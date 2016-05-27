@@ -1,0 +1,226 @@
+/*global css */
+.pos-absolute{
+    position: absolute!important;
+}
+.pos-relative{
+    position: relative!important;
+}
+
+[contenteditable=true]:empty:before{
+    content: attr(placeholder);
+    display: block; /* For Firefox */
+    color: #D0D0D0;
+}
+
+/*code for kore chat window*/
+
+.kore-chat-window{
+    position: fixed;
+    bottom: 2px;
+    right: 2px;
+    min-width: 300px;
+    min-height: 350px;
+    -webkit-box-shadow: 0 0 2px 0 black;
+    -moz-box-shadow: 0 0 2px 0 black;
+    box-shadow: 0 0 2px 0 black;
+}
+.kore-chat-window.minimize{
+    min-height: 48px!important;
+    height: 48px!important;
+    width: auto!important;
+    min-width: auto;
+    bottom:20px!important;
+    top: auto!important;
+    left:auto!important;
+    right: 20px!important;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+.kore-chat-window.minimize .kore-chat-body,.kore-chat-window.minimize .kore-chat-footer,.kore-chat-window.minimize .kore-chat-header{
+    display: none;
+}
+.kore-chat-window.minimize .minimized{
+    display: block;
+    background: #5B9BD5;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    padding: 6px;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+}
+
+.kore-chat-window .minimized{
+    display:none;
+}
+
+.kore-chat-window .messages {
+    background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PHN2ZyB3aWR0aD0iMjJweCIgaGVpZ2h0PSIyMXB4IiB2aWV3Qm94PSIwIDAgMjIgMjEiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+ICAgICAgICA8dGl0bGU+ODVGODJDNTAtMzI0OC00MjhFLUI1QUUtOTA2QTg5OUU3QTE3PC90aXRsZT4gICAgPGRlc2M+Q3JlYXRlZCB3aXRoIHNrZXRjaHRvb2wuPC9kZXNjPiAgICA8ZGVmcz48L2RlZnM+ICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+ICAgICAgICA8ZyBpZD0iMDMtc3BhY2UiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yOS4wMDAwMDAsIC02Ni4wMDAwMDApIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMiI+ICAgICAgICAgICAgPGcgaWQ9IlNpZGUtTmF2Ij4gICAgICAgICAgICAgICAgPGcgaWQ9ImNoYXRzLWluYWN0aXZlIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgzMC4wMDAwMDAsIDY3LjAwMDAwMCkiPiAgICAgICAgICAgICAgICAgICAgPHBhdGggZD0iTTMuMzMzMzMzMzQsMTIuNDU5MjA4MiBDMy4zMzMzMzMzNCwxMi40NTkyMDgyIDAuNTYyNTMyOTkyLDEwLjM0NDMzNDcgMC44MzMzMzMzMzMsNi42NjY2NjY2NyBDMS4xNTA2MTM2MywzLjAwMjc3MzQ5IDQuMzI0NTEyMTEsMCA4LjMzMzMzMzMzLDAgTDExLjY2NjY2NjcsMCBDMTUuOTcwMzM4NywwIDE4LjkzNDQ4MzksMi44NjY1MjQ0NyAxOS4xNjY2NjY3LDYuNjY2NjY2NjcgQzE5LjUwMTIwMDEsMTAuNzgyMTAzNCAxNS45NzAxMTY1LDE0LjE4MTMwMjUgMTEuNjY2NjY2NywxNC4xNjY2NjY3IEwxMCwxNC4xNjY2NjY3IEw4LjMzMzMzMzMzLDE0LjE2NjY2NjcgTDIuNSwxOC4zMzMzMzMzIEwzLjMzMzMzMzMzLDE1IiBpZD0iUmVjdGFuZ2xlLTM5NiI+PC9wYXRoPiAgICAgICAgICAgICAgICAgICAgPHBhdGggZD0iTTQuMTY2NjY2NjcsMy4zMzMzMzMzMyBMNi40NDI0ODY4MSwzLjMzMzMzMzMzIEM4Ljg4NjE5Mjc2LDMuMzMzMzMzMzMgMTAuODY3MjA3OCw1LjAxNjQ3OTczIDEwLjg2NzIwNzgsNy4wODMzMzMzMyBDMTAuODY3MjA3OCw5LjE1NDQwMTE1IDguODg2MDUzNDIsMTAuODMzMzMzMyA2LjQ0NjA5NTksMTAuODMzMzMzMyIgaWQ9IlJlY3RhbmdsZS0zOTYtQ29weSIgc3Ryb2tlLW9wYWNpdHk9IjAuNSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNy41MTY5MzcsIDcuMDgzMzMzKSBzY2FsZSgtMSwgLTEpIHRyYW5zbGF0ZSgtNy41MTY5MzcsIC03LjA4MzMzMykgIj48L3BhdGg+ICAgICAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMTEuNjY2NjY2NywzLjMzMzMzMzMzIEMxMy45Njc4NTMxLDMuMzMzMzMzMzMgMTUuODMzMzMzMyw1LjIwMzQ5NTk5IDE1LjgzMzMzMzMsNy41IiBpZD0iUmVjdGFuZ2xlLTM5Ni1Db3B5LTIiIHN0cm9rZS1vcGFjaXR5PSIwLjUiPjwvcGF0aD4gICAgICAgICAgICAgICAgPC9nPiAgICAgICAgICAgIDwvZz4gICAgICAgIDwvZz4gICAgPC9nPjwvc3ZnPg==);
+    display:inline-block;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+}
+.kore-chat-window  .kore-chat-header {
+    border-bottom:1px solid lightgray;
+    height: 36px;
+    color: #818181;
+    font-size: 13px;
+    background-color: #f2f2f2;
+    font-family: arial,sans-serif;
+}
+.kore-chat-header  h3{
+    width: 55%;
+    margin: 0;
+    padding: 10px;
+    font-size: 14px!important;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: default;
+    float: left;
+}
+.kore-chat-header .chat-box-controls{
+    width: auto;
+    display: table-cell;
+    text-align: right;
+    float: right;
+    padding-top: 0;
+    padding-right: 6px;
+    color: black;
+    margin-top: -3px;
+}
+.kore-chat-header .chat-box-controls button{
+    cursor: pointer;
+    color: #818181;
+    background: none;
+    border: none;
+    opacity: 0.6;
+    outline: none;
+    font-size: 29px;
+}
+.kore-chat-header .chat-box-controls .reload-btn{
+    font-size:26px;
+}
+.kore-chat-header .chat-box-controls .reload-btn.active{
+    -webkit-animation-name: spinnerRotate;
+    -webkit-animation-duration: 5s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+}
+.kore-chat-header .chat-box-controls button:not(.disabled):hover{
+    opacity: 1;
+}
+.kore-chat-window .kore-chat-body{
+    position: absolute;
+    width: 100%;
+    top: 36px;
+    bottom: 39px;
+    background-color: white;
+    font-family: "Lato", sans-serif;
+    font-size: 14px;
+}
+.kore-chat-window .kore-chat-body ul.chat-container{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 0;
+    max-height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    padding:0;
+}
+ul.chat-container li:first-child{
+    margin-top: 10px;
+}
+
+ul.chat-container li{
+    list-style: none;
+    width: 100%;
+    display: inline-block;
+    margin-bottom: 10px;
+    word-break: break-word;
+}
+
+ul.chat-container li.fromCurrentUser .messageBubble{
+    float:right;
+    padding: 10px;
+    max-width: 70%;
+    background-color: #0072ff;
+    color:white;
+    border-radius: 15px 0px 15px 15px;
+    margin-right: 5px;
+    position: relative;
+}
+ul.chat-container li.fromCurrentUser .messageBubble .message-status{
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 2px solid white;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    background: lightgray;
+    z-index: 1000;
+    display: inline-block;
+}
+ul.chat-container li.fromCurrentUser .messageBubble .message-status.recieved{
+    background-color: green;
+}
+ul.chat-container li.fromOtherUsers .messageBubble{
+    float:left;
+    padding: 10px;
+    max-width: 70%;
+    background-color: #D8D4D4;
+    color:#333333;
+    border-radius: 0px 15px 15px 15px;
+    margin-left: 5px;
+}
+.kore-chat-window .kore-chat-footer{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    min-height: 38px;
+    -webkit-box-shadow: 0 0 4px 0 rgba(0,0,0,0.12),0 4px 4px 0 rgba(0,0,0,0.24);
+    -moz-box-shadow: 0 0 4px 0 rgba(0,0,0,0.12),0 4px 4px 0 rgba(0,0,0,0.24);
+    box-shadow: 0 0 4px 0 rgba(0,0,0,0.12),0 4px 4px 0 rgba(0,0,0,0.24);
+    border-top: 1px solid rgba(0,0,0,.1);
+    background:white;
+}	
+
+.kore-chat-window .kore-chat-footer .chatInputBox{
+    width: 80%;
+    padding: 10px;
+    outline: none;
+    display: block;
+    font-size: 16px;
+    cursor: text;
+    max-height: 70px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.kore-chat-window .kore-chat-footer .sendChat{
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    width: 32px;
+    height: 32px;
+    background: #127927;
+    margin-top: -16px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 29px;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+    font-size: 20px;
+}
+.kore-chat-window .kore-chat-footer .sendChat.disabled{
+    background: whitesmoke!important;
+    color: lightgray!important;
+}
