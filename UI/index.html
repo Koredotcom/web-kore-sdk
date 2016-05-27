@@ -11,9 +11,34 @@
 		<link href="chatWindow.css" rel="stylesheet"></link>
 		<script type="text/javascript">
 		$(document).on("ready",function(){
+			function assertion(options, callback) {
+				// Client has to fill the claims and call the callback.
+				$.ajax({
+					url: "http://devbots.kore.com/api/users/sts",
+					type: 'post',
+					headers: {
+						Authorization: "bearer -0*************f"
+					},
+					dataType: 'json',
+					success: function (data) {
+						options.assertion = data
+						callback(null, options);
+					}
+				})
+			}
+
+			var botOptions = {};
+			botOptions.logLevel = 'debug';
+			botOptions.koreAPIUrl = "http://devbots.kore.com/api/";
+			botOptions.assertion = assertion;
+			botOptions.isLoggedIn = true;
+			
+			botOptions.botInfo = {name:"Twitter", "_id":""}; // pass bot name and stream id
+			
 			var chatConfig={
-				
+				botOptions:botOptions
 			};
+
 			koreBotChat().show(chatConfig);
 			$('.openChatWindow').click(function(){
 				koreBotChat().show(chatConfig);
