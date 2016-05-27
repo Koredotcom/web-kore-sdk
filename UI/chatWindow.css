@@ -49,17 +49,18 @@
     width: auto;
     text-align: right;
     vertical-align: middle;
-    font-size: 18px;
+    font-size: 16px;
     margin-right: 35px;
     color: white;
-    padding: 12px 20px 11px 10px;
+    margin-top: 6px;
+    padding: 8px 20px 8px 10px;
     background: #5B9BD5; 
     border-radius: 20px;
     display:block;
     opacity: 0;
     cursor: pointer;
     white-space: nowrap;
-    transition: all 0.35s ease-in;
+    transition: all 0.6s ease-in;
 }
 .kore-chat-window.minimize:hover .minimized-title{
     opacity: 1;
