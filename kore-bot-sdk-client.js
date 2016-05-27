@@ -62,7 +62,7 @@ KoreBot.prototype.onLogIn = function(err, data) {
 	this.options.accessToken = this.accessToken;
 	this.WebClient.user.accessToken = this.accessToken;
 	this.RtmClient = new clients.KoreRtmClient({}, this.options);
-	this.RtmClient.start();
+	this.RtmClient.start({"botInfo":this.options.botInfo});
 	this.RtmClient.on(RTM_EVENTS.MESSAGE,bind(this.onMessage, this));
 	this.RtmClient.on(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED,bind(this.onOpenWSConnection, this));
 };
@@ -203,17 +203,8 @@ BaseAPIClient.prototype._callTransport = function _callTransport(task, queueCb) 
           return;
         }
       }
-    } else {
-      try {
-        jsonResponse = JSON.parse(body);
-      } catch (parseErr) {
-        jsonParseErr = new Error('unable to parse kore API Response');
-      }
-
-      try {
-        cb(jsonParseErr, jsonResponse);
-      } catch (callbackErr) {
-      }
+    } else {        
+        cb(null, body);
     }
 
     queueCb();
@@ -231,6 +222,7 @@ BaseAPIClient.prototype.makeAPICall = function makeAPICall(endpoint, optData, op
     data: apiCallArgs.data,
     headers: {
       'User-Agent': this.userAgent,
+      "content-type":'application/json'
     },
   };
 
@@ -451,6 +443,7 @@ function KoreRTMClient(token, opts) {
   this._reconnecting = false;
   this.user = {};
   this.user.accessToken = clientOpts.accessToken;
+  this.botInfo = clientOpts.botInfo || {};
 }
 
 inherits(KoreRTMClient, BaseAPIClient);
@@ -469,7 +462,7 @@ KoreRTMClient.prototype.start = function start(opts) {
   if (!this._connecting) {
     this.emit(CLIENT_EVENTS.CONNECTING);
     this._connecting = true;
-    opts = opts || {};
+    opts = opts || {"botInfo":this.botInfo};
     opts.authorization = "bearer "+ this.user.accessToken;
     this._rtm.start(opts, bind(this._onStart, this));
   }
@@ -689,7 +682,6 @@ var request = require('browser-request');
 var handleRequestTranportRes = function handleRequestTranportRes(cb, err, response, body) {
   var headers;
   var statusCode;
-
   if (err) {
     headers = response ? response.headers || {} : {};
     statusCode = response ? response.statusCode || null : null;
@@ -709,7 +701,7 @@ var getRequestTransportArgs = function getReqestTransportArgs(args) {
   if (has(args.data, 'file')) {
     transportArgs.formData = args.data;
   } else {
-    transportArgs.form = args.data;
+    transportArgs.json = args.data;
   }
 
   return transportArgs;
