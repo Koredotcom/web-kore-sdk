@@ -6,8 +6,8 @@
     - jwt assertion generation methodology. ex: service which will be used in the assertion function injected as part of sdk initialization.
 
 # Integrating into your app
-#### 1. Include the bundle.js file 
-    -  <script src='bundle.js'></script>
+#### 1. Include the kore-bot-sdk-client.js file 
+    -  <script src='kore-bot-sdk-client.js'></script>
     
 #### 2. Define the assertion function.(This should be defined by the clients.)
 
