@@ -108,12 +108,12 @@ function koreBotChat() {
             {
                 _chatContainer.addClass("minimize");
                 _chatContainer.draggable("destroy");
-                _chatContainer.find('.minimized').attr('title',"Talk to "+ me.config.chatTitle);
+                _chatContainer.find('.minimized-title').html("Talk to "+ me.config.chatTitle);
                 me.minimized = true;
             }
         });
         
-        _chatContainer.off('click', '.minimized').on('click', '.minimized', function (event) {
+        _chatContainer.off('click', '.minimized').on('click', '.minimized,.minimized-title', function (event) {
             _chatContainer.removeClass("minimize");
             me.minimized = false;
             _chatContainer.draggable({
@@ -222,6 +222,7 @@ function koreBotChat() {
 
         var chatWindowTemplate = '<script id="chat_window_tmpl" type="text/x-jqury-tmpl"> \
 			<div class="kore-chat-window"> \
+                                <div class="minimized-title"></div> \
                                 <div class="minimized"><span class="messages"></span></div> \
 				<div class="kore-chat-header"> \
 					<h3 title="${chatTitle}">${chatTitle}</h3> \
