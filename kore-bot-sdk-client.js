@@ -79,6 +79,51 @@ KoreBot.prototype.logIn = function(err, data) {
 	}
 
 };
+
+KoreBot.prototype.generateUUID  = function() {
+    var d = new Date().getTime();
+    if(window.performance && typeof window.performance.now === "function"){
+        d += performance.now(); //use high-precision timer if available
+    }
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+};
+
+
+KoreBot.prototype.anonymous = function(options){
+	var korecookie = localStorage.getItem("korecom");
+    // if(korecookie) 
+    // 	korecookie = JSON.parse(korecookie);
+
+	var uuid = (korecookie) || this.generateUUID();
+
+	localStorage.setItem("korecom", uuid);
+
+     if(!options.clientId){
+     	console.log("clientId should be there for anonymous user");
+        return;
+     } 	
+     var assertion = {};
+     assertion.issuer    = options.clientId;
+     assertion.subject   = uuid;
+
+     options.assertion = assertion;
+
+	this.options = options;
+	this.claims = options.assertion;
+	this.WebClient = new clients.KoreWebClient({}, this.options);
+	this.WebClient.claims = this.claims;
+	this.WebClient.anonymouslogin.login({
+		"assertion": options.assertion
+	}, bind(this.onLogIn, this));
+
+};
+
+
 /*
 Example of options ::
 {
@@ -101,6 +146,7 @@ KoreBot.prototype.init = function(options) {
 		}
 
 	}else{
+          this.anonymous(options);
          //TODO::??
 	}
 };
@@ -110,7 +156,7 @@ KoreBot.prototype.init = function(options) {
 module.exports.instance = function(){
 	return new KoreBot();
 };
-},{"./index.js":1,"events":24,"inherits":18,"lodash":19}],1:[function(require,module,exports){
+},{"./index.js":1,"events":25,"inherits":19,"lodash":20}],1:[function(require,module,exports){
 var events = require('./lib/clients/events');
 
 module.exports= {
@@ -124,7 +170,7 @@ module.exports= {
   RTM_MESSAGE_SUBTYPES: events.RTM_MESSAGE_SUBTYPES,
 };
 
-},{"./lib/clients/events":4,"./lib/clients/rtm/client":8,"./lib/clients/web/client":15}],2:[function(require,module,exports){
+},{"./lib/clients/events":4,"./lib/clients/rtm/client":8,"./lib/clients/web/client":16}],2:[function(require,module,exports){
 var EventEmitter = require('events');
 var async = require('async');
 var bind = require('lodash').bind;
@@ -238,7 +284,7 @@ BaseAPIClient.prototype.makeAPICall = function makeAPICall(endpoint, optData, op
 
 module.exports = BaseAPIClient;
 
-},{"./events/client":3,"./helpers":7,"./transports/request":9,"async":16,"events":24,"inherits":18,"lodash":19,"retry":20,"url-join":23}],3:[function(require,module,exports){
+},{"./events/client":3,"./helpers":7,"./transports/request":9,"async":17,"events":25,"inherits":19,"lodash":20,"retry":21,"url-join":24}],3:[function(require,module,exports){
 /**
  * API client events.
  */
@@ -396,7 +442,7 @@ var getAPICallArgs = function getAPICallArgs(token, optData, optCb) {
 module.exports.getData = getData;
 module.exports.getAPICallArgs = getAPICallArgs;
 
-},{"lodash":19}],8:[function(require,module,exports){
+},{"lodash":20}],8:[function(require,module,exports){
 var bind = require('lodash').bind;
 var cloneDeep = require('lodash').cloneDeep;
 var contains = require('lodash').contains;
@@ -669,7 +715,7 @@ KoreRTMClient.prototype.send = function send(message, optCb) {
 
 module.exports = KoreRTMClient;
 
-},{"../client":2,"../events/client":3,"../events/rtm":5,"../events/utils":6,"../transports/ws":10,"../web/apis":12,"inherits":18,"lodash":19}],9:[function(require,module,exports){
+},{"../client":2,"../events/client":3,"../events/rtm":5,"../events/utils":6,"../transports/ws":10,"../web/apis":13,"inherits":19,"lodash":20}],9:[function(require,module,exports){
 /**
  * Simple transport using the node request library.
  */
@@ -716,7 +762,7 @@ var requestTransport = function requestTransport(args, cb) {
 
 module.exports.requestTransport = requestTransport;
 
-},{"browser-request":17,"lodash":19}],10:[function(require,module,exports){
+},{"browser-request":18,"lodash":20}],10:[function(require,module,exports){
 
 var wsTransport = function wsTransport(socketUrl, opts) {
   var wsTransportOpts = opts || {};
@@ -735,12 +781,34 @@ function BaseApi () {
 
 module.exports = BaseApi;
 },{}],12:[function(require,module,exports){
+var BaseApi = require('./BaseApi');
+var inherits = require('inherits');
+
+function AnonymousLogin(client) {
+  this.name = 'anonymouslogin';
+  this.client = client;
+}
+
+inherits(AnonymousLogin, BaseApi);
+
+AnonymousLogin.prototype.login = function login(opts, optCb) {
+  opts = opts || {};
+  var args = {
+    opts: opts,
+  };
+  return this.client.makeAPICall('/oAuth/token/jwtgrant/anonymous', args, optCb);
+};
+
+
+module.exports = AnonymousLogin;
+},{"./BaseApi":11,"inherits":19}],13:[function(require,module,exports){
 module.exports = {
   RtmApi: require('./rtm.js'),
   LogInApi: require('./login.js'),
+  AnonymousLogin : require('./anonymouslogin.js'),
 };
 
-},{"./login.js":13,"./rtm.js":14}],13:[function(require,module,exports){
+},{"./anonymouslogin.js":12,"./login.js":14,"./rtm.js":15}],14:[function(require,module,exports){
 var BaseApi = require('./BaseApi');
 var inherits = require('inherits');
 
@@ -761,7 +829,7 @@ LogInApi.prototype.login = function login(opts, optCb) {
 
 
 module.exports = LogInApi;
-},{"./BaseApi":11,"inherits":18}],14:[function(require,module,exports){
+},{"./BaseApi":11,"inherits":19}],15:[function(require,module,exports){
 var BaseApi = require('./BaseApi');
 var inherits = require('inherits');
 
@@ -783,7 +851,7 @@ RtmApi.prototype.start = function start(opts, optCb) {
 
 module.exports = RtmApi;
 
-},{"./BaseApi":11,"inherits":18}],15:[function(require,module,exports){
+},{"./BaseApi":11,"inherits":19}],16:[function(require,module,exports){
 var bind = require('lodash').bind;
 var forEach = require('lodash').forEach;
 var inherits = require('inherits');
@@ -821,7 +889,7 @@ WebAPIClient.prototype._createFacets = function _createFacets() {
 
 module.exports = WebAPIClient;
 
-},{"../client":2,"./apis/index":12,"inherits":18,"lodash":19}],16:[function(require,module,exports){
+},{"../client":2,"./apis/index":13,"inherits":19,"lodash":20}],17:[function(require,module,exports){
 (function (process,global){
 /*!
  * async
@@ -2090,7 +2158,7 @@ module.exports = WebAPIClient;
 }());
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":25}],17:[function(require,module,exports){
+},{"_process":26}],18:[function(require,module,exports){
 // Browser Request
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -2586,7 +2654,7 @@ function b64_enc (data) {
 }));
 //UMD FOOTER END
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -2611,7 +2679,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -14966,9 +15034,9 @@ if (typeof Object.create === 'function') {
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 module.exports = require('./lib/retry');
-},{"./lib/retry":21}],21:[function(require,module,exports){
+},{"./lib/retry":22}],22:[function(require,module,exports){
 var RetryOperation = require('./retry_operation');
 
 exports.operation = function(options) {
@@ -15064,7 +15132,7 @@ exports.wrap = function(obj, options, methods) {
   }
 };
 
-},{"./retry_operation":22}],22:[function(require,module,exports){
+},{"./retry_operation":23}],23:[function(require,module,exports){
 function RetryOperation(timeouts, retryForever) {
   this._timeouts = timeouts;
   this._fn = null;
@@ -15186,7 +15254,7 @@ RetryOperation.prototype.mainError = function() {
   return mainError;
 };
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 function normalize (str) {
   return str
           .replace(/[\/]+/g, '/')
@@ -15199,7 +15267,7 @@ module.exports = function () {
   var joined = [].slice.call(arguments, 0).join('/');
   return normalize(joined);
 };
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -15499,7 +15567,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
