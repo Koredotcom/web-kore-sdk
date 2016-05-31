@@ -28,13 +28,13 @@
 
 
 #### 3. Initialize the Bot
-    - define the bot options.
+        //define the bot options.
         var botOptions = {};
         botOptions.koreAPIUrl = "http://devbots.kore.com/api/"; 
         botOptions.assertionFn = assertion;
         botOptions.isLoggedIn = true;
         botOptions.botInfo = {chatBot:"Kora",taskBotId :"u-*********"};  
-    - initialize the bot.
+        //initialize the bot.
         var bot = require('/KoreBot.js').instance();
         bot.init(botOptions);
 
