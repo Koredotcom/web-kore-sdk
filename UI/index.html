@@ -32,8 +32,8 @@
 			botOptions.logLevel = 'debug';
 			botOptions.koreAPIUrl = "http://devbots.kore.com/api/";
 			botOptions.assertionFn = assertion;
-			botOptions.isLoggedIn = true;
-			
+			botOptions.isLoggedIn = false; // false: triggers anonymus flow. set it to true for log-in flow.
+			botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149";
 			botOptions.botInfo = {name:"twitter","_id":""}; // pass bot name and stream id
 			
 			var chatConfig={
