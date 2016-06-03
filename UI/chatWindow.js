@@ -31,41 +31,41 @@ function koreBotChat() {
         me.config.botOptions.botInfo = {chatBot:_botInfo.name,taskBotId :_botInfo._id};
         var tempTitle = _botInfo.name + " Bot";
         me.config.botMessages = botMessages;
-        
+
         me.config.chatTitle = me.config.botMessages.connecting;
         var chatWindowHtml = $(me.getChatTemplate()).tmpl(me.config);
         me.config.chatContainer = chatWindowHtml;
-        
+
         me.config.chatTitle = tempTitle;
         bot.init(me.config.botOptions);
         me.render(chatWindowHtml);
     };
-    
+
     chatWindow.prototype.destroy = function () {
         var me = this;
         if (me.config && me.config.chatContainer) {
             me.config.chatContainer.remove();
         }
     };
-    
+
     chatWindow.prototype.resetWindow = function() {
         var me = this;
-        me.config.chatContainer.find('.kore-chat-header h3').html( me.config.botMessages.reconnecting);
+        me.config.chatContainer.find('.kore-chat-header .header-title').html( me.config.botMessages.reconnecting);
         me.config.chatContainer.find('.chat-container').html("");
         bot.init(me.config.botOptions);
     };
-    
+
     chatWindow.prototype.bindEvents = function () {
         var me = this;
         var _chatContainer = me.config.chatContainer;
         _chatContainer.draggable({
-                handle: _chatContainer.find(".kore-chat-header h3"),
+                handle: _chatContainer.find(".kore-chat-header .header-title"),
                 containment: "html"
         }).resizable({
                 handles: "n, e, w, s",
                 containment: "parent"
         });
-		
+
         _chatContainer.off('keyup', '.chatInputBox').on('keyup', '.chatInputBox', function (event) {
             var _this = $(this);
             if (_this.text().trim() === "") {
@@ -80,7 +80,7 @@ function koreBotChat() {
             var _footerContainer = $(me.config.container).find('.kore-chat-footer');
             var _bodyContainer = $(me.config.container).find('.kore-chat-body');
             _bodyContainer.css('bottom', _footerContainer.outerHeight());
-            if (!event.shiftKey && event.keyCode === 13) {
+            if (event.keyCode === 13) {
                 event.preventDefault();
                 me.sendMessage(_this);
                 return;
@@ -101,7 +101,7 @@ function koreBotChat() {
                 _chatContainer.removeClass("minimize");
                 me.minimized = false;
                 _chatContainer.draggable({
-                    handle: _chatContainer.find(".kore-chat-header h3"),
+                    handle: _chatContainer.find(".kore-chat-header .header-title"),
                     containment: "html"
                 });
             } else
@@ -112,37 +112,33 @@ function koreBotChat() {
                 me.minimized = true;
             }
         });
-        
+
         _chatContainer.off('click', '.minimized').on('click', '.minimized,.minimized-title', function (event) {
             _chatContainer.removeClass("minimize");
             me.minimized = false;
             _chatContainer.draggable({
-                handle: _chatContainer.find(".kore-chat-header h3"),
+                handle: _chatContainer.find(".kore-chat-header .header-title"),
                 containment: "html"
             });
         });
-        
+
         _chatContainer.off('click', '.reload-btn').on('click', '.reload-btn',function(event){
             $(this).addClass("disabled").prop('disabled',true);
             me.resetWindow();
         });
         bot.on("open", function (response) {
             var _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
-            _chatContainer.find('.kore-chat-header h3').html(me.config.chatTitle).attr('title',me.config.chatTitle);
+            _chatContainer.find('.kore-chat-header .header-title').html(me.config.chatTitle).attr('title',me.config.chatTitle);
             _chatContainer.find('.kore-chat-header .disabled').prop('disabled',false).removeClass("disabled");
             _chatInput.focus();
         });
-        
+
         bot.on("message", function (message) {
             var tempData = JSON.parse(message.data);
 
             if (tempData.type === "bot_response")
             {
                 me.renderMessage(tempData);
-            }
-            if(tempData.replyto){
-                var _msgEle = $('#msg_'+tempData.replyto);
-                _msgEle.find('.message-status').addClass("recieved");
             }
         });
     };
@@ -193,26 +189,26 @@ function koreBotChat() {
 
     chatWindow.prototype.renderMessage = function (msgData) {
         var me = this;
-        var _chatContainer = $(me.config.chatContainer).find('.chat-container'); 
-        
+        var _chatContainer = $(me.config.chatContainer).find('.chat-container');
+
         var messageHtml = $(me.getChatTemplate("message")).tmpl({
             'msgData': msgData,
             'helpers':helpers
         });
 
         _chatContainer.append(messageHtml);
-        
+
         me.formatMessages(messageHtml);
         _chatContainer.animate({
             scrollTop: _chatContainer.prop("scrollHeight")
         }, 0);
     };
-    
+
     chatWindow.prototype.formatMessages = function (msgContainer){
     /*adding target to a tags */
         $(msgContainer).find('a').attr('target','_blank');
     };
-    
+
     chatWindow.prototype.getChatTemplate = function (tempType) {
         var chatFooterTemplate =
                 '<div class="footerContainer pos-relative"> \
@@ -225,7 +221,7 @@ function koreBotChat() {
                                 <div class="minimized-title"></div> \
                                 <div class="minimized"><span class="messages"></span></div> \
 				<div class="kore-chat-header"> \
-					<h3 title="${chatTitle}">${chatTitle}</h3> \
+					<div class="header-title" title="${chatTitle}">${chatTitle}</div> \
 					<div class="chat-box-controls"> \
                                                 <button class="reload-btn" title="Reconnect">&#10227;</button> \
 						<button class="minimize-btn" title="Minimize">&minus;</button> \
@@ -245,8 +241,7 @@ function koreBotChat() {
                         {{if msgItem.cInfo && msgItem.type === "text"}} \
 			<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}}"> \
 				<div class="messageBubble">\
-                                    {{html helpers.nl2br(msgItem.cInfo.body)}} \
-                                    <div class="message-status"></div> \
+                                    {{if msgData.type === "bot_response"}} {{html helpers.nl2br(msgItem.cInfo.body)}} {{else}} ${msgItem.cInfo.body} {{/if}} \
                                 </div> \
 			</li> \
                         {{/if}} \
@@ -261,7 +256,7 @@ function koreBotChat() {
         }
     };
     var chatInitialize;
-    
+
     this.show = function (cfg) {
         if ($('body').find('.kore-chat-window').length > 0)
         {
