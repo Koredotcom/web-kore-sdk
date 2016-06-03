@@ -7,9 +7,23 @@ function koreBotChat() {
     };
     var _botInfo = {};
     var helpers = {
-        'nl2br': function nl2br(str){
+        'nl2br': function (str) {
             str = str.replace(/(?:\r\n|\r|\n)/g, '<br />');
             return str;
+        },
+        'formatAMPM': function (date) {
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var ampm = hours >= 12 ? 'pm' : 'am';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            minutes = minutes < 10 ? '0'+minutes : minutes;
+            var strTime = hours + ':' + minutes + ' ' + ampm;
+            return strTime;
+        },
+        'formatDate': function (date) {
+            var d = new Date(date);
+            return d.toDateString() + " at " + helpers.formatAMPM(d);
         }
     };
     function chatWindow(cfg) {
@@ -136,9 +150,24 @@ function koreBotChat() {
         bot.on("message", function (message) {
             var tempData = JSON.parse(message.data);
 
-            if (tempData.type === "bot_response")
+            if (tempData.from === "bot" && tempData.type === "bot_response")
             {
                 me.renderMessage(tempData);
+            }
+            else if(tempData.from === "self" && tempData.type === "user_message"){
+                var tempmsg = tempData.message;
+                
+                var msgData = {
+                    'type': "currentUser",
+                    "message": [{
+                        'type': 'text',
+                        'cInfo': {'body':tempmsg.body},
+                        'clientMessageId': tempData.id
+                    }],
+                    "createdOn": tempData.id
+                };
+                console.log(msgData);
+                me.renderMessage(msgData);
             }
         });
     };
@@ -167,10 +196,11 @@ function koreBotChat() {
         var msgData = {
             'type': "currentUser",
             "message": [{
-                    'type': 'text',
-                    'cInfo': {'body':chatInput.text()},
-                    'clientMessageId': clientMessageId
-                }]
+                'type': 'text',
+                'cInfo': {'body':chatInput.text()},
+                'clientMessageId': clientMessageId
+            }],
+            "createdOn": clientMessageId
         };
 
         var messageToBot = {};
@@ -239,8 +269,10 @@ function koreBotChat() {
 			{{if msgData.message}} \
 			{{each(key, msgItem) msgData.message}} \
                         {{if msgItem.cInfo && msgItem.type === "text"}} \
-			<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}}"> \
-				<div class="messageBubble">\
+			<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
+                                {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+                                {{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+                                <div class="messageBubble">\
                                     {{if msgData.type === "bot_response"}} {{html helpers.nl2br(msgItem.cInfo.body)}} {{else}} ${msgItem.cInfo.body} {{/if}} \
                                 </div> \
 			</li> \

@@ -523,6 +523,7 @@ KoreRTMClient.prototype.nextMessageId = function nextMessageId() {
 
 KoreRTMClient.prototype._onStart = function _onStart(err, data) {
   var errMsg;
+  var __reconnect__ = this._reconnecting?true:false;
   this._connecting = false;
   this._reconnecting = false;
   try{
@@ -545,6 +546,9 @@ KoreRTMClient.prototype._onStart = function _onStart(err, data) {
       }
     }
   } else {
+    if(__reconnect__){
+      data.url = data.url + "&isReconnect=true"
+    }
     this.authenticated = true;
     //this.activeUserId = data.self.id;
     this.emit(CLIENT_EVENTS.AUTHENTICATED, data);

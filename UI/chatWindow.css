@@ -13,18 +13,13 @@
 }
 
 /*code for kore chat window*/
-.kore-chat-window *{
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-}
 
 .kore-chat-window{
     position: fixed;
     bottom: 2px;
     right: 2px;
-    min-width: 400px;
-    min-height: 550px;
+    min-width: 350px;
+    min-height: 450px;
     border: 1px solid #EEEEEE;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
@@ -175,6 +170,39 @@ ul.chat-container li{
     word-break: break-word;
 }
 
+ul.chat-container li .extra-info{
+    color: #999;
+    font-size: 12px;
+    position: relative;
+    margin: 0;
+    padding: 0 0 5px;
+    white-space: nowrap;
+}
+
+ul.chat-container li .profile-photo{
+    -webkit-transition: all .3s ease-in-out;
+    -ms-transition: all .3s ease-in-out;
+    -moz-transition: all .3s ease-in-out;
+    -o-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+    width: 34px;
+    height: 34px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+ul.chat-container li .profile-photo .user-account{
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    border-radius: 50%;
+    font-size: 13.6px;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    display: inline-block;
+    background-size: 100%;
+}
+    
 ul.chat-container li.fromCurrentUser .messageBubble{
     float:right;
     padding: 12px 15px;
@@ -188,6 +216,10 @@ ul.chat-container li.fromCurrentUser .messageBubble{
     -webkit-animation: message-right ease-in-out 2s forwards;
     -moz-animation: message-right ease-in-out 2s forwards;
     animation: message-right ease-in-out 2s forwards;
+}
+ul.chat-container li.fromCurrentUser .extra-info{
+    padding-right: 5px;
+    text-align: right;
 }
 ul.chat-container li.fromCurrentUser .messageBubble .message-status{
     position: absolute;
@@ -216,6 +248,19 @@ ul.chat-container li.fromOtherUsers .messageBubble{
     -webkit-animation: message-left ease-in-out 2s forwards;
     -moz-animation: message-left ease-in-out 2s forwards;
     animation: message-left ease-in-out 2s forwards;
+}
+
+ul.chat-container li.fromOtherUsers.with-icon{
+    padding-left: 44px;
+    position: relative;
+}
+ul.chat-container li.fromOtherUsers .extra-info{
+    padding-left: 59px;
+    padding-right: 0;
+    text-align: left;
+}
+ul.chat-container li.fromOtherUsers.with-icon .extra-info{
+    padding-left: 5px;
 }
 .kore-chat-window .kore-chat-footer{
     position: absolute;
