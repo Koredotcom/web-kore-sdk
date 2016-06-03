@@ -43,7 +43,7 @@ function koreBotChat() {
         var me = this;
         _botInfo = me.config.botOptions.botInfo;
         me.config.botOptions.botInfo = {chatBot:_botInfo.name,taskBotId :_botInfo._id};
-        var tempTitle = _botInfo.name + " Bot";
+        var tempTitle = _botInfo.name;
         me.config.botMessages = botMessages;
 
         me.config.chatTitle = me.config.botMessages.connecting;
