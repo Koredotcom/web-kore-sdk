@@ -13,6 +13,11 @@
 }
 
 /*code for kore chat window*/
+.kore-chat-window *{
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
 
 .kore-chat-window{
     position: fixed;
