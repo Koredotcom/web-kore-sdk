@@ -30,6 +30,7 @@ function koreBotChat() {
         this.config = {
             "chatTitle": "Kore Bot Chat",
             "container": "body",
+            "allowIframe": false,
             "botOptions": cfg.botOptions
         };
         if (cfg && cfg.chatContainer) {
@@ -105,6 +106,17 @@ function koreBotChat() {
             var _footerContainer = $(me.config.container).find('.kore-chat-footer');
             me.sendMessage(_footerContainer.find('.chatInputBox'));
         });
+        
+        _chatContainer.on('click','li a',function(e){
+            e.preventDefault();
+            var a_link = $(this).attr('href');
+            if(me.config.allowIframe === true){
+                me.openPopup(a_link);
+            }
+            else{
+                var _tempWin = window.open(a_link,"_blank");
+            }
+        });
 
         _chatContainer.off('click', '.close-btn').on('click', '.close-btn', function (event) {
             me.destroy();
@@ -148,6 +160,9 @@ function koreBotChat() {
         });
 
         bot.on("message", function (message) {
+            if(me.popupOpened === true){
+                $('.kore-auth-popup .close-popup').trigger("click");
+            }
             var tempData = JSON.parse(message.data);
 
             if (tempData.from === "bot" && tempData.type === "bot_response")
@@ -166,12 +181,26 @@ function koreBotChat() {
                     }],
                     "createdOn": tempData.id
                 };
-                console.log(msgData);
                 me.renderMessage(msgData);
             }
         });
     };
-
+    
+    chatWindow.prototype.bindIframeEvents = function(authPopup){
+        var me = this;
+        authPopup.on('click','.close-popup',function(){
+           $(this).closest('.kore-auth-popup').remove();
+           $('.kore-auth-layover').remove();
+           me.popupOpened = false;
+        });
+        
+        var ifram = authPopup.find('iframe')[0];
+        
+        ifram.addEventListener('onload',function(){
+            console.log(this);            
+        },true);
+    };
+    
     chatWindow.prototype.render = function (chatWindowHtml) {
         var me = this;
         $(me.config.container).append(chatWindowHtml);
@@ -228,7 +257,7 @@ function koreBotChat() {
 
         _chatContainer.append(messageHtml);
 
-        me.formatMessages(messageHtml);
+        //me.formatMessages(messageHtml);
         _chatContainer.animate({
             scrollTop: _chatContainer.prop("scrollHeight")
         }, 0);
@@ -237,6 +266,16 @@ function koreBotChat() {
     chatWindow.prototype.formatMessages = function (msgContainer){
     /*adding target to a tags */
         $(msgContainer).find('a').attr('target','_blank');
+    };
+    
+    chatWindow.prototype.openPopup = function(link_url){
+        var me = this;
+        var popupHtml = $(me.getChatTemplate("popup")).tmpl({
+            "link_url":link_url
+        });
+        $(me.config.container).append(popupHtml);
+        me.popupOpened = true;
+        me.bindIframeEvents($(popupHtml));
     };
 
     chatWindow.prototype.getChatTemplate = function (tempType) {
@@ -280,13 +319,24 @@ function koreBotChat() {
 			{{/each}} \
 			{{/if}} \
 		</scipt>';
-
+        
+        var popupTemplate = '<script id="kore_popup_tmpl" type="text/x-jquery-tmpl"> \
+                <div class="kore-auth-layover">\\n\
+                    <div class="kore-auth-popup"> \
+                        <div class="popup_controls"><span class="close-popup" title="Close">&times;</span></div> \
+                        <iframe id="authIframe" src="${link_url}"></iframe> \
+                    </div> \
+                </div>\
+        </script>';
         if (tempType === "message") {
             return msgTemplate;
+        } else if(tempType === "popup"){
+            return popupTemplate;
         } else {
             return chatWindowTemplate;
         }
     };
+    
     var chatInitialize;
 
     this.show = function (cfg) {
