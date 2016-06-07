@@ -19,23 +19,50 @@
     box-sizing: border-box;
 }
 
+.kore-chat-overlay {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1020;
+    background: rgba(255,255,255,0.8);
+    display: none;
+}
+
 .kore-chat-window{
     position: fixed;
-    bottom: 2px;
-    right: 2px;
-    min-width: 350px;
-    min-height: 450px;
+    bottom: 10px;
+    right: 10px;
+    width: 400px;   
+    min-width: 400px;
+    max-height: 90%;
+    height: 90%;
+    min-height: 200px;
     border: 1px solid #EEEEEE;
     background: white;
+    box-shadow: 0 10px 25px 0 rgba(0,0,0,.2);
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
+    z-index: 1030;
 }
+
+.kore-chat-window.expanded{
+    min-width: 330px;
+    width: 50%!important;
+    bottom:10px!important;
+    top: auto!important;
+    left:auto!important;
+    right: 10px!important;
+    box-shadow: 0 10px 25px 0 rgba(0,0,0,.2);
+}
+
 .kore-chat-window.minimize{
     min-height: 48px!important;
     height: 48px!important;
     width: auto!important;
-    min-width: auto;
+    min-width: auto!important;
     bottom:20px!important;
     top: auto!important;
     left:auto!important;
@@ -117,8 +144,10 @@
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    cursor: move;
     float: left;
+}
+.kore-chat-header  .header-title.ui-draggable-handle{
+    cursor: move;   
 }
 .kore-chat-header .chat-box-controls{
     width: auto;
@@ -132,10 +161,10 @@
 }
 .kore-chat-header .chat-box-controls button{
     cursor: pointer;
-    color: #909090;
+    color: #AAAAAA;
     background: none;
     border: none;
-    opacity: 0.6;
+    opacity: 1;
     outline: none;
     font-size: 29px;
 }
@@ -145,10 +174,14 @@
     display: table-cell;
     vertical-align: top;
 }
-
-.kore-chat-header .chat-box-controls button:not(.disabled):hover{
-    opacity: 1;
+.kore-chat-header .chat-box-controls .expand-btn span{
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAOCAAAAAADRMNWAAAAAnRSTlMAAHaTzTgAAABWSURBVAjXdY+xDYAwDAS9/yhXJWWwZDFABgDBDklhiZaSp8h3d9IVb7ZcB+pUE1CGcPpfpNNcReBptxTXntrHIXQ+6cTHo2wNTxX82EZBA7NZgb6+9AJNFjJH3aM64AAAAABJRU5ErkJggg==);
+    display: inline-block;
+    width: 16px;
+    height: 17px;
+    background-repeat: no-repeat;
 }
+
 .kore-chat-window .kore-chat-body{
     position: absolute;
     width: 100%;
@@ -366,7 +399,7 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     top: 0;
     width: 100%;
     height: 100%;
-    z-index: 1000;
+    z-index: 1100;
     background: rgba(0,0,0,0.3);
 }
 

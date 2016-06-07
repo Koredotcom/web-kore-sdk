@@ -58,6 +58,7 @@ function koreBotChat() {
 
     chatWindow.prototype.destroy = function () {
         var me = this;
+        $('.kore-chat-overlay').hide();
         if (me.config && me.config.chatContainer) {
             me.config.chatContainer.remove();
         }
@@ -122,19 +123,57 @@ function koreBotChat() {
             if (me.minimized === true) {
                 _chatContainer.removeClass("minimize");
                 me.minimized = false;
-                _chatContainer.draggable({
-                    handle: _chatContainer.find(".kore-chat-header .header-title"),
-                    containment: "html"
-                });
+                if(me.expanded === false){
+                    _chatContainer.draggable({
+                        handle: _chatContainer.find(".kore-chat-header .header-title"),
+                        containment: "html"
+                    });
+                }
             } else
             {
                 _chatContainer.addClass("minimize");
-                _chatContainer.draggable("destroy");
+                if(me.expanded === false && _chatContainer.hasClass("ui-draggable")) {
+                    _chatContainer.draggable("destroy");
+                }
                 _chatContainer.find('.minimized-title').html("Talk to "+ me.config.chatTitle);
                 me.minimized = true;
             }
         });
-
+        
+        _chatContainer.off('click', '.expand-btn').on('click', '.expand-btn', function (event) {
+            if($('.kore-chat-overlay').length === 0) {
+                $(me.config.container).append('<div class="kore-chat-overlay"></div>');
+            }
+            if (me.expanded === true) {
+                $('.kore-chat-overlay').hide();
+                $(this).attr('title',"Expand");
+                _chatContainer.removeClass("expanded");
+                me.expanded = false;
+                _chatContainer.draggable({
+                    handle: _chatContainer.find(".kore-chat-header .header-title"),
+                    containment: "html"
+                }).resizable({
+                        handles: "n, e, w, s",
+                        containment: "parent"
+                });
+            } else {
+                $('.kore-chat-overlay').show();
+                $(this).attr('title',"Collapse");
+                _chatContainer.addClass("expanded");
+                _chatContainer.draggable("destroy").resizable("destroy");
+                me.expanded = true;
+            }
+            var container_pos_left = _chatContainer.position().left + _chatContainer.width();
+            if(container_pos_left > $(window).width()){
+                _chatContainer.css('left',_chatContainer.position().left - (container_pos_left - $(window).width() + 10)  + "px" );
+            }
+        });
+        $('body').on('click','.kore-chat-overlay, .kore-chat-window .minimize-btn',function(){
+            if(me.expanded === true){
+                $('.kore-chat-window .expand-btn').trigger('click');
+            }
+        });
+        
         _chatContainer.off('click', '.minimized').on('click', '.minimized,.minimized-title', function (event) {
             _chatContainer.removeClass("minimize");
             me.minimized = false;
@@ -290,6 +329,7 @@ function koreBotChat() {
 					<div class="chat-box-controls"> \
                                                 <button class="reload-btn" title="Reconnect">&#10227;</button> \
 						<button class="minimize-btn" title="Minimize">&minus;</button> \
+                                                <button class="expand-btn" title="Expand"><span></span></button>\
 						<button class="close-btn" title="Close">&times;</button> \
 					</div> \
 				</div> \
@@ -317,7 +357,7 @@ function koreBotChat() {
 		</scipt>';
         
         var popupTemplate = '<script id="kore_popup_tmpl" type="text/x-jquery-tmpl"> \
-                <div class="kore-auth-layover">\\n\
+                <div class="kore-auth-layover">\
                     <div class="kore-auth-popup"> \
                         <div class="popup_controls"><span class="close-popup" title="Close">&times;</span></div> \
                         <iframe id="authIframe" src="${link_url}"></iframe> \
