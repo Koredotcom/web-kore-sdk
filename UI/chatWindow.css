@@ -14,9 +14,9 @@
 
 /*code for kore chat window*/
 .kore-chat-window *{
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .kore-chat-window{
@@ -26,6 +26,7 @@
     min-width: 350px;
     min-height: 450px;
     border: 1px solid #EEEEEE;
+    background: white;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
@@ -40,6 +41,7 @@
     left:auto!important;
     right: 20px!important;
     border: none;
+    background:none;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
@@ -138,7 +140,10 @@
     font-size: 29px;
 }
 .kore-chat-header .chat-box-controls .reload-btn{
-    font-size:26px;
+    font-size:17px;
+    font-weight: bold;
+    display: table-cell;
+    vertical-align: top;
 }
 
 .kore-chat-header .chat-box-controls button:not(.disabled):hover{
@@ -278,17 +283,26 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
 }	
 
 .kore-chat-window .kore-chat-footer .chatInputBox{
-    width: 80%;
-    padding: 10px 0;
+    width: 100%;
+    padding: 2px 0;
     outline: none;
     display: block;
     font-size: 16px;
     cursor: text;
+    margin-bottom: 16px;
     max-height: 70px;
     overflow-x: hidden;
     overflow-y: auto;
 }
-.kore-chat-window .kore-chat-footer .sendChat{
+.kore-chat-window .kore-chat-footer .chatSendMsg{
+    font-size: 14px;
+    color: #AAA;
+    position: absolute;
+    bottom: -20px;
+    right: 0;
+}
+
+/*.kore-chat-window .kore-chat-footer .sendChat{
     position: absolute;
     top: 50%;
     right: 0;
@@ -307,7 +321,8 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
 .kore-chat-window .kore-chat-footer .sendChat.disabled{
     background: whitesmoke!important;
     color: lightgray!important;
-}
+}*/
+
 @keyframes message-left {
     0% {
         transform: translate3d(-15%, 5%, 0) scale3d(1, 1, 1);

@@ -82,13 +82,9 @@ function koreBotChat() {
         });
 
         _chatContainer.off('keyup', '.chatInputBox').on('keyup', '.chatInputBox', function (event) {
-            var _this = $(this);
-            if (_this.text().trim() === "") {
-                _chatContainer.find('.sendChat').addClass("disabled");
-            } else
-            {
-                _chatContainer.find('.sendChat').removeClass("disabled");
-            }
+            var _footerContainer = $(me.config.container).find('.kore-chat-footer');
+            var _bodyContainer = $(me.config.container).find('.kore-chat-body');
+            _bodyContainer.css('bottom', _footerContainer.outerHeight());
         });
         _chatContainer.off('keydown', '.chatInputBox').on('keydown', '.chatInputBox', function (event) {
             var _this = $(this);
@@ -282,7 +278,7 @@ function koreBotChat() {
         var chatFooterTemplate =
                 '<div class="footerContainer pos-relative"> \
 			<div class="chatInputBox" contenteditable="true" placeholder="${botMessages.message}"></div> \
-			<div class="sendChat disabled">&#8626;</div> \
+			<div class="chatSendMsg">Press enter to send</div> \
 		</div>';
 
         var chatWindowTemplate = '<script id="chat_window_tmpl" type="text/x-jqury-tmpl"> \
