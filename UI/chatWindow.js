@@ -59,6 +59,7 @@ function koreBotChat() {
     chatWindow.prototype.destroy = function () {
         var me = this;
         $('.kore-chat-overlay').hide();
+        bot.close();
         if (me.config && me.config.chatContainer) {
             me.config.chatContainer.remove();
         }
@@ -68,6 +69,7 @@ function koreBotChat() {
         var me = this;
         me.config.chatContainer.find('.kore-chat-header .header-title').html( me.config.botMessages.reconnecting);
         me.config.chatContainer.find('.chat-container').html("");
+        bot.close();
         bot.init(me.config.botOptions);
     };
 
@@ -374,6 +376,13 @@ function koreBotChat() {
     };
     
     var chatInitialize;
+    
+    window.onbeforeunload = function(){
+        if (chatInitialize && $(chatInitialize.config.chatContainer).length > 0) {
+            chatInitialize.destroy();
+            return null;
+        }
+    }
 
     this.show = function (cfg) {
         if ($('body').find('.kore-chat-window').length > 0)
