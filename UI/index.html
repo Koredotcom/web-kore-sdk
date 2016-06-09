@@ -15,7 +15,7 @@
 
 				// Client has to fill the claims and call the callback.
 				$.ajax({
-					url: "http://devbots.kore.com/api/users/sts",
+					url: "https://devbots.kore.com/api/users/sts",
 					type: 'post',
 					headers: {
 						Authorization: "bearer xyz------"
@@ -30,7 +30,7 @@
 
 			var botOptions = {};
 			botOptions.logLevel = 'debug';
-			botOptions.koreAPIUrl = "http://devbots.kore.com/api/";
+			botOptions.koreAPIUrl = "https://devbots.kore.com/api/";
 			botOptions.assertionFn = assertion;
 			botOptions.isLoggedIn = false; // false: triggers anonymus flow. set it to true for log-in flow.
 			botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149";
