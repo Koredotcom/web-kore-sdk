@@ -38,6 +38,12 @@ KoreBot.prototype.onMessage = function(msg) {
 	this.emit(RTM_EVENTS.MESSAGE, msg);
 };
 
+KoreBot.prototype.close = function() {
+	if (this.RtmClient) {
+		this.RtmClient._close();
+	}
+};
+
 KoreBot.prototype.onHistory = function(err, data) {
 
 };
@@ -75,7 +81,7 @@ KoreBot.prototype.logIn = function(err, data) {
 		this.claims = data.assertion;
 		this.WebClient = new clients.KoreWebClient({}, this.options);
 		this.WebClient.claims = this.claims;
-		this.WebClient.login.login({"assertion":data.assertion}, bind(this.onLogIn, this));
+		this.WebClient.login.login({"assertion":data.assertion,"botInfo":this.options.botInfo}, bind(this.onLogIn, this));
 	}
 
 };
@@ -118,7 +124,8 @@ KoreBot.prototype.anonymous = function(options){
 	this.WebClient = new clients.KoreWebClient({}, this.options);
 	this.WebClient.claims = this.claims;
 	this.WebClient.anonymouslogin.login({
-		"assertion": options.assertion
+		"assertion": options.assertion,
+		"botInfo":this.options.botInfo
 	}, bind(this.onLogIn, this));
 
 };
@@ -556,6 +563,11 @@ KoreRTMClient.prototype._onStart = function _onStart(err, data) {
   }
 };
 
+//To close the ws on refresh,close, and on logout.
+KoreRTMClient.prototype._close = function _close() {
+  this.autoReconnect = false;
+  this._safeDisconnect();
+};
 
 KoreRTMClient.prototype._safeDisconnect = function _safeDisconnect() {
   if (this.ws) {
