@@ -48,7 +48,7 @@
         // assign botoptions to chatWindow config
         var chatConfig={
 			botOptions:botOptions,
-			// its opens authentication links in popup window , default value "false"
+			// if true opens authentication links in popup window , default value "false"
 			allowIframe : true
 		};
 
