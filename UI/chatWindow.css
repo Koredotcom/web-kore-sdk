@@ -51,6 +51,7 @@
 .kore-chat-window.expanded{
     min-width: 330px;
     width: 50%!important;
+    min-height: 90%;
     bottom:10px!important;
     top: auto!important;
     left:auto!important;
@@ -167,12 +168,13 @@
     opacity: 1;
     outline: none;
     font-size: 29px;
+    vertical-align: top;
+    height: 51px;
+    line-height: inherit;
 }
 .kore-chat-header .chat-box-controls .reload-btn{
     font-size:17px;
     font-weight: bold;
-    display: table-cell;
-    vertical-align: top;
 }
 .kore-chat-header .chat-box-controls .expand-btn span{
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAOCAAAAAADRMNWAAAAAnRSTlMAAHaTzTgAAABWSURBVAjXdY+xDYAwDAS9/yhXJWWwZDFABgDBDklhiZaSp8h3d9IVb7ZcB+pUE1CGcPpfpNNcReBptxTXntrHIXQ+6cTHo2wNTxX82EZBA7NZgb6+9AJNFjJH3aM64AAAAABJRU5ErkJggg==);
