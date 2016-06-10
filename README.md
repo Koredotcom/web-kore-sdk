@@ -22,7 +22,7 @@
     -   function assertion(options, callback) {
         //client has to fill the claims and call the callback.
         $.ajax({
-        url: "http://hostname/api/users/sts", //client api which should return the signed jwt token.
+        url: "https://hostname/api/users/sts", //client api which should return the signed jwt token.
          type: 'post',
          headers: {
             Authorization: "bearer K*****************************8"
@@ -37,10 +37,11 @@
 #### 5. Initialize the Bot
         //Define the bot options
         var botOptions = {};
-        botOptions.koreAPIUrl = "http://devbots.kore.com/api/"; 
+        botOptions.koreAPIUrl = "https://devbots.kore.com/api/"; 
         botOptions.assertionFn = assertion;
-        botOptions.isLoggedIn = true;
-        botOptions.botInfo = {chatBot:"Kora",taskBotId :"u-*********"};  
+        botOptions.isLoggedIn = false; // false: triggers anonymus user flow. set it to true for log-in user flow.
+        botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // issued by the kore on client app registration.
+        botOptions.botInfo = {chatBot:"Kora",taskBotId :"st-*********"};  
         // Assign Bot options to chatWindow config
         var chatConfig={
 			botOptions:botOptions,
@@ -60,10 +61,11 @@
 #### 2. Initialize the Bot
         //define the bot options
         var botOptions = {}; 
-        botOptions.koreAPIUrl = "http://devbots.kore.com/api/"; 
+        botOptions.koreAPIUrl = "https://devbots.kore.com/api/"; 
         botOptions.assertionFn = assertion;
-        botOptions.isLoggedIn = true;
-        botOptions.botInfo = {chatBot:"Kora",taskBotId :"u-*********"};  
+        botOptions.isLoggedIn = false; // false: triggers anonymus user flow. set it to true for log-in user flow.
+        botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // issued by the kore on client app registration.
+        botOptions.botInfo = {chatBot:"Kora",taskBotId :"st-*********"};  
         var bot = require('/KoreBot.js').instance(); //initialize the bot.
         bot.init(botOptions); // bot instance created.
         bot.destroy(); // Destroy bot instance 
