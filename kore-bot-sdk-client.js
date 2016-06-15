@@ -7,6 +7,14 @@ var isFunction = require('lodash').isFunction;
 var RTM_CLIENT_EVENTS = clients.CLIENT_EVENTS.RTM;
 var RTM_EVENTS = clients.RTM_EVENTS;
 
+if(typeof window !== "undefined"){
+	window.kore = window.kore || {};
+	window.kore.botsdk = window.kore.botsdk || {};
+	window.kore.botsdk.logger = window.kore.botsdk.logger || require("debug");
+}
+
+var debug = require("debug")("botsdk:KoreBot");
+
 function KoreBot() {
 	EventEmitter.call(this);
 	this.WebClient = null;
@@ -21,7 +29,11 @@ KoreBot.prototype.emit = function emit() {
   KoreBot.super_.prototype.emit.apply(this, arguments);
 };
 
+/*
+sends a message to bot.
+*/
 KoreBot.prototype.sendMessage = function(message,optCb) {
+	debug("sending message to bot");
 	if(this.initialized){
 		message["resourceid"] = '/bot.message';
 		message["botInfo"] = this.options.botInfo || {};
@@ -34,49 +46,83 @@ KoreBot.prototype.sendMessage = function(message,optCb) {
 	
 };
 
+/*
+emits a message event on message from the server.
+*/
 KoreBot.prototype.onMessage = function(msg) {
+	debug("on message from bot/self");
 	this.emit(RTM_EVENTS.MESSAGE, msg);
 };
 
+/*
+close's the WS connection.
+*/
 KoreBot.prototype.close = function() {
+	debug("request to close ws connection");
 	if (this.RtmClient) {
 		this.RtmClient._close();
 	}
 };
 
+/*
+*/
 KoreBot.prototype.onHistory = function(err, data) {
+	debug("on history");
 
 };
 
+/*
+gets the history of the conversation.
+*/
 KoreBot.prototype.getHistory = function(options) {
-	//@@TODO --??
-
+	debug("get history");
 	this.WebClient.history.history({}, bind(this.onHistory, this));
 };
 
+/*
+*/
 KoreBot.prototype.sync = function(options) {
 	//@@TODO --??
 };
 
+/*
+emits the open event on WS connection established.
+*/
 KoreBot.prototype.onOpenWSConnection = function(msg) {
+	debug("opened WS Connection");
 	this.initialized = true;
 	this.emit(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, {});
 };
 
+/*
+initializes the rtmclient and binds the cb's for ws events.
+*/
 KoreBot.prototype.onLogIn = function(err, data) {
-	this.accessToken = data.authorization.accessToken;
-	this.options.accessToken = this.accessToken;
-	this.WebClient.user.accessToken = this.accessToken;
-	this.RtmClient = new clients.KoreRtmClient({}, this.options);
-	this.RtmClient.start({"botInfo":this.options.botInfo});
-	this.RtmClient.on(RTM_EVENTS.MESSAGE,bind(this.onMessage, this));
-	this.RtmClient.on(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED,bind(this.onOpenWSConnection, this));
+	debug("sign-in/anonymous user onLogin");
+	if (err) {
+        console.error(err && err.stack);
+	} else {
+		this.accessToken = data.authorization.accessToken;
+		this.options.accessToken = this.accessToken;
+		this.WebClient.user.accessToken = this.accessToken;
+		this.RtmClient = new clients.KoreRtmClient({}, this.options);
+		this.RtmClient.start({
+			"botInfo": this.options.botInfo
+		});
+		this.RtmClient.on(RTM_EVENTS.MESSAGE, bind(this.onMessage, this));
+		this.RtmClient.on(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, bind(this.onOpenWSConnection, this));
+	}
 };
 
+/*
+validates the JWT claims and issue's access token for valid user.
+*/
 KoreBot.prototype.logIn = function(err, data) {
 	if (err) {
-            //TODO::??
+		debug("error in assertionFn %s",err);
+		console.error("error in assertionFn",err && err.stack);
 	} else {
+		debug("signed-in user login");
 		this.options = data;
 		this.claims = data.assertion;
 		this.WebClient = new clients.KoreWebClient({}, this.options);
@@ -86,25 +132,29 @@ KoreBot.prototype.logIn = function(err, data) {
 
 };
 
-KoreBot.prototype.generateUUID  = function() {
-    var d = new Date().getTime();
-    if(window.performance && typeof window.performance.now === "function"){
-        d += performance.now(); //use high-precision timer if available
-    }
-    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = (d + Math.random()*16)%16 | 0;
-        d = Math.floor(d/16);
-        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
-    });
-    return uuid;
+/*
+generates the UUID for anonymous user.
+*/
+KoreBot.prototype.generateUUID = function() {
+	debug("generate UUID");
+	var d = new Date().getTime();
+	if (window.performance && typeof window.performance.now === "function") {
+		d += performance.now(); //use high-precision timer if available
+	}
+	var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+		var r = (d + Math.random() * 16) % 16 | 0;
+		d = Math.floor(d / 16);
+		return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+	});
+	return uuid;
 };
 
-
+/*
+validates the claims and returns the access token for this session.
+*/
 KoreBot.prototype.anonymous = function(options){
+	debug("anonymous user login");
 	var korecookie = localStorage.getItem("korecom");
-    // if(korecookie) 
-    // 	korecookie = JSON.parse(korecookie);
-
 	var uuid = (korecookie) || this.generateUUID();
 
 	localStorage.setItem("korecom", uuid);
@@ -130,40 +180,31 @@ KoreBot.prototype.anonymous = function(options){
 
 };
 
-
 /*
-Example of options ::
-{
-	assertion : function(options,callBack){
-	
-	},
-	isLoggedIn : true/false,
-	clientId  : "sadhash123",
-	orgId     : "1125rtrrt"
-}
+initializes the bot set up.
 */
 KoreBot.prototype.init = function(options) {
 	options = options || {};
 	this.options = options;
 	if(options.isLoggedIn){
+		debug("isLoggedIn is true");
 		if(isFunction(options.assertionFn)){
 			options.assertionFn(options,bind(this.logIn, this));
 		}else{
-         //TODO::??
+			debug("assertion is not a function");
+			console.error("assertion is not a function");
 		}
 
 	}else{
+		  debug("isLoggedIn is false");
           this.anonymous(options);
-         //TODO::??
 	}
 };
-
-
 
 module.exports.instance = function(){
 	return new KoreBot();
 };
-},{"./index.js":1,"events":25,"inherits":19,"lodash":20}],1:[function(require,module,exports){
+},{"./index.js":1,"debug":19,"events":28,"inherits":21,"lodash":22}],1:[function(require,module,exports){
 var events = require('./lib/clients/events');
 
 module.exports= {
@@ -291,7 +332,7 @@ BaseAPIClient.prototype.makeAPICall = function makeAPICall(endpoint, optData, op
 
 module.exports = BaseAPIClient;
 
-},{"./events/client":3,"./helpers":7,"./transports/request":9,"async":17,"events":25,"inherits":19,"lodash":20,"retry":21,"url-join":24}],3:[function(require,module,exports){
+},{"./events/client":3,"./helpers":7,"./transports/request":9,"async":17,"events":28,"inherits":21,"lodash":22,"retry":24,"url-join":27}],3:[function(require,module,exports){
 /**
  * API client events.
  */
@@ -449,13 +490,13 @@ var getAPICallArgs = function getAPICallArgs(token, optData, optCb) {
 module.exports.getData = getData;
 module.exports.getAPICallArgs = getAPICallArgs;
 
-},{"lodash":20}],8:[function(require,module,exports){
+},{"lodash":22}],8:[function(require,module,exports){
 var bind = require('lodash').bind;
 var cloneDeep = require('lodash').cloneDeep;
 var contains = require('lodash').contains;
 var inherits = require('inherits');
 var isUndefined = require('lodash').isUndefined;
-
+var debug = require("debug")("botsdk:KoreRTMClient");
 
 var RTM_API_EVENTS = require('../events/rtm').EVENTS;
 var RTM_CLIENT_INTERNAL_EVENT_TYPES = [
@@ -540,6 +581,7 @@ KoreRTMClient.prototype._onStart = function _onStart(err, data) {
     console.log(e && e.stack);
   }
   if (err || !data.url) {
+    debug("error or no url in response %s", err || "no url");
     this.emit(CLIENT_EVENTS.UNABLE_TO_RTM_START, err || data.error);
 
     // Any of these mean this client is unusable, so don't attempt to auto-reconnect
@@ -554,7 +596,7 @@ KoreRTMClient.prototype._onStart = function _onStart(err, data) {
     }
   } else {
     if(__reconnect__){
-      data.url = data.url + "&isReconnect=true"
+      data.url = data.url + "&isReconnect=true";
     }
     this.authenticated = true;
     //this.activeUserId = data.self.id;
@@ -582,6 +624,7 @@ KoreRTMClient.prototype._safeDisconnect = function _safeDisconnect() {
 
 
 KoreRTMClient.prototype.connect = function connect(socketUrl) {
+  debug("connecting");
   this.emit(CLIENT_EVENTS.WS_OPENING,{});
   this.ws = this._socketFn(socketUrl);
   this.ws.onopen = bind(this.handleWsOpen, this);
@@ -592,6 +635,7 @@ KoreRTMClient.prototype.connect = function connect(socketUrl) {
 };
 
 KoreRTMClient.prototype.disconnect = function disconnect(optErr, optCode) {
+  debug("disconnecting");
   this.emit(CLIENT_EVENTS.DISCONNECT, optErr, optCode);
   this.autoReconnect = false;
   this._safeDisconnect();
@@ -599,6 +643,7 @@ KoreRTMClient.prototype.disconnect = function disconnect(optErr, optCode) {
 
 
 KoreRTMClient.prototype.reconnect = function reconnect() {
+  debug("reconnecting");
   console.log("in reconnect");
 
   if (!this._reconnecting) {
@@ -615,6 +660,7 @@ KoreRTMClient.prototype.reconnect = function reconnect() {
 
 
 KoreRTMClient.prototype.handleWsOpen = function handleWsOpen() {
+  debug("connected");
   this.connected = true;
   this.emit('open',{data:{}});
   this._connAttempts = 0;  
@@ -669,6 +715,7 @@ KoreRTMClient.prototype._handleWsMessageViaEventHandler = function _handleWsMess
 };
 
 KoreRTMClient.prototype.handleWsError = function handleWsError(err) {
+  debug("web socket error::%s",err);
   this.emit(CLIENT_EVENTS.WS_ERROR, err);
 };
 
@@ -682,6 +729,7 @@ KoreRTMClient.prototype.handleWsClose = function handleWsClose(code, reason) {
       this.reconnect();
     }
   } else {
+    debug("websocket closed with auto-reconnect false on the RTM client");
     this.disconnect('websocket closed with auto-reconnect false on the RTM client');
   }
 };
@@ -722,6 +770,7 @@ KoreRTMClient.prototype.send = function send(message, optCb) {
     });
   } else {
     err = 'ws not connected, unable to send message';
+    debug(err);
     if (!isUndefined(optCb)) {
       optCb(new Error(err));
     }
@@ -731,7 +780,7 @@ KoreRTMClient.prototype.send = function send(message, optCb) {
 
 module.exports = KoreRTMClient;
 
-},{"../client":2,"../events/client":3,"../events/rtm":5,"../events/utils":6,"../transports/ws":10,"../web/apis":13,"inherits":19,"lodash":20}],9:[function(require,module,exports){
+},{"../client":2,"../events/client":3,"../events/rtm":5,"../events/utils":6,"../transports/ws":10,"../web/apis":13,"debug":19,"inherits":21,"lodash":22}],9:[function(require,module,exports){
 /**
  * Simple transport using the node request library.
  */
@@ -778,7 +827,7 @@ var requestTransport = function requestTransport(args, cb) {
 
 module.exports.requestTransport = requestTransport;
 
-},{"browser-request":18,"lodash":20}],10:[function(require,module,exports){
+},{"browser-request":18,"lodash":22}],10:[function(require,module,exports){
 
 var wsTransport = function wsTransport(socketUrl, opts) {
   var wsTransportOpts = opts || {};
@@ -817,7 +866,7 @@ AnonymousLogin.prototype.login = function login(opts, optCb) {
 
 
 module.exports = AnonymousLogin;
-},{"./BaseApi":11,"inherits":19}],13:[function(require,module,exports){
+},{"./BaseApi":11,"inherits":21}],13:[function(require,module,exports){
 module.exports = {
   RtmApi: require('./rtm.js'),
   LogInApi: require('./login.js'),
@@ -845,7 +894,7 @@ LogInApi.prototype.login = function login(opts, optCb) {
 
 
 module.exports = LogInApi;
-},{"./BaseApi":11,"inherits":19}],15:[function(require,module,exports){
+},{"./BaseApi":11,"inherits":21}],15:[function(require,module,exports){
 var BaseApi = require('./BaseApi');
 var inherits = require('inherits');
 
@@ -867,7 +916,7 @@ RtmApi.prototype.start = function start(opts, optCb) {
 
 module.exports = RtmApi;
 
-},{"./BaseApi":11,"inherits":19}],16:[function(require,module,exports){
+},{"./BaseApi":11,"inherits":21}],16:[function(require,module,exports){
 var bind = require('lodash').bind;
 var forEach = require('lodash').forEach;
 var inherits = require('inherits');
@@ -905,7 +954,7 @@ WebAPIClient.prototype._createFacets = function _createFacets() {
 
 module.exports = WebAPIClient;
 
-},{"../client":2,"./apis/index":13,"inherits":19,"lodash":20}],17:[function(require,module,exports){
+},{"../client":2,"./apis/index":13,"inherits":21,"lodash":22}],17:[function(require,module,exports){
 (function (process,global){
 /*!
  * async
@@ -2174,7 +2223,7 @@ module.exports = WebAPIClient;
 }());
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":26}],18:[function(require,module,exports){
+},{"_process":29}],18:[function(require,module,exports){
 // Browser Request
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -2671,6 +2720,375 @@ function b64_enc (data) {
 //UMD FOOTER END
 
 },{}],19:[function(require,module,exports){
+
+/**
+ * This is the web browser implementation of `debug()`.
+ *
+ * Expose `debug()` as the module.
+ */
+
+exports = module.exports = require('./debug');
+exports.log = log;
+exports.formatArgs = formatArgs;
+exports.save = save;
+exports.load = load;
+exports.useColors = useColors;
+exports.storage = 'undefined' != typeof chrome
+               && 'undefined' != typeof chrome.storage
+                  ? chrome.storage.local
+                  : localstorage();
+
+/**
+ * Colors.
+ */
+
+exports.colors = [
+  'lightseagreen',
+  'forestgreen',
+  'goldenrod',
+  'dodgerblue',
+  'darkorchid',
+  'crimson'
+];
+
+/**
+ * Currently only WebKit-based Web Inspectors, Firefox >= v31,
+ * and the Firebug extension (any Firefox version) are known
+ * to support "%c" CSS customizations.
+ *
+ * TODO: add a `localStorage` variable to explicitly enable/disable colors
+ */
+
+function useColors() {
+  // is webkit? http://stackoverflow.com/a/16459606/376773
+  return ('WebkitAppearance' in document.documentElement.style) ||
+    // is firebug? http://stackoverflow.com/a/398120/376773
+    (window.console && (console.firebug || (console.exception && console.table))) ||
+    // is firefox >= v31?
+    // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
+    (navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31);
+}
+
+/**
+ * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
+ */
+
+exports.formatters.j = function(v) {
+  return JSON.stringify(v);
+};
+
+
+/**
+ * Colorize log arguments if enabled.
+ *
+ * @api public
+ */
+
+function formatArgs() {
+  var args = arguments;
+  var useColors = this.useColors;
+
+  args[0] = (useColors ? '%c' : '')
+    + this.namespace
+    + (useColors ? ' %c' : ' ')
+    + args[0]
+    + (useColors ? '%c ' : ' ')
+    + '+' + exports.humanize(this.diff);
+
+  if (!useColors) return args;
+
+  var c = 'color: ' + this.color;
+  args = [args[0], c, 'color: inherit'].concat(Array.prototype.slice.call(args, 1));
+
+  // the final "%c" is somewhat tricky, because there could be other
+  // arguments passed either before or after the %c, so we need to
+  // figure out the correct index to insert the CSS into
+  var index = 0;
+  var lastC = 0;
+  args[0].replace(/%[a-z%]/g, function(match) {
+    if ('%%' === match) return;
+    index++;
+    if ('%c' === match) {
+      // we only are interested in the *last* %c
+      // (the user may have provided their own)
+      lastC = index;
+    }
+  });
+
+  args.splice(lastC, 0, c);
+  return args;
+}
+
+/**
+ * Invokes `console.log()` when available.
+ * No-op when `console.log` is not a "function".
+ *
+ * @api public
+ */
+
+function log() {
+  // this hackery is required for IE8/9, where
+  // the `console.log` function doesn't have 'apply'
+  return 'object' === typeof console
+    && console.log
+    && Function.prototype.apply.call(console.log, console, arguments);
+}
+
+/**
+ * Save `namespaces`.
+ *
+ * @param {String} namespaces
+ * @api private
+ */
+
+function save(namespaces) {
+  try {
+    if (null == namespaces) {
+      exports.storage.removeItem('debug');
+    } else {
+      exports.storage.debug = namespaces;
+    }
+  } catch(e) {}
+}
+
+/**
+ * Load `namespaces`.
+ *
+ * @return {String} returns the previously persisted debug modes
+ * @api private
+ */
+
+function load() {
+  var r;
+  try {
+    r = exports.storage.debug;
+  } catch(e) {}
+  return r;
+}
+
+/**
+ * Enable namespaces listed in `localStorage.debug` initially.
+ */
+
+exports.enable(load());
+
+/**
+ * Localstorage attempts to return the localstorage.
+ *
+ * This is necessary because safari throws
+ * when a user disables cookies/localstorage
+ * and you attempt to access it.
+ *
+ * @return {LocalStorage}
+ * @api private
+ */
+
+function localstorage(){
+  try {
+    return window.localStorage;
+  } catch (e) {}
+}
+
+},{"./debug":20}],20:[function(require,module,exports){
+
+/**
+ * This is the common logic for both the Node.js and web browser
+ * implementations of `debug()`.
+ *
+ * Expose `debug()` as the module.
+ */
+
+exports = module.exports = debug;
+exports.coerce = coerce;
+exports.disable = disable;
+exports.enable = enable;
+exports.enabled = enabled;
+exports.humanize = require('ms');
+
+/**
+ * The currently active debug mode names, and names to skip.
+ */
+
+exports.names = [];
+exports.skips = [];
+
+/**
+ * Map of special "%n" handling functions, for the debug "format" argument.
+ *
+ * Valid key names are a single, lowercased letter, i.e. "n".
+ */
+
+exports.formatters = {};
+
+/**
+ * Previously assigned color.
+ */
+
+var prevColor = 0;
+
+/**
+ * Previous log timestamp.
+ */
+
+var prevTime;
+
+/**
+ * Select a color.
+ *
+ * @return {Number}
+ * @api private
+ */
+
+function selectColor() {
+  return exports.colors[prevColor++ % exports.colors.length];
+}
+
+/**
+ * Create a debugger with the given `namespace`.
+ *
+ * @param {String} namespace
+ * @return {Function}
+ * @api public
+ */
+
+function debug(namespace) {
+
+  // define the `disabled` version
+  function disabled() {
+  }
+  disabled.enabled = false;
+
+  // define the `enabled` version
+  function enabled() {
+
+    var self = enabled;
+
+    // set `diff` timestamp
+    var curr = +new Date();
+    var ms = curr - (prevTime || curr);
+    self.diff = ms;
+    self.prev = prevTime;
+    self.curr = curr;
+    prevTime = curr;
+
+    // add the `color` if not set
+    if (null == self.useColors) self.useColors = exports.useColors();
+    if (null == self.color && self.useColors) self.color = selectColor();
+
+    var args = Array.prototype.slice.call(arguments);
+
+    args[0] = exports.coerce(args[0]);
+
+    if ('string' !== typeof args[0]) {
+      // anything else let's inspect with %o
+      args = ['%o'].concat(args);
+    }
+
+    // apply any `formatters` transformations
+    var index = 0;
+    args[0] = args[0].replace(/%([a-z%])/g, function(match, format) {
+      // if we encounter an escaped % then don't increase the array index
+      if (match === '%%') return match;
+      index++;
+      var formatter = exports.formatters[format];
+      if ('function' === typeof formatter) {
+        var val = args[index];
+        match = formatter.call(self, val);
+
+        // now we need to remove `args[index]` since it's inlined in the `format`
+        args.splice(index, 1);
+        index--;
+      }
+      return match;
+    });
+
+    if ('function' === typeof exports.formatArgs) {
+      args = exports.formatArgs.apply(self, args);
+    }
+    var logFn = enabled.log || exports.log || console.log.bind(console);
+    logFn.apply(self, args);
+  }
+  enabled.enabled = true;
+
+  var fn = exports.enabled(namespace) ? enabled : disabled;
+
+  fn.namespace = namespace;
+
+  return fn;
+}
+
+/**
+ * Enables a debug mode by namespaces. This can include modes
+ * separated by a colon and wildcards.
+ *
+ * @param {String} namespaces
+ * @api public
+ */
+
+function enable(namespaces) {
+  exports.save(namespaces);
+
+  var split = (namespaces || '').split(/[\s,]+/);
+  var len = split.length;
+
+  for (var i = 0; i < len; i++) {
+    if (!split[i]) continue; // ignore empty strings
+    namespaces = split[i].replace(/\*/g, '.*?');
+    if (namespaces[0] === '-') {
+      exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
+    } else {
+      exports.names.push(new RegExp('^' + namespaces + '$'));
+    }
+  }
+}
+
+/**
+ * Disable debug output.
+ *
+ * @api public
+ */
+
+function disable() {
+  exports.enable('');
+}
+
+/**
+ * Returns true if the given mode name is enabled, false otherwise.
+ *
+ * @param {String} name
+ * @return {Boolean}
+ * @api public
+ */
+
+function enabled(name) {
+  var i, len;
+  for (i = 0, len = exports.skips.length; i < len; i++) {
+    if (exports.skips[i].test(name)) {
+      return false;
+    }
+  }
+  for (i = 0, len = exports.names.length; i < len; i++) {
+    if (exports.names[i].test(name)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Coerce `val`.
+ *
+ * @param {Mixed} val
+ * @return {Mixed}
+ * @api private
+ */
+
+function coerce(val) {
+  if (val instanceof Error) return val.stack || val.message;
+  return val;
+}
+
+},{"ms":23}],21:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -2695,7 +3113,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],20:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -15050,9 +15468,136 @@ if (typeof Object.create === 'function') {
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],21:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
+/**
+ * Helpers.
+ */
+
+var s = 1000;
+var m = s * 60;
+var h = m * 60;
+var d = h * 24;
+var y = d * 365.25;
+
+/**
+ * Parse or format the given `val`.
+ *
+ * Options:
+ *
+ *  - `long` verbose formatting [false]
+ *
+ * @param {String|Number} val
+ * @param {Object} options
+ * @return {String|Number}
+ * @api public
+ */
+
+module.exports = function(val, options){
+  options = options || {};
+  if ('string' == typeof val) return parse(val);
+  return options.long
+    ? long(val)
+    : short(val);
+};
+
+/**
+ * Parse the given `str` and return milliseconds.
+ *
+ * @param {String} str
+ * @return {Number}
+ * @api private
+ */
+
+function parse(str) {
+  str = '' + str;
+  if (str.length > 10000) return;
+  var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(str);
+  if (!match) return;
+  var n = parseFloat(match[1]);
+  var type = (match[2] || 'ms').toLowerCase();
+  switch (type) {
+    case 'years':
+    case 'year':
+    case 'yrs':
+    case 'yr':
+    case 'y':
+      return n * y;
+    case 'days':
+    case 'day':
+    case 'd':
+      return n * d;
+    case 'hours':
+    case 'hour':
+    case 'hrs':
+    case 'hr':
+    case 'h':
+      return n * h;
+    case 'minutes':
+    case 'minute':
+    case 'mins':
+    case 'min':
+    case 'm':
+      return n * m;
+    case 'seconds':
+    case 'second':
+    case 'secs':
+    case 'sec':
+    case 's':
+      return n * s;
+    case 'milliseconds':
+    case 'millisecond':
+    case 'msecs':
+    case 'msec':
+    case 'ms':
+      return n;
+  }
+}
+
+/**
+ * Short format for `ms`.
+ *
+ * @param {Number} ms
+ * @return {String}
+ * @api private
+ */
+
+function short(ms) {
+  if (ms >= d) return Math.round(ms / d) + 'd';
+  if (ms >= h) return Math.round(ms / h) + 'h';
+  if (ms >= m) return Math.round(ms / m) + 'm';
+  if (ms >= s) return Math.round(ms / s) + 's';
+  return ms + 'ms';
+}
+
+/**
+ * Long format for `ms`.
+ *
+ * @param {Number} ms
+ * @return {String}
+ * @api private
+ */
+
+function long(ms) {
+  return plural(ms, d, 'day')
+    || plural(ms, h, 'hour')
+    || plural(ms, m, 'minute')
+    || plural(ms, s, 'second')
+    || ms + ' ms';
+}
+
+/**
+ * Pluralization helper.
+ */
+
+function plural(ms, n, name) {
+  if (ms < n) return;
+  if (ms < n * 1.5) return Math.floor(ms / n) + ' ' + name;
+  return Math.ceil(ms / n) + ' ' + name + 's';
+}
+
+},{}],24:[function(require,module,exports){
 module.exports = require('./lib/retry');
-},{"./lib/retry":22}],22:[function(require,module,exports){
+},{"./lib/retry":25}],25:[function(require,module,exports){
 var RetryOperation = require('./retry_operation');
 
 exports.operation = function(options) {
@@ -15148,7 +15693,7 @@ exports.wrap = function(obj, options, methods) {
   }
 };
 
-},{"./retry_operation":23}],23:[function(require,module,exports){
+},{"./retry_operation":26}],26:[function(require,module,exports){
 function RetryOperation(timeouts, retryForever) {
   this._timeouts = timeouts;
   this._fn = null;
@@ -15270,7 +15815,7 @@ RetryOperation.prototype.mainError = function() {
   return mainError;
 };
 
-},{}],24:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 function normalize (str) {
   return str
           .replace(/[\/]+/g, '/')
@@ -15283,7 +15828,7 @@ module.exports = function () {
   var joined = [].slice.call(arguments, 0).join('/');
   return normalize(joined);
 };
-},{}],25:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -15583,7 +16128,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],26:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
