@@ -35,7 +35,7 @@ function koreBotChat() {
         if (cfg && cfg.chatContainer) {
             delete cfg.chatContainer;
         }
-        $.extend(this.config, cfg);
+        this.config = $.extend(this.config, cfg);
         this.init();
     }
 
