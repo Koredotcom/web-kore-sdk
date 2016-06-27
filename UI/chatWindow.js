@@ -5,7 +5,7 @@ function koreBotChat() {
         connecting: "Connecting...",
         reconnecting: "Reconnecting..."
     };
-    var _botInfo = {};
+	
     var helpers = {
         'nl2br': function (str) {
             str = str.replace(/(?:\r\n|\r|\n)/g, '<br />');
@@ -35,15 +35,15 @@ function koreBotChat() {
         if (cfg && cfg.chatContainer) {
             delete cfg.chatContainer;
         }
-        this.config = $.extend({}, this.config, cfg);
+        $.extend(this.config, cfg);
         this.init();
     }
 
     chatWindow.prototype.init = function () {
         var me = this;
-        _botInfo = me.config.botOptions.botInfo;
-        me.config.botOptions.botInfo = {chatBot:_botInfo.name,taskBotId :_botInfo._id};
-        var tempTitle = _botInfo.name;
+        var _botInfo = $.extend({}, me.config.botOptions);
+        _botInfo.botInfo = {chatBot:_botInfo.botInfo.name,taskBotId :_botInfo.botInfo._id};
+        var tempTitle = _botInfo.botInfo.chatBot;
         me.config.botMessages = botMessages;
 
         me.config.chatTitle = me.config.botMessages.connecting;
@@ -51,7 +51,7 @@ function koreBotChat() {
         me.config.chatContainer = chatWindowHtml;
 
         me.config.chatTitle = tempTitle;
-        bot.init(me.config.botOptions);
+        bot.init(_botInfo);
         me.render(chatWindowHtml);
     };
 
@@ -388,6 +388,7 @@ function koreBotChat() {
         {
             return false;
         }
+		delete chatInitialize;
         chatInitialize = new chatWindow(cfg);
         return this;
     };
