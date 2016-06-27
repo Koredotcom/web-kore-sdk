@@ -22,6 +22,7 @@ function KoreBot() {
 	this.options = {};
 	this.accessToken = null;
 	this.initialized = false;
+	this.clients = clients;
 }
 inherits(KoreBot, EventEmitter);
 
@@ -133,71 +134,28 @@ KoreBot.prototype.logIn = function(err, data) {
 };
 
 /*
-generates the UUID for anonymous user.
-*/
-KoreBot.prototype.generateUUID = function() {
-	debug("generate UUID");
-	var d = new Date().getTime();
-	if (window.performance && typeof window.performance.now === "function") {
-		d += performance.now(); //use high-precision timer if available
-	}
-	var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-		var r = (d + Math.random() * 16) % 16 | 0;
-		d = Math.floor(d / 16);
-		return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-	});
-	return uuid;
-};
-
-/*
-validates the claims and returns the access token for this session.
-*/
-KoreBot.prototype.anonymous = function(options){
-	debug("anonymous user login");
-	var korecookie = localStorage.getItem("korecom");
-	var uuid = (korecookie) || this.generateUUID();
-
-	localStorage.setItem("korecom", uuid);
-
-     if(!options.clientId){
-     	console.log("clientId should be there for anonymous user");
-        return;
-     } 	
-     var assertion = {};
-     assertion.issuer    = options.clientId;
-     assertion.subject   = uuid;
-
-     options.assertion = assertion;
-
-	this.options = options;
-	this.claims = options.assertion;
-	this.WebClient = new clients.KoreWebClient({}, this.options);
-	this.WebClient.claims = this.claims;
-	this.WebClient.anonymouslogin.login({
-		"assertion": options.assertion,
-		"botInfo":this.options.botInfo
-	}, bind(this.onLogIn, this));
-
-};
-
-/*
 initializes the bot set up.
 */
 KoreBot.prototype.init = function(options) {
 	options = options || {};
 	this.options = options;
-	if(options.isLoggedIn){
-		debug("isLoggedIn is true");
-		if(isFunction(options.assertionFn)){
-			options.assertionFn(options,bind(this.logIn, this));
-		}else{
+	if (!options.test) {
+		debug("test is false");
+		if (isFunction(options.assertionFn)) {
+			options.assertionFn(options, bind(this.logIn, this));
+		} else {
 			debug("assertion is not a function");
 			console.error("assertion is not a function");
 		}
 
-	}else{
-		  debug("isLoggedIn is false");
-          this.anonymous(options);
+	} else {
+		debug("test is true");
+		if (isFunction(options.assertionFn)) {
+			options.assertionFn.call(this, options);
+		} else {
+			debug("assertion is not a function");
+			console.error("assertion is not a function");
+		}
 	}
 };
 
