@@ -30,8 +30,7 @@ function koreBotChat() {
         this.config = {
             "chatTitle": "Kore Bot Chat",
             "container": "body",
-            "allowIframe": false,
-            "botOptions": cfg.botOptions
+            "allowIframe": false
         };
         if (cfg && cfg.chatContainer) {
             delete cfg.chatContainer;
