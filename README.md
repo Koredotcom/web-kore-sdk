@@ -15,8 +15,10 @@
     -   <script src='UI/libs/jquery.js'></script>
     -   <script src='UI/libs/jquery-ui.min.js'></script>
     -   <script src='UI/libs/jquery.tmpl.min.js'></script>
-#### 3. Include the kore-bot-sdk-client.js & chatWindow.js files 
-    -   <script src='kore-bot-sdk-client.js'></script>
+    -   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+#### 3. Include the kore-bot-sdk-client.js ,anonymousassertion.js & chatWindow.js files 
+    -   <script src='../test/anonymousassertion.js'></script>
+    -   <script src='../kore-bot-sdk-client.js'></script>
     -   <script src='UI/chatWindow.js'></script> // chat ui js
 #### 4. Define the assertion function (Should be defined by the clients)
     -   function assertion(options, callback) {
@@ -39,7 +41,16 @@
         var botOptions = {};
         botOptions.koreAPIUrl = "https://devbots.kore.com/api/"; 
         botOptions.assertionFn = assertion;
-        botOptions.isLoggedIn = false; // false: triggers anonymus user flow. set it to true for log-in user flow.
+        /*
+             Below config:(To support the anonymous user in test environments only.)
+             Case.1:Anonymous User
+                    a. set it to false if the client defined the assertion for Anonymous User.
+                    b. set it to true if the client have not defined the assertion for Anonymous User.
+             Case.2:Logged-In User
+                    a. set it to false if the client defined the assertion.
+        */
+        botOptions.test = true;
+        botOptions.koreAnonymousFn = koreAnonymousFn;
         botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // issued by the kore on client app registration.
         botOptions.botInfo = {chatBot:"Kora",taskBotId :"st-*********"};  
         // Assign Bot options to chatWindow config
@@ -57,13 +68,24 @@
 
 #### 1. Include the kore-bot-sdk-client.js & dependencies
     -   <script src='jquery.js'></script>
-    -   <script src='kore-bot-sdk-client.js'></script>
+    -   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    -   <script src='../test/anonymousassertion.js'></script>
+    -   <script src='../kore-bot-sdk-client.js'></script>
 #### 2. Initialize the Bot
         //define the bot options
         var botOptions = {}; 
         botOptions.koreAPIUrl = "https://devbots.kore.com/api/"; 
         botOptions.assertionFn = assertion;
-        botOptions.isLoggedIn = false; // false: triggers anonymus user flow. set it to true for log-in user flow.
+        /*
+             Below config:(To support the anonymous user in test environments only.)
+             Case.1:Anonymous User
+                    a. set it to false if the client defined the assertion for Anonymous User.
+                    b. set it to true if the client have not defined the assertion for Anonymous User.
+             Case.2:Logged-In User
+                    a. set it to false if the client defined the assertion.
+        */
+        botOptions.test = true;
+        botOptions.koreAnonymousFn = koreAnonymousFn;
         botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // issued by the kore on client app registration.
         botOptions.botInfo = {chatBot:"Kora",taskBotId :"st-*********"};  
         var bot = require('/KoreBot.js').instance(); //initialize the bot.
