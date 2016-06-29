@@ -150,11 +150,11 @@ KoreBot.prototype.init = function(options) {
 
 	} else {
 		debug("test is true");
-		if (isFunction(options.assertionFn)) {
-			options.assertionFn.call(this, options);
+		if (isFunction(options.koreAnonymousFn)) {
+			options.koreAnonymousFn.call(this, options);
 		} else {
-			debug("assertion is not a function");
-			console.error("assertion is not a function");
+			debug("koreAnonymousFn is not a function");
+			console.error("koreAnonymousFn is not a function");
 		}
 	}
 };
@@ -278,8 +278,10 @@ BaseAPIClient.prototype.makeAPICall = function makeAPICall(endpoint, optData, op
     },
   };
 
-  if(optData && optData.opts && optData.opts.authorization)
+  if(optData && optData.opts && optData.opts.authorization){
     args.headers.Authorization = optData.opts.authorization;
+    delete args.data.authorization;
+  }
 
   this._requestQueue.push({
     args: args,
