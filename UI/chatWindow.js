@@ -5,10 +5,84 @@ function koreBotChat() {
         connecting: "Connecting...",
         reconnecting: "Reconnecting..."
     };
-	
+    var _botInfo = {};
+    var detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
+    String.prototype.isNotAllowedHTMLTags = function () {
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = this;
+
+        var setFlags = {
+            isValid: true,
+            key: ''
+        };
+        if ($(wrapper).find('script').length) {
+            setFlags.isValid = false;
+
+        }
+        if ($(wrapper).find('link').length && $(wrapper).find('link').attr('href').indexOf('script') !== -1) {
+            if(detectScriptTag.test($(wrapper).find('link').attr('href'))) {
+                setFlags.isValid = false;
+            } else {
+                setFlags.isValid = true;
+            }
+        }
+        if ($(wrapper).find('a').length && $(wrapper).find('a').attr('href').indexOf('script') !== -1) {
+            if(detectScriptTag.test($(wrapper).find('a').attr('href'))) {
+                setFlags.isValid = false;
+            } else {
+                setFlags.isValid = true;
+            }
+        }
+        if ($(wrapper).find('img').length && $(wrapper).find('img').attr('src').indexOf('script') !== -1) {
+            if(detectScriptTag.test($(wrapper).find('img').attr('href'))) {
+                setFlags.isValid = false;
+            } else {
+                setFlags.isValid = true;
+            }
+        }
+        if ($(wrapper).find('object').length) {
+            setFlags.isValid = false;
+        }
+
+        return setFlags;
+    };
+    
+    String.prototype.escapeHTML = function () {
+        //'&': '&amp;',
+        var escapeTokens = {
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#x27;'
+        };
+        var htmlTags = /[<>"']/g;
+        return ('' + this).replace(htmlTags, function (match) {
+            return escapeTokens[match];
+        });
+    };
+    
+    function xssAttack(txtStr) {
+        //   if (compObj && compObj[0] && compObj[0].componentType === "text") {
+
+        var textHasXSS;
+        if (txtStr) {
+            textHasXSS = txtStr.isNotAllowedHTMLTags();
+        }
+        if (textHasXSS && !textHasXSS.isValid) {
+            txtStr = txtStr.escapeHTML();
+        }
+        return txtStr;
+        //return compObj[0].componentBody;
+
+    }
+    
     var helpers = {
         'nl2br': function (str) {
             str = str.replace(/(?:\r\n|\r|\n)/g, '<br />');
+            return str;
+        },
+        'br2nl': function (str) {
+            str = str.replace(/<br \/>/g, '\n');
             return str;
         },
         'formatAMPM': function (date) {
@@ -24,13 +98,175 @@ function koreBotChat() {
         'formatDate': function (date) {
             var d = new Date(date);
             return d.toDateString() + " at " + helpers.formatAMPM(d);
+        },
+        'convertMDtoHTML': function (val, ignoreNewLine,component) {
+            var mdre = {};
+            //mdre.date = new RegExp(/\\d\(\s*(.{10})\s*\)/g);
+            mdre.date = new RegExp(/\\d\(\s*(.{10})\s*(?:,\s*["'](.+?)["']\s*)?\)/g);
+            mdre.time = new RegExp(/\\t\(\s*(.{8}\.\d{0,3})\s*\)/g);
+            //mdre.datetime = new RegExp(/\\dt\(\s*(.{10})[T](.{12})([z]|[Z]|[+-]\d{4})\s*\)/g);
+            mdre.datetime = new RegExp(/\\(d|dt|t)\(\s*([-0-9]{10}[T][0-9:.]{12})([z]|[Z]|[+-]\d{4})[\s]*,[\s]*["']([a-zA-Z\W]+)["']\s*\)/g);
+            mdre.num = new RegExp(/\\#\(\s*(\d*.\d*)\s*\)/g);
+            mdre.curr = new RegExp(/\\\$\((\d*.\d*)[,](\s*[\"\']\s*\w{3}\s*[\"\']\s*)\)|\\\$\((\d*.\d*)[,](\s*\w{3}\s*)\)/g);
+            
+            var regEx = {};
+            regEx.SPECIAL_CHARS = /[\=\`\~\!@#\$\%\^&\*\(\)_\-\+\{\}\:"\[\];\',\.\/<>\?\|\\]+/;
+            regEx.EMAIL = /^[-a-z0-9~!$%^&*_=+}{\']+(\.[-a-z0-9~!$%^&*_=+}{\']+)*@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,255})+$/i;
+            regEx.MENTION = /(^|\s|\\n|")@([^\s]*)(?:[\s]\[([^\]]*)\])?["]?/gi;
+            regEx.HASHTAG = /(^|\s|\\n)#(\S+)/g;
+            regEx.NEWLINE = /\n/g;
+            
+            var str = val;
+            var mmntns = {};
+            mmntns.sd = new RegExp(/^(d{1})[^d]|[^d](d{1})[^d]/g);
+            mmntns.dd = new RegExp(/^(d{2})[^d]|[^d](d{2})[^d]/g);
+            mmntns.fy = new RegExp(/(y{4})|y{2}/g);
+            var regexkeys = Object.keys(mdre);
+            function matchmap(regexval, stringval) {
+                var da;
+                var matches = [];
+                while ((da = regexval.exec(stringval)) !== null) {
+                    var keypair = {};
+                    keypair.index = da.index;
+                    keypair.matchexp = da[0];
+                    if (da.length > 1) {
+                        for (var n = 1; n < da.length; n++) {
+                            var mstr = "matchval" + n.toString();
+                            keypair[mstr] = da[n];
+                        }
+                    }
+                    matches.push(keypair);
+                }
+                return matches;
+            }
+            function ucreplacer(match) {
+                return match.toUpperCase();
+            }
+            for (var j = 0; j < regexkeys.length; j++) {
+                var k;
+                switch (regexkeys[j]) {
+                    case 'date':
+                        var strvald = str;
+                        var datematcharray = matchmap(mdre.date, strvald);
+                        if (datematcharray.length) {
+                            for (k = 0; k < datematcharray.length; k++) {
+                                //var fdate = moment(datematcharray[k].matchval).format('DD,dd,MM,YYY');
+                                var fdate = new Date(datematcharray[k].matchval1).toLocaleDateString();
+                                fdate = ' ' + fdate.toString() + ' ';
+                                str = str.replace(datematcharray[k].matchexp.toString(), fdate);
+                            }
+                        }
+                        break;
+                    case 'time':
+                        var strvalt = str;
+                        var timematcharray = matchmap(mdre.time, strvalt);
+                        if (timematcharray.length) {
+                            for (k = 0; k < timematcharray.length; k++) {
+                                var ftime = new Date(timematcharray[k].matchval1).toLocaleTimeString();
+                                ftime = ' ' + ftime.toString() + ' ';
+                                str = str.replace(timematcharray[k].matchexp.toString(), ftime);
+                            }
+                        }
+                        break;
+                    case 'datetime':
+                        var strvaldt = str;
+                        var dtimematcharray = matchmap(mdre.datetime, strvaldt);
+                        if (dtimematcharray.length) {
+                            for (k = 0; k < dtimematcharray.length; k++) {
+                                var ms = '';
+                                var mergekeylength = Object.keys(dtimematcharray[k]).length - 2;
+                                for (var l = 2; l < mergekeylength; l++) {
+                                    var keystr = "matchval" + l.toString();
+                                    ms += dtimematcharray[k][keystr];
+                                }
+                                var foptionstring = "matchval" + mergekeylength.toString();
+                                var fmtstr = dtimematcharray[k][foptionstring];
+                                fmtstr = fmtstr.replace(mmntns.fy, ucreplacer);
+                                fmtstr = fmtstr.replace(mmntns.dd, ucreplacer);
+                                fmtstr = fmtstr.replace(mmntns.sd, ucreplacer);
+                                //var fdtime = new Date(dtimematcharray[k].matchval).toLocaleString();
+                                var fdtime = moment(ms).format(fmtstr);
+                                fdtime = ' ' + fdtime.toString() + ' ';
+                                str = str.replace(dtimematcharray[k].matchexp.toString(), fdtime);
+                            }
+                        }
+                        break;
+                    case 'num':
+                        var strnumval = str;
+                        var nummatcharray = matchmap(mdre.num, strnumval);
+                        if (nummatcharray.length) {
+                            for (k = 0; k < nummatcharray.length; k++) {
+                                var fnum = Number(nummatcharray[k].matchval1).toLocaleString();
+                                fnum = ' ' + fnum.toString() + ' ';
+                                str = str.replace(nummatcharray[k].matchexp.toString(), fnum);
+                            }
+                        }
+                        break;
+                    case 'curr':
+                        var strcurval = str;
+                        var currmatcharray = matchmap(mdre.curr, strcurval);
+                        var browserLang = window.navigator.language || window.navigator.browserLanguage;
+                        var curcode = new RegExp(/\w{3}/);
+                        if (currmatcharray.length) {
+                            for (k = 0; k < currmatcharray.length; k++) {
+                                var currops = {}, fcode;
+                                currops.style = 'currency';
+                                if (currmatcharray[k].matchval2) {
+                                    fcode = curcode.exec(currmatcharray[k].matchval2);
+                                }
+                                currops.currency = fcode[0].toString();
+                                var fcurr = Number(currmatcharray[k].matchval1).toLocaleString(browserLang, currops);
+                                //check for browser support if browser doesnot suppor we get the same value back and we append the currency Code
+                                if (currmatcharray[k].matchval1.toString() === fcurr.toString()) {
+                                    fcurr = ' ' + fcurr.toString() + ' ' + currops.currency;
+                                } else {
+                                    fcurr = ' ' + fcurr.toString() + ' ';
+                                }
+                                str = str.replace(currmatcharray[k].matchexp.toString(), fcurr);
+                            }
+                        }
+                        break;
+                }
+            }
+            function nextLnReplacer(match, p1, offset, string) {
+                return "<br/>";
+            }
+            var nextln = regEx.NEWLINE;
+            str = xssAttack(str);
+
+            //Adding target=web for links if authUrl is true
+            if (component && component.componentData && component.componentData.bot && component.componentData.bot.authUrl) {
+                var rawHTML = str;
+                var $div = $('<div>').html(rawHTML);
+
+                var _aDivs = $div.find('a');
+                _aDivs.toArray().forEach(function (ele) {
+                    ele.href += '&target=web';
+                    $(ele).attr('data-authUrl', ele.href);
+                });
+                str = $div.html();
+            }
+            //Adding target=web for links if actionUrl is true
+            if (component && component.componentData && component.componentData.bot && component.componentData.bot.actionUrl) {
+                var rawHTML_A = str;
+                var $div_A = $('<div>').html(rawHTML_A);
+                var _aDivs_A = $div_A.find('a');
+                _aDivs_A.toArray().forEach(function (ele) {
+                    ele.href += '&target=web';
+                    $(ele).attr('data-actionUrl', ele.href);
+                });
+                str = $div_A.html();
+            }
+            
+            return helpers.nl2br(str);
         }
     };
     function chatWindow(cfg) {
         this.config = {
             "chatTitle": "Kore Bot Chat",
             "container": "body",
-            "allowIframe": false
+            "allowIframe": false,
+            "botOptions": cfg.botOptions
         };
         if (cfg && cfg.chatContainer) {
             delete cfg.chatContainer;
@@ -41,9 +277,9 @@ function koreBotChat() {
 
     chatWindow.prototype.init = function () {
         var me = this;
-        var _botInfo = $.extend({}, me.config.botOptions);
-        _botInfo.botInfo = {chatBot:_botInfo.botInfo.name,taskBotId :_botInfo.botInfo._id};
-        var tempTitle = _botInfo.botInfo.chatBot;
+        _botInfo = me.config.botOptions.botInfo;
+        me.config.botOptions.botInfo = {chatBot:_botInfo.name,taskBotId :_botInfo._id};
+        var tempTitle = _botInfo.name;
         me.config.botMessages = botMessages;
 
         me.config.chatTitle = me.config.botMessages.connecting;
@@ -51,7 +287,7 @@ function koreBotChat() {
         me.config.chatContainer = chatWindowHtml;
 
         me.config.chatTitle = tempTitle;
-        bot.init(_botInfo);
+        bot.init(me.config.botOptions);
         me.render(chatWindowHtml);
     };
 
@@ -77,10 +313,11 @@ function koreBotChat() {
         var _chatContainer = me.config.chatContainer;
         _chatContainer.draggable({
                 handle: _chatContainer.find(".kore-chat-header .header-title"),
-                containment: "html"
+                containment: "window",
+                scroll: false
         }).resizable({
                 handles: "n, e, w, s",
-                containment: "parent"
+                containment: "html"
         });
 
         _chatContainer.off('keyup', '.chatInputBox').on('keyup', '.chatInputBox', function (event) {
@@ -99,7 +336,14 @@ function koreBotChat() {
                 return;
             }
         });
-
+        
+        _chatContainer.off('paste', '.chatInputBox').on('paste', '.chatInputBox', function (event) {
+            event.preventDefault();
+            var _clipboardData = event.clipboardData || (event.originalEvent && event.originalEvent.clipboardData) || window.clipboardData;
+            if(_clipboardData){
+                $(this).html(helpers.nl2br(_clipboardData.getData('text').escapeHTML()));
+            }
+        });
         _chatContainer.off('click', '.sendChat').on('click', '.sendChat', function (event) {
             var _footerContainer = $(me.config.container).find('.kore-chat-footer');
             me.sendMessage(_footerContainer.find('.chatInputBox'));
@@ -127,7 +371,8 @@ function koreBotChat() {
                 if(me.expanded === false){
                     _chatContainer.draggable({
                         handle: _chatContainer.find(".kore-chat-header .header-title"),
-                        containment: "html"
+                        containment: "window",
+                        scroll: false
                     });
                 }
             } else
@@ -152,10 +397,11 @@ function koreBotChat() {
                 me.expanded = false;
                 _chatContainer.draggable({
                     handle: _chatContainer.find(".kore-chat-header .header-title"),
-                    containment: "html"
+                    containment: "window",
+                    scroll: false
                 }).resizable({
                         handles: "n, e, w, s",
-                        containment: "parent"
+                        containment: "html"
                 });
             } else {
                 $('.kore-chat-overlay').show();
@@ -180,7 +426,8 @@ function koreBotChat() {
             me.minimized = false;
             _chatContainer.draggable({
                 handle: _chatContainer.find(".kore-chat-header .header-title"),
-                containment: "html"
+                containment: "window",
+                scroll: false
             });
         });
 
@@ -262,7 +509,7 @@ function koreBotChat() {
             'type': "currentUser",
             "message": [{
                 'type': 'text',
-                'cInfo': {'body':chatInput.text()},
+                'cInfo': {'body':chatInput.html()},
                 'clientMessageId': clientMessageId
             }],
             "createdOn": clientMessageId
@@ -270,7 +517,7 @@ function koreBotChat() {
 
         var messageToBot = {};
         messageToBot["clientMessageId"] = clientMessageId;
-        messageToBot["message"] = {body: chatInput.text(), attachments: []};
+        messageToBot["message"] = {body: helpers.br2nl(chatInput.html()), attachments: []};
         messageToBot["resourceid"] = '/bot.message';
 
         bot.sendMessage(messageToBot, function messageSent() {
@@ -349,7 +596,7 @@ function koreBotChat() {
                                 {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                                 {{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
                                 <div class="messageBubble">\
-                                    {{if msgData.type === "bot_response"}} {{html helpers.nl2br(msgItem.cInfo.body)}} {{else}} ${msgItem.cInfo.body} {{/if}} \
+                                    {{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.cInfo.body)}} {{else}} {{html msgItem.cInfo.body}} {{/if}} \
                                 </div> \
 			</li> \
                         {{/if}} \
@@ -388,7 +635,6 @@ function koreBotChat() {
         {
             return false;
         }
-		delete chatInitialize;
         chatInitialize = new chatWindow(cfg);
         return this;
     };
