@@ -4,7 +4,7 @@
 # Prerequsites
     - SDK app credentials (Create your SDk App in Bot Admin console to aquire the client id and client Secret Key.
     - JWT assertion generation methodology. ex: service which will be used in the assertion function injected as part of sdk initialization.
-    - Dependencies JQuery, Jquery-ui, jquery template. Please include all these dependencies before including chatWindow.js
+    - Dependencies JQuery, Jquery-ui, jquery template, moment js. Please include all these dependencies before including chatWindow.js
     
 # Integration of Kore chat UI into your App
 
@@ -15,6 +15,7 @@
     -   <script src='UI/libs/jquery.js'></script>
     -   <script src='UI/libs/jquery-ui.min.js'></script>
     -   <script src='UI/libs/jquery.tmpl.min.js'></script>
+	-	<script src='UI/libs/moment.js'></script>
     -   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
 #### 3. Include the kore-bot-sdk-client.js ,anonymousassertion.js & chatWindow.js files 
     -   <script src='../test/anonymousassertion.js'></script>
