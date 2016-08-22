@@ -517,7 +517,7 @@ function koreBotChat() {
 
         var messageToBot = {};
         messageToBot["clientMessageId"] = clientMessageId;
-        messageToBot["message"] = {body: helpers.br2nl(chatInput.html()), attachments: []};
+        messageToBot["message"] = {body: chatInput.text().trim(), attachments: []};
         messageToBot["resourceid"] = '/bot.message';
 
         bot.sendMessage(messageToBot, function messageSent() {
