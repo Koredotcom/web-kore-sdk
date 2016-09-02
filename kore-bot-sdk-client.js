@@ -38,6 +38,7 @@ KoreBot.prototype.sendMessage = function(message,optCb) {
 	if(this.initialized){
 		message["resourceid"] = '/bot.message';
 		message["botInfo"] = this.options.botInfo || {};
+		message["client"] = this.options.client || "sdk";
 		this.RtmClient.sendMessage(message,optCb);
 	}else{
 		if(optCb){
