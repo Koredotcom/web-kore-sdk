@@ -1,0 +1,59 @@
+<!DOCTYPE>
+<html>
+	<head>
+		<script src="libs/moment.js" type="text/javascript"></script>
+		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+		<script src='../test/anonymousassertion.js'></script>
+		<script src="../kore-bot-sdk-client.js"></script>
+		<script src="chatWindow.js" type="text/javascript"></script>
+		<link href="chatWindow.css" rel="stylesheet"></link>
+	</head>
+	<body>
+		<div id="chatContainer">
+		<button class="openChatWindow" id="openChatWindow">Open Chat Window</button>
+		</div>
+		<script type="text/javascript">
+			function assertion(options, callback) {
+
+				// Client has to fill the claims and call the callback.
+				$.ajax({
+					url: "https://devbots.kore.com/api/users/sts",
+					type: 'post',
+					headers: {
+						Authorization: "bearer xyz------"
+					},
+					dataType: 'json',
+					success: function (data) {
+						options.assertion = data.jwt
+						callback(null, options);
+					}
+				})
+			}
+
+			var botOptions = {};
+			botOptions.logLevel = 'debug';
+			botOptions.koreAPIUrl = "https://qabots.kore.com/api/";
+			botOptions.assertionFn = assertion;
+			/*
+			 Below config:(To support the anonymous user in test environments only.)
+			 Case.1:Anonymous User
+			        a. set it to false if the client defined the assertion for Anonymous User.
+			        b. set it to true if the client have not defined the assertion for Anonymous User.
+			 Case.2:Logged-In User
+			        a. set it to false if the client defined the assertion.
+			*/
+			botOptions.test = true;
+			botOptions.koreAnonymousFn = koreAnonymousFn;
+			botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // secure client-id
+			botOptions.botInfo = {name:"your bot name","_id":"bot_id"}; // bot name is case sensitive
+			
+			var chatConfig={
+				botOptions:botOptions
+			};
+			document.getElementById('openChatWindow').addEventListener('click',function() {
+				koreBotChat().show(chatConfig);
+			});
+		</script>
+	</body>
+</html>

@@ -258,9 +258,6 @@ ul.chat-container li.fromCurrentUser .messageBubble{
     border-radius: 12px;
     border-bottom-right-radius: 2px;
     position: relative;
-    -webkit-animation: message-right ease-in-out 2s forwards;
-    -moz-animation: message-right ease-in-out 2s forwards;
-    animation: message-right ease-in-out 2s forwards;
 }
 ul.chat-container li.fromCurrentUser .extra-info{
     padding-right: 5px;
@@ -290,9 +287,6 @@ ul.chat-container li.fromOtherUsers .messageBubble{
     padding: 12px 15px;
     max-width: 70%;
     font-size: 16px;
-    -webkit-animation: message-left ease-in-out 2s forwards;
-    -moz-animation: message-left ease-in-out 2s forwards;
-    animation: message-left ease-in-out 2s forwards;
 }
 
 ul.chat-container li.fromOtherUsers.with-icon{
@@ -338,64 +332,7 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     right: 0;
 }
 
-/*.kore-chat-window .kore-chat-footer .sendChat{
-    position: absolute;
-    top: 50%;
-    right: 0;
-    width: 32px;
-    height: 32px;
-    background: #127927;
-    margin-top: -16px;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 29px;
-    cursor: pointer;
-    font-weight: bold;
-    color: white;
-    font-size: 20px;
-}
-.kore-chat-window .kore-chat-footer .sendChat.disabled{
-    background: whitesmoke!important;
-    color: lightgray!important;
-}*/
 
-@keyframes message-left {
-    0% {
-        transform: translate3d(-15%, 5%, 0) scale3d(1, 1, 1);
-        visibility: visible
-    }
-    5% {
-        transform: translate3d(0, 0, 0) scale3d(1.01, 1.01, 1)
-    }
-    10% {
-        transform: translate3d(0, -2px, 0) scale3d(1.03, 1.03, 1)
-    }
-    15% {
-        transform: translate3d(0, 1px, 0) scale3d(1, 1, 1)
-    }
-    20% {
-        transform: translate3d(0, 0, 0) scale3d(1, 1, 1)
-    }
-}
-
-@keyframes message-right {
-    0% {
-        transform: translate3d(15%, 5%, 0) scale3d(1, 1, 1);
-        visibility: visible
-    }
-    5% {
-        transform: translate3d(0, 0, 0) scale3d(1.01, 1.01, 1)
-    }
-    10% {
-        transform: translate3d(0, -2px, 0) scale3d(1.03, 1.03, 1)
-    }
-    15% {
-        transform: translate3d(0, 1px, 0) scale3d(1, 1, 1)
-    }
-    20% {
-        transform: translate3d(0, 0, 0) scale3d(1, 1, 1)
-    }
-}
 .kore-auth-layover {
     position: fixed;
     left: 0;
