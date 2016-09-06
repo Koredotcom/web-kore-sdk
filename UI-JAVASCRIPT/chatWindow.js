@@ -498,6 +498,9 @@ function koreBotChat() {
 		var _div = document.createElement('div');
 		_div.innerHTML = chatWindowHtml;
 		me.config.container = document.querySelector(me.config.container);
+		if(me.config.container === null) {
+			me.config.container = document.querySelector('body');
+		}
         me.config.container.appendChild(_div);
 		
 		me.config.chatContainer = document.getElementById('koreChatWindow');
