@@ -554,20 +554,20 @@ function koreBotChat() {
         var messageHtml = me.getChatTemplate("message", msgData);
 
         _chatContainer.innerHTML += messageHtml;
-		
-		_chatContainer.querySelectorAll('li a').forEach(function(ele){
-			ele.addEventListener('click',function(e){
-				e.preventDefault();
-				var a_link = this.href;
-				if(me.config.allowIframe === true){
-					me.openPopup(a_link);
-				}
-				else{
-					var _tempWin = window.open(a_link,"_blank");
-				}
+		if(_chatContainer.querySelectorAll('li a').length > 0) {
+			_chatContainer.querySelectorAll('li a').item(function(ele){
+				ele.addEventListener('click',function(e){
+					e.preventDefault();
+					var a_link = this.href;
+					if(me.config.allowIframe === true){
+						me.openPopup(a_link);
+					}
+					else{
+						var _tempWin = window.open(a_link,"_blank");
+					}
+				});
 			});
-        });
-		
+		}
         _chatContainer.scrollTop = _chatContainer.scrollHeight;
     };
     
