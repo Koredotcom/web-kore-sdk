@@ -17,23 +17,25 @@
 			function assertion(options, callback) {
 
 				// Client has to fill the claims and call the callback.
-				$.ajax({
-					url: "https://devbots.kore.com/api/users/sts",
-					type: 'post',
-					headers: {
-						Authorization: "bearer xyz------"
-					},
-					dataType: 'json',
-					success: function (data) {
+				var xhr = new XMLHttpRequest();
+
+				xhr.open('POST', 'https://devbots.kore.com/api/users/sts');
+				xhr.setRequestHeader('Content-Type', 'application/json');
+				xhr.setRequestHeader('Authorization', 'bearer -----------');
+				xhr.onload = function() {
+					if (xhr.status === 200) {
+						var data = JSON.parse(xhr.responseText);
 						options.assertion = data.jwt
 						callback(null, options);
+						console.log(data);
 					}
-				})
+				};
+				xhr.send();
 			}
 
 			var botOptions = {};
 			botOptions.logLevel = 'debug';
-			botOptions.koreAPIUrl = "https://qabots.kore.com/api/";
+			botOptions.koreAPIUrl = "https://devbots.kore.com/api/";
 			botOptions.assertionFn = assertion;
 			/*
 			 Below config:(To support the anonymous user in test environments only.)
