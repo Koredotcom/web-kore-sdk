@@ -19,7 +19,7 @@
 				// Client has to fill the claims and call the callback.
 				var xhr = new XMLHttpRequest();
 
-				xhr.open('POST', 'https://devbots.kore.com/api/users/sts');
+				xhr.open('POST', 'https://bots.kore.com/api/users/sts');
 				xhr.setRequestHeader('Content-Type', 'application/json');
 				xhr.setRequestHeader('Authorization', 'bearer -----------');
 				xhr.onload = function() {
@@ -35,7 +35,7 @@
 
 			var botOptions = {};
 			botOptions.logLevel = 'debug';
-			botOptions.koreAPIUrl = "https://devbots.kore.com/api/";
+			botOptions.koreAPIUrl = "https://bots.kore.com/api/";
 			botOptions.assertionFn = assertion;
 			/*
 			 Below config:(To support the anonymous user in test environments only.)

@@ -17,7 +17,7 @@
 
 				// Client has to fill the claims and call the callback.
 				$.ajax({
-					url: "https://devbots.kore.com/api/users/sts",
+					url: "https://bots.kore.com/api/users/sts",
 					type: 'post',
 					headers: {
 						Authorization: "bearer xyz------"
@@ -32,7 +32,7 @@
 
 			var botOptions = {};
 			botOptions.logLevel = 'debug';
-			botOptions.koreAPIUrl = "https://devbots.kore.com/api/";
+			botOptions.koreAPIUrl = "https://bots.kore.com/api/";
 			botOptions.assertionFn = assertion;
 			/*
 			 Below config:(To support the anonymous user in test environments only.)
@@ -44,8 +44,8 @@
 			*/
 			botOptions.test = true;
 			botOptions.koreAnonymousFn = koreAnonymousFn;
-			botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149";
-			botOptions.botInfo = {name:"twitter","_id":""}; // pass bot name and stream id
+			botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // secure client-id
+			botOptions.botInfo = {name:"your bot name","_id":"bot_id"}; // bot name is case sensitive
 			
 			var chatConfig={
 				botOptions:botOptions,
