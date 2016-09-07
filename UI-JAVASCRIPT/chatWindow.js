@@ -295,10 +295,34 @@ function koreBotChat() {
 	}
 	
 	function extend(){
-		for(var i=1; i<arguments.length; i++)
-			for(var key in arguments[i])
-				if(arguments[i].hasOwnProperty(key))
-					arguments[0][key] = arguments[i][key];
+		var rec = function(obj) {
+			var recRes = {};
+			if (typeof obj === "object") {
+				for(var key in obj) {
+					if(obj.hasOwnProperty(key)) {
+						if (typeof obj[key] === "object") {
+							recRes[key] = rec(obj[key]);
+						} else {
+							recRes[key] = obj[key];
+						}
+					}
+				}
+				return recRes;
+			} else {
+				return obj;
+			}
+		}
+		for(var i=1; i<arguments.length; i++) {
+			for(var key in arguments[i]) {
+				if(arguments[i].hasOwnProperty(key)) {
+					if (typeof arguments[i][key] === "object") {
+						arguments[0][key] = rec(arguments[i][key]);
+					} else {
+						arguments[0][key] = arguments[i][key];
+					}
+				}
+			}
+		}
 		return arguments[0];
 	}
 	
@@ -318,7 +342,7 @@ function koreBotChat() {
 
     chatWindow.prototype.init = function () {
         var me = this;
-        _botInfo = me.config.botOptions.botInfo;
+        _botInfo = extend({},me.config.botOptions.botInfo);
         me.config.botOptions.botInfo = {chatBot:_botInfo.name,taskBotId :_botInfo._id};
         var tempTitle = _botInfo.name;
         me.config.botMessages = botMessages;

@@ -261,6 +261,38 @@ function koreBotChat() {
             return helpers.nl2br(str);
         }
     };
+	function extend(){
+		var rec = function(obj) {
+			var recRes = {};
+			if (typeof obj === "object") {
+				for(var key in obj) {
+					if(obj.hasOwnProperty(key)) {
+						if (typeof obj[key] === "object") {
+							recRes[key] = rec(obj[key]);
+						} else {
+							recRes[key] = obj[key];
+						}
+					}
+				}
+				return recRes;
+			} else {
+				return obj;
+			}
+		}
+		for(var i=1; i<arguments.length; i++) {
+			for(var key in arguments[i]) {
+				if(arguments[i].hasOwnProperty(key)) {
+					if (typeof arguments[i][key] === "object") {
+						arguments[0][key] = rec(arguments[i][key]);
+					} else {
+						arguments[0][key] = arguments[i][key];
+					}
+				}
+			}
+		}
+		return arguments[0];
+	}
+	
     function chatWindow(cfg) {
         this.config = {
             "chatTitle": "Kore Bot Chat",
@@ -271,7 +303,7 @@ function koreBotChat() {
         if (cfg && cfg.chatContainer) {
             delete cfg.chatContainer;
         }
-        this.config = $.extend(this.config, cfg);
+        this.config = extend(this.config, cfg);
         this.init();
     }
 
