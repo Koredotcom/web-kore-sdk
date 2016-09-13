@@ -23,6 +23,8 @@ function KoreBot() {
 	this.accessToken = null;
 	this.initialized = false;
 	this.clients = clients;
+	this.latestId = null; // latest messageId.
+	this.oldestId = null; // oldest messageId.
 }
 inherits(KoreBot, EventEmitter);
 
@@ -53,6 +55,12 @@ emits a message event on message from the server.
 */
 KoreBot.prototype.onMessage = function(msg) {
 	debug("on message from bot/self");
+	if(msg.from === "bot" && msg.type === "bot_response")
+	{
+		this.latestId = msg.messageId || this.latestId;
+		this.oldestId = this.oldestId || msg.messageId;
+	}
+
 	this.emit(RTM_EVENTS.MESSAGE, msg);
 };
 
@@ -67,18 +75,131 @@ KoreBot.prototype.close = function() {
 };
 
 /*
+on forward history.
 */
-KoreBot.prototype.onHistory = function(err, data) {
-	debug("on history");
+KoreBot.prototype.onForwardHistory = function(err, data) {
+	debug("on forward history");
+	
+	var clientresp = {};
+	clientresp.moreAvailable = data.moreAvailable;
+	clientresp.messages = [];
+	clientresp.forward = true;
+	clientresp.afterMessageId = this.latestId;
+	if (data.messages && data.messages.length > 0) {
+		var i;
+		for (i = 0; i < data.messages.length; i++) {
+			var _msg = {};
+			_msg.messageId = data.messages[i]._id;
+			this.oldestId = this.oldestId || data.messages[i]._id;
+			this.latestId = data.messages[i]._id || this.latestId;
+			if (data.messages[i].type === 'incoming') {
+				_msg.from = "self";
+				_msg.type = "user_message";
+			} else {
+				_msg.from = "bot";
+				_msg.type = "bot_response";
+			}
+			var j = 0;
+			if (data.messages[i].components && data.messages[i].components.length > 0) {
+				_msg.message = [];
+				for (j = 0; j < data.messages[i].components.length; j++) {
+					var _comp = {};
+					_comp.type = data.messages[i].components[j].cT;
+					if (_comp.type === 'text') {
+						_comp.cInfo = {};
+						_comp.cInfo.body = data.messages[i].components[j].data && data.messages[i].components[j].data.text;
+					}
 
+					_msg.message[j] = _comp;
+				}
+			}
+			_msg.createdOn = data.messages[i].createdOn;
+
+			clientresp.messages[i] = _msg;
+
+		}
+	}
+
+	this.emit("history", clientresp);
+
+};
+
+
+/*
+on backward history.
+*/
+
+KoreBot.prototype.onBackWardHistory = function(err, data) {
+	debug("on backword history");
+	
+	var clientresp = {};
+	clientresp.moreAvailable = data.moreAvailable;
+	clientresp.messages = [];
+	clientresp.backward = true;
+	clientresp.beforeMessageId = this.oldestId;
+	if (data.messages && data.messages.length > 0) {
+		var i;
+		for (i = 0; i < data.messages.length; i++) {
+			var _msg = {};
+			_msg.messageId = data.messages[i]._id;
+			this.oldestId = data.messages[i]._id || this.oldestId;
+			this.latestId = this.latestId || data.messages[i]._id;
+			if (data.messages[i].type === 'incoming') {
+				_msg.from = "self";
+				_msg.type = "user_message";
+			} else {
+				_msg.from = "bot";
+				_msg.type = "bot_response";
+			}
+			var j = 0;
+			if (data.messages[i].components && data.messages[i].components.length > 0) {
+				_msg.message = [];
+				for (j = 0; j < data.messages[i].components.length; j++) {
+					var _comp = {};
+					_comp.type = data.messages[i].components[j].cT;
+					if (_comp.type === 'text') {
+						_comp.cInfo = {};
+						_comp.cInfo.body = data.messages[i].components[j].data && data.messages[i].components[j].data.text;
+					}
+
+					_msg.message[j] = _comp;
+				}
+			}
+			_msg.createdOn = data.messages[i].createdOn;
+
+			clientresp.messages[i] = _msg;
+
+		}
+	}
+
+	this.emit("history", clientresp);
 };
 
 /*
 gets the history of the conversation.
 */
-KoreBot.prototype.getHistory = function(options) {
+KoreBot.prototype.getHistory = function(opts) {
 	debug("get history");
-	this.WebClient.history.history({}, bind(this.onHistory, this));
+	opts = opts || {};
+	var __opts__ = {};
+	__opts__.forward = opts.forward;
+	__opts__.limit = opts.limit || 10; // 10 is the max size.
+    
+	if (__opts__.forward) {
+		if (this.latestId)
+			__opts__.msgId = this.latestId;
+	} else {
+		if (this.oldestId)
+			__opts__.msgId = this.oldestId;
+	}
+
+	__opts__.botInfo = this.options.botInfo;
+	__opts__.authorization = "bearer " + this.WebClient.user.accessToken;
+
+	if (__opts__.forward)
+		this.WebClient.history.history(__opts__, bind(this.onForwardHistory, this));
+	else
+		this.WebClient.history.history(__opts__, bind(this.onBackWardHistory, this));
 };
 
 /*
@@ -93,6 +214,7 @@ emits the open event on WS connection established.
 KoreBot.prototype.onOpenWSConnection = function(msg) {
 	debug("opened WS Connection");
 	this.initialized = true;
+	this.getHistory({});
 	this.emit(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, {});
 };
 
@@ -163,7 +285,7 @@ KoreBot.prototype.init = function(options) {
 module.exports.instance = function(){
 	return new KoreBot();
 };
-},{"./index.js":1,"debug":19,"events":28,"inherits":21,"lodash":22}],1:[function(require,module,exports){
+},{"./index.js":1,"debug":20,"events":29,"inherits":22,"lodash":23}],1:[function(require,module,exports){
 var events = require('./lib/clients/events');
 
 module.exports= {
@@ -177,7 +299,7 @@ module.exports= {
   RTM_MESSAGE_SUBTYPES: events.RTM_MESSAGE_SUBTYPES,
 };
 
-},{"./lib/clients/events":4,"./lib/clients/rtm/client":8,"./lib/clients/web/client":16}],2:[function(require,module,exports){
+},{"./lib/clients/events":4,"./lib/clients/rtm/client":8,"./lib/clients/web/client":17}],2:[function(require,module,exports){
 var EventEmitter = require('events');
 var async = require('async');
 var bind = require('lodash').bind;
@@ -293,7 +415,7 @@ BaseAPIClient.prototype.makeAPICall = function makeAPICall(endpoint, optData, op
 
 module.exports = BaseAPIClient;
 
-},{"./events/client":3,"./helpers":7,"./transports/request":9,"async":17,"events":28,"inherits":21,"lodash":22,"retry":24,"url-join":27}],3:[function(require,module,exports){
+},{"./events/client":3,"./helpers":7,"./transports/request":9,"async":18,"events":29,"inherits":22,"lodash":23,"retry":25,"url-join":28}],3:[function(require,module,exports){
 /**
  * API client events.
  */
@@ -451,7 +573,7 @@ var getAPICallArgs = function getAPICallArgs(token, optData, optCb) {
 module.exports.getData = getData;
 module.exports.getAPICallArgs = getAPICallArgs;
 
-},{"lodash":22}],8:[function(require,module,exports){
+},{"lodash":23}],8:[function(require,module,exports){
 var bind = require('lodash').bind;
 var cloneDeep = require('lodash').cloneDeep;
 var contains = require('lodash').contains;
@@ -741,7 +863,7 @@ KoreRTMClient.prototype.send = function send(message, optCb) {
 
 module.exports = KoreRTMClient;
 
-},{"../client":2,"../events/client":3,"../events/rtm":5,"../events/utils":6,"../transports/ws":10,"../web/apis":13,"debug":19,"inherits":21,"lodash":22}],9:[function(require,module,exports){
+},{"../client":2,"../events/client":3,"../events/rtm":5,"../events/utils":6,"../transports/ws":10,"../web/apis":14,"debug":20,"inherits":22,"lodash":23}],9:[function(require,module,exports){
 /**
  * Simple transport using the node request library.
  */
@@ -781,14 +903,21 @@ var getRequestTransportArgs = function getReqestTransportArgs(args) {
 
 
 var requestTransport = function requestTransport(args, cb) {
+  
   var requestArgs = getRequestTransportArgs(args);
-  request.post(requestArgs, partial(handleRequestTranportRes, cb));
+
+  if (args.data && args.data.type && args.data.type === 'GET') {
+    request.get(requestArgs, partial(handleRequestTranportRes, cb));
+  } else {
+    request.post(requestArgs, partial(handleRequestTranportRes, cb));
+  }
+  
 };
 
 
 module.exports.requestTransport = requestTransport;
 
-},{"browser-request":18,"lodash":22}],10:[function(require,module,exports){
+},{"browser-request":19,"lodash":23}],10:[function(require,module,exports){
 
 var wsTransport = function wsTransport(socketUrl, opts) {
   var wsTransportOpts = opts || {};
@@ -827,14 +956,99 @@ AnonymousLogin.prototype.login = function login(opts, optCb) {
 
 
 module.exports = AnonymousLogin;
-},{"./BaseApi":11,"inherits":21}],13:[function(require,module,exports){
+},{"./BaseApi":11,"inherits":22}],13:[function(require,module,exports){
+var BaseApi = require('./BaseApi');
+var inherits = require('inherits');
+
+function HistoryApi(client) {
+  this.name = 'history';
+  this.client = client;
+}
+
+inherits(HistoryApi, BaseApi);
+
+HistoryApi.prototype.history = function history(opts, optCb) {
+  opts = opts || {};
+  var args = {
+    opts: opts,
+    type: "GET"
+  };
+	var _api = '/botmessages/rtm';
+	var del = false;
+	var x = '?';
+
+	if (opts.botInfo && opts.botInfo.taskBotId) {
+
+		if (del === false) {
+			_api += x + 'botId=' + opts.botInfo.taskBotId + '';
+			x = '&';
+			del = true;
+		} else {
+			_api += x + 'botId=' + opts.botInfo.taskBotId + '';
+		}
+       delete opts.botInfo;
+	}
+
+	if (opts.offset) {
+		if (del === false) {
+			_api += x + 'offset=' + opts.offset + '';
+			x = '&';
+			del = true;
+		} else {
+			_api += x + 'offset=' + opts.offset + '';
+		}
+		delete opts.offset;
+	}
+
+	if (opts.limit) {
+		if (del === false) {
+			_api += x + 'limit=' + opts.limit + '';
+			x = '&';
+			del = true;
+		} else {
+			_api += x + 'limit=' + opts.limit + '';
+		}
+		delete opts.limit;
+	}
+
+	if (opts.forward) {
+		if (del === false) {
+			_api += x + 'forward=' + opts.forward + '';
+			x = '&';
+			del = true;
+		} else {
+			_api += x + 'forward=' + opts.forward + '';
+		}
+		delete opts.forward;
+	}
+
+	if (opts.msgId) {
+		if (del === false) {
+			_api += x + 'msgId=' + opts.msgId + '';
+			x = '&';
+			del = true;
+		} else {
+			_api += x + 'msgId=' + opts.msgId + '';
+		}
+		delete opts.msgId;
+	}
+
+
+  return this.client.makeAPICall(_api, args, optCb);
+};
+
+
+module.exports = HistoryApi;
+},{"./BaseApi":11,"inherits":22}],14:[function(require,module,exports){
 module.exports = {
   RtmApi: require('./rtm.js'),
   LogInApi: require('./login.js'),
   AnonymousLogin : require('./anonymouslogin.js'),
+  HistoryApi : require('./history.js'),
 };
 
-},{"./anonymouslogin.js":12,"./login.js":14,"./rtm.js":15}],14:[function(require,module,exports){
+
+},{"./anonymouslogin.js":12,"./history.js":13,"./login.js":15,"./rtm.js":16}],15:[function(require,module,exports){
 var BaseApi = require('./BaseApi');
 var inherits = require('inherits');
 
@@ -855,7 +1069,7 @@ LogInApi.prototype.login = function login(opts, optCb) {
 
 
 module.exports = LogInApi;
-},{"./BaseApi":11,"inherits":21}],15:[function(require,module,exports){
+},{"./BaseApi":11,"inherits":22}],16:[function(require,module,exports){
 var BaseApi = require('./BaseApi');
 var inherits = require('inherits');
 
@@ -877,7 +1091,7 @@ RtmApi.prototype.start = function start(opts, optCb) {
 
 module.exports = RtmApi;
 
-},{"./BaseApi":11,"inherits":21}],16:[function(require,module,exports){
+},{"./BaseApi":11,"inherits":22}],17:[function(require,module,exports){
 var bind = require('lodash').bind;
 var forEach = require('lodash').forEach;
 var inherits = require('inherits');
@@ -915,7 +1129,7 @@ WebAPIClient.prototype._createFacets = function _createFacets() {
 
 module.exports = WebAPIClient;
 
-},{"../client":2,"./apis/index":13,"inherits":21,"lodash":22}],17:[function(require,module,exports){
+},{"../client":2,"./apis/index":14,"inherits":22,"lodash":23}],18:[function(require,module,exports){
 (function (process,global){
 /*!
  * async
@@ -2184,7 +2398,7 @@ module.exports = WebAPIClient;
 }());
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":29}],18:[function(require,module,exports){
+},{"_process":30}],19:[function(require,module,exports){
 // Browser Request
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -2680,7 +2894,7 @@ function b64_enc (data) {
 }));
 //UMD FOOTER END
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 
 /**
  * This is the web browser implementation of `debug()`.
@@ -2850,7 +3064,7 @@ function localstorage(){
   } catch (e) {}
 }
 
-},{"./debug":20}],20:[function(require,module,exports){
+},{"./debug":21}],21:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -3049,7 +3263,7 @@ function coerce(val) {
   return val;
 }
 
-},{"ms":23}],21:[function(require,module,exports){
+},{"ms":24}],22:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -3074,7 +3288,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -15429,7 +15643,7 @@ if (typeof Object.create === 'function') {
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -15556,9 +15770,9 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 module.exports = require('./lib/retry');
-},{"./lib/retry":25}],25:[function(require,module,exports){
+},{"./lib/retry":26}],26:[function(require,module,exports){
 var RetryOperation = require('./retry_operation');
 
 exports.operation = function(options) {
@@ -15654,7 +15868,7 @@ exports.wrap = function(obj, options, methods) {
   }
 };
 
-},{"./retry_operation":26}],26:[function(require,module,exports){
+},{"./retry_operation":27}],27:[function(require,module,exports){
 function RetryOperation(timeouts, retryForever) {
   this._timeouts = timeouts;
   this._fn = null;
@@ -15776,7 +15990,7 @@ RetryOperation.prototype.mainError = function() {
   return mainError;
 };
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 function normalize (str) {
   return str
           .replace(/[\/]+/g, '/')
@@ -15789,7 +16003,7 @@ module.exports = function () {
   var joined = [].slice.call(arguments, 0).join('/');
   return normalize(joined);
 };
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -16089,7 +16303,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
