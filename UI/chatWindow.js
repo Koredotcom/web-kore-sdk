@@ -233,7 +233,23 @@ function koreBotChat() {
             }
             var nextln = regEx.NEWLINE;
             str = xssAttack(str);
-
+			function linkreplacer(match, p1, offset, string) {
+				debugger;
+				var _link = p1.indexOf('http') < 0 ? 'http://' + match : match, _target;
+				_link = encodeURIComponent(_link);
+				_target = "target='_blank'";
+				return "<span class='isLink'><a " + _target + " href=\"" + _link + "\">" + match + "</a></span>";
+			}
+            var nextln = regEx.NEWLINE;
+            //check for whether to linkify or not
+			var wrapper1 = document.createElement('div');
+			wrapper1.innerHTML = (txt || '').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+			wrapper1.innerHTML = xssAttack(wrapper1.innerHTML);
+			if ($(wrapper1).find('a').attr('href')) {
+				txt = wrapper1.innerHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+			} else {
+				txt = wrapper1.innerHTML.replace(_regExForLink, linkreplacer);
+			}
             //Adding target=web for links if authUrl is true
             if (component && component.componentData && component.componentData.bot && component.componentData.bot.authUrl) {
                 var rawHTML = str;
