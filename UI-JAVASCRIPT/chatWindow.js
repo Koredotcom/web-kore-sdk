@@ -7,6 +7,7 @@ function koreBotChat() {
     };
     var _botInfo = {};
     var detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
+    var _eventQueue = {};
     String.prototype.isNotAllowedHTMLTags = function () {
         var wrapper = document.createElement('div');
         wrapper.innerHTML = this;
@@ -119,7 +120,7 @@ function koreBotChat() {
             regEx.MENTION = /(^|\s|\\n|")@([^\s]*)(?:[\s]\[([^\]]*)\])?["]?/gi;
             regEx.HASHTAG = /(^|\s|\\n)#(\S+)/g;
             regEx.NEWLINE = /\n/g;
-            
+            _regExForLink = /((?:http\:\/\/|https\:\/\/|www\.)+\S*\.[a-z]{2,4}(?:(?:\.\S)*[^\,\s\.])*\/?)/gi;
             var str = val;
             var mmntns = {};
             mmntns.sd = new RegExp(/^(d{1})[^d]|[^d](d{1})[^d]/g);
@@ -248,12 +249,12 @@ function koreBotChat() {
             var nextln = regEx.NEWLINE;
             //check for whether to linkify or not
 			var wrapper1 = document.createElement('div');
-			wrapper1.innerHTML = (txt || '').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+			wrapper1.innerHTML = (str || '').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 			wrapper1.innerHTML = xssAttack(wrapper1.innerHTML);
 			if ($(wrapper1).find('a').attr('href')) {
-				txt = wrapper1.innerHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+				str = wrapper1.innerHTML;
 			} else {
-				txt = wrapper1.innerHTML.replace(_regExForLink, linkreplacer);
+				str = wrapper1.innerHTML.replace(_regExForLink, linkreplacer);
 			}
 
             //Adding target=web for links if authUrl is true
@@ -601,6 +602,11 @@ function koreBotChat() {
 				ele.addEventListener('click',function(e){
 					e.preventDefault();
 					var a_link = this.href;
+					var _trgt = this.target;
+					if (_trgt === "_self") {
+						callListener("provideVal", {link: a_link} );
+						return;
+					}
 					if(me.config.allowIframe === true){
 						me.openPopup(a_link);
 					}
@@ -708,7 +714,36 @@ function koreBotChat() {
             return null;
         }
     }
-
+	
+	this.addListener = function(evtName, trgFunc) {
+		if (!_eventQueue) {
+			_eventQueue = {};
+		}
+		if (evtName && evtName.trim().length > 0) {
+			if (!_eventQueue[evtName]) {
+				_eventQueue[evtName] = [];
+			}
+			if (typeof trgFunc === "function") {
+				_eventQueue[evtName].push(trgFunc);
+			}
+		}
+	}
+	this.removeListener = function(evtName) {
+		if (_eventQueue && _eventQueue[evtName]) {
+			delete _eventQueue[evtName];
+		}
+	}
+	
+	this.callListener = function(evtName, data) {
+		if (_eventQueue && _eventQueue[evtName]) {
+			for(var i = 0; i < _eventQueue[evtName].length; i++) {
+				if (typeof _eventQueue[evtName][i] === "function") {
+					_eventQueue[evtName][i].call(this, data);
+				}
+			}
+		}
+	}
+	
     this.show = function (cfg) {
         if (document.querySelector('.kore-chat-window') !== null)
         {
@@ -719,11 +754,14 @@ function koreBotChat() {
     };
     this.destroy = function () {
         if (chatInitialize && chatInitialize.destroy) {
+			_eventQueue = {};
             chatInitialize.destroy();
         }
     };
     return {
-        show: show,
+        addListener: addListener,
+		removeListener: removeListener,
+		show: show,
         destroy: destroy
     };
 }

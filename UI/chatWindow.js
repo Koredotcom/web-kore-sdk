@@ -7,6 +7,7 @@ function koreBotChat() {
     };
     var _botInfo = {};
     var detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
+	var _eventQueue = {};
     String.prototype.isNotAllowedHTMLTags = function () {
         var wrapper = document.createElement('div');
         wrapper.innerHTML = this;
@@ -115,7 +116,7 @@ function koreBotChat() {
             regEx.MENTION = /(^|\s|\\n|")@([^\s]*)(?:[\s]\[([^\]]*)\])?["]?/gi;
             regEx.HASHTAG = /(^|\s|\\n)#(\S+)/g;
             regEx.NEWLINE = /\n/g;
-            
+            _regExForLink = /((?:http\:\/\/|https\:\/\/|www\.)+\S*\.[a-z]{2,4}(?:(?:\.\S)*[^\,\s\.])*\/?)/gi;
             var str = val;
             var mmntns = {};
             mmntns.sd = new RegExp(/^(d{1})[^d]|[^d](d{1})[^d]/g);
@@ -232,23 +233,20 @@ function koreBotChat() {
                 return "<br/>";
             }
             var nextln = regEx.NEWLINE;
-            str = xssAttack(str);
-			function linkreplacer(match, p1, offset, string) {
-				debugger;
+            function linkreplacer(match, p1, offset, string) {
 				var _link = p1.indexOf('http') < 0 ? 'http://' + match : match, _target;
 				_link = encodeURIComponent(_link);
 				_target = "target='_blank'";
 				return "<span class='isLink'><a " + _target + " href=\"" + _link + "\">" + match + "</a></span>";
 			}
-            var nextln = regEx.NEWLINE;
             //check for whether to linkify or not
 			var wrapper1 = document.createElement('div');
-			wrapper1.innerHTML = (txt || '').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+			wrapper1.innerHTML = (str || '').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 			wrapper1.innerHTML = xssAttack(wrapper1.innerHTML);
 			if ($(wrapper1).find('a').attr('href')) {
-				txt = wrapper1.innerHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+				str = wrapper1.innerHTML;
 			} else {
-				txt = wrapper1.innerHTML.replace(_regExForLink, linkreplacer);
+				str = wrapper1.innerHTML.replace(_regExForLink, linkreplacer);
 			}
             //Adding target=web for links if authUrl is true
             if (component && component.componentData && component.componentData.bot && component.componentData.bot.authUrl) {
@@ -322,7 +320,7 @@ function koreBotChat() {
         this.config = extend(this.config, cfg);
         this.init();
     }
-
+	
     chatWindow.prototype.init = function () {
         var me = this;
         _botInfo = me.config.botOptions.botInfo;
@@ -397,10 +395,15 @@ function koreBotChat() {
             me.sendMessage(_footerContainer.find('.chatInputBox'));
         });
         
-        _chatContainer.on('click','li a',function(e){
+        _chatContainer.off('click', 'li a').on('click','li a',function(e){
             e.preventDefault();
             var a_link = $(this).attr('href');
-            if(me.config.allowIframe === true){
+			var _trgt = $(this).attr('target');
+			if (_trgt === "_self") {
+				callListener("provideVal", {link: a_link} );
+				return;
+			}
+			if(me.config.allowIframe === true){
                 me.openPopup(a_link);
             }
             else{
@@ -677,7 +680,34 @@ function koreBotChat() {
             return null;
         }
     }
-
+	this.addListener = function(evtName, trgFunc) {
+		if (!_eventQueue) {
+			_eventQueue = {};
+		}
+		if (evtName && evtName.trim().length > 0) {
+			if (!_eventQueue[evtName]) {
+				_eventQueue[evtName] = [];
+			}
+			if (typeof trgFunc === "function") {
+				_eventQueue[evtName].push(trgFunc);
+			}
+		}
+	}
+	this.removeListener = function(evtName) {
+		if (_eventQueue && _eventQueue[evtName]) {
+			delete _eventQueue[evtName];
+		}
+	}
+	
+	this.callListener = function(evtName, data) {
+		if (_eventQueue && _eventQueue[evtName]) {
+			for(var i = 0; i < _eventQueue[evtName].length; i++) {
+				if (typeof _eventQueue[evtName][i] === "function") {
+					_eventQueue[evtName][i].call(this, data);
+				}
+			}
+		}
+	}
     this.show = function (cfg) {
         if ($('body').find('.kore-chat-window').length > 0)
         {
@@ -688,11 +718,14 @@ function koreBotChat() {
     };
     this.destroy = function () {
         if (chatInitialize && chatInitialize.destroy) {
+			_eventQueue = {};
             chatInitialize.destroy();
         }
     };
     return {
-        show: show,
+		addListener: addListener,
+		removeListener: removeListener,
+		show: show,
         destroy: destroy
     };
 }
