@@ -116,7 +116,8 @@ function koreBotChat() {
             regEx.MENTION = /(^|\s|\\n|")@([^\s]*)(?:[\s]\[([^\]]*)\])?["]?/gi;
             regEx.HASHTAG = /(^|\s|\\n)#(\S+)/g;
             regEx.NEWLINE = /\n/g;
-            _regExForLink = /((?:http\:\/\/|https\:\/\/|www\.)+\S*\.[a-z]{2,4}(?:(?:\.\S)*[^\,\s\.])*\/?)/gi;
+            var _regExForLink = /((?:http\:\/\/|https\:\/\/|www\.)+\S*\.[a-z]{2,4}(?:(?:\.\S)*[^\,\s\.])*\/?)/gi;
+			var _regExForMarkdownLink = /\[([^\]]+)\](|\s)+\(([^\)])+\)/g;
             var str = val;
             var mmntns = {};
             mmntns.sd = new RegExp(/^(d{1})[^d]|[^d](d{1})[^d]/g);
@@ -234,10 +235,15 @@ function koreBotChat() {
             }
             var nextln = regEx.NEWLINE;
             function linkreplacer(match, p1, offset, string) {
-				var _link = p1.indexOf('http') < 0 ? 'http://' + match : match, _target;
-				_link = encodeURIComponent(_link);
-				_target = "target='_blank'";
-				return "<span class='isLink'><a " + _target + " href=\"" + _link + "\">" + match + "</a></span>";
+				var dummyString = string.replace(_regExForMarkdownLink, '[]');
+				if (dummyString.indexOf(match) !== -1){
+					var _link = p1.indexOf('http') < 0 ? 'http://' + match : match, _target;
+					_link = encodeURIComponent(_link);
+					_target = "target='_blank'";
+					return "<span class='isLink'><a " + _target + " href=\"" + _link + "\">" + match + "</a></span>";
+				} else {
+					return match;
+				}
 			}
             //check for whether to linkify or not
 			var wrapper1 = document.createElement('div');
@@ -272,9 +278,105 @@ function koreBotChat() {
                 str = $div_A.html();
             }
             
-            return helpers.nl2br(str);
-        }
+            return helpers.nl2br(helpers.checkMarkdowns(str));
+        },
+		'checkMarkdowns': function (val) {
+			var txtArr = val.split(/\r?\n/);
+			for(var i = 0; i < txtArr.length;i++) {
+				var _lineBreakAdded = false;
+				if (txtArr[i].indexOf('=h6') === 0 || txtArr[i].indexOf('=H6') === 0) {
+					txtArr[i] = '<h6>' + txtArr[i].substring(3) + '</h6>';
+					_lineBreakAdded = true;
+				} else if (txtArr[i].indexOf('=h5') === 0 || txtArr[i].indexOf('=H5') === 0) {
+					txtArr[i] = '<h5>' + txtArr[i].substring(3) + '</h5>';
+					_lineBreakAdded = true;
+				} else if (txtArr[i].indexOf('=h4') === 0 || txtArr[i].indexOf('=H4') === 0) {
+					txtArr[i] = '<h4>' + txtArr[i].substring(3) + '</h4>';
+					_lineBreakAdded = true;
+				} else if (txtArr[i].indexOf('=h3') === 0 || txtArr[i].indexOf('=H3') === 0) {
+					txtArr[i] = '<h3>' + txtArr[i].substring(3) + '</h3>';
+					_lineBreakAdded = true;
+				} else if(txtArr[i].indexOf('=h2') === 0 || txtArr[i].indexOf('=H2') === 0) {
+					txtArr[i] = '<h2>' + txtArr[i].substring(3) + '</h2>';
+					_lineBreakAdded = true;
+				} else if (txtArr[i].indexOf('=h1') === 0 || txtArr[i].indexOf('=H1') === 0) {
+					txtArr[i] = '<h1>' + txtArr[i].substring(3) + '</h1>';
+					_lineBreakAdded = true;
+				} else if (txtArr[i].length === 0) {
+					txtArr[i] = '<br/>';
+					_lineBreakAdded = true;
+				} else if (txtArr[i].indexOf('*') === 0) {
+					if (!isEven(txtArr[i].split('*').length - 1)) {
+						txtArr[i] = '<br/>&#9679; ' + txtArr[i].substring(1);
+						_lineBreakAdded = true;
+					}
+				}
+				var j;
+				// Matches Image markup ![test](http://google.com/image.png)
+				var _matchImage = txtArr[i].match(/\!\[([^\]]+)\](|\s)+\(([^\)])+\)/g);
+				if (_matchImage && _matchImage.length > 0) {
+					for(j = 0; j < _matchImage.length; j++) {
+						var _imgTxt = _matchImage[j].substring(2, _matchImage[j].indexOf(']'));
+						var remainingString = _matchImage[j].substring(_matchImage[j].indexOf(']') + 1).trim();
+						var _imgLink = remainingString.substring(1, remainingString.indexOf(')'));
+						_imgLink = '<img src="' + _imgLink + '" alt="' + _imgTxt + '">';
+						txtArr[i] = txtArr[i].replace(_matchImage[j], _imgLink);
+					}
+				}
+				// Matches link markup [test](http://google.com/)
+				var _matchLink = txtArr[i].match(/\[([^\]]+)\](|\s)+\(([^\)])+\)/g);
+				if (_matchLink && _matchLink.length > 0) {
+					for(j = 0; j < _matchLink.length; j++) {
+						var _linkTxt = _matchLink[j].substring(1, _matchLink[j].indexOf(']'));
+						var remainingString = _matchLink[j].substring(_matchLink[j].indexOf(']') + 1).trim();
+						var _linkLink = remainingString.substring(1, remainingString.indexOf(')'));
+						_linkLink = '<a href="' + _linkLink + '" target="_blank">' + _linkTxt + '</a>';
+						txtArr[i] = txtArr[i].replace(_matchLink[j], _linkLink);
+					}
+				}
+				// Matches bold markup *test* doesnot match * test *, *test *, * test*. If all these are required then replace \S with \s
+				var _matchAstrik = txtArr[i].match(/\*\S([^*]*?)\S\*/g);
+				if (_matchAstrik && _matchAstrik.length > 0) {
+					for(j = 0; j < _matchAstrik.length; j++) {
+						var _boldTxt = _matchAstrik[j];
+						_boldTxt = _boldTxt.substring(1, _boldTxt.length - 1);
+						_boldTxt = '<b>' + _boldTxt + '</b>';
+						txtArr[i] = txtArr[i].replace(_matchAstrik[j], _boldTxt);
+					}
+				}
+				// Matches bold markup ~test~ doesnot match ~ test ~, ~test ~, ~ test~. If all these are required then replace \S with \s
+				var _matchItalic = txtArr[i].match(/\~\S([^*]*?)\S\~/g);
+				if (_matchItalic && _matchItalic.length > 0) {
+					for(j = 0; j < _matchItalic.length; j++) {
+						var _italicTxt = _matchItalic[j];
+						_italicTxt = _italicTxt.substring(1, _italicTxt.length - 1);
+						_italicTxt = '<i>' + _italicTxt + '</i>';
+						txtArr[i] = txtArr[i].replace(_matchItalic[j], _italicTxt);
+					}
+				}
+				// Matches bold markup ~test~ doesnot match ~ test ~, ~test ~, ~ test~. If all these are required then replace \S with \s
+				var _matchPre = txtArr[i].match(/\`\`\`\S([^*]*?)\S\`\`\`/g);
+				if (_matchPre && _matchPre.length > 0) {
+					for(j = 0; j < _matchPre.length; j++) {
+						var _preTxt = _matchPre[j];
+						_preTxt = _preTxt.substring(3, _preTxt.length - 3);
+						_preTxt = '<pre>' + _preTxt + '</pre>';
+						txtArr[i] = txtArr[i].replace(_matchItalic[j], _italicTxt);
+					}
+				}
+				if (!_lineBreakAdded && i > 0) {
+					txtArr[i] = '<br/>' + txtArr[i];
+				}
+			}
+			val = txtArr.join('');
+			return val;
+		}
     };
+	
+	function isEven(n) {
+		n = Number(n);
+		return n === 0 || !!(n && !(n%2));
+	}
 	function extend(){
 		var rec = function(obj) {
 			var recRes = {};
@@ -576,7 +678,9 @@ function koreBotChat() {
         });
         chatInput.html("");
         _bodyContainer.css('bottom', _footerContainer.outerHeight());
-
+		if (msgData && msgData.message && msgData.message[0].cInfo && msgData.message[0].cInfo.body) {
+			msgData.message[0].cInfo.body = helpers.convertMDtoHTML(msgData.message[0].cInfo.body);
+		}
         me.renderMessage(msgData);
     };
 

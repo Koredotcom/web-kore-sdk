@@ -247,7 +247,10 @@ ul.chat-container li .profile-photo .user-account{
     display: inline-block;
     background-size: 100%;
 }
-    
+ul.chat-container li .messageBubble img{
+	max-width: 100%;
+	height: auto;
+}
 ul.chat-container li.fromCurrentUser .messageBubble{
     float:right;
     padding: 12px 15px;
