@@ -18,10 +18,12 @@
 	-	<script src='UI/libs/moment.js'></script>
     -   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
 #### 3. Include the kore-bot-sdk-client.js ,anonymousassertion.js & chatWindow.js files 
-    -   <script src='../test/anonymousassertion.js'></script>
+    -   <script src='../libs/anonymousassertion.js'></script>
     -   <script src='../kore-bot-sdk-client.js'></script>
     -   <script src='UI/chatWindow.js'></script> // chat ui js
 #### 4. Define the assertion function (Should be defined by the clients)
+        //NOTE:clients has to define a API which should generate and return the JWT token. and do the necessary changes in the below function like change the url,type,Authorization and on success set the returned jwt.
+        //fields to set in JWT:subject(emailId),issuer(clientId),algorithm(HS256 or RS256)
     -   function assertion(options, callback) {
         //client has to fill the claims and call the callback.
         $.ajax({
@@ -70,7 +72,7 @@
 #### 1. Include the kore-bot-sdk-client.js & dependencies
     -   <script src='jquery.js'></script>
     -   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
-    -   <script src='../test/anonymousassertion.js'></script>
+    -   <script src='../libs/anonymousassertion.js'></script>
     -   <script src='../kore-bot-sdk-client.js'></script>
 #### 2. Initialize the Bot
         //define the bot options
@@ -116,9 +118,9 @@
             }
         });
 
-# How to check connection stablished with bot
+# How to check connection established with bot
 
-        // Open event triggers when connection stablished with bot
+        // Open event triggers when connection established with bot
         bot.on("open", function (response) {
             // your code
         });
