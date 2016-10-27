@@ -342,7 +342,7 @@ function koreBotChat() {
 						var _imgTxt = _matchImage[j].substring(2, _matchImage[j].indexOf(']'));
 						var remainingString = _matchImage[j].substring(_matchImage[j].indexOf(']') + 1).trim();
 						var _imgLink = remainingString.substring(1, remainingString.indexOf(')'));
-						_imgLink = '<img src="' + _imgLink + '" alt="' + _imgTxt + '">';
+						_imgLink = '<img src="' + _imgLink + '" alt="' + _imgTxt + '"/>';
 						txtArr[i] = txtArr[i].replace(_matchImage[j], _imgLink);
 					}
 				}
@@ -387,6 +387,7 @@ function koreBotChat() {
 						_preTxt = '<pre>' + _preTxt + '</pre>';
 						txtArr[i] = txtArr[i].replace(_matchPre[j], _preTxt);
 					}
+					_lineBreakAdded = true;
 				}
 				if (_matchPre1 && _matchPre1.length > 0) {
 					for(j = 0; j < _matchPre1.length; j++) {
@@ -395,6 +396,7 @@ function koreBotChat() {
 						_preTxt = '<pre>' + _preTxt + '</pre>';
 						txtArr[i] = txtArr[i].replace(_matchPre1[j], _preTxt);
 					}
+					_lineBreakAdded = true;
 				}
 				if (!_lineBreakAdded && i > 0) {
 					txtArr[i] = '<br/>' + txtArr[i];

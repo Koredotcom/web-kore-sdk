@@ -373,6 +373,7 @@ function koreBotChat() {
 						_preTxt = '<pre>' + _preTxt + '</pre>';
 						txtArr[i] = txtArr[i].replace(_matchPre[j], _preTxt);
 					}
+					_lineBreakAdded = true;
 				}
 				if (_matchPre1 && _matchPre1.length > 0) {
 					for(j = 0; j < _matchPre1.length; j++) {
@@ -381,6 +382,7 @@ function koreBotChat() {
 						_preTxt = '<pre>' + _preTxt + '</pre>';
 						txtArr[i] = txtArr[i].replace(_matchPre1[j], _preTxt);
 					}
+					_lineBreakAdded = true;
 				}
 				if (!_lineBreakAdded && i > 0) {
 					txtArr[i] = '<br/>' + txtArr[i];
