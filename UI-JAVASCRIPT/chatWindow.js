@@ -324,6 +324,15 @@ function koreBotChat() {
 						txtArr[i] = '<br/>&#9679; ' + txtArr[i].substring(1);
 						_lineBreakAdded = true;
 					}
+				} else if (txtArr[i].indexOf('>>') === 0) {
+					txtArr[i] = '<p class="indent">' + txtArr[i].substring(2) + '</p>';
+					_lineBreakAdded = true;
+				} else if (txtArr[i].indexOf('&gt;&gt;') === 0) {
+					txtArr[i] = '<p class="indent">' + txtArr[i].substring(8) + '</p>';
+					_lineBreakAdded = true;
+				} else if (txtArr[i].indexOf('---') === 0) {
+					txtArr[i] = '<hr/>' + txtArr[i].substring(3);
+					_lineBreakAdded = true;
 				}
 				var j;
 				// Matches Image markup ![test](http://google.com/image.png)
@@ -370,12 +379,21 @@ function koreBotChat() {
 				}
 				// Matches bold markup ~test~ doesnot match ~ test ~, ~test ~, ~ test~. If all these are required then replace \S with \s
 				var _matchPre = txtArr[i].match(/\`\`\`\S([^*]*?)\S\`\`\`/g);
+				var _matchPre1 = txtArr[i].match(/\'\'\'\S([^*]*?)\S\'\'\'/g);
 				if (_matchPre && _matchPre.length > 0) {
 					for(j = 0; j < _matchPre.length; j++) {
 						var _preTxt = _matchPre[j];
 						_preTxt = _preTxt.substring(3, _preTxt.length - 3);
 						_preTxt = '<pre>' + _preTxt + '</pre>';
-						txtArr[i] = txtArr[i].replace(_matchItalic[j], _italicTxt);
+						txtArr[i] = txtArr[i].replace(_matchPre[j], _preTxt);
+					}
+				}
+				if (_matchPre1 && _matchPre1.length > 0) {
+					for(j = 0; j < _matchPre1.length; j++) {
+						var _preTxt = _matchPre1[j];
+						_preTxt = _preTxt.substring(3, _preTxt.length - 3);
+						_preTxt = '<pre>' + _preTxt + '</pre>';
+						txtArr[i] = txtArr[i].replace(_matchPre1[j], _preTxt);
 					}
 				}
 				if (!_lineBreakAdded && i > 0) {

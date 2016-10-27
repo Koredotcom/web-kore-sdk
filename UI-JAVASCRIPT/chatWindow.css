@@ -251,6 +251,16 @@ ul.chat-container li .messageBubble img{
 	max-width: 100%;
 	height: auto;
 }
+ul.chat-container li .messageBubble p.indent{
+	padding-left: 10px;
+	border-left: 6px solid #DDD;
+}
+ul.chat-container li .messageBubble pre{
+	padding: 10px 12px;
+	border: 1px solid #DDD;
+	white-space: pre-wrap;
+	border-radius: 4px;
+}
 ul.chat-container li.fromCurrentUser .messageBubble{
     float:right;
     padding: 12px 15px;
