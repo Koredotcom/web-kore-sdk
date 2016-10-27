@@ -284,22 +284,22 @@ function koreBotChat() {
 			var txtArr = val.split(/\r?\n/);
 			for(var i = 0; i < txtArr.length;i++) {
 				var _lineBreakAdded = false;
-				if (txtArr[i].indexOf('=h6') === 0 || txtArr[i].indexOf('=H6') === 0) {
+				if (txtArr[i].indexOf('#h6') === 0 || txtArr[i].indexOf('#H6') === 0) {
 					txtArr[i] = '<h6>' + txtArr[i].substring(3) + '</h6>';
 					_lineBreakAdded = true;
-				} else if (txtArr[i].indexOf('=h5') === 0 || txtArr[i].indexOf('=H5') === 0) {
+				} else if (txtArr[i].indexOf('#h5') === 0 || txtArr[i].indexOf('#H5') === 0) {
 					txtArr[i] = '<h5>' + txtArr[i].substring(3) + '</h5>';
 					_lineBreakAdded = true;
-				} else if (txtArr[i].indexOf('=h4') === 0 || txtArr[i].indexOf('=H4') === 0) {
+				} else if (txtArr[i].indexOf('#h4') === 0 || txtArr[i].indexOf('#H4') === 0) {
 					txtArr[i] = '<h4>' + txtArr[i].substring(3) + '</h4>';
 					_lineBreakAdded = true;
-				} else if (txtArr[i].indexOf('=h3') === 0 || txtArr[i].indexOf('=H3') === 0) {
+				} else if (txtArr[i].indexOf('#h3') === 0 || txtArr[i].indexOf('#H3') === 0) {
 					txtArr[i] = '<h3>' + txtArr[i].substring(3) + '</h3>';
 					_lineBreakAdded = true;
-				} else if(txtArr[i].indexOf('=h2') === 0 || txtArr[i].indexOf('=H2') === 0) {
+				} else if(txtArr[i].indexOf('#h2') === 0 || txtArr[i].indexOf('#H2') === 0) {
 					txtArr[i] = '<h2>' + txtArr[i].substring(3) + '</h2>';
 					_lineBreakAdded = true;
-				} else if (txtArr[i].indexOf('=h1') === 0 || txtArr[i].indexOf('=H1') === 0) {
+				} else if (txtArr[i].indexOf('#h1') === 0 || txtArr[i].indexOf('#H1') === 0) {
 					txtArr[i] = '<h1>' + txtArr[i].substring(3) + '</h1>';
 					_lineBreakAdded = true;
 				} else if (txtArr[i].length === 0) {
@@ -316,7 +316,7 @@ function koreBotChat() {
 				} else if (txtArr[i].indexOf('&gt;&gt;') === 0) {
 					txtArr[i] = '<p class="indent">' + txtArr[i].substring(8) + '</p>';
 					_lineBreakAdded = true;
-				} else if (txtArr[i].indexOf('---') === 0) {
+				} else if (txtArr[i].indexOf('---') === 0 || txtArr[i].indexOf('___') === 0) {
 					txtArr[i] = '<hr/>' + txtArr[i].substring(3);
 					_lineBreakAdded = true;
 				}
