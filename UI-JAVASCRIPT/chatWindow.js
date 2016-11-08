@@ -353,7 +353,7 @@ function koreBotChat() {
 						var _linkTxt = _matchLink[j].substring(1, _matchLink[j].indexOf(']'));
 						var remainingString = _matchLink[j].substring(_matchLink[j].indexOf(']') + 1).trim();
 						var _linkLink = remainingString.substring(1, remainingString.indexOf(')'));
-						_linkLink = '<a href="' + _linkLink + '" target="_blank">' + _linkTxt + '</a>';
+						_linkLink = '<span class="isLink"><a href="' + _linkLink + '" target="_blank">' + _linkTxt + '</a></span>';
 						txtArr[i] = txtArr[i].replace(_matchLink[j], _linkLink);
 					}
 				}
@@ -770,7 +770,7 @@ function koreBotChat() {
 						if(tempData.type !== "bot_response") {
 							msg_data = 'id = "msg_' + msgItem.clientMessageId + '"';
 							msg_class = 'fromCurrentUser';
-							msg_html = msgItem.cInfo.body;
+							msg_html = helpers.convertMDtoHTML(msgItem.cInfo.body);
 						}
 						else {
 							msg_class = 'fromOtherUsers';

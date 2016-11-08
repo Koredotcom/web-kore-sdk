@@ -339,7 +339,7 @@ function koreBotChat() {
 						var _linkTxt = _matchLink[j].substring(1, _matchLink[j].indexOf(']'));
 						var remainingString = _matchLink[j].substring(_matchLink[j].indexOf(']') + 1).trim();
 						var _linkLink = remainingString.substring(1, remainingString.indexOf(')'));
-						_linkLink = '<a href="' + _linkLink + '" target="_blank">' + _linkTxt + '</a>';
+						_linkLink = '<span class="isLink"><a href="' + _linkLink + '" target="_blank">' + _linkTxt + '</a></span>';
 						txtArr[i] = txtArr[i].replace(_matchLink[j], _linkLink);
 					}
 				}
@@ -771,7 +771,7 @@ function koreBotChat() {
                                 {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                                 {{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
                                 <div class="messageBubble">\
-                                    {{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.cInfo.body)}} {{else}} {{html msgItem.cInfo.body}} {{/if}} \
+                                    {{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.cInfo.body)}} {{else}} {{html helpers.convertMDtoHTML(msgItem.cInfo.body)}} {{/if}} \
                                 </div> \
 			</li> \
                         {{/if}} \

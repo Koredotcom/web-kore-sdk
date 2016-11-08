@@ -261,6 +261,11 @@ ul.chat-container li .messageBubble pre{
 	white-space: pre-wrap;
 	border-radius: 4px;
 }
+ul.chat-container li .messageBubble hr{
+	border: 0;
+	border-top: 1px solid #333;
+	margin: 8px 0;
+}
 ul.chat-container li.fromCurrentUser .messageBubble{
     float:right;
     padding: 12px 15px;
@@ -274,6 +279,9 @@ ul.chat-container li.fromCurrentUser .messageBubble{
     -webkit-animation: message-right ease-in-out 2s forwards;
     -moz-animation: message-right ease-in-out 2s forwards;
     animation: message-right ease-in-out 2s forwards;
+}
+ul.chat-container li.fromCurrentUser .messageBubble .isLink a{
+	color: #FFF;
 }
 ul.chat-container li.fromCurrentUser .extra-info{
     padding-right: 5px;
@@ -307,7 +315,6 @@ ul.chat-container li.fromOtherUsers .messageBubble{
     -moz-animation: message-left ease-in-out 2s forwards;
     animation: message-left ease-in-out 2s forwards;
 }
-
 ul.chat-container li.fromOtherUsers.with-icon{
     padding-left: 44px;
     position: relative;
