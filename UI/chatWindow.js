@@ -8,6 +8,7 @@ function koreBotChat() {
     var _botInfo = {};
     var detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
 	var _eventQueue = {};
+	var prevRange;
     String.prototype.isNotAllowedHTMLTags = function () {
         var wrapper = document.createElement('div');
         wrapper.innerHTML = this;
@@ -492,6 +493,12 @@ function koreBotChat() {
             var _footerContainer = $(me.config.container).find('.kore-chat-footer');
             var _bodyContainer = $(me.config.container).find('.kore-chat-body');
             _bodyContainer.css('bottom', _footerContainer.outerHeight());
+			prevComposeSelection = window.getSelection();
+            prevRange = prevComposeSelection.rangeCount > 0 && prevComposeSelection.getRangeAt(0);
+        });
+		_chatContainer.on('click', '.chatInputBox', function (event) {
+            prevComposeSelection = window.getSelection();
+            prevRange = prevComposeSelection.rangeCount > 0 && prevComposeSelection.getRangeAt(0);
         });
         _chatContainer.off('keydown', '.chatInputBox').on('keydown', '.chatInputBox', function (event) {
             var _this = $(this);
@@ -507,10 +514,16 @@ function koreBotChat() {
         
         _chatContainer.off('paste', '.chatInputBox').on('paste', '.chatInputBox', function (event) {
             event.preventDefault();
+			var _this = document.getElementsByClassName("chatInputBox");
             var _clipboardData = event.clipboardData || (event.originalEvent && event.originalEvent.clipboardData) || window.clipboardData;
-            if(_clipboardData){
-                $(this).html(helpers.nl2br(_clipboardData.getData('text').escapeHTML()));
+            var _htmlData = '';
+			if(_clipboardData){
+                _htmlData = helpers.nl2br(_clipboardData.getData('text').escapeHTML());
+				insertHtmlData(_this, _htmlData);
             }
+			setTimeout(function(){
+				setCaretEnd(_this);
+			}, 100);
         });
         _chatContainer.off('click', '.sendChat').on('click', '.sendChat', function (event) {
             var _footerContainer = $(me.config.container).find('.kore-chat-footer');
@@ -797,6 +810,48 @@ function koreBotChat() {
     };
     
     var chatInitialize;
+	function insertHtmlData (_txtBox, _html) {
+		var _input = _txtBox;
+		sel = window.getSelection();
+		if (sel.rangeCount > 0) {
+			range = sel.getRangeAt(0);
+		}
+		prevRange = prevRange ? prevRange : range;
+		if (prevRange) {
+			node = document.createElement("span");
+			prevRange.insertNode(node);
+			var _span = document.createElement("span");
+			_span.innerHTML = _html;
+			prevRange.insertNode(_span);
+			prevRange.setEndAfter(node);
+			prevRange.setStartAfter(node);
+			prevRange.collapse(false);
+			sel = window.getSelection();
+			sel.removeAllRanges();
+			sel.addRange(prevRange);
+			var focused = document.activeElement;
+			if (focused && !focused.className =="chatInputBox") {
+				_input.focus();
+			}
+			return _input;
+		} else {
+			_input.appendChild(html);
+		}
+	}
+	function setCaretEnd (_this){
+		var sel;
+		if (_this.item(0).innerText.length) {
+			var range = document.createRange();
+			range.selectNodeContents(_this[0]);
+			range.collapse(false);
+			var sel1 = window.getSelection();
+			sel1.removeAllRanges();
+			sel1.addRange(range);
+			prevRange = range;
+		} else {
+			prevRange = false;
+		}
+	}
     
     window.onbeforeunload = function(){
         if (chatInitialize && $(chatInitialize.config.chatContainer).length > 0) {

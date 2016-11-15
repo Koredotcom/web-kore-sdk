@@ -8,6 +8,7 @@ function koreBotChat() {
     var _botInfo = {};
     var detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
     var _eventQueue = {};
+    var prevRange;
     String.prototype.isNotAllowedHTMLTags = function () {
         var wrapper = document.createElement('div');
         wrapper.innerHTML = this;
@@ -515,17 +516,23 @@ function koreBotChat() {
 
     chatWindow.prototype.bindEvents = function () {
         var me = this;
-        var _chatContainer = me.config.chatContainer;
+		var _chatContainer = me.config.chatContainer;
 		var _chatInputBox = _chatContainer.querySelector('.chatInputBox');
 		var _expandBtn = _chatContainer.querySelector('.expand-btn');
 		var _closeBtn = _chatContainer.querySelector('.close-btn');
 		var _minimizeBtn =  _chatContainer.querySelector('.minimize-btn');
 		var _reloadBtn = _chatContainer.querySelector('.reload-btn');
-
+		
         _chatInputBox.addEventListener('keyup', function (event) {
             var _footerContainer = me.config.container.querySelector('.kore-chat-footer');
             var _bodyContainer =me.config.container.querySelector('.kore-chat-body');
             _bodyContainer.style.bottom = _footerContainer.scrollHeight;
+			prevComposeSelection = window.getSelection();
+            prevRange = prevComposeSelection.rangeCount > 0 && prevComposeSelection.getRangeAt(0);
+        });
+		_chatInputBox.addEventListener('click', function (event) {
+            prevComposeSelection = window.getSelection();
+            prevRange = prevComposeSelection.rangeCount > 0 && prevComposeSelection.getRangeAt(0);
         });
 		
         _chatInputBox.addEventListener('keydown', function (event) {
@@ -541,10 +548,17 @@ function koreBotChat() {
         
         _chatInputBox.addEventListener('paste', function (event) {
             event.preventDefault();
+			var _this = document.getElementsByClassName("chatInputBox");
             var _clipboardData = event.clipboardData || (event.originalEvent && event.originalEvent.clipboardData) || window.clipboardData;
-            if(_clipboardData){
-                _chatInputBox.innerHTML = helpers.nl2br(_clipboardData.getData('text').escapeHTML());
+            var _htmlData = '';
+			if(_clipboardData){
+                _htmlData = helpers.nl2br(_clipboardData.getData('text').escapeHTML());
+				insertHtmlData(_this, _htmlData);
             }
+			setTimeout(function(){
+				setCaretEnd(_this);
+			}, 100);
+			
         });
 
         _closeBtn.addEventListener('click', function (event) {
@@ -829,7 +843,49 @@ function koreBotChat() {
     };
     
     var chatInitialize;
-    
+    function insertHtmlData (_txtBox, _html) {
+		var _input = _txtBox;
+		sel = window.getSelection();
+		if (sel.rangeCount > 0) {
+			range = sel.getRangeAt(0);
+		}
+		prevRange = prevRange ? prevRange : range;
+		if (prevRange) {
+			node = document.createElement("span");
+			prevRange.insertNode(node);
+			var _span = document.createElement("span");
+			_span.innerHTML = _html;
+			prevRange.insertNode(_span);
+			prevRange.setEndAfter(node);
+			prevRange.setStartAfter(node);
+			prevRange.collapse(false);
+			sel = window.getSelection();
+			sel.removeAllRanges();
+			sel.addRange(prevRange);
+			var focused = document.activeElement;
+			if (focused && !focused.className =="chatInputBox") {
+				_input.focus();
+			}
+			return _input;
+		} else {
+			_input.appendChild(html);
+		}
+	}
+	function setCaretEnd (_this){
+		var sel;
+		if (_this.item(0).innerText.length) {
+			var range = document.createRange();
+			range.selectNodeContents(_this[0]);
+			range.collapse(false);
+			var sel1 = window.getSelection();
+			sel1.removeAllRanges();
+			sel1.addRange(range);
+			prevRange = range;
+		} else {
+			prevRange = false;
+		}
+	}
+	
     window.onbeforeunload = function(){
         if (chatInitialize && document.querySelector('.kore-chat-window') !== null) {
             chatInitialize.destroy();
