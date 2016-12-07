@@ -9,6 +9,20 @@ function koreBotChat() {
     var detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
     var _eventQueue = {};
     var prevRange;
+
+    /******************* Mic variable initilization *******************/
+    var _exports = {},
+    _template, _this = {};
+    var navigator = window.navigator;
+    var mediaStream, mediaStreamSource, rec,_connection, intervalKey, context;
+    var _permission = false;
+    var _user_connection = false;
+    var CONTENT_TYPE = "content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)16000,+format=(string)S16LE,+channels=(int)1";
+
+    var recorderWorkerPath = "../libs/recorderWorker.js";
+    var INTERVAL = 250; 
+    /***************** Mic initilization code end here ************************/
+
     String.prototype.isNotAllowedHTMLTags = function () {
         var wrapper = document.createElement('div');
         wrapper.innerHTML = this;
@@ -498,7 +512,7 @@ function koreBotChat() {
     chatWindow.prototype.destroy = function () {
         var me = this;
 		if(document.querySelector('.kore-chat-overlay') !== null) {
-			document.querySelector('.kore-chat-overlay').style.display = "none";
+			document.querySelector('.kore-chat-overlay').style.display = "";
 		}
         bot.close();
         if (me.config && me.config.chatContainer) {
@@ -522,7 +536,9 @@ function koreBotChat() {
 		var _closeBtn = _chatContainer.querySelector('.close-btn');
 		var _minimizeBtn =  _chatContainer.querySelector('.minimize-btn');
 		var _reloadBtn = _chatContainer.querySelector('.reload-btn');
-		
+		var _buttonTmplContentBox = _chatContainer.querySelector('.buttonTmplContentBox');
+		var _startRecord = _chatContainer.querySelector('.notRecordingMicrophone');
+        var _stopRecord = _chatContainer.querySelector('.recordingMicrophone');
         _chatInputBox.addEventListener('keyup', function (event) {
             var _footerContainer = me.config.container.querySelector('.kore-chat-footer');
             var _bodyContainer =me.config.container.querySelector('.kore-chat-body');
@@ -533,6 +549,12 @@ function koreBotChat() {
 		_chatInputBox.addEventListener('click', function (event) {
             prevComposeSelection = window.getSelection();
             prevRange = prevComposeSelection.rangeCount > 0 && prevComposeSelection.getRangeAt(0);
+        });
+        _startRecord.addEventListener('click', function (event) {
+            micEnable();
+        });
+        _stopRecord.addEventListener('click', function (event) {
+            stop();
         });
 		
         _chatInputBox.addEventListener('keydown', function (event) {
@@ -618,11 +640,12 @@ function koreBotChat() {
             me.minimized = false;
         });
 
-        _reloadBtn.addEventListener('click', function(event){
+        _reloadBtn.addEventListener('click', function(event){			
             addClass(_reloadBtn, "disabled");
 			_reloadBtn.disabled = true;
             me.resetWindow();
         });
+		
         bot.on("open", function (response) {
 			var _botTitle = _chatContainer.querySelector('.kore-chat-header .header-title');
 			var _reconnectEl = _chatContainer.querySelector('.kore-chat-header .disabled');
@@ -643,6 +666,16 @@ function koreBotChat() {
 
             if (tempData.from === "bot" && tempData.type === "bot_response")
             {
+				if(tempData.message[0]){
+					tempData.message[0].cInfo.body = window.emojione.shortnameToImage(tempData.message[0].cInfo.body);
+					if(tempData.message[0].component && !tempData.message[0].component.payload.text ) {
+						try{
+							tempData.message[0].component = JSON.parse(tempData.message[0].component.payload);
+						}catch(err){
+							tempData.message[0].component = tempData.message[0].component.payload;
+						}
+					}					
+				}
                 me.renderMessage(tempData);
             }
             else if(tempData.from === "self" && tempData.type === "user_message"){
@@ -727,10 +760,19 @@ function koreBotChat() {
     };
 
     chatWindow.prototype.renderMessage = function (msgData) {
-        var me = this;
+        var me = this,messageHtml = '';
         var _chatContainer = me.config.chatContainer.querySelector('.chat-container');
-
-        var messageHtml = me.getChatTemplate("message", msgData);
+		
+        if(msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "button"){
+			messageHtml = me.getChatTemplate("templatebutton", msgData);
+		}
+		else if(msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "list"){
+			messageHtml = me.getChatTemplate("templatelist", msgData);
+		}else if(msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "quick_replies"){
+			messageHtml = me.getChatTemplate("templatequickreply", msgData);
+		}else{
+			messageHtml = me.getChatTemplate("message", msgData);
+		}
 
         _chatContainer.innerHTML += messageHtml;
 		if(_chatContainer.querySelectorAll('li a').length > 0) {
@@ -752,9 +794,34 @@ function koreBotChat() {
 				});
 			});
 		}
+		if(_chatContainer.querySelectorAll('.sendClickReq').length > 0) {			
+			for (var i = 0; i < _chatContainer.querySelectorAll('.sendClickReq').length; i++){
+				var evt = _chatContainer.querySelectorAll('.sendClickReq')[i];
+				evt.addEventListener('click',function(){
+					var _this = this;
+					me.templateBtnClick(_this, me);
+				});
+			}
+		}
         _chatContainer.scrollTop = _chatContainer.scrollHeight;
     };
     
+    chatWindow.prototype.templateBtnClick = function(_this,me){
+		var type = _this.getAttribute('type');
+		if(type == "postback" || type == "text"){
+			document.getElementsByClassName('chatInputBox').textContent = _this.getAttribute('value');
+			document.getElementsByClassName('chatInputBox').innerHTML = _this.getAttribute('value');
+			setTimeout(function(){
+				me.sendMessage(document.getElementsByClassName('chatInputBox'));
+			},100);
+		}else if(type == "url" || type == "web_url"){
+			var a_link = _this.getAttribute('url');
+			if(a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0){
+				a_link = "http://" + a_link;
+			}
+			var _tempWin = window.open(a_link,"_blank");
+		}
+	};
     chatWindow.prototype.openPopup = function(link_url){
         var me = this;
         var popupHtml = me.getChatTemplate("popup", link_url);
@@ -799,6 +866,9 @@ function koreBotChat() {
 						if(tempData.createdOn) {
 							msg_created_html = '<div class="extra-info">'+ helpers.formatDate(tempData.createdOn) +'</div>';
 						}
+						if(msgItem.cInfo.emoji) {
+							msg_html = msg_html +'<span class="emojione emojione-'+msgItem.cInfo.emoji[0].code+'"></span>';
+						}
 						
 						msgTemplate += '<li '+ msg_data +' class=" ' + msg_class + '"> \
                                 '+ msg_created_html +' \
@@ -815,7 +885,227 @@ function koreBotChat() {
 			var popupTemplate = '<div class="kore-auth-popup"><div class="popup_controls"><span class="close-popup" title="Close">&times;</span></div> \
 							<iframe id="authIframe" src=" ' + tempData + '"></iframe></div>';
             return popupTemplate;
-        } else {
+        }
+		else if(tempType ==="templatebutton"){
+			var buttonTemplate = '';
+			if(tempData.message) {
+				tempData.message.forEach(function(msgItem){
+					if(msgItem.component && msgItem.component.type === "template") { 
+						var msg_data = '';
+						var msg_class = '';
+						var msg_icon_html = '';
+						var msg_created_html = '';
+						var msg_html = '';
+						var inner_html = '';
+						if(tempData.type !== "bot_response") {
+							msg_data = 'id = "msg_' + msgItem.clientMessageId + '"';
+							msg_class = 'fromCurrentUser';
+							msg_html = helpers.convertMDtoHTML(msgItem.component.payload.text);
+						}
+						else {
+							msg_class = 'fromOtherUsers';
+							msg_html = helpers.convertMDtoHTML(msgItem.component.payload.text);
+						}
+						
+						if(tempData.icon) {
+							msg_class += ' with-icon';
+							msg_icon_html = '<div class="profile-photo"> <div class="user-account avtar" style="background-image:url('+ tempData.icon +')"></div> </div>';
+						}
+						
+						if(tempData.createdOn) {
+							msg_created_html = '<div class="extra-info">'+ helpers.formatDate(tempData.createdOn) +'</div>';
+						}
+						if(msgItem.cInfo.emoji) {
+							msg_html = msg_html +'<span class="emojione emojione-'+msgItem.cInfo.emoji[0].code+'"></span>';
+						}
+						msgItem.component.payload.buttons.forEach(function(msgInnerItem) {
+							var value='',url='',type='';
+							if(msgInnerItem.payload){
+								value ='value="'+msgInnerItem.payload+'"';
+							}
+							if(msgInnerItem.url){
+								url = 'url="'+msgInnerItem.url+'"';
+							}
+							if(msgInnerItem.type){
+								type = 'type="'+msgInnerItem.type+'"';
+							}
+							inner_html = inner_html + '<li '+value+' '+url+' '+type+' class="buttonTmplContentChild sendClickReq">\
+									'+ msgInnerItem.title+ '</li>';
+						});
+						buttonTemplate += '<li '+ msg_data +' class=" ' + msg_class + '"> \
+								<div class="buttonTmplContent"> \
+                                '+ msg_created_html +' \
+                                '+ msg_icon_html +' \
+								<ul class="buttonTmplContentBox">\
+									<li class="buttonTmplContentHeading">'+msg_html+'</li>\
+									'+ inner_html +' \
+								</ul>\
+								</div>\
+						</li>';
+					}
+				});
+			}
+            return buttonTemplate;
+		}
+		else if(tempType ==="templatequickreply"){
+			var quickReplyTemplate = '';
+			if(tempData.message) {
+				tempData.message.forEach(function(msgItem){
+					if(msgItem.component && msgItem.component.type === "template") { 
+						var msg_data = '';
+						var msg_class = '';
+						var msg_icon_html = '';
+						var msg_created_html = '';
+						var msg_html = '';
+						var inner_html = '';
+						if(tempData.type !== "bot_response") {
+							msg_data = 'id = "msg_' + msgItem.clientMessageId + '"';
+							msg_class = 'fromCurrentUser';
+							msg_html = helpers.convertMDtoHTML(msgItem.component.payload.text);
+						}
+						else {
+							msg_class = 'fromOtherUsers';
+							msg_html = helpers.convertMDtoHTML(msgItem.component.payload.text);
+						}
+						
+						if(tempData.icon) {
+							msg_class += ' with-icon';
+							msg_icon_html = '<div class="profile-photo"> <div class="user-account avtar" style="background-image:url('+ tempData.icon +')"></div> </div>';
+						}
+						
+						if(tempData.createdOn) {
+							msg_created_html = '<div class="extra-info">'+ helpers.formatDate(tempData.createdOn) +'</div>';
+						}
+						if(msgItem.cInfo.emoji) {
+							msg_html = msg_html +'<span class="emojione emojione-'+msgItem.cInfo.emoji[0].code+'"></span>';
+						}
+						msgItem.component.payload.quick_replies.forEach(function(msgInnerItem) {
+							var value='',url='',type='';
+							if(msgInnerItem.payload){
+								value ='value="'+msgInnerItem.payload+'"';
+							}
+							if(msgInnerItem.image_url){
+								url = 'img src="'+'+msgInnerItem.image_url+'+'"';
+							}
+							if(msgInnerItem.content_type){
+								type = 'type="'+msgInnerItem.content_type+'"';
+							}
+							inner_html = inner_html + '<li '+value+' '+url+' '+type+' class="quickReply buttonTmplContentChild sendClickReq">\
+									'+url+' '+ msgInnerItem.title+ '</li>';
+						});
+						quickReplyTemplate += '<li '+ msg_data +' class=" ' + msg_class + '"> \
+								<div class="buttonTmplContent"> \
+                                '+ msg_created_html +' \
+                                '+ msg_icon_html +' \
+								<ul class="buttonTmplContentBox">\
+									<li class="buttonTmplContentHeading">'+msg_html+'</li>\
+									'+ inner_html +' \
+								</ul>\
+								</div>\
+						</li>';
+					}
+				});
+			}
+            return quickReplyTemplate;
+		}
+		else if(tempType ==="templatelist"){
+			var listTemplate = '';
+			if(tempData.message) {
+				tempData.message.forEach(function(msgItem){
+					if(msgItem.component && msgItem.component.type === "template") { 
+						var msg_data = '';
+						var msg_class = '';
+						var msg_icon_html = '';
+						var msg_created_html = '';
+						var msg_html = '';
+						var inner_html = '',lastButton = '',count = 0;
+						if(tempData.type !== "bot_response") {
+							msg_data = 'id = "msg_' + msgItem.clientMessageId + '"';
+							msg_class = 'fromCurrentUser';
+							msg_html = helpers.convertMDtoHTML(msgItem.component.payload.text);
+						}
+						else {
+							msg_class = 'fromOtherUsers';
+							msg_html = helpers.convertMDtoHTML(msgItem.component.payload.text);
+						}
+						
+						if(tempData.icon) {
+							msg_class += ' with-icon';
+							msg_icon_html = '<div class="profile-photo"> <div class="user-account avtar" style="background-image:url('+ tempData.icon +')"></div> </div>';
+						}
+						
+						if(tempData.createdOn) {
+							msg_created_html = '<div class="extra-info">'+ helpers.formatDate(tempData.createdOn) +'</div>';
+						}
+						if(msgItem.cInfo.emoji) {
+							msg_html = msg_html +'<span class="emojione emojione-'+msgItem.cInfo.emoji[0].code+'"></span>';
+						}
+						msgItem.component.payload.elements.forEach(function(msgInnerItem) {
+							if(count < 3){
+								count++;
+								var value='',url='',type='';
+								if(msgInnerItem.buttons[0].payload){
+									value ='value="'+msgInnerItem.buttons[0].payload+'"';
+								} else {
+									value ='value="'+msgInnerItem.buttons[0].title+'"';
+								}
+								if(msgInnerItem.buttons[0].url){
+									url = 'url="'+msgInnerItem.buttons[0].url+'"';
+								}
+								if(msgInnerItem.buttons[0].type){
+									type = 'type="'+msgInnerItem.buttons[0].type+'"';
+								}
+								inner_html = inner_html + '<li class="listTmplContentChild"> \
+									<div class="listLeftContent"> \
+										<div class="listItemTitle">'+msgInnerItem.title+'</div> \
+										<div class="listItemSubtitle">'+msgInnerItem.subtitle+'</div> \
+										<div class="listItemPath sendClickReq" type="url" url="'+msgInnerItem.default_action.url+'">'+msgInnerItem.default_action.url+'</div> \
+										<div> \
+											<button '+value+' '+type+' '+url+' class="buyBtn sendClickReq">Buy</button> \
+										</div> \
+									</div>\
+									<div class="listRightContent"> \
+										<img src="'+msgInnerItem.image_url+'" /> \
+									</div> \
+								</li>';
+							}
+						});
+						if(msgItem.component.payload.elements && msgItem.component.payload.elements.length > 3){
+							msgItem.component.payload.buttons.forEach(function(msgLastItem) {
+								var url='',type='',value='';
+								if(msgLastItem.payload){
+									value ='value="'+msgLastItem.payload+'"';
+								} else {
+									value ='value="'+msgLastItem.title+'"';
+								}
+								if(msgLastItem.url){
+									url = 'url="'+msgLastItem.url+'"';
+								}
+								if(msgLastItem.type){
+									type = 'type="'+msgLastItem.type+'"';
+								}
+								lastButton = '<li class="viewMoreList"> \
+									<button '+value+' '+type+' '+url+' class="viewMore sendClickReq">'+msgLastItem.title+'</button> \
+								</li>';
+							});
+						}
+						listTemplate += '<li '+ msg_data +' class=" ' + msg_class + '"> \
+								<div class="listTmplContent"> \
+                                '+ msg_created_html +' \
+                                '+ msg_icon_html +' \
+								<ul class="listTmplContentBox">\
+									<li class="listTmplContentHeading">'+msg_html+'</li>\
+									'+ inner_html +' \
+									'+ lastButton +' \
+								</ul>\
+								</div>\
+						</li>';
+					}
+				});
+			}
+            return listTemplate;
+		}
+		else {
 			var chatWindowTemplate = '<div class="kore-chat-window" id="koreChatWindow"> \
 									<div class="minimized-title"></div> \
 									<div class="minimized"><span class="messages"></span></div> \
@@ -834,6 +1124,16 @@ function koreBotChat() {
 					<div class="kore-chat-footer"> \
 						<div class="footerContainer pos-relative"> \
 							<div class="chatInputBox" contenteditable="true" placeholder="'+ tempData.botMessages.message +'"></div> \
+                            <div class="btn-group msg-option dropup microphoneBtn"> \
+                                <button class="notRecordingMicrophone"> \
+                                    <i class="fa fa-microphone fa-lg"></i> \
+                                </button> \
+                                <button class="recordingMicrophone"> \
+                                    <i class="fa fa-microphone fa-lg"></i> \
+                                    <img src="../libs/img/audio-record.gif" style="height:10px;"> \
+                                </button> \
+                                <div id="textFromServer"></div> \
+                            </div> \
 							<div class="chatSendMsg">Press enter to send</div> \
 						</div> \
 					</div> \
@@ -936,6 +1236,187 @@ function koreBotChat() {
             chatInitialize.destroy();
         }
     };
+    /************************************* Microphone code **********************************************/
+    function micEnable() {
+        if (!navigator.getUserMedia) {
+            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+        }
+        if (navigator.getUserMedia) {
+            navigator.getUserMedia({
+                audio: true
+            }, success, function(e) {
+                alert('Error capturing audio');
+                return;
+            });
+        } else {
+            alert('getUserMedia is not supported in this browser.');
+        }
+    }
+
+    function afterMicEnable() {
+        if (navigator.getUserMedia) {
+            if (!rec) {
+                console.error("Recorder undefined");
+                return;
+            }
+            if (_connection) {
+                cancel();
+            }
+            try {
+                _connection = createSocket();
+            } catch (e) {
+                console.log(e);
+                console.error('Web socket not supported in the browser');
+            }
+        }
+    }
+
+    function success(e) {
+        mediaStream = e;
+        var Context = window.AudioContext || window.webkitAudioContext;
+        context = new Context();
+        mediaStreamSource = context.createMediaStreamSource(mediaStream);
+        window.userSpeechAnalyser = context.createAnalyser();
+        mediaStreamSource.connect(window.userSpeechAnalyser);
+        console.log('Mediastream created');
+        rec = new Recorder(mediaStreamSource, {
+            workerPath: recorderWorkerPath
+        });
+        console.log('Recorder Initialized');
+        _permission = true;
+        afterMicEnable();
+    }
+
+    function cancel() {
+        // Stop the regular sending of audio (if present) and disconnect microphone
+        clearInterval(intervalKey);
+        if (document.getElementsByClassName('recordingMicrophone')) {
+            document.getElementsByClassName('recordingMicrophone')[0].style.display = 'none';
+        }
+        if (document.getElementsByClassName('notRecordingMicrophone')) {
+            document.getElementsByClassName('notRecordingMicrophone')[0].style.display = 'block';
+        }
+        if (rec) {
+            rec.stop();
+            rec.clear();
+        }
+        if (_connection) {
+            _connection.close();
+            _connection = null;
+        }
+    }
+
+    function socketSend(item) {
+        if (_connection) {
+            var state = _connection.readyState;
+            if (state === 1) {
+                if (item instanceof Blob) {
+                    if (item.size > 0) {
+                        _connection.send(item);
+                        console.log('Send: blob: ' + item.type + ', ' + item.size);
+                    } else {
+                        console.log('Send: blob: ' + item.type + ', ' + item.size);
+                    }
+                } else {
+                    console.log(item);
+                    _connection.send(item);
+                    //console.log('send tag: '+ item);
+                }
+            } else {
+                console.error('Web Socket readyState != 1: ', state, 'failed to send :' + item.type + ', ' + item.size);
+                var track = mediaStream.getTracks()[0];
+                track.stop();
+                cancel();
+            }
+        } else {
+            console.error('No web socket connection: failed to send: ', item);
+        }
+    }
+
+    function createSocket() {
+        window.ENABLE_MICROPHONE = true;
+        window.SPEECH_SERVER_SOCKET_URL="wss://presence.kore.com/speechcntxt/ws/speech";
+        var serv_url = window.SPEECH_SERVER_SOCKET_URL;
+        //var userEmail = 'rohan.singh@kore.com' | userModel.getUserInfo().emailId;
+        var userEmail = 'rohan.singh@kore.com';
+        window.WebSocket = window.WebSocket || window.MozWebSocket;
+        var url = serv_url + '?' + CONTENT_TYPE + '&email=' + userEmail;
+        var _connection = new WebSocket(url);
+        // User is connected to server
+        _connection.onopen = function(e) {
+            console.log('User connected');
+            _user_connection = true;
+            rec.record();
+            document.getElementsByClassName('recordingMicrophone')[0].style.display = 'block';
+            document.getElementsByClassName('notRecordingMicrophone')[0].style.display = 'none';
+            console.log('recording...');
+            intervalKey = setInterval(function() {
+                rec.export16kMono(function(blob) {
+                    socketSend(blob);
+                    rec.clear();
+                }, 'audio/x-raw');
+            }, INTERVAL);
+        };
+        // On receving message from server
+        _connection.onmessage = function(msg) {
+            var data = msg.data;
+            //console.log(data);
+            if (data instanceof Object && !(data instanceof Blob)) {
+                console.log('Got object that is not a blob');
+            } else if (data instanceof Blob) {
+                console.log('Got Blob');
+            } else {
+                var res = JSON.parse(data);
+                if (res.status === 0) {
+                    if (res.result.final) {
+                        var final_result = res.result.hypotheses[0].transcript;
+                        document.getElementsByClassName('chatInputBox')[0].textContent  = document.getElementsByClassName('chatInputBox')[0].textContent + ' '+ final_result;
+                    } else {
+                        document.getElementsByClassName('chatInputBox')[0].textContent = res.result.hypotheses[0].transcript;
+                        console.log('Not final: ', res.result.hypotheses[0].transcript);
+                    }
+                } else {
+                    console.log('Server error : ', res.status);
+                }
+            }
+        };
+        // If server is closed
+        _connection.onclose = function(e) {
+            console.log('Server is closed');
+            console.log(e);
+        };
+        // If there is an error while sending or receving data
+        _connection.onerror = function(e) {
+            console.log("Error : ", e);
+        };
+        return _connection;
+    }
+
+    function stop() {
+        clearInterval(intervalKey);
+        document.getElementsByClassName('recordingMicrophone')[0].style.display = 'none';
+        document.getElementsByClassName('notRecordingMicrophone')[0].style.display = 'block';
+
+        if (rec) {
+            rec.stop();
+            console.log('stopped recording..');
+            rec.export16kMono(function(blob) {
+                socketSend(blob);
+                rec.clear();
+                //_connection.close();
+                var track = mediaStream.getTracks()[0];
+                track.stop();
+            }, 'audio/x-raw');
+        } else {
+            console.error('Recorder undefined');
+        }
+    };
+
+    window.onbeforeunload = function(e) {
+        cancel();
+    };
+
+    /*************************************  Microphone code end here **************************************/
     return {
         addListener: addListener,
 		removeListener: removeListener,

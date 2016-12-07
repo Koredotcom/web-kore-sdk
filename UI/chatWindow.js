@@ -9,6 +9,18 @@ function koreBotChat() {
     var detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
 	var _eventQueue = {};
 	var prevRange;
+    /******************* Mic variable initilization *******************/
+    var _exports = {},
+    _template, _this = {};
+    var navigator = window.navigator;
+    var mediaStream, mediaStreamSource, rec,_connection, intervalKey, context;
+    var _permission = false;
+    var _user_connection = false;
+    var CONTENT_TYPE = "content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)16000,+format=(string)S16LE,+channels=(int)1";
+
+    var recorderWorkerPath = "../libs/recorderWorker.js";
+    var INTERVAL = 250;
+    /***************** Mic initilization code end here ************************/
     String.prototype.isNotAllowedHTMLTags = function () {
         var wrapper = document.createElement('div');
         wrapper.innerHTML = this;
@@ -511,7 +523,12 @@ function koreBotChat() {
                 return;
             }
         });
-        
+        _chatContainer.off('click', '.notRecordingMicrophone').on('click', '.notRecordingMicrophone', function (event) {
+            micEnable();
+        });        
+         _chatContainer.off('click', '.recordingMicrophone').on('click', '.recordingMicrophone', function (event) {
+            stop();
+        });
         _chatContainer.off('paste', '.chatInputBox').on('paste', '.chatInputBox', function (event) {
             event.preventDefault();
 			var _this = document.getElementsByClassName("chatInputBox");
@@ -545,7 +562,20 @@ function koreBotChat() {
                 var _tempWin = window.open(a_link,"_blank");
             }
         });
-
+		_chatContainer.off('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn,.viewMoreList .viewMore,.listItemPath').on('click','.buttonTmplContentBox li,.listTmplContentChild .buyBtn, .viewMoreList .viewMore,listItemPath',function(e){
+            e.preventDefault();
+            var type = $(this).attr('type');
+			if(type == "postback" || type == "text"){
+				$('.chatInputBox').text($(this).attr('value'));
+				me.sendMessage($('.chatInputBox'));
+			}else if(type == "url" || type == "web_url"){
+				var a_link = $(this).attr('url');
+				if(a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0){
+					a_link = "http:////" + a_link;
+				}
+				var _tempWin = window.open(a_link,"_blank");
+			}
+        });		
         _chatContainer.off('click', '.close-btn').on('click', '.close-btn', function (event) {
             me.destroy();
         });
@@ -635,12 +665,21 @@ function koreBotChat() {
             var tempData = JSON.parse(message.data);
 
             if (tempData.from === "bot" && tempData.type === "bot_response")
-            {
+            {	
+				if(tempData.message[0]){
+					tempData.message[0].cInfo.body = window.emojione.shortnameToImage(tempData.message[0].cInfo.body);
+					if(tempData.message[0].component && !tempData.message[0].component.payload.text ) {
+						try{
+							tempData.message[0].component = JSON.parse(tempData.message[0].component.payload);
+						}catch(err){
+							tempData.message[0].component = tempData.message[0].component.payload;
+						}
+					}
+				}				
                 me.renderMessage(tempData);
             }
             else if(tempData.from === "self" && tempData.type === "user_message"){
-                var tempmsg = tempData.message;
-                
+                var tempmsg = tempData.message;                
                 var msgData = {
                     'type': "currentUser",
                     "message": [{
@@ -718,14 +757,31 @@ function koreBotChat() {
     };
 
     chatWindow.prototype.renderMessage = function (msgData) {
-        var me = this;
+        var me = this, messageHtml = '';
         var _chatContainer = $(me.config.chatContainer).find('.chat-container');
-
-        var messageHtml = $(me.getChatTemplate("message")).tmpl({
-            'msgData': msgData,
-            'helpers':helpers
-        });
-
+		if(msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "button"){
+			messageHtml = $(me.getChatTemplate("templatebutton")).tmpl({
+				'msgData': msgData,
+				'helpers':helpers
+			});
+		}
+		else if(msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "list"){
+			messageHtml = $(me.getChatTemplate("templatelist")).tmpl({
+				'msgData': msgData,
+				'helpers':helpers
+			});
+		}
+		else if(msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "quick_replies"){
+			messageHtml = $(me.getChatTemplate("templatequickreply")).tmpl({
+				'msgData': msgData,
+				'helpers':helpers
+			});
+		}else{
+			messageHtml = $(me.getChatTemplate("message")).tmpl({
+				'msgData': msgData,
+				'helpers':helpers
+			});
+		}
         _chatContainer.append(messageHtml);
 
         //me.formatMessages(messageHtml);
@@ -753,6 +809,16 @@ function koreBotChat() {
         var chatFooterTemplate =
                 '<div class="footerContainer pos-relative"> \
 			<div class="chatInputBox" contenteditable="true" placeholder="${botMessages.message}"></div> \
+            <div class="btn-group msg-option dropup microphoneBtn"> \
+                <button class="notRecordingMicrophone"> \
+                    <i class="fa fa-microphone fa-lg"></i> \
+                </button> \
+                <button class="recordingMicrophone"> \
+                    <i class="fa fa-microphone fa-lg"></i> \
+                    <img src="../libs/img/audio-record.gif" style="height:10px;"> \
+                </button> \
+                <div id="textFromServer"></div> \
+            </div> \
 			<div class="chatSendMsg">Press enter to send</div> \
 		</div>';
 
@@ -778,17 +844,20 @@ function koreBotChat() {
 
         var msgTemplate = ' <script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			{{if msgData.message}} \
-			{{each(key, msgItem) msgData.message}} \
-                        {{if msgItem.cInfo && msgItem.type === "text"}} \
-			<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
-                                {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-                                {{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-                                <div class="messageBubble">\
-                                    {{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.cInfo.body)}} {{else}} {{html helpers.convertMDtoHTML(msgItem.cInfo.body)}} {{/if}} \
-                                </div> \
-			</li> \
-                        {{/if}} \
-			{{/each}} \
+				{{each(key, msgItem) msgData.message}} \
+					{{if msgItem.cInfo && msgItem.type === "text"}} \
+						<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
+							{{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+							{{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+							<div class="messageBubble">\
+								{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.cInfo.body)}} {{else}} {{html helpers.convertMDtoHTML(msgItem.cInfo.body)}} {{/if}} \
+								{{if msgItem.cInfo && msgItem.cInfo.emoji}} \
+									<span class="emojione emojione-${msgItem.cInfo.emoji[0].code}">${msgItem.cInfo.emoji[0].title}</span> \
+								{{/if}} \
+							</div> \
+						</li> \
+					{{/if}} \
+				{{/each}} \
 			{{/if}} \
 		</scipt>';
         
@@ -800,15 +869,119 @@ function koreBotChat() {
                     </div> \
                 </div>\
         </script>';
+		var buttonTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+			{{if msgData.message}} \
+				<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+					<div class="buttonTmplContent"> \
+						{{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+						{{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+						<ul class="buttonTmplContentBox">\
+							<li class="buttonTmplContentHeading"> \
+								{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text)}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text)}} {{/if}} \
+								{{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
+									<span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
+								{{/if}} \
+							</li>\
+							{{each(key, msgItem) msgData.message[0].component.payload.buttons}} \
+								<li {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} {{if msgItem.url}}url="${msgItem.url}"{{/if}} class="buttonTmplContentChild" data-value="${msgItem.value}" type="${msgItem.type}">\
+									${msgItem.title}\
+								</li> \
+							{{/each}} \
+						</ul>\
+					</div>\
+				</li> \
+			{{/if}} \
+		</scipt>';
+		var quickReplyTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+			{{if msgData.message}} \
+				<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+					<div class="buttonTmplContent"> \
+						{{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+						{{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+						<ul class="buttonTmplContentBox">\
+							{{if msgData.message[0].component.payload.text}} \
+								<li class="buttonTmplContentHeading"> \
+									{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text)}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text)}} {{/if}} \
+									{{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
+										<span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
+									{{/if}} \
+								</li>\
+							{{/if}} \
+							{{each(key, msgItem) msgData.message[0].component.payload.quick_replies}} \
+								<li {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} class="quickReply buttonTmplContentChild" type="${msgItem.content_type}">\
+									{{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} ${msgItem.title}\
+								</li> \
+							{{/each}} \
+						</ul>\
+					</div>\
+				</li> \
+			{{/if}} \
+		</scipt>';
+		var listTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+			{{if msgData.message}} \
+				<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+					<div class="listTmplContent"> \
+						{{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+						{{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+						<ul class="listTmplContentBox"> \
+							{{if msgData.message[0].component.payload.title}} \
+								<li class="listTmplContentHeading"> \
+									{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text)}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text)}} {{/if}} \
+									{{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
+										<span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
+									{{/if}} \
+								</li> \
+							{{/if}} \
+							{{each(key, msgItem) msgData.message[0].component.payload.elements}} \
+								{{if key<= 2}}\
+									<li class="listTmplContentChild"> \
+										<div class="listLeftContent"> \
+											<div class="listItemTitle">${msgItem.title}</div> \
+											<div class="listItemSubtitle">${msgItem.subtitle}</div> \
+											<div class="listItemPath" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div> \
+											<div> \
+												<button class="buyBtn" {{if msgItem.buttons[0].type}}type="${msgItem.buttons[0].type}"{{/if}} {{if msgItem.buttons[0].url}}url="${msgItem.buttons[0].url}"{{/if}} {{if msgItem.buttons[0].payload}}value="${msgItem.buttons[0].payload}"{{/if}}>{{if msgItem.buttons[0].title}}${msgItem.buttons[0].title}{{else}}Buy{{/if}}</button> \
+											</div> \
+										</div>\
+										<div class="listRightContent"> \
+											<img src="${msgItem.image_url}" /> \
+										</div> \
+									</li> \
+								{{/if}}\
+							{{/each}} \
+							</li> \
+							{{if msgData.message[0].component.payload.elements.length > 3}}\
+							<li class="viewMoreList"> \
+								<button class="viewMore" url="{{if msgData.message[0].component.payload.buttons[0].url}}${msgData.message[0].component.payload.buttons[0].url}{{/if}}" type="${msgData.message[0].component.payload.buttons[0].type}" value="{{if msgData.message[0].component.payload.buttons[0].payload}}${msgData.message[0].component.payload.buttons[0].payload}{{else}}${msgData.message[0].component.payload.buttons[0].title}{{/if}}">${msgData.message[0].component.payload.buttons[0].title}</button> \
+							</li> \
+							{{/if}}\
+						</ul> \
+					</div> \
+				</li> \
+			{{/if}} \
+		</scipt>';
         if (tempType === "message") {
             return msgTemplate;
         } else if(tempType === "popup"){
             return popupTemplate;
+        } else if(tempType === "templatebutton"){
+            return buttonTemplate;
+        } else if(tempType === "templatelist"){
+            return listTemplate;
+        } else if(tempType === "templatequickreply"){
+            return quickReplyTemplate;
         } else {
             return chatWindowTemplate;
         }
     };
-    
+    function IsJsonString(){
+		try {
+			JSON.parse(str);
+		} catch (e) {
+			return false;
+		}
+		return true;
+	}
     var chatInitialize;
 	function insertHtmlData (_txtBox, _html) {
 		var _input = _txtBox;
@@ -901,6 +1074,189 @@ function koreBotChat() {
             chatInitialize.destroy();
         }
     };
+
+    /*************************************       Microphone code      **********************************************/
+    function micEnable() {
+        if (!navigator.getUserMedia) {
+            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+        }
+        if (navigator.getUserMedia) {
+            navigator.getUserMedia({
+                audio: true
+            }, success, function(e) {
+                alert('Error capturing audio');
+                return;
+            });
+        } else {
+            alert('getUserMedia is not supported in this browser.');
+        }
+    }
+
+    function afterMicEnable() {
+        if (navigator.getUserMedia) {
+            if (!rec) {
+                console.error("Recorder undefined");
+                return;
+            }
+            if (_connection) {
+                cancel();
+            }
+            try {
+                _connection = createSocket();
+            } catch (e) {
+                console.log(e);
+                console.error('Web socket not supported in the browser');
+            }
+        }
+    }
+
+    function success(e) {
+        mediaStream = e;
+        var Context = window.AudioContext || window.webkitAudioContext;
+        context = new Context();
+        mediaStreamSource = context.createMediaStreamSource(mediaStream);
+        window.userSpeechAnalyser = context.createAnalyser();
+        mediaStreamSource.connect(window.userSpeechAnalyser);
+        console.log('Mediastream created');
+        rec = new Recorder(mediaStreamSource, {
+            workerPath: recorderWorkerPath
+        });
+        console.log('Recorder Initialized');
+        _permission = true;
+        afterMicEnable();
+    }
+
+    function cancel() {
+        // Stop the regular sending of audio (if present) and disconnect microphone
+        clearInterval(intervalKey);
+        if ($('.recordingMicrophone')) {
+            $('.recordingMicrophone').css('display', 'none');
+        }
+        if ($('.notRecordingMicrophone')) {
+            $('.notRecordingMicrophone').css('display', 'block');
+        }
+        if (rec) {
+            rec.stop();
+            rec.clear();
+        }
+        if (_connection) {
+            _connection.close();
+            _connection = null;
+        }
+    }
+
+    function socketSend(item) {
+        if (_connection) {
+            var state = _connection.readyState;
+            if (state === 1) {
+                if (item instanceof Blob) {
+                    if (item.size > 0) {
+                        _connection.send(item);
+                        console.log('Send: blob: ' + item.type + ', ' + item.size);
+                    } else {
+                        console.log('Send: blob: ' + item.type + ', ' + item.size);
+                    }
+                } else {
+                    console.log(item);
+                    _connection.send(item);
+                    //console.log('send tag: '+ item);
+                }
+            } else {
+                console.error('Web Socket readyState != 1: ', state, 'failed to send :' + item.type + ', ' + item.size);
+                var track = mediaStream.getTracks()[0];
+                track.stop();
+                cancel();
+            }
+        } else {
+            console.error('No web socket connection: failed to send: ', item);
+        }
+    }
+
+    function createSocket() {
+        window.ENABLE_MICROPHONE = true;
+        window.SPEECH_SERVER_SOCKET_URL="wss://presence.kore.com/speechcntxt/ws/speech";
+        var serv_url = window.SPEECH_SERVER_SOCKET_URL;
+        //var userEmail = 'rohan.singh@kore.com' | userModel.getUserInfo().emailId;
+        var userEmail = 'rohan.singh@kore.com';
+        window.WebSocket = window.WebSocket || window.MozWebSocket;
+        var url = serv_url + '?' + CONTENT_TYPE + '&email=' + userEmail;
+        var _connection = new WebSocket(url);
+        // User is connected to server
+        _connection.onopen = function(e) {
+            console.log('User connected');
+            _user_connection = true;
+            rec.record();
+            $('.recordingMicrophone').css('display', 'block');
+            $('.notRecordingMicrophone').css('display', 'none');
+            console.log('recording...');
+            intervalKey = setInterval(function() {
+                rec.export16kMono(function(blob) {
+                    socketSend(blob);
+                    rec.clear();
+                }, 'audio/x-raw');
+            }, INTERVAL);
+        };
+        // On receving message from server
+        _connection.onmessage = function(msg) {
+            var data = msg.data;
+            //console.log(data);
+            if (data instanceof Object && !(data instanceof Blob)) {
+                console.log('Got object that is not a blob');
+            } else if (data instanceof Blob) {
+                console.log('Got Blob');
+            } else {
+                var res = JSON.parse(data);
+                if (res.status === 0) {
+                    if (res.result.final) {
+                        var final_result = res.result.hypotheses[0].transcript;
+                        $('.chatInputBox').text($('.chatInputBox').text() + ' '+ final_result);
+
+                    } else {
+                        $('.chatInputBox').text(res.result.hypotheses[0].transcript);
+                        console.log('Not final: ', res.result.hypotheses[0].transcript);
+                    }
+                } else {
+                    console.log('Server error : ', res.status);
+                }
+            }
+        };
+        // If server is closed
+        _connection.onclose = function(e) {
+            console.log('Server is closed');
+            console.log(e);
+        };
+        // If there is an error while sending or receving data
+        _connection.onerror = function(e) {
+            console.log("Error : ", e);
+        };
+        return _connection;
+    }
+
+    function stop() {
+        clearInterval(intervalKey);
+        $('.recordingMicrophone').css('display', 'none');
+        $('.notRecordingMicrophone').css('display', 'block');
+
+        if (rec) {
+            rec.stop();
+            console.log('stopped recording..');
+            rec.export16kMono(function(blob) {
+                socketSend(blob);
+                rec.clear();
+                //_connection.close();
+                var track = mediaStream.getTracks()[0];
+                track.stop();
+            }, 'audio/x-raw');
+        } else {
+            console.error('Recorder undefined');
+        }
+    };
+
+    $(window).on('beforeunload', function() {
+        cancel();
+    });
+
+    /*************************************    Microphone code end here    **************************************/
     return {
 		addListener: addListener,
 		removeListener: removeListener,
