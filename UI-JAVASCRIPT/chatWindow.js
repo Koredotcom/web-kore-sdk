@@ -8,7 +8,7 @@ function koreBotChat() {
     var _botInfo = {};
     var detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
     var _eventQueue = {};
-    var prevRange;
+    var prevRange, accessToken ,koreAPIUrl,fileToken,fileUploaderCounter = 0,_removeAttachments='',globalRecState,bearerToken;
 
     /******************* Mic variable initilization *******************/
     var _exports = {},
@@ -22,6 +22,39 @@ function koreBotChat() {
     var recorderWorkerPath = "../libs/recorderWorker.js";
     var INTERVAL = 250; 
     /***************** Mic initilization code end here ************************/
+
+    /*************************** file upload variable *******************************/
+    var appConsts ={};
+    var attachmentInfo = {};
+    appConsts.CHUNK_SIZE = 1024 * 1024;
+    var allowedFileTypes = ["m4a","amr","aac","wav","mp3","mp4","mov","3gp","flv","png","jpg","jpeg","gif","bmp","csv","txt","json","pdf","doc","dot","docx","docm"
+            ,"dotx","dotm","xls","xlt","xlm","xlsx","xlsm","xltx","xltm","xlsb","xla","xlam","xll","xlw","ppt","pot","pps","pptx","pptm","potx","potm","ppam",
+            "ppsx","ppsm","sldx","sldm","zip","rar","tar","wpd","wps","rtf","msg","dat","sdf","vcf","xml","3ds","3dm","max","obj","ai","eps","ps","svg","indd","pct","accdb",
+            "db","dbf","mdb","pdb","sql","apk","cgi","cfm","csr","css","htm","html","jsp","php","xhtml","rss","fnt","fon","otf","ttf","cab","cur","dll","dmp","drv","7z","cbr",
+            "deb","gz","pkg","rpm","zipx","bak","avi","m4v","mpg","rm","swf","vob","wmv","3gp2","3g2","asf","asx","srt","wma","mid","aif","iff","m3u","mpa","ra","aiff","tiff"];
+    var filetypes = {}, audio = ['m4a', 'amr', 'wav', 'aac', 'mp3'], video = ['mp4', 'mov', '3gp', 'flv'], image = ['png', 'jpg', 'jpeg'];
+    filetypes.audio = audio;
+    filetypes.video = video;
+    filetypes.image = image;
+    filetypes.file = {limit: {size: 25 * 1024 * 1024, msg: "Please limit the individual file upload size to 25 MB or lower"}};
+    filetypes.determineFileType = function (extension) {
+        extension = extension.toLowerCase();
+        if ((filetypes.image.indexOf(extension) > -1)) {
+            return "image";
+        } else if ((filetypes.video.indexOf(extension) > -1)) {
+            return "video";
+        } else if ((filetypes.audio.indexOf(extension) > -1)) {
+            return "audio";
+        } else {
+            return "attachment";
+        }
+    };
+
+    var kony ={};
+    kony.application = {};
+    kony.ui = {};
+    kony.net = {};
+    /**************************File upload variable end here **************************/
 
     String.prototype.isNotAllowedHTMLTags = function () {
         var wrapper = document.createElement('div');
@@ -487,6 +520,8 @@ function koreBotChat() {
             "allowIframe": false,
             "botOptions": cfg.botOptions
         };
+        koreAPIUrl = cfg.botOptions.koreAPIUrl;
+        bearerToken = cfg.botOptions.bearer;
         if (cfg && cfg.chatContainer) {
             delete cfg.chatContainer;
         }
@@ -539,6 +574,8 @@ function koreBotChat() {
 		var _buttonTmplContentBox = _chatContainer.querySelector('.buttonTmplContentBox');
 		var _startRecord = _chatContainer.querySelector('.notRecordingMicrophone');
         var _stopRecord = _chatContainer.querySelector('.recordingMicrophone');
+        var _uploadButton = _chatContainer.querySelector('.attachmentBtn');
+        var _uploadBox = _chatContainer.querySelector('.captureAttachmnts');
         _chatInputBox.addEventListener('keyup', function (event) {
             var _footerContainer = me.config.container.querySelector('.kore-chat-footer');
             var _bodyContainer =me.config.container.querySelector('.kore-chat-body');
@@ -556,6 +593,32 @@ function koreBotChat() {
         _stopRecord.addEventListener('click', function (event) {
             stop();
         });
+        _uploadButton.addEventListener('click', function (event) {
+            if(fileUploaderCounter == 1){
+                alert('You can upload only one file');
+                return;
+            }
+            /*if(document.getElementsByClassName('upldIndc').style.display){
+                alert('Wait until file upload is not completed');
+                return;
+            }*/
+            document.getElementById('captureAttachmnts').click();
+        });
+        _uploadBox.addEventListener('change', function (event) {            
+            var file = document.getElementById('captureAttachmnts').files[0];
+            if (file && file.size) {
+                if (file.size > filetypes.file.limit.size) {
+                    alert(filetypes.file.limit.msg);
+                    return;
+                }
+            }
+            /*if (Object.keys(_scope.components).length === 6) {
+                showbootBox(i18nLangString.teamscommon.moreThan6Comp);
+                return;
+            }*/
+            //_scope.cnvertFiles(file);
+            cnvertFiles(this,file);
+        });
 		
         _chatInputBox.addEventListener('keydown', function (event) {
             var _footerContainer = me.config.container.querySelector('.kore-chat-footer');
@@ -563,7 +626,7 @@ function koreBotChat() {
             _bodyContainer.style.bottom = _footerContainer.scrollHeight;
             if (event.keyCode === 13) {
                 event.preventDefault();
-                me.sendMessage(_chatInputBox);
+                me.sendMessage(_chatInputBox,attachmentInfo);
                 return;
             }
         });
@@ -647,6 +710,7 @@ function koreBotChat() {
         });
 		
         bot.on("open", function (response) {
+            accessToken = me.config.botOptions.accessToken;
 			var _botTitle = _chatContainer.querySelector('.kore-chat-header .header-title');
 			var _reconnectEl = _chatContainer.querySelector('.kore-chat-header .disabled');
             _botTitle.innerHTML = _botTitle.title = me.config.chatTitle;
@@ -680,16 +744,28 @@ function koreBotChat() {
             }
             else if(tempData.from === "self" && tempData.type === "user_message"){
                 var tempmsg = tempData.message;
-                
-                var msgData = {
-                    'type': "currentUser",
-                    "message": [{
-                        'type': 'text',
-                        'cInfo': {'body':tempmsg.body},
-                        'clientMessageId': tempData.id
-                    }],
-                    "createdOn": tempData.id
-                };
+                var msgData = {};
+				if (tempmsg && tempmsg.attachments && tempmsg.attachments[0] && tempmsg.attachments[0].fileId) {
+					msgData = {
+						'type': "currentUser",
+						"message": [{
+							'type': 'text',
+							'cInfo': {'body':tempmsg.body, attachments: tempmsg.attachments},
+							'clientMessageId': tempData.id
+						}],
+						"createdOn": tempData.id
+					};
+				} else {
+					msgData = {
+						'type': "currentUser",
+						"message": [{
+							'type': 'text',
+							'cInfo': {'body':tempmsg.body},
+							'clientMessageId': tempData.id
+						}],
+						"createdOn": tempData.id
+					};
+				}
                 me.renderMessage(msgData);
             }
         });
@@ -725,33 +801,54 @@ function koreBotChat() {
 
     chatWindow.prototype.sendMessage = function (chatInput) {
         var me = this;
-        if (chatInput.textContent.trim() === "") {
+        if (chatInput.textContent.trim() === "" && document.getElementsByClassName('attachment')[0].innerHTML.length == 0) {
             return;
         }
 		
 		var _footerContainer = me.config.container.querySelector('.kore-chat-footer');
         var _bodyContainer =me.config.container.querySelector('.kore-chat-body');
         var clientMessageId = new Date().getTime();
-
-        var msgData = {
-            'type': "currentUser",
-            "message": [{
-                'type': 'text',
-                'cInfo': {'body':chatInput.innerHTML},
-                'clientMessageId': clientMessageId
-            }],
-            "createdOn": clientMessageId
-        };
+        var msgData = {};
+        fileUploaderCounter = 0;
+        if(attachmentInfo && Object.keys(attachmentInfo).length) {
+            msgData = {
+                'type': "currentUser",
+                "message": [{
+                    'type': 'text',
+                    'cInfo': {
+                        'body':chatInput.innerHTML,
+                        'attachments':[attachmentInfo]
+                    },
+                    'clientMessageId': clientMessageId
+                }],
+                "createdOn": clientMessageId
+            };
+            document.getElementsByClassName('attachment')[0].innerHTML = '';            
+            document.getElementById("captureAttachmnts").value = "";
+        }else{
+			attachmentInfo = {};
+            msgData = {
+                'type': "currentUser",
+                "message": [{
+                    'type': 'text',
+                    'cInfo': {
+                        'body':chatInput.innerHTML
+                    },
+                    'clientMessageId': clientMessageId
+                }],
+                "createdOn": clientMessageId
+            };
+        }
 
         var messageToBot = {};
         messageToBot["clientMessageId"] = clientMessageId;
-        messageToBot["message"] = {body: chatInput.textContent.trim(), attachments: []};
+        messageToBot["message"] = {body: chatInput.textContent.trim(), attachments: [attachmentInfo]};
         messageToBot["resourceid"] = '/bot.message';
-
+		attachmentInfo = {};
         bot.sendMessage(messageToBot, function messageSent() {
 
         });
-        chatInput.innerHTML = "";
+        chatInput.innerHTML = "";       
         _bodyContainer.style.bottom = _footerContainer.scrollHeight;
 		if (msgData && msgData.message && msgData.message[0].cInfo && msgData.message[0].cInfo.body) {
 			msgData.message[0].cInfo.body = helpers.convertMDtoHTML(msgData.message[0].cInfo.body);
@@ -760,9 +857,11 @@ function koreBotChat() {
     };
 
     chatWindow.prototype.renderMessage = function (msgData) {
-        var me = this,messageHtml = '';
+        var me = this,messageHtml = '',extension;
         var _chatContainer = me.config.chatContainer.querySelector('.chat-container');
-		
+		if(msgData.message[0] && msgData.message[0].cInfo.attachments){
+            extension = strSplit(msgData.message[0].cInfo.attachments[0].fileName)
+        }
         if(msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "button"){
 			messageHtml = me.getChatTemplate("templatebutton", msgData);
 		}
@@ -771,7 +870,7 @@ function koreBotChat() {
 		}else if(msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "quick_replies"){
 			messageHtml = me.getChatTemplate("templatequickreply", msgData);
 		}else{
-			messageHtml = me.getChatTemplate("message", msgData);
+			messageHtml = me.getChatTemplate("message", msgData,extension);
 		}
 
         _chatContainer.innerHTML += messageHtml;
@@ -803,7 +902,40 @@ function koreBotChat() {
 				});
 			}
 		}
+        if(_chatContainer.querySelectorAll('.attachments').length > 0) {           
+            for (var i = 0; i < _chatContainer.querySelectorAll('.attachments').length; i++){
+                var evt = _chatContainer.querySelectorAll('.attachments')[i];
+                evt.addEventListener('click',function(){
+                    var _this = this;
+                    me.downloadClickFile(_this, me);
+                });
+            }
+        }
         _chatContainer.scrollTop = _chatContainer.scrollHeight;
+    };
+    chatWindow.prototype.downloadClickFile = function(_this,me){
+        var attachFileID  = _this.getAttribute('fileid');
+        var xhttp=new XMLHttpRequest();
+        xhttp.onreadystatechange = function(response) {
+            if (this.readyState == 4 && this.status == 200) {
+                var downloadUrl = JSON.parse(this.response);
+                var url = downloadUrl.fileUrl;
+                if(url.indexOf("?") < 0){
+                    url +="?download=1";
+                }else{
+                    url +="&download=1";
+                }
+                window.open(url,'_blank');
+                /*var save = document.createElement('a');
+                save.href = url;
+                save.target = '_blank';
+                save.download = 'unknown file';
+                save.click();*/
+            }
+        };        
+        xhttp.open("GET", koreAPIUrl+"1.1/attachment/file/"+attachFileID+"/url", true);
+        xhttp.setRequestHeader('Authorization', bearerToken);
+        xhttp.send();        
     };
     
     chatWindow.prototype.templateBtnClick = function(_this,me){
@@ -835,7 +967,7 @@ function koreBotChat() {
         me.bindIframeEvents(_div);
     };
 
-    chatWindow.prototype.getChatTemplate = function (tempType, tempData) {
+    chatWindow.prototype.getChatTemplate = function (tempType, tempData, extension) {
         
         if (tempType === "message") {
 			var msgTemplate = '';
@@ -856,8 +988,24 @@ function koreBotChat() {
 						else {
 							msg_class = 'fromOtherUsers';
 							msg_html = helpers.convertMDtoHTML(msgItem.cInfo.body);
-						}
-						
+						}						
+                        if(msgItem.cInfo.attachments){
+                            var className = '';
+                            if(msgItem.cInfo.attachments[0].fileType =="image"){
+                                className = "icon cf-icon icon-photos_active";   
+                            }else if(msgItem.cInfo.attachments[0].fileType =="audio"){
+                                className = "icon cf-icon icon-files_audio"; 
+                            }else if(msgItem.cInfo.attachments[0].fileType =="video"){
+                                className = "icon cf-icon icon-video_active "; 
+                            }else{
+                                if(extension[1]=="xlsx" || extension[1]=="xls" || extension[1]=="docx" || extension[1]=="doc" || extension[1]=="pdf" || extension[1]=="ppsx" || extension[1]=="pptx" || extension[1]=="ppt" || extension[1]=="zip" || extension[1]=="rar"){
+                                    className = "icon cf-icon icon-files_"+extension[1]; 
+                                }else{
+                                    className = "icon cf-icon icon-files_other_doc"; 
+                                }
+                            }
+                            msg_html += '<div class="msgCmpt attachments" fileid="'+msgItem.cInfo.attachments[0].fileId+'"><div class="uploadedFileIcon"> <span class="'+className+'"></span></div><div class="curUseruploadedFileName">'+msgItem.cInfo.attachments[0].fileName+'</div></div>';
+                        }
 						if(tempData.icon) {
 							msg_class += ' with-icon';
 							msg_icon_html = '<div class="profile-photo"> <div class="user-account avtar" style="background-image:url('+ tempData.icon +')"></div> </div>';
@@ -1112,7 +1260,7 @@ function koreBotChat() {
 					<div class="kore-chat-header"> \
 						<div class="header-title" title="'+ tempData.chatTitle +'">'+ tempData.chatTitle +'</div> \
 						<div class="chat-box-controls"> \
-													<button class="reload-btn" title="Reconnect">&#10227;</button> \
+													<button class="reload-btn" title="Reconnect"><span></span></button> \
 							<button class="minimize-btn" title="Minimize">&minus;</button> \
 													<button class="expand-btn" title="Expand"><span></span></button>\
 							<button class="close-btn" title="Close">&times;</button> \
@@ -1124,7 +1272,8 @@ function koreBotChat() {
 					<div class="kore-chat-footer"> \
 						<div class="footerContainer pos-relative"> \
 							<div class="chatInputBox" contenteditable="true" placeholder="'+ tempData.botMessages.message +'"></div> \
-                            <div class="btn-group msg-option dropup microphoneBtn"> \
+                            <div class="attachment"></div> \
+                            <div class="sdkFooterIcon microphoneBtn"> \
                                 <button class="notRecordingMicrophone"> \
                                     <i class="fa fa-microphone fa-lg"></i> \
                                 </button> \
@@ -1133,6 +1282,11 @@ function koreBotChat() {
                                     <img src="../libs/img/audio-record.gif" style="height:10px;"> \
                                 </button> \
                                 <div id="textFromServer"></div> \
+                            </div> \
+                            <div class="sdkFooterIcon" style="display:none;"> \
+                                <button class="sdkAttachment attachmentBtn"> \
+                                    <i class="fa fa fa-paperclip"></i><input type="file" name="Attachment" class="filety captureAttachmnts" id="captureAttachmnts"> \
+                                </button> \
                             </div> \
 							<div class="chatSendMsg">Press enter to send</div> \
 						</div> \
@@ -1185,6 +1339,9 @@ function koreBotChat() {
 			prevRange = false;
 		}
 	}
+    function strSplit(str){
+        return (str.split('.'));
+    }
 	
     window.onbeforeunload = function(){
         if (chatInitialize && document.querySelector('.kore-chat-window') !== null) {
@@ -1416,7 +1573,757 @@ function koreBotChat() {
         cancel();
     };
 
-    /*************************************  Microphone code end here **************************************/
+    /*************************************  Microphone code end here ******************************************/
+
+    /*******************************    Function for Attachment ***********************************************/
+    function cnvertFiles(_this,_file, customFileName) {   
+        var _scope = _this, recState = {};
+        if (_file && _file.size) {
+            if (_file.size > filetypes.file.limit.size) {
+                alert(filetypes.file.limit.msg);
+                return;
+            }
+        }
+        if (_file && customFileName) {
+            _file.name = customFileName;
+        }
+        if (_file && (_file.name|| customFileName)) {
+            var _fileName = customFileName || _file.name;
+            var fileType = _fileName.split('.').pop().toLowerCase();
+            recState.name = _fileName;
+            recState.mediaName = getUID();
+            recState.fileType = _fileName.split('.').pop().toLowerCase();
+            var uploadFn;
+            if ((filetypes.image.indexOf(recState.fileType) > -1)) {
+                recState.type = 'image';
+                recState.uploadFn = 'acceptFileRecording';
+            } else if ((filetypes.video.indexOf(recState.fileType) > -1)) {
+                recState.type = 'video';
+                recState.uploadFn = 'acceptVideoRecording';
+            } else if ((filetypes.audio.indexOf(recState.fileType) > -1)) {
+                recState.type = 'audio';
+                recState.uploadFn = 'acceptFile';
+            } else {
+                recState.type = 'attachment';
+                recState.componentSize = _file.size;
+                recState.uploadFn = 'acceptFile';
+            }
+            if (allowedFileTypes && allowedFileTypes.indexOf(fileType) !== -1) {
+                if (recState.type === 'audio' || recState.type === 'video') {
+                    //read duration;
+                    var rd = new FileReader();
+                    rd.onload = function (e) {
+                        var blob = new Blob([e.target.result], {type: _file.type}), // create a blob of buffer
+                                url = (URL || webkitURL).createObjectURL(blob), // create o-URL of blob
+                                video = document.createElement(recState.type);              // create video element
+                        video.preload = "metadata";                               // preload setting
+                        if (video.readyState === 0) {
+                            video.addEventListener("loadedmetadata", function (evt) {     // whenshow duration
+                                var _dur = Math.round(evt.target.duration);
+                                if(recState.type === "audio"){
+                                    (URL || webkitURL).revokeObjectURL(url); //fallback for webkit
+                                    getFileToken(_this,_file, recState);
+                                }
+                            });
+                            if(recState.type  === "video"){
+                                video.addEventListener('loadeddata', function(e){
+                                    recState.resulttype = getDataURL(video);
+                                    (URL || webkitURL).revokeObjectURL(url); //fallback for webkit
+                                    getFileToken(_this,_file, recState);
+                                });
+                            }
+                            video.src = url;                                          // start video load
+                        } else {
+                            recState.duration = '';
+                            (URL || webkitURL).revokeObjectURL(url); //fallback for webkit
+                            getFileToken(_this,_file, recState);
+                        }
+                    };
+                    rd.readAsArrayBuffer(_file);
+                } else {
+                    if(_file.type.indexOf('image') !== (-1)) {
+                        var imgRd = new FileReader();
+                        imgRd.onload = function (e) {
+                            var blob = new Blob([e.target.result], {type: _file.type}), // create a blob of buffer
+                            url = (URL || webkitURL).createObjectURL(blob); // create o-URL of blob
+                            var img = new Image();
+                            img.src = url;
+                            img.onload = function(){
+                                recState.resulttype = getDataURL(img);
+                                getFileToken(_this,_file, recState);
+                            };
+                        };
+                        imgRd.readAsArrayBuffer(_file);
+                    }
+                    else{
+                        getFileToken(_this, _file, recState);
+                    }
+                }
+            } else{
+                alert("SDK not supported this type of file");
+            }
+        }
+    };
+    function getUID(pattern) {
+        var _pattern = pattern || 'xxxxyx';
+        _pattern = _pattern.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0,
+                v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+        return _pattern;
+    };
+    function getDataURL (src){
+        var thecanvas = document.createElement("canvas");
+        thecanvas.height = 180;
+        thecanvas.width = 320;
+        var context = thecanvas.getContext('2d');
+        context.drawImage(src, 0, 0, thecanvas.width, thecanvas.height);
+        var dataURL = thecanvas.toDataURL();
+        return dataURL;
+    };
+    function acceptAndUploadFile  (_this,file, recState) {
+        var _scope = _this, ele;
+        globalRecState = recState;
+        var uc = getfileuploadConf(recState);
+        uc.chunkUpload = file.size > appConsts.CHUNK_SIZE;
+        uc.chunkSize = appConsts.CHUNK_SIZE;
+        uc.file = file;
+        if (uc.chunkUpload) {
+            notifyFlie(_scope,recState);
+            ele = document.getElementsByClassName('chatInputBox')[0];
+            initiateRcorder(_scope,recState, ele);
+            uploader(uc);
+        } else {
+            var reader = new FileReader();
+            reader.onloadend = function (evt) {
+                if (evt.target.readyState === FileReader.DONE) { // DONE == 2
+                    var converted = reader.result.replace(/^.*;base64,/, '');
+                    var relt = reader.result;
+                    var resultGet = converted;
+                    recState.resulttype = resultGet;
+                    acceptFileRecording(_scope,recState, ele);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    function getFileToken(_obj, _file, recState){
+        var xhttp=new XMLHttpRequest();
+        xhttp.onreadystatechange = function(response) {
+            if (this.readyState == 4 && this.status == 200) {
+                var resposeArr = JSON.parse(this.response);
+                fileToken = resposeArr.fileToken;
+                acceptAndUploadFile(_obj, _file, recState);
+            }
+        };        
+        xhttp.open("POST", koreAPIUrl+"1.1/attachment/file/token", true);
+        xhttp.setRequestHeader('Content-Type', 'json');
+        xhttp.setRequestHeader('Authorization', bearerToken);
+        xhttp.send();
+    }
+    function getfileuploadConf (_recState) {
+        appConsts.UPLOAD = {
+            "FILE_ENDPOINT": koreAPIUrl+"1.1/attachment/file",
+            "FILE_TOKEN_ENDPOINT": koreAPIUrl+"1.1/attachment/file/token",
+            "FILE_CHUNK_ENDPOINT": koreAPIUrl+"1.1/attachment/file/:fileID/chunk"       
+        }
+        _accessToke = "bearer " + accessToken;
+        _uploadConfg = {};        
+        _uploadConfg.url = appConsts.UPLOAD.FILE_ENDPOINT.replace(':fileID', fileToken);
+        _uploadConfg.tokenUrl = appConsts.UPLOAD.FILE_TOKEN_ENDPOINT;
+        _uploadConfg.chunkUrl = appConsts.UPLOAD.FILE_CHUNK_ENDPOINT.replace(':fileID', fileToken);
+        _uploadConfg.fieldName = 'file';
+        _uploadConfg.data = {
+            'fileExtension': _recState.fileType,
+            'fileContext': 'message',
+            thumbnailUpload: false,
+            filename: _recState.name
+        };
+        _uploadConfg.headers = {
+            Authorization: _accessToke
+        };
+        return _uploadConfg;
+    };
+    function notifyFlie (_this,_recState, _tofileId) {
+        var _this = _this;
+        var _data = {};
+        _data.meta = {
+            thumbNail: _recState.resulttype ? _recState.resulttype : undefined,
+            duration: _recState.duration
+        };
+        _data.values = {
+            componentId: _recState.mediaName,
+            componentType: _recState.type,
+            componentFileId: _tofileId,
+            componentData: {
+                filename: _recState.name
+            }
+        };
+        if (_recState.componentSize) {
+            _data.values.componentSize = _recState.componentSize;
+        }
+        onComponentReady(_this,_data);
+    };
+    function initiateRcorder (_this,_recState, ele) {
+        var _scope = _this;
+        ele = ele || _scope.ele;
+        ele.addEventListener('success.ke.uploader', function (e) {
+            onFileToUploaded(_scope, e, _recState);
+        });
+        ele.addEventListener('progress.ke.uploader', onUploadProgress);
+        ele.addEventListener('error.ke.uploader', onUploadError);
+    };
+    function onFileToUploaded (_this,evt, _recState) {
+        var _this = _this;
+        var _data = evt.params;
+        if (!_data || !_data.fileId) {
+            onError();
+            return;
+        }
+        if (_recState.mediaName) {
+            var _tofileId = _data.fileId;
+            notifyfileCmpntRdy(_this,_recState, _tofileId);
+        }
+    };
+
+    function onUploadProgress (_this,evt) {
+
+    };
+    function onUploadError (_this,evt, _recState) {
+        var _scope = _this;
+        _recfileLisnr.onError({
+            code: 'UPLOAD_FAILED'
+        });
+        _scope.removeCmpt(_recState);
+    };
+    function onError () {
+        alert("Failed to upload content. Try again");
+        attachmentInfo = {};
+        document.getElementsByClassName('attachment').innerHTML = '';
+        fileUploaderCounter  = 0;
+    };
+    function onComponentReady (_this,data) {
+        var _this = _this,
+                _src,
+                _imgCntr, _img, base64Matcher, http,
+                _cmptVal, _cmpt='';
+        if (!_cmpt) {
+            _cmpt = document.createElement('div');
+            _cmpt.setAttribute('class','msgCmpt ' + data.values.componentType + ' ' + data.values.componentId);
+            _cmpt.setAttribute('data-html','true');
+            
+            if (!data.values.componentFileId && data.values.componentType !== 'contact' && data.values.componentType !== 'location' && data.values.componentType !== 'filelink' && data.values.componentType !== 'alert' && data.values.componentType !== 'email') {
+                _cmpt.innerHTML = '<div class="upldIndc"></div>';
+            }
+            if (data.values.componentType === 'attachment') {
+                var fileType, _fn;
+                if (data.values.componentDescription) {
+                    fileType = data.values.componentDescription.split('.').pop().toLowerCase();
+                } else {
+                    fileType = data.values.componentData.filename.split('.').pop().toLowerCase();
+                }
+                if (fileType === 'xls' || fileType === 'xlsx') {
+                    _cmpt.innerHTML +='<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_excel"></span></div>';                    
+                    _cmpt.innerHTML +='<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
+                } else if (fileType === 'docx' || fileType === 'doc') {
+                    _cmpt.innerHTML +='<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_word"></span></div>';
+                    _cmpt.innerHTML +='<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
+                }                 
+                else if (fileType === 'pdf') {
+                    _cmpt.innerHTML +='<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_pdf"></span></div>';
+                    _cmpt.innerHTML +='<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
+                } else if (fileType === 'ppsx' || fileType === 'pptx' || fileType === 'ppt') {
+                    _cmpt.innerHTML +='<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_ppt"></span></div>';
+                    _cmpt.innerHTML +='<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
+                } else if (fileType === 'zip' || fileType === 'rar') {
+                    _cmpt.innerHTML +='<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_zip"></span></div>';
+                    _cmpt.innerHTML +='<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
+                } else {
+                    _cmpt.innerHTML +='<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_other_doc"></span></div>';
+                    _cmpt.innerHTML +='<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
+                }
+            } 
+            if (data.values.componentType === 'image') {
+                _cmpt.innerHTML +='<div class="uploadedFileIcon"><span class="icon cf-icon icon-photos_active"></span></div>';
+                _cmpt.innerHTML +='<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
+            }
+            if (data.values.componentType === 'audio') {
+                _cmpt.innerHTML +='<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_audio"></span></div>';
+                _cmpt.innerHTML +='<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
+            }
+            if (data.values.componentType === 'video') {
+                _cmpt.innerHTML +='<div class="uploadedFileIcon"><span class="icon cf-icon icon-video_active"></span></div>';
+                _cmpt.innerHTML +='<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
+            } 
+        } else {
+            _cmptVal = _cmpt.data('value');
+            _cmptVal.componentFileId = data.values.componentFileId;
+            _cmpt.data('value', _cmptVal);
+            if (_cmptVal.componentFileId) {
+                _cmpt.find('.upldIndc').remove();
+            }
+            if (_cmptVal.componentType === "audio" || _cmptVal.componentType === "video") {
+                _cmpt.find(".msgCmptTxt").text(_cmptVal.duration);
+                data.values.componentLength = _cmptVal.componentLength; //_cmptVal.duration;
+            }
+        }
+        _cmpt.innerHTML +='<div class="removeAttachment"><span>&times;</span></div>';
+        if(!document.getElementsByClassName('attachment')[0].innerHTML.length){
+             document.getElementsByClassName('attachment')[0].appendChild(_cmpt);
+            document.getElementsByClassName('chatInputBox')[0].focus();
+            _removeAttachments = document.querySelector('.removeAttachment');
+            _removeAttachments.addEventListener('click',function () {
+                this.parentElement.remove();
+                attachmentInfo = {};
+                fileUploaderCounter  = 0;
+                document.getElementById("captureAttachmnts").value = "";
+            })
+        }       
+        attachmentInfo.fileName = data.values.componentData.filename;
+        attachmentInfo.fileType = data.values.componentType;
+    };
+    function acceptFileRecording  (_this,_recState, ele) {
+        var _scope = _this;
+        var _uc = getfileuploadConf(_recState),
+                _imageCntn = _recState.resulttype;
+        notifyfileCmpntRdy(_scope,_recState);
+        _uc.data[_uc.fieldName] = {
+            fileName: _recState.name,
+            data: _imageCntn,
+            type: 'image/png'
+        };
+        _uc.data.thumbnail = {
+            fileName: _recState.name + '_thumb',
+            data: _imageCntn,
+            type: 'image/png'
+        };
+        _uc.data.thumbnailExtension = "png";
+        ele = document.getElementsByClassName('chatInputBox')[0];
+        initiateRcorder(_scope,_recState, ele);
+        uploader(_uc);
+    };
+    function notifyfileCmpntRdy (_this,_recState, _tofileId) {
+        var _this = _this;
+        var _data = {};
+        _data.meta = {
+            thumbNail: _recState.resulttype,
+            duration: _recState.duration
+        };
+        _data.values = {
+            componentId: _recState.mediaName,
+            componentType: _recState.type,
+            componentFileId: _tofileId,
+            componentData: {
+                filename: _recState.name
+            }
+        };
+        onComponentReady(_this,_data);
+    };
+    /***************************************************** ke.uploader file code **********************************************/
+    function MultipartData() {
+        this.boundary = "--------MultipartData" + Math.random();
+        this._fields = [];
+    }
+    MultipartData.prototype.append = function (key, value) {
+        this._fields.push([key, value]);
+    };
+    MultipartData.prototype.toString = function () {
+        var boundary = this.boundary;
+        var body = "";
+        this._fields.forEach(function (field) {
+            body += "--" + boundary + "\r\n";
+            // file upload
+            if (field[1].data) {
+                var file = field[1];
+                if (file.fileName) {
+                    body += "Content-Disposition: form-data; name=\"" + field[0] + "\"; filename=\"" + file.fileName + "\"";
+                } else {
+                    body += "Content-Disposition: form-data; name=\"" + field[0] + "\"";
+                }
+                body += "\r\n";
+                if (file.type) {
+                    body += "Content-Type: UTF-8; charset=ISO-8859-1\r\n";
+                }
+                body += "Content-Transfer-Encoding: base64\r\n";
+                body += "\r\n" + file.data + "\r\n"; //base64 data
+            } else {
+                body += "Content-Disposition: form-data; name=\"" + field[0] + "\";\r\n\r\n";
+                body += field[1] + "\r\n";
+            }
+        });
+        body += "--" + boundary + "--";
+        return body;
+    };
+    function Uploader(element, options) {
+        _this.options = options;
+        _this.$element = element;
+        if (!_this.options.chunkUpload) {
+            startUpload(_this);
+        } else {
+            startChunksUpload(_this);
+        }
+    }
+    var _cls = Uploader.prototype;
+     _cls.events = {
+        error: ('error.ke.uploader'),
+        progressChange: ('progress.ke.uploader'),
+        success: ('success.ke.uploader')
+    };
+    function getConnection (_this) {
+        return new kony.net.HttpRequest();
+    };
+
+    function loadListener (_this, evt) {
+        _this.events = {
+            error: {'type':'error.ke.uploader'},
+            progressChange: {'type':'progress.ke.uploader'},
+            success: {'type':'success.ke.uploader'}
+        };
+        _this.events.success.params = JSON.parse(evt.target.response);
+        attachmentInfo.fileId = _this.events.success.params.fileId;
+        fileUploaderCounter = 1;
+        document.getElementsByClassName('upldIndc')[0].remove();
+        onFileToUploaded(_this, _this.events.success,globalRecState);
+    };
+
+    function errorListener (_this,evt) {
+        _this.events.error.params = evt;
+        _this.$element.trigger(_this.events.error);
+    };
+
+    function progressListener (_this,evt) {
+    };
+
+    function setOptions (_this,opts) {
+        _this.options = opts;
+        return _this;
+    };
+
+    function commitFile (_this) {
+        var _scope = _this,
+                _conc = getConnection(_this),
+                _mdat = new MultipartData();
+        _conc.addEventListener('load', function (evt) {
+            if (evt.target.status === 200) {
+                if (_scope.$element[0].parentElement) {
+                    loadListener(_scope,evt);
+                }
+            } else {
+                errorListener(_scope,evt);
+            }
+        }, false);
+        _conc.addEventListener('error', function (evt) {
+            errorListener(_scope,evt);
+        }, false);
+        _conc.withCredentials = false;
+        _conc.open('PUT', _this.options.chunkUrl.replace(/\/chunk/, ''));
+
+        if (_this.options.headers) {
+            for (var header in _this.options.headers) {
+                _conc.setRequestHeader(header, _this.options.headers[header]);
+            }
+        }
+        _mdat.append('totalChunks', _scope.totalChunks);
+        _mdat.append('messageToken', _scope.messageToken);
+        if (_this.options.data) {
+            for (var key in _this.options.data) {
+                _mdat.append(key, _this.options.data[key]);
+            }
+        }
+        _conc.setRequestHeader('Content-Type', "multipart/form-data; boundary=" + _mdat.boundary);
+        _conc.send(_mdat.toString());
+    };
+
+    function uploadChunk (_this) {
+        var _scope = _this,
+                _conc = getConnection(_this),
+                _mdat = new MultipartData();
+        _conc.addEventListener('load', function (evt) {
+            if (evt.target.status === 200) {
+                _scope.currChunk++;
+                if (!_scope.$element[0].parentElement) {
+                    return;
+                } else if (_scope.currChunk === _scope.totalChunks) {
+                    commitFile(_scope);
+                } else {
+                    initUploadChunk(_scope);
+                }
+            } else {
+                errorListener(_scope,evt);
+            }
+        }, false);
+        _conc.addEventListener('error', function (evt) {
+            errorListener(_scope,evt);
+        }, false);
+        _conc.withCredentials = false;
+        _conc.open('POST', _this.options.chunkUrl);
+
+        if (_this.options.headers) {
+            for (var header in _this.options.headers) {
+                _conc.setRequestHeader(header, _this.options.headers[header]);
+            }
+        }
+        _mdat.append('chunkNo', _scope.currChunk);
+        _mdat.append('messageToken', _scope.messageToken);
+        _mdat.append('chunk', {
+            data: _scope.chunk,
+            fileName: _scope.options.file.name
+        });
+        _conc.setRequestHeader('Content-Type', "multipart/form-data; boundary=" + _mdat.boundary);
+        _conc.send(_mdat.toString());
+    };
+
+    function initUploadChunk (_this) {
+        var _scope = _this;
+        var file = _scope.options.file;
+        var start = _scope.options.chunkSize * (_scope.currChunk);
+        var stop = (_scope.currChunk === _scope.totalChunks - 1) ? file.size : (_scope.currChunk + 1) * _scope.options.chunkSize;
+        var reader = new FileReader();
+        var blob = file.slice(start, stop);
+        reader.onloadend = function (evt) {
+            if (evt.target.readyState === FileReader.DONE && _scope.$element[0].parentElement) { // DONE == 2
+                _scope.chunk = evt.target.result;
+                _scope.chunk = _scope.chunk.replace(/data:;base64,/, '');
+                if (_scope.currChunk < _scope.totalChunks && _scope.$element[0].parentElement) {
+                    uploadChunk(_scope);
+                }
+            } else {
+                errorListener(_scope,evt);
+            }
+        };
+        reader.readAsDataURL(blob);
+    };
+
+    function startChunksUpload (_this) {
+        var _scope = _this,
+                _conc = getConnection(_this);
+        _conc.addEventListener('error', function (evt) {
+            errorListener(_scope,evt);
+        }, false);
+        _conc.addEventListener('load', function (evt) {
+            if (evt.target.status === 200) {
+                _scope.messageToken = JSON.parse(evt.target.response).fileToken;
+                _scope.totalChunks = Math.floor(_scope.options.file.size / _scope.options.chunkSize) + 1;
+                _scope.currChunk = 0;
+                _scope.options.chunkUrl = _scope.options.chunkUrl.replace(':token', _scope.messageToken);
+                if (_scope.$element[0].parentElement) {
+                    initUploadChunk(_scope);
+                }
+            } else {
+                errorListener(_scope,evt);
+            }
+        }, false);
+        _conc.withCredentials = false;
+        _conc.open('POST', _this.options.tokenUrl);
+        if (_this.options.headers) {
+            for (var header in _this.options.headers) {
+                _conc.setRequestHeader(header, _this.options.headers[header]);
+            }
+        }
+        _conc.send();
+    };
+    function startUpload (_this) {
+        var _scope = _this;
+                _conc = getConnection(_this),
+                _mdat = new MultipartData();
+        if (_conc.upload && _conc.upload.addEventListener) {
+            _conc.upload.addEventListener('progress', function (evt) {
+                progressListener(_scope,evt);
+            }, false);
+        }
+        _conc.addEventListener('load', function (evt) {
+            if (_scope.$element[0].parentElement) {
+                loadListener(_scope,evt);
+            }
+        }, false);
+        _conc.addEventListener('error', function (evt) {
+            errorListener(_scope,evt);
+        }, false);
+        _conc.withCredentials = false;
+        _conc.open('POST', _this.options.url);
+
+        if (_this.options.headers) {
+            for (var header in _this.options.headers) {
+                _conc.setRequestHeader(header, _this.options.headers[header]);
+            }
+        }
+        if (_this.options.data) {
+            for (var key in _this.options.data) {
+                _mdat.append(key, _this.options.data[key]);
+            }
+        }
+        _conc.setRequestHeader('Content-Type', "multipart/form-data; boundary=" + _mdat.boundary);
+        _conc.send(_mdat.toString());
+    };
+
+    function uploader (option) {
+        var _args = Array.prototype.slice.call(arguments, 1);
+        var l = document.getElementsByClassName('chatInputBox').length;
+        for ( i = 0 ; i < l; i++ ) {
+            var $this = document.getElementsByClassName('chatInputBox'),
+                    data = '';//$this.data('ke.uploader'),
+                    options = typeof option === 'object' && option;
+
+            if (!data) {
+                Uploader($this, options);
+            } else if (option) {
+                if (typeof option === 'string' && data[option]) {
+                    data[option].apply(data, _args);
+                } else if (options) {
+                    startUpload(setOptions(data,options));
+                }
+            }
+            return option && data[option] && data[option].apply(data, _args);
+        }
+    };
+
+    uploader.Constructor = Uploader;
+
+    uploader.noConflict = function () {
+        $.fn.uploader = old;
+        return this;
+    };
+    /************************************************************************************************************************************************
+    ********************************************** kony framework file ******************************************************************************
+    ************************************************************************************************************************************************/
+    var NOOP = function() {
+        return true;
+    },
+            conf = {
+                hashRegx: /^#_(\w+)[?,&]?(.*)/,
+                startForm: "login",
+                loginForm: "login",
+                homeForm: "messages",
+                pageNotFound: "404",
+                hashBang: '_',
+                onFormChange: function() {
+                    return {
+                        canAccess: true
+                    };
+                }
+            },
+    _initCb;
+
+    //Prepare namespaces    
+    kony.constants = {
+        HTTP_READY_STATE_DONE: 4,
+        HTTP_RESPONSE_TYPE_JSON: "json",
+        HTTP_METHOD_GET: "GET",
+        HTTP_METHOD_POST: "POST",
+        HTTP_METHOD_PUT: "PUT",
+        HTTP_METHOD_DELETE: "DELETE",
+        HTTP_CONTENT_TYPE_JSON: "application/json",
+        HTTP_CONTENT_TYPE: "content-type"
+    };
+   
+    +function() {
+        function getHTTPConnecton() {
+            var xhr = false;
+            xhr = new XMLHttpRequest();
+            if (xhr) {
+                return xhr;
+            } else if (typeof XDomainRequest !== "undefined") {
+                return new XDomainRequest();
+            }
+            return xhr;
+        }
+
+        function HttpRequest() {
+            var xhr = getHTTPConnecton();
+            if (!xhr) {
+                throw "Unsupported HTTP Connection";
+            }
+            try {
+                xhr.withCredentials = true;
+            } catch (e) {
+            }
+            xhr.onreadystatechange = function() {
+                return xhr.onReadyStateChange && xhr.onReadyStateChange.call(xhr);
+            };
+            return xhr;
+        }
+
+        function FormData() {
+            this.data = {};
+        }
+        FormData.prototype.append = function(key, value) {
+            this.data[key] = value;
+        };
+        FormData.prototype.toHTTPParams = function() {
+            var _str = "",
+                    _propName, paramsObj = this.data,
+                    _val;
+            for (_propName in paramsObj) {
+                if (paramsObj.hasOwnProperty(_propName)) {
+                    _val = paramsObj[_propName];
+                    _str += _propName + '=' + _val + '\r\n';
+                }
+            }
+            return _str;
+        };
+
+        kony.net.FormData = FormData;
+        kony.net.HttpRequest = HttpRequest;
+    }();
+
+    var $FM = {//Form Manager
+        allForms: {},
+        currForm: false,
+        prevForm: false,
+        showForm: function(form, info, ignoreIfshown) {
+            if ($win.location.hash.indexOf(conf.hashBang + form.id) === -1 || info) {
+                var _newHash = conf.hashBang + form.id;
+                try {
+                    var _tempSrch = "";
+                    if ($win.location.search) {
+                        _tempSrch = $win.location.search;
+                        $win.location.hash = _newHash + (info ? '?' + $win.$.param(info) : '');
+                        info = $win.$.extend({}, $win.$.deparam(_tempSrch.substring(1, _tempSrch.length)), info);
+                    } else {
+                        $win.location.hash = _newHash + (info ? '?' + $win.$.param(info) : '');
+                    }
+                } catch (e) {
+                    $win.location.hash = _newHash;
+                }
+            }
+            info = info || {};
+            if ($FM.currForm) {
+                if ($FM.currForm.id === form.id) {
+                    if (!ignoreIfshown) {
+                        $FM.currForm.show(info);
+                    }
+                    return true; // do nothing;
+                }
+                $FM.currForm.hide();
+                $FM.prevForm = $FM.currForm;
+            }
+            $FM.currForm = form;
+            $FM.currForm.show(info);
+            if (_initCb) {
+                _initCb();
+                _initCb = false;
+            }
+            return true;
+        },
+        getId: function() { //Get Current Form Id
+            return $FM.currForm && $FM.currForm.id;
+        }
+    };   
+
+    kony.initConfig = function(newConf) {
+        for (var prop in newConf) {
+            if (newConf.hasOwnProperty(prop) && conf.hasOwnProperty(prop)) {
+                conf[prop] = newConf[prop];
+            }
+        }
+    };
+    kony.init = function(cb) {
+        _initCb = cb;
+        kony.resolveURL();
+    };
+
+    /********************************  Code end here for attachment *******************************************/
     return {
         addListener: addListener,
 		removeListener: removeListener,

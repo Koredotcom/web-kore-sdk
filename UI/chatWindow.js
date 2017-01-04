@@ -8,7 +8,7 @@ function koreBotChat() {
     var _botInfo = {};
     var detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
 	var _eventQueue = {};
-	var prevRange;
+	var prevRange, accessToken ,koreAPIUrl,fileToken,fileUploaderCounter = 0,bearerToken='';
     /******************* Mic variable initilization *******************/
     var _exports = {},
     _template, _this = {};
@@ -21,6 +21,38 @@ function koreBotChat() {
     var recorderWorkerPath = "../libs/recorderWorker.js";
     var INTERVAL = 250;
     /***************** Mic initilization code end here ************************/
+    /*************************** file upload variable *******************************/
+    var appConsts ={};
+    var attachmentInfo = {};
+    var allowedFileTypes = ["m4a","amr","aac","wav","mp3","mp4","mov","3gp","flv","png","jpg","jpeg","gif","bmp","csv","txt","json","pdf","doc","dot","docx","docm"
+            ,"dotx","dotm","xls","xlt","xlm","xlsx","xlsm","xltx","xltm","xlsb","xla","xlam","xll","xlw","ppt","pot","pps","pptx","pptm","potx","potm","ppam",
+            "ppsx","ppsm","sldx","sldm","zip","rar","tar","wpd","wps","rtf","msg","dat","sdf","vcf","xml","3ds","3dm","max","obj","ai","eps","ps","svg","indd","pct","accdb",
+            "db","dbf","mdb","pdb","sql","apk","cgi","cfm","csr","css","htm","html","jsp","php","xhtml","rss","fnt","fon","otf","ttf","cab","cur","dll","dmp","drv","7z","cbr",
+            "deb","gz","pkg","rpm","zipx","bak","avi","m4v","mpg","rm","swf","vob","wmv","3gp2","3g2","asf","asx","srt","wma","mid","aif","iff","m3u","mpa","ra","aiff","tiff"];
+    appConsts.CHUNK_SIZE = 1024 * 1024;
+    var filetypes = {}, audio = ['m4a', 'amr', 'wav', 'aac', 'mp3'], video = ['mp4', 'mov', '3gp', 'flv'], image = ['png', 'jpg', 'jpeg'];
+    filetypes.audio = audio;
+    filetypes.video = video;
+    filetypes.image = image;
+    filetypes.file = {limit: {size: 25 * 1024 * 1024, msg: "Please limit the individual file upload size to 25 MB or lower"}};
+    filetypes.determineFileType = function (extension) {
+        extension = extension.toLowerCase();
+        if ((filetypes.image.indexOf(extension) > -1)) {
+            return "image";
+        } else if ((filetypes.video.indexOf(extension) > -1)) {
+            return "video";
+        } else if ((filetypes.audio.indexOf(extension) > -1)) {
+            return "audio";
+        } else {
+            return "attachment";
+        }
+    };
+
+    var kony ={};
+    kony.application = {};
+    kony.ui = {};
+    kony.net = {};
+    /**************************File upload variable end here **************************/
     String.prototype.isNotAllowedHTMLTags = function () {
         var wrapper = document.createElement('div');
         wrapper.innerHTML = this;
@@ -442,13 +474,15 @@ function koreBotChat() {
 		return arguments[0];
 	}
 	
-    function chatWindow(cfg) {
+    function chatWindow(cfg) {        
         this.config = {
             "chatTitle": "Kore Bot Chat",
             "container": "body",
             "allowIframe": false,
             "botOptions": cfg.botOptions
         };
+        koreAPIUrl = cfg.botOptions.koreAPIUrl;
+        bearerToken = cfg.botOptions.bearer;
         if (cfg && cfg.chatContainer) {
             delete cfg.chatContainer;
         }
@@ -469,7 +503,7 @@ function koreBotChat() {
 
         me.config.chatTitle = tempTitle;
         bot.init(me.config.botOptions);
-        me.render(chatWindowHtml);
+        me.render(chatWindowHtml);       
     };
 
     chatWindow.prototype.destroy = function () {
@@ -512,22 +546,87 @@ function koreBotChat() {
             prevComposeSelection = window.getSelection();
             prevRange = prevComposeSelection.rangeCount > 0 && prevComposeSelection.getRangeAt(0);
         });
+        _chatContainer.off('click', '.attachments').on('click', '.attachments', function (event) {
+            var attachFileID  = $(this).attr('fileid');
+            $.ajax({type: "GET",
+                url: koreAPIUrl+"1.1/attachment/file/"+attachFileID+"/url",
+                headers: {
+                    Authorization: bearerToken
+                },
+                success: function (response) {
+                    var downloadUrl = response.fileUrl;
+                    if(downloadUrl.indexOf("?") < 0){
+                        downloadUrl +="?download=1";
+                    }else{
+                        downloadUrl +="&download=1";
+                    }
+                    window.open(downloadUrl,'_blank');
+                   //debugger;
+                    /*document.body.appendChild(link);
+                    link.setAttribute("type", "hidden"); // make it hidden if needed
+                    link.download = 'test.xls';
+                    link.href = 'data:application/vnd.ms-excel;utf-8,test';
+                    link.click();*/
+
+                    /*var save = document.createElement('a');
+                    document.body.appendChild(save);
+                    save.href = downloadUrl;
+                    save.target = '_blank';
+                    save.download = 'unknown file';
+                    save.click();*/
+                },
+                error: function (msg) {
+                    console.log("Oops, something went horribly wrong");
+                }
+            });
+        });
         _chatContainer.off('keydown', '.chatInputBox').on('keydown', '.chatInputBox', function (event) {
             var _this = $(this);
             var _footerContainer = $(me.config.container).find('.kore-chat-footer');
             var _bodyContainer = $(me.config.container).find('.kore-chat-body');
             _bodyContainer.css('bottom', _footerContainer.outerHeight());
             if (event.keyCode === 13) {
+                 if($('.upldIndc').is(':visible')){
+                    alert('Wait until file upload is not completed');
+                    return;
+                }
                 event.preventDefault();
-                me.sendMessage(_this);
+                me.sendMessage(_this,attachmentInfo);
                 return;
             }
         });
         _chatContainer.off('click', '.notRecordingMicrophone').on('click', '.notRecordingMicrophone', function (event) {
             micEnable();
         });        
-         _chatContainer.off('click', '.recordingMicrophone').on('click', '.recordingMicrophone', function (event) {
+        _chatContainer.off('click', '.recordingMicrophone').on('click', '.recordingMicrophone', function (event) {
             stop();
+        });
+        _chatContainer.off('click', '.attachmentBtn').on('click', '.attachmentBtn', function (event) {
+            if(fileUploaderCounter == 1){
+                alert('You can upload only one file');
+                return;
+            }
+            if($('.upldIndc').is(':visible')){
+                alert('Wait until file upload is not completed');
+                return;
+            }
+            $('#captureAttachmnts').trigger('click');
+        });
+        _chatContainer.off('click', '.removeAttachment').on('click', '.removeAttachment', function (event) {
+           $(this).parents('.msgCmpt').remove();
+           fileUploaderCounter  = 0;
+           attachmentInfo = {};
+           document.getElementById("captureAttachmnts").value = "";
+        });
+        _chatContainer.off('change', '#captureAttachmnts').on('change', '#captureAttachmnts', function (event) {            
+            var file = $('#captureAttachmnts').prop('files')[0];
+            if (file && file.size) {
+                if (file.size > filetypes.file.limit.size) {
+                    alert(filetypes.file.limit.msg);
+                    return;
+                }
+            }
+            cnvertFiles(this,file);
         });
         _chatContainer.off('paste', '.chatInputBox').on('paste', '.chatInputBox', function (event) {
             event.preventDefault();
@@ -547,7 +646,7 @@ function koreBotChat() {
             me.sendMessage(_footerContainer.find('.chatInputBox'));
         });
         
-        _chatContainer.off('click', 'li a').on('click','li a',function(e){
+        _chatContainer.off('click', 'li a').on('click','li a',function(e){            
             e.preventDefault();
             var a_link = $(this).attr('href');
 			var _trgt = $(this).attr('target');
@@ -562,7 +661,7 @@ function koreBotChat() {
                 var _tempWin = window.open(a_link,"_blank");
             }
         });
-		_chatContainer.off('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn,.viewMoreList .viewMore,.listItemPath').on('click','.buttonTmplContentBox li,.listTmplContentChild .buyBtn, .viewMoreList .viewMore,listItemPath',function(e){
+		_chatContainer.off('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn,.viewMoreList .viewMore,.listItemPath').on('click','.buttonTmplContentBox li,.listTmplContentChild .buyBtn, .viewMoreList .viewMore,.listItemPath',function(e){
             e.preventDefault();
             var type = $(this).attr('type');
 			if(type == "postback" || type == "text"){
@@ -652,6 +751,7 @@ function koreBotChat() {
             me.resetWindow();
         });
         bot.on("open", function (response) {
+            accessToken = me.config.botOptions.accessToken;
             var _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
             _chatContainer.find('.kore-chat-header .header-title').html(me.config.chatTitle).attr('title',me.config.chatTitle);
             _chatContainer.find('.kore-chat-header .disabled').prop('disabled',false).removeClass("disabled");
@@ -679,16 +779,29 @@ function koreBotChat() {
                 me.renderMessage(tempData);
             }
             else if(tempData.from === "self" && tempData.type === "user_message"){
-                var tempmsg = tempData.message;                
-                var msgData = {
-                    'type': "currentUser",
-                    "message": [{
-                        'type': 'text',
-                        'cInfo': {'body':tempmsg.body},
-                        'clientMessageId': tempData.id
-                    }],
-                    "createdOn": tempData.id
-                };
+                var tempmsg = tempData.message;
+				var msgData = {};
+				if (tempmsg && tempmsg.attachments && tempmsg.attachments[0] && tempmsg.attachments[0].fileId) {
+					msgData = {
+						'type': "currentUser",
+						"message": [{
+							'type': 'text',
+							'cInfo': {'body':tempmsg.body, attachments: tempmsg.attachments},
+							'clientMessageId': tempData.id
+						}],
+						"createdOn": tempData.id
+					};
+				} else {
+					msgData = {
+						'type': "currentUser",
+						"message": [{
+							'type': 'text',
+							'cInfo': {'body':tempmsg.body},
+							'clientMessageId': tempData.id
+						}],
+						"createdOn": tempData.id
+					};
+				}
                 me.renderMessage(msgData);
             }
         });
@@ -723,28 +836,47 @@ function koreBotChat() {
 
     chatWindow.prototype.sendMessage = function (chatInput) {
         var me = this;
-        if (chatInput.text().trim() === "") {
+        if (chatInput.text().trim() === "" && $('.attachment').html().trim().length == 0) {
             return;
         }
         var _bodyContainer = $(me.config.chatContainer).find('.kore-chat-body');
         var _footerContainer = $(me.config.chatContainer).find('.kore-chat-footer');
         var clientMessageId = new Date().getTime();
-
-        var msgData = {
-            'type': "currentUser",
-            "message": [{
-                'type': 'text',
-                'cInfo': {'body':chatInput.html()},
-                'clientMessageId': clientMessageId
-            }],
-            "createdOn": clientMessageId
-        };
+        var msgData = {};
+        fileUploaderCounter = 0;
+        if(attachmentInfo && Object.keys(attachmentInfo).length) {
+            msgData = {
+                'type': "currentUser",
+                "message": [{
+                    'type': 'text',
+                    'cInfo': {
+                        'body':chatInput.html(),
+                        'attachments':[attachmentInfo]
+                    },
+                    'clientMessageId': clientMessageId
+                }],
+                "createdOn": clientMessageId
+            };
+            $('.attachment').html('');
+            document.getElementById("captureAttachmnts").value = "";
+        }else{
+			attachmentInfo = {};
+            msgData = {
+                'type': "currentUser",
+                "message": [{
+                    'type': 'text',
+                    'cInfo': {'body':chatInput.html()},
+                    'clientMessageId': clientMessageId
+                }],
+                "createdOn": clientMessageId
+            };
+        }
 
         var messageToBot = {};
         messageToBot["clientMessageId"] = clientMessageId;
-        messageToBot["message"] = {body: chatInput.text().trim(), attachments: []};
+        messageToBot["message"] = {body: chatInput.text().trim(), attachments: [attachmentInfo]};
         messageToBot["resourceid"] = '/bot.message';
-
+		attachmentInfo = {};
         bot.sendMessage(messageToBot, function messageSent() {
 
         });
@@ -757,29 +889,36 @@ function koreBotChat() {
     };
 
     chatWindow.prototype.renderMessage = function (msgData) {
-        var me = this, messageHtml = '';
+        var me = this, messageHtml = '',extension ='';
         var _chatContainer = $(me.config.chatContainer).find('.chat-container');
+        if(msgData.message && msgData.message[0] && msgData.message[0].cInfo.attachments){
+            extension = strSplit(msgData.message[0].cInfo.attachments[0].fileName);
+        }
 		if(msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "button"){
 			messageHtml = $(me.getChatTemplate("templatebutton")).tmpl({
 				'msgData': msgData,
-				'helpers':helpers
+				'helpers':helpers,
+                'extension': extension
 			});
 		}
 		else if(msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "list"){
 			messageHtml = $(me.getChatTemplate("templatelist")).tmpl({
 				'msgData': msgData,
-				'helpers':helpers
+				'helpers':helpers,
+                'extension': extension
 			});
 		}
 		else if(msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "quick_replies"){
 			messageHtml = $(me.getChatTemplate("templatequickreply")).tmpl({
 				'msgData': msgData,
-				'helpers':helpers
+				'helpers':helpers,
+                'extension': extension
 			});
 		}else{
 			messageHtml = $(me.getChatTemplate("message")).tmpl({
 				'msgData': msgData,
-				'helpers':helpers
+				'helpers':helpers,
+                'extension': extension
 			});
 		}
         _chatContainer.append(messageHtml);
@@ -809,7 +948,8 @@ function koreBotChat() {
         var chatFooterTemplate =
                 '<div class="footerContainer pos-relative"> \
 			<div class="chatInputBox" contenteditable="true" placeholder="${botMessages.message}"></div> \
-            <div class="btn-group msg-option dropup microphoneBtn"> \
+            <div class="attachment"></div> \
+            <div class="sdkFooterIcon microphoneBtn"> \
                 <button class="notRecordingMicrophone"> \
                     <i class="fa fa-microphone fa-lg"></i> \
                 </button> \
@@ -818,6 +958,12 @@ function koreBotChat() {
                     <img src="../libs/img/audio-record.gif" style="height:10px;"> \
                 </button> \
                 <div id="textFromServer"></div> \
+            </div> \
+            <div class="sdkFooterIcon" style="display:none;"> \
+                <button class="sdkAttachment attachmentBtn"> \
+                    <i class="fa fa fa-paperclip"></i> \
+                </button> \
+                <input type="file" name="Attachment" class="filety" id="captureAttachmnts"> \
             </div> \
 			<div class="chatSendMsg">Press enter to send</div> \
 		</div>';
@@ -829,7 +975,7 @@ function koreBotChat() {
 				<div class="kore-chat-header"> \
 					<div class="header-title" title="${chatTitle}">${chatTitle}</div> \
 					<div class="chat-box-controls"> \
-                                                <button class="reload-btn" title="Reconnect">&#10227;</button> \
+                                                <button class="reload-btn" title="Reconnect"><span></span></button> \
 						<button class="minimize-btn" title="Minimize">&minus;</button> \
                                                 <button class="expand-btn" title="Expand"><span></span></button>\
 						<button class="close-btn" title="Close">&times;</button> \
@@ -850,10 +996,30 @@ function koreBotChat() {
 							{{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
 							{{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
 							<div class="messageBubble">\
-								{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.cInfo.body)}} {{else}} {{html helpers.convertMDtoHTML(msgItem.cInfo.body)}} {{/if}} \
+								<div>{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.cInfo.body)}} {{else}} {{html helpers.convertMDtoHTML(msgItem.cInfo.body)}} {{/if}} </div>\
 								{{if msgItem.cInfo && msgItem.cInfo.emoji}} \
 									<span class="emojione emojione-${msgItem.cInfo.emoji[0].code}">${msgItem.cInfo.emoji[0].title}</span> \
 								{{/if}} \
+                                {{if msgItem.cInfo.attachments}} \
+                                    <div class="msgCmpt attachments" fileid="${msgItem.cInfo.attachments[0].fileId}"> \
+                                        <div class="uploadedFileIcon"> \
+                                            {{if msgItem.cInfo.attachments[0].fileType == "image"}} \
+                                                <span class="icon cf-icon icon-photos_active"></span> \
+                                            {{else msgItem.cInfo.attachments[0].fileType == "audio"}}\
+                                                <span class="icon cf-icon icon-files_audio"></span> \
+                                            {{else msgItem.cInfo.attachments[0].fileType == "video"}} \
+                                                <span class="icon cf-icon icon-video_active"></span> \
+                                            {{else}} \
+                                                {{if extension[1]=="xlsx" || extension[1]=="xls" || extension[1]=="docx" || extension[1]=="doc" || extension[1]=="pdf" || extension[1]=="ppsx" || extension[1]=="pptx" || extension[1]=="ppt" || extension[1]=="zip" || extension[1]=="rar"}}\
+                                                    <span class="icon cf-icon icon-files_${extension[1]}"></span> \
+                                                {{else extension[1]}}\
+                                                    <span class="icon cf-icon icon-files_other_doc"></span> \
+                                                {{/if}}\
+                                            {{/if}}\
+                                        </div> \
+                                        <div class="curUseruploadedFileName">${msgItem.cInfo.attachments[0].fileName}</div> \
+                                    </div> \
+                                {{/if}} \
 							</div> \
 						</li> \
 					{{/if}} \
@@ -1025,6 +1191,9 @@ function koreBotChat() {
 			prevRange = false;
 		}
 	}
+    function strSplit(str){
+        return (str.split('.'));
+    }
     
     window.onbeforeunload = function(){
         if (chatInitialize && $(chatInitialize.config.chatContainer).length > 0) {
@@ -1257,6 +1426,725 @@ function koreBotChat() {
     });
 
     /*************************************    Microphone code end here    **************************************/
+
+    /*******************************    Function for Attachment ***********************************************/
+    function cnvertFiles(_this,_file, customFileName) {   
+        var _scope = _this, recState = {};
+        if (_file && _file.size) {
+            if (_file.size > filetypes.file.limit.size) {
+                alert(filetypes.file.limit.msg);
+                return;
+            }
+        }
+        if (_file && customFileName) {
+            _file.name = customFileName;
+        }        
+        if (_file && (_file.name|| customFileName)) {
+            var _fileName = customFileName || _file.name;
+            var fileType = _fileName.split('.').pop().toLowerCase();
+            recState.name = _fileName;
+            recState.mediaName = getUID();
+            recState.fileType = _fileName.split('.').pop().toLowerCase();
+            var uploadFn;
+            if ((filetypes.image.indexOf(recState.fileType) > -1)) {
+                recState.type = 'image';
+                recState.uploadFn = 'acceptFileRecording';
+            } else if ((filetypes.video.indexOf(recState.fileType) > -1)) {
+                recState.type = 'video';
+                recState.uploadFn = 'acceptVideoRecording';
+            } else if ((filetypes.audio.indexOf(recState.fileType) > -1)) {
+                recState.type = 'audio';
+                recState.uploadFn = 'acceptFile';
+            } else {
+                recState.type = 'attachment';
+                recState.componentSize = _file.size;
+                recState.uploadFn = 'acceptFile';
+            }
+            if (allowedFileTypes && allowedFileTypes.indexOf(fileType) !== -1) {
+                if (recState.type === 'audio' || recState.type === 'video') {
+                    //read duration;
+                    var rd = new FileReader();
+                    rd.onload = function (e) {
+                        var blob = new Blob([e.target.result], {type: _file.type}), // create a blob of buffer
+                                url = (URL || webkitURL).createObjectURL(blob), // create o-URL of blob
+                                video = document.createElement(recState.type);              // create video element
+                        video.preload = "metadata";                               // preload setting
+                        if (video.readyState === 0) {
+                            video.addEventListener("loadedmetadata", function (evt) {     // whenshow duration
+                                var _dur = Math.round(evt.target.duration);
+                                if(recState.type === "audio"){
+                                    (URL || webkitURL).revokeObjectURL(url); //fallback for webkit
+                                    getFileToken(_this,_file, recState);
+                                }
+                            });
+                            if(recState.type  === "video"){
+                                video.addEventListener('loadeddata', function(e){
+                                    recState.resulttype = getDataURL(video);
+                                    (URL || webkitURL).revokeObjectURL(url); //fallback for webkit
+                                    getFileToken(_this,_file, recState);
+                                });
+                            }
+                            video.src = url;                                          // start video load
+                        } else {
+                            (URL || webkitURL).revokeObjectURL(url); //fallback for webkit
+                            getFileToken(_this,_file, recState);
+                        }
+                    };
+                    rd.readAsArrayBuffer(_file);
+                } else {
+                    if(_file.type.indexOf('image') !== (-1)) {
+                        var imgRd = new FileReader();
+                        imgRd.onload = function (e) {
+                            var blob = new Blob([e.target.result], {type: _file.type}), // create a blob of buffer
+                            url = (URL || webkitURL).createObjectURL(blob); // create o-URL of blob
+                            var img = new Image();
+                            img.src = url;
+                            img.onload = function(){
+                                recState.resulttype = getDataURL(img);
+                                getFileToken(_this,_file, recState);
+                            };
+                        };
+                        imgRd.readAsArrayBuffer(_file);
+                    }
+                    else{
+                        getFileToken(_this, _file, recState);
+                    }
+                }
+            } else{
+                alert("SDK not supported this type of file");
+            }
+        }        
+    };
+    function getUID(pattern) {
+        var _pattern = pattern || 'xxxxyx';
+        _pattern = _pattern.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0,
+                v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+        return _pattern;
+    };
+    function getDataURL (src){
+        var thecanvas = document.createElement("canvas");
+        thecanvas.height = 180;
+        thecanvas.width = 320;
+
+        var context = thecanvas.getContext('2d');
+        context.drawImage(src, 0, 0, thecanvas.width, thecanvas.height);
+        var dataURL = thecanvas.toDataURL();
+        return dataURL;
+    };
+    function acceptAndUploadFile  (_this,file, recState) {
+        var _scope = _this, ele;
+        var uc = getfileuploadConf(recState);
+        uc.chunkUpload = file.size > appConsts.CHUNK_SIZE;
+        uc.chunkSize = appConsts.CHUNK_SIZE;
+        uc.file = file;
+        if (uc.chunkUpload) {
+            notifyFlie(_scope,recState);
+            ele = $('.chatInputBox');
+            initiateRcorder(recState, ele);
+            ele.uploader(uc);
+        } else {
+            var reader = new FileReader();
+            reader.onloadend = function (evt) {
+                if (evt.target.readyState === FileReader.DONE) { // DONE == 2
+                    var converted = reader.result.replace(/^.*;base64,/, '');
+                    var relt = reader.result;
+                    var resultGet = converted;
+                    recState.resulttype = resultGet;
+                    acceptFileRecording(_scope,recState, ele);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    function getFileToken(_obj, _file, recState){
+         $.ajax({type: "POST",
+            url: koreAPIUrl+"1.1/attachment/file/token",
+            dataType: "json",
+            headers: {
+                Authorization: bearerToken
+            },
+            success: function (response) {
+               fileToken = response.fileToken;
+               acceptAndUploadFile(_obj, _file, recState);
+            },
+            error: function (msg) {
+                console.log("Oops, something went horribly wrong");
+            }
+        });
+    }
+    function getfileuploadConf (_recState) {
+        appConsts.UPLOAD = {
+            "FILE_ENDPOINT":koreAPIUrl+"1.1/attachment/file",
+            "FILE_TOKEN_ENDPOINT":koreAPIUrl+"1.1/attachment/file/token",
+            "FILE_CHUNK_ENDPOINT":koreAPIUrl+"1.1/attachment/file/:fileID/chunk"       
+        }
+        _accessToke = "bearer " + accessToken;
+        _uploadConfg = {};        
+        _uploadConfg.url = appConsts.UPLOAD.FILE_ENDPOINT.replace(':fileID', fileToken);
+        _uploadConfg.tokenUrl = appConsts.UPLOAD.FILE_TOKEN_ENDPOINT;
+        _uploadConfg.chunkUrl = appConsts.UPLOAD.FILE_CHUNK_ENDPOINT.replace(':fileID', fileToken);
+        _uploadConfg.fieldName = 'file';
+        _uploadConfg.data = {
+            'fileExtension': _recState.fileType,
+            'fileContext': 'message',
+            thumbnailUpload: false,
+            filename: _recState.name
+        };
+        _uploadConfg.headers = {
+            Authorization: _accessToke
+        };
+        return _uploadConfg;
+    };
+    function notifyFlie (_this,_recState, _tofileId) {
+        var _this = _this;
+        var _data = {};
+        _data.meta = {
+            thumbNail: _recState.resulttype ? _recState.resulttype : undefined
+        };
+        _data.values = {
+            componentId: _recState.mediaName,
+            componentType: _recState.type,
+            componentFileId: _tofileId,
+            componentData: {
+                filename: _recState.name
+            }
+
+        };
+        if (_recState.componentSize) {
+            _data.values.componentSize = _recState.componentSize;
+        }
+        onComponentReady(_this,_data);
+    };
+    function initiateRcorder (_recState, ele) {
+        var _scope = this;
+        ele = ele || _scope.ele;
+        ele.on('success.ke.uploader', function (e) {
+            onFileToUploaded(_scope, e, _recState);
+        });
+        ele.on('error.ke.uploader', onUploadError);
+    };
+    function onFileToUploaded (_this,evt, _recState) {
+        var _this = _this;
+        var _data = evt.params;
+        if (!_data || !_data.fileId) {
+            onError();
+            return;
+        }
+        if (_recState.mediaName) {
+            var _tofileId = _data.fileId;
+            notifyfileCmpntRdy(_this,_recState, _tofileId);
+        }
+    };
+    function onUploadError (_this,evt, _recState) {
+        var _scope = _this;
+        _recfileLisnr.onError({
+            code: 'UPLOAD_FAILED'
+        });
+        _scope.removeCmpt(_recState);
+    };
+    function onError () {
+        alert("Failed to upload content. Try again");
+        attachmentInfo = {};
+        $('.attachment').html('');
+        fileUploaderCounter  = 0;
+    };
+    function onComponentReady (_this,data) {
+        var _this = _this,
+                _src,
+                _imgCntr, _img, base64Matcher, http,
+                _cmptVal, _cmpt;
+        if (!_cmpt) {
+            _cmpt = $('<div/>').attr({
+                'class': 'msgCmpt ' + data.values.componentType + ' ' + data.values.componentId
+            });
+            _cmpt.data('value', data.values);
+            
+            if (!data.values.componentFileId && data.values.componentType !== 'contact' && data.values.componentType !== 'location' && data.values.componentType !== 'filelink' && data.values.componentType !== 'alert' && data.values.componentType !== 'email') {
+                _cmpt.append('<div class="upldIndc"></div>');
+            }
+            if (data.values.componentType === 'attachment') {
+                var fileType, _fn;
+                if (data.values.componentDescription) {
+                    fileType = data.values.componentDescription.split('.').pop().toLowerCase();
+                } else {
+                    fileType = data.values.componentData.filename.split('.').pop().toLowerCase();
+                }
+                if (fileType === 'xls' || fileType === 'xlsx') {
+                    _cmpt.append('<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_excel"></span></div>');                    
+                    _cmpt.append('<div class="uploadedFileName">' + data.values.componentData.filename + '</div>');
+                } else if (fileType === 'docx' || fileType === 'doc') {
+                    _cmpt.append('<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_word"></span></div>');
+                    _cmpt.append('<div class="uploadedFileName">' + data.values.componentData.filename + '</div>');
+                }                 
+                else if (fileType === 'pdf') {
+                    _cmpt.append('<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_pdf"></span></div>');
+                    _cmpt.append('<div class="uploadedFileName">' + data.values.componentData.filename + '</div>');
+                } else if (fileType === 'ppsx' || fileType === 'pptx' || fileType === 'ppt') {
+                    _cmpt.append('<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_ppt"></span></div>');
+                    _cmpt.append('<div class="uploadedFileName">' + data.values.componentData.filename + '</div>');
+                } else if (fileType === 'zip' || fileType === 'rar') {
+                    _cmpt.append('<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_zip"></span></div>');
+                    _cmpt.append('<div class="uploadedFileName">' + data.values.componentData.filename + '</div>');
+                } else {
+                    _cmpt.append('<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_other_doc"></span></div>');
+                    _cmpt.append('<div class="uploadedFileName">' + data.values.componentData.filename + '</div>');
+                }
+            } 
+            if (data.values.componentType === 'image') {
+                _cmpt.append('<div class="uploadedFileIcon"><span class="icon cf-icon icon-photos_active"></span></div>');
+                _cmpt.append('<div class="uploadedFileName">' + data.values.componentData.filename + '</div>');
+            }
+            if (data.values.componentType === 'audio') {
+                _cmpt.append('<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_audio"></span></div>');
+                _cmpt.append('<div class="uploadedFileName">' + data.values.componentData.filename + '</div>');
+            }
+            if (data.values.componentType === 'video') {
+                _cmpt.append('<div class="uploadedFileIcon"><span class="icon cf-icon icon-video_active"></span></div>');
+                _cmpt.append('<div class="uploadedFileName">' + data.values.componentData.filename + '</div>');
+            } 
+        }
+        _cmpt.append('<div class="removeAttachment"><span>&times;</span></div>');
+        $('.footerContainer').find('.attachment').html(_cmpt);
+        $('.chatInputBox').focus();
+        attachmentInfo.fileName = data.values.componentData.filename;
+        attachmentInfo.fileType = data.values.componentType;
+    };
+    function acceptFileRecording  (_this,_recState, ele) {
+        var _scope = _this;
+        var _uc = getfileuploadConf(_recState),
+                _imageCntn = _recState.resulttype;
+        notifyfileCmpntRdy(_scope,_recState);
+        _uc.data[_uc.fieldName] = {
+            fileName: _recState.name,
+            data: _imageCntn,
+            type: 'image/png'
+        };
+        _uc.data.thumbnail = {
+            fileName: _recState.name + '_thumb',
+            data: _imageCntn,
+            type: 'image/png'
+        };
+        ele = $('.chatInputBox');
+        initiateRcorder(_recState, ele);
+        ele.uploader(_uc);
+    };
+    function notifyfileCmpntRdy (_this,_recState, _tofileId) {
+        var _this = _this;
+        var _data = {};
+        _data.meta = {
+            thumbNail: _recState.resulttype
+        };
+        _data.values = {
+            componentId: _recState.mediaName,
+            componentType: _recState.type,
+            componentFileId: _tofileId,
+            componentData: {
+                filename: _recState.name
+            }
+        };
+        onComponentReady(_this,_data);
+    };
+    /***************************************************** ke.uploader file code **********************************************/
+    function MultipartData() {
+        this.boundary = "--------MultipartData" + Math.random();
+        this._fields = [];
+    }
+    MultipartData.prototype.append = function (key, value) {
+        this._fields.push([key, value]);
+    };
+    MultipartData.prototype.toString = function () {
+        var boundary = this.boundary;
+        var body = "";
+        this._fields.forEach(function (field) {
+            body += "--" + boundary + "\r\n";
+            // file upload
+            if (field[1].data) {
+                var file = field[1];
+                if (file.fileName) {
+                    body += "Content-Disposition: form-data; name=\"" + field[0] + "\"; filename=\"" + file.fileName + "\"";
+                } else {
+                    body += "Content-Disposition: form-data; name=\"" + field[0] + "\"";
+                }
+                body += "\r\n";
+                if (file.type) {
+                    body += "Content-Type: UTF-8; charset=ISO-8859-1\r\n";
+                }
+                body += "Content-Transfer-Encoding: base64\r\n";
+                body += "\r\n" + file.data + "\r\n"; //base64 data
+            } else {
+                body += "Content-Disposition: form-data; name=\"" + field[0] + "\";\r\n\r\n";
+                body += field[1] + "\r\n";
+            }
+        });
+        body += "--" + boundary + "--";
+        return body;
+    };
+    function Uploader(element, options) {
+        this.options = options;
+        this.$element = element;
+        if (!this.options.chunkUpload) {
+            startUpload(this);
+        } else {
+            startChunksUpload(this);
+        }
+    }
+    var _cls = Uploader.prototype;
+    _cls.events = {
+        error: $.Event('error.ke.uploader'),
+        progressChange: $.Event('progress.ke.uploader'),
+        success: $.Event('success.ke.uploader')
+    };
+    function getConnection (_this) {
+        return new kony.net.HttpRequest();
+    };
+
+    function loadListener (_this, evt) {
+        _this.events.success.params = $.parseJSON(evt.target.response);
+        attachmentInfo.fileId = _this.events.success.params.fileId;
+        fileUploaderCounter = 1;
+        $('.upldIndc').remove();
+        _this.$element.trigger(_this.events.success);
+    };
+
+    function errorListener (_this,evt) {
+        _this.events.error.params = evt;
+        _this.$element.trigger(_this.events.error);
+    };
+
+    function progressListener (_this,evt) {
+    };
+
+    function setOptions (_this,opts) {
+        _this.options = opts;
+        return _this;
+    };
+
+    function commitFile (_this) {
+        var _scope = _this,
+                _conc = getConnection(_this),
+                _mdat = new MultipartData();
+        _conc.addEventListener('load', function (evt) {
+            if (evt.target.status === 200) {
+                if (_scope.$element.parent().length) {
+                    loadListener(_scope,evt);
+                }
+            } else {
+                errorListener(_scope,evt);
+            }
+        }, false);
+        _conc.addEventListener('error', function (evt) {
+            errorListener(_scope,evt);
+        }, false);
+        _conc.withCredentials = false;
+        _conc.open('PUT', _this.options.chunkUrl.replace(/\/chunk/, ''));
+
+        if (_this.options.headers) {
+            for (var header in _this.options.headers) {
+                _conc.setRequestHeader(header, _this.options.headers[header]);
+            }
+        }
+        _mdat.append('totalChunks', _scope.totalChunks);
+        _mdat.append('messageToken', _scope.messageToken);
+        if (_this.options.data) {
+            for (var key in _this.options.data) {
+                _mdat.append(key, _this.options.data[key]);
+            }
+        }
+        _conc.setRequestHeader('Content-Type', "multipart/form-data; boundary=" + _mdat.boundary);
+        _conc.send(_mdat.toString());
+    };
+
+    function uploadChunk (_this) {
+        var _scope = _this,
+                _conc = getConnection(_this),
+                _mdat = new MultipartData();
+        _conc.addEventListener('load', function (evt) {
+            if (evt.target.status === 200) {
+                _scope.currChunk++;
+                if (!_scope.$element.parent().length) {
+                    return;
+                } else if (_scope.currChunk === _scope.totalChunks) {
+                    commitFile(_scope);
+                } else {
+                    initUploadChunk(_scope);
+                }
+            } else {
+                errorListener(_scope,evt);
+            }
+        }, false);
+        _conc.addEventListener('error', function (evt) {
+            errorListener(_scope,evt);
+        }, false);
+        _conc.withCredentials = false;
+        _conc.open('POST', _this.options.chunkUrl);
+
+        if (_this.options.headers) {
+            for (var header in _this.options.headers) {
+                _conc.setRequestHeader(header, _this.options.headers[header]);
+            }
+        }
+        _mdat.append('chunkNo', _scope.currChunk);
+        _mdat.append('messageToken', _scope.messageToken);
+        _mdat.append('chunk', {
+            data: _scope.chunk,
+            fileName: _scope.options.file.name
+        });
+        _conc.setRequestHeader('Content-Type', "multipart/form-data; boundary=" + _mdat.boundary);
+        _conc.send(_mdat.toString());
+    };
+
+    function initUploadChunk (_this) {
+        var _scope = _this;
+        var file = _scope.options.file;
+        var start = _scope.options.chunkSize * (_scope.currChunk);
+        var stop = (_scope.currChunk === _scope.totalChunks - 1) ? file.size : (_scope.currChunk + 1) * _scope.options.chunkSize;
+        var reader = new FileReader();
+        var blob = file.slice(start, stop);
+        reader.onloadend = function (evt) {
+            if (evt.target.readyState === FileReader.DONE && _scope.$element.parent().length) { // DONE == 2
+                _scope.chunk = evt.target.result;
+                _scope.chunk = _scope.chunk.replace(/data:;base64,/, '');
+                if (_scope.currChunk < _scope.totalChunks && _scope.$element.parent().length) {
+                    uploadChunk(_scope);
+                }
+            } else {
+                errorListener(_scope,evt);
+            }
+        };
+        reader.readAsDataURL(blob);
+    };
+
+    function startChunksUpload (_this) {
+        var _scope = _this,
+                _conc = getConnection(_this);
+        _conc.addEventListener('error', function (evt) {
+            errorListener(_scope,evt);
+        }, false);
+        _conc.addEventListener('load', function (evt) {
+            if (evt.target.status === 200) {
+                _scope.messageToken = JSON.parse(evt.target.response).fileToken;
+                _scope.totalChunks = Math.floor(_scope.options.file.size / _scope.options.chunkSize) + 1;
+                _scope.currChunk = 0;
+                _scope.options.chunkUrl = _scope.options.chunkUrl.replace(':token', _scope.messageToken);
+                if (_scope.$element.parent().length) {
+                    initUploadChunk(_scope);
+                }
+            } else {
+                errorListener(_scope,evt);
+            }
+        }, false);
+        _conc.withCredentials = false;
+        _conc.open('POST', _this.options.tokenUrl);
+        if (_this.options.headers) {
+            for (var header in _this.options.headers) {
+                _conc.setRequestHeader(header, _this.options.headers[header]);
+            }
+        }
+        _conc.send();
+    };
+    function startUpload (_this) {
+        var _scope = _this;
+                _conc = getConnection(_this),
+                _mdat = new MultipartData();
+        if (_conc.upload && _conc.upload.addEventListener) {
+            _conc.upload.addEventListener('progress', function (evt) {
+                progressListener(_scope,evt);
+            }, false);
+        }
+        _conc.addEventListener('load', function (evt) {
+            if (_scope.$element.parent().length) {
+                loadListener(_scope,evt);
+            }
+        }, false);
+        _conc.addEventListener('error', function (evt) {
+            errorListener(_scope,evt);
+        }, false);
+        _conc.withCredentials = false;
+        _conc.open('POST', _this.options.url);
+
+        if (_this.options.headers) {
+            for (var header in _this.options.headers) {
+                _conc.setRequestHeader(header, _this.options.headers[header]);
+            }
+        }
+        if (_this.options.data) {
+            for (var key in _this.options.data) {
+                _mdat.append(key, _this.options.data[key]);
+            }
+        }
+        _conc.setRequestHeader('Content-Type', "multipart/form-data; boundary=" + _mdat.boundary);
+        _conc.send(_mdat.toString());
+    };
+
+    var old = $.fn.uploader;
+
+    $.fn.uploader = function (option) {
+        var _args = Array.prototype.slice.call(arguments, 1);
+        return this.each(function () {
+            var $this = $(this),
+                    data = '';//$this.data('ke.uploader'),
+                    options = typeof option === 'object' && option;
+
+            if (!data) {
+                $this.data('ke.uploader', (data = new Uploader($this, options)));
+            } else if (option) {
+                if (typeof option === 'string' && data[option]) {
+                    data[option].apply(data, _args);
+                } else if (options) {
+                    startUpload(setOptions(data,options));
+                }
+            }
+            return option && data[option] && data[option].apply(data, _args);
+        });
+    };
+
+    $.fn.uploader.Constructor = Uploader;
+
+    $.fn.uploader.noConflict = function () {
+        $.fn.uploader = old;
+        return this;
+    };
+    /************************************************************************************************************************************************
+    ********************************************** kony framework file ******************************************************************************
+    ************************************************************************************************************************************************/
+    var NOOP = function() {
+        return true;
+    },
+            conf = {
+                hashRegx: /^#_(\w+)[?,&]?(.*)/,
+                startForm: "login",
+                loginForm: "login",
+                homeForm: "messages",
+                pageNotFound: "404",
+                hashBang: '_',
+                onFormChange: function() {
+                    return {
+                        canAccess: true
+                    };
+                }
+            },
+    _initCb;
+
+    //Prepare namespaces    
+    kony.constants = {
+        HTTP_READY_STATE_DONE: 4,
+        HTTP_RESPONSE_TYPE_JSON: "json",
+        HTTP_METHOD_GET: "GET",
+        HTTP_METHOD_POST: "POST",
+        HTTP_METHOD_PUT: "PUT",
+        HTTP_METHOD_DELETE: "DELETE",
+        HTTP_CONTENT_TYPE_JSON: "application/json",
+        HTTP_CONTENT_TYPE: "content-type"
+    };
+    +function() {
+        function getHTTPConnecton() {
+            var xhr = false;
+            xhr = new XMLHttpRequest();
+            if (xhr) {
+                return xhr;
+            } else if (typeof XDomainRequest !== "undefined") {
+                return new XDomainRequest();
+            }
+            return xhr;
+        }
+
+        function HttpRequest() {
+            var xhr = getHTTPConnecton();
+            if (!xhr) {
+                throw "Unsupported HTTP Connection";
+            }
+            try {
+                xhr.withCredentials = true;
+            } catch (e) {
+            }
+            xhr.onreadystatechange = function() {
+                return xhr.onReadyStateChange && xhr.onReadyStateChange.call(xhr);
+            };
+            return xhr;
+        }
+
+        function FormData() {
+            this.data = {};
+        }
+        FormData.prototype.append = function(key, value) {
+            this.data[key] = value;
+        };
+        FormData.prototype.toHTTPParams = function() {
+            var _str = "",
+                    _propName, paramsObj = this.data,
+                    _val;
+            for (_propName in paramsObj) {
+                if (paramsObj.hasOwnProperty(_propName)) {
+                    _val = paramsObj[_propName];
+                    _str += _propName + '=' + _val + '\r\n';
+                }
+            }
+            return _str;
+        };
+
+        kony.net.FormData = FormData;
+        kony.net.HttpRequest = HttpRequest;
+    }();
+
+    var $FM = {//Form Manager
+        allForms: {},
+        currForm: false,
+        prevForm: false,
+        showForm: function(form, info, ignoreIfshown) {
+            if ($win.location.hash.indexOf(conf.hashBang + form.id) === -1 || info) {
+                var _newHash = conf.hashBang + form.id;
+                try {
+                    var _tempSrch = "";
+                    if ($win.location.search) {
+                        _tempSrch = $win.location.search;
+                        $win.location.hash = _newHash + (info ? '?' + $win.$.param(info) : '');
+                        info = $win.$.extend({}, $win.$.deparam(_tempSrch.substring(1, _tempSrch.length)), info);
+                    } else {
+                        $win.location.hash = _newHash + (info ? '?' + $win.$.param(info) : '');
+                    }
+                } catch (e) {
+                    $win.location.hash = _newHash;
+                }
+            }
+            info = info || {};
+            if ($FM.currForm) {
+                if ($FM.currForm.id === form.id) {
+                    if (!ignoreIfshown) {
+                        $FM.currForm.show(info);
+                    }
+                    return true; // do nothing;
+                }
+                $FM.currForm.hide();
+                $FM.prevForm = $FM.currForm;
+            }
+            $FM.currForm = form;
+            $FM.currForm.show(info);
+            if (_initCb) {
+                _initCb();
+                _initCb = false;
+            }
+            return true;
+        },
+        getId: function() { //Get Current Form Id
+            return $FM.currForm && $FM.currForm.id;
+        }
+    };
+    kony.initConfig = function(newConf) {
+        for (var prop in newConf) {
+            if (newConf.hasOwnProperty(prop) && conf.hasOwnProperty(prop)) {
+                conf[prop] = newConf[prop];
+            }
+        }
+    };
+    kony.init = function(cb) {
+        _initCb = cb;
+        kony.resolveURL();
+    };
+
+    /********************************  Code end here for attachment *******************************************/
     return {
 		addListener: addListener,
 		removeListener: removeListener,

@@ -234,6 +234,7 @@ KoreBot.prototype.onLogIn = function(err, data) {
 		this.accessToken = data.authorization.accessToken;
 		this.options.accessToken = this.accessToken;
 		this.WebClient.user.accessToken = this.accessToken;
+		this.userInfo = data;		
 		this.RtmClient = new clients.KoreRtmClient({}, this.options);
 		this.RtmClient.start({
 			"botInfo": this.options.botInfo
