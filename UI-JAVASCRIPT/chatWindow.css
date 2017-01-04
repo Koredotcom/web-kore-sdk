@@ -398,10 +398,11 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     margin-top: -250px;
     margin-left: -40%;
     width: 80%;
-    height: 500px;
+    height: 85%;
+	min-height: 200px;
     z-index: 1001;
     background: white;
-    min-width: 500px;
+    min-width: 200px;
     max-width: 1024px;
 }
 .kore-auth-popup iframe{
