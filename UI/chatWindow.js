@@ -949,7 +949,7 @@ function koreBotChat() {
                 '<div class="footerContainer pos-relative"> \
 			<div class="chatInputBox" contenteditable="true" placeholder="${botMessages.message}"></div> \
             <div class="attachment"></div> \
-            <div class="sdkFooterIcon microphoneBtn"> \
+            <div class="sdkFooterIcon microphoneBtn" style="visibility:hidden;"> \
                 <button class="notRecordingMicrophone"> \
                     <i class="fa fa-microphone fa-lg"></i> \
                 </button> \
