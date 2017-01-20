@@ -308,6 +308,8 @@ ul.chat-container li.fromCurrentUser .messageBubble{
     -webkit-animation: message-right ease-in-out 2s forwards;
     -moz-animation: message-right ease-in-out 2s forwards;
     animation: message-right ease-in-out 2s forwards;
+    display: inline-block;
+    word-wrap: break-word;
 }
 ul.chat-container li.fromCurrentUser .messageBubble .isLink a{
 	color: #FFF;
@@ -343,6 +345,8 @@ ul.chat-container li.fromOtherUsers .messageBubble{
     -webkit-animation: message-left ease-in-out 2s forwards;
     -moz-animation: message-left ease-in-out 2s forwards;
     animation: message-left ease-in-out 2s forwards;
+    display: inline-block;
+    word-wrap: break-word;
 }
 ul.chat-container li.fromOtherUsers.with-icon{
     padding-left: 44px;
@@ -757,4 +761,33 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
 }
 .noneBtn{
 	cursor: pointer;;
+}
+.kore-chat-attachment .kore-chat-body{
+    bottom: 125px!important;
+}
+.kore-chat-attachment .typingIndicatorContent{
+    bottom: 135px!important;
+}
+.typingIndicatorContent{
+    position: absolute;
+    width: 100px;
+    bottom: 70px;
+    left: 20px;
+    display: none;
+}
+.typingIndicator{
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 50%;
+    font-size: 13.6px;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    display: inline-block;
+    background-size: 100%;
+}
+.typingIndicatorContent img{
+    width: 17%;
+    margin-left: 5px;
+    vertical-align: text-top;
 }

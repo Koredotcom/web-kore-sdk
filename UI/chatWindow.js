@@ -374,7 +374,14 @@ function koreBotChat() {
 						var remainingString = _matchImage[j].substring(_matchImage[j].indexOf(']') + 1).trim();
 						var _imgLink = remainingString.substring(1, remainingString.indexOf(')'));
 						_imgLink = '<img src="' + _imgLink + '" alt="' + _imgTxt + '">';
-						txtArr[i] = txtArr[i].replace(_matchImage[j], _imgLink);
+						var _tempImg = txtArr[i].split(' ');
+                        for(var k = 0; k < _tempImg.length; k++) {
+                            if (_tempImg[k] === _matchImage[j]) {
+                                _tempImg[k] = _imgLink;
+                            }
+                        }
+                        txtArr[i] = _tempImg.join(' ');
+						//txtArr[i] = txtArr[i].replace(_matchImage[j], _imgLink);
 					}
 				}
 				// Matches link markup [test](http://google.com/)
@@ -614,6 +621,7 @@ function koreBotChat() {
         });
         _chatContainer.off('click', '.removeAttachment').on('click', '.removeAttachment', function (event) {
            $(this).parents('.msgCmpt').remove();
+           $('.kore-chat-window').removeClass('kore-chat-attachment');
            fileUploaderCounter  = 0;
            attachmentInfo = {};
            document.getElementById("captureAttachmnts").value = "";
@@ -858,6 +866,7 @@ function koreBotChat() {
                 "createdOn": clientMessageId
             };
             $('.attachment').html('');
+            $('.kore-chat-window').removeClass('kore-chat-attachment');
             document.getElementById("captureAttachmnts").value = "";
         }else{
 			attachmentInfo = {};
@@ -874,7 +883,12 @@ function koreBotChat() {
 
         var messageToBot = {};
         messageToBot["clientMessageId"] = clientMessageId;
-        messageToBot["message"] = {body: chatInput.text().trim(), attachments: [attachmentInfo]};
+        if (Object.keys(attachmentInfo).length > 0) {
+            messageToBot["message"] = {body: chatInput.text().trim(), attachments: [attachmentInfo]};
+        }
+        else{
+            messageToBot["message"] = {body: chatInput.text().trim()};
+        }
         messageToBot["resourceid"] = '/bot.message';
 		attachmentInfo = {};
         bot.sendMessage(messageToBot, function messageSent() {
@@ -885,11 +899,24 @@ function koreBotChat() {
 		if (msgData && msgData.message && msgData.message[0].cInfo && msgData.message[0].cInfo.body) {
 			msgData.message[0].cInfo.body = helpers.convertMDtoHTML(msgData.message[0].cInfo.body);
 		}
+        $('.typingIndicatorContent').css('display','block');
+        setTimeout(function(){
+            $('.typingIndicatorContent').css('display','none');
+        },3000)           
+
         me.renderMessage(msgData);
     };
 
     chatWindow.prototype.renderMessage = function (msgData) {
         var me = this, messageHtml = '',extension ='';
+        if (msgData.type==="bot_response"){
+            setTimeout(function(){
+                 $('.typingIndicator').css('background-image',"url("+msgData.icon+")");
+            },500);
+            setTimeout(function(){
+                $('.typingIndicatorContent').css('display','none');
+            },500) 
+        }
         var _chatContainer = $(me.config.chatContainer).find('.chat-container');
         if(msgData.message && msgData.message[0] && msgData.message[0].cInfo.attachments){
             extension = strSplit(msgData.message[0].cInfo.attachments[0].fileName);
@@ -984,6 +1011,7 @@ function koreBotChat() {
 				<div class="kore-chat-body"> \
 					<ul class="chat-container"></ul> \
 				</div> \
+                <div class="typingIndicatorContent"><div class="typingIndicator"></div><img src="../libs/img/3dot.gif"></div> \
 				<div class="kore-chat-footer">' + chatFooterTemplate + '</div> \
 			</div> \
 		</script>';
@@ -1378,10 +1406,10 @@ function koreBotChat() {
                 if (res.status === 0) {
                     if (res.result.final) {
                         var final_result = res.result.hypotheses[0].transcript;
-                        $('.chatInputBox').text($('.chatInputBox').text() + ' '+ final_result);
+                        $('.chatInputBox').html($('.chatInputBox').html() +' '+ final_result);
 
                     } else {
-                        $('.chatInputBox').text(res.result.hypotheses[0].transcript);
+                        //$('.chatInputBox').html($('.chatInputBox').html() + ' '+ res.result.hypotheses[0].transcript);
                         console.log('Not final: ', res.result.hypotheses[0].transcript);
                     }
                 } else {
@@ -1804,6 +1832,7 @@ function koreBotChat() {
     function loadListener (_this, evt) {
         _this.events.success.params = $.parseJSON(evt.target.response);
         attachmentInfo.fileId = _this.events.success.params.fileId;
+        $('.kore-chat-window').addClass('kore-chat-attachment');
         fileUploaderCounter = 1;
         $('.upldIndc').remove();
         _this.$element.trigger(_this.events.success);

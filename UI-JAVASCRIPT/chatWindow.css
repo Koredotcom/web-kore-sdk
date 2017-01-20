@@ -304,6 +304,8 @@ ul.chat-container li.fromCurrentUser .messageBubble{
     border-radius: 12px;
     border-bottom-right-radius: 2px;
     position: relative;
+    display: inline-block;
+    word-wrap: break-word;
 }
 ul.chat-container li.fromCurrentUser .extra-info{
     padding-right: 5px;
@@ -336,6 +338,8 @@ ul.chat-container li.fromOtherUsers .messageBubble{
     padding: 12px 15px;
     max-width: 70%;
     font-size: 16px;
+    display: inline-block;
+    word-wrap: break-word;
 }
 ul.chat-container li.fromOtherUsers.with-icon{
     padding-left: 44px;
@@ -691,4 +695,33 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     top: 0;
     left: 0;
     opacity: 0.6;
+}
+.kore-chat-attachment .kore-chat-body{
+    bottom: 125px!important;
+}
+.kore-chat-attachment .typingIndicatorContent{
+    bottom: 135px!important;
+}
+.typingIndicatorContent{
+    position: absolute;
+    width: 100px;
+    bottom: 70px;
+    left: 20px;
+    display: none;
+}
+.typingIndicator{
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 50%;
+    font-size: 13.6px;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    display: inline-block;
+    background-size: 100%;
+}
+.typingIndicatorContent img{
+    width: 17%;
+    margin-left: 5px;
+    vertical-align: text-top;
 }
