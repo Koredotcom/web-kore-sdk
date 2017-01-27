@@ -883,8 +883,10 @@ function koreBotChat() {
 
         var messageToBot = {};
         messageToBot["clientMessageId"] = clientMessageId;
-        if (Object.keys(attachmentInfo).length > 0) {
+        if (Object.keys(attachmentInfo).length > 0 && chatInput.text().trim().length) {
             messageToBot["message"] = {body: chatInput.text().trim(), attachments: [attachmentInfo]};
+        } else if(Object.keys(attachmentInfo).length > 0){
+            messageToBot["message"] = {attachments: [attachmentInfo]};
         }
         else{
             messageToBot["message"] = {body: chatInput.text().trim()};
@@ -1617,7 +1619,7 @@ function koreBotChat() {
         _uploadConfg.fieldName = 'file';
         _uploadConfg.data = {
             'fileExtension': _recState.fileType,
-            'fileContext': 'message',
+            'fileContext': 'workflows',
             thumbnailUpload: false,
             filename: _recState.name
         };
