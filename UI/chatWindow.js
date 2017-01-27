@@ -1013,7 +1013,7 @@ function koreBotChat() {
 				<div class="kore-chat-body"> \
 					<ul class="chat-container"></ul> \
 				</div> \
-                <div class="typingIndicatorContent"><div class="typingIndicator"></div><img src="../libs/img/3dot.gif"></div> \
+                <div class="typingIndicatorContent"><div class="typingIndicator"></div><div class="movingDots"></div></div> \
 				<div class="kore-chat-footer">' + chatFooterTemplate + '</div> \
 			</div> \
 		</script>';

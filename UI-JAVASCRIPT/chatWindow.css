@@ -47,6 +47,7 @@
     border-radius: 4px;
     z-index: 1030;
 }
+
 @media(max-width: 767px) {
 	.kore-chat-window {
 		left: 5px!important;
@@ -203,8 +204,8 @@
 	}
 }
 .kore-chat-header .chat-box-controls .expand-btn span{
-	margin-top: 3px;
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAOCAAAAAADRMNWAAAAAnRSTlMAAHaTzTgAAABWSURBVAjXdY+xDYAwDAS9/yhXJWWwZDFABgDBDklhiZaSp8h3d9IVb7ZcB+pUE1CGcPpfpNNcReBptxTXntrHIXQ+6cTHo2wNTxX82EZBA7NZgb6+9AJNFjJH3aM64AAAAABJRU5ErkJggg==);
+    margin-top: 3px;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAOCAAAAAADRMNWAAAAAnRSTlMAAHaTzTgAAABWSURBVAjXdY+xDYAwDAS9/yhXJWWwZDFABgDBDklhiZaSp8h3d9IVb7ZcB+pUE1CGcPpfpNNcReBptxTXntrHIXQ+6cTHo2wNTxX82EZBA7NZgb6+9AJNFjJH3aM64AAAAABJRU5ErkJggg==);
     background-size: 16px 16px;
 	display: inline-block;
     width: 16px;
@@ -304,15 +305,18 @@ ul.chat-container li.fromCurrentUser .messageBubble{
     border-radius: 12px;
     border-bottom-right-radius: 2px;
     position: relative;
+    -webkit-animation: message-right ease-in-out 2s forwards;
+    -moz-animation: message-right ease-in-out 2s forwards;
+    animation: message-right ease-in-out 2s forwards;
     display: inline-block;
     word-wrap: break-word;
+}
+ul.chat-container li.fromCurrentUser .messageBubble .isLink a{
+	color: #FFF;
 }
 ul.chat-container li.fromCurrentUser .extra-info{
     padding-right: 5px;
     text-align: right;
-}
-ul.chat-container li.fromCurrentUser .messageBubble .isLink a{
-	color: #FFF;
 }
 ul.chat-container li.fromCurrentUser .messageBubble .message-status{
     position: absolute;
@@ -338,6 +342,9 @@ ul.chat-container li.fromOtherUsers .messageBubble{
     padding: 12px 15px;
     max-width: 70%;
     font-size: 16px;
+    -webkit-animation: message-left ease-in-out 2s forwards;
+    -moz-animation: message-left ease-in-out 2s forwards;
+    animation: message-left ease-in-out 2s forwards;
     display: inline-block;
     word-wrap: break-word;
 }
@@ -384,7 +391,64 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     right: 0;
 }
 
+/*.kore-chat-window .kore-chat-footer .sendChat{
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    background: #127927;
+    margin-top: -16px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 29px;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+    font-size: 20px;
+}
+.kore-chat-window .kore-chat-footer .sendChat.disabled{
+    background: whitesmoke!important;
+    color: lightgray!important;
+}*/
 
+@keyframes message-left {
+    0% {
+        transform: translate3d(-15%, 5%, 0) scale3d(1, 1, 1);
+        visibility: visible
+    }
+    5% {
+        transform: translate3d(0, 0, 0) scale3d(1.01, 1.01, 1)
+    }
+    10% {
+        transform: translate3d(0, -2px, 0) scale3d(1.03, 1.03, 1)
+    }
+    15% {
+        transform: translate3d(0, 1px, 0) scale3d(1, 1, 1)
+    }
+    20% {
+        transform: translate3d(0, 0, 0) scale3d(1, 1, 1)
+    }
+}
+
+@keyframes message-right {
+    0% {
+        transform: translate3d(15%, 5%, 0) scale3d(1, 1, 1);
+        visibility: visible
+    }
+    5% {
+        transform: translate3d(0, 0, 0) scale3d(1.01, 1.01, 1)
+    }
+    10% {
+        transform: translate3d(0, -2px, 0) scale3d(1.03, 1.03, 1)
+    }
+    15% {
+        transform: translate3d(0, 1px, 0) scale3d(1, 1, 1)
+    }
+    20% {
+        transform: translate3d(0, 0, 0) scale3d(1, 1, 1)
+    }
+}
 .kore-auth-layover {
     position: fixed;
     left: 0;
@@ -453,10 +517,6 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     border: 1px solid #F2F2F2;
 	max-width: 70%;
 }
-.listTmplContentBox li:first-child{
-	margin-top:0!important;
-	border-top:0;
-}
 .buttonTmplContent .buttonTmplContentHeading{
 	text-align: left;
 	color: #2A2A2A;
@@ -510,7 +570,7 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
 }
 .listTmplContent .listItemPath{
 	font-size:12px;
-	color: #0079FF!important;
+	color: #0079FF;
     cursor: pointer;
 }
 .listTmplContent .buyBtn{
@@ -521,6 +581,10 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
 	padding: 5px 10px;
 	cursor: pointer;
 	margin-top: 10px;
+}
+.listTmplContentBox li:first-child{
+	margin-top:0!important;
+	border-top:0;
 }
 .listTmplContent .listTmplContentHeading{
 	padding:0 10px;
@@ -548,14 +612,14 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     margin: -18px -18px!important;
 }
 .recordingMicrophone{
-    display: none;/* when required mic icon then remove the notRecordingMicrophone class from here then mic recording is on*/
+    display: none;/* when you need to show the mic icon then remove the notRecordingMicrophone from this mic is working fine then*/
 }
 .sdkFooterIcon button{
     margin-bottom: -1px;
     background: none;
     border: none;
     outline:0;
-    cursor: pointer;;
+    cursor: pointer;
 }
 .sdkFooterIcon i {
     margin-top: 3px;
@@ -563,7 +627,7 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     color: #999;
     transition: background-color, 0.1s ease-in-out;
 }
-.sdkFooterIcon i:hover{
+.sdkFooterIcon i:hover {
     color: #808080;
 }
 .microphoneBtn{
@@ -675,16 +739,15 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     margin: 2px 0;
 }
 .attachments .uploadedFileIcon{
+    float:left;
     width:25px;
     padding:0;
-    text-align: left!important;
-}
-.attachments div{
-    float:left;    
+    text-align:left!important;
 }
 .curUseruploadedFileName{
-   max-width: 80%;
-   min-width: 80px;
+    float:left;
+    max-width:80%;
+    min-width: 80px;
 }
 .upldIndc{
     position: absolute;
@@ -696,16 +759,26 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     left: 0;
     opacity: 0.6;
 }
+.noneBtn{
+	cursor: pointer;
+}
 .kore-chat-attachment .kore-chat-body{
     bottom: 125px!important;
 }
 .kore-chat-attachment .typingIndicatorContent{
     bottom: 135px!important;
 }
+.typingIndicatorContent .movingDots {
+	background-image: url(../libs/img/3dot.gif);
+    display: inline-block;
+    width: 30px;
+    height: 10px;
+	vertical-align: text-top;
+}
 .typingIndicatorContent{
     position: absolute;
     width: 100px;
-    bottom: 70px;
+    bottom: 72px;
     left: 20px;
     display: none;
 }
@@ -719,6 +792,7 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     background-repeat: no-repeat;
     display: inline-block;
     background-size: 100%;
+	margin-bottom: -2px;
 }
 .typingIndicatorContent img{
     width: 17%;

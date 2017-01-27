@@ -187,7 +187,7 @@
     height: 50px;
     line-height: inherit;
 	margin: 0;
-	padding: 0px 6px;
+	padding: 0 6px;
 }
 .kore-chat-header .chat-box-controls .reload-btn span{
 	margin-top: 0;
@@ -760,7 +760,7 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     opacity: 0.6;
 }
 .noneBtn{
-	cursor: pointer;;
+	cursor: pointer;
 }
 .kore-chat-attachment .kore-chat-body{
     bottom: 125px!important;
@@ -768,10 +768,17 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
 .kore-chat-attachment .typingIndicatorContent{
     bottom: 135px!important;
 }
+.typingIndicatorContent .movingDots {
+	background-image: url(../libs/img/3dot.gif);
+    display: inline-block;
+    width: 30px;
+    height: 10px;
+	vertical-align: text-top;
+}
 .typingIndicatorContent{
     position: absolute;
     width: 100px;
-    bottom: 70px;
+    bottom: 72px;
     left: 20px;
     display: none;
 }
@@ -785,6 +792,7 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     background-repeat: no-repeat;
     display: inline-block;
     background-size: 100%;
+	margin-bottom: -2px;
 }
 .typingIndicatorContent img{
     width: 17%;
