@@ -535,11 +535,11 @@ function koreBotChat() {
         this.config = extend(this.config, cfg);
         this.init();
     }
-
+ 
     chatWindow.prototype.init = function () {
         var me = this;
         _botInfo = extend({},me.config.botOptions.botInfo);
-        me.config.botOptions.botInfo = {chatBot:_botInfo.name,taskBotId :_botInfo._id};
+        me.config.botOptions.botInfo = {chatBot:_botInfo.name,taskBotId :_botInfo._id, customData : _botInfo.customData, tenanturl : _botInfo.tenanturl};
         var tempTitle = _botInfo.name;
         me.config.botMessages = botMessages;
 
