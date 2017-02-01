@@ -1193,7 +1193,7 @@ KoreRTMClient.prototype.send = function send(message, optCb) {
   var err;
   var _this = this;
 
-  if (this.connected) {
+  if (this.connected && !this._reconnecting) {
     wsMsg.id = wsMsg.clientMessageId || this.nextMessageId();
     jsonMessage = JSON.stringify(wsMsg);
 
@@ -1207,7 +1207,7 @@ KoreRTMClient.prototype.send = function send(message, optCb) {
       }
     });
   } else {
-    err = 'ws not connected, unable to send message';
+    err = 'ws not connected or reconnecting, unable to send message';
     debug(err);
     if (!isUndefined(optCb)) {
       optCb(new Error(err));
