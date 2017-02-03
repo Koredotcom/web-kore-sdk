@@ -20,7 +20,8 @@ function koreBotChat() {
     var CONTENT_TYPE = "content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)16000,+format=(string)S16LE,+channels=(int)1";
 
     var recorderWorkerPath = "../libs/recorderWorker.js";
-    var INTERVAL = 250; 
+    var INTERVAL = 250;
+	var _pingTimer, _pingTime = 30000;
     /***************** Mic initilization code end here ************************/
 
     /*************************** file upload variable *******************************/
@@ -537,7 +538,19 @@ function koreBotChat() {
         this.config = extend(this.config, cfg);
         this.init();
     }
- 
+
+	function resetPingMessage() {
+		clearTimeout(_pingTimer);
+		_pingTimer = setTimeout(function () {
+			var messageToBot = {};
+			messageToBot["type"] = 'ping';
+			bot.sendMessage(messageToBot, function messageSent() {
+				
+			});
+			resetPingMessage();
+		}, _pingTime);
+	}
+	
     chatWindow.prototype.init = function () {
         var me = this;
         _botInfo = extend({},me.config.botOptions.botInfo);
@@ -852,13 +865,13 @@ function koreBotChat() {
 
         var messageToBot = {};
         messageToBot["clientMessageId"] = clientMessageId;
-        if (Object.keys(attachmentInfo).length > 0 && chatInput.text().trim().length) {
-            messageToBot["message"] = {body: chatInput.text().trim(), attachments: [attachmentInfo]};
+        if (Object.keys(attachmentInfo).length > 0 && chatInput.innerText.trim().length) {
+            messageToBot["message"] = {body: chatInput.innerText.trim(), attachments: [attachmentInfo]};
         } else if(Object.keys(attachmentInfo).length > 0){
             messageToBot["message"] = {attachments: [attachmentInfo]};
         }
         else{
-            messageToBot["message"] = {body: chatInput.text().trim()};
+            messageToBot["message"] = {body: chatInput.innerText.trim()};
         }
         messageToBot["resourceid"] = '/bot.message';
 		attachmentInfo = {};
@@ -870,7 +883,8 @@ function koreBotChat() {
 		if (msgData && msgData.message && msgData.message[0].cInfo && msgData.message[0].cInfo.body) {
 			msgData.message[0].cInfo.body = helpers.convertMDtoHTML(msgData.message[0].cInfo.body);
 		}
-        document.getElementsByClassName('typingIndicatorContent')[0].style.display = 'block';
+        resetPingMessage();
+		document.getElementsByClassName('typingIndicatorContent')[0].style.display = 'block';
         setTimeout(function(){
             document.getElementsByClassName('typingIndicatorContent')[0].style.display = 'none';
         },3000)

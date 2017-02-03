@@ -20,6 +20,7 @@ function koreBotChat() {
 
     var recorderWorkerPath = "../libs/recorderWorker.js";
     var INTERVAL = 250;
+	var _pingTimer, _pingTime = 30000;
     /***************** Mic initilization code end here ************************/
     /*************************** file upload variable *******************************/
     var appConsts ={};
@@ -499,6 +500,18 @@ function koreBotChat() {
         this.init();
     }
 	
+	function resetPingMessage() {
+		clearTimeout(_pingTimer);
+		_pingTimer = setTimeout(function () {
+			var messageToBot = {};
+			messageToBot["type"] = 'ping';
+			bot.sendMessage(messageToBot, function messageSent() {
+				
+			});
+			resetPingMessage();
+		}, _pingTime);
+	}
+	
     chatWindow.prototype.init = function () {
         var me = this;
         _botInfo = me.config.botOptions.botInfo;
@@ -903,7 +916,8 @@ function koreBotChat() {
 		if (msgData && msgData.message && msgData.message[0].cInfo && msgData.message[0].cInfo.body) {
 			msgData.message[0].cInfo.body = helpers.convertMDtoHTML(msgData.message[0].cInfo.body);
 		}
-        $('.typingIndicatorContent').css('display','block');
+        resetPingMessage();
+		$('.typingIndicatorContent').css('display','block');
         setTimeout(function(){
             $('.typingIndicatorContent').css('display','none');
         },3000)           
