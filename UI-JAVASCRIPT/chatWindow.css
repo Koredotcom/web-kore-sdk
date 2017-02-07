@@ -47,7 +47,14 @@
     border-radius: 4px;
     z-index: 1030;
 }
-
+.kore-chat-window .errorMsg {
+	position: absolute;
+	width: 160px;
+	right: -5px;
+	color: red;
+	font-size: 12px;
+	margin-top: 11px;
+}
 @media(max-width: 767px) {
 	.kore-chat-window {
 		left: 5px!important;

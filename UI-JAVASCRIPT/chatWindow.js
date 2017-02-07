@@ -8,7 +8,7 @@ function koreBotChat() {
     var _botInfo = {};
     var detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
     var _eventQueue = {};
-    var prevRange, accessToken ,koreAPIUrl,fileToken,fileUploaderCounter = 0,_removeAttachments='',globalRecState,bearerToken;
+    var prevRange, accessToken ,koreAPIUrl,fileToken,fileUploaderCounter = 0,_removeAttachments='',globalRecState,bearerToken ='', assertionToken ='';
 
     /******************* Mic variable initilization *******************/
     var _exports = {},
@@ -875,8 +875,21 @@ function koreBotChat() {
         }
         messageToBot["resourceid"] = '/bot.message';
 		attachmentInfo = {};
-        bot.sendMessage(messageToBot, function messageSent() {
-
+        bot.sendMessage(messageToBot, function messageSent(err) {
+			if (err && err.message) {
+				setTimeout(function (){
+					var _ele = document.getElementById('msg_' + clientMessageId);
+					if (_ele) {
+						var _msgBubble = _ele.getElementsByClassName('messageBubble');
+						if (_msgBubble && _msgBubble.length > 0) {
+							var _div = document.createElement('div');
+							_div.className = "errorMsg";
+							_div.innerHTML = "Send Failed. Please resend.";
+							_msgBubble[0].appendChild(_div);
+						}
+					}
+				}, 350);
+			}
         });
         chatInput.innerHTML = "";       
         _bodyContainer.style.bottom = _footerContainer.scrollHeight;
@@ -977,7 +990,7 @@ function koreBotChat() {
             }
         };        
         xhttp.open("GET", koreAPIUrl+"1.1/attachment/file/"+attachFileID+"/url", true);
-        xhttp.setRequestHeader('Authorization', bearerToken);
+        xhttp.setRequestHeader('Authorization', (bearerToken?bearerToken:assertionToken));
         xhttp.send();        
     };
     
@@ -1022,6 +1035,7 @@ function koreBotChat() {
 						var msg_icon_html = '';
 						var msg_created_html = '';
 						var msg_html = '';
+						var err_html = '';
 						
 						if(tempData.type !== "bot_response") {
 							msg_data = 'id = "msg_' + msgItem.clientMessageId + '"';
@@ -1060,12 +1074,15 @@ function koreBotChat() {
 						if(msgItem.cInfo.emoji) {
 							msg_html = msg_html +'<span class="emojione emojione-'+msgItem.cInfo.emoji[0].code+'"></span>';
 						}
-						
+						if (tempData.isError) {
+							err_html = '<div class="errorMsg">Send Failed. Please resend.</div>';
+						}
 						msgTemplate += '<li '+ msg_data +' class=" ' + msg_class + '"> \
                                 '+ msg_created_html +' \
                                 '+ msg_icon_html +' \
                                 <div class="messageBubble">\
                                     '+ msg_html +' \
+									'+ err_html +' \
                                 </div> \
 						</li>';
 					}
@@ -1437,6 +1454,9 @@ function koreBotChat() {
             chatInitialize.destroy();
         }
     };
+    this.initToken = function (options) {
+        assertionToken = "bearer "+options.accessToken;
+    };
     /************************************* Microphone code **********************************************/
     function micEnable() {
         if (!navigator.getUserMedia) {
@@ -1763,7 +1783,7 @@ function koreBotChat() {
         };        
         xhttp.open("POST", koreAPIUrl+"1.1/attachment/file/token", true);
         xhttp.setRequestHeader('Content-Type', 'json');
-        xhttp.setRequestHeader('Authorization', bearerToken);
+        xhttp.setRequestHeader('Authorization', (bearerToken?bearerToken:assertionToken));
         xhttp.send();
     }
     function getfileuploadConf (_recState) {
@@ -2372,6 +2392,7 @@ function koreBotChat() {
 
     /********************************  Code end here for attachment *******************************************/
     return {
+        initToken: initToken,
         addListener: addListener,
 		removeListener: removeListener,
 		show: show,

@@ -8,7 +8,7 @@ function koreBotChat() {
     var _botInfo = {};
     var detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
 	var _eventQueue = {};
-	var prevRange, accessToken ,koreAPIUrl,fileToken,fileUploaderCounter = 0,bearerToken='';
+	var prevRange, accessToken ,koreAPIUrl,fileToken,fileUploaderCounter = 0,bearerToken='', assertionToken='';
     /******************* Mic variable initilization *******************/
     var _exports = {},
     _template, _this = {};
@@ -527,7 +527,6 @@ function koreBotChat() {
         bot.init(me.config.botOptions);
         me.render(chatWindowHtml);       
     };
-
     chatWindow.prototype.destroy = function () {
         var me = this;
         $('.kore-chat-overlay').hide();
@@ -570,10 +569,11 @@ function koreBotChat() {
         });
         _chatContainer.off('click', '.attachments').on('click', '.attachments', function (event) {
             var attachFileID  = $(this).attr('fileid');
+            var auth = (bearerToken)?bearerToken:assertionToken;
             $.ajax({type: "GET",
                 url: koreAPIUrl+"1.1/attachment/file/"+attachFileID+"/url",
                 headers: {
-                    Authorization: bearerToken
+                    Authorization: auth
                 },
                 success: function (response) {
                     var downloadUrl = response.fileUrl;
@@ -908,8 +908,12 @@ function koreBotChat() {
         }
         messageToBot["resourceid"] = '/bot.message';
 		attachmentInfo = {};
-        bot.sendMessage(messageToBot, function messageSent() {
-
+        bot.sendMessage(messageToBot, function messageSent(err) {
+			if (err && err.message) {
+				setTimeout(function (){
+					$('#msg_' + clientMessageId).find('.messageBubble').append('<div class="errorMsg">Send Failed. Please resend.</div>');
+				}, 350);
+			}
         });
         chatInput.html("");
         _bodyContainer.css('bottom', _footerContainer.outerHeight());
@@ -1066,6 +1070,9 @@ function koreBotChat() {
                                         <div class="curUseruploadedFileName">${msgItem.cInfo.attachments[0].fileName}</div> \
                                     </div> \
                                 {{/if}} \
+								{{if msgData.isError}} \
+									<div class="errorMsg">Send Failed. Please resend.</div> \
+								{{/if}} \
 							</div> \
 						</li> \
 					{{/if}} \
@@ -1289,7 +1296,9 @@ function koreBotChat() {
             chatInitialize.destroy();
         }
     };
-
+    this.initToken = function (options) {
+        assertionToken = "bearer "+options.accessToken;
+    };
     /*************************************       Microphone code      **********************************************/
     function micEnable() {
         if (!navigator.getUserMedia) {
@@ -1606,11 +1615,12 @@ function koreBotChat() {
         }
     };
     function getFileToken(_obj, _file, recState){
+        var auth = (bearerToken)?bearerToken:assertionToken;
          $.ajax({type: "POST",
             url: koreAPIUrl+"1.1/attachment/file/token",
             dataType: "json",
             headers: {
-                Authorization: bearerToken
+                Authorization: auth
             },
             success: function (response) {
                fileToken = response.fileToken;
@@ -2194,6 +2204,7 @@ function koreBotChat() {
 
     /********************************  Code end here for attachment *******************************************/
     return {
+        initToken: initToken,
 		addListener: addListener,
 		removeListener: removeListener,
 		show: show,

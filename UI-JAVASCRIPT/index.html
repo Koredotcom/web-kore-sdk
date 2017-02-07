@@ -19,9 +19,16 @@
 		</div>
 		<script type="text/javascript">
 			function assertion(options, callback) {
+				options.assertion =  "";
+				callback(null, options);
+				setTimeout(function(){
+					if (koreBot && koreBot.initToken){
+						koreBot.initToken(options);
+					}
+				}, 2000);
 
 				// Client has to fill the claims and call the callback.
-				var xhr = new XMLHttpRequest();
+				/*var xhr = new XMLHttpRequest();
 
 				xhr.open('POST', botOptions.koreAPIUrl+'users/sts');
 				xhr.setRequestHeader('Content-Type', 'application/json');
@@ -35,6 +42,7 @@
 					}
 				};
 				xhr.send();
+				*/
 			}
 
 			var botOptions = {};
@@ -55,11 +63,12 @@
 			botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // secure client-id
 			botOptions.botInfo = {name:"your bot name","_id":"bot_id"}; // bot name is case sensitive
 			
+			var koreBot = koreBotChat();
 			var chatConfig={
 				botOptions:botOptions
 			};
 			document.getElementById('openChatWindow').addEventListener('click',function() {
-				koreBotChat().show(chatConfig);
+				koreBot.show(chatConfig);
 			});
 		</script>
 	</body>

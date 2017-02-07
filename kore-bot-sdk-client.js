@@ -49,7 +49,7 @@ KoreBot.prototype.sendMessage = function(message,optCb) {
 		this.RtmClient.sendMessage(message,optCb);
 	}else{
 		if(optCb){
-			optCb(true,"Bot is Initializing...Please try again");
+			optCb(new Error("Bot is Initializing...Please try again"));
 		}
 	}
 	
@@ -2791,7 +2791,7 @@ request.log = {
   'trace': noop, 'debug': noop, 'info': noop, 'warn': noop, 'error': noop
 }
 
-var DEFAULT_TIMEOUT = 3 * 60 * 1000 // 3 minutes
+var DEFAULT_TIMEOUT = 2 * 60 * 1000 // 3 minutes
 
 //
 // request

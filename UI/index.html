@@ -18,8 +18,15 @@
 		<link href="../libs/emojione.sprites.css" rel="stylesheet"></link>
 		<script type="text/javascript">
 		$(document).on("ready",function(){
-			function assertion(options, callback) {
-
+			function assertion(options, callback) {				
+				options.assertion =  "";
+						callback(null, options);
+						setTimeout(function(){
+							if (koreBot && koreBot.initToken){
+								koreBot.initToken(options);
+							}
+						}, 2000);
+						
 				// Client has to fill the claims and call the callback.
 				$.ajax({
 					url: botOptions.koreAPIUrl+"users/sts",
@@ -58,8 +65,8 @@
 				botOptions:botOptions,
 				allowIframe: false
 			};
-
-			koreBotChat().show(chatConfig);
+			var koreBot = koreBotChat();
+			koreBot.show(chatConfig);
 			$('.openChatWindow').click(function(){
 				koreBotChat().show(chatConfig);
 			});
