@@ -1014,7 +1014,7 @@ function koreBotChat() {
 				<div class="chatInputBox" contenteditable="true" placeholder="${botMessages.message}"></div> \
             	{{/if}} \
 			<div class="attachment"></div> \
-            <div class="sdkFooterIcon microphoneBtn" style="visibility:hidden;"> \
+            <div class="sdkFooterIcon microphoneBtn" style="display:none;"> \
                 <button class="notRecordingMicrophone"> \
                     <i class="fa fa-microphone fa-lg"></i> \
                 </button> \
@@ -1024,7 +1024,7 @@ function koreBotChat() {
                 </button> \
                 <div id="textFromServer"></div> \
             </div> \
-            <div class="sdkFooterIcon" style="display:none;"> \
+            <div class="sdkFooterIcon"> \
                 <button class="sdkAttachment attachmentBtn"> \
                     <i class="fa fa fa-paperclip"></i> \
                 </button> \
