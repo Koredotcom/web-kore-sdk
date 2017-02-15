@@ -20,13 +20,13 @@
 		$(document).on("ready",function(){
 			function assertion(options, callback) {				
 				options.assertion =  "";
-						callback(null, options);
-						setTimeout(function(){
-							if (koreBot && koreBot.initToken){
-								koreBot.initToken(options);
-							}
-						}, 2000);
-						
+				options.handleError = koreBot.showError;
+				callback(null, options);
+				setTimeout(function(){
+					if (koreBot && koreBot.initToken){
+						koreBot.initToken(options);
+					}
+				}, 2000);
 				// Client has to fill the claims and call the callback.
 				$.ajax({
 					url: botOptions.koreAPIUrl+"users/sts",
@@ -38,6 +38,9 @@
 					success: function (data) {
 						options.assertion = data.jwt
 						callback(null, options);
+					},
+					error: function (err) {
+						koreBot.showError(err.responseText);
 					}
 				})
 			}
@@ -55,7 +58,6 @@
 			 Case.2:Logged-In User
 			        a. set it to false if the client defined the assertion.
 			*/
-			botOptions.test = true;
 			botOptions.koreAnonymousFn = koreAnonymousFn;
 			botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // secure client-id
 

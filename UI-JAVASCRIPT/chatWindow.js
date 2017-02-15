@@ -524,6 +524,7 @@ function koreBotChat() {
 	}
 	
     function chatWindow(cfg) {
+        cfg.botOptions.test = false;
         this.config = {
             "chatTitle": "Kore Bot Chat",
             "container": "body",
@@ -559,6 +560,7 @@ function koreBotChat() {
         me.config.botMessages = botMessages;
 
         me.config.chatTitle = me.config.botMessages.connecting;
+		me.config.userAgentIE = navigator.userAgent.indexOf('Trident/') !== -1;
         var chatWindowHtml = me.getChatTemplate('chatWindowTemplate', me.config);
 
         me.config.chatTitle = tempTitle;
@@ -589,6 +591,7 @@ function koreBotChat() {
         var me = this;
 		var _chatContainer = me.config.chatContainer;
 		var _chatInputBox = _chatContainer.querySelector('.chatInputBox');
+		var _chatInputBoxPlaceholder = _chatContainer.querySelector('.chatInputBoxPlaceholder');
 		var _expandBtn = _chatContainer.querySelector('.expand-btn');
 		var _closeBtn = _chatContainer.querySelector('.close-btn');
 		var _minimizeBtn =  _chatContainer.querySelector('.minimize-btn');
@@ -604,7 +607,18 @@ function koreBotChat() {
             _bodyContainer.style.bottom = _footerContainer.scrollHeight;
 			prevComposeSelection = window.getSelection();
             prevRange = prevComposeSelection.rangeCount > 0 && prevComposeSelection.getRangeAt(0);
+			if (this.innerText.length > 0) {
+				addClass(_chatInputBoxPlaceholder, 'hide');
+			} else {
+				removeClass(_chatInputBoxPlaceholder, 'hide');
+			}
         });
+		if (_chatInputBoxPlaceholder && _chatInputBoxPlaceholder.innerText && _chatInputBoxPlaceholder.innerText.length > 0) {
+			_chatInputBoxPlaceholder.addEventListener('click', function (event) {
+				_chatInputBox.click();
+				_chatInputBox.focus();
+			});
+		}
 		_chatInputBox.addEventListener('click', function (event) {
             prevComposeSelection = window.getSelection();
             prevRange = prevComposeSelection.rangeCount > 0 && prevComposeSelection.getRangeAt(0);
@@ -1044,7 +1058,11 @@ function koreBotChat() {
 						}
 						else {
 							msg_class = 'fromOtherUsers';
-							msg_html = helpers.convertMDtoHTML(msgItem.cInfo.body);
+                            if(msgItem.component && msgItem.component.type =="error"){
+                                msg_html = '<span style="color:'+msgItem.component.payload.color+';">'+ helpers.convertMDtoHTML(msgItem.component.payload.text) +'</span>';
+                            }else{
+                                msg_html = helpers.convertMDtoHTML(msgItem.cInfo.body);
+                            }
 						}						
                         if(msgItem.cInfo.attachments){
                             var className = '';
@@ -1230,11 +1248,10 @@ function koreBotChat() {
 						if(tempData.type !== "bot_response") {
 							msg_data = 'id = "msg_' + msgItem.clientMessageId + '"';
 							msg_class = 'fromCurrentUser';
-							msg_html = helpers.convertMDtoHTML(msgItem.component.payload.text);
+							
 						}
 						else {
-							msg_class = 'fromOtherUsers';
-							msg_html = helpers.convertMDtoHTML(msgItem.component.payload.text);
+							msg_class = 'fromOtherUsers';							
 						}
 						
 						if(tempData.icon) {
@@ -1244,41 +1261,76 @@ function koreBotChat() {
 						
 						if(tempData.createdOn) {
 							msg_created_html = '<div class="extra-info">'+ helpers.formatDate(tempData.createdOn) +'</div>';
-						}
-						if(msgItem.cInfo.emoji) {
-							msg_html = msg_html +'<span class="emojione emojione-'+msgItem.cInfo.emoji[0].code+'"></span>';
-						}
+						}						
+                        if(msgItem.component.payload && msgItem.component.payload.heading){
+                            msg_html = '<li class="listTmplContentHeading">' + helpers.convertMDtoHTML(msgItem.component.payload.heading) + '</li>';
+                        }
 						msgItem.component.payload.elements.forEach(function(msgInnerItem) {
-							if(count < 3){
+							if(msgItem.component.payload.buttons && count < 3){
 								count++;
-								var value='',url='',type='';
-								if(msgInnerItem.buttons[0].payload){
-									value ='value="'+msgInnerItem.buttons[0].payload+'"';
-								} else {
-									value ='value="'+msgInnerItem.buttons[0].title+'"';
-								}
-								if(msgInnerItem.buttons[0].url){
-									url = 'url="'+msgInnerItem.buttons[0].url+'"';
-								}
-								if(msgInnerItem.buttons[0].type){
-									type = 'type="'+msgInnerItem.buttons[0].type+'"';
-								}
-								inner_html = inner_html + '<li class="listTmplContentChild"> \
-									<div class="listLeftContent"> \
-										<div class="listItemTitle">'+msgInnerItem.title+'</div> \
-										<div class="listItemSubtitle">'+msgInnerItem.subtitle+'</div> \
-										<div class="listItemPath sendClickReq" type="url" url="'+msgInnerItem.default_action.url+'">'+msgInnerItem.default_action.url+'</div> \
-										<div> \
-											<button '+value+' '+type+' '+url+' class="buyBtn sendClickReq">Buy</button> \
-										</div> \
-									</div>\
-									<div class="listRightContent"> \
-										<img src="'+msgInnerItem.image_url+'" /> \
-									</div> \
-								</li>';
-							}
+                                var value='',url='',type='';
+                                if(msgInnerItem.buttons && msgInnerItem.buttons[0].payload){
+                                    value ='value="'+msgInnerItem.buttons[0].payload+'"';
+                                } else if(msgInnerItem.buttons) {
+                                    value ='value="'+msgInnerItem.buttons[0].title+'"';
+                                }
+                                if(msgInnerItem.buttons && msgInnerItem.buttons[0].url){
+                                    url = 'url="'+msgInnerItem.buttons[0].url+'"';
+                                }
+                                if(msgInnerItem.buttons && msgInnerItem.buttons[0].type){
+                                    type = 'type="'+msgInnerItem.buttons[0].type+'"';
+                                }
+                                inner_html = inner_html + '<li class="listTmplContentChild">';
+                                if(msgInnerItem.image_url){
+                                    inner_html = inner_html + '<div class="listRightContent"><img src="'+msgInnerItem.image_url+'" /></div>';
+                                }
+                                inner_html = inner_html + '<div class="listLeftContent"><div class="listItemTitle">'+msgInnerItem.title+'</div>';
+                                if(msgInnerItem.subtitle){
+                                    inner_html = inner_html + '<div class="listItemSubtitle">'+msgInnerItem.subtitle+'</div>';
+                                }
+                                if(msgInnerItem.default_action && msgInnerItem.default_action.url){
+                                    inner_html = inner_html + '<div class="listItemPath sendClickReq" type="url" url="'+msgInnerItem.default_action.url+'">'+msgInnerItem.default_action.url+'</div>';
+                                }
+                                if(msgInnerItem.buttons){
+                                    inner_html = inner_html + '<div><button '+value+' '+type+' '+url+' class="buyBtn sendClickReq">Buy</button></div>';
+                                }
+                                inner_html = inner_html +'</div>';
+                                  
+                                inner_html = inner_html +'</li>';
+							}else{
+                                count++;
+                                var value='',url='',type='';
+                                if(msgInnerItem.buttons && msgInnerItem.buttons[0].payload){
+                                    value ='value="'+msgInnerItem.buttons[0].payload+'"';
+                                } else if(msgInnerItem.buttons) {
+                                    value ='value="'+msgInnerItem.buttons[0].title+'"';
+                                }
+                                if(msgInnerItem.buttons && msgInnerItem.buttons[0].url){
+                                    url = 'url="'+msgInnerItem.buttons[0].url+'"';
+                                }
+                                if(msgInnerItem.buttons && msgInnerItem.buttons[0].type){
+                                    type = 'type="'+msgInnerItem.buttons[0].type+'"';
+                                }
+                                inner_html = inner_html + '<li class="listTmplContentChild">';
+                                if(msgInnerItem.image_url){
+                                    inner_html = inner_html + '<div class="listRightContent"><img src="'+msgInnerItem.image_url+'" /></div>';
+                                }
+                                inner_html = inner_html + '<div class="listLeftContent"><div class="listItemTitle">'+msgInnerItem.title+'</div>';
+                                if(msgInnerItem.subtitle){
+                                    inner_html = inner_html + '<div class="listItemSubtitle">'+msgInnerItem.subtitle+'</div>';
+                                }
+                                if(msgInnerItem.default_action && msgInnerItem.default_action.url){
+                                    inner_html = inner_html + '<div class="listItemPath sendClickReq" type="url" url="'+msgInnerItem.default_action.url+'">'+msgInnerItem.default_action.url+'</div>';
+                                }
+                                if(msgInnerItem.buttons){
+                                    inner_html = inner_html + '<div><button '+value+' '+type+' '+url+' class="buyBtn sendClickReq">Buy</button></div>';
+                                }
+                                inner_html = inner_html +'</div>';
+                                  
+                                inner_html = inner_html +'</li>';
+                            }
 						});
-						if(msgItem.component.payload.elements && msgItem.component.payload.elements.length > 3){
+						if(msgItem.component.payload.elements && msgItem.component.payload.buttons && msgItem.component.payload.elements.length > 3){
 							msgItem.component.payload.buttons.forEach(function(msgLastItem) {
 								var url='',type='',value='';
 								if(msgLastItem.payload){
@@ -1302,7 +1354,7 @@ function koreBotChat() {
                                 '+ msg_created_html +' \
                                 '+ msg_icon_html +' \
 								<ul class="listTmplContentBox">\
-									<li class="listTmplContentHeading">'+msg_html+'</li>\
+									'+msg_html+' \
 									'+ inner_html +' \
 									'+ lastButton +' \
 								</ul>\
@@ -1314,6 +1366,11 @@ function koreBotChat() {
             return listTemplate;
 		}
 		else {
+			var _inputField = '<div class="chatInputBox" contenteditable="true" placeholder="'+ tempData.botMessages.message +'"></div>';
+			if (tempData.userAgentIE) {
+				_inputField = '<div class="chatInputBox" contenteditable="true" ></div> \
+								<div class="chatInputBoxPlaceholder">' + tempData.botMessages.message + '</div>';
+			}
 			var chatWindowTemplate = '<div class="kore-chat-window" id="koreChatWindow"> \
 									<div class="minimized-title"></div> \
 									<div class="minimized"><span class="messages"></span></div> \
@@ -1327,12 +1384,14 @@ function koreBotChat() {
 						</div> \
 					</div> \
 					<div class="kore-chat-body"> \
+						<div class="errorMsgBlock"> \
+						</div> \
 						<ul class="chat-container"></ul> \
 					</div> \
                     <div class="typingIndicatorContent"><div class="typingIndicator"></div><div class="movingDots"></div></div> \
 					<div class="kore-chat-footer"> \
 						<div class="footerContainer pos-relative"> \
-							<div class="chatInputBox" contenteditable="true" placeholder="'+ tempData.botMessages.message +'"></div> \
+							' + _inputField + ' \
                             <div class="attachment"></div> \
                             <div class="sdkFooterIcon microphoneBtn" style="visibility:hidden;"> \
                                 <button class="notRecordingMicrophone"> \
@@ -1457,6 +1516,18 @@ function koreBotChat() {
     this.initToken = function (options) {
         assertionToken = "bearer "+options.accessToken;
     };
+    this.showError = function (response) {
+        try {
+            response = JSON.parse(response);
+            if (response.errors && response.errors[0]) {
+				document.getElementsByClassName('errorMsgBlock')[0].innerText = response.errors[0].msg;
+                addClass(document.getElementsByClassName('errorMsgBlock')[0], 'showError');
+            }
+        } catch(e) {
+			document.getElementsByClassName('errorMsgBlock')[0].innerText = response;
+            addClass(document.getElementsByClassName('errorMsgBlock')[0], 'showError');
+        }
+    }
     /************************************* Microphone code **********************************************/
     function micEnable() {
         if (!navigator.getUserMedia) {
@@ -2396,6 +2467,7 @@ function koreBotChat() {
         addListener: addListener,
 		removeListener: removeListener,
 		show: show,
-        destroy: destroy
+        destroy: destroy,
+		showError: showError
     };
 }

@@ -7,6 +7,7 @@ var isFunction = require('lodash').isFunction;
 var RTM_CLIENT_EVENTS = clients.CLIENT_EVENTS.RTM;
 var RTM_EVENTS = clients.RTM_EVENTS;
 var jstz = require('./jstz.js');
+var noop = require('lodash').noop;
 
 if(typeof window !== "undefined"){
 	window.kore = window.kore || {};
@@ -229,7 +230,14 @@ initializes the rtmclient and binds the cb's for ws events.
 KoreBot.prototype.onLogIn = function(err, data) {
 	debug("sign-in/anonymous user onLogin");
 	if (err) {
-        console.error(err && err.stack);
+        if (this.cbErrorToClient) {
+			if (data && data.errors && data.errors[0] && data.errors[0].msg) {
+				this.cbErrorToClient(data.errors[0].msg);
+			} else {
+				this.cbErrorToClient(err.message);
+			}
+		}
+		console.error(err && err.stack);
 	} else {
 		this.accessToken = data.authorization.accessToken;
 		this.options.accessToken = this.accessToken;
@@ -257,6 +265,7 @@ KoreBot.prototype.logIn = function(err, data) {
 		this.claims = data.assertion;
 		this.WebClient = new clients.KoreWebClient({}, this.options);
 		this.WebClient.claims = this.claims;
+		this.cbErrorToClient = data.handleError || noop;
 		this.WebClient.login.login({"assertion":data.assertion,"botInfo":this.options.botInfo}, bind(this.onLogIn, this));
 	}
 
@@ -728,8 +737,9 @@ BaseAPIClient.prototype._callTransport = function _callTransport(task, queueCb) 
 
         httpErr = new Error('Unable to process request, received bad ' + statusCode + ' error');
         if (!retryOp.retry(httpErr)) {
-          cb(httpErr, null);
+          cb(httpErr, body);
         } else {
+		  cb(httpErr, body);
           return;
         }
       }
@@ -869,7 +879,7 @@ var isFunction = require('lodash').isFunction;
 var isUndefined = require('lodash').isUndefined;
 var isString = require('lodash').isString;
 var forEach = require('lodash').forEach;
-var noop = require('lodash').noop;
+
 
 var getData = function getData(data, token) {
   var newData = assign({}, data ? data.opts || {} : {});

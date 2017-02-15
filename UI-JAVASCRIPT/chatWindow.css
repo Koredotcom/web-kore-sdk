@@ -390,6 +390,17 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     overflow-y: auto;
 	font-family: "Lato", sans-serif;
 }
+.kore-chat-window .kore-chat-footer .chatInputBoxPlaceholder {
+	position: absolute;
+	color: #aaa;
+	font-size: 16px;
+	font-family: "Lato", sans-serif;
+	position: absolute;
+	top: 4px;
+}
+.kore-chat-window .hide {
+	display: none!important;
+}
 .kore-chat-window .kore-chat-footer .chatSendMsg{
     font-size: 14px;
     color: #AAA;
@@ -555,25 +566,28 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
 	max-width: 70%;
 }
 .listTmplContent .listLeftContent{
-	float:left;
-	width:70%;
+	display: table-cell;
+    vertical-align: top;
 }
 .listTmplContent .listRightContent{
-	float:left;
+	display: table-cell;
 	width:30%;
+    padding-right: 5px;
 }
 .listRightContent img{
-	height: 62px;
-	width: 62px;
+	height: 57px;
+	width: 57px;
 }
 .listTmplContent .listTmplContentChild{
 	border-top: 1px solid #F2F2F2;
 	padding: 10px;
 	margin:0;
+    width: 100%;
+    display: table;
 }
 .listTmplContent .listItemSubtitle{
-	font-size:14px;
-	color: #797979;
+	font-size:12px;
+	color: #9d9d9d;
 }
 .listTmplContent .listItemPath{
 	font-size:12px;
@@ -581,23 +595,28 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     cursor: pointer;
 }
 .listTmplContent .buyBtn{
-	background:#FFF;
-	border: 1px solid #4D95FE;
-	color: #0079FF!important;
-	border-radius: 5px;
-	padding: 5px 10px;
-	cursor: pointer;
-	margin-top: 10px;
+    background: #FFF;
+    border: 0;
+    color: #0079FF!important;
+    cursor: pointer;
+    float: right;
+    font-weight: bold;
+    letter-spacing: -0.3px;
 }
 .listTmplContentBox li:first-child{
 	margin-top:0!important;
 	border-top:0;
 }
 .listTmplContent .listTmplContentHeading{
-	padding:0 10px;
+	padding: 10px;
+    background: #f4f4f4;
+    margin-bottom: 0;
+    border-radius: 12px 12px 0 0;
+    font-size: 15px;
 }
 .listTmplContent .listItemTitle,.listItemSubtitle,.listItemPath{
 	padding: 3px 0;
+    font-size:13px;
 }
 .listTmplContent .viewMoreList{
 	text-align: center;
@@ -609,7 +628,7 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
 	border: 0;
     background: none;
     color: #0079FF!important;
-    font-size: 16px;
+    font-size: 15px;
 	cursor: pointer;
 }
 .emojione {
@@ -805,4 +824,20 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     width: 17%;
     margin-left: 5px;
     vertical-align: text-top;
+}
+
+/* Error Message Block */
+.kore-chat-window .kore-chat-body .errorMsgBlock {
+	position: absolute;
+	top: 0;
+	display: none;
+	text-align: center;
+	background-color: antiquewhite;
+	color: red;
+	left: 0;
+	right: 0;
+	padding: 5px;
+}
+.kore-chat-window .kore-chat-body .errorMsgBlock.showError {
+	display: block;
 }

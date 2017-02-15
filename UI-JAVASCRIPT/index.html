@@ -19,16 +19,18 @@
 		</div>
 		<script type="text/javascript">
 			function assertion(options, callback) {
+				/*
 				options.assertion =  "";
+				options.handleError = koreBot.showError;
 				callback(null, options);
 				setTimeout(function(){
 					if (koreBot && koreBot.initToken){
 						koreBot.initToken(options);
 					}
 				}, 2000);
-
+				*/
 				// Client has to fill the claims and call the callback.
-				/*var xhr = new XMLHttpRequest();
+				var xhr = new XMLHttpRequest();
 
 				xhr.open('POST', botOptions.koreAPIUrl+'users/sts');
 				xhr.setRequestHeader('Content-Type', 'application/json');
@@ -38,11 +40,12 @@
 						var data = JSON.parse(xhr.responseText);
 						options.assertion = data.jwt
 						callback(null, options);
-						console.log(data);
+					} else {
+						var data = JSON.parse(xhr.responseText);
+						koreBot.showError(data);
 					}
 				};
 				xhr.send();
-				*/
 			}
 
 			var botOptions = {};
@@ -58,7 +61,6 @@
 			 Case.2:Logged-In User
 			        a. set it to false if the client defined the assertion.
 			*/
-			botOptions.test = true;
 			botOptions.koreAnonymousFn = koreAnonymousFn;
 			botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // secure client-id
 			botOptions.botInfo = {name:"your bot name","_id":"bot_id"}; // bot name is case sensitive

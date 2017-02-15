@@ -484,7 +484,8 @@ function koreBotChat() {
 		return arguments[0];
 	}
 	
-    function chatWindow(cfg) {        
+    function chatWindow(cfg) {
+        cfg.botOptions.test = false;    
         this.config = {
             "chatTitle": "Kore Bot Chat",
             "container": "body",
@@ -520,6 +521,7 @@ function koreBotChat() {
         me.config.botMessages = botMessages;
 
         me.config.chatTitle = me.config.botMessages.connecting;
+		me.config.userAgentIE = navigator.userAgent.indexOf('Trident/') !== -1;
         var chatWindowHtml = $(me.getChatTemplate()).tmpl(me.config);
         me.config.chatContainer = chatWindowHtml;
 
@@ -562,8 +564,17 @@ function koreBotChat() {
             _bodyContainer.css('bottom', _footerContainer.outerHeight());
 			prevComposeSelection = window.getSelection();
             prevRange = prevComposeSelection.rangeCount > 0 && prevComposeSelection.getRangeAt(0);
+			if (this.innerText.length > 0) {
+				_chatContainer.find('.chatInputBoxPlaceholder').css('display', 'none');
+			} else {
+				_chatContainer.find('.chatInputBoxPlaceholder').css('display', 'block');
+			}
         });
-		_chatContainer.on('click', '.chatInputBox', function (event) {
+		_chatContainer.on('click', '.chatInputBoxPlaceholder', function (event) {
+            _chatContainer.find('.chatInputBox').trigger('click');
+			_chatContainer.find('.chatInputBox').trigger('focus');
+        });
+        _chatContainer.on('click', '.chatInputBox', function (event) {
             prevComposeSelection = window.getSelection();
             prevRange = prevComposeSelection.rangeCount > 0 && prevComposeSelection.getRangeAt(0);
         });
@@ -994,10 +1005,15 @@ function koreBotChat() {
     };
 
     chatWindow.prototype.getChatTemplate = function (tempType) {
-        var chatFooterTemplate =
+		var chatFooterTemplate =
                 '<div class="footerContainer pos-relative"> \
-			<div class="chatInputBox" contenteditable="true" placeholder="${botMessages.message}"></div> \
-            <div class="attachment"></div> \
+				{{if userAgentIE}} \
+				<div class="chatInputBox" contenteditable="true" ></div> \
+				<div class="chatInputBoxPlaceholder">${botMessages.message}</div> \
+            	{{else}} \
+				<div class="chatInputBox" contenteditable="true" placeholder="${botMessages.message}"></div> \
+            	{{/if}} \
+			<div class="attachment"></div> \
             <div class="sdkFooterIcon microphoneBtn" style="visibility:hidden;"> \
                 <button class="notRecordingMicrophone"> \
                     <i class="fa fa-microphone fa-lg"></i> \
@@ -1031,6 +1047,8 @@ function koreBotChat() {
 					</div> \
 				</div> \
 				<div class="kore-chat-body"> \
+					<div class="errorMsgBlock"> \
+					</div> \
 					<ul class="chat-container"></ul> \
 				</div> \
                 <div class="typingIndicatorContent"><div class="typingIndicator"></div><div class="movingDots"></div></div> \
@@ -1046,7 +1064,17 @@ function koreBotChat() {
 							{{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
 							{{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
 							<div class="messageBubble">\
-								<div>{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.cInfo.body)}} {{else}} {{html helpers.convertMDtoHTML(msgItem.cInfo.body)}} {{/if}} </div>\
+								<div> \
+                                    {{if msgData.type === "bot_response"}} \
+                                        {{if msgItem.component  && msgItem.component.type =="error"}} \
+                                            <span style="color:${msgItem.component.payload.color}">{{html helpers.convertMDtoHTML(msgItem.component.payload.text)}} </span>\
+                                        {{else}} \
+                                            {{html helpers.convertMDtoHTML(msgItem.cInfo.body)}} \
+                                        {{/if}} \
+                                    {{else}} \
+                                        {{html helpers.convertMDtoHTML(msgItem.cInfo.body)}} \
+                                    {{/if}} \
+                                </div>\
 								{{if msgItem.cInfo && msgItem.cInfo.emoji}} \
 									<span class="emojione emojione-${msgItem.cInfo.emoji[0].code}">${msgItem.cInfo.emoji[0].title}</span> \
 								{{/if}} \
@@ -1143,33 +1171,57 @@ function koreBotChat() {
 						{{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
 						{{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
 						<ul class="listTmplContentBox"> \
-							{{if msgData.message[0].component.payload.title}} \
+							{{if msgData.message[0].component.payload.title || msgData.message[0].component.payload.heading}} \
 								<li class="listTmplContentHeading"> \
-									{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text)}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text)}} {{/if}} \
+									{{if msgData.type === "bot_response" && msgData.message[0].component.payload.heading}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.heading)}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text)}} {{/if}} \
 									{{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
 										<span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
 									{{/if}} \
 								</li> \
 							{{/if}} \
 							{{each(key, msgItem) msgData.message[0].component.payload.elements}} \
-								{{if key<= 2}}\
-									<li class="listTmplContentChild"> \
-										<div class="listLeftContent"> \
-											<div class="listItemTitle">${msgItem.title}</div> \
-											<div class="listItemSubtitle">${msgItem.subtitle}</div> \
-											<div class="listItemPath" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div> \
-											<div> \
-												<button class="buyBtn" {{if msgItem.buttons[0].type}}type="${msgItem.buttons[0].type}"{{/if}} {{if msgItem.buttons[0].url}}url="${msgItem.buttons[0].url}"{{/if}} {{if msgItem.buttons[0].payload}}value="${msgItem.buttons[0].payload}"{{/if}}>{{if msgItem.buttons[0].title}}${msgItem.buttons[0].title}{{else}}Buy{{/if}}</button> \
-											</div> \
-										</div>\
-										<div class="listRightContent"> \
-											<img src="${msgItem.image_url}" /> \
-										</div> \
-									</li> \
-								{{/if}}\
+								{{if msgData.message[0].component.payload.buttons}} \
+                                    {{if key<= 2 }}\
+    									<li class="listTmplContentChild"> \
+    										{{if msgItem.image_url}} \
+                                            <div class="listRightContent"> \
+                                                <img src="${msgItem.image_url}" /> \
+                                            </div> \
+                                            {{/if}} \
+                                            <div class="listLeftContent"> \
+    											<div class="listItemTitle">${msgItem.title}</div> \
+    											{{if msgItem.subtitle}}<div class="listItemSubtitle">${msgItem.subtitle}</div>{{/if}} \
+    											{{if msgItem.default_action}}<div class="listItemPath" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
+    											{{if msgItem.buttons}}\
+                                                <div> \
+    												<button class="buyBtn" {{if msgItem.buttons[0].type}}type="${msgItem.buttons[0].type}"{{/if}} {{if msgItem.buttons[0].url}}url="${msgItem.buttons[0].url}"{{/if}} {{if msgItem.buttons[0].payload}}value="${msgItem.buttons[0].payload}"{{/if}}>{{if msgItem.buttons[0].title}}${msgItem.buttons[0].title}{{else}}Buy{{/if}}</button> \
+    											</div> \
+                                                {{/if}}\
+    										</div>\
+    									</li> \
+    								{{/if}}\
+                                {{else}} \
+                                    <li class="listTmplContentChild"> \
+                                        {{if msgItem.image_url}} \
+                                        <div class="listRightContent"> \
+                                            <img src="${msgItem.image_url}" /> \
+                                        </div> \
+                                        {{/if}} \
+                                        <div class="listLeftContent"> \
+                                            <div class="listItemTitle">${msgItem.title}</div> \
+                                            {{if msgItem.subtitle}}<div class="listItemSubtitle">${msgItem.subtitle}</div> {{/if}} \
+                                            {{if msgItem.default_action}}<div class="listItemPath" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
+                                            {{if msgItem.buttons}}\
+                                            <div> \
+                                                <button class="buyBtn" {{if msgItem.buttons[0].type}}type="${msgItem.buttons[0].type}"{{/if}} {{if msgItem.buttons[0].url}}url="${msgItem.buttons[0].url}"{{/if}} {{if msgItem.buttons[0].payload}}value="${msgItem.buttons[0].payload}"{{/if}}>{{if msgItem.buttons[0].title}}${msgItem.buttons[0].title}{{else}}Buy{{/if}}</button> \
+                                            </div> \
+                                            {{/if}}\
+                                        </div>\
+                                    </li> \
+                                {{/if}} \
 							{{/each}} \
 							</li> \
-							{{if msgData.message[0].component.payload.elements.length > 3}}\
+							{{if msgData.message[0].component.payload.elements.length > 3 && msgData.message[0].component.payload.buttons}}\
 							<li class="viewMoreList"> \
 								<button class="viewMore" url="{{if msgData.message[0].component.payload.buttons[0].url}}${msgData.message[0].component.payload.buttons[0].url}{{/if}}" type="${msgData.message[0].component.payload.buttons[0].type}" value="{{if msgData.message[0].component.payload.buttons[0].payload}}${msgData.message[0].component.payload.buttons[0].payload}{{else}}${msgData.message[0].component.payload.buttons[0].title}{{/if}}">${msgData.message[0].component.payload.buttons[0].title}</button> \
 							</li> \
@@ -1299,6 +1351,18 @@ function koreBotChat() {
     this.initToken = function (options) {
         assertionToken = "bearer "+options.accessToken;
     };
+	this.showError = function (response) {
+		try {
+			response = JSON.parse(response);
+			if (response.errors && response.errors[0]) {
+				$('.errorMsgBlock').text(response.errors[0].msg);
+				$('.errorMsgBlock').addClass('showError');
+			}
+		} catch(e) {
+			$('.errorMsgBlock').text(response);
+			$('.errorMsgBlock').addClass('showError');
+		}
+	}
     /*************************************       Microphone code      **********************************************/
     function micEnable() {
         if (!navigator.getUserMedia) {
@@ -2208,6 +2272,7 @@ function koreBotChat() {
 		addListener: addListener,
 		removeListener: removeListener,
 		show: show,
-        destroy: destroy
+        destroy: destroy,
+		showError: showError
     };
 }
