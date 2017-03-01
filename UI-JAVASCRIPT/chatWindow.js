@@ -767,6 +767,9 @@ function koreBotChat() {
             if (tempData.from === "bot" && tempData.type === "bot_response")
             {
 				if(tempData.message[0]){
+					if (!tempData.message[0].cInfo) {
+						tempData.message[0].cInfo = {};
+					}
 					tempData.message[0].cInfo.body = window.emojione.shortnameToImage(tempData.message[0].cInfo.body);
 					if(tempData.message[0].component && !tempData.message[0].component.payload.text ) {
 						try{
@@ -774,7 +777,10 @@ function koreBotChat() {
 						}catch(err){
 							tempData.message[0].component = tempData.message[0].component.payload;
 						}
-					}					
+					}
+					if (tempData.message[0].component && tempData.message[0].component.payload && tempData.message[0].component.payload.text) {
+						tempData.message[0].cInfo.body = window.emojione.shortnameToImage(tempData.message[0].component.payload.text);
+					}
 				}
                 me.renderMessage(tempData);
             }
