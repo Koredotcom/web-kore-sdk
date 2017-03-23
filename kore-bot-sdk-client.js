@@ -1095,7 +1095,7 @@ KoreRTMClient.prototype.reconnect = function reconnect() {
   console.log("in reconnect");
 
   if (!this._reconnecting) {
-	this._reconnecting = true;
+    this._reconnecting = true;
     this.emit(CLIENT_EVENTS.ATTEMPTING_RECONNECT);
     this._safeDisconnect();
     this._connAttempts++;

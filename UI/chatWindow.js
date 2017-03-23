@@ -9,6 +9,7 @@ function koreBotChat() {
     var detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
 	var _eventQueue = {};
 	var prevRange, accessToken ,koreAPIUrl,fileToken,fileUploaderCounter = 0,bearerToken='', assertionToken='';
+    var speechServerUrl = '';
     /******************* Mic variable initilization *******************/
     var _exports = {},
     _template, _this = {};
@@ -494,6 +495,7 @@ function koreBotChat() {
         };
         koreAPIUrl = cfg.botOptions.koreAPIUrl;
         bearerToken = cfg.botOptions.bearer;
+        speechServerUrl = cfg.botOptions.SpeechSocketUrl;
         if (cfg && cfg.chatContainer) {
             delete cfg.chatContainer;
         }
@@ -1020,7 +1022,7 @@ function koreBotChat() {
 				<div class="chatInputBox" contenteditable="true" placeholder="${botMessages.message}"></div> \
             	{{/if}} \
 			<div class="attachment"></div> \
-            <div class="sdkFooterIcon microphoneBtn" style="display:none;"> \
+            <div class="sdkFooterIcon microphoneBtn"> \
                 <button class="notRecordingMicrophone"> \
                     <i class="fa fa-microphone fa-lg"></i> \
                 </button> \
@@ -1468,7 +1470,7 @@ function koreBotChat() {
 
     function createSocket() {
         window.ENABLE_MICROPHONE = true;
-        window.SPEECH_SERVER_SOCKET_URL="wss://presence.kore.com/speechcntxt/ws/speech";
+        window.SPEECH_SERVER_SOCKET_URL = speechServerUrl;
         var serv_url = window.SPEECH_SERVER_SOCKET_URL;
         //var userEmail = 'rohan.singh@kore.com' | userModel.getUserInfo().emailId;
         var userEmail = 'rohan.singh@kore.com';

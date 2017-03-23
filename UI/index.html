@@ -6,7 +6,7 @@
 		<script src="libs/jquery.tmpl.min.js" type="text/javascript"></script>
 		<script src="libs/jquery-ui.min.js" type="text/javascript"></script>
 		<link href="libs/jquery-ui.min.css" rel="stylesheet"></link>
-		
+
 		<script src="../libs/lodash.min.js"></script>
 		<script src='../libs/anonymousassertion.js'></script>
 		<script src="../kore-bot-sdk-client.js"></script>
@@ -17,67 +17,61 @@
 		<link href="chatWindow.css" rel="stylesheet"></link>
 		<link href="../libs/emojione.sprites.css" rel="stylesheet"></link>
 		<script type="text/javascript">
-		$(document).on("ready",function(){
-			function assertion(options, callback) {				
-				options.assertion =  "";
-				options.handleError = koreBot.showError;
-				callback(null, options);
-				setTimeout(function(){
-					if (koreBot && koreBot.initToken){
-						koreBot.initToken(options);
-					}
-				}, 2000);
-				// Client has to fill the claims and call the callback.
-				$.ajax({
-					url: botOptions.koreAPIUrl+"users/sts",
-					type: 'post',
-					headers: {
-						Authorization: botOptions.bearer
-					},
-					dataType: 'json',
-					success: function (data) {
-						options.assertion = data.jwt
-						callback(null, options);
-					},
-					error: function (err) {
-						koreBot.showError(err.responseText);
-					}
-				})
-			}
+			$(document).on("ready", function () {
+				function assertion(options, callback) {
+					var jsonData = {
+						"clientId": "",
+						"clientSecret": "",
+						"identity": "",
+						"aud": "",
+						"isAnonymous": false
+					};
+					$.ajax({
+						url: botOptions.koreAPIUrl + "users/sts",
+						type: 'post',
+						data: jsonData,
+						dataType: 'json',
+						success: function (data) {
+							options.assertion = data.jwt;
+							options.handleError = koreBot.showError;
+							callback(null, options);
+							setTimeout(function () {
+								if (koreBot && koreBot.initToken) {
+									koreBot.initToken(options);
+								}
+							}, 2000);
+						},
+						error: function (err) {
+							koreBot.showError(err.responseText);
+						}
+					});
+				}
 
-			var botOptions = {};
-			botOptions.logLevel = 'debug';
-			botOptions.koreAPIUrl = "https://bots.kore.com/api/";
-			botOptions.bearer = "bearer xyz-------------------";
-			botOptions.assertionFn = assertion;
-			/*
-			 Below config:(To support the anonymous user in test environments only.)
-			 Case.1:Anonymous User
-			        a. set it to false if the client defined the assertion for Anonymous User.
-			        b. set it to true if the client have not defined the assertion for Anonymous User.
-			 Case.2:Logged-In User
-			        a. set it to false if the client defined the assertion.
-			*/
-			botOptions.koreAnonymousFn = koreAnonymousFn;
-			botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // secure client-id
-
-			botOptions.botInfo = {name:"Twitter","_id":"st-feaa128b-be6c-5e27-bfb8-3845219c759b"}; // bot name is case sensitive
-			
-			var chatConfig={
-				botOptions:botOptions,
-				allowIframe: false
-			};
-			var koreBot = koreBotChat();
-			koreBot.show(chatConfig);
-			$('.openChatWindow').click(function(){
-				koreBotChat().show(chatConfig);
+				var botOptions = {};
+				botOptions.logLevel = 'debug';
+				botOptions.koreAPIUrl = "https://bots.kore.com/api/";
+				botOptions.bearer = "bearer xyz-------------------";
+				botOptions.speechSocketUrl = 'wss://';
+				botOptions.assertionFn = assertion;
+				botOptions.koreAnonymousFn = koreAnonymousFn;
+				botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // secure client-id
+				botOptions.botInfo = {name:"your bot name","_id":"bot_id"}; // bot name is case sensitive
+				
+				var chatConfig={
+					botOptions:botOptions,
+					allowIframe: false
+				};
+				var koreBot = koreBotChat();
+				koreBot.show(chatConfig);
+				$('.openChatWindow').click(function () {
+					koreBotChat().show(chatConfig);
+				});
 			});
-		});
 		</script>
 	</head>
 	<body>
 		<div id="chatContainer">
-		<button class="openChatWindow">Open Chat Window</button>
+			<button class="openChatWindow">Open Chat Window</button>
 		</div>
 	</body>
 </html>
