@@ -1,12 +1,29 @@
-﻿# Overview
-    This Web SDK allows you to talk to Bots over a web socket.
+# Kore SDK
+Kore offers Bots SDKs as a set of platform-specific client libraries that provide a quick and convenient way to integrate Kore Bots chat capability into custom applications.
 
-# Prerequsites
-    - SDK app credentials (Create your SDk App in Bot Admin console to aquire the client id and client Secret Key.
-    - JWT assertion generation methodology. ex: service which will be used in the assertion function injected as part of sdk initialization.
-    - Dependencies JQuery, Jquery-ui, jquery template, moment js. Please include all these dependencies before including chatWindow.js
-    
-# Integration of Kore chat UI into your App
+With just few lines of code, you can embed our Kore chat widget into your applications to enable end-users to interact with your applications using Natural Language. For more information, refer to https://developer.kore.com/docs/bots/kore-web-sdk/
+
+# Kore Web SDK for developers
+
+Kore SDK for web enables you to talk to Kore bots over a web socket. This repo also comes with the code for sample application that developers can modify according to their Bot configuration.
+
+# Setting up
+
+### Prerequisites
+* Service to generate JWT (JSON Web Tokens)- SDK uses this to send the user identity to Kore Platform.
+* SDK app credentials 
+	* Login to the Bots platform
+	* Navigate to the Bot builder
+	* Search and click on the bot 
+	* Enable *Web / Mobile Client* channel against the bot as shown in the screen below.
+	![Add bot to Web/Mobile Client channel](https://github.com/mandarudg/Tst/blob/master/channels.png)
+	* create new or use existing SDK app to obtain client id and client secret
+	![Obtain Client id and Client secret](https://github.com/mandarudg/Tst/blob/master/web-mobile-client-channel.png)
+
+* Service to generate JWT (JSON Web Tokens)- this service will be used in the assertion function injected to obtain the connection.
+
+## Instructions
+Integration of Kore chat UI into your App
 
 #### 1. Include Dependent CSS
     -   <link href="UI/libs/jquery-ui.min.css" rel="stylesheet"/>
@@ -21,7 +38,11 @@
     -   <script src='../libs/anonymousassertion.js'></script>
     -   <script src='../kore-bot-sdk-client.js'></script>
     -   <script src='UI/chatWindow.js'></script> // chat ui js
-#### 4. Define the assertion function (Should be defined by the clients)
+#### 4. Include dependencies for recorder & emoji support
+    -   <script src="../libs/emoji.js" type="text/javascript"></script>
+    -   <script src="../libs/recorder.js" type="text/javascript"></script>
+    -   <script src="../libs/recorderWorker.js" type="text/javascript"></script>
+#### 5. Define the assertion function (Should be defined by the clients)
         //NOTE:clients has to define a API which should generate and return the JWT token. and do the necessary changes in the below function like change the url,type,Authorization and on success set the returned jwt.
         //fields to set in JWT:subject(emailId),issuer(clientId),algorithm(HS256 or RS256)
     -   function assertion(options, callback) {
@@ -39,20 +60,12 @@
             }
            }) 
         }
-#### 5. Initialize the Bot
+#### 6. Initialize the Bot
         //Define the bot options
         var botOptions = {};
-        botOptions.koreAPIUrl = "https://devbots.kore.com/api/"; 
+        botOptions.koreAPIUrl = "https://bots.kore.com/api/";
+	botOptions.speechSocketUrl = 'wss://';
         botOptions.assertionFn = assertion;
-        /*
-             Below config:(To support the anonymous user in test environments only.)
-             Case.1:Anonymous User
-                    a. set it to false if the client defined the assertion for Anonymous User.
-                    b. set it to true if the client have not defined the assertion for Anonymous User.
-             Case.2:Logged-In User
-                    a. set it to false if the client defined the assertion.
-        */
-        botOptions.test = true;
         botOptions.koreAnonymousFn = koreAnonymousFn;
         botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // issued by the kore on client app registration.
         botOptions.botInfo = {chatBot:"Kora",taskBotId :"st-*********"};  
@@ -62,7 +75,7 @@
 			// if true, opens authentication links in popup window , default value is "false"
 			allowIframe : true
 		};
-#### 6. Call koreBotChat instance
+#### 7. Call koreBotChat instance
         var chatInstance = koreBotChat(); // get chat instance
         chatInstance.show(chatConfig); // open chat window
         chatInstance.destroy(); // for destroying chat window instance
@@ -77,17 +90,9 @@
 #### 2. Initialize the Bot
         //define the bot options
         var botOptions = {}; 
-        botOptions.koreAPIUrl = "https://devbots.kore.com/api/"; 
+        botOptions.koreAPIUrl = "https://devbots.kore.com/api/";
+        botOptions.speechSocketUrl = 'wss://';
         botOptions.assertionFn = assertion;
-        /*
-             Below config:(To support the anonymous user in test environments only.)
-             Case.1:Anonymous User
-                    a. set it to false if the client defined the assertion for Anonymous User.
-                    b. set it to true if the client have not defined the assertion for Anonymous User.
-             Case.2:Logged-In User
-                    a. set it to false if the client defined the assertion.
-        */
-        botOptions.test = true;
         botOptions.koreAnonymousFn = koreAnonymousFn;
         botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // issued by the kore on client app registration.
         botOptions.botInfo = {chatBot:"Kora",taskBotId :"st-*********"};  
@@ -124,20 +129,9 @@
         bot.on("open", function (response) {
             // your code
         });
+```
 
 
-
-
-
-
-
-
-
-
-
-
-
-License
-----
-Copyright © Kore, Inc. MIT License; see LICENSE for further details.
+# License
+_Copyright © Kore, Inc. MIT License; see LICENSE for further details._
 
