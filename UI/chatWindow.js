@@ -293,13 +293,14 @@ function koreBotChat() {
 				}
 			}
             //check for whether to linkify or not
-			var wrapper1 = document.createElement('div');
-			wrapper1.innerHTML = (str || '').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-			wrapper1.innerHTML = xssAttack(wrapper1.innerHTML);
+			var newStr = '', wrapper1 = document.createElement('div');
+            newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
+			newStr = newStr.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+			wrapper1.innerHTML = xssAttack(newStr);
 			if ($(wrapper1).find('a').attr('href')) {
-				str = wrapper1.innerHTML;
-			} else {
-				str = wrapper1.innerHTML.replace(_regExForLink, linkreplacer);
+				str = newStr;
+			} else {                
+				str = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(_regExForLink, linkreplacer);
 			}
             //Adding target=web for links if authUrl is true
             if (component && component.componentData && component.componentData.bot && component.componentData.bot.authUrl) {
@@ -324,8 +325,10 @@ function koreBotChat() {
                 });
                 str = $div_A.html();
             }
-            
-            return helpers.nl2br(helpers.checkMarkdowns(str));
+            str = str.replace(/&nbsp;@/g, ' @').replace(/&nbsp;\[/g, ' [');
+            str = helpers.checkMarkdowns(str);
+            str = str.replace(/abc-error=/gi, 'onerror=');
+            return helpers.nl2br(str);
         },
 		'checkMarkdowns': function (val) {
 			var txtArr = val.split(/\r?\n/);
