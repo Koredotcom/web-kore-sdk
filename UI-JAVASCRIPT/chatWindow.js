@@ -51,10 +51,8 @@ function koreBotChat() {
         }
     };
 
-    var kony ={};
-    kony.application = {};
-    kony.ui = {};
-    kony.net = {};
+    var kfrm ={};
+    kfrm.net = {};
     /**************************File upload variable end here **************************/
 
     String.prototype.isNotAllowedHTMLTags = function () {
@@ -2118,7 +2116,7 @@ function koreBotChat() {
         success: ('success.ke.uploader')
     };
     function getConnection (_this) {
-        return new kony.net.HttpRequest();
+        return new kfrm.net.HttpRequest();
     };
 
     function loadListener (_this, evt) {
@@ -2336,36 +2334,6 @@ function koreBotChat() {
     /************************************************************************************************************************************************
     ********************************************** kony framework file ******************************************************************************
     ************************************************************************************************************************************************/
-    var NOOP = function() {
-        return true;
-    },
-            conf = {
-                hashRegx: /^#_(\w+)[?,&]?(.*)/,
-                startForm: "login",
-                loginForm: "login",
-                homeForm: "messages",
-                pageNotFound: "404",
-                hashBang: '_',
-                onFormChange: function() {
-                    return {
-                        canAccess: true
-                    };
-                }
-            },
-    _initCb;
-
-    //Prepare namespaces    
-    kony.constants = {
-        HTTP_READY_STATE_DONE: 4,
-        HTTP_RESPONSE_TYPE_JSON: "json",
-        HTTP_METHOD_GET: "GET",
-        HTTP_METHOD_POST: "POST",
-        HTTP_METHOD_PUT: "PUT",
-        HTTP_METHOD_DELETE: "DELETE",
-        HTTP_CONTENT_TYPE_JSON: "application/json",
-        HTTP_CONTENT_TYPE: "content-type"
-    };
-   
     +function() {
         function getHTTPConnecton() {
             var xhr = false;
@@ -2392,85 +2360,8 @@ function koreBotChat() {
             };
             return xhr;
         }
-
-        function FormData() {
-            this.data = {};
-        }
-        FormData.prototype.append = function(key, value) {
-            this.data[key] = value;
-        };
-        FormData.prototype.toHTTPParams = function() {
-            var _str = "",
-                    _propName, paramsObj = this.data,
-                    _val;
-            for (_propName in paramsObj) {
-                if (paramsObj.hasOwnProperty(_propName)) {
-                    _val = paramsObj[_propName];
-                    _str += _propName + '=' + _val + '\r\n';
-                }
-            }
-            return _str;
-        };
-
-        kony.net.FormData = FormData;
-        kony.net.HttpRequest = HttpRequest;
+        kfrm.net.HttpRequest = HttpRequest;
     }();
-
-    var $FM = {//Form Manager
-        allForms: {},
-        currForm: false,
-        prevForm: false,
-        showForm: function(form, info, ignoreIfshown) {
-            if ($win.location.hash.indexOf(conf.hashBang + form.id) === -1 || info) {
-                var _newHash = conf.hashBang + form.id;
-                try {
-                    var _tempSrch = "";
-                    if ($win.location.search) {
-                        _tempSrch = $win.location.search;
-                        $win.location.hash = _newHash + (info ? '?' + $win.$.param(info) : '');
-                        info = $win.$.extend({}, $win.$.deparam(_tempSrch.substring(1, _tempSrch.length)), info);
-                    } else {
-                        $win.location.hash = _newHash + (info ? '?' + $win.$.param(info) : '');
-                    }
-                } catch (e) {
-                    $win.location.hash = _newHash;
-                }
-            }
-            info = info || {};
-            if ($FM.currForm) {
-                if ($FM.currForm.id === form.id) {
-                    if (!ignoreIfshown) {
-                        $FM.currForm.show(info);
-                    }
-                    return true; // do nothing;
-                }
-                $FM.currForm.hide();
-                $FM.prevForm = $FM.currForm;
-            }
-            $FM.currForm = form;
-            $FM.currForm.show(info);
-            if (_initCb) {
-                _initCb();
-                _initCb = false;
-            }
-            return true;
-        },
-        getId: function() { //Get Current Form Id
-            return $FM.currForm && $FM.currForm.id;
-        }
-    };   
-
-    kony.initConfig = function(newConf) {
-        for (var prop in newConf) {
-            if (newConf.hasOwnProperty(prop) && conf.hasOwnProperty(prop)) {
-                conf[prop] = newConf[prop];
-            }
-        }
-    };
-    kony.init = function(cb) {
-        _initCb = cb;
-        kony.resolveURL();
-    };
 
     /********************************  Code end here for attachment *******************************************/
     return {
