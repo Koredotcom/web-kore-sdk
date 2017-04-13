@@ -129,8 +129,19 @@ function koreBotChat() {
     }
     
     var helpers = {
-        'nl2br': function (str) {
+        'nl2br': function (str, runEmojiCheck) {
+            // Extract br tags and keep angular brackets only on these
+            str = str.replace(/&lt;/g, '<').replace(/&gt;/, '>');
+            str = str.replace(/<br(\s|\/)*>/gi, '\r\n');
+            str = str.replace(/</g, '&lt;').replace(/>/, '&gt;');
+            //Place emoji check just after replacement of tags
+            if (runEmojiCheck) {
+                str = window.emojione.shortnameToImage(str);
+            }
             str = str.replace(/(?:\r\n|\r|\n)/g, '<br />');
+            if (str.lastIndexOf('<br />') === str.length - 6) {
+                str = str.substring(0, str.length - 6);
+            }
             return str;
         },
         'br2nl': function (str) {
@@ -344,7 +355,7 @@ function koreBotChat() {
             str = str.replace(/&nbsp;@/g, ' @').replace(/&nbsp;\[/g, ' [');
             str = helpers.checkMarkdowns(str);
             str = str.replace(/abc-error=/gi, 'onerror=');
-            return helpers.nl2br(str);
+            return helpers.nl2br(str, true);
         },
 		'checkMarkdowns': function (val) {
 			var txtArr = val.split(/\r?\n/);
@@ -677,7 +688,7 @@ function koreBotChat() {
             var _clipboardData = event.clipboardData || (event.originalEvent && event.originalEvent.clipboardData) || window.clipboardData;
             var _htmlData = '';
 			if(_clipboardData){
-                _htmlData = helpers.nl2br(_clipboardData.getData('text').escapeHTML());
+                _htmlData = helpers.nl2br(_clipboardData.getData('text').escapeHTML(), false);
 				insertHtmlData(_this, _htmlData);
             }
 			setTimeout(function(){
@@ -774,7 +785,7 @@ function koreBotChat() {
 					if (!tempData.message[0].cInfo) {
 						tempData.message[0].cInfo = {};
 					}
-					tempData.message[0].cInfo.body = window.emojione.shortnameToImage(tempData.message[0].cInfo.body);
+					tempData.message[0].cInfo.body = tempData.message[0].cInfo.body;
 					if(tempData.message[0].component && !tempData.message[0].component.payload.text ) {
 						try{
 							tempData.message[0].component = JSON.parse(tempData.message[0].component.payload);
@@ -783,7 +794,7 @@ function koreBotChat() {
 						}
 					}
 					if (tempData.message[0].component && tempData.message[0].component.payload && tempData.message[0].component.payload.text) {
-						tempData.message[0].cInfo.body = window.emojione.shortnameToImage(tempData.message[0].component.payload.text);
+						tempData.message[0].cInfo.body = tempData.message[0].component.payload.text;
 					}
 				}
                 me.renderMessage(tempData);
@@ -862,7 +873,7 @@ function koreBotChat() {
                 "message": [{
                     'type': 'text',
                     'cInfo': {
-                        'body':chatInput.innerHTML,
+                        'body':chatInput.innerText,
                         'attachments':[attachmentInfo]
                     },
                     'clientMessageId': clientMessageId
@@ -879,7 +890,7 @@ function koreBotChat() {
                 "message": [{
                     'type': 'text',
                     'cInfo': {
-                        'body':chatInput.innerHTML
+                        'body':chatInput.innerText
                     },
                     'clientMessageId': clientMessageId
                 }],
