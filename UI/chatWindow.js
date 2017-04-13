@@ -165,6 +165,7 @@ function koreBotChat() {
 			var _regExForMarkdownLink = /\[([^\]]+)\](|\s)+\(([^\)])+\)/g;
             var str = val;
             var mmntns = {};
+            str = (str || '').replace(/onerror=/gi, 'abc-error=');
             mmntns.sd = new RegExp(/^(d{1})[^d]|[^d](d{1})[^d]/g);
             mmntns.dd = new RegExp(/^(d{2})[^d]|[^d](d{2})[^d]/g);
             mmntns.fy = new RegExp(/(y{4})|y{2}/g);
