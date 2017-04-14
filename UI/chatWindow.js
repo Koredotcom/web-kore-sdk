@@ -124,17 +124,10 @@ function koreBotChat() {
     
     var helpers = {
         'nl2br': function (str, runEmojiCheck) {
-            str = str.replace(/&lt;/g, '<').replace(/&gt;/, '>');
-            str = str.replace(/<br(\s|\/)*>/gi, '\r\n');
-            str = str.replace(/</g, '&lt;').replace(/>/, '&gt;');
-            //Place emoji check just after replacement of tags
             if (runEmojiCheck) {
                 str = window.emojione.shortnameToImage(str);
             }
             str = str.replace(/(?:\r\n|\r|\n)/g, '<br />');
-            if (str.lastIndexOf('<br />') === str.length - 6) {
-                str = str.substring(0, str.length - 6);
-            }
             return str;
         },
         'br2nl': function (str) {
@@ -155,7 +148,7 @@ function koreBotChat() {
             var d = new Date(date);
             return d.toDateString() + " at " + helpers.formatAMPM(d);
         },
-        'convertMDtoHTML': function (val, ignoreNewLine,component) {
+        'convertMDtoHTML': function (val, responseType) {
             var mdre = {};
             //mdre.date = new RegExp(/\\d\(\s*(.{10})\s*\)/g);
             mdre.date = new RegExp(/\\d\(\s*(.{10})\s*(?:,\s*["'](.+?)["']\s*)?\)/g);
@@ -175,7 +168,6 @@ function koreBotChat() {
 			var _regExForMarkdownLink = /\[([^\]]+)\](|\s)+\(([^\)])+\)/g;
             var str = val;
             var mmntns = {};
-            str = (str || '').replace(/onerror=/gi, 'abc-error=');
             mmntns.sd = new RegExp(/^(d{1})[^d]|[^d](d{1})[^d]/g);
             mmntns.dd = new RegExp(/^(d{2})[^d]|[^d](d{2})[^d]/g);
             mmntns.fy = new RegExp(/(y{4})|y{2}/g);
@@ -302,41 +294,22 @@ function koreBotChat() {
 				}
 			}
             //check for whether to linkify or not
-			var newStr = '', wrapper1 = document.createElement('div');
-            newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
-			newStr = newStr.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-			wrapper1.innerHTML = xssAttack(newStr);
-			if ($(wrapper1).find('a').attr('href')) {
-				str = newStr;
-			} else {                
-				str = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(_regExForLink, linkreplacer);
-			}
-            //Adding target=web for links if authUrl is true
-            if (component && component.componentData && component.componentData.bot && component.componentData.bot.authUrl) {
-                var rawHTML = str;
-                var $div = $('<div>').html(rawHTML);
-
-                var _aDivs = $div.find('a');
-                _aDivs.toArray().forEach(function (ele) {
-                    ele.href += '&target=web';
-                    $(ele).attr('data-authUrl', ele.href);
-                });
-                str = $div.html();
+            if (responseType === 'user') {
+                str = (str || '').replace(/onerror=/gi, 'abc-error=');
+                var newStr = '', wrapper1 = document.createElement('div');
+                newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
+                newStr = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                wrapper1.innerHTML = xssAttack(newStr);
+                if ($(wrapper1).find('a').attr('href')) {
+                    str = newStr;
+                } else {                
+                    str = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(_regExForLink, linkreplacer);
+                }
             }
-            //Adding target=web for links if actionUrl is true
-            if (component && component.componentData && component.componentData.bot && component.componentData.bot.actionUrl) {
-                var rawHTML_A = str;
-                var $div_A = $('<div>').html(rawHTML_A);
-                var _aDivs_A = $div_A.find('a');
-                _aDivs_A.toArray().forEach(function (ele) {
-                    ele.href += '&target=web';
-                    $(ele).attr('data-actionUrl', ele.href);
-                });
-                str = $div_A.html();
-            }
-            str = str.replace(/&nbsp;@/g, ' @').replace(/&nbsp;\[/g, ' [');
             str = helpers.checkMarkdowns(str);
-            str = str.replace(/abc-error=/gi, 'onerror=');
+            if (responseType === 'user') {
+                str = str.replace(/abc-error=/gi, 'onerror=');
+            }
             return helpers.nl2br(str, true);
         },
 		'checkMarkdowns': function (val) {
@@ -362,11 +335,11 @@ function koreBotChat() {
 					txtArr[i] = '<h1>' + txtArr[i].substring(3) + '</h1>';
 					_lineBreakAdded = true;
 				} else if (txtArr[i].length === 0) {
-					txtArr[i] = '<br/>';
+					txtArr[i] = '\r\n';
 					_lineBreakAdded = true;
 				} else if (txtArr[i].indexOf('*') === 0) {
 					if (!isEven(txtArr[i].split('*').length - 1)) {
-						txtArr[i] = '<br/>&#9679; ' + txtArr[i].substring(1);
+						txtArr[i] = '\r\n&#9679; ' + txtArr[i].substring(1);
 						_lineBreakAdded = true;
 					}
 				} else if (txtArr[i].indexOf('>>') === 0) {
@@ -453,7 +426,7 @@ function koreBotChat() {
 					_lineBreakAdded = true;
 				}
 				if (!_lineBreakAdded && i > 0) {
-					txtArr[i] = '<br/>' + txtArr[i];
+					txtArr[i] = '\r\n' + txtArr[i];
 				}
 			}
 			val = txtArr.join('');
@@ -948,10 +921,7 @@ function koreBotChat() {
         });
         chatInput.html("");
         _bodyContainer.css('bottom', _footerContainer.outerHeight());
-		if (msgData && msgData.message && msgData.message[0].cInfo && msgData.message[0].cInfo.body) {
-			msgData.message[0].cInfo.body = helpers.convertMDtoHTML(msgData.message[0].cInfo.body);
-		}
-        resetPingMessage();
+		resetPingMessage();
 		$('.typingIndicatorContent').css('display','block');
         setTimeout(function(){
             $('.typingIndicatorContent').css('display','none');
@@ -962,13 +932,13 @@ function koreBotChat() {
 
     chatWindow.prototype.renderMessage = function (msgData) {
         var me = this, messageHtml = '',extension ='';
-        if (msgData.type==="bot_response"){
+        if (msgData.type === "bot_response"){
             setTimeout(function(){
                  $('.typingIndicator').css('background-image',"url("+msgData.icon+")");
             },500);
             setTimeout(function(){
                 $('.typingIndicatorContent').css('display','none');
-            },500) 
+            },500);
         }
         var _chatContainer = $(me.config.chatContainer).find('.chat-container');
         if(msgData.message && msgData.message[0] && msgData.message[0].cInfo.attachments){
@@ -1087,12 +1057,12 @@ function koreBotChat() {
 								<div> \
                                     {{if msgData.type === "bot_response"}} \
                                         {{if msgItem.component  && msgItem.component.type =="error"}} \
-                                            <span style="color:${msgItem.component.payload.color}">{{html helpers.convertMDtoHTML(msgItem.component.payload.text)}} </span>\
+                                            <span style="color:${msgItem.component.payload.color}">{{html helpers.convertMDtoHTML(msgItem.component.payload.text, "bot")}} </span>\
                                         {{else}} \
-                                            {{html helpers.convertMDtoHTML(msgItem.cInfo.body)}} \
+                                            {{html helpers.convertMDtoHTML(msgItem.cInfo.body, "bot")}} \
                                         {{/if}} \
                                     {{else}} \
-                                        {{html helpers.convertMDtoHTML(msgItem.cInfo.body)}} \
+                                        {{html helpers.convertMDtoHTML(msgItem.cInfo.body, "user")}} \
                                     {{/if}} \
                                 </div>\
 								{{if msgItem.cInfo && msgItem.cInfo.emoji}} \
@@ -1144,7 +1114,7 @@ function koreBotChat() {
 						{{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
 						<ul class="buttonTmplContentBox">\
 							<li class="buttonTmplContentHeading"> \
-								{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text)}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text)}} {{/if}} \
+								{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
 								{{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
 									<span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
 								{{/if}} \
@@ -1168,7 +1138,7 @@ function koreBotChat() {
 						<ul class="buttonTmplContentBox">\
 							{{if msgData.message[0].component.payload.text}} \
 								<li class="buttonTmplContentHeading"> \
-									{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text)}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text)}} {{/if}} \
+									{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
 									{{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
 										<span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
 									{{/if}} \
@@ -1193,7 +1163,7 @@ function koreBotChat() {
 						<ul class="listTmplContentBox"> \
 							{{if msgData.message[0].component.payload.title || msgData.message[0].component.payload.heading}} \
 								<li class="listTmplContentHeading"> \
-									{{if msgData.type === "bot_response" && msgData.message[0].component.payload.heading}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.heading)}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text)}} {{/if}} \
+									{{if msgData.type === "bot_response" && msgData.message[0].component.payload.heading}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.heading, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
 									{{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
 										<span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
 									{{/if}} \

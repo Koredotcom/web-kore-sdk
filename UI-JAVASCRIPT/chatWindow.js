@@ -8,36 +8,36 @@ function koreBotChat() {
     var _botInfo = {};
     var detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
     var _eventQueue = {};
-    var prevRange, accessToken ,koreAPIUrl,fileToken,fileUploaderCounter = 0,_removeAttachments='',globalRecState,bearerToken ='', assertionToken ='';
+    var prevRange, accessToken, koreAPIUrl, fileToken, fileUploaderCounter = 0, _removeAttachments = '', globalRecState, bearerToken = '', assertionToken = '';
     var speechServerUrl = '';
     /******************* Mic variable initilization *******************/
     var _exports = {},
-    _template, _this = {};
+        _template, _this = {};
     var navigator = window.navigator;
-    var mediaStream, mediaStreamSource, rec,_connection, intervalKey, context;
+    var mediaStream, mediaStreamSource, rec, _connection, intervalKey, context;
     var _permission = false;
     var _user_connection = false;
     var CONTENT_TYPE = "content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)16000,+format=(string)S16LE,+channels=(int)1";
 
     var recorderWorkerPath = "../libs/recorderWorker.js";
     var INTERVAL = 250;
-	var _pingTimer, _pingTime = 30000;
+    var _pingTimer, _pingTime = 30000;
     /***************** Mic initilization code end here ************************/
 
     /*************************** file upload variable *******************************/
-    var appConsts ={};
+    var appConsts = {};
     var attachmentInfo = {};
     appConsts.CHUNK_SIZE = 1024 * 1024;
-    var allowedFileTypes = ["m4a","amr","aac","wav","mp3","mp4","mov","3gp","flv","png","jpg","jpeg","gif","bmp","csv","txt","json","pdf","doc","dot","docx","docm"
-            ,"dotx","dotm","xls","xlt","xlm","xlsx","xlsm","xltx","xltm","xlsb","xla","xlam","xll","xlw","ppt","pot","pps","pptx","pptm","potx","potm","ppam",
-            "ppsx","ppsm","sldx","sldm","zip","rar","tar","wpd","wps","rtf","msg","dat","sdf","vcf","xml","3ds","3dm","max","obj","ai","eps","ps","svg","indd","pct","accdb",
-            "db","dbf","mdb","pdb","sql","apk","cgi","cfm","csr","css","htm","html","jsp","php","xhtml","rss","fnt","fon","otf","ttf","cab","cur","dll","dmp","drv","7z","cbr",
-            "deb","gz","pkg","rpm","zipx","bak","avi","m4v","mpg","rm","swf","vob","wmv","3gp2","3g2","asf","asx","srt","wma","mid","aif","iff","m3u","mpa","ra","aiff","tiff"];
+    var allowedFileTypes = ["m4a", "amr", "aac", "wav", "mp3", "mp4", "mov", "3gp", "flv", "png", "jpg", "jpeg", "gif", "bmp", "csv", "txt", "json", "pdf", "doc", "dot", "docx", "docm"
+        , "dotx", "dotm", "xls", "xlt", "xlm", "xlsx", "xlsm", "xltx", "xltm", "xlsb", "xla", "xlam", "xll", "xlw", "ppt", "pot", "pps", "pptx", "pptm", "potx", "potm", "ppam",
+        "ppsx", "ppsm", "sldx", "sldm", "zip", "rar", "tar", "wpd", "wps", "rtf", "msg", "dat", "sdf", "vcf", "xml", "3ds", "3dm", "max", "obj", "ai", "eps", "ps", "svg", "indd", "pct", "accdb",
+        "db", "dbf", "mdb", "pdb", "sql", "apk", "cgi", "cfm", "csr", "css", "htm", "html", "jsp", "php", "xhtml", "rss", "fnt", "fon", "otf", "ttf", "cab", "cur", "dll", "dmp", "drv", "7z", "cbr",
+        "deb", "gz", "pkg", "rpm", "zipx", "bak", "avi", "m4v", "mpg", "rm", "swf", "vob", "wmv", "3gp2", "3g2", "asf", "asx", "srt", "wma", "mid", "aif", "iff", "m3u", "mpa", "ra", "aiff", "tiff"];
     var filetypes = {}, audio = ['m4a', 'amr', 'wav', 'aac', 'mp3'], video = ['mp4', 'mov', '3gp', 'flv'], image = ['png', 'jpg', 'jpeg'];
     filetypes.audio = audio;
     filetypes.video = video;
     filetypes.image = image;
-    filetypes.file = {limit: {size: 25 * 1024 * 1024, msg: "Please limit the individual file upload size to 25 MB or lower"}};
+    filetypes.file = { limit: { size: 25 * 1024 * 1024, msg: "Please limit the individual file upload size to 25 MB or lower" } };
     filetypes.determineFileType = function (extension) {
         extension = extension.toLowerCase();
         if ((filetypes.image.indexOf(extension) > -1)) {
@@ -51,17 +51,17 @@ function koreBotChat() {
         }
     };
 
-    var kfrm ={};
+    var kfrm = {};
     kfrm.net = {};
     /**************************File upload variable end here **************************/
 
     String.prototype.isNotAllowedHTMLTags = function () {
         var wrapper = document.createElement('div');
         wrapper.innerHTML = this;
-		var wrapperScript = wrapper.querySelector('script');
-		var wrapperLink = wrapper.querySelector('link');
-		var wrapperA = wrapper.querySelector('a');
-		var wrapperImg = wrapper.querySelector('img');
+        var wrapperScript = wrapper.querySelector('script');
+        var wrapperLink = wrapper.querySelector('link');
+        var wrapperA = wrapper.querySelector('a');
+        var wrapperImg = wrapper.querySelector('img');
 
         var setFlags = {
             isValid: true,
@@ -72,21 +72,21 @@ function koreBotChat() {
 
         }
         if (wrapperLink !== null && wrapperLink.href.indexOf('script') !== -1) {
-            if(detectScriptTag.test(wrapperLink.href)) {
+            if (detectScriptTag.test(wrapperLink.href)) {
                 setFlags.isValid = false;
             } else {
                 setFlags.isValid = true;
             }
         }
         if (wrapperA !== null && wrapperA.href.indexOf('script') !== -1) {
-            if(detectScriptTag.test(wrapperA.href)) {
+            if (detectScriptTag.test(wrapperA.href)) {
                 setFlags.isValid = false;
             } else {
                 setFlags.isValid = true;
             }
         }
         if (wrapperImg !== null && wrapperImg.src.indexOf('script') !== -1) {
-            if(detectScriptTag.test(wrapperImg.src)) {
+            if (detectScriptTag.test(wrapperImg.src)) {
                 setFlags.isValid = false;
             } else {
                 setFlags.isValid = true;
@@ -98,7 +98,7 @@ function koreBotChat() {
 
         return setFlags;
     };
-    
+
     String.prototype.escapeHTML = function () {
         //'&': '&amp;',
         var escapeTokens = {
@@ -112,7 +112,7 @@ function koreBotChat() {
             return escapeTokens[match];
         });
     };
-    
+
     function xssAttack(txtStr) {
         //   if (compObj && compObj[0] && compObj[0].componentType === "text") {
 
@@ -127,21 +127,13 @@ function koreBotChat() {
         //return compObj[0].componentBody;
 
     }
-    
+
     var helpers = {
         'nl2br': function (str, runEmojiCheck) {
-            // Extract br tags and keep angular brackets only on these
-            str = str.replace(/&lt;/g, '<').replace(/&gt;/, '>');
-            str = str.replace(/<br(\s|\/)*>/gi, '\r\n');
-            str = str.replace(/</g, '&lt;').replace(/>/, '&gt;');
-            //Place emoji check just after replacement of tags
             if (runEmojiCheck) {
                 str = window.emojione.shortnameToImage(str);
             }
             str = str.replace(/(?:\r\n|\r|\n)/g, '<br />');
-            if (str.lastIndexOf('<br />') === str.length - 6) {
-                str = str.substring(0, str.length - 6);
-            }
             return str;
         },
         'br2nl': function (str) {
@@ -154,7 +146,7 @@ function koreBotChat() {
             var ampm = hours >= 12 ? 'pm' : 'am';
             hours = hours % 12;
             hours = hours ? hours : 12; // the hour '0' should be '12'
-            minutes = minutes < 10 ? '0'+minutes : minutes;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
             var strTime = hours + ':' + minutes + ' ' + ampm;
             return strTime;
         },
@@ -162,7 +154,7 @@ function koreBotChat() {
             var d = new Date(date);
             return d.toDateString() + " at " + helpers.formatAMPM(d);
         },
-        'convertMDtoHTML': function (val, ignoreNewLine,component) {
+        'convertMDtoHTML': function (val, responseType) {
             var mdre = {};
             //mdre.date = new RegExp(/\\d\(\s*(.{10})\s*\)/g);
             mdre.date = new RegExp(/\\d\(\s*(.{10})\s*(?:,\s*["'](.+?)["']\s*)?\)/g);
@@ -171,7 +163,7 @@ function koreBotChat() {
             mdre.datetime = new RegExp(/\\(d|dt|t)\(\s*([-0-9]{10}[T][0-9:.]{12})([z]|[Z]|[+-]\d{4})[\s]*,[\s]*["']([a-zA-Z\W]+)["']\s*\)/g);
             mdre.num = new RegExp(/\\#\(\s*(\d*.\d*)\s*\)/g);
             mdre.curr = new RegExp(/\\\$\((\d*.\d*)[,](\s*[\"\']\s*\w{3}\s*[\"\']\s*)\)|\\\$\((\d*.\d*)[,](\s*\w{3}\s*)\)/g);
-            
+
             var regEx = {};
             regEx.SPECIAL_CHARS = /[\=\`\~\!@#\$\%\^&\*\(\)_\-\+\{\}\:"\[\];\',\.\/<>\?\|\\]+/;
             regEx.EMAIL = /^[-a-z0-9~!$%^&*_=+}{\']+(\.[-a-z0-9~!$%^&*_=+}{\']+)*@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,255})+$/i;
@@ -179,10 +171,9 @@ function koreBotChat() {
             regEx.HASHTAG = /(^|\s|\\n)#(\S+)/g;
             regEx.NEWLINE = /\n/g;
             var _regExForLink = /((?:http\:\/\/|https\:\/\/|www\.)+\S*\.[a-z]{2,4}(?:(?:\.\S)*[^\,\s\.])*\/?)/gi;
-			var _regExForMarkdownLink = /\[([^\]]+)\](|\s)+\(([^\)])+\)/g;
+            var _regExForMarkdownLink = /\[([^\]]+)\](|\s)+\(([^\)])+\)/g;
             var str = val;
             var mmntns = {};
-            str = (str || '').replace(/onerror=/gi, 'abc-error=');
             mmntns.sd = new RegExp(/^(d{1})[^d]|[^d](d{1})[^d]/g);
             mmntns.dd = new RegExp(/^(d{2})[^d]|[^d](d{2})[^d]/g);
             mmntns.fy = new RegExp(/(y{4})|y{2}/g);
@@ -298,245 +289,219 @@ function koreBotChat() {
             }
             var nextln = regEx.NEWLINE;
             //str = xssAttack(str);
-			
-			function linkreplacer(match, p1, offset, string) {
-				var dummyString = string.replace(_regExForMarkdownLink, '[]');
-				if (dummyString.indexOf(match) !== -1){
-					var _link = p1.indexOf('http') < 0 ? 'http://' + match : match, _target;
-					//_link = encodeURIComponent(_link);
-					_target = "target='_blank'";
-					return "<span class='isLink'><a " + _target + " href=\"" + _link + "\">" + match + "</a></span>";
-				} else {
-					return match;
-				}
-			}
+
+            function linkreplacer(match, p1, offset, string) {
+                var dummyString = string.replace(_regExForMarkdownLink, '[]');
+                if (dummyString.indexOf(match) !== -1) {
+                    var _link = p1.indexOf('http') < 0 ? 'http://' + match : match, _target;
+                    //_link = encodeURIComponent(_link);
+                    _target = "target='_blank'";
+                    return "<span class='isLink'><a " + _target + " href=\"" + _link + "\">" + match + "</a></span>";
+                } else {
+                    return match;
+                }
+            }
             var nextln = regEx.NEWLINE;
             //check for whether to linkify or not
-            var newStr = '', wrapper1 = document.createElement('div');
-            newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
-            newStr = newStr.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-            wrapper1.innerHTML = xssAttack(newStr);
+            if (responseType === 'user') {
+                str = (str || '').replace(/onerror=/gi, 'abc-error=');
+                var newStr = '', wrapper1 = document.createElement('div');
+                newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
+                newStr = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                wrapper1.innerHTML = xssAttack(newStr);
 
-			if (wrapper1.getElementsByTagName('a')[0] && wrapper1.getElementsByTagName('a')[0].getAttribute('href')) {
-				str = newStr;
-			} else {
-				str = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(_regExForLink, linkreplacer);
-			}
-
-            //Adding target=web for links if authUrl is true
-            if (component && component.componentData && component.componentData.bot && component.componentData.bot.authUrl) {
-                var rawHTML = str;
-				var $div = document.createElement('div');
-                $div.innerHTML = rawHTML;
-
-                var _aDivs = $div.querySelectorAll('a');
-                _aDivs.forEach(function (ele) {
-                    ele.href += '&target=web';
-					var authAttr = document.createAttribute("data-authUrl");
-					authAttr.value = ele.href;
-					ele.setAttributeNode(authAttr);
-                });
-                str = $div.innerHTML;
+                if (wrapper1.getElementsByTagName('a')[0] && wrapper1.getElementsByTagName('a')[0].getAttribute('href')) {
+                    str = newStr;
+                } else {
+                    str = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(_regExForLink, linkreplacer);
+                }
             }
-            //Adding target=web for links if actionUrl is true
-            if (component && component.componentData && component.componentData.bot && component.componentData.bot.actionUrl) {
-                var rawHTML_A = str;
-				var $div_A = document.createElement('div');
-                $div_A.innerHTML = rawHTML_A;
-                var _aDivs_A = $div_A.querySelectorAll('a');
-                _aDivs_A.forEach(function (ele) {
-                    ele.href += '&target=web';
-					var actionAttr = document.createAttribute("data-actionUrl");
-					actionAttr.value = ele.href;
-					ele.setAttributeNode(actionAttr);
-                });
-                str = $div_A.innerHTML;
-            }
-            str = str.replace(/&nbsp;@/g, ' @').replace(/&nbsp;\[/g, ' [');
             str = helpers.checkMarkdowns(str);
-            str = str.replace(/abc-error=/gi, 'onerror=');
+            if (responseType === 'user') {
+                str = str.replace(/abc-error=/gi, 'onerror=');
+            }
             return helpers.nl2br(str, true);
         },
-		'checkMarkdowns': function (val) {
-			var txtArr = val.split(/\r?\n/);
-			for(var i = 0; i < txtArr.length;i++) {
-				var _lineBreakAdded = false;
-				if (txtArr[i].indexOf('#h6') === 0 || txtArr[i].indexOf('#H6') === 0) {
-					txtArr[i] = '<h6>' + txtArr[i].substring(3) + '</h6>';
-					_lineBreakAdded = true;
-				} else if (txtArr[i].indexOf('#h5') === 0 || txtArr[i].indexOf('#H5') === 0) {
-					txtArr[i] = '<h5>' + txtArr[i].substring(3) + '</h5>';
-					_lineBreakAdded = true;
-				} else if (txtArr[i].indexOf('#h4') === 0 || txtArr[i].indexOf('#H4') === 0) {
-					txtArr[i] = '<h4>' + txtArr[i].substring(3) + '</h4>';
-					_lineBreakAdded = true;
-				} else if (txtArr[i].indexOf('#h3') === 0 || txtArr[i].indexOf('#H3') === 0) {
-					txtArr[i] = '<h3>' + txtArr[i].substring(3) + '</h3>';
-					_lineBreakAdded = true;
-				} else if(txtArr[i].indexOf('#h2') === 0 || txtArr[i].indexOf('#H2') === 0) {
-					txtArr[i] = '<h2>' + txtArr[i].substring(3) + '</h2>';
-					_lineBreakAdded = true;
-				} else if (txtArr[i].indexOf('#h1') === 0 || txtArr[i].indexOf('#H1') === 0) {
-					txtArr[i] = '<h1>' + txtArr[i].substring(3) + '</h1>';
-					_lineBreakAdded = true;
-				} else if (txtArr[i].length === 0) {
-					txtArr[i] = '<br/>';
-					_lineBreakAdded = true;
-				} else if (txtArr[i].indexOf('*') === 0) {
-					if (!isEven(txtArr[i].split('*').length - 1)) {
-						txtArr[i] = '<br/>&#9679; ' + txtArr[i].substring(1);
-						_lineBreakAdded = true;
-					}
-				} else if (txtArr[i].indexOf('>>') === 0) {
-					txtArr[i] = '<p class="indent">' + txtArr[i].substring(2) + '</p>';
-					_lineBreakAdded = true;
-				} else if (txtArr[i].indexOf('&gt;&gt;') === 0) {
-					txtArr[i] = '<p class="indent">' + txtArr[i].substring(8) + '</p>';
-					_lineBreakAdded = true;
-				} else if (txtArr[i].indexOf('---') === 0 || txtArr[i].indexOf('___') === 0) {
-					txtArr[i] = '<hr/>' + txtArr[i].substring(3);
-					_lineBreakAdded = true;
-				}
-				var j;
-				// Matches Image markup ![test](http://google.com/image.png)
-				var _matchImage = txtArr[i].match(/\!\[([^\]]+)\](|\s)+\(([^\)])+\)/g);
-				if (_matchImage && _matchImage.length > 0) {
-					for(j = 0; j < _matchImage.length; j++) {
-						var _imgTxt = _matchImage[j].substring(2, _matchImage[j].indexOf(']'));
-						var remainingString = _matchImage[j].substring(_matchImage[j].indexOf(']') + 1).trim();
-						var _imgLink = remainingString.substring(1, remainingString.indexOf(')'));
-						_imgLink = '<img src="' + _imgLink + '" alt="' + _imgTxt + '"/>';
-						var _tempImg = txtArr[i].split(' ');
-                        for(var k = 0; k < _tempImg.length; k++) {
+        'checkMarkdowns': function (val) {
+            var txtArr = val.split(/\r?\n/);
+            for (var i = 0; i < txtArr.length; i++) {
+                var _lineBreakAdded = false;
+                if (txtArr[i].indexOf('#h6') === 0 || txtArr[i].indexOf('#H6') === 0) {
+                    txtArr[i] = '<h6>' + txtArr[i].substring(3) + '</h6>';
+                    _lineBreakAdded = true;
+                } else if (txtArr[i].indexOf('#h5') === 0 || txtArr[i].indexOf('#H5') === 0) {
+                    txtArr[i] = '<h5>' + txtArr[i].substring(3) + '</h5>';
+                    _lineBreakAdded = true;
+                } else if (txtArr[i].indexOf('#h4') === 0 || txtArr[i].indexOf('#H4') === 0) {
+                    txtArr[i] = '<h4>' + txtArr[i].substring(3) + '</h4>';
+                    _lineBreakAdded = true;
+                } else if (txtArr[i].indexOf('#h3') === 0 || txtArr[i].indexOf('#H3') === 0) {
+                    txtArr[i] = '<h3>' + txtArr[i].substring(3) + '</h3>';
+                    _lineBreakAdded = true;
+                } else if (txtArr[i].indexOf('#h2') === 0 || txtArr[i].indexOf('#H2') === 0) {
+                    txtArr[i] = '<h2>' + txtArr[i].substring(3) + '</h2>';
+                    _lineBreakAdded = true;
+                } else if (txtArr[i].indexOf('#h1') === 0 || txtArr[i].indexOf('#H1') === 0) {
+                    txtArr[i] = '<h1>' + txtArr[i].substring(3) + '</h1>';
+                    _lineBreakAdded = true;
+                } else if (txtArr[i].length === 0) {
+                    txtArr[i] = '\r\n';
+                    _lineBreakAdded = true;
+                } else if (txtArr[i].indexOf('*') === 0) {
+                    if (!isEven(txtArr[i].split('*').length - 1)) {
+                        txtArr[i] = '\r\n&#9679; ' + txtArr[i].substring(1);
+                        _lineBreakAdded = true;
+                    }
+                } else if (txtArr[i].indexOf('>>') === 0) {
+                    txtArr[i] = '<p class="indent">' + txtArr[i].substring(2) + '</p>';
+                    _lineBreakAdded = true;
+                } else if (txtArr[i].indexOf('&gt;&gt;') === 0) {
+                    txtArr[i] = '<p class="indent">' + txtArr[i].substring(8) + '</p>';
+                    _lineBreakAdded = true;
+                } else if (txtArr[i].indexOf('---') === 0 || txtArr[i].indexOf('___') === 0) {
+                    txtArr[i] = '<hr/>' + txtArr[i].substring(3);
+                    _lineBreakAdded = true;
+                }
+                var j;
+                // Matches Image markup ![test](http://google.com/image.png)
+                var _matchImage = txtArr[i].match(/\!\[([^\]]+)\](|\s)+\(([^\)])+\)/g);
+                if (_matchImage && _matchImage.length > 0) {
+                    for (j = 0; j < _matchImage.length; j++) {
+                        var _imgTxt = _matchImage[j].substring(2, _matchImage[j].indexOf(']'));
+                        var remainingString = _matchImage[j].substring(_matchImage[j].indexOf(']') + 1).trim();
+                        var _imgLink = remainingString.substring(1, remainingString.indexOf(')'));
+                        _imgLink = '<img src="' + _imgLink + '" alt="' + _imgTxt + '"/>';
+                        var _tempImg = txtArr[i].split(' ');
+                        for (var k = 0; k < _tempImg.length; k++) {
                             if (_tempImg[k] === _matchImage[j]) {
                                 _tempImg[k] = _imgLink;
                             }
                         }
                         txtArr[i] = _tempImg.join(' ');
-						//txtArr[i] = txtArr[i].replace(_matchImage[j], _imgLink);
-					}
-				}
-				// Matches link markup [test](http://google.com/)
-				var _matchLink = txtArr[i].match(/\[([^\]]+)\](|\s)+\(([^\)])+\)/g);
-				if (_matchLink && _matchLink.length > 0) {
-					for(j = 0; j < _matchLink.length; j++) {
-						var _linkTxt = _matchLink[j].substring(1, _matchLink[j].indexOf(']'));
-						var remainingString = _matchLink[j].substring(_matchLink[j].indexOf(']') + 1).trim();
-						var _linkLink = remainingString.substring(1, remainingString.indexOf(')'));
-						_linkLink = '<span class="isLink"><a href="' + _linkLink + '" target="_blank">' + _linkTxt + '</a></span>';
-						txtArr[i] = txtArr[i].replace(_matchLink[j], _linkLink);
-					}
-				}
-				// Matches bold markup *test* doesnot match * test *, *test *, * test*. If all these are required then replace \S with \s
-				var _matchAstrik = txtArr[i].match(/\*\S([^*]*?)\S\*/g);
-				if (_matchAstrik && _matchAstrik.length > 0) {
-					for(j = 0; j < _matchAstrik.length; j++) {
-						var _boldTxt = _matchAstrik[j];
-						_boldTxt = _boldTxt.substring(1, _boldTxt.length - 1);
-						_boldTxt = '<b>' + _boldTxt + '</b>';
-						txtArr[i] = txtArr[i].replace(_matchAstrik[j], _boldTxt);
-					}
-				}
-				// Matches bold markup ~test~ doesnot match ~ test ~, ~test ~, ~ test~. If all these are required then replace \S with \s
-				var _matchItalic = txtArr[i].match(/\~\S([^*]*?)\S\~/g);
-				if (_matchItalic && _matchItalic.length > 0) {
-					for(j = 0; j < _matchItalic.length; j++) {
-						var _italicTxt = _matchItalic[j];
-						if (txtArr[i].indexOf(_italicTxt) === 0 || txtArr[i][txtArr[i].indexOf(_italicTxt) - 1] === ' ') {
-							_italicTxt = _italicTxt.substring(1, _italicTxt.length - 1);
-							_italicTxt = '<i class="markdownItalic">' + _italicTxt + '</i>';
-							txtArr[i] = txtArr[i].replace(_matchItalic[j], _italicTxt);
-						}
-					}
-				}
-				// Matches bold markup ~test~ doesnot match ~ test ~, ~test ~, ~ test~. If all these are required then replace \S with \s
-				var _matchPre = txtArr[i].match(/\`\`\`\S([^*]*?)\S\`\`\`/g);
-				var _matchPre1 = txtArr[i].match(/\'\'\'\S([^*]*?)\S\'\'\'/g);
-				if (_matchPre && _matchPre.length > 0) {
-					for(j = 0; j < _matchPre.length; j++) {
-						var _preTxt = _matchPre[j];
-						_preTxt = _preTxt.substring(3, _preTxt.length - 3);
-						_preTxt = '<pre>' + _preTxt + '</pre>';
-						txtArr[i] = txtArr[i].replace(_matchPre[j], _preTxt);
-					}
-					_lineBreakAdded = true;
-				}
-				if (_matchPre1 && _matchPre1.length > 0) {
-					for(j = 0; j < _matchPre1.length; j++) {
-						var _preTxt = _matchPre1[j];
-						_preTxt = _preTxt.substring(3, _preTxt.length - 3);
-						_preTxt = '<pre>' + _preTxt + '</pre>';
-						txtArr[i] = txtArr[i].replace(_matchPre1[j], _preTxt);
-					}
-					_lineBreakAdded = true;
-				}
-				if (!_lineBreakAdded && i > 0) {
-					txtArr[i] = '<br/>' + txtArr[i];
-				}
-			}
-			val = txtArr.join('');
-			return val;
-		}
+                        //txtArr[i] = txtArr[i].replace(_matchImage[j], _imgLink);
+                    }
+                }
+                // Matches link markup [test](http://google.com/)
+                var _matchLink = txtArr[i].match(/\[([^\]]+)\](|\s)+\(([^\)])+\)/g);
+                if (_matchLink && _matchLink.length > 0) {
+                    for (j = 0; j < _matchLink.length; j++) {
+                        var _linkTxt = _matchLink[j].substring(1, _matchLink[j].indexOf(']'));
+                        var remainingString = _matchLink[j].substring(_matchLink[j].indexOf(']') + 1).trim();
+                        var _linkLink = remainingString.substring(1, remainingString.indexOf(')'));
+                        _linkLink = '<span class="isLink"><a href="' + _linkLink + '" target="_blank">' + _linkTxt + '</a></span>';
+                        txtArr[i] = txtArr[i].replace(_matchLink[j], _linkLink);
+                    }
+                }
+                // Matches bold markup *test* doesnot match * test *, *test *, * test*. If all these are required then replace \S with \s
+                var _matchAstrik = txtArr[i].match(/\*\S([^*]*?)\S\*/g);
+                if (_matchAstrik && _matchAstrik.length > 0) {
+                    for (j = 0; j < _matchAstrik.length; j++) {
+                        var _boldTxt = _matchAstrik[j];
+                        _boldTxt = _boldTxt.substring(1, _boldTxt.length - 1);
+                        _boldTxt = '<b>' + _boldTxt + '</b>';
+                        txtArr[i] = txtArr[i].replace(_matchAstrik[j], _boldTxt);
+                    }
+                }
+                // Matches bold markup ~test~ doesnot match ~ test ~, ~test ~, ~ test~. If all these are required then replace \S with \s
+                var _matchItalic = txtArr[i].match(/\~\S([^*]*?)\S\~/g);
+                if (_matchItalic && _matchItalic.length > 0) {
+                    for (j = 0; j < _matchItalic.length; j++) {
+                        var _italicTxt = _matchItalic[j];
+                        if (txtArr[i].indexOf(_italicTxt) === 0 || txtArr[i][txtArr[i].indexOf(_italicTxt) - 1] === ' ') {
+                            _italicTxt = _italicTxt.substring(1, _italicTxt.length - 1);
+                            _italicTxt = '<i class="markdownItalic">' + _italicTxt + '</i>';
+                            txtArr[i] = txtArr[i].replace(_matchItalic[j], _italicTxt);
+                        }
+                    }
+                }
+                // Matches bold markup ~test~ doesnot match ~ test ~, ~test ~, ~ test~. If all these are required then replace \S with \s
+                var _matchPre = txtArr[i].match(/\`\`\`\S([^*]*?)\S\`\`\`/g);
+                var _matchPre1 = txtArr[i].match(/\'\'\'\S([^*]*?)\S\'\'\'/g);
+                if (_matchPre && _matchPre.length > 0) {
+                    for (j = 0; j < _matchPre.length; j++) {
+                        var _preTxt = _matchPre[j];
+                        _preTxt = _preTxt.substring(3, _preTxt.length - 3);
+                        _preTxt = '<pre>' + _preTxt + '</pre>';
+                        txtArr[i] = txtArr[i].replace(_matchPre[j], _preTxt);
+                    }
+                    _lineBreakAdded = true;
+                }
+                if (_matchPre1 && _matchPre1.length > 0) {
+                    for (j = 0; j < _matchPre1.length; j++) {
+                        var _preTxt = _matchPre1[j];
+                        _preTxt = _preTxt.substring(3, _preTxt.length - 3);
+                        _preTxt = '<pre>' + _preTxt + '</pre>';
+                        txtArr[i] = txtArr[i].replace(_matchPre1[j], _preTxt);
+                    }
+                    _lineBreakAdded = true;
+                }
+                if (!_lineBreakAdded && i > 0) {
+                    txtArr[i] = '\r\n' + txtArr[i];
+                }
+            }
+            val = txtArr.join('');
+            return val;
+        }
     };
-	function isEven(n) {
-		n = Number(n);
-		return n === 0 || !!(n && !(n%2));
-	}
-	
-	function hasClass(el, className) {
-	  if (el.classList)
-		return el.classList.contains(className)
-	  else
-		return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'))
-	}
+    function isEven(n) {
+        n = Number(n);
+        return n === 0 || !!(n && !(n % 2));
+    }
 
-	function addClass(el, className) {
-	  if (el.classList)
-		el.classList.add(className)
-	  else if (!hasClass(el, className)) el.className += " " + className
-	}
+    function hasClass(el, className) {
+        if (el.classList)
+            return el.classList.contains(className)
+        else
+            return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'))
+    }
 
-	function removeClass(el, className) {
-	  if (el.classList)
-		el.classList.remove(className)
-	  else if (hasClass(el, className)) {
-		var reg = new RegExp('(\\s|^)' + className + '(\\s|$)')
-		el.className=el.className.replace(reg, ' ')
-	  }
-	}
-	
-	function extend(){
-		var rec = function(obj) {
-			var recRes = {};
-			if (typeof obj === "object") {
-				for(var key in obj) {
-					if(obj.hasOwnProperty(key)) {
-						if (typeof obj[key] === "object") {
-							recRes[key] = rec(obj[key]);
-						} else {
-							recRes[key] = obj[key];
-						}
-					}
-				}
-				return recRes;
-			} else {
-				return obj;
-			}
-		}
-		for(var i=1; i<arguments.length; i++) {
-			for(var key in arguments[i]) {
-				if(arguments[i].hasOwnProperty(key)) {
-					if (typeof arguments[i][key] === "object") {
-						arguments[0][key] = rec(arguments[i][key]);
-					} else {
-						arguments[0][key] = arguments[i][key];
-					}
-				}
-			}
-		}
-		return arguments[0];
-	}
-	
+    function addClass(el, className) {
+        if (el.classList)
+            el.classList.add(className)
+        else if (!hasClass(el, className)) el.className += " " + className
+    }
+
+    function removeClass(el, className) {
+        if (el.classList)
+            el.classList.remove(className)
+        else if (hasClass(el, className)) {
+            var reg = new RegExp('(\\s|^)' + className + '(\\s|$)')
+            el.className = el.className.replace(reg, ' ')
+        }
+    }
+
+    function extend() {
+        var rec = function (obj) {
+            var recRes = {};
+            if (typeof obj === "object") {
+                for (var key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        if (typeof obj[key] === "object") {
+                            recRes[key] = rec(obj[key]);
+                        } else {
+                            recRes[key] = obj[key];
+                        }
+                    }
+                }
+                return recRes;
+            } else {
+                return obj;
+            }
+        }
+        for (var i = 1; i < arguments.length; i++) {
+            for (var key in arguments[i]) {
+                if (arguments[i].hasOwnProperty(key)) {
+                    if (typeof arguments[i][key] === "object") {
+                        arguments[0][key] = rec(arguments[i][key]);
+                    } else {
+                        arguments[0][key] = arguments[i][key];
+                    }
+                }
+            }
+        }
+        return arguments[0];
+    }
+
     function chatWindow(cfg) {
         cfg.botOptions.test = false;
         this.config = {
@@ -555,27 +520,27 @@ function koreBotChat() {
         this.init();
     }
 
-	function resetPingMessage() {
-		clearTimeout(_pingTimer);
-		_pingTimer = setTimeout(function () {
-			var messageToBot = {};
-			messageToBot["type"] = 'ping';
-			bot.sendMessage(messageToBot, function messageSent() {
-				
-			});
-			resetPingMessage();
-		}, _pingTime);
-	}
-	
+    function resetPingMessage() {
+        clearTimeout(_pingTimer);
+        _pingTimer = setTimeout(function () {
+            var messageToBot = {};
+            messageToBot["type"] = 'ping';
+            bot.sendMessage(messageToBot, function messageSent() {
+
+            });
+            resetPingMessage();
+        }, _pingTime);
+    }
+
     chatWindow.prototype.init = function () {
         var me = this;
-        _botInfo = extend({},me.config.botOptions.botInfo);
-        me.config.botOptions.botInfo = {chatBot:_botInfo.name,taskBotId :_botInfo._id, customData : _botInfo.customData, tenanturl : _botInfo.tenanturl};
+        _botInfo = extend({}, me.config.botOptions.botInfo);
+        me.config.botOptions.botInfo = { chatBot: _botInfo.name, taskBotId: _botInfo._id, customData: _botInfo.customData, tenanturl: _botInfo.tenanturl };
         var tempTitle = _botInfo.name;
         me.config.botMessages = botMessages;
 
         me.config.chatTitle = me.config.botMessages.connecting;
-		me.config.userAgentIE = navigator.userAgent.indexOf('Trident/') !== -1;
+        me.config.userAgentIE = navigator.userAgent.indexOf('Trident/') !== -1;
         var chatWindowHtml = me.getChatTemplate('chatWindowTemplate', me.config);
 
         me.config.chatTitle = tempTitle;
@@ -585,16 +550,16 @@ function koreBotChat() {
 
     chatWindow.prototype.destroy = function () {
         var me = this;
-		if(document.querySelector('.kore-chat-overlay') !== null) {
-			document.querySelector('.kore-chat-overlay').style.display = "";
-		}
+        if (document.querySelector('.kore-chat-overlay') !== null) {
+            document.querySelector('.kore-chat-overlay').style.display = "";
+        }
         bot.close();
         if (me.config && me.config.chatContainer) {
             me.config.chatContainer.remove();
         }
     };
 
-    chatWindow.prototype.resetWindow = function() {
+    chatWindow.prototype.resetWindow = function () {
         var me = this;
         me.config.chatContainer.querySelector('.kore-chat-header .header-title').innerHTML = me.config.botMessages.reconnecting;
         me.config.chatContainer.querySelector('.chat-container').innerHTML = "";
@@ -604,37 +569,37 @@ function koreBotChat() {
 
     chatWindow.prototype.bindEvents = function () {
         var me = this;
-		var _chatContainer = me.config.chatContainer;
-		var _chatInputBox = _chatContainer.querySelector('.chatInputBox');
-		var _chatInputBoxPlaceholder = _chatContainer.querySelector('.chatInputBoxPlaceholder');
-		var _expandBtn = _chatContainer.querySelector('.expand-btn');
-		var _closeBtn = _chatContainer.querySelector('.close-btn');
-		var _minimizeBtn =  _chatContainer.querySelector('.minimize-btn');
-		var _reloadBtn = _chatContainer.querySelector('.reload-btn');
-		var _buttonTmplContentBox = _chatContainer.querySelector('.buttonTmplContentBox');
-		var _startRecord = _chatContainer.querySelector('.notRecordingMicrophone');
+        var _chatContainer = me.config.chatContainer;
+        var _chatInputBox = _chatContainer.querySelector('.chatInputBox');
+        var _chatInputBoxPlaceholder = _chatContainer.querySelector('.chatInputBoxPlaceholder');
+        var _expandBtn = _chatContainer.querySelector('.expand-btn');
+        var _closeBtn = _chatContainer.querySelector('.close-btn');
+        var _minimizeBtn = _chatContainer.querySelector('.minimize-btn');
+        var _reloadBtn = _chatContainer.querySelector('.reload-btn');
+        var _buttonTmplContentBox = _chatContainer.querySelector('.buttonTmplContentBox');
+        var _startRecord = _chatContainer.querySelector('.notRecordingMicrophone');
         var _stopRecord = _chatContainer.querySelector('.recordingMicrophone');
         var _uploadButton = _chatContainer.querySelector('.attachmentBtn');
         var _uploadBox = _chatContainer.querySelector('.captureAttachmnts');
         _chatInputBox.addEventListener('keyup', function (event) {
             var _footerContainer = me.config.container.querySelector('.kore-chat-footer');
-            var _bodyContainer =me.config.container.querySelector('.kore-chat-body');
+            var _bodyContainer = me.config.container.querySelector('.kore-chat-body');
             _bodyContainer.style.bottom = _footerContainer.scrollHeight;
-			prevComposeSelection = window.getSelection();
+            prevComposeSelection = window.getSelection();
             prevRange = prevComposeSelection.rangeCount > 0 && prevComposeSelection.getRangeAt(0);
-			if (this.innerText.length > 0) {
-				addClass(_chatInputBoxPlaceholder, 'hide');
-			} else {
-				removeClass(_chatInputBoxPlaceholder, 'hide');
-			}
+            if (this.innerText.length > 0) {
+                addClass(_chatInputBoxPlaceholder, 'hide');
+            } else {
+                removeClass(_chatInputBoxPlaceholder, 'hide');
+            }
         });
-		if (_chatInputBoxPlaceholder && _chatInputBoxPlaceholder.innerText && _chatInputBoxPlaceholder.innerText.length > 0) {
-			_chatInputBoxPlaceholder.addEventListener('click', function (event) {
-				_chatInputBox.click();
-				_chatInputBox.focus();
-			});
-		}
-		_chatInputBox.addEventListener('click', function (event) {
+        if (_chatInputBoxPlaceholder && _chatInputBoxPlaceholder.innerText && _chatInputBoxPlaceholder.innerText.length > 0) {
+            _chatInputBoxPlaceholder.addEventListener('click', function (event) {
+                _chatInputBox.click();
+                _chatInputBox.focus();
+            });
+        }
+        _chatInputBox.addEventListener('click', function (event) {
             prevComposeSelection = window.getSelection();
             prevRange = prevComposeSelection.rangeCount > 0 && prevComposeSelection.getRangeAt(0);
         });
@@ -645,7 +610,7 @@ function koreBotChat() {
             stop();
         });
         _uploadButton.addEventListener('click', function (event) {
-            if(fileUploaderCounter == 1){
+            if (fileUploaderCounter == 1) {
                 alert('You can upload only one file');
                 return;
             }
@@ -655,7 +620,7 @@ function koreBotChat() {
             }*/
             document.getElementById('captureAttachmnts').click();
         });
-        _uploadBox.addEventListener('change', function (event) {            
+        _uploadBox.addEventListener('change', function (event) {
             var file = document.getElementById('captureAttachmnts').files[0];
             if (file && file.size) {
                 if (file.size > filetypes.file.limit.size) {
@@ -668,33 +633,33 @@ function koreBotChat() {
                 return;
             }*/
             //_scope.cnvertFiles(file);
-            cnvertFiles(this,file);
+            cnvertFiles(this, file);
         });
-		
+
         _chatInputBox.addEventListener('keydown', function (event) {
             var _footerContainer = me.config.container.querySelector('.kore-chat-footer');
-            var _bodyContainer =me.config.container.querySelector('.kore-chat-body');
+            var _bodyContainer = me.config.container.querySelector('.kore-chat-body');
             _bodyContainer.style.bottom = _footerContainer.scrollHeight;
             if (event.keyCode === 13) {
                 event.preventDefault();
-                me.sendMessage(_chatInputBox,attachmentInfo);
+                me.sendMessage(_chatInputBox, attachmentInfo);
                 return;
             }
         });
-        
+
         _chatInputBox.addEventListener('paste', function (event) {
             event.preventDefault();
-			var _this = document.getElementsByClassName("chatInputBox");
+            var _this = document.getElementsByClassName("chatInputBox");
             var _clipboardData = event.clipboardData || (event.originalEvent && event.originalEvent.clipboardData) || window.clipboardData;
             var _htmlData = '';
-			if(_clipboardData){
+            if (_clipboardData) {
                 _htmlData = helpers.nl2br(_clipboardData.getData('text').escapeHTML(), false);
-				insertHtmlData(_this, _htmlData);
+                insertHtmlData(_this, _htmlData);
             }
-			setTimeout(function(){
-				setCaretEnd(_this);
-			}, 100);
-			
+            setTimeout(function () {
+                setCaretEnd(_this);
+            }, 100);
+
         });
 
         _closeBtn.addEventListener('click', function (event) {
@@ -703,29 +668,28 @@ function koreBotChat() {
 
         _minimizeBtn.addEventListener('click', function (event) {
             if (me.minimized === true) {
-				removeClass(_chatContainer, "minimize");
+                removeClass(_chatContainer, "minimize");
                 me.minimized = false;
-            } else
-            {
+            } else {
                 addClass(_chatContainer, "minimize");
-                _chatContainer.querySelector('.minimized-title').innerHTML = "Talk to "+ me.config.chatTitle;
+                _chatContainer.querySelector('.minimized-title').innerHTML = "Talk to " + me.config.chatTitle;
                 me.minimized = true;
             }
         });
-        
+
         _expandBtn.addEventListener('click', function (event) {
-            if(document.querySelector('.kore-chat-overlay') === null) {
-				var _divOverlay = document.createElement('div');
-				_divOverlay.className = "kore-chat-overlay";
+            if (document.querySelector('.kore-chat-overlay') === null) {
+                var _divOverlay = document.createElement('div');
+                _divOverlay.className = "kore-chat-overlay";
                 me.config.container.appendChild(_divOverlay);
-				
-				_divOverlay.addEventListener('click',function(){
-					if(me.expanded === true){
-						_expandBtn.click();
-					}
-				});
+
+                _divOverlay.addEventListener('click', function () {
+                    if (me.expanded === true) {
+                        _expandBtn.click();
+                    }
+                });
             }
-			var _chatOverlay = me.config.container.querySelector('.kore-chat-overlay');
+            var _chatOverlay = me.config.container.querySelector('.kore-chat-overlay');
             if (me.expanded === true) {
                 _chatOverlay.style.display = "none";
                 _expandBtn.title = "Expand";
@@ -738,118 +702,117 @@ function koreBotChat() {
                 me.expanded = true;
             }
         });
-		
-		document.querySelector('body').querySelector('.kore-chat-window .minimize-btn').addEventListener('click',function(){
-            if(me.expanded === true){
+
+        document.querySelector('body').querySelector('.kore-chat-window .minimize-btn').addEventListener('click', function () {
+            if (me.expanded === true) {
                 _expandBtn.click();
             }
         });
-        
+
         _chatContainer.querySelector('.minimized').addEventListener('click', function (event) {
             removeClass(_chatContainer, "minimize");
             me.minimized = false;
         });
-		_chatContainer.querySelector('.minimized-title').addEventListener('click', function (event) {
+        _chatContainer.querySelector('.minimized-title').addEventListener('click', function (event) {
             removeClass(_chatContainer, "minimize");
             me.minimized = false;
         });
 
-        _reloadBtn.addEventListener('click', function(event){			
+        _reloadBtn.addEventListener('click', function (event) {
             addClass(_reloadBtn, "disabled");
-			_reloadBtn.disabled = true;
+            _reloadBtn.disabled = true;
             me.resetWindow();
         });
-		
+
         bot.on("open", function (response) {
             accessToken = me.config.botOptions.accessToken;
-			var _botTitle = _chatContainer.querySelector('.kore-chat-header .header-title');
-			var _reconnectEl = _chatContainer.querySelector('.kore-chat-header .disabled');
+            var _botTitle = _chatContainer.querySelector('.kore-chat-header .header-title');
+            var _reconnectEl = _chatContainer.querySelector('.kore-chat-header .disabled');
             _botTitle.innerHTML = _botTitle.title = me.config.chatTitle;
-			
-			if(_reconnectEl !== null){
-				_reconnectEl.disabled = false;
-				removeClass(_reconnectEl, "disabled");
-			}
+
+            if (_reconnectEl !== null) {
+                _reconnectEl.disabled = false;
+                removeClass(_reconnectEl, "disabled");
+            }
             _chatInputBox.focus();
         });
 
         bot.on("message", function (message) {
-            if(me.popupOpened === true){
+            if (me.popupOpened === true) {
                 document.querySelector('.kore-auth-popup .close-popup').click();
             }
             var tempData = JSON.parse(message.data);
 
-            if (tempData.from === "bot" && tempData.type === "bot_response")
-            {
-				if(tempData.message[0]){
-					if (!tempData.message[0].cInfo) {
-						tempData.message[0].cInfo = {};
-					}
-					tempData.message[0].cInfo.body = tempData.message[0].cInfo.body;
-					if(tempData.message[0].component && !tempData.message[0].component.payload.text ) {
-						try{
-							tempData.message[0].component = JSON.parse(tempData.message[0].component.payload);
-						}catch(err){
-							tempData.message[0].component = tempData.message[0].component.payload;
-						}
-					}
-					if (tempData.message[0].component && tempData.message[0].component.payload && tempData.message[0].component.payload.text) {
-						tempData.message[0].cInfo.body = tempData.message[0].component.payload.text;
-					}
-				}
+            if (tempData.from === "bot" && tempData.type === "bot_response") {
+                if (tempData.message[0]) {
+                    if (!tempData.message[0].cInfo) {
+                        tempData.message[0].cInfo = {};
+                    }
+                    tempData.message[0].cInfo.body = tempData.message[0].cInfo.body;
+                    if (tempData.message[0].component && !tempData.message[0].component.payload.text) {
+                        try {
+                            tempData.message[0].component = JSON.parse(tempData.message[0].component.payload);
+                        } catch (err) {
+                            tempData.message[0].component = tempData.message[0].component.payload;
+                        }
+                    }
+                    if (tempData.message[0].component && tempData.message[0].component.payload && tempData.message[0].component.payload.text) {
+                        tempData.message[0].cInfo.body = tempData.message[0].component.payload.text;
+                    }
+                }
                 me.renderMessage(tempData);
             }
-            else if(tempData.from === "self" && tempData.type === "user_message"){
+            else if (tempData.from === "self" && tempData.type === "user_message") {
                 var tempmsg = tempData.message;
                 var msgData = {};
-				if (tempmsg && tempmsg.attachments && tempmsg.attachments[0] && tempmsg.attachments[0].fileId) {
-					msgData = {
-						'type': "currentUser",
-						"message": [{
-							'type': 'text',
-							'cInfo': {'body':tempmsg.body, attachments: tempmsg.attachments},
-							'clientMessageId': tempData.id
-						}],
-						"createdOn": tempData.id
-					};
-				} else {
-					msgData = {
-						'type': "currentUser",
-						"message": [{
-							'type': 'text',
-							'cInfo': {'body':tempmsg.body},
-							'clientMessageId': tempData.id
-						}],
-						"createdOn": tempData.id
-					};
-				}
+                if (tempmsg && tempmsg.attachments && tempmsg.attachments[0] && tempmsg.attachments[0].fileId) {
+                    msgData = {
+                        'type': "currentUser",
+                        "message": [{
+                            'type': 'text',
+                            'cInfo': { 'body': tempmsg.body, attachments: tempmsg.attachments },
+                            'clientMessageId': tempData.id
+                        }],
+                        "createdOn": tempData.id
+                    };
+                } else {
+                    msgData = {
+                        'type': "currentUser",
+                        "message": [{
+                            'type': 'text',
+                            'cInfo': { 'body': tempmsg.body },
+                            'clientMessageId': tempData.id
+                        }],
+                        "createdOn": tempData.id
+                    };
+                }
                 me.renderMessage(msgData);
             }
         });
     };
-    
-    chatWindow.prototype.bindIframeEvents = function(authPopup){
+
+    chatWindow.prototype.bindIframeEvents = function (authPopup) {
         var me = this;
-        authPopup.querySelector('.close-popup').addEventListener('click', function(){
-           authPopup.remove();
-           me.popupOpened = false;
+        authPopup.querySelector('.close-popup').addEventListener('click', function () {
+            authPopup.remove();
+            me.popupOpened = false;
         });
     };
-    
+
     chatWindow.prototype.render = function (chatWindowHtml) {
         var me = this;
-		var _div = document.createElement('div');
-		_div.innerHTML = chatWindowHtml;
-		me.config.container = document.querySelector(me.config.container);
-		if(me.config.container === null) {
-			me.config.container = document.querySelector('body');
-		}
+        var _div = document.createElement('div');
+        _div.innerHTML = chatWindowHtml;
+        me.config.container = document.querySelector(me.config.container);
+        if (me.config.container === null) {
+            me.config.container = document.querySelector('body');
+        }
         me.config.container.appendChild(_div);
-		
-		me.config.chatContainer = document.getElementById('koreChatWindow');
+
+        me.config.chatContainer = document.getElementById('koreChatWindow');
 
         if (me.config.container.localName !== "body") {
-            addClass(me.config.container,'pos-relative');
+            addClass(me.config.container, 'pos-relative');
             addClass(me.config.container, 'pos-absolute');
         }
 
@@ -861,36 +824,36 @@ function koreBotChat() {
         if (chatInput.textContent.trim() === "" && document.getElementsByClassName('attachment')[0].innerHTML.length == 0) {
             return;
         }
-		
-		var _footerContainer = me.config.container.querySelector('.kore-chat-footer');
-        var _bodyContainer =me.config.container.querySelector('.kore-chat-body');
+
+        var _footerContainer = me.config.container.querySelector('.kore-chat-footer');
+        var _bodyContainer = me.config.container.querySelector('.kore-chat-body');
         var clientMessageId = new Date().getTime();
         var msgData = {};
         fileUploaderCounter = 0;
-        if(attachmentInfo && Object.keys(attachmentInfo).length) {
+        if (attachmentInfo && Object.keys(attachmentInfo).length) {
             msgData = {
                 'type': "currentUser",
                 "message": [{
                     'type': 'text',
                     'cInfo': {
-                        'body':chatInput.innerText,
-                        'attachments':[attachmentInfo]
+                        'body': chatInput.innerText,
+                        'attachments': [attachmentInfo]
                     },
                     'clientMessageId': clientMessageId
                 }],
                 "createdOn": clientMessageId
             };
-            document.getElementsByClassName('attachment')[0].innerHTML = '';            
+            document.getElementsByClassName('attachment')[0].innerHTML = '';
             document.getElementById("captureAttachmnts").value = "";
             document.getElementsByClassName('kore-chat-window')[0].classList.remove('kore-chat-attachment');
-        }else{
-			attachmentInfo = {};
+        } else {
+            attachmentInfo = {};
             msgData = {
                 'type': "currentUser",
                 "message": [{
                     'type': 'text',
                     'cInfo': {
-                        'body':chatInput.innerText
+                        'body': chatInput.innerText
                     },
                     'clientMessageId': clientMessageId
                 }],
@@ -901,102 +864,99 @@ function koreBotChat() {
         var messageToBot = {};
         messageToBot["clientMessageId"] = clientMessageId;
         if (Object.keys(attachmentInfo).length > 0 && chatInput.innerText.trim().length) {
-            messageToBot["message"] = {body: chatInput.innerText.trim(), attachments: [attachmentInfo]};
-        } else if(Object.keys(attachmentInfo).length > 0){
-            messageToBot["message"] = {attachments: [attachmentInfo]};
+            messageToBot["message"] = { body: chatInput.innerText.trim(), attachments: [attachmentInfo] };
+        } else if (Object.keys(attachmentInfo).length > 0) {
+            messageToBot["message"] = { attachments: [attachmentInfo] };
         }
-        else{
-            messageToBot["message"] = {body: chatInput.innerText.trim()};
+        else {
+            messageToBot["message"] = { body: chatInput.innerText.trim() };
         }
         messageToBot["resourceid"] = '/bot.message';
-		attachmentInfo = {};
+        attachmentInfo = {};
         bot.sendMessage(messageToBot, function messageSent(err) {
-			if (err && err.message) {
-				setTimeout(function (){
-					var _ele = document.getElementById('msg_' + clientMessageId);
-					if (_ele) {
-						var _msgBubble = _ele.getElementsByClassName('messageBubble');
-						if (_msgBubble && _msgBubble.length > 0) {
-							var _div = document.createElement('div');
-							_div.className = "errorMsg";
-							_div.innerHTML = "Send Failed. Please resend.";
-							_msgBubble[0].appendChild(_div);
-						}
-					}
-				}, 350);
-			}
+            if (err && err.message) {
+                setTimeout(function () {
+                    var _ele = document.getElementById('msg_' + clientMessageId);
+                    if (_ele) {
+                        var _msgBubble = _ele.getElementsByClassName('messageBubble');
+                        if (_msgBubble && _msgBubble.length > 0) {
+                            var _div = document.createElement('div');
+                            _div.className = "errorMsg";
+                            _div.innerHTML = "Send Failed. Please resend.";
+                            _msgBubble[0].appendChild(_div);
+                        }
+                    }
+                }, 350);
+            }
         });
-        chatInput.innerHTML = "";       
+        chatInput.innerHTML = "";
         _bodyContainer.style.bottom = _footerContainer.scrollHeight;
-		if (msgData && msgData.message && msgData.message[0].cInfo && msgData.message[0].cInfo.body) {
-			msgData.message[0].cInfo.body = helpers.convertMDtoHTML(msgData.message[0].cInfo.body);
-		}
         resetPingMessage();
-		document.getElementsByClassName('typingIndicatorContent')[0].style.display = 'block';
-        setTimeout(function(){
+        document.getElementsByClassName('typingIndicatorContent')[0].style.display = 'block';
+        setTimeout(function () {
             document.getElementsByClassName('typingIndicatorContent')[0].style.display = 'none';
-        },3000)
+        }, 3000)
         me.renderMessage(msgData);
     };
 
     chatWindow.prototype.renderMessage = function (msgData) {
-        var me = this,messageHtml = '',extension;
-        if (msgData.type==="bot_response"){
-            setTimeout(function(){
-                 document.getElementsByClassName('typingIndicator')[0].style.backgroundImage = "url("+msgData.icon+")";
-            },500);
-            setTimeout(function(){
-                document.getElementsByClassName('typingIndicatorContent')[0].style.display ='none';
-            },500) 
+        var me = this, messageHtml = '', extension;
+        if (msgData.type === "bot_response") {
+            setTimeout(function () {
+                document.getElementsByClassName('typingIndicator')[0].style.backgroundImage = "url(" + msgData.icon + ")";
+            }, 500);
+            setTimeout(function () {
+                document.getElementsByClassName('typingIndicatorContent')[0].style.display = 'none';
+            }, 500)
         }
         var _chatContainer = me.config.chatContainer.querySelector('.chat-container');
-		if(msgData.message[0] && msgData.message[0].cInfo.attachments){
+        if (msgData.message[0] && msgData.message[0].cInfo.attachments) {
             extension = strSplit(msgData.message[0].cInfo.attachments[0].fileName)
         }
-        if(msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "button"){
-			messageHtml = me.getChatTemplate("templatebutton", msgData);
-		}
-		else if(msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "list"){
-			messageHtml = me.getChatTemplate("templatelist", msgData);
-		}else if(msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "quick_replies"){
-			messageHtml = me.getChatTemplate("templatequickreply", msgData);
-		}else{
-			messageHtml = me.getChatTemplate("message", msgData,extension);
-		}
+        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "button") {
+            messageHtml = me.getChatTemplate("templatebutton", msgData);
+        }
+        else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "list") {
+            messageHtml = me.getChatTemplate("templatelist", msgData);
+        } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "quick_replies") {
+            messageHtml = me.getChatTemplate("templatequickreply", msgData);
+        } else {
+            messageHtml = me.getChatTemplate("message", msgData, extension);
+        }
 
         _chatContainer.innerHTML += messageHtml;
-		if(_chatContainer.querySelectorAll('li a').length > 0) {
-			_chatContainer.querySelectorAll('li a').item(function(ele){
-				ele.addEventListener('click',function(e){
-					e.preventDefault();
-					var a_link = this.href;
-					var _trgt = this.target;
-					if (_trgt === "_self") {
-						callListener("provideVal", {link: a_link} );
-						return;
-					}
-					if(me.config.allowIframe === true){
-						me.openPopup(a_link);
-					}
-					else{
-						var _tempWin = window.open(a_link,"_blank");
-					}
-				});
-			});
-		}
-		if(_chatContainer.querySelectorAll('.sendClickReq').length > 0) {			
-			for (var i = 0; i < _chatContainer.querySelectorAll('.sendClickReq').length; i++){
-				var evt = _chatContainer.querySelectorAll('.sendClickReq')[i];
-				evt.addEventListener('click',function(){
-					var _this = this;
-					me.templateBtnClick(_this, me);
-				});
-			}
-		}
-        if(_chatContainer.querySelectorAll('.attachments').length > 0) {           
-            for (var i = 0; i < _chatContainer.querySelectorAll('.attachments').length; i++){
+        if (_chatContainer.querySelectorAll('li a').length > 0) {
+            _chatContainer.querySelectorAll('li a').item(function (ele) {
+                ele.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    var a_link = this.href;
+                    var _trgt = this.target;
+                    if (_trgt === "_self") {
+                        callListener("provideVal", { link: a_link });
+                        return;
+                    }
+                    if (me.config.allowIframe === true) {
+                        me.openPopup(a_link);
+                    }
+                    else {
+                        var _tempWin = window.open(a_link, "_blank");
+                    }
+                });
+            });
+        }
+        if (_chatContainer.querySelectorAll('.sendClickReq').length > 0) {
+            for (var i = 0; i < _chatContainer.querySelectorAll('.sendClickReq').length; i++) {
+                var evt = _chatContainer.querySelectorAll('.sendClickReq')[i];
+                evt.addEventListener('click', function () {
+                    var _this = this;
+                    me.templateBtnClick(_this, me);
+                });
+            }
+        }
+        if (_chatContainer.querySelectorAll('.attachments').length > 0) {
+            for (var i = 0; i < _chatContainer.querySelectorAll('.attachments').length; i++) {
                 var evt = _chatContainer.querySelectorAll('.attachments')[i];
-                evt.addEventListener('click',function(){
+                evt.addEventListener('click', function () {
                     var _this = this;
                     me.downloadClickFile(_this, me);
                 });
@@ -1004,399 +964,403 @@ function koreBotChat() {
         }
         _chatContainer.scrollTop = _chatContainer.scrollHeight;
     };
-    chatWindow.prototype.downloadClickFile = function(_this,me){
-        var attachFileID  = _this.getAttribute('fileid');
-        var xhttp=new XMLHttpRequest();
-        xhttp.onreadystatechange = function(response) {
+    chatWindow.prototype.downloadClickFile = function (_this, me) {
+        var attachFileID = _this.getAttribute('fileid');
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function (response) {
             if (this.readyState == 4 && this.status == 200) {
                 var downloadUrl = JSON.parse(this.response);
                 var url = downloadUrl.fileUrl;
-                if(url.indexOf("?") < 0){
-                    url +="?download=1";
-                }else{
-                    url +="&download=1";
+                if (url.indexOf("?") < 0) {
+                    url += "?download=1";
+                } else {
+                    url += "&download=1";
                 }
-                window.open(url,'_blank');
+                window.open(url, '_blank');
                 /*var save = document.createElement('a');
                 save.href = url;
                 save.target = '_blank';
                 save.download = 'unknown file';
                 save.click();*/
             }
-        };        
-        xhttp.open("GET", koreAPIUrl+"1.1/attachment/file/"+attachFileID+"/url", true);
-        xhttp.setRequestHeader('Authorization', (bearerToken?bearerToken:assertionToken));
-        xhttp.send();        
+        };
+        xhttp.open("GET", koreAPIUrl + "1.1/attachment/file/" + attachFileID + "/url", true);
+        xhttp.setRequestHeader('Authorization', (bearerToken ? bearerToken : assertionToken));
+        xhttp.send();
     };
-    
-    chatWindow.prototype.templateBtnClick = function(_this,me){
-		var type = _this.getAttribute('type');
-		if(type == "postback" || type == "text"){
-			document.getElementsByClassName('chatInputBox').textContent = _this.getAttribute('value');
-			document.getElementsByClassName('chatInputBox').innerHTML = _this.getAttribute('value');
-			setTimeout(function(){
-				me.sendMessage(document.getElementsByClassName('chatInputBox'));
-			},100);
-		}else if(type == "url" || type == "web_url"){
-			var a_link = _this.getAttribute('url');
-			if(a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0){
-				a_link = "http://" + a_link;
-			}
-			var _tempWin = window.open(a_link,"_blank");
-		}
-	};
-    chatWindow.prototype.openPopup = function(link_url){
+
+    chatWindow.prototype.templateBtnClick = function (_this, me) {
+        var type = _this.getAttribute('type');
+        if (type == "postback" || type == "text") {
+            document.getElementsByClassName('chatInputBox').textContent = _this.getAttribute('value');
+            document.getElementsByClassName('chatInputBox').innerHTML = _this.getAttribute('value');
+            setTimeout(function () {
+                me.sendMessage(document.getElementsByClassName('chatInputBox'));
+            }, 100);
+        } else if (type == "url" || type == "web_url") {
+            var a_link = _this.getAttribute('url');
+            if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
+                a_link = "http://" + a_link;
+            }
+            var _tempWin = window.open(a_link, "_blank");
+        }
+    };
+    chatWindow.prototype.openPopup = function (link_url) {
         var me = this;
         var popupHtml = me.getChatTemplate("popup", link_url);
-							
-		var _div = document.createElement('div');
-		_div.className = "kore-auth-layover";
-		_div.innerHTML = popupHtml;
-		
+
+        var _div = document.createElement('div');
+        _div.className = "kore-auth-layover";
+        _div.innerHTML = popupHtml;
+
         me.config.container.appendChild(_div);
         me.popupOpened = true;
         me.bindIframeEvents(_div);
     };
 
     chatWindow.prototype.getChatTemplate = function (tempType, tempData, extension) {
-        
+
         if (tempType === "message") {
-			var msgTemplate = '';
-			if(tempData.message) {
-				tempData.message.forEach(function(msgItem){
-					if(msgItem.cInfo && msgItem.type === "text") { 
-						var msg_data = '';
-						var msg_class = '';
-						var msg_icon_html = '';
-						var msg_created_html = '';
-						var msg_html = '';
-						var err_html = '';
-						
-						if(tempData.type !== "bot_response") {
-							msg_data = 'id = "msg_' + msgItem.clientMessageId + '"';
-							msg_class = 'fromCurrentUser';
-							msg_html = helpers.convertMDtoHTML(msgItem.cInfo.body);
-						}
-						else {
-							msg_class = 'fromOtherUsers';
-                            if(msgItem.component && msgItem.component.type =="error"){
-                                msg_html = '<span style="color:'+msgItem.component.payload.color+';">'+ helpers.convertMDtoHTML(msgItem.component.payload.text) +'</span>';
-                            }else{
-                                msg_html = helpers.convertMDtoHTML(msgItem.cInfo.body);
+            var msgTemplate = '';
+            if (tempData.message) {
+                tempData.message.forEach(function (msgItem) {
+                    if (msgItem.cInfo && msgItem.type === "text") {
+                        var msg_data = '';
+                        var msg_class = '';
+                        var msg_icon_html = '';
+                        var msg_created_html = '';
+                        var msg_html = '';
+                        var err_html = '';
+
+                        if (tempData.type !== "bot_response") {
+                            msg_data = 'id = "msg_' + msgItem.clientMessageId + '"';
+                            msg_class = 'fromCurrentUser';
+                            msg_html = helpers.convertMDtoHTML(msgItem.cInfo.body, 'user');
+                        }
+                        else {
+                            msg_class = 'fromOtherUsers';
+                            if (msgItem.component && msgItem.component.type == "error") {
+                                msg_html = '<span style="color:' + msgItem.component.payload.color + ';">' + helpers.convertMDtoHTML(msgItem.component.payload.text, 'bot') + '</span>';
+                            } else {
+                                msg_html = helpers.convertMDtoHTML(msgItem.cInfo.body, 'bot');
                             }
-						}						
-                        if(msgItem.cInfo.attachments){
+                        }
+                        if (msgItem.cInfo.attachments) {
                             var className = '';
-                            if(msgItem.cInfo.attachments[0].fileType =="image"){
-                                className = "icon cf-icon icon-photos_active";   
-                            }else if(msgItem.cInfo.attachments[0].fileType =="audio"){
-                                className = "icon cf-icon icon-files_audio"; 
-                            }else if(msgItem.cInfo.attachments[0].fileType =="video"){
-                                className = "icon cf-icon icon-video_active "; 
-                            }else{
-                                if(extension[1]=="xlsx" || extension[1]=="xls" || extension[1]=="docx" || extension[1]=="doc" || extension[1]=="pdf" || extension[1]=="ppsx" || extension[1]=="pptx" || extension[1]=="ppt" || extension[1]=="zip" || extension[1]=="rar"){
-                                    className = "icon cf-icon icon-files_"+extension[1]; 
-                                }else{
-                                    className = "icon cf-icon icon-files_other_doc"; 
+                            if (msgItem.cInfo.attachments[0].fileType == "image") {
+                                className = "icon cf-icon icon-photos_active";
+                            } else if (msgItem.cInfo.attachments[0].fileType == "audio") {
+                                className = "icon cf-icon icon-files_audio";
+                            } else if (msgItem.cInfo.attachments[0].fileType == "video") {
+                                className = "icon cf-icon icon-video_active ";
+                            } else {
+                                if (extension[1] == "xlsx" || extension[1] == "xls" || extension[1] == "docx" || extension[1] == "doc" || extension[1] == "pdf" || extension[1] == "ppsx" || extension[1] == "pptx" || extension[1] == "ppt" || extension[1] == "zip" || extension[1] == "rar") {
+                                    className = "icon cf-icon icon-files_" + extension[1];
+                                } else {
+                                    className = "icon cf-icon icon-files_other_doc";
                                 }
                             }
-                            msg_html += '<div class="msgCmpt attachments" fileid="'+msgItem.cInfo.attachments[0].fileId+'"><div class="uploadedFileIcon"> <span class="'+className+'"></span></div><div class="curUseruploadedFileName">'+msgItem.cInfo.attachments[0].fileName+'</div></div>';
+                            msg_html += '<div class="msgCmpt attachments" fileid="' + msgItem.cInfo.attachments[0].fileId + '"><div class="uploadedFileIcon"> <span class="' + className + '"></span></div><div class="curUseruploadedFileName">' + msgItem.cInfo.attachments[0].fileName + '</div></div>';
                         }
-						if(tempData.icon) {
-							msg_class += ' with-icon';
-							msg_icon_html = '<div class="profile-photo"> <div class="user-account avtar" style="background-image:url('+ tempData.icon +')"></div> </div>';
-						}
-						
-						if(tempData.createdOn) {
-							msg_created_html = '<div class="extra-info">'+ helpers.formatDate(tempData.createdOn) +'</div>';
-						}
-						if(msgItem.cInfo.emoji) {
-							msg_html = msg_html +'<span class="emojione emojione-'+msgItem.cInfo.emoji[0].code+'"></span>';
-						}
-						if (tempData.isError) {
-							err_html = '<div class="errorMsg">Send Failed. Please resend.</div>';
-						}
-						msgTemplate += '<li '+ msg_data +' class=" ' + msg_class + '"> \
-                                '+ msg_created_html +' \
-                                '+ msg_icon_html +' \
+                        if (tempData.icon) {
+                            msg_class += ' with-icon';
+                            msg_icon_html = '<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(' + tempData.icon + ')"></div> </div>';
+                        }
+
+                        if (tempData.createdOn) {
+                            msg_created_html = '<div class="extra-info">' + helpers.formatDate(tempData.createdOn) + '</div>';
+                        }
+                        if (msgItem.cInfo.emoji) {
+                            msg_html = msg_html + '<span class="emojione emojione-' + msgItem.cInfo.emoji[0].code + '"></span>';
+                        }
+                        if (tempData.isError) {
+                            err_html = '<div class="errorMsg">Send Failed. Please resend.</div>';
+                        }
+                        msgTemplate += '<li ' + msg_data + ' class=" ' + msg_class + '"> \
+                                '+ msg_created_html + ' \
+                                '+ msg_icon_html + ' \
                                 <div class="messageBubble">\
-                                    '+ msg_html +' \
-									'+ err_html +' \
+                                    '+ msg_html + ' \
+									'+ err_html + ' \
                                 </div> \
 						</li>';
-					}
-				});
-			}
+                    }
+                });
+            }
             return msgTemplate;
-        } else if(tempType === "popup"){
-			var popupTemplate = '<div class="kore-auth-popup"><div class="popup_controls"><span class="close-popup" title="Close">&times;</span></div> \
+        } else if (tempType === "popup") {
+            var popupTemplate = '<div class="kore-auth-popup"><div class="popup_controls"><span class="close-popup" title="Close">&times;</span></div> \
 							<iframe id="authIframe" src=" ' + tempData + '"></iframe></div>';
             return popupTemplate;
         }
-		else if(tempType ==="templatebutton"){
-			var buttonTemplate = '';
-			if(tempData.message) {
-				tempData.message.forEach(function(msgItem){
-					if(msgItem.component && msgItem.component.type === "template") { 
-						var msg_data = '';
-						var msg_class = '';
-						var msg_icon_html = '';
-						var msg_created_html = '';
-						var msg_html = '';
-						var inner_html = '';
-						if(tempData.type !== "bot_response") {
-							msg_data = 'id = "msg_' + msgItem.clientMessageId + '"';
-							msg_class = 'fromCurrentUser';
-							msg_html = helpers.convertMDtoHTML(msgItem.component.payload.text);
-						}
-						else {
-							msg_class = 'fromOtherUsers';
-							msg_html = helpers.convertMDtoHTML(msgItem.component.payload.text);
-						}
-						
-						if(tempData.icon) {
-							msg_class += ' with-icon';
-							msg_icon_html = '<div class="profile-photo"> <div class="user-account avtar" style="background-image:url('+ tempData.icon +')"></div> </div>';
-						}
-						
-						if(tempData.createdOn) {
-							msg_created_html = '<div class="extra-info">'+ helpers.formatDate(tempData.createdOn) +'</div>';
-						}
-						if(msgItem.cInfo.emoji) {
-							msg_html = msg_html +'<span class="emojione emojione-'+msgItem.cInfo.emoji[0].code+'"></span>';
-						}
-						msgItem.component.payload.buttons.forEach(function(msgInnerItem) {
-							var value='',url='',type='';
-							if(msgInnerItem.payload){
-								value ='value="'+msgInnerItem.payload+'"';
-							}
-							if(msgInnerItem.url){
-								url = 'url="'+msgInnerItem.url+'"';
-							}
-							if(msgInnerItem.type){
-								type = 'type="'+msgInnerItem.type+'"';
-							}
-							inner_html = inner_html + '<li '+value+' '+url+' '+type+' class="buttonTmplContentChild sendClickReq">\
-									'+ msgInnerItem.title+ '</li>';
-						});
-						buttonTemplate += '<li '+ msg_data +' class=" ' + msg_class + '"> \
-								<div class="buttonTmplContent"> \
-                                '+ msg_created_html +' \
-                                '+ msg_icon_html +' \
-								<ul class="buttonTmplContentBox">\
-									<li class="buttonTmplContentHeading">'+msg_html+'</li>\
-									'+ inner_html +' \
-								</ul>\
-								</div>\
-						</li>';
-					}
-				});
-			}
-            return buttonTemplate;
-		}
-		else if(tempType ==="templatequickreply"){
-			var quickReplyTemplate = '';
-			if(tempData.message) {
-				tempData.message.forEach(function(msgItem){
-					if(msgItem.component && msgItem.component.type === "template") { 
-						var msg_data = '';
-						var msg_class = '';
-						var msg_icon_html = '';
-						var msg_created_html = '';
-						var msg_html = '';
-						var inner_html = '';
-						if(tempData.type !== "bot_response") {
-							msg_data = 'id = "msg_' + msgItem.clientMessageId + '"';
-							msg_class = 'fromCurrentUser';
-							msg_html = helpers.convertMDtoHTML(msgItem.component.payload.text);
-						}
-						else {
-							msg_class = 'fromOtherUsers';
-							msg_html = helpers.convertMDtoHTML(msgItem.component.payload.text);
-						}
-						
-						if(tempData.icon) {
-							msg_class += ' with-icon';
-							msg_icon_html = '<div class="profile-photo"> <div class="user-account avtar" style="background-image:url('+ tempData.icon +')"></div> </div>';
-						}
-						
-						if(tempData.createdOn) {
-							msg_created_html = '<div class="extra-info">'+ helpers.formatDate(tempData.createdOn) +'</div>';
-						}
-						if(msgItem.cInfo.emoji) {
-							msg_html = msg_html +'<span class="emojione emojione-'+msgItem.cInfo.emoji[0].code+'"></span>';
-						}
-						msgItem.component.payload.quick_replies.forEach(function(msgInnerItem) {
-							var value='',url='',type='';
-							if(msgInnerItem.payload){
-								value ='value="'+msgInnerItem.payload+'"';
-							}
-							if(msgInnerItem.image_url){
-								url = 'img src="'+'+msgInnerItem.image_url+'+'"';
-							}
-							if(msgInnerItem.content_type){
-								type = 'type="'+msgInnerItem.content_type+'"';
-							}
-							inner_html = inner_html + '<li '+value+' '+url+' '+type+' class="quickReply buttonTmplContentChild sendClickReq">\
-									'+url+' '+ msgInnerItem.title+ '</li>';
-						});
-						quickReplyTemplate += '<li '+ msg_data +' class=" ' + msg_class + '"> \
-								<div class="buttonTmplContent"> \
-                                '+ msg_created_html +' \
-                                '+ msg_icon_html +' \
-								<ul class="buttonTmplContentBox">\
-									<li class="buttonTmplContentHeading">'+msg_html+'</li>\
-									'+ inner_html +' \
-								</ul>\
-								</div>\
-						</li>';
-					}
-				});
-			}
-            return quickReplyTemplate;
-		}
-		else if(tempType ==="templatelist"){
-			var listTemplate = '';
-			if(tempData.message) {
-				tempData.message.forEach(function(msgItem){
-					if(msgItem.component && msgItem.component.type === "template") { 
-						var msg_data = '';
-						var msg_class = '';
-						var msg_icon_html = '';
-						var msg_created_html = '';
-						var msg_html = '';
-						var inner_html = '',lastButton = '',count = 0;
-						if(tempData.type !== "bot_response") {
-							msg_data = 'id = "msg_' + msgItem.clientMessageId + '"';
-							msg_class = 'fromCurrentUser';
-							
-						}
-						else {
-							msg_class = 'fromOtherUsers';							
-						}
-						
-						if(tempData.icon) {
-							msg_class += ' with-icon';
-							msg_icon_html = '<div class="profile-photo"> <div class="user-account avtar" style="background-image:url('+ tempData.icon +')"></div> </div>';
-						}
-						
-						if(tempData.createdOn) {
-							msg_created_html = '<div class="extra-info">'+ helpers.formatDate(tempData.createdOn) +'</div>';
-						}						
-                        if(msgItem.component.payload && msgItem.component.payload.heading){
-                            msg_html = '<li class="listTmplContentHeading">' + helpers.convertMDtoHTML(msgItem.component.payload.heading) + '</li>';
+        else if (tempType === "templatebutton") {
+            var buttonTemplate = '';
+            if (tempData.message) {
+                tempData.message.forEach(function (msgItem) {
+                    if (msgItem.component && msgItem.component.type === "template") {
+                        var msg_data = '';
+                        var msg_class = '';
+                        var msg_icon_html = '';
+                        var msg_created_html = '';
+                        var msg_html = '';
+                        var inner_html = '';
+                        if (tempData.type !== "bot_response") {
+                            msg_data = 'id = "msg_' + msgItem.clientMessageId + '"';
+                            msg_class = 'fromCurrentUser';
+                            msg_html = helpers.convertMDtoHTML(msgItem.component.payload.text, 'user');
                         }
-						msgItem.component.payload.elements.forEach(function(msgInnerItem) {
-							if(msgItem.component.payload.buttons && count < 3){
-								count++;
-                                var value='',url='',type='';
-                                if(msgInnerItem.buttons && msgInnerItem.buttons[0].payload){
-                                    value ='value="'+msgInnerItem.buttons[0].payload+'"';
-                                } else if(msgInnerItem.buttons) {
-                                    value ='value="'+msgInnerItem.buttons[0].title+'"';
-                                }
-                                if(msgInnerItem.buttons && msgInnerItem.buttons[0].url){
-                                    url = 'url="'+msgInnerItem.buttons[0].url+'"';
-                                }
-                                if(msgInnerItem.buttons && msgInnerItem.buttons[0].type){
-                                    type = 'type="'+msgInnerItem.buttons[0].type+'"';
-                                }
-                                inner_html = inner_html + '<li class="listTmplContentChild">';
-                                if(msgInnerItem.image_url){
-                                    inner_html = inner_html + '<div class="listRightContent"><img src="'+msgInnerItem.image_url+'" /></div>';
-                                }
-                                inner_html = inner_html + '<div class="listLeftContent"><div class="listItemTitle">'+msgInnerItem.title+'</div>';
-                                if(msgInnerItem.subtitle){
-                                    inner_html = inner_html + '<div class="listItemSubtitle">'+msgInnerItem.subtitle+'</div>';
-                                }
-                                if(msgInnerItem.default_action && msgInnerItem.default_action.url){
-                                    inner_html = inner_html + '<div class="listItemPath sendClickReq" type="url" url="'+msgInnerItem.default_action.url+'">'+msgInnerItem.default_action.url+'</div>';
-                                }
-                                if(msgInnerItem.buttons){
-                                    inner_html = inner_html + '<div><button '+value+' '+type+' '+url+' class="buyBtn sendClickReq">Buy</button></div>';
-                                }
-                                inner_html = inner_html +'</div>';
-                                  
-                                inner_html = inner_html +'</li>';
-							}else{
-                                count++;
-                                var value='',url='',type='';
-                                if(msgInnerItem.buttons && msgInnerItem.buttons[0].payload){
-                                    value ='value="'+msgInnerItem.buttons[0].payload+'"';
-                                } else if(msgInnerItem.buttons) {
-                                    value ='value="'+msgInnerItem.buttons[0].title+'"';
-                                }
-                                if(msgInnerItem.buttons && msgInnerItem.buttons[0].url){
-                                    url = 'url="'+msgInnerItem.buttons[0].url+'"';
-                                }
-                                if(msgInnerItem.buttons && msgInnerItem.buttons[0].type){
-                                    type = 'type="'+msgInnerItem.buttons[0].type+'"';
-                                }
-                                inner_html = inner_html + '<li class="listTmplContentChild">';
-                                if(msgInnerItem.image_url){
-                                    inner_html = inner_html + '<div class="listRightContent"><img src="'+msgInnerItem.image_url+'" /></div>';
-                                }
-                                inner_html = inner_html + '<div class="listLeftContent"><div class="listItemTitle">'+msgInnerItem.title+'</div>';
-                                if(msgInnerItem.subtitle){
-                                    inner_html = inner_html + '<div class="listItemSubtitle">'+msgInnerItem.subtitle+'</div>';
-                                }
-                                if(msgInnerItem.default_action && msgInnerItem.default_action.url){
-                                    inner_html = inner_html + '<div class="listItemPath sendClickReq" type="url" url="'+msgInnerItem.default_action.url+'">'+msgInnerItem.default_action.url+'</div>';
-                                }
-                                if(msgInnerItem.buttons){
-                                    inner_html = inner_html + '<div><button '+value+' '+type+' '+url+' class="buyBtn sendClickReq">Buy</button></div>';
-                                }
-                                inner_html = inner_html +'</div>';
-                                  
-                                inner_html = inner_html +'</li>';
+                        else {
+                            msg_class = 'fromOtherUsers';
+                            msg_html = helpers.convertMDtoHTML(msgItem.component.payload.text, 'bot');
+                        }
+
+                        if (tempData.icon) {
+                            msg_class += ' with-icon';
+                            msg_icon_html = '<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(' + tempData.icon + ')"></div> </div>';
+                        }
+
+                        if (tempData.createdOn) {
+                            msg_created_html = '<div class="extra-info">' + helpers.formatDate(tempData.createdOn) + '</div>';
+                        }
+                        if (msgItem.cInfo.emoji) {
+                            msg_html = msg_html + '<span class="emojione emojione-' + msgItem.cInfo.emoji[0].code + '"></span>';
+                        }
+                        msgItem.component.payload.buttons.forEach(function (msgInnerItem) {
+                            var value = '', url = '', type = '';
+                            if (msgInnerItem.payload) {
+                                value = 'value="' + msgInnerItem.payload + '"';
                             }
-						});
-						if(msgItem.component.payload.elements && msgItem.component.payload.buttons && msgItem.component.payload.elements.length > 3){
-							msgItem.component.payload.buttons.forEach(function(msgLastItem) {
-								var url='',type='',value='';
-								if(msgLastItem.payload){
-									value ='value="'+msgLastItem.payload+'"';
-								} else {
-									value ='value="'+msgLastItem.title+'"';
-								}
-								if(msgLastItem.url){
-									url = 'url="'+msgLastItem.url+'"';
-								}
-								if(msgLastItem.type){
-									type = 'type="'+msgLastItem.type+'"';
-								}
-								lastButton = '<li class="viewMoreList"> \
-									<button '+value+' '+type+' '+url+' class="viewMore sendClickReq">'+msgLastItem.title+'</button> \
-								</li>';
-							});
-						}
-						listTemplate += '<li '+ msg_data +' class=" ' + msg_class + '"> \
-								<div class="listTmplContent"> \
-                                '+ msg_created_html +' \
-                                '+ msg_icon_html +' \
-								<ul class="listTmplContentBox">\
-									'+msg_html+' \
-									'+ inner_html +' \
-									'+ lastButton +' \
+                            if (msgInnerItem.url) {
+                                url = 'url="' + msgInnerItem.url + '"';
+                            }
+                            if (msgInnerItem.type) {
+                                type = 'type="' + msgInnerItem.type + '"';
+                            }
+                            inner_html = inner_html + '<li ' + value + ' ' + url + ' ' + type + ' class="buttonTmplContentChild sendClickReq">\
+									'+ msgInnerItem.title + '</li>';
+                        });
+                        buttonTemplate += '<li ' + msg_data + ' class=" ' + msg_class + '"> \
+								<div class="buttonTmplContent"> \
+                                '+ msg_created_html + ' \
+                                '+ msg_icon_html + ' \
+								<ul class="buttonTmplContentBox">\
+									<li class="buttonTmplContentHeading">'+ msg_html + '</li>\
+									'+ inner_html + ' \
 								</ul>\
 								</div>\
 						</li>';
-					}
-				});
-			}
+                    }
+                });
+            }
+            return buttonTemplate;
+        }
+        else if (tempType === "templatequickreply") {
+            var quickReplyTemplate = '';
+            if (tempData.message) {
+                tempData.message.forEach(function (msgItem) {
+                    if (msgItem.component && msgItem.component.type === "template") {
+                        var msg_data = '';
+                        var msg_class = '';
+                        var msg_icon_html = '';
+                        var msg_created_html = '';
+                        var msg_html = '';
+                        var inner_html = '';
+                        if (tempData.type !== "bot_response") {
+                            msg_data = 'id = "msg_' + msgItem.clientMessageId + '"';
+                            msg_class = 'fromCurrentUser';
+                            msg_html = helpers.convertMDtoHTML(msgItem.component.payload.text, 'user');
+                        }
+                        else {
+                            msg_class = 'fromOtherUsers';
+                            msg_html = helpers.convertMDtoHTML(msgItem.component.payload.text, 'bot');
+                        }
+
+                        if (tempData.icon) {
+                            msg_class += ' with-icon';
+                            msg_icon_html = '<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(' + tempData.icon + ')"></div> </div>';
+                        }
+
+                        if (tempData.createdOn) {
+                            msg_created_html = '<div class="extra-info">' + helpers.formatDate(tempData.createdOn) + '</div>';
+                        }
+                        if (msgItem.cInfo.emoji) {
+                            msg_html = msg_html + '<span class="emojione emojione-' + msgItem.cInfo.emoji[0].code + '"></span>';
+                        }
+                        msgItem.component.payload.quick_replies.forEach(function (msgInnerItem) {
+                            var value = '', url = '', type = '';
+                            if (msgInnerItem.payload) {
+                                value = 'value="' + msgInnerItem.payload + '"';
+                            }
+                            if (msgInnerItem.image_url) {
+                                url = 'img src="' + '+msgInnerItem.image_url+' + '"';
+                            }
+                            if (msgInnerItem.content_type) {
+                                type = 'type="' + msgInnerItem.content_type + '"';
+                            }
+                            inner_html = inner_html + '<li ' + value + ' ' + url + ' ' + type + ' class="quickReply buttonTmplContentChild sendClickReq">\
+									'+ url + ' ' + msgInnerItem.title + '</li>';
+                        });
+                        quickReplyTemplate += '<li ' + msg_data + ' class=" ' + msg_class + '"> \
+								<div class="buttonTmplContent"> \
+                                '+ msg_created_html + ' \
+                                '+ msg_icon_html + ' \
+								<ul class="buttonTmplContentBox">\
+									<li class="buttonTmplContentHeading">'+ msg_html + '</li>\
+									'+ inner_html + ' \
+								</ul>\
+								</div>\
+						</li>';
+                    }
+                });
+            }
+            return quickReplyTemplate;
+        }
+        else if (tempType === "templatelist") {
+            var listTemplate = '';
+            if (tempData.message) {
+                tempData.message.forEach(function (msgItem) {
+                    if (msgItem.component && msgItem.component.type === "template") {
+                        var msg_data = '';
+                        var msg_class = '';
+                        var msg_icon_html = '';
+                        var msg_created_html = '';
+                        var msg_html = '';
+                        var inner_html = '', lastButton = '', count = 0;
+                        if (tempData.type !== "bot_response") {
+                            msg_data = 'id = "msg_' + msgItem.clientMessageId + '"';
+                            msg_class = 'fromCurrentUser';
+
+                        }
+                        else {
+                            msg_class = 'fromOtherUsers';
+                        }
+
+                        if (tempData.icon) {
+                            msg_class += ' with-icon';
+                            msg_icon_html = '<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(' + tempData.icon + ')"></div> </div>';
+                        }
+
+                        if (tempData.createdOn) {
+                            msg_created_html = '<div class="extra-info">' + helpers.formatDate(tempData.createdOn) + '</div>';
+                        }
+                        if (msgItem.component.payload && msgItem.component.payload.heading) {
+                            if (tempData.type !== "bot_response") {
+                                msg_html = '<li class="listTmplContentHeading">' + helpers.convertMDtoHTML(msgItem.component.payload.heading, 'user') + '</li>';
+                            } else {
+                                msg_html = '<li class="listTmplContentHeading">' + helpers.convertMDtoHTML(msgItem.component.payload.heading, 'bot') + '</li>';
+                            }
+                        }
+                        msgItem.component.payload.elements.forEach(function (msgInnerItem) {
+                            if (msgItem.component.payload.buttons && count < 3) {
+                                count++;
+                                var value = '', url = '', type = '';
+                                if (msgInnerItem.buttons && msgInnerItem.buttons[0].payload) {
+                                    value = 'value="' + msgInnerItem.buttons[0].payload + '"';
+                                } else if (msgInnerItem.buttons) {
+                                    value = 'value="' + msgInnerItem.buttons[0].title + '"';
+                                }
+                                if (msgInnerItem.buttons && msgInnerItem.buttons[0].url) {
+                                    url = 'url="' + msgInnerItem.buttons[0].url + '"';
+                                }
+                                if (msgInnerItem.buttons && msgInnerItem.buttons[0].type) {
+                                    type = 'type="' + msgInnerItem.buttons[0].type + '"';
+                                }
+                                inner_html = inner_html + '<li class="listTmplContentChild">';
+                                if (msgInnerItem.image_url) {
+                                    inner_html = inner_html + '<div class="listRightContent"><img src="' + msgInnerItem.image_url + '" /></div>';
+                                }
+                                inner_html = inner_html + '<div class="listLeftContent"><div class="listItemTitle">' + msgInnerItem.title + '</div>';
+                                if (msgInnerItem.subtitle) {
+                                    inner_html = inner_html + '<div class="listItemSubtitle">' + msgInnerItem.subtitle + '</div>';
+                                }
+                                if (msgInnerItem.default_action && msgInnerItem.default_action.url) {
+                                    inner_html = inner_html + '<div class="listItemPath sendClickReq" type="url" url="' + msgInnerItem.default_action.url + '">' + msgInnerItem.default_action.url + '</div>';
+                                }
+                                if (msgInnerItem.buttons) {
+                                    inner_html = inner_html + '<div><button ' + value + ' ' + type + ' ' + url + ' class="buyBtn sendClickReq">Buy</button></div>';
+                                }
+                                inner_html = inner_html + '</div>';
+
+                                inner_html = inner_html + '</li>';
+                            } else {
+                                count++;
+                                var value = '', url = '', type = '';
+                                if (msgInnerItem.buttons && msgInnerItem.buttons[0].payload) {
+                                    value = 'value="' + msgInnerItem.buttons[0].payload + '"';
+                                } else if (msgInnerItem.buttons) {
+                                    value = 'value="' + msgInnerItem.buttons[0].title + '"';
+                                }
+                                if (msgInnerItem.buttons && msgInnerItem.buttons[0].url) {
+                                    url = 'url="' + msgInnerItem.buttons[0].url + '"';
+                                }
+                                if (msgInnerItem.buttons && msgInnerItem.buttons[0].type) {
+                                    type = 'type="' + msgInnerItem.buttons[0].type + '"';
+                                }
+                                inner_html = inner_html + '<li class="listTmplContentChild">';
+                                if (msgInnerItem.image_url) {
+                                    inner_html = inner_html + '<div class="listRightContent"><img src="' + msgInnerItem.image_url + '" /></div>';
+                                }
+                                inner_html = inner_html + '<div class="listLeftContent"><div class="listItemTitle">' + msgInnerItem.title + '</div>';
+                                if (msgInnerItem.subtitle) {
+                                    inner_html = inner_html + '<div class="listItemSubtitle">' + msgInnerItem.subtitle + '</div>';
+                                }
+                                if (msgInnerItem.default_action && msgInnerItem.default_action.url) {
+                                    inner_html = inner_html + '<div class="listItemPath sendClickReq" type="url" url="' + msgInnerItem.default_action.url + '">' + msgInnerItem.default_action.url + '</div>';
+                                }
+                                if (msgInnerItem.buttons) {
+                                    inner_html = inner_html + '<div><button ' + value + ' ' + type + ' ' + url + ' class="buyBtn sendClickReq">Buy</button></div>';
+                                }
+                                inner_html = inner_html + '</div>';
+
+                                inner_html = inner_html + '</li>';
+                            }
+                        });
+                        if (msgItem.component.payload.elements && msgItem.component.payload.buttons && msgItem.component.payload.elements.length > 3) {
+                            msgItem.component.payload.buttons.forEach(function (msgLastItem) {
+                                var url = '', type = '', value = '';
+                                if (msgLastItem.payload) {
+                                    value = 'value="' + msgLastItem.payload + '"';
+                                } else {
+                                    value = 'value="' + msgLastItem.title + '"';
+                                }
+                                if (msgLastItem.url) {
+                                    url = 'url="' + msgLastItem.url + '"';
+                                }
+                                if (msgLastItem.type) {
+                                    type = 'type="' + msgLastItem.type + '"';
+                                }
+                                lastButton = '<li class="viewMoreList"> \
+									<button '+ value + ' ' + type + ' ' + url + ' class="viewMore sendClickReq">' + msgLastItem.title + '</button> \
+								</li>';
+                            });
+                        }
+                        listTemplate += '<li ' + msg_data + ' class=" ' + msg_class + '"> \
+								<div class="listTmplContent"> \
+                                '+ msg_created_html + ' \
+                                '+ msg_icon_html + ' \
+								<ul class="listTmplContentBox">\
+									'+ msg_html + ' \
+									'+ inner_html + ' \
+									'+ lastButton + ' \
+								</ul>\
+								</div>\
+						</li>';
+                    }
+                });
+            }
             return listTemplate;
-		}
-		else {
-			var _inputField = '<div class="chatInputBox" contenteditable="true" placeholder="'+ tempData.botMessages.message +'"></div>';
-			if (tempData.userAgentIE) {
-				_inputField = '<div class="chatInputBox" contenteditable="true" ></div> \
+        }
+        else {
+            var _inputField = '<div class="chatInputBox" contenteditable="true" placeholder="' + tempData.botMessages.message + '"></div>';
+            if (tempData.userAgentIE) {
+                _inputField = '<div class="chatInputBox" contenteditable="true" ></div> \
 								<div class="chatInputBoxPlaceholder">' + tempData.botMessages.message + '</div>';
-			}
-			var chatWindowTemplate = '<div class="kore-chat-window" id="koreChatWindow"> \
+            }
+            var chatWindowTemplate = '<div class="kore-chat-window" id="koreChatWindow"> \
 									<div class="minimized-title"></div> \
 									<div class="minimized"><span class="messages"></span></div> \
 					<div class="kore-chat-header"> \
-						<div class="header-title" title="'+ tempData.chatTitle +'">'+ tempData.chatTitle +'</div> \
+						<div class="header-title" title="'+ tempData.chatTitle + '">' + tempData.chatTitle + '</div> \
 						<div class="chat-box-controls"> \
 													<button class="reload-btn" title="Reconnect"><span></span></button> \
 							<button class="minimize-btn" title="Minimize">&minus;</button> \
@@ -1436,93 +1400,92 @@ function koreBotChat() {
             return chatWindowTemplate;
         }
     };
-    
+
     var chatInitialize;
-    function insertHtmlData (_txtBox, _html) {
-		var _input = _txtBox;
-		sel = window.getSelection();
-		if (sel.rangeCount > 0) {
-			range = sel.getRangeAt(0);
-		}
-		prevRange = prevRange ? prevRange : range;
-		if (prevRange) {
-			node = document.createElement("span");
-			prevRange.insertNode(node);
-			var _span = document.createElement("span");
-			_span.innerHTML = _html;
-			prevRange.insertNode(_span);
-			prevRange.setEndAfter(node);
-			prevRange.setStartAfter(node);
-			prevRange.collapse(false);
-			sel = window.getSelection();
-			sel.removeAllRanges();
-			sel.addRange(prevRange);
-			var focused = document.activeElement;
-			if (focused && !focused.className =="chatInputBox") {
-				_input.focus();
-			}
-			return _input;
-		} else {
-			_input.appendChild(html);
-		}
-	}
-	function setCaretEnd (_this){
-		var sel;
-		if (_this.item(0).innerText.length) {
-			var range = document.createRange();
-			range.selectNodeContents(_this[0]);
-			range.collapse(false);
-			var sel1 = window.getSelection();
-			sel1.removeAllRanges();
-			sel1.addRange(range);
-			prevRange = range;
-		} else {
-			prevRange = false;
-		}
-	}
-    function strSplit(str){
+    function insertHtmlData(_txtBox, _html) {
+        var _input = _txtBox;
+        sel = window.getSelection();
+        if (sel.rangeCount > 0) {
+            range = sel.getRangeAt(0);
+        }
+        prevRange = prevRange ? prevRange : range;
+        if (prevRange) {
+            node = document.createElement("span");
+            prevRange.insertNode(node);
+            var _span = document.createElement("span");
+            _span.innerHTML = _html;
+            prevRange.insertNode(_span);
+            prevRange.setEndAfter(node);
+            prevRange.setStartAfter(node);
+            prevRange.collapse(false);
+            sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(prevRange);
+            var focused = document.activeElement;
+            if (focused && !focused.className == "chatInputBox") {
+                _input.focus();
+            }
+            return _input;
+        } else {
+            _input.appendChild(html);
+        }
+    }
+    function setCaretEnd(_this) {
+        var sel;
+        if (_this.item(0).innerText.length) {
+            var range = document.createRange();
+            range.selectNodeContents(_this[0]);
+            range.collapse(false);
+            var sel1 = window.getSelection();
+            sel1.removeAllRanges();
+            sel1.addRange(range);
+            prevRange = range;
+        } else {
+            prevRange = false;
+        }
+    }
+    function strSplit(str) {
         return (str.split('.'));
     }
-	
-    window.onbeforeunload = function(){
+
+    window.onbeforeunload = function () {
         if (chatInitialize && document.querySelector('.kore-chat-window') !== null) {
             chatInitialize.destroy();
             return null;
         }
     }
-	
-	this.addListener = function(evtName, trgFunc) {
-		if (!_eventQueue) {
-			_eventQueue = {};
-		}
-		if (evtName && evtName.trim().length > 0) {
-			if (!_eventQueue[evtName]) {
-				_eventQueue[evtName] = [];
-			}
-			if (typeof trgFunc === "function") {
-				_eventQueue[evtName].push(trgFunc);
-			}
-		}
-	}
-	this.removeListener = function(evtName) {
-		if (_eventQueue && _eventQueue[evtName]) {
-			delete _eventQueue[evtName];
-		}
-	}
-	
-	this.callListener = function(evtName, data) {
-		if (_eventQueue && _eventQueue[evtName]) {
-			for(var i = 0; i < _eventQueue[evtName].length; i++) {
-				if (typeof _eventQueue[evtName][i] === "function") {
-					_eventQueue[evtName][i].call(this, data);
-				}
-			}
-		}
-	}
-	
+
+    this.addListener = function (evtName, trgFunc) {
+        if (!_eventQueue) {
+            _eventQueue = {};
+        }
+        if (evtName && evtName.trim().length > 0) {
+            if (!_eventQueue[evtName]) {
+                _eventQueue[evtName] = [];
+            }
+            if (typeof trgFunc === "function") {
+                _eventQueue[evtName].push(trgFunc);
+            }
+        }
+    }
+    this.removeListener = function (evtName) {
+        if (_eventQueue && _eventQueue[evtName]) {
+            delete _eventQueue[evtName];
+        }
+    }
+
+    this.callListener = function (evtName, data) {
+        if (_eventQueue && _eventQueue[evtName]) {
+            for (var i = 0; i < _eventQueue[evtName].length; i++) {
+                if (typeof _eventQueue[evtName][i] === "function") {
+                    _eventQueue[evtName][i].call(this, data);
+                }
+            }
+        }
+    }
+
     this.show = function (cfg) {
-        if (document.querySelector('.kore-chat-window') !== null)
-        {
+        if (document.querySelector('.kore-chat-window') !== null) {
             return false;
         }
         chatInitialize = new chatWindow(cfg);
@@ -1530,22 +1493,22 @@ function koreBotChat() {
     };
     this.destroy = function () {
         if (chatInitialize && chatInitialize.destroy) {
-			_eventQueue = {};
+            _eventQueue = {};
             chatInitialize.destroy();
         }
     };
     this.initToken = function (options) {
-        assertionToken = "bearer "+options.accessToken;
+        assertionToken = "bearer " + options.accessToken;
     };
     this.showError = function (response) {
         try {
             response = JSON.parse(response);
             if (response.errors && response.errors[0]) {
-				document.getElementsByClassName('errorMsgBlock')[0].innerText = response.errors[0].msg;
+                document.getElementsByClassName('errorMsgBlock')[0].innerText = response.errors[0].msg;
                 addClass(document.getElementsByClassName('errorMsgBlock')[0], 'showError');
             }
-        } catch(e) {
-			document.getElementsByClassName('errorMsgBlock')[0].innerText = response;
+        } catch (e) {
+            document.getElementsByClassName('errorMsgBlock')[0].innerText = response;
             addClass(document.getElementsByClassName('errorMsgBlock')[0], 'showError');
         }
     }
@@ -1557,7 +1520,7 @@ function koreBotChat() {
         if (navigator.getUserMedia) {
             navigator.getUserMedia({
                 audio: true
-            }, success, function(e) {
+            }, success, function (e) {
                 alert('Error capturing audio');
                 return;
             });
@@ -1656,22 +1619,22 @@ function koreBotChat() {
         var url = serv_url + '?' + CONTENT_TYPE + '&email=' + userEmail;
         var _connection = new WebSocket(url);
         // User is connected to server
-        _connection.onopen = function(e) {
+        _connection.onopen = function (e) {
             console.log('User connected');
             _user_connection = true;
             rec.record();
             document.getElementsByClassName('recordingMicrophone')[0].style.display = 'block';
             document.getElementsByClassName('notRecordingMicrophone')[0].style.display = 'none';
             console.log('recording...');
-            intervalKey = setInterval(function() {
-                rec.export16kMono(function(blob) {
+            intervalKey = setInterval(function () {
+                rec.export16kMono(function (blob) {
                     socketSend(blob);
                     rec.clear();
                 }, 'audio/x-raw');
             }, INTERVAL);
         };
         // On receving message from server
-        _connection.onmessage = function(msg) {
+        _connection.onmessage = function (msg) {
             var data = msg.data;
             //console.log(data);
             if (data instanceof Object && !(data instanceof Blob)) {
@@ -1683,7 +1646,7 @@ function koreBotChat() {
                 if (res.status === 0) {
                     if (res.result.final) {
                         var final_result = res.result.hypotheses[0].transcript;
-                        document.getElementsByClassName('chatInputBox')[0].innerHTML  = document.getElementsByClassName('chatInputBox')[0].innerHTML + ' '+ final_result;
+                        document.getElementsByClassName('chatInputBox')[0].innerHTML = document.getElementsByClassName('chatInputBox')[0].innerHTML + ' ' + final_result;
                     } else {
                         //document.getElementsByClassName('chatInputBox')[0].textContent = res.result.hypotheses[0].transcript;
                         console.log('Not final: ', res.result.hypotheses[0].transcript);
@@ -1694,12 +1657,12 @@ function koreBotChat() {
             }
         };
         // If server is closed
-        _connection.onclose = function(e) {
+        _connection.onclose = function (e) {
             console.log('Server is closed');
             console.log(e);
         };
         // If there is an error while sending or receving data
-        _connection.onerror = function(e) {
+        _connection.onerror = function (e) {
             console.log("Error : ", e);
         };
         return _connection;
@@ -1713,7 +1676,7 @@ function koreBotChat() {
         if (rec) {
             rec.stop();
             console.log('stopped recording..');
-            rec.export16kMono(function(blob) {
+            rec.export16kMono(function (blob) {
                 socketSend(blob);
                 rec.clear();
                 //_connection.close();
@@ -1725,14 +1688,14 @@ function koreBotChat() {
         }
     };
 
-    window.onbeforeunload = function(e) {
+    window.onbeforeunload = function (e) {
         cancel();
     };
 
     /*************************************  Microphone code end here ******************************************/
 
     /*******************************    Function for Attachment ***********************************************/
-    function cnvertFiles(_this,_file, customFileName) {   
+    function cnvertFiles(_this, _file, customFileName) {
         var _scope = _this, recState = {};
         if (_file && _file.size) {
             if (_file.size > filetypes.file.limit.size) {
@@ -1743,7 +1706,7 @@ function koreBotChat() {
         if (_file && customFileName) {
             _file.name = customFileName;
         }
-        if (_file && (_file.name|| customFileName)) {
+        if (_file && (_file.name || customFileName)) {
             var _fileName = customFileName || _file.name;
             var fileType = _fileName.split('.').pop().toLowerCase();
             recState.name = _fileName;
@@ -1769,53 +1732,53 @@ function koreBotChat() {
                     //read duration;
                     var rd = new FileReader();
                     rd.onload = function (e) {
-                        var blob = new Blob([e.target.result], {type: _file.type}), // create a blob of buffer
-                                url = (URL || webkitURL).createObjectURL(blob), // create o-URL of blob
-                                video = document.createElement(recState.type);              // create video element
+                        var blob = new Blob([e.target.result], { type: _file.type }), // create a blob of buffer
+                            url = (URL || webkitURL).createObjectURL(blob), // create o-URL of blob
+                            video = document.createElement(recState.type);              // create video element
                         video.preload = "metadata";                               // preload setting
                         if (video.readyState === 0) {
                             video.addEventListener("loadedmetadata", function (evt) {     // whenshow duration
                                 var _dur = Math.round(evt.target.duration);
-                                if(recState.type === "audio"){
+                                if (recState.type === "audio") {
                                     (URL || webkitURL).revokeObjectURL(url); //fallback for webkit
-                                    getFileToken(_this,_file, recState);
+                                    getFileToken(_this, _file, recState);
                                 }
                             });
-                            if(recState.type  === "video"){
-                                video.addEventListener('loadeddata', function(e){
+                            if (recState.type === "video") {
+                                video.addEventListener('loadeddata', function (e) {
                                     recState.resulttype = getDataURL(video);
                                     (URL || webkitURL).revokeObjectURL(url); //fallback for webkit
-                                    getFileToken(_this,_file, recState);
+                                    getFileToken(_this, _file, recState);
                                 });
                             }
                             video.src = url;                                          // start video load
                         } else {
                             recState.duration = '';
                             (URL || webkitURL).revokeObjectURL(url); //fallback for webkit
-                            getFileToken(_this,_file, recState);
+                            getFileToken(_this, _file, recState);
                         }
                     };
                     rd.readAsArrayBuffer(_file);
                 } else {
-                    if(_file.type.indexOf('image') !== (-1)) {
+                    if (_file.type.indexOf('image') !== (-1)) {
                         var imgRd = new FileReader();
                         imgRd.onload = function (e) {
-                            var blob = new Blob([e.target.result], {type: _file.type}), // create a blob of buffer
-                            url = (URL || webkitURL).createObjectURL(blob); // create o-URL of blob
+                            var blob = new Blob([e.target.result], { type: _file.type }), // create a blob of buffer
+                                url = (URL || webkitURL).createObjectURL(blob); // create o-URL of blob
                             var img = new Image();
                             img.src = url;
-                            img.onload = function(){
+                            img.onload = function () {
                                 recState.resulttype = getDataURL(img);
-                                getFileToken(_this,_file, recState);
+                                getFileToken(_this, _file, recState);
                             };
                         };
                         imgRd.readAsArrayBuffer(_file);
                     }
-                    else{
+                    else {
                         getFileToken(_this, _file, recState);
                     }
                 }
-            } else{
+            } else {
                 alert("SDK not supported this type of file");
             }
         }
@@ -1829,7 +1792,7 @@ function koreBotChat() {
         });
         return _pattern;
     };
-    function getDataURL (src){
+    function getDataURL(src) {
         var thecanvas = document.createElement("canvas");
         thecanvas.height = 180;
         thecanvas.width = 320;
@@ -1838,7 +1801,7 @@ function koreBotChat() {
         var dataURL = thecanvas.toDataURL();
         return dataURL;
     };
-    function acceptAndUploadFile  (_this,file, recState) {
+    function acceptAndUploadFile(_this, file, recState) {
         var _scope = _this, ele;
         globalRecState = recState;
         var uc = getfileuploadConf(recState);
@@ -1846,9 +1809,9 @@ function koreBotChat() {
         uc.chunkSize = appConsts.CHUNK_SIZE;
         uc.file = file;
         if (uc.chunkUpload) {
-            notifyFlie(_scope,recState);
+            notifyFlie(_scope, recState);
             ele = document.getElementsByClassName('chatInputBox')[0];
-            initiateRcorder(_scope,recState, ele);
+            initiateRcorder(_scope, recState, ele);
             uploader(uc);
         } else {
             var reader = new FileReader();
@@ -1858,34 +1821,34 @@ function koreBotChat() {
                     var relt = reader.result;
                     var resultGet = converted;
                     recState.resulttype = resultGet;
-                    acceptFileRecording(_scope,recState, ele);
+                    acceptFileRecording(_scope, recState, ele);
                 }
             };
             reader.readAsDataURL(file);
         }
     };
-    function getFileToken(_obj, _file, recState){
-        var xhttp=new XMLHttpRequest();
-        xhttp.onreadystatechange = function(response) {
+    function getFileToken(_obj, _file, recState) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function (response) {
             if (this.readyState == 4 && this.status == 200) {
                 var resposeArr = JSON.parse(this.response);
                 fileToken = resposeArr.fileToken;
                 acceptAndUploadFile(_obj, _file, recState);
             }
-        };        
-        xhttp.open("POST", koreAPIUrl+"1.1/attachment/file/token", true);
+        };
+        xhttp.open("POST", koreAPIUrl + "1.1/attachment/file/token", true);
         xhttp.setRequestHeader('Content-Type', 'json');
-        xhttp.setRequestHeader('Authorization', (bearerToken?bearerToken:assertionToken));
+        xhttp.setRequestHeader('Authorization', (bearerToken ? bearerToken : assertionToken));
         xhttp.send();
     }
-    function getfileuploadConf (_recState) {
+    function getfileuploadConf(_recState) {
         appConsts.UPLOAD = {
-            "FILE_ENDPOINT": koreAPIUrl+"1.1/attachment/file",
-            "FILE_TOKEN_ENDPOINT": koreAPIUrl+"1.1/attachment/file/token",
-            "FILE_CHUNK_ENDPOINT": koreAPIUrl+"1.1/attachment/file/:fileID/chunk"       
+            "FILE_ENDPOINT": koreAPIUrl + "1.1/attachment/file",
+            "FILE_TOKEN_ENDPOINT": koreAPIUrl + "1.1/attachment/file/token",
+            "FILE_CHUNK_ENDPOINT": koreAPIUrl + "1.1/attachment/file/:fileID/chunk"
         }
         _accessToke = "bearer " + accessToken;
-        _uploadConfg = {};        
+        _uploadConfg = {};
         _uploadConfg.url = appConsts.UPLOAD.FILE_ENDPOINT.replace(':fileID', fileToken);
         _uploadConfg.tokenUrl = appConsts.UPLOAD.FILE_TOKEN_ENDPOINT;
         _uploadConfg.chunkUrl = appConsts.UPLOAD.FILE_CHUNK_ENDPOINT.replace(':fileID', fileToken);
@@ -1901,7 +1864,7 @@ function koreBotChat() {
         };
         return _uploadConfg;
     };
-    function notifyFlie (_this,_recState, _tofileId) {
+    function notifyFlie(_this, _recState, _tofileId) {
         var _this = _this;
         var _data = {};
         _data.meta = {
@@ -1919,9 +1882,9 @@ function koreBotChat() {
         if (_recState.componentSize) {
             _data.values.componentSize = _recState.componentSize;
         }
-        onComponentReady(_this,_data);
+        onComponentReady(_this, _data);
     };
-    function initiateRcorder (_this,_recState, ele) {
+    function initiateRcorder(_this, _recState, ele) {
         var _scope = _this;
         ele = ele || _scope.ele;
         ele.addEventListener('success.ke.uploader', function (e) {
@@ -1930,7 +1893,7 @@ function koreBotChat() {
         ele.addEventListener('progress.ke.uploader', onUploadProgress);
         ele.addEventListener('error.ke.uploader', onUploadError);
     };
-    function onFileToUploaded (_this,evt, _recState) {
+    function onFileToUploaded(_this, evt, _recState) {
         var _this = _this;
         var _data = evt.params;
         if (!_data || !_data.fileId) {
@@ -1939,36 +1902,36 @@ function koreBotChat() {
         }
         if (_recState.mediaName) {
             var _tofileId = _data.fileId;
-            notifyfileCmpntRdy(_this,_recState, _tofileId);
+            notifyfileCmpntRdy(_this, _recState, _tofileId);
         }
     };
 
-    function onUploadProgress (_this,evt) {
+    function onUploadProgress(_this, evt) {
 
     };
-    function onUploadError (_this,evt, _recState) {
+    function onUploadError(_this, evt, _recState) {
         var _scope = _this;
         _recfileLisnr.onError({
             code: 'UPLOAD_FAILED'
         });
         _scope.removeCmpt(_recState);
     };
-    function onError () {
+    function onError() {
         alert("Failed to upload content. Try again");
         attachmentInfo = {};
         document.getElementsByClassName('attachment').innerHTML = '';
-        fileUploaderCounter  = 0;
+        fileUploaderCounter = 0;
     };
-    function onComponentReady (_this,data) {
+    function onComponentReady(_this, data) {
         var _this = _this,
-                _src,
-                _imgCntr, _img, base64Matcher, http,
-                _cmptVal, _cmpt='';
+            _src,
+            _imgCntr, _img, base64Matcher, http,
+            _cmptVal, _cmpt = '';
         if (!_cmpt) {
             _cmpt = document.createElement('div');
-            _cmpt.setAttribute('class','msgCmpt ' + data.values.componentType + ' ' + data.values.componentId);
-            _cmpt.setAttribute('data-html','true');
-            
+            _cmpt.setAttribute('class', 'msgCmpt ' + data.values.componentType + ' ' + data.values.componentId);
+            _cmpt.setAttribute('data-html', 'true');
+
             if (!data.values.componentFileId && data.values.componentType !== 'contact' && data.values.componentType !== 'location' && data.values.componentType !== 'filelink' && data.values.componentType !== 'alert' && data.values.componentType !== 'email') {
                 _cmpt.innerHTML = '<div class="upldIndc"></div>';
             }
@@ -1980,38 +1943,38 @@ function koreBotChat() {
                     fileType = data.values.componentData.filename.split('.').pop().toLowerCase();
                 }
                 if (fileType === 'xls' || fileType === 'xlsx') {
-                    _cmpt.innerHTML +='<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_excel"></span></div>';                    
-                    _cmpt.innerHTML +='<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
+                    _cmpt.innerHTML += '<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_excel"></span></div>';
+                    _cmpt.innerHTML += '<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
                 } else if (fileType === 'docx' || fileType === 'doc') {
-                    _cmpt.innerHTML +='<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_word"></span></div>';
-                    _cmpt.innerHTML +='<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
-                }                 
-                else if (fileType === 'pdf') {
-                    _cmpt.innerHTML +='<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_pdf"></span></div>';
-                    _cmpt.innerHTML +='<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
-                } else if (fileType === 'ppsx' || fileType === 'pptx' || fileType === 'ppt') {
-                    _cmpt.innerHTML +='<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_ppt"></span></div>';
-                    _cmpt.innerHTML +='<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
-                } else if (fileType === 'zip' || fileType === 'rar') {
-                    _cmpt.innerHTML +='<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_zip"></span></div>';
-                    _cmpt.innerHTML +='<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
-                } else {
-                    _cmpt.innerHTML +='<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_other_doc"></span></div>';
-                    _cmpt.innerHTML +='<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
+                    _cmpt.innerHTML += '<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_word"></span></div>';
+                    _cmpt.innerHTML += '<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
                 }
-            } 
+                else if (fileType === 'pdf') {
+                    _cmpt.innerHTML += '<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_pdf"></span></div>';
+                    _cmpt.innerHTML += '<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
+                } else if (fileType === 'ppsx' || fileType === 'pptx' || fileType === 'ppt') {
+                    _cmpt.innerHTML += '<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_ppt"></span></div>';
+                    _cmpt.innerHTML += '<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
+                } else if (fileType === 'zip' || fileType === 'rar') {
+                    _cmpt.innerHTML += '<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_zip"></span></div>';
+                    _cmpt.innerHTML += '<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
+                } else {
+                    _cmpt.innerHTML += '<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_other_doc"></span></div>';
+                    _cmpt.innerHTML += '<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
+                }
+            }
             if (data.values.componentType === 'image') {
-                _cmpt.innerHTML +='<div class="uploadedFileIcon"><span class="icon cf-icon icon-photos_active"></span></div>';
-                _cmpt.innerHTML +='<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
+                _cmpt.innerHTML += '<div class="uploadedFileIcon"><span class="icon cf-icon icon-photos_active"></span></div>';
+                _cmpt.innerHTML += '<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
             }
             if (data.values.componentType === 'audio') {
-                _cmpt.innerHTML +='<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_audio"></span></div>';
-                _cmpt.innerHTML +='<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
+                _cmpt.innerHTML += '<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_audio"></span></div>';
+                _cmpt.innerHTML += '<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
             }
             if (data.values.componentType === 'video') {
-                _cmpt.innerHTML +='<div class="uploadedFileIcon"><span class="icon cf-icon icon-video_active"></span></div>';
-                _cmpt.innerHTML +='<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
-            } 
+                _cmpt.innerHTML += '<div class="uploadedFileIcon"><span class="icon cf-icon icon-video_active"></span></div>';
+                _cmpt.innerHTML += '<div class="uploadedFileName">' + data.values.componentData.filename + '</div>';
+            }
         } else {
             _cmptVal = _cmpt.data('value');
             _cmptVal.componentFileId = data.values.componentFileId;
@@ -2024,27 +1987,27 @@ function koreBotChat() {
                 data.values.componentLength = _cmptVal.componentLength; //_cmptVal.duration;
             }
         }
-        _cmpt.innerHTML +='<div class="removeAttachment"><span>&times;</span></div>';
-        if(!document.getElementsByClassName('attachment')[0].innerHTML.length){
-             document.getElementsByClassName('attachment')[0].appendChild(_cmpt);
+        _cmpt.innerHTML += '<div class="removeAttachment"><span>&times;</span></div>';
+        if (!document.getElementsByClassName('attachment')[0].innerHTML.length) {
+            document.getElementsByClassName('attachment')[0].appendChild(_cmpt);
             document.getElementsByClassName('chatInputBox')[0].focus();
             _removeAttachments = document.querySelector('.removeAttachment');
-            _removeAttachments.addEventListener('click',function () {
+            _removeAttachments.addEventListener('click', function () {
                 this.parentElement.remove();
                 attachmentInfo = {};
-                fileUploaderCounter  = 0;
+                fileUploaderCounter = 0;
                 document.getElementById("captureAttachmnts").value = "";
                 document.getElementsByClassName('kore-chat-window')[0].classList.remove('kore-chat-attachment');
             })
-        }       
+        }
         attachmentInfo.fileName = data.values.componentData.filename;
         attachmentInfo.fileType = data.values.componentType;
     };
-    function acceptFileRecording  (_this,_recState, ele) {
+    function acceptFileRecording(_this, _recState, ele) {
         var _scope = _this;
         var _uc = getfileuploadConf(_recState),
-                _imageCntn = _recState.resulttype;
-        notifyfileCmpntRdy(_scope,_recState);
+            _imageCntn = _recState.resulttype;
+        notifyfileCmpntRdy(_scope, _recState);
         _uc.data[_uc.fieldName] = {
             fileName: _recState.name,
             data: _imageCntn,
@@ -2057,10 +2020,10 @@ function koreBotChat() {
         };
         _uc.data.thumbnailExtension = "png";
         ele = document.getElementsByClassName('chatInputBox')[0];
-        initiateRcorder(_scope,_recState, ele);
+        initiateRcorder(_scope, _recState, ele);
         uploader(_uc);
     };
-    function notifyfileCmpntRdy (_this,_recState, _tofileId) {
+    function notifyfileCmpntRdy(_this, _recState, _tofileId) {
         var _this = _this;
         var _data = {};
         _data.meta = {
@@ -2075,7 +2038,7 @@ function koreBotChat() {
                 filename: _recState.name
             }
         };
-        onComponentReady(_this,_data);
+        onComponentReady(_this, _data);
     };
     /***************************************************** ke.uploader file code **********************************************/
     function MultipartData() {
@@ -2122,20 +2085,20 @@ function koreBotChat() {
         }
     }
     var _cls = Uploader.prototype;
-     _cls.events = {
+    _cls.events = {
         error: ('error.ke.uploader'),
         progressChange: ('progress.ke.uploader'),
         success: ('success.ke.uploader')
     };
-    function getConnection (_this) {
+    function getConnection(_this) {
         return new kfrm.net.HttpRequest();
     };
 
-    function loadListener (_this, evt) {
+    function loadListener(_this, evt) {
         _this.events = {
-            error: {'type':'error.ke.uploader'},
-            progressChange: {'type':'progress.ke.uploader'},
-            success: {'type':'success.ke.uploader'}
+            error: { 'type': 'error.ke.uploader' },
+            progressChange: { 'type': 'progress.ke.uploader' },
+            success: { 'type': 'success.ke.uploader' }
         };
         _this.events.success.params = JSON.parse(evt.target.response);
         attachmentInfo.fileId = _this.events.success.params.fileId;
@@ -2143,37 +2106,37 @@ function koreBotChat() {
         document.getElementsByClassName('upldIndc')[0].remove();
         document.getElementsByClassName('kore-chat-window')[0].classList.add('kore-chat-attachment');
         document.getElementsByClassName('chat-container')[0].scrollTop = document.getElementsByClassName('chat-container')[0].scrollHeight;
-        onFileToUploaded(_this, _this.events.success,globalRecState);
+        onFileToUploaded(_this, _this.events.success, globalRecState);
     };
 
-    function errorListener (_this,evt) {
+    function errorListener(_this, evt) {
         _this.events.error.params = evt;
         _this.$element.trigger(_this.events.error);
     };
 
-    function progressListener (_this,evt) {
+    function progressListener(_this, evt) {
     };
 
-    function setOptions (_this,opts) {
+    function setOptions(_this, opts) {
         _this.options = opts;
         return _this;
     };
 
-    function commitFile (_this) {
+    function commitFile(_this) {
         var _scope = _this,
-                _conc = getConnection(_this),
-                _mdat = new MultipartData();
+            _conc = getConnection(_this),
+            _mdat = new MultipartData();
         _conc.addEventListener('load', function (evt) {
             if (evt.target.status === 200) {
                 if (_scope.$element[0].parentElement) {
-                    loadListener(_scope,evt);
+                    loadListener(_scope, evt);
                 }
             } else {
-                errorListener(_scope,evt);
+                errorListener(_scope, evt);
             }
         }, false);
         _conc.addEventListener('error', function (evt) {
-            errorListener(_scope,evt);
+            errorListener(_scope, evt);
         }, false);
         _conc.withCredentials = false;
         _conc.open('PUT', _this.options.chunkUrl.replace(/\/chunk/, ''));
@@ -2194,10 +2157,10 @@ function koreBotChat() {
         _conc.send(_mdat.toString());
     };
 
-    function uploadChunk (_this) {
+    function uploadChunk(_this) {
         var _scope = _this,
-                _conc = getConnection(_this),
-                _mdat = new MultipartData();
+            _conc = getConnection(_this),
+            _mdat = new MultipartData();
         _conc.addEventListener('load', function (evt) {
             if (evt.target.status === 200) {
                 _scope.currChunk++;
@@ -2209,11 +2172,11 @@ function koreBotChat() {
                     initUploadChunk(_scope);
                 }
             } else {
-                errorListener(_scope,evt);
+                errorListener(_scope, evt);
             }
         }, false);
         _conc.addEventListener('error', function (evt) {
-            errorListener(_scope,evt);
+            errorListener(_scope, evt);
         }, false);
         _conc.withCredentials = false;
         _conc.open('POST', _this.options.chunkUrl);
@@ -2233,7 +2196,7 @@ function koreBotChat() {
         _conc.send(_mdat.toString());
     };
 
-    function initUploadChunk (_this) {
+    function initUploadChunk(_this) {
         var _scope = _this;
         var file = _scope.options.file;
         var start = _scope.options.chunkSize * (_scope.currChunk);
@@ -2248,17 +2211,17 @@ function koreBotChat() {
                     uploadChunk(_scope);
                 }
             } else {
-                errorListener(_scope,evt);
+                errorListener(_scope, evt);
             }
         };
         reader.readAsDataURL(blob);
     };
 
-    function startChunksUpload (_this) {
+    function startChunksUpload(_this) {
         var _scope = _this,
-                _conc = getConnection(_this);
+            _conc = getConnection(_this);
         _conc.addEventListener('error', function (evt) {
-            errorListener(_scope,evt);
+            errorListener(_scope, evt);
         }, false);
         _conc.addEventListener('load', function (evt) {
             if (evt.target.status === 200) {
@@ -2270,7 +2233,7 @@ function koreBotChat() {
                     initUploadChunk(_scope);
                 }
             } else {
-                errorListener(_scope,evt);
+                errorListener(_scope, evt);
             }
         }, false);
         _conc.withCredentials = false;
@@ -2282,22 +2245,22 @@ function koreBotChat() {
         }
         _conc.send();
     };
-    function startUpload (_this) {
+    function startUpload(_this) {
         var _scope = _this;
-                _conc = getConnection(_this),
-                _mdat = new MultipartData();
+        _conc = getConnection(_this),
+            _mdat = new MultipartData();
         if (_conc.upload && _conc.upload.addEventListener) {
             _conc.upload.addEventListener('progress', function (evt) {
-                progressListener(_scope,evt);
+                progressListener(_scope, evt);
             }, false);
         }
         _conc.addEventListener('load', function (evt) {
             if (_scope.$element[0].parentElement) {
-                loadListener(_scope,evt);
+                loadListener(_scope, evt);
             }
         }, false);
         _conc.addEventListener('error', function (evt) {
-            errorListener(_scope,evt);
+            errorListener(_scope, evt);
         }, false);
         _conc.withCredentials = false;
         _conc.open('POST', _this.options.url);
@@ -2316,13 +2279,13 @@ function koreBotChat() {
         _conc.send(_mdat.toString());
     };
 
-    function uploader (option) {
+    function uploader(option) {
         var _args = Array.prototype.slice.call(arguments, 1);
         var l = document.getElementsByClassName('chatInputBox').length;
-        for ( i = 0 ; i < l; i++ ) {
+        for (i = 0; i < l; i++) {
             var $this = document.getElementsByClassName('chatInputBox'),
-                    data = '';//$this.data('ke.uploader'),
-                    options = typeof option === 'object' && option;
+                data = '';//$this.data('ke.uploader'),
+            options = typeof option === 'object' && option;
 
             if (!data) {
                 Uploader($this, options);
@@ -2330,7 +2293,7 @@ function koreBotChat() {
                 if (typeof option === 'string' && data[option]) {
                     data[option].apply(data, _args);
                 } else if (options) {
-                    startUpload(setOptions(data,options));
+                    startUpload(setOptions(data, options));
                 }
             }
             return option && data[option] && data[option].apply(data, _args);
@@ -2346,7 +2309,7 @@ function koreBotChat() {
     /************************************************************************************************************************************************
     ********************************************** kony framework file ******************************************************************************
     ************************************************************************************************************************************************/
-    +function() {
+    +function () {
         function getHTTPConnecton() {
             var xhr = false;
             xhr = new XMLHttpRequest();
@@ -2367,7 +2330,7 @@ function koreBotChat() {
                 xhr.withCredentials = true;
             } catch (e) {
             }
-            xhr.onreadystatechange = function() {
+            xhr.onreadystatechange = function () {
                 return xhr.onReadyStateChange && xhr.onReadyStateChange.call(xhr);
             };
             return xhr;
@@ -2379,9 +2342,9 @@ function koreBotChat() {
     return {
         initToken: initToken,
         addListener: addListener,
-		removeListener: removeListener,
-		show: show,
+        removeListener: removeListener,
+        show: show,
         destroy: destroy,
-		showError: showError
+        showError: showError
     };
 }
