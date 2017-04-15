@@ -301,19 +301,26 @@ function koreBotChat() {
                     return match;
                 }
             }
-            var nextln = regEx.NEWLINE;
             //check for whether to linkify or not
+            var newStr = '', wrapper1;
             if (responseType === 'user') {
                 str = (str || '').replace(/onerror=/gi, 'abc-error=');
-                var newStr = '', wrapper1 = document.createElement('div');
+                wrapper1 = document.createElement('div');
                 newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
                 newStr = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;');
                 wrapper1.innerHTML = xssAttack(newStr);
-
-                if (wrapper1.getElementsByTagName('a')[0] && wrapper1.getElementsByTagName('a')[0].getAttribute('href')) {
+                if ($(wrapper1).find('a').attr('href')) {
                     str = newStr;
                 } else {
                     str = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(_regExForLink, linkreplacer);
+                }
+            } else {
+                wrapper1 = document.createElement('div');
+                wrapper1.innerHTML = xssAttack(str);
+                if ($(wrapper1).find('a').attr('href')) {
+                    str = wrapper1.innerHTML;
+                } else {
+                    str = wrapper1.innerHTML.replace(_regExForLink, linkreplacer);
                 }
             }
             str = helpers.checkMarkdowns(str);
