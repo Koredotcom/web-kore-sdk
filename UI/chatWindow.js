@@ -166,7 +166,7 @@ function koreBotChat() {
             regEx.NEWLINE = /\n/g;
             var _regExForLink = /((?:http\:\/\/|https\:\/\/|www\.)+\S*\.[a-z]{2,4}(?:(?:\.\S)*[^\,\s\.])*\/?)/gi;
 			var _regExForMarkdownLink = /\[([^\]]+)\](|\s)+\(([^\)])+\)/g;
-            var str = val;
+            var str = val || '';
             var mmntns = {};
             mmntns.sd = new RegExp(/^(d{1})[^d]|[^d](d{1})[^d]/g);
             mmntns.dd = new RegExp(/^(d{2})[^d]|[^d](d{2})[^d]/g);
@@ -296,7 +296,7 @@ function koreBotChat() {
             //check for whether to linkify or not
             var newStr = '', wrapper1;
             if (responseType === 'user') {
-                str = (str || '').replace(/onerror=/gi, 'abc-error=');
+                str = str.replace(/onerror=/gi, 'abc-error=');
                 wrapper1 = document.createElement('div');
                 newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
                 newStr = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -491,6 +491,9 @@ function koreBotChat() {
         bearerToken = cfg.botOptions.bearer;
         speechServerUrl = cfg.botOptions.speechSocketUrl;
         userIdentity = cfg.botOptions.userIdentity;
+        if (cfg.botOptions.recorderWorkerPath && cfg.botOptions.recorderWorkerPath.trim().length > 0) {
+            recorderWorkerPath = cfg.botOptions.recorderWorkerPath.trim();
+        }
         if (cfg && cfg.chatContainer) {
             delete cfg.chatContainer;
         }

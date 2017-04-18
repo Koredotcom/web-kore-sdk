@@ -521,6 +521,9 @@ function koreBotChat() {
         bearerToken = cfg.botOptions.bearer;
         speechServerUrl = cfg.botOptions.speechSocketUrl;
         userIdentity = cfg.botOptions.userIdentity;
+        if (cfg.botOptions.recorderWorkerPath && cfg.botOptions.recorderWorkerPath.trim().length > 0) {
+            recorderWorkerPath = cfg.botOptions.recorderWorkerPath.trim();
+        }
         if (cfg && cfg.chatContainer) {
             delete cfg.chatContainer;
         }
