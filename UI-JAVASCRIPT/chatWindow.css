@@ -640,6 +640,15 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
 .recordingMicrophone{
     display: none;/* when you need to show the mic icon then remove the notRecordingMicrophone from this mic is working fine then*/
 }
+.recordingMicrophone .recordingGif {
+    background-image: url(../libs/img/audio-record.gif);
+    background-size: 100% 100%;
+    width: 144px;
+    height: 10px;
+    background-position: 0 0;
+    border-radius: 0;
+    display: inline-block;
+}
 .sdkFooterIcon button{
     margin-bottom: -1px;
     background: none;

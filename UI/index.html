@@ -20,9 +20,9 @@
 			$(document).on("ready", function () {
 				function assertion(options, callback) {
 					var jsonData = {
-						"clientId": "",
+						"clientId": botOptions.clientId,
 						"clientSecret": "",
-						"identity": "",
+						"identity": "botOptions.userIdentity",
 						"aud": "",
 						"isAnonymous": false
 					};
@@ -49,12 +49,14 @@
 
 				var botOptions = {};
 				botOptions.logLevel = 'debug';
-				botOptions.koreAPIUrl = "https://bots.kore.com/api/";
-				botOptions.bearer = "bearer xyz-------------------";
-				botOptions.speechSocketUrl = 'wss://';
+				botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
+				//botOptions.bearer = "bearer xyz-------------------";
+				botOptions.speechSocketUrl = 'wss://speech.kore.ai/stream/kore/decode';
+				botOptions.userIdentity = 'userIdentity';// Provide users email id here
+				botOptions.recorderWorkerPath = '../libs/recorderWorker.js';
 				botOptions.assertionFn = assertion;
 				botOptions.koreAnonymousFn = koreAnonymousFn;
-				botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // secure client-id
+				botOptions.clientId   = "cs-5a37bf24-fea0-4e6b-a816-f9602db08149"; // secure client-id
 				botOptions.botInfo = {name:"your bot name","_id":"bot_id"}; // bot name is case sensitive
 				
 				var chatConfig={
@@ -69,9 +71,11 @@
 			});
 		</script>
 	</head>
+
 	<body>
 		<div id="chatContainer">
 			<button class="openChatWindow">Open Chat Window</button>
 		</div>
 	</body>
+
 </html>

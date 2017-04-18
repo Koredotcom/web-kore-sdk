@@ -9,7 +9,7 @@ function koreBotChat() {
     var detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
 	var _eventQueue = {};
 	var prevRange, accessToken ,koreAPIUrl,fileToken,fileUploaderCounter = 0,bearerToken='', assertionToken='';
-    var speechServerUrl = '';
+    var speechServerUrl = '', userIdentity = '';
     /******************* Mic variable initilization *******************/
     var _exports = {},
     _template, _this = {};
@@ -489,7 +489,8 @@ function koreBotChat() {
         };
         koreAPIUrl = cfg.botOptions.koreAPIUrl;
         bearerToken = cfg.botOptions.bearer;
-        speechServerUrl = cfg.botOptions.SpeechSocketUrl;
+        speechServerUrl = cfg.botOptions.speechSocketUrl;
+        userIdentity = cfg.botOptions.userIdentity;
         if (cfg && cfg.chatContainer) {
             delete cfg.chatContainer;
         }
@@ -619,7 +620,11 @@ function koreBotChat() {
                     alert('Wait until file upload is not completed');
                     return;
                 }
+                if ($('.recordingMicrophone').is(':visible')) {
+                    $('.recordingMicrophone').trigger('click');
+                }
                 event.preventDefault();
+
                 me.sendMessage(_this,attachmentInfo);
                 return;
             }
@@ -629,6 +634,9 @@ function koreBotChat() {
         });        
         _chatContainer.off('click', '.recordingMicrophone').on('click', '.recordingMicrophone', function (event) {
             stop();
+            setTimeout(function () {
+                setCaretEnd(document.getElementsByClassName("chatInputBox"));
+            }, 350);
         });
         _chatContainer.off('click', '.attachmentBtn').on('click', '.attachmentBtn', function (event) {
             if(fileUploaderCounter == 1){
@@ -811,6 +819,12 @@ function koreBotChat() {
 					if (tempData.message[0].component && tempData.message[0].component.payload && tempData.message[0].component.payload.text) {
 						tempData.message[0].cInfo.body = tempData.message[0].component.payload.text;
 					}
+                    try {
+                        tempData.message[0].cInfo.body = decodeURIComponent(tempData.message[0].cInfo.body);
+                    } catch (e) {
+                        tempData.message[0].cInfo.body = tempData.message[0].cInfo.body || '';
+                    }
+                    tempData.message[0].cInfo.body = tempData.message[0].cInfo.body.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 				}
                 me.renderMessage(tempData);
             }
@@ -1019,7 +1033,7 @@ function koreBotChat() {
                 </button> \
                 <button class="recordingMicrophone"> \
                     <i class="fa fa-microphone fa-lg"></i> \
-                    <img src="../libs/img/audio-record.gif" style="height:10px;"> \
+                    <span class="recordingGif"></span> \
                 </button> \
                 <div id="textFromServer"></div> \
             </div> \
@@ -1463,8 +1477,7 @@ function koreBotChat() {
         window.ENABLE_MICROPHONE = true;
         window.SPEECH_SERVER_SOCKET_URL = speechServerUrl;
         var serv_url = window.SPEECH_SERVER_SOCKET_URL;
-        //var userEmail = 'rohan.singh@kore.com' | userModel.getUserInfo().emailId;
-        var userEmail = 'rohan.singh@kore.com';
+        var userEmail = userIdentity;
         window.WebSocket = window.WebSocket || window.MozWebSocket;
         var url = serv_url + '?' + CONTENT_TYPE + '&email=' + userEmail;
         var _connection = new WebSocket(url);
