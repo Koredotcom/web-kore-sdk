@@ -172,7 +172,7 @@ function koreBotChat() {
             regEx.NEWLINE = /\n/g;
             var _regExForLink = /((?:http\:\/\/|https\:\/\/|www\.)+\S*\.[a-z]{2,4}(?:(?:\.\S)*[^\,\s\.])*\/?)/gi;
             var _regExForMarkdownLink = /\[([^\]]+)\](|\s)+\(([^\)])+\)/g;
-            var str = val;
+            var str = val || '';
             var mmntns = {};
             mmntns.sd = new RegExp(/^(d{1})[^d]|[^d](d{1})[^d]/g);
             mmntns.dd = new RegExp(/^(d{2})[^d]|[^d](d{2})[^d]/g);
@@ -302,9 +302,14 @@ function koreBotChat() {
                 }
             }
             //check for whether to linkify or not
+            try {
+                str = decodeURIComponent(str);
+            } catch (e) {
+                str = str || '';
+            }
             var newStr = '', wrapper1;
             if (responseType === 'user') {
-                str = (str || '').replace(/onerror=/gi, 'abc-error=');
+                str = str.replace(/onerror=/gi, 'abc-error=');
                 wrapper1 = document.createElement('div');
                 newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
                 newStr = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -316,9 +321,16 @@ function koreBotChat() {
                 }
             } else {
                 wrapper1 = document.createElement('div');
+                str = str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
                 wrapper1.innerHTML = xssAttack(str);
                 if ($(wrapper1).find('a').attr('href')) {
-                    str = wrapper1.innerHTML;
+                    var linkArray = str.match(/<a[^>]*>([^<]+)<\/a>/g);
+                    for (var x = 0; x < linkArray.length; x++) {
+                        var _newLA = document.createElement('div');
+                        _newLA.innerHTML = linkArray[x];
+                        $(_newLA).find('a').attr('target', '_blank');
+                        str = str.replace(linkArray[x], _newLA.innerHTML);
+                    }
                 } else {
                     str = wrapper1.innerHTML.replace(_regExForLink, linkreplacer);
                 }
