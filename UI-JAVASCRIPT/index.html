@@ -22,9 +22,9 @@
 				// Client has to fill the claims and call the callback.
 				var xhr = new XMLHttpRequest();
 				var _params = {
-					"clientId": "",
+					"clientId": botOptions.clientId,
 					"clientSecret": "",
-					"identity": "",
+					"identity": botOptions.userIdentity,
 					"aud": "",
 					"isAnonymous": false
 				};
