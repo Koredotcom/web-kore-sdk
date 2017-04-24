@@ -54,7 +54,10 @@
     this.clear = function(){
       worker.postMessage({ command: 'clear' });
     }
-
+    this.destroy = function() {
+      worker.terminate();
+      console.log('Recorderworker terminated');
+    }
     this.getBuffer = function(cb) {
       currCallback = cb || config.callback;
       worker.postMessage({ command: 'getBuffer' })

@@ -9,7 +9,7 @@ function koreBotChat() {
     var detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
     var _eventQueue = {};
     var prevRange, accessToken, koreAPIUrl, fileToken, fileUploaderCounter = 0, bearerToken = '', assertionToken = '';
-    var speechServerUrl = '', userIdentity = '';
+    var speechServerUrl = '', userIdentity = '', isListening = false;
     /******************* Mic variable initilization *******************/
     var _exports = {},
         _template, _this = {};
@@ -503,6 +503,9 @@ function koreBotChat() {
         bearerToken = cfg.botOptions.bearer;
         speechServerUrl = cfg.botOptions.speechSocketUrl;
         userIdentity = cfg.botOptions.userIdentity;
+        if (cfg.botOptions.recorderWorkerPath && cfg.botOptions.recorderWorkerPath.trim().length > 0) {
+            recorderWorkerPath = cfg.botOptions.recorderWorkerPath.trim();
+        }
         if (cfg && cfg.chatContainer) {
             delete cfg.chatContainer;
         }
@@ -1416,6 +1419,7 @@ function koreBotChat() {
     }
 
     function success(e) {
+        isListening = true;
         mediaStream = e;
         var Context = window.AudioContext || window.webkitAudioContext;
         context = new Context();
@@ -1423,6 +1427,15 @@ function koreBotChat() {
         window.userSpeechAnalyser = context.createAnalyser();
         mediaStreamSource.connect(window.userSpeechAnalyser);
         console.log('Mediastream created');
+        if (_connection) {
+            _connection.close();
+            _connection = null;
+        }
+        if (rec) {
+            rec.stop();
+            rec.clear();
+            rec.destroy();
+        }
         rec = new Recorder(mediaStreamSource, {
             workerPath: recorderWorkerPath
         });
@@ -1510,7 +1523,7 @@ function koreBotChat() {
                 console.log('Got Blob');
             } else {
                 var res = JSON.parse(data);
-                if (res.status === 0) {
+                if (isListening && res.status === 0) {
                     if (res.result.final) {
                         var final_result = res.result.hypotheses[0].transcript;
                         $('.chatInputBox').html($('.chatInputBox').html() + ' ' + final_result);
@@ -1543,7 +1556,14 @@ function koreBotChat() {
 
         if (rec) {
             rec.stop();
+            isListening = false;
             console.log('stopped recording..');
+            if (_connection) {
+                _connection.close();
+                _connection = null;
+            }
+            rec.clear();
+            rec.destroy();
             rec.export16kMono(function (blob) {
                 socketSend(blob);
                 rec.clear();
