@@ -1588,14 +1588,14 @@ function koreBotChat() {
         window.userSpeechAnalyser = context.createAnalyser();
         mediaStreamSource.connect(window.userSpeechAnalyser);
         console.log('Mediastream created');
-        if (_connection) {
-            _connection.close();
-            _connection = null;
-        }
         if (rec) {
             rec.stop();
             rec.clear();
             rec.destroy();
+        }
+        if (_connection) {
+            _connection.close();
+            _connection = null;
         }
         rec = new Recorder(mediaStreamSource, {
             workerPath: recorderWorkerPath
@@ -1614,13 +1614,17 @@ function koreBotChat() {
         if (document.getElementsByClassName('notRecordingMicrophone')) {
             document.getElementsByClassName('notRecordingMicrophone')[0].style.display = 'block';
         }
-        if (rec) {
-            rec.stop();
-            rec.clear();
+        if (mediaStream !== null && mediaStream.getTracks()[0].enabled) {
+            var track = mediaStream.getTracks()[0];
+            track.stop();
         }
         if (_connection) {
             _connection.close();
             _connection = null;
+        }
+        if (rec) {
+            rec.stop();
+            rec.clear();
         }
     }
 
@@ -1701,6 +1705,7 @@ function koreBotChat() {
         _connection.onclose = function (e) {
             console.log('Server is closed');
             console.log(e);
+            cancel();
         };
         // If there is an error while sending or receving data
         _connection.onerror = function (e) {
@@ -1722,14 +1727,13 @@ function koreBotChat() {
                 _connection.close();
                 _connection = null;
             }
-            rec.clear();
-            rec.destroy();
             rec.export16kMono(function (blob) {
                 socketSend(blob);
                 rec.clear();
                 //_connection.close();
                 var track = mediaStream.getTracks()[0];
                 track.stop();
+                rec.destroy();
             }, 'audio/x-raw');
         } else {
             console.error('Recorder undefined');
