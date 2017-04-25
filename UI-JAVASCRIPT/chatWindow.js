@@ -9,7 +9,7 @@ function koreBotChat() {
     var detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
     var _eventQueue = {};
     var prevRange, accessToken, koreAPIUrl, fileToken, fileUploaderCounter = 0, _removeAttachments = '', globalRecState, bearerToken = '', assertionToken = '';
-    var speechServerUrl = '', userIdentity = '', isListening = false;
+    var speechServerUrl = '', userIdentity = '', isListening = false, isRecordingStarted = false;
     /******************* Mic variable initilization *******************/
     var _exports = {},
         _template, _this = {};
@@ -522,6 +522,7 @@ function koreBotChat() {
     }
 
     function chatWindow(cfg) {
+        isRecordingStarted = false;
         cfg.botOptions.test = false;
         this.config = {
             "chatTitle": "Kore Bot Chat",
@@ -1464,7 +1465,7 @@ function koreBotChat() {
     }
     function setCaretEnd(_this) {
         var sel;
-        if (_this.item(0).innerText.length) {
+        if (_this && _this.item(0) && _this.item(0).innerText.length) {
             var range = document.createRange();
             range.selectNodeContents(_this[0]);
             range.collapse(false);
@@ -1546,17 +1547,23 @@ function koreBotChat() {
     }
     /************************************* Microphone code **********************************************/
     function micEnable() {
+        if (isRecorderStarted) {
+            return;
+        }
         if (!navigator.getUserMedia) {
             navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
         }
         if (navigator.getUserMedia) {
+            isRecordingStarted = true;
             navigator.getUserMedia({
                 audio: true
             }, success, function (e) {
+                isRecordingStarted = false;
                 alert('Error capturing audio');
                 return;
             });
         } else {
+            isRecordingStarted = false;
             alert('getUserMedia is not supported in this browser.');
         }
     }
@@ -1564,6 +1571,7 @@ function koreBotChat() {
     function afterMicEnable() {
         if (navigator.getUserMedia) {
             if (!rec) {
+                isRecordingStarted = false;
                 console.error("Recorder undefined");
                 return;
             }
@@ -1573,6 +1581,7 @@ function koreBotChat() {
             try {
                 _connection = createSocket();
             } catch (e) {
+                isRecordingStarted = false;
                 console.log(e);
                 console.error('Web socket not supported in the browser');
             }
@@ -1588,14 +1597,15 @@ function koreBotChat() {
         window.userSpeechAnalyser = context.createAnalyser();
         mediaStreamSource.connect(window.userSpeechAnalyser);
         console.log('Mediastream created');
+        if (_connection) {
+            _connection.close();
+            _connection = null;
+        }
         if (rec) {
             rec.stop();
             rec.clear();
             rec.destroy();
-        }
-        if (_connection) {
-            _connection.close();
-            _connection = null;
+            rec = null;
         }
         rec = new Recorder(mediaStreamSource, {
             workerPath: recorderWorkerPath
@@ -1608,6 +1618,7 @@ function koreBotChat() {
     function cancel() {
         // Stop the regular sending of audio (if present) and disconnect microphone
         clearInterval(intervalKey);
+        isRecordingStarted = false;
         if (document.getElementsByClassName('recordingMicrophone')) {
             document.getElementsByClassName('recordingMicrophone')[0].style.display = 'none';
         }
@@ -1645,9 +1656,8 @@ function koreBotChat() {
                     //console.log('send tag: '+ item);
                 }
             } else {
+                isRecordingStarted = false;
                 console.error('Web Socket readyState != 1: ', state, 'failed to send :' + item.type + ', ' + item.size);
-                var track = mediaStream.getTracks()[0];
-                track.stop();
                 cancel();
             }
         } else {
@@ -1659,7 +1669,7 @@ function koreBotChat() {
         window.ENABLE_MICROPHONE = true;
         window.SPEECH_SERVER_SOCKET_URL = speechServerUrl;
         var serv_url = window.SPEECH_SERVER_SOCKET_URL;
-        var userEmail = 'userIdentity';
+        var userEmail = userIdentity;
         window.WebSocket = window.WebSocket || window.MozWebSocket;
         var url = serv_url + '?' + CONTENT_TYPE + '&email=' + userEmail;
         var _connection = new WebSocket(url);
@@ -1703,6 +1713,7 @@ function koreBotChat() {
         };
         // If server is closed
         _connection.onclose = function (e) {
+            isRecordingStarted = false;
             console.log('Server is closed');
             console.log(e);
             cancel();
@@ -1734,6 +1745,7 @@ function koreBotChat() {
                 var track = mediaStream.getTracks()[0];
                 track.stop();
                 rec.destroy();
+                isRecordingStarted = false;
             }, 'audio/x-raw');
         } else {
             console.error('Recorder undefined');
