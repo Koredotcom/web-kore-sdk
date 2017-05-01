@@ -375,7 +375,22 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     border-top: 1px solid #EEEEEE;
     background:white;
     padding: 5px 20px;
-}	
+}
+.sendBtnCnt .disabled {
+    opacity: 0.3;
+} 
+.sendBtnCnt .sendButton {
+    background: #009DAB;
+    padding: 5px;
+    border: 1px solid #009DAB;
+    border-radius: 3px;
+    color: #fff;
+    font-size: 12px;
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+    cursor: pointer;
+}
 
 .kore-chat-window .kore-chat-footer .chatInputBox{
     width: 100%;

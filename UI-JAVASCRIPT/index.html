@@ -63,7 +63,8 @@
 			
 			var koreBot = koreBotChat();
 			var chatConfig={
-				botOptions:botOptions
+				botOptions:botOptions,
+				isSendButton: false
 			};
 			document.getElementById('openChatWindow').addEventListener('click',function() {
 				koreBot.show(chatConfig);

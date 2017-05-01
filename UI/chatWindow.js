@@ -21,7 +21,7 @@ function koreBotChat() {
 
     var recorderWorkerPath = "../libs/recorderWorker.js";
     var INTERVAL = 250;
-    var _pingTimer, _pingTime = 30000;
+    var _pingTimer, _pingTime = 30000, isSendButton = false;
     /***************** Mic initilization code end here ************************/
     /*************************** file upload variable *******************************/
     var appConsts = {};
@@ -535,6 +535,7 @@ function koreBotChat() {
 
         me.config.chatTitle = me.config.botMessages.connecting;
         me.config.userAgentIE = navigator.userAgent.indexOf('Trident/') !== -1;
+        isSendButton = me.config.isSendButton;
         var chatWindowHtml = $(me.getChatTemplate()).tmpl(me.config);
         me.config.chatContainer = chatWindowHtml;
 
@@ -579,8 +580,10 @@ function koreBotChat() {
             prevRange = prevComposeSelection.rangeCount > 0 && prevComposeSelection.getRangeAt(0);
             if (this.innerText.length > 0) {
                 _chatContainer.find('.chatInputBoxPlaceholder').css('display', 'none');
+                _chatContainer.find('.sendButton').removeClass('disabled');
             } else {
                 _chatContainer.find('.chatInputBoxPlaceholder').css('display', 'block');
+                _chatContainer.find('.sendButton').addClass('disabled');
             }
         });
         _chatContainer.on('click', '.chatInputBoxPlaceholder', function (event) {
@@ -646,6 +649,16 @@ function koreBotChat() {
                 return;
             }
         });
+        _chatContainer.off('click', '.sendButton').on('click', '.sendButton', function (event) {
+            var _this = $('.chatInputBox');
+            if ($('.upldIndc').is(':visible')) {
+                alert('Wait until file upload is not completed');
+                return;
+            }
+            event.preventDefault();
+            me.sendMessage(_this, attachmentInfo);
+            return;
+        });
         _chatContainer.off('click', '.notRecordingMicrophone').on('click', '.notRecordingMicrophone', function (event) {
             micEnable();
         });
@@ -671,6 +684,7 @@ function koreBotChat() {
             $('.kore-chat-window').removeClass('kore-chat-attachment');
             fileUploaderCounter = 0;
             attachmentInfo = {};
+            $('.sendButton').addClass('disabled');
             document.getElementById("captureAttachmnts").value = "";
         });
         _chatContainer.off('change', '#captureAttachmnts').on('change', '#captureAttachmnts', function (event) {
@@ -955,6 +969,7 @@ function koreBotChat() {
             }
         });
         chatInput.html("");
+        $('.sendButton').addClass('disabled');
         _bodyContainer.css('bottom', _footerContainer.outerHeight());
         resetPingMessage();
         $('.typingIndicatorContent').css('display', 'block');
@@ -1055,7 +1070,7 @@ function koreBotChat() {
                 </button> \
                 <input type="file" name="Attachment" class="filety" id="captureAttachmnts"> \
             </div> \
-			<div class="chatSendMsg">Press enter to send</div> \
+			{{if !(isSendButton)}}<div class="chatSendMsg">Press enter to send</div>{{/if}} \
 		</div>';
 
         var chatWindowTemplate = '<script id="chat_window_tmpl" type="text/x-jqury-tmpl"> \
@@ -1077,7 +1092,7 @@ function koreBotChat() {
 					<ul class="chat-container"></ul> \
 				</div> \
                 <div class="typingIndicatorContent"><div class="typingIndicator"></div><div class="movingDots"></div></div> \
-				<div class="kore-chat-footer">' + chatFooterTemplate + '</div> \
+				<div class="kore-chat-footer">' + chatFooterTemplate + '{{if isSendButton}}<div class="sendBtnCnt"><button class="sendButton disabled" type="button">Send</button></div>{{/if}}</div> \
 			</div> \
 		</script>';
 
@@ -1319,6 +1334,9 @@ function koreBotChat() {
             prevRange = range;
         } else {
             prevRange = false;
+            if (_this && _this[0]) {
+                _this[0].focus();
+            }
         }
     }
     function strSplit(str) {
@@ -1389,7 +1407,7 @@ function koreBotChat() {
     }
     /*************************************       Microphone code      **********************************************/
     function micEnable() {
-        if (isRecordingStarted) {
+        if (isRecorderStarted) {
             return;
         }
         if (!navigator.getUserMedia) {
@@ -1433,8 +1451,10 @@ function koreBotChat() {
     function success(e) {
         isListening = true;
         mediaStream = e;
-        var Context = window.AudioContext || window.webkitAudioContext;
-        context = new Context();
+        if (!context) {
+            var Context = window.AudioContext || window.webkitAudioContext;
+            context = new Context();
+        }
         mediaStreamSource = context.createMediaStreamSource(mediaStream);
         window.userSpeechAnalyser = context.createAnalyser();
         mediaStreamSource.connect(window.userSpeechAnalyser);
@@ -1455,6 +1475,9 @@ function koreBotChat() {
         console.log('Recorder Initialized');
         _permission = true;
         afterMicEnable();
+        setTimeout(function () {
+            setCaretEnd(document.getElementsByClassName("chatInputBox"));
+        }, 600);
     }
 
     function cancel() {
@@ -1544,7 +1567,9 @@ function koreBotChat() {
                     if (res.result.final) {
                         var final_result = res.result.hypotheses[0].transcript;
                         $('.chatInputBox').html($('.chatInputBox').html() + ' ' + final_result);
-
+                        setTimeout(function () {
+                            setCaretEnd(document.getElementsByClassName("chatInputBox"));
+                        }, 350);
                     } else {
                         //$('.chatInputBox').html($('.chatInputBox').html() + ' '+ res.result.hypotheses[0].transcript);
                         console.log('Not final: ', res.result.hypotheses[0].transcript);
@@ -1824,6 +1849,7 @@ function koreBotChat() {
         alert("Failed to upload content. Try again");
         attachmentInfo = {};
         $('.attachment').html('');
+        $('.sendButton').addClass('disabled');
         fileUploaderCounter = 0;
     };
     function onComponentReady(_this, data) {
@@ -1886,6 +1912,7 @@ function koreBotChat() {
         $('.chatInputBox').focus();
         attachmentInfo.fileName = data.values.componentData.filename;
         attachmentInfo.fileType = data.values.componentType;
+        $('.sendButton').removeClass('disabled');
     };
     function acceptFileRecording(_this, _recState, ele) {
         var _scope = _this;
@@ -1979,6 +2006,7 @@ function koreBotChat() {
     function loadListener(_this, evt) {
         _this.events.success.params = $.parseJSON(evt.target.response);
         attachmentInfo.fileId = _this.events.success.params.fileId;
+        $('.sendButton').removeClass('disabled');
         $('.kore-chat-window').addClass('kore-chat-attachment');
         $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
         fileUploaderCounter = 1;
