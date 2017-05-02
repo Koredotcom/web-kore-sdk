@@ -1407,7 +1407,7 @@ function koreBotChat() {
     }
     /*************************************       Microphone code      **********************************************/
     function micEnable() {
-        if (isRecorderStarted) {
+        if (isRecordingStarted) {
             return;
         }
         if (!navigator.getUserMedia) {
