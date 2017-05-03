@@ -314,7 +314,15 @@ function koreBotChat() {
                 newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
                 newStr = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;');
                 wrapper1.innerHTML = xssAttack(newStr);
-                if ($(wrapper1).find('a').attr('href')) {
+                var aTags = wrapper1.getElementsByTagName('a').length > 0 ? wrapper1.getElementsByTagName('a'): [];
+                var _hasHref = false;
+                for (var x = 0; x < aTags.length; x++) {
+                    if (aTags[x].getAttribute('href').length > 0) {
+                        _hasHref = true;
+                        break;
+                    }
+                }
+                if (_hasHref) {
                     str = newStr;
                 } else {
                     str = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(_regExForLink, linkreplacer);
@@ -323,7 +331,15 @@ function koreBotChat() {
                 wrapper1 = document.createElement('div');
                 str = str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
                 wrapper1.innerHTML = xssAttack(str);
-                if ($(wrapper1).find('a').attr('href')) {
+                var aTags = wrapper1.getElementsByTagName('a').length > 0 ? wrapper1.getElementsByTagName('a'): [];
+                var _hasHref = false;
+                for (var x = 0; x < aTags.length; x++) {
+                    if (aTags[x].getAttribute('href').length > 0) {
+                        _hasHref = true;
+                        break;
+                    }
+                }
+                if (_hasHref) {
                     var linkArray = str.match(/<a[^>]*>([^<]+)<\/a>/g);
                     for (var x = 0; x < linkArray.length; x++) {
                         var _newLA = document.createElement('div');
@@ -673,17 +689,21 @@ function koreBotChat() {
             var _bodyContainer = me.config.container.querySelector('.kore-chat-body');
             _bodyContainer.style.bottom = _footerContainer.scrollHeight;
             if (event.keyCode === 13) {
+                if(event.shiftKey){
+                    return;
+                }
                 event.preventDefault();
                 me.sendMessage(_chatInputBox, attachmentInfo);
                 return;
             }
         });
-        _sendMessage.addEventListener('click', function (event) {
-            event.preventDefault();
-            me.sendMessage(_chatInputBox, attachmentInfo);
-            return;
-        });
-
+        if (isSendButton && _sendMessage.length > 0) {
+            _sendMessage.addEventListener('click', function (event) {
+                event.preventDefault();
+                me.sendMessage(_chatInputBox, attachmentInfo);
+                return;
+            });
+        }
         _chatInputBox.addEventListener('paste', function (event) {
             event.preventDefault();
             var _this = document.getElementsByClassName("chatInputBox");

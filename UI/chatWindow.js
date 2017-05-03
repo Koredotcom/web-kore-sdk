@@ -636,6 +636,9 @@ function koreBotChat() {
             var _bodyContainer = $(me.config.container).find('.kore-chat-body');
             _bodyContainer.css('bottom', _footerContainer.outerHeight());
             if (event.keyCode === 13) {
+                if(event.shiftKey){
+                    return;
+                }
                 if ($('.upldIndc').is(':visible')) {
                     alert('Wait until file upload is not completed');
                     return;
