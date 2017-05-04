@@ -2007,14 +2007,16 @@ function koreBotChat() {
     };
 
     function loadListener(_this, evt) {
-        _this.events.success.params = $.parseJSON(evt.target.response);
-        attachmentInfo.fileId = _this.events.success.params.fileId;
-        $('.sendButton').removeClass('disabled');
-        $('.kore-chat-window').addClass('kore-chat-attachment');
-        $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
-        fileUploaderCounter = 1;
-        $('.upldIndc').remove();
-        _this.$element.trigger(_this.events.success);
+        if($('.upldIndc').is(':visible')){
+            _this.events.success.params = $.parseJSON(evt.target.response);
+            attachmentInfo.fileId = _this.events.success.params.fileId;
+            $('.sendButton').removeClass('disabled');
+            $('.kore-chat-window').addClass('kore-chat-attachment');
+            $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
+            fileUploaderCounter = 1;
+            $('.upldIndc').remove();
+            _this.$element.trigger(_this.events.success);
+        }
     };
 
     function errorListener(_this, evt) {

@@ -630,11 +630,14 @@ function koreBotChat() {
             prevComposeSelection = window.getSelection();
             prevRange = prevComposeSelection.rangeCount > 0 && prevComposeSelection.getRangeAt(0);
             if (this.innerText.length > 0) {
-                document.getElementsByClassName('sendButton')[0].classList.remove('disabled');
+                if (document.getElementsByClassName('sendButton') && document.getElementsByClassName('sendButton')[0]){
+                    document.getElementsByClassName('sendButton')[0].classList.remove('disabled');
+                }
                 addClass(_chatInputBoxPlaceholder, 'hide');
 
             } else {
-                document.getElementsByClassName('sendButton')[0].classList.add('disabled');
+                if (document.getElementsByClassName('sendButton') && document.getElementsByClassName('sendButton')[0])
+                    document.getElementsByClassName('sendButton')[0].classList.add('disabled');
                 removeClass(_chatInputBoxPlaceholder, 'hide');
             }
         });
@@ -662,7 +665,7 @@ function koreBotChat() {
                 alert('You can upload only one file');
                 return;
             }
-            /*if(document.getElementsByClassName('upldIndc').style.display){
+            /*if(document.getElementsByClassName('upldIndc') && document.getElementsByClassName('upldIndc')[0].style.display){
                 alert('Wait until file upload is not completed');
                 return;
             }*/
@@ -693,6 +696,10 @@ function koreBotChat() {
                     return;
                 }
                 event.preventDefault();
+                if(document.getElementsByClassName('upldIndc') && document.getElementsByClassName('upldIndc')[0] && document.getElementsByClassName('upldIndc')[0].style.display === ""){
+                    alert('Wait until file upload is not completed');
+                    return;
+                }
                 me.sendMessage(_chatInputBox, attachmentInfo);
                 return;
             }
@@ -2212,13 +2219,15 @@ function koreBotChat() {
             progressChange: { 'type': 'progress.ke.uploader' },
             success: { 'type': 'success.ke.uploader' }
         };
-        _this.events.success.params = JSON.parse(evt.target.response);
-        attachmentInfo.fileId = _this.events.success.params.fileId;
-        fileUploaderCounter = 1;
-        document.getElementsByClassName('upldIndc')[0].remove();
-        document.getElementsByClassName('kore-chat-window')[0].classList.add('kore-chat-attachment');
-        document.getElementsByClassName('chat-container')[0].scrollTop = document.getElementsByClassName('chat-container')[0].scrollHeight;
-        onFileToUploaded(_this, _this.events.success, globalRecState);
+        if(document.getElementsByClassName('upldIndc') && document.getElementsByClassName('upldIndc')[0] && document.getElementsByClassName('upldIndc')[0].style.display === ""){
+           _this.events.success.params = JSON.parse(evt.target.response);
+            attachmentInfo.fileId = _this.events.success.params.fileId;
+            fileUploaderCounter = 1;
+            document.getElementsByClassName('upldIndc')[0].remove();
+            document.getElementsByClassName('kore-chat-window')[0].classList.add('kore-chat-attachment');
+            document.getElementsByClassName('chat-container')[0].scrollTop = document.getElementsByClassName('chat-container')[0].scrollHeight;
+            onFileToUploaded(_this, _this.events.success, globalRecState);
+        }
     };
 
     function errorListener(_this, evt) {
