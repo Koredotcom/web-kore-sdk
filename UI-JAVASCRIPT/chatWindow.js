@@ -633,12 +633,14 @@ function koreBotChat() {
                 if (document.getElementsByClassName('sendButton') && document.getElementsByClassName('sendButton')[0]){
                     document.getElementsByClassName('sendButton')[0].classList.remove('disabled');
                 }
-                addClass(_chatInputBoxPlaceholder, 'hide');
+                if (_chatInputBoxPlaceholder)
+                    addClass(_chatInputBoxPlaceholder, 'hide');
 
             } else {
                 if (document.getElementsByClassName('sendButton') && document.getElementsByClassName('sendButton')[0])
                     document.getElementsByClassName('sendButton')[0].classList.add('disabled');
-                removeClass(_chatInputBoxPlaceholder, 'hide');
+                if (_chatInputBoxPlaceholder)
+                    removeClass(_chatInputBoxPlaceholder, 'hide');
             }
         });
         if (_chatInputBoxPlaceholder && _chatInputBoxPlaceholder.innerText && _chatInputBoxPlaceholder.innerText.length > 0) {
