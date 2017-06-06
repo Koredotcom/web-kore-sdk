@@ -495,7 +495,7 @@ function koreBotChat() {
         isRecordingStarted = false;
         cfg.botOptions.test = false;
         this.config = {
-            "chatTitle": "Kore Bot Chat",
+            "chatTitle": "Kore.ai Bot Chat",
             "container": "body",
             "allowIframe": false,
             "botOptions": cfg.botOptions
