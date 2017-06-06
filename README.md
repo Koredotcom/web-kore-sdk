@@ -1,16 +1,16 @@
-# Kore SDK
-Kore offers Bots SDKs as a set of platform-specific client libraries that provide a quick and convenient way to integrate Kore Bots chat capability into custom applications.
+# Kore.ai SDK
+Kore.ai offers Bots SDKs as a set of platform-specific client libraries that provide a quick and convenient way to integrate Kore.ai Bots chat capability into custom applications.
 
-With just few lines of code, you can embed our Kore chat widget into your applications to enable end-users to interact with your applications using Natural Language. For more information, refer to https://developer.kore.com/docs/bots/kore-web-sdk/
+With just few lines of code, you can embed our Kore.ai chat widget into your applications to enable end-users to interact with your applications using Natural Language. For more information, refer to https://developer.kore.ai/docs/bots/kore-web-sdk/
 
-# Kore Web SDK for developers
+# Kore.ai Web SDK for developers
 
-Kore SDK for web enables you to talk to Kore bots over a web socket. This repo also comes with the code for sample application that developers can modify according to their Bot configuration.
+Kore.ai SDK for web enables you to talk to Kore.ai bots over a web socket. This repo also comes with the code for sample application that developers can modify according to their Bot configuration.
 
 # Setting up
 
 ### Prerequisites
-* Service to generate JWT (JSON Web Tokens)- SDK uses this to send the user identity to Kore Platform.
+* Service to generate JWT (JSON Web Tokens)- SDK uses this to send the user identity to Kore.ai Platform.
 * SDK app credentials 
 	* Login to the Bots platform
 	* Navigate to the Bot builder
@@ -23,7 +23,7 @@ Kore SDK for web enables you to talk to Kore bots over a web socket. This repo a
 * Service to generate JWT (JSON Web Tokens)- this service will be used in the assertion function injected to obtain the connection.
 
 ## Instructions
-Integration of Kore chat UI into your App
+Integration of Kore.ai chat UI into your App
 
 #### 1. Include Dependent CSS
     -   <link href="UI/libs/jquery-ui.min.css" rel="stylesheet"/>
@@ -63,11 +63,11 @@ Integration of Kore chat UI into your App
 #### 6. Initialize the Bot
         //Define the bot options
         var botOptions = {};
-        botOptions.koreAPIUrl = "https://bots.kore.com/api/";
+        botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
 	botOptions.speechSocketUrl = 'wss://';
         botOptions.assertionFn = assertion;
         botOptions.koreAnonymousFn = koreAnonymousFn;
-        botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // issued by the kore on client app registration.
+        botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // issued by the kore.ai on client app registration.
         botOptions.botInfo = {chatBot:"Kora",taskBotId :"st-*********"};  
         // Assign Bot options to chatWindow config
         var chatConfig={
@@ -80,7 +80,7 @@ Integration of Kore chat UI into your App
         chatInstance.show(chatConfig); // open chat window
         chatInstance.destroy(); // for destroying chat window instance
 
-# How to create your own ui with kore chat bot api 
+# How to create your own ui with kore.ai chat bot api 
 
 #### 1. Include the kore-bot-sdk-client.js & dependencies
     -   <script src='jquery.js'></script>
@@ -90,11 +90,11 @@ Integration of Kore chat UI into your App
 #### 2. Initialize the Bot
         //define the bot options
         var botOptions = {}; 
-        botOptions.koreAPIUrl = "https://devbots.kore.com/api/";
+        botOptions.koreAPIUrl = "https://devbots.kore.ai/api/";
         botOptions.speechSocketUrl = 'wss://';
         botOptions.assertionFn = assertion;
         botOptions.koreAnonymousFn = koreAnonymousFn;
-        botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // issued by the kore on client app registration.
+        botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // issued by the kore.ai on client app registration.
         botOptions.botInfo = {chatBot:"Kora",taskBotId :"st-*********"};  
         var bot = require('/KoreBot.js').instance(); //initialize the bot.
         bot.init(botOptions); // bot instance created.
@@ -133,5 +133,5 @@ Integration of Kore chat UI into your App
 
 
 # License
-_Copyright © Kore, Inc. MIT License; see LICENSE for further details._
+_Copyright © Kore.ai, Inc. MIT License; see LICENSE for further details._
 
