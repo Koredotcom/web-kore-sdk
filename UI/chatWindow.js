@@ -313,7 +313,6 @@ function koreBotChat() {
                 }
             } else {
                 wrapper1 = document.createElement('div');
-                str = str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
                 wrapper1.innerHTML = xssAttack(str);
                 if ($(wrapper1).find('a').attr('href')) {
                     var linkArray = str.match(/<a[^>]*>([^<]+)<\/a>/g);

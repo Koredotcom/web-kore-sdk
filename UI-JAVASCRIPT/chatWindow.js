@@ -312,7 +312,6 @@ function koreBotChat() {
                 str = str.replace(/onerror=/gi, 'abc-error=');
                 wrapper1 = document.createElement('div');
                 newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
-                newStr = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;');
                 wrapper1.innerHTML = xssAttack(newStr);
                 var aTags = wrapper1.getElementsByTagName('a').length > 0 ? wrapper1.getElementsByTagName('a'): [];
                 var _hasHref = false;
