@@ -842,7 +842,6 @@ function koreBotChat() {
                     if (!tempData.message[0].cInfo) {
                         tempData.message[0].cInfo = {};
                     }
-                    tempData.message[0].cInfo.body = tempData.message[0].cInfo.body;
                     if (tempData.message[0].component && !tempData.message[0].component.payload.text) {
                         try {
                             tempData.message[0].component = JSON.parse(tempData.message[0].component.payload);
