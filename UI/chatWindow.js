@@ -164,7 +164,7 @@ function koreBotChat() {
             regEx.MENTION = /(^|\s|\\n|")@([^\s]*)(?:[\s]\[([^\]]*)\])?["]?/gi;
             regEx.HASHTAG = /(^|\s|\\n)#(\S+)/g;
             regEx.NEWLINE = /\n/g;
-            var _regExForLink = /((?:http\:\/\/|https\:\/\/|www\.)+\S*\.[a-z]{2,4}(?:(?:\.\S)*[^\,\s\.])*\/?)/gi;
+            var _regExForLink = /((?:http\:\/\/|https\:\/\/|www\.)+\S*\.(?:(?:\.\S)*[^\,\s\.])*\/?)/gi;
             var _regExForMarkdownLink = /\[([^\]]+)\](|\s)+\(([^\)])+\)/g;
             var str = val || '';
             var mmntns = {};
