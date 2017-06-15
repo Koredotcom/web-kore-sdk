@@ -281,9 +281,18 @@ function koreBotChat() {
             function nextLnReplacer(match, p1, offset, string) {
                 return "<br/>";
             }
+            function ignoreWords(str){
+                var _words=['onclick','onmouse'];
+                _words.forEach(function(word){
+                    var regEx = new RegExp(word, "ig");
+                    str = str.replace(regEx, "");
+                });
+                return str;
+            }
             var nextln = regEx.NEWLINE;
             function linkreplacer(match, p1, offset, string) {
                 var dummyString = string.replace(_regExForMarkdownLink, '[]');
+                dummyString=ignoreWords(dummyString);
                 if (dummyString.indexOf(match) !== -1) {
                     var _link = p1.indexOf('http') < 0 ? 'http://' + match : match, _target;
                     //_link = encodeURIComponent(_link);
