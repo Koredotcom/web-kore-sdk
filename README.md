@@ -90,7 +90,7 @@ Integration of Kore.ai chat UI into your App
 #### 2. Initialize the Bot
         //define the bot options
         var botOptions = {}; 
-        botOptions.koreAPIUrl = "https://devbots.kore.ai/api/";
+        botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
         botOptions.speechSocketUrl = 'wss://';
         botOptions.assertionFn = assertion;
         botOptions.koreAnonymousFn = koreAnonymousFn;
