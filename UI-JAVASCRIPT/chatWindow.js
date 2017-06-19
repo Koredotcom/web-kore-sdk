@@ -67,9 +67,8 @@ function koreBotChat() {
             isValid: true,
             key: ''
         };
-        if (wrapperScript !== null) {
+        if (wrapperScript !== null || videoScript !== null || audioScript !== null) {
             setFlags.isValid = false;
-
         }
         if (wrapperLink !== null && wrapperLink.href.indexOf('script') !== -1) {
             if (detectScriptTag.test(wrapperLink.href)) {
@@ -582,7 +581,7 @@ function koreBotChat() {
 
     chatWindow.prototype.init = function () {
         var me = this;
-        me.config.botOptions.botInfo.name = xssAttack(me.config.botOptions.botInfo.name);
+        me.config.botOptions.botInfo.name = me.config.botOptions.botInfo.name.escapeHTML();
         _botInfo = extend({}, me.config.botOptions.botInfo);
         me.config.botOptions.botInfo = { chatBot: _botInfo.name, taskBotId: _botInfo._id, customData: _botInfo.customData, tenanturl: _botInfo.tenanturl };
         var tempTitle = _botInfo.name;
