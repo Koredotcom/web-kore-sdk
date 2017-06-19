@@ -282,7 +282,7 @@ function koreBotChat() {
                 return "<br/>";
             }
             function ignoreWords(str){
-                var _words=['onclick','onmouse'];
+                var _words=['onclick','onmouse','onblur','onscroll','onStart'];
                 _words.forEach(function(word){
                     var regEx = new RegExp(word, "ig");
                     str = str.replace(regEx, "");
