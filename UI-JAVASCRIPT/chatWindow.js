@@ -582,6 +582,7 @@ function koreBotChat() {
 
     chatWindow.prototype.init = function () {
         var me = this;
+        me.config.botOptions.botInfo.name = xssAttack(me.config.botOptions.botInfo.name);
         _botInfo = extend({}, me.config.botOptions.botInfo);
         me.config.botOptions.botInfo = { chatBot: _botInfo.name, taskBotId: _botInfo._id, customData: _botInfo.customData, tenanturl: _botInfo.tenanturl };
         var tempTitle = _botInfo.name;
