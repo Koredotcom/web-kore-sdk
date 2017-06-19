@@ -1,13 +1,19 @@
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/KoreBot.js":[function(require,module,exports){
+requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/KoreBot.js":[function(require,module,exports){
 var clients = require('./index.js');
 var EventEmitter = require('events');
 var inherits = require('inherits');
-var bind = require('lodash').bind;
-var isFunction = require('lodash').isFunction;
+var lodash;
+if (require('lodash').bind) {
+	lodash = require('lodash');
+} else {
+	lodash = _;
+}
+var bind = lodash.bind;
+var isFunction = lodash.isFunction;
 var RTM_CLIENT_EVENTS = clients.CLIENT_EVENTS.RTM;
 var RTM_EVENTS = clients.RTM_EVENTS;
 var jstz = require('./jstz.js');
-var noop = require('lodash').noop;
+var noop = lodash.noop;
 
 if(typeof window !== "undefined"){
 	window.kore = window.kore || {};
@@ -666,7 +672,13 @@ module.exports= {
 },{}],3:[function(require,module,exports){
 var EventEmitter = require('events');
 var async = require('async');
-var bind = require('lodash').bind;
+var lodash;
+if (require('lodash').bind) {
+	lodash = require('lodash');
+} else {
+	lodash = _;
+}
+var bind = lodash.bind;
 var inherits = require('inherits');
 var retry = require('retry');
 var urlJoin = require('url-join');
@@ -873,12 +885,17 @@ module.exports.makeMessageEventWithSubtype = makeMessageEventWithSubtype;
 /**
  * Helpers for working with kore API clients.
  */
-
-var assign = require('lodash').assign;
-var isFunction = require('lodash').isFunction;
-var isUndefined = require('lodash').isUndefined;
-var isString = require('lodash').isString;
-var forEach = require('lodash').forEach;
+var lodash;
+if (require('lodash').bind) {
+	lodash = require('lodash');
+} else {
+	lodash = _;
+}
+var assign = lodash.assign;
+var isFunction = lodash.isFunction;
+var isUndefined = lodash.isUndefined;
+var isString = lodash.isString;
+var forEach = lodash.forEach;
 
 
 var getData = function getData(data, token) {
@@ -939,11 +956,17 @@ module.exports.getData = getData;
 module.exports.getAPICallArgs = getAPICallArgs;
 
 },{"lodash":24}],9:[function(require,module,exports){
-var bind = require('lodash').bind;
-var cloneDeep = require('lodash').cloneDeep;
-var contains = require('lodash').contains;
+var lodash;
+if (require('lodash').bind) {
+	lodash = require('lodash');
+} else {
+	lodash = _;
+}
+var bind = lodash.bind;
+var cloneDeep = lodash.cloneDeep;
+var contains = lodash.contains;
 var inherits = require('inherits');
-var isUndefined = require('lodash').isUndefined;
+var isUndefined = lodash.isUndefined;
 var debug = require("debug")("botsdk:KoreRTMClient");
 
 var RTM_API_EVENTS = require('../events/rtm').EVENTS;
@@ -1232,9 +1255,14 @@ module.exports = KoreRTMClient;
 /**
  * Simple transport using the node request library.
  */
-
-var has = require('lodash').has;
-var partial = require('lodash').partial;
+var lodash;
+if (require('lodash').bind) {
+	lodash = require('lodash');
+} else {
+	lodash = _;
+}
+var has = lodash.has;
+var partial = lodash.partial;
 var request = require('browser-request');
 
 
@@ -1457,8 +1485,14 @@ RtmApi.prototype.start = function start(opts, optCb) {
 module.exports = RtmApi;
 
 },{"./BaseApi":12,"inherits":23}],18:[function(require,module,exports){
-var bind = require('lodash').bind;
-var forEach = require('lodash').forEach;
+var lodash;
+if (require('lodash').bind) {
+	lodash = require('lodash');
+} else {
+	lodash = _;
+}
+var bind = lodash.bind;
+var forEach = lodash.forEach;
 var inherits = require('inherits');
 
 var BaseAPIClient = require('../client');
@@ -2783,6 +2817,7 @@ module.exports = WebAPIClient;
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define([], factory);
+        module.exports = factory();
     } else if (typeof exports === 'object') {
         // Node. Does not work with strict CommonJS, but
         // only CommonJS-like enviroments that support module.exports,

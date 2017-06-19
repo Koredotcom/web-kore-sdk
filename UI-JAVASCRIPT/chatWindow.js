@@ -1,5 +1,5 @@
 function koreBotChat() {
-    var bot = require('/KoreBot.js').instance();
+    var bot = requireKr('/KoreBot.js').instance();
     var botMessages = {
         message: "Message...",
         connecting: "Connecting...",
