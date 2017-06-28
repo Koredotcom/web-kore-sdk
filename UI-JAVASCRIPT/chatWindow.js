@@ -62,7 +62,9 @@ function koreBotChat() {
         var wrapperLink = wrapper.querySelector('link');
         var wrapperA = wrapper.querySelector('a');
         var wrapperImg = wrapper.querySelector('img');
-
+		var videoScript = wrapper.querySelector('video');
+        var audioScript = wrapper.querySelector('audio');
+		
         var setFlags = {
             isValid: true,
             key: ''
