@@ -585,12 +585,13 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
 }
 .listTmplContent .listRightContent{
 	display: table-cell;
-	width:30%;
-    padding-right: 5px;
+	width:65px;
+    height: 60px;
 }
 .listRightContent img{
 	height: 57px;
 	width: 57px;
+    border-radius: 50%;
 }
 .listTmplContent .listTmplContentChild{
 	border-top: 1px solid #F2F2F2;
@@ -616,6 +617,8 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     float: right;
     font-weight: bold;
     letter-spacing: -0.3px;
+    font-size: 12px;
+    text-align: right;
 }
 .listTmplContentBox li:first-child{
 	margin-top:0!important;
@@ -631,6 +634,14 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
 .listTmplContent .listItemTitle,.listItemSubtitle,.listItemPath{
 	padding: 3px 0;
     font-size:13px;
+}
+.listItemTitle {
+    font-family: Lato;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.54;
+    letter-spacing: -0.1px;
+    color: #222222;
 }
 .listTmplContent .viewMoreList{
 	text-align: center;
