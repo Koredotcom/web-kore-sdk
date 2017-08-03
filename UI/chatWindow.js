@@ -145,6 +145,10 @@ function koreBotChat() {
         },
         'formatDate': function (date) {
             var d = new Date(date);
+            if ( isNaN( d.getTime() ) ) {
+                var _tmpDate = new Date().getTime();
+                d = new Date(_tmpDate);
+            }
             return d.toDateString() + " at " + helpers.formatAMPM(d);
         },
         'convertMDtoHTML': function (val, responseType) {
