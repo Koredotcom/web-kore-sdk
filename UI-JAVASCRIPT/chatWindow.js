@@ -921,7 +921,7 @@ function koreBotChat() {
                 "message": [{
                     'type': 'text',
                     'cInfo': {
-                        'body': chatInput.innerText,
+                        'body': chatInput.innerHTML,
                         'attachments': [attachmentInfo]
                     },
                     'clientMessageId': clientMessageId
@@ -938,7 +938,7 @@ function koreBotChat() {
                 "message": [{
                     'type': 'text',
                     'cInfo': {
-                        'body': chatInput.innerText
+                        'body': chatInput.innerHTML
                     },
                     'clientMessageId': clientMessageId
                 }],
@@ -948,13 +948,13 @@ function koreBotChat() {
 
         var messageToBot = {};
         messageToBot["clientMessageId"] = clientMessageId;
-        if (Object.keys(attachmentInfo).length > 0 && chatInput.innerText.trim().length) {
-            messageToBot["message"] = { body: chatInput.innerText.trim(), attachments: [attachmentInfo] };
+        if (Object.keys(attachmentInfo).length > 0 && chatInput.innerHTML.trim().length) {
+            messageToBot["message"] = { body: chatInput.innerHTML.trim(), attachments: [attachmentInfo] };
         } else if (Object.keys(attachmentInfo).length > 0) {
             messageToBot["message"] = { attachments: [attachmentInfo] };
         }
         else {
-            messageToBot["message"] = { body: chatInput.innerText.trim() };
+            messageToBot["message"] = { body: chatInput.innerHTML.trim() };
         }
         messageToBot["resourceid"] = '/bot.message';
         attachmentInfo = {};
