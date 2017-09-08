@@ -8,8 +8,9 @@ function koreBotChat() {
     var _botInfo = {};
     var detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
     var _eventQueue = {};
+    var carouselEles = [];
     var prevRange, accessToken, koreAPIUrl, fileToken, fileUploaderCounter = 0, _removeAttachments = '', globalRecState, bearerToken = '', assertionToken = '';
-    var speechServerUrl = '', userIdentity = '', isListening = false, isRecordingStarted = false;
+    var speechServerUrl = '', userIdentity = '', isListening = false, isRecordingStarted = false,  isSpeechEnabled = false, speechPrefixURL = "", sidToken = "",carouselTemplateCount = 0;
     /******************* Mic variable initilization *******************/
     var _exports = {},
         _template, _this = {};
@@ -24,6 +25,10 @@ function koreBotChat() {
     var _pingTimer, _pingTime = 30000, isSendButton = false;;
     /***************** Mic initilization code end here ************************/
 
+    /******************************* TTS variable initialization **************/
+    var _ttsContext = null, _ttsConnection = null, ttsServerUrl = '', ttsAudioSource = null, _txtToSpeak = "", isTTSOn = false, isTTSEnabled = false, optionIndex = 65;    // Audio context
+    /************************** TTS initialization code end here **************/
+    
     /*************************** file upload variable *******************************/
     var appConsts = {};
     var attachmentInfo = {};
@@ -54,7 +59,7 @@ function koreBotChat() {
     var kfrm = {};
     kfrm.net = {};
     /**************************File upload variable end here **************************/
-
+    var _escPressed = 0; 
     String.prototype.isNotAllowedHTMLTags = function () {
         var wrapper = document.createElement('div');
         wrapper.innerHTML = this;
@@ -62,9 +67,9 @@ function koreBotChat() {
         var wrapperLink = wrapper.querySelector('link');
         var wrapperA = wrapper.querySelector('a');
         var wrapperImg = wrapper.querySelector('img');
-		var videoScript = wrapper.querySelector('video');
+        var videoScript = wrapper.querySelector('video');
         var audioScript = wrapper.querySelector('audio');
-		
+
         var setFlags = {
             isValid: true,
             key: ''
@@ -305,7 +310,7 @@ function koreBotChat() {
 
             function linkreplacer(match, p1, offset, string) {
                 var dummyString = string.replace(_regExForMarkdownLink, '[]');
-                 dummyString=ignoreWords(dummyString);
+                dummyString=ignoreWords(dummyString);
                 if (dummyString.indexOf(match) !== -1) {
                     var _link = p1.indexOf('http') < 0 ? 'http://' + match : match, _target;
                     //_link = encodeURIComponent(_link);
@@ -326,7 +331,7 @@ function koreBotChat() {
                 str = str.replace(/onerror=/gi, 'abc-error=');
                 wrapper1 = document.createElement('div');
                 newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
-				str = str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+                newStr = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;');
                 wrapper1.innerHTML = xssAttack(newStr);
                 var aTags = wrapper1.getElementsByTagName('a').length > 0 ? wrapper1.getElementsByTagName('a'): [];
                 var _hasHref = false;
@@ -343,6 +348,7 @@ function koreBotChat() {
                 }
             } else {
                 wrapper1 = document.createElement('div');
+                //str = str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
                 wrapper1.innerHTML = xssAttack(str);
                 var aTags = wrapper1.getElementsByTagName('a').length > 0 ? wrapper1.getElementsByTagName('a'): [];
                 var _hasHref = false;
@@ -440,13 +446,13 @@ function koreBotChat() {
                         txtArr[i] = txtArr[i].replace(_matchLink[j], _linkLink);
                     }
                 }
-                // Matches bold markup *test* doesnot match * test *, *test *, * test*. If all these are required then replace \S with \s
-                var _matchAstrik = txtArr[i].match(/\*\S([^*]*?)\S\*/g);
+                // Matches bold markup *test* doesnot match * test *, * test*. If all these are required then replace \S with \s
+                var _matchAstrik = txtArr[i].match(/\*\S([^*]*?)\*/g);
                 if (_matchAstrik && _matchAstrik.length > 0) {
                     for (j = 0; j < _matchAstrik.length; j++) {
                         var _boldTxt = _matchAstrik[j];
                         _boldTxt = _boldTxt.substring(1, _boldTxt.length - 1);
-                        _boldTxt = '<b>' + _boldTxt + '</b>';
+                        _boldTxt = '<b>' + _boldTxt.trim() + '</b>';
                         txtArr[i] = txtArr[i].replace(_matchAstrik[j], _boldTxt);
                     }
                 }
@@ -554,14 +560,16 @@ function koreBotChat() {
         isRecordingStarted = false;
         cfg.botOptions.test = false;
         this.config = {
-            "chatTitle": "Kore Bot Chat",
+            "chatTitle": "Kore.ai Bot Chat",
             "container": "body",
             "allowIframe": false,
             "botOptions": cfg.botOptions
         };
         koreAPIUrl = cfg.botOptions.koreAPIUrl;
         bearerToken = cfg.botOptions.bearer;
-        speechServerUrl = cfg.botOptions.speechSocketUrl;
+        //speechServerUrl = cfg.botOptions.speechSocketUrl;
+        speechPrefixURL = cfg.botOptions.koreSpeechAPIUrl;
+        ttsServerUrl = cfg.botOptions.ttsSocketUrl;
         userIdentity = cfg.botOptions.userIdentity;
         if (cfg.botOptions.recorderWorkerPath && cfg.botOptions.recorderWorkerPath.trim().length > 0) {
             recorderWorkerPath = cfg.botOptions.recorderWorkerPath.trim();
@@ -585,6 +593,23 @@ function koreBotChat() {
         }, _pingTime);
     }
 
+    window.onresize = function(event) {
+        var _carouselElements = document.querySelectorAll(".carousel");
+        if ((document.querySelectorAll(".kore-chat-window")[0] && document.querySelectorAll(".kore-chat-window")[0].offsetWidth > 400) && (document.getElementsByClassName('kore-chat-window').length && document.getElementsByClassName('kore-chat-window')[0].classList.contains('expanded'))) {
+            var _koreChatWindowHeight = document.querySelectorAll(".kore-chat-window")[0].offsetWidth;
+            for(var i=0;i<_carouselElements.length;i++) {
+                _carouselElements[i].style.cssText = 'width:'+(_koreChatWindowHeight-85)+'px !important';
+            }
+        } else {
+            for(var i=0;i<_carouselElements.length;i++) {
+                _carouselElements[i].style.cssText = 'width: 300px !important';
+            }
+        }
+        for(var i=0;i<carouselEles.length;i++) {
+            carouselEles[i].computeResize();
+        }
+    };
+
     chatWindow.prototype.init = function () {
         var me = this;
         me.config.botOptions.botInfo.name = me.config.botOptions.botInfo.name.escapeHTML();
@@ -596,6 +621,8 @@ function koreBotChat() {
         me.config.chatTitle = me.config.botMessages.connecting;
         me.config.userAgentIE = navigator.userAgent.indexOf('Trident/') !== -1;
         isSendButton = me.config.isSendButton;
+        isTTSEnabled = me.config.isTTSEnabled || false;
+        isSpeechEnabled = me.config.isSpeechEnabled || false;
         var chatWindowHtml = me.getChatTemplate('chatWindowTemplate', me.config);
 
         me.config.chatTitle = tempTitle;
@@ -608,16 +635,30 @@ function koreBotChat() {
         if (document.querySelector('.kore-chat-overlay') !== null) {
             document.querySelector('.kore-chat-overlay').style.display = "";
         }
+        if(ttsAudioSource) {
+            ttsAudioSource.stop();
+        }
         bot.close();
         if (me.config && me.config.chatContainer) {
             me.config.chatContainer.remove();
         }
+        if(ttsAudioSource) {
+            ttsAudioSource.stop();
+        }
+        if(_ttsContext) {
+            _ttsContext.close();
+            _ttsContext = null;
+        }
+        isTTSOn = false;
     };
 
     chatWindow.prototype.resetWindow = function () {
         var me = this;
         me.config.chatContainer.querySelector('.kore-chat-header .header-title').innerHTML = me.config.botMessages.reconnecting;
         me.config.chatContainer.querySelector('.chat-container').innerHTML = "";
+        if(ttsAudioSource) {
+            ttsAudioSource.stop();
+        }
         bot.close();
         bot.init(me.config.botOptions);
     };
@@ -637,6 +678,9 @@ function koreBotChat() {
         var _uploadButton = _chatContainer.querySelector('.attachmentBtn');
         var _uploadBox = _chatContainer.querySelector('.captureAttachmnts');
         var _sendMessage = _chatContainer.querySelector('.sendButton');
+        var _ttsSpeaker = _chatContainer.querySelector('#ttspeaker');
+        var _ttsSpeakerDiv = _chatContainer.querySelector('.ttspeakerDiv');
+        var _expandBtnSpan = _chatContainer.querySelector('.expand-btn-span');
         _chatInputBox.addEventListener('keyup', function (event) {
             var _footerContainer = me.config.container.querySelector('.kore-chat-footer');
             var _bodyContainer = me.config.container.querySelector('.kore-chat-body');
@@ -667,15 +711,22 @@ function koreBotChat() {
             prevComposeSelection = window.getSelection();
             prevRange = prevComposeSelection.rangeCount > 0 && prevComposeSelection.getRangeAt(0);
         });
-        _startRecord.addEventListener('click', function (event) {
-            micEnable();
-        });
-        _stopRecord.addEventListener('click', function (event) {
-            stop();
-            setTimeout(function () {
-                setCaretEnd(document.getElementsByClassName("chatInputBox"));
-            }, 350);
-        });
+        if(isSpeechEnabled) {
+            _startRecord.addEventListener('click', function (event) {
+                if(ttsAudioSource) {
+                    ttsAudioSource.stop();
+                }
+                if(isSpeechEnabled) {
+                    getSIDToken();
+                }
+            });
+            _stopRecord.addEventListener('click', function (event) {
+                stop();
+                setTimeout(function () {
+                    setCaretEnd(document.getElementsByClassName("chatInputBox"));
+                }, 350);
+            });
+        }
         _uploadButton.addEventListener('click', function (event) {
             if (fileUploaderCounter == 1) {
                 alert('You can upload only one file');
@@ -702,7 +753,9 @@ function koreBotChat() {
             //_scope.cnvertFiles(file);
             cnvertFiles(this, file);
         });
-
+        _chatInputBox.addEventListener('blur', function (event) {
+            _escPressed = 0;
+        });
         _chatInputBox.addEventListener('keydown', function (event) {
             var _footerContainer = me.config.container.querySelector('.kore-chat-footer');
             var _bodyContainer = me.config.container.querySelector('.kore-chat-body');
@@ -718,6 +771,22 @@ function koreBotChat() {
                 }
                 me.sendMessage(_chatInputBox, attachmentInfo);
                 return;
+            }
+            else if(event.keyCode === 27) {
+                _escPressed++;
+                if(_escPressed > 1) {
+                    _escPressed = 0;
+                    stop();
+                    this.innerText = "";
+                    var _attachmentNodes = document.getElementsByClassName("attachment");
+                    while (_attachmentNodes.firstChild) {
+                        _attachmentNodes.removeChild(_attachmentNodes.firstChild);
+                    }
+                    fileUploaderCounter = 0;
+                    setTimeout(function () {
+                        setCaretEnd((document.getElementsByClassName("chatInputBox")));
+                    }, 100);
+                }
             }
         });
         if (isSendButton && _sendMessage.length > 0) {
@@ -743,7 +812,15 @@ function koreBotChat() {
         });
 
         _closeBtn.addEventListener('click', function (event) {
+            if(ttsAudioSource) {
+                ttsAudioSource.stop();
+            }
+            isTTSOn = false;
             me.destroy();
+            if(_ttsContext) {
+                _ttsContext.close();
+                _ttsContext = null;
+            }
         });
 
         _minimizeBtn.addEventListener('click', function (event) {
@@ -754,6 +831,9 @@ function koreBotChat() {
                 addClass(_chatContainer, "minimize");
                 _chatContainer.querySelector('.minimized-title').innerHTML = "Talk to " + me.config.chatTitle;
                 me.minimized = true;
+            }
+            if(ttsAudioSource) {
+                ttsAudioSource.stop();
             }
         });
 
@@ -770,17 +850,25 @@ function koreBotChat() {
                 });
             }
             var _chatOverlay = me.config.container.querySelector('.kore-chat-overlay');
+
             if (me.expanded === true) {
                 _chatOverlay.style.display = "none";
                 _expandBtn.title = "Expand";
                 removeClass(_chatContainer, "expanded");
                 me.expanded = false;
+                removeClass(_expandBtnSpan,"fa-compress");
+                addClass(_expandBtnSpan,"fa-expand");
             } else {
                 _chatOverlay.style.display = "block";;
                 _expandBtn.title = "Collapse";
                 addClass(_chatContainer, "expanded");
                 me.expanded = true;
+                addClass(_expandBtnSpan,"fa-compress");
+                removeClass(_expandBtnSpan,"fa-expand");
             }
+            setTimeout(function(){
+                window.dispatchEvent(new Event('resize'));
+            });
         });
 
         document.querySelector('body').querySelector('.kore-chat-window .minimize-btn').addEventListener('click', function () {
@@ -797,10 +885,33 @@ function koreBotChat() {
             removeClass(_chatContainer, "minimize");
             me.minimized = false;
         });
-
+        if(isTTSEnabled) {
+            _chatContainer.querySelector('.ttspeaker').addEventListener('click', function (event) {
+                if (isTTSEnabled) {
+                    if (isTTSOn) {
+                        if(ttsAudioSource) {
+                            ttsAudioSource.stop();
+                        }
+                        cancelTTSConnection();
+                        isTTSOn = false;
+                        _ttsSpeaker.pause();
+                        addClass(_ttsSpeakerDiv,"ttsOff");
+                    } else {
+                        if(!_ttsConnection){
+                            _ttsConnection =  createSocketForTTS();
+                        }
+                        isTTSOn = true;
+                        removeClass(_ttsSpeakerDiv,"ttsOff");
+                    }
+                }
+            });
+        }
         _reloadBtn.addEventListener('click', function (event) {
             addClass(_reloadBtn, "disabled");
             _reloadBtn.disabled = true;
+            if(ttsAudioSource) {
+                ttsAudioSource.stop();
+            }
             me.resetWindow();
         });
 
@@ -904,7 +1015,7 @@ function koreBotChat() {
         me.bindEvents();
     };
 
-    chatWindow.prototype.sendMessage = function (chatInput) {
+    chatWindow.prototype.sendMessage = function (chatInput,renderMsg) {
         var me = this;
         if (chatInput.textContent.trim() === "" && document.getElementsByClassName('attachment')[0].innerHTML.length == 0) {
             return;
@@ -981,11 +1092,14 @@ function koreBotChat() {
         setTimeout(function () {
             document.getElementsByClassName('typingIndicatorContent')[0].style.display = 'none';
         }, 3000)
+        if(renderMsg && typeof renderMsg==='string'){
+           msgData.message[0].cInfo.body=renderMsg;
+        }
         me.renderMessage(msgData);
     };
 
     chatWindow.prototype.renderMessage = function (msgData) {
-        var me = this, messageHtml = '', extension;
+        var me = this, messageHtml = '', extension, _extractedFileName = '';
         if (msgData.type === "bot_response") {
             setTimeout(function () {
                 document.getElementsByClassName('typingIndicator')[0].style.backgroundImage = "url(" + msgData.icon + ")";
@@ -998,6 +1112,10 @@ function koreBotChat() {
         if (msgData.message[0] && msgData.message[0].cInfo.attachments) {
             extension = strSplit(msgData.message[0].cInfo.attachments[0].fileName)
         }
+        if (msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.url) {
+            extension = strSplit(msgData.message[0].component.payload.url);
+            _extractedFileName = msgData.message[0].component.payload.url.replace(/^.*[\\\/]/, '');
+        }
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "button") {
             messageHtml = me.getChatTemplate("templatebutton", msgData);
         }
@@ -1005,11 +1123,36 @@ function koreBotChat() {
             messageHtml = me.getChatTemplate("templatelist", msgData);
         } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "quick_replies") {
             messageHtml = me.getChatTemplate("templatequickreply", msgData);
-        } else {
+        }
+        else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "carousel") {
+            messageHtml = me.getChatTemplate("carouselTemplate", msgData);
+            setTimeout(function () {
+                var _carouselEles = document.querySelectorAll(".carousel");
+                addClass(_carouselEles[_carouselEles.length-1], 'carousel'+carouselTemplateCount);
+                var count = document.querySelectorAll(".carousel"+carouselTemplateCount)[0].children.length;
+                if(count > 1) {
+                    var carouselOneByOne = new PureJSCarousel({
+                        carousel: '.carousel'+carouselTemplateCount,
+                        slide: '.slide',
+                        oneByOne: true
+                      });
+                     document.querySelectorAll(".carousel"+carouselTemplateCount)[0].parentNode.style.display = 'block';
+                     document.querySelectorAll(".carousel"+carouselTemplateCount)[0].style.height = '100%';
+                    carouselEles.push(carouselOneByOne);
+                }
+                window.dispatchEvent(new Event('resize'));
+                carouselTemplateCount += 1;
+                document.getElementsByClassName('chat-container')[0].scrollTop = document.getElementsByClassName('chat-container')[0].scrollHeight;
+            });
+        } 
+        else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.type == "image" || msgData.message[0].component.type == "audio" || msgData.message[0].component.type == "video" || msgData.message[0].component.type == "link")) {
+            messageHtml = me.getChatTemplate("templateAttachment",msgData, extension, _extractedFileName);
+        }else {
             messageHtml = me.getChatTemplate("message", msgData, extension);
         }
 
-        _chatContainer.innerHTML += messageHtml;
+        ///_chatContainer.innerHTML += messageHtml;
+        _chatContainer.insertAdjacentHTML('beforeend',messageHtml);
         if (_chatContainer.querySelectorAll('li a').length > 0) {
             _chatContainer.querySelectorAll('li a').item(function (ele) {
                 ele.addEventListener('click', function (e) {
@@ -1032,7 +1175,9 @@ function koreBotChat() {
         if (_chatContainer.querySelectorAll('.sendClickReq').length > 0) {
             for (var i = 0; i < _chatContainer.querySelectorAll('.sendClickReq').length; i++) {
                 var evt = _chatContainer.querySelectorAll('.sendClickReq')[i];
-                evt.addEventListener('click', function () {
+                evt.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
                     var _this = this;
                     me.templateBtnClick(_this, me);
                 });
@@ -1047,7 +1192,73 @@ function koreBotChat() {
                 });
             }
         }
+        if (_chatContainer.querySelectorAll('.botResponseAttachments').length > 0) {
+            for (var i = 0; i < _chatContainer.querySelectorAll('.botResponseAttachments').length; i++) {
+                var evt = _chatContainer.querySelectorAll('.botResponseAttachments')[i];
+                evt.addEventListener('click', function () {
+                    var _this = this;
+                    me.downloadClickResponseFile(_this, me);
+                });
+            }
+        }
         _chatContainer.scrollTop = _chatContainer.scrollHeight;
+        if(msgData.type === "bot_response" && isTTSOn && isTTSEnabled && !me.minimized){
+            try {
+                _txtToSpeak = msgData.message[0].component.payload.text?msgData.message[0].component.payload.text.replace(/\r?\n/g, ". ."):"";
+                _txtToSpeak = helpers.checkMarkdowns(_txtToSpeak);
+                // replacing extra new line or line characters
+                _txtToSpeak = _txtToSpeak.replace('___','<hr/>');
+                _txtToSpeak = _txtToSpeak.replace('---','<hr/>');
+                if(msgData.message[0].component.payload.template_type && (msgData.message[0].component.payload.template_type === 'quick_replies' || msgData.message[0].component.payload.template_type === 'button')) {
+                    optionIndex = 65;
+                    if(msgData.message[0].component.payload.quick_replies) {
+                        _txtToSpeak = _txtToSpeak.concat('. .Select one of the options.'+'. .'+'The available options are');
+                        for(var i=0;i<msgData.message[0].component.payload.quick_replies.length;i++) {
+                            _txtToSpeak = _txtToSpeak.concat('. .'+String.fromCharCode(optionIndex+i)+') '+msgData.message[0].component.payload.quick_replies[i].title);
+                        }
+                         _txtToSpeak = _txtToSpeak.concat('. .You can either click or enter your preference.');
+                    }
+                    else if(msgData.message[0].component.payload.buttons) {
+                        _txtToSpeak = _txtToSpeak.concat('. .Select one of the options.'+'. .'+'The available options are');
+                        for(var i=0;i<msgData.message[0].component.payload.buttons.length;i++) {
+                            _txtToSpeak = _txtToSpeak.concat('. .'+String.fromCharCode(optionIndex+i)+') '+msgData.message[0].component.payload.buttons[i].title);
+                        }
+                         _txtToSpeak = _txtToSpeak.concat('. .You can either click or enter your preference.');
+                    }
+                }
+                else if(msgData.message[0].component.type === 'image' || msgData.message[0].component.type === 'audio' || msgData.message[0].component.type === 'video' || msgData.message[0].component.type === 'link'){
+                    var _extractedFileName = msgData.message[0].component.payload.url.replace(/^.*[\\\/]/, '');
+                    _txtToSpeak = _txtToSpeak.concat('. .A file is attached with this message.');
+                    if(_extractedFileName && _extractedFileName.length) {
+                        _txtToSpeak = _txtToSpeak.concat('. .The file name is '+_extractedFileName);
+                    }
+                }
+                else if(msgData.message[0].component.payload.template_type && msgData.message[0].component.payload.template_type === 'list') {
+                    optionIndex = 65;
+                    if(msgData.message[0].component.payload.elements) {
+                        _txtToSpeak = _txtToSpeak.concat('. .Select one of the options.'+'. .'+'The available options are');
+                        for(var i=0;i<msgData.message[0].component.payload.elements.length;i++) {
+                            _txtToSpeak = _txtToSpeak.concat('. .'+msgData.message[0].component.payload.elements[i].title);
+                        }
+                    }
+                }
+            } catch (e) {
+                _txtToSpeak = '';
+            }
+            if(!_ttsConnection || (_ttsConnection.readyState && _ttsConnection.readyState !== 1)) {
+                try {
+                    _ttsConnection = createSocketForTTS();
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+            else {
+                socketSendTTSMessage(_txtToSpeak);
+            }
+        }
+    };
+    chatWindow.prototype.downloadClickResponseFile = function (_this, me) {
+        window.open(_this.getAttribute('fileid'), '_blank');
     };
     chatWindow.prototype.downloadClickFile = function (_this, me) {
         var attachFileID = _this.getAttribute('fileid');
@@ -1080,7 +1291,7 @@ function koreBotChat() {
             document.getElementsByClassName('chatInputBox').textContent = _this.getAttribute('value');
             document.getElementsByClassName('chatInputBox').innerHTML = _this.getAttribute('value');
             setTimeout(function () {
-                me.sendMessage(document.getElementsByClassName('chatInputBox'));
+                me.sendMessage(document.getElementsByClassName('chatInputBox'),_this.textContent.replace(/<img .*?>/g,"").trim());
             }, 100);
         } else if (type == "url" || type == "web_url") {
             var a_link = _this.getAttribute('url');
@@ -1089,6 +1300,9 @@ function koreBotChat() {
             }
             var _tempWin = window.open(a_link, "_blank");
         }
+        setTimeout(function () {
+            document.getElementsByClassName('chatInputBox')[0].focus();
+        }, 600);
     };
     chatWindow.prototype.openPopup = function (link_url) {
         var me = this;
@@ -1103,7 +1317,7 @@ function koreBotChat() {
         me.bindIframeEvents(_div);
     };
 
-    chatWindow.prototype.getChatTemplate = function (tempType, tempData, extension) {
+    chatWindow.prototype.getChatTemplate = function (tempType, tempData, extension, extractedFileName) {
 
         if (tempType === "message") {
             var msgTemplate = '';
@@ -1173,7 +1387,65 @@ function koreBotChat() {
                 });
             }
             return msgTemplate;
-        } else if (tempType === "popup") {
+        }
+        else if (tempType === "templateAttachment") {
+            var attachmentTemplate = '';
+            if (tempData.message) {
+                tempData.message.forEach(function (msgItem) {
+                    if (msgItem.component && msgItem.component.payload.url) {
+                        var msg_data = '';
+                        var msg_class = '';
+                        var msg_icon_html = '';
+                        var msg_created_html = '';
+                        var msg_html = '';
+                        var err_html = '';
+
+                        if (tempData.type !== "bot_response") {
+                            msg_data = 'id = "msg_' + msgItem.clientMessageId + '"';
+                            msg_class = 'fromCurrentUser';
+                        }
+                        else {
+                            msg_class = 'fromOtherUsers';
+                        }
+                        if (msgItem.component.payload.url) {
+                            var className = '';
+                            if (msgItem.component.type == "image") {
+                                className = "icon cf-icon icon-photos_active";
+                            } else if (msgItem.component.type == "audio") {
+                                className = "icon cf-icon icon-files_audio";
+                            } else if (msgItem.component.type == "video") {
+                                className = "icon cf-icon icon-video_active ";
+                            } else {
+                                if (extension[1] == "xlsx" || extension[1] == "xls" || extension[1] == "docx" || extension[1] == "doc" || extension[1] == "pdf" || extension[1] == "ppsx" || extension[1] == "pptx" || extension[1] == "ppt" || extension[1] == "zip" || extension[1] == "rar") {
+                                    className = "icon cf-icon icon-files_" + extension[1];
+                                } else {
+                                    className = "icon cf-icon icon-files_other_doc";
+                                }
+                            }
+                            msg_html += '<div class="msgCmpt botResponseAttachments" fileid="' + msgItem.component.payload.url + '"><div class="uploadedFileIcon"> <span class="' + className + '"></span></div><div class="botuploadedFileName">' + extractedFileName + '</div></div>';
+                        }
+                        if (tempData.icon) {
+                            msg_class += ' with-icon';
+                            msg_icon_html = '<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(' + tempData.icon + ')"></div> </div>';
+                        }
+
+                        if (tempData.createdOn) {
+                            msg_created_html = '<div class="extra-info">' + helpers.formatDate(tempData.createdOn) + '</div>';
+                        }
+                        attachmentTemplate += '<li ' + msg_data + ' class=" ' + msg_class + '"> \
+                                '+ msg_created_html + ' \
+                                '+ msg_icon_html + ' \
+                                <div class="messageBubble">\
+                                    '+ msg_html + ' \
+                                    '+ err_html + ' \
+                                </div> \
+                        </li>';
+                    }
+                });
+            }
+            return attachmentTemplate;
+        }
+        else if (tempType === "popup") {
             var popupTemplate = '<div class="kore-auth-popup"><div class="popup_controls"><span class="close-popup" title="Close">&times;</span></div> \
 							<iframe id="authIframe" src=" ' + tempData + '"></iframe></div>';
             return popupTemplate;
@@ -1277,12 +1549,12 @@ function koreBotChat() {
                                 value = 'value="' + msgInnerItem.payload + '"';
                             }
                             if (msgInnerItem.image_url) {
-                                url = 'img src="' + '+msgInnerItem.image_url+' + '"';
+                                url = '<img src="' + msgInnerItem.image_url + '"></img>';
                             }
                             if (msgInnerItem.content_type) {
                                 type = 'type="' + msgInnerItem.content_type + '"';
                             }
-                            inner_html = inner_html + '<li ' + value + ' ' + url + ' ' + type + ' class="quickReply buttonTmplContentChild sendClickReq">\
+                            inner_html = inner_html + '<li ' + value + '  ' + type + ' class="quickReply buttonTmplContentChild sendClickReq">\
 									'+ url + ' ' + msgInnerItem.title + '</li>';
                         });
                         quickReplyTemplate += '<li ' + msg_data + ' class=" ' + msg_class + '"> \
@@ -1299,6 +1571,105 @@ function koreBotChat() {
                 });
             }
             return quickReplyTemplate;
+        }
+        else if (tempType === "carouselTemplate") {
+            var carouselTemplate = '';
+            if (tempData.message) {
+                tempData.message.forEach(function (msgItem) {
+                    if (msgItem.component && msgItem.component.type === "template") {
+                        var msg_data = '';
+                        var msg_class = '';
+                        var msg_icon_html = '';
+                        var msg_created_html = '';
+                        var msg_html = '';
+                        var inner_html = '', lastButton = '', count = 0;
+                        if (tempData.type !== "bot_response") {
+                            msg_data = 'id = "msg_' + msgItem.clientMessageId + '"';
+                            msg_class = 'fromCurrentUser';
+
+                        }
+                        else {
+                            msg_class = 'fromOtherUsers';
+                        }
+
+                        if (tempData.icon) {
+                            msg_class += ' with-icon';
+                            msg_icon_html = '<div class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(' + tempData.icon + ')"></div> </div>';
+                        }
+
+                        if (tempData.createdOn) {
+                            msg_created_html = '<div class="extra-info">' + helpers.formatDate(tempData.createdOn) + '</div>';
+                        }
+
+                        msgItem.component.payload.elements.forEach(function (msgInnerItem) {
+                                var value = '', url = '', type = '';
+                                if (msgInnerItem.buttons && msgInnerItem.buttons[0].payload) {
+                                    value = 'value="' + msgInnerItem.buttons[0].payload + '"';
+                                } else if (msgInnerItem.buttons) {
+                                    value = 'value="' + msgInnerItem.buttons[0].title + '"';
+                                }
+                                if (msgInnerItem.buttons && msgInnerItem.buttons[0].url) {
+                                    url = 'url="' + msgInnerItem.buttons[0].url + '"';
+                                }
+                                if (msgInnerItem.buttons && msgInnerItem.buttons[0].type) {
+                                    type = 'type="' + msgInnerItem.buttons[0].type + '"';
+                                }
+
+
+                                inner_html = inner_html + '<div class="slide">';
+                                if (msgInnerItem.image_url) {
+                                    inner_html = inner_html + '<div class="carouselImageContent"><img src="' + msgInnerItem.image_url + '" /></div>';
+                                }
+
+
+                                if (tempData.type !== "bot_response") {
+                                    inner_html = inner_html + '<p class="carouselTitleBox"><p class="carouselTitle">' + helpers.convertMDtoHTML(msgInnerItem.title, 'user') + '</p>';
+                                } else {
+                                    inner_html = inner_html + '<div class="carouselTitleBox"><p class="carouselTitle">' + helpers.convertMDtoHTML(msgInnerItem.title, 'bot') + '</p>';
+                                }
+                                if (msgInnerItem.subtitle) {
+                                    if (tempData.type !== "bot_response") {
+                                        inner_html = inner_html + '<p class="carouselDescription">' + helpers.convertMDtoHTML(msgInnerItem.subtitle, 'user') + '</p>';
+                                    } else {
+                                        inner_html = inner_html + '<p class="carouselDescription">' + helpers.convertMDtoHTML(msgInnerItem.subtitle, 'bot') + '</p>';
+                                    }
+                                }
+                                if (msgInnerItem.default_action && msgInnerItem.default_action.url) {
+                                    inner_html = inner_html + '<div class="listItemPath sendClickReq carouselDefaultAction" type="url" url="' + msgInnerItem.default_action.url + '">' + msgInnerItem.default_action.url + '</div>';
+                                }
+
+
+
+                                if (msgInnerItem.buttons) {
+                                    msgInnerItem.buttons.forEach(function (btn) {
+                                        var _value = '', url = '', type = '';
+                                        if (btn.payload) {
+                                            _value = 'value="' + btn.payload + '"';
+                                        }
+                                        if (btn.url) {
+                                            url = 'url="' + btn.url + '"';
+                                        }
+                                        if (btn.type) {
+                                            type = 'type="' + btn.type + '"';
+                                        }
+                                        inner_html = inner_html + '<div ' + _value + ' ' + url + ' ' + type + ' class="listItemPath sendClickReq carouselButton">\
+                                                '+ btn.title + '</div>';
+                                    });
+                                }
+                                inner_html = inner_html + '</div>';
+                                inner_html = inner_html + '</div>';
+                        });
+                        carouselTemplate += '<li ' + msg_data + ' class=" ' + msg_class + '"> \
+                                    '+ msg_created_html + ' \
+                                    '+ msg_icon_html + ' \
+                                    <div class="carousel" id="carousel-one-by-one" style="height: 0px;"> \
+                                    '+ inner_html + ' \
+                                </div>\
+                        </li>';
+                    }
+                });
+            }
+            return carouselTemplate;
         }
         else if (tempType === "templatelist") {
             var listTemplate = '';
@@ -1354,9 +1725,17 @@ function koreBotChat() {
                                 if (msgInnerItem.image_url) {
                                     inner_html = inner_html + '<div class="listRightContent"><img src="' + msgInnerItem.image_url + '" /></div>';
                                 }
-                                inner_html = inner_html + '<div class="listLeftContent"><div class="listItemTitle">' + msgInnerItem.title + '</div>';
+                                if (tempData.type !== "bot_response") {
+                                    inner_html = inner_html + '<div class="listLeftContent"><div class="listItemTitle">' + helpers.convertMDtoHTML(msgInnerItem.title, 'user') + '</div>';
+                                } else {
+                                    inner_html = inner_html + '<div class="listLeftContent"><div class="listItemTitle">' + helpers.convertMDtoHTML(msgInnerItem.title, 'bot') + '</div>';
+                                }
                                 if (msgInnerItem.subtitle) {
-                                    inner_html = inner_html + '<div class="listItemSubtitle">' + msgInnerItem.subtitle + '</div>';
+                                    if (tempData.type !== "bot_response") {
+                                        inner_html = inner_html + '<div class="listItemSubtitle">' + helpers.convertMDtoHTML(msgInnerItem.subtitle, 'user') + '</div>';
+                                    } else {
+                                        inner_html = inner_html + '<div class="listItemSubtitle">' + helpers.convertMDtoHTML(msgInnerItem.subtitle, 'bot') + '</div>';
+                                    }
                                 }
                                 if (msgInnerItem.default_action && msgInnerItem.default_action.url) {
                                     inner_html = inner_html + '<div class="listItemPath sendClickReq" type="url" url="' + msgInnerItem.default_action.url + '">' + msgInnerItem.default_action.url + '</div>';
@@ -1385,9 +1764,17 @@ function koreBotChat() {
                                 if (msgInnerItem.image_url) {
                                     inner_html = inner_html + '<div class="listRightContent"><img src="' + msgInnerItem.image_url + '" /></div>';
                                 }
-                                inner_html = inner_html + '<div class="listLeftContent"><div class="listItemTitle">' + msgInnerItem.title + '</div>';
+                                if (tempData.type !== "bot_response") {
+                                    inner_html = inner_html + '<div class="listLeftContent"><div class="listItemTitle">' + helpers.convertMDtoHTML(msgInnerItem.title, 'user') + '</div>';
+                                } else {
+                                    inner_html = inner_html + '<div class="listLeftContent"><div class="listItemTitle">' + helpers.convertMDtoHTML(msgInnerItem.title, 'bot') + '</div>';
+                                }
                                 if (msgInnerItem.subtitle) {
-                                    inner_html = inner_html + '<div class="listItemSubtitle">' + msgInnerItem.subtitle + '</div>';
+                                    if (tempData.type !== "bot_response") {
+                                        inner_html = inner_html + '<div class="listItemSubtitle">' + helpers.convertMDtoHTML(msgInnerItem.subtitle, 'user') + '</div>';
+                                    } else {
+                                        inner_html = inner_html + '<div class="listItemSubtitle">' + helpers.convertMDtoHTML(msgInnerItem.subtitle, 'bot') + '</div>';
+                                    }
                                 }
                                 if (msgInnerItem.default_action && msgInnerItem.default_action.url) {
                                     inner_html = inner_html + '<div class="listItemPath sendClickReq" type="url" url="' + msgInnerItem.default_action.url + '">' + msgInnerItem.default_action.url + '</div>';
@@ -1441,12 +1828,33 @@ function koreBotChat() {
                 _inputField = '<div class="chatInputBox" contenteditable="true" ></div> \
 								<div class="chatInputBoxPlaceholder">' + tempData.botMessages.message + '</div>';
             }
-            var buttonHtml = '', isPressEnter = '';
+            var buttonHtml = '', isPressEnter = '', _ttsButton= '', _speechButton = '';
             if (isSendButton) {
                 buttonHtml = '<div class="sendBtnCnt"><button class="sendButton disabled" type="button">Send</button></div>';
             }
             if (!isSendButton) {
                 isPressEnter = '<div class="chatSendMsg">Press enter to send</div>';
+            }
+            if(isTTSEnabled) {
+                _ttsButton = '<div class="sdkFooterIcon ttspeakerDiv ttsOff hide"> \
+                                    <button class="ttspeaker"> \
+                                        <span class="ttsSpeakerEnable"></span> \
+                                        <span class="ttsSpeakerDisable"></span> \
+                                        <span style="display:none;"><audio id="ttspeaker" controls="" autoplay="" name="media"><source src="" type="audio/wav"></audio></span>\
+                                    </button> \
+                                </div>';
+            }
+            if(isSpeechEnabled) {
+                _speechButton = '<div class="sdkFooterIcon microphoneBtn hide"> \
+                                    <button class="notRecordingMicrophone"> \
+                                        <i class="fa fa-microphone fa-lg"></i> \
+                                    </button> \
+                                    <button class="recordingMicrophone"> \
+                                        <i class="fa fa-microphone fa-lg"></i> \
+                                        <span class="recordingGif"></span> \
+                                    </button> \
+                                    <div id="textFromServer"></div> \
+                                </div>';
             }
             var chatWindowTemplate = '<div class="kore-chat-window" id="koreChatWindow"> \
 									<div class="minimized-title"></div> \
@@ -1456,7 +1864,7 @@ function koreBotChat() {
 						<div class="chat-box-controls"> \
 													<button class="reload-btn" title="Reconnect"><span></span></button> \
 							<button class="minimize-btn" title="Minimize">&minus;</button> \
-													<button class="expand-btn" title="Expand"><span></span></button>\
+													<button class="expand-btn" title="Expand"><span class="expand-btn-span fa fa-expand"></span></button>\
 							<button class="close-btn" title="Close">&times;</button> \
 						</div> \
 					</div> \
@@ -1470,16 +1878,8 @@ function koreBotChat() {
 						<div class="footerContainer pos-relative"> \
 							' + _inputField + ' \
                             <div class="attachment"></div> \
-                            <div class="sdkFooterIcon microphoneBtn"> \
-                                <button class="notRecordingMicrophone"> \
-                                    <i class="fa fa-microphone fa-lg"></i> \
-                                </button> \
-                                <button class="recordingMicrophone"> \
-                                    <i class="fa fa-microphone fa-lg"></i> \
-                                    <span class="recordingGif"></span> \
-                                </button> \
-                                <div id="textFromServer"></div> \
-                            </div> \
+                            ' + _ttsButton + ' \
+                            ' + _speechButton + ' \
                             <div class="sdkFooterIcon"> \
                                 <button class="sdkAttachment attachmentBtn"> \
                                     <i class="fa fa fa-paperclip"></i><input type="file" name="Attachment" class="filety captureAttachmnts" id="captureAttachmnts"> \
@@ -1607,7 +2007,28 @@ function koreBotChat() {
             addClass(document.getElementsByClassName('errorMsgBlock')[0], 'showError');
         }
     }
+    this.botDetails = function(response, botInfo){
+        setTimeout(function () {
+            fetchBotDetails(response,botInfo);
+        }, 50);
+    }
     /************************************* Microphone code **********************************************/
+    function getSIDToken() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', speechPrefixURL+"asr/wss/start?email="+userIdentity);
+        xhr.setRequestHeader('Authorization', (bearerToken) ? bearerToken : assertionToken);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                var data = JSON.parse(xhr.responseText);
+                sidToken = data.link;
+                micEnable();
+            } else {
+                var data = JSON.parse(xhr.responseText);
+                console.log(data);
+            }
+        };
+        xhr.send();
+    }
     function micEnable() {
         if (isRecordingStarted) {
             return;
@@ -1621,7 +2042,7 @@ function koreBotChat() {
                 audio: true
             }, success, function (e) {
                 isRecordingStarted = false;
-                alert('Error capturing audio');
+                alert('Please enable the microphone permission for this page');
                 return;
             });
         } else {
@@ -1704,6 +2125,7 @@ function koreBotChat() {
             rec.stop();
             rec.clear();
         }
+        sidToken = "";
     }
 
     function socketSend(item) {
@@ -1734,11 +2156,11 @@ function koreBotChat() {
 
     function createSocket() {
         window.ENABLE_MICROPHONE = true;
-        window.SPEECH_SERVER_SOCKET_URL = speechServerUrl;
+        window.SPEECH_SERVER_SOCKET_URL = sidToken;
         var serv_url = window.SPEECH_SERVER_SOCKET_URL;
         var userEmail = userIdentity;
         window.WebSocket = window.WebSocket || window.MozWebSocket;
-        var url = serv_url + '?' + CONTENT_TYPE + '&email=' + userEmail;
+        var url = serv_url + '&' + CONTENT_TYPE + '&email=' + userEmail;
         var _connection = new WebSocket(url);
         // User is connected to server
         _connection.onopen = function (e) {
@@ -1771,6 +2193,7 @@ function koreBotChat() {
                         document.getElementsByClassName('chatInputBox')[0].innerHTML = document.getElementsByClassName('chatInputBox')[0].innerHTML + ' ' + final_result;
                         setTimeout(function () {
                             setCaretEnd(document.getElementsByClassName("chatInputBox"));
+                            document.getElementsByClassName('chatInputBox')[0].scrollTop = document.getElementsByClassName('chatInputBox')[0].scrollHeight;
                         }, 350);
                     } else {
                         //document.getElementsByClassName('chatInputBox')[0].textContent = res.result.hypotheses[0].transcript;
@@ -1804,10 +2227,12 @@ function koreBotChat() {
             rec.stop();
             isListening = false;
             console.log('stopped recording..');
-            if (_connection) {
-                _connection.close();
-                _connection = null;
-            }
+            setTimeout(function () {
+                if (_connection) {
+                    _connection.close();
+                    _connection = null;
+                }
+            }, 1000); // waiting to send and receive last message
             rec.export16kMono(function (blob) {
                 socketSend(blob);
                 rec.clear();
@@ -1821,13 +2246,148 @@ function koreBotChat() {
             console.error('Recorder undefined');
         }
     };
-
+    function fetchBotDetails(botData,botInfo) {
+        if(botData && botData.userInfo && botData.authorization) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', koreAPIUrl + "1.1/users/"+botData.userInfo.userId+"/builder/streams/"+botInfo.taskBotId);
+            xhr.setRequestHeader('Authorization', "bearer " + botData.authorization.accessToken);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var res = JSON.parse(xhr.responseText);
+                    var _speechEnabledForBot = false;
+                    for(var i=0; i<res.channels.length;i++) {
+                        if(res.channels[i].type === "rtm") {
+                            _speechEnabledForBot = res.channels[i].sttEnabled || false;
+                            break;
+                        }
+                    }
+                    var _microPhoneEle = document.getElementsByClassName("sdkFooterIcon microphoneBtn")[0];
+                    var _ttsSpeakerEle = document.getElementsByClassName("sdkFooterIcon ttspeakerDiv")[0];
+                    if(!_speechEnabledForBot) {
+                        if(_microPhoneEle) {
+                            _microPhoneEle.remove();
+                        }
+                        if(_ttsSpeakerEle) {
+                            _ttsSpeakerEle.remove();
+                        }
+                    }
+                    else {
+                        if(_microPhoneEle) {
+                            _microPhoneEle.classList.remove("hide");
+                        }
+                        if(_ttsSpeakerEle) {
+                            _ttsSpeakerEle.classList.remove("hide");
+                        }
+                    }
+                } else {
+                    var data = JSON.parse(xhr.responseText);
+                    console.log(data);
+                }
+            };
+            xhr.send();
+        }
+    }
     window.onbeforeunload = function (e) {
         cancel();
     };
 
     /*************************************  Microphone code end here ******************************************/
 
+    /*************************************    TTS code start here         **************************************/
+    function createSocketForTTS() {
+        window.TTS_SOCKET_URL = ttsServerUrl;
+        var serv_url = window.TTS_SOCKET_URL;
+        var userEmail = userIdentity;
+        window.WebSocket = window.WebSocket || window.MozWebSocket;
+        var _ttsConnection = new WebSocket(serv_url);
+        _ttsConnection.binaryType = 'arraybuffer';
+        // User is connected to server
+        _ttsConnection.onopen = function (e) {
+            socketSendTTSMessage(_txtToSpeak);
+        };
+        // On receving message from server
+        _ttsConnection.onmessage = function (msg) {
+            _txtToSpeak = "";
+            if (typeof msg.data === 'string') {
+                // do nothing
+            } else {
+                var _data = msg.data
+                if(isTTSOn) {
+                    playsound(_data);
+                }
+            }
+        };
+        // If server is closed
+        _ttsConnection.onclose = function (e) {
+            //tts socket closed
+        };
+        // If there is an error while sending or receving data
+        _ttsConnection.onerror = function (e) {
+            console.log("Error : ", e);
+        };
+        return _ttsConnection;
+    }
+
+    function cancelTTSConnection() {
+        if (_ttsConnection) {
+            _ttsConnection.close();
+            _ttsConnection = null;
+        }
+    }
+    function socketSendTTSMessage(item) {
+        if (_ttsConnection) {
+            var state = _ttsConnection.readyState;
+            if (state === 1) {
+                var auth = (bearerToken) ? bearerToken : assertionToken;
+                var _message = {
+                    message: item,
+                    'user': _botInfo.name,
+                    'authorization': auth
+                };
+                _ttsConnection.send(JSON.stringify(_message));
+            } else {
+                console.error('Web Socket readyState != 1: ', state);
+                cancelTTSConnection();
+            }
+        } else {
+            console.error('No web socket connection: failed to send');
+        }
+    }
+    function initTTSAudioContext() {
+        if(!_ttsContext) {
+            if (!window.AudioContext) {
+                if (!window.webkitAudioContext) {
+                    console.error("Your browser does not support any AudioContext and cannot play back this audio.");
+                    return;
+                }
+                window.AudioContext = window.webkitAudioContext;
+            }
+            _ttsContext = new AudioContext();
+        }
+    }
+    initTTSAudioContext();
+    function playsound(raw) {
+        _ttsContext.decodeAudioData(raw, function (buffer) {
+            if (!buffer) {
+                console.error("failed to decode:", "buffer null");
+                return;
+            }
+            try {
+                if(ttsAudioSource) {
+                    ttsAudioSource.stop();
+                }
+                ttsAudioSource = _ttsContext.createBufferSource();
+                ttsAudioSource.buffer = buffer;
+                ttsAudioSource.connect(_ttsContext.destination);
+                ttsAudioSource.start(0);
+            } catch (e) {
+            }
+        }, function (error) {
+            console.error("failed to decode:", error);
+        });
+    }
+    /******************************** TTS code end here **********************************************/
+    
     /*******************************    Function for Attachment ***********************************************/
     function cnvertFiles(_this, _file, customFileName) {
         var _scope = _this, recState = {};
@@ -2481,6 +3041,7 @@ function koreBotChat() {
         removeListener: removeListener,
         show: show,
         destroy: destroy,
-        showError: showError
+        showError: showError,
+        botDetails: botDetails
     };
 }

@@ -248,7 +248,8 @@ KoreBot.prototype.onLogIn = function(err, data) {
 		this.accessToken = data.authorization.accessToken;
 		this.options.accessToken = this.accessToken;
 		this.WebClient.user.accessToken = this.accessToken;
-		this.userInfo = data;		
+		this.userInfo = data;
+		this.cbBotDetails(data,this.options.botInfo);
 		this.RtmClient = new clients.KoreRtmClient({}, this.options);
 		this.RtmClient.start({
 			"botInfo": this.options.botInfo
@@ -272,6 +273,7 @@ KoreBot.prototype.logIn = function(err, data) {
 		this.WebClient = new clients.KoreWebClient({}, this.options);
 		this.WebClient.claims = this.claims;
 		this.cbErrorToClient = data.handleError || noop;
+		this.cbBotDetails = data.botDetails || noop;
 		this.WebClient.login.login({"assertion":data.assertion,"botInfo":this.options.botInfo}, bind(this.onLogIn, this));
 	}
 
@@ -314,10 +316,10 @@ module.exports= {
   KoreRtmClient: require('./lib/clients/rtm/client'),
   CLIENT_EVENTS: {
     WEB: events.CLIENT_EVENTS.WEB,
-    RTM: events.CLIENT_EVENTS.RTM,
+    RTM: events.CLIENT_EVENTS.RTM
   },
   RTM_EVENTS: events.RTM_EVENTS,
-  RTM_MESSAGE_SUBTYPES: events.RTM_MESSAGE_SUBTYPES,
+  RTM_MESSAGE_SUBTYPES: events.RTM_MESSAGE_SUBTYPES
 };
 
 },{"./lib/clients/events":5,"./lib/clients/rtm/client":9,"./lib/clients/web/client":18}],2:[function(require,module,exports){
@@ -775,7 +777,7 @@ BaseAPIClient.prototype.makeAPICall = function makeAPICall(endpoint, optData, op
     headers: {
       'User-Agent': this.userAgent,
       "content-type":'application/json'
-    },
+    }
   };
 
   if(optData && optData.opts && optData.opts.authorization){
@@ -785,7 +787,7 @@ BaseAPIClient.prototype.makeAPICall = function makeAPICall(endpoint, optData, op
 
   this._requestQueue.push({
     args: args,
-    cb: apiCallArgs.cb,
+    cb: apiCallArgs.cb
   });
 };
 
@@ -798,7 +800,7 @@ module.exports = BaseAPIClient;
  */
 
 module.exports.WEB = {
-  RATE_LIMITED: 'rate_limited',
+  RATE_LIMITED: 'rate_limited'
 };
 
 module.exports.RTM = {
@@ -832,7 +834,7 @@ module.exports.RTM = {
 
   ATTEMPTING_RECONNECT: 'attempting_reconnect', // the client is attempting to initiate a reconnect
 
-  RAW_MESSAGE: 'raw_message',                   // a message was received from the RTM API. This
+  RAW_MESSAGE: 'raw_message'                   // a message was received from the RTM API. This
                                                 // will also contain the raw message payload that
                                                 // was sent from kore
 };
@@ -841,10 +843,10 @@ module.exports.RTM = {
 module.exports = {
   CLIENT_EVENTS: {
     WEB: require('./client').WEB,
-    RTM: require('./client').RTM,
+    RTM: require('./client').RTM
   },
   RTM_EVENTS: require('./rtm').EVENTS,
-  RTM_MESSAGE_SUBTYPES: require('./rtm').MESSAGE_SUBTYPES,
+  RTM_MESSAGE_SUBTYPES: require('./rtm').MESSAGE_SUBTYPES
 };
 
 },{"./client":4,"./rtm":6}],6:[function(require,module,exports){
@@ -854,12 +856,12 @@ module.exports = {
 
 module.exports.EVENTS = {
   HELLO: 'hello',
-  MESSAGE: 'message',
+  MESSAGE: 'message'
 };
 
 module.exports.MESSAGE_SUBTYPES = {
   BOT_MESSAGE: 'bot_message',
-  ME_MESSAGE: 'me_message',
+  ME_MESSAGE: 'me_message'
 };
 
 },{}],7:[function(require,module,exports){
@@ -947,7 +949,7 @@ var getAPICallArgs = function getAPICallArgs(token, optData, optCb) {
 
   return {
     cb: cb,
-    data: data,
+    data: data
   };
 };
 
@@ -972,12 +974,12 @@ var debug = require("debug")("botsdk:KoreRTMClient");
 var RTM_API_EVENTS = require('../events/rtm').EVENTS;
 var RTM_CLIENT_INTERNAL_EVENT_TYPES = [
   'pong',
-  RTM_API_EVENTS.HELLO,
+  RTM_API_EVENTS.HELLO
 ];
 var UNRECOVERABLE_RTM_START_ERRS = [
   'not_authed',
   'invalid_auth',
-  'account_inactive',
+  'account_inactive'
 ];
 var CLIENT_EVENTS = require('../events/client').RTM;
 var BaseAPIClient = require('../client');
@@ -1282,7 +1284,7 @@ var handleRequestTranportRes = function handleRequestTranportRes(cb, err, respon
 var getRequestTransportArgs = function getReqestTransportArgs(args) {
   var transportArgs = {
     url: args.url,
-    headers: args.headers,
+    headers: args.headers
   };
 
   if (has(args.data, 'file')) {
@@ -1342,7 +1344,7 @@ inherits(AnonymousLogin, BaseApi);
 AnonymousLogin.prototype.login = function login(opts, optCb) {
   opts = opts || {};
   var args = {
-    opts: opts,
+    opts: opts
   };
   return this.client.makeAPICall('/oAuth/token/jwtgrant/anonymous', args, optCb);
 };
@@ -1437,7 +1439,7 @@ module.exports = {
   RtmApi: require('./rtm.js'),
   LogInApi: require('./login.js'),
   AnonymousLogin : require('./anonymouslogin.js'),
-  HistoryApi : require('./history.js'),
+  HistoryApi : require('./history.js')
 };
 
 
@@ -1455,7 +1457,7 @@ inherits(LogInApi, BaseApi);
 LogInApi.prototype.login = function login(opts, optCb) {
   opts = opts || {};
   var args = {
-    opts: opts,
+    opts: opts
   };
   return this.client.makeAPICall('/oAuth/token/jwtgrant', args, optCb);
 };
@@ -1475,7 +1477,7 @@ inherits(RtmApi, BaseApi);
 
 RtmApi.prototype.start = function start(opts, optCb) {
   var args = {
-    opts: opts,
+    opts: opts
   };
 
   return this.client.makeAPICall('/rtm/start', args, optCb);
@@ -1505,7 +1507,7 @@ function WebAPIClient(token, opts) {
   this.claims = opts.claims;
   this.retryConfig = clientOpts.retryConfig || {
     retries: 5,
-    factor: 3.9,
+    factor: 3.9
   };
   this.user = {};
 }

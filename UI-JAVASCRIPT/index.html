@@ -12,6 +12,8 @@
 		<link href="../libs/emojione.sprites.css" rel="stylesheet"></link>
 		<script src="../libs/recorder.js" type="text/javascript"></script>
 		<script src="../libs/recorderWorker.js" type="text/javascript"></script>
+		<link href="../libs/purejscarousel.css" rel="stylesheet"></link>
+		<script src="../libs/purejscarousel.js" type="text/javascript"></script>
 	</head>
 	<body>
 		<div id="chatContainer">
@@ -35,6 +37,7 @@
 						var data = JSON.parse(xhr.responseText);
 						options.assertion = data.jwt;
 						options.handleError = koreBot.showError;
+						options.botDetails = koreBot.botDetails;
 						callback(null, options);
 						setTimeout(function () {
 							if (koreBot && koreBot.initToken) {
@@ -52,19 +55,22 @@
 			var botOptions = {};
 			botOptions.logLevel = 'debug';
 			botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
+			botOptions.koreSpeechAPIUrl = "https://speech.kore.ai/";
 			//botOptions.bearer = "bearer xyz-------------------";
-			botOptions.speechSocketUrl = 'wss://speech.kore.ai/stream/kore/decode';
+			botOptions.ttsSocketUrl = 'wss://speech.kore.ai/tts/ws';
 			botOptions.userIdentity = 'userIdentity';// Provide users email id here
 			botOptions.recorderWorkerPath = '../libs/recorderWorker.js';
 			botOptions.assertionFn = assertion;
 			botOptions.koreAnonymousFn = koreAnonymousFn;
 			botOptions.clientId   = "your client-id"; // secure client-id
-			botOptions.botInfo = {name:"A Test Bot","_id":"bot_id"}; // bot name is case sensitive
+			botOptions.botInfo = {name:"your bot name","_id":"bot_id"}; // bot name is case sensitive
 			
 			var koreBot = koreBotChat();
 			var chatConfig={
 				botOptions:botOptions,
-				isSendButton: false
+				isSendButton: false,
+				isTTSEnabled: true,
+				isSpeechEnabled: true
 			};
 			document.getElementById('openChatWindow').addEventListener('click',function() {
 				koreBot.show(chatConfig);

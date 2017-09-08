@@ -8,8 +8,9 @@ function koreBotChat() {
     var _botInfo = {};
     var detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
     var _eventQueue = {};
+    var carouselEles = [];
     var prevRange, accessToken, koreAPIUrl, fileToken, fileUploaderCounter = 0, bearerToken = '', assertionToken = '';
-    var speechServerUrl = '', userIdentity = '', isListening = false, isRecordingStarted = false;
+    var speechServerUrl = '', userIdentity = '', isListening = false, isRecordingStarted = false,  isSpeechEnabled = false, speechPrefixURL = "", sidToken = "",carouselTemplateCount = 0;
     /******************* Mic variable initilization *******************/
     var _exports = {},
         _template, _this = {};
@@ -23,6 +24,11 @@ function koreBotChat() {
     var INTERVAL = 250;
     var _pingTimer, _pingTime = 30000, isSendButton = false;
     /***************** Mic initilization code end here ************************/
+
+    /******************************* TTS variable initialization **************/
+    var _ttsContext = null, _ttsConnection = null, ttsServerUrl = '', ttsAudioSource = null, _txtToSpeak = "", isTTSOn = false, isTTSEnabled = false, optionIndex = 65;    // Audio context
+    /************************** TTS initialization code end here **************/
+
     /*************************** file upload variable *******************************/
     var appConsts = {};
     var attachmentInfo = {};
@@ -53,6 +59,7 @@ function koreBotChat() {
     var kfrm = {};
     kfrm.net = {};
     /**************************File upload variable end here **************************/
+    var _escPressed = 0; 
     String.prototype.isNotAllowedHTMLTags = function () {
         var wrapper = document.createElement('div');
         wrapper.innerHTML = this;
@@ -325,6 +332,7 @@ function koreBotChat() {
                 }
             } else {
                 wrapper1 = document.createElement('div');
+                //str = str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
                 wrapper1.innerHTML = xssAttack(str);
                 if ($(wrapper1).find('a').attr('href')) {
                     var linkArray = str.match(/<a[^>]*>([^<]+)<\/a>/g);
@@ -414,13 +422,13 @@ function koreBotChat() {
                         txtArr[i] = txtArr[i].replace(_matchLink[j], _linkLink);
                     }
                 }
-                // Matches bold markup *test* doesnot match * test *, *test *, * test*. If all these are required then replace \S with \s
-                var _matchAstrik = txtArr[i].match(/\*\S([^*]*?)\S\*/g);
+                // Matches bold markup *test* doesnot match * test *, * test*. If all these are required then replace \S with \s
+                var _matchAstrik = txtArr[i].match(/\*\S([^*]*?)\*/g);
                 if (_matchAstrik && _matchAstrik.length > 0) {
                     for (j = 0; j < _matchAstrik.length; j++) {
                         var _boldTxt = _matchAstrik[j];
                         _boldTxt = _boldTxt.substring(1, _boldTxt.length - 1);
-                        _boldTxt = '<b>' + _boldTxt + '</b>';
+                        _boldTxt = '<b>' + _boldTxt.trim() + '</b>';
                         txtArr[i] = txtArr[i].replace(_matchAstrik[j], _boldTxt);
                     }
                 }
@@ -513,7 +521,9 @@ function koreBotChat() {
         };
         koreAPIUrl = cfg.botOptions.koreAPIUrl;
         bearerToken = cfg.botOptions.bearer;
-        speechServerUrl = cfg.botOptions.speechSocketUrl;
+        //speechServerUrl = cfg.botOptions.speechSocketUrl;
+        speechPrefixURL = cfg.botOptions.koreSpeechAPIUrl;
+        ttsServerUrl = cfg.botOptions.ttsSocketUrl;
         userIdentity = cfg.botOptions.userIdentity;
         if (cfg.botOptions.recorderWorkerPath && cfg.botOptions.recorderWorkerPath.trim().length > 0) {
             recorderWorkerPath = cfg.botOptions.recorderWorkerPath.trim();
@@ -536,6 +546,18 @@ function koreBotChat() {
             resetPingMessage();
         }, _pingTime);
     }
+    
+    window.onresize = function(event) {
+        if (($('.kore-chat-window').width()>400) || (document.getElementsByClassName('kore-chat-window').length && document.getElementsByClassName('kore-chat-window')[0].classList.contains('expanded'))) {
+            var _koreChatWindowHeight = $('.kore-chat-window').width();
+            $('.carousel').attr('style','width: '+(_koreChatWindowHeight-85)+'px !important');
+        } else {
+            $('.carousel').attr('style','width: 300px !important');
+        }
+        for(var i=0;i<carouselEles.length;i++) {
+            carouselEles[i].computeResize();
+        }
+    };
 
     chatWindow.prototype.init = function () {
         var me = this;
@@ -548,6 +570,8 @@ function koreBotChat() {
         me.config.chatTitle = me.config.botMessages.connecting;
         me.config.userAgentIE = navigator.userAgent.indexOf('Trident/') !== -1;
         isSendButton = me.config.isSendButton;
+        isTTSEnabled = me.config.isTTSEnabled || false;
+        isSpeechEnabled = me.config.isSpeechEnabled || false;
         var chatWindowHtml = $(me.getChatTemplate()).tmpl(me.config);
         me.config.chatContainer = chatWindowHtml;
 
@@ -561,6 +585,14 @@ function koreBotChat() {
         bot.close();
         if (me.config && me.config.chatContainer) {
             me.config.chatContainer.remove();
+        }
+        if(ttsAudioSource) {
+            ttsAudioSource.stop();
+        }
+        isTTSOn = false;
+        if(_ttsContext) {
+            _ttsContext.close();
+            _ttsContext = null;
         }
     };
 
@@ -605,6 +637,12 @@ function koreBotChat() {
         _chatContainer.on('click', '.chatInputBox', function (event) {
             prevComposeSelection = window.getSelection();
             prevRange = prevComposeSelection.rangeCount > 0 && prevComposeSelection.getRangeAt(0);
+        });
+        _chatContainer.on('blur', '.chatInputBox', function (event) {
+            _escPressed = 0;
+        });
+        _chatContainer.off('click', '.botResponseAttachments').on('click', '.botResponseAttachments', function (event) {
+            window.open($(this).attr('fileid'), '_blank');
         });
         _chatContainer.off('click', '.attachments').on('click', '.attachments', function (event) {
             var attachFileID = $(this).attr('fileid');
@@ -663,6 +701,19 @@ function koreBotChat() {
                 me.sendMessage(_this, attachmentInfo);
                 return;
             }
+            else if(event.keyCode === 27) {
+                _escPressed++;
+                if(_escPressed > 1) {
+                    _escPressed = 0;
+                    stop();
+                    this.innerText = "";
+                    $('.attachment').empty();
+                    fileUploaderCounter = 0;
+                    setTimeout(function () {
+                        setCaretEnd((document.getElementsByClassName("chatInputBox")));
+                    }, 100);
+                }
+            }
         });
         _chatContainer.off('click', '.sendButton').on('click', '.sendButton', function (event) {
             var _this = $('.chatInputBox');
@@ -675,7 +726,12 @@ function koreBotChat() {
             return;
         });
         _chatContainer.off('click', '.notRecordingMicrophone').on('click', '.notRecordingMicrophone', function (event) {
-            micEnable();
+            if(ttsAudioSource) {
+                ttsAudioSource.stop();
+            }
+            if(isSpeechEnabled) {
+                getSIDToken();
+            }
         });
         _chatContainer.off('click', '.recordingMicrophone').on('click', '.recordingMicrophone', function (event) {
             stop();
@@ -750,7 +806,7 @@ function koreBotChat() {
             var type = $(this).attr('type');
             if (type == "postback" || type == "text") {
                 $('.chatInputBox').text($(this).attr('value'));
-                me.sendMessage($('.chatInputBox'));
+                me.sendMessage($('.chatInputBox'),$(this).html().replace(/<img .*?>/g,"").trim());
             } else if (type == "url" || type == "web_url") {
                 var a_link = $(this).attr('url');
                 if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
@@ -758,10 +814,22 @@ function koreBotChat() {
                 }
                 var _tempWin = window.open(a_link, "_blank");
             }
+            setTimeout(function () {
+                var _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
+                _chatInput.focus();
+            }, 600);
         });
         _chatContainer.off('click', '.close-btn').on('click', '.close-btn', function (event) {
             $('.recordingMicrophone').trigger('click');
+            if(ttsAudioSource) {
+                ttsAudioSource.stop();
+            }
+            isTTSOn = false;
             me.destroy();
+            if(_ttsContext) {
+                _ttsContext.close();
+                _ttsContext = null;
+            }
         });
 
         _chatContainer.off('click', '.minimize-btn').on('click', '.minimize-btn', function (event) {
@@ -784,6 +852,9 @@ function koreBotChat() {
                 me.minimized = true;
             }
             $('.recordingMicrophone').trigger('click');
+            if(ttsAudioSource) {
+                ttsAudioSource.stop();
+            }
         });
 
         _chatContainer.off('click', '.expand-btn').on('click', '.expand-btn', function (event) {
@@ -794,6 +865,8 @@ function koreBotChat() {
                 $('.kore-chat-overlay').hide();
                 $(this).attr('title', "Expand");
                 _chatContainer.removeClass("expanded");
+                $('.expand-btn-span').removeClass('fa-compress');
+                $('.expand-btn-span').addClass('fa-expand');
                 me.expanded = false;
                 _chatContainer.draggable({
                     handle: _chatContainer.find(".kore-chat-header .header-title"),
@@ -807,9 +880,12 @@ function koreBotChat() {
                 $('.kore-chat-overlay').show();
                 $(this).attr('title', "Collapse");
                 _chatContainer.addClass("expanded");
+                $('.expand-btn-span').addClass('fa-compress');
+                $('.expand-btn-span').removeClass('fa-expand');
                 _chatContainer.draggable("destroy").resizable("destroy");
                 me.expanded = true;
             }
+            window.dispatchEvent(new Event('resize'));
             var container_pos_left = _chatContainer.position().left + _chatContainer.width();
             if (container_pos_left > $(window).width()) {
                 _chatContainer.css('left', _chatContainer.position().left - (container_pos_left - $(window).width() + 10) + "px");
@@ -835,6 +911,28 @@ function koreBotChat() {
             $(this).addClass("disabled").prop('disabled', true);
             me.resetWindow();
             $('.recordingMicrophone').trigger('click');
+            if(ttsAudioSource) {
+                ttsAudioSource.stop();
+            }
+        });
+        _chatContainer.off('click', '.ttspeaker').on('click', '.ttspeaker', function (event) {
+            if (isTTSEnabled) {
+                if (isTTSOn) {
+                    if(ttsAudioSource) {
+                        ttsAudioSource.stop();
+                    }
+                    cancelTTSConnection();
+                    isTTSOn = false;
+                    $('#ttspeaker')[0].pause();
+                    $('.ttspeakerDiv').addClass('ttsOff');
+                } else {
+                    if(!_ttsConnection){
+                        _ttsConnection =  createSocketForTTS();
+                    }
+                    isTTSOn = true;
+                    $('.ttspeakerDiv').removeClass('ttsOff');
+                }
+            }
         });
         bot.on("open", function (response) {
             accessToken = me.config.botOptions.accessToken;
@@ -924,7 +1022,7 @@ function koreBotChat() {
         me.bindEvents();
     };
 
-    chatWindow.prototype.sendMessage = function (chatInput) {
+    chatWindow.prototype.sendMessage = function (chatInput,renderMsg) {
         var me = this;
         if (chatInput.text().trim() === "" && $('.attachment').html().trim().length == 0) {
             return;
@@ -990,12 +1088,14 @@ function koreBotChat() {
         setTimeout(function () {
             $('.typingIndicatorContent').css('display', 'none');
         }, 3000)
-
+        if(renderMsg && typeof renderMsg==='string'){
+           msgData.message[0].cInfo.body=renderMsg;
+        }
         me.renderMessage(msgData);
     };
 
     chatWindow.prototype.renderMessage = function (msgData) {
-        var me = this, messageHtml = '', extension = '';
+        var me = this, messageHtml = '', extension = '', _extractedFileName = '';
         if (msgData.type === "bot_response") {
             setTimeout(function () {
                 $('.typingIndicator').css('background-image', "url(" + msgData.icon + ")");
@@ -1007,6 +1107,10 @@ function koreBotChat() {
         var _chatContainer = $(me.config.chatContainer).find('.chat-container');
         if (msgData.message && msgData.message[0] && msgData.message[0].cInfo.attachments) {
             extension = strSplit(msgData.message[0].cInfo.attachments[0].fileName);
+        }
+        if (msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.url) {
+            extension = strSplit(msgData.message[0].component.payload.url);
+            _extractedFileName = msgData.message[0].component.payload.url.replace(/^.*[\\\/]/, '');
         }
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "button") {
             messageHtml = $(me.getChatTemplate("templatebutton")).tmpl({
@@ -1028,6 +1132,40 @@ function koreBotChat() {
                 'helpers': helpers,
                 'extension': extension
             });
+        }
+        else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "carousel") {
+            messageHtml = $(me.getChatTemplate("carouselTemplate")).tmpl({
+                'msgData': msgData,
+                'helpers': helpers,
+                'extension': extension
+            });
+            setTimeout(function () {
+                $('.carousel:last').addClass("carousel"+carouselTemplateCount);
+                var count = $(".carousel"+carouselTemplateCount).children().length;
+                if(count > 1) {
+                    var carouselOneByOne = new PureJSCarousel({
+                        carousel: '.carousel'+carouselTemplateCount,
+                        slide: '.slide',
+                        oneByOne: true
+                      });
+                     $('.carousel'+carouselTemplateCount).parent().show();
+                     $('.carousel'+carouselTemplateCount).attr('style', 'height: 100% !important');
+                     carouselEles.push(carouselOneByOne);
+                }
+                window.dispatchEvent(new Event('resize'));
+                carouselTemplateCount += 1;
+                _chatContainer.animate({
+                    scrollTop: _chatContainer.prop("scrollHeight")
+                }, 0);
+            });
+        } 
+        else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.type == "image" || msgData.message[0].component.type == "audio" || msgData.message[0].component.type == "video" || msgData.message[0].component.type == "link")) {
+            messageHtml = $(me.getChatTemplate("templateAttachment")).tmpl({
+                'msgData': msgData,
+                'helpers': helpers,
+                'extension': extension,
+                'extractedFileName' : _extractedFileName
+            });
         } else {
             messageHtml = $(me.getChatTemplate("message")).tmpl({
                 'msgData': msgData,
@@ -1041,6 +1179,60 @@ function koreBotChat() {
         _chatContainer.animate({
             scrollTop: _chatContainer.prop("scrollHeight")
         }, 0);
+        if(msgData.type === "bot_response" && isTTSOn && isTTSEnabled && !me.minimized){
+            try {
+                _txtToSpeak = msgData.message[0].component.payload.text?msgData.message[0].component.payload.text.replace(/\r?\n/g, ". ."):"";
+                _txtToSpeak = helpers.checkMarkdowns(_txtToSpeak);
+                // replacing extra new line or line characters
+                _txtToSpeak = _txtToSpeak.replace('___','<hr/>');
+                _txtToSpeak = _txtToSpeak.replace('---','<hr/>');
+                if(msgData.message[0].component.payload.template_type && (msgData.message[0].component.payload.template_type === 'quick_replies' || msgData.message[0].component.payload.template_type === 'button')) {
+                    optionIndex = 65;
+                    if(msgData.message[0].component.payload.quick_replies) {
+                        _txtToSpeak = _txtToSpeak.concat('. .Select one of the options.'+'. .'+'The available options are');
+                        for(var i=0;i<msgData.message[0].component.payload.quick_replies.length;i++) {
+                            _txtToSpeak = _txtToSpeak.concat('. .'+String.fromCharCode(optionIndex+i)+') '+msgData.message[0].component.payload.quick_replies[i].title);
+                        }
+                         _txtToSpeak = _txtToSpeak.concat('. .You can either click or enter your preference.');
+                    }
+                    else if(msgData.message[0].component.payload.buttons) {
+                        _txtToSpeak = _txtToSpeak.concat('. .Select one of the options.'+'. .'+'The available options are');
+                        for(var i=0;i<msgData.message[0].component.payload.buttons.length;i++) {
+                            _txtToSpeak = _txtToSpeak.concat('. .'+String.fromCharCode(optionIndex+i)+') '+msgData.message[0].component.payload.buttons[i].title);
+                        }
+                         _txtToSpeak = _txtToSpeak.concat('. .You can either click or enter your preference.');
+                    }
+                }
+                else if(msgData.message[0].component.type === 'image' || msgData.message[0].component.type === 'audio' || msgData.message[0].component.type === 'video' || msgData.message[0].component.type === 'link'){
+                    var _extractedFileName = msgData.message[0].component.payload.url.replace(/^.*[\\\/]/, '');
+                    _txtToSpeak = _txtToSpeak.concat('. .A file is attached with this message.');
+                    if(_extractedFileName && _extractedFileName.length) {
+                        _txtToSpeak = _txtToSpeak.concat('. .The file name is '+_extractedFileName);
+                    }
+                }
+                else if(msgData.message[0].component.payload.template_type && msgData.message[0].component.payload.template_type === 'list') {
+                    optionIndex = 65;
+                    if(msgData.message[0].component.payload.elements) {
+                        _txtToSpeak = _txtToSpeak.concat('. .Select one of the options.'+'. .'+'The available options are');
+                        for(var i=0;i<msgData.message[0].component.payload.elements.length;i++) {
+                            _txtToSpeak = _txtToSpeak.concat('. .'+msgData.message[0].component.payload.elements[i].title);
+                        }
+                    }
+                }
+            } catch (e) {
+                _txtToSpeak = '';
+            }
+            if(!_ttsConnection || (_ttsConnection.readyState && _ttsConnection.readyState !== 1)) {
+                try {
+                    _ttsConnection = createSocketForTTS();
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+            else {
+                socketSendTTSMessage(_txtToSpeak);
+            }
+        }
     };
 
     chatWindow.prototype.formatMessages = function (msgContainer) {
@@ -1068,7 +1260,17 @@ function koreBotChat() {
 				<div class="chatInputBox" contenteditable="true" placeholder="${botMessages.message}"></div> \
             	{{/if}} \
 			<div class="attachment"></div> \
-            <div class="sdkFooterIcon microphoneBtn"> \
+            {{if isTTSEnabled}} \
+                <div class="sdkFooterIcon ttspeakerDiv ttsOff hide"> \
+                    <button class="ttspeaker"> \
+                        <span class="ttsSpeakerEnable"></span> \
+                        <span class="ttsSpeakerDisable"></span> \
+                        <span style="display:none;"><audio id="ttspeaker" controls="" autoplay="" name="media"><source src="" type="audio/wav"></audio></span>\
+                    </button> \
+                </div> \
+            {{/if}} \
+            {{if isSpeechEnabled}}\
+            <div class="sdkFooterIcon microphoneBtn hide"> \
                 <button class="notRecordingMicrophone"> \
                     <i class="fa fa-microphone fa-lg"></i> \
                 </button> \
@@ -1078,6 +1280,7 @@ function koreBotChat() {
                 </button> \
                 <div id="textFromServer"></div> \
             </div> \
+            {{/if}}\
             <div class="sdkFooterIcon"> \
                 <button class="sdkAttachment attachmentBtn"> \
                     <i class="fa fa fa-paperclip"></i> \
@@ -1096,7 +1299,7 @@ function koreBotChat() {
 					<div class="chat-box-controls"> \
                                                 <button class="reload-btn" title="Reconnect"><span></span></button> \
 						<button class="minimize-btn" title="Minimize">&minus;</button> \
-                                                <button class="expand-btn" title="Expand"><span></span></button>\
+                                                <button class="expand-btn" title="Expand"><span class="expand-btn-span fa fa-expand"></span></button>\
 						<button class="close-btn" title="Close">&times;</button> \
 					</div> \
 				</div> \
@@ -1110,7 +1313,7 @@ function koreBotChat() {
 			</div> \
 		</script>';
 
-        var msgTemplate = ' <script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+        var msgTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			{{if msgData.message}} \
 				{{each(key, msgItem) msgData.message}} \
 					{{if msgItem.cInfo && msgItem.type === "text"}} \
@@ -1122,8 +1325,11 @@ function koreBotChat() {
                                     {{if msgData.type === "bot_response"}} \
                                         {{if msgItem.component  && msgItem.component.type =="error"}} \
                                             <span style="color:${msgItem.component.payload.color}">{{html helpers.convertMDtoHTML(msgItem.component.payload.text, "bot")}} </span>\
-                                        {{else}} \
+                                         {{else}} \
                                             {{html helpers.convertMDtoHTML(msgItem.cInfo.body, "bot")}} \
+                                            {{if msgItem.component && msgItem.component.payload && msgItem.component.payload.videoUrl}}\
+                                                <div class="videoEle"><video width="300" controls><source src="${msgItem.component.payload.videoUrl}" type="video/mp4"></video></div>\
+                                            {{/if}}\
                                         {{/if}} \
                                     {{else}} \
                                         {{html helpers.convertMDtoHTML(msgItem.cInfo.body, "user")}} \
@@ -1161,7 +1367,40 @@ function koreBotChat() {
 				{{/each}} \
 			{{/if}} \
 		</scipt>';
-
+        var templateAttachment = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+            {{if msgData.message}} \
+                {{each(key, msgItem) msgData.message}} \
+                    {{if msgItem.component && msgItem.component.payload.url}} \
+                        <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
+                            {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+                            {{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+                            <div class="messageBubble">\
+                                {{if msgItem.component.payload.url}} \
+                                    <div class="msgCmpt botResponseAttachments" fileid="${msgItem.component.payload.url}"> \
+                                        <div class="uploadedFileIcon"> \
+                                            {{if msgItem.component.type == "image"}} \
+                                                <span class="icon cf-icon icon-photos_active"></span> \
+                                            {{else msgItem.component.type == "audio"}}\
+                                                <span class="icon cf-icon icon-files_audio"></span> \
+                                            {{else msgItem.component.type == "video"}} \
+                                                <span class="icon cf-icon icon-video_active"></span> \
+                                            {{else}} \
+                                                {{if extension[1]=="xlsx" || extension[1]=="xls" || extension[1]=="docx" || extension[1]=="doc" || extension[1]=="pdf" || extension[1]=="ppsx" || extension[1]=="pptx" || extension[1]=="ppt" || extension[1]=="zip" || extension[1]=="rar"}}\
+                                                    <span class="icon cf-icon icon-files_${extension[1]}"></span> \
+                                                {{else extension[1]}}\
+                                                    <span class="icon cf-icon icon-files_other_doc"></span> \
+                                                {{/if}}\
+                                            {{/if}}\
+                                        </div> \
+                                        <div class="botuploadedFileName">${extractedFileName}</div> \
+                                    </div> \
+                                {{/if}} \
+                            </div> \
+                        </li> \
+                    {{/if}} \
+                {{/each}} \
+            {{/if}} \
+        </scipt>';
         var popupTemplate = '<script id="kore_popup_tmpl" type="text/x-jquery-tmpl"> \
                 <div class="kore-auth-layover">\
                     <div class="kore-auth-popup"> \
@@ -1193,6 +1432,38 @@ function koreBotChat() {
 				</li> \
 			{{/if}} \
 		</scipt>';
+        var carouselTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+            {{if msgData.message}} \
+                <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+                    {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+                    {{if msgData.icon}}<div class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+                    <div class="carousel" id="carousel-one-by-one" style="height: 0px;">\
+                        {{each(key, msgItem) msgData.message[0].component.payload.elements}} \
+                            <div class="slide">\
+                                {{if msgItem.image_url}} \
+                                    <div class="carouselImageContent"> \
+                                        <img src="${msgItem.image_url}" /> \
+                                    </div> \
+                                {{/if}} \
+                                <div class="carouselTitleBox"> \
+                                    <p class="carouselTitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</p> \
+                                    {{if msgItem.subtitle}}<p class="carouselDescription">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</p>{{/if}} \
+                                    {{if msgItem.default_action}}<div class="listItemPath carouselDefaultAction" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
+                                    {{if msgItem.buttons}} \
+                                        {{each(key, msgBtn) msgItem.buttons}} \
+                                            <div {{if msgBtn.payload}}value="${msgBtn.payload}"{{/if}} {{if msgBtn.url}}url="${msgBtn.url}"{{/if}} class="listItemPath carouselButton" data-value="${msgBtn.value}" type="${msgBtn.type}">\
+                                                ${msgBtn.title}\
+                                            </div> \
+                                        {{/each}} \
+                                    {{/if}} \
+                                </div>\
+                            </div>\
+                        {{/each}} \
+                    </div>\
+                </li> \
+            {{/if}}\
+        </scipt>';
+        
         var quickReplyTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			{{if msgData.message}} \
 				<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
@@ -1243,8 +1514,8 @@ function koreBotChat() {
                                             </div> \
                                             {{/if}} \
                                             <div class="listLeftContent"> \
-    											<div class="listItemTitle">${msgItem.title}</div> \
-    											{{if msgItem.subtitle}}<div class="listItemSubtitle">${msgItem.subtitle}</div>{{/if}} \
+    											<div class="listItemTitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
+                                                {{if msgItem.subtitle}}<div class="listItemSubtitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
     											{{if msgItem.default_action}}<div class="listItemPath" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
     											{{if msgItem.buttons}}\
                                                 <div> \
@@ -1262,8 +1533,8 @@ function koreBotChat() {
                                         </div> \
                                         {{/if}} \
                                         <div class="listLeftContent"> \
-                                            <div class="listItemTitle">${msgItem.title}</div> \
-                                            {{if msgItem.subtitle}}<div class="listItemSubtitle">${msgItem.subtitle}</div> {{/if}} \
+                                            <div class="listItemTitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
+                                            {{if msgItem.subtitle}}<div class="listItemSubtitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
                                             {{if msgItem.default_action}}<div class="listItemPath" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
                                             {{if msgItem.buttons}}\
                                             <div> \
@@ -1295,6 +1566,11 @@ function koreBotChat() {
             return listTemplate;
         } else if (tempType === "templatequickreply") {
             return quickReplyTemplate;
+        } else if(tempType === "templateAttachment") {
+            return templateAttachment;
+        } 
+        else if(tempType === "carouselTemplate"){
+            return carouselTemplate;
         } else {
             return chatWindowTemplate;
         }
@@ -1356,7 +1632,48 @@ function koreBotChat() {
     function strSplit(str) {
         return (str.split('.'));
     }
-
+    function fetchBotDetails(botData,botInfo) {
+        if(botData && botData.userInfo && botData.authorization) {
+            $.ajax({
+                type: "GET",
+                url: koreAPIUrl + "1.1/users/"+botData.userInfo.userId+"/builder/streams/"+botInfo.taskBotId,
+                dataType: "json",
+                headers: {
+                    Authorization: "bearer " + botData.authorization.accessToken
+                },
+                success: function (res) {
+                    var _speechEnabledForBot = false;
+                    for(var i=0; i<res.channels.length;i++) {
+                        if(res.channels[i].type === "rtm") {
+                            _speechEnabledForBot = res.channels[i].sttEnabled || false;
+                            break;
+                        }
+                    }
+                    var _microPhoneEle = document.getElementsByClassName("sdkFooterIcon microphoneBtn")[0];
+                    var _ttsSpeakerEle = document.getElementsByClassName("sdkFooterIcon ttspeakerDiv")[0];
+                    if(!_speechEnabledForBot) {
+                        if(_microPhoneEle) {
+                            _microPhoneEle.remove();
+                        }
+                        if(_ttsSpeakerEle) {
+                            _ttsSpeakerEle.remove();
+                        }
+                    }
+                    else {
+                        if(_microPhoneEle) {
+                            _microPhoneEle.classList.remove("hide");
+                        }
+                        if(_ttsSpeakerEle) {
+                            _ttsSpeakerEle.classList.remove("hide");
+                        }
+                    }
+                },
+                error: function (msg) {
+                    console.log("Failed to fetch bot details.");
+                }
+            });
+        }
+    }
     window.onbeforeunload = function () {
         if (chatInitialize && $(chatInitialize.config.chatContainer).length > 0) {
             chatInitialize.destroy();
@@ -1419,7 +1736,27 @@ function koreBotChat() {
             $('.errorMsgBlock').addClass('showError');
         }
     }
+    this.botDetails = function(response, botInfo){
+        setTimeout(function () {
+            fetchBotDetails(response,botInfo);
+        }, 50);
+    }
     /*************************************       Microphone code      **********************************************/
+    function getSIDToken() {
+        $.ajax({
+            url: speechPrefixURL+"asr/wss/start?email="+userIdentity,
+            type: 'post',
+             headers: {"Authorization": (bearerToken) ? bearerToken : assertionToken},
+            dataType: 'json',
+            success: function (data) {
+                sidToken = data.link;
+                micEnable();
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
     function micEnable() {
         if (isRecordingStarted) {
             return;
@@ -1433,7 +1770,7 @@ function koreBotChat() {
                 audio: true
             }, success, function (e) {
                 isRecordingStarted = false;
-                alert('Error capturing audio');
+                alert('Please enable the microphone permission for this page');
                 return;
             });
         } else {
@@ -1480,7 +1817,7 @@ function koreBotChat() {
         if (rec) {
             rec.stop();
             rec.clear();
-            rec.destroy();
+            //rec.destroy();
             rec = null;
         }
         rec = new Recorder(mediaStreamSource, {
@@ -1516,6 +1853,7 @@ function koreBotChat() {
             rec.stop();
             rec.clear();
         }
+        sidToken = "";
     }
 
     function socketSend(item) {
@@ -1544,13 +1882,14 @@ function koreBotChat() {
         }
     }
 
+
     function createSocket() {
         window.ENABLE_MICROPHONE = true;
-        window.SPEECH_SERVER_SOCKET_URL = speechServerUrl;
+        window.SPEECH_SERVER_SOCKET_URL = sidToken;
         var serv_url = window.SPEECH_SERVER_SOCKET_URL;
         var userEmail = userIdentity;
         window.WebSocket = window.WebSocket || window.MozWebSocket;
-        var url = serv_url + '?' + CONTENT_TYPE + '&email=' + userEmail;
+        var url = serv_url + '&' + CONTENT_TYPE + '&email=' + userEmail;
         var _connection = new WebSocket(url);
         // User is connected to server
         _connection.onopen = function (e) {
@@ -1583,6 +1922,7 @@ function koreBotChat() {
                         $('.chatInputBox').html($('.chatInputBox').html() + ' ' + final_result);
                         setTimeout(function () {
                             setCaretEnd(document.getElementsByClassName("chatInputBox"));
+                            document.getElementsByClassName('chatInputBox')[0].scrollTop = document.getElementsByClassName('chatInputBox')[0].scrollHeight;
                         }, 350);
                     } else {
                         //$('.chatInputBox').html($('.chatInputBox').html() + ' '+ res.result.hypotheses[0].transcript);
@@ -1615,17 +1955,20 @@ function koreBotChat() {
             rec.stop();
             isListening = false;
             console.log('stopped recording..');
-            if (_connection) {
-                _connection.close();
-                _connection = null;
-            }
+            setTimeout(function () {
+                if (_connection) {
+                    _connection.close();
+                    _connection = null;
+                }
+            }, 1000); // waiting to send and receive last message
+            
             rec.export16kMono(function (blob) {
                 socketSend(blob);
                 rec.clear();
                 //_connection.close();
                 var track = mediaStream.getTracks()[0];
                 track.stop();
-                rec.destroy();
+                //rec.destroy();
                 isRecordingStarted = false;
             }, 'audio/x-raw');
         } else {
@@ -1639,6 +1982,100 @@ function koreBotChat() {
 
     /*************************************    Microphone code end here    **************************************/
 
+    /*************************************    TTS code start here         **************************************/
+    function createSocketForTTS() {
+        window.TTS_SOCKET_URL = ttsServerUrl;
+        var serv_url = window.TTS_SOCKET_URL;
+        var userEmail = userIdentity;
+        window.WebSocket = window.WebSocket || window.MozWebSocket;
+        var _ttsConnection = new WebSocket(serv_url);
+        _ttsConnection.binaryType = 'arraybuffer';
+        // User is connected to server
+        _ttsConnection.onopen = function (e) {
+            socketSendTTSMessage(_txtToSpeak);
+        };
+        // On receving message from server
+        _ttsConnection.onmessage = function (msg) {
+            _txtToSpeak = "";
+            if (typeof msg.data === 'string') {
+                // do nothing
+            } else {
+                var _data = msg.data
+                if(isTTSOn) {
+                    playsound(_data);
+                }
+            }
+        };
+        // If server is closed
+        _ttsConnection.onclose = function (e) {
+            //tts socket closed
+        };
+        // If there is an error while sending or receving data
+        _ttsConnection.onerror = function (e) {
+            console.log("Error : ", e);
+        };
+        return _ttsConnection;
+    }
+
+    function cancelTTSConnection() {
+        if (_ttsConnection) {
+            _ttsConnection.close();
+            _ttsConnection = null;
+        }
+    }
+    function socketSendTTSMessage(item) {
+        if (_ttsConnection) {
+            var state = _ttsConnection.readyState;
+            if (state === 1) {
+                var auth = (bearerToken) ? bearerToken : assertionToken;
+                var _message = {
+                    message: item,
+                    'user': _botInfo.name,
+                    'authorization': auth
+                };
+                _ttsConnection.send(JSON.stringify(_message));
+            } else {
+                console.error('Web Socket readyState != 1: ', state);
+                cancelTTSConnection();
+            }
+        } else {
+            console.error('No web socket connection: failed to send');
+        }
+    }
+    function initTTSAudioContext() {
+        if(!_ttsContext) {
+            if (!window.AudioContext) {
+                if (!window.webkitAudioContext) {
+                    console.error("Your browser does not support any AudioContext and cannot play back this audio.");
+                    return;
+                }
+                window.AudioContext = window.webkitAudioContext;
+            }
+            _ttsContext = new AudioContext();
+        }
+    }
+    initTTSAudioContext();
+    function playsound(raw) {
+        _ttsContext.decodeAudioData(raw, function (buffer) {
+            if (!buffer) {
+                console.error("failed to decode:", "buffer null");
+                return;
+            }
+            try {
+                if(ttsAudioSource) {
+                    ttsAudioSource.stop();
+                }
+                ttsAudioSource = _ttsContext.createBufferSource();
+                ttsAudioSource.buffer = buffer;
+                ttsAudioSource.connect(_ttsContext.destination);
+                ttsAudioSource.start(0);
+            } catch (e) {
+            }
+        }, function (error) {
+            console.error("failed to decode:", error);
+        });
+    }
+    /******************************** TTS code end here **********************************************/
     /*******************************    Function for Attachment ***********************************************/
     function cnvertFiles(_this, _file, customFileName) {
         var _scope = _this, recState = {};
@@ -2267,6 +2704,7 @@ function koreBotChat() {
         removeListener: removeListener,
         show: show,
         destroy: destroy,
-        showError: showError
+        showError: showError,
+        botDetails: botDetails
     };
 }

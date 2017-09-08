@@ -16,6 +16,8 @@
 		<script src="../libs/recorderWorker.js" type="text/javascript"></script>
 		<link href="chatWindow.css" rel="stylesheet"></link>
 		<link href="../libs/emojione.sprites.css" rel="stylesheet"></link>
+		<link href="../libs/purejscarousel.css" rel="stylesheet"></link>
+		<script src="../libs/purejscarousel.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			$(document).on("ready", function () {
 				function assertion(options, callback) {
@@ -34,6 +36,7 @@
 						success: function (data) {
 							options.assertion = data.jwt;
 							options.handleError = koreBot.showError;
+							options.botDetails = koreBot.botDetails;
 							callback(null, options);
 							setTimeout(function () {
 								if (koreBot && koreBot.initToken) {
@@ -50,8 +53,9 @@
 				var botOptions = {};
 				botOptions.logLevel = 'debug';
 				botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
+				botOptions.koreSpeechAPIUrl = "https://speech.kore.ai/";
 				//botOptions.bearer = "bearer xyz-------------------";
-				botOptions.speechSocketUrl = 'wss://speech.kore.ai/stream/kore/decode';
+				botOptions.ttsSocketUrl = 'wss://speech.kore.ai/tts/ws';
 				botOptions.userIdentity = 'userIdentity';// Provide users email id here
 				botOptions.recorderWorkerPath = '../libs/recorderWorker.js';
 				botOptions.assertionFn = assertion;
@@ -62,7 +66,9 @@
 				var chatConfig={
 					botOptions:botOptions,
 					allowIframe: false,
-					isSendButton: false
+					isSendButton: false,
+					isTTSEnabled: true,
+					isSpeechEnabled: true
 				};
 				var koreBot = koreBotChat();
 				koreBot.show(chatConfig);
