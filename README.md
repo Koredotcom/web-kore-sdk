@@ -137,6 +137,8 @@ Integration of Kore.ai chat UI into your App
         });
 ```
 
+###Release History:
+V5.0.0 on 08-SEP-2017
 
 # License
 _Copyright © Kore.ai, Inc. MIT License; see LICENSE for further details._
