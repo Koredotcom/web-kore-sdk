@@ -654,26 +654,20 @@ function koreBotChat() {
                     Authorization: auth
                 },
                 success: function (response) {
-                    var downloadUrl = response.fileUrl;
-                    if (downloadUrl.indexOf("?") < 0) {
-                        downloadUrl += "?download=1";
+                    var downloadUrl = JSON.parse(this.response);
+                    var url = downloadUrl.fileUrl;
+                    if (url.indexOf("?") < 0) {
+                        url += "?download=1";
                     } else {
-                        downloadUrl += "&download=1";
+                        url += "&download=1";
                     }
-                    window.open(downloadUrl, '_blank');
-                    //debugger;
-                    /*document.body.appendChild(link);
-                    link.setAttribute("type", "hidden"); // make it hidden if needed
-                    link.download = 'test.xls';
-                    link.href = 'data:application/vnd.ms-excel;utf-8,test';
-                    link.click();*/
-
-                    /*var save = document.createElement('a');
-                    document.body.appendChild(save);
-                    save.href = downloadUrl;
+                    var save = document.createElement('a');
+                    save.href = url;
                     save.target = '_blank';
                     save.download = 'unknown file';
-                    save.click();*/
+                    save.style.dislay = 'none !important;';
+                    save.click();
+                    save.remove();
                 },
                 error: function (msg) {
                     console.log("Oops, something went horribly wrong");

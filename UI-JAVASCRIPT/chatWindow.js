@@ -1272,12 +1272,13 @@ function koreBotChat() {
                 } else {
                     url += "&download=1";
                 }
-                window.open(url, '_blank');
-                /*var save = document.createElement('a');
+                var save = document.createElement('a');
                 save.href = url;
                 save.target = '_blank';
                 save.download = 'unknown file';
-                save.click();*/
+                save.style.dislay = 'none !important;';
+                save.click();
+                save.remove();
             }
         };
         xhttp.open("GET", koreAPIUrl + "1.1/attachment/file/" + attachFileID + "/url", true);
