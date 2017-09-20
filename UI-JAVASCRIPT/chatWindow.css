@@ -240,6 +240,10 @@
     overflow-y: auto;
     padding:20px;
 }
+a {
+    color: #009dab;
+    text-decoration: none;
+}
 ul.chat-container li:first-child{
     margin-top: 10px;
 }
@@ -283,6 +287,54 @@ ul.chat-container li .profile-photo .user-account{
     background-repeat: no-repeat;
     display: inline-block;
     background-size: 100%;
+}
+.quick_replies_btn_parent {
+    overflow: hidden;
+}
+.quick_replies_btn_parent .autoWidth {
+    display: table-row;
+}
+.buttonTmplContent .buttonTmplContentHeading.quickReply {
+    display: table;
+}
+.buttonTmplContent .buttonTmplContentChild.quickReplyDiv {
+    display: table-cell;
+    padding: 10px 10px 7px 0;
+    border: none;
+}
+.buttonTmplContent .buttonTmplContentChild .quickReply{
+    border: 1px solid #009dab;
+    padding: 4px 13px;
+    border-radius: 20px;
+    display: table;
+    white-space: nowrap;
+    color: #009dab;
+    background: #fff;
+	transition: background-color 200ms linear;
+    -webkit-transition: background-color 200ms linear;
+    -moz-transition: background-color 200ms linear;
+    -o-transition: background-color 200ms linear;
+    -ms-transition: background-color 200ms linear;
+}
+.buttonTmplContent .buttonTmplContentChild .quickReply.with-img{
+    padding: 2px 13px;
+}
+.buttonTmplContent .buttonTmplContentChild .quickReply  img{
+    height: 17px;
+    width: 17px;
+    border-radius: 50%;
+    max-width: 34px;
+    margin: 0px 7px -2px -8px;
+}
+.buttonTmplContent .buttonTmplContentChild .quickReply:hover{
+    background: #009dab;
+    color: #fff;
+}
+.quickreplyText {
+    position: relative;
+}
+.quickreplyText.with-img {
+    top: -1px;
 }
 ul.chat-container li .messageBubble img{
 	max-width: 100%;
@@ -770,6 +822,12 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
 .fa-expand:before {
     content: "\f065";
 }
+.fa-chevron-left:before {
+    content: "\f053";
+}
+.fa-chevron-right:before {
+    content: "\f054";
+}
 .sdkFooterIcon{
     display: inline-block;
 }
@@ -959,6 +1017,7 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     width: 244px;
     height: 139px;
     background-color: #ffffff;
+    cursor: pointer;
 }
 .carouselImageContent img {
     width: 244px;
@@ -972,6 +1031,7 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     background-color: #ffffff;
     border: solid 1px #ededed;
     border-bottom-right-radius: 12px;
+    cursor: auto;
 }
 .carouselTitleBox .carouselTitle {
     font-size: 13px;
@@ -1053,4 +1113,47 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
 }
 .videoEle video{
     width: 100% !important;
+}
+ul.chat-container li.quickReplies {
+    padding-right: 20px;
+}
+.quickreplyLeftIcon {
+    height: 26px;
+    width: 26px;
+    border: 1px solid #ddd;
+    padding-top: 6px;
+    padding-left: 6px;
+    border-radius: 4px;
+    margin-top: 9px;
+    left: 12px;
+    font-size: 13px;
+    color: #8b8b8b;
+    position: absolute;
+    cursor: pointer;
+}
+.quickreplyLeftIcon:hover {
+    background-color: #f6f6f6;
+}
+.quickreplyRightIcon:hover {
+    background-color: #f6f6f6;
+}
+.quickreplyRightIcon {
+    height: 26px;
+    width: 26px;
+    border: 1px solid #ddd;
+    padding-top: 6px;
+    padding-left: 8px;
+    border-radius: 4px;
+    margin-top: 9px;
+    right: -13px;
+    font-size: 13px;
+    color: #8b8b8b;
+    position: absolute;
+    cursor: pointer;
+}
+.marginT50 {
+    margin-top: -50px;
+}
+.hide {
+    display: none;
 }

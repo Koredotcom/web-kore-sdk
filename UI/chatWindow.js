@@ -557,6 +557,28 @@ function koreBotChat() {
         for(var i=0;i<carouselEles.length;i++) {
             carouselEles[i].computeResize();
         }
+
+        // handling quick replies
+        var quickReplyDivs = document.querySelectorAll('.quickReplies');
+        for(var i=0;i<quickReplyDivs.length;i++) {
+            var btnsParentDiv = quickReplyDivs[i].querySelectorAll('.quick_replies_btn_parent');
+            var leftScrollBtn = quickReplyDivs[i].querySelectorAll('.quickreplyLeftIcon');
+            var rightScrollBtn = quickReplyDivs[i].querySelectorAll('.quickreplyRightIcon');
+            if(btnsParentDiv[0].hasChildNodes()) {
+                if(btnsParentDiv[0].scrollLeft > 0) {
+                    leftScrollBtn[0].classList.remove('hide');
+                }
+                else{
+                    leftScrollBtn[0].classList.add('hide');
+                }
+                if(btnsParentDiv[0].offsetWidth < btnsParentDiv[0].scrollWidth) {
+                    rightScrollBtn[0].classList.remove('hide');
+                }
+                else{
+                    rightScrollBtn[0].classList.add('hide');
+                }
+            }
+        }
     };
 
     chatWindow.prototype.init = function () {
@@ -654,15 +676,16 @@ function koreBotChat() {
                     Authorization: auth
                 },
                 success: function (response) {
-                    var downloadUrl = JSON.parse(this.response);
-                    var url = downloadUrl.fileUrl;
-                    if (url.indexOf("?") < 0) {
-                        url += "?download=1";
+                    var downloadUrl = response.fileUrl;
+                    if (downloadUrl.indexOf("?") < 0) {
+                        downloadUrl += "?download=1";
                     } else {
-                        url += "&download=1";
+                        downloadUrl += "&download=1";
                     }
+
                     var save = document.createElement('a');
-                    save.href = url;
+                    document.body.appendChild(save);
+                    save.href = downloadUrl;
                     save.target = '_blank';
                     save.download = 'unknown file';
                     save.style.dislay = 'none !important;';
@@ -795,18 +818,29 @@ function koreBotChat() {
                 var _tempWin = window.open(a_link, "_blank");
             }
         });
-        _chatContainer.off('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn,.viewMoreList .viewMore,.listItemPath').on('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn, .viewMoreList .viewMore,.listItemPath', function (e) {
+        _chatContainer.off('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn,.viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent').on('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn, .viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent', function (e) {
             e.preventDefault();
             var type = $(this).attr('type');
             if (type == "postback" || type == "text") {
                 $('.chatInputBox').text($(this).attr('value'));
-                me.sendMessage($('.chatInputBox'),$(this).html().replace(/<img .*?>/g,"").trim());
+                var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
+                me.sendMessage($('.chatInputBox'),_innerText);
             } else if (type == "url" || type == "web_url") {
                 var a_link = $(this).attr('url');
                 if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
                     a_link = "http:////" + a_link;
                 }
                 var _tempWin = window.open(a_link, "_blank");
+            }
+            if(e.currentTarget.classList && e.currentTarget.classList.length>0 && e.currentTarget.classList[0] === 'quickReply') {
+                var _parentQuikReplyEle = e.currentTarget.parentElement.parentElement;
+                var _leftIcon = _parentQuikReplyEle.parentElement.parentElement.querySelectorAll('.quickreplyLeftIcon');
+                var _rightIcon = _parentQuikReplyEle.parentElement.parentElement.querySelectorAll('.quickreplyRightIcon');
+                setTimeout(function() {
+                    _parentQuikReplyEle.parentElement.parentElement.removeChild(_leftIcon[0]);
+                    _parentQuikReplyEle.parentElement.parentElement.removeChild(_rightIcon[0]);
+                    _parentQuikReplyEle.parentElement.removeChild(_parentQuikReplyEle);
+                },50);
             }
             setTimeout(function () {
                 var _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
@@ -879,7 +913,9 @@ function koreBotChat() {
                 _chatContainer.draggable("destroy").resizable("destroy");
                 me.expanded = true;
             }
-            window.dispatchEvent(new Event('resize'));
+            var evt = document.createEvent("HTMLEvents");
+            evt.initEvent('resize', true, false);
+            window.dispatchEvent(evt);
             var container_pos_left = _chatContainer.position().left + _chatContainer.width();
             if (container_pos_left > $(window).width()) {
                 _chatContainer.css('left', _chatContainer.position().left - (container_pos_left - $(window).width() + 10) + "px");
@@ -890,7 +926,59 @@ function koreBotChat() {
                 $('.kore-chat-window .expand-btn').trigger('click');
             }
         });
-
+        _chatContainer.off('click', '.quickreplyLeftIcon').on('click', '.quickreplyLeftIcon', function (event) {
+            var _quickReplesDivs = event.currentTarget.parentElement.getElementsByClassName('buttonTmplContentChild');
+            if(_quickReplesDivs.length) {
+                var _scrollParentDiv = event.target.parentElement.getElementsByClassName('quick_replies_btn_parent');
+                var _totalWidth = _scrollParentDiv[0].scrollLeft;
+                var _currWidth = 0;
+                for(var i=0;i<_quickReplesDivs.length;i++) {
+                    _currWidth += (_quickReplesDivs[i].offsetWidth+10);
+                    if(_currWidth > _totalWidth) {
+                        //_scrollParentDiv[0].scrollLeft = (_totalWidth - _quickReplesDivs[i].offsetWidth+20);
+                        $(_scrollParentDiv).animate({
+                            scrollLeft: (_totalWidth - _quickReplesDivs[i].offsetWidth-50)
+                        },'slow',function(){
+                            // deciding to enable left and right scroll icons
+                            var rightIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyRightIcon');
+                            rightIcon[0].classList.remove('hide');
+                            if(_scrollParentDiv[0].scrollLeft <= 0) {
+                                var leftIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyLeftIcon');
+                                leftIcon[0].classList.add('hide');
+                            }
+                        });
+                        break;
+                    }
+                }
+            }
+        });
+        _chatContainer.off('click', '.quickreplyRightIcon').on('click', '.quickreplyRightIcon', function (event) {
+            var _quickReplesDivs = event.currentTarget.parentElement.getElementsByClassName('buttonTmplContentChild');
+            if(_quickReplesDivs.length) {
+                var _scrollParentDiv = event.target.parentElement.getElementsByClassName('quick_replies_btn_parent');
+                var _totalWidth = event.target.parentElement.offsetWidth;
+                var _currWidth = 0;
+                // calculation for moving element scroll
+                for(var i=0;i<_quickReplesDivs.length;i++) {
+                    _currWidth += (_quickReplesDivs[i].offsetWidth+10);
+                    if(_currWidth > _totalWidth) {
+                        //_scrollParentDiv[0].scrollLeft = _currWidth;
+                        $(_scrollParentDiv).animate({
+                            scrollLeft: (_scrollParentDiv[0].scrollLeft + _quickReplesDivs[i].offsetWidth+20)
+                        },'slow',function(){
+                            // deciding to enable left and right scroll icons
+                            var leftIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyLeftIcon');
+                            leftIcon[0].classList.remove('hide');
+                            if((_scrollParentDiv[0].scrollLeft+_totalWidth+10) >= _scrollParentDiv[0].scrollWidth) {
+                                var rightIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyRightIcon');
+                                rightIcon[0].classList.add('hide');
+                            }
+                        });
+                        break;
+                    }
+                }
+            }
+        });
         _chatContainer.off('click', '.minimized').on('click', '.minimized,.minimized-title', function (event) {
             _chatContainer.removeClass("minimize");
             me.minimized = false;
@@ -1081,7 +1169,7 @@ function koreBotChat() {
         $('.typingIndicatorContent').css('display', 'block');
         setTimeout(function () {
             $('.typingIndicatorContent').css('display', 'none');
-        }, 3000)
+        }, 3000);
         if(renderMsg && typeof renderMsg==='string'){
            msgData.message[0].cInfo.body=renderMsg;
         }
@@ -1126,6 +1214,11 @@ function koreBotChat() {
                 'helpers': helpers,
                 'extension': extension
             });
+            setTimeout(function(){
+                var evt = document.createEvent("HTMLEvents");
+                 evt.initEvent('resize', true, false);
+                 window.dispatchEvent(evt);
+            },150);
         }
         else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "carousel") {
             messageHtml = $(me.getChatTemplate("carouselTemplate")).tmpl({
@@ -1146,7 +1239,10 @@ function koreBotChat() {
                      $('.carousel'+carouselTemplateCount).attr('style', 'height: 100% !important');
                      carouselEles.push(carouselOneByOne);
                 }
-                window.dispatchEvent(new Event('resize'));
+                //window.dispatchEvent(new Event('resize'));
+                var evt = document.createEvent("HTMLEvents");
+                 evt.initEvent('resize', true, false);
+                 window.dispatchEvent(evt);
                 carouselTemplateCount += 1;
                 _chatContainer.animate({
                     scrollTop: _chatContainer.prop("scrollHeight")
@@ -1435,14 +1531,14 @@ function koreBotChat() {
                         {{each(key, msgItem) msgData.message[0].component.payload.elements}} \
                             <div class="slide">\
                                 {{if msgItem.image_url}} \
-                                    <div class="carouselImageContent"> \
+                                    <div class="carouselImageContent" {{if msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
                                         <img src="${msgItem.image_url}" /> \
                                     </div> \
                                 {{/if}} \
                                 <div class="carouselTitleBox"> \
                                     <p class="carouselTitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</p> \
                                     {{if msgItem.subtitle}}<p class="carouselDescription">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</p>{{/if}} \
-                                    {{if msgItem.default_action}}<div class="listItemPath carouselDefaultAction" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
+                                    {{if msgItem.default_action && msgItem.default_action.type === "web_url"}}<div class="listItemPath carouselDefaultAction" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
                                     {{if msgItem.buttons}} \
                                         {{each(key, msgBtn) msgItem.buttons}} \
                                             <div {{if msgBtn.payload}}value="${msgBtn.payload}"{{/if}} {{if msgBtn.url}}url="${msgBtn.url}"{{/if}} class="listItemPath carouselButton" data-value="${msgBtn.value}" type="${msgBtn.type}">\
@@ -1459,30 +1555,33 @@ function koreBotChat() {
         </scipt>';
         
         var quickReplyTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-			{{if msgData.message}} \
-				<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
-					<div class="buttonTmplContent"> \
-						{{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-						{{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-						<ul class="buttonTmplContentBox">\
-							{{if msgData.message[0].component.payload.text}} \
-								<li class="buttonTmplContentHeading"> \
-									{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
-									{{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
-										<span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
-									{{/if}} \
-								</li>\
-							{{/if}} \
-							{{each(key, msgItem) msgData.message[0].component.payload.quick_replies}} \
-								<li {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} class="quickReply buttonTmplContentChild" type="${msgItem.content_type}">\
-									{{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} ${msgItem.title}\
-								</li> \
-							{{/each}} \
-						</ul>\
-					</div>\
-				</li> \
-			{{/if}} \
-		</scipt>';
+            {{if msgData.message}} \
+                <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon quickReplies"> \
+                    <div class="buttonTmplContent"> \
+                        {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+                        {{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar marginT50" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+                        {{if msgData.message[0].component.payload.text}} \
+                            <div class="buttonTmplContentHeading quickReply"> \
+                                {{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
+                                {{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
+                                    <span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
+                                {{/if}} \
+                            </div>\
+                            {{/if}} \
+                            {{if msgData.message[0].component.payload.quick_replies && msgData.message[0].component.payload.quick_replies.length}} \
+                            <div class="fa fa-chevron-left quickreplyLeftIcon hide"></div><div class="fa fa-chevron-right quickreplyRightIcon"></div>\
+                                <div class="quick_replies_btn_parent"><div class="autoWidth">\
+                                    {{each(key, msgItem) msgData.message[0].component.payload.quick_replies}} \
+                                        <div class="buttonTmplContentChild quickReplyDiv"> <span {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} class="quickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.content_type}">\
+                                            {{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} <span class="quickreplyText {{if msgItem.image_url}}with-img{{/if}}">${msgItem.title}</span></span>\
+                                        </div> \
+                                    {{/each}} \
+                                </div></div>\
+                            {{/if}} \
+                    </div>\
+                </li> \
+            {{/if}} \
+        </scipt>';
         var listTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			{{if msgData.message}} \
 				<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
@@ -1835,7 +1934,7 @@ function koreBotChat() {
         if ($('.notRecordingMicrophone')) {
             $('.notRecordingMicrophone').css('display', 'block');
         }
-        if (mediaStream !== null && mediaStream.getTracks()[0].enabled) {
+        if (mediaStream !== null && mediaStream && mediaStream.getTracks()[0].enabled) {
             var track = mediaStream.getTracks()[0];
             track.stop();
         }

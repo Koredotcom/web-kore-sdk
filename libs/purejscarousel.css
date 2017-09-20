@@ -21,7 +21,7 @@
   border: 0;
   box-shadow: none;
   outline: none;
-  cursor: pointer;
+  cursor: pointer !important;
   height: 20px;
   margin-top: -25px;
   position: absolute;

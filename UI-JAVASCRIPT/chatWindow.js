@@ -608,6 +608,27 @@ function koreBotChat() {
         for(var i=0;i<carouselEles.length;i++) {
             carouselEles[i].computeResize();
         }
+        // handling quick replies
+        var quickReplyDivs = document.querySelectorAll('.quickReplies');
+        for(var i=0;i<quickReplyDivs.length;i++) {
+            var btnsParentDiv = quickReplyDivs[i].querySelectorAll('.quick_replies_btn_parent');
+            var leftScrollBtn = quickReplyDivs[i].querySelectorAll('.quickreplyLeftIcon');
+            var rightScrollBtn = quickReplyDivs[i].querySelectorAll('.quickreplyRightIcon');
+            if(btnsParentDiv[0].hasChildNodes()) {
+                if(btnsParentDiv[0].scrollLeft > 0) {
+                    leftScrollBtn[0].classList.remove('hide');
+                }
+                else{
+                    leftScrollBtn[0].classList.add('hide');
+                }
+                if(btnsParentDiv[0].offsetWidth < btnsParentDiv[0].scrollWidth) {
+                    rightScrollBtn[0].classList.remove('hide');
+                }
+                else{
+                    rightScrollBtn[0].classList.add('hide');
+                }
+            }
+        }
     };
 
     chatWindow.prototype.init = function () {
@@ -867,7 +888,9 @@ function koreBotChat() {
                 removeClass(_expandBtnSpan,"fa-expand");
             }
             setTimeout(function(){
-                window.dispatchEvent(new Event('resize'));
+                var evt = document.createEvent("HTMLEvents");
+                evt.initEvent('resize', true, false);
+                window.dispatchEvent(evt);
             });
         });
 
@@ -1091,7 +1114,7 @@ function koreBotChat() {
         document.getElementsByClassName('typingIndicatorContent')[0].style.display = 'block';
         setTimeout(function () {
             document.getElementsByClassName('typingIndicatorContent')[0].style.display = 'none';
-        }, 3000)
+        }, 3000);
         if(renderMsg && typeof renderMsg==='string'){
            msgData.message[0].cInfo.body=renderMsg;
         }
@@ -1106,7 +1129,7 @@ function koreBotChat() {
             }, 500);
             setTimeout(function () {
                 document.getElementsByClassName('typingIndicatorContent')[0].style.display = 'none';
-            }, 500)
+            }, 500);
         }
         var _chatContainer = me.config.chatContainer.querySelector('.chat-container');
         if (msgData.message[0] && msgData.message[0].cInfo.attachments) {
@@ -1123,6 +1146,11 @@ function koreBotChat() {
             messageHtml = me.getChatTemplate("templatelist", msgData);
         } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "quick_replies") {
             messageHtml = me.getChatTemplate("templatequickreply", msgData);
+            setTimeout(function(){
+                var evt = document.createEvent("HTMLEvents");
+                evt.initEvent('resize', true, false);
+                window.dispatchEvent(evt);
+            },150);
         }
         else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "carousel") {
             messageHtml = me.getChatTemplate("carouselTemplate", msgData);
@@ -1140,7 +1168,9 @@ function koreBotChat() {
                      document.querySelectorAll(".carousel"+carouselTemplateCount)[0].style.height = '100%';
                     carouselEles.push(carouselOneByOne);
                 }
-                window.dispatchEvent(new Event('resize'));
+                var evt = document.createEvent("HTMLEvents");
+                evt.initEvent('resize', true, false);
+                window.dispatchEvent(evt);
                 carouselTemplateCount += 1;
                 document.getElementsByClassName('chat-container')[0].scrollTop = document.getElementsByClassName('chat-container')[0].scrollHeight;
             });
@@ -1180,6 +1210,65 @@ function koreBotChat() {
                     e.stopImmediatePropagation();
                     var _this = this;
                     me.templateBtnClick(_this, me);
+                });
+            }
+        }
+        if (_chatContainer.querySelectorAll('.quickreplyLeftIcon').length > 0) {
+            for (var i = 0; i < _chatContainer.querySelectorAll('.quickreplyLeftIcon').length; i++) {
+                var evt = _chatContainer.querySelectorAll('.quickreplyLeftIcon')[i];
+                evt.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    event.stopImmediatePropagation();
+                    var _quickReplesDivs = event.currentTarget.parentElement.getElementsByClassName('buttonTmplContentChild');
+                    if(_quickReplesDivs.length) {
+                        var _scrollParentDiv = event.target.parentElement.getElementsByClassName('quick_replies_btn_parent');
+                        var _totalWidth = _scrollParentDiv[0].scrollLeft;
+                        var _currWidth = 0;
+                        for(var i=0;i<_quickReplesDivs.length;i++) {
+                            _currWidth += (_quickReplesDivs[i].offsetWidth+10);
+                            if(_currWidth > _totalWidth) {
+                                _scrollParentDiv[0].scrollLeft = (_totalWidth - _quickReplesDivs[i].offsetWidth-50);
+                                // deciding to enable left and right scroll icons
+                                var rightIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyRightIcon');
+                                rightIcon[0].classList.remove('hide');
+                                if(_scrollParentDiv[0].scrollLeft <= 0) {
+                                    var leftIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyLeftIcon');
+                                    leftIcon[0].classList.add('hide');
+                                }
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        if (_chatContainer.querySelectorAll('.quickreplyRightIcon').length > 0) {
+            for (var i = 0; i < _chatContainer.querySelectorAll('.quickreplyRightIcon').length; i++) {
+                var evt = _chatContainer.querySelectorAll('.quickreplyRightIcon')[i];
+                evt.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    event.stopImmediatePropagation();
+                    var _quickReplesDivs = event.currentTarget.parentElement.getElementsByClassName('buttonTmplContentChild');
+                    if(_quickReplesDivs.length) {
+                        var _scrollParentDiv = event.target.parentElement.getElementsByClassName('quick_replies_btn_parent');
+                        var _totalWidth = event.target.parentElement.offsetWidth;
+                        var _currWidth = 0;
+                        // calculation for moving element scroll
+                        for(var i=0;i<_quickReplesDivs.length;i++) {
+                            _currWidth += (_quickReplesDivs[i].offsetWidth+10);
+                            if(_currWidth > _totalWidth) {
+                                _scrollParentDiv[0].scrollLeft = (_scrollParentDiv[0].scrollLeft + _quickReplesDivs[i].offsetWidth+20);
+                                // deciding to enable left and right scroll icons
+                                var leftIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyLeftIcon');
+                                leftIcon[0].classList.remove('hide');
+                                if((_scrollParentDiv[0].scrollLeft+_totalWidth+10) >= _scrollParentDiv[0].scrollWidth) {
+                                    var rightIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyRightIcon');
+                                    rightIcon[0].classList.add('hide');
+                                }
+                                break;
+                            }
+                        }
+                    }
                 });
             }
         }
@@ -1292,7 +1381,8 @@ function koreBotChat() {
             document.getElementsByClassName('chatInputBox').textContent = _this.getAttribute('value');
             document.getElementsByClassName('chatInputBox').innerHTML = _this.getAttribute('value');
             setTimeout(function () {
-                me.sendMessage(document.getElementsByClassName('chatInputBox'),_this.textContent.replace(/<img .*?>/g,"").trim());
+                var _innerText = _this.innerText.trim() ||_this.getAttribute('data-value').trim();
+                me.sendMessage(document.getElementsByClassName('chatInputBox'),_innerText);
             }, 100);
         } else if (type == "url" || type == "web_url") {
             var a_link = _this.getAttribute('url');
@@ -1301,6 +1391,16 @@ function koreBotChat() {
             }
             var _tempWin = window.open(a_link, "_blank");
         }
+		if(_this.classList && _this.classList.length>0 && _this.classList[0] === 'quickReply') {
+			var _parentQuikReplyEle = _this.parentElement.parentElement;
+            var _leftIcon = _parentQuikReplyEle.parentElement.parentElement.querySelectorAll('.quickreplyLeftIcon');
+            var _rightIcon = _parentQuikReplyEle.parentElement.parentElement.querySelectorAll('.quickreplyRightIcon');
+            setTimeout(function() {
+                _parentQuikReplyEle.parentElement.parentElement.removeChild(_leftIcon[0]);
+                _parentQuikReplyEle.parentElement.parentElement.removeChild(_rightIcon[0]);
+                _parentQuikReplyEle.parentElement.removeChild(_parentQuikReplyEle);
+            },50);
+		}
         setTimeout(function () {
             document.getElementsByClassName('chatInputBox')[0].focus();
         }, 600);
@@ -1534,8 +1634,8 @@ function koreBotChat() {
                         }
 
                         if (tempData.icon) {
-                            msg_class += ' with-icon';
-                            msg_icon_html = '<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(' + tempData.icon + ')"></div> </div>';
+                            msg_class += ' with-icon quickReplies';
+                            msg_icon_html = '<div class="profile-photo"> <div class="user-account avtar marginT50" style="background-image:url(' + tempData.icon + ')"></div> </div>';
                         }
 
                         if (tempData.createdOn) {
@@ -1544,28 +1644,33 @@ function koreBotChat() {
                         if (msgItem.cInfo.emoji) {
                             msg_html = msg_html + '<span class="emojione emojione-' + msgItem.cInfo.emoji[0].code + '"></span>';
                         }
-                        msgItem.component.payload.quick_replies.forEach(function (msgInnerItem) {
-                            var value = '', url = '', type = '';
-                            if (msgInnerItem.payload) {
-                                value = 'value="' + msgInnerItem.payload + '"';
-                            }
-                            if (msgInnerItem.image_url) {
-                                url = '<img src="' + msgInnerItem.image_url + '"></img>';
-                            }
-                            if (msgInnerItem.content_type) {
-                                type = 'type="' + msgInnerItem.content_type + '"';
-                            }
-                            inner_html = inner_html + '<li ' + value + '  ' + type + ' class="quickReply buttonTmplContentChild sendClickReq">\
-									'+ url + ' ' + msgInnerItem.title + '</li>';
-                        });
+                        inner_html = inner_html + '<div class="fa fa-chevron-left quickreplyLeftIcon hide"></div><div class="fa fa-chevron-right quickreplyRightIcon"></div>';
+						if(msgItem.component.payload.quick_replies && msgItem.component.payload.quick_replies.length) {
+							inner_html = inner_html + '<div class="quick_replies_btn_parent"><div class="autoWidth">';
+							msgItem.component.payload.quick_replies.forEach(function (msgInnerItem) {
+								var value = '', url = '', type = '', innerTitleClass="quickreplyText", withImgClass="";
+                                if (msgInnerItem.payload) {
+									value = 'value="' + msgInnerItem.payload + '"';
+								}
+								if (msgInnerItem.image_url) {
+									url = '<img src="' + msgInnerItem.image_url + '"></img>';
+                                    withImgClass += "with-img";
+                                    innerTitleClass += "with-img";
+								}
+								if (msgInnerItem.content_type) {
+									type = 'type="' + msgInnerItem.content_type + '"';
+								}
+								inner_html = inner_html + '<div class="buttonTmplContentChild quickReplyDiv"><span ' + value + '  ' + type + ' class="quickReply sendClickReq '+innerTitleClass+'">\
+										'+ url + ' <span class="'+innerTitleClass+'">' + msgInnerItem.title + '</span></span></div>';
+							});
+							inner_html = inner_html + '</div></div>';
+						}
                         quickReplyTemplate += '<li ' + msg_data + ' class=" ' + msg_class + '"> \
 								<div class="buttonTmplContent"> \
                                 '+ msg_created_html + ' \
                                 '+ msg_icon_html + ' \
-								<ul class="buttonTmplContentBox">\
-									<li class="buttonTmplContentHeading">'+ msg_html + '</li>\
+									<div class="buttonTmplContentHeading quickReply">'+ msg_html + '</div>\
 									'+ inner_html + ' \
-								</ul>\
 								</div>\
 						</li>';
                     }
@@ -1619,7 +1724,20 @@ function koreBotChat() {
 
                                 inner_html = inner_html + '<div class="slide">';
                                 if (msgInnerItem.image_url) {
-                                    inner_html = inner_html + '<div class="carouselImageContent"><img src="' + msgInnerItem.image_url + '" /></div>';
+                                    var defaultActionUrl = '', defaultActionDataValue='', defaultActionPayload='', defaultActionType='';
+                                    if(msgInnerItem.default_action && msgInnerItem.default_action.url){
+                                        defaultActionUrl = 'url="' + msgInnerItem.default_action.url + '"';
+                                    }
+                                    if(msgInnerItem.default_action && msgInnerItem.default_action.title){
+                                        defaultActionDataValue = 'data-value="' + msgInnerItem.default_action.title + '"';
+                                    }
+                                    if(msgInnerItem.default_action && msgInnerItem.default_action.payload){
+                                        defaultActionPayload = 'value="' + msgInnerItem.default_action.payload + '"';
+                                    }
+                                    if(msgInnerItem.default_action && msgInnerItem.default_action.type){
+                                        defaultActionType = 'type="' + msgInnerItem.default_action.type + '"';
+                                    }
+                                    inner_html = inner_html + '<div class="carouselImageContent sendClickReq" '+defaultActionUrl+''+defaultActionDataValue+''+defaultActionPayload+''+defaultActionType+'><img src="' + msgInnerItem.image_url + '" /></div>';
                                 }
 
 
@@ -1635,7 +1753,7 @@ function koreBotChat() {
                                         inner_html = inner_html + '<p class="carouselDescription">' + helpers.convertMDtoHTML(msgInnerItem.subtitle, 'bot') + '</p>';
                                     }
                                 }
-                                if (msgInnerItem.default_action && msgInnerItem.default_action.url) {
+                                if (msgInnerItem.default_action && msgInnerItem.default_action.url && msgInnerItem.default_action.type === "web_url") {
                                     inner_html = inner_html + '<div class="listItemPath sendClickReq carouselDefaultAction" type="url" url="' + msgInnerItem.default_action.url + '">' + msgInnerItem.default_action.url + '</div>';
                                 }
 
@@ -2114,7 +2232,7 @@ function koreBotChat() {
         if (document.getElementsByClassName('notRecordingMicrophone')) {
             document.getElementsByClassName('notRecordingMicrophone')[0].style.display = 'block';
         }
-        if (mediaStream !== null && mediaStream.getTracks()[0].enabled) {
+        if (mediaStream !== null && mediaStream && mediaStream.getTracks()[0].enabled) {
             var track = mediaStream.getTracks()[0];
             track.stop();
         }
