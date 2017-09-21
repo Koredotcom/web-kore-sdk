@@ -1860,7 +1860,7 @@ function koreBotChat() {
                                     inner_html = inner_html + '<div class="listItemPath sendClickReq" type="url" url="' + msgInnerItem.default_action.url + '">' + msgInnerItem.default_action.url + '</div>';
                                 }
                                 if (msgInnerItem.buttons) {
-                                    inner_html = inner_html + '<div><button ' + value + ' ' + type + ' ' + url + ' class="buyBtn sendClickReq">Buy</button></div>';
+                                    inner_html = inner_html + '<div><span ' + value + ' ' + type + ' ' + url + ' class="buyBtn sendClickReq">Buy</span></div>';
                                 }
                                 inner_html = inner_html + '</div>';
 
@@ -1899,7 +1899,7 @@ function koreBotChat() {
                                     inner_html = inner_html + '<div class="listItemPath sendClickReq" type="url" url="' + msgInnerItem.default_action.url + '">' + msgInnerItem.default_action.url + '</div>';
                                 }
                                 if (msgInnerItem.buttons) {
-                                    inner_html = inner_html + '<div><button ' + value + ' ' + type + ' ' + url + ' class="buyBtn sendClickReq">Buy</button></div>';
+                                    inner_html = inner_html + '<div><span ' + value + ' ' + type + ' ' + url + ' class="buyBtn sendClickReq">Buy</span></div>';
                                 }
                                 inner_html = inner_html + '</div>';
 
@@ -1921,7 +1921,7 @@ function koreBotChat() {
                                     type = 'type="' + msgLastItem.type + '"';
                                 }
                                 lastButton = '<li class="viewMoreList"> \
-									<button '+ value + ' ' + type + ' ' + url + ' class="viewMore sendClickReq">' + msgLastItem.title + '</button> \
+									<span '+ value + ' ' + type + ' ' + url + ' class="viewMore sendClickReq">' + msgLastItem.title + '</span> \
 								</li>';
                             });
                         }
