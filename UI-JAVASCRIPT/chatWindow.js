@@ -593,6 +593,34 @@ function koreBotChat() {
         }, _pingTime);
     }
 
+    function scrollLeftAnimate(element, to, duration) {
+        var start = element.scrollLeft,
+            change = to - start,
+            currentTime = 0,
+            increment = 20;
+            
+        var animateScroll = function(){        
+            currentTime += increment;
+            var val = Math.easeInOutQuad(currentTime, start, change, duration);
+            element.scrollLeft = val;
+            if(currentTime < duration) {
+                setTimeout(animateScroll, increment);
+            }
+        };
+        animateScroll();
+    }
+
+    //t = current time
+    //b = start value
+    //c = change in value
+    //d = duration
+    Math.easeInOutQuad = function (t, b, c, d) {
+      t /= d/2;
+        if (t < 1) return c/2*t*t + b;
+        t--;
+        return -c/2 * (t*(t-2) - 1) + b;
+    };
+
     window.onresize = function(event) {
         var _carouselElements = document.querySelectorAll(".carousel");
         if ((document.querySelectorAll(".kore-chat-window")[0] && document.querySelectorAll(".kore-chat-window")[0].offsetWidth > 400) && (document.getElementsByClassName('kore-chat-window').length && document.getElementsByClassName('kore-chat-window')[0].classList.contains('expanded'))) {
@@ -1227,11 +1255,12 @@ function koreBotChat() {
                         for(var i=0;i<_quickReplesDivs.length;i++) {
                             _currWidth += (_quickReplesDivs[i].offsetWidth+10);
                             if(_currWidth > _totalWidth) {
-                                _scrollParentDiv[0].scrollLeft = (_totalWidth - _quickReplesDivs[i].offsetWidth-50);
+                                var offsetWidthToMove = (_totalWidth - _quickReplesDivs[i].offsetWidth-50);
+                                scrollLeftAnimate(_scrollParentDiv[0],offsetWidthToMove,500);
                                 // deciding to enable left and right scroll icons
                                 var rightIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyRightIcon');
                                 rightIcon[0].classList.remove('hide');
-                                if(_scrollParentDiv[0].scrollLeft <= 0) {
+                                if(offsetWidthToMove <= 0) {
                                     var leftIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyLeftIcon');
                                     leftIcon[0].classList.add('hide');
                                 }
@@ -1257,11 +1286,12 @@ function koreBotChat() {
                         for(var i=0;i<_quickReplesDivs.length;i++) {
                             _currWidth += (_quickReplesDivs[i].offsetWidth+10);
                             if(_currWidth > _totalWidth) {
-                                _scrollParentDiv[0].scrollLeft = (_scrollParentDiv[0].scrollLeft + _quickReplesDivs[i].offsetWidth+20);
+                                var offsetWidthToMove = (_scrollParentDiv[0].scrollLeft + _quickReplesDivs[i].offsetWidth+20);
+                                scrollLeftAnimate(_scrollParentDiv[0], offsetWidthToMove, 500);
                                 // deciding to enable left and right scroll icons
                                 var leftIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyLeftIcon');
                                 leftIcon[0].classList.remove('hide');
-                                if((_scrollParentDiv[0].scrollLeft+_totalWidth+10) >= _scrollParentDiv[0].scrollWidth) {
+                                if((offsetWidthToMove+_totalWidth+10) >= _scrollParentDiv[0].scrollWidth) {
                                     var rightIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyRightIcon');
                                     rightIcon[0].classList.add('hide');
                                 }

@@ -138,7 +138,7 @@ Integration of Kore.ai chat UI into your App
 ```
 
 ###Release History:
-V5.0.3 on 21-SEP-2017 (quick replies, list and carousel templates UI changes)
+V5.0.4 on 25-SEP-2017 (quick replies template (UI-javascript) UI changes)
 
 # License
 _Copyright © Kore.ai, Inc. MIT License; see LICENSE for further details._
