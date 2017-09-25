@@ -43,7 +43,9 @@ Integration of Kore.ai chat UI into your App
     -   <script src="../libs/emoji.js" type="text/javascript"></script>
     -   <script src="../libs/recorder.js" type="text/javascript"></script>
     -   <script src="../libs/recorderWorker.js" type="text/javascript"></script>
-	-	<script src="../libs/purejscarousel.js" type="text/javascript"></script>
+	-   <script src="../libs/purejscarousel.js" type="text/javascript"></script>
+    -   <script src="custom/customTemplate.js" type="text/javascript"></script>
+    -   <link href="custom/customTemplate.css" rel="stylesheet"></link>
 #### 5. Define the assertion function (Should be defined by the clients)
         //NOTE:clients has to define a API which should generate and return the JWT token. and do the necessary changes in the below function like change the url,type,Authorization and on success set the returned jwt.
         //fields to set in JWT:subject(emailId),issuer(clientId),algorithm(HS256 or RS256)
@@ -138,7 +140,7 @@ Integration of Kore.ai chat UI into your App
 ```
 
 ###Release History:
-V5.0.4 on 25-SEP-2017 (quick replies template (UI-javascript) UI changes)
+V5.0.5 on 25-SEP-2017 (Added custom folder for client specific custom templates & quick replies template (UI-javascript) UI changes)
 
 # License
 _Copyright © Kore.ai, Inc. MIT License; see LICENSE for further details._

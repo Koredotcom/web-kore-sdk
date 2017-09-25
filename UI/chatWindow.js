@@ -1178,6 +1178,9 @@ function koreBotChat() {
 
     chatWindow.prototype.renderMessage = function (msgData) {
         var me = this, messageHtml = '', extension = '', _extractedFileName = '';
+		customTemplateObj.helpers = helpers;
+		customTemplateObj.extension = extension;
+		
         if (msgData.type === "bot_response") {
             setTimeout(function () {
                 $('.typingIndicator').css('background-image', "url(" + msgData.icon + ")");
@@ -1194,62 +1197,68 @@ function koreBotChat() {
             extension = strSplit(msgData.message[0].component.payload.url);
             _extractedFileName = msgData.message[0].component.payload.url.replace(/^.*[\\\/]/, '');
         }
-        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "button") {
-            messageHtml = $(me.getChatTemplate("templatebutton")).tmpl({
-                'msgData': msgData,
-                'helpers': helpers,
-                'extension': extension
-            });
-        }
-        else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "list") {
-            messageHtml = $(me.getChatTemplate("templatelist")).tmpl({
-                'msgData': msgData,
-                'helpers': helpers,
-                'extension': extension
-            });
-        }
-        else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "quick_replies") {
-            messageHtml = $(me.getChatTemplate("templatequickreply")).tmpl({
-                'msgData': msgData,
-                'helpers': helpers,
-                'extension': extension
-            });
-            setTimeout(function(){
-                var evt = document.createEvent("HTMLEvents");
-                 evt.initEvent('resize', true, false);
-                 window.dispatchEvent(evt);
-            },150);
-        }
-        else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "carousel") {
-            messageHtml = $(me.getChatTemplate("carouselTemplate")).tmpl({
-                'msgData': msgData,
-                'helpers': helpers,
-                'extension': extension
-            });
-            setTimeout(function () {
-                $('.carousel:last').addClass("carousel"+carouselTemplateCount);
-                var count = $(".carousel"+carouselTemplateCount).children().length;
-                if(count > 1) {
-                    var carouselOneByOne = new PureJSCarousel({
-                        carousel: '.carousel'+carouselTemplateCount,
-                        slide: '.slide',
-                        oneByOne: true
-                      });
-                     $('.carousel'+carouselTemplateCount).parent().show();
-                     $('.carousel'+carouselTemplateCount).attr('style', 'height: 100% !important');
-                     carouselEles.push(carouselOneByOne);
-                }
-                //window.dispatchEvent(new Event('resize'));
-                var evt = document.createEvent("HTMLEvents");
-                 evt.initEvent('resize', true, false);
-                 window.dispatchEvent(evt);
-                carouselTemplateCount += 1;
-                _chatContainer.animate({
-                    scrollTop: _chatContainer.prop("scrollHeight")
-                }, 0);
-            });
-        } 
-        else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.type == "image" || msgData.message[0].component.type == "audio" || msgData.message[0].component.type == "video" || msgData.message[0].component.type == "link")) {
+		
+		/* checking for matched custom template */
+		messageHtml = customTemplateObj.renderMessage(msgData);
+		if(messageHtml === '') {
+		
+			if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "button") {
+				messageHtml = $(me.getChatTemplate("templatebutton")).tmpl({
+					'msgData': msgData,
+					'helpers': helpers,
+					'extension': extension
+				});
+			}
+			else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "list") {
+				messageHtml = $(me.getChatTemplate("templatelist")).tmpl({
+					'msgData': msgData,
+					'helpers': helpers,
+					'extension': extension
+				});
+			}
+			else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "quick_replies") {
+				messageHtml = $(me.getChatTemplate("templatequickreply")).tmpl({
+					'msgData': msgData,
+					'helpers': helpers,
+					'extension': extension
+				});
+				setTimeout(function(){
+					var evt = document.createEvent("HTMLEvents");
+					 evt.initEvent('resize', true, false);
+					 window.dispatchEvent(evt);
+				},150);
+			}
+			else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "carousel") {
+				messageHtml = $(me.getChatTemplate("carouselTemplate")).tmpl({
+					'msgData': msgData,
+					'helpers': helpers,
+					'extension': extension
+				});
+				
+				setTimeout(function () {
+					$('.carousel:last').addClass("carousel"+carouselTemplateCount);
+					var count = $(".carousel"+carouselTemplateCount).children().length;
+					if(count > 1) {
+						var carouselOneByOne = new PureJSCarousel({
+							carousel: '.carousel'+carouselTemplateCount,
+							slide: '.slide',
+							oneByOne: true
+						  });
+						 $('.carousel'+carouselTemplateCount).parent().show();
+						 $('.carousel'+carouselTemplateCount).attr('style', 'height: 100% !important');
+						 carouselEles.push(carouselOneByOne);
+					}
+					//window.dispatchEvent(new Event('resize'));
+					var evt = document.createEvent("HTMLEvents");
+					 evt.initEvent('resize', true, false);
+					 window.dispatchEvent(evt);
+					carouselTemplateCount += 1;
+					_chatContainer.animate({
+						scrollTop: _chatContainer.prop("scrollHeight")
+					}, 0);
+				});
+			} 
+			else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.type == "image" || msgData.message[0].component.type == "audio" || msgData.message[0].component.type == "video" || msgData.message[0].component.type == "link")) {
             messageHtml = $(me.getChatTemplate("templateAttachment")).tmpl({
                 'msgData': msgData,
                 'helpers': helpers,
@@ -1263,7 +1272,8 @@ function koreBotChat() {
                 'extension': extension
             });
         }
-        _chatContainer.append(messageHtml);
+        }
+		_chatContainer.append(messageHtml);
 
         //me.formatMessages(messageHtml);
         _chatContainer.animate({
@@ -1677,6 +1687,7 @@ function koreBotChat() {
         return true;
     }
     var chatInitialize;
+	var customTemplateObj;
     function insertHtmlData(_txtBox, _html) {
         var _input = _txtBox;
         sel = window.getSelection();
@@ -1806,6 +1817,7 @@ function koreBotChat() {
             return false;
         }
         chatInitialize = new chatWindow(cfg);
+		customTemplateObj = new customTemplate(cfg);
         return this;
     };
     this.destroy = function () {
