@@ -1309,7 +1309,7 @@ function koreBotChat() {
                 });
             }
         }
-        if (_chatContainer.querySelectorAll('.attachments').length > 0) {
+        /*if (_chatContainer.querySelectorAll('.attachments').length > 0) {
             for (var i = 0; i < _chatContainer.querySelectorAll('.attachments').length; i++) {
                 var evt = _chatContainer.querySelectorAll('.attachments')[i];
                 evt.addEventListener('click', function () {
@@ -1317,7 +1317,7 @@ function koreBotChat() {
                     me.downloadClickFile(_this, me);
                 });
             }
-        }
+        }*/
         if (_chatContainer.querySelectorAll('.botResponseAttachments').length > 0) {
             for (var i = 0; i < _chatContainer.querySelectorAll('.botResponseAttachments').length; i++) {
                 var evt = _chatContainer.querySelectorAll('.botResponseAttachments')[i];
@@ -1386,7 +1386,7 @@ function koreBotChat() {
     chatWindow.prototype.downloadClickResponseFile = function (_this, me) {
         window.open(_this.getAttribute('fileid'), '_blank');
     };
-    chatWindow.prototype.downloadClickFile = function (_this, me) {
+    /*chatWindow.prototype.downloadClickFile = function (_this, me) {
         var attachFileID = _this.getAttribute('fileid');
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function (response) {
@@ -1410,7 +1410,7 @@ function koreBotChat() {
         xhttp.open("GET", koreAPIUrl + "1.1/attachment/file/" + attachFileID + "/url", true);
         xhttp.setRequestHeader('Authorization', (bearerToken ? bearerToken : assertionToken));
         xhttp.send();
-    };
+    };*/
 
     chatWindow.prototype.templateBtnClick = function (_this, me) {
         var type = _this.getAttribute('type');
@@ -1992,7 +1992,7 @@ function koreBotChat() {
                 isPressEnter = '<div class="chatSendMsg">Press enter to send</div>';
             }
             if(isTTSEnabled) {
-                _ttsButton = '<div class="sdkFooterIcon ttspeakerDiv ttsOff hide"> \
+                _ttsButton = '<div class="sdkFooterIcon ttspeakerDiv ttsOff"> \
                                     <button class="ttspeaker"> \
                                         <span class="ttsSpeakerEnable"></span> \
                                         <span class="ttsSpeakerDisable"></span> \
@@ -2001,7 +2001,7 @@ function koreBotChat() {
                                 </div>';
             }
             if(isSpeechEnabled) {
-                _speechButton = '<div class="sdkFooterIcon microphoneBtn hide"> \
+                _speechButton = '<div class="sdkFooterIcon microphoneBtn"> \
                                     <button class="notRecordingMicrophone"> \
                                         <i class="fa fa-microphone fa-lg"></i> \
                                     </button> \
@@ -2166,9 +2166,9 @@ function koreBotChat() {
         }
     }
     this.botDetails = function(response, botInfo){
-        setTimeout(function () {
+        /*setTimeout(function () {
             fetchBotDetails(response,botInfo);
-        }, 50);
+        }, 50);*/
     }
     /************************************* Microphone code **********************************************/
     function getSIDToken() {
@@ -2404,7 +2404,7 @@ function koreBotChat() {
             console.error('Recorder undefined');
         }
     };
-    function fetchBotDetails(botData,botInfo) {
+    /*function fetchBotDetails(botData,botInfo) {
         if(botData && botData.userInfo && botData.authorization) {
             var xhr = new XMLHttpRequest();
             xhr.open('GET', koreAPIUrl + "1.1/users/"+botData.userInfo.userId+"/builder/streams/"+botInfo.taskBotId);
@@ -2444,7 +2444,7 @@ function koreBotChat() {
             };
             xhr.send();
         }
-    }
+    }*/
     window.onbeforeunload = function (e) {
         cancel();
     };

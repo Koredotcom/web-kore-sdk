@@ -917,6 +917,7 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     padding: 2px 5px;
     width: 100%;
     margin: 2px 0;
+    cursor: auto;
 }
 .attachments .uploadedFileIcon{
     float:left;

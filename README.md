@@ -140,7 +140,7 @@ Integration of Kore.ai chat UI into your App
 ```
 
 ###Release History:
-V5.0.5 on 25-SEP-2017 (Added custom folder for client specific custom templates & quick replies template (UI-javascript) UI changes)
+V5.0.6 on 26-SEP-2017 (commented unused code).
 
 # License
 _Copyright © Kore.ai, Inc. MIT License; see LICENSE for further details._

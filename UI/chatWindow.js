@@ -666,7 +666,7 @@ function koreBotChat() {
         _chatContainer.off('click', '.botResponseAttachments').on('click', '.botResponseAttachments', function (event) {
             window.open($(this).attr('fileid'), '_blank');
         });
-        _chatContainer.off('click', '.attachments').on('click', '.attachments', function (event) {
+        /*_chatContainer.off('click', '.attachments').on('click', '.attachments', function (event) {
             var attachFileID = $(this).attr('fileid');
             var auth = (bearerToken) ? bearerToken : assertionToken;
             $.ajax({
@@ -696,7 +696,7 @@ function koreBotChat() {
                     console.log("Oops, something went horribly wrong");
                 }
             });
-        });
+        });*/
         _chatContainer.off('keydown', '.chatInputBox').on('keydown', '.chatInputBox', function (event) {
             var _this = $(this);
             var _footerContainer = $(me.config.container).find('.kore-chat-footer');
@@ -1361,7 +1361,7 @@ function koreBotChat() {
             	{{/if}} \
 			<div class="attachment"></div> \
             {{if isTTSEnabled}} \
-                <div class="sdkFooterIcon ttspeakerDiv ttsOff hide"> \
+                <div class="sdkFooterIcon ttspeakerDiv ttsOff"> \
                     <button class="ttspeaker"> \
                         <span class="ttsSpeakerEnable"></span> \
                         <span class="ttsSpeakerDisable"></span> \
@@ -1370,7 +1370,7 @@ function koreBotChat() {
                 </div> \
             {{/if}} \
             {{if isSpeechEnabled}}\
-            <div class="sdkFooterIcon microphoneBtn hide"> \
+            <div class="sdkFooterIcon microphoneBtn"> \
                 <button class="notRecordingMicrophone"> \
                     <i class="fa fa-microphone fa-lg"></i> \
                 </button> \
@@ -1736,7 +1736,7 @@ function koreBotChat() {
     function strSplit(str) {
         return (str.split('.'));
     }
-    function fetchBotDetails(botData,botInfo) {
+    /*function fetchBotDetails(botData,botInfo) {
         if(botData && botData.userInfo && botData.authorization) {
             $.ajax({
                 type: "GET",
@@ -1777,7 +1777,7 @@ function koreBotChat() {
                 }
             });
         }
-    }
+    }*/
     window.onbeforeunload = function () {
         if (chatInitialize && $(chatInitialize.config.chatContainer).length > 0) {
             chatInitialize.destroy();
@@ -1842,9 +1842,10 @@ function koreBotChat() {
         }
     }
     this.botDetails = function(response, botInfo){
-        setTimeout(function () {
+        /* Remove hide class for tts and speech if sppech not enabled for this bot */
+        /*setTimeout(function () {
             fetchBotDetails(response,botInfo);
-        }, 50);
+        }, 50);*/
     }
     /*************************************       Microphone code      **********************************************/
     function getSIDToken() {
