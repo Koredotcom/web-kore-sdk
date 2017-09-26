@@ -664,7 +664,14 @@ function koreBotChat() {
             _escPressed = 0;
         });
         _chatContainer.off('click', '.botResponseAttachments').on('click', '.botResponseAttachments', function (event) {
-            window.open($(this).attr('fileid'), '_blank');
+            var attachmentEle = document.createElement('a');
+            document.body.appendChild(attachmentEle);
+            attachmentEle.href = $(this).attr('fileid');
+            attachmentEle.target = '_blank';
+            attachmentEle.style.dislay = 'none !important;';
+            attachmentEle.download = 'unknown file';
+            attachmentEle.click();
+            attachmentEle.remove();
         });
         _chatContainer.off('click', '.attachments').on('click', '.attachments', function (event) {
             var attachFileID = $(this).attr('fileid');
@@ -815,7 +822,13 @@ function koreBotChat() {
                 me.openPopup(a_link);
             }
             else {
-                var _tempWin = window.open(a_link, "_blank");
+                var linkEle = document.createElement('a');
+                document.body.appendChild(linkEle);
+                linkEle.href = a_link;
+                linkEle.target = '_blank';
+                linkEle.style.dislay = 'none !important;';
+                linkEle.click();
+                linkEle.remove();
             }
         });
         _chatContainer.off('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn,.viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent').on('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn, .viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent', function (e) {
@@ -830,7 +843,13 @@ function koreBotChat() {
                 if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
                     a_link = "http:////" + a_link;
                 }
-                var _tempWin = window.open(a_link, "_blank");
+                var templateLinkEle = document.createElement('a');
+                document.body.appendChild(templateLinkEle);
+                templateLinkEle.href = a_link;
+                templateLinkEle.target = '_blank';
+                templateLinkEle.style.dislay = 'none !important;';
+                templateLinkEle.click();
+                templateLinkEle.remove();
             }
             if(e.currentTarget.classList && e.currentTarget.classList.length>0 && e.currentTarget.classList[0] === 'quickReply') {
                 var _parentQuikReplyEle = e.currentTarget.parentElement.parentElement;

@@ -1232,7 +1232,13 @@ function koreBotChat() {
                         me.openPopup(a_link);
                     }
                     else {
-                        var _tempWin = window.open(a_link, "_blank");
+                        var _tempWinEle = document.createElement('a');
+                        document.body.appendChild(_tempWinEle);
+                        _tempWinEle.href = a_link;
+                        _tempWinEle.target = '_blank';
+                        _tempWinEle.style.dislay = 'none !important;';
+                        _tempWinEle.click();
+                        _tempWinEle.remove();
                     }
                 });
             });
@@ -1384,7 +1390,14 @@ function koreBotChat() {
         }
     };
     chatWindow.prototype.downloadClickResponseFile = function (_this, me) {
-        window.open(_this.getAttribute('fileid'), '_blank');
+        var _downloadLinkEle = document.createElement('a');
+        document.body.appendChild(_downloadLinkEle);
+        _downloadLinkEle.href = _this.getAttribute('fileid');
+        _downloadLinkEle.target = '_blank';
+        _downloadLinkEle.style.dislay = 'none !important;';
+        _downloadLinkEle.download = 'unknown file';
+        _downloadLinkEle.click();
+        _downloadLinkEle.remove();
     };
     chatWindow.prototype.downloadClickFile = function (_this, me) {
         var attachFileID = _this.getAttribute('fileid');
@@ -1426,7 +1439,13 @@ function koreBotChat() {
             if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
                 a_link = "http://" + a_link;
             }
-            var _tempWin = window.open(a_link, "_blank");
+            var _tempWinEle = document.createElement('a');
+            document.body.appendChild(_tempWinEle);
+            _tempWinEle.href = a_link;
+            _tempWinEle.target = '_blank';
+            _tempWinEle.style.dislay = 'none !important;';
+            _tempWinEle.click();
+            _tempWinEle.remove();
         }
 		if(_this.classList && _this.classList.length>0 && _this.classList[0] === 'quickReply') {
 			var _parentQuikReplyEle = _this.parentElement.parentElement;
