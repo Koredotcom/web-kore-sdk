@@ -822,7 +822,7 @@ function koreBotChat() {
             e.preventDefault();
             var type = $(this).attr('type');
             if (type == "postback" || type == "text") {
-                $('.chatInputBox').text($(this).attr('value'));
+                $('.chatInputBox').text($(this).attr('actual-value') || $(this).attr('value'));
                 var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
                 me.sendMessage($('.chatInputBox'),_innerText);
             } else if (type == "url" || type == "web_url") {
@@ -1523,9 +1523,9 @@ function koreBotChat() {
 								{{/if}} \
 							</li>\
 							{{each(key, msgItem) msgData.message[0].component.payload.buttons}} \
-								<li {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} {{if msgItem.url}}url="${msgItem.url}"{{/if}} class="buttonTmplContentChild" data-value="${msgItem.value}" type="${msgItem.type}">\
-									${msgItem.title}\
-								</li> \
+								<li {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} {{if msgItem.payload}}actual-value="${msgItem.payload}"{{/if}} {{if msgItem.url}}url="${msgItem.url}"{{/if}} class="buttonTmplContentChild" data-value="${msgItem.value}" type="${msgItem.type}">\
+                                    ${msgItem.title}\
+                                </li> \
 							{{/each}} \
 						</ul>\
 					</div>\
