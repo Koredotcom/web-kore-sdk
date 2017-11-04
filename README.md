@@ -150,8 +150,13 @@ Integration of Kore.ai chat UI into your App
 ```
 
 ###Release History:
-V6.0.0 [Major] on 04-NOV-2017 (Chart templates (Pie, Bar, Line, Table) added and Google speech (SST) integrated)
-V5.0.5 on 12-OCT-2017 (Updated Readme document with supported browser details)
+V6.0.0 [Major] on 04-NOV-2017: Master branch
+Released major release with following features:
+ 1. Added charts support (Pie chart, Line chart, Bar chart and Table)
+ 2. Added Google Speech to text support
+
+V5.0.5 on 12-OCT-2017: web-sdk-5.0.5 branch
+(Updated Readme document with supported browser details)
 V5.0.4 on 10-OCT-2017 (Bug fix: Button template issue specific to IE browser)
 V5.0.3 on 26-SEP-2017 (Security issue fix: commented unused code)
 V5.0.2 on 25-SEP-2017 (UI changes for Quick Replies, List & Carosuel templates)
