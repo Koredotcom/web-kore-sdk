@@ -658,7 +658,10 @@ function koreBotChat() {
             }
         }
     };
-
+    function isMobile() {
+        var isMobile = (/iphone|ipod|android|blackberry|fennec/).test(navigator.userAgent.toLowerCase());
+        return isMobile;
+    }
     chatWindow.prototype.init = function () {
         var me = this;
         me.config.botOptions.botInfo.name = me.config.botOptions.botInfo.name.escapeHTML();
@@ -669,6 +672,10 @@ function koreBotChat() {
 
         me.config.chatTitle = me.config.botMessages.connecting;
         me.config.userAgentIE = navigator.userAgent.indexOf('Trident/') !== -1;
+        var mobileBrowserOpened = isMobile();
+        if(mobileBrowserOpened) {
+            me.config.isSendButton = true;
+        }
         isSendButton = me.config.isSendButton;
         isTTSEnabled = me.config.isTTSEnabled || false;
         isSpeechEnabled = me.config.isSpeechEnabled || false;

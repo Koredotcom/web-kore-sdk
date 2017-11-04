@@ -292,6 +292,7 @@ ul.chat-container li .profile-photo .user-account{
 ul.chat-container li .messageBubble img{
 	max-width: 100%;
 	height: auto;
+    padding-top: 5px;
 }
 ul.chat-container li .messageBubble p.indent{
 	padding-left: 10px;
@@ -1020,6 +1021,8 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     height: 139px;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
+    border: solid 1px #ededed;
+    border-bottom: none;
 }
 .carouselTitleBox {
     width: 244px;
@@ -1161,4 +1164,220 @@ ul.chat-container li.quickReplies {
 }
 .hide {
     display: none;
+}
+/* Pie chart css */
+.piechart .piechartDiv {
+    display: block;
+    /*border: 13px solid #F1F0F0;*/
+    border-radius: 9px;
+    clear: both;
+    width: 317px;
+}
+.piechart .messageBubble.pieChart {
+    margin-bottom: 10px;
+}
+.piechart .profile-photo {
+    top: 65px !important;
+}
+
+/* table template chart css */
+.tablechart .tablechartDiv {
+    clear: both;
+    left: -30px;
+    position: relative;
+    top: 18px;
+    border: 2px solid #d6d6d6;
+    border-radius: 9px;
+    margin: 0px -40px 13px -23px;
+}
+.tablechartDiv table {
+    border-collapse: collapse;
+}
+.tablechartDiv tr {
+    border-bottom: 1px solid #dfdfdf;
+}
+.tablechartDiv tr.headerTitle {
+    border-bottom: 2px solid #d6d6d6;
+}
+.tablechart .tablechartDiv tr.bottomThickBorder{
+    border-bottom: 3px solid #d6d6d6;
+}
+.tablechart .profile-photo {
+    top: 42px !important;
+}
+.kore-chat-window.expanded .tablechart .profile-photo {
+    top: 30px !important;
+}
+.tablechart .tablechartDiv table {
+    width: 100%;
+}
+.tablechart .tablechartDiv table td, .tablechart .tablechartDiv table th{
+    padding: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 200px !important;
+}
+/*.tablechart .tablechartDiv table .addBottomBorder{
+    border-bottom: 1px solid #dfdfdf;
+}
+.tablechart .tablechartDiv table .addTopBorder{
+    border-top: 2px solid #d6d6d6;
+}
+.tablechart .tablechartDiv table .bottomThickBorder{
+    border-bottom: 3px solid #d6d6d6;
+}
+*/
+.noPadding {
+    padding: 0 !important;
+}
+
+/* Bar chart css */
+.barchart .barchartDiv {
+    display: block;
+    /*border: 13px solid #F1F0F0;*/
+    border-radius: 9px;
+    clear: both;
+    width: 317px;
+}
+.barchart .messageBubble.barchart {
+    margin-bottom: 10px;
+}
+.barchart .profile-photo {
+    top: 65px !important;
+}
+
+/* line chart css */
+.linechart .linechartDiv {
+    display: block;
+    /*border: 13px solid #F1F0F0;*/
+    border-radius: 9px;
+    clear: both;
+    width: 317px;
+}
+.linechart .messageBubble.linechart {
+    margin-bottom: 10px;
+}
+.linechart .profile-photo {
+    top: 65px !important;
+}
+
+/* Droppable attachment css */
+.attachmentDropoverBlock{
+    position: inherit;
+    background-color: transparent;
+    height: 0px;
+    width: 94%;
+    bottom: 0px;
+    border-style: dashed;
+    border-color: #009dab;
+    display: none;
+}
+.kore-chat-window.dragover.attachmentDropoverBlock {
+    height: 175px;
+    display: block;
+}
+.kore-chat-window.dragover {
+    border: 2px solid #009dab;
+    border-style: dashed;
+}
+
+
+/* CSS for image preview */
+/* The Modal (background) */
+.modalImagePreview {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 100000; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+}
+
+/* Modal Content (Image) */
+.modal-content-imagePreview {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 750px;
+}
+.messageBubble img {
+    cursor: pointer;
+}
+
+/* Caption of Modal Image (Image Text) - Same Width as the Image */
+#caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 150px;
+}
+
+/* Add Animation - Zoom in the Modal */
+.modal-content-imagePreview, #caption { 
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
+@-webkit-keyframes zoom {
+    from {-webkit-transform:scale(0)} 
+    to {-webkit-transform:scale(1)}
+}
+
+@keyframes zoom {
+    from {transform:scale(0)} 
+    to {transform:scale(1)}
+}
+
+/* The Close Button */
+.closeImagePreview {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    opacity: 1;
+}
+
+.closeImagePreview:hover,
+.closeImagePreview:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px){
+    .modal-content-imagePreview {
+        width: 100%;
+    }
+}
+:-ms-input-placeholder { /* Internet Explorer */
+    color: #aaa; 
+    font-size: 18px;
+    z-index: -1;
+}
+.inputCursor:empty:before
+{
+    display:inline;
+    content:"Message...";
+    position:absolute; 
+    top:3px !important; left:0;
+}
+.disableFooter {
+    pointer-events: none;
+    opacity: 0.3;
 }
