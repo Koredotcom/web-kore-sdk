@@ -39,16 +39,19 @@ Integration of Kore.ai chat UI into your App
     -   <link href="UI/libs/jquery-ui.min.css" rel="stylesheet"/>
     -   <link href="UI/chatWindow.css" rel="stylesheet"/> // chat ui design
 	-   <link href="../libs/purejscarousel.css" rel="stylesheet"></link> // carousel template design
+
 #### 2. Include Dependent JS
     -   <script src='UI/libs/jquery.js'></script>
     -   <script src='UI/libs/jquery-ui.min.js'></script>
     -   <script src='UI/libs/jquery.tmpl.min.js'></script>
     -   <script src='UI/libs/moment.js'></script>
     -   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+
 #### 3. Include the kore-bot-sdk-client.js ,anonymousassertion.js & chatWindow.js files 
     -   <script src='../libs/anonymousassertion.js'></script>
     -   <script src='../kore-bot-sdk-client.js'></script>
     -   <script src='UI/chatWindow.js'></script> // chat ui js
+
 #### 4. Include dependencies for recorder , emoji and carousel template support
     -   <script src="../libs/emoji.js" type="text/javascript"></script>
     -   <script src="../libs/recorder.js" type="text/javascript"></script>
@@ -56,6 +59,7 @@ Integration of Kore.ai chat UI into your App
 	-   <script src="../libs/purejscarousel.js" type="text/javascript"></script>
     -   <script src="custom/customTemplate.js" type="text/javascript"></script>
     -   <link href="custom/customTemplate.css" rel="stylesheet"></link>
+
 #### 5. Define the assertion function (Should be defined by the clients)
         //NOTE:clients has to define a API which should generate and return the JWT token. and do the necessary changes in the below function like change the url,type,Authorization and on success set the returned jwt.
         //fields to set in JWT:subject(emailId),issuer(clientId),algorithm(HS256 or RS256)
@@ -74,6 +78,7 @@ Integration of Kore.ai chat UI into your App
             }
            }) 
         }
+
 #### 6. Initialize the Bot
         //Define the bot options
         var botOptions = {};
@@ -86,12 +91,13 @@ Integration of Kore.ai chat UI into your App
         // Assign Bot options to chatWindow config
         var chatConfig={
             botOptions:botOptions,
-            // if true, opens authentication links in popup window , default value is "false"
-            allowIframe : true,
-			isSendButton: false,
-			isTTSEnabled: true,
-			isSpeechEnabled: true
+            allowIframe : false, // set true, opens authentication links in popup window, default value is "false"
+			isSendButton: false, // set true, to shown send button below the compose bar
+			isTTSEnabled: true, // set false, to hide speaker icon
+			isSpeechEnabled: true // set false, to hide mic icon
+            allowGoogleSpeech : true // set false, to use KORE.ai speech engine instead Google speech engine. This feature requires valid Google speech API key. (Place it in 'web-kore-sdk/libs/speech/key.js')
         };
+
 #### 7. Call koreBotChat instance
         var chatInstance = koreBotChat(); // get chat instance
         chatInstance.show(chatConfig); // open chat window
@@ -104,6 +110,7 @@ Integration of Kore.ai chat UI into your App
     -   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
     -   <script src='../libs/anonymousassertion.js'></script>
     -   <script src='../kore-bot-sdk-client.js'></script>
+
 #### 2. Initialize the Bot
         //define the bot options
         var botOptions = {}; 
@@ -117,6 +124,7 @@ Integration of Kore.ai chat UI into your App
         var bot = require('/KoreBot.js').instance(); //initialize the bot.
         bot.init(botOptions); // bot instance created.
         bot.destroy(); // Destroy bot instance 
+
 #### 3. Send message to Bot
         var messageToBot = {};
         messageToBot["message"] = {body:"your message",attachments:[]};
@@ -126,6 +134,7 @@ Integration of Kore.ai chat UI into your App
         // Send message to Bot
         bot.sendMessage(messageToBot, function messageSent() {
         });
+
 #### 4. Listen to a Message (Response)
         // Event occurs when you recieve any message from server
         bot.on("message",function(msg){
@@ -147,21 +156,25 @@ Integration of Kore.ai chat UI into your App
         bot.on("open", function (response) {
             // your code
         });
+
+
+
 ```
 
 ###Release History:
-V6.0.0 [Major] on 04-NOV-2017: Master branch
-Released major release with following features:
- 1. Added charts support (Pie chart, Line chart, Bar chart and Table)
- 2. Added Google Speech to text support
 
-V5.0.5 on 12-OCT-2017: web-sdk-5.0.5 branch
-(Updated Readme document with supported browser details)
-V5.0.4 on 10-OCT-2017 (Bug fix: Button template issue specific to IE browser)
-V5.0.3 on 26-SEP-2017 (Security issue fix: commented unused code)
-V5.0.2 on 25-SEP-2017 (UI changes for Quick Replies, List & Carosuel templates)
-V5.0.1 on 15-SEP-2017 (Security issue fixes)
-V5.0.0 on 08-SEP-2017 (Added in-line video playback and Carosuel template support)
+V6.0.0 [Major] on 04-NOV-2017: Master branch
+    Released major release with following features:
+    1. Added Pie chart, Line chart, Bar chart and Table support
+    2. Added Google Speech to text support. 
+        This feature requires valid Google speech API key. (Place it in 'web-kore-sdk/libs/speech/key.js')  
+        (Supported Browsers are Chrome, Firefox, Microsoft Edge, Safari 11.
+        Firefox, Microsoft Edge, Safari 11 requires Google API key)
+    3. Updated chatConfig options to turn on/off Google Speech to Text.
+
+V5.0.0 [Major] on 12-OCT-2017: web-sdk-5.0.0 branch
+    1. Added Quick Replies, List & Carosuel templates support
+    2. Added in-line video playback support
 
 # License
 _Copyright © Kore.ai, Inc. MIT License; see LICENSE for further details._
