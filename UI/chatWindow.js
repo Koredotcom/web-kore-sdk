@@ -1833,7 +1833,7 @@ function koreBotChat() {
 				<div class="kore-chat-header"> \
 					<div class="header-title" title="${chatTitle}">${chatTitle}</div> \
 					<div class="chat-box-controls"> \
-                                                <button class="reload-btn" title="Reconnect"><span></span></button> \
+                                                <button class="reload-btn" title="Reconnect"><i class="fa fa-repeat" aria-hidden="true"></i></button> \
 						<button class="minimize-btn" title="Minimize">&minus;</button> \
                                                 <button class="expand-btn" title="Expand"><span class="expand-btn-span fa fa-expand"></span></button>\
 						<button class="close-btn" title="Close">&times;</button> \
