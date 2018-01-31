@@ -38,7 +38,7 @@ Integration of Kore.ai chat UI into your App
 #### 1. Include Dependent CSS
     -   <link href="UI/libs/jquery-ui.min.css" rel="stylesheet"/>
     -   <link href="UI/chatWindow.css" rel="stylesheet"/> // chat ui design
-	-   <link href="../libs/purejscarousel.css" rel="stylesheet"></link> // carousel template design
+    -   <link href="../libs/purejscarousel.css" rel="stylesheet"></link> // carousel template design
 
 #### 2. Include Dependent JS
     -   <script src='UI/libs/jquery.js'></script>
@@ -52,12 +52,16 @@ Integration of Kore.ai chat UI into your App
     -   <script src='../kore-bot-sdk-client.js'></script>
     -   <script src='UI/chatWindow.js'></script> // chat ui js
 
-#### 4. Include dependencies for recorder , emoji and carousel template support
+#### 4. Include dependencies for recorder , emoji, charts, Google speech and carousel template support
     -   <script src="../libs/emoji.js" type="text/javascript"></script>
     -   <script src="../libs/recorder.js" type="text/javascript"></script>
     -   <script src="../libs/recorderWorker.js" type="text/javascript"></script>
-	-   <script src="../libs/purejscarousel.js" type="text/javascript"></script>
+    -   <script src="../libs/purejscarousel.js" type="text/javascript"></script>
     -   <script src="custom/customTemplate.js" type="text/javascript"></script>
+    -   <script src="libs/loader.js" type="text/javascript"></script>
+    -   <script src="../libs/speech/app.js" type="text/javascript"></script>
+    -   <script src="../libs/speech/key.js" type="text/javascript"></script>
+    -   <script src="../libs/client_api.js" type="text/javascript"></script>
     -   <link href="custom/customTemplate.css" rel="stylesheet"></link>
 
 #### 5. Define the assertion function (Should be defined by the clients)
@@ -92,10 +96,11 @@ Integration of Kore.ai chat UI into your App
         var chatConfig={
             botOptions:botOptions,
             allowIframe : false, // set true, opens authentication links in popup window, default value is "false"
-			isSendButton: false, // set true, to shown send button below the compose bar
-			isTTSEnabled: true, // set false, to hide speaker icon
-			isSpeechEnabled: true // set false, to hide mic icon
+            isSendButton: false, // set true, to shown send button below the compose bar
+            isTTSEnabled: true, // set false, to hide speaker icon
+            isSpeechEnabled: true // set false, to hide mic icon
             allowGoogleSpeech : true // set false, to use KORE.ai speech engine instead Google speech engine. This feature requires valid Google speech API key. (Place it in 'web-kore-sdk/libs/speech/key.js')
+            allowLocation : true // set false, to deny sending location
         };
 
 #### 7. Call koreBotChat instance
@@ -116,7 +121,7 @@ Integration of Kore.ai chat UI into your App
         var botOptions = {}; 
         botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
         botOptions.koreSpeechAPIUrl = "https://speech.kore.ai/";
-		botOptions.ttsSocketUrl = 'wss://speech.kore.ai/tts/ws';
+        botOptions.ttsSocketUrl = 'wss://speech.kore.ai/tts/ws';
         botOptions.assertionFn = assertion;
         botOptions.koreAnonymousFn = koreAnonymousFn;
         botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // issued by the kore.ai on client app registration.
@@ -163,18 +168,19 @@ Integration of Kore.ai chat UI into your App
 
 ###Release History:
 
-V6.0.0 [Major] on 04-NOV-2017: Master branch
+V6.1.0 [Major] on 31-JAN-2018: Master branch
     Released major release with following features:
+    1. Added Pie chart, Donut chart, Line chart, Bar chart and Table (Regular & Responsive) mini-table and Waiting-For-Response template support.
+    2. Able to zoom image and chart templates.
+    3. Showing intermediate results whiie using STT (Speech To Text).
+
+V6.0.0 [Major] on 04-NOV-2017: web-sdk-6.0.0 branch
     1. Added Pie chart, Line chart, Bar chart and Table support
     2. Added Google Speech to text support. 
         This feature requires valid Google speech API key. (Place it in 'web-kore-sdk/libs/speech/key.js')  
         (Supported Browsers are Chrome, Firefox, Microsoft Edge, Safari 11.
         Firefox, Microsoft Edge, Safari 11 requires Google API key)
     3. Updated chatConfig options to turn on/off Google Speech to Text.
-
-V5.0.0 [Major] on 12-OCT-2017: web-sdk-5.0.0 branch
-    1. Added Quick Replies, List & Carosuel templates support
-    2. Added in-line video playback support
 
 # License
 _Copyright © Kore.ai, Inc. MIT License; see LICENSE for further details._

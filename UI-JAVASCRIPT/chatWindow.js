@@ -418,6 +418,10 @@ function koreBotChat() {
                 }
                 var j;
                 // Matches Image markup ![test](http://google.com/image.png)
+                // Matches Image markup ![test](http://google.com/image.png)
+                if(txtArr[i].indexOf(' ![') === -1) {// replace method trimming last'$' character, to handle this adding ' ![' extra space
+                    txtArr[i] = txtArr[i].replace('![',' ![');
+                }
                 var _matchImage = txtArr[i].match(/\!\[([^\]]+)\](|\s)+\(([^\)])+\)/g);
                 if (_matchImage && _matchImage.length > 0) {
                     for (j = 0; j < _matchImage.length; j++) {
@@ -683,6 +687,9 @@ function koreBotChat() {
 
         me.config.chatTitle = tempTitle;
         bot.init(me.config.botOptions);
+        if(me.config.allowLocation) {
+            bot.fetchUserLocation();
+        }
         me.render(chatWindowHtml);
     };
 
@@ -887,6 +894,10 @@ function koreBotChat() {
                 addClass(_chatContainer, "minimize");
                 _chatContainer.querySelector('.minimized-title').innerHTML = "Talk to " + me.config.chatTitle;
                 me.minimized = true;
+                if(me.expanded === true) {
+                    var _chatOverlay = me.config.container.querySelector('.kore-chat-overlay');
+                    _chatOverlay.style.display = "none";
+                }
             }
             if(ttsAudioSource) {
                 ttsAudioSource.stop();
@@ -929,15 +940,22 @@ function koreBotChat() {
             });
         });
 
-        document.querySelector('body').querySelector('.kore-chat-window .minimize-btn').addEventListener('click', function () {
+        /*document.querySelector('body').querySelector('.kore-chat-window .minimize-btn').addEventListener('click', function () {
             if (me.expanded === true) {
                 _expandBtn.click();
             }
-        });
+        });*/
 
         _chatContainer.querySelector('.minimized').addEventListener('click', function (event) {
             removeClass(_chatContainer, "minimize");
             me.minimized = false;
+            if(me.expanded === true) {
+                var _chatOverlay = me.config.container.querySelector('.kore-chat-overlay');
+                _chatOverlay.style.display = "block";
+            }
+            var evt = document.createEvent("HTMLEvents");
+            evt.initEvent('resize', true, false);
+            document.getElementsByClassName('chat-container')[0].scrollTop = document.getElementsByClassName('chat-container')[0].scrollHeight;
         });
         _chatContainer.querySelector('.minimized-title').addEventListener('click', function (event) {
             removeClass(_chatContainer, "minimize");
@@ -1440,6 +1458,7 @@ function koreBotChat() {
             var _leftIcon = _parentQuikReplyEle.parentElement.parentElement.querySelectorAll('.quickreplyLeftIcon');
             var _rightIcon = _parentQuikReplyEle.parentElement.parentElement.querySelectorAll('.quickreplyRightIcon');
             setTimeout(function() {
+                _parentQuikReplyEle.parentElement.parentElement.getElementsByClassName('user-account')[0].classList.remove('marginT50');
                 _parentQuikReplyEle.parentElement.parentElement.removeChild(_leftIcon[0]);
                 _parentQuikReplyEle.parentElement.parentElement.removeChild(_rightIcon[0]);
                 _parentQuikReplyEle.parentElement.removeChild(_parentQuikReplyEle);

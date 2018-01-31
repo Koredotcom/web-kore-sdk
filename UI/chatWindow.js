@@ -10,7 +10,7 @@ function koreBotChat() {
     var _eventQueue = {};
     var carouselEles = [];
     var prevRange, accessToken, koreAPIUrl, fileToken, fileUploaderCounter = 0, bearerToken = '', assertionToken = '';
-    var speechServerUrl = '', userIdentity = '', isListening = false, isRecordingStarted = false,  isSpeechEnabled = false, speechPrefixURL = "", sidToken = "",carouselTemplateCount = 0;
+    var speechServerUrl = '', userIdentity = '', isListening = false, isRecordingStarted = false,  isSpeechEnabled = false, speechPrefixURL = "", sidToken = "",carouselTemplateCount = 0, waiting_for_message = false;
     /******************* Mic variable initilization *******************/
     var _exports = {},
         _template, _this = {};
@@ -61,7 +61,8 @@ function koreBotChat() {
     window.PieChartCount = 0;
     window.barchartCount = 0;
     window.linechartCount = 0;
-    window.chartColors = ['#41C5D3', '#09A8FA', '#626EEF', '#22EAAA', '#C4AFF0', '#324E7B', '#FC5C9C','#26344a','#50e3c2','#5f6bf7','#b3bac8','#f86a54','#00e5e0','#9371e8','#ffec8e','#99ed9e','#73888d'];
+    var available_charts = [];
+    window.chartColors = ['#75b0fe','#f78083','#99ed9e','#fde296','#26344a','#5f6bf7','#b3bac8','#99a1fd','#9cebf9','#f7c7f4'];
     /**************************File upload variable end here **************************/
     var _escPressed = 0; 
     String.prototype.isNotAllowedHTMLTags = function () {
@@ -398,6 +399,9 @@ function koreBotChat() {
                 }
                 var j;
                 // Matches Image markup ![test](http://google.com/image.png)
+                if(txtArr[i].indexOf(' ![') === -1) {// replace method trimming last'$' character, to handle this adding ' ![' extra space
+                    txtArr[i] = txtArr[i].replace('![',' ![');
+                }
                 var _matchImage = txtArr[i].match(/\!\[([^\]]+)\](|\s)+\(([^\)])+\)/g);
                 if (_matchImage && _matchImage.length > 0) {
                     for (j = 0; j < _matchImage.length; j++) {
@@ -412,7 +416,7 @@ function koreBotChat() {
                             }
                         }
                         txtArr[i] = _tempImg.join(' ');
-                        //txtArr[i] = txtArr[i].replace(_matchImage[j], _imgLink);
+                        txtArr[i] = txtArr[i].replace(_matchImage[j], _imgLink);
                     }
                 }
                 // Matches link markup [test](http://google.com/)
@@ -422,7 +426,7 @@ function koreBotChat() {
                         var _linkTxt = _matchLink[j].substring(1, _matchLink[j].indexOf(']'));
                         var remainingString = _matchLink[j].substring(_matchLink[j].indexOf(']') + 1).trim();
                         var _linkLink = remainingString.substring(1, remainingString.indexOf(')'));
-                        _linkLink = '<span class="isLink"><a href="' + _linkLink + '" target="_blank">' + _linkTxt + '</a></span>';
+                        _linkLink = '<span class="isLink"><a href="' + _linkLink + '" target="_blank">' + helpers.checkMarkdowns(_linkTxt) + '</a></span>';
                         txtArr[i] = txtArr[i].replace(_matchLink[j], _linkLink);
                     }
                 }
@@ -550,8 +554,11 @@ function koreBotChat() {
             resetPingMessage();
         }, _pingTime);
     }
-    
     window.onresize = function(event) {
+        if(event.target == window) {
+            var _width = $('#chatContainer').width()-400;
+            $('.kore-chat-window').attr('style','left: '+_width+'+px');
+        }
         if (($('.kore-chat-window').width()>400) || (document.getElementsByClassName('kore-chat-window').length && document.getElementsByClassName('kore-chat-window')[0].classList.contains('expanded'))) {
             var _koreChatWindowHeight = $('.kore-chat-window').width();
             $('.carousel').attr('style','width: '+(_koreChatWindowHeight-85)+'px !important');
@@ -583,6 +590,33 @@ function koreBotChat() {
                 }
             }
         }
+
+        /* Handling for full size table */
+            if($('.kore-chat-window').width()>460) {
+                $(".accordionTable").each(function() {
+                    if ($(this).hasClass("responsive")) {
+                        $(this).addClass("hide")
+                    }
+                });
+                $(".tablechartDiv").each(function() {
+                    if (!$(this).hasClass("regular")) {
+                        $(this).removeClass("hide")
+                    }
+                });
+            }
+            else{
+                $(".accordionTable").each(function() {
+                    if ($(this).hasClass("responsive")) {
+                        $(this).removeClass("hide")
+                    }
+                });
+                $(".tablechartDiv").each(function() {
+                    if (!$(this).hasClass("regular")) {
+                        $(this).addClass("hide")
+                    }
+                });
+            }
+        /* Handling for table ends*/
     };
     function handleImagePreview() {
         var modal = document.getElementById('myModal');
@@ -646,6 +680,9 @@ function koreBotChat() {
 
         me.config.chatTitle = tempTitle;
         bot.init(me.config.botOptions);
+        if(me.config.allowLocation) {
+            bot.fetchUserLocation();
+        }
         me.render(chatWindowHtml);
     };
     chatWindow.prototype.destroy = function () {
@@ -682,7 +719,8 @@ function koreBotChat() {
             scroll: false
         }).resizable({
             handles: "n, e, w, s",
-            containment: "html"
+            containment: "html",
+            minWidth:400
         });
 
         _chatContainer.off('keyup', '.chatInputBox').on('keyup', '.chatInputBox', function (event) {
@@ -842,7 +880,9 @@ function koreBotChat() {
             var _htmlData = '';
             if (_clipboardData) {
                 _htmlData = helpers.nl2br(_clipboardData.getData('text').escapeHTML(), false);
-                insertHtmlData(_this, _htmlData);
+                if(_htmlData) {
+                    insertHtmlData(_this, _htmlData);
+                }
             }
             setTimeout(function () {
                 setCaretEnd(_this);
@@ -868,7 +908,7 @@ function koreBotChat() {
                 var _tempWin = window.open(a_link, "_blank");
             }
         });
-        _chatContainer.off('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn,.viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent').on('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn, .viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent', function (e) {
+        _chatContainer.off('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn,.viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent,.listRightContent').on('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn, .viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent,.listRightContent', function (e) {
             e.preventDefault();
             var type = $(this).attr('type');
             if (type == "postback" || type == "text") {
@@ -887,6 +927,7 @@ function koreBotChat() {
                 var _leftIcon = _parentQuikReplyEle.parentElement.parentElement.querySelectorAll('.quickreplyLeftIcon');
                 var _rightIcon = _parentQuikReplyEle.parentElement.parentElement.querySelectorAll('.quickreplyRightIcon');
                 setTimeout(function() {
+                    _parentQuikReplyEle.parentElement.parentElement.getElementsByClassName('user-account')[0].classList.remove('marginT50');
                     _parentQuikReplyEle.parentElement.parentElement.removeChild(_leftIcon[0]);
                     _parentQuikReplyEle.parentElement.parentElement.removeChild(_rightIcon[0]);
                     _parentQuikReplyEle.parentElement.removeChild(_parentQuikReplyEle);
@@ -928,6 +969,9 @@ function koreBotChat() {
                 }
                 _chatContainer.find('.minimized-title').html("Talk to " + me.config.chatTitle);
                 me.minimized = true;
+                if (me.expanded === true) {
+                    $('.kore-chat-overlay').hide();
+                }
             }
             $('.recordingMicrophone').trigger('click');
             if(ttsAudioSource) {
@@ -952,7 +996,8 @@ function koreBotChat() {
                     scroll: false
                 }).resizable({
                     handles: "n, e, w, s",
-                    containment: "html"
+                    containment: "html",
+                    minWidth: 400
                 });
             } else {
                 $('.kore-chat-overlay').show();
@@ -971,14 +1016,15 @@ function koreBotChat() {
                 _chatContainer.css('left', _chatContainer.position().left - (container_pos_left - $(window).width() + 10) + "px");
             }
         });
-        $('body').on('click', '.kore-chat-overlay, .kore-chat-window .minimize-btn', function () {
+        /*$('body').on('click', '.kore-chat-overlay, .kore-chat-window .minimize-btn', function () {
             if (me.expanded === true) {
                 $('.kore-chat-window .expand-btn').trigger('click');
             }
-        });
+        });*/
         $(document).on('keyup',function(evt) {
             if (evt.keyCode == 27) {
                $('.closeImagePreview').trigger('click');
+               $('.closeElePreview').trigger('click');
             }
         });
         _chatContainer.off('click', '.quickreplyLeftIcon').on('click', '.quickreplyLeftIcon', function (event) {
@@ -1042,6 +1088,14 @@ function koreBotChat() {
                 containment: "window",
                 scroll: false
             });
+            if (me.expanded === true) {
+                $('.kore-chat-overlay').show();
+            }
+            var evt = document.createEvent("HTMLEvents");
+            evt.initEvent('resize', true, false);
+            $('.chat-container').animate({
+                scrollTop: $('.chat-container').prop("scrollHeight")
+            }, 100);
         });
 
         _chatContainer.off('click', '.reload-btn').on('click', '.reload-btn', function (event) {
@@ -1180,6 +1234,9 @@ function koreBotChat() {
         if (chatInput.text().trim() === "" && $('.attachment').html().trim().length == 0) {
             return;
         }
+        if(me.config.allowLocation) {
+            bot.fetchUserLocation();
+        }
         var _bodyContainer = $(me.config.chatContainer).find('.kore-chat-body');
         var _footerContainer = $(me.config.chatContainer).find('.kore-chat-footer');
         var clientMessageId = new Date().getTime();
@@ -1253,12 +1310,18 @@ function koreBotChat() {
 		customTemplateObj.extension = extension;
 		
         if (msgData.type === "bot_response") {
+            waiting_for_message = false;
             setTimeout(function () {
                 $('.typingIndicator').css('background-image', "url(" + msgData.icon + ")");
             }, 500);
             setTimeout(function () {
-                $('.typingIndicatorContent').css('display', 'none');
+                if(!waiting_for_message) {
+                    $('.typingIndicatorContent').css('display', 'none');
+                }
             }, 500);
+        }
+        else{
+            waiting_for_message = false;
         }
         var _chatContainer = $(me.config.chatContainer).find('.chat-container');
         if (msgData.message && msgData.message[0] && msgData.message[0].cInfo.attachments) {
@@ -1280,6 +1343,11 @@ function koreBotChat() {
 					'extension': extension
 				});
 			}
+            else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "wait_for_response") {// to show typing indicator until next response receive
+                waiting_for_message = true; 
+                $('.typingIndicatorContent').css('display', 'block');
+                return;
+            }
 			else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "list") {
 				messageHtml = $(me.getChatTemplate("templatelist")).tmpl({
 					'msgData': msgData,
@@ -1343,6 +1411,52 @@ function koreBotChat() {
                     'helpers': helpers,
                     'extension': extension
                 });
+                setTimeout(function(){
+                    var acc = document.getElementsByClassName("accordionRow");
+
+                    for (var i = 0; i < acc.length; i++) {
+                        acc[i].onclick = function(){
+                            this.classList.toggle("open");
+                        }
+                    }
+                    var showFullTableModal = document.getElementsByClassName("showMore");
+
+                    for (var i = 0; i < showFullTableModal.length; i++) {
+                        showFullTableModal[i].onclick = function(){
+                            var parentli = this.parentNode.parentElement;
+                            $( "#dialog" ).empty();
+                            $("#dialog").html($(parentli).find('.tablechartDiv').html());
+                           $( ".hello" ).clone().appendTo( ".goodbye" );
+
+                            
+                            var modal = document.getElementById('myPreviewModal');
+                            $(".largePreviewContent").empty();
+                            //$(".largePreviewContent").html($(parentli).find('.tablechartDiv').html());
+                            $(parentli).find('.tablechartDiv').clone().appendTo( ".largePreviewContent" );
+
+
+                            modal.style.display = "block";
+
+                            // Get the <span> element that closes the modal
+                            var span = document.getElementsByClassName("closeElePreview")[0];
+
+                            // When the user clicks on <span> (x), close the modal
+                            span.onclick = function() { 
+                              modal.style.display = "none";
+                              $(".largePreviewContent").removeClass("addheight");
+                            }
+
+                        }
+                    }
+                },350);
+                
+            }
+            else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "mini_table") {
+                messageHtml = $(me.getChatTemplate("miniTableChartTemplate")).tmpl({
+                    'msgData': msgData,
+                    'helpers': helpers,
+                    'extension': extension
+                });
             }
             else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "piechart") {
                 messageHtml = $(me.getChatTemplate("pieChartTemplate")).tmpl({
@@ -1356,24 +1470,18 @@ function koreBotChat() {
                     function drawChart() {
                         var data = new google.visualization.DataTable();
                         data.addColumn('string', 'Task');
-                         data.addColumn('number', 'Hours per Day');
-                        data.addColumn({type: 'string', role: 'tooltip'});
+                        data.addColumn('number', 'Hours per Day');
+                        if( msgData.message[0].component.payload.elements && msgData.message[0].component.payload.elements[0].displayValue) {
+                            data.addColumn({type: 'string', role: 'tooltip'});
+                        }
                         var pieChartData = [];
                         var piechartElements = msgData.message[0].component.payload.elements;
-                        var _currrencyValue  = "";
                         for(var i=0;i<piechartElements.length;i++) {
-                            var regex = /[+-]?\d+(\.\d+)?/g;
-                            var _value =  piechartElements[i].value;
-                            /*if(typeof piechartElements[i].value === "string") {
-                                _value = piechartElements[i].value.match(regex)[0] || 0;
-                                _currrencyValue = piechartElements[i].value.split(/[0-9]+/)[0] || "";
-                            }*/
-                            if(piechartElements[i].currency) {
-                                _currrencyValue = piechartElements[i].currency;
+                            var arr = [piechartElements[i].title+" \n"+piechartElements[i].value];
+                            arr.push(parseFloat(piechartElements[i].value));
+                            if(piechartElements[i].displayValue) {
+                                arr.push(piechartElements[i].displayValue);
                             }
-                            var arr = [piechartElements[i].title+" \n"+_currrencyValue+""+_value];
-                            arr.push(parseFloat(_value));
-                            arr.push(piechartElements[i].title+"\n"+_currrencyValue+""+_value);
                             pieChartData.push(arr);
                         }
                         data.addRows(pieChartData);
@@ -1385,31 +1493,41 @@ function koreBotChat() {
                                 width: "94%"
                             },
                             pieSliceTextStyle : {},
-                            colors: window.chartColors
+                            colors: window.chartColors,
+                            legend: {
+                                textStyle: {
+                                    color: '#b3bac8'
+                                }
+                            }
                         };
 
-                        if(piechartElements.length === 1) {
+                        if(piechartElements.length === 1) { // if only element, then deault donut chart
                             options.pieHole =  0.5;
                             options.pieSliceTextStyle.color = "black";
                         }
+                        if(msgData.message[0].component.payload.pie_type) { //chart based on user requireent
+                            if(msgData.message[0].component.payload.pie_type === "donut") 
+                            {
+                                options.pieHole =  0.6;
+                                options.pieSliceTextStyle.color = "black";
+                                options.legend.position = "none";
+                            }
+                            else if(msgData.message[0].component.payload.pie_type === "donut_legend"){
+                                options.pieHole =  0.6;
+                                options.pieSliceTextStyle.color = "black";
+                            }
+                        }
+                        var _piechartObj = {'id':'piechart'+window.PieChartCount,'data':data,'options':options,'type':'piechart'};
+                        available_charts.push(_piechartObj);
                         var container = document.getElementById('piechart'+window.PieChartCount);
                         var chart = new google.visualization.PieChart(container);
-                        google.visualization.events.addListener(chart, 'ready', function() {
-                            /*var rowIndex = 0;
-                              Array.prototype.forEach.call(container.getElementsByTagName('text'), function(label) {
-                                // find legend labels
-                                if ((label.getAttribute('text-anchor') === 'start') && (label.getAttribute('fill') !== '#ffffff')) {
-                                  label.innerHTML += ' (' + _currrencyValue + '' + data.getValue(rowIndex++, 1) + ')';
-                                }
-                              });
-                              */
-                        });
                         chart.draw(data, options);
                         window.PieChartCount = window.PieChartCount + 1;
                       }
                 },150);
                 setTimeout(function(){
                     $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
+                    handleChartOnclick();
                 },200);
             }
             else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "barchart") {
@@ -1422,18 +1540,33 @@ function koreBotChat() {
                     google.charts.load('current', {packages: ['corechart', 'bar']});
                     google.charts.setOnLoadCallback(drawChart);
                     function drawChart() {
-                        var arrData = [];
-                        arrData.push(msgData.message[0].component.payload.headers);
+                        var customToolTips = false;
+                        var data = new google.visualization.DataTable();
+                        data.addColumn("string",'y');
+                        //adding legend labels
                         for(var i=0;i<msgData.message[0].component.payload.elements.length;i++) {
-                            var _tempArr = [];
-                            var _ele = msgData.message[0].component.payload.elements[i];
-                            _tempArr.push(_ele.title);
-                            for(var j=0;j<_ele.values.length;j++) {
-                                _tempArr.push(parseFloat(_ele.values[j]));
+                            var currEle = msgData.message[0].component.payload.elements[i];
+                            data.addColumn('number', currEle.title);
+                            //checking for display values ( custom tooltips)
+                            if(currEle.displayValues && currEle.displayValues.length) {
+                                data.addColumn({type: 'string', role: 'tooltip'});
+                                customToolTips = true;
                             }
-                            arrData.push(_tempArr);
                         }
-                        var data = google.visualization.arrayToDataTable(arrData);
+
+                        //filling rows
+                        var totalLines = msgData.message[0].component.payload.elements.length;
+                        for(var i=0;i<msgData.message[0].component.payload.X_axis.length;i++) {
+                            var arr = [];
+                            arr.push(msgData.message[0].component.payload.X_axis[i]);
+                            for(var j=0;j<totalLines;j++) {
+                                arr.push(parseFloat(msgData.message[0].component.payload.elements[j].values[i]));
+                                if(customToolTips) {
+                                    arr.push(msgData.message[0].component.payload.elements[j].displayValues[i]);
+                                }
+                            }
+                            data.addRow(arr);
+                        }
                         var options = {
                             chartArea: {
                                 height: "70%",
@@ -1442,32 +1575,64 @@ function koreBotChat() {
                             legend: { 
                                 position : 'top',
                                 alignment: 'end',
-                                maxLines: 3
+                                maxLines: 3,
+                                textStyle: {
+                                    color: '#b3bac8'
+                                }
                             },
                             hAxis: {
                                 gridlines: {
                                     color: 'transparent'
+                                },
+                                textStyle: {
+                                    color: '#b3bac8'
                                 }
                             },
                             vAxis: {
                                 gridlines: {
                                     color: 'transparent'
                                 },
+                                textStyle: {
+                                    color: '#b3bac8'
+                                },
                                 baselineColor: 'transparent'
                             },
-                            bar: {groupWidth: "40%"},
+                            animation:{
+                                duration: 500,
+                                easing: 'out',
+                                startup : true
+                            },
+                            bar: {groupWidth: "25%"},
                             colors: window.chartColors
                         };
-                        var container = document.getElementById('barchart'+window.barchartCount);
 
-                        var chart = new google.visualization.ColumnChart(container);
-                        //chart.draw(data, options);
+                        //horizontal chart, then increase size of bard
+                        if(msgData.message[0].component.payload.direction === 'horizontal'){
+                            options.bar.groupWidth = "45%";
+                            options.hAxis.baselineColor = '#b3bac8';
+                        }
+                        //stacked chart
+                        if(msgData.message[0].component.payload.stacked){
+                            options.isStacked = true;
+                            options.bar.groupWidth = "25%";
+                        }
+                        var _barchartObj = {'id':'barchart'+window.barchartCount,'direction':msgData.message[0].component.payload.direction,'data':data,'options':options,'type':'barchart'};
+                        available_charts.push(_barchartObj);
+                        var container = document.getElementById('barchart'+window.barchartCount);
+                        var chart = null;
+                        if(msgData.message[0].component.payload.direction === 'horizontal'){
+                            chart = new google.visualization.BarChart(container);
+                        }
+                        else{
+                            chart = new google.visualization.ColumnChart(container);
+                        }
                         chart.draw(data, options);
                         window.barchartCount = window.barchartCount + 1;
                       }
                 },150);
                 setTimeout(function(){
                     $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
+                    handleChartOnclick();
                 },200);
             }
             else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "linechart") {
@@ -1480,18 +1645,34 @@ function koreBotChat() {
                     google.charts.load('current', {packages: ['corechart', 'line']});
                     google.charts.setOnLoadCallback(drawChart);
                     function drawChart() {
-                        var arrData = [];
-                        arrData.push(msgData.message[0].component.payload.headers);
+                        var customToolTips = false;
+                        var data = new google.visualization.DataTable();
+                        data.addColumn("string",'y');
+                        //adding legend labels
                         for(var i=0;i<msgData.message[0].component.payload.elements.length;i++) {
-                            var _tempArr = [];
-                            var _ele = msgData.message[0].component.payload.elements[i];
-                            _tempArr.push(_ele.title);
-                            for(var j=0;j<_ele.values.length;j++) {
-                                _tempArr.push(parseFloat(_ele.values[j]));
+                            var currEle = msgData.message[0].component.payload.elements[i];
+                            data.addColumn('number', currEle.title);
+                            //checking for display values ( custom tooltips)
+                            if(currEle.displayValues && currEle.displayValues.length) {
+                                data.addColumn({type: 'string', role: 'tooltip'});
+                                customToolTips = true;
                             }
-                            arrData.push(_tempArr);
                         }
-                        var data = google.visualization.arrayToDataTable(arrData);
+
+                        //filling rows
+                        var totalLines = msgData.message[0].component.payload.elements.length;
+                        for(var i=0;i<msgData.message[0].component.payload.X_axis.length;i++) {
+                            var arr = [];
+                            arr.push(msgData.message[0].component.payload.X_axis[i]);
+                            for(var j=0;j<totalLines;j++) {
+                                arr.push(parseFloat(msgData.message[0].component.payload.elements[j].values[i]));
+                                if(customToolTips) {
+                                    arr.push(msgData.message[0].component.payload.elements[j].displayValues[i]);
+                                }
+                            }
+                            data.addRow(arr);
+                        }
+
                         var options = {
                             curveType: 'function',
                             chartArea: {
@@ -1501,32 +1682,48 @@ function koreBotChat() {
                             legend: { 
                                 position : 'top',
                                 alignment: 'end',
-                                maxLines: 3
+                                maxLines: 3,
+                                textStyle: {
+                                    color: "#b3bac8"
+                                }
                             },
                             hAxis: {
                                 gridlines: {
                                     color: 'transparent'
+                                },
+                                textStyle: {
+                                    color: "#b3bac8"
                                 }
                             },
                             vAxis: {
                                 gridlines: {
                                     color: 'transparent'
                                 },
+                                textStyle: {
+                                    color: '#b3bac8'
+                                },
                                 baselineColor: 'transparent'
                             },
                             lineWidth: 3,
+                            animation:{
+                                duration: 500,
+                                easing: 'out',
+                                startup : true
+                            },
                             colors: window.chartColors
                         };
+                        var lineChartObj = {'id':'linechart'+window.linechartCount,'data':data,'options':options,'type':'linechart'};
+                        available_charts.push(lineChartObj);
                         var container = document.getElementById('linechart'+window.linechartCount);
 
                         var chart = new google.visualization.LineChart(container);
-                        //chart.draw(data, options);
                         chart.draw(data, options);
                         window.linechartCount = window.linechartCount + 1;
                       }
                 },150);
                 setTimeout(function(){
                     $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
+                    handleChartOnclick();
                 },200);
             }
         else {
@@ -1545,47 +1742,19 @@ function koreBotChat() {
             scrollTop: _chatContainer.prop("scrollHeight")
         }, 100);
         if(msgData.type === "bot_response" && isTTSOn && isTTSEnabled && !me.minimized){
-            try {
-                _txtToSpeak = msgData.message[0].component.payload.text?msgData.message[0].component.payload.text.replace(/\r?\n/g, ". ."):"";
-                _txtToSpeak = helpers.checkMarkdowns(_txtToSpeak);
-                // replacing extra new line or line characters
-                _txtToSpeak = _txtToSpeak.replace('___','<hr/>');
-                _txtToSpeak = _txtToSpeak.replace('---','<hr/>');
-                if(msgData.message[0].component.payload.template_type && (msgData.message[0].component.payload.template_type === 'quick_replies' || msgData.message[0].component.payload.template_type === 'button')) {
-                    optionIndex = 65;
-                    if(msgData.message[0].component.payload.quick_replies) {
-                        _txtToSpeak = _txtToSpeak.concat('. .Select one of the options.'+'. .'+'The available options are');
-                        for(var i=0;i<msgData.message[0].component.payload.quick_replies.length;i++) {
-                            _txtToSpeak = _txtToSpeak.concat('. .'+String.fromCharCode(optionIndex+i)+') '+msgData.message[0].component.payload.quick_replies[i].title);
-                        }
-                         _txtToSpeak = _txtToSpeak.concat('. .You can either click or enter your preference.');
-                    }
-                    else if(msgData.message[0].component.payload.buttons) {
-                        _txtToSpeak = _txtToSpeak.concat('. .Select one of the options.'+'. .'+'The available options are');
-                        for(var i=0;i<msgData.message[0].component.payload.buttons.length;i++) {
-                            _txtToSpeak = _txtToSpeak.concat('. .'+String.fromCharCode(optionIndex+i)+') '+msgData.message[0].component.payload.buttons[i].title);
-                        }
-                         _txtToSpeak = _txtToSpeak.concat('. .You can either click or enter your preference.');
-                    }
-                }
-                else if(msgData.message[0].component.type === 'image' || msgData.message[0].component.type === 'audio' || msgData.message[0].component.type === 'video' || msgData.message[0].component.type === 'link'){
-                    var _extractedFileName = msgData.message[0].component.payload.url.replace(/^.*[\\\/]/, '');
-                    _txtToSpeak = _txtToSpeak.concat('. .A file is attached with this message.');
-                    if(_extractedFileName && _extractedFileName.length) {
-                        _txtToSpeak = _txtToSpeak.concat('. .The file name is '+_extractedFileName);
-                    }
-                }
-                else if(msgData.message[0].component.payload.template_type && msgData.message[0].component.payload.template_type === 'list') {
-                    optionIndex = 65;
-                    if(msgData.message[0].component.payload.elements) {
-                        _txtToSpeak = _txtToSpeak.concat('. .Select one of the options.'+'. .'+'The available options are');
-                        for(var i=0;i<msgData.message[0].component.payload.elements.length;i++) {
-                            _txtToSpeak = _txtToSpeak.concat('. .'+msgData.message[0].component.payload.elements[i].title);
-                        }
-                    }
-                }
-            } catch (e) {
+            if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.type === "template"){
                 _txtToSpeak = '';
+            }
+            else{
+                try {
+                    _txtToSpeak = msgData.message[0].component.payload.text?msgData.message[0].component.payload.text.replace(/\r?\n/g, ". ."):"";
+                    _txtToSpeak = helpers.checkMarkdowns(_txtToSpeak);
+                    // replacing extra new line or line characters
+                    _txtToSpeak = _txtToSpeak.replace('___','<hr/>');
+                    _txtToSpeak = _txtToSpeak.replace('---','<hr/>');
+                } catch (e) {
+                    _txtToSpeak = '';
+                }
             }
             if(msgData.message[0].component.payload.speech_hint) {
                 _txtToSpeak = msgData.message[0].component.payload.speech_hint;
@@ -1681,6 +1850,10 @@ function koreBotChat() {
                       <span class="closeImagePreview">&times;</span>\
                       <img class="modal-content-imagePreview" id="img01">\
                       <div id="caption"></div>\
+                </div>\
+                <div id="myPreviewModal" class="modalImagePreview">\
+                      <span class="closeElePreview">&times;</span>\
+                      <div class="largePreviewContent"></div>\
                 </div>\
             </div> \
 		</script>';
@@ -1810,11 +1983,11 @@ function koreBotChat() {
                 <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon piechart"> \
                     {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                     {{if msgData.icon}}<div class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-                    <div class="messageBubble pieChart">\
+                    {{if msgData.message[0].component.payload.text}}<div class="messageBubble pieChart">\
                         <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
-                    </div>\
+                    </div>{{/if}}\
                     <div class="piechartDiv">\
-                        <div id="piechart${window.PieChartCount}" style="width: 300px;"></div>\
+                        <div class="lineChartChildDiv" id="piechart${window.PieChartCount}"></div>\
                     </div>\
                 </li> \
             {{/if}} \
@@ -1825,11 +1998,11 @@ function koreBotChat() {
                 <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon barchart"> \
                     {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                     {{if msgData.icon}}<div class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-                    <div class="messageBubble barchart">\
+                    {{if msgData.message[0].component.payload.text}}<div class="messageBubble barchart">\
                         <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
-                    </div>\
+                    </div>{{/if}}\
                     <div class="barchartDiv">\
-                        <div id="barchart${window.barchartCount}" style="width: 300px;"></div>\
+                        <div class="lineChartChildDiv" id="barchart${window.barchartCount}"></div>\
                     </div>\
                 </li> \
             {{/if}} \
@@ -1839,12 +2012,43 @@ function koreBotChat() {
                 <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon linechart"> \
                     {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                     {{if msgData.icon}}<div class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-                    <div class="messageBubble linechart">\
+                    {{if msgData.message[0].component.payload.text}}<div class="messageBubble linechart">\
                         <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
-                    </div>\
+                    </div>{{/if}}\
                     <div class="linechartDiv">\
-                        <div id="linechart${window.linechartCount}" style="width: 300px;"></div>\
+                        <div class="lineChartChildDiv" id="linechart${window.linechartCount}"></div>\
                     </div>\
+                </li> \
+            {{/if}} \
+        </scipt>';
+        var miniTableChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+            {{if msgData.message}} \
+                <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
+                    {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+                    {{if msgData.icon}}<div class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+                    {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
+                        <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
+                    </div>{{/if}}\
+                    {{each(key, table) msgData.message[0].component.payload.elements}}\
+                        <div class="minitableDiv">\
+                            <div style="overflow-x:auto; padding: 0 8px;">\
+                                <table cellspacing="0" cellpadding="0">\
+                                    <tr class="headerTitle">\
+                                        {{each(key, tableHeader) table.primary}} \
+                                            <th {{if tableHeader[1]}}style="text-align:${tableHeader[1]};" {{/if}}>${tableHeader[0]}</th>\
+                                        {{/each}} \
+                                    </tr>\
+                                    {{each(key, additional) table.additional}} \
+                                        <tr>\
+                                            {{each(cellkey, cellValue) additional}} \
+                                                <td  {{if cellkey === additional.length-1}}colspan="2"{{/if}}  {{if table.primary[cellkey][1]}}style="text-align:${table.primary[cellkey][1]};" {{/if}}>${cellValue}</td>\
+                                            {{/each}} \
+                                        </tr>\
+                                    {{/each}} \
+                                </table>\
+                            </div>\
+                        </div>\
+                    {{/each}}\
                 </li> \
             {{/if}} \
         </scipt>';
@@ -1853,28 +2057,51 @@ function koreBotChat() {
                 <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
                     {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                     {{if msgData.icon}}<div class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-                    <div class="messageBubble tableChart">\
+                    {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
                         <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
-                    </div>\
-                    <div class="tablechartDiv">\
-                        <div style="overflow-x:auto;">\
+                    </div>{{/if}}\
+                    <div class="tablechartDiv {{if msgData.message[0].component.payload.table_design && msgData.message[0].component.payload.table_design == "regular"}}regular{{else}}hide{{/if}}">\
+                        <div style="overflow-x:auto; padding: 0 8px;">\
                             <table cellspacing="0" cellpadding="0">\
                                 <tr class="headerTitle">\
-                                    {{each(key, tableHeader) msgData.message[0].component.payload.data.headers}} \
-                                        <th style="width:${tableHeader.percentage}%; text-align:${tableHeader.alignment};">${tableHeader.title}</th>\
+                                    {{each(key, tableHeader) msgData.message[0].component.payload.columns}} \
+                                        <th {{if tableHeader[1]}}style="text-align:${tableHeader[1]};"{{/if}}>${tableHeader[0]}</th>\
                                     {{/each}} \
                                 </tr>\
-                                {{each(key, tableRow) msgData.message[0].component.payload.data.rows}} \
-                                    {{if tableRow.length>1}}\
-                                        <tr class="{{if (key < msgData.message[0].component.payload.data.rows.length-2) && (msgData.message[0].component.payload.data.rows[key+1].length < 2)}}bottomThickBorder{{/if}}">\
-                                            {{each(cellkey, cellValue) tableRow}} \
-                                                <td  {{if cellkey === tableRow.length-1}}colspan="2"{{/if}} class="{{if key < msgData.message[0].component.payload.data.rows.length-1}} addBottomBorder {{/if}} {{if key == 0}} addTopBorder {{/if}} {{if (key < msgData.message[0].component.payload.data.rows.length-2) && (msgData.message[0].component.payload.data.rows[key+1].length < 2)}}bottomThickBorder{{/if}}" style="text-align:${msgData.message[0].component.payload.data.headers[cellkey].alignment};">${cellValue}</td>\
+                                {{each(key, tableRow) msgData.message[0].component.payload.elements}} \
+                                    {{if tableRow.Values.length>1}}\
+                                        <tr>\
+                                            {{each(cellkey, cellValue) tableRow.Values}} \
+                                                <td  {{if cellkey === tableRow.Values.length-1}}colspan="2"{{/if}} class=" {{if key == 0}} addTopBorder {{/if}}" {{if msgData.message[0].component.payload.columns[cellkey][1]}}style="text-align:${msgData.message[0].component.payload.columns[cellkey][1]};" {{/if}}>${cellValue}</td>\
                                             {{/each}} \
                                         </tr>\
                                     {{/if}}\
                                 {{/each}} \
                             </table>\
                         </div>\
+                    </div>\
+                    <div class="accordionTable {{if msgData.message[0].component.payload.table_design && msgData.message[0].component.payload.table_design == "regular"}}hide{{else}}responsive{{/if}}">\
+                        {{each(key, tableRow) msgData.message[0].component.payload.elements}} \
+                            {{if key < 4}}\
+                                <div class="accordionRow">\
+                                    {{each(cellkey, cellValue) tableRow.Values}} \
+                                        {{if cellkey < 2}}\
+                                            <div class="accordionCol">\
+                                                <div class="colTitle hideSdkEle">${msgData.message[0].component.payload.columns[cellkey][0]}</div>\
+                                                <div class="colVal">${cellValue}</div>\
+                                            </div>\
+                                        {{else}}\
+                                            <div class="accordionCol hideSdkEle">\
+                                                <div class="colTitle">${msgData.message[0].component.payload.columns[cellkey][0]}</div>\
+                                                <div class="colVal">${cellValue}</div>\
+                                            </div>\
+                                        {{/if}}\
+                                    {{/each}} \
+                                    <span class="fa fa-caret-right tableBtn"></span>\
+                                </div>\
+                            {{/if}}\
+                        {{/each}} \
+                        <div class="showMore">Show more</div>\
                     </div>\
                 </li> \
             {{/if}} \
@@ -1890,8 +2117,8 @@ function koreBotChat() {
                         {{each(key, msgItem) msgData.message[0].component.payload.elements}} \
                             <div class="slide">\
                                 {{if msgItem.image_url}} \
-                                    <div class="carouselImageContent" {{if msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
-                                        <img src="${msgItem.image_url}" /> \
+                                    <div class="carouselImageContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
+                                        <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
                                     </div> \
                                 {{/if}} \
                                 <div class="carouselTitleBox"> \
@@ -1961,14 +2188,14 @@ function koreBotChat() {
                                     {{if key<= 2 }}\
     									<li class="listTmplContentChild"> \
     										{{if msgItem.image_url}} \
-                                            <div class="listRightContent"> \
-                                                <img src="${msgItem.image_url}" /> \
-                                            </div> \
+                                                <div class="listRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
+                                                    <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
+                                                </div> \
                                             {{/if}} \
                                             <div class="listLeftContent"> \
     											<div class="listItemTitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
                                                 {{if msgItem.subtitle}}<div class="listItemSubtitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
-    											{{if msgItem.default_action}}<div class="listItemPath" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
+    											{{if msgItem.default_action && msgItem.default_action.url}}<div class="listItemPath" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
     											{{if msgItem.buttons}}\
                                                 <div> \
     												<span class="buyBtn" {{if msgItem.buttons[0].type}}type="${msgItem.buttons[0].type}"{{/if}} {{if msgItem.buttons[0].url}}url="${msgItem.buttons[0].url}"{{/if}} {{if msgItem.buttons[0].payload}}value="${msgItem.buttons[0].payload}"{{/if}}>{{if msgItem.buttons[0].title}}${msgItem.buttons[0].title}{{else}}Buy{{/if}}</span> \
@@ -1980,14 +2207,14 @@ function koreBotChat() {
                                 {{else}} \
                                     <li class="listTmplContentChild"> \
                                         {{if msgItem.image_url}} \
-                                        <div class="listRightContent"> \
-                                            <img src="${msgItem.image_url}" /> \
-                                        </div> \
+                                            <div class="listRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
+                                                <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';" /> \
+                                            </div> \
                                         {{/if}} \
                                         <div class="listLeftContent"> \
                                             <div class="listItemTitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
                                             {{if msgItem.subtitle}}<div class="listItemSubtitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
-                                            {{if msgItem.default_action}}<div class="listItemPath" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
+                                            {{if msgItem.default_action && msgItem.default_action.url}}<div class="listItemPath" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
                                             {{if msgItem.buttons}}\
                                             <div> \
                                                 <span class="buyBtn" {{if msgItem.buttons[0].type}}type="${msgItem.buttons[0].type}"{{/if}} {{if msgItem.buttons[0].url}}url="${msgItem.buttons[0].url}"{{/if}} {{if msgItem.buttons[0].payload}}value="${msgItem.buttons[0].payload}"{{/if}}>{{if msgItem.buttons[0].title}}${msgItem.buttons[0].title}{{else}}Buy{{/if}}</span> \
@@ -2029,6 +2256,9 @@ function koreBotChat() {
         }
         else if(tempType === "tableChartTemplate") {
             return tableChartTemplate;
+        }
+        else if(tempType === "miniTableChartTemplate") {
+            return miniTableChartTemplate;
         }
         else if(tempType === "barchartTemplate") {
             return barchartTemplate;
@@ -2186,6 +2416,10 @@ function koreBotChat() {
         if (chatInitialize && chatInitialize.destroy) {
             _eventQueue = {};
             chatInitialize.destroy();
+        }
+        if (_ttsContext) {
+            _ttsContext.close();
+            _ttsContext = null;
         }
     };
     this.initToken = function (options) {
@@ -2473,9 +2707,9 @@ function koreBotChat() {
                 if (item instanceof Blob) {
                     if (item.size > 0) {
                         _connection.send(item);
-                        console.log('Send: blob: ' + item.type + ', ' + item.size);
+                        //console.log('Send: blob: ' + item.type + ', ' + item.size);
                     } else {
-                        console.log('Send: blob: ' + item.type + ', ' + item.size);
+                        //console.log('Send: blob: ' + item.type + ', ' + item.size);
                     }
                 } else {
                     console.log(item);
@@ -2510,6 +2744,7 @@ function koreBotChat() {
             $('.recordingMicrophone').css('display', 'block');
             $('.notRecordingMicrophone').css('display', 'none');
             console.log('recording...');
+            prevStr = "";
             intervalKey = setInterval(function () {
                 rec.export16kMono(function (blob) {
                     socketSend(blob);
@@ -2520,6 +2755,7 @@ function koreBotChat() {
         // On receving message from server
         _connection.onmessage = function (msg) {
             var data = msg.data;
+            var interim_transcript = '';
             //console.log(data);
             if (data instanceof Object && !(data instanceof Blob)) {
                 console.log('Got object that is not a blob');
@@ -2528,7 +2764,20 @@ function koreBotChat() {
             } else {
                 var res = JSON.parse(data);
                 if (isListening && res.status === 0) {
-                    if (res.result.final) {
+                    interim_transcript = res.result.hypotheses[0].transcript;
+                    if(res.result.final) {
+                        prevStr += res.result.hypotheses[0].transcript+" ";
+                        interim_transcript = "";
+                    }
+
+                    console.log('Interm: ',interim_transcript);
+                    console.log('final: ',prevStr);
+                    $('.chatInputBox').html(prevStr+""+interim_transcript);
+                    setTimeout(function () {
+                        setCaretEnd(document.getElementsByClassName("chatInputBox"));
+                        document.getElementsByClassName('chatInputBox')[0].scrollTop = document.getElementsByClassName('chatInputBox')[0].scrollHeight;
+                    }, 350);
+                    /*if (res.result.final) {
                         var final_result = res.result.hypotheses[0].transcript;
                         $('.chatInputBox').html($('.chatInputBox').html() + ' ' + final_result);
                         setTimeout(function () {
@@ -2538,7 +2787,7 @@ function koreBotChat() {
                     } else {
                         //$('.chatInputBox').html($('.chatInputBox').html() + ' '+ res.result.hypotheses[0].transcript);
                         console.log('Not final: ', res.result.hypotheses[0].transcript);
-                    }
+                    }*/
                 } else {
                     console.log('Server error : ', res.status);
                 }
@@ -3298,6 +3547,77 @@ function koreBotChat() {
         _conc.send(_mdat.toString());
     };
 
+    function zoomChart() {
+        var modal = document.getElementById('myPreviewModal');
+        $(".largePreviewContent").empty();
+        $(".largePreviewContent").addClass("addheight");
+        $(".largePreviewContent").html("<div class='chartContainerDiv'>/</div>");
+        modal.style.display = "block";
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("closeElePreview")[0];
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() { 
+          modal.style.display = "none";
+          $(".largePreviewContent").removeClass("addheight");
+        }
+    }
+    // listen to chart click
+    function handleChartOnclick() {
+        $('.piechartDiv,.barchartDiv, .linechartDiv').click(function(e){
+            var firstEleId = e.currentTarget.firstElementChild.getAttribute("id");
+            //get chart data
+            var chart = null;
+            var data = null;
+            var container = null;
+            for(var i=0;i<available_charts.length;i++) {
+                if(available_charts[i].id == firstEleId) {
+                    data = jQuery.extend({}, available_charts[i]);
+                    zoomChart();
+                    break;
+                }
+            }
+            if(data.type === "piechart") {
+                google.charts.load('current', {'packages':['corechart']});
+                google.charts.setOnLoadCallback(drawChart);
+                function drawChart() {
+                    container = document.getElementsByClassName('chartContainerDiv');
+                    chart = new google.visualization.PieChart(container[0]);
+                }
+            }
+            else if(data.type === "linechart") {
+                google.charts.load('current', {packages: ['corechart', 'line']});
+                google.charts.setOnLoadCallback(drawChart);
+                function drawChart() {
+                    container = document.getElementsByClassName('chartContainerDiv');
+                    chart = new google.visualization.LineChart(container[0]);
+                  }
+            }
+            else if(data.type === "barchart") {
+                google.charts.load('current', {packages: ['corechart', 'bar']});
+                google.charts.setOnLoadCallback(drawChart);
+                function drawChart() {
+                    container = document.getElementsByClassName('chartContainerDiv');
+                    if(data.direction === 'horizontal'){
+                        chart = new google.visualization.BarChart(container[0]);
+                    }
+                    else{
+                        chart = new google.visualization.ColumnChart(container[0]);
+                    }
+                }
+            }
+            setTimeout(function(){
+                var chartAreaObj = {"height":"85%","width":"85%"};
+                data.options.chartArea = chartAreaObj;
+                google.visualization.events.addListener(chart, 'ready', function() {
+                    setTimeout(function(){
+                        $(".largePreviewContent .chartContainerDiv").css("height","91%");
+                    });
+                });
+                chart.draw(data.data, data.options);
+            },200);
+        });
+    }
     var old = $.fn.uploader;
 
     $.fn.uploader = function (option) {

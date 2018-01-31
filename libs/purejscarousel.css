@@ -72,21 +72,6 @@
   opacity: .5;
 }
 
-
-
-
-
-
-*,
-*:after,
-*:before {
-  box-sizing: border-box;
-}
-
-section {
-  border-bottom: 1px solid;
-}
-
 h1 {
   text-align: center;
 }

@@ -34,12 +34,69 @@ function KoreBot() {
 	this.latestId = null; // latest messageId.
 	this.oldestId = null; // oldest messageId.
 }
+var userLocation = {
+    "city": "",
+    "country": "",
+    "latitude": 0,
+    "longitude": 0,
+    "street": ""
+};
 inherits(KoreBot, EventEmitter);
 
 KoreBot.prototype.emit = function emit() {
   KoreBot.super_.prototype.emit.apply(this, arguments);
 };
 
+/*
+	Fetch user location and send along with user message
+*/
+KoreBot.prototype.fetchUserLocation = function() {
+	if(userLocation.country !== "") {
+		return;
+	}
+	console.log("Fetching user location");
+	var successCallback =  function(position){
+		var latitude = position.coords.latitude;
+		var longitude =  position.coords.longitude;
+		userLocation.latitude = latitude;
+		userLocation.longitude = longitude;
+		var request = new XMLHttpRequest();
+
+	   var method = 'GET';
+	   var url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='+latitude+','+longitude+'&sensor=true';
+	   var async = true;
+
+	   request.open(method, url, async);
+	   request.onreadystatechange = function(){
+		    if(request.readyState == 4 && request.status == 200){
+				var data = JSON.parse(request.responseText);
+				if(typeof(Storage) !== "undefined") {
+					if(data.results.length == 0) {
+						data = JSON.parse(localStorage.getItem("locationData"));
+					}
+					else{
+						localStorage.setItem("locationData", JSON.stringify(data));
+					}
+				}
+				var addressComponents = data.results[0].address_components;
+				for(i=0;i<addressComponents.length;i++){
+					var types = addressComponents[i].types;
+					if(types=="locality,political"){
+						userLocation.city = addressComponents[i].long_name;
+					}
+					else if(types=="country,political"){
+						userLocation.country = addressComponents[i].long_name;
+					}
+					else if(types=="street_number"){
+						userLocation.street = addressComponents[i].long_name;
+					}
+				}
+		   }
+		};
+		request.send();
+	};
+	navigator.geolocation.getCurrentPosition(successCallback);
+};
 /*
 sends a message to bot.
 */
@@ -53,6 +110,9 @@ KoreBot.prototype.sendMessage = function(message,optCb) {
 			"timezone":jstz.jstz.determine().name(),
 			"locale":window.navigator.userLanguage || window.navigator.language
 		};
+		if(userLocation.latitude !== 0 && userLocation.longitude !== 0) { //passing location for each message
+			message["meta"].location = userLocation;
+		}
 		this.RtmClient.sendMessage(message,optCb);
 	}else{
 		if(optCb){
@@ -1053,6 +1113,9 @@ KoreRTMClient.prototype._onStart = function _onStart(err, data) {
   catch(e){
     console.log(e && e.stack);
   }
+  if(data && data.errors && (data.errors[0].code === 'TOKEN_EXPIRED' || data.errors[0].code === 401 || data.errors[0].msg === 'token expired')){
+      $('.reload-btn').click();
+  }
   if (err || !data.url) {
     debug("error or no url in response %s", err || "no url");
     this.emit(CLIENT_EVENTS.UNABLE_TO_RTM_START, err || data.error);
@@ -1125,7 +1188,7 @@ KoreRTMClient.prototype.reconnect = function reconnect() {
     this._safeDisconnect();
     this._connAttempts++;
     if (this._connAttempts > this.MAX_RECONNECTION_ATTEMPTS) {
-      throw new Error('unable to connect to kore RTM API, failed after max reconnection attempts');
+      throw new Error('unable to connect to kore.ai RTM API, failed after max reconnection attempts');
     }
     setTimeout(bind(this.start, this), this._connAttempts * this.RECONNECTION_BACKOFF);
   }

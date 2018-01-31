@@ -644,9 +644,9 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     vertical-align: top;
 }
 .listTmplContent .listRightContent{
-	display: table-cell;
 	width: 65px;
     height: 60px;
+    cursor: pointer;
 }
 .listRightContent img{
 	height: 57px;
@@ -696,7 +696,6 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     font-size: 13px;
 }
 .listItemTitle {
-    font-family: Lato;
     font-size: 13px;
     font-weight: 600;
     line-height: 1.54;
@@ -1168,27 +1167,30 @@ ul.chat-container li.quickReplies {
 /* Pie chart css */
 .piechart .piechartDiv {
     display: block;
-    /*border: 13px solid #F1F0F0;*/
-    border-radius: 9px;
+    border-radius: 4px;
     clear: both;
-    width: 317px;
+    width: 353px;
+    margin-left: -45px;
+    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    cursor: pointer;
 }
 .piechart .messageBubble.pieChart {
     margin-bottom: 10px;
 }
 .piechart .profile-photo {
-    top: 65px !important;
+    top: 45px !important;
 }
 
 /* table template chart css */
-.tablechart .tablechartDiv {
+.tablechart .tablechartDiv ,.largePreviewContent .tablehartDiv{
     clear: both;
     left: -30px;
     position: relative;
     top: 18px;
-    border: 2px solid #d6d6d6;
-    border-radius: 9px;
-    margin: 0px -40px 13px -23px;
+    margin: 0px -22px 13px 0px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
 }
 .tablechartDiv table {
     border-collapse: collapse;
@@ -1197,18 +1199,18 @@ ul.chat-container li.quickReplies {
     border-bottom: 1px solid #dfdfdf;
 }
 .tablechartDiv tr.headerTitle {
-    border-bottom: 2px solid #d6d6d6;
+    border-bottom: solid 1px #99ed9e;
 }
-.tablechart .tablechartDiv tr.bottomThickBorder{
+.tablechart .tablechartDiv tr.bottomThickBorder, .largePreviewContent .tablechartDiv tr.bottomThickBorder{
     border-bottom: 3px solid #d6d6d6;
 }
 .tablechart .profile-photo {
-    top: 42px !important;
+    top: 30px !important;
 }
 .kore-chat-window.expanded .tablechart .profile-photo {
     top: 30px !important;
 }
-.tablechart .tablechartDiv table {
+.tablechart .tablechartDiv table, .largePreviewContent .tablechartDiv table {
     width: 100%;
 }
 .tablechart .tablechartDiv table td, .tablechart .tablechartDiv table th{
@@ -1217,17 +1219,18 @@ ul.chat-container li.quickReplies {
     overflow: hidden;
     white-space: nowrap;
     max-width: 200px !important;
+    font-size: 14px;
+    color: #26344a;
+    text-align: left;
 }
-/*.tablechart .tablechartDiv table .addBottomBorder{
-    border-bottom: 1px solid #dfdfdf;
+.largePreviewContent .tablechartDiv table td, .largePreviewContent .tablechartDiv table th{
+    padding: 17px;
+    white-space: nowrap;
+    font-size: 14px;
+    color: #26344a;
+    text-align: left;
 }
-.tablechart .tablechartDiv table .addTopBorder{
-    border-top: 2px solid #d6d6d6;
-}
-.tablechart .tablechartDiv table .bottomThickBorder{
-    border-bottom: 3px solid #d6d6d6;
-}
-*/
+.tablechart tr:last-child , .largePreviewContent  tr:last-child{ border:none; }
 .noPadding {
     padding: 0 !important;
 }
@@ -1236,30 +1239,39 @@ ul.chat-container li.quickReplies {
 .barchart .barchartDiv {
     display: block;
     /*border: 13px solid #F1F0F0;*/
-    border-radius: 9px;
+    border-radius: 4px;
     clear: both;
-    width: 317px;
+    margin-left: -45px;
+    width: 353px;
+    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    cursor: pointer;
 }
 .barchart .messageBubble.barchart {
     margin-bottom: 10px;
 }
 .barchart .profile-photo {
-    top: 65px !important;
+    top: 28px !important;
 }
 
 /* line chart css */
 .linechart .linechartDiv {
     display: block;
-    /*border: 13px solid #F1F0F0;*/
-    border-radius: 9px;
+    border-radius: 4px;
     clear: both;
-    width: 317px;
+    margin-left: -45px;
+    width: 353px;
+    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    cursor: pointer;
+}
+.lineChartChildDiv {
+    margin-left: 13px;
+    width: 340px;
 }
 .linechart .messageBubble.linechart {
     margin-bottom: 10px;
 }
 .linechart .profile-photo {
-    top: 65px !important;
+    top: 30px !important;
 }
 
 /* Droppable attachment css */
@@ -1381,3 +1393,171 @@ ul.chat-container li.quickReplies {
     pointer-events: none;
     opacity: 0.3;
 }
+
+
+.fa-caret-right:before {
+    content: "\f0da";
+}
+.accordionRow {
+    cursor: pointer;
+    border-bottom: solid 1px rgba(185, 192, 205, .5);
+    clear: both;
+    display: table;    
+    width: 100%;
+}
+.accordionRow .hideSdkEle {
+    display: none !important;
+}
+.accordionRow.open .hideSdkEle {
+    display: block !important;
+}
+.accordionRow.open .tableBtn {
+    transform: rotate(-270deg);
+    color: #5f6bf7;
+}
+.accordionRow .colTitle {
+    font-size: 10px;
+    font-weight: 600;
+    text-align: left;
+    color: #b3bac8;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.accordionRow .colVal {
+    font-size: 16px;
+    text-align: left;
+    color: #26344a;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.accordionRow .accordionCol {
+    float: left;
+    display: table-cell;
+    padding: 10px;
+    width: 150px;
+}
+.accordionTable {
+    clear: both;
+    padding: 14px;
+    margin-left: -37px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+}
+
+.accordionTable .tableBtn {
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #b3bac8;    
+    margin-top: 10px;
+}
+.accordionTable .showMore {
+    font-size: 14px;
+    line-height: 0.86;
+    letter-spacing: -0.1px;
+    text-align: center;
+    color: #5f6bf7;
+    margin-top: 16px;
+    cursor: pointer;
+}
+.messageBubble.tableChart {
+    margin-bottom: 10px;
+}
+
+
+/* SDK ele preview */
+/* Modal Content (Image) */
+.largePreviewContent {
+    margin: auto;
+    display: block;
+    width: 80%;
+    background-color: #fff;
+    max-width: 750px;
+}
+.largePreviewContent.addheight{
+    height: 81%;
+}
+.largePreviewContent .chartContainerDiv {
+    top: 5%;
+    left: 5%;
+    position: relative;
+    height: 90%;
+    width: 90%;
+    border-radius: 4px;
+    overflow: auto;
+    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+}
+
+/* Add Animation - Zoom in the Modal */
+.largePreviewContent { 
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
+/* The Close Button */
+.closeElePreview {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    opacity: 1;
+}
+
+.closeElePreview:hover,
+.closeElePreview:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+.largePreviewContent .tablechartDiv {
+    display: block !important;
+    background: #fff;
+    font-family: sans-serif;
+    padding: 10px;
+    border: 30px solid #f2f3f5;
+    border-top: 52px solid #f2f3f5;
+}
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px){
+    .largePreviewContent {
+        width: 100%;
+    }
+}
+/* element preview css ends */
+/* mini table css */
+.minitableDiv {
+    clear: both;
+    border-radius: 4px;
+    background-color: #ffffff;
+    margin-top: 10px;
+    box-shadow: 0 1px 7px 0 rgba(157, 157, 157, 0.58);
+}
+.minitableDiv table {
+    width: 100%;
+}
+.minitableDiv table th{
+    text-align: left;
+    padding: 10px;
+    font-size: 15px;
+    color: #26344a;
+    font-weight: bold;
+}
+.minitableDiv table td {
+    text-align: left;
+    padding: 10px;
+    text-align: left;
+    padding: 10px;
+    font-size: 15px;
+    color: #8a959f;
+}
+/* mini table css ends here */
