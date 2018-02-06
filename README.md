@@ -87,19 +87,20 @@ Integration of Kore.ai chat UI into your App
         //Define the bot options
         var botOptions = {};
         botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
-    botOptions.speechSocketUrl = 'wss://';
+        botOptions.koreSpeechAPIUrl = "https://speech.kore.ai/";
+        botOptions.ttsSocketUrl = 'wss://speech.kore.ai/tts/ws';
         botOptions.assertionFn = assertion;
         botOptions.koreAnonymousFn = koreAnonymousFn;
-        botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // issued by the kore.ai on client app registration.
-        botOptions.botInfo = {chatBot:"Kora",taskBotId :"st-*********"};  
+        botOptions.clientId   = "clientId"; // issued by the kore.ai on client app registration.
+        botOptions.botInfo = {"name":"Bot Name", "_id" :"st-*********"};  //bot name is case sensitive  
         // Assign Bot options to chatWindow config
         var chatConfig={
             botOptions:botOptions,
             allowIframe : false, // set true, opens authentication links in popup window, default value is "false"
-            isSendButton: false, // set true, to shown send button below the compose bar
+            isSendButton: false, // set true, to show send button below the compose bar
             isTTSEnabled: true, // set false, to hide speaker icon
-            isSpeechEnabled: true // set false, to hide mic icon
-            allowGoogleSpeech : true // set false, to use KORE.ai speech engine instead Google speech engine. This feature requires valid Google speech API key. (Place it in 'web-kore-sdk/libs/speech/key.js')
+            isSpeechEnabled: true, // set false, to hide mic icon
+            allowGoogleSpeech : true, // set false, to use KORE.ai speech engine instead Google speech engine.This feature requires valid Google speech API key. (Place it in 'web-kore-sdk/libs/speech/key.js')
             allowLocation : true // set false, to deny sending location
         };
 
@@ -124,8 +125,8 @@ Integration of Kore.ai chat UI into your App
         botOptions.ttsSocketUrl = 'wss://speech.kore.ai/tts/ws';
         botOptions.assertionFn = assertion;
         botOptions.koreAnonymousFn = koreAnonymousFn;
-        botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // issued by the kore.ai on client app registration.
-        botOptions.botInfo = {chatBot:"Kora",taskBotId :"st-*********"};  
+        botOptions.clientId   = "clientId"; // issued by the kore.ai on client app registration.
+        botOptions.botInfo = {"name":"Bot Name", "_id" :"st-*********"};  //bot name is case sensitive
         var bot = require('/KoreBot.js').instance(); //initialize the bot.
         bot.init(botOptions); // bot instance created.
         bot.destroy(); // Destroy bot instance 
@@ -134,7 +135,7 @@ Integration of Kore.ai chat UI into your App
         var messageToBot = {};
         messageToBot["message"] = {body:"your message",attachments:[]};
         messageToBot["resourceid"] = '/bot.message';
-        // Should be an uniqe id for each message, you can use timestamp as well
+        // Should be an unique id for each message, you can use timestamp as well
         messageToBot["clientMessageId"] = 232341234; 
         // Send message to Bot
         bot.sendMessage(messageToBot, function messageSent() {
