@@ -27,9 +27,9 @@ Kore.ai SDK for web enables you to talk to Kore.ai bots over a web socket. This 
     * Search and click on the bot
     * Navigate to Apps & Agents tab and click on Web/Mobile SDK menu to create new or use existing SDK app
     * obtain client id and client secret as shown in the screen below
-    ![Obtain Client id and Client secret](https://github.com/mandarudg/Tst/blob/master/web-mobile-client-channel.png)
+    ![Obtain Client id and Client secret](https://github.com/Koredotcom/web-kore-sdk/blob/master/web-mobile-client-channel.png)
     * Enable *Web / Mobile Client* channel against the bot as shown in the screen below.
-    ![Add bot to Web/Mobile Client channel](https://github.com/mandarudg/Tst/blob/master/channels.png)
+    ![Add bot to Web/Mobile Client channel](https://github.com/Koredotcom/web-kore-sdk/blob/master/channels.png)
 
 * Service to generate JWT (JSON Web Tokens)- this service will be used in the assertion function injected to obtain the connection.
 
