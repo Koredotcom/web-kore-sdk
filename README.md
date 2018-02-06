@@ -169,7 +169,7 @@ Integration of Kore.ai chat UI into your App
 # How to handle custom templates
   -  Custom templates logic has been separated out from chatWindow.js
   -  Refer custom folder under UI folder
-  -  Refer customTemplate.js and customTemplate.css files for sample code snippet under custom folder. 
+  -  Refer https://github.com/Koredotcom/web-kore-sdk/blob/master/UI/custom/customTemplate.js and https://github.com/Koredotcom/web-kore-sdk/blob/master/UI/custom/customTemplate.css files for sample code snippet. 
 
 ```
 
