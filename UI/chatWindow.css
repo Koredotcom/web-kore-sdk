@@ -1562,3 +1562,93 @@ ul.chat-container li.quickReplies {
     color: #8a959f;
 }
 /* mini table css ends here */
+
+.historyLoadingDiv {
+    background-color: #f2fafb !important;
+    border-top: 1px solid #009dab !important;
+    border-bottom: 1px solid #009dab !important;
+    cursor: default;
+    height: 0px;
+    width: 100%;
+    padding: 3px 0px 0px 0px !important;
+    position: absolute;
+    z-index: 1;
+    font-size: 11px !important;
+    line-height: inherit !important;
+    display: none;
+    transition: all 0.5s ease-in-out;
+    opacity: 0;
+}
+.historyLoadingDiv.showMsg {
+    display: block;
+    height: auto !important;
+    opacity: 1;
+}
+.historyLoadingDiv .historyWarningTextDiv.displayTable {
+    display: table;
+    padding: 12px 19px;
+}
+.historyLoadingDiv .historyWarningTextDiv.displayTable .circle-o-notch {
+    display: table-cell;
+    padding-right: 10px;
+    bottom: 4px;
+    position: relative;
+}
+.historyLoadingDiv .historyWarningTextDiv.displayTable .circle-o-notch i.fa-circle-o-notch {
+    vertical-align: text-top;
+    margin-left: 0;
+    font-family: FontAwesome;
+    font-size: 14px;
+    color: #009dab;
+}
+.historyLoadingDiv .historyWarningTextDiv.displayTable .headerTip.warningTip {
+    color: #009dab;
+}
+.fa-circle-o-notch {
+    width: 20px;
+    height: 20px;
+    border-bottom: 1px solid #009dab;
+    border-left: 1px solid #009dab;
+    border-radius: 50%;
+    -webkit-animation: spin 400ms infinite linear;
+    -moz-animation: spin 400ms infinite linear;
+    -o-animation: spin 400ms infinite linear;
+    animation: spin 400ms infinite linear;
+}
+@keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
+}
+
+.endChatContainer {
+    position: relative;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 30px;
+    font-weight: 400;
+}
+.endChatContainer .endChatContainerText{
+    position: relative;
+    top: 9px;
+    background: #fff;
+    padding: 0 10px;
+    display: block;
+    width: 137px;
+    color: #333;
+    margin: 0 auto;
+}
+
+/* IE issues */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    .kore-chat-window .kore-chat-body ul.chat-container{
+        bottom: 15px;
+    }
+    .kore-chat-header {
+        z-index: 9;
+        position: absolute;
+    }
+}
+/* IE issues css ends here */

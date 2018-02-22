@@ -41,9 +41,20 @@ var userLocation = {
     "longitude": 0,
     "street": ""
 };
+var _chatHistoryLoaded = false, messageHistoryLimit = 10;
 inherits(KoreBot, EventEmitter);
 
 KoreBot.prototype.emit = function emit() {
+	if(!_chatHistoryLoaded && arguments && arguments[0] === 'history') {
+		_chatHistoryLoaded = true;
+		this.cbBotChatHistory(arguments);
+	}
+	else if(_chatHistoryLoaded && arguments && arguments[0] === 'history') {
+		setTimeout(function(){
+            $('.chatInputBox').focus();
+            $('.disableFooter').removeClass('disableFooter');
+        });
+	}
   KoreBot.super_.prototype.emit.apply(this, arguments);
 };
 
@@ -253,6 +264,7 @@ gets the history of the conversation.
 KoreBot.prototype.getHistory = function(opts) {
 	debug("get history");
 	opts = opts || {};
+	opts.limit = messageHistoryLimit || 10;
 	var __opts__ = {};
 	__opts__.forward = opts.forward;
 	__opts__.limit = opts.limit || 10; // 10 is the max size.
@@ -334,6 +346,7 @@ KoreBot.prototype.logIn = function(err, data) {
 		this.WebClient.claims = this.claims;
 		this.cbErrorToClient = data.handleError || noop;
 		this.cbBotDetails = data.botDetails || noop;
+		this.cbBotChatHistory = data.chatHistory || noop;
 		this.WebClient.login.login({"assertion":data.assertion,"botInfo":this.options.botInfo}, bind(this.onLogIn, this));
 	}
 
@@ -342,7 +355,11 @@ KoreBot.prototype.logIn = function(err, data) {
 /*
 initializes the bot set up.
 */
-KoreBot.prototype.init = function(options) {
+KoreBot.prototype.init = function(options,messageHistoryLimit) {
+	messageHistoryLimit = messageHistoryLimit || 10;
+	if(messageHistoryLimit > 100) {
+		messageHistoryLimit = 100;
+	}
 	options = options || {};
 	this.options = options;
 	if (!options.test) {
@@ -366,6 +383,7 @@ KoreBot.prototype.init = function(options) {
 };
 
 module.exports.instance = function(){
+	_chatHistoryLoaded = false;
 	return new KoreBot();
 };
 },{"./index.js":1,"./jstz.js":2,"debug":21,"events":30,"inherits":23,"lodash":24}],1:[function(require,module,exports){

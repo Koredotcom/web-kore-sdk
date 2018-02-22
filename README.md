@@ -104,6 +104,10 @@ Integration of Kore.ai chat UI into your App
             isSpeechEnabled: true, // set false, to hide mic icon
             allowGoogleSpeech : true, // set false, to use KORE.ai speech engine instead Google speech engine.This feature requires valid Google speech API key. (Place it in 'web-kore-sdk/libs/speech/key.js')
             allowLocation : true // set false, to deny sending location
+            loadHistory: true, // set false to stop render old messages.
+            messageHistoryLimit: 10 // fetch old messages limit
+            loadHistory: false, // set true to load recent chat history
+            messageHistoryLimit: 10 // set limit to load recent chat history
         };
 
 #### 7. Call koreBotChat instance
@@ -181,6 +185,8 @@ V6.1.0 [Major] on 31-JAN-2018: Master branch
     1. Added Pie chart, Donut chart, Line chart, Bar chart and Table (Regular & Responsive) mini-table and Waiting-For-Response template support.
     2. Able to zoom image and chart templates.
     3. Showing intermediate results whiie using STT (Speech To Text).
+    4. Able to fetch recent chat history.
+    5. Avoid clearing chat messages when user click on reload button.
 
 V6.0.0 [Major] on 04-NOV-2017: web-sdk-6.0.0 branch
     1. Added Pie chart, Line chart, Bar chart and Table support

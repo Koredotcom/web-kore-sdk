@@ -42,6 +42,7 @@
 						success: function (data) {
 							options.assertion = data.jwt;
 							options.handleError = koreBot.showError;
+							options.chatHistory = koreBot.chatHistory;
 							options.botDetails = koreBot.botDetails;
 							callback(null, options);
 							setTimeout(function () {
@@ -76,7 +77,9 @@
 					isTTSEnabled: true,
 					isSpeechEnabled: true,
 					allowGoogleSpeech: true,
-					allowLocation : true
+					allowLocation: true,
+					loadHistory: false,
+					messageHistoryLimit: 10
 				};
 				/* 
 					allowGoogleSpeech will use Google cloud service api.

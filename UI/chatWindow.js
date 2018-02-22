@@ -10,7 +10,7 @@ function koreBotChat() {
     var _eventQueue = {};
     var carouselEles = [];
     var prevRange, accessToken, koreAPIUrl, fileToken, fileUploaderCounter = 0, bearerToken = '', assertionToken = '';
-    var speechServerUrl = '', userIdentity = '', isListening = false, isRecordingStarted = false,  isSpeechEnabled = false, speechPrefixURL = "", sidToken = "",carouselTemplateCount = 0, waiting_for_message = false;
+    var speechServerUrl = '', userIdentity = '', isListening = false, isRecordingStarted = false,  isSpeechEnabled = false, speechPrefixURL = "", sidToken = "",carouselTemplateCount = 0, waiting_for_message = false, loadHistory = false;
     /******************* Mic variable initilization *******************/
     var _exports = {},
         _template, _this = {};
@@ -73,35 +73,40 @@ function koreBotChat() {
             isValid: true,
             key: ''
         };
-        if ($(wrapper).find('script').length || $(wrapper).find('video').length || $(wrapper).find('audio').length) {
-            setFlags.isValid = false;
-        }
-        if ($(wrapper).find('link').length && $(wrapper).find('link').attr('href').indexOf('script') !== -1) {
-            if (detectScriptTag.test($(wrapper).find('link').attr('href'))) {
+        try {
+            if ($(wrapper).find('script').length || $(wrapper).find('video').length || $(wrapper).find('audio').length) {
                 setFlags.isValid = false;
-            } else {
-                setFlags.isValid = true;
             }
-        }
-        if ($(wrapper).find('a').length && $(wrapper).find('a').attr('href').indexOf('script') !== -1) {
-            if (detectScriptTag.test($(wrapper).find('a').attr('href'))) {
+            if ($(wrapper).find('link').length && $(wrapper).find('link').attr('href').indexOf('script') !== -1) {
+                if (detectScriptTag.test($(wrapper).find('link').attr('href'))) {
+                    setFlags.isValid = false;
+                } else {
+                    setFlags.isValid = true;
+                }
+            }
+            if ($(wrapper).find('a').length && $(wrapper).find('a').attr('href').indexOf('script') !== -1) {
+                if (detectScriptTag.test($(wrapper).find('a').attr('href'))) {
+                    setFlags.isValid = false;
+                } else {
+                    setFlags.isValid = true;
+                }
+            }
+            if ($(wrapper).find('img').length && $(wrapper).find('img').attr('src').indexOf('script') !== -1) {
+                if (detectScriptTag.test($(wrapper).find('img').attr('href'))) {
+                    setFlags.isValid = false;
+                } else {
+                    setFlags.isValid = true;
+                }
+            }
+            if ($(wrapper).find('object').length) {
                 setFlags.isValid = false;
-            } else {
-                setFlags.isValid = true;
             }
-        }
-        if ($(wrapper).find('img').length && $(wrapper).find('img').attr('src').indexOf('script') !== -1) {
-            if (detectScriptTag.test($(wrapper).find('img').attr('href'))) {
-                setFlags.isValid = false;
-            } else {
-                setFlags.isValid = true;
-            }
-        }
-        if ($(wrapper).find('object').length) {
-            setFlags.isValid = false;
-        }
 
-        return setFlags;
+            return setFlags;
+        }
+        catch(e){
+            return setFlags;
+        }
     };
 
     String.prototype.escapeHTML = function () {
@@ -654,11 +659,17 @@ function koreBotChat() {
         }
     }
     function isMobile() {
-        var isMobile = (/iphone|ipod|android|blackberry|fennec/).test(navigator.userAgent.toLowerCase()) || window.screen.width <= 480;
-        return isMobile;
+        try {
+            var isMobile = (/iphone|ipod|android|blackberry|fennec/).test(navigator.userAgent.toLowerCase()) || window.screen.width <= 480;
+            return isMobile;
+        }
+        catch(e) {
+            return false;
+        }
     }
     chatWindow.prototype.init = function () {
         var me = this;
+        window.chatContainerConfig = me;
         me.config.botOptions.botInfo.name = me.config.botOptions.botInfo.name.escapeHTML();
         _botInfo = me.config.botOptions.botInfo;
         me.config.botOptions.botInfo = { chatBot: _botInfo.name, taskBotId: _botInfo._id, customData: _botInfo.customData, tenanturl: _botInfo.tenanturl };
@@ -675,11 +686,12 @@ function koreBotChat() {
         isTTSEnabled = me.config.isTTSEnabled || false;
         allowGoogleSpeech = me.config.allowGoogleSpeech || false;
         isSpeechEnabled = me.config.isSpeechEnabled || false;
+        loadHistory = me.config.loadHistory || false;
         var chatWindowHtml = $(me.getChatTemplate()).tmpl(me.config);
         me.config.chatContainer = chatWindowHtml;
 
         me.config.chatTitle = tempTitle;
-        bot.init(me.config.botOptions);
+        bot.init(me.config.botOptions,me.config.messageHistoryLimit);
         if(me.config.allowLocation) {
             bot.fetchUserLocation();
         }
@@ -705,7 +717,7 @@ function koreBotChat() {
     chatWindow.prototype.resetWindow = function () {
         var me = this;
         me.config.chatContainer.find('.kore-chat-header .header-title').html(me.config.botMessages.reconnecting);
-        me.config.chatContainer.find('.chat-container').html("");
+        //me.config.chatContainer.find('.chat-container').html("");
         bot.close();
         bot.init(me.config.botOptions);
     };
@@ -911,6 +923,9 @@ function koreBotChat() {
         _chatContainer.off('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn,.viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent,.listRightContent').on('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn, .viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent,.listRightContent', function (e) {
             e.preventDefault();
             var type = $(this).attr('type');
+            if(type) {
+                type = type.toLowerCase();
+            }
             if (type == "postback" || type == "text") {
                 $('.chatInputBox').text($(this).attr('actual-value') || $(this).attr('value'));
                 var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
@@ -1130,10 +1145,12 @@ function koreBotChat() {
             var _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
             _chatContainer.find('.kore-chat-header .header-title').html(me.config.chatTitle).attr('title', me.config.chatTitle);
             _chatContainer.find('.kore-chat-header .disabled').prop('disabled', false).removeClass("disabled");
-            _chatInput.focus();
-            setTimeout(function(){
-                $('.disableFooter').removeClass('disableFooter');
-            });
+            if(!loadHistory) {
+                setTimeout(function(){
+                    $('.chatInputBox').focus();
+                    $('.disableFooter').removeClass('disableFooter');
+                });
+            }
         });
 
         bot.on("message", function (message) {
@@ -1297,7 +1314,7 @@ function koreBotChat() {
         $('.typingIndicatorContent').css('display', 'block');
         setTimeout(function () {
             $('.typingIndicatorContent').css('display', 'none');
-        }, 3000);
+        }, 10000);
         if(renderMsg && typeof renderMsg==='string'){
            msgData.message[0].cInfo.body=renderMsg;
         }
@@ -1839,6 +1856,12 @@ function koreBotChat() {
 						<button class="close-btn" title="Close">&times;</button> \
 					</div> \
 				</div> \
+                <div class="kore-chat-header historyLoadingDiv"> \
+                    <div class="historyWarningTextDiv displayTable"> \
+                        <span class="circle-o-notch"><i class="fa fa-circle-o-notch" aria-hidden="true"></i></span> \
+                        <p class="headerTip warningTip">Loading chat history..</p> \
+                    </div> \
+                </div> \
 				<div class="kore-chat-body"> \
 					<div class="errorMsgBlock"> \
 					</div> \
@@ -2442,6 +2465,47 @@ function koreBotChat() {
         /*setTimeout(function () {
             fetchBotDetails(response,botInfo);
         }, 50);*/
+    }
+    this.chatHistory = function(res){
+        if(loadHistory) {
+            var me = window.chatContainerConfig;
+            if(res && res[1] && res[1].messages.length > 0) {
+                $('.chat-container').hide();
+                $('.historyLoadingDiv').addClass('showMsg');
+                res[1].messages.reverse();
+                res[1].messages.forEach(function(msgData,index){
+                    setTimeout(function(){
+                        try {
+                            msgData.message[0].cInfo.body = JSON.parse(msgData.message[0].cInfo.body);
+                            msgData.message[0].component = msgData.message[0].cInfo.body;
+                            me.renderMessage(msgData);
+                        } catch (e) {
+                            me.renderMessage(msgData);
+                        }
+                        if(index === res[1].messages.length-1) {
+                            setTimeout(function(){
+                                $('.chat-container').hide();
+                                $('.chat-container').animate({
+                                    scrollTop: $('.chat-container').prop("scrollHeight")
+                                }, 2500);
+                                $('.historyLoadingDiv').removeClass('showMsg');
+                                $('.chat-container').append("<div class='endChatContainer'><span class='endChatContainerText'>End of chat history</span></div>");
+                            },500);
+                            setTimeout(function(){
+                                $('.chatInputBox').focus();
+                                $('.disableFooter').removeClass('disableFooter');
+                            });
+                        }
+                    },index*100);
+                });
+            }
+            else {
+                setTimeout(function(){
+                    $('.chatInputBox').focus();
+                    $('.disableFooter').removeClass('disableFooter');
+                });
+            }
+        }
     }
     /*************************************       Microphone code      **********************************************/
     var final_transcript = '';
@@ -3686,6 +3750,7 @@ function koreBotChat() {
         show: show,
         destroy: destroy,
         showError: showError,
-        botDetails: botDetails
+        botDetails: botDetails,
+        chatHistory: chatHistory
     };
 }

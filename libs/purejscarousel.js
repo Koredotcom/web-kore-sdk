@@ -322,7 +322,12 @@
       this.goToSlide(newActiveIndex, 'next', 'dirBtn');
     }
     if(this.slidesContainer.offsetLeft-this.slides[0].offsetWidth <= this.minPos) {
-      this.btnNext.classList.add('hideNow');
+      if(this.carousel.offsetWidth < 350 && (newActiveIndex < this.slides.length-1)) {
+        this.btnNext.classList.remove('hideNow');
+      }
+      else {
+        this.btnNext.classList.add('hideNow');
+      }
     }
     else{
       this.btnNext.classList.remove('hideNow');
