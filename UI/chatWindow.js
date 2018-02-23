@@ -2484,7 +2484,7 @@ function koreBotChat() {
                         }
                         if(index === res[1].messages.length-1) {
                             setTimeout(function(){
-                                $('.chat-container').hide();
+                                $('.chat-container').show();
                                 $('.chat-container').animate({
                                     scrollTop: $('.chat-container').prop("scrollHeight")
                                 }, 2500);
