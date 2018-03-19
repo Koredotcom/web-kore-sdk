@@ -2472,7 +2472,6 @@ function koreBotChat() {
             if(res && res[1] && res[1].messages.length > 0) {
                 $('.chat-container').hide();
                 $('.historyLoadingDiv').addClass('showMsg');
-                res[1].messages.reverse();
                 res[1].messages.forEach(function(msgData,index){
                     setTimeout(function(){
                         try {
