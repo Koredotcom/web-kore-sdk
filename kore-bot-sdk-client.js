@@ -19,6 +19,7 @@ if(typeof window !== "undefined"){
 	window.kore = window.kore || {};
 	window.kore.botsdk = window.kore.botsdk || {};
 	window.kore.botsdk.logger = window.kore.botsdk.logger || require("debug");
+	window.messageHistoryLimit = 10;
 }
 
 var debug = require("debug")("botsdk:KoreBot");
@@ -41,7 +42,7 @@ var userLocation = {
     "longitude": 0,
     "street": ""
 };
-var _chatHistoryLoaded = false, messageHistoryLimit = 10;
+var _chatHistoryLoaded = false;
 inherits(KoreBot, EventEmitter);
 
 KoreBot.prototype.emit = function emit() {
@@ -264,7 +265,10 @@ gets the history of the conversation.
 KoreBot.prototype.getHistory = function(opts) {
 	debug("get history");
 	opts = opts || {};
-	opts.limit = messageHistoryLimit || 10;
+	opts.limit = 10;
+    if(typeof window !== "undefined"){
+        opts.limit = window.messageHistoryLimit || 10;
+    }
 	var __opts__ = {};
 	__opts__.forward = opts.forward;
 	__opts__.limit = opts.limit || 10; // 10 is the max size.
@@ -360,6 +364,9 @@ KoreBot.prototype.init = function(options,messageHistoryLimit) {
 	if(messageHistoryLimit > 100) {
 		messageHistoryLimit = 100;
 	}
+	if(typeof window !== "undefined"){
+        window.messageHistoryLimit = messageHistoryLimit || 10;
+    }
 	options = options || {};
 	this.options = options;
 	if (!options.test) {
