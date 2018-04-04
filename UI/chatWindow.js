@@ -9,7 +9,7 @@ function koreBotChat() {
     var detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
     var _eventQueue = {};
     var carouselEles = [];
-    var prevRange, accessToken, koreAPIUrl, fileToken, fileUploaderCounter = 0, bearerToken = '', assertionToken = '';
+    var prevRange, accessToken, koreAPIUrl, fileToken, fileUploaderCounter = 0, bearerToken = '', assertionToken = '', messagesQueue = [], historyLoading = false;;
     var speechServerUrl = '', userIdentity = '', isListening = false, isRecordingStarted = false,  isSpeechEnabled = false, speechPrefixURL = "", sidToken = "",carouselTemplateCount = 0, waiting_for_message = false, loadHistory = false;
     /******************* Mic variable initilization *******************/
     var _exports = {},
@@ -450,7 +450,7 @@ function koreBotChat() {
                 if (_matchItalic && _matchItalic.length > 0) {
                     for (j = 0; j < _matchItalic.length; j++) {
                         var _italicTxt = _matchItalic[j];
-                        if (txtArr[i].indexOf(_italicTxt) === 0 || txtArr[i][txtArr[i].indexOf(_italicTxt) - 1] === ' ') {
+                        if (txtArr[i].indexOf(_italicTxt) === 0 || txtArr[i][txtArr[i].indexOf(_italicTxt) - 1] === ' ' || txtArr[i].indexOf(_italicTxt) !== -1) {
                             _italicTxt = _italicTxt.substring(1, _italicTxt.length - 1);
                             _italicTxt = '<i class="markdownItalic">' + _italicTxt + '</i>';
                             txtArr[i] = txtArr[i].replace(_matchItalic[j], _italicTxt);
@@ -562,7 +562,7 @@ function koreBotChat() {
     window.onresize = function(event) {
         if(event.target == window) {
             var _width = $('#chatContainer').width()-400;
-            $('.kore-chat-window').attr('style','left: '+_width+'+px');
+            //$('.kore-chat-window').attr('style','left: '+_width+'+px');
         }
         if (($('.kore-chat-window').width()>400) || (document.getElementsByClassName('kore-chat-window').length && document.getElementsByClassName('kore-chat-window')[0].classList.contains('expanded'))) {
             var _koreChatWindowHeight = $('.kore-chat-window').width();
@@ -687,6 +687,7 @@ function koreBotChat() {
         allowGoogleSpeech = me.config.allowGoogleSpeech || false;
         isSpeechEnabled = me.config.isSpeechEnabled || false;
         loadHistory = me.config.loadHistory || false;
+        historyLoading = loadHistory?true : false;
         var chatWindowHtml = $(me.getChatTemplate()).tmpl(me.config);
         me.config.chatContainer = chatWindowHtml;
 
@@ -727,11 +728,11 @@ function koreBotChat() {
         var _chatContainer = me.config.chatContainer;
         _chatContainer.draggable({
             handle: _chatContainer.find(".kore-chat-header .header-title"),
-            containment: "window",
-            scroll: false
-        }).resizable({
+            containment:"document",
+        })
+        .resizable({
             handles: "n, e, w, s",
-            containment: "html",
+            containment: "document",
             minWidth:400
         });
 
@@ -971,16 +972,16 @@ function koreBotChat() {
                 _chatContainer.removeClass("minimize");
                 me.minimized = false;
                 if (me.expanded === false) {
-                    _chatContainer.draggable({
+                    /*_chatContainer.draggable({
                         handle: _chatContainer.find(".kore-chat-header .header-title"),
                         containment: "window",
                         scroll: false
-                    });
+                    });*/
                 }
             } else {
                 _chatContainer.addClass("minimize");
                 if (me.expanded === false && _chatContainer.hasClass("ui-draggable")) {
-                    _chatContainer.draggable("destroy");
+                    //_chatContainer.draggable("destroy");
                 }
                 _chatContainer.find('.minimized-title').html("Talk to " + me.config.chatTitle);
                 me.minimized = true;
@@ -1005,22 +1006,22 @@ function koreBotChat() {
                 $('.expand-btn-span').removeClass('fa-compress');
                 $('.expand-btn-span').addClass('fa-expand');
                 me.expanded = false;
-                _chatContainer.draggable({
+               /* _chatContainer.draggable({
                     handle: _chatContainer.find(".kore-chat-header .header-title"),
-                    containment: "window",
+                    containment: "parent",
                     scroll: false
                 }).resizable({
                     handles: "n, e, w, s",
                     containment: "html",
                     minWidth: 400
-                });
+                });*/
             } else {
                 $('.kore-chat-overlay').show();
                 $(this).attr('title', "Collapse");
                 _chatContainer.addClass("expanded");
                 $('.expand-btn-span').addClass('fa-compress');
                 $('.expand-btn-span').removeClass('fa-expand');
-                _chatContainer.draggable("destroy").resizable("destroy");
+                //_chatContainer.draggable("destroy").resizable("destroy");
                 me.expanded = true;
             }
             var evt = document.createEvent("HTMLEvents");
@@ -1098,11 +1099,11 @@ function koreBotChat() {
         _chatContainer.off('click', '.minimized').on('click', '.minimized,.minimized-title', function (event) {
             _chatContainer.removeClass("minimize");
             me.minimized = false;
-            _chatContainer.draggable({
+            /*_chatContainer.draggable({
                 handle: _chatContainer.find(".kore-chat-header .header-title"),
                 containment: "window",
                 scroll: false
-            });
+            });*/
             if (me.expanded === true) {
                 $('.kore-chat-overlay').show();
             }
@@ -1175,7 +1176,12 @@ function koreBotChat() {
                         tempData.message[0].cInfo.body = tempData.message[0].component.payload.text;
                     }
                 }
-                me.renderMessage(tempData);
+                if(loadHistory && historyLoading) {
+                    messagesQueue.push(tempData);
+                }
+                else{
+                    me.renderMessage(tempData);
+                }
             }
             else if (tempData.from === "self" && tempData.type === "user_message") {
                 var tempmsg = tempData.message;
@@ -2468,6 +2474,7 @@ function koreBotChat() {
     }
     this.chatHistory = function(res){
         if(loadHistory) {
+            historyLoading = true;
             var me = window.chatContainerConfig;
             if(res && res[1] && res[1].messages.length > 0) {
                 $('.chat-container').hide();
@@ -2489,10 +2496,17 @@ function koreBotChat() {
                                 }, 2500);
                                 $('.historyLoadingDiv').removeClass('showMsg');
                                 $('.chat-container').append("<div class='endChatContainer'><span class='endChatContainerText'>End of chat history</span></div>");
+                                messagesQueue.forEach(function(msg, currIndex){
+                                    me.renderMessage(msg);
+                                    if(messagesQueue.length-1 ===  currIndex) {
+                                        messagesQueue = [];
+                                    }
+                                });
                             },500);
                             setTimeout(function(){
                                 $('.chatInputBox').focus();
                                 $('.disableFooter').removeClass('disableFooter');
+                                historyLoading = false;
                             });
                         }
                     },index*100);
