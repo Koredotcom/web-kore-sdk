@@ -2516,6 +2516,7 @@ function koreBotChat() {
                 setTimeout(function(){
                     $('.chatInputBox').focus();
                     $('.disableFooter').removeClass('disableFooter');
+					historyLoading = false;
                 });
             }
         }
