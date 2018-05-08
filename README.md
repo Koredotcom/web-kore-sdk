@@ -103,9 +103,7 @@ Integration of Kore.ai chat UI into your App
             isTTSEnabled: true, // set false, to hide speaker icon
             isSpeechEnabled: true, // set false, to hide mic icon
             allowGoogleSpeech : true, // set false, to use KORE.ai speech engine instead Google speech engine.This feature requires valid Google speech API key. (Place it in 'web-kore-sdk/libs/speech/key.js')
-            allowLocation : true // set false, to deny sending location
-            loadHistory: true, // set false to stop render old messages.
-            messageHistoryLimit: 10 // fetch old messages limit
+            allowLocation : true // set false, to deny sending location to server
             loadHistory: false, // set true to load recent chat history
             messageHistoryLimit: 10 // set limit to load recent chat history
         };
