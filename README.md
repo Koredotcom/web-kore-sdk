@@ -182,7 +182,7 @@ V6.1.0 [Major] on 31-JAN-2018: Master branch
     Released major release with following features:
     1. Added Pie chart, Donut chart, Line chart, Bar chart and Table (Regular & Responsive) mini-table and Waiting-For-Response template support.
     2. Able to zoom image and chart templates.
-    3. Showing intermediate results whiie using STT (Speech To Text).
+    3. Showing intermediate results while using STT (Speech To Text).
     4. Able to fetch recent chat history.
     5. Avoid clearing chat messages when user click on reload button.
 
