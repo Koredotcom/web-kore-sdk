@@ -26,7 +26,7 @@ function koreBotChat() {
     /***************** Mic initilization code end here ************************/
 
     /******************************* TTS variable initialization **************/
-    var _ttsContext = null, _ttsConnection = null, ttsServerUrl = '', ttsAudioSource = null, _txtToSpeak = "", isTTSOn = false, isTTSEnabled = false, optionIndex = 65;    // Audio context
+    var _ttsContext = null, _ttsConnection = null, ttsServerUrl = '', ttsAudioSource = null, _txtToSpeak = "", isTTSOn = false, isTTSEnabled = false, optionIndex = 65, autoEnableSpeechAndTTS = false;    // Audio context
     /************************** TTS initialization code end here **************/
 
     /*************************** file upload variable *******************************/
@@ -688,6 +688,14 @@ function koreBotChat() {
         isSpeechEnabled = me.config.isSpeechEnabled || false;
         loadHistory = me.config.loadHistory || false;
         historyLoading = loadHistory?true : false;
+        autoEnableSpeechAndTTS = me.config.autoEnableSpeechAndTTS || false;
+        /* autoEnableSpeechAndTTS will on if and only if both tts and mic are enabled */
+        if(isTTSEnabled && (isSpeechEnabled || allowGoogleSpeech) && autoEnableSpeechAndTTS) {
+            isTTSOn = true;
+            setTimeout(function(){
+                $('.ttspeakerDiv').removeClass('ttsOff');
+            },350);
+        }
         var chatWindowHtml = $(me.getChatTemplate()).tmpl(me.config);
         me.config.chatContainer = chatWindowHtml;
 
@@ -1305,6 +1313,10 @@ function koreBotChat() {
             messageToBot["message"] = { body: chatInput.text().trim() };
         }
         messageToBot["resourceid"] = '/bot.message';
+
+        if(renderMsg && typeof renderMsg==='string'){
+            messageToBot["message"].renderMsg=renderMsg;
+        }
         attachmentInfo = {};
         bot.sendMessage(messageToBot, function messageSent(err) {
             if (err && err.message) {
@@ -1347,7 +1359,7 @@ function koreBotChat() {
             waiting_for_message = false;
         }
         var _chatContainer = $(me.config.chatContainer).find('.chat-container');
-        if (msgData.message && msgData.message[0] && msgData.message[0].cInfo.attachments) {
+        if (msgData.message && msgData.message[0] && msgData.message[0].cInfo && msgData.message[0].cInfo.attachments) {
             extension = strSplit(msgData.message[0].cInfo.attachments[0].fileName);
         }
         if (msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.url) {
@@ -1357,10 +1369,10 @@ function koreBotChat() {
 		
 		/* checking for matched custom template */
 		messageHtml = customTemplateObj.renderMessage(msgData);
-		if(messageHtml === '') {
+		if(messageHtml === '' && msgData && msgData.message && msgData.message[0]) {
 		
 			if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "button") {
-				messageHtml = $(me.getChatTemplate("templatebutton")).tmpl({
+                messageHtml = $(me.getChatTemplate("templatebutton")).tmpl({
 					'msgData': msgData,
 					'helpers': helpers,
 					'extension': extension
@@ -1456,7 +1468,7 @@ function koreBotChat() {
                             $(".largePreviewContent").empty();
                             //$(".largePreviewContent").html($(parentli).find('.tablechartDiv').html());
                             $(parentli).find('.tablechartDiv').clone().appendTo( ".largePreviewContent" );
-
+                            
 
                             modal.style.display = "block";
 
@@ -1475,12 +1487,43 @@ function koreBotChat() {
                 
             }
             else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "mini_table") {
-                messageHtml = $(me.getChatTemplate("miniTableChartTemplate")).tmpl({
-                    'msgData': msgData,
-                    'helpers': helpers,
-                    'extension': extension
-                });
+                if(msgData.message[0].component.payload.layout == "horizontal"){
+                    messageHtml = $(me.getChatTemplate("miniTableHorizontalTemplate")).tmpl({
+                        'msgData': msgData,
+                        'helpers': helpers,
+                        'extension': extension
+                    });
+                    setTimeout(function () {
+                        $('.carousel:last').addClass("carousel"+carouselTemplateCount);
+                        var count = $(".carousel"+carouselTemplateCount).children().length;
+                        if(count > 1) {
+                            var carouselOneByOne = new PureJSCarousel({
+                                carousel: '.carousel'+carouselTemplateCount,
+                                slide: '.slide',
+                                oneByOne: true
+                              });
+                             $('.carousel'+carouselTemplateCount).parent().show();
+                             $('.carousel'+carouselTemplateCount).attr('style', 'height: 100% !important');
+                             carouselEles.push(carouselOneByOne);
+                        }
+                        //window.dispatchEvent(new Event('resize'));
+                        var evt = document.createEvent("HTMLEvents");
+                         evt.initEvent('resize', true, false);
+                         window.dispatchEvent(evt);
+                        carouselTemplateCount += 1;
+                        _chatContainer.animate({
+                            scrollTop: _chatContainer.prop("scrollHeight")
+                        }, 0);
+                    });
+                }else{
+                    messageHtml = $(me.getChatTemplate("miniTableChartTemplate")).tmpl({
+                        'msgData': msgData,
+                        'helpers': helpers,
+                        'extension': extension
+                    });
+                }
             }
+            
             else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "piechart") {
                 messageHtml = $(me.getChatTemplate("pieChartTemplate")).tmpl({
                     'msgData': msgData,
@@ -1630,7 +1673,7 @@ function koreBotChat() {
                         };
 
                         //horizontal chart, then increase size of bard
-                        if(msgData.message[0].component.payload.direction === 'horizontal'){
+                        if(msgData.message[0].component.payload.direction !== 'vertical'){
                             options.bar.groupWidth = "45%";
                             options.hAxis.baselineColor = '#b3bac8';
                         }
@@ -1643,11 +1686,11 @@ function koreBotChat() {
                         available_charts.push(_barchartObj);
                         var container = document.getElementById('barchart'+window.barchartCount);
                         var chart = null;
-                        if(msgData.message[0].component.payload.direction === 'horizontal'){
-                            chart = new google.visualization.BarChart(container);
+                        if(msgData.message[0].component.payload.direction === 'vertical'){
+                            chart = new google.visualization.ColumnChart(container);
                         }
                         else{
-                            chart = new google.visualization.ColumnChart(container);
+                            chart = new google.visualization.BarChart(container);
                         }
                         chart.draw(data, options);
                         window.barchartCount = window.barchartCount + 1;
@@ -1764,7 +1807,7 @@ function koreBotChat() {
         _chatContainer.animate({
             scrollTop: _chatContainer.prop("scrollHeight")
         }, 100);
-        if(msgData.type === "bot_response" && isTTSOn && isTTSEnabled && !me.minimized){
+        if(msgData.type === "bot_response" && isTTSOn && isTTSEnabled && !me.minimized && !historyLoading){
             if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.type === "template"){
                 _txtToSpeak = '';
             }
@@ -1779,7 +1822,7 @@ function koreBotChat() {
                     _txtToSpeak = '';
                 }
             }
-            if(msgData.message[0].component.payload.speech_hint) {
+            if(msgData.message[0].component && msgData.message[0].component.payload.speech_hint) {
                 _txtToSpeak = msgData.message[0].component.payload.speech_hint;
             }
             if(!_ttsConnection || (_ttsConnection.readyState && _ttsConnection.readyState !== 1)) {
@@ -1906,7 +1949,11 @@ function koreBotChat() {
                                             {{/if}}\
                                         {{/if}} \
                                     {{else}} \
-                                        {{html helpers.convertMDtoHTML(msgItem.cInfo.body, "user")}} \
+                                        {{if msgItem.cInfo.renderMsg && msgItem.cInfo.renderMsg !== ""}}\
+                                            {{html helpers.convertMDtoHTML(msgItem.cInfo.renderMsg, "user")}} \
+                                        {{else}}\
+                                            {{html helpers.convertMDtoHTML(msgItem.cInfo.body, "user")}} \
+                                        {{/if}}\
                                     {{/if}} \
                                 </div>\
 								{{if msgItem.cInfo && msgItem.cInfo.emoji}} \
@@ -2081,6 +2128,41 @@ function koreBotChat() {
                 </li> \
             {{/if}} \
         </scipt>';
+        var miniTableHorizontalTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+            {{if msgData.message}} \
+            <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
+                {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+                {{if msgData.icon}}<div class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+                {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
+                    <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
+                </div>{{/if}}\
+                <div class="carousel" id="carousel-one-by-one" style="height: 0px;">\
+                    {{each(key, table) msgData.message[0].component.payload.elements}}\
+                        <div class="slide">\
+                            <div class="minitableDiv">\
+                                <div style="overflow-x:auto; padding: 0 8px;">\
+                                    <table cellspacing="0" cellpadding="0">\
+                                        <tr class="headerTitle">\
+                                            {{each(key, tableHeader) table.primary}} \
+                                                <th {{if tableHeader[1]}}style="text-align:${tableHeader[1]};" {{/if}}>${tableHeader[0]}</th>\
+                                            {{/each}} \
+                                        </tr>\
+                                        {{each(key, additional) table.additional}} \
+                                            <tr>\
+                                                {{each(cellkey, cellValue) additional}} \
+                                                    <td  {{if cellkey === additional.length-1}}colspan="2"{{/if}}  {{if table.primary[cellkey][1]}}style="text-align:${table.primary[cellkey][1]};" {{/if}}>${cellValue}</td>\
+                                                {{/each}} \
+                                            </tr>\
+                                        {{/each}} \
+                                    </table>\
+                                </div>\
+                            </div>\
+                        </div>\
+                    {{/each}}\
+                </div>\
+            </li> \
+            {{/if}} \
+        </scipt>';
         var tableChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
             {{if msgData.message}} \
                 <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
@@ -2099,7 +2181,7 @@ function koreBotChat() {
                                 </tr>\
                                 {{each(key, tableRow) msgData.message[0].component.payload.elements}} \
                                     {{if tableRow.Values.length>1}}\
-                                        <tr>\
+                                        <tr {{if key > 4}}class="hide"{{/if}}>\
                                             {{each(cellkey, cellValue) tableRow.Values}} \
                                                 <td  {{if cellkey === tableRow.Values.length-1}}colspan="2"{{/if}} class=" {{if key == 0}} addTopBorder {{/if}}" {{if msgData.message[0].component.payload.columns[cellkey][1]}}style="text-align:${msgData.message[0].component.payload.columns[cellkey][1]};" {{/if}}>${cellValue}</td>\
                                             {{/each}} \
@@ -2108,8 +2190,9 @@ function koreBotChat() {
                                 {{/each}} \
                             </table>\
                         </div>\
+                        {{if msgData.message[0].component.payload.elements.length > 4 && msgData.message[0].component.payload.table_design && msgData.message[0].component.payload.table_design == "regular"}}<div class="showMore">Show more</div>{{/if}}\
                     </div>\
-                    <div class="accordionTable {{if msgData.message[0].component.payload.table_design && msgData.message[0].component.payload.table_design == "regular"}}hide{{else}}responsive{{/if}}">\
+                     <div class="accordionTable {{if msgData.message[0].component.payload.table_design && msgData.message[0].component.payload.table_design == "regular"}}hide{{else}}responsive{{/if}}">\
                         {{each(key, tableRow) msgData.message[0].component.payload.elements}} \
                             {{if key < 4}}\
                                 <div class="accordionRow">\
@@ -2191,8 +2274,9 @@ function koreBotChat() {
                                             {{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} <span class="quickreplyText {{if msgItem.image_url}}with-img{{/if}}">${msgItem.title}</span></span>\
                                         </div> \
                                     {{/each}} \
-                                </div></div>\
-                            {{/if}} \
+                                </div>\
+                            </div>\
+                        {{/if}} \
                     </div>\
                 </li> \
             {{/if}} \
@@ -2288,6 +2372,9 @@ function koreBotChat() {
         }
         else if(tempType === "miniTableChartTemplate") {
             return miniTableChartTemplate;
+        }
+        else if(tempType === "miniTableHorizontalTemplate") {
+            return miniTableHorizontalTemplate;
         }
         else if(tempType === "barchartTemplate") {
             return barchartTemplate;
@@ -2516,7 +2603,7 @@ function koreBotChat() {
                 setTimeout(function(){
                     $('.chatInputBox').focus();
                     $('.disableFooter').removeClass('disableFooter');
-					historyLoading = false;
+                    historyLoading = false;
                 });
             }
         }
@@ -2873,6 +2960,10 @@ function koreBotChat() {
         };
         // If server is closed
         _connection.onclose = function (e) {
+            if($('.chatInputBox').text() !== '' && autoEnableSpeechAndTTS) {
+                var me  = window.chatContainerConfig;
+                me.sendMessage($('.chatInputBox'));
+            }
             isRecordingStarted = false;
             console.log('Server is closed');
             console.log(e);
@@ -2886,6 +2977,10 @@ function koreBotChat() {
     }
 
     function stop() {
+        if($('.chatInputBox').text() !== '' && autoEnableSpeechAndTTS) {
+            var me  = window.chatContainerConfig;
+            me.sendMessage($('.chatInputBox'));
+        }
         clearInterval(intervalKey);
         $('.recordingMicrophone').css('display', 'none');
         $('.notRecordingMicrophone').css('display', 'block');
@@ -3013,6 +3108,13 @@ function koreBotChat() {
                 ttsAudioSource.buffer = buffer;
                 ttsAudioSource.connect(_ttsContext.destination);
                 ttsAudioSource.start(0);
+                ttsAudioSource.addEventListener('ended', function(){
+                    setTimeout(function(){
+                        if(isTTSOn && autoEnableSpeechAndTTS) {
+                            $('.notRecordingMicrophone').trigger('click');
+                        }
+                    },350);
+                });
             } catch (e) {
             }
         }, function (error) {
@@ -3676,11 +3778,11 @@ function koreBotChat() {
                 google.charts.setOnLoadCallback(drawChart);
                 function drawChart() {
                     container = document.getElementsByClassName('chartContainerDiv');
-                    if(data.direction === 'horizontal'){
-                        chart = new google.visualization.BarChart(container[0]);
+                    if(data.direction === 'vertical'){
+                        chart = new google.visualization.ColumnChart(container[0]);
                     }
                     else{
-                        chart = new google.visualization.ColumnChart(container[0]);
+                        chart = new google.visualization.BarChart(container[0]);
                     }
                 }
             }

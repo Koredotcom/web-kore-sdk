@@ -1157,3 +1157,7 @@ ul.chat-container li.quickReplies {
 .hide {
     display: none;
 }
+.kore-chat-window.minimize .historyLoadingDiv{
+    opacity: 0 !important;
+    display: none !important;
+}

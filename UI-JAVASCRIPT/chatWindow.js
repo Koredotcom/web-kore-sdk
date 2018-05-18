@@ -465,7 +465,7 @@ function koreBotChat() {
                 if (_matchItalic && _matchItalic.length > 0) {
                     for (j = 0; j < _matchItalic.length; j++) {
                         var _italicTxt = _matchItalic[j];
-                        if (txtArr[i].indexOf(_italicTxt) === 0 || txtArr[i][txtArr[i].indexOf(_italicTxt) - 1] === ' ') {
+                        if (txtArr[i].indexOf(_italicTxt) === 0 || txtArr[i][txtArr[i].indexOf(_italicTxt) - 1] === ' ' || txtArr[i].indexOf(_italicTxt) !== -1) {
                             _italicTxt = _italicTxt.substring(1, _italicTxt.length - 1);
                             _italicTxt = '<i class="markdownItalic">' + _italicTxt + '</i>';
                             txtArr[i] = txtArr[i].replace(_matchItalic[j], _italicTxt);
@@ -1187,7 +1187,7 @@ function koreBotChat() {
             }, 500);
         }
         var _chatContainer = me.config.chatContainer.querySelector('.chat-container');
-        if (msgData.message[0] && msgData.message[0].cInfo.attachments) {
+        if (msgData.message[0] && msgData.message[0].cInfo && msgData.message[0].cInfo.attachments) {
             extension = strSplit(msgData.message[0].cInfo.attachments[0].fileName)
         }
         if (msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.url) {
@@ -1197,7 +1197,7 @@ function koreBotChat() {
 
         /* checking for matched custom template */
         messageHtml = customTemplateObj.renderMessage(msgData);
-        if(messageHtml === '') {
+        if(messageHtml === '' && msgData && msgData.message && msgData.message[0]) {
             if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "button") {
                 messageHtml = me.getChatTemplate("templatebutton", msgData);
             }

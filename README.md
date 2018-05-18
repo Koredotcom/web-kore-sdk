@@ -106,6 +106,7 @@ Integration of Kore.ai chat UI into your App
             allowLocation : true // set false, to deny sending location to server
             loadHistory: false, // set true to load recent chat history
             messageHistoryLimit: 10 // set limit to load recent chat history
+            autoEnableSpeechAndTTS : false // set true, to use talkType voice keyboard.
         };
 
 #### 7. Call koreBotChat instance
@@ -178,11 +179,19 @@ Integration of Kore.ai chat UI into your App
 
 ###Release History:
 
+V6.2.0 [Minor] on 18-MAY-2018: Master branch
+    Released minor release with following features:
+    1. Added talkType voice keyboard. This feature allows you to use your voice to enter text on chatwindow input box. Even it reads out bot responses as well.
+    2. Able to render Mini-chart table in both vertical and horizontal way.
+    3. Updated chatConfig options to turn on/off voice-centric keyboard.
+    4. Minor bug fixes.
+
+
 V6.1.0 [Major] on 31-JAN-2018: Master branch
     Released major release with following features:
     1. Added Pie chart, Donut chart, Line chart, Bar chart and Table (Regular & Responsive) mini-table and Waiting-For-Response template support.
     2. Able to zoom image and chart templates.
-    3. Showing intermediate results whiie using STT (Speech To Text).
+    3. Showing intermediate results while using STT (Speech To Text).
     4. Able to fetch recent chat history.
     5. Avoid clearing chat messages when user click on reload button.
 

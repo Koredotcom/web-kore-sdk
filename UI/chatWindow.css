@@ -563,6 +563,7 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
 }
 .buttonTmplContent .buttonTmplContentHeading.quickReply {
     display: table;
+    font-size: 16px;
 }
 .buttonTmplContent .buttonTmplContentChild{
 	color: #3292FF;
@@ -1469,6 +1470,19 @@ ul.chat-container li.quickReplies {
     margin-bottom: 10px;
 }
 
+#myPreviewModal .tablechartDiv .hide{
+    display:table-row;
+}
+#myPreviewModal .tablechartDiv .showMore{
+    display:none;
+}
+.showMore{
+    font-size: 14px;
+    text-align: center;
+    color: #5f6bf7;
+    cursor: pointer;
+    padding:5px;
+}
 
 /* SDK ele preview */
 /* Modal Content (Image) */

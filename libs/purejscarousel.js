@@ -40,8 +40,8 @@
         windowWidth          = window.innerWidth,
         windowHeight         = window.innerHeight;
 
-    _.minPos       = (_.carousel.offsetWidth - (_.slides.length * _.slides[0].offsetWidth));
-    _.slidesToShow = Math.round(_.carousel.offsetWidth / _.slides[0].offsetWidth);
+    _.minPos       = ($(_.carousel).width() - (_.slides.length * $(_.slides[0]).width()));
+    _.slidesToShow = Math.round($(_.carousel).width() / $(_.slides[0]).width());
     _.maxIndex     = 0;
     _.isEnabled    = 1;
 
@@ -56,7 +56,7 @@
       _.slidesContainer.style.width = (_.slides[0].offsetWidth * _.slides.length * 3) + 'px';
     } else {
       _.slidesContainer.style.marginLeft = '0px';
-      _.slidesContainer.style.width = ((_.slides[0].offsetWidth+54) * _.slides.length) + 'px';
+      _.slidesContainer.style.width = (($(_.slides[0]).width()+54) * _.slides.length) + 'px';
     }
 
     if ('ontouchstart' in window || navigator.maxTouchPoints) {
@@ -70,7 +70,7 @@
       });
       _.slidesContainer.addEventListener('touchend', function () {
         var direction  = parseInt(this.getAttribute('data-active-touch-x')) - parseInt(this.getAttribute('data-start-touch-x')) > 0 ? 'prev' : 'next',
-            blockWidth = _.oneByOne === true ? _.slidesContainer[0].offsetWidth : _.carousel.offsetWidth;
+            blockWidth = _.oneByOne === true ? $(_.slidesContainer[0]).width() : $(_.carousel).width();
         if (Math.abs(parseInt(this.getAttribute('data-active-touch-x')) - parseInt(this.getAttribute('data-start-touch-x'))) >= blockWidth / 2) {
           if (_.infinite === true) {
             direction === 'next' ? _.goToNextSlide() : _.goToPrevSlide();
@@ -124,13 +124,13 @@
       if (_.infinite === true) {
         dotsLength = _.slides.length;
       } else {
-        dotsLength = ((_.slidesContainer.offsetWidth - _.carousel.offsetWidth) / _.slides[0].offsetWidth) + 1;
+        dotsLength = (($(_.slidesContainer).width() - $(_.carousel).width()) / $(_.slides[0]).width()) + 1;
       }
     } else {
       if (_.infinite === true) {
         dotsLength = Math.ceil(_.slidesContainer.offsetWidth / _.carousel.offsetWidth / 3);
       } else {
-        dotsLength = Math.ceil(_.slidesContainer.offsetWidth / _.carousel.offsetWidth);
+        dotsLength = Math.ceil($(_.slidesContainer).width() / $(_.carousel).width());
       }
     }
     for (i = 0; i < dotsLength; i++) {
