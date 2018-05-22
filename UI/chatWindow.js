@@ -705,6 +705,7 @@ function koreBotChat() {
             bot.fetchUserLocation();
         }
         me.render(chatWindowHtml);
+		unfreezeUIOnHistoryLoadingFail();
     };
     chatWindow.prototype.destroy = function () {
         var me = this;
@@ -2639,6 +2640,15 @@ function koreBotChat() {
       } else { 
         return false;
       }
+    }
+	function unfreezeUIOnHistoryLoadingFail() {
+        setTimeout(function(){
+            if(loadHistory) {
+                $('.chatInputBox').focus();
+                $('.disableFooter').removeClass('disableFooter');
+                historyLoading = false;
+            }
+        },20000);
     }
     if ('webkitSpeechRecognition' in window && isChrome()) {
       recognition = new window.webkitSpeechRecognition;
