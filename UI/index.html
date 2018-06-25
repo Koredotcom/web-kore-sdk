@@ -29,7 +29,7 @@
 				function assertion(options, callback) {
 					var jsonData = {
 						"clientId": botOptions.clientId,
-						"clientSecret": "r7EqpzKzai2tSIt2cDhXuwcHQ64aWi1GhxUST/yVpaA=",
+						"clientSecret": "",
 						"identity": botOptions.userIdentity,
 						"aud": "",
 						"isAnonymous": false
@@ -58,17 +58,17 @@
 				}
 
 				var botOptions = {};
-			botOptions.logLevel = 'debug';
-			botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
-			botOptions.koreSpeechAPIUrl = "https://speech.kore.ai/";
-			//botOptions.bearer = "bearer xyz-------------------";
-			botOptions.ttsSocketUrl = 'wss://speech.kore.ai/tts/ws';
-			botOptions.userIdentity = 'admin@qakore.xyz';// Provide users email id here
-			botOptions.recorderWorkerPath = '../libs/recorderWorker.js';
-			botOptions.assertionFn = assertion;
-			botOptions.koreAnonymousFn = koreAnonymousFn;
-			botOptions.clientId   = "cs-77ce0f83-cf1c-5e18-9f6e-3160369feaf1"; // secure client-id
-			botOptions.botInfo = {name:"SDK","_id":"st-858d1c07-a214-517a-aaec-7ca1d6cad3a3"}; // bot name is case sensitive
+				botOptions.logLevel = 'debug';
+				botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
+				botOptions.koreSpeechAPIUrl = "https://speech.kore.ai/";
+				//botOptions.bearer = "bearer xyz-------------------";
+				botOptions.ttsSocketUrl = 'wss://speech.kore.ai/tts/ws';
+				botOptions.userIdentity = 'userIdentity';// Provide users email id here
+				botOptions.recorderWorkerPath = '../libs/recorderWorker.js';
+				botOptions.assertionFn = assertion;
+				botOptions.koreAnonymousFn = koreAnonymousFn;
+				botOptions.clientId   = "your clientId"; // secure client-id
+				botOptions.botInfo = {name:"your bot name","_id":"bot_id"}; // bot name is case sensitive
 				
 				var chatConfig={
 					botOptions:botOptions,
