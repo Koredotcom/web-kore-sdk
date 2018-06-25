@@ -15,7 +15,7 @@ Kore.ai SDK for web enables you to talk to Kore.ai bots over a web socket. This 
 4. Mac Safari version 9.1 & above
 5. Opera version 48 & above
 
-#Supported JQuery version 2.1.4
+#Supported JQuery version 3.3.1
 
 # Setting up
 

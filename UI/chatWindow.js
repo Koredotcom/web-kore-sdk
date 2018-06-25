@@ -688,6 +688,7 @@ function koreBotChat() {
         isSpeechEnabled = me.config.isSpeechEnabled || false;
         loadHistory = me.config.loadHistory || false;
         historyLoading = loadHistory?true : false;
+        me.config.botOptions.loadHistory=me.config.loadHistory;
         autoEnableSpeechAndTTS = me.config.autoEnableSpeechAndTTS || false;
         /* autoEnableSpeechAndTTS will on if and only if both tts and mic are enabled */
         if(isTTSEnabled && (isSpeechEnabled || allowGoogleSpeech) && autoEnableSpeechAndTTS) {

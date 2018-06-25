@@ -301,8 +301,10 @@ emits the open event on WS connection established.
 */
 KoreBot.prototype.onOpenWSConnection = function(msg) {
 	debug("opened WS Connection");
-	this.initialized = true;
-	this.getHistory({});
+  this.initialized = true;
+  if(this.options.loadHistory && !_chatHistoryLoaded){
+    this.getHistory({});
+  }
 	this.emit(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, {});
 };
 
