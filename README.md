@@ -179,6 +179,20 @@ Integration of Kore.ai chat UI into your App
 
 ###Release History:
 
+V6.2.0.1 [Minor] on 26-JUNE-2018: Master branch
+    Released minor release with following features:
+    1.Jquery libraries upgrade to address security issue
+      jquery.js - v3.3.1. 
+      jquery-ui.min.js - 1.12.1.
+      jquery-ui.min.css - 1.12.1.
+    2.Minor bug fixes.
+
+    NOTE: New Jquery version upgrade requires below change in Index.html
+    
+    $(document).on("ready", function () { 
+        TO 
+    $(document).ready(function () {
+
 V6.2.0 [Minor] on 18-MAY-2018: Master branch
     Released minor release with following features:
     1. Added talkType voice keyboard. This feature allows you to use your voice to enter text on chatwindow input box. Even it reads out bot responses as well.
