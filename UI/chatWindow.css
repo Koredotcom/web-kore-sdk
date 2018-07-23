@@ -1654,7 +1654,36 @@ ul.chat-container li.quickReplies {
     color: #333;
     margin: 0 auto;
 }
-
+.trainWarningDiv {
+    background-color: #f2fafb !important;
+    border-top: 1px solid #009dab !important;
+    border-bottom: 1px solid #009dab !important;
+    cursor: default;
+    height: 0px;
+    width: 100%;
+    padding: 3px 0px 0px 0px !important;
+    position: absolute;
+    z-index: 1;
+    font-size: 11px !important;
+    line-height: inherit !important;
+    display: none;
+    transition: all 0.5s ease-in-out;
+    opacity: 0;
+}
+.trainWarningTextDiv{
+    display: table;
+    padding: 12px 19px;
+}
+.trainWarningDiv.showMsg {
+    display: block;
+    height: auto !important;
+    opacity: 1;
+}
+.trainWarningTextDiv .headerTip.warningTip{
+    color: #009dab;
+    font-size: 16px;
+    margin-top: 0;
+}
 /* IE issues */
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
     .kore-chat-window .kore-chat-body ul.chat-container{

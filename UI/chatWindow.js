@@ -1219,6 +1219,11 @@ function koreBotChat() {
                 }
                 me.renderMessage(msgData);
             }
+            if(tempData.type === "appInvalidNotification"){
+                setTimeout(function () {
+                    $('.trainWarningDiv').addClass('showMsg');
+                }, 2000)
+            }
         });
         var element = document.querySelector('.droppable');
         function callback(files) {
@@ -1906,7 +1911,13 @@ function koreBotChat() {
                                                 <button class="expand-btn" title="Expand"><span class="expand-btn-span fa fa-expand"></span></button>\
 						<button class="close-btn" title="Close">&times;</button> \
 					</div> \
-				</div> \
+                </div> \
+                <div class="kore-chat-header trainWarningDiv"> \
+                    <div class="trainWarningTextDiv displayTable"> \
+                        <span class="exclamation-circle"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span> \
+                        <p class="headerTip warningTip">Invalid Token.Please try again later.</p> \
+                    </div> \
+               </div> \
                 <div class="kore-chat-header historyLoadingDiv"> \
                     <div class="historyWarningTextDiv displayTable"> \
                         <span class="circle-o-notch"><i class="fa fa-circle-o-notch" aria-hidden="true"></i></span> \

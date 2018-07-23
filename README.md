@@ -179,6 +179,11 @@ Integration of Kore.ai chat UI into your App
 
 ###Release History:
 
+v6.2.2[Minor] on 21-JULY-2018:Master branch
+    Released minor release with following features:
+    1.Added new notification, When app client secret ID is 'reset'.
+    2.Minor bug fixes.
+
 V6.2.0.1 [Minor] on 26-JUNE-2018: Master branch
     Released minor release with following features:
     1.Jquery libraries upgrade to address security issue
