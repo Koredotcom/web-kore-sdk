@@ -9,7 +9,7 @@ function koreBotChat() {
     var detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
     var _eventQueue = {};
     var carouselEles = [];
-    var prevRange, accessToken, koreAPIUrl, fileToken, fileUploaderCounter = 0, bearerToken = '', assertionToken = '', messagesQueue = [], historyLoading = false;;
+    var prevRange, accessToken, koreAPIUrl, fileToken, fileUploaderCounter = 0, bearerToken = '', assertionToken = '', messagesQueue = [], historyLoading = false;
     var speechServerUrl = '', userIdentity = '', isListening = false, isRecordingStarted = false,  isSpeechEnabled = false, speechPrefixURL = "", sidToken = "",carouselTemplateCount = 0, waiting_for_message = false, loadHistory = false;
     /******************* Mic variable initilization *******************/
     var _exports = {},
@@ -1350,7 +1350,7 @@ function koreBotChat() {
         var me = this, messageHtml = '', extension = '', _extractedFileName = '';
 		customTemplateObj.helpers = helpers;
 		customTemplateObj.extension = extension;
-		
+		graphLibGlob = me.config.graphLib || "d3";
         if (msgData.type === "bot_response") {
             waiting_for_message = false;
             setTimeout(function () {
@@ -1537,67 +1537,106 @@ function koreBotChat() {
                     'helpers': helpers,
                     'extension': extension
                 });
-                setTimeout(function(){
-                    google.charts.load('current', {'packages':['corechart']});
-                    google.charts.setOnLoadCallback(drawChart);
-                    function drawChart() {
-                        var data = new google.visualization.DataTable();
-                        data.addColumn('string', 'Task');
-                        data.addColumn('number', 'Hours per Day');
-                        if( msgData.message[0].component.payload.elements && msgData.message[0].component.payload.elements[0].displayValue) {
-                            data.addColumn({type: 'string', role: 'tooltip'});
-                        }
-                        var pieChartData = [];
-                        var piechartElements = msgData.message[0].component.payload.elements;
-                        for(var i=0;i<piechartElements.length;i++) {
-                            var arr = [piechartElements[i].title+" \n"+piechartElements[i].value];
-                            arr.push(parseFloat(piechartElements[i].value));
-                            if(piechartElements[i].displayValue) {
-                                arr.push(piechartElements[i].displayValue);
+                if(graphLibGlob==="google") {
+                    setTimeout(function(){
+                        google.charts.load('current', {'packages':['corechart']});
+                        google.charts.setOnLoadCallback(drawChart);
+                        function drawChart() {
+                            var data = new google.visualization.DataTable();
+                            data.addColumn('string', 'Task');
+                            data.addColumn('number', 'Hours per Day');
+                            if( msgData.message[0].component.payload.elements && msgData.message[0].component.payload.elements[0].displayValue) {
+                                data.addColumn({type: 'string', role: 'tooltip'});
                             }
-                            pieChartData.push(arr);
-                        }
-                        data.addRows(pieChartData);
-                        var options = {
-                            chartArea: {
-                                left: "3%",
-                                top: "3%",
-                                height: "94%",
-                                width: "94%"
-                            },
-                            pieSliceTextStyle : {},
-                            colors: window.chartColors,
-                            legend: {
-                                textStyle: {
-                                    color: '#b3bac8'
+                            var pieChartData = [];
+                            var piechartElements = msgData.message[0].component.payload.elements;
+                            for(var i=0;i<piechartElements.length;i++) {
+                                var arr = [piechartElements[i].title+" \n"+piechartElements[i].value];
+                                arr.push(parseFloat(piechartElements[i].value));
+                                if(piechartElements[i].displayValue) {
+                                    arr.push(piechartElements[i].displayValue);
+                                }
+                                pieChartData.push(arr);
+                            }
+                            data.addRows(pieChartData);
+                            var options = {
+                                chartArea: {
+                                    left: "3%",
+                                    top: "3%",
+                                    height: "94%",
+                                    width: "94%"
+                                },
+                                pieSliceTextStyle : {},
+                                colors: window.chartColors,
+                                legend: {
+                                    textStyle: {
+                                        color: '#b3bac8'
+                                    }
+                                }
+                            };
+    
+                            if(piechartElements.length === 1) { // if only element, then deault donut chart
+                                options.pieHole =  0.5;
+                                options.pieSliceTextStyle.color = "black";
+                            }
+                            if(msgData.message[0].component.payload.pie_type) { //chart based on user requireent
+                                if(msgData.message[0].component.payload.pie_type === "donut") 
+                                {
+                                    options.pieHole =  0.6;
+                                    options.pieSliceTextStyle.color = "black";
+                                    options.legend.position = "none";
+                                }
+                                else if(msgData.message[0].component.payload.pie_type === "donut_legend"){
+                                    options.pieHole =  0.6;
+                                    options.pieSliceTextStyle.color = "black";
                                 }
                             }
-                        };
-
-                        if(piechartElements.length === 1) { // if only element, then deault donut chart
-                            options.pieHole =  0.5;
-                            options.pieSliceTextStyle.color = "black";
+                            var _piechartObj = {'id':'piechart'+msgData.messageId,'data':data,'options':options,'type':'piechart'};
+                            available_charts.push(_piechartObj);
+                            var container = document.getElementById('piechart'+msgData.messageId);
+                            var chart = new google.visualization.PieChart(container);
+                            chart.draw(data, options);
+                            //window.PieChartCount = window.PieChartCount + 1;
                         }
-                        if(msgData.message[0].component.payload.pie_type) { //chart based on user requireent
-                            if(msgData.message[0].component.payload.pie_type === "donut") 
-                            {
-                                options.pieHole =  0.6;
-                                options.pieSliceTextStyle.color = "black";
-                                options.legend.position = "none";
-                            }
-                            else if(msgData.message[0].component.payload.pie_type === "donut_legend"){
-                                options.pieHole =  0.6;
-                                options.pieSliceTextStyle.color = "black";
-                            }
+                    },150);
+                }
+                else if(graphLibGlob === "d3") {
+                    if(msgData.message[0].component.payload.pie_type === undefined) {
+                       msgData.message[0].component.payload.pie_type = 'regular'; 
+                    }
+                    if(msgData.message[0].component.payload.pie_type) {
+                        // define data
+                        dimens = {};
+                        dimens.width = 300;
+                        dimens.height = 200;
+                        dimens.legendRectSize = 10;
+                        dimens.legendSpacing = 2.4;
+                        if(msgData.message[0].component.payload.pie_type === "regular") {
+                            setTimeout(function(){
+                                var _piechartObj = {'id': 'piechart'+msgData.messageId, 'data': msgData, 'type': 'regular'};
+                                available_charts.push(_piechartObj);
+                                KoreGraphAdapter.drawD3Pie(msgData, dimens, '#piechart'+msgData.messageId, 12); 
+                                //window.PieChartCount = window.PieChartCount + 1;
+                            },150);                            
                         }
-                        var _piechartObj = {'id':'piechart'+window.PieChartCount,'data':data,'options':options,'type':'piechart'};
-                        available_charts.push(_piechartObj);
-                        var container = document.getElementById('piechart'+window.PieChartCount);
-                        var chart = new google.visualization.PieChart(container);
-                        chart.draw(data, options);
-                        window.PieChartCount = window.PieChartCount + 1;
-                      }
-                },150);
+                        else if(msgData.message[0].component.payload.pie_type === "donut") {
+                            setTimeout(function(){
+                                var _piechartObj = {'id': 'piechart'+msgData.messageId, 'data': msgData, 'type': 'donut'};
+                                available_charts.push(_piechartObj);
+                                KoreGraphAdapter.drawD3PieDonut(msgData, dimens, '#piechart'+msgData.messageId, 12, 'donut'); 
+                                //window.PieChartCount = window.PieChartCount + 1;
+                            },150);  
+                        }
+                        else if(msgData.message[0].component.payload.pie_type === "donut_legend") {
+                            setTimeout(function(){
+                                var _piechartObj = {'id': 'piechart'+msgData.messageId, 'data': msgData, 'type': 'donut_legend'};
+                                available_charts.push(_piechartObj);
+                                KoreGraphAdapter.drawD3PieDonut(msgData, dimens, '#piechart'+msgData.messageId, 12, 'donut_legend'); 
+                                //window.PieChartCount = window.PieChartCount + 1;
+                            },150);  
+                        }
+                    }
+                }
                 setTimeout(function(){
                     $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
                     handleChartOnclick();
@@ -1609,100 +1648,151 @@ function koreBotChat() {
                     'helpers': helpers,
                     'extension': extension
                 });
-                setTimeout(function(){
-                    google.charts.load('current', {packages: ['corechart', 'bar']});
-                    google.charts.setOnLoadCallback(drawChart);
-                    function drawChart() {
-                        var customToolTips = false;
-                        var data = new google.visualization.DataTable();
-                        data.addColumn("string",'y');
-                        //adding legend labels
-                        for(var i=0;i<msgData.message[0].component.payload.elements.length;i++) {
-                            var currEle = msgData.message[0].component.payload.elements[i];
-                            data.addColumn('number', currEle.title);
-                            //checking for display values ( custom tooltips)
-                            if(currEle.displayValues && currEle.displayValues.length) {
-                                data.addColumn({type: 'string', role: 'tooltip'});
-                                customToolTips = true;
-                            }
-                        }
-
-                        //filling rows
-                        var totalLines = msgData.message[0].component.payload.elements.length;
-                        for(var i=0;i<msgData.message[0].component.payload.X_axis.length;i++) {
-                            var arr = [];
-                            arr.push(msgData.message[0].component.payload.X_axis[i]);
-                            for(var j=0;j<totalLines;j++) {
-                                arr.push(parseFloat(msgData.message[0].component.payload.elements[j].values[i]));
-                                if(customToolTips) {
-                                    arr.push(msgData.message[0].component.payload.elements[j].displayValues[i]);
+                if(graphLibGlob==="google") {
+                    setTimeout(function(){
+                        google.charts.load('current', {packages: ['corechart', 'bar']});
+                        google.charts.setOnLoadCallback(drawChart);
+                        function drawChart() {
+                            var customToolTips = false;
+                            var data = new google.visualization.DataTable();
+                            data.addColumn("string",'y');
+                            //adding legend labels
+                            for(var i=0;i<msgData.message[0].component.payload.elements.length;i++) {
+                                var currEle = msgData.message[0].component.payload.elements[i];
+                                data.addColumn('number', currEle.title);
+                                //checking for display values ( custom tooltips)
+                                if(currEle.displayValues && currEle.displayValues.length) {
+                                    data.addColumn({type: 'string', role: 'tooltip'});
+                                    customToolTips = true;
                                 }
                             }
-                            data.addRow(arr);
-                        }
-                        var options = {
-                            chartArea: {
-                                height: "70%",
-                                width: "80%"
-                            },
-                            legend: { 
-                                position : 'top',
-                                alignment: 'end',
-                                maxLines: 3,
-                                textStyle: {
-                                    color: '#b3bac8'
+    
+                            //filling rows
+                            var totalLines = msgData.message[0].component.payload.elements.length;
+                            for(var i=0;i<msgData.message[0].component.payload.X_axis.length;i++) {
+                                var arr = [];
+                                arr.push(msgData.message[0].component.payload.X_axis[i]);
+                                for(var j=0;j<totalLines;j++) {
+                                    arr.push(parseFloat(msgData.message[0].component.payload.elements[j].values[i]));
+                                    if(customToolTips) {
+                                        arr.push(msgData.message[0].component.payload.elements[j].displayValues[i]);
+                                    }
                                 }
-                            },
-                            hAxis: {
-                                gridlines: {
-                                    color: 'transparent'
+                                data.addRow(arr);
+                            }
+                            var options = {
+                                chartArea: {
+                                    height: "70%",
+                                    width: "80%"
                                 },
-                                textStyle: {
-                                    color: '#b3bac8'
-                                }
-                            },
-                            vAxis: {
-                                gridlines: {
-                                    color: 'transparent'
+                                legend: { 
+                                    position : 'top',
+                                    alignment: 'end',
+                                    maxLines: 3,
+                                    textStyle: {
+                                        color: '#b3bac8'
+                                    }
                                 },
-                                textStyle: {
-                                    color: '#b3bac8'
+                                hAxis: {
+                                    gridlines: {
+                                        color: 'transparent'
+                                    },
+                                    textStyle: {
+                                        color: '#b3bac8'
+                                    }
                                 },
-                                baselineColor: 'transparent'
-                            },
-                            animation:{
-                                duration: 500,
-                                easing: 'out',
-                                startup : true
-                            },
-                            bar: {groupWidth: "25%"},
-                            colors: window.chartColors
-                        };
+                                vAxis: {
+                                    gridlines: {
+                                        color: 'transparent'
+                                    },
+                                    textStyle: {
+                                        color: '#b3bac8'
+                                    },
+                                    baselineColor: 'transparent'
+                                },
+                                animation:{
+                                    duration: 500,
+                                    easing: 'out',
+                                    startup : true
+                                },
+                                bar: {groupWidth: "25%"},
+                                colors: window.chartColors
+                            };
+    
+                            //horizontal chart, then increase size of bard
+                            if(msgData.message[0].component.payload.direction !== 'vertical'){
+                                options.bar.groupWidth = "45%";
+                                options.hAxis.baselineColor = '#b3bac8';
+                            }
+                            //stacked chart
+                            if(msgData.message[0].component.payload.stacked){
+                                options.isStacked = true;
+                                options.bar.groupWidth = "25%";
+                            }
+                            var _barchartObj = {'id':'barchart'+msgData.messageId,'direction':msgData.message[0].component.payload.direction,'data':data,'options':options,'type':'barchart'};
+                            available_charts.push(_barchartObj);
+                            var container = document.getElementById('barchart'+msgData.messageId);
+                            var chart = null;
+                            if(msgData.message[0].component.payload.direction === 'vertical'){
+                                chart = new google.visualization.ColumnChart(container);
+                            }
+                            else{
+                                chart = new google.visualization.BarChart(container);
+                            }
+                            chart.draw(data, options);
+                            //window.barchartCount = window.barchartCount + 1;
+                          }
+                    },150);
+                } 
+                else if (graphLibGlob === "d3") {
+                    var dimens = {};
+                    dimens.outerWidth = 350;
+                    dimens.outerHeight = 300;
+                    dimens.innerHeight = 200;
+                    dimens.legendRectSize = 15;
+                    dimens.legendSpacing = 4;
+                    if(msgData.message[0].component.payload.direction === undefined) {
+                        msgData.message[0].component.payload.direction = 'horizontal';
+                    }
+                    if(msgData.message[0].component.payload.direction === 'horizontal' && !msgData.message[0].component.payload.stacked) {
+                        setTimeout(function() {
+                            dimens.innerWidth = 180;
+                            var _barchartObj = {'id': 'Legend_barchart'+msgData.messageId, 'data': msgData, 'type': 'barchart'};
+                            available_charts.push(_barchartObj);                        
+                            KoreGraphAdapter.drawD3barHorizontalbarChart(msgData, dimens, '#barchart'+msgData.messageId, 12);
+                           // window.barchartCount = window.barchartCount + 1;
+                        },250);
+                    }
+                    else if(msgData.message[0].component.payload.direction === 'vertical' && msgData.message[0].component.payload.stacked ) {
+                        setTimeout(function() {
+                            dimens.outerWidth = 400;
+                            dimens.innerWidth = 270;
+                            var _barchartObj = {'id': 'barchart'+msgData.messageId, 'data': msgData, 'type': 'stackedBarchart'};
+                            available_charts.push(_barchartObj);
+                            KoreGraphAdapter.drawD3barVerticalStackedChart(msgData, dimens, '#barchart'+msgData.messageId, 12);
+                           // window.barchartCount = window.barchartCount + 1;
+                        }, 250);
+                    }
 
-                        //horizontal chart, then increase size of bard
-                        if(msgData.message[0].component.payload.direction !== 'vertical'){
-                            options.bar.groupWidth = "45%";
-                            options.hAxis.baselineColor = '#b3bac8';
-                        }
-                        //stacked chart
-                        if(msgData.message[0].component.payload.stacked){
-                            options.isStacked = true;
-                            options.bar.groupWidth = "25%";
-                        }
-                        var _barchartObj = {'id':'barchart'+window.barchartCount,'direction':msgData.message[0].component.payload.direction,'data':data,'options':options,'type':'barchart'};
-                        available_charts.push(_barchartObj);
-                        var container = document.getElementById('barchart'+window.barchartCount);
-                        var chart = null;
-                        if(msgData.message[0].component.payload.direction === 'vertical'){
-                            chart = new google.visualization.ColumnChart(container);
-                        }
-                        else{
-                            chart = new google.visualization.BarChart(container);
-                        }
-                        chart.draw(data, options);
-                        window.barchartCount = window.barchartCount + 1;
-                      }
-                },150);
+                    else if(msgData.message[0].component.payload.direction === 'horizontal' && msgData.message[0].component.payload.stacked) {
+                        setTimeout(function() {
+                            dimens.innerWidth = 180;
+                            var _barchartObj = {'id': 'barchart'+msgData.messageId, 'data': msgData, 'type': 'stackedBarchart'};
+                            available_charts.push(_barchartObj);
+                            KoreGraphAdapter.drawD3barStackedChart(msgData, dimens, '#barchart'+msgData.messageId, 12);
+                           // window.barchartCount = window.barchartCount + 1;
+                        }, 250);
+                    }
+                    else if(msgData.message[0].component.payload.direction === 'vertical' && !msgData.message[0].component.payload.stacked ){
+                        setTimeout(function() {
+                            dimens.innerWidth = 240;
+                            var _barchartObj = {'id': 'barchart'+msgData.messageId, 'data': msgData, 'type': 'barchart'};
+                            available_charts.push(_barchartObj);
+                            KoreGraphAdapter.drawD3barChart(msgData, dimens, '#barchart'+msgData.messageId, 12);
+                           // window.barchartCount = window.barchartCount + 1;
+                        }, 250);
+                    }
+                }
                 setTimeout(function(){
                     $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
                     handleChartOnclick();
@@ -1714,86 +1804,109 @@ function koreBotChat() {
                     'helpers': helpers,
                     'extension': extension
                 });
-                setTimeout(function(){
-                    google.charts.load('current', {packages: ['corechart', 'line']});
-                    google.charts.setOnLoadCallback(drawChart);
-                    function drawChart() {
-                        var customToolTips = false;
-                        var data = new google.visualization.DataTable();
-                        data.addColumn("string",'y');
-                        //adding legend labels
-                        for(var i=0;i<msgData.message[0].component.payload.elements.length;i++) {
-                            var currEle = msgData.message[0].component.payload.elements[i];
-                            data.addColumn('number', currEle.title);
-                            //checking for display values ( custom tooltips)
-                            if(currEle.displayValues && currEle.displayValues.length) {
-                                data.addColumn({type: 'string', role: 'tooltip'});
-                                customToolTips = true;
-                            }
-                        }
-
-                        //filling rows
-                        var totalLines = msgData.message[0].component.payload.elements.length;
-                        for(var i=0;i<msgData.message[0].component.payload.X_axis.length;i++) {
-                            var arr = [];
-                            arr.push(msgData.message[0].component.payload.X_axis[i]);
-                            for(var j=0;j<totalLines;j++) {
-                                arr.push(parseFloat(msgData.message[0].component.payload.elements[j].values[i]));
-                                if(customToolTips) {
-                                    arr.push(msgData.message[0].component.payload.elements[j].displayValues[i]);
+                if(graphLibGlob === "google") {
+                    setTimeout(function(){
+                        google.charts.load('current', {packages: ['corechart', 'line']});
+                        google.charts.setOnLoadCallback(drawChart);
+                        function drawChart() {
+                            var customToolTips = false;
+                            var data = new google.visualization.DataTable();
+                            data.addColumn("string",'y');
+                            //adding legend labels
+                            for(var i=0;i<msgData.message[0].component.payload.elements.length;i++) {
+                                var currEle = msgData.message[0].component.payload.elements[i];
+                                data.addColumn('number', currEle.title);
+                                //checking for display values ( custom tooltips)
+                                if(currEle.displayValues && currEle.displayValues.length) {
+                                    data.addColumn({type: 'string', role: 'tooltip'});
+                                    customToolTips = true;
                                 }
                             }
-                            data.addRow(arr);
-                        }
-
-                        var options = {
-                            curveType: 'function',
-                            chartArea: {
-                                height: "70%",
-                                width: "80%"
-                            },
-                            legend: { 
-                                position : 'top',
-                                alignment: 'end',
-                                maxLines: 3,
-                                textStyle: {
-                                    color: "#b3bac8"
+    
+                            //filling rows
+                            var totalLines = msgData.message[0].component.payload.elements.length;
+                            for(var i=0;i<msgData.message[0].component.payload.X_axis.length;i++) {
+                                var arr = [];
+                                arr.push(msgData.message[0].component.payload.X_axis[i]);
+                                for(var j=0;j<totalLines;j++) {
+                                    arr.push(parseFloat(msgData.message[0].component.payload.elements[j].values[i]));
+                                    if(customToolTips) {
+                                        arr.push(msgData.message[0].component.payload.elements[j].displayValues[i]);
+                                    }
                                 }
-                            },
-                            hAxis: {
-                                gridlines: {
-                                    color: 'transparent'
+                                data.addRow(arr);
+                            }
+    
+                            var options = {
+                                curveType: 'function',
+                                chartArea: {
+                                    height: "70%",
+                                    width: "80%"
                                 },
-                                textStyle: {
-                                    color: "#b3bac8"
-                                }
-                            },
-                            vAxis: {
-                                gridlines: {
-                                    color: 'transparent'
+                                legend: { 
+                                    position : 'top',
+                                    alignment: 'end',
+                                    maxLines: 3,
+                                    textStyle: {
+                                        color: "#b3bac8"
+                                    }
                                 },
-                                textStyle: {
-                                    color: '#b3bac8'
+                                hAxis: {
+                                    gridlines: {
+                                        color: 'transparent'
+                                    },
+                                    textStyle: {
+                                        color: "#b3bac8"
+                                    }
                                 },
-                                baselineColor: 'transparent'
-                            },
-                            lineWidth: 3,
-                            animation:{
-                                duration: 500,
-                                easing: 'out',
-                                startup : true
-                            },
-                            colors: window.chartColors
-                        };
-                        var lineChartObj = {'id':'linechart'+window.linechartCount,'data':data,'options':options,'type':'linechart'};
-                        available_charts.push(lineChartObj);
-                        var container = document.getElementById('linechart'+window.linechartCount);
+                                vAxis: {
+                                    gridlines: {
+                                        color: 'transparent'
+                                    },
+                                    textStyle: {
+                                        color: '#b3bac8'
+                                    },
+                                    baselineColor: 'transparent'
+                                },
+                                lineWidth: 3,
+                                animation:{
+                                    duration: 500,
+                                    easing: 'out',
+                                    startup : true
+                                },
+                                colors: window.chartColors
+                            };
+                            var lineChartObj = {'id':'linechart'+msgData.messageId,'data':data,'options':options,'type':'linechart'};
+                            available_charts.push(lineChartObj);
+                            var container = document.getElementById('linechart'+msgData.messageId);
+    
+                            var chart = new google.visualization.LineChart(container);
+                            chart.draw(data, options);
+                            //window.linechartCount = window.linechartCount + 1;
+                          }
+                    },150);
+                } 
+                else if (graphLibGlob === "d3") {
+                    setTimeout(function() {
+                        var dimens = {};
+                        dimens.outerWidth = 320;
+                        dimens.outerHeight = 300;
+                        dimens.innerWidth = 230;
+                        dimens.innerHeight = 250;
+                        dimens.legendRectSize = 15;
+                        dimens.legendSpacing = 4;
+                        var _linechartObj = {'id': 'linechart'+msgData.messageId, 'data': msgData, 'type': 'linechart'};
+                        available_charts.push(_linechartObj);
+                      //  KoreGraphAdapter.drawD3lineChart(msgData, dimens, '#linechart'+window.linechartCount, 12);
+                        KoreGraphAdapter.drawD3lineChartV2(msgData, dimens, '#linechart'+msgData.messageId, 12);
+                        //window.linechartCount = window.linechartCount + 1;
+                    }, 250);
+                    setTimeout(function(){
+                        $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
+                        handleChartOnClick();
+                    },300);
 
-                        var chart = new google.visualization.LineChart(container);
-                        chart.draw(data, options);
-                        window.linechartCount = window.linechartCount + 1;
-                      }
-                },150);
+                }
                 setTimeout(function(){
                     $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
                     handleChartOnclick();
@@ -2076,7 +2189,7 @@ function koreBotChat() {
                         <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
                     </div>{{/if}}\
                     <div class="piechartDiv">\
-                        <div class="lineChartChildDiv" id="piechart${window.PieChartCount}"></div>\
+                        <div class="lineChartChildDiv" id="piechart${msgData.messageId}"></div>\
                     </div>\
                 </li> \
             {{/if}} \
@@ -2091,7 +2204,7 @@ function koreBotChat() {
                         <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
                     </div>{{/if}}\
                     <div class="barchartDiv">\
-                        <div class="lineChartChildDiv" id="barchart${window.barchartCount}"></div>\
+                        <div class="lineChartChildDiv" id="barchart${msgData.messageId}"></div>\
                     </div>\
                 </li> \
             {{/if}} \
@@ -2105,7 +2218,7 @@ function koreBotChat() {
                         <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
                     </div>{{/if}}\
                     <div class="linechartDiv">\
-                        <div class="lineChartChildDiv" id="linechart${window.linechartCount}"></div>\
+                        <div class="lineChartChildDiv" id="linechart${msgData.messageId}"></div>\
                     </div>\
                 </li> \
             {{/if}} \
@@ -3753,7 +3866,7 @@ function koreBotChat() {
         var modal = document.getElementById('myPreviewModal');
         $(".largePreviewContent").empty();
         $(".largePreviewContent").addClass("addheight");
-        $(".largePreviewContent").html("<div class='chartContainerDiv'>/</div>");
+        $(".largePreviewContent").html("<div class='chartContainerDiv'></div>");
         modal.style.display = "block";
         // Get the <span> element that closes the modal
         var span = document.getElementsByClassName("closeElePreview")[0];
@@ -3779,45 +3892,109 @@ function koreBotChat() {
                     break;
                 }
             }
-            if(data.type === "piechart") {
-                google.charts.load('current', {'packages':['corechart']});
-                google.charts.setOnLoadCallback(drawChart);
-                function drawChart() {
-                    container = document.getElementsByClassName('chartContainerDiv');
-                    chart = new google.visualization.PieChart(container[0]);
+            if(graphLibGlob === "d3") {
+                zoomChart();
+                if(data.data.message[0].component.payload.pie_type === undefined) {
+                    data.data.message[0].component.payload.pie_type = 'regular';
+                }
+                if(data.data.message[0].component.payload.template_type !== 'linechart' && data.data.message[0].component.payload.template_type !== 'piechart') {
+                    var dimens = {};
+                    dimens.outerWidth = 650;
+                    dimens.outerHeight = 460;
+                    dimens.innerWidth = 450;
+                    dimens.innerHeight = 350;
+                    dimens.legendRectSize = 15;
+                    dimens.legendSpacing = 4;
+                    $('.chartContainerDiv').html('');
+                    if(data.data.message[0].component.payload.template_type === 'barchart' && data.data.message[0].component.payload.direction === 'vertical' && data.type === "barchart") {
+                        dimens.innerWidth = 500;
+                        KoreGraphAdapter.drawD3barChart(data.data, dimens, '.chartContainerDiv', 12);
+                    } else if (data.data.message[0].component.payload.template_type === 'barchart' && data.data.message[0].component.payload.direction === 'horizontal' && data.type === "stackedBarchart") {
+                        KoreGraphAdapter.drawD3barStackedChart(data.data, dimens, '.chartContainerDiv', 12);
+                    } else if(data.data.message[0].component.payload.template_type === 'barchart' && data.data.message[0].component.payload.direction === 'vertical' && data.type === "stackedBarchart") {
+                        dimens.innerWidth = 550;
+                        KoreGraphAdapter.drawD3barVerticalStackedChart(data.data, dimens, '.chartContainerDiv', 12);
+                    } else if(data.data.message[0].component.payload.template_type === 'barchart' && data.data.message[0].component.payload.direction === 'horizontal' && data.type === "barchart") {
+                        dimens.outerWidth = 650;
+                        dimens.outerHeight = 350;
+                        dimens.innerWidth = 450;
+                        dimens.innerHeight = 310;
+                        KoreGraphAdapter.drawD3barHorizontalbarChart(data.data, dimens, '.chartContainerDiv', 12);
+                    }
+                }
+                else if(data.data.message[0].component.payload.template_type === "linechart") {
+                    var dimens = {};
+                    dimens.outerWidth = 600;
+                    dimens.outerHeight = 400;
+                    dimens.innerWidth = 480;
+                    dimens.innerHeight = 350;
+                    dimens.legendRectSize = 15;
+                    dimens.legendSpacing = 4;
+                    $('.chartContainerDiv').html('');
+                  //  KoreGraphAdapter.drawD3lineChart(data.data, dimens, '.chartContainerDiv', 12);
+                    KoreGraphAdapter.drawD3lineChartV2(data.data, dimens, '.chartContainerDiv', 12);
+
+                }
+                else if(data.data.message[0].component.payload.pie_type) {
+                    var dimens = {};
+                    dimens.width = 600;
+                    dimens.height = 400;
+                    dimens.legendRectSize = 15;
+                    dimens.legendSpacing = 4;
+                    $('chartContainerDiv').html('');
+                    if(data.data.message[0].component.payload.pie_type === "regular") {
+                        KoreGraphAdapter.drawD3Pie(data.data, dimens,'.chartContainerDiv', 16);
+                    }
+                    else if (data.data.message[0].component.payload.pie_type === "donut") {
+                        KoreGraphAdapter.drawD3PieDonut(data.data, dimens,'.chartContainerDiv', 16, 'donut');                   
+                    }
+                    else if (data.data.message[0].component.payload.pie_type === "donut_legend") {
+                        $('chartContainerDiv').html('');
+                        KoreGraphAdapter.drawD3PieDonut(data.data, dimens,'.chartContainerDiv', 16, 'donut_legend');      
+                    }
                 }
             }
-            else if(data.type === "linechart") {
-                google.charts.load('current', {packages: ['corechart', 'line']});
-                google.charts.setOnLoadCallback(drawChart);
-                function drawChart() {
-                    container = document.getElementsByClassName('chartContainerDiv');
-                    chart = new google.visualization.LineChart(container[0]);
-                  }
-            }
-            else if(data.type === "barchart") {
-                google.charts.load('current', {packages: ['corechart', 'bar']});
-                google.charts.setOnLoadCallback(drawChart);
-                function drawChart() {
-                    container = document.getElementsByClassName('chartContainerDiv');
-                    if(data.direction === 'vertical'){
-                        chart = new google.visualization.ColumnChart(container[0]);
-                    }
-                    else{
-                        chart = new google.visualization.BarChart(container[0]);
+            else if(graphLibGlob === "google"){
+                if(data.type === "piechart") {
+                    google.charts.load('current', {'packages':['corechart']});
+                    google.charts.setOnLoadCallback(drawChart);
+                    function drawChart() {
+                        container = document.getElementsByClassName('chartContainerDiv');
+                        chart = new google.visualization.PieChart(container[0]);
                     }
                 }
-            }
-            setTimeout(function(){
-                var chartAreaObj = {"height":"85%","width":"85%"};
-                data.options.chartArea = chartAreaObj;
-                google.visualization.events.addListener(chart, 'ready', function() {
-                    setTimeout(function(){
-                        $(".largePreviewContent .chartContainerDiv").css("height","91%");
+                else if(data.type === "linechart") {
+                    google.charts.load('current', {packages: ['corechart', 'line']});
+                    google.charts.setOnLoadCallback(drawChart);
+                    function drawChart() {
+                        container = document.getElementsByClassName('chartContainerDiv');
+                        chart = new google.visualization.LineChart(container[0]);
+                      }
+                }
+                else if(data.type === "barchart") {
+                    google.charts.load('current', {packages: ['corechart', 'bar']});
+                    google.charts.setOnLoadCallback(drawChart);
+                    function drawChart() {
+                        container = document.getElementsByClassName('chartContainerDiv');
+                        if(data.direction === 'vertical'){
+                            chart = new google.visualization.ColumnChart(container[0]);
+                        }
+                        else{
+                            chart = new google.visualization.BarChart(container[0]);
+                        }
+                    }
+                }
+                setTimeout(function(){
+                    var chartAreaObj = {"height":"85%","width":"85%"};
+                    data.options.chartArea = chartAreaObj;
+                    google.visualization.events.addListener(chart, 'ready', function() {
+                        setTimeout(function(){
+                            $(".largePreviewContent .chartContainerDiv").css("height","91%");
+                        });
                     });
-                });
-                chart.draw(data.data, data.options);
-            },200);
+                    chart.draw(data.data, data.options);
+                },200);
+            }
         });
     }
     var old = $.fn.uploader;

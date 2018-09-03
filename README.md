@@ -179,10 +179,31 @@ Integration of Kore.ai chat UI into your App
 
 ###Release History:
 
+v6.2.2[Minor] on 03-SEPTEMBER-2018:Master branch
+    Released minor release with following features:
+    1.Added D3 v4 library for rendering Graphs.
+    2.Minor bug fixes.
+
+    Note: Rendering Graphs using google charts, should have loader.js file. 
+
 v6.2.2[Minor] on 21-JULY-2018:Master branch
     Released minor release with following features:
     1.Added new notification, When app client secret ID is 'reset'.
     2.Minor bug fixes.
+
+V6.2.0.1 [Minor] on 26-JUNE-2018: Master branch
+    Released minor release with following features:
+    1.Jquery libraries upgrade to address security issue
+      jquery.js - v3.3.1. 
+      jquery-ui.min.js - 1.12.1.
+      jquery-ui.min.css - 1.12.1.
+    2.Minor bug fixes.
+
+    NOTE: New Jquery version upgrade requires below change in Index.html
+    
+    $(document).on("ready", function () { 
+        TO 
+    $(document).ready(function () {
 
 V6.2.0.1 [Minor] on 26-JUNE-2018: Master branch
     Released minor release with following features:

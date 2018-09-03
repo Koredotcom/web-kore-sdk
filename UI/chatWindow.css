@@ -1684,6 +1684,67 @@ ul.chat-container li.quickReplies {
     font-size: 16px;
     margin-top: 0;
 }
+.axis--x path {
+    display: none;
+}
+
+.axis--y path {
+    display: none;
+}
+
+  
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}
+
+.axis--x path {
+    display: none;
+}
+
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}
+  
+  
+.tooltip, .tooltipDonut, .tooltipVSB, .tooltipHBC, .tooltipBC {
+    background: #fff;
+    box-shadow: 0 0 5px #999999;
+    color: #333;
+    font-size: 12px;
+    left: 130px;
+    padding: 10px;
+    position: absolute;
+    text-align: center;
+    top: 95px;
+    width: 80px;
+    z-index: 10;
+    /*opacity: 0; */
+}
+
+.tooltip, .tooltipDonut{
+    display: none;
+}
+
+.tooltipVSB {
+    display: block;	
+}
+
+.tooltipHStacked {
+    display: block;
+}
+
+.tooltipHBC {
+    display: block;
+}
+
+.tooltipBC {
+    display: block;
+  }
+
 /* IE issues */
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
     .kore-chat-window .kore-chat-body ul.chat-container{
