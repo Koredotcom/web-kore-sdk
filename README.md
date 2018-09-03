@@ -179,7 +179,7 @@ Integration of Kore.ai chat UI into your App
 
 ###Release History:
 
-v6.2.2[Minor] on 03-SEPTEMBER-2018:Master branch
+v6.3.0[Minor] on 03-SEPTEMBER-2018:Master branch
     Released minor release with following features:
     1.Added D3 v4 library for rendering Graphs.
     2.Minor bug fixes.
