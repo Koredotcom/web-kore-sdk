@@ -123,18 +123,18 @@ var KoreGraphAdapter = (function() {
             tooltip.style('display', 'none'); // hide tooltip for that element
         });
 
-        if($('#myPreviewModal').css('display') === 'block') {
+/*        if($('#myPreviewModal').css('display') === 'block') {
             path.on('mousemove', function(d) { // when mouse moves                  
             tooltip.style('top', (d3.event.layerY + 10) + 'px') // always 10px below the cursor
             .style('left', (d3.event.layerX + 900) + 'px'); // always 10px to the right of the mouse
             });
         }
-        else {
+        else {*/
             path.on('mousemove', function(d) { // when mouse moves                  
             tooltip.style('top', (d3.event.layerY + 10) + 'px') // always 10px below the cursor
             .style('left', (d3.event.layerX + 10) + 'px'); // always 10px to the right of the mouse
             });
-        }
+       // }
 
 
         // define legend
@@ -274,18 +274,18 @@ var KoreGraphAdapter = (function() {
             tooltip.style('display', 'none'); // hide tooltip for that element
         });
 
-        if($('#myPreviewModal').css('display') === 'block') {
+/*        if($('#myPreviewModal').css('display') === 'block') {
             g.on('mousemove', function(d) { // when mouse moves                  
             tooltip.style('top', (d3.event.layerY + 10) + 'px') // always 10px below the cursor
             .style('left', (d3.event.layerX + 900) + 'px'); // always 10px to the right of the mouse
             });
         }
-        else {
+    else {  */
             g.on('mousemove', function(d) { // when mouse moves                  
             tooltip.style('top', (d3.event.layerY + 10) + 'px') // always 10px below the cursor
             .style('left', (d3.event.layerX + 10) + 'px'); // always 10px to the right of the mouse
             });
-        }
+    //    }
 
         if(chart_type === 'donut_legend') {
             // define legend
@@ -414,7 +414,7 @@ var KoreGraphAdapter = (function() {
         })
         .attr("y", function(d) { return y(d[1]); })
         .attr("height", function(d) { return y(d[0]) - y(d[1]); })
-        .attr("width", x.bandwidth())
+        .attr("width", 0.5*x.bandwidth())
         .attr("dispVal", function(d) {
             if(d[0] === 0) {
                 return d.data.dispVal[0];
@@ -422,7 +422,7 @@ var KoreGraphAdapter = (function() {
             else {
                 return d.data.dispVal[1]
             }
-        })
+        }).attr('transform', 'translate('+0.25*x.bandwidth()+',0)')
         .on("mouseover", function() { tooltip.style("display", null); })
         .on("mouseout", function() { tooltip.style("display", "none"); })
         .on("mousemove", function(d) {
@@ -1144,7 +1144,8 @@ function horizontalGroupBarChart(config, dimens) {
               .attr("y", function(d) { return y(d.data.xAxis); })       //.attr("x", function(d) { return x(d.data.State); })
               .attr("x", function(d) { return x(d[0]); })               //.attr("y", function(d) { return y(d[1]); })   
               .attr("width", function(d) { return x(d[1]) - x(d[0]); }) //.attr("height", function(d) { return y(d[0]) - y(d[1]); })
-              .attr("height", y.bandwidth())                           //.attr("width", x.bandwidth());
+              .attr("height", 0.5*y.bandwidth())                           //.attr("width", x.bandwidth());
+              .attr('transform', 'translate(0,'+ 0.25*y.bandwidth() +')')
               .attr("dispVal", function(d) {
                 if(d[0] === 0) {
                     return d.data.dispVal[0];
@@ -1230,10 +1231,10 @@ function horizontalGroupBarChart(config, dimens) {
     }
 
     function drawD3lineChartV2(msgData, dimens, selection, scaleLegend) {
-        const margin = {top: 15, right: 120, bottom: 30, left: 30};
+        const margin = {top: 35, right: 120, bottom: 30, left: 30};
         const width = dimens.innerWidth;
         const height = dimens.innerHeight;
-       // var colorRange = ['#75b0fe', '#f78083', '#99ed9e', '#fde296', '#26344a', '#5f6bf7', '#b3bac8', '#99a1fd', '#9cebf9', '#f7c7f4'];
+        var colorRange = ['#75b0fe', '#f78083', '#99ed9e', '#fde296', '#26344a', '#5f6bf7', '#b3bac8', '#99a1fd', '#9cebf9', '#f7c7f4'];
         var z = d3.scaleOrdinal()
             .range(['#75b0fe','#f78083','#99ed9e','#fde296','#26344a','#5f6bf7','#b3bac8','#99a1fd','#9cebf9','#f7c7f4']); 
 
@@ -1242,7 +1243,7 @@ function horizontalGroupBarChart(config, dimens) {
         // Define the scales and tell D3 how to draw the line
       //  const x = d3.scaleLinear().domain().range([0, width]);     
 
-        const x = d3.scaleLinear().domain([0,3]).range([0, width]);
+        const x = d3.scaleLinear().domain([0,xAxisDisp.length-1]).range([0, width]);
         const y = d3.scaleLinear().domain([0, 60]).range([height, 0]);
         //const line = d3.line().x(d => x(d.year)).y(d => y(d.population));
         const line = d3.line().x(function(d) {
@@ -1264,7 +1265,9 @@ function horizontalGroupBarChart(config, dimens) {
 
         const yAxis = d3.axisLeft(y).tickFormat(d3.format('.2s'));
         chart.append('g').call(yAxis); 
-        chart.append('g').attr('transform', 'translate(0,' + height + ')').call(xAxis);
+        chart.append('g').attr('transform', 'translate(0,' + height + ')').call(xAxis).attr('class', 'xAxisR');
+        chart.selectAll('.xAxisR text')
+        .attr("transform", "rotate(-65) translate(-30, 0)");
           
         // Load the data and draw a chart
         let states, tipBox;
@@ -1346,10 +1349,11 @@ function horizontalGroupBarChart(config, dimens) {
                 .attr("class", "mouse-over-effects");
 
 /*            mouseG.append("path") // this is the black vertical line to follow mouse
-                .attr("class", "mouse-line")
+                .attr("class", "mouse-line"+selection.slice(10))
                 .style("stroke", "black")
                 .style("stroke-width", "1px")
-                .style("opacity", "0");*/
+                .style("opacity", "0")
+                .attr('transform', 'translate(30,35)');*/
 
             var lines = document.getElementsByClassName('lineC');
 
@@ -1359,22 +1363,31 @@ function horizontalGroupBarChart(config, dimens) {
                 .append("g")
                 .attr("class", "mouse-per-line");
 
+                mousePerLine.append("circle")
+                  .attr("r", 7)
+                  .style("stroke", function(d,i) {
+                    return colorRange[i];
+                  })
+                  .style("fill", "none")
+                  .style("stroke-width", "3px")
+                  .style("opacity", "0").attr("transform", "translate(30,35)");
+
             mousePerLine.append("text")
-                .attr("transform", "translate(10,3)");
+                .attr("transform", "translate(38,35)");
 
             mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
                 .attr('width', dimens.innerWidth) // can't catch mouse events on a g element
                 .attr('height', dimens.innerHeight)
-                .attr('transform', 'translate(30,0)')
+                .attr('transform', 'translate(30,35)')
                 .attr('fill', 'none')
                 .attr('pointer-events', 'all')
                 .on('mouseout', function() { // on mouse out hide line, circles and text
-                   // d3.select(".mouse-line")
-                   //     .style("opacity", "0");
+                   // d3.select(".mouse-line"+selection.slice(10))
+                   //      .style("opacity", "0");
                     d3.selectAll(".mouse-per-line circle")
                         .style("opacity", "0");
                     d3.selectAll(".mouse-per-line text")
-                        .style("opacity", "0");
+                        .style("opacity", "0").style('font-weight', 'bold');
                 })
                 .on('mouseover', function() { // on mouse in show line, circles and text
 
@@ -1384,8 +1397,8 @@ function horizontalGroupBarChart(config, dimens) {
                         $('.lineChartChildDiv .mouse-per-line').show();
                     }
 
-                 //   d3.select(".mouse-line")
-                   //     .style("opacity", "1");
+/*                    d3.select(".mouse-line"+selection.slice(10))
+                        .style("opacity", "1");*/
                     d3.selectAll(".mouse-per-line circle")
                         .style("opacity", "1");
                     d3.selectAll(".mouse-per-line text")
@@ -1393,7 +1406,7 @@ function horizontalGroupBarChart(config, dimens) {
                 })
                 .on('mousemove', function() { // mouse moving over canvas
                     var mouse = d3.mouse(this);
-/*                    d3.select(".mouse-line")
+/*                    d3.select(".mouse-line"+selection.slice(10))
                         .attr("d", function() {
                             var d = "M" + mouse[0] + "," + height;
                             d += " " + mouse[0] + "," + 0;
@@ -1402,7 +1415,6 @@ function horizontalGroupBarChart(config, dimens) {
 
                     d3.selectAll(".mouse-per-line")
                         .attr("transform", function(d, i) {
-                            console.log(width / mouse[0])
                             var xDate = x.invert(mouse[0]),
                                 bisect = d3.bisector(function(d) {
                                     return d.date;
@@ -1410,7 +1422,7 @@ function horizontalGroupBarChart(config, dimens) {
                             idx = bisect(d.values, xDate);
 
                             var beginning = 0,
-                                end = lines[i].getTotalLength(),
+                                end = lines[i].getTotalLength() + 2,
                                 target = null;
 
                             while (true) {
@@ -1426,12 +1438,19 @@ function horizontalGroupBarChart(config, dimens) {
 
                             d3.select(this).select('text')
                                 .text(function(d, i) {
-                                    return y.invert(pos.y).toFixed(2) + objDisp[this.__data__.id];
-                                })
+                                    if(objDisp[this.__data__.id] !== undefined) {
+                                        return y.invert(pos.y).toFixed(2) + objDisp[this.__data__.id];
+                                    }
+                                    else {
+                                        return y.invert(pos.y).toFixed(2);
+                                    }
+                                });
 
                             return "translate(" + mouse[0] + "," + pos.y + ")";
                         });
                 });
+
+
 
             function type(d, _, columns) {
                 d.date = parseTime(d.date);
