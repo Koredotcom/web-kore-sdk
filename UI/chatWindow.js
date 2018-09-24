@@ -2464,7 +2464,7 @@ function koreBotChat() {
                                 {{/if}} \
 							{{/each}} \
 							</li> \
-							{{if msgData.message[0].component.payload.elements.length > 3 && msgData.message[0].component.payload.buttons}}\
+							{{if msgData.message[0].component.AlwaysShowGlobalButtons || (msgData.message[0].component.payload.elements.length > 3 && msgData.message[0].component.payload.buttons)}}\
 							<li class="viewMoreList"> \
 								<span class="viewMore" url="{{if msgData.message[0].component.payload.buttons[0].url}}${msgData.message[0].component.payload.buttons[0].url}{{/if}}" type="${msgData.message[0].component.payload.buttons[0].type}" value="{{if msgData.message[0].component.payload.buttons[0].payload}}${msgData.message[0].component.payload.buttons[0].payload}{{else}}${msgData.message[0].component.payload.buttons[0].title}{{/if}}">${msgData.message[0].component.payload.buttons[0].title}</span> \
 							</li> \
