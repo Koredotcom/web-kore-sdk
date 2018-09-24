@@ -179,10 +179,11 @@ Integration of Kore.ai chat UI into your App
 
 ###Release History:
 
-v6.3.0[Minor] on 03-SEPTEMBER-2018:Master branch
+v6.2.3[Minor] on 03-SEPTEMBER-2018:Master branch
     Released minor release with following features:
-    1.Added D3 v4 library for rendering Graphs.
-    2.Minor bug fixes.
+    1. Added D3 v4 library for rendering Graphs.
+    2. Removed loader.js library from UI/lib folder.
+    3. Minor bug fixes.
 
     Note: Rendering Graphs using google charts, should have loader.js file. 
 
