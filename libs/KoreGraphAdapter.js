@@ -1231,9 +1231,9 @@ function horizontalGroupBarChart(config, dimens) {
     }
 
     function drawD3lineChartV2(msgData, dimens, selection, scaleLegend) {
-        const margin = {top: 35, right: 120, bottom: 30, left: 30};
-        const width = dimens.innerWidth;
-        const height = dimens.innerHeight;
+        var margin = {top: 35, right: 120, bottom: 30, left: 30};
+        var width = dimens.innerWidth;
+        var height = dimens.innerHeight;
         var colorRange = ['#75b0fe', '#f78083', '#99ed9e', '#fde296', '#26344a', '#5f6bf7', '#b3bac8', '#99a1fd', '#9cebf9', '#f7c7f4'];
         var z = d3.scaleOrdinal()
             .range(['#75b0fe','#f78083','#99ed9e','#fde296','#26344a','#5f6bf7','#b3bac8','#99a1fd','#9cebf9','#f7c7f4']); 
@@ -1241,12 +1241,12 @@ function horizontalGroupBarChart(config, dimens) {
         var xAxisDisp = msgData.message[0].component.payload.X_axis;
 
         // Define the scales and tell D3 how to draw the line
-      //  const x = d3.scaleLinear().domain().range([0, width]);     
+      //  var x = d3.scaleLinear().domain().range([0, width]);     
 
-        const x = d3.scaleLinear().domain([0,xAxisDisp.length-1]).range([0, width]);
-        const y = d3.scaleLinear().domain([0, 60]).range([height, 0]);
-        //const line = d3.line().x(d => x(d.year)).y(d => y(d.population));
-        const line = d3.line().x(function(d) {
+        var x = d3.scaleLinear().domain([0,xAxisDisp.length-1]).range([0, width]);
+        var y = d3.scaleLinear().domain([0, 60]).range([height, 0]);
+        //var line = d3.line().x(d => x(d.year)).y(d => y(d.population));
+        var line = d3.line().x(function(d) {
             return x(d.ind);
         }).y(function(d) {
             return y(d.value);
@@ -1256,14 +1256,14 @@ function horizontalGroupBarChart(config, dimens) {
         .attr("width", dimens.outerWidth)
         .attr("height", dimens.outerHeight);
 
-        const chart = svg.append('g')
+        var chart = svg.append('g')
           .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
         // Add the axes and a title
 
-        const xAxis = d3.axisBottom(x).tickFormat(function(d){return xAxisDisp[d]});
+        var xAxis = d3.axisBottom(x).tickFormat(function(d){return xAxisDisp[d]});
 
-        const yAxis = d3.axisLeft(y).tickFormat(d3.format('.2s'));
+        var yAxis = d3.axisLeft(y).tickFormat(d3.format('.2s'));
         chart.append('g').call(yAxis); 
         chart.append('g').attr('transform', 'translate(0,' + height + ')').call(xAxis).attr('class', 'xAxisR');
         chart.selectAll('.xAxisR text')
