@@ -1270,7 +1270,7 @@ function horizontalGroupBarChart(config, dimens) {
         .attr("transform", "rotate(-65) translate(-30, 0)");
           
         // Load the data and draw a chart
-        let states, tipBox;
+        var states, tipBox;
         var cols = [];
         var dataset = [];
         var dataMap = [];
