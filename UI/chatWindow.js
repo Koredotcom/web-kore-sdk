@@ -185,7 +185,8 @@ function koreBotChat() {
             regEx.HASHTAG = /(^|\s|\\n)#(\S+)/g;
             regEx.NEWLINE = /\n/g;
             var _regExForLink = /((?:http\:\/\/|https\:\/\/|www\.)+\S*\.(?:(?:\.\S)*[^\,\s\.])*\/?)/gi;
-            var _regExForMarkdownLink = /\[([^\]]+)\](|\s)+\(([^\)])+\)/g;
+           // var _regExForMarkdownLink = /\[([^\]]+)\](|\s)+\(([^\)])+\)/g;
+           var _regExForMarkdownLink = /\[([^\]]+)\](|\s)\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\)/g; 
             var str = val || '';
             var mmntns = {};
             mmntns.sd = new RegExp(/^(d{1})[^d]|[^d](d{1})[^d]/g);
@@ -425,12 +426,14 @@ function koreBotChat() {
                     }
                 }
                 // Matches link markup [test](http://google.com/)
-                var _matchLink = txtArr[i].match(/\[([^\]]+)\](|\s)+\(([^\)])+\)/g);
+                ///var _matchLink = txtArr[i].match(/\[([^\]]+)\](|\s)+\(([^\)])+\)/g);
+                var _matchLink = txtArr[i].match(/\[([^\]]+)\](|\s)\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\)/g);
                 if (_matchLink && _matchLink.length > 0) {
                     for (j = 0; j < _matchLink.length; j++) {
                         var _linkTxt = _matchLink[j].substring(1, _matchLink[j].indexOf(']'));
                         var remainingString = _matchLink[j].substring(_matchLink[j].indexOf(']') + 1).trim();
                         var _linkLink = remainingString.substring(1, remainingString.indexOf(')'));
+                        _linkLink=_linkLink.replace(/\\n/g,"%0A");
                         _linkLink = '<span class="isLink"><a href="' + _linkLink + '" target="_blank">' + helpers.checkMarkdowns(_linkTxt) + '</a></span>';
                         txtArr[i] = txtArr[i].replace(_matchLink[j], _linkLink);
                     }
