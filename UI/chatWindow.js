@@ -2530,6 +2530,7 @@ function koreBotChat() {
         sel = window.getSelection();
         if (sel.rangeCount > 0) {
             range = sel.getRangeAt(0);
+            range.deleteContents();
         }
         prevRange = prevRange ? prevRange : range;
         if (prevRange) {
