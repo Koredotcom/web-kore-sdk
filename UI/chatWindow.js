@@ -942,7 +942,8 @@ function koreBotChat() {
             }
             if (type == "postback" || type == "text") {
                 $('.chatInputBox').text($(this).attr('actual-value') || $(this).attr('value'));
-                var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
+                //var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
+                var _innerText = ($(this)[0] && $(this)[0].innerText) ? $(this)[0].innerText.trim():"" || ($(this) && $(this).attr('data-value'))?$(this).attr('data-value').trim():"";
                 me.sendMessage($('.chatInputBox'),_innerText);
             } else if (type == "url" || type == "web_url") {
                 var a_link = $(this).attr('url');
