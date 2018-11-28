@@ -1769,7 +1769,7 @@ function koreBotChat() {
                     }
                     else if(msgData.message[0].component.payload.direction === 'vertical' && msgData.message[0].component.payload.stacked ) {
                         setTimeout(function() {
-                            dimens.outerWidth = 400;
+                            dimens.outerWidth = 350;
                             dimens.innerWidth = 270;
                             var _barchartObj = {'id': 'barchart'+msgData.messageId, 'data': msgData, 'type': 'stackedBarchart'};
                             available_charts.push(_barchartObj);
@@ -2699,12 +2699,21 @@ function koreBotChat() {
                 $('.historyLoadingDiv').addClass('showMsg');
                 res[1].messages.forEach(function(msgData,index){
                     setTimeout(function(){
-                        try {
-                            msgData.message[0].cInfo.body = JSON.parse(msgData.message[0].cInfo.body);
-                            msgData.message[0].component = msgData.message[0].cInfo.body;
-                            me.renderMessage(msgData);
-                        } catch (e) {
-                            me.renderMessage(msgData);
+                        var _ignoreMsgs = messagesQueue.filter(function (queMsg) {
+                            return queMsg.messageId === msgData.messageId;
+                        });
+                        //dont show the the history message if we already have same message came from socket connect  
+                        if (!_ignoreMsgs.length) {
+                            try {
+                                msgData.message[0].cInfo.body = JSON.parse(msgData.message[0].cInfo.body);
+                                if (msgData.message[0].cInfo.body && msgData.message[0].cInfo.body.text) {
+                                    msgData.message[0].cInfo.body = msgData.message[0].cInfo.body.text;
+                                }
+                                msgData.message[0].component = msgData.message[0].cInfo.body;
+                                me.renderMessage(msgData);
+                            } catch (e) {
+                                me.renderMessage(msgData);
+                            }
                         }
                         if(index === res[1].messages.length-1) {
                             setTimeout(function(){
