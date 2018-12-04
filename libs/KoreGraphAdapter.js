@@ -1368,7 +1368,7 @@ function horizontalGroupBarChart(config, dimens) {
                   .style("opacity", "0").attr("transform", "translate(30,35)");
 
             mousePerLine.append("text")
-                .attr("transform", "translate(0,35)");
+                .attr("transform", "translate(0,20)");
 
             mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
                 .attr('width', dimens.innerWidth+5) // can't catch mouse events on a g element
@@ -1382,7 +1382,7 @@ function horizontalGroupBarChart(config, dimens) {
                     d3.selectAll(".mouse-per-line circle")
                         .style("opacity", "0");
                     d3.selectAll(".mouse-per-line text")
-                        .style("opacity", "0").style('font-weight', 'bold');
+                        .style("opacity", "0"); //.style('font-weight', 'bold');
                 })
                 .on('mouseover', function() { // on mouse in show line, circles and text
 
