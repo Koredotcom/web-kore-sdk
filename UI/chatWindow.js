@@ -1893,7 +1893,7 @@ function koreBotChat() {
                 else if (graphLibGlob === "d3") {
                     setTimeout(function() {
                         var dimens = {};
-                        dimens.outerWidth = 320;
+                        dimens.outerWidth = 350;
                         dimens.outerHeight = 300;
                         dimens.innerWidth = 230;
                         dimens.innerHeight = 250;
@@ -3938,7 +3938,7 @@ function koreBotChat() {
                 }
                 else if(data.data.message[0].component.payload.template_type === "linechart") {
                     var dimens = {};
-                    dimens.outerWidth = 600;
+                    dimens.outerWidth = 650;
                     dimens.outerHeight = 400;
                     dimens.innerWidth = 480;
                     dimens.innerHeight = 350;

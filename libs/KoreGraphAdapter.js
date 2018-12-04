@@ -1239,13 +1239,11 @@ function horizontalGroupBarChart(config, dimens) {
             .range(['#75b0fe','#f78083','#99ed9e','#fde296','#26344a','#5f6bf7','#b3bac8','#99a1fd','#9cebf9','#f7c7f4']); 
 
         var xAxisDisp = msgData.message[0].component.payload.X_axis;
-
-        // Define the scales and tell D3 how to draw the line
-      //  var x = d3.scaleLinear().domain().range([0, width]);     
+        var valsTerm = msgData.message[0].component.payload.elements;
+        // Define the scales and tell D3 how to draw the line   
 
         var x = d3.scaleLinear().domain([0,xAxisDisp.length-1]).range([0, width]);
         var y = d3.scaleLinear().domain([0, 60]).range([height, 0]);
-        //var line = d3.line().x(d => x(d.year)).y(d => y(d.population));
         var line = d3.line().x(function(d) {
             return x(d.ind);
         }).y(function(d) {
@@ -1262,7 +1260,6 @@ function horizontalGroupBarChart(config, dimens) {
         // Add the axes and a title
 
         var xAxis = d3.axisBottom(x).tickFormat(function(d){return xAxisDisp[d]});
-
         var yAxis = d3.axisLeft(y).tickFormat(d3.format('.2s'));
         chart.append('g').call(yAxis); 
         chart.append('g').attr('transform', 'translate(0,' + height + ')').call(xAxis).attr('class', 'xAxisR');
@@ -1317,12 +1314,10 @@ function horizontalGroupBarChart(config, dimens) {
             .data(states).enter()
             .append('path')
             .attr('fill', 'none')
-            //.attr('stroke', d => d.color)
             .attr('stroke', function(d){
                 return z(d.name);
             })
             .attr('stroke-width', 2)
-            //.datum(d => d.valueSet)
             .datum(function(d){
                 return d.valueSet;
             })
@@ -1373,10 +1368,10 @@ function horizontalGroupBarChart(config, dimens) {
                   .style("opacity", "0").attr("transform", "translate(30,35)");
 
             mousePerLine.append("text")
-                .attr("transform", "translate(38,35)");
+                .attr("transform", "translate(0,35)");
 
             mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
-                .attr('width', dimens.innerWidth) // can't catch mouse events on a g element
+                .attr('width', dimens.innerWidth+5) // can't catch mouse events on a g element
                 .attr('height', dimens.innerHeight)
                 .attr('transform', 'translate(30,35)')
                 .attr('fill', 'none')
@@ -1438,10 +1433,26 @@ function horizontalGroupBarChart(config, dimens) {
 
                             d3.select(this).select('text')
                                 .text(function(d, i) {
+                                    var tempList = [];
+                                    for(var i=0; i < valsTerm.length; i++) {
+                                        if(valsTerm[i].title === d.id) {
+                                            for(var j=0; j< d.values.length; j++) {
+                                                tempList[j] = d.values[j].temperature;
+                                            }
+                                        }
+                                    }
                                     if(objDisp[this.__data__.id] !== undefined) {
+                                        var tCompare = y.invert(pos.y).toFixed(2); //+ objDisp[this.__data__.id];
+                                        if(tempList.indexOf(Math.floor(tCompare)) !== -1) {
+                                            return y.invert(pos.y).toFixed(2) + "\n" + xAxisDisp[tempList.indexOf(Math.floor(tCompare))];
+                                        }
                                         return y.invert(pos.y).toFixed(2) + objDisp[this.__data__.id];
                                     }
                                     else {
+                                        var tCompare = y.invert(pos.y).toFixed(2); //+ objDisp[this.__data__.id];
+                                        if(tempList.indexOf(Math.floor(tCompare)) !== -1) {
+                                            return y.invert(pos.y).toFixed(2) + "\n" +  xAxisDisp[tempList.indexOf(Math.floor(tCompare))];
+                                        }
                                         return y.invert(pos.y).toFixed(2);
                                     }
                                 });
