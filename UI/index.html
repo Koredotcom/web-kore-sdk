@@ -6,9 +6,7 @@
 		<script src="libs/jquery.tmpl.min.js" type="text/javascript"></script>
 		<script src="libs/jquery-ui.min.js" type="text/javascript"></script>
 		<link href="libs/jquery-ui.min.css" rel="stylesheet"></link>
-
 		<script src="../libs/lodash.min.js"></script>
-		
 		<script src="../libs/d3.v4.min.js"></script>
 		<script src="../libs/KoreGraphAdapter.js" type="text/javascript"></script>
 		<script src='../libs/anonymousassertion.js'></script>
@@ -31,13 +29,13 @@
 				function assertion(options, callback) {
 					var jsonData = {
 						"clientId": botOptions.clientId,
-						"clientSecret": "",
+						"clientSecret": botOptions.clientSecret,
 						"identity": botOptions.userIdentity,
 						"aud": "",
 						"isAnonymous": false
 					};
 					$.ajax({
-						url: botOptions.koreAPIUrl + "users/sts",
+						url: botOptions.JWTUrl,
 						type: 'post',
 						data: jsonData,
 						dataType: 'json',
@@ -65,13 +63,16 @@
 				botOptions.koreSpeechAPIUrl = "https://speech.kore.ai/";
 				//botOptions.bearer = "bearer xyz-------------------";
 				botOptions.ttsSocketUrl = 'wss://speech.kore.ai/tts/ws';
-				botOptions.userIdentity = 'userIdentity';// Provide users email id here
 				botOptions.recorderWorkerPath = '../libs/recorderWorker.js';
 				botOptions.assertionFn = assertion;
 				botOptions.koreAnonymousFn = koreAnonymousFn;
-				botOptions.clientId   = "your clientId"; // secure client-id
-				botOptions.botInfo = {name:"your bot name","_id":"bot_id"}; // bot name is case sensitive
 				
+				botOptions.JWTUrl ="PLEASE_ENTER_JWTURL_HERE";
+				botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
+				botOptions.botInfo = {name:"PLEASE_ENTER_BOT_NAME","_id":"PLEASE_ENTER_BOT_ID"}; // bot name is case sensitive
+				botOptions.clientId   = "PLEASE_ENTER_CLIENT_ID"; 
+				botOptions.clientSecret="PLEASE_ENTER_CLIENT_SECRET";
+
 				var chatConfig={
 					botOptions:botOptions,
 					allowIframe: false,
