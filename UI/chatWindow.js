@@ -169,6 +169,7 @@ function koreBotChat() {
             return d.toDateString() + " at " + helpers.formatAMPM(d);
         },
         'convertMDtoHTML': function (val, responseType) {
+            var hyperLinksMap={};
             var mdre = {};
             //mdre.date = new RegExp(/\\d\(\s*(.{10})\s*\)/g);
             mdre.date = new RegExp(/\\d\(\s*(.{10})\s*(?:,\s*["'](.+?)["']\s*)?\)/g);
@@ -186,7 +187,7 @@ function koreBotChat() {
             regEx.NEWLINE = /\n/g;
             var _regExForLink = /((?:http\:\/\/|https\:\/\/|www\.)+\S*\.(?:(?:\.\S)*[^\,\s\.])*\/?)/gi;
            // var _regExForMarkdownLink = /\[([^\]]+)\](|\s)+\(([^\)])+\)/g;
-           var _regExForMarkdownLink = /\[([^\]]+)\](|\s)\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\)/g; 
+           var _regExForMarkdownLink = /\[([^\]]+)\](|\s)\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\)?/g; 
             var str = val || '';
             var mmntns = {};
             mmntns.sd = new RegExp(/^(d{1})[^d]|[^d](d{1})[^d]/g);
@@ -350,6 +351,20 @@ function koreBotChat() {
                     for (var x = 0; x < linkArray.length; x++) {
                         var _newLA = document.createElement('div');
                         _newLA.innerHTML = linkArray[x];
+                        
+                        //for mailto: links, new line character need to be repaced with %0A 
+                        if(_detectedLink.indexOf("href='mailto:")>-1||_detectedLink.indexOf('href="mailto:')>-1){
+                            _detectedLink=_detectedLink.split('\n').join("%0A")
+              
+                        }
+                        var _randomKey="korerandom://"+x;
+                        _newLA.innerHTML = _detectedLink;
+                        
+                        var _aEle=_newLA.getElementsByTagName('a'); 
+                        if(_aEle && _aEle[0] && _aEle[0].href){
+                            hyperLinksMap[_randomKey]=_aEle[0].href;
+                            _aEle[0].href=_randomKey;
+                        }
                         $(_newLA).find('a').attr('target', '_blank');
                         str = str.replace(linkArray[x], _newLA.innerHTML);
                     }
@@ -358,6 +373,12 @@ function koreBotChat() {
                 }
             }
             str = helpers.checkMarkdowns(str);
+            var hrefRefs=Object.keys(hyperLinksMap);
+            if(hrefRefs && hrefRefs.length){
+                hrefRefs.forEach(function(hrefRef){
+                  str=str.replace(hrefRef,hyperLinksMap[hrefRef])
+                });
+            }
             if (responseType === 'user') {
                 str = str.replace(/abc-error=/gi, 'onerror=');
             }
@@ -427,7 +448,7 @@ function koreBotChat() {
                 }
                 // Matches link markup [test](http://google.com/)
                 ///var _matchLink = txtArr[i].match(/\[([^\]]+)\](|\s)+\(([^\)])+\)/g);
-                var _matchLink = txtArr[i].match(/\[([^\]]+)\](|\s)\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\)/g);
+                var _matchLink = txtArr[i].match(/\[([^\]]+)\](|\s)\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\)?/g);
                 if (_matchLink && _matchLink.length > 0) {
                     for (j = 0; j < _matchLink.length; j++) {
                         var _linkTxt = _matchLink[j].substring(1, _matchLink[j].indexOf(']'));
