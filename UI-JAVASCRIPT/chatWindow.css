@@ -230,6 +230,9 @@
     font-family: "Lato", sans-serif;
     font-size: 14px;
 }
+.lineChartChildDiv .mouse-over-effects .mouse-per-line text{
+    font-size: 12px;
+}
 .kore-chat-window .kore-chat-body ul.chat-container{
     position: absolute;
     bottom: 0;

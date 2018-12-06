@@ -179,6 +179,13 @@ Integration of Kore.ai chat UI into your App
 
 ###Release History:
 
+v6.3.0[Minor] on 24-November-2018:Master branch
+    Released minior release with following bug fixes
+    1. Fixed duplicate welcome message
+    2. Fixed copy & paste issue in the compose bar
+    3. Fixed D3 graph minor issues
+    4. Handled null exception in the quick replies 
+
 v6.2.3[Minor] on 03-SEPTEMBER-2018:Master branch
     Released minor release with following features:
     1. Added D3 v4 library for rendering Graphs.
