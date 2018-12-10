@@ -469,6 +469,31 @@ function koreBotChat() {
                         txtArr[i] = txtArr[i].replace(_matchAstrik[j], _boldTxt);
                     }
                 }
+                //For backward compatability who used ~ for Italics
+                //Matches italic markup ~test~ doesnot match ~ test ~, ~test ~, ~ test~. If all these are required then replace \S with \s
+                var _matchItalic = txtArr[i].match(/\~\S([^*]*?)\S\~/g);
+                if (_matchItalic && _matchItalic.length > 0) {
+                    for (j = 0; j < _matchItalic.length; j++) {
+                        var _italicTxt = _matchItalic[j];
+                        if (txtArr[i].indexOf(_italicTxt) === 0 || txtArr[i][txtArr[i].indexOf(_italicTxt) - 1] === ' ' || txtArr[i].indexOf(_italicTxt) !== -1) {
+                            _italicTxt = _italicTxt.substring(1, _italicTxt.length - 1);
+                            _italicTxt = '<i class="markdownItalic">' + _italicTxt + '</i>';
+                            txtArr[i] = txtArr[i].replace(_matchItalic[j], _italicTxt);
+                        }
+                    }
+                }                                
+                // Matches italic markup _test_ doesnot match _ test _, _test _, _ test_. If all these are required then replace \S with \s
+                var _matchItalic = txtArr[i].match(/\_\S([^*]*?)\S\_/g);
+                if (_matchItalic && _matchItalic.length > 0) {
+                    for (j = 0; j < _matchItalic.length; j++) {
+                        var _italicTxt = _matchItalic[j];
+                        if (txtArr[i].indexOf(_italicTxt) === 0 || txtArr[i][txtArr[i].indexOf(_italicTxt) - 1] === ' ' || txtArr[i].indexOf(_italicTxt) !== -1) {
+                            _italicTxt = _italicTxt.substring(1, _italicTxt.length - 1);
+                            _italicTxt = '<i class="markdownItalic">' + _italicTxt + '</i>';
+                            txtArr[i] = txtArr[i].replace(_matchItalic[j], _italicTxt);
+                        }
+                    }
+                }
                 // Matches bold markup ~test~ doesnot match ~ test ~, ~test ~, ~ test~. If all these are required then replace \S with \s
                 var _matchItalic = txtArr[i].match(/\~\S([^*]*?)\S\~/g);
                 if (_matchItalic && _matchItalic.length > 0) {
