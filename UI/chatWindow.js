@@ -1894,7 +1894,7 @@ function koreBotChat() {
                     setTimeout(function() {
                         var dimens = {};
                         dimens.outerWidth = 350;
-                        dimens.outerHeight = 300;
+                        dimens.outerHeight = 350;
                         dimens.innerWidth = 230;
                         dimens.innerHeight = 250;
                         dimens.legendRectSize = 15;
@@ -3939,7 +3939,7 @@ function koreBotChat() {
                 else if(data.data.message[0].component.payload.template_type === "linechart") {
                     var dimens = {};
                     dimens.outerWidth = 650;
-                    dimens.outerHeight = 400;
+                    dimens.outerHeight = 450;
                     dimens.innerWidth = 480;
                     dimens.innerHeight = 350;
                     dimens.legendRectSize = 15;
