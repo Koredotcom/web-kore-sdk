@@ -399,6 +399,8 @@ var KoreGraphAdapter = (function() {
     })]).nice();
       z.domain(keys);
 
+    coordsVal = [];
+
       g.append("g")
         .selectAll("g")
         .data(d3.stack().keys(keys)(data))
@@ -407,7 +409,17 @@ var KoreGraphAdapter = (function() {
             return z(d.key); 
         })
         .selectAll("rect")
-        .data(function(d) { return d; })
+        .data(function(d, i) {
+            coordsVal[i] = [];
+            for(var j=0; j < d.length; j++) {
+                coordsVal[i][j] = {
+                    'x':    d[j][0],
+                    'y':    d[j][1],
+                    'val':  d[j].data.dispVal[i]
+                };
+            }
+            return d; 
+         })
         .enter().append("rect")
           .attr("x", function(d) { 
             return x(d.data.xAxis); 
@@ -416,11 +428,12 @@ var KoreGraphAdapter = (function() {
         .attr("height", function(d) { return y(d[0]) - y(d[1]); })
         .attr("width", 0.5*x.bandwidth())
         .attr("dispVal", function(d) {
-            if(d[0] === 0) {
-                return d.data.dispVal[0];
-            }
-            else {
-                return d.data.dispVal[1]
+            for(var j = 0; j<coordsVal.length; j++) {
+                for(var k=0; k<coordsVal[j].length; k++) {
+                    if(coordsVal[j][k].x === d[0] && coordsVal[j][k].y === d[1]) {
+                        return coordsVal[j][k].val;
+                    }
+                }
             }
         }).attr('transform', 'translate('+0.25*x.bandwidth()+',0)')
         .on("mouseover", function() { tooltip.style("display", null); })
@@ -1131,6 +1144,8 @@ function horizontalGroupBarChart(config, dimens) {
           })]).nice();  // y.domain...
           z.domain(keys);
 
+          var coordsVal = [];
+
           g.append("g")
             .selectAll("g")
             .data(d3.stack().keys(keys)(data))
@@ -1139,19 +1154,36 @@ function horizontalGroupBarChart(config, dimens) {
                 return z(d.key); 
             })
             .selectAll("rect")
-            .data(function(d) { return d; })
+            .data(function(d,i) {
+                coordsVal[i] = [];
+                for(var j=0; j < d.length; j++) {
+                    coordsVal[i][j] = {
+                        'x':    d[j][0],
+                        'y':    d[j][1],
+                        'val':  d[j].data.dispVal[i]
+                    };
+                }
+             return d; 
+         })
             .enter().append("rect")
-              .attr("y", function(d) { return y(d.data.xAxis); })       //.attr("x", function(d) { return x(d.data.State); })
-              .attr("x", function(d) { return x(d[0]); })               //.attr("y", function(d) { return y(d[1]); })   
-              .attr("width", function(d) { return x(d[1]) - x(d[0]); }) //.attr("height", function(d) { return y(d[0]) - y(d[1]); })
+              .attr("y", function(d) { 
+              return y(d.data.xAxis); 
+              })       //.attr("x", function(d) { return x(d.data.State); })
+              .attr("x", function(d) { 
+              return x(d[0]); 
+              })               //.attr("y", function(d) { return y(d[1]); })   
+              .attr("width", function(d) { 
+              return x(d[1]) - x(d[0]); 
+              }) //.attr("height", function(d) { return y(d[0]) - y(d[1]); })
               .attr("height", 0.5*y.bandwidth())                           //.attr("width", x.bandwidth());
               .attr('transform', 'translate(0,'+ 0.25*y.bandwidth() +')')
               .attr("dispVal", function(d) {
-                if(d[0] === 0) {
-                    return d.data.dispVal[0];
-                }
-                else {
-                    return d.data.dispVal[1]
+                for(var j = 0; j<coordsVal.length; j++) {
+                    for(var k=0; k<coordsVal[j].length; k++) {
+                        if(coordsVal[j][k].x === d[0] && coordsVal[j][k].y === d[1]) {
+                            return coordsVal[j][k].val;
+                        }
+                    }
                 }
               })
               .on("mouseover", function() { tooltip.style("display", null); })
@@ -1368,7 +1400,19 @@ function horizontalGroupBarChart(config, dimens) {
                   .style("opacity", "0").attr("transform", "translate(30,35)");
 
             mousePerLine.append("text")
-                .attr("transform", "translate(0,20)");
+                .attr("transform", function(d, i){
+                    if(i==0) {
+                        return 'translate(40,40)';
+                    }
+                    else if(i==1) {
+                        return 'translate(20,10)';
+                    }
+                    else {
+                        return 'translate(0,40)';
+                    }
+                });
+
+                    //"translate(0,20)");
 
             mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
                 .attr('width', dimens.innerWidth+5) // can't catch mouse events on a g element
@@ -1395,7 +1439,7 @@ function horizontalGroupBarChart(config, dimens) {
 /*                    d3.select(".mouse-line"+selection.slice(10))
                         .style("opacity", "1");*/
                     d3.selectAll(".mouse-per-line circle")
-                        .style("opacity", "1");
+                        .style("opacity", "0.5");
                     d3.selectAll(".mouse-per-line text")
                         .style("opacity", "1");
                 })
@@ -1434,10 +1478,10 @@ function horizontalGroupBarChart(config, dimens) {
                             d3.select(this).select('text')
                                 .text(function(d, i) {
                                     var tempList = [];
-                                    for(var i=0; i < valsTerm.length; i++) {
-                                        if(valsTerm[i].title === d.id) {
-                                            for(var j=0; j< d.values.length; j++) {
-                                                tempList[j] = d.values[j].temperature;
+                                    for(var j=0; j < valsTerm.length; j++) {
+                                        if(valsTerm[j].title === d.id) {
+                                            for(var k=0; k< d.values.length; k++) {
+                                                tempList[k] = d.values[k].temperature;
                                             }
                                         }
                                     }
@@ -1456,7 +1500,6 @@ function horizontalGroupBarChart(config, dimens) {
                                         return y.invert(pos.y).toFixed(2);
                                     }
                                 });
-
                             return "translate(" + mouse[0] + "," + pos.y + ")";
                         });
                 });

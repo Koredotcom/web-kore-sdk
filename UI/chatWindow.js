@@ -1846,7 +1846,7 @@ function koreBotChat() {
                 setTimeout(function(){
                     $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
                     handleChartOnclick();
-                },200);
+                },300);
             }
             else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "linechart") {
                 messageHtml = $(me.getChatTemplate("linechartTemplate")).tmpl({
@@ -1951,10 +1951,10 @@ function koreBotChat() {
                         KoreGraphAdapter.drawD3lineChartV2(msgData, dimens, '#linechart'+msgData.messageId, 12);
                         //window.linechartCount = window.linechartCount + 1;
                     }, 250);
-                    setTimeout(function(){
+/*                    setTimeout(function(){
                         $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
                         handleChartOnClick();
-                    },300);
+                    },300);*/
 
                 }
                 setTimeout(function(){
