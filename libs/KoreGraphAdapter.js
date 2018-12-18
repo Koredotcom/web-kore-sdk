@@ -1520,7 +1520,13 @@ function horizontalGroupBarChart(config, dimens) {
             .data(keys.slice().reverse())
             .enter().append("g")
             //.attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-             .attr("transform", function(d, i) { return "translate(80," + (150 + i * 20) + ")"; });
+             .attr("transform", function(d, i) { 
+                if(dimens.innerWidth === 230) {
+                    return "translate(100," + (250 + i * 20) + ")"; 
+                } else {
+                    return "translate(100," + (330 + i * 20) + ")"; 
+                }
+            });
 
           legend.append("rect")
               .attr("x", width - 19)

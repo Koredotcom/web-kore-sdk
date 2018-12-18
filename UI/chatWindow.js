@@ -1939,7 +1939,7 @@ function koreBotChat() {
                 else if (graphLibGlob === "d3") {
                     setTimeout(function() {
                         var dimens = {};
-                        dimens.outerWidth = 350;
+                        dimens.outerWidth = 380;
                         dimens.outerHeight = 350;
                         dimens.innerWidth = 230;
                         dimens.innerHeight = 250;
