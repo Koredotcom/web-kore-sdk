@@ -1474,7 +1474,7 @@ function horizontalGroupBarChart(config, dimens) {
                                 else if (pos.x < mouse[0]) beginning = target;
                                 else break; //position found
                             }
-
+                            xtempLC = x;
                             d3.select(this).select('text')
                                 .text(function(d, i) {
                                     var tempList = [];
@@ -1487,15 +1487,15 @@ function horizontalGroupBarChart(config, dimens) {
                                     }
                                     if(objDisp[this.__data__.id] !== undefined) {
                                         var tCompare = y.invert(pos.y).toFixed(2); //+ objDisp[this.__data__.id];
-                                        if(tempList.indexOf(Math.floor(tCompare)) !== -1) {
-                                            return y.invert(pos.y).toFixed(2) + "\n" + xAxisDisp[tempList.indexOf(Math.floor(tCompare))];
+                                        if(tempList.indexOf(Math.round(tCompare)) !== -1 && tempList.indexOf(Math.round(tCompare)) === Math.round(xtempLC.invert(pos.x))) {
+                                            return y.invert(pos.y).toFixed(2) + "\n" + xAxisDisp[Math.round(xtempLC.invert(pos.x))];
                                         }
                                         return y.invert(pos.y).toFixed(2) + objDisp[this.__data__.id];
                                     }
                                     else {
                                         var tCompare = y.invert(pos.y).toFixed(2); //+ objDisp[this.__data__.id];
-                                        if(tempList.indexOf(Math.floor(tCompare)) !== -1) {
-                                            return y.invert(pos.y).toFixed(2) + "\n" +  xAxisDisp[tempList.indexOf(Math.floor(tCompare))];
+                                        if(tempList.indexOf(Math.round(tCompare)) !== -1 && tempList.indexOf(Math.round(tCompare)) === Math.round(xtempLC.invert(pos.x))) {
+                                            return y.invert(pos.y).toFixed(2) + "\n" +  xAxisDisp[Math.round(xtempLC.invert(pos.x))];
                                         }
                                         return y.invert(pos.y).toFixed(2);
                                     }
