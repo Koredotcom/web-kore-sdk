@@ -123,6 +123,11 @@ function koreBotChat() {
         });
     };
 
+    String.prototype.replaceAll = function (search, replacement) {
+        var target = this;
+        return target.replace(new RegExp(search, 'g'), replacement);
+    };
+
     function xssAttack(txtStr) {
         //   if (compObj && compObj[0] && compObj[0].componentType === "text") {
 
@@ -318,7 +323,12 @@ function koreBotChat() {
                 if (dummyString.indexOf(match) !== -1) {
                     var _link = p1.indexOf('http') < 0 ? 'http://' + match : match, _target;
                     //_link = encodeURIComponent(_link);
-                    _target = "target='_blank'";
+                    _target = "target='underscoreblank'";
+                    if (hyperLinksMap) {
+                        var _randomKey = "korerandom://" + Object.keys(hyperLinksMap).length;
+                        hyperLinksMap[_randomKey] = _link;
+                        _link = _randomKey;
+                    }
                     return "<span class='isLink'><a " + _target + " href=\"" + _link + "\">" + match + "</a></span>";
                 } else {
                     return match;
@@ -357,7 +367,7 @@ function koreBotChat() {
                             _detectedLink=_detectedLink.split('\n').join("%0A")
               
                         }
-                        var _randomKey="korerandom://"+x;
+                        var _randomKey="korerandom://"+Object.keys(hyperLinksMap).length;
                         _newLA.innerHTML = _detectedLink;
                         
                         var _aEle=_newLA.getElementsByTagName('a'); 
@@ -365,26 +375,28 @@ function koreBotChat() {
                             hyperLinksMap[_randomKey]=_aEle[0].href;
                             _aEle[0].href=_randomKey;
                         }
-                        $(_newLA).find('a').attr('target', '_blank');
+                        $(_newLA).find('a').attr("target", 'underscoreblank');
                         str = str.replace(linkArray[x], _newLA.innerHTML);
                     }
                 } else {
                     str = wrapper1.innerHTML.replace(_regExForLink, linkreplacer);
                 }
             }
-            str = helpers.checkMarkdowns(str);
+            str = helpers.checkMarkdowns(str,hyperLinksMap);
             var hrefRefs=Object.keys(hyperLinksMap);
             if(hrefRefs && hrefRefs.length){
                 hrefRefs.forEach(function(hrefRef){
                   str=str.replace(hrefRef,hyperLinksMap[hrefRef])
                 });
             }
+            str=str.replaceAll('target="underscoreblank"','target="_blank"');
+            str=str.replaceAll("target='underscoreblank'",'target="_blank"');
             if (responseType === 'user') {
                 str = str.replace(/abc-error=/gi, 'onerror=');
             }
             return helpers.nl2br(str, true);
         },
-        'checkMarkdowns': function (val) {
+        'checkMarkdowns': function (val,hyperLinksMap) {
             var txtArr = val.split(/\r?\n/);
             for (var i = 0; i < txtArr.length; i++) {
                 var _lineBreakAdded = false;
@@ -434,7 +446,12 @@ function koreBotChat() {
                     for (j = 0; j < _matchImage.length; j++) {
                         var _imgTxt = _matchImage[j].substring(2, _matchImage[j].indexOf(']'));
                         var remainingString = _matchImage[j].substring(_matchImage[j].indexOf(']') + 1).trim();
-                        var _imgLink = remainingString.substring(1, remainingString.indexOf(')'));
+                        var _imgLink = remainingString.substring(1, remainingString.indexOf(')'));                          
+                        if (hyperLinksMap) {
+                            var _randomKey = "korerandom://" + Object.keys(hyperLinksMap).length;
+                            hyperLinksMap[_randomKey] = _imgLink;
+                            _imgLink = _randomKey;
+                        }
                         _imgLink = '<img src="' + _imgLink + '" alt="' + _imgTxt + '">';
                         var _tempImg = txtArr[i].split(' ');
                         for (var k = 0; k < _tempImg.length; k++) {
@@ -455,7 +472,12 @@ function koreBotChat() {
                         var remainingString = _matchLink[j].substring(_matchLink[j].indexOf(']') + 1).trim();
                         var _linkLink = remainingString.substring(1, remainingString.indexOf(')'));
                         _linkLink=_linkLink.replace(/\\n/g,"%0A");
-                        _linkLink = '<span class="isLink"><a href="' + _linkLink + '" target="_blank">' + helpers.checkMarkdowns(_linkTxt) + '</a></span>';
+                        if (hyperLinksMap) {
+                            var _randomKey = "korerandom://" + Object.keys(hyperLinksMap).length;
+                            hyperLinksMap[_randomKey] = _linkLink;
+                            _linkLink = _randomKey;
+                        }
+                        _linkLink = '<span class="isLink"><a href="' + _linkLink + '" target="underscoreblank">' + helpers.checkMarkdowns(_linkTxt) + '</a></span>';
                         txtArr[i] = txtArr[i].replace(_matchLink[j], _linkLink);
                     }
                 }
