@@ -107,6 +107,8 @@ Integration of Kore.ai chat UI into your App
             loadHistory: false, // set true to load recent chat history
             messageHistoryLimit: 10 // set limit to load recent chat history
             autoEnableSpeechAndTTS : false // set true, to use talkType voice keyboard.
+            graphLib: "d3"  // set google, to render google charts.This feature requires loader.js file which is available in google charts documentation.
+
         };
 
 #### 7. Call koreBotChat instance
@@ -174,10 +176,29 @@ Integration of Kore.ai chat UI into your App
   -  Custom templates logic has been separated out from chatWindow.js
   -  Refer custom folder under UI folder
   -  Refer https://github.com/Koredotcom/web-kore-sdk/blob/master/UI/custom/customTemplate.js and https://github.com/Koredotcom/web-kore-sdk/blob/master/UI/custom/customTemplate.css files for sample code snippet. 
+  
+
+# How to implement minified SDK
+    node js:
+	    Install node js if not installed  https://nodejs.org
+
+    Steps:
+        -> Go to UI folder and run "npm install" in terminal to install dependencies
+        -> Run "grunt" in terminal. This will generate minified versions on js and css files
+        -> Now comment all the js and css references in index.html 
+        -> Add the following lines
+            <link href="dist/kore-ai-sdk.min.css" rel="stylesheet"/>
+            <script src="dist/kore-ai-sdk.min.js" type="text/javascript"> </script>  
 
 ```
 
 ###Release History:
+
+v6.3.1[Major] on 07-January-2019:Master branch
+    Released major release with following bug fixes
+    1. Added how to implement minified SDK.
+    2. Removed Font awesome icons and family,Added images with base64 URL.
+    3. Minor bug fixes.
 
 v6.3.0[Minor] on 24-November-2018:Master branch
     Released minior release with following bug fixes
