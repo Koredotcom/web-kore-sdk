@@ -387,7 +387,10 @@ function koreBotChat() {
             var hrefRefs=Object.keys(hyperLinksMap);
             if(hrefRefs && hrefRefs.length){
                 hrefRefs.forEach(function(hrefRef){
-                  str=str.replace(hrefRef,hyperLinksMap[hrefRef])
+                    function customStrReplacer() { //custom replacer is used as by default replace() replaces with '$' in place of '$$'
+                        return hyperLinksMap[hrefRef];
+                    }
+                    str = str.replace(hrefRef, customStrReplacer);
                 });
             }
             str=str.replaceAll('target="underscoreblank"','target="_blank"');
