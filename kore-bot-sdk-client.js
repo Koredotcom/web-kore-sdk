@@ -779,6 +779,7 @@ function BaseAPIClient(token, opts) {
   EventEmitter.call(this);
   this._token = token;
   this.koreAPIUrl = opts.koreAPIUrl || 'https://app.kore.com/api/';
+  this.reWriteSocketURL=opts.reWriteSocketURL;
   this.transport = opts.transport || requestsTransport;
   this.userAgent ;
   this._requestQueue = async.priorityQueue(
@@ -1185,10 +1186,32 @@ KoreRTMClient.prototype._safeDisconnect = function _safeDisconnect() {
   this.connected = false;
 };
 
+KoreRTMClient.prototype.reWriteURL = function connect(socketUrl) {
+  if (this.reWriteSocketURL) {
+      var parser = document.createElement('a');
+      parser.href = socketUrl;
+      if (this.reWriteSocketURL.protocol) {
+          parser.protocol = this.reWriteSocketURL.protocol;
+
+      }
+      if (this.reWriteSocketURL.hostname) {
+          parser.hostname = this.reWriteSocketURL.hostname;
+
+      }
+      if (this.reWriteSocketURL.port) {
+          parser.port = this.reWriteSocketURL.port;
+
+      }
+      socketUrl=parser.href;
+  }
+  return socketUrl;
+};
+
 
 KoreRTMClient.prototype.connect = function connect(socketUrl) {
   debug("connecting");
   this.emit(CLIENT_EVENTS.WS_OPENING,{});
+  socketUrl=this.reWriteURL(socketUrl);
   this.ws = this._socketFn(socketUrl);
   this.ws.onopen = bind(this.handleWsOpen, this);
   this.ws.onmessage = bind(this.handleWsMessage, this);

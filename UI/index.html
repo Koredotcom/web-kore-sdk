@@ -70,6 +70,13 @@
 				botOptions.assertionFn = assertion;
 				botOptions.koreAnonymousFn = koreAnonymousFn;
 				
+				// To modify the web socket url use the following option
+				// botOptions.reWriteSocketURL = {
+                //     protocol: 'PROTOCOL_TO_BE_REWRITTEN',
+                //     hostname: 'HOSTNAME_TO_BE_REWRITTEN',
+                //     port: 'PORT_TO_BE_REWRITTEN'
+                // };
+				
 				botOptions.JWTUrl ="PLEASE_ENTER_JWTURL_HERE";
 				botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
 				botOptions.botInfo = {name:"PLEASE_ENTER_BOT_NAME","_id":"PLEASE_ENTER_BOT_ID"}; // bot name is case sensitive
