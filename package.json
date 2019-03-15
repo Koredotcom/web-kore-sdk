@@ -1,0 +1,18 @@
+{
+  "name": "web-kore-sdk",
+  "version": "6.4.0",
+  "description": "Kore.ai offers Bots SDKs as a set of platform-specific client libraries that provide a quick and convenient way to integrate Kore.ai Bots chat capability into custom applications",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Koredotcom/web-kore-sdk.git"
+  },
+  "author": "Rajasekhar Balla",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Koredotcom/web-kore-sdk/issues"
+  },
+  "homepage": "https://github.com/Koredotcom/web-kore-sdk#readme"
+}
