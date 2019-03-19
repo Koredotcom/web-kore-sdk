@@ -1356,6 +1356,8 @@ function koreBotChat() {
         var clientMessageId = new Date().getTime();
         var msgData = {};
         fileUploaderCounter = 0;
+        //to send \n to server for new lines
+        chatInput.html(chatInput.html().replaceAll("<br>", "\n"));
         if (attachmentInfo && Object.keys(attachmentInfo).length) {
             msgData = {
                 'type': "currentUser",
