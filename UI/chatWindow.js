@@ -1228,6 +1228,9 @@ function koreBotChat() {
             }
         });
         bot.on("open", function (response) {
+            if (!$('.chat-container:visible').length) {
+                this.close();
+            }
             accessToken = me.config.botOptions.accessToken;
             var _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
             _chatContainer.find('.kore-chat-header .header-title').html(me.config.chatTitle).attr('title', me.config.chatTitle);
@@ -2071,7 +2074,7 @@ function koreBotChat() {
             {{/if}} \
             {{if isSpeechEnabled}}\
             <div class="sdkFooterIcon microphoneBtn"> \
-                <button class="notRecordingMicrophone" title="Recording"> \
+                <button class="notRecordingMicrophone" title="Voice Recording"> \
                     <i class="microphone"></i> \
                 </button> \
                 <button class="recordingMicrophone"> \
