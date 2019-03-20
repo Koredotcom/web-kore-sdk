@@ -2065,7 +2065,7 @@ function koreBotChat() {
 			<div class="attachment"></div> \
             {{if isTTSEnabled}} \
                 <div class="sdkFooterIcon ttspeakerDiv ttsOff"> \
-                    <button class="ttspeaker" title="Talk to speak"> \
+                    <button class="ttspeaker" title="Text to Speech"> \
                         <span class="ttsSpeakerEnable"></span> \
                         <span class="ttsSpeakerDisable"></span> \
                         <span style="display:none;"><audio id="ttspeaker" controls="" autoplay="" name="media"><source src="" type="audio/wav"></audio></span>\
@@ -2074,7 +2074,7 @@ function koreBotChat() {
             {{/if}} \
             {{if isSpeechEnabled}}\
             <div class="sdkFooterIcon microphoneBtn"> \
-                <button class="notRecordingMicrophone" title="Voice Recording"> \
+                <button class="notRecordingMicrophone" title="Speech to Text"> \
                     <i class="microphone"></i> \
                 </button> \
                 <button class="recordingMicrophone"> \
@@ -2143,7 +2143,7 @@ function koreBotChat() {
 					{{if msgItem.cInfo && msgItem.type === "text"}} \
 						<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
 							{{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-							{{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})" title="User avatar"></div> </div> {{/if}} \
+							{{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})" title="Bot Icon"></div> </div> {{/if}} \
 							<div class="messageBubble">\
 								<div> \
                                     {{if msgData.type === "bot_response"}} \
