@@ -2931,7 +2931,7 @@ module.exports = WebAPIClient;
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define([], factory);
+        //define([], factory);
         module.exports = factory();
     } else if (typeof exports === 'object') {
         // Node. Does not work with strict CommonJS, but
@@ -16138,9 +16138,9 @@ if (typeof Object.create === 'function') {
 
     // Define as an anonymous module so, through path mapping, it can be
     // referenced as the "underscore" module.
-    define(function() {
-      return _;
-    });
+    // define(function() {
+    //   return _;
+    // });
   }
   // Check for `exports` after `define` in case a build optimizer adds an `exports` object.
   else if (freeExports && freeModule) {
