@@ -582,7 +582,7 @@
 	color: #3292FF;
 	border-top: 1px solid #F2F2F2;
 	padding: 10px;
-	margin:0;
+	margin:0 !important;
 	text-align: center;
     cursor: pointer;
     background: #fff;
