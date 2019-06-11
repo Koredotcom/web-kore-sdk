@@ -621,6 +621,19 @@ function koreBotChat() {
         }
         this.config = extend(this.config, cfg);
         this.init();
+        updateOnlineStatus();
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+    }
+    function updateOnlineStatus() {
+        if ("boolean" === typeof(navigator["onLine"])) {
+            if (navigator.onLine) {
+                this.hideError();
+
+            } else {
+                this.showError("You are currently offline")
+            }
+        }
     }
 
     function resetPingMessage() {
@@ -2748,10 +2761,17 @@ function koreBotChat() {
             _ttsContext.close();
             _ttsContext = null;
         }
+        window.removeEventListener('online', updateOnlineStatus);
+        window.removeEventListener('offline', updateOnlineStatus);
     };
     this.initToken = function (options) {
         assertionToken = "bearer " + options.accessToken;
     };
+    
+    this.hideError = function () {
+        $('.errorMsgBlock').removeClass('showError');
+    }
+
     this.showError = function (response) {
         try {
             response = JSON.parse(response);

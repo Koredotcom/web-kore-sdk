@@ -997,7 +997,8 @@
 	color: red;
 	left: 0;
 	right: 0;
-	padding: 5px;
+    padding: 5px;
+    z-index: 1;
 }
 .kore-chat-window .kore-chat-body .errorMsgBlock.showError {
 	display: block;
