@@ -135,7 +135,7 @@ Integration of Kore.ai chat UI into your App
         botOptions.clientId   = "clientId"; // issued by the kore.ai on client app registration.
         botOptions.botInfo = {"name":"Bot Name", "_id" :"Bot Id"};
         //Capture Bot Name & Bot ID from Builder Tool app. Go to respective Bot and then navigate to Settings-->Genernal Settings section. Bot Name is case sensitive. 
-        var bot = require('/KoreBot.js').instance(); //initialize the bot.
+        var bot = requireKr('/KoreBot.js').instance(); //initialize the bot.
         bot.init(botOptions); // bot instance created.
         bot.destroy(); // Destroy bot instance 
 
@@ -163,6 +163,12 @@ Integration of Kore.ai chat UI into your App
                 // If you are logged in on several devices at the same time & sent a message to same Bot, it will appear on every device
             }
         });
+
+#### 5. To get old messages (optional)
+	//applicable only if botOptions.loadHistory = true;	
+	bot.on("history", function (historyRes) {;
+	    console.log("History ::", JSON.stringify(historyRes));
+	});
 
 # How to check connection established with bot
 
