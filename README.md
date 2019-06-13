@@ -133,7 +133,7 @@ Integration of Kore.ai chat UI into your App
         botOptions.assertionFn = assertion;
         botOptions.koreAnonymousFn = koreAnonymousFn;
         botOptions.clientId   = "clientId"; // issued by the kore.ai on client app registration.
-        botOptions.botInfo = {"name":"Bot Name", "_id" :"Bot Id"};
+        botOptions.botInfo = {"chatBot":"Bot Name", "taskBotId" :"Bot Id"};
         //Capture Bot Name & Bot ID from Builder Tool app. Go to respective Bot and then navigate to Settings-->Genernal Settings section. Bot Name is case sensitive. 
         var bot = requireKr('/KoreBot.js').instance(); //initialize the bot.
         bot.init(botOptions); // bot instance created.
