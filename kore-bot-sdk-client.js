@@ -329,6 +329,7 @@ KoreBot.prototype.onLogIn = function(err, data) {
 		this.userInfo = data;
 		this.cbBotDetails(data,this.options.botInfo);
 		this.RtmClient = new clients.KoreRtmClient({}, this.options);
+		this.emit("rtm_client_initialized");
 		this.RtmClient.start({
 			"botInfo": this.options.botInfo
 		});
