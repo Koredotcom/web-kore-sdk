@@ -159,6 +159,16 @@ KoreBot.prototype.close = function() {
 };
 
 /*
+destory for bot sdk object
+*/
+KoreBot.prototype.destroy = function () {
+  if (this.RtmClient) {
+    this.RtmClient._close();
+  }
+  _chatHistoryLoaded = false;
+  this.removeAllListeners();
+};
+/*
 on forward history.
 */
 KoreBot.prototype.onForwardHistory = function(err, data) {

@@ -800,6 +800,8 @@ function koreBotChat() {
         var me = this;
         $('.kore-chat-overlay').hide();
         bot.close();
+        bot.destroy();
+        messagesQueue=[];
         if (me.config && me.config.chatContainer) {
             me.config.chatContainer.remove();
         }
@@ -2761,6 +2763,7 @@ function koreBotChat() {
             _ttsContext.close();
             _ttsContext = null;
         }
+        
         window.removeEventListener('online', updateOnlineStatus);
         window.removeEventListener('offline', updateOnlineStatus);
     };
@@ -2798,7 +2801,7 @@ function koreBotChat() {
                 $('.chat-container').hide();
                 $('.historyLoadingDiv').addClass('showMsg');
                 res[1].messages.forEach(function(msgData,index){
-                    setTimeout(function(){
+                    setTimeout(function(messagesQueue){
                         var _ignoreMsgs = messagesQueue.filter(function (queMsg) {
                             return queMsg.messageId === msgData.messageId;
                         });
@@ -2816,27 +2819,37 @@ function koreBotChat() {
                             }
                         }
                         if(index === res[1].messages.length-1) {
-                            setTimeout(function(){
+                            setTimeout(function(messagesQueue){
                                 $('.chat-container').show();
                                 $('.chat-container').animate({
                                     scrollTop: $('.chat-container').prop("scrollHeight")
                                 }, 2500);
                                 $('.historyLoadingDiv').removeClass('showMsg');
                                 $('.chat-container').append("<div class='endChatContainer'><span class='endChatContainerText'>End of chat history</span></div>");
-                                messagesQueue.forEach(function(msg, currIndex){
-                                    me.renderMessage(msg);
-                                    if(messagesQueue.length-1 ===  currIndex) {
-                                        messagesQueue = [];
-                                    }
-                                });
-                            },500);
-                            setTimeout(function(){
-                                $('.chatInputBox').focus();
-                                $('.disableFooter').removeClass('disableFooter');
-                                historyLoading = false;
-                            });
+                                if(messagesQueue.length){
+                                    messagesQueue.forEach(function(msg, currIndex){
+                                        me.renderMessage(msg);
+                                        if(messagesQueue.length-1 ===  currIndex) {
+                                            messagesQueue = [];
+                                            setTimeout(function(){
+                                                $('.chatInputBox').focus();
+                                                $('.disableFooter').removeClass('disableFooter');
+                                                historyLoading = false;
+                                            });
+                                        }
+                                    });
+                                }else{
+                                    setTimeout(function(){
+                                        $('.chatInputBox').focus();
+                                        $('.disableFooter').removeClass('disableFooter');
+                                        historyLoading = false;
+                                    });
+                                }
+                               
+                            },500,messagesQueue);
+                           
                         }
-                    },index*100);
+                    },index*100,messagesQueue);
                 });
             }
             else {
