@@ -34,57 +34,79 @@ Kore.ai SDK for web enables you to talk to Kore.ai bots over a web socket. This 
 * Service to generate JWT (JSON Web Tokens)- this service will be used in the assertion function injected to obtain the connection.
 
 ## Instructions
-Integration of Kore.ai chat UI into your App
+Integration of Kore.ai chat UI into your App. Clone the repository and create your html file inside the UI folder.
 
 #### 1. Include Dependent CSS
-    -   <link href="UI/libs/jquery-ui.min.css" rel="stylesheet"/>
-    -   <link href="UI/chatWindow.css" rel="stylesheet"/> // chat ui design
-    -   <link href="../libs/purejscarousel.css" rel="stylesheet"></link> // carousel template design
-
+	<link href="libs/jquery-ui.min.css" rel="stylesheet"></link>
+	<link href="chatWindow.css" rel="stylesheet"></link>
+	<link href="../libs/emojione.sprites.css" rel="stylesheet"></link>
+	<link href="../libs/purejscarousel.css" rel="stylesheet"></link>
+	<link href="custom/customTemplate.css" rel="stylesheet"></link>
 #### 2. Include Dependent JS
-    -   <script src='UI/libs/jquery.js'></script>
-    -   <script src='UI/libs/jquery-ui.min.js'></script>
-    -   <script src='UI/libs/jquery.tmpl.min.js'></script>
-    -   <script src='UI/libs/moment.js'></script>
-    -   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+	<script src="libs/jquery.js" type="text/javascript"></script>
+	<script src="libs/jquery.tmpl.min.js" type="text/javascript"></script>
+	<script src="libs/jquery-ui.min.js" type="text/javascript"></script>
+	<script src='libs/moment.js'></script>
+	<script src="../libs/lodash.min.js"></script>
 
-#### 3. Include the kore-bot-sdk-client.js ,anonymousassertion.js & chatWindow.js files 
-    -   <script src='../libs/anonymousassertion.js'></script>
-    -   <script src='../kore-bot-sdk-client.js'></script>
-    -   <script src='UI/chatWindow.js'></script> // chat ui js
+#### 3. Include the graph dependent JS 	
+	<script src="../libs/d3.v4.min.js"></script>
+	<script src="../libs/KoreGraphAdapter.js" type="text/javascript"></script>
+		
+#### 4. Include the kore-bot-sdk-client.js ,anonymousassertion.js & chatWindow.js files 
+	<script src='../libs/anonymousassertion.js'></script>
+	<script src="../kore-bot-sdk-client.js"></script>
+	<script src="chatWindow.js" type="text/javascript"></script>
 
-#### 4. Include dependencies for recorder , emoji, charts, Google speech and carousel template support
-    -   <script src="../libs/emoji.js" type="text/javascript"></script>
-    -   <script src="../libs/recorder.js" type="text/javascript"></script>
-    -   <script src="../libs/recorderWorker.js" type="text/javascript"></script>
-    -   <script src="../libs/purejscarousel.js" type="text/javascript"></script>
-    -   <script src="custom/customTemplate.js" type="text/javascript"></script>
-    -   <script src="libs/loader.js" type="text/javascript"></script>
-    -   <script src="../libs/speech/app.js" type="text/javascript"></script>
-    -   <script src="../libs/speech/key.js" type="text/javascript"></script>
-    -   <script src="../libs/client_api.js" type="text/javascript"></script>
-    -   <link href="custom/customTemplate.css" rel="stylesheet"></link>
+#### 5. Include dependencies for recorder , emoji, charts, Google speech and carousel template support
+	<script src="../libs/emoji.js" type="text/javascript"></script>
+	<script src="../libs/recorder.js" type="text/javascript"></script>
+	<script src="../libs/recorderWorker.js" type="text/javascript"></script>
+	<script src="../libs/purejscarousel.js" type="text/javascript"></script>
+	<script src="custom/customTemplate.js" type="text/javascript"></script>
 
-#### 5. Define the assertion function (Should be defined by the clients)
+	<!-- Uncomment following lines for Google Speech. -->
+	<!-- <script type="text/javascript" src="../libs/speech/app.js"></script>
+	<script type="text/javascript" src="../libs/speech/key.js"></script>
+	<script type="text/javascript" src="../libs/client_api.js"></script> -->
+
+#### 6. Define the assertion function (Should be defined by the clients)
         //NOTE:clients has to define a API which should generate and return the JWT token. and do the necessary changes in the below function like change the url,type,Authorization and on success set the returned jwt.
         //fields to set in JWT:subject(emailId),issuer(clientId),algorithm(HS256 or RS256)
     -   function assertion(options, callback) {
         //client has to fill the claims and call the callback.
-        $.ajax({
-        url: "https://hostname/api/users/sts", //client api which should return the signed jwt token.
-         type: 'post',
-         headers: {
-            Authorization: "bearer K*****************************8"
-                  },
-         dataType: 'json',
-         success: function(data) {
-            options.assertion = data.jwt
-            callback(null, options);
-            }
-           }) 
-        }
-
-#### 6. Initialize the Bot
+        function assertion(options, callback) {
+		//client has to fill the claims and call the callback.
+		var jsonData = {
+			"clientId": botOptions.clientId,
+			"clientSecret": botOptions.clientSecret,
+			"identity": botOptions.userIdentity,
+			"aud": "",
+			"isAnonymous": false
+		};
+		$.ajax({
+			url: botOptions.JWTUrl,
+			type: 'post',
+			data: jsonData,
+			dataType: 'json',
+			success: function (data) {
+				options.assertion = data.jwt;
+				options.handleError = koreBot.showError;
+				options.chatHistory = koreBot.chatHistory;
+				options.botDetails = koreBot.botDetails;
+				callback(null, options);
+				setTimeout(function () {
+					if (koreBot && koreBot.initToken) {
+						koreBot.initToken(options);
+					}
+				}, 2000);
+			},
+			error: function (err) {
+				koreBot.showError(err.responseText);
+			}
+		});
+	}
+#### 7. Initialize the Bot
         //Define the bot options
         var botOptions = {};
         botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
@@ -92,9 +114,14 @@ Integration of Kore.ai chat UI into your App
         botOptions.ttsSocketUrl = 'wss://speech.kore.ai/tts/ws';
         botOptions.assertionFn = assertion;
         botOptions.koreAnonymousFn = koreAnonymousFn;
-        botOptions.clientId   = "clientId"; // issued by the kore.ai on client app registration.
-        botOptions.botInfo = {"name":"Bot Name", "_id" :"Bot Id"};  
-        //Capture Bot Name & Bot ID from Builder Tool app. Go to respective Bot and then navigate to Settings-->Genernal Settings section. Bot Name is case sensitive.   
+        botOptions.botInfo = {"name":"Bot Name", "_id" :"Bot Id"};  //Capture Bot Name & Bot ID from Builder Tool app. Go to respective Bot and then navigate to Settings-->Config Settings-->General settings section. Bot Name is case sensitive.
+	botOptions.JWTUrl ="PLEASE_ENTER_JWTURL_HERE";//above assertion function  picks url from here
+	botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
+	botOptions.botInfo = {name:"PLEASE_ENTER_BOT_NAME","_id":"PLEASE_ENTER_BOT_ID"}; // bot name is case sensitive
+	botOptions.clientId   = "PLEASE_ENTER_CLIENT_ID"; // issued by the kore.ai on client app registration.
+	botOptions.clientSecret="PLEASE_ENTER_CLIENT_SECRET";// issued by the kore.ai on client app registration.
+
+        
         // Assign Bot options to chatWindow config
         var chatConfig={
             botOptions:botOptions,
@@ -111,7 +138,7 @@ Integration of Kore.ai chat UI into your App
 
         };
 
-#### 7. Call koreBotChat instance
+#### 8. Call koreBotChat instance
         var chatInstance = koreBotChat(); // get chat instance
         chatInstance.show(chatConfig); // open chat window
         chatInstance.destroy(); // for destroying chat window instance
@@ -124,7 +151,44 @@ Integration of Kore.ai chat UI into your App
     -   <script src='../libs/anonymousassertion.js'></script>
     -   <script src='../kore-bot-sdk-client.js'></script>
 
-#### 2. Initialize the Bot
+#### 2. Define the assertion function (Should be defined by the clients)
+        //NOTE:clients has to define a API which should generate and return the JWT token. and do the necessary changes in the below function like change the url,type,Authorization and on success set the returned jwt.
+        //fields to set in JWT:subject(emailId),issuer(clientId),algorithm(HS256 or RS256)
+    -   function assertion(options, callback) {
+        //client has to fill the claims and call the callback.
+        function assertion(options, callback) {
+		//client has to fill the claims and call the callback.
+		var jsonData = {
+			"clientId": botOptions.clientId,
+			"clientSecret": botOptions.clientSecret,
+			"identity": botOptions.userIdentity,
+			"aud": "",
+			"isAnonymous": false
+		};
+		$.ajax({
+			url: botOptions.JWTUrl,
+			type: 'post',
+			data: jsonData,
+			dataType: 'json',
+			success: function (data) {
+				options.assertion = data.jwt;
+				options.handleError = koreBot.showError;
+				options.chatHistory = koreBot.chatHistory;
+				options.botDetails = koreBot.botDetails;
+				callback(null, options);
+				setTimeout(function () {
+					if (koreBot && koreBot.initToken) {
+						koreBot.initToken(options);
+					}
+				}, 2000);
+			},
+			error: function (err) {
+				koreBot.showError(err.responseText);
+			}
+		});
+	}
+
+#### 3. Initialize the Bot
         //define the bot options
         var botOptions = {}; 
         botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
@@ -133,13 +197,15 @@ Integration of Kore.ai chat UI into your App
         botOptions.assertionFn = assertion;
         botOptions.koreAnonymousFn = koreAnonymousFn;
         botOptions.clientId   = "clientId"; // issued by the kore.ai on client app registration.
+	botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
         botOptions.botInfo = {"chatBot":"Bot Name", "taskBotId" :"Bot Id"};
-        //Capture Bot Name & Bot ID from Builder Tool app. Go to respective Bot and then navigate to Settings-->Genernal Settings section. Bot Name is case sensitive. 
+        //Capture Bot Name & Bot ID from Builder Tool app. Go to respective Bot and then navigate to Settings-->Genernal Settings section. Bot Name is case sensitive. 	
+	botOptions.loadHistory = true;	
         var bot = requireKr('/KoreBot.js').instance(); //initialize the bot.
         bot.init(botOptions); // bot instance created.
         bot.destroy(); // Destroy bot instance 
 
-#### 3. Send message to Bot
+#### 4. Send message to Bot
         var messageToBot = {};
         messageToBot["message"] = {body:"your message",attachments:[]};
         messageToBot["resourceid"] = '/bot.message';
@@ -149,7 +215,7 @@ Integration of Kore.ai chat UI into your App
         bot.sendMessage(messageToBot, function messageSent() {
         });
 
-#### 4. Listen to a Message (Response)
+#### 5. Listen to a Message (Response)
         // Event occurs when you recieve any message from server
         bot.on("message",function(msg){
             console.log("Received Message::",msg.data);
@@ -164,7 +230,7 @@ Integration of Kore.ai chat UI into your App
             }
         });
 
-#### 5. To get old messages (optional)
+#### 6. To get old messages (optional)
 	//applicable only if botOptions.loadHistory = true;	
 	bot.on("history", function (historyRes) {;
 	    console.log("History ::", JSON.stringify(historyRes));
