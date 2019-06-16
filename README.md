@@ -107,36 +107,36 @@ Integration of Kore.ai chat UI into your App. Clone the repository and create yo
 		});
 	}
 #### 7. Initialize the Bot
-        //Define the bot options
-        var botOptions = {};
-        botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
-        botOptions.koreSpeechAPIUrl = "https://speech.kore.ai/";
-        botOptions.ttsSocketUrl = 'wss://speech.kore.ai/tts/ws';
-        botOptions.assertionFn = assertion;
-        botOptions.koreAnonymousFn = koreAnonymousFn;
-        botOptions.botInfo = {"name":"Bot Name", "_id" :"Bot Id"};  //Capture Bot Name & Bot ID from Builder Tool app. Go to respective Bot and then navigate to Settings-->Config Settings-->General settings section. Bot Name is case sensitive.
+	//Define the bot options
+	var botOptions = {};
+	botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
+	botOptions.koreSpeechAPIUrl = "https://speech.kore.ai/";
+	botOptions.ttsSocketUrl = 'wss://speech.kore.ai/tts/ws';
+	botOptions.assertionFn = assertion;
+	botOptions.koreAnonymousFn = koreAnonymousFn;
+	botOptions.botInfo = {"name":"Bot Name", "_id" :"Bot Id"};  //Capture Bot Name & Bot ID from Builder Tool app. Go to respective Bot and then navigate to Settings-->Config Settings-->General settings section. Bot Name is case sensitive.
 	botOptions.JWTUrl ="PLEASE_ENTER_JWTURL_HERE";//above assertion function  picks url from here
 	botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
 	botOptions.botInfo = {name:"PLEASE_ENTER_BOT_NAME","_id":"PLEASE_ENTER_BOT_ID"}; // bot name is case sensitive
 	botOptions.clientId   = "PLEASE_ENTER_CLIENT_ID"; // issued by the kore.ai on client app registration.
 	botOptions.clientSecret="PLEASE_ENTER_CLIENT_SECRET";// issued by the kore.ai on client app registration.
 
-        
-        // Assign Bot options to chatWindow config
-        var chatConfig={
-            botOptions:botOptions,
-            allowIframe : false, // set true, opens authentication links in popup window, default value is "false"
-            isSendButton: false, // set true, to show send button below the compose bar
-            isTTSEnabled: true, // set false, to hide speaker icon
-            isSpeechEnabled: true, // set false, to hide mic icon
-            allowGoogleSpeech : true, // set false, to use KORE.ai speech engine instead Google speech engine.This feature requires valid Google speech API key. (Place it in 'web-kore-sdk/libs/speech/key.js')
-            allowLocation : true // set false, to deny sending location to server
-            loadHistory: false, // set true to load recent chat history
-            messageHistoryLimit: 10 // set limit to load recent chat history
-            autoEnableSpeechAndTTS : false // set true, to use talkType voice keyboard.
-            graphLib: "d3"  // set google, to render google charts.This feature requires loader.js file which is available in google charts documentation.
 
-        };
+	// Assign Bot options to chatWindow config
+	var chatConfig={
+	    botOptions:botOptions,
+	    allowIframe : false, // set true, opens authentication links in popup window, default value is "false"
+	    isSendButton: false, // set true, to show send button below the compose bar
+	    isTTSEnabled: true, // set false, to hide speaker icon
+	    isSpeechEnabled: true, // set false, to hide mic icon
+	    allowGoogleSpeech : true, // set false, to use KORE.ai speech engine instead Google speech engine.This feature requires valid Google speech API key. (Place it in 'web-kore-sdk/libs/speech/key.js')
+	    allowLocation : true // set false, to deny sending location to server
+	    loadHistory: false, // set true to load recent chat history
+	    messageHistoryLimit: 10 // set limit to load recent chat history
+	    autoEnableSpeechAndTTS : false // set true, to use talkType voice keyboard.
+	    graphLib: "d3"  // set google, to render google charts.This feature requires loader.js file which is available in google charts documentation.
+
+	};
 
 #### 8. Call koreBotChat instance
         var chatInstance = koreBotChat(); // get chat instance
@@ -189,21 +189,21 @@ Integration of Kore.ai chat UI into your App. Clone the repository and create yo
 	}
 
 #### 3. Initialize the Bot
-        //define the bot options
-        var botOptions = {}; 
-        botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
-        botOptions.koreSpeechAPIUrl = "https://speech.kore.ai/";
-        botOptions.ttsSocketUrl = 'wss://speech.kore.ai/tts/ws';
-        botOptions.assertionFn = assertion;
-        botOptions.koreAnonymousFn = koreAnonymousFn;
-        botOptions.clientId   = "clientId"; // issued by the kore.ai on client app registration.
+	//define the bot options
+	var botOptions = {}; 
+	botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
+	botOptions.koreSpeechAPIUrl = "https://speech.kore.ai/";
+	botOptions.ttsSocketUrl = 'wss://speech.kore.ai/tts/ws';
+	botOptions.assertionFn = assertion;
+	botOptions.koreAnonymousFn = koreAnonymousFn;
+	botOptions.clientId   = "clientId"; // issued by the kore.ai on client app registration.
 	botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
-        botOptions.botInfo = {"chatBot":"Bot Name", "taskBotId" :"Bot Id"};
-        //Capture Bot Name & Bot ID from Builder Tool app. Go to respective Bot and then navigate to Settings-->Genernal Settings section. Bot Name is case sensitive. 	
+	botOptions.botInfo = {"chatBot":"Bot Name", "taskBotId" :"Bot Id"};
+	//Capture Bot Name & Bot ID from Builder Tool app. Go to respective Bot and then navigate to Settings-->Genernal Settings section. Bot Name is case sensitive. 	
 	botOptions.loadHistory = true;	
-        var bot = requireKr('/KoreBot.js').instance(); //initialize the bot.
-        bot.init(botOptions); // bot instance created.
-        bot.destroy(); // Destroy bot instance 
+	var bot = requireKr('/KoreBot.js').instance(); //initialize the bot.
+	bot.init(botOptions); // bot instance created.
+	bot.destroy(); // Destroy bot instance 
 
 #### 4. Send message to Bot
         var messageToBot = {};
