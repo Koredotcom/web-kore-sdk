@@ -90,18 +90,10 @@ Integration of Kore.ai chat UI into your App. Clone the repository and create yo
 			dataType: 'json',
 			success: function (data) {
 				options.assertion = data.jwt;
-				options.handleError = koreBot.showError;
-				options.chatHistory = koreBot.chatHistory;
-				options.botDetails = koreBot.botDetails;
 				callback(null, options);
-				setTimeout(function () {
-					if (koreBot && koreBot.initToken) {
-						koreBot.initToken(options);
-					}
-				}, 2000);
 			},
 			error: function (err) {
-				koreBot.showError(err.responseText);
+				console.error("Error in JWT get: "+JSON.stringify(err))	
 			}
 		});
 	}
@@ -170,18 +162,10 @@ Integration of Kore.ai chat UI into your App. Clone the repository and create yo
 			dataType: 'json',
 			success: function (data) {
 				options.assertion = data.jwt;
-				options.handleError = koreBot.showError;
-				options.chatHistory = koreBot.chatHistory;
-				options.botDetails = koreBot.botDetails;
 				callback(null, options);
-				setTimeout(function () {
-					if (koreBot && koreBot.initToken) {
-						koreBot.initToken(options);
-					}
-				}, 2000);
 			},
 			error: function (err) {
-				koreBot.showError(err.responseText);
+				console.error("Error in JWT get: "+JSON.stringify(err))	
 			}
 		});
 	}
