@@ -778,6 +778,7 @@ function koreBotChat() {
         historyLoading = loadHistory?true : false;
         me.config.botOptions.loadHistory=me.config.loadHistory;
         me.config.botOptions.chatHistory=me.config.chatHistory;
+        me.config.botOptions.handleError=me.config.handleError;
         
         autoEnableSpeechAndTTS = me.config.autoEnableSpeechAndTTS || false;
         /* autoEnableSpeechAndTTS will on if and only if both tts and mic are enabled */
@@ -2753,6 +2754,7 @@ function koreBotChat() {
             return false;
         }
         cfg.chatHistory=this.chatHistory;
+        cfg.handleError=this.showError;        
         chatInitialize = new chatWindow(cfg);
 		customTemplateObj = new customTemplate(cfg);
         return this;
