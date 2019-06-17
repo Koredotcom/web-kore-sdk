@@ -73,8 +73,7 @@ Integration of Kore.ai chat UI into your App. Clone the repository and create yo
 #### 6. Define the assertion function (Should be defined by the clients)
         //NOTE:clients has to define a API which should generate and return the JWT token. and do the necessary changes in the below function like change the url,type,Authorization and on success set the returned jwt.
         //fields to set in JWT:subject(emailId),issuer(clientId),algorithm(HS256 or RS256)
-    -   function assertion(options, callback) {
-        //client has to fill the claims and call the callback.
+
         function assertion(options, callback) {
 		//client has to fill the claims and call the callback.
 		var jsonData = {
