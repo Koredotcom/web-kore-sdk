@@ -207,9 +207,6 @@ Integration of Kore.ai chat UI into your App. Clone the repository and create yo
             if(dataObj.from === "bot" && dataObj.type === "bot_response") {
                 // Bot sends a message to you
             }
-            if(tempData.from === "self" && tempData.type === "user_message") {
-                // If you are logged in on several devices at the same time & sent a message to same Bot, it will appear on every device
-            }
         });
 
 #### 6. To get old messages (optional)
