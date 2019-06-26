@@ -220,6 +220,18 @@ Integration of Kore.ai chat UI into your App. Clone the repository and create yo
         bot.on("open", function (response) {
             // your code
         });
+# How to listen web socket connection events
+
+	bot.on("rtm_client_initialized", function () {
+  
+		bot.RtmClient.on("ws_error",function(event){
+			//where event is web socket's onerror event
+		});
+		
+		bot.RtmClient.on("ws_close",function(event){
+			//where event is web socket's onclose event
+		});
+	});
 
 
 # How to handle custom templates
