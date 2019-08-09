@@ -256,6 +256,15 @@ Integration of Kore.ai chat UI into your App. Clone the repository and create yo
 
 ###Release History:
 
+Recent changes in Master branch:
+	1. Added network disconnect warnings
+	2. Minor bug fixes
+
+v6.4.0[Minor] on 23-Apr-2019:Master branch
+	Released minor release with following changes:
+	1. Add ADA compliance support
+	2. Minor bug fixes
+
 v6.3.1[Major] on 07-January-2019:Master branch
     Released major release with following bug fixes
     1. Added how to implement minified SDK.
