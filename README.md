@@ -234,11 +234,11 @@ Integration of Kore.ai chat UI into your App. Clone the repository and create yo
 	});
 
 # How to integrate emojis into chat 
-1.Make sure emoji.js and emojione.sprites.css are properly included(by default those are included in index.html)
-2.Download the "emojione.sprites.png" file from the following Url
-https://raw.githubusercontent.com/Koredotcom/web-kore-sdk/a7a5f8563f883e6420c00767defabeb89b034b9c/libs/img/emojione.sprites.png
-3.Under "libs" directory create a new folder named "img" 
-4.Copy the downloaded "emojione.sprites.png" image file in created "img" folder
+1. Make sure emoji.js and emojione.sprites.css are properly included(by default those are included in index.html)
+2. Download the "emojione.sprites.png" file from this url
+	https://raw.githubusercontent.com/Koredotcom/web-kore-sdk/a7a5f8563f883e6420c00767defabeb89b034b9c/libs/img/emojione.sprites.png
+3. Under "libs" directory create a new folder named "img"
+4. Copy the downloaded "emojione.sprites.png" image file in created "img" folder
 
 # How to handle custom templates
   -  Custom templates logic has been separated out from chatWindow.js
