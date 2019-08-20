@@ -585,7 +585,7 @@
 	margin:0 !important;
 	text-align: center;
     cursor: pointer;
-    background: #fff;
+    /* background: #fff; */
 }
 .kore-chat-window .buttonTmplContent .buttonTmplContentChild.quickReplyDiv{
     background: transparent;
