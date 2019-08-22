@@ -1221,7 +1221,10 @@ function koreBotChat() {
 
         _chatContainer.off('click', '.reload-btn').on('click', '.reload-btn', function (event) {
             $(this).addClass("disabled").prop('disabled', true);
-            me.resetWindow();
+            $(".close-btn").addClass("disabled").prop('disabled', true);
+            setTimeout(function(){
+                me.resetWindow();
+            });
             $('.recordingMicrophone').trigger('click');
             if(ttsAudioSource) {
                 ttsAudioSource.stop();

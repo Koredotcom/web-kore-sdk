@@ -388,6 +388,10 @@
 .kore-chat-window .sendBtnCnt .disabled {
     opacity: 0.3;
 } 
+.kore-chat-window .close-btn.disabled {
+    opacity: 0.3;
+    pointer-events: none;
+} 
 .kore-chat-window .sendBtnCnt .sendButton {
     background: #009DAB;
     padding: 5px;
