@@ -672,13 +672,13 @@ function koreBotChat() {
                 if(btnsParentDiv[0].scrollLeft > 0) {
                     leftScrollBtn[0].classList.remove('hide');
                 }
-                else{
+                else if(leftScrollBtn.length){
                     leftScrollBtn[0].classList.add('hide');
                 }
                 if(btnsParentDiv[0].offsetWidth < btnsParentDiv[0].scrollWidth) {
                     rightScrollBtn[0].classList.remove('hide');
                 }
-                else{
+                else if(rightScrollBtn.length){
                     rightScrollBtn[0].classList.add('hide');
                 }
             }
