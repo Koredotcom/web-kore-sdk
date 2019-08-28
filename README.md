@@ -125,7 +125,7 @@ Integration of Kore.ai chat UI into your App. Clone the repository and create yo
 	    messageHistoryLimit: 10, // set limit to load recent chat history
 	    autoEnableSpeechAndTTS : false, // set true, to use talkType voice keyboard.
 	    graphLib: "d3"  // set google, to render google charts.This feature requires loader.js file which is available in google charts documentation.
-
+		googleMapsAPIKey:'' // please provide google maps API key to fetch user location.
 	};
 
 #### 8. Call koreBotChat instance
@@ -265,6 +265,9 @@ Integration of Kore.ai chat UI into your App. Clone the repository and create yo
 Recent changes in Master branch:
 	1. Added network disconnect warnings
 	2. Minor bug fixes
+	3. In chatConfig options, added googleMapsAPIKey to fetch user location.
+		please provide google maps API key from https://console.cloud.google.com
+
 
 v6.4.0[Minor] on 23-Apr-2019:Master branch
 	Released minor release with following changes:

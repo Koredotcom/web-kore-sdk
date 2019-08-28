@@ -68,46 +68,49 @@ KoreBot.prototype.fetchUserLocation = function() {
 	}
 	console.log("Fetching user location");
 	var successCallback =  function(position){
-		var latitude = position.coords.latitude;
-		var longitude =  position.coords.longitude;
-		userLocation.latitude = latitude;
-		userLocation.longitude = longitude;
-		var request = new XMLHttpRequest();
+    if(this.KoreSDK.chatConfig.googleMapsAPIKey !== ""){
+      var latitude = position.coords.latitude;
+      var longitude =  position.coords.longitude;
+      userLocation.latitude = latitude;
+      userLocation.longitude = longitude;
+      var request = new XMLHttpRequest();
+      var method = 'GET';
+      var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+latitude+','+longitude+'&sensor=true&key='+this.KoreSDK.chatConfig.googleMapsAPIKey+'';
+      var async = true;
 
-	   var method = 'GET';
-	   var url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='+latitude+','+longitude+'&sensor=true';
-	   var async = true;
-
-	   request.open(method, url, async);
-	   request.onreadystatechange = function(){
-		    if(request.readyState == 4 && request.status == 200){
-				var data = JSON.parse(request.responseText);
-				if(typeof(Storage) !== "undefined") {
-					if(data.results.length == 0) {
-						data = JSON.parse(localStorage.getItem("locationData"));
-					}
-					else{
-						localStorage.setItem("locationData", JSON.stringify(data));
-					}
-				}
-				var addressComponents = data.results[0].address_components;
-				for(i=0;i<addressComponents.length;i++){
-					var types = addressComponents[i].types;
-					if(types=="locality,political"){
-						userLocation.city = addressComponents[i].long_name;
-					}
-					else if(types=="country,political"){
-						userLocation.country = addressComponents[i].long_name;
-					}
-					else if(types=="street_number"){
-						userLocation.street = addressComponents[i].long_name;
-					}
-				}
-		   }
-		};
-		request.send();
-	};
-	navigator.geolocation.getCurrentPosition(successCallback);
+      request.open(method, url, async);
+      request.onreadystatechange = function(){
+        if(request.readyState == 4 && request.status == 200){
+          var data = JSON.parse(request.responseText);
+          if(typeof(Storage) !== "undefined") {
+            if(data.results.length == 0) {
+              data = JSON.parse(localStorage.getItem("locationData"));
+            }
+            else{
+              localStorage.setItem("locationData", JSON.stringify(data));
+            }
+          }
+          var addressComponents = data.results[0].address_components;
+          for(i=0;i<addressComponents.length;i++){
+            var types = addressComponents[i].types;
+            if(types=="locality,political"){
+              userLocation.city = addressComponents[i].long_name;
+            }
+            else if(types=="country,political"){
+              userLocation.country = addressComponents[i].long_name;
+            }
+            else if(types=="political,sublocality,sublocality_level_2"){
+              userLocation.street = addressComponents[i].long_name;
+            }
+          }
+        }
+      };
+      request.send();
+    }else{
+      console.warn("please provide google maps API key");
+    }
+  };
+  navigator.geolocation.getCurrentPosition(successCallback);
 };
 /*
 sends a message to bot.
