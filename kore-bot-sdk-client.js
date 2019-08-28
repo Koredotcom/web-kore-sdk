@@ -852,12 +852,13 @@ BaseAPIClient.prototype._callTransport = function _callTransport(task, queueCb) 
       } else {
 
         httpErr = new Error('Unable to process request, received bad ' + statusCode + ' error');
-        if (!retryOp.retry(httpErr)) {
-          cb(httpErr, body);
-        } else {
-		  cb(httpErr, body);
-          return;
-        }
+        //   if (!retryOp.retry(httpErr)) {
+        //     cb(httpErr, body);
+        //   } else {
+        // cb(httpErr, body);
+        //     return;
+        //   }
+        cb(httpErr, body);
       }
     } else {        
         cb(null, body);
@@ -1081,7 +1082,8 @@ var RTM_CLIENT_INTERNAL_EVENT_TYPES = [
 var UNRECOVERABLE_RTM_START_ERRS = [
   'not_authed',
   'invalid_auth',
-  'account_inactive'
+  'account_inactive',
+  'token_expired'
 ];
 var CLIENT_EVENTS = require('../events/client').RTM;
 var BaseAPIClient = require('../client');
@@ -1145,6 +1147,7 @@ KoreRTMClient.prototype.nextMessageId = function nextMessageId() {
 
 
 KoreRTMClient.prototype._onStart = function _onStart(err, data) {
+
   var errMsg;
   var __reconnect__ = this._reconnecting?true:false;
   this._connecting = false;
@@ -1157,6 +1160,7 @@ KoreRTMClient.prototype._onStart = function _onStart(err, data) {
   }
   if(data && data.errors && (data.errors[0].code === 'TOKEN_EXPIRED' || data.errors[0].code === 401 || data.errors[0].msg === 'token expired')){
       $('.reload-btn').click();
+      data.error='token_expired';
   }
   if (err || !data.url) {
     debug("error or no url in response %s", err || "no url");
