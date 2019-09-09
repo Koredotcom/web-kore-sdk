@@ -3567,6 +3567,7 @@ function koreBotChat() {
     };
     function getFileToken(_obj, _file, recState) {
         var auth = (bearerToken) ? bearerToken : assertionToken;
+        var _self=this;
         $.ajax({
             type: "POST",
             url: koreAPIUrl + "1.1/attachment/file/token",
@@ -3579,6 +3580,14 @@ function koreBotChat() {
                 acceptAndUploadFile(_obj, _file, recState);
             },
             error: function (msg) {
+                chatInitialize.config.botOptions._reconnecting=true;
+                _self.showError("Failed to upload file.Please try again");
+                if(msg.responseJSON && msg.responseJSON.errors && msg.responseJSON.errors.length && msg.responseJSON.errors[0].httpStatus==="401"){
+                    setTimeout(function(){
+                        _self.hideError();
+                    },5000);
+                    $(".kore-chat-window .reload-btn").trigger("click");
+                }                
                 console.log("Oops, something went horribly wrong");
             }
         });

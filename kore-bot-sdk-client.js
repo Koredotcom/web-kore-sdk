@@ -1112,6 +1112,10 @@ function KoreRTMClient(token, opts) {
   this._connAttempts = 0;
   this._connecting = false;
   this._reconnecting = false;
+  if (clientOpts.hasOwnProperty("_reconnecting") && clientOpts._reconnecting) {
+    this._reconnecting = clientOpts._reconnecting;
+    clientOpts._reconnecting=false;
+  }
   this.user = {};
   this.user.accessToken = clientOpts.accessToken;
   this.botInfo = clientOpts.botInfo || {};
