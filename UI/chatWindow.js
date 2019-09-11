@@ -818,11 +818,14 @@ function koreBotChat() {
         }
     };
 
-    chatWindow.prototype.resetWindow = function () {
+    chatWindow.prototype.resetWindow = function (isReconnect) {
         var me = this;
         me.config.chatContainer.find('.kore-chat-header .header-title').html(me.config.botMessages.reconnecting);
         //me.config.chatContainer.find('.chat-container').html("");
         bot.close();
+        if(isReconnect){
+            me.config.botOptions._reconnecting=true;   
+        }
         bot.init(me.config.botOptions);
     };
 
@@ -1219,11 +1222,16 @@ function koreBotChat() {
             }, 100);
         });
 
-        _chatContainer.off('click', '.reload-btn').on('click', '.reload-btn', function (event) {
+        _chatContainer.off('click', '.reload-btn').on('click', '.reload-btn', function (event,customData) {
             $(this).addClass("disabled").prop('disabled', true);
             $(".close-btn").addClass("disabled").prop('disabled', true);
             setTimeout(function(){
-                me.resetWindow();
+                if(customData && customData.isReconnect){
+                    me.resetWindow(true);
+                }else{
+                    me.resetWindow();
+                }
+
             });
             $('.recordingMicrophone').trigger('click');
             if(ttsAudioSource) {

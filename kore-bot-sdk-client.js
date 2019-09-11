@@ -1151,7 +1151,6 @@ KoreRTMClient.prototype.nextMessageId = function nextMessageId() {
 
 
 KoreRTMClient.prototype._onStart = function _onStart(err, data) {
-
   var errMsg;
   var __reconnect__ = this._reconnecting?true:false;
   this._connecting = false;
@@ -1163,7 +1162,7 @@ KoreRTMClient.prototype._onStart = function _onStart(err, data) {
     console.log(e && e.stack);
   }
   if(data && data.errors && (data.errors[0].code === 'TOKEN_EXPIRED' || data.errors[0].code === 401 || data.errors[0].msg === 'token expired')){
-      $('.reload-btn').click();
+      $(".reload-btn").trigger('click',{isReconnect:true});
       data.error='token_expired';
   }
   if (err || !data.url) {
