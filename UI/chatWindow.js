@@ -1027,7 +1027,7 @@ function koreBotChat() {
                 var _tempWin = window.open(a_link, "_blank");
             }
         });
-        _chatContainer.off('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn,.viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent,.listRightContent').on('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn, .viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent,.listRightContent', function (e) {
+        _chatContainer.off('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn,.viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent,.listRightContent,.checkboxBtn,.likeDislikeDiv').on('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn, .viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent,.listRightContent,.checkboxBtn,.likeDislikeDiv', function (e) {
             e.preventDefault();
             e.stopPropagation();
             var type = $(this).attr('type');
@@ -1045,6 +1045,29 @@ function koreBotChat() {
                     a_link = "http:////" + a_link;
                 }
                 var _tempWin = window.open(a_link, "_blank");
+            }
+            if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[1] === 'likeDiv') {
+                $(".likeImg").addClass('hide');
+                $(".likedImg").removeClass('hide');
+                $(".likeDislikeDiv").addClass('dummy');
+            }
+            if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[1] === 'disLikeDiv') {
+                $(".disLikeImg").addClass('hide');
+                $(".disLikedImg").removeClass('hide');
+                $(".likeDislikeDiv").addClass('dummy');
+            }
+
+            if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[0] === 'checkboxBtn') {
+                var checkboxSelection = $(e.currentTarget.parentElement).find('.checkInput:checked');
+                var selectedValue = [];
+                var toShowText = [];
+                for (var i = 0; i < checkboxSelection.length; i++) {
+                    selectedValue.push($(checkboxSelection[i]).attr('value'));
+                    toShowText.push($(checkboxSelection[i]).attr('text'));
+                    console.log(selectedValue);
+                }
+                $('.chatInputBox').text(toShowText.toString());
+                me.sendMessage($('.chatInputBox'), toShowText.toString());
             }
             if(e.currentTarget.classList && e.currentTarget.classList.length>0 && e.currentTarget.classList[0] === 'quickReply') {
                 var _parentQuikReplyEle = e.currentTarget.parentElement.parentElement;
@@ -2461,6 +2484,9 @@ function koreBotChat() {
                 <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
                     {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                     {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+                    {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
+                        <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
+                    </div>{{/if}}\
                     <div class="carousel" id="carousel-one-by-one" style="height: 0px;">\
                         {{each(key, msgItem) msgData.message[0].component.payload.elements}} \
                             <div class="slide">\
@@ -2826,6 +2852,13 @@ function koreBotChat() {
                                     msgData.message[0].cInfo.body = msgData.message[0].cInfo.body.text;
                                 }
                                 msgData.message[0].component = msgData.message[0].cInfo.body;
+                                if (msgData.message[0].component.payload.template_type === 'dropdowm_template') {
+                                    msgData.message[0].component.payload.fromHistory = true;
+                                    msgData.message[0].component.selectedValue=res[1].messages[index+1].message[0].cInfo.body;                                    
+                                }
+                                if (msgData.message[0].component.payload.template_type === 'multi_select') {
+                                    msgData.message[0].component.payload.fromHistory = true;
+                                }
                                 me.renderMessage(msgData);
                             } catch (e) {
                                 me.renderMessage(msgData);
