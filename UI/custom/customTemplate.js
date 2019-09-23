@@ -45,6 +45,43 @@ customTemplate.prototype.renderMessage = function (msgData) {
 */
 
 customTemplate.prototype.getChatTemplate = function (tempType) {
+	/* Sample template structure for dropdown
+	var message =  {
+        "type": "template",
+        "payload": {
+            "template_type": "dropdown_template",
+            "heading":"please select : ",
+            "elements": [
+                {
+                    "title": "United Arab Emirates Dirham",
+                    "value":"AED"
+                },
+                {
+                    "title": "Australian Dollar",
+                    "value":"AUD"
+                },
+                {
+                    "title": "Canadian Dollar",
+                    "value":"CAD"
+                },
+                {
+                    "title": "Swiss Franc",
+                    "value":"CHF"
+                },
+                {
+                    "title": "Chinese Yuanr",
+                    "value":"CNY"
+                },
+                {
+                    "title": "Czech Koruna",
+                    "value":"CZK"
+                }
+           
+            ], 
+        }
+	};
+	print(JSON.stringify(message)); 
+	*/
 	var dropdownTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 		{{if msgData.message}} \
 			<li {{if msgData.type !== "bot_response"}} id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
@@ -66,6 +103,36 @@ customTemplate.prototype.getChatTemplate = function (tempType) {
 			</li> \
 		{{/if}} \
 	</script>';
+
+	/* Sample template structure for multi-select checkboxes
+		var message = {
+		"type": "template",
+		"payload": {
+		"template_type": "multi_select",
+		"elements": [
+		{
+		"title": "Classic T-Shirt Collection",
+		"value":"tShirt"
+		},{
+		"title": "Classic Shirt Collection",
+		"value":"shirts"
+		},
+		{
+		"title": "Classic shorts Collection",
+		"value":"shorts"
+		}
+		],
+		"buttons": [
+		{
+		"title": "Done",
+		"type": "postback",
+		"payload": "payload" 
+		}
+		] 
+		}
+		};
+		print(JSON.stringify(message)); 
+	*/
 	var checkBoxesTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 		{{if msgData.message}} \
 		<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
@@ -100,6 +167,16 @@ customTemplate.prototype.getChatTemplate = function (tempType) {
 			</li> \
 		{{/if}} \
 	</script>';
+
+	/* Sample template structure for Like_dislike template
+		var message = {
+		"type": "template",
+		"payload": {
+		"template_type": "like_dislike"
+		}
+		};
+		print(JSON.stringify(message));
+	*/
 	var likeDislikeTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 		{{if msgData.message}} \
 			<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon quickReplies"> \
