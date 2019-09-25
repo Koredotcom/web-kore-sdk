@@ -2852,7 +2852,7 @@ function koreBotChat() {
                                     msgData.message[0].cInfo.body = msgData.message[0].cInfo.body.text;
                                 }
                                 msgData.message[0].component = msgData.message[0].cInfo.body;
-                                if (msgData.message[0].component.payload.template_type === 'dropdowm_template') {
+                                if (msgData.message[0].component.payload.template_type === 'dropdown_template') {
                                     msgData.message[0].component.payload.fromHistory = true;
                                     msgData.message[0].component.selectedValue=res[1].messages[index+1].message[0].cInfo.body;                                    
                                 }

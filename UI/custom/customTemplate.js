@@ -12,7 +12,7 @@ function customTemplate(data) {
 customTemplate.prototype.renderMessage = function (msgData) {
 	var messageHtml = '';
 	if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "dropdowm_template") {
-		messageHtml = $(this.getChatTemplate("dropdowm_template")).tmpl({
+		messageHtml = $(this.getChatTemplate("dropdown_template")).tmpl({
 			'msgData': msgData,
 			'helpers': this.helpers,
 			'extension': this.extension
@@ -199,7 +199,7 @@ customTemplate.prototype.getChatTemplate = function (tempType) {
 			</li> \
 		{{/if}} \
 	</script>';
-	if (tempType === "dropdowm_template") {
+	if (tempType === "dropdown_template") {
 		return dropdownTemplate;
 	} else if (tempType === "checkBoxesTemplate") {
 		return checkBoxesTemplate;
