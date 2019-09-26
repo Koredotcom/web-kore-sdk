@@ -11,7 +11,7 @@ function customTemplate(data) {
  */
 customTemplate.prototype.renderMessage = function (msgData) {
 	var messageHtml = '';
-	if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "dropdowm_template") {
+	if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "dropdown_template") {
 		messageHtml = $(this.getChatTemplate("dropdown_template")).tmpl({
 			'msgData': msgData,
 			'helpers': this.helpers,
