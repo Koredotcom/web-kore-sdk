@@ -101,15 +101,19 @@
 .checkbox-primary input[type="checkbox"]:checked + label::after {
     color: #ffffff;
 }
-.checkboxBtn{
+.checkboxButtons{
     text-align: center;
     border-top: 1px solid #F2F2F2;
     padding: 10px;
-    margin: 0;
-    background: #fff;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
+}
+.checkboxBtn{
     cursor: pointer;
+    background-color: #009dab;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-right: 5px;
+    display: inline-block;
 }
 .checkboxBtnText{
     border: 0;

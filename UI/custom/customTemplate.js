@@ -158,10 +158,13 @@ customTemplate.prototype.getChatTemplate = function (tempType) {
 								</li> \
 							{{/if}} \
 						{{/each}} \
-						</li> \
-						<li class="{{if msgData.message[0].component.payload.fromHistory}} hide  {{else}} checkboxBtn{{/if}} "> \
-							<span class="{{if msgData.message[0].component.payload.fromHistory}} hide  {{else}} viewMore {{/if}}" type="postback" value="{{if msgData.message[0].component.payload.buttons[0].payload}}${msgData.message[0].component.payload.buttons[0].payload}{{else}}${msgData.message[0].component.payload.buttons[0].title}{{/if}}">${msgData.message[0].component.payload.buttons[0].title}</span> \
-						</li> \
+						<div class="{{if msgData.message[0].component.payload.fromHistory}} hide  {{else}} checkboxButtons {{/if}} "> \
+							{{each(key, buttonData) msgData.message[0].component.payload.buttons}} \
+								<div class="checkboxBtn" value=${buttonData.value} title="${buttonData.title}"> \
+									${buttonData.title} \
+								</div> \
+							{{/each}} \
+						</div> \
 					</ul> \
 				</div> \
 			</li> \

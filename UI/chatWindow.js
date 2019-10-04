@@ -1057,17 +1057,16 @@ function koreBotChat() {
                 $(".likeDislikeDiv").addClass('dummy');
             }
 
-            if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[0] === 'checkboxBtn') {
-                var checkboxSelection = $(e.currentTarget.parentElement).find('.checkInput:checked');
+            if(e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[0] === 'checkboxBtn'){
+                var checkboxSelection = $(e.currentTarget.parentElement.parentElement).find('.checkInput:checked');
                 var selectedValue = [];
                 var toShowText = [];
-                for (var i = 0; i < checkboxSelection.length; i++) {
+                for(var i=0;i<checkboxSelection.length;i++){
                     selectedValue.push($(checkboxSelection[i]).attr('value'));
                     toShowText.push($(checkboxSelection[i]).attr('text'));
-                    console.log(selectedValue);
                 }
-                $('.chatInputBox').text(toShowText.toString());
-                me.sendMessage($('.chatInputBox'), toShowText.toString());
+                $('.chatInputBox').text($(this).attr('value') +':'+ selectedValue.toString());
+                me.sendMessage($('.chatInputBox'),$(this).attr('title') +':'+ toShowText.toString());
             }
             if(e.currentTarget.classList && e.currentTarget.classList.length>0 && e.currentTarget.classList[0] === 'quickReply') {
                 var _parentQuikReplyEle = e.currentTarget.parentElement.parentElement;
