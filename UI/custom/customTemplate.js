@@ -160,7 +160,7 @@ customTemplate.prototype.getChatTemplate = function (tempType) {
 						{{/each}} \
 						<div class="{{if msgData.message[0].component.payload.fromHistory}} hide  {{else}} checkboxButtons {{/if}} "> \
 							{{each(key, buttonData) msgData.message[0].component.payload.buttons}} \
-								<div class="checkboxBtn" value=${buttonData.value} title="${buttonData.title}"> \
+								<div class="checkboxBtn" value=${buttonData.payload} title="${buttonData.title}"> \
 									${buttonData.title} \
 								</div> \
 							{{/each}} \
