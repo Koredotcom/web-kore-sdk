@@ -262,12 +262,12 @@ Integration of Kore.ai chat UI into your App. Clone the repository and create yo
 
 ###Release History:
 
-Recent changes in Master branch:
-	1. Added network disconnect warnings
-	2. Minor bug fixes
-	3. In chatConfig options, added googleMapsAPIKey to fetch user location.
+v7.1.0[Major] on 02-Nov-2019: Master branch:
+	1. Multi-select & Dropdown custom templates support
+	2. Added network disconnect warnings
+	3. Minor bug fixes
+	4. In chatConfig options, added googleMapsAPIKey to fetch user location.
 		please provide google maps API key from https://console.cloud.google.com
-
 
 v6.4.0[Minor] on 23-Apr-2019:Master branch
 	Released minor release with following changes:
