@@ -911,7 +911,7 @@ function koreBotChat() {
                     return;
                 }
                 if ($('.upldIndc').is(':visible')) {
-                    alert('Wait until file upload is not completed');
+                    alert('Please wait. Your file is uploading.');
                     return;
                 }
                 if ($('.recordingMicrophone').is(':visible')) {
@@ -939,7 +939,7 @@ function koreBotChat() {
         _chatContainer.off('click', '.sendButton').on('click', '.sendButton', function (event) {
             var _this = $('.chatInputBox');
             if ($('.upldIndc').is(':visible')) {
-                alert('Wait until file upload is not completed');
+                alert('Please wait. Your file is uploading.');
                 return;
             }
             if ($('.recordingMicrophone').is(':visible')) {
@@ -969,7 +969,7 @@ function koreBotChat() {
                 return;
             }
             if ($('.upldIndc').is(':visible')) {
-                alert('Wait until file upload is not completed');
+                alert('Please wait. Your file is uploading.');
                 return;
             }
             $('#captureAttachmnts').trigger('click');
