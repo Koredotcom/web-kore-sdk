@@ -792,7 +792,14 @@ function koreBotChat() {
         me.config.chatContainer = chatWindowHtml;
 
         me.config.chatTitle = tempTitle;
-        bot.init(me.config.botOptions,me.config.messageHistoryLimit);
+        if(!me.config.minimizeMode){
+            bot.init(me.config.botOptions,me.config.messageHistoryLimit);
+        }else{
+            chatWindowHtml.addClass('minimize');
+            chatWindowHtml.find('.minimized-title').html("Talk to " + me.config.chatTitle);
+            me.skipedInit=true;
+        }
+        
         if(me.config.allowLocation) {
             bot.fetchUserLocation();
         }
@@ -803,10 +810,18 @@ function koreBotChat() {
         var me = this;
         $('.kore-chat-overlay').hide();
         bot.close();
-        bot.destroy();
+        if (!me.config.minimizeMode) {
+            bot.destroy();
+        }
         messagesQueue=[];
         if (me.config && me.config.chatContainer) {
-            me.config.chatContainer.remove();
+            if (!me.config.minimizeMode) {
+                me.config.chatContainer.remove();
+            }else{
+                me.config.chatContainer.find('.kore-chat-header .header-title').html(me.config.botMessages.reconnecting);
+                me.config.chatContainer.addClass('minimize');
+                me.skipedInit=true;                
+            }
         }
         if(ttsAudioSource) {
             ttsAudioSource.stop();
@@ -1229,6 +1244,10 @@ function koreBotChat() {
         _chatContainer.off('click', '.minimized').on('click', '.minimized,.minimized-title', function (event) {
             _chatContainer.removeClass("minimize");
             me.minimized = false;
+            if(me.skipedInit){
+                bot.init(me.config.botOptions,me.config.messageHistoryLimit);
+                me.skipedInit=false;
+            }
             /*_chatContainer.draggable({
                 handle: _chatContainer.find(".kore-chat-header .header-title"),
                 containment: "window",
