@@ -1047,7 +1047,7 @@ function horizontalGroupBarChart(config, dimens) {
             .selectAll("g")
             .data(keys.slice().reverse())
             .enter().append("g")
-              .attr("transform", function(d, i) { return "translate(70," + i * 20 + ")"; });
+              .attr("transform", function(d, i) { return "translate(60," + i * 20 + ")"; });
 
           legend.append("rect")
               .attr("x", width - 19)
