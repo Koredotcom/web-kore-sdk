@@ -922,7 +922,7 @@ function horizontalGroupBarChart(config, dimens) {
         var svg = d3.select(selection).append('svg')
             .attr("width", dimens.outerWidth)
             .attr("height", dimens.outerHeight),
-            margin = {top: 20, right: 20, bottom: 30, left: 30},
+            margin = {top: 20, right: 20, bottom: 30, left: 35},
             width = dimens.innerWidth,
             height = dimens.innerHeight,
             g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
