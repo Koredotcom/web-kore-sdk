@@ -2933,7 +2933,12 @@ function koreBotChat() {
     var prevStr = "";
     setTimeout(function(){
         if(allowGoogleSpeech) {
-            initGapi();
+            if(window.initGapi){
+                initGapi();
+            }else{
+                console.warn("Please uncomment Google Speech files('speech/app.js','speech/key.js' and 'client_api.js' in index.html")
+            }
+
         }
     },2000);
     function isChrome() {
@@ -3064,6 +3069,10 @@ function koreBotChat() {
     }
     
     function getSIDToken() {
+        if(!speechPrefixURL){
+            console.warn("Please provide speech socket url");
+            return false;
+        }
         if(allowGoogleSpeech) {
             if(recognition) { // using webkit speech recognition
                 startGoogleWebKitRecognization();
@@ -3333,8 +3342,6 @@ function koreBotChat() {
                 rec.destroy();
                 isRecordingStarted = false;
             }, 'audio/x-raw');
-        } else {
-            console.error('Recorder undefined');
         }
         if (recognizing) {
             recognition.stop();
@@ -3350,6 +3357,10 @@ function koreBotChat() {
 
     /*************************************    TTS code start here         **************************************/
     function createSocketForTTS() {
+        if(!ttsServerUrl){
+            console.warn("Please provide tts socket url");
+            return false;
+        }
         window.TTS_SOCKET_URL = ttsServerUrl;
         var serv_url = window.TTS_SOCKET_URL;
         var userEmail = userIdentity;

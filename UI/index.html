@@ -63,9 +63,9 @@
 				var botOptions = {};
 				botOptions.logLevel = 'debug';
 				botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
-				botOptions.koreSpeechAPIUrl = "https://speech.kore.ai/";
+				//botOptions.koreSpeechAPIUrl = "";//deprecated
 				//botOptions.bearer = "bearer xyz-------------------";
-				botOptions.ttsSocketUrl = 'wss://speech.kore.ai/tts/ws';
+				//botOptions.ttsSocketUrl = '';//deprecated
 				botOptions.recorderWorkerPath = '../libs/recorderWorker.js';
 				botOptions.assertionFn = assertion;
 				botOptions.koreAnonymousFn = koreAnonymousFn;
@@ -89,7 +89,7 @@
 					isSendButton: false,
 					isTTSEnabled: true,
 					isSpeechEnabled: true,
-					allowGoogleSpeech: false,
+					allowGoogleSpeech: true,
 					allowLocation: true,
 					loadHistory: true,
 					messageHistoryLimit: 10,

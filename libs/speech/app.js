@@ -20,6 +20,9 @@ var gapiLoaded = false;
 
 /* eslint-disable no-unused-vars */
 function initGapi () {
+  if (!apiKey) {
+    return false;
+  }
   console.log('loading gapi');
   gapi.client.setApiKey(apiKey);
 
