@@ -66,9 +66,10 @@ KoreBot.prototype.fetchUserLocation = function() {
 	if(userLocation.country !== "") {
 		return;
 	}
-	console.log("Fetching user location");
+  console.log("Fetching user location");
+  var options=this.options;
 	var successCallback =  function(position){
-    if(this.KoreSDK.chatConfig.googleMapsAPIKey !== ""){
+    if(options.googleMapsAPIKey !== ""){
       var latitude = position.coords.latitude;
       var longitude =  position.coords.longitude;
       userLocation.latitude = latitude;

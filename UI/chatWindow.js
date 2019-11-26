@@ -775,7 +775,8 @@ function koreBotChat() {
         allowGoogleSpeech = me.config.allowGoogleSpeech || false;
         isSpeechEnabled = me.config.isSpeechEnabled || false;
         loadHistory = me.config.loadHistory || false;
-        historyLoading = loadHistory?true : false;
+        historyLoading = loadHistory?true : false;      
+        me.config.botOptions.googleMapsAPIKey=me.config.googleMapsAPIKey;
         me.config.botOptions.loadHistory=me.config.loadHistory;
         me.config.botOptions.chatHistory=me.config.chatHistory;
         me.config.botOptions.handleError=me.config.handleError;
