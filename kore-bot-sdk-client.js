@@ -76,7 +76,7 @@ KoreBot.prototype.fetchUserLocation = function() {
       userLocation.longitude = longitude;
       var request = new XMLHttpRequest();
       var method = 'GET';
-      var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+latitude+','+longitude+'&sensor=true&key='+this.KoreSDK.chatConfig.googleMapsAPIKey+'';
+      var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+latitude+','+longitude+'&sensor=true&key='+options.googleMapsAPIKey+'';
       var async = true;
 
       request.open(method, url, async);
