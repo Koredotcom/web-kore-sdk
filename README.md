@@ -101,8 +101,8 @@ Integration of Kore.ai chat UI into your App. Clone the repository and create yo
 	//Define the bot options
 	var botOptions = {};
 	botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
-	botOptions.koreSpeechAPIUrl = "https://speech.kore.ai/";
-	botOptions.ttsSocketUrl = 'wss://speech.kore.ai/tts/ws';
+	botOptions.koreSpeechAPIUrl = ""; // This option is deprecated
+	botOptions.ttsSocketUrl = ''; // This option is deprecated
 	botOptions.assertionFn = assertion;
 	botOptions.koreAnonymousFn = koreAnonymousFn;
 	botOptions.botInfo = {"name":"Bot Name", "_id" :"Bot Id"};  //Capture Bot Name & Bot ID from Builder Tool app. Go to respective Bot and then navigate to Settings-->Config Settings-->General settings section. Bot Name is case sensitive.
@@ -119,7 +119,8 @@ Integration of Kore.ai chat UI into your App. Clone the repository and create yo
 	    isSendButton: false, // set true, to show send button below the compose bar
 	    isTTSEnabled: true, // set false, to hide speaker icon
 	    isSpeechEnabled: true, // set false, to hide mic icon
-	    allowGoogleSpeech : true, // set false, to use KORE.ai speech engine instead Google speech engine.This feature requires valid Google speech API key. (Place it in 'web-kore-sdk/libs/speech/key.js')
+	    allowGoogleSpeech : true, //This feature requires valid Google speech API key. (Place it in 'web-kore-sdk/libs/speech/key.js')
+	    						  //Google speech works in Google Chrome browser without API key.
 	    allowLocation : true, // set false, to deny sending location to server
 	    loadHistory: false, // set true to load recent chat history
 	    messageHistoryLimit: 10, // set limit to load recent chat history
@@ -173,8 +174,8 @@ Integration of Kore.ai chat UI into your App. Clone the repository and create yo
 	//define the bot options
 	var botOptions = {}; 
 	botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
-	botOptions.koreSpeechAPIUrl = "https://speech.kore.ai/";
-	botOptions.ttsSocketUrl = 'wss://speech.kore.ai/tts/ws';
+	botOptions.koreSpeechAPIUrl = ""; //This option is deprecated
+	botOptions.ttsSocketUrl = ''; //This option is deprecated
 	botOptions.assertionFn = assertion;
 	botOptions.koreAnonymousFn = koreAnonymousFn;
 	botOptions.clientId   = "clientId"; // issued by the kore.ai on client app registration.
@@ -347,7 +348,7 @@ V6.1.0 [Major] on 31-JAN-2018: Master branch
 V6.0.0 [Major] on 04-NOV-2017: web-sdk-6.0.0 branch
     1. Added Pie chart, Line chart, Bar chart and Table support
     2. Added Google Speech to text support. 
-        This feature requires valid Google speech API key. (Place it in 'web-kore-sdk/libs/speech/key.js')  
+        This feature requires valid Google speech API key. (Place it in 'web-kore-sdk/libs/speech/key.js')
         (Supported Browsers are Chrome, Firefox, Microsoft Edge, Safari 11.
         Firefox, Microsoft Edge, Safari 11 requires Google API key)
     3. Updated chatConfig options to turn on/off Google Speech to Text.
