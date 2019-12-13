@@ -1028,7 +1028,7 @@ function horizontalGroupBarChart(config, dimens) {
 
           g.append("g")
               .attr("class", "axis")
-              .call(d3.axisLeft(y).ticks(null, "s"))
+              .call(d3.axisLeft(y).ticks(null, ""))
               .append("text")
               .attr("x", 2)
               .attr("y", y(y.ticks().pop()) + 0.5)
