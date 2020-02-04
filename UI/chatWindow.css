@@ -1242,10 +1242,11 @@
 }
 .kore-chat-window .largePreviewContent .tablechartDiv table td, .kore-chat-window .largePreviewContent .tablechartDiv table th{
     padding: 17px;
-    white-space: nowrap;
+    /* white-space: nowrap; */
     font-size: 14px;
     color: #26344a;
     text-align: left;
+    max-width: 200px !important;
 }
 .kore-chat-window .tablechart tr:last-child , .kore-chat-window .largePreviewContent  tr:last-child{ border:none; }
 .kore-chat-window .noPadding {
@@ -1590,6 +1591,10 @@
     padding: 10px;
     font-size: 15px;
     color: #8a959f;
+    max-width: 190px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 /* mini table css ends here */
 

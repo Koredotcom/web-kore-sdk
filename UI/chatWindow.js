@@ -2395,7 +2395,7 @@ function koreBotChat() {
                                     {{each(key, additional) table.additional}} \
                                         <tr>\
                                             {{each(cellkey, cellValue) additional}} \
-                                                <td  {{if cellkey === additional.length-1}}colspan="2"{{/if}}  {{if table.primary[cellkey][1]}}style="text-align:${table.primary[cellkey][1]};" {{/if}}>${cellValue}</td>\
+                                                <td  {{if cellkey === additional.length-1}}colspan="2"{{/if}}  {{if table.primary[cellkey][1]}}style="text-align:${table.primary[cellkey][1]};" {{/if}} title="${cellValue}">${cellValue}</td>\
                                             {{/each}} \
                                         </tr>\
                                     {{/each}} \
@@ -2428,7 +2428,7 @@ function koreBotChat() {
                                         {{each(key, additional) table.additional}} \
                                             <tr>\
                                                 {{each(cellkey, cellValue) additional}} \
-                                                    <td  {{if cellkey === additional.length-1}}colspan="2"{{/if}}  {{if table.primary[cellkey][1]}}style="text-align:${table.primary[cellkey][1]};" {{/if}}>${cellValue}</td>\
+                                                    <td  {{if cellkey === additional.length-1}}colspan="2"{{/if}}  {{if table.primary[cellkey][1]}}style="text-align:${table.primary[cellkey][1]};" {{/if}} title="${cellValue}">${cellValue}</td>\
                                                 {{/each}} \
                                             </tr>\
                                         {{/each}} \
@@ -2461,7 +2461,7 @@ function koreBotChat() {
                                     {{if tableRow.Values.length>1}}\
                                         <tr {{if key > 4}}class="hide"{{/if}}>\
                                             {{each(cellkey, cellValue) tableRow.Values}} \
-                                                <td  {{if cellkey === tableRow.Values.length-1}}colspan="2"{{/if}} class=" {{if key == 0}} addTopBorder {{/if}}" {{if msgData.message[0].component.payload.columns[cellkey][1]}}style="text-align:${msgData.message[0].component.payload.columns[cellkey][1]};" {{/if}}>${cellValue}</td>\
+                                                <td  {{if cellkey === tableRow.Values.length-1}}colspan="2"{{/if}} class=" {{if key == 0}} addTopBorder {{/if}}" {{if msgData.message[0].component.payload.columns[cellkey][1]}}style="text-align:${msgData.message[0].component.payload.columns[cellkey][1]};" {{/if}} title="${cellValue}">${cellValue}</td>\
                                             {{/each}} \
                                         </tr>\
                                     {{/if}}\
