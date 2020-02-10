@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.1, maximum-scale=1.0">
+		<script src="libs/kore-no-conflict-start.js" type="text/javascript"></script>		
 		<script src="libs/jquery.js" type="text/javascript"></script>
 		<script src="libs/jquery.tmpl.min.js" type="text/javascript"></script>
 		<script src="libs/jquery-ui.min.js" type="text/javascript"></script>
@@ -21,101 +22,21 @@
 		<script src="../libs/purejscarousel.js" type="text/javascript"></script>
 		<script src="custom/customTemplate.js" type="text/javascript"></script>
 		<link href="custom/customTemplate.css" rel="stylesheet"></link>
-
+		<!-- <script type="text/javascript" src="libs/loader.js"></script>  -->
+		
 		<!-- Uncomment these lines for Google Speech. -->
 		<!-- <script type="text/javascript" src="../libs/speech/app.js"></script>
 		<script type="text/javascript" src="../libs/speech/key.js"></script>
 		<script type="text/javascript" src="../libs/client_api.js"></script> -->
-
-		<script type="text/javascript">
-			$(document).ready(function () {
-				function assertion(options, callback) {
-					var jsonData = {
-						"clientId": botOptions.clientId,
-						"clientSecret": botOptions.clientSecret,
-						"identity": botOptions.userIdentity,
-						"aud": "",
-						"isAnonymous": false
-					};
-					$.ajax({
-						url: botOptions.JWTUrl,
-						type: 'post',
-						data: jsonData,
-						dataType: 'json',
-						success: function (data) {
-							options.assertion = data.jwt;
-							options.handleError = koreBot.showError;
-							options.chatHistory = koreBot.chatHistory;
-							options.botDetails = koreBot.botDetails;
-							callback(null, options);
-							setTimeout(function () {
-								if (koreBot && koreBot.initToken) {
-									koreBot.initToken(options);
-								}
-							}, 2000);
-						},
-						error: function (err) {
-							koreBot.showError(err.responseText);
-						}
-					});
-				}
-
-				var botOptions = {};
-				botOptions.logLevel = 'debug';
-				botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
-				//botOptions.koreSpeechAPIUrl = "";//deprecated
-				//botOptions.bearer = "bearer xyz-------------------";
-				//botOptions.ttsSocketUrl = '';//deprecated
-				botOptions.recorderWorkerPath = '../libs/recorderWorker.js';
-				botOptions.assertionFn = assertion;
-				botOptions.koreAnonymousFn = koreAnonymousFn;
-				
-				// To modify the web socket url use the following option
-				// botOptions.reWriteSocketURL = {
-                //     protocol: 'PROTOCOL_TO_BE_REWRITTEN',
-                //     hostname: 'HOSTNAME_TO_BE_REWRITTEN',
-                //     port: 'PORT_TO_BE_REWRITTEN'
-                // };
-				
-				botOptions.JWTUrl ="PLEASE_ENTER_JWTURL_HERE";
-				botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
-				botOptions.botInfo = {name:"PLEASE_ENTER_BOT_NAME","_id":"PLEASE_ENTER_BOT_ID"}; // bot name is case sensitive
-				botOptions.clientId   = "PLEASE_ENTER_CLIENT_ID"; 
-				botOptions.clientSecret="PLEASE_ENTER_CLIENT_SECRET";
-
-				var chatConfig={
-					botOptions:botOptions,
-					allowIframe: false,
-					isSendButton: false,
-					isTTSEnabled: false,
-					isSpeechEnabled: true,
-					allowGoogleSpeech: true,
-					allowLocation: true,
-					loadHistory: true,
-					messageHistoryLimit: 10,
-					autoEnableSpeechAndTTS: false,
-					graphLib: "d3",
-					googleMapsAPIKey:"",
-					minimizeMode:false
-				};
-				/* 
-					allowGoogleSpeech will use Google cloud service api.
-					Google speech key is required for all browsers except chrome.
-					On Windows 10, Microsoft Edge will support speech recognization.
-				 */
-				var koreBot = koreBotChat();
-				koreBot.show(chatConfig);
-				$('.openChatWindow').click(function () {
-					koreBot.show(chatConfig);
-				});
-			});
-		</script>
+		
+		<script src="kore-config.js" type="text/javascript"></script>
+		<script src="kore-main.js" type="text/javascript"></script>	
+		<script src="libs/kore-no-conflict-end.js" type="text/javascript"></script>
+		
 	</head>
-
 	<body>
 		<div id="chatContainer">
 			<button class="openChatWindow">Open Chat Window</button>
 		</div>
 	</body>
-
 </html>

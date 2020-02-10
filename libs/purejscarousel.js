@@ -5,7 +5,7 @@
  * Author URI: https://ninjadev.pw
  */
 
-(function() {
+(function($) {
   'use strict';
 
   window.PureJSCarousel = function(settings) {
@@ -460,4 +460,4 @@
       }
     }
   };
-})();
+})($);

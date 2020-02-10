@@ -1,0 +1,99 @@
+<!DOCTYPE>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.1, maximum-scale=1.0">
+		<link href="dist/kore-ai-sdk.min.css" rel="stylesheet" />
+		<script src="dist/kore-ai-sdk.min.js" type="text/javascript"> </script>
+
+		<script type="text/javascript">
+			(function ($) {
+
+				$(document).ready(function () {
+					function assertion(options, callback) {
+						var jsonData = {
+							"clientId": botOptions.clientId,
+							"clientSecret": botOptions.clientSecret,
+							"identity": botOptions.userIdentity,
+							"aud": "",
+							"isAnonymous": false
+						};
+						$.ajax({
+							url: botOptions.JWTUrl,
+							type: 'post',
+							data: jsonData,
+							dataType: 'json',
+							success: function (data) {
+								options.assertion = data.jwt;
+								options.handleError = koreBot.showError;
+								options.chatHistory = koreBot.chatHistory;
+								options.botDetails = koreBot.botDetails;
+								callback(null, options);
+								setTimeout(function () {
+									if (koreBot && koreBot.initToken) {
+										koreBot.initToken(options);
+									}
+								}, 2000);
+							},
+							error: function (err) {
+								koreBot.showError(err.responseText);
+							}
+						});
+					}
+
+					var botOptions = {};
+					botOptions.logLevel = 'debug';
+					botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
+					botOptions.koreSpeechAPIUrl = "https://speech.kore.ai/";
+					//botOptions.bearer = "bearer xyz-------------------";
+					botOptions.ttsSocketUrl = 'wss://speech.kore.ai/tts/ws';
+					botOptions.assertionFn = assertion;
+					botOptions.koreAnonymousFn = koreAnonymousFn;
+					botOptions.recorderWorkerPath = '../libs/recorderWorker.js';
+
+					// To modify the web socket url use the following option
+					// botOptions.reWriteSocketURL = {
+					//     protocol: 'PROTOCOL_TO_BE_REWRITTEN',
+					//     hostname: 'HOSTNAME_TO_BE_REWRITTEN',
+					//     port: 'PORT_TO_BE_REWRITTEN'
+					// };
+
+					botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
+					botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
+					botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
+					botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
+					botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+
+					var chatConfig = {
+						botOptions: botOptions,
+						allowIframe: false, 			// set true, opens authentication links in popup window, default value is "false"
+						isSendButton: false, 			// set true, to show send button below the compose bar
+						isTTSEnabled: true,				// set false, to hide speaker icon
+						isSpeechEnabled: true,			// set false, to hide mic icon
+						allowGoogleSpeech: false,		// set true, to use Google speech engine instead KORE.AI engine.This feature requires valid Google speech API key. (Place it in 'web-kore-sdk/libs/speech/key.js')
+						allowLocation: true,			// set false, to deny sending location to server
+						loadHistory: true,				// set true to load recent chat history
+						messageHistoryLimit: 10,		// set limit to load recent chat history
+						autoEnableSpeechAndTTS: false, 	// set true, to use talkType voice keyboard.
+						graphLib: "d3"  				// set google, to render google charts.This feature requires loader.js file which is available in google charts documentation.
+					};
+					/* 
+						allowGoogleSpeech will use Google cloud service api.
+						Google speech key is required for all browsers except chrome.
+						On Windows 10, Microsoft Edge will support speech recognization.
+					*/
+					var koreBot = koreBotChat();
+					koreBot.show(chatConfig);
+					$('.openChatWindow').click(function () {
+						koreBot.show(chatConfig);
+					});
+				});
+
+			})(jQuery || (window.KoreSDK && window.KoreSDK.dependencies && window.KoreSDK.dependencies.jQuery));
+		</script>
+	</head>
+	<body>
+		<div id="chatContainer">
+			<button class="openChatWindow">Open Chat Window</button>
+		</div>
+	</body>
+</html>

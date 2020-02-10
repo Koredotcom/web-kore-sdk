@@ -263,6 +263,14 @@ Integration of Kore.ai chat UI into your App. Clone the repository and create yo
 
 ###Release History:
 
+v7.2.0[Major] on 10-Feb-2020: Master branch:
+    1. Panels & Widgets support in SDK
+	2. Moved chatConfig from index.html to kore-config.js
+	3. Like and Dislike custom template support
+	4. Minor Bug Fixes
+	5. Added no-conflict files for prevention of conflicts with your libraries.
+
+	   
 v7.1.0[Major] on 02-Nov-2019: Master branch:
 	1. Multi-select & Dropdown custom templates support
 	2. Added network disconnect warnings
