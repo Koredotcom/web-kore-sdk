@@ -185,7 +185,7 @@
 		if (matchesGetters) {
 			var getters = []; // eg. [border,color]
 			for (j = 0; match = matchesGetters[j++];) {
-				let propName = match.slice(7, -1);
+				var propName = match.slice(7, -1);
 				if (propName[0] === '❗') propName = propName.substr(1);
 				getters.push(propName);
 
@@ -198,9 +198,9 @@
 		if (matchesSetters) {
 			var setters = {}; // eg. [--color:#fff, --padding:10px];
 			for (j = 0; match = matchesSetters[j++];) {
-				let x = match.substr(4).split(':');
-				let propName = x[0];
-				let propValue = x[1];
+				var x = match.substr(4).split(':');
+				var propName = x[0];
+				var propValue = x[1];
 				if (propName[0] === '❗') propName = propName.substr(1);
 				setters[propName] = propValue;
 			}
@@ -271,7 +271,7 @@
 	//beta
 	function redrawStyleSheets() {
 		for (var prop in styles_of_getter_properties) {
-			let styles = styles_of_getter_properties[prop];
+			var styles = styles_of_getter_properties[prop];
 			for (var i=0, style; style=styles[i++];) {
 				if (style.owningElement) continue;
 				var value = style['-ieVar-'+prop];
@@ -307,7 +307,7 @@
 			var parts = selector.split(':'+pseudo);
 			if (parts.length > 1) {
 				var ending = parts[1].match(/^[^\s]*/); // ending elementpart of selector (used for not(:active))
-				let sel = unPseudo(parts[0]+ending);
+				var sel = unPseudo(parts[0]+ending);
 				const listeners = pseudos[pseudo];
 				onElement(sel, function (el) {
 					el.addEventListener(listeners.on, drawTreeEvent);
@@ -316,7 +316,7 @@
 			}
 		}
 	}
-	let CSSActive = null;
+	var CSSActive = null;
 	document.addEventListener('mousedown',function(e){
 		setTimeout(function(){
 			if (e.target === document.activeElement) {
@@ -348,10 +348,10 @@
 			el.classList.add('iecp-u' + el.ieCP_unique);
 		}
 		var style = getComputedStyle(el);
-		if (el.ieCP_sheet) while (el.ieCP_sheet.rules[0]) el.ieCP_sheet.deleteRule(0);
+		if (el.ieCP_sheet) while (el.ieCP_sheet.rules[0]) el.ieCP_sheet.devareRule(0);
 		for (var prop in el.ieCPSelectors) {
 			var important = style['-ieVar-❗' + prop];
-			let valueWithVar = important || style['-ieVar-' + prop];
+			var valueWithVar = important || style['-ieVar-' + prop];
 			if (!valueWithVar) continue; // todo, what if '0'
 
 			var details = {};
@@ -366,8 +366,8 @@
 					// beta
 					if (!important && details.allByRoot !== false) continue; // dont have to draw root-properties
 
-					//let selector = item.selector.replace(/>? \.[^ ]+/, ' ', item.selector); // todo: try to equalize specificity
-					let selector = item.selector;
+					//var selector = item.selector.replace(/>? \.[^ ]+/, ' ', item.selector); // todo: try to equalize specificity
+					var selector = item.selector;
 					elementStyleSheet(el).insertRule(selector + '.iecp-u' + el.ieCP_unique + item.pseudo + ' {' + prop + ':' + value + '}', 0); // faster then innerHTML
 				}
 			}
@@ -390,9 +390,9 @@
 		for (var i = 0, el; el = els[i++];) drawElement(el); // tree
 	}
 	// draw queue
-	let drawQueue = new Set();
-	let collecting = false;
-	let drawing = false;
+	var drawQueue = new Set();
+	var collecting = false;
+	var drawing = false;
 	function drawElement(el){
 		drawQueue.add(el);
 		if (collecting) return;
@@ -414,7 +414,7 @@
 	}
 
 	function findVars(str, cb){ // css value parser
-		let level=0, lastPoint=0, newStr = '', i=0, char;
+		var level=0, lastPoint=0, newStr = '', i=0, char;
 		while (char=str[i++]) {
 			if (char === '(') ++level;
 			if (level===1) {
@@ -425,8 +425,8 @@
 					}
 				}
 				if (char === ')') {
-					let variable = str.substring(lastPoint, i-1).trim(), fallback;
-					let x = variable.indexOf(',');
+					var variable = str.substring(lastPoint, i-1).trim(), fallback;
+					var x = variable.indexOf(',');
 					if (x!==-1) {
 						fallback = variable.slice(x+1);
 						variable = variable.slice(0,x);
@@ -514,7 +514,7 @@
 		const undashed = property.substr(2);
 		const ieProperty = '-ie-'+undashed;
 		const iePropertyImportant = '-ie-❗'+undashed;
-		let value = this[iePropertyImportant] || this[ieProperty];
+		var value = this[iePropertyImportant] || this[ieProperty];
 		if (this.computedFor) { // computedStyle
 			if (value !== undefined) {
 				if (regHasVar.test(value)) {
@@ -524,8 +524,8 @@
 			} else {
 				if (!register[property] || register[property].inherits) {
 					// inherited
-					//let el = this.pseudoElt ? this.computedFor : this.computedFor.parentNode;
-					let el = this.computedFor.parentNode;
+					//var el = this.pseudoElt ? this.computedFor : this.computedFor.parentNode;
+					var el = this.computedFor.parentNode;
 					while (el.nodeType === 1) {
 						// how slower would it be to getComputedStyle for every element, not just with defined ieCP_setters
 						if (el.ieCP_setters && el.ieCP_setters[property]) {
