@@ -2082,6 +2082,27 @@
     cursor: pointer;
     max-width: 100%;
 }
+.kr-wiz-content-css .mainTemplateCntr .panelHeader .headerTitleTEXT{
+    /* background: var(--sdk-btn-light-color) !important;
+    color: var(--sdk-primary-blue-color); */
+    position: relative;
+    /* max-width: 110px; */
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 10px;
+    text-transform: uppercase;
+    line-height: 32px;
+    padding: 0 10px;
+    display: block;
+    height: 32px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-left: 8px;
+    /* cursor: pointer; */
+    max-width: 100%;
+}
 .kr-wiz-content-css .mainTemplateCntr .panelHeader .headerTitleURL{
     cursor: pointer;
     line-height: 14px;

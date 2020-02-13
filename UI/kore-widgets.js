@@ -318,7 +318,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
             <p class="headerWidgetDesc" id="widgetDisc">${tempData.description}</p>\
             {{/if}}\
           </div>\
-          {{if tempData && ((tempData.sortOptions && tempData.sortOptions.length) || (tempData.headerOptions && tempData.headerOptions.type==="menu" && tempData.headerOptions.menu && tempData.headerOptions.menu.length) || (tempData.headerOptions && tempData.headerOptions.type==="image" && tempData.headerOptions.image_url) || (tempData.filterOptions && tempData.filterOptions.length) || (tempData.headerOptions && tempData.headerOptions.type==="button" && tempData.headerOptions.button && tempData.headerOptions.button.title) || (tempData.headerOptions && tempData.headerOptions.type==="url" && tempData.headerOptions.url && tempData.headerOptions.url.title))}}\
+          {{if tempData && ((tempData.sortOptions && tempData.sortOptions.length)|| (tempData && tempData.headerOptions && (tempData.headerOptions.type==="text") && tempData.headerOptions.text) || (tempData.headerOptions && tempData.headerOptions.type==="menu" && tempData.headerOptions.menu && tempData.headerOptions.menu.length) || (tempData.headerOptions && tempData.headerOptions.type==="image" && tempData.headerOptions && tempData.headerOptions.image && tempData.headerOptions.image.image_src) || (tempData.filterOptions && tempData.filterOptions.length) || (tempData.headerOptions && tempData.headerOptions.type==="button" && tempData.headerOptions.button && tempData.headerOptions.button.title) || (tempData.headerOptions && tempData.headerOptions.type==="url" && tempData.headerOptions.url && tempData.headerOptions.url.title))}}\
             <div class="headerRight">\
                 {{if tempData && tempData.sortOptions && tempData.sortOptions.length}}\
                   <div class="headerTitleSorting">\
@@ -336,11 +336,14 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
                 {{if tempData && tempData.headerOptions && tempData.headerOptions.type==="button" && tempData.headerOptions.button && tempData.headerOptions.button.title}}\
                   <div class="headerTitleBTN action" action-type="default" actionObj="${JSON.stringify(tempData.headerOptions.button)}">${tempData.headerOptions.button.title}</div>\
                 {{/if}}\
+                {{if tempData && tempData.headerOptions && tempData.headerOptions.type==="text" && tempData.headerOptions.text}}\
+                  <div class="headerTitleTEXT" action-type="default">${tempData.headerOptions.text}</div>\
+                {{/if}}\
                 {{if tempData && tempData.headerOptions && tempData.headerOptions.type==="url" && tempData.headerOptions.url && tempData.headerOptions.url.title}}\
                   <div class="headerTitleURL action" action-type="url" actionObj="${JSON.stringify(tempData.headerOptions.url)}">${tempData.headerOptions.url.title}</div>\
                 {{/if}}\
-                {{if tempData && tempData.headerOptions && tempData.headerOptions.type==="image" && tempData.headerOptions.image_url}}\
-                <div class="headerTitleIMG"><img src="${tempData.headerOptions.image_url}" class="headerIcon"></div>\
+                {{if tempData && tempData.headerOptions && tempData.headerOptions.type==="image" && tempData.headerOptions.image && tempData.headerOptions.image.image_src}}\
+                <div class="headerTitleIMG action" action-type="default" actionObj="${JSON.stringify(tempData.headerOptions.image)}"><img src="${tempData.headerOptions.image.image_src}" class="headerIcon"></div>\
                 {{/if}}\
                 {{if tempData && tempData.headerOptions && tempData.headerOptions.type==="menu" && tempData.headerOptions.menu && tempData.headerOptions.menu.length}}\
                 <div class="headerTitleMenu">\
@@ -2832,7 +2835,9 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
                   if(widget.pollingTimer){
                     clearInterval(widget.pollingTimer);
                   }
-                  _self.refreshWidgetData(widget,refreshInterval,passedJson);
+                  if( widget.autoRefresh && widget.autoRefresh.enabled){
+                    _self.refreshWidgetData(widget,refreshInterval,passedJson);
+                  }
                 }
               });
             }
@@ -3787,7 +3792,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           (responseData.sortOptions && responseData.sortOptions.length) || 
           (responseData.filterOptions && responseData.filterOptions.length) || 
           (responseData.headerOptions && responseData.headerOptions.type==="menu" && responseData.headerOptions.menu && responseData.headerOptions.menu.length) || 
-          (responseData.headerOptions && responseData.headerOptions.type==="image" && responseData.headerOptions.image_url) || 
+          (responseData.headerOptions && responseData.headerOptions.type==="text" && responseData.headerOptions.text) || 
+          (responseData.headerOptions && responseData.headerOptions.type==="image" && responseData.headerOptions.image && responseData.headerOptions.image.image_src) || 
           (responseData.headerOptions && responseData.headerOptions.type==="button" && responseData.headerOptions.button && responseData.headerOptions.button.title) || 
           (responseData.headerOptions && responseData.headerOptions.type==="url" && responseData.headerOptions.url && responseData.headerOptions.url.title))){
           var headerHtml = $(_self.getTemplate("widgetHeader")).tmplProxy({
@@ -4282,7 +4288,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           if(refreshFullpanel){
             _self.prepareRenderData(panelDetails.panel);
           }else {
-            $('.mainTemplateCntr .progress').show();
+            if(widgetData){
+              clearInterval(widgetData.pollingTimer);
+            }
+            $('.widgetContParent#'+ panelDetails.subpanel).find('.progress').show();
             _self.getServerData('widgetsdk/' + _config.botOptions.botInfo._id + '/widgets/' + panelDetails.subpanel, 'post', {}, {
               "from": _config.botOptions.userIdentity || "user-name"
             }, panelDetails);
@@ -4303,9 +4312,9 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         clearInterval(widgetData.pollingTimer);
       }
     };
-    KoreWidgetSDK.prototype.clearWidgetPolling= function(widget) {
+    KoreWidgetSDK.prototype.clearWidgetPolling= function(widgetData) {
       var _self = this;
-           if(widget){
+           if(widgetData){
             clearInterval(widgetData.pollingTimer);
           }else {
             if(_self.vars.initialWidgetData && _self.vars.initialWidgetData.panels && _self.vars.initialWidgetData.panels.length){
@@ -4578,16 +4587,16 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         eData.payload = actionObj.payload;
       }
 
-      if (actionObj.nlmeta) {
-        eData.nlmeta = actionObj.nlmeta;
+      if (actionObj.nlMeta) {
+        eData.nlMeta = actionObj.nlMeta;
       }
 
       if (actionObj.customdata) {
-        eData.customdata = actionObj.customdata;
+        eData.customData = actionObj.customData;
       }
 
       _self.triggerEvent('onPostback', eData);
-
+      _self.openPanel('closePanel');
       _self.setChatFocus();
     };
 

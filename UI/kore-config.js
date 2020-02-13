@@ -30,7 +30,7 @@
         autoEnableSpeechAndTTS: false, 	// set true, to use talkType voice keyboard.
         graphLib: "d3" ,				// set google, to render google charts.This feature requires loader.js file which is available in google charts documentation.
         googleMapsAPIKey:"",
-		minimizeMode:true              // set true, to show chatwindow in minized mode 
+		minimizeMode:false              // set true, to show chatwindow in minized mode 
     };
      /* 
         allowGoogleSpeech will use Google cloud service api.
