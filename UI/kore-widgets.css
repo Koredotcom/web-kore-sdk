@@ -145,7 +145,7 @@
 /* .kr-wiz-content-css .tab-list-template .listTemplateContainer .arcRegular path{
     fill: var(--sdk-primary-font-color);
 } */
-.kore-chat-window .listTemplateContainer .tooltip-legend{
+.kr-wiz-content-css .listTemplateContainer .tooltip-legend{
     position: absolute;
     background-color: var(--sdk-primary-bg-color);
     opacity: 1;
@@ -155,15 +155,15 @@
     border-radius: 2px;
 }
 
-.kore-chat-window .listTemplateContainer .tooltip-legend.no-show {
+.kr-wiz-content-css .listTemplateContainer .tooltip-legend.no-show {
     display: none;
 }
-.kore-chat-window .listTemplateContainer .tooltip-legend.only-show {
+.kr-wiz-content-css .listTemplateContainer .tooltip-legend.only-show {
     display: block;
 }
 
 /* Pie chart starts here*/
-.kore-chat-window .piechart .piechartDiv {
+.kr-wiz-content-css .piechart .piechartDiv {
     display: block;
     border-radius: 4px;
     clear: both;
@@ -174,45 +174,45 @@
     background: var(--sdk-default-white);
 }
 
-.kore-chat-window .piechart .piechartDiv .legend-tooltip-pie-chart {
+.kr-wiz-content-css .piechart .piechartDiv .legend-tooltip-pie-chart {
     background: var(--sdk-default-white);
     box-shadow: var(--sdk-primary-box-shadow);
     height: 150px;
     overflow-y: scroll;
  } 
 
-.kore-chat-window .legend-tooltip-pie-chart::-webkit-scrollbar {
+.kr-wiz-content-css .legend-tooltip-pie-chart::-webkit-scrollbar {
    width: 4px;
 }
 
-.kore-chat-window .legend-tooltip-pie-chart::-webkit-scrollbar-track {
+.kr-wiz-content-css .legend-tooltip-pie-chart::-webkit-scrollbar-track {
    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
 }
 
-.kore-chat-window .legend-tooltip-pie-chart::-webkit-scrollbar-thumb {
+.kr-wiz-content-css .legend-tooltip-pie-chart::-webkit-scrollbar-thumb {
  background-color:  var(--sdk-primary-bg-color);
  outline: 1px solid slategrey;
 }
 
 
-.kore-chat-window .legend-tooltip-pie-chart {
+.kr-wiz-content-css .legend-tooltip-pie-chart {
     background: var(--sdk-default-white);
     box-shadow: var(--sdk-primary-box-shadow);
     height: 150px;
     overflow-y: scroll;
  } 
 
-.kore-chat-window .piechart .messageBubble.pieChart {
+.kr-wiz-content-css .piechart .messageBubble.pieChart {
     margin-bottom: 10px;
 }
-.kore-chat-window .piechart .profile-photo {
+.kr-wiz-content-css .piechart .profile-photo {
     top: 30px !important;
 }
-.kore-chat-window .messageBubble.tableChart {
+.kr-wiz-content-css .messageBubble.tableChart {
     margin-bottom: 10px;
 }
 
-.kore-chat-window .barchartDiv .bar-chart-tooltip {
+.kr-wiz-content-css .barchartDiv .bar-chart-tooltip {
   position: absolute;
   max-width: 170px;
   padding: 2px;
@@ -222,7 +222,7 @@
   border-radius: 8px;
   pointer-events: none;
 }
-.kore-chat-window  .largePreviewContent .bar-chart-tooltip {
+.kr-wiz-content-css  .largePreviewContent .bar-chart-tooltip {
     position: absolute;
     padding: 2px;
     font: 12px sans-serif;
@@ -235,43 +235,43 @@
 
 /* Pie chart ends here*/
 
-.kore-chat-window .no-show {
+.kr-wiz-content-css .no-show {
     display: none;
 }
-.kore-chat-window .no-visible {
+.kr-wiz-content-css .no-visible {
     visibility: hidden;
 }
-.kore-chat-window .only-show {
+.kr-wiz-content-css .only-show {
     display: block;
 }
 
 /* pie chart polylines and labels start */
-.kore-chat-window polyline{
+.kr-wiz-content-css polyline{
     opacity: .3;
     stroke: var(--sdk-primary-font-color);
     stroke-width: 1px;
     fill: none;
 }
 
-.kore-chat-window .labelName tspan {
+.kr-wiz-content-css .labelName tspan {
     font-style: normal;
     font-weight: 700;
 }
 
-.kore-chat-window .labelName {
+.kr-wiz-content-css .labelName {
     font-size: 0.9em;
     font-style: italic;
 }
 /* pie chart polylines and labels end */
 
-.kore-chat-window .piechart .piechartDiv .legend-tooltip-pie-chart {
+.kr-wiz-content-css .piechart .piechartDiv .legend-tooltip-pie-chart {
     background: var(--sdk-default-white);
     box-shadow: var(--sdk-primary-box-shadow);
     height: 150px;
     overflow-y: scroll;
  }
  
- .kore-chat-window .legend-tooltip-pie-chart {
+ .kr-wiz-content-css .legend-tooltip-pie-chart {
     background: var(--sdk-default-white);
     box-shadow: var(--sdk-primary-box-shadow);
     height: 105px;
@@ -6684,3 +6684,21 @@
   */
 }
 
+.kr-wiz-container .tooltip,
+.kr-wiz-container .tooltipDonut,
+.kr-wiz-container .tooltipVSB,
+.kr-wiz-container .tooltipHBC,
+.kr-wiz-container .tooltipBC {
+    background: var(--sdk-chat-widow-default-white);
+    box-shadow: 0 0 5px #999999;
+    color: #333;
+    font-size: 12px;
+    left: 130px;
+    padding: 10px;
+    position: absolute;
+    text-align: center;
+    top: 95px;
+    width: 80px;
+    z-index: 10;
+    opacity: 1 !important;
+}

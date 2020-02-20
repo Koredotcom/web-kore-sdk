@@ -49,7 +49,7 @@
             /***************** Mic initilization code end here ************************/
 
             /******************************* TTS variable initialization **************/
-            var _ttsContext = null, _ttsConnection = null, ttsServerUrl = '', ttsAudioSource = null, _txtToSpeak = "", isTTSOn = false, isTTSEnabled = false, optionIndex = 65, autoEnableSpeechAndTTS = false;    // Audio context
+            var _ttsContext = null, _ttsConnection = null,_ttsInterface = "webapi", ttsServerUrl = '', ttsAudioSource = null, _txtToSpeak = "", isTTSOn = false, isTTSEnabled = false, optionIndex = 65, autoEnableSpeechAndTTS = false;    // Audio context
             /************************** TTS initialization code end here **************/
 
             /*************************** file upload variable *******************************/
@@ -1304,7 +1304,10 @@
                             $('#ttspeaker')[0].pause();
                             $('.ttspeakerDiv').addClass('ttsOff');
                         } else {
-                            if (!_ttsConnection) {
+                            if(_ttsInterface && _ttsInterface==="webapi"){
+                                _ttsConnection = speakWithWebAPI();
+ 
+                            }else{
                                 _ttsConnection = createSocketForTTS();
                             }
                             isTTSOn = true;
@@ -2124,7 +2127,9 @@
                     if (msgData.message[0].component && msgData.message[0].component.payload.speech_hint) {
                         _txtToSpeak = msgData.message[0].component.payload.speech_hint;
                     }
-                    if (!_ttsConnection || (_ttsConnection.readyState && _ttsConnection.readyState !== 1)) {
+                    if (_ttsInterface&&_ttsInterface==="webapi") {
+                        _ttsConnection = speakWithWebAPI(_txtToSpeak);
+                    }else if (!_ttsConnection || (_ttsConnection.readyState && _ttsConnection.readyState !== 1)) {
                         try {
                             _ttsConnection = createSocketForTTS();
                         } catch (e) {
@@ -3418,6 +3423,23 @@
             /*************************************    Microphone code end here    **************************************/
 
             /*************************************    TTS code start here         **************************************/
+
+            function speakWithWebAPI(_txtToSpeak) {
+                if('speechSynthesis' in window){
+                    window.speechSynthesis.cancel();
+                    // Create a new instance of SpeechSynthesisUtterance.
+                    var msg = new SpeechSynthesisUtterance();
+                    msg.text =_txtToSpeak;
+                   //  msg.voice = speechSynthesis.getVoices().filter(function(voice) {        
+                   //      return voice.default===true;
+                   //     })[0];
+                   // Queue this utterance.
+                    window.speechSynthesis.speak(msg);
+               }else{
+                   console.warn("KORE:Your browser doesn't support TTS(Speech Synthesiser)")
+               }
+            }
+
             function createSocketForTTS() {
 
                 if(!ttsServerUrl){
