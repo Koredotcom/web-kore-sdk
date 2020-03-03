@@ -386,6 +386,7 @@
                             var linkArray = str.match(/<a[^>]*>([^<]+)<\/a>/g);
                             for (var x = 0; x < linkArray.length; x++) {
                                 var _newLA = document.createElement('div');
+                                var _detectedLink=linkArray[x];
                                 _newLA.innerHTML = linkArray[x];
                                 //for mailto: links, new line character need to be repaced with %0A 
                                 if (_detectedLink.indexOf("href='mailto:") > -1 || _detectedLink.indexOf('href="mailto:') > -1) {
