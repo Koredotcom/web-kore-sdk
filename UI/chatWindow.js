@@ -2509,7 +2509,7 @@
                                         {{/each}} \
                                     </table>\
                                 </div>\
-                                {{if msgData.message[0].component.payload.elements.length > 4 && msgData.message[0].component.payload.table_design && msgData.message[0].component.payload.table_design == "regular"}}<div class="showMore">Show more</div>{{/if}}\
+                                {{if msgData.message[0].component.payload.elements.length > 5 && msgData.message[0].component.payload.table_design && msgData.message[0].component.payload.table_design == "regular"}}<div class="showMore">Show more</div>{{/if}}\
                             </div>\
                              <div class="accordionTable {{if msgData.message[0].component.payload.table_design && msgData.message[0].component.payload.table_design == "regular"}}hide{{else}}responsive{{/if}}">\
                                 {{each(key, tableRow) msgData.message[0].component.payload.elements}} \
