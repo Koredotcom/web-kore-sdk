@@ -426,6 +426,9 @@
                     return helpers.nl2br(str, true);
                 },
                 'checkMarkdowns': function (val, hyperLinksMap) {
+                    if(val===''){
+                        return val;
+                    }
                     var txtArr = val.split(/\r?\n/);
                     for (var i = 0; i < txtArr.length; i++) {
                         var _lineBreakAdded = false;
@@ -1353,6 +1356,9 @@
                             if (tempData.message[0].component && tempData.message[0].component.payload && tempData.message[0].component.payload.text) {
                                 tempData.message[0].cInfo.body = tempData.message[0].component.payload.text;
                             }
+                            if(tempData.message[0].component && tempData.message[0].component.payload && (tempData.message[0].component.payload.videoUrl || tempData.message[0].component.payload.audioUrl)){
+                                tempData.message[0].cInfo.body = tempData.message[0].component.payload.text || "";
+                            }
                         }
                         if (loadHistory && historyLoading) {
                             messagesQueue.push(tempData);
@@ -2262,6 +2268,9 @@
                                                     {{if msgItem.component && msgItem.component.payload && msgItem.component.payload.videoUrl}}\
                                                         <div class="videoEle"><video width="300" controls><source src="${msgItem.component.payload.videoUrl}" type="video/mp4"></video></div>\
                                                     {{/if}}\
+                                                    {{if msgItem.component && msgItem.component.payload && msgItem.component.payload.audioUrl}}\
+                                                        <div class="audioEle"><audio width="180" controls><source src="${msgItem.component.payload.audioUrl}"></audio></div>\
+                                                    {{/if}}\
                                                 {{/if}} \
                                             {{else}} \
                                                 {{if msgItem.cInfo.renderMsg && msgItem.cInfo.renderMsg !== ""}}\
@@ -2944,6 +2953,9 @@
                                         }
                                         if (msgData.message[0].component.payload.template_type === 'multi_select') {
                                             msgData.message[0].component.payload.fromHistory = true;
+                                        }
+                                        if(msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)){
+                                            msgData.message[0].cInfo.body = "";
                                         }
                                         me.renderMessage(msgData);
                                     } catch (e) {
