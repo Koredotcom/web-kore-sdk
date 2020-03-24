@@ -153,6 +153,18 @@
                 return target.replace(new RegExp(search, 'g'), replacement);
             };
 
+            function findSortedIndex(array, value) {
+                var low = 0,
+                    high = array.length;
+    
+                while (low < high) {
+                    var mid = low + high >>> 1;
+                    if (array[mid] < value) low = mid + 1;
+                    else high = mid;
+                }
+                return low;
+            }
+
             function xssAttack(txtStr) {
                 //   if (compObj && compObj[0] && compObj[0].componentType === "text") {
 
@@ -795,6 +807,9 @@
                 if ("boolean" === typeof(navigator["onLine"])) {
                     if (navigator.onLine) {
                         this.hideError();
+                        if(bot && bot.RtmClient){
+                                bot.getHistory({forHistorySync:true,limit:30});                           
+                        }
 
                     } else {
                         this.showError("You are currently offline")
@@ -1712,7 +1727,7 @@
                 bot.sendMessage(messageToBot, function messageSent(err) {
                     if (err && err.message) {
                         setTimeout(function () {
-                            $('#msg_' + clientMessageId).find('.messageBubble').append('<div class="errorMsg">Send Failed. Please resend.</div>');
+                            $('.kore-chat-window [data-time="'+clientMessageId+'"]').find('.messageBubble').append('<div class="errorMsg">Send Failed. Please resend.</div>');
                         }, 350);
                     }
                 });
@@ -1733,6 +1748,7 @@
 
             chatWindow.prototype.renderMessage = function (msgData) {
                 var me = this, messageHtml = '', extension = '', _extractedFileName = '';
+                msgData.createdOnTimemillis=new Date(msgData.createdOn).valueOf();
                 customTemplateObj.helpers = helpers;
                 customTemplateObj.extension = extension;
                 graphLibGlob = me.config.graphLib || "d3";
@@ -2319,7 +2335,34 @@
                 if(msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.sliderView && !msgData.message[0].component.payload.fromHistory){
                     bottomSliderAction('show',messageHtml);
                 }else{
-                _chatContainer.append(messageHtml);
+                    //ignore message(msgId) if it is already in viewport                     
+                    if ($('.kore-chat-window .chat-container li#' + msgData.messageId).length < 1) {
+                        if (msgData.type === "bot_response") {
+                            var msgTimeStamps = [];
+                            var msgEles = $('.kore-chat-window .chat-container>li');
+                            if (msgEles.length) {
+                                msgEles.each(function (i, ele) {
+                                    msgTimeStamps.push(parseInt($(ele).attr('data-time')));
+                                });
+                                var insertAtIndex = findSortedIndex(msgTimeStamps, msgData.createdOnTimemillis);
+
+                                if (insertAtIndex > 0) {
+                                    var insertAfterEle = msgEles[insertAtIndex];
+                                    if (insertAfterEle) {
+                                        $(messageHtml).insertBefore(insertAfterEle);
+                                    } else {
+                                        _chatContainer.append(messageHtml);
+                                    }
+                                } else {
+                                    _chatContainer.prepend(messageHtml);
+                                }
+                            } else {
+                                _chatContainer.append(messageHtml);
+                            }
+                        } else {
+                            _chatContainer.append(messageHtml);
+                        }
+                    }
                 }
                 handleImagePreview();
 
@@ -2365,8 +2408,7 @@
                         socketSendTTSMessage(_txtToSpeak);
                     }
                 }
-            };
-
+            };                   
             chatWindow.prototype.formatMessages = function (msgContainer) {
                 /*adding target to a tags */
                 $(msgContainer).find('a').attr('target', '_blank');
@@ -2478,7 +2520,8 @@
                     {{if msgData.message}} \
                         {{each(key, msgItem) msgData.message}} \
                             {{if msgItem.cInfo && msgItem.type === "text"}} \
-                                <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
+                                <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+                                     class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}}\ {{if msgData.icon}}with-icon{{/if}}"> \
                                     {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                                     {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})" title="User Avatar"></div> </div> {{/if}} \
                                     <div aria-live="assertive"  class="messageBubble">\
@@ -2539,7 +2582,8 @@
                     {{if msgData.message}} \
                         {{each(key, msgItem) msgData.message}} \
                             {{if msgItem.component && msgItem.component.payload.url}} \
-                                <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
+                                <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+                                    class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
                                     {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                                     {{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
                                     <div class="messageBubble">\
@@ -2579,7 +2623,8 @@
                 </script>';
                 var buttonTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
                     {{if msgData.message}} \
-                        <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+                        <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+                            class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
                             <div class="buttonTmplContent"> \
                                 {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                                 {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
@@ -2605,7 +2650,8 @@
 
                 var pieChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
                     {{if msgData.message}} \
-                        <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon piechart"> \
+                        <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+                            class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon piechart"> \
                             {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                             {{if msgData.icon}}<div class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
                             {{if msgData.message[0].component.payload.text}}<div class="messageBubble pieChart">\
@@ -2622,7 +2668,8 @@
 
                 var barchartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
                     {{if msgData.message}} \
-                        <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon barchart"> \
+                        <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+                            class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon barchart"> \
                             {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                             {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
                             {{if msgData.message[0].component.payload.text}}<div class="messageBubble barchart">\
@@ -2636,7 +2683,8 @@
                 </scipt>';
                 var linechartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
                     {{if msgData.message}} \
-                        <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon linechart"> \
+                        <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+                            class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon linechart"> \
                             {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                             {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
                             {{if msgData.message[0].component.payload.text}}<div class="messageBubble linechart">\
@@ -2650,7 +2698,8 @@
                 </scipt>';
                 var miniTableChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
                     {{if msgData.message}} \
-                        <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
+                        <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+                            class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
                             {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                             {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
                             {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
@@ -2681,7 +2730,8 @@
                 </scipt>';
                 var miniTableHorizontalTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
                     {{if msgData.message}} \
-                    <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
+                    <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+                        class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
                         {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                         {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
                         {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
@@ -2716,7 +2766,8 @@
                 </scipt>';
                 var tableChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
                     {{if msgData.message}} \
-                        <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
+                        <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+                            class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
                             {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                             {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
                             {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
@@ -2773,7 +2824,8 @@
 
                 var carouselTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
                     {{if msgData.message}} \
-                        <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+                        <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+                            class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
                             {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                             {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
                             {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
@@ -2808,7 +2860,8 @@
 
                 var quickReplyTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
                     {{if msgData.message}} \
-                        <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon quickReplies"> \
+                        <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+                            class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon quickReplies"> \
                             <div class="buttonTmplContent"> \
                                 {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                                 {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar marginT50" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
@@ -2837,7 +2890,8 @@
                 </scipt>';
                 var listTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
                     {{if msgData.message}} \
-                        <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+                        <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+                            class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
                             <div class="listTmplContent"> \
                                 {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                                 {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
@@ -3200,9 +3254,24 @@
                 }, 50);*/
             }
             this.chatHistory = function (res) {
-                if (loadHistory) {
+                
+                var me = window.chatContainerConfig;
+                if(res[2]==='historysync'){
+                    //setTimeout(function () {
+                        if (res && res[1] && res[1].messages.length > 0) {
+                            res[1].messages.forEach(function (msgData, index) {
+                                setTimeout(function () {
+                                    if (msgData.type === "outgoing" || msgData.type === "bot_response") {
+                                        //if ($('.kore-chat-window .chat-container li#' + msgData.messageId).length < 1) {
+                                            me.renderMessage(msgData);
+                                        //}
+                                    }
+                                }, index * 100);
+                            });
+                        }
+                    //}, 4000);//sync history messages after sockeet messages gets into viewport
+                }else  if (loadHistory) {   
                     historyLoading = true;
-                    var me = window.chatContainerConfig;
                     if (res && res[1] && res[1].messages.length > 0) {
                         $('.chat-container').hide();
                         $('.historyLoadingDiv').addClass('showMsg');

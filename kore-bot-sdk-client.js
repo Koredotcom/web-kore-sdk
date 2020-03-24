@@ -46,7 +46,10 @@ var _chatHistoryLoaded = false;
 inherits(KoreBot, EventEmitter);
 
 KoreBot.prototype.emit = function emit() {
-	if(!_chatHistoryLoaded && arguments && arguments[0] === 'history') {
+	if(arguments && arguments[0] === 'history' && this.historySyncInProgress){
+    arguments[2]="historysync";
+    this.cbBotChatHistory(arguments);
+  }else if(!window._chatHistoryLoaded && arguments && arguments[0] === 'history') {
 		_chatHistoryLoaded = true;
 		this.cbBotChatHistory(arguments);
 	}
@@ -283,9 +286,9 @@ gets the history of the conversation.
 KoreBot.prototype.getHistory = function(opts) {
 	debug("get history");
 	opts = opts || {};
-	opts.limit = 10;
+	//opts.limit = 10;
     if(typeof window !== "undefined"){
-        opts.limit = window.messageHistoryLimit || 10;
+        opts.limit = opts.limit || window.messageHistoryLimit || 10;
     }
 	var __opts__ = {};
 	__opts__.forward = opts.forward;
@@ -300,7 +303,11 @@ KoreBot.prototype.getHistory = function(opts) {
 	}
 
 	__opts__.botInfo = this.options.botInfo;
-	__opts__.authorization = "bearer " + this.WebClient.user.accessToken;
+  __opts__.authorization = "bearer " + this.WebClient.user.accessToken;
+  if(opts.forHistorySync){
+    this.historySyncInProgress=true;
+    delete __opts__.msgId;
+  }
 
 	if (__opts__.forward)
 		this.WebClient.history.history(__opts__, bind(this.onForwardHistory, this));
