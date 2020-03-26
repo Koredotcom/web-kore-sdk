@@ -1291,7 +1291,10 @@
 
                 _chatContainer.off('click', '.reload-btn').on('click', '.reload-btn', function (event) {
                     $(this).addClass("disabled").prop('disabled', true);
-                    me.resetWindow();
+                    $(".close-btn").addClass("disabled").prop('disabled', true);
+                    setTimeout(function () {
+                        me.resetWindow();
+                    });
                     $('.recordingMicrophone').trigger('click');
                     if (ttsAudioSource) {
                         ttsAudioSource.stop();
@@ -1320,9 +1323,6 @@
                     }
                 });
                 bot.on("open", function (response) {
-                    if (!$('.chat-container:visible').length) {
-                        this.close();
-                    }
                     accessToken = me.config.botOptions.accessToken;
                     var _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
                     _chatContainer.find('.kore-chat-header .header-title').html(me.config.chatTitle).attr('title', me.config.chatTitle);

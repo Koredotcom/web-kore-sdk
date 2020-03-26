@@ -511,6 +511,11 @@
     opacity: 0.3;
 }
 
+.kore-chat-window .close-btn.disabled {
+    opacity: 0.3;
+    pointer-events: none;
+} 
+
 .kore-chat-window .sendBtnCnt .sendButton {
     background: var(--sdk-chat-widow-primary-blue-color);
     padding: 5px;
