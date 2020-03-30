@@ -299,7 +299,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
               </div>\
               {{/each}}\
           </div>\
-          <div class="sdkThemeContainer">\
+          <div class="sdkThemeContainer" title="Themes">\
           <i  class="icon-More dropbtnWidgt sdkThemeIcon"  onclick="showDropdown(this)"></i>\
           <ul class="dropdown-contentWidgt  rmpmW themeContent" style="list-style:none;">\
                   <li class="themeTitle">Theme</li>\
