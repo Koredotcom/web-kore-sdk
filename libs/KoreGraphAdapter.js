@@ -447,7 +447,7 @@ var KoreGraphAdapter = (function($) {
                 data[i].percentage=100-percentAccumulation;
             }
             percentAccumulation=percentAccumulation+data[i].percentage;
-        }    
+         }    
         // legend dimensions
         var legendRectSize = dimens.legendRectSize; // defines the size of the colored squares in legend   dimens.legendRectSize
         var legendSpacing = dimens.legendSpacing; // defines spacing between squares                    dimens.legendSpacing
@@ -540,7 +540,15 @@ var KoreGraphAdapter = (function($) {
                        var pos = outerArc.centroid(d);
                        pos[0] = radius * 0.95 * (midAngle(d) < Math.PI ? 1 : -1);
                        return [arc.centroid(d), outerArc.centroid(d), pos]
-                   });
+                   })
+                   .style("display", function(d){
+                    if(d.data.percentage == 0) {
+                        return 'none';
+                    }
+                    else {
+                        return 'block';
+                    }
+                   })
            
            
        
@@ -555,11 +563,20 @@ var KoreGraphAdapter = (function($) {
                    .attr('transform', function(d) {
                        var pos = outerArc.centroid(d);
                        pos[0] = radius * 0.95 * (midAngle(d) < Math.PI ? 1 : -1);
+                       pos[0] = pos[0] + 10;
                        return 'translate(' + pos + ')';
                    })
                    .style('text-anchor', function(d) {
                        return (midAngle(d)) < Math.PI ? 'start' : 'end';
-                   });
+                   })
+                   .style('display', function(d) {
+                        if(d.data.percentage == 0) {
+                            return 'none';
+                        }
+                        else {
+                            return 'block';
+                        }
+                   })
 
 
    // mouse event handlers are attached to path so they need to come after its definition
@@ -932,13 +949,15 @@ var KoreGraphAdapter = (function($) {
           .call(d3.axisBottom(x));
 
          g.selectAll('text')
-         .attr("class", "chart-disp-val")
+          .attr("class", "chart-disp-val")
         .attr("transform", "rotate(-65) translate(-30, 0)");
+
+
 
       g.append("g")
           .attr("class", "axis")
           .call(d3.axisLeft(y).ticks(null, "s"))
-        .append("text")
+          .append("text")
           .attr("x", 2)
           .attr("y", y(y.ticks().pop()) - 10)
           .attr("dy", "0.32em")
@@ -946,12 +965,14 @@ var KoreGraphAdapter = (function($) {
           .attr("font-weight", "bold")
           .attr("text-anchor", "start")
          // .text("Population");
-         g.selectAll('text')
-         .attr("class", "chart-disp-val")
-        g.selectAll(".axis .domain").classed("chart-axis-line", true);
-        g.selectAll(".axis line").classed("chart-axis-line", true);
 
-       // .attr("class", "domain chart-axis-line");
+    g.selectAll('text')
+          .attr("class", "chart-disp-val")
+
+      g.selectAll(".axis .domain").classed("chart-axis-line", true);
+      g.selectAll(".axis line").classed("chart-axis-line", true);
+
+        // .attr("class", "domain chart-axis-line");
 
       var tt_legend = d3.select(selection).append("div")   
          .attr("class", "tooltip-legend no-show");
@@ -1029,7 +1050,7 @@ function horizontalGroupBarChart(config, dimens) {
     }
 
     drawHorizontalGroupBarChartChart(config, dimens);
-    // setReSizeEvent(config);
+    //setReSizeEvent(config);
 }
 function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
     var z = d3.scaleOrdinal()
@@ -1237,11 +1258,10 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
             .attr("font-weight", "bold")
             // .attr("text-anchor", "start")
          //   .text(label.yAxis);
+
          g.selectAll(".axis text").attr("class", "chart-disp-val");
          g.selectAll(".axis line").attr("class", "chart-axis-line");
          g.selectAll(".axis .domain").classed("chart-axis-line", true);
-
-
     }
     var helpers = {
         getDimensions: function (id) {
@@ -1561,10 +1581,12 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
               .attr("fill", "#000")
               .attr("font-weight", "bold")
               .attr("text-anchor", "start");
-              g.selectAll(".axis text").attr("class", "chart-disp-val");
-              g.selectAll(".axis line").attr("class", "chart-axis-line");
-              g.selectAll(".axis .domain").classed("chart-axis-line", true);
-     
+
+
+         g.selectAll(".axis text").attr("class", "chart-disp-val");
+         g.selectAll(".axis line").attr("class", "chart-axis-line");
+         g.selectAll(".axis .domain").classed("chart-axis-line", true);
+
 
           var tt_legend = d3.select(selection).append("div")   
                 .attr("class", "tooltip-legend no-show")
@@ -1773,10 +1795,11 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
               .attr("class", "axis")
               .attr("transform", "translate(0,0)")                      //  .attr("transform", "translate(0," + height + ")")
               .call(d3.axisLeft(y));                                    //   .call(d3.axisBottom(x));
-              g.selectAll(".axis text").attr("class", "chart-disp-val");
-              g.selectAll(".axis line").attr("class", "chart-axis-line");
-              g.selectAll(".axis .domain").classed("chart-axis-line", true);
- 
+
+             g.selectAll(".axis text").attr("class", "chart-disp-val");
+             g.selectAll(".axis line").attr("class", "chart-axis-line");
+             g.selectAll(".axis .domain").classed("chart-axis-line", true);
+
           var tt_legend = d3.select(selection).append("div")   
               .attr("class", "tooltip-legend no-show")
 
@@ -2095,10 +2118,10 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
                 for (var i = 1, n = columns.length, c; i < n; ++i) d[c = columns[i]] = +d[c];
                 return d;
             }
-            chart.selectAll(".axis text").attr("class", "chart-disp-val");
-            chart.selectAll(".axis line").attr("class", "chart-axis-line");
-            chart.selectAll(".axis .domain").classed("chart-axis-line", true);
-   
+         chart.selectAll(".axis text").attr("class", "chart-disp-val");
+         chart.selectAll(".axis line").attr("class", "chart-axis-line");
+         chart.selectAll(".axis .domain").classed("chart-axis-line", true);
+
         var tt_legend = d3.select(selection).append("div")   
             .attr("class", "tooltip-legend no-show");
 
