@@ -247,7 +247,8 @@ KoreBot.prototype.onBackWardHistory = function(err, data) {
 				_msg.type = "user_message";
 			} else {
 				_msg.from = "bot";
-				_msg.type = "bot_response";
+        _msg.type = "bot_response";
+        _msg.icon =data.icon
 			}
 			var j = 0;
 			if (data.messages[i].components && data.messages[i].components.length > 0) {
