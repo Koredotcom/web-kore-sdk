@@ -16,6 +16,8 @@
     botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
     botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
     botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+
+    botOptions.inputPlaceholder = "Okay Mr. User! Enter New Question";
     
     var chatConfig={
         botOptions:botOptions,

@@ -794,6 +794,8 @@
                 var tempTitle = _botInfo.name;
                 me.config.botMessages = botMessages;
 
+                me.config.botMessages.message = me.config.botOptions.inputPlaceholder;
+
                 me.config.chatTitle = me.config.botMessages.connecting;
                 me.config.userAgentIE = navigator.userAgent.indexOf('Trident/') !== -1;
                 var mobileBrowserOpened = isMobile();
