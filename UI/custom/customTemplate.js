@@ -32,6 +32,29 @@
 				'extension': this.extension
 			});
 		}
+		else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "form_template") {
+			messageHtml = $(this.getChatTemplate("formTemplate")).tmpl({
+				'msgData': msgData,
+				'helpers': this.helpers,
+				'extension': this.extension
+			});
+			$(messageHtml).data(msgData);
+		}
+		else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "listView") {
+			messageHtml = $(this.getChatTemplate("templatelistView")).tmpl({
+				'msgData': msgData,
+				'helpers': this.helpers,
+				'extension': this.extension
+			});
+			$(messageHtml).data(msgData);
+		}
+		else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "advanced_multi_select") {
+			messageHtml = $(this.getChatTemplate("advancedMultiSelect")).tmpl({
+				'msgData': msgData,
+				 'helpers': this.helpers,
+				'extension': this.extension
+			});
+		}
 		return messageHtml;
 	
 		return "";
@@ -104,7 +127,6 @@
 				</li> \
 			{{/if}} \
 		</script>';
-	
 		/* Sample template structure for multi-select checkboxes
 			var message = {
 			"type": "template",
@@ -203,13 +225,427 @@
 				</li> \
 			{{/if}} \
 		</script>';
+
+		
+			
+/* Sample template structure for Inline Form
+		
+var message = {
+  	"type": "template",
+	    "payload": {
+	        "template_type": "form_template",
+	        "heading": "Please fill the form",
+	        "formFields": [
+	            {
+	               "type": "password",
+	               "label": "Enter Password",
+	               "placeholder": "Enter password",
+	               "fieldButton": {
+	                        "title": "Ok"
+	                              }
+               }
+	           ]
+	      }
+	}
+	print(JSON.stringify(message)); */
+	
+		
+var formTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+{{if msgData.message}} \
+<li {{if msgData.type !== "bot_response"}} id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+	<div class="buttonTmplContent"> \
+	{{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+		{{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+	   <div class="{{if msgData.message[0].component.payload.fromHistory}} dummy messageBubble {{else}}messageBubble{{/if}}"> \
+			<div class="formMainComponent">\
+			  {{if msgData.message[0].component.payload.heading}}<div class="templateHeading">${msgData.message[0].component.payload.heading}</div>{{else}}Submit Form{{/if}}\
+				<form>\
+				   <div class="formBody">\
+					   {{each(key, msgItem) msgData.message[0].component.payload.formFields}} \
+					   <div class="input_group">\
+					{{if msgData.message[0].component.payload.formFields[0].label}}<div class="input_label">${msgData.message[0].component.payload.formFields[0].label} : </div>{{/if}}\
+							<div class="inputMainComponent">\
+							 <div class="input-btn-submit">\
+								  <input type="${msgItem.type}" class="form-control" id="email" name="email" placeholder="${msgItem.placeholder}" value=""/>\
+							 </div>\
+							 <div id="submit" class="submit" value={{if msgData.message[0].component.payload.text}} "${msgData.message[0].component.payload.text}"{{/if}} >\
+								 <div class="ok_btn" value="${msgData.message[0].component.payload.formFields[0].fieldButton.title}">${msgData.message[0].component.payload.formFields[0].fieldButton.title}</div>\
+							 </div>\
+							 </div>\
+							</div>\
+							{{/each}} \
+					   </div>\
+						 <div class="errorMessage hide"></div>\
+			   </form>\
+			</div>\
+	   </div>\
+	</div>\
+</li> \
+{{/if}} \
+</script>';
+
+         /* Sample template structure for New List Template 
+    	 var message={
+			"type": "template",
+			"payload": {
+			    "template_type": "listView",
+			    "seeMore":true,
+			    "moreCount":4,
+			    "text":"Here is your recent transactions",
+			    "heading":"Speed Analysis",
+			    "buttons":[
+			        {
+			            "title":"See more",
+			            "type":"postback",
+			            "payload":"payload"
+			        }
+			    ],
+			    "elements": [
+			       {
+			          "title": "Swiggy",
+			          "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
+			          "subtitle": "17 Monday June",
+			          "value":"get directions",
+			          "default_action": {
+				           "title":"swiggyOrder",
+			            }
+			        },
+			        {
+			            "title": "Amazon",
+			            "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
+			            "subtitle": "17 Monday June",
+			            "value":"$35.88",
+			            "default_action": {
+				            "title":"AmazonOrder",
+			            }
+			        },
+			        {
+			            "title": "Timex",
+			            "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
+			            "subtitle": "20 Monday June",
+			            "value":"$35.88",
+			            "default_action": {
+			               "title":"TimexOrder",
+			            }
+			        },
+			        {
+			            "title": "Fuel",
+			            "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
+			            "subtitle": "12 Transactions",
+			            "value":"$35.88",
+			            "default_action": {
+							"title":"TimexOrder",
+			            }
+			        },
+			        {
+			            "title": "Shopping",
+			            "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
+			            "subtitle": "17 Monday June",
+			            "value":"$35.88",
+			            "default_action": {
+							"title":"TimexOrder",
+			            }
+			        },
+			    ],
+			    "moreData": {
+			       "Tab1": [
+					 {
+						"title": "Swiggy",
+						"image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
+						"subtitle": "17 Monday June",
+						"value":"get directions",
+						"default_action": {
+							 "title":"swiggyOrder",
+						  }
+					  },
+					  {
+						  "title": "Amazon",
+						  "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
+						  "subtitle": "17 Monday June",
+						  "value":"$35.88",
+						  "default_action": {
+							  "title":"AmazonOrder",
+						  }
+					  },
+					  {
+						  "title": "Timex",
+						  "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
+						  "subtitle": "20 Monday June",
+						  "value":"$35.88",
+						  "default_action": {
+							 "title":"TimexOrder",
+						  }
+					  },
+			    ],
+			       "Tab2": [
+					{
+			            "title": "Fuel",
+			            "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
+			            "subtitle": "12 Transactions",
+			            "value":"$35.88",
+			            "default_action": {
+							"title":"TimexOrder",
+			            }
+			        },
+			        {
+			            "title": "Shopping",
+			            "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
+			            "subtitle": "17 Monday June",
+			            "value":"$35.88",
+			            "default_action": {
+							"title":"TimexOrder",
+			            }
+			        },
+			    ]
+			}
+		}
+	}
+	print(JSON.stringify(message)); */
+
+
+
+	var listViewTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+		{{if msgData.message}} \
+			<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon listView"> \
+				<div class="listViewTmplContent {{if msgData.message[0].component.payload.boxShadow}}noShadow{{/if}}"> \
+					{{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+					{{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+					<ul class="listViewTmplContentBox"> \
+						{{if msgData.message[0].component.payload.text || msgData.message[0].component.payload.heading}} \
+							<li class="listViewTmplContentHeading"> \
+								{{if msgData.type === "bot_response" && msgData.message[0].component.payload.heading}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
+								{{if msgData.message[0].component.payload.sliderView}} <button class="close-button" title="Close"><img src="data:image/svg+xml;base64,           PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button>{{/if}}\
+								{{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
+									<span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
+								{{/if}} \
+							</li> \
+						{{/if}} \
+						<div class="listItems">\
+						{{each(key, msgItem) msgData.message[0].component.payload.elements}} \
+						{{if (msgData.message[0].component.payload.seeMore && key < msgData.message[0].component.payload.moreCount) || (!msgData.message[0].component.payload.seeMore)}}\
+									<li class="listViewTmplContentChild"> \
+										{{if msgItem.image_url}} \
+											<div class="listViewRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
+												<img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
+											</div> \
+										{{/if}} \
+										<div class="listViewLeftContent" data-url="${msgItem.default_action.url}" data-title="${msgItem.default_action.title}" data-value="${msgItem.default_action.title}"> \
+											<span class="titleDesc">\
+											<div class="listViewItemTitle" title="${msgItem.title}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
+											{{if msgItem.subtitle}}<div class="listViewItemSubtitle" title="${msgItem.subtitle}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
+											</span>\
+										{{if msgItem.value}}<div class="listViewItemValue" title="${msgItem.value}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.value, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.value, "user")}} {{/if}}</div>{{/if}} \
+										</div>\
+									</li> \
+									{{/if}}\
+						{{/each}} \
+						</div>\
+						{{if msgData.message[0].component.payload.seeMore}}\
+						<li class="seeMore"> \
+							<span class="seeMoreList">More</span> \
+						</li> \
+						{{/if}}\
+					</ul> \
+				</div> \
+			</li> \
+		{{/if}} \
+	 </script>';
+	
+/* Sample template structure for Advanced Multi Select Checkbox 
+ var message = {
+	"type": "template",
+	"payload": {
+	"template_type": "advanced_multi_select",
+	"heading":"Please select items to proceed",
+	"description":"Header Discription",
+	"sliderView":true,
+	"showViewMore":true,
+	"limit":1,
+	"elements": [
+	{
+	'collectionTitle':"Collection 1",
+	'collection':[
+	{
+	"title": "Classic T-Shirt Collection 1",
+	"description":"Discription 1A",
+	"value":"tShirt",
+	"image_url":"https://cdn.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_300/https://rbt.net.au/wp-content/uploads/2017/12/dummy-image-300x300.png"
+	},{
+	"title": "Classic Shirt Collection 1",
+	"value":"shirts",
+	"description":"Discription 1B",
+	"image_url":"https://cdn.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_300/https://rbt.net.au/wp-content/uploads/2017/12/dummy-image-300x300.png"
+	},
+	{
+	"title": "Classic shorts Collection 1",
+	"description":"Discription 3C",
+	"value":"shorts",
+	"image_url":"https://cdn.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_300/https://rbt.net.au/wp-content/uploads/2017/12/dummy-image-300x300.png"
+	}
+	]
+	
+	},
+	{
+	'collectionTitle':"Collection 2",
+	'collection':[
+	{
+	"title": "Classic T-Shirt Collection 2",
+	"value":"tShirt",
+	"description":"Discription 2A",
+	"image_url":"https://cdn.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_300/https://rbt.net.au/wp-content/uploads/2017/12/dummy-image-300x300.png"
+	},{
+	"title": "Classic Shirt Collection 2",
+	"value":"shirts",
+	"description":"Discription 2B",
+	"image_url":"https://cdn.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_300/https://rbt.net.au/wp-content/uploads/2017/12/dummy-image-300x300.png"
+	},
+	{
+	"title": "Classic shorts Collection 2",
+	"value":"shorts",
+	"description":"Discription 2C",
+	"image_url":"https://cdn.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_300/https://rbt.net.au/wp-content/uploads/2017/12/dummy-image-300x300.png"
+	}
+	]
+	},{
+	'collectionTitle':"Collection 3",
+	'collection':[
+	{
+	"title": "Classic T-Shirt Collection 3",
+	"value":"tShirt",
+	"description":"Discription 3A",
+	"image_url":"https://cdn.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_300/https://rbt.net.au/wp-content/uploads/2017/12/dummy-image-300x300.png"
+	}
+	]
+	},
+	{
+	'collectionTitle':"Collection 4",
+	'collection':[
+	{
+	"title": "Classic T-Shirt Collection 4",
+	"value":"tShirt",
+	"description":"Discription 4A",
+	"image_url":"https://cdn.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_300/https://rbt.net.au/wp-content/uploads/2017/12/dummy-image-300x300.png"
+	}
+	]
+	},
+	{
+	'collectionTitle':"Collection 5",
+	'collection':[
+	{
+	"title": "Classic T-Shirt Collection 5",
+	"value":"tShirt",
+	"description":"Discription 5A",
+	"image_url":"https://cdn.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_300/https://rbt.net.au/wp-content/uploads/2017/12/dummy-image-300x300.png"
+	}
+	]
+	}
+	],
+	"buttons": [
+	{
+	"title": "Done",
+	"type": "postback",
+	"payload": "payload"
+	}
+	]
+	}
+	};
+	print(JSON.stringify(message)); */
+
+
+ var advancedMultiSelect = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+                {{if msgData.message}} \
+                <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
+                        <div class = "listTmplContent advancedMultiSelect"> \
+                            {{if msgData.createdOn && !msgData.message[0].component.payload.sliderView}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+                            {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+                            <ul class="{{if msgData.message[0].component.payload.fromHistory}} fromHistory listTmplContentBox  {{else}} listTmplContentBox{{/if}} "> \
+                                {{if msgData.message[0].component.payload.title || msgData.message[0].component.payload.heading}} \
+                                <div class="advMultiSelectHeader">\
+                                    <h4 class="advMultiSelectHeaderTitle">${(msgData.message[0].component.payload.title) || (msgData.message[0].component.payload.heading)}<div class="closeIcon closeBottomSlider"></div></h4>\
+                                    <p class="orderDate">${msgData.message[0].component.payload.description}</p>\
+                                </div>\
+                                {{/if}} \
+                                <div class="advancedMultiSelectScroll">\
+                                  {{each(index, element) msgData.message[0].component.payload.elements}} \
+                                    <div class="collectionDiv {{if msgData.message[0].component.payload.showViewMore && index > 3}}hide{{/if}}">\
+                                        {{if element.collection && element.collection.length}}\
+                                            {{if element && element.collection && element.collection.length > 1}}\
+                                                <div class="checkbox checkbox-primary styledCSS checkboxesDiv groupMultiSelect"> \
+                                                <input  class = "checkInput " type="checkbox" text = "${element.collectionName}" value = "${element.collectionName}" id="${element.collectionName}${msgData.messageId}${index}"> \
+                                                    <label for="${element.collectionName}${msgData.messageId}${index}">\
+                                                            {{if element && element.collectionHeader}}\
+                                                            <div class="imgDescContainer">\
+                                                                <div class="checkImgContainer">\
+                                                                    <img src="https://image12.coupangcdn.com/image/displayitem/displayitem_8ad9b5e0-fd76-407b-b820-6494f03ffc31.jpg">\
+                                                                </div>\
+                                                                <div class="multiSelectDescContainer">\
+                                                                    <p class="multiTitle">{{html helpers.convertMDtoHTML(msgItem.title, "bot")}}\</p>\
+                                                                    <p class="multiDesc">Consultation on weekends and holidays</p>\
+                                                                </div>\
+                                                            </div>\
+                                                            {{else}}\
+                                                            Select all\
+                                                            {{/if}}\
+                                                        </label> \
+                                                </div> \
+                                            {{/if}}\
+                                            {{each(key, msgItem) element.collection}} \
+                                                {{if msgData.message[0].component.payload.buttons}} \
+                                                    <li class="listTmplContentChild"> \
+                                                        <div class="checkbox checkbox-primary styledCSS checkboxesDiv singleSelect {{if !msgItem.description}}nodescription{{/if}} {{if !msgItem.description && !msgItem.image_url}}noImgdescription{{/if}}"> \
+                                                            <input  class = "checkInput" type="checkbox" text = "${msgItem.title}" value = "${msgItem.value}" id="${msgItem.value}${msgData.messageId}${index}${key}"> \
+                                                            <label for="${msgItem.value}${msgData.messageId}${index}${key}">\
+                                                                <div class="imgDescContainer">\
+                                                                    {{if msgItem.image_url}}\
+                                                                        <div class="checkImgContainer">\
+                                                                            <img src="${msgItem.image_url}">\
+                                                                        </div>\
+                                                                    {{/if}}\
+                                                                    <div class="multiSelectDescContainer">\
+                                                                        <p class="multiTitle">{{html helpers.convertMDtoHTML(msgItem.title, "bot")}}\</p>\
+                                                                        {{if msgItem.description}}\
+                                                                        <p class="multiDesc">${msgItem.description}</p>\
+                                                                        {{/if}}\
+                                                                    </div>\
+                                                                </div>\
+                                                            </label> \
+                                                        </div> \
+                                                    </li> \
+                                                {{/if}} \
+                                            {{/each}} \
+                                        {{/if}}\
+                                    </div>\
+                                  {{/each}} \
+                                  {{if !(msgData.message[0].component.payload.fromHistory)}}\
+                                  <li class="viewMoreContainer {{if !(msgData.message[0].component.payload.showViewMore)}}hide{{/if}}"> \
+                                      <span class="viewMoreGroups">ViewMore</span> \
+                                  </li> \
+                                  {{/if}}\
+                                  </div>\
+                                {{if !(msgData.message[0].component.payload.fromHistory)}}\
+                                <li class="hide multiCheckboxBtn ">\
+                                    <span title="Here are your selected items " class="{{if msgData.message[0].component.payload.fromHistory}} hide  {{else}} viewMore {{/if}}" type="postback" value="{{if msgData.message[0].component.payload.buttons[0].payload}}${msgData.message[0].component.payload.buttons[0].payload}{{else}}${msgData.message[0].component.payload.buttons[0].title}{{/if}}">${msgData.message[0].component.payload.buttons[0].title}</span> \
+                                </li> \
+                                {{/if}}\
+                            </ul> \
+                        </div> \
+                    </li> \
+                {{/if}} \
+               </scipt>';
+
 		if (tempType === "dropdown_template") {
 			return dropdownTemplate;
 		} else if (tempType === "checkBoxesTemplate") {
 			return checkBoxesTemplate;
 		} else if (tempType === "likeDislikeTemplate") {
 			return likeDislikeTemplate;
-		} else {
+		} else if (tempType === "templatelistView") {
+			return listViewTemplate;
+		} else if(tempType === "formTemplate"){
+            return formTemplate;
+		}else if (tempType === "advancedMultiSelect") {
+			return advancedMultiSelect;
+		}else {
 			return "";
 		}
 		return "";
