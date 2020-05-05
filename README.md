@@ -262,6 +262,19 @@ Integration of Kore.ai chat UI into your App. Clone the repository and create yo
 ```
 
 ###Release History:
+v7.2.15[Minor] on 05-May-2020: Master branch:
+    1.Multi Select Checkbox Template
+    2.Inline Form Template
+    3.List Template using Nav Tabs
+    4.DatePicker Template
+      -> Single date selection
+    5.DateRangePicker Template
+      -> Date range selection
+    6.Clock Template
+    7.Radio Option Picker Template
+    8.TaskMenu Picker Template
+    9.Minor Bug Fixes
+    Note: All these templates are available in customTemplate.js and kore-picker.js files
 
 v7.2.0[Major] on 10-Feb-2020: Master branch:
     1. Panels & Widgets support in SDK
