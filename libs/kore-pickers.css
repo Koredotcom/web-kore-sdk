@@ -1,0 +1,835 @@
+.kore-chat-window{	
+    font-family: "Lato", sans-serif !important;	
+}
+.kore-chat-window .kore-action-sheet .header{
+    height: 57px;
+    border-bottom: 1px solid #edeef1;
+}
+.kore-chat-window .kore-action-sheet{
+    position: absolute;
+    width: 100%;
+    max-height: 100%;
+    height: auto;
+    background:white;
+    z-index: 9;
+    bottom: 0;
+    list-style: none;
+    /* overflow: hidden; */
+    font-family: "Lato", sans-serif !important;	
+    box-shadow: 0 1px 25px 0 rgba(179, 186, 200, 0.58);
+}
+/* RadioOption CSS start */
+.kore-chat-window .sdkAccount.accountBtn .accountIcon{
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAANElEQVRoge3WwQ0AIAzEsCv77wxLIFoke4I8kwAAqSS7O+KG1R0AAADP2HgAAPiOjQcABjrSpwMHOlg7MAAAAABJRU5ErkJggg==');
+    background-size: 100% 100%;
+    width: 21px;
+    height: 21px;
+    margin: -4px;
+    display: block;
+}
+.kore-chat-window .kore-action-sheet .radioOptionsPickerContainer{
+    height:415px;
+    overflow-y: auto;
+}
+.kore-chat-window .kore-action-sheet .radioOptionsPickerContainer .sdkFooterIcon.account{
+    opacity:0;
+}
+.kore-chat-window .kore-action-sheet .radioOptionsPickerContainer .radioOptionMenuHeader .closePicker{
+    cursor: pointer;
+    background: none;
+    border: none;
+    outline: none;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+}
+.kore-chat-window .kore-action-sheet .radioOptionsPickerContainer .radioOptionMenuHeader .radioOptionHeading{
+            width: 160px;
+            height: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 2;
+            letter-spacing: normal;
+            text-align: center;
+            /* line-height: 2.5; */
+            margin-left:17px;
+       
+        color: #000000;
+}
+.kore-chat-window .kore-action-sheet  .radioOptionMenuPicker{
+    height: calc(100% - 109px);
+    padding: 0px 20px 0 20px;
+    overflow-y: auto;
+}
+.kore-chat-window .kore-action-sheet.hide .radioOptionsPickerContainer .confirmBTN{
+    opacity: 0 ;
+    z-index:2;
+}
+.kore-chat-window .kore-action-sheet .radioOptionsPickerContainer .confirmBTN{
+    position: absolute;
+    height: 54px;
+    background: #009dab;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    opacity: 1;
+    line-height: 54px;
+    transition: opacity 1.5s ease-in-out;
+    -moz-transition: opacity 1.5s ease-in-out;
+    -webkit-transition: opacity 1.5s ease-in-out;
+}
+.kore-chat-window .kore-action-sheet  .radioOptionMenuPicker .btnAccount{
+    height: 50px;
+    /* box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58); */
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding-left:13px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    display:table;
+}
+.kore-chat-window .kore-action-sheet  .radioOptionMenuPicker .radioButton .btnAccount{
+    position: relative;
+    background-color: white;
+}
+.kore-chat-window .kore-action-sheet  .radioOptionMenuPicker .btnAccount  {
+    display: block;
+    cursor: pointer;
+    user-select: none;
+}
+.kore-chat-window .kore-action-sheet  .radioOptionMenuPicker .radioButton{
+    /* display:table; */
+    width:61%;
+}
+.kore-chat-window .kore-action-sheet  .radioOptionMenuPicker .radioButton .radioValue{
+    display:table-cell;
+}
+.kore-chat-window .kore-action-sheet  .radioOptionMenuPicker .radioButton .btnAccount input{
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+.kore-chat-window .kore-action-sheet  .radioOptionMenuPicker .radioButton .btnAccount .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 30px;
+    width: 30px;
+    background-color: #eee;
+    border-radius: 50%;
+    border: solid 1px #d8d8d8;
+    background-color: #ffffff;
+}
+.kore-chat-window .kore-action-sheet  .radioOptionMenuPicker .radioButton .btnAccount  input:checked ~ .checkmark {
+    background-color: white;
+}
+.kore-chat-window .kore-action-sheet  .radioOptionMenuPicker .radioButton .btnAccount .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+.kore-chat-window .kore-action-sheet  .radioOptionMenuPicker .radioButton .btnAccount input:checked ~ .checkmark:after {
+    display: block;
+}
+.kore-chat-window .kore-action-sheet  .radioOptionMenuPicker .radioButton .btnAccount .checkmark:after {
+    top: 7px;
+    left: 7px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #007ee5;
+}
+.kore-chat-window .kore-action-sheet  .radioOptionMenuPicker .btnAccount .accountIcon{
+     margin-right: 15px;
+}
+.kore-chat-window .kore-action-sheet  .radioOptionMenuPicker .btnAccount .radioOptionName{
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 80%;
+    position: relative;
+    padding-left:40px;
+    height: 20px;
+    font-size: 15px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.25;
+    letter-spacing: -0.12px;
+    color: #222222;
+}
+.kore-chat-window .kore-action-sheet  .radioOptionMenuPicker .btnAccount .radioOptionValue{
+    padding-left:40px;
+    margin-top: 4px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+     width: 100%;
+    height: 19px;
+    font-size: 12px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.58;
+    letter-spacing: 2px;
+    color: #677180;
+}
+    /* RadioOption CSS end */
+
+    /* TaskMenu CSS start */
+.kore-chat-window .sdkMenu.menuBtn .menuIcon {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAANElEQVRoge3WwQ0AIAzEsCv77wxLIFoke4I8kwAAqSS7O+KG1R0AAADP2HgAAPiOjQcABjrSpwMHOlg7MAAAAABJRU5ErkJggg==');
+    background-size: 100% 100%;
+    width: 21px;
+    height: 21px;
+    margin: -4px;
+    display: block;
+}
+.kore-chat-window .kore-action-sheet .TaskPickerContainer{
+    height:415px;
+    overflow-y: auto;
+}
+.kore-chat-window .kore-action-sheet .TaskPickerContainer .taskMenuHeader .closeSheet{
+    cursor: pointer;
+    background: none;
+    border: none;
+    outline: none;
+    position: absolute;
+    top: 21px;
+    right: 20px;
+}
+.kore-chat-window .kore-action-sheet .TaskPickerContainer .taskMenuHeader .taskHeading{
+    line-height: 2.5;
+    margin-left:17px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #000000;
+}
+.kore-chat-window .kore-action-sheet  .taskMenuPicker{
+    height: calc(100% - 58px);
+    padding: 20px 30px;
+    overflow-y: auto;
+}
+.kore-chat-window .kore-action-sheet  .taskMenuPicker .btnTask{
+    height: 56px;
+    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 8px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+.kore-chat-window .kore-action-sheet  .taskMenuPicker .btnTask .taskIcon{
+    margin-right: 15px;
+}
+.kore-chat-window .kore-action-sheet  .taskMenuPicker .btnTask .taskName{
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 80%;
+    position: relative;
+    top: 8px;
+    color: #17151d;
+    padding-left:10px;
+}
+.kore-chat-window .kore-action-sheet  .taskMenuPicker .btnTask .displayIcon{
+    width:100%;
+}
+.kore-chat-window .kore-action-sheet .taskMenuPicker .btnTask .imageIcon{
+    width:30px;
+    height: 30px;
+    margin: 5px 3px;
+    float:left;
+}
+    /* TaskMenu CSS end */
+
+    /* ClockPicker CSS start */
+.kore-chat-window .kore-action-sheet .clockPickerContainer .sdkFooterIcon.clock{
+    opacity: 0;
+}
+.kore-chat-window .sdkFooterIcon.clock .sdkClock.clockBtn .clock{
+    background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA2NCA2NDsiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDY0IDY0IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48c3R5bGUgdHlwZT0idGV4dC9jc3MiPgoJLnN0MHtmaWxsOiMxMzQ1NjM7fQo8L3N0eWxlPjxnPjxnIGlkPSJJY29uLUNsb2NrIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgzNzguMDAwMDAwLCA0MjguMDAwMDAwKSI+PHBhdGggY2xhc3M9InN0MCIgZD0iTS0zNDYuMS0zNzMuMWMtMTIuNiwwLTIyLjktMTAuMy0yMi45LTIyLjljMC0xMi42LDEwLjMtMjIuOSwyMi45LTIyLjkgICAgIGMxMi42LDAsMjIuOSwxMC4zLDIyLjksMjIuOUMtMzIzLjEtMzgzLjQtMzMzLjQtMzczLjEtMzQ2LjEtMzczLjFMLTM0Ni4xLTM3My4xeiBNLTM0Ni4xLTQxNi41Yy0xMS4zLDAtMjAuNCw5LjItMjAuNCwyMC40ICAgICBzOS4yLDIwLjQsMjAuNCwyMC40czIwLjQtOS4yLDIwLjQtMjAuNFMtMzM0LjgtNDE2LjUtMzQ2LjEtNDE2LjVMLTM0Ni4xLTQxNi41eiIgaWQ9IkZpbGwtMTMxIi8+PHBvbHlsaW5lIGNsYXNzPSJzdDAiIGlkPSJGaWxsLTEzMiIgcG9pbnRzPSItMzM4LjksLTM4NC4zIC0zNDcuNCwtMzkyLjggLTM0Ny40LC00MDguMyAtMzQ0LjcsLTQwOC4zIC0zNDQuNywtMzkzLjkgICAgICAtMzM3LC0zODYuMiAtMzM4LjksLTM4NC4zICAgICIvPjwvZz48L2c+PC9zdmc+');
+    background-size: 100% 100%;
+    width: 21px;
+    height: 21px;
+    margin: -4px;
+    display: block;
+}
+.kore-chat-window .kore-action-sheet .clockPickerContainer .clockpicker-popover{
+    width: 100%!important;
+    position: relative;
+    top: auto !important;
+    left: auto !important;
+    margin: 0 auto;
+    border: 0;
+    background: transparent;
+    max-width: 100%;
+    /* margin-top: 32px; */
+    box-shadow: none;
+}
+.kore-chat-window .kore-action-sheet .clockPickerContainer .clockpicker-popover .arrow{
+    display: none;
+}
+.kore-chat-window .kore-action-sheet .clockPickerContainer .clockpicker-popover .popover-title{
+    height: 84px;
+    background-color: #f2f3f5;
+    padding: 26px 70px 26px 26px;
+    font-size: 54px;
+    border: 0;
+}
+.kore-chat-window .kore-action-sheet .clockPickerContainer .clockpicker-popover .popover-title span.clockpicker-span-hours{
+    font-size: 54px;
+    color: #000000 !important;
+    opacity:.3;
+}
+.kore-chat-window .kore-action-sheet .clockPickerContainer .clockpicker-popover .popover-title .clockpicker-span-hours.text-primary{
+     opacity:1;
+}
+.kore-chat-window .kore-action-sheet .clockPickerContainer .clockpicker-popover .popover-title .clockpicker-span-minutes.text-primary{
+    opacity:1;
+}
+.kore-chat-window .kore-action-sheet .clockPickerContainer .clockpicker-popover .popover-title span.clockpicker-span-minutes{
+    font-size: 54px;
+    color: #000000 !important;
+    opacity: .3;
+}
+.darkTheme.kore-chat-window .kore-action-sheet .clockPickerContainer .clockpicker-popover .popover-title{
+    height: 84px;
+    background-color: #2E2C34;
+    padding: 26px 70px 26px 26px;
+    font-size: 54px;
+}
+.darkTheme.kore-chat-window .kore-action-sheet .clockPickerContainer .clockpicker-popover .popover-title span.clockpicker-span-hours{
+    font-size: 54px;
+    color: #ffffff !important;
+}
+.darkTheme.kore-chat-window .kore-action-sheet .clockPickerContainer .clockpicker-popover .popover-title span.clockpicker-span-minutes{
+    font-size: 54px;
+    color: #ffffff !important;
+}
+.kore-chat-window .kore-action-sheet.hide .clockPickerContainer .confirmBTN{
+    opacity: 0 ;
+}
+.kore-chat-window .kore-action-sheet .clockPickerContainer .confirmBTN{
+    position: absolute;
+    height: 54px;
+    background: #009dab;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+    opacity: 1;
+    line-height: 54px;
+    transition: opacity 1.5s ease-in-out;
+    -moz-transition: opacity 1.5s ease-in-out;
+    -webkit-transition: opacity 1.5s ease-in-out;
+}
+.darkTheme.kore-chat-window .kore-action-sheet .clockPickerContainer .confirmBTN{
+    background: #0047CC;
+}
+.kore-chat-window .kore-action-sheet .clockPickerContainer .headerClock{
+    height:56px;
+    padding:17px;
+}
+.kore-chat-window .kore-action-sheet .clockPickerContainer .headerClock .choose{
+    font-size: 20px;
+    font-weight: bold;
+    color: #000000;
+}
+.kore-chat-window .kore-action-sheet .clockPickerContainer .headerClock .closeButton{
+    cursor: pointer;
+    color: #AAAAAA;
+    background: none;
+    border: none;
+    opacity: 1;
+    outline: none;
+    font-size: 30px;
+    float:right;
+    line-height: inherit;
+    margin-right: 30px;
+    margin-top:5px;
+    padding: 0 6px;
+}
+.kore-chat-window .kore-action-sheet .clockPickerContainer .clockpicker-popover .clockpicker-button.am-button,.kore-chat-window .kore-action-sheet .clockPickerContainer .clockpicker-popover .clockpicker-button.pm-button{
+    margin-left: 0 !important;
+    padding: 3px !important;
+    border: 0;
+    border-radius: 4px !important;
+    display: flex;
+    background: transparent;
+    color: #000000;
+} 
+.darkTheme.kore-chat-window  .kore-action-sheet .clockPickerContainer .clockpicker-popover .clockpicker-button.am-button,.darkTheme.kore-chat-window  .kore-action-sheet .clockPickerContainer .clockpicker-popover .clockpicker-button.pm-button{
+    color: #ffffff;
+}
+.kore-chat-window .kore-action-sheet .clockPickerContainer .clockpicker-popover .clockpicker-am-pm-block{ 
+    right: 0;
+    position: absolute;
+    top: 0;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.kore-chat-window .kore-action-sheet .clockPickerContainer{
+    padding-bottom: 54px;
+}
+.kore-chat-window .kore-action-sheet .clockPickerContainer .clockpicker-popover .clockpicker-span-am-pm{
+    display:none;
+}
+.kore-chat-window .kore-action-sheet .clockPickerContainer .clockpicker-popover .popover-content{
+    background-color: transparent;
+}
+.kore-chat-window .kore-action-sheet .clockPickerContainer .clockpicker-popover .popover-content .clockpicker-plate{
+    width: 196px;
+    height: 196px;
+    margin: 0 auto !important;
+    background-color: #eeeeee;
+    border: 1px solid #eeeeee;
+}
+.kore-chat-window .kore-action-sheet .clockPickerContainer #clockPickerInput .hide{
+    display:none !important;
+}
+.darkTheme.kore-chat-window .kore-action-sheet .clockPickerContainer .clockpicker-popover .popover-content .clockpicker-plate{
+    background-color: #2E2C34;
+    border: 1px solid #2E2C34;
+}  
+    /* ClockPicker CSS end */
+    
+    /* DatePicker CSS start */
+.kore-chat-window .kore-action-sheet .datePickerContainer .sdkFooterIcon.calender{
+    opacity:0;
+}
+.kore-chat-window  .sdkFooterIcon.singleCalender .sdkCalender.calenderBtn .calender{
+    background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjJweCIgaGVpZ2h0PSIyMnB4IiB2aWV3Qm94PSIwIDAgMjIgMjIiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUzLjIgKDcyNjQzKSAtIGh0dHBzOi8vc2tldGNoYXBwLmNvbSAtLT4KICAgIDx0aXRsZT5JY29uPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGcgaWQ9IlR3by1Ub25lLUljb25zIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjQ5LjAwMDAwMCwgLTU2LjAwMDAwMCkiIGlkPSJDYWxlbmRhciI+CiAgICAgICAgICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDIyMC4wMDAwMDAsIDQwLjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPGcgaWQ9Ikljb24iIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI5LjAwMDAwMCwgMTYuMDAwMDAwKSI+CiAgICAgICAgICAgICAgICAgICAgPHBhdGggZD0iTTAuNSw4LjUgTDAuNSw0IEMwLjUsMy43MjQgMC43MjQsMy41IDEsMy41IEwyMSwzLjUgQzIxLjI3NiwzLjUgMjEuNSwzLjcyNCAyMS41LDQgTDIxLjUsOC41IEwwLjUsOC41IFogTTUsMTcuNSBDNC43MjQsMTcuNSA0LjUsMTcuMjc2IDQuNSwxNyBMNC41LDE0IEM0LjUsMTMuNzI0IDQuNzI0LDEzLjUgNSwxMy41IEw4LDEzLjUgQzguMjc2LDEzLjUgOC41LDEzLjcyNCA4LjUsMTQgTDguNSwxNyBDOC41LDE3LjI3NiA4LjI3NiwxNy41IDgsMTcuNSBMNSwxNy41IFoiIGlkPSJGaWxsIiBmaWxsPSIjREFGM0ZGIj48L3BhdGg+CiAgICAgICAgICAgICAgICAgICAgPHBhdGggZD0iTTIxLDMgTDEsMyBDMC40NDgsMyAwLDMuNDQ4IDAsNCBMMCwyMSBDMCwyMS41NTIgMC40NDgsMjIgMSwyMiBMMjEsMjIgQzIxLjU1MiwyMiAyMiwyMS41NTIgMjIsMjEgTDIyLDQgQzIyLDMuNDQ4IDIxLjU1MiwzIDIxLDMgTDIxLDMgWiBNMSwyMSBMMjEsMjEgTDIxLDQgTDEsNCBMMSwyMSBaIE0xNSwzIEwxNSwwLjUgQzE1LDAuMjI1IDE1LjIyNSwwIDE1LjUsMCBDMTUuNzc1LDAgMTYsMC4yMjUgMTYsMC41IEwxNiwzIE02LDMgTDYsMC41IEM2LDAuMjI1IDYuMjI1LDAgNi41LDAgQzYuNzc1LDAgNywwLjIyNSA3LDAuNSBMNywzIEw2LDMgWiBNOCwxMyBMNSwxMyBDNC40NDgsMTMgNCwxMy40NDggNCwxNCBMNCwxNyBDNCwxNy41NTIgNC40NDgsMTggNSwxOCBMOCwxOCBDOC41NTIsMTggOSwxNy41NTIgOSwxNyBMOSwxNCBDOSwxMy40NDggOC41NTIsMTMgOCwxMyBMOCwxMyBaIE01LDE3IEw4LDE3IEw4LDE0IEw1LDE0IEw1LDE3IFogTTEsOSBMMjEsOSBMMjEsOCBMMSw4IEwxLDkgWiIgaWQ9Ik91dGxpbmUiIGZpbGw9IiMxRkI2RkYiPjwvcGF0aD4KICAgICAgICAgICAgICAgIDwvZz4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+');
+    background-size: 100% 100%;
+    width: 21px;
+    height: 21px;
+    margin: -4px;
+    display: block;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer .close-button{
+    cursor: pointer;
+    color: #AAAAAA;
+    background: none;
+    border: none;
+    opacity: 1;
+    outline: none;
+    font-size: 30px;
+    float:right;
+    line-height: inherit;
+    margin-right: 30px;
+    margin-top:5px;
+    padding: 0 6px;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer .date-picker-wrapper {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer{
+    position: relative;
+    padding-bottom: 57px;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer .headerCalendar{
+    height:56px;
+    padding:20px;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer table thead tr:nth-child(2) {
+    color: #ccc;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer .headerCalendar .choose{
+    font-size: 20px;
+    font-weight: bold;
+    color: #000000;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer .headerCalendar .close-button{
+    margin: 0;
+    padding-top: 8px;
+    cursor: pointer;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer .headerCalendar{
+    height:56px;
+    padding:16px 20px;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer .showDatevalues{
+    height: 84px;
+    width: 100%;
+    background-color: #f2f3f5;
+    padding: 15px;
+    display: table;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer .showDatevalues .showStartdate, .kore-chat-window .kore-action-sheet .datePickerContainer .showDatevalues .showEnddate{
+    display: table-cell;
+    /* width:50%; */
+    text-align:center;
+    position: relative;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer .showDatevalues .showStartdate .showStartYear{
+    font-size: 14px;
+    font-weight: 500;
+    color: #677180;
+    margin-right:79px;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer .showDatevalues .showStartdate .showStartMonth{
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer .showDatevalues .showEnddate .showEndYear{
+    font-size: 14px;
+    font-weight: 500;
+    color: #677180;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer .showDatevalues .showEnddate .showEndMonth{
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer .daterangepicker{
+    width: 288px !important;
+    position: relative;
+    top: auto !important;
+    left: auto !important;
+    margin: 0 auto;
+    border: 0;
+    background: transparent;
+    /* margin-top: 32px; */
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer .daterangepicker.drop-up:after{
+    display: none;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer .daterangepicker.drop-up:before{
+    display: none;
+}
+.kore-chat-window .kore-action-sheet.hide .datePickerContainer .confirmBTN{
+    opacity: 0 ;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer .confirmBTN{
+    position: absolute;
+    z-index: 100;
+    height: 54px;
+    background: #009dab;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+    opacity: 1;
+    line-height: 54px;
+    transition: opacity 1.5s ease-in-out;
+    -moz-transition: opacity 1.5s ease-in-out;
+    -webkit-transition: opacity 1.5s ease-in-out;
+}
+.darkTheme.kore-chat-window .kore-action-sheet .datePickerContainer .confirmBTN{
+    background: #0047CC;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer .daterangepicker .drp-calendar.right{
+    padding: 8px 8px 0 8px;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer .daterangepicker .drp-buttons{
+    display: none;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer .applyBtn{
+    outline: none;
+    height: 54px;
+    display: none;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer .daterangepicker td.active, .kore-chat-window .kore-action-sheet .datePickerContainer .daterangepicker td.active:hover{
+    background-color: #e94848;
+}
+.kore-chat-window .kore-action-sheet .datePickerContainer .daterangepicker .calendar-table th, .kore-chat-window .kore-action-sheet .datePickerContainer .daterangepicker .calendar-table td{
+    border-radius: 50%;
+    height: 32px;
+}
+.datePickerContainer .date-picker-wrapper{
+    font-size: 15px !important;
+}
+.datePickerContainer .date-picker-wrapper .month-wrapper table th{
+    font-size:12px;
+}
+.datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.tmp.first-date-selected{
+    background-color: #e94848!important;
+}
+.datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.tmp.checked.last-date-selected{
+    background-color: #e94848!important;
+}
+.datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.first-date-selected{
+    background-color: #e94848!important;
+}
+.datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.last-date-selected{
+    background-color: #e94848!important;
+}
+.datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.real-today{
+    background-color: #cdecfa;
+    border-radius: 50%!important;
+    height: 24px!important;
+}
+.datePickerContainer .date-picker-wrapper .month-wrapper table .day.toMonth.valid{
+    border-radius: 50%!important;
+    height: 24px!important;
+    width: 26px!important;
+}
+.datePickerContainer .date-picker-wrapper .month-wrapper table {
+    width: 100%!important;
+    /* display: table!important; */
+    height: 100%!important;
+}
+.datePickerContainer .date-picker-wrapper .month-wrapper{
+    text-align: center;
+    width: 225px;
+    height: 221px;
+}
+.datePickerContainer .date-picker-wrapper table .caption .next, .date-picker-wrapper table .caption .prev {
+    border-radius: 50%!important;
+    height: 37px!important;
+    width: 35px!important;
+    font-size: 16px!important;
+}
+    /*DatePicker CSS end*/
+
+    /*DateRangePicker CSS start*/
+.kore-chat-window .sdkFooterIcon.rangeCalender .sdkRangeCalender.calenderBtn .Rangecalender{
+    background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjJweCIgaGVpZ2h0PSIyMnB4IiB2aWV3Qm94PSIwIDAgMjIgMjIiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUzLjIgKDcyNjQzKSAtIGh0dHBzOi8vc2tldGNoYXBwLmNvbSAtLT4KICAgIDx0aXRsZT5JY29uPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGcgaWQ9IlR3by1Ub25lLUljb25zIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjQ5LjAwMDAwMCwgLTU2LjAwMDAwMCkiIGlkPSJDYWxlbmRhciI+CiAgICAgICAgICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDIyMC4wMDAwMDAsIDQwLjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPGcgaWQ9Ikljb24iIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI5LjAwMDAwMCwgMTYuMDAwMDAwKSI+CiAgICAgICAgICAgICAgICAgICAgPHBhdGggZD0iTTAuNSw4LjUgTDAuNSw0IEMwLjUsMy43MjQgMC43MjQsMy41IDEsMy41IEwyMSwzLjUgQzIxLjI3NiwzLjUgMjEuNSwzLjcyNCAyMS41LDQgTDIxLjUsOC41IEwwLjUsOC41IFogTTUsMTcuNSBDNC43MjQsMTcuNSA0LjUsMTcuMjc2IDQuNSwxNyBMNC41LDE0IEM0LjUsMTMuNzI0IDQuNzI0LDEzLjUgNSwxMy41IEw4LDEzLjUgQzguMjc2LDEzLjUgOC41LDEzLjcyNCA4LjUsMTQgTDguNSwxNyBDOC41LDE3LjI3NiA4LjI3NiwxNy41IDgsMTcuNSBMNSwxNy41IFoiIGlkPSJGaWxsIiBmaWxsPSIjREFGM0ZGIj48L3BhdGg+CiAgICAgICAgICAgICAgICAgICAgPHBhdGggZD0iTTIxLDMgTDEsMyBDMC40NDgsMyAwLDMuNDQ4IDAsNCBMMCwyMSBDMCwyMS41NTIgMC40NDgsMjIgMSwyMiBMMjEsMjIgQzIxLjU1MiwyMiAyMiwyMS41NTIgMjIsMjEgTDIyLDQgQzIyLDMuNDQ4IDIxLjU1MiwzIDIxLDMgTDIxLDMgWiBNMSwyMSBMMjEsMjEgTDIxLDQgTDEsNCBMMSwyMSBaIE0xNSwzIEwxNSwwLjUgQzE1LDAuMjI1IDE1LjIyNSwwIDE1LjUsMCBDMTUuNzc1LDAgMTYsMC4yMjUgMTYsMC41IEwxNiwzIE02LDMgTDYsMC41IEM2LDAuMjI1IDYuMjI1LDAgNi41LDAgQzYuNzc1LDAgNywwLjIyNSA3LDAuNSBMNywzIEw2LDMgWiBNOCwxMyBMNSwxMyBDNC40NDgsMTMgNCwxMy40NDggNCwxNCBMNCwxNyBDNCwxNy41NTIgNC40NDgsMTggNSwxOCBMOCwxOCBDOC41NTIsMTggOSwxNy41NTIgOSwxNyBMOSwxNCBDOSwxMy40NDggOC41NTIsMTMgOCwxMyBMOCwxMyBaIE01LDE3IEw4LDE3IEw4LDE0IEw1LDE0IEw1LDE3IFogTTEsOSBMMjEsOSBMMjEsOCBMMSw4IEwxLDkgWiIgaWQ9Ik91dGxpbmUiIGZpbGw9IiMxRkI2RkYiPjwvcGF0aD4KICAgICAgICAgICAgICAgIDwvZz4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+');
+    background-size: 100% 100%;
+    width: 21px;
+    height: 21px;
+    margin: -4px;
+    display: block;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .sdkFooterIcon.rangeCalenderBtn{
+    opacity:0;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .close-button{
+    cursor: pointer;
+    color: #AAAAAA;
+    background: none;
+    border: none;
+    opacity: 1;
+    outline: none;
+    font-size: 30px;
+    float:right;
+    line-height: inherit;
+    margin-right: 30px;
+    margin-top:5px;
+    padding: 0 6px;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer{
+    position: relative;
+    padding-bottom: 57px;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .headerCalendar{
+    height:56px;
+    padding:20px;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer table thead tr:nth-child(2) {
+    color: #ccc;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .headerCalendar .choose{
+    font-size: 20px;
+    font-weight: bold;
+    color: #000000;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .headerCalendar .close-button{
+    margin: 0;
+    padding-top: 8px;
+    cursor: pointer;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .headerCalendar{
+    height:56px;
+    padding:16px 20px;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .showDatevalues{
+    height: 84px;
+    width: 100%;
+    background-color: #f2f3f5;
+    padding: 15px;
+    display: table;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .showDatevalues .showStartdate, .kore-chat-window .kore-action-sheet .dateRangePickerContainer .showDatevalues .showEnddate{
+    display: table-cell;
+    width:50%;
+    text-align:center;
+    position: relative;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .showDatevalues .showStartdate::after{
+    content: '-';
+    color:#000;
+    position: absolute;
+    right: -5px;
+    top: 25%;
+    font-size: 30px;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .showDatevalues .showStartdate .showStartYear{
+    font-size: 14px;
+    font-weight: 500;
+    color: #677180;
+    margin-right:79px;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .showDatevalues .showStartdate .showStartMonth{
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000;
+}
+    
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .showDatevalues .showEnddate .showEndYear{
+    font-size: 14px;
+    font-weight: 500;
+    color: #677180;
+    margin-right:79px;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .showDatevalues .showEnddate .showEndMonth{
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .daterangepicker{
+    width: 288px !important;
+    position: relative;
+    top: auto !important;
+    left: auto !important;
+    margin: 0 auto;
+    border: 0;
+    background: transparent;
+    /* margin-top: 32px; */
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .daterangepicker.drop-up:after{
+    display: none;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .daterangepicker.drop-up:before{
+    display: none;
+}
+.kore-chat-window .kore-action-sheet.hide .dateRangePickerContainer .confirmBTN{
+    opacity: 0 ;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .confirmBTN{
+    position: absolute;
+    height: 54px;
+    z-index: 100;
+    background: #009dab;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+    opacity: 1;
+    line-height: 54px;
+    transition: opacity 1.5s ease-in-out;
+    -moz-transition: opacity 1.5s ease-in-out;
+    -webkit-transition: opacity 1.5s ease-in-out;
+}
+.darkTheme.kore-chat-window .kore-action-sheet .dateRangePickerContainer .confirmBTN{
+    background: #0047CC;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .daterangepicker .drp-calendar.right{
+    padding: 8px 8px 0 8px;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .daterangepicker .drp-buttons{
+    display: none;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .applyBtn{
+    outline: none;
+    height: 54px;
+    display: none;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .daterangepicker td.active, .kore-chat-window .kore-action-sheet .dateRangePickerContainer .daterangepicker td.active:hover{
+    background-color: #e94848;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .daterangepicker .calendar-table th, .kore-chat-window .kore-action-sheet .dateRangePickerContainer .daterangepicker .calendar-table td{
+    border-radius: 50%;
+    height: 32px;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .daterangepicker .drp-calendar.right {
+    position: absolute !important;
+    right: 35px !important;
+    top: 0 !important;
+    margin-top:-8px !important;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .daterangepicker .drp-calendar.right tbody {
+    display: none !important;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .daterangepicker .drp-calendar.right thead > tr:nth-child(2) {
+    display: none !important;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .daterangepicker .drp-calendar.right th.month {
+    display: none !important;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .daterangepicker .drp-calendar.right thead th.prev.available{
+    position: absolute;
+    left: -217px;
+    top: 17px;
+}
+.kore-chat-window .kore-action-sheet .dateRangePickerContainer .daterangepicker .drp-calendar.left {
+    padding:0px !important;
+    margin-left: 15px !important;
+}
+.dateRangePickerContainer .date-picker-wrapper{
+    font-size: 15px !important;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+.dateRangePickerContainer .date-picker-wrapper .month-wrapper table th{
+    font-size:12px;
+}
+.dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.tmp.first-date-selected{
+    background-color: #e94848!important;
+}
+.dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.tmp.checked.last-date-selected{
+    background-color: #e94848!important;
+}
+.dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.first-date-selected{
+    background-color: #e94848!important;
+}
+.dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.last-date-selected{
+    background-color: #e94848!important;
+}
+.dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.real-today{
+    background-color: #cdecfa;
+    border-radius: 50%!important;
+    height: 24px!important;
+}
+.dateRangePickerContainer .date-picker-wrapper .month-wrapper table .day.toMonth.valid{
+    border-radius: 50%!important;
+    height: 23px!important;
+    width: 26px!important;
+}
+.dateRangePickerContainer .date-picker-wrapper .month-wrapper{
+    text-align: center;
+    width: 225px;
+    height: 221px;
+}
+.dateRangePickerContainer .date-picker-wrapper .month-wrapper table {
+    width: 100%!important;
+    /* display: table!important; */
+    height: 100%!important;
+}
+.dateRangePickerContainer .date-picker-wrapper table .caption .next, .date-picker-wrapper table .caption .prev {
+    border-radius: 50%!important;
+    height: 37px!important;
+    width: 35px!important;
+    font-size: 16px!important;
+}
+    
+    /*DateRangePicker CSS end*/
+    
+    
+    
+      

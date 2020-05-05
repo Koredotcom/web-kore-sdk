@@ -1208,6 +1208,15 @@
                         $('.kore-chat-window .expand-btn').trigger('click');
                     }
                 });*/
+                // dateClockPickers();
+                if (KorePickers) {
+                    var pickerConfig={
+                     chatWindowInstance: me,
+                      chatConfig: me.config,
+                   }
+                   var korePicker = new KorePickers(pickerConfig);
+                   korePicker.init();
+                }
                 $(document).on('keyup', function (evt) {
                     if (evt.keyCode == 27) {
                         $('.closeImagePreview').trigger('click');
