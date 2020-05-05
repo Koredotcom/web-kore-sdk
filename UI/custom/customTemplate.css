@@ -1,13 +1,97 @@
 /* write your custom templates css styles */
+.liteTheme-one { /*--Theme one kore lite--*/
+    --sdk-chat-widow-default-white: #ffffff;
+    --sdk-chat-widow-primary-font-color: #26344a;
+    --sdk-chat-widow-primary-blue-color: #009dab;
+    --sdk-chat-widow-primary-border-color: #e5e8ec;
+    --sdk-chat-widow-primary-bg-color: #f2f3f5;
+    --sdk-chat-widow-panel-header-bg-color:#f2f3f5;
+    --sdk-chat-widow-secondary-font-color: #8a959f;
+    --sdk-chat-widow-btn-light-color: #e5f5f6;
+    --sdk-chat-window-pie-chart-background:#fff;
+    --sdk-chat-window-checkbox-label-before-color:#cccccc;
+    --sdk-chat-window-input-border:#ccc;
+    --sdk-chat-window-list-template-close-btn-color:#AAAAAA;
+    --sdk-chat-window-input-focus-outline:#D6D7D8;
+    --sdk-chat-window-list-view-value-color:#008000; 
+    --sdk-chat-window-list-view-color:#333;
+    --sdk-chat-window-list-template-title-color:#222222;
+    --sdk-chat-window-checkbox-border:#F2F2F2;
+    --sdk-chat-window-viewmore-btn-color:#0079FF;
+    --sdk-chat-window-dropdown-border:#ddd;
+    --sdk-chat-window-checkbox-label-after-color:#555555;
+    --sdk-chat-window-list-template-heading-background-color:#f4f4f4;
+    --sdk-chat-window-list-template-sub-title-color:#77869e;
+    --sdk-chat-window-list-template-value-color:#9d9d9d;
+    --sdk-chat-window-like-border-color:#b2b2b2;
+    --sdk-chat-window-list-template-choose-color:#000000;
+    --sdk-chat-widow-primary-box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    --sdk-chat-widow-top-box-shadow: 0 0 24px 0 #8a959f;
+    --sdk-chat-widow-accordion-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDIwIDIwIj4KICAgIDxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGNpcmNsZSBjeD0iMTAiIGN5PSIxMCIgcj0iMTAiIGZpbGw9IiNFNUY1RjYiLz4KICAgICAgICA8cGF0aCBmaWxsPSIjMDA5REFCIiBkPSJNMTQuMTcyIDEyLjA0Yy4zOS0uMzkuMzktMS4wMyAwLTEuNDJsLTMuMTctMy4xN2EuOTk2Ljk5NiAwIDAgMC0xLjQxIDBsLTMuMTcgMy4xN2MtLjQuMzktLjQgMS4wMy0uMDEgMS40Mi4zOS4zOSA3LjM3LjM5IDcuNzYgMHoiLz4KICAgIDwvZz4KPC9zdmc+Cg==');
+    --sdk-chat-widow-show-more: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjgiIHZpZXdCb3g9IjAgMCA0IDgiPgogICAgPHBhdGggZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDlEQUIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgZD0iTS40NDIgMWwzLjMzMyAzTC40NDIgNyIvPgo8L3N2Zz4K');
+    --sdk-chat-widow-vertical-ellipsis:url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iM3B4IiBoZWlnaHQ9IjEycHgiIHZpZXdCb3g9IjAgMCAzIDEyIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPCEtLSBHZW5lcmF0b3I6IFNrZXRjaCA1My4yICg3MjY0MykgLSBodHRwczovL3NrZXRjaGFwcC5jb20gLS0+CiAgICA8dGl0bGU+dmVydGljYWxFbGxpcHNpczwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJ2ZXJ0aWNhbEVsbGlwc2lzIiBmaWxsPSIjMDA5REFCIiBmaWxsLXJ1bGU9Im5vbnplcm8iPgogICAgICAgICAgICA8cGF0aCBkPSJNMS41LDkgQzIuMzI4NDI3MTIsOSAzLDkuNjcxNTcyODggMywxMC41IEMzLDExLjMyODQyNzEgMi4zMjg0MjcxMiwxMiAxLjUsMTIgQzAuNjcxNTcyODc1LDEyIDEuMDE0NTMwNjNlLTE2LDExLjMyODQyNzEgMCwxMC41IEMtMS4wMTQ1MzA2M2UtMTYsOS42NzE1NzI4OCAwLjY3MTU3Mjg3NSw5IDEuNSw5IFogTTEuNSw0LjUgQzIuMzI4NDI3MTIsNC41IDMsNS4xNzE1NzI4OCAzLDYgQzMsNi44Mjg0MjcxMiAyLjMyODQyNzEyLDcuNSAxLjUsNy41IEMwLjY3MTU3Mjg3NSw3LjUgMS4wMTQ1MzA2M2UtMTYsNi44Mjg0MjcxMiAwLDYgQy0xLjAxNDUzMDYzZS0xNiw1LjE3MTU3Mjg4IDAuNjcxNTcyODc1LDQuNSAxLjUsNC41IFogTTEuNSwwIEMyLjMyODQyNzEyLDUuMDcyNjUzMTNlLTE3IDMsMC42NzE1NzI4NzUgMywxLjUgQzMsMi4zMjg0MjcxMiAyLjMyODQyNzEyLDMgMS41LDMgQzAuNjcxNTcyODc1LDMgMS4wMTQ1MzA2M2UtMTYsMi4zMjg0MjcxMiAwLDEuNSBDLTEuMDE0NTMwNjNlLTE2LDAuNjcxNTcyODc1IDAuNjcxNTcyODc1LDEuNTIxNzk1OTRlLTE2IDEuNSwwIFoiIGlkPSJTaGFwZSI+PC9wYXRoPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+');
+    --sdk-chat-widow-back-arrow:url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTJweCIgaGVpZ2h0PSI3cHgiIHZpZXdCb3g9IjAgMCAxMiA3IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPCEtLSBHZW5lcmF0b3I6IFNrZXRjaCA0OSAoNTEwMDIpIC0gaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoIC0tPgogICAgPHRpdGxlPkdyb3VwIDU8L3RpdGxlPgogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+CiAgICA8ZGVmcz48L2RlZnM+CiAgICA8ZyBpZD0iUHJvcGVydHktcGFubmVsIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0iMTAuMS1JVlItQ29weSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEzMzQuMDAwMDAwLCAtMTAwNi4wMDAwMDApIiBzdHJva2U9IiM4QTk1OUYiPgogICAgICAgICAgICA8ZyBpZD0iR3JvdXAtNiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTA2NC4wMDAwMDAsIDk5NS4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxnIGlkPSJHcm91cC01IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyNzAuMDAwMDAwLCAxMS4wMDAwMDApIj4KICAgICAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMC41LDMuNSBMMTAuNSwzLjUiIGlkPSJMaW5lLTIiIHN0cm9rZS1saW5lY2FwPSJzcXVhcmUiPjwvcGF0aD4KICAgICAgICAgICAgICAgICAgICA8cG9seWxpbmUgaWQ9IlJlY3RhbmdsZS04IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3LjUzNTUzNCwgMy41MzU1MzQpIHJvdGF0ZSgtMzE1LjAwMDAwMCkgdHJhbnNsYXRlKC03LjUzNTUzNCwgLTMuNTM1NTM0KSAiIHBvaW50cz0iNS4wMzU1MzM5MSAxLjAzNTUzMzkxIDEwLjAzNTUzMzkgMS4wMzU1MzM5MSAxMC4wMzU1MzM5IDYuMDM1NTMzOTEiPjwvcG9seWxpbmU+CiAgICAgICAgICAgICAgICA8L2c+CiAgICAgICAgICAgIDwvZz4KICAgICAgICA8L2c+CiAgICA8L2c+Cjwvc3ZnPg==');
+}
+
+.darkTheme-one {/*--Theme one kore dark--*/
+    --sdk-chat-widow-default-white: #262626;
+    --sdk-chat-widow-primary-font-color: #ffffff;
+    --sdk-chat-widow-primary-border-color: rgba(255, 255, 255, .2);
+    --sdk-chat-widow-primary-blue-color: #009dab;
+    --sdk-chat-widow-primary-bg-color: #000000;
+    --sdk-chat-widow-panel-header-bg-color:#262626;
+    --sdk-chat-widow-secondary-font-color: #7c7c7c;
+    --sdk-chat-widow-btn-light-color: #223233;
+    --sdk-chat-widow-primary-box-shadow: none;
+    --sdk-chat-widow-top-box-shadow: 0 0 24px 0 #8a959f;
+    --sdk-chat-widow-accordion-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDIwIDIwIj4KICAgIDxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGNpcmNsZSBjeD0iMTAiIGN5PSIxMCIgcj0iMTAiIGZpbGw9IiMyMjMyMzMiLz4KICAgICAgICA8cGF0aCBmaWxsPSIjMDA5REFCIiBkPSJNMTQuMTcyIDEyLjA0Yy4zOS0uMzkuMzktMS4wMyAwLTEuNDJsLTMuMTctMy4xN2EuOTk2Ljk5NiAwIDAgMC0xLjQxIDBsLTMuMTcgMy4xN2MtLjQuMzktLjQgMS4wMy0uMDEgMS40Mi4zOS4zOSA3LjM3LjM5IDcuNzYgMHoiLz4KICAgIDwvZz4KPC9zdmc+Cg==');
+    --sdk-chat-widow-show-more: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjgiIHZpZXdCb3g9IjAgMCA0IDgiPgogICAgPHBhdGggZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDlEQUIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgZD0iTS40NDIgMWwzLjMzMyAzTC40NDIgNyIvPgo8L3N2Zz4K');
+    --sdk-chat-widow-vertical-ellipsis:url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iM3B4IiBoZWlnaHQ9IjEycHgiIHZpZXdCb3g9IjAgMCAzIDEyIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPCEtLSBHZW5lcmF0b3I6IFNrZXRjaCA1My4yICg3MjY0MykgLSBodHRwczovL3NrZXRjaGFwcC5jb20gLS0+CiAgICA8dGl0bGU+dmVydGljYWxFbGxpcHNpczwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJ2ZXJ0aWNhbEVsbGlwc2lzIiBmaWxsPSIjMDA5REFCIiBmaWxsLXJ1bGU9Im5vbnplcm8iPgogICAgICAgICAgICA8cGF0aCBkPSJNMS41LDkgQzIuMzI4NDI3MTIsOSAzLDkuNjcxNTcyODggMywxMC41IEMzLDExLjMyODQyNzEgMi4zMjg0MjcxMiwxMiAxLjUsMTIgQzAuNjcxNTcyODc1LDEyIDEuMDE0NTMwNjNlLTE2LDExLjMyODQyNzEgMCwxMC41IEMtMS4wMTQ1MzA2M2UtMTYsOS42NzE1NzI4OCAwLjY3MTU3Mjg3NSw5IDEuNSw5IFogTTEuNSw0LjUgQzIuMzI4NDI3MTIsNC41IDMsNS4xNzE1NzI4OCAzLDYgQzMsNi44Mjg0MjcxMiAyLjMyODQyNzEyLDcuNSAxLjUsNy41IEMwLjY3MTU3Mjg3NSw3LjUgMS4wMTQ1MzA2M2UtMTYsNi44Mjg0MjcxMiAwLDYgQy0xLjAxNDUzMDYzZS0xNiw1LjE3MTU3Mjg4IDAuNjcxNTcyODc1LDQuNSAxLjUsNC41IFogTTEuNSwwIEMyLjMyODQyNzEyLDUuMDcyNjUzMTNlLTE3IDMsMC42NzE1NzI4NzUgMywxLjUgQzMsMi4zMjg0MjcxMiAyLjMyODQyNzEyLDMgMS41LDMgQzAuNjcxNTcyODc1LDMgMS4wMTQ1MzA2M2UtMTYsMi4zMjg0MjcxMiAwLDEuNSBDLTEuMDE0NTMwNjNlLTE2LDAuNjcxNTcyODc1IDAuNjcxNTcyODc1LDEuNTIxNzk1OTRlLTE2IDEuNSwwIFoiIGlkPSJTaGFwZSI+PC9wYXRoPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+');
+    --sdk-chat-widow-back-arrow:url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTJweCIgaGVpZ2h0PSI3cHgiIHZpZXdCb3g9IjAgMCAxMiA3IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPCEtLSBHZW5lcmF0b3I6IFNrZXRjaCA0OSAoNTEwMDIpIC0gaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoIC0tPgogICAgPHRpdGxlPkdyb3VwIDU8L3RpdGxlPgogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+CiAgICA8ZGVmcz48L2RlZnM+CiAgICA8ZyBpZD0iUHJvcGVydHktcGFubmVsIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0iMTAuMS1JVlItQ29weSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEzMzQuMDAwMDAwLCAtMTAwNi4wMDAwMDApIiBzdHJva2U9IiM4QTk1OUYiPgogICAgICAgICAgICA8ZyBpZD0iR3JvdXAtNiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTA2NC4wMDAwMDAsIDk5NS4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxnIGlkPSJHcm91cC01IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyNzAuMDAwMDAwLCAxMS4wMDAwMDApIj4KICAgICAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMC41LDMuNSBMMTAuNSwzLjUiIGlkPSJMaW5lLTIiIHN0cm9rZS1saW5lY2FwPSJzcXVhcmUiPjwvcGF0aD4KICAgICAgICAgICAgICAgICAgICA8cG9seWxpbmUgaWQ9IlJlY3RhbmdsZS04IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3LjUzNTUzNCwgMy41MzU1MzQpIHJvdGF0ZSgtMzE1LjAwMDAwMCkgdHJhbnNsYXRlKC03LjUzNTUzNCwgLTMuNTM1NTM0KSAiIHBvaW50cz0iNS4wMzU1MzM5MSAxLjAzNTUzMzkxIDEwLjAzNTUzMzkgMS4wMzU1MzM5MSAxMC4wMzU1MzM5IDYuMDM1NTMzOTEiPjwvcG9seWxpbmU+CiAgICAgICAgICAgICAgICA8L2c+CiAgICAgICAgICAgIDwvZz4KICAgICAgICA8L2c+CiAgICA8L2c+Cjwvc3ZnPg==');
+}
+
+.liteTheme-two {/*--Theme one kora lite--*/
+    --sdk-chat-widow-default-white: #ffffff;
+    --sdk-chat-widow-primary-font-color: #515365;
+    --sdk-chat-widow-primary-blue-color: #4741fa;
+    --sdk-chat-widow-primary-border-color: #e9eff5;
+    --sdk-chat-widow-primary-bg-color: #ededef;
+    --sdk-chat-widow-panel-header-bg-color:#ededef;
+    --sdk-chat-widow-secondary-font-color: #767688;
+    --sdk-chat-widow-btn-light-color: #E1E0FC;
+    --sdk-chat-widow-primary-box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.25);
+    --sdk-chat-widow-top-box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.15);
+    --sdk-chat-widow-accordion-icon: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUzLjIgKDcyNjQzKSAtIGh0dHBzOi8vc2tldGNoYXBwLmNvbSAtLT4KICAgIDx0aXRsZT5hY2NvcmRpb25JY29uLXBwPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9ImFjY29yZGlvbkljb24tcHAiIGZpbGwtcnVsZT0ibm9uemVybyI+CiAgICAgICAgICAgIDxjaXJjbGUgaWQ9Ik92YWwiIGZpbGw9IiNFMUUwRkMiIGN4PSIxMCIgY3k9IjEwIiByPSIxMCI+PC9jaXJjbGU+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0xNC4xNzIsMTIuMDQgQzE0LjU2MiwxMS42NSAxNC41NjIsMTEuMDEgMTQuMTcyLDEwLjYyIEwxMS4wMDIsNy40NSBDMTAuODE1MTU1NCw3LjI2Mjc3MTkxIDEwLjU2MTUwOTUsNy4xNTc1NTU5NyAxMC4yOTcsNy4xNTc1NTU5NyBDMTAuMDMyNDkwNSw3LjE1NzU1NTk3IDkuNzc4ODQ0NTksNy4yNjI3NzE5MSA5LjU5Miw3LjQ1IEw2LjQyMiwxMC42MiBDNi4wMjIsMTEuMDEgNi4wMjIsMTEuNjUgNi40MTIsMTIuMDQgQzYuODAyLDEyLjQzIDEzLjc4MiwxMi40MyAxNC4xNzIsMTIuMDQgWiIgaWQ9IlBhdGgiIGZpbGw9IiM0NzQxRkEiPjwvcGF0aD4KICAgICAgICA8L2c+CiAgICA8L2c+Cjwvc3ZnPg==');
+    --sdk-chat-widow-show-more:  url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNHB4IiBoZWlnaHQ9IjhweCIgdmlld0JveD0iMCAwIDQgOCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNTMuMiAoNzI2NDMpIC0gaHR0cHM6Ly9za2V0Y2hhcHAuY29tIC0tPgogICAgPHRpdGxlPnNob3ctbW9yZS1wdXJwbGU8L3RpdGxlPgogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgICAgIDxnIGlkPSJzaG93LW1vcmUtcHVycGxlIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwgMS4wMDAwMDApIiBzdHJva2U9IiM0NzQxRkEiPgogICAgICAgICAgICA8cG9seWxpbmUgaWQ9IlBhdGgiIHBvaW50cz0iMC40NDIgMCAzLjc3NSAzIDAuNDQyIDYiPjwvcG9seWxpbmU+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=');
+    --sdk-chat-widow-vertical-ellipsis:url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iM3B4IiBoZWlnaHQ9IjEycHgiIHZpZXdCb3g9IjAgMCAzIDEyIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPCEtLSBHZW5lcmF0b3I6IFNrZXRjaCA1My4yICg3MjY0MykgLSBodHRwczovL3NrZXRjaGFwcC5jb20gLS0+CiAgICA8dGl0bGU+U2hhcGU8L3RpdGxlPgogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0idmVydGljYWxFbGxpcHNpcyIgZmlsbD0iIzQ3NDFGQSIgZmlsbC1ydWxlPSJub256ZXJvIj4KICAgICAgICAgICAgPHBhdGggZD0iTTEuNSw5IEMyLjMyODQyNzEyLDkgMyw5LjY3MTU3Mjg4IDMsMTAuNSBDMywxMS4zMjg0MjcxIDIuMzI4NDI3MTIsMTIgMS41LDEyIEMwLjY3MTU3Mjg3NSwxMiAxLjAxNDUzMDYzZS0xNiwxMS4zMjg0MjcxIDAsMTAuNSBDLTEuMDE0NTMwNjNlLTE2LDkuNjcxNTcyODggMC42NzE1NzI4NzUsOSAxLjUsOSBaIE0xLjUsNC41IEMyLjMyODQyNzEyLDQuNSAzLDUuMTcxNTcyODggMyw2IEMzLDYuODI4NDI3MTIgMi4zMjg0MjcxMiw3LjUgMS41LDcuNSBDMC42NzE1NzI4NzUsNy41IDEuMDE0NTMwNjNlLTE2LDYuODI4NDI3MTIgMCw2IEMtMS4wMTQ1MzA2M2UtMTYsNS4xNzE1NzI4OCAwLjY3MTU3Mjg3NSw0LjUgMS41LDQuNSBaIE0xLjUsMCBDMi4zMjg0MjcxMiw1LjA3MjY1MzEzZS0xNyAzLDAuNjcxNTcyODc1IDMsMS41IEMzLDIuMzI4NDI3MTIgMi4zMjg0MjcxMiwzIDEuNSwzIEMwLjY3MTU3Mjg3NSwzIDEuMDE0NTMwNjNlLTE2LDIuMzI4NDI3MTIgMCwxLjUgQy0xLjAxNDUzMDYzZS0xNiwwLjY3MTU3Mjg3NSAwLjY3MTU3Mjg3NSwxLjUyMTc5NTk0ZS0xNiAxLjUsMCBaIiBpZD0iU2hhcGUiPjwvcGF0aD4KICAgICAgICA8L2c+CiAgICA8L2c+Cjwvc3ZnPg==');
+    --sdk-chat-widow-back-arrow:url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTJweCIgaGVpZ2h0PSI3cHgiIHZpZXdCb3g9IjAgMCAxMiA3IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPCEtLSBHZW5lcmF0b3I6IFNrZXRjaCA0OSAoNTEwMDIpIC0gaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoIC0tPgogICAgPHRpdGxlPkdyb3VwIDU8L3RpdGxlPgogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+CiAgICA8ZGVmcz48L2RlZnM+CiAgICA8ZyBpZD0iUHJvcGVydHktcGFubmVsIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0iMTAuMS1JVlItQ29weSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEzMzQuMDAwMDAwLCAtMTAwNi4wMDAwMDApIiBzdHJva2U9IiM4QTk1OUYiPgogICAgICAgICAgICA8ZyBpZD0iR3JvdXAtNiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTA2NC4wMDAwMDAsIDk5NS4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxnIGlkPSJHcm91cC01IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyNzAuMDAwMDAwLCAxMS4wMDAwMDApIj4KICAgICAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMC41LDMuNSBMMTAuNSwzLjUiIGlkPSJMaW5lLTIiIHN0cm9rZS1saW5lY2FwPSJzcXVhcmUiPjwvcGF0aD4KICAgICAgICAgICAgICAgICAgICA8cG9seWxpbmUgaWQ9IlJlY3RhbmdsZS04IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3LjUzNTUzNCwgMy41MzU1MzQpIHJvdGF0ZSgtMzE1LjAwMDAwMCkgdHJhbnNsYXRlKC03LjUzNTUzNCwgLTMuNTM1NTM0KSAiIHBvaW50cz0iNS4wMzU1MzM5MSAxLjAzNTUzMzkxIDEwLjAzNTUzMzkgMS4wMzU1MzM5MSAxMC4wMzU1MzM5IDYuMDM1NTMzOTEiPjwvcG9seWxpbmU+CiAgICAgICAgICAgICAgICA8L2c+CiAgICAgICAgICAgIDwvZz4KICAgICAgICA8L2c+CiAgICA8L2c+Cjwvc3ZnPg==');
+}
+
+.darkTheme-two {/*--Theme one korea dark--*/
+    --sdk-chat-widow-default-white: #161620;
+    --sdk-chat-widow-primary-font-color: #ffffff;
+    --sdk-chat-widow-primary-border-color: #3e3e3e;
+    --sdk-chat-widow-primary-blue-color: #F79540;
+    --sdk-chat-widow-primary-bg-color: #28293b;
+    --sdk-chat-widow-panel-header-bg-color:#161620;
+    --sdk-chat-widow-secondary-font-color: #dadada;
+    --sdk-chat-widow-btn-light-color: #3e3e3e;
+    --sdk-chat-widow-primary-box-shadow: none;
+    --sdk-chat-widow-top-box-shadow: 0 0 24px 0 rgba(255, 255, 255, 0.15);
+    --sdk-chat-widow-accordion-icon: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUzLjIgKDcyNjQzKSAtIGh0dHBzOi8vc2tldGNoYXBwLmNvbSAtLT4KICAgIDx0aXRsZT5hY2NvcmRpb25JY29uLWRhcmtNb2RlLW9vPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9ImFjY29yZGlvbkljb24tZGFya01vZGUtb28iIGZpbGwtcnVsZT0ibm9uemVybyI+CiAgICAgICAgICAgIDxjaXJjbGUgaWQ9Ik92YWwiIGZpbGw9IiMzRTNFM0UiIGN4PSIxMCIgY3k9IjEwIiByPSIxMCI+PC9jaXJjbGU+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0xNC4xNzIsMTIuMDQgQzE0LjU2MiwxMS42NSAxNC41NjIsMTEuMDEgMTQuMTcyLDEwLjYyIEwxMS4wMDIsNy40NSBDMTAuODE1MTU1NCw3LjI2Mjc3MTkxIDEwLjU2MTUwOTUsNy4xNTc1NTU5NyAxMC4yOTcsNy4xNTc1NTU5NyBDMTAuMDMyNDkwNSw3LjE1NzU1NTk3IDkuNzc4ODQ0NTksNy4yNjI3NzE5MSA5LjU5Miw3LjQ1IEw2LjQyMiwxMC42MiBDNi4wMjIsMTEuMDEgNi4wMjIsMTEuNjUgNi40MTIsMTIuMDQgQzYuODAyLDEyLjQzIDEzLjc4MiwxMi40MyAxNC4xNzIsMTIuMDQgWiIgaWQ9IlBhdGgiIGZpbGw9IiNGNzk1NDAiPjwvcGF0aD4KICAgICAgICA8L2c+CiAgICA8L2c+Cjwvc3ZnPg==');
+    --sdk-chat-widow-show-more: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNHB4IiBoZWlnaHQ9IjhweCIgdmlld0JveD0iMCAwIDQgOCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNTMuMiAoNzI2NDMpIC0gaHR0cHM6Ly9za2V0Y2hhcHAuY29tIC0tPgogICAgPHRpdGxlPnNob3ctbW9yZS1vcmFuZ2U8L3RpdGxlPgogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgICAgIDxnIGlkPSJzaG93LW1vcmUtb3JhbmdlIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwgMS4wMDAwMDApIiBzdHJva2U9IiNGNzk1NDAiPgogICAgICAgICAgICA8cG9seWxpbmUgaWQ9IlBhdGgiIHBvaW50cz0iMC40NDIgMCAzLjc3NSAzIDAuNDQyIDYiPjwvcG9seWxpbmU+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=');
+    --sdk-chat-widow-vertical-ellipsis:url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iM3B4IiBoZWlnaHQ9IjEycHgiIHZpZXdCb3g9IjAgMCAzIDEyIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPCEtLSBHZW5lcmF0b3I6IFNrZXRjaCA1My4yICg3MjY0MykgLSBodHRwczovL3NrZXRjaGFwcC5jb20gLS0+CiAgICA8dGl0bGU+U2hhcGU8L3RpdGxlPgogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0idmVydGljYWxFbGxpcHNpcyIgZmlsbD0iI0Y3OTU0MCIgZmlsbC1ydWxlPSJub256ZXJvIj4KICAgICAgICAgICAgPHBhdGggZD0iTTEuNSw5IEMyLjMyODQyNzEyLDkgMyw5LjY3MTU3Mjg4IDMsMTAuNSBDMywxMS4zMjg0MjcxIDIuMzI4NDI3MTIsMTIgMS41LDEyIEMwLjY3MTU3Mjg3NSwxMiAxLjAxNDUzMDYzZS0xNiwxMS4zMjg0MjcxIDAsMTAuNSBDLTEuMDE0NTMwNjNlLTE2LDkuNjcxNTcyODggMC42NzE1NzI4NzUsOSAxLjUsOSBaIE0xLjUsNC41IEMyLjMyODQyNzEyLDQuNSAzLDUuMTcxNTcyODggMyw2IEMzLDYuODI4NDI3MTIgMi4zMjg0MjcxMiw3LjUgMS41LDcuNSBDMC42NzE1NzI4NzUsNy41IDEuMDE0NTMwNjNlLTE2LDYuODI4NDI3MTIgMCw2IEMtMS4wMTQ1MzA2M2UtMTYsNS4xNzE1NzI4OCAwLjY3MTU3Mjg3NSw0LjUgMS41LDQuNSBaIE0xLjUsMCBDMi4zMjg0MjcxMiw1LjA3MjY1MzEzZS0xNyAzLDAuNjcxNTcyODc1IDMsMS41IEMzLDIuMzI4NDI3MTIgMi4zMjg0MjcxMiwzIDEuNSwzIEMwLjY3MTU3Mjg3NSwzIDEuMDE0NTMwNjNlLTE2LDIuMzI4NDI3MTIgMCwxLjUgQy0xLjAxNDUzMDYzZS0xNiwwLjY3MTU3Mjg3NSAwLjY3MTU3Mjg3NSwxLjUyMTc5NTk0ZS0xNiAxLjUsMCBaIiBpZD0iU2hhcGUiPjwvcGF0aD4KICAgICAgICA8L2c+CiAgICA8L2c+Cjwvc3ZnPg==');
+    --sdk-chat-widow-back-arrow:url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTJweCIgaGVpZ2h0PSI3cHgiIHZpZXdCb3g9IjAgMCAxMiA3IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPCEtLSBHZW5lcmF0b3I6IFNrZXRjaCA0OSAoNTEwMDIpIC0gaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoIC0tPgogICAgPHRpdGxlPkdyb3VwIDU8L3RpdGxlPgogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+CiAgICA8ZGVmcz48L2RlZnM+CiAgICA8ZyBpZD0iUHJvcGVydHktcGFubmVsIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0iMTAuMS1JVlItQ29weSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEzMzQuMDAwMDAwLCAtMTAwNi4wMDAwMDApIiBzdHJva2U9IiM4QTk1OUYiPgogICAgICAgICAgICA8ZyBpZD0iR3JvdXAtNiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTA2NC4wMDAwMDAsIDk5NS4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxnIGlkPSJHcm91cC01IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyNzAuMDAwMDAwLCAxMS4wMDAwMDApIj4KICAgICAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMC41LDMuNSBMMTAuNSwzLjUiIGlkPSJMaW5lLTIiIHN0cm9rZS1saW5lY2FwPSJzcXVhcmUiPjwvcGF0aD4KICAgICAgICAgICAgICAgICAgICA8cG9seWxpbmUgaWQ9IlJlY3RhbmdsZS04IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3LjUzNTUzNCwgMy41MzU1MzQpIHJvdGF0ZSgtMzE1LjAwMDAwMCkgdHJhbnNsYXRlKC03LjUzNTUzNCwgLTMuNTM1NTM0KSAiIHBvaW50cz0iNS4wMzU1MzM5MSAxLjAzNTUzMzkxIDEwLjAzNTUzMzkgMS4wMzU1MzM5MSAxMC4wMzU1MzM5IDYuMDM1NTMzOTEiPjwvcG9seWxpbmU+CiAgICAgICAgICAgICAgICA8L2c+CiAgICAgICAgICAgIDwvZz4KICAgICAgICA8L2c+CiAgICA8L2c+Cjwvc3ZnPg==');
+}
 .templateHeading{
     margin-bottom: 10px;
     font-size: 12px;
     font-weight: bold;
 }
 .selectTemplateDropdowm{
-    border: 1px solid #ddd;
+    border: 1px solid var(--sdk-chat-window-dropdown-border);
     height: 25px;
-    background: #fff;
+    background: var(--sdk-chat-window-pie-chart-background);
 }
 .dummy{
     cursor: none;
@@ -15,7 +99,7 @@
 }
 .likeDislikeDiv{
     display: inline-block;
-    border: 1px solid #b2b2b2;
+    border: 1px solid var(--sdk-chat-window-like-border-color);
     border-radius: 50%;
     padding: 10px;
     margin-right: 5px;
@@ -37,7 +121,7 @@
     padding-right: 7px;
     text-transform: none;
     line-height: 17px;
-    color:#26344a;
+    color:var(--sdk-chat-widow-primary-font-color);
 }
 .styled{    position: absolute;
             width: 0px !important;
@@ -50,9 +134,9 @@
     height: 16px;
     left: 0;
     margin-left: 0px;
-    border: 1px solid #cccccc;
+    border: 1px solid var(--sdk-chat-window-checkbox-label-before-color);
     border-radius: 3px;
-    background-color:#ffffff;
+    background-color:var(--sdk-chat-widow-default-white);
     -webkit-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
     -o-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
     transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
@@ -68,7 +152,7 @@
     padding-left: 3px;
     padding-top: 1px;
     font-size: 11px;
-    color: #555555;
+    color: var(--sdk-chat-window-checkbox-label-after-color);
 }
 
 .floatNone{
@@ -89,27 +173,27 @@
     content: "";
     width: 10px;
     height: 3px;
-    background-color: #555555;
+    background-color: var(--sdk-chat-window-checkbox-label-after-color);
     border-radius: 2px;
     margin-left: -16.5px;
     margin-top: 7px;
 }
 .checkbox-primary input[type="checkbox"]:checked + label::before {
-    background-color: #009dab;
-    border-color: #009dab;
+    background-color: var(--sdk-chat-widow-primary-blue-color);
+    border-color: var(--sdk-chat-widow-primary-blue-color);
 }
 .checkbox-primary input[type="checkbox"]:checked + label::after {
-    color: #ffffff;
+    color: var(--sdk-chat-widow-default-white);
 }
 .checkboxButtons{
     text-align: center;
-    border-top: 1px solid #F2F2F2;
+    border-top: 1px solid var(--sdk-chat-window-checkbox-border);
     padding: 10px;
 }
 .checkboxBtn{
     cursor: pointer;
-    background-color: #009dab;
-    color: #fff;
+    background-color: var(--sdk-chat-widow-primary-blue-color);
+    color: var(--sdk-chat-window-pie-chart-background);
     padding: 5px 10px;
     border-radius: 4px;
     margin-right: 5px;
@@ -118,7 +202,7 @@
 .checkboxBtnText{
     border: 0;
     background: none;
-    color: #0079FF!important;
+    color: var(--sdk-chat-window-viewmore-btn-color)!important;
     font-size: 15px;
     cursor: pointer;
 }
@@ -131,3 +215,587 @@
     cursor: none;
     pointer-events: none;
 }
+/* Inline form template css starts here */ 
+.kore-chat-window .buttonTmplContent .formMainComponent .submitClass{
+    cursor:pointer;
+    width:30px;
+    height:20px;
+    border:1px solid var(--sdk-chat-widow-primary-blue-color);
+}
+.kore-chat-window .buttonTmplContent .formMainComponent{
+    position: relative;
+}
+.kore-chat-window .buttonTmplContent .formMainComponent .input_group{
+    padding: 0;
+    position: relative;
+    border-radius: 10px;
+}
+.kore-chat-window .buttonTmplContent .formMainComponent .input_group .input-btn-submit{
+    position: relative;
+    top: 0;
+}
+.kore-chat-window .buttonTmplContent .formMainComponent .input_group input:focus{
+    outline: 1px solid var(--sdk-chat-window-input-focus-outline)!important;
+}
+.kore-chat-window .buttonTmplContent .formMainComponent .input_group input{
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    background-color: var(--sdk-chat-window-pie-chart-background);
+    background-image: none;
+    border: 1px solid var(--sdk-chat-window-input-border);
+    border-radius: 4px;
+    z-index:1;
+}
+.kore-chat-window .buttonTmplContent .formMainComponent .ok_btn{
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    height: 26px;
+    bottom: 0;
+    background: var(--sdk-chat-widow-secondary-font-color);
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: var(--sdk-chat-window-pie-chart-background);
+    float: right;
+    cursor: pointer;
+    z-index:2;
+}
+.kore-chat-window .buttonTmplContent .formMainComponent .inputMainComponent{
+    position: relative;
+}
+.kore-chat-window .buttonTmplContent .formMainComponent form .hide{
+    display:none;
+}
+/* Inline form template css ends here */ 
+
+
+ /* Multi select checkbox css starts here */
+.kore-chat-window .kore-action-sheet{
+    position: absolute;
+    width: 100%;
+    max-height: 100%;
+    height: auto;
+    background:white;
+    z-index: 9;
+    bottom: 0;
+    list-style: none;
+    /* overflow: hidden; */
+    font-family: "Lato", sans-serif !important;	
+    box-shadow: 0 1px 25px 0 rgba(179, 186, 200, 0.58);
+}
+ .kore-chat-window .listTmplContent.advancedMultiSelect {
+    padding: 0;
+     /* box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58); */
+     height: 100%;
+     /* display: table; */
+     width: 100%;
+     border-radius: 0;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox{
+     width: 100%;
+     max-width: none;
+     border: none;
+     float: none;
+     border-radius: 0;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .fromHistory{
+     pointer-events: none;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .advMultiSelectHeader{
+     padding: 0 15px;
+ }   
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .advMultiSelectHeader .advMultiSelectHeaderTitle{
+     color: var(--sdk-chat-widow-primary-font-color);
+     margin-bottom: 5px;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .advMultiSelectHeader .orderDate{
+     color: var(--sdk-chat-widow-secondary-font-color);
+     margin-bottom: 5px;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .fromHistory .advancedMultiSelectScroll{
+     overflow: hidden !important;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .fromHistory .closeIcon{
+     pointer-events: none;
+     display: none !important;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .advMultiSelectHeader .closeIcon{
+     background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+);
+     display: inline-block;
+     width: 14px;
+     height: 14px;
+     cursor: pointer;
+     position: absolute;
+     right: 25px;
+     top: 20px;
+     opacity: 0.8;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .advMultiSelectHeader .closeIcon{
+     opacity: 1;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .advancedMultiSelectScroll{
+     overflow: auto;
+     max-height: 300px;
+     padding: 10px;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv{
+    margin-bottom: 10px;
+    border: 1px solid var(--sdk-chat-window-input-focus-outline);
+    border-radius: 10px;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv .groupMultiSelect{
+     padding: 10px;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label{
+     width: 100%;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS.groupMultiSelect label::before{
+     top: auto;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS.groupMultiSelect input[type="checkbox"]:checked+label::after{
+     top: auto;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS label::before{
+     top: 36%;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS input[type="checkbox"]:checked+label::after{
+     top: 36%;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS.noImgdescription label::before{
+     top: 0;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS.noImgdescription input[type="checkbox"]:checked+label::after{
+     top: 0;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer{
+     display: flex;
+     align-items: center;
+     vertical-align: middle;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer .checkImgContainer{ 
+     float: left;
+     width: 50px;
+     height: 50px;
+     margin-right: 10px;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer .checkImgContainer img{
+     width: 50px;
+     height: 50px;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS.noImgdescription label  .multiSelectDescContainer .multiTitle{
+     font-weight: bold;
+     margin-bottom: 0;
+     margin-top: 0px;
+     /* padding-top: 4px; */
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label  .multiSelectDescContainer .multiTitle{
+     font-weight: bold;
+     margin-bottom: 6px;
+     margin-top: 0px;
+     color: var(--sdk-chat-widow-primary-font-color);
+     /* padding-top: 4px; */
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label  .multiSelectDescContainer .multiDesc{
+     margin-bottom: 0;
+     margin-top: 0;
+     color: var(--sdk-chat-widow-secondary-font-color);
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .viewMoreContainer{
+     list-style: none;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .viewMoreContainer.hide{
+     display: none;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .viewMoreContainer .viewMoreGroups{
+     text-align: center;
+     line-height: 35px;
+     border: 1px solid var(--sdk-chat-widow-primary-blue-color);
+     cursor: pointer;
+     display: block;
+     color: var(--sdk-chat-widow-primary-blue-color);
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .viewMoreContainer .viewMoreGroups:hover{
+     background: var(--sdk-chat-widow-primary-blue-color);
+     color: var(--sdk-chat-widow-default-white);
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .multiCheckboxBtn{
+     background: var(--sdk-chat-widow-primary-blue-color);
+     opacity: 0.9;
+     border-radius: 0;
+     text-align: center;
+     border-top: 1px solid var(--sdk-chat-widow-primary-bg-color);
+     padding: 10px;
+     margin: 0;
+     border-bottom-left-radius: 8px;
+     border-bottom-right-radius: 8px;
+     list-style: none;
+     cursor: pointer;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .multiCheckboxBtn .viewMore{
+     color: var(--sdk-chat-widow-default-white) !important;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .multiCheckboxBtn:hover{
+     opacity: 1;
+ }
+ .kore-chat-window .listTmplContent.advancedMultiSelect .listTmplContentBox .multiCheckboxBtn.hide{
+     display:none;
+ }
+ /* Multi select checkbox css ends here */
+  
+ /* New List Template using tabs Css starts here */
+.kore-chat-window .kore-action-sheet .listViewTmplContentBox .close-button{
+    cursor: pointer;
+    margin: 0;
+    padding-top: 8px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color:var(--sdk-chat-window-list-template-close-btn-color);
+    background:none;
+    opacity:1;
+    outline:none;
+    font-size:30px;
+    float:right;
+    line-height:inherit;
+    border:none;
+}
+.kore-chat-window .listViewTmplContent .listViewTmplContentBox{
+	float:left;
+	color:var(--sdk-chat-window-list-view-color);
+	border-radius: 12px;
+    padding: 0;
+	font-size: 14px;
+	-webkit-animation: message-left ease-in-out 2s forwards;
+    -moz-animation: message-left ease-in-out 2s forwards;
+    animation: message-left ease-in-out 2s forwards;
+	margin: 0;
+	width:100%;
+}
+.kore-chat-window .listViewTmplContent .listViewLeftContent{
+    width: 77%;
+    padding: 0 10px;
+    vertical-align: middle;
+    display: flex;	
+    align-items: center;	
+    justify-content: space-between;
+}
+.kore-chat-window .listViewTmplContent .listViewRightContent{
+    cursor: pointer;
+    display: table-cell;
+    width: 60px;
+    vertical-align: middle;
+    padding-left: 10px;
+
+}
+.kore-chat-window .listViewRightContent img{
+	height: 36px;
+	width: 36px;
+    border-radius: 50%;
+    
+}
+.kore-chat-window .listViewTmplContent .listViewTmplContentChild{
+	border-top: 1px solid var(--sdk-chat-window-checkbox-border);
+	margin-bottom:10px;
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: var(--sdk-chat-widow-primary-box-shadow);
+    background-color: var(--sdk-chat-widow-default-white);
+    height: 56px;
+    display: flex;	
+    align-items: center;	
+    flex-wrap: wrap;	
+    cursor: pointer;
+}
+.kore-chat-window .listViewTmplContent .listViewItemSubtitle{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* width: 102px;
+    height: 18px; */
+    font-size: 13px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: 0.27px;
+    color: var(--sdk-chat-window-list-template-sub-title-color);
+      
+}
+.kore-chat-window .listViewTmplContent .listViewItemValue{
+    
+    display: inline-block;
+     margin-left: 15px; 
+    color: var(--sdk-chat-window-list-template-value-color);
+    /* width: 66px;
+    height: 22px; */
+    font-size: 14px;
+    font-weight: 900;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: 0.4px;
+    text-align: right;
+    color:  var(--sdk-chat-window-list-view-value-color);
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    white-space: nowrap;
+      
+}
+.kore-chat-window .listViewTmplContent .listItemPath{
+	font-size:12px;
+	color: var(--sdk-chat-window-viewmore-btn-color);
+    cursor: pointer;
+}
+.kore-chat-window .listViewTmplContent .buyBtn{
+	background: var(--sdk-chat-window-pie-chart-background);
+    border: 0;
+    color: var(--sdk-chat-window-viewmore-btn-color)!important;
+    cursor: pointer;
+    float: right;
+    font-weight: bold;
+    letter-spacing: -0.3px;
+    font-size: 12px;
+    text-align: right;
+}
+.kore-chat-window .listViewTmplContentBox li:first-child{
+	margin-top:0!important;
+	border-top:0;
+}
+.kore-chat-window .listViewTmplContent .listViewTmplContentHeading{
+	padding:10px;
+    background: var(--sdk-chat-window-list-template-heading-background-color);
+    margin-bottom: 10px;
+    border-radius: 12px 12px 0 0;
+    font-size: 15px;
+    width: 100%;
+    font-size: 15px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.33;
+    letter-spacing: -0.11px;
+    color: var(--sdk-chat-widow-primary-font-color);
+}
+.kore-chat-window .listViewTmplContent .listViewLeftContent .titleDesc{
+    display: inline-block;
+    width:60%;
+}
+
+.kore-chat-window .listViewItemTitle {	
+    font-size: 13px;	
+    font-weight: 600;	
+    line-height: 1.54;	
+    letter-spacing: -0.1px;	
+    color: var(--sdk-chat-window-list-template-title-color);	
+    overflow: hidden;	
+    text-overflow: ellipsis;	
+    white-space: nowrap;	
+}
+.kore-chat-window .listViewTmplContent .seeMoreList{
+	text-align: center;
+    border-top: 1px solid var(--sdk-chat-window-checkbox-border);
+    padding: 10px;
+    margin: 0;
+}
+.kore-chat-window .listViewTmplContent .seeMoreList{
+	border: 0;
+    background: none;
+    color: var(--sdk-chat-widow-primary-blue-color)!important;
+    cursor: pointer;
+    float: right;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 5px;
+    letter-spacing: normal;
+    display: inline-block;	
+    border-bottom: 1px solid var(--sdk-chat-widow-primary-blue-color);	
+    padding: 10px 0;	
+    text-align: center;
+}
+.kore-chat-window .list-template-sheet{
+    position: absolute;
+    width: 100%;
+    z-index: 9;
+    bottom: 0;
+    /* box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.22); */
+    background-color: var(--sdk-chat-widow-default-white);
+    height: 400px;
+    cursor: default;
+    overflow-y: auto;
+}
+.kore-chat-window .list-template-sheet .sheetHeader{
+    height:50px;
+    width:100%;
+}
+.kore-chat-window .list-template-sheet .sheetHeader .choose{
+    margin-left:11px;
+    width: 135px;
+    height: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    /* line-height: 2.3; */
+    letter-spacing: normal;
+    color: var(--sdk-chat-window-list-template-choose-color);
+      
+}
+.kore-chat-window .list-template-sheet .listViewLeftContent .titleDesc{
+    display: inline-block;
+    width:60%;
+}
+.kore-chat-window .list-template-sheet .sheetHeader .close-button{
+    margin: 0;
+    padding-top: 8px;
+    cursor: pointer;
+}
+.kore-chat-window  .list-template-sheet .sheetHeader .close-button{
+    cursor: pointer;
+    color: var(--sdk-chat-window-list-template-close-btn-color);
+    background: none;
+    border: none;
+    opacity: 1;
+    outline: none;
+    font-size: 30px;
+    float:right;
+    line-height: inherit;
+    margin-right: 20px;
+    margin-top: 10px;
+    padding: 0 6px;
+}
+
+.kore-chat-window .list-template-sheet .listViewTmplContentChild {
+    border-top: 1px solid var(--sdk-chat-window-checkbox-border);
+	margin-bottom:10px;
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    background-color: var(--sdk-chat-widow-default-white);
+    height: 56px;
+    display: flex;	
+    align-items: center;	
+    flex-wrap: wrap;	
+    cursor: pointer;
+}
+    .kore-chat-window .list-template-sheet .listTemplateContainer .displayMonth{
+        width:84%;
+        height:40px;
+      overflow:auto;
+      display:flex;
+    }
+    .kore-chat-window .list-template-sheet .listTemplateContainer .displayMonth .tabs {
+        width: 18px;
+        height: 17px;
+        font-size: 14px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: normal;
+        letter-spacing: 0.12px;
+        color: var(--sdk-chat-window-list-template-sub-title-color);
+        padding-left:103px;
+        cursor: pointer;
+        flex:1.1;  
+          
+    }
+    .kore-chat-window .list-template-sheet .listTemplateContainer .displayMonth .tabs.active {
+     
+            width: 28px;
+            height: 17px;
+            font-size: 14px;
+            font-weight: bold;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: normal;
+            letter-spacing: 0.12px;
+            color: var(--sdk-chat-widow-primary-blue-color);
+            flex:1.1;
+          
+    }
+    .kore-chat-window .list-template-sheet .listTemplateContainer .displayMonth .btnBG{	
+        height: 26px;	
+        border-radius: 6px;	
+        display: inline-block;	
+        padding: 0 6px;	
+        text-align: center;	
+        line-height: 26px;	
+    }	
+            
+    .kore-chat-window .list-template-sheet .listTemplateContainer .displayMonth .tabs.active .btnBG{	
+        background-color: var(--sdk-chat-window-viewmore-btn-color);	
+        color: var(--sdk-chat-widow-default-white);	
+              
+    }
+    .kore-chat-window .list-template-sheet .listTemplateContainer .listViewRightContent img{
+        height: 36px;
+        width: 36px;
+        border-radius: 50%;
+    }
+    .kore-chat-window .list-template-sheet .listTemplateContainer .displayListValues{	
+        width:96%;	
+    }
+    .kore-chat-window .list-template-sheet .listTemplateContainer .displayListValues .listViewRightContent{
+        cursor: pointer;
+    display: table-cell;
+    width: 60px;
+    vertical-align: middle;
+    padding-left: 10px;
+    }
+    .kore-chat-window .list-template-sheet .listTemplateContainer .displayListValues .listViewLeftContent{
+        width: 77%;
+        padding: 0 10px;
+        vertical-align: middle;
+        display: flex;	
+        align-items: center;	
+        justify-content: space-between;
+    }
+    .kore-chat-window .list-template-sheet .listTemplateContainer .displayListValues .listViewLeftContent .listViewItemTitle{
+        font-size: 13px;	
+    font-weight: 600;	
+    line-height: 1.54;	
+    letter-spacing: -0.1px;	
+    color: var(--sdk-chat-window-list-template-title-color);	
+    overflow: hidden;	
+    text-overflow: ellipsis;	
+    white-space: nowrap;
+ }
+ .kore-chat-window .list-template-sheet .listTemplateContainer .displayListValues .listViewLeftContent .listViewItemSubtitle{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* width: 102px;
+    height: 18px; */
+    font-size: 13px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: 0.27px;
+    color: var(--sdk-chat-window-list-template-sub-title-color);
+}
+ 
+ .kore-chat-window .list-template-sheet .listTemplateContainer .displayListValues .listViewLeftContent .listViewItemValue{
+    display: inline-block;
+     margin-left: 15px; 
+    color: var(--sdk-chat-window-list-template-value-color);
+    /* width: 66px;
+    height: 22px; */
+    font-size: 14px;
+    font-weight: 900;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: 0.4px;
+    text-align: right;
+    color:  var(--sdk-chat-window-list-view-value-color);
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    white-space: nowrap;
+      
+ }
+ /* New List Template using tabs Css ends here */

@@ -199,8 +199,11 @@
                     }
                     return d.toDateString() + " at " + helpers.formatAMPM(d);
                 },
-                'convertMDtoHTML': function (val, responseType) {
+                'convertMDtoHTML': function (val, responseType,msgItem) {
                     var hyperLinksMap = {};
+                    if(msgItem && msgItem.cInfo && msgItem.cInfo.ignoreCheckMark){
+                        var ignoreCheckMark=msgItem.cInfo.ignoreCheckMark;
+                    }
                     var mdre = {};
                     //mdre.date = new RegExp(/\\d\(\s*(.{10})\s*\)/g);
                     mdre.date = new RegExp(/\\d\(\s*(.{10})\s*(?:,\s*["'](.+?)["']\s*)?\)/g);
@@ -408,7 +411,11 @@
                             str = wrapper1.innerHTML.replace(_regExForLink, linkreplacer);
                         }
                     }
+                    if(ignoreCheckMark){
+                        str=val;
+                    }else{
                     str = helpers.checkMarkdowns(str, hyperLinksMap);
+                    }
                     var hrefRefs = Object.keys(hyperLinksMap);
                     if (hrefRefs && hrefRefs.length) {
                         hrefRefs.forEach(function (hrefRef) {
@@ -513,8 +520,8 @@
                                 txtArr[i] = txtArr[i].replace(_matchLink[j], _linkLink);
                             }
                         }
-                        // Matches bold markup *test* doesnot match * test *, * test*. If all these are required then replace \S with \s
-                        var _matchAstrik = txtArr[i].match(/\*\S([^*]*?)\*/g);
+                        // Matches bold markup *test*,* test *, * test*.
+                        var _matchAstrik = txtArr[i].match(/(\*+)(\s*\b)([^\*]*)(\b\s*)(\*+)/g);
                         if (_matchAstrik && _matchAstrik.length > 0) {
                             for (j = 0; j < _matchAstrik.length; j++) {
                                 var _boldTxt = _matchAstrik[j];
@@ -702,13 +709,13 @@
                         if (btnsParentDiv[0].scrollLeft > 0) {
                             leftScrollBtn[0].classList.remove('hide');
                         }
-                        else {
+                        else if(leftScrollBtn.length){
                             leftScrollBtn[0].classList.add('hide');
                         }
                         if (btnsParentDiv[0].offsetWidth < btnsParentDiv[0].scrollWidth) {
                             rightScrollBtn[0].classList.remove('hide');
                         }
-                        else {
+                        else if(rightScrollBtn.length){
                             rightScrollBtn[0].classList.add('hide');
                         }
                     }
@@ -1441,8 +1448,11 @@
                 me.bindEvents();
             };
 
-            chatWindow.prototype.sendMessage = function (chatInput, renderMsg,data) {
+            chatWindow.prototype.sendMessage = function (chatInput, renderMsg,msgObject) {
                 var me = this;
+                if(msgObject && msgObject.message[0]&& msgObject.message[0].component&& msgObject.message[0].component.payload && msgObject.message[0].component.payload.ignoreCheckMark){
+                var ignoreCheckMark=msgObject.message[0].component.payload.ignoreCheckMark;
+                }
                 if (chatInput.text().trim() === "" && $('.attachment').html().trim().length == 0) {
                     return;
                 }
@@ -1500,11 +1510,11 @@
                 if (renderMsg && typeof renderMsg === 'string') {
                     messageToBot["message"].renderMsg = renderMsg;
                 }
-                if(data && data.customdata){
-                    messageToBot["message"].customdata=data.customdata;
+                if(msgObject && msgObject.customdata){
+                    messageToBot["message"].customdata=msgObject.customdata;
                 }
-                if(data && data.nlmeta){
-                    messageToBot["message"].nlmeta=data.nlmeta;
+                if(msgObject && msgObject.nlmeta){
+                    messageToBot["message"].nlmeta=msgObject.nlmeta;
                 }
                 attachmentInfo = {};
                 bot.sendMessage(messageToBot, function messageSent(err) {
@@ -1525,6 +1535,7 @@
                 if (renderMsg && typeof renderMsg === 'string') {
                     msgData.message[0].cInfo.body = renderMsg;
                 }
+                msgData.message[0].cInfo.ignoreCheckMark=ignoreCheckMark;
                 me.renderMessage(msgData);
             };
 
@@ -2274,9 +2285,9 @@
                                                 {{/if}} \
                                             {{else}} \
                                                 {{if msgItem.cInfo.renderMsg && msgItem.cInfo.renderMsg !== ""}}\
-                                                    {{html helpers.convertMDtoHTML(msgItem.cInfo.renderMsg, "user")}} \
+                                                    {{html helpers.convertMDtoHTML(msgItem.cInfo.renderMsg, "user",msgItem)}} \
                                                 {{else}}\
-                                                    {{html helpers.convertMDtoHTML(msgItem.cInfo.body, "user")}} \
+                                                    {{html helpers.convertMDtoHTML(msgItem.cInfo.body, "user",msgItem)}} \
                                                 {{/if}}\
                                             {{/if}} \
                                         </div>\
@@ -2370,7 +2381,7 @@
                                     {{each(key, msgItem) msgData.message[0].component.payload.buttons}} \
                                         <a href=""#>\
                                             <li {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} {{if msgItem.payload}}actual-value="${msgItem.payload}"{{/if}} {{if msgItem.url}}url="${msgItem.url}"{{/if}} class="buttonTmplContentChild" data-value="${msgItem.value}" type="${msgItem.type}">\
-                                                ${msgItem.title}\
+                                                {{html helpers.convertMDtoHTML(msgItem.title, "bot")}}\
                                             </li> \
                                         </a> \
                                     {{/each}} \
@@ -2571,7 +2582,7 @@
                                             {{if msgItem.buttons}} \
                                                 {{each(key, msgBtn) msgItem.buttons}} \
                                                     <div {{if msgBtn.payload}}value="${msgBtn.payload}"{{/if}} {{if msgBtn.url}}url="${msgBtn.url}"{{/if}} class="listItemPath carouselButton" data-value="${msgBtn.value}" type="${msgBtn.type}">\
-                                                        ${msgBtn.title}\
+                                                        {{html helpers.convertMDtoHTML(msgBtn.title, "bot")}}\
                                                     </div> \
                                                 {{/each}} \
                                             {{/if}} \
@@ -2602,7 +2613,7 @@
                                         <div class="quick_replies_btn_parent"><div class="autoWidth">\
                                             {{each(key, msgItem) msgData.message[0].component.payload.quick_replies}} \
                                                 <div class="buttonTmplContentChild quickReplyDiv"> <span {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} class="quickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.content_type}">\
-                                                    {{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} <span class="quickreplyText {{if msgItem.image_url}}with-img{{/if}}">${msgItem.title}</span></span>\
+                                                    {{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} <span class="quickreplyText {{if msgItem.image_url}}with-img{{/if}}">{{html helpers.convertMDtoHTML(msgItem.title, "bot")}}</span></span>\
                                                 </div> \
                                             {{/each}} \
                                         </div>\
@@ -2861,7 +2872,7 @@
                     this.addWidgetEvents(cfg);
                 };
                 chatInitialize = new chatWindow(cfg);
-                customTemplateObj = new customTemplate(cfg);
+                customTemplateObj = new customTemplate(cfg,chatInitialize);
                 
                 return this;
             };
@@ -2951,7 +2962,13 @@
                                             msgData.message[0].component.payload.fromHistory = true;
                                             msgData.message[0].component.selectedValue=res[1].messages[index+1].message[0].cInfo.body;                                    
                                         }
-                                        if (msgData.message[0].component.payload.template_type === 'multi_select') {
+                                        if (msgData.message[0].component.payload.template_type === 'multi_select' || msgData.message[0].component.payload.template_type === 'advanced_multi_select') {
+                                            msgData.message[0].component.payload.fromHistory = true;
+                                        }
+                                        if (msgData.message[0].component.payload.template_type === 'form_template') {
+                                            msgData.message[0].component.payload.fromHistory = true;
+                                        }
+                                        if (msgData.message[0].component.payload.template_type === 'listView') {
                                             msgData.message[0].component.payload.fromHistory = true;
                                         }
                                         if(msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)){

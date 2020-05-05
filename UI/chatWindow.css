@@ -8,6 +8,23 @@
     --sdk-chat-widow-primary-bg-color: #f2f3f5;
     --sdk-chat-widow-panel-header-bg-color:#f2f3f5;
     --sdk-chat-widow-secondary-font-color: #8a959f;
+    --sdk-chat-window-like-border-color:#b2b2b2;
+    --sdk-chat-window-contenteditable-color:#D0D0D0;
+    --sdk-chat-window-messagebubble-border-color:#333;
+    --sdk-chat-window-messagebubble-background-color:#F1F0F0;
+    --sdk-chat-window-popup-color:#909090;
+    --sdk-chat-window-tooltip-box-shadow:#999999;
+    --sdk-chat-window-list-template-heading-background-color:#f4f4f4;
+    --sdk-chat-window-viewmore-btn-color:#0079FF;
+    --sdk-chat-window-footericon-hover-color: #808080;
+    --sdk-chat-window-tablechart-border-color:#dfdfdf;
+    --sdk-chat-window-tablechart-header-border:#99ed9e;
+    --sdk-chat-window-tablechart-border-bottom:#d6d6d6;
+    --sdk-chat-window-caption-color:#ccc;
+    --sdk-chat-window-close-element-color:#f1f1f1;
+    --sdk-chat-window-accordion-table-btn:#5f6bf7;
+    --sdk-chat-window-checkbox-label-color:#555555;
+    --sdk-chat-window-pie-chart-background:#fff;
     --sdk-chat-widow-btn-light-color: #e5f5f6;
     --sdk-chat-widow-primary-box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
     --sdk-chat-widow-top-box-shadow: 0 0 24px 0 #8a959f;
@@ -80,7 +97,7 @@
     content: attr(placeholder);
     display: block;
     /* For Firefox */
-    color: #D0D0D0;
+    color: var(--sdk-chat-window-contenteditable-color);
 }
 
 
@@ -132,7 +149,7 @@
 
 .kore-chat-window .listTemplateContainer .tooltip-legend{
     position: absolute;
-    background-color: #F2F3F5;
+    background-color: var(--sdk-chat-widow-primary-bg-color);
     opacity: 1;
     font-size: 12px;
     width: fit-content;
@@ -208,7 +225,7 @@
     color: var(--sdk-chat-widow-default-white);
     margin-top: 6px;
     padding: 8px 20px 8px 10px;
-    background: #5B9BD5;
+    background: var(--sdk-chat-widow-primary-blue-color);
     border-radius: 20px;
     display: block;
     opacity: 0;
@@ -224,7 +241,7 @@
 
 .kore-chat-window.minimize .minimized {
     display: block;
-    background: #5B9BD5;
+    background: var(--sdk-chat-widow-primary-blue-color);
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
@@ -409,19 +426,19 @@
 
 .kore-chat-window ul.chat-container li .messageBubble p.indent {
     padding-left: 10px;
-    border-left: 6px solid #DDD;
+    border-left: 6px solid var(--sdk-chat-widow-primary-border-color);
 }
 
 .kore-chat-window ul.chat-container li .messageBubble pre {
     padding: 10px 12px;
-    border: 1px solid #DDD;
+    border: 1px solid var(--sdk-chat-widow-primary-border-color);
     white-space: pre-wrap;
     border-radius: 4px;
 }
 
 .kore-chat-window ul.chat-container li .messageBubble hr {
     border: 0;
-    border-top: 1px solid #333;
+    border-top: 1px solid var(--sdk-chat-window-messagebubble-border-color);
     margin: 8px 0;
 }
 
@@ -464,12 +481,13 @@
 }
 
 .kore-chat-window ul.chat-container li.fromCurrentUser .messageBubble .message-status.recieved {
-    background-color: green;
+    background-color: var(--sdk-chat-widow-primary-bg-color);
+    color: var(--sdk-chat-widow-primary-font-color);
 }
 
 .kore-chat-window ul.chat-container li.fromOtherUsers .messageBubble {
-    background-color: #F1F0F0;
-    color: #333;
+    background-color: var(--sdk-chat-window-messagebubble-background-color);
+    color: var(--sdk-chat-window-messagebubble-border-color);
     border-radius: 12px;
     border-bottom-left-radius: 2px;
     padding: 12px 15px;
@@ -544,7 +562,7 @@
 
 .kore-chat-window .kore-chat-footer .chatInputBoxPlaceholder {
     position: absolute;
-    color: #aaa;
+    color: var(--sdk-chat-widow-secondary-font-color);
     font-size: 14px;
     position: absolute;
     top: 4px;
@@ -552,7 +570,7 @@
 
 .kore-chat-window .kore-chat-footer .chatSendMsg {
     font-size: 14px;
-    color: #AAA;
+    color: var(--sdk-chat-widow-secondary-font-color);
     position: absolute;
     bottom: 0px;
     right: 0;
@@ -636,7 +654,7 @@
 
 .kore-chat-window .kore-auth-popup .popup_controls span {
     cursor: pointer;
-    color: #909090;
+    color: var(--sdk-chat-window-popup-color);
     opacity: 1;
     font-size: 30px;
     padding: 0;
@@ -657,7 +675,7 @@
 
 .kore-chat-window .buttonTmplContent .buttonTmplContentBox {
     float: left;
-    color: #333;
+    color: var(--sdk-chat-widow-primary-font-color);
     border-radius: 12px;
     padding: 0;
     font-size: 14px;
@@ -671,8 +689,8 @@
 
 .kore-chat-window .buttonTmplContent .buttonTmplContentHeading {
     text-align: left;
-    color: #2A2A2A;
-    background: #F0F0F0;
+    color: var(--sdk-chat-widow-primary-font-color);
+    background: var(--sdk-chat-widow-primary-bg-color);
     margin: 0!important;
     padding: 10px;
     border-top-left-radius: 10px;
@@ -685,7 +703,7 @@
 }
 
 .kore-chat-window .buttonTmplContent .buttonTmplContentChild {
-    color: #3292FF;
+    color: var(--sdk-chat-widow-primary-blue-color);
     border-top: 1px solid var(--sdk-chat-widow-primary-bg-color);
     padding: 10px;
     margin: 0 !important;
@@ -755,7 +773,7 @@
 
 .kore-chat-window .listTmplContent .listTmplContentBox {
     float: left;
-    color: #333;
+    color:  var(--sdk-chat-widow-primary-font-color);
     border-radius: 12px;
     padding: 0;
     font-size: 14px;
@@ -799,14 +817,14 @@
 
 .kore-chat-window .listTmplContent .listItemPath {
     font-size: 12px;
-    color: #0079FF;
+    color: var(--sdk-chat-widow-primary-blue-color);
     cursor: pointer;
 }
 
 .kore-chat-window .listTmplContent .buyBtn {
     background: var(--sdk-chat-widow-default-white);
     border: 0;
-    color: #0079FF!important;
+    color: var(--sdk-chat-widow-primary-blue-color)!important;
     cursor: pointer;
     float: right;
     font-weight: bold;
@@ -822,7 +840,7 @@
 
 .kore-chat-window .listTmplContent .listTmplContentHeading {
     padding: 10px;
-    background: #f4f4f4;
+    background: var(--sdk-chat-window-list-template-heading-background-color);
     margin-bottom: 0;
     border-radius: 12px 12px 0 0;
     font-size: 15px;
@@ -853,7 +871,7 @@
 .kore-chat-window .listTmplContent .viewMore {
     border: 0;
     background: none;
-    color: #0079FF!important;
+    color: var(--sdk-chat-window-viewmore-btn-color)!important;
     font-size: 15px;
     cursor: pointer;
 }
@@ -898,7 +916,7 @@
 }
 
 .kore-chat-window .sdkFooterIcon i:hover {
-    color: #808080;
+    color: var(--sdk-chat-window-footericon-hover-color);
 }
 
 .kore-chat-window .ttsSpeakerEnable {
@@ -1024,7 +1042,7 @@
     float: left;
     width: 100%;
     margin-top: 3px;
-    border-bottom: 2px solid #F1F0F0;
+    border-bottom: 2px solid var(--sdk-chat-window-messagebubble-background-color);
 }
 
 .kore-chat-window .botuploadedFileName {
@@ -1325,7 +1343,7 @@
     letter-spacing: -0.1px;
     text-align: left;
     line-height: 1.54;
-    color: #0076ff;
+    color: var(--sdk-chat-window-viewmore-btn-color);
     cursor: pointer;
     max-width: 230px;
     margin: -5px 2px 8px 11px;
@@ -1340,7 +1358,7 @@
     letter-spacing: -0.3px;
     text-align: center;
     line-height: 1.54;
-    color: #0076ff;
+    color: var(--sdk-chat-window-viewmore-btn-color);
     cursor: pointer;
     max-width: 242px;
     padding-top: 13px;
@@ -1465,13 +1483,13 @@
 
 /* Pie chart css */
 .kore-chat-window .piechartDiv .legend-title {
-    fill: #8a959f;
+    fill: var(--sdk-chat-widow-top-box-shadow);
 }
 .kore-chat-window .piechartDiv .legend-value {
-    fill: #26344a;
+    fill: var(--sdk-chat-widow-primary-font-color);
 }
 .kore-chat-window .piechartDiv .chart-disp-val{
-    fill: #26344a;
+    fill: var(--sdk-chat-widow-primary-font-color);
 }
 .kore-chat-window .piechart .piechartDiv {
     display: block;
@@ -1479,7 +1497,7 @@
     clear: both;
     width: 353px;
     margin-left: -45px;
-    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    box-shadow: var(--sdk-chat-widow-primary-box-shadow);
     cursor: pointer;
 }
 
@@ -1503,7 +1521,7 @@
     margin: 0px -22px 13px 0px;
     border-radius: 4px;
     background-color: var(--sdk-chat-widow-default-white);
-    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    box-shadow: var(--sdk-chat-widow-primary-box-shadow);;
 }
 
 .kore-chat-window .tablechartDiv table {
@@ -1511,16 +1529,16 @@
 }
 
 .kore-chat-window .tablechartDiv tr {
-    border-bottom: 1px solid #dfdfdf;
+    border-bottom: 1px solid var(--sdk-chat-window-tablechart-border-color);
 }
 
 .kore-chat-window .tablechartDiv tr.headerTitle {
-    border-bottom: solid 1px #99ed9e;
+    border-bottom: solid 1px var(--sdk-chat-window-tablechart-header-border);
 }
 
 .kore-chat-window .tablechart .tablechartDiv tr.bottomThickBorder,
 .kore-chat-window .largePreviewContent .tablechartDiv tr.bottomThickBorder {
-    border-bottom: 3px solid #d6d6d6;
+    border-bottom: 3px solid var(--sdk-chat-window-tablechart-border-bottom);
 }
 
 .kore-chat-window .tablechart .profile-photo {
@@ -1577,7 +1595,7 @@
     clear: both;
     margin-left: -45px;
     width: 353px;
-    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    box-shadow: var(--sdk-chat-widow-primary-box-shadow);;
     cursor: pointer;
 }
 
@@ -1598,7 +1616,7 @@
     clear: both;
     margin-left: -45px;
     width: 353px;
-    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    box-shadow: var(--sdk-chat-widow-primary-box-shadow);;
     cursor: pointer;
 }
 
@@ -1691,7 +1709,7 @@
     width: 80%;
     max-width: 700px;
     text-align: center;
-    color: #ccc;
+    color: var(--sdk-chat-window-caption-color);
     padding: 10px 0;
     height: 150px;
 }
@@ -1732,7 +1750,7 @@
     position: absolute;
     top: 15px;
     right: 35px;
-    color: #f1f1f1;
+    color: var(--sdk-chat-window-close-element-color);
     font-size: 40px;
     font-weight: bold;
     transition: 0.3s;
@@ -1797,7 +1815,7 @@
 
 .kore-chat-window .accordionRow.open .tableBtn {
     transform: rotate(-270deg);
-    color: #5f6bf7;
+    color: var(--sdk-chat-window-accordion-table-btn);
 }
 
 .kore-chat-window .accordionRow .colTitle {
@@ -1832,7 +1850,7 @@
     margin-left: -37px;
     border-radius: 4px;
     background-color: var(--sdk-chat-widow-default-white);
-    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    box-shadow: var(--sdk-chat-widow-primary-box-shadow);;
 }
 
 .kore-chat-window .accordionTable .tableBtn {
@@ -1853,7 +1871,7 @@
     line-height: 0.86;
     letter-spacing: -0.1px;
     text-align: center;
-    color: #5f6bf7;
+    color: var(--sdk-chat-window-accordion-table-btn);
     margin-top: 16px;
     cursor: pointer;
 }
@@ -1873,7 +1891,7 @@
 .kore-chat-window .showMore {
     font-size: 14px;
     text-align: center;
-    color: #5f6bf7;
+    color: var(--sdk-chat-window-accordion-table-btn);
     cursor: pointer;
     padding: 5px;
 }
@@ -1904,7 +1922,7 @@
     width: 90%;
     border-radius: 4px;
     overflow: auto;
-    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    box-shadow: var(--sdk-chat-widow-primary-box-shadow);;
 }
 
 
@@ -1924,7 +1942,7 @@
     position: absolute;
     top: 15px;
     right: 35px;
-    color: #f1f1f1;
+    color: var(--sdk-chat-window-close-element-color);
     font-size: 40px;
     font-weight: bold;
     transition: 0.3s;
@@ -1987,7 +2005,7 @@
     text-align: left;
     padding: 10px;
     font-size: 15px;
-    color: #8a959f;
+    color: var(--sdk-chat-widow-secondary-font-color);
     max-width: 190px !important;
     white-space: nowrap;
     overflow: hidden;
@@ -2084,7 +2102,7 @@
     padding: 0 10px;
     display: block;
     width: 137px;
-    color: #333;
+    color: var(--sdk-chat-window-messagebubble-border-color);
     margin: 0 auto;
 }
 
@@ -2152,8 +2170,8 @@
 .kore-chat-window .tooltipHBC,
 .kore-chat-window .tooltipBC {
     background: var(--sdk-chat-widow-default-white);
-    box-shadow: 0 0 5px #999999;
-    color: #333;
+    box-shadow: 0 0 5px var(--sdk-chat-window-tooltip-box-shadow);
+    color: var(--sdk-chat-window-messagebubble-border-color);
     font-size: 12px;
     left: 130px;
     padding: 10px;
@@ -2260,7 +2278,7 @@
     padding-left: 3px;
     padding-top: 1px;
     font-size: 11px;
-    color: #555555;
+    color: var(--sdk-chat-window-checkbox-label-color);
 }
 
 .floatNone {
@@ -2283,7 +2301,7 @@
     content: "";
     width: 10px;
     height: 3px;
-    background-color: #555555;
+    background-color: var(--sdk-chat-window-checkbox-label-color);
     border-radius: 2px;
     margin-left: -16.5px;
     margin-top: 7px;
@@ -2312,7 +2330,7 @@
 .checkboxBtnText {
     border: 0;
     background: none;
-    color: #0079FF!important;
+    color: var(--sdk-chat-window-viewmore-btn-color)!important;
     font-size: 15px;
     cursor: pointer;
 }
@@ -2330,7 +2348,7 @@
 
 .likeDislikeDiv {
     display: inline-block;
-    border: 1px solid #b2b2b2;
+    border: 1px solid var(--sdk-chat-window-like-border-color);
     border-radius: 50%;
     padding: 10px;
     margin-right: 5px;
@@ -2366,15 +2384,15 @@
     clear: both;
     width: 353px;
     margin-left: -45px;
-    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    box-shadow: var(--sdk-chat-widow-primary-box-shadow);;
     cursor: pointer;
-    background: #fff;
+    background: var(--sdk-chat-window-pie-chart-background);
 }
 
 .kore-chat-window .piechart .piechartDiv .legend-tooltip-pie-chart {
     position: absolute;
-    background: #fff;
-    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    background: var(--sdk-chat-window-pie-chart-background);
+    box-shadow: var(--sdk-chat-widow-primary-box-shadow);;
     height: 150px;
     overflow-y: scroll;
  }
@@ -2394,8 +2412,8 @@
 }
 
 .kore-chat-window .legend-tooltip-pie-chart {
-    background: #fff;
-    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    background: var(--sdk-chat-window-pie-chart-background);
+    box-shadow: var(--sdk-chat-widow-primary-box-shadow);;
     height: 105px;
     padding-bottom: 6px;
     overflow-y: scroll;
@@ -2415,8 +2433,8 @@
   position: absolute;
   max-width: 170px;
   padding: 2px;
-  font: 12px sans-serif;
-  background: #eed;
+ font: 12px ;
+ background: var(--sdk-chat-widow-primary-border-color);
   border: 0px;
   border-radius: 8px;
   pointer-events: none;
@@ -2424,8 +2442,8 @@
 .kore-chat-window  .largePreviewContent .bar-chart-tooltip {
     position: absolute;
     padding: 2px;
-    font: 12px sans-serif;
-    background: #eed;
+    font: 12px;
+    background: var(--sdk-chat-widow-primary-border-color);
     border: 0px;
     border-radius: 8px;
     pointer-events: none;
