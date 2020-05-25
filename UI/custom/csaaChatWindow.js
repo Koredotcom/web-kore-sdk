@@ -33,6 +33,7 @@
         // set chat icon visibility
       }
 
+      attachChatIconUI($);
       initializeSession.apply(this, [chatConfig, setChatIconVisibility]);
     };
   }
@@ -79,6 +80,28 @@
     }
 
     return chatConfig;
+  }
+
+  function attachChatIconUI ($) {
+    var bubble = '\
+      <div chat="bubble" thinking="nope">\
+        <div chat="notifications">\
+          <div></div>\
+        </div>\
+        <div chat="master_button">\
+          <div>\
+            <div chat="icon">\
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" stroke="rgb(255, 255, 255)" fill="none"><path d="M9.37 1.34h1.43a8.2 8.2 0 0 1 0 16.39H9.37a10 10 0 0 1-2.68-.45c-.55-.15-2.23 1.8-2.63 1.36s.05-2.8-.4-3.23q-.28-.27-.54-.57a8.2 8.2 0 0 1 6.26-13.5z"/><path d="M6.37 7.04h6.2m-6.2 2.62h7.94m-7.94 2.62h5.05" stroke-linecap="round"/></svg>\
+              <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66">\
+                <circle class="path" cx="33" cy="33" r="30" fill="none" stroke-width="6"></circle>\
+              </svg>\
+            </div>\
+          </div>\
+        </div>\
+      </div>\
+    ';
+
+    $('body').append(bubble);
   }
 
   function initializeSession (chatConfig, setChatIconVisibility) {
