@@ -4,6 +4,8 @@
   var RESTORE_P_S = 'restorePS';
   var JWT_GRANT = 'jwtGrant';
   var BOT_USER_IDENTITY = 'csaa_chat_unique_id';
+  var MESSAGE_COUNTER = 'chatHistoryCount';
+  var LIVE_CHAT_FLAG = 'agentTfrOn';
 
   function csaaKoreBotChat() {
     var koreJquery;
@@ -130,6 +132,42 @@
 
     $chatBoxControls.children('.minimize-btn').on('click', function () {
       setChatIconVisibility(true);
+    });
+
+    var bot = chatInstance.bot;
+
+    bot.on('rtm_client_initialized', function () {
+      bot.RtmClient.on('ws_error', function (event){
+        //where event is web socket's onerror event
+      });
+      
+      bot.RtmClient.on('ws_close', function (event) {
+        //where event is web socket's onclose event
+
+        localStorage.removeItem(getBotUserIdentity());
+        localStorage.removeItem(JWT_GRANT);
+        localStorage.removeItem(RESTORE_P_S);
+        localStorage.removeItem(MESSAGE_COUNTER);
+        localStorage.removeItem(LIVE_CHAT_FLAG);
+
+        setChatIconVisibility(true);
+      });
+    });
+
+    // Open event triggers when connection established with bot
+    bot.on('open', function (response) {
+      // your code
+    });
+
+    // Event occurs when you recieve any message from server
+    bot.on('message', function(msg) {
+      // Converting JSON string to object
+      var dataObj = JSON.parse(msg.data); 
+
+      //differ user message & bot response check message type
+      if (dataObj.from === 'bot' && dataObj.type === 'bot_response') {
+        // Bot sends a message to you
+      }
     });
   };
 

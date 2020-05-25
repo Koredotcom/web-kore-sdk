@@ -4829,7 +4829,8 @@
                 botDetails: botDetails,
                 chatHistory: chatHistory,
                 addWidgetEvents:addWidgetEvents,
-                setWidgetInstance:setWidgetInstance
+                setWidgetInstance:setWidgetInstance,
+                bot: bot
             };
 
             //Actual chatwindow.js koreBotChat function code end here
