@@ -29,8 +29,35 @@
   };
 
   function init (chatInstance) {
-    return function (botOptions, configOverrides) {
+    return function (botOptions, configOverrides, chatLifeCycle) {
+      if (!chatLifeCycle.shouldChatContruct()) return;
+
       var chatConfig = getChatConfig(botOptions, configOverrides, chatInstance);
+
+      var originalShow = chatInstance.show;
+      var wrapperShow = function () {
+        if (chatLifeCycle.onWillMount) chatLifeCycle.onWillMount();
+
+        var chatInstance = originalShow.call(this, chatConfig);
+
+        if (chatConfig.onMount) chatConfig.onMount();
+
+        return chatInstance;
+      }
+
+      var originalDestroy = chatInstance.destroy
+      var wrapperDestroy = function () {
+        if (chatLifeCycle.onWillUnmount) chatLifeCycle.onWillUnmount();
+
+        var chatInstance =  originalDestroy.call(this, chatConfig);
+
+        if (chatConfig.onUnmount) chatConfig.onUnmount();
+
+        return chatInstance;
+      };
+
+      chatInstance.show = wrapperShow;
+      chatInstance.destroy = wrapperDestroy;
 
       var setChatIconVisibility = function (visibility) {
         var $bubble = $('[chat=bubble]');
