@@ -91,6 +91,7 @@ module.exports = function (grunt) {
             '../libs/client_api.js',
             // 'kore-config.js',
             // 'kore-main.js',
+            'custom/csaaChatWindow.js',
             'libs/kore-no-conflict-end.js'
         ];
         cssFiles=[
