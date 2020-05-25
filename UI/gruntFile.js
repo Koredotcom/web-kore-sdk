@@ -89,8 +89,8 @@ module.exports = function (grunt) {
             '../libs/speech/app.js',
             '../libs/speech/key.js',
             '../libs/client_api.js',
-            'kore-config.js',
-            'kore-main.js',
+            // 'kore-config.js',
+            // 'kore-main.js',
             'libs/kore-no-conflict-end.js'
         ];
         cssFiles=[
