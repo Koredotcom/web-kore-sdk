@@ -30,11 +30,13 @@
       var chatConfig = getChatConfig(botOptions, configOverrides, chatInstance);
 
       var setChatIconVisibility = function (visibility) {
-        // set chat icon visibility
+        var $bubble = $('[chat=bubble]');
+        visibility ? $bubble.attr('visible', 'yep') : $bubble.attr('visible', 'nope');
       }
 
       attachChatIconUI($);
       initializeSession.apply(this, [chatConfig, setChatIconVisibility]);
+      bindEvents(chatInstance, setChatIconVisibility);
     };
   }
 
@@ -116,6 +118,20 @@
 
     setChatIconVisibility(true);
   }
+
+  function bindEvents (chatInstance, setChatIconVisibility) {
+    var $bubble = $('[chat=bubble]');
+    var $chatBoxControls = $('.kore-chat-window .kore-chat-header .chat-box-controls');
+
+    $bubble.on('click', function () {
+      setChatIconVisibility(false);
+      chatInstance.show();
+    });
+
+    $chatBoxControls.children('.minimize-btn').on('click', function () {
+      setChatIconVisibility(true);
+    });
+  };
 
   function assertionFnWrapper (originalAssertionFn, koreBot) {
     return function (options, callback) {
