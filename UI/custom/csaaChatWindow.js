@@ -1,6 +1,8 @@
 (function (factory) {
   window.csaaKoreBotChat = factory();
 })(function () {
+  var RESTORE_P_S = 'restorePS';
+  var JWT_GRANT = 'jwtGrant';
   var BOT_USER_IDENTITY = 'csaa_chat_unique_id';
 
   function csaaKoreBotChat() {
@@ -27,7 +29,11 @@
     return function (botOptions, configOverrides) {
       var chatConfig = getChatConfig(botOptions, configOverrides, chatInstance);
 
-      initializeSession.apply(this, [chatConfig]);
+      var setChatIconVisibility = function (visibility) {
+        // set chat icon visibility
+      }
+
+      initializeSession.apply(this, [chatConfig, setChatIconVisibility]);
     };
   }
 
@@ -75,8 +81,17 @@
     return chatConfig;
   }
 
-  function initializeSession (chatConfig) {
-    // initialize chat session
+  function initializeSession (chatConfig, setChatIconVisibility) {
+    if (isChatSessionActive(RESTORE_P_S, JWT_GRANT)) return this.show(chatConfig);
+
+    var jwtGrant = JSON.parse(localStorage.getItem(JWT_GRANT));
+
+    chatConfig.botOptions.restorePS = true;
+    chatConfig.botOptions.jwtGrant = jwtGrant;
+    chatConfig.botOptions.chatHistory = this.chatHistory;
+    chatConfig.loadHistory = true;
+
+    setChatIconVisibility(true);
   }
 
   function assertionFnWrapper (originalAssertionFn, koreBot) {
@@ -99,9 +114,17 @@
   }
 
   function getBotUserIdentity () {
-    var userID = getUniqueID();
-    localStorage.setItem(BOT_USER_IDENTITY, getUniqueID());
-    return userID;
+    if (isChatSessionActive(RESTORE_P_S, JWT_GRANT)) {
+      return localStorage.getItem(BOT_USER_IDENTITY);
+    } else {
+      var userID = getUniqueID();
+      localStorage.setItem(BOT_USER_IDENTITY, getUniqueID());
+      return userID;
+    }
+  }
+
+  function isChatSessionActive (RESTORE_P_S, JWT_GRANT) {
+    return localStorage.getItem(RESTORE_P_S) && localStorage.getItem(JWT_GRANT) != null;
   }
 
   function getUniqueID () {
