@@ -4,6 +4,7 @@
   var RESTORE_P_S = 'restorePS';
   var JWT_GRANT = 'jwtGrant';
   var BOT_USER_IDENTITY = 'csaa_chat_unique_id';
+  var CHAT_MAXIMIZED = 'csaa_chat_maximized';
   var MESSAGE_COUNTER = 'chatHistoryCount';
   var LIVE_CHAT_FLAG = 'agentTfrOn';
 
@@ -111,6 +112,7 @@
   function initializeSession (chatConfig, setChatIconVisibility) {
     if (isChatSessionActive(RESTORE_P_S, JWT_GRANT)) return this.show(chatConfig);
 
+    var isChatMaximized = localStorage.getItem(CHAT_MAXIMIZED) === 'true';
     var jwtGrant = JSON.parse(localStorage.getItem(JWT_GRANT));
 
     chatConfig.botOptions.restorePS = true;
@@ -118,7 +120,12 @@
     chatConfig.botOptions.chatHistory = this.chatHistory;
     chatConfig.loadHistory = true;
 
-    setChatIconVisibility(true);
+    if (isChatMaximized) {
+      setChatIconVisibility(false);
+      this.show(chatConfig);
+    } else {
+      setChatIconVisibility(true);
+    }
   }
 
   function bindEvents (chatInstance, setChatIconVisibility) {
@@ -126,11 +133,13 @@
     var $chatBoxControls = $('.kore-chat-window .kore-chat-header .chat-box-controls');
 
     $bubble.on('click', function () {
+      localStorage.setItem(CHAT_MAXIMIZED, 'true');
       setChatIconVisibility(false);
       chatInstance.show();
     });
 
     $chatBoxControls.children('.minimize-btn').on('click', function () {
+      localStorage.setItem(CHAT_MAXIMIZED, 'false');
       setChatIconVisibility(true);
     });
 
@@ -144,6 +153,7 @@
       bot.RtmClient.on('ws_close', function (event) {
         //where event is web socket's onclose event
 
+        localStorage.removeItem(CHAT_MAXIMIZED);
         localStorage.removeItem(getBotUserIdentity());
         localStorage.removeItem(JWT_GRANT);
         localStorage.removeItem(RESTORE_P_S);
