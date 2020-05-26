@@ -66,7 +66,7 @@
 
       attachChatIconUI($);
       initializeSession.apply(this, [chatConfig, setChatIconVisibility]);
-      bindEvents(chatInstance, setChatIconVisibility);
+      bindEvents(chatConfig, chatInstance, setChatIconVisibility);
     };
   }
 
@@ -155,14 +155,14 @@
     }
   }
 
-  function bindEvents (chatInstance, setChatIconVisibility) {
+  function bindEvents (chatConfig, chatInstance, setChatIconVisibility) {
     var $bubble = $('[chat=bubble]');
     var $chatBoxControls = $('.kore-chat-window .kore-chat-header .chat-box-controls');
 
     $bubble.on('click', function () {
       localStorage.setItem(CHAT_MAXIMIZED, 'true');
       setChatIconVisibility(false);
-      chatInstance.show();
+      chatInstance.show(chatConfig);
     });
 
     $chatBoxControls.children('.minimize-btn').on('click', function () {
