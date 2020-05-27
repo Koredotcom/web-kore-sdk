@@ -379,7 +379,11 @@ KoreBot.prototype.logIn = function(err, data) {
 		this.cbErrorToClient = data.handleError || noop;
 		this.cbBotDetails = data.botDetails || noop;
 		this.cbBotChatHistory = data.chatHistory || noop;
-		this.WebClient.login.login({"assertion":data.assertion,"botInfo":this.options.botInfo}, bind(this.onLogIn, this));
+		if (data.restorePS) {
+			this.onLogIn(null, data.jwtGrant);
+		} else {
+			this.WebClient.login.login({"assertion":data.assertion,"botInfo":this.options.botInfo}, bind(this.onLogIn, this));
+		}
 	}
 
 };

@@ -143,9 +143,8 @@
   }
 
   function initializeSession (chatConfig, setChatIconVisibility) {
-    if (isChatSessionActive(RESTORE_P_S, JWT_GRANT)) return this.show(chatConfig);
+    if (!isChatSessionActive(RESTORE_P_S, JWT_GRANT)) return setChatIconVisibility(true);
 
-    var isChatMaximized = localStorage.getItem(CHAT_MAXIMIZED) === 'true';
     var jwtGrant = JSON.parse(localStorage.getItem(JWT_GRANT));
 
     chatConfig.botOptions.restorePS = true;
@@ -153,14 +152,8 @@
     chatConfig.botOptions.chatHistory = this.chatHistory;
     chatConfig.loadHistory = true;
 
-    if (isChatMaximized) {
-      setChatIconVisibility(false);
-
-      // show but retain chatHistory
-      this.show(chatConfig);
-    } else {
-      setChatIconVisibility(true);
-    }
+    setChatIconVisibility(false);
+    return this.show(chatConfig)
   }
 
   function bindEventListeners (chatConfig, chatInstance, setChatIconVisibility) {
@@ -213,7 +206,8 @@
 
     // Open event triggers when connection established with bot
     bot.on('open', function (response) {
-      // your code
+      localStorage.setItem(RESTORE_P_S, 'true');
+      localStorage.setItem(JWT_GRANT, JSON.stringify(bot.userInfo));
     });
 
     // Event occurs when you recieve any message from server
