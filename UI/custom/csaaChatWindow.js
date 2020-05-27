@@ -65,6 +65,12 @@
       }
 
       attachChatIconUI($);
+
+      if (chatConfig.disabled) {
+        setChatIconVisibility(true);
+        return;
+      }
+
       initializeSession.apply(this, [chatConfig, setChatIconVisibility]);
       bindEvents(chatConfig, chatInstance, setChatIconVisibility);
     };
