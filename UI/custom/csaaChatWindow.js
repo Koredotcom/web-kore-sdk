@@ -72,7 +72,7 @@
       }
 
       initializeSession.apply(this, [chatConfig, setChatIconVisibility]);
-      bindEvents(chatConfig, chatInstance, setChatIconVisibility);
+      bindEventListeners(chatConfig, chatInstance, setChatIconVisibility);
     };
   }
 
@@ -155,31 +155,45 @@
 
     if (isChatMaximized) {
       setChatIconVisibility(false);
+
+      // show but retain chatHistory
       this.show(chatConfig);
     } else {
       setChatIconVisibility(true);
     }
   }
 
-  function bindEvents (chatConfig, chatInstance, setChatIconVisibility) {
+  function bindEventListeners (chatConfig, chatInstance, setChatIconVisibility) {
     var $bubble = $('[chat=bubble]');
-    var $chatBoxControls = $('.kore-chat-window .kore-chat-header .chat-box-controls');
 
     $bubble.on('click', function () {
-      localStorage.setItem(CHAT_MAXIMIZED, 'true');
-      setChatIconVisibility(false);
-      chatInstance.show(chatConfig);
-    });
+      if (localStorage.getItem(CHAT_MAXIMIZED) === 'false') {
+        $('.minimized').trigger('click');
+        $bubble.attr('thinking', 'nope');
+        setChatIconVisibility(false);
+      } else {
+        $bubble.attr('thinking', 'yep');
+        chatInstance.show(chatConfig);
+      }
 
-    $chatBoxControls.children('.minimize-btn').on('click', function () {
-      localStorage.setItem(CHAT_MAXIMIZED, 'false');
-      setChatIconVisibility(true);
+      localStorage.setItem(CHAT_MAXIMIZED, 'true');
     });
 
     var bot = chatInstance.bot;
 
+    chatWindowEventListeners(bot, $bubble, setChatIconVisibility); // chat window already open
+
+    $bubble.on('click', function () {
+      // event handlers are getting added 2x
+      chatWindowEventListeners(bot, $bubble, setChatIconVisibility); // bubble needs to clicked first
+    });
+  };
+
+  function chatWindowEventListeners(bot, $bubble, setChatIconVisibility) {
+    var $chatBoxControls = $('.kore-chat-window .kore-chat-header .chat-box-controls');
+
     bot.on('rtm_client_initialized', function () {
-      bot.RtmClient.on('ws_error', function (event){
+      bot.RtmClient.on('ws_error', function (event) {
         //where event is web socket's onerror event
       });
       
@@ -210,9 +224,18 @@
       //differ user message & bot response check message type
       if (dataObj.from === 'bot' && dataObj.type === 'bot_response') {
         // Bot sends a message to you
+        if ($bubble.attr('thinking') === 'yep') {
+          $bubble.attr('thinking', 'nope');
+          setChatIconVisibility(false);
+        }
       }
     });
-  };
+
+    $chatBoxControls.children('.minimize-btn').on('click', function () {
+      localStorage.setItem(CHAT_MAXIMIZED, 'false');
+      setChatIconVisibility(true);
+    });
+  }
 
   function assertionFnWrapper (originalAssertionFn, koreBot) {
     return function (options, callback) {
