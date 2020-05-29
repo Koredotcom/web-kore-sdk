@@ -16,6 +16,13 @@
     botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
     botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
     botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+	
+// To modify the web socket url use the following option
+// botOptions.reWriteSocketURL = {
+//     protocol: 'PROTOCOL_TO_BE_REWRITTEN',
+//     hostname: 'HOSTNAME_TO_BE_REWRITTEN',
+//     port: 'PORT_TO_BE_REWRITTEN'
+// };
     
     var chatConfig={
         botOptions:botOptions,
