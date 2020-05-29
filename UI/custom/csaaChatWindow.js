@@ -170,7 +170,7 @@
       } else {
         $bubble.attr('thinking', 'yep');
       }
-      
+
       chatInstance.show(chatConfig);
       chatWindowEventListeners(chatInstance.bot, $bubble, setChatIconVisibility, chatConfig);
       localStorage.setItem(CHAT_MAXIMIZED, 'true');
@@ -191,6 +191,9 @@
       
       bot.RtmClient.on('ws_close', function (event) {
         //where event is web socket's onclose event
+
+        // need a way to distinguish between ws_close from close button, or bot is reconnectiong
+        // if (localStorage.getItem(CHAT_MAXIMIZED)) return // return for reconneting events
 
         localStorage.removeItem(CHAT_MAXIMIZED);
         localStorage.removeItem(BOT_USER_IDENTITY);
