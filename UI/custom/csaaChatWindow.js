@@ -143,14 +143,19 @@
   }
 
   function initializeSession (chatConfig, setChatIconVisibility) {
-    if (!isChatSessionActive(RESTORE_P_S, JWT_GRANT)) {
-      return setTimeout(function () { setChatIconVisibility(true) }, 800);
+    var chatSessionActive = isChatSessionActive(RESTORE_P_S, JWT_GRANT);
+    var chatMinimized = localStorage.getItem(CHAT_MAXIMIZED) === 'false';
+
+    if (!chatSessionActive || chatMinimized) {
+      setTimeout(function () { setChatIconVisibility(true) }, 800);
     }
 
-    chatConfig.botOptions.restorePS = true;
-    chatConfig.botOptions.jwtGrant = JSON.parse(localStorage.getItem(JWT_GRANT));
-    chatConfig.botOptions.chatHistory = this.chatHistory;
-    chatConfig.loadHistory = true;
+    if (chatSessionActive) {
+      chatConfig.botOptions.restorePS = true;
+      chatConfig.botOptions.jwtGrant = JSON.parse(localStorage.getItem(JWT_GRANT));
+      chatConfig.botOptions.chatHistory = this.chatHistory;
+      chatConfig.loadHistory = true;
+    }
   }
 
   function bindEventListeners (chatConfig, chatInstance, setChatIconVisibility) {
@@ -164,9 +169,9 @@
         setChatIconVisibility(false);
       } else {
         $bubble.attr('thinking', 'yep');
-        chatInstance.show(chatConfig);
       }
-
+      
+      chatInstance.show(chatConfig);
       chatWindowEventListeners(chatInstance.bot, $bubble, setChatIconVisibility, chatConfig);
       localStorage.setItem(CHAT_MAXIMIZED, 'true');
     });
