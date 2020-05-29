@@ -147,15 +147,10 @@
       return setTimeout(function () { setChatIconVisibility(true) }, 800);
     }
 
-    var jwtGrant = JSON.parse(localStorage.getItem(JWT_GRANT));
-
     chatConfig.botOptions.restorePS = true;
-    chatConfig.botOptions.jwtGrant = jwtGrant;
+    chatConfig.botOptions.jwtGrant = JSON.parse(localStorage.getItem(JWT_GRANT));
     chatConfig.botOptions.chatHistory = this.chatHistory;
     chatConfig.loadHistory = true;
-
-    setChatIconVisibility(false);
-    return this.show(chatConfig)
   }
 
   function bindEventListeners (chatConfig, chatInstance, setChatIconVisibility) {
@@ -172,17 +167,13 @@
         chatInstance.show(chatConfig);
       }
 
+      chatWindowEventListeners(chatInstance.bot, $bubble, setChatIconVisibility, chatConfig);
       localStorage.setItem(CHAT_MAXIMIZED, 'true');
     });
 
-    var bot = chatInstance.bot;
-
-    chatWindowEventListeners(bot, $bubble, setChatIconVisibility, chatConfig); // chat window already open
-
-    $bubble.on('click', function () {
-      // event handlers are getting added 2x
-      chatWindowEventListeners(bot, $bubble, setChatIconVisibility, chatConfig); // bubble needs to clicked first
-    });
+    if (localStorage.getItem(CHAT_MAXIMIZED) === 'true') {
+      $masterButton.trigger('click');
+    }
   };
 
   function chatWindowEventListeners(bot, $bubble, setChatIconVisibility, chatConfig) {
@@ -235,7 +226,7 @@
       }
     });
 
-    $chatBoxControls.children('.minimize-btn').on('click', function () {
+    $chatBoxControls.children('.minimize-btn').off('click').on('click', function () {
       localStorage.setItem(CHAT_MAXIMIZED, 'false');
       setChatIconVisibility(true);
     });
