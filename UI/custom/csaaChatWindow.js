@@ -177,15 +177,15 @@
 
     var bot = chatInstance.bot;
 
-    chatWindowEventListeners(bot, $bubble, setChatIconVisibility); // chat window already open
+    chatWindowEventListeners(bot, $bubble, setChatIconVisibility, chatConfig); // chat window already open
 
     $bubble.on('click', function () {
       // event handlers are getting added 2x
-      chatWindowEventListeners(bot, $bubble, setChatIconVisibility); // bubble needs to clicked first
+      chatWindowEventListeners(bot, $bubble, setChatIconVisibility, chatConfig); // bubble needs to clicked first
     });
   };
 
-  function chatWindowEventListeners(bot, $bubble, setChatIconVisibility) {
+  function chatWindowEventListeners(bot, $bubble, setChatIconVisibility, chatConfig) {
     var $chatBoxControls = $('.kore-chat-window .kore-chat-header .chat-box-controls');
 
     bot.on('rtm_client_initialized', function () {
@@ -197,11 +197,18 @@
         //where event is web socket's onclose event
 
         localStorage.removeItem(CHAT_MAXIMIZED);
-        localStorage.removeItem(getBotUserIdentity());
+        localStorage.removeItem(BOT_USER_IDENTITY);
         localStorage.removeItem(JWT_GRANT);
         localStorage.removeItem(RESTORE_P_S);
         localStorage.removeItem(MESSAGE_COUNTER);
         localStorage.removeItem(LIVE_CHAT_FLAG);
+
+        chatConfig.botOptions.userIdentity = getBotUserIdentity();
+        chatConfig.botOptions.chatHistory = undefined;
+
+        chatConfig.chatHistory = undefined;
+        chatConfig.handleError = undefined;
+        chatConfig.loadHistory = false;
 
         setChatIconVisibility(true);
       });
@@ -258,7 +265,7 @@
       return localStorage.getItem(BOT_USER_IDENTITY);
     } else {
       var userID = getUniqueID();
-      localStorage.setItem(BOT_USER_IDENTITY, getUniqueID());
+      localStorage.setItem(BOT_USER_IDENTITY, userID);
       return userID;
     }
   }
