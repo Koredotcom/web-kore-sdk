@@ -122,7 +122,7 @@
 
   function attachChatIconUI ($) {
     var bubble = '\
-      <div chat="bubble" thinking="nope">\
+      <div chat="bubble" thinking="nope" visible="nope">\
         <div chat="notifications">\
           <div></div>\
         </div>\
@@ -143,7 +143,9 @@
   }
 
   function initializeSession (chatConfig, setChatIconVisibility) {
-    if (!isChatSessionActive(RESTORE_P_S, JWT_GRANT)) return setChatIconVisibility(true);
+    if (!isChatSessionActive(RESTORE_P_S, JWT_GRANT)) {
+      return setTimeout(function () { setChatIconVisibility(true) }, 800);
+    }
 
     var jwtGrant = JSON.parse(localStorage.getItem(JWT_GRANT));
 
@@ -157,9 +159,10 @@
   }
 
   function bindEventListeners (chatConfig, chatInstance, setChatIconVisibility) {
-    var $bubble = $('[chat=bubble]');
+    var $masterButton = $('[chat=bubble] [chat=master_button]');
+    var $bubble = $masterButton.parent();
 
-    $bubble.on('click', function () {
+    $masterButton.on('click', function () {
       if (localStorage.getItem(CHAT_MAXIMIZED) === 'false') {
         $('.minimized').trigger('click');
         $bubble.attr('thinking', 'nope');
