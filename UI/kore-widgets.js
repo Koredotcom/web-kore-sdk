@@ -4098,9 +4098,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
             for (var j = 0; j < initialWidgetData.panels[i].widgets.length; j++) {
               initialWidgetData.panels[i].widgets[j].templateType = initialWidgetData.panels[i].widgets[j].templateType == undefined ? "Sushanth" : initialWidgetData.panels[i].widgets[j].templateType;
 
-              if (initialWidgetData.panels[i].widgets[j].templateType === viewMoreObj.widgetTemplate) {
+              if (initialWidgetData.panels[i].widgets[j]._id === viewMoreObj.subpanel) {
                 var ele = $.extend(true, {}, initialWidgetData.panels[i]);
-
+                ele.widgets = [];
+                ele.widgets.push(initialWidgetData.panels[i].widgets[j]);
                 if (ele.widgets.length === 1) {
                   var dataHTML = $(_self.getTemplate("viewMoreTemplate")).tmplProxy({
                     'widgetData': ele,
