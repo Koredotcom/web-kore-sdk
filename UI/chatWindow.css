@@ -407,7 +407,7 @@
     max-height: 100%;
     width: 100%;
     overflow-y: auto;
-    padding: 20px;
+    padding: 20px 20px;
 }
 
 .kore-chat-window a {
@@ -488,7 +488,8 @@
 .kore-chat-window ul.chat-container li.fromCurrentUser .messageBubble {
     float: right;
     padding: 12px 15px;
-    max-width: 70%;
+    max-width: 95%;
+    line-height: 1.5;
     font-size: 14px;
     background-color: var(--sdk-chat-widow-primary-blue-color);
     color: var(--sdk-chat-widow-default-white);
@@ -533,7 +534,8 @@
     border-radius: 12px;
     border-bottom-left-radius: 2px;
     padding: 12px 15px;
-    max-width: 70%;
+    max-width: 95%;
+    line-height: 1.5;
     font-size: 14px;
     -webkit-animation: message-left ease-in-out 2s forwards;
     -moz-animation: message-left ease-in-out 2s forwards;
@@ -726,7 +728,8 @@
     animation: message-left ease-in-out 2s forwards;
     margin: 0;
     border: 1px solid var(--sdk-chat-widow-primary-bg-color);
-    max-width: 70%;
+    max-width: 95%;
+    line-height: 1.5;
 }
 
 .kore-chat-window .buttonTmplContent .buttonTmplContentHeading {
@@ -824,7 +827,8 @@
     animation: message-left ease-in-out 2s forwards;
     margin: 0;
     border: 1px solid var(--sdk-chat-widow-primary-bg-color);
-    max-width: 70%;
+    max-width: 95%;
+    line-height: 1.5;
 }
 
 .kore-chat-window .listTmplContent .listLeftContent {
