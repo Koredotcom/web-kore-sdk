@@ -161,7 +161,67 @@
         max-height: 100%;
     }
 }
-
+@media(max-width: 479px) {
+    .kr-wiz-container{
+        position: absolute;
+        left: 0;
+        right: auto;
+        height: 100%;
+        max-height: 100%;
+        bottom: 0;
+        width: 100%;
+        min-width: inherit;
+    }
+    .kr-wiz-menu{
+        position: relative;
+        margin-left: 0;
+        float: left;
+    }
+    .kr-wiz-menu-chat{
+        position: relative;
+        margin-left: 0;
+        float: left;
+        z-index: 9;
+        height: 48px;
+        box-shadow: none;
+        border: 0;
+        transition: ease-in .33s;
+    }
+    .selectedHeight .kr-wiz-menu-chat{
+        box-shadow: 0px 0px 14px 0px rgba(138, 149, 159, 0.25);
+        height: 100%;
+    }
+    .kr-wiz-menu-css .menuItemCntr .sdkThemeContainer{
+        display: none;
+    }
+    .selectedHeight .kr-wiz-menu-css .menuItemCntr .sdkThemeContainer{
+        display: block;
+    }
+    .selectedHeight .kr-wiz-content-chat{
+        z-index: 99;
+    }
+    .kr-wiz-menu-css .menuItemCntr .sdkBotIcon{
+        height: 48px;
+        background: transparent !important;
+         border-right: 0px solid transparent !important;
+         padding-top: 10px;
+    }
+    .kr-wiz-content.kr-wiz-content-css{
+        float: left;
+        width: calc(100% - 68px);
+        /* overflow-x: auto; */
+    }
+    .kr-wiz-content.kr-wiz-content-css .widgetTitle .panelWidgetName{
+        max-width: 246px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+    }
+    .kr-wiz-content-css .mainTemplateCntr .mainTemplateBdr.scroll{
+        padding: 10px;
+    }
+}
 .kore-chat-window.expanded {
     min-width: 330px;
     width: 50%!important;
@@ -347,7 +407,7 @@
     max-height: 100%;
     width: 100%;
     overflow-y: auto;
-    padding: 20px;
+    padding: 20px 20px;
 }
 
 .kore-chat-window a {
@@ -428,7 +488,8 @@
 .kore-chat-window ul.chat-container li.fromCurrentUser .messageBubble {
     float: right;
     padding: 12px 15px;
-    max-width: 70%;
+    max-width: 95%;
+    line-height: 1.5;
     font-size: 14px;
     background-color: var(--sdk-chat-widow-primary-blue-color);
     color: var(--sdk-chat-widow-default-white);
@@ -473,7 +534,8 @@
     border-radius: 12px;
     border-bottom-left-radius: 2px;
     padding: 12px 15px;
-    max-width: 70%;
+    max-width: 95%;
+    line-height: 1.5;
     font-size: 14px;
     -webkit-animation: message-left ease-in-out 2s forwards;
     -moz-animation: message-left ease-in-out 2s forwards;
@@ -666,7 +728,8 @@
     animation: message-left ease-in-out 2s forwards;
     margin: 0;
     border: 1px solid var(--sdk-chat-widow-primary-bg-color);
-    max-width: 70%;
+    max-width: 95%;
+    line-height: 1.5;
 }
 
 .kore-chat-window .buttonTmplContent .buttonTmplContentHeading {
@@ -764,7 +827,8 @@
     animation: message-left ease-in-out 2s forwards;
     margin: 0;
     border: 1px solid var(--sdk-chat-widow-primary-bg-color);
-    max-width: 70%;
+    max-width: 95%;
+    line-height: 1.5;
 }
 
 .kore-chat-window .listTmplContent .listLeftContent {

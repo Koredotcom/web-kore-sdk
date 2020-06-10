@@ -288,7 +288,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     KoreWidgetSDK.prototype.getTemplate = function (type) {
       var menuTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl">\
         <div class="menuItemCntr">\
-        <div class="sdkBotIcon" onClick="openPanel(\'closePanel\')" {{if botDetails && botDetails.name}}title="${botDetails.name}"{{/if}}>\
+        <div class="sdkBotIcon" onClick="openPanel(\'closePanel\',\'' + " " + '\',\'' + "true" + '\')" {{if botDetails && botDetails.name}}title="${botDetails.name}"{{/if}}>\
         <img src="$(botDetails.icon)" class="iconBot" onerror="this.onerror=null;this.src=\'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMzBweCIgaGVpZ2h0PSIzMHB4IiB2aWV3Qm94PSIwIDAgMzAgMzAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUzLjIgKDcyNjQzKSAtIGh0dHBzOi8vc2tldGNoYXBwLmNvbSAtLT4KICAgIDx0aXRsZT4yPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9IjIiIGZpbGw9IiM0QTkwRTIiIGZpbGwtcnVsZT0ibm9uemVybyI+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yLDE1IEMyLDIyLjE4IDcuODIsMjggMTUsMjggQzIyLjE4LDI4IDI4LDIyLjE4IDI4LDE1IEMyOCw3LjgyIDIyLjE4LDIgMTUsMiBDNy44MiwyIDIsNy44MiAyLDE1IFogTTE1LDAgQzIzLjI4NCwwIDMwLDYuNzE2IDMwLDE1IEMzMCwyMy4yODQgMjMuMjg0LDMwIDE1LDMwIEM2LjcxNiwzMCAwLDIzLjI4NCAwLDE1IEMwLDYuNzE2IDYuNzE2LDAgMTUsMCBaIiBpZD0iU2hhcGUiPjwvcGF0aD4KICAgICAgICAgICAgPHBhdGggZD0iTTExLDEwIEMxMC40NDc3MTUzLDEwIDEwLDEwLjQ0NzcxNTMgMTAsMTEgQzEwLDExLjU1MjI4NDcgMTAuNDQ3NzE1MywxMiAxMSwxMiBDMTEuNTUyMjg0NywxMiAxMiwxMS41NTIyODQ3IDEyLDExIEMxMiwxMC40NDc3MTUzIDExLjU1MjI4NDcsMTAgMTEsMTAgWiBNMTEsOCBDMTIuMDcxNzk2OCw3Ljk5OTk5OTk4IDEzLjA2MjE3NzksOC41NzE3OTY3NCAxMy41OTgwNzYzLDkuNDk5OTk5OTggQzE0LjEzMzk3NDcsMTAuNDI4MjAzMiAxNC4xMzM5NzQ3LDExLjU3MTc5NjggMTMuNTk4MDc2MywxMi41IEMxMy4wNjIxNzc5LDEzLjQyODIwMzMgMTIuMDcxNzk2OCwxNCAxMSwxNCBDOS4zNDMxNDU3NSwxNCA4LDEyLjY1Njg1NDIgOCwxMSBDOCw5LjM0MzE0NTc1IDkuMzQzMTQ1NzUsOCAxMSw4IEwxMSw4IFogTTExLDE4IEMxMC40NDc3MTUzLDE4IDEwLDE4LjQ0NzcxNTMgMTAsMTkgQzEwLDE5LjU1MjI4NDcgMTAuNDQ3NzE1MywyMCAxMSwyMCBDMTEuNTUyMjg0NywyMCAxMiwxOS41NTIyODQ3IDEyLDE5IEMxMiwxOC40NDc3MTUzIDExLjU1MjI4NDcsMTggMTEsMTggWiBNMTEsMTYgQzEyLjY1Njg1NDIsMTYgMTQsMTcuMzQzMTQ1OCAxNCwxOSBDMTQsMjAuNjU2ODU0MiAxMi42NTY4NTQyLDIyIDExLDIyIEM5LjM0MzE0NTc1LDIyIDgsMjAuNjU2ODU0MiA4LDE5IEM4LDE3LjM0MzE0NTggOS4zNDMxNDU3NSwxNiAxMSwxNiBaIE0xOSwxMCBDMTguNDQ3NzE1MywxMCAxOCwxMC40NDc3MTUzIDE4LDExIEMxOCwxMS41NTIyODQ3IDE4LjQ0NzcxNTMsMTIgMTksMTIgQzE5LjU1MjI4NDcsMTIgMjAsMTEuNTUyMjg0NyAyMCwxMSBDMjAsMTAuNDQ3NzE1MyAxOS41NTIyODQ3LDEwIDE5LDEwIFogTTE5LDggQzIwLjA3MTc5NjgsNy45OTk5OTk5OCAyMS4wNjIxNzc5LDguNTcxNzk2NzQgMjEuNTk4MDc2Myw5LjQ5OTk5OTk4IEMyMi4xMzM5NzQ3LDEwLjQyODIwMzIgMjIuMTMzOTc0NywxMS41NzE3OTY4IDIxLjU5ODA3NjMsMTIuNSBDMjEuMDYyMTc3OSwxMy40MjgyMDMzIDIwLjA3MTc5NjgsMTQgMTksMTQgQzE3LjM0MzE0NTgsMTQgMTYsMTIuNjU2ODU0MiAxNiwxMSBDMTYsOS4zNDMxNDU3NSAxNy4zNDMxNDU4LDggMTksOCBMMTksOCBaIE0xOSwxOCBDMTguNDQ3NzE1MywxOCAxOCwxOC40NDc3MTUzIDE4LDE5IEMxOCwxOS41NTIyODQ3IDE4LjQ0NzcxNTMsMjAgMTksMjAgQzE5LjU1MjI4NDcsMjAgMjAsMTkuNTUyMjg0NyAyMCwxOSBDMjAsMTguNDQ3NzE1MyAxOS41NTIyODQ3LDE4IDE5LDE4IFogTTE5LDE2IEMyMC42NTY4NTQyLDE2IDIyLDE3LjM0MzE0NTggMjIsMTkgQzIyLDIwLjY1Njg1NDIgMjAuNjU2ODU0MiwyMiAxOSwyMiBDMTcuMzQzMTQ1OCwyMiAxNiwyMC42NTY4NTQyIDE2LDE5IEMxNiwxNy4zNDMxNDU4IDE3LjM0MzE0NTgsMTYgMTksMTYgWiIgaWQ9IlNoYXBlIj48L3BhdGg+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=\';">\
        </div>\
           <div class="menuItemBox" >\
@@ -2437,8 +2437,108 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     KoreWidgetSDK.prototype.openDropdown = function (data) {
       console.log(data);
     };
-
     KoreWidgetSDK.prototype.openPanel = function (panelName, resPopUp) {
+     
+      var _self = this;
+      var popUpStatus;
+      if ((panelName === oldPanelName) || (panelName==='closePanel')) {
+        //todo:deviation:toggle fuctionality on panel click
+        oldPanelName = "";
+        if($('.menuItemContainer') && $('.menuItemContainer').removeClass('selected')){
+          $('.menuItemContainer').removeClass('selected');
+        }
+        $('.sdkBotIcon').addClass('selected');
+        localPanelDetail[panelName] = "";
+        _self.clearWidgetPolling();
+        $(_self.config.container.content).hide("slide", {
+          direction: _self.config.direction === 'left' ? 'left' : 'right'
+        }, 500);
+        return false;
+      }
+
+      if (resPopUp) {
+        if (!resPopUp.btnresponse) {
+          return;
+        }
+      } else {
+        popUpStatus = _self.checkWidgetSwitchEditor(panelName, oldPanelName);
+      }
+
+      if (popUpStatus) {
+        return;
+      }
+
+      makeAPICall = true;
+
+      if (localPanelDetail[panelName] !== undefined) {
+        var currTime = new Date().getTime();
+        var deffTime = currTime - localPanelDetail[panelName];
+        var seconds = Math.floor(deffTime / 1000);
+
+        if (seconds < 10) {
+          makeAPICall = false;
+        }
+      }
+
+      localPanelDetail[panelName] = new Date().getTime();
+      oldPanelName = panelName;
+      panelName = panelName ? panelName.toLowerCase() : '';
+      clearInterval(pollingTimer);
+
+      if (meetingTimeRef.length > 0) {
+        for (var k = 0; k < meetingTimeRef.length; k++) {
+          clearInterval(meetingTimeRef[k]);
+        }
+      }
+
+      if (panelName === 'kora') {
+        console.log('<<<<Width350>>>>');
+        menuActiveTab = '';
+
+        _self.setChatFocus();
+
+        $('.menuItem').removeClass('active');
+        $('.menuItemCntr #' + panelName).addClass('active'); // $('.menuItemCntr #' + oldPanelName).addClass('active');
+
+        $('.centerWindow').children().not('.kore-chat-window').not('.koraPanelHeader').not('.centralLoader').remove();
+      } else if (panelName === 'profile') {
+        window.angularComponentReference.zone.run(function () {
+          window.angularComponentShowProfile.componentFn();
+        });
+      } else if (panelName === 'notification') {
+        window.angularComponentReference.zone.run(function () {
+          window.angularCmptRefNotification.componentFn();
+        });
+      } else {
+        _self.resetTask();
+
+        console.log('<<<<Width350>>>>');
+        menuActiveTab = panelName;
+        $('.menuItem').removeClass('selected');
+        $('.menuItemContainer').removeClass('selected');
+        $('.sdkBotIcon').removeClass('selected');
+        $('.menuItemContainer.' + panelName).addClass('selected'); // $('.menuItemCntr #' + oldPanelName).addClass('active');
+
+        $('.centerWindow').children().not('.kore-chat-window').not('.koraPanelHeader').not('.centralLoader').remove();
+        mainTemplateBdr = '';
+
+        if ($(_self.config.container.content).is(':visible')) {
+          $(_self.config.container.content).hide();
+        }
+
+        $(_self.config.container.content).show("slide", {
+          direction: _self.config.direction //$.jStorage.get('menuPosition')
+
+        }, 250);
+        $(_self.config.container.content).html('<div class="loaderRing"><div></div><div></div><div></div><div></div></div>');
+
+        _self.prepareRenderData(panelName, true);
+      }
+    };
+    KoreWidgetSDK.prototype.openPanel = function (panelName, resPopUp, heightToggle) {
+      if(heightToggle){
+        $(".kore-chat-window").toggleClass("selectedHeight");
+      }
       var _self = this;
 
       var popUpStatus;
@@ -3998,9 +4098,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
             for (var j = 0; j < initialWidgetData.panels[i].widgets.length; j++) {
               initialWidgetData.panels[i].widgets[j].templateType = initialWidgetData.panels[i].widgets[j].templateType == undefined ? "Sushanth" : initialWidgetData.panels[i].widgets[j].templateType;
 
-              if (initialWidgetData.panels[i].widgets[j].templateType === viewMoreObj.widgetTemplate) {
+              if (initialWidgetData.panels[i].widgets[j]._id === viewMoreObj.subpanel) {
                 var ele = $.extend(true, {}, initialWidgetData.panels[i]);
-
+                ele.widgets = [];
+                ele.widgets.push(initialWidgetData.panels[i].widgets[j]);
                 if (ele.widgets.length === 1) {
                   var dataHTML = $(_self.getTemplate("viewMoreTemplate")).tmplProxy({
                     'widgetData': ele,
@@ -5004,8 +5105,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       return methodMap;
     };
 
-    KoreWidgetSDK.prototype.openPanelForWindow = function (panelName, resPopUp) {
-      KoreWidgetSDK.prototype.openPanel.call(koreWidgetSDKInstance, panelName, resPopUp);
+    KoreWidgetSDK.prototype.openPanelForWindow = function (panelName, resPopUp, heightToggle) {
+      KoreWidgetSDK.prototype.openPanel.call(koreWidgetSDKInstance, panelName, resPopUp, heightToggle);
     };
 
     KoreWidgetSDK.prototype.filterTabsForWindow = function (parentId, subpanelId, filterId) {
