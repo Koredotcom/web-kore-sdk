@@ -288,14 +288,16 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     KoreWidgetSDK.prototype.getTemplate = function (type) {
       var menuTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl">\
         <div class="menuItemCntr">\
-        <div class="sdkBotIcon" onClick="openPanel(\'closePanel\',\'' + " " + '\',\'' + "true" + '\')" {{if botDetails && botDetails.name}}title="${botDetails.name}"{{/if}}>\
-        <img src="$(botDetails.icon)" class="iconBot" onerror="this.onerror=null;this.src=\'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMzBweCIgaGVpZ2h0PSIzMHB4IiB2aWV3Qm94PSIwIDAgMzAgMzAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUzLjIgKDcyNjQzKSAtIGh0dHBzOi8vc2tldGNoYXBwLmNvbSAtLT4KICAgIDx0aXRsZT4yPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9IjIiIGZpbGw9IiM0QTkwRTIiIGZpbGwtcnVsZT0ibm9uemVybyI+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yLDE1IEMyLDIyLjE4IDcuODIsMjggMTUsMjggQzIyLjE4LDI4IDI4LDIyLjE4IDI4LDE1IEMyOCw3LjgyIDIyLjE4LDIgMTUsMiBDNy44MiwyIDIsNy44MiAyLDE1IFogTTE1LDAgQzIzLjI4NCwwIDMwLDYuNzE2IDMwLDE1IEMzMCwyMy4yODQgMjMuMjg0LDMwIDE1LDMwIEM2LjcxNiwzMCAwLDIzLjI4NCAwLDE1IEMwLDYuNzE2IDYuNzE2LDAgMTUsMCBaIiBpZD0iU2hhcGUiPjwvcGF0aD4KICAgICAgICAgICAgPHBhdGggZD0iTTExLDEwIEMxMC40NDc3MTUzLDEwIDEwLDEwLjQ0NzcxNTMgMTAsMTEgQzEwLDExLjU1MjI4NDcgMTAuNDQ3NzE1MywxMiAxMSwxMiBDMTEuNTUyMjg0NywxMiAxMiwxMS41NTIyODQ3IDEyLDExIEMxMiwxMC40NDc3MTUzIDExLjU1MjI4NDcsMTAgMTEsMTAgWiBNMTEsOCBDMTIuMDcxNzk2OCw3Ljk5OTk5OTk4IDEzLjA2MjE3NzksOC41NzE3OTY3NCAxMy41OTgwNzYzLDkuNDk5OTk5OTggQzE0LjEzMzk3NDcsMTAuNDI4MjAzMiAxNC4xMzM5NzQ3LDExLjU3MTc5NjggMTMuNTk4MDc2MywxMi41IEMxMy4wNjIxNzc5LDEzLjQyODIwMzMgMTIuMDcxNzk2OCwxNCAxMSwxNCBDOS4zNDMxNDU3NSwxNCA4LDEyLjY1Njg1NDIgOCwxMSBDOCw5LjM0MzE0NTc1IDkuMzQzMTQ1NzUsOCAxMSw4IEwxMSw4IFogTTExLDE4IEMxMC40NDc3MTUzLDE4IDEwLDE4LjQ0NzcxNTMgMTAsMTkgQzEwLDE5LjU1MjI4NDcgMTAuNDQ3NzE1MywyMCAxMSwyMCBDMTEuNTUyMjg0NywyMCAxMiwxOS41NTIyODQ3IDEyLDE5IEMxMiwxOC40NDc3MTUzIDExLjU1MjI4NDcsMTggMTEsMTggWiBNMTEsMTYgQzEyLjY1Njg1NDIsMTYgMTQsMTcuMzQzMTQ1OCAxNCwxOSBDMTQsMjAuNjU2ODU0MiAxMi42NTY4NTQyLDIyIDExLDIyIEM5LjM0MzE0NTc1LDIyIDgsMjAuNjU2ODU0MiA4LDE5IEM4LDE3LjM0MzE0NTggOS4zNDMxNDU3NSwxNiAxMSwxNiBaIE0xOSwxMCBDMTguNDQ3NzE1MywxMCAxOCwxMC40NDc3MTUzIDE4LDExIEMxOCwxMS41NTIyODQ3IDE4LjQ0NzcxNTMsMTIgMTksMTIgQzE5LjU1MjI4NDcsMTIgMjAsMTEuNTUyMjg0NyAyMCwxMSBDMjAsMTAuNDQ3NzE1MyAxOS41NTIyODQ3LDEwIDE5LDEwIFogTTE5LDggQzIwLjA3MTc5NjgsNy45OTk5OTk5OCAyMS4wNjIxNzc5LDguNTcxNzk2NzQgMjEuNTk4MDc2Myw5LjQ5OTk5OTk4IEMyMi4xMzM5NzQ3LDEwLjQyODIwMzIgMjIuMTMzOTc0NywxMS41NzE3OTY4IDIxLjU5ODA3NjMsMTIuNSBDMjEuMDYyMTc3OSwxMy40MjgyMDMzIDIwLjA3MTc5NjgsMTQgMTksMTQgQzE3LjM0MzE0NTgsMTQgMTYsMTIuNjU2ODU0MiAxNiwxMSBDMTYsOS4zNDMxNDU3NSAxNy4zNDMxNDU4LDggMTksOCBMMTksOCBaIE0xOSwxOCBDMTguNDQ3NzE1MywxOCAxOCwxOC40NDc3MTUzIDE4LDE5IEMxOCwxOS41NTIyODQ3IDE4LjQ0NzcxNTMsMjAgMTksMjAgQzE5LjU1MjI4NDcsMjAgMjAsMTkuNTUyMjg0NyAyMCwxOSBDMjAsMTguNDQ3NzE1MyAxOS41NTIyODQ3LDE4IDE5LDE4IFogTTE5LDE2IEMyMC42NTY4NTQyLDE2IDIyLDE3LjM0MzE0NTggMjIsMTkgQzIyLDIwLjY1Njg1NDIgMjAuNjU2ODU0MiwyMiAxOSwyMiBDMTcuMzQzMTQ1OCwyMiAxNiwyMC42NTY4NTQyIDE2LDE5IEMxNiwxNy4zNDMxNDU4IDE3LjM0MzE0NTgsMTYgMTksMTYgWiIgaWQ9IlNoYXBlIj48L3BhdGg+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=\';">\
-       </div>\
+        <div class="sdkBotIcon" {{if botDetails && botDetails.name}}title="${botDetails.name}"{{/if}}>\
+        <img class="menuIconMobile" onClick="openPanel(\'closePanel\',\'' + " " + '\',\'' + "true" + '\')"  src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNDcwcHgiIGhlaWdodD0iNDcwcHgiIHZpZXdCb3g9IjAgMCA0NzAgNDcwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPCEtLSBHZW5lcmF0b3I6IFNrZXRjaCA1My4yICg3MjY0MykgLSBodHRwczovL3NrZXRjaGFwcC5jb20gLS0+CiAgICA8dGl0bGU+bWVudS1pY29uPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9Im1lbnUtaWNvbiIgZmlsbD0iIzc2NzY4OCIgZmlsbC1ydWxlPSJub256ZXJvIj4KICAgICAgICAgICAgPHBhdGggZD0iTTUzLjMzMywxMDYuNjY3IEw0MTYsMTA2LjY2NyBDNDQ1LjQxNywxMDYuNjY3IDQ2OS4zMzMsODIuNzQgNDY5LjMzMyw1My4zMzQgQzQ2OS4zMzMsMjMuOTI4IDQ0NS40MTcsMCA0MTYsMCBMNTMuMzMzLDAgQzIzLjkxNywwIDAsMjMuOTI3IDAsNTMuMzMzIEMwLDgyLjczOSAyMy45MTcsMTA2LjY2NyA1My4zMzMsMTA2LjY2NyBaIiBpZD0iUGF0aCI+PC9wYXRoPgogICAgICAgICAgICA8cGF0aCBkPSJNNDE2LDE4MS4zMzMgTDUzLjMzMywxODEuMzMzIEMyMy45MTcsMTgxLjMzMyAwLDIwNS4yNiAwLDIzNC42NjcgQzAsMjY0LjA3NCAyMy45MTcsMjg4IDUzLjMzMywyODggTDQxNiwyODggQzQ0NS40MTcsMjg4IDQ2OS4zMzMsMjY0LjA3MyA0NjkuMzMzLDIzNC42NjcgQzQ2OS4zMzMsMjA1LjI2MSA0NDUuNDE3LDE4MS4zMzMgNDE2LDE4MS4zMzMgWiIgaWQ9IlBhdGgiPjwvcGF0aD4KICAgICAgICAgICAgPHBhdGggZD0iTTQxNiwzNjIuNjY3IEw1My4zMzMsMzYyLjY2NyBDMjMuOTE3LDM2Mi42NjcgMCwzODYuNTk0IDAsNDE2IEMwLDQ0NS40MDYgMjMuOTE3LDQ2OS4zMzMgNTMuMzMzLDQ2OS4zMzMgTDQxNiw0NjkuMzMzIEM0NDUuNDE3LDQ2OS4zMzMgNDY5LjMzMyw0NDUuNDA2IDQ2OS4zMzMsNDE2IEM0NjkuMzMzLDM4Ni41OTQgNDQ1LjQxNywzNjIuNjY3IDQxNiwzNjIuNjY3IFoiIGlkPSJQYXRoIj48L3BhdGg+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=" >\
+        <img onClick="openPanel(\'closePanel\',\'' + " " + '\',\'' + "true" + '\')" src="https://dlnwzkim0wron.cloudfront.net/f-c1af9314-6121-5e4d-86d6-4c98d3f17a8e.png" class="iconBot" onerror="this.onerror=null;this.src="">\
+        <span class="botName">${botDetails.name}</span>\
+        </div>\
           <div class="menuItemBox" >\
               {{each(key, msgItem) panelData}}\
-              <div class="menuItemContainer {{if msgItem && msgItem._id}}${msgItem._id}{{/if}}" {{if msgItem && msgItem.name}}title="${msgItem.name}"{{/if}}>\
-                  <img src="${msgItem.icon}" class="menuItem" panels-menu-id="${msgItem._id}" id="${msgItem.name}" onClick="openPanel(\'${msgItem._id}\')" onerror="this.onerror=null;this.src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAAA/FJREFUWAnNmItK60AQQLdN05eIIoog+v+/pQiKIlhab9M2SXv3TDthk25evenFgTbJPmZOdndmM9ubL/7szC+WwalsvZ4xg2BggqBvevah3+/JFX273c5stzu5punWJGli70+z1BowDAcmHAQWaA/mM7sH3teEIcChBd6aOElNHCe+LqVljQEHFmo0DAWsVFtJBcBBEMhvaF9wvYlNYmGbSC0gyifjoShvorCuDSM/GY9MmqYmWm1kGVT16VdVBlbZdDLuDM61xYiKbmujSkprmdLJZCSLv0rBv9ThWNjAVpl4p5iRG4+GmVcyHT8/P7XTUTQyHA4twCTTU6znmSWErWi7Nql1pKIcAUoHu0a4qry+vpr1eq2Pra5APjw8mNFoVNpPbS6j1dEgHAHiEAy9K8Bh6Pb21i0uvV8sFobfdDo1y+XS8IJPT0+VkDLd1vYyyg9EDpC1wOL1CeWXl5e+qqOyzWYjgDc3N9Ln4+OjESQ2YHBDUM5JiHNdy/X1tbm/v5ew0mSpFBkyQHYIYtQ5pA0kDLCoZERsX+cUF/Lt7e3IGVzbLoug4rDnGL3VauXatSMTZo4TRZHc5xocHmCBiQ8MAeSrxA0rvk5tyvB45Ovrq7QbjoSX+wQWmOIk2QPyydRWCD388Oziy1FG7AOiKPQhBNUJTHz4HKY4H/fqOr+/v5v5fC7NPj8/zePjoxmPx7luZSFJY2SusedBX1qGrhiYPe2zojiOMzgK2Qa/v7+z+q5ulEkAlbaJct+0Ad21KFPrxXdxcSHe6AIRQlwBuC6UuO2r7mUNkkMocVVjrWNfnc1m4iRXV1e5LRA4dgyuifVC2rbRrTZgQgSQBKfNJkI8u7u7U13Z1YWjkFgH7CmQMCEyxUorJS3+GCGVIpyWK2RbG9peAEkN2wpfKM/PzzLNZXCqE0jWZBtRJpnifd4aNl4rwLEGEaaQrQnIKvF5f1l7Rg8m5DDFRvLWsg5uOQFa4SgnDtbBuf2b3JNDH3xkD0gnkuomQudzi8uSxUEy/v9hvO7l5ATCOX2QNaidyPhJqquEoFwMzFXt29bB4EoOkFyANeXLS3iz4vedq6jpfZWzYNvNR9CZA6SA4wgyft2sKSMw85n08vLCYyeCTlcIzNguSs93PkjiTsavWxRweK8Gz6KSts/kyGyRKuiNbLrpS9y9gHQc2BzFPV1QZV1fgVutN0dTq3YyL9YCvbIWeCvdE7W8y6tMq7VRXHeujVJAGjHkHEeweLsWdIrumrh65CRFEKaA4wim/NQDTFcn0aDTA0xVzjTwa3IErH30yktKALb9z3YErMYwwI+89VceoiuoHRTJW51dSas6vf4FP88rnfrjdTEAAAAASUVORK5CYII=\';">\
-                 <!-- <span class="panelNameTooltip">${msgItem.name}</span>-->\
+              <div onClick="openPanel(\'${msgItem._id}\')" class="menuItemContainer {{if msgItem && msgItem._id}}${msgItem._id}{{/if}}" {{if msgItem && msgItem.name}}title="${msgItem.name}"{{/if}}>\
+                  <img src="${msgItem.icon}" class="menuItem" panels-menu-id="${msgItem._id}" id="${msgItem.name}"  onerror="this.onerror=null;this.src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAAA/FJREFUWAnNmItK60AQQLdN05eIIoog+v+/pQiKIlhab9M2SXv3TDthk25evenFgTbJPmZOdndmM9ubL/7szC+WwalsvZ4xg2BggqBvevah3+/JFX273c5stzu5punWJGli70+z1BowDAcmHAQWaA/mM7sH3teEIcChBd6aOElNHCe+LqVljQEHFmo0DAWsVFtJBcBBEMhvaF9wvYlNYmGbSC0gyifjoShvorCuDSM/GY9MmqYmWm1kGVT16VdVBlbZdDLuDM61xYiKbmujSkprmdLJZCSLv0rBv9ThWNjAVpl4p5iRG4+GmVcyHT8/P7XTUTQyHA4twCTTU6znmSWErWi7Nql1pKIcAUoHu0a4qry+vpr1eq2Pra5APjw8mNFoVNpPbS6j1dEgHAHiEAy9K8Bh6Pb21i0uvV8sFobfdDo1y+XS8IJPT0+VkDLd1vYyyg9EDpC1wOL1CeWXl5e+qqOyzWYjgDc3N9Ln4+OjESQ2YHBDUM5JiHNdy/X1tbm/v5ew0mSpFBkyQHYIYtQ5pA0kDLCoZERsX+cUF/Lt7e3IGVzbLoug4rDnGL3VauXatSMTZo4TRZHc5xocHmCBiQ8MAeSrxA0rvk5tyvB45Ovrq7QbjoSX+wQWmOIk2QPyydRWCD388Oziy1FG7AOiKPQhBNUJTHz4HKY4H/fqOr+/v5v5fC7NPj8/zePjoxmPx7luZSFJY2SusedBX1qGrhiYPe2zojiOMzgK2Qa/v7+z+q5ulEkAlbaJct+0Ad21KFPrxXdxcSHe6AIRQlwBuC6UuO2r7mUNkkMocVVjrWNfnc1m4iRXV1e5LRA4dgyuifVC2rbRrTZgQgSQBKfNJkI8u7u7U13Z1YWjkFgH7CmQMCEyxUorJS3+GCGVIpyWK2RbG9peAEkN2wpfKM/PzzLNZXCqE0jWZBtRJpnifd4aNl4rwLEGEaaQrQnIKvF5f1l7Rg8m5DDFRvLWsg5uOQFa4SgnDtbBuf2b3JNDH3xkD0gnkuomQudzi8uSxUEy/v9hvO7l5ATCOX2QNaidyPhJqquEoFwMzFXt29bB4EoOkFyANeXLS3iz4vedq6jpfZWzYNvNR9CZA6SA4wgyft2sKSMw85n08vLCYyeCTlcIzNguSs93PkjiTsavWxRweK8Gz6KSts/kyGyRKuiNbLrpS9y9gHQc2BzFPV1QZV1fgVutN0dTq3YyL9YCvbIWeCvdE7W8y6tMq7VRXHeujVJAGjHkHEeweLsWdIrumrh65CRFEKaA4wim/NQDTFcn0aDTA0xVzjTwa3IErH30yktKALb9z3YErMYwwI+89VceoiuoHRTJW51dSas6vf4FP88rnfrjdTEAAAAASUVORK5CYII=\';">\
+                 <span class="panelNameTooltip">${msgItem.name}</span>\
               </div>\
               {{/each}}\
           </div>\
@@ -361,12 +363,14 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       var mainTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
           <div class="mainTemplateCntr" id="${widgetData._id}" {{if panelDetail}}panelDetail="${JSON.stringify(panelDetail)}{{/if}}">\
               <div class="widgetTitle">\
+              <img class="menuIconMobile" onClick="openPanel(\'closePanel\',\'' + " " + '\',\'' + "true" + '\')"  src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNDcwcHgiIGhlaWdodD0iNDcwcHgiIHZpZXdCb3g9IjAgMCA0NzAgNDcwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPCEtLSBHZW5lcmF0b3I6IFNrZXRjaCA1My4yICg3MjY0MykgLSBodHRwczovL3NrZXRjaGFwcC5jb20gLS0+CiAgICA8dGl0bGU+bWVudS1pY29uPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9Im1lbnUtaWNvbiIgZmlsbD0iIzc2NzY4OCIgZmlsbC1ydWxlPSJub256ZXJvIj4KICAgICAgICAgICAgPHBhdGggZD0iTTUzLjMzMywxMDYuNjY3IEw0MTYsMTA2LjY2NyBDNDQ1LjQxNywxMDYuNjY3IDQ2OS4zMzMsODIuNzQgNDY5LjMzMyw1My4zMzQgQzQ2OS4zMzMsMjMuOTI4IDQ0NS40MTcsMCA0MTYsMCBMNTMuMzMzLDAgQzIzLjkxNywwIDAsMjMuOTI3IDAsNTMuMzMzIEMwLDgyLjczOSAyMy45MTcsMTA2LjY2NyA1My4zMzMsMTA2LjY2NyBaIiBpZD0iUGF0aCI+PC9wYXRoPgogICAgICAgICAgICA8cGF0aCBkPSJNNDE2LDE4MS4zMzMgTDUzLjMzMywxODEuMzMzIEMyMy45MTcsMTgxLjMzMyAwLDIwNS4yNiAwLDIzNC42NjcgQzAsMjY0LjA3NCAyMy45MTcsMjg4IDUzLjMzMywyODggTDQxNiwyODggQzQ0NS40MTcsMjg4IDQ2OS4zMzMsMjY0LjA3MyA0NjkuMzMzLDIzNC42NjcgQzQ2OS4zMzMsMjA1LjI2MSA0NDUuNDE3LDE4MS4zMzMgNDE2LDE4MS4zMzMgWiIgaWQ9IlBhdGgiPjwvcGF0aD4KICAgICAgICAgICAgPHBhdGggZD0iTTQxNiwzNjIuNjY3IEw1My4zMzMsMzYyLjY2NyBDMjMuOTE3LDM2Mi42NjcgMCwzODYuNTk0IDAsNDE2IEMwLDQ0NS40MDYgMjMuOTE3LDQ2OS4zMzMgNTMuMzMzLDQ2OS4zMzMgTDQxNiw0NjkuMzMzIEM0NDUuNDE3LDQ2OS4zMzMgNDY5LjMzMyw0NDUuNDA2IDQ2OS4zMzMsNDE2IEM0NjkuMzMzLDM4Ni41OTQgNDQ1LjQxNywzNjIuNjY3IDQxNiwzNjIuNjY3IFoiIGlkPSJQYXRoIj48L3BhdGg+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=">\
+              <img class="widgetMobileIcon"src="${widgetData.icon}" onerror="this.onerror=null;this.src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAAA/FJREFUWAnNmItK60AQQLdN05eIIoog+v+/pQiKIlhab9M2SXv3TDthk25evenFgTbJPmZOdndmM9ubL/7szC+WwalsvZ4xg2BggqBvevah3+/JFX273c5stzu5punWJGli70+z1BowDAcmHAQWaA/mM7sH3teEIcChBd6aOElNHCe+LqVljQEHFmo0DAWsVFtJBcBBEMhvaF9wvYlNYmGbSC0gyifjoShvorCuDSM/GY9MmqYmWm1kGVT16VdVBlbZdDLuDM61xYiKbmujSkprmdLJZCSLv0rBv9ThWNjAVpl4p5iRG4+GmVcyHT8/P7XTUTQyHA4twCTTU6znmSWErWi7Nql1pKIcAUoHu0a4qry+vpr1eq2Pra5APjw8mNFoVNpPbS6j1dEgHAHiEAy9K8Bh6Pb21i0uvV8sFobfdDo1y+XS8IJPT0+VkDLd1vYyyg9EDpC1wOL1CeWXl5e+qqOyzWYjgDc3N9Ln4+OjESQ2YHBDUM5JiHNdy/X1tbm/v5ew0mSpFBkyQHYIYtQ5pA0kDLCoZERsX+cUF/Lt7e3IGVzbLoug4rDnGL3VauXatSMTZo4TRZHc5xocHmCBiQ8MAeSrxA0rvk5tyvB45Ovrq7QbjoSX+wQWmOIk2QPyydRWCD388Oziy1FG7AOiKPQhBNUJTHz4HKY4H/fqOr+/v5v5fC7NPj8/zePjoxmPx7luZSFJY2SusedBX1qGrhiYPe2zojiOMzgK2Qa/v7+z+q5ulEkAlbaJct+0Ad21KFPrxXdxcSHe6AIRQlwBuC6UuO2r7mUNkkMocVVjrWNfnc1m4iRXV1e5LRA4dgyuifVC2rbRrTZgQgSQBKfNJkI8u7u7U13Z1YWjkFgH7CmQMCEyxUorJS3+GCGVIpyWK2RbG9peAEkN2wpfKM/PzzLNZXCqE0jWZBtRJpnifd4aNl4rwLEGEaaQrQnIKvF5f1l7Rg8m5DDFRvLWsg5uOQFa4SgnDtbBuf2b3JNDH3xkD0gnkuomQudzi8uSxUEy/v9hvO7l5ATCOX2QNaidyPhJqquEoFwMzFXt29bB4EoOkFyANeXLS3iz4vedq6jpfZWzYNvNR9CZA6SA4wgyft2sKSMw85n08vLCYyeCTlcIzNguSs93PkjiTsavWxRweK8Gz6KSts/kyGyRKuiNbLrpS9y9gHQc2BzFPV1QZV1fgVutN0dTq3YyL9YCvbIWeCvdE7W8y6tMq7VRXHeujVJAGjHkHEeweLsWdIrumrh65CRFEKaA4wim/NQDTFcn0aDTA0xVzjTwa3IErH30yktKALb9z3YErMYwwI+89VceoiuoHRTJW51dSas6vf4FP88rnfrjdTEAAAAASUVORK5CYII=\';">\
               <span class="panelWidgetName">${widgetData.name}</span>\
               <span class="panelHeaderActions">\
                 <span onClick="refreshElement(\'${JSON.stringify(panelDetail)}\',\'refreshPanel\')" class="panelRefresh"></span>\
                 <span class="panelSetting"></span>\
                 <span class="panelMin"></span>\
-                <span onClick="openPanel(\'closePanel\')" class="panelClose"></span>\
+                <span onClick="openPanel(\'${widgetData._id}\')" class="panelClose"></span>\
               </span>\
               </div>\
               <div class="mainTemplateBdr {{if widgetData.widgets && widgetData.widgets.length > 1}}scroll{{else}}scroll{{/if}}">\
@@ -2437,113 +2441,18 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     KoreWidgetSDK.prototype.openDropdown = function (data) {
       console.log(data);
     };
-    KoreWidgetSDK.prototype.openPanel = function (panelName, resPopUp) {
-     
-      var _self = this;
-      var popUpStatus;
-      if ((panelName === oldPanelName) || (panelName==='closePanel')) {
-        //todo:deviation:toggle fuctionality on panel click
-        oldPanelName = "";
-        if($('.menuItemContainer') && $('.menuItemContainer').removeClass('selected')){
-          $('.menuItemContainer').removeClass('selected');
-        }
-        $('.sdkBotIcon').addClass('selected');
-        localPanelDetail[panelName] = "";
-        _self.clearWidgetPolling();
-        $(_self.config.container.content).hide("slide", {
-          direction: _self.config.direction === 'left' ? 'left' : 'right'
-        }, 500);
-        return false;
-      }
-
-      if (resPopUp) {
-        if (!resPopUp.btnresponse) {
-          return;
-        }
-      } else {
-        popUpStatus = _self.checkWidgetSwitchEditor(panelName, oldPanelName);
-      }
-
-      if (popUpStatus) {
-        return;
-      }
-
-      makeAPICall = true;
-
-      if (localPanelDetail[panelName] !== undefined) {
-        var currTime = new Date().getTime();
-        var deffTime = currTime - localPanelDetail[panelName];
-        var seconds = Math.floor(deffTime / 1000);
-
-        if (seconds < 10) {
-          makeAPICall = false;
-        }
-      }
-
-      localPanelDetail[panelName] = new Date().getTime();
-      oldPanelName = panelName;
-      panelName = panelName ? panelName.toLowerCase() : '';
-      clearInterval(pollingTimer);
-
-      if (meetingTimeRef.length > 0) {
-        for (var k = 0; k < meetingTimeRef.length; k++) {
-          clearInterval(meetingTimeRef[k]);
-        }
-      }
-
-      if (panelName === 'kora') {
-        console.log('<<<<Width350>>>>');
-        menuActiveTab = '';
-
-        _self.setChatFocus();
-
-        $('.menuItem').removeClass('active');
-        $('.menuItemCntr #' + panelName).addClass('active'); // $('.menuItemCntr #' + oldPanelName).addClass('active');
-
-        $('.centerWindow').children().not('.kore-chat-window').not('.koraPanelHeader').not('.centralLoader').remove();
-      } else if (panelName === 'profile') {
-        window.angularComponentReference.zone.run(function () {
-          window.angularComponentShowProfile.componentFn();
-        });
-      } else if (panelName === 'notification') {
-        window.angularComponentReference.zone.run(function () {
-          window.angularCmptRefNotification.componentFn();
-        });
-      } else {
-        _self.resetTask();
-
-        console.log('<<<<Width350>>>>');
-        menuActiveTab = panelName;
-        $('.menuItem').removeClass('selected');
-        $('.menuItemContainer').removeClass('selected');
-        $('.sdkBotIcon').removeClass('selected');
-        $('.menuItemContainer.' + panelName).addClass('selected'); // $('.menuItemCntr #' + oldPanelName).addClass('active');
-
-        $('.centerWindow').children().not('.kore-chat-window').not('.koraPanelHeader').not('.centralLoader').remove();
-        mainTemplateBdr = '';
-
-        if ($(_self.config.container.content).is(':visible')) {
-          $(_self.config.container.content).hide();
-        }
-
-        $(_self.config.container.content).show("slide", {
-          direction: _self.config.direction //$.jStorage.get('menuPosition')
-
-        }, 250);
-        $(_self.config.container.content).html('<div class="loaderRing"><div></div><div></div><div></div><div></div></div>');
-
-        _self.prepareRenderData(panelName, true);
-      }
-    };
     KoreWidgetSDK.prototype.openPanel = function (panelName, resPopUp, heightToggle) {
-      if(heightToggle){
-        $(".kore-chat-window").toggleClass("selectedHeight");
+      if(panelName && (panelName !== 'closePanel')){
+        $(".kore-chat-window").removeClass("selectedHeight");
+      }
+      if (heightToggle) {
+          $(".kore-chat-window").toggleClass("selectedHeight");
       }
       var _self = this;
 
       var popUpStatus;
 
-      if ((panelName === oldPanelName) || (panelName==='closePanel')) {
+      if ((panelName === oldPanelName) || (panelName === 'closePanel')) {
         //todo:deviation:toggle fuctionality on panel click
         oldPanelName = "";
         if($('.menuItemContainer') && $('.menuItemContainer').removeClass('selected')){
@@ -2707,6 +2616,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
                 'helpers': helpers,
                 'panelDetail': panelDetailLocal
               });
+              _self.bindTemplateEvents(dataHTML,'mainTemplate');
             } else {
               var panelDetailLocal = {
                 'panel': initialWidgetData.panels[i]._id,
@@ -2717,6 +2627,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
                 'helpers': helpers,
                 'panelDetail': panelDetailLocal
               });
+              _self.bindTemplateEvents(dataHTML,'mainTemplate');
             }
 
             $(_self.config.container.content).addClass('kr-wiz-content-css');
@@ -3197,7 +3108,12 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
       var initialWidgetData = initialWidgetData;
       var $ele = $(ele);
-        if (templateType === 'widgetHeader'){
+      if(templateType === 'mainTemplate'){
+        $ele.off('click').on('click',function(e){
+         e.stopPropagation();
+         e.stopImmediatePropagation();
+        })
+      } else if (templateType === 'widgetHeader'){
           $ele.off('click', '.action').on('click', '.action', function (e) {
             e.stopPropagation();
             var actionObjString = $(e.currentTarget).attr('actionObj');
@@ -3630,6 +3546,14 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           }
         });
       } else if (templateType === 'menu') {
+        $ele.off('click').on('click',function(e){
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+         })
+         $ele.off('click','.menuIconMobile').on('click','.menuIconMobile',function(e){
+           e.stopPropagation();
+           e.stopImmediatePropagation();
+          })
         $ele.find('#defaultTheme-kore span').addClass('checkMarkIcon');
         $ele.find('.sdkBotIcon').addClass('selected');
         $ele.off('click', '.action').on('click', '.action', function (e) {
@@ -5361,6 +5285,11 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       }; //$.jStorage.get('currentAccount').userInfo;
 
       console.log($);
+      $('body').off('click').on('click',function(){
+        if($('.kore-chat-window')){
+          $('.kore-chat-window').removeClass('selectedHeight')
+        }
+      })
     };
 
     KoreWidgetSDK.prototype.setJWT = function (jwtToken) {
