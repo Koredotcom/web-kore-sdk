@@ -79,6 +79,12 @@
 			});
 			 this.bindEvents(messageHtml);
 			 $(messageHtml).data(msgData);
+		} else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "list") {
+			messageHtml = $(this.getChatTemplate("templatelist")).tmpl({
+				'msgData': msgData,
+				'helpers': this.helpers,
+				'extension': this.extension
+			});
 		}
 	   return messageHtml;
 	
@@ -339,7 +345,6 @@ var formTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 "image_url":"https://miro.medium.com/max/1161/1*cJUVJJSWPj9WFIJlvf7dKg.jpeg"
 }
 ]
-
 },
 {
 'collectionTitle':"Collection 2",
@@ -700,7 +705,6 @@ print(JSON.stringify(message)); */
 </div>\
 </script>';
 /*TABLE LIST TEMPLATE
-
 var message={
 "type": "template",
 	"payload": {
@@ -712,7 +716,6 @@ var message={
                 "text":"Comics",
                         },
 	    },
-
  "elements":[
  {
  "sectionHeader":"Marvel Comics",
@@ -987,7 +990,6 @@ var message = {
     };
 message.payload.starArrays.push(starArray);
 }
-
 }
 else if(message.payload.view === "emojis"){
     for(var i=1;i<=5;i++){
@@ -1033,6 +1035,90 @@ print(JSON.stringify(message)); */
 		</li>\
 	{{/if}} \
 	</script>';
+
+	var listTemplate = ' \
+		<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+			{{if msgData.message}} \
+					<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+							<div class="listTmplContent"> \
+									{{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+									{{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+									<ul class="listTmplContentBox"> \
+											{{if msgData.message[0].component.payload.text || msgData.message[0].component.payload.heading}} \
+													<li class="listTmplContentHeading"> \
+															{{if msgData.type === "bot_response" && msgData.message[0].component.payload.heading}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.heading, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
+															{{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
+																	<span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
+															{{/if}} \
+													</li> \
+											{{/if}} \
+											{{each(key, msgItem) msgData.message[0].component.payload.elements}} \
+													{{if msgData.message[0].component.payload.buttons}} \
+															{{if key<= 2 }}\
+																	<li class="listTmplContentChild"> \
+																			{{if msgItem.image_url}} \
+																					<div class="listRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
+																							<img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
+																					</div> \
+																			{{/if}} \
+																			<div class="listLeftContent"> \
+																					<div class="listItemTitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
+																					{{if msgItem.subtitle}}<div class="listItemSubtitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
+																					{{if msgItem.default_action && msgItem.default_action.url}}<div class="listItemPath" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
+																					{{if msgItem.buttons}}\
+																					<div> \
+																							<span class="buyBtn" {{if msgItem.buttons[0].type}}type="${msgItem.buttons[0].type}"{{/if}} {{if msgItem.buttons[0].url}}url="${msgItem.buttons[0].url}"{{/if}} {{if msgItem.buttons[0].payload}}value="${msgItem.buttons[0].payload}"{{/if}}>{{if msgItem.buttons[0].title}}${msgItem.buttons[0].title}{{else}}Buy{{/if}}</span> \
+																					</div> \
+																					{{/if}}\
+																			</div>\
+																	</li> \
+															{{/if}}\
+													{{else}} \
+															<li class="listTmplContentChild hidingListTemplateValues"> \
+																	{{if msgItem.image_url}} \
+																			<div class="listRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
+																					<img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';" /> \
+																			</div> \
+																	{{/if}} \
+																	<div class="listLeftContent"> \
+																		<div class="listItemTitle"> \
+																		{{if msgData.type === "bot_response"}} \
+																				{{if msgItem.buttons}}\
+																						{{if msgItem.buttons[0].title}}\
+																								{{html helpers.convertMDtoHTML(msgItem.title + " - " + msgItem.buttons[0].title, "bot", false)}} \
+																						{{else}} \
+																								{{html helpers.convertMDtoHTML(msgItem.title, "user")}} \
+																						{{/if}}\
+																				{{else}} \
+																						{{html helpers.convertMDtoHTML(msgItem.title, "bot", true)}} \
+																				{{/if}}\
+																		{{else}} \
+																				{{html helpers.convertMDtoHTML(msgItem.title, "user")}} \
+																		{{/if}} \
+																		</div> \
+																			{{if msgItem.subtitle}}<div class="listItemSubtitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
+																			{{if msgItem.default_action && msgItem.default_action.url}}<div class="listItemPath" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
+																			{{if msgItem.buttons}}\
+																			<div> \
+																					<span class="buyBtn" {{if msgItem.buttons[0].type}}type="${msgItem.buttons[0].type}"{{/if}} {{if msgItem.buttons[0].url}}url="${msgItem.buttons[0].url}"{{/if}} {{if msgItem.buttons[0].payload}}value="${msgItem.buttons[0].payload}"{{/if}}>{{if msgItem.buttons[0].title}}${msgItem.buttons[0].title}{{else}}Buy{{/if}}</span> \
+																			</div> \
+																			{{/if}}\
+																	</div>\
+															</li> \
+													{{/if}} \
+											{{/each}} \
+											</li> \
+											{{if msgData.message[0].component.AlwaysShowGlobalButtons || (msgData.message[0].component.payload.elements.length > 3 && msgData.message[0].component.payload.buttons)}}\
+											<li class="viewMoreList"> \
+													<span class="viewMore" url="{{if msgData.message[0].component.payload.buttons[0].url}}${msgData.message[0].component.payload.buttons[0].url}{{/if}}" type="${msgData.message[0].component.payload.buttons[0].type}" value="{{if msgData.message[0].component.payload.buttons[0].payload}}${msgData.message[0].component.payload.buttons[0].payload}{{else}}${msgData.message[0].component.payload.buttons[0].title}{{/if}}">${msgData.message[0].component.payload.buttons[0].title}</span> \
+											</li> \
+											{{/if}}\
+									</ul> \
+							</div> \
+					</li> \
+			{{/if}} \
+		</scipt> \
+	';
 	
 		if (tempType === "dropdown_template") {
 			return dropdownTemplate;
@@ -1052,7 +1138,9 @@ print(JSON.stringify(message)); */
 			return tableListTemplate;
 		}else if(tempType === "ratingTemplate"){
 			return ratingTemplate;
-		}else {
+		} else if (tempType === "templatelist") {
+			return listTemplate;
+		}	else {
 			return "";
 		}
 		return "";
@@ -1486,4 +1574,3 @@ print(JSON.stringify(message)); */
 		valueClick:valueClick
 	}
 })($);
-

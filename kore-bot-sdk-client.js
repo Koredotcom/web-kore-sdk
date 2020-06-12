@@ -406,7 +406,11 @@ KoreBot.prototype.init = function(options,messageHistoryLimit) {
 	if (!options.test) {
 		debug("test is false");
 		if (isFunction(options.assertionFn)) {
-			options.assertionFn(options, bind(this.logIn, this));
+			if (options.restorePS){
+				this.logIn(null, options);
+			} else {
+				options.assertionFn(options, bind(this.logIn, this));
+			}
 		} else {
 			debug("assertion is not a function");
 			console.error("assertion is not a function");
@@ -1137,6 +1141,7 @@ function KoreRTMClient(token, opts) {
   this.user = {};
   this.user.accessToken = clientOpts.accessToken;
   this.botInfo = clientOpts.botInfo || {};
+  if (clientOpts.restorePS) this._reconnecting = true;
 }
 
 inherits(KoreRTMClient, BaseAPIClient);
