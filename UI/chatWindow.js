@@ -785,6 +785,9 @@
                     return false;
                 }
             }
+            function setCollapsedModeStyles(){
+                $('.kore-chat-window').css({left:$('body').width()-400,width:'400px'});
+            }
             chatWindow.prototype.init = function () {
                 var me = this;
                 window.chatContainerConfig = me;
@@ -1329,6 +1332,7 @@
                         $(me.config.container).append('<div class="kore-chat-overlay"></div>');
                     }
                     if (me.expanded === true) {
+                        setCollapsedModeStyles();
                         $('.kore-chat-overlay').hide();
                         $(this).attr('title', "Expand");
                         _chatContainer.removeClass("expanded");
@@ -1796,7 +1800,7 @@
                     $(me.config.container).addClass('pos-relative');
                     $(me.config.chatContainer).addClass('pos-absolute');
                 }
-
+                setCollapsedModeStyles();
                 me.bindEvents();
             };
 

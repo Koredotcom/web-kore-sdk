@@ -344,6 +344,16 @@
     box-sizing: border-box;
     border-right: 2px solid transparent; 
 }
+
+.kr-wiz-menu-css .menuItemCntr .sdkBotIcon .botName {
+    display: none;
+}
+/* .selectedHeight .kr-wiz-menu-css .menuItemCntr .sdkBotIcon .botName{
+  display: inline-block;
+} */
+.selectedHeight .kr-wiz-menu-css .menuItemCntr .sdkBotIcon .menuIconMobile{
+    display: none;
+  }
 .kr-wiz-menu-css .menuItemCntr .sdkBotIcon:hover{
     background: var(--sdk-btn-light-color);  
     border-right: 2px solid var(--sdk-primary-blue-color); 

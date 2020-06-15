@@ -149,6 +149,29 @@
 .kore-chat-window .only-show {
     display: block;
 }
+.kr-wiz-menu-css .menuItemCntr .menuIconMobile{
+    display: none;
+}
+.kr-wiz-content-chat .mainTemplateCntr .widgetTitle .menuIconMobile{
+    width: 15px;
+    height: 30px;
+    opacity: .8;
+    display: none;
+}
+
+.kr-wiz-menu-css .menuItemCntr .menuItemContainer  .panelNameTooltip{
+    display: none;
+    position: relative;
+    top: -15px;
+}
+.kr-wiz-content-css .mainTemplateCntr .widgetTitle .widgetMobileIcon{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+    margin-left: 10px;
+    display: none;
+}
 @media(max-width: 767px) {
     .kore-chat-window {
         left: 5px!important;
@@ -178,10 +201,10 @@
         float: left;
     }
     .kr-wiz-menu-chat{
-        position: relative;
+        position: absolute;
         margin-left: 0;
         float: left;
-        z-index: 9;
+        /* z-index: 9; */
         height: 48px;
         box-shadow: none;
         border: 0;
@@ -190,6 +213,7 @@
     .selectedHeight .kr-wiz-menu-chat{
         box-shadow: 0px 0px 14px 0px rgba(138, 149, 159, 0.25);
         height: 100%;
+        width: 250;
     }
     .kr-wiz-menu-css .menuItemCntr .sdkThemeContainer{
         display: none;
@@ -200,11 +224,25 @@
     .selectedHeight .kr-wiz-content-chat{
         z-index: 99;
     }
+    .kr-wiz-menu-css .menuItemCntr .menuIconMobile{
+        display: inline-block;
+        width: 15px;
+        height: 30px;
+        opacity: .8;
+    }
+    .kr-wiz-content-chat .mainTemplateCntr .widgetTitle .menuIconMobile{
+        display: inline-block;
+        width: 15px;
+        height: 30px;
+        opacity: .8;
+    }
     .kr-wiz-menu-css .menuItemCntr .sdkBotIcon{
         height: 48px;
         background: transparent !important;
          border-right: 0px solid transparent !important;
          padding-top: 10px;
+         text-align: left;
+         width: 85px;
     }
     .kr-wiz-content.kr-wiz-content-css{
         float: left;
@@ -220,6 +258,45 @@
     }
     .kr-wiz-content-css .mainTemplateCntr .mainTemplateBdr.scroll{
         padding: 10px;
+    }
+    .kr-wiz-menu-css .menuItemCntr .menuItemContainer{
+        padding: 15px;
+    }
+    .kr-wiz-menu-css .menuItemCntr .menuItemContainer .menuItem{
+        display: inline-block;
+         margin: 0;
+    }
+    .kr-wiz-menu-css .menuItemCntr .menuItemContainer  .panelNameTooltip{
+        display: inline-block;
+        position: relative;
+        top: -8px;
+        margin-left: 5px;
+    }
+    .kore-chat-window .kore-chat-header .header-title{
+        padding-left: 50px;
+    }
+    .kr-wiz-content-css .mainTemplateCntr .widgetTitle{
+        font-size: 18px;
+    }
+    .kr-wiz-content-css .mainTemplateCntr .widgetTitle .widgetMobileIcon{
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin-right: 10px;
+        margin-left: 10px;
+        display: inline-block;
+    }
+    .kr-wiz-menu-css .menuItemCntr .sdkBotIcon .iconBot{
+        display: inline-block;
+    }
+    .kore-chat-window.selectedHeight .kr-wiz-menu-css .menuItemCntr .sdkBotIcon{
+        width: 100%;
+    }
+    .kore-chat-window.selectedHeight .kr-wiz-menu-css .menuItemCntr .sdkBotIcon .botName{
+        position: relative;
+        display: inline-block;
+        top: -10px;
+        margin-left: 5px;
     }
 }
 .kore-chat-window.expanded {

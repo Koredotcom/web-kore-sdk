@@ -348,7 +348,7 @@
 			el.classList.add('iecp-u' + el.ieCP_unique);
 		}
 		var style = getComputedStyle(el);
-		if (el.ieCP_sheet) while (el.ieCP_sheet.rules[0]) el.ieCP_sheet.devareRule(0);
+		//if (el.ieCP_sheet) while (el.ieCP_sheet.rules[0]) el.ieCP_sheet.devareRule(0);
 		for (var prop in el.ieCPSelectors) {
 			var important = style['-ieVar-❗' + prop];
 			var valueWithVar = important || style['-ieVar-' + prop];
