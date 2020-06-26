@@ -79,13 +79,13 @@
 			});
 			 this.bindEvents(messageHtml);
 			 $(messageHtml).data(msgData);
-		} else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "list") {
-			messageHtml = $(this.getChatTemplate("templatelist")).tmpl({
-				'msgData': msgData,
-				'helpers': this.helpers,
-				'extension': this.extension
-			});
-		}
+			} else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "list") {
+				messageHtml = $(this.getChatTemplate("templatelist")).tmpl({
+					'msgData': msgData,
+					'helpers': this.helpers,
+					'extension': this.extension
+				});
+			}
 	   return messageHtml;
 	
 		return "";
@@ -345,6 +345,7 @@ var formTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 "image_url":"https://miro.medium.com/max/1161/1*cJUVJJSWPj9WFIJlvf7dKg.jpeg"
 }
 ]
+
 },
 {
 'collectionTitle':"Collection 2",
@@ -705,6 +706,7 @@ print(JSON.stringify(message)); */
 </div>\
 </script>';
 /*TABLE LIST TEMPLATE
+
 var message={
 "type": "template",
 	"payload": {
@@ -716,6 +718,7 @@ var message={
                 "text":"Comics",
                         },
 	    },
+
  "elements":[
  {
  "sectionHeader":"Marvel Comics",
@@ -990,6 +993,7 @@ var message = {
     };
 message.payload.starArrays.push(starArray);
 }
+
 }
 else if(message.payload.view === "emojis"){
     for(var i=1;i<=5;i++){
@@ -1140,7 +1144,7 @@ print(JSON.stringify(message)); */
 			return ratingTemplate;
 		} else if (tempType === "templatelist") {
 			return listTemplate;
-		}	else {
+		} else {
 			return "";
 		}
 		return "";

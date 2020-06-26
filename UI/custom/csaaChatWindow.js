@@ -70,7 +70,7 @@
           }
 
           initializeSession.apply(this, [chatConfig, setChatIconVisibility]);
-          bindEventListeners(chatConfig, chatInstance, setChatIconVisibility);
+          bindEventListeners(chatConfig, chatInstance, setChatIconVisibility, chatLifeCycle);
         };
       }
 
@@ -186,7 +186,7 @@
         }
       }
 
-      function bindEventListeners (chatConfig, chatInstance, setChatIconVisibility) {
+      function bindEventListeners (chatConfig, chatInstance, setChatIconVisibility, chatLifeCycle) {
         var $bubble = $('[chat=bubble]');
         var $masterButton = $bubble.children('[chat=master_button]');
         var $notifications = $bubble.children('[chat=notifications]');
@@ -202,22 +202,28 @@
               $notifications: $notifications
             },
             setChatIconVisibility,
-            chatConfig
+            chatConfig,
+            chatLifeCycle
           );
         }
 
         $masterButton.on('click', function () {
+          chatLifeCycle.onIconClick(isChatSessionActive(RESTORE_P_S, JWT_GRANT));
+
           if (localStorage.getItem(CHAT_MAXIMIZED) === 'false') {
             $('.minimized').trigger('click');
             setChatIconVisibility(false);
             $('.kore-chat-window').addClass('slide');
+            chatLifeCycle.onMaximize();
 
             if (!CHAT_WINDOW_OPENED) renderChat();
           } else {
             $bubble.attr('thinking', 'yep');
             renderChat();
+            chatLifeCycle.onOpen();
           }
 
+          localStorage.setItem(CHAT_MAXIMIZED, 'true');
           $masterButton.removeAttr('queued_messages');
           $notifications.removeAttr('queued_messages');
           localStorage.removeItem(QUEUED_MESSAGE_COUNT);
@@ -232,7 +238,7 @@
         }
       };
 
-      function chatWindowEventListeners(chatInstance, bubble, setChatIconVisibility, chatConfig) {
+      function chatWindowEventListeners(chatInstance, bubble, setChatIconVisibility, chatConfig, chatLifeCycle) {
         var bot = chatInstance.bot;
 
         var $bubble = bubble.$bubble;
@@ -266,7 +272,6 @@
           if (CHAT_WINDOW_OPENED) return;    // hence the need for a CHAT_WINDOW_OPENED flag
           CHAT_WINDOW_OPENED = true;
 
-          localStorage.setItem(CHAT_MAXIMIZED, 'true');
           localStorage.setItem(RESTORE_P_S, 'true');
           localStorage.setItem(JWT_GRANT, JSON.stringify(bot.userInfo));
 
@@ -276,6 +281,7 @@
 
           $('.close-btn').on('click', function (e) {
             e.stopPropagation();
+            chatLifeCycle.onClose();
             CHAT_WINDOW_OPENED = false;
 
             if (localStorage.getItem(LIVE_CHAT) === 'true') {
@@ -368,7 +374,7 @@
         }
 
         $chatBoxControls.children('.minimize-btn').off('click').on('click', function () {
-          console.log('.minimize');
+          chatLifeCycle.onMinimize();
           localStorage.setItem(CHAT_MAXIMIZED, 'false');
           $koreChatWindow.removeClass('slide');
           setChatIconVisibility(true);
@@ -412,7 +418,7 @@
       }
 
       function isChatSessionActive (RESTORE_P_S, JWT_GRANT) {
-        return localStorage.getItem(RESTORE_P_S) && localStorage.getItem(JWT_GRANT) != null;
+        return (localStorage.getItem(RESTORE_P_S) && localStorage.getItem(JWT_GRANT) != null) || false;
       }
 
       function getUniqueID () {
