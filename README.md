@@ -262,7 +262,7 @@ Integration of Kore.ai chat UI into your App. Clone the repository and create yo
 ```
 
 ###Release History:
-v7.2.0[Major] on 04-Jun-2020: Master branch:
+v7.3.0[Major] on 04-Jun-2020: Master branch:
 	1.UI Forms support added
 	2.Multi Select Checkbox Template
 	3.Inline Form Template
