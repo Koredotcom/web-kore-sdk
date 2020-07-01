@@ -14,6 +14,10 @@
     margin: -4px;
     display: block;
 }
+.kore-chat-window .kore-action-sheet .radioOptionsPickerContainer{
+    height:415px;
+    overflow-y: auto;
+}
 .kore-chat-window .kore-action-sheet .radioOptionsPickerContainer .sdkFooterIcon.account{
     opacity:0;
 }
@@ -23,7 +27,7 @@
     border: none;
     outline: none;
     position: absolute;
-    top: 15px;
+    top: 21px;
     right: 20px;
 }
 .kore-chat-window .kore-action-sheet .radioOptionsPickerContainer .radioOptionMenuHeader .radioOptionHeading{
@@ -42,12 +46,13 @@
         color: #000000;
 }
 .kore-chat-window .kore-action-sheet  .radioOptionMenuPicker{
-    height: calc(100% - 58px);
-    padding: 0px 20px 55px 20px;
+    height: calc(100% - 109px);
+    padding: 0px 20px 0 20px;
     overflow-y: auto;
 }
 .kore-chat-window .kore-action-sheet.hide .radioOptionsPickerContainer .confirmBTN{
     opacity: 0 ;
+    z-index:2;
 }
 .kore-chat-window .kore-action-sheet .radioOptionsPickerContainer .confirmBTN{
     position: absolute;
@@ -173,6 +178,10 @@
     height: 21px;
     margin: -4px;
     display: block;
+}
+.kore-chat-window .kore-action-sheet .TaskPickerContainer{
+    height:462px;
+    overflow-y: auto;
 }
 .kore-chat-window .kore-action-sheet .TaskPickerContainer .taskMenuHeader .closeSheet{
     cursor: pointer;
@@ -335,7 +344,6 @@
     font-size: 30px;
     float:right;
     line-height: inherit;
-    margin-right: 30px;
     margin-top:5px;
     padding: 0 6px;
 }
@@ -377,6 +385,9 @@
     margin: 0 auto !important;
     background-color: #eeeeee;
     border: 1px solid #eeeeee;
+}
+.kore-chat-window .kore-action-sheet .clockPickerContainer #clockPickerInput .hide{
+    display:none !important;
 }
 .darkTheme.kore-chat-window .kore-action-sheet .clockPickerContainer .clockpicker-popover .popover-content .clockpicker-plate{
     background-color: #2E2C34;

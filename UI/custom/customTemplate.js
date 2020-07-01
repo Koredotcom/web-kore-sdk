@@ -1,6 +1,7 @@
 (function($){
-	function customTemplate(data) {
+	function customTemplate(data,chatInitialize) {
 		this.cfg = data;
+		this.chatInitialize=chatInitialize;
 		this.helpers = null;
 		this.extension = null;
 	}
@@ -38,15 +39,10 @@
 				'helpers': this.helpers,
 				'extension': this.extension
 			});
-			$(messageHtml).data(msgData);
-		}
-		else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "listView") {
-			messageHtml = $(this.getChatTemplate("templatelistView")).tmpl({
-				'msgData': msgData,
-				'helpers': this.helpers,
-				'extension': this.extension
-			});
-			$(messageHtml).data(msgData);
+			this.bindEvents(messageHtml);
+		    if(msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.fromHistory){
+		        $(messageHtml).find(".formMainComponent form").addClass("hide");
+		    }
 		}
 		else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "advanced_multi_select") {
 			messageHtml = $(this.getChatTemplate("advancedMultiSelect")).tmpl({
@@ -54,8 +50,37 @@
 				 'helpers': this.helpers,
 				'extension': this.extension
 			});
+			$(messageHtml).data(msgData);
+			this.bindEvents(messageHtml);
+		} else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "tableList") {
+			messageHtml = $(this.getChatTemplate("tableListTemplate")).tmpl({
+				'msgData': msgData,
+				'helpers': this.helpers,
+				'extension': this.extension
+			});
+			this.bindEvents(messageHtml);
 		}
-		return messageHtml;
+		else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "listView") {
+			messageHtml = $(this.getChatTemplate("templatelistView")).tmpl({
+				'msgData': msgData,
+				'helpers': this.helpers,
+				'extension': this.extension
+			});
+			this.bindEvents(messageHtml);
+			$(messageHtml).data(msgData);
+			if(msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.fromHistory){
+				$(messageHtml).css({"pointer-events":"none"});
+			}
+		}else if(msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.template_type === "feedbackTemplate" && (msgData.message[0].component.payload.view==="star"|| msgData.message[0].component.payload.view ==="emojis"))){
+			messageHtml = $(this.getChatTemplate("ratingTemplate")).tmpl({
+				'msgData': msgData,
+				 'helpers': this.helpers,
+				'extension': this.extension
+			});
+			 this.bindEvents(messageHtml);
+			 $(messageHtml).data(msgData);
+		}
+	   return messageHtml;
 	
 		return "";
 	}; // end of renderMessage method
@@ -67,6 +92,7 @@
 	* output : Custom template HTML
 	*
 	*/
+	
 	
 	customTemplate.prototype.getChatTemplate = function (tempType) {
 		/* Sample template structure for dropdown
@@ -127,6 +153,7 @@
 				</li> \
 			{{/if}} \
 		</script>';
+	
 		/* Sample template structure for multi-select checkboxes
 			var message = {
 			"type": "template",
@@ -225,12 +252,8 @@
 				</li> \
 			{{/if}} \
 		</script>';
-
-		
-			
-/* Sample template structure for Inline Form
-		
-var message = {
+	/* Sample template structure for Inline Form
+	var message = {
   	"type": "template",
 	    "payload": {
 	        "template_type": "form_template",
@@ -284,7 +307,188 @@ var formTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 {{/if}} \
 </script>';
 
-         /* Sample template structure for New List Template 
+/* Sample template structure for Advanced Multi Select Checkbox 
+ var message = {
+"type": "template",
+"payload": {
+"template_type": "advanced_multi_select",
+"heading":"Please select items to proceed",
+"description":"Premium Brands",
+"sliderView":false,
+"showViewMore":true,
+"limit":1,
+"elements": [
+{
+'collectionTitle':"Collection 1",
+'collection':[
+{
+"title": "Classic Adidas Collection",
+"description":"German Company",
+"value":"Adidas",
+"image_url":"https://cdn.britannica.com/94/193794-050-0FB7060D/Adidas-logo.jpg"
+},{
+"title": "Classic Puma Collection",
+"value":"Puma",
+"description":"German Company",
+"image_url":"https://www.myredqueen.com/45056-home_default/gucci-white-logo-t-shirt.jpg"
+},
+{
+"title": "Classic Nike Collection",
+"description":"American Company",
+"value":"Nike",
+"image_url":"https://miro.medium.com/max/1161/1*cJUVJJSWPj9WFIJlvf7dKg.jpeg"
+}
+]
+
+},
+{
+'collectionTitle':"Collection 2",
+'collection':[
+{
+"title": "Classic Rolls Royce Collection",
+"value":"Roll Royce",
+"description":"London Company",
+"image_url":"https://i.pinimg.com/236x/bd/40/f6/bd40f62bad0e38dd46f9aeaa6a95d80e.jpg"
+},{
+"title": "Classic Audi Collection",
+"value":"Audi",
+"description":"German Company",
+"image_url":"https://www.car-logos.org/wp-content/uploads/2011/09/audi.png"
+},
+{
+"title": "Classic lamborghini Collection",
+"value":"lamborghini",
+"description":"Italy Company",
+"image_url":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbBeoerEQ7F5Mlh4S7u0uvEcPAlQ-J0s6V-__tBJ7JPc6KCZo9&usqp=CAU"
+}
+]
+},{
+'collectionTitle':"Collection 3",
+'collection':[
+{
+"title": "Classic Rolex Collection",
+"value":"Rolex",
+"description":"Switzerland Company",
+"image_url":"https://image.shutterstock.com/image-photo/kiev-ukraine-may-13-2015-260nw-278633477.jpg"
+}
+]
+},
+{
+'collectionTitle':"Collection 4",
+'collection':[
+{
+"title": "Classic Fossil Collection",
+"value":"Fossil",
+"description":"American Company ",
+"image_url":"https://www.pngitem.com/pimgs/m/247-2470775_fossil-logo-png-free-download-fossil-transparent-png.png"
+}
+]
+},
+{
+'collectionTitle':"Collection 5",
+'collection':[
+{
+"title": "Classic Fastrack Collection",
+"value":"FastTrack",
+"description":"Indian Company",
+"image_url":"https://logodix.com/logo/2153855.jpg"
+}
+]
+}
+],
+"buttons": [
+{
+"title": "Done",
+"type": "postback",
+"payload": "payload"
+}
+]
+}
+};
+print(JSON.stringify(message)); */
+
+
+	var advancedMultiSelect = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+	{{if msgData.message}} \
+	<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
+			<div class = "listTmplContent advancedMultiSelect"> \
+				{{if msgData.createdOn && !msgData.message[0].component.payload.sliderView}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+				{{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+				<ul class="{{if msgData.message[0].component.payload.fromHistory}} fromHistory listTmplContentBox  {{else}} listTmplContentBox{{/if}} "> \
+					{{if msgData.message[0].component.payload.title || msgData.message[0].component.payload.heading}} \
+					<div class="advMultiSelectHeader">\
+						<h4 class="advMultiSelectHeaderTitle">${(msgData.message[0].component.payload.title) || (msgData.message[0].component.payload.heading)}{{if msgData.message[0].component.payload.sliderView}}<div class="closeIcon closeBottomSlider"></div>{{/if}}</h4>\
+						<p class="orderDate">${msgData.message[0].component.payload.description}</p>\
+					</div>\
+					{{/if}} \
+					<div class="advancedMultiSelectScroll">\
+					  {{each(index, element) msgData.message[0].component.payload.elements}} \
+					  <div class="collectionDiv {{if msgData.message[0].component.payload.showViewMore && (index >= msgData.message[0].component.payload.limit)}}hide{{/if}}">\
+							{{if element.collection && element.collection.length}}\
+								{{if element && element.collection && element.collection.length > 1}}\
+									<div class="checkbox checkbox-primary styledCSS checkboxesDiv groupMultiSelect"> \
+									<input  class = "checkInput " type="checkbox" text = "${element.collectionName}" value = "${element.collectionName}" id="${element.collectionName}${msgData.messageId}${index}"> \
+										<label for="${element.collectionName}${msgData.messageId}${index}">\
+												{{if element && element.collectionHeader}}\
+												<div class="imgDescContainer">\
+													<div class="checkImgContainer">\
+														<img src="https://image12.coupangcdn.com/image/displayitem/displayitem_8ad9b5e0-fd76-407b-b820-6494f03ffc31.jpg">\
+													</div>\
+													<div class="multiSelectDescContainer">\
+														<p class="multiTitle">{{html helpers.convertMDtoHTML(msgItem.title, "bot")}}\</p>\
+														<p class="multiDesc">Consultation on weekends and holidays</p>\
+													</div>\
+												</div>\
+												{{else}}\
+												Select all\
+												{{/if}}\
+											</label> \
+									</div> \
+								{{/if}}\
+								{{each(key, msgItem) element.collection}} \
+									{{if msgData.message[0].component.payload.buttons}} \
+										<li class="listTmplContentChild"> \
+											<div class="checkbox checkbox-primary styledCSS checkboxesDiv singleSelect {{if !msgItem.description}}nodescription{{/if}} {{if !msgItem.description && !msgItem.image_url}}noImgdescription{{/if}}"> \
+												<input  class = "checkInput" type="checkbox" text = "${msgItem.title}" value = "${msgItem.value}" id="${msgItem.value}${msgData.messageId}${index}${key}"> \
+												<label for="${msgItem.value}${msgData.messageId}${index}${key}">\
+													<div class="imgDescContainer">\
+														{{if msgItem.image_url}}\
+															<div class="checkImgContainer">\
+																<img src="${msgItem.image_url}">\
+															</div>\
+														{{/if}}\
+														<div class="multiSelectDescContainer">\
+															<p class="multiTitle">{{html helpers.convertMDtoHTML(msgItem.title, "bot")}}\</p>\
+															{{if msgItem.description}}\
+															<p class="multiDesc">${msgItem.description}</p>\
+															{{/if}}\
+														</div>\
+													</div>\
+												</label> \
+											</div> \
+										</li> \
+									{{/if}} \
+								{{/each}} \
+							{{/if}}\
+						</div>\
+					  {{/each}} \
+					  {{if !(msgData.message[0].component.payload.fromHistory)}}\
+					  <li class="viewMoreContainer {{if !(msgData.message[0].component.payload.showViewMore) || (msgData.message[0].component.payload.showViewMore && (msgData.message[0].component.payload.elements.length <= msgData.message[0].component.payload.limit))}}hide{{/if}}"> \
+						  <span class="viewMoreGroups">ViewMore</span> \
+					  </li> \
+					  {{/if}}\
+					  </div>\
+					{{if !(msgData.message[0].component.payload.fromHistory)}}\
+					<li class="multiCheckboxBtn hide">\
+						<span title="Here are your selected items " class="{{if msgData.message[0].component.payload.fromHistory}} hide  {{else}} viewMore {{/if}}" type="postback" value="{{if msgData.message[0].component.payload.buttons[0].payload}}${msgData.message[0].component.payload.buttons[0].payload}{{else}}${msgData.message[0].component.payload.buttons[0].title}{{/if}}">${msgData.message[0].component.payload.buttons[0].title}</span> \
+					</li> \
+					{{/if}}\
+				</ul> \
+			</div> \
+		</li> \
+	{{/if}} \
+   </scipt>';
+    /* Sample template structure for New List Template 
     	 var message={
 			"type": "template",
 			"payload": {
@@ -307,7 +511,8 @@ var formTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			          "subtitle": "17 Monday June",
 			          "value":"get directions",
 			          "default_action": {
-				           "title":"swiggyOrder",
+						   "title":"swiggyOrder",
+						   "type":"postback"
 			            }
 			        },
 			        {
@@ -316,7 +521,8 @@ var formTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			            "subtitle": "17 Monday June",
 			            "value":"$35.88",
 			            "default_action": {
-				            "title":"AmazonOrder",
+							"title":"AmazonOrder",
+							"type":"postback"
 			            }
 			        },
 			        {
@@ -325,7 +531,8 @@ var formTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			            "subtitle": "20 Monday June",
 			            "value":"$35.88",
 			            "default_action": {
-			               "title":"TimexOrder",
+						   "title":"TimexOrder",
+						   "type":"postback"
 			            }
 			        },
 			        {
@@ -335,6 +542,7 @@ var formTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			            "value":"$35.88",
 			            "default_action": {
 							"title":"TimexOrder",
+							"type":"postback"
 			            }
 			        },
 			        {
@@ -344,6 +552,7 @@ var formTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			            "value":"$35.88",
 			            "default_action": {
 							"title":"TimexOrder",
+							"type":"postback"
 			            }
 			        },
 			    ],
@@ -356,6 +565,7 @@ var formTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 						"value":"get directions",
 						"default_action": {
 							 "title":"swiggyOrder",
+							 "type":"postback"
 						  }
 					  },
 					  {
@@ -365,6 +575,7 @@ var formTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 						  "value":"$35.88",
 						  "default_action": {
 							  "title":"AmazonOrder",
+							  "type":"postback"
 						  }
 					  },
 					  {
@@ -374,6 +585,7 @@ var formTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 						  "value":"$35.88",
 						  "default_action": {
 							 "title":"TimexOrder",
+							 "type":"postback"
 						  }
 					  },
 			    ],
@@ -385,6 +597,7 @@ var formTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			            "value":"$35.88",
 			            "default_action": {
 							"title":"TimexOrder",
+							"type":"postback"
 			            }
 			        },
 			        {
@@ -394,6 +607,7 @@ var formTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			            "value":"$35.88",
 			            "default_action": {
 							"title":"TimexOrder",
+							"type":"postback"
 			            }
 			        },
 			    ]
@@ -405,246 +619,438 @@ var formTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 
 
 	var listViewTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-		{{if msgData.message}} \
-			<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon listView"> \
-				<div class="listViewTmplContent {{if msgData.message[0].component.payload.boxShadow}}noShadow{{/if}}"> \
-					{{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-					{{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-					<ul class="listViewTmplContentBox"> \
-						{{if msgData.message[0].component.payload.text || msgData.message[0].component.payload.heading}} \
-							<li class="listViewTmplContentHeading"> \
-								{{if msgData.type === "bot_response" && msgData.message[0].component.payload.heading}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
-								{{if msgData.message[0].component.payload.sliderView}} <button class="close-button" title="Close"><img src="data:image/svg+xml;base64,           PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button>{{/if}}\
-								{{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
-									<span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
-								{{/if}} \
-							</li> \
-						{{/if}} \
-						<div class="listItems">\
-						{{each(key, msgItem) msgData.message[0].component.payload.elements}} \
-						{{if (msgData.message[0].component.payload.seeMore && key < msgData.message[0].component.payload.moreCount) || (!msgData.message[0].component.payload.seeMore)}}\
-									<li class="listViewTmplContentChild"> \
-										{{if msgItem.image_url}} \
-											<div class="listViewRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
-												<img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
-											</div> \
-										{{/if}} \
-										<div class="listViewLeftContent" data-url="${msgItem.default_action.url}" data-title="${msgItem.default_action.title}" data-value="${msgItem.default_action.title}"> \
-											<span class="titleDesc">\
-											<div class="listViewItemTitle" title="${msgItem.title}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
-											{{if msgItem.subtitle}}<div class="listViewItemSubtitle" title="${msgItem.subtitle}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
-											</span>\
-										{{if msgItem.value}}<div class="listViewItemValue" title="${msgItem.value}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.value, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.value, "user")}} {{/if}}</div>{{/if}} \
-										</div>\
-									</li> \
-									{{/if}}\
-						{{/each}} \
-						</div>\
-						{{if msgData.message[0].component.payload.seeMore}}\
-						<li class="seeMore"> \
-							<span class="seeMoreList">More</span> \
+	{{if msgData.message}} \
+		<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon listView"> \
+			<div class="listViewTmplContent {{if msgData.message[0].component.payload.boxShadow}}noShadow{{/if}}"> \
+				{{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+				{{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+				<ul class="listViewTmplContentBox"> \
+					{{if msgData.message[0].component.payload.text || msgData.message[0].component.payload.heading}} \
+						<li class="listViewTmplContentHeading"> \
+							{{if msgData.type === "bot_response" && msgData.message[0].component.payload.heading}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
+							{{if msgData.message[0].component.payload.sliderView}} <button class="close-button" title="Close"><img src="data:image/svg+xml;base64,           PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button>{{/if}}\
+							{{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
+								<span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
+							{{/if}} \
 						</li> \
-						{{/if}}\
-					</ul> \
-				</div> \
-			</li> \
-		{{/if}} \
-	 </script>';
-	
-/* Sample template structure for Advanced Multi Select Checkbox 
- var message = {
-	"type": "template",
+					{{/if}} \
+					<div class="listItems">\
+					{{each(key, msgItem) msgData.message[0].component.payload.elements}} \
+					{{if (msgData.message[0].component.payload.seeMore && key < msgData.message[0].component.payload.moreCount) || (!msgData.message[0].component.payload.seeMore)}}\
+								<li class="listViewTmplContentChild"> \
+									{{if msgItem.image_url}} \
+										<div class="listViewRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
+											<img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
+										</div> \
+									{{/if}} \
+									<div class="listViewLeftContent" data-url="${msgItem.default_action.url}" data-title="${msgItem.default_action.title}" data-value="${msgItem.default_action.title}"> \
+										<span class="titleDesc">\
+										<div class="listViewItemTitle" title="${msgItem.title}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
+										{{if msgItem.subtitle}}<div class="listViewItemSubtitle" title="${msgItem.subtitle}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
+										</span>\
+									{{if msgItem.value}}<div class="listViewItemValue" title="${msgItem.value}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.value, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.value, "user")}} {{/if}}</div>{{/if}} \
+									</div>\
+								</li> \
+								{{/if}}\
+					{{/each}} \
+					</div>\
+					{{if msgData.message[0].component.payload.seeMore}}\
+					<li class="seeMore"> \
+						<span class="seeMoreList">${msgData.message[0].component.payload.buttons[0].title}</span> \
+					</li> \
+					{{/if}}\
+				</ul> \
+			</div> \
+		</li> \
+	{{/if}} \
+ </script>';
+ var listActionSheetTemplate = '<script id="chat-window-listTemplate" type="text/x-jqury-tmpl">\
+ <div class="list-template-sheet hide">\
+  {{if msgData.message}} \
+	<div class="sheetHeader">\
+	  <span class="choose">${msgData.message[0].component.payload.heading}</span>\
+	  <button class="close-button" title="Close"><img src="data:image/svg+xml;base64,           PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button>\
+	</div>\
+	<div class="listTemplateContainer" >\
+		 <div class="displayMonth">\
+			 {{each(key, tab) tabs}} \
+				 <span class="tabs" data-tabid="${tab}"><span class="btnBG">${tab}</span></span>\
+			 {{/each}}\
+		 </div>\
+		   <ul class="displayListValues">\
+			   {{each(key, msgItem) dataItems}} \
+					<li class="listViewTmplContentChild"> \
+						  {{if msgItem.image_url}} \
+							  <div class="listViewRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
+								 <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
+							 </div> \
+						 {{/if}} \
+							 <div class="listViewLeftContent" data-url="${msgItem.default_action.url}" data-title="${msgItem.default_action.title}" data-value="${msgItem.default_action.title}"> \
+								<span class="titleDesc">\
+									<div class="listViewItemTitle" title="${msgItem.title}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
+									 {{if msgItem.subtitle}}<div class="listViewItemSubtitle" title="${msgItem.subtitle}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
+								 </span>\
+									 {{if msgItem.value}}<div class="listViewItemValue" title="${msgItem.value}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.value, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.value, "user")}} {{/if}}</div>{{/if}} \
+							 </div>\
+					 </li> \
+				{{/each}} \
+			</ul> \
+	</div>\
+{{/if}}\
+</div>\
+</script>';
+/*TABLE LIST TEMPLATE
+
+var message={
+"type": "template",
 	"payload": {
-	"template_type": "advanced_multi_select",
-	"heading":"Please select items to proceed",
-	"description":"Header Discription",
-	"sliderView":true,
-	"showViewMore":true,
-	"limit":1,
-	"elements": [
-	{
-	'collectionTitle':"Collection 1",
-	'collection':[
-	{
-	"title": "Classic T-Shirt Collection 1",
-	"description":"Discription 1A",
-	"value":"tShirt",
-	"image_url":"https://cdn.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_300/https://rbt.net.au/wp-content/uploads/2017/12/dummy-image-300x300.png"
-	},{
-	"title": "Classic Shirt Collection 1",
-	"value":"shirts",
-	"description":"Discription 1B",
-	"image_url":"https://cdn.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_300/https://rbt.net.au/wp-content/uploads/2017/12/dummy-image-300x300.png"
-	},
-	{
-	"title": "Classic shorts Collection 1",
-	"description":"Discription 3C",
-	"value":"shorts",
-	"image_url":"https://cdn.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_300/https://rbt.net.au/wp-content/uploads/2017/12/dummy-image-300x300.png"
-	}
-	]
-	
-	},
-	{
-	'collectionTitle':"Collection 2",
-	'collection':[
-	{
-	"title": "Classic T-Shirt Collection 2",
-	"value":"tShirt",
-	"description":"Discription 2A",
-	"image_url":"https://cdn.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_300/https://rbt.net.au/wp-content/uploads/2017/12/dummy-image-300x300.png"
-	},{
-	"title": "Classic Shirt Collection 2",
-	"value":"shirts",
-	"description":"Discription 2B",
-	"image_url":"https://cdn.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_300/https://rbt.net.au/wp-content/uploads/2017/12/dummy-image-300x300.png"
-	},
-	{
-	"title": "Classic shorts Collection 2",
-	"value":"shorts",
-	"description":"Discription 2C",
-	"image_url":"https://cdn.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_300/https://rbt.net.au/wp-content/uploads/2017/12/dummy-image-300x300.png"
-	}
-	]
-	},{
-	'collectionTitle':"Collection 3",
-	'collection':[
-	{
-	"title": "Classic T-Shirt Collection 3",
-	"value":"tShirt",
-	"description":"Discription 3A",
-	"image_url":"https://cdn.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_300/https://rbt.net.au/wp-content/uploads/2017/12/dummy-image-300x300.png"
-	}
-	]
-	},
-	{
-	'collectionTitle':"Collection 4",
-	'collection':[
-	{
-	"title": "Classic T-Shirt Collection 4",
-	"value":"tShirt",
-	"description":"Discription 4A",
-	"image_url":"https://cdn.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_300/https://rbt.net.au/wp-content/uploads/2017/12/dummy-image-300x300.png"
-	}
-	]
-	},
-	{
-	'collectionTitle':"Collection 5",
-	'collection':[
-	{
-	"title": "Classic T-Shirt Collection 5",
-	"value":"tShirt",
-	"description":"Discription 5A",
-	"image_url":"https://cdn.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_300/https://rbt.net.au/wp-content/uploads/2017/12/dummy-image-300x300.png"
-	}
-	]
-	}
-	],
-	"buttons": [
-	{
-	"title": "Done",
-	"type": "postback",
-	"payload": "payload"
-	}
-	]
-	}
-	};
-	print(JSON.stringify(message)); */
+	"template_type": "tableList",
+	"title":"Marvel Comics",
+            "description":"Marvel Worldwide Inc.",
+           "headerOptions":{
+                "type":"text",
+                "text":"Comics",
+                        },
+	    },
+
+ "elements":[
+ {
+ "sectionHeader":"Marvel Comics",
+ "sectionHeaderDesc":"It is a story book",
+ "rowItems":[
+ {
+"title":{
+ "image":{
+ "image_type":"image",
+ "image_src":"https://i1.pngguru.com/preview/277/841/159/captain-marvel-movie-folder-icon-v4-png-clipart.jpg",
+ "radius":10,
+ "size":"medium"
+ },
+ "type":"text|url",
+ "text|url":{
+"link":"https://www.facebook.com", // if type=url use link
+ "title":"Captain Marvel",
+ "subtitle":"Cosmic energy",
+ },
+ 
+ "rowColor":"blue" //text color to entire row
+},
+ "value":{
+ "type":"url",
+ "url":{
+ "link":"https://www.marvel.com/movies/captain-marvel",
+ "title":"energy"
+ },
+ "layout":{
+ "align":"top",
+"color":"blue",//apply color to value in row
+ "colSize":"25%",
+ }
+ },
+ "default_action":{
+ "type":"postback|url",
+"url":"https://www.marvel.com", // if type =url use url
+ "payload":"marvelmovies",
+ "title":"Captain Marvel",
+ "utterance":""
+ },
+ "bgcolor":"#F67159" // background color to entire row
+ },
+ {
+"title":{
+ "image":{
+ "image_type":"image",
+ "image_src":"https://www.pinclipart.com/picdir/middle/44-444753_avengers-clipart-marvel-super-heroes-iron-man-logo.png",
+ "radius":10,
+ "size":"medium"
+ },
+ "type":"text",
+ "text":{
+ "title":"Iron Man",
+ "subtitle":"Iron Sute",
+ },
+ "rowColor":"#4BA2F9"
+},
+ "value":{
+ "type":"text",
+ "text":"$ 7,000,000",
+ "layout":{
+ "align":"center",
+ "color":"blue",
+ "colSize":"25%",
+ }
+ },
+ "default_action":{
+ "type":"url",
+ "url":"https://www.marvel.com/comics/characters/1009368/iron_man",
+ "utterance":"",
+ },
+ "bgcolor":"#C9EEBB"
+ },
+ {
+ "title":{
+ "image":{
+ "image_type":"image",
+ "image_src":"https://img1.looper.com/img/gallery/rumor-report-is-marvel-really-making-captain-america-4/intro-1571140919.jpg",
+ "radius":10,
+ "size":"medium"
+ },
+ "type":"text",
+ "text":{
+ "title":"Captain America",
+ "subtitle":"Vibranium Shield",
+ },
+ "rowColor":"#F5978A"
+},
+ "value":{
+ "type":"text",
+ "text":"$ 10,000,000",
+ "layout":{
+ "align":"center",
+ "color":"black",
+ "colSize":"25%",
+ }
+ },
+ "default_action":{
+ "type":"url",
+ "url":"https://www.marvel.com/characters/captain-america-steve-rogers",
+ "utterance":"",
+ }
+ },
+ {
+"title":{
+ "image":{
+ "image_type":"image",
+ "image_src":"https://vignette.wikia.nocookie.net/marvelcinematicuniverse/images/1/13/Thor-EndgameProfile.jpg/revision/latest/scale-to-width-down/620?cb=20190423174911",
+ "radius":10,
+ "size":"medium"
+ },
+ "type":"url",
+"url":{ "link":"https://www.marvel.com/movies/captain-marvel", 
+"title":"Captain Marvel",
+"subtitle":"bskjfkejf",
+},
+ "rowColor":"#13F5E0"
+},
+ "value":{
+ "type":"text",
+ "text":"$ 5,000,000",
+ "layout":{
+ "align":"center",
+ "color":"#FF5733",
+ "colSize":"25%",
+ }
+ },
+ "default_action":{
+"type":"url",
+ "url":"https://www.marvel.com/characters/thor-thor-odinson",
+ "utterance":"",
+ },
+ }
+ ]
+ }
+ 
+ ]
+ };
+ print(JSON.stringify(message));*/
 
 
- var advancedMultiSelect = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+
+var tableListTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
                 {{if msgData.message}} \
-                <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
-                        <div class = "listTmplContent advancedMultiSelect"> \
-                            {{if msgData.createdOn && !msgData.message[0].component.payload.sliderView}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+                    <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+                        <div class="listTmplContent"> \
+                            {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                             {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-                            <ul class="{{if msgData.message[0].component.payload.fromHistory}} fromHistory listTmplContentBox  {{else}} listTmplContentBox{{/if}} "> \
-                                {{if msgData.message[0].component.payload.title || msgData.message[0].component.payload.heading}} \
-                                <div class="advMultiSelectHeader">\
-                                    <h4 class="advMultiSelectHeaderTitle">${(msgData.message[0].component.payload.title) || (msgData.message[0].component.payload.heading)}<div class="closeIcon closeBottomSlider"></div></h4>\
-                                    <p class="orderDate">${msgData.message[0].component.payload.description}</p>\
+							<div class="{{if msgData.message[0].component.payload.fromHistory}}dummy listTableContainerDiv {{else}}listTableContainerDiv{{/if}} ">\
+                <div class="listTableContainerDivRepet">\
+                <div class="listTableContainer">\
+                {{each(index,element) msgData.message[0].component.elements}}\
+                        <div class="listTableDetailsBorderDiv">\
+                                <div class="listTableDetails">\
+                                <div class="listTableHeader">\
+                                    <div class="listTableDetailsTitle">${element.sectionHeader}</div>\
+                                    <div class="listTableHeaderDesc{{if element.value && element.value.layout && element.value.layout.align}}${element.value.layout.align}{{/if}}" {{if element.value && element.value.layout && element.value.layout.colSize}} style="width:${element.value.layout.colSize};"{{/if}} {{if element.value && element.value.layout && element.value.layout.color}} style="color:${element.value.layout.color}"{{/if}}>${element.sectionHeaderDesc}</div>\
                                 </div>\
-                                {{/if}} \
-                                <div class="advancedMultiSelectScroll">\
-                                  {{each(index, element) msgData.message[0].component.payload.elements}} \
-                                    <div class="collectionDiv {{if msgData.message[0].component.payload.showViewMore && index > 3}}hide{{/if}}">\
-                                        {{if element.collection && element.collection.length}}\
-                                            {{if element && element.collection && element.collection.length > 1}}\
-                                                <div class="checkbox checkbox-primary styledCSS checkboxesDiv groupMultiSelect"> \
-                                                <input  class = "checkInput " type="checkbox" text = "${element.collectionName}" value = "${element.collectionName}" id="${element.collectionName}${msgData.messageId}${index}"> \
-                                                    <label for="${element.collectionName}${msgData.messageId}${index}">\
-                                                            {{if element && element.collectionHeader}}\
-                                                            <div class="imgDescContainer">\
-                                                                <div class="checkImgContainer">\
-                                                                    <img src="https://image12.coupangcdn.com/image/displayitem/displayitem_8ad9b5e0-fd76-407b-b820-6494f03ffc31.jpg">\
-                                                                </div>\
-                                                                <div class="multiSelectDescContainer">\
-                                                                    <p class="multiTitle">{{html helpers.convertMDtoHTML(msgItem.title, "bot")}}\</p>\
-                                                                    <p class="multiDesc">Consultation on weekends and holidays</p>\
-                                                                </div>\
-                                                            </div>\
-                                                            {{else}}\
-                                                            Select all\
-                                                            {{/if}}\
-                                                        </label> \
-                                                </div> \
-                                            {{/if}}\
-                                            {{each(key, msgItem) element.collection}} \
-                                                {{if msgData.message[0].component.payload.buttons}} \
-                                                    <li class="listTmplContentChild"> \
-                                                        <div class="checkbox checkbox-primary styledCSS checkboxesDiv singleSelect {{if !msgItem.description}}nodescription{{/if}} {{if !msgItem.description && !msgItem.image_url}}noImgdescription{{/if}}"> \
-                                                            <input  class = "checkInput" type="checkbox" text = "${msgItem.title}" value = "${msgItem.value}" id="${msgItem.value}${msgData.messageId}${index}${key}"> \
-                                                            <label for="${msgItem.value}${msgData.messageId}${index}${key}">\
-                                                                <div class="imgDescContainer">\
-                                                                    {{if msgItem.image_url}}\
-                                                                        <div class="checkImgContainer">\
-                                                                            <img src="${msgItem.image_url}">\
-                                                                        </div>\
-                                                                    {{/if}}\
-                                                                    <div class="multiSelectDescContainer">\
-                                                                        <p class="multiTitle">{{html helpers.convertMDtoHTML(msgItem.title, "bot")}}\</p>\
-                                                                        {{if msgItem.description}}\
-                                                                        <p class="multiDesc">${msgItem.description}</p>\
-                                                                        {{/if}}\
-                                                                    </div>\
-                                                                </div>\
-                                                            </label> \
-                                                        </div> \
-                                                    </li> \
-                                                {{/if}} \
-                                            {{/each}} \
+                        {{each(index,msgItem) element.rowItems}}\
+                                    <div class="listTableDetailsDesc {{if msgItem.title.image && msgItem.title.image.size==="medium"}}mediumImg{{/if}} {{if msgItem.title.type!=="url" && msgItem.default_action}}pointerStyle{{/if}}" {{if msgItem.title.image && msgItem.title.image.size==="large"}}mediumImg{{/if}}" {{if msgItem.title.image && msgItem.title.image.size==="small"}}smallImg{{/if}}" {{if msgItem && msgItem.bgcolor}} style="background-color:${msgItem.bgcolor};"{{/if}} {{if msgItem && msgItem.title && msgItem.title.rowColor}}style="color:${msgItem.title.rowColor}"{{/if}} {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}} data-title="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} data-value="${msgItem.default_action.payload}"{{/if}}>\
+                                      {{if msgItem && msgItem.title.image && msgItem.title.image.image_type && msgItem.title.image.image_src}}\
+                                        <div class="listTableBigImgConytainer">\
+                                          {{if msgItem.title.image.image_type === "image"}}\
+                                              <img src="${msgItem.title.image.image_src}">\
+                                          {{/if}}\
+                                          {{if msgItem.title.image.image_type === "fontawesome"}}\
+                                              <i class="fa {{msgItem.title.image.image_src}}" ></i>\
+                                          {{/if}}\
+                                        </div>\
+                                      {{/if}}\
+                                        <div class="listTableDetailsDescSub ">\
+                                        {{if (msgItem.title && msgItem.title.type && msgItem.title.type ==="url")}}\
+                                        <div class="listTableDetailsDescName {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.align}}${msgItem.value.layout.align}{{/if}} {{if !msgItem.default_action}} pointer {{/if}}" {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.colSize}} style="width:${msgItem.value.layout.colSize};"{{/if}}>\
+                                        <div actionObj="${JSON.stringify(msgItem.title.url)}" type="${msgItem.title.type}" url="${msgItem.title.url.link}" class="listViewItemValue actionLink action {{if !msgItem.subtitle}}top10{{/if}}">${msgItem.title.url.title}</div>\
+                                        </div>{{else}}\
+                                        <p class="listTableDetailsDescName">${msgItem.title.text.title}</p>\
+                                      {{/if}}\
+                                      {{if (msgItem.title && msgItem.title.url && msgItem.title.url.subtitle)}}\
+                                            <p class="listTableDetailsDescValue">${msgItem.title.url.subtitle}</p>\
+                                            {{else (msgItem.title && msgItem.title.text)}}\
+                                            <p class="listTableDetailsDescValue">${msgItem.title.text.subtitle}</p>\
                                         {{/if}}\
+                                        </div>\
+                                          {{if (msgItem.value && msgItem.value.type === "text" && msgItem.value.text)}}\
+                                            <div class="titleActions {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.align}}${msgItem.value.layout.align}{{/if}}" {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.colSize}} style="width:${msgItem.value.layout.colSize};"{{/if}}>\
+                                                <div class="listViewItemValue {{if !msgItem.subtitle}}top10{{/if}}" {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.color}} style="color:${msgItem.value.layout.color}"{{/if}} title="${msgItem.value.text}">${msgItem.value.text}</div>\
+                                            </div>\
+                                          {{/if}}\
+                                          {{if (msgItem.value && msgItem.value.type === "image" && msgItem.value.image && msgItem.value.image.image_src)}}\
+                                            <div actionObj="${JSON.stringify(msgItem.value.image)}" class="titleActions imageValue action {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.align}}${msgItem.value.layout.align}{{/if}}" {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.colSize}} style="width:${msgItem.value.layout.colSize};"{{/if}}>\
+                                                {{if msgItem.value.image && msgItem.value.image.image_type === "image" && msgItem.value.image.image_src}}\
+                                                    <span class="wid-temp-btnImage"> \
+                                                        <img alt="image" src="${msgItem.value.image.image_src}" onerror="this.onerror=null;this.src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAAA/FJREFUWAnNmItK60AQQLdN05eIIoog+v+/pQiKIlhab9M2SXv3TDthk25evenFgTbJPmZOdndmM9ubL/7szC+WwalsvZ4xg2BggqBvevah3+/JFX273c5stzu5punWJGli70+z1BowDAcmHAQWaA/mM7sH3teEIcChBd6aOElNHCe+LqVljQEHFmo0DAWsVFtJBcBBEMhvaF9wvYlNYmGbSC0gyifjoShvorCuDSM/GY9MmqYmWm1kGVT16VdVBlbZdDLuDM61xYiKbmujSkprmdLJZCSLv0rBv9ThWNjAVpl4p5iRG4+GmVcyHT8/P7XTUTQyHA4twCTTU6znmSWErWi7Nql1pKIcAUoHu0a4qry+vpr1eq2Pra5APjw8mNFoVNpPbS6j1dEgHAHiEAy9K8Bh6Pb21i0uvV8sFobfdDo1y+XS8IJPT0+VkDLd1vYyyg9EDpC1wOL1CeWXl5e+qqOyzWYjgDc3N9Ln4+OjESQ2YHBDUM5JiHNdy/X1tbm/v5ew0mSpFBkyQHYIYtQ5pA0kDLCoZERsX+cUF/Lt7e3IGVzbLoug4rDnGL3VauXatSMTZo4TRZHc5xocHmCBiQ8MAeSrxA0rvk5tyvB45Ovrq7QbjoSX+wQWmOIk2QPyydRWCD388Oziy1FG7AOiKPQhBNUJTHz4HKY4H/fqOr+/v5v5fC7NPj8/zePjoxmPx7luZSFJY2SusedBX1qGrhiYPe2zojiOMzgK2Qa/v7+z+q5ulEkAlbaJct+0Ad21KFPrxXdxcSHe6AIRQlwBuC6UuO2r7mUNkkMocVVjrWNfnc1m4iRXV1e5LRA4dgyuifVC2rbRrTZgQgSQBKfNJkI8u7u7U13Z1YWjkFgH7CmQMCEyxUorJS3+GCGVIpyWK2RbG9peAEkN2wpfKM/PzzLNZXCqE0jWZBtRJpnifd4aNl4rwLEGEaaQrQnIKvF5f1l7Rg8m5DDFRvLWsg5uOQFa4SgnDtbBuf2b3JNDH3xkD0gnkuomQudzi8uSxUEy/v9hvO7l5ATCOX2QNaidyPhJqquEoFwMzFXt29bB4EoOkFyANeXLS3iz4vedq6jpfZWzYNvNR9CZA6SA4wgyft2sKSMw85n08vLCYyeCTlcIzNguSs93PkjiTsavWxRweK8Gz6KSts/kyGyRKuiNbLrpS9y9gHQc2BzFPV1QZV1fgVutN0dTq3YyL9YCvbIWeCvdE7W8y6tMq7VRXHeujVJAGjHkHEeweLsWdIrumrh65CRFEKaA4wim/NQDTFcn0aDTA0xVzjTwa3IErH30yktKALb9z3YErMYwwI+89VceoiuoHRTJW51dSas6vf4FP88rnfrjdTEAAAAASUVORK5CYII=\';"/> \
+                                                    </span> \
+                                                {{/if}}\
+                                            </div>\
+                                          {{/if}}\
+                                          {{if (msgItem.value && msgItem.value.type === "url" && msgItem.value.url.link && msgItem.value.url.title)}}\
+                                            <div class="titleActions {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.align}}${msgItem.value.layout.align}{{/if}}" {{if msgItem.value && msgItem.value.layout && (msgItem.value.layout.colSize || msgItem.value.layout.color)}} style="width:${msgItem.value.layout.colSize};color:${msgItem.value.layout.color}"{{/if}}>\
+                                                <div actionObj="${JSON.stringify(msgItem.value.url)}" type="${msgItem.value.type}" url="${msgItem.value.url.link}"class="listViewItemValue actionLink action {{if !msgItem.subtitle}}top10{{/if}}">${msgItem.value.url.title}</div>\
+                                            </div>\
+                                          {{/if}}\
+                                          {{if msgItem.value && msgItem.value.type=="button" && msgItem.value.button && (msgItem.value.button.title || (msgItem.value.button.image && msgItem.value.button.image.image_src))}}\
+                                            <div class="titleActions {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.align}}${msgItem.value.layout.align}{{/if}}" {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.colSize}}style="width:${msgItem.value.layout.colSize};"{{/if}}>\
+                                                <div class="actionBtns action singleBTN {{if !msgItem.value.button.title && (msgItem.value.button.image && msgItem.value.button.image.image_src)}}padding5{{/if}}" actionObj="${JSON.stringify(msgItem.value.button)}">\
+                                                    {{if msgItem.value.button.image && msgItem.value.button.image.image_type === "image" && msgItem.value.button.image.image_src}}\
+                                                            <span class="wid-temp-btnImage"> \
+                                                                <img alt="image" src="${msgItem.value.button.image.image_src}" onerror="this.onerror=null;this.src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAAA/FJREFUWAnNmItK60AQQLdN05eIIoog+v+/pQiKIlhab9M2SXv3TDthk25evenFgTbJPmZOdndmM9ubL/7szC+WwalsvZ4xg2BggqBvevah3+/JFX273c5stzu5punWJGli70+z1BowDAcmHAQWaA/mM7sH3teEIcChBd6aOElNHCe+LqVljQEHFmo0DAWsVFtJBcBBEMhvaF9wvYlNYmGbSC0gyifjoShvorCuDSM/GY9MmqYmWm1kGVT16VdVBlbZdDLuDM61xYiKbmujSkprmdLJZCSLv0rBv9ThWNjAVpl4p5iRG4+GmVcyHT8/P7XTUTQyHA4twCTTU6znmSWErWi7Nql1pKIcAUoHu0a4qry+vpr1eq2Pra5APjw8mNFoVNpPbS6j1dEgHAHiEAy9K8Bh6Pb21i0uvV8sFobfdDo1y+XS8IJPT0+VkDLd1vYyyg9EDpC1wOL1CeWXl5e+qqOyzWYjgDc3N9Ln4+OjESQ2YHBDUM5JiHNdy/X1tbm/v5ew0mSpFBkyQHYIYtQ5pA0kDLCoZERsX+cUF/Lt7e3IGVzbLoug4rDnGL3VauXatSMTZo4TRZHc5xocHmCBiQ8MAeSrxA0rvk5tyvB45Ovrq7QbjoSX+wQWmOIk2QPyydRWCD388Oziy1FG7AOiKPQhBNUJTHz4HKY4H/fqOr+/v5v5fC7NPj8/zePjoxmPx7luZSFJY2SusedBX1qGrhiYPe2zojiOMzgK2Qa/v7+z+q5ulEkAlbaJct+0Ad21KFPrxXdxcSHe6AIRQlwBuC6UuO2r7mUNkkMocVVjrWNfnc1m4iRXV1e5LRA4dgyuifVC2rbRrTZgQgSQBKfNJkI8u7u7U13Z1YWjkFgH7CmQMCEyxUorJS3+GCGVIpyWK2RbG9peAEkN2wpfKM/PzzLNZXCqE0jWZBtRJpnifd4aNl4rwLEGEaaQrQnIKvF5f1l7Rg8m5DDFRvLWsg5uOQFa4SgnDtbBuf2b3JNDH3xkD0gnkuomQudzi8uSxUEy/v9hvO7l5ATCOX2QNaidyPhJqquEoFwMzFXt29bB4EoOkFyANeXLS3iz4vedq6jpfZWzYNvNR9CZA6SA4wgyft2sKSMw85n08vLCYyeCTlcIzNguSs93PkjiTsavWxRweK8Gz6KSts/kyGyRKuiNbLrpS9y9gHQc2BzFPV1QZV1fgVutN0dTq3YyL9YCvbIWeCvdE7W8y6tMq7VRXHeujVJAGjHkHEeweLsWdIrumrh65CRFEKaA4wim/NQDTFcn0aDTA0xVzjTwa3IErH30yktKALb9z3YErMYwwI+89VceoiuoHRTJW51dSas6vf4FP88rnfrjdTEAAAAASUVORK5CYII=\';"/> \
+                                                            </span> \
+                                                    {{/if}}\
+                                                    {{if msgItem.value.button.title}}\
+                                                    ${msgItem.value.button.title}\
+                                                    {{/if}}\
+                                                </div>\
+                                            </div>\
+                                          {{/if}}\
+                                          {{if msgItem.value && msgItem.value.type=="menu" && msgItem.value.menu && msgItem.value.menu.length}}\
+                                          <div class="titleActions {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.align}}${msgItem.value.layout.align}{{/if}}" {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.colSize}}style="width:${msgItem.value.layout.colSize};"{{/if}}>\
+                                              <i class="icon-More dropbtnWidgt moreValue"  onclick="showDropdown(this)"></i>\
+                                                  <ul  class="dropdown-contentWidgt  rmpmW moreValueContent" style="list-style:none;">\
+                                                    {{each(key, actionbtnli) msgItem.value.menu}} \
+                                                          <li class="dropdown-item action" actionObj="${JSON.stringify(actionbtnli)}">\
+                                                        <i>\
+                                                        {{if actionbtnli.image && actionbtnli.image.image_type === "image" && msgItem.title.image.image_src}}\
+                                                        <span class="wid-temp-btnImage"> \
+                                                            <img alt="image" src="${actionbtnli.image.image_src}" onerror="this.onerror=null;this.src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAAA/FJREFUWAnNmItK60AQQLdN05eIIoog+v+/pQiKIlhab9M2SXv3TDthk25evenFgTbJPmZOdndmM9ubL/7szC+WwalsvZ4xg2BggqBvevah3+/JFX273c5stzu5punWJGli70+z1BowDAcmHAQWaA/mM7sH3teEIcChBd6aOElNHCe+LqVljQEHFmo0DAWsVFtJBcBBEMhvaF9wvYlNYmGbSC0gyifjoShvorCuDSM/GY9MmqYmWm1kGVT16VdVBlbZdDLuDM61xYiKbmujSkprmdLJZCSLv0rBv9ThWNjAVpl4p5iRG4+GmVcyHT8/P7XTUTQyHA4twCTTU6znmSWErWi7Nql1pKIcAUoHu0a4qry+vpr1eq2Pra5APjw8mNFoVNpPbS6j1dEgHAHiEAy9K8Bh6Pb21i0uvV8sFobfdDo1y+XS8IJPT0+VkDLd1vYyyg9EDpC1wOL1CeWXl5e+qqOyzWYjgDc3N9Ln4+OjESQ2YHBDUM5JiHNdy/X1tbm/v5ew0mSpFBkyQHYIYtQ5pA0kDLCoZERsX+cUF/Lt7e3IGVzbLoug4rDnGL3VauXatSMTZo4TRZHc5xocHmCBiQ8MAeSrxA0rvk5tyvB45Ovrq7QbjoSX+wQWmOIk2QPyydRWCD388Oziy1FG7AOiKPQhBNUJTHz4HKY4H/fqOr+/v5v5fC7NPj8/zePjoxmPx7luZSFJY2SusedBX1qGrhiYPe2zojiOMzgK2Qa/v7+z+q5ulEkAlbaJct+0Ad21KFPrxXdxcSHe6AIRQlwBuC6UuO2r7mUNkkMocVVjrWNfnc1m4iRXV1e5LRA4dgyuifVC2rbRrTZgQgSQBKfNJkI8u7u7U13Z1YWjkFgH7CmQMCEyxUorJS3+GCGVIpyWK2RbG9peAEkN2wpfKM/PzzLNZXCqE0jWZBtRJpnifd4aNl4rwLEGEaaQrQnIKvF5f1l7Rg8m5DDFRvLWsg5uOQFa4SgnDtbBuf2b3JNDH3xkD0gnkuomQudzi8uSxUEy/v9hvO7l5ATCOX2QNaidyPhJqquEoFwMzFXt29bB4EoOkFyANeXLS3iz4vedq6jpfZWzYNvNR9CZA6SA4wgyft2sKSMw85n08vLCYyeCTlcIzNguSs93PkjiTsavWxRweK8Gz6KSts/kyGyRKuiNbLrpS9y9gHQc2BzFPV1QZV1fgVutN0dTq3YyL9YCvbIWeCvdE7W8y6tMq7VRXHeujVJAGjHkHEeweLsWdIrumrh65CRFEKaA4wim/NQDTFcn0aDTA0xVzjTwa3IErH30yktKALb9z3YErMYwwI+89VceoiuoHRTJW51dSas6vf4FP88rnfrjdTEAAAAASUVORK5CYII=\';"/> \
+                                                        </span> \
+                                                        {{/if}} \
+                                                        </i>${actionbtnli.title}</li>\
+                                                    {{/each}}\
+                                                  </ul>\
+                                          </div>\
+                                          {{/if}}\
                                     </div>\
-                                  {{/each}} \
-                                  {{if !(msgData.message[0].component.payload.fromHistory)}}\
-                                  <li class="viewMoreContainer {{if !(msgData.message[0].component.payload.showViewMore)}}hide{{/if}}"> \
-                                      <span class="viewMoreGroups">ViewMore</span> \
-                                  </li> \
-                                  {{/if}}\
-                                  </div>\
-                                {{if !(msgData.message[0].component.payload.fromHistory)}}\
-                                <li class="hide multiCheckboxBtn ">\
-                                    <span title="Here are your selected items " class="{{if msgData.message[0].component.payload.fromHistory}} hide  {{else}} viewMore {{/if}}" type="postback" value="{{if msgData.message[0].component.payload.buttons[0].payload}}${msgData.message[0].component.payload.buttons[0].payload}{{else}}${msgData.message[0].component.payload.buttons[0].title}{{/if}}">${msgData.message[0].component.payload.buttons[0].title}</span> \
-                                </li> \
-                                {{/if}}\
-                            </ul> \
-                        </div> \
-                    </li> \
-                {{/if}} \
-               </scipt>';
+                        {{/each}}\
+                                </div>\
+                        </div>\
+                {{/each}}\
+                </div>\
+                {{if msgData.elements && msgData.elements.length > 3 && viewmore}} \
+                    <div class="seeMoreFooter">\
+                        <span class="seeMoreLink" onclick="viewMorePanel(\'${JSON.stringify(panelDetail)}\')">Show more</span>\
+                    </div>\
+                {{/if}}\
+                </div>\
+            </div>\
+			</div> \
+            </li> \
+        {{/if}} \
+    </scipt>';
+/* rating template
+var message = {
+"type": "template",
+"payload": {
+"text":"Rate this chat session",
+"template_type": "feedbackTemplate",
+"view":"star|| emojis",
+"sliderView":false, //add this line and change to true when you want template to open as slider
+"starArrays":[],
+"smileyArrays":[],
+"messageTodisplay":"Glad you liked the experience. Thanks!"//To display on click of 5th star or emoji
+}
+};
+ if(message.payload.view === "star"){
+    var level=5;
+    for (i = level; i >=1; i--) {
+    var starArray = {
+        "starId": i,
+        "value": i,
+    };
+message.payload.starArrays.push(starArray);
+}
 
+}
+else if(message.payload.view === "emojis"){
+    for(var i=1;i<=5;i++){
+     var smileyArray = {
+        "smileyId":i,
+        "value": i
+    };
+message.payload.smileyArrays.push(smileyArray);
+    }
+}
+print(JSON.stringify(message)); */
+
+	var ratingTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+	{{if msgData.message}} \
+	<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
+		<div class="buttonTmplContent"> \
+		        {{if msgData.createdOn && !msgData.message[0].component.payload.sliderView}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+				{{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+				{{if msgData.message[0].component.payload.fromHistory}}<ul class="fromHistory listTempView">\
+				              ${msgData.message[0].cInfo.body}</ul>\
+				{{else}}<ul class="listTmplContentBox rating-main-component"> \
+				{{if msgData.message[0].component.payload.view == "star"}}\
+				  <div class="ratingMainComponent">\
+				  {{if msgData.message[0].component.payload.sliderView}}<button class="close-btn" title="Close"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button> {{/if}}\
+				  {{if msgData.message[0].component.payload.text}}<div class="templateHeading">${msgData.message[0].component.payload.text}</div>{{else}}Rate the chat session{{/if}}\
+					<div class="star-rating">\
+					   {{each(key, msgItem) msgData.message[0].component.payload.starArrays}}\
+					   <input type="radio" id="${msgItem.starId}-stars" name="rating" value="${msgItem.value}" />\
+					   <label for="${msgItem.starId}-stars" class="star">&#9733;</label>\
+					   {{/each}}\
+				    </div>\
+				  </div>\
+				  {{else msgData.message[0].component.payload.view == "emojis"}}\
+				  <div class="emojiComponent">\
+				  {{if msgData.message[0].component.payload.sliderView}}<button class="close-btn" title="Close"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button> {{/if}}\
+				  {{if msgData.message[0].component.payload.text}}<div class="templateHeading">${msgData.message[0].component.payload.text}</div>{{else}}Rate the chat session{{/if}}\
+				  {{each(key, msgItem) msgData.message[0].component.payload.smileyArrays}}\
+				     <div class="rating" id="rating_${msgItem.smileyId}" value="${msgItem.value}"></div>\
+				  {{/each}}\
+				  {{/if}}\
+		       </ul>{{/if}}\
+		</div>\
+		</li>\
+	{{/if}} \
+	</script>';
+	
 		if (tempType === "dropdown_template") {
 			return dropdownTemplate;
 		} else if (tempType === "checkBoxesTemplate") {
 			return checkBoxesTemplate;
 		} else if (tempType === "likeDislikeTemplate") {
 			return likeDislikeTemplate;
-		} else if (tempType === "templatelistView") {
-			return listViewTemplate;
-		} else if(tempType === "formTemplate"){
+		}else if(tempType === "formTemplate"){
             return formTemplate;
-		}else if (tempType === "advancedMultiSelect") {
+		} else if (tempType === "advancedMultiSelect") {
 			return advancedMultiSelect;
+		}else if (tempType === "templatelistView") {
+			return listViewTemplate;
+		}else if (tempType === "actionSheetTemplate") {
+			return listActionSheetTemplate;
+		}else if(tempType === "tableListTemplate"){
+			return tableListTemplate;
+		}else if(tempType === "ratingTemplate"){
+			return ratingTemplate;
 		}else {
 			return "";
 		}
@@ -652,6 +1058,8 @@ var formTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 	}; // end of getChatTemplate method
 	
 	customTemplate.prototype.bindEvents = function (messageHtml) {
+		chatInitialize=this.chatInitialize;
+		helpers=this.helpers;
 		$(messageHtml).find('.selectTemplateDropdowm').on('change', function (e) {
 			e.preventDefault();
 			e.stopPropagation();
@@ -661,6 +1069,410 @@ var formTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			$('.chatInputBox').trigger(k);
 	
 		});
+		/* Inline form submit click function starts here*/
+		$(messageHtml).find(".formMainComponent").on('keydown',function(e){
+			if(e.keyCode==13){
+		 e.preventDefault();
+		 e.stopPropagation();
+	       }
+	    })
+		$(messageHtml).find("#submit").on('click', function(e){
+		var inputForm_id =$(e.currentTarget).closest('.buttonTmplContent').find(".formMainComponent .formBody");
+		var parentElement = $(e.currentTarget).closest(".fromOtherUsers.with-icon");
+		var messageData=$(parentElement).data();
+		if(messageData.tmplItem.data.msgData.message[0].component.payload){
+			messageData.tmplItem.data.msgData.message[0].component.payload.ignoreCheckMark=true;
+			var msgData=messageData.tmplItem.data.msgData;
+		}
+		
+		if(inputForm_id.find("#email").val()==""){
+			   $(parentElement).find(".buttonTmplContent").last().find(".errorMessage").removeClass("hide");
+			  $(".errorMessage").text("Please enter value");
+		 }
+	    else if(inputForm_id.find("input[type='password']").length!=0){
+				 var textPwd= inputForm_id.find("#email").val();
+				 var passwordLength=textPwd.length;
+				 var selectedValue="";
+				 for(var i=0;i<passwordLength;i++){
+						  selectedValue=selectedValue+"*";
+					 }
+				  $('.chatInputBox').text(textPwd);
+				  $(messageHtml).find(".formMainComponent form").addClass("hide");
+		}else if(inputForm_id.find("input[type='password']").length==0){
+				$('.chatInputBox').text(inputForm_id.find("#email").val());
+				var selectedValue=inputForm_id.find("#email").val();
+				$(messageHtml).find(".formMainComponent form").addClass("hide");
+		}
+		chatInitialize.sendMessage($('.chatInputBox'),selectedValue,msgData);
+		});
+		/* Inline form submit click function ends here*/
+		
+		/* Advanced multi select checkbox click functions starts here */
+		$(messageHtml).off('click', '.closeBottomSlider').on('click', '.closeBottomSlider', function (e) {
+			bottomSliderAction('hide');
+		});
+		$(messageHtml).off('click', '.singleSelect').on('click', '.singleSelect', function (e) {
+			var parentContainer = $(e.currentTarget).closest('.listTmplContentBox');
+			var allGroups = $(parentContainer).find('.collectionDiv');
+			var allcheckboxs = $(parentContainer).find('.checkbox input');
+			$(allGroups).removeClass('selected');
+			var selectedGroup = $(e.currentTarget).closest('.collectionDiv');
+			$(selectedGroup).addClass("selected");
+			var groupSelectInput = $(selectedGroup).find('.groupMultiSelect input');
+			if (allGroups) {
+				if (allGroups && allGroups.length) {
+					for (i = 0; i < allGroups.length; i++) {
+						if (allGroups && !($(allGroups[i]).hasClass('selected'))) {
+							var allGroupItems = $(allGroups[i]).find('.checkbox input');
+							for (j = 0; j < allGroupItems.length; j++) {
+								$(allGroupItems[j]).prop("checked", false);
+							}
+						}
+					}
+				}
+			}
+			if (selectedGroup && selectedGroup[0]) {
+				var allChecked = true;
+				var selectedGroupItems = $(selectedGroup).find('.checkbox.singleSelect input');
+				if (selectedGroupItems && selectedGroupItems.length) {
+					for (i = 0; i < selectedGroupItems.length; i++) {
+						if (!($(selectedGroupItems[i]).prop("checked"))) {
+							allChecked = false;
+						}
+					}
+				}
+				if (allChecked) {
+					$(groupSelectInput).prop("checked", true);
+				} else {
+					$(groupSelectInput).prop("checked", false);
+				}
+			}
+			var showDoneButton = false;
+			var doneButton = $(parentContainer).find('.multiCheckboxBtn');
+			if (allcheckboxs && allcheckboxs.length) {
+				for (i = 0; i < allcheckboxs.length; i++) {
+					if($(allcheckboxs[i]).prop("checked")){
+						showDoneButton = true;
+					}
+				}
+			}
+			if(showDoneButton){
+			   $(doneButton).removeClass('hide');
+			}else{
+				$(doneButton).addClass('hide');
+			}
+		});
+		$(messageHtml).off('click', '.viewMoreGroups').on('click', '.viewMoreGroups', function (e) {
+			var parentContainer = $(e.currentTarget).closest('.listTmplContentBox')
+			var allGroups = $(parentContainer).find('.collectionDiv');
+			$(allGroups).removeClass('hide');
+			$(".viewMoreContainer").addClass('hide');
+		});
+		$(messageHtml).off('click', '.groupMultiSelect').on('click', '.groupMultiSelect', function (e) {
+			var clickedGroup = $(e.currentTarget).find('input');
+			var clickedGroupStatus = $(clickedGroup[0]).prop('checked');
+			var selectedGroup = $(e.currentTarget).closest('.collectionDiv');
+			var selectedGroupItems = $(selectedGroup).find('.checkbox input');
+			var parentContainer = $(e.currentTarget).closest('.listTmplContentBox')
+			var allcheckboxs = $(parentContainer).find('.checkbox input');
+				if (allcheckboxs && allcheckboxs.length) {
+					for (i = 0; i < allcheckboxs.length; i++) {
+						$(allcheckboxs[i]).prop("checked", false);
+					}
+				}
+			if (clickedGroupStatus) {
+				if (selectedGroupItems && selectedGroupItems.length) {
+					for (i = 0; i < selectedGroupItems.length; i++) {
+						$(selectedGroupItems[i]).prop("checked", true);
+					}
+				}
+			} else {
+				if (selectedGroupItems && selectedGroupItems.length) {
+					for (i = 0; i < selectedGroupItems.length; i++) {
+						$(selectedGroupItems[i]).prop("checked", false);
+					}
+				}
+			}
+			var showDoneButton = false;
+			var doneButton = $(parentContainer).find('.multiCheckboxBtn');
+			if (allcheckboxs && allcheckboxs.length) {
+				for (i = 0; i < allcheckboxs.length; i++) {
+					if($(allcheckboxs[i]).prop("checked")){
+						showDoneButton = true;
+					}
+				}
+			}
+			if(showDoneButton){
+			   $(doneButton).removeClass('hide');
+			}else{
+				$(doneButton).addClass('hide');
+			}
+		});
+		$(messageHtml).find(".multiCheckboxBtn").on('click',function(e){
+			var msgData=$(messageHtml).data();
+			msgData.message[0].component.payload.sliderView=false;
+				var checkboxSelection = $(e.currentTarget.parentElement).find('.checkInput:checked');
+				var selectedValue = [];
+				var toShowText = [];
+				for (var i = 0; i < checkboxSelection.length; i++) {
+					selectedValue.push($(checkboxSelection[i]).attr('value'));
+					toShowText.push($(checkboxSelection[i]).attr('text'));
+				}
+				$('.chatInputBox').text('Here are the selected items ' + ': '+ selectedValue.toString());
+				chatInitialize.renderMessage(msgData);
+				chatInitialize.sendMessage($('.chatInputBox'),'Here are the selected items '+': '+ toShowText.toString());
+				$(messageHtml).find(".multiCheckboxBtn").hide();
+				bottomSliderAction("hide");
+				$(messageHtml).find(".advancedMultiSelectScroll").css({"pointer-events":"none"});
+				$(messageHtml).find(".advancedMultiSelectScroll").css({"overflow":"hidden"});
+			
+		})
+		/* Advanced multi select checkbox click functions ends here */
+  
+		/* New List Template click functions starts here*/
+		$(messageHtml).off('click', '.listViewTmplContent .seeMoreList').on('click', '.listViewTmplContent .seeMoreList', function () {
+			debugger;
+			if($(".list-template-sheet").length!==0){
+				$(".list-template-sheet").remove();
+				listViewTabs();
+			}
+			else if($(".list-template-sheet").length===0){
+				listViewTabs();
+			}
+		});
+		$(messageHtml).find(".listViewLeftContent").on('click', function (e) {
+		 if($(this).attr('data-url')){
+			var a_link = $(this).attr('data-url');
+			if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
+				a_link = "http:////" + a_link;
+			}
+			var _tempWin = window.open(a_link, "_blank");
+		 }else{
+			var _innerText= $(this).attr('data-value');
+			var postBack=$(this).attr('data-title');
+			chatInitialize.sendMessage($('.chatInputBox').text(_innerText), postBack);
+			$(".listViewTmplContentBox").css({"pointer-events":"none"});
+		 }
+		 });
+		/* New List Template click functions ends here*/
+		$(messageHtml).off('click', '.listViewItemValue.actionLink.action,.listTableDetailsDesc').on('click', '.listViewItemValue.actionLink.action,.listTableDetailsDesc', function () {
+			var _self=this;
+			valueClick(_self);
+		});
+		$(messageHtml).find(".ratingMainComponent").off('click','[type*="radio"]').on('click','[type*="radio"]',function (e) {
+			var _innerText=$(e.currentTarget).attr('value');
+			var msgData=$(messageHtml).data();
+			if($("label.active")){
+				$("label").removeClass("active");
+			}
+			for(i=parseInt(_innerText);i>0;i--){
+				$('label[for="'+i+'-stars"]').addClass("active");
+			}
+			if(_innerText==msgData.message[0].component.payload.starArrays.length){
+		        var messageTodisplay=msgData.message[0].component.payload.messageTodisplay;
+				$(".suggestionsMainComponent").remove();
+				$(".ratingStar").remove();
+				if($(".submitButton")){
+					$(".submitButton").remove();
+				}
+				$(".kore-action-sheet").find(".ratingMainComponent").append('<div class="ratingStar">'+messageTodisplay+'</div><div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>')
+			}else{
+				if($(".submitButton")){
+					$(".submitButton").remove();
+				}
+				$(".ratingStar").remove();
+			    if($(".suggestionsMainComponent").length > 0){
+				$(".suggestionsMainComponent").remove();
+				$(".kore-action-sheet").find(".ratingMainComponent").append(customTemplate.prototype.suggestionComponent());
+			    }else{
+                $(".kore-action-sheet").find(".ratingMainComponent").append(customTemplate.prototype.suggestionComponent());
+				}
+			}
+			if(msgData && msgData.message[0]&& msgData.message[0].component && msgData.message[0].component.payload && !msgData.message[0].component.payload.sliderView){
+				chatInitialize.sendMessage($('.chatInputBox').text(_innerText), _innerText)
+	
+			  }
+			$(".buttonTmplContent .ratingMainComponent .submitBtn").click(function(){
+				msgData.message[0].component.payload.sliderView=false;
+				if(_innerText == msgData.message[0].component.payload.starArrays.length){
+					chatInitialize.renderMessage(msgData);
+					chatInitialize.sendMessage($('.chatInputBox').text(_innerText +" :"+ $(".ratingStar").text()), _innerText +" :"+ $(".ratingStar").text());
+				}else if($(".suggestionInput").val()==""){
+					chatInitialize.renderMessage(msgData);
+					chatInitialize.sendMessage($('.chatInputBox').text(_innerText),_innerText)
+				}else{
+					chatInitialize.renderMessage(msgData);
+					chatInitialize.sendMessage($('.chatInputBox').text(_innerText +" :"+ $(".suggestionInput").val()),_innerText +" :"+ $(".suggestionInput").val());
+				}
+				bottomSliderAction("hide");
+				msgData.message[0].component.payload.sliderView=true;
+			   });
+		});
+		$(messageHtml).find(".buttonTmplContent .ratingMainComponent .close-btn").click(function(e){
+			bottomSliderAction("hide");
+			e.stopPropagation();
+		});
+		$(messageHtml).find(".emojiComponent").off('click','.rating').on('click','.rating',function(e){
+			var msgData=$(messageHtml).data();
+			  if($(".active").length=="0"){
+				$(".emojiElement").remove();
+			}
+			var emojiValue=$(this).attr("value");
+			$(e.currentTarget).addClass("active");
+			if($(this).attr("id")=="rating_1" && $("#rating_1.active")){
+				 $("<img class='emojiElement' />").attr('src','libs/images/emojis/gifs/rating_1.gif').appendTo(this)
+				 $(e.currentTarget).removeClass("active");
+			  }else if($(this).attr("id")=="rating_2" && $("#rating_2.active")){
+				$("<img class='emojiElement' />").attr('src','libs/images/emojis/gifs/rating_2.gif').appendTo(this)
+				$(e.currentTarget).removeClass("active");
+			  }else if($(this).attr("id")=="rating_3" && $("#rating_3.active")){
+				$("<img class='emojiElement' />").attr('src','libs/images/emojis/gifs/rating_3.gif').appendTo(this)
+				$(e.currentTarget).removeClass("active");
+			  }else if($(this).attr("id")=="rating_4" && $("#rating_4.active")){
+				$("<img class='emojiElement' />").attr('src','libs/images/emojis/gifs/rating_4.gif').appendTo(this)
+				$(e.currentTarget).removeClass("active");
+			  }else if($(this).attr("id")=="rating_5" && $("#rating_5.active")){
+				$("<img class='emojiElement' />").attr('src','libs/images/emojis/gifs/rating_5.gif').appendTo(this)
+				$(e.currentTarget).removeClass("active");
+			  }
+			if($(this).attr("value") < "5"){
+				$(".ratingStar").remove();
+				if($(".submitButton")){
+					$(".submitButton").remove();
+				}
+				if($(".suggestionsMainComponent").length > 0){
+					$(".suggestionsMainComponent").remove();
+				}
+				$(".kore-action-sheet").find(".emojiComponent").append(customTemplate.prototype.suggestionComponent());
+			    
+		    }else{
+				if($(".submitButton")){
+					$(".submitButton").remove();
+				}
+				if($(".ratingStar").length > 0){
+					$(".ratingStar").remove();
+				}
+				var messageTodisplay=msgData.message[0].component.payload.messageTodisplay;
+				$(".suggestionsMainComponent").remove();
+				$(".kore-action-sheet").find(".emojiComponent").append('<div class="ratingStar">'+messageTodisplay+'</div><div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>')
+			}
+			if(msgData && msgData.message[0]&& msgData.message[0].component && msgData.message[0].component.payload && !msgData.message[0].component.payload.sliderView){
+				chatInitialize.sendMessage($('.chatInputBox').text(emojiValue),emojiValue);
+			}
+			$(".emojiComponent").off('click','.submitBtn').on('click','.submitBtn',function(e){
+				msgData.message[0].component.payload.sliderView=false;
+				if(emojiValue=="5"){
+					chatInitialize.renderMessage(msgData);
+				  chatInitialize.sendMessage($('.chatInputBox').text(emojiValue +" :"+ $(".ratingStar").text()),"Rating"+': '+ emojiValue +" and "+ $(".ratingStar").text());
+				}else if($(".suggestionInput").val()==""){
+					chatInitialize.renderMessage(msgData);
+					chatInitialize.sendMessage($('.chatInputBox').text(emojiValue),emojiValue);
+				}else{
+					chatInitialize.renderMessage(msgData);
+					chatInitialize.sendMessage($('.chatInputBox').text(emojiValue +" :"+ $(".suggestionInput").val()),emojiValue +" :"+ $(".suggestionInput").val());
+				}
+				bottomSliderAction("hide");
+		  });
+		
+		});
+		$(messageHtml).find(".buttonTmplContent .emojiComponent .close-btn").click(function(e){
+			bottomSliderAction("hide");
+			
+			e.stopPropagation();
+		});
+	
 	}; 
-	window.customTemplate=customTemplate;	
+	    customTemplate.prototype.suggestionComponent=function(){
+            return '<div class="suggestionsMainComponent">\
+	<div class="suggestionsHeading">What can be improved?</div>\
+	<div class="suggestionBox">\
+	<textarea type="text" class="suggestionInput" placeholder="Add Suggestions"></textarea></div>\
+	<div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>\
+	</div>'
+		}
+	   
+		this.bottomSliderAction = function(action, appendElement){
+		$(".kore-action-sheet").animate({ height: 'toggle' });
+		if(action=='hide'){
+		$(".kore-action-sheet").innerHTML='';
+		$(".kore-action-sheet").addClass("hide");
+		} else {
+		$(".kore-action-sheet").removeClass("hide");
+		$(".kore-action-sheet .actionSheetContainer").empty();
+		setTimeout(function(){
+		$(".kore-action-sheet .actionSheetContainer").append(appendElement);
+		},200);
+		
+		}
+		}
+		/* Action sheet Template functions starts here*/
+		this.listViewTabs = function () {
+			var msgData = $("li.fromOtherUsers.with-icon.listView").data();
+			if(msgData.message[0].component.payload.seeMore){
+				msgData.message[0].component.payload.seeMore=false;
+			   }
+			var listValues = $(customTemplate.prototype.getChatTemplate("actionSheetTemplate")).tmpl({
+				'msgData': msgData,
+				'dataItems': msgData.message[0].component.payload.moreData.Tab1,
+				'tabs': Object.keys(msgData.message[0].component.payload.moreData),
+				'helpers': helpers
+			});
+
+			$($(listValues).find(".tabs")[0]).addClass("active");
+			$(".kore-action-sheet").append(listValues);
+			$(".kore-action-sheet .list-template-sheet").removeClass("hide");
+			this.bottomSliderAction('show',$(".list-template-sheet"));
+			$(".kore-action-sheet .list-template-sheet .displayMonth .tabs").on('click', function (e) {
+				var _selectedTab = $(e.target).text();
+	
+				var msgData = $("li.fromOtherUsers.with-icon.listView").data();
+				var viewTabValues = $(customTemplate.prototype.getChatTemplate("actionSheetTemplate")).tmpl({
+					'msgData': msgData,
+					'dataItems': msgData.message[0].component.payload.moreData[_selectedTab],
+					'tabs': Object.keys(msgData.message[0].component.payload.moreData),
+					'helpers': helpers
+				});
+	            $(".list-template-sheet .displayMonth").find(".tabs").removeClass("active");
+				$(".list-template-sheet .displayMonth").find(".tabs[data-tabid='" + _selectedTab + "']").addClass("active");
+				$(".list-template-sheet .displayListValues").html($(viewTabValues).find(".displayListValues"));
+				$(".kore-action-sheet .list-template-sheet .listViewLeftContent").on('click', function () {
+					var _self=this;
+				    valueClick(_self);
+					});
+			});
+			$(".kore-action-sheet .list-template-sheet .close-button").on('click', function (event) {
+				bottomSliderAction('hide');
+			});
+			$(".kore-action-sheet .list-template-sheet .listViewLeftContent").on('click', function () {
+				var _self=this;
+				valueClick(_self);
+			});
+		};
+		this.valueClick=function(_self){
+			if($(_self).attr('data-url')||$(_self).attr('url')){
+				var a_link = $(_self).attr('data-url')||$(_self).attr('url');
+				if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
+					a_link = "http:////" + a_link;
+				}
+				var _tempWin = window.open(a_link, "_blank");
+			 }else{
+				var _innerText= $(_self).attr('data-value');
+				var postBack=$(_self).attr('data-title');
+				chatInitialize.sendMessage($('.chatInputBox').text(_innerText), postBack);
+			 $(".kore-action-sheet .list-template-sheet").animate({ height: 'toggle' });
+             bottomSliderAction("hide");
+			 $(".listViewTmplContentBox").css({"pointer-events":"none"});
+			 }
+		}
+		/* Action sheet Template functions ends here*/
+	
+
+	    window.customTemplate=customTemplate;	
+
+	return {
+		bottomSliderAction:bottomSliderAction,
+		listViewTabs:listViewTabs,
+		valueClick:valueClick
+	}
 })($);
+
