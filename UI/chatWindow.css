@@ -2574,3 +2574,98 @@
 }
 
 /* Pie chart ends here*/
+
+ /* iframe modal */
+ .chatBodyModal{
+    display: none;
+    background: white;
+    width: 100%;
+    height: 100%;
+    bottom: 0px;
+    position: absolute;
+    z-index: 100000;
+}
+.animate-bottom {
+    position: absolute;
+    -webkit-animation-name: animatebottom;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatebottom;
+    animation-duration: 0.4s
+  }
+  @-webkit-keyframes animatebottom {
+    from { bottom:-550px; opacity:1 } 
+    to { bottom:0px; opacity:1}
+  }
+  @keyframes animatebottom { 
+    from{ bottom:-550px; opacity:1 } 
+    to{ bottom:0; opacity:1}
+  }
+.chatBodyModal iframe{
+    border: none;
+    height: 100%;
+    width: 100%;
+}
+.chatBodyModal .loading_form{
+    position: absolute;
+    top: 45%;
+    left: 45%;
+    z-index: 99;
+    border: 2px solid #f3f3f3;
+    -webkit-animation: spin 1s linear infinite;
+    animation: spining 1s linear infinite;
+    border-top: 2px solid #555;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+}
+@keyframes spining {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+  }
+.chatBodyModal #chatBodyModalContent{
+    z-index: 99;
+    position: relative;
+    height: 100%;
+}
+.chatBodyModal .closeChatBodyModal{
+    z-index: 9999;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    cursor: pointer;
+    display: none;
+    background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNXB4IiB2aWV3Qm94PSIwIDAgMTQgMTUiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUzLjIgKDcyNjQzKSAtIGh0dHBzOi8vc2tldGNoYXBwLmNvbSAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICAgICAgPGcgaWQ9ImNsb3NlIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwgMS4wMDAwMDApIiBzdHJva2U9IiM4QTk1OUYiIHN0cm9rZS13aWR0aD0iMiI+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0wLjk2NiwwLjkyOSBMMTIuMTA4LDEyLjA3MSBNMTIuMTA4LDAuOTI5IEwwLjk2NiwxMi4wNzEiIGlkPSJTaGFwZSI+PC9wYXRoPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+);
+    background-size: 14px 14px;
+    width: 14px;
+    height: 14px;
+    background-repeat: no-repeat;
+}
+.chatBodyModal .failedIframe{
+    padding: 28%;
+    text-align: center;
+    height: 100%;
+    z-index: 999;
+    background: white;
+
+}
+.kore-chat-window .inlineIframeContainer .iframeBubble{
+    border-radius: 10px;
+    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+}
+.kore-chat-window .uiformComponent{
+    position: relative;
+    min-height: 350px;
+}
+.kore-chat-window .uiformComponent #inlineIframeModal{
+    width: 100%;
+    height: 350px;
+    background: none;
+    border: none;
+}
+.kore-chat-window .uiformComponent #nlineIframeModal .closeForm{
+    display: none !important;
+}
+.kore-chat-window .uiformComponent #nlineIframeModal .closeForm{
+    display: none !important;
+}
+/* iframe modal ends here */

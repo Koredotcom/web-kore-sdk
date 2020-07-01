@@ -355,7 +355,7 @@
                                 hyperLinksMap[_randomKey] = _link;
                                 _link = _randomKey;
                             }
-                            return "<span class='isLink'><a " + _target + " href=\"" + _link + "\">" + match + "</a></span>";
+                            return "<span class='isLink'><a id='linkEvent'" + _target + " href=\"" + _link + "\">" + match + "</a></span>";
                         } else {
                             return match;
                         }
@@ -511,7 +511,7 @@
                                     hyperLinksMap[_randomKey] = _linkLink;
                                     _linkLink = _randomKey;
                                 }
-                                _linkLink = '<span class="isLink"><a href="' + _linkLink + '" target="_blank">' + helpers.checkMarkdowns(_linkTxt) + '</a></span>';
+                                _linkLink = '<span class="isLink"><a id="linkEvent" href="' + _linkLink + '" target="underscoreblank">' + helpers.checkMarkdowns(_linkTxt) + '</a></span>';
                                 txtArr[i] = txtArr[i].replace(_matchLink[j], _linkLink);
                             }
                         }
@@ -655,7 +655,118 @@
                 updateOnlineStatus();
                 window.addEventListener('online', updateOnlineStatus);
                 window.addEventListener('offline', updateOnlineStatus);
+                attachEventListener();
             }
+            // iframe of child window events //
+            function attachEventListener(){
+                // Create IE + others compatible event handler
+                var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+                var eventer = window[eventMethod];
+                var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+                // Listen to message from child window
+                eventer(messageEvent, function (e) {
+                    if (e.data && e.data.event) {
+                        var data = e.data;
+                        switch (data.event) {
+                            case 'formEvent':
+                                formAction(e.data);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }, false);
+            }
+            function postMessageToChildIframes (iframe,postPayload) {
+                if(iframe && iframe.length && iframe[0] && iframe[0].contentWindow && postPayload){
+                    iframe[0].contentWindow.postMessage(
+                        postPayload, '*'
+                  );
+                }
+             };
+        // iframe of child window events ends//
+
+        // inline model for iframes starts here//
+        function openModal(template, showClose){
+            var chatBodyModal=  $('#chatBodyModal');
+            var close = document.getElementsByClassName("closeChatBodyModal")[0];
+                close.onclick = function () {
+                    var postPayload={
+                        payload:{},
+                        event : 'formEvent', // need to find another way to make it common ,giving a static value due to time constrain //
+                        action : 'formCancel',
+                        metaData:{},
+                     }
+                    var iframe = chatBodyModal.find('iframe');
+                    postMessageToChildIframes(iframe,postPayload);
+                    chatBodyModal.hide();
+                }
+            if(template){
+                chatBodyModal.find('.closeChatBodyModal').css('display','none');
+                chatBodyModal.find('.loading_form').css('z-index',999);
+                if(chatBodyModal && chatBodyModal.length){
+                    chatBodyModal.find('#chatBodyModalContent').empty();
+                    chatBodyModal.find('#chatBodyModalContent').append(template);
+                    chatBodyModal.show();
+                }
+                setTimeout(function(){
+                    chatBodyModal.find('.loading_form').css('z-index',0);
+                    if(showClose){
+                        chatBodyModal.find('.closeChatBodyModal').css('display','block');
+                   } else {
+                       chatBodyModal.find('.closeChatBodyModal').css('display','none');
+                     }
+                },1500);
+            } else {
+                chatBodyModal.find('.closeChatBodyModal').css('display','none');
+                setTimeout(function(){
+                    chatBodyModal.find('#chatBodyModalContent').empty();
+                },1000);
+                chatBodyModal.hide(); 
+            }
+            }
+        // inline model for iframes starts ends//
+
+        // form event actions starts here //
+        function formAction(event){
+            if(event && event.action==='formSubmit'){
+               openModal();
+               if($('.kore-chat-body .uiformComponent').length){
+                $('.kore-chat-body .uiformComponent').closest('.inlineIframeContainer').css('display', 'none');
+               }
+            } else if(event.action==='formCancel'){
+                if($('.kore-chat-body .uiformComponent').length){
+                    $('.kore-chat-body .uiformComponent').closest('.inlineIframeContainer').css('display', 'none');
+                   }
+            } else if (event.action==='formClose'){
+               openModal();
+               if($('.kore-chat-body .uiformComponent').length){
+                $('.kore-chat-body .uiformComponent').closest('.inlineIframeContainer').css('display', 'none');
+               }
+            }
+        }
+        chatWindow.prototype.renderWebForm = function (msgData, returnTemplate) {
+            if (msgData.message && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.formData) {
+                msgData.renderType = msgData.message[0].component.payload.formData.renderType;
+                msgData.message[0].component.payload.template_type = 'iframe';
+                if (!returnTemplate && msgData.renderType === 'inline') {
+                     this.renderMessage(msgData);
+                } else {
+                    var popupHtml = $(this.getChatTemplate("iframe")).tmpl({
+                        'msgData': msgData,
+                        'helpers': helpers,
+                        "link_url": msgData.message[0].component.payload.formData.formLink
+                    });
+                    if (returnTemplate) {
+                        return popupHtml;
+                    } else {
+                        openModal(popupHtml[0], true);
+                    }
+                }
+    
+            }
+        }
+        // form event actions ends here //
 
             function updateOnlineStatus() {
                 if ("boolean" === typeof(navigator["onLine"])) {
@@ -1169,12 +1280,31 @@
                     e.preventDefault();
                     var a_link = $(this).attr('href');
                     var _trgt = $(this).attr('target');
-                    if (_trgt === "_self") {
+                    var msgDataText = $(event.currentTarget).closest('span.simpleMsg').attr('msgData') || '';
+                    var msgData;
+                    if(msgDataText){
+                        try {
+                         msgData = JSON.parse(msgDataText);
+                        } catch (err) {
+        
+                        }
+                    }
+                    if(msgData && msgData.message && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.formData){
+                        me.renderWebForm(msgData);
+                    } else if (_trgt === "_self") {
                         callListener("provideVal", { link: a_link });
                         return;
                     }
                     if (me.config.allowIframe === true) {
-                        me.openPopup(a_link);
+                         var popupHtml = $(me.getChatTemplate("iframe")).tmpl({
+                            'msgData': msgData,
+                            'helpers': helpers,
+                            "link_url": url
+                        });
+                         popupHtml[0].onload = function(iFrameEvent){
+                            console.log(iFrameEvent);
+                         }
+                         openModal(popupHtml[0],true);
                     }
                     else {
                         var _tempWin = window.open(a_link, "_blank");
@@ -1193,6 +1323,21 @@
                         var _innerText = ($(this)[0] && $(this)[0].innerText) ? $(this)[0].innerText.trim() : "" || ($(this) && $(this).attr('data-value')) ? $(this).attr('data-value').trim() : "";
                         me.sendMessage($('.chatInputBox'), _innerText);
                     } else if (type == "url" || type == "web_url") {
+                        if($(this).attr('msgData')!==undefined){
+                            var msgData;
+                            try {
+                                msgData = JSON.parse($(this).attr('msgData'));
+                               } catch (err) {
+               
+                             }
+                            if(msgData && msgData.message && msgData.message[0].component && (msgData.message[0].component.formData || (msgData.message[0].component.payload &&  msgData.message[0].component.payload.formData))){
+                                if(msgData.message[0].component.formData){
+                                   msgData.message[0].component.payload.formData = msgData.message[0].component.formData;
+                                }
+                                me.renderWebForm(msgData);
+                                return;
+                            }
+                        }
                         var a_link = $(this).attr('url');
                         if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
                             a_link = "http:////" + a_link;
@@ -2466,6 +2611,10 @@
                             handleChartOnClick();
                         }, 200);
                     }
+                    else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.formData && msgData.message[0].component.payload.formData.renderType==='inline'){
+                        msgData.renderType = 'inline';
+                        messageHtml = me.renderWebForm(msgData,true);
+                    }
                     else {
                         messageHtml = $(me.getChatTemplate("message")).tmpl({
                             'msgData': msgData,
@@ -2616,6 +2765,11 @@
                               <img class="modal-content-imagePreview" id="img01">\
                               <div id="caption"></div>\
                         </div>\
+                        <div id="chatBodyModal" class="chatBodyModal animate-bottom">\
+                        <span class="closeChatBodyModal "></span>\
+                        <div id="closeInlineModel" class="loading_form iframeLoader"></div>\
+                        <div id="chatBodyModalContent"></div>\
+                        </div>\
                         <div id="myPreviewModal" class="modalImagePreview">\
                               <span class="closeElePreview">&times;</span>\
                               <div class="largePreviewContent"></div>\
@@ -2636,9 +2790,9 @@
                                         <div> \
                                             {{if msgData.type === "bot_response"}} \
                                                 {{if msgItem.component  && msgItem.component.type =="error"}} \
-                                                    <span style="color:${msgItem.component.payload.color}">{{html helpers.convertMDtoHTML(msgItem.component.payload.text, "bot")}} </span>\
+                                                    <span style="color:${msgItem.component.payload.color}">{{html helpers.convertMDtoHTML(msgItem.component.payload.text, "bot",msgItem)}} </span>\
                                                  {{else}} \
-                                                    {{html helpers.convertMDtoHTML(msgItem.cInfo.body, "bot")}} \
+                                                    <span class="simpleMsg" {{if msgData}}msgData="${JSON.stringify(msgData)}" {{/if}}>{{html helpers.convertMDtoHTML(msgItem.cInfo.body, "bot",msgItem)}}</span> \
                                                     {{if msgItem.component && msgItem.component.payload && msgItem.component.payload.videoUrl}}\
                                                         <div class="videoEle"><video width="300" controls><source src="${msgItem.component.payload.videoUrl}" type="video/mp4"></video></div>\
                                                     {{/if}}\
@@ -2743,7 +2897,7 @@
                                     </li>\
                                     {{each(key, msgItem) msgData.message[0].component.payload.buttons}} \
                                         <a href=""#>\
-                                            <li {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} {{if msgItem.payload}}actual-value="${msgItem.payload}"{{/if}} {{if msgItem.url}}url="${msgItem.url}"{{/if}} class="buttonTmplContentChild" data-value="${msgItem.value}" type="${msgItem.type}">\
+                                            <li {{if msgData}}msgData="${JSON.stringify(msgData)}"{{/if}} {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} {{if msgItem.payload}}actual-value="${msgItem.payload}"{{/if}} {{if msgItem.url}}url="${msgItem.url}"{{/if}} class="buttonTmplContentChild" data-value="${msgItem.value}" type="${msgItem.type}">\
                                                 ${msgItem.title}\
                                             </li> \
                                         </a> \
@@ -3088,7 +3242,24 @@
                {{/if}}\
            </div>\
          </script>';
-        
+         var iframe = '<script id="chat_message_tmpl" type="text/x-jquery-tmpl"> \
+                        {{if link_url}}\
+                           {{if (msgData && msgData.renderType ==="inline")}}\
+                                <li class="inlineIframeContainer"> \
+                                    <div class="iframeBubble"> \
+                                            <div class="uiformComponent">\
+                                            <div id="closeInlineModel" class="loading_form iframeLoader"></div>\
+                                            <iframe id="inlineIframeModal" src="${link_url}"></iframe> \
+                                            </div>\
+                                    </div>\
+                                </li> \
+                            {{else}}\
+                                <iframe id="iframeModal" src="${link_url}"></iframe> \
+                            {{/if}}\
+                        {{else}}\
+                            <div class="failedIframe">Failed to load iFrame</div>\
+                        {{/if}}\
+                    </script>';
                 if (tempType === "message") {
                     return msgTemplate;
                 } else if (tempType === "popup") {
@@ -3124,6 +3295,9 @@
                     return linechartTemplate;
                 }else if (tempType === "actionSheetTemplate") {
                     return listActionSheetTemplate;
+                }
+                else if (tempType === "iframe") {
+                    return iframe;
                 }
                 else {
                     return chatWindowTemplate;

@@ -127,7 +127,137 @@
 }
 
 /*--NEW STYLES---*/
+/* --TABBLE LIST---*/
+.kr-wiz-content-css .listTableContainerDiv{
+    background-color: #ffffff;
+    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    border-radius: 10px;
+    display: flex
+}
 
+.kr-wiz-content-css .listTableContainerDiv .listTableContainerDivRepet{
+    width: 100%;
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableHeader{
+    /* height: 52px; */
+    background-color: #f2f3f5;
+    display: flex;
+    padding: 15px;
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableHeader .listTableHeaderTitle{
+    font-size: 16px;
+    font-weight: bold;
+    color: #26344a;
+    width: 100%;
+    display: block;
+    float: left;
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableHeader .listtableHeaderFilters{
+    width: 120px;
+    display: block;
+    float: left;
+    text-align: right;
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableHeader .listtableHeaderFilters .filterIcon{
+    width: 15px;
+    cursor: pointer;
+    display: inline-block;
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableHeader .listtableHeaderFilters .sortingIcon{
+    width: 15px;
+    cursor: pointer;
+    display: inline-block;
+    margin-left: 20px;
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableContainer{
+    padding: 0 15px;
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv{
+    border-bottom: 1px solid #e5e8ec;
+     padding: 15px 0;
+     display: flex;
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv:nth-last-child(1){
+    border-bottom: 0;
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails{
+    float: left;
+    width: 100%;
+    vertical-align: top;
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsTitle{
+    margin: 0 0 15px 0;
+    font-size: 14px;
+    font-weight: bold;
+    color: #26344a;
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.largeImg{
+    display: flex;
+    /* align-items: center; */
+    margin-bottom: 20px;
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.mediumImg{
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.smallImg{
+    display: flex;
+    /* align-items: center; */
+    margin-bottom: 20px;
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc:nth-last-child(1){
+    margin-bottom: 0;
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .listTableDetailsDescSub {
+    /* float: left; */
+    flex: 100%;
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .listTableDetailsDescSub .listTableDetailsDescName{
+    font-size: 12px;
+    font-weight: normal;
+    color: #26344a;
+    margin: 0
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .listTableDetailsDescSub .listTableDetailsDescValue{
+    font-size: 16px;
+    font-weight: 500;
+    color: #26344a;
+    padding-top: 5px;
+    margin: 0;
+}
+
+.kr-wiz-content-css .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.largeImg .listTableBigImgConytainer{
+    flex: 50px;
+    height: 40px;
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.mediumImg .listTableBigImgConytainer{
+    flex: 30px;
+    height: 20px;
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.smallImg .listTableBigImgConytainer{
+    flex: 20px;
+    height: 10px;
+    padding-top:3px;
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .listTableBigImgConytainer img{
+    padding-right: 10px;
+    max-width: 100%;
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableContainerDivRepet .seeMoreFooter{
+    padding: 0 15px;
+    text-align: center;
+}
+.kr-wiz-content-css .listTableContainerDiv .listTableContainerDivRepet .seeMoreFooter .seeMoreLink{
+    cursor: pointer;
+    color: #009dab;
+    font-size: 14px;
+    font-weight: normal;  
+    border-top: 1px solid #e5e8ec;
+    padding: 15px 0;
+    display: block;
+}
+/* --TABBLE LIST ENDS HERE--*/
 /* WIDGET CHANGES FOR CHARTS START*/
 
 .kr-wiz-content-css .tab-list-template .listTemplateContainer .displayListValues .listViewLeftContent .legend-title {
@@ -138,6 +268,9 @@
 }
 .kr-wiz-content-css .tab-list-template .listTemplateContainer .chart-disp-val{
     fill: var(--sdk-primary-font-color);
+}
+.kr-wiz-content-css .tab-list-template .listTemplateContainer .chart-axis-line{
+    stroke: var(--sdk-primary-font-color);
 }
 .kr-wiz-content-css .tab-list-template .listTemplateContainer polyline{
     stroke: var(--sdk-primary-font-color);
@@ -266,14 +399,14 @@
 
 .kr-wiz-content-css .piechart .piechartDiv .legend-tooltip-pie-chart {
     background: var(--sdk-default-white);
-    box-shadow: var(--sdk-primary-box-shadow);
+    box-shadow: var(--sdk-action-bar-shodow);
     height: 150px;
     overflow-y: scroll;
  }
  
  .kr-wiz-content-css .legend-tooltip-pie-chart {
     background: var(--sdk-default-white);
-    box-shadow: var(--sdk-primary-box-shadow);
+    box-shadow: var(--sdk-action-bar-shodow);
     height: 105px;
     padding-bottom: 6px;
     overflow-y: scroll;
@@ -344,7 +477,6 @@
     box-sizing: border-box;
     border-right: 2px solid transparent; 
 }
-
 .kr-wiz-menu-css .menuItemCntr .sdkBotIcon .botName {
     display: none;
 }
@@ -1973,6 +2105,11 @@
     border-radius: 10px;
     margin-bottom: 10px;
 }
+.kr-wiz-content-css .mainTemplateCntr .widgetPanel .iframeModal{
+    border: none;
+    width: 100%;
+    min-height: 300px;
+  }
 /* .kr-wiz-content-css .mainTemplateCntr .notScroll .widgetContParent {
     height: 100%;
 } */
@@ -6699,9 +6836,9 @@
 .kr-wiz-container .tooltipVSB,
 .kr-wiz-container .tooltipHBC,
 .kr-wiz-container .tooltipBC {
-    background: var(--sdk-chat-widow-default-white);
+    background: var(--sdk-primary-bg-color);
     box-shadow: 0 0 5px #999999;
-    color: #333;
+    color: var(--sdk-primary-font-color);
     font-size: 12px;
     left: 130px;
     padding: 10px;
@@ -6710,5 +6847,56 @@
     top: 95px;
     width: 80px;
     z-index: 10;
-    opacity: 1 !important;
+    opacity: 0.9 !important;
+}
+.kore-chat-window .widgetPanel .widgetContParent .webFormWidget .sucessMsg{
+    text-align: center;
+}
+.kore-chat-window .widgetPanel .widgetContParent .webFormWidget .sucessMsg .sucessTickGreen{
+    width: 37px;
+    height: 37px;
+    margin-bottom: 15px;
+}
+.kore-chat-window .widgetPanel .widgetContParent .webFormWidget .sucessMsg .sucessDesc{
+    font-size: 16px;
+    font-weight: normal;
+    margin-bottom: 10px;
+    color: var(--sdk-chat-widow-primary-font-color);
+}
+.kore-chat-window .widgetPanel .widgetContParent .webFormWidget .sucessMsg .sucessDoneBtn{
+    font-size: 14px;
+    color: #fff;
+    background: #009dab;
+    height: 30px;
+    padding: 0px 20px !important;
+    width: auto;
+    border-radius: 3px;
+    border: 1px solid #009dab;
+    line-height: 30px;
+    position: relative;
+}
+.kore-chat-window .widgetPanel .widgetContParent .webFormWidget .sucessMsg .sucessDoneBtn .sucessProgress{
+    display: none;
+    width: 0%;
+    position: absolute;
+    background: #018490;
+    opacity: 0;
+     transition: all 5s ease;
+     top: 0;
+     left: 0;
+     /* z-index: 9; */
+     height: 30px;
+     
+
+}
+.kore-chat-window .widgetPanel .widgetContParent .webFormWidget .sucessMsg .sucessDoneBtn.active .sucessProgress{
+    display: block;
+    width: 100%;
+    position: absolute;
+    opacity: 1;
+    animation: progress-anim 10s ease 0s;
+}
+.kore-chat-window .widgetPanel .widgetContParent .webFormWidget .sucessMsg .sucessDoneBtn.active  .doneBTNText{
+     position: relative;
+     z-index: 1;
 }

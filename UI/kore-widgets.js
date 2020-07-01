@@ -38,6 +38,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     /**
     * @param  {Object} KoreWidgetSDK Config
     */
+    var me;
     function KoreWidgetSDK(config) {
       // this.config=config;
       // this.config.container=this.config.container || "body";
@@ -50,8 +51,28 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       this.initVariables();
       this.jqueryManupulations(); //this.on=$(this).on;
       this.addPolyFils();
+      var me = this;
+      attachEventListener();
     }
-
+    function attachEventListener(){
+      // Create IE + others compatible event handler
+      var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+      var eventer = window[eventMethod];
+      var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+      // Listen to message from child window
+      eventer(messageEvent, function (e) {
+          if (e.data && e.data.event) {
+              var data = e.data;
+              switch (data.event) {
+                  case 'formEvent':
+                      formAction(e.data);
+                      break;
+                  default:
+                      break;
+              }
+          }
+      }, false);
+  }
     KoreWidgetSDK.prototype = Object.create($.prototype);
     KoreWidgetSDK.prototype.addPolyFils = function () {
       var _self = this;
@@ -226,7 +247,32 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         }, 100);
       });
     };
-
+    function formAction(event){
+      if(event && event.metaData && event.metaData.queryParams && event.metaData.queryParams.widgetId){
+        var widgetElement = $('.widgetPanel#' + event.metaData.queryParams.widgetId);
+        var paneldataString = widgetElement.find('.webFormWidget').attr('paneldetail');
+        var panelData = JSON.parse(paneldataString);
+        if((event.action==='formCancel') || (event.action==='formClose')){
+          me.refreshElement(paneldataString);        }else{
+          var responseData = {
+            success:true,
+            successMsg:'Form Submitted Successfully'
+          }
+          var dataHTML = $(me.getTemplate("webForm")).tmplProxy({
+            'tempdata': responseData,
+            'panelDetail': panelData
+            });
+          me.bindTemplateEvents(dataHTML, 'webForm');
+          widgetElement.find('.widgetContentPanel ').html(dataHTML);
+        }
+      }
+      widgetElement.find('button').addClass('active')
+      setTimeout(function(){
+        if(widgetElement.find('button').length){
+          me.refreshElement(paneldataString);
+        }
+      },5000)
+     }
     KoreWidgetSDK.prototype.maintainCache = function () {
       var _self = this;
       var initialWidgetData=_self.vars.initialWidgetData;
@@ -2020,6 +2066,111 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
               {{/if}} \
             </script>';
 
+      var TableList = '<script> \
+                        <div class="listTableContainerDiv">\
+                        <div class="listTableContainerDivRepet">\
+                        <div class="listTableContainer">\
+                        {{each(index,record) tempdata.records}}\
+                                <div class="listTableDetailsBorderDiv">\
+                                        <div class="listTableDetails">\
+                                            <p class="listTableDetailsTitle">${record.sectionHeader}</p>\
+                                {{each(index,msgItem) record.elements}}\
+                                            <div class="listTableDetailsDesc {{if msgItem.image && msgItem.image.size==="medium"}}mediumImg{{/if}}" {{if msgItem.image && msgItem.image.size==="large"}}mediumImg{{/if}}" {{if msgItem.image && msgItem.image.size==="small"}}smallImg{{/if}}">\
+                                              {{if msgItem && msgItem.image && msgItem.image.image_type && msgItem.image.image_src}}\
+                                                <div class="listTableBigImgConytainer">\
+                                                  {{if msgItem.image.image_type === "image"}}\
+                                                      <img src="${msgItem.image.image_src}">\
+                                                  {{/if}}\
+                                                  {{if msgItem.image.image_type === "fontawesome"}}\
+                                                      <i class="fa {{msgItem.image.image_src}}" ></i>\
+                                                  {{/if}}\
+                                                </div>\
+                                              {{/if}}\
+                                                <div class="listTableDetailsDescSub ">\
+                                                    <p class="listTableDetailsDescName">${msgItem.title}</p>\
+                                                    <p class="listTableDetailsDescValue">${msgItem.subtitle}</p>\
+                                                </div>\
+                                                  {{if (msgItem.value && msgItem.value.type === "text" && msgItem.value.text)}}\
+                                                    <div class="titleActions {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.align}}${msgItem.value.layout.align}{{/if}}" {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.colSize}} style="width:${msgItem.value.layout.colSize};"{{/if}} {{if msgItem.value && msgItem.value.layout && msgItem.value.color}} style="color:${msgItem.value.layout.color};"{{/if}}>\
+                                                        <div class="listViewItemValue {{if !msgItem.subtitle}}top10{{/if}}">${msgItem.value.text}</div>\
+                                                    </div>\
+                                                  {{/if}}\
+                                                  {{if (msgItem.value && msgItem.value.type === "image" && msgItem.value.image && msgItem.value.image.image_src)}}\
+                                                    <div actionObj="${JSON.stringify(msgItem.value.image)}" class="titleActions imageValue action {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.align}}${msgItem.value.layout.align}{{/if}}" {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.colSize}} style="width:${msgItem.value.layout.colSize};"{{/if}}>\
+                                                        {{if msgItem.value.image && msgItem.value.image.image_type === "image" && msgItem.value.image.image_src}}\
+                                                            <span class="wid-temp-btnImage"> \
+                                                                <img alt="image" src="${msgItem.value.image.image_src}" onerror="this.onerror=null;this.src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAAA/FJREFUWAnNmItK60AQQLdN05eIIoog+v+/pQiKIlhab9M2SXv3TDthk25evenFgTbJPmZOdndmM9ubL/7szC+WwalsvZ4xg2BggqBvevah3+/JFX273c5stzu5punWJGli70+z1BowDAcmHAQWaA/mM7sH3teEIcChBd6aOElNHCe+LqVljQEHFmo0DAWsVFtJBcBBEMhvaF9wvYlNYmGbSC0gyifjoShvorCuDSM/GY9MmqYmWm1kGVT16VdVBlbZdDLuDM61xYiKbmujSkprmdLJZCSLv0rBv9ThWNjAVpl4p5iRG4+GmVcyHT8/P7XTUTQyHA4twCTTU6znmSWErWi7Nql1pKIcAUoHu0a4qry+vpr1eq2Pra5APjw8mNFoVNpPbS6j1dEgHAHiEAy9K8Bh6Pb21i0uvV8sFobfdDo1y+XS8IJPT0+VkDLd1vYyyg9EDpC1wOL1CeWXl5e+qqOyzWYjgDc3N9Ln4+OjESQ2YHBDUM5JiHNdy/X1tbm/v5ew0mSpFBkyQHYIYtQ5pA0kDLCoZERsX+cUF/Lt7e3IGVzbLoug4rDnGL3VauXatSMTZo4TRZHc5xocHmCBiQ8MAeSrxA0rvk5tyvB45Ovrq7QbjoSX+wQWmOIk2QPyydRWCD388Oziy1FG7AOiKPQhBNUJTHz4HKY4H/fqOr+/v5v5fC7NPj8/zePjoxmPx7luZSFJY2SusedBX1qGrhiYPe2zojiOMzgK2Qa/v7+z+q5ulEkAlbaJct+0Ad21KFPrxXdxcSHe6AIRQlwBuC6UuO2r7mUNkkMocVVjrWNfnc1m4iRXV1e5LRA4dgyuifVC2rbRrTZgQgSQBKfNJkI8u7u7U13Z1YWjkFgH7CmQMCEyxUorJS3+GCGVIpyWK2RbG9peAEkN2wpfKM/PzzLNZXCqE0jWZBtRJpnifd4aNl4rwLEGEaaQrQnIKvF5f1l7Rg8m5DDFRvLWsg5uOQFa4SgnDtbBuf2b3JNDH3xkD0gnkuomQudzi8uSxUEy/v9hvO7l5ATCOX2QNaidyPhJqquEoFwMzFXt29bB4EoOkFyANeXLS3iz4vedq6jpfZWzYNvNR9CZA6SA4wgyft2sKSMw85n08vLCYyeCTlcIzNguSs93PkjiTsavWxRweK8Gz6KSts/kyGyRKuiNbLrpS9y9gHQc2BzFPV1QZV1fgVutN0dTq3YyL9YCvbIWeCvdE7W8y6tMq7VRXHeujVJAGjHkHEeweLsWdIrumrh65CRFEKaA4wim/NQDTFcn0aDTA0xVzjTwa3IErH30yktKALb9z3YErMYwwI+89VceoiuoHRTJW51dSas6vf4FP88rnfrjdTEAAAAASUVORK5CYII=\';"/> \
+                                                            </span> \
+                                                        {{/if}}\
+                                                    </div>\
+                                                  {{/if}}\
+                                                  {{if (msgItem.value && msgItem.value.type === "url" && msgItem.value.url && msgItem.value.url.title)}}\
+                                                    <div class="titleActions {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.align}}${msgItem.value.layout.align}{{/if}}" {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.colSize}} style="width:${msgItem.value.layout.colSize};"{{/if}}>\
+                                                        <div actionObj="${JSON.stringify(msgItem.value.url)}" class="listViewItemValue actionLink action {{if !msgItem.subtitle}}top10{{/if}}">${msgItem.value.url.title}</div>\
+                                                    </div>\
+                                                  {{/if}}\
+                                                  {{if msgItem.value && msgItem.value.type=="button" && msgItem.value.button && (msgItem.value.button.title || (msgItem.value.button.image && msgItem.value.button.image.image_src))}}\
+                                                    <div class="titleActions {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.align}}${msgItem.value.layout.align}{{/if}}" {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.colSize}}style="width:${msgItem.value.layout.colSize};"{{/if}}>\
+                                                        <div class="actionBtns action singleBTN {{if !msgItem.value.button.title && (msgItem.value.button.image && msgItem.value.button.image.image_src)}}padding5{{/if}}" actionObj="${JSON.stringify(msgItem.value.button)}">\
+                                                            {{if msgItem.value.button.image && msgItem.value.button.image.image_type === "image" && msgItem.value.button.image.image_src}}\
+                                                                    <span class="wid-temp-btnImage"> \
+                                                                        <img alt="image" src="${msgItem.value.button.image.image_src}" onerror="this.onerror=null;this.src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAAA/FJREFUWAnNmItK60AQQLdN05eIIoog+v+/pQiKIlhab9M2SXv3TDthk25evenFgTbJPmZOdndmM9ubL/7szC+WwalsvZ4xg2BggqBvevah3+/JFX273c5stzu5punWJGli70+z1BowDAcmHAQWaA/mM7sH3teEIcChBd6aOElNHCe+LqVljQEHFmo0DAWsVFtJBcBBEMhvaF9wvYlNYmGbSC0gyifjoShvorCuDSM/GY9MmqYmWm1kGVT16VdVBlbZdDLuDM61xYiKbmujSkprmdLJZCSLv0rBv9ThWNjAVpl4p5iRG4+GmVcyHT8/P7XTUTQyHA4twCTTU6znmSWErWi7Nql1pKIcAUoHu0a4qry+vpr1eq2Pra5APjw8mNFoVNpPbS6j1dEgHAHiEAy9K8Bh6Pb21i0uvV8sFobfdDo1y+XS8IJPT0+VkDLd1vYyyg9EDpC1wOL1CeWXl5e+qqOyzWYjgDc3N9Ln4+OjESQ2YHBDUM5JiHNdy/X1tbm/v5ew0mSpFBkyQHYIYtQ5pA0kDLCoZERsX+cUF/Lt7e3IGVzbLoug4rDnGL3VauXatSMTZo4TRZHc5xocHmCBiQ8MAeSrxA0rvk5tyvB45Ovrq7QbjoSX+wQWmOIk2QPyydRWCD388Oziy1FG7AOiKPQhBNUJTHz4HKY4H/fqOr+/v5v5fC7NPj8/zePjoxmPx7luZSFJY2SusedBX1qGrhiYPe2zojiOMzgK2Qa/v7+z+q5ulEkAlbaJct+0Ad21KFPrxXdxcSHe6AIRQlwBuC6UuO2r7mUNkkMocVVjrWNfnc1m4iRXV1e5LRA4dgyuifVC2rbRrTZgQgSQBKfNJkI8u7u7U13Z1YWjkFgH7CmQMCEyxUorJS3+GCGVIpyWK2RbG9peAEkN2wpfKM/PzzLNZXCqE0jWZBtRJpnifd4aNl4rwLEGEaaQrQnIKvF5f1l7Rg8m5DDFRvLWsg5uOQFa4SgnDtbBuf2b3JNDH3xkD0gnkuomQudzi8uSxUEy/v9hvO7l5ATCOX2QNaidyPhJqquEoFwMzFXt29bB4EoOkFyANeXLS3iz4vedq6jpfZWzYNvNR9CZA6SA4wgyft2sKSMw85n08vLCYyeCTlcIzNguSs93PkjiTsavWxRweK8Gz6KSts/kyGyRKuiNbLrpS9y9gHQc2BzFPV1QZV1fgVutN0dTq3YyL9YCvbIWeCvdE7W8y6tMq7VRXHeujVJAGjHkHEeweLsWdIrumrh65CRFEKaA4wim/NQDTFcn0aDTA0xVzjTwa3IErH30yktKALb9z3YErMYwwI+89VceoiuoHRTJW51dSas6vf4FP88rnfrjdTEAAAAASUVORK5CYII=\';"/> \
+                                                                    </span> \
+                                                            {{/if}}\
+                                                            {{if msgItem.value.button.title}}\
+                                                            ${msgItem.value.button.title}\
+                                                            {{/if}}\
+                                                        </div>\
+                                                    </div>\
+                                                  {{/if}}\
+                                                  {{if msgItem.value && msgItem.value.type=="menu" && msgItem.value.menu && msgItem.value.menu.length}}\
+                                                  <div class="titleActions {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.align}}${msgItem.value.layout.align}{{/if}}" {{if msgItem.value && msgItem.value.layout && msgItem.value.layout.colSize}}style="width:${msgItem.value.layout.colSize};"{{/if}}>\
+                                                      <i class="icon-More dropbtnWidgt moreValue"  onclick="showDropdown(this)"></i>\
+                                                          <ul  class="dropdown-contentWidgt  rmpmW moreValueContent" style="list-style:none;">\
+                                                            {{each(key, actionbtnli) msgItem.value.menu}} \
+                                                                  <li class="dropdown-item action" actionObj="${JSON.stringify(actionbtnli)}">\
+                                                                <i>\
+                                                                {{if actionbtnli.image && actionbtnli.image.image_type === "image" && msgItem.image.image_src}}\
+                                                                <span class="wid-temp-btnImage"> \
+                                                                    <img alt="image" src="${actionbtnli.image.image_src}" onerror="this.onerror=null;this.src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAAA/FJREFUWAnNmItK60AQQLdN05eIIoog+v+/pQiKIlhab9M2SXv3TDthk25evenFgTbJPmZOdndmM9ubL/7szC+WwalsvZ4xg2BggqBvevah3+/JFX273c5stzu5punWJGli70+z1BowDAcmHAQWaA/mM7sH3teEIcChBd6aOElNHCe+LqVljQEHFmo0DAWsVFtJBcBBEMhvaF9wvYlNYmGbSC0gyifjoShvorCuDSM/GY9MmqYmWm1kGVT16VdVBlbZdDLuDM61xYiKbmujSkprmdLJZCSLv0rBv9ThWNjAVpl4p5iRG4+GmVcyHT8/P7XTUTQyHA4twCTTU6znmSWErWi7Nql1pKIcAUoHu0a4qry+vpr1eq2Pra5APjw8mNFoVNpPbS6j1dEgHAHiEAy9K8Bh6Pb21i0uvV8sFobfdDo1y+XS8IJPT0+VkDLd1vYyyg9EDpC1wOL1CeWXl5e+qqOyzWYjgDc3N9Ln4+OjESQ2YHBDUM5JiHNdy/X1tbm/v5ew0mSpFBkyQHYIYtQ5pA0kDLCoZERsX+cUF/Lt7e3IGVzbLoug4rDnGL3VauXatSMTZo4TRZHc5xocHmCBiQ8MAeSrxA0rvk5tyvB45Ovrq7QbjoSX+wQWmOIk2QPyydRWCD388Oziy1FG7AOiKPQhBNUJTHz4HKY4H/fqOr+/v5v5fC7NPj8/zePjoxmPx7luZSFJY2SusedBX1qGrhiYPe2zojiOMzgK2Qa/v7+z+q5ulEkAlbaJct+0Ad21KFPrxXdxcSHe6AIRQlwBuC6UuO2r7mUNkkMocVVjrWNfnc1m4iRXV1e5LRA4dgyuifVC2rbRrTZgQgSQBKfNJkI8u7u7U13Z1YWjkFgH7CmQMCEyxUorJS3+GCGVIpyWK2RbG9peAEkN2wpfKM/PzzLNZXCqE0jWZBtRJpnifd4aNl4rwLEGEaaQrQnIKvF5f1l7Rg8m5DDFRvLWsg5uOQFa4SgnDtbBuf2b3JNDH3xkD0gnkuomQudzi8uSxUEy/v9hvO7l5ATCOX2QNaidyPhJqquEoFwMzFXt29bB4EoOkFyANeXLS3iz4vedq6jpfZWzYNvNR9CZA6SA4wgyft2sKSMw85n08vLCYyeCTlcIzNguSs93PkjiTsavWxRweK8Gz6KSts/kyGyRKuiNbLrpS9y9gHQc2BzFPV1QZV1fgVutN0dTq3YyL9YCvbIWeCvdE7W8y6tMq7VRXHeujVJAGjHkHEeweLsWdIrumrh65CRFEKaA4wim/NQDTFcn0aDTA0xVzjTwa3IErH30yktKALb9z3YErMYwwI+89VceoiuoHRTJW51dSas6vf4FP88rnfrjdTEAAAAASUVORK5CYII=\';"/> \
+                                                                </span> \
+                                                                {{/if}} \
+                                                                </i>${actionbtnli.title}</li>\
+                                                            {{/each}}\
+                                                          </ul>\
+                                                  </div>\
+                                                  {{/if}}\
+                                            </div>\
+                                {{/each}}\
+                                        </div>\
+                                </div>\
+                        {{/each}}\
+                        </div>\
+                        {{if tempdata.records && tempdata.records.length > 3 && viewmore}} \
+                            <div class="seeMoreFooter">\
+                                <span class="seeMoreLink" onclick="viewMorePanel(\'${JSON.stringify(panelDetail)}\')">Show more</span>\
+                            </div>\
+                        {{/if}}\
+                        </div>\
+                    </div>\
+          </sript>'; 
+          var webForm = '<script  type="text/x-jquery-tmpl"> \
+          <div class="webFormWidget" {{if panelDetail}}panelDetail="${JSON.stringify(panelDetail)}"{{/if}}>\
+              {{if tempdata && tempdata.formLink}}\
+                      <iframe id="${panelDetail.subpanel}" class="iframeModal" src="${tempdata.formLink}"></iframe> \
+              {{else}}\
+                      {{if tempdata.success}}\
+                        <div class="sucessMsg">\
+                        <img class="sucessTickGreen" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNTRweCIgaGVpZ2h0PSI1NHB4IiB2aWV3Qm94PSIwIDAgNTQgNTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUzLjIgKDcyNjQzKSAtIGh0dHBzOi8vc2tldGNoYXBwLmNvbSAtLT4KICAgIDx0aXRsZT5zdWNlc3NUaWNrR3JlZW48L3RpdGxlPgogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0ic3VjZXNzVGlja0dyZWVuIiBmaWxsLXJ1bGU9Im5vbnplcm8iPgogICAgICAgICAgICA8Y2lyY2xlIGlkPSJPdmFsIiBmaWxsPSIjMDA5REFCIiBjeD0iMjciIGN5PSIyNyIgcj0iMjciPjwvY2lyY2xlPgogICAgICAgICAgICA8cGF0aCBkPSJNMzUuMzM3MDUzNiwyMi40MTUxNzg2IEMzNS41NDUzODc5LDIyLjYyMzUxMjkgMzUuNjQ5NTUzNiwyMi44NzY0ODY2IDM1LjY0OTU1MzYsMjMuMTc0MTA3MSBDMzUuNjQ5NTUzNiwyMy40NzE3Mjc3IDM1LjU0NTM4NzksMjMuNzI0NzAxMyAzNS4zMzcwNTM2LDIzLjkzMzAzNTcgTDI1LjczODgzOTMsMzMuNTMxMjUgQzI1LjUzMDUwNDksMzMuNzM5NTg0NCAyNS4yNzc1MzEyLDMzLjg0Mzc1IDI0Ljk3OTkxMDcsMzMuODQzNzUgQzI0LjY4MjI5MDIsMzMuODQzNzUgMjQuNDI5MzE2NSwzMy43Mzk1ODQ0IDI0LjIyMDk4MjEsMzMuNTMxMjUgTDE4LjY2Mjk0NjQsMjcuOTczMjE0MyBDMTguNDU0NjEyMSwyNy43NjQ4Nzk5IDE4LjM1MDQ0NjQsMjcuNTExOTA2MyAxOC4zNTA0NDY0LDI3LjIxNDI4NTcgQzE4LjM1MDQ0NjQsMjYuOTE2NjY1MiAxOC40NTQ2MTIxLDI2LjY2MzY5MTUgMTguNjYyOTQ2NCwyNi40NTUzNTcxIEwyMC4xODA4MDM2LDI0LjkzNzUgQzIwLjM4OTEzNzksMjQuNzI5MTY1NiAyMC42NDIxMTE2LDI0LjYyNSAyMC45Mzk3MzIxLDI0LjYyNSBDMjEuMjM3MzUyNywyNC42MjUgMjEuNDkwMzI2MywyNC43MjkxNjU2IDIxLjY5ODY2MDcsMjQuOTM3NSBMMjQuOTc5OTEwNywyOC4yMjk5MTA3IEwzMi4zMDEzMzkzLDIwLjg5NzMyMTQgQzMyLjUwOTY3MzcsMjAuNjg4OTg3MSAzMi43NjI2NDczLDIwLjU4NDgyMTQgMzMuMDYwMjY3OSwyMC41ODQ4MjE0IEMzMy4zNTc4ODg0LDIwLjU4NDgyMTQgMzMuNjEwODYyMSwyMC42ODg5ODcxIDMzLjgxOTE5NjQsMjAuODk3MzIxNCBMMzUuMzM3MDUzNiwyMi40MTUxNzg2IFoiIGlkPSLvgIwiIGZpbGw9IiNGRkZGRkYiPjwvcGF0aD4KICAgICAgICA8L2c+CiAgICA8L2c+Cjwvc3ZnPg==">\
+                          <div class="sucessDesc">${tempdata.successMsg}</div>\
+                          <button class="sucessDoneBtn"><span class="doneBTNText">Done</span> <span class="sucessProgress"></span></button>\
+                        </div>\
+                      {{else}}\
+                      <div class="failedIframe">Failed to load Form</div>\
+                    {{/if}}\
+            {{/if}}\
+          </div>\
+       </script>';  
       switch (type) {
         case 'menu':
           return menuTemplate;
@@ -2098,6 +2249,11 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
         case 'widgetHeader':
           return widgetHeader;
+
+        case 'TableList':
+          return TableList;
+        case 'webForm':
+          return webForm;
       }
     }; //********************original widgetTemplate.js ends */
     //********************original widgetEvents.js end */
@@ -2778,10 +2934,14 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           var xhrObject = {};
           xhrObject.passedkey = {};
           xhrObject.passedkey = passedJson;
-
-          _self.renderTemplate(cacheData[i].response, xhrObject); // need to implement this later //
-
-          $('.mainTemplateCntr .progress').show(); // progress meter show
+           if(cacheData[i].response && cacheData[i].response.templateType !=='form'){
+            _self.renderTemplate(cacheData[i].response, xhrObject); // need to implement this later //
+           }
+          //  if(passedJson.subpanel){
+          //   $('.widgetContParent#'+ passedJson.subpanel).find('.progress').show(); // progress meter show
+          //  }else{
+          //   $('.widgetContParent#'+ passedJson.subpanel).find('.progress').show(); // progress meter show
+          //  }
         }
       }
 
@@ -3478,7 +3638,67 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         // $('.widgetContentPanel').css({
         //   'padding': '10px 20px'
         // });
-      } else if (templateType === 'pieChartTemplate' || templateType === 'barChartTemplate' || templateType === 'lineChartTemplate') {
+      } else if (templateType === 'TableList') {
+        $($ele.find(".tabs")[0]).addClass("active");
+        var titleEle = $ele.find('.listViewLeftContent');
+        if(titleEle && titleEle.length){
+          for (i = 0; i < titleEle.length; i++){
+            var ele =titleEle[i];
+            if($(ele).attr('col-size')){
+              var width = _self.getColumnWidth($(ele).attr('col-size'));
+              $(ele).css("width", width + '%');
+            }
+          }
+        }
+        $ele.off('click', '.listViewLeftContent').on('click', '.listViewLeftContent', function (e) {
+          e.stopPropagation();
+          var actionObjString = $(e.currentTarget).attr('actionObj');
+          var actionObj = {};
+
+          if (actionObjString) {
+            actionObj = JSON.parse(actionObjString);
+          }
+
+          _self.triggerAction(actionObj);
+        });
+        $ele.off('click', '.moreValue').on('click', '.moreValue', function (e) {
+          e.stopPropagation();
+        });
+        $ele.off('click', '#showMoreContents').on('click', '#showMoreContents', function (e) {
+          e.stopPropagation();
+          $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showMoreBottom").removeClass('hide');
+        });
+        $ele.off('click', '.wid-temp-showMoreClose').on('click', '.wid-temp-showMoreClose', function (e) {
+          e.stopPropagation();
+          $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showMoreBottom").addClass('hide');
+        });
+        $ele.off('click', '.action').on('click', '.action', function (e) {
+          e.stopPropagation();
+          var actionObjString = $(e.currentTarget).attr('actionObj');
+          var actionObj = {};
+
+          if (actionObjString) {
+            actionObj = JSON.parse(actionObjString);
+          } // var eData={
+          //   postbackValue: actionObj.payload,
+          //   payload:actionObj,
+          //   type:'widget'
+          // }
+          // if(eData && eData.postbackValue && eData.payload){
+          //   _self.triggerEvent('postback',eData);
+          // }
+
+           if(typeof actionObj=='object' && actionObj.link){
+            window.open(actionObj.link);
+           }else {
+            _self.triggerAction(actionObj);
+           }
+        });
+        // $('.widgetContentPanel').css({
+        //   'padding': '10px 20px'
+        // });
+      } 
+      else if (templateType === 'pieChartTemplate' || templateType === 'barChartTemplate' || templateType === 'lineChartTemplate') {
         $ele.off('click', '#showMoreContents').on('click', '#showMoreContents', function (e) {
           $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showMoreBottom").removeClass('hide');
         });
@@ -3591,6 +3811,12 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
             $(_self.config.container.content).addClass(addtheme);
           }
         });
+      } else if (templateType === 'webForm') {
+        var checkfordone = ele.find('button');
+        checkfordone.off('click').on('click',function(){
+          var paneldatastring = ele.attr('paneldetail');
+          _self.refreshElement(paneldatastring);
+        })
       }
     };
 
@@ -3791,6 +4017,21 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           });
 
           _self.bindTemplateEvents(dataHTML, 'AuthRequired');
+        }  else if (xhrObject.passedkey.widgetTemplate === 'TableList') {
+          dataHTML = $(_self.getTemplate("TableList")).tmplProxy({
+            'tempdata': responseData,
+            'helpers': helpers,
+            'panelDetail': xhrObject.passedkey,
+            'viewmore':true,
+          });
+          _self.bindTemplateEvents(dataHTML, 'TableList');
+        } else if (xhrObject.passedkey.widgetTemplate === 'form') {
+          dataHTML = $(_self.getTemplate("webForm")).tmplProxy({
+            'tempdata': responseData,
+            'helpers': helpers,
+            'panelDetail': xhrObject.passedkey
+          });
+          _self.bindTemplateEvents(dataHTML, 'webForm',);
         } else {
           //#todo:deviation : making "defaultFilesTemplate" as default template, naming should correct though
           //var dataHTML = $(_self.getTemplate("defaultTemplate")).tmplProxy({
@@ -3835,6 +4076,11 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       var _self = this;
       if (xhrObject && xhrObject.passedkey) {
         _self.prepereWidgetHeader(responseData, xhrObject);
+        if(responseData && responseData.formLink){
+          var channelParms = "&channel=widgetSdk"
+          var widgetId = "&widgetId=" + xhrObject.passedkey.subpanel;
+          responseData.formLink = responseData.formLink + channelParms + widgetId;
+        }
         var dataHTML = _self.getHTMLTemplate(responseData, xhrObject);
         if (!xhrObject.passedkey.showAll) {
           if (xhrObject.passedkey.panel && xhrObject.passedkey.subpanel && xhrObject.passedkey.filter) {
@@ -5273,6 +5519,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     };
 
     KoreWidgetSDK.prototype.init = function (config) {
+      me = this;
       this.events = {};
       this.config = config || {}; //this.bot.init(this.config.botOptions);
       //todo:need to remove
