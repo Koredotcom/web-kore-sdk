@@ -1231,7 +1231,6 @@ print(JSON.stringify(message)); */
   
 		/* New List Template click functions starts here*/
 		$(messageHtml).off('click', '.listViewTmplContent .seeMoreList').on('click', '.listViewTmplContent .seeMoreList', function () {
-			debugger;
 			if($(".list-template-sheet").length!==0){
 				$(".list-template-sheet").remove();
 				listViewTabs();
