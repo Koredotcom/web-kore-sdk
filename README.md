@@ -272,7 +272,9 @@ v7.3.0[Major] on 04-Jun-2020: Master branch:
 	7.Clock Template
 	8.Radio Option Picker Template
 	9.TaskMenu Picker Template
-	10.Minor Bug Fixes
+	10.Table List Template
+	11.Feedback Template
+	12.Minor Bug Fixes
 v7.2.0[Major] on 10-Feb-2020: Master branch:
     1. Panels & Widgets support in SDK
 	2. Moved chatConfig from index.html to kore-config.js
