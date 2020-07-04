@@ -1620,7 +1620,7 @@
                 if (chatInput.text().trim() === "" && $('.attachment').html().trim().length == 0) {
                     return;
                 }
-                if(msgObject && msgObject.message[0]&& msgObject.message[0].component&& msgObject.message[0].component.payload && msgObject.message[0].component.payload.ignoreCheckMark){
+                if(msgObject && msgObject.message && msgObject.message.length && msgObject.message[0]&& msgObject.message[0].component&& msgObject.message[0].component.payload && msgObject.message[0].component.payload.ignoreCheckMark){
                     var ignoreCheckMark=msgObject.message[0].component.payload.ignoreCheckMark;
                     }
                 if (me.config.allowLocation) {

@@ -1261,6 +1261,7 @@ print(JSON.stringify(message)); */
 		$(messageHtml).find(".ratingMainComponent").off('click','[type*="radio"]').on('click','[type*="radio"]',function (e) {
 			var _innerText=$(e.currentTarget).attr('value');
 			var msgData=$(messageHtml).data();
+			var silderValue=msgData.message[0].component.payload.sliderView;
 			if($("label.active")){
 				$("label").removeClass("active");
 			}
@@ -1287,21 +1288,23 @@ print(JSON.stringify(message)); */
                 $(".kore-action-sheet").find(".ratingMainComponent").append(customTemplate.prototype.suggestionComponent());
 				}
 			}
-			if(msgData && msgData.message[0]&& msgData.message[0].component && msgData.message[0].component.payload && !msgData.message[0].component.payload.sliderView){
-				chatInitialize.sendMessage($('.chatInputBox').text(_innerText), _innerText)
+			if(silderValue===false){
+				chatInitialize.sendMessage($('.chatInputBox').text(_innerText), _innerText);
 	
 			  }
 			$(".buttonTmplContent .ratingMainComponent .submitBtn").click(function(){
 				msgData.message[0].component.payload.sliderView=false;
 				if(_innerText == msgData.message[0].component.payload.starArrays.length){
+					var messageTodisplay=msgData.message[0].component.payload.messageTodisplay;
 					chatInitialize.renderMessage(msgData);
-					chatInitialize.sendMessage($('.chatInputBox').text(_innerText +" :"+ $(".ratingStar").text()), _innerText +" :"+ $(".ratingStar").text());
+					chatInitialize.sendMessage($('.chatInputBox').text(_innerText +" :"+ messageTodisplay), _innerText +" :"+ messageTodisplay);
 				}else if($(".suggestionInput").val()==""){
 					chatInitialize.renderMessage(msgData);
 					chatInitialize.sendMessage($('.chatInputBox').text(_innerText),_innerText)
 				}else{
+					var messageDisplay=$(".suggestionInput").val();
 					chatInitialize.renderMessage(msgData);
-					chatInitialize.sendMessage($('.chatInputBox').text(_innerText +" :"+ $(".suggestionInput").val()),_innerText +" :"+ $(".suggestionInput").val());
+					chatInitialize.sendMessage($('.chatInputBox').text(_innerText +" :"+ messageDisplay),_innerText +" :"+ messageDisplay);
 				}
 				bottomSliderAction("hide");
 				msgData.message[0].component.payload.sliderView=true;
@@ -1313,7 +1316,8 @@ print(JSON.stringify(message)); */
 		});
 		$(messageHtml).find(".emojiComponent").off('click','.rating').on('click','.rating',function(e){
 			var msgData=$(messageHtml).data();
-			  if($(".active").length=="0"){
+			var sliderValue=msgData.message[0].component.payload.sliderView;
+			  if($(messageHtml).find(".emojiComponent .active").length=="0"){
 				$(".emojiElement").remove();
 			}
 			var emojiValue=$(this).attr("value");
@@ -1355,22 +1359,25 @@ print(JSON.stringify(message)); */
 				$(".suggestionsMainComponent").remove();
 				$(".kore-action-sheet").find(".emojiComponent").append('<div class="ratingStar">'+messageTodisplay+'</div><div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>')
 			}
-			if(msgData && msgData.message[0]&& msgData.message[0].component && msgData.message[0].component.payload && !msgData.message[0].component.payload.sliderView){
+			if(sliderValue===false){
 				chatInitialize.sendMessage($('.chatInputBox').text(emojiValue),emojiValue);
 			}
 			$(".emojiComponent").off('click','.submitBtn').on('click','.submitBtn',function(e){
 				msgData.message[0].component.payload.sliderView=false;
 				if(emojiValue=="5"){
+					var messageTodisplay=msgData.message[0].component.payload.messageTodisplay
 					chatInitialize.renderMessage(msgData);
-				  chatInitialize.sendMessage($('.chatInputBox').text(emojiValue +" :"+ $(".ratingStar").text()),"Rating"+': '+ emojiValue +" and "+ $(".ratingStar").text());
+				  chatInitialize.sendMessage($('.chatInputBox').text(emojiValue +" :"+ messageTodisplay),"Rating"+': '+ emojiValue +" and "+ messageTodisplay);
 				}else if($(".suggestionInput").val()==""){
 					chatInitialize.renderMessage(msgData);
 					chatInitialize.sendMessage($('.chatInputBox').text(emojiValue),emojiValue);
 				}else{
+					var messageDisplay=$(".suggestionInput").val();
 					chatInitialize.renderMessage(msgData);
-					chatInitialize.sendMessage($('.chatInputBox').text(emojiValue +" :"+ $(".suggestionInput").val()),emojiValue +" :"+ $(".suggestionInput").val());
+                    chatInitialize.sendMessage($('.chatInputBox').text(emojiValue +" :"+ messageDisplay),emojiValue +" :"+ messageDisplay);
 				}
 				bottomSliderAction("hide");
+				msgData.message[0].component.payload.sliderView=true;
 		  });
 		
 		});
