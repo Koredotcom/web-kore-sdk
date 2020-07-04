@@ -149,29 +149,6 @@
 .kore-chat-window .only-show {
     display: block;
 }
-.kr-wiz-menu-css .menuItemCntr .menuIconMobile{
-    display: none;
-}
-.kr-wiz-content-chat .mainTemplateCntr .widgetTitle .menuIconMobile{
-    width: 15px;
-    height: 30px;
-    opacity: .8;
-    display: none;
-}
-
-.kr-wiz-menu-css .menuItemCntr .menuItemContainer  .panelNameTooltip{
-    display: none;
-    position: relative;
-    top: -15px;
-}
-.kr-wiz-content-css .mainTemplateCntr .widgetTitle .widgetMobileIcon{
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    margin-right: 10px;
-    margin-left: 10px;
-    display: none;
-}
 @media(max-width: 767px) {
     .kore-chat-window {
         left: 5px!important;
