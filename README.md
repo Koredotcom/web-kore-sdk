@@ -134,6 +134,22 @@ Integration of Kore.ai chat UI into your App. Clone the repository and create yo
         chatInstance.show(chatConfig); // open chat window
         chatInstance.destroy(); // for destroying chat window instance
 
+
+# How to run sample application
+Install node js if not installed  https://nodejs.org
+
+#### 1. Configure the following parameters in kore-config.js
+	botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";//URL of the Service to generate JWT (JSON Web Tokens)
+	botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
+	botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
+	botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
+	botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+#### 3. Install the dependencies
+	npm install
+#### 4. Run the Application
+	npm start	
+
+
 # How to create your own ui with kore.ai chat bot api 
 
 #### 1. Include the kore-bot-sdk-client.js & dependencies
