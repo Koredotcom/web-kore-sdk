@@ -49,7 +49,7 @@
             /***************** Mic initilization code end here ************************/
 
             /******************************* TTS variable initialization **************/
-            var _ttsContext = null, _ttsConnection = null,_ttsInterface = "webapi", ttsServerUrl = '', ttsAudioSource = null, _txtToSpeak = "", isTTSOn = false, isTTSEnabled = false, optionIndex = 65, autoEnableSpeechAndTTS = false;    // Audio context
+            var _ttsContext = null, _ttsConnection = null,_ttsInterface, ttsServerUrl = '', ttsAudioSource = null, _txtToSpeak = "", isTTSOn = false, isTTSEnabled = false, optionIndex = 65, autoEnableSpeechAndTTS = false;    // Audio context
             /************************** TTS initialization code end here **************/
 
             /*************************** file upload variable *******************************/
@@ -931,6 +931,7 @@
                 }
                 isSendButton = me.config.isSendButton;
                 isTTSEnabled = me.config.isTTSEnabled || false;
+                _ttsInterface = me.config.ttsInterface || 'webapi';
                 allowGoogleSpeech = me.config.allowGoogleSpeech || false;
                 isSpeechEnabled = me.config.isSpeechEnabled || false;
                 loadHistory = me.config.loadHistory || false;
@@ -2322,6 +2323,13 @@
                     }
                     if (_ttsInterface&&_ttsInterface==="webapi") {
                         _ttsConnection = speakWithWebAPI(_txtToSpeak);
+                    }else if(_ttsInterface && _ttsInterface==="awspolly"){
+                        if(!window.speakTextWithAWSPolly){
+                            console.warn("Please uncomment amazon polly files 'plugins/aws-sdk-2.668.0.min.js' and'plugins/kore-aws-polly.js' in index.html");
+                        }else{
+                            speakTextWithAWSPolly(_txtToSpeak);
+                        }
+
                     }else if (!_ttsConnection || (_ttsConnection.readyState && _ttsConnection.readyState !== 1)) {
                         try {
                             _ttsConnection = createSocketForTTS();
