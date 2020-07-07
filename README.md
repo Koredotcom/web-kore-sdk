@@ -71,6 +71,7 @@ Integration of Kore.ai chat UI into your App. Clone the repository and create yo
 	<script type="text/javascript" src="../libs/client_api.js"></script> -->
 
 #### 6. Define the assertion function (Should be defined by the clients)
+	    //SECURITY RECOMMENDATION:Instead of sending the 'clientId' and  'clientSecret' from browser javascript, store it in server and use it during the jwt generation.
         //NOTE:clients has to define a API which should generate and return the JWT token. and do the necessary changes in the below function like change the url,type,Authorization and on success set the returned jwt.
         //fields to set in JWT:subject(emailId),issuer(clientId),algorithm(HS256 or RS256)
 
@@ -262,6 +263,11 @@ Install node js if not installed  https://nodejs.org
   -  Refer custom folder under UI folder
   -  Refer https://github.com/Koredotcom/web-kore-sdk/blob/master/UI/custom/customTemplate.js and https://github.com/Koredotcom/web-kore-sdk/blob/master/UI/custom/customTemplate.css files for sample code snippet. 
   
+## How to integrate Amazon Polly TTS
+1. Uncomment amazon polly files 'plugins/aws-sdk-2.668.0.min.js' and 'plugins/kore-aws-polly.js' in index.html
+2. Provide AWS "REGION" and "IDENTITY_POOL_ID" in plugins/kore-aws-polly.js which can be generated from AWS web console by following the instructions here
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-started-browser.html#getting-started-browser-iam-role
+3.In kore-config.js set chatConfig.ttsInterface to "awspolly" and chatConfig.isTTSEnabled to "true"
 
 # How to implement minified SDK
     node js:
@@ -274,6 +280,11 @@ Install node js if not installed  https://nodejs.org
         -> Add the following lines
             <link href="dist/kore-ai-sdk.min.css" rel="stylesheet"/>
             <script src="dist/kore-ai-sdk.min.js" type="text/javascript"> </script>  
+
+# How to resolve conflicts with existing libraries like jquery, require, etc..
+	1. Add "libs/kore-no-conflict-start.js" before kore SDK files which will stores your library references.
+	2.Add "libs/kore-no-conflict-end.js" after kore SDK files which will reassign your library references.
+	In our sample UI/index.html it is been included already.			
 
 ```
 
