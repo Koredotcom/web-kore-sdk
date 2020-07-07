@@ -1374,7 +1374,7 @@
                 });*/
 
                   // dateClockPickers();
-                  if (KorePickers) {
+                  if (window.KorePickers) {
                     var pickerConfig={
                      chatWindowInstance: me,
                       chatConfig: me.config,
