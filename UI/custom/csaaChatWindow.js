@@ -3,27 +3,30 @@
 })(function () {
 
   // Local storage entry
-  var JWT_GRANT               = 'csaa_chat_jwt';
-  var BOT_USER_IDENTITY       = 'csaa_chat_unique_id';
-  var CHAT_WINDOW_STATUS      = 'csaa_chat_window_status';
-  var LIVE_CHAT               = 'csaa_chat_live_agent';
-  var QUEUED_MESSAGE_COUNT    = 'csaa_chat_queued_message_count';
-  var CUSTOMER_ENGAGED        = 'csaa_chat_customer_engaged';
+  var JWT_GRANT                   = 'csaa_chat_jwt';
+  var BOT_USER_IDENTITY           = 'csaa_chat_unique_id';
+  var CHAT_WINDOW_STATUS          = 'csaa_chat_window_status';
+  var LIVE_CHAT                   = 'csaa_chat_live_agent';
+  var QUEUED_MESSAGE_COUNT        = 'csaa_chat_queued_message_count';
+  var CUSTOMER_ENGAGED            = 'csaa_chat_customer_engaged';
 
   // Chat events
-  var CHAT_ICON_CLICKED       = 'CHAT_ICON_CLICKED';
-  var CHAT_STARTED            = 'CHAT_STARTED';
-  var CHAT_MINIMIZED          = 'CHAT_MINIMIZED';
-  var CHAT_MAXIMIZED          = 'CHAT_MAXIMIZED';
-  var CHAT_CUSTOMER_ENGAGED   = 'CHAT_CUSTOMER_ENGAGED';
-  var CHAT_AGENT_ENGAGED      = 'CHAT_AGENT_ENGAGED';
-  var CHAT_AGENT_DISCONNECTED = 'CHAT_AGENT_DISCONNECTED';
-  var CHAT_CLOSE_ICON_CLICKED = 'CHAT_CLOSE_ICON_CLICKED';
-  var CHAT_ENDED_USER         = 'CHAT_ENDED_USER';
-  var CHAT_ENDED_AGENT        = 'CHAT_ENDED_AGENT';
-  var CHAT_SURVEY_TRIGGERED   = 'CHAT_SURVEY_TRIGGERED';
-  var CHAT_SURVEY_ANSWERED    = 'CHAT_SURVEY_ANSWERED';
-  var CHAT_SURVEY_UNANSWERED  = 'CHAT_SURVEY_UNANSWERED';
+  var CHAT_ICON_CLICKED           = 'CHAT_ICON_CLICKED';
+  var CHAT_STARTED                = 'CHAT_STARTED';
+  var CHAT_MINIMIZED              = 'CHAT_MINIMIZED';
+  var CHAT_MAXIMIZED              = 'CHAT_MAXIMIZED';
+  var CHAT_CUSTOMER_ENGAGED       = 'CHAT_CUSTOMER_ENGAGED';
+  var CHAT_AGENT_ENGAGED          = 'CHAT_AGENT_ENGAGED';
+  var CHAT_AGENT_DISCONNECTED     = 'CHAT_AGENT_DISCONNECTED';
+  var CHAT_CLOSE_ICON_CLICKED     = 'CHAT_CLOSE_ICON_CLICKED';
+  var CHAT_ENDED_USER             = 'CHAT_ENDED_USER';
+  var CHAT_ENDED_AGENT            = 'CHAT_ENDED_AGENT';
+  var CHAT_SURVEY_TRIGGERED       = 'CHAT_SURVEY_TRIGGERED';
+  var CHAT_SURVEY_ANSWERED        = 'CHAT_SURVEY_ANSWERED';
+  var CHAT_SURVEY_UNANSWERED      = 'CHAT_SURVEY_UNANSWERED';
+  var CHAT_INIT_VALIDATION_ERROR  = 'CHAT_INIT_VALIDATION_ERROR';
+  var CHAT_START_VALIDATION_ERROR = 'CHAT_START_VALIDATION_ERROR';
+  var CHAT_END_VALIDATION_ERROR   = 'CHAT_END_VALIDATION_ERROR';
 
   function csaaKoreBotChat() {
     var koreJquery;
@@ -51,35 +54,30 @@
         return function (chatConfig, startChatImmediately, chatLifeCycleObj) {
 
           // Chat Check
-          if (chatLifeCycleObj && chatLifeCycleObj.isChatEnabled && !chatLifeCycleObj.isChatEnabled()) {
-            chatEnabled = false;
-            // Do not allow new chat sessions but open any existing chat session
-            if (!isChatSessionActive()) {
-              return;
+          chatLifeCycleObj.isChatEnabled().then(function (response) {
+            chatEnabled = response;
+            if (chatEnabled || isChatSessionActive()) {
+              initializeSession(chatConfig, startChatImmediately, chatLifeCycleObj);
             }
-          }
-
-          // Set Data
-          defaultChatConfig = chatConfig;
-          chatLifeCycle = chatLifeCycleObj;
-
-          // Chat Icon
-          attachChatIconUI($);
-
-          // Chat Listeners
-          chatIconEventListeners();
-
-          // Chat Initialize
-          initializeSession();
-
-          // Start Chat Session Immediately
-          if (startChatImmediately) {
-            startNewChat();
-          }
+          }).catch(function (error) {
+            chatEnabled = false;
+            emit(CHAT_INIT_VALIDATION_ERROR);
+          });
         };
       }
 
-      function initializeSession () {
+      function initializeSession (chatConfig, startChatImmediately, chatLifeCycleObj) {
+
+        // Set Data
+        defaultChatConfig = chatConfig;
+        chatLifeCycle = chatLifeCycleObj;
+
+        // Chat Icon
+        attachChatIconUI($);
+
+        // Chat Listeners
+        chatIconEventListeners();
+
         setChatIconVisibility(true);
 
         if (isChatSessionActive()) {
@@ -91,6 +89,11 @@
           } else {
             // Open ongoing session
             reloadChatSession();
+          }
+        } else {
+          // Start Chat Session Immediately
+          if (startChatImmediately) {
+            startNewChat();
           }
         }
       }
@@ -198,20 +201,24 @@
       }
 
       function startNewChat() {
+
         setChatIconGraphics(true);
 
         // Check whether a new chat session is allowed
-        if (chatLifeCycle && chatLifeCycle.canChatStart && !chatLifeCycle.canChatStart()) {
-          // Do not launch a new chat session
+        chatLifeCycle.canChatStart().then(function (response) {
+          if (response) {
+            // Open new session
+            var chatConfig = getChatConfig(defaultChatConfig, false);
+            renderChat(chatConfig);
+            localStorage.setItem(CHAT_WINDOW_STATUS, 'maximized');
+            emit(CHAT_STARTED);
+          } else {
+            setChatIconGraphics(false);
+          }
+        }).catch(function (error) {
           setChatIconGraphics(false);
-          return;
-        }
-
-        // Open new session
-        var chatConfig = getChatConfig(defaultChatConfig, false);
-        renderChat(chatConfig);
-        localStorage.setItem(CHAT_WINDOW_STATUS, 'maximized');
-        emit(CHAT_STARTED);
+          emit(CHAT_START_VALIDATION_ERROR);
+        });
       }
 
       function reloadChatSession() {
@@ -293,10 +300,14 @@
         $('.close-btn').on('click', function (e) {
           e.stopPropagation();
           emit(CHAT_CLOSE_ICON_CLICKED);
-          if (chatLifeCycle && chatLifeCycle.canChatEnd && !chatLifeCycle.canChatEnd()) {
-            return;
-          }
-          handleChatEndByUser();
+
+          chatLifeCycle.canChatEnd().then(function (response) {
+            if (response) {
+              handleChatEndByUser();
+            }
+          }).catch(function (error) {
+            emit(CHAT_END_VALIDATION_ERROR);
+          });
         });
 
         bot.on('rtm_client_initialized', function () {
