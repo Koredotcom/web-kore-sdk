@@ -47,23 +47,23 @@
 
     return (function ($) {
       koreBot = koreBotChat();
-      koreBot.init = init();
-      koreBot.on = on();
+      koreBot.init = init;
+      koreBot.on = on;
+      koreBot.isChatActive = isChatSessionActive;
+      koreBot.endChat = handleChatEnd;
 
-      function init () {
-        return function (chatConfig, startChatImmediately, chatLifeCycleObj) {
+      function init (chatConfig, startChatImmediately, chatLifeCycleObj) {
 
-          // Chat Check
-          chatLifeCycleObj.isChatEnabled().then(function (response) {
-            chatEnabled = response;
-            if (chatEnabled || isChatSessionActive()) {
-              initializeSession(chatConfig, startChatImmediately, chatLifeCycleObj);
-            }
-          }).catch(function (error) {
-            chatEnabled = false;
-            emit(CHAT_INIT_VALIDATION_ERROR);
-          });
-        };
+        // Chat Check
+        chatLifeCycleObj.isChatEnabled().then(function (response) {
+          chatEnabled = response;
+          if (chatEnabled || isChatSessionActive()) {
+            initializeSession(chatConfig, startChatImmediately, chatLifeCycleObj);
+          }
+        }).catch(function (error) {
+          chatEnabled = false;
+          emit(CHAT_INIT_VALIDATION_ERROR);
+        });
       }
 
       function initializeSession (chatConfig, startChatImmediately, chatLifeCycleObj) {
@@ -528,16 +528,14 @@
         }
       }
 
-      function on() {
-        return function (eventName, fn) {
-          if (!events[eventName]) {
-            events[eventName] = [];
-          }
-          events[eventName] = events[eventName].filter(function (eventFn) {
-            return fn !== eventFn;
-          });
-          events[eventName].push(fn);
+      function on(eventName, fn) {
+        if (!events[eventName]) {
+          events[eventName] = [];
         }
+        events[eventName] = events[eventName].filter(function (eventFn) {
+          return fn !== eventFn;
+        });
+        events[eventName].push(fn);
       }
 
       return koreBot;
