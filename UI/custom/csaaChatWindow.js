@@ -51,6 +51,7 @@
       koreBot.on = on;
       koreBot.isChatActive = isChatSessionActive;
       koreBot.endChat = handleChatEnd;
+      koreBot.chatID = getChatID;
 
       function init (chatConfig, startChatImmediately, chatLifeCycleObj) {
 
@@ -487,6 +488,10 @@
           var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
           return v.toString(16);
         });
+      }
+      
+      function getChatID() {
+        return localStorage.getItem(BOT_USER_IDENTITY);
       }
 
       function handleChatEndByUser() {
