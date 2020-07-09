@@ -975,9 +975,6 @@
                 me.config.botOptions.botInfo = { chatBot: _botInfo.name, taskBotId: _botInfo._id, customData: _botInfo.customData, metaTags: _botInfo.metaTags, tenanturl: _botInfo.tenanturl };
                 var tempTitle = _botInfo.name;
                 me.config.botMessages = botMessages;
-                if (me.config.inputFieldPlaceholder) {
-                    me.config.botMessages.message = me.config.inputFieldPlaceholder;
-                }
 
                 me.config.chatTitle = me.config.botMessages.connecting;
                 me.config.userAgentIE = navigator.userAgent.indexOf('Trident/') !== -1;

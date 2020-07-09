@@ -201,7 +201,6 @@
       }
 
       function startNewChat() {
-
         setChatIconGraphics(true);
 
         // Check whether a new chat session is allowed
@@ -290,11 +289,17 @@
 
         var $koreChatWindow = $('.kore-chat-window');
         var $koreChatHeader = $koreChatWindow.find('.kore-chat-header');
+        var $koreChatFooter = $koreChatWindow.find('.kore-chat-footer');
         var $koreChatBody = $koreChatWindow.find('.kore-chat-body');
         var $chatBoxControls = $koreChatHeader.find('.chat-box-controls');
+        var $chatInputBox = $koreChatFooter.find('.chatInputBox');
 
         if (defaultChatConfig.subheader) {
           attachSubheaderUI(defaultChatConfig.subheader, $koreChatHeader, $koreChatBody);
+        }
+
+        if (defaultChatConfig.inputFieldPlaceholder) {
+          $chatInputBox.attr('placeholder', defaultChatConfig.inputFieldPlaceholder);
         }
 
         $('.close-btn').on('click', function (e) {
