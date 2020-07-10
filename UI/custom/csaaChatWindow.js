@@ -395,7 +395,7 @@
             }
 
             if (localStorage.getItem(LIVE_CHAT) === 'true') {
-              if (defaultChatConfig.notificaitonsEnabled && localStorage.getItem(CHAT_WINDOW_STATUS) === 'minimized') {
+              if (defaultChatConfig.notificationsEnabled && localStorage.getItem(CHAT_WINDOW_STATUS) === 'minimized') {
 
                 if (['XX', 'AR', 'AT', 'AST', 'ack', 'pong', 'ping'].indexOf(msgText) !== -1) return;
 
@@ -508,16 +508,18 @@
 
       function handleChatEndByAgent() {
         emit(CHAT_ENDED_AGENT);
-        handleChatEnd();
+        handleChatEnd(true);
       }
 
-      function handleChatEnd() {
+      function handleChatEnd(hideSlowly) {
         clearLocalStorage();
-        $('.kore-chat-window').removeClass('slide');
         setTimeout(function () {
-          koreBot.destroy();
-          setChatIconVisibility(chatEnabled);
-        }, 400);
+          $('.kore-chat-window').removeClass('slide');
+          setTimeout(function () {
+            koreBot.destroy();
+            setChatIconVisibility(chatEnabled);
+          }, 500);
+        }, hideSlowly ? 2500 : 500);
       }
 
       function clearLocalStorage() {
