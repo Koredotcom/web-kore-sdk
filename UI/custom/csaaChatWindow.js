@@ -211,7 +211,6 @@
             var chatConfig = getChatConfig(defaultChatConfig, false);
             renderChat(chatConfig);
             localStorage.setItem(CHAT_WINDOW_STATUS, 'maximized');
-            emit(CHAT_STARTED);
           } else {
             setChatIconGraphics(false);
           }
@@ -357,6 +356,7 @@
             // Bot sends a message to you
             if (isChatIconGraphicsEnabled()) {
               setChatIconVisibility(false);
+              emit(CHAT_STARTED);
               $koreChatWindow.addClass('slide');
             }
 
