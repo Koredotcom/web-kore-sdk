@@ -264,6 +264,7 @@
         $('[chat=bubble]')
           .children('[chat=master_button]')
           .on('click', function () {
+            if (isChatIconGraphicsEnabled()) return;
             if (!isChatSessionActive()) {
               emit(CHAT_ICON_CLICKED);
               startNewChat();
