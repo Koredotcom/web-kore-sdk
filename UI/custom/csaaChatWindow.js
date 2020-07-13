@@ -21,6 +21,7 @@
   var CHAT_CLOSE_ICON_CLICKED     = 'CHAT_CLOSE_ICON_CLICKED';
   var CHAT_ENDED_USER             = 'CHAT_ENDED_USER';
   var CHAT_ENDED_AGENT            = 'CHAT_ENDED_AGENT';
+  var CHAT_ENDED_SYSTEM           = 'CHAT_ENDED_SYSTEM';
   var CHAT_SURVEY_TRIGGERED       = 'CHAT_SURVEY_TRIGGERED';
   var CHAT_SURVEY_ANSWERED        = 'CHAT_SURVEY_ANSWERED';
   var CHAT_SURVEY_UNANSWERED      = 'CHAT_SURVEY_UNANSWERED';
@@ -50,34 +51,36 @@
       koreBot.init = init;
       koreBot.on = on;
       koreBot.isChatActive = isChatSessionActive;
-      koreBot.endChat = handleChatEnd;
+      koreBot.endChat = endChat;
+      koreBot.reset = resetChat;
       koreBot.chatID = getChatID;
 
+      // Chat Icon
+      attachChatIconUI($);
+      
       function init (chatConfig, startChatImmediately, chatLifeCycleObj) {
-
+        
         // Chat Check
         chatLifeCycleObj.isChatEnabled().then(function (response) {
           chatEnabled = response;
           if (chatEnabled || isChatSessionActive()) {
             initializeSession(chatConfig, startChatImmediately, chatLifeCycleObj);
+          } else {
+            
           }
         }).catch(function (error) {
           chatEnabled = false;
           emit(CHAT_INIT_VALIDATION_ERROR);
         });
       }
+      
+      
 
       function initializeSession (chatConfig, startChatImmediately, chatLifeCycleObj) {
 
         // Set Data
         defaultChatConfig = chatConfig;
         chatLifeCycle = chatLifeCycleObj;
-
-        // Chat Icon
-        attachChatIconUI($);
-
-        // Chat Listeners
-        chatIconEventListeners();
 
         setChatIconVisibility(true);
 
@@ -169,6 +172,7 @@
         ';
 
         $('body').append(bubble);
+        chatIconEventListeners();
       }
 
       function attachNotificationMessageUI (message, $notifications) {
@@ -521,6 +525,27 @@
             setChatIconVisibility(chatEnabled);
           }, 500);
         }, hideSlowly ? 2500 : 500);
+      }
+      
+      function endChat() {
+        // Clear existing sessions
+        if (isChatSessionActive()) {
+          emit(CHAT_ENDED_SYSTEM);
+        }
+        handleChatEnd();
+      }
+      
+      function resetChat() {
+        // Clear existing sessions
+        if (isChatSessionActive()) {
+          emit(CHAT_ENDED_SYSTEM);
+        }
+        defaultChatConfig = undefined;
+        chatLifeCycle = undefined;
+        events = {};
+        minimizedWithoutPageReload = false;
+        chatEnabled = false;
+        handleChatEnd();
       }
 
       function clearLocalStorage() {
