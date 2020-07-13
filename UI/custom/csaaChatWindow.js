@@ -56,7 +56,7 @@
       koreBot.chatID = getChatID;
 
       function init (chatConfig, startChatImmediately, chatLifeCycleObj) {
-        
+
         // Chat Check
         chatLifeCycleObj.isChatEnabled().then(function (response) {
           chatEnabled = response;
@@ -94,7 +94,7 @@
             reloadChatSession();
           }
         } else {
-          // Start Chat Session immediately
+          // Start Chat Session Immediately
           if (startChatImmediately) {
             startNewChat();
           }
