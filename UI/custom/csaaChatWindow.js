@@ -55,9 +55,6 @@
       koreBot.reset = resetChat;
       koreBot.chatID = getChatID;
 
-      // Chat Icon
-      attachChatIconUI($);
-      
       function init (chatConfig, startChatImmediately, chatLifeCycleObj) {
         
         // Chat Check
@@ -73,14 +70,18 @@
           emit(CHAT_INIT_VALIDATION_ERROR);
         });
       }
-      
-      
 
       function initializeSession (chatConfig, startChatImmediately, chatLifeCycleObj) {
 
         // Set Data
         defaultChatConfig = chatConfig;
         chatLifeCycle = chatLifeCycleObj;
+
+        // Chat Icon
+        attachChatIconUI($);
+
+        // Chat Listeners
+        chatIconEventListeners();
 
         setChatIconVisibility(true);
 
@@ -172,7 +173,6 @@
         ';
 
         $('body').append(bubble);
-        chatIconEventListeners();
       }
 
       function attachNotificationMessageUI (message, $notifications) {
