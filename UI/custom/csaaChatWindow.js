@@ -96,7 +96,7 @@
             reloadChatSession();
           }
         } else {
-          // Start Chat Session Immediately
+          // Start Chat Session immediately
           if (startChatImmediately) {
             startNewChat();
           }
