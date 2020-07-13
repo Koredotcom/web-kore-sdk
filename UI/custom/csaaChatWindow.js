@@ -62,8 +62,6 @@
           chatEnabled = response;
           if (chatEnabled || isChatSessionActive()) {
             initializeSession(chatConfig, startChatImmediately, chatLifeCycleObj);
-          } else {
-            
           }
         }).catch(function (error) {
           chatEnabled = false;
