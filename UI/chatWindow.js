@@ -1484,11 +1484,24 @@
                             cancelTTSConnection();
                             isTTSOn = false;
                             $('#ttspeaker')[0].pause();
+                            if(_ttsInterface && _ttsInterface ==="webapi"){
+                                var synth = window.speechSynthesis;
+                                synth.pause();
+                             }else if (_ttsInterface === 'awspolly') {
+                                if (isTTSOn ===false) {
+                                    // isTTSOn = false;
+                                    gainNode.gain.value = 0; // 10 %
+                                    $('.ttspeakerDiv').addClass('ttsOff');
+                                }
+                            }
                             $('.ttspeakerDiv').addClass('ttsOff');
-                        } else {
+                        } 
+                        else {
                             if(_ttsInterface && _ttsInterface==="webapi"){
                                 _ttsConnection = speakWithWebAPI();
  
+                            }else if(_ttsInterface &&_ttsInterface === 'awspolly'){
+                                gainNode.gain.value = 1
                             }else{
                                 _ttsConnection = createSocketForTTS();
                             }
@@ -1497,7 +1510,7 @@
                         }
                     }
                 });
-              
+                
                 bot.on("open", function (response) {
                     accessToken = me.config.botOptions.accessToken;
                     var _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
