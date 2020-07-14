@@ -72,7 +72,6 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
             });
         }
         function playFromUrl(URL) {
-            debugger;
             const request = new XMLHttpRequest();
             request.open('GET', URL, true);
             request.responseType = 'arraybuffer';
