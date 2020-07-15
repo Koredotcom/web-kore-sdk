@@ -203,6 +203,51 @@
         $koreChatBody.css({ top: newKoreChatBodyTop + 'px' });
       }
 
+      function attachLiveAgentButton ($koreChatBody, $chatContainer, $koreChatFooter) {
+        var $liveAgentButton = $('\
+          <div id="liveAgentActor" distance="close">\
+            <div>live agent</div>\
+          </div>\
+        ');
+
+        $koreChatFooter.prepend($liveAgentButton);
+
+        $chatContainer.on('scroll', function () {
+          var liveAgentButtonOffset = $liveAgentButton.offset();
+          var liveAgentButtonSelectionOffset = getLiveAgentSelection().offset();
+          var chatContainerHeight = $koreChatBody.height();
+
+          if (!liveAgentButtonSelectionOffset) return;
+
+          var positionDifference = Math.abs(
+            liveAgentButtonSelectionOffset.top - liveAgentButtonOffset.top
+          );
+
+          var distanceAttr;
+
+          if (positionDifference < (chatContainerHeight / 2)) {
+            distanceAttr = 'close';
+          } else if (positionDifference < chatContainerHeight) {
+            distanceAttr = 'semi-close';
+          } else {
+            distanceAttr = 'far';
+          }
+
+          $liveAgentButton.attr('distance', distanceAttr);
+        });
+
+        $liveAgentButton.children().on('click', function () {
+          getLiveAgentSelection().click();
+          $liveAgentButton.remove();
+        });
+
+        function getLiveAgentSelection () {
+          return $chatContainer
+            .find('.buttonTmplContentBox li:contains("Live Agent")')
+            .last();
+        }
+      }
+
       function startNewChat() {
         setChatIconGraphics(true);
 
@@ -291,14 +336,24 @@
         var $notifications = $bubble.children('[chat=notifications]');
 
         var $koreChatWindow = $('.kore-chat-window');
-        var $koreChatHeader = $koreChatWindow.find('.kore-chat-header');
-        var $koreChatFooter = $koreChatWindow.find('.kore-chat-footer');
-        var $koreChatBody = $koreChatWindow.find('.kore-chat-body');
-        var $chatBoxControls = $koreChatHeader.find('.chat-box-controls');
+        var $koreChatHeader = $koreChatWindow.children('.kore-chat-header');
+        var $historyLoadingDiv = $koreChatWindow.children('.historyLoadingDiv');
+        var $koreChatFooter = $koreChatWindow.children('.kore-chat-footer');
+        var $koreChatBody = $koreChatWindow.children('.kore-chat-body');
+        var $chatContainer = $koreChatBody.children('.chat-container');
+        var $chatBoxControls = $koreChatHeader.children('.chat-box-controls');
         var $chatInputBox = $koreChatFooter.find('.chatInputBox');
 
         if (defaultChatConfig.subheader) {
           attachSubheaderUI(defaultChatConfig.subheader, $koreChatHeader, $koreChatBody);
+
+        }
+
+        if (defaultChatConfig.liveAgentButton) {
+          if (!(localStorage.getItem(LIVE_CHAT) === 'true')) {
+            attachLiveAgentButton($koreChatBody, $chatContainer, $koreChatFooter);
+            $chatContainer.css({ padding: '42px 20px' });
+          }
         }
 
         if (defaultChatConfig.inputFieldPlaceholder) {
@@ -330,8 +385,33 @@
 
         //applicable only if botOptions.loadHistory = true;
         bot.on('history', function (historyRes) {
-          setChatIconVisibility(false);
-          $koreChatWindow.addClass('slide');
+          var observer = new MutationObserver(onMutation('class', function (value) {
+            if (value.indexOf('showMsg') === -1) {
+              $chatContainer.finish();
+              setChatIconVisibility(false);
+              $koreChatWindow.addClass('slide');
+            }
+          }));
+          
+          observer.observe($historyLoadingDiv[0], {
+            attributes: true
+          });
+          
+          function onMutation(attr, cb) {
+            return function (mutationList, observer) {
+              mutationList.forEach(function (mutation) {
+                attrChange(attr, mutation, cb);
+              });
+              observer.disconnect();
+            };
+          }
+          
+          function attrChange (attr, mutation, cb) {
+            if (mutation.attributeName === attr) {
+              var attrValue = $(mutation.target).attr(mutation.attributeName);
+              cb(attrValue);
+            }
+          }
         });
 
         // Open event triggers when connection established with bot
@@ -385,6 +465,7 @@
               emit(CHAT_AGENT_ENGAGED);
             } else if (msgText === 'Live Agent Chat has ended.') {
               localStorage.setItem(LIVE_CHAT, 'false');
+              attachLiveAgentButton($koreChatBody, $chatContainer, $koreChatFooter);
               emit(CHAT_AGENT_DISCONNECTED);
             } else if (msgText === 'Do you want to provide feedback?') {
               localStorage.setItem(LIVE_CHAT, 'false');
