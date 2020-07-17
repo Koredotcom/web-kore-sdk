@@ -3438,7 +3438,9 @@
                                             msgData.message[0].cInfo.body="Rate this chat session";
                                         }
                                         if (msgData.message[0].component.payload.template_type === 'list') {
-                                            msgData.message[0].component.payload.fromHistory = true;
+                                            if (index !== res[1].messages.length - 1) {
+                                                msgData.message[0].component.payload.fromHistory = true;
+                                            }
                                         }
                                         if(msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)){
                                             msgData.message[0].cInfo.body = "";
