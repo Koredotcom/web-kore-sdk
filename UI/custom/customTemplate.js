@@ -1210,6 +1210,11 @@ print(JSON.stringify(message)); */
 		});
 		$(messageHtml).find(".multiCheckboxBtn").on('click',function(e){
 			var msgData=$(messageHtml).data();
+			if(msgData.message[0].component.payload.sliderView===true){
+				msgData.message[0].component.payload.sliderView=false;
+				chatInitialize.renderMessage(msgData);
+				bottomSliderAction("hide");
+			}
 			msgData.message[0].component.payload.sliderView=false;
 				var checkboxSelection = $(e.currentTarget.parentElement).find('.checkInput:checked');
 				var selectedValue = [];
@@ -1219,10 +1224,9 @@ print(JSON.stringify(message)); */
 					toShowText.push($(checkboxSelection[i]).attr('text'));
 				}
 				$('.chatInputBox').text('Here are the selected items ' + ': '+ selectedValue.toString());
-				chatInitialize.renderMessage(msgData);
+				
 				chatInitialize.sendMessage($('.chatInputBox'),'Here are the selected items '+': '+ toShowText.toString());
 				$(messageHtml).find(".multiCheckboxBtn").hide();
-				bottomSliderAction("hide");
 				$(messageHtml).find(".advancedMultiSelectScroll").css({"pointer-events":"none"});
 				$(messageHtml).find(".advancedMultiSelectScroll").css({"overflow":"hidden"});
 			
