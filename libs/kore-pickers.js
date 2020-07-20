@@ -473,7 +473,7 @@ KorePickers.prototype.addClickEventRangeCalender = function (mainConfig) {
 }
 KorePickers.prototype.getDateRangeIconTemplate = function () {
     var dateRangeFooterTemplate = '<div class="sdkFooterIcon rangeCalender"> \
-                    <button name="dates" class="sdkRangeCalender calenderBtn" title="Rangecalender"> \
+                    <button name="dates" class="sdkRangeCalender calenderBtn" title="RangeCalender"> \
                         <i class="Rangecalender"></i> \
                     </button> \
                 </div>';
@@ -605,7 +605,7 @@ KorePickers.prototype.addClickEventCalender = function (mainConfig) {
 }
 KorePickers.prototype.getDateIconTemplate = function () {
     var dateFooterTemplate = '<div class="sdkFooterIcon singleCalender"> \
-                    <button name="dates" class="sdkCalender calenderBtn" title="calender"> \
+                    <button name="dates" class="sdkCalender calenderBtn" title="Calender"> \
                         <i class="calender"></i> \
                     </button> \
                 </div>';
@@ -757,7 +757,7 @@ KorePickers.prototype.addClockListener = function (mainConfig) {
 }
 KorePickers.prototype.getClockIconTemplate = function () {
     var clockFooterTemplate = '<div class="sdkFooterIcon clock"> \
-                   <button type="button"  class="sdkClock clockBtn" title="clock"> \
+                   <button type="button"  class="sdkClock clockBtn" title="Clock"> \
                         <i class="clock"></i> \
                    </button> \
                </div>';
