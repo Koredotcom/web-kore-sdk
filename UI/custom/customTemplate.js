@@ -13,6 +13,12 @@
 	 */
 	customTemplate.prototype.renderMessage = function (msgData) {
 		var messageHtml = '';
+		var customTemplateOverrides;
+
+		if (this.cfg.customTemplateOverrides) {
+			customTemplateOverrides = this.cfg.customTemplateOverrides
+		}
+
 		if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "dropdown_template") {
 			messageHtml = $(this.getChatTemplate("dropdown_template")).tmpl({
 				'msgData': msgData,
@@ -80,6 +86,12 @@
 			 this.bindEvents(messageHtml);
 			 $(messageHtml).data(msgData);
 			} else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "list") {
+				if (customTemplateOverrides.list && customTemplateOverrides.list.getIconHREF) {
+					msgData.message[0].component.payload.elements.forEach(function (el) {
+						el.svg_url = customTemplateOverrides.list.getIconHREF(el.image_url);
+					});
+				}
+
 				messageHtml = $(this.getChatTemplate("templatelist")).tmpl({
 					'msgData': msgData,
 					'helpers': this.helpers,
@@ -1080,9 +1092,19 @@ print(JSON.stringify(message)); */
 													{{else}} \
 															<li class="listTmplContentChild hidingListTemplateValues"> \
 																	{{if msgItem.image_url}} \
-																			<div class="listRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
-																					<img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';" /> \
-																			</div> \
+																			\{{if msgItem.svg_url}} \
+																					<div class="listRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
+																						<div icon="outline" size="s" svg="${msgItem.svg_url}"> \
+																							<svg class="icon"> \
+																								<use xlink:href="#${msgItem.svg_url}"></use> \
+																							</svg> \
+																						</div> \
+																					</div> \
+																			{{else}} \
+																				<div class="listRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
+																						<img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';" /> \
+																				</div> \
+																			{{/if}} \
 																	{{/if}} \
 																	<div class="listLeftContent"> \
 																		<div class="listItemTitle"> \
