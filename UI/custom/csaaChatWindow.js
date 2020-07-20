@@ -13,6 +13,7 @@
   // Chat events
   var CHAT_ICON_CLICKED           = 'CHAT_ICON_CLICKED';
   var CHAT_STARTED                = 'CHAT_STARTED';
+  var CHAT_RELOADED               = 'CHAT_RELOADED';
   var CHAT_MINIMIZED              = 'CHAT_MINIMIZED';
   var CHAT_MAXIMIZED              = 'CHAT_MAXIMIZED';
   var CHAT_CUSTOMER_ENGAGED       = 'CHAT_CUSTOMER_ENGAGED';
@@ -28,6 +29,9 @@
   var CHAT_INIT_VALIDATION_ERROR  = 'CHAT_INIT_VALIDATION_ERROR';
   var CHAT_START_VALIDATION_ERROR = 'CHAT_START_VALIDATION_ERROR';
   var CHAT_END_VALIDATION_ERROR   = 'CHAT_END_VALIDATION_ERROR';
+
+  var CHAT_AGENT_TYPING           = 'CHAT_AGENT_TYPING';
+  var CHAT_AGENT_STOPPED_TYPING   = 'CHAT_AGENT_STOPPED_TYPING';
 
   function csaaKoreBotChat() {
     var koreJquery;
@@ -292,6 +296,9 @@
           if (!isChatWindowMinimized() && !defaultChatConfig.loadHistory) {
             $('.kore-chat-window').addClass('slide');
           }
+          if (!defaultChatConfig.loadHistory) {
+            emit(CHAT_RELOADED);
+          }
         }).catch(function (error) {
           handleChatEnd();
         });
@@ -398,6 +405,7 @@
         //applicable only if botOptions.loadHistory = true;
         bot.on('history', function (historyRes) {
 
+          emit(CHAT_RELOADED);
           if (isChatWindowMinimized()) {
             return;
           }
@@ -445,6 +453,7 @@
           var dataObj = JSON.parse(msg.data);
 
           if (dataObj.ok && dataObj.type === 'ack'
+            && isChatSessionActive()
             && localStorage.getItem(CUSTOMER_ENGAGED) !== 'true') {
               emit(CHAT_CUSTOMER_ENGAGED);
               localStorage.setItem(CUSTOMER_ENGAGED, 'true');
@@ -493,6 +502,10 @@
             } else if (msgText === 'Thank you. The chat session has ended.') {
               emit(CHAT_SURVEY_UNANSWERED);
               handleChatEndByAgent();
+            } else if (msgText === 'AT') {
+              emit(CHAT_AGENT_TYPING);
+            } else if (msgText === 'AST') {
+              emit(CHAT_AGENT_STOPPED_TYPING);
             }
 
             if (localStorage.getItem(LIVE_CHAT) === 'true') {
