@@ -901,25 +901,31 @@
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.largeImg{
     display: flex;
-    /* align-items: center; */
+    align-items: center; 
     margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 3px;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.mediumImg{
     display: flex;
     align-items: center;
     margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 3px;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.smallImg{
     display: flex;
-    /* align-items: center; */
+     align-items: center; 
     margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 3px;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc:nth-last-child(1){
     margin-bottom: 0;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .listTableDetailsDescSub {
     /* float: left; */
-    flex: 100%;
+    width: 100%;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .listTableDetailsDescSub .listTableDetailsDescName{
     font-size: 12px;
@@ -936,17 +942,19 @@
 }
 
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.largeImg .listTableBigImgConytainer{
-    flex: 50px;
-    height: 40px;
+    /* height: 40px; */
+    width: 45px;
+    flex-shrink: 0;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.mediumImg .listTableBigImgConytainer{
-    flex: 30px;
-    height: 20px;
+    /* height: 30px; */
+    width: 30px;
+    flex-shrink: 0;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.smallImg .listTableBigImgConytainer{
-    flex: 20px;
-    height: 10px;
-    padding-top:3px;
+    width: 25px;
+    /* height: 10px; */
+    flex-shrink: 0;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .listTableBigImgConytainer img{
     padding-right: 10px;
