@@ -939,6 +939,7 @@
                 me.config.botOptions.loadHistory = me.config.loadHistory;
                 me.config.botOptions.chatHistory=me.config.chatHistory;
                 me.config.botOptions.handleError=me.config.handleError;
+                me.config.botOptions.googleMapsAPIKey=me.config.googleMapsAPIKey;
                 autoEnableSpeechAndTTS = me.config.autoEnableSpeechAndTTS || false;
                 /* autoEnableSpeechAndTTS will on if and only if both tts and mic are enabled */
                 if (isTTSEnabled && (isSpeechEnabled || allowGoogleSpeech) && autoEnableSpeechAndTTS) {

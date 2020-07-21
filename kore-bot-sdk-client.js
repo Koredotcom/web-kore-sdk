@@ -69,7 +69,7 @@ KoreBot.prototype.fetchUserLocation = function() {
   console.log("Fetching user location");
   var options=this.options;
 	var successCallback =  function(position){
-    if(options.googleMapsAPIKey !== ""){
+    if(options.googleMapsAPIKey){
       var latitude = position.coords.latitude;
       var longitude =  position.coords.longitude;
       userLocation.latitude = latitude;
@@ -91,7 +91,10 @@ KoreBot.prototype.fetchUserLocation = function() {
               localStorage.setItem("locationData", JSON.stringify(data));
             }
           }
-          var addressComponents = data.results[0].address_components;
+          var addressComponents = [];
+          if(data.results && data.results.length && data.results[0].address_components) {
+              addressComponents = data.results[0].address_components;
+          }
           for(i=0;i<addressComponents.length;i++){
             var types = addressComponents[i].types;
             if(types=="locality,political"){
