@@ -526,9 +526,19 @@
                         if (_matchAstrik && _matchAstrik.length > 0) {
                             for (j = 0; j < _matchAstrik.length; j++) {
                                 var _boldTxt = _matchAstrik[j];
-                                _boldTxt = _boldTxt.substring(1, _boldTxt.length - 1);
-                                _boldTxt = '<b>' + _boldTxt.trim() + '</b>';
-                                txtArr[i] = txtArr[i].replace(_matchAstrik[j], _boldTxt);
+                                var validBoldGroup = true;
+                                if(_boldTxt.includes('*')){
+                                    var _tempStr = _boldTxt.replace(/\*/g,'');
+                                    var letterNumber = /^[0-9a-zA-Z!@#$%^&()_ +\-=\[\]{};':"\\|,.<>\/?]+$/;
+                                    if(!(_tempStr.match(letterNumber))){
+                                        validBoldGroup = false;
+                                    }
+                                }
+                                if(validBoldGroup){
+                                    _boldTxt = _boldTxt.substring(1, _boldTxt.length - 1);
+                                    _boldTxt = '<b>' + _boldTxt.trim() + '</b>';
+                                    txtArr[i] = txtArr[i].replace(_matchAstrik[j], _boldTxt);
+                                }
                             }
                         }
                         //For backward compatability who used ~ for Italics
