@@ -1282,6 +1282,10 @@
                         //var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
                         var _innerText = ($(this)[0] && $(this)[0].innerText) ? $(this)[0].innerText.trim() : "" || ($(this) && $(this).attr('data-value')) ? $(this).attr('data-value').trim() : "";
                         me.sendMessage($('.chatInputBox'), _innerText);
+                    } else if (type == "list-postback" || type == "list-text") {
+                        var value = $(this).attr('actual-value') || $(this).attr('value');
+                        $('.chatInputBox').text(value);
+                        me.sendMessage($('.chatInputBox'), value);
                     } else if (type == "url" || type == "web_url") {
                         if($(this).attr('msgData')!==undefined){
                             var msgData;

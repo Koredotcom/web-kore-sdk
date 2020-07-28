@@ -224,8 +224,9 @@
         $koreChatFooter.prepend($liveAgentButton);
 
         $chatContainer.on('scroll', function () {
+          var $lastLiveAgentButton = getLastLiveAgentButton();
           var liveAgentButtonOffset = $liveAgentButton.offset();
-          var liveAgentButtonSelectionOffset = getLiveAgentSelection().offset();
+          var liveAgentButtonSelectionOffset = $lastLiveAgentButton.offset();
           var chatContainerHeight = $koreChatBody.height();
 
           if (!liveAgentButtonSelectionOffset) return;
@@ -245,14 +246,18 @@
           }
 
           $liveAgentButton.attr('distance', distanceAttr);
+
+          $lastLiveAgentButton.off('click').on('click', function () {
+            $liveAgentButton.remove();
+          });
         });
 
         $liveAgentButton.children().on('click', function () {
-          getLiveAgentSelection().click();
+          getLastLiveAgentButton().click();
           $liveAgentButton.remove();
         });
 
-        function getLiveAgentSelection () {
+        function getLastLiveAgentButton () {
           return $chatContainer
             .find('.buttonTmplContentBox li:contains("Live Agent")')
             .last();
@@ -467,15 +472,6 @@
               emit(CHAT_STARTED);
               $koreChatWindow.addClass('slide');
             }
-
-            $('.listTmplContentChild').off('click').on('click', function (e) {
-              if (e.target.className === 'buyBtn') return;
-              if (e.target.className === 'listRightContent') return;
-              if (e.target.tagName === 'IMG') return;
-
-              var $buyBtn = $(this).find('.buyBtn')
-              $buyBtn.trigger('click');
-            });
 
             var payload = dataObj.message[0].component.payload;
             var msgText = '';

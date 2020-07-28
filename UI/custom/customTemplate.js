@@ -1091,45 +1091,44 @@ print(JSON.stringify(message)); */
 															{{/if}}\
 													{{else}} \
 															<li class="listTmplContentChild hidingListTemplateValues"> \
-																	{{if msgItem.image_url}} \
-																			\{{if msgItem.svg_url}} \
-																					<div class="listRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
-																						<div icon="outline" size="s" svg="${msgItem.svg_url}"> \
-																							<svg class="icon"> \
-																								<use xlink:href="#${msgItem.svg_url}"></use> \
-																							</svg> \
+																	{{if msgItem.buttons}}\
+																			<div class="buyBtn" {{if msgItem.buttons[0].type}}type="list-${msgItem.buttons[0].type}"{{/if}} {{if msgItem.buttons[0].url}}url="${msgItem.buttons[0].url}"{{/if}} {{if msgItem.buttons[0].payload}}value="${msgItem.buttons[0].payload}"{{/if}}>\
+																				{{if msgItem.image_url}} \
+																					{{if msgItem.svg_url}} \
+																							<div class="listRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
+																								<div icon="outline" size="s" svg="${msgItem.svg_url}"> \
+																									<svg class="icon"> \
+																										<use xlink:href="#${msgItem.svg_url}"></use> \
+																									</svg> \
+																								</div> \
+																							</div> \
+																					{{else}} \
+																						<div class="listRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
+																								<img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';" /> \
 																						</div> \
+																					{{/if}} \
+																				{{/if}} \
+																				<div class="listLeftContent"> \
+																					<div class="listItemTitle"> \
+																					{{if msgData.type === "bot_response"}} \
+																							{{if msgItem.buttons}}\
+																									{{if msgItem.buttons[0].title}}\
+																											{{html helpers.convertMDtoHTML(msgItem.title + " - " + msgItem.buttons[0].title, "bot", false)}} \
+																									{{else}} \
+																											{{html helpers.convertMDtoHTML(msgItem.title, "user")}} \
+																									{{/if}}\
+																							{{else}} \
+																									{{html helpers.convertMDtoHTML(msgItem.title, "bot", true)}} \
+																							{{/if}}\
+																					{{else}} \
+																							{{html helpers.convertMDtoHTML(msgItem.title, "user")}} \
+																					{{/if}} \
 																					</div> \
-																			{{else}} \
-																				<div class="listRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
-																						<img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';" /> \
-																				</div> \
-																			{{/if}} \
-																	{{/if}} \
-																	<div class="listLeftContent"> \
-																		<div class="listItemTitle"> \
-																		{{if msgData.type === "bot_response"}} \
-																				{{if msgItem.buttons}}\
-																						{{if msgItem.buttons[0].title}}\
-																								{{html helpers.convertMDtoHTML(msgItem.title + " - " + msgItem.buttons[0].title, "bot", false)}} \
-																						{{else}} \
-																								{{html helpers.convertMDtoHTML(msgItem.title, "user")}} \
-																						{{/if}}\
-																				{{else}} \
-																						{{html helpers.convertMDtoHTML(msgItem.title, "bot", true)}} \
-																				{{/if}}\
-																		{{else}} \
-																				{{html helpers.convertMDtoHTML(msgItem.title, "user")}} \
-																		{{/if}} \
-																		</div> \
-																			{{if msgItem.subtitle}}<div class="listItemSubtitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
-																			{{if msgItem.default_action && msgItem.default_action.url}}<div class="listItemPath" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
-																			{{if msgItem.buttons}}\
-																			<div> \
-																					<span class="buyBtn" {{if msgItem.buttons[0].type}}type="${msgItem.buttons[0].type}"{{/if}} {{if msgItem.buttons[0].url}}url="${msgItem.buttons[0].url}"{{/if}} {{if msgItem.buttons[0].payload}}value="${msgItem.buttons[0].payload}"{{/if}}>{{if msgItem.buttons[0].title}}${msgItem.buttons[0].title}{{else}}Buy{{/if}}</span> \
+																						{{if msgItem.subtitle}}<div class="listItemSubtitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
+																						{{if msgItem.default_action && msgItem.default_action.url}}<div class="listItemPath" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
+																				</div>\
 																			</div> \
-																			{{/if}}\
-																	</div>\
+																	{{/if}}\
 															</li> \
 													{{/if}} \
 											{{/each}} \
