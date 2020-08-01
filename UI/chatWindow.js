@@ -2337,7 +2337,7 @@
                 }else{
                     //ignore message(msgId) if it is already in viewport                     
                     if ($('.kore-chat-window .chat-container li#' + msgData.messageId).length < 1) {
-                        if (msgData.type === "bot_response") {
+                        if (msgData.type === "bot_response" && msgData.fromHistorySync) {
                             var msgTimeStamps = [];
                             var msgEles = $('.kore-chat-window .chat-container>li');
                             if (msgEles.length) {
@@ -3263,6 +3263,7 @@
                                 setTimeout(function () {
                                     if (msgData.type === "outgoing" || msgData.type === "bot_response") {
                                         //if ($('.kore-chat-window .chat-container li#' + msgData.messageId).length < 1) {
+                                            msgData.fromHistorySync=true;
                                             me.renderMessage(msgData);
                                         //}
                                     }
