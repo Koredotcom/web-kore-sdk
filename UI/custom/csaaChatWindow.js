@@ -128,6 +128,7 @@
               allowLocation: false,
               loadHistory: false,
               messageHistoryLimit: 10,
+              automaticInputFocus: true,
               autoEnableSpeechAndTTS: false,
               graphLib: 'd3',
               googleMapsAPIKey: ''
@@ -418,6 +419,7 @@
           var observer = new MutationObserver(onMutation('class', function (value) {
             if (value.indexOf('showMsg') === -1) {
               $chatContainer.finish();
+              if (!defaultChatConfig.automaticInputFocus) setTimeout(function () { $chatInputBox.blur(); });
               setChatIconVisibility(false);
               $koreChatWindow.addClass('slide');
             }
@@ -446,6 +448,7 @@
 
         // Open event triggers when connection established with bot
         bot.on('open', function (response) {
+          if (!defaultChatConfig.automaticInputFocus) setTimeout(function () { $chatInputBox.blur(); });
           var jwt = JSON.stringify(bot.userInfo);
           if (localStorage.getItem(JWT_GRANT) !== jwt) {
             localStorage.setItem(JWT_GRANT, jwt);
