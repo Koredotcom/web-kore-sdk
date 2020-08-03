@@ -3509,10 +3509,6 @@
             }
 
             function getSIDToken() {
-                if(!speechPrefixURL){
-                    console.warn("Please provide speech socket url");
-                    return false;
-                }
                 if(allowGoogleSpeech) {
                     if(recognition) { // using webkit speech recognition
                         startGoogleWebKitRecognization();
@@ -3522,6 +3518,10 @@
                     }
                 }
                 else {
+                    if(!speechPrefixURL){
+                        console.warn("Please provide speech socket url");
+                        return false;
+                    }
                     $.ajax({
                         url: speechPrefixURL+"asr/wss/start?email="+userIdentity,
                         type: 'post',
