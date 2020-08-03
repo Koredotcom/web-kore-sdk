@@ -396,7 +396,9 @@ KoreBot.prototype.init = function(options,messageHistoryLimit) {
         window.messageHistoryLimit = messageHistoryLimit || 10;
     }
 	options = options || {};
-	this.options = options;
+  this.options = options;
+  this.oldestId=null;
+  this.RtmClient=null;
 	if (!options.test) {
 		debug("test is false");
 		if (isFunction(options.assertionFn)) {
