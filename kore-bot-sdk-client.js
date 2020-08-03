@@ -2,6 +2,7 @@ requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof re
 var clients = require('./index.js');
 var EventEmitter = require('events');
 var inherits = require('inherits');
+var apis = require(15);//require('./apis/index');
 var lodash;
 if (require('lodash').bind) {
 	lodash = require('lodash');
@@ -33,7 +34,20 @@ function KoreBot() {
 	this.initialized = false;
 	this.clients = clients;
 	this.latestId = null; // latest messageId.
-	this.oldestId = null; // oldest messageId.
+  this.oldestId = null; // oldest messageId.
+  this.EventEmitter=EventEmitter;
+  //this.removeClass=removeClass;
+  this.lodash=lodash;
+
+  this.bind=bind;
+  this.isFunction=isFunction;
+  this.RTM_EVENTS=RTM_EVENTS;
+  this.RTM_CLIENT_EVENTS=RTM_CLIENT_EVENTS;
+  this.jstz=jstz;
+  this.noop=noop; 
+  this.debug=debug;
+  this.userLocation=userLocation;
+  //this.removeClass=removeClass;
 }
 var userLocation = {
     "city": "",
@@ -60,7 +74,7 @@ KoreBot.prototype.emit = function emit() {
             $('.disableFooter').removeClass('disableFooter');
         });
 	}
-  KoreBot.super_.prototype.emit.apply(this, arguments);
+  this.EventEmitter.prototype.emit.apply(this, arguments);
 };
 
 /*
@@ -360,7 +374,14 @@ KoreBot.prototype.onLogIn = function(err, data) {
 			"botInfo": this.options.botInfo
 		});
 		this.RtmClient.on(RTM_EVENTS.MESSAGE, bind(this.onMessage, this));
-		this.RtmClient.on(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, bind(this.onOpenWSConnection, this));
+    this.RtmClient.on(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, bind(this.onOpenWSConnection, this));
+    //Propagating the events triggered on this.RtmClient to KoreBot instance with ":rtm" prefix
+    var _me=this;
+    Object.keys(RTM_CLIENT_EVENTS).forEach(function(rtmClientEvent){
+      _me.RtmClient.on(RTM_CLIENT_EVENTS[rtmClientEvent],function(eventData){
+        _me.emit("rtm:"+RTM_CLIENT_EVENTS[rtmClientEvent],eventData);
+      });
+    });
 	}
 };
 
@@ -422,7 +443,35 @@ KoreBot.prototype.init = function(options,messageHistoryLimit) {
 
 module.exports.instance = function(){
 	_chatHistoryLoaded = false;
-	return new KoreBot();
+	  var _instance=new KoreBot();
+    /*
+      Adding KoreBot,KoreRTMClient function to instance 
+      so developers can override the prototype methods of KoreBot from out of this file 
+      
+      Example:overriding the KoreBot.prototype.onMessage
+        var bot = requireKr('/KoreBot.js').instance();
+        bot.KoreBot.onMessage = function(msg) {
+          //write your implementation here
+        };
+      */
+      _instance.KoreBot=KoreBot;
+      _instance.KoreRTMClient=clients.KoreRtmClient;
+
+      /*
+      adding dependent module functions to instance
+      as on this time of writing following are the dependents
+        "KoreRtmClient", 
+        "RtmApi", 
+        "LogInApi", 
+        "AnonymousLogin",
+        "HistoryApi"
+      Developers can override methods of these modules also via
+        bot.moduleName.methodName  
+      */
+      Object.keys(apis).forEach(function(apikey){
+        _instance[apikey]=apis[apikey];
+      });
+      return _instance;
 };
 },{"./index.js":1,"./jstz.js":2,"debug":21,"events":30,"inherits":23,"lodash":24}],1:[function(require,module,exports){
 var events = require('./lib/clients/events');
@@ -1105,6 +1154,8 @@ var BaseAPIClient = require('../client');
 var RtmApi = require('../web/apis').RtmApi;
 var makeMessageEventWithSubtype = require('../events/utils').makeMessageEventWithSubtype;
 var wsSocketFn = require('../transports/ws');
+debugger;
+var CLIENT_EVENTS = require(4);
 
 function KoreRTMClient(token, opts) {
   var clientOpts = opts || {};
@@ -1134,6 +1185,8 @@ function KoreRTMClient(token, opts) {
   this.user = {};
   this.user.accessToken = clientOpts.accessToken;
   this.botInfo = clientOpts.botInfo || {};
+  this.CLIENT_EVENTS=CLIENT_EVENTS.RTM;
+  this.debug=debug;
 }
 
 inherits(KoreRTMClient, BaseAPIClient);
@@ -1486,6 +1539,7 @@ var inherits = require('inherits');
 function AnonymousLogin(client) {
   this.name = 'anonymouslogin';
   this.client = client;
+  this.BaseApi=BaseApi;
 }
 
 inherits(AnonymousLogin, BaseApi);
@@ -1507,6 +1561,7 @@ var inherits = require('inherits');
 function HistoryApi(client) {
   this.name = 'history';
   this.client = client;
+  this.BaseApi=BaseApi;
 }
 
 inherits(HistoryApi, BaseApi);
@@ -1599,6 +1654,7 @@ var inherits = require('inherits');
 function LogInApi(client) {
   this.name = 'login';
   this.client = client;
+  this.BaseApi = BaseApi;
 }
 
 inherits(LogInApi, BaseApi);
@@ -1620,6 +1676,7 @@ var inherits = require('inherits');
 function RtmApi(client) {
   this.name = 'rtm';
   this.client = client;
+  this.BaseApi = BaseApi;
 }
 
 inherits(RtmApi, BaseApi);
