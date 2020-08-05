@@ -140,7 +140,7 @@ sends a message to bot.
 KoreBot.prototype.sendMessage = function(message,optCb) {
 	debug("sending message to bot");
 	if(this.initialized){
-		message["resourceid"] = '/bot.message';
+		message["resourceid"] = message.resourceid || '/bot.message';
 		message["botInfo"] = this.options.botInfo || {};
 		message["client"] = this.options.client || "sdk";
 		message["meta"] = {

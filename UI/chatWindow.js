@@ -1959,6 +1959,17 @@
                 msgData.message[0].cInfo.ignoreCheckMark=ignoreCheckMark;
                 me.renderMessage(msgData);
             };
+                       
+            chatWindow.prototype.closeConversationSession = function () {
+                var me = this;
+                var clientMessageId = new Date().getTime();
+                var messageToBot = {};
+                messageToBot["clientMessageId"] = clientMessageId;
+                messageToBot["resourceid"] = '/bot.closeConversationSession';
+                bot.sendMessage(messageToBot, function messageSent(err) {
+                    console.error("bot.closeConversationSession send failed sending")
+                });
+            };
 
             chatWindow.prototype.renderMessage = function (msgData) {
                 var me = this, messageHtml = '', extension = '', _extractedFileName = '';
@@ -3804,6 +3815,11 @@
                     }
                 }
             }
+            this.closeConversationSession = function () {
+               if(chatInitialize){
+                    chatInitialize.closeConversationSession();
+               } 
+            }
             /*************************************       Microphone code      **********************************************/
             var final_transcript = '';
             var recognizing = false;
@@ -5184,7 +5200,8 @@
                 sdkInstance:bot,
                 chatWindow:chatWindow,
                 addWidgetEvents:addWidgetEvents,
-                setWidgetInstance:setWidgetInstance
+                setWidgetInstance:setWidgetInstance,
+                closeConversationSession:closeConversationSession
             };
 
             //Actual chatwindow.js koreBotChat function code end here
