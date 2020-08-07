@@ -2332,6 +2332,9 @@
                         });
                     }
                 }
+                _chatContainer.find('li').attr('aria-live','off');
+                _chatContainer.find('li').attr('aria-hidden','true');//for mac voiceover bug with aria-live
+   
                 if(msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.sliderView && !msgData.message[0].component.payload.fromHistory){
                     bottomSliderAction('show',messageHtml);
                 }else{
@@ -2490,7 +2493,7 @@
                                 <p class="headerTip warningTip">Something went wrong.Please try again later.</p> \
                             </div> \
                         </div> \
-                        <div role="region" aria-live="assertive" class="kore-chat-body"> \
+                        <div role="log" aria-live="polite" aria-atomic="true" class="kore-chat-body"> \
                             <div class="errorMsgBlock"> \
                             </div> \
                             <ul class="chat-container"></ul> \
@@ -2522,9 +2525,9 @@
                             {{if msgItem.cInfo && msgItem.type === "text"}} \
                                 <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
                                      class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}}\ {{if msgData.icon}}with-icon{{/if}}"> \
-                                    {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-                                    {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})" title="User Avatar"></div> </div> {{/if}} \
-                                    <div aria-live="assertive"  class="messageBubble">\
+                                    {{if msgData.createdOn}}<div aria-hidden="true" aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+                                    {{if msgData.icon}}<div aria-hidden="true"  aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})" title="User Avatar"></div> </div> {{/if}} \
+                                    <div class="messageBubble">\
                                         <div> \
                                             {{if msgData.type === "bot_response"}} \
                                                 {{if msgItem.component  && msgItem.component.type =="error"}} \
@@ -3331,7 +3334,7 @@
                                             scrollTop: $('.chat-container').prop("scrollHeight")
                                         }, 2500);
                                         $('.historyLoadingDiv').removeClass('showMsg');
-                                        $('.chat-container').append("<div class='endChatContainer'><span class='endChatContainerText'>End of chat history</span></div>");
+                                        $('.chat-container').append("<div class='endChatContainer' aria-live='off' aria-hidden='true' ><span class='endChatContainerText'>End of chat history</span></div>");
                                         if(messagesQueue.length){
                                             messagesQueue.forEach(function(msg, currIndex){
                                                 me.renderMessage(msg);
