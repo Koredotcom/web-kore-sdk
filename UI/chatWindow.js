@@ -3267,7 +3267,26 @@
                                     if (msgData.type === "outgoing" || msgData.type === "bot_response") {
                                         //if ($('.kore-chat-window .chat-container li#' + msgData.messageId).length < 1) {
                                             msgData.fromHistorySync=true;
-                                            me.renderMessage(msgData);
+                                                                                        
+                                            try {
+                                                msgData.message[0].cInfo.body = JSON.parse(msgData.message[0].cInfo.body);
+                                                if (msgData.message[0].cInfo.body && msgData.message[0].cInfo.body.text) {
+                                                    msgData.message[0].cInfo.body = msgData.message[0].cInfo.body.text;
+                                                }
+                                                msgData.message[0].component = msgData.message[0].cInfo.body;
+                                                if (msgData.message[0].component.payload.template_type === 'dropdown_template') {
+                                                    msgData.message[0].component.selectedValue=res[1].messages[index+1].message[0].cInfo.body;                                    
+                                                }
+                                                if (msgData.message[0].component.payload.template_type === 'feedbackTemplate') {
+                                                    msgData.message[0].cInfo.body="Rate this chat session";
+                                                }
+                                                if(msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)){
+                                                    msgData.message[0].cInfo.body = "";
+                                                }
+                                                me.renderMessage(msgData);
+                                            } catch (e) {
+                                                me.renderMessage(msgData);
+                                            }
                                         //}
                                     }
                                 }, index * 100);
