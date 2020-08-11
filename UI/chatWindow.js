@@ -1579,7 +1579,11 @@
                             messagesQueue.push(tempData);
                         }
                         else {
-                            me.renderMessage(tempData);
+                            if (me.config.supportDelayedMessages) {
+                                me.pushTorenderMessagesQueue(tempData);
+                            } else {
+                                me.renderMessage(tempData);
+                            }
                         }
                     }
                     else if (tempData.from === "self" && tempData.type === "user_message") {
@@ -2412,6 +2416,45 @@
                     }
                 }
             };                   
+                                    
+            chatWindow.prototype.pushTorenderMessagesQueue = function (msgItem) {
+                var me = this;
+                if( !me.renderMessagesQueue){
+                    me.renderMessagesQueue = [];
+                }
+                me.renderMessagesQueue.push(msgItem);
+                if(!me.renderEventLoop){
+                    me.startRenderEventLoop();
+                }
+            }
+            chatWindow.prototype.startRenderEventLoop = function () {
+                var me = this;
+                me.msgRenderingProgress = false;
+                me.renderEventLoop=setInterval(function () {
+                    console.log("Running Event loop")
+                    me.checkForMsgQueue();
+                }, 500);
+            }
+            chatWindow.prototype.checkForMsgQueue = function () {
+                var me = this;
+                if (me.renderMessagesQueue.length && !me.msgRenderingProgress) {
+                    var tempData = me.renderMessagesQueue.shift();
+                    var delay = 0;
+                    if (tempData.message && tempData.message.length && tempData.message[0] && tempData.message[0].component && tempData.message[0].component.payload && tempData.message[0].component.payload.renderDelay) {
+                        delay = tempData.message[0].component.payload.renderDelay || 0;
+                    }
+                    me.msgRenderingProgress = true;
+                    setTimeout(function () {
+                        me.renderMessage(tempData);
+                        me.msgRenderingProgress = false;
+                    }, delay);
+                }
+                if(!me.renderMessagesQueue.length && !me.msgRenderingProgress && me.renderEventLoop){
+                    clearTimeout(me.renderEventLoop);
+                    me.renderEventLoop=false;
+                }
+            };    
+
             chatWindow.prototype.formatMessages = function (msgContainer) {
                 /*adding target to a tags */
                 $(msgContainer).find('a').attr('target', '_blank');
