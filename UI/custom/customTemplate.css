@@ -383,9 +383,10 @@
      content:"";
  }
  .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer{
-     display: flex;
-     align-items: center;
      vertical-align: middle;
+     height: 100%;
+     width: 100%;
+     display: inline-block;
  }
  .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer .checkImgContainer,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer .checkImgContainer{ 
      float: left;
@@ -396,6 +397,9 @@
  .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer .checkImgContainer img,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer .checkImgContainer img{
      width: 50px;
      height: 50px;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer .multiSelectDescContainer,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer .multiSelectDescContainer{ 
+    padding: 5px 0 0 0;
  }
  .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS.noImgdescription label  .multiSelectDescContainer .multiTitle,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS.noImgdescription label  .multiSelectDescContainer .multiTitle{
      font-weight: bold;
@@ -490,12 +494,10 @@
 	width:100%;
 }
 .kore-chat-window .kore-chat-body .listViewTmplContent .listViewLeftContent{
-    width: 77%;
-    padding: 0 10px;
     vertical-align: middle;
-    display: flex;	
-    align-items: center;	
-    justify-content: space-between;
+    display: table-cell;
+    padding: 0 10px;
+    width: 100%;
 }
 .kore-chat-window .kore-chat-body .listViewTmplContent .listViewRightContent{
     cursor: pointer;
@@ -519,9 +521,8 @@
     box-shadow: var(--sdk-chat-widow-primary-box-shadow);
     background-color: var(--sdk-chat-widow-default-white);
     height: 56px;
-    display: flex;	
-    align-items: center;	
-    flex-wrap: wrap;	
+    display: table;
+    vertical-align: middle;	
     cursor: pointer;
 }
 .kore-chat-window .kore-chat-body .listViewTmplContent .listViewItemSubtitle{
@@ -542,7 +543,7 @@
 .kore-chat-window .kore-chat-body .listViewTmplContent .listViewItemValue{
     
     display: inline-block;
-     margin-left: 15px; 
+     /* margin-left: 15px;  */
     color: var(--sdk-chat-window-list-template-value-color);
     /* width: 66px;
     height: 22px; */
@@ -557,6 +558,7 @@
     overflow: hidden;
     text-overflow: ellipsis; 
     white-space: nowrap;
+    width:33%;
       
 }
 .kore-chat-window .kore-chat-body .listViewTmplContent .listItemPath{
@@ -596,7 +598,7 @@
 }
 .kore-chat-window .kore-chat-body .listViewTmplContent .listViewLeftContent .titleDesc{
     display: inline-block;
-    width:60%;
+    width:65%;
 }
 
 .kore-chat-window .kore-chat-body .listViewItemTitle {	
@@ -665,7 +667,7 @@
 }
 .kore-chat-window .kore-action-sheet .list-template-sheet .listViewLeftContent .titleDesc{
     display: inline-block;
-    width:60%;
+    width:65%;
 }
 .kore-chat-window .kore-action-sheet .list-template-sheet .sheetHeader .close-button{
     margin: 0;
@@ -694,54 +696,35 @@
     border-radius: 10px;
     box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
     background-color: var(--sdk-chat-widow-default-white);
-    height: 56px;
-    display: flex;	
-    align-items: center;	
-    flex-wrap: wrap;	
+    height: 56px;	
     cursor: pointer;
+    display: table;   
 }
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth{
-        width:84%;
-        height:40px;
-      overflow:auto;
-      display:flex;
+      width: 40%;
+      margin: 0 auto;
     }
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth .tabs {
-        width: 18px;
-        height: 17px;
-        font-size: 14px;
-        font-weight: normal;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: normal;
-        letter-spacing: 0.12px;
         color: var(--sdk-chat-window-list-template-sub-title-color);
-        padding-left:103px;
         cursor: pointer;
-        flex:1.1;  
-          
+        font-size: 14px;       
+    }
+    .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth .tabs:last-child{
+        float: right;
     }
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth .tabs.active {
      
-            width: 28px;
-            height: 17px;
             font-size: 14px;
             font-weight: bold;
-            font-stretch: normal;
-            font-style: normal;
-            line-height: normal;
-            letter-spacing: 0.12px;
             color: var(--sdk-chat-widow-primary-blue-color);
-            flex:1.1;
           
     }
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth .btnBG{	
         height: 26px;	
         border-radius: 6px;	
         display: inline-block;	
-        padding: 0 6px;	
-        text-align: center;	
-        line-height: 26px;	
+        padding: 5px 10px;
+        text-align: center;		
     }	
             
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth .tabs.active .btnBG{	
@@ -755,7 +738,11 @@
         border-radius: 50%;
     }
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues{	
-        width:96%;	
+        width:100%;    
+        padding: 0 10px;
+    }
+    .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .displayListValues{
+        padding: 0;
     }
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .listViewRightContent{
         cursor: pointer;
@@ -765,12 +752,10 @@
     padding-left: 10px;
     }
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .listViewLeftContent{
-        width: 77%;
+        width: 100%;
         padding: 0 10px;
         vertical-align: middle;
-        display: flex;	
-        align-items: center;	
-        justify-content: space-between;
+        display: table-cell;
     }
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .listViewLeftContent .listViewItemTitle{
         font-size: 13px;	
@@ -799,7 +784,7 @@
  
  .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .listViewLeftContent .listViewItemValue{
     display: inline-block;
-     margin-left: 15px; 
+     /* margin-left: 15px;  */
     color: var(--sdk-chat-window-list-template-value-color);
     /* width: 66px;
     height: 22px; */
@@ -814,6 +799,7 @@
     overflow: hidden;
     text-overflow: ellipsis; 
     white-space: nowrap;
+    width:33%;
       
  }
  /* New List Template using tabs Css ends here */
@@ -824,19 +810,13 @@
 .kore-chat-window .kore-chat-body .listTableContainerDiv{
     background-color: var(--sdk-chat-widow-default-white);
     box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
-    border-radius: 10px;
-    display: flex
+    border-radius: 10px;  
 }
 
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainerDivRepet{
     width: 100%;
 }
-.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableHeader{
-    /* height: 52px; */
-    background-color: var(--sdk-chat-widow-primary-bg-color);
-    display: flex;
-    padding: 15px;
-}
+
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableHeader .listTableHeaderTitle{
     font-size: 16px;
     font-weight: bold;
@@ -868,7 +848,8 @@
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv{
     border-bottom: 1px solid var(--sdk-chat-widow-primary-border-color);
      padding: 15px 0;
-     display: flex;
+     display: inline-block;
+     width: 100%;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .titleActions .listViewItemValue{
   white-space: nowrap;
@@ -884,48 +865,60 @@
     vertical-align: top;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsTitle{
-    margin: 0 0 15px 0;
+    /* margin: 0 0 15px 0; */
     font-size: 14px;
     font-weight: bold;
     color: var(--sdk-chat-widow-primary-font-color);
-    flex: 100%;
+    width: 58%;
+    display: inline-block;  
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainerDivRepet .listTableDetails .listTableHeader .listTableHeaderDesc{  
+    display: inline-block;
+    vertical-align: top;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc{
     margin: 0 0 15px 0;
     font-size: 14px;
-    font-weight: bold;
+    font-weight: bold;  
+    padding:10px;
     color: var(--sdk-chat-widow-primary-font-color);
+    border-bottom: 1px solid var(--sdk-chat-window-table-border-color);
+    display: table;
+    width: 100%;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.pointerStyle:hover{
     cursor:pointer;
 }
-.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.largeImg{
-    display: flex;
-    align-items: center; 
-    margin-bottom: 20px;
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.largeImg{    
+    margin-bottom: 10px;
     padding: 10px;
-    border-radius: 3px;
 }
-.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.mediumImg{
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.mediumImg{   
+    margin-bottom: 10px;
     padding: 10px;
-    border-radius: 3px;
 }
-.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.smallImg{
-    display: flex;
-     align-items: center; 
-    margin-bottom: 20px;
-    padding: 10px;
-    border-radius: 3px;
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.smallImg{  
+    margin-bottom: 10px;
+     padding: 10px;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listViewItemValue.actionLink.actiontitle{
+    text-decoration: underline;
+    cursor: pointer;
+    display:inline-block;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc:nth-last-child(1){
     margin-bottom: 0;
+    border-bottom: 0;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .listTableDetailsDescSub {
-    /* float: left; */
-    width: 100%;
+    display: table-cell;
+    vertical-align: middle;
+    padding: 0 5px 0 10px;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .titleActions{
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .listTableDetailsDescSub .listTableDetailsDescName{
     font-size: 12px;
@@ -942,23 +935,27 @@
 }
 
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.largeImg .listTableBigImgConytainer{
-    /* height: 40px; */
-    width: 45px;
-    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: table-cell;
+    vertical-align: middle;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.mediumImg .listTableBigImgConytainer{
-    /* height: 30px; */
     width: 30px;
-    flex-shrink: 0;
+    height: 30px;
+    display: table-cell;
+    vertical-align: middle;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.smallImg .listTableBigImgConytainer{
-    width: 25px;
-    /* height: 10px; */
-    flex-shrink: 0;
+    width: 20px;
+    height: 20px;    
+    display: table-cell;
+    vertical-align: middle;
 }
-.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .listTableBigImgConytainer img{
-    padding-right: 10px;
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .listTableBigImgConytainer img{ 
     max-width: 100%;
+    width: 100%;
+    height: 100%;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainerDivRepet .seeMoreFooter{
     padding: 0 15px;
@@ -974,10 +971,18 @@
     display: block;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainerDivRepet .listTableDetails .listTableHeader{
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
+    margin: 0 0 15px 0;
+    font-size: 14px;
+    font-weight: bold;    
+    padding:10px;
+    color: var(--sdk-chat-widow-primary-font-color);
+    display: block;
 }
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainerDivRepet .listTableDetails .listTableHeader .listTableHeaderDesc .headerDesc{
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
+ }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainerDivRepet .listTableDetails .listTableDetailsDescName.pointer:hover{
     cursor: pointer !important;
 }
@@ -1072,13 +1077,17 @@
     cursor: pointer;
 } */
 .kore-chat-window .star-rating {
-    display:flex;
-    flex-direction: row-reverse;
     font-size:3.5em;
-    justify-content:space-around;
     padding:0 .2em;
     text-align:center;
-    width:5em;
+    width:6em;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: reverse;
+    -ms-flex-direction: row-reverse;
+    flex-direction: row-reverse;
   }
   
   .kore-chat-window .star-rating input {
