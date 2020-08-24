@@ -4038,7 +4038,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
             'helpers': helpers,
             'panelDetail': xhrObject.passedkey
           });
-          _self.bindTemplateEvents(dataHTML, 'webForm',);
+          _self.bindTemplateEvents(dataHTML, 'webForm');
         } else {
           //#todo:deviation : making "defaultFilesTemplate" as default template, naming should correct though
           //var dataHTML = $(_self.getTemplate("defaultTemplate")).tmplProxy({

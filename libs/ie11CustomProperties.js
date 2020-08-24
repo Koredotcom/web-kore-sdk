@@ -100,12 +100,12 @@
 	// main logic
 
 	// cached regexps, better performance
-	const regFindSetters = /([\s{;])(--([A-Za-z0-9-_]+\s*:[^;!}{]+)(!important)?)(?=\s*([;}]|$))/g;
-	const regFindGetters = /([{;]\s*)([A-Za-z0-9-_]+\s*:[^;}{]*var\([^!;}{]+)(!important)?(?=\s*([;}$]|$))/g;
-	const regRuleIEGetters = /-ieVar-([^:]+):/g
-	const regRuleIESetters = /-ie-([^};]+)/g
-	const regHasVar = /var\(/;
-	const regPseudos = /:(hover|active|focus|target|:before|:after)/;
+	var regFindSetters = /([\s{;])(--([A-Za-z0-9-_]+\s*:[^;!}{]+)(!important)?)(?=\s*([;}]|$))/g;
+	var regFindGetters = /([{;]\s*)([A-Za-z0-9-_]+\s*:[^;}{]*var\([^!;}{]+)(!important)?(?=\s*([;}$]|$))/g;
+	var regRuleIEGetters = /-ieVar-([^:]+):/g
+	var regRuleIESetters = /-ie-([^};]+)/g
+	var regHasVar = /var\(/;
+	var regPseudos = /:(hover|active|focus|target|:before|:after)/;
 
 	onElement('link[rel="stylesheet"]', function (el) {
 		fetchCss(el.href, function (css) {
@@ -153,9 +153,9 @@
 		/* uncomment if spec finished and needed by someone
 		css = css.replace(/@property ([^{]+){([^}]+)}/, function($0, prop, body){
 			prop = prop.trim();
-			const declaration = {name:prop};
+			var declaration = {name:prop};
 			body.split(';').forEach(function(pair){
-				const x = pair.split(':');
+				var x = pair.split(':');
 				if (x[1]) declaration[ x[0].trim() ] = x[1];
 			});
 			declaration['inherits'] = declaration['inherits'].trim()==='true' ? true : false;
@@ -173,14 +173,14 @@
 	}
 
 	// beta
-	const styles_of_getter_properties = {};
+	var styles_of_getter_properties = {};
 
 	function parseRewrittenStyle(style) { // less memory then parameter cssText?
 
 		// beta
 		style['z-index']; // ie11 can access unknown properties in stylesheets only if accessed a dashed known property
 
-		const cssText = style.cssText;
+		var cssText = style.cssText;
 		var matchesGetters = cssText.match(regRuleIEGetters), j, match;
 		if (matchesGetters) {
 			var getters = []; // eg. [border,color]
@@ -213,13 +213,13 @@
 		style.ieCP_polyfilled = true;
 		var rules = style.sheet.rules, i=0, rule; // cssRules = CSSRuleList, rules = MSCSSRuleList
 		while (rule = rules[i++]) {
-			const found = parseRewrittenStyle(rule.style);
+			var found = parseRewrittenStyle(rule.style);
 			if (found.getters) addGettersSelector(rule.selectorText, found.getters);
 			if (found.setters) addSettersSelector(rule.selectorText, found.setters);
 
 			// mediaQueries: redraw the hole document
 			// better add events for each element?
-			const media = rule.parentRule && rule.parentRule.media && rule.parentRule.media.mediaText;
+			var media = rule.parentRule && rule.parentRule.media && rule.parentRule.media.mediaText;
 			if (media && (found.getters || found.setters)) {
 				matchMedia(media).addListener(function(){
 					drawTree(document.documentElement)
@@ -240,12 +240,12 @@
 	}
 	function addGetterElement(el, properties, selector) {
 		var i=0, prop, j;
-		const selectors = selector.split(','); // split grouped selectors
+		var selectors = selector.split(','); // split grouped selectors
 		el.setAttribute('iecp-needed', true);
 		if (!el.ieCPSelectors) el.ieCPSelectors = {};
 		while (prop = properties[i++]) {
 			for (j = 0; selector = selectors[j++];) {
-				const parts = selector.trim().split('::');
+				var parts = selector.trim().split('::');
 				if (!el.ieCPSelectors[prop]) el.ieCPSelectors[prop] = [];
 				el.ieCPSelectors[prop].push({
 					selector: parts[0],
@@ -284,7 +284,7 @@
 	}
 
 
-	const pseudos = {
+	var pseudos = {
 		hover:{
 			on:'mouseenter',
 			off:'mouseleave'
@@ -308,7 +308,7 @@
 			if (parts.length > 1) {
 				var ending = parts[1].match(/^[^\s]*/); // ending elementpart of selector (used for not(:active))
 				var sel = unPseudo(parts[0]+ending);
-				const listeners = pseudos[pseudo];
+				var listeners = pseudos[pseudo];
 				onElement(sel, function (el) {
 					el.addEventListener(listeners.on, drawTreeEvent);
 					el.addEventListener(listeners.off, drawTreeEvent);
@@ -440,7 +440,7 @@
 		newStr += str.substring(lastPoint);
 		return newStr;
 	}
-	//const regValueGetters = /var\(([^),]+)(\,([^),]+))?\)/g;
+	//var regValueGetters = /var\(([^),]+)(\,([^),]+))?\)/g;
 	function styleComputeValueWidthVars(style, valueWithVars, details){
 		return findVars(valueWithVars, function(variable, fallback){
 			var value = style.getPropertyValue(variable);
@@ -489,7 +489,7 @@
 	var descriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'style');
 	var styleGetter = descriptor.get;
 	descriptor.get = function () {
-		const style = styleGetter.call(this);
+		var style = styleGetter.call(this);
 		style.owningElement = this;
 		return style;
 	}
@@ -505,15 +505,15 @@
 	}
 
 	// getPropertyValue / setProperty hooks
-	const StyleProto = CSSStyleDeclaration.prototype;
+	var StyleProto = CSSStyleDeclaration.prototype;
 
-	const oldGetP = StyleProto.getPropertyValue;
+	var oldGetP = StyleProto.getPropertyValue;
 	StyleProto.getPropertyValue = function (property) {
 		this.lastPropertyServedBy = false;
 		if (property[0] !== '-' || property[1] !== '-') return oldGetP.apply(this, arguments);
-		const undashed = property.substr(2);
-		const ieProperty = '-ie-'+undashed;
-		const iePropertyImportant = '-ie-❗'+undashed;
+		var undashed = property.substr(2);
+		var ieProperty = '-ie-'+undashed;
+		var iePropertyImportant = '-ie-❗'+undashed;
 		var value = this[iePropertyImportant] || this[ieProperty];
 		if (this.computedFor) { // computedStyle
 			if (value !== undefined) {
@@ -554,11 +554,11 @@
 		return value;
 	};
 
-	const oldSetP = StyleProto.setProperty;
+	var oldSetP = StyleProto.setProperty;
 	StyleProto.setProperty = function (property, value, prio) {
 		if (property[0] !== '-' || property[1] !== '-') return oldSetP.apply(this, arguments);
 		if (this.owningElement) {
-			const el = this.owningElement;
+			var el = this.owningElement;
 			if (!el.ieCP_setters) el.ieCP_setters = {};
 			el.ieCP_setters[property] = 1;
 			drawTree(el);
@@ -571,7 +571,7 @@
 
 
 	if (!window.CSS) window.CSS = {};
-	const register = {}
+	var register = {}
 	CSS.registerProperty = function(options){
 		register[options.name] = options;
 	}

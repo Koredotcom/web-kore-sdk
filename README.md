@@ -275,7 +275,10 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 
     Steps:
         -> Go to UI folder and run "npm install" in terminal to install dependencies
-        -> Run "grunt" in terminal. This will generate minified versions on js and css files
+        -> Run "grunt" in terminal. This will generate minified versions of js and css files
+			for widgets+chat combination use grunt --type="widgets_chat"
+			for only widgets  use grunt --type="widgets"
+			Any additions or deletions of script and css inclusions should be updated in /UI/gruntFile.js 
         -> Now comment all the js and css references in index.html 
         -> Add the following lines
             <link href="dist/kore-ai-sdk.min.css" rel="stylesheet"/>
