@@ -83,6 +83,7 @@ module.exports = function (grunt) {
             '../libs/purejscarousel.js',
             'chatWindow.js',
             'custom/customTemplate.js',
+            '../libs/ie11CustomProperties.js',
             '../libs/recorder.js',
             '../libs/recorderWorker.js',
             '../libs/speech/app.js',

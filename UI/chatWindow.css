@@ -296,7 +296,7 @@
     top: auto!important;
     left: auto!important;
     right: 20px!important;
-    border: none;
+    border: none !important;
     background: none;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
@@ -308,8 +308,9 @@
 
 .kore-chat-window.minimize .kore-chat-body,
 .kore-chat-window.minimize .kore-chat-footer,
-.kore-chat-window.minimize .kore-chat-header {
-    display: none;
+.kore-chat-window.minimize .kore-chat-header,
+.kore-chat-window.minimize .kr-wiz-menu-chat {
+    display: none !important;
 }
 
 .kore-chat-window.minimize .minimized-title {
