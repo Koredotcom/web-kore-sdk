@@ -668,7 +668,7 @@
       }
 
       function emit(eventName) {
-        const event = events['CHAT_EVENT'];
+        var event = events['CHAT_EVENT'];
         if (event) {
           event.forEach(function (fn) {
             fn.call(null, {eventName: eventName});
