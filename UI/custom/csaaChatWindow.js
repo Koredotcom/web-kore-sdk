@@ -216,9 +216,10 @@
       }
 
       function attachLiveAgentButton ($koreChatBody, $chatContainer, $koreChatFooter) {
+        var liveAgentText = defaultChatConfig.liveAgent.text || 'live agent';
         var $liveAgentButton = $('\
           <div id="liveAgentActor" distance="close">\
-            <div>live agent</div>\
+            <div>' + liveAgentText + '</div>\
           </div>\
         ');
 
@@ -374,7 +375,7 @@
 
         }
 
-        if (defaultChatConfig.liveAgentButton) {
+        if (defaultChatConfig.liveAgent) {
           if (!(localStorage.getItem(LIVE_CHAT) === 'true')) {
             attachLiveAgentButton($koreChatBody, $chatContainer, $koreChatFooter);
             $chatContainer.css({ padding: '42px 20px' });
