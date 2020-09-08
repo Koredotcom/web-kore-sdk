@@ -47,6 +47,7 @@ inherits(KoreBot, EventEmitter);
 
 KoreBot.prototype.emit = function emit() {
 	if(arguments && arguments[0] === 'history' && this.historySyncInProgress){
+    this.historySyncInProgress = false;
     arguments[2]="historysync";
     this.cbBotChatHistory(arguments);
   }else if(!window._chatHistoryLoaded && arguments && arguments[0] === 'history') {
