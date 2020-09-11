@@ -538,6 +538,16 @@
           localStorage.setItem(CHAT_WINDOW_STATUS, 'minimized');
           emit(CHAT_MINIMIZED);
         });
+
+        $chatContainer.on('click',
+          '.buttonTmplContentBox li[type=web_url], .buttonTmplContentBox li[type=web_url]',
+          function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            
+            var link = $(this).attr('url');
+            window.open(link, '_self');
+          });
       }
 
       function bindNotificationMessageEventListeners ($notifications) {

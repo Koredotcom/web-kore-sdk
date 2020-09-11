@@ -1306,13 +1306,7 @@
                         if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
                             a_link = "http:////" + a_link;
                         }
-
-                        var isButton = e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[0] === 'buttonTmplContentChild';
-                        if (isButton) {
-                            window.open(a_link, "_self")
-                        } else {
-                            me.openExternalLink(a_link);
-                        }
+                        me.openExternalLink(a_link);
                     }
                     if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[1] === 'likeDiv') {
                         $(".likeImg").addClass('hide');
