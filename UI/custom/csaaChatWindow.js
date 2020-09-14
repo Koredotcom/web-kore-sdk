@@ -6,7 +6,8 @@
   var JWT_GRANT                   = 'csaa_chat_jwt';
   var BOT_USER_IDENTITY           = 'csaa_chat_unique_id';
   var CHAT_WINDOW_STATUS          = 'csaa_chat_window_status';
-  var LIVE_CHAT                   = 'csaa_chat_live_agent';
+  var LIVE_CHAT_PENDING           = 'csaa_chat_live_agent_pending';
+  var LIVE_CHAT_CONNECTED         = 'csaa_chat_live_agent_connected';
   var QUEUED_MESSAGE_COUNT        = 'csaa_chat_queued_message_count';
   var CUSTOMER_ENGAGED            = 'csaa_chat_customer_engaged';
 
@@ -17,6 +18,7 @@
   var CHAT_MINIMIZED              = 'CHAT_MINIMIZED';
   var CHAT_MAXIMIZED              = 'CHAT_MAXIMIZED';
   var CHAT_CUSTOMER_ENGAGED       = 'CHAT_CUSTOMER_ENGAGED';
+  var CHAT_CONNECTING_TO_AGENT    = 'CHAT_CONNECTING_TO_AGENT';
   var CHAT_AGENT_ENGAGED          = 'CHAT_AGENT_ENGAGED';
   var CHAT_AGENT_DISCONNECTED     = 'CHAT_AGENT_DISCONNECTED';
   var CHAT_CLOSE_ICON_CLICKED     = 'CHAT_CLOSE_ICON_CLICKED';
@@ -376,7 +378,7 @@
         }
 
         if (defaultChatConfig.liveAgent) {
-          if (!(localStorage.getItem(LIVE_CHAT) === 'true')) {
+          if (!(localStorage.getItem(LIVE_CHAT_CONNECTED) === 'true')) {
             attachLiveAgentButton($koreChatBody, $chatContainer, $koreChatFooter);
             $chatContainer.css({ padding: '42px 20px' });
           }
@@ -486,15 +488,22 @@
               msgText = payload.payload.text;
             }
 
-            if (msgText === 'You are now connected to an Agent.') {
-              localStorage.setItem(LIVE_CHAT, 'true');
+
+            if (msgText === 'Please wait while we connect you to an Agent.') {
+              localStorage.setItem(LIVE_CHAT_PENDING, 'true');
+              emit(CHAT_CONNECTING_TO_AGENT);
+            } else if (msgText === 'You are now connected to an Agent.') {
+              localStorage.setItem(LIVE_CHAT_CONNECTED, 'true');
+              localStorage.setItem(LIVE_CHAT_PENDING, 'false');
               emit(CHAT_AGENT_ENGAGED);
             } else if (msgText === 'Live Agent Chat has ended.') {
-              localStorage.setItem(LIVE_CHAT, 'false');
+              localStorage.setItem(LIVE_CHAT_CONNECTED, 'false');
+              localStorage.setItem(LIVE_CHAT_PENDING, 'false');
               attachLiveAgentButton($koreChatBody, $chatContainer, $koreChatFooter);
               emit(CHAT_AGENT_DISCONNECTED);
             } else if (msgText === 'Do you want to provide feedback?') {
-              localStorage.setItem(LIVE_CHAT, 'false');
+              localStorage.setItem(LIVE_CHAT_CONNECTED, 'false');
+              localStorage.setItem(LIVE_CHAT_PENDING, 'false');
               emit(CHAT_SURVEY_TRIGGERED);
             } else if (msgText === 'Thank you for your feedback. The chat session has ended.') {
               emit(CHAT_SURVEY_ANSWERED);
@@ -508,7 +517,7 @@
               emit(CHAT_AGENT_STOPPED_TYPING);
             }
 
-            if (localStorage.getItem(LIVE_CHAT) === 'true') {
+            if (localStorage.getItem(LIVE_CHAT_CONNECTED) === 'true') {
               if (defaultChatConfig.notificationsEnabled && localStorage.getItem(CHAT_WINDOW_STATUS) === 'minimized') {
 
                 if (['XX', 'AR', 'AT', 'AST', 'ack', 'pong', 'ping'].indexOf(msgText) !== -1) return;
@@ -659,7 +668,10 @@
       }
 
       function endLiveAgentSession() {
-        if (localStorage.getItem(LIVE_CHAT) === 'true') {
+        if (
+          localStorage.getItem(LIVE_CHAT_CONNECTED) === 'true' ||
+          localStorage.getItem(LIVE_CHAT_PENDING) === 'true'
+        ) {
           var messageToBot = {
             message: { body: 'endAgentChat' },
             resourceid: '/bot.message'
@@ -672,7 +684,8 @@
         localStorage.removeItem(CHAT_WINDOW_STATUS);
         localStorage.removeItem(BOT_USER_IDENTITY);
         localStorage.removeItem(JWT_GRANT);
-        localStorage.removeItem(LIVE_CHAT);
+        localStorage.removeItem(LIVE_CHAT_CONNECTED);
+        localStorage.removeItem(LIVE_CHAT_PENDING);
         localStorage.removeItem(QUEUED_MESSAGE_COUNT);
         localStorage.removeItem(CUSTOMER_ENGAGED);
       }
