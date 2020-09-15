@@ -376,11 +376,12 @@
                         }
                     }
                     //check for whether to linkify or not
-                    try {
-                        str = decodeURIComponent(str);
-                    } catch (e) {
-                        str = str || '';
-                    }
+                    // try {
+                    //     str = decodeURIComponent(str);
+                    // } catch (e) {
+                    //     str = str || '';
+                    // }
+                    str = str || '';
                     
                     var newStr = '', wrapper1;
                     if (responseType === 'user') {
