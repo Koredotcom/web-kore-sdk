@@ -99,7 +99,8 @@ module.exports = function (grunt) {
             'libs/emojione.sprites.css',
             // '../libs/purejscarousel.css',
             'chatWindow.css',
-            'custom/customTemplate.css'
+            // 'custom/customTemplate.css'
+            'custom/csaaChatWindow.css'
         ]
     }
 
