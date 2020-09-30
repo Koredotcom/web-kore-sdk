@@ -212,6 +212,13 @@
                     return d.toDateString() + " at " + helpers.formatAMPM(d);
                 },
                 'convertMDtoHTML': function (val, responseType,msgItem) {
+                    if(typeof val==='object'){
+                        try {
+                            val=JSON.stringify(val);
+                        } catch (error) {
+                            val="";
+                        }
+                    }
                     var hyperLinksMap = {};
                     var mdre = {};
                     if(msgItem && msgItem.cInfo && msgItem.cInfo.ignoreCheckMark){
