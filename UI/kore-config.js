@@ -20,6 +20,7 @@
   botOptions.botInfo.customData.accessToken = getCookie("accessToken");
   botOptions.botInfo.customData.source = getCookie("source");
   botOptions.botInfo.customData.tenantId = getCookie("tenantId");
+  botOptions.botInfo.customData.uniqueUserId = getCookie("uniqueUserId");
 
   // To modify the web socket url use the following option
   // botOptions.reWriteSocketURL = {

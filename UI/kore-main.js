@@ -87,7 +87,8 @@
                 }, 2000);
             } else {
                 var jsonData = {
-                    "tenantId": "mmbdemo-uat" || options.botInfo.customData.tenantId
+                    "tenantId": options.botInfo.customData.tenantId,
+                    "uniqueUserId": options.botInfo.customData.uniqueUserId,
                 };
                 $.ajax({
                     url: options.JWTUrl,
