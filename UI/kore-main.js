@@ -107,7 +107,13 @@
                         options.botDetails = koreBot.botDetails(data);
                         callback(null, options);
                         setTimeout(function () {
-                            CheckRefreshToken(options);
+                            if(options && options.botInfo && options.botInfo.customData && options.botInfo.customData.source === 'finastra'){
+                                CheckRefreshToken(options);
+                            } else {
+                                if (koreBot && koreBot.initToken) {
+                                    koreBot.initToken(options);
+                                }
+                            }
                         }, 2000);
                     },
                     error: function (err) {
