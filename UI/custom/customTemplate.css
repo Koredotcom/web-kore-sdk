@@ -28,6 +28,20 @@
     --sdk-chat-window-list-template-choose-color:#000000;
     --sdk-chat-widow-primary-box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
     --sdk-chat-widow-top-box-shadow: 0 0 24px 0 #8a959f;
+
+    --sdk-chat-widow-bot-chat-bubble-background-color :var(--sdk-chat-widow-panel-header-bg-color);
+    --sdk-chat-widow-bot-chat-bubble-text-color : var(--sdk-chat-widow-primary-font-color);
+
+    --sdk-chat-widow-user-chat-bubble-background-color : var(--sdk-chat-widow-primary-font-color);
+    --sdk-chat-widow-user-chat-bubble-text-color : var(--sdk-chat-widow-default-white);
+
+    --sdk-chat-widow-widget-background-color :var(--sdk-chat-widow-default-white);
+    --sdk-chat-widow-widget-text-color : var(--sdk-chat-widow-primary-font-color);
+    --sdk-chat-widow-widget-divider-color : var(--sdk-chat-widow-primary-border-color);
+
+    --sdk-chat-widow-chat-button-active-color:var(--sdk-chat-widow-default-white);
+    --sdk-chat-widow-chat-button-active-text-color:var(--sdk-chat-widow-primary-blue-color);
+
     --sdk-chat-widow-accordion-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDIwIDIwIj4KICAgIDxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGNpcmNsZSBjeD0iMTAiIGN5PSIxMCIgcj0iMTAiIGZpbGw9IiNFNUY1RjYiLz4KICAgICAgICA8cGF0aCBmaWxsPSIjMDA5REFCIiBkPSJNMTQuMTcyIDEyLjA0Yy4zOS0uMzkuMzktMS4wMyAwLTEuNDJsLTMuMTctMy4xN2EuOTk2Ljk5NiAwIDAgMC0xLjQxIDBsLTMuMTcgMy4xN2MtLjQuMzktLjQgMS4wMy0uMDEgMS40Mi4zOS4zOSA3LjM3LjM5IDcuNzYgMHoiLz4KICAgIDwvZz4KPC9zdmc+Cg==');
     --sdk-chat-widow-show-more: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjgiIHZpZXdCb3g9IjAgMCA0IDgiPgogICAgPHBhdGggZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDlEQUIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgZD0iTS40NDIgMWwzLjMzMyAzTC40NDIgNyIvPgo8L3N2Zz4K');
     --sdk-chat-widow-vertical-ellipsis:url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iM3B4IiBoZWlnaHQ9IjEycHgiIHZpZXdCb3g9IjAgMCAzIDEyIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPCEtLSBHZW5lcmF0b3I6IFNrZXRjaCA1My4yICg3MjY0MykgLSBodHRwczovL3NrZXRjaGFwcC5jb20gLS0+CiAgICA8dGl0bGU+dmVydGljYWxFbGxpcHNpczwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJ2ZXJ0aWNhbEVsbGlwc2lzIiBmaWxsPSIjMDA5REFCIiBmaWxsLXJ1bGU9Im5vbnplcm8iPgogICAgICAgICAgICA8cGF0aCBkPSJNMS41LDkgQzIuMzI4NDI3MTIsOSAzLDkuNjcxNTcyODggMywxMC41IEMzLDExLjMyODQyNzEgMi4zMjg0MjcxMiwxMiAxLjUsMTIgQzAuNjcxNTcyODc1LDEyIDEuMDE0NTMwNjNlLTE2LDExLjMyODQyNzEgMCwxMC41IEMtMS4wMTQ1MzA2M2UtMTYsOS42NzE1NzI4OCAwLjY3MTU3Mjg3NSw5IDEuNSw5IFogTTEuNSw0LjUgQzIuMzI4NDI3MTIsNC41IDMsNS4xNzE1NzI4OCAzLDYgQzMsNi44Mjg0MjcxMiAyLjMyODQyNzEyLDcuNSAxLjUsNy41IEMwLjY3MTU3Mjg3NSw3LjUgMS4wMTQ1MzA2M2UtMTYsNi44Mjg0MjcxMiAwLDYgQy0xLjAxNDUzMDYzZS0xNiw1LjE3MTU3Mjg4IDAuNjcxNTcyODc1LDQuNSAxLjUsNC41IFogTTEuNSwwIEMyLjMyODQyNzEyLDUuMDcyNjUzMTNlLTE3IDMsMC42NzE1NzI4NzUgMywxLjUgQzMsMi4zMjg0MjcxMiAyLjMyODQyNzEyLDMgMS41LDMgQzAuNjcxNTcyODc1LDMgMS4wMTQ1MzA2M2UtMTYsMi4zMjg0MjcxMiAwLDEuNSBDLTEuMDE0NTMwNjNlLTE2LDAuNjcxNTcyODc1IDAuNjcxNTcyODc1LDEuNTIxNzk1OTRlLTE2IDEuNSwwIFoiIGlkPSJTaGFwZSI+PC9wYXRoPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+');
@@ -83,6 +97,22 @@
     --sdk-chat-widow-show-more: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNHB4IiBoZWlnaHQ9IjhweCIgdmlld0JveD0iMCAwIDQgOCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNTMuMiAoNzI2NDMpIC0gaHR0cHM6Ly9za2V0Y2hhcHAuY29tIC0tPgogICAgPHRpdGxlPnNob3ctbW9yZS1vcmFuZ2U8L3RpdGxlPgogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgICAgIDxnIGlkPSJzaG93LW1vcmUtb3JhbmdlIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwgMS4wMDAwMDApIiBzdHJva2U9IiNGNzk1NDAiPgogICAgICAgICAgICA8cG9seWxpbmUgaWQ9IlBhdGgiIHBvaW50cz0iMC40NDIgMCAzLjc3NSAzIDAuNDQyIDYiPjwvcG9seWxpbmU+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=');
     --sdk-chat-widow-vertical-ellipsis:url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iM3B4IiBoZWlnaHQ9IjEycHgiIHZpZXdCb3g9IjAgMCAzIDEyIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPCEtLSBHZW5lcmF0b3I6IFNrZXRjaCA1My4yICg3MjY0MykgLSBodHRwczovL3NrZXRjaGFwcC5jb20gLS0+CiAgICA8dGl0bGU+U2hhcGU8L3RpdGxlPgogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0idmVydGljYWxFbGxpcHNpcyIgZmlsbD0iI0Y3OTU0MCIgZmlsbC1ydWxlPSJub256ZXJvIj4KICAgICAgICAgICAgPHBhdGggZD0iTTEuNSw5IEMyLjMyODQyNzEyLDkgMyw5LjY3MTU3Mjg4IDMsMTAuNSBDMywxMS4zMjg0MjcxIDIuMzI4NDI3MTIsMTIgMS41LDEyIEMwLjY3MTU3Mjg3NSwxMiAxLjAxNDUzMDYzZS0xNiwxMS4zMjg0MjcxIDAsMTAuNSBDLTEuMDE0NTMwNjNlLTE2LDkuNjcxNTcyODggMC42NzE1NzI4NzUsOSAxLjUsOSBaIE0xLjUsNC41IEMyLjMyODQyNzEyLDQuNSAzLDUuMTcxNTcyODggMyw2IEMzLDYuODI4NDI3MTIgMi4zMjg0MjcxMiw3LjUgMS41LDcuNSBDMC42NzE1NzI4NzUsNy41IDEuMDE0NTMwNjNlLTE2LDYuODI4NDI3MTIgMCw2IEMtMS4wMTQ1MzA2M2UtMTYsNS4xNzE1NzI4OCAwLjY3MTU3Mjg3NSw0LjUgMS41LDQuNSBaIE0xLjUsMCBDMi4zMjg0MjcxMiw1LjA3MjY1MzEzZS0xNyAzLDAuNjcxNTcyODc1IDMsMS41IEMzLDIuMzI4NDI3MTIgMi4zMjg0MjcxMiwzIDEuNSwzIEMwLjY3MTU3Mjg3NSwzIDEuMDE0NTMwNjNlLTE2LDIuMzI4NDI3MTIgMCwxLjUgQy0xLjAxNDUzMDYzZS0xNiwwLjY3MTU3Mjg3NSAwLjY3MTU3Mjg3NSwxLjUyMTc5NTk0ZS0xNiAxLjUsMCBaIiBpZD0iU2hhcGUiPjwvcGF0aD4KICAgICAgICA8L2c+CiAgICA8L2c+Cjwvc3ZnPg==');
     --sdk-chat-widow-back-arrow:url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTJweCIgaGVpZ2h0PSI3cHgiIHZpZXdCb3g9IjAgMCAxMiA3IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPCEtLSBHZW5lcmF0b3I6IFNrZXRjaCA0OSAoNTEwMDIpIC0gaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoIC0tPgogICAgPHRpdGxlPkdyb3VwIDU8L3RpdGxlPgogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+CiAgICA8ZGVmcz48L2RlZnM+CiAgICA8ZyBpZD0iUHJvcGVydHktcGFubmVsIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0iMTAuMS1JVlItQ29weSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEzMzQuMDAwMDAwLCAtMTAwNi4wMDAwMDApIiBzdHJva2U9IiM4QTk1OUYiPgogICAgICAgICAgICA8ZyBpZD0iR3JvdXAtNiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTA2NC4wMDAwMDAsIDk5NS4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxnIGlkPSJHcm91cC01IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyNzAuMDAwMDAwLCAxMS4wMDAwMDApIj4KICAgICAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMC41LDMuNSBMMTAuNSwzLjUiIGlkPSJMaW5lLTIiIHN0cm9rZS1saW5lY2FwPSJzcXVhcmUiPjwvcGF0aD4KICAgICAgICAgICAgICAgICAgICA8cG9seWxpbmUgaWQ9IlJlY3RhbmdsZS04IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3LjUzNTUzNCwgMy41MzU1MzQpIHJvdGF0ZSgtMzE1LjAwMDAwMCkgdHJhbnNsYXRlKC03LjUzNTUzNCwgLTMuNTM1NTM0KSAiIHBvaW50cz0iNS4wMzU1MzM5MSAxLjAzNTUzMzkxIDEwLjAzNTUzMzkgMS4wMzU1MzM5MSAxMC4wMzU1MzM5IDYuMDM1NTMzOTEiPjwvcG9seWxpbmU+CiAgICAgICAgICAgICAgICA8L2c+CiAgICAgICAgICAgIDwvZz4KICAgICAgICA8L2c+CiAgICA8L2c+Cjwvc3ZnPg==');
+}
+
+.customBranding-theme {
+    --sdk-chat-widow-bot-chat-bubble-background-color :var(--custom-bot-chat-bubble-background-color) !important;
+    --sdk-chat-widow-bot-chat-bubble-text-color : var(--custom-bot-chat-bubble-text-color) !important;
+
+    --sdk-chat-widow-user-chat-bubble-background-color : var(--custom-user-chat-bubble-background-color) !important;
+    --sdk-chat-widow-user-chat-bubble-text-color : var(--custom-user-chat-bubble-text-color) !important;
+
+    --sdk-chat-widow-widget-background-color :var(--custom-widget-background-color) !important;
+    --sdk-chat-widow-widget-text-color : var(--custom-widget-text-color) !important;
+    --sdk-chat-widow-widget-divider-color : var(--custom-widget-divider-color) !important;
+    --sdk-chat-widow-widet-border-color : var(--custom-widget-border-color);
+
+    --sdk-chat-widow-chat-button-active-color:var(--custom-button-active-background-color) !important;
+  
 }
 .templateHeading{
     margin-bottom: 10px;
@@ -383,10 +413,9 @@
      content:"";
  }
  .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer{
+     display: flex;
+     align-items: center;
      vertical-align: middle;
-     height: 100%;
-     width: 100%;
-     display: inline-block;
  }
  .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer .checkImgContainer,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer .checkImgContainer{ 
      float: left;
@@ -397,9 +426,6 @@
  .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer .checkImgContainer img,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer .checkImgContainer img{
      width: 50px;
      height: 50px;
- }
- .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer .multiSelectDescContainer,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer .multiSelectDescContainer{ 
-    padding: 5px 0 0 0;
  }
  .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS.noImgdescription label  .multiSelectDescContainer .multiTitle,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS.noImgdescription label  .multiSelectDescContainer .multiTitle{
      font-weight: bold;
@@ -471,7 +497,7 @@
     padding-top: 8px;
     position: absolute;
     right: 10px;
-    top: 10px;
+    top: 5px;
     color:var(--sdk-chat-window-list-template-close-btn-color);
     background:none;
     opacity:1;
@@ -494,10 +520,15 @@
 	width:100%;
 }
 .kore-chat-window .kore-chat-body .listViewTmplContent .listViewLeftContent{
-    vertical-align: middle;
-    display: table-cell;
-    padding: 0 10px;
     width: 100%;
+    padding: 0 10px;
+    vertical-align: middle;
+    display: flex;	
+    align-items: center;	
+    justify-content: space-between;
+}
+.kore-chat-window .listViewTmplContent .listViewTmplContentChild:hover {
+    background-color: rgba(10, 10, 10, 0.08);
 }
 .kore-chat-window .kore-chat-body .listViewTmplContent .listViewRightContent{
     cursor: pointer;
@@ -521,8 +552,9 @@
     box-shadow: var(--sdk-chat-widow-primary-box-shadow);
     background-color: var(--sdk-chat-widow-default-white);
     height: 56px;
-    display: table;
-    vertical-align: middle;	
+    display: flex;	
+    align-items: center;	
+    flex-wrap: wrap;	
     cursor: pointer;
 }
 .kore-chat-window .kore-chat-body .listViewTmplContent .listViewItemSubtitle{
@@ -543,11 +575,11 @@
 .kore-chat-window .kore-chat-body .listViewTmplContent .listViewItemValue{
     
     display: inline-block;
-     /* margin-left: 15px;  */
+    margin-left: 15px; 
     color: var(--sdk-chat-window-list-template-value-color);
     /* width: 66px;
     height: 22px; */
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 900;
     font-stretch: normal;
     font-style: normal;
@@ -555,10 +587,9 @@
     letter-spacing: 0.4px;
     text-align: right;
     color:  var(--sdk-chat-window-list-view-value-color);
-    overflow: hidden;
+    /* overflow: hidden;
     text-overflow: ellipsis; 
-    white-space: nowrap;
-    width:33%;
+    white-space: nowrap; */
       
 }
 .kore-chat-window .kore-chat-body .listViewTmplContent .listItemPath{
@@ -583,7 +614,7 @@
 }
 .kore-chat-window .kore-chat-body .listViewTmplContent .listViewTmplContentHeading{
 	padding:10px;
-    background: var(--sdk-chat-window-list-template-heading-background-color);
+    background:  var(--sdk-chat-widow-bot-chat-bubble-background-color);
     margin-bottom: 10px;
     border-radius: 12px 12px 0 0;
     font-size: 15px;
@@ -594,11 +625,11 @@
     font-style: normal;
     line-height: 1.33;
     letter-spacing: -0.11px;
-    color: var(--sdk-chat-widow-primary-font-color);
+    color: var(--sdk-chat-widow-bot-chat-bubble-text-color);
 }
 .kore-chat-window .kore-chat-body .listViewTmplContent .listViewLeftContent .titleDesc{
     display: inline-block;
-    width:65%;
+    width:60%;
 }
 
 .kore-chat-window .kore-chat-body .listViewItemTitle {	
@@ -620,19 +651,18 @@
 .kore-chat-window .kore-chat-body .listViewTmplContent .seeMoreList{
 	border: 0;
     background: none;
-    color: var(--sdk-chat-widow-primary-blue-color)!important;
+    color: var(--sdk-chat-widow-primary-blue-color);    
     cursor: pointer;
-    float: right;
     font-size: 14px;
     font-weight: normal;
     font-stretch: normal;
     font-style: normal;
     line-height: 5px;
     letter-spacing: normal;
-    display: inline-block;	
-    border-bottom: 1px solid var(--sdk-chat-widow-primary-blue-color);	
-    padding: 10px 0;	
+    display: inline-block;
+    padding: 10px 0;
     text-align: center;
+    width: 100%;
 }
 .kore-chat-window .kore-action-sheet.hide{
     display:none!important;
@@ -667,7 +697,7 @@
 }
 .kore-chat-window .kore-action-sheet .list-template-sheet .listViewLeftContent .titleDesc{
     display: inline-block;
-    width:65%;
+    width:60%;
 }
 .kore-chat-window .kore-action-sheet .list-template-sheet .sheetHeader .close-button{
     margin: 0;
@@ -696,35 +726,54 @@
     border-radius: 10px;
     box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
     background-color: var(--sdk-chat-widow-default-white);
-    height: 56px;	
+    height: 56px;
+    display: flex;	
+    align-items: center;	
+    flex-wrap: wrap;	
     cursor: pointer;
-    display: table;   
 }
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth{
-      width: 40%;
-      margin: 0 auto;
+        width:84%;
+        height:40px;
+      overflow:auto;
+      display:flex;
     }
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth .tabs {
+        width: 18px;
+        height: 17px;
+        font-size: 14px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: normal;
+        letter-spacing: 0.12px;
         color: var(--sdk-chat-window-list-template-sub-title-color);
+        padding-left:103px;
         cursor: pointer;
-        font-size: 14px;       
-    }
-    .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth .tabs:last-child{
-        float: right;
+        flex:1.1;  
+          
     }
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth .tabs.active {
      
+            width: 28px;
+            height: 17px;
             font-size: 14px;
             font-weight: bold;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: normal;
+            letter-spacing: 0.12px;
             color: var(--sdk-chat-widow-primary-blue-color);
+            flex:1.1;
           
     }
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth .btnBG{	
         height: 26px;	
         border-radius: 6px;	
         display: inline-block;	
-        padding: 5px 10px;
-        text-align: center;		
+        padding: 0 6px;	
+        text-align: center;	
+        line-height: 26px;	
     }	
             
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth .tabs.active .btnBG{	
@@ -738,11 +787,7 @@
         border-radius: 50%;
     }
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues{	
-        width:100%;    
-        padding: 0 10px;
-    }
-    .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .displayListValues{
-        padding: 0;
+        width:96%;	
     }
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .listViewRightContent{
         cursor: pointer;
@@ -752,10 +797,12 @@
     padding-left: 10px;
     }
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .listViewLeftContent{
-        width: 100%;
+        width: 77%;
         padding: 0 10px;
         vertical-align: middle;
-        display: table-cell;
+        display: flex;	
+        align-items: center;	
+        justify-content: space-between;
     }
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .listViewLeftContent .listViewItemTitle{
         font-size: 13px;	
@@ -784,7 +831,7 @@
  
  .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .listViewLeftContent .listViewItemValue{
     display: inline-block;
-     /* margin-left: 15px;  */
+     margin-left: 15px; 
     color: var(--sdk-chat-window-list-template-value-color);
     /* width: 66px;
     height: 22px; */
@@ -799,7 +846,6 @@
     overflow: hidden;
     text-overflow: ellipsis; 
     white-space: nowrap;
-    width:33%;
       
  }
  /* New List Template using tabs Css ends here */
@@ -810,13 +856,19 @@
 .kore-chat-window .kore-chat-body .listTableContainerDiv{
     background-color: var(--sdk-chat-widow-default-white);
     box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
-    border-radius: 10px;  
+    border-radius: 10px;
+    display: flex
 }
 
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainerDivRepet{
     width: 100%;
 }
-
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableHeader{
+    /* height: 52px; */
+    background-color: var(--sdk-chat-widow-primary-bg-color);
+    display: flex;
+    padding: 15px;
+}
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableHeader .listTableHeaderTitle{
     font-size: 16px;
     font-weight: bold;
@@ -846,10 +898,9 @@
     padding: 0 15px;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv{
-    border-bottom: 1px solid var(--sdk-chat-widow-primary-border-color);
+    border-bottom: 1px solid var(--sdk-chat-widow-widet-border-color);
      padding: 15px 0;
-     display: inline-block;
-     width: 100%;
+     display: flex;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .titleActions .listViewItemValue{
   white-space: nowrap;
@@ -865,60 +916,48 @@
     vertical-align: top;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsTitle{
-    /* margin: 0 0 15px 0; */
+    margin: 0 0 15px 0;
     font-size: 14px;
     font-weight: bold;
     color: var(--sdk-chat-widow-primary-font-color);
-    width: 58%;
-    display: inline-block;  
-}
-.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainerDivRepet .listTableDetails .listTableHeader .listTableHeaderDesc{  
-    display: inline-block;
-    vertical-align: top;
+    flex: 100%;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc{
     margin: 0 0 15px 0;
     font-size: 14px;
-    font-weight: bold;  
-    padding:10px;
+    font-weight: bold;
     color: var(--sdk-chat-widow-primary-font-color);
-    border-bottom: 1px solid var(--sdk-chat-window-table-border-color);
-    display: table;
-    width: 100%;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.pointerStyle:hover{
     cursor:pointer;
 }
-.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.largeImg{    
-    margin-bottom: 10px;
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.largeImg{
+    display: flex;
+    align-items: center; 
+    margin-bottom: 20px;
     padding: 10px;
+    border-radius: 3px;
 }
-.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.mediumImg{   
-    margin-bottom: 10px;
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.mediumImg{
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
     padding: 10px;
+    border-radius: 3px;
 }
-.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.smallImg{  
-    margin-bottom: 10px;
-     padding: 10px;
-}
-.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listViewItemValue.actionLink.actiontitle{
-    text-decoration: underline;
-    cursor: pointer;
-    display:inline-block;
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.smallImg{
+    display: flex;
+     align-items: center; 
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 3px;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc:nth-last-child(1){
     margin-bottom: 0;
-    border-bottom: 0;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .listTableDetailsDescSub {
-    display: table-cell;
-    vertical-align: middle;
-    padding: 0 5px 0 10px;
-}
-.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .titleActions{
-    display: table-cell;
-    vertical-align: middle;
-    text-align: right;
+    /* float: left; */
+    width: 100%;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .listTableDetailsDescSub .listTableDetailsDescName{
     font-size: 12px;
@@ -935,27 +974,23 @@
 }
 
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.largeImg .listTableBigImgConytainer{
-    width: 40px;
-    height: 40px;
-    display: table-cell;
-    vertical-align: middle;
+    /* height: 40px; */
+    width: 45px;
+    flex-shrink: 0;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.mediumImg .listTableBigImgConytainer{
+    /* height: 30px; */
     width: 30px;
-    height: 30px;
-    display: table-cell;
-    vertical-align: middle;
+    flex-shrink: 0;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.smallImg .listTableBigImgConytainer{
-    width: 20px;
-    height: 20px;    
-    display: table-cell;
-    vertical-align: middle;
+    width: 25px;
+    /* height: 10px; */
+    flex-shrink: 0;
 }
-.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .listTableBigImgConytainer img{ 
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .listTableBigImgConytainer img{
+    padding-right: 10px;
     max-width: 100%;
-    width: 100%;
-    height: 100%;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainerDivRepet .seeMoreFooter{
     padding: 0 15px;
@@ -966,23 +1001,15 @@
     color: var(--sdk-chat-widow-primary-blue-color);
     font-size: 14px;
     font-weight: normal;  
-    border-top: 1px solid var(--sdk-chat-widow-primary-border-color);
+    border-top: 1px solid var(--sdk-chat-widow-widet-border-color);
     padding: 15px 0;
     display: block;
 }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainerDivRepet .listTableDetails .listTableHeader{
-    margin: 0 0 15px 0;
-    font-size: 14px;
-    font-weight: bold;    
-    padding:10px;
-    color: var(--sdk-chat-widow-primary-font-color);
-    display: block;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
 }
-.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainerDivRepet .listTableDetails .listTableHeader .listTableHeaderDesc .headerDesc{
-     white-space: nowrap;
-     overflow: hidden;
-     text-overflow: ellipsis;
- }
 .kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainerDivRepet .listTableDetails .listTableDetailsDescName.pointer:hover{
     cursor: pointer !important;
 }
@@ -1005,7 +1032,7 @@
      height: auto;
  }
  .kore-chat-window .rating-main-component .ratingMainComponent .suggestionsMainComponent .suggestionBox textarea{
-    border: 1px solid var(--sdk-chat-widow-primary-border-color);   
+    border: 1px solid var(--sdk-chat-widow-widet-border-color);   
     border-radius: 4px;
  } 
  .kore-chat-window .rating-main-component .ratingMainComponent .suggestionsMainComponent .suggestionBox textarea:focus{
@@ -1042,7 +1069,7 @@
     padding: 0;
  }
  .kore-chat-window .rating-main-component .emojiComponent .suggestionsMainComponent .suggestionBox textarea{
-    border: 1px solid var(--sdk-chat-widow-primary-border-color);   
+    border: 1px solid var(--sdk-chat-widow-widet-border-color);   
     border-radius: 4px;
  }
  .kore-chat-window .rating-main-component .emojiComponent .suggestionsMainComponent .suggestionBox textarea:focus{
@@ -1077,17 +1104,13 @@
     cursor: pointer;
 } */
 .kore-chat-window .star-rating {
+    display:flex;
+    flex-direction: row-reverse;
     font-size:3.5em;
+    justify-content:space-around;
     padding:0 .2em;
     text-align:center;
-    width:6em;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: reverse;
-    -ms-flex-direction: row-reverse;
-    flex-direction: row-reverse;
+    width:5em;
   }
   
   .kore-chat-window .star-rating input {
@@ -1208,4 +1231,143 @@
     display: inline-block;
     background-size: 100% 100%!important;
     cursor: pointer;
+}
+
+.kore-chat-window .buttonTmplContent .buttonTmplContentChild.quickReplyDiv.displayInline {
+    display: inline-block;
+    padding: 10px 10px 7px 0;
+    border: none;
+}
+
+.kore-chat-window .buttonTmplContent .buttonTmplContentChild.quickReplyDiv.displayInline .quickReply {
+    border: 1px dashed var(--sdk-chat-widow-primary-font-color);
+    color: var(--sdk-chat-widow-chat-button-active-text-color);
+    font-size: 12px;
+    border-radius: 6px;
+}
+.kore-chat-window .buttonTmplContent .buttonTmplContentChild.quickReplyDiv.displayInline .quickReply:hover{
+    background:var(--sdk-chat-widow-primary-font-color); 
+    border: 1px dashed var(--sdk-chat-widow-primary-font-color);
+    color: var(--sdk-chat-widow-default-white);
+}
+
+
+
+.kore-chat-window .listViewTmplContent.noShadow .listViewTmplContentBox {
+    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+}
+
+.kore-chat-window .listViewTmplContent .listViewTmplContentBox {
+    float: left;
+    color: var(--sdk-chat-window-list-view-color);
+    border-radius: 12px;
+    padding: 0;
+    font-size: 14px;
+    -webkit-animation: message-left ease-in-out 2s forwards;
+    -moz-animation: message-left ease-in-out 2s forwards;
+    animation: message-left ease-in-out 2s forwards;
+    margin: 0;
+    width: 100%;
+}
+
+.kore-chat-window .listViewTmplContent.noShadow .listViewTmplContentBox .listViewTmplContentHeading {
+    margin-bottom: 0;
+    list-style-type: none;
+}
+
+.kore-chat-window .listViewTmplContentBox li:first-child {
+    margin-top: 0!important;
+    border-top: 0;
+}
+
+
+.kore-chat-window .listViewTmplContent .listViewTmplContentHeading {
+    padding: 10px;
+    background: var(--sdk-chat-widow-bot-chat-bubble-background-color);;
+    margin-bottom: 10px;
+    border-radius: 12px 12px 0 0;
+    font-size: 15px;
+    width: 100%;
+    font-size: 15px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.33;
+    letter-spacing: -0.11px;
+    color: var(--sdk-chat-widow-bot-chat-bubble-text-color);
+}
+
+.kore-chat-window .actionSheetContainer .listItems {
+    overflow: auto;
+    max-height: 400px;
+    padding: 10px;
+}
+
+.kore-chat-window .listViewTmplContent.noShadow .listViewTmplContentChild {
+    border-top: 0;
+    border-bottom: 1px solid #F2F2F2;
+    margin-bottom: 0px;
+    width: 100%;
+    border-radius: 0px;
+    box-shadow: none;
+    background-color:var(--sdk-chat-widow-chat-button-active-color);
+    height: 56px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    cursor: default;
+    margin-top: 0!important;
+}
+
+.kore-chat-window .listViewTmplContent .listViewLeftContent {
+    width: 100%;
+    padding: 0 10px;
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.kore-chat-window .listViewTmplContent .listViewLeftContent .titleDesc {
+    display: inline-block;
+    width: 60%;
+}
+
+.kore-chat-window .listViewItemTitle {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.54;
+    letter-spacing: -0.1px;
+    color: #222222;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.kore-chat-window .listViewTmplContent .listViewItemSubtitle {
+    width: 102px;
+    height: 18px;
+    font-size: 11px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: 0.27px;
+    color: #77869e;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.kore-chat-window .listViewTmplContent .listViewItemValue {
+    display: inline-block;
+    width: 90px;
+    height: 22px;
+    font-size: 14px;
+    font-weight: 900;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: 0.4px;
+    text-align: right;
 }

@@ -192,7 +192,7 @@
 }
 
 .date-picker-wrapper .month-wrapper table .day.real-today {
-  background-color: #ffe684;
+  background-color: #fff;
 }
 
 .date-picker-wrapper .month-wrapper table .day.real-today.checked, .date-picker-wrapper .month-wrapper table .day.real-today.hovering {

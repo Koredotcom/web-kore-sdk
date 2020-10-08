@@ -874,8 +874,11 @@ BaseAPIClient.prototype._callTransport = function _callTransport(task, queueCb) 
         //   }
         cb(httpErr, body);
       }
-    } else {        
-        cb(null, body);
+    } else { 
+      if(body && body.userInfo){
+        window.jwtDetails = body.userInfo
+      }      
+      cb(null, body);
     }
 
     queueCb();

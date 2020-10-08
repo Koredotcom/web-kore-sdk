@@ -196,13 +196,6 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       _self.getServerDataGen("/widgetsdk/" + config.botOptions.botInfo._id + "/panels?resolveWidgets=true&from="+config.botOptions.userIdentity, 'get').done(function (response) {
         //_self.getServerDataGen("/api/1.1/ka/users/:userId/panels?tz=" + currentTimezone + "&lat=" + latitude + "&lon=" + longitude, 'get').done(function (response) {
         // getServerData("/api/1.1/ka/users/:userId/widgets?tz=" + currentTimezone + "&lat=" + latitude + "&lon=" + longitude, 'get').done(function(response){
-          if(response && response.length){
-            response.sort(function(a, b) {
-              var c = new Date(a.lMod).getTime();
-              var d = new Date(b.lMod).getTime();
-              return d-c;
-          });
-          }
         initialWidgetData.panels = response;
         var panelData = [];
 
@@ -4038,7 +4031,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
             'helpers': helpers,
             'panelDetail': xhrObject.passedkey
           });
-          _self.bindTemplateEvents(dataHTML, 'webForm');
+          _self.bindTemplateEvents(dataHTML, 'webForm',);
         } else {
           //#todo:deviation : making "defaultFilesTemplate" as default template, naming should correct though
           //var dataHTML = $(_self.getTemplate("defaultTemplate")).tmplProxy({

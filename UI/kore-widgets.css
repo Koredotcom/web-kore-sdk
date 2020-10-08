@@ -200,6 +200,7 @@
     display: flex;
     align-items: center;
     margin-bottom: 20px;
+    background-color: var(--sdk-chat-widow-widget-background-color);
 }
 .kr-wiz-content-css .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.smallImg{
     display: flex;
@@ -217,7 +218,8 @@
     font-size: 12px;
     font-weight: normal;
     color: #26344a;
-    margin: 0
+    margin: 0;
+    color: var(--sdk-chat-widow-widget-text-color);
 }
 .kr-wiz-content-css .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .listTableDetailsDescSub .listTableDetailsDescValue{
     font-size: 16px;
@@ -225,6 +227,7 @@
     color: #26344a;
     padding-top: 5px;
     margin: 0;
+    background-color: var(--sdk-chat-widow-chat-button-active-color);
 }
 
 .kr-wiz-content-css .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.largeImg .listTableBigImgConytainer{
@@ -239,6 +242,7 @@
     flex: 20px;
     height: 10px;
     padding-top:3px;
+    color: var(--sdk-chat-widow-chat-button-active-text-color);
 }
 .kr-wiz-content-css .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .listTableBigImgConytainer img{
     padding-right: 10px;

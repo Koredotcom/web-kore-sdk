@@ -1,3 +1,20 @@
+.customBranding-theme {
+    --sdk-chat-widow-bot-chat-bubble-background-color :var(--custom-bot-chat-bubble-background-color) !important;
+    --sdk-chat-widow-bot-chat-bubble-text-color : var(--custom-bot-chat-bubble-text-color) !important;
+
+    --sdk-chat-widow-user-chat-bubble-background-color : var(--custom-user-chat-bubble-background-color) !important;
+    --sdk-chat-widow-user-chat-bubble-text-color : var(--custom-user-chat-bubble-text-color) !important;
+
+    --sdk-chat-widow-widget-background-color :var(--custom-widget-background-color) !important;
+    --sdk-chat-widow-widget-text-color : var(--custom-widget-text-color) !important;
+    --sdk-chat-widow-widget-divider-color : var(--custom-widget-divider-color) !important;
+
+    --sdk-chat-widow-chat-button-active-color:var(--custom-button-active-background-color) !important;
+    --sdk-chat-widow-chat-button-active-text-color:var(--custom-button-active-text-color) !important;
+
+}
+
+
 .kore-chat-window{	
     font-family: "Lato", sans-serif !important;	
 }
@@ -223,17 +240,16 @@
     text-overflow: ellipsis;
     width: 80%;
     position: relative;
-    top: 8px;
+    top: 13px;
     color: #17151d;
     padding-left:10px;
 }
 .kore-chat-window .kore-action-sheet  .taskMenuPicker .btnTask .displayIcon{
-    width:100%;
+    /* width:100%; */
 }
 .kore-chat-window .kore-action-sheet .taskMenuPicker .btnTask .imageIcon{
     width:30px;
-    height: 30px;
-    margin: 5px 3px;
+    margin: 10px 3px;
     float:left;
 }
     /* TaskMenu CSS end */
@@ -438,14 +454,18 @@
     color: #ccc;
 }
 .kore-chat-window .kore-action-sheet .datePickerContainer .headerCalendar .choose{
-    font-size: 20px;
+    font-size: 14px;
     font-weight: bold;
-    color: #000000;
+    color: var(--sdk-chat-widow-primary-font-color);
+    padding-right: 25px;
+    display: inline-block;
 }
 .kore-chat-window .kore-action-sheet .datePickerContainer .headerCalendar .close-button{
     margin: 0;
     padding-top: 8px;
     cursor: pointer;
+    position: absolute;
+    right: 15px;
 }
 .kore-chat-window .kore-action-sheet .datePickerContainer .headerCalendar{
     height:56px;
@@ -550,21 +570,16 @@
     font-size:12px;
 }
 .datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.tmp.first-date-selected{
-    background-color: #e94848!important;
+    background-color: rgb(97, 104, 231)!important;
 }
 .datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.tmp.checked.last-date-selected{
-    background-color: #e94848!important;
+    background-color: rgb(97, 104, 231)!important;
 }
 .datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.first-date-selected{
     background-color: #e94848!important;
 }
 .datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.last-date-selected{
     background-color: #e94848!important;
-}
-.datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.real-today{
-    background-color: #cdecfa;
-    border-radius: 50%!important;
-    height: 24px!important;
 }
 .datePickerContainer .date-picker-wrapper .month-wrapper table .day.toMonth.valid{
     border-radius: 50%!important;
@@ -627,14 +642,18 @@
     color: #ccc;
 }
 .kore-chat-window .kore-action-sheet .dateRangePickerContainer .headerCalendar .choose{
-    font-size: 20px;
+    font-size: 14px;
     font-weight: bold;
-    color: #000000;
+    color: var(--sdk-chat-widow-primary-font-color);
+    padding-right: 25px;
+    display: inline-block;
 }
 .kore-chat-window .kore-action-sheet .dateRangePickerContainer .headerCalendar .close-button{
     margin: 0;
     padding-top: 8px;
     cursor: pointer;
+    position: absolute;
+    right: 15px;
 }
 .kore-chat-window .kore-action-sheet .dateRangePickerContainer .headerCalendar{
     height:56px;
@@ -787,11 +806,6 @@
 .dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.last-date-selected{
     background-color: #e94848!important;
 }
-.dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.real-today{
-    background-color: #cdecfa;
-    border-radius: 50%!important;
-    height: 24px!important;
-}
 .dateRangePickerContainer .date-picker-wrapper .month-wrapper table .day.toMonth.valid{
     border-radius: 50%!important;
     height: 23px!important;
@@ -813,8 +827,37 @@
     width: 35px!important;
     font-size: 16px!important;
 }
+.datePickerContainer .datePickerHighlights{
+    padding: 0 0 4px 85px;
+}
+.datePickerContainer .datePickerHighlights .paymentIcon{
+    width: 12px;
+    height: 12px;
+    background-color: #e94848!important;
+    display: inline-block;
+}
+.datePickerContainer .datePickerHighlights .selectedDate{
+    font-size:14px;
+}
+.datePickerContainer .datePickerHighlights .paymentDue{
+    font-size:14px;
+}
+.datePickerContainer .selectedMain{
+    padding: 0 0 4px 85px;
+    font-size:14px;
+}
+.datePickerContainer .selectedIcon{
+    width: 12px;
+    height: 12px;
+    background-color: rgb(97, 104, 231)!important;
+    display: inline-block;
+}
+.datePickerContainer .date-picker-wrapper .day.toMonth.valid.selectedDefault{
+    background-color: rgb(97, 104, 231)!important;
+    color:#000000 !important;
+}
     
-    /*DateRangePicker CSS end*/
+/*DateRangePicker CSS end*/
     
     
     
