@@ -87,33 +87,37 @@
                 }, 2000);
             } else {
                 var jsonData = {
-                    "tenantId": options.botInfo.customData.tenantId,
-                    "uniqueUserId": options.botInfo.customData.uniqueUserId,
-                };
+					"clientId": options.clientId,
+					"clientSecret": options.clientSecret,
+					"identity": uuid,
+					"aud": "",
+					"isAnonymous": false
+				};
                 $.ajax({
                     url: options.JWTUrl,
                     type: 'post',
                     data: jsonData,
                     dataType: 'json',
                     success: function (data) {
-                        options.botInfo.chatBot = data.botInfo.name;
-                        chatConfig.botOptions.botInfo.name = data.botInfo.name;
-                        options.botInfo.taskBotId = data.botInfo._id;
-                        chatConfig.botOptions.botInfo._id = data.botInfo._id;
-                        options.koreAPIUrl = data.koreAPIUrl;
+
                         options.assertion = data.jwt;
-                        options.uniqueUserId = data.uniqueUserId;
                         options.handleError = koreBot.showError;
                         options.chatHistory = koreBot.chatHistory;
-                        options.botDetails = koreBot.botDetails(data);
+                        options.botDetails = koreBot.botDetails;
+
+                        // options.botInfo.chatBot = data.botInfo.name;
+                        // chatConfig.botOptions.botInfo.name = data.botInfo.name;
+                        // options.botInfo.taskBotId = data.botInfo._id;
+                        // chatConfig.botOptions.botInfo._id = data.botInfo._id;
+                        // options.koreAPIUrl = data.koreAPIUrl;
+                        // options.assertion = data.jwt;
+                        // options.handleError = koreBot.showError;
+                        // options.chatHistory = koreBot.chatHistory;
+                        // options.botDetails = koreBot.botDetails(data);
                         callback(null, options);
                         setTimeout(function () {
-                            if(options && options.botInfo && options.botInfo.customData && options.botInfo.customData.source === 'finastra'){
-                                CheckRefreshToken(options);
-                            } else {
-                                if (koreBot && koreBot.initToken) {
-                                    koreBot.initToken(options);
-                                }
+                            if (koreBot && koreBot.initToken) {
+                                koreBot.initToken(options);
                             }
                         }, 2000);
                     },
@@ -122,23 +126,6 @@
                     }
                 });
             }
-        }
-        function CheckRefreshToken(options){
-            var jsonData = {
-                "userId":window.jwtDetails.userId,
-                "uniqueUserId":options.uniqueUserId
-            };
-            $.ajax({
-                url: "https://demodpd.kore.ai/finastraLoginDEMO/uniqueUser",
-                type: 'post',
-                data: jsonData,
-                dataType: 'json',
-                success: function (data) {
-                    if (koreBot && koreBot.initToken) {
-                        koreBot.initToken(options);
-                    }
-                }
-            });
         }
         var korecookie = localStorage.getItem("korecom");
         var uuid = getQueryStringValue('uid');

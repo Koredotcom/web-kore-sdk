@@ -4,23 +4,21 @@
 
   var botOptions = {};
   botOptions.logLevel = 'debug';
-  botOptions.koreAPIUrl = "";
+  // botOptions.koreAPIUrl = "";
+
+  botOptions.koreAPIUrl = "https://bankingassistant-qa.kore.ai/api";
+
   botOptions.koreSpeechAPIUrl = "";//deprecated
   //botOptions.bearer = "bearer xyz-------------------";
   //botOptions.ttsSocketUrl = '';//deprecated
   botOptions.koreAnonymousFn = koreAnonymousFn;
   botOptions.recorderWorkerPath = '../libs/recorderWorker.js';
 
-  botOptions.JWTUrl = "https://demodpd.kore.ai/finastraLoginDEMO/token";
+  botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
   botOptions.userIdentity = '';// Provide users email id here
-  botOptions.botInfo = {name:"","_id":"",customData:{"rtmType":"web"}}// bot name is case sensitive
-  // botOptions.clientId = "";
-  // botOptions.clientSecret="";
-
-  botOptions.botInfo.customData.accessToken = getCookie("accessToken");
-  botOptions.botInfo.customData.source = getCookie("source");
-  botOptions.botInfo.customData.tenantId = getCookie("tenantId");
-  botOptions.botInfo.customData.uniqueUserId = getCookie("uniqueUserId");
+  botOptions.botInfo = {name:"Banking Assist","_id":"st-eda5cef6-7009-5afa-8b0d-f4ad241d89fd",customData:{"rtmType":"web"}}// bot name is case sensitive
+  botOptions.clientId = "cs-c234e5ba-bcd3-5887-828e-d36d503b33d4";
+  botOptions.clientSecret="RdeQ6CD2P7PqoyB/6ORzN9qw7fVz06UD4XHfLhy9gzs="
 
   // To modify the web socket url use the following option
   // botOptions.reWriteSocketURL = {
@@ -54,22 +52,6 @@
     }
   };
 
-  function getCookie(cname) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for(var i = 0; i < ca.length; i++) {
-      var c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return "";
-  }
-    
   /* 
   allowGoogleSpeech will use Google cloud service api.
   Google speech key is required for all browsers except chrome.
