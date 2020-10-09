@@ -10,6 +10,7 @@
                 startDate: '',
                 endDate: '',
                 inline: true,
+                selectForward: true
                 // container : $('.dateRangePickerContainer'),
     
             },
