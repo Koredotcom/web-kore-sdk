@@ -1301,7 +1301,7 @@ print(JSON.stringify(message)); */
 			if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
 				a_link = "http:////" + a_link;
 			}
-			var _tempWin = window.open(a_link, "_blank");
+			this.openExternalLink(a_link);
 		 }else{
 			var _innerText= $(this).attr('data-value');
 			var postBack=$(this).attr('data-title');
@@ -1521,7 +1521,7 @@ print(JSON.stringify(message)); */
 				if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
 					a_link = "http:////" + a_link;
 				}
-				var _tempWin = window.open(a_link, "_blank");
+				this.openExternalLink(a_link);
 			 }else{
 				var _innerText= $(_self).attr('data-value');
 				var postBack=$(_self).attr('data-title');
@@ -1531,6 +1531,14 @@ print(JSON.stringify(message)); */
 			 $(".listViewTmplContentBox").css({"pointer-events":"none"});
 			 }
 		}
+
+		this.openExternalLink = function (link_url) {
+			var a = document.createElement("a");
+			a.href = link_url;
+			a.target = "_blank";
+			a.rel = "noopener noreferrer";//for tabnabbing security attack
+			a.click();
+		};
 		/* Action sheet Template functions ends here*/
 	
 

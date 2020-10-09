@@ -1255,7 +1255,7 @@
                          openModal(popupHtml[0],true);
                     }
                     else {
-                        var _tempWin = window.open(a_link, "_blank");
+                        me.openExternalLink(a_link);
                     }
                 });
                 _chatContainer.off('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn,.viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent,.listRightContent,.checkboxBtn,.likeDislikeDiv').on('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn, .viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent,.listRightContent,.checkboxBtn,.likeDislikeDiv', function (e) {
@@ -1294,7 +1294,7 @@
                         if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
                             a_link = "http:////" + a_link;
                         }
-                        var _tempWin = window.open(a_link, "_blank");
+                        me.openExternalLink(a_link);
                     }
                     if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[1] === 'likeDiv') {
                         $(".likeImg").addClass('hide');
@@ -1762,6 +1762,14 @@
                 ifram.addEventListener('onload', function () {
                     console.log(this);
                 }, true);
+            };
+
+            chatWindow.prototype.openExternalLink = function (link_url) {
+                var a = document.createElement("a");
+                a.href = link_url;
+                a.target = "_blank";
+                a.rel = "noopener noreferrer";//for tabnabbing security attack
+                a.click();
             };
 
             chatWindow.prototype.render = function (chatWindowHtml) {
