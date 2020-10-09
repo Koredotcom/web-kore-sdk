@@ -2516,4 +2516,119 @@
 .kore-chat-window .uiformComponent #nlineIframeModal .closeForm{
     display: none !important;
 }
+[dir="rtl"].kore-chat-window .kore-chat-header{
+    padding: 0 20px 0 0px;
+}
+
+[dir="rtl"].kore-chat-window .kore-chat-header .header-title{
+    float: right;
+}
+[dir="rtl"].kore-chat-window .kore-chat-header .chat-box-controls{
+    left: 5px;
+    right: auto;
+}
+[dir="rtl"].kore-chat-window .kore-chat-footer .chatSendMsg{
+    left: 0;
+    right: auto;
+}
+
+[dir="rtl"].kore-chat-window .sendBtnCnt .sendButton{
+    left: 10px;
+}
+
+[dir="rtl"].kore-chat-window .historyLoadingDiv .historyWarningTextDiv.displayTable .headerTip.warningTip{
+    right: 10px;
+}
+
+[dir="rtl"].kore-chat-window .typingIndicatorContent{
+    right: 20px;
+}
+
+[dir="rtl"].kore-chat-window ul.chat-container li.fromCurrentUser .messageBubble{
+    float: left;
+    border-bottom-right-radius: 12px;
+    border-bottom-left-radius: 2px;
+}
+
+[dir="rtl"].kore-chat-window ul.chat-container li.fromCurrentUser .extra-info{
+    text-align: left;
+}
+
+[dir="rtl"].kore-chat-window ul.chat-container li.fromOtherUsers.with-icon{
+    padding-right: 44px;
+    padding-left: 0px;
+}
+[dir="rtl"].kore-chat-window ul.chat-container li.fromOtherUsers.with-icon .extra-info{
+    text-align: right;
+}
+[dir="rtl"].kore-chat-window ul.chat-container li .profile-photo{
+    right: 0;
+}
+
+[dir="rtl"].kore-chat-window .buttonTmplContent .buttonTmplContentBox{
+    float:right;
+}
+[dir="rtl"].kore-chat-window .buttonTmplContent .buttonTmplContentHeading{
+    text-align: right;
+}
+
+[dir="rtl"].kore-chat-window .listTmplContent .listTmplContentBox{
+    float: right;
+}
+[dir="rtl"].kore-chat-window #carousel-one-by-one{
+    direction: ltr;
+}
+
+[dir="rtl"].kore-chat-window .tablechart .tablechartDiv{
+    right: 20px;
+    width: 100%;
+}
+[dir="rtl"].kore-chat-window .accordionTable{
+    width: 100%;
+}
+[dir="rtl"].kore-chat-window .accordionTable .tableBtn{
+    right: auto;
+}
+
+
+[dir="rtl"].kore-chat-window .carouselTitleBox .carouselTitle{
+    margin: 8px 11px 0px 0px;
+    text-align: right;
+}
+[dir="rtl"].kore-chat-window .carouselTitleBox .carouselDescription{
+    margin: 8px 11px 0px 0px;
+    text-align: right
+}
+[dir="rtl"].kore-chat-window .carouselTitleBox .carouselDefaultAction{
+    text-align: right;
+    margin: -5px 11px 8px 1px;
+}
+
+[dir="rtl"].kore-chat-window .piechart .piechartDiv{
+    direction: ltr;
+    margin-right: -45px;
+}
+[dir="rtl"].kore-chat-window .buttonTmplContent .buttonTmplContentChild.quickReplyDiv{
+    padding: 10px 0px 7px 10px;
+}
+[dir="rtl"].kore-chat-window .buttonTmplContent .buttonTmplContentChild .quickReply img{
+    margin: 0px -8px -2px 7px;
+}
+[dir="rtl"].kore-chat-window .barchart .barchartDiv{
+    margin-right: -45px;
+    direction: ltr; 
+}
+[dir="rtl"].kore-chat-window .linechart .linechartDiv{
+    margin-right: -45px;
+    direction: ltr;
+}
+/* .kore-chat-window .slide{
+    float: right;  
+} */
 /* iframe modal ends here */
+.kore-chat-window .lang-selector{
+    top: 15px;
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 5px;
+}

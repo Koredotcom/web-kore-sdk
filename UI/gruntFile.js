@@ -79,6 +79,7 @@ module.exports = function (grunt) {
             '../libs/KoreGraphAdapter.js',
             '../libs/anonymousassertion.js',
             '../kore-bot-sdk-client.js',
+            '../libs/perfect-scrollbar.js',
             '../libs/emoji.js',
             '../libs/purejscarousel.js',
             'chatWindow.js',
@@ -97,6 +98,7 @@ module.exports = function (grunt) {
             'libs/jquery-ui.min.css',
             'libs/emojione.sprites.css',
             '../libs/purejscarousel.css',
+            '../libs/prefect-scrollbar.css',
             'chatWindow.css',
             'custom/customTemplate.css'
         ]
