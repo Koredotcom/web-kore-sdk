@@ -1441,7 +1441,7 @@
 .kore-chat-window .typingIndicatorContent {
     position: absolute;
     width: 100px;
-    bottom: 72px;
+    bottom: 65px;
     left: 20px;
     display: none;
 }
