@@ -952,7 +952,7 @@
                 window.chatContainerConfig = me;
                 me.config.botOptions.botInfo.name = me.config.botOptions.botInfo.name.escapeHTML();
                 _botInfo = me.config.botOptions.botInfo;
-                me.config.botOptions.botInfo = { chatBot: _botInfo.name, taskBotId: _botInfo._id, customData: _botInfo.customData, tenanturl: _botInfo.tenanturl };
+                me.config.botOptions.botInfo = { chatBot: _botInfo.name, taskBotId: _botInfo._id, customData: _botInfo.customData, metaTags: _botInfo.metaTags, tenanturl: _botInfo.tenanturl };
                 var tempTitle = _botInfo.name;
                 me.config.botMessages = botMessages;
 
@@ -1732,6 +1732,10 @@
                 if(msgObject && msgObject.customdata){
                     messageToBot["message"].customdata=msgObject.customdata;
                 }
+                if(msgObject && msgObject.metaTags){
+                    messageToBot["message"].metaTags=msgObject.metaTags;
+                }
+
                 if(msgObject && msgObject.nlmeta){
                     messageToBot["message"].nlmeta=msgObject.nlmeta;
                 }
