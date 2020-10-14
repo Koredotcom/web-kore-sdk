@@ -632,10 +632,15 @@
                 n = Number(n);
                 return n === 0 || !!(n && !(n % 2));
             }
+            if (typeof Array.isArray === 'undefined') {
+                Array.isArray = function (obj) {
+                    return Object.prototype.toString.call(obj) === '[object Array]';
+                }
+            };
             function extend() {
                 var rec = function (obj) {
                     var recRes = {};
-                    if (typeof obj === "object") {
+                    if (typeof obj === "object" && !Array.isArray(obj)) {
                         for (var key in obj) {
                             if (obj.hasOwnProperty(key)) {
                                 if (typeof obj[key] === "object") {
