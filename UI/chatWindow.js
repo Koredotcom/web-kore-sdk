@@ -212,6 +212,13 @@
                     return d.toDateString() + " at " + helpers.formatAMPM(d);
                 },
                 'convertMDtoHTML': function (val, responseType,msgItem) {
+                    if(typeof val==='object'){
+                        try {
+                            val=JSON.stringify(val);
+                        } catch (error) {
+                            val="";
+                        }
+                    }
                     var hyperLinksMap = {};
                     var mdre = {};
                     if(msgItem && msgItem.cInfo && msgItem.cInfo.ignoreCheckMark){
@@ -376,11 +383,12 @@
                         }
                     }
                     //check for whether to linkify or not
-                    try {
-                        str = decodeURIComponent(str);
-                    } catch (e) {
-                        str = str || '';
-                    }
+                    // try {
+                    //     str = decodeURIComponent(str);
+                    // } catch (e) {
+                    //     str = str || '';
+                    // }
+                    str = str || '';
                     
                     var newStr = '', wrapper1;
                     if (responseType === 'user') {
@@ -624,10 +632,15 @@
                 n = Number(n);
                 return n === 0 || !!(n && !(n % 2));
             }
+            if (typeof Array.isArray === 'undefined') {
+                Array.isArray = function (obj) {
+                    return Object.prototype.toString.call(obj) === '[object Array]';
+                }
+            };
             function extend() {
                 var rec = function (obj) {
                     var recRes = {};
-                    if (typeof obj === "object") {
+                    if (typeof obj === "object" && !Array.isArray(obj)) {
                         for (var key in obj) {
                             if (obj.hasOwnProperty(key)) {
                                 if (typeof obj[key] === "object") {
@@ -944,7 +957,7 @@
                 window.chatContainerConfig = me;
                 me.config.botOptions.botInfo.name = me.config.botOptions.botInfo.name.escapeHTML();
                 _botInfo = me.config.botOptions.botInfo;
-                me.config.botOptions.botInfo = { chatBot: _botInfo.name, taskBotId: _botInfo._id, customData: _botInfo.customData, tenanturl: _botInfo.tenanturl };
+                me.config.botOptions.botInfo = { chatBot: _botInfo.name, taskBotId: _botInfo._id, customData: _botInfo.customData, metaTags: _botInfo.metaTags, tenanturl: _botInfo.tenanturl };
                 var tempTitle = _botInfo.name;
                 me.config.botMessages = botMessages;
 
@@ -1724,6 +1737,10 @@
                 if(msgObject && msgObject.customdata){
                     messageToBot["message"].customdata=msgObject.customdata;
                 }
+                if(msgObject && msgObject.metaTags){
+                    messageToBot["message"].metaTags=msgObject.metaTags;
+                }
+
                 if(msgObject && msgObject.nlmeta){
                     messageToBot["message"].nlmeta=msgObject.nlmeta;
                 }
@@ -2343,7 +2360,7 @@
                     bottomSliderAction('show',messageHtml);
                 }else{
                     //ignore message(msgId) if it is already in viewport                     
-                    if ($('.kore-chat-window .chat-container li#' + msgData.messageId).length < 1) {
+                    if ($('.kore-chat-window .chat-container li#' + msgData.messageId).length < 1 || (msgData.renderType==='inline')) {
                         if (msgData.type === "bot_response" && msgData.fromHistorySync) {
                             var msgTimeStamps = [];
                             var msgEles = $('.kore-chat-window .chat-container>li');
