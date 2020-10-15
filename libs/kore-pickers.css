@@ -48,19 +48,18 @@
     right: 20px;
 }
 .kore-chat-window .kore-action-sheet .radioOptionsPickerContainer .radioOptionMenuHeader .radioOptionHeading{
-            width: 160px;
-            height: 20px;
-            font-size: 20px;
-            font-weight: bold;
-            font-stretch: normal;
-            font-style: normal;
-            line-height: 2;
-            letter-spacing: normal;
-            text-align: center;
-            /* line-height: 2.5; */
-            margin-left:17px;
-       
-        color: #000000;
+    width: 160px;
+    height: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 2;
+    letter-spacing: normal;
+    text-align: center;
+    /* line-height: 2.5; */
+    margin-left:17px;
+    color: #000000;
 }
 .kore-chat-window .kore-action-sheet  .radioOptionMenuPicker{
     height: calc(100% - 109px);
@@ -189,7 +188,7 @@
 
     /* TaskMenu CSS start */
 .kore-chat-window .sdkMenu.menuBtn .menuIcon {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAANElEQVRoge3WwQ0AIAzEsCv77wxLIFoke4I8kwAAqSS7O+KG1R0AAADP2HgAAPiOjQcABjrSpwMHOlg7MAAAAABJRU5ErkJggg==');
+    background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNTJweCIgaGVpZ2h0PSIzMnB4IiB2aWV3Qm94PSIwIDAgNTIgMzIiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUzLjIgKDcyNjQzKSAtIGh0dHBzOi8vc2tldGNoYXBwLmNvbSAtLT4KICAgIDx0aXRsZT5tZW51LWljb24tZ3JheTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJtZW51LWljb24tZ3JheSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMS4wMDAwMDAsIDAuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiIgZmlsbC1ydWxlPSJub256ZXJvIj4KICAgICAgICAgICAgPHBvbHlnb24gaWQ9IkxpbmUiIHBvaW50cz0iLTEgMiAtMSAwIDUxIDAgNTEgMiI+PC9wb2x5Z29uPgogICAgICAgICAgICA8cG9seWdvbiBpZD0iTGluZS1Db3B5IiBwb2ludHM9Ii0xIDE3IC0xIDE1IDUxIDE1IDUxIDE3Ij48L3BvbHlnb24+CiAgICAgICAgICAgIDxwb2x5Z29uIGlkPSJMaW5lLUNvcHktMiIgcG9pbnRzPSItMSAzMiAtMSAzMCA1MSAzMCA1MSAzMiI+PC9wb2x5Z29uPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+');
     background-size: 100% 100%;
     width: 21px;
     height: 21px;
@@ -214,7 +213,7 @@
     margin-left:17px;
     font-size: 20px;
     font-weight: bold;
-    color: #000000;
+    color: var(--sdk-chat-widow-widget-text-color);
 }
 .kore-chat-window .kore-action-sheet  .taskMenuPicker{
     height: calc(100% - 58px);
@@ -222,11 +221,12 @@
     overflow-y: auto;
 }
 .kore-chat-window .kore-action-sheet  .taskMenuPicker .btnTask{
-    height: 56px;
-    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
-    background-color: #ffffff;
-    border-radius: 10px;
-    padding: 8px;
+    height: 60px;
+    /* box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58); */
+    border-radius: 6px;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);    
+    background-color: var(--sdk-chat-widow-chat-button-active-color);
+    padding: 12px 20px;
     cursor: pointer;
     margin-bottom: 10px;
 }
@@ -456,7 +456,7 @@
 .kore-chat-window .kore-action-sheet .datePickerContainer .headerCalendar .choose{
     font-size: 14px;
     font-weight: bold;
-    color: var(--sdk-chat-widow-primary-font-color);
+    color: var(--sdk-chat-widow-widget-text-color);
     padding-right: 25px;
     display: inline-block;
 }
@@ -845,6 +845,9 @@
 .datePickerContainer .selectedMain{
     padding: 0 0 4px 85px;
     font-size:14px;
+}
+.datePickerContainer .selectedMain .selectedDate{
+    color: var(--sdk-chat-widow-widget-text-color);
 }
 .datePickerContainer .selectedIcon{
     width: 12px;

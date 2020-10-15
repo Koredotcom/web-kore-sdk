@@ -99,26 +99,15 @@
                     data: jsonData,
                     dataType: 'json',
                     success: function (data) {
-
                         options.assertion = data.jwt;
                         options.handleError = koreBot.showError;
                         options.chatHistory = koreBot.chatHistory;
-                        options.botDetails = koreBot.botDetails;
-
-                        // options.botInfo.chatBot = data.botInfo.name;
-                        // chatConfig.botOptions.botInfo.name = data.botInfo.name;
-                        // options.botInfo.taskBotId = data.botInfo._id;
-                        // chatConfig.botOptions.botInfo._id = data.botInfo._id;
-                        // options.koreAPIUrl = data.koreAPIUrl;
-                        // options.assertion = data.jwt;
-                        // options.handleError = koreBot.showError;
-                        // options.chatHistory = koreBot.chatHistory;
-                        // options.botDetails = koreBot.botDetails(data);
+                        // options.botDetails = koreBot.botDetails;
                         callback(null, options);
+
                         setTimeout(function () {
-                            if (koreBot && koreBot.initToken) {
-                                koreBot.initToken(options);
-                            }
+                            getBrandingInformation(options);
+                            
                         }, 2000);
                     },
                     error: function (err) {
@@ -126,6 +115,30 @@
                     }
                 });
             }
+        }
+        function getBrandingInformation(options){
+            var url = options.koreAPIUrl +'/1.1/internal/workbench/sdkBranding'
+            $.ajax({
+                url: url,
+                headers: {
+                    'AccountId': options.accountId,
+                    'apiKey': 'ydsjyderjdzfwhhM3wQkjhsfiaHqSBxTpc4XXOP7v/rHdPYfD',
+                    'Accept-Language':'en_US',
+                    'Accepts-version':'1',
+                    'state':'published'
+                },
+                type: 'get',
+                dataType: 'json',
+                success: function (data) {
+                    options.botDetails = koreBot.botDetails(data);
+                    if (koreBot && koreBot.initToken) {
+                        koreBot.initToken(options);
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
         }
         var korecookie = localStorage.getItem("korecom");
         var uuid = getQueryStringValue('uid');

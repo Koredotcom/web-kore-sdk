@@ -6,7 +6,7 @@
   botOptions.logLevel = 'debug';
   // botOptions.koreAPIUrl = "";
 
-  botOptions.koreAPIUrl = "https://bankingassistant-qa.kore.ai/api";
+  botOptions.koreAPIUrl = "https://bankingassistant-dev.kore.ai/api";
 
   botOptions.koreSpeechAPIUrl = "";//deprecated
   //botOptions.bearer = "bearer xyz-------------------";
@@ -16,9 +16,10 @@
 
   botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
   botOptions.userIdentity = '';// Provide users email id here
-  botOptions.botInfo = {name:"Banking Assist","_id":"st-eda5cef6-7009-5afa-8b0d-f4ad241d89fd",customData:{"rtmType":"web"}}// bot name is case sensitive
-  botOptions.clientId = "cs-c234e5ba-bcd3-5887-828e-d36d503b33d4";
-  botOptions.clientSecret="RdeQ6CD2P7PqoyB/6ORzN9qw7fVz06UD4XHfLhy9gzs="
+  botOptions.botInfo = {name:"Banking Assist","_id":"st-dc8b899c-78da-56ee-93cb-382c7b43cc70",customData:{"rtmType":"web"}}// bot name is case sensitive
+  botOptions.clientId = "cs-6f396b14-bc02-5e95-8e86-c4f14cffb551";
+  botOptions.clientSecret="opwdVdnx2EWyzh4oOKmPbSTyaNoPoKho6P5lrkPXPuY="
+  botOptions.accountId = "5f86a48491f4d84b80c383a4"
 
   // To modify the web socket url use the following option
   // botOptions.reWriteSocketURL = {
