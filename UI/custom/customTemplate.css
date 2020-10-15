@@ -550,12 +550,16 @@
     width: 100%;
     border-radius: 10px;
     box-shadow: var(--sdk-chat-widow-primary-box-shadow);
-    background-color: var(--sdk-chat-widow-default-white);
+    /* background-color: var(--sdk-chat-widow-default-white); */
+    background-color: var(--sdk-chat-widow-chat-button-active-color);
     height: 56px;
     display: flex;	
     align-items: center;	
     flex-wrap: wrap;	
     cursor: pointer;
+}
+.kore-chat-window .kore-chat-body .listViewTmplContent .listViewTmplContentChild:hover{
+    background-color: rgba(10, 10, 10, 0.08);
 }
 .kore-chat-window .kore-chat-body .listViewTmplContent .listViewItemSubtitle{
     white-space: nowrap;
@@ -1317,6 +1321,9 @@
     flex-wrap: wrap;
     cursor: default;
     margin-top: 0!important;
+}
+.kore-chat-window .listViewTmplContent.noShadow .listViewTmplContentChild:hover{
+    background-color: var(--sdk-chat-widow-chat-button-active-color) !important;
 }
 
 .kore-chat-window .listViewTmplContent .listViewLeftContent {

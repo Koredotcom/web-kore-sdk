@@ -122,7 +122,7 @@
                 url: url,
                 headers: {
                     'AccountId': options.accountId,
-                    'apiKey': 'ydsjyderjdzfwhhM3wQkjhsfiaHqSBxTpc4XXOP7v/rHdPYfD',
+                    'apiKey': option.apiKey,
                     'Accept-Language':'en_US',
                     'Accepts-version':'1',
                     'state':'published'

@@ -14,12 +14,15 @@
   botOptions.koreAnonymousFn = koreAnonymousFn;
   botOptions.recorderWorkerPath = '../libs/recorderWorker.js';
 
-  botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
-  botOptions.userIdentity = '';// Provide users email id here
-  botOptions.botInfo = {name:"Banking Assist","_id":"st-dc8b899c-78da-56ee-93cb-382c7b43cc70",customData:{"rtmType":"web"}}// bot name is case sensitive
-  botOptions.clientId = "cs-6f396b14-bc02-5e95-8e86-c4f14cffb551";
-  botOptions.clientSecret="opwdVdnx2EWyzh4oOKmPbSTyaNoPoKho6P5lrkPXPuY="
-  botOptions.accountId = "5f86a48491f4d84b80c383a4"
+
+  botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
+  botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
+  botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
+  botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
+  botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+  
+  botOptions.accountId = "PLEASE_ENTER_ACCOUNT_ID";
+  botOptions.apiKey = 'PLEASE_ENTER_API_KEY';
 
   // To modify the web socket url use the following option
   // botOptions.reWriteSocketURL = {
