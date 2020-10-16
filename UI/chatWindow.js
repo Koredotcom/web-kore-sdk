@@ -3516,7 +3516,10 @@
             }
             this.botDetails = function (response, botInfo) {
                 if(response){
-                    // chatContainerConfig.config.chatTitle = response.botInfo.name;
+                    if(response.botName !== ""){
+                        chatContainerConfig.config.chatTitle = response.botName;
+                        $('.kore-chat-header .header-title').html(chatContainerConfig.config.chatTitle).attr('title', chatContainerConfig.config.chatTitle);
+                    }
                     var cssPrefix = "--custom-";
                     var cssBrandingVariables = {
                         "botchatBgColor":"bot-chat-bubble-background-color",

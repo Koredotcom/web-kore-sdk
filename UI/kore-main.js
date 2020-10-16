@@ -117,12 +117,12 @@
             }
         }
         function getBrandingInformation(options){
-            var url = options.koreAPIUrl +'/1.1/internal/workbench/sdkBranding'
+            var url = options.koreAPIUrl +'/1.1/workbench/sdkBranding'
             $.ajax({
                 url: url,
                 headers: {
-                    'AccountId': options.accountId,
-                    'apiKey': option.apiKey,
+                    'tenantId': options.accountId,
+                    'Authorization': "bearer " + options.accessToken,
                     'Accept-Language':'en_US',
                     'Accepts-version':'1',
                     'state':'published'
