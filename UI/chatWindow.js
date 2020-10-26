@@ -2467,12 +2467,35 @@
                         msgData.renderType = 'inline';
                         messageHtml = me.renderWebForm(msgData,true);
                     }
+                    else if(msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "live_agent"){                      
+                        
+                        msgData.fromAgent=true;
+
+                        if(msgData.message[0].component && msgData.message[0].component.payload){
+                            msgData.message[0].cInfo.body = msgData.message[0].component.payload.text || "";
+                        }
+                        messageHtml = $(me.getChatTemplate("message")).tmpl({
+                            'msgData': msgData,
+                            'helpers': helpers,
+                            'extension': extension
+                        });
+                    }
                     else {
                         messageHtml = $(me.getChatTemplate("message")).tmpl({
                             'msgData': msgData,
                             'helpers': helpers,
                             'extension': extension
                         });
+                    }
+
+                    //For Agent presence
+                    if (msgData.type === "bot_response") {
+                        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "live_agent") {
+                            $('.kore-chat-window').addClass('agent-on-chat');
+                        } else {
+                            $('.kore-chat-window').removeClass('agent-on-chat');
+                        }
+
                     }
                 }
                 _chatContainer.find('li').attr('aria-live','off');
@@ -2724,7 +2747,7 @@
                         {{each(key, msgItem) msgData.message}} \
                             {{if msgItem.cInfo && msgItem.type === "text"}} \
                                 <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-                                    class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}}\ {{if msgData.icon}}with-icon{{/if}}"> \
+                                     class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}}\ {{if msgData.icon}}with-icon{{/if}} {{if msgData.fromAgent}}from-agent{{/if}}"> \
                                     {{if msgData.createdOn}}<div aria-hidden="true" aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                                     {{if msgData.icon}}<div aria-hidden="true"  aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})" title="User Avatar"></div> </div> {{/if}} \
                                     <div class="messageBubble">\
