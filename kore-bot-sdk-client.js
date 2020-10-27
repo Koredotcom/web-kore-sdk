@@ -1154,7 +1154,6 @@ var BaseAPIClient = require('../client');
 var RtmApi = require('../web/apis').RtmApi;
 var makeMessageEventWithSubtype = require('../events/utils').makeMessageEventWithSubtype;
 var wsSocketFn = require('../transports/ws');
-debugger;
 var CLIENT_EVENTS = require(4);
 
 function KoreRTMClient(token, opts) {
@@ -1177,7 +1176,11 @@ function KoreRTMClient(token, opts) {
   this._pendingMessages = {};
   this._connAttempts = 0;
   this._connecting = false;
-  this._reconnecting = false;
+  this._reconnecting = clientOpts.maintainContext || false;
+  if(clientOpts.forceReconnecting){
+    this._reconnecting=true;
+    clientOpts.forceReconnecting=false;
+  }
   if (clientOpts.hasOwnProperty("_reconnecting") && clientOpts._reconnecting) {
     this._reconnecting = clientOpts._reconnecting;
     clientOpts._reconnecting=false;
