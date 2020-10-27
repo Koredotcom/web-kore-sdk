@@ -38,7 +38,12 @@
         autoEnableSpeechAndTTS: false, 	// set true, to use talkType voice keyboard.
         graphLib: "d3" ,				// set google, to render google charts.This feature requires loader.js file which is available in google charts documentation.
         googleMapsAPIKey:"",
-        minimizeMode:false,              // set true, to show chatwindow in minized mode 
+        minimizeMode: true,             // set true, to show chatwindow in minimized mode 
+        multiPageApp: {
+            enable: false,              //set true for non SPA(Single page applications)
+            userIdentityStore: 'localStorage',//'localStorage || sessionStorage'
+            chatWindowStateStore: 'localStorage'//'localStorage || sessionStorage'
+        },              
         supportDelayedMessages:true,    // enable to add support for renderDelay in message nodes which will help to render messages with delay from UI       
         pickersConfig:{
             showDatePickerIcon:false,           //set true to show datePicker icon

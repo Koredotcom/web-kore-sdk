@@ -970,6 +970,31 @@
             chatWindow.prototype.setCollapsedModeStyles = function (){
                 $('.kore-chat-window').css({left:$('body').width()-400,width:'400px'});
             }
+            chatWindow.prototype.setLocalStoreItem = function (key,value){
+                var me=this;
+                var storage=me.getStoreTypeByKey(key);
+                return window[storage].setItem(key,value);
+            }
+            chatWindow.prototype.getLocalStoreItem = function (key){
+                var me=this;
+                var storage=me.getStoreTypeByKey(key);
+                return window[storage].getItem(key);
+            }
+            chatWindow.prototype.removeLocalStoreItem = function (key){
+                var me=this;
+                var storage=me.getStoreTypeByKey(key);
+                return window[storage].removeItem(key);
+            }
+            chatWindow.prototype.getStoreTypeByKey = function (key){
+                var me=this;
+                var storage='localStorage';
+                if(key==='kr-cw-uid'){
+                    storage=me.config.multiPageApp.chatWindowStateStore;
+                }else if(key==='kr-cw-uid'){
+                    storage=me.config.multiPageApp.userIdentityStore;
+                }
+                return storage; 
+            }
             chatWindow.prototype.init = function () {
                 var me = this;
                 me.initi18n();
@@ -980,6 +1005,14 @@
                 me.config.botOptions.botInfo = { chatBot: me._botInfo.name, taskBotId: me._botInfo._id, customData: me._botInfo.customData, metaTags: me._botInfo.metaTags, tenanturl: me._botInfo.tenanturl };
                 var tempTitle = me._botInfo.name;
                 me.config.chatTitle = me.config.botMessages.connecting;
+                if(me.config.multiPageApp && me.config.multiPageApp.enable){
+                    var cwState=me.getLocalStoreItem('kr-cw-state');
+                    var maintainContext=cwState?true:false;
+                    if(maintainContext && me.getLocalStoreItem('kr-cw-uid')){
+                        me.config.botOptions.userIdentity=userIdentity =me.getLocalStoreItem('kr-cw-uid');
+                    }
+                    me.config.botOptions.maintainContext = maintainContext;
+                }
                 me.config.userAgentIE = navigator.userAgent.indexOf('Trident/') !== -1;
                 var mobileBrowserOpened = me.isMobile();
                 if (mobileBrowserOpened) {
@@ -1006,10 +1039,31 @@
                 me.config.chatTitle = tempTitle;
                 if(!me.config.minimizeMode){
                     me.bot.init(me.config.botOptions,me.config.messageHistoryLimit);
+                    if (me.config.multiPageApp && me.config.multiPageApp.enable) {
+                        me.setLocalStoreItem('kr-cw-state', 'open');
+                        me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
+                        setTimeout(function () {
+                            if (cwState === 'minimized') {
+                                $('.kore-chat-window button.minimize-btn').trigger('click');
+                            }
+                        }, 500);
+                    }
+                    
                 }else{
                     chatWindowHtml.addClass('minimize');
                     chatWindowHtml.find('.minimized-title').html("Talk to " + me.config.chatTitle);
                     me.skipedInit=true;
+                    if(me.config.multiPageApp && me.config.multiPageApp.enable && maintainContext){
+                        setTimeout(function () {
+                            if (cwState === 'open') {
+                                $('.kore-chat-window .minimized .messages').trigger('click');
+                            } else if (cwState === 'minimized') {
+                                $('.kore-chat-window .minimized .messages').trigger('click');
+                                $('.kore-chat-window button.minimize-btn').trigger('click');
+                            }
+                        }, 500);
+
+                    }
                 }
                 if (me.config.allowLocation) {
                     me.bot.fetchUserLocation();
@@ -1049,7 +1103,6 @@
             chatWindow.prototype.seti18n = function (lang) {
                 var me = this;
                 me.i18n.selectedLanguage=lang;
-                debugger;
                 me.config.botMessages=botMessages=me.i18n.langFiles[me.i18n.selectedLanguage];
                 botMessages.availableLanguages=(me.config.i18n && me.config.i18n.availableLanguages)||false;
                 botMessages.selectedLanguage=me.i18n.selectedLanguage;
@@ -1130,6 +1183,8 @@
                 me.config.chatContainer.find('.kore-chat-header .header-title').html(me.config.botMessages.reconnecting);
                 //me.config.chatContainer.find('.chat-container').html("");
                 me.bot.close();
+                me.config.botOptions.maintainContext = false
+                me.setLocalStoreItem('kr-cw-uid',me.config.botOptions.userIdentity);
                 me.bot.init(me.config.botOptions);
             };
 
@@ -1439,9 +1494,19 @@
                         _ttsContext.close();
                         _ttsContext = null;
                     }
+
+                    if (me.config.multiPageApp && me.config.multiPageApp.enable) {
+                        me.removeLocalStoreItem('kr-cw-state');
+                        me.removeLocalStoreItem('kr-cw-uid');
+                        me.config.botOptions.maintainContext = false;
+                    }
+
                 });
 
                 _chatContainer.off('click', '.minimize-btn').on('click', '.minimize-btn', function (event) {
+                    if(me.config.multiPageApp && me.config.multiPageApp.enable){
+                        me.setLocalStoreItem('kr-cw-state','minimized');
+                    }
                     if (me.minimized === true) {
                         _chatContainer.removeClass("minimize");
                         me.minimized = false;
@@ -1582,9 +1647,15 @@
                     }
                 });
                 _chatContainer.off('click', '.minimized').on('click', '.minimized,.minimized-title', function (event) {
+                    if(me.config.multiPageApp && me.config.multiPageApp.enable){
+                        me.setLocalStoreItem('kr-cw-state','open');
+                    }
                     _chatContainer.removeClass("minimize");
                     me.minimized = false;
                     if(me.skipedInit){
+                        if(me.config.multiPageApp && me.config.multiPageApp.enable){
+                            me.setLocalStoreItem('kr-cw-uid',me.config.botOptions.userIdentity);
+                        }
                         bot.init(me.config.botOptions,me.config.messageHistoryLimit);
                         me.skipedInit=false;
                     }
@@ -1604,6 +1675,7 @@
                 });
 
                 _chatContainer.off('click', '.reload-btn').on('click', '.reload-btn', function (event) {
+                    me.config.botOptions.forceReconnecting=true;
                     $(this).addClass("disabled").prop('disabled', true);
                     $(".close-btn").addClass("disabled").prop('disabled', true);
                     setTimeout(function () {
@@ -1613,6 +1685,7 @@
                     if (ttsAudioSource) {
                         ttsAudioSource.stop();
                     }
+
                 });
                 _chatContainer.off('click', '.ttspeaker').on('click', '.ttspeaker', function (event) {
                     if (me.config.isTTSEnabled) {
@@ -1778,7 +1851,6 @@
             };
 
             chatWindow.prototype.render = function (chatWindowHtml) {
-                debugger;
                 var me = this;
                 $(me.config.container).append(chatWindowHtml);
 
@@ -3692,7 +3764,9 @@
                                             scrollTop: $('.chat-container').prop("scrollHeight")
                                         }, 2500);
                                         $('.historyLoadingDiv').removeClass('showMsg');
-                                        $('.chat-container').append("<div class='endChatContainer' aria-live='off' aria-hidden='true' ><span class='endChatContainerText'>"+botMessages.endofchat+"</span></div>");
+                                        if(!me.config.botOptions.maintainContext){
+                                            $('.chat-container').append("<div class='endChatContainer' aria-live='off' aria-hidden='true' ><span class='endChatContainerText'>"+botMessages.endofchat+"</span></div>");
+                                        }
                                         if(messagesQueue.length){
                                             messagesQueue.forEach(function(msg, currIndex){
                                                 me.renderMessage(msg);
