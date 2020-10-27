@@ -579,9 +579,12 @@
           function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            
+
+            var defaultTarget = '_self';
             var link = $(this).attr('url');
-            window.open(link, '_self');
+            var target = $(this).parent('a').attr('target');
+
+            window.open(link, target ? target : defaultTarget)
           });
 
           $chatContainer.on('click',
