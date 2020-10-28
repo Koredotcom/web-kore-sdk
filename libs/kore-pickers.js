@@ -6,6 +6,7 @@
                 singleMonth: true,
                 showShortcuts: false,
                 showTopbar: false,
+                selectForward: true,
                 format: 'DD-MM-YYYY',
                 startDate: '',
                 endDate: '',
