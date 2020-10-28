@@ -1463,8 +1463,8 @@
                             selectedValue.push($(checkboxSelection[i]).attr('value'));
                             toShowText.push($(checkboxSelection[i]).attr('text'));
                         }
-                        $('.chatInputBox').text($(this).attr('value') + ': '+ selectedValue.toString());
-                        me.sendMessage($('.chatInputBox'),$(this).attr('title') +':'+ toShowText.toString());
+                        $('.chatInputBox').text($(this).attr('title') +': '+ selectedValue.toString());
+                        me.sendMessage($('.chatInputBox'),toShowText.toString());
                     }
                     if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[0] === 'quickReply') {
                         var _parentQuikReplyEle = e.currentTarget.parentElement.parentElement;
@@ -3743,6 +3743,9 @@
                                             msgData.message[0].component.payload.fromHistory = true;
                                         }
                                         if (msgData.message[0].component.payload.template_type === 'listView') {
+                                            msgData.message[0].component.payload.fromHistory = true;
+                                        }
+                                        if (msgData.message[0].component.payload.template_type === 'List') {
                                             msgData.message[0].component.payload.fromHistory = true;
                                         }
                                         if (msgData.message[0].component.payload.template_type === 'feedbackTemplate') {
