@@ -292,6 +292,14 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 ```
 
 ###Release History:
+V8.0.0 [Major] on 31-OCT-2020: Master branch
+    1.i18n and RTL support added.
+    2.Support for multipage applications added.
+    3.Added "list" and "live_agent" message templates.
+    4.Added flexibility to override some of the methods of chatwindow.js and kore-bot-sdk-client.js. 
+    5.Minor bug fixes 
+    6.Added support to send metaTags.Older sdk's can take this specific change from here https://github.com/Koredotcom/web-kore-sdk/commit/aabd4ff87875728b3bc9b05176fe5fc5cb32bf18
+    
 v7.3.0[Major] on 04-Jun-2020: Master branch:
 	1. Interactive UI Forms support
 	   Launch interactive UI form to collect input from the end-users and then submit it to the virtual agent for taking the necessary actions
