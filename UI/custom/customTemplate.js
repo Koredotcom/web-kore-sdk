@@ -1056,7 +1056,7 @@ print(JSON.stringify(message)); */
                             {{if msgData.message[0].component.payload.quick_replies && msgData.message[0].component.payload.quick_replies.length}} \
                                 <div class="quick_replies_btn_parent"><div class="autoWidth">\
                                     {{each(key, msgItem) msgData.message[0].component.payload.quick_replies}} \
-                                        <div class="buttonTmplContentChild quickReplyDiv displayInline"> <span {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} class="quickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.content_type}">\
+                                        <div class="buttonTmplContentChild quickReplyDiv displayInline"> <span {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} class="buttonQuickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.content_type}">\
                                             {{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} <span class="quickreplyText {{if msgItem.image_url}}with-img{{/if}}">${msgItem.title}</span></span>\
                                         </div> \
                                     {{/each}} \

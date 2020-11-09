@@ -5,7 +5,10 @@
     --sdk-chat-widow-user-chat-bubble-background-color : var(--custom-user-chat-bubble-background-color) !important;
     --sdk-chat-widow-user-chat-bubble-text-color : var(--custom-user-chat-bubble-text-color) !important;
 
-    --sdk-chat-widow-widget-background-color :var(--custom-widget-background-color) !important;
+    /* --sdk-chat-widow-widget-background-color :var(--custom-widget-background-color) !important; */
+    --sdk-chat-widow-widget-body-color :var(--sdk-chat-widow-default-white);
+    --sdk-chat-widow-widget-header-color :var(--sdk-chat-widow-default-white);
+    --sdk-chat-widow-widget-footer-color :var(--sdk-chat-widow-default-white);
     --sdk-chat-widow-widget-text-color : var(--custom-widget-text-color) !important;
     --sdk-chat-widow-widget-divider-color : var(--custom-widget-divider-color) !important;
 
@@ -194,10 +197,24 @@
     height: 21px;
     margin: -4px;
     display: block;
+    left: -5px;
 }
 .kore-chat-window .kore-action-sheet .TaskPickerContainer{
-    height:462px;
+    /* height:462px; */
     overflow-y: auto;
+    animation-name: fadeInBottom;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+}
+@keyframes fadeInBottom {
+    from {
+        opacity: 0;
+        height: 0;
+    }
+    to { 
+        opacity: 1;
+        height: 462px; 
+    }
 }
 .kore-chat-window .kore-action-sheet .TaskPickerContainer .taskMenuHeader .closeSheet{
     cursor: pointer;

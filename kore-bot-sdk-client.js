@@ -348,6 +348,9 @@ KoreBot.prototype.onLogIn = function(err, data) {
 		}
 		console.error(err && err.stack);
 	} else {
+    if(this.options && this.options.jwtgrantSuccessCB){
+      this.options.jwtgrantSuccessCB(data);
+    }
 		this.accessToken = data.authorization.accessToken;
 		this.options.accessToken = this.accessToken;
 		this.WebClient.user.accessToken = this.accessToken;

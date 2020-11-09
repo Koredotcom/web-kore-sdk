@@ -983,6 +983,21 @@
                     }, 350);
                 }
                 var chatWindowHtml = $(me.getChatTemplate()).tmpl(me.config);
+
+                $(chatWindowHtml).off('click', '.drpdown_theme').on('click', '.drpdown_theme', function(e){
+                    me.showDropdown(this);
+                });
+
+                $(chatWindowHtml).off('click', '.themeName').on('click', '.themeName', function(e){
+                    var themeChange = $(this).attr('id');
+                    if(themeChange == 'shopping_theme'){
+                        $('.kore-chat-window').removeClass('logo_theme').addClass("shopping_theme");
+                    }
+                    else{
+                        $('.kore-chat-window').removeClass('shopping_theme').addClass("logo_theme");
+                    } 
+                });
+                
                 me.config.chatContainer = chatWindowHtml;
 
                 me.config.chatTitle = tempTitle;
@@ -1255,10 +1270,10 @@
                          openModal(popupHtml[0],true);
                     }
                     else {
-                        me.openExternalLink(a_link);
+                        window.open(a_link, "_blank");
                     }
                 });
-                _chatContainer.off('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn,.viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent,.listRightContent,.checkboxBtn,.likeDislikeDiv').on('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn, .viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent,.listRightContent,.checkboxBtn,.likeDislikeDiv', function (e) {
+                _chatContainer.off('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn,.viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent,.listRightContent,.checkboxBtn,.likeDislikeDiv,.buttonQuickReply').on('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn, .viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent,.listRightContent,.checkboxBtn,.likeDislikeDiv,.buttonQuickReply', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
                     var type = $(this).attr('type');
@@ -1961,7 +1976,7 @@
                 if (messageHtml === '' && msgData && msgData.message && msgData.message[0]) {
 
                     if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "button") {
-                        messageHtml = $(me.getChatTemplate("templatebutton")).tmpl({
+                        messageHtml = $(me.getChatTemplate("templatequickreply")).tmpl({
                             'msgData': msgData,
                             'helpers': helpers,
                             'extension': extension
@@ -2655,6 +2670,30 @@
                 me.bindIframeEvents($(popupHtml));
             };
 
+            chatWindow.prototype.showDropdown = function (obj) {
+                if ($(obj).next().hasClass('dropdown-contentWidgt')) {
+                    $(obj).next().toggleClass('show');
+                }
+                $('.dropdown-contentWidgt.show').not($(obj).next()).removeClass('show');
+            }; // Close the dropdown if the user clicks outside of it
+
+            (function () {
+                window.onclick = function (event) {
+                  if (!event.target.matches('.dropbtnWidgt')) {
+                    var dropdowns = document.getElementsByClassName("dropdown-contentWidgt");
+                    var i;
+          
+                    for (i = 0; i < dropdowns.length; i++) {
+                      var openDropdown = dropdowns[i];
+          
+                      if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                      }
+                    }
+                  }
+                };
+            })();
+
             chatWindow.prototype.getChatTemplate = function (tempType) {
                 var chatFooterTemplate =
                     '<div class="footerContainer pos-relative"> \
@@ -2711,6 +2750,14 @@
                                 <button class="expand-btn" title="Expand"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5leHBhbmQ8L3RpdGxlPgogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0iQXJ0Ym9hcmQiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0zMDUuMDAwMDAwLCAtMjUyLjAwMDAwMCkiIGZpbGw9IiM4QTk1OUYiIGZpbGwtcnVsZT0ibm9uemVybyI+CiAgICAgICAgICAgIDxnIGlkPSJleHBhbmQiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDMwNS4wMDAwMDAsIDI1Mi4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik0xLjg2NjY2NjY3LDkuMzMzMzMzMzMgTDAsOS4zMzMzMzMzMyBMMCwxNCBMNC42NjY2NjY2NywxNCBMNC42NjY2NjY2NywxMi4xMzMzMzMzIEwxLjg2NjY2NjY3LDEyLjEzMzMzMzMgTDEuODY2NjY2NjcsOS4zMzMzMzMzMyBaIE0wLDQuNjY2NjY2NjcgTDEuODY2NjY2NjcsNC42NjY2NjY2NyBMMS44NjY2NjY2NywxLjg2NjY2NjY3IEw0LjY2NjY2NjY3LDEuODY2NjY2NjcgTDQuNjY2NjY2NjcsMCBMMCwwIEwwLDQuNjY2NjY2NjcgWiBNMTIuMTMzMzMzMywxMi4xMzMzMzMzIEw5LjMzMzMzMzMzLDEyLjEzMzMzMzMgTDkuMzMzMzMzMzMsMTQgTDE0LDE0IEwxNCw5LjMzMzMzMzMzIEwxMi4xMzMzMzMzLDkuMzMzMzMzMzMgTDEyLjEzMzMzMzMsMTIuMTMzMzMzMyBaIE05LjMzMzMzMzMzLDAgTDkuMzMzMzMzMzMsMS44NjY2NjY2NyBMMTIuMTMzMzMzMywxLjg2NjY2NjY3IEwxMi4xMzMzMzMzLDQuNjY2NjY2NjcgTDE0LDQuNjY2NjY2NjcgTDE0LDAgTDkuMzMzMzMzMzMsMCBaIiBpZD0iU2hhcGUiPjwvcGF0aD4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button>\
                                 <button class="close-btn" title="Close"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button> \
                             </div> \
+                            <div class="logo-icon"></div>\
+                            <div class="sdkThemeContainer" title="Themes">\
+                                <i class="icon-More dropbtnWidgt sdkThemeIcon drpdown_theme"></i>\
+                                <ul class="dropdown-contentWidgt rmpmW themeContent" style="list-style:none;">\
+                                    <li class="themeName" id="logo_theme">Logo theme<span class="checkMarkIcon checkMarkIcon-1"></span></li>\
+                                    <li class="action themeName" id="shopping_theme">Shopping theme<span class="checkMarkIcon checkMarkIcon-2"></span></li>\
+                                </ul>\
+                            </div>\
                         </div> \
                         <div class="kore-chat-header historyLoadingDiv"> \
                             <div class="historyWarningTextDiv displayTable"> \
@@ -2813,6 +2860,7 @@
                         {{/each}} \
                     {{/if}} \
                 </scipt>';
+
                 var templateAttachment = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
                     {{if msgData.message}} \
                         {{each(key, msgItem) msgData.message}} \
@@ -2848,14 +2896,16 @@
                         {{/each}} \
                     {{/if}} \
                 </scipt>';
+
                 var popupTemplate = '<script id="kore_popup_tmpl" type="text/x-jquery-tmpl"> \
-                        <div class="kore-auth-layover">\
-                            <div class="kore-auth-popup"> \
-                                <div class="popup_controls"><span class="close-popup" title="Close">&times;</span></div> \
-                                <iframe id="authIframe" src="${link_url}"></iframe> \
-                            </div> \
-                        </div>\
+                    <div class="kore-auth-layover">\
+                        <div class="kore-auth-popup"> \
+                            <div class="popup_controls"><span class="close-popup" title="Close">&times;</span></div> \
+                            <iframe id="authIframe" src="${link_url}"></iframe> \
+                        </div> \
+                    </div>\
                 </script>';
+
                 var buttonTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
                     {{if msgData.message}} \
                         <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
@@ -2916,6 +2966,7 @@
                         </li> \
                     {{/if}} \
                 </scipt>';
+
                 var linechartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
                     {{if msgData.message}} \
                         <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
@@ -2931,6 +2982,7 @@
                         </li> \
                     {{/if}} \
                 </scipt>';
+
                 var miniTableChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
                     {{if msgData.message}} \
                         <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
@@ -2963,42 +3015,44 @@
                         </li> \
                     {{/if}} \
                 </scipt>';
+
                 var miniTableHorizontalTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
                     {{if msgData.message}} \
-                    <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-                        class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
-                        {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-                        {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-                        {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
-                            <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
-                        </div>{{/if}}\
-                        <div class="carousel" id="carousel-one-by-one" style="height: 0px;">\
-                            {{each(key, table) msgData.message[0].component.payload.elements}}\
-                                <div class="slide">\
-                                    <div class="minitableDiv">\
-                                        <div style="overflow-x:auto; padding: 0 8px;">\
-                                            <table cellspacing="0" cellpadding="0">\
-                                                <tr class="headerTitle">\
-                                                    {{each(key, tableHeader) table.primary}} \
-                                                        <th {{if tableHeader[1]}}style="text-align:${tableHeader[1]};" {{/if}}>${tableHeader[0]}</th>\
-                                                    {{/each}} \
-                                                </tr>\
-                                                {{each(key, additional) table.additional}} \
-                                                    <tr>\
-                                                        {{each(cellkey, cellValue) additional}} \
-                                                            <td  {{if cellkey === additional.length-1}}colspan="2"{{/if}}  {{if table.primary[cellkey][1]}}style="text-align:${table.primary[cellkey][1]};" {{/if}} title="${cellValue}">${cellValue}</td>\
+                        <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+                            class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
+                            {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+                            {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+                            {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
+                                <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
+                            </div>{{/if}}\
+                            <div class="carousel" id="carousel-one-by-one" style="height: 0px;">\
+                                {{each(key, table) msgData.message[0].component.payload.elements}}\
+                                    <div class="slide">\
+                                        <div class="minitableDiv">\
+                                            <div style="overflow-x:auto; padding: 0 8px;">\
+                                                <table cellspacing="0" cellpadding="0">\
+                                                    <tr class="headerTitle">\
+                                                        {{each(key, tableHeader) table.primary}} \
+                                                            <th {{if tableHeader[1]}}style="text-align:${tableHeader[1]};" {{/if}}>${tableHeader[0]}</th>\
                                                         {{/each}} \
                                                     </tr>\
-                                                {{/each}} \
-                                            </table>\
+                                                    {{each(key, additional) table.additional}} \
+                                                        <tr>\
+                                                            {{each(cellkey, cellValue) additional}} \
+                                                                <td  {{if cellkey === additional.length-1}}colspan="2"{{/if}}  {{if table.primary[cellkey][1]}}style="text-align:${table.primary[cellkey][1]};" {{/if}} title="${cellValue}">${cellValue}</td>\
+                                                            {{/each}} \
+                                                        </tr>\
+                                                    {{/each}} \
+                                                </table>\
+                                            </div>\
                                         </div>\
                                     </div>\
-                                </div>\
-                            {{/each}}\
-                        </div>\
-                    </li> \
+                                {{/each}}\
+                            </div>\
+                        </li> \
                     {{/if}} \
                 </scipt>';
+
                 var tableChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
                     {{if msgData.message}} \
                         <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
@@ -3095,11 +3149,10 @@
 
                 var quickReplyTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
                     {{if msgData.message}} \
-                        <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-                            class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon quickReplies"> \
+                        <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon quickReplies"> \
                             <div class="buttonTmplContent"> \
-                                {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-                                {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar marginT50" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+                                {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+                                {{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
                                 {{if msgData.message[0].component.payload.text}} \
                                     <div class="buttonTmplContentHeading quickReply"> \
                                         {{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
@@ -3107,22 +3160,30 @@
                                             <span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
                                         {{/if}} \
                                     </div>\
-                                    {{/if}} \
-                                    {{if msgData.message[0].component.payload.quick_replies && msgData.message[0].component.payload.quick_replies.length}} \
-                                    <div class="fa fa-chevron-left quickreplyLeftIcon hide"></div><div class="fa fa-chevron-right quickreplyRightIcon hide"></div>\
-                                        <div class="quick_replies_btn_parent"><div class="autoWidth">\
+                                {{/if}} \
+                                <div class="fa fa-chevron-left quickreplyLeftIcon hide"></div><div class="fa fa-chevron-right quickreplyRightIcon hide"></div>\
+                                    <div class="quick_replies_btn_parent"><div class="autoWidth">\
+                                        {{if msgData.message[0].component.payload.quick_replies && msgData.message[0].component.payload.quick_replies.length}} \
                                             {{each(key, msgItem) msgData.message[0].component.payload.quick_replies}} \
                                                 <div class="buttonTmplContentChild quickReplyDiv"> <span {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} class="quickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.content_type}">\
                                                     {{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} <span class="quickreplyText {{if msgItem.image_url}}with-img{{/if}}">${msgItem.title}</span></span>\
                                                 </div> \
                                             {{/each}} \
-                                        </div>\
+                                        {{/if}} \
+                                        {{if msgData.message[0].component.payload.buttons && msgData.message[0].component.payload.buttons.length}} \
+                                            {{each(key, msgItem) msgData.message[0].component.payload.buttons}} \
+                                                <div class="buttonTmplContentChild quickReplyDiv displayInline"> <span {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} class="buttonQuickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.type}">\
+                                                    {{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} <span class="quickreplyText {{if msgItem.image_url}}with-img{{/if}}">${msgItem.title}</span></span>\
+                                                </div> \
+                                            {{/each}} \
+                                        {{/if}} \
                                     </div>\
-                                {{/if}} \
+                                </div>\
                             </div>\
                         </li> \
                     {{/if}} \
                 </scipt>';
+
                 var listTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
                     {{if msgData.message}} \
                         <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
@@ -3191,134 +3252,129 @@
                         </li> \
                     {{/if}} \
                 </scipt>';
+
                 var listActionSheetTemplate = '<script id="chat-window-listTemplate" type="text/x-jqury-tmpl">\
-                <div class="list-template-sheet hide">\
-                 {{if msgData.message}} \
-                   <div class="sheetHeader">\
-                     <span class="choose">${msgData.message[0].component.payload.heading}</span>\
-                     <button class="close-button" title="Close"><img src="data:image/svg+xml;base64,           PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button>\
-                   </div>\
-                   <div class="listTemplateContainer" >\
-                        <div class="displayMonth">\
-                            {{each(key, tab) tabs}} \
-                                <span class="tabs" data-tabid="${tab}"><span class="btnBG">${tab}</span></span>\
-                            {{/each}}\
-                        </div>\
-                          <ul class="displayListValues">\
-                              {{each(key, msgItem) dataItems}} \
-                                   <li class="listViewTmplContentChild"> \
-                                         {{if msgItem.image_url}} \
-                                             <div class="listViewRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
-                                                <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
-                                            </div> \
-                                        {{/if}} \
-                                            <div class="listViewLeftContent" data-url="${msgItem.default_action.url}" data-title="${msgItem.default_action.title}" data-value="${msgItem.default_action.title}"> \
-                                               <span class="titleDesc">\
-                                                   <div class="listViewItemTitle" title="${msgItem.title}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
-                                                    {{if msgItem.subtitle}}<div class="listViewItemSubtitle" title="${msgItem.subtitle}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
-                                                </span>\
-                                                    {{if msgItem.value}}<div class="listViewItemValue" title="${msgItem.value}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.value, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.value, "user")}} {{/if}}</div>{{/if}} \
-                                            </div>\
-                                    </li> \
-                               {{/each}} \
-                           </ul> \
-                   </div>\
-               {{/if}}\
-           </div>\
-         </script>';
-         var iframe = '<script id="chat_message_tmpl" type="text/x-jquery-tmpl"> \
-            {{if link_url}}\
-                {{if (msgData && msgData.renderType ==="inline")}}\
-                    <li class="inlineIframeContainer"> \
-                        <div class="iframeBubble"> \
-                                <div class="uiformComponent">\
-                                <div id="closeInlineModel" class="loading_form iframeLoader"></div>\
-                                <iframe id="inlineIframeModal" src="${link_url}"></iframe> \
-                                </div>\
-                        </div>\
-                    </li> \
-                {{else}}\
-                    <iframe id="iframeModal" src="${link_url}"></iframe> \
-                {{/if}}\
-            {{else}}\
-                <div class="failedIframe">Failed to load iFrame</div>\
-            {{/if}}\
-        </script>';
-        var NotificationTemplate='<script id="notification_tmpl" type="tet/x-jqury-tmpl">\
-            {{if msgData.message}}\
-                <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon notification"> \
-                    <div class="notificationTemplate">\
-                        <div class="setLeftHeight"></div>\
-                        <div class="setRightHeight"></div>\
-                        <div title="${msgData.message[0].component.payload.text}" class="notificationHeader">${msgData.message[0].component.payload.text}\
-                        </div>\
-                        <div class="notificationDescp">\
-                            <div class="notificationImg">\
-                            {{if msgData.message[0].component.payload.image_url}} <div class="notificationImg">\
-                            <img alt="image" src="${msgData.message[0].component.payload.image_url}">\
-                            </div>{{/if}}\                           </div>\
-                            <div class="titleDescp">\
-                                <div class="notificationTitle">${msgData.message[0].component.payload.title}\
-                                </div>\
-                                <div class="notificationSubtitle">${msgData.message[0].component.payload.subtitle}\
-                                </div>\
+                    <div class="list-template-sheet hide">\
+                        {{if msgData.message}} \
+                            <div class="sheetHeader">\
+                                <span class="choose">${msgData.message[0].component.payload.heading}</span>\
+                                <button class="close-button" title="Close"><img src="data:image/svg+xml;base64,           PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button>\
                             </div>\
-                            <div class="btn-notification">\
-                            {{each(key, msgItem) msgData.message[0].component.payload.buttons}}\
-                            <div class="link" data-value="${msgItem.postback.value}">${msgItem.name}</div>\
-                            {{/each}}\
+                            <div class="listTemplateContainer" >\
+                                <div class="displayMonth">\
+                                    {{each(key, tab) tabs}} \
+                                        <span class="tabs" data-tabid="${tab}"><span class="btnBG">${tab}</span></span>\
+                                    {{/each}}\
+                                </div>\
+                                <ul class="displayListValues">\
+                                    {{each(key, msgItem) dataItems}} \
+                                        <li class="listViewTmplContentChild"> \
+                                                {{if msgItem.image_url}} \
+                                                    <div class="listViewRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
+                                                        <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
+                                                    </div> \
+                                                {{/if}} \
+                                                    <div class="listViewLeftContent" data-url="${msgItem.default_action.url}" data-title="${msgItem.default_action.title}" data-value="${msgItem.default_action.title}"> \
+                                                    <span class="titleDesc">\
+                                                        <div class="listViewItemTitle" title="${msgItem.title}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
+                                                            {{if msgItem.subtitle}}<div class="listViewItemSubtitle" title="${msgItem.subtitle}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
+                                                        </span>\
+                                                            {{if msgItem.value}}<div class="listViewItemValue" title="${msgItem.value}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.value, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.value, "user")}} {{/if}}</div>{{/if}} \
+                                                    </div>\
+                                            </li> \
+                                    {{/each}} \
+                                </ul> \
                             </div>\
-                        </div>\
+                        {{/if}}\
                     </div>\
-                </li>\
-            {{/if}}\
-        </script>'
-            if (tempType === "message") {
-                return msgTemplate;
-            } else if (tempType === "popup") {
-                return popupTemplate;
-            } else if (tempType === "templatebutton") {
-                return buttonTemplate;
-            } else if (tempType === "templatelist") {
-                return listTemplate;
-            } else if (tempType === "templatequickreply") {
-                return quickReplyTemplate;
-            } else if (tempType === "templateAttachment") {
-                return templateAttachment;
-            }
-            else if (tempType === "carouselTemplate") {
-                return carouselTemplate;
-            }
-            else if (tempType === "pieChartTemplate") {
-                return pieChartTemplate;
-            }
-            else if (tempType === "tableChartTemplate") {
-                return tableChartTemplate;
-            }
-            else if (tempType === "miniTableChartTemplate") {
-                return miniTableChartTemplate;
-            }
-            else if (tempType === "miniTableHorizontalTemplate") {
-                return miniTableHorizontalTemplate;
-            }
-            else if (tempType === "barchartTemplate") {
-                return barchartTemplate;
-            }
-            else if (tempType === "linechartTemplate") {
-                return linechartTemplate;
-            }else if (tempType === "actionSheetTemplate") {
-                return listActionSheetTemplate;
-            }
-            else if (tempType === "iframe") {
-                return iframe;
-            }
-            else if(tempType ==="NotificationTmpl"){
-                return NotificationTemplate;
-            }
-            else {
-                return chatWindowTemplate;
-            }
-        };
+                </script>';
+
+                var iframe = '<script id="chat_message_tmpl" type="text/x-jquery-tmpl"> \
+                    {{if link_url}}\
+                        {{if (msgData && msgData.renderType ==="inline")}}\
+                            <li class="inlineIframeContainer"> \
+                                <div class="iframeBubble"> \
+                                        <div class="uiformComponent">\
+                                        <div id="closeInlineModel" class="loading_form iframeLoader"></div>\
+                                        <iframe id="inlineIframeModal" src="${link_url}"></iframe> \
+                                        </div>\
+                                </div>\
+                            </li> \
+                        {{else}}\
+                            <iframe id="iframeModal" src="${link_url}"></iframe> \
+                        {{/if}}\
+                    {{else}}\
+                        <div class="failedIframe">Failed to load iFrame</div>\
+                    {{/if}}\
+                </script>';
+
+                var NotificationTemplate='<script id="notification_tmpl" type="tet/x-jqury-tmpl">\
+                    {{if msgData.message}}\
+                        <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon notification"> \
+                            <div class="notificationTemplate">\
+                                <div class="setLeftHeight"></div>\
+                                <div class="setRightHeight"></div>\
+                                <div title="${msgData.message[0].component.payload.text}" class="notificationHeader">${msgData.message[0].component.payload.text}\
+                                </div>\
+                                <div class="notificationDescp">\
+                                    <div class="notificationImg">\
+                                    {{if msgData.message[0].component.payload.image_url}} <div class="notificationImg">\
+                                    <img alt="image" src="${msgData.message[0].component.payload.image_url}">\
+                                    </div>{{/if}}\                           </div>\
+                                    <div class="titleDescp">\
+                                        <div class="notificationTitle">${msgData.message[0].component.payload.title}\
+                                        </div>\
+                                        <div class="notificationSubtitle">${msgData.message[0].component.payload.subtitle}\
+                                        </div>\
+                                    </div>\
+                                    <div class="btn-notification">\
+                                    {{each(key, msgItem) msgData.message[0].component.payload.buttons}}\
+                                    <div class="link" data-value="${msgItem.postback.value}">${msgItem.name}</div>\
+                                    {{/each}}\
+                                    </div>\
+                                </div>\
+                            </div>\
+                        </li>\
+                    {{/if}}\
+                </script>'
+
+                if (tempType === "message") {
+                    return msgTemplate;
+                } else if (tempType === "popup") {
+                    return popupTemplate;
+                } else if (tempType === "templatebutton") {
+                    return buttonTemplate;
+                } else if (tempType === "templatelist") {
+                    return listTemplate;
+                } else if (tempType === "templatequickreply") {
+                    return quickReplyTemplate;
+                } else if (tempType === "templateAttachment") {
+                    return templateAttachment;
+                } else if (tempType === "carouselTemplate") {
+                    return carouselTemplate;
+                } else if (tempType === "pieChartTemplate") {
+                    return pieChartTemplate;
+                } else if (tempType === "tableChartTemplate") {
+                    return tableChartTemplate;
+                } else if (tempType === "miniTableChartTemplate") {
+                    return miniTableChartTemplate;
+                } else if (tempType === "miniTableHorizontalTemplate") {
+                    return miniTableHorizontalTemplate;
+                } else if (tempType === "barchartTemplate") {
+                    return barchartTemplate;
+                } else if (tempType === "linechartTemplate") {
+                    return linechartTemplate;
+                } else if (tempType === "actionSheetTemplate") {
+                    return listActionSheetTemplate;
+                } else if (tempType === "iframe") {
+                    return iframe;
+                } else if(tempType ==="NotificationTmpl"){
+                    return NotificationTemplate;
+                } else {
+                    return chatWindowTemplate;
+                }
+            };
+
             function IsJsonString() {
                 try {
                     JSON.parse(str);
@@ -3327,6 +3383,7 @@
                 }
                 return true;
             }
+
             function insertHtmlData(_txtBox, _html) {
                 var _input = _txtBox;
                 sel = window.getSelection();
@@ -3530,18 +3587,27 @@
                         "buttonInactiveTextColor":"button-inactive-text-color",
                         "userchatBgColor":"user-chat-bubble-background-color",
                         "userchatTextColor":"user-chat-bubble-text-color",
-                        "widgetBgColor":"widget-background-color",
+                        "widgetBodyColor":"widget-body-color",
+                        "widgetFooterColor":"widget-footer-color",
+                        "widgetHeaderColor":"widget-header-color",
                         "widgetTextColor":"widget-text-color",
                         "widgetBorderColor":"widget-border-color",
                         "widgetDividerColor":"widget-divider-color",
                     };
                     var cssVariable = "";
-                    
-                    // console.log(cssVariable);
                     for (var key in response) {
-                        if(key !== "theme"){
+                        if(key == 'bankLogo' && response[key] !== ""){
+                            $(".logo-icon").css("background-image", "url(" + response['bankLogo'] + ")");
+                        } else if(key !== "theme" && key !== 'widgetBgImage'){
                             cssVariable = cssPrefix + cssBrandingVariables[key];
                             document.documentElement.style.setProperty(cssVariable,response[key]);
+                        } else if(key == 'widgetBgImage' && response[key] !== ""){
+                            // setTimeout(function(){
+                                $(".kore-chat-body").css("background-image", "url(" + response['widgetBgImage'] + ")");
+                                $(".kore-chat-body").css("background-repeat", "no-repeat");
+                                $(".kore-chat-body").css("background-position", "center"); 
+                            // },1000);
+                           
                         }
                     }
                     $(".kore-chat-window").addClass('customBranding-theme');

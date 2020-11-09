@@ -35,7 +35,10 @@
     --sdk-chat-widow-user-chat-bubble-background-color : var(--sdk-chat-widow-primary-font-color);
     --sdk-chat-widow-user-chat-bubble-text-color : var(--sdk-chat-widow-default-white);
 
-    --sdk-chat-widow-widget-background-color :var(--sdk-chat-widow-default-white);
+    /* --sdk-chat-widow-widget-background-color :var(--custom-widget-background-color) !important; */
+    --sdk-chat-widow-widget-body-color :var(--sdk-chat-widow-default-white);
+    --sdk-chat-widow-widget-header-color :var(--sdk-chat-widow-default-white);
+    --sdk-chat-widow-widget-footer-color :var(--sdk-chat-widow-default-white);
     --sdk-chat-widow-widget-text-color : var(--sdk-chat-widow-primary-font-color);
     --sdk-chat-widow-widget-divider-color : var(--sdk-chat-widow-primary-border-color);
 
@@ -106,7 +109,10 @@
     --sdk-chat-widow-user-chat-bubble-background-color : var(--custom-user-chat-bubble-background-color) !important;
     --sdk-chat-widow-user-chat-bubble-text-color : var(--custom-user-chat-bubble-text-color) !important;
 
-    --sdk-chat-widow-widget-background-color :var(--custom-widget-background-color) !important;
+    /* --sdk-chat-widow-widget-background-color :var(--custom-widget-background-color) !important; */
+    --sdk-chat-widow-widget-body-color :var(--sdk-chat-widow-default-white);
+    --sdk-chat-widow-widget-header-color :var(--sdk-chat-widow-default-white);
+    --sdk-chat-widow-widget-footer-color :var(--sdk-chat-widow-default-white);
     --sdk-chat-widow-widget-text-color : var(--custom-widget-text-color) !important;
     --sdk-chat-widow-widget-divider-color : var(--custom-widget-divider-color) !important;
     --sdk-chat-widow-widet-border-color : var(--custom-widget-border-color);
@@ -314,7 +320,7 @@
     width: 100%;
     max-height: 100%;
     height: auto;
-    background: var(--sdk-chat-widow-widget-background-color);
+    background: var(--sdk-chat-widow-widget-body-color);
     z-index: 9;
     bottom: 0;
     list-style: none;
@@ -1239,19 +1245,19 @@
 
 .kore-chat-window .buttonTmplContent .buttonTmplContentChild.quickReplyDiv.displayInline {
     display: inline-block;
-    padding: 10px 10px 7px 0;
+    padding: 10px 10px 0 0;
     border: none;
 }
 
 .kore-chat-window .buttonTmplContent .buttonTmplContentChild.quickReplyDiv.displayInline .quickReply {
-    border: 1px dashed var(--sdk-chat-widow-primary-font-color);
+    border: 1px solid var(--sdk-chat-widow-primary-font-color);
     color: var(--sdk-chat-widow-chat-button-active-text-color);
     font-size: 12px;
     border-radius: 6px;
 }
 .kore-chat-window .buttonTmplContent .buttonTmplContentChild.quickReplyDiv.displayInline .quickReply:hover{
     background:var(--sdk-chat-widow-primary-font-color); 
-    border: 1px dashed var(--sdk-chat-widow-primary-font-color);
+    border: 1px solid var(--sdk-chat-widow-primary-font-color);
     color: var(--sdk-chat-widow-default-white);
 }
 
