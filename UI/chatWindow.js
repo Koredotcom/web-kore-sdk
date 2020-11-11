@@ -152,6 +152,18 @@
                 var target = this;
                 return target.replace(new RegExp(search, 'g'), replacement);
             };
+            
+            if (!String.prototype.includes) {
+              String.prototype.includes = function(search, start) {
+                'use strict';
+
+                if (search instanceof RegExp) {
+                  throw TypeError('first argument must not be a RegExp');
+                } 
+                if (start === undefined) { start = 0; }
+                return this.indexOf(search, start) !== -1;
+              };
+            }
 
             function xssAttack(txtStr) {
                 //   if (compObj && compObj[0] && compObj[0].componentType === "text") {
