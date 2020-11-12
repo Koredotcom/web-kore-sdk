@@ -87,7 +87,8 @@
                 type: 'get',
                 dataType: 'json',
                 success: function (data) {
-                    options.botDetails = koreBot.botDetails(data);
+                    options.botDetails = koreBot.botDetails(data[1].branding);
+                    chatConfig.botOptions.hamburgermenuData = data[0].hamburgermenu;
                     if (koreBot && koreBot.initToken) {
                         koreBot.initToken(options);
                     }
