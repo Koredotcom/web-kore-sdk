@@ -7,7 +7,7 @@
   // botOptions.koreAPIUrl = "";
 
   botOptions.koreAPIUrl = "https://bankingassistant-dev.kore.ai/api";
-  botOptions.brandingAPIUrl = botOptions.koreAPIUrl + '/1.1/wbservice/workbench/sdkData?objectId=hamburgermenu&objectId=branding';
+  botOptions.brandingAPIUrl = botOptions.koreAPIUrl + '/1.1/wbservice/workbench/sdkData?objectId=hamburgermenu&objectId=brandingwidgetdesktop';
 
   botOptions.koreSpeechAPIUrl = "";//deprecated
   //botOptions.bearer = "bearer xyz-------------------";

@@ -270,20 +270,22 @@ KorePickers.prototype.showTaskPicker = function (mainConfig) {
         _korePickers.find(".kore-action-sheet").remove();
     }
     this.addSlider();
-    _korePickers.find(".kore-action-sheet").append(this.getTaskPickerContainer());
+    _korePickers.find(".kore-action-sheet").append(this.getTaskPickerContainer(actionsData));
     _korePickers.find(".TaskPickerContainer").append(this.getTaskPickerTemplate(actionsData));
     this.addTaskMenuListener(mainConfig);
 }
 KorePickers.prototype.getTaskPickerTemplate = function (taskPickerConfig) {
     var $taskContent = $('<div class="taskMenuPicker"></div>');
-    var tasks = taskPickerConfig.tasks;
-    tasks.forEach(function (task) {
-    var taskHtml = $('<div class="btnTask">\
-        <span class="taskName" data-title-response="'+ task.postback.buttonResponse + '" data-value="'+ task.postback.value + '" data-title="' + task.postback.title + '" title="' + task.title + '">' + task.title + '</span>\
-        <div class="imageIcon"> <img src="'+ task.icon + '" class="displayIcon"></div>\
-        </div>');
-        $taskContent.append(taskHtml)
-    });
+    if(taskPickerConfig && taskPickerConfig.tasks){
+        var tasks = taskPickerConfig.tasks;
+        tasks.forEach(function (task) {
+        var taskHtml = $('<div class="btnTask">\
+            <span class="taskName" data-title-response="'+ task.postback.buttonResponse + '" data-value="'+ task.postback.value + '" data-title="' + task.postback.title + '" title="' + task.title + '">' + task.title + '</span>\
+            <div class="imageIcon"> <img src="'+ task.icon + '" class="displayIcon"></div>\
+            </div>');
+            $taskContent.append(taskHtml)
+        });
+    }   
 return $taskContent;
 }
 KorePickers.prototype.addTaskMenuListener = function (mainConfig) {
@@ -325,12 +327,12 @@ KorePickers.prototype.addTaskIconToFooter = function () {
     _korePickers=this._korePickers;
     _korePickers.find(".footerContainer").append(this.getTaskIconTemplate);
 }
-KorePickers.prototype.getTaskPickerContainer = function () {
+KorePickers.prototype.getTaskPickerContainer = function (actionsData) {
     return '<div class="TaskPickerContainer hide">\
     <div class="taskMenuHeader">\
          <button class="closeSheet" title="Close"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button> \
          <input class="searchInput" placeholder="Write a reply">\
-       <label class="taskHeading">  How may I help you?</label>\
+       <label class="taskHeading"> '+ actionsData.heading +' </label>\
     </div>'
 }
 /*TaskMenu Template end*/

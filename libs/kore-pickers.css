@@ -227,10 +227,15 @@
 }
 .kore-chat-window .kore-action-sheet .TaskPickerContainer .taskMenuHeader .taskHeading{
     line-height: 2.5;
-    margin-left:17px;
+    margin-left: 17px;
     font-size: 20px;
     font-weight: bold;
     color: var(--sdk-chat-widow-widget-text-color);
+    overflow: hidden;
+    white-space: nowrap;
+    padding-right: 55px;
+    text-overflow: ellipsis;
+    display: block;
 }
 .kore-chat-window .kore-action-sheet  .taskMenuPicker{
     height: calc(100% - 58px);

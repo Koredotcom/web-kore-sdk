@@ -347,9 +347,6 @@
         top: -8px;
         margin-left: 5px;
     }
-    .kore-chat-window .kore-chat-header .header-title{
-        padding-left: 50px;
-    }
     .kr-wiz-content-css .mainTemplateCntr .widgetTitle{
         font-size: 18px;
     }
@@ -489,12 +486,16 @@
 .kore-chat-window .kore-chat-header .header-title {
     width: 100%;
     text-align: center;
-    font-size: 25px !important;
+    font-size: 20px !important;
     font-weight: bold;
     padding-right: 30px;
     height: 100%;
     background-size: 100%;
-    background-position: center; 
+    background-position: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding-left: 60px;
 }
 
 /* .kore-chat-window .kore-chat-header .header-title.ui-draggable-handle {
