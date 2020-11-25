@@ -80,8 +80,8 @@
 			 this.bindEvents(messageHtml);
 			 $(messageHtml).data(msgData);
 		}
-		else if(msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "List"){
-			messageHtml = $(this.getChatTemplate("list")).tmpl({
+		else if(msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "listWidget"){
+			messageHtml = $(this.getChatTemplate("listWidget")).tmpl({
 				'msgData': msgData,
 				'tempdata':msgData.message[0].component.payload,
 				'dataItems': msgData.message[0].component.payload.elements || {},
@@ -89,7 +89,7 @@
 				 'helpers': this.helpers,
 				'extension': this.extension
 			});
-			 this.templateEvents(messageHtml, 'List');
+			 this.templateEvents(messageHtml, 'listWidget');
 			 $(messageHtml).data(messageHtml);
 		}
 	   return messageHtml;
@@ -490,7 +490,7 @@ print(JSON.stringify(message)); */
 					  </li> \
 					  {{/if}}\
 					  </div>\
-					{{if !(msgData.message[0].component.payload.fromHistory)}}\
+					{{if !(msgData.message[0].component.payload.fromHistory) && msgData.message[0].component.payload.buttons && msgData.message[0].component.payload.buttons.length}}\
 					<li class="multiCheckboxBtn hide">\
 						<span title="Here are your selected items " class="{{if msgData.message[0].component.payload.fromHistory}} hide  {{else}} viewMore {{/if}}" type="postback" value="{{if msgData.message[0].component.payload.buttons[0].payload}}${msgData.message[0].component.payload.buttons[0].payload}{{else}}${msgData.message[0].component.payload.buttons[0].title}{{/if}}">${msgData.message[0].component.payload.buttons[0].title}</span> \
 					</li> \
@@ -666,7 +666,7 @@ print(JSON.stringify(message)); */
 								{{/if}}\
 					{{/each}} \
 					</div>\
-					{{if msgData.message[0].component.payload.seeMore}}\
+					{{if msgData && msgData.message && msgData.message.length && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.seeMore && msgData.message[0].component.payload.buttons && msgData.message[0].component.payload.buttons.length && msgData.message[0].component.payload.buttons[0].title}}\
 					<li class="seeMore"> \
 						<span class="seeMoreList">${msgData.message[0].component.payload.buttons[0].title}</span> \
 					</li> \
@@ -1045,7 +1045,292 @@ print(JSON.stringify(message)); */
 		</li>\
 	{{/if}} \
 	</script>';
-	var list = '<script id="chat-window-listTemplate" type="text/x-jqury-tmpl">\
+
+/* Sample template structure for List Widget Template 
+	var message={
+    	"type": "template",
+    	"payload": {
+  "template_type": "listWidget",
+  "title": "Main Title",
+  "description": "Min description",
+  "headerOptions": {
+       "type": "menu",
+      "menu": [
+      {
+        "type": "postback",
+        "title": "menuitem",
+        "payload": "menupayload",
+        "image": {
+          "image_type": "image",
+          "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
+        },
+      },
+       {
+        "type": "postback",
+        "title": "menuitem",
+        "payload": "menupayload",
+        "image": {
+          "image_type": "image",
+          "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
+        },
+      },
+       {
+        "type": "postback",
+        "title": "menuitem",
+        "payload": "menupayload",
+        "image": {
+          "image_type": "image",
+          "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
+        },
+      },
+       {
+        "type": "postback",
+        "title": "menuitem",
+        "payload": "menupayload",
+        "image": {
+          "image_type": "image",
+          "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
+        },
+      }
+    ],
+
+  },
+  "elements": [
+    {
+      "image": {
+        "image_type": "image",
+        "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s",
+        "radius": 10,
+        "size": "medium"
+      },
+      "title": "One Title",
+      "subtitle": "One subtitle",
+      "value": {
+        "layout":{
+          "align":"center",
+          "colSize":"50%"
+        },
+        "type": "text",
+        "text": "One Value",
+      },
+     "details": [{
+                "image": {
+                    "image_type": "image",
+                    "image_src": "https://static.thenounproject.com/png/2539563-200.png"
+                },
+                "description": "$250.00 - Aug 03rd - ONLINE BANKING TRANSFER FROM 0175 552393******8455"
+            }, {
+                "image": {
+                    "image_type": "image",
+                    "image_src": "https://static.thenounproject.com/png/2539563-200.png"
+                },
+                "description": "$250.00 - Jul 26th - ONLINE BANKING TRANSFER TO 0175 552393******8455"
+            }],
+
+      "default_action": {
+        "type": "postback",
+        "payload": "New Value",
+      },
+       "buttonsLayout": {
+        "displayLimit": {
+          "count": "3"
+        },
+        "style": "float"
+      },
+      "buttons": [
+        {
+          "type": "postback",
+          "title": "button1",
+          "payload": "buttonpayload",
+          "utterance": "",
+          "image": {
+            "image_type": "image",
+            "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
+          },
+        },
+          {
+          "type": "postback",
+          "title": "button2",
+          "payload": "buttonpayload",
+          "utterance": "",
+          "image": {
+            "image_type": "image",
+            "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
+          },
+        },
+          {
+          "type": "postback",
+          "title": "button3",
+          "payload": "buttonpayload",
+          "utterance": "",
+          "image": {
+            "image_type": "image",
+            "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
+          },
+        },
+          {
+          "type": "postback",
+          "title": "button4",
+          "payload": "buttonpayload",
+          "utterance": "",
+          "image": {
+            "image_type": "image",
+            "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
+          },
+        }
+      ]
+    },
+    {
+      "image": {
+        "image_type": "image",
+        "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s",
+        "radius": 10,
+        "size": "medium"
+      },
+      "title": "Two Title",
+      "subtitle": "Two subtitle",
+      "value": {
+        "layout":{
+          "align":"center",
+          "colSize":"50%"
+        },
+       "type": "menu",
+      "menu": [
+      {
+        "type": "postback",
+        "title": "menuitem",
+        "payload": "menupayload",
+        "image": {
+          "image_type": "image",
+          "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
+        },
+      },
+       {
+        "type": "postback",
+        "title": "menuitem",
+        "payload": "menupayload",
+        "image": {
+          "image_type": "image",
+          "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
+        },
+      },
+       {
+        "type": "postback",
+        "title": "menuitem",
+        "payload": "menupayload",
+        "image": {
+          "image_type": "image",
+          "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
+        },
+      },
+       {
+        "type": "postback",
+        "title": "menuitem",
+        "payload": "menupayload",
+        "image": {
+          "image_type": "image",
+          "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
+        },
+      }
+    ],
+      },
+     "details": [{
+                "image": {
+                    "image_type": "image",
+                    "image_src": "https://static.thenounproject.com/png/2539563-200.png"
+                },
+                "description": "$250.00 - Aug 03rd - ONLINE BANKING TRANSFER FROM 0175 552393******8455"
+            }, {
+                "image": {
+                    "image_type": "image",
+                    "image_src": "https://static.thenounproject.com/png/2539563-200.png"
+                },
+                "description": "$250.00 - Jul 26th - ONLINE BANKING TRANSFER TO 0175 552393******8455"
+            }],
+
+      "default_action": {
+        "type": "postback",
+        "payload": "New Value",
+      },
+    },
+    {
+      "image": {
+        "image_type": "image",
+        "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s",
+        "radius": 10,
+        "size": "medium"
+      },
+      "title": "Three Title",
+      "subtitle": "Three subtitle",
+      "value": {
+        "layout":{
+          "align":"center",
+          "colSize":"50%"
+        },
+        "type": "text",
+        "text": "three Value",
+      },
+     "details": [{
+                "image": {
+                    "image_type": "image",
+                    "image_src": "https://static.thenounproject.com/png/2539563-200.png"
+                },
+                "description": "$250.00 - Aug 03rd - ONLINE BANKING TRANSFER FROM 0175 552393******8455"
+            }, {
+                "image": {
+                    "image_type": "image",
+                    "image_src": "https://static.thenounproject.com/png/2539563-200.png"
+                },
+                "description": "$250.00 - Jul 26th - ONLINE BANKING TRANSFER TO 0175 552393******8455"
+            }],
+
+      "default_action": {
+        "type": "postback",
+        "payload": "New Value",
+      },
+    },
+    {
+      "image": {
+        "image_type": "image",
+        "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s",
+        "radius": 10,
+        "size": "medium"
+      },
+      "title": "Four Title",
+      "subtitle": "Four subtitle",
+      "value": {
+        "layout":{
+          "align":"center",
+          "colSize":"50%"
+        },
+        "type": "text",
+        "text": "Four Value",
+      },
+      "details": [{
+                "image": {
+                    "image_type": "image",
+                    "image_src": "https://static.thenounproject.com/png/2539563-200.png"
+                },
+                "description": "$250.00 - Aug 03rd - ONLINE BANKING TRANSFER FROM 0175 552393******8455"
+            }, {
+                "image": {
+                    "image_type": "image",
+                    "image_src": "https://static.thenounproject.com/png/2539563-200.png"
+                },
+                "description": "$250.00 - Jul 26th - ONLINE BANKING TRANSFER TO 0175 552393******8455"
+            }],
+
+      "default_action": {
+        "type": "postback",
+        "payload": "New Value",
+      },
+    }
+  ],
+    	}
+}
+print(JSON.stringify(message)); */
+	
+	var listWidget = '<script id="chat-window-listTemplate" type="text/x-jqury-tmpl">\
 	{{if msgData.message}} \
 	<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
 		<div class="listTmplContent"> \
@@ -1320,8 +1605,8 @@ print(JSON.stringify(message)); */
 			return tableListTemplate;
 		}else if(tempType === "ratingTemplate"){
 			return ratingTemplate;
-		}else if(tempType === "list"){
-			return list;
+		}else if(tempType === "listWidget"){
+			return listWidget;
 		}else {
 			return "";
 		}
@@ -1349,7 +1634,7 @@ print(JSON.stringify(message)); */
 		chatInitialize=this.chatInitialize;
 		var _self = this;
 		var $ele = $(ele);
-		if (templateType === 'TabbedList' || templateType === 'List') {
+		if (templateType === 'TabbedList' || templateType === 'listWidget') {
 			$($ele.find(".tabs")[0]).addClass("active");
 			var titleEle = $ele.find('.listViewLeftContent');
 			if(titleEle && titleEle.length){
