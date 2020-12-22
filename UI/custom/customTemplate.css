@@ -556,8 +556,8 @@
     width: 100%;
     border-radius: 10px;
     box-shadow: var(--sdk-chat-widow-primary-box-shadow);
-    /* background-color: var(--sdk-chat-widow-default-white); */
-    background-color: var(--sdk-chat-widow-chat-button-active-color);
+    background-color: var(--sdk-chat-widow-default-white);
+    /* background-color: var(--sdk-chat-widow-chat-button-active-color); */
     height: 56px;
     display: flex;	
     align-items: center;	
@@ -1320,7 +1320,7 @@
     width: 100%;
     border-radius: 0px;
     box-shadow: none;
-    background-color:var(--sdk-chat-widow-chat-button-active-color);
+    /* background-color:var(--sdk-chat-widow-chat-button-active-color); */
     height: 56px;
     display: flex;
     align-items: center;
@@ -1329,7 +1329,7 @@
     margin-top: 0!important;
 }
 .kore-chat-window .listViewTmplContent.noShadow .listViewTmplContentChild:hover{
-    background-color: var(--sdk-chat-widow-chat-button-active-color) !important;
+    /* background-color: var(--sdk-chat-widow-chat-button-active-color) !important; */
 }
 
 .kore-chat-window .listViewTmplContent .listViewLeftContent {

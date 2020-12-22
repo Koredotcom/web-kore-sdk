@@ -82,6 +82,7 @@
                     'Authorization': "bearer " + options.authorization.accessToken,
                     'Accept-Language': 'en_US',
                     'Accepts-version': '1',
+                    'botId': chatConfig.botOptions.botInfo._id,
                     'state': 'published'
                 },
                 type: 'get',

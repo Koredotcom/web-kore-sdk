@@ -6,8 +6,8 @@
   botOptions.logLevel = 'debug';
   // botOptions.koreAPIUrl = "";
 
-  botOptions.koreAPIUrl = "https://bankingassistant-dev.kore.ai/api";
-  botOptions.brandingAPIUrl = botOptions.koreAPIUrl + '/1.1/wbservice/workbench/sdkData?objectId=hamburgermenu&objectId=brandingwidgetdesktop';
+  botOptions.koreAPIUrl = "https://bankingassistant-qa.kore.ai/workbench/api";
+  botOptions.brandingAPIUrl = botOptions.koreAPIUrl + '/workbench/sdkData?objectId=hamburgermenu&objectId=brandingwidgetdesktop';
 
   botOptions.koreSpeechAPIUrl = "";//deprecated
   //botOptions.bearer = "bearer xyz-------------------";
@@ -18,10 +18,10 @@
 
   botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
   botOptions.userIdentity = '';// Provide users email id here
-  botOptions.botInfo = { name: "UB_Banking", "_id": "st-333efe97-2a5b-5059-8264-8c80623ef3b5",customData:{"rtmType":"web"}}; // bot name is case sensitive
-  botOptions.clientId = "cs-f3c2f0bb-2245-51a9-bcfd-cb82c4468866";
-  botOptions.clientSecret = "MOlHKt63Co4bVPYrNSuUrrc7tEamylpBqKmVp2BaBRQ=";
-  botOptions.accountId = "5fad6c9a694b34300513832e";
+  botOptions.botInfo = { name: "Bank Assist Dev", "_id": "st-9e078d20-2ae8-5e84-bcf2-df51ba689f10",customData:{"rtmType":"web"}}; // bot name is case sensitive
+  botOptions.clientId = "cs-15f1cfad-832f-53a1-beed-094c128eb05b";
+  botOptions.clientSecret = "PycudTp3WsSniVuMEOeJuILp7yKULrhnvB442/4F9ig=";
+  botOptions.accountId = "5fdc983ad54ba96f481fd771";
   
   // To modify the web socket url use the following option
   // botOptions.reWriteSocketURL = {

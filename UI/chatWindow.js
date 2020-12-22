@@ -3597,7 +3597,7 @@
                     var cssVariable = "";
                     for (var key in response) {
                         if(key == 'bankLogo' && response[key] !== ""){
-                            $(".logo-icon").css("background-image", "url(" + response['bankLogo'] + ")");
+                            // $(".logo-icon").css("background-image", "url(" + response['bankLogo'] + ")");
                         } else if(key !== "theme" && key !== 'widgetBgImage'){
                             cssVariable = cssPrefix + cssBrandingVariables[key];
                             document.documentElement.style.setProperty(cssVariable,response[key]);
