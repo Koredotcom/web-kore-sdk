@@ -1778,6 +1778,7 @@
                     var tempData = JSON.parse(message.data);
 
                     if (tempData.from === "bot" && tempData.type === "bot_response") {
+                        if(tempData && tempData.message && tempData.message.length) {
                         if (tempData.message[0]) {
                             if (!tempData.message[0].cInfo) {
                                 tempData.message[0].cInfo = {};
@@ -1806,6 +1807,7 @@
                                 me.renderMessage(tempData);
                             }
                         }
+                    }
                     }
                     else if (tempData.from === "self" && tempData.type === "user_message") {
                         var tempmsg = tempData.message;
