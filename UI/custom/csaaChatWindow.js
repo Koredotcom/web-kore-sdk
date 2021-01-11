@@ -519,7 +519,9 @@
             } else if (msgText === 'Live Agent Chat has ended.') {
               localStorage.setItem(LIVE_CHAT_CONNECTED, 'false');
               localStorage.setItem(LIVE_CHAT_PENDING, 'false');
-              attachLiveAgentButton($koreChatBody, $chatContainer, $koreChatFooter);
+              if (defaultChatConfig.liveAgent) {
+                attachLiveAgentButton($koreChatBody, $chatContainer, $koreChatFooter);
+              }
               emit(CHAT_AGENT_DISCONNECTED);
             } else if (msgText === 'Do you want to provide feedback?') {
               localStorage.setItem(LIVE_CHAT_CONNECTED, 'false');
