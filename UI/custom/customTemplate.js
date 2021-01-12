@@ -19,7 +19,7 @@
 				'helpers': this.helpers,
 				'extension': this.extension
 			});
-			this.bindEvents(messageHtml);
+			this.dropdownTemplateBindEvents(messageHtml);
 		} else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "multi_select") {
 			messageHtml = $(this.getChatTemplate("checkBoxesTemplate")).tmpl({
 				'msgData': msgData,
@@ -1093,7 +1093,19 @@ print(JSON.stringify(message)); */
 		}
 		return "";
 	}; // end of getChatTemplate method
-	
+
+	customTemplate.prototype.dropdownTemplateBindEvents = function (messageHtml) {
+        $(messageHtml).find('.selectTemplateDropdowm').on('change', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(".chatInputBox").text(this.value)
+            var k = window.KoreSDK.dependencies.jQuery.Event('keydown', { which: 13 });
+            k.keyCode = 13
+            $('.chatInputBox').trigger(k);
+    
+        });
+    };
+
 	customTemplate.prototype.bindEvents = function (messageHtml) {
 		chatInitialize=this.chatInitialize;
 		helpers=this.helpers;
@@ -1101,7 +1113,7 @@ print(JSON.stringify(message)); */
 			e.preventDefault();
 			e.stopPropagation();
 			$(".chatInputBox").text(this.value)
-			var k = jQuery.Event('keydown', { which: 13 });
+			var k = window.KoreSDK.dependencies.jQuery.Event('keydown', { which: 13 });
 			k.keyCode = 13
 			$('.chatInputBox').trigger(k);
 	

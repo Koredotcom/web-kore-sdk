@@ -30,11 +30,6 @@
   //     port: 'PORT_TO_BE_REWRITTEN'
   // };
 
-  // botOptions.botInfo.customData.accessToken = getCookie("accessToken");
-  // botOptions.botInfo.customData.source = getCookie("source");
-  // botOptions.botInfo.customData.tenantId = getCookie("tenantId");
-  // botOptions.botInfo.customData.uniqueUserId = getCookie("uniqueUserId");
-
   var chatConfig = {
     botOptions: botOptions,
     allowIframe: false, 			      // set true, opens authentication links in popup window, default value is "false"
@@ -59,6 +54,11 @@
       showradioOptionMenuPickerIcon: false //set true to show Radio Option Template icon
     }
   };
+
+  // botOptions.botInfo.customData.accessToken = getCookie("accessToken");
+  // botOptions.botInfo.customData.source = getCookie("source");
+  // botOptions.botInfo.customData.tenantId = getCookie("tenantId");
+  // botOptions.botInfo.customData.uniqueUserId = getCookie("uniqueUserId");
 
   // function getCookie(cname) {
   //   var name = cname + "=";

@@ -3576,6 +3576,9 @@
                     if(response.botName !== ""){
                         chatContainerConfig.config.chatTitle = response.botName;
                         $('.kore-chat-header .header-title').html(chatContainerConfig.config.chatTitle).attr('title', chatContainerConfig.config.chatTitle);
+                    } else {
+                        chatContainerConfig.config.chatTitle = chatContainerConfig.config.botOptions.botInfo.chatBot;
+                        $('.kore-chat-header .header-title').html(chatContainerConfig.config.chatTitle).attr('title', chatContainerConfig.config.chatTitle);
                     }
                     var cssPrefix = "--custom-";
                     var cssBrandingVariables = {

@@ -247,7 +247,7 @@
     /* box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58); */
     border-radius: 6px;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);    
-    background-color: var(--sdk-chat-widow-chat-button-active-color);
+    /* background-color: var(--sdk-chat-widow-chat-button-active-color); */
     padding: 12px 20px;
     cursor: pointer;
     margin-bottom: 10px;

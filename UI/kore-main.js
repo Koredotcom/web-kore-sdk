@@ -1,6 +1,7 @@
 (function ($) {
 
     var _hash = (location.href.split("#")[1] || "");
+    // var _hash = "eyJqd3QiOiJleUowZVhBaU9pSktWMVFpTENKaGJHY2lPaUpJVXpJMU5pSjkuZXlKcFlYUWlPakUyTVRBME16RTJNRGswTmpjc0ltVjRjQ0k2TVRZeE1EUXpNVFkyT1RRMk55d2lZWFZrSWpvaUlpd2lhWE56SWpvaVkzTXROMkUyTkdZelpUVXRZelkxTXkwMVpXUTNMVGt4T1RjdE9EUmpNR1UzTjJOak1qRmxJaXdpYzNWaUlqb2lZMkV5T1RJNFltSmxNV1kxTVRCaE9ERXhaRFU0Wm1Gak9XTXhZalprTmpNME1pSXNJbWx6UVc1dmJubHRiM1Z6SWpwbVlXeHpaWDAuOGRib3JwTEhWTm9BUE5OSVhzN1VhQ2hqNF9yS1o3bU1fRFdQTUxxa0txcyIsImJvdEluZm8iOnsibmFtZSI6IkJhbmtpbmcgQXNzaXN0IiwiX2lkIjoic3QtY2RlZmNlMGYtOWVlZC01NGM1LWIzZDctM2MxYjJmODNiOGVjIn0sImtvcmVBUElVcmwiOiJodHRwczovL2Jhbmtpbmdhc3Npc3RhbnQtcWEua29yZS5haTo0NDMvIiwiY2hhbm5lbCI6InJ0bSJ9"
     var hashObj = {};
 
     if (_hash) {
@@ -43,11 +44,6 @@
                 options.chatHistory = koreBot.chatHistory;
                 options.botDetails = koreBot.botDetails;
                 callback(null, options);
-                setTimeout(function () {
-                    if (koreBot && koreBot.initToken) {
-                        koreBot.initToken(options);
-                    }
-                }, 2000);
             } else {
                 var jsonData = {
                     "clientId": options.clientId,
@@ -111,6 +107,7 @@
         var chatConfig = window.KoreSDK.chatConfig;
         chatConfig.botOptions.assertionFn = assertion;
         chatConfig.botOptions.jwtgrantSuccessCB = getBrandingInformation;
+
         if (hashObj && hashObj.botInfo) {
             chatConfig.botOptions.botInfo = hashObj.botInfo;
         }
@@ -119,9 +116,9 @@
             chatConfig.botOptions.koreAPIUrl = hashObj.koreAPIUrl + '/api/';
         }
 
-        if (hashObj.brand && hashObj.brand.headerTitle) {
-            chatConfig.chatTitleOverride = hashObj.brand.headerTitle;
-        }
+        // if (hashObj.brand && hashObj.brand.headerTitle) {
+        //     chatConfig.chatTitleOverride = hashObj.brand.headerTitle;
+        // }
 
         var koreBot = koreBotChat();
         koreBot.show(chatConfig);

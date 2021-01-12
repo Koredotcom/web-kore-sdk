@@ -565,7 +565,7 @@
     cursor: pointer;
 }
 .kore-chat-window .kore-chat-body .listViewTmplContent .listViewTmplContentChild:hover{
-    background-color: rgba(10, 10, 10, 0.08);
+    /* background-color: rgba(10, 10, 10, 0.08); */
 }
 .kore-chat-window .kore-chat-body .listViewTmplContent .listViewItemSubtitle{
     white-space: nowrap;
@@ -1374,7 +1374,7 @@
 
 .kore-chat-window .listViewTmplContent .listViewItemValue {
     display: inline-block;
-    width: 90px;
+    /* width: 90px; */
     height: 22px;
     font-size: 14px;
     font-weight: 900;
