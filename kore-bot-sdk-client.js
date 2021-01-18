@@ -879,7 +879,7 @@ BaseAPIClient.prototype._callTransport = function _callTransport(task, queueCb) 
       }
     } else { 
       if(body && body.userInfo){
-        window.jwtDetails = body.userInfo;
+        window.jwtDetails = body;
       }      
       cb(null, body);
     }

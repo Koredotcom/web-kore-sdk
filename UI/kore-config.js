@@ -6,23 +6,12 @@
   botOptions.logLevel = 'debug';
   // botOptions.koreAPIUrl = "";
 
-  botOptions.koreAPIUrl = "https://bankingassistant-qa.kore.ai/workbench/api";
-  botOptions.brandingAPIUrl = botOptions.koreAPIUrl + '/workbench/sdkData?objectId=hamburgermenu&objectId=brandingwidgetdesktop';
-
   botOptions.koreSpeechAPIUrl = "";//deprecated
   //botOptions.bearer = "bearer xyz-------------------";
   //botOptions.ttsSocketUrl = '';//deprecated
   botOptions.koreAnonymousFn = koreAnonymousFn;
   botOptions.recorderWorkerPath = '../libs/recorderWorker.js';
 
-
-  botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
-  botOptions.userIdentity = '';// Provide users email id here
-  botOptions.botInfo = { name: "Bank Assist Dev", "_id": "st-9e078d20-2ae8-5e84-bcf2-df51ba689f10",customData:{"rtmType":"web"}}; // bot name is case sensitive
-  botOptions.clientId = "cs-15f1cfad-832f-53a1-beed-094c128eb05b";
-  botOptions.clientSecret = "PycudTp3WsSniVuMEOeJuILp7yKULrhnvB442/4F9ig=";
-  botOptions.accountId = "5fdc983ad54ba96f481fd771";
-  
   // To modify the web socket url use the following option
   // botOptions.reWriteSocketURL = {
   //     protocol: 'PROTOCOL_TO_BE_REWRITTEN',
@@ -45,7 +34,8 @@
     graphLib: "d3",				          // set google, to render google charts.This feature requires loader.js file which is available in google charts documentation.
     googleMapsAPIKey: "",
     minimizeMode: false,             // set true, to show chatwindow in minized mode 
-    supportDelayedMessages: true,    // enable to add support for renderDelay in message nodes which will help to render messages with delay from UI       
+    supportDelayedMessages: false,    // enable to add support for renderDelay in message nodes which will help to render messages with delay from UI       
+    isFromFinastra: false,
     pickersConfig: {
       showDatePickerIcon: false,           //set true to show datePicker icon
       showDateRangePickerIcon: false,      //set true to show dateRangePicker icon
@@ -55,26 +45,46 @@
     }
   };
 
-  // botOptions.botInfo.customData.accessToken = getCookie("accessToken");
-  // botOptions.botInfo.customData.source = getCookie("source");
-  // botOptions.botInfo.customData.tenantId = getCookie("tenantId");
-  // botOptions.botInfo.customData.uniqueUserId = getCookie("uniqueUserId");
+  
 
-  // function getCookie(cname) {
-  //   var name = cname + "=";
-  //   var decodedCookie = decodeURIComponent(document.cookie);
-  //   var ca = decodedCookie.split(';');
-  //   for (var i = 0; i < ca.length; i++) {
-  //     var c = ca[i];
-  //     while (c.charAt(0) == ' ') {
-  //       c = c.substring(1);
-  //     }
-  //     if (c.indexOf(name) == 0) {
-  //       return c.substring(name.length, c.length);
-  //     }
-  //   }
-  //   return "";
-  // }
+  if(chatConfig.isFromFinastra){
+    botOptions.JWTUrl = "https://staging-bankassist.korebots.com/finastra-wrapper/token";
+    botOptions.brandingAPIUrl = "";
+    botOptions.userIdentity = '';// Provide users email id here
+    botOptions.botInfo = { name: "Banking Assist", "_id": "",customData:{"rtmType":"web"}}; // bot name is case sensitive
+    botOptions.accountId = "5fad6c9a694b34300513832e";  
+
+    botOptions.botInfo.customData.accessToken = getCookie("accessToken");
+    botOptions.botInfo.customData.source = getCookie("source");
+    botOptions.botInfo.customData.tenantId = getCookie("tenantId");
+    botOptions.botInfo.customData.uniqueUserId = getCookie("uniqueUserId");
+
+  } else {
+    botOptions.koreAPIUrl = "https://bankingassistant-qa.kore.ai/workbench/api";
+    botOptions.brandingAPIUrl = botOptions.koreAPIUrl + '/workbench/sdkData?objectId=hamburgermenu&objectId=brandingwidgetdesktop';
+    botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
+    botOptions.userIdentity = '';// Provide users email id here
+    botOptions.botInfo = { name: "Bank Assist Dev", "_id": "st-9e078d20-2ae8-5e84-bcf2-df51ba689f10",customData:{"rtmType":"web"}}; // bot name is case sensitive
+    botOptions.clientId = "cs-15f1cfad-832f-53a1-beed-094c128eb05b";
+    botOptions.clientSecret = "PycudTp3WsSniVuMEOeJuILp7yKULrhnvB442/4F9ig=";
+    botOptions.accountId = "5fdc983ad54ba96f481fd771";
+  }
+
+  function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
 
   /* 
   allowGoogleSpeech will use Google cloud service api.

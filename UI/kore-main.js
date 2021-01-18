@@ -44,6 +44,38 @@
                 options.chatHistory = koreBot.chatHistory;
                 options.botDetails = koreBot.botDetails;
                 callback(null, options);
+            } else if(chatConfig.isFromFinastra){
+                var jsonData = {
+                    "tenantId": "mlz-b2c-vader" || options.botInfo.customData.tenantId,
+                    "uniqueUserId": "luke_~#$$#~_mlz-b2c-vader" || options.botInfo.customData.uniqueUserId,
+                };
+                $.ajax({
+                    url: options.JWTUrl,
+                    type: 'post',
+                    data: jsonData,
+                    dataType: 'json',
+                    success: function (data) {
+                        options.botInfo.chatBot = data.botInfo.name;
+                        chatConfig.botOptions.botInfo.name = data.botInfo.name;
+                        options.botInfo.taskBotId = data.botInfo._id;
+                        chatConfig.botOptions.botInfo._id = data.botInfo._id;
+                        options.koreAPIUrl = data.koreAPIUrl;
+                        options.brandingAPIUrl = data.koreAPIUrl + 'workbench/sdkData?objectId=hamburgermenu&objectId=brandingwidgetdesktop';
+                        options.assertion = data.jwt;
+                        options.uniqueUserId = data.uniqueUserId;
+                        options.handleError = koreBot.showError;
+                        options.chatHistory = koreBot.chatHistory;
+                        // options.botDetails = koreBot.botDetails(data);
+                        callback(null, options);
+                        setTimeout(function () {
+                            CheckRefreshToken(options);
+                        }, 2000);
+                        
+                    },
+                    error: function (err) {
+                        koreBot.showError(err.responseText);
+                    }
+                });
             } else {
                 var jsonData = {
                     "clientId": options.clientId,
@@ -72,7 +104,7 @@
 
         function getBrandingInformation(options) {
             $.ajax({
-                url: chatConfig.botOptions.brandingAPIUrl,
+                url: this.brandingAPIUrl,
                 headers: {
                     'tenantId': chatConfig.botOptions.accountId,
                     'Authorization': "bearer " + options.authorization.accessToken,
@@ -92,6 +124,25 @@
                 },
                 error: function (err) {
                     console.log(err);
+                }
+            });
+        }
+
+        function CheckRefreshToken(options){
+            debugger
+            var jsonData = {
+                "userId": window.jwtDetails.userInfo.userId,
+                "uniqueUserId": options.uniqueUserId
+            };
+            $.ajax({
+                url: "https://staging-bankassist.korebots.com/finastra-wrapper/uniqueUser",
+                type: 'post',
+                data: jsonData,
+                dataType: 'json',
+                success: function (data) {
+                    if (koreBot && koreBot.initToken) {
+                        koreBot.initToken(options);
+                    }
                 }
             });
         }
