@@ -2527,7 +2527,23 @@
                     else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.formData && msgData.message[0].component.payload.formData.renderType==='inline'){
                         msgData.renderType = 'inline';
                         messageHtml = me.renderWebForm(msgData,true);
-                    }
+                    } 
+                    else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "iframe") {
+                        var popupHtml = $(me.getChatTemplate("iframe")).tmpl({
+                            'msgData': msgData,
+                            'helpers': helpers,
+                            "link_url": msgData.message[0].component.link_url    
+                        });
+                        popupHtml[0].onload = function(iFrameEvent){
+                            console.log(iFrameEvent);
+                        }
+                        openModal(popupHtml[0],true);
+                        setTimeout(function(){
+                            var iframe = document.getElementById("iframeModal");
+                            var elemt = iframe.contentWindow.document.getElementsByClassName('x-unblu-launcher-button');
+                            elemt[0].click();
+                        },7000);
+                    } 
                     else {
                         messageHtml = $(me.getChatTemplate("message")).tmpl({
                             'msgData': msgData,

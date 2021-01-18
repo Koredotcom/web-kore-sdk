@@ -1,0 +1,46 @@
+<html>
+
+<head>
+    <!--<meta name="unblu:named-area" content="UNBLUBot"/>-->
+    <script type="text/javascript">window["x-unblu-root"] = true;</script>
+    <meta name="unblu:named-area" content="S4C0ntqnQxO6HFhTMykIHA" />
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+    <script src="https://kore.dev.unblu-test.com/unblu/js-api/v2/visitor/visitor-api.min.js"></script>
+
+    <script>
+        function cbTest(engagementType, visitorData) { return Promise.resolve(JSON.stringify({ name: "Aravind", about: "Kore" })); }
+        window.unblu.api
+            .configure({
+                apiKey: "qzWgKosHSC-eRhfXFSdFYw",
+                serverUrl: "https://unblu.p01423501020001.c01.pt.provides.cloud/co-unblu/"
+            })
+            .initialize()
+            .then(function (api) {
+                console.log("API initialized successfully!", api);
+                api.setNewConversationInterceptor(cbTest);
+
+
+            })
+            .catch(e => {
+                // console.log("------error : ", e);
+                if (e.type === 'INITIALIZATION_TIMEOUT') {
+                    //retry
+                    console.log('error ', e)
+                } else if (e.type === 'UNSUPPORTED_BROWSER') {
+                    // display unsupported browser dialog
+
+                } else {
+                    // show generic error message
+
+                }
+            });
+   // console.log("personIfo", window.unbluapi);
+
+    </script>
+
+    <script type="text/javascript" defer="defer"
+        src="https://kore.dev.unblu-test.com/unblu/visitor.js?x-unblu-apikey=MZsy5sFESYqU7MawXZgR_w"></script>
+
+<body></body>
+
+</html>
