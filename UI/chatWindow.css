@@ -1039,7 +1039,8 @@
     padding: 4px 13px;
     border-radius: 20px;
     display: table;
-    white-space: nowrap;
+    /* white-space: nowrap; */
+    text-align: left;
     color: var(--sdk-chat-widow-chat-button-active-text-color);
     background: var(--sdk-chat-widow-chat-button-active-color);
     transition: background-color 200ms linear;
