@@ -35,7 +35,7 @@
     googleMapsAPIKey: "",
     minimizeMode: false,             // set true, to show chatwindow in minized mode 
     supportDelayedMessages: false,    // enable to add support for renderDelay in message nodes which will help to render messages with delay from UI       
-    isFromFinastra: false,
+    isFromFinastra: true,
     pickersConfig: {
       showDatePickerIcon: false,           //set true to show datePicker icon
       showDateRangePickerIcon: false,      //set true to show dateRangePicker icon
