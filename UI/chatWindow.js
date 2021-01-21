@@ -1757,7 +1757,7 @@
                 me.bot.on("open", function (response) {
                     var _chatContainer=me.config.chatContainer;
                     //actual implementation starts here
-                    this.accessToken = me.config.botOptions.accessToken;
+                    me.accessToken = me.config.botOptions.accessToken;
                     var _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
                     _chatContainer.find('.kore-chat-header .header-title').html(me.config.chatTitle).attr('title', me.config.chatTitle);
                     _chatContainer.find('.kore-chat-header .disabled').prop('disabled', false).removeClass("disabled");
@@ -4597,7 +4597,7 @@
                     "FILE_TOKEN_ENDPOINT": koreAPIUrl + "1.1/attachment/file/token",
                     "FILE_CHUNK_ENDPOINT": koreAPIUrl + "1.1/attachment/file/:fileID/chunk"
                 };
-                _accessToke = "bearer " + this.accessToken;
+                _accessToke = "bearer " + chatInitialize.accessToken;
                 _uploadConfg = {};
                 _uploadConfg.url = appConsts.UPLOAD.FILE_ENDPOINT.replace(':fileID', fileToken);
                 _uploadConfg.tokenUrl = appConsts.UPLOAD.FILE_TOKEN_ENDPOINT;
