@@ -97,6 +97,33 @@
                 'helpers': this.helpers,
                 'extension': this.extension
 			});
+			if(msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.meta && msgData.message[0].component.payload.meta.custSegId){
+				$.ajax({
+					url: this.cfg.botOptions.brandingAPIUrl,
+					headers: {
+						'tenantId': this.cfg.botOptions.accountId,
+						'Authorization': "bearer " + window.jwtDetails.authorization.accessToken,
+						'Accept-Language': 'en_US',
+						'Accepts-version': '1',
+						'botId': this.cfg.botOptions.botInfo._id,
+						'state': 'published',
+						'segmentId': msgData.message[0].component.payload.meta.custSegId
+					},
+					type: 'get',
+					dataType: 'json',
+					success: function (data) {
+						options.botDetails = koreBot.botDetails(data[1].brandingwidgetdesktop);
+						// chatConfig.botOptions.hamburgermenuData = data[0].hamburgermenu;
+						// if (koreBot && koreBot.initToken) {
+						// 	koreBot.initToken(options);
+						// }
+					},
+					error: function (err) {
+						console.log(err);
+					}
+				});
+			}
+			
 		}
 	   return messageHtml;
 	

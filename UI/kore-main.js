@@ -46,8 +46,8 @@
                 callback(null, options);
             } else if(chatConfig.isFromFinastra){
                 var jsonData = {
-                    "tenantId": "mlz-b2c-vader" || options.botInfo.customData.tenantId,
-                    "uniqueUserId": "luke_~#$$#~_mlz-b2c-vader" || options.botInfo.customData.uniqueUserId,
+                    "tenantId": options.botInfo.customData.tenantId,
+                    "uniqueUserId": options.botInfo.customData.uniqueUserId,
                 };
                 $.ajax({
                     url: options.JWTUrl,
@@ -129,7 +129,6 @@
         }
 
         function CheckRefreshToken(options){
-            debugger
             var jsonData = {
                 "userId": window.jwtDetails.userInfo.userId,
                 "uniqueUserId": options.uniqueUserId
