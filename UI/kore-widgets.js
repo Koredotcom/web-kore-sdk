@@ -3095,6 +3095,14 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
             var xhrObject = {};
             xhrObject.passedkey = {};
             xhrObject.passedkey = err.passedkey;
+            if (err && typeof err === 'object' && err.responseJSON && err.responseJSON.errors && err.responseJSON.errors.length) {
+              xhrObject.templateType = 'somthingWentWrong';
+              xhrObject.errMsg = err.responseJSON.errors[0].msg || ''; // responseData.errMsgDiscription = responseCopy;
+            } 
+            if(err && err.status == '429'){
+              xhrObject.templateType = 'somthingWentWrong';
+              xhrObject.errMsg = err.responseText || 'Too many tries, please wait for sometime'; 
+            }
             var dataHTML = $(_self.getTemplate("ErrorTemplate")).tmplProxy({
               'tempdata': xhrObject,
               'panelDetail': xhrObject.passedkey
@@ -4467,6 +4475,14 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           var xhrObject = {};
           xhrObject.passedkey = {};
           xhrObject.passedkey = err.passedkey;
+          if (err && typeof err === 'object' && err.responseJSON && err.responseJSON.errors && err.responseJSON.errors.length) {
+            xhrObject.templateType = 'somthingWentWrong';
+            xhrObject.errMsg = err.responseJSON.errors[0].msg || ''; // responseData.errMsgDiscription = responseCopy;
+          } 
+          if(err && err.status == '429'){
+            xhrObject.templateType = 'somthingWentWrong';
+            xhrObject.errMsg = err.responseText || 'Too many tries, please wait for sometime'; 
+          }
           var dataHTML = $(_self.getTemplate("ErrorTemplate")).tmplProxy({
             'tempdata': xhrObject,
             'panelDetail': xhrObject.passedkey
