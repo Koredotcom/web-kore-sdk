@@ -193,11 +193,13 @@
 
 
 /*code for kore chat window*/
-
+.kore-chat-window{
+    font-family: 'GilroyRegular';
+}
 .kore-chat-window * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
-    box-sizing: border-box;
+    box-sizing: border-box;    
 }
 
 .kore-chat-window .kore-chat-overlay {
@@ -577,7 +579,6 @@
     top: 90px;
     bottom: 75px;
     background-color: var(--sdk-chat-widow-widget-body-color);
-    font-family: "Lato", sans-serif;
     font-size: 14px;
 }
 
