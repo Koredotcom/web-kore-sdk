@@ -1617,7 +1617,7 @@
                                 'type': "currentUser",
                                 "message": [{
                                     'type': 'text',
-                                    'cInfo': { 'body': tempmsg.body },
+                                    'cInfo': { 'body': tempmsg.renderMessage || tempmsg.body },
                                     'clientMessageId': tempData.id
                                 }],
                                 "createdOn": tempData.id

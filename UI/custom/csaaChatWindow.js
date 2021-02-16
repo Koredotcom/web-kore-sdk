@@ -760,7 +760,11 @@
           localStorage.getItem(LIVE_CHAT_PENDING) === 'true'
         ) {
           var messageToBot = {
-            message: { body: 'endAgentChat' },
+            clientMessageId: new Date().getTime(),
+            message: {
+              body: 'endAgentChat',
+              renderMessage: 'Your chat with the agent has unexpectedly ended.'
+            },
             resourceid: '/bot.message'
           };
           koreBot.bot.sendMessage(messageToBot);
