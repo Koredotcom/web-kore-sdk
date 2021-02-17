@@ -504,9 +504,9 @@
               templateType = payload.payload.template_type;
             }
 
-            if (templateType === 'list') {
-              var $listItems = findListTemplateItems(dataObj.messageId);
-              $listItems.on('click', function () { $listItems.hide(); });
+            if (templateType === 'list' || templateType === 'removing_button') {
+              var $messageItems = findMessageItems(dataObj.messageId);
+              $messageItems.on('click', function () { $messageItems.hide(); });
             }
 
             if (msgText === 'Please wait while we connect you to an Agent.') {
@@ -656,12 +656,15 @@
             msgBody = msgData.message[0].cInfo.body
           }
 
-          if (msgBody.payload && msgBody.payload.template_type === 'list') {
+          if (
+            msgBody.payload && msgBody.payload.template_type === 'list' ||
+            msgBody.payload && msgBody.payload.template_type === 'removing_button'
+          ) {
             if (i === arr.length - 1) {
-              var $listItems = findListTemplateItems(msgData.messageId);
-              $listItems.on('click', function () { $listItems.hide(); });
+              var $messageItems = findMessageItems(msgData.messageId);
+              $messageItems.on('click', function () { $messageItems.hide(); });
             } else {
-              findListTemplateItems(msgData.messageId).hide();
+              findMessageItems(msgData.messageId).hide();
             }
           }
         });
@@ -684,10 +687,10 @@
         });
       }
       
-      function findListTemplateItems(messageId) {
-        var $listMessage = $('li#' + messageId);
-        var $listItems = $listMessage.find('.listTmplContentChild');
-        return $listItems;
+      function findMessageItems(messageId) {
+        var $message = $('li#' + messageId);
+        var $items = $message.find('.listTmplContentChild, .buttonTmplContentChild');
+        return $items;
       }
 
       function isChatSessionActive () {
