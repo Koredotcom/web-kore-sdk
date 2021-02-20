@@ -292,6 +292,10 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 ```
 
 ###Release History:
+V8.1.0 [Minor] on 20-Feb-2021: Master branch
+    1.Bug fixes.
+    2.Added listWidget, tableList template.
+
 V8.0.0 [Major] on 31-OCT-2020: Master branch
     1.i18n and RTL support added.
     2.Support for multipage applications added.
