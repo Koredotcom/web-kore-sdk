@@ -3108,7 +3108,7 @@ function request(options, callback) {
       options.body = JSON.stringify(options.body)
   }
   
-  //BEGIN QS Hack
+  //BEGIN QS
   var serialize = function(obj) {
     var str = [];
     for(var p in obj)
@@ -3126,9 +3126,9 @@ function request(options, callback) {
         options.uri = options.uri+'?'+qs;
     }
   }
-  //END QS Hack
+  //END QS
   
-  //BEGIN FORM Hack
+  //BEGIN FORM
   var multipart = function(obj) {
     //todo: support file type (useful?)
     var result = {};
@@ -3170,7 +3170,7 @@ function request(options, callback) {
         }
     }
   }
-  //END FORM Hack
+  //END FORM
 
   // If onResponse is boolean true, call back immediately when the response is known,
   // not when the full request is complete.
@@ -3615,7 +3615,7 @@ function formatArgs() {
  */
 
 function log() {
-  // this hackery is required for IE8/9, where
+  // this is required for IE8/9, where
   // the `console.log` function doesn't have 'apply'
   return 'object' === typeof console
     && console.log
