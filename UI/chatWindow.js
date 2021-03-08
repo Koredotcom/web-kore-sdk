@@ -1929,8 +1929,10 @@
                 var messageToBot = {};
                 messageToBot["clientMessageId"] = clientMessageId;
                 if (Object.keys(me.attachmentInfo).length > 0 && chatInput.text().trim().length) {
+                    me.attachmentInfo.fileId = attachmentInfo.fileId;
                     messageToBot["message"] = { body: chatInput.text().trim(), attachments: [me.attachmentInfo] };
                 } else if (Object.keys(me.attachmentInfo).length > 0) {
+                    me.attachmentInfo.fileId = attachmentInfo.fileId;
                     messageToBot["message"] = { attachments: [me.attachmentInfo] };
                 }
                 else {
