@@ -98,7 +98,8 @@
                 'extension': this.extension
 			});
 			if(msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.meta && msgData.message[0].component.payload.meta.custSegId){
-				$.ajax({
+				var botConfigDetails = this.cfg;
+                $.ajax({
 					url: this.cfg.botOptions.brandingAPIUrl,
 					headers: {
 						'tenantId': this.cfg.botOptions.accountId,
@@ -112,7 +113,10 @@
 					type: 'get',
 					dataType: 'json',
 					success: function (data) {
-						options.botDetails = koreBot.botDetails(data[1].brandingwidgetdesktop);
+						//options.botDetails = koreBot.botDetails(data[1].brandingwidgetdesktop);
+						var koreBot = koreBotChat()
+						// options.botDetails = koreBot.botDetails(data[1].brandingwidgetdesktop);
+						botConfigDetails.botOptions.botDetails = koreBot.botDetails(data[1].brandingwidgetdesktop);
 						// chatConfig.botOptions.hamburgermenuData = data[0].hamburgermenu;
 						// if (koreBot && koreBot.initToken) {
 						// 	koreBot.initToken(options);
@@ -1613,7 +1617,9 @@ print(JSON.stringify(message)); */
 			if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
 				a_link = "http:////" + a_link;
 			}
-			this.openExternalLink(a_link);
+			// this.openExternalLink(a_link);
+			var _tempWin = window.open(a_link, "_blank");
+
 		 }else{
 			var _innerText= $(this).attr('data-value');
 			var postBack=$(this).attr('data-title');
@@ -1833,7 +1839,8 @@ print(JSON.stringify(message)); */
 				if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
 					a_link = "http:////" + a_link;
 				}
-				this.openExternalLink(a_link);
+				// this.openExternalLink(a_link);
+				var _tempWin = window.open(a_link, "_blank");
 			 }else{
 				var _innerText= $(_self).attr('data-value');
 				var postBack=$(_self).attr('data-title');

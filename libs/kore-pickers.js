@@ -496,9 +496,9 @@ KorePickers.prototype.showDatePicker = function (mainConfig) {
         showShortcuts: false,
         singleDate: true,
         showTopbar: false,
-        format: mainConfig[1].dateRangeConfig.format,
-        startDate: mainConfig[1].dateRangeConfig.startDate,
-        endDate: mainConfig[1].dateRangeConfig.endDate,
+        format: mainConfig[1].dateConfig.format,
+        startDate: mainConfig[1].dateConfig.startDate,
+        endDate: mainConfig[1].dateConfig.endDate,
         inline: true,
         container:  _korePickers.find('.kore-action-sheet .datePickerContainer'),
 

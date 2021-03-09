@@ -64,11 +64,11 @@
     botOptions.brandingAPIUrl = botOptions.koreAPIUrl + '/workbench/sdkData?objectId=hamburgermenu&objectId=brandingwidgetdesktop';
     botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
     botOptions.userIdentity = '';// Provide users email id here
-    botOptions.botInfo = { name: "Bank Assist Dev", "_id": "st-9e078d20-2ae8-5e84-bcf2-df51ba689f10",customData:{"rtmType":"web"}}; // bot name is case sensitive
-    botOptions.clientId = "cs-15f1cfad-832f-53a1-beed-094c128eb05b";
-    botOptions.clientSecret = "PycudTp3WsSniVuMEOeJuILp7yKULrhnvB442/4F9ig=";
-    botOptions.accountId = "5fdc983ad54ba96f481fd771";
-  }
+    botOptions.botInfo = { name: "Bank Assist Dev", "_id": "st-beed09f6-1b54-508d-8c6c-9eab34d85466",customData:{"rtmType":"web"}}; // bot name is case sensitive
+    botOptions.clientId = "cs-de823b51-faed-503d-bc37-017d2abeac41";
+    botOptions.clientSecret = "JSAgeh/lUsvurI2oDVmh9/UqyHMHJZ3NLCW8N8XChAQ=";
+    botOptions.accountId = "60238b260d183d1a288c7647"
+ }
 
   function getCookie(cname) {
     var name = cname + "=";

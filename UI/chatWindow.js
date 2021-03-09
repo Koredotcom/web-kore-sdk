@@ -3627,6 +3627,10 @@
                                 $(".kore-chat-body").css("background-position", "center"); 
                             // },1000);
                            
+                        } else if(key == 'widgetBgImage' && response[key] == ""){
+                            $(".kore-chat-body").css("background-image", "url(" + response['widgetBgImage'] + ")");
+                            $(".kore-chat-body").css("background-repeat", "no-repeat");
+                            $(".kore-chat-body").css("background-position", "center");
                         }
                     }
                     $(".kore-chat-window").addClass('customBranding-theme');
