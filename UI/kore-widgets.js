@@ -4881,8 +4881,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         eData.payload = actionObj.payload;
       }
 
-      if (actionObj.nlmeta) {
-        eData.nlmeta = actionObj.nlmeta;
+      if (actionObj.nlmeta || actionObj.nlMeta) {
+        eData.nlmeta = actionObj.nlmeta || actionObj.nlMeta;
       }
 
       if (actionObj.customdata) {
@@ -4970,8 +4970,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         eData.payload = actionObjJson.payload;
       }
 
-      if (actionObjJson.nlmeta) {
-        eData.nlmeta = actionObjJson.nlmeta;
+      if (actionObjJson.nlmeta || actionObjJson.mlMeta) {
+        eData.nlmeta = actionObjJson.nlmeta || actionObjJson.nlMeta;
       }
 
       if (actionObjJson.customdata) {

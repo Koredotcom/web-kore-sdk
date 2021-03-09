@@ -1950,8 +1950,8 @@
                     messageToBot["message"].metaTags=msgObject.metaTags;
                 }
 
-                if(msgObject && msgObject.nlmeta){
-                    messageToBot["message"].nlmeta=msgObject.nlmeta;
+                if(msgObject && (msgObject.nlmeta || msgObject.nlMeta)){
+                    messageToBot["message"].nlMeta= msgObject.nlmeta || msgObject.nlMeta;
                 }
                 me.attachmentInfo = {};
                 me.bot.sendMessage(messageToBot, function messageSent(err) {
