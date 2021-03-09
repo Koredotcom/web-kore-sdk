@@ -325,6 +325,7 @@
     bottom: 0;
     list-style: none;
     /* overflow: hidden; */
+    font-family: "Lato", sans-serif !important;	
     box-shadow: 0 1px 25px 0 rgba(179, 186, 200, 0.58);
 }
  .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect {
@@ -1190,13 +1191,13 @@
     color: var(--sdk-chat-window-pie-chart-background);
     border: 0;
     outline: 0;
-    font-weight: bold;
+    font-family: LATOBold!important;
     text-transform: uppercase;
     margin-right: 85px;
     cursor:pointer;
 }
 .kore-chat-window .ratingStar{
-    font-weight: bold;
+    font-family: LATOBold;
     font-size: 17px;
     letter-spacing: .09px;
     margin: 15px 0;
@@ -1628,6 +1629,7 @@
     /* width: 18px;
             height: 17px; */
     /* flex: 1 1 auto; */
+    /* font-family: Lato; */
     font-size: 14px;
     font-weight: normal;
     letter-spacing: 0.12px;

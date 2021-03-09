@@ -153,6 +153,7 @@
     color: #222;
     font-size: 16px;
     background-color: white;
+    font-family: arial,sans-serif;
     height: 50px;
     line-height: 49px;
     padding: 0 0 0 20px;
@@ -226,6 +227,7 @@
     top: 50px;
     bottom: 53px;
     background-color: white;
+    font-family: "Lato", sans-serif;
     font-size: 14px;
 }
 .lineChartChildDiv .mouse-over-effects .mouse-per-line text{
@@ -456,11 +458,13 @@ ul.chat-container li.fromOtherUsers.with-icon .extra-info{
     max-height: 70px;
     overflow-x: hidden;
     overflow-y: auto;
+	font-family: "Lato", sans-serif;
 }
 .kore-chat-window .kore-chat-footer .chatInputBoxPlaceholder {
 	position: absolute;
 	color: #aaa;
 	font-size: 16px;
+	font-family: "Lato", sans-serif;
 	position: absolute;
 	top: 4px;
 }

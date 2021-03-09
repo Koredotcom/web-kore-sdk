@@ -19,7 +19,7 @@
 
 
 .kore-chat-window{	
-    font-family: 'GilroyRegular';
+    font-family: "Lato", sans-serif !important;	
 }
 .kore-chat-window .kore-action-sheet .header{
     height: 57px;
