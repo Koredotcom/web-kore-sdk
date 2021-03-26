@@ -568,8 +568,8 @@
                                 var validBoldGroup = true;
                                 if(_boldTxt.includes('*')){
                                     var _tempStr = _boldTxt.replace(/\*/g,'');
-                                    var letterNumber = /^[0-9a-zA-Z!@#$%^&()_ +\-=\[\]{};':"\\|,.<>\/?]+$/;
-                                    if(!(_tempStr.match(letterNumber))){
+                                    // var letterNumber = /^[0-9a-zA-Z!@#$%^&()_ +\-=\[\]{};':"\\|,.<>\/?]+$/;
+                                    if (!(_tempStr && _tempStr.length)) {
                                         validBoldGroup = false;
                                     }
                                 }
