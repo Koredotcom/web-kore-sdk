@@ -426,9 +426,6 @@
         //applicable only if botOptions.loadHistory = true;
         bot.on('history', function (historyRes) {
           emit(CHAT_RELOADED);
-          if (isChatWindowMinimized()) {
-            return;
-          }
           
           var observer = new MutationObserver(onMutation('class', function (value) {
             if (value.indexOf('showMsg') === -1) {
@@ -436,8 +433,11 @@
               if (!defaultChatConfig.automaticInputFocus) setTimeout(function () { $chatInputBox.blur(); });
               hideListTemplateItems(historyRes.messages);
               hideMessages(historyRes.messages, defaultChatConfig.hideMessages);
-              setChatIconVisibility(false);
-              $koreChatWindow.addClass('slide');
+
+              if (!isChatWindowMinimized()) {
+                setChatIconVisibility(false);
+                $koreChatWindow.addClass('slide');
+              }
             }
           }));
           
