@@ -1658,9 +1658,9 @@ print(JSON.stringify(message)); */
 			$ele.off('click', '.listViewLeftContent').on('click', '.listViewLeftContent', function (e) {
 			  e.stopPropagation();
 			  var actionObjString = $(e.currentTarget).attr('actionObj');
-			  var actionObj = {};
 	
 			  if (actionObjString) {
+				var actionObj = {};
 				actionObj = JSON.parse(actionObjString);
 			  }
 	var _self=this;
@@ -1727,9 +1727,9 @@ print(JSON.stringify(message)); */
 			$ele.off('click', '.action').on('click', '.action', function (e) {
 			  e.stopPropagation();
 			  var actionObjString = $(e.currentTarget).attr('actionObj');
-			  var actionObj = {};
 	
 			  if (actionObjString) {
+				var actionObj = {};
 				actionObj = JSON.parse(actionObjString);
 			  } // var eData={
 			  //   postbackValue: actionObj.payload,
@@ -2184,11 +2184,15 @@ print(JSON.stringify(message)); */
 				return;
 			  }
 			  if (actionObj.payload) {
-				  var _innerText = _self.innerText || actionObj.title;
+				  var _innerText = actionObj.payload;
 				  var eData={};
-				eData.payload = actionObj.payload;
+				eData.payload = _self.innerText || actionObj.title;
 				chatInitialize.sendMessage($('.chatInputBox').text(_innerText), eData.payload);
-			  }}else{
+			  }
+			  if(_self && _self.hasClass("dropdown-contentWidgt")){
+				$(_self).hide();
+			}
+			}else{
 			if($(_self).attr('data-url')||$(_self).attr('url')){
 				var a_link = $(_self).attr('data-url')||$(_self).attr('url');
 				if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
@@ -2203,9 +2207,6 @@ print(JSON.stringify(message)); */
              bottomSliderAction("hide");
 			 $(".listViewTmplContentBox").css({"pointer-events":"none"});
 			 }
-			}
-			if(_self.hasClass("dropdown-contentWidgt")){
-				$(_self).hide();
 			}
 			
 		}
