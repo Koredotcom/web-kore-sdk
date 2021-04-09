@@ -935,6 +935,9 @@
                 }
                 /* Handling for table ends*/
             };
+            window.onresize = function(event) {
+                chatInitialize.setCollapsedModeStyles();
+            };
             chatWindow.prototype.handleImagePreview= function() {
                 var modal = document.getElementById('myModal');
 
