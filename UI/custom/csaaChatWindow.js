@@ -539,11 +539,10 @@
               emit(CHAT_AGENT_STOPPED_TYPING);
             }
 
-            if (localStorage.getItem(LIVE_CHAT_CONNECTED) === 'true') {
+            var isAgentNotification = defaultChatConfig.hideMessages.indexOf(msgText) !== -1;
+
+            if (localStorage.getItem(LIVE_CHAT_CONNECTED) === 'true' && !isAgentNotification) {
               if (defaultChatConfig.notificationsEnabled && localStorage.getItem(CHAT_WINDOW_STATUS) === 'minimized') {
-
-                if (defaultChatConfig.hideMessages.indexOf(msgText) !== -1) return;
-
                 var currentQueuedMessages = $masterButton.attr('queued_messages') || 0;
                 var queuedMessages = parseInt(currentQueuedMessages) + 1;
 
@@ -557,7 +556,7 @@
               }
             }
 
-            if (defaultChatConfig.hideMessages.indexOf(msgText) !== -1) {
+            if (isAgentNotification) {
               $('li#' + dataObj.messageId).hide();
               hideMessages(defaultChatConfig.hideMessages);
             }
