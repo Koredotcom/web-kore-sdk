@@ -527,7 +527,7 @@
               localStorage.setItem(LIVE_CHAT_CONNECTED, 'false');
               localStorage.setItem(LIVE_CHAT_PENDING, 'false');
               emit(CHAT_SURVEY_TRIGGERED);
-            } else if (msgText === 'Thank you for your feedback. The chat session has ended.') {
+            } else if (msgText === 'Got it. thanks for the feedback') {
               emit(CHAT_SURVEY_ANSWERED);
               handleChatEndByAgent();
             } else if (msgText === 'Thank you. The chat session has ended.') {
