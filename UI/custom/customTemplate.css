@@ -231,6 +231,7 @@
     text-align: center;
     border-top: 1px solid var(--sdk-chat-window-checkbox-border);
     padding: 10px;
+    background-color: #ffffff;
 }
 .checkboxBtn{
     cursor: pointer;

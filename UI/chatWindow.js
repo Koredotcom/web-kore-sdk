@@ -1285,6 +1285,7 @@
                         //var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
                         if($('.quickReply') && $('.quickReply').length){
                             var _innerText = $(this).attr('value');
+			                // _innerText = toTitleCase(_innerText);
                         } else {
                             var _innerText = ($(this)[0] && $(this)[0].innerText) ? $(this)[0].innerText.trim():"" || ($(this) && $(this).attr('data-value'))?$(this).attr('data-value').trim():"";
                         }
@@ -1936,7 +1937,8 @@
                     $('.typingIndicatorContent').css('display', 'none');
                 }, 10000);
                 if (renderMsg && typeof renderMsg === 'string') {
-                    msgData.message[0].cInfo.body = renderMsg;
+                    msgData.message[0].cInfo.body = messageToBot["message"].body;
+		            // msgData.message[0].cInfo.body = renderMsg;
                 }
                 msgData.message[0].cInfo.ignoreCheckMark=ignoreCheckMark;
                 me.renderMessage(msgData);
@@ -3188,7 +3190,7 @@
                                         {{/if}} \
                                         {{if msgData.message[0].component.payload.buttons && msgData.message[0].component.payload.buttons.length}} \
                                             {{each(key, msgItem) msgData.message[0].component.payload.buttons}} \
-                                                <div class="buttonTmplContentChild quickReplyDiv displayInline"> <span {{if msgData}}msgData="${JSON.stringify(msgData)}"{{/if}} {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} class="buttonQuickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.type}" {{if msgItem.url}}url="${msgItem.url}"{{/if}}>\
+                                                <div class="buttonTmplContentChild quickReplyDiv displayInline"> <span actual-value="${msgItem.title}" {{if msgData}}msgData="${JSON.stringify(msgData)}"{{/if}} {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} class="buttonQuickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.type}" {{if msgItem.url}}url="${msgItem.url}"{{/if}}>\
                                                     {{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} <span class="quickreplyText {{if msgItem.image_url}}with-img{{/if}}">${msgItem.title}</span></span>\
                                                 </div> \
                                             {{/each}} \
@@ -3631,7 +3633,7 @@
                             $(".kore-chat-body").css("background-image", "url(" + response['widgetBgImage'] + ")");
                             $(".kore-chat-body").css("background-repeat", "no-repeat");
                             $(".kore-chat-body").css("background-position", "center");
-                        }
+			            }
                     }
                     $(".kore-chat-window").addClass('customBranding-theme');
                 }
@@ -5104,6 +5106,11 @@
                 $.fn.uploader = old;
                 return this;
             };
+            function toTitleCase(str) {
+                return str.replace(/(?:^|\s)\w/g, function(match) {
+                    return match.toUpperCase();
+                });
+            }
             /************************************************************************************************************************************************
             ********************************************** kore.ai framework file ******************************************************************************
             ************************************************************************************************************************************************/
