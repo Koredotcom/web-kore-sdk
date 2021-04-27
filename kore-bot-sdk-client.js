@@ -145,6 +145,22 @@ KoreBot.prototype.sendMessage = function(message,optCb) {
 	
 };
 
+// Send client side events to bot kit
+KoreBot.prototype.sendClientEvent = function(message,optCb) {
+	debug("sending message to bot");
+	if(this.initialized){
+		message["resourceid"] = '/bot.clientEvent';
+		message["botInfo"] = this.options.botInfo || {};
+		message["client"] = this.options.client || "sdk";
+		message["meta"] = {
+			"timezone":jstz.jstz.determine().name(),
+      "locale":window.navigator.userLanguage || window.navigator.language
+    };
+
+		this.RtmClient.sendClientEvent(message,optCb);
+	}	
+};
+
 /*
 emits a message event on message from the server.
 */
@@ -1377,6 +1393,11 @@ KoreRTMClient.prototype._handleHello = function _handleHello() {
 };
 
 KoreRTMClient.prototype.sendMessage = function sendMessage(message, optCb) {
+  this.send(message, optCb);
+};
+
+// Send client side events to Bots
+KoreRTMClient.prototype.sendClientEvent = function sendClientEvent(message, optCb) {
   this.send(message, optCb);
 };
 

@@ -10,6 +10,7 @@
   var LIVE_CHAT_CONNECTED         = 'csaa_chat_live_agent_connected';
   var QUEUED_MESSAGE_COUNT        = 'csaa_chat_queued_message_count';
   var CUSTOMER_ENGAGED            = 'csaa_chat_customer_engaged';
+  var SQUENCE_ID                  = 'csaa_chat_squence_id';
 
   // Chat events
   var CHAT_ICON_CLICKED           = 'CHAT_ICON_CLICKED';
@@ -42,6 +43,7 @@
     var chatLifeCycle;
     var events = {};
     var chatEnabled = true;
+    var isChatWindowActive
 
     if (window && window.KoreSDK && window.KoreSDK.dependencies && window.KoreSDK.dependencies.jQuery) {
       //load kore's jquery version
@@ -343,6 +345,9 @@
           .children('[chat=master_button]')
           .on('click', function () {
             if (isChatIconGraphicsEnabled()) return;
+
+            isChatWindowActive = true;
+
             if (!isChatSessionActive()) {
               emit(CHAT_ICON_CLICKED);
               startNewChat();
@@ -372,6 +377,7 @@
         var $chatContainer = $koreChatBody.children('.chat-container');
         var $chatBoxControls = $koreChatHeader.children('.chat-box-controls');
         var $chatInputBox = $koreChatFooter.find('.chatInputBox');
+        var $sendButton = $koreChatFooter.find('.sendButton');
 
         if (defaultChatConfig.subheader) {
           attachSubheaderUI(defaultChatConfig.subheader, $koreChatHeader, $koreChatBody);
@@ -495,6 +501,7 @@
             var payload = dataObj.message[0].component.payload;
             var msgText = '';
             var templateType = '';
+            var sequenceId = null;
 
             if (payload.text) {
               msgText = payload.text;
@@ -502,11 +509,28 @@
             } else if (payload.payload) {
               msgText = payload.payload.text;
               templateType = payload.payload.template_type;
+              sequenceId = payload.payload.sequenceId;
+            }
+
+            if (sequenceId) {
+              if (isChatWindowActive) {
+                sendClientEvent({
+                  type: 'MESSAGE_READ',
+                  payload: { sequenceIDs: [sequenceId] }
+                });
+              } else {
+                setSequenceID(sequenceId);
+              }
             }
 
             if (templateType === 'list' || templateType === 'removing_button') {
               var $messageItems = findMessageItems(dataObj.messageId);
               $messageItems.on('click', function () { $messageItems.hide(); });
+            }
+
+            if (templateType === 'live_person') {
+              // conntected to a live person
+              $('li#' + dataObj.messageId + ' .user-account').addClass('live-agent');
             }
 
             if (msgText === 'Please wait while we connect you to an Agent.') {
@@ -558,7 +582,6 @@
 
             if (isAgentNotification) {
               $('li#' + dataObj.messageId).hide();
-              hideMessages(defaultChatConfig.hideMessages);
             }
           }
         });
@@ -569,6 +592,7 @@
 
         $chatBoxControls.children('.minimize-btn').off('click').on('click', function (e) {
           e.stopImmediatePropagation();
+          isChatWindowActive = false;
           $koreChatWindow.removeClass('slide');
           setChatIconVisibility(true);
           localStorage.setItem(CHAT_WINDOW_STATUS, 'minimized');
@@ -588,16 +612,115 @@
             window.open(link, target ? target : defaultTarget)
           });
 
-          $chatContainer.on('click',
-            '.listTmplContentChild .buyBtn',
-            function (e) {
-              var type = $(this).attr('type');
-              if (type == 'list-postback' || type == 'list-text') {
-                var value = $(this).attr('actual-value') || $(this).attr('value');
-                $('.chatInputBox').text(value);
-                chatWindow.sendMessage($('.chatInputBox'), value);
-              }
-            });
+        $chatContainer.on('click',
+          '.listTmplContentChild .buyBtn',
+          function (e) {
+            var type = $(this).attr('type');
+            if (type == 'list-postback' || type == 'list-text') {
+              var value = $(this).attr('actual-value') || $(this).attr('value');
+              $('.chatInputBox').text(value);
+              chatWindow.sendMessage($('.chatInputBox'), value);
+            }
+          });
+
+        bindUserEventEmmitters($koreChatWindow, $chatInputBox, $sendButton);
+      }
+
+      function bindUserEventEmmitters ($koreChatWindow, $chatInputBox, $sendButton) {
+        onChatWindowActivation($koreChatWindow);
+        onChatInput($chatInputBox);
+
+        $sendButton.on('click', sendClientReadMessage);
+
+        koreBot.on('CHAT_EVENT', function (e) {
+          var eventName = e.eventName;
+          
+          if (eventName === CHAT_MAXIMIZED) {
+            sendClientEvent({ type: CHAT_MAXIMIZED });
+            sendClientReadMessage();
+          }
+
+          if (eventName === CHAT_MINIMIZED) {
+            sendClientEvent({ type: CHAT_MINIMIZED });
+          }
+        });
+      }
+
+      function onChatWindowActivation ($koreChatWindow) {
+        $(document).click(function() {
+          isChatWindowActive = false;
+        });
+
+        $koreChatWindow.on('click keydown', function (event) {
+          event.stopPropagation();
+
+          if (isChatWindowActive === false) {
+            sendClientReadMessage();
+          }
+
+          isChatWindowActive = true;
+        });
+      }
+
+      function onChatInput ($chatInputBox) {
+        var withConsideredTyping = function (typingCB) {
+          return function (event) {
+            if (event.key !== 'SPACE' && event.key.length > 1) return;
+
+            typingCB(event);
+          };
+        };
+
+        var typingStarted = _.throttle(withConsideredTyping(function () {
+          sendClientEvent({ type: 'TYPING_STARTED' });
+        }), 5000, { trailing: false });
+        var typingStopped = _.debounce(withConsideredTyping(function () {
+          sendClientEvent({ type: 'TYPING_STOPPED' });
+        }), 5000);
+        var onEnter = function (event) {
+          if (event.key === 'Enter' && !event.shiftKey) {
+            typingStopped.flush();
+            sendClientReadMessage();
+          }
+        };
+
+        $chatInputBox
+        .on('keyup', onEnter)
+        .on('keyup', typingStarted)
+        .on('keyup', typingStopped);
+      }
+
+      function sendClientEvent (event) {
+        var bot = koreBot.bot;
+        var createBotMessage = function (eventType, eventPayload) {
+          var sequenceIDs = eventPayload.sequenceIDs;
+
+          return {
+            preDefinedEvent: { type: eventType,  sequenceArray: sequenceIDs},
+            resourceid: '/bot.clientEvent',
+          };
+        }
+
+        var eventType = event.type;
+        var eventPayload = event.payload || {};
+        var botMessage = createBotMessage(eventType, eventPayload);
+
+        bot.sendClientEvent(botMessage);
+
+        if (eventPayload.sequenceIDs) {
+          setSequenceID(null, true);
+        }
+      }
+
+      function sendClientReadMessage () {
+        var sequenceIDs = getSequenceIDs();
+
+        if (sequenceIDs.length) {
+          sendClientEvent({
+            type: 'MESSAGE_READ',
+            payload: { sequenceIDs: sequenceIDs }
+          });
+        }
       }
 
       function bindNotificationMessageEventListeners ($notifications) {
@@ -771,6 +894,26 @@
           };
           koreBot.bot.sendMessage(messageToBot);
         }
+      }
+
+      function setSequenceID(sequenceId, reset) {
+        var sequenceIDs = getSequenceIDs();
+
+        if (reset) {
+          localStorage.removeItem(SQUENCE_ID);
+        }
+
+        if (sequenceId) {
+          sequenceIDs.push(sequenceId);
+          localStorage.setItem(SQUENCE_ID, JSON.stringify(sequenceIDs));
+        }
+      }
+
+      function getSequenceIDs() {
+        var sequenceStorage = localStorage.getItem(SQUENCE_ID);
+        var sequenceIDs = JSON.parse(sequenceStorage);
+
+        return sequenceIDs || []
       }
 
       function clearLocalStorage() {
