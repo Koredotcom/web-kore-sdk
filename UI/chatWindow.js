@@ -407,6 +407,9 @@
                     // } catch (e) {
                     //     str = str || '';
                     // }
+                    if(typeof str === 'number'){
+                        str =  str.toString(); 
+                    }
                     str = str || '';
                     
                     var newStr = '', wrapper1;
