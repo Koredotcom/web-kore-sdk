@@ -99,8 +99,9 @@
 			});
 			if(msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.meta && msgData.message[0].component.payload.meta.custSegId){
 				var botConfigDetails = this.cfg;
-                $.ajax({
-					url: this.cfg.botOptions.brandingAPIUrl,
+                                  $.ajax({
+					//url: this.cfg.botOptions.brandingAPIUrl,
+					url: this.cfg.botOptions.koreAPIUrl + '/workbench/sdkData?objectId=hamburgermenu&objectId=brandingwidgetdesktop',
 					headers: {
 						'tenantId': this.cfg.botOptions.accountId,
 						'Authorization': "bearer " + window.jwtDetails.authorization.accessToken,
@@ -2043,4 +2044,3 @@ print(JSON.stringify(message)); */
 		valueClick:valueClick
 	}
 })($);
-

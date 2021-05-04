@@ -274,6 +274,12 @@
         max-height: 100%;
     }
 }
+@media(max-width: 480px) {
+    .kore-chat-window .footerContainer.pos-relative{
+        margin-right: 86px !important;
+    }
+}
+
 @media(max-width: 479px) {
     .kr-wiz-container{
         position: absolute;
@@ -799,15 +805,16 @@
 } 
 
 .kore-chat-window .sendBtnCnt .sendButton {
-    background: var(--sdk-chat-widow-primary-blue-color);
+    background: transparent;
     padding: 5px;
-    border: 1px solid var(--sdk-chat-widow-primary-blue-color);
-    border-radius: 3px;
-    color: var(--sdk-chat-widow-default-white);
+    border: 0px;
+    border-radius: 100%;
+    padding: 8px;
+    text-align: center;    
     font-size: 12px;
     position: absolute;
     right: 10px;
-    bottom: 22px;
+    bottom: 14px;
     cursor: pointer;
 }
 
@@ -832,6 +839,7 @@
     margin: 0 auto;
     position: relative;
     left: 7px;
+    line-height: 18px;
 }
 
 .kore-chat-window .kore-chat-footer .chatInputBoxPlaceholder {

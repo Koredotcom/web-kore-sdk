@@ -36,6 +36,7 @@
     minimizeMode: false,             // set true, to show chatwindow in minized mode 
     supportDelayedMessages: false,    // enable to add support for renderDelay in message nodes which will help to render messages with delay from UI       
     isFromFinastra: false,
+    isFromDeflect: true,
     pickersConfig: {
       showDatePickerIcon: false,           //set true to show datePicker icon
       showDateRangePickerIcon: false,      //set true to show dateRangePicker icon
@@ -59,7 +60,7 @@
     botOptions.botInfo.customData.tenantId = getCookie("tenantId");
     botOptions.botInfo.customData.uniqueUserId = getCookie("uniqueUserId");
 
-  } else {
+  } else if(!chatConfig.isFromDeflect) {
     botOptions.koreAPIUrl = "https://bankingassistant-qa.kore.ai/workbench/api";
     botOptions.brandingAPIUrl = botOptions.koreAPIUrl + '/workbench/sdkData?objectId=hamburgermenu&objectId=brandingwidgetdesktop';
     botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";

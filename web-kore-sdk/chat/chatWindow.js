@@ -1285,7 +1285,7 @@
                         //var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
                         if($('.quickReply') && $('.quickReply').length){
                             var _innerText = $(this).attr('value');
-			                // _innerText = toTitleCase(_innerText);
+			   // _innerText = toTitleCase(_innerText);
                         } else {
                             var _innerText = ($(this)[0] && $(this)[0].innerText) ? $(this)[0].innerText.trim():"" || ($(this) && $(this).attr('data-value'))?$(this).attr('data-value').trim():"";
                         }
@@ -1938,7 +1938,7 @@
                 }, 10000);
                 if (renderMsg && typeof renderMsg === 'string') {
                     msgData.message[0].cInfo.body = messageToBot["message"].body;
-		            // msgData.message[0].cInfo.body = renderMsg;
+		   // msgData.message[0].cInfo.body = renderMsg;
                 }
                 msgData.message[0].cInfo.ignoreCheckMark=ignoreCheckMark;
                 me.renderMessage(msgData);
@@ -2795,7 +2795,7 @@
                             <ul class="chat-container"></ul> \
                         </div> \
                         <div class="typingIndicatorContent"><div class="typingIndicator"></div><div class="movingDots"></div></div> \
-                        <div class="kore-chat-footer disableFooter">' + chatFooterTemplate + '{{if isSendButton}}<div class="sendBtnCnt"><button class="sendButton disabled" type="button">Send</button></div>{{/if}}</div> \
+                        <div class="kore-chat-footer disableFooter">' + chatFooterTemplate + '{{if isSendButton}}<div class="sendBtnCnt"><button class="sendButton disabled" type="button"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIxSURBVHgBrVVNVuJAEK7qEJ15bxY5QrgBR8AbMCcAlr7BIcAsJrowefPGuMGEAd8siSfwCOoJxBOYI7BUAt1Wg4kBAhLNt8jrdKq/r6rrJwCvMP5elgzH1SFnoCRloN4ggC43BIDPIbQ9sxVADmBMqJU5uRDfif2K1jUF1Me2MxjmERGLFjOcjrrHjZoKSjFPITRcV1Oe1Edaj7pm4yD68Nv5r4diZgFCVb5/9OpQPtpnAwMRXMF5/eLkp580+KwQRouOM7ih06XZJCx6Vmu8apgUIpGAjpLQ5Oo9IfamJGx6aOyLeppmeG4eBlGOUMAd2Vuy+trO5em2HGHypeP0PdpqzkAceObRLWzBrhEtCSwSvndPNx0kE55Z6HnSi64ZVw90zvoVQLwWAloXxw0PdsSaEOe2LBhMM44STsYjyAgi1+OpQE4WUq0Qx9JUCIGQEYiovanheE2g7fyrEXNFcKSeaPiwI4w//bJSQFmBUmBMVdbr0vnlJMeDD6Fr/ihmJC5HxNPnb55n1edJXoqAodqkGtdVYO+SpxDbSeIImPReDjdOHrjmkbGReGE33OTxKuII5NWQXrAPireJGEWBuher2zxOFZCJlaUlONTPTw6DjcS4O3GE+I8GHB6oaiprxBh73MtCHEfAeKGGjBLLlPloMCxXY/t7TTnMPuLxmsCiqQBCMS3RZKwicEM22WeJYwH+NfRpwDWJ8RplowPzqUxtOZ4hT/xy+mXDGmqQM14AUvxKH1svRBgAAAAASUVORK5CYII="></button></div>{{/if}}</div> \
                          <div id="myModal" class="modalImagePreview">\
                               <span class="closeImagePreview">&times;</span>\
                               <img class="modal-content-imagePreview" id="img01">\
@@ -3630,10 +3630,10 @@
                             // },1000);
                            
                         } else if(key == 'widgetBgImage' && response[key] == ""){
-                            $(".kore-chat-body").css("background-image", "url(" + response['widgetBgImage'] + ")");
-                            $(".kore-chat-body").css("background-repeat", "no-repeat");
-                            $(".kore-chat-body").css("background-position", "center");
-			            }
+				$(".kore-chat-body").css("background-image", "url(" + response['widgetBgImage'] + ")");
+				$(".kore-chat-body").css("background-repeat", "no-repeat");
+				$(".kore-chat-body").css("background-position", "center");
+			}
                     }
                     $(".kore-chat-window").addClass('customBranding-theme');
                 }
@@ -5106,11 +5106,11 @@
                 $.fn.uploader = old;
                 return this;
             };
-            function toTitleCase(str) {
-                return str.replace(/(?:^|\s)\w/g, function(match) {
-                    return match.toUpperCase();
-                });
-            }
+	    function toTitleCase(str) {
+		return str.replace(/(?:^|\s)\w/g, function(match) {
+			return match.toUpperCase();
+		});
+	    }
             /************************************************************************************************************************************************
             ********************************************** kore.ai framework file ******************************************************************************
             ************************************************************************************************************************************************/

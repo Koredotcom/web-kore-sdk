@@ -478,7 +478,8 @@
 .kore-chat-window .kore-action-sheet .datePickerContainer .headerCalendar .choose{
     font-size: 14px;
     font-weight: bold;
-    color: var(--sdk-chat-widow-widget-text-color);
+    color: #26344a;
+   /* color: var(--sdk-chat-widow-widget-text-color);*/
     padding-right: 25px;
     display: inline-block;
 }
@@ -666,7 +667,8 @@
 .kore-chat-window .kore-action-sheet .dateRangePickerContainer .headerCalendar .choose{
     font-size: 14px;
     font-weight: bold;
-    color: var(--sdk-chat-widow-primary-font-color);
+    color: #26344a;
+   /*color: var(--sdk-chat-widow-primary-font-color);*/
     padding-right: 25px;
     display: inline-block;
 }
@@ -869,7 +871,8 @@
     font-size:14px;
 }
 .datePickerContainer .selectedMain .selectedDate{
-    color: var(--sdk-chat-widow-widget-text-color);
+   /* color: var(--sdk-chat-widow-widget-text-color);*/
+   color: #000000;
 }
 .datePickerContainer .selectedIcon{
     width: 12px;
@@ -883,7 +886,3 @@
 }
     
 /*DateRangePicker CSS end*/
-    
-    
-    
-      

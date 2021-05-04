@@ -335,6 +335,8 @@ KorePickers.prototype.getTaskPickerContainer = function (actionsData) {
        <label class="taskHeading"> '+ actionsData.heading +' </label>\
     </div>'
 }
+
+
 /*TaskMenu Template end*/
 
 /*DateRangePicker start*/
