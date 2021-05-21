@@ -38,7 +38,6 @@
         }
 
         function assertion(options, callback) {
-            //console.log(options.botInfo.customData.tenantId);
             if (hashObj && hashObj.jwt) {
                 options.assertion = hashObj.jwt;
                 options.handleError = koreBot.showError;
