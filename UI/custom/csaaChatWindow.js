@@ -439,6 +439,7 @@
               if (!defaultChatConfig.automaticInputFocus) setTimeout(function () { $chatInputBox.blur(); });
               hideListTemplateItems(historyRes.messages);
               hideMessages(historyRes.messages, defaultChatConfig.hideMessages);
+              addAgentClassNames(historyRes.messages);
 
               if (!isChatWindowMinimized()) {
                 setChatIconVisibility(false);
@@ -805,6 +806,19 @@
 
           if (hideMessages.indexOf(msgBody) !== -1) {
             $('li#' + msgData.messageId).hide();
+          }
+        });
+      }
+
+      function addAgentClassNames (messages) {
+        messages.forEach(function (msgData) {
+          if (
+            msgData.message[0] &&
+            msgData.message[0].component &&
+            msgData.message[0].component.payload &&
+            msgData.message[0].component.payload.template_type == "live_person"
+          ) {
+            $('li#' + msgData.messageId + ' .user-account').addClass('live-agent');
           }
         });
       }
