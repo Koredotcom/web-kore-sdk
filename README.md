@@ -1,12 +1,18 @@
 ﻿# Kore.ai SDK
 Kore.ai offers Bots SDKs as a set of platform-specific client libraries that provide a quick and convenient way to integrate Kore.ai Bots chat capability into custom applications.
 
-With just few lines of code, you can embed our Kore.ai chat widget into your applications to enable end-users to interact with your applications using Natural Language. For more information, refer to 
+With just few lines of code, you can embed our Kore.ai chat widget into your applications to enable end-users to interact with your applications using Natural Language. For more information, refer to
+
 [Bot SDKs](https://developer.kore.ai/docs/bots/kore-web-sdk/)
+
 [Web SDK Tutorial](https://developer.kore.ai/docs/bots/sdks/kore-ai-web-sdk-tutorial/)
+
 [Web Socket Endpoints and Events](https://developer.kore.ai/docs/bots/sdks/bots-platform-api-reference/)
+
 [SDK Security](https://developer.kore.ai/docs/bots/sdks/user-authorization-and-assertion/)
+
 [SDK App Registration](https://developer.kore.ai/docs/bots/sdks/sdk-app-registration/)
+
 [Message Templates](https://developer.kore.ai/docs/bots/sdks/message-templates/)
 
 
