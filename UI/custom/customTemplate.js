@@ -2142,7 +2142,7 @@ print(JSON.stringify(message)); */
 			   }
 			var listValues = $(customTemplate.prototype.getChatTemplate("actionSheetTemplate")).tmpl({
 				'msgData': msgData,
-				'dataItems': msgData.message[0].component.payload.moreData.Tab1,
+				'dataItems':  msgData.message[0].component.payload.moreData[Object.keys(msgData.message[0].component.payload.moreData)[0]],
 				'tabs': Object.keys(msgData.message[0].component.payload.moreData),
 				'helpers': helpers
 			});
