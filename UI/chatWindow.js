@@ -2741,11 +2741,14 @@
             };
 
             chatWindow.prototype.openExternalLink = function (link_url) {
+                var me = this;
                 var a = document.createElement("a");
+                $(me.config.container).append(a);
                 a.href = link_url;
                 a.target = "_blank";
                 a.rel = "noopener noreferrer";//for tabnabbing security attack
                 a.click();
+                $(a).remove();
             };
 
             chatWindow.prototype.getChatTemplate = function (tempType) {
