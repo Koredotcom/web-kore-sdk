@@ -1693,7 +1693,7 @@
                 });
 
                 _chatContainer.off('click', '.reload-btn').on('click', '.reload-btn', function (event) {
-                    me.config.botOptions.forceReconnecting=true;
+                    me.config.botOptions.forceReconnecting=false;//make it to true if reconnect button should not trigger on connect message
                     $(this).addClass("disabled").prop('disabled', true);
                     $(".close-btn").addClass("disabled").prop('disabled', true);
                     setTimeout(function () {
