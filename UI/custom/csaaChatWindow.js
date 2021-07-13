@@ -616,6 +616,7 @@
         $chatContainer.on('click',
           '.listTmplContentChild .buyBtn',
           function (e) {
+            e.stopPropagation();
             var type = $(this).attr('type');
             if (type == 'list-postback' || type == 'list-text') {
               var value = $(this).attr('actual-value') || $(this).attr('value');
