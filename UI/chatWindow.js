@@ -2605,7 +2605,7 @@
                     }
                 }
                 _chatContainer.find('li').attr('aria-live','off');
-                _chatContainer.find('li').attr('aria-hidden','true');//for mac voiceover bug with aria-live
+                //_chatContainer.find('li').attr('aria-hidden','true');//for mac voiceover bug with aria-live
    
                 if(msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.sliderView && !msgData.message[0].component.payload.fromHistory){
                     bottomSliderAction('show',messageHtml);
@@ -2859,7 +2859,7 @@
                                      class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}}\ {{if msgData.icon}}with-icon{{/if}} {{if msgData.fromAgent}}from-agent{{/if}}"> \
                                     {{if msgData.createdOn}}<div aria-hidden="true" aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                                     {{if msgData.icon}}<div aria-hidden="true"  aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})" title="User Avatar"></div> </div> {{/if}} \
-                                    <div class="messageBubble">\
+                                    <div class="messageBubble" aria-live="assertive">\
                                         <div> \
                                             {{if msgData.type === "bot_response"}} \
                                                 {{if msgItem.component  && msgItem.component.type =="error"}} \
