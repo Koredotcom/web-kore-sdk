@@ -164,8 +164,8 @@
         }
 
         if (hashObj.koreAPIUrl) {
-            if(hashObj.koreAPIUrl === 'https://bots.kore.ai'){
-                hashObj.koreAPIUrl === 'https://bankassist.kore.ai';
+            if(hashObj.koreAPIUrl === 'https://bots.kore.ai/'){
+                hashObj.koreAPIUrl === 'https://bankassist.kore.ai/';
                 chatConfig.botOptions.koreAPIUrl = hashObj.koreAPIUrl + 'workbench/api/';
             } else {
                 chatConfig.botOptions.koreAPIUrl = hashObj.koreAPIUrl + 'workbench/api/';
