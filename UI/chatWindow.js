@@ -1294,7 +1294,7 @@
                             return;
                         }
                         if ($('.upldIndc').is(':visible')) {
-                            alert('Wait until file upload is not completed');
+                            alert('Uploading file, please wait...');
                             return;
                         }
                         if ($('.recordingMicrophone').is(':visible')) {
@@ -1322,7 +1322,7 @@
                 _chatContainer.off('click', '.sendButton').on('click', '.sendButton', function (event) {
                     var _this = $('.chatInputBox');
                     if ($('.upldIndc').is(':visible')) {
-                        alert('Wait until file upload is not completed');
+                        alert('Uploading file, please wait...');
                         return;
                     }
                     if ($('.recordingMicrophone').is(':visible')) {
@@ -1352,7 +1352,7 @@
                         return;
                     }
                     if ($('.upldIndc').is(':visible')) {
-                        alert('Wait until file upload is not completed');
+                        alert('Uploading file, please wait...');
                         return;
                     }
                     $('#captureAttachmnts').trigger('click');
