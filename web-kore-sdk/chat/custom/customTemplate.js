@@ -26,6 +26,7 @@
 				'helpers': this.helpers,
 				'extension': this.extension
 			});
+			this.bindEvents(messageHtml);
 		} else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "like_dislike") {
 			messageHtml = $(this.getChatTemplate("likeDislikeTemplate")).tmpl({
 				'msgData': msgData,
@@ -89,9 +90,8 @@
 				'extension': this.extension
 			});
 			this.templateEvents(messageHtml, 'listWidget');
-			 $(messageHtml).data(msgData);
-		}
-		 else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "quick_replies_welcome") {
+			$(messageHtml).data(msgData);
+		} else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "quick_replies_welcome") {
             messageHtml = $(this.getChatTemplate("quick_replies_welcome")).tmpl({
                 'msgData': msgData,
                 'helpers': this.helpers,
@@ -99,7 +99,7 @@
 			});
 			if(msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.meta && msgData.message[0].component.payload.meta.custSegId){
 				var botConfigDetails = this.cfg;
-                                  $.ajax({
+                $.ajax({
 					//url: this.cfg.botOptions.brandingAPIUrl,
 					url: this.cfg.botOptions.koreAPIUrl + '/workbench/sdkData?objectId=hamburgermenu&objectId=brandingwidgetdesktop',
 					headers: {
@@ -129,6 +129,17 @@
 				});
 			}
 			
+		} else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.template_type === "bankingFeedbackTemplate")) {
+			messageHtml = $(this.getChatTemplate("bankingFeedbackTemplate")).tmpl({
+				'msgData': msgData,
+				'helpers': this.helpers,
+				'extension': this.extension
+			});
+			this.bankingFeedbackTemplateEvents(messageHtml);
+			$(messageHtml).data(msgData);
+		}
+		else if (msgData && msgData.message[0] && msgData.message[0].cInfo && msgData.message[0].cInfo.body && this.toCheckBankingFeedbackTemplate(msgData)) {
+			return;
 		}
 	   return messageHtml;
 	
@@ -233,12 +244,13 @@
 			};
 			print(JSON.stringify(message)); 
 		*/
+		
 		var checkBoxesTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			{{if msgData.message}} \
-			<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+            <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
 					<div class = "listTmplContent"> \
-						{{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-						{{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+                        {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+						{{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
 						<ul class="{{if msgData.message[0].component.payload.fromHistory}} dummy listTmplContentBox  {{else}} listTmplContentBox{{/if}} "> \
 							{{if msgData.message[0].component.payload.title || msgData.message[0].component.payload.heading}} \
 								<li class="listTmplContentHeading"> \
@@ -250,21 +262,26 @@
 							{{/if}} \
 							{{each(key, msgItem) msgData.message[0].component.payload.elements}} \
 								{{if msgData.message[0].component.payload.buttons}} \
-									<li class="listTmplContentChild"> \
+									<li class="listTmplContentChild noMargin {{if key > 4}}hide{{/if}}"> \
 										<div class="checkbox checkbox-primary styledCSS checkboxesDiv"> \
 											<input  class = "checkInput" type="checkbox" text = "${msgItem.title}" value = "${msgItem.value}" id="${msgItem.value}${msgData.messageId}"> \
 											<label for="${msgItem.value}${msgData.messageId}">{{html helpers.convertMDtoHTML(msgItem.title, "bot")}}</label> \
 										</div> \
-									</li> \
-								{{/if}} \
-							{{/each}} \
-							<div class="{{if msgData.message[0].component.payload.fromHistory}} hide  {{else}} checkboxButtons {{/if}} "> \
-								{{each(key, buttonData) msgData.message[0].component.payload.buttons}} \
-									<div class="checkboxBtn" value=${buttonData.payload} title="${buttonData.title}"> \
-										${buttonData.title} \
-									</div> \
-								{{/each}} \
-							</div> \
+                                    </li> \
+                                {{/if}} \
+                            {{/each}} \
+                            {{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload &&  msgData.message[0].component.payload.elements && msgData.message[0].component.payload.elements.length > 5}}\
+                            <li class="listTmplContentChild listTmplContentChild_show_more"> \
+                                  <div classs="show-more">Show More</div>\
+                             </li> \
+                            {{/if}}\
+                            <div class="{{if msgData.message[0].component.payload.fromHistory}} hide  {{else}} checkboxButtons {{/if}} "> \
+                                {{each(key, buttonData) msgData.message[0].component.payload.buttons}} \
+                                    <div class="checkboxBtn" value=${buttonData.payload} title="${buttonData.title}"> \
+                                        ${buttonData.title} \
+                                    </div> \
+                                {{/each}} \
+                            </div> \
 						</ul> \
 					</div> \
 				</li> \
@@ -1369,6 +1386,67 @@ print(JSON.stringify(message)); */
 	</li>\
 	{{/if}} \
 	</script>';
+
+	var bankingFeedbackTemplate = '<script id="chat-window-listTemplate" type="text/x-jqury-tmpl">\
+	{{if msgData.message && msgData.message[0].component.payload}} \
+	<li {{if msgData.type !=="bot_response" }}id="msg_${msgItem.clientMessageId}" {{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+		<div class="{{if msgData.message[0].component.payload.fromHistory}} dummy bankingFeedBackTemplate messageBubble {{else}}bankingFeedBackTemplate messageBubble{{/if}}"> \
+				{{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>\
+				{{/if}} \
+				{{if msgData.icon}}\
+				<div aria-live="off" class="profile-photo">\
+					<div class="user-account avtar" style="background-image:url(${msgData.icon})"></div>\
+				</div> \
+				{{/if}} \
+				<div class="bankingFeedBackTemplate-experience-content">\
+					{{if msgData.message[0].component.payload}}<div class="content-heading"> ${msgData.message[0].component.payload.heading}</div>{{/if}}\
+					<div class="bankingFeedBackTemplate-content-experience">\
+						{{if msgData && msgData.message[0].component.payload.experienceContent}}\
+							{{each(key, experience) msgData.message[0].component.payload.experienceContent}}\
+								<div class="content-list-view">\
+									<input  class = "checkInput" type="radio" text = "${experience.value}" value = "${experience.value}" id="${experience.id}${msgData.messageId}" actionObj="${JSON.stringify(experience)}"> \
+									<label for="${experience.id}${msgData.messageId}" class="checkInput-label">${experience.value}</label> \
+								</div>\
+							{{/each}}\
+						{{/if}}\
+					</div>\
+				</div>\
+				{{if msgData && msgData.message[0].component.payload.experienceContent}}\
+					{{each(key, experience) msgData.message[0].component.payload.experienceContent}}\
+					    {{if experience && experience.empathyMessage && experience.empathyMessage.length}}\
+							<div class="empathy-message hide" id="${experience.id}${msgData.messageId}"> ${experience.empathyMessage}</div>\
+						{{/if}}\
+					{{/each}}\
+				{{/if}}\
+				{{if msgData &&  msgData.message[0] &&  msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.feedbackList}}\
+				<div class="bankingFeedBackTemplate-feedback-content hide">\
+							{{if msgData &&  msgData.message[0] &&  msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.feedbackListHeading}}<div class="feebackList-heading">${msgData.message[0].component.payload.feedbackListHeading}</div>{{/if}}\
+								{{if msgData &&  msgData.message[0] &&  msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.feedbackList && msgData.message[0].component.payload.feedbackList.length}}\
+								<div class="experience-feedback-listItems">\
+									{{each(keyval, list) msgData.message[0].component.payload.feedbackList}}\
+									<div class="feedback-listItem">\
+										<div class="checkbox checkbox-primary styledCSS checkboxesDiv"> \
+											<input  class = "checkInput" type="checkbox" text = "${list.value}" value = "${list.value}" id="${list.id}${msgData.messageId}" actionObj="${JSON.stringify(list)}" > \
+											<label for="${list.id}${msgData.messageId}">${list.value}</label> \
+										</div> \
+									</div>\
+									{{/each}}\
+								</div>\
+								{{/if}}\
+								<div class="suggestions-component"><textarea type="text" class="feedback-suggestionInput" rows="5" id="bankingSuggestionInput" placeholder="Tell us more.."></textarea></div>\
+								{{if msgData.message[0].component.payload.buttons && msgData.message[0].component.payload.buttons.length}}\
+									<div class="buttons-div">\
+										{{each(btnKey,button) msgData.message[0].component.payload.buttons}}\
+											<div class="{{if (button.btnType == "confirm") }}feedback-submit {{else (button.btnType == "cancel")}}feedback-cancel{{/if}}"><button type="button" class="{{if (button.btnType == "confirm") }}submitBtn {{else (button.btnType == "cancel")}}cancelBtn{{/if}}">${button.label}</button></div>\
+										{{/each}}\
+									</div>\
+								{{/if}}\
+					</div>\
+				{{/if}}\
+		</div>\
+	</li>\
+	{{/if}}\
+    </script>';
 	
 		if (tempType === "dropdown_template") {
 			return dropdownTemplate;
@@ -1392,7 +1470,11 @@ print(JSON.stringify(message)); */
             return quick_replies_welcome;
 		}else if(tempType === "listWidget"){
 			return listWidget;
+		} else if (tempType === "bankingFeedbackTemplate") {
+            return bankingFeedbackTemplate;
+        } 
 		} 
+        } 
 		else {
 			return "";
 		}
@@ -1412,6 +1494,18 @@ print(JSON.stringify(message)); */
     };
 
 	customTemplate.prototype.bindEvents = function (messageHtml) {
+		$(messageHtml).off('click', '.listTmplContentChild_show_more').on('click', '.listTmplContentChild_show_more', function (e) {
+           		 var _parentElement = e.currentTarget.parentElement;
+           		 var hiddenElementsArray = $(_parentElement).find('.hide');
+            		for (var i = 0; i < hiddenElementsArray.length; i++) {
+                		if ($(hiddenElementsArray[i]).hasClass('hide')) {
+                    			$(hiddenElementsArray[i]).removeClass('hide')
+               			 }
+           		 }
+           		 var currentTarget = e.currentTarget;
+           		 $(currentTarget).addClass('hide');
+	        });
+
 		chatInitialize=this.chatInitialize;
 		helpers=this.helpers;
 		$(messageHtml).find('.selectTemplateDropdowm').on('change', function (e) {
@@ -2035,6 +2129,117 @@ print(JSON.stringify(message)); */
 		   }
 		  };
 		   /* list widget template actions end here */
+
+		customTemplate.prototype.bankingFeedbackTemplateEvents = function(messageHtml){
+			var me = this;
+			var _chatContainer = me.chatInitialize.config.chatContainer;
+			_chatContainer.off('click', '.bankingFeedBackTemplate-experience-content [type*="radio"]').on('click', '.bankingFeedBackTemplate-experience-content [type*="radio"]', function (e) {
+				var currentTargetId = $(e.currentTarget).attr('id');
+				var msgData = $(messageHtml).data();
+				var experienceContentArray = $('.bankingFeedBackTemplate-content-experience').find('[type*="radio"]');
+				var empathyMessageArray = $('.bankingFeedBackTemplate').find('.empathy-message');
+				for (var i = 0; i < empathyMessageArray.length; i++) {
+					if (!$(empathyMessageArray[i]).hasClass('hide')) {
+						$(empathyMessageArray[i]).addClass('hide');
+					}
+				}
+				for (var i = 0; i < experienceContentArray.length; i++) {
+					if ((currentTargetId != $(experienceContentArray[i]).attr('id')) && ($(experienceContentArray[i]).prop('checked'))) {
+						$(experienceContentArray[i]).prop('checked', false);
+					} else if ((currentTargetId === $(experienceContentArray[i]).attr('id')) && ($(experienceContentArray[i]).prop('checked'))) {
+						if ($('.empathy-message#' + currentTargetId).hasClass('hide')) {
+							$('.empathy-message#' + currentTargetId).removeClass('hide')
+						}
+					}
+				}
+				if ($('.bankingFeedBackTemplate-feedback-content').hasClass('hide')) {
+					$('.bankingFeedBackTemplate-feedback-content').removeClass('hide');
+					// $('.empathy-message').removeClass('hide');
+				}
+			});
+			_chatContainer.off('click', '.bankingFeedBackTemplate-feedback-content .buttons-div .feedback-submit').on('click', '.bankingFeedBackTemplate-feedback-content .buttons-div .feedback-submit', function (e) {
+				var msgData = $(messageHtml).data();
+				if (msgData && msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.experienceContent) {
+					var contentArray = msgData.message[0].component.payload.experienceContent;
+					var payload = {};
+					payload.selectedFeedback = [];
+					var experienceContentArray = $('.bankingFeedBackTemplate-content-experience').find('[type*="radio"]');
+					for (var i = 0; i < experienceContentArray.length; i++) {
+						if ($(experienceContentArray[i]).prop('checked')) {
+							var selectedExperience = $(experienceContentArray[i]).attr('actionObj');
+							var parsedSelectedExperienceObj = JSON.parse(selectedExperience);
+							delete parsedSelectedExperienceObj.empathyMessage;
+							payload.selectedExperience = parsedSelectedExperienceObj;
+						}
+					}
+					var feedbackOptionsArray = $('.experience-feedback-listItems').find('[type*="checkbox"]');
+					for (var i = 0; i < feedbackOptionsArray.length; i++) {
+						if ($(feedbackOptionsArray[i]).prop('checked')) {
+							var actionObj = $(feedbackOptionsArray[i]).attr('actionObj');
+							var parsedActionObj = JSON.parse(actionObj);
+							payload.selectedFeedback.push(parsedActionObj);
+						}
+					}
+					var userSuggestion = $("#bankingSuggestionInput").val();
+					payload.userSuggestion = userSuggestion;
+					console.log(JSON.stringify(payload));
+					var displayMessage = msgData.message[0].component.payload.messageToDisplay;
+					$('.chatInputBox').text(JSON.stringify(payload));
+					$('.kore-chat-window .bankingFeedBackTemplate').addClass('disabled');
+					me.chatInitialize.sendMessage($('.chatInputBox'), displayMessage, msgData);
+				}
+			});
+			_chatContainer.off('click', '.bankingFeedBackTemplate-feedback-content .buttons-div .feedback-cancel').on('click', '.bankingFeedBackTemplate-feedback-content .buttons-div .feedback-cancel', function (e) {
+				var msgData = $(messageHtml).data();
+				if (msgData && msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.experienceContent) {
+					var contentArray = msgData.message[0].component.payload.experienceContent;
+					var payload = {};
+					payload.selectedFeedback = [];
+					var experienceContentArray = $('.bankingFeedBackTemplate-content-experience').find('[type*="radio"]');
+					for (var i = 0; i < experienceContentArray.length; i++) {
+						if ($(experienceContentArray[i]).prop('checked')) {
+							$(experienceContentArray[i]).prop('checked', false)
+							var selectedExperience = $(experienceContentArray[i]).attr('actionObj');
+							var parsedSelectedExperienceObj = JSON.parse(selectedExperience);
+							delete parsedSelectedExperienceObj.empathyMessage;
+							payload.selectedExperience = parsedSelectedExperienceObj;
+						}
+					}
+					var feedbackOptionsArray = $('.experience-feedback-listItems').find('[type*="checkbox"]');
+					for (var i = 0; i < feedbackOptionsArray.length; i++) {
+						if ($(feedbackOptionsArray[i]).prop('checked')) {
+							$(feedbackOptionsArray[i]).prop('checked', false);
+							var actionObj = $(feedbackOptionsArray[i]).attr('actionObj');
+							var parsedActionObj = JSON.parse(actionObj);
+							payload.selectedFeedback.push(parsedActionObj);
+						}
+					}
+					var userSuggestion = $("#bankingSuggestionInput").val("");
+					var userSuggestion = $("#bankingSuggestionInput").val();
+					payload.userSuggestion = userSuggestion;
+					console.log(JSON.stringify(payload));
+					var displayMessage = msgData.message[0].component.payload.messageToDisplay;
+					$('.chatInputBox').text('Cancel');
+					$('.kore-chat-window .bankingFeedBackTemplate').addClass('disabled');
+					me.chatInitialize.sendMessage($('.chatInputBox'), 'Cancel', msgData);
+				}
+			});
+		};
+
+		customTemplate.prototype.toCheckBankingFeedbackTemplate = function(msgData){
+			if(msgData && msgData.message[0] && msgData.message[0].cInfo && msgData.message[0].cInfo.body ) {
+				if(typeof msgData.message[0].cInfo.body === 'string') {
+					try {
+						if(JSON.parse(msgData.message[0].cInfo.body) && JSON.parse(msgData.message[0].cInfo.body).hasOwnProperty('userSuggestion')) {
+							return true;
+						}
+					} catch(e) {
+						return false
+					}
+				} 
+			} 
+			return false;
+		}
 
 	    window.customTemplate=customTemplate;	
 

@@ -1026,6 +1026,16 @@
 }
 /* --TABBLE LIST ENDS HERE--*/
 
+ .kore-chat-window .kore-chat-body .listTmplContent .listTmplContentBox .listTmplContentChild.hide{
+    display: none !important;
+}
+.kore-chat-window .kore-chat-body .listTmplContent .listTmplContentBox .listTmplContentChild_show_more{
+    text-align: center;
+    border-top: 1px solid var(--sdk-chat-window-checkbox-border);
+    padding: 10px;
+    background-color: #ffffff;
+    cursor: pointer;
+}
 
  
  /* remove inline-block whitespace */
@@ -2044,3 +2054,164 @@
     float: right;
 }
 /*-- Tabbedlist -ended   ---*/
+
+
+/* --- Banking feedback template css starts here -- */
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-experience-content .content-heading{
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 19px;
+    margin: 16px 0;
+}
+.kore-chat-window .bankingFeedBackTemplate{
+    border-radius: 0px 10px 10px 10px;
+    width: 100%;
+    padding: 10px !important;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-experience-content{
+    border-radius: 0px 10px 10px 10px;
+    width: 80%;
+    padding: 0px !important;
+    cursor: pointer;
+}
+.kore-chat-window .bankingFeedBackTemplate .empathy-message{
+    border-top: 1px solid #BDC1C6;
+    border-bottom: 1px solid #BDC1C6;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+.kore-chat-window .bankingFeedBackTemplate.disabled{
+    pointer-events: none !important;
+    opacity: 0.5 !important;
+
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-experience-content .bankingFeedBackTemplate-content-experience{
+    background: #FFFFFF;
+    border-radius: 7px;
+    padding: 5px 0px;
+    margin-bottom: 20px; /*need to add based on conditional */
+    margin-top: 0;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-experience-content .bankingFeedBackTemplate-content-experience .checkInput{
+    position: relative !important;
+    opacity: 1 !important;
+    /* z-index: 1; */
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+    margin-top: 0;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-experience-content .bankingFeedBackTemplate-content-experience .content-list-view{
+    align-items: center;
+    padding: 10px 10px 10px 14px;
+    height: 40px;
+    left: 0px;
+    top: 5px;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-experience-content .bankingFeedBackTemplate-content-experience .checkInput-label{
+    position: absolute !important;
+    margin-left: 6px;
+    cursor: pointer;
+    font-weight: normal;
+
+}
+
+
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .feebackList-heading{
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 19px;
+    margin: 16px 0;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content{
+    border-radius: 0px 10px 10px 10px;
+    width: 100%;
+    padding: 0px !important;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .experience-feedback-listItems{
+    background: #FFFFFF;
+    border-radius: 7px;
+    padding: 5px 0px;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .experience-feedback-listItems .checkInput{
+    /* position: relative !important;
+    opacity: 1 !important;
+    /* z-index: 1; */
+    /* height: 20px;
+    width: 20px; */ 
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .experience-feedback-listItems .feedback-listItem{
+    align-items: center;
+    padding: 5px 10px 5px 14px;
+    left: 0px;
+    top: 5px;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .experience-feedback-listItems .feedback-listItem .checkbox{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .experience-feedback-listItems .checkInput-label{
+    position: absolute !important;
+    margin-left: 4px;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .suggestions-component .feedback-suggestionInput{
+    width: 100%;
+    background: #FFFFFF;
+    border: 1px solid #BDC1C6;
+    box-sizing: border-box;
+    border-radius: 8px;
+    margin: 10px 0px;
+    resize: none !important;
+    padding: 10px 10px;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .buttons-div{
+    display: flex;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .buttons-div .feedback-submit .submitBtn{
+    font-size: 14px;
+    color: #fff;
+    background: #009dab;
+    height: 34px;
+    padding: 0px 20px !important;
+    width: auto;
+    border-radius: 3px;
+    border: 1px solid #009dab;
+    margin-left: 0;
+    outline: 0;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .buttons-div .feedback-submit .submitBtn:hover{
+    background: #018490;
+    border: 1px solid #018490;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .buttons-div .feedback-cancel .cancelBtn{
+    font-size: 14px;
+    color: #fff;
+    height: 34px;
+    padding: 0px 20px !important;
+    width: auto;
+    border-radius: 3px;
+    outline: 0;
+    background: #FFFFFF;
+    color: #202124;
+    border: 1px solid #BDC1C6;
+    box-sizing: border-box;
+    margin-left: 10px;
+    cursor: pointer;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content.hide{
+    display: none !important;
+}
+
+.kore-chat-window .bankingFeedBackTemplate .feedback-listItem .checkbox.styledCSS input[type="checkbox"]:checked + label::after {
+    background-size: 10px 20px;
+    display: inline-block;
+    background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjxzdmcgd2lkdGg9IjE2cHgiIGhlaWdodD0iMTJweCIgdmlld0JveD0iMCAwIDE2IDEyIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPg0KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNTMuMiAoNzI2NDMpIC0gaHR0cHM6Ly9za2V0Y2hhcHAuY29tIC0tPg0KICAgIDx0aXRsZT5jaGVjay13aGl0ZTwvdGl0bGU+DQogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+DQogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+DQogICAgICAgIDxnIGlkPSJjaGVjay13aGl0ZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsIC0yLjAwMDAwMCkiIGZpbGwtcnVsZT0ibm9uemVybyI+DQogICAgICAgICAgICA8cG9seWdvbiBpZD0iUGF0aCIgZmlsbC1vcGFjaXR5PSIwIiBmaWxsPSIjRDhEOEQ4IiBwb2ludHM9IjAgMCAxNiAwIDE2IDE2IDAgMTYiPjwvcG9seWdvbj4NCiAgICAgICAgICAgIDxwYXRoIGQ9Ik0xNC4yLDIuODM1IEMxNC40LDIuNjIgMTQuNzMzLDIuNjEgMTQuOTQ1LDIuODExIEMxNS4xNDUsMyAxNS4xNjUsMy4zMDkgMTUuMDAyLDMuNTIzIEwxNC45NjksMy41NjMgTDYuMDQ5LDEzLjE2NSBDNS44NTksMTMuMzcgNS41NDUsMTMuMzg5IDUuMzMzLDEzLjIxNSBMNS4yOTUsMTMuMTggTDEuMDQ1LDguOTUzIEMwLjg0LDguNzQ3IDAuODM3LDguNDEgMS4wNCw4LjIgQzEuMjMzLDguMDAzIDEuNTQsNy45ODkgMS43NDgsOC4xNiBMMS43ODUsOC4xOTQgTDUuNjUsMTIuMDQgTDE0LjIsMi44MzUgWiIgaWQ9IlBhdGgiIGZpbGw9IiNGRkZGRkYiPjwvcGF0aD4NCiAgICAgICAgPC9nPg0KICAgIDwvZz4NCjwvc3ZnPg==);
+    width: 10px;
+    height: 20px;
+    content: "";
+    background-repeat: no-repeat;
+    left: 3px;
+    top: -2px;
+}
+
+/* --- Banking feedback template css Ends here -- */
