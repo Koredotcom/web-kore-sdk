@@ -4940,8 +4940,10 @@
                 var blob = file.slice(start, stop);
                 reader.onloadend = function (evt) {
                     if (evt.target.readyState === FileReader.DONE && _scope.$element.parent().length) { // DONE == 2
-                        _scope.chunk = evt.target.result;
-                        _scope.chunk = _scope.chunk.replace(/data:;base64,/, '');
+                        var dataObj =  evt.target.result;
+                        dataObj = dataObj.replace(/^.*;base64,/, "");
+                        dataObj = dataObj.replace('data:application/octet-stream;base64,', '');
+                        _scope.chunk = dataObj;
                         if (_scope.currChunk < _scope.totalChunks && _scope.$element.parent().length) {
                             uploadChunk(_scope);
                         }
