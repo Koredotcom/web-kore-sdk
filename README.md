@@ -306,6 +306,9 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 ```
 
 ###Release History:
+V9.0.0 [Minor] on 14-Aug-2021: Master branch
+    1.Bug fixes
+
 V8.1.0 [Minor] on 20-Feb-2021: Master branch
     1.Bug fixes.
     2.Added listWidget, tableList template.
