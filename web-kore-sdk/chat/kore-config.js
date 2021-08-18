@@ -12,6 +12,16 @@
   botOptions.koreAnonymousFn = koreAnonymousFn;
   botOptions.recorderWorkerPath = '../libs/recorderWorker.js';
 
+
+  botOptions.koreAPIUrl = "PLEASE_ENTER_KORE_API_URL";
+  botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
+  botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID'; // Provide users email id here
+  botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID",customData:{"rtmType":"web"} }; // bot name is case sensitive
+  botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
+  botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+  botOptions.accountId = "PLEASE_ENTER_ACCOUNT_ID"
+  botOptions.brandingAPIUrl = botOptions.koreAPIUrl + '/workbench/sdkData?objectId=hamburgermenu&objectId=brandingwidgetdesktop';
+
   // To modify the web socket url use the following option
   // botOptions.reWriteSocketURL = {
   //     protocol: 'PROTOCOL_TO_BE_REWRITTEN',
@@ -35,8 +45,6 @@
     googleMapsAPIKey: "",
     minimizeMode: false,             // set true, to show chatwindow in minized mode 
     supportDelayedMessages: false,    // enable to add support for renderDelay in message nodes which will help to render messages with delay from UI       
-    isFromFinastra: false,
-    isFromDeflect: true,
     pickersConfig: {
       showDatePickerIcon: false,           //set true to show datePicker icon
       showDateRangePickerIcon: false,      //set true to show dateRangePicker icon
@@ -45,47 +53,6 @@
       showradioOptionMenuPickerIcon: false //set true to show Radio Option Template icon
     }
   };
-
-  
-
-  if(chatConfig.isFromFinastra){
-    botOptions.JWTUrl = "https://staging-bankassist.korebots.com/finastra-wrapper/token";
-    botOptions.brandingAPIUrl = "";
-    botOptions.userIdentity = '';// Provide users email id here
-    botOptions.botInfo = { name: "Banking Assist", "_id": "",customData:{"rtmType":"web"}}; // bot name is case sensitive
-    botOptions.accountId = "5fad6c9a694b34300513832e";  
-
-    botOptions.botInfo.customData.accessToken = getCookie("accessToken");
-    botOptions.botInfo.customData.source = getCookie("source");
-    botOptions.botInfo.customData.tenantId = getCookie("tenantId");
-    botOptions.botInfo.customData.uniqueUserId = getCookie("uniqueUserId");
-
-  } else if(!chatConfig.isFromDeflect) {
-    botOptions.koreAPIUrl = "https://bankingassistant-qa.kore.ai/workbench/api";
-    botOptions.brandingAPIUrl = botOptions.koreAPIUrl + '/workbench/sdkData?objectId=hamburgermenu&objectId=brandingwidgetdesktop';
-    botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
-    botOptions.userIdentity = '';// Provide users email id here
-    botOptions.botInfo = { name: "Bank Assist Dev", "_id": "st-beed09f6-1b54-508d-8c6c-9eab34d85466",customData:{"rtmType":"web"}}; // bot name is case sensitive
-    botOptions.clientId = "cs-de823b51-faed-503d-bc37-017d2abeac41";
-    botOptions.clientSecret = "JSAgeh/lUsvurI2oDVmh9/UqyHMHJZ3NLCW8N8XChAQ=";
-    botOptions.accountId = "60238b260d183d1a288c7647"
- }
-
-  function getCookie(cname) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-      var c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return "";
-  }
 
   /* 
   allowGoogleSpeech will use Google cloud service api.

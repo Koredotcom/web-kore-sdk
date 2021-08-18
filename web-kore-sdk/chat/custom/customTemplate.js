@@ -1473,8 +1473,6 @@ print(JSON.stringify(message)); */
 		} else if (tempType === "bankingFeedbackTemplate") {
             return bankingFeedbackTemplate;
         } 
-		} 
-        } 
 		else {
 			return "";
 		}

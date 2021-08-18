@@ -1537,10 +1537,10 @@
                     setTimeout(function(){
                         if(customData && customData.isReconnect){
                             me.resetWindow(true);
-                            me.defaultWelcomeMsg();
+                            // me.defaultWelcomeMsg();
                         }else{
                             me.resetWindow();
-                            me.defaultWelcomeMsg();
+                            // me.defaultWelcomeMsg();
                         }
                     });
                     $('.recordingMicrophone').trigger('click');
@@ -1596,7 +1596,7 @@
                         });
                     }
                     if(!me.config.botOptions._reconnecting){
-                        me.defaultWelcomeMsg();
+                        // me.defaultWelcomeMsg();
                     }
                 });
 
