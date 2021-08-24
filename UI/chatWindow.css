@@ -525,7 +525,7 @@
 
 .kore-chat-window ul.chat-container li .messageBubble p.indent {
     padding-left: 10px;
-    border-left: 6px solid #DDD;
+    /* border-left: 6px solid #DDD; */
 }
 
 .kore-chat-window ul.chat-container li .messageBubble pre {
