@@ -374,6 +374,9 @@ KorePickers.prototype.getTaskPickerContainer = function () {
 
 /*DateRangePicker start*/
 KorePickers.prototype.showDateRangePicker = function (mainConfig) {
+    if(mainConfig && mainConfig.length && mainConfig[0] && mainConfig[0].chatConfig && mainConfig[0].chatConfig.chatContainer){
+    _korePickers= mainConfig[0].chatConfig.chatContainer;
+    }
     if (_korePickers.find(".kore-action-sheet").length) {
         _korePickers.find(".kore-action-sheet .dateRangePickerContainer").remove();
         _korePickers.find(".kore-action-sheet").remove();
@@ -397,6 +400,9 @@ KorePickers.prototype.showDateRangePicker = function (mainConfig) {
     this.addDateRangeListener(mainConfig);
 }
 KorePickers.prototype.addDateRangeListener = function (mainConfig) {
+    if(mainConfig && mainConfig.length && mainConfig[0] && mainConfig[0].chatConfig && mainConfig[0].chatConfig.chatContainer){
+        _korePickers= mainConfig[0].chatConfig.chatContainer;
+        }
     var _self = this;
     var startdateValue;
     var enddateValue;
@@ -449,6 +455,9 @@ KorePickers.prototype.addDateRangeListener = function (mainConfig) {
     })
 }
 KorePickers.prototype.addClickEventRangeCalender = function (mainConfig) {
+    if(mainConfig && mainConfig.length && mainConfig[0] && mainConfig[0].chatConfig && mainConfig[0].chatConfig.chatContainer){
+        _korePickers= mainConfig[0].chatConfig.chatContainer;
+        }
     var _self = this;  
     _korePickers.find('.kore-action-sheet .datePickerContainer').addClass("hide");
     _korePickers.find(".kore-action-sheet .clockPickerContainer").addClass("hide");
@@ -523,6 +532,9 @@ KorePickers.prototype.getdateRangePickerContainer = function () {
 
 /*DatePicker start*/  
 KorePickers.prototype.showDatePicker = function (mainConfig) {
+    if(mainConfig && mainConfig.length && mainConfig[0] && mainConfig[0].chatConfig && mainConfig[0].chatConfig.chatContainer){
+        _korePickers= mainConfig[0].chatConfig.chatContainer;
+        }
     if (_korePickers.find(".kore-action-sheet").length) {
         _korePickers.find(".kore-action-sheet  .datePickerContainer").remove();
         _korePickers.find(".kore-action-sheet").remove();
@@ -548,6 +560,9 @@ KorePickers.prototype.showDatePicker = function (mainConfig) {
     this.addDateListener(mainConfig);
 }
 KorePickers.prototype.addDateListener = function (mainConfig) {
+    if(mainConfig && mainConfig.length && mainConfig[0] && mainConfig[0].chatConfig && mainConfig[0].chatConfig.chatContainer){
+        _korePickers= mainConfig[0].chatConfig.chatContainer;
+        }
     var _self = this;
     this.addClickEventCalender(mainConfig);
     var startdateValue;
@@ -583,6 +598,9 @@ KorePickers.prototype.addDateListener = function (mainConfig) {
     })
 }
 KorePickers.prototype.addClickEventCalender = function (mainConfig) {
+    if(mainConfig && mainConfig.length && mainConfig[0] && mainConfig[0].chatConfig && mainConfig[0].chatConfig.chatContainer){
+        _korePickers= mainConfig[0].chatConfig.chatContainer;
+        }
     var _self = this;
     _korePickers.find(".kore-action-sheet .dateRangePickerContainer").addClass("hide");
     _korePickers.find(".kore-action-sheet .clockPickerContainer").addClass("hide");
@@ -655,6 +673,9 @@ KorePickers.prototype.getdatePickerContainer = function () {
  
 /*ClockPicker start*/ 
 KorePickers.prototype.showClockPicker = function (mainConfig,e) {
+    if(mainConfig && mainConfig.length && mainConfig[0] && mainConfig[0].chatConfig && mainConfig[0].chatConfig.chatContainer){
+        _korePickers= mainConfig[0].chatConfig.chatContainer;
+        }
     if (_korePickers.find(".kore-action-sheet").length) {
         _korePickers.find(".clockPickerContainer").remove();
         _korePickers.find(".kore-action-sheet").remove();
@@ -692,6 +713,9 @@ KorePickers.prototype.showClockPicker = function (mainConfig,e) {
     this.addClockListener(mainConfig);
 }
 KorePickers.prototype.addClickEventClock = function (mainConfig) {
+    if(mainConfig && mainConfig.length && mainConfig[0] && mainConfig[0].chatConfig && mainConfig[0].chatConfig.chatContainer){
+        _korePickers= mainConfig[0].chatConfig.chatContainer;
+        }
     var clockInput = this.input;
     var showAmorPm =  _korePickers.find('#clockPickerInput').data('clockpicker');
     showAmorPm.amOrPm = "AM";
@@ -733,6 +757,9 @@ KorePickers.prototype.addClickEventClock = function (mainConfig) {
     }, 0);
 }
 KorePickers.prototype.addClockListener = function (mainConfig) {
+    if(mainConfig && mainConfig.length && mainConfig[0] && mainConfig[0].chatConfig && mainConfig[0].chatConfig.chatContainer){
+        _korePickers= mainConfig[0].chatConfig.chatContainer;
+        }
     this.addClickEventClock(mainConfig);
     _korePickers.find(".btn.btn-sm.btn-default.clockpicker-button.am-button").click(function () {
         _korePickers.find(".btn.btn-sm.btn-default.clockpicker-button.pm-button").css({ "opacity": "0.4" });
