@@ -1815,6 +1815,49 @@
                             }
                             if (tempData.message[0].component && tempData.message[0].component.payload && tempData.message[0].component.payload.text) {
                                 tempData.message[0].cInfo.body = tempData.message[0].component.payload.text;
+                                if(chatContainerConfig && chatContainerConfig.pickerMainConfig){
+                                    var pickerConfig =  {};
+                                    pickerConfig= chatContainerConfig.pickerMainConfig;
+                                    if (tempData.message[0].component.payload.template_type == "daterange") {
+                                        tempData.message[0].cInfo.body = tempData.message[0].component.payload.text_message;
+                                        pickerConfig[1].dateRangeConfig.format = tempData.message[0].component.payload.format;
+                                        pickerConfig[1].dateRangeConfig.startDate = tempData.message[0].component.payload.startDate;
+                                        pickerConfig[1].dateRangeConfig.endDate = tempData.message[0].component.payload.endDate;
+                                        if (tempData.message[0].component.payload.title) {
+                                            pickerConfig[1].daterangepicker.title = tempData.message[0].component.payload.title;
+                                        }
+                                        // $('.typingIndicatorContent').css('display', 'block');
+                                        KorePickers.prototype.showDateRangePicker(pickerConfig);
+                                        // $('.typingIndicatorContent').css('display', 'none');
+                                    }
+                                    console.log(JSON.stringify(tempData.message))
+                                    if (tempData.message[0].component.payload.template_type == "dateTemplate") {
+                                        tempData.message[0].cInfo.body = tempData.message[0].component.payload.text_message;
+                                        pickerConfig[1].dateConfig.format = tempData.message[0].component.payload.format;
+                                        pickerConfig[1].dateConfig.startDate = tempData.message[0].component.payload.startDate;
+                                        pickerConfig[1].dateConfig.showdueDate = tempData.message[0].component.payload.showdueDate;
+                                        pickerConfig[1].dateConfig.endDate = tempData.message[0].component.payload.endDate;
+                                        // pickerConfig.dateConfig.selectedDate="Selected Date";
+                                        // pickerConfig.dateConfig.selectedDate=tempData.message[0].component.payload.selectedDate;
+                                        // if(tempData.message[0].component.payload.showdueDate){
+
+                                        //     pickerConfig.dateConfig.paymentDue="Payment Due Date";
+
+                                        //     pickerConfig.dateConfig.paymentDue=tempData.message[0].component.payload.paymentDue;
+                                        // }
+
+                                        if (tempData.message[0].component.payload.title) {
+                                            pickerConfig[1].datepicker.title = tempData.message[0].component.payload.title;
+                                        }
+
+                                        // $('.typingIndicatorContent').css('display', 'block');
+                                        KorePickers.prototype.showDatePicker(pickerConfig);
+                                        // $('.typingIndicatorContent').css('display', 'none');
+                                    }
+                                    if (tempData.message[0].cInfo.body.indexOf('clockPicker') > -1) {
+                                        KorePickers.prototype.showClockPicker(pickerConfig);
+                                    }
+                                }
                             }
                             if(tempData.message[0].component && tempData.message[0].component.payload && (tempData.message[0].component.payload.videoUrl || tempData.message[0].component.payload.audioUrl)){
                                 tempData.message[0].cInfo.body = tempData.message[0].component.payload.text || "";
