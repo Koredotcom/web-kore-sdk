@@ -739,6 +739,7 @@
                     delete cfg.chatContainer;
                 }
                 this.config = extend(this.config, cfg);
+                this.reWriteWebHookURL(this.config)
                 window._chatHistoryLoaded = false;
                 this.init();
                 updateOnlineStatus();
@@ -746,6 +747,14 @@
                 window.addEventListener('online', updateOnlineStatus);
                 window.addEventListener('offline', updateOnlineStatus);
                 attachEventListener();
+            }
+            //converts v1 webhooks url to v2 automatically
+            chatWindow.prototype.reWriteWebHookURL = function (chatConfig) {
+                if (chatConfig.botOptions && chatConfig.botOptions.webhookConfig && chatConfig.botOptions.webhookConfig.apiVersion && chatConfig.botOptions.webhookConfig.apiVersion === 2) {
+                    if (chatConfig.botOptions && chatConfig.botOptions.webhookConfig && chatConfig.botOptions.webhookConfig.webhookURL) {
+                        chatConfig.botOptions.webhookConfig.webhookURL = chatConfig.botOptions.webhookConfig.webhookURL.replace('hooks', 'v2/webhook');
+                    }
+                }
             }
             // iframe of child window events //
             function attachEventListener(){
@@ -1789,22 +1798,38 @@
                 me.makeDroppable(element, callback);
                 me.bindSDKEvents()
             };
+            
+            chatWindow.prototype.getBotMetaData = function () {
+                var me = this;
+                me.bot.getBotMetaData(function(res){
+                    me.sendWebhookOnConnectEvent();
+                },function(errRes){
+                    me.sendWebhookOnConnectEvent();
+                });
+            };
+            chatWindow.prototype.sendWebhookOnConnectEvent = function () {
+                var me = this;
+                me.sendMessageViaWebHook({
+                    "type": "event",
+                    "val": "ON_CONNECT",
+                }, function (msgsData) {
+                    me.onBotReady();
+                    me.handleWebHookResponse(msgsData);
+                }, function () {
+                    me.onBotReady();
+                    console.log("Kore:error sending on connect event")
+                }, {
+                    session: {
+                        "new": true
+                    }
+                });
+            }
+
             chatWindow.prototype.bindSDKEvents = function (){
                 //hook to add custom events
                 var me=this;
                 me.bot.on("open", function (response) {
-                    var _chatContainer=me.config.chatContainer;
-                    //actual implementation starts here
-                    me.accessToken = me.config.botOptions.accessToken;
-                    var _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
-                    _chatContainer.find('.kore-chat-header .header-title').html(me.config.chatTitle).attr('title', me.config.chatTitle);
-                    _chatContainer.find('.kore-chat-header .disabled').prop('disabled', false).removeClass("disabled");
-                    if (!me.loadHistory) {
-                        setTimeout(function () {
-                            $('.chatInputBox').focus();
-                            $('.disableFooter').removeClass('disableFooter');
-                        });
-                    }
+                    me.onBotReady();
                 });
 
                 me.bot.on("message", function (message) {
@@ -1922,6 +1947,16 @@
                         }, 2000);
                     }
                 });
+                
+                me.bot.on("webhook_ready", function (response) {
+                    if (!me.config.loadHistory) {
+                        me.getBotMetaData();
+                    }
+                });
+
+                me.bot.on("webhook_reconnected", function (response) {
+                    me.onBotReady();
+                });
             };
             chatWindow.prototype.bindCustomEvents = function (){
                 //hook to add custom events
@@ -1930,6 +1965,23 @@
                 //add additional events or override events in this method
                 //e.stopImmediatePropagation(); would be useful to override
             };
+            chatWindow.prototype.onBotReady = function (){
+                //hook to add custom events
+                var me=this;
+
+                var _chatContainer=me.config.chatContainer;
+                //actual implementation starts here
+                me.accessToken = me.config.botOptions.accessToken;
+                var _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
+                _chatContainer.find('.kore-chat-header .header-title').html(me.config.chatTitle).attr('title', me.config.chatTitle);
+                _chatContainer.find('.kore-chat-header .disabled').prop('disabled', false).removeClass("disabled");
+                if (!me.loadHistory) {
+                    setTimeout(function () {
+                        $('.chatInputBox').focus();
+                        $('.disableFooter').removeClass('disableFooter');
+                    });
+                }
+            }
             chatWindow.prototype.bindIframeEvents = function (authPopup) {
                 var me = this;
                 authPopup.on('click', '.close-popup', function () {
@@ -2034,14 +2086,29 @@
                 if(msgObject && (msgObject.nlmeta || msgObject.nlMeta)){
                     messageToBot["message"].nlMeta= msgObject.nlmeta || msgObject.nlMeta;
                 }
+                if(me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable){
+                    me.sendMessageViaWebHook(
+                        chatInput.text(),
+                        function (msgsData) {
+                            me.handleWebHookResponse(msgsData);
+                        }, function (err) {
+                            setTimeout(function () {
+                                $('.typingIndicatorContent').css('display', 'none');
+                                $('.kore-chat-window [data-time="' + clientMessageId + '"]').find('.messageBubble').append('<div class="errorMsg">Send Failed. Please resend.</div>');
+                            }, 350);
+                        },
+                        me.attachmentInfo?{attachments:[me.attachmentInfo]}:null
+                        );
+                }else{
+                    me.bot.sendMessage(messageToBot, function messageSent(err) {
+                        if (err && err.message) {
+                            setTimeout(function () {
+                                $('.kore-chat-window [data-time="'+clientMessageId+'"]').find('.messageBubble').append('<div class="errorMsg">Send Failed. Please resend.</div>');
+                            }, 350);
+                        }
+                    });    
+                }
                 me.attachmentInfo = {};
-                me.bot.sendMessage(messageToBot, function messageSent(err) {
-                    if (err && err.message) {
-                        setTimeout(function () {
-                            $('.kore-chat-window [data-time="'+clientMessageId+'"]').find('.messageBubble').append('<div class="errorMsg">Send Failed. Please resend.</div>');
-                        }, 350);
-                    }
-                });
                 chatInput.html("");
                 $('.sendButton').addClass('disabled');
                 _bodyContainer.css('bottom', _footerContainer.outerHeight());
@@ -2059,7 +2126,68 @@
                 msgData.message[0].cInfo.ignoreCheckMark=ignoreCheckMark;
                 me.renderMessage(msgData);
             };
-                       
+                 
+            chatWindow.prototype.handleWebHookResponse = function (msgsData) {
+                var SUBSEQUENT_RENDER_DELAY = 500;
+                if (msgsData && msgsData.length) {
+                    msgsData.forEach(function (msgData, index) {
+                        setTimeout(function () {
+                            chatInitialize.renderMessage(msgData);
+                        }, (index >= 1) ? SUBSEQUENT_RENDER_DELAY : 0);
+                    });
+                }
+            }
+
+            chatWindow.prototype.sendMessageViaWebHook= function(message,successCb,failureCB,options){
+                var me=this;
+                if(me.config.botOptions.webhookConfig.webhookURL){
+                    var payload = {
+                        "session": {
+                            "new": false
+                        },
+                        "message": {
+                            "text": message
+                        },
+                        "from": {
+                            "id": me.config.botOptions.userIdentity,
+                            "userInfo": {
+                                "firstName": "",
+                                "lastName": "",
+                                "email": ""
+                            }
+                        },
+                        "to": {
+                            "id": "Kore.ai",
+                            "groupInfo": {
+                                "id": "",
+                                "name": ""
+                            }
+                        }
+                    }
+
+                    if(me.config.botOptions.webhookConfig.apiVersion && me.config.botOptions.webhookConfig.apiVersion===2){
+                        payload.message={
+                            "type": "text",
+                            "val": message
+                          }
+                    }
+                    if(typeof message==='object'){
+                        payload.message=message;
+                    }
+                    if(options && options.session){
+                        payload.session=options.session;
+                    }
+                    if(options && options.attachments){
+                        payload.message.attachments=options.attachments;
+                    }
+
+                    me.bot.sendMessageViaWebhook(payload,successCb,failureCB);
+                }else{
+                    console.error("KORE:Please provide webhookURL in webhookConfig")
+                }
+            };
+            
+
             chatWindow.prototype.closeConversationSession = function () {
                 var me = this;
                 var clientMessageId = new Date().getTime();
@@ -3467,7 +3595,19 @@
                 return chatWindowTemplate;
             }
             };
-            
+
+            chatWindow.prototype.historyLoadingComplete = function () {
+                var me=this;
+                setTimeout(function(me){
+                    $('.chatInputBox').focus();
+                    $('.disableFooter').removeClass('disableFooter');
+                    me.historyLoading = false;
+                    if(me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable){
+                        me.getBotMetaData();
+                    }
+                },0,me);
+            }
+
             chatWindow.prototype.chatHistory = function (res) {
                 var me = this;
                 if(res[2]==='historysync'){
@@ -3551,19 +3691,11 @@
                                                 me.renderMessage(msg);
                                                 if(messagesQueue.length-1 ===  currIndex) {
                                                     messagesQueue = [];
-                                                    setTimeout(function(me){
-                                                        $('.chatInputBox').focus();
-                                                        $('.disableFooter').removeClass('disableFooter');
-                                                        me.historyLoading = false;
-                                                    },0,me);
+                                                    me.historyLoadingComplete();
                                                 }
                                             });
                                         }else{
-                                            setTimeout(function(me){
-                                                $('.chatInputBox').focus();
-                                                $('.disableFooter').removeClass('disableFooter');
-                                                me.historyLoading = false;
-                                            },0,me);
+                                            me.historyLoadingComplete();
                                         }
         
                                     },500,messagesQueue);
@@ -3572,11 +3704,7 @@
                         });
                     }
                     else {
-                        setTimeout(function () {
-                            $('.chatInputBox').focus();
-                            $('.disableFooter').removeClass('disableFooter');
-                            me.historyLoading = false;
-                        });
+                        me.historyLoadingComplete();
                     }
                 }
             }
@@ -3785,146 +3913,130 @@
             this.chatHistory = function (res) {
                 chatInitialize.chatHistory.call(chatInitialize,res);
             }
-            chatWindow.prototype.chatHistory = function (res) {
-                var me = this;
-                if(res[2]==='historysync'){
-                    //setTimeout(function () {
-                        if (res && res[1] && res[1].messages.length > 0) {
-                            res[1].messages.forEach(function (msgData, index) {
-                                setTimeout(function () {
-                                    if (msgData.type === "outgoing" || msgData.type === "bot_response") {
-                                        //if ($('.kore-chat-window .chat-container li#' + msgData.messageId).length < 1) {
-                                            msgData.fromHistorySync=true;
+            // chatWindow.prototype.chatHistory = function (res) {
+            //     var me = this;
+            //     if(res[2]==='historysync'){
+            //         //setTimeout(function () {
+            //             if (res && res[1] && res[1].messages.length > 0) {
+            //                 res[1].messages.forEach(function (msgData, index) {
+            //                     setTimeout(function () {
+            //                         if (msgData.type === "outgoing" || msgData.type === "bot_response") {
+            //                             //if ($('.kore-chat-window .chat-container li#' + msgData.messageId).length < 1) {
+            //                                 msgData.fromHistorySync=true;
                                                                                         
-                                            try {
-                                                msgData.message[0].cInfo.body = JSON.parse(msgData.message[0].cInfo.body);
-                                                if (msgData.message[0].cInfo.body && msgData.message[0].cInfo.body.text) {
-                                                    msgData.message[0].cInfo.body = msgData.message[0].cInfo.body.text;
-                                                }
-                                                msgData.message[0].component = msgData.message[0].cInfo.body;
-                                                if (msgData.message[0].component.payload.template_type === 'dropdown_template') {
-                                                    msgData.message[0].component.selectedValue=res[1].messages[index+1].message[0].cInfo.body;                                    
-                                                }
-                                                // if (msgData.message[0].component.payload.template_type === 'feedbackTemplate') {
-                                                //     msgData.message[0].cInfo.body="Rate this chat session";
-                                                // }
-                                                if(msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)){
-                                                    msgData.message[0].cInfo.body = "";
-                                                }
-                                                me.renderMessage(msgData);
-                                            } catch (e) {
-                                                me.renderMessage(msgData);
-                                            }
-                                        //}
-                                    }
-                                }, index * 100);
-                            });
-                        }
-                    //}, 4000);//sync history messages after sockeet messages gets into viewport
-                }else  if (me.loadHistory) {
-                    me.historyLoading = true;
-                    if (res && res[1] && res[1].messages.length > 0) {
-                        $('.chat-container').hide();
-                        $('.historyLoadingDiv').addClass('showMsg');
-                        res[1].messages.forEach(function (msgData, index) {
-                            setTimeout(function (messagesQueue) {
-                                // try {
-                                //     msgData.message[0].cInfo.body = JSON.parse(msgData.message[0].cInfo.body);
-                                //     msgData.message[0].component = msgData.message[0].cInfo.body;
-                                //     me.renderMessage(msgData);
-                                // } catch (e) {
-                                //     me.renderMessage(msgData);
-                                // }
-                                var _ignoreMsgs = messagesQueue.filter(function (queMsg) {
-                                    return queMsg.messageId === msgData.messageId;
-                                });
-                                //dont show the the history message if we already have same message came from socket connect  
-                                if (!_ignoreMsgs.length) {
-                                    try {
-                                        msgData.message[0].cInfo.body = JSON.parse(msgData.message[0].cInfo.body);
-                                        if (msgData.message[0].cInfo.body && msgData.message[0].cInfo.body.text) {
-                                            msgData.message[0].cInfo.body = msgData.message[0].cInfo.body.text;
-                                        }
-                                        msgData.message[0].component = msgData.message[0].cInfo.body;
-                                        if (msgData.message[0].component.payload.template_type === 'dropdown_template') {
-                                            msgData.message[0].component.payload.fromHistory = true;
-                                            msgData.message[0].component.selectedValue=res[1].messages[index+1].message[0].cInfo.body;                                    
-                                        }
-                                        if (msgData.message[0].component.payload.template_type === 'multi_select' || msgData.message[0].component.payload.template_type === 'advanced_multi_select') {
-                                            msgData.message[0].component.payload.fromHistory = true;
-                                        }
-                                        if (msgData.message[0].component.payload.template_type === 'form_template') {
-                                            msgData.message[0].component.payload.fromHistory = true;
-                                        }
-                                        if (msgData.message[0].component.payload.template_type === 'tableList') {
-                                            msgData.message[0].component.payload.fromHistory = true;
-                                        }
-                                        if (msgData.message[0].component.payload.template_type === 'listView') {
-                                            msgData.message[0].component.payload.fromHistory = true;
-                                        }
-                                        if (msgData.message[0].component.payload.template_type === 'List') {
-                                            msgData.message[0].component.payload.fromHistory = true;
-                                        }
-                                        if (msgData.message[0].component.payload.template_type === 'feedbackTemplate') {
-                                            if(res[1].messages[index+1] && res[1].messages[index+1].type ==="user_message"){
-                                                if (res[1].messages[index + 1].message[0] && res[1].messages[index + 1].message[0].cInfo && res[1].messages[index + 1].message[0].cInfo.body) {
-                                                    msgData.message[0].component.payload.selectedfeedbackValue = res[1].messages[index + 1].message[0].cInfo.body;
-                                                }
-                                            }
-                                            // msgData.message[0].cInfo.body = "Rate this chat session";
-                                        }
-                                                                                if(msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)){
-                                            msgData.message[0].cInfo.body = "";
-                                        }
-                                        me.renderMessage(msgData);
-                                    } catch (e) {
-                                        me.renderMessage(msgData);
-                                    }
-                                }
-                                if (index === res[1].messages.length - 1) {
-                                    setTimeout(function (messagesQueue) {
-                                        $('.chat-container').show();
-                                        $('.chat-container').animate({
-                                            scrollTop: $('.chat-container').prop("scrollHeight")
-                                        }, 2500);
-                                        $('.historyLoadingDiv').removeClass('showMsg');
-                                        if(!me.config.botOptions.maintainContext){
-                                            $('.chat-container').append("<div class='endChatContainer' aria-live='off' aria-hidden='true' ><span class='endChatContainerText'>"+botMessages.endofchat+"</span></div>");
-                                        }
-                                        if(messagesQueue.length){
-                                            messagesQueue.forEach(function(msg, currIndex){
-                                                me.renderMessage(msg);
-                                                if(messagesQueue.length-1 ===  currIndex) {
-                                                    messagesQueue = [];
-                                                    setTimeout(function(me){
-                                                        $('.chatInputBox').focus();
-                                                        $('.disableFooter').removeClass('disableFooter');
-                                                        me.historyLoading = false;
-                                                    },0,me);
-                                                }
-                                            });
-                                        }else{
-                                            setTimeout(function(me){
-                                                $('.chatInputBox').focus();
-                                                $('.disableFooter').removeClass('disableFooter');
-                                                me.historyLoading = false;
-                                            },0,me);
-                                        }
+            //                                 try {
+            //                                     msgData.message[0].cInfo.body = JSON.parse(msgData.message[0].cInfo.body);
+            //                                     if (msgData.message[0].cInfo.body && msgData.message[0].cInfo.body.text) {
+            //                                         msgData.message[0].cInfo.body = msgData.message[0].cInfo.body.text;
+            //                                     }
+            //                                     msgData.message[0].component = msgData.message[0].cInfo.body;
+            //                                     if (msgData.message[0].component.payload.template_type === 'dropdown_template') {
+            //                                         msgData.message[0].component.selectedValue=res[1].messages[index+1].message[0].cInfo.body;                                    
+            //                                     }
+            //                                     if (msgData.message[0].component.payload.template_type === 'feedbackTemplate') {
+            //                                         msgData.message[0].cInfo.body="Rate this chat session";
+            //                                     }
+            //                                     if(msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)){
+            //                                         msgData.message[0].cInfo.body = "";
+            //                                     }
+            //                                     me.renderMessage(msgData);
+            //                                 } catch (e) {
+            //                                     me.renderMessage(msgData);
+            //                                 }
+            //                             //}
+            //                         }
+            //                     }, index * 100);
+            //                 });
+            //             }
+            //         //}, 4000);//sync history messages after sockeet messages gets into viewport
+            //     }else  if (me.loadHistory) {
+            //         me.historyLoading = true;
+            //         if (res && res[1] && res[1].messages.length > 0) {
+            //             $('.chat-container').hide();
+            //             $('.historyLoadingDiv').addClass('showMsg');
+            //             res[1].messages.forEach(function (msgData, index) {
+            //                 setTimeout(function (messagesQueue) {
+            //                     // try {
+            //                     //     msgData.message[0].cInfo.body = JSON.parse(msgData.message[0].cInfo.body);
+            //                     //     msgData.message[0].component = msgData.message[0].cInfo.body;
+            //                     //     me.renderMessage(msgData);
+            //                     // } catch (e) {
+            //                     //     me.renderMessage(msgData);
+            //                     // }
+            //                     var _ignoreMsgs = messagesQueue.filter(function (queMsg) {
+            //                         return queMsg.messageId === msgData.messageId;
+            //                     });
+            //                     //dont show the the history message if we already have same message came from socket connect  
+            //                     if (!_ignoreMsgs.length) {
+            //                         try {
+            //                             msgData.message[0].cInfo.body = JSON.parse(msgData.message[0].cInfo.body);
+            //                             if (msgData.message[0].cInfo.body && msgData.message[0].cInfo.body.text) {
+            //                                 msgData.message[0].cInfo.body = msgData.message[0].cInfo.body.text;
+            //                             }
+            //                             msgData.message[0].component = msgData.message[0].cInfo.body;
+            //                             if (msgData.message[0].component.payload.template_type === 'dropdown_template') {
+            //                                 msgData.message[0].component.payload.fromHistory = true;
+            //                                 msgData.message[0].component.selectedValue=res[1].messages[index+1].message[0].cInfo.body;                                    
+            //                             }
+            //                             if (msgData.message[0].component.payload.template_type === 'multi_select' || msgData.message[0].component.payload.template_type === 'advanced_multi_select') {
+            //                                 msgData.message[0].component.payload.fromHistory = true;
+            //                             }
+            //                             if (msgData.message[0].component.payload.template_type === 'form_template') {
+            //                                 msgData.message[0].component.payload.fromHistory = true;
+            //                             }
+            //                             if (msgData.message[0].component.payload.template_type === 'tableList') {
+            //                                 msgData.message[0].component.payload.fromHistory = true;
+            //                             }
+            //                             if (msgData.message[0].component.payload.template_type === 'listView') {
+            //                                 msgData.message[0].component.payload.fromHistory = true;
+            //                             }
+            //                             if (msgData.message[0].component.payload.template_type === 'List') {
+            //                                 msgData.message[0].component.payload.fromHistory = true;
+            //                             }
+            //                             if (msgData.message[0].component.payload.template_type === 'feedbackTemplate') {
+            //                                 msgData.message[0].component.payload.fromHistory = true;
+            //                                 msgData.message[0].cInfo.body="Rate this chat session";
+            //                             }
+            //                                                                     if(msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)){
+            //                                 msgData.message[0].cInfo.body = "";
+            //                             }
+            //                             me.renderMessage(msgData);
+            //                         } catch (e) {
+            //                             me.renderMessage(msgData);
+            //                         }
+            //                     }
+            //                     if (index === res[1].messages.length - 1) {
+            //                         setTimeout(function (messagesQueue) {
+            //                             $('.chat-container').show();
+            //                             $('.chat-container').animate({
+            //                                 scrollTop: $('.chat-container').prop("scrollHeight")
+            //                             }, 2500);
+            //                             $('.historyLoadingDiv').removeClass('showMsg');
+            //                             if(!me.config.botOptions.maintainContext){
+            //                                 $('.chat-container').append("<div class='endChatContainer' aria-live='off' aria-hidden='true' ><span class='endChatContainerText'>"+botMessages.endofchat+"</span></div>");
+            //                             }
+            //                             if(messagesQueue.length){
+            //                                 messagesQueue.forEach(function(msg, currIndex){
+            //                                     me.renderMessage(msg);
+            //                                     if(messagesQueue.length-1 ===  currIndex) {
+            //                                         messagesQueue = [];
+            //                                         me.historyLoadingComplete();
+            //                                     }
+            //                                 });
+            //                             }else{
+            //                                 me.historyLoadingComplete();
+            //                             }
         
-                                    },500,messagesQueue);
-                                }
-                            }, index * 100,messagesQueue);
-                        });
-                    }
-                    else {
-                        setTimeout(function () {
-                            $('.chatInputBox').focus();
-                            $('.disableFooter').removeClass('disableFooter');
-                            me.historyLoading = false;
-                        });
-                    }
-                }
-            }
+            //                         },500,messagesQueue);
+            //                     }
+            //                 }, index * 100,messagesQueue);
+            //             });
+            //         }
+            //         else {
+            //            me.historyLoadingComplete();
+            //         }
+            //     }
+            // }
             this.closeConversationSession = function () {
                if(chatInitialize){
                     chatInitialize.closeConversationSession();
@@ -4662,10 +4774,16 @@
                 }
             };
             function getFileToken(_obj, _file, recState) {
+                var me=chatInitialize;
                 var auth = (bearerToken) ? bearerToken : assertionToken;
+                var url=koreAPIUrl + "1.1/attachment/file/token";
+                if(me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable){
+                    url=koreAPIUrl + "attachments/"+me.config.botOptions.webhookConfig.streamId+"/"+me.config.botOptions.webhookConfig.channelType+"/token";
+                    auth='bearer '+me.config.botOptions.webhookConfig.token;
+                }
                 $.ajax({
                     type: "POST",
-                    url: koreAPIUrl + "1.1/attachment/file/token",
+                    url: url,
                     dataType: "json",
                     headers: {
                         Authorization: auth
@@ -4688,12 +4806,22 @@
                 });
             }
             function getfileuploadConf(_recState) {
+                var me=chatInitialize;
                 appConsts.UPLOAD = {
                     "FILE_ENDPOINT": koreAPIUrl + "1.1/attachment/file",
                     "FILE_TOKEN_ENDPOINT": koreAPIUrl + "1.1/attachment/file/token",
                     "FILE_CHUNK_ENDPOINT": koreAPIUrl + "1.1/attachment/file/:fileID/chunk"
                 };
                 _accessToke = "bearer " + chatInitialize.accessToken;
+                if(me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable){
+                    //appConsts.UPLOAD.FILE_ENDPOINT=koreAPIUrl + "attachments/file/"+me.config.botOptions.webhookConfig.streamId+"/"+me.config.botOptions.webhookConfig.channelType;
+                    _accessToke='bearer '+me.config.botOptions.webhookConfig.token;
+                    appConsts.UPLOAD = {
+                        "FILE_ENDPOINT": koreAPIUrl + "attachments/file/"+me.config.botOptions.webhookConfig.streamId+"/"+me.config.botOptions.webhookConfig.channelType,
+                        "FILE_TOKEN_ENDPOINT": koreAPIUrl + "attachments/"+me.config.botOptions.webhookConfig.streamId+"/"+me.config.botOptions.webhookConfig.channelType+"/token",
+                        "FILE_CHUNK_ENDPOINT": koreAPIUrl + "attachments/"+me.config.botOptions.webhookConfig.streamId+"/"+me.config.botOptions.webhookConfig.channelType+"/token/:fileID/chunk"
+                    };
+                }
                 _uploadConfg = {};
                 _uploadConfg.url = appConsts.UPLOAD.FILE_ENDPOINT.replace(':fileID', fileToken);
                 _uploadConfg.tokenUrl = appConsts.UPLOAD.FILE_TOKEN_ENDPOINT;

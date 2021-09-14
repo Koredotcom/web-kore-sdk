@@ -22,7 +22,14 @@
     **/
     botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
     botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
-	
+
+// for webhook based communication use following option 
+// botOptions.webhookConfig={
+//     enable:true,
+//     webhookURL:'PLEASE_PROVIDE_WEBHOOK_URL',
+//     apiVersion:2 //webhookURL will be converted to v2 by default. To use v1(not recommended) webhookURL change it to 1
+// }
+   
 // To modify the web socket url use the following option
 // botOptions.reWriteSocketURL = {
 //     protocol: 'PROTOCOL_TO_BE_REWRITTEN',
