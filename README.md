@@ -301,7 +301,16 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 # How to resolve conflicts with existing libraries like jquery, require, etc..
 	1. Add "libs/kore-no-conflict-start.js" before kore SDK files which will stores your library references.
 	2.Add "libs/kore-no-conflict-end.js" after kore SDK files which will reassign your library references.
-	In our sample UI/index.html it is been included already.			
+	In our sample UI/index.html it is been included already.	
+# How to enable API based (webhook channel) message communication 
+	1. Enable the webhook channel by following the below link
+		https://developer.kore.ai/docs/bots/channel-enablement/adding-webhook-channel/
+	2.Un comment the following lines in UI/kore-config.js and provide the webhookURL which you get in the above steps
+	// for webhook based communication use following option 
+	// botOptions.webhookConfig={
+	//     enable:true,
+	//     webhookURL:'PLEASE_PROVIDE_WEBHOOK_URL'
+	// }		
 
 ```
 
