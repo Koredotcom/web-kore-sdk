@@ -301,11 +301,31 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 # How to resolve conflicts with existing libraries like jquery, require, etc..
 	1. Add "libs/kore-no-conflict-start.js" before kore SDK files which will stores your library references.
 	2.Add "libs/kore-no-conflict-end.js" after kore SDK files which will reassign your library references.
-	In our sample UI/index.html it is been included already.			
+	In our sample UI/index.html it is been included already.	
+# How to enable API based (webhook channel) message communication 
+	1. Enable the webhook channel by following the below link
+		https://developer.kore.ai/docs/bots/channel-enablement/adding-webhook-channel/
+	2.Configure the botOptions in kore-config.js with the values you get in above steps
+		botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";//URL of the Service to generate JWT (JSON Web Tokens)
+		botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
+		botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
+		botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
+		botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+	3.Un comment the following lines in UI/kore-config.js and provide the webhookURL which you get in the above steps
+	// for webhook based communication use following option 
+	// botOptions.webhookConfig={
+	//     enable:true,
+	//     webhookURL:'PLEASE_PROVIDE_WEBHOOK_URL',
+	//     apiVersion:2	
+	// }		
 
 ```
 
 ###Release History:
+V9.1.0 [Minor] on 29-Oct-2021: Master branch
+    1.Webhook support
+ 	2.Bug fixes
+
 V9.0.0 [Minor] on 14-Aug-2021: Master branch
     1.Bug fixes
 
