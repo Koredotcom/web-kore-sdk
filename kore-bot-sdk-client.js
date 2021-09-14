@@ -13,6 +13,7 @@ var bind = lodash.bind;
 var isFunction = lodash.isFunction;
 var RTM_CLIENT_EVENTS = clients.CLIENT_EVENTS.RTM;
 var RTM_EVENTS = clients.RTM_EVENTS;
+var WEB_EVENTS=clients.CLIENT_EVENTS.WEB;
 var jstz = require('./jstz.js');
 var noop = lodash.noop;
 
@@ -156,6 +157,79 @@ KoreBot.prototype.sendMessage = function(message,optCb) {
 			optCb(new Error("Bot is Initializing...Please try again"));
 		}
 	}
+	
+};
+
+KoreBot.prototype.sendMessageViaWebhook = function(messagePayload,successCb,failureCb) {
+  var client=this.WebClient;
+  messagePayload.opts={
+    authorization:'bearer '+this.options.webhookConfig.token
+  }
+  client.makeAPICall(this.options.webhookConfig.webhookURL, messagePayload, function(error,resBody){
+  if(error){
+    failureCb(error);
+  }else{
+      var msgData;
+      var textData = resBody.text;
+      var msgsData=[];
+
+      if (textData instanceof Array) {
+          console.log("it is array")
+          textData.forEach(function(entry,index) {
+              var clientMessageId = new Date().getTime()+index;
+              msgData = {
+                  'type': "bot_response",
+                  'messageId':clientMessageId,
+                  //'icon': 'https://dlnwzkim0wron.cloudfront.net/f-828f4392-b552-5702-8bd0-eff267925ddb.png',
+                  'createdOn': "",//clientMessageId,
+                  "message": [{
+                      'type': 'text',
+                      'cInfo': {
+                          'body': entry,
+                          'attachments': ""
+                      },
+                      "component": isJson(entry),
+                      'clientMessageId': clientMessageId
+                  }],
+
+              };
+              msgsData.push(msgData);
+          });
+      } else {
+          console.log("its Object");
+          var clientMessageId = new Date().getTime();
+          msgData = {
+              'type': "bot_response",
+              'messageId': clientMessageId,
+              'createdOn': "",//clientMessageId,
+              //'icon': 'https://dlnwzkim0wron.cloudfront.net/f-828f4392-b552-5702-8bd0-eff267925ddb.png',
+              "message": [{
+                  'type': 'text',
+                  'cInfo': {
+                      'body': isJson(textData),
+                      'attachments': ""
+                  },
+                  "component": isJson(textData),
+                  'clientMessageId': clientMessageId
+              }],
+
+          };
+          msgsData.push(msgData);
+
+      }
+      successCb(msgsData);
+    }
+
+  });
+
+  function isJson(entry) {
+    try {
+        entry = JSON.parse(entry);
+    } catch (e) {
+        return entry
+    }
+    return entry;
+  }
 	
 };
 
@@ -401,7 +475,15 @@ KoreBot.prototype.logIn = function(err, data) {
 		this.cbErrorToClient = data.handleError || noop;
 		this.cbBotDetails = data.botDetails || noop;
 		this.cbBotChatHistory = data.chatHistory || noop;
-		this.WebClient.login.login({"assertion":data.assertion,"botInfo":this.options.botInfo}, bind(this.onLogIn, this));
+    if(this.options.webhookConfig && this.options.webhookConfig.enable){
+      this.options.webhookConfig.token=this.options.assertion;
+      this.emit(WEB_EVENTS.WEB_HOOK_READY);
+      if(this.options.loadHistory && !_chatHistoryLoaded){
+        this.getHistory({});
+      }
+    }else{
+      this.WebClient.login.login({"assertion":data.assertion,"botInfo":this.options.botInfo}, bind(this.onLogIn, this));
+    }   
 	}
 
 };
@@ -937,9 +1019,10 @@ BaseAPIClient.prototype._callTransport = function _callTransport(task, queueCb) 
 };
 
 BaseAPIClient.prototype.makeAPICall = function makeAPICall(endpoint, optData, optCb) {
+  var urlPattern = /^((http|https):\/\/)/;
   var apiCallArgs = helpers.getAPICallArgs(this._token, optData, optCb);
   var args = {
-    url: urlJoin(this.koreAPIUrl, endpoint),
+    url: urlPattern.test(endpoint)?endpoint:urlJoin(this.koreAPIUrl, endpoint),
     data: apiCallArgs.data,
     headers: {
       'User-Agent': this.userAgent,
@@ -967,7 +1050,8 @@ module.exports = BaseAPIClient;
  */
 
 module.exports.WEB = {
-  RATE_LIMITED: 'rate_limited'
+  RATE_LIMITED: 'rate_limited',
+  WEB_HOOK_READY:'webhook_ready'
 };
 
 module.exports.RTM = {

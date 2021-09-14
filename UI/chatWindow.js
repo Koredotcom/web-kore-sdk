@@ -1778,18 +1778,10 @@
                 //hook to add custom events
                 var me=this;
                 me.bot.on("open", function (response) {
-                    var _chatContainer=me.config.chatContainer;
-                    //actual implementation starts here
-                    me.accessToken = me.config.botOptions.accessToken;
-                    var _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
-                    _chatContainer.find('.kore-chat-header .header-title').html(me.config.chatTitle).attr('title', me.config.chatTitle);
-                    _chatContainer.find('.kore-chat-header .disabled').prop('disabled', false).removeClass("disabled");
-                    if (!me.loadHistory) {
-                        setTimeout(function () {
-                            $('.chatInputBox').focus();
-                            $('.disableFooter').removeClass('disableFooter');
-                        });
-                    }
+                   me.onBotReady();
+                });
+                me.bot.on("webhook_ready", function (response) {
+                    me.onBotReady();
                 });
 
                 me.bot.on("message", function (message) {
@@ -1872,6 +1864,23 @@
                 //add additional events or override events in this method
                 //e.stopImmediatePropagation(); would be useful to override
             };
+            chatWindow.prototype.onBotReady = function (){
+                //hook to add custom events
+                var me=this;
+
+                var _chatContainer=me.config.chatContainer;
+                //actual implementation starts here
+                me.accessToken = me.config.botOptions.accessToken;
+                var _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
+                _chatContainer.find('.kore-chat-header .header-title').html(me.config.chatTitle).attr('title', me.config.chatTitle);
+                _chatContainer.find('.kore-chat-header .disabled').prop('disabled', false).removeClass("disabled");
+                if (!me.loadHistory) {
+                    setTimeout(function () {
+                        $('.chatInputBox').focus();
+                        $('.disableFooter').removeClass('disableFooter');
+                    });
+                }
+            }
             chatWindow.prototype.bindIframeEvents = function (authPopup) {
                 var me = this;
                 authPopup.on('click', '.close-popup', function () {
@@ -1977,13 +1986,54 @@
                     messageToBot["message"].nlMeta= msgObject.nlmeta || msgObject.nlMeta;
                 }
                 me.attachmentInfo = {};
-                me.bot.sendMessage(messageToBot, function messageSent(err) {
-                    if (err && err.message) {
-                        setTimeout(function () {
-                            $('.kore-chat-window [data-time="'+clientMessageId+'"]').find('.messageBubble').append('<div class="errorMsg">Send Failed. Please resend.</div>');
-                        }, 350);
+                if(me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable){
+                    if(me.config.botOptions.webhookConfig.webhookURL){
+                        var payload = {
+                            "session": {
+                                "new": false
+                            },
+                            "message": {
+                                "text": chatInput.text(),
+                                "attachments": "WelcomeTask"
+                            },
+                            "from": {
+                                "id": me.config.botOptions.userIdentity,
+                                "userInfo": {
+                                    "firstName": "",
+                                    "lastName": "",
+                                    "email": ""
+                                }
+                            },
+                            "to": {
+                                "id": "Kore.ai",
+                                "groupInfo": {
+                                    "id": "",
+                                    "name": ""
+                                }
+                            }
+                        }
+                        me.bot.sendMessageViaWebhook(payload,function(msgsData){
+                            var SUBSEQUENT_RENDER_DELAY=500;
+                            if(msgsData && msgsData.length){
+                                msgsData.forEach(function(msgData,index){
+                                    setTimeout(function(){
+                                        chatInitialize.renderMessage(msgData);
+                                    },(index>=1)?SUBSEQUENT_RENDER_DELAY:0);
+                                });
+                            }
+                        });
+                    }else{
+                        console.error("KORE:Please provide webhookURL in webhookConfig")
                     }
-                });
+                }else{
+                    me.bot.sendMessage(messageToBot, function messageSent(err) {
+                        if (err && err.message) {
+                            setTimeout(function () {
+                                $('.kore-chat-window [data-time="'+clientMessageId+'"]').find('.messageBubble').append('<div class="errorMsg">Send Failed. Please resend.</div>');
+                            }, 350);
+                        }
+                    });    
+                }
                 chatInput.html("");
                 $('.sendButton').addClass('disabled');
                 _bodyContainer.css('bottom', _footerContainer.outerHeight());
