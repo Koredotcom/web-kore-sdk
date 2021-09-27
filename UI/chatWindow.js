@@ -10,7 +10,7 @@
 //     return 
 // });
 import requireKr from '../kore-bot-sdk-client'
-import $ from 'jquery'; 
+import * as $ from 'jquery'; 
 import 'jquery-ui'
 import 'jquery.tmpl'; 
 import PerfectScrollbar from 'perfect-scrollbar';
@@ -3671,9 +3671,9 @@ var iframe = '<script id="chat_message_tmpl" type="text/x-jquery-tmpl"> \
      }
      chatWindow.prototype.show = function (cfg) {
         //todo:raj 
-        //  if ($('body').find('.kore-chat-window').length > 0) {
-        //      return false;
-        //  }
+         if ($('body').find('.kore-chat-window').length > 0) {
+             return false;
+         }
          cfg.chatHistory=this.chatHistory;
          cfg.handleError=this.showError;
          if(cfg.widgetSDKInstace){
