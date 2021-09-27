@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Koredotcom/web-kore-sdk.git"
+    "url": "git@github.com:RajasekharBa-Kore/web-kore-sdk.git#wsdk2"
   },
   "author": "Rajasekhar Balla",
   "license": "MIT",
