@@ -9,8 +9,7 @@ let config= {
             {
                 test: /\.ts/,
                 use: 'ts-loader',
-                include:[path.resolve(__dirname,'src')],
-                exclude:[path.resolve(__dirname,'/UI/chatWindow.js')]
+                include:[path.resolve(__dirname,'src')]
             },
             // {
             //     test: /\.m?js$/,
@@ -89,12 +88,17 @@ let config= {
 module.exports= function(env,argv){
     
     console.log(`ENV:${JSON.stringify(env)} \nARGV:${JSON.stringify(argv)}`);
-    if (env.dev) {
+    if (env.mode==='dev') {
         config.devtool = 'source-map';
-        config.mode='development'
+        config.mode='development';
+        config.entry='./src/index_chat.js';
+        if(env.component==='chat'){
+          console.log("chating");
+        }
     }
-    if (argv.prod) {
-        config.mode='production'
+    if (env.mode==='prod') {
+        config.mode='production';
+        config.entry='';
     }
     
     return config;

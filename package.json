@@ -4,9 +4,11 @@
   "description": "Kore.ai offers Bots SDKs as a set of platform-specific client libraries that provide a quick and convenient way to integrate Kore.ai Bots chat capability into custom applications",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --env=prod",
-    "serve": "webpack-dev-server --env=dev --open"
+    "build": "webpack --env=mode=prod",
+    "serve": "webpack-dev-server --env=mode=dev --open --env=component=chat"
   },
+  "main": "dist/bundle.js" ,
+  "types":"dist/bundle.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:RajasekharBa-Kore/web-kore-sdk.git#wsdk2"
