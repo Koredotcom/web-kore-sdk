@@ -1,9 +1,10 @@
 const path=require('path');
-const webpack = require('webpack')
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 let config= {
     mode:"none",//none || development || production
-    entry:'./src/index.ts',
+    entry:'./src/index.js',
     module:{
         rules:[
             {
@@ -67,6 +68,7 @@ let config= {
             'window.$': 'jquery',
             'window.jQuery': 'jquery',
           }),
+        new HtmlWebpackPlugin()   
     ],
     resolve:{
         extensions:['.js','.ts']
@@ -88,7 +90,7 @@ let config= {
 module.exports= function(env,argv){
     
     console.log(`ENV:${JSON.stringify(env)} \nARGV:${JSON.stringify(argv)}`);
-    if (env.mode==='dev') {
+    if (env.kore_env==='dev') {
         config.devtool = 'source-map';
         config.mode='development';
         config.entry='./src/index_chat.js';
@@ -96,9 +98,9 @@ module.exports= function(env,argv){
           console.log("chating");
         }
     }
-    if (env.mode==='prod') {
+    if (env.kore_env==='prod') {
         config.mode='production';
-        config.entry='';
+        config.entry='./src/index.js';
     }
     
     return config;
