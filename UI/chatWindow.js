@@ -10,7 +10,8 @@
 //     return 
 // });
 import requireKr from '../kore-bot-sdk-client'
-import * as $ from 'jquery'; 
+import $ from 'jquery'
+window.jQuery = $
 import 'jquery-ui'
 import 'jquery.tmpl'; 
 import PerfectScrollbar from 'perfect-scrollbar';

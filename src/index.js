@@ -31,7 +31,7 @@
 // import '../UI/kore-main.js';
 // import '../UI/libs/kore-no-conflict-end.js';
 
-
+import '../UI/libs/kore-no-conflict-start';
 import chatWindow from '../UI/chatWindow.js';
 import chatConfig from '../UI/kore-config.js';
 
