@@ -68,10 +68,10 @@ let config= {
     },
     plugins:[
         new webpack.ProvidePlugin({
-            $: 'jquery',
-            jQuery: 'jquery',
-            'window.$': 'jquery',
-            'window.jQuery': 'jquery',
+            korejquery: 'jquery',
+            // jQuery: 'jquery',
+            // 'window.$': 'jquery',
+            // 'window.jQuery': 'jquery',
           }),
         new HtmlWebpackPlugin()   
     ],
