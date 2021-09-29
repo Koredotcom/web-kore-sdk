@@ -372,7 +372,7 @@ KoreBot.prototype.onBackWardHistory = function(err, data) {
 /*
 gets the history of the conversation.
 */
-KoreBot.prototype.getHistory = function(opts) {
+KoreBot.prototype.getHistory = function(opts,config) {
 	debug("get history");
 	opts = opts || {};
 	//opts.limit = 10;
@@ -393,15 +393,20 @@ KoreBot.prototype.getHistory = function(opts) {
 
 	__opts__.botInfo = this.options.botInfo;
   __opts__.authorization = "bearer " + this.WebClient.user.accessToken;
+
+  if(config && config.webhookConfig && config.webhookConfig.enable){
+    __opts__.authorization = 'bearer '+this.options.webhookConfig.token
+  }
+
   if(opts.forHistorySync){
     this.historySyncInProgress=true;
     delete __opts__.msgId;
   }
 
 	if (__opts__.forward)
-		this.WebClient.history.history(__opts__, bind(this.onForwardHistory, this));
+		this.WebClient.history.history(__opts__, bind(this.onForwardHistory, this),config);
 	else
-		this.WebClient.history.history(__opts__, bind(this.onBackWardHistory, this));
+		this.WebClient.history.history(__opts__, bind(this.onBackWardHistory, this),config);
 };
 
 /*
@@ -479,7 +484,7 @@ KoreBot.prototype.logIn = function(err, data) {
       this.options.webhookConfig.token=this.options.assertion;
       this.emit(WEB_EVENTS.WEB_HOOK_READY);
       if(this.options.loadHistory && !_chatHistoryLoaded){
-        this.getHistory({});
+        this.getHistory({},data);
       }
     }else{
       this.WebClient.login.login({"assertion":data.assertion,"botInfo":this.options.botInfo}, bind(this.onLogIn, this));
@@ -1653,13 +1658,26 @@ function HistoryApi(client) {
 
 inherits(HistoryApi, BaseApi);
 
-HistoryApi.prototype.history = function history(opts, optCb) {
+HistoryApi.prototype.history = function history(opts, optCb,config) {
   opts = opts || {};
   var args = {
     opts: opts,
     type: "GET"
   };
 	var _api = '/botmessages/rtm';
+
+  if(config && config.webhookConfig && config.webhookConfig.enable){
+    var streamId=config.botInfo.taskBotId;
+    var channelType='ivr';
+    var webhookURL=config.webhookConfig.webhookURL;
+    //check for mulitple webhook url version
+    var patternStr='hookInstance/'
+    if(webhookURL.indexOf(patternStr)>-1){
+      channelType=webhookURL.substring(webhookURL.indexOf(patternStr)+patternStr.length,webhookURL.length)
+    }
+    _api='/chathistory/'+streamId+'/'+channelType
+  }
+
 	var del = false;
 	var x = '?';
 

@@ -739,6 +739,7 @@
                     delete cfg.chatContainer;
                 }
                 this.config = extend(this.config, cfg);
+                this.reWriteWebHookURL(this.config)
                 window._chatHistoryLoaded = false;
                 this.init();
                 updateOnlineStatus();
@@ -746,6 +747,12 @@
                 window.addEventListener('online', updateOnlineStatus);
                 window.addEventListener('offline', updateOnlineStatus);
                 attachEventListener();
+            }
+            //converts v1 webhooks url to v2 automatically
+            chatWindow.prototype.reWriteWebHookURL = function (chatConfig) {
+                if(chatConfig.botOptions && chatConfig.botOptions.webhookConfig && chatConfig.botOptions.webhookConfig.webhookURL){
+                    chatConfig.botOptions.webhookConfig.webhookURL=chatConfig.botOptions.webhookConfig.webhookURL.replace('hooks','v2/webhook');
+                }
             }
             // iframe of child window events //
             function attachEventListener(){
