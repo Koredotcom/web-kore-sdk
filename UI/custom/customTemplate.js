@@ -2119,106 +2119,106 @@ print(JSON.stringify(message)); */
 	<div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>\
 	</div>'
 		}
-	   
-		this.bottomSliderAction = function(action, appendElement){
-		$(".kore-action-sheet").animate({ height: 'toggle' });
-		if(action=='hide'){
-		$(".kore-action-sheet").innerHTML='';
-		$(".kore-action-sheet").addClass("hide");
-		} else {
-		$(".kore-action-sheet").removeClass("hide");
-		$(".kore-action-sheet .actionSheetContainer").empty();
-		setTimeout(function(){
-		$(".kore-action-sheet .actionSheetContainer").append(appendElement);
-		},200);
+	//#todu:raj   
+	// 	this.bottomSliderAction = function(action, appendElement){
+	// 	$(".kore-action-sheet").animate({ height: 'toggle' });
+	// 	if(action=='hide'){
+	// 	$(".kore-action-sheet").innerHTML='';
+	// 	$(".kore-action-sheet").addClass("hide");
+	// 	} else {
+	// 	$(".kore-action-sheet").removeClass("hide");
+	// 	$(".kore-action-sheet .actionSheetContainer").empty();
+	// 	setTimeout(function(){
+	// 	$(".kore-action-sheet .actionSheetContainer").append(appendElement);
+	// 	},200);
 		
-		}
-		}
-		/* Action sheet Template functions starts here*/
-		this.listViewTabs = function () {
-			var msgData = $("li.fromOtherUsers.with-icon.listView").data();
-			if(msgData.message[0].component.payload.seeMore){
-				msgData.message[0].component.payload.seeMore=false;
-			   }
-			var listValues = $(customTemplate.prototype.getChatTemplate("actionSheetTemplate")).tmpl({
-				'msgData': msgData,
-				'dataItems':  msgData.message[0].component.payload.moreData[Object.keys(msgData.message[0].component.payload.moreData)[0]],
-				'tabs': Object.keys(msgData.message[0].component.payload.moreData),
-				'helpers': helpers
-			});
+	// 	}
+	// 	}
+	// 	/* Action sheet Template functions starts here*/
+	// 	this.listViewTabs = function () {
+	// 		var msgData = $("li.fromOtherUsers.with-icon.listView").data();
+	// 		if(msgData.message[0].component.payload.seeMore){
+	// 			msgData.message[0].component.payload.seeMore=false;
+	// 		   }
+	// 		var listValues = $(customTemplate.prototype.getChatTemplate("actionSheetTemplate")).tmpl({
+	// 			'msgData': msgData,
+	// 			'dataItems':  msgData.message[0].component.payload.moreData[Object.keys(msgData.message[0].component.payload.moreData)[0]],
+	// 			'tabs': Object.keys(msgData.message[0].component.payload.moreData),
+	// 			'helpers': helpers
+	// 		});
 
-			$($(listValues).find(".tabs")[0]).addClass("active");
-			$(".kore-action-sheet").append(listValues);
-			$(".kore-action-sheet .list-template-sheet").removeClass("hide");
-			this.bottomSliderAction('show',$(".list-template-sheet"));
-			$(".kore-action-sheet .list-template-sheet .displayMonth .tabs").on('click', function (e) {
-				var _selectedTab = $(e.target).text();
+	// 		$($(listValues).find(".tabs")[0]).addClass("active");
+	// 		$(".kore-action-sheet").append(listValues);
+	// 		$(".kore-action-sheet .list-template-sheet").removeClass("hide");
+	// 		this.bottomSliderAction('show',$(".list-template-sheet"));
+	// 		$(".kore-action-sheet .list-template-sheet .displayMonth .tabs").on('click', function (e) {
+	// 			var _selectedTab = $(e.target).text();
 	
-				var msgData = $("li.fromOtherUsers.with-icon.listView").data();
-				var viewTabValues = $(customTemplate.prototype.getChatTemplate("actionSheetTemplate")).tmpl({
-					'msgData': msgData,
-					'dataItems': msgData.message[0].component.payload.moreData[_selectedTab],
-					'tabs': Object.keys(msgData.message[0].component.payload.moreData),
-					'helpers': helpers
-				});
-	            $(".list-template-sheet .displayMonth").find(".tabs").removeClass("active");
-				$(".list-template-sheet .displayMonth").find(".tabs[data-tabid='" + _selectedTab + "']").addClass("active");
-				$(".list-template-sheet .displayListValues").html($(viewTabValues).find(".displayListValues"));
-				$(".kore-action-sheet .list-template-sheet .listViewLeftContent").on('click', function () {
-					var _self=this;
-				    valueClick(_self);
-					});
-			});
-			$(".kore-action-sheet .list-template-sheet .close-button").on('click', function (event) {
-				bottomSliderAction('hide');
-			});
-			$(".kore-action-sheet .list-template-sheet .listViewLeftContent").on('click', function () {
-				var _self=this;
-				valueClick(_self);
-			});
-		};
-		this.valueClick=function(_self,actionObj){
-			if(actionObj){
-			if (actionObj.type === "url") {
-				window.open(actionObj.url, "_blank");
-				return;
-			  }
-			  if (actionObj.payload) {
-				  var _innerText = actionObj.payload;
-				  var eData={};
-				eData.payload = _self.innerText || actionObj.title;
-				chatInitialize.sendMessage($('.chatInputBox').text(_innerText), eData.payload);
-			  }
-			  if(_self && _self.hasClass("dropdown-contentWidgt")){
-				$(_self).hide();
-			}
-			}else{
-			if($(_self).attr('data-url')||$(_self).attr('url')){
-				var a_link = $(_self).attr('data-url')||$(_self).attr('url');
-				if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
-					a_link = "http:////" + a_link;
-				}
-				var _tempWin = window.open(a_link, "_blank");
-			 }else{
-				var _innerText= $(_self).attr('data-value');
-				var postBack=$(_self).attr('data-title');
-				chatInitialize.sendMessage($('.chatInputBox').text(_innerText), postBack);
-			 $(".kore-action-sheet .list-template-sheet").animate({ height: 'toggle' });
-             bottomSliderAction("hide");
-			 $(".listViewTmplContentBox").css({"pointer-events":"none"});
-			 }
-			}
+	// 			var msgData = $("li.fromOtherUsers.with-icon.listView").data();
+	// 			var viewTabValues = $(customTemplate.prototype.getChatTemplate("actionSheetTemplate")).tmpl({
+	// 				'msgData': msgData,
+	// 				'dataItems': msgData.message[0].component.payload.moreData[_selectedTab],
+	// 				'tabs': Object.keys(msgData.message[0].component.payload.moreData),
+	// 				'helpers': helpers
+	// 			});
+	//             $(".list-template-sheet .displayMonth").find(".tabs").removeClass("active");
+	// 			$(".list-template-sheet .displayMonth").find(".tabs[data-tabid='" + _selectedTab + "']").addClass("active");
+	// 			$(".list-template-sheet .displayListValues").html($(viewTabValues).find(".displayListValues"));
+	// 			$(".kore-action-sheet .list-template-sheet .listViewLeftContent").on('click', function () {
+	// 				var _self=this;
+	// 			    valueClick(_self);
+	// 				});
+	// 		});
+	// 		$(".kore-action-sheet .list-template-sheet .close-button").on('click', function (event) {
+	// 			bottomSliderAction('hide');
+	// 		});
+	// 		$(".kore-action-sheet .list-template-sheet .listViewLeftContent").on('click', function () {
+	// 			var _self=this;
+	// 			valueClick(_self);
+	// 		});
+	// 	};
+	// 	this.valueClick=function(_self,actionObj){
+	// 		if(actionObj){
+	// 		if (actionObj.type === "url") {
+	// 			window.open(actionObj.url, "_blank");
+	// 			return;
+	// 		  }
+	// 		  if (actionObj.payload) {
+	// 			  var _innerText = actionObj.payload;
+	// 			  var eData={};
+	// 			eData.payload = _self.innerText || actionObj.title;
+	// 			chatInitialize.sendMessage($('.chatInputBox').text(_innerText), eData.payload);
+	// 		  }
+	// 		  if(_self && _self.hasClass("dropdown-contentWidgt")){
+	// 			$(_self).hide();
+	// 		}
+	// 		}else{
+	// 		if($(_self).attr('data-url')||$(_self).attr('url')){
+	// 			var a_link = $(_self).attr('data-url')||$(_self).attr('url');
+	// 			if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
+	// 				a_link = "http:////" + a_link;
+	// 			}
+	// 			var _tempWin = window.open(a_link, "_blank");
+	// 		 }else{
+	// 			var _innerText= $(_self).attr('data-value');
+	// 			var postBack=$(_self).attr('data-title');
+	// 			chatInitialize.sendMessage($('.chatInputBox').text(_innerText), postBack);
+	// 		 $(".kore-action-sheet .list-template-sheet").animate({ height: 'toggle' });
+    //          bottomSliderAction("hide");
+	// 		 $(".listViewTmplContentBox").css({"pointer-events":"none"});
+	// 		 }
+	// 		}
 			
-		}
-		/* Action sheet Template functions ends here*/
+	// 	}
+	// 	/* Action sheet Template functions ends here*/
 	
 
-	    window.customTemplate=customTemplate;	
+	     window.customTemplate=customTemplate;	
 
-	return {
-		bottomSliderAction:bottomSliderAction,
-		listViewTabs:listViewTabs,
-		valueClick:valueClick
-	}
+	// return {
+	// 	bottomSliderAction:bottomSliderAction,
+	// 	listViewTabs:listViewTabs,
+	// 	valueClick:valueClick
+	// }
 })($);
 

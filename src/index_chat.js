@@ -1,6 +1,9 @@
 
 
-import {chatConfig,chatWindow} from './index.js';
+import {chatConfig,chatWindow} from '../dist/bundle.js';
+var $ =chatWindow.$;
+debugger
+//var chatConfig=KoreSDK2.chatConfig;
 
 function assertion(options, callback) {
     var jsonData = {

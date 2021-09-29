@@ -9,8 +9,10 @@
 // })(function () {
 //     return 
 // });
+debugger;
 import requireKr from '../kore-bot-sdk-client'
-import $ from 'jquery'
+//import $ from 'jquery'
+import * as $ from 'jquery'
 window.jQuery = $
 import 'jquery-ui'
 import 'jquery.tmpl'; 
@@ -2036,7 +2038,7 @@ chatWindow.prototype.updateOnlineStatus= function() {
          msgData.createdOnTimemillis=new Date(msgData.createdOn).valueOf();
          me.customTemplateObj.helpers = me.helpers;
          me.customTemplateObj.extension = extension;
-         graphLibGlob = me.config.graphLib || "d3";
+         var graphLibGlob = me.config.graphLib || "d3";
          if (msgData.type === "bot_response") {
              waiting_for_message = false;
              setTimeout(function () {
@@ -4484,6 +4486,7 @@ var iframe = '<script id="chat_message_tmpl" type="text/x-jquery-tmpl"> \
              callback.call(null, files);
          }
      }
+     chatWindow.$=$;
      function cnvertFiles(_this, _file, customFileName) {
          var _scope = _this, recState = {};
          if (_file && _file.size) {

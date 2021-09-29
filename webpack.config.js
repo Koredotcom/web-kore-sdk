@@ -7,11 +7,16 @@ let config= {
     entry:'./src/index.js',
     module:{
         rules:[
-            {
-                test: /\.ts/,
-                use: 'ts-loader',
-                include:[path.resolve(__dirname,'src')]
-            },
+          {
+            test: /\.(js)$/,
+            exclude: /node_modules/,
+            use: "babel-loader",
+          },
+            // {
+            //     test: /\.ts/,
+            //     use: 'ts-loader',
+            //     include:[path.resolve(__dirname,'src')]
+            // },
             // {
             //     test: /\.m?js$/,
             //     exclude: /node_modules/,
@@ -62,12 +67,12 @@ let config= {
         ]
     },
     plugins:[
-        // new webpack.ProvidePlugin({
-        //     $: 'jquery',
-        //     jQuery: 'jquery',
-        //     'window.$': 'jquery',
-        //     'window.jQuery': 'jquery',
-        //   }),
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.$': 'jquery',
+            'window.jQuery': 'jquery',
+          }),
         new HtmlWebpackPlugin()   
     ],
     resolve:{
@@ -77,6 +82,11 @@ let config= {
         filename: 'bundle.js',
         path: path.resolve(__dirname,'dist'),
         clean: true,
+        // library: "KoreSDK2",
+        libraryTarget: "module",
+    },
+    experiments: {
+      outputModule: true,
     },
     devServer: {
         static: {
@@ -93,7 +103,7 @@ module.exports= function(env,argv){
     if (env.kore_env==='dev') {
         config.devtool = 'source-map';
         config.mode='development';
-        config.entry='./src/index_chat.js';
+        config.entry=['./dist/bundle.js','./src/index_chat.js'];
         if(env.component==='chat'){
           console.log("chating");
         }
