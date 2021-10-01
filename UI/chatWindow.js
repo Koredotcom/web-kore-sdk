@@ -750,8 +750,10 @@
             }
             //converts v1 webhooks url to v2 automatically
             chatWindow.prototype.reWriteWebHookURL = function (chatConfig) {
-                if(chatConfig.botOptions && chatConfig.botOptions.webhookConfig && chatConfig.botOptions.webhookConfig.webhookURL){
-                    chatConfig.botOptions.webhookConfig.webhookURL=chatConfig.botOptions.webhookConfig.webhookURL.replace('hooks','v2/webhook');
+                if (chatConfig.botOptions && chatConfig.botOptions.webhookConfig && chatConfig.botOptions.webhookConfig.apiVersion && chatConfig.botOptions.webhookConfig.apiVersion === 2) {
+                    if (chatConfig.botOptions && chatConfig.botOptions.webhookConfig && chatConfig.botOptions.webhookConfig.webhookURL) {
+                        chatConfig.botOptions.webhookConfig.webhookURL = chatConfig.botOptions.webhookConfig.webhookURL.replace('hooks', 'v2/webhook');
+                    }
                 }
             }
             // iframe of child window events //
@@ -2019,6 +2021,14 @@
                                 }
                             }
                         }
+
+                        if(me.config.botOptions.webhookConfig.apiVersion && me.config.botOptions.webhookConfig.apiVersion===2){
+                            payload.message={
+                                "type": "text",
+                                "val": chatInput.text(),
+                                "attachments": [me.attachmentInfo]
+                              }
+                        }
                         me.bot.sendMessageViaWebhook(payload,function(msgsData){
                             var SUBSEQUENT_RENDER_DELAY=500;
                             if(msgsData && msgsData.length){
@@ -2028,6 +2038,11 @@
                                     },(index>=1)?SUBSEQUENT_RENDER_DELAY:0);
                                 });
                             }
+                        },function(err){
+                            setTimeout(function () {
+                                $('.typingIndicatorContent').css('display', 'none');
+                                $('.kore-chat-window [data-time="'+clientMessageId+'"]').find('.messageBubble').append('<div class="errorMsg">Send Failed. Please resend.</div>');
+                            }, 350);     
                         });
                     }else{
                         console.error("KORE:Please provide webhookURL in webhookConfig")

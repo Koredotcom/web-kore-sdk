@@ -167,12 +167,15 @@ KoreBot.prototype.sendMessageViaWebhook = function(messagePayload,successCb,fail
   }
   client.makeAPICall(this.options.webhookConfig.webhookURL, messagePayload, function(error,resBody){
   if(error){
-    failureCb(error);
+    failureCb(resBody);
   }else{
       var msgData;
       var textData = resBody.text;
       var msgsData=[];
 
+      if(resBody._v==='v2'){
+        textData=resBody.data 
+      }
       if (textData instanceof Array) {
           console.log("it is array")
           textData.forEach(function(entry,index) {
@@ -185,10 +188,10 @@ KoreBot.prototype.sendMessageViaWebhook = function(messagePayload,successCb,fail
                   "message": [{
                       'type': 'text',
                       'cInfo': {
-                          'body': entry,
+                          'body': entry.val || entry,//for v2 and v1 respectively 
                           'attachments': ""
                       },
-                      "component": isJson(entry),
+                      "component": isJson(entry.val || entry),//for v2 and v1 respectively 
                       'clientMessageId': clientMessageId
                   }],
 

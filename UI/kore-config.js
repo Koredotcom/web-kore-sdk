@@ -20,7 +20,8 @@
 // for webhook based communication use following option 
 // botOptions.webhookConfig={
 //     enable:true,
-//     webhookURL:'PLEASE_PROVIDE_WEBHOOK_URL'
+//     webhookURL:'PLEASE_PROVIDE_WEBHOOK_URL',
+//     apiVersion:2
 // }
    
 // To modify the web socket url use the following option
