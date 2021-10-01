@@ -1790,7 +1790,19 @@
                    me.onBotReady();
                 });
                 me.bot.on("webhook_ready", function (response) {
-                    me.onBotReady();
+                    me.sendMessageViaWebHook({
+                        "type": "event",
+                        "val": "ON_CONNECT",
+                    }, function () {
+                        me.onBotReady();
+                    }, function () {
+                        me.onBotReady();
+                        console.log("Kore:error sending on connect event")
+                    }, {
+                        session: {
+                            "new": true
+                        }
+                    });
                 });
 
                 me.bot.on("message", function (message) {
@@ -1996,40 +2008,9 @@
                 }
                 me.attachmentInfo = {};
                 if(me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable){
-                    if(me.config.botOptions.webhookConfig.webhookURL){
-                        var payload = {
-                            "session": {
-                                "new": false
-                            },
-                            "message": {
-                                "text": chatInput.text(),
-                                "attachments": "WelcomeTask"
-                            },
-                            "from": {
-                                "id": me.config.botOptions.userIdentity,
-                                "userInfo": {
-                                    "firstName": "",
-                                    "lastName": "",
-                                    "email": ""
-                                }
-                            },
-                            "to": {
-                                "id": "Kore.ai",
-                                "groupInfo": {
-                                    "id": "",
-                                    "name": ""
-                                }
-                            }
-                        }
-
-                        if(me.config.botOptions.webhookConfig.apiVersion && me.config.botOptions.webhookConfig.apiVersion===2){
-                            payload.message={
-                                "type": "text",
-                                "val": chatInput.text(),
-                                "attachments": [me.attachmentInfo]
-                              }
-                        }
-                        me.bot.sendMessageViaWebhook(payload,function(msgsData){
+                    me.sendMessageViaWebHook(
+                        chatInput.text(),
+                        function(msgsData){
                             var SUBSEQUENT_RENDER_DELAY=500;
                             if(msgsData && msgsData.length){
                                 msgsData.forEach(function(msgData,index){
@@ -2044,9 +2025,6 @@
                                 $('.kore-chat-window [data-time="'+clientMessageId+'"]').find('.messageBubble').append('<div class="errorMsg">Send Failed. Please resend.</div>');
                             }, 350);     
                         });
-                    }else{
-                        console.error("KORE:Please provide webhookURL in webhookConfig")
-                    }
                 }else{
                     me.bot.sendMessage(messageToBot, function messageSent(err) {
                         if (err && err.message) {
@@ -2070,7 +2048,56 @@
                 msgData.message[0].cInfo.ignoreCheckMark=ignoreCheckMark;
                 me.renderMessage(msgData);
             };
-                       
+                 
+            chatWindow.prototype.sendMessageViaWebHook= function(message,successCb,failureCB,options){
+                var me=this;
+                if(me.config.botOptions.webhookConfig.webhookURL){
+                    var payload = {
+                        "session": {
+                            "new": false
+                        },
+                        "message": {
+                            "text": message,
+                            "attachments": "WelcomeTask"
+                        },
+                        "from": {
+                            "id": me.config.botOptions.userIdentity,
+                            "userInfo": {
+                                "firstName": "",
+                                "lastName": "",
+                                "email": ""
+                            }
+                        },
+                        "to": {
+                            "id": "Kore.ai",
+                            "groupInfo": {
+                                "id": "",
+                                "name": ""
+                            }
+                        }
+                    }
+
+                    if(me.config.botOptions.webhookConfig.apiVersion && me.config.botOptions.webhookConfig.apiVersion===2){
+                        payload.message={
+                            "type": "text",
+                            "val": message,
+                            "attachments": [me.attachmentInfo]
+                          }
+                    }
+                    if(typeof message==='object'){
+                        payload.message=message;
+                    }
+                    if(options && options.session){
+                        payload.session=options.session;
+                    }
+
+                    me.bot.sendMessageViaWebhook(payload,successCb,failureCB);
+                }else{
+                    console.error("KORE:Please provide webhookURL in webhookConfig")
+                }
+            };
+            
+
             chatWindow.prototype.closeConversationSession = function () {
                 var me = this;
                 var clientMessageId = new Date().getTime();
