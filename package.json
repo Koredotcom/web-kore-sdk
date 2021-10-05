@@ -9,7 +9,7 @@
     "serve": "webpack-dev-server --env=kore_env=dev --env=component=chat --open",
     "serve-esm": "webpack-dev-server --env=kore_env=dev --env=component=chat --open --env=target_module=esm"
   },
-  "main": "dist/kore-web-sdk.umd.js",
+  "main": "dist/kore-web-sdk.esm.browser.js",
   "module":"dist/kore-web-sdk.esm.browser.js",
   "repository": {
     "type": "git",
