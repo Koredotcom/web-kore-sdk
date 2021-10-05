@@ -9,7 +9,6 @@
 // })(function () {
 //     return 
 // });
-debugger;
 import requireKr from '../kore-bot-sdk-client'
 //import $ from 'jquery'
 import korejquery from '../src/libs/korejquery'
@@ -21,7 +20,6 @@ import './chatWindow.css'
 
 let $=korejquery;
 // function koreBotChat() {
-    debugger;
     // var koreJquery;
     // if (window && window.KoreSDK && window.KoreSDK.dependencies && window.KoreSDK.dependencies.jQuery) {
     //     //load kore's jquery version

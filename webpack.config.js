@@ -73,24 +73,24 @@ let config= {
             // 'window.$': 'jquery',
             // 'window.jQuery': 'jquery',
           }),
-        new HtmlWebpackPlugin()   
+        // new HtmlWebpackPlugin()   
     ],
     resolve:{
         extensions:['.js','.ts']
     },
     output: {
-        filename: 'bundle.js',
+        filename: 'kore-web-sdk.umd.js',
         path: path.resolve(__dirname,'dist'),
-        clean: true,
-        // library: "KoreSDK2",
-        libraryTarget: "module",
+        clean: false,
+        //library: "KoreSDK2",
+        libraryTarget: "umd",
     },
     experiments: {
       outputModule: true,
     },
     devServer: {
         static: {
-          directory: path.join(__dirname, 'dist'),
+          directory: path.join(__dirname, ''),
         },
         port: 9000,
         liveReload: true,
@@ -103,14 +103,28 @@ module.exports= function(env,argv){
     if (env.kore_env==='dev') {
         config.devtool = 'source-map';
         config.mode='development';
-        config.entry=['./dist/bundle.js','./src/index_chat.js'];
+        if(env.target_module==='esm'){
+          config.entry=['./dist/kore-web-sdk.esm.browser.js','./src/examples/esm/index_chat.js'];
+        }else{
+          config.entry=['./dist/kore-web-sdk.umd.js','./src/examples/umd/index_chat.js'];
+        }
+
         if(env.component==='chat'){
           console.log("chating");
         }
     }
     if (env.kore_env==='prod') {
+
         config.mode='production';
         config.entry='./src/index.js';
+
+        if(env.target_module==='esm'){
+          config.output.filename='kore-web-sdk.esm.browser.js';
+          config.output.libraryTarget="module";
+        }else{
+          config.mode='development';//todo:raj
+        }
+
     }
     
     return config;
