@@ -1,3 +1,4 @@
+import koreJquery from '../../src/libs/korejquery'
 (function($){
 	function customTemplate(data,chatInitialize) {
 		this.cfg = data;
@@ -2220,5 +2221,5 @@ print(JSON.stringify(message)); */
 	// 	listViewTabs:listViewTabs,
 	// 	valueClick:valueClick
 	// }
-})($);
+})(koreJquery);
 

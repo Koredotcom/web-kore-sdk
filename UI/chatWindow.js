@@ -14,7 +14,7 @@ import requireKr from '../kore-bot-sdk-client'
 //import $ from 'jquery'
 import korejquery from '../src/libs/korejquery'
 // import 'jquery-ui'
-import 'jquery.tmpl'; 
+// import 'jquery.tmpl'; 
 import PerfectScrollbar from 'perfect-scrollbar';
 import './custom/customTemplate';
 import './chatWindow.css'
