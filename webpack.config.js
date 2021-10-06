@@ -67,12 +67,12 @@ let config= {
         ]
     },
     plugins:[
-        new webpack.ProvidePlugin({
-            korejquery: 'jquery',
-            // jQuery: 'jquery',
-            // 'window.$': 'jquery',
-            // 'window.jQuery': 'jquery',
-          }),
+        // new webpack.ProvidePlugin({
+        //     korejquery: 'jquery',
+        //     // jQuery: 'jquery',
+        //     // 'window.$': 'jquery',
+        //     // 'window.jQuery': 'jquery',
+        //   }),
         // new HtmlWebpackPlugin()   
     ],
     resolve:{
@@ -82,11 +82,6 @@ let config= {
         filename: 'kore-web-sdk.umd.js',
         path: path.resolve(__dirname,'dist'),
         clean: false,
-        //library: "KoreSDK2",
-        libraryTarget: "umd",
-    },
-    experiments: {
-      outputModule: true,
     },
     devServer: {
         static: {
@@ -94,6 +89,7 @@ let config= {
         },
         port: 9000,
         liveReload: true,
+        open: ['/examples/esm'],
       },
 }
 
@@ -118,13 +114,16 @@ module.exports= function(env,argv){
         config.mode='production';
         config.entry='./src/index.js';
 
-        if(env.target_module==='esm'){
-          config.output.filename='kore-web-sdk.esm.browser.js';
-          config.output.libraryTarget="module";
-        }else{
-          config.mode='development';//todo:raj
+      if (env.target_module === 'esm') {
+        config.output.filename = 'kore-web-sdk.esm.browser.js';
+        config.output.libraryTarget = "module";
+        config.experiments = {
+          outputModule: true,
         }
-
+      } else if (env.target_module === 'umd') {
+        config.output.library = "KoreSDK";
+        config.output.libraryTarget = "umd";
+      }
     }
     
     return config;

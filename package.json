@@ -4,10 +4,10 @@
   "description": "Kore.ai offers Bots SDKs as a set of platform-specific client libraries that provide a quick and convenient way to integrate Kore.ai Bots chat capability into custom applications",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --env=kore_env=prod",
-    "build-esm": "webpack --env=kore_env=prod  --env=target_module=esm",
-    "serve": "webpack-dev-server --env=kore_env=dev --env=component=chat --open",
-    "serve-esm": "webpack-dev-server --env=kore_env=dev --env=component=chat --open --env=target_module=esm"
+    "build-umd": "webpack --env=kore_env=prod --env=target_module=umd",
+    "build": "webpack --env=kore_env=prod  --env=target_module=esm",
+    "serve": "webpack-dev-server --env=kore_env=dev --env=component=chat",
+    "serve-esm": "webpack-dev-server --env=kore_env=dev --env=component=chat --env=target_module=esm"
   },
   "main": "dist/kore-web-sdk.esm.browser.js",
   "module":"dist/kore-web-sdk.esm.browser.js",

@@ -1,6 +1,7 @@
 
 
-import {chatConfig,chatWindow} from '../dist/bundle.js';
+var chatConfig=KoreSDK.chatConfig;
+var chatWindow=KoreSDK.chatWindow;
 var $ =chatWindow.$;
 debugger
 //var chatConfig=KoreSDK2.chatConfig;
@@ -42,7 +43,4 @@ chatConfig.botOptions.assertionFn=assertion;
 
 var chatWindowInstance = new chatWindow(chatConfig);
 
-chatWindow.prototype.show=function(){
-    console.log('overridedn')
-}
 chatWindowInstance.show(chatConfig);
