@@ -529,7 +529,24 @@ KoreBot.prototype.init = function(options,messageHistoryLimit) {
 			console.error("koreAnonymousFn is not a function");
 		}
 	}
+  this.reWriteWebhookConfig(options)
 };
+
+
+KoreBot.prototype.reWriteWebhookConfig=function (config){
+  if(config && config.webhookConfig && config.webhookConfig.enable){
+    var streamId=config.botInfo.taskBotId;
+    var channelType='ivr';
+    var webhookURL=config.webhookConfig.webhookURL;
+    //check for mulitple webhook url version
+    var patternStr='hookInstance/'
+    if(webhookURL.indexOf(patternStr)>-1){
+      channelType=webhookURL.substring(webhookURL.indexOf(patternStr)+patternStr.length,webhookURL.length)
+    }
+    config.webhookConfig.streamId=streamId;
+    config.webhookConfig.channelType=channelType;
+  }
+}
 
 module.exports.instance = function(){
 	_chatHistoryLoaded = false;
@@ -1670,15 +1687,15 @@ HistoryApi.prototype.history = function history(opts, optCb,config) {
 	var _api = '/botmessages/rtm';
 
   if(config && config.webhookConfig && config.webhookConfig.enable){
-    var streamId=config.botInfo.taskBotId;
-    var channelType='ivr';
-    var webhookURL=config.webhookConfig.webhookURL;
-    //check for mulitple webhook url version
-    var patternStr='hookInstance/'
-    if(webhookURL.indexOf(patternStr)>-1){
-      channelType=webhookURL.substring(webhookURL.indexOf(patternStr)+patternStr.length,webhookURL.length)
-    }
-    _api='/chathistory/'+streamId+'/'+channelType
+    // var streamId=config.botInfo.taskBotId;
+    // var channelType='ivr';
+    // var webhookURL=config.webhookConfig.webhookURL;
+    // //check for mulitple webhook url version
+    // var patternStr='hookInstance/'
+    // if(webhookURL.indexOf(patternStr)>-1){
+    //   channelType=webhookURL.substring(webhookURL.indexOf(patternStr)+patternStr.length,webhookURL.length)
+    // }
+    _api='/chathistory/'+config.webhookConfig.streamId+'/'+config.webhookConfig.channelType
   }
 
 	var del = false;
