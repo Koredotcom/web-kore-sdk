@@ -162,6 +162,7 @@ KoreBot.prototype.sendMessage = function(message,optCb) {
 
 KoreBot.prototype.sendMessageViaWebhook = function(messagePayload,successCb,failureCb) {
   var client=this.WebClient;
+  var me=this;
   messagePayload.opts={
     authorization:'bearer '+this.options.webhookConfig.token
   }
@@ -169,62 +170,21 @@ KoreBot.prototype.sendMessageViaWebhook = function(messagePayload,successCb,fail
   if(error){
     failureCb(resBody);
   }else{
-      var msgData;
-      var textData = resBody.text;
-      var msgsData=[];
-
-      if(resBody._v==='v2'){
-        textData=resBody.data 
-      }
-      if (textData instanceof Array) {
-          console.log("it is array")
-          textData.forEach(function(entry,index) {
-              var clientMessageId = new Date().getTime()+index;
-              msgData = {
-                  'type': "bot_response",
-                  'messageId':clientMessageId,
-                  //'icon': 'https://dlnwzkim0wron.cloudfront.net/f-828f4392-b552-5702-8bd0-eff267925ddb.png',
-                  'createdOn': "",//clientMessageId,
-                  "message": [{
-                      'type': 'text',
-                      'cInfo': {
-                          'body': entry.val || entry,//for v2 and v1 respectively 
-                          'attachments': ""
-                      },
-                      "component": isJson(entry.val || entry),//for v2 and v1 respectively 
-                      'clientMessageId': clientMessageId
-                  }],
-
-              };
-              msgsData.push(msgData);
-          });
-      } else {
-          console.log("its Object");
-          var clientMessageId = new Date().getTime();
-          msgData = {
-              'type': "bot_response",
-              'messageId': clientMessageId,
-              'createdOn': "",//clientMessageId,
-              //'icon': 'https://dlnwzkim0wron.cloudfront.net/f-828f4392-b552-5702-8bd0-eff267925ddb.png',
-              "message": [{
-                  'type': 'text',
-                  'cInfo': {
-                      'body': isJson(textData),
-                      'attachments': ""
-                  },
-                  "component": isJson(textData),
-                  'clientMessageId': clientMessageId
-              }],
-
-          };
-          msgsData.push(msgData);
-
-      }
-      successCb(msgsData);
+    debugger;
+      if(resBody.pId){
+        me.startPollForWebhookResponse(resBody.pId,successCb);
+        return false;
+      } 
+      successCb(me.convertWebhookResposeToMessages(resBody));
     }
 
   });
-
+	
+};
+KoreBot.prototype.convertWebhookResposeToMessages=function(resBody){
+  var msgData;
+  var textData = resBody.text;
+  var msgsData=[];
   function isJson(entry) {
     try {
         entry = JSON.parse(entry);
@@ -233,9 +193,85 @@ KoreBot.prototype.sendMessageViaWebhook = function(messagePayload,successCb,fail
     }
     return entry;
   }
-	
-};
 
+  if(resBody._v==='v2'){
+    textData=resBody.data;
+  }
+  if (textData instanceof Array) {
+      console.log("it is array")
+      textData.forEach(function(entry,index) {
+          var clientMessageId = new Date().getTime()+index;
+          msgData = {
+              'type': "bot_response",
+              'messageId':clientMessageId,
+              //'icon': 'https://dlnwzkim0wron.cloudfront.net/f-828f4392-b552-5702-8bd0-eff267925ddb.png',
+              'createdOn': "",//clientMessageId,
+              "message": [{
+                  'type': 'text',
+                  'cInfo': {
+                      'body': entry.val || entry,//for v2 and v1 respectively 
+                      'attachments': ""
+                  },
+                  "component": isJson(entry.val || entry),//for v2 and v1 respectively 
+                  'clientMessageId': clientMessageId
+              }],
+
+          };
+          msgsData.push(msgData);
+      });
+  } else {
+      console.log("its Object");
+      var clientMessageId = new Date().getTime();
+      msgData = {
+          'type': "bot_response",
+          'messageId': clientMessageId,
+          'createdOn': "",//clientMessageId,
+          //'icon': 'https://dlnwzkim0wron.cloudfront.net/f-828f4392-b552-5702-8bd0-eff267925ddb.png',
+          "message": [{
+              'type': 'text',
+              'cInfo': {
+                  'body': isJson(textData),
+                  'attachments': ""
+              },
+              "component": isJson(textData),
+              'clientMessageId': clientMessageId
+          }],
+
+      };
+      msgsData.push(msgData);
+     
+  }
+  return msgsData;
+  
+}
+KoreBot.prototype.startPollForWebhookResponse = function(pId,successCb) {
+
+  var POOL_INTERVAL=1000;//1 SEC
+  var me=this;
+  var apiUrl='/chatbot/v2/webhook/'+me.options.webhookConfig.streamId+'/poll/'+pId;
+  var client=this.WebClient;
+  var payload={};
+  payload.opts={
+    authorization:'bearer '+this.options.webhookConfig.token
+  }
+
+
+  client.makeAPICall(apiUrl, payload, function(error,resBody){
+    if(error){
+      failureCb(resBody);
+    }else{
+        if(resBody.pId){
+     
+          setTimeout(function(){
+            me.startPollForWebhookResponse(resBody.pId,successCb);
+          },POOL_INTERVAL);
+        }else{
+          successCb(me.convertWebhookResposeToMessages(resBody));
+        }
+      }
+  })
+
+}
 /*
 emits a message event on message from the server.
 */

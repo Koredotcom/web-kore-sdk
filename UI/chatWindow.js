@@ -2015,7 +2015,6 @@
                 if(msgObject && (msgObject.nlmeta || msgObject.nlMeta)){
                     messageToBot["message"].nlMeta= msgObject.nlmeta || msgObject.nlMeta;
                 }
-                me.attachmentInfo = {};
                 if(me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable){
                     me.sendMessageViaWebHook(
                         chatInput.text(),
@@ -2026,7 +2025,9 @@
                                 $('.typingIndicatorContent').css('display', 'none');
                                 $('.kore-chat-window [data-time="' + clientMessageId + '"]').find('.messageBubble').append('<div class="errorMsg">Send Failed. Please resend.</div>');
                             }, 350);
-                        });
+                        },
+                        me.attachmentInfo?{attachments:[me.attachmentInfo]}:null
+                        );
                 }else{
                     me.bot.sendMessage(messageToBot, function messageSent(err) {
                         if (err && err.message) {
@@ -2036,6 +2037,7 @@
                         }
                     });    
                 }
+                me.attachmentInfo = {};
                 chatInput.html("");
                 $('.sendButton').addClass('disabled');
                 _bodyContainer.css('bottom', _footerContainer.outerHeight());
@@ -2070,8 +2072,7 @@
                             "new": false
                         },
                         "message": {
-                            "text": message,
-                            "attachments": "WelcomeTask"
+                            "text": message
                         },
                         "from": {
                             "id": me.config.botOptions.userIdentity,
@@ -2093,8 +2094,7 @@
                     if(me.config.botOptions.webhookConfig.apiVersion && me.config.botOptions.webhookConfig.apiVersion===2){
                         payload.message={
                             "type": "text",
-                            "val": message,
-                            "attachments": [me.attachmentInfo]
+                            "val": message
                           }
                     }
                     if(typeof message==='object'){
@@ -2102,6 +2102,9 @@
                     }
                     if(options && options.session){
                         payload.session=options.session;
+                    }
+                    if(options && options.attachments){
+                        payload.message.attachments=options.attachments;
                     }
 
                     me.bot.sendMessageViaWebhook(payload,successCb,failureCB);
@@ -4694,38 +4697,49 @@
                 }
             };
             function getFileToken(_obj, _file, recState) {
+                var me=chatInitialize;
                 var auth = (bearerToken) ? bearerToken : assertionToken;
-                $.ajax({
-                    type: "POST",
-                    url: koreAPIUrl + "1.1/attachment/file/token",
-                    dataType: "json",
-                    headers: {
-                        Authorization: auth
-                    },
-                    success: function (response) {
-                        fileToken = response.fileToken;
-                        acceptAndUploadFile(_obj, _file, recState);
-                    },
-                    error: function (msg) {
-                        chatInitialize.config.botOptions._reconnecting=true;
-                        _self.showError("Failed to upload file.Please try again");
-                        if(msg.responseJSON && msg.responseJSON.errors && msg.responseJSON.errors.length && msg.responseJSON.errors[0].httpStatus==="401"){
-                            setTimeout(function(){
-                                _self.hideError();
-                            },5000);
-                            $(".kore-chat-window .reload-btn").trigger("click");
+                if(me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable){
+                    acceptAndUploadFile(_obj, _file, recState);
+                }else{
+                    $.ajax({
+                        type: "POST",
+                        url: koreAPIUrl + "1.1/attachment/file/token",
+                        dataType: "json",
+                        headers: {
+                            Authorization: auth
+                        },
+                        success: function (response) {
+                            fileToken = response.fileToken;
+                            acceptAndUploadFile(_obj, _file, recState);
+                        },
+                        error: function (msg) {
+                            chatInitialize.config.botOptions._reconnecting=true;
+                            _self.showError("Failed to upload file.Please try again");
+                            if(msg.responseJSON && msg.responseJSON.errors && msg.responseJSON.errors.length && msg.responseJSON.errors[0].httpStatus==="401"){
+                                setTimeout(function(){
+                                    _self.hideError();
+                                },5000);
+                                $(".kore-chat-window .reload-btn").trigger("click");
+                            }
+                            console.log("Oops, something went horribly wrong");
                         }
-                        console.log("Oops, something went horribly wrong");
-                    }
-                });
+                    });
+                }
+                
             }
             function getfileuploadConf(_recState) {
+                var me=chatInitialize;
                 appConsts.UPLOAD = {
                     "FILE_ENDPOINT": koreAPIUrl + "1.1/attachment/file",
                     "FILE_TOKEN_ENDPOINT": koreAPIUrl + "1.1/attachment/file/token",
                     "FILE_CHUNK_ENDPOINT": koreAPIUrl + "1.1/attachment/file/:fileID/chunk"
                 };
                 _accessToke = "bearer " + chatInitialize.accessToken;
+                if(me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable){
+                    appConsts.UPLOAD.FILE_ENDPOINT=koreAPIUrl + "attachments/file/"+me.config.botOptions.webhookConfig.streamId+"/"+me.config.botOptions.webhookConfig.channelType;
+                    _accessToke='bearer '+me.config.botOptions.webhookConfig.token
+                }
                 _uploadConfg = {};
                 _uploadConfg.url = appConsts.UPLOAD.FILE_ENDPOINT.replace(':fileID', fileToken);
                 _uploadConfg.tokenUrl = appConsts.UPLOAD.FILE_TOKEN_ENDPOINT;
