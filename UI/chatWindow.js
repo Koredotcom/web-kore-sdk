@@ -781,6 +781,7 @@
             var chatBodyModal=  $('#chatBodyModal');
             var close = document.getElementsByClassName("closeChatBodyModal")[0];
                 close.onclick = function () {
+                    $('.kore-chat-window').removeClass('modelOpen');
                     var postPayload={
                         payload:{},
                         event : 'formEvent', // need to find another way to make it common ,giving a static value due to time constrain //
@@ -790,6 +791,7 @@
                     var iframe = chatBodyModal.find('iframe');
                     postMessageToChildIframes(iframe,postPayload);
                     chatBodyModal.hide();
+                    $('.kore-chat-window').removeClass('modelOpen');
                 }
             if(template){
                 chatBodyModal.find('.closeChatBodyModal').css('display','none');
@@ -798,6 +800,7 @@
                     chatBodyModal.find('#chatBodyModalContent').empty();
                     chatBodyModal.find('#chatBodyModalContent').append(template);
                     chatBodyModal.show();
+                    $('.kore-chat-window').addClass('modelOpen');
                 }
                 setTimeout(function(){
                     chatBodyModal.find('.loading_form').css('z-index',0);
@@ -808,11 +811,13 @@
                      }
                 },1500);
             } else {
+                $('.kore-chat-window').removeClass('modelOpen');
                 chatBodyModal.find('.closeChatBodyModal').css('display','none');
                 setTimeout(function(){
                     chatBodyModal.find('#chatBodyModalContent').empty();
                 },1000);
                 chatBodyModal.hide(); 
+                $('.kore-chat-window').removeClass('modelOpen');
             }
             }
         // inline model for iframes starts ends//
@@ -2897,7 +2902,7 @@
                           <div id="caption"></div>\
                     </div>\
                     <div id="chatBodyModal" class="chatBodyModal animate-bottom">\
-                    <span class="closeChatBodyModal "></span>\
+                    <span class="closeChatBodyModal" aira-label="Close Form" role="button" tabindex="0" aria-atomic="true"></span>\
                     <div id="closeInlineModel" class="loading_form iframeLoader"></div>\
                     <div id="chatBodyModalContent"></div>\
                     </div>\
@@ -3030,7 +3035,7 @@
                                     {{/if}} \
                                 </li>\
                                 {{each(key, msgItem) msgData.message[0].component.payload.buttons}} \
-                                    <a href=""#>\
+                                    <a>\
                                         <li {{if msgData}}msgData="${JSON.stringify(msgData)}"{{/if}} {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} {{if msgItem.payload}}actual-value="${msgItem.payload}"{{/if}} {{if msgItem.url}}url="${msgItem.url}"{{/if}} class="buttonTmplContentChild" data-value="${msgItem.value}" type="${msgItem.type}">\
                                             ${msgItem.title}\
                                         </li> \
@@ -3391,16 +3396,16 @@
                             <li class="inlineIframeContainer"> \
                                 <div class="iframeBubble"> \
                                         <div class="uiformComponent">\
-                                        <div id="closeInlineModel" class="loading_form iframeLoader"></div>\
+                                        <div id="closeInlineModel" role="region" aria-live="polite" aria-atomic="true" aira-label="close Form" class="loading_form iframeLoader"></div>\
                                         <iframe id="inlineIframeModal" src="${link_url}"></iframe> \
                                         </div>\
                                 </div>\
                             </li> \
                         {{else}}\
-                            <iframe id="iframeModal" src="${link_url}"></iframe> \
+                            <iframe role="region" aria-live="polite" aria-atomic="true" aira-label="Loadig Form" id="iframeModal" src="${link_url}"></iframe> \
                         {{/if}}\
                     {{else}}\
-                        <div class="failedIframe">Failed to load iFrame</div>\
+                        <div role="region" aria-live="polite" aria-atomic="true" class="failedIframe">Failed to load iFrame</div>\
                     {{/if}}\
                 </script>';
             if (tempType === "message") {
