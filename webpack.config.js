@@ -82,13 +82,22 @@ let config= {
         filename: 'kore-web-sdk.umd.js',
         path: path.resolve(__dirname,'dist'),
         clean: false,
+        hotUpdateChunkFilename: 'hot/hot-update.js',
+        hotUpdateMainFilename: 'hot/hot-update.json'
     },
     devServer: {
         static: {
           directory: path.join(__dirname, ''),
         },
         port: 9000,
-        liveReload: true,
+        liveReload: false,
+        devMiddleware: {
+          index: true,
+          // mimeTypes: { 'text/html': ['phtml'] },
+          // publicPath: '/publicPathForDevServe',
+          // serverSideRender: true,
+          writeToDisk: true,
+        },
         open: ['/examples/esm'],
       },
 }
@@ -96,34 +105,28 @@ let config= {
 module.exports= function(env,argv){
     
     console.log(`ENV:${JSON.stringify(env)} \nARGV:${JSON.stringify(argv)}`);
+    config.entry='./src/index.js';
+
+    if (env.target_module === 'esm') {
+      config.output.filename = 'kore-web-sdk.esm.browser.js';
+      config.output.libraryTarget = "module";
+      config.experiments = {
+        outputModule: true,
+      }
+    } else if (env.target_module === 'umd') {
+      config.output.library = "KoreSDK";
+      config.output.libraryTarget = "umd";
+    }
+
     if (env.kore_env==='dev') {
         config.devtool = 'source-map';
         config.mode='development';
-        if(env.target_module==='esm'){
-          config.entry=['./dist/kore-web-sdk.esm.browser.js','./src/examples/esm/index_chat.js'];
-        }else{
-          config.entry=['./dist/kore-web-sdk.umd.js','./src/examples/umd/index_chat.js'];
-        }
-
         if(env.component==='chat'){
           console.log("chating");
         }
     }
     if (env.kore_env==='prod') {
-
         config.mode='production';
-        config.entry='./src/index.js';
-
-      if (env.target_module === 'esm') {
-        config.output.filename = 'kore-web-sdk.esm.browser.js';
-        config.output.libraryTarget = "module";
-        config.experiments = {
-          outputModule: true,
-        }
-      } else if (env.target_module === 'umd') {
-        config.output.library = "KoreSDK";
-        config.output.libraryTarget = "umd";
-      }
     }
     
     return config;
