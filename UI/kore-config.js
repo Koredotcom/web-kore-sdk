@@ -4,31 +4,19 @@
 
     var botOptions = {};
     botOptions.logLevel = 'debug';
-   
-    botOptions.logLevel = 'debug';
-    botOptions.koreAPIUrl = "https://qa-bots.kore.ai/api/";
+    botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
     botOptions.koreSpeechAPIUrl = "";//deprecated
     //botOptions.bearer = "bearer xyz-------------------";
     //botOptions.ttsSocketUrl = '';//deprecated
     botOptions.koreAnonymousFn = koreAnonymousFn;
     botOptions.recorderWorkerPath = '../libs/recorderWorker.js';
 
-    botOptions.JWTUrl =  "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
-    botOptions.JWTUrl =  "http://localhost:3000/api/users/sts";
-    botOptions.userIdentity = 'rajasekhar.balla12345@kore.com';// Provide users email id here
-    botOptions.botInfo = { name: "WebhookRajBot", "_id": "st-5840c71a-ec0b-516e-8d9a-f9e608ea8c4b" }; // bot name is case sensitive
-    botOptions.clientId = "cs-854a9d4d-9f34-5fdb-a5e3-6fa864ed77c8";
-    botOptions.clientSecret = "knoJVXBrxflCUczrwFYkTp2FK476oZneN7cb7Mqdxxc=";
+    botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
+    botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
+    botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
+    botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
+    botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 
-// for webhook based communication use following option 
-botOptions.webhookConfig={
-    enable:true,
-    webhookURL:'https://qa-bots.kore.ai/chatbot/hooks/st-5840c71a-ec0b-516e-8d9a-f9e608ea8c4b',
-    apiVersion:2
-    //webhookURL:'https://qa-bots.kore.ai/chatbot/v2/webhook/st-5840c71a-ec0b-516e-8d9a-f9e608ea8c4b',
-    //webhookURL:'https://qa-bots.kore.ai/chatbot/hooks/st-5840c71a-ec0b-516e-8d9a-f9e608ea8c4b/hookInstance/ivrInst-62c362b9-5f88-5ec5-9f3f-7c0eb9801e70'
-    //webhookURL:'https://qa-bots.kore.ai/chatbot/v2/webhook/st-5840c71a-ec0b-516e-8d9a-f9e608ea8c4b/hookInstance/ivrInst-62c362b9-5f88-5ec5-9f3f-7c0eb9801e70'
- }
 // for webhook based communication use following option 
 // botOptions.webhookConfig={
 //     enable:true,
