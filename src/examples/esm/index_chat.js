@@ -40,9 +40,20 @@ chatConfig.botOptions.assertionFn=assertion;
 
 
 
+
+
 var chatWindowInstance = new chatWindow(chatConfig);
 
-chatWindow.prototype.show=function(){
-    console.log('overridedn')
-}
+// chatWindow.prototype.show=function(){
+//     console.log('overridedn')
+// }
 chatWindowInstance.show(chatConfig);
+
+// function stockTemplate(){
+// }
+// stockTemplate.prototype.renderMessage=function(){
+//     return "<h1>a</h1>"
+// }
+// chatWindowInstance.customTemplateObj.installTemplate(new stockTemplate());
+
+

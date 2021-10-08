@@ -15,7 +15,7 @@ import korejquery from '../src/libs/korejquery'
 // import 'jquery-ui'
 // import 'jquery.tmpl'; 
 import PerfectScrollbar from 'perfect-scrollbar';
-import './custom/customTemplate';
+import  customTemplate from './custom/customTemplate';
 import './chatWindow.css'
 
 let $=korejquery;
@@ -218,9 +218,10 @@ let $=korejquery;
 
      var helpers = {
          'nl2br': function (str, runEmojiCheck) {
-             if (runEmojiCheck) {
-                 str = window.emojione.shortnameToImage(str);
-             }
+             //todo:raj
+            //  if (runEmojiCheck) {
+            //      str = window.emojione.shortnameToImage(str);
+            //  }
              str = str.replace(/(?:\r\n|\r|\n)/g, '<br />');
              return str;
          },
@@ -1124,6 +1125,7 @@ chatWindow.prototype.updateOnlineStatus= function() {
          }
          me.render(chatWindowHtml);
          me.unfreezeUIOnHistoryLoadingFail.call(me);
+         me.show();
      };
      chatWindow.prototype.initi18n = function () {
          var me = this;
@@ -3670,20 +3672,22 @@ var iframe = '<script id="chat_message_tmpl" type="text/x-jquery-tmpl"> \
              }
          }
      }
-     chatWindow.prototype.show = function (cfg) {
+     chatWindow.prototype.show = function () {
         //todo:raj 
-         if ($('body').find('.kore-chat-window').length > 0) {
-             return false;
-         }
+        var me=this;
+        var cfg=me.config;  
+        //  if ($('body').find('.kore-chat-window').length > 0) {
+        //      return false;
+        //  }
          cfg.chatHistory=this.chatHistory;
          cfg.handleError=this.showError;
          if(cfg.widgetSDKInstace){
              this.addWidgetEvents(cfg);
          };
-         chatInitialize = new chatWindow(cfg);
+         chatInitialize = me//new chatWindow(cfg);
          chatInitialize.customTemplateObj = new customTemplate(cfg,chatInitialize);
          
-         return this;
+        // return this;
      };
      
      chatWindow.prototype.addWidgetEvents = function (cfg) {

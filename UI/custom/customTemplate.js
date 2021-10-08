@@ -1,12 +1,18 @@
-import koreJquery from '../../src/libs/korejquery'
-(function($){
+import $ from '../../src/libs/korejquery'
+//import './templates/stockTemplate';
+//(function($){
 	function customTemplate(data,chatInitialize) {
 		this.cfg = data;
 		this.chatInitialize=chatInitialize;
 		this.helpers = null;
 		this.extension = null;
+		this.templates=[];
 	}
-	
+
+	customTemplate.prototype.installTemplate = function (template) {
+		this.templates.push(template);
+	};
+
 	/**
 	 * purpose: Function to render bot message for a given custom template
 	 * input  : Bot Message
@@ -14,6 +20,22 @@ import koreJquery from '../../src/libs/korejquery'
 	 */
 	customTemplate.prototype.renderMessage = function (msgData) {
 		var messageHtml = '';
+		var me=this;
+		var templatesIndex=0;
+
+		if(me.templates.length){
+			while (!messageHtml) {
+				var template=me.templates[templatesIndex]
+				if(template.renderMessage){
+					messageHtml=template.renderMessage();
+				}
+				templatesIndex++
+			}
+			if(messageHtml){
+				return messageHtml;
+			}
+		}
+
 		if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "dropdown_template") {
 			messageHtml = $(this.getChatTemplate("dropdown_template")).tmpl({
 				'msgData': msgData,
@@ -2214,12 +2236,13 @@ print(JSON.stringify(message)); */
 	// 	/* Action sheet Template functions ends here*/
 	
 
-	     window.customTemplate=customTemplate;	
+	//     window.customTemplate=customTemplate;	
 
 	// return {
 	// 	bottomSliderAction:bottomSliderAction,
 	// 	listViewTabs:listViewTabs,
 	// 	valueClick:valueClick
 	// }
-})(koreJquery);
+//})(koreJquery);
 
+export default customTemplate;

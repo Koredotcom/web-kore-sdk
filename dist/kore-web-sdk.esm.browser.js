@@ -466,10 +466,10 @@ function xssAttack(txtStr) {
 
 var helpers = {
   'nl2br': function nl2br(str, runEmojiCheck) {
-    if (runEmojiCheck) {
-      str = window.emojione.shortnameToImage(str);
-    }
-
+    //todo:raj
+    //  if (runEmojiCheck) {
+    //      str = window.emojione.shortnameToImage(str);
+    //  }
     str = str.replace(/(?:\r\n|\r|\n)/g, '<br />');
     return str;
   },
@@ -1550,6 +1550,7 @@ chatWindow.prototype.init = function () {
 
   me.render(chatWindowHtml);
   me.unfreezeUIOnHistoryLoadingFail.call(me);
+  me.show();
 };
 
 chatWindow.prototype.initi18n = function () {
@@ -4364,11 +4365,12 @@ chatWindow.prototype.callListener = function (evtName, data) {
   }
 };
 
-chatWindow.prototype.show = function (cfg) {
+chatWindow.prototype.show = function () {
   //todo:raj 
-  if ($('body').find('.kore-chat-window').length > 0) {
-    return false;
-  }
+  var me = this;
+  var cfg = me.config; //  if ($('body').find('.kore-chat-window').length > 0) {
+  //      return false;
+  //  }
 
   cfg.chatHistory = this.chatHistory;
   cfg.handleError = this.showError;
@@ -4378,9 +4380,9 @@ chatWindow.prototype.show = function (cfg) {
   }
 
   ;
-  chatInitialize = new chatWindow(cfg);
-  chatInitialize.customTemplateObj = new customTemplate(cfg, chatInitialize);
-  return this;
+  chatInitialize = me; //new chatWindow(cfg);
+
+  chatInitialize.customTemplateObj = new _custom_customTemplate__WEBPACK_IMPORTED_MODULE_3__["default"](cfg, chatInitialize); // return this;
 };
 
 chatWindow.prototype.addWidgetEvents = function (cfg) {
@@ -6279,159 +6281,185 @@ $.fn.uploader.noConflict = function () {
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
 /* harmony import */ var _src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../src/libs/korejquery */ "./src/libs/korejquery.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+ //import './templates/stockTemplate';
+//(function($){
+
+function customTemplate(data, chatInitialize) {
+  this.cfg = data;
+  this.chatInitialize = chatInitialize;
+  this.helpers = null;
+  this.extension = null;
+  this.templates = [];
+}
+
+customTemplate.prototype.installTemplate = function (template) {
+  this.templates.push(template);
+};
+/**
+ * purpose: Function to render bot message for a given custom template
+ * input  : Bot Message
+ * output : Custom template HTML
+ */
 
 
-(function ($) {
-  function customTemplate(data, chatInitialize) {
-    this.cfg = data;
-    this.chatInitialize = chatInitialize;
-    this.helpers = null;
-    this.extension = null;
-  }
-  /**
-   * purpose: Function to render bot message for a given custom template
-   * input  : Bot Message
-   * output : Custom template HTML
-   */
+customTemplate.prototype.renderMessage = function (msgData) {
+  var messageHtml = '';
+  var me = this;
+  var templatesIndex = 0;
 
+  if (me.templates.length) {
+    while (!messageHtml) {
+      var template = me.templates[templatesIndex];
 
-  customTemplate.prototype.renderMessage = function (msgData) {
-    var messageHtml = '';
-
-    if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "dropdown_template") {
-      messageHtml = $(this.getChatTemplate("dropdown_template")).tmpl({
-        'msgData': msgData,
-        'helpers': this.helpers,
-        'extension': this.extension
-      });
-      this.bindEvents(messageHtml);
-    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "multi_select") {
-      messageHtml = $(this.getChatTemplate("checkBoxesTemplate")).tmpl({
-        'msgData': msgData,
-        'helpers': this.helpers,
-        'extension': this.extension
-      });
-    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "like_dislike") {
-      messageHtml = $(this.getChatTemplate("likeDislikeTemplate")).tmpl({
-        'msgData': msgData,
-        'helpers': this.helpers,
-        'extension': this.extension
-      });
-    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "form_template") {
-      messageHtml = $(this.getChatTemplate("formTemplate")).tmpl({
-        'msgData': msgData,
-        'helpers': this.helpers,
-        'extension': this.extension
-      });
-      this.bindEvents(messageHtml);
-
-      if (msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.fromHistory) {
-        $(messageHtml).find(".formMainComponent form").addClass("hide");
+      if (template.renderMessage) {
+        messageHtml = template.renderMessage();
       }
-    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "advanced_multi_select") {
-      messageHtml = $(this.getChatTemplate("advancedMultiSelect")).tmpl({
-        'msgData': msgData,
-        'helpers': this.helpers,
-        'extension': this.extension
-      });
-      $(messageHtml).data(msgData);
-      this.bindEvents(messageHtml);
-    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "tableList") {
-      messageHtml = $(this.getChatTemplate("tableListTemplate")).tmpl({
-        'msgData': msgData,
-        'helpers': this.helpers,
-        'extension': this.extension
-      });
-      this.bindEvents(messageHtml);
-    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "listView") {
-      messageHtml = $(this.getChatTemplate("templatelistView")).tmpl({
-        'msgData': msgData,
-        'helpers': this.helpers,
-        'extension': this.extension
-      });
-      this.bindEvents(messageHtml);
-      $(messageHtml).data(msgData);
 
-      if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.fromHistory) {
-        $(messageHtml).css({
-          "pointer-events": "none"
-        });
-      }
-    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type === "feedbackTemplate" && (msgData.message[0].component.payload.view === "star" || msgData.message[0].component.payload.view === "emojis")) {
-      messageHtml = $(this.getChatTemplate("ratingTemplate")).tmpl({
-        'msgData': msgData,
-        'helpers': this.helpers,
-        'extension': this.extension
-      });
-      this.bindEvents(messageHtml);
-      $(messageHtml).data(msgData);
-    } else if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "listWidget") {
-      messageHtml = $(this.getChatTemplate("listWidget")).tmpl({
-        'msgData': msgData,
-        'tempdata': msgData.message[0].component.payload,
-        'dataItems': msgData.message[0].component.payload.elements || {},
-        'viewmore': null,
-        'helpers': this.helpers,
-        'extension': this.extension
-      });
-      this.templateEvents(messageHtml, 'listWidget');
-      $(messageHtml).data(messageHtml);
+      templatesIndex++;
     }
 
-    return messageHtml;
-    return "";
-  }; // end of renderMessage method
+    if (messageHtml) {
+      return messageHtml;
+    }
+  }
 
-  /**
-  * purpose: Function to get custom template HTML
-  * input  : Template type
-  * output : Custom template HTML
-  *
+  if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "dropdown_template") {
+    messageHtml = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(this.getChatTemplate("dropdown_template")).tmpl({
+      'msgData': msgData,
+      'helpers': this.helpers,
+      'extension': this.extension
+    });
+    this.bindEvents(messageHtml);
+  } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "multi_select") {
+    messageHtml = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(this.getChatTemplate("checkBoxesTemplate")).tmpl({
+      'msgData': msgData,
+      'helpers': this.helpers,
+      'extension': this.extension
+    });
+  } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "like_dislike") {
+    messageHtml = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(this.getChatTemplate("likeDislikeTemplate")).tmpl({
+      'msgData': msgData,
+      'helpers': this.helpers,
+      'extension': this.extension
+    });
+  } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "form_template") {
+    messageHtml = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(this.getChatTemplate("formTemplate")).tmpl({
+      'msgData': msgData,
+      'helpers': this.helpers,
+      'extension': this.extension
+    });
+    this.bindEvents(messageHtml);
+
+    if (msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.fromHistory) {
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).find(".formMainComponent form").addClass("hide");
+    }
+  } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "advanced_multi_select") {
+    messageHtml = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(this.getChatTemplate("advancedMultiSelect")).tmpl({
+      'msgData': msgData,
+      'helpers': this.helpers,
+      'extension': this.extension
+    });
+    (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).data(msgData);
+    this.bindEvents(messageHtml);
+  } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "tableList") {
+    messageHtml = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(this.getChatTemplate("tableListTemplate")).tmpl({
+      'msgData': msgData,
+      'helpers': this.helpers,
+      'extension': this.extension
+    });
+    this.bindEvents(messageHtml);
+  } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "listView") {
+    messageHtml = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(this.getChatTemplate("templatelistView")).tmpl({
+      'msgData': msgData,
+      'helpers': this.helpers,
+      'extension': this.extension
+    });
+    this.bindEvents(messageHtml);
+    (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).data(msgData);
+
+    if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.fromHistory) {
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).css({
+        "pointer-events": "none"
+      });
+    }
+  } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type === "feedbackTemplate" && (msgData.message[0].component.payload.view === "star" || msgData.message[0].component.payload.view === "emojis")) {
+    messageHtml = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(this.getChatTemplate("ratingTemplate")).tmpl({
+      'msgData': msgData,
+      'helpers': this.helpers,
+      'extension': this.extension
+    });
+    this.bindEvents(messageHtml);
+    (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).data(msgData);
+  } else if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "listWidget") {
+    messageHtml = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(this.getChatTemplate("listWidget")).tmpl({
+      'msgData': msgData,
+      'tempdata': msgData.message[0].component.payload,
+      'dataItems': msgData.message[0].component.payload.elements || {},
+      'viewmore': null,
+      'helpers': this.helpers,
+      'extension': this.extension
+    });
+    this.templateEvents(messageHtml, 'listWidget');
+    (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).data(messageHtml);
+  }
+
+  return messageHtml;
+  return "";
+}; // end of renderMessage method
+
+/**
+* purpose: Function to get custom template HTML
+* input  : Template type
+* output : Custom template HTML
+*
+*/
+
+
+customTemplate.prototype.getChatTemplate = function (tempType) {
+  /* Sample template structure for dropdown
+  var message =  {
+  	"type": "template",
+  	"payload": {
+  		"template_type": "dropdown_template",
+  		"heading":"please select : ",
+  		"elements": [
+  			{
+  				"title": "United Arab Emirates Dirham",
+  				"value":"AED"
+  			},
+  			{
+  				"title": "Australian Dollar",
+  				"value":"AUD"
+  			},
+  			{
+  				"title": "Canadian Dollar",
+  				"value":"CAD"
+  			},
+  			{
+  				"title": "Swiss Franc",
+  				"value":"CHF"
+  			},
+  			{
+  				"title": "Chinese Yuanr",
+  				"value":"CNY"
+  			},
+  			{
+  				"title": "Czech Koruna",
+  				"value":"CZK"
+  			}
+  	   
+  		], 
+  	}
+  };
+  print(JSON.stringify(message)); 
   */
-
-
-  customTemplate.prototype.getChatTemplate = function (tempType) {
-    /* Sample template structure for dropdown
-    var message =  {
-    	"type": "template",
-    	"payload": {
-    		"template_type": "dropdown_template",
-    		"heading":"please select : ",
-    		"elements": [
-    			{
-    				"title": "United Arab Emirates Dirham",
-    				"value":"AED"
-    			},
-    			{
-    				"title": "Australian Dollar",
-    				"value":"AUD"
-    			},
-    			{
-    				"title": "Canadian Dollar",
-    				"value":"CAD"
-    			},
-    			{
-    				"title": "Swiss Franc",
-    				"value":"CHF"
-    			},
-    			{
-    				"title": "Chinese Yuanr",
-    				"value":"CNY"
-    			},
-    			{
-    				"title": "Czech Koruna",
-    				"value":"CZK"
-    			}
-    	   
-    		], 
-    	}
-    };
-    print(JSON.stringify(message)); 
-    */
-    var dropdownTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var dropdownTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			{{if msgData.message}} \
 				<li {{if msgData.type !== "bot_response"}} id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
 					<div class="buttonTmplContent"> \
@@ -6452,37 +6480,37 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 				</li> \
 			{{/if}} \
 		</script>';
-    /* Sample template structure for multi-select checkboxes
-    	var message = {
-    	"type": "template",
-    	"payload": {
-    	"template_type": "multi_select",
-    	"elements": [
-    	{
-    	"title": "Classic T-Shirt Collection",
-    	"value":"tShirt"
-    	},{
-    	"title": "Classic Shirt Collection",
-    	"value":"shirts"
-    	},
-    	{
-    	"title": "Classic shorts Collection",
-    	"value":"shorts"
-    	}
-    	],
-    	"buttons": [
-    	{
-    	"title": "Done",
-    	"type": "postback",
-    	"payload": "payload" 
-    	}
-    	] 
-    	}
-    	};
-    	print(JSON.stringify(message)); 
-    */
+  /* Sample template structure for multi-select checkboxes
+  	var message = {
+  	"type": "template",
+  	"payload": {
+  	"template_type": "multi_select",
+  	"elements": [
+  	{
+  	"title": "Classic T-Shirt Collection",
+  	"value":"tShirt"
+  	},{
+  	"title": "Classic Shirt Collection",
+  	"value":"shirts"
+  	},
+  	{
+  	"title": "Classic shorts Collection",
+  	"value":"shorts"
+  	}
+  	],
+  	"buttons": [
+  	{
+  	"title": "Done",
+  	"type": "postback",
+  	"payload": "payload" 
+  	}
+  	] 
+  	}
+  	};
+  	print(JSON.stringify(message)); 
+  */
 
-    var checkBoxesTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var checkBoxesTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			{{if msgData.message}} \
 			<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
 					<div class = "listTmplContent"> \
@@ -6519,17 +6547,17 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 				</li> \
 			{{/if}} \
 		</script>';
-    /* Sample template structure for Like_dislike template
-    	var message = {
-    	"type": "template",
-    	"payload": {
-    	"template_type": "like_dislike"
-    	}
-    	};
-    	print(JSON.stringify(message));
-    */
+  /* Sample template structure for Like_dislike template
+  	var message = {
+  	"type": "template",
+  	"payload": {
+  	"template_type": "like_dislike"
+  	}
+  	};
+  	print(JSON.stringify(message));
+  */
 
-    var likeDislikeTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var likeDislikeTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			{{if msgData.message}} \
 				<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon quickReplies"> \
 					<div class="buttonTmplContent"> \
@@ -6551,27 +6579,27 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 				</li> \
 			{{/if}} \
 		</script>';
-    /* Sample template structure for Inline Form
-    var message = {
-     	"type": "template",
-        "payload": {
-            "template_type": "form_template",
-            "heading": "Please fill the form",
-            "formFields": [
-                {
-                   "type": "password",
-                   "label": "Enter Password",
-                   "placeholder": "Enter password",
-                   "fieldButton": {
-                            "title": "Ok"
-                                  }
-                  }
-               ]
-          }
-    }
-    print(JSON.stringify(message)); */
+  /* Sample template structure for Inline Form
+  var message = {
+   	"type": "template",
+      "payload": {
+          "template_type": "form_template",
+          "heading": "Please fill the form",
+          "formFields": [
+              {
+                 "type": "password",
+                 "label": "Enter Password",
+                 "placeholder": "Enter password",
+                 "fieldButton": {
+                          "title": "Ok"
+                                }
+                }
+             ]
+        }
+  }
+  print(JSON.stringify(message)); */
 
-    var formTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var formTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 {{if msgData.message}} \
 <li {{if msgData.type !== "bot_response"}} id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
 	<div class="buttonTmplContent"> \
@@ -6604,107 +6632,107 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 </li> \
 {{/if}} \
 </script>';
-    /* Sample template structure for Advanced Multi Select Checkbox 
-     var message = {
-    "type": "template",
-    "payload": {
-    "template_type": "advanced_multi_select",
-    "heading":"Please select items to proceed",
-    "description":"Premium Brands",
-    "sliderView":false,
-    "showViewMore":true,
-    "limit":1,
-    "elements": [
-    {
-    'collectionTitle':"Collection 1",
-    'collection':[
-    {
-    "title": "Classic Adidas Collection",
-    "description":"German Company",
-    "value":"Adidas",
-    "image_url":"https://cdn.britannica.com/94/193794-050-0FB7060D/Adidas-logo.jpg"
-    },{
-    "title": "Classic Puma Collection",
-    "value":"Puma",
-    "description":"German Company",
-    "image_url":"https://www.myredqueen.com/45056-home_default/gucci-white-logo-t-shirt.jpg"
-    },
-    {
-    "title": "Classic Nike Collection",
-    "description":"American Company",
-    "value":"Nike",
-    "image_url":"https://miro.medium.com/max/1161/1*cJUVJJSWPj9WFIJlvf7dKg.jpeg"
-    }
-    ]
-    
-    },
-    {
-    'collectionTitle':"Collection 2",
-    'collection':[
-    {
-    "title": "Classic Rolls Royce Collection",
-    "value":"Roll Royce",
-    "description":"London Company",
-    "image_url":"https://i.pinimg.com/236x/bd/40/f6/bd40f62bad0e38dd46f9aeaa6a95d80e.jpg"
-    },{
-    "title": "Classic Audi Collection",
-    "value":"Audi",
-    "description":"German Company",
-    "image_url":"https://www.car-logos.org/wp-content/uploads/2011/09/audi.png"
-    },
-    {
-    "title": "Classic lamborghini Collection",
-    "value":"lamborghini",
-    "description":"Italy Company",
-    "image_url":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbBeoerEQ7F5Mlh4S7u0uvEcPAlQ-J0s6V-__tBJ7JPc6KCZo9&usqp=CAU"
-    }
-    ]
-    },{
-    'collectionTitle':"Collection 3",
-    'collection':[
-    {
-    "title": "Classic Rolex Collection",
-    "value":"Rolex",
-    "description":"Switzerland Company",
-    "image_url":"https://image.shutterstock.com/image-photo/kiev-ukraine-may-13-2015-260nw-278633477.jpg"
-    }
-    ]
-    },
-    {
-    'collectionTitle':"Collection 4",
-    'collection':[
-    {
-    "title": "Classic Fossil Collection",
-    "value":"Fossil",
-    "description":"American Company ",
-    "image_url":"https://www.pngitem.com/pimgs/m/247-2470775_fossil-logo-png-free-download-fossil-transparent-png.png"
-    }
-    ]
-    },
-    {
-    'collectionTitle':"Collection 5",
-    'collection':[
-    {
-    "title": "Classic Fastrack Collection",
-    "value":"FastTrack",
-    "description":"Indian Company",
-    "image_url":"https://logodix.com/logo/2153855.jpg"
-    }
-    ]
-    }
-    ],
-    "buttons": [
-    {
-    "title": "Done",
-    "type": "postback",
-    "payload": "payload"
-    }
-    ]
-    }
-    };
-    print(JSON.stringify(message)); */
+  /* Sample template structure for Advanced Multi Select Checkbox 
+   var message = {
+  "type": "template",
+  "payload": {
+  "template_type": "advanced_multi_select",
+  "heading":"Please select items to proceed",
+  "description":"Premium Brands",
+  "sliderView":false,
+  "showViewMore":true,
+  "limit":1,
+  "elements": [
+  {
+  'collectionTitle':"Collection 1",
+  'collection':[
+  {
+  "title": "Classic Adidas Collection",
+  "description":"German Company",
+  "value":"Adidas",
+  "image_url":"https://cdn.britannica.com/94/193794-050-0FB7060D/Adidas-logo.jpg"
+  },{
+  "title": "Classic Puma Collection",
+  "value":"Puma",
+  "description":"German Company",
+  "image_url":"https://www.myredqueen.com/45056-home_default/gucci-white-logo-t-shirt.jpg"
+  },
+  {
+  "title": "Classic Nike Collection",
+  "description":"American Company",
+  "value":"Nike",
+  "image_url":"https://miro.medium.com/max/1161/1*cJUVJJSWPj9WFIJlvf7dKg.jpeg"
+  }
+  ]
+  
+  },
+  {
+  'collectionTitle':"Collection 2",
+  'collection':[
+  {
+  "title": "Classic Rolls Royce Collection",
+  "value":"Roll Royce",
+  "description":"London Company",
+  "image_url":"https://i.pinimg.com/236x/bd/40/f6/bd40f62bad0e38dd46f9aeaa6a95d80e.jpg"
+  },{
+  "title": "Classic Audi Collection",
+  "value":"Audi",
+  "description":"German Company",
+  "image_url":"https://www.car-logos.org/wp-content/uploads/2011/09/audi.png"
+  },
+  {
+  "title": "Classic lamborghini Collection",
+  "value":"lamborghini",
+  "description":"Italy Company",
+  "image_url":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbBeoerEQ7F5Mlh4S7u0uvEcPAlQ-J0s6V-__tBJ7JPc6KCZo9&usqp=CAU"
+  }
+  ]
+  },{
+  'collectionTitle':"Collection 3",
+  'collection':[
+  {
+  "title": "Classic Rolex Collection",
+  "value":"Rolex",
+  "description":"Switzerland Company",
+  "image_url":"https://image.shutterstock.com/image-photo/kiev-ukraine-may-13-2015-260nw-278633477.jpg"
+  }
+  ]
+  },
+  {
+  'collectionTitle':"Collection 4",
+  'collection':[
+  {
+  "title": "Classic Fossil Collection",
+  "value":"Fossil",
+  "description":"American Company ",
+  "image_url":"https://www.pngitem.com/pimgs/m/247-2470775_fossil-logo-png-free-download-fossil-transparent-png.png"
+  }
+  ]
+  },
+  {
+  'collectionTitle':"Collection 5",
+  'collection':[
+  {
+  "title": "Classic Fastrack Collection",
+  "value":"FastTrack",
+  "description":"Indian Company",
+  "image_url":"https://logodix.com/logo/2153855.jpg"
+  }
+  ]
+  }
+  ],
+  "buttons": [
+  {
+  "title": "Done",
+  "type": "postback",
+  "payload": "payload"
+  }
+  ]
+  }
+  };
+  print(JSON.stringify(message)); */
 
-    var advancedMultiSelect = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var advancedMultiSelect = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 	{{if msgData.message}} \
 	<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
 			<div class = "listTmplContent advancedMultiSelect"> \
@@ -6784,135 +6812,135 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 		</li> \
 	{{/if}} \
    </scipt>';
-    /* Sample template structure for New List Template 
-    	 var message={
-    "type": "template",
-    "payload": {
-       "template_type": "listView",
-       "seeMore":true,
-       "moreCount":4,
-       "text":"Here is your recent transactions",
-       "heading":"Speed Analysis",
-       "buttons":[
-           {
-               "title":"See more",
-               "type":"postback",
-               "payload":"payload"
-           }
-       ],
-       "elements": [
-          {
-             "title": "Swiggy",
+  /* Sample template structure for New List Template 
+  	 var message={
+  "type": "template",
+  "payload": {
+     "template_type": "listView",
+     "seeMore":true,
+     "moreCount":4,
+     "text":"Here is your recent transactions",
+     "heading":"Speed Analysis",
+     "buttons":[
+         {
+             "title":"See more",
+             "type":"postback",
+             "payload":"payload"
+         }
+     ],
+     "elements": [
+        {
+           "title": "Swiggy",
+           "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
+           "subtitle": "17 Monday June",
+           "value":"get directions",
+           "default_action": {
+  		   "title":"swiggyOrder",
+  		   "type":"postback"
+             }
+         },
+         {
+             "title": "Amazon",
              "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
              "subtitle": "17 Monday June",
-             "value":"get directions",
+             "value":"$35.88",
              "default_action": {
-    		   "title":"swiggyOrder",
-    		   "type":"postback"
-               }
-           },
-           {
-               "title": "Amazon",
-               "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
-               "subtitle": "17 Monday June",
-               "value":"$35.88",
-               "default_action": {
-    			"title":"AmazonOrder",
-    			"type":"postback"
-               }
-           },
-           {
-               "title": "Timex",
-               "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
-               "subtitle": "20 Monday June",
-               "value":"$35.88",
-               "default_action": {
-    		   "title":"TimexOrder",
-    		   "type":"postback"
-               }
-           },
-           {
-               "title": "Fuel",
-               "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
-               "subtitle": "12 Transactions",
-               "value":"$35.88",
-               "default_action": {
-    			"title":"TimexOrder",
-    			"type":"postback"
-               }
-           },
-           {
-               "title": "Shopping",
-               "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
-               "subtitle": "17 Monday June",
-               "value":"$35.88",
-               "default_action": {
-    			"title":"TimexOrder",
-    			"type":"postback"
-               }
-           },
-       ],
-       "moreData": {
-          "Tab1": [
-    	 {
-    		"title": "Swiggy",
-    		"image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
-    		"subtitle": "17 Monday June",
-    		"value":"get directions",
-    		"default_action": {
-    			 "title":"swiggyOrder",
-    			 "type":"postback"
-    		  }
-    	  },
-    	  {
-    		  "title": "Amazon",
-    		  "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
-    		  "subtitle": "17 Monday June",
-    		  "value":"$35.88",
-    		  "default_action": {
-    			  "title":"AmazonOrder",
-    			  "type":"postback"
-    		  }
-    	  },
-    	  {
-    		  "title": "Timex",
-    		  "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
-    		  "subtitle": "20 Monday June",
-    		  "value":"$35.88",
-    		  "default_action": {
-    			 "title":"TimexOrder",
-    			 "type":"postback"
-    		  }
-    	  },
-       ],
-          "Tab2": [
-    	{
-               "title": "Fuel",
-               "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
-               "subtitle": "12 Transactions",
-               "value":"$35.88",
-               "default_action": {
-    			"title":"TimexOrder",
-    			"type":"postback"
-               }
-           },
-           {
-               "title": "Shopping",
-               "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
-               "subtitle": "17 Monday June",
-               "value":"$35.88",
-               "default_action": {
-    			"title":"TimexOrder",
-    			"type":"postback"
-               }
-           },
-       ]
-    }
-    }
-    }
-    print(JSON.stringify(message)); */
+  			"title":"AmazonOrder",
+  			"type":"postback"
+             }
+         },
+         {
+             "title": "Timex",
+             "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
+             "subtitle": "20 Monday June",
+             "value":"$35.88",
+             "default_action": {
+  		   "title":"TimexOrder",
+  		   "type":"postback"
+             }
+         },
+         {
+             "title": "Fuel",
+             "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
+             "subtitle": "12 Transactions",
+             "value":"$35.88",
+             "default_action": {
+  			"title":"TimexOrder",
+  			"type":"postback"
+             }
+         },
+         {
+             "title": "Shopping",
+             "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
+             "subtitle": "17 Monday June",
+             "value":"$35.88",
+             "default_action": {
+  			"title":"TimexOrder",
+  			"type":"postback"
+             }
+         },
+     ],
+     "moreData": {
+        "Tab1": [
+  	 {
+  		"title": "Swiggy",
+  		"image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
+  		"subtitle": "17 Monday June",
+  		"value":"get directions",
+  		"default_action": {
+  			 "title":"swiggyOrder",
+  			 "type":"postback"
+  		  }
+  	  },
+  	  {
+  		  "title": "Amazon",
+  		  "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
+  		  "subtitle": "17 Monday June",
+  		  "value":"$35.88",
+  		  "default_action": {
+  			  "title":"AmazonOrder",
+  			  "type":"postback"
+  		  }
+  	  },
+  	  {
+  		  "title": "Timex",
+  		  "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
+  		  "subtitle": "20 Monday June",
+  		  "value":"$35.88",
+  		  "default_action": {
+  			 "title":"TimexOrder",
+  			 "type":"postback"
+  		  }
+  	  },
+     ],
+        "Tab2": [
+  	{
+             "title": "Fuel",
+             "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
+             "subtitle": "12 Transactions",
+             "value":"$35.88",
+             "default_action": {
+  			"title":"TimexOrder",
+  			"type":"postback"
+             }
+         },
+         {
+             "title": "Shopping",
+             "image_url": "https://i.ebayimg.com/images/g/daIAAOSw32lYtlKn/s-l300.jpg",
+             "subtitle": "17 Monday June",
+             "value":"$35.88",
+             "default_action": {
+  			"title":"TimexOrder",
+  			"type":"postback"
+             }
+         },
+     ]
+  }
+  }
+  }
+  print(JSON.stringify(message)); */
 
-    var listViewTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var listViewTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 	{{if msgData.message}} \
 		<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon listView"> \
 			<div class="listViewTmplContent {{if msgData.message[0].component.payload.boxShadow}}noShadow{{/if}}"> \
@@ -6958,7 +6986,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 		</li> \
 	{{/if}} \
  </script>';
-    var listActionSheetTemplate = '<script id="chat-window-listTemplate" type="text/x-jqury-tmpl">\
+  var listActionSheetTemplate = '<script id="chat-window-listTemplate" type="text/x-jqury-tmpl">\
  <div class="list-template-sheet hide">\
   {{if msgData.message}} \
 	<div class="sheetHeader">\
@@ -6993,166 +7021,166 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 {{/if}}\
 </div>\
 </script>';
-    /*TABLE LIST TEMPLATE
-    
-    var message={
-    	"type": "template",
-    	"payload": {
-    				"template_type": "tableList",
-    				"title":"Marvel Comics",
-    				"description":"Marvel Worldwide Inc.",
-    				"headerOptions":{
-    					"type":"text",
-    					"text":"Comics",
-    				},
-    
-    
-    	"elements":[
-    		{
-    			"sectionHeader":"Marvel Comics",
-    			"sectionHeaderDesc":"It is a story book",
-    			"rowItems":[
-    				{
-    					"title":{
-    						"image":{
-    							"image_type":"image",
-    							"image_src":"https://i1.pngguru.com/preview/277/841/159/captain-marvel-movie-folder-icon-v4-png-clipart.jpg",
-    							"radius":10,
-    							"size":"medium"
-    						},
-    						"type":"url",    //type=text | url
-    						"url":{			 // if type text use text, if type url use url
-    							"link":"https://www.facebook.com", // if type=url use link
-    							"title":"Captain Marvel",
-    							"subtitle":"Cosmic energy",
-    						},
-    
-    						"rowColor":"blue" //text color to entire row
-    					},
-    					"value":{
-    						"type":"url",
-    						"url":{
-    							"link":"https://www.marvel.com/movies/captain-marvel",
-    							"title":"energy"
-    						},
-    						"layout":{
-    							"align":"top",
-    							"color":"blue",//apply color to value in row
-    							"colSize":"25%",
-    						}
-    					},
-    					"default_action":{
-    						"type":"url",
-    						"url":"https://www.marvel.com", // if type =url use url
-    						"payload":"marvelmovies",
-    						"title":"Captain Marvel",
-    						"utterance":""
-    					},
-    					"bgcolor":"#F67159" // background color to entire row
-    				},
-    				{
-    					"title":{
-    						"image":{
-    							"image_type":"image",
-    							"image_src":"https://www.pinclipart.com/picdir/middle/44-444753_avengers-clipart-marvel-super-heroes-iron-man-logo.png",
-    							"radius":10,
-    							"size":"medium"
-    						},
-    						"type":"text",
-    						"text":{
-    							"title":"Iron Man",
-    							"subtitle":"Iron Sute",
-    						},
-    						"rowColor":"#4BA2F9"
-    					},
-    					"value":{
-    						"type":"text",
-    						"text":"$ 7,000,000",
-    						"layout":{
-    							"align":"center",
-    							"color":"blue",
-    							"colSize":"25%",
-    						}
-    					},
-    					"default_action":{
-    						"type":"url",
-    						"url":"https://www.marvel.com/comics/characters/1009368/iron_man",
-    						"utterance":"",
-    					},
-    					"bgcolor":"#C9EEBB"
-    				},
-    				{
-    					"title":{
-    						"image":{
-    							"image_type":"image",
-    							"image_src":"https://img1.looper.com/img/gallery/rumor-report-is-marvel-really-making-captain-america-4/intro-1571140919.jpg",
-    							"radius":10,
-    							"size":"medium"
-    						},
-    						"type":"text",
-    						"text":{
-    							"title":"Captain America",
-    							"subtitle":"Vibranium Shield",
-    						},
-    						"rowColor":"#F5978A"
-    					},
-    					"value":{
-    						"type":"text",
-    						"text":"$ 10,000,000",
-    						"layout":{
-    							"align":"center",
-    							"color":"black",
-    							"colSize":"25%",
-    						}
-    					},
-    					"default_action":{
-    						"type":"url",
-    						"url":"https://www.marvel.com/characters/captain-america-steve-rogers",
-    						"utterance":"",
-    					}
-    				},
-    				{
-    					"title":{
-    						"image":{
-    							"image_type":"image",
-    							"image_src":"https://vignette.wikia.nocookie.net/marvelcinematicuniverse/images/1/13/Thor-EndgameProfile.jpg/revision/latest/scale-to-width-down/620?cb=20190423174911",
-    							"radius":10,
-    							"size":"medium"
-    						},
-    						"type":"url",
-    						"url":{ 
-    							"link":"https://www.marvel.com/movies/captain-marvel",
-    							"title":"Captain Marvel",
-    							"subtitle":"bskjfkejf",
-    						},
-    						"rowColor":"#13F5E0"
-    					},
-    					"value":{
-    						"type":"text",
-    						"text":"$ 5,000,000",
-    						"layout":{
-    							"align":"center",
-    							"color":"#FF5733",
-    							"colSize":"25%",
-    						}
-    					},
-    					"default_action":{
-    						"type":"url",
-    						"url":"https://www.marvel.com/characters/thor-thor-odinson",
-    						"utterance":"",
-    					},
-    				}
-    			]
-    		}
-    
-    	]
-    }
-    };
-    print(JSON.stringify(message));
-    
-    */
+  /*TABLE LIST TEMPLATE
+  
+  var message={
+  	"type": "template",
+  	"payload": {
+  				"template_type": "tableList",
+  				"title":"Marvel Comics",
+  				"description":"Marvel Worldwide Inc.",
+  				"headerOptions":{
+  					"type":"text",
+  					"text":"Comics",
+  				},
+  
+  
+  	"elements":[
+  		{
+  			"sectionHeader":"Marvel Comics",
+  			"sectionHeaderDesc":"It is a story book",
+  			"rowItems":[
+  				{
+  					"title":{
+  						"image":{
+  							"image_type":"image",
+  							"image_src":"https://i1.pngguru.com/preview/277/841/159/captain-marvel-movie-folder-icon-v4-png-clipart.jpg",
+  							"radius":10,
+  							"size":"medium"
+  						},
+  						"type":"url",    //type=text | url
+  						"url":{			 // if type text use text, if type url use url
+  							"link":"https://www.facebook.com", // if type=url use link
+  							"title":"Captain Marvel",
+  							"subtitle":"Cosmic energy",
+  						},
+  
+  						"rowColor":"blue" //text color to entire row
+  					},
+  					"value":{
+  						"type":"url",
+  						"url":{
+  							"link":"https://www.marvel.com/movies/captain-marvel",
+  							"title":"energy"
+  						},
+  						"layout":{
+  							"align":"top",
+  							"color":"blue",//apply color to value in row
+  							"colSize":"25%",
+  						}
+  					},
+  					"default_action":{
+  						"type":"url",
+  						"url":"https://www.marvel.com", // if type =url use url
+  						"payload":"marvelmovies",
+  						"title":"Captain Marvel",
+  						"utterance":""
+  					},
+  					"bgcolor":"#F67159" // background color to entire row
+  				},
+  				{
+  					"title":{
+  						"image":{
+  							"image_type":"image",
+  							"image_src":"https://www.pinclipart.com/picdir/middle/44-444753_avengers-clipart-marvel-super-heroes-iron-man-logo.png",
+  							"radius":10,
+  							"size":"medium"
+  						},
+  						"type":"text",
+  						"text":{
+  							"title":"Iron Man",
+  							"subtitle":"Iron Sute",
+  						},
+  						"rowColor":"#4BA2F9"
+  					},
+  					"value":{
+  						"type":"text",
+  						"text":"$ 7,000,000",
+  						"layout":{
+  							"align":"center",
+  							"color":"blue",
+  							"colSize":"25%",
+  						}
+  					},
+  					"default_action":{
+  						"type":"url",
+  						"url":"https://www.marvel.com/comics/characters/1009368/iron_man",
+  						"utterance":"",
+  					},
+  					"bgcolor":"#C9EEBB"
+  				},
+  				{
+  					"title":{
+  						"image":{
+  							"image_type":"image",
+  							"image_src":"https://img1.looper.com/img/gallery/rumor-report-is-marvel-really-making-captain-america-4/intro-1571140919.jpg",
+  							"radius":10,
+  							"size":"medium"
+  						},
+  						"type":"text",
+  						"text":{
+  							"title":"Captain America",
+  							"subtitle":"Vibranium Shield",
+  						},
+  						"rowColor":"#F5978A"
+  					},
+  					"value":{
+  						"type":"text",
+  						"text":"$ 10,000,000",
+  						"layout":{
+  							"align":"center",
+  							"color":"black",
+  							"colSize":"25%",
+  						}
+  					},
+  					"default_action":{
+  						"type":"url",
+  						"url":"https://www.marvel.com/characters/captain-america-steve-rogers",
+  						"utterance":"",
+  					}
+  				},
+  				{
+  					"title":{
+  						"image":{
+  							"image_type":"image",
+  							"image_src":"https://vignette.wikia.nocookie.net/marvelcinematicuniverse/images/1/13/Thor-EndgameProfile.jpg/revision/latest/scale-to-width-down/620?cb=20190423174911",
+  							"radius":10,
+  							"size":"medium"
+  						},
+  						"type":"url",
+  						"url":{ 
+  							"link":"https://www.marvel.com/movies/captain-marvel",
+  							"title":"Captain Marvel",
+  							"subtitle":"bskjfkejf",
+  						},
+  						"rowColor":"#13F5E0"
+  					},
+  					"value":{
+  						"type":"text",
+  						"text":"$ 5,000,000",
+  						"layout":{
+  							"align":"center",
+  							"color":"#FF5733",
+  							"colSize":"25%",
+  						}
+  					},
+  					"default_action":{
+  						"type":"url",
+  						"url":"https://www.marvel.com/characters/thor-thor-odinson",
+  						"utterance":"",
+  					},
+  				}
+  			]
+  		}
+  
+  	]
+  }
+  };
+  print(JSON.stringify(message));
+  
+  */
 
-    var tableListTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var tableListTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
  {{if msgData.message}} \
 	 <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
 		 <div class="listTmplContent"> \
@@ -7261,42 +7289,42 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 </li> \
 {{/if}} \
 </scipt>';
-    /* rating template
-    var message = {
-    "type": "template",
-    "payload": {
-    "text":"Rate this chat session",
-    "template_type": "feedbackTemplate",
-    "view":"star|| emojis",
-    "sliderView":false, //add this line and change to true when you want template to open as slider
-    "starArrays":[],
-    "smileyArrays":[],
-    "messageTodisplay":"Glad you liked the experience. Thanks!"//To display on click of 5th star or emoji
-    }
-    };
-     if(message.payload.view === "star"){
-        var level=5;
-        for (i = level; i >=1; i--) {
-        var starArray = {
-            "starId": i,
-            "value": i,
-        };
-    message.payload.starArrays.push(starArray);
-    }
-    
-    }
-    else if(message.payload.view === "emojis"){
-        for(var i=1;i<=5;i++){
-         var smileyArray = {
-            "smileyId":i,
-            "value": i
-        };
-    message.payload.smileyArrays.push(smileyArray);
-        }
-    }
-    print(JSON.stringify(message)); */
+  /* rating template
+  var message = {
+  "type": "template",
+  "payload": {
+  "text":"Rate this chat session",
+  "template_type": "feedbackTemplate",
+  "view":"star|| emojis",
+  "sliderView":false, //add this line and change to true when you want template to open as slider
+  "starArrays":[],
+  "smileyArrays":[],
+  "messageTodisplay":"Glad you liked the experience. Thanks!"//To display on click of 5th star or emoji
+  }
+  };
+   if(message.payload.view === "star"){
+      var level=5;
+      for (i = level; i >=1; i--) {
+      var starArray = {
+          "starId": i,
+          "value": i,
+      };
+  message.payload.starArrays.push(starArray);
+  }
+  
+  }
+  else if(message.payload.view === "emojis"){
+      for(var i=1;i<=5;i++){
+       var smileyArray = {
+          "smileyId":i,
+          "value": i
+      };
+  message.payload.smileyArrays.push(smileyArray);
+      }
+  }
+  print(JSON.stringify(message)); */
 
-    var ratingTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var ratingTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 	{{if msgData.message}} \
 	<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
 		<div class="buttonTmplContent"> \
@@ -7329,291 +7357,291 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 		</li>\
 	{{/if}} \
 	</script>';
-    /* Sample template structure for List Widget Template 
-    	var message={
-        	"type": "template",
-        	"payload": {
-      "template_type": "listWidget",
-      "title": "Main Title",
-      "description": "Min description",
-      "headerOptions": {
-           "type": "menu",
-          "menu": [
-          {
-            "type": "postback",
-            "title": "menuitem",
-            "payload": "menupayload",
-            "image": {
-              "image_type": "image",
-              "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
-            },
-          },
-           {
-            "type": "postback",
-            "title": "menuitem",
-            "payload": "menupayload",
-            "image": {
-              "image_type": "image",
-              "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
-            },
-          },
-           {
-            "type": "postback",
-            "title": "menuitem",
-            "payload": "menupayload",
-            "image": {
-              "image_type": "image",
-              "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
-            },
-          },
-           {
-            "type": "postback",
-            "title": "menuitem",
-            "payload": "menupayload",
-            "image": {
-              "image_type": "image",
-              "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
-            },
-          }
-        ],
-    
-      },
-      "elements": [
+  /* Sample template structure for List Widget Template 
+  	var message={
+      	"type": "template",
+      	"payload": {
+    "template_type": "listWidget",
+    "title": "Main Title",
+    "description": "Min description",
+    "headerOptions": {
+         "type": "menu",
+        "menu": [
         {
+          "type": "postback",
+          "title": "menuitem",
+          "payload": "menupayload",
           "image": {
             "image_type": "image",
-            "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s",
-            "radius": 10,
-            "size": "medium"
-          },
-          "title": "One Title",
-          "subtitle": "One subtitle",
-          "value": {
-            "layout":{
-              "align":"center",
-              "colSize":"50%"
-            },
-            "type": "text",
-            "text": "One Value",
-          },
-         "details": [{
-                    "image": {
-                        "image_type": "image",
-                        "image_src": "https://static.thenounproject.com/png/2539563-200.png"
-                    },
-                    "description": "$250.00 - Aug 03rd - ONLINE BANKING TRANSFER FROM 0175 552393******8455"
-                }, {
-                    "image": {
-                        "image_type": "image",
-                        "image_src": "https://static.thenounproject.com/png/2539563-200.png"
-                    },
-                    "description": "$250.00 - Jul 26th - ONLINE BANKING TRANSFER TO 0175 552393******8455"
-                }],
-    
-          "default_action": {
-            "type": "postback",
-            "payload": "New Value",
-          },
-           "buttonsLayout": {
-            "displayLimit": {
-              "count": "3"
-            },
-            "style": "float"
-          },
-          "buttons": [
-            {
-              "type": "postback",
-              "title": "button1",
-              "payload": "buttonpayload",
-              "utterance": "",
-              "image": {
-                "image_type": "image",
-                "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
-              },
-            },
-              {
-              "type": "postback",
-              "title": "button2",
-              "payload": "buttonpayload",
-              "utterance": "",
-              "image": {
-                "image_type": "image",
-                "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
-              },
-            },
-              {
-              "type": "postback",
-              "title": "button3",
-              "payload": "buttonpayload",
-              "utterance": "",
-              "image": {
-                "image_type": "image",
-                "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
-              },
-            },
-              {
-              "type": "postback",
-              "title": "button4",
-              "payload": "buttonpayload",
-              "utterance": "",
-              "image": {
-                "image_type": "image",
-                "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
-              },
-            }
-          ]
-        },
-        {
-          "image": {
-            "image_type": "image",
-            "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s",
-            "radius": 10,
-            "size": "medium"
-          },
-          "title": "Two Title",
-          "subtitle": "Two subtitle",
-          "value": {
-            "layout":{
-              "align":"center",
-              "colSize":"50%"
-            },
-           "type": "menu",
-          "menu": [
-          {
-            "type": "postback",
-            "title": "menuitem",
-            "payload": "menupayload",
-            "image": {
-              "image_type": "image",
-              "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
-            },
-          },
-           {
-            "type": "postback",
-            "title": "menuitem",
-            "payload": "menupayload",
-            "image": {
-              "image_type": "image",
-              "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
-            },
-          },
-           {
-            "type": "postback",
-            "title": "menuitem",
-            "payload": "menupayload",
-            "image": {
-              "image_type": "image",
-              "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
-            },
-          },
-           {
-            "type": "postback",
-            "title": "menuitem",
-            "payload": "menupayload",
-            "image": {
-              "image_type": "image",
-              "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
-            },
-          }
-        ],
-          },
-         "details": [{
-                    "image": {
-                        "image_type": "image",
-                        "image_src": "https://static.thenounproject.com/png/2539563-200.png"
-                    },
-                    "description": "$250.00 - Aug 03rd - ONLINE BANKING TRANSFER FROM 0175 552393******8455"
-                }, {
-                    "image": {
-                        "image_type": "image",
-                        "image_src": "https://static.thenounproject.com/png/2539563-200.png"
-                    },
-                    "description": "$250.00 - Jul 26th - ONLINE BANKING TRANSFER TO 0175 552393******8455"
-                }],
-    
-          "default_action": {
-            "type": "postback",
-            "payload": "New Value",
+            "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
           },
         },
-        {
+         {
+          "type": "postback",
+          "title": "menuitem",
+          "payload": "menupayload",
           "image": {
             "image_type": "image",
-            "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s",
-            "radius": 10,
-            "size": "medium"
-          },
-          "title": "Three Title",
-          "subtitle": "Three subtitle",
-          "value": {
-            "layout":{
-              "align":"center",
-              "colSize":"50%"
-            },
-            "type": "text",
-            "text": "three Value",
-          },
-         "details": [{
-                    "image": {
-                        "image_type": "image",
-                        "image_src": "https://static.thenounproject.com/png/2539563-200.png"
-                    },
-                    "description": "$250.00 - Aug 03rd - ONLINE BANKING TRANSFER FROM 0175 552393******8455"
-                }, {
-                    "image": {
-                        "image_type": "image",
-                        "image_src": "https://static.thenounproject.com/png/2539563-200.png"
-                    },
-                    "description": "$250.00 - Jul 26th - ONLINE BANKING TRANSFER TO 0175 552393******8455"
-                }],
-    
-          "default_action": {
-            "type": "postback",
-            "payload": "New Value",
+            "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
           },
         },
-        {
+         {
+          "type": "postback",
+          "title": "menuitem",
+          "payload": "menupayload",
           "image": {
             "image_type": "image",
-            "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s",
-            "radius": 10,
-            "size": "medium"
+            "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
           },
-          "title": "Four Title",
-          "subtitle": "Four subtitle",
-          "value": {
-            "layout":{
-              "align":"center",
-              "colSize":"50%"
-            },
-            "type": "text",
-            "text": "Four Value",
-          },
-          "details": [{
-                    "image": {
-                        "image_type": "image",
-                        "image_src": "https://static.thenounproject.com/png/2539563-200.png"
-                    },
-                    "description": "$250.00 - Aug 03rd - ONLINE BANKING TRANSFER FROM 0175 552393******8455"
-                }, {
-                    "image": {
-                        "image_type": "image",
-                        "image_src": "https://static.thenounproject.com/png/2539563-200.png"
-                    },
-                    "description": "$250.00 - Jul 26th - ONLINE BANKING TRANSFER TO 0175 552393******8455"
-                }],
-    
-          "default_action": {
-            "type": "postback",
-            "payload": "New Value",
+        },
+         {
+          "type": "postback",
+          "title": "menuitem",
+          "payload": "menupayload",
+          "image": {
+            "image_type": "image",
+            "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
           },
         }
       ],
-        	}
-    }
-    print(JSON.stringify(message)); */
+  
+    },
+    "elements": [
+      {
+        "image": {
+          "image_type": "image",
+          "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s",
+          "radius": 10,
+          "size": "medium"
+        },
+        "title": "One Title",
+        "subtitle": "One subtitle",
+        "value": {
+          "layout":{
+            "align":"center",
+            "colSize":"50%"
+          },
+          "type": "text",
+          "text": "One Value",
+        },
+       "details": [{
+                  "image": {
+                      "image_type": "image",
+                      "image_src": "https://static.thenounproject.com/png/2539563-200.png"
+                  },
+                  "description": "$250.00 - Aug 03rd - ONLINE BANKING TRANSFER FROM 0175 552393******8455"
+              }, {
+                  "image": {
+                      "image_type": "image",
+                      "image_src": "https://static.thenounproject.com/png/2539563-200.png"
+                  },
+                  "description": "$250.00 - Jul 26th - ONLINE BANKING TRANSFER TO 0175 552393******8455"
+              }],
+  
+        "default_action": {
+          "type": "postback",
+          "payload": "New Value",
+        },
+         "buttonsLayout": {
+          "displayLimit": {
+            "count": "3"
+          },
+          "style": "float"
+        },
+        "buttons": [
+          {
+            "type": "postback",
+            "title": "button1",
+            "payload": "buttonpayload",
+            "utterance": "",
+            "image": {
+              "image_type": "image",
+              "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
+            },
+          },
+            {
+            "type": "postback",
+            "title": "button2",
+            "payload": "buttonpayload",
+            "utterance": "",
+            "image": {
+              "image_type": "image",
+              "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
+            },
+          },
+            {
+            "type": "postback",
+            "title": "button3",
+            "payload": "buttonpayload",
+            "utterance": "",
+            "image": {
+              "image_type": "image",
+              "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
+            },
+          },
+            {
+            "type": "postback",
+            "title": "button4",
+            "payload": "buttonpayload",
+            "utterance": "",
+            "image": {
+              "image_type": "image",
+              "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
+            },
+          }
+        ]
+      },
+      {
+        "image": {
+          "image_type": "image",
+          "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s",
+          "radius": 10,
+          "size": "medium"
+        },
+        "title": "Two Title",
+        "subtitle": "Two subtitle",
+        "value": {
+          "layout":{
+            "align":"center",
+            "colSize":"50%"
+          },
+         "type": "menu",
+        "menu": [
+        {
+          "type": "postback",
+          "title": "menuitem",
+          "payload": "menupayload",
+          "image": {
+            "image_type": "image",
+            "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
+          },
+        },
+         {
+          "type": "postback",
+          "title": "menuitem",
+          "payload": "menupayload",
+          "image": {
+            "image_type": "image",
+            "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
+          },
+        },
+         {
+          "type": "postback",
+          "title": "menuitem",
+          "payload": "menupayload",
+          "image": {
+            "image_type": "image",
+            "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
+          },
+        },
+         {
+          "type": "postback",
+          "title": "menuitem",
+          "payload": "menupayload",
+          "image": {
+            "image_type": "image",
+            "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s"
+          },
+        }
+      ],
+        },
+       "details": [{
+                  "image": {
+                      "image_type": "image",
+                      "image_src": "https://static.thenounproject.com/png/2539563-200.png"
+                  },
+                  "description": "$250.00 - Aug 03rd - ONLINE BANKING TRANSFER FROM 0175 552393******8455"
+              }, {
+                  "image": {
+                      "image_type": "image",
+                      "image_src": "https://static.thenounproject.com/png/2539563-200.png"
+                  },
+                  "description": "$250.00 - Jul 26th - ONLINE BANKING TRANSFER TO 0175 552393******8455"
+              }],
+  
+        "default_action": {
+          "type": "postback",
+          "payload": "New Value",
+        },
+      },
+      {
+        "image": {
+          "image_type": "image",
+          "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s",
+          "radius": 10,
+          "size": "medium"
+        },
+        "title": "Three Title",
+        "subtitle": "Three subtitle",
+        "value": {
+          "layout":{
+            "align":"center",
+            "colSize":"50%"
+          },
+          "type": "text",
+          "text": "three Value",
+        },
+       "details": [{
+                  "image": {
+                      "image_type": "image",
+                      "image_src": "https://static.thenounproject.com/png/2539563-200.png"
+                  },
+                  "description": "$250.00 - Aug 03rd - ONLINE BANKING TRANSFER FROM 0175 552393******8455"
+              }, {
+                  "image": {
+                      "image_type": "image",
+                      "image_src": "https://static.thenounproject.com/png/2539563-200.png"
+                  },
+                  "description": "$250.00 - Jul 26th - ONLINE BANKING TRANSFER TO 0175 552393******8455"
+              }],
+  
+        "default_action": {
+          "type": "postback",
+          "payload": "New Value",
+        },
+      },
+      {
+        "image": {
+          "image_type": "image",
+          "image_src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3entfePD55XmxKLRx_ZswN3vyRHrV9hIU24EM8pEkyLxsU7M&s",
+          "radius": 10,
+          "size": "medium"
+        },
+        "title": "Four Title",
+        "subtitle": "Four subtitle",
+        "value": {
+          "layout":{
+            "align":"center",
+            "colSize":"50%"
+          },
+          "type": "text",
+          "text": "Four Value",
+        },
+        "details": [{
+                  "image": {
+                      "image_type": "image",
+                      "image_src": "https://static.thenounproject.com/png/2539563-200.png"
+                  },
+                  "description": "$250.00 - Aug 03rd - ONLINE BANKING TRANSFER FROM 0175 552393******8455"
+              }, {
+                  "image": {
+                      "image_type": "image",
+                      "image_src": "https://static.thenounproject.com/png/2539563-200.png"
+                  },
+                  "description": "$250.00 - Jul 26th - ONLINE BANKING TRANSFER TO 0175 552393******8455"
+              }],
+  
+        "default_action": {
+          "type": "postback",
+          "payload": "New Value",
+        },
+      }
+    ],
+      	}
+  }
+  print(JSON.stringify(message)); */
 
-    var listWidget = '<script id="chat-window-listTemplate" type="text/x-jqury-tmpl">\
+  var listWidget = '<script id="chat-window-listTemplate" type="text/x-jqury-tmpl">\
 	{{if msgData.message}} \
 	<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
 		<div class="listTmplContent"> \
@@ -7870,702 +7898,704 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 	{{/if}} \
 	</script>';
 
-    if (tempType === "dropdown_template") {
-      return dropdownTemplate;
-    } else if (tempType === "checkBoxesTemplate") {
-      return checkBoxesTemplate;
-    } else if (tempType === "likeDislikeTemplate") {
-      return likeDislikeTemplate;
-    } else if (tempType === "formTemplate") {
-      return formTemplate;
-    } else if (tempType === "advancedMultiSelect") {
-      return advancedMultiSelect;
-    } else if (tempType === "templatelistView") {
-      return listViewTemplate;
-    } else if (tempType === "actionSheetTemplate") {
-      return listActionSheetTemplate;
-    } else if (tempType === "tableListTemplate") {
-      return tableListTemplate;
-    } else if (tempType === "ratingTemplate") {
-      return ratingTemplate;
-    } else if (tempType === "listWidget") {
-      return listWidget;
-    } else {
-      return "";
-    }
-
+  if (tempType === "dropdown_template") {
+    return dropdownTemplate;
+  } else if (tempType === "checkBoxesTemplate") {
+    return checkBoxesTemplate;
+  } else if (tempType === "likeDislikeTemplate") {
+    return likeDislikeTemplate;
+  } else if (tempType === "formTemplate") {
+    return formTemplate;
+  } else if (tempType === "advancedMultiSelect") {
+    return advancedMultiSelect;
+  } else if (tempType === "templatelistView") {
+    return listViewTemplate;
+  } else if (tempType === "actionSheetTemplate") {
+    return listActionSheetTemplate;
+  } else if (tempType === "tableListTemplate") {
+    return tableListTemplate;
+  } else if (tempType === "ratingTemplate") {
+    return ratingTemplate;
+  } else if (tempType === "listWidget") {
+    return listWidget;
+  } else {
     return "";
-  }; // end of getChatTemplate method
+  }
+
+  return "";
+}; // end of getChatTemplate method
 
 
-  customTemplate.prototype.getColumnWidth = function (width) {
-    var _self = this;
+customTemplate.prototype.getColumnWidth = function (width) {
+  var _self = this;
 
-    var newWidth;
-    var widthToApply = '100%';
+  var newWidth;
+  var widthToApply = '100%';
 
-    if (width) {
-      newWidth = width.replace(/[^\d.-]/g, '');
+  if (width) {
+    newWidth = width.replace(/[^\d.-]/g, '');
+    console.log(width);
+
+    try {
+      widthToApply = 100 - parseInt(newWidth, 10);
+    } catch (e) {
       console.log(width);
-
-      try {
-        widthToApply = 100 - parseInt(newWidth, 10);
-      } catch (e) {
-        console.log(width);
-      }
-
-      return widthToApply;
     }
-  }; //Below method is for template specific events
+
+    return widthToApply;
+  }
+}; //Below method is for template specific events
 
 
-  customTemplate.prototype.templateEvents = function (ele, templateType, bindingData) {
-    chatInitialize = this.chatInitialize;
+customTemplate.prototype.templateEvents = function (ele, templateType, bindingData) {
+  chatInitialize = this.chatInitialize;
 
-    var _self = this;
+  var _self = this;
 
-    var $ele = $(ele);
+  var $ele = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(ele);
 
-    if (templateType === 'TabbedList' || templateType === 'listWidget') {
-      $($ele.find(".tabs")[0]).addClass("active");
-      var titleEle = $ele.find('.listViewLeftContent');
+  if (templateType === 'TabbedList' || templateType === 'listWidget') {
+    (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])($ele.find(".tabs")[0]).addClass("active");
+    var titleEle = $ele.find('.listViewLeftContent');
 
-      if (titleEle && titleEle.length) {
-        for (i = 0; i < titleEle.length; i++) {
-          var ele = titleEle[i];
+    if (titleEle && titleEle.length) {
+      for (i = 0; i < titleEle.length; i++) {
+        var ele = titleEle[i];
 
-          if ($(ele).attr('col-size')) {
-            if ($(ele).hasClass("listViewLeftContent")) {
-              var width = _self.getColumnWidth(100 - parseInt($(ele).attr('col-size')) + '%');
+        if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(ele).attr('col-size')) {
+          if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(ele).hasClass("listViewLeftContent")) {
+            var width = _self.getColumnWidth(100 - parseInt((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(ele).attr('col-size')) + '%');
 
-              $(ele).css("width", width + '%');
-            } else {
-              var width = _self.getColumnWidth($(ele).attr('col-size'));
+            (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(ele).css("width", width + '%');
+          } else {
+            var width = _self.getColumnWidth((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(ele).attr('col-size'));
 
-              $(ele).css("width", width + '%');
-            }
+            (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(ele).css("width", width + '%');
           }
         }
       }
+    }
 
-      console.log(bindingData);
-      $ele.off('click', '.listViewLeftContent').on('click', '.listViewLeftContent', function (e) {
-        e.stopPropagation();
-        var actionObjString = $(e.currentTarget).attr('actionObj');
+    console.log(bindingData);
+    $ele.off('click', '.listViewLeftContent').on('click', '.listViewLeftContent', function (e) {
+      e.stopPropagation();
+      var actionObjString = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).attr('actionObj');
 
-        if (actionObjString) {
-          var actionObj = {};
-          actionObj = JSON.parse(actionObjString);
-        }
+      if (actionObjString) {
+        var actionObj = {};
+        actionObj = JSON.parse(actionObjString);
+      }
 
-        var _self = this;
+      var _self = this;
 
-        valueClick(_self, actionObj);
-      });
-      $ele.off('click', '.moreValue').on('click', '.moreValue', function (e) {
-        e.stopPropagation();
-      });
-      $ele.off('click', '.tabs').on('click', '.tabs', function (e) {
-        e.stopPropagation();
+      valueClick(_self, actionObj);
+    });
+    $ele.off('click', '.moreValue').on('click', '.moreValue', function (e) {
+      e.stopPropagation();
+    });
+    $ele.off('click', '.tabs').on('click', '.tabs', function (e) {
+      e.stopPropagation();
 
-        var _selectedTab = $(e.target).text();
+      var _selectedTab = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.target).text();
 
-        var msgData = $(e.target).closest(".tab-list-template").data();
-        var panelDetail = $(e.target).closest(".tab-list-template").attr('panelDetail');
+      var msgData = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.target).closest(".tab-list-template").data();
+      var panelDetail = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.target).closest(".tab-list-template").attr('panelDetail');
 
-        if (panelDetail) {
-          panelDetail = JSON.parse(panelDetail);
-        }
+      if (panelDetail) {
+        panelDetail = JSON.parse(panelDetail);
+      }
 
-        delete msgData.tmplItem;
-        var tempObj = {
+      delete msgData.tmplItem;
+      var tempObj = {
+        'tempdata': msgData,
+        'dataItems': msgData.elements,
+        'helpers': helpers,
+        'viewmore': panelDetail.viewmore,
+        'panelDetail': panelDetail
+      };
+
+      if (msgData && msgData.tabs && Object.keys(msgData.tabs) && Object.keys(msgData.tabs).length) {
+        tempObj = {
           'tempdata': msgData,
-          'dataItems': msgData.elements,
+          'dataItems': msgData.tabs[_selectedTab],
+          'tabs': Object.keys(msgData.tabs),
           'helpers': helpers,
           'viewmore': panelDetail.viewmore,
           'panelDetail': panelDetail
         };
+      }
 
-        if (msgData && msgData.tabs && Object.keys(msgData.tabs) && Object.keys(msgData.tabs).length) {
-          tempObj = {
-            'tempdata': msgData,
-            'dataItems': msgData.tabs[_selectedTab],
-            'tabs': Object.keys(msgData.tabs),
-            'helpers': helpers,
-            'viewmore': panelDetail.viewmore,
-            'panelDetail': panelDetail
-          };
-        }
+      var viewTabValues = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(_self.getTemplate("TabbedList")).tmplProxy(tempObj);
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(viewTabValues).find(".tabs[data-tabid='" + _selectedTab + "']").addClass("active");
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.target).closest(".tab-list-template").html((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(viewTabValues).html());
+    });
+    $ele.off('click', '#showMoreContents').on('click', '#showMoreContents', function (e) {
+      e.stopPropagation();
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showMoreBottom").removeClass('hide');
+    });
+    $ele.off('click', '.wid-temp-showMoreClose').on('click', '.wid-temp-showMoreClose', function (e) {
+      e.stopPropagation();
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showMoreBottom").addClass('hide');
+    });
+    $ele.off('click', '.wid-temp-showActions').on('click', '.wid-temp-showActions', function (e) {
+      e.stopPropagation();
 
-        var viewTabValues = $(_self.getTemplate("TabbedList")).tmplProxy(tempObj);
-        $(viewTabValues).find(".tabs[data-tabid='" + _selectedTab + "']").addClass("active");
-        $(e.target).closest(".tab-list-template").html($(viewTabValues).html());
-      });
-      $ele.off('click', '#showMoreContents').on('click', '#showMoreContents', function (e) {
-        e.stopPropagation();
-        $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showMoreBottom").removeClass('hide');
-      });
-      $ele.off('click', '.wid-temp-showMoreClose').on('click', '.wid-temp-showMoreClose', function (e) {
-        e.stopPropagation();
-        $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showMoreBottom").addClass('hide');
-      });
-      $ele.off('click', '.wid-temp-showActions').on('click', '.wid-temp-showActions', function (e) {
-        e.stopPropagation();
+      if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget) && (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).closest(".listViewTmplContentChild") && (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showActions") && (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showActions").hasClass('active')) {
+        (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showActions").removeClass('active');
+        (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).closest(".listViewTmplContentChild").find(".meetingActionButtons").addClass('hide'); // $(e.currentTarget).closest(".listViewTmplContentChild").find("#showMoreContents").removeClass('hide');
+      } else {
+        (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showActions").addClass('active');
+        (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).closest(".listViewTmplContentChild").find(".meetingActionButtons").removeClass('hide'); // $(e.currentTarget).closest(".listViewTmplContentChild").find("#showMoreContents").addClass('hide');
+      }
+    });
+    $ele.off('click', '.action').on('click', '.action', function (e) {
+      e.stopPropagation();
+      var actionObjString = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).attr('actionObj');
 
-        if ($(e.currentTarget) && $(e.currentTarget).closest(".listViewTmplContentChild") && $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showActions") && $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showActions").hasClass('active')) {
-          $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showActions").removeClass('active');
-          $(e.currentTarget).closest(".listViewTmplContentChild").find(".meetingActionButtons").addClass('hide'); // $(e.currentTarget).closest(".listViewTmplContentChild").find("#showMoreContents").removeClass('hide');
-        } else {
-          $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showActions").addClass('active');
-          $(e.currentTarget).closest(".listViewTmplContentChild").find(".meetingActionButtons").removeClass('hide'); // $(e.currentTarget).closest(".listViewTmplContentChild").find("#showMoreContents").addClass('hide');
-        }
-      });
-      $ele.off('click', '.action').on('click', '.action', function (e) {
-        e.stopPropagation();
-        var actionObjString = $(e.currentTarget).attr('actionObj');
-
-        if (actionObjString) {
-          var actionObj = {};
-          actionObj = JSON.parse(actionObjString);
-        } // var eData={
-        //   postbackValue: actionObj.payload,
-        //   payload:actionObj,
-        //   type:'widget'
-        // }
-        // if(eData && eData.postbackValue && eData.payload){
-        //   _self.triggerEvent('postback',eData);
-        // }
+      if (actionObjString) {
+        var actionObj = {};
+        actionObj = JSON.parse(actionObjString);
+      } // var eData={
+      //   postbackValue: actionObj.payload,
+      //   payload:actionObj,
+      //   type:'widget'
+      // }
+      // if(eData && eData.postbackValue && eData.payload){
+      //   _self.triggerEvent('postback',eData);
+      // }
 
 
-        if (_typeof(actionObj) == 'object' && actionObj.link) {
-          window.open(actionObj.link);
-        } else {
-          var _self = $(e.currentTarget).parent();
+      if (_typeof(actionObj) == 'object' && actionObj.link) {
+        window.open(actionObj.link);
+      } else {
+        var _self = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).parent();
 
-          valueClick(_self, actionObj);
-        }
-      }); // $('.widgetContentPanel').css({
-      //   'padding': '10px 20px'
-      // });
+        valueClick(_self, actionObj);
+      }
+    }); // $('.widgetContentPanel').css({
+    //   'padding': '10px 20px'
+    // });
+  }
+
+  $ele.off('click', '.dropbtnWidgt.moreValue,.dropbtnWidgt.actionBtns').on('click', '.dropbtnWidgt.moreValue,.dropbtnWidgt.actionBtns', function (e) {
+    var obj = this;
+
+    if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(obj).next().hasClass('dropdown-contentWidgt')) {
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(obj).next().toggleClass('show');
     }
 
-    $ele.off('click', '.dropbtnWidgt.moreValue,.dropbtnWidgt.actionBtns').on('click', '.dropbtnWidgt.moreValue,.dropbtnWidgt.actionBtns', function (e) {
-      var obj = this;
+    (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])('.dropdown-contentWidgt.show').not((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(obj).next()).removeClass('show');
+  });
 
-      if ($(obj).next().hasClass('dropdown-contentWidgt')) {
-        $(obj).next().toggleClass('show');
-      }
+  window.onclick = function (event) {
+    if (!event.target.matches('.dropbtnWidgt')) {
+      var dropdowns = document.getElementsByClassName("dropdown-contentWidgt");
+      var i;
 
-      $('.dropdown-contentWidgt.show').not($(obj).next()).removeClass('show');
-    });
+      for (i = 0; i < dropdowns.length; i++) {
+        var openDropdown = dropdowns[i];
 
-    window.onclick = function (event) {
-      if (!event.target.matches('.dropbtnWidgt')) {
-        var dropdowns = document.getElementsByClassName("dropdown-contentWidgt");
-        var i;
-
-        for (i = 0; i < dropdowns.length; i++) {
-          var openDropdown = dropdowns[i];
-
-          if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
-          }
+        if (openDropdown.classList.contains('show')) {
+          openDropdown.classList.remove('show');
         }
       }
-    };
+    }
   };
+};
 
-  customTemplate.prototype.bindEvents = function (messageHtml) {
-    chatInitialize = this.chatInitialize;
-    helpers = this.helpers;
-    $(messageHtml).find('.selectTemplateDropdowm').on('change', function (e) {
+customTemplate.prototype.bindEvents = function (messageHtml) {
+  chatInitialize = this.chatInitialize;
+  helpers = this.helpers;
+  (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).find('.selectTemplateDropdowm').on('change', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".chatInputBox").text(this.value);
+    var k = jQuery.Event('keydown', {
+      which: 13
+    });
+    k.keyCode = 13;
+    (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])('.chatInputBox').trigger(k);
+  });
+  /* Inline form submit click function starts here*/
+
+  (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).find(".formMainComponent").on('keydown', function (e) {
+    if (e.keyCode == 13) {
       e.preventDefault();
       e.stopPropagation();
-      $(".chatInputBox").text(this.value);
-      var k = jQuery.Event('keydown', {
-        which: 13
-      });
-      k.keyCode = 13;
-      $('.chatInputBox').trigger(k);
-    });
-    /* Inline form submit click function starts here*/
+    }
+  });
+  (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).find("#submit").on('click', function (e) {
+    var inputForm_id = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).closest('.buttonTmplContent').find(".formMainComponent .formBody");
+    var parentElement = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).closest(".fromOtherUsers.with-icon");
+    var messageData = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(parentElement).data();
 
-    $(messageHtml).find(".formMainComponent").on('keydown', function (e) {
-      if (e.keyCode == 13) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    });
-    $(messageHtml).find("#submit").on('click', function (e) {
-      var inputForm_id = $(e.currentTarget).closest('.buttonTmplContent').find(".formMainComponent .formBody");
-      var parentElement = $(e.currentTarget).closest(".fromOtherUsers.with-icon");
-      var messageData = $(parentElement).data();
+    if (messageData.tmplItem.data.msgData.message[0].component.payload) {
+      messageData.tmplItem.data.msgData.message[0].component.payload.ignoreCheckMark = true;
+      var msgData = messageData.tmplItem.data.msgData;
+    }
 
-      if (messageData.tmplItem.data.msgData.message[0].component.payload) {
-        messageData.tmplItem.data.msgData.message[0].component.payload.ignoreCheckMark = true;
-        var msgData = messageData.tmplItem.data.msgData;
-      }
+    if (inputForm_id.find("#email").val() == "") {
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(parentElement).find(".buttonTmplContent").last().find(".errorMessage").removeClass("hide");
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".errorMessage").text("Please enter value");
+    } else if (inputForm_id.find("input[type='password']").length != 0) {
+      var textPwd = inputForm_id.find("#email").val();
+      var passwordLength = textPwd.length;
+      var selectedValue = "";
 
-      if (inputForm_id.find("#email").val() == "") {
-        $(parentElement).find(".buttonTmplContent").last().find(".errorMessage").removeClass("hide");
-        $(".errorMessage").text("Please enter value");
-      } else if (inputForm_id.find("input[type='password']").length != 0) {
-        var textPwd = inputForm_id.find("#email").val();
-        var passwordLength = textPwd.length;
-        var selectedValue = "";
-
-        for (var i = 0; i < passwordLength; i++) {
-          selectedValue = selectedValue + "*";
-        }
-
-        $('.chatInputBox').text(textPwd);
-        $(messageHtml).find(".formMainComponent form").addClass("hide");
-      } else if (inputForm_id.find("input[type='password']").length == 0) {
-        $('.chatInputBox').text(inputForm_id.find("#email").val());
-        var selectedValue = inputForm_id.find("#email").val();
-        $(messageHtml).find(".formMainComponent form").addClass("hide");
+      for (var i = 0; i < passwordLength; i++) {
+        selectedValue = selectedValue + "*";
       }
 
-      chatInitialize.sendMessage($('.chatInputBox'), selectedValue, msgData);
-    });
-    /* Inline form submit click function ends here*/
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])('.chatInputBox').text(textPwd);
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).find(".formMainComponent form").addClass("hide");
+    } else if (inputForm_id.find("input[type='password']").length == 0) {
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])('.chatInputBox').text(inputForm_id.find("#email").val());
+      var selectedValue = inputForm_id.find("#email").val();
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).find(".formMainComponent form").addClass("hide");
+    }
 
-    /* Advanced multi select checkbox click functions starts here */
+    chatInitialize.sendMessage((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])('.chatInputBox'), selectedValue, msgData);
+  });
+  /* Inline form submit click function ends here*/
 
-    $(messageHtml).off('click', '.closeBottomSlider').on('click', '.closeBottomSlider', function (e) {
-      bottomSliderAction('hide');
-    });
-    $(messageHtml).off('click', '.singleSelect').on('click', '.singleSelect', function (e) {
-      var parentContainer = $(e.currentTarget).closest('.listTmplContentBox');
-      var allGroups = $(parentContainer).find('.collectionDiv');
-      var allcheckboxs = $(parentContainer).find('.checkbox input');
-      $(allGroups).removeClass('selected');
-      var selectedGroup = $(e.currentTarget).closest('.collectionDiv');
-      $(selectedGroup).addClass("selected");
-      var groupSelectInput = $(selectedGroup).find('.groupMultiSelect input');
+  /* Advanced multi select checkbox click functions starts here */
 
-      if (allGroups) {
-        if (allGroups && allGroups.length) {
-          for (i = 0; i < allGroups.length; i++) {
-            if (allGroups && !$(allGroups[i]).hasClass('selected')) {
-              var allGroupItems = $(allGroups[i]).find('.checkbox input');
+  (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).off('click', '.closeBottomSlider').on('click', '.closeBottomSlider', function (e) {
+    bottomSliderAction('hide');
+  });
+  (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).off('click', '.singleSelect').on('click', '.singleSelect', function (e) {
+    var parentContainer = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).closest('.listTmplContentBox');
+    var allGroups = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(parentContainer).find('.collectionDiv');
+    var allcheckboxs = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(parentContainer).find('.checkbox input');
+    (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(allGroups).removeClass('selected');
+    var selectedGroup = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).closest('.collectionDiv');
+    (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(selectedGroup).addClass("selected");
+    var groupSelectInput = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(selectedGroup).find('.groupMultiSelect input');
 
-              for (j = 0; j < allGroupItems.length; j++) {
-                $(allGroupItems[j]).prop("checked", false);
-              }
+    if (allGroups) {
+      if (allGroups && allGroups.length) {
+        for (i = 0; i < allGroups.length; i++) {
+          if (allGroups && !(0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(allGroups[i]).hasClass('selected')) {
+            var allGroupItems = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(allGroups[i]).find('.checkbox input');
+
+            for (j = 0; j < allGroupItems.length; j++) {
+              (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(allGroupItems[j]).prop("checked", false);
             }
           }
         }
       }
+    }
 
-      if (selectedGroup && selectedGroup[0]) {
-        var allChecked = true;
-        var selectedGroupItems = $(selectedGroup).find('.checkbox.singleSelect input');
+    if (selectedGroup && selectedGroup[0]) {
+      var allChecked = true;
+      var selectedGroupItems = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(selectedGroup).find('.checkbox.singleSelect input');
 
-        if (selectedGroupItems && selectedGroupItems.length) {
-          for (i = 0; i < selectedGroupItems.length; i++) {
-            if (!$(selectedGroupItems[i]).prop("checked")) {
-              allChecked = false;
-            }
-          }
-        }
-
-        if (allChecked) {
-          $(groupSelectInput).prop("checked", true);
-        } else {
-          $(groupSelectInput).prop("checked", false);
-        }
-      }
-
-      var showDoneButton = false;
-      var doneButton = $(parentContainer).find('.multiCheckboxBtn');
-
-      if (allcheckboxs && allcheckboxs.length) {
-        for (i = 0; i < allcheckboxs.length; i++) {
-          if ($(allcheckboxs[i]).prop("checked")) {
-            showDoneButton = true;
+      if (selectedGroupItems && selectedGroupItems.length) {
+        for (i = 0; i < selectedGroupItems.length; i++) {
+          if (!(0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(selectedGroupItems[i]).prop("checked")) {
+            allChecked = false;
           }
         }
       }
 
-      if (showDoneButton) {
-        $(doneButton).removeClass('hide');
+      if (allChecked) {
+        (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(groupSelectInput).prop("checked", true);
       } else {
-        $(doneButton).addClass('hide');
+        (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(groupSelectInput).prop("checked", false);
       }
-    });
-    $(messageHtml).off('click', '.viewMoreGroups').on('click', '.viewMoreGroups', function (e) {
-      var parentContainer = $(e.currentTarget).closest('.listTmplContentBox');
-      var allGroups = $(parentContainer).find('.collectionDiv');
-      $(allGroups).removeClass('hide');
-      $(".viewMoreContainer").addClass('hide');
-    });
-    $(messageHtml).off('click', '.groupMultiSelect').on('click', '.groupMultiSelect', function (e) {
-      var clickedGroup = $(e.currentTarget).find('input');
-      var clickedGroupStatus = $(clickedGroup[0]).prop('checked');
-      var selectedGroup = $(e.currentTarget).closest('.collectionDiv');
-      var selectedGroupItems = $(selectedGroup).find('.checkbox input');
-      var parentContainer = $(e.currentTarget).closest('.listTmplContentBox');
-      var allcheckboxs = $(parentContainer).find('.checkbox input');
+    }
 
-      if (allcheckboxs && allcheckboxs.length) {
-        for (i = 0; i < allcheckboxs.length; i++) {
-          $(allcheckboxs[i]).prop("checked", false);
+    var showDoneButton = false;
+    var doneButton = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(parentContainer).find('.multiCheckboxBtn');
+
+    if (allcheckboxs && allcheckboxs.length) {
+      for (i = 0; i < allcheckboxs.length; i++) {
+        if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(allcheckboxs[i]).prop("checked")) {
+          showDoneButton = true;
         }
       }
+    }
 
-      if (clickedGroupStatus) {
-        if (selectedGroupItems && selectedGroupItems.length) {
-          for (i = 0; i < selectedGroupItems.length; i++) {
-            $(selectedGroupItems[i]).prop("checked", true);
-          }
+    if (showDoneButton) {
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(doneButton).removeClass('hide');
+    } else {
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(doneButton).addClass('hide');
+    }
+  });
+  (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).off('click', '.viewMoreGroups').on('click', '.viewMoreGroups', function (e) {
+    var parentContainer = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).closest('.listTmplContentBox');
+    var allGroups = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(parentContainer).find('.collectionDiv');
+    (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(allGroups).removeClass('hide');
+    (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".viewMoreContainer").addClass('hide');
+  });
+  (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).off('click', '.groupMultiSelect').on('click', '.groupMultiSelect', function (e) {
+    var clickedGroup = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).find('input');
+    var clickedGroupStatus = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(clickedGroup[0]).prop('checked');
+    var selectedGroup = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).closest('.collectionDiv');
+    var selectedGroupItems = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(selectedGroup).find('.checkbox input');
+    var parentContainer = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).closest('.listTmplContentBox');
+    var allcheckboxs = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(parentContainer).find('.checkbox input');
+
+    if (allcheckboxs && allcheckboxs.length) {
+      for (i = 0; i < allcheckboxs.length; i++) {
+        (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(allcheckboxs[i]).prop("checked", false);
+      }
+    }
+
+    if (clickedGroupStatus) {
+      if (selectedGroupItems && selectedGroupItems.length) {
+        for (i = 0; i < selectedGroupItems.length; i++) {
+          (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(selectedGroupItems[i]).prop("checked", true);
         }
-      } else {
-        if (selectedGroupItems && selectedGroupItems.length) {
-          for (i = 0; i < selectedGroupItems.length; i++) {
-            $(selectedGroupItems[i]).prop("checked", false);
-          }
+      }
+    } else {
+      if (selectedGroupItems && selectedGroupItems.length) {
+        for (i = 0; i < selectedGroupItems.length; i++) {
+          (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(selectedGroupItems[i]).prop("checked", false);
         }
       }
+    }
 
-      var showDoneButton = false;
-      var doneButton = $(parentContainer).find('.multiCheckboxBtn');
+    var showDoneButton = false;
+    var doneButton = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(parentContainer).find('.multiCheckboxBtn');
 
-      if (allcheckboxs && allcheckboxs.length) {
-        for (i = 0; i < allcheckboxs.length; i++) {
-          if ($(allcheckboxs[i]).prop("checked")) {
-            showDoneButton = true;
-          }
+    if (allcheckboxs && allcheckboxs.length) {
+      for (i = 0; i < allcheckboxs.length; i++) {
+        if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(allcheckboxs[i]).prop("checked")) {
+          showDoneButton = true;
         }
       }
+    }
 
-      if (showDoneButton) {
-        $(doneButton).removeClass('hide');
-      } else {
-        $(doneButton).addClass('hide');
-      }
-    });
-    $(messageHtml).find(".multiCheckboxBtn").on('click', function (e) {
-      var msgData = $(messageHtml).data();
+    if (showDoneButton) {
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(doneButton).removeClass('hide');
+    } else {
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(doneButton).addClass('hide');
+    }
+  });
+  (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).find(".multiCheckboxBtn").on('click', function (e) {
+    var msgData = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).data();
 
-      if (msgData.message[0].component.payload.sliderView === true) {
-        msgData.message[0].component.payload.sliderView = false;
-        chatInitialize.renderMessage(msgData);
-        bottomSliderAction("hide");
-      }
-
+    if (msgData.message[0].component.payload.sliderView === true) {
       msgData.message[0].component.payload.sliderView = false;
-      var checkboxSelection = $(e.currentTarget.parentElement).find('.checkInput:checked');
-      var selectedValue = [];
-      var toShowText = [];
+      chatInitialize.renderMessage(msgData);
+      bottomSliderAction("hide");
+    }
 
-      for (var i = 0; i < checkboxSelection.length; i++) {
-        selectedValue.push($(checkboxSelection[i]).attr('value'));
-        toShowText.push($(checkboxSelection[i]).attr('text'));
+    msgData.message[0].component.payload.sliderView = false;
+    var checkboxSelection = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget.parentElement).find('.checkInput:checked');
+    var selectedValue = [];
+    var toShowText = [];
+
+    for (var i = 0; i < checkboxSelection.length; i++) {
+      selectedValue.push((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(checkboxSelection[i]).attr('value'));
+      toShowText.push((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(checkboxSelection[i]).attr('text'));
+    }
+
+    (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])('.chatInputBox').text('Here are the selected items ' + ': ' + selectedValue.toString());
+    chatInitialize.sendMessage((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])('.chatInputBox'), 'Here are the selected items ' + ': ' + toShowText.toString());
+    (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).find(".multiCheckboxBtn").hide();
+    (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).find(".advancedMultiSelectScroll").css({
+      "pointer-events": "none"
+    });
+    (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).find(".advancedMultiSelectScroll").css({
+      "overflow": "hidden"
+    });
+  });
+  /* Advanced multi select checkbox click functions ends here */
+
+  /* New List Template click functions starts here*/
+
+  (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).off('click', '.listViewTmplContent .seeMoreList').on('click', '.listViewTmplContent .seeMoreList', function () {
+    if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".list-template-sheet").length !== 0) {
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".list-template-sheet").remove();
+      listViewTabs();
+    } else if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".list-template-sheet").length === 0) {
+      listViewTabs();
+    }
+  });
+  (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).find(".listViewLeftContent").on('click', function (e) {
+    if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(this).attr('data-url')) {
+      var a_link = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(this).attr('data-url');
+
+      if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
+        a_link = "http:////" + a_link;
       }
 
-      $('.chatInputBox').text('Here are the selected items ' + ': ' + selectedValue.toString());
-      chatInitialize.sendMessage($('.chatInputBox'), 'Here are the selected items ' + ': ' + toShowText.toString());
-      $(messageHtml).find(".multiCheckboxBtn").hide();
-      $(messageHtml).find(".advancedMultiSelectScroll").css({
+      var _tempWin = window.open(a_link, "_blank");
+    } else {
+      var _innerText = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(this).attr('data-value');
+
+      var postBack = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(this).attr('data-title');
+      chatInitialize.sendMessage((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])('.chatInputBox').text(_innerText), postBack);
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".listViewTmplContentBox").css({
         "pointer-events": "none"
       });
-      $(messageHtml).find(".advancedMultiSelectScroll").css({
-        "overflow": "hidden"
-      });
-    });
-    /* Advanced multi select checkbox click functions ends here */
+    }
+  });
+  /* New List Template click functions ends here*/
 
-    /* New List Template click functions starts here*/
+  (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).off('click', '.listViewItemValue.actionLink,.listTableDetailsDesc').on('click', '.listViewItemValue.actionLink,.listTableDetailsDesc', function () {
+    var _self = this;
 
-    $(messageHtml).off('click', '.listViewTmplContent .seeMoreList').on('click', '.listViewTmplContent .seeMoreList', function () {
-      if ($(".list-template-sheet").length !== 0) {
-        $(".list-template-sheet").remove();
-        listViewTabs();
-      } else if ($(".list-template-sheet").length === 0) {
-        listViewTabs();
+    valueClick(_self);
+  });
+  (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).find(".ratingMainComponent").off('click', '[type*="radio"]').on('click', '[type*="radio"]', function (e) {
+    var _innerText = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).attr('value');
+
+    var msgData = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).data();
+    var silderValue = msgData.message[0].component.payload.sliderView;
+
+    if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])("label.active")) {
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])("label").removeClass("active");
+    }
+
+    for (i = parseInt(_innerText); i > 0; i--) {
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])('label[for="' + i + '-stars"]').addClass("active");
+    }
+
+    if (_innerText == msgData.message[0].component.payload.starArrays.length) {
+      var messageTodisplay = msgData.message[0].component.payload.messageTodisplay;
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".suggestionsMainComponent").remove();
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".ratingStar").remove();
+
+      if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".submitButton")) {
+        (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".submitButton").remove();
       }
-    });
-    $(messageHtml).find(".listViewLeftContent").on('click', function (e) {
-      if ($(this).attr('data-url')) {
-        var a_link = $(this).attr('data-url');
 
-        if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
-          a_link = "http:////" + a_link;
-        }
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".kore-action-sheet").find(".ratingMainComponent").append('<div class="ratingStar">' + messageTodisplay + '</div><div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>');
+    } else {
+      if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".submitButton")) {
+        (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".submitButton").remove();
+      }
 
-        var _tempWin = window.open(a_link, "_blank");
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".ratingStar").remove();
+
+      if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".suggestionsMainComponent").length > 0) {
+        (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".suggestionsMainComponent").remove();
+        (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".kore-action-sheet").find(".ratingMainComponent").append(customTemplate.prototype.suggestionComponent());
       } else {
-        var _innerText = $(this).attr('data-value');
-
-        var postBack = $(this).attr('data-title');
-        chatInitialize.sendMessage($('.chatInputBox').text(_innerText), postBack);
-        $(".listViewTmplContentBox").css({
-          "pointer-events": "none"
-        });
+        (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".kore-action-sheet").find(".ratingMainComponent").append(customTemplate.prototype.suggestionComponent());
       }
-    });
-    /* New List Template click functions ends here*/
+    }
 
-    $(messageHtml).off('click', '.listViewItemValue.actionLink,.listTableDetailsDesc').on('click', '.listViewItemValue.actionLink,.listTableDetailsDesc', function () {
-      var _self = this;
+    if (silderValue === false) {
+      chatInitialize.sendMessage((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])('.chatInputBox').text(_innerText), _innerText);
+    }
 
-      valueClick(_self);
-    });
-    $(messageHtml).find(".ratingMainComponent").off('click', '[type*="radio"]').on('click', '[type*="radio"]', function (e) {
-      var _innerText = $(e.currentTarget).attr('value');
-
-      var msgData = $(messageHtml).data();
-      var silderValue = msgData.message[0].component.payload.sliderView;
-
-      if ($("label.active")) {
-        $("label").removeClass("active");
-      }
-
-      for (i = parseInt(_innerText); i > 0; i--) {
-        $('label[for="' + i + '-stars"]').addClass("active");
-      }
+    (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".buttonTmplContent .ratingMainComponent .submitBtn").click(function () {
+      msgData.message[0].component.payload.sliderView = false;
 
       if (_innerText == msgData.message[0].component.payload.starArrays.length) {
         var messageTodisplay = msgData.message[0].component.payload.messageTodisplay;
-        $(".suggestionsMainComponent").remove();
-        $(".ratingStar").remove();
-
-        if ($(".submitButton")) {
-          $(".submitButton").remove();
-        }
-
-        $(".kore-action-sheet").find(".ratingMainComponent").append('<div class="ratingStar">' + messageTodisplay + '</div><div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>');
+        chatInitialize.renderMessage(msgData);
+        chatInitialize.sendMessage((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])('.chatInputBox').text(_innerText + " :" + messageTodisplay), _innerText + " :" + messageTodisplay);
+      } else if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".suggestionInput").val() == "") {
+        chatInitialize.renderMessage(msgData);
+        chatInitialize.sendMessage((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])('.chatInputBox').text(_innerText), _innerText);
       } else {
-        if ($(".submitButton")) {
-          $(".submitButton").remove();
-        }
-
-        $(".ratingStar").remove();
-
-        if ($(".suggestionsMainComponent").length > 0) {
-          $(".suggestionsMainComponent").remove();
-          $(".kore-action-sheet").find(".ratingMainComponent").append(customTemplate.prototype.suggestionComponent());
-        } else {
-          $(".kore-action-sheet").find(".ratingMainComponent").append(customTemplate.prototype.suggestionComponent());
-        }
+        var messageDisplay = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".suggestionInput").val();
+        chatInitialize.renderMessage(msgData);
+        chatInitialize.sendMessage((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])('.chatInputBox').text(_innerText + " :" + messageDisplay), _innerText + " :" + messageDisplay);
       }
 
-      if (silderValue === false) {
-        chatInitialize.sendMessage($('.chatInputBox').text(_innerText), _innerText);
-      }
-
-      $(".buttonTmplContent .ratingMainComponent .submitBtn").click(function () {
-        msgData.message[0].component.payload.sliderView = false;
-
-        if (_innerText == msgData.message[0].component.payload.starArrays.length) {
-          var messageTodisplay = msgData.message[0].component.payload.messageTodisplay;
-          chatInitialize.renderMessage(msgData);
-          chatInitialize.sendMessage($('.chatInputBox').text(_innerText + " :" + messageTodisplay), _innerText + " :" + messageTodisplay);
-        } else if ($(".suggestionInput").val() == "") {
-          chatInitialize.renderMessage(msgData);
-          chatInitialize.sendMessage($('.chatInputBox').text(_innerText), _innerText);
-        } else {
-          var messageDisplay = $(".suggestionInput").val();
-          chatInitialize.renderMessage(msgData);
-          chatInitialize.sendMessage($('.chatInputBox').text(_innerText + " :" + messageDisplay), _innerText + " :" + messageDisplay);
-        }
-
-        bottomSliderAction("hide");
-        msgData.message[0].component.payload.sliderView = true;
-      });
-    });
-    $(messageHtml).find(".buttonTmplContent .ratingMainComponent .close-btn").click(function (e) {
       bottomSliderAction("hide");
-      e.stopPropagation();
+      msgData.message[0].component.payload.sliderView = true;
     });
-    $(messageHtml).find(".emojiComponent").off('click', '.rating').on('click', '.rating', function (e) {
-      var msgData = $(messageHtml).data();
-      var sliderValue = msgData.message[0].component.payload.sliderView;
+  });
+  (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).find(".buttonTmplContent .ratingMainComponent .close-btn").click(function (e) {
+    bottomSliderAction("hide");
+    e.stopPropagation();
+  });
+  (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).find(".emojiComponent").off('click', '.rating').on('click', '.rating', function (e) {
+    var msgData = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).data();
+    var sliderValue = msgData.message[0].component.payload.sliderView;
 
-      if ($(messageHtml).find(".emojiComponent .active").length == "0") {
-        $(".emojiElement").remove();
+    if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).find(".emojiComponent .active").length == "0") {
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".emojiElement").remove();
+    }
+
+    var emojiValue = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(this).attr("value");
+    (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).addClass("active");
+
+    if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(this).attr("id") == "rating_1" && (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])("#rating_1.active")) {
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])("<img class='emojiElement' />").attr('src', 'libs/images/emojis/gifs/rating_1.gif').appendTo(this);
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).removeClass("active");
+    } else if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(this).attr("id") == "rating_2" && (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])("#rating_2.active")) {
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])("<img class='emojiElement' />").attr('src', 'libs/images/emojis/gifs/rating_2.gif').appendTo(this);
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).removeClass("active");
+    } else if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(this).attr("id") == "rating_3" && (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])("#rating_3.active")) {
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])("<img class='emojiElement' />").attr('src', 'libs/images/emojis/gifs/rating_3.gif').appendTo(this);
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).removeClass("active");
+    } else if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(this).attr("id") == "rating_4" && (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])("#rating_4.active")) {
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])("<img class='emojiElement' />").attr('src', 'libs/images/emojis/gifs/rating_4.gif').appendTo(this);
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).removeClass("active");
+    } else if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(this).attr("id") == "rating_5" && (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])("#rating_5.active")) {
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])("<img class='emojiElement' />").attr('src', 'libs/images/emojis/gifs/rating_5.gif').appendTo(this);
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(e.currentTarget).removeClass("active");
+    }
+
+    if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(this).attr("value") < "5") {
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".ratingStar").remove();
+
+      if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".submitButton")) {
+        (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".submitButton").remove();
       }
 
-      var emojiValue = $(this).attr("value");
-      $(e.currentTarget).addClass("active");
-
-      if ($(this).attr("id") == "rating_1" && $("#rating_1.active")) {
-        $("<img class='emojiElement' />").attr('src', 'libs/images/emojis/gifs/rating_1.gif').appendTo(this);
-        $(e.currentTarget).removeClass("active");
-      } else if ($(this).attr("id") == "rating_2" && $("#rating_2.active")) {
-        $("<img class='emojiElement' />").attr('src', 'libs/images/emojis/gifs/rating_2.gif').appendTo(this);
-        $(e.currentTarget).removeClass("active");
-      } else if ($(this).attr("id") == "rating_3" && $("#rating_3.active")) {
-        $("<img class='emojiElement' />").attr('src', 'libs/images/emojis/gifs/rating_3.gif').appendTo(this);
-        $(e.currentTarget).removeClass("active");
-      } else if ($(this).attr("id") == "rating_4" && $("#rating_4.active")) {
-        $("<img class='emojiElement' />").attr('src', 'libs/images/emojis/gifs/rating_4.gif').appendTo(this);
-        $(e.currentTarget).removeClass("active");
-      } else if ($(this).attr("id") == "rating_5" && $("#rating_5.active")) {
-        $("<img class='emojiElement' />").attr('src', 'libs/images/emojis/gifs/rating_5.gif').appendTo(this);
-        $(e.currentTarget).removeClass("active");
+      if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".suggestionsMainComponent").length > 0) {
+        (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".suggestionsMainComponent").remove();
       }
 
-      if ($(this).attr("value") < "5") {
-        $(".ratingStar").remove();
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".kore-action-sheet").find(".emojiComponent").append(customTemplate.prototype.suggestionComponent());
+    } else {
+      if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".submitButton")) {
+        (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".submitButton").remove();
+      }
 
-        if ($(".submitButton")) {
-          $(".submitButton").remove();
-        }
+      if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".ratingStar").length > 0) {
+        (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".ratingStar").remove();
+      }
 
-        if ($(".suggestionsMainComponent").length > 0) {
-          $(".suggestionsMainComponent").remove();
-        }
+      var messageTodisplay = msgData.message[0].component.payload.messageTodisplay;
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".suggestionsMainComponent").remove();
+      (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".kore-action-sheet").find(".emojiComponent").append('<div class="ratingStar">' + messageTodisplay + '</div><div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>');
+    }
 
-        $(".kore-action-sheet").find(".emojiComponent").append(customTemplate.prototype.suggestionComponent());
-      } else {
-        if ($(".submitButton")) {
-          $(".submitButton").remove();
-        }
+    if (sliderValue === false) {
+      chatInitialize.sendMessage((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])('.chatInputBox').text(emojiValue), emojiValue);
+    }
 
-        if ($(".ratingStar").length > 0) {
-          $(".ratingStar").remove();
-        }
+    (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".emojiComponent").off('click', '.submitBtn').on('click', '.submitBtn', function (e) {
+      msgData.message[0].component.payload.sliderView = false;
 
+      if (emojiValue == "5") {
         var messageTodisplay = msgData.message[0].component.payload.messageTodisplay;
-        $(".suggestionsMainComponent").remove();
-        $(".kore-action-sheet").find(".emojiComponent").append('<div class="ratingStar">' + messageTodisplay + '</div><div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>');
+        chatInitialize.renderMessage(msgData);
+        chatInitialize.sendMessage((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])('.chatInputBox').text(emojiValue + " :" + messageTodisplay), "Rating" + ': ' + emojiValue + " and " + messageTodisplay);
+      } else if ((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".suggestionInput").val() == "") {
+        chatInitialize.renderMessage(msgData);
+        chatInitialize.sendMessage((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])('.chatInputBox').text(emojiValue), emojiValue);
+      } else {
+        var messageDisplay = (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".suggestionInput").val();
+        chatInitialize.renderMessage(msgData);
+        chatInitialize.sendMessage((0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])('.chatInputBox').text(emojiValue + " :" + messageDisplay), emojiValue + " :" + messageDisplay);
       }
 
-      if (sliderValue === false) {
-        chatInitialize.sendMessage($('.chatInputBox').text(emojiValue), emojiValue);
-      }
-
-      $(".emojiComponent").off('click', '.submitBtn').on('click', '.submitBtn', function (e) {
-        msgData.message[0].component.payload.sliderView = false;
-
-        if (emojiValue == "5") {
-          var messageTodisplay = msgData.message[0].component.payload.messageTodisplay;
-          chatInitialize.renderMessage(msgData);
-          chatInitialize.sendMessage($('.chatInputBox').text(emojiValue + " :" + messageTodisplay), "Rating" + ': ' + emojiValue + " and " + messageTodisplay);
-        } else if ($(".suggestionInput").val() == "") {
-          chatInitialize.renderMessage(msgData);
-          chatInitialize.sendMessage($('.chatInputBox').text(emojiValue), emojiValue);
-        } else {
-          var messageDisplay = $(".suggestionInput").val();
-          chatInitialize.renderMessage(msgData);
-          chatInitialize.sendMessage($('.chatInputBox').text(emojiValue + " :" + messageDisplay), emojiValue + " :" + messageDisplay);
-        }
-
-        bottomSliderAction("hide");
-        msgData.message[0].component.payload.sliderView = true;
-      });
-    });
-    $(messageHtml).find(".buttonTmplContent .emojiComponent .close-btn").click(function (e) {
       bottomSliderAction("hide");
-      e.stopPropagation();
+      msgData.message[0].component.payload.sliderView = true;
     });
-  };
+  });
+  (0,_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"])(messageHtml).find(".buttonTmplContent .emojiComponent .close-btn").click(function (e) {
+    bottomSliderAction("hide");
+    e.stopPropagation();
+  });
+};
 
-  customTemplate.prototype.suggestionComponent = function () {
-    return '<div class="suggestionsMainComponent">\
+customTemplate.prototype.suggestionComponent = function () {
+  return '<div class="suggestionsMainComponent">\
 	<div class="suggestionsHeading">What can be improved?</div>\
 	<div class="suggestionBox">\
 	<textarea type="text" class="suggestionInput" placeholder="Add Suggestions"></textarea></div>\
 	<div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>\
 	</div>';
-  }; //#todu:raj   
-  // 	this.bottomSliderAction = function(action, appendElement){
-  // 	$(".kore-action-sheet").animate({ height: 'toggle' });
-  // 	if(action=='hide'){
-  // 	$(".kore-action-sheet").innerHTML='';
-  // 	$(".kore-action-sheet").addClass("hide");
-  // 	} else {
-  // 	$(".kore-action-sheet").removeClass("hide");
-  // 	$(".kore-action-sheet .actionSheetContainer").empty();
-  // 	setTimeout(function(){
-  // 	$(".kore-action-sheet .actionSheetContainer").append(appendElement);
-  // 	},200);
-  // 	}
-  // 	}
-  // 	/* Action sheet Template functions starts here*/
-  // 	this.listViewTabs = function () {
-  // 		var msgData = $("li.fromOtherUsers.with-icon.listView").data();
-  // 		if(msgData.message[0].component.payload.seeMore){
-  // 			msgData.message[0].component.payload.seeMore=false;
-  // 		   }
-  // 		var listValues = $(customTemplate.prototype.getChatTemplate("actionSheetTemplate")).tmpl({
-  // 			'msgData': msgData,
-  // 			'dataItems':  msgData.message[0].component.payload.moreData[Object.keys(msgData.message[0].component.payload.moreData)[0]],
-  // 			'tabs': Object.keys(msgData.message[0].component.payload.moreData),
-  // 			'helpers': helpers
-  // 		});
-  // 		$($(listValues).find(".tabs")[0]).addClass("active");
-  // 		$(".kore-action-sheet").append(listValues);
-  // 		$(".kore-action-sheet .list-template-sheet").removeClass("hide");
-  // 		this.bottomSliderAction('show',$(".list-template-sheet"));
-  // 		$(".kore-action-sheet .list-template-sheet .displayMonth .tabs").on('click', function (e) {
-  // 			var _selectedTab = $(e.target).text();
-  // 			var msgData = $("li.fromOtherUsers.with-icon.listView").data();
-  // 			var viewTabValues = $(customTemplate.prototype.getChatTemplate("actionSheetTemplate")).tmpl({
-  // 				'msgData': msgData,
-  // 				'dataItems': msgData.message[0].component.payload.moreData[_selectedTab],
-  // 				'tabs': Object.keys(msgData.message[0].component.payload.moreData),
-  // 				'helpers': helpers
-  // 			});
-  //             $(".list-template-sheet .displayMonth").find(".tabs").removeClass("active");
-  // 			$(".list-template-sheet .displayMonth").find(".tabs[data-tabid='" + _selectedTab + "']").addClass("active");
-  // 			$(".list-template-sheet .displayListValues").html($(viewTabValues).find(".displayListValues"));
-  // 			$(".kore-action-sheet .list-template-sheet .listViewLeftContent").on('click', function () {
-  // 				var _self=this;
-  // 			    valueClick(_self);
-  // 				});
-  // 		});
-  // 		$(".kore-action-sheet .list-template-sheet .close-button").on('click', function (event) {
-  // 			bottomSliderAction('hide');
-  // 		});
-  // 		$(".kore-action-sheet .list-template-sheet .listViewLeftContent").on('click', function () {
-  // 			var _self=this;
-  // 			valueClick(_self);
-  // 		});
-  // 	};
-  // 	this.valueClick=function(_self,actionObj){
-  // 		if(actionObj){
-  // 		if (actionObj.type === "url") {
-  // 			window.open(actionObj.url, "_blank");
-  // 			return;
-  // 		  }
-  // 		  if (actionObj.payload) {
-  // 			  var _innerText = actionObj.payload;
-  // 			  var eData={};
-  // 			eData.payload = _self.innerText || actionObj.title;
-  // 			chatInitialize.sendMessage($('.chatInputBox').text(_innerText), eData.payload);
-  // 		  }
-  // 		  if(_self && _self.hasClass("dropdown-contentWidgt")){
-  // 			$(_self).hide();
-  // 		}
-  // 		}else{
-  // 		if($(_self).attr('data-url')||$(_self).attr('url')){
-  // 			var a_link = $(_self).attr('data-url')||$(_self).attr('url');
-  // 			if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
-  // 				a_link = "http:////" + a_link;
-  // 			}
-  // 			var _tempWin = window.open(a_link, "_blank");
-  // 		 }else{
-  // 			var _innerText= $(_self).attr('data-value');
-  // 			var postBack=$(_self).attr('data-title');
-  // 			chatInitialize.sendMessage($('.chatInputBox').text(_innerText), postBack);
-  // 		 $(".kore-action-sheet .list-template-sheet").animate({ height: 'toggle' });
-  //          bottomSliderAction("hide");
-  // 		 $(".listViewTmplContentBox").css({"pointer-events":"none"});
-  // 		 }
-  // 		}
-  // 	}
-  // 	/* Action sheet Template functions ends here*/
+}; //#todu:raj   
+// 	this.bottomSliderAction = function(action, appendElement){
+// 	$(".kore-action-sheet").animate({ height: 'toggle' });
+// 	if(action=='hide'){
+// 	$(".kore-action-sheet").innerHTML='';
+// 	$(".kore-action-sheet").addClass("hide");
+// 	} else {
+// 	$(".kore-action-sheet").removeClass("hide");
+// 	$(".kore-action-sheet .actionSheetContainer").empty();
+// 	setTimeout(function(){
+// 	$(".kore-action-sheet .actionSheetContainer").append(appendElement);
+// 	},200);
+// 	}
+// 	}
+// 	/* Action sheet Template functions starts here*/
+// 	this.listViewTabs = function () {
+// 		var msgData = $("li.fromOtherUsers.with-icon.listView").data();
+// 		if(msgData.message[0].component.payload.seeMore){
+// 			msgData.message[0].component.payload.seeMore=false;
+// 		   }
+// 		var listValues = $(customTemplate.prototype.getChatTemplate("actionSheetTemplate")).tmpl({
+// 			'msgData': msgData,
+// 			'dataItems':  msgData.message[0].component.payload.moreData[Object.keys(msgData.message[0].component.payload.moreData)[0]],
+// 			'tabs': Object.keys(msgData.message[0].component.payload.moreData),
+// 			'helpers': helpers
+// 		});
+// 		$($(listValues).find(".tabs")[0]).addClass("active");
+// 		$(".kore-action-sheet").append(listValues);
+// 		$(".kore-action-sheet .list-template-sheet").removeClass("hide");
+// 		this.bottomSliderAction('show',$(".list-template-sheet"));
+// 		$(".kore-action-sheet .list-template-sheet .displayMonth .tabs").on('click', function (e) {
+// 			var _selectedTab = $(e.target).text();
+// 			var msgData = $("li.fromOtherUsers.with-icon.listView").data();
+// 			var viewTabValues = $(customTemplate.prototype.getChatTemplate("actionSheetTemplate")).tmpl({
+// 				'msgData': msgData,
+// 				'dataItems': msgData.message[0].component.payload.moreData[_selectedTab],
+// 				'tabs': Object.keys(msgData.message[0].component.payload.moreData),
+// 				'helpers': helpers
+// 			});
+//             $(".list-template-sheet .displayMonth").find(".tabs").removeClass("active");
+// 			$(".list-template-sheet .displayMonth").find(".tabs[data-tabid='" + _selectedTab + "']").addClass("active");
+// 			$(".list-template-sheet .displayListValues").html($(viewTabValues).find(".displayListValues"));
+// 			$(".kore-action-sheet .list-template-sheet .listViewLeftContent").on('click', function () {
+// 				var _self=this;
+// 			    valueClick(_self);
+// 				});
+// 		});
+// 		$(".kore-action-sheet .list-template-sheet .close-button").on('click', function (event) {
+// 			bottomSliderAction('hide');
+// 		});
+// 		$(".kore-action-sheet .list-template-sheet .listViewLeftContent").on('click', function () {
+// 			var _self=this;
+// 			valueClick(_self);
+// 		});
+// 	};
+// 	this.valueClick=function(_self,actionObj){
+// 		if(actionObj){
+// 		if (actionObj.type === "url") {
+// 			window.open(actionObj.url, "_blank");
+// 			return;
+// 		  }
+// 		  if (actionObj.payload) {
+// 			  var _innerText = actionObj.payload;
+// 			  var eData={};
+// 			eData.payload = _self.innerText || actionObj.title;
+// 			chatInitialize.sendMessage($('.chatInputBox').text(_innerText), eData.payload);
+// 		  }
+// 		  if(_self && _self.hasClass("dropdown-contentWidgt")){
+// 			$(_self).hide();
+// 		}
+// 		}else{
+// 		if($(_self).attr('data-url')||$(_self).attr('url')){
+// 			var a_link = $(_self).attr('data-url')||$(_self).attr('url');
+// 			if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
+// 				a_link = "http:////" + a_link;
+// 			}
+// 			var _tempWin = window.open(a_link, "_blank");
+// 		 }else{
+// 			var _innerText= $(_self).attr('data-value');
+// 			var postBack=$(_self).attr('data-title');
+// 			chatInitialize.sendMessage($('.chatInputBox').text(_innerText), postBack);
+// 		 $(".kore-action-sheet .list-template-sheet").animate({ height: 'toggle' });
+//          bottomSliderAction("hide");
+// 		 $(".listViewTmplContentBox").css({"pointer-events":"none"});
+// 		 }
+// 		}
+// 	}
+// 	/* Action sheet Template functions ends here*/
+//     window.customTemplate=customTemplate;	
+// return {
+// 	bottomSliderAction:bottomSliderAction,
+// 	listViewTabs:listViewTabs,
+// 	valueClick:valueClick
+// }
+//})(koreJquery);
 
 
-  window.customTemplate = customTemplate; // return {
-  // 	bottomSliderAction:bottomSliderAction,
-  // 	listViewTabs:listViewTabs,
-  // 	valueClick:valueClick
-  // }
-})(_src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__["default"]);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (customTemplate);
 
 /***/ }),
 
@@ -34039,7 +34069,7 @@ module.exports = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5v
 /******/ 
 /******/ /* webpack/runtime/getFullHash */
 /******/ (() => {
-/******/ 	__webpack_require__.h = () => ("1f195357abe259abd0c2")
+/******/ 	__webpack_require__.h = () => ("27cbd9ac9a2abf2247da")
 /******/ })();
 /******/ 
 /******/ /* webpack/runtime/global */
