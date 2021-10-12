@@ -3510,10 +3510,10 @@
                                         if (msgData.message[0].component.payload.template_type === 'listView') {
                                             msgData.message[0].component.payload.fromHistory = true;
                                         }
-                                        if (msgData.message[0].component.payload.template_type === 'feedbackTemplate') {
-                                            msgData.message[0].component.payload.fromHistory = true;
-                                            msgData.message[0].cInfo.body="Rate this chat session";
-                                        }
+                                        // if (msgData.message[0].component.payload.template_type === 'feedbackTemplate') {
+                                        //     msgData.message[0].component.payload.fromHistory = true;
+                                        //     msgData.message[0].cInfo.body="Rate this chat session";
+                                        // }
                                                                                 if(msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)){
                                             msgData.message[0].cInfo.body = "";
                                         }
@@ -3789,9 +3789,9 @@
                                                 if (msgData.message[0].component.payload.template_type === 'dropdown_template') {
                                                     msgData.message[0].component.selectedValue=res[1].messages[index+1].message[0].cInfo.body;                                    
                                                 }
-                                                if (msgData.message[0].component.payload.template_type === 'feedbackTemplate') {
-                                                    msgData.message[0].cInfo.body="Rate this chat session";
-                                                }
+                                                // if (msgData.message[0].component.payload.template_type === 'feedbackTemplate') {
+                                                //     msgData.message[0].cInfo.body="Rate this chat session";
+                                                // }
                                                 if(msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)){
                                                     msgData.message[0].cInfo.body = "";
                                                 }
@@ -3850,8 +3850,12 @@
                                             msgData.message[0].component.payload.fromHistory = true;
                                         }
                                         if (msgData.message[0].component.payload.template_type === 'feedbackTemplate') {
-                                            msgData.message[0].component.payload.fromHistory = true;
-                                            msgData.message[0].cInfo.body="Rate this chat session";
+                                            if(res[1].messages[index+1] && res[1].messages[index+1].type ==="user_message"){
+                                                if (res[1].messages[index + 1].message[0] && res[1].messages[index + 1].message[0].cInfo && res[1].messages[index + 1].message[0].cInfo.body) {
+                                                    msgData.message[0].component.payload.selectedfeedbackValue = res[1].messages[index + 1].message[0].cInfo.body;
+                                                }
+                                            }
+                                            // msgData.message[0].cInfo.body = "Rate this chat session";
                                         }
                                                                                 if(msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)){
                                             msgData.message[0].cInfo.body = "";
