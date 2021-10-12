@@ -959,6 +959,12 @@
                     });
                 }
                 /* Handling for table ends*/
+                 /* Handling expand and collapse chat-container height */
+                $(".chat-container").scrollTop($(".chat-container")[0].scrollHeight);
+                if(me.chatPSObj && me.chatPSObj.update){
+                    me.chatPSObj.update()
+                }
+                /* Handling expand and collapse chat-container height */
             };
             window.onresize = function(event) {
                 chatInitialize.setCollapsedModeStyles();
@@ -1586,6 +1592,7 @@
                         $('.expand-btn-span').removeClass('fa-compress');
                         $('.expand-btn-span').addClass('fa-expand');
                         me.expanded = false;
+                        $(".chat-container").scrollTop($(".chat-container")[0].scrollHeight);
                         /* _chatContainer.draggable({
                              handle: _chatContainer.find(".kore-chat-header .header-title"),
                              containment: "parent",
@@ -1610,6 +1617,9 @@
                     var container_pos_left = _chatContainer.position().left + _chatContainer.width();
                     if (container_pos_left > $(window).width()) {
                         _chatContainer.css('left', _chatContainer.position().left - (container_pos_left - $(window).width() + 10) + "px");
+                    }
+                    if(me.chatPSObj && me.chatPSObj.update){
+                        me.chatPSObj.update()
                     }
                 });
                 /*$('body').on('click', '.kore-chat-overlay, .kore-chat-window .minimize-btn', function () {
