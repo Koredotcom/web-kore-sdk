@@ -67,12 +67,12 @@ let config= {
         ]
     },
     plugins:[
-        // new webpack.ProvidePlugin({
-        //     korejquery: 'jquery',
-        //     // jQuery: 'jquery',
-        //     // 'window.$': 'jquery',
-        //     // 'window.jQuery': 'jquery',
-        //   }),
+        new webpack.ProvidePlugin({
+            //korejquery: 'jquery',
+            jQuery: 'jquery',
+            'window.$': 'jquery',
+            'window.jQuery': 'jquery',
+          })
         // new HtmlWebpackPlugin()   
     ],
     resolve:{
