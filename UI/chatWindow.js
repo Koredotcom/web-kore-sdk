@@ -1816,11 +1816,6 @@
                 me.bot.on("open", function (response) {
                     me.onBotReady();
                 });
-                me.bot.on("webhook_ready", function (response) {
-                    if (!me.config.loadHistory) {
-                        me.getBotMetaData();
-                    }
-                });
 
                 me.bot.on("message", function (message) {
 
@@ -1893,6 +1888,16 @@
                             $('.trainWarningDiv').addClass('showMsg');
                         }, 2000);
                     }
+                });
+                
+                me.bot.on("webhook_ready", function (response) {
+                    if (!me.config.loadHistory) {
+                        me.getBotMetaData();
+                    }
+                });
+
+                me.bot.on("webhook_reconnected", function (response) {
+                    me.onBotReady();
                 });
             };
             chatWindow.prototype.bindCustomEvents = function (){

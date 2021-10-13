@@ -164,15 +164,14 @@ KoreBot.prototype.sendMessageViaWebhook = function(messagePayload,successCb,fail
   var client=this.WebClient;
   var me=this;
   messagePayload.opts={
-    authorization:'bearer '+this.options.webhookConfig.token
+    authorization:'bearer '+this.options.webhookConfig.token 
   }
   client.makeAPICall(this.options.webhookConfig.webhookURL, messagePayload, function(error,resBody){
   if(error){
     failureCb(resBody);
   }else{
-      if(resBody.pId){
-        me.startPollForWebhookResponse(resBody.pId,successCb);
-        return false;
+      if(resBody.pollId){
+        me.startPollForWebhookResponse(resBody.pollId,successCb);
       } 
       successCb(me.convertWebhookResposeToMessages(resBody));
     }
@@ -180,7 +179,7 @@ KoreBot.prototype.sendMessageViaWebhook = function(messagePayload,successCb,fail
   });
 	
 };
-KoreBot.prototype.getBotMetaData = function (successCb, failureCb) {
+KoreBot.prototype.getBotMetaData = function (successCb, failureCb,) {
   var client = this.WebClient;
   var me = this;
   var payload={}
@@ -221,7 +220,7 @@ KoreBot.prototype.convertWebhookResposeToMessages=function(resBody){
           var clientMessageId = new Date().getTime()+index;
           msgData = {
               'type': "bot_response",
-              'messageId':clientMessageId,
+              'messageId':entry.messageId || clientMessageId,
               'icon': icon,//'https://dlnwzkim0wron.cloudfront.net/f-828f4392-b552-5702-8bd0-eff267925ddb.png',
               'createdOn': entry.createdOn,
               "message": [{
@@ -242,7 +241,7 @@ KoreBot.prototype.convertWebhookResposeToMessages=function(resBody){
       var clientMessageId = new Date().getTime();
       msgData = {
           'type': "bot_response",
-          'messageId': clientMessageId,
+          'messageId': entry.messageId || clientMessageId,
           'createdOn': entry.createdOn,
           'icon': icon,
           "message": [{
@@ -266,24 +265,28 @@ KoreBot.prototype.startPollForWebhookResponse = function(pId,successCb) {
 
   var POOL_INTERVAL=1000;//1 SEC
   var me=this;
-  var apiUrl='/chatbot/v2/webhook/'+me.options.webhookConfig.streamId+'/poll/'+pId;
+  var envUrl=me.options.koreAPIUrl
+  envUrl=envUrl.substring(0, envUrl.length - 5);//to exclude '/api'
+  var apiUrl=envUrl+'/chatbot/v2/webhook/'+me.options.webhookConfig.streamId+'/poll/'+pId;
   var client=this.WebClient;
   var payload={};
   payload.opts={
-    authorization:'bearer '+this.options.webhookConfig.token
+    authorization:'bearer '+this.options.webhookConfig.token,
+    type:'GET'   
   }
 
 
   client.makeAPICall(apiUrl, payload, function(error,resBody){
     if(error){
-      failureCb(resBody);
+      //failureCb(resBody);
     }else{
-        if(resBody.pId){
+        if(resBody.pollId){
      
           setTimeout(function(){
-            me.startPollForWebhookResponse(resBody.pId,successCb);
+            me.startPollForWebhookResponse(resBody.pollId,successCb);
           },POOL_INTERVAL);
-        }else{
+        }
+        if(resBody.data){
           successCb(me.convertWebhookResposeToMessages(resBody));
         }
       }
@@ -542,6 +545,8 @@ KoreBot.prototype.logIn = function(err, data) {
       this.emit(WEB_EVENTS.WEB_HOOK_READY);
       if(this.options.loadHistory && !_chatHistoryLoaded){
         this.getHistory({},data);
+      }else{
+        this.emit(WEB_EVENTS.WEB_HOOK_RECONNECTED);
       }
     }else{
       this.WebClient.login.login({"assertion":data.assertion,"botInfo":this.options.botInfo}, bind(this.onLogIn, this));
@@ -1130,7 +1135,8 @@ module.exports = BaseAPIClient;
 
 module.exports.WEB = {
   RATE_LIMITED: 'rate_limited',
-  WEB_HOOK_READY:'webhook_ready'
+  WEB_HOOK_READY:'webhook_ready',
+  WEB_HOOK_RECONNECTED:'webhook_reconnected'
 };
 
 module.exports.RTM = {
