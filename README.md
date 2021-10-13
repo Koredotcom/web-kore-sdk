@@ -315,7 +315,8 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 	// for webhook based communication use following option 
 	// botOptions.webhookConfig={
 	//     enable:true,
-	//     webhookURL:'PLEASE_PROVIDE_WEBHOOK_URL'
+	//     webhookURL:'PLEASE_PROVIDE_WEBHOOK_URL',
+	//     apiVersion:2	
 	// }		
 
 ```
