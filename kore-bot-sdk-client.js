@@ -170,7 +170,6 @@ KoreBot.prototype.sendMessageViaWebhook = function(messagePayload,successCb,fail
   if(error){
     failureCb(resBody);
   }else{
-    debugger;
       if(resBody.pId){
         me.startPollForWebhookResponse(resBody.pId,successCb);
         return false;
@@ -181,10 +180,29 @@ KoreBot.prototype.sendMessageViaWebhook = function(messagePayload,successCb,fail
   });
 	
 };
+KoreBot.prototype.getBotMetaData = function (successCb, failureCb) {
+  var client = this.WebClient;
+  var me = this;
+  var payload={}
+  payload.opts = {
+    authorization: 'bearer ' + this.options.webhookConfig.token,
+    type:'GET'
+  }
+  client.makeAPICall('botmeta/' + me.options.botInfo.taskBotId, payload, function (error, resBody) {
+    if (error) {
+      failureCb(resBody);
+    } else {
+      me.options.botInfo.icon=resBody.icon;
+      successCb(resBody);
+    }
+  });
+};
 KoreBot.prototype.convertWebhookResposeToMessages=function(resBody){
   var msgData;
   var textData = resBody.text;
   var msgsData=[];
+  var me=this;
+  var icon=me.options.botInfo.icon;
   function isJson(entry) {
     try {
         entry = JSON.parse(entry);
@@ -204,8 +222,8 @@ KoreBot.prototype.convertWebhookResposeToMessages=function(resBody){
           msgData = {
               'type': "bot_response",
               'messageId':clientMessageId,
-              //'icon': 'https://dlnwzkim0wron.cloudfront.net/f-828f4392-b552-5702-8bd0-eff267925ddb.png',
-              'createdOn': "",//clientMessageId,
+              'icon': icon,//'https://dlnwzkim0wron.cloudfront.net/f-828f4392-b552-5702-8bd0-eff267925ddb.png',
+              'createdOn': entry.createdOn,
               "message": [{
                   'type': 'text',
                   'cInfo': {
@@ -213,7 +231,7 @@ KoreBot.prototype.convertWebhookResposeToMessages=function(resBody){
                       'attachments': ""
                   },
                   "component": isJson(entry.val || entry),//for v2 and v1 respectively 
-                  'clientMessageId': clientMessageId
+                  //'clientMessageId': clientMessageId
               }],
 
           };
@@ -225,8 +243,8 @@ KoreBot.prototype.convertWebhookResposeToMessages=function(resBody){
       msgData = {
           'type': "bot_response",
           'messageId': clientMessageId,
-          'createdOn': "",//clientMessageId,
-          //'icon': 'https://dlnwzkim0wron.cloudfront.net/f-828f4392-b552-5702-8bd0-eff267925ddb.png',
+          'createdOn': entry.createdOn,
+          'icon': icon,
           "message": [{
               'type': 'text',
               'cInfo': {
@@ -234,7 +252,7 @@ KoreBot.prototype.convertWebhookResposeToMessages=function(resBody){
                   'attachments': ""
               },
               "component": isJson(textData),
-              'clientMessageId': clientMessageId
+              //'clientMessageId': clientMessageId
           }],
 
       };

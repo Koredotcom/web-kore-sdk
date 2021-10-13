@@ -1783,7 +1783,15 @@
                 me.makeDroppable(element, callback);
                 me.bindSDKEvents()
             };
-
+            
+            chatWindow.prototype.getBotMetaData = function () {
+                var me = this;
+                me.bot.getBotMetaData(function(res){
+                    me.sendWebhookOnConnectEvent();
+                },function(errRes){
+                    me.sendWebhookOnConnectEvent();
+                });
+            };
             chatWindow.prototype.sendWebhookOnConnectEvent = function () {
                 var me = this;
                 me.sendMessageViaWebHook({
@@ -1810,7 +1818,7 @@
                 });
                 me.bot.on("webhook_ready", function (response) {
                     if (!me.config.loadHistory) {
-                        me.sendWebhookOnConnectEvent();
+                        me.getBotMetaData();
                     }
                 });
 
@@ -3526,7 +3534,7 @@
                     $('.disableFooter').removeClass('disableFooter');
                     me.historyLoading = false;
                     if(me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable){
-                        me.sendWebhookOnConnectEvent();
+                        me.getBotMetaData();
                     }
                 },0,me);
             }
