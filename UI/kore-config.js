@@ -51,6 +51,7 @@
             chatWindowStateStore: 'localStorage'//'localStorage || sessionStorage'
         },              
         supportDelayedMessages:true,    // enable to add support for renderDelay in message nodes which will help to render messages with delay from UI       
+        maxTypingIndicatorTime:10000,   //time in milliseconds,typing indicator will be stopped after this time limit,even bot doesn't respond 
         pickersConfig:{
             showDatePickerIcon:false,           //set true to show datePicker icon
             showDateRangePickerIcon:false,      //set true to show dateRangePicker icon

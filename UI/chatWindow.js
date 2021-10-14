@@ -2047,9 +2047,12 @@
                 _bodyContainer.css('bottom', _footerContainer.outerHeight());
                 me.resetPingMessage();
                 $('.typingIndicatorContent').css('display', 'block');
-                setTimeout(function () {
+                if(me.typingIndicatorTimer){
+                    clearTimeout(me.typingIndicatorTimer);
+                }
+                me.typingIndicatorTimer=setTimeout(function () {
                     $('.typingIndicatorContent').css('display', 'none');
-                }, 10000);
+                }, me.config.maxTypingIndicatorTime || 10000);
                 if (renderMsg && typeof renderMsg === 'string') {
                     msgData.message[0].cInfo.body = renderMsg;
                 }
@@ -2082,6 +2085,9 @@
                     }, 500);
                     setTimeout(function () {
                         if (!waiting_for_message) {
+                            if(me.typingIndicatorTimer){
+                                clearTimeout(me.typingIndicatorTimer);
+                            }
                             $('.typingIndicatorContent').css('display', 'none');
                         }
                     }, 500);
