@@ -13,6 +13,7 @@ var bind = lodash.bind;
 var isFunction = lodash.isFunction;
 var RTM_CLIENT_EVENTS = clients.CLIENT_EVENTS.RTM;
 var RTM_EVENTS = clients.RTM_EVENTS;
+var WEB_EVENTS=clients.CLIENT_EVENTS.WEB;
 var jstz = require('./jstz.js');
 var noop = lodash.noop;
 
@@ -159,6 +160,139 @@ KoreBot.prototype.sendMessage = function(message,optCb) {
 	
 };
 
+KoreBot.prototype.sendMessageViaWebhook = function(messagePayload,successCb,failureCb) {
+  var client=this.WebClient;
+  var me=this;
+  messagePayload.opts={
+    authorization:'bearer '+this.options.webhookConfig.token 
+  }
+  client.makeAPICall(this.options.webhookConfig.webhookURL, messagePayload, function(error,resBody){
+  if(error){
+    failureCb(resBody);
+  }else{
+      if(resBody.pollId){
+        me.startPollForWebhookResponse(resBody.pollId,successCb);
+      } 
+      successCb(me.convertWebhookResposeToMessages(resBody));
+    }
+
+  });
+	
+};
+KoreBot.prototype.getBotMetaData = function (successCb, failureCb,) {
+  var client = this.WebClient;
+  var me = this;
+  var payload={}
+  payload.opts = {
+    authorization: 'bearer ' + this.options.webhookConfig.token,
+    type:'GET'
+  }
+  client.makeAPICall('botmeta/' + me.options.botInfo.taskBotId, payload, function (error, resBody) {
+    if (error) {
+      failureCb(resBody);
+    } else {
+      me.options.botInfo.icon=resBody.icon;
+      successCb(resBody);
+    }
+  });
+};
+KoreBot.prototype.convertWebhookResposeToMessages=function(resBody){
+  var msgData;
+  var textData = resBody.text;
+  var msgsData=[];
+  var me=this;
+  var icon=me.options.botInfo.icon;
+  function isJson(entry) {
+    try {
+        entry = JSON.parse(entry);
+    } catch (e) {
+        return entry
+    }
+    return entry;
+  }
+
+  if(resBody._v==='v2'){
+    textData=resBody.data;
+  }
+  if (textData instanceof Array) {
+      console.log("it is array")
+      textData.forEach(function(entry,index) {
+          var clientMessageId = new Date().getTime()+index;
+          msgData = {
+              'type': "bot_response",
+              'messageId':entry.messageId || clientMessageId,
+              'icon': icon,//'https://dlnwzkim0wron.cloudfront.net/f-828f4392-b552-5702-8bd0-eff267925ddb.png',
+              'createdOn': entry.createdOn,
+              "message": [{
+                  'type': 'text',
+                  'cInfo': {
+                      'body': entry.val || entry,//for v2 and v1 respectively 
+                      'attachments': ""
+                  },
+                  "component": isJson(entry.val || entry),//for v2 and v1 respectively 
+                  //'clientMessageId': clientMessageId
+              }],
+
+          };
+          msgsData.push(msgData);
+      });
+  } else {
+      console.log("its Object");
+      var clientMessageId = new Date().getTime();
+      msgData = {
+          'type': "bot_response",
+          'messageId': entry.messageId || clientMessageId,
+          'createdOn': entry.createdOn,
+          'icon': icon,
+          "message": [{
+              'type': 'text',
+              'cInfo': {
+                  'body': isJson(textData),
+                  'attachments': ""
+              },
+              "component": isJson(textData),
+              //'clientMessageId': clientMessageId
+          }],
+
+      };
+      msgsData.push(msgData);
+     
+  }
+  return msgsData;
+  
+}
+KoreBot.prototype.startPollForWebhookResponse = function(pId,successCb) {
+
+  var POOL_INTERVAL=1000;//1 SEC
+  var me=this;
+  var envUrl=me.options.koreAPIUrl
+  envUrl=envUrl.substring(0, envUrl.length - 5);//to exclude '/api'
+  var apiUrl=envUrl+'/chatbot/v2/webhook/'+me.options.webhookConfig.streamId+'/poll/'+pId;
+  var client=this.WebClient;
+  var payload={};
+  payload.opts={
+    authorization:'bearer '+this.options.webhookConfig.token,
+    type:'GET'   
+  }
+
+
+  client.makeAPICall(apiUrl, payload, function(error,resBody){
+    if(error){
+      //failureCb(resBody);
+    }else{
+        if(resBody.pollId){
+     
+          setTimeout(function(){
+            me.startPollForWebhookResponse(resBody.pollId,successCb);
+          },POOL_INTERVAL);
+        }
+        if(resBody.data){
+          successCb(me.convertWebhookResposeToMessages(resBody));
+        }
+      }
+  })
+
+}
 /*
 emits a message event on message from the server.
 */
@@ -298,7 +432,7 @@ KoreBot.prototype.onBackWardHistory = function(err, data) {
 /*
 gets the history of the conversation.
 */
-KoreBot.prototype.getHistory = function(opts) {
+KoreBot.prototype.getHistory = function(opts,config) {
 	debug("get history");
 	opts = opts || {};
 	//opts.limit = 10;
@@ -319,15 +453,20 @@ KoreBot.prototype.getHistory = function(opts) {
 
 	__opts__.botInfo = this.options.botInfo;
   __opts__.authorization = "bearer " + this.WebClient.user.accessToken;
+
+  if(config && config.webhookConfig && config.webhookConfig.enable){
+    __opts__.authorization = 'bearer '+this.options.webhookConfig.token
+  }
+
   if(opts.forHistorySync){
     this.historySyncInProgress=true;
     delete __opts__.msgId;
   }
 
 	if (__opts__.forward)
-		this.WebClient.history.history(__opts__, bind(this.onForwardHistory, this));
+		this.WebClient.history.history(__opts__, bind(this.onForwardHistory, this),config);
 	else
-		this.WebClient.history.history(__opts__, bind(this.onBackWardHistory, this));
+		this.WebClient.history.history(__opts__, bind(this.onBackWardHistory, this),config);
 };
 
 /*
@@ -401,7 +540,17 @@ KoreBot.prototype.logIn = function(err, data) {
 		this.cbErrorToClient = data.handleError || noop;
 		this.cbBotDetails = data.botDetails || noop;
 		this.cbBotChatHistory = data.chatHistory || noop;
-		this.WebClient.login.login({"assertion":data.assertion,"botInfo":this.options.botInfo}, bind(this.onLogIn, this));
+    if(this.options.webhookConfig && this.options.webhookConfig.enable){
+      this.options.webhookConfig.token=this.options.assertion;
+      this.emit(WEB_EVENTS.WEB_HOOK_READY);
+      if(this.options.loadHistory && !_chatHistoryLoaded){
+        this.getHistory({},data);
+      }else{
+        this.emit(WEB_EVENTS.WEB_HOOK_RECONNECTED);
+      }
+    }else{
+      this.WebClient.login.login({"assertion":data.assertion,"botInfo":this.options.botInfo}, bind(this.onLogIn, this));
+    }   
 	}
 
 };
@@ -439,7 +588,24 @@ KoreBot.prototype.init = function(options,messageHistoryLimit) {
 			console.error("koreAnonymousFn is not a function");
 		}
 	}
+  this.reWriteWebhookConfig(options)
 };
+
+
+KoreBot.prototype.reWriteWebhookConfig=function (config){
+  if(config && config.webhookConfig && config.webhookConfig.enable){
+    var streamId=config.botInfo.taskBotId;
+    var channelType='ivr';
+    var webhookURL=config.webhookConfig.webhookURL;
+    //check for mulitple webhook url version
+    var patternStr='hookInstance/'
+    if(webhookURL.indexOf(patternStr)>-1){
+      channelType=webhookURL.substring(webhookURL.indexOf(patternStr)+patternStr.length,webhookURL.length)
+    }
+    config.webhookConfig.streamId=streamId;
+    config.webhookConfig.channelType=channelType;
+  }
+}
 
 module.exports.instance = function(){
 	_chatHistoryLoaded = false;
@@ -937,9 +1103,10 @@ BaseAPIClient.prototype._callTransport = function _callTransport(task, queueCb) 
 };
 
 BaseAPIClient.prototype.makeAPICall = function makeAPICall(endpoint, optData, optCb) {
+  var urlPattern = /^((http|https):\/\/)/;
   var apiCallArgs = helpers.getAPICallArgs(this._token, optData, optCb);
   var args = {
-    url: urlJoin(this.koreAPIUrl, endpoint),
+    url: urlPattern.test(endpoint)?endpoint:urlJoin(this.koreAPIUrl, endpoint),
     data: apiCallArgs.data,
     headers: {
       'User-Agent': this.userAgent,
@@ -967,7 +1134,9 @@ module.exports = BaseAPIClient;
  */
 
 module.exports.WEB = {
-  RATE_LIMITED: 'rate_limited'
+  RATE_LIMITED: 'rate_limited',
+  WEB_HOOK_READY:'webhook_ready',
+  WEB_HOOK_RECONNECTED:'webhook_reconnected'
 };
 
 module.exports.RTM = {
@@ -1569,13 +1738,26 @@ function HistoryApi(client) {
 
 inherits(HistoryApi, BaseApi);
 
-HistoryApi.prototype.history = function history(opts, optCb) {
+HistoryApi.prototype.history = function history(opts, optCb,config) {
   opts = opts || {};
   var args = {
     opts: opts,
     type: "GET"
   };
 	var _api = '/botmessages/rtm';
+
+  if(config && config.webhookConfig && config.webhookConfig.enable){
+    // var streamId=config.botInfo.taskBotId;
+    // var channelType='ivr';
+    // var webhookURL=config.webhookConfig.webhookURL;
+    // //check for mulitple webhook url version
+    // var patternStr='hookInstance/'
+    // if(webhookURL.indexOf(patternStr)>-1){
+    //   channelType=webhookURL.substring(webhookURL.indexOf(patternStr)+patternStr.length,webhookURL.length)
+    // }
+    _api='/chathistory/'+config.webhookConfig.streamId+'/'+config.webhookConfig.channelType
+  }
+
 	var del = false;
 	var x = '?';
 

@@ -100,6 +100,16 @@ import $ from '../../src/libs/korejquery'
 				 'helpers': this.helpers,
 				'extension': this.extension
 			});
+			if(msgData.message[0].component.payload.selectedfeedbackValue){
+				$(messageHtml).find(".ratingMainComponent").css({"pointer-events":"none"});
+				var _innerText = msgData.message[0].component.payload.selectedfeedbackValue;
+				if($(messageHtml).find(".ratingMainComponent label.active")){
+					$(messageHtml).find(".ratingMainComponent label").removeClass("active");
+				}
+				for(i=parseInt(_innerText);i>0;i--){
+					$(messageHtml).find('.ratingMainComponent label[for="'+i+'-stars"]').addClass("active");
+				}
+			}
 			 this.bindEvents(messageHtml);
 			 $(messageHtml).data(msgData);
 		}
@@ -2036,7 +2046,7 @@ print(JSON.stringify(message)); */
 			}
 			if(silderValue===false){
 				chatInitialize.sendMessage($('.chatInputBox').text(_innerText), _innerText);
-	
+				$(".ratingMainComponent").css({"pointer-events":"none"});
 			  }
 			$(".buttonTmplContent .ratingMainComponent .submitBtn").click(function(){
 				msgData.message[0].component.payload.sliderView=false;

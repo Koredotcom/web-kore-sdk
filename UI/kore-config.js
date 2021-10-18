@@ -19,6 +19,12 @@ botOptions.clientId = "cs-1e845b00-81ad-5757-a1e7-d0f6fea227e9";
 botOptions.clientSecret = "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=";
 
 
+// for webhook based communication use following option 
+// botOptions.webhookConfig={
+//     enable:true,
+//     webhookURL:'PLEASE_PROVIDE_WEBHOOK_URL',
+//     apiVersion:2
+// }
 
 // To modify the web socket url use the following option
 // botOptions.reWriteSocketURL = {
