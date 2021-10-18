@@ -790,6 +790,7 @@
             var chatBodyModal=  $('#chatBodyModal');
             var close = document.getElementsByClassName("closeChatBodyModal")[0];
                 close.onclick = function () {
+                    $('.kore-chat-window').removeClass('modelOpen');
                     var postPayload={
                         payload:{},
                         event : 'formEvent', // need to find another way to make it common ,giving a static value due to time constrain //
@@ -799,6 +800,7 @@
                     var iframe = chatBodyModal.find('iframe');
                     postMessageToChildIframes(iframe,postPayload);
                     chatBodyModal.hide();
+                    $('.kore-chat-window').removeClass('modelOpen');
                 }
             if(template){
                 chatBodyModal.find('.closeChatBodyModal').css('display','none');
@@ -807,6 +809,7 @@
                     chatBodyModal.find('#chatBodyModalContent').empty();
                     chatBodyModal.find('#chatBodyModalContent').append(template);
                     chatBodyModal.show();
+                    $('.kore-chat-window').addClass('modelOpen');
                 }
                 setTimeout(function(){
                     chatBodyModal.find('.loading_form').css('z-index',0);
@@ -817,11 +820,13 @@
                      }
                 },1500);
             } else {
+                $('.kore-chat-window').removeClass('modelOpen');
                 chatBodyModal.find('.closeChatBodyModal').css('display','none');
                 setTimeout(function(){
                     chatBodyModal.find('#chatBodyModalContent').empty();
                 },1000);
                 chatBodyModal.hide(); 
+                $('.kore-chat-window').removeClass('modelOpen');
             }
             }
         // inline model for iframes starts ends//
@@ -963,6 +968,12 @@
                     });
                 }
                 /* Handling for table ends*/
+                 /* Handling expand and collapse chat-container height */
+                $(".chat-container").scrollTop($(".chat-container")[0].scrollHeight);
+                if(me.chatPSObj && me.chatPSObj.update){
+                    me.chatPSObj.update()
+                }
+                /* Handling expand and collapse chat-container height */
             };
             window.onresize = function(event) {
                 chatInitialize.setCollapsedModeStyles();
@@ -1590,6 +1601,7 @@
                         $('.expand-btn-span').removeClass('fa-compress');
                         $('.expand-btn-span').addClass('fa-expand');
                         me.expanded = false;
+                        $(".chat-container").scrollTop($(".chat-container")[0].scrollHeight);
                         /* _chatContainer.draggable({
                              handle: _chatContainer.find(".kore-chat-header .header-title"),
                              containment: "parent",
@@ -1614,6 +1626,9 @@
                     var container_pos_left = _chatContainer.position().left + _chatContainer.width();
                     if (container_pos_left > $(window).width()) {
                         _chatContainer.css('left', _chatContainer.position().left - (container_pos_left - $(window).width() + 10) + "px");
+                    }
+                    if(me.chatPSObj && me.chatPSObj.update){
+                        me.chatPSObj.update()
                     }
                 });
                 /*$('body').on('click', '.kore-chat-overlay, .kore-chat-window .minimize-btn', function () {
@@ -1840,6 +1855,49 @@
                             }
                             if (tempData.message[0].component && tempData.message[0].component.payload && tempData.message[0].component.payload.text) {
                                 tempData.message[0].cInfo.body = tempData.message[0].component.payload.text;
+                                if(chatContainerConfig && chatContainerConfig.pickerMainConfig){
+                                    var pickerConfig =  {};
+                                    pickerConfig= chatContainerConfig.pickerMainConfig;
+                                    if (tempData.message[0].component.payload.template_type == "daterange") {
+                                        tempData.message[0].cInfo.body = tempData.message[0].component.payload.text_message;
+                                        pickerConfig[1].dateRangeConfig.format = tempData.message[0].component.payload.format;
+                                        pickerConfig[1].dateRangeConfig.startDate = tempData.message[0].component.payload.startDate;
+                                        pickerConfig[1].dateRangeConfig.endDate = tempData.message[0].component.payload.endDate;
+                                        if (tempData.message[0].component.payload.title) {
+                                            pickerConfig[1].daterangepicker.title = tempData.message[0].component.payload.title;
+                                        }
+                                        // $('.typingIndicatorContent').css('display', 'block');
+                                        KorePickers.prototype.showDateRangePicker(pickerConfig);
+                                        // $('.typingIndicatorContent').css('display', 'none');
+                                    }
+                                    console.log(JSON.stringify(tempData.message))
+                                    if (tempData.message[0].component.payload.template_type == "dateTemplate") {
+                                        tempData.message[0].cInfo.body = tempData.message[0].component.payload.text_message;
+                                        pickerConfig[1].dateConfig.format = tempData.message[0].component.payload.format;
+                                        pickerConfig[1].dateConfig.startDate = tempData.message[0].component.payload.startDate;
+                                        pickerConfig[1].dateConfig.showdueDate = tempData.message[0].component.payload.showdueDate;
+                                        pickerConfig[1].dateConfig.endDate = tempData.message[0].component.payload.endDate;
+                                        // pickerConfig.dateConfig.selectedDate="Selected Date";
+                                        // pickerConfig.dateConfig.selectedDate=tempData.message[0].component.payload.selectedDate;
+                                        // if(tempData.message[0].component.payload.showdueDate){
+
+                                        //     pickerConfig.dateConfig.paymentDue="Payment Due Date";
+
+                                        //     pickerConfig.dateConfig.paymentDue=tempData.message[0].component.payload.paymentDue;
+                                        // }
+
+                                        if (tempData.message[0].component.payload.title) {
+                                            pickerConfig[1].datepicker.title = tempData.message[0].component.payload.title;
+                                        }
+
+                                        // $('.typingIndicatorContent').css('display', 'block');
+                                        KorePickers.prototype.showDatePicker(pickerConfig);
+                                        // $('.typingIndicatorContent').css('display', 'none');
+                                    }
+                                    if (tempData.message[0].cInfo.body.indexOf('clockPicker') > -1) {
+                                        KorePickers.prototype.showClockPicker(pickerConfig);
+                                    }
+                                }
                             }
                             if(tempData.message[0].component && tempData.message[0].component.payload && (tempData.message[0].component.payload.videoUrl || tempData.message[0].component.payload.audioUrl)){
                                 tempData.message[0].cInfo.body = tempData.message[0].component.payload.text || "";
@@ -2056,9 +2114,12 @@
                 _bodyContainer.css('bottom', _footerContainer.outerHeight());
                 me.resetPingMessage();
                 $('.typingIndicatorContent').css('display', 'block');
-                setTimeout(function () {
+                if(me.typingIndicatorTimer){
+                    clearTimeout(me.typingIndicatorTimer);
+                }
+                me.typingIndicatorTimer=setTimeout(function () {
                     $('.typingIndicatorContent').css('display', 'none');
-                }, 10000);
+                }, me.config.maxTypingIndicatorTime || 10000);
                 if (renderMsg && typeof renderMsg === 'string') {
                     msgData.message[0].cInfo.body = renderMsg;
                 }
@@ -2152,6 +2213,9 @@
                     }, 500);
                     setTimeout(function () {
                         if (!waiting_for_message) {
+                            if(me.typingIndicatorTimer){
+                                clearTimeout(me.typingIndicatorTimer);
+                            }
                             $('.typingIndicatorContent').css('display', 'none');
                         }
                     }, 500);
@@ -2982,7 +3046,7 @@
                           <div id="caption"></div>\
                     </div>\
                     <div id="chatBodyModal" class="chatBodyModal animate-bottom">\
-                    <span class="closeChatBodyModal "></span>\
+                    <span class="closeChatBodyModal" aira-label="Close Form" role="button" tabindex="0" aria-atomic="true"></span>\
                     <div id="closeInlineModel" class="loading_form iframeLoader"></div>\
                     <div id="chatBodyModalContent"></div>\
                     </div>\
@@ -3115,7 +3179,7 @@
                                     {{/if}} \
                                 </li>\
                                 {{each(key, msgItem) msgData.message[0].component.payload.buttons}} \
-                                    <a href=""#>\
+                                    <a>\
                                         <li {{if msgData}}msgData="${JSON.stringify(msgData)}"{{/if}} {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} {{if msgItem.payload}}actual-value="${msgItem.payload}"{{/if}} {{if msgItem.url}}url="${msgItem.url}"{{/if}} class="buttonTmplContentChild" data-value="${msgItem.value}" type="${msgItem.type}">\
                                             ${msgItem.title}\
                                         </li> \
@@ -3476,16 +3540,16 @@
                             <li class="inlineIframeContainer"> \
                                 <div class="iframeBubble"> \
                                         <div class="uiformComponent">\
-                                        <div id="closeInlineModel" class="loading_form iframeLoader"></div>\
+                                        <div id="closeInlineModel" role="region" aria-live="polite" aria-atomic="true" aira-label="close Form" class="loading_form iframeLoader"></div>\
                                         <iframe id="inlineIframeModal" src="${link_url}"></iframe> \
                                         </div>\
                                 </div>\
                             </li> \
                         {{else}}\
-                            <iframe id="iframeModal" src="${link_url}"></iframe> \
+                            <iframe role="region" aria-live="polite" aria-atomic="true" aira-label="Loadig Form" id="iframeModal" src="${link_url}"></iframe> \
                         {{/if}}\
                     {{else}}\
-                        <div class="failedIframe">Failed to load iFrame</div>\
+                        <div role="region" aria-live="polite" aria-atomic="true" class="failedIframe">Failed to load iFrame</div>\
                     {{/if}}\
                 </script>';
             if (tempType === "message") {
@@ -3602,10 +3666,10 @@
                                         if (msgData.message[0].component.payload.template_type === 'listView') {
                                             msgData.message[0].component.payload.fromHistory = true;
                                         }
-                                        if (msgData.message[0].component.payload.template_type === 'feedbackTemplate') {
-                                            msgData.message[0].component.payload.fromHistory = true;
-                                            msgData.message[0].cInfo.body="Rate this chat session";
-                                        }
+                                        // if (msgData.message[0].component.payload.template_type === 'feedbackTemplate') {
+                                        //     msgData.message[0].component.payload.fromHistory = true;
+                                        //     msgData.message[0].cInfo.body="Rate this chat session";
+                                        // }
                                                                                 if(msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)){
                                             msgData.message[0].cInfo.body = "";
                                         }
@@ -3849,130 +3913,7 @@
             this.chatHistory = function (res) {
                 chatInitialize.chatHistory.call(chatInitialize,res);
             }
-            // chatWindow.prototype.chatHistory = function (res) {
-            //     var me = this;
-            //     if(res[2]==='historysync'){
-            //         //setTimeout(function () {
-            //             if (res && res[1] && res[1].messages.length > 0) {
-            //                 res[1].messages.forEach(function (msgData, index) {
-            //                     setTimeout(function () {
-            //                         if (msgData.type === "outgoing" || msgData.type === "bot_response") {
-            //                             //if ($('.kore-chat-window .chat-container li#' + msgData.messageId).length < 1) {
-            //                                 msgData.fromHistorySync=true;
-                                                                                        
-            //                                 try {
-            //                                     msgData.message[0].cInfo.body = JSON.parse(msgData.message[0].cInfo.body);
-            //                                     if (msgData.message[0].cInfo.body && msgData.message[0].cInfo.body.text) {
-            //                                         msgData.message[0].cInfo.body = msgData.message[0].cInfo.body.text;
-            //                                     }
-            //                                     msgData.message[0].component = msgData.message[0].cInfo.body;
-            //                                     if (msgData.message[0].component.payload.template_type === 'dropdown_template') {
-            //                                         msgData.message[0].component.selectedValue=res[1].messages[index+1].message[0].cInfo.body;                                    
-            //                                     }
-            //                                     if (msgData.message[0].component.payload.template_type === 'feedbackTemplate') {
-            //                                         msgData.message[0].cInfo.body="Rate this chat session";
-            //                                     }
-            //                                     if(msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)){
-            //                                         msgData.message[0].cInfo.body = "";
-            //                                     }
-            //                                     me.renderMessage(msgData);
-            //                                 } catch (e) {
-            //                                     me.renderMessage(msgData);
-            //                                 }
-            //                             //}
-            //                         }
-            //                     }, index * 100);
-            //                 });
-            //             }
-            //         //}, 4000);//sync history messages after sockeet messages gets into viewport
-            //     }else  if (me.loadHistory) {
-            //         me.historyLoading = true;
-            //         if (res && res[1] && res[1].messages.length > 0) {
-            //             $('.chat-container').hide();
-            //             $('.historyLoadingDiv').addClass('showMsg');
-            //             res[1].messages.forEach(function (msgData, index) {
-            //                 setTimeout(function (messagesQueue) {
-            //                     // try {
-            //                     //     msgData.message[0].cInfo.body = JSON.parse(msgData.message[0].cInfo.body);
-            //                     //     msgData.message[0].component = msgData.message[0].cInfo.body;
-            //                     //     me.renderMessage(msgData);
-            //                     // } catch (e) {
-            //                     //     me.renderMessage(msgData);
-            //                     // }
-            //                     var _ignoreMsgs = messagesQueue.filter(function (queMsg) {
-            //                         return queMsg.messageId === msgData.messageId;
-            //                     });
-            //                     //dont show the the history message if we already have same message came from socket connect  
-            //                     if (!_ignoreMsgs.length) {
-            //                         try {
-            //                             msgData.message[0].cInfo.body = JSON.parse(msgData.message[0].cInfo.body);
-            //                             if (msgData.message[0].cInfo.body && msgData.message[0].cInfo.body.text) {
-            //                                 msgData.message[0].cInfo.body = msgData.message[0].cInfo.body.text;
-            //                             }
-            //                             msgData.message[0].component = msgData.message[0].cInfo.body;
-            //                             if (msgData.message[0].component.payload.template_type === 'dropdown_template') {
-            //                                 msgData.message[0].component.payload.fromHistory = true;
-            //                                 msgData.message[0].component.selectedValue=res[1].messages[index+1].message[0].cInfo.body;                                    
-            //                             }
-            //                             if (msgData.message[0].component.payload.template_type === 'multi_select' || msgData.message[0].component.payload.template_type === 'advanced_multi_select') {
-            //                                 msgData.message[0].component.payload.fromHistory = true;
-            //                             }
-            //                             if (msgData.message[0].component.payload.template_type === 'form_template') {
-            //                                 msgData.message[0].component.payload.fromHistory = true;
-            //                             }
-            //                             if (msgData.message[0].component.payload.template_type === 'tableList') {
-            //                                 msgData.message[0].component.payload.fromHistory = true;
-            //                             }
-            //                             if (msgData.message[0].component.payload.template_type === 'listView') {
-            //                                 msgData.message[0].component.payload.fromHistory = true;
-            //                             }
-            //                             if (msgData.message[0].component.payload.template_type === 'List') {
-            //                                 msgData.message[0].component.payload.fromHistory = true;
-            //                             }
-            //                             if (msgData.message[0].component.payload.template_type === 'feedbackTemplate') {
-            //                                 msgData.message[0].component.payload.fromHistory = true;
-            //                                 msgData.message[0].cInfo.body="Rate this chat session";
-            //                             }
-            //                                                                     if(msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)){
-            //                                 msgData.message[0].cInfo.body = "";
-            //                             }
-            //                             me.renderMessage(msgData);
-            //                         } catch (e) {
-            //                             me.renderMessage(msgData);
-            //                         }
-            //                     }
-            //                     if (index === res[1].messages.length - 1) {
-            //                         setTimeout(function (messagesQueue) {
-            //                             $('.chat-container').show();
-            //                             $('.chat-container').animate({
-            //                                 scrollTop: $('.chat-container').prop("scrollHeight")
-            //                             }, 2500);
-            //                             $('.historyLoadingDiv').removeClass('showMsg');
-            //                             if(!me.config.botOptions.maintainContext){
-            //                                 $('.chat-container').append("<div class='endChatContainer' aria-live='off' aria-hidden='true' ><span class='endChatContainerText'>"+botMessages.endofchat+"</span></div>");
-            //                             }
-            //                             if(messagesQueue.length){
-            //                                 messagesQueue.forEach(function(msg, currIndex){
-            //                                     me.renderMessage(msg);
-            //                                     if(messagesQueue.length-1 ===  currIndex) {
-            //                                         messagesQueue = [];
-            //                                         me.historyLoadingComplete();
-            //                                     }
-            //                                 });
-            //                             }else{
-            //                                 me.historyLoadingComplete();
-            //                             }
         
-            //                         },500,messagesQueue);
-            //                     }
-            //                 }, index * 100,messagesQueue);
-            //             });
-            //         }
-            //         else {
-            //            me.historyLoadingComplete();
-            //         }
-            //     }
-            // }
             this.closeConversationSession = function () {
                if(chatInitialize){
                     chatInitialize.closeConversationSession();
