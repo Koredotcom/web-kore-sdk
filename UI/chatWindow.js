@@ -57,6 +57,7 @@ let $=korejquery;
      OPEN_OVERRIDE:"cw:open:override",
      MESSAGE_OVERRIDE:"cw:message:override"
  };
+ var target;
  /******************* Mic variable initilization *******************/
  var _exports = {},
      _template, _this = {};
@@ -1070,6 +1071,7 @@ chatWindow.prototype.addBottomSlider=function(){
  }
  chatWindow.prototype.init = function () {
      var me = this;
+     me.config.botOptions.assertionFn=me.assertion.bind(me);
      me.initi18n();
      me.seti18n((me.config && me.config.i18n && me.config.i18n.defaultLanguage) || 'en');
      window.chatContainerConfig = me;
@@ -1143,7 +1145,7 @@ chatWindow.prototype.addBottomSlider=function(){
      }
      me.render(chatWindowHtml);
      me.unfreezeUIOnHistoryLoadingFail.call(me);
-     me.show();
+     //me.show();
  };
  chatWindow.prototype.initi18n = function () {
      var me = this;
@@ -3880,7 +3882,49 @@ var iframe = '<script id="chat_message_tmpl" type="text/x-jquery-tmpl"> \
     // return this;
  };
  
- 
+
+ chatWindow.prototype.getJWT=function(options, callback) {
+    var jsonData = {
+        "clientId": options.clientId,
+        "clientSecret": options.clientSecret,
+        "identity": options.userIdentity,
+        "aud": "",
+        "isAnonymous": false
+    };
+    return $.ajax({
+        url: options.JWTUrl,
+        type: 'post',
+        data: jsonData,
+        dataType: 'json',
+        success: function (data) {
+           
+        },
+        error: function (err) {
+            chatWindowInstance.showError(err.responseText);
+        }
+    });
+}
+chatWindow.prototype.setJWT=function(jwtToken) {
+    var me=this;
+    var options=me.config.botOptions;
+    options.assertion = jwtToken;
+    options.callback(null, options);
+
+}
+chatWindow.prototype.assertion=function (options, callback) {
+    var me=this;
+            options.callback=callback;
+            options.handleError = me.showError;
+            options.chatHistory = me.chatHistory.bind(me);
+            options.botDetails = me.botDetails;
+            // callback(null, options);
+            setTimeout(function () {
+                if (me && me.initToken) {
+                    me.initToken(options);
+                }
+            }, 2000);
+}
+
  chatWindow.prototype.addWidgetEvents = function (cfg) {
      if (cfg) {
          var wizSDK = cfg.widgetSDKInstace;
