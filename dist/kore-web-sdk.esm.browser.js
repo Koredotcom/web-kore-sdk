@@ -1489,6 +1489,7 @@ chatWindow.prototype.getStoreTypeByKey = function (key) {
 
 chatWindow.prototype.init = function () {
   var me = this;
+  me.initVars();
   me.config.botOptions.assertionFn = me.assertion.bind(me);
   me.initi18n();
   me.seti18n(me.config && me.config.i18n && me.config.i18n.defaultLanguage || 'en');
@@ -1581,6 +1582,11 @@ chatWindow.prototype.init = function () {
   me.unfreezeUIOnHistoryLoadingFail.call(me); //me.show();
 };
 
+chatWindow.prototype.initVars = function () {
+  var me = this;
+  me.plugins = {};
+};
+
 chatWindow.prototype.initi18n = function () {
   var me = this;
   me.i18n = {
@@ -1604,6 +1610,10 @@ chatWindow.prototype.initi18n = function () {
       }
     }
   };
+
+  if (me.plugins.Korei18nPlugin) {
+    me.config.i18n = me.plugins.Korei18nPlugin.config;
+  }
 
   if (me.config && me.config.i18n && me.config.i18n.languageStrings) {
     me.i18n.langFiles = extend(me.i18n.langFiles, me.config.i18n.languageStrings);
@@ -6377,6 +6387,12 @@ $.fn.uploader.noConflict = function () {
 //})(korejquery,KRPerfectScrollbar)
 
 chatWindow.prototype.$ = $;
+
+chatWindow.prototype.installPlugin = function (plugin) {
+  var me = this;
+  me.plugins[plugin.name] = plugin.plugin;
+};
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (chatWindow);
 
 /***/ }),
@@ -6392,11 +6408,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../src/libs/korejquery */ "./src/libs/korejquery.js");
-/* harmony import */ var _templates_stockTemplate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./templates/stockTemplate */ "./UI/custom/templates/stockTemplate.js");
-/* harmony import */ var _templates_buttonTemplate__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./templates/buttonTemplate */ "./UI/custom/templates/buttonTemplate.js");
+/* harmony import */ var _templates_buttonTemplate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./templates/buttonTemplate */ "./UI/custom/templates/buttonTemplate.js");
 /* provided dependency */ var jQuery = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 
 
  //(function($){
@@ -6417,7 +6431,7 @@ customTemplate.prototype.installTemplate = function (template) {
 
 customTemplate.prototype.installDefaultTemplates = function () {
   //this.installTemplate(new stockTemplate());
-  this.installTemplate(new _templates_buttonTemplate__WEBPACK_IMPORTED_MODULE_2__["default"]());
+  this.installTemplate(new _templates_buttonTemplate__WEBPACK_IMPORTED_MODULE_1__["default"]());
 };
 /**
  * purpose: Function to render bot message for a given custom template
@@ -8812,29 +8826,6 @@ var buttonTemplate = /*#__PURE__*/function () {
 }();
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (buttonTemplate);
-
-/***/ }),
-
-/***/ "./UI/custom/templates/stockTemplate.js":
-/*!**********************************************!*\
-  !*** ./UI/custom/templates/stockTemplate.js ***!
-  \**********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _customTemplate__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../customTemplate */ "./UI/custom/customTemplate.js");
-
-
-function stockTemplate() {}
-
-stockTemplate.prototype.renderMessage = function () {
-  return "<h1>a</h1>";
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (stockTemplate);
 
 /***/ }),
 
@@ -18066,10 +18057,12 @@ var KoreGraphAdapter = function ($, d3) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "chatConfig": () => (/* reexport safe */ _UI_kore_config_js__WEBPACK_IMPORTED_MODULE_1__["default"]),
-/* harmony export */   "chatWindow": () => (/* reexport safe */ _UI_chatWindow_js__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */   "chatWindow": () => (/* reexport safe */ _UI_chatWindow_js__WEBPACK_IMPORTED_MODULE_0__["default"]),
+/* harmony export */   "Korei18nPlugin": () => (/* reexport safe */ _plugins_i18n_js__WEBPACK_IMPORTED_MODULE_2__["default"])
 /* harmony export */ });
 /* harmony import */ var _UI_chatWindow_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../UI/chatWindow.js */ "./UI/chatWindow.js");
 /* harmony import */ var _UI_kore_config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../UI/kore-config.js */ "./UI/kore-config.js");
+/* harmony import */ var _plugins_i18n_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./plugins/i18n.js */ "./src/plugins/i18n.js");
 // declare global {
 //     interface Window {
 //         KoreSDK:any;
@@ -18103,6 +18096,7 @@ __webpack_require__.r(__webpack_exports__);
 // import '../UI/kore-main.js';
 // import '../UI/libs/kore-no-conflict-end.js';
 // import '../UI/libs/kore-no-conflict-start';
+
 
 
 
@@ -18532,6 +18526,56 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((jquery__WEBPACK_IMPORTED_MODULE_0___default()));
+
+/***/ }),
+
+/***/ "./src/plugins/i18n.js":
+/*!*****************************!*\
+  !*** ./src/plugins/i18n.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var Korei18nPlugin = function Korei18nPlugin() {
+  _classCallCheck(this, Korei18nPlugin);
+};
+
+_defineProperty(Korei18nPlugin, "config", {
+  rtlLanguages: ['ar'],
+  availableLanguages: ['en', 'ar'],
+  //shown as list of available languages in chat window header to select
+  defaultLanguage: "en",
+  //default selection from above list
+  languageStrings: {
+    //any additional language can be added in this object by adding the key in availableLanguages
+    ar: {
+      message: "رسالة...",
+      connecting: "توصيل ...",
+      reconnecting: "جاري إعادة الاتصال ...",
+      entertosend: "اضغط على Enter للإرسال",
+      endofchat: "نهاية سجل الدردشة",
+      loadinghistory: "تحميل محفوظات الدردشة ..",
+      sendText: "إرسال",
+      closeText: "قريب",
+      expandText: "وسعت",
+      minimizeText: "تصغير",
+      reconnectText: "أعد الاتصال",
+      attachmentText: "المرفق"
+    }
+  }
+});
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: "Korei18nPlugin",
+  plugin: Korei18nPlugin
+});
 
 /***/ }),
 
@@ -69741,7 +69785,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 
 /******/ /* webpack/runtime/getFullHash */
 /******/ (() => {
-/******/ 	__webpack_require__.h = () => ("857a3c958a1f6a5366cb")
+/******/ 	__webpack_require__.h = () => ("deec768641c68e2a5067")
 /******/ })();
 /******/ 
 /******/ /* webpack/runtime/global */
@@ -70738,9 +70782,10 @@ __webpack_require__.r(__webpack_exports__);
 /******/ __webpack_require__("./node_modules/webpack-dev-server/client/index.js?protocol=ws%3A&hostname=0.0.0.0&port=9000&pathname=%2Fws&logging=info");
 /******/ __webpack_require__("./node_modules/webpack/hot/dev-server.js");
 /******/ var __webpack_exports__ = __webpack_require__("./src/index.js");
+/******/ var __webpack_exports__Korei18nPlugin = __webpack_exports__.Korei18nPlugin;
 /******/ var __webpack_exports__chatConfig = __webpack_exports__.chatConfig;
 /******/ var __webpack_exports__chatWindow = __webpack_exports__.chatWindow;
-/******/ export { __webpack_exports__chatConfig as chatConfig, __webpack_exports__chatWindow as chatWindow };
+/******/ export { __webpack_exports__Korei18nPlugin as Korei18nPlugin, __webpack_exports__chatConfig as chatConfig, __webpack_exports__chatWindow as chatWindow };
 /******/ 
 
 //# sourceMappingURL=kore-web-sdk.esm.browser.js.map

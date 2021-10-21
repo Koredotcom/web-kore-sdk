@@ -1,6 +1,7 @@
 
 
 import {chatConfig,chatWindow} from '../../../dist/kore-web-sdk.esm.browser.js';
+import {Korei18nPlugin} from '../../../dist/kore-web-sdk.esm.browser.js';
 var $ =chatWindow.$;
 debugger
 //var chatConfig=KoreSDK2.chatConfig;
@@ -47,6 +48,8 @@ var chatWindowInstance = new chatWindow(chatConfig);
 // chatWindow.prototype.show=function(){
 //     console.log('overridedn')
 // }
+
+//chatWindowInstance.installPlugin(Korei18nPlugin);
 chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){
     chatWindowInstance.setJWT(res.jwt);
     chatWindowInstance.show(chatConfig);

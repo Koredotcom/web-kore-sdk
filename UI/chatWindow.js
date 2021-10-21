@@ -1072,6 +1072,7 @@ chatWindow.prototype.addBottomSlider=function(){
  }
  chatWindow.prototype.init = function () {
      var me = this;
+     me.initVars();
      me.config.botOptions.assertionFn=me.assertion.bind(me);
      me.initi18n();
      me.seti18n((me.config && me.config.i18n && me.config.i18n.defaultLanguage) || 'en');
@@ -1148,6 +1149,10 @@ chatWindow.prototype.addBottomSlider=function(){
      me.unfreezeUIOnHistoryLoadingFail.call(me);
      //me.show();
  };
+ chatWindow.prototype.initVars=function(){
+    var me=this;
+    me.plugins={};
+ }
  chatWindow.prototype.initi18n = function () {
      var me = this;
      me.i18n={
@@ -1169,6 +1174,10 @@ chatWindow.prototype.addBottomSlider=function(){
                  attachmentText:"Attachment"
              }
          }
+     }
+     
+     if(me.plugins.Korei18nPlugin){
+         me.config.i18n=me.plugins.Korei18nPlugin.config;
      }
      if(me.config &&  me.config.i18n &&  me.config.i18n.languageStrings){
          me.i18n.langFiles=extend(me.i18n.langFiles, me.config.i18n.languageStrings);
@@ -5395,4 +5404,9 @@ chatWindow.prototype.assertion=function (options, callback) {
  //    return chatWindow
 //})(korejquery,KRPerfectScrollbar)
 chatWindow.prototype.$=$;
+chatWindow.prototype.installPlugin=function(plugin){
+    var me=this;
+    me.plugins[plugin.name]=plugin.plugin;
+}
+
 export default chatWindow;
