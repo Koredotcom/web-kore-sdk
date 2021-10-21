@@ -1,5 +1,5 @@
 import $ from '../../src/libs/korejquery'
-//import './templates/stockTemplate';
+import stockTemplate from './templates/stockTemplate';
 //(function($){
 	function customTemplate(data,chatInitialize) {
 		this.cfg = data;
@@ -7,12 +7,16 @@ import $ from '../../src/libs/korejquery'
 		this.helpers = null;
 		this.extension = null;
 		this.templates=[];
+		this.installDefaultTemplates();
 	}
 
 	customTemplate.prototype.installTemplate = function (template) {
 		this.templates.push(template);
 	};
 
+	customTemplate.prototype.installDefaultTemplates = function () {
+		//this.installTemplate(new stockTemplate());
+	};
 	/**
 	 * purpose: Function to render bot message for a given custom template
 	 * input  : Bot Message

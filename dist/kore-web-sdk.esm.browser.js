@@ -6392,11 +6392,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _src_libs_korejquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../src/libs/korejquery */ "./src/libs/korejquery.js");
+/* harmony import */ var _templates_stockTemplate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./templates/stockTemplate */ "./UI/custom/templates/stockTemplate.js");
 /* provided dependency */ var jQuery = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
- //import './templates/stockTemplate';
-//(function($){
+
+ //(function($){
 
 function customTemplate(data, chatInitialize) {
   this.cfg = data;
@@ -6404,10 +6405,14 @@ function customTemplate(data, chatInitialize) {
   this.helpers = null;
   this.extension = null;
   this.templates = [];
+  this.installDefaultTemplates();
 }
 
 customTemplate.prototype.installTemplate = function (template) {
   this.templates.push(template);
+};
+
+customTemplate.prototype.installDefaultTemplates = function () {//this.installTemplate(new stockTemplate());
 };
 /**
  * purpose: Function to render bot message for a given custom template
@@ -8723,6 +8728,29 @@ customTemplate.prototype.suggestionComponent = function () {
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (customTemplate);
+
+/***/ }),
+
+/***/ "./UI/custom/templates/stockTemplate.js":
+/*!**********************************************!*\
+  !*** ./UI/custom/templates/stockTemplate.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _customTemplate__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../customTemplate */ "./UI/custom/customTemplate.js");
+
+
+function stockTemplate() {}
+
+stockTemplate.prototype.renderMessage = function () {
+  return "<h1>a</h1>";
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (stockTemplate);
 
 /***/ }),
 
@@ -68994,7 +69022,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 
 /******/ /* webpack/runtime/getFullHash */
 /******/ (() => {
-/******/ 	__webpack_require__.h = () => ("88c9270142e456c7cfd3")
+/******/ 	__webpack_require__.h = () => ("4484d33d5c58af4c4647")
 /******/ })();
 /******/ 
 /******/ /* webpack/runtime/global */
