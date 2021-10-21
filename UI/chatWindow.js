@@ -18,7 +18,8 @@ import PerfectScrollbar from 'perfect-scrollbar';
 import  customTemplate from './custom/customTemplate';
 import './chatWindow.css'
 
-let $=korejquery;
+var $=korejquery;
+import KoreGraphAdapter from '../libs/KoreGraphAdapter'
 // function koreBotChat() {
     // var koreJquery;
     // if (window && window.KoreSDK && window.KoreSDK.dependencies && window.KoreSDK.dependencies.jQuery) {

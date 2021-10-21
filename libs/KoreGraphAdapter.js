@@ -1,8 +1,10 @@
-var KoreGraphAdapter = (function($) {
+import * as d3 from "d3";
+import korejquery from '../src/libs/korejquery'
+var KoreGraphAdapter = (function($,d3) {
     function drawD3Pie(msgData, dimens, selection, scaleLegend) {
         var payload=msgData;//msgData.message[0].component.payload
         var widthDivision=3;
-        legendCenterOffset=0;
+        var legendCenterOffset=0;
         if(msgData.message){
             payload=msgData.message[0].component.payload;
         }else{
@@ -2179,4 +2181,6 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
         drawD3barHorizontalbarChart: drawD3barHorizontalbarChart,
         drawD3lineChartV2:drawD3lineChartV2
     }
-})($);
+})(korejquery,d3);
+
+export default KoreGraphAdapter

@@ -10,7 +10,7 @@
     "serve": "webpack-dev-server --env=kore_env=dev --env=component=chat --env=target_module=esm"
   },
   "main": "dist/kore-web-sdk.esm.browser.js",
-  "module":"dist/kore-web-sdk.esm.browser.js",
+  "module": "dist/kore-web-sdk.esm.browser.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:RajasekharBa-Kore/web-kore-sdk.git#wsdk2"
@@ -23,6 +23,7 @@
   "homepage": "https://github.com/Koredotcom/web-kore-sdk#readme",
   "dependencies": {
     "@types/jquery": "^3.5.6",
+    "d3": "^7.1.1",
     "express": "~4.9.0",
     "jquery": "^3.6.0",
     "jquery-ui": "^1.12.1",
