@@ -1,5 +1,6 @@
 import $ from '../../src/libs/korejquery'
 import stockTemplate from './templates/stockTemplate';
+import buttonTemplate from './templates/buttonTemplate';
 //(function($){
 	function customTemplate(data,chatInitialize) {
 		this.cfg = data;
@@ -12,10 +13,12 @@ import stockTemplate from './templates/stockTemplate';
 
 	customTemplate.prototype.installTemplate = function (template) {
 		this.templates.push(template);
+		template.cwInstance=this.chatInitialize;
 	};
 
 	customTemplate.prototype.installDefaultTemplates = function () {
 		//this.installTemplate(new stockTemplate());
+		this.installTemplate(new buttonTemplate());
 	};
 	/**
 	 * purpose: Function to render bot message for a given custom template
@@ -28,10 +31,10 @@ import stockTemplate from './templates/stockTemplate';
 		var templatesIndex=0;
 
 		if(me.templates.length){
-			while (!messageHtml) {
+			while (!messageHtml && templatesIndex<me.templates.length) {
 				var template=me.templates[templatesIndex]
 				if(template.renderMessage){
-					messageHtml=template.renderMessage();
+					messageHtml=template.renderMessage.call(template,msgData);
 				}
 				templatesIndex++
 			}

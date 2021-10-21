@@ -2257,7 +2257,7 @@ chatWindow.prototype.addBottomSlider=function(){
 
      /* checking for matched custom template */
      messageHtml = me.customTemplateObj.renderMessage(msgData);
-     if (messageHtml === '' && msgData && msgData.message && msgData.message[0]) {
+     if (!messageHtml && msgData && msgData.message && msgData.message[0]) {
 
          if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "button") {
              messageHtml = $(me.getChatTemplate("templatebutton")).tmpl({
@@ -5394,5 +5394,5 @@ chatWindow.prototype.assertion=function (options, callback) {
  //Actual chatwindow.js koreBotChat function code end here
  //    return chatWindow
 //})(korejquery,KRPerfectScrollbar)
-chatWindow.$=$;
+chatWindow.prototype.$=$;
 export default chatWindow;
