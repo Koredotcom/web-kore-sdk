@@ -9,14 +9,6 @@ var chatWindowInstance = new chatWindow(chatConfig);
 //     console.log('overridedn')
 // }
 
-//chatWindowInstance.installPlugin(Korei18nPlugin);
-chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){
-    chatWindowInstance.setJWT(res.jwt);
-    chatWindowInstance.show(chatConfig);
-
-},function(errRes){
-
-});
 
 // function stockTemplate(){
 // }
@@ -26,3 +18,12 @@ chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){
 // chatWindowInstance.customTemplateObj.installTemplate(new stockTemplate());
 
 
+
+//chatWindowInstance.installPlugin(Korei18nPlugin);
+chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){
+    chatWindowInstance.setJWT(res.jwt);
+    chatWindowInstance.show();
+
+},function(errRes){
+
+});

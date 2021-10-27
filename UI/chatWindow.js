@@ -735,38 +735,11 @@ import KoreGraphAdapter from '../libs/KoreGraphAdapter'
      return arguments[0];
  }
 
- function chatWindow(cfg) {
+ function chatWindow(config) {
      var me=this;
-     this.setPrivateVarToContext(this);
-     isRecordingStarted = false;
-     cfg.botOptions.test = false;
-     this.config = {
-         "chatTitle": "Kore.ai Bot Chat",
-         "container": "body",
-         "allowIframe": false,
-         "botOptions": cfg.botOptions
-     };
-     koreAPIUrl = cfg.botOptions.koreAPIUrl;
-     bearerToken = cfg.botOptions.bearer;
-     //speechServerUrl = cfg.botOptions.speechSocketUrl;
-     speechPrefixURL = cfg.botOptions.koreSpeechAPIUrl;
-     ttsServerUrl = cfg.botOptions.ttsSocketUrl;
-     userIdentity = cfg.botOptions.userIdentity;
-     if (cfg.botOptions.recorderWorkerPath && cfg.botOptions.recorderWorkerPath.trim().length > 0) {
-         recorderWorkerPath = cfg.botOptions.recorderWorkerPath.trim();
-     }
-     if (cfg && cfg.chatContainer) {
-         delete cfg.chatContainer;
-     }
-     this.config = extend(this.config, cfg);
-     this.reWriteWebHookURL(this.config)
-     window._chatHistoryLoaded = false;
-     this.init();
-     me.updateOnlineStatus();
-     me.addBottomSlider();
-     window.addEventListener('online', me.updateOnlineStatus);
-     window.addEventListener('offline', me.updateOnlineStatus);
-     attachEventListener();
+     me.config=config;
+     me.initVars();
+
  }
  //converts v1 webhooks url to v2 automatically
  chatWindow.prototype.reWriteWebHookURL = function (chatConfig) {
@@ -1070,9 +1043,39 @@ chatWindow.prototype.addBottomSlider=function(){
      }
      return storage; 
  }
- chatWindow.prototype.init = function () {
+ chatWindow.prototype.init = function (cfg) {
      var me = this;
-     me.initVars();
+     this.setPrivateVarToContext(this);
+     isRecordingStarted = false;
+     cfg.botOptions.test = false;
+     this.config = extend({
+        "chatTitle": "Kore.ai Bot Chat",
+        "container": "body",
+        "allowIframe": false,
+        "botOptions": cfg.botOptions
+    }, me.config);
+
+    me.config.chatTitle='Kore.ai Bot Chat';
+    me.config.container='body';
+    me.config.allowIframe=false
+    //me.config.allowIframe='Kore.ai Bot Chat';
+
+
+     koreAPIUrl = cfg.botOptions.koreAPIUrl;
+     bearerToken = cfg.botOptions.bearer;
+     //speechServerUrl = cfg.botOptions.speechSocketUrl;
+     speechPrefixURL = cfg.botOptions.koreSpeechAPIUrl;
+     ttsServerUrl = cfg.botOptions.ttsSocketUrl;
+     userIdentity = cfg.botOptions.userIdentity;
+     if (cfg.botOptions.recorderWorkerPath && cfg.botOptions.recorderWorkerPath.trim().length > 0) {
+         recorderWorkerPath = cfg.botOptions.recorderWorkerPath.trim();
+     }
+     if (cfg && cfg.chatContainer) {
+         delete cfg.chatContainer;
+     }
+   
+     this.reWriteWebHookURL(this.config)
+     window._chatHistoryLoaded = false;
      me.config.botOptions.assertionFn=me.assertion.bind(me);
      me.initi18n();
      me.seti18n((me.config && me.config.i18n && me.config.i18n.defaultLanguage) || 'en');
@@ -1116,6 +1119,7 @@ chatWindow.prototype.addBottomSlider=function(){
      me.config.chatTitle = tempTitle;
      if(!me.config.minimizeMode){
          me.bot.init(me.config.botOptions,me.config.messageHistoryLimit);
+         me.config.botOptions.callback(null, me.config.botOptions);
          if (me.config.multiPageApp && me.config.multiPageApp.enable) {
              me.setLocalStoreItem('kr-cw-state', 'open');
              me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
@@ -1147,11 +1151,19 @@ chatWindow.prototype.addBottomSlider=function(){
      }
      me.render(chatWindowHtml);
      me.unfreezeUIOnHistoryLoadingFail.call(me);
+     me.updateOnlineStatus();
+     me.addBottomSlider();
+     window.addEventListener('online', me.updateOnlineStatus);
+     window.addEventListener('offline', me.updateOnlineStatus);
+     attachEventListener();
      //me.show();
  };
  chatWindow.prototype.initVars=function(){
     var me=this;
     me.plugins={};
+    ////chatInitialize = me//new chatWindow(cfg);
+    me.customTemplateObj = new customTemplate(me.config,me);
+
  }
  chatWindow.prototype.initi18n = function () {
      var me = this;
@@ -1232,7 +1244,7 @@ chatWindow.prototype.addBottomSlider=function(){
      _this.botMessages=botMessages;
      _this.attachmentInfo=attachmentInfo;
      _this._botInfo=_botInfo;
-     _this.customTemplateObj=customTemplateObj;
+     //_this.customTemplateObj=customTemplateObj;
      _this.helpers = helpers;
      _this._pingTimer = _pingTimer;
      _this._pingTime = _pingTime;
@@ -3877,6 +3889,7 @@ var iframe = '<script id="chat_message_tmpl" type="text/x-jquery-tmpl"> \
  chatWindow.prototype.show = function () {
     //todo:raj 
     var me=this;
+    this.init(me.config);
     var cfg=me.config;  
     //  if ($('body').find('.kore-chat-window').length > 0) {
     //      return false;
@@ -3886,8 +3899,8 @@ var iframe = '<script id="chat_message_tmpl" type="text/x-jquery-tmpl"> \
      if(cfg.widgetSDKInstace){
          this.addWidgetEvents(cfg);
      };
-     chatInitialize = me//new chatWindow(cfg);
-     chatInitialize.customTemplateObj = new customTemplate(cfg,chatInitialize);
+    //  chatInitialize = me//new chatWindow(cfg);
+    //  chatInitialize.customTemplateObj = new customTemplate(cfg,chatInitialize);
      
     // return this;
  };
@@ -3918,7 +3931,6 @@ chatWindow.prototype.setJWT=function(jwtToken) {
     var me=this;
     var options=me.config.botOptions;
     options.assertion = jwtToken;
-    options.callback(null, options);
 
 }
 chatWindow.prototype.assertion=function (options, callback) {

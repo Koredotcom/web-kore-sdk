@@ -13,7 +13,7 @@ var chatWindowInstance = new chatWindow(chatConfig);
 //chatWindowInstance.installPlugin(Korei18nPlugin);
 chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){
     chatWindowInstance.setJWT(res.jwt);
-    chatWindowInstance.show(chatConfig);
+    chatWindowInstance.show();
 
 },function(errRes){
 
