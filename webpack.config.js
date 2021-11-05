@@ -98,7 +98,7 @@ let config= {
           // serverSideRender: true,
           writeToDisk: true,
         },
-        open: ['/examples/esm'],
+        open: ['/examples/esm/chat'],
       },
 }
 

@@ -2049,6 +2049,9 @@ chatWindow.prototype.addBottomSlider=function(){
          $(me.config.container).addClass('pos-relative');
          $(me.config.chatContainer).addClass('pos-absolute');
      }
+     if(me.config.widgetSDKInstace){
+        me.config.chatContainer.find('.kr-wiz-menu-chat').show(); 
+     }
      me.setCollapsedModeStyles();
      me.chatPSObj=new KRPerfectScrollbar(me.config.chatContainer.find('.chat-container').get(0), {
          suppressScrollX: true

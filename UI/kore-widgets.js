@@ -1,44 +1,50 @@
-//"use strict";
+import $ from '../src/libs/korejquery';
+import PerfectScrollbar from 'perfect-scrollbar';
+import requireKr from '../kore-bot-sdk-client'
+import './kore-widgets.css'
+
+// //"use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-(function (factory) {
-  //if (typeof define === 'function' && define.amd) { // AMD
-  //    define(factory);
-  //} else if (typeof module !== 'undefined') {      // CommonJS
-  //    module.exports = factory();
-  //} else {                                         // browser globals
-  window.KoreWidgetSDK = factory(); //}
-})(function () {
-  var koreJquery;
+// (function (factory) {
+//   //if (typeof define === 'function' && define.amd) { // AMD
+//   //    define(factory);
+//   //} else if (typeof module !== 'undefined') {      // CommonJS
+//   //    module.exports = factory();
+//   //} else {                                         // browser globals
+//   window.KoreWidgetSDK = factory(); //}
+// })(function () {
+//   var koreJquery;
 
-  if (window && window.KoreSDK && window.KoreSDK.dependencies && window.KoreSDK.dependencies.jQuery) {
-    //load kore's jquery version
-    koreJquery = window.KoreSDK.dependencies.jQuery;
-  } else {
-    //fall back to clients jquery version
-    koreJquery = window.jQuery;
-  }
+//   if (window && window.KoreSDK && window.KoreSDK.dependencies && window.KoreSDK.dependencies.jQuery) {
+//     //load kore's jquery version
+//     koreJquery = window.KoreSDK.dependencies.jQuery;
+//   } else {
+//     //fall back to clients jquery version
+//     koreJquery = window.jQuery;
+//   }
 
-  var korejstz;
-  if (window.jstz) {
-    korejstz = window.jstz;
-  } else {
-    korejstz = requireKr(2).jstz;
-  }
+  // var korejstz;
+  // if (window.jstz) {
+  //   korejstz = window.jstz;
+  // } else {
+  //   korejstz = requireKr(2).jstz;
+  // }
+  var jstz = requireKr(2).jstz;
 
   var KRPerfectScrollbar;
   if(window.PerfectScrollbar && typeof PerfectScrollbar ==='function'){
     KRPerfectScrollbar=window.PerfectScrollbar;
   }
   
-  return function ($, jstz,KRPerfectScrollbar) {
-    //get dependencies as arguments here 
+//   return function ($, jstz,KRPerfectScrollbar) {
+//     //get dependencies as arguments here 
 
-    /**
-    * @param  {Object} KoreWidgetSDK Config
-    */
-    var me;
+//     /**
+//     * @param  {Object} KoreWidgetSDK Config
+//     */
+//     var me;
     function KoreWidgetSDK(config) {
       // this.config=config;
       // this.config.container=this.config.container || "body";
@@ -2624,9 +2630,11 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         $('.sdkBotIcon').addClass('selected');
         localPanelDetail[panelName] = "";
         _self.clearWidgetPolling();
-        $(_self.config.container.content).hide("slide", {
-          direction: _self.config.direction === 'left' ? 'left' : 'right'
-        }, 500);
+        //todo:raj
+        $(_self.config.container.content).hide();
+        // $(_self.config.container.content).hide("slide", {
+        //   direction: _self.config.direction === 'left' ? 'left' : 'right'
+        // }, 500);
         return false;
       }
 
@@ -2699,11 +2707,12 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         if ($(_self.config.container.content).is(':visible')) {
           $(_self.config.container.content).hide();
         }
+        $(_self.config.container.content).show();
+        //todo:raj
+        // $(_self.config.container.content).show("slide", {
+        //   direction: _self.config.direction //$.jStorage.get('menuPosition')
 
-        $(_self.config.container.content).show("slide", {
-          direction: _self.config.direction //$.jStorage.get('menuPosition')
-
-        }, 250);
+        // }, 250);
         $(_self.config.container.content).html('<div class="loaderRing"><div></div><div></div><div></div><div></div></div>');
 
         _self.prepareRenderData(panelName, true);
@@ -3550,7 +3559,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         $($ele.find(".tabs")[0]).addClass("active");
         var titleEle = $ele.find('.listViewLeftContent');
         if(titleEle && titleEle.length){
-          for (i = 0; i < titleEle.length; i++){
+          for (var i = 0; i < titleEle.length; i++){
             var ele =titleEle[i];
             if($(ele).attr('col-size')){
               var width = _self.getColumnWidth($(ele).attr('col-size'));
@@ -5542,7 +5551,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     };
 
     KoreWidgetSDK.prototype.init = function (config) {
-      me = this;
+      //me = this;
       this.events = {};
       this.config = config || {}; //this.bot.init(this.config.botOptions);
       //todo:need to remove
@@ -5582,6 +5591,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       }
     };
 
-    return KoreWidgetSDK;
-  }(koreJquery, korejstz,KRPerfectScrollbar);
-});
+//     return KoreWidgetSDK;
+//   }(koreJquery, korejstz,KRPerfectScrollbar);
+// });
+export default KoreWidgetSDK

@@ -36,8 +36,13 @@ import chatWindow from '../UI/chatWindow.js';
 import chatConfig from '../UI/kore-config.js';
 import Korei18nPlugin from './plugins/i18n.js';
 
+import KoreWidgetSDK from '../UI/kore-widgets.js';
+import widgetsConfig from '../UI/kore-widgets-config.js';
+
 export {
     chatConfig,
     chatWindow,
+    widgetsConfig,
+    KoreWidgetSDK,
     Korei18nPlugin
 };

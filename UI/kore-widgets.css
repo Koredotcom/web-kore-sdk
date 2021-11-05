@@ -2045,6 +2045,7 @@
     box-shadow: -11px 0px 14px 0px rgba(138, 149, 159, 0.25);
     position: absolute;
     border-right:1px solid var(--sdk-primary-border-color); 
+    display: none;
 }
 
 .kr-wiz-content-chat {
@@ -3080,7 +3081,7 @@
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
 }
-
+/* 
 .kr-wiz-content-css .filesCntr .fileTypeDoc {
     background: url("../../../images/fileType/fileType_document.svg");
 }
@@ -3147,7 +3148,7 @@
 
 .kr-wiz-content-css .filesCntr .fileTypeNone {
     background: url("../../../images/fileType/fileType_none.svg");
-}
+} */
 
 .kr-wiz-content-css .dropbtnWidgt {
     font-size: 10px;
@@ -4328,7 +4329,7 @@
     display: inline-block;
     background-repeat: no-repeat !important;
 }
-
+/* 
 .kr-wiz-content-css .koraFilesTemplate_Widget .filesCntr .fileTypeDoc {
     background: url("../../images/fileType/fileType_document.svg");
 }
@@ -4395,7 +4396,7 @@
 
 .kr-wiz-content-css .koraFilesTemplate_Widget .filesCntr .fileTypeNone {
     background: url("../../images/fileType/fileType_none.svg");
-}
+} */
 
 .kr-wiz-content-css .ulFilterbtns {
     background: var(--bg-color-four);
@@ -5126,7 +5127,7 @@
     display: inline-block;
     width: 18px;
     height: 18px;
-    background: url("../../images/attachmentIcon.svg");
+    /* background: url("../../images/attachmentIcon.svg"); */
     transform: rotate(-53deg);
 }
 
@@ -5245,7 +5246,7 @@
     background-repeat: no-repeat !important;
 }
 
-.kr-wiz-content-css .koraFilesTemplate .filesCntr .fileTypeDoc {
+/* .kr-wiz-content-css .koraFilesTemplate .filesCntr .fileTypeDoc {
     background: url("../../images/fileType/fileType_document.svg");
 }
 
@@ -5311,7 +5312,7 @@
 
 .kr-wiz-content-css .koraFilesTemplate .filesCntr .fileTypeNone {
     background: url("../../images/fileType/fileType_none.svg");
-}
+} */
 
 .kr-wiz-content-css .pickMeetingSlotTemplate {
     width: 85% !important;
@@ -5940,7 +5941,7 @@
     margin-right: 5px;
     display: inline-block;
     vertical-align: sub;
-    background: url("../../images/star.svg") no-repeat;
+    /* background: url("../../images/star.svg") no-repeat; */
 }
 
 .kr-wiz-content-css .attendeeSlotsTemplate .mostPopularMsg {
@@ -6113,7 +6114,7 @@
     height: 24px;
     width: 25px;
     display: inline-block;
-    background: url(../../images/companyContact.svg) no-repeat;
+    /* background: url(../../images/companyContact.svg) no-repeat; */
     background-position: -4px -4px;
 }
 
@@ -6486,7 +6487,7 @@
 
 .kr-wiz-content-css .skillCntr .skillKoraIcon,
 .kr-wiz-content-css .switchHeader .skillKoraIcon {
-    background: url(../../images/skill/kora.svg) no-repeat;
+    /* background: url(../../images/skill/kora.svg) no-repeat; */
     height: 20px;
     width: 20px;
     display: inline-block;
@@ -6939,7 +6940,7 @@
     width: 16px;
     margin-top: 2px;
     display: inline-block;
-    background: url("../../../images/kora/logo16.svg");
+    /* background: url("../../../images/kora/logo16.svg"); */
 }
 
 .kr-wiz-menu-css .menuItemCntr .headerProfileCntrH {

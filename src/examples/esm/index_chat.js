@@ -3,7 +3,7 @@
 import {chatConfig,chatWindow} from '../../../dist/kore-web-sdk.esm.browser.js';
 import {Korei18nPlugin} from '../../../dist/kore-web-sdk.esm.browser.js';
 
-var chatWindowInstance = new chatWindow(chatConfig);
+let chatWindowInstance = new chatWindow(chatConfig);
 
 // chatWindow.prototype.show=function(){
 //     console.log('overridedn')

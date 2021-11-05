@@ -19,6 +19,13 @@ botOptions.clientId = "cs-1e845b00-81ad-5757-a1e7-d0f6fea227e9";
 botOptions.clientSecret = "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=";
 
 
+botOptions.JWTUrl ="https://demo.kore.net/users/sts";
+botOptions.userIdentity = 'rukmini.natti@kore.com';//koreGenerateUUID();// Provide users email id here
+botOptions.botInfo = {name:"Metlife Mockbot","_id":"st-37f07942-d602-517d-bf99-a78db107e6e7"};// bot name is case sensitive
+botOptions.clientId = "cs-94ba582c-a464-5324-a082-c17585679ef8"; 
+botOptions.clientSecret="klGYBUVsDsuFVk7VHkyZHtH4+E/HEAosHT0WDc0KHnY=";
+
+
 // for webhook based communication use following option 
 // botOptions.webhookConfig={
 //     enable:true,
