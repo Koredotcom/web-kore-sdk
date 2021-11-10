@@ -872,7 +872,9 @@
                             rightScrollBtn[0].classList.remove('hide');
                         }
                         else {
-                            rightScrollBtn[0].classList.add('hide');
+                            if(rightScrollBtn && rightScrollBtn[0]){
+                                rightScrollBtn[0].classList.add('hide');
+                            }
                         }
                     }
                 }   
@@ -1284,10 +1286,10 @@
                         type = type.toLowerCase();
                     }
                     if (type == "postback" || type == "text") {
-                        $('.chatInputBox').text($(this).attr('actual-value') || $(this).attr('value'));
+                        $('.chatInputBox').text($(this).attr('value') || $(this).attr('actual-value'));
                         //var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
                         if($('.quickReply') && $('.quickReply').length){
-                            var _innerText = $(this).attr('value');
+                            var _innerText = $(this).attr('actual-value');
 			   // _innerText = toTitleCase(_innerText);
                         } else {
                             var _innerText = ($(this)[0] && $(this)[0].innerText) ? $(this)[0].innerText.trim():"" || ($(this) && $(this).attr('data-value'))?$(this).attr('data-value').trim():"";
@@ -1940,8 +1942,8 @@
                     $('.typingIndicatorContent').css('display', 'none');
                 }, 10000);
                 if (renderMsg && typeof renderMsg === 'string') {
-                    msgData.message[0].cInfo.body = messageToBot["message"].body;
-		   // msgData.message[0].cInfo.body = renderMsg;
+                   // msgData.message[0].cInfo.body = messageToBot["message"].body;
+		             msgData.message[0].cInfo.body = renderMsg;
                 }
                 msgData.message[0].cInfo.ignoreCheckMark=ignoreCheckMark;
                 me.renderMessage(msgData);
@@ -3187,7 +3189,7 @@
                                     <div class="quick_replies_btn_parent"><div class="autoWidth">\
                                         {{if msgData.message[0].component.payload.quick_replies && msgData.message[0].component.payload.quick_replies.length}} \
                                             {{each(key, msgItem) msgData.message[0].component.payload.quick_replies}} \
-                                        <div class="buttonTmplContentChild quickReplyDiv displayInline"> <span {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} class="quickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.content_type}">\
+                                        <div class="buttonTmplContentChild quickReplyDiv displayInline"> <span  actual-value="${msgItem.title}" {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} class="quickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.content_type}">\
                                             {{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} <span class="quickreplyText {{if msgItem.image_url}}with-img{{/if}}">${msgItem.title}</span></span>\
                                         </div> \
                                     {{/each}} \
