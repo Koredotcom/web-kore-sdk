@@ -1,5 +1,5 @@
 import $ from '../../src/libs/korejquery'
-import buttonTemplate from './templates/buttonTemplate';
+import ButtonTemplate from './templates/button/buttonTemplate';
 //(function($){
 	function customTemplate(data,chatInitialize) {
 		this.cfg = data;
@@ -17,7 +17,7 @@ import buttonTemplate from './templates/buttonTemplate';
 
 	customTemplate.prototype.installDefaultTemplates = function () {
 		//this.installTemplate(new stockTemplate());
-		this.installTemplate(new buttonTemplate());
+		this.installTemplate(new ButtonTemplate());
 	};
 	/**
 	 * purpose: Function to render bot message for a given custom template

@@ -1,22 +1,24 @@
 
-import helpers from '../../../src/utils/helpers'
+import helpers from '../../../../src/utils/helpers'
 
-class buttonTemplate {
+class ButtonTemplate {
 
-    renderMessage(msgData) {
-        var me = this;
-        var $ = me.cwInstance.$;
-        var helpersObj = new helpers();
+    renderMessage(msgData:any) {
+        let me:any = this;
+        let $ = me.cwInstance.$;
+        let helpersObj = new helpers();
 
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "button") {
-            var messageHtml = $(me.getTemplateString("templatebutton")).tmpl({
+            me.messageHtml = $(me.getTemplateString("templatebutton")).tmpl({
                 'msgData': msgData,
                 'helpers': helpersObj.helpers
             });
-            return messageHtml;
+            me.bindEvents();
+            return me.messageHtml;
         }
     }
-
+    bindEvents(){
+    }
     getTemplateString() {
         var buttonTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
             {{if msgData.message}} \
@@ -49,4 +51,4 @@ class buttonTemplate {
     
 }
 
-export default buttonTemplate;
+export default ButtonTemplate;

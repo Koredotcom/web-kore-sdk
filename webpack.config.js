@@ -12,11 +12,11 @@ let config= {
             exclude: /node_modules/,
             use: "babel-loader",
           },
-            // {
-            //     test: /\.ts/,
-            //     use: 'ts-loader',
-            //     include:[path.resolve(__dirname,'src')]
-            // },
+            {
+                test: /\.ts/,
+                use: 'ts-loader',
+                include:[path.resolve(__dirname,'src'),path.resolve(__dirname,'UI')]
+            },
             // {
             //     test: /\.m?js$/,
             //     exclude: /node_modules/,
@@ -30,7 +30,7 @@ let config= {
             //     }
             //   },
               {
-                test: /\.css$/,
+                test: /\.css|.scss$/,
                 use: [
                   "style-loader", //3. Inject styles into DOM
                   "css-loader", //2. Turns css into commonjs

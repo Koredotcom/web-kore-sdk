@@ -16,7 +16,7 @@ import korejquery from '../src/libs/korejquery'
 // import 'jquery.tmpl'; 
 import PerfectScrollbar from 'perfect-scrollbar';
 import  customTemplate from './custom/customTemplate';
-import './chatWindow.css'
+import './chatWindow.scss'
 
 var $=korejquery;
 import KoreGraphAdapter from '../libs/KoreGraphAdapter'
