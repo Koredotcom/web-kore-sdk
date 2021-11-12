@@ -9,11 +9,11 @@ botOptionsWiz.clientId = "PLEASE_ENTER_CLIENT_ID";
 botOptionsWiz.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 
 
-botOptionsWiz.JWTUrl ="https://demo.kore.net/users/sts";
-botOptionsWiz.userIdentity = 'rukmini.natti@kore.com';//koreGenerateUUID();// Provide users email id here
-botOptionsWiz.botInfo = {name:"Metlife Mockbot","_id":"st-37f07942-d602-517d-bf99-a78db107e6e7"};// bot name is case sensitive
-botOptionsWiz.clientId = "cs-94ba582c-a464-5324-a082-c17585679ef8"; 
-botOptionsWiz.clientSecret="klGYBUVsDsuFVk7VHkyZHtH4+E/HEAosHT0WDc0KHnY=";
+// botOptionsWiz.JWTUrl ="https://demo.kore.net/users/sts";
+// botOptionsWiz.userIdentity = 'rukmini.natti@kore.com';//koreGenerateUUID();// Provide users email id here
+// botOptionsWiz.botInfo = {name:"Metlife Mockbot","_id":"st-37f07942-d602-517d-bf99-a78db107e6e7"};// bot name is case sensitive
+// botOptionsWiz.clientId = "cs-94ba582c-a464-5324-a082-c17585679ef8"; 
+// botOptionsWiz.clientSecret="klGYBUVsDsuFVk7VHkyZHtH4+E/HEAosHT0WDc0KHnY=";
 
 var widgetsConfig = {
     botOptions: botOptionsWiz

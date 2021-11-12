@@ -1,5 +1,5 @@
 
-import helpers from '../../../../src/utils/helpers'
+import helpers from '../../../../../src/utils/helpers'
 
 class ButtonTemplate {
 

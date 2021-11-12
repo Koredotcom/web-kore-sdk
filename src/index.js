@@ -32,8 +32,8 @@
 // import '../UI/libs/kore-no-conflict-end.js';
 
 // import '../UI/libs/kore-no-conflict-start';
-import chatWindow from '../UI/chatWindow.js';
-import chatConfig from '../UI/kore-config.js';
+import chatWindow from './components/chatwindow/chatWindow';
+import chatConfig from './components/chatwindow/config/kore-config';
 import Korei18nPlugin from './plugins/i18n.js';
 
 import KoreWidgetSDK from '../UI/kore-widgets.js';

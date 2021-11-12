@@ -1,4 +1,4 @@
-import $ from '../../src/libs/korejquery'
+import $ from '../../../src/libs/korejquery'
 import ButtonTemplate from './templates/button/buttonTemplate';
 //(function($){
 	function customTemplate(data,chatInitialize) {

@@ -9,17 +9,17 @@
 // })(function () {
 //     return 
 // });
-import requireKr from '../kore-bot-sdk-client'
+import requireKr from '../../../kore-bot-sdk-client'
 //import $ from 'jquery'
-import korejquery from '../src/libs/korejquery'
+import korejquery from '../../libs/korejquery'
 // import 'jquery-ui'
 // import 'jquery.tmpl'; 
 import PerfectScrollbar from 'perfect-scrollbar';
-import  customTemplate from './custom/customTemplate';
+import  customTemplate from '../custom/customTemplate';
 import './chatWindow.scss'
 
 var $=korejquery;
-import KoreGraphAdapter from '../libs/KoreGraphAdapter'
+import KoreGraphAdapter from '../../../libs/KoreGraphAdapter'
 // function koreBotChat() {
     // var koreJquery;
     // if (window && window.KoreSDK && window.KoreSDK.dependencies && window.KoreSDK.dependencies.jQuery) {
