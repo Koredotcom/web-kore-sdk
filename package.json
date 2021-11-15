@@ -33,8 +33,13 @@
   "devDependencies": {
     "@babel/core": "^7.15.5",
     "@babel/preset-env": "^7.15.6",
+    "@typescript-eslint/eslint-plugin": "^5.3.1",
+    "@typescript-eslint/parser": "^5.3.1",
     "babel-loader": "^8.2.2",
     "css-loader": "^6.3.0",
+    "eslint": "^8.2.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.3",
     "html-webpack-plugin": "^5.3.2",
     "imports-loader": "^3.0.0",
     "postcss": "^8.3.7",
