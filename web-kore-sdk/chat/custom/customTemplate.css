@@ -530,7 +530,8 @@
     width: 100%;
     padding: 0 10px;
     vertical-align: middle;
-    display: flex;	
+    /* display: flex;	 */
+    display: table-cell;
     align-items: center;	
     justify-content: space-between;
 }
@@ -560,7 +561,7 @@
     background-color: var(--sdk-chat-widow-default-white);
     /* background-color: var(--sdk-chat-widow-chat-button-active-color); */
     height: 56px;
-    display: flex;	
+    display: table;	
     align-items: center;	
     flex-wrap: wrap;	
     cursor: pointer;
@@ -581,6 +582,8 @@
     line-height: normal;
     letter-spacing: 0.27px;
     color: var(--sdk-chat-window-list-template-sub-title-color);
+    height: 100%;
+    width: 100%;
       
 }
 .kore-chat-window .kore-chat-body .listViewTmplContent .listViewItemValue{
@@ -641,6 +644,7 @@
 .kore-chat-window .kore-chat-body .listViewTmplContent .listViewLeftContent .titleDesc{
     display: inline-block;
     width:60%;
+    position: relative;
 }
 
 .kore-chat-window .kore-chat-body .listViewItemTitle {	
