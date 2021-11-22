@@ -2055,3 +2055,11 @@
     float: right;
 }
 /*-- Tabbedlist -ended   ---*/
+
+.kore-chat-window .clickableButton{
+    cursor: pointer !important;
+    color: #009dab !important;
+}
+.kore-chat-window .clickableLink{
+    text-decoration: underline !important;
+}
