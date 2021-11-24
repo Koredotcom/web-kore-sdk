@@ -3158,7 +3158,7 @@
                                             {{if msgItem.default_action && msgItem.default_action.type === "web_url"}}<div class="listItemPath carouselDefaultAction" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
                                             {{if msgItem.buttons}} \
                                                 {{each(key, msgBtn) msgItem.buttons}} \
-                                                    <div {{if msgBtn.payload}}value="${msgBtn.payload}"{{/if}} {{if msgBtn.url}}url="${msgBtn.url}"{{/if}} class="listItemPath carouselButton" data-value="${msgBtn.value}" type="${msgBtn.type}">\
+                                                <div {{if msgBtn.payload}} value="${msgBtn.title}"{{/if}} {{if msgBtn.url}} url="${msgBtn.url}"{{/if}} class="listItemPath carouselButton" actual-value="${msgBtn.payload}" type="${msgBtn.type}">\
                                                         ${msgBtn.title}\
                                                     </div> \
                                                 {{/each}} \
