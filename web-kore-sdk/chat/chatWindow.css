@@ -1876,7 +1876,7 @@ background-image : url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbm
 .kore-chat-window .tablechart .tablechartDiv,
 .kore-chat-window .largePreviewContent .tablehartDiv {
     clear: both;
-    left: -30px;
+    left: -10px;
     position: relative;
     top: 18px;
     margin: 0px -22px 13px 0px;
