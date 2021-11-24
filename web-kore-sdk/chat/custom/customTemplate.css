@@ -528,22 +528,29 @@
 }
 .kore-chat-window .kore-chat-body .listViewTmplContent .listViewLeftContent{
     width: 100%;
-    padding: 0 10px;
+    padding: 10px;
     vertical-align: middle;
-    /* display: flex;	 */
-    display: table-cell;
+    display: flex;	
+    /* display: table-cell; */
     align-items: center;	
     justify-content: space-between;
+}
+.kore-chat-window .kore-chat-body .listViewTmplContent .listViewLeftContent.pl-60{
+    padding-left: 60px;
 }
 .kore-chat-window .listViewTmplContent .listViewTmplContentChild:hover {
     background-color: rgba(10, 10, 10, 0.08);
 }
 .kore-chat-window .kore-chat-body .listViewTmplContent .listViewRightContent{
     cursor: pointer;
-    display: table-cell;
     width: 60px;
     vertical-align: middle;
     padding-left: 10px;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
 
 }
 .kore-chat-window .kore-chat-body .listViewRightContent img{
@@ -560,11 +567,12 @@
     box-shadow: var(--sdk-chat-widow-primary-box-shadow);
     background-color: var(--sdk-chat-widow-default-white);
     /* background-color: var(--sdk-chat-widow-chat-button-active-color); */
-    height: 56px;
-    display: table;	
+    height: auto;
+    display: flex;	
     align-items: center;	
     flex-wrap: wrap;	
     cursor: pointer;
+    position: relative;
 }
 .kore-chat-window .kore-chat-body .listViewTmplContent .listViewTmplContentChild:hover{
     /* background-color: rgba(10, 10, 10, 0.08); */
@@ -589,7 +597,7 @@
 .kore-chat-window .kore-chat-body .listViewTmplContent .listViewItemValue{
     
     display: inline-block;
-    margin-left: 15px; 
+    padding-left: 15px; 
     color: var(--sdk-chat-window-list-template-value-color);
     /* width: 66px;
     height: 22px; */
@@ -679,6 +687,199 @@
     text-align: center;
     width: 100%;
 }
+
+
+.kore-chat-window .kore-action-sheet .listViewTmplContentBox .close-button{
+    cursor: pointer;
+    margin: 0;
+    padding-top: 8px;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    color:var(--sdk-chat-window-list-template-close-btn-color);
+    background:none;
+    opacity:1;
+    outline:none;
+    font-size:30px;
+    float:right;
+    line-height:inherit;
+    border:none;
+}
+.kore-chat-window .kore-action-sheet .listViewTmplContent .listViewTmplContentBox{
+	float:left;
+	color:var(--sdk-chat-window-list-view-color);
+	border-radius: 12px;
+    padding: 0;
+	font-size: 14px;
+	-webkit-animation: message-left ease-in-out 2s forwards;
+    -moz-animation: message-left ease-in-out 2s forwards;
+    animation: message-left ease-in-out 2s forwards;
+	margin: 0;
+	width:100%;
+}
+.kore-chat-window .kore-action-sheet .listViewTmplContent .listViewLeftContent{
+    width: 100%;
+    padding: 10px;
+    vertical-align: middle;
+    display: flex;	
+    /* display: table-cell; */
+    align-items: center;	
+    justify-content: space-between;
+}
+.kore-chat-window .kore-action-sheet .listViewTmplContent .listViewLeftContent.pl-60{
+    padding-left: 60px;
+}
+.kore-chat-window .listViewTmplContent .listViewTmplContentChild:hover {
+    background-color: rgba(10, 10, 10, 0.08);
+}
+.kore-chat-window .kore-action-sheet .listViewTmplContent .listViewRightContent{
+    cursor: pointer;
+    width: 60px;
+    vertical-align: middle;
+    padding-left: 10px;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+.kore-chat-window .kore-action-sheet .listViewRightContent img{
+	height: 36px;
+	width: 36px;
+    border-radius: 50%;
+    
+}
+.kore-chat-window .kore-action-sheet .listViewTmplContent .listViewTmplContentChild{
+	border-top: 1px solid var(--sdk-chat-window-checkbox-border);
+	margin-bottom:10px;
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: var(--sdk-chat-widow-primary-box-shadow);
+    background-color: var(--sdk-chat-widow-default-white);
+    /* background-color: var(--sdk-chat-widow-chat-button-active-color); */
+    height: auto;
+    display: flex;	
+    align-items: center;	
+    flex-wrap: wrap;	
+    cursor: pointer;
+    position: relative;
+}
+.kore-chat-window .kore-action-sheet .listViewTmplContent .listViewTmplContentChild:hover{
+    /* background-color: rgba(10, 10, 10, 0.08); */
+}
+.kore-chat-window .kore-action-sheet .listViewTmplContent .listViewItemSubtitle{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* width: 102px;
+    height: 18px; */
+    font-size: 13px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: 0.27px;
+    color: var(--sdk-chat-window-list-template-sub-title-color);
+    height: 100%;
+    width: 100%;
+      
+}
+.kore-chat-window .kore-action-sheet .listViewTmplContent .listViewItemValue{
+    
+    display: inline-block;
+    padding-left: 15px; 
+    color: var(--sdk-chat-window-list-template-value-color);
+    /* width: 66px;
+    height: 22px; */
+    font-size: 12px;
+    font-weight: 900;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: 0.4px;
+    text-align: right;
+    color:  var(--sdk-chat-window-list-view-value-color);
+    /* overflow: hidden;
+    text-overflow: ellipsis; 
+    white-space: nowrap; */
+      
+}
+.kore-chat-window .kore-action-sheet .listViewTmplContent .listItemPath{
+	font-size:12px;
+	color: var(--sdk-chat-window-viewmore-btn-color);
+    cursor: pointer;
+}
+.kore-chat-window .kore-action-sheet .listViewTmplContent .buyBtn{
+	background: var(--sdk-chat-window-pie-chart-background);
+    border: 0;
+    color: var(--sdk-chat-window-viewmore-btn-color)!important;
+    cursor: pointer;
+    float: right;
+    font-weight: bold;
+    letter-spacing: -0.3px;
+    font-size: 12px;
+    text-align: right;
+}
+.kore-chat-window .kore-action-sheet .listViewTmplContentBox li:first-child{
+	margin-top:0!important;
+	border-top:0;
+}
+.kore-chat-window .kore-action-sheet .listViewTmplContent .listViewTmplContentHeading{
+	padding:10px;
+    background:  var(--sdk-chat-widow-bot-chat-bubble-background-color);
+    margin-bottom: 10px;
+    border-radius: 12px 12px 0 0;
+    font-size: 15px;
+    width: 100%;
+    font-size: 15px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.33;
+    letter-spacing: -0.11px;
+    color: var(--sdk-chat-widow-bot-chat-bubble-text-color);
+    list-style-type: none;
+}
+.kore-chat-window .kore-action-sheet .listViewTmplContent .listViewLeftContent .titleDesc{
+    display: inline-block;
+    width:60%;
+    position: relative;
+}
+
+.kore-chat-window .kore-action-sheet .listViewItemTitle {	
+    font-size: 13px;	
+    font-weight: 600;	
+    line-height: 1.54;	
+    letter-spacing: -0.1px;	
+    color: var(--sdk-chat-window-list-template-title-color);	
+    overflow: hidden;	
+    text-overflow: ellipsis;	
+    white-space: nowrap;	
+}
+.kore-chat-window .kore-action-sheet .listViewTmplContent .seeMoreList{
+	text-align: center;
+    border-top: 1px solid var(--sdk-chat-window-checkbox-border);
+    padding: 10px;
+    margin: 0;
+}
+.kore-chat-window .kore-action-sheet .listViewTmplContent .seeMoreList{
+	border: 0;
+    background: none;
+    color: var(--sdk-chat-widow-primary-blue-color);    
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 5px;
+    letter-spacing: normal;
+    display: inline-block;
+    padding: 10px 0;
+    text-align: center;
+    width: 100%;
+}
+
+
 .kore-chat-window .kore-action-sheet.hide{
     display:none!important;
 }
@@ -747,88 +948,88 @@
     flex-wrap: wrap;	
     cursor: pointer;
 }
-    .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth{
-        width:84%;
-        height:40px;
-      overflow:auto;
-      display:flex;
-    }
-    .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth .tabs {
-        width: 18px;
+.kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth{
+    width:84%;
+    height:40px;
+    overflow:auto;
+    display:flex;
+}
+.kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth .tabs {
+    width: 18px;
+    height: 17px;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: 0.12px;
+    color: var(--sdk-chat-window-list-template-sub-title-color);
+    padding-left:103px;
+    cursor: pointer;
+    flex:1.1;  
+        
+}
+.kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth .tabs.active {
+    
+        width: 28px;
         height: 17px;
         font-size: 14px;
-        font-weight: normal;
+        font-weight: bold;
         font-stretch: normal;
         font-style: normal;
         line-height: normal;
         letter-spacing: 0.12px;
-        color: var(--sdk-chat-window-list-template-sub-title-color);
-        padding-left:103px;
-        cursor: pointer;
-        flex:1.1;  
-          
-    }
-    .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth .tabs.active {
-     
-            width: 28px;
-            height: 17px;
-            font-size: 14px;
-            font-weight: bold;
-            font-stretch: normal;
-            font-style: normal;
-            line-height: normal;
-            letter-spacing: 0.12px;
-            color: var(--sdk-chat-widow-primary-blue-color);
-            flex:1.1;
-          
-    }
-    .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth .btnBG{	
-        height: 26px;	
-        border-radius: 6px;	
-        display: inline-block;	
-        padding: 0 6px;	
-        text-align: center;	
-        line-height: 26px;	
-    }	
+        color: var(--sdk-chat-widow-primary-blue-color);
+        flex:1.1;
+        
+}
+.kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth .btnBG{	
+    height: 26px;	
+    border-radius: 6px;	
+    display: inline-block;	
+    padding: 0 6px;	
+    text-align: center;	
+    line-height: 26px;	
+}	
+        
+.kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth .tabs.active .btnBG{	
+    background-color: var(--sdk-chat-window-viewmore-btn-color);	
+    color: var(--sdk-chat-widow-default-white);	
             
-    .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth .tabs.active .btnBG{	
-        background-color: var(--sdk-chat-window-viewmore-btn-color);	
-        color: var(--sdk-chat-widow-default-white);	
-              
-    }
-    .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .listViewRightContent img{
-        height: 36px;
-        width: 36px;
-        border-radius: 50%;
-    }
-    .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues{	
-        width:96%;	
-    }
-    .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .listViewRightContent{
-        cursor: pointer;
-    display: table-cell;
-    width: 60px;
+}
+.kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .listViewRightContent img{
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+}
+.kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues{	
+    width:96%;	
+}
+.kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .listViewRightContent{
+    cursor: pointer;
+display: table-cell;
+width: 60px;
+vertical-align: middle;
+padding-left: 10px;
+}
+.kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .listViewLeftContent{
+    width: 77%;
+    padding: 0 10px;
     vertical-align: middle;
-    padding-left: 10px;
-    }
-    .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .listViewLeftContent{
-        width: 77%;
-        padding: 0 10px;
-        vertical-align: middle;
-        display: flex;	
-        align-items: center;	
-        justify-content: space-between;
-    }
-    .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .listViewLeftContent .listViewItemTitle{
-        font-size: 13px;	
-    font-weight: 600;	
-    line-height: 1.54;	
-    letter-spacing: -0.1px;	
-    color: var(--sdk-chat-window-list-template-title-color);	
-    overflow: hidden;	
-    text-overflow: ellipsis;	
-    white-space: nowrap;
- }
+    display: flex;	
+    align-items: center;	
+    justify-content: space-between;
+}
+.kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .listViewLeftContent .listViewItemTitle{
+    font-size: 13px;	
+font-weight: 600;	
+line-height: 1.54;	
+letter-spacing: -0.1px;	
+color: var(--sdk-chat-window-list-template-title-color);	
+overflow: hidden;	
+text-overflow: ellipsis;	
+white-space: nowrap;
+}
  .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .listViewLeftContent .listViewItemSubtitle{
     white-space: nowrap;
     overflow: hidden;
