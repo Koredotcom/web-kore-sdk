@@ -786,6 +786,18 @@
         // iframe of child window events ends//
 
         // inline model for iframes starts here//
+        function closeChatModal() {
+            if ($('#chatBodyModal').length) {
+                $('#chatBodyModal').hide();
+            }
+            $('.kore-chat-window').removeClass('modelOpen');
+            try {
+                if (koreAriaUtilis) {
+                    koreAriaUtilis.closeDialog(document.getElementById('closeChatBodyModal'));
+                }
+            } catch (e) {
+            }
+        }
         function openModal(template, showClose){
             var chatBodyModal=  $('#chatBodyModal');
             var close = document.getElementsByClassName("closeChatBodyModal")[0];
@@ -799,8 +811,6 @@
                      }
                     var iframe = chatBodyModal.find('iframe');
                     postMessageToChildIframes(iframe,postPayload);
-                    chatBodyModal.hide();
-                    $('.kore-chat-window').removeClass('modelOpen');
                 }
             if(template){
                 chatBodyModal.find('.closeChatBodyModal').css('display','none');
@@ -825,8 +835,7 @@
                 setTimeout(function(){
                     chatBodyModal.find('#chatBodyModalContent').empty();
                 },1000);
-                chatBodyModal.hide(); 
-                $('.kore-chat-window').removeClass('modelOpen');
+                closeChatModal();
             }
             }
         // inline model for iframes starts ends//
@@ -839,6 +848,7 @@
                 $('.kore-chat-body .uiformComponent').closest('.inlineIframeContainer').css('display', 'none');
                }
             } else if(event.action==='formCancel'){
+                closeChatModal();
                 if($('.kore-chat-body .uiformComponent').length){
                     $('.kore-chat-body .uiformComponent').closest('.inlineIframeContainer').css('display', 'none');
                    }
