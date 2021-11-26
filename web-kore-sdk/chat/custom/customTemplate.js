@@ -1961,7 +1961,7 @@ print(JSON.stringify(message)); */
 				  var eData={};
 				eData.payload = actionObj.payload;
 				var chatInitialize = this.chatInitialize;
-				chatInitialize.sendMessage($('.chatInputBox').text(_innerText), eData.payload);
+				chatInitialize.sendMessage($('.chatInputBox').text(eData.payload),_innerText );
 			  }}
 			  if(action){
 			  if(_self.hasClass("dropdown-contentWidgt")){
