@@ -1288,7 +1288,17 @@
                     if (type == "postback" || type == "text") {
                         $('.chatInputBox').text($(this).attr('value') || $(this).attr('actual-value'));
                         //var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
-                        if($('.quickReply') && $('.quickReply').length){
+                        //if($('.quickReply') && $('.quickReply').length){
+                            var currentTargetClassList = e.currentTarget.classList;
+                            var isQuikReply = false;
+                            if(currentTargetClassList && currentTargetClassList.length){
+                                 for(var classListKey =0;classListKey<currentTargetClassList.length ;classListKey++){
+                                     if(currentTargetClassList[classListKey] && currentTargetClassList[classListKey] === 'quickReply' ){
+                                         isQuikReply = true;
+                                     }
+                                 }
+                            }
+                        if(isQuikReply){
                             var _innerText = $(this).attr('actual-value');
 			   // _innerText = toTitleCase(_innerText);
                         } else {

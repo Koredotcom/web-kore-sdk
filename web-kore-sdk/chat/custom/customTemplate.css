@@ -942,7 +942,8 @@
     border-radius: 10px;
     box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
     background-color: var(--sdk-chat-widow-default-white);
-    height: 56px;
+    /* height: 56px; */
+    height: auto;
     display: flex;	
     align-items: center;	
     flex-wrap: wrap;	
@@ -1004,6 +1005,7 @@
 }
 .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues{	
     width:96%;	
+    padding-left: 16px;
 }
 .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .listViewRightContent{
     cursor: pointer;
@@ -1013,11 +1015,12 @@ vertical-align: middle;
 padding-left: 10px;
 }
 .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .listViewLeftContent{
-    width: 77%;
-    padding: 0 10px;
+    width: 100%;
     vertical-align: middle;
-    display: flex;	
-    align-items: center;	
+    display: flex;
+    padding: 10px;
+    /* display: table-cell; */
+    align-items: center;
     justify-content: space-between;
 }
 .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .listViewLeftContent .listViewItemTitle{
