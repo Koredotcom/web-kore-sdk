@@ -1313,9 +1313,9 @@ chatWindow.prototype.bindEvents = function () {
   _chatContainer.on('blur', '.chatInputBox', (event) => {
     _escPressed = 0;
   });
-  _chatContainer.off('click', '.botResponseAttachments').on('click', '.botResponseAttachments', function (event) {
-    window.open($(this).attr('fileid'), '_blank');
-  });
+  // _chatContainer.off('click', '.botResponseAttachments').on('click', '.botResponseAttachments', function (event) {
+  //   window.open($(this).attr('fileid'), '_blank');
+  // });
   /* _chatContainer.off('click', '.attachments').on('click', '.attachments', function (event) {
          var attachFileID = $(this).attr('fileid');
          var auth = (bearerToken) ? bearerToken : assertionToken;
@@ -1488,7 +1488,7 @@ chatWindow.prototype.bindEvents = function () {
       me.openExternalLink(a_link);
     }
   });
-  _chatContainer.off('click', '.buttonTmplContentBox li,.listItemPath,.quickReply,.carouselImageContent,.checkboxBtn,.likeDislikeDiv').on('click', '.buttonTmplContentBox li,.quickReply,.carouselImageContent,.checkboxBtn,.likeDislikeDiv', function (e) {
+  _chatContainer.off('click', '.listItemPath,.quickReply,.carouselImageContent,.checkboxBtn,.likeDislikeDiv').on('click', '.quickReply,.carouselImageContent,.checkboxBtn,.likeDislikeDiv', function (e) {
     e.preventDefault();
     e.stopPropagation();
     let type = $(this).attr('type');

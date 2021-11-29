@@ -2,7 +2,7 @@
 import helpers from '../../../../../src/utils/helpers'
 
 class TemplateAttachment {
-
+    [x: string]: any;
     renderMessage(msgData: any) {
         let me: any = this;
         let $ = me.cwInstance.$;
@@ -18,6 +18,16 @@ class TemplateAttachment {
         }
     }
     bindEvents() {
+        let me = this;
+        let chatWindowInstance = me.cwInstance;
+        let $ = me.cwInstance.$;
+        const _chatContainer = chatWindowInstance.config.chatContainer;
+        _chatContainer.off('click', '.botResponseAttachments').on('click', '.botResponseAttachments', function (event: any) {
+            event.preventDefault();
+            event.stopPropagation();
+            let selectedTarget = event.currentTarget;
+            window.open($(selectedTarget).attr('fileid'), '_blank');
+        });
     }
     getTemplateString() {
         var templateAttachment = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
