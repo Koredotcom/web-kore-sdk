@@ -1488,7 +1488,7 @@ chatWindow.prototype.bindEvents = function () {
       me.openExternalLink(a_link);
     }
   });
-  _chatContainer.off('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn,.viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent,.listRightContent,.checkboxBtn,.likeDislikeDiv').on('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn, .viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent,.listRightContent,.checkboxBtn,.likeDislikeDiv', function (e) {
+  _chatContainer.off('click', '.buttonTmplContentBox li,.listItemPath,.quickReply,.carouselImageContent,.checkboxBtn,.likeDislikeDiv').on('click', '.buttonTmplContentBox li,.quickReply,.carouselImageContent,.checkboxBtn,.likeDislikeDiv', function (e) {
     e.preventDefault();
     e.stopPropagation();
     let type = $(this).attr('type');
@@ -2260,95 +2260,101 @@ chatWindow.prototype.renderMessage = function (msgData) {
       waiting_for_message = true;
       $('.typingIndicatorContent').css('display', 'block');
       return;
-    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'list') {
-      messageHtml = $(me.getChatTemplate('templatelist')).tmpl({
-        msgData,
-        helpers,
-        extension,
-      });
-    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'quick_replies') {
-      messageHtml = $(me.getChatTemplate('templatequickreply')).tmpl({
-        msgData,
-        helpers,
-        extension,
-      });
-      setTimeout(() => {
-        const evt = document.createEvent('HTMLEvents');
-        evt.initEvent('resize', true, false);
-        window.dispatchEvent(evt);
-      }, 150);
-    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'carousel') {
-      messageHtml = $(me.getChatTemplate('carouselTemplate')).tmpl({
-        msgData,
-        helpers,
-        extension,
-      });
+    } 
+    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'list') {
+    //   messageHtml = $(me.getChatTemplate('templatelist')).tmpl({
+    //     msgData,
+    //     helpers,
+    //     extension,
+    //   });
+    // } 
+    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'quick_replies') {
+    //   messageHtml = $(me.getChatTemplate('templatequickreply')).tmpl({
+    //     msgData,
+    //     helpers,
+    //     extension,
+    //   });
+    //   setTimeout(() => {
+    //     const evt = document.createEvent('HTMLEvents');
+    //     evt.initEvent('resize', true, false);
+    //     window.dispatchEvent(evt);
+    //   }, 150);
+    // } 
+    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'carousel') {
+    //   messageHtml = $(me.getChatTemplate('carouselTemplate')).tmpl({
+    //     msgData,
+    //     helpers,
+    //     extension,
+    //   });
 
-      setTimeout(() => {
-        $('.carousel:last').addClass(`carousel${carouselTemplateCount}`);
-        const count = $(`.carousel${carouselTemplateCount}`).children().length;
-        if (count > 1) {
-          const carouselOneByOne = new PureJSCarousel({
-            carousel: `.carousel${carouselTemplateCount}`,
-            slide: '.slide',
-            oneByOne: true,
-          });
-          $(`.carousel${carouselTemplateCount}`).parent().show();
-          $(`.carousel${carouselTemplateCount}`).attr('style', 'height: 100% !important');
-          carouselEles.push(carouselOneByOne);
-        }
-        // window.dispatchEvent(new Event('resize'));
-        const evt = document.createEvent('HTMLEvents');
-        evt.initEvent('resize', true, false);
-        window.dispatchEvent(evt);
-        carouselTemplateCount += 1;
-        _chatContainer.animate({
-          scrollTop: _chatContainer.prop('scrollHeight'),
-        }, 0);
-      });
-    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.type == 'image' || msgData.message[0].component.type == 'audio' || msgData.message[0].component.type == 'video' || msgData.message[0].component.type == 'link')) {
-      messageHtml = $(me.getChatTemplate('templateAttachment')).tmpl({
-        msgData,
-        helpers,
-        extension,
-        extractedFileName: _extractedFileName,
-      });
-    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'table') {
-      messageHtml = $(me.getChatTemplate('tableChartTemplate')).tmpl({
-        msgData,
-        helpers,
-        extension,
-      });
-      setTimeout(() => {
-        const acc = document.getElementsByClassName('accordionRow');
-        for (var i = 0; i < acc.length; i++) {
-          acc[i].onclick = function () {
-            this.classList.toggle('open');
-          };
-        }
-        const showFullTableModal = document.getElementsByClassName('showMore');
-        for (var i = 0; i < showFullTableModal.length; i++) {
-          showFullTableModal[i].onclick = function () {
-            const parentli = this.parentNode.parentElement;
-            $('#dialog').empty();
-            $('#dialog').html($(parentli).find('.tablechartDiv').html());
-            $('.hello').clone().appendTo('.goodbye');
-            const modal = document.getElementById('myPreviewModal');
-            $('.largePreviewContent').empty();
-            // $(".largePreviewContent").html($(parentli).find('.tablechartDiv').html());
-            $(parentli).find('.tablechartDiv').clone().appendTo('.largePreviewContent');
-            modal.style.display = 'block';
-            // Get the <span> element that closes the modal
-            const span = document.getElementsByClassName('closeElePreview')[0];
-            // When the user clicks on <span> (x), close the modal
-            span.onclick = function () {
-              modal.style.display = 'none';
-              $('.largePreviewContent').removeClass('addheight');
-            };
-          };
-        }
-      }, 350);
-    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'mini_table') {
+    //   setTimeout(() => {
+    //     $('.carousel:last').addClass(`carousel${carouselTemplateCount}`);
+    //     const count = $(`.carousel${carouselTemplateCount}`).children().length;
+    //     if (count > 1) {
+    //       const carouselOneByOne = new PureJSCarousel({
+    //         carousel: `.carousel${carouselTemplateCount}`,
+    //         slide: '.slide',
+    //         oneByOne: true,
+    //       });
+    //       $(`.carousel${carouselTemplateCount}`).parent().show();
+    //       $(`.carousel${carouselTemplateCount}`).attr('style', 'height: 100% !important');
+    //       carouselEles.push(carouselOneByOne);
+    //     }
+    //     // window.dispatchEvent(new Event('resize'));
+    //     const evt = document.createEvent('HTMLEvents');
+    //     evt.initEvent('resize', true, false);
+    //     window.dispatchEvent(evt);
+    //     carouselTemplateCount += 1;
+    //     _chatContainer.animate({
+    //       scrollTop: _chatContainer.prop('scrollHeight'),
+    //     }, 0);
+    //   });
+    // } 
+    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.type == 'image' || msgData.message[0].component.type == 'audio' || msgData.message[0].component.type == 'video' || msgData.message[0].component.type == 'link')) {
+    //   messageHtml = $(me.getChatTemplate('templateAttachment')).tmpl({
+    //     msgData,
+    //     helpers,
+    //     extension,
+    //     extractedFileName: _extractedFileName,
+    //   });
+    // } 
+    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'table') {
+    //   messageHtml = $(me.getChatTemplate('tableChartTemplate')).tmpl({
+    //     msgData,
+    //     helpers,
+    //     extension,
+    //   });
+    //   setTimeout(() => {
+    //     const acc = document.getElementsByClassName('accordionRow');
+    //     for (var i = 0; i < acc.length; i++) {
+    //       acc[i].onclick = function () {
+    //         this.classList.toggle('open');
+    //       };
+    //     }
+    //     const showFullTableModal = document.getElementsByClassName('showMore');
+    //     for (var i = 0; i < showFullTableModal.length; i++) {
+    //       showFullTableModal[i].onclick = function () {
+    //         const parentli = this.parentNode.parentElement;
+    //         $('#dialog').empty();
+    //         $('#dialog').html($(parentli).find('.tablechartDiv').html());
+    //         $('.hello').clone().appendTo('.goodbye');
+    //         const modal = document.getElementById('myPreviewModal');
+    //         $('.largePreviewContent').empty();
+    //         // $(".largePreviewContent").html($(parentli).find('.tablechartDiv').html());
+    //         $(parentli).find('.tablechartDiv').clone().appendTo('.largePreviewContent');
+    //         modal.style.display = 'block';
+    //         // Get the <span> element that closes the modal
+    //         const span = document.getElementsByClassName('closeElePreview')[0];
+    //         // When the user clicks on <span> (x), close the modal
+    //         span.onclick = function () {
+    //           modal.style.display = 'none';
+    //           $('.largePreviewContent').removeClass('addheight');
+    //         };
+    //       };
+    //     }
+    //   }, 350);
+    // } 
+    else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'mini_table') {
       if (msgData.message[0].component.payload.layout == 'horizontal') {
         messageHtml = $(me.getChatTemplate('miniTableHorizontalTemplate')).tmpl({
           msgData,
@@ -2384,19 +2390,22 @@ chatWindow.prototype.renderMessage = function (msgData) {
           extension,
         });
       }
-    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'multi_select') {
-      messageHtml = $(this.getChatTemplate('checkBoxesTemplate')).tmpl({
-        msgData,
-        helpers,
-        extension,
-      });
-    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'like_dislike') {
-      messageHtml = $(this.getChatTemplate('likeDislikeTemplate')).tmpl({
-        msgData,
-        helpers,
-        extension,
-      });
-    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'piechart') {
+    }
+    //  else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'multi_select') {
+    //   messageHtml = $(this.getChatTemplate('checkBoxesTemplate')).tmpl({
+    //     msgData,
+    //     helpers,
+    //     extension,
+    //   });
+    // } 
+    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'like_dislike') {
+    //   messageHtml = $(this.getChatTemplate('likeDislikeTemplate')).tmpl({
+    //     msgData,
+    //     helpers,
+    //     extension,
+    //   });
+    //} 
+    else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'piechart') {
       messageHtml = $(me.getChatTemplate('pieChartTemplate')).tmpl({
         msgData,
         helpers,
@@ -2768,7 +2777,8 @@ chatWindow.prototype.renderMessage = function (msgData) {
         $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
         handleChartOnClick();
       }, 200);
-    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.formData && msgData.message[0].component.payload.formData.renderType === 'inline') {
+    }
+    else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.formData && msgData.message[0].component.payload.formData.renderType === 'inline') {
       msgData.renderType = 'inline';
       messageHtml = me.renderWebForm(msgData, true);
     } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'live_agent') {
@@ -3105,41 +3115,41 @@ chatWindow.prototype.getChatTemplate = function (tempType) {
              {{/each}} \
          {{/if}} \
      </scipt>';
-         var templateAttachment = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-     {{if msgData.message}} \
-         {{each(key, msgItem) msgData.message}} \
-             {{if msgItem.component && msgItem.component.payload.url}} \
-                 <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-                     class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
-                     {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-                     {{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-                     <div class="messageBubble">\
-                         {{if msgItem.component.payload.url}} \
-                             <div class="msgCmpt botResponseAttachments" fileid="${msgItem.component.payload.url}"> \
-                                 <div class="uploadedFileIcon"> \
-                                     {{if msgItem.component.type == "image"}} \
-                                         <span class="icon cf-icon icon-photos_active"></span> \
-                                     {{else msgItem.component.type == "audio"}}\
-                                         <span class="icon cf-icon icon-files_audio"></span> \
-                                     {{else msgItem.component.type == "video"}} \
-                                         <span class="icon cf-icon icon-video_active"></span> \
-                                     {{else}} \
-                                         {{if extension[1]=="xlsx" || extension[1]=="xls" || extension[1]=="docx" || extension[1]=="doc" || extension[1]=="pdf" || extension[1]=="ppsx" || extension[1]=="pptx" || extension[1]=="ppt" || extension[1]=="zip" || extension[1]=="rar"}}\
-                                             <span class="icon cf-icon icon-files_${extension[1]}"></span> \
-                                         {{else extension[1]}}\
-                                             <span class="icon cf-icon icon-files_other_doc"></span> \
-                                         {{/if}}\
-                                     {{/if}}\
-                                 </div> \
-                                 <div class="botuploadedFileName">${extractedFileName}</div> \
-                             </div> \
-                         {{/if}} \
-                     </div> \
-                 </li> \
-             {{/if}} \
-         {{/each}} \
-     {{/if}} \
- </scipt>';
+//          var templateAttachment = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+//      {{if msgData.message}} \
+//          {{each(key, msgItem) msgData.message}} \
+//              {{if msgItem.component && msgItem.component.payload.url}} \
+//                  <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+//                      class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
+//                      {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+//                      {{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+//                      <div class="messageBubble">\
+//                          {{if msgItem.component.payload.url}} \
+//                              <div class="msgCmpt botResponseAttachments" fileid="${msgItem.component.payload.url}"> \
+//                                  <div class="uploadedFileIcon"> \
+//                                      {{if msgItem.component.type == "image"}} \
+//                                          <span class="icon cf-icon icon-photos_active"></span> \
+//                                      {{else msgItem.component.type == "audio"}}\
+//                                          <span class="icon cf-icon icon-files_audio"></span> \
+//                                      {{else msgItem.component.type == "video"}} \
+//                                          <span class="icon cf-icon icon-video_active"></span> \
+//                                      {{else}} \
+//                                          {{if extension[1]=="xlsx" || extension[1]=="xls" || extension[1]=="docx" || extension[1]=="doc" || extension[1]=="pdf" || extension[1]=="ppsx" || extension[1]=="pptx" || extension[1]=="ppt" || extension[1]=="zip" || extension[1]=="rar"}}\
+//                                              <span class="icon cf-icon icon-files_${extension[1]}"></span> \
+//                                          {{else extension[1]}}\
+//                                              <span class="icon cf-icon icon-files_other_doc"></span> \
+//                                          {{/if}}\
+//                                      {{/if}}\
+//                                  </div> \
+//                                  <div class="botuploadedFileName">${extractedFileName}</div> \
+//                              </div> \
+//                          {{/if}} \
+//                      </div> \
+//                  </li> \
+//              {{/if}} \
+//          {{/each}} \
+//      {{/if}} \
+//  </scipt>';
  var popupTemplate = '<script id="kore_popup_tmpl" type="text/x-jquery-tmpl"> \
          <div class="kore-auth-layover">\
              <div class="kore-auth-popup"> \
@@ -3148,32 +3158,32 @@ chatWindow.prototype.getChatTemplate = function (tempType) {
              </div> \
          </div>\
  </script>';
- var buttonTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-     {{if msgData.message}} \
-         <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-             class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
-             <div class="buttonTmplContent"> \
-                 {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-                 {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-                 <ul class="buttonTmplContentBox">\
-                     <li class="buttonTmplContentHeading"> \
-                         {{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
-                         {{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
-                             <span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
-                         {{/if}} \
-                     </li>\
-                     {{each(key, msgItem) msgData.message[0].component.payload.buttons}} \
-                         <a>\
-                             <li {{if msgData}}msgData="${JSON.stringify(msgData)}"{{/if}} {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} {{if msgItem.payload}}actual-value="${msgItem.payload}"{{/if}} {{if msgItem.url}}url="${msgItem.url}"{{/if}} class="buttonTmplContentChild" data-value="${msgItem.value}" type="${msgItem.type}">\
-                                 ${msgItem.title}\
-                             </li> \
-                         </a> \
-                     {{/each}} \
-                 </ul>\
-             </div>\
-         </li> \
-     {{/if}} \
- </scipt>';
+//  var buttonTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+//      {{if msgData.message}} \
+//          <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+//              class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+//              <div class="buttonTmplContent"> \
+//                  {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+//                  {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+//                  <ul class="buttonTmplContentBox">\
+//                      <li class="buttonTmplContentHeading"> \
+//                          {{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
+//                          {{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
+//                              <span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
+//                          {{/if}} \
+//                      </li>\
+//                      {{each(key, msgItem) msgData.message[0].component.payload.buttons}} \
+//                          <a>\
+//                              <li {{if msgData}}msgData="${JSON.stringify(msgData)}"{{/if}} {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} {{if msgItem.payload}}actual-value="${msgItem.payload}"{{/if}} {{if msgItem.url}}url="${msgItem.url}"{{/if}} class="buttonTmplContentChild" data-value="${msgItem.value}" type="${msgItem.type}">\
+//                                  ${msgItem.title}\
+//                              </li> \
+//                          </a> \
+//                      {{/each}} \
+//                  </ul>\
+//              </div>\
+//          </li> \
+//      {{/if}} \
+//  </scipt>';
 
  var pieChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
      {{if msgData.message}} \
@@ -3291,198 +3301,198 @@ chatWindow.prototype.getChatTemplate = function (tempType) {
      </li> \
      {{/if}} \
  </scipt>';
- var tableChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-     {{if msgData.message}} \
-         <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-             class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
-             {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-             {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-             {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
-                 <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
-             </div>{{/if}}\
-             <div class="tablechartDiv {{if msgData.message[0].component.payload.table_design && msgData.message[0].component.payload.table_design == "regular"}}regular{{else}}hide{{/if}}">\
-                 <div style="overflow-x:auto; padding: 0 8px;">\
-                     <table cellspacing="0" cellpadding="0">\
-                         <tr class="headerTitle">\
-                             {{each(key, tableHeader) msgData.message[0].component.payload.columns}} \
-                                 <th {{if tableHeader[1]}}style="text-align:${tableHeader[1]};"{{/if}}>${tableHeader[0]}</th>\
-                             {{/each}} \
-                         </tr>\
-                         {{each(key, tableRow) msgData.message[0].component.payload.elements}} \
-                             {{if tableRow.Values.length>1}}\
-                                 <tr {{if key > 4}}class="hide"{{/if}}>\
-                                     {{each(cellkey, cellValue) tableRow.Values}} \
-                                         <td  {{if cellkey === tableRow.Values.length-1}}colspan="2"{{/if}} class=" {{if key == 0}} addTopBorder {{/if}}" {{if msgData.message[0].component.payload.columns[cellkey][1]}}style="text-align:${msgData.message[0].component.payload.columns[cellkey][1]};" {{/if}} title="${cellValue}">${cellValue}</td>\
-                                     {{/each}} \
-                                 </tr>\
-                             {{/if}}\
-                         {{/each}} \
-                     </table>\
-                 </div>\
-                 {{if msgData.message[0].component.payload.elements.length > 5 && msgData.message[0].component.payload.table_design && msgData.message[0].component.payload.table_design == "regular"}}<div class="showMore">Show more</div>{{/if}}\
-             </div>\
-              <div class="accordionTable {{if msgData.message[0].component.payload.table_design && msgData.message[0].component.payload.table_design == "regular"}}hide{{else}}responsive{{/if}}">\
-                 {{each(key, tableRow) msgData.message[0].component.payload.elements}} \
-                     {{if key < 4}}\
-                         <div class="accordionRow">\
-                             {{each(cellkey, cellValue) tableRow.Values}} \
-                                 {{if cellkey < 2}}\
-                                     <div class="accordionCol">\
-                                         <div class="colTitle hideSdkEle">${msgData.message[0].component.payload.columns[cellkey][0]}</div>\
-                                         <div class="colVal">${cellValue}</div>\
-                                     </div>\
-                                 {{else}}\
-                                     <div class="accordionCol hideSdkEle">\
-                                         <div class="colTitle">${msgData.message[0].component.payload.columns[cellkey][0]}</div>\
-                                         <div class="colVal">${cellValue}</div>\
-                                     </div>\
-                                 {{/if}}\
-                             {{/each}} \
-                             <span class="fa fa-caret-right tableBtn"></span>\
-                         </div>\
-                     {{/if}}\
-                 {{/each}} \
-                 <div class="showMore">Show more</div>\
-             </div>\
-         </li> \
-     {{/if}} \
- </scipt>';
+//  var tableChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+//      {{if msgData.message}} \
+//          <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+//              class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
+//              {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+//              {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+//              {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
+//                  <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
+//              </div>{{/if}}\
+//              <div class="tablechartDiv {{if msgData.message[0].component.payload.table_design && msgData.message[0].component.payload.table_design == "regular"}}regular{{else}}hide{{/if}}">\
+//                  <div style="overflow-x:auto; padding: 0 8px;">\
+//                      <table cellspacing="0" cellpadding="0">\
+//                          <tr class="headerTitle">\
+//                              {{each(key, tableHeader) msgData.message[0].component.payload.columns}} \
+//                                  <th {{if tableHeader[1]}}style="text-align:${tableHeader[1]};"{{/if}}>${tableHeader[0]}</th>\
+//                              {{/each}} \
+//                          </tr>\
+//                          {{each(key, tableRow) msgData.message[0].component.payload.elements}} \
+//                              {{if tableRow.Values.length>1}}\
+//                                  <tr {{if key > 4}}class="hide"{{/if}}>\
+//                                      {{each(cellkey, cellValue) tableRow.Values}} \
+//                                          <td  {{if cellkey === tableRow.Values.length-1}}colspan="2"{{/if}} class=" {{if key == 0}} addTopBorder {{/if}}" {{if msgData.message[0].component.payload.columns[cellkey][1]}}style="text-align:${msgData.message[0].component.payload.columns[cellkey][1]};" {{/if}} title="${cellValue}">${cellValue}</td>\
+//                                      {{/each}} \
+//                                  </tr>\
+//                              {{/if}}\
+//                          {{/each}} \
+//                      </table>\
+//                  </div>\
+//                  {{if msgData.message[0].component.payload.elements.length > 5 && msgData.message[0].component.payload.table_design && msgData.message[0].component.payload.table_design == "regular"}}<div class="showMore">Show more</div>{{/if}}\
+//              </div>\
+//               <div class="accordionTable {{if msgData.message[0].component.payload.table_design && msgData.message[0].component.payload.table_design == "regular"}}hide{{else}}responsive{{/if}}">\
+//                  {{each(key, tableRow) msgData.message[0].component.payload.elements}} \
+//                      {{if key < 4}}\
+//                          <div class="accordionRow">\
+//                              {{each(cellkey, cellValue) tableRow.Values}} \
+//                                  {{if cellkey < 2}}\
+//                                      <div class="accordionCol">\
+//                                          <div class="colTitle hideSdkEle">${msgData.message[0].component.payload.columns[cellkey][0]}</div>\
+//                                          <div class="colVal">${cellValue}</div>\
+//                                      </div>\
+//                                  {{else}}\
+//                                      <div class="accordionCol hideSdkEle">\
+//                                          <div class="colTitle">${msgData.message[0].component.payload.columns[cellkey][0]}</div>\
+//                                          <div class="colVal">${cellValue}</div>\
+//                                      </div>\
+//                                  {{/if}}\
+//                              {{/each}} \
+//                              <span class="fa fa-caret-right tableBtn"></span>\
+//                          </div>\
+//                      {{/if}}\
+//                  {{/each}} \
+//                  <div class="showMore">Show more</div>\
+//              </div>\
+//          </li> \
+//      {{/if}} \
+//  </scipt>';
 
 
- var carouselTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-     {{if msgData.message}} \
-         <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-             class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
-             {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-             {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-             {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
-                 <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
-             </div>{{/if}}\
-             <div class="carousel" id="carousel-one-by-one" style="height: 0px;">\
-                 {{each(key, msgItem) msgData.message[0].component.payload.elements}} \
-                     <div class="slide">\
-                         {{if msgItem.image_url}} \
-                             <div class="carouselImageContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
-                                 <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
-                             </div> \
-                         {{/if}} \
-                         <div class="carouselTitleBox"> \
-                             <p class="carouselTitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</p> \
-                             {{if msgItem.subtitle}}<p class="carouselDescription">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</p>{{/if}} \
-                             {{if msgItem.default_action && msgItem.default_action.type === "web_url"}}<div class="listItemPath carouselDefaultAction" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
-                             {{if msgItem.buttons}} \
-                                 {{each(key, msgBtn) msgItem.buttons}} \
-                                     <div {{if msgBtn.payload}}value="${msgBtn.payload}"{{/if}} {{if msgBtn.url}}url="${msgBtn.url}"{{/if}} class="listItemPath carouselButton" data-value="${msgBtn.value}" type="${msgBtn.type}">\
-                                         ${msgBtn.title}\
-                                     </div> \
-                                 {{/each}} \
-                             {{/if}} \
-                         </div>\
-                     </div>\
-                 {{/each}} \
-             </div>\
-         </li> \
-     {{/if}}\
- </scipt>';
+//  var carouselTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+//      {{if msgData.message}} \
+//          <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+//              class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+//              {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+//              {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+//              {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
+//                  <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
+//              </div>{{/if}}\
+//              <div class="carousel" id="carousel-one-by-one" style="height: 0px;">\
+//                  {{each(key, msgItem) msgData.message[0].component.payload.elements}} \
+//                      <div class="slide">\
+//                          {{if msgItem.image_url}} \
+//                              <div class="carouselImageContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
+//                                  <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
+//                              </div> \
+//                          {{/if}} \
+//                          <div class="carouselTitleBox"> \
+//                              <p class="carouselTitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</p> \
+//                              {{if msgItem.subtitle}}<p class="carouselDescription">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</p>{{/if}} \
+//                              {{if msgItem.default_action && msgItem.default_action.type === "web_url"}}<div class="listItemPath carouselDefaultAction" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
+//                              {{if msgItem.buttons}} \
+//                                  {{each(key, msgBtn) msgItem.buttons}} \
+//                                      <div {{if msgBtn.payload}}value="${msgBtn.payload}"{{/if}} {{if msgBtn.url}}url="${msgBtn.url}"{{/if}} class="listItemPath carouselButton" data-value="${msgBtn.value}" type="${msgBtn.type}">\
+//                                          ${msgBtn.title}\
+//                                      </div> \
+//                                  {{/each}} \
+//                              {{/if}} \
+//                          </div>\
+//                      </div>\
+//                  {{/each}} \
+//              </div>\
+//          </li> \
+//      {{/if}}\
+//  </scipt>';
 
- var quickReplyTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-     {{if msgData.message}} \
-         <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-             class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon quickReplies"> \
-             <div class="buttonTmplContent"> \
-                 {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-                 {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar marginT50" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-                 {{if msgData.message[0].component.payload.text}} \
-                     <div class="buttonTmplContentHeading quickReply"> \
-                         {{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
-                         {{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
-                             <span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
-                         {{/if}} \
-                     </div>\
-                     {{/if}} \
-                     {{if msgData.message[0].component.payload.quick_replies && msgData.message[0].component.payload.quick_replies.length}} \
-                     <div class="fa fa-chevron-left quickreplyLeftIcon hide"></div><div class="fa fa-chevron-right quickreplyRightIcon"></div>\
-                         <div class="quick_replies_btn_parent"><div class="autoWidth">\
-                             {{each(key, msgItem) msgData.message[0].component.payload.quick_replies}} \
-                                 <div class="buttonTmplContentChild quickReplyDiv"> <span {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} class="quickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.content_type}">\
-                                     {{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} <span class="quickreplyText {{if msgItem.image_url}}with-img{{/if}}">${msgItem.title}</span></span>\
-                                 </div> \
-                             {{/each}} \
-                         </div>\
-                     </div>\
-                 {{/if}} \
-             </div>\
-         </li> \
-     {{/if}} \
- </scipt>';
- var listTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-     {{if msgData.message}} \
-         <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-             class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
-             <div class="listTmplContent"> \
-                 {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-                 {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-                 <ul class="listTmplContentBox"> \
-                     {{if msgData.message[0].component.payload.text || msgData.message[0].component.payload.heading}} \
-                         <li class="listTmplContentHeading"> \
-                             {{if msgData.type === "bot_response" && msgData.message[0].component.payload.heading}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.heading, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
-                             {{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
-                                 <span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
-                             {{/if}} \
-                         </li> \
-                     {{/if}} \
-                     {{each(key, msgItem) msgData.message[0].component.payload.elements}} \
-                         {{if msgData.message[0].component.payload.buttons}} \
-                             {{if key<= 2 }}\
-                                 <li class="listTmplContentChild"> \
-                                     {{if msgItem.image_url}} \
-                                         <div class="listRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
-                                             <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
-                                         </div> \
-                                     {{/if}} \
-                                     <div class="listLeftContent"> \
-                                         <div class="listItemTitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
-                                         {{if msgItem.subtitle}}<div class="listItemSubtitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
-                                         {{if msgItem.default_action && msgItem.default_action.url}}<div class="listItemPath" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
-                                         {{if msgItem.buttons}}\
-                                         <div> \
-                                             <span class="buyBtn" {{if msgItem.buttons[0].type}}type="${msgItem.buttons[0].type}"{{/if}} {{if msgItem.buttons[0].url}}url="${msgItem.buttons[0].url}"{{/if}} {{if msgItem.buttons[0].payload}}value="${msgItem.buttons[0].payload}"{{/if}}>{{if msgItem.buttons[0].title}}${msgItem.buttons[0].title}{{else}}Buy{{/if}}</span> \
-                                         </div> \
-                                         {{/if}}\
-                                     </div>\
-                                 </li> \
-                             {{/if}}\
-                         {{else}} \
-                             <li class="listTmplContentChild"> \
-                                 {{if msgItem.image_url}} \
-                                     <div class="listRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
-                                         <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';" /> \
-                                     </div> \
-                                 {{/if}} \
-                                 <div class="listLeftContent"> \
-                                     <div class="listItemTitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
-                                     {{if msgItem.subtitle}}<div class="listItemSubtitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
-                                     {{if msgItem.default_action && msgItem.default_action.url}}<div class="listItemPath" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
-                                     {{if msgItem.buttons}}\
-                                     <div> \
-                                         <span class="buyBtn" {{if msgItem.buttons[0].type}}type="${msgItem.buttons[0].type}"{{/if}} {{if msgItem.buttons[0].url}}url="${msgItem.buttons[0].url}"{{/if}} {{if msgItem.buttons[0].payload}}value="${msgItem.buttons[0].payload}"{{/if}}>{{if msgItem.buttons[0].title}}${msgItem.buttons[0].title}{{else}}Buy{{/if}}</span> \
-                                     </div> \
-                                     {{/if}}\
-                                 </div>\
-                             </li> \
-                         {{/if}} \
-                     {{/each}} \
-                     </li> \
-                     {{if msgData.message[0].component.AlwaysShowGlobalButtons || (msgData.message[0].component.payload.elements.length > 3 && msgData.message[0].component.payload.buttons)}}\
-                     <li class="viewMoreList"> \
-                         <span class="viewMore" url="{{if msgData.message[0].component.payload.buttons[0].url}}${msgData.message[0].component.payload.buttons[0].url}{{/if}}" type="${msgData.message[0].component.payload.buttons[0].type}" value="{{if msgData.message[0].component.payload.buttons[0].payload}}${msgData.message[0].component.payload.buttons[0].payload}{{else}}${msgData.message[0].component.payload.buttons[0].title}{{/if}}">${msgData.message[0].component.payload.buttons[0].title}</span> \
-                     </li> \
-                     {{/if}}\
-                 </ul> \
-             </div> \
-         </li> \
-     {{/if}} \
- </scipt>';
+//  var quickReplyTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+//      {{if msgData.message}} \
+//          <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+//              class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon quickReplies"> \
+//              <div class="buttonTmplContent"> \
+//                  {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+//                  {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar marginT50" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+//                  {{if msgData.message[0].component.payload.text}} \
+//                      <div class="buttonTmplContentHeading quickReply"> \
+//                          {{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
+//                          {{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
+//                              <span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
+//                          {{/if}} \
+//                      </div>\
+//                      {{/if}} \
+//                      {{if msgData.message[0].component.payload.quick_replies && msgData.message[0].component.payload.quick_replies.length}} \
+//                      <div class="fa fa-chevron-left quickreplyLeftIcon hide"></div><div class="fa fa-chevron-right quickreplyRightIcon"></div>\
+//                          <div class="quick_replies_btn_parent"><div class="autoWidth">\
+//                              {{each(key, msgItem) msgData.message[0].component.payload.quick_replies}} \
+//                                  <div class="buttonTmplContentChild quickReplyDiv"> <span {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} class="quickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.content_type}">\
+//                                      {{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} <span class="quickreplyText {{if msgItem.image_url}}with-img{{/if}}">${msgItem.title}</span></span>\
+//                                  </div> \
+//                              {{/each}} \
+//                          </div>\
+//                      </div>\
+//                  {{/if}} \
+//              </div>\
+//          </li> \
+//      {{/if}} \
+//  </scipt>';
+//  var listTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+//      {{if msgData.message}} \
+//          <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+//              class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+//              <div class="listTmplContent"> \
+//                  {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+//                  {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+//                  <ul class="listTmplContentBox"> \
+//                      {{if msgData.message[0].component.payload.text || msgData.message[0].component.payload.heading}} \
+//                          <li class="listTmplContentHeading"> \
+//                              {{if msgData.type === "bot_response" && msgData.message[0].component.payload.heading}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.heading, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
+//                              {{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
+//                                  <span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
+//                              {{/if}} \
+//                          </li> \
+//                      {{/if}} \
+//                      {{each(key, msgItem) msgData.message[0].component.payload.elements}} \
+//                          {{if msgData.message[0].component.payload.buttons}} \
+//                              {{if key<= 2 }}\
+//                                  <li class="listTmplContentChild"> \
+//                                      {{if msgItem.image_url}} \
+//                                          <div class="listRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
+//                                              <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
+//                                          </div> \
+//                                      {{/if}} \
+//                                      <div class="listLeftContent"> \
+//                                          <div class="listItemTitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
+//                                          {{if msgItem.subtitle}}<div class="listItemSubtitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
+//                                          {{if msgItem.default_action && msgItem.default_action.url}}<div class="listItemPath" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
+//                                          {{if msgItem.buttons}}\
+//                                          <div> \
+//                                              <span class="buyBtn" {{if msgItem.buttons[0].type}}type="${msgItem.buttons[0].type}"{{/if}} {{if msgItem.buttons[0].url}}url="${msgItem.buttons[0].url}"{{/if}} {{if msgItem.buttons[0].payload}}value="${msgItem.buttons[0].payload}"{{/if}}>{{if msgItem.buttons[0].title}}${msgItem.buttons[0].title}{{else}}Buy{{/if}}</span> \
+//                                          </div> \
+//                                          {{/if}}\
+//                                      </div>\
+//                                  </li> \
+//                              {{/if}}\
+//                          {{else}} \
+//                              <li class="listTmplContentChild"> \
+//                                  {{if msgItem.image_url}} \
+//                                      <div class="listRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
+//                                          <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';" /> \
+//                                      </div> \
+//                                  {{/if}} \
+//                                  <div class="listLeftContent"> \
+//                                      <div class="listItemTitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
+//                                      {{if msgItem.subtitle}}<div class="listItemSubtitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
+//                                      {{if msgItem.default_action && msgItem.default_action.url}}<div class="listItemPath" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
+//                                      {{if msgItem.buttons}}\
+//                                      <div> \
+//                                          <span class="buyBtn" {{if msgItem.buttons[0].type}}type="${msgItem.buttons[0].type}"{{/if}} {{if msgItem.buttons[0].url}}url="${msgItem.buttons[0].url}"{{/if}} {{if msgItem.buttons[0].payload}}value="${msgItem.buttons[0].payload}"{{/if}}>{{if msgItem.buttons[0].title}}${msgItem.buttons[0].title}{{else}}Buy{{/if}}</span> \
+//                                      </div> \
+//                                      {{/if}}\
+//                                  </div>\
+//                              </li> \
+//                          {{/if}} \
+//                      {{/each}} \
+//                      </li> \
+//                      {{if msgData.message[0].component.AlwaysShowGlobalButtons || (msgData.message[0].component.payload.elements.length > 3 && msgData.message[0].component.payload.buttons)}}\
+//                      <li class="viewMoreList"> \
+//                          <span class="viewMore" url="{{if msgData.message[0].component.payload.buttons[0].url}}${msgData.message[0].component.payload.buttons[0].url}{{/if}}" type="${msgData.message[0].component.payload.buttons[0].type}" value="{{if msgData.message[0].component.payload.buttons[0].payload}}${msgData.message[0].component.payload.buttons[0].payload}{{else}}${msgData.message[0].component.payload.buttons[0].title}{{/if}}">${msgData.message[0].component.payload.buttons[0].title}</span> \
+//                      </li> \
+//                      {{/if}}\
+//                  </ul> \
+//              </div> \
+//          </li> \
+//      {{/if}} \
+//  </scipt>';
  var listActionSheetTemplate = '<script id="chat-window-listTemplate" type="text/x-jqury-tmpl">\
  <div class="list-template-sheet hide">\
   {{if msgData.message}} \
@@ -3540,24 +3550,28 @@ var iframe = '<script id="chat_message_tmpl" type="text/x-jquery-tmpl"> \
      return msgTemplate;
  } if (tempType === "popup") {
      return popupTemplate;
- } if (tempType === "templatebutton") {
-     return buttonTemplate;
- } if (tempType === "templatelist") {
-     return listTemplate;
- } if (tempType === "templatequickreply") {
-     return quickReplyTemplate;
- } if (tempType === "templateAttachment") {
-     return templateAttachment;
- }
- if (tempType === "carouselTemplate") {
-     return carouselTemplate;
- }
+ } 
+//  if (tempType === "templatebutton") {// done
+//      return buttonTemplate;
+//  } 
+//  if (tempType === "templatelist") {
+//      return listTemplate;
+//  } 
+//  if (tempType === "templatequickreply") {
+//      return quickReplyTemplate;
+//  } 
+//  if (tempType === "templateAttachment") {
+//      return templateAttachment;
+//  }
+//  if (tempType === "carouselTemplate") {
+//      return carouselTemplate;
+//  }
  if (tempType === "pieChartTemplate") {
      return pieChartTemplate;
  }
- if (tempType === "tableChartTemplate") {
-     return tableChartTemplate;
- }
+//  if (tempType === "tableChartTemplate") {
+//      return tableChartTemplate;
+//  }
  if (tempType === "miniTableChartTemplate") {
      return miniTableChartTemplate;
  }
