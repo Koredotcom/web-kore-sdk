@@ -1683,10 +1683,10 @@ print(JSON.stringify(message)); */
 		$(messageHtml).off('click', '.listViewTmplContent .seeMoreList').on('click', '.listViewTmplContent .seeMoreList', function (e) {
 			if($(".list-template-sheet").length!==0){
 				$(".list-template-sheet").remove();
-				listViewTabs();
+				listViewTabs(e);
 			}
 			else if($(".list-template-sheet").length===0){
-				 listViewTabs();
+				 listViewTabs(e);
 				
 				// var msgData = $(e.currentTarget).closest("li.fromOtherUsers.with-icon.listView").data();
 				// if(msgData.message[0].component.payload.seeMore){
@@ -1882,8 +1882,8 @@ print(JSON.stringify(message)); */
 			}
 		}
 		/* Action sheet Template functions starts here*/
-		this.listViewTabs = function () {
-			var msgData = $("li.fromOtherUsers.with-icon.listView").data();
+		this.listViewTabs = function (e) {
+			var msgData = $(e.currentTarget.closest(".fromOtherUsers.with-icon.listView")).data();
 			if(msgData.message[0].component.payload.seeMore){
 				msgData.message[0].component.payload.seeMore=false;
 			   }
@@ -1901,7 +1901,7 @@ print(JSON.stringify(message)); */
 			$(".kore-action-sheet .list-template-sheet .displayMonth .tabs").on('click', function (e) {
 				var _selectedTab = $(e.target).text();
 	
-				var msgData = $("li.fromOtherUsers.with-icon.listView").data();
+			//	var msgData = $("li.fromOtherUsers.with-icon.listView").data();
 				var viewTabValues = $(customTemplate.prototype.getChatTemplate("actionSheetTemplate")).tmpl({
 					'msgData': msgData,
 					'dataItems': msgData.message[0].component.payload.moreData[_selectedTab],
