@@ -7,20 +7,164 @@ class RatingTemplate {
         let $ = me.cwInstance.$;
         let helpersObj = new helpers();
 
-        if(msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.template_type === "feedbackTemplate" && (msgData.message[0].component.payload.view==="star"|| msgData.message[0].component.payload.view ==="emojis"))){
+        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.template_type === "feedbackTemplate" && (msgData.message[0].component.payload.view === "star" || msgData.message[0].component.payload.view === "emojis"))) {
             me.messageHtml = $(me.getTemplateString('ratingTemplate')).tmpl({
                 'msgData': msgData,
                 'helpers': helpersObj.helpers
             });
-            me.bindEvents();
+            me.bindEvents(me.messageHtml);
             return me.messageHtml;
         }
     }
-    bindEvents() {
-    
+    bindEvents(messageHtml: any) {
+        let me: any = this;
+        let chatWindowInstance = me.cwInstance;
+        let $ = me.cwInstance.$;
+        $(messageHtml).find(".ratingMainComponent").off('click', '[type*="radio"]').on('click', '[type*="radio"]', function (e: any) {
+            var _innerText: any = $(e.currentTarget).attr('value');
+            var msgData: any;
+            if ($(messageHtml).data().tmplItem && $(messageHtml).data().tmplItem.data && $(messageHtml).data().tmplItem.data.msgData) {
+                msgData = $(messageHtml).data().tmplItem.data.msgData
+            } else {
+                msgData = $(messageHtml).data();
+            }
+            var silderValue = msgData.message[0].component.payload.sliderView;
+            if ($("label.active")) {
+                $("label").removeClass("active");
+            }
+            for (let i = parseInt(_innerText); i > 0; i--) {
+                $('label[for="' + i + '-stars"]').addClass("active");
+            }
+            if (_innerText == msgData.message[0].component.payload.starArrays.length) {
+                var messageTodisplay = msgData.message[0].component.payload.messageTodisplay;
+                $(".suggestionsMainComponent").remove();
+                $(".ratingStar").remove();
+                if ($(".submitButton")) {
+                    $(".submitButton").remove();
+                }
+                $(".kore-action-sheet").find(".ratingMainComponent").append('<div class="ratingStar">' + messageTodisplay + '</div><div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>')
+            } else {
+                if ($(".submitButton")) {
+                    $(".submitButton").remove();
+                }
+                $(".ratingStar").remove();
+                if ($(".suggestionsMainComponent").length > 0) {
+                    $(".suggestionsMainComponent").remove();
+                    $(".kore-action-sheet").find(".ratingMainComponent").append(me.suggestionComponent());
+                } else {
+                    $(".kore-action-sheet").find(".ratingMainComponent").append(me.suggestionComponent());
+                }
+            }
+            if (silderValue === false) {
+                chatWindowInstance.sendMessage($('.chatInputBox').text(_innerText), _innerText);
+                $(".ratingMainComponent").css({ "pointer-events": "none" });
+            }
+            $(".buttonTmplContent .ratingMainComponent .submitBtn").click(function () {
+                msgData.message[0].component.payload.sliderView = false;
+                if (_innerText == msgData.message[0].component.payload.starArrays.length) {
+                    var messageTodisplay = msgData.message[0].component.payload.messageTodisplay;
+                    chatWindowInstance.renderMessage(msgData);
+                    chatWindowInstance.sendMessage($('.chatInputBox').text(_innerText + " :" + messageTodisplay), _innerText + " :" + messageTodisplay);
+                } else if ($(".suggestionInput").val() == "") {
+                    chatWindowInstance.renderMessage(msgData);
+                    chatWindowInstance.sendMessage($('.chatInputBox').text(_innerText), _innerText)
+                } else {
+                    var messageDisplay = $(".suggestionInput").val();
+                    chatWindowInstance.renderMessage(msgData);
+                    chatWindowInstance.sendMessage($('.chatInputBox').text(_innerText + " :" + messageDisplay), _innerText + " :" + messageDisplay);
+                }
+                ////bottomSliderAction("hide");
+                msgData.message[0].component.payload.sliderView = true;
+            });
+        });
+        $(messageHtml).find(".buttonTmplContent .ratingMainComponent .close-btn").click(function (e: any) {
+            //bottomSliderAction("hide");
+            e.stopPropagation();
+        });
+        $(messageHtml).find(".emojiComponent").off('click', '.rating').on('click', '.rating', function (e: any) {
+            var msgData = $(messageHtml).data();
+            var sliderValue = msgData.message[0].component.payload.sliderView;
+            if ($(messageHtml).find(".emojiComponent .active").length == "0") {
+                $(".emojiElement").remove();
+            }
+            let selectedTarget = e.currentTarget;
+            var emojiValue = $(selectedTarget).attr("value");
+            $(e.currentTarget).addClass("active");
+            if ($(selectedTarget).attr("id") == "rating_1" && $("#rating_1.active")) {
+                $("<img class='emojiElement' />").attr('src', 'libs/images/emojis/gifs/rating_1.gif').appendTo(selectedTarget)
+                $(e.currentTarget).removeClass("active");
+            } else if ($(selectedTarget).attr("id") == "rating_2" && $("#rating_2.active")) {
+                $("<img class='emojiElement' />").attr('src', 'libs/images/emojis/gifs/rating_2.gif').appendTo(selectedTarget)
+                $(e.currentTarget).removeClass("active");
+            } else if ($(selectedTarget).attr("id") == "rating_3" && $("#rating_3.active")) {
+                $("<img class='emojiElement' />").attr('src', 'libs/images/emojis/gifs/rating_3.gif').appendTo(selectedTarget)
+                $(e.currentTarget).removeClass("active");
+            } else if ($(selectedTarget).attr("id") == "rating_4" && $("#rating_4.active")) {
+                $("<img class='emojiElement' />").attr('src', 'libs/images/emojis/gifs/rating_4.gif').appendTo(selectedTarget)
+                $(e.currentTarget).removeClass("active");
+            } else if ($(selectedTarget).attr("id") == "rating_5" && $("#rating_5.active")) {
+                $("<img class='emojiElement' />").attr('src', 'libs/images/emojis/gifs/rating_5.gif').appendTo(selectedTarget)
+                $(e.currentTarget).removeClass("active");
+            }
+            if ($(selectedTarget).attr("value") < "5") {
+                $(".ratingStar").remove();
+                if ($(".submitButton")) {
+                    $(".submitButton").remove();
+                }
+                if ($(".suggestionsMainComponent").length > 0) {
+                    $(".suggestionsMainComponent").remove();
+                }
+                $(".kore-action-sheet").find(".emojiComponent").append(me.suggestionComponent());
+
+            } else {
+                if ($(".submitButton")) {
+                    $(".submitButton").remove();
+                }
+                if ($(".ratingStar").length > 0) {
+                    $(".ratingStar").remove();
+                }
+                var messageTodisplay = msgData.message[0].component.payload.messageTodisplay;
+                $(".suggestionsMainComponent").remove();
+                $(".kore-action-sheet").find(".emojiComponent").append('<div class="ratingStar">' + messageTodisplay + '</div><div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>')
+            }
+            if (sliderValue === false) {
+                chatWindowInstance.sendMessage($('.chatInputBox').text(emojiValue), emojiValue);
+            }
+            $(".emojiComponent").off('click', '.submitBtn').on('click', '.submitBtn', function (e: any) {
+                msgData.message[0].component.payload.sliderView = false;
+                if (emojiValue == "5") {
+                    var messageTodisplay = msgData.message[0].component.payload.messageTodisplay
+                    chatWindowInstance.renderMessage(msgData);
+                    chatWindowInstance.sendMessage($('.chatInputBox').text(emojiValue + " :" + messageTodisplay), "Rating" + ': ' + emojiValue + " and " + messageTodisplay);
+                } else if ($(".suggestionInput").val() == "") {
+                    chatWindowInstance.renderMessage(msgData);
+                    chatWindowInstance.sendMessage($('.chatInputBox').text(emojiValue), emojiValue);
+                } else {
+                    var messageDisplay = $(".suggestionInput").val();
+                    chatWindowInstance.renderMessage(msgData);
+                    chatWindowInstance.sendMessage($('.chatInputBox').text(emojiValue + " :" + messageDisplay), emojiValue + " :" + messageDisplay);
+                }
+                //bottomSliderAction("hide");
+                msgData.message[0].component.payload.sliderView = true;
+            });
+
+        });
+        $(messageHtml).find(".buttonTmplContent .emojiComponent .close-btn").click(function (e: any) {
+            // bottomSliderAction("hide");
+
+            e.stopPropagation();
+        });
+    }
+    suggestionComponent() {
+        return '<div class="suggestionsMainComponent">\
+<div class="suggestionsHeading">What can be improved?</div>\
+<div class="suggestionBox">\
+<textarea type="text" class="suggestionInput" placeholder="Add Suggestions"></textarea></div>\
+<div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>\
+</div>'
     }
     getTemplateString() {
-        var ratingTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+        var ratingTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
         <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
             <div class="buttonTmplContent"> \

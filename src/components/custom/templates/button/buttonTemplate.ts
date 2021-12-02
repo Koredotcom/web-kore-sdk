@@ -34,7 +34,7 @@ class ButtonTemplate {
                 $('.chatInputBox').text($(selectedTarget).attr('actual-value') || $(selectedTarget).attr('value'));
                 // var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
                 const _innerText = ($(selectedTarget)[0] && $(selectedTarget)[0].innerText) ? $(selectedTarget)[0].innerText.trim() : '' || ($(selectedTarget) && $(selectedTarget).attr('data-value')) ? $(selectedTarget).attr('data-value').trim() : '';
-                me.sendMessage($('.chatInputBox'), _innerText);
+                chatWindowInstance.sendMessage($('.chatInputBox'), _innerText);
             } else if (type == 'url' || type == 'web_url') {
                 if ($(selectedTarget).attr('msgData') !== undefined) {
                     let msgData;

@@ -2,25 +2,67 @@
 import helpers from '../../../../../src/utils/helpers'
 
 class TableListTemplate {
-    renderMessage(msgData: any) {
-        let me: any = this;
-        let $ = me.cwInstance.$;
-        let helpersObj = new helpers();
+	renderMessage(msgData: any) {
+		let me: any = this;
+		let $ = me.cwInstance.$;
+		let helpersObj = new helpers();
 
-        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "tableList") {
-            me.messageHtml = $(me.getTemplateString('tableListTemplate')).tmpl({
-                'msgData': msgData,
-                'helpers': helpersObj.helpers
-            });
-            me.bindEvents();
-            return me.messageHtml;
-        }
-    }
-    bindEvents() {
-    
-    }
-    getTemplateString() {
-        var tableListTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+		if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "tableList") {
+			me.messageHtml = $(me.getTemplateString('tableListTemplate')).tmpl({
+				'msgData': msgData,
+				'helpers': helpersObj.helpers
+			});
+			me.bindEvents(me.messageHtml);
+			return me.messageHtml;
+		}
+	}
+	bindEvents(messageHtml: any) {
+		let me: any = this;
+		let chatWindowInstance = me.cwInstance;
+		let $ = me.cwInstance.$;
+		$(messageHtml).off('click', '.listViewItemValue.actionLink,.listTableDetailsDesc').on('click', '.listViewItemValue.actionLink,.listTableDetailsDesc', function (e: any) {
+			var _self = e.currentTarget;
+			me.valueClick(_self);
+		});
+	}
+	valueClick(_self: any, actionObj: any) {
+		let me: any = this;
+		let chatWindowInstance = me.cwInstance;
+		let $ = me.cwInstance.$;
+		if (actionObj) {
+			if (actionObj.type === "url") {
+				window.open(actionObj.url, "_blank");
+				return;
+			}
+			if (actionObj.payload) {
+				var _innerText = actionObj.payload;
+				var eData: any = {};
+				eData.payload = _self.innerText || actionObj.title;
+				chatWindowInstance.sendMessage($('.chatInputBox').text(_innerText), eData.payload);
+			}
+			if (_self && _self.hasClass("dropdown-contentWidgt")) {
+				$(_self).hide();
+			}
+		} else {
+			if ($(_self).attr('data-url') || $(_self).attr('url')) {
+				var a_link = $(_self).attr('data-url') || $(_self).attr('url');
+				if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
+					a_link = "http:////" + a_link;
+				}
+				var _tempWin = window.open(a_link, "_blank");
+			} else {
+				var _innerText = $(_self).attr('data-value');
+				var postBack = $(_self).attr('data-title');
+				chatWindowInstance.sendMessage($('.chatInputBox').text(_innerText), postBack);
+				$(".kore-action-sheet .list-template-sheet").animate({ height: 'toggle' });
+				// bottomSliderAction("hide");
+				$(".listViewTmplContentBox").css({ "pointer-events": "none" });
+			}
+		}
+
+	}
+	getTemplateString() {
+		var tableListTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
  {{if msgData.message}} \
 	 <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
 		 <div class="listTmplContent"> \
@@ -130,8 +172,8 @@ class TableListTemplate {
 {{/if}} \
 </scipt>';
 
-        return tableListTemplate;
-    }
+		return tableListTemplate;
+	}
 
 }
 

@@ -5,10 +5,10 @@
  * Author URI: https://ninjadev.pw
  */
 
-(function($) {
-  'use strict';
-
-  window.PureJSCarousel = function(settings) {
+// (function($) {
+//   'use strict';
+ import $ from '../src/libs/korejquery';
+  function PureJSCarousel(settings) {
     this.carousel          = document.querySelector(settings.carousel);
     this.slides            = this.carousel.querySelectorAll(settings.slide);
     this.btnNext           = this.carousel.querySelector(settings.btnNext) || null;
@@ -460,4 +460,5 @@
       }
     }
   };
-})($);
+  export default PureJSCarousel;
+// })($);

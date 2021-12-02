@@ -12,12 +12,25 @@ class DropdownTemplate {
                 'msgData': msgData,
                 'helpers': helpersObj.helpers
             });
-            me.bindEvents();
+            me.bindEvents(me.messageHtml);
             return me.messageHtml;
         }
     }
-    bindEvents() {
-    
+    bindEvents(messageHtml: any) {
+        let me: any = this;
+        let chatWindowInstance = me.cwInstance;
+        let $ = me.cwInstance.$;
+        $(messageHtml).find('.selectTemplateDropdowm').on('change', function (e: any) {
+            e.preventDefault();
+            e.stopPropagation();
+            let selectedTarget = e.currentTarget;
+            $(".chatInputBox").text(selectedTarget.value)
+            var k = jQuery.Event('keydown', { which: 13 });
+            k.keyCode = 13
+            $('.chatInputBox').trigger(k);
+
+        });
+
     }
     getTemplateString() {
         var dropdownTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \

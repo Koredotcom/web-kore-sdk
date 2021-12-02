@@ -908,24 +908,24 @@ window.onresize = function (event) {
   }
 
   // handling quick replies
-  const quickReplyDivs = document.querySelectorAll('.quickReplies');
-  for (var i = 0; i < quickReplyDivs.length; i++) {
-    const btnsParentDiv = quickReplyDivs[i].querySelectorAll('.quick_replies_btn_parent');
-    const leftScrollBtn = quickReplyDivs[i].querySelectorAll('.quickreplyLeftIcon');
-    const rightScrollBtn = quickReplyDivs[i].querySelectorAll('.quickreplyRightIcon');
-    if (btnsParentDiv[0].hasChildNodes()) {
-      if (btnsParentDiv[0].scrollLeft > 0) {
-        leftScrollBtn[0].classList.remove('hide');
-      } else {
-        leftScrollBtn[0].classList.add('hide');
-      }
-      if (btnsParentDiv[0].offsetWidth < btnsParentDiv[0].scrollWidth) {
-        rightScrollBtn[0].classList.remove('hide');
-      } else {
-        rightScrollBtn[0].classList.add('hide');
-      }
-    }
-  }
+  // const quickReplyDivs = document.querySelectorAll('.quickReplies');
+  // for (var i = 0; i < quickReplyDivs.length; i++) {
+  //   const btnsParentDiv = quickReplyDivs[i].querySelectorAll('.quick_replies_btn_parent');
+  //   const leftScrollBtn = quickReplyDivs[i].querySelectorAll('.quickreplyLeftIcon');
+  //   const rightScrollBtn = quickReplyDivs[i].querySelectorAll('.quickreplyRightIcon');
+  //   if (btnsParentDiv[0].hasChildNodes()) {
+  //     if (btnsParentDiv[0].scrollLeft > 0) {
+  //       leftScrollBtn[0].classList.remove('hide');
+  //     } else {
+  //       leftScrollBtn[0].classList.add('hide');
+  //     }
+  //     if (btnsParentDiv[0].offsetWidth < btnsParentDiv[0].scrollWidth) {
+  //       rightScrollBtn[0].classList.remove('hide');
+  //     } else {
+  //       rightScrollBtn[0].classList.add('hide');
+  //     }
+  //   }
+  // }
 
   /* Handling for full size table */
   if ($('.kore-chat-window').width() > 460) {
@@ -1149,7 +1149,7 @@ chatWindow.prototype.init = function (cfg) {
 chatWindow.prototype.initVars = function () {
   const me = this;
   me.plugins = {};
-  /// /chatInitialize = me//new chatWindow(cfg);
+  chatInitialize = me//new chatWindow(cfg);
   me.customTemplateObj = new customTemplate(me.config, me);
 };
 chatWindow.prototype.initi18n = function () {
@@ -1488,7 +1488,7 @@ chatWindow.prototype.bindEvents = function () {
       me.openExternalLink(a_link);
     }
   });
-  _chatContainer.off('click', '.listItemPath,.quickReply,.carouselImageContent,.checkboxBtn,.likeDislikeDiv').on('click', '.quickReply,.carouselImageContent,.checkboxBtn,.likeDislikeDiv', function (e) {
+  _chatContainer.off('click', '.carouselImageContent').on('click', '.carouselImageContent', function (e) {
     e.preventDefault();
     e.stopPropagation();
     let type = $(this).attr('type');
@@ -1700,33 +1700,33 @@ chatWindow.prototype.bindEvents = function () {
       }
     }
   });
-  _chatContainer.off('click', '.quickreplyRightIcon').on('click', '.quickreplyRightIcon', (event) => {
-    const _quickReplesDivs = event.currentTarget.parentElement.getElementsByClassName('buttonTmplContentChild');
-    if (_quickReplesDivs.length) {
-      const _scrollParentDiv = event.target.parentElement.getElementsByClassName('quick_replies_btn_parent');
-      const _totalWidth = event.target.parentElement.offsetWidth;
-      let _currWidth = 0;
-      // calculation for moving element scroll
-      for (let i = 0; i < _quickReplesDivs.length; i++) {
-        _currWidth += (_quickReplesDivs[i].offsetWidth + 10);
-        if (_currWidth > _totalWidth) {
-          // _scrollParentDiv[0].scrollLeft = _currWidth;
-          $(_scrollParentDiv).animate({
-            scrollLeft: (_scrollParentDiv[0].scrollLeft + _quickReplesDivs[i].offsetWidth + 20),
-          }, 'slow', () => {
-            // deciding to enable left and right scroll icons
-            const leftIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyLeftIcon');
-            leftIcon[0].classList.remove('hide');
-            if ((_scrollParentDiv[0].scrollLeft + _totalWidth + 10) >= _scrollParentDiv[0].scrollWidth) {
-              const rightIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyRightIcon');
-              rightIcon[0].classList.add('hide');
-            }
-          });
-          break;
-        }
-      }
-    }
-  });
+  // _chatContainer.off('click', '.quickreplyRightIcon').on('click', '.quickreplyRightIcon', (event) => {
+  //   const _quickReplesDivs = event.currentTarget.parentElement.getElementsByClassName('buttonTmplContentChild');
+  //   if (_quickReplesDivs.length) {
+  //     const _scrollParentDiv = event.target.parentElement.getElementsByClassName('quick_replies_btn_parent');
+  //     const _totalWidth = event.target.parentElement.offsetWidth;
+  //     let _currWidth = 0;
+  //     // calculation for moving element scroll
+  //     for (let i = 0; i < _quickReplesDivs.length; i++) {
+  //       _currWidth += (_quickReplesDivs[i].offsetWidth + 10);
+  //       if (_currWidth > _totalWidth) {
+  //         // _scrollParentDiv[0].scrollLeft = _currWidth;
+  //         $(_scrollParentDiv).animate({
+  //           scrollLeft: (_scrollParentDiv[0].scrollLeft + _quickReplesDivs[i].offsetWidth + 20),
+  //         }, 'slow', () => {
+  //           // deciding to enable left and right scroll icons
+  //           const leftIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyLeftIcon');
+  //           leftIcon[0].classList.remove('hide');
+  //           if ((_scrollParentDiv[0].scrollLeft + _totalWidth + 10) >= _scrollParentDiv[0].scrollWidth) {
+  //             const rightIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyRightIcon');
+  //             rightIcon[0].classList.add('hide');
+  //           }
+  //         });
+  //         break;
+  //       }
+  //     }
+  //   }
+  // });
   _chatContainer.off('click', '.minimized').on('click', '.minimized,.minimized-title', (event) => {
     if (me.config.multiPageApp && me.config.multiPageApp.enable) {
       me.setLocalStoreItem('kr-cw-state', 'open');
@@ -2250,13 +2250,14 @@ chatWindow.prototype.renderMessage = function (msgData) {
   /* checking for matched custom template */
   messageHtml = me.customTemplateObj.renderMessage(msgData);
   if (!messageHtml && msgData && msgData.message && msgData.message[0]) {
-    if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'button') {
-      messageHtml = $(me.getChatTemplate('templatebutton')).tmpl({
-        msgData,
-        helpers,
-        extension,
-      });
-    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'wait_for_response') { // to show typing indicator until next response receive
+    // if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'button') {
+    //   messageHtml = $(me.getChatTemplate('templatebutton')).tmpl({
+    //     msgData,
+    //     helpers,
+    //     extension,
+    //   });
+    // } else 
+    if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'wait_for_response') { // to show typing indicator until next response receive
       waiting_for_message = true;
       $('.typingIndicatorContent').css('display', 'block');
       return;
@@ -2354,43 +2355,43 @@ chatWindow.prototype.renderMessage = function (msgData) {
     //     }
     //   }, 350);
     // } 
-    else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'mini_table') {
-      if (msgData.message[0].component.payload.layout == 'horizontal') {
-        messageHtml = $(me.getChatTemplate('miniTableHorizontalTemplate')).tmpl({
-          msgData,
-          helpers,
-          extension,
-        });
-        setTimeout(() => {
-          $('.carousel:last').addClass(`carousel${carouselTemplateCount}`);
-          const count = $(`.carousel${carouselTemplateCount}`).children().length;
-          if (count > 1) {
-            const carouselOneByOne = new PureJSCarousel({
-              carousel: `.carousel${carouselTemplateCount}`,
-              slide: '.slide',
-              oneByOne: true,
-            });
-            $(`.carousel${carouselTemplateCount}`).parent().show();
-            $(`.carousel${carouselTemplateCount}`).attr('style', 'height: 100% !important');
-            carouselEles.push(carouselOneByOne);
-          }
-          // window.dispatchEvent(new Event('resize'));
-          const evt = document.createEvent('HTMLEvents');
-          evt.initEvent('resize', true, false);
-          window.dispatchEvent(evt);
-          carouselTemplateCount += 1;
-          _chatContainer.animate({
-            scrollTop: _chatContainer.prop('scrollHeight'),
-          }, 0);
-        });
-      } else {
-        messageHtml = $(me.getChatTemplate('miniTableChartTemplate')).tmpl({
-          msgData,
-          helpers,
-          extension,
-        });
-      }
-    }
+    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'mini_table') {
+    //   if (msgData.message[0].component.payload.layout == 'horizontal') {
+    //     messageHtml = $(me.getChatTemplate('miniTableHorizontalTemplate')).tmpl({
+    //       msgData,
+    //       helpers,
+    //       extension,
+    //     });
+    //     setTimeout(() => {
+    //       $('.carousel:last').addClass(`carousel${carouselTemplateCount}`);
+    //       const count = $(`.carousel${carouselTemplateCount}`).children().length;
+    //       if (count > 1) {
+    //         const carouselOneByOne = new PureJSCarousel({
+    //           carousel: `.carousel${carouselTemplateCount}`,
+    //           slide: '.slide',
+    //           oneByOne: true,
+    //         });
+    //         $(`.carousel${carouselTemplateCount}`).parent().show();
+    //         $(`.carousel${carouselTemplateCount}`).attr('style', 'height: 100% !important');
+    //         carouselEles.push(carouselOneByOne);
+    //       }
+    //       // window.dispatchEvent(new Event('resize'));
+    //       const evt = document.createEvent('HTMLEvents');
+    //       evt.initEvent('resize', true, false);
+    //       window.dispatchEvent(evt);
+    //       carouselTemplateCount += 1;
+    //       _chatContainer.animate({
+    //         scrollTop: _chatContainer.prop('scrollHeight'),
+    //       }, 0);
+    //     });
+    //   } else {
+    //     messageHtml = $(me.getChatTemplate('miniTableChartTemplate')).tmpl({
+    //       msgData,
+    //       helpers,
+    //       extension,
+    //     });
+    //   }
+    // }
     //  else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'multi_select') {
     //   messageHtml = $(this.getChatTemplate('checkBoxesTemplate')).tmpl({
     //     msgData,
@@ -3265,42 +3266,42 @@ chatWindow.prototype.getChatTemplate = function (tempType) {
          </li> \
      {{/if}} \
  </scipt>';
- var miniTableHorizontalTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-     {{if msgData.message}} \
-     <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-         class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
-         {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-         {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-         {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
-             <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
-         </div>{{/if}}\
-         <div class="carousel" id="carousel-one-by-one" style="height: 0px;">\
-             {{each(key, table) msgData.message[0].component.payload.elements}}\
-                 <div class="slide">\
-                     <div class="minitableDiv">\
-                         <div style="overflow-x:auto; padding: 0 8px;">\
-                             <table cellspacing="0" cellpadding="0">\
-                                 <tr class="headerTitle">\
-                                     {{each(key, tableHeader) table.primary}} \
-                                         <th {{if tableHeader[1]}}style="text-align:${tableHeader[1]};" {{/if}}>${tableHeader[0]}</th>\
-                                     {{/each}} \
-                                 </tr>\
-                                 {{each(key, additional) table.additional}} \
-                                     <tr>\
-                                         {{each(cellkey, cellValue) additional}} \
-                                             <td  {{if cellkey === additional.length-1}}colspan="2"{{/if}}  {{if table.primary[cellkey][1]}}style="text-align:${table.primary[cellkey][1]};" {{/if}} title="${cellValue}">${cellValue}</td>\
-                                         {{/each}} \
-                                     </tr>\
-                                 {{/each}} \
-                             </table>\
-                         </div>\
-                     </div>\
-                 </div>\
-             {{/each}}\
-         </div>\
-     </li> \
-     {{/if}} \
- </scipt>';
+//  var miniTableHorizontalTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+//      {{if msgData.message}} \
+//      <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+//          class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
+//          {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+//          {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+//          {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
+//              <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
+//          </div>{{/if}}\
+//          <div class="carousel" id="carousel-one-by-one" style="height: 0px;">\
+//              {{each(key, table) msgData.message[0].component.payload.elements}}\
+//                  <div class="slide">\
+//                      <div class="minitableDiv">\
+//                          <div style="overflow-x:auto; padding: 0 8px;">\
+//                              <table cellspacing="0" cellpadding="0">\
+//                                  <tr class="headerTitle">\
+//                                      {{each(key, tableHeader) table.primary}} \
+//                                          <th {{if tableHeader[1]}}style="text-align:${tableHeader[1]};" {{/if}}>${tableHeader[0]}</th>\
+//                                      {{/each}} \
+//                                  </tr>\
+//                                  {{each(key, additional) table.additional}} \
+//                                      <tr>\
+//                                          {{each(cellkey, cellValue) additional}} \
+//                                              <td  {{if cellkey === additional.length-1}}colspan="2"{{/if}}  {{if table.primary[cellkey][1]}}style="text-align:${table.primary[cellkey][1]};" {{/if}} title="${cellValue}">${cellValue}</td>\
+//                                          {{/each}} \
+//                                      </tr>\
+//                                  {{/each}} \
+//                              </table>\
+//                          </div>\
+//                      </div>\
+//                  </div>\
+//              {{/each}}\
+//          </div>\
+//      </li> \
+//      {{/if}} \
+//  </scipt>';
 //  var tableChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 //      {{if msgData.message}} \
 //          <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
@@ -3572,12 +3573,12 @@ var iframe = '<script id="chat_message_tmpl" type="text/x-jquery-tmpl"> \
 //  if (tempType === "tableChartTemplate") {
 //      return tableChartTemplate;
 //  }
- if (tempType === "miniTableChartTemplate") {
-     return miniTableChartTemplate;
- }
- if (tempType === "miniTableHorizontalTemplate") {
-     return miniTableHorizontalTemplate;
- }
+//  if (tempType === "miniTableChartTemplate") {
+//      return miniTableChartTemplate;
+//  }
+//  if (tempType === "miniTableHorizontalTemplate") {
+//      return miniTableHorizontalTemplate;
+//  }
  else if (tempType === "barchartTemplate") {
      return barchartTemplate;
  }
@@ -3702,6 +3703,7 @@ chatWindow.prototype.chatHistory = function (res) {
     }
   }
 };
+chatWindow.prototype.carouselTemplateCount = 0;
 
 function IsJsonString() {
   try {

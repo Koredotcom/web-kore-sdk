@@ -17,7 +17,62 @@ class LikeDislikeTemplate {
         }
     }
     bindEvents() {
-    
+        let me: any = this;
+        let $ = me.cwInstance.$;
+        let helpersObj = new helpers();
+        let carouselEles = [];
+        let chatWindowInstance = me.cwInstance;
+        let _chatContainer = chatWindowInstance.config.chatContainer;
+        _chatContainer.off('click', '.likeDislikeDiv').on('click', '.likeDislikeDiv', function (e: any) {
+            e.preventDefault();
+            e.stopPropagation();
+            let selectedTarget = e.currentTarget;
+            let type = $(selectedTarget).attr('type');
+            if (type) {
+                type = type.toLowerCase();
+            }
+            if (type == 'postback' || type == 'text') {
+                $('.chatInputBox').text($(selectedTarget).attr('actual-value') || $(selectedTarget).attr('value'));
+                // var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
+                const _innerText = ($(selectedTarget)[0] && $(selectedTarget)[0].innerText) ? $(selectedTarget)[0].innerText.trim() : '' || ($(selectedTarget) && $(selectedTarget).attr('data-value')) ? $(selectedTarget).attr('data-value').trim() : '';
+                chatWindowInstance.sendMessage($('.chatInputBox'), _innerText);
+            } else if (type == 'url' || type == 'web_url') {
+                if ($(selectedTarget).attr('msgData') !== undefined) {
+                    let msgData;
+                    try {
+                        msgData = JSON.parse($(selectedTarget).attr('msgData'));
+                    } catch (err) {
+
+                    }
+                    if (msgData && msgData.message && msgData.message[0].component && (msgData.message[0].component.formData || (msgData.message[0].component.payload && msgData.message[0].component.payload.formData))) {
+                        if (msgData.message[0].component.formData) {
+                            msgData.message[0].component.payload.formData = msgData.message[0].component.formData;
+                        }
+                        chatWindowInstance.renderWebForm(msgData);
+                        return;
+                    }
+                }
+                let a_link = $(selectedTarget).attr('url');
+                if (a_link.indexOf('http:') < 0 && a_link.indexOf('https:') < 0) {
+                    a_link = `http:////${a_link}`;
+                }
+                chatWindowInstance.openExternalLink(a_link);
+            }
+            if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[1] === 'likeDiv') {
+                $('.likeImg').addClass('hide');
+                $('.likedImg').removeClass('hide');
+                $('.likeDislikeDiv').addClass('dummy');
+            }
+            if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[1] === 'disLikeDiv') {
+                $('.disLikeImg').addClass('hide');
+                $('.disLikedImg').removeClass('hide');
+                $('.likeDislikeDiv').addClass('dummy');
+            }
+            setTimeout(() => {
+                const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
+                _chatInput.focus();
+            }, 600);
+        });
     }
     getTemplateString() {
         var likeDislikeTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \

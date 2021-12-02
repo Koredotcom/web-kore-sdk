@@ -12,15 +12,54 @@ class FormTemplate {
                 'msgData': msgData,
                 'helpers': helpersObj.helpers
             });
-            me.bindEvents();
+            me.bindEvents(me.messageHtml);
             return me.messageHtml;
         }
     }
-    bindEvents() {
-    
+    bindEvents(messageHtml: any) {
+        let me: any = this;
+        let chatWindowInstance = me.cwInstance;
+        let $ = me.cwInstance.$;
+        const _chatContainer = chatWindowInstance.config.chatContainer;
+        $(messageHtml).find(".formMainComponent").on('keydown', function (e: any) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        })
+        $(messageHtml).find("#submit").on('click', function (e: any) {
+            var inputForm_id = $(e.currentTarget).closest('.buttonTmplContent').find(".formMainComponent .formBody");
+            var parentElement = $(e.currentTarget).closest(".fromOtherUsers.with-icon");
+            var messageData = $(parentElement).data();
+            var selectedValue: any;
+            if (messageData.tmplItem.data.msgData.message[0].component.payload) {
+                messageData.tmplItem.data.msgData.message[0].component.payload.ignoreCheckMark = true;
+                var msgData = messageData.tmplItem.data.msgData;
+            }
+
+            if (inputForm_id.find("#email").val() == "") {
+                $(parentElement).find(".buttonTmplContent").last().find(".errorMessage").removeClass("hide");
+                $(".errorMessage").text("Please enter value");
+            }
+            else if (inputForm_id.find("input[type='password']").length != 0) {
+                var textPwd = inputForm_id.find("#email").val();
+                var passwordLength = textPwd.length;
+                selectedValue = "";
+                for (var i = 0; i < passwordLength; i++) {
+                    selectedValue = selectedValue + "*";
+                }
+                $('.chatInputBox').text(textPwd);
+                $(messageHtml).find(".formMainComponent form").addClass("hide");
+            } else if (inputForm_id.find("input[type='password']").length == 0) {
+                $('.chatInputBox').text(inputForm_id.find("#email").val());
+                selectedValue = inputForm_id.find("#email").val();
+                $(messageHtml).find(".formMainComponent form").addClass("hide");
+            }
+            chatWindowInstance.sendMessage($('.chatInputBox'), selectedValue, msgData);
+        });
     }
     getTemplateString() {
-        var formTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+        var formTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
         <li {{if msgData.type !== "bot_response"}} id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
             <div class="buttonTmplContent"> \

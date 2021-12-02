@@ -2,7 +2,7 @@
 import helpers from '../../../../../src/utils/helpers'
 
 class ListTemplate {
-    [x: string]: any;
+
     renderMessage(msgData: any) {
         let me: any = this;
         let $ = me.cwInstance.$;
@@ -18,11 +18,11 @@ class ListTemplate {
         }
     }
     bindEvents() {
-        let me = this;
+        let me: any = this;
         let chatWindowInstance = me.cwInstance;
         let $ = me.cwInstance.$;
         const _chatContainer = chatWindowInstance.config.chatContainer;
-        _chatContainer.off('click', '.listTmplContentChild .buyBtn,.viewMoreList .viewMore,.listItemPath,.listRightContent').on('click', '.listTmplContentChild .buyBtn,.viewMoreList .viewMore,.listItemPath,.listRightContent', (e:any) =>  {
+        _chatContainer.off('click', '.listTmplContentChild .buyBtn,.viewMoreList .viewMore,.listItemPath,.listRightContent').on('click', '.listTmplContentChild .buyBtn,.viewMoreList .viewMore,.listItemPath,.listRightContent', function (e: any) {
             e.preventDefault();
             e.stopPropagation();
             let selectedTarget = e.currentTarget;

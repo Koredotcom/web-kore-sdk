@@ -1,6 +1,6 @@
 
 import helpers from '../../../../../src/utils/helpers';
-// import PureJSCarousel from '../../../../../libs/purejscarousel';
+import PureJSCarousel from '../../../../../libs/purejscarousel';
 
 class MiniTableChartTemplate {
 
@@ -8,7 +8,7 @@ class MiniTableChartTemplate {
         let me: any = this;
         let $ = me.cwInstance.$;
         let helpersObj = new helpers();
-        let carouselTemplateCount = 0;
+        //   let chatWindowInstance.carouselTemplateCount = 0;
         const carouselEles = [];
         const _chatContainer = $(me.cwInstance.config.chatContainer).find('.chat-container');
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "mini_table") {
@@ -17,28 +17,6 @@ class MiniTableChartTemplate {
                     'msgData': msgData,
                     'helpers': helpersObj.helpers
                 });
-                setTimeout(() => {
-                    $('.carousel:last').addClass(`carousel${carouselTemplateCount}`);
-                    const count = $(`.carousel${carouselTemplateCount}`).children().length;
-                    if (count > 1) {
-                        // const carouselOneByOne = new PureJSCarousel({
-                        //     carousel: `.carousel${carouselTemplateCount}`,
-                        //     slide: '.slide',
-                        //     oneByOne: true,
-                        // });
-                        // $(`.carousel${carouselTemplateCount}`).parent().show();
-                        // $(`.carousel${carouselTemplateCount}`).attr('style', 'height: 100% !important');
-                        // carouselEles.push(carouselOneByOne);
-                    }
-                    // window.dispatchEvent(new Event('resize'));
-                    const evt = document.createEvent('HTMLEvents');
-                    evt.initEvent('resize', true, false);
-                    window.dispatchEvent(evt);
-                    carouselTemplateCount += 1;
-                    _chatContainer.animate({
-                        scrollTop: _chatContainer.prop('scrollHeight'),
-                    }, 0);
-                });
                 me.bindEvents();
                 return me.messageHtml;
             } else {
@@ -46,12 +24,39 @@ class MiniTableChartTemplate {
                     'msgData': msgData,
                     'helpers': helpersObj.helpers
                 });
-                me.bindEvents();
                 return me.messageHtml;
             }
         }
     }
     bindEvents() {
+        let me: any = this;
+        const carouselEles = [];
+        let $ = me.cwInstance.$;
+        const _chatContainer = $(me.cwInstance.config.chatContainer).find('.chat-container');
+        let chatWindowInstance = me.cwInstance;
+
+        setTimeout(() => {
+            $('.carousel:last').addClass(`carousel${chatWindowInstance.carouselTemplateCount}`);
+            const count = $(`.carousel${chatWindowInstance.carouselTemplateCount}`).children().length;
+            if (count > 1) {
+                const carouselOneByOne = new PureJSCarousel({
+                    carousel: `.carousel${chatWindowInstance.carouselTemplateCount}`,
+                    slide: '.slide',
+                    oneByOne: true,
+                });
+                $(`.carousel${chatWindowInstance.carouselTemplateCount}`).parent().show();
+                $(`.carousel${chatWindowInstance.carouselTemplateCount}`).attr('style', 'height: 100% !important');
+                carouselEles.push(carouselOneByOne);
+            }
+            window.dispatchEvent(new Event('resize'));
+            const evt = document.createEvent('HTMLEvents');
+            evt.initEvent('resize', true, false);
+            window.dispatchEvent(evt);
+            chatWindowInstance.carouselTemplateCount += 1;
+            _chatContainer.animate({
+                scrollTop: _chatContainer.prop('scrollHeight'),
+            }, 0);
+        });
     }
     getTemplateString(template_type: string) {
 

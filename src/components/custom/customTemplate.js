@@ -12,8 +12,11 @@ import AdvancedMultiSelectTemplate from './templates/advancedMultiSelect/advance
 import TableListTemplate from './templates/tableListTemplate/tableListTemplate';
 import RatingTemplate from './templates/ratingTemplate/ratingTemplate';
 import ListWidgetTemplate from './templates/listWidgetTemplate/listWidgetTemplate';
-// import MiniTableChartTemplate from './templates/miniTableTemplate/miniTableTemplate';
+import MiniTableChartTemplate from './templates/miniTableTemplate/miniTableTemplate';
 import CarouselTemplate from './templates/carouselTemplate/carouselTemplate';
+import ListViewTemplate from './templates/listViewTemplate/listViewTemplate';
+import './customTemplate.css';
+import '../../../libs/purejscarousel.css';
 //(function($){
 	function customTemplate(data,chatInitialize) {
 		this.cfg = data;
@@ -45,7 +48,8 @@ import CarouselTemplate from './templates/carouselTemplate/carouselTemplate';
 		this.installTemplate(new RatingTemplate());
 		this.installTemplate(new ListWidgetTemplate());
 		this.installTemplate(new CarouselTemplate());
-		// this.installTemplate(new MiniTableChartTemplate());
+		this.installTemplate(new MiniTableChartTemplate());
+		this.installTemplate(new ListViewTemplate());
 	};
 	/**
 	 * purpose: Function to render bot message for a given custom template
@@ -120,18 +124,18 @@ import CarouselTemplate from './templates/carouselTemplate/carouselTemplate';
 		// 	});
 		// 	this.bindEvents(messageHtml);
 		// }
-		else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "listView") {
-			messageHtml = $(this.getChatTemplate("templatelistView")).tmpl({
-				'msgData': msgData,
-				'helpers': this.helpers,
-				'extension': this.extension
-			});
-			this.bindEvents(messageHtml);
-			$(messageHtml).data(msgData);
-			if(msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.fromHistory){
-				$(messageHtml).css({"pointer-events":"none"});
-			}
-		}
+		// else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "listView") {
+		// 	messageHtml = $(this.getChatTemplate("templatelistView")).tmpl({
+		// 		'msgData': msgData,
+		// 		'helpers': this.helpers,
+		// 		'extension': this.extension
+		// 	});
+		// 	this.bindEvents(messageHtml);
+		// 	$(messageHtml).data(msgData);
+		// 	if(msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.fromHistory){
+		// 		$(messageHtml).css({"pointer-events":"none"});
+		// 	}
+		// }
 		// else if(msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.template_type === "feedbackTemplate" && (msgData.message[0].component.payload.view==="star"|| msgData.message[0].component.payload.view ==="emojis"))){
 		// 	messageHtml = $(this.getChatTemplate("ratingTemplate")).tmpl({
 		// 		'msgData': msgData,
@@ -701,52 +705,52 @@ print(JSON.stringify(message)); */
 
 
 
-	var listViewTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-	{{if msgData.message}} \
-		<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon listView"> \
-			<div class="listViewTmplContent {{if msgData.message[0].component.payload.boxShadow}}noShadow{{/if}}"> \
-				{{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-				{{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-				<ul class="listViewTmplContentBox"> \
-					{{if msgData.message[0].component.payload.text || msgData.message[0].component.payload.heading}} \
-						<li class="listViewTmplContentHeading"> \
-							{{if msgData.type === "bot_response" && msgData.message[0].component.payload.heading}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
-							{{if msgData.message[0].component.payload.sliderView}} <button class="close-button" title="Close"><img src="data:image/svg+xml;base64,           PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button>{{/if}}\
-							{{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
-								<span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
-							{{/if}} \
-						</li> \
-					{{/if}} \
-					<div class="listItems">\
-					{{each(key, msgItem) msgData.message[0].component.payload.elements}} \
-					{{if (msgData.message[0].component.payload.seeMore && key < msgData.message[0].component.payload.moreCount) || (!msgData.message[0].component.payload.seeMore)}}\
-								<li class="listViewTmplContentChild"> \
-									{{if msgItem.image_url}} \
-										<div class="listViewRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
-											<img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
-										</div> \
-									{{/if}} \
-									<div class="listViewLeftContent" data-url="${msgItem.default_action.url}" data-title="${msgItem.default_action.title}" data-value="${msgItem.default_action.title}"> \
-										<span class="titleDesc">\
-										<div class="listViewItemTitle" title="${msgItem.title}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
-										{{if msgItem.subtitle}}<div class="listViewItemSubtitle" title="${msgItem.subtitle}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
-										</span>\
-									{{if msgItem.value}}<div class="listViewItemValue" title="${msgItem.value}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.value, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.value, "user")}} {{/if}}</div>{{/if}} \
-									</div>\
-								</li> \
-								{{/if}}\
-					{{/each}} \
-					</div>\
-					{{if msgData && msgData.message && msgData.message.length && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.seeMore && msgData.message[0].component.payload.buttons && msgData.message[0].component.payload.buttons.length && msgData.message[0].component.payload.buttons[0].title}}\
-					<li class="seeMore"> \
-						<span class="seeMoreList">${msgData.message[0].component.payload.buttons[0].title}</span> \
-					</li> \
-					{{/if}}\
-				</ul> \
-			</div> \
-		</li> \
-	{{/if}} \
- </script>';
+// 	var listViewTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+// 	{{if msgData.message}} \
+// 		<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon listView"> \
+// 			<div class="listViewTmplContent {{if msgData.message[0].component.payload.boxShadow}}noShadow{{/if}}"> \
+// 				{{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+// 				{{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+// 				<ul class="listViewTmplContentBox"> \
+// 					{{if msgData.message[0].component.payload.text || msgData.message[0].component.payload.heading}} \
+// 						<li class="listViewTmplContentHeading"> \
+// 							{{if msgData.type === "bot_response" && msgData.message[0].component.payload.heading}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
+// 							{{if msgData.message[0].component.payload.sliderView}} <button class="close-button" title="Close"><img src="data:image/svg+xml;base64,           PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button>{{/if}}\
+// 							{{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
+// 								<span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
+// 							{{/if}} \
+// 						</li> \
+// 					{{/if}} \
+// 					<div class="listItems">\
+// 					{{each(key, msgItem) msgData.message[0].component.payload.elements}} \
+// 					{{if (msgData.message[0].component.payload.seeMore && key < msgData.message[0].component.payload.moreCount) || (!msgData.message[0].component.payload.seeMore)}}\
+// 								<li class="listViewTmplContentChild"> \
+// 									{{if msgItem.image_url}} \
+// 										<div class="listViewRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
+// 											<img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
+// 										</div> \
+// 									{{/if}} \
+// 									<div class="listViewLeftContent" data-url="${msgItem.default_action.url}" data-title="${msgItem.default_action.title}" data-value="${msgItem.default_action.title}"> \
+// 										<span class="titleDesc">\
+// 										<div class="listViewItemTitle" title="${msgItem.title}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
+// 										{{if msgItem.subtitle}}<div class="listViewItemSubtitle" title="${msgItem.subtitle}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
+// 										</span>\
+// 									{{if msgItem.value}}<div class="listViewItemValue" title="${msgItem.value}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.value, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.value, "user")}} {{/if}}</div>{{/if}} \
+// 									</div>\
+// 								</li> \
+// 								{{/if}}\
+// 					{{/each}} \
+// 					</div>\
+// 					{{if msgData && msgData.message && msgData.message.length && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.seeMore && msgData.message[0].component.payload.buttons && msgData.message[0].component.payload.buttons.length && msgData.message[0].component.payload.buttons[0].title}}\
+// 					<li class="seeMore"> \
+// 						<span class="seeMoreList">${msgData.message[0].component.payload.buttons[0].title}</span> \
+// 					</li> \
+// 					{{/if}}\
+// 				</ul> \
+// 			</div> \
+// 		</li> \
+// 	{{/if}} \
+//  </script>';
  var listActionSheetTemplate = '<script id="chat-window-listTemplate" type="text/x-jqury-tmpl">\
  <div class="list-template-sheet hide">\
   {{if msgData.message}} \
@@ -1676,9 +1680,10 @@ print(JSON.stringify(message)); */
 		//  if (tempType === "advancedMultiSelect") {
 		// 	return advancedMultiSelect;
 		// }
-		 if (tempType === "templatelistView") {
-			return listViewTemplate;
-		}else if (tempType === "actionSheetTemplate") {
+		//  if (tempType === "templatelistView") {
+		// 	return listViewTemplate;
+		// }
+		 if (tempType === "actionSheetTemplate") {
 			return listActionSheetTemplate;
 		}
 		// else if(tempType === "tableListTemplate"){
@@ -1859,177 +1864,177 @@ print(JSON.stringify(message)); */
 	customTemplate.prototype.bindEvents = function (messageHtml) {
 		chatInitialize=this.chatInitialize;
 		helpers=this.helpers;
-		$(messageHtml).find('.selectTemplateDropdowm').on('change', function (e) {
-			e.preventDefault();
-			e.stopPropagation();
-			$(".chatInputBox").text(this.value)
-			var k = jQuery.Event('keydown', { which: 13 });
-			k.keyCode = 13
-			$('.chatInputBox').trigger(k);
+		// $(messageHtml).find('.selectTemplateDropdowm').on('change', function (e) {
+		// 	e.preventDefault();
+		// 	e.stopPropagation();
+		// 	$(".chatInputBox").text(this.value)
+		// 	var k = jQuery.Event('keydown', { which: 13 });
+		// 	k.keyCode = 13
+		// 	$('.chatInputBox').trigger(k);
 	
-		});
+		// });
 		/* Inline form submit click function starts here*/
-		$(messageHtml).find(".formMainComponent").on('keydown',function(e){
-			if(e.keyCode==13){
-		 e.preventDefault();
-		 e.stopPropagation();
-	       }
-	    })
-		$(messageHtml).find("#submit").on('click', function(e){
-		var inputForm_id =$(e.currentTarget).closest('.buttonTmplContent').find(".formMainComponent .formBody");
-		var parentElement = $(e.currentTarget).closest(".fromOtherUsers.with-icon");
-		var messageData=$(parentElement).data();
-		if(messageData.tmplItem.data.msgData.message[0].component.payload){
-			messageData.tmplItem.data.msgData.message[0].component.payload.ignoreCheckMark=true;
-			var msgData=messageData.tmplItem.data.msgData;
-		}
+		// $(messageHtml).find(".formMainComponent").on('keydown',function(e){
+		// 	if(e.keyCode==13){
+		//  e.preventDefault();
+		//  e.stopPropagation();
+	    //    }
+	    // })
+		// $(messageHtml).find("#submit").on('click', function(e){
+		// var inputForm_id =$(e.currentTarget).closest('.buttonTmplContent').find(".formMainComponent .formBody");
+		// var parentElement = $(e.currentTarget).closest(".fromOtherUsers.with-icon");
+		// var messageData=$(parentElement).data();
+		// if(messageData.tmplItem.data.msgData.message[0].component.payload){
+		// 	messageData.tmplItem.data.msgData.message[0].component.payload.ignoreCheckMark=true;
+		// 	var msgData=messageData.tmplItem.data.msgData;
+		// }
 		
-		if(inputForm_id.find("#email").val()==""){
-			   $(parentElement).find(".buttonTmplContent").last().find(".errorMessage").removeClass("hide");
-			  $(".errorMessage").text("Please enter value");
-		 }
-	    else if(inputForm_id.find("input[type='password']").length!=0){
-				 var textPwd= inputForm_id.find("#email").val();
-				 var passwordLength=textPwd.length;
-				 var selectedValue="";
-				 for(var i=0;i<passwordLength;i++){
-						  selectedValue=selectedValue+"*";
-					 }
-				  $('.chatInputBox').text(textPwd);
-				  $(messageHtml).find(".formMainComponent form").addClass("hide");
-		}else if(inputForm_id.find("input[type='password']").length==0){
-				$('.chatInputBox').text(inputForm_id.find("#email").val());
-				var selectedValue=inputForm_id.find("#email").val();
-				$(messageHtml).find(".formMainComponent form").addClass("hide");
-		}
-		chatInitialize.sendMessage($('.chatInputBox'),selectedValue,msgData);
-		});
+		// if(inputForm_id.find("#email").val()==""){
+		// 	   $(parentElement).find(".buttonTmplContent").last().find(".errorMessage").removeClass("hide");
+		// 	  $(".errorMessage").text("Please enter value");
+		//  }
+	    // else if(inputForm_id.find("input[type='password']").length!=0){
+		// 		 var textPwd= inputForm_id.find("#email").val();
+		// 		 var passwordLength=textPwd.length;
+		// 		 var selectedValue="";
+		// 		 for(var i=0;i<passwordLength;i++){
+		// 				  selectedValue=selectedValue+"*";
+		// 			 }
+		// 		  $('.chatInputBox').text(textPwd);
+		// 		  $(messageHtml).find(".formMainComponent form").addClass("hide");
+		// }else if(inputForm_id.find("input[type='password']").length==0){
+		// 		$('.chatInputBox').text(inputForm_id.find("#email").val());
+		// 		var selectedValue=inputForm_id.find("#email").val();
+		// 		$(messageHtml).find(".formMainComponent form").addClass("hide");
+		// }
+		// chatInitialize.sendMessage($('.chatInputBox'),selectedValue,msgData);
+		// });
 		/* Inline form submit click function ends here*/
 		
 		/* Advanced multi select checkbox click functions starts here */
-		$(messageHtml).off('click', '.closeBottomSlider').on('click', '.closeBottomSlider', function (e) {
-			bottomSliderAction('hide');
-		});
-		$(messageHtml).off('click', '.singleSelect').on('click', '.singleSelect', function (e) {
-			var parentContainer = $(e.currentTarget).closest('.listTmplContentBox');
-			var allGroups = $(parentContainer).find('.collectionDiv');
-			var allcheckboxs = $(parentContainer).find('.checkbox input');
-			$(allGroups).removeClass('selected');
-			var selectedGroup = $(e.currentTarget).closest('.collectionDiv');
-			$(selectedGroup).addClass("selected");
-			var groupSelectInput = $(selectedGroup).find('.groupMultiSelect input');
-			if (allGroups) {
-				if (allGroups && allGroups.length) {
-					for (i = 0; i < allGroups.length; i++) {
-						if (allGroups && !($(allGroups[i]).hasClass('selected'))) {
-							var allGroupItems = $(allGroups[i]).find('.checkbox input');
-							for (j = 0; j < allGroupItems.length; j++) {
-								$(allGroupItems[j]).prop("checked", false);
-							}
-						}
-					}
-				}
-			}
-			if (selectedGroup && selectedGroup[0]) {
-				var allChecked = true;
-				var selectedGroupItems = $(selectedGroup).find('.checkbox.singleSelect input');
-				if (selectedGroupItems && selectedGroupItems.length) {
-					for (i = 0; i < selectedGroupItems.length; i++) {
-						if (!($(selectedGroupItems[i]).prop("checked"))) {
-							allChecked = false;
-						}
-					}
-				}
-				if (allChecked) {
-					$(groupSelectInput).prop("checked", true);
-				} else {
-					$(groupSelectInput).prop("checked", false);
-				}
-			}
-			var showDoneButton = false;
-			var doneButton = $(parentContainer).find('.multiCheckboxBtn');
-			if (allcheckboxs && allcheckboxs.length) {
-				for (i = 0; i < allcheckboxs.length; i++) {
-					if($(allcheckboxs[i]).prop("checked")){
-						showDoneButton = true;
-					}
-				}
-			}
-			if(showDoneButton){
-			   $(doneButton).removeClass('hide');
-			}else{
-				$(doneButton).addClass('hide');
-			}
-		});
-		$(messageHtml).off('click', '.viewMoreGroups').on('click', '.viewMoreGroups', function (e) {
-			var parentContainer = $(e.currentTarget).closest('.listTmplContentBox')
-			var allGroups = $(parentContainer).find('.collectionDiv');
-			$(allGroups).removeClass('hide');
-			$(".viewMoreContainer").addClass('hide');
-		});
-		$(messageHtml).off('click', '.groupMultiSelect').on('click', '.groupMultiSelect', function (e) {
-			var clickedGroup = $(e.currentTarget).find('input');
-			var clickedGroupStatus = $(clickedGroup[0]).prop('checked');
-			var selectedGroup = $(e.currentTarget).closest('.collectionDiv');
-			var selectedGroupItems = $(selectedGroup).find('.checkbox input');
-			var parentContainer = $(e.currentTarget).closest('.listTmplContentBox')
-			var allcheckboxs = $(parentContainer).find('.checkbox input');
-				if (allcheckboxs && allcheckboxs.length) {
-					for (i = 0; i < allcheckboxs.length; i++) {
-						$(allcheckboxs[i]).prop("checked", false);
-					}
-				}
-			if (clickedGroupStatus) {
-				if (selectedGroupItems && selectedGroupItems.length) {
-					for (i = 0; i < selectedGroupItems.length; i++) {
-						$(selectedGroupItems[i]).prop("checked", true);
-					}
-				}
-			} else {
-				if (selectedGroupItems && selectedGroupItems.length) {
-					for (i = 0; i < selectedGroupItems.length; i++) {
-						$(selectedGroupItems[i]).prop("checked", false);
-					}
-				}
-			}
-			var showDoneButton = false;
-			var doneButton = $(parentContainer).find('.multiCheckboxBtn');
-			if (allcheckboxs && allcheckboxs.length) {
-				for (i = 0; i < allcheckboxs.length; i++) {
-					if($(allcheckboxs[i]).prop("checked")){
-						showDoneButton = true;
-					}
-				}
-			}
-			if(showDoneButton){
-			   $(doneButton).removeClass('hide');
-			}else{
-				$(doneButton).addClass('hide');
-			}
-		});
-		$(messageHtml).find(".multiCheckboxBtn").on('click',function(e){
-			var msgData=$(messageHtml).data();
-			if(msgData.message[0].component.payload.sliderView===true){
-				msgData.message[0].component.payload.sliderView=false;
-				chatInitialize.renderMessage(msgData);
-				bottomSliderAction("hide");
-			}
-			msgData.message[0].component.payload.sliderView=false;
-				var checkboxSelection = $(e.currentTarget.parentElement).find('.checkInput:checked');
-				var selectedValue = [];
-				var toShowText = [];
-				for (var i = 0; i < checkboxSelection.length; i++) {
-					selectedValue.push($(checkboxSelection[i]).attr('value'));
-					toShowText.push($(checkboxSelection[i]).attr('text'));
-				}
-				$('.chatInputBox').text('Here are the selected items ' + ': '+ selectedValue.toString());
+		// $(messageHtml).off('click', '.closeBottomSlider').on('click', '.closeBottomSlider', function (e) {
+		// 	bottomSliderAction('hide');
+		// });
+		// $(messageHtml).off('click', '.singleSelect').on('click', '.singleSelect', function (e) {
+		// 	var parentContainer = $(e.currentTarget).closest('.listTmplContentBox');
+		// 	var allGroups = $(parentContainer).find('.collectionDiv');
+		// 	var allcheckboxs = $(parentContainer).find('.checkbox input');
+		// 	$(allGroups).removeClass('selected');
+		// 	var selectedGroup = $(e.currentTarget).closest('.collectionDiv');
+		// 	$(selectedGroup).addClass("selected");
+		// 	var groupSelectInput = $(selectedGroup).find('.groupMultiSelect input');
+		// 	if (allGroups) {
+		// 		if (allGroups && allGroups.length) {
+		// 			for (i = 0; i < allGroups.length; i++) {
+		// 				if (allGroups && !($(allGroups[i]).hasClass('selected'))) {
+		// 					var allGroupItems = $(allGroups[i]).find('.checkbox input');
+		// 					for (j = 0; j < allGroupItems.length; j++) {
+		// 						$(allGroupItems[j]).prop("checked", false);
+		// 					}
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// 	if (selectedGroup && selectedGroup[0]) {
+		// 		var allChecked = true;
+		// 		var selectedGroupItems = $(selectedGroup).find('.checkbox.singleSelect input');
+		// 		if (selectedGroupItems && selectedGroupItems.length) {
+		// 			for (i = 0; i < selectedGroupItems.length; i++) {
+		// 				if (!($(selectedGroupItems[i]).prop("checked"))) {
+		// 					allChecked = false;
+		// 				}
+		// 			}
+		// 		}
+		// 		if (allChecked) {
+		// 			$(groupSelectInput).prop("checked", true);
+		// 		} else {
+		// 			$(groupSelectInput).prop("checked", false);
+		// 		}
+		// 	}
+		// 	var showDoneButton = false;
+		// 	var doneButton = $(parentContainer).find('.multiCheckboxBtn');
+		// 	if (allcheckboxs && allcheckboxs.length) {
+		// 		for (i = 0; i < allcheckboxs.length; i++) {
+		// 			if($(allcheckboxs[i]).prop("checked")){
+		// 				showDoneButton = true;
+		// 			}
+		// 		}
+		// 	}
+		// 	if(showDoneButton){
+		// 	   $(doneButton).removeClass('hide');
+		// 	}else{
+		// 		$(doneButton).addClass('hide');
+		// 	}
+		// });
+		// $(messageHtml).off('click', '.viewMoreGroups').on('click', '.viewMoreGroups', function (e) {
+		// 	var parentContainer = $(e.currentTarget).closest('.listTmplContentBox')
+		// 	var allGroups = $(parentContainer).find('.collectionDiv');
+		// 	$(allGroups).removeClass('hide');
+		// 	$(".viewMoreContainer").addClass('hide');
+		// });
+		// $(messageHtml).off('click', '.groupMultiSelect').on('click', '.groupMultiSelect', function (e) {
+		// 	var clickedGroup = $(e.currentTarget).find('input');
+		// 	var clickedGroupStatus = $(clickedGroup[0]).prop('checked');
+		// 	var selectedGroup = $(e.currentTarget).closest('.collectionDiv');
+		// 	var selectedGroupItems = $(selectedGroup).find('.checkbox input');
+		// 	var parentContainer = $(e.currentTarget).closest('.listTmplContentBox')
+		// 	var allcheckboxs = $(parentContainer).find('.checkbox input');
+		// 		if (allcheckboxs && allcheckboxs.length) {
+		// 			for (i = 0; i < allcheckboxs.length; i++) {
+		// 				$(allcheckboxs[i]).prop("checked", false);
+		// 			}
+		// 		}
+		// 	if (clickedGroupStatus) {
+		// 		if (selectedGroupItems && selectedGroupItems.length) {
+		// 			for (i = 0; i < selectedGroupItems.length; i++) {
+		// 				$(selectedGroupItems[i]).prop("checked", true);
+		// 			}
+		// 		}
+		// 	} else {
+		// 		if (selectedGroupItems && selectedGroupItems.length) {
+		// 			for (i = 0; i < selectedGroupItems.length; i++) {
+		// 				$(selectedGroupItems[i]).prop("checked", false);
+		// 			}
+		// 		}
+		// 	}
+		// 	var showDoneButton = false;
+		// 	var doneButton = $(parentContainer).find('.multiCheckboxBtn');
+		// 	if (allcheckboxs && allcheckboxs.length) {
+		// 		for (i = 0; i < allcheckboxs.length; i++) {
+		// 			if($(allcheckboxs[i]).prop("checked")){
+		// 				showDoneButton = true;
+		// 			}
+		// 		}
+		// 	}
+		// 	if(showDoneButton){
+		// 	   $(doneButton).removeClass('hide');
+		// 	}else{
+		// 		$(doneButton).addClass('hide');
+		// 	}
+		// });
+		// $(messageHtml).find(".multiCheckboxBtn").on('click',function(e){
+		// 	var msgData=$(messageHtml).data();
+		// 	if(msgData.message[0].component.payload.sliderView===true){
+		// 		msgData.message[0].component.payload.sliderView=false;
+		// 		chatInitialize.renderMessage(msgData);
+		// 		bottomSliderAction("hide");
+		// 	}
+		// 	msgData.message[0].component.payload.sliderView=false;
+		// 		var checkboxSelection = $(e.currentTarget.parentElement).find('.checkInput:checked');
+		// 		var selectedValue = [];
+		// 		var toShowText = [];
+		// 		for (var i = 0; i < checkboxSelection.length; i++) {
+		// 			selectedValue.push($(checkboxSelection[i]).attr('value'));
+		// 			toShowText.push($(checkboxSelection[i]).attr('text'));
+		// 		}
+		// 		$('.chatInputBox').text('Here are the selected items ' + ': '+ selectedValue.toString());
 				
-				chatInitialize.sendMessage($('.chatInputBox'),'Here are the selected items '+': '+ toShowText.toString());
-				$(messageHtml).find(".multiCheckboxBtn").hide();
-				$(messageHtml).find(".advancedMultiSelectScroll").css({"pointer-events":"none"});
-				$(messageHtml).find(".advancedMultiSelectScroll").css({"overflow":"hidden"});
+		// 		chatInitialize.sendMessage($('.chatInputBox'),'Here are the selected items '+': '+ toShowText.toString());
+		// 		$(messageHtml).find(".multiCheckboxBtn").hide();
+		// 		$(messageHtml).find(".advancedMultiSelectScroll").css({"pointer-events":"none"});
+		// 		$(messageHtml).find(".advancedMultiSelectScroll").css({"overflow":"hidden"});
 			
-		})
+		// })
 		/* Advanced multi select checkbox click functions ends here */
   
 		/* New List Template click functions starts here*/
@@ -2057,148 +2062,148 @@ print(JSON.stringify(message)); */
 		 }
 		 });
 		/* New List Template click functions ends here*/
-		$(messageHtml).off('click', '.listViewItemValue.actionLink,.listTableDetailsDesc').on('click', '.listViewItemValue.actionLink,.listTableDetailsDesc', function () {
-			var _self=this;
-			valueClick(_self);
-		});
-		$(messageHtml).find(".ratingMainComponent").off('click','[type*="radio"]').on('click','[type*="radio"]',function (e) {
-			var _innerText=$(e.currentTarget).attr('value');
-			var msgData=$(messageHtml).data();
-			var silderValue=msgData.message[0].component.payload.sliderView;
-			if($("label.active")){
-				$("label").removeClass("active");
-			}
-			for(i=parseInt(_innerText);i>0;i--){
-				$('label[for="'+i+'-stars"]').addClass("active");
-			}
-			if(_innerText==msgData.message[0].component.payload.starArrays.length){
-		        var messageTodisplay=msgData.message[0].component.payload.messageTodisplay;
-				$(".suggestionsMainComponent").remove();
-				$(".ratingStar").remove();
-				if($(".submitButton")){
-					$(".submitButton").remove();
-				}
-				$(".kore-action-sheet").find(".ratingMainComponent").append('<div class="ratingStar">'+messageTodisplay+'</div><div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>')
-			}else{
-				if($(".submitButton")){
-					$(".submitButton").remove();
-				}
-				$(".ratingStar").remove();
-			    if($(".suggestionsMainComponent").length > 0){
-				$(".suggestionsMainComponent").remove();
-				$(".kore-action-sheet").find(".ratingMainComponent").append(customTemplate.prototype.suggestionComponent());
-			    }else{
-                $(".kore-action-sheet").find(".ratingMainComponent").append(customTemplate.prototype.suggestionComponent());
-				}
-			}
-			if(silderValue===false){
-				chatInitialize.sendMessage($('.chatInputBox').text(_innerText), _innerText);
-				$(".ratingMainComponent").css({"pointer-events":"none"});
-			  }
-			$(".buttonTmplContent .ratingMainComponent .submitBtn").click(function(){
-				msgData.message[0].component.payload.sliderView=false;
-				if(_innerText == msgData.message[0].component.payload.starArrays.length){
-					var messageTodisplay=msgData.message[0].component.payload.messageTodisplay;
-					chatInitialize.renderMessage(msgData);
-					chatInitialize.sendMessage($('.chatInputBox').text(_innerText +" :"+ messageTodisplay), _innerText +" :"+ messageTodisplay);
-				}else if($(".suggestionInput").val()==""){
-					chatInitialize.renderMessage(msgData);
-					chatInitialize.sendMessage($('.chatInputBox').text(_innerText),_innerText)
-				}else{
-					var messageDisplay=$(".suggestionInput").val();
-					chatInitialize.renderMessage(msgData);
-					chatInitialize.sendMessage($('.chatInputBox').text(_innerText +" :"+ messageDisplay),_innerText +" :"+ messageDisplay);
-				}
-				bottomSliderAction("hide");
-				msgData.message[0].component.payload.sliderView=true;
-			   });
-		});
-		$(messageHtml).find(".buttonTmplContent .ratingMainComponent .close-btn").click(function(e){
-			bottomSliderAction("hide");
-			e.stopPropagation();
-		});
-		$(messageHtml).find(".emojiComponent").off('click','.rating').on('click','.rating',function(e){
-			var msgData=$(messageHtml).data();
-			var sliderValue=msgData.message[0].component.payload.sliderView;
-			  if($(messageHtml).find(".emojiComponent .active").length=="0"){
-				$(".emojiElement").remove();
-			}
-			var emojiValue=$(this).attr("value");
-			$(e.currentTarget).addClass("active");
-			if($(this).attr("id")=="rating_1" && $("#rating_1.active")){
-				 $("<img class='emojiElement' />").attr('src','libs/images/emojis/gifs/rating_1.gif').appendTo(this)
-				 $(e.currentTarget).removeClass("active");
-			  }else if($(this).attr("id")=="rating_2" && $("#rating_2.active")){
-				$("<img class='emojiElement' />").attr('src','libs/images/emojis/gifs/rating_2.gif').appendTo(this)
-				$(e.currentTarget).removeClass("active");
-			  }else if($(this).attr("id")=="rating_3" && $("#rating_3.active")){
-				$("<img class='emojiElement' />").attr('src','libs/images/emojis/gifs/rating_3.gif').appendTo(this)
-				$(e.currentTarget).removeClass("active");
-			  }else if($(this).attr("id")=="rating_4" && $("#rating_4.active")){
-				$("<img class='emojiElement' />").attr('src','libs/images/emojis/gifs/rating_4.gif').appendTo(this)
-				$(e.currentTarget).removeClass("active");
-			  }else if($(this).attr("id")=="rating_5" && $("#rating_5.active")){
-				$("<img class='emojiElement' />").attr('src','libs/images/emojis/gifs/rating_5.gif').appendTo(this)
-				$(e.currentTarget).removeClass("active");
-			  }
-			if($(this).attr("value") < "5"){
-				$(".ratingStar").remove();
-				if($(".submitButton")){
-					$(".submitButton").remove();
-				}
-				if($(".suggestionsMainComponent").length > 0){
-					$(".suggestionsMainComponent").remove();
-				}
-				$(".kore-action-sheet").find(".emojiComponent").append(customTemplate.prototype.suggestionComponent());
+		// $(messageHtml).off('click', '.listViewItemValue.actionLink,.listTableDetailsDesc').on('click', '.listViewItemValue.actionLink,.listTableDetailsDesc', function () {
+		// 	var _self=this;
+		// 	valueClick(_self);
+		// });
+		// $(messageHtml).find(".ratingMainComponent").off('click','[type*="radio"]').on('click','[type*="radio"]',function (e) {
+		// 	var _innerText=$(e.currentTarget).attr('value');
+		// 	var msgData=$(messageHtml).data();
+		// 	var silderValue=msgData.message[0].component.payload.sliderView;
+		// 	if($("label.active")){
+		// 		$("label").removeClass("active");
+		// 	}
+		// 	for(i=parseInt(_innerText);i>0;i--){
+		// 		$('label[for="'+i+'-stars"]').addClass("active");
+		// 	}
+		// 	if(_innerText==msgData.message[0].component.payload.starArrays.length){
+		//         var messageTodisplay=msgData.message[0].component.payload.messageTodisplay;
+		// 		$(".suggestionsMainComponent").remove();
+		// 		$(".ratingStar").remove();
+		// 		if($(".submitButton")){
+		// 			$(".submitButton").remove();
+		// 		}
+		// 		$(".kore-action-sheet").find(".ratingMainComponent").append('<div class="ratingStar">'+messageTodisplay+'</div><div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>')
+		// 	}else{
+		// 		if($(".submitButton")){
+		// 			$(".submitButton").remove();
+		// 		}
+		// 		$(".ratingStar").remove();
+		// 	    if($(".suggestionsMainComponent").length > 0){
+		// 		$(".suggestionsMainComponent").remove();
+		// 		$(".kore-action-sheet").find(".ratingMainComponent").append(customTemplate.prototype.suggestionComponent());
+		// 	    }else{
+        //         $(".kore-action-sheet").find(".ratingMainComponent").append(customTemplate.prototype.suggestionComponent());
+		// 		}
+		// 	}
+		// 	if(silderValue===false){
+		// 		chatInitialize.sendMessage($('.chatInputBox').text(_innerText), _innerText);
+		// 		$(".ratingMainComponent").css({"pointer-events":"none"});
+		// 	  }
+		// 	$(".buttonTmplContent .ratingMainComponent .submitBtn").click(function(){
+		// 		msgData.message[0].component.payload.sliderView=false;
+		// 		if(_innerText == msgData.message[0].component.payload.starArrays.length){
+		// 			var messageTodisplay=msgData.message[0].component.payload.messageTodisplay;
+		// 			chatInitialize.renderMessage(msgData);
+		// 			chatInitialize.sendMessage($('.chatInputBox').text(_innerText +" :"+ messageTodisplay), _innerText +" :"+ messageTodisplay);
+		// 		}else if($(".suggestionInput").val()==""){
+		// 			chatInitialize.renderMessage(msgData);
+		// 			chatInitialize.sendMessage($('.chatInputBox').text(_innerText),_innerText)
+		// 		}else{
+		// 			var messageDisplay=$(".suggestionInput").val();
+		// 			chatInitialize.renderMessage(msgData);
+		// 			chatInitialize.sendMessage($('.chatInputBox').text(_innerText +" :"+ messageDisplay),_innerText +" :"+ messageDisplay);
+		// 		}
+		// 		bottomSliderAction("hide");
+		// 		msgData.message[0].component.payload.sliderView=true;
+		// 	   });
+		// });
+		// $(messageHtml).find(".buttonTmplContent .ratingMainComponent .close-btn").click(function(e){
+		// 	bottomSliderAction("hide");
+		// 	e.stopPropagation();
+		// });
+		// $(messageHtml).find(".emojiComponent").off('click','.rating').on('click','.rating',function(e){
+		// 	var msgData=$(messageHtml).data();
+		// 	var sliderValue=msgData.message[0].component.payload.sliderView;
+		// 	  if($(messageHtml).find(".emojiComponent .active").length=="0"){
+		// 		$(".emojiElement").remove();
+		// 	}
+		// 	var emojiValue=$(this).attr("value");
+		// 	$(e.currentTarget).addClass("active");
+		// 	if($(this).attr("id")=="rating_1" && $("#rating_1.active")){
+		// 		 $("<img class='emojiElement' />").attr('src','libs/images/emojis/gifs/rating_1.gif').appendTo(this)
+		// 		 $(e.currentTarget).removeClass("active");
+		// 	  }else if($(this).attr("id")=="rating_2" && $("#rating_2.active")){
+		// 		$("<img class='emojiElement' />").attr('src','libs/images/emojis/gifs/rating_2.gif').appendTo(this)
+		// 		$(e.currentTarget).removeClass("active");
+		// 	  }else if($(this).attr("id")=="rating_3" && $("#rating_3.active")){
+		// 		$("<img class='emojiElement' />").attr('src','libs/images/emojis/gifs/rating_3.gif').appendTo(this)
+		// 		$(e.currentTarget).removeClass("active");
+		// 	  }else if($(this).attr("id")=="rating_4" && $("#rating_4.active")){
+		// 		$("<img class='emojiElement' />").attr('src','libs/images/emojis/gifs/rating_4.gif').appendTo(this)
+		// 		$(e.currentTarget).removeClass("active");
+		// 	  }else if($(this).attr("id")=="rating_5" && $("#rating_5.active")){
+		// 		$("<img class='emojiElement' />").attr('src','libs/images/emojis/gifs/rating_5.gif').appendTo(this)
+		// 		$(e.currentTarget).removeClass("active");
+		// 	  }
+		// 	if($(this).attr("value") < "5"){
+		// 		$(".ratingStar").remove();
+		// 		if($(".submitButton")){
+		// 			$(".submitButton").remove();
+		// 		}
+		// 		if($(".suggestionsMainComponent").length > 0){
+		// 			$(".suggestionsMainComponent").remove();
+		// 		}
+		// 		$(".kore-action-sheet").find(".emojiComponent").append(customTemplate.prototype.suggestionComponent());
 			    
-		    }else{
-				if($(".submitButton")){
-					$(".submitButton").remove();
-				}
-				if($(".ratingStar").length > 0){
-					$(".ratingStar").remove();
-				}
-				var messageTodisplay=msgData.message[0].component.payload.messageTodisplay;
-				$(".suggestionsMainComponent").remove();
-				$(".kore-action-sheet").find(".emojiComponent").append('<div class="ratingStar">'+messageTodisplay+'</div><div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>')
-			}
-			if(sliderValue===false){
-				chatInitialize.sendMessage($('.chatInputBox').text(emojiValue),emojiValue);
-			}
-			$(".emojiComponent").off('click','.submitBtn').on('click','.submitBtn',function(e){
-				msgData.message[0].component.payload.sliderView=false;
-				if(emojiValue=="5"){
-					var messageTodisplay=msgData.message[0].component.payload.messageTodisplay
-					chatInitialize.renderMessage(msgData);
-				  chatInitialize.sendMessage($('.chatInputBox').text(emojiValue +" :"+ messageTodisplay),"Rating"+': '+ emojiValue +" and "+ messageTodisplay);
-				}else if($(".suggestionInput").val()==""){
-					chatInitialize.renderMessage(msgData);
-					chatInitialize.sendMessage($('.chatInputBox').text(emojiValue),emojiValue);
-				}else{
-					var messageDisplay=$(".suggestionInput").val();
-					chatInitialize.renderMessage(msgData);
-                    chatInitialize.sendMessage($('.chatInputBox').text(emojiValue +" :"+ messageDisplay),emojiValue +" :"+ messageDisplay);
-				}
-				bottomSliderAction("hide");
-				msgData.message[0].component.payload.sliderView=true;
-		  });
+		//     }else{
+		// 		if($(".submitButton")){
+		// 			$(".submitButton").remove();
+		// 		}
+		// 		if($(".ratingStar").length > 0){
+		// 			$(".ratingStar").remove();
+		// 		}
+		// 		var messageTodisplay=msgData.message[0].component.payload.messageTodisplay;
+		// 		$(".suggestionsMainComponent").remove();
+		// 		$(".kore-action-sheet").find(".emojiComponent").append('<div class="ratingStar">'+messageTodisplay+'</div><div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>')
+		// 	}
+		// 	if(sliderValue===false){
+		// 		chatInitialize.sendMessage($('.chatInputBox').text(emojiValue),emojiValue);
+		// 	}
+		// 	$(".emojiComponent").off('click','.submitBtn').on('click','.submitBtn',function(e){
+		// 		msgData.message[0].component.payload.sliderView=false;
+		// 		if(emojiValue=="5"){
+		// 			var messageTodisplay=msgData.message[0].component.payload.messageTodisplay
+		// 			chatInitialize.renderMessage(msgData);
+		// 		  chatInitialize.sendMessage($('.chatInputBox').text(emojiValue +" :"+ messageTodisplay),"Rating"+': '+ emojiValue +" and "+ messageTodisplay);
+		// 		}else if($(".suggestionInput").val()==""){
+		// 			chatInitialize.renderMessage(msgData);
+		// 			chatInitialize.sendMessage($('.chatInputBox').text(emojiValue),emojiValue);
+		// 		}else{
+		// 			var messageDisplay=$(".suggestionInput").val();
+		// 			chatInitialize.renderMessage(msgData);
+        //             chatInitialize.sendMessage($('.chatInputBox').text(emojiValue +" :"+ messageDisplay),emojiValue +" :"+ messageDisplay);
+		// 		}
+		// 		bottomSliderAction("hide");
+		// 		msgData.message[0].component.payload.sliderView=true;
+		//   });
 		
-		});
-		$(messageHtml).find(".buttonTmplContent .emojiComponent .close-btn").click(function(e){
-			bottomSliderAction("hide");
+		// });
+		// $(messageHtml).find(".buttonTmplContent .emojiComponent .close-btn").click(function(e){
+		// 	bottomSliderAction("hide");
 			
-			e.stopPropagation();
-		});
+		// 	e.stopPropagation();
+		// });
 	
 	}; 
-	    customTemplate.prototype.suggestionComponent=function(){
-            return '<div class="suggestionsMainComponent">\
-	<div class="suggestionsHeading">What can be improved?</div>\
-	<div class="suggestionBox">\
-	<textarea type="text" class="suggestionInput" placeholder="Add Suggestions"></textarea></div>\
-	<div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>\
-	</div>'
-		}
+	//     customTemplate.prototype.suggestionComponent=function(){
+    //         return '<div class="suggestionsMainComponent">\
+	// <div class="suggestionsHeading">What can be improved?</div>\
+	// <div class="suggestionBox">\
+	// <textarea type="text" class="suggestionInput" placeholder="Add Suggestions"></textarea></div>\
+	// <div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>\
+	// </div>'
+	// 	}
 	//#todu:raj   
 	// 	this.bottomSliderAction = function(action, appendElement){
 	// 	$(".kore-action-sheet").animate({ height: 'toggle' });

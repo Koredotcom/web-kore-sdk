@@ -18,6 +18,44 @@ class TableChartTemplate {
         }
     }
     bindEvents() {
+        let me: any = this;
+        let $ = me.cwInstance.$;
+        setTimeout(() => {
+            const acc = document.getElementsByClassName('accordionRow');
+            for (var i = 0; i < acc.length; i++) {
+                let accordian: any = acc[i];
+                accordian.onclick = function (e: any) {
+                    let selectedAcc = e.currentTarget;
+                    selectedAcc.classList.toggle('open');
+                };
+            }
+            const showFullTableModal = document.getElementsByClassName('showMore');
+            for (var i = 0; i < showFullTableModal.length; i++) {
+                let element: any = showFullTableModal[i];
+                element.onclick = function (e: any) {
+                    let selectedTarget = e.currentTarget;
+                    const parentli = selectedTarget.parentElement;
+                    const tableChartDiv =  $(parentli).closest('.tableChart');
+                    $('#dialog').empty();
+                    $('#dialog').html($(parentli).find('.tablechartDiv').html());
+                    $('.hello').clone().appendTo('.goodbye');
+                    const modal: any = document.getElementById('myPreviewModal');
+                    $('.largePreviewContent').empty();
+                    // $(".largePreviewContent").html($(parentli).find('.tablechartDiv').html());
+                    console.log($(parentli).find('.tablechartDiv'));
+
+                   $('.tablechartDiv').clone().appendTo('.largePreviewContent');
+                    modal.style.display = 'block';
+                    // Get the <span> element that closes the modal
+                    const span: any = document.getElementsByClassName('closeElePreview')[0];
+                    // When the user clicks on <span> (x), close the modal
+                    span.onclick = function () {
+                        modal.style.display = 'none';
+                        $('.largePreviewContent').removeClass('addheight');
+                    };
+                };
+            }
+        }, 350);
     }
     getTemplateString() {
         var tableChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \

@@ -12,12 +12,140 @@ class AdvancedMultiSelectTemplate {
                 'msgData': msgData,
                 'helpers': helpersObj.helpers
             });
-            me.bindEvents();
+            me.bindEvents(me.messageHtml);
             return me.messageHtml;
         }
     }
-    bindEvents() {
-    
+    bindEvents(messageHtml: any) {
+        let me: any = this;
+        let chatWindowInstance = me.cwInstance;
+        let $ = me.cwInstance.$;
+        const _chatContainer = chatWindowInstance.config.chatContainer;
+        $(messageHtml).off('click', '.singleSelect').on('click', '.singleSelect', function (e:any) {
+            var parentContainer = $(e.currentTarget).closest('.listTmplContentBox');
+            var allGroups = $(parentContainer).find('.collectionDiv');
+            var allcheckboxs = $(parentContainer).find('.checkbox input');
+            $(allGroups).removeClass('selected');
+            var selectedGroup = $(e.currentTarget).closest('.collectionDiv');
+            $(selectedGroup).addClass("selected");
+            var groupSelectInput = $(selectedGroup).find('.groupMultiSelect input');
+            if (allGroups) {
+                if (allGroups && allGroups.length) {
+                    for (let i = 0; i < allGroups.length; i++) {
+                        if (allGroups && !($(allGroups[i]).hasClass('selected'))) {
+                            var allGroupItems = $(allGroups[i]).find('.checkbox input');
+                            for (let j = 0; j < allGroupItems.length; j++) {
+                                $(allGroupItems[j]).prop("checked", false);
+                            }
+                        }
+                    }
+                }
+            }
+            if (selectedGroup && selectedGroup[0]) {
+                var allChecked = true;
+                var selectedGroupItems = $(selectedGroup).find('.checkbox.singleSelect input');
+                if (selectedGroupItems && selectedGroupItems.length) {
+                    for (let i = 0; i < selectedGroupItems.length; i++) {
+                        if (!($(selectedGroupItems[i]).prop("checked"))) {
+                            allChecked = false;
+                        }
+                    }
+                }
+                if (allChecked) {
+                    $(groupSelectInput).prop("checked", true);
+                } else {
+                    $(groupSelectInput).prop("checked", false);
+                }
+            }
+            var showDoneButton = false;
+            var doneButton = $(parentContainer).find('.multiCheckboxBtn');
+            if (allcheckboxs && allcheckboxs.length) {
+                for (let i = 0; i < allcheckboxs.length; i++) {
+                    if ($(allcheckboxs[i]).prop("checked")) {
+                        showDoneButton = true;
+                    }
+                }
+            }
+            if (showDoneButton) {
+                $(doneButton).removeClass('hide');
+            } else {
+                $(doneButton).addClass('hide');
+            }
+        });
+        $(messageHtml).off('click', '.viewMoreGroups').on('click', '.viewMoreGroups', function (e:any) {
+            var parentContainer = $(e.currentTarget).closest('.listTmplContentBox')
+            var allGroups = $(parentContainer).find('.collectionDiv');
+            $(allGroups).removeClass('hide');
+            $(".viewMoreContainer").addClass('hide');
+        });
+        $(messageHtml).off('click', '.groupMultiSelect').on('click', '.groupMultiSelect', function (e:any) {
+            var clickedGroup = $(e.currentTarget).find('input');
+            var clickedGroupStatus = $(clickedGroup[0]).prop('checked');
+            var selectedGroup = $(e.currentTarget).closest('.collectionDiv');
+            var selectedGroupItems = $(selectedGroup).find('.checkbox input');
+            var parentContainer = $(e.currentTarget).closest('.listTmplContentBox')
+            var allcheckboxs = $(parentContainer).find('.checkbox input');
+            if (allcheckboxs && allcheckboxs.length) {
+                for (let i = 0; i < allcheckboxs.length; i++) {
+                    $(allcheckboxs[i]).prop("checked", false);
+                }
+            }
+            if (clickedGroupStatus) {
+                if (selectedGroupItems && selectedGroupItems.length) {
+                    for (let i = 0; i < selectedGroupItems.length; i++) {
+                        $(selectedGroupItems[i]).prop("checked", true);
+                    }
+                }
+            } else {
+                if (selectedGroupItems && selectedGroupItems.length) {
+                    for (let i = 0; i < selectedGroupItems.length; i++) {
+                        $(selectedGroupItems[i]).prop("checked", false);
+                    }
+                }
+            }
+            var showDoneButton = false;
+            var doneButton = $(parentContainer).find('.multiCheckboxBtn');
+            if (allcheckboxs && allcheckboxs.length) {
+                for (let i = 0; i < allcheckboxs.length; i++) {
+                    if ($(allcheckboxs[i]).prop("checked")) {
+                        showDoneButton = true;
+                    }
+                }
+            }
+            if (showDoneButton) {
+                $(doneButton).removeClass('hide');
+            } else {
+                $(doneButton).addClass('hide');
+            }
+        });
+        $(messageHtml).find(".multiCheckboxBtn").on('click', function (e:any) {
+            let msgData : any;
+            if($(messageHtml).data().tmplItem && $(messageHtml).data().tmplItem.data && $(messageHtml).data().tmplItem.data.msgData){
+                msgData =  $(messageHtml).data().tmplItem.data.msgData
+            }else{
+                msgData = $(messageHtml).data();
+            } 
+            if (msgData.message[0].component.payload.sliderView === true) {
+                msgData.message[0].component.payload.sliderView = false;
+                chatWindowInstance.renderMessage(msgData);
+                // bottomSliderAction("hide");
+            }
+            msgData.message[0].component.payload.sliderView = false;
+            var checkboxSelection = $(e.currentTarget.parentElement).find('.checkInput:checked');
+            var selectedValue = [];
+            var toShowText = [];
+            for (var i = 0; i < checkboxSelection.length; i++) {
+                selectedValue.push($(checkboxSelection[i]).attr('value'));
+                toShowText.push($(checkboxSelection[i]).attr('text'));
+            }
+            $('.chatInputBox').text('Here are the selected items ' + ': ' + selectedValue.toString());
+
+            chatWindowInstance.sendMessage($('.chatInputBox'), 'Here are the selected items ' + ': ' + toShowText.toString());
+            $(messageHtml).find(".multiCheckboxBtn").hide();
+            $(messageHtml).find(".advancedMultiSelectScroll").css({ "pointer-events": "none" });
+            $(messageHtml).find(".advancedMultiSelectScroll").css({ "overflow": "hidden" });
+
+        })
     }
     getTemplateString() {
         var advancedMultiSelect = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
