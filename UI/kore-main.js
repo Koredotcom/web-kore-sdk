@@ -88,7 +88,7 @@
         $('#appLoadingIndicator').hide();
     }
 
-    $(document).ready(function () {
+    //$(document).ready(function () {
         // var pageTitle = getPageTitle();
         // var pagesVisited = localStorage.getItem("pagesVisited");
         // var pagesVisitedArray = [];
@@ -271,14 +271,18 @@
             showAppLoader();
         }else{
             var koreBot = koreBotChat();
-            koreBot.show(chatConfig);
-            $('.kore-chat-window .minimized').trigger('click');
-            $('.kore-chat-window .minimized').click(function () {
-                koreBot.show(chatConfig);
-            });
+            // koreBot.show(chatConfig);
+            // $('.kore-chat-window .minimized').trigger('click');
+            // $('.kore-chat-window .minimized').click(function () {
+            //     koreBot.show(chatConfig);
+            // });
             //var uuId = koreGenerateUUID();
             //AgentDesktop(uuId);
         }
-    });
+        window.KoreSDK.show=function(chatConfig){
+            koreBot.show(chatConfig);
+        }
+        
+    //});
 
 })(jQuery || (window.KoreSDK && window.KoreSDK.dependencies && window.KoreSDK.dependencies.jQuery));

@@ -53,4 +53,8 @@ function getURLParameterByName(name, url = window.location.href) {
         return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 loadStyle(styleURL);
-loadScript(scriptURL);
+loadScript(scriptURL,function OnLoadScript(){
+    KoreSDK.chatConfig.minimizeMode=false;
+    KoreSDK.show(KoreSDK.chatConfig);
+
+});

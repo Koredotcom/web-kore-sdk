@@ -4487,6 +4487,9 @@
             /*************************************    TTS code start here         **************************************/
 
             chatWindow.prototype.speakWithWebAPI= function(_txtToSpeak) {
+                if(!_txtToSpeak){
+                    return false;
+                }
                 if('speechSynthesis' in window){
                     window.speechSynthesis.cancel();
                     // Create a new instance of SpeechSynthesisUtterance.
