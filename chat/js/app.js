@@ -12,7 +12,7 @@ if(location.hostname!=='localhost'){
     //https://bots.kore.ai/api/websdkjs?apiKey=1234'
     //by reading from /var/www/websdk/UI/dist/kore-ai-sdk.min.js
     //load script from API to inject window.JWT_OBJ
-    scriptURL=location.hostname+'/api/websdkjs?apiKey='+API_KEY;
+    scriptURL="//"+location.hostname+'/api/websdkjs?apiKey='+API_KEY;
 }else{
     //DEV ENV
     //FOLLOWING LINE ONLY FOR DEV TESTING
