@@ -53,8 +53,6 @@
             alert("Something went wrong. Please try again.." + error);
         }
 
-    } else {
-        alert("Something went wrong. Please try again")
     }
 
     
