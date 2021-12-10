@@ -2,7 +2,7 @@
 //http://localhost:8081/chat/?API_KEY=1234
 //https://qa-bots.kore.ai/websdk/chat/?API_KEY=1234
 
-var API_KEY=getURLParameterByName('API_KEY');
+var API_KEY=getURLParameterByName('apiKey');
 var styleURL='../UI/dist/kore-ai-sdk.min.css';
 var scriptURL='../UI/dist/kore-ai-sdk.min.js';
 
