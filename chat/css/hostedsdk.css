@@ -46,7 +46,7 @@
     cursor: pointer;
 }
 .kore-chat-window ul.chat-container li.fromCurrentUser .messageBubble{
-    background-color: #0D6EFD !important !important
+    background-color: #0D6EFD !important;
 }
 .kore-chat-window ul.chat-container li.fromOtherUsers .messageBubble{
     background-color: #EFF0F1 !important
