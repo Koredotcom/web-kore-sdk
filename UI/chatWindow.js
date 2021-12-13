@@ -1379,12 +1379,18 @@
                     return;
                 });
                 _chatContainer.off('click', '.notRecordingMicrophone').on('click', '.notRecordingMicrophone', function (event) {
-                    if (ttsAudioSource) {
-                        ttsAudioSource.stop();
+                   
+                    if ('webkitSpeechRecognition' in window && isChrome()) {
+                        if (ttsAudioSource) {
+                            ttsAudioSource.stop();
+                        }
+                        if (me.config.isSpeechEnabled) {
+                            getSIDToken();
+                        }  
+                    }else{
+                        window.alert('Your browser does not support Speech recognition');
                     }
-                    if (me.config.isSpeechEnabled) {
-                        getSIDToken();
-                    }
+                  
                 });
                 _chatContainer.off('click', '.recordingMicrophone').on('click', '.recordingMicrophone', function (event) {
                     stop();
@@ -4113,6 +4119,7 @@
                 };
 
                 recognition.onerror = function (event) {
+                    window.alert('Your browser does not support speech recognition');
                     console.log(event.error);
                     $('.recordingMicrophone').trigger('click');
                     $('.recordingMicrophone').css('display', 'none');
