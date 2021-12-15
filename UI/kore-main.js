@@ -264,22 +264,29 @@
             chatConfig.tasktotrigger = hashObj.tasktotrigger;
         }
 
-        if(hashObj && hashObj.channel && hashObj.channel==='unblu'){
-            injectUnBluTags();
-            showAppLoader();
+        if(hashObj && hashObj.botStatus && hashObj.botStatus==="published" ){
+            if(hashObj && hashObj.channel && hashObj.channel==='unblu'){
+                injectUnBluTags();
+                showAppLoader();
+            }else{
+                var koreBot = koreBotChat();
+                // koreBot.show(chatConfig);
+                // $('.kore-chat-window .minimized').trigger('click');
+                // $('.kore-chat-window .minimized').click(function () {
+                //     koreBot.show(chatConfig);
+                // });
+                //var uuId = koreGenerateUUID();
+                //AgentDesktop(uuId);
+            }
+            window.KoreSDK.show=function(chatConfig){
+                koreBot.show(chatConfig);
+            }
         }else{
-            var koreBot = koreBotChat();
-            // koreBot.show(chatConfig);
-            // $('.kore-chat-window .minimized').trigger('click');
-            // $('.kore-chat-window .minimized').click(function () {
-            //     koreBot.show(chatConfig);
-            // });
-            //var uuId = koreGenerateUUID();
-            //AgentDesktop(uuId);
+            //hashObj.botStatus==="configured" 
+            window.alert("Bot is not published.Plese publish and try again")
         }
-        window.KoreSDK.show=function(chatConfig){
-            koreBot.show(chatConfig);
-        }
+
+        
         
     //});
 
