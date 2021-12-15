@@ -283,7 +283,7 @@
             }
         }else{
             //hashObj.botStatus==="configured" 
-            window.alert("Bot is not published.Plese publish and try again")
+            window.alert("Bot is not published.Please publish and try again")
         }
 
         
