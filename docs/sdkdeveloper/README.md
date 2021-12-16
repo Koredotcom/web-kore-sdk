@@ -23,14 +23,14 @@ Run
 npm run serve
 ```
 
-Build
+## 💡 Build
 
 ```bash
 npm run build (default)
 npm run build-umd (for umd build)
 ```
 
-Build
+## 💡 ESLint
 
 ```bash
 ./node_modules/.bin/eslint src/index.js 
