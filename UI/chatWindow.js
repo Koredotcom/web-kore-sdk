@@ -2279,7 +2279,7 @@
                         setTimeout(function () {
                             $('.carousel:last').addClass("carousel" + carouselTemplateCount);
                             var count = $(".carousel" + carouselTemplateCount).children().length;
-                            if (count > 1) {
+                            if (count >= 1) {
                                 var carouselOneByOne = new PureJSCarousel({
                                     carousel: '.carousel' + carouselTemplateCount,
                                     slide: '.slide',
