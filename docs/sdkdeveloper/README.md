@@ -30,4 +30,10 @@ npm run build (default)
 npm run build-umd (for umd build)
 ```
 
+Build
+
+```bash
+./node_modules/.bin/eslint src/index.js 
+
+```
 
