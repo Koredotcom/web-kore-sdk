@@ -1,10 +1,11 @@
 const path=require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 let config= {
     mode:"none",//none || development || production
-    entry:'./src/index.js',
+    entry:'./src/index.ts',
     module:{
         rules:[
           {
@@ -72,8 +73,15 @@ let config= {
             jQuery: 'jquery',
             'window.$': 'jquery',
             'window.jQuery': 'jquery',
-          })
-        // new HtmlWebpackPlugin()   
+          }),
+        new ESLintPlugin({
+          files: 'src/**/*.ts,src/**/*.js',
+          failOnError: true,
+          failOnWarning: true,
+          //exclude:['src/components/chatwindow/chatWindow.js']
+        })
+        // new HtmlWebpackPlugin() 
+          
     ],
     resolve:{
         extensions:['.js','.ts']
@@ -105,7 +113,7 @@ let config= {
 module.exports= function(env,argv){
     
     console.log(`ENV:${JSON.stringify(env)} \nARGV:${JSON.stringify(argv)}`);
-    config.entry='./src/index.js';
+    config.entry='./src/index.ts';
 
     if (env.target_module === 'esm') {
       config.output.filename = 'kore-web-sdk.esm.browser.js';
