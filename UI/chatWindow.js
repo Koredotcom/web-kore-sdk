@@ -976,7 +976,9 @@
                 /* Handling expand and collapse chat-container height */
             };
             window.onresize = function(event) {
-                chatInitialize.setCollapsedModeStyles();
+                if(event.target===window){
+                    chatInitialize.setCollapsedModeStyles();
+                }
             };
             chatWindow.prototype.handleImagePreview= function() {
                 var modal = document.getElementById('myModal');
