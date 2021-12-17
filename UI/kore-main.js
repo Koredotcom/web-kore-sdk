@@ -264,7 +264,9 @@
             chatConfig.tasktotrigger = hashObj.tasktotrigger;
         }
 
-        if(hashObj && hashObj.botStatus && hashObj.botStatus==="published" ){
+        if(hashObj && hashObj.errorObj){
+          window.alert(hashObj.errorObj.message)
+        }else{
             if(hashObj && hashObj.channel && hashObj.channel==='unblu'){
                 injectUnBluTags();
                 showAppLoader();
@@ -280,10 +282,7 @@
             }
             window.KoreSDK.show=function(chatConfig){
                 koreBot.show(chatConfig);
-            }
-        }else{
-            //hashObj.botStatus==="configured" 
-            window.alert("Bot is not published.Please publish and try again")
+            }           
         }
 
         
