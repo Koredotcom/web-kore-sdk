@@ -2406,379 +2406,381 @@ chatWindow.prototype.renderMessage = function (msgData) {
     //     extension,
     //   });
     //} 
-    else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'piechart') {
-      messageHtml = $(me.getChatTemplate('pieChartTemplate')).tmpl({
-        msgData,
-        helpers,
-        extension,
-      });
-      // storing the type of the graph to be displayed.
-      if (me.config.graphLib === 'google') {
-        setTimeout(() => {
-          google.charts.load('current', { packages: ['corechart'] });
-          google.charts.setOnLoadCallback(drawChart);
-          function drawChart() {
-            const data = new google.visualization.DataTable();
-            data.addColumn('string', 'Task');
-            data.addColumn('number', 'Hours per Day');
-            if (msgData.message[0].component.payload.elements && msgData.message[0].component.payload.elements[0].displayValue) {
-              data.addColumn({ type: 'string', role: 'tooltip' });
-            }
-            const pieChartData = [];
-            const piechartElements = msgData.message[0].component.payload.elements;
-            for (let i = 0; i < piechartElements.length; i++) {
-              const arr = [`${piechartElements[i].title} \n${piechartElements[i].value}`];
-              arr.push(parseFloat(piechartElements[i].value));
-              if (piechartElements[i].displayValue) {
-                arr.push(piechartElements[i].displayValue);
-              }
-              pieChartData.push(arr);
-            }
-            data.addRows(pieChartData);
-            const options = {
-              chartArea: {
-                left: '3%',
-                top: '3%',
-                height: '94%',
-                width: '94%',
-              },
-              pieSliceTextStyle: {},
-              colors: window.chartColors,
-              legend: {
-                textStyle: {
-                  color: '#b3bac8',
-                },
-              },
-            };
+    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'piechart') {
+    //   messageHtml = $(me.getChatTemplate('pieChartTemplate')).tmpl({
+    //     msgData,
+    //     helpers,
+    //     extension,
+    //   });
+    //   // storing the type of the graph to be displayed.
+    //   if (me.config.graphLib === 'google') {
+    //     setTimeout(() => {
+    //       google.charts.load('current', { packages: ['corechart'] });
+    //       google.charts.setOnLoadCallback(drawChart);
+    //       function drawChart() {
+    //         const data = new google.visualization.DataTable();
+    //         data.addColumn('string', 'Task');
+    //         data.addColumn('number', 'Hours per Day');
+    //         if (msgData.message[0].component.payload.elements && msgData.message[0].component.payload.elements[0].displayValue) {
+    //           data.addColumn({ type: 'string', role: 'tooltip' });
+    //         }
+    //         const pieChartData = [];
+    //         const piechartElements = msgData.message[0].component.payload.elements;
+    //         for (let i = 0; i < piechartElements.length; i++) {
+    //           const arr = [`${piechartElements[i].title} \n${piechartElements[i].value}`];
+    //           arr.push(parseFloat(piechartElements[i].value));
+    //           if (piechartElements[i].displayValue) {
+    //             arr.push(piechartElements[i].displayValue);
+    //           }
+    //           pieChartData.push(arr);
+    //         }
+    //         data.addRows(pieChartData);
+    //         const options = {
+    //           chartArea: {
+    //             left: '3%',
+    //             top: '3%',
+    //             height: '94%',
+    //             width: '94%',
+    //           },
+    //           pieSliceTextStyle: {},
+    //           colors: window.chartColors,
+    //           legend: {
+    //             textStyle: {
+    //               color: '#b3bac8',
+    //             },
+    //           },
+    //         };
 
-            if (piechartElements.length === 1) { // if only element, then deault donut chart
-              options.pieHole = 0.5;
-              options.pieSliceTextStyle.color = 'black';
-            }
-            if (msgData.message[0].component.payload.pie_type) { // chart based on user requireent
-              if (msgData.message[0].component.payload.pie_type === 'donut') {
-                options.pieHole = 0.6;
-                options.pieSliceTextStyle.color = 'black';
-                options.legend.position = 'none';
-              } else if (msgData.message[0].component.payload.pie_type === 'donut_legend') {
-                options.pieHole = 0.6;
-                options.pieSliceTextStyle.color = 'black';
-              }
-            }
-            const _piechartObj = {
-              id: `piechart${msgData.messageId}`, data, options, type: 'piechart',
-            };
-            available_charts.push(_piechartObj);
-            const container = document.getElementById(`piechart${msgData.messageId}`);
-            const chart = new google.visualization.PieChart(container);
-            chart.draw(data, options);
-            // window.PieChartCount = window.PieChartCount + 1;
-          }
-        }, 150);
-      } else if (me.graphLibGlob === 'd3') {
-        if (msgData.message[0].component.payload.pie_type === undefined) {
-          msgData.message[0].component.payload.pie_type = 'regular';
-        }
-        if (msgData.message[0].component.payload.pie_type) {
-          // define data
-          dimens = {};
-          dimens.width = 300;
-          dimens.height = 200;
-          dimens.legendRectSize = 10;
-          dimens.legendSpacing = 2.4;
-          if (msgData.message[0].component.payload.pie_type === 'regular') {
-            setTimeout(() => {
-              const _piechartObj = { id: `piechart${msgData.messageId}`, data: msgData, type: 'regular' };
-              available_charts.push(_piechartObj);
-              KoreGraphAdapter.drawD3Pie(msgData, dimens, `#piechart${msgData.messageId}`, 12);
-              // window.PieChartCount = window.PieChartCount + 1;
-            }, 150);
-          } else if (msgData.message[0].component.payload.pie_type === 'donut') {
-            setTimeout(() => {
-              const _piechartObj = { id: `piechart${msgData.messageId}`, data: msgData, type: 'donut' };
-              available_charts.push(_piechartObj);
-              KoreGraphAdapter.drawD3PieDonut(msgData, dimens, `#piechart${msgData.messageId}`, 12, 'donut');
-              // window.PieChartCount = window.PieChartCount + 1;
-            }, 150);
-          } else if (msgData.message[0].component.payload.pie_type === 'donut_legend') {
-            setTimeout(() => {
-              const _piechartObj = { id: `piechart${msgData.messageId}`, data: msgData, type: 'donut_legend' };
-              available_charts.push(_piechartObj);
-              KoreGraphAdapter.drawD3PieDonut(msgData, dimens, `#piechart${msgData.messageId}`, 12, 'donut_legend');
-              // window.PieChartCount = window.PieChartCount + 1;
-            }, 150);
-          }
-        }
-      }
-      setTimeout(() => {
-        $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
-        handleChartOnClick();
-      }, 200);
-    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'barchart') {
-      messageHtml = $(me.getChatTemplate('barchartTemplate')).tmpl({
-        msgData,
-        helpers,
-        extension,
-      });
-      if (me.graphLibGlob === 'google') {
-        setTimeout(() => {
-          google.charts.load('current', { packages: ['corechart', 'bar'] });
-          google.charts.setOnLoadCallback(drawChart);
-          function drawChart() {
-            let customToolTips = false;
-            const data = new google.visualization.DataTable();
-            data.addColumn('string', 'y');
-            // adding legend labels
-            for (var i = 0; i < msgData.message[0].component.payload.elements.length; i++) {
-              const currEle = msgData.message[0].component.payload.elements[i];
-              data.addColumn('number', currEle.title);
-              // checking for display values ( custom tooltips)
-              if (currEle.displayValues && currEle.displayValues.length) {
-                data.addColumn({ type: 'string', role: 'tooltip' });
-                customToolTips = true;
-              }
-            }
+    //         if (piechartElements.length === 1) { // if only element, then deault donut chart
+    //           options.pieHole = 0.5;
+    //           options.pieSliceTextStyle.color = 'black';
+    //         }
+    //         if (msgData.message[0].component.payload.pie_type) { // chart based on user requireent
+    //           if (msgData.message[0].component.payload.pie_type === 'donut') {
+    //             options.pieHole = 0.6;
+    //             options.pieSliceTextStyle.color = 'black';
+    //             options.legend.position = 'none';
+    //           } else if (msgData.message[0].component.payload.pie_type === 'donut_legend') {
+    //             options.pieHole = 0.6;
+    //             options.pieSliceTextStyle.color = 'black';
+    //           }
+    //         }
+    //         const _piechartObj = {
+    //           id: `piechart${msgData.messageId}`, data, options, type: 'piechart',
+    //         };
+    //         available_charts.push(_piechartObj);
+    //         const container = document.getElementById(`piechart${msgData.messageId}`);
+    //         const chart = new google.visualization.PieChart(container);
+    //         chart.draw(data, options);
+    //         // window.PieChartCount = window.PieChartCount + 1;
+    //       }
+    //     }, 150);
+    //   } else if (me.graphLibGlob === 'd3') {
+    //     if (msgData.message[0].component.payload.pie_type === undefined) {
+    //       msgData.message[0].component.payload.pie_type = 'regular';
+    //     }
+    //     if (msgData.message[0].component.payload.pie_type) {
+    //       // define data
+    //       dimens = {};
+    //       dimens.width = 300;
+    //       dimens.height = 200;
+    //       dimens.legendRectSize = 10;
+    //       dimens.legendSpacing = 2.4;
+    //       if (msgData.message[0].component.payload.pie_type === 'regular') {
+    //         setTimeout(() => {
+    //           const _piechartObj = { id: `piechart${msgData.messageId}`, data: msgData, type: 'regular' };
+    //           available_charts.push(_piechartObj);
+    //           KoreGraphAdapter.drawD3Pie(msgData, dimens, `#piechart${msgData.messageId}`, 12);
+    //           // window.PieChartCount = window.PieChartCount + 1;
+    //         }, 150);
+    //       } else if (msgData.message[0].component.payload.pie_type === 'donut') {
+    //         setTimeout(() => {
+    //           const _piechartObj = { id: `piechart${msgData.messageId}`, data: msgData, type: 'donut' };
+    //           available_charts.push(_piechartObj);
+    //           KoreGraphAdapter.drawD3PieDonut(msgData, dimens, `#piechart${msgData.messageId}`, 12, 'donut');
+    //           // window.PieChartCount = window.PieChartCount + 1;
+    //         }, 150);
+    //       } else if (msgData.message[0].component.payload.pie_type === 'donut_legend') {
+    //         setTimeout(() => {
+    //           const _piechartObj = { id: `piechart${msgData.messageId}`, data: msgData, type: 'donut_legend' };
+    //           available_charts.push(_piechartObj);
+    //           KoreGraphAdapter.drawD3PieDonut(msgData, dimens, `#piechart${msgData.messageId}`, 12, 'donut_legend');
+    //           // window.PieChartCount = window.PieChartCount + 1;
+    //         }, 150);
+    //       }
+    //     }
+    //   }
+    //   setTimeout(() => {
+    //     $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
+    //     handleChartOnClick();
+    //   }, 200);
+    // }
+    //  else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'barchart') {
+    //   messageHtml = $(me.getChatTemplate('barchartTemplate')).tmpl({
+    //     msgData,
+    //     helpers,
+    //     extension,
+    //   });
+    //   if (me.graphLibGlob === 'google') {
+    //     setTimeout(() => {
+    //       google.charts.load('current', { packages: ['corechart', 'bar'] });
+    //       google.charts.setOnLoadCallback(drawChart);
+    //       function drawChart() {
+    //         let customToolTips = false;
+    //         const data = new google.visualization.DataTable();
+    //         data.addColumn('string', 'y');
+    //         // adding legend labels
+    //         for (var i = 0; i < msgData.message[0].component.payload.elements.length; i++) {
+    //           const currEle = msgData.message[0].component.payload.elements[i];
+    //           data.addColumn('number', currEle.title);
+    //           // checking for display values ( custom tooltips)
+    //           if (currEle.displayValues && currEle.displayValues.length) {
+    //             data.addColumn({ type: 'string', role: 'tooltip' });
+    //             customToolTips = true;
+    //           }
+    //         }
 
-            // filling rows
-            const totalLines = msgData.message[0].component.payload.elements.length;
-            for (var i = 0; i < msgData.message[0].component.payload.X_axis.length; i++) {
-              const arr = [];
-              arr.push(msgData.message[0].component.payload.X_axis[i]);
-              for (let j = 0; j < totalLines; j++) {
-                arr.push(parseFloat(msgData.message[0].component.payload.elements[j].values[i]));
-                if (customToolTips) {
-                  arr.push(msgData.message[0].component.payload.elements[j].displayValues[i]);
-                }
-              }
-              data.addRow(arr);
-            }
-            const options = {
-              chartArea: {
-                height: '70%',
-                width: '80%',
-              },
-              legend: {
-                position: 'top',
-                alignment: 'end',
-                maxLines: 3,
-                textStyle: {
-                  color: '#b3bac8',
-                },
-              },
-              hAxis: {
-                gridlines: {
-                  color: 'transparent',
-                },
-                textStyle: {
-                  color: '#b3bac8',
-                },
-              },
-              vAxis: {
-                gridlines: {
-                  color: 'transparent',
-                },
-                textStyle: {
-                  color: '#b3bac8',
-                },
-                baselineColor: 'transparent',
-              },
-              animation: {
-                duration: 500,
-                easing: 'out',
-                startup: true,
-              },
-              bar: { groupWidth: '25%' },
-              colors: window.chartColors,
-            };
+    //         // filling rows
+    //         const totalLines = msgData.message[0].component.payload.elements.length;
+    //         for (var i = 0; i < msgData.message[0].component.payload.X_axis.length; i++) {
+    //           const arr = [];
+    //           arr.push(msgData.message[0].component.payload.X_axis[i]);
+    //           for (let j = 0; j < totalLines; j++) {
+    //             arr.push(parseFloat(msgData.message[0].component.payload.elements[j].values[i]));
+    //             if (customToolTips) {
+    //               arr.push(msgData.message[0].component.payload.elements[j].displayValues[i]);
+    //             }
+    //           }
+    //           data.addRow(arr);
+    //         }
+    //         const options = {
+    //           chartArea: {
+    //             height: '70%',
+    //             width: '80%',
+    //           },
+    //           legend: {
+    //             position: 'top',
+    //             alignment: 'end',
+    //             maxLines: 3,
+    //             textStyle: {
+    //               color: '#b3bac8',
+    //             },
+    //           },
+    //           hAxis: {
+    //             gridlines: {
+    //               color: 'transparent',
+    //             },
+    //             textStyle: {
+    //               color: '#b3bac8',
+    //             },
+    //           },
+    //           vAxis: {
+    //             gridlines: {
+    //               color: 'transparent',
+    //             },
+    //             textStyle: {
+    //               color: '#b3bac8',
+    //             },
+    //             baselineColor: 'transparent',
+    //           },
+    //           animation: {
+    //             duration: 500,
+    //             easing: 'out',
+    //             startup: true,
+    //           },
+    //           bar: { groupWidth: '25%' },
+    //           colors: window.chartColors,
+    //         };
 
-            // horizontal chart, then increase size of bard
-            if (msgData.message[0].component.payload.direction !== 'vertical') {
-              options.bar.groupWidth = '45%';
-              options.hAxis.baselineColor = '#b3bac8';
-            }
-            // stacked chart
-            if (msgData.message[0].component.payload.stacked) {
-              options.isStacked = true;
-              options.bar.groupWidth = '25%';
-            }
-            const _barchartObj = {
-              id: `barchart${msgData.messageId}`, direction: msgData.message[0].component.payload.direction, data, options, type: 'barchart',
-            };
-            available_charts.push(_barchartObj);
-            const container = document.getElementById(`barchart${msgData.messageId}`);
-            let chart = null;
-            if (msgData.message[0].component.payload.direction === 'vertical') {
-              chart = new google.visualization.ColumnChart(container);
-            } else {
-              chart = new google.visualization.BarChart(container);
-            }
-            chart.draw(data, options);
-            // window.barchartCount = window.barchartCount + 1;
-          }
-        }, 150);
-      } else if (me.graphLibGlob === 'd3') {
-        var dimens = {};
-        dimens.outerWidth = 350;
-        dimens.outerHeight = 300;
-        dimens.innerHeight = 200;
-        dimens.legendRectSize = 15;
-        dimens.legendSpacing = 4;
-        if (msgData.message[0].component.payload.direction === undefined) {
-          msgData.message[0].component.payload.direction = 'horizontal';
-        }
-        if (msgData.message[0].component.payload.direction === 'horizontal' && !msgData.message[0].component.payload.stacked) {
-          setTimeout(() => {
-            dimens.innerWidth = 180;
-            const _barchartObj = { id: `Legend_barchart${msgData.messageId}`, data: msgData, type: 'barchart' };
-            available_charts.push(_barchartObj);
-            KoreGraphAdapter.drawD3barHorizontalbarChart(msgData, dimens, `#barchart${msgData.messageId}`, 12);
-            // window.barchartCount = window.barchartCount + 1;
-          }, 250);
-        } else if (msgData.message[0].component.payload.direction === 'vertical' && msgData.message[0].component.payload.stacked) {
-          setTimeout(() => {
-            dimens.outerWidth = 350;
-            dimens.innerWidth = 270;
-            const _barchartObj = { id: `barchart${msgData.messageId}`, data: msgData, type: 'stackedBarchart' };
-            available_charts.push(_barchartObj);
-            KoreGraphAdapter.drawD3barVerticalStackedChart(msgData, dimens, `#barchart${msgData.messageId}`, 12);
-            // window.barchartCount = window.barchartCount + 1;
-          }, 250);
-        } else if (msgData.message[0].component.payload.direction === 'horizontal' && msgData.message[0].component.payload.stacked) {
-          setTimeout(() => {
-            dimens.innerWidth = 180;
-            const _barchartObj = { id: `barchart${msgData.messageId}`, data: msgData, type: 'stackedBarchart' };
-            available_charts.push(_barchartObj);
-            KoreGraphAdapter.drawD3barStackedChart(msgData, dimens, `#barchart${msgData.messageId}`, 12);
-            // window.barchartCount = window.barchartCount + 1;
-          }, 250);
-        } else if (msgData.message[0].component.payload.direction === 'vertical' && !msgData.message[0].component.payload.stacked) {
-          setTimeout(() => {
-            dimens.innerWidth = 240;
-            const _barchartObj = { id: `barchart${msgData.messageId}`, data: msgData, type: 'barchart' };
-            available_charts.push(_barchartObj);
-            KoreGraphAdapter.drawD3barChart(msgData, dimens, `#barchart${msgData.messageId}`, 12);
-            // window.barchartCount = window.barchartCount + 1;
-          }, 250);
-        }
-      }
-      setTimeout(() => {
-        $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
-        handleChartOnClick();
-      }, 300);
-    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'linechart') {
-      messageHtml = $(me.getChatTemplate('linechartTemplate')).tmpl({
-        msgData,
-        helpers,
-        extension,
-      });
-      if (me.graphLibGlob === 'google') {
-        setTimeout(() => {
-          google.charts.load('current', { packages: ['corechart', 'line'] });
-          google.charts.setOnLoadCallback(drawChart);
-          function drawChart() {
-            let customToolTips = false;
-            const data = new google.visualization.DataTable();
-            data.addColumn('string', 'y');
-            // adding legend labels
-            for (var i = 0; i < msgData.message[0].component.payload.elements.length; i++) {
-              const currEle = msgData.message[0].component.payload.elements[i];
-              data.addColumn('number', currEle.title);
-              // checking for display values ( custom tooltips)
-              if (currEle.displayValues && currEle.displayValues.length) {
-                data.addColumn({ type: 'string', role: 'tooltip' });
-                customToolTips = true;
-              }
-            }
+    //         // horizontal chart, then increase size of bard
+    //         if (msgData.message[0].component.payload.direction !== 'vertical') {
+    //           options.bar.groupWidth = '45%';
+    //           options.hAxis.baselineColor = '#b3bac8';
+    //         }
+    //         // stacked chart
+    //         if (msgData.message[0].component.payload.stacked) {
+    //           options.isStacked = true;
+    //           options.bar.groupWidth = '25%';
+    //         }
+    //         const _barchartObj = {
+    //           id: `barchart${msgData.messageId}`, direction: msgData.message[0].component.payload.direction, data, options, type: 'barchart',
+    //         };
+    //         available_charts.push(_barchartObj);
+    //         const container = document.getElementById(`barchart${msgData.messageId}`);
+    //         let chart = null;
+    //         if (msgData.message[0].component.payload.direction === 'vertical') {
+    //           chart = new google.visualization.ColumnChart(container);
+    //         } else {
+    //           chart = new google.visualization.BarChart(container);
+    //         }
+    //         chart.draw(data, options);
+    //         // window.barchartCount = window.barchartCount + 1;
+    //       }
+    //     }, 150);
+    //   } else if (me.graphLibGlob === 'd3') {
+    //     var dimens = {};
+    //     dimens.outerWidth = 350;
+    //     dimens.outerHeight = 300;
+    //     dimens.innerHeight = 200;
+    //     dimens.legendRectSize = 15;
+    //     dimens.legendSpacing = 4;
+    //     if (msgData.message[0].component.payload.direction === undefined) {
+    //       msgData.message[0].component.payload.direction = 'horizontal';
+    //     }
+    //     if (msgData.message[0].component.payload.direction === 'horizontal' && !msgData.message[0].component.payload.stacked) {
+    //       setTimeout(() => {
+    //         dimens.innerWidth = 180;
+    //         const _barchartObj = { id: `Legend_barchart${msgData.messageId}`, data: msgData, type: 'barchart' };
+    //         available_charts.push(_barchartObj);
+    //         KoreGraphAdapter.drawD3barHorizontalbarChart(msgData, dimens, `#barchart${msgData.messageId}`, 12);
+    //         // window.barchartCount = window.barchartCount + 1;
+    //       }, 250);
+    //     } else if (msgData.message[0].component.payload.direction === 'vertical' && msgData.message[0].component.payload.stacked) {
+    //       setTimeout(() => {
+    //         dimens.outerWidth = 350;
+    //         dimens.innerWidth = 270;
+    //         const _barchartObj = { id: `barchart${msgData.messageId}`, data: msgData, type: 'stackedBarchart' };
+    //         available_charts.push(_barchartObj);
+    //         KoreGraphAdapter.drawD3barVerticalStackedChart(msgData, dimens, `#barchart${msgData.messageId}`, 12);
+    //         // window.barchartCount = window.barchartCount + 1;
+    //       }, 250);
+    //     } else if (msgData.message[0].component.payload.direction === 'horizontal' && msgData.message[0].component.payload.stacked) {
+    //       setTimeout(() => {
+    //         dimens.innerWidth = 180;
+    //         const _barchartObj = { id: `barchart${msgData.messageId}`, data: msgData, type: 'stackedBarchart' };
+    //         available_charts.push(_barchartObj);
+    //         KoreGraphAdapter.drawD3barStackedChart(msgData, dimens, `#barchart${msgData.messageId}`, 12);
+    //         // window.barchartCount = window.barchartCount + 1;
+    //       }, 250);
+    //     } else if (msgData.message[0].component.payload.direction === 'vertical' && !msgData.message[0].component.payload.stacked) {
+    //       setTimeout(() => {
+    //         dimens.innerWidth = 240;
+    //         const _barchartObj = { id: `barchart${msgData.messageId}`, data: msgData, type: 'barchart' };
+    //         available_charts.push(_barchartObj);
+    //         KoreGraphAdapter.drawD3barChart(msgData, dimens, `#barchart${msgData.messageId}`, 12);
+    //         // window.barchartCount = window.barchartCount + 1;
+    //       }, 250);
+    //     }
+    //   }
+    //   setTimeout(() => {
+    //     $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
+    //     handleChartOnClick();
+    //   }, 300);
+    // } 
+    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'linechart') {
+    //   messageHtml = $(me.getChatTemplate('linechartTemplate')).tmpl({
+    //     msgData,
+    //     helpers,
+    //     extension,
+    //   });
+    //   if (me.graphLibGlob === 'google') {
+    //     setTimeout(() => {
+    //       google.charts.load('current', { packages: ['corechart', 'line'] });
+    //       google.charts.setOnLoadCallback(drawChart);
+    //       function drawChart() {
+    //         let customToolTips = false;
+    //         const data = new google.visualization.DataTable();
+    //         data.addColumn('string', 'y');
+    //         // adding legend labels
+    //         for (var i = 0; i < msgData.message[0].component.payload.elements.length; i++) {
+    //           const currEle = msgData.message[0].component.payload.elements[i];
+    //           data.addColumn('number', currEle.title);
+    //           // checking for display values ( custom tooltips)
+    //           if (currEle.displayValues && currEle.displayValues.length) {
+    //             data.addColumn({ type: 'string', role: 'tooltip' });
+    //             customToolTips = true;
+    //           }
+    //         }
 
-            // filling rows
-            const totalLines = msgData.message[0].component.payload.elements.length;
-            for (var i = 0; i < msgData.message[0].component.payload.X_axis.length; i++) {
-              const arr = [];
-              arr.push(msgData.message[0].component.payload.X_axis[i]);
-              for (let j = 0; j < totalLines; j++) {
-                arr.push(parseFloat(msgData.message[0].component.payload.elements[j].values[i]));
-                if (customToolTips) {
-                  arr.push(msgData.message[0].component.payload.elements[j].displayValues[i]);
-                }
-              }
-              data.addRow(arr);
-            }
+    //         // filling rows
+    //         const totalLines = msgData.message[0].component.payload.elements.length;
+    //         for (var i = 0; i < msgData.message[0].component.payload.X_axis.length; i++) {
+    //           const arr = [];
+    //           arr.push(msgData.message[0].component.payload.X_axis[i]);
+    //           for (let j = 0; j < totalLines; j++) {
+    //             arr.push(parseFloat(msgData.message[0].component.payload.elements[j].values[i]));
+    //             if (customToolTips) {
+    //               arr.push(msgData.message[0].component.payload.elements[j].displayValues[i]);
+    //             }
+    //           }
+    //           data.addRow(arr);
+    //         }
 
-            const options = {
-              curveType: 'function',
-              chartArea: {
-                height: '70%',
-                width: '80%',
-              },
-              legend: {
-                position: 'top',
-                alignment: 'end',
-                maxLines: 3,
-                textStyle: {
-                  color: '#b3bac8',
-                },
-              },
-              hAxis: {
-                gridlines: {
-                  color: 'transparent',
-                },
-                textStyle: {
-                  color: '#b3bac8',
-                },
-              },
-              vAxis: {
-                gridlines: {
-                  color: 'transparent',
-                },
-                textStyle: {
-                  color: '#b3bac8',
-                },
-                baselineColor: 'transparent',
-              },
-              lineWidth: 3,
-              animation: {
-                duration: 500,
-                easing: 'out',
-                startup: true,
-              },
-              colors: window.chartColors,
-            };
-            const lineChartObj = {
-              id: `linechart${msgData.messageId}`, data, options, type: 'linechart',
-            };
-            available_charts.push(lineChartObj);
-            const container = document.getElementById(`linechart${msgData.messageId}`);
+    //         const options = {
+    //           curveType: 'function',
+    //           chartArea: {
+    //             height: '70%',
+    //             width: '80%',
+    //           },
+    //           legend: {
+    //             position: 'top',
+    //             alignment: 'end',
+    //             maxLines: 3,
+    //             textStyle: {
+    //               color: '#b3bac8',
+    //             },
+    //           },
+    //           hAxis: {
+    //             gridlines: {
+    //               color: 'transparent',
+    //             },
+    //             textStyle: {
+    //               color: '#b3bac8',
+    //             },
+    //           },
+    //           vAxis: {
+    //             gridlines: {
+    //               color: 'transparent',
+    //             },
+    //             textStyle: {
+    //               color: '#b3bac8',
+    //             },
+    //             baselineColor: 'transparent',
+    //           },
+    //           lineWidth: 3,
+    //           animation: {
+    //             duration: 500,
+    //             easing: 'out',
+    //             startup: true,
+    //           },
+    //           colors: window.chartColors,
+    //         };
+    //         const lineChartObj = {
+    //           id: `linechart${msgData.messageId}`, data, options, type: 'linechart',
+    //         };
+    //         available_charts.push(lineChartObj);
+    //         const container = document.getElementById(`linechart${msgData.messageId}`);
 
-            const chart = new google.visualization.LineChart(container);
-            chart.draw(data, options);
-            // window.linechartCount = window.linechartCount + 1;
-          }
-        }, 150);
-      } else if (me.graphLibGlob === 'd3') {
-        setTimeout(() => {
-          const dimens = {};
-          dimens.outerWidth = 380;
-          dimens.outerHeight = 350;
-          dimens.innerWidth = 230;
-          dimens.innerHeight = 250;
-          dimens.legendRectSize = 15;
-          dimens.legendSpacing = 4;
-          const _linechartObj = { id: `linechart${msgData.messageId}`, data: msgData, type: 'linechart' };
-          available_charts.push(_linechartObj);
-          //  KoreGraphAdapter.drawD3lineChart(msgData, dimens, '#linechart'+window.linechartCount, 12);
-          KoreGraphAdapter.drawD3lineChartV2(msgData, dimens, `#linechart${msgData.messageId}`, 12);
-          // window.linechartCount = window.linechartCount + 1;
-        }, 250);
-        /*                    setTimeout(function(){
-                                         $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
-                                         handleChartOnClick();
-                                     },300); */
-      }
-      setTimeout(() => {
-        $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
-        handleChartOnClick();
-      }, 200);
-    }
+    //         const chart = new google.visualization.LineChart(container);
+    //         chart.draw(data, options);
+    //         // window.linechartCount = window.linechartCount + 1;
+    //       }
+    //     }, 150);
+    //   } else if (me.graphLibGlob === 'd3') {
+    //     setTimeout(() => {
+    //       const dimens = {};
+    //       dimens.outerWidth = 380;
+    //       dimens.outerHeight = 350;
+    //       dimens.innerWidth = 230;
+    //       dimens.innerHeight = 250;
+    //       dimens.legendRectSize = 15;
+    //       dimens.legendSpacing = 4;
+    //       const _linechartObj = { id: `linechart${msgData.messageId}`, data: msgData, type: 'linechart' };
+    //       available_charts.push(_linechartObj);
+    //       //  KoreGraphAdapter.drawD3lineChart(msgData, dimens, '#linechart'+window.linechartCount, 12);
+    //       KoreGraphAdapter.drawD3lineChartV2(msgData, dimens, `#linechart${msgData.messageId}`, 12);
+    //       // window.linechartCount = window.linechartCount + 1;
+    //     }, 250);
+    //     /*                    setTimeout(function(){
+    //                                      $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
+    //                                      handleChartOnClick();
+    //                                  },300); */
+    //   }
+    //   setTimeout(() => {
+    //     $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
+    //     handleChartOnClick();
+    //   }, 200);
+    // }
     else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.formData && msgData.message[0].component.payload.formData.renderType === 'inline') {
       msgData.renderType = 'inline';
       messageHtml = me.renderWebForm(msgData, true);
@@ -3186,86 +3188,86 @@ chatWindow.prototype.getChatTemplate = function (tempType) {
 //      {{/if}} \
 //  </scipt>';
 
- var pieChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-     {{if msgData.message}} \
-         <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-             class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon piechart"> \
-             {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-             {{if msgData.icon}}<div class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-             {{if msgData.message[0].component.payload.text}}<div class="messageBubble pieChart">\
-                 <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
-             </div>{{/if}}\
-             <div id="d3Pie">\
-             </div>\
-             <div class="piechartDiv">\
-                 <div class="lineChartChildDiv" id="piechart${msgData.messageId}"></div>\
-             </div>\
-         </li> \
-     {{/if}} \
- </scipt>';
+//  var pieChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+//      {{if msgData.message}} \
+//          <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+//              class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon piechart"> \
+//              {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+//              {{if msgData.icon}}<div class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+//              {{if msgData.message[0].component.payload.text}}<div class="messageBubble pieChart">\
+//                  <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
+//              </div>{{/if}}\
+//              <div id="d3Pie">\
+//              </div>\
+//              <div class="piechartDiv">\
+//                  <div class="lineChartChildDiv" id="piechart${msgData.messageId}"></div>\
+//              </div>\
+//          </li> \
+//      {{/if}} \
+//  </scipt>';
 
- var barchartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-     {{if msgData.message}} \
-         <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-             class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon barchart"> \
-             {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-             {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-             {{if msgData.message[0].component.payload.text}}<div class="messageBubble barchart">\
-                 <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
-             </div>{{/if}}\
-             <div class="barchartDiv">\
-                 <div class="lineChartChildDiv" id="barchart${msgData.messageId}"></div>\
-             </div>\
-         </li> \
-     {{/if}} \
- </scipt>';
- var linechartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-     {{if msgData.message}} \
-         <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-             class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon linechart"> \
-             {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-             {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-             {{if msgData.message[0].component.payload.text}}<div class="messageBubble linechart">\
-                 <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
-             </div>{{/if}}\
-             <div class="linechartDiv">\
-                 <div class="lineChartChildDiv" id="linechart${msgData.messageId}"></div>\
-             </div>\
-         </li> \
-     {{/if}} \
- </scipt>';
- var miniTableChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-     {{if msgData.message}} \
-         <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-             class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
-             {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-             {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-             {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
-                 <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
-             </div>{{/if}}\
-             {{each(key, table) msgData.message[0].component.payload.elements}}\
-                 <div class="minitableDiv">\
-                     <div style="overflow-x:auto; padding: 0 8px;">\
-                         <table cellspacing="0" cellpadding="0">\
-                             <tr class="headerTitle">\
-                                 {{each(key, tableHeader) table.primary}} \
-                                     <th {{if tableHeader[1]}}style="text-align:${tableHeader[1]};" {{/if}}>${tableHeader[0]}</th>\
-                                 {{/each}} \
-                             </tr>\
-                             {{each(key, additional) table.additional}} \
-                                 <tr>\
-                                     {{each(cellkey, cellValue) additional}} \
-                                         <td  {{if cellkey === additional.length-1}}colspan="2"{{/if}}  {{if table.primary[cellkey][1]}}style="text-align:${table.primary[cellkey][1]};" {{/if}} title="${cellValue}">${cellValue}</td>\
-                                     {{/each}} \
-                                 </tr>\
-                             {{/each}} \
-                         </table>\
-                     </div>\
-                 </div>\
-             {{/each}}\
-         </li> \
-     {{/if}} \
- </scipt>';
+//  var barchartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+//      {{if msgData.message}} \
+//          <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+//              class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon barchart"> \
+//              {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+//              {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+//              {{if msgData.message[0].component.payload.text}}<div class="messageBubble barchart">\
+//                  <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
+//              </div>{{/if}}\
+//              <div class="barchartDiv">\
+//                  <div class="lineChartChildDiv" id="barchart${msgData.messageId}"></div>\
+//              </div>\
+//          </li> \
+//      {{/if}} \
+//  </scipt>';
+//  var linechartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+//      {{if msgData.message}} \
+//          <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+//              class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon linechart"> \
+//              {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+//              {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+//              {{if msgData.message[0].component.payload.text}}<div class="messageBubble linechart">\
+//                  <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
+//              </div>{{/if}}\
+//              <div class="linechartDiv">\
+//                  <div class="lineChartChildDiv" id="linechart${msgData.messageId}"></div>\
+//              </div>\
+//          </li> \
+//      {{/if}} \
+//  </scipt>';
+//  var miniTableChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+//      {{if msgData.message}} \
+//          <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+//              class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
+//              {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+//              {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+//              {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
+//                  <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
+//              </div>{{/if}}\
+//              {{each(key, table) msgData.message[0].component.payload.elements}}\
+//                  <div class="minitableDiv">\
+//                      <div style="overflow-x:auto; padding: 0 8px;">\
+//                          <table cellspacing="0" cellpadding="0">\
+//                              <tr class="headerTitle">\
+//                                  {{each(key, tableHeader) table.primary}} \
+//                                      <th {{if tableHeader[1]}}style="text-align:${tableHeader[1]};" {{/if}}>${tableHeader[0]}</th>\
+//                                  {{/each}} \
+//                              </tr>\
+//                              {{each(key, additional) table.additional}} \
+//                                  <tr>\
+//                                      {{each(cellkey, cellValue) additional}} \
+//                                          <td  {{if cellkey === additional.length-1}}colspan="2"{{/if}}  {{if table.primary[cellkey][1]}}style="text-align:${table.primary[cellkey][1]};" {{/if}} title="${cellValue}">${cellValue}</td>\
+//                                      {{/each}} \
+//                                  </tr>\
+//                              {{/each}} \
+//                          </table>\
+//                      </div>\
+//                  </div>\
+//              {{/each}}\
+//          </li> \
+//      {{/if}} \
+//  </scipt>';
 //  var miniTableHorizontalTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 //      {{if msgData.message}} \
 //      <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
@@ -3494,41 +3496,41 @@ chatWindow.prototype.getChatTemplate = function (tempType) {
 //          </li> \
 //      {{/if}} \
 //  </scipt>';
- var listActionSheetTemplate = '<script id="chat-window-listTemplate" type="text/x-jqury-tmpl">\
- <div class="list-template-sheet hide">\
-  {{if msgData.message}} \
-    <div class="sheetHeader">\
-      <span class="choose">${msgData.message[0].component.payload.heading}</span>\
-      <button class="close-button" title="Close"><img src="data:image/svg+xml;base64,           PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button>\
-    </div>\
-    <div class="listTemplateContainer" >\
-         <div class="displayMonth">\
-             {{each(key, tab) tabs}} \
-                 <span class="tabs" data-tabid="${tab}"><span class="btnBG">${tab}</span></span>\
-             {{/each}}\
-         </div>\
-           <ul class="displayListValues">\
-               {{each(key, msgItem) dataItems}} \
-                    <li class="listViewTmplContentChild"> \
-                          {{if msgItem.image_url}} \
-                              <div class="listViewRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
-                                 <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
-                             </div> \
-                         {{/if}} \
-                             <div class="listViewLeftContent" data-url="${msgItem.default_action.url}" data-title="${msgItem.default_action.title}" data-value="${msgItem.default_action.title}"> \
-                                <span class="titleDesc">\
-                                    <div class="listViewItemTitle" title="${msgItem.title}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
-                                     {{if msgItem.subtitle}}<div class="listViewItemSubtitle" title="${msgItem.subtitle}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
-                                 </span>\
-                                     {{if msgItem.value}}<div class="listViewItemValue" title="${msgItem.value}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.value, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.value, "user")}} {{/if}}</div>{{/if}} \
-                             </div>\
-                     </li> \
-                {{/each}} \
-            </ul> \
-    </div>\
-{{/if}}\
-</div>\
-</script>';
+//  var listActionSheetTemplate = '<script id="chat-window-listTemplate" type="text/x-jqury-tmpl">\
+//  <div class="list-template-sheet hide">\
+//   {{if msgData.message}} \
+//     <div class="sheetHeader">\
+//       <span class="choose">${msgData.message[0].component.payload.heading}</span>\
+//       <button class="close-button" title="Close"><img src="data:image/svg+xml;base64,           PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button>\
+//     </div>\
+//     <div class="listTemplateContainer" >\
+//          <div class="displayMonth">\
+//              {{each(key, tab) tabs}} \
+//                  <span class="tabs" data-tabid="${tab}"><span class="btnBG">${tab}</span></span>\
+//              {{/each}}\
+//          </div>\
+//            <ul class="displayListValues">\
+//                {{each(key, msgItem) dataItems}} \
+//                     <li class="listViewTmplContentChild"> \
+//                           {{if msgItem.image_url}} \
+//                               <div class="listViewRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
+//                                  <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
+//                              </div> \
+//                          {{/if}} \
+//                              <div class="listViewLeftContent" data-url="${msgItem.default_action.url}" data-title="${msgItem.default_action.title}" data-value="${msgItem.default_action.title}"> \
+//                                 <span class="titleDesc">\
+//                                     <div class="listViewItemTitle" title="${msgItem.title}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
+//                                      {{if msgItem.subtitle}}<div class="listViewItemSubtitle" title="${msgItem.subtitle}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
+//                                  </span>\
+//                                      {{if msgItem.value}}<div class="listViewItemValue" title="${msgItem.value}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.value, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.value, "user")}} {{/if}}</div>{{/if}} \
+//                              </div>\
+//                      </li> \
+//                 {{/each}} \
+//             </ul> \
+//     </div>\
+// {{/if}}\
+// </div>\
+// </script>';
 var iframe = '<script id="chat_message_tmpl" type="text/x-jquery-tmpl"> \
          {{if link_url}}\
             {{if (msgData && msgData.renderType ==="inline")}}\
@@ -3567,9 +3569,9 @@ var iframe = '<script id="chat_message_tmpl" type="text/x-jquery-tmpl"> \
 //  if (tempType === "carouselTemplate") {
 //      return carouselTemplate;
 //  }
- if (tempType === "pieChartTemplate") {
-     return pieChartTemplate;
- }
+//  if (tempType === "pieChartTemplate") {
+//      return pieChartTemplate;
+//  }
 //  if (tempType === "tableChartTemplate") {
 //      return tableChartTemplate;
 //  }
@@ -3579,14 +3581,15 @@ var iframe = '<script id="chat_message_tmpl" type="text/x-jquery-tmpl"> \
 //  if (tempType === "miniTableHorizontalTemplate") {
 //      return miniTableHorizontalTemplate;
 //  }
- else if (tempType === "barchartTemplate") {
-     return barchartTemplate;
- }
- else if (tempType === "linechartTemplate") {
-     return linechartTemplate;
- }else if (tempType === "actionSheetTemplate") {
-     return listActionSheetTemplate;
- }
+//  else if (tempType === "barchartTemplate") {
+//      return barchartTemplate;
+//  }
+//  else if (tempType === "linechartTemplate") {
+//      return linechartTemplate;
+//  }
+//  else if (tempType === "actionSheetTemplate") {
+//      return listActionSheetTemplate;
+//  }
  else if (tempType === "iframe") {
      return iframe;
  }
@@ -3959,6 +3962,20 @@ chatWindow.prototype.closeConversationSession = function () {
     chatInitialize.closeConversationSession();
   }
 };
+chatWindow.prototype.bottomSliderAction = function (action, appendElement) {
+  $(".kore-action-sheet").animate({ height: 'toggle' });
+  if (action == 'hide') {
+    $(".kore-action-sheet").innerHTML = '';
+    $(".kore-action-sheet").addClass("hide");
+  } else {
+    $(".kore-action-sheet").removeClass("hide");
+    $(".kore-action-sheet .actionSheetContainer").empty();
+    setTimeout(function () {
+      $(".kore-action-sheet .actionSheetContainer").append(appendElement);
+    }, 200);
+
+  }
+}
 /** ***********************************       Microphone code      ********************************************* */
 let final_transcript = '';
 let recognizing = false;
@@ -5136,133 +5153,10 @@ function startUpload(_this) {
   _conc.send(_mdat.toString());
 }
 
-function zoomChart() {
-  const modal = document.getElementById('myPreviewModal');
-  $('.largePreviewContent').empty();
-  $('.largePreviewContent').addClass('addheight');
-  $('.largePreviewContent').html("<div class='chartContainerDiv'></div>");
-  modal.style.display = 'block';
-  // Get the <span> element that closes the modal
-  const span = document.getElementsByClassName('closeElePreview')[0];
 
-  // When the user clicks on <span> (x), close the modal
-  span.onclick = function () {
-    modal.style.display = 'none';
-    $('.largePreviewContent').removeClass('addheight');
-  };
-}
 
 // listen to chart click
-function handleChartOnClick() {
-  $('.piechartDiv,.barchartDiv, .linechartDiv').click((e) => {
-    const firstEleId = e.currentTarget.firstElementChild.getAttribute('id');
-    // get chart data
-    let chart = null;
-    let data = null;
-    let container = null;
-    for (let i = 0; i < available_charts.length; i++) {
-      if (available_charts[i].id == firstEleId) {
-        data = jQuery.extend({}, available_charts[i]);
-        zoomChart();
-        break;
-      }
-    }
-    if (me.graphLibGlob === 'd3') {
-      zoomChart();
-      if (data.data.message[0].component.payload.pie_type === undefined) {
-        data.data.message[0].component.payload.pie_type = 'regular';
-      }
-      if (data.data.message[0].component.payload.template_type !== 'linechart' && data.data.message[0].component.payload.template_type !== 'piechart') {
-        var dimens = {};
-        dimens.outerWidth = 650;
-        dimens.outerHeight = 460;
-        dimens.innerWidth = 450;
-        dimens.innerHeight = 350;
-        dimens.legendRectSize = 15;
-        dimens.legendSpacing = 4;
-        $('.chartContainerDiv').html('');
-        if (data.data.message[0].component.payload.template_type === 'barchart' && data.data.message[0].component.payload.direction === 'vertical' && data.type === 'barchart') {
-          dimens.innerWidth = 500;
-          KoreGraphAdapter.drawD3barChart(data.data, dimens, '.chartContainerDiv', 12);
-        } else if (data.data.message[0].component.payload.template_type === 'barchart' && data.data.message[0].component.payload.direction === 'horizontal' && data.type === 'stackedBarchart') {
-          KoreGraphAdapter.drawD3barStackedChart(data.data, dimens, '.chartContainerDiv', 12);
-        } else if (data.data.message[0].component.payload.template_type === 'barchart' && data.data.message[0].component.payload.direction === 'vertical' && data.type === 'stackedBarchart') {
-          dimens.innerWidth = 550;
-          KoreGraphAdapter.drawD3barVerticalStackedChart(data.data, dimens, '.chartContainerDiv', 12);
-        } else if (data.data.message[0].component.payload.template_type === 'barchart' && data.data.message[0].component.payload.direction === 'horizontal' && data.type === 'barchart') {
-          dimens.outerWidth = 650;
-          dimens.outerHeight = 350;
-          dimens.innerWidth = 450;
-          dimens.innerHeight = 310;
-          KoreGraphAdapter.drawD3barHorizontalbarChart(data.data, dimens, '.chartContainerDiv', 12);
-        }
-      } else if (data.data.message[0].component.payload.template_type === 'linechart') {
-        var dimens = {};
-        dimens.outerWidth = 650;
-        dimens.outerHeight = 450;
-        dimens.innerWidth = 480;
-        dimens.innerHeight = 350;
-        dimens.legendRectSize = 15;
-        dimens.legendSpacing = 4;
-        $('.chartContainerDiv').html('');
-        //  KoreGraphAdapter.drawD3lineChart(data.data, dimens, '.chartContainerDiv', 12);
-        KoreGraphAdapter.drawD3lineChartV2(data.data, dimens, '.chartContainerDiv', 12);
-      } else if (data.data.message[0].component.payload.pie_type) {
-        var dimens = {};
-        dimens.width = 600;
-        dimens.height = 400;
-        dimens.legendRectSize = 15;
-        dimens.legendSpacing = 4;
-        $('chartContainerDiv').html('');
-        if (data.data.message[0].component.payload.pie_type === 'regular') {
-          KoreGraphAdapter.drawD3Pie(data.data, dimens, '.chartContainerDiv', 16);
-        } else if (data.data.message[0].component.payload.pie_type === 'donut') {
-          KoreGraphAdapter.drawD3PieDonut(data.data, dimens, '.chartContainerDiv', 16, 'donut');
-        } else if (data.data.message[0].component.payload.pie_type === 'donut_legend') {
-          $('chartContainerDiv').html('');
-          KoreGraphAdapter.drawD3PieDonut(data.data, dimens, '.chartContainerDiv', 16, 'donut_legend');
-        }
-      }
-    } else if (graphLibGlob === 'google') {
-      if (data.type === 'piechart') {
-        google.charts.load('current', { packages: ['corechart'] });
-        google.charts.setOnLoadCallback(drawChart);
-        function drawChart() {
-          container = document.getElementsByClassName('chartContainerDiv');
-          chart = new google.visualization.PieChart(container[0]);
-        }
-      } else if (data.type === 'linechart') {
-        google.charts.load('current', { packages: ['corechart', 'line'] });
-        google.charts.setOnLoadCallback(drawChart);
-        function drawChart() {
-          container = document.getElementsByClassName('chartContainerDiv');
-          chart = new google.visualization.LineChart(container[0]);
-        }
-      } else if (data.type === 'barchart') {
-        google.charts.load('current', { packages: ['corechart', 'bar'] });
-        google.charts.setOnLoadCallback(drawChart);
-        function drawChart() {
-          container = document.getElementsByClassName('chartContainerDiv');
-          if (data.direction === 'vertical') {
-            chart = new google.visualization.ColumnChart(container[0]);
-          } else {
-            chart = new google.visualization.BarChart(container[0]);
-          }
-        }
-      }
-      setTimeout(() => {
-        const chartAreaObj = { height: '85%', width: '85%' };
-        data.options.chartArea = chartAreaObj;
-        google.visualization.events.addListener(chart, 'ready', () => {
-          setTimeout(() => {
-            $('.largePreviewContent .chartContainerDiv').css('height', '91%');
-          });
-        });
-        chart.draw(data.data, data.options);
-      }, 200);
-    }
-  });
-}
+
 const old = $.fn.uploader;
 
 $.fn.uploader = function (option) {

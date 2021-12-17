@@ -1,6 +1,6 @@
 
-import helpers from '../../../../../src/utils/helpers'
-
+import helpers from '../../../../../src/utils/helpers';
+import './tableListTemplate.scss';
 class TableListTemplate {
 	renderMessage(msgData: any) {
 		let me: any = this;
@@ -55,7 +55,7 @@ class TableListTemplate {
 				var postBack = $(_self).attr('data-title');
 				chatWindowInstance.sendMessage($('.chatInputBox').text(_innerText), postBack);
 				$(".kore-action-sheet .list-template-sheet").animate({ height: 'toggle' });
-				// bottomSliderAction("hide");
+				chatWindowInstance.bottomSliderAction("hide");
 				$(".listViewTmplContentBox").css({ "pointer-events": "none" });
 			}
 		}

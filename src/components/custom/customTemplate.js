@@ -15,6 +15,9 @@ import ListWidgetTemplate from './templates/listWidgetTemplate/listWidgetTemplat
 import MiniTableChartTemplate from './templates/miniTableTemplate/miniTableTemplate';
 import CarouselTemplate from './templates/carouselTemplate/carouselTemplate';
 import ListViewTemplate from './templates/listViewTemplate/listViewTemplate';
+import LineChartTemplate from './templates/lineChartTemplate/lineChartTemplate';
+import BarChartTemplate from './templates/barChartTemplate/barChartTemplate';
+import PieChartTemplate from './templates/pieChartTemplate/pieChartTemplate';
 import './customTemplate.css';
 import '../../../libs/purejscarousel.css';
 //(function($){
@@ -50,6 +53,9 @@ import '../../../libs/purejscarousel.css';
 		this.installTemplate(new CarouselTemplate());
 		this.installTemplate(new MiniTableChartTemplate());
 		this.installTemplate(new ListViewTemplate());
+		this.installTemplate(new PieChartTemplate());
+		this.installTemplate(new BarChartTemplate());
+		this.installTemplate(new LineChartTemplate());
 	};
 	/**
 	 * purpose: Function to render bot message for a given custom template
@@ -751,41 +757,41 @@ print(JSON.stringify(message)); */
 // 		</li> \
 // 	{{/if}} \
 //  </script>';
- var listActionSheetTemplate = '<script id="chat-window-listTemplate" type="text/x-jqury-tmpl">\
- <div class="list-template-sheet hide">\
-  {{if msgData.message}} \
-	<div class="sheetHeader">\
-	  <span class="choose">${msgData.message[0].component.payload.heading}</span>\
-	  <button class="close-button" title="Close"><img src="data:image/svg+xml;base64,           PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button>\
-	</div>\
-	<div class="listTemplateContainer" >\
-		 <div class="displayMonth">\
-			 {{each(key, tab) tabs}} \
-				 <span class="tabs" data-tabid="${tab}"><span class="btnBG">${tab}</span></span>\
-			 {{/each}}\
-		 </div>\
-		   <ul class="displayListValues">\
-			   {{each(key, msgItem) dataItems}} \
-					<li class="listViewTmplContentChild"> \
-						  {{if msgItem.image_url}} \
-							  <div class="listViewRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
-								 <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
-							 </div> \
-						 {{/if}} \
-							 <div class="listViewLeftContent" data-url="${msgItem.default_action.url}" data-title="${msgItem.default_action.title}" data-value="${msgItem.default_action.title}"> \
-								<span class="titleDesc">\
-									<div class="listViewItemTitle" title="${msgItem.title}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
-									 {{if msgItem.subtitle}}<div class="listViewItemSubtitle" title="${msgItem.subtitle}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
-								 </span>\
-									 {{if msgItem.value}}<div class="listViewItemValue" title="${msgItem.value}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.value, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.value, "user")}} {{/if}}</div>{{/if}} \
-							 </div>\
-					 </li> \
-				{{/each}} \
-			</ul> \
-	</div>\
-{{/if}}\
-</div>\
-</script>';
+//  var listActionSheetTemplate = '<script id="chat-window-listTemplate" type="text/x-jqury-tmpl">\
+//  <div class="list-template-sheet hide">\
+//   {{if msgData.message}} \
+// 	<div class="sheetHeader">\
+// 	  <span class="choose">${msgData.message[0].component.payload.heading}</span>\
+// 	  <button class="close-button" title="Close"><img src="data:image/svg+xml;base64,           PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button>\
+// 	</div>\
+// 	<div class="listTemplateContainer" >\
+// 		 <div class="displayMonth">\
+// 			 {{each(key, tab) tabs}} \
+// 				 <span class="tabs" data-tabid="${tab}"><span class="btnBG">${tab}</span></span>\
+// 			 {{/each}}\
+// 		 </div>\
+// 		   <ul class="displayListValues">\
+// 			   {{each(key, msgItem) dataItems}} \
+// 					<li class="listViewTmplContentChild"> \
+// 						  {{if msgItem.image_url}} \
+// 							  <div class="listViewRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
+// 								 <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
+// 							 </div> \
+// 						 {{/if}} \
+// 							 <div class="listViewLeftContent" data-url="${msgItem.default_action.url}" data-title="${msgItem.default_action.title}" data-value="${msgItem.default_action.title}"> \
+// 								<span class="titleDesc">\
+// 									<div class="listViewItemTitle" title="${msgItem.title}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
+// 									 {{if msgItem.subtitle}}<div class="listViewItemSubtitle" title="${msgItem.subtitle}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
+// 								 </span>\
+// 									 {{if msgItem.value}}<div class="listViewItemValue" title="${msgItem.value}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.value, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.value, "user")}} {{/if}}</div>{{/if}} \
+// 							 </div>\
+// 					 </li> \
+// 				{{/each}} \
+// 			</ul> \
+// 	</div>\
+// {{/if}}\
+// </div>\
+// </script>';
 
 /*TABLE LIST TEMPLATE
 
@@ -1683,9 +1689,9 @@ print(JSON.stringify(message)); */
 		//  if (tempType === "templatelistView") {
 		// 	return listViewTemplate;
 		// }
-		 if (tempType === "actionSheetTemplate") {
-			return listActionSheetTemplate;
-		}
+		//  if (tempType === "actionSheetTemplate") {
+		// 	return listActionSheetTemplate;
+		// }
 		// else if(tempType === "tableListTemplate"){
 		// 	return tableListTemplate;
 		// }
@@ -1695,170 +1701,170 @@ print(JSON.stringify(message)); */
 		// else if(tempType === "listWidget"){
 		// 	return listWidget;
 		// }
-		else {
-			return "";
-		}
+		// else {
+		// 	return "";
+		// }
 		return "";
 	}; // end of getChatTemplate method
 
 
-	customTemplate.prototype.getColumnWidth = function (width) {
-		var _self = this;
-		var newWidth;
-		var widthToApply = '100%';
-	  if (width){
-		newWidth = width.replace(/[^\d.-]/g, '');
-		 console.log(width)
-		try {
-		  widthToApply = 100 - parseInt(newWidth, 10);
-		} catch (e){
-		console.log(width);
-		}
-		return widthToApply;
-	   }
-	  };
+	// customTemplate.prototype.getColumnWidth = function (width) {
+	// 	var _self = this;
+	// 	var newWidth;
+	// 	var widthToApply = '100%';
+	//   if (width){
+	// 	newWidth = width.replace(/[^\d.-]/g, '');
+	// 	 console.log(width)
+	// 	try {
+	// 	  widthToApply = 100 - parseInt(newWidth, 10);
+	// 	} catch (e){
+	// 	console.log(width);
+	// 	}
+	// 	return widthToApply;
+	//    }
+	//   };
 //Below method is for template specific events
-	customTemplate.prototype.templateEvents =function(ele, templateType, bindingData){
-		chatInitialize=this.chatInitialize;
-		var _self = this;
-		var $ele = $(ele);
-		if (templateType === 'TabbedList' || templateType === 'listWidget') {
-			$($ele.find(".tabs")[0]).addClass("active");
-			var titleEle = $ele.find('.listViewLeftContent');
-			if(titleEle && titleEle.length){
-			  for (i = 0; i < titleEle.length; i++){
-				var ele =titleEle[i];
-				if($(ele).attr('col-size')){
-					if($(ele).hasClass("listViewLeftContent")){
-						var width = _self.getColumnWidth((100 - parseInt($(ele).attr('col-size')))+'%');
-						$(ele).css("width", width + '%');
-					}else{
-				  var width = _self.getColumnWidth($(ele).attr('col-size'));
-				  $(ele).css("width", width + '%');
-					}
-				}
-			  }
-			}
-			console.log(bindingData);
-			$ele.off('click', '.listViewLeftContent').on('click', '.listViewLeftContent', function (e) {
-			  e.stopPropagation();
-			  var actionObjString = $(e.currentTarget).attr('actionObj');
+	// customTemplate.prototype.templateEvents =function(ele, templateType, bindingData){
+	// 	chatInitialize=this.chatInitialize;
+	// 	var _self = this;
+	// 	var $ele = $(ele);
+	// 	if (templateType === 'TabbedList' || templateType === 'listWidget') {
+	// 		$($ele.find(".tabs")[0]).addClass("active");
+	// 		var titleEle = $ele.find('.listViewLeftContent');
+	// 		if(titleEle && titleEle.length){
+	// 		  for (i = 0; i < titleEle.length; i++){
+	// 			var ele =titleEle[i];
+	// 			if($(ele).attr('col-size')){
+	// 				if($(ele).hasClass("listViewLeftContent")){
+	// 					var width = _self.getColumnWidth((100 - parseInt($(ele).attr('col-size')))+'%');
+	// 					$(ele).css("width", width + '%');
+	// 				}else{
+	// 			  var width = _self.getColumnWidth($(ele).attr('col-size'));
+	// 			  $(ele).css("width", width + '%');
+	// 				}
+	// 			}
+	// 		  }
+	// 		}
+	// 		console.log(bindingData);
+	// 		$ele.off('click', '.listViewLeftContent').on('click', '.listViewLeftContent', function (e) {
+	// 		  e.stopPropagation();
+	// 		  var actionObjString = $(e.currentTarget).attr('actionObj');
 	
-			  if (actionObjString) {
-				var actionObj = {};
-				actionObj = JSON.parse(actionObjString);
-			  }
-	var _self=this;
-			  valueClick(_self,actionObj);
-			});
-			$ele.off('click', '.moreValue').on('click', '.moreValue', function (e) {
-			  e.stopPropagation();
-			});
-			$ele.off('click', '.tabs').on('click', '.tabs', function (e) {
-			  e.stopPropagation();
+	// 		  if (actionObjString) {
+	// 			var actionObj = {};
+	// 			actionObj = JSON.parse(actionObjString);
+	// 		  }
+	// var _self=this;
+	// 		  valueClick(_self,actionObj);
+	// 		});
+	// 		$ele.off('click', '.moreValue').on('click', '.moreValue', function (e) {
+	// 		  e.stopPropagation();
+	// 		});
+	// 		$ele.off('click', '.tabs').on('click', '.tabs', function (e) {
+	// 		  e.stopPropagation();
 	
-			  var _selectedTab = $(e.target).text();
+	// 		  var _selectedTab = $(e.target).text();
 	
-			  var msgData = $(e.target).closest(".tab-list-template").data();
-			  var panelDetail = $(e.target).closest(".tab-list-template").attr('panelDetail');
+	// 		  var msgData = $(e.target).closest(".tab-list-template").data();
+	// 		  var panelDetail = $(e.target).closest(".tab-list-template").attr('panelDetail');
 	
-			  if (panelDetail) {
-				panelDetail = JSON.parse(panelDetail);
-			  }
+	// 		  if (panelDetail) {
+	// 			panelDetail = JSON.parse(panelDetail);
+	// 		  }
 	
-			  delete msgData.tmplItem;
-			  var tempObj = {
-				'tempdata': msgData,
-				'dataItems': msgData.elements,
-				'helpers': helpers,
-				'viewmore': panelDetail.viewmore,
-				'panelDetail': panelDetail
-			  };
+	// 		  delete msgData.tmplItem;
+	// 		  var tempObj = {
+	// 			'tempdata': msgData,
+	// 			'dataItems': msgData.elements,
+	// 			'helpers': helpers,
+	// 			'viewmore': panelDetail.viewmore,
+	// 			'panelDetail': panelDetail
+	// 		  };
 	
-			  if (msgData && msgData.tabs && Object.keys(msgData.tabs) && Object.keys(msgData.tabs).length) {
-				tempObj = {
-				  'tempdata': msgData,
-				  'dataItems': msgData.tabs[_selectedTab],
-				  'tabs': Object.keys(msgData.tabs),
-				  'helpers': helpers,
-				  'viewmore': panelDetail.viewmore,
-				  'panelDetail': panelDetail
-				};
-			  }
+	// 		  if (msgData && msgData.tabs && Object.keys(msgData.tabs) && Object.keys(msgData.tabs).length) {
+	// 			tempObj = {
+	// 			  'tempdata': msgData,
+	// 			  'dataItems': msgData.tabs[_selectedTab],
+	// 			  'tabs': Object.keys(msgData.tabs),
+	// 			  'helpers': helpers,
+	// 			  'viewmore': panelDetail.viewmore,
+	// 			  'panelDetail': panelDetail
+	// 			};
+	// 		  }
 	
-			  var viewTabValues = $(_self.getTemplate("TabbedList")).tmplProxy(tempObj);
-			  $(viewTabValues).find(".tabs[data-tabid='" + _selectedTab + "']").addClass("active");
-			  $(e.target).closest(".tab-list-template").html($(viewTabValues).html());
-			});
-			$ele.off('click', '#showMoreContents').on('click', '#showMoreContents', function (e) {
-			  e.stopPropagation();
-			  $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showMoreBottom").removeClass('hide');
-			});
-			$ele.off('click', '.wid-temp-showMoreClose').on('click', '.wid-temp-showMoreClose', function (e) {
-			  e.stopPropagation();
-			  $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showMoreBottom").addClass('hide');
-			});
-			$ele.off('click', '.wid-temp-showActions').on('click', '.wid-temp-showActions', function (e) {
-			  e.stopPropagation();
+	// 		  var viewTabValues = $(_self.getTemplate("TabbedList")).tmplProxy(tempObj);
+	// 		  $(viewTabValues).find(".tabs[data-tabid='" + _selectedTab + "']").addClass("active");
+	// 		  $(e.target).closest(".tab-list-template").html($(viewTabValues).html());
+	// 		});
+	// 		$ele.off('click', '#showMoreContents').on('click', '#showMoreContents', function (e) {
+	// 		  e.stopPropagation();
+	// 		  $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showMoreBottom").removeClass('hide');
+	// 		});
+	// 		$ele.off('click', '.wid-temp-showMoreClose').on('click', '.wid-temp-showMoreClose', function (e) {
+	// 		  e.stopPropagation();
+	// 		  $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showMoreBottom").addClass('hide');
+	// 		});
+	// 		$ele.off('click', '.wid-temp-showActions').on('click', '.wid-temp-showActions', function (e) {
+	// 		  e.stopPropagation();
 	
-			  if ($(e.currentTarget) && $(e.currentTarget).closest(".listViewTmplContentChild") && $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showActions") && $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showActions").hasClass('active')) {
-				$(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showActions").removeClass('active');
-				$(e.currentTarget).closest(".listViewTmplContentChild").find(".meetingActionButtons").addClass('hide'); // $(e.currentTarget).closest(".listViewTmplContentChild").find("#showMoreContents").removeClass('hide');
-			  } else {
-				$(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showActions").addClass('active');
-				$(e.currentTarget).closest(".listViewTmplContentChild").find(".meetingActionButtons").removeClass('hide'); // $(e.currentTarget).closest(".listViewTmplContentChild").find("#showMoreContents").addClass('hide');
-			  }
-			});
-			$ele.off('click', '.action').on('click', '.action', function (e) {
-			  e.stopPropagation();
-			  var actionObjString = $(e.currentTarget).attr('actionObj');
+	// 		  if ($(e.currentTarget) && $(e.currentTarget).closest(".listViewTmplContentChild") && $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showActions") && $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showActions").hasClass('active')) {
+	// 			$(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showActions").removeClass('active');
+	// 			$(e.currentTarget).closest(".listViewTmplContentChild").find(".meetingActionButtons").addClass('hide'); // $(e.currentTarget).closest(".listViewTmplContentChild").find("#showMoreContents").removeClass('hide');
+	// 		  } else {
+	// 			$(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showActions").addClass('active');
+	// 			$(e.currentTarget).closest(".listViewTmplContentChild").find(".meetingActionButtons").removeClass('hide'); // $(e.currentTarget).closest(".listViewTmplContentChild").find("#showMoreContents").addClass('hide');
+	// 		  }
+	// 		});
+	// 		$ele.off('click', '.action').on('click', '.action', function (e) {
+	// 		  e.stopPropagation();
+	// 		  var actionObjString = $(e.currentTarget).attr('actionObj');
 	
-			  if (actionObjString) {
-				var actionObj = {};
-				actionObj = JSON.parse(actionObjString);
-			  } // var eData={
-			  //   postbackValue: actionObj.payload,
-			  //   payload:actionObj,
-			  //   type:'widget'
-			  // }
-			  // if(eData && eData.postbackValue && eData.payload){
-			  //   _self.triggerEvent('postback',eData);
-			  // }
+	// 		  if (actionObjString) {
+	// 			var actionObj = {};
+	// 			actionObj = JSON.parse(actionObjString);
+	// 		  } // var eData={
+	// 		  //   postbackValue: actionObj.payload,
+	// 		  //   payload:actionObj,
+	// 		  //   type:'widget'
+	// 		  // }
+	// 		  // if(eData && eData.postbackValue && eData.payload){
+	// 		  //   _self.triggerEvent('postback',eData);
+	// 		  // }
 	            
-			   if(typeof actionObj=='object' && actionObj.link){
-				window.open(actionObj.link);
-			   }else {
-				   var _self = $(e.currentTarget).parent();
-				valueClick(_self,actionObj);
-			   }
-			});
-			// $('.widgetContentPanel').css({
-			//   'padding': '10px 20px'
-			// });
-		  }
-		  $ele.off('click', '.dropbtnWidgt.moreValue,.dropbtnWidgt.actionBtns').on('click', '.dropbtnWidgt.moreValue,.dropbtnWidgt.actionBtns', function (e) {
-		      var obj=this;
-			if ($(obj).next().hasClass('dropdown-contentWidgt')) {
-			  $(obj).next().toggleClass('show');
-			}
+	// 		   if(typeof actionObj=='object' && actionObj.link){
+	// 			window.open(actionObj.link);
+	// 		   }else {
+	// 			   var _self = $(e.currentTarget).parent();
+	// 			valueClick(_self,actionObj);
+	// 		   }
+	// 		});
+	// 		// $('.widgetContentPanel').css({
+	// 		//   'padding': '10px 20px'
+	// 		// });
+	// 	  }
+	// 	  $ele.off('click', '.dropbtnWidgt.moreValue,.dropbtnWidgt.actionBtns').on('click', '.dropbtnWidgt.moreValue,.dropbtnWidgt.actionBtns', function (e) {
+	// 	      var obj=this;
+	// 		if ($(obj).next().hasClass('dropdown-contentWidgt')) {
+	// 		  $(obj).next().toggleClass('show');
+	// 		}
 	  
-			$('.dropdown-contentWidgt.show').not($(obj).next()).removeClass('show');
-		  })
-			window.onclick = function (event) {
-			  if (!event.target.matches('.dropbtnWidgt')) {
-				var dropdowns = document.getElementsByClassName("dropdown-contentWidgt");
-				var i;
+	// 		$('.dropdown-contentWidgt.show').not($(obj).next()).removeClass('show');
+	// 	  })
+	// 		window.onclick = function (event) {
+	// 		  if (!event.target.matches('.dropbtnWidgt')) {
+	// 			var dropdowns = document.getElementsByClassName("dropdown-contentWidgt");
+	// 			var i;
 	  
-				for (i = 0; i < dropdowns.length; i++) {
-				  var openDropdown = dropdowns[i];
+	// 			for (i = 0; i < dropdowns.length; i++) {
+	// 			  var openDropdown = dropdowns[i];
 	  
-				  if (openDropdown.classList.contains('show')) {
-					openDropdown.classList.remove('show');
-				  }
-				}
-			  }
-			};
-	}
+	// 			  if (openDropdown.classList.contains('show')) {
+	// 				openDropdown.classList.remove('show');
+	// 			  }
+	// 			}
+	// 		  }
+	// 		};
+	// }
 
 
 	customTemplate.prototype.bindEvents = function (messageHtml) {
@@ -2038,29 +2044,29 @@ print(JSON.stringify(message)); */
 		/* Advanced multi select checkbox click functions ends here */
   
 		/* New List Template click functions starts here*/
-		$(messageHtml).off('click', '.listViewTmplContent .seeMoreList').on('click', '.listViewTmplContent .seeMoreList', function () {
-			if($(".list-template-sheet").length!==0){
-				$(".list-template-sheet").remove();
-				listViewTabs();
-			}
-			else if($(".list-template-sheet").length===0){
-				listViewTabs();
-			}
-		});
-		$(messageHtml).find(".listViewLeftContent").on('click', function (e) {
-		 if($(this).attr('data-url')){
-			var a_link = $(this).attr('data-url');
-			if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
-				a_link = "http:////" + a_link;
-			}
-			var _tempWin = window.open(a_link, "_blank");
-		 }else{
-			var _innerText= $(this).attr('data-value');
-			var postBack=$(this).attr('data-title');
-			chatInitialize.sendMessage($('.chatInputBox').text(_innerText), postBack);
-			$(".listViewTmplContentBox").css({"pointer-events":"none"});
-		 }
-		 });
+		// $(messageHtml).off('click', '.listViewTmplContent .seeMoreList').on('click', '.listViewTmplContent .seeMoreList', function () {
+		// 	if($(".list-template-sheet").length!==0){
+		// 		$(".list-template-sheet").remove();
+		// 		listViewTabs();
+		// 	}
+		// 	else if($(".list-template-sheet").length===0){
+		// 		listViewTabs();
+		// 	}
+		// });
+		// $(messageHtml).find(".listViewLeftContent").on('click', function (e) {
+		//  if($(this).attr('data-url')){
+		// 	var a_link = $(this).attr('data-url');
+		// 	if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
+		// 		a_link = "http:////" + a_link;
+		// 	}
+		// 	var _tempWin = window.open(a_link, "_blank");
+		//  }else{
+		// 	var _innerText= $(this).attr('data-value');
+		// 	var postBack=$(this).attr('data-title');
+		// 	chatInitialize.sendMessage($('.chatInputBox').text(_innerText), postBack);
+		// 	$(".listViewTmplContentBox").css({"pointer-events":"none"});
+		//  }
+		//  });
 		/* New List Template click functions ends here*/
 		// $(messageHtml).off('click', '.listViewItemValue.actionLink,.listTableDetailsDesc').on('click', '.listViewItemValue.actionLink,.listTableDetailsDesc', function () {
 		// 	var _self=this;

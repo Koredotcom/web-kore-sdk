@@ -1,6 +1,6 @@
 
-import helpers from '../../../../../src/utils/helpers'
-
+import helpers from '../../../../../src/utils/helpers';
+import './quickReplyTemplate.scss';
 class QuickReplyTemplate {
 
     renderMessage(msgData: any) {
@@ -115,7 +115,7 @@ class QuickReplyTemplate {
             }, 600);
         });
         _chatContainer.off('click', '.quickreplyRightIcon').on('click', '.quickreplyRightIcon', (event: any) => {
-            const _quickReplesDivs = event.currentTarget.parentElement.getElementsByClassName('buttonTmplContentChild');
+            const _quickReplesDivs = event.currentTarget.parentElement.getElementsByClassName('quickReplyTemplContentChild');
             if (_quickReplesDivs.length) {
                 const _scrollParentDiv = event.target.parentElement.getElementsByClassName('quick_replies_btn_parent');
                 const _totalWidth = event.target.parentElement.offsetWidth;
@@ -147,11 +147,11 @@ class QuickReplyTemplate {
         {{if msgData.message}} \
             <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
                 class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon quickReplies"> \
-                <div class="buttonTmplContent"> \
+                <div class="quickReplyTemplate"> \
                     {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                     {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar marginT50" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
                     {{if msgData.message[0].component.payload.text}} \
-                        <div class="buttonTmplContentHeading quickReply"> \
+                        <div class="quickReplyHeading quickReply"> \
                             {{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
                             {{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
                                 <span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
@@ -162,7 +162,7 @@ class QuickReplyTemplate {
                         <div class="fa fa-chevron-left quickreplyLeftIcon hide"></div><div class="fa fa-chevron-right quickreplyRightIcon"></div>\
                             <div class="quick_replies_btn_parent"><div class="autoWidth">\
                                 {{each(key, msgItem) msgData.message[0].component.payload.quick_replies}} \
-                                    <div class="buttonTmplContentChild quickReplyDiv"> <span {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} class="quickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.content_type}">\
+                                    <div class="quickReplyTemplContentChild quickReplyDiv"> <span {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} class="quickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.content_type}">\
                                         {{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} <span class="quickreplyText {{if msgItem.image_url}}with-img{{/if}}">${msgItem.title}</span></span>\
                                     </div> \
                                 {{/each}} \

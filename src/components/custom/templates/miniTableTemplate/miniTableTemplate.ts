@@ -1,14 +1,13 @@
 
 import helpers from '../../../../../src/utils/helpers';
 import PureJSCarousel from '../../../../../libs/purejscarousel';
-
+import './miniTableTemplate.scss';
 class MiniTableChartTemplate {
 
     renderMessage(msgData: any) {
         let me: any = this;
         let $ = me.cwInstance.$;
         let helpersObj = new helpers();
-        //   let chatWindowInstance.carouselTemplateCount = 0;
         const carouselEles = [];
         const _chatContainer = $(me.cwInstance.config.chatContainer).find('.chat-container');
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "mini_table") {

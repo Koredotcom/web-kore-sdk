@@ -1,5 +1,6 @@
 
-import helpers from '../../../../../src/utils/helpers'
+import helpers from '../../../../../src/utils/helpers';
+import './listTemplate.scss';
 
 class ListTemplate {
 

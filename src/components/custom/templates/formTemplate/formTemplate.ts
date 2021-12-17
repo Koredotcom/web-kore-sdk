@@ -1,6 +1,6 @@
 
-import helpers from '../../../../../src/utils/helpers'
-
+import helpers from '../../../../../src/utils/helpers';
+import  './formTemplate.scss';
 class FormTemplate {
     renderMessage(msgData: any) {
         let me: any = this;

@@ -1,6 +1,6 @@
 
-import helpers from '../../../../../src/utils/helpers'
-
+import helpers from '../../../../../src/utils/helpers';
+import './buttonTemplate.scss';
 class ButtonTemplate {
     [x: string]: any;
     renderMessage(msgData: any) {

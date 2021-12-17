@@ -1,135 +1,101 @@
-
-import helpers from '../../../../../src/utils/helpers'
+import helpers from '../../../../utils/helpers';
 import PureJSCarousel from '../../../../../libs/purejscarousel';
-
+import './carouselTemplate.scss';
 
 class CarouselTemplate {
-    renderMessage(msgData: any) {
-        let me: any = this;
-        let $ = me.cwInstance.$;
-        let helpersObj = new helpers();
-        //let chatWindowInstance.carouselTemplateCount = 0;
-        let carouselEles = [];
-        let chatWindowInstance = me.cwInstance;
-        let _chatContainer = chatWindowInstance.config.chatContainer;
+  renderMessage(msgData: any) {
+    const me: any = this;
+    const { $ } = me.cwInstance;
+    const helpersObj = new helpers();
+    const carouselEles = [];
+    const chatWindowInstance = me.cwInstance;
+    const _chatContainer = chatWindowInstance.config.chatContainer;
 
-        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "carousel") {
-            me.messageHtml = $(me.getTemplateString('carouselTemplate')).tmpl({
-                'msgData': msgData,
-                'helpers': helpersObj.helpers
-            });
-            setTimeout(() => {
-                let me: any = this;
-                let chatWindowInstance = me.cwInstance;
-                $('.carousel:last').addClass(`carousel${chatWindowInstance.carouselTemplateCount}`);
-                const count = $(`.carousel${chatWindowInstance.carouselTemplateCount}`).children().length;
-                if (count > 1) {
-                    const carouselOneByOne = new PureJSCarousel({
-                        carousel: `.carousel${chatWindowInstance.carouselTemplateCount}`,
-                        slide: '.slide',
-                        oneByOne: true,
-                    });
-                    $(`.carousel${chatWindowInstance.carouselTemplateCount}`).parent().show();
-                    $(`.carousel${chatWindowInstance.carouselTemplateCount}`).attr('style', 'height: 100% !important');
-                    carouselEles.push(carouselOneByOne);
-                }
-                window.dispatchEvent(new Event('resize'));
-                const evt = document.createEvent('HTMLEvents');
-                evt.initEvent('resize', true, false);
-                window.dispatchEvent(evt);
-                chatWindowInstance.carouselTemplateCount += 1;
-                _chatContainer.animate({
-                    scrollTop: _chatContainer.prop('scrollHeight'),
-                }, 0);
-            });
-            me.bindEvents();
-            return me.messageHtml;
-        }
-    }
-    bindEvents() {
-        let me: any = this;
-        let $ = me.cwInstance.$;
-        let helpersObj = new helpers();
-        //let chatWindowInstance.carouselTemplateCount = 0;
-        let carouselEles = [];
-        let chatWindowInstance = me.cwInstance;
-        let _chatContainer = chatWindowInstance.config.chatContainer;
-        _chatContainer.off('click', '.carouselImageContent').on('click', '.carouselImageContent', function (e:any) {
-            e.preventDefault();
-            e.stopPropagation();
-           let selectedTarget = e.currentTarget;
-            let type = $(selectedTarget).attr('type');
-            if (type) {
-              type = type.toLowerCase();
-            }
-            if (type == 'postback' || type == 'text') {
-              $('.chatInputBox').text($(selectedTarget).attr('actual-value') || $(selectedTarget).attr('value'));
-              // var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
-              const _innerText = ($(selectedTarget)[0] && $(selectedTarget)[0].innerText) ? $(selectedTarget)[0].innerText.trim() : '' || ($(selectedTarget) && $(selectedTarget).attr('data-value')) ? $(selectedTarget).attr('data-value').trim() : '';
-              chatWindowInstance.sendMessage($('.chatInputBox'), _innerText);
-            } else if (type == 'url' || type == 'web_url') {
-              if ($(selectedTarget).attr('msgData') !== undefined) {
-                let msgData;
-                try {
-                  msgData = JSON.parse($(selectedTarget).attr('msgData'));
-                } catch (err) {
-        
-                }
-                if (msgData && msgData.message && msgData.message[0].component && (msgData.message[0].component.formData || (msgData.message[0].component.payload && msgData.message[0].component.payload.formData))) {
-                  if (msgData.message[0].component.formData) {
-                    msgData.message[0].component.payload.formData = msgData.message[0].component.formData;
-                  }
-                  chatWindowInstance.renderWebForm(msgData);
-                  return;
-                }
-              }
-              let a_link = $(selectedTarget).attr('url');
-              if (a_link.indexOf('http:') < 0 && a_link.indexOf('https:') < 0) {
-                a_link = `http:////${a_link}`;
-              }
-              chatWindowInstance.openExternalLink(a_link);
-            }
-            if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[1] === 'likeDiv') {
-              $('.likeImg').addClass('hide');
-              $('.likedImg').removeClass('hide');
-              $('.likeDislikeDiv').addClass('dummy');
-            }
-            if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[1] === 'disLikeDiv') {
-              $('.disLikeImg').addClass('hide');
-              $('.disLikedImg').removeClass('hide');
-              $('.likeDislikeDiv').addClass('dummy');
-            }
-        
-            if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[0] === 'checkboxBtn') {
-              const checkboxSelection = $(e.currentTarget.parentElement.parentElement).find('.checkInput:checked');
-              const selectedValue = [];
-              const toShowText = [];
-              for (let i = 0; i < checkboxSelection.length; i++) {
-                selectedValue.push($(checkboxSelection[i]).attr('value'));
-                toShowText.push($(checkboxSelection[i]).attr('text'));
-              }
-              $('.chatInputBox').text(`${$(selectedTarget).attr('title')}: ${selectedValue.toString()}`);
-              chatWindowInstance.sendMessage($('.chatInputBox'), toShowText.toString());
-            }
-            if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[0] === 'quickReply') {
-              const _parentQuikReplyEle = e.currentTarget.parentElement.parentElement;
-              const _leftIcon = _parentQuikReplyEle.parentElement.parentElement.querySelectorAll('.quickreplyLeftIcon');
-              const _rightIcon = _parentQuikReplyEle.parentElement.parentElement.querySelectorAll('.quickreplyRightIcon');
-              setTimeout(() => {
-                _parentQuikReplyEle.parentElement.parentElement.getElementsByClassName('user-account')[0].classList.remove('marginT50');
-                _parentQuikReplyEle.parentElement.parentElement.removeChild(_leftIcon[0]);
-                _parentQuikReplyEle.parentElement.parentElement.removeChild(_rightIcon[0]);
-                _parentQuikReplyEle.parentElement.removeChild(_parentQuikReplyEle);
-              }, 50);
-            }
-            setTimeout(() => {
-              const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
-              _chatInput.focus();
-            }, 600);
+    if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'carousel') {
+      me.messageHtml = $(me.getTemplateString('carouselTemplate')).tmpl({
+        msgData,
+        helpers: helpersObj.helpers,
+      });
+      setTimeout(() => {
+        const me: any = this;
+        const chatWindowInstance = me.cwInstance;
+        $('.carousel:last').addClass(`carousel${chatWindowInstance.carouselTemplateCount}`);
+        const count = $(`.carousel${chatWindowInstance.carouselTemplateCount}`).children().length;
+        if (count > 1) {
+          const carouselOneByOne = new PureJSCarousel({
+            carousel: `.carousel${chatWindowInstance.carouselTemplateCount}`,
+            slide: '.slide',
+            oneByOne: true,
           });
+          $(`.carousel${chatWindowInstance.carouselTemplateCount}`).parent().show();
+          $(`.carousel${chatWindowInstance.carouselTemplateCount}`).attr('style', 'height: 100% !important');
+          carouselEles.push(carouselOneByOne);
+        }
+        window.dispatchEvent(new Event('resize'));
+        const evt = document.createEvent('HTMLEvents');
+        evt.initEvent('resize', true, false);
+        window.dispatchEvent(evt);
+        chatWindowInstance.carouselTemplateCount += 1;
+        _chatContainer.animate({
+          scrollTop: _chatContainer.prop('scrollHeight'),
+        }, 0);
+      });
+      me.bindEvents(me.messageHtml);
+      return me.messageHtml;
     }
-    getTemplateString() {
-        var carouselTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  }
+
+  bindEvents(messageHtml: any) {
+    const me: any = this;
+    const { $ } = me.cwInstance;
+    const helpersObj = new helpers();
+    const carouselEles = [];
+    const chatWindowInstance = me.cwInstance;
+    const _chatContainer = chatWindowInstance.config.chatContainer;
+    $(messageHtml).off('click', '.carouselImageContent').on('click', '.carouselImageContent', (e: any) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const selectedTarget = e.currentTarget;
+      let type = $(selectedTarget).attr('type');
+      if (type) {
+        type = type.toLowerCase();
+      }
+      if (type == 'postback' || type == 'text') {
+        $('.chatInputBox').text($(selectedTarget).attr('actual-value') || $(selectedTarget).attr('value'));
+        // var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
+        const _innerText = ($(selectedTarget)[0] && $(selectedTarget)[0].innerText) ? $(selectedTarget)[0].innerText.trim() : '' || ($(selectedTarget) && $(selectedTarget).attr('data-value')) ? $(selectedTarget).attr('data-value').trim() : '';
+        chatWindowInstance.sendMessage($('.chatInputBox'), _innerText);
+      } else if (type == 'url' || type == 'web_url') {
+        if ($(selectedTarget).attr('msgData') !== undefined) {
+          let msgData;
+          try {
+            msgData = JSON.parse($(selectedTarget).attr('msgData'));
+          } catch (err) {
+
+          }
+          if (msgData && msgData.message && msgData.message[0].component && (msgData.message[0].component.formData || (msgData.message[0].component.payload && msgData.message[0].component.payload.formData))) {
+            if (msgData.message[0].component.formData) {
+              msgData.message[0].component.payload.formData = msgData.message[0].component.formData;
+            }
+            chatWindowInstance.renderWebForm(msgData);
+            return;
+          }
+        }
+        let a_link = $(selectedTarget).attr('url');
+        if (a_link.indexOf('http:') < 0 && a_link.indexOf('https:') < 0) {
+          a_link = `http:////${a_link}`;
+        }
+        chatWindowInstance.openExternalLink(a_link);
+      }
+      setTimeout(() => {
+        const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
+        _chatInput.focus();
+      }, 600);
+    });
+  }
+
+  getTemplateString() {
+    const carouselTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
             <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
                 class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
@@ -165,10 +131,8 @@ class CarouselTemplate {
         {{/if}}\
     </scipt>';
 
-
-        return carouselTemplate;
-    }
-
+    return carouselTemplate;
+  }
 }
 
 export default CarouselTemplate;

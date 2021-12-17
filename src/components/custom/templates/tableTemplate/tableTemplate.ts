@@ -1,6 +1,6 @@
 
-import helpers from '../../../../../src/utils/helpers'
-
+import helpers from '../../../../../src/utils/helpers';
+import './tableTemplate.scss';
 class TableChartTemplate {
 
     renderMessage(msgData: any) {

@@ -1,26 +1,224 @@
 
-import helpers from '../../../../../src/utils/helpers'
-
+import helpers from '../../../../../src/utils/helpers';
+import './listWidgetTemplate.scss';
 class ListWidgetTemplate {
-    renderMessage(msgData: any) {
-        let me: any = this;
-        let $ = me.cwInstance.$;
-        let helpersObj = new helpers();
+  renderMessage(msgData: any) {
+    let me: any = this;
+    let $ = me.cwInstance.$;
+    let helpersObj = new helpers();
 
-        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "listWidget") {
-            me.messageHtml = $(me.getTemplateString('listWidget')).tmpl({
-                'msgData': msgData,
-                'helpers': helpersObj.helpers
-            });
-            me.bindEvents();
-            return me.messageHtml;
+    if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "listWidget") {
+      me.messageHtml = $(me.getTemplateString('listWidget')).tmpl({
+        'msgData': msgData,
+        'helpers': helpersObj.helpers,
+        'tempdata': msgData.message[0].component.payload,
+        'dataItems': msgData.message[0].component.payload.elements || {},
+        'viewmore': null,
+      });
+      me.bindEvents(me.messageHtml, 'listWidget');
+      return me.messageHtml;
+    }
+  }
+  bindEvents(ele: any, templateType: any, bindingData: any) {
+    //	customTemplate.prototype.templateEvents =function(ele, templateType, bindingData){
+    let me: any = this;
+    let chatWindowInstance = me.cwInstance;
+    let $ = me.cwInstance.$;
+    const _chatContainer = chatWindowInstance.config.chatContainer;
+    var _self: any = this;
+    var $ele = $(ele);
+    if (templateType === 'TabbedList' || templateType === 'listWidget') {
+      $($ele.find(".tabs")[0]).addClass("active");
+      var titleEle = $ele.find('.listViewLeftContent');
+      if (titleEle && titleEle.length) {
+        for (let i = 0; i < titleEle.length; i++) {
+          var ele = titleEle[i];
+          if ($(ele).attr('col-size')) {
+            if ($(ele).hasClass("listViewLeftContent")) {
+              var width = _self.getColumnWidth((100 - parseInt($(ele).attr('col-size'))) + '%');
+              $(ele).css("width", width + '%');
+            } else {
+              var width = _self.getColumnWidth($(ele).attr('col-size'));
+              $(ele).css("width", width + '%');
+            }
+          }
         }
+      }
+      console.log(bindingData);
+      $ele.off('click', '.listViewLeftContent').on('click', '.listViewLeftContent', function (e: any) {
+        e.stopPropagation();
+        var actionObjString = $(e.currentTarget).attr('actionObj');
+
+        if (actionObjString) {
+          var actionObj: any = {};
+          actionObj = JSON.parse(actionObjString);
+        }
+        let _selectedTarget = e.currentTarget
+        me.valueClick(_selectedTarget, actionObj);
+      });
+      $ele.off('click', '.moreValue').on('click', '.moreValue', function (e: any) {
+        e.stopPropagation();
+      });
+      $ele.off('click', '.tabs').on('click', '.tabs', function (e: any) {
+        e.stopPropagation();
+
+        var _selectedTab = $(e.target).text();
+
+        var msgData = $(e.target).closest(".tab-list-template").data();
+        var panelDetail = $(e.target).closest(".tab-list-template").attr('panelDetail');
+
+        if (panelDetail) {
+          panelDetail = JSON.parse(panelDetail);
+        }
+
+        delete msgData.tmplItem;
+        var tempObj: any = {
+          'tempdata': msgData,
+          'dataItems': msgData.elements,
+          'helpers': helpers,
+          'viewmore': panelDetail.viewmore,
+          'panelDetail': panelDetail
+        };
+
+        if (msgData && msgData.tabs && Object.keys(msgData.tabs) && Object.keys(msgData.tabs).length) {
+          tempObj = {
+            'tempdata': msgData,
+            'dataItems': msgData.tabs[_selectedTab],
+            'tabs': Object.keys(msgData.tabs),
+            'helpers': helpers,
+            'viewmore': panelDetail.viewmore,
+            'panelDetail': panelDetail
+          };
+        }
+
+        var viewTabValues = $(_self.getTemplate("TabbedList")).tmplProxy(tempObj);
+        $(viewTabValues).find(".tabs[data-tabid='" + _selectedTab + "']").addClass("active");
+        $(e.target).closest(".tab-list-template").html($(viewTabValues).html());
+      });
+      $ele.off('click', '#showMoreContents').on('click', '#showMoreContents', function (e: any) {
+        e.stopPropagation();
+        $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showMoreBottom").removeClass('hide');
+      });
+      $ele.off('click', '.wid-temp-showMoreClose').on('click', '.wid-temp-showMoreClose', function (e: any) {
+        e.stopPropagation();
+        $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showMoreBottom").addClass('hide');
+      });
+      $ele.off('click', '.wid-temp-showActions').on('click', '.wid-temp-showActions', function (e: any) {
+        e.stopPropagation();
+
+        if ($(e.currentTarget) && $(e.currentTarget).closest(".listViewTmplContentChild") && $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showActions") && $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showActions").hasClass('active')) {
+          $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showActions").removeClass('active');
+          $(e.currentTarget).closest(".listViewTmplContentChild").find(".meetingActionButtons").addClass('hide'); // $(e.currentTarget).closest(".listViewTmplContentChild").find("#showMoreContents").removeClass('hide');
+        } else {
+          $(e.currentTarget).closest(".listViewTmplContentChild").find(".wid-temp-showActions").addClass('active');
+          $(e.currentTarget).closest(".listViewTmplContentChild").find(".meetingActionButtons").removeClass('hide'); // $(e.currentTarget).closest(".listViewTmplContentChild").find("#showMoreContents").addClass('hide');
+        }
+      });
+      $ele.off('click', '.action').on('click', '.action', function (e: any) {
+        e.stopPropagation();
+        var actionObjString = $(e.currentTarget).attr('actionObj');
+
+        if (actionObjString) {
+          var actionObj: any = {};
+          actionObj = JSON.parse(actionObjString);
+        } // var eData={
+        //   postbackValue: actionObj.payload,
+        //   payload:actionObj,
+        //   type:'widget'
+        // }
+        // if(eData && eData.postbackValue && eData.payload){
+        //   _self.triggerEvent('postback',eData);
+        // }
+
+        if (typeof actionObj == 'object' && actionObj.link) {
+          window.open(actionObj.link);
+        } else {
+          var _self = $(e.currentTarget).parent();
+          me.valueClick(_self, actionObj);
+        }
+      });
+      // $('.widgetContentPanel').css({
+      //   'padding': '10px 20px'
+      // });
     }
-    bindEvents() {
-    
+    $ele.off('click', '.dropbtnWidgt.moreValue,.dropbtnWidgt.actionBtns').on('click', '.dropbtnWidgt.moreValue,.dropbtnWidgt.actionBtns', function (e: any) {
+      var obj = e.currentTarget;
+      if ($(obj).next().hasClass('dropdown-contentWidgt')) {
+        $(obj).next().toggleClass('show');
+      }
+
+      $('.dropdown-contentWidgt.show').not($(obj).next()).removeClass('show');
+    })
+    window.onclick = function (event: any) {
+      if (!event.target.matches('.dropbtnWidgt')) {
+        var dropdowns = document.getElementsByClassName("dropdown-contentWidgt");
+        var i;
+
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    };
+    //  }
+  }
+  getColumnWidth(width: any) {
+    var _self = this;
+    var newWidth;
+    var widthToApply: any = '100%';
+    if (width) {
+      newWidth = width.replace(/[^\d.-]/g, '');
+      console.log(width)
+      try {
+        widthToApply = 100 - parseInt(newWidth, 10);
+      } catch (e) {
+        console.log(width);
+      }
+      return widthToApply;
     }
-    getTemplateString() {
-        var listWidget = '<script id="chat-window-listTemplate" type="text/x-jqury-tmpl">\
+  };
+  valueClick(_self: any, actionObj: any) {
+    let me: any = this;
+    let chatWindowInstance = me.cwInstance;
+    let $ = me.cwInstance.$;
+    const _chatContainer = chatWindowInstance.config.chatContainer;
+    if (actionObj) {
+      if (actionObj.type === "url") {
+        window.open(actionObj.url, "_blank");
+        return;
+      }
+      if (actionObj.payload) {
+        var _innerText = actionObj.payload;
+        var eData: any = {};
+        eData.payload = _self.innerText || actionObj.title;
+        chatWindowInstance.sendMessage($('.chatInputBox').text(_innerText), eData.payload);
+      }
+      if (_self && _self.hasClass("dropdown-contentWidgt")) {
+        $(_self).hide();
+      }
+    } else {
+      if ($(_self).attr('data-url') || $(_self).attr('url')) {
+        var a_link = $(_self).attr('data-url') || $(_self).attr('url');
+        if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
+          a_link = "http:////" + a_link;
+        }
+        var _tempWin = window.open(a_link, "_blank");
+      } else {
+        var _innerText = $(_self).attr('data-value');
+        var postBack = $(_self).attr('data-title');
+        chatWindowInstance.sendMessage($('.chatInputBox').text(_innerText), postBack);
+        $(".kore-action-sheet .list-template-sheet").animate({ height: 'toggle' });
+        chatWindowInstance.bottomSliderAction("hide");
+        $(".listViewTmplContentBox").css({ "pointer-events": "none" });
+      }
+    }
+
+  }
+  getTemplateString() {
+    var listWidget = '<script id="chat-window-listTemplate" type="text/x-jqury-tmpl">\
         {{if msgData.message}} \
         <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
             <div class="listTmplContent"> \
@@ -276,8 +474,8 @@ class ListWidgetTemplate {
         </li>\
         {{/if}} \
         </script>';
-        return listWidget;
-    }
+    return listWidget;
+  }
 
 }
 

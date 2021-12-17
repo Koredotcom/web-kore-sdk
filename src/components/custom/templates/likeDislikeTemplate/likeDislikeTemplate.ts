@@ -1,5 +1,6 @@
 
-import helpers from '../../../../../src/utils/helpers'
+import helpers from '../../../../../src/utils/helpers';
+import './likeDislikeTemplate.scss';
 
 class LikeDislikeTemplate {
     renderMessage(msgData: any) {

@@ -1,6 +1,6 @@
 
-import helpers from '../../../../../src/utils/helpers'
-
+import helpers from '../../../../../src/utils/helpers';
+import './checkBoxesTemplate.scss';
 class CheckBoxesTemplate {
     renderMessage(msgData: any) {
         let me: any = this;
@@ -79,10 +79,10 @@ class CheckBoxesTemplate {
         var checkBoxesTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
         <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
-                <div class = "listTmplContent"> \
+                <div class = "checkboxes-template"> \
                     {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                     {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-                    <ul class="{{if msgData.message[0].component.payload.fromHistory}} dummy listTmplContentBox  {{else}} listTmplContentBox{{/if}} "> \
+                    <ul class="{{if msgData.message[0].component.payload.fromHistory}} dummy checkBoxestmplContentBox  {{else}} checkBoxestmplContentBox{{/if}} "> \
                         {{if msgData.message[0].component.payload.title || msgData.message[0].component.payload.heading}} \
                             <li class="listTmplContentHeading"> \
                                 {{if msgData.type === "bot_response" && msgData.message[0].component.payload.heading}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.heading, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
@@ -93,7 +93,7 @@ class CheckBoxesTemplate {
                         {{/if}} \
                         {{each(key, msgItem) msgData.message[0].component.payload.elements}} \
                             {{if msgData.message[0].component.payload.buttons}} \
-                                <li class="listTmplContentChild"> \
+                                <li class="checkBoxestmplContentChild"> \
                                     <div class="checkbox checkbox-primary styledCSS checkboxesDiv"> \
                                         <input  class = "checkInput" type="checkbox" text = "${msgItem.title}" value = "${msgItem.value}" id="${msgItem.value}${msgData.messageId}"> \
                                         <label for="${msgItem.value}${msgData.messageId}">{{html helpers.convertMDtoHTML(msgItem.title, "bot")}}</label> \

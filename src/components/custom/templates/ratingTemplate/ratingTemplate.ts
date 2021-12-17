@@ -1,6 +1,6 @@
 
-import helpers from '../../../../../src/utils/helpers'
-
+import helpers from '../../../../../src/utils/helpers';
+import './ratingTemplate.scss';
 class RatingTemplate {
     renderMessage(msgData: any) {
         let me: any = this;
@@ -73,12 +73,12 @@ class RatingTemplate {
                     chatWindowInstance.renderMessage(msgData);
                     chatWindowInstance.sendMessage($('.chatInputBox').text(_innerText + " :" + messageDisplay), _innerText + " :" + messageDisplay);
                 }
-                ////bottomSliderAction("hide");
+                chatWindowInstance.bottomSliderAction("hide");
                 msgData.message[0].component.payload.sliderView = true;
             });
         });
         $(messageHtml).find(".buttonTmplContent .ratingMainComponent .close-btn").click(function (e: any) {
-            //bottomSliderAction("hide");
+            chatWindowInstance.bottomSliderAction("hide");
             e.stopPropagation();
         });
         $(messageHtml).find(".emojiComponent").off('click', '.rating').on('click', '.rating', function (e: any) {
@@ -144,13 +144,13 @@ class RatingTemplate {
                     chatWindowInstance.renderMessage(msgData);
                     chatWindowInstance.sendMessage($('.chatInputBox').text(emojiValue + " :" + messageDisplay), emojiValue + " :" + messageDisplay);
                 }
-                //bottomSliderAction("hide");
+                chatWindowInstance.bottomSliderAction("hide");
                 msgData.message[0].component.payload.sliderView = true;
             });
 
         });
         $(messageHtml).find(".buttonTmplContent .emojiComponent .close-btn").click(function (e: any) {
-            // bottomSliderAction("hide");
+            chatWindowInstance.bottomSliderAction("hide");
 
             e.stopPropagation();
         });

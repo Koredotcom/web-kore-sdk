@@ -1,5 +1,6 @@
 
-import helpers from '../../../../../src/utils/helpers'
+import helpers from '../../../../../src/utils/helpers';
+import './templateAttachment.scss';
 
 class TemplateAttachment {
     [x: string]: any;

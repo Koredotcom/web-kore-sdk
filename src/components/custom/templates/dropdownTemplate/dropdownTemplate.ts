@@ -1,5 +1,6 @@
 
-import helpers from '../../../../../src/utils/helpers'
+import helpers from '../../../../../src/utils/helpers';
+import './dropdownTemplate.scss';
 
 class DropdownTemplate {
     renderMessage(msgData: any) {
@@ -36,7 +37,7 @@ class DropdownTemplate {
         var dropdownTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
             <li {{if msgData.type !== "bot_response"}} id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
-                <div class="buttonTmplContent"> \
+                <div class="dropDowntmplContent"> \
                     {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                     {{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
                     <div class="{{if msgData.message[0].component.payload.fromHistory}} dummy messageBubble {{else}}messageBubble{{/if}}"> \

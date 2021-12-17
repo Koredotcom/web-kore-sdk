@@ -1,6 +1,6 @@
 
-import helpers from '../../../../../src/utils/helpers'
-
+import helpers from '../../../../../src/utils/helpers';
+import './advancedMultiSelect.scss';
 class AdvancedMultiSelectTemplate {
     renderMessage(msgData: any) {
         let me: any = this;
@@ -128,7 +128,7 @@ class AdvancedMultiSelectTemplate {
             if (msgData.message[0].component.payload.sliderView === true) {
                 msgData.message[0].component.payload.sliderView = false;
                 chatWindowInstance.renderMessage(msgData);
-                // bottomSliderAction("hide");
+                chatWindowInstance.bottomSliderAction("hide");
             }
             msgData.message[0].component.payload.sliderView = false;
             var checkboxSelection = $(e.currentTarget.parentElement).find('.checkInput:checked');

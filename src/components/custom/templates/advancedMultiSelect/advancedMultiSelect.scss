@@ -1,0 +1,188 @@
+.kore-chat-body .listWidgetContainerDiv{
+    background-color: var(--sdk-chat-widow-default-white);
+    box-shadow: 0 1px 5px 0 rgb(179 186 200 / 58%);
+    border-radius: 10px;
+}
+.kore-chat-window .kore-action-sheet{
+    position: absolute;
+    width: 100%;
+    max-height: 100%;
+    height: auto;
+    background:var(--sdk-chat-widow-default-white);
+    z-index: 9;
+    bottom: 0;
+    list-style: none;
+    /* overflow: hidden; */
+    font-family: "Lato", sans-serif !important;	
+    box-shadow: 0 1px 25px 0 rgba(179, 186, 200, 0.58);
+}
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect {
+    padding: 0;
+     /* box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58); */
+     height: 100%;
+     /* display: table; */
+     width: 100%;
+     border-radius: 0;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox{
+     width: 100%;
+     max-width: none;
+     border: none;
+     float: none;
+     border-radius: 0;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .fromHistory,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .fromHistory{
+     pointer-events: none;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .advMultiSelectHeader,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .advMultiSelectHeader{
+     padding: 0 15px;
+ }   
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .advMultiSelectHeader .advMultiSelectHeaderTitle,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .advMultiSelectHeader .advMultiSelectHeaderTitle{
+     color: var(--sdk-chat-widow-primary-font-color);
+     margin-bottom: 5px;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .advMultiSelectHeader .orderDate,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .advMultiSelectHeader .orderDate{
+     color: var(--sdk-chat-widow-secondary-font-color);
+     margin-bottom: 5px;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .fromHistory .advancedMultiSelectScroll,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .fromHistory .advancedMultiSelectScroll{
+     overflow: hidden !important;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .fromHistory .closeIcon{
+     pointer-events: none;
+     display: none !important;
+ }
+ .kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .advMultiSelectHeader .closeIcon{
+     background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+);
+     display: inline-block;
+     width: 14px;
+     height: 14px;
+     cursor: pointer;
+     position: absolute;
+     right: 25px;
+     top: 20px;
+     opacity: 0.8;
+ }
+ .kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .advMultiSelectHeader .closeIcon{
+     opacity: 1;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .advancedMultiSelectScroll,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .advancedMultiSelectScroll{
+     overflow: auto;
+     max-height: 300px;
+     padding: 10px;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv{
+    margin-bottom: 10px;
+    border: 1px solid var(--sdk-chat-window-input-focus-outline);
+    border-radius: 10px;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv .groupMultiSelect,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv .groupMultiSelect{
+     padding: 10px;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label{
+     width: 100%;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS.groupMultiSelect label::before,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS.groupMultiSelect label::before{
+     top: auto;
+     content:"";
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS.groupMultiSelect input[type="checkbox"]:checked+label::after,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS.groupMultiSelect input[type="checkbox"]:checked+label::after{
+     top: auto;
+     content:"";
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS label::before,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS label::before{
+     top: 36%!important;
+     display:inline-block!important;
+     content:"";
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS input[type="checkbox"]:checked+label::after, .kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS input[type="checkbox"]:checked+label::after{
+     top: 36%;
+     content:"";
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS.noImgdescription label::before,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS.noImgdescription label::before{
+     top: 0;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS.noImgdescription input[type="checkbox"]:checked+label::after,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS.noImgdescription input[type="checkbox"]:checked+label::after{
+     top: 0;
+     content:"";
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer{
+     vertical-align: middle;
+     height: 100%;
+     width: 100%;
+     display: inline-block;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer .checkImgContainer,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer .checkImgContainer{ 
+     float: left;
+     width: 50px;
+     height: 50px;
+     margin-right: 10px;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer .checkImgContainer img,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer .checkImgContainer img{
+     width: 50px;
+     height: 50px;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer .multiSelectDescContainer,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label .imgDescContainer .multiSelectDescContainer{ 
+    padding: 5px 0 0 0;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS.noImgdescription label  .multiSelectDescContainer .multiTitle,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkbox.styledCSS.noImgdescription label  .multiSelectDescContainer .multiTitle{
+     font-weight: bold;
+     margin-bottom: 0;
+     margin-top: 0px;
+     font-size:14px;
+     /* padding-top: 4px; */
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label  .multiSelectDescContainer .multiTitle,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label  .multiSelectDescContainer .multiTitle{
+     font-weight: bold;
+     margin-bottom: 6px;
+     margin-top: 0px;
+     color: var(--sdk-chat-widow-primary-font-color);
+     font-size:14px;
+     /* padding-top: 4px; */
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label  .multiSelectDescContainer .multiDesc, .kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .collectionDiv  .listTmplContentChild .checkboxesDiv label  .multiSelectDescContainer .multiDesc{
+     margin-bottom: 0;
+     margin-top: 0;
+     color: var(--sdk-chat-widow-secondary-font-color);
+     font-size:13px;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .viewMoreContainer,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .viewMoreContainer{
+     list-style: none;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .viewMoreContainer.hide,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .viewMoreContainer.hide{
+     display: none;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .viewMoreContainer .viewMoreGroups,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .viewMoreContainer .viewMoreGroups{
+     text-align: center;
+     line-height: 35px;
+     border: 1px solid var(--sdk-chat-widow-primary-blue-color);
+     cursor: pointer;
+     display: block;
+     color: var(--sdk-chat-widow-primary-blue-color);
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .viewMoreContainer .viewMoreGroups:hover,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .viewMoreContainer .viewMoreGroups:hover{
+     background: var(--sdk-chat-widow-primary-blue-color);
+     color: var(--sdk-chat-widow-default-white);
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .multiCheckboxBtn,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .multiCheckboxBtn{
+     background: var(--sdk-chat-widow-primary-blue-color);
+     opacity: 0.9;
+     border-radius: 0;
+     text-align: center;
+     border-top: 1px solid var(--sdk-chat-widow-primary-bg-color);
+     padding: 10px;
+     margin: 0;
+     border-bottom-left-radius: 8px;
+     border-bottom-right-radius: 8px;
+     list-style: none;
+     cursor: pointer;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .multiCheckboxBtn .viewMore,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .multiCheckboxBtn .viewMore{
+     color: var(--sdk-chat-widow-default-white) !important;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .multiCheckboxBtn:hover,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .multiCheckboxBtn:hover{
+     opacity: 1;
+ }
+ .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .multiCheckboxBtn.hide,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .multiCheckboxBtn.hide{
+     display:none;
+ }
