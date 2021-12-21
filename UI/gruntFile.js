@@ -96,7 +96,7 @@ module.exports = function (grunt) {
         ];
         cssFiles=[
             'libs/jquery-ui.min.css',
-            'libs/emojione.sprites.css',
+            '../libs/emojione.sprites.css',
             '../libs/purejscarousel.css',
             '../libs/prefect-scrollbar.css',
             'chatWindow.css',
@@ -135,7 +135,7 @@ module.exports = function (grunt) {
                 options: {
                     force: true
                 },
-                src: ['dist']
+                src: ['dist/kore-ai-sdk.min.css','dist/kore-ai-sdk.min.js']
             }
         },
     });
