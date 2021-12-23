@@ -1867,49 +1867,6 @@
                             }
                             if (tempData.message[0].component && tempData.message[0].component.payload && tempData.message[0].component.payload.text) {
                                 tempData.message[0].cInfo.body = tempData.message[0].component.payload.text;
-                                if(chatContainerConfig && chatContainerConfig.pickerMainConfig){
-                                    var pickerConfig =  {};
-                                    pickerConfig= chatContainerConfig.pickerMainConfig;
-                                    if (tempData.message[0].component.payload.template_type == "daterange") {
-                                        tempData.message[0].cInfo.body = tempData.message[0].component.payload.text_message;
-                                        pickerConfig[1].dateRangeConfig.format = tempData.message[0].component.payload.format;
-                                        pickerConfig[1].dateRangeConfig.startDate = tempData.message[0].component.payload.startDate;
-                                        pickerConfig[1].dateRangeConfig.endDate = tempData.message[0].component.payload.endDate;
-                                        if (tempData.message[0].component.payload.title) {
-                                            pickerConfig[1].daterangepicker.title = tempData.message[0].component.payload.title;
-                                        }
-                                        // $('.typingIndicatorContent').css('display', 'block');
-                                        KorePickers.prototype.showDateRangePicker(pickerConfig);
-                                        // $('.typingIndicatorContent').css('display', 'none');
-                                    }
-                                    console.log(JSON.stringify(tempData.message))
-                                    if (tempData.message[0].component.payload.template_type == "dateTemplate") {
-                                        tempData.message[0].cInfo.body = tempData.message[0].component.payload.text_message;
-                                        pickerConfig[1].dateConfig.format = tempData.message[0].component.payload.format;
-                                        pickerConfig[1].dateConfig.startDate = tempData.message[0].component.payload.startDate;
-                                        pickerConfig[1].dateConfig.showdueDate = tempData.message[0].component.payload.showdueDate;
-                                        pickerConfig[1].dateConfig.endDate = tempData.message[0].component.payload.endDate;
-                                        // pickerConfig.dateConfig.selectedDate="Selected Date";
-                                        // pickerConfig.dateConfig.selectedDate=tempData.message[0].component.payload.selectedDate;
-                                        // if(tempData.message[0].component.payload.showdueDate){
-
-                                        //     pickerConfig.dateConfig.paymentDue="Payment Due Date";
-
-                                        //     pickerConfig.dateConfig.paymentDue=tempData.message[0].component.payload.paymentDue;
-                                        // }
-
-                                        if (tempData.message[0].component.payload.title) {
-                                            pickerConfig[1].datepicker.title = tempData.message[0].component.payload.title;
-                                        }
-
-                                        // $('.typingIndicatorContent').css('display', 'block');
-                                        KorePickers.prototype.showDatePicker(pickerConfig);
-                                        // $('.typingIndicatorContent').css('display', 'none');
-                                    }
-                                    if (tempData.message[0].cInfo.body.indexOf('clockPicker') > -1) {
-                                        KorePickers.prototype.showClockPicker(pickerConfig);
-                                    }
-                                }
                             }
                             if(tempData.message[0].component && tempData.message[0].component.payload && (tempData.message[0].component.payload.videoUrl || tempData.message[0].component.payload.audioUrl)){
                                 tempData.message[0].cInfo.body = tempData.message[0].component.payload.text || "";
@@ -2026,6 +1983,7 @@
 
             chatWindow.prototype.sendMessage = function (chatInput, renderMsg,msgObject) {
                 var me = this;
+                me.stopSpeaking();
                 if (chatInput.text().trim() === "" && $('.attachment').html().trim().length == 0) {
                     return;
                 }
@@ -2157,6 +2115,7 @@
                         "session": {
                             "new": false
                         },
+                        //"preferredChannelForResponse": "rtm",
                         "message": {
                             "text": message
                         },
@@ -2177,6 +2136,10 @@
                         }
                     }
 
+                    if(me.config.botOptions.webhookConfig.useSDKChannelResponses){
+                        payload.preferredChannelForResponse='rtm';
+                    }
+                        
                     if(me.config.botOptions.webhookConfig.apiVersion && me.config.botOptions.webhookConfig.apiVersion===2){
                         payload.message={
                             "type": "text",
@@ -2806,7 +2769,64 @@
                             'extension': extension
                         });
                     }
-                    else {
+                    else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.template_type == "daterange"||msgData.message[0].component.payload.template_type == "dateTemplate"||(msgData.message[0].cInfo.body && msgData.message[0].cInfo.body.indexOf && msgData.message[0].cInfo.body.indexOf('clockPicker') > -1))) {
+                        if(chatContainerConfig && chatContainerConfig.pickerMainConfig){
+                            var pickerConfig =  {};
+                            pickerConfig= chatContainerConfig.pickerMainConfig;
+                            if (msgData.message[0].component.payload.template_type == "daterange") {
+                                msgData.message[0].cInfo.body = msgData.message[0].component.payload.text_message;
+                                pickerConfig[1].dateRangeConfig.format = msgData.message[0].component.payload.format;
+                                pickerConfig[1].dateRangeConfig.startDate = msgData.message[0].component.payload.startDate;
+                                pickerConfig[1].dateRangeConfig.endDate = msgData.message[0].component.payload.endDate;
+                                if (msgData.message[0].component.payload.title) {
+                                    pickerConfig[1].daterangepicker.title = msgData.message[0].component.payload.title;
+                                }
+                                // $('.typingIndicatorContent').css('display', 'block');
+                                if(!msgData.fromHistory){
+                                    KorePickers.prototype.showDateRangePicker(pickerConfig);
+                                }
+                                // $('.typingIndicatorContent').css('display', 'none');
+                            }
+                            console.log(JSON.stringify(msgData.message))
+                            if (msgData.message[0].component.payload.template_type == "dateTemplate") {
+                                msgData.message[0].cInfo.body = msgData.message[0].component.payload.text_message;
+                                pickerConfig[1].dateConfig.format = msgData.message[0].component.payload.format;
+                                pickerConfig[1].dateConfig.startDate = msgData.message[0].component.payload.startDate;
+                                pickerConfig[1].dateConfig.showdueDate = msgData.message[0].component.payload.showdueDate;
+                                pickerConfig[1].dateConfig.endDate = msgData.message[0].component.payload.endDate;
+                                // pickerConfig.dateConfig.selectedDate="Selected Date";
+                                // pickerConfig.dateConfig.selectedDate=msgData.message[0].component.payload.selectedDate;
+                                // if(msgData.message[0].component.payload.showdueDate){
+                    
+                                //     pickerConfig.dateConfig.paymentDue="Payment Due Date";
+                    
+                                //     pickerConfig.dateConfig.paymentDue=msgData.message[0].component.payload.paymentDue;
+                                // }
+                    
+                                if (msgData.message[0].component.payload.title) {
+                                    pickerConfig[1].datepicker.title = msgData.message[0].component.payload.title;
+                                }
+                    
+                                // $('.typingIndicatorContent').css('display', 'block');
+                                if(!msgData.fromHistory){
+                                    KorePickers.prototype.showDatePicker(pickerConfig);
+                                }
+                                // $('.typingIndicatorContent').css('display', 'none');
+                            }
+                            if (msgData.message[0].cInfo.body.indexOf('clockPicker') > -1) {
+                                if(!msgData.fromHistory){
+                                    KorePickers.prototype.showClockPicker(pickerConfig);
+                                }
+                            }
+                        }
+
+                        //to render message bubble even in datepickers case
+                        messageHtml = $(me.getChatTemplate("message")).tmpl({
+                            'msgData': msgData,
+                            'helpers': helpers,
+                            'extension': extension
+                        });
+                    } else {
                         messageHtml = $(me.getChatTemplate("message")).tmpl({
                             'msgData': msgData,
                             'helpers': helpers,
@@ -3643,6 +3663,7 @@
                         $('.chat-container').hide();
                         $('.historyLoadingDiv').addClass('showMsg');
                         res[1].messages.forEach(function (msgData, index) {
+                            msgData.fromHistory=true;
                             setTimeout(function (messagesQueue) {
                                 // try {
                                 //     msgData.message[0].cInfo.body = JSON.parse(msgData.message[0].cInfo.body);
@@ -4489,6 +4510,9 @@
             /*************************************    TTS code start here         **************************************/
 
             chatWindow.prototype.speakWithWebAPI= function(_txtToSpeak) {
+                if(!_txtToSpeak){
+                    return false;
+                }
                 if('speechSynthesis' in window){
                     window.speechSynthesis.cancel();
                     // Create a new instance of SpeechSynthesisUtterance.
@@ -4503,7 +4527,16 @@
                    console.warn("KORE:Your browser doesn't support TTS(Speech Synthesiser)")
                }
             }
-
+            chatWindow.prototype.stopSpeaking= function() {
+                var me = this;
+                if (me.config.isTTSEnabled) {
+                    if(me.config.ttsInterface && me.config.ttsInterface==="webapi"){
+                        if('speechSynthesis' in window){
+                            window.speechSynthesis.cancel();
+                        }
+                    }
+                }
+            }
             function createSocketForTTS() {
 
                 if(!ttsServerUrl){
