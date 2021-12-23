@@ -2763,7 +2763,7 @@
                             'extension': extension
                         });
                     }
-                    else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.template_type == "daterange"||msgData.message[0].component.payload.template_type == "dateTemplate"||msgData.message[0].cInfo.body.indexOf('clockPicker') > -1)) {
+                    else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.template_type == "daterange"||msgData.message[0].component.payload.template_type == "dateTemplate"||(msgData.message[0].cInfo.body && msgData.message[0].cInfo.body.indexOf && msgData.message[0].cInfo.body.indexOf('clockPicker') > -1))) {
                         if(chatContainerConfig && chatContainerConfig.pickerMainConfig){
                             var pickerConfig =  {};
                             pickerConfig= chatContainerConfig.pickerMainConfig;
@@ -4490,6 +4490,9 @@
             /*************************************    TTS code start here         **************************************/
 
             chatWindow.prototype.speakWithWebAPI= function(_txtToSpeak) {
+                if(!_txtToSpeak){
+                    return false;
+                }
                 if('speechSynthesis' in window){
                     window.speechSynthesis.cancel();
                     // Create a new instance of SpeechSynthesisUtterance.

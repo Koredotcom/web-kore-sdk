@@ -238,11 +238,22 @@ KoreBot.prototype.convertWebhookResposeToMessages=function(resBody){
           if(textORJSON.payload){
             msgData.message[0].component.payload=textORJSON.payload;
             msgData.message[0].component.type=textORJSON.type;
+          }else if(textORJSON.text){
+            msgData.message[0].component.payload={
+              text:textORJSON.text
+            }
+            msgData.message[0].component.type='template'
           }else{
             msgData.message[0].component.payload={
               text:textORJSON
             }
             msgData.message[0].component.type='text'
+          }
+          if (msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.text) {
+              msgData.message[0].cInfo.body = msgData.message[0].component.payload.text;
+          }
+          if(msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)){
+            msgData.message[0].cInfo.body = msgData.message[0].component.payload.text || "";
           }
           msgsData.push(msgData);
       });
