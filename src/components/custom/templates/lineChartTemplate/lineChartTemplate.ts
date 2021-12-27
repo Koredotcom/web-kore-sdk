@@ -19,7 +19,7 @@ class LineChartTemplate {
     }
     bindEvents(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let chatWindowInstance = me.cwInstance;
         KoreGraphAdapter.drawlineChartTemplate(msgData,me.messageHtml);
 
         setTimeout(() => {

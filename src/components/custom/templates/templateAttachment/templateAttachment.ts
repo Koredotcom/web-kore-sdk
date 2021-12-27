@@ -19,9 +19,7 @@ class TemplateAttachment {
     }
     bindEvents(messageHtml:any) {
         let me :any = this;
-        let chatWindowInstance = me.cwInstance;
         let $ = me.cwInstance.$;
-        const _chatContainer = chatWindowInstance.config.chatContainer;
         $(messageHtml).off('click', '.botResponseAttachments').on('click', '.botResponseAttachments', function (event: any) {
             event.preventDefault();
             event.stopPropagation();

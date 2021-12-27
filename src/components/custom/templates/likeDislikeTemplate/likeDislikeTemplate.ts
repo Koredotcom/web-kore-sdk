@@ -17,11 +17,10 @@ class LikeDislikeTemplate {
             return me.messageHtml;
         }
     }
-    bindEvents(messageHtml:any) {
+    bindEvents(messageHtml: any) {
         let me: any = this;
         let $ = me.cwInstance.$;
         let chatWindowInstance = me.cwInstance;
-        let _chatContainer = chatWindowInstance.config.chatContainer;
         $(messageHtml).off('click', '.likeDislikeDiv').on('click', '.likeDislikeDiv', function (e: any) {
             e.preventDefault();
             e.stopPropagation();
@@ -34,14 +33,14 @@ class LikeDislikeTemplate {
                 chatWindowInstance.assignValueToInput($(selectedTarget).attr('actual-value') || $(selectedTarget).attr('value'));
                 // var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
                 const _innerText = ($(selectedTarget)[0] && $(selectedTarget)[0].innerText) ? $(selectedTarget)[0].innerText.trim() : '' || ($(selectedTarget) && $(selectedTarget).attr('data-value')) ? $(selectedTarget).attr('data-value').trim() : '';
-                chatWindowInstance.sendMessage($('.chatInputBox'), _innerText);
+                chatWindowInstance.sendMessage(_innerText);
             } else if (type == 'url' || type == 'web_url') {
                 if ($(selectedTarget).attr('msgData') !== undefined) {
                     let msgData;
                     try {
                         msgData = JSON.parse($(selectedTarget).attr('msgData'));
                     } catch (err) {
-                      console.log(err);
+                        console.log(err);
                     }
                     if (msgData && msgData.message && msgData.message[0].component && (msgData.message[0].component.formData || (msgData.message[0].component.payload && msgData.message[0].component.payload.formData))) {
                         if (msgData.message[0].component.formData) {

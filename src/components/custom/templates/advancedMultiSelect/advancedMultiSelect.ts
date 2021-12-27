@@ -139,7 +139,7 @@ class AdvancedMultiSelectTemplate {
             }
             // $('.chatInputBox').text('Here are the selected items ' + ': ' + selectedValue.toString());
             chatWindowInstance.assignValueToInput('Here are the selected items ' + ': ' + selectedValue.toString());
-            chatWindowInstance.sendMessage($('.chatInputBox'), 'Here are the selected items ' + ': ' + toShowText.toString());
+            chatWindowInstance.sendMessage('Here are the selected items ' + ': ' + toShowText.toString());
             $(messageHtml).find(".multiCheckboxBtn").hide();
             $(messageHtml).find(".advancedMultiSelectScroll").css({ "pointer-events": "none" });
             $(messageHtml).find(".advancedMultiSelectScroll").css({ "overflow": "hidden" });

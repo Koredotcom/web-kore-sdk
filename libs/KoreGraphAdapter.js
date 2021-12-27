@@ -2167,7 +2167,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
                 else {
                     return d; 
                 }
-            }).on("mouseover", function(d) {     
+            }).on("mouseover", function(e,d) {     
                 tt_legend.attr('class','only-show tooltip-legend');      
                 tt_legend.html(d).style("left", (e.pageX - 1042) + "px")     
                 .style("top", (e.pageY - 178) + "px");

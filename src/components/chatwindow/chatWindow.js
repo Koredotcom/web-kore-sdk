@@ -1365,7 +1365,7 @@ chatWindow.prototype.bindEvents = function () {
       }
       event.preventDefault();
 
-      me.sendMessage(_this, me.attachmentInfo);
+      me.sendMessageToBot(_this, me.attachmentInfo);
     } else if (event.keyCode === 27) {
       _escPressed++;
       if (_escPressed > 1) {
@@ -1390,7 +1390,7 @@ chatWindow.prototype.bindEvents = function () {
       $('.recordingMicrophone').trigger('click');
     }
     event.preventDefault();
-    me.sendMessage(_this, me.attachmentInfo);
+    me.sendMessageToBot(_this, me.attachmentInfo);
   });
   _chatContainer.off('click', '.notRecordingMicrophone').on('click', '.notRecordingMicrophone', (event) => {
     if (ttsAudioSource) {
@@ -1452,7 +1452,7 @@ chatWindow.prototype.bindEvents = function () {
   });
   _chatContainer.off('click', '.sendChat').on('click', '.sendChat', (event) => {
     const _footerContainer = $(me.config.container).find('.kore-chat-footer');
-    me.sendMessage(_footerContainer.find('.chatInputBox'));
+    me.sendMessageToBot(_footerContainer.find('.chatInputBox'));
   });
 
   _chatContainer.off('click', 'li a').on('click', 'li a', function (e) {
@@ -1499,7 +1499,7 @@ chatWindow.prototype.bindEvents = function () {
       $('.chatInputBox').text($(this).attr('actual-value') || $(this).attr('value'));
       // var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
       const _innerText = ($(this)[0] && $(this)[0].innerText) ? $(this)[0].innerText.trim() : '' || ($(this) && $(this).attr('data-value')) ? $(this).attr('data-value').trim() : '';
-      me.sendMessage($('.chatInputBox'), _innerText);
+      me.sendMessageToBot($('.chatInputBox'), _innerText);
     } else if (type == 'url' || type == 'web_url') {
       if ($(this).attr('msgData') !== undefined) {
         let msgData;
@@ -1542,7 +1542,7 @@ chatWindow.prototype.bindEvents = function () {
         toShowText.push($(checkboxSelection[i]).attr('text'));
       }
       $('.chatInputBox').text(`${$(this).attr('title')}: ${selectedValue.toString()}`);
-      me.sendMessage($('.chatInputBox'), toShowText.toString());
+      me.sendMessageToBot($('.chatInputBox'), toShowText.toString());
     }
     if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[0] === 'quickReply') {
       const _parentQuikReplyEle = e.currentTarget.parentElement.parentElement;
@@ -2028,7 +2028,7 @@ chatWindow.prototype.render = function (chatWindowHtml) {
   me.bindEvents();
 };
 
-chatWindow.prototype.sendMessage = function (chatInput, renderMsg, msgObject) {
+chatWindow.prototype.sendMessageToBot = function (chatInput, renderMsg, msgObject) {
   const me = this;
   if (chatInput.text().trim() === '' && $('.attachment').html().trim().length == 0) {
     return;
@@ -3904,7 +3904,7 @@ chatWindow.prototype.addWidgetEvents = function (cfg) {
     const wizSDK = cfg.widgetSDKInstace;
     wizSDK.events.onPostback = function (data) {
       $('.chatInputBox').text(data.payload);
-      chatInitialize.sendMessage($('.chatInputBox'), data.utterance, data);
+      chatInitialize.sendMessageToBot($('.chatInputBox'), data.utterance, data);
     };
   }
 };
@@ -4341,7 +4341,7 @@ function createSocket() {
   _connection.onclose = function (e) {
     if ($('.chatInputBox').text() !== '' && chatInitialize.config.autoEnableSpeechAndTTS) {
       const me = window.chatContainerConfig;
-      me.sendMessage($('.chatInputBox'));
+      me.sendMessageToBot($('.chatInputBox'));
     }
     isRecordingStarted = false;
     console.log('Server is closed');
@@ -4358,7 +4358,7 @@ function createSocket() {
 function stop() {
   if ($('.chatInputBox').text() !== '' && chatInitialize.config.autoEnableSpeechAndTTS) {
     const me = window.chatContainerConfig;
-    me.sendMessage($('.chatInputBox'));
+    me.sendMessageToBot($('.chatInputBox'));
   }
   clearInterval(intervalKey);
   $('.recordingMicrophone').css('display', 'none');
@@ -4718,10 +4718,10 @@ function getFileToken(_obj, _file, recState) {
     },
     error(msg) {
       chatInitialize.config.botOptions._reconnecting = true;
-      _self.showError('Failed to upload file.Please try again');
+      me.showError('Failed to upload file.Please try again');
       if (msg.responseJSON && msg.responseJSON.errors && msg.responseJSON.errors.length && msg.responseJSON.errors[0].httpStatus === '401') {
         setTimeout(() => {
-          _self.hideError();
+          me.hideError();
         }, 5000);
         $('.kore-chat-window .reload-btn').trigger('click');
       }
@@ -4730,6 +4730,7 @@ function getFileToken(_obj, _file, recState) {
   });
 }
 function getfileuploadConf(_recState) {
+  var _accessToke;
   const me = chatInitialize;
   appConsts.UPLOAD = {
     FILE_ENDPOINT: `${koreAPIUrl}1.1/attachment/file`,
@@ -4746,7 +4747,7 @@ function getfileuploadConf(_recState) {
       FILE_CHUNK_ENDPOINT: `${koreAPIUrl}attachments/${me.config.botOptions.webhookConfig.streamId}/${me.config.botOptions.webhookConfig.channelType}/token/:fileID/chunk`,
     };
   }
-  _uploadConfg = {};
+  var _uploadConfg = {};
   _uploadConfg.url = appConsts.UPLOAD.FILE_ENDPOINT.replace(':fileID', fileToken);
   _uploadConfg.tokenUrl = appConsts.UPLOAD.FILE_TOKEN_ENDPOINT;
   _uploadConfg.chunkUrl = appConsts.UPLOAD.FILE_CHUNK_ENDPOINT.replace(':fileID', fileToken);
@@ -5263,5 +5264,11 @@ chatWindow.prototype.assignValueToInput = function (value) {
   const _chatContainer = me.config.chatContainer;
   const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
   _chatInput.text(value);
+};
+chatWindow.prototype.sendMessage = function (payload, options) {
+  const me = this;
+  const _chatContainer = me.config.chatContainer;
+  const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
+  me.sendMessageToBot(_chatInput, payload, options);
 };
 export default chatWindow;

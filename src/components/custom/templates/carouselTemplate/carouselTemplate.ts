@@ -8,8 +8,6 @@ class CarouselTemplate {
     let $ = me.cwInstance.$;
     const helpersObj = new helpers();
     const carouselEles = [];
-    const chatWindowInstance = me.cwInstance;
-    const _chatContainer = chatWindowInstance.config.chatContainer;
 
     if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'carousel') {
       me.messageHtml = $(me.getTemplateString('carouselTemplate')).tmpl({
@@ -50,7 +48,6 @@ class CarouselTemplate {
     const me: any = this;
     let $ = me.cwInstance.$;
     const chatWindowInstance = me.cwInstance;
-    const _chatContainer = chatWindowInstance.config.chatContainer;
     $(messageHtml).off('click', '.carouselImageContent').on('click', '.carouselImageContent', (e: any) => {
       e.preventDefault();
       e.stopPropagation();
@@ -63,7 +60,7 @@ class CarouselTemplate {
         chatWindowInstance.assignValueToInput($(selectedTarget).attr('actual-value') || $(selectedTarget).attr('value'));
         // var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
         const _innerText = ($(selectedTarget)[0] && $(selectedTarget)[0].innerText) ? $(selectedTarget)[0].innerText.trim() : '' || ($(selectedTarget) && $(selectedTarget).attr('data-value')) ? $(selectedTarget).attr('data-value').trim() : '';
-        chatWindowInstance.sendMessage($('.chatInputBox'), _innerText);
+        chatWindowInstance.sendMessage(_innerText);
       } else if (type == 'url' || type == 'web_url') {
         if ($(selectedTarget).attr('msgData') !== undefined) {
           let msgData;
@@ -86,7 +83,7 @@ class CarouselTemplate {
         }
         chatWindowInstance.openExternalLink(a_link);
       }
-        chatWindowInstance.focusInputTextbox();
+      chatWindowInstance.focusInputTextbox();
       // setTimeout(() => {
       //   const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
       //   _chatInput.focus();

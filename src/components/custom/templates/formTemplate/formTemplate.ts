@@ -54,7 +54,7 @@ class FormTemplate {
                 selectedValue = inputForm_id.find("#email").val();
                 $(messageHtml).find(".formMainComponent form").addClass("hide");
             }
-            chatWindowInstance.sendMessage($('.chatInputBox'), selectedValue, msgData);
+            chatWindowInstance.sendMessage(selectedValue, msgData);
         });
     }
     getTemplateString() {

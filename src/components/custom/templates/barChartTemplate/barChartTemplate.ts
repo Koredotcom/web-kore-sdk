@@ -20,7 +20,6 @@ class BarChartTemplate {
 
   bindEvents(msgData: any) {
     const me: any = this;
-    let $ = me.cwInstance.$;
     const chatWindowInstance = me.cwInstance;
     KoreGraphAdapter.drawBarChartTemplate(msgData, me.messageHtml);
     setTimeout(() => {

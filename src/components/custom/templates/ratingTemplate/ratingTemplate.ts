@@ -57,7 +57,7 @@ class RatingTemplate {
             }
             if (silderValue === false) {
                 chatWindowInstance.assignValueToInput(_innerText);
-                chatWindowInstance.sendMessage($('.chatInputBox'), _innerText);
+                chatWindowInstance.sendMessage(_innerText);
                 $(".ratingMainComponent").css({ "pointer-events": "none" });
             }
             $(".buttonTmplContent .ratingMainComponent .submitBtn").click(function () {
@@ -66,16 +66,16 @@ class RatingTemplate {
                     var messageTodisplay = msgData.message[0].component.payload.messageTodisplay;
                     chatWindowInstance.renderMessage(msgData);
                     chatWindowInstance.assignValueToInput(_innerText + " :" + messageTodisplay);
-                    chatWindowInstance.sendMessage($('.chatInputBox'), _innerText + " :" + messageTodisplay);
+                    chatWindowInstance.sendMessage( _innerText + " :" + messageTodisplay);
                 } else if ($(".suggestionInput").val() == "") {
                     chatWindowInstance.renderMessage(msgData);
                     chatWindowInstance.assignValueToInput(_innerText);
-                    chatWindowInstance.sendMessage($('.chatInputBox'), _innerText)
+                    chatWindowInstance.sendMessage(_innerText)
                 } else {
                     var messageDisplay = $(".suggestionInput").val();
                     chatWindowInstance.renderMessage(msgData);
                     chatWindowInstance.assignValueToInput(_innerText + " :" + messageDisplay)
-                    chatWindowInstance.sendMessage($('.chatInputBox'), _innerText + " :" + messageDisplay);
+                    chatWindowInstance.sendMessage( _innerText + " :" + messageDisplay);
                 }
                 chatWindowInstance.bottomSliderAction("hide");
                 msgData.message[0].component.payload.sliderView = true;
@@ -133,7 +133,7 @@ class RatingTemplate {
             }
             if (sliderValue === false) {
                 chatWindowInstance.assignValueToInput(emojiValue)
-                chatWindowInstance.sendMessage($('.chatInputBox'), emojiValue);
+                chatWindowInstance.sendMessage(emojiValue);
             }
             $(".emojiComponent").off('click', '.submitBtn').on('click', '.submitBtn', function () {
                 msgData.message[0].component.payload.sliderView = false;
@@ -141,16 +141,16 @@ class RatingTemplate {
                     var messageTodisplay = msgData.message[0].component.payload.messageTodisplay
                     chatWindowInstance.renderMessage(msgData);
                     chatWindowInstance.assignValueToInput(emojiValue + " :" + messageTodisplay)
-                    chatWindowInstance.sendMessage($('.chatInputBox'), "Rating" + ': ' + emojiValue + " and " + messageTodisplay);
+                    chatWindowInstance.sendMessage("Rating" + ': ' + emojiValue + " and " + messageTodisplay);
                 } else if ($(".suggestionInput").val() == "") {
                     chatWindowInstance.renderMessage(msgData);
                     chatWindowInstance.assignValueToInput(emojiValue)
-                    chatWindowInstance.sendMessage($('.chatInputBox'), emojiValue);
+                    chatWindowInstance.sendMessage( emojiValue);
                 } else {
                     var messageDisplay = $(".suggestionInput").val();
                     chatWindowInstance.renderMessage(msgData);
                     chatWindowInstance.assignValueToInput(emojiValue + " :" + messageDisplay)
-                    chatWindowInstance.sendMessage($('.chatInputBox'), emojiValue + " :" + messageDisplay);
+                    chatWindowInstance.sendMessage( emojiValue + " :" + messageDisplay);
                 }
                 chatWindowInstance.bottomSliderAction("hide");
                 msgData.message[0].component.payload.sliderView = true;

@@ -4769,7 +4769,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
     KoreWidgetSDK.prototype.passHashTag = function (uttarence) {
       var message = 'find the articles with ' + uttarence;
-      window['chatWinRef'].sendMessage($('.chatInputBox'), message, {}, 'onlyMessage');
+      window['chatWinRef'].sendMessageToBot($('.chatInputBox'), message, {}, 'onlyMessage');
     };
 
     KoreWidgetSDK.prototype.openArticle = function (kId) {
@@ -5027,7 +5027,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           var parmaMessage = {
             ids: [mainObj.data.eventId]
           };
-          window['chatWinRef'].sendMessage($('.chatInputBox'), actionObj.utterance, parmaMessage, 'widget');
+          window['chatWinRef'].sendMessageToBot($('.chatInputBox'), actionObj.utterance, parmaMessage, 'widget');
           setChatFocus();
         } else if (actionObj.type === 'view_details') {
           window.angularComponentReference.zone.run(function () {
@@ -5142,7 +5142,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         msg = 'Ask Kora ' + msg;
       }
 
-      window['chatWinRef'].sendMessage($('.chatInputBox'), msg, parmaMessage, 'meeting_action');
+      window['chatWinRef'].sendMessageToBot($('.chatInputBox'), msg, parmaMessage, 'meeting_action');
       taskList = [];
       taskTitle = {};
       $(_self.config.container.content).find('.viewMoreCntr').remove();

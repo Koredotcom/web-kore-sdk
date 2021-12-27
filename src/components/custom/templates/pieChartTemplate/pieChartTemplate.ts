@@ -20,7 +20,7 @@ class PieChartTemplate {
     }
     bindEvents(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let chatWindowInstance = me.cwInstance;
         KoreGraphAdapter.drawPieChartTemplate(msgData, me.messageHtml);
         setTimeout(() => {
             // $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));

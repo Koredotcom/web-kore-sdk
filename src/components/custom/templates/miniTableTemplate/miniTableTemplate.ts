@@ -29,7 +29,6 @@ class MiniTableChartTemplate {
         let me: any = this;
         const carouselEles = [];
         let $ = me.cwInstance.$;
-        const _chatContainer = $(me.cwInstance.config.chatContainer).find('.chat-container');
         let chatWindowInstance = me.cwInstance;
 
         setTimeout(() => {

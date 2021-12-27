@@ -256,7 +256,7 @@ KorePickers.prototype.addradioOptionsMenuListener = function (mainConfig) {
     _korePickers.find(".radioOptionsPickerContainer .confirmBTN").click(function (event) {
         var radioOptionPostbackMsg = target.find('.radioOptionName').attr('data-value');
         var radioOptionTitle = target.find('.radioOptionName').attr('data-title');
-        mainConfig[0].chatWindowInstance.sendMessage($('.chatInputBox').text(radioOptionPostbackMsg), radioOptionTitle);
+        mainConfig[0].chatWindowInstance.sendMessageToBot($('.chatInputBox').text(radioOptionPostbackMsg), radioOptionTitle);
         _korePickers.find(".radioOptionsPickerContainer .confirmBTN").css({ "display": "block" });
         _self.bottomSlider('hide');
         _korePickers.find(".kore-action-sheet").remove();
@@ -341,7 +341,7 @@ KorePickers.prototype.addTaskMenuListener = function (mainConfig) {
         _korePickers.find('.footerContainer.pos-relative .chatInputBox').text(inputValue);
         var taskPostbackMsg = $(e.currentTarget).find('.taskName').attr('data-value');
         var taskTitle = $(e.currentTarget).find('.taskName').attr('data-title');
-        mainConfig[0].chatWindowInstance.sendMessage($('.chatInputBox').text(taskPostbackMsg), taskTitle);
+        mainConfig[0].chatWindowInstance.sendMessageToBot($('.chatInputBox').text(taskPostbackMsg), taskTitle);
         _self.bottomSlider('hide');
         _korePickers.find(".kore-action-sheet").remove();
     });
