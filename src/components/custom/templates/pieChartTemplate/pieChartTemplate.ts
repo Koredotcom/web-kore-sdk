@@ -8,9 +8,6 @@ class PieChartTemplate {
         let me: any = this;
         let $ = me.cwInstance.$;
         let helpersObj = new helpers();
-        let chatWindowInstance = me.cwInstance;
-        let _chatContainer = chatWindowInstance.config.chatContainer;
-
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "piechart") {
             me.messageHtml = $(me.getTemplateString('pieChartTemplate')).tmpl({
                 'msgData': msgData,
@@ -24,10 +21,10 @@ class PieChartTemplate {
     bindEvents(msgData: any) {
         let me: any = this;
         let $ = me.cwInstance.$;
-        let chatWindowInstance = me.cwInstance;
         KoreGraphAdapter.drawPieChartTemplate(msgData, me.messageHtml);
         setTimeout(() => {
-            $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
+            // $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
+            chatWindowInstance.scrollTop();
             KoreGraphAdapter.handleChartOnClick();
         }, 200);
     }

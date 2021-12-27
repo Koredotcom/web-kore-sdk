@@ -25,7 +25,7 @@ class ListViewTemplate {
         let me: any = this;
         let chatWindowInstance = me.cwInstance;
         let $ = me.cwInstance.$;
-        const _chatContainer = chatWindowInstance.config.chatContainer;
+        var _innerText;
         $(messageHtml).off('click', '.listViewTmplContent .seeMoreList').on('click', '.listViewTmplContent .seeMoreList', function () {
             if ($(".list-template-sheet").length !== 0) {
                 $(".list-template-sheet").remove();
@@ -42,11 +42,12 @@ class ListViewTemplate {
                 if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
                     a_link = "http:////" + a_link;
                 }
-                var _tempWin = window.open(a_link, "_blank");
+                window.open(a_link, "_blank");
             } else {
-                var _innerText = $(selectedTarget).attr('data-value');
+                _innerText = $(selectedTarget).attr('data-value');
                 var postBack = $(selectedTarget).attr('data-title');
-                chatWindowInstance.sendMessage($('.chatInputBox').text(_innerText), postBack);
+                chatWindowInstance.assignValueToInput(_innerText);
+                chatWindowInstance.sendMessage($('.chatInputBox'), postBack);
                 $(".listViewTmplContentBox").css({ "pointer-events": "none" });
             }
         });
@@ -57,7 +58,6 @@ class ListViewTemplate {
         let me: any = this;
         let chatWindowInstance = me.cwInstance;
         let $ = me.cwInstance.$;
-        const _chatContainer = chatWindowInstance.config.chatContainer;
         let helpersObj = new helpers();
         var msgData = $("li.fromOtherUsers.with-icon.listView").data();
         if (msgData.message[0].component.payload.seeMore) {
@@ -91,29 +91,30 @@ class ListViewTemplate {
                 me.valueClick(_selectedTarget);
             });
         });
-        $(".kore-action-sheet .list-template-sheet .close-button").on('click', function (event: any) {
+        $(".kore-action-sheet .list-template-sheet .close-button").on('click', function () {
             chatWindowInstance.bottomSliderAction('hide');
         });
         $(".kore-action-sheet .list-template-sheet .listViewLeftContent").on('click', function (e: any) {
             let _selectedTarget = e.currentTarget
             me.valueClick(_selectedTarget);
         });
-    };
+    }
     valueClick(_self: any, actionObj: any) {
         let me: any = this;
         let chatWindowInstance = me.cwInstance;
         let $ = me.cwInstance.$;
-        const _chatContainer = chatWindowInstance.config.chatContainer;
+        var _innerText;
         if (actionObj) {
             if (actionObj.type === "url") {
                 window.open(actionObj.url, "_blank");
                 return;
             }
             if (actionObj.payload) {
-                var _innerText = actionObj.payload;
+                _innerText = actionObj.payload;
                 var eData: any = {};
                 eData.payload = _self.innerText || actionObj.title;
-                chatWindowInstance.sendMessage($('.chatInputBox').text(_innerText), eData.payload);
+                chatWindowInstance.assignValueToInput(_innerText);
+                chatWindowInstance.sendMessage($('.chatInputBox'), eData.payload);
             }
             if (_self && _self.hasClass("dropdown-contentWidgt")) {
                 $(_self).hide();
@@ -124,11 +125,12 @@ class ListViewTemplate {
                 if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
                     a_link = "http:////" + a_link;
                 }
-                var _tempWin = window.open(a_link, "_blank");
+                window.open(a_link, "_blank");
             } else {
-                var _innerText = $(_self).attr('data-value');
+                _innerText = $(_self).attr('data-value');
                 var postBack = $(_self).attr('data-title');
-                chatWindowInstance.sendMessage($('.chatInputBox').text(_innerText), postBack);
+                chatWindowInstance.assignValueToInput(_innerText);
+                chatWindowInstance.sendMessage($('.chatInputBox'), postBack);
                 $(".kore-action-sheet .list-template-sheet").animate({ height: 'toggle' });
                 chatWindowInstance.bottomSliderAction("hide");
                 $(".listViewTmplContentBox").css({ "pointer-events": "none" });

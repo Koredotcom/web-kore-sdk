@@ -20,7 +20,6 @@ class AdvancedMultiSelectTemplate {
         let me: any = this;
         let chatWindowInstance = me.cwInstance;
         let $ = me.cwInstance.$;
-        const _chatContainer = chatWindowInstance.config.chatContainer;
         $(messageHtml).off('click', '.singleSelect').on('click', '.singleSelect', function (e:any) {
             var parentContainer = $(e.currentTarget).closest('.listTmplContentBox');
             var allGroups = $(parentContainer).find('.collectionDiv');
@@ -138,8 +137,8 @@ class AdvancedMultiSelectTemplate {
                 selectedValue.push($(checkboxSelection[i]).attr('value'));
                 toShowText.push($(checkboxSelection[i]).attr('text'));
             }
-            $('.chatInputBox').text('Here are the selected items ' + ': ' + selectedValue.toString());
-
+            // $('.chatInputBox').text('Here are the selected items ' + ': ' + selectedValue.toString());
+            chatWindowInstance.assignValueToInput('Here are the selected items ' + ': ' + selectedValue.toString());
             chatWindowInstance.sendMessage($('.chatInputBox'), 'Here are the selected items ' + ': ' + toShowText.toString());
             $(messageHtml).find(".multiCheckboxBtn").hide();
             $(messageHtml).find(".advancedMultiSelectScroll").css({ "pointer-events": "none" });
@@ -175,7 +174,7 @@ class AdvancedMultiSelectTemplate {
                                                             <img src="https://image12.coupangcdn.com/image/displayitem/displayitem_8ad9b5e0-fd76-407b-b820-6494f03ffc31.jpg">\
                                                         </div>\
                                                         <div class="multiSelectDescContainer">\
-                                                            <p class="multiTitle">{{html helpers.convertMDtoHTML(msgItem.title, "bot")}}\</p>\
+                                                            <p class="multiTitle">{{html helpers.convertMDtoHTML(msgItem.title, "bot")}}</p>\
                                                             <p class="multiDesc">Consultation on weekends and holidays</p>\
                                                         </div>\
                                                     </div>\
@@ -198,7 +197,7 @@ class AdvancedMultiSelectTemplate {
                                                                 </div>\
                                                             {{/if}}\
                                                             <div class="multiSelectDescContainer">\
-                                                                <p class="multiTitle">{{html helpers.convertMDtoHTML(msgItem.title, "bot")}}\</p>\
+                                                                <p class="multiTitle">{{html helpers.convertMDtoHTML(msgItem.title, "bot")}}</p>\
                                                                 {{if msgItem.description}}\
                                                                 <p class="multiDesc">${msgItem.description}</p>\
                                                                 {{/if}}\

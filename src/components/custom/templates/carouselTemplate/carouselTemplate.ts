@@ -5,7 +5,7 @@ import './carouselTemplate.scss';
 class CarouselTemplate {
   renderMessage(msgData: any) {
     const me: any = this;
-    const { $ } = me.cwInstance;
+    let $ = me.cwInstance.$;
     const helpersObj = new helpers();
     const carouselEles = [];
     const chatWindowInstance = me.cwInstance;
@@ -36,9 +36,10 @@ class CarouselTemplate {
         evt.initEvent('resize', true, false);
         window.dispatchEvent(evt);
         chatWindowInstance.carouselTemplateCount += 1;
-        _chatContainer.animate({
-          scrollTop: _chatContainer.prop('scrollHeight'),
-        }, 0);
+        // _chatContainer.animate({
+        //   scrollTop: _chatContainer.prop('scrollHeight'),
+        // }, 0);
+        chatWindowInstance.scrollTop();
       });
       me.bindEvents(me.messageHtml);
       return me.messageHtml;
@@ -47,9 +48,7 @@ class CarouselTemplate {
 
   bindEvents(messageHtml: any) {
     const me: any = this;
-    const { $ } = me.cwInstance;
-    const helpersObj = new helpers();
-    const carouselEles = [];
+    let $ = me.cwInstance.$;
     const chatWindowInstance = me.cwInstance;
     const _chatContainer = chatWindowInstance.config.chatContainer;
     $(messageHtml).off('click', '.carouselImageContent').on('click', '.carouselImageContent', (e: any) => {
@@ -61,7 +60,7 @@ class CarouselTemplate {
         type = type.toLowerCase();
       }
       if (type == 'postback' || type == 'text') {
-        $('.chatInputBox').text($(selectedTarget).attr('actual-value') || $(selectedTarget).attr('value'));
+        chatWindowInstance.assignValueToInput($(selectedTarget).attr('actual-value') || $(selectedTarget).attr('value'));
         // var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
         const _innerText = ($(selectedTarget)[0] && $(selectedTarget)[0].innerText) ? $(selectedTarget)[0].innerText.trim() : '' || ($(selectedTarget) && $(selectedTarget).attr('data-value')) ? $(selectedTarget).attr('data-value').trim() : '';
         chatWindowInstance.sendMessage($('.chatInputBox'), _innerText);
@@ -71,7 +70,7 @@ class CarouselTemplate {
           try {
             msgData = JSON.parse($(selectedTarget).attr('msgData'));
           } catch (err) {
-
+            console.log(err);
           }
           if (msgData && msgData.message && msgData.message[0].component && (msgData.message[0].component.formData || (msgData.message[0].component.payload && msgData.message[0].component.payload.formData))) {
             if (msgData.message[0].component.formData) {
@@ -87,10 +86,11 @@ class CarouselTemplate {
         }
         chatWindowInstance.openExternalLink(a_link);
       }
-      setTimeout(() => {
-        const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
-        _chatInput.focus();
-      }, 600);
+        chatWindowInstance.focusInputTextbox();
+      // setTimeout(() => {
+      //   const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
+      //   _chatInput.focus();
+      // }, 600);
     });
   }
 

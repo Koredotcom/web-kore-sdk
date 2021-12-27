@@ -20,11 +20,8 @@ class ListWidgetTemplate {
     }
   }
   bindEvents(ele: any, templateType: any, bindingData: any) {
-    //	customTemplate.prototype.templateEvents =function(ele, templateType, bindingData){
     let me: any = this;
-    let chatWindowInstance = me.cwInstance;
     let $ = me.cwInstance.$;
-    const _chatContainer = chatWindowInstance.config.chatContainer;
     var _self: any = this;
     var $ele = $(ele);
     if (templateType === 'TabbedList' || templateType === 'listWidget') {
@@ -32,14 +29,15 @@ class ListWidgetTemplate {
       var titleEle = $ele.find('.listViewLeftContent');
       if (titleEle && titleEle.length) {
         for (let i = 0; i < titleEle.length; i++) {
-          var ele = titleEle[i];
-          if ($(ele).attr('col-size')) {
-            if ($(ele).hasClass("listViewLeftContent")) {
-              var width = _self.getColumnWidth((100 - parseInt($(ele).attr('col-size'))) + '%');
-              $(ele).css("width", width + '%');
+          var element = titleEle[i];
+          if ($(element).attr('col-size')) {
+            var width;
+            if ($(element).hasClass("listViewLeftContent")) {
+              width = _self.getColumnWidth((100 - parseInt($(element).attr('col-size'))) + '%');
+              $(element).css("width", width + '%');
             } else {
-              var width = _self.getColumnWidth($(ele).attr('col-size'));
-              $(ele).css("width", width + '%');
+              width = _self.getColumnWidth($(element).attr('col-size'));
+              $(element).css("width", width + '%');
             }
           }
         }
@@ -166,7 +164,6 @@ class ListWidgetTemplate {
     //  }
   }
   getColumnWidth(width: any) {
-    var _self = this;
     var newWidth;
     var widthToApply: any = '100%';
     if (width) {
@@ -179,22 +176,23 @@ class ListWidgetTemplate {
       }
       return widthToApply;
     }
-  };
+  }
   valueClick(_self: any, actionObj: any) {
     let me: any = this;
     let chatWindowInstance = me.cwInstance;
     let $ = me.cwInstance.$;
-    const _chatContainer = chatWindowInstance.config.chatContainer;
+    var _innerText;
     if (actionObj) {
       if (actionObj.type === "url") {
         window.open(actionObj.url, "_blank");
         return;
       }
       if (actionObj.payload) {
-        var _innerText = actionObj.payload;
+        _innerText = actionObj.payload;
         var eData: any = {};
         eData.payload = _self.innerText || actionObj.title;
-        chatWindowInstance.sendMessage($('.chatInputBox').text(_innerText), eData.payload);
+        chatWindowInstance.assignValueToInput(_innerText);
+        chatWindowInstance.sendMessage($('.chatInputBox'), eData.payload);
       }
       if (_self && _self.hasClass("dropdown-contentWidgt")) {
         $(_self).hide();
@@ -205,11 +203,12 @@ class ListWidgetTemplate {
         if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
           a_link = "http:////" + a_link;
         }
-        var _tempWin = window.open(a_link, "_blank");
+        window.open(a_link, "_blank");
       } else {
-        var _innerText = $(_self).attr('data-value');
+        _innerText = $(_self).attr('data-value');
         var postBack = $(_self).attr('data-title');
-        chatWindowInstance.sendMessage($('.chatInputBox').text(_innerText), postBack);
+        chatWindowInstance.assignValueToInput(_innerText) 
+        chatWindowInstance.sendMessage($('.chatInputBox'), postBack);
         $(".kore-action-sheet .list-template-sheet").animate({ height: 'toggle' });
         chatWindowInstance.bottomSliderAction("hide");
         $(".listViewTmplContentBox").css({ "pointer-events": "none" });

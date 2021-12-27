@@ -8,8 +8,6 @@ class MiniTableChartTemplate {
         let me: any = this;
         let $ = me.cwInstance.$;
         let helpersObj = new helpers();
-        const carouselEles = [];
-        const _chatContainer = $(me.cwInstance.config.chatContainer).find('.chat-container');
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "mini_table") {
             if (msgData.message[0].component.payload.layout == 'horizontal') {
                 me.messageHtml = $(me.getTemplateString('miniTableHorizontalTemplate')).tmpl({
@@ -52,9 +50,10 @@ class MiniTableChartTemplate {
             evt.initEvent('resize', true, false);
             window.dispatchEvent(evt);
             chatWindowInstance.carouselTemplateCount += 1;
-            _chatContainer.animate({
-                scrollTop: _chatContainer.prop('scrollHeight'),
-            }, 0);
+            chatWindowInstance.scrollTop();
+            // _chatContainer.animate({
+            //     scrollTop: _chatContainer.prop('scrollHeight'),
+            // }, 0);
         });
     }
     getTemplateString(template_type: string) {

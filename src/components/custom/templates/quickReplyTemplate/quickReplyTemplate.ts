@@ -13,15 +13,13 @@ class QuickReplyTemplate {
                 'msgData': msgData,
                 'helpers': helpersObj.helpers
             });
-            me.bindEvents();
+            me.bindEvents( me.messageHtml);
             return me.messageHtml;
         }
     }
-    bindEvents() {
+    bindEvents(messageHtml:any) {
         let me: any = this;
-        const carouselEles = [];
         let $ = me.cwInstance.$;
-        const _chatContainer = $(me.cwInstance.config.chatContainer).find('.chat-container');
         let chatWindowInstance = me.cwInstance;
         const quickReplyDivs = document.querySelectorAll('.quickReplies');
         for (var i = 0; i < quickReplyDivs.length; i++) {
@@ -41,7 +39,7 @@ class QuickReplyTemplate {
                 }
             }
         }
-        _chatContainer.off('click', '.quickReply').on('click', '.quickReply', function (e: any) {
+        $(messageHtml).off('click', '.quickReply').on('click', '.quickReply', function (e: any) {
             e.preventDefault();
             e.stopPropagation();
             let selectedTarget = e.currentTarget;
@@ -50,7 +48,7 @@ class QuickReplyTemplate {
                 type = type.toLowerCase();
             }
             if (type == 'postback' || type == 'text') {
-                $('.chatInputBox').text($(selectedTarget).attr('actual-value') || $(selectedTarget).attr('value'));
+                chatWindowInstance.assignValueToInput($(selectedTarget).attr('actual-value') || $(selectedTarget).attr('value'));
                 // var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
                 const _innerText = ($(selectedTarget)[0] && $(selectedTarget)[0].innerText) ? $(selectedTarget)[0].innerText.trim() : '' || ($(selectedTarget) && $(selectedTarget).attr('data-value')) ? $(selectedTarget).attr('data-value').trim() : '';
                 chatWindowInstance.sendMessage($('.chatInputBox'), _innerText);
@@ -60,7 +58,7 @@ class QuickReplyTemplate {
                     try {
                         msgData = JSON.parse($(selectedTarget).attr('msgData'));
                     } catch (err) {
-
+                      console.log(err);
                     }
                     if (msgData && msgData.message && msgData.message[0].component && (msgData.message[0].component.formData || (msgData.message[0].component.payload && msgData.message[0].component.payload.formData))) {
                         if (msgData.message[0].component.formData) {
@@ -95,7 +93,7 @@ class QuickReplyTemplate {
                     selectedValue.push($(checkboxSelection[i]).attr('value'));
                     toShowText.push($(checkboxSelection[i]).attr('text'));
                 }
-                $('.chatInputBox').text(`${$(selectedTarget).attr('title')}: ${selectedValue.toString()}`);
+                chatWindowInstance.assignValueToInput(`${$(selectedTarget).attr('title')}: ${selectedValue.toString()}`);
                 chatWindowInstance.sendMessage($('.chatInputBox'), toShowText.toString());
             }
             if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[0] === 'quickReply') {
@@ -109,12 +107,11 @@ class QuickReplyTemplate {
                     _parentQuikReplyEle.parentElement.removeChild(_parentQuikReplyEle);
                 }, 50);
             }
-            setTimeout(() => {
-                const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
-                _chatInput.focus();
-            }, 600);
+            // setTimeout(() => {
+                chatWindowInstance.focusInputTextbox();
+            // }, 600);
         });
-        _chatContainer.off('click', '.quickreplyRightIcon').on('click', '.quickreplyRightIcon', (event: any) => {
+        $(messageHtml).off('click', '.quickreplyRightIcon').on('click', '.quickreplyRightIcon', (event: any) => {
             const _quickReplesDivs = event.currentTarget.parentElement.getElementsByClassName('quickReplyTemplContentChild');
             if (_quickReplesDivs.length) {
                 const _scrollParentDiv = event.target.parentElement.getElementsByClassName('quick_replies_btn_parent');

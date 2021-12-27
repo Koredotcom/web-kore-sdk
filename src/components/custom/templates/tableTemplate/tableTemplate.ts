@@ -30,12 +30,12 @@ class TableChartTemplate {
                 };
             }
             const showFullTableModal = document.getElementsByClassName('showMore');
-            for (var i = 0; i < showFullTableModal.length; i++) {
-                let element: any = showFullTableModal[i];
+            for (var j = 0; j < showFullTableModal.length; j++) {
+                let element: any = showFullTableModal[j];
                 element.onclick = function (e: any) {
                     let selectedTarget = e.currentTarget;
                     const parentli = selectedTarget.parentElement;
-                    const tableChartDiv =  $(parentli).closest('.tableChart');
+                   // const tableChartDiv =  $(parentli).closest('.tableChart'); can be uncommented if using tableChartDiv
                     $('#dialog').empty();
                     $('#dialog').html($(parentli).find('.tablechartDiv').html());
                     $('.hello').clone().appendTo('.goodbye');

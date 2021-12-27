@@ -18,11 +18,7 @@ class ListTemplate {
         }
     }
     bindEvents() {
-        let me: any = this;
-        let chatWindowInstance = me.cwInstance;
-        let $ = me.cwInstance.$;
-        const _chatContainer = chatWindowInstance.config.chatContainer;
-
+       
     }
     getTemplateString() {
         var iframe = '<script id="chat_message_tmpl" type="text/x-jquery-tmpl"> \

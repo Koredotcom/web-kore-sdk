@@ -20,7 +20,6 @@ class FormTemplate {
         let me: any = this;
         let chatWindowInstance = me.cwInstance;
         let $ = me.cwInstance.$;
-        const _chatContainer = chatWindowInstance.config.chatContainer;
         $(messageHtml).find(".formMainComponent").on('keydown', function (e: any) {
             if (e.keyCode == 13) {
                 e.preventDefault();
@@ -48,10 +47,10 @@ class FormTemplate {
                 for (var i = 0; i < passwordLength; i++) {
                     selectedValue = selectedValue + "*";
                 }
-                $('.chatInputBox').text(textPwd);
+                chatWindowInstance.assignValueToInput(textPwd);
                 $(messageHtml).find(".formMainComponent form").addClass("hide");
             } else if (inputForm_id.find("input[type='password']").length == 0) {
-                $('.chatInputBox').text(inputForm_id.find("#email").val());
+                chatWindowInstance.assignValueToInput(inputForm_id.find("#email").val());
                 selectedValue = inputForm_id.find("#email").val();
                 $(messageHtml).find(".formMainComponent form").addClass("hide");
             }

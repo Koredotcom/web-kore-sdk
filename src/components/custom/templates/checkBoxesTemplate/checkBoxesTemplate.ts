@@ -30,7 +30,7 @@ class CheckBoxesTemplate {
                 type = type.toLowerCase();
             }
             if (type == 'postback' || type == 'text') {
-                $('.chatInputBox').text($(selectedTarget).attr('actual-value') || $(selectedTarget).attr('value'));
+                chatWindowInstance.assignValueToInput($(selectedTarget).attr('actual-value') || $(selectedTarget).attr('value'));
                 // var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
                 const _innerText = ($(selectedTarget)[0] && $(selectedTarget)[0].innerText) ? $(selectedTarget)[0].innerText.trim() : '' || ($(selectedTarget) && $(selectedTarget).attr('data-value')) ? $(selectedTarget).attr('data-value').trim() : '';
                 chatWindowInstance.sendMessage($('.chatInputBox'), _innerText);
@@ -40,7 +40,7 @@ class CheckBoxesTemplate {
                     try {
                         msgData = JSON.parse($(selectedTarget).attr('msgData'));
                     } catch (err) {
-
+                      console.log(err);
                     }
                     if (msgData && msgData.message && msgData.message[0].component && (msgData.message[0].component.formData || (msgData.message[0].component.payload && msgData.message[0].component.payload.formData))) {
                         if (msgData.message[0].component.formData) {
@@ -66,13 +66,14 @@ class CheckBoxesTemplate {
                     selectedValue.push($(checkboxSelection[i]).attr('value'));
                     toShowText.push($(checkboxSelection[i]).attr('text'));
                 }
-                $('.chatInputBox').text(`${$(selectedTarget).attr('title')}: ${selectedValue.toString()}`);
+                chatWindowInstance.assignValueToInput(`${$(selectedTarget).attr('title')}: ${selectedValue.toString()}`);
                 chatWindowInstance.sendMessage($('.chatInputBox'), toShowText.toString());
             }
-            setTimeout(() => {
-                const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
-                _chatInput.focus();
-            }, 600);
+            chatWindowInstance.focusInputTextbox();
+            // setTimeout(() => {
+            //     const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
+            //     _chatInput.focus();
+            // }, 600);
         });
     }
     getTemplateString() {

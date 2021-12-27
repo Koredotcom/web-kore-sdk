@@ -19,14 +19,13 @@ class DropdownTemplate {
     }
     bindEvents(messageHtml: any) {
         let me: any = this;
-        let chatWindowInstance = me.cwInstance;
         let $ = me.cwInstance.$;
         $(messageHtml).find('.selectTemplateDropdowm').on('change', function (e: any) {
             e.preventDefault();
             e.stopPropagation();
             let selectedTarget = e.currentTarget;
             $(".chatInputBox").text(selectedTarget.value)
-            var k = jQuery.Event('keydown', { which: 13 });
+            var k = $.Event('keydown', { which: 13 });
             k.keyCode = 13
             $('.chatInputBox').trigger(k);
 

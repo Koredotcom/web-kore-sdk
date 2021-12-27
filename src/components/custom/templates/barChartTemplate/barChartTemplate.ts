@@ -4,9 +4,8 @@ import KoreGraphAdapter from '../../../../../libs/KoreGraphAdapter';
 class BarChartTemplate {
   renderMessage(msgData: any) {
     const me: any = this;
-    const { $ } = me.cwInstance;
+  let $ = me.cwInstance.$;
     const helpersObj = new helpers();
-    const chatWindowInstance = me.cwInstance;
 
     if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type === 'barchart') {
       me.messageHtml = $(me.getTemplateString('barchartTemplate')).tmpl({
@@ -21,11 +20,12 @@ class BarChartTemplate {
 
   bindEvents(msgData: any) {
     const me: any = this;
-    const { $ } = me.cwInstance;
+    let $ = me.cwInstance.$;
     const chatWindowInstance = me.cwInstance;
     KoreGraphAdapter.drawBarChartTemplate(msgData, me.messageHtml);
     setTimeout(() => {
-      $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
+      chatWindowInstance.scrollTop();
+      // $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
       KoreGraphAdapter.handleChartOnClick();
     }, 300);
   }

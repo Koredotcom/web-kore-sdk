@@ -18,7 +18,6 @@ class TableListTemplate {
 	}
 	bindEvents(messageHtml: any) {
 		let me: any = this;
-		let chatWindowInstance = me.cwInstance;
 		let $ = me.cwInstance.$;
 		$(messageHtml).off('click', '.listViewItemValue.actionLink,.listTableDetailsDesc').on('click', '.listViewItemValue.actionLink,.listTableDetailsDesc', function (e: any) {
 			var _self = e.currentTarget;
@@ -29,16 +28,18 @@ class TableListTemplate {
 		let me: any = this;
 		let chatWindowInstance = me.cwInstance;
 		let $ = me.cwInstance.$;
+		var _innerText;
 		if (actionObj) {
 			if (actionObj.type === "url") {
 				window.open(actionObj.url, "_blank");
 				return;
 			}
 			if (actionObj.payload) {
-				var _innerText = actionObj.payload;
+				_innerText = actionObj.payload;
 				var eData: any = {};
 				eData.payload = _self.innerText || actionObj.title;
-				chatWindowInstance.sendMessage($('.chatInputBox').text(_innerText), eData.payload);
+				chatWindowInstance.assignValueToInput(_innerText)
+				chatWindowInstance.sendMessage($('.chatInputBox'), eData.payload);
 			}
 			if (_self && _self.hasClass("dropdown-contentWidgt")) {
 				$(_self).hide();
@@ -49,11 +50,12 @@ class TableListTemplate {
 				if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
 					a_link = "http:////" + a_link;
 				}
-				var _tempWin = window.open(a_link, "_blank");
+				window.open(a_link, "_blank");
 			} else {
-				var _innerText = $(_self).attr('data-value');
+				_innerText = $(_self).attr('data-value');
 				var postBack = $(_self).attr('data-title');
-				chatWindowInstance.sendMessage($('.chatInputBox').text(_innerText), postBack);
+				chatWindowInstance.assignValueToInput(_innerText)
+				chatWindowInstance.sendMessage($('.chatInputBox'), postBack);
 				$(".kore-action-sheet .list-template-sheet").animate({ height: 'toggle' });
 				chatWindowInstance.bottomSliderAction("hide");
 				$(".listViewTmplContentBox").css({ "pointer-events": "none" });

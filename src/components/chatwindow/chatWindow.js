@@ -5245,5 +5245,23 @@ chatWindow.prototype.installPlugin = function (plugin) {
   const me = this;
   me.plugins[plugin.name] = plugin.plugin;
 };
-
+chatWindow.prototype.scrollTop = function () {
+  const me = this;
+  const _chatContainer = me.config.chatContainer;
+  _chatContainer.scrollTop($('.chat-container').prop('scrollHeight'));
+};
+chatWindow.prototype.focusInputTextbox = function () {
+  const me = this;
+  const _chatContainer = me.config.chatContainer;
+  setTimeout(() => {
+    const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
+    _chatInput.focus();
+  }, 600);
+};
+chatWindow.prototype.assignValueToInput = function (value) {
+  const me = this;
+  const _chatContainer = me.config.chatContainer;
+  const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
+  _chatInput.text(value);
+};
 export default chatWindow;

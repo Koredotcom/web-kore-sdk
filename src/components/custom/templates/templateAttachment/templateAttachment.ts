@@ -3,7 +3,6 @@ import helpers from '../../../../../src/utils/helpers';
 import './templateAttachment.scss';
 
 class TemplateAttachment {
-    [x: string]: any;
     renderMessage(msgData: any) {
         let me: any = this;
         let $ = me.cwInstance.$;
@@ -14,16 +13,16 @@ class TemplateAttachment {
                 'msgData': msgData,
                 'helpers': helpersObj.helpers
             });
-            me.bindEvents();
+            me.bindEvents(me.messageHtml);
             return me.messageHtml;
         }
     }
-    bindEvents() {
-        let me = this;
+    bindEvents(messageHtml:any) {
+        let me :any = this;
         let chatWindowInstance = me.cwInstance;
         let $ = me.cwInstance.$;
         const _chatContainer = chatWindowInstance.config.chatContainer;
-        _chatContainer.off('click', '.botResponseAttachments').on('click', '.botResponseAttachments', function (event: any) {
+        $(messageHtml).off('click', '.botResponseAttachments').on('click', '.botResponseAttachments', function (event: any) {
             event.preventDefault();
             event.stopPropagation();
             let selectedTarget = event.currentTarget;
