@@ -1983,6 +1983,7 @@
 
             chatWindow.prototype.sendMessage = function (chatInput, renderMsg,msgObject) {
                 var me = this;
+                me.stopSpeaking();
                 if (chatInput.text().trim() === "" && $('.attachment').html().trim().length == 0) {
                     return;
                 }
@@ -4507,7 +4508,16 @@
                    console.warn("KORE:Your browser doesn't support TTS(Speech Synthesiser)")
                }
             }
-
+            chatWindow.prototype.stopSpeaking= function() {
+                var me = this;
+                if (me.config.isTTSEnabled) {
+                    if(me.config.ttsInterface && me.config.ttsInterface==="webapi"){
+                        if('speechSynthesis' in window){
+                            window.speechSynthesis.cancel();
+                        }
+                    }
+                }
+            }
             function createSocketForTTS() {
 
                 if(!ttsServerUrl){
