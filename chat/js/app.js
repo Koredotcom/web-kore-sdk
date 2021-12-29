@@ -2,7 +2,7 @@
 //http://localhost:8081/chat/?API_KEY=1234
 //https://qa-bots.kore.ai/websdk/chat/?API_KEY=1234
 
-var API_KEY=getURLParameterByName('apiKey');
+var API_KEY=getAPIKey();//getURLParameterByName('apiKey');
 var styleURL='../UI/dist/kore-ai-sdk.min.css';
 var scriptURL='../UI/dist/kore-ai-sdk.min.js';
 
@@ -12,7 +12,7 @@ if(location.hostname!=='localhost'){
     //https://bots.kore.ai/api/websdkjs?apiKey=1234'
     //by reading from /var/www/websdk/UI/dist/kore-ai-sdk.min.js
     //load script from API to inject window.JWT_OBJ
-    scriptURL="//"+location.hostname+'/api/platform/websdkjs?apiKey='+API_KEY;
+    scriptURL="//"+location.hostname+'/api/platform/websdkjs/'+API_KEY;
 }else{
     //DEV ENV
     //FOLLOWING LINE ONLY FOR DEV TESTING
@@ -43,6 +43,12 @@ function loadStyle(url, cb) {
             cb();
         }
     };
+}
+function getAPIKey(){
+    var url=location.href;//'http://localhost:8080/chat/123';
+    var splits=url.split('/');
+    var lastFragment=splits[splits.length-1];
+    return lastFragment
 }
 function getURLParameterByName(name, url = window.location.href) {
         name = name.replace(/[\[\]]/g, '\\$&');
