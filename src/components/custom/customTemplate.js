@@ -18,6 +18,7 @@ import ListViewTemplate from './templates/listViewTemplate/listViewTemplate';
 import LineChartTemplate from './templates/lineChartTemplate/lineChartTemplate';
 import BarChartTemplate from './templates/barChartTemplate/barChartTemplate';
 import PieChartTemplate from './templates/pieChartTemplate/pieChartTemplate';
+import DatePickerTemplate from './templates/datePicker/datePicker';
 import './customTemplate.css';
 import '../../../libs/purejscarousel.css';
 //(function($){
@@ -56,6 +57,7 @@ import '../../../libs/purejscarousel.css';
 		this.installTemplate(new PieChartTemplate());
 		this.installTemplate(new BarChartTemplate());
 		this.installTemplate(new LineChartTemplate());
+		this.installTemplate(new DatePickerTemplate());
 	};
 	/**
 	 * purpose: Function to render bot message for a given custom template

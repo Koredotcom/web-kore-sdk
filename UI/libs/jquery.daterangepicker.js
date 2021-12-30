@@ -3,18 +3,8 @@
 // license : MIT
 // www.jszen.com
 
-(function(factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery', 'moment'], factory);
-    } else if (typeof exports === 'object' && typeof module !== 'undefined') {
-        // CommonJS. Register as a module
-        module.exports = factory(require('jquery'), require('moment'));
-    } else {
-        // Browser globals
-        factory(jQuery, moment);
-    }
-}(function($, moment) {
+
+function installDateRangeFunctions($, moment) {
     'use strict';
     $.dateRangePickerLanguages = {
         "default": //default language: English
@@ -2598,4 +2588,6 @@
         }
 
     };
-}));
+}
+
+export default installDateRangeFunctions;

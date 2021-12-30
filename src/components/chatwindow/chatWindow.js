@@ -3718,6 +3718,10 @@ function IsJsonString() {
 }
 function insertHtmlData(_txtBox, _html) {
   const _input = _txtBox;
+  var sel;
+  var range;
+  var prevRange;
+  var node;
   sel = window.getSelection();
   if (sel.rangeCount > 0) {
     range = sel.getRangeAt(0);
@@ -5271,4 +5275,5 @@ chatWindow.prototype.sendMessage = function (payload, options) {
   const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
   me.sendMessageToBot(_chatInput, payload, options);
 };
+
 export default chatWindow;
