@@ -74,6 +74,7 @@ module.exports = function (grunt) {
             'libs/jquery.js',
             'libs/jquery.tmpl.min.js',
             'libs/jquery-ui.min.js',
+            'libs/moment.js',
             '../libs/lodash.min.js',
             '../libs/d3.v4.min.js',
             '../libs/KoreGraphAdapter.js',
@@ -83,6 +84,9 @@ module.exports = function (grunt) {
             '../libs/emoji.js',
             '../libs/purejscarousel.js',
             'chatWindow.js',
+            'libs/jquery.daterangepicker.js',
+            'libs/jquery-clockpicker.js',
+            '../libs/kore-pickers.js',
             'custom/customTemplate.js',
             '../libs/ie11CustomProperties.js',
             '../libs/recorder.js',
@@ -100,7 +104,11 @@ module.exports = function (grunt) {
             '../libs/purejscarousel.css',
             '../libs/prefect-scrollbar.css',
             'chatWindow.css',
-            'custom/customTemplate.css'
+            'custom/customTemplate.css',
+            'libs/daterangepicker.css',
+            'libs/jquery-clockpicker.css',
+            '../libs/kore-pickers.css'
+ 
         ]
     }
 
