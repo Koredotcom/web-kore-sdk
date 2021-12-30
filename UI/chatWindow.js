@@ -2115,6 +2115,7 @@
                         "session": {
                             "new": false
                         },
+                        //"preferredChannelForResponse": "rtm",
                         "message": {
                             "text": message
                         },
@@ -2132,8 +2133,7 @@
                                 "id": "",
                                 "name": ""
                             }
-                        },
-                        "preferredChannelForResponse": "rtm"
+                        }
                     }
 
                     if(me.config.botOptions.webhookConfig.apiVersion && me.config.botOptions.webhookConfig.apiVersion===2){
