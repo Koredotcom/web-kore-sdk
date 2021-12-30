@@ -2132,7 +2132,8 @@
                                 "id": "",
                                 "name": ""
                             }
-                        }
+                        },
+                        "preferredChannelForResponse": "rtm"
                     }
 
                     if(me.config.botOptions.webhookConfig.apiVersion && me.config.botOptions.webhookConfig.apiVersion===2){
