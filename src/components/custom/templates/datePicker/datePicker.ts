@@ -3,6 +3,19 @@ import '../../../../../UI/libs/daterangepicker.css';
 import moment from 'moment';
 import './datePicker.scss';
 class DatePickerTemplate {
+    defaultDatePickerConfig :any = {
+        alwaysOpen: true,
+        singleMonth: true,
+        showShortcuts: false,
+        singleDate: true,
+        showTopbar: false,
+        format: 'DD-MM-YYYY',
+        startDate: moment(new Date()).format("DD-MM-YYYY"),
+        endDate:  (moment(new Date()).add(1, 'M')).format("DD-MM-YYYY"),
+        inline: true,
+        container: '',
+        appendTo:'slider' // slider|| messageBubble
+    };
     daterangeInput: any;
     renderMessage(msgData: any) {
         let me: any = this;
@@ -12,7 +25,9 @@ class DatePickerTemplate {
             me.initiateDatePicker(msgData);
             me.addClickEventCalender(msgData)
             me.bindEvents();
-            // return me.messageHtml;
+            if(this.defaultDatePickerConfig.appendTo === 'messageBubble'){
+                return me.messageHtml;
+            }
         }
     }
     bindEvents() {
@@ -28,7 +43,11 @@ class DatePickerTemplate {
             chatWindowInstance.bottomSliderAction('hide');
             me.daterangeInput.data('dateRangePicker').clear();
             me.daterangeInput.data('dateRangePicker').resetMonthsView();
-        })
+            if(me.defaultDatePickerConfig.appendTo === 'messageBubble'){
+                $(me.messageHtml).find(".confirmBTN").css({  "display": "none"  });
+                $(me.messageHtml).find(".confirmBTN").css({'pointer-events':'none'});
+            }   
+        });
         $(me.messageHtml).off('click', '.headerCalendar .close-button').on('click', '.headerCalendar .close-button', function () {
             chatWindowInstance.bottomSliderAction("hide");
         });
@@ -47,7 +66,9 @@ class DatePickerTemplate {
         let chatWindowInstance = me.cwInstance;
         let $ = me.cwInstance.$;
         installDateRangeFunctions($, moment);
-        chatWindowInstance.bottomSliderAction('show', me.messageHtml);
+        if(this.defaultDatePickerConfig.appendTo !== 'messageBubble'){
+            chatWindowInstance.bottomSliderAction('show', me.messageHtml);
+        }
         var datePickerConfig = {
             alwaysOpen: true,
             singleMonth: true,
@@ -61,8 +82,8 @@ class DatePickerTemplate {
             inline: true,
             container: $(me.messageHtml),
         };
-        me.daterangeInput;
-        me.daterangeInput = $(me.messageHtml).find('#calender').dateRangePicker(datePickerConfig);
+     $.extend(this.defaultDatePickerConfig,datePickerConfig)
+        me.daterangeInput = $(me.messageHtml).find('#calender').dateRangePicker(this.defaultDatePickerConfig);
     }
     getTemplateString() {
         return '<div class="datePickerContainer">\
@@ -98,6 +119,9 @@ class DatePickerTemplate {
         $(me.messageHtml).find(".confirmBTN").css({
             "display": "none"
         });
+        if(me.defaultDatePickerConfig && me.defaultDatePickerConfig.appendTo !== 'slider'){
+            $(me.messageHtml).find(".headerCalendar .close-button").addClass('hide');
+        }
         setTimeout(function () {
             $(me.messageHtml).find(".confirmBTN").css({
                 "display": "block"
