@@ -2815,6 +2815,13 @@
                                 KorePickers.prototype.showClockPicker(pickerConfig);
                             }
                         }
+
+                        //to render message bubble even in datepickers case
+                        messageHtml = $(me.getChatTemplate("message")).tmpl({
+                            'msgData': msgData,
+                            'helpers': helpers,
+                            'extension': extension
+                        });
                     } else {
                         messageHtml = $(me.getChatTemplate("message")).tmpl({
                             'msgData': msgData,
