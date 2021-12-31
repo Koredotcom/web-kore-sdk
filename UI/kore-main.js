@@ -1,8 +1,8 @@
 
 
 (function ($) {
-    $( document ).ready(function() {
-        
+    //$( document ).ready(function() {
+
     function getPageTitle() {
         var title = document.title;
         var metaTags = document.getElementsByTagName("meta");
@@ -265,9 +265,9 @@
         if (hashObj.tasktotrigger) {
             chatConfig.tasktotrigger = hashObj.tasktotrigger;
         }
-        $('body').removeClass('loading');
+        $('html').removeClass('loading');
         if(hashObj && hashObj.errorObj){
-          $('body').addClass('error');
+          $('html').addClass('error');
           $('.emptyDes').html(hashObj.errorObj.message);
           //window.alert(hashObj.errorObj.message)
         }else{
@@ -291,6 +291,6 @@
 
         
         
-    });
+    //});
 
 })(jQuery || (window.KoreSDK && window.KoreSDK.dependencies && window.KoreSDK.dependencies.jQuery));
