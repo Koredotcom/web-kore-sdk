@@ -1,6 +1,8 @@
 
 
 (function ($) {
+    $( document ).ready(function() {
+        
     function getPageTitle() {
         var title = document.title;
         var metaTags = document.getElementsByTagName("meta");
@@ -263,9 +265,11 @@
         if (hashObj.tasktotrigger) {
             chatConfig.tasktotrigger = hashObj.tasktotrigger;
         }
-
+        $('body').removeClass('loading');
         if(hashObj && hashObj.errorObj){
-          window.alert(hashObj.errorObj.message)
+          $('body').addClass('error');
+          $('.emptyDes').html(hashObj.errorObj.message);
+          //window.alert(hashObj.errorObj.message)
         }else{
             if(hashObj && hashObj.channel && hashObj.channel==='unblu'){
                 injectUnBluTags();
@@ -287,6 +291,6 @@
 
         
         
-    //});
+    });
 
 })(jQuery || (window.KoreSDK && window.KoreSDK.dependencies && window.KoreSDK.dependencies.jQuery));
