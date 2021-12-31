@@ -2778,7 +2778,9 @@
                                     pickerConfig[1].daterangepicker.title = msgData.message[0].component.payload.title;
                                 }
                                 // $('.typingIndicatorContent').css('display', 'block');
-                                KorePickers.prototype.showDateRangePicker(pickerConfig);
+                                if(!msgData.fromHistory){
+                                    KorePickers.prototype.showDateRangePicker(pickerConfig);
+                                }
                                 // $('.typingIndicatorContent').css('display', 'none');
                             }
                             console.log(JSON.stringify(msgData.message))
@@ -2802,11 +2804,15 @@
                                 }
                     
                                 // $('.typingIndicatorContent').css('display', 'block');
-                                KorePickers.prototype.showDatePicker(pickerConfig);
+                                if(!msgData.fromHistory){
+                                    KorePickers.prototype.showDatePicker(pickerConfig);
+                                }
                                 // $('.typingIndicatorContent').css('display', 'none');
                             }
                             if (msgData.message[0].cInfo.body.indexOf('clockPicker') > -1) {
-                                KorePickers.prototype.showClockPicker(pickerConfig);
+                                if(!msgData.fromHistory){
+                                    KorePickers.prototype.showClockPicker(pickerConfig);
+                                }
                             }
                         }
 
@@ -3653,6 +3659,7 @@
                         $('.chat-container').hide();
                         $('.historyLoadingDiv').addClass('showMsg');
                         res[1].messages.forEach(function (msgData, index) {
+                            msgData.fromHistory=true;
                             setTimeout(function (messagesQueue) {
                                 // try {
                                 //     msgData.message[0].cInfo.body = JSON.parse(msgData.message[0].cInfo.body);
