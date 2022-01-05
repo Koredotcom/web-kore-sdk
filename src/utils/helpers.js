@@ -206,7 +206,7 @@ class KoreHelpers{
                 if (dummyString.indexOf(match) !== -1) {
                     var _link = p1.indexOf('http') < 0 ? 'http://' + match : match, _target;
                     //_link = encodeURIComponent(_link);
-                    target = "target='underscoreblank'";
+                    var target = "target='underscoreblank'";
                     if (hyperLinksMap) {
                         var _randomKey = "korerandom://" + Object.keys(hyperLinksMap).length;
                         hyperLinksMap[_randomKey] = _link;

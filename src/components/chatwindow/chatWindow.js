@@ -847,11 +847,12 @@ chatWindow.prototype.renderWebForm = function (msgData, returnTemplate) {
     if (!returnTemplate && msgData.renderType === 'inline') {
       this.renderMessage(msgData);
     } else {
-      const popupHtml = $(this.getChatTemplate('iframe')).tmpl({
-        msgData,
-        helpers: me.helpers,
-        link_url: msgData.message[0].component.payload.formData.formLink,
-      });
+      // const popupHtml = $(this.getChatTemplate('iframe')).tmpl({
+      //   msgData,
+      //   helpers: me.helpers,
+      //   link_url: msgData.message[0].component.payload.formData.formLink,
+      // });
+      const popupHtml =  me.customTemplateObj.renderMessage(msgData)
       if (returnTemplate) {
         return popupHtml;
       }
@@ -2781,28 +2782,29 @@ chatWindow.prototype.renderMessage = function (msgData) {
     //     handleChartOnClick();
     //   }, 200);
     // }
-    else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.formData && msgData.message[0].component.payload.formData.renderType === 'inline') {
-      msgData.renderType = 'inline';
-      messageHtml = me.renderWebForm(msgData, true);
-    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'live_agent') {
-      msgData.fromAgent = true;
+    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.formData && msgData.message[0].component.payload.formData.renderType === 'inline') {
+    //   msgData.renderType = 'inline';
+    //   messageHtml = me.renderWebForm(msgData, true);
+    // } 
+    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'live_agent') {
+    //   msgData.fromAgent = true;
 
-      if (msgData.message[0].component && msgData.message[0].component.payload) {
-        msgData.message[0].cInfo.body = msgData.message[0].component.payload.text || '';
-      }
-      messageHtml = $(me.getChatTemplate('message')).tmpl({
-        msgData,
-        helpers,
-        extension,
-      });
-    }
-     else {
-      messageHtml = $(me.getChatTemplate('message')).tmpl({
-        msgData,
-        helpers,
-        extension,
-      });
-    }
+    //   if (msgData.message[0].component && msgData.message[0].component.payload) {
+    //     msgData.message[0].cInfo.body = msgData.message[0].component.payload.text || '';
+    //   }
+    //   messageHtml = $(me.getChatTemplate('message')).tmpl({
+    //     msgData,
+    //     helpers,
+    //     extension,
+    //   });
+    // }
+    //  else {
+    //   messageHtml = $(me.getChatTemplate('message')).tmpl({
+    //     msgData,
+    //     helpers,
+    //     extension,
+    //   });
+    // }
 
     // For Agent presence
     if (msgData.type === 'bot_response') {
@@ -3532,24 +3534,24 @@ chatWindow.prototype.getChatTemplate = function (tempType) {
 // {{/if}}\
 // </div>\
 // </script>';
-var iframe = '<script id="chat_message_tmpl" type="text/x-jquery-tmpl"> \
-         {{if link_url}}\
-            {{if (msgData && msgData.renderType ==="inline")}}\
-                 <li class="inlineIframeContainer"> \
-                     <div class="iframeBubble"> \
-                             <div class="uiformComponent">\
-                             <div id="closeInlineModel" role="region" aria-live="polite" aria-atomic="true" aira-label="close Form" class="loading_form iframeLoader"></div>\
-                             <iframe id="inlineIframeModal" src="${link_url}"></iframe> \
-                             </div>\
-                     </div>\
-                 </li> \
-             {{else}}\
-                 <iframe role="region" aria-live="polite" aria-atomic="true" aira-label="Loadig Form" id="iframeModal" src="${link_url}"></iframe> \
-             {{/if}}\
-         {{else}}\
-             <div role="region" aria-live="polite" aria-atomic="true" class="failedIframe">Failed to load iFrame</div>\
-         {{/if}}\
-     </script>';
+// var iframe = '<script id="chat_message_tmpl" type="text/x-jquery-tmpl"> \
+//          {{if link_url}}\
+//             {{if (msgData && msgData.renderType ==="inline")}}\
+//                  <li class="inlineIframeContainer"> \
+//                      <div class="iframeBubble"> \
+//                              <div class="uiformComponent">\
+//                              <div id="closeInlineModel" role="region" aria-live="polite" aria-atomic="true" aira-label="close Form" class="loading_form iframeLoader"></div>\
+//                              <iframe id="inlineIframeModal" src="${link_url}"></iframe> \
+//                              </div>\
+//                      </div>\
+//                  </li> \
+//              {{else}}\
+//                  <iframe role="region" aria-live="polite" aria-atomic="true" aira-label="Loadig Form" id="iframeModal" src="${link_url}"></iframe> \
+//              {{/if}}\
+//          {{else}}\
+//              <div role="region" aria-live="polite" aria-atomic="true" class="failedIframe">Failed to load iFrame</div>\
+//          {{/if}}\
+//      </script>';
 //  if (tempType === "message") {
 //      return msgTemplate;
 //  } 
@@ -3592,9 +3594,9 @@ var iframe = '<script id="chat_message_tmpl" type="text/x-jquery-tmpl"> \
 //  else if (tempType === "actionSheetTemplate") {
 //      return listActionSheetTemplate;
 //  }
- else if (tempType === "iframe") {
-     return iframe;
- }
+//  else if (tempType === "iframe") {
+//      return iframe;
+//  }
  else {
      return chatWindowTemplate;
  }

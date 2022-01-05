@@ -1,24 +1,25 @@
 
-import helpers from '../../../../../src/utils/helpers'
+import helpers from '../../../../../src/utils/helpers';
+import './iframeTemplate.scss';
 
-class ListTemplate {
+class IframeTemplate {
 
     renderMessage(msgData: any) {
         let me: any = this;
         let $ = me.cwInstance.$;
         let helpersObj = new helpers();
-
-        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "list") {
-            me.messageHtml = $(me.getTemplateString()).tmpl({
+        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "iframe") {
+            me.messageHtml = $(me.getTemplateString('iframe')).tmpl({
                 'msgData': msgData,
-                'helpers': helpersObj.helpers
+                'helpers': helpersObj.helpers,
+                'link_url': msgData.message[0].component.payload.formData.formLink,
             });
             me.bindEvents();
             return me.messageHtml;
         }
     }
     bindEvents() {
-       
+
     }
     getTemplateString() {
         var iframe = '<script id="chat_message_tmpl" type="text/x-jquery-tmpl"> \
@@ -44,4 +45,4 @@ class ListTemplate {
 
 }
 
-export default ListTemplate;
+export default IframeTemplate;

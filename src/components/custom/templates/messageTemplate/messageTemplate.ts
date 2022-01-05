@@ -2,33 +2,43 @@
 import helpers from '../../../../utils/helpers';
 import './messageTemplate.scss';
 
-class  MessageTemplate {
+class MessageTemplate {
 
     renderMessage(msgData: any) {
         let me: any = this;
         let $ = me.cwInstance.$;
         let helpersObj = new helpers();
-        me.messageHtml = $(me.getTemplateString('message')).tmpl({
-            'msgData': msgData,
-            'helpers': helpersObj.helpers
-        });
-        me.bindEvents(me.messageHtml);
+        let chatWindowInstance = me.cwInstance;
+        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.formData && msgData.message[0].component.payload.formData.renderType === 'inline') {
+            msgData.renderType = 'inline';
+            me.messageHtml = chatWindowInstance.renderWebForm(msgData, true);
+        } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'live_agent') {
+            msgData.fromAgent = true;
+
+            if (msgData.message[0].component && msgData.message[0].component.payload) {
+                msgData.message[0].cInfo.body = msgData.message[0].component.payload.text || '';
+            }
+            me.messageHtml = $(me.getTemplateString('message')).tmpl({
+                'msgData': msgData,
+                'helpers': helpersObj.helpers
+            });
+        } else {
+            me.messageHtml = $(me.getTemplateString('message')).tmpl({
+                'msgData': msgData,
+                'helpers': helpersObj.helpers
+            });
+        }
         return me.messageHtml;
 
     }
-    bindEvents(messageHtml: any) {
-        let me: any = this;
-        let chatWindowInstance = me.cwInstance;
-        let $ = me.cwInstance.$;
 
-    }
     getTemplateString() {
         var msgTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
             {{each(key, msgItem) msgData.message}} \
                 {{if msgItem.cInfo && msgItem.type === "text"}} \
                     <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-                         class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}}\ {{if msgData.icon}}with-icon{{/if}} {{if msgData.fromAgent}}from-agent{{/if}}"> \
+                         class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}} {{if msgData.fromAgent}}from-agent{{/if}}"> \
                         {{if msgData.createdOn}}<div aria-hidden="true" aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                         {{if msgData.icon}}<div aria-hidden="true"  aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})" title="User Avatar"></div> </div> {{/if}} \
                         <div class="messageBubble" aria-live="assertive">\
@@ -90,4 +100,4 @@ class  MessageTemplate {
 
 }
 
-export default  MessageTemplate;
+export default MessageTemplate;

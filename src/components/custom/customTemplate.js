@@ -24,6 +24,7 @@ import MessageTemplate from './templates/messageTemplate/messageTemplate';
 import ClockPickerTemplate from './templates/clockPicker/clockPicker';
 import RadioOptionPickerTemplate from './templates/radioOptionPicker/radioOptionPicker';
 import TaskPickerTemplate from './templates/taskPickerTemplate/taskPickerTemplate';
+import IframeTemplate from './templates/iframeTemplate/iframeTemplate';
 import './customTemplate.css';
 import '../../../libs/purejscarousel.css';
 //(function($){
@@ -67,6 +68,7 @@ import '../../../libs/purejscarousel.css';
 		this.installTemplate(new ClockPickerTemplate());
 		this.installTemplate(new RadioOptionPickerTemplate());
 		this.installTemplate(new TaskPickerTemplate());
+		this.installTemplate(new IframeTemplate());
 		this.installTemplate(new MessageTemplate());
 
 	};
