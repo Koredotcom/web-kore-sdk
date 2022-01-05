@@ -1808,34 +1808,9 @@
     height: 14px;
     background-repeat: no-repeat;
 }
-.chatBodyModal .failedIframe{
-    padding: 28%;
-    text-align: center;
-    height: 100%;
-    z-index: 999;
-    background: white;
 
-}
-.kore-chat-window .inlineIframeContainer .iframeBubble{
-    border-radius: 10px;
-    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
-}
-.kore-chat-window .uiformComponent{
-    position: relative;
-    min-height: 350px;
-}
-.kore-chat-window .uiformComponent #inlineIframeModal{
-    width: 100%;
-    height: 350px;
-    background: none;
-    border: none;
-}
-.kore-chat-window .uiformComponent #nlineIframeModal .closeForm{
-    display: none !important;
-}
-.kore-chat-window .uiformComponent #nlineIframeModal .closeForm{
-    display: none !important;
-}
+
+
 [dir="rtl"].kore-chat-window .kore-chat-header{
     padding: 0 20px 0 0px;
 }
