@@ -3,7 +3,7 @@
 var chatConfig=KoreSDK.chatConfig;
 var chatWindow=KoreSDK.chatWindow;
 
-debugger
+
 var chatWindowInstance = new chatWindow(chatConfig);
 
 // chatWindow.prototype.show=function(){
