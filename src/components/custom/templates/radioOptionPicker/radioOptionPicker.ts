@@ -35,14 +35,18 @@ class RadioOptionPickerTemplate {
             chatWindowInstance.bottomSliderAction('hide');
         });
     }
-    initiateRadioOptionPicker() {
+    initiateRadioOptionPicker(msgData: any) {
         let me: any = this;
         let $ = me.cwInstance.$;
         let chatWindowInstance = me.cwInstance;
-        let accountData: any = me.getRadioOptions();
+        // let accountData: any = me.getRadioOptions();
+        let accountData: any = msgData.message[0].component.payload.radioOptions;
         chatWindowInstance.bottomSliderAction('show', me.messageHtml);
         $(me.messageHtml).append(me.getradioOptionsPickerTemplate(accountData))
         $(me.messageHtml).removeClass("hide");
+        if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.heading) {
+            $(me.messageHtml).find('.radioOptionHeading').html(msgData.message[0].component.payload.heading);
+        }
     }
     getTemplateString() {
         return '<div class="radioOptionsPickerContainer hide">\
@@ -106,8 +110,7 @@ class RadioOptionPickerTemplate {
         let me: any = this;
         let $ = me.cwInstance.$;
         var $radioOptionsContent = $('<div class="radioOptionMenuPicker"></div>');
-        var radioOptions = radioOptionConfig.radioOptions;
-        radioOptions.forEach(function (radioOption: any) {
+        radioOptionConfig.forEach(function (radioOption: any) {
             var radioOptionHtml = $('<label class="radioButton"><div class="btnAccount">\
                                         <div class="radioValue">\
                                             <input type="radio" id="selectedValue" name="radio">\

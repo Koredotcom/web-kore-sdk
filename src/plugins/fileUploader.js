@@ -1,4 +1,5 @@
 class KoreFileUploaderPlugin {
+  name= "KoreFileUploaderPlugin";
   static filetypes = {};
   static allowedFileTypes = {};
   static appConsts = {};
@@ -52,7 +53,7 @@ class KoreFileUploaderPlugin {
       });
     };
 
-    $.fn.uploader.Constructor = Uploader;
+    $.fn.uploader.Constructor = me.Uploader();
 
     $.fn.uploader.noConflict = function () {
       $.fn.uploader = old;
@@ -682,10 +683,11 @@ getTemplateString() {
 }
 
 }
+export default KoreFileUploaderPlugin;
 
-export default {
-  name: "KoreFileUploaderPlugin",
-  plugin: new KoreFileUploaderPlugin(),
-};
+// export default {
+//   name: "KoreFileUploaderPlugin",
+//   plugin: new KoreFileUploaderPlugin(),
+// };
 
 

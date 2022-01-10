@@ -39,6 +39,7 @@ import KoreFileUploaderPlugin from './plugins/fileUploader';
 
 import KoreWidgetSDK from '../UI/kore-widgets';
 import widgetsConfig from '../UI/kore-widgets-config';
+import KorePickersPlugin from './plugins/korePickers';
 
 export {
   chatConfig,
@@ -47,4 +48,5 @@ export {
   KoreWidgetSDK,
   Korei18nPlugin,
   KoreFileUploaderPlugin,
+  KorePickersPlugin
 };

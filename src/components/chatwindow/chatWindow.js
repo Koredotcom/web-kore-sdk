@@ -2023,7 +2023,11 @@ chatWindow.prototype.invokePluginCallbacksForCWInstance = function(){
 chatWindow.prototype.render = function (chatWindowHtml) {
   const me = this;
   $(me.config.container).append(chatWindowHtml);
-  me.invokePluginCallbacksForCWInstance();
+   //me.invokePluginCallbacksForCWInstance();
+  if (me.plugins.KorePickersPlugin) {
+    me.config.KorePickersPlugin = me.plugins.KorePickersPlugin.onChatWindowInit();
+  }
+
   if (me.config.container !== 'body') {
     $(me.config.container).addClass('pos-relative');
     $(me.config.chatContainer).addClass('pos-absolute');
@@ -5254,8 +5258,8 @@ function setOptions(_this, opts) {
 chatWindow.prototype.$ = $;
 chatWindow.prototype.installPlugin = function (plugin) {
   const me = this;
-  me.plugins[plugin.name] = plugin.plugin;
-  plugin.plugin.cwInstance = this;
+  me.plugins[plugin.name] = plugin;
+  plugin.cwInstance = this;
   // if(plugin.onPluginInstall){
   //   plugin.onPluginInstall();
   // }
@@ -5285,5 +5289,11 @@ chatWindow.prototype.sendMessage = function (payload, options) {
   const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
   me.sendMessageToBot(_chatInput, payload, options);
 };
+
+chatWindow.prototype.appendPickerHTMLtoFooter = function(HTML){
+  const me = this;
+  const _chatContainer = me.config.chatContainer;
+ _chatContainer.find('.kore-chat-footer .footerContainer').append(HTML);
+}
 
 export default chatWindow;

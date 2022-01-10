@@ -11,7 +11,7 @@ class DatePickerTemplate {
         showTopbar: false,
         format: 'DD-MM-YYYY',
         startDate: moment(new Date()).format("DD-MM-YYYY"),
-        endDate:  (moment(new Date()).add(1, 'M')).format("DD-MM-YYYY"),
+        endDate:  (moment(new Date()).add(3, 'M')).format("DD-MM-YYYY"),
         inline: true,
         container: '',
         appendTo:'slider' // slider|| messageBubble

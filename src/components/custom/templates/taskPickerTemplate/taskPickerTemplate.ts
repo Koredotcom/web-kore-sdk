@@ -28,16 +28,19 @@ class TaskPickerTemplate {
         });
 
     }
-    initiateTaskPicker() {
+    initiateTaskPicker(msgData: any) {
         let me: any = this;
         let $ = me.cwInstance.$;
         let chatWindowInstance = me.cwInstance;
-        let accountData: any = me.getTaskMenuItems();
+        // let accountData: any = me.getTaskMenuItems();
+        let accountData: any = msgData.message[0].component.payload.tasks;
         chatWindowInstance.bottomSliderAction('show', me.messageHtml);
         $(me.messageHtml).append(me.getTaskPickerOptions(accountData));
         $(me.messageHtml).find(".searchInput").hide();
         $(me.messageHtml).removeClass("hide");
-
+        if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.heading) {
+            $(me.messageHtml).find('.taskHeading').html(msgData.message[0].component.payload.heading);
+        }
     }
     getTemplateString() {
         return '<div class="TaskPickerContainer hide">\
@@ -94,8 +97,7 @@ class TaskPickerTemplate {
         let me: any = this;
         let $ = me.cwInstance.$;
         var $taskContent = $('<div class="taskMenuPicker"></div>');
-        var tasks = taskPickerConfig.tasks;
-        tasks.forEach(function (task: any) {
+        taskPickerConfig.forEach(function (task: any) {
             var taskHtml = $('<div class="btnTask">\
                 <span class="taskName" data-value="'+ task.postback.value + '" data-title="' + task.postback.title + '" title="' + task.title + '">' + task.title + '</span>\
                 <div class="imageIcon"> <img src="'+ task.icon + '" class="displayIcon"></div>\
