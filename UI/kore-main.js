@@ -265,6 +265,25 @@
         if (hashObj.tasktotrigger) {
             chatConfig.tasktotrigger = hashObj.tasktotrigger;
         }
+
+        debugger
+        if(hashObj && hashObj.botInfo && hashObj.botInfo.panelsExists){
+            var widgetsConfig=window.KoreSDK.widgetsConfig;
+            widgetsConfig.botOptions.botInfo=chatConfig.botOptions.botInfo;
+            widgetsConfig.botOptions.koreAPIUrl = hashObj.koreAPIUrl.substr(0,hashObj.koreAPIUrl.length-1);
+            widgetsConfig.botOptions.userIdentity=chatConfig.botOptions.userIdentity;
+    
+            var wizSelector = {
+                menu: ".kr-wiz-menu-chat",
+                content: ".kr-wiz-content-chat"
+            }
+            var wSdk = new KoreWidgetSDK(widgetsConfig);
+            chatConfig.widgetSDKInstace=wSdk;//passing widget sdk instance to chatwindow 
+            wSdk.setJWT(hashObj.jwt);
+            wSdk.show(widgetsConfig, wizSelector);
+          
+        }
+
         $('html').removeClass('loading');
         if(hashObj && hashObj.errorObj){
           $('html').addClass('error');

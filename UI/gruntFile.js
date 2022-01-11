@@ -35,14 +35,18 @@ module.exports = function (grunt) {
             'libs/jquery.js',
             'libs/jquery.tmpl.min.js',
             'libs/jquery-ui.min.js',
+            'libs/moment.js',
             '../libs/lodash.min.js',
             '../libs/d3.v4.min.js',
             '../libs/KoreGraphAdapter.js',
             '../libs/anonymousassertion.js',
             '../kore-bot-sdk-client.js',
             '../libs/perfect-scrollbar.js',
+            '../libs/purejscarousel.js',
             'kore-widgets.js',
             'chatWindow.js',
+            'libs/jquery.daterangepicker.js',
+            'libs/jquery-clockpicker.js',
             '../libs/emoji.js',
             '../libs/recorder.js',
             '../libs/recorderWorker.js',
@@ -64,7 +68,10 @@ module.exports = function (grunt) {
             'chatWindow.css',
             'custom/customTemplate.css',
             '../libs/prefect-scrollbar.css',
-            'kore-widgets.css'
+            'kore-widgets.css',
+            'libs/daterangepicker.css',
+            'libs/jquery-clockpicker.css',
+            '../libs/kore-pickers.css'
         ]
 
     }else{

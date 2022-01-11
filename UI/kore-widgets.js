@@ -221,6 +221,9 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
           panelData.push(initialWidgetData.panels[i]);
         }
+        if(panelData.length){
+          $(".kore-chat-window .kr-wiz-menu-chat").removeClass('hide');
+        }
         var dataHTML = $(_self.getTemplate("menu")).tmplProxy({
           'panelData': panelData,
           'helpers': helpers,

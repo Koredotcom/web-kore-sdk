@@ -531,6 +531,7 @@
     height: 65px;
     text-align: center;
     padding: 0 7px;
+    display: none;
 }
 .kr-wiz-menu-css .menuItemCntr .sdkThemeContainer .sdkThemeIcon{
     text-align: center;

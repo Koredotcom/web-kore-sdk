@@ -3035,7 +3035,7 @@
 
             var chatWindowTemplate = '<script id="chat_window_tmpl" type="text/x-jqury-tmpl"> \
                 <div class="kore-chat-window droppable liteTheme-one"> \
-                <div class="kr-wiz-menu-chat defaultTheme-kore">\
+                <div class="kr-wiz-menu-chat hide defaultTheme-kore">\
                 </div>	\
                     <div class="minimized-title"></div> \
                     <div class="minimized"><span class="messages"></span></div> \
