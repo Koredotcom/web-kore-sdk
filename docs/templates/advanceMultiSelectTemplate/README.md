@@ -1,6 +1,12 @@
 ##  Advance multi select template
 
-###### Example
+###### Preview
+
+
+![advance-multi-select](https://user-images.githubusercontent.com/58174664/148904346-b262cc94-8cba-4371-bee0-d58c0fb4c51c.PNG)
+
+
+###### Message Payload
 
 ```json
 {
@@ -103,10 +109,6 @@
   }
 }
 
-
-
 ```
-###### Image
 
 
-![advance-multi-select](https://user-images.githubusercontent.com/58174664/148904346-b262cc94-8cba-4371-bee0-d58c0fb4c51c.PNG)
