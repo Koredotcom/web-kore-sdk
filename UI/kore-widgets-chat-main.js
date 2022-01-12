@@ -244,10 +244,39 @@
             }
 
         }
+        function onJWTGrantError(res){
+            if (hashObj && hashObj.jwt) {
+                var jwtRefreshAPIUrl = hashObj.koreAPIUrl+'api/platform/websdksts';
+                $.ajax({
+                    url: jwtRefreshAPIUrl,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    contentType: "application/json",
+                    data:JSON.stringify({
+                        "ak": hashObj.ak,
+                        "ity": hashObj.ity,
+                        "botId": hashObj.botInfo._id
+                    }),
+                    type: 'post',
+                    dataType: 'json',
+                    success: function (data) {
+                      if(data && data.jwt){
+                        hashObj.jwt=data.jwt;
+                        $('.kore-chat-window .reload-btn').trigger('click');
+                      }
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            }
+        }
         var chatConfig = window.KoreSDK.chatConfig;
         chatConfig.botOptions.userIdentity = uuId;
         chatConfig.botOptions.assertionFn = assertion;
         chatConfig.botOptions.jwtgrantSuccessCB = getBrandingInformation;
+        chatConfig.onJWTGrantError=onJWTGrantError;
         if (hashObj && hashObj.botInfo) {
             chatConfig.botOptions.botInfo = hashObj.botInfo;
         }

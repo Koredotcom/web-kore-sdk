@@ -245,10 +245,39 @@
             }
 
         }
+        function onJWTGrantError(res){
+            if (hashObj && hashObj.jwt) {
+                var jwtRefreshAPIUrl = hashObj.koreAPIUrl+'api/platform/websdksts';
+                $.ajax({
+                    url: jwtRefreshAPIUrl,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    contentType: "application/json",
+                    data:JSON.stringify({
+                        "ak": hashObj.ak,
+                        "ity": hashObj.ity,
+                        "botId": hashObj.botInfo._id
+                    }),
+                    type: 'post',
+                    dataType: 'json',
+                    success: function (data) {
+                      if(data && data.jwt){
+                        hashObj.jwt=data.jwt;
+                        $('.kore-chat-window .reload-btn').trigger('click');
+                      }
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            }
+        }
         var chatConfig = window.KoreSDK.chatConfig;
         chatConfig.botOptions.userIdentity = uuId;
         chatConfig.botOptions.assertionFn = assertion;
         chatConfig.botOptions.jwtgrantSuccessCB = getBrandingInformation;
+        chatConfig.onJWTGrantError=onJWTGrantError;
         if (hashObj && hashObj.botInfo) {
             chatConfig.botOptions.botInfo = hashObj.botInfo;
         }
@@ -266,23 +295,23 @@
             chatConfig.tasktotrigger = hashObj.tasktotrigger;
         }
 
-        debugger
-        if(hashObj && hashObj.botInfo && hashObj.botInfo.panelsExists){
-            var widgetsConfig=window.KoreSDK.widgetsConfig;
-            widgetsConfig.botOptions.botInfo=chatConfig.botOptions.botInfo;
-            widgetsConfig.botOptions.koreAPIUrl = hashObj.koreAPIUrl.substr(0,hashObj.koreAPIUrl.length-1);
-            widgetsConfig.botOptions.userIdentity=chatConfig.botOptions.userIdentity;
+        // debugger
+        // if(hashObj && hashObj.botInfo && hashObj.botInfo.panelsExists){
+        //     var widgetsConfig=window.KoreSDK.widgetsConfig;
+        //     widgetsConfig.botOptions.botInfo=chatConfig.botOptions.botInfo;
+        //     widgetsConfig.botOptions.koreAPIUrl = hashObj.koreAPIUrl.substr(0,hashObj.koreAPIUrl.length-1);
+        //     widgetsConfig.botOptions.userIdentity=chatConfig.botOptions.userIdentity;
     
-            var wizSelector = {
-                menu: ".kr-wiz-menu-chat",
-                content: ".kr-wiz-content-chat"
-            }
-            var wSdk = new KoreWidgetSDK(widgetsConfig);
-            chatConfig.widgetSDKInstace=wSdk;//passing widget sdk instance to chatwindow 
-            wSdk.setJWT(hashObj.jwt);
-            wSdk.show(widgetsConfig, wizSelector);
+        //     var wizSelector = {
+        //         menu: ".kr-wiz-menu-chat",
+        //         content: ".kr-wiz-content-chat"
+        //     }
+        //     var wSdk = new KoreWidgetSDK(widgetsConfig);
+        //     chatConfig.widgetSDKInstace=wSdk;//passing widget sdk instance to chatwindow 
+        //     wSdk.setJWT(hashObj.jwt);
+        //     wSdk.show(widgetsConfig, wizSelector);
           
-        }
+        // }
 
         $('html').removeClass('loading');
         if(hashObj && hashObj.errorObj){

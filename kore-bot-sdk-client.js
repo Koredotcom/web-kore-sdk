@@ -514,9 +514,13 @@ initializes the rtmclient and binds the cb's for ws events.
 KoreBot.prototype.onLogIn = function(err, data) {
 	debug("sign-in/anonymous user onLogin");
 	if (err) {
-        if (this.cbErrorToClient) {
+      if (this.cbErrorToClient) {
 			if (data && data.errors && data.errors[0] && data.errors[0].msg) {
-				this.cbErrorToClient(data.errors[0].msg);
+        if(data.errors[0].tokenExpired){
+          this.cbErrorToClient(JSON.stringify(data));
+        }else{
+          this.cbErrorToClient(data.errors[0].msg);
+        }
 			} else {
 				this.cbErrorToClient(err.message);
 			}

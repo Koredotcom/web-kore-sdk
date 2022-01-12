@@ -3931,8 +3931,14 @@
                 try {
                     response = JSON.parse(response);
                     if (response.errors && response.errors[0]) {
-                        $('.errorMsgBlock').text(response.errors[0].msg);
-                        $('.errorMsgBlock').addClass('showError');
+                        if(response.errors[0].tokenExpired){
+                           if(chatInitialize && chatInitialize.config &&chatInitialize.config.onJWTGrantError){
+                            chatInitialize.config.onJWTGrantError(response);
+                           }
+                        }else{
+                            $('.errorMsgBlock').text(response.errors[0].msg);
+                            $('.errorMsgBlock').addClass('showError');    
+                        }
                     }
                 } catch (e) {
                     $('.errorMsgBlock').text(response);
