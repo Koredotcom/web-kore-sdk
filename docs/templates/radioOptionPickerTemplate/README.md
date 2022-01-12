@@ -1,3 +1,14 @@
+##  Radio option picker template
+
+###### Preview
+
+
+![radioOptionPickerTemplate](https://user-images.githubusercontent.com/58174664/148944880-96791636-d8f5-480e-b9b4-1b496f0b237b.PNG)
+
+
+###### Message Payload
+
+```js
 var message = {
     "type": "template",
     "payload": {
@@ -49,3 +60,4 @@ var message = {
     }
 };
 print(JSON.stringify(message));
+```

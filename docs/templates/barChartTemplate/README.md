@@ -1,3 +1,14 @@
+##  Barchart template
+
+###### Preview
+
+![bar-chart](https://user-images.githubusercontent.com/58174664/148940646-06716a68-ac79-47d1-b3b9-8bd2084c8e0e.PNG)
+
+
+###### Message Payload
+
+```js
+
 var elements = [{
     "title": "Peter",
     "values": [10, 5, 15, 20],
@@ -41,3 +52,4 @@ for (var i = 0; i < elements.length; i++) {
 message.payload.elements = ele;
 message.payload.X_axis = X_axis;
 print(JSON.stringify(message));
+```

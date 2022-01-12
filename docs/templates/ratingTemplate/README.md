@@ -1,3 +1,14 @@
+##  Rating template
+
+###### Preview
+
+
+![ratingTemplate](https://user-images.githubusercontent.com/58174664/148945067-332cdf1b-fd76-41e3-b2da-bb58b0bb0e5b.PNG)
+
+
+###### Message Payload
+
+```js
 var message = {
 	"type": "template",
 	"payload": {
@@ -31,3 +42,4 @@ else if (message.payload.view === "emojis") {
 	}
 }
 print(JSON.stringify(message));
+```

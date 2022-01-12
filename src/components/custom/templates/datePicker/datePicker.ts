@@ -3,7 +3,7 @@ import '../../../../../UI/libs/daterangepicker.css';
 import moment from 'moment';
 import './datePicker.scss';
 class DatePickerTemplate {
-    defaultDatePickerConfig :any = {
+    defaultDatePickerConfig: any = {
         alwaysOpen: true,
         singleMonth: true,
         showShortcuts: false,
@@ -11,10 +11,10 @@ class DatePickerTemplate {
         showTopbar: false,
         format: 'DD-MM-YYYY',
         startDate: moment(new Date()).format("DD-MM-YYYY"),
-        endDate:  (moment(new Date()).add(3, 'M')).format("DD-MM-YYYY"),
+        endDate: (moment(new Date()).add(3, 'M')).format("DD-MM-YYYY"),
         inline: true,
         container: '',
-        appendTo:'slider' // slider|| messageBubble
+        appendTo: 'slider' // slider|| messageBubble
     };
     daterangeInput: any;
     renderMessage(msgData: any) {
@@ -25,7 +25,7 @@ class DatePickerTemplate {
             me.initiateDatePicker(msgData);
             me.addClickEventCalender(msgData)
             me.bindEvents();
-            if(this.defaultDatePickerConfig.appendTo === 'messageBubble'){
+            if (this.defaultDatePickerConfig.appendTo === 'messageBubble') {
                 return me.messageHtml;
             }
         }
@@ -43,10 +43,10 @@ class DatePickerTemplate {
             chatWindowInstance.bottomSliderAction('hide');
             me.daterangeInput.data('dateRangePicker').clear();
             me.daterangeInput.data('dateRangePicker').resetMonthsView();
-            if(me.defaultDatePickerConfig.appendTo === 'messageBubble'){
-                $(me.messageHtml).find(".confirmBTN").css({  "display": "none"  });
-                $(me.messageHtml).find(".date-picker-wrapper").css({'pointer-events':'none'});
-            }   
+            if (me.defaultDatePickerConfig.appendTo === 'messageBubble') {
+                $(me.messageHtml).find(".confirmBTN").css({ "display": "none" });
+                $(me.messageHtml).find(".date-picker-wrapper").css({ 'pointer-events': 'none' });
+            }
         });
         $(me.messageHtml).off('click', '.headerCalendar .close-button').on('click', '.headerCalendar .close-button', function () {
             chatWindowInstance.bottomSliderAction("hide");
@@ -66,23 +66,35 @@ class DatePickerTemplate {
         let chatWindowInstance = me.cwInstance;
         let $ = me.cwInstance.$;
         installDateRangeFunctions($, moment);
-        if(this.defaultDatePickerConfig.appendTo !== 'messageBubble'){
+        if (this.defaultDatePickerConfig.appendTo !== 'messageBubble') {
             chatWindowInstance.bottomSliderAction('show', me.messageHtml);
         }
-        var datePickerConfig = {
+        let datePickerConfig: any = {
             alwaysOpen: true,
             singleMonth: true,
             showShortcuts: false,
             singleDate: true,
             showTopbar: false,
-            format: 'DD-MM-YYYY',
-            startDate: msgData.message[0].component.payload.startDate,
-            endDate: msgData.message[0].component.payload.endDate,
-            showdueDate: msgData.message[0].component.payload.showdueDate,
+            // format: 'DD-MM-YYYY',
+            // startDate: msgData.message[0].component.payload.startDate,
+            // endDate: msgData.message[0].component.payload.endDate,
+            // showdueDate: msgData.message[0].component.payload.showdueDate,
             inline: true,
             container: $(me.messageHtml),
         };
-     $.extend(this.defaultDatePickerConfig,datePickerConfig)
+        if (msgData.message[0].component.payload.startDate) {
+            datePickerConfig.startDate = msgData.message[0].component.payload.startDate;
+        }
+        if (msgData.message[0].component.payload.endDate) {
+            datePickerConfig.endDate = msgData.message[0].component.payload.endDate;
+        }
+        if (msgData.message[0].component.payload.showdueDate) {
+            datePickerConfig.showdueDate = msgData.message[0].component.payload.showdueDate;
+        }
+        if (msgData.message[0].component.payload.format) {
+            datePickerConfig.format = msgData.message[0].component.payload.format;
+        }
+        $.extend(this.defaultDatePickerConfig, datePickerConfig)
         me.daterangeInput = $(me.messageHtml).find('#calender').dateRangePicker(this.defaultDatePickerConfig);
     }
     getTemplateString() {
@@ -119,7 +131,7 @@ class DatePickerTemplate {
         $(me.messageHtml).find(".confirmBTN").css({
             "display": "none"
         });
-        if(me.defaultDatePickerConfig && me.defaultDatePickerConfig.appendTo !== 'slider'){
+        if (me.defaultDatePickerConfig && me.defaultDatePickerConfig.appendTo !== 'slider') {
             $(me.messageHtml).find(".headerCalendar .close-button").addClass('hide');
         }
         setTimeout(function () {

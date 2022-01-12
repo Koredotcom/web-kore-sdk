@@ -1,5 +1,26 @@
+## Text template
 
-Text temmplate with video attachment
+###### Text template
+
+###### Preview
+![textTemplate](https://user-images.githubusercontent.com/58174664/148945903-22484a15-1af1-4351-bd12-ab64ea5bd7f7.PNG)
+###### Message Payload
+```js
+var message = {
+    "text": "test message"
+};
+print(JSON.stringify(message));
+```
+###### Text template with video attachment
+###### Preview
+
+
+![textTemplate-with-videoAttachment](https://user-images.githubusercontent.com/58174664/148946072-16a20a42-24b4-4f9d-986d-e279ea8c773d.PNG)
+
+
+###### Message Payload
+
+```js
 var message = {
     "type": 'message',
     "payload": {
@@ -9,11 +30,4 @@ var message = {
 };
 
 print(JSON.stringify(message));
-
-text template
-var message = {
-    "text": "test message"
-};
-
-print(JSON.stringify(message));
-
+```

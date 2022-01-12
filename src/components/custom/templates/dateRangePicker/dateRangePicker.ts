@@ -89,18 +89,30 @@ class DateRangePickerTemplate {
         if (this.defaultDateRangePickerConfig.appendTo !== 'messageBubble') {
             chatWindowInstance.bottomSliderAction('show', me.messageHtml);
         }
-        var datePickerConfig = {
+        let datePickerConfig: any = {
             alwaysOpen: true,
             singleMonth: true,
             showShortcuts: false,
             showTopbar: false,
-            format: 'DD-MM-YYYY',
-            startDate: msgData.message[0].component.payload.startDate,
-            endDate: msgData.message[0].component.payload.endDate,
-            showdueDate: msgData.message[0].component.payload.showdueDate,
+            //format: 'DD-MM-YYYY',
+            // startDate: msgData.message[0].component.payload.startDate,
+            // endDate: msgData.message[0].component.payload.endDate,
+            // showdueDate: msgData.message[0].component.payload.showdueDate,
             inline: true,
             container: $(me.messageHtml),
         };
+        if (msgData.message[0].component.payload.startDate) {
+            datePickerConfig.startDate = msgData.message[0].component.payload.startDate;
+        }
+        if (msgData.message[0].component.payload.endDate) {
+            datePickerConfig.endDate = msgData.message[0].component.payload.endDate;
+        }
+        if (msgData.message[0].component.payload.showdueDate) {
+            datePickerConfig.showdueDate = msgData.message[0].component.payload.showdueDate;
+        }
+        if (msgData.message[0].component.payload.format) {
+            datePickerConfig.format = msgData.message[0].component.payload.format;
+        }
         $.extend(this.defaultDateRangePickerConfig, datePickerConfig)
         me.daterangeInput = $(me.messageHtml).find('#rangeCalenderBtn').dateRangePicker(this.defaultDateRangePickerConfig);
     }

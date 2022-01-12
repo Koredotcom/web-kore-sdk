@@ -68,7 +68,7 @@ chatConfig = {
     },
     supportDelayedMessages: true,    // enable to add support for renderDelay in message nodes which will help to render messages with delay from UI       
     pickersConfig: {
-        showDatePickerIcon: true,           //set true to show datePicker icon
+        showDatePickerIcon: false,           //set true to show datePicker icon
         showDateRangePickerIcon: false,      //set true to show dateRangePicker icon
         showClockPickerIcon: false,          //set true to show clockPicker icon
         showTaskMenuPickerIcon: false,       //set true to show TaskMenu Template icon

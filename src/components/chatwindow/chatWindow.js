@@ -2023,10 +2023,7 @@ chatWindow.prototype.invokePluginCallbacksForCWInstance = function(){
 chatWindow.prototype.render = function (chatWindowHtml) {
   const me = this;
   $(me.config.container).append(chatWindowHtml);
-   //me.invokePluginCallbacksForCWInstance();
-  if (me.plugins.KorePickersPlugin) {
-    me.config.KorePickersPlugin = me.plugins.KorePickersPlugin.onChatWindowInit();
-  }
+  me.invokePluginCallbacksForCWInstance();
 
   if (me.config.container !== 'body') {
     $(me.config.container).addClass('pos-relative');

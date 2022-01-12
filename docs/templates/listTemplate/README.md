@@ -1,3 +1,15 @@
+##  List template
+
+###### Preview
+
+
+![listTemplate](https://user-images.githubusercontent.com/58174664/148943505-41ef0e0e-3a6c-4efa-9a48-ff92f766f3d9.PNG)
+
+
+
+###### Message Payload
+
+```js
 var info = ["Element1", "Element2", "Element3"];
 var message = {
     "type": "template",
@@ -55,3 +67,4 @@ for (i = 0; i < info.length; i++) {
     message.payload.elements.push(element);
 }
 print(JSON.stringify(message));
+```

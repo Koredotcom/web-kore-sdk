@@ -1,3 +1,13 @@
+##  Table template
+
+###### Preview
+
+![tableTemplate](https://user-images.githubusercontent.com/58174664/148945466-07f469c6-5724-4538-8c5c-04c407d60ee2.PNG)
+
+
+###### Message Payload
+
+```js
 var elements = [
     {id: "1", name: "Peter", designation: "Producer", salary: 1000},
     {id: "2", name: "Sam", designation: "Director", salary: 2000},
@@ -23,3 +33,4 @@ for (var i = 0; i < elements.length; i++) {
 }
 message.payload.elements = ele;
 print(JSON.stringify(message));
+```

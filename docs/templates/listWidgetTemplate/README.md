@@ -1,3 +1,15 @@
+## Listwidget template
+
+###### Preview
+
+
+![listWidgetTemplate](https://user-images.githubusercontent.com/58174664/148943999-d3019dc5-90f0-41a8-9383-8a727c77e4f4.PNG)
+
+
+
+###### Message Payload
+
+```js
 var message = {
     "type": "template",
     "payload": {
@@ -300,3 +312,4 @@ var message = {
     }
 }
 print(JSON.stringify(message));
+```

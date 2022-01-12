@@ -1,3 +1,13 @@
+##  Button template
+
+###### Preview
+
+![buttonTemplate](https://user-images.githubusercontent.com/58174664/148940966-5d7990ea-9e94-4eeb-a277-e97b4906b879.PNG)
+
+
+###### Message Payload
+
+```js
 var info = ["Button1", "Button2", "Button3"];
 var message = {
     "type": "template",
@@ -27,3 +37,4 @@ for (i = 0; i < info.length; i++) {
     message.payload.buttons.push(button);
 }
 print(JSON.stringify(message));
+```

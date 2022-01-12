@@ -1,8 +1,20 @@
-var elements = [{
+##  Piechart template
+
+###### Preview
+
+
+![pieChartTemplate](https://user-images.githubusercontent.com/58174664/148944411-f54f8d16-e03e-4c02-8568-0bc803c17aa6.PNG)
+
+
+
+###### Message Payload
+
+```js
+var elements = [
+    {
         "title": "Airlines",
         "value": "1234.0",
         "displayValue": "$ 1,234"
-
     },
     {
         "title": "Hotels",
@@ -40,3 +52,4 @@ for (var i = 0; i < elements.length; i++) {
 }
 message.payload.elements = ele;
 print(JSON.stringify(message));
+```

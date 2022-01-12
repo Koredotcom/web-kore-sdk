@@ -1,3 +1,14 @@
+##  Linechart template
+
+###### Preview
+
+![lineChartTemplate](https://user-images.githubusercontent.com/58174664/148943313-80595e92-af73-43bf-92a0-feb9d5e1a9b4.PNG)
+
+
+
+###### Message Payload
+
+```js
 var elements = [
     {
         "title": "Peter",
@@ -31,3 +42,4 @@ for (i = 0; i < headers.length; i++) {
     message.payload.headers.push(headers[i]);
 }
 print(JSON.stringify(message));
+```

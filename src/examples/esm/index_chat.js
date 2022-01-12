@@ -10,7 +10,7 @@ let pickerConfig = {};
 
 
 // chatWindowInstance.installPlugin(Korei18nPlugin);
-chatWindowInstance.installPlugin(new KoreFileUploaderPlugin());
+//chatWindowInstance.installPlugin(new KoreFileUploaderPlugin());
 chatWindowInstance.installPlugin(new KorePickersPlugin(pickerConfig));
 chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){
     chatWindowInstance.setJWT(res.jwt);

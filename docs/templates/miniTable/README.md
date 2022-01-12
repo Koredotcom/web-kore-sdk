@@ -1,3 +1,15 @@
+##  Minitable template
+
+###### Preview
+
+
+![miniTableTemplate](https://user-images.githubusercontent.com/58174664/148944198-5dc8ccd0-9985-4a60-a86d-fc2078ca3970.PNG)
+
+
+
+###### Message Payload
+
+```js
 var elements = [
     {
         "primary": [["Current Accounts"], ["300", "right"]],
@@ -24,3 +36,4 @@ for (var i = 0; i < elements.length; i++) {
 }
 message.payload.elements = ele;
 print(JSON.stringify(message));
+```

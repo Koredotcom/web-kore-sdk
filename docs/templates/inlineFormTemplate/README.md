@@ -1,3 +1,12 @@
+##  Inline form template
+
+###### Preview
+
+![inlineFormTemplate](https://user-images.githubusercontent.com/58174664/148943000-cbccf32c-1395-4232-aac5-f9d915337eb8.PNG)
+
+###### Message Payload
+
+```js
 var message1 = {
     "type": "template",
     "payload": {
@@ -9,3 +18,4 @@ var message1 = {
 };
 
 print(JSON.stringify(message1));
+```
