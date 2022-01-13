@@ -263,6 +263,7 @@
                     success: function (data) {
                       if(data && data.jwt){
                         hashObj.jwt=data.jwt;
+                        $('.kore-chat-header .disabled').prop('disabled', false).removeClass("disabled");
                         $('.kore-chat-window .reload-btn').trigger('click');
                       }
                     },
