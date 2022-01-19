@@ -223,6 +223,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         }
         if(panelData.length){
           $(".kore-chat-window .kr-wiz-menu-chat").removeClass('hide');
+          $(".kore-chat-window").addClass('has-panels');
         }
         var dataHTML = $(_self.getTemplate("menu")).tmplProxy({
           'panelData': panelData,
