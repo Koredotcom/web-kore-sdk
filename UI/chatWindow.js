@@ -1751,8 +1751,15 @@
                     }, 100);
                 });
 
-                _chatContainer.off('click', '.reload-btn').on('click', '.reload-btn', function (event) {
-                    me.config.botOptions.forceReconnecting=false;//make it to true if reconnect button should not trigger on connect message
+                _chatContainer.off('click', '.reload-btn').on('click', '.reload-btn', function (event,data) {
+                    if(data && data.isReconnect){
+                        me.config.botOptions.forceReconnecting=true;
+                        setTimeout(function(){
+                            me.config.botOptions.forceReconnecting=false;
+                        },1000)
+                    }else{
+                        me.config.botOptions.forceReconnecting=false;//make it to true if reconnect button should not trigger on connect message
+                    }
                     $(this).addClass("disabled").prop('disabled', true);
                     $(".close-btn").addClass("disabled").prop('disabled', true);
                     setTimeout(function () {
