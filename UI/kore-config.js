@@ -27,6 +27,7 @@
 // botOptions.webhookConfig={
 //     enable:true,
 //     webhookURL:'PLEASE_PROVIDE_WEBHOOK_URL',
+//     useSDKChannelResponses: false, //Set it to true if you would like to use the responses defined for Web/Mobile SDK Channel
 //     apiVersion:2 //webhookURL will be converted to v2 by default. To use v1(not recommended) webhookURL change it to 1
 // }
    

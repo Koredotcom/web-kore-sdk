@@ -1754,9 +1754,6 @@
                 _chatContainer.off('click', '.reload-btn').on('click', '.reload-btn', function (event,data) {
                     if(data && data.isReconnect){
                         me.config.botOptions.forceReconnecting=true;
-                        setTimeout(function(){
-                            me.config.botOptions.forceReconnecting=false;
-                        },1000)
                     }else{
                         me.config.botOptions.forceReconnecting=false;//make it to true if reconnect button should not trigger on connect message
                     }
@@ -2149,6 +2146,10 @@
                         }
                     }
 
+                    if(me.config.botOptions.webhookConfig.useSDKChannelResponses){
+                        payload.preferredChannelForResponse='rtm';
+                    }
+                        
                     if(me.config.botOptions.webhookConfig.apiVersion && me.config.botOptions.webhookConfig.apiVersion===2){
                         payload.message={
                             "type": "text",
