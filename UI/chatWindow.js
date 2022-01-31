@@ -3942,6 +3942,13 @@
                 }
             }
             this.botDetails = function (response, botInfo) {
+                if(window.KoreAgentDesktop){
+                    if (response && response.userInfo) {
+                        KoreAgentDesktop(response.userInfo.userId, response);
+                    } else {
+                        console.log("AgentDesktop initialization - did not receive authResponse")
+                    }    
+                }
                 /* Remove hide class for tts and speech if sppech not enabled for this bot */
                 /*setTimeout(function () {
                     fetchBotDetails(response,botInfo);

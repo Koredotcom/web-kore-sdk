@@ -627,10 +627,10 @@ KoreBot.prototype.reWriteWebhookConfig=function (config){
     config.webhookConfig.channelType=channelType;
   }
 }
-
+var _instance;
 module.exports.instance = function(){
 	_chatHistoryLoaded = false;
-	  var _instance=new KoreBot();
+	  _instance=new KoreBot();
     /*
       Adding KoreBot,KoreRTMClient function to instance 
       so developers can override the prototype methods of KoreBot from out of this file 
@@ -660,6 +660,9 @@ module.exports.instance = function(){
       });
       return _instance;
 };
+module.exports.singletoninstance = function(){
+  return _instance;
+}
 },{"./index.js":1,"./jstz.js":2,"debug":21,"events":30,"inherits":23,"lodash":24}],1:[function(require,module,exports){
 var events = require('./lib/clients/events');
 
