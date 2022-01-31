@@ -28,18 +28,17 @@ import IframeTemplate from './templates/iframeTemplate/iframeTemplate';
 import './customTemplate.css';
 import '../../../libs/purejscarousel.css';
 //(function($){
-	function customTemplate(data,chatInitialize) {
-		this.cfg = data;
-		this.chatInitialize=chatInitialize;
-		this.helpers = null;
-		this.extension = null;
+	function customTemplate(hostInstance) {
+		this.hostInstance=hostInstance;//chatwindowInstance|SearchSDK Instance|WidgetSDK Instanse
+		// this.helpers = null;
+		// this.extension = null;
 		this.templates=[];
 		this.installDefaultTemplates();
 	}
 
 	customTemplate.prototype.installTemplate = function (template) {
 		this.templates.push(template);
-		template.cwInstance=this.chatInitialize;
+		template.cwInstance=this.hostInstance;
 	};
 
 	customTemplate.prototype.installDefaultTemplates = function () {

@@ -41,6 +41,11 @@ import KoreWidgetSDK from '../UI/kore-widgets';
 import widgetsConfig from '../UI/kore-widgets-config';
 import KorePickersPlugin from './plugins/korePickers';
 
+
+import KRSearch from './components/search/findly-sdk';
+import KRSearchConfig from './components/search/config/findly-config';
+
+
 export {
   chatConfig,
   chatWindow,
@@ -48,5 +53,7 @@ export {
   KoreWidgetSDK,
   Korei18nPlugin,
   KoreFileUploaderPlugin,
-  KorePickersPlugin
+  KorePickersPlugin,
+  KRSearch,
+  KRSearchConfig
 };
