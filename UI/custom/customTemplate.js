@@ -2953,13 +2953,13 @@ var advancedListTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tm
 		/* Advanced multi select checkbox click functions ends here */
   
 		/* New List Template click functions starts here*/
-		$(messageHtml).off('click', '.listViewTmplContent .seeMoreList').on('click', '.listViewTmplContent .seeMoreList', function () {
+		$(messageHtml).off('click', '.listViewTmplContent .seeMoreList').on('click', '.listViewTmplContent .seeMoreList', function (e) {
 			if($(".list-template-sheet").length!==0){
 				$(".list-template-sheet").remove();
-				listViewTabs();
+				listViewTabs(e);
 			}
 			else if($(".list-template-sheet").length===0){
-				listViewTabs();
+				listViewTabs(e);
 			}
 		});
 		$(messageHtml).find(".listViewLeftContent").on('click', function (e) {
@@ -3149,8 +3149,8 @@ var advancedListTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tm
 		}
 		}
 		/* Action sheet Template functions starts here*/
-		this.listViewTabs = function () {
-			var msgData = $("li.fromOtherUsers.with-icon.listView").data();
+		this.listViewTabs = function (e) {
+			var msgData = $(e.currentTarget).closest("li.fromOtherUsers.with-icon.listView").data();
 			if(msgData.message[0].component.payload.seeMore){
 				msgData.message[0].component.payload.seeMore=false;
 			   }
@@ -3168,7 +3168,6 @@ var advancedListTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tm
 			$(".kore-action-sheet .list-template-sheet .displayMonth .tabs").on('click', function (e) {
 				var _selectedTab = $(e.target).text();
 	
-				var msgData = $("li.fromOtherUsers.with-icon.listView").data();
 				var viewTabValues = $(customTemplate.prototype.getChatTemplate("actionSheetTemplate")).tmpl({
 					'msgData': msgData,
 					'dataItems': msgData.message[0].component.payload.moreData[_selectedTab],
