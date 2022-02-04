@@ -315,9 +315,13 @@
 
         $('html').removeClass('loading');
         if(hashObj && hashObj.errorObj){
-          $('html').addClass('error');
-          $('.emptyDes').html(hashObj.errorObj.message);
-          //window.alert(hashObj.errorObj.message)
+          var infoEle=$('.kr-sdkEmptyState .emptyDes');  
+          if(infoEle && infoEle.length){
+            $('html').addClass('error');
+            $('.kr-sdkEmptyState .emptyDes').html(hashObj.errorObj.message);
+          }else{
+            window.alert(hashObj.errorObj.message);
+          }
         }else{
             if(hashObj && hashObj.channel && hashObj.channel==='unblu'){
                 injectUnBluTags();
