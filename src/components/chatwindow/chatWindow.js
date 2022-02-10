@@ -1151,7 +1151,7 @@ chatWindow.prototype.initVars = function () {
   const me = this;
   me.plugins = {};
   chatInitialize = me//new chatWindow(cfg);
-  me.customTemplateObj = new customTemplate(me.config, me);
+  me.customTemplateObj = new customTemplate(me);
 };
 chatWindow.prototype.initi18n = function () {
   const me = this;

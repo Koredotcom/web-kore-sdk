@@ -7,7 +7,7 @@
     "build-umd": "webpack --env=kore_env=prod --env=target_module=umd",
     "build": "webpack --env=kore_env=prod  --env=target_module=esm",
     "serve-umd": "webpack-dev-server --env=kore_env=dev  --env=component=chat  --env=target_module=umd",
-    "serve": "webpack-dev-server --env=kore_env=dev --env=component=chat --env=target_module=esm"
+    "serve": "webpack-dev-server --env=kore_env=dev --env=component=chat --env=target_module=esm --mode development"
   },
   "main": "dist/kore-web-sdk.esm.browser.js",
   "module": "dist/kore-web-sdk.esm.browser.js",

@@ -5,7 +5,7 @@ const ESLintPlugin = require('eslint-webpack-plugin');
 
 let config= {
     mode:"none",//none || development || production
-    entry:'./src/index.ts',
+    entry:'',
     module:{
         rules:[
           {
@@ -87,7 +87,7 @@ let config= {
         extensions:['.js','.ts']
     },
     output: {
-        filename: 'kore-web-sdk.umd.js',
+        filename: 'kore-web-sdk-[name].umd.js',
         path: path.resolve(__dirname,'dist'),
         clean: false,
         hotUpdateChunkFilename: 'hot/hot-update.js',
@@ -113,17 +113,49 @@ let config= {
 module.exports= function(env,argv){
     
     console.log(`ENV:${JSON.stringify(env)} \nARGV:${JSON.stringify(argv)}`);
-    config.entry='./src/index.ts';
 
     if (env.target_module === 'esm') {
       config.output.filename = 'kore-web-sdk.esm.browser.js';
       config.output.libraryTarget = "module";
+      config.entry={
+        esm: "./src/index_esm.ts"
+      }
       config.experiments = {
         outputModule: true,
       }
     } else if (env.target_module === 'umd') {
-      config.output.library = "KoreSDK";
-      config.output.libraryTarget = "umd";
+        config.output.libraryTarget = "umd";
+        config.entry={
+          Chat: {
+            import: "./src/index_umd_chat.ts",
+            filename: 'kore-web-sdk-umd-chat.js',
+            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+          },
+          Widgets:{
+            import: "./src/index_umd_widgets.ts",
+            filename: 'kore-web-sdk-umd-widgets.js',
+            // dependOn: 'chat',
+            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+          },
+          Search:{
+            import: "./src/index_umd_search.ts",
+            filename: 'kore-web-sdk-umd-search.js',
+            // dependOn: 'chat',
+            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+          }
+          //search: "./src/index_umd_search.ts"
+        }
+        config.output.library = {
+          name: 'Kore[name]SDK',
+          type: 'assign-properties',
+        }//["KoreChatSDK","KoreWidgetsSDK","KoreSearchSDK"];
+        //config.output.umdNamedDefine= true;
+        //config.output.filename = 'kore-web-sdk-umd-[name].js';
+        // function(entryKey, entryValue) {
+        //     if (entryKey === 'umd_chat') return 'KoreChatSDK';
+        //     if (entryKey === 'umd_widgets') return 'KoreWidgetsSDK';
+        //     if (entryKey === 'umd_search') return 'KoreSearchSDK';
+        // }
     }
 
     if (env.kore_env==='dev') {
