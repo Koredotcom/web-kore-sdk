@@ -7,7 +7,7 @@ class MiniTableChartTemplate {
     renderMessage(msgData: any) {
         let me: any = this;
         let $ = me.cwInstance.$;
-        let helpersObj = new helpers();
+        let helpersObj = helpers;
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "mini_table") {
             if (msgData.message[0].component.payload.layout == 'horizontal') {
                 me.messageHtml = $(me.getTemplateString('miniTableHorizontalTemplate')).tmpl({

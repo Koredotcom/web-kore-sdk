@@ -1,97 +1,61 @@
-// (function (factory) {
-//     // if (typeof define === 'function' && define.amd) { // AMD
-//     //    define(factory);
-//     //  } else if (typeof module !== 'undefined') {      // CommonJS
-//     //    module.exports = factory();
-//     //  } else {                                         // browser globals
-//     window.koreBotChat = factory();
-//     //}
-// })(function () {
-//     return
-// });
-import PerfectScrollbar from 'perfect-scrollbar';
+import $ from '../../libs/korejquery';
 import requireKr from '../../../kore-bot-sdk-client';
-// import $ from 'jquery'
-import korejquery from '../../libs/korejquery';
-// import 'jquery-ui'
-// import 'jquery.tmpl';
 import customTemplate from '../custom/customTemplate';
+import KRPerfectScrollbar from 'perfect-scrollbar';
+import KoreHelpers from '../../utils/helpers'
 import './chatWindow.scss';
-import KoreGraphAdapter from '../../../libs/KoreGraphAdapter';
-
-const $ = korejquery;
-// function koreBotChat() {
-// var koreJquery;
-// if (window && window.KoreSDK && window.KoreSDK.dependencies && window.KoreSDK.dependencies.jQuery) {
-//     //load kore's jquery version
-//     koreJquery = window.KoreSDK.dependencies.jQuery;
-// } else {
-//     //fall back to clients jquery version
-//     koreJquery = window.jQuery;
-// }
-
-let KRPerfectScrollbar;
-if (window.PerfectScrollbar && typeof PerfectScrollbar === 'function') {
-  KRPerfectScrollbar = window.PerfectScrollbar;
-}
-KRPerfectScrollbar = PerfectScrollbar;
-
-// var chatWindow =(function ($,KRPerfectScrollbar) {
-
-//     //chatwindow code comes here
-// })(koreJquery,KRPerfectScrollbar);
-// return returnFun;
-
-// Actual  chatwindow.js koreBotChat function code starts here
 
 const bot = requireKr('/KoreBot.js').instance();
-const _koreBotChat = this;
-let botMessages = {};
-const _botInfo = {};
-const detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
-let _eventQueue = {};
-const carouselEles = [];
-let prevRange; let accessToken; let koreAPIUrl; let fileToken; let fileUploaderCounter = 0; let bearerToken = ''; let assertionToken = ''; const messagesQueue = []; const
-  historyLoading = false;
-const speechServerUrl = ''; let userIdentity = ''; let isListening = false; let isRecordingStarted = false; let speechPrefixURL = ''; let sidToken = ''; let carouselTemplateCount = 0; let waiting_for_message = false; const
-  loadHistory = false;
-const EVENTS = {
-  // chat window exposed events
-  OPEN_OVERRIDE: 'cw:open:override',
-  MESSAGE_OVERRIDE: 'cw:message:override',
-};
-let target;
-/** ***************** Mic variable initilization ****************** */
-const _exports = {};
-let _template; const
-  _this = {};
-const { navigator } = window;
-let mediaStream; let mediaStreamSource; let rec; let _connection; let intervalKey; let
-  context;
-let _permission = false;
-let _user_connection = false;
-const CONTENT_TYPE = 'content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)16000,+format=(string)S16LE,+channels=(int)1';
 
-let recorderWorkerPath = '../libs/recorderWorker.js';
-const INTERVAL = 250;
-let _pingTimer; const
-  _pingTime = 30000;
+//let prevRange;
+//const INTERVAL = 250;
+//let _pingTimer; 
+//const _pingTime = 30000;
+
+// let botMessages = {};
+// const _botInfo = {};
+// const detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
+// let _eventQueue = {};
+// const carouselEles = [];
+// let prevRange; let accessToken; let koreAPIUrl; let fileToken; let fileUploaderCounter = 0; let bearerToken = ''; let assertionToken = ''; const messagesQueue = []; const
+//   historyLoading = false;
+// const speechServerUrl = ''; let userIdentity = ''; let isListening = false; let isRecordingStarted = false; let speechPrefixURL = ''; let sidToken = ''; let carouselTemplateCount = 0; let me.waiting_for_message = false; const
+//   loadHistory = false;
+// const EVENTS = {
+//   // chat window exposed events
+//   OPEN_OVERRIDE: 'cw:open:override',
+//   MESSAGE_OVERRIDE: 'cw:message:override',
+// };
+// let target;
+/** ***************** Mic variable initilization ****************** */
+// const _exports = {};
+// let _template; const
+//   _this = {};
+// const { navigator } = window;
+// let mediaStream; let mediaStreamSource; let rec; let _connection; let intervalKey; let
+//   context;
+// let _permission = false;
+// let _user_connection = false;
+// const CONTENT_TYPE = 'content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)16000,+format=(string)S16LE,+channels=(int)1';
+
+// let recorderWorkerPath = '../libs/recorderWorker.js';
+
 /** *************** Mic initilization code end here *********************** */
 
 /** ***************************** TTS variable initialization ************* */
-let _ttsContext = null; let _ttsConnection = null; let ttsServerUrl = ''; let ttsAudioSource = null; let _txtToSpeak = ''; const
-  optionIndex = 65; // Audio context
+// let _ttsContext = null; let _ttsConnection = null; let ttsServerUrl = ''; let ttsAudioSource = null; let _txtToSpeak = ''; const
+//   optionIndex = 65; // Audio context
 /** ************************ TTS initialization code end here ************* */
 
 /** ************************* file upload variable ****************************** */
-const appConsts = {};
-let attachmentInfo = {};
+// const appConsts = {};
+// let attachmentInfo = {};
 // const allowedFileTypes = ['m4a', 'amr', 'aac', 'wav', 'mp3', 'mp4', 'mov', '3gp', 'flv', 'png', 'jpg', 'jpeg', 'gif', 'bmp', 'csv', 'txt', 'json', 'pdf', 'doc', 'dot', 'docx', 'docm',
 //   'dotx', 'dotm', 'xls', 'xlt', 'xlm', 'xlsx', 'xlsm', 'xltx', 'xltm', 'xlsb', 'xla', 'xlam', 'xll', 'xlw', 'ppt', 'pot', 'pps', 'pptx', 'pptm', 'potx', 'potm', 'ppam',
 //   'ppsx', 'ppsm', 'sldx', 'sldm', 'zip', 'rar', 'tar', 'wpd', 'wps', 'rtf', 'msg', 'dat', 'sdf', 'vcf', 'xml', '3ds', '3dm', 'max', 'obj', 'ai', 'eps', 'ps', 'svg', 'indd', 'pct', 'accdb',
 //   'db', 'dbf', 'mdb', 'pdb', 'sql', 'apk', 'cgi', 'cfm', 'csr', 'css', 'htm', 'html', 'jsp', 'php', 'xhtml', 'rss', 'fnt', 'fon', 'otf', 'ttf', 'cab', 'cur', 'dll', 'dmp', 'drv', '7z', 'cbr',
 //   'deb', 'gz', 'pkg', 'rpm', 'zipx', 'bak', 'avi', 'm4v', 'mpg', 'rm', 'swf', 'vob', 'wmv', '3gp2', '3g2', 'asf', 'asx', 'srt', 'wma', 'mid', 'aif', 'iff', 'm3u', 'mpa', 'ra', 'aiff', 'tiff'];
-appConsts.CHUNK_SIZE = 1024 * 1024;
+//appConsts.CHUNK_SIZE = 1024 * 1024;
 // const filetypes = {}; const audio = ['m4a', 'amr', 'wav', 'aac', 'mp3']; const video = ['mp4', 'mov', '3gp', 'flv']; const
 //   image = ['png', 'jpg', 'jpeg'];
 // filetypes.audio = audio;
@@ -110,17 +74,17 @@ appConsts.CHUNK_SIZE = 1024 * 1024;
 //   return 'attachment';
 // };
 
-const kfrm = {};
-kfrm.net = {};
-window.PieChartCount = 0;
-window.barchartCount = 0;
-window.linechartCount = 0;
-const available_charts = [];
-let chatInitialize;
-const customTemplateObj = {};
-window.chartColors = ['#75b0fe', '#f78083', '#99ed9e', '#fde296', '#26344a', '#5f6bf7', '#b3bac8', '#99a1fd', '#9cebf9', '#f7c7f4'];
+// const kfrm = {};
+// kfrm.net = {};
+// window.PieChartCount = 0;
+// window.barchartCount = 0;
+// window.linechartCount = 0;
+// const available_charts = [];
+//let chatInitialize;
+//const customTemplateObj = {};
+//window.chartColors = ['#75b0fe', '#f78083', '#99ed9e', '#fde296', '#26344a', '#5f6bf7', '#b3bac8', '#99a1fd', '#9cebf9', '#f7c7f4'];
 /** ************************File upload variable end here ************************* */
-let _escPressed = 0;
+//let me.vars._escPressed = 0;
 String.prototype.isNotAllowedHTMLTags = function () {
   const wrapper = document.createElement('div');
   wrapper.innerHTML = this;
@@ -217,483 +181,483 @@ function xssAttack(txtStr) {
   // return compObj[0].componentBody;
 }
 
-var helpers = {
-  nl2br(str, runEmojiCheck) {
-    // todo:raj
-    //  if (runEmojiCheck) {
-    //      str = window.emojione.shortnameToImage(str);
-    //  }
-    str = str.replace(/(?:\r\n|\r|\n)/g, '<br />');
-    return str;
-  },
-  br2nl(str) {
-    str = str.replace(/<br \/>/g, '\n');
-    return str;
-  },
-  formatAMPM(date) {
-    let hours = date.getHours();
-    let minutes = date.getMinutes();
-    let seconds = date.getSeconds();
-    const ampm = hours >= 12 ? 'pm' : 'am';
-    hours %= 12;
-    hours = hours || 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? `0${minutes}` : minutes;
-    seconds = seconds < 10 ? `0${seconds}` : seconds;
-    const strTime = `${hours}:${minutes}:${seconds} ${ampm}`;
-    return strTime;
-  },
-  formatDate(date) {
-    let d = new Date(date);
-    if (isNaN(d.getTime())) {
-      const _tmpDate = new Date().getTime();
-      d = new Date(_tmpDate);
-    }
-    return `${d.toDateString()} at ${helpers.formatAMPM(d)}`;
-  },
-  convertMDtoHTML(val, responseType, msgItem) {
-    if (typeof val === 'object') {
-      try {
-        val = JSON.stringify(val);
-      } catch (error) {
-        val = '';
-      }
-    }
-    const hyperLinksMap = {};
-    const mdre = {};
-    if (msgItem && msgItem.cInfo && msgItem.cInfo.ignoreCheckMark) {
-      var { ignoreCheckMark } = msgItem.cInfo;
-    }
-    // mdre.date = new RegExp(/\\d\(\s*(.{10})\s*\)/g);
-    mdre.date = new RegExp(/\\d\(\s*(.{10})\s*(?:,\s*["'](.+?)["']\s*)?\)/g);
-    mdre.time = new RegExp(/\\t\(\s*(.{8}\.\d{0,3})\s*\)/g);
-    // mdre.datetime = new RegExp(/\\dt\(\s*(.{10})[T](.{12})([z]|[Z]|[+-]\d{4})\s*\)/g);
-    mdre.datetime = new RegExp(/\\(d|dt|t)\(\s*([-0-9]{10}[T][0-9:.]{12})([z]|[Z]|[+-]\d{4})[\s]*,[\s]*["']([a-zA-Z\W]+)["']\s*\)/g);
-    mdre.num = new RegExp(/\\#\(\s*(\d*.\d*)\s*\)/g);
-    mdre.curr = new RegExp(/\\\$\((\d*.\d*)[,](\s*[\"\']\s*\w{3}\s*[\"\']\s*)\)|\\\$\((\d*.\d*)[,](\s*\w{3}\s*)\)/g);
+// var helpers = {
+//   nl2br(str, runEmojiCheck) {
+//     // todo:raj
+//     //  if (runEmojiCheck) {
+//     //      str = window.emojione.shortnameToImage(str);
+//     //  }
+//     str = str.replace(/(?:\r\n|\r|\n)/g, '<br />');
+//     return str;
+//   },
+//   br2nl(str) {
+//     str = str.replace(/<br \/>/g, '\n');
+//     return str;
+//   },
+//   formatAMPM(date) {
+//     let hours = date.getHours();
+//     let minutes = date.getMinutes();
+//     let seconds = date.getSeconds();
+//     const ampm = hours >= 12 ? 'pm' : 'am';
+//     hours %= 12;
+//     hours = hours || 12; // the hour '0' should be '12'
+//     minutes = minutes < 10 ? `0${minutes}` : minutes;
+//     seconds = seconds < 10 ? `0${seconds}` : seconds;
+//     const strTime = `${hours}:${minutes}:${seconds} ${ampm}`;
+//     return strTime;
+//   },
+//   formatDate(date) {
+//     let d = new Date(date);
+//     if (isNaN(d.getTime())) {
+//       const _tmpDate = new Date().getTime();
+//       d = new Date(_tmpDate);
+//     }
+//     return `${d.toDateString()} at ${helpers.formatAMPM(d)}`;
+//   },
+//   convertMDtoHTML(val, responseType, msgItem) {
+//     if (typeof val === 'object') {
+//       try {
+//         val = JSON.stringify(val);
+//       } catch (error) {
+//         val = '';
+//       }
+//     }
+//     const hyperLinksMap = {};
+//     const mdre = {};
+//     if (msgItem && msgItem.cInfo && msgItem.cInfo.ignoreCheckMark) {
+//       var { ignoreCheckMark } = msgItem.cInfo;
+//     }
+//     // mdre.date = new RegExp(/\\d\(\s*(.{10})\s*\)/g);
+//     mdre.date = new RegExp(/\\d\(\s*(.{10})\s*(?:,\s*["'](.+?)["']\s*)?\)/g);
+//     mdre.time = new RegExp(/\\t\(\s*(.{8}\.\d{0,3})\s*\)/g);
+//     // mdre.datetime = new RegExp(/\\dt\(\s*(.{10})[T](.{12})([z]|[Z]|[+-]\d{4})\s*\)/g);
+//     mdre.datetime = new RegExp(/\\(d|dt|t)\(\s*([-0-9]{10}[T][0-9:.]{12})([z]|[Z]|[+-]\d{4})[\s]*,[\s]*["']([a-zA-Z\W]+)["']\s*\)/g);
+//     mdre.num = new RegExp(/\\#\(\s*(\d*.\d*)\s*\)/g);
+//     mdre.curr = new RegExp(/\\\$\((\d*.\d*)[,](\s*[\"\']\s*\w{3}\s*[\"\']\s*)\)|\\\$\((\d*.\d*)[,](\s*\w{3}\s*)\)/g);
 
-    const regEx = {};
-    regEx.SPECIAL_CHARS = /[\=\`\~\!@#\$\%\^&\*\(\)_\-\+\{\}\:"\[\];\',\.\/<>\?\|\\]+/;
-    regEx.EMAIL = /^[-a-z0-9~!$%^&*_=+}{\']+(\.[-a-z0-9~!$%^&*_=+}{\']+)*@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,255})+$/i;
-    regEx.MENTION = /(^|\s|\\n|")@([^\s]*)(?:[\s]\[([^\]]*)\])?["]?/gi;
-    regEx.HASHTAG = /(^|\s|\\n)#(\S+)/g;
-    regEx.NEWLINE = /\n/g;
-    const _regExForLink = /((?:http\:\/\/|https\:\/\/|www\.)+\S*\.(?:(?:\.\S)*[^\,\s\.])*\/?)/gi;
-    // var _regExForMarkdownLink = /\[([^\]]+)\](|\s)+\(([^\)])+\)/g;
-    const _regExForMarkdownLink = /\[([^\]]+)\](|\s)\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\)?/g;
-    let str = val || '';
-    const mmntns = {};
-    mmntns.sd = new RegExp(/^(d{1})[^d]|[^d](d{1})[^d]/g);
-    mmntns.dd = new RegExp(/^(d{2})[^d]|[^d](d{2})[^d]/g);
-    mmntns.fy = new RegExp(/(y{4})|y{2}/g);
-    const regexkeys = Object.keys(mdre);
-    function matchmap(regexval, stringval) {
-      let da;
-      const matches = [];
-      while ((da = regexval.exec(stringval)) !== null) {
-        const keypair = {};
-        keypair.index = da.index;
-        keypair.matchexp = da[0];
-        if (da.length > 1) {
-          for (let n = 1; n < da.length; n++) {
-            const mstr = `matchval${n.toString()}`;
-            keypair[mstr] = da[n];
-          }
-        }
-        matches.push(keypair);
-      }
-      return matches;
-    }
-    function ucreplacer(match) {
-      return match.toUpperCase();
-    }
-    for (let j = 0; j < regexkeys.length; j++) {
-      var k;
-      switch (regexkeys[j]) {
-        case 'date':
-          var strvald = str;
-          var datematcharray = matchmap(mdre.date, strvald);
-          if (datematcharray.length) {
-            for (k = 0; k < datematcharray.length; k++) {
-              // var fdate = moment(datematcharray[k].matchval).format('DD,dd,MM,YYY');
-              let fdate = new Date(datematcharray[k].matchval1).toLocaleDateString();
-              fdate = ` ${fdate.toString()} `;
-              str = str.replace(datematcharray[k].matchexp.toString(), fdate);
-            }
-          }
-          break;
-        case 'time':
-          var strvalt = str;
-          var timematcharray = matchmap(mdre.time, strvalt);
-          if (timematcharray.length) {
-            for (k = 0; k < timematcharray.length; k++) {
-              let ftime = new Date(timematcharray[k].matchval1).toLocaleTimeString();
-              ftime = ` ${ftime.toString()} `;
-              str = str.replace(timematcharray[k].matchexp.toString(), ftime);
-            }
-          }
-          break;
-        case 'datetime':
-          var strvaldt = str;
-          var dtimematcharray = matchmap(mdre.datetime, strvaldt);
-          if (dtimematcharray.length) {
-            for (k = 0; k < dtimematcharray.length; k++) {
-              let ms = '';
-              const mergekeylength = Object.keys(dtimematcharray[k]).length - 2;
-              for (let l = 2; l < mergekeylength; l++) {
-                const keystr = `matchval${l.toString()}`;
-                ms += dtimematcharray[k][keystr];
-              }
-              const foptionstring = `matchval${mergekeylength.toString()}`;
-              let fmtstr = dtimematcharray[k][foptionstring];
-              fmtstr = fmtstr.replace(mmntns.fy, ucreplacer);
-              fmtstr = fmtstr.replace(mmntns.dd, ucreplacer);
-              fmtstr = fmtstr.replace(mmntns.sd, ucreplacer);
-              // var fdtime = new Date(dtimematcharray[k].matchval).toLocaleString();
-              let fdtime = moment(ms).format(fmtstr);
-              fdtime = ` ${fdtime.toString()} `;
-              str = str.replace(dtimematcharray[k].matchexp.toString(), fdtime);
-            }
-          }
-          break;
-        case 'num':
-          var strnumval = str;
-          var nummatcharray = matchmap(mdre.num, strnumval);
-          if (nummatcharray.length) {
-            for (k = 0; k < nummatcharray.length; k++) {
-              let fnum = Number(nummatcharray[k].matchval1).toLocaleString();
-              fnum = ` ${fnum.toString()} `;
-              str = str.replace(nummatcharray[k].matchexp.toString(), fnum);
-            }
-          }
-          break;
-        case 'curr':
-          var strcurval = str;
-          var currmatcharray = matchmap(mdre.curr, strcurval);
-          var browserLang = window.navigator.language || window.navigator.browserLanguage;
-          var curcode = new RegExp(/\w{3}/);
-          if (currmatcharray.length) {
-            for (k = 0; k < currmatcharray.length; k++) {
-              const currops = {}; var
-                fcode;
-              currops.style = 'currency';
-              if (currmatcharray[k].matchval2) {
-                fcode = curcode.exec(currmatcharray[k].matchval2);
-              }
-              currops.currency = fcode[0].toString();
-              let fcurr = Number(currmatcharray[k].matchval1).toLocaleString(browserLang, currops);
-              // check for browser support if browser doesnot suppor we get the same value back and we append the currency Code
-              if (currmatcharray[k].matchval1.toString() === fcurr.toString()) {
-                fcurr = ` ${fcurr.toString()} ${currops.currency}`;
-              } else {
-                fcurr = ` ${fcurr.toString()} `;
-              }
-              str = str.replace(currmatcharray[k].matchexp.toString(), fcurr);
-            }
-          }
-          break;
-      }
-    }
-    function nextLnReplacer(match, p1, offset, string) {
-      return '<br/>';
-    }
-    function ignoreWords(str) {
-      const _words = ['onclick', 'onmouse', 'onblur', 'onscroll', 'onStart'];
-      _words.forEach((word) => {
-        const regEx = new RegExp(word, 'ig');
-        str = str.replace(regEx, '');
-      });
-      return str;
-    }
-    const nextln = regEx.NEWLINE;
-    function linkreplacer(match, p1, offset, string) {
-      let dummyString = string.replace(_regExForMarkdownLink, '[]');
-      dummyString = ignoreWords(dummyString);
-      if (dummyString.indexOf(match) !== -1) {
-        let _link = p1.indexOf('http') < 0 ? `http://${match}` : match; let
-          _target;
-        // _link = encodeURIComponent(_link);
-        target = "target='underscoreblank'";
-        if (hyperLinksMap) {
-          const _randomKey = `korerandom://${Object.keys(hyperLinksMap).length}`;
-          hyperLinksMap[_randomKey] = _link;
-          _link = _randomKey;
-        }
-        return `<span class='isLink'><a id='linkEvent'${_target} href="${_link}">${match}</a></span>`;
-      }
-      return match;
-    }
-    // check for whether to linkify or not
-    // try {
-    //     str = decodeURIComponent(str);
-    // } catch (e) {
-    //     str = str || '';
-    // }
-    if (typeof str === 'number') {
-      str = str.toString();
-    }
-    str = str || '';
+//     const regEx = {};
+//     regEx.SPECIAL_CHARS = /[\=\`\~\!@#\$\%\^&\*\(\)_\-\+\{\}\:"\[\];\',\.\/<>\?\|\\]+/;
+//     regEx.EMAIL = /^[-a-z0-9~!$%^&*_=+}{\']+(\.[-a-z0-9~!$%^&*_=+}{\']+)*@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,255})+$/i;
+//     regEx.MENTION = /(^|\s|\\n|")@([^\s]*)(?:[\s]\[([^\]]*)\])?["]?/gi;
+//     regEx.HASHTAG = /(^|\s|\\n)#(\S+)/g;
+//     regEx.NEWLINE = /\n/g;
+//     const _regExForLink = /((?:http\:\/\/|https\:\/\/|www\.)+\S*\.(?:(?:\.\S)*[^\,\s\.])*\/?)/gi;
+//     // var _regExForMarkdownLink = /\[([^\]]+)\](|\s)+\(([^\)])+\)/g;
+//     const _regExForMarkdownLink = /\[([^\]]+)\](|\s)\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\)?/g;
+//     let str = val || '';
+//     const mmntns = {};
+//     mmntns.sd = new RegExp(/^(d{1})[^d]|[^d](d{1})[^d]/g);
+//     mmntns.dd = new RegExp(/^(d{2})[^d]|[^d](d{2})[^d]/g);
+//     mmntns.fy = new RegExp(/(y{4})|y{2}/g);
+//     const regexkeys = Object.keys(mdre);
+//     function matchmap(regexval, stringval) {
+//       let da;
+//       const matches = [];
+//       while ((da = regexval.exec(stringval)) !== null) {
+//         const keypair = {};
+//         keypair.index = da.index;
+//         keypair.matchexp = da[0];
+//         if (da.length > 1) {
+//           for (let n = 1; n < da.length; n++) {
+//             const mstr = `matchval${n.toString()}`;
+//             keypair[mstr] = da[n];
+//           }
+//         }
+//         matches.push(keypair);
+//       }
+//       return matches;
+//     }
+//     function ucreplacer(match) {
+//       return match.toUpperCase();
+//     }
+//     for (let j = 0; j < regexkeys.length; j++) {
+//       var k;
+//       switch (regexkeys[j]) {
+//         case 'date':
+//           var strvald = str;
+//           var datematcharray = matchmap(mdre.date, strvald);
+//           if (datematcharray.length) {
+//             for (k = 0; k < datematcharray.length; k++) {
+//               // var fdate = moment(datematcharray[k].matchval).format('DD,dd,MM,YYY');
+//               let fdate = new Date(datematcharray[k].matchval1).toLocaleDateString();
+//               fdate = ` ${fdate.toString()} `;
+//               str = str.replace(datematcharray[k].matchexp.toString(), fdate);
+//             }
+//           }
+//           break;
+//         case 'time':
+//           var strvalt = str;
+//           var timematcharray = matchmap(mdre.time, strvalt);
+//           if (timematcharray.length) {
+//             for (k = 0; k < timematcharray.length; k++) {
+//               let ftime = new Date(timematcharray[k].matchval1).toLocaleTimeString();
+//               ftime = ` ${ftime.toString()} `;
+//               str = str.replace(timematcharray[k].matchexp.toString(), ftime);
+//             }
+//           }
+//           break;
+//         case 'datetime':
+//           var strvaldt = str;
+//           var dtimematcharray = matchmap(mdre.datetime, strvaldt);
+//           if (dtimematcharray.length) {
+//             for (k = 0; k < dtimematcharray.length; k++) {
+//               let ms = '';
+//               const mergekeylength = Object.keys(dtimematcharray[k]).length - 2;
+//               for (let l = 2; l < mergekeylength; l++) {
+//                 const keystr = `matchval${l.toString()}`;
+//                 ms += dtimematcharray[k][keystr];
+//               }
+//               const foptionstring = `matchval${mergekeylength.toString()}`;
+//               let fmtstr = dtimematcharray[k][foptionstring];
+//               fmtstr = fmtstr.replace(mmntns.fy, ucreplacer);
+//               fmtstr = fmtstr.replace(mmntns.dd, ucreplacer);
+//               fmtstr = fmtstr.replace(mmntns.sd, ucreplacer);
+//               // var fdtime = new Date(dtimematcharray[k].matchval).toLocaleString();
+//               let fdtime = moment(ms).format(fmtstr);
+//               fdtime = ` ${fdtime.toString()} `;
+//               str = str.replace(dtimematcharray[k].matchexp.toString(), fdtime);
+//             }
+//           }
+//           break;
+//         case 'num':
+//           var strnumval = str;
+//           var nummatcharray = matchmap(mdre.num, strnumval);
+//           if (nummatcharray.length) {
+//             for (k = 0; k < nummatcharray.length; k++) {
+//               let fnum = Number(nummatcharray[k].matchval1).toLocaleString();
+//               fnum = ` ${fnum.toString()} `;
+//               str = str.replace(nummatcharray[k].matchexp.toString(), fnum);
+//             }
+//           }
+//           break;
+//         case 'curr':
+//           var strcurval = str;
+//           var currmatcharray = matchmap(mdre.curr, strcurval);
+//           var browserLang = window.navigator.language || window.navigator.browserLanguage;
+//           var curcode = new RegExp(/\w{3}/);
+//           if (currmatcharray.length) {
+//             for (k = 0; k < currmatcharray.length; k++) {
+//               const currops = {}; var
+//                 fcode;
+//               currops.style = 'currency';
+//               if (currmatcharray[k].matchval2) {
+//                 fcode = curcode.exec(currmatcharray[k].matchval2);
+//               }
+//               currops.currency = fcode[0].toString();
+//               let fcurr = Number(currmatcharray[k].matchval1).toLocaleString(browserLang, currops);
+//               // check for browser support if browser doesnot suppor we get the same value back and we append the currency Code
+//               if (currmatcharray[k].matchval1.toString() === fcurr.toString()) {
+//                 fcurr = ` ${fcurr.toString()} ${currops.currency}`;
+//               } else {
+//                 fcurr = ` ${fcurr.toString()} `;
+//               }
+//               str = str.replace(currmatcharray[k].matchexp.toString(), fcurr);
+//             }
+//           }
+//           break;
+//       }
+//     }
+//     function nextLnReplacer(match, p1, offset, string) {
+//       return '<br/>';
+//     }
+//     function ignoreWords(str) {
+//       const _words = ['onclick', 'onmouse', 'onblur', 'onscroll', 'onStart'];
+//       _words.forEach((word) => {
+//         const regEx = new RegExp(word, 'ig');
+//         str = str.replace(regEx, '');
+//       });
+//       return str;
+//     }
+//     const nextln = regEx.NEWLINE;
+//     function linkreplacer(match, p1, offset, string) {
+//       let dummyString = string.replace(_regExForMarkdownLink, '[]');
+//       dummyString = ignoreWords(dummyString);
+//       if (dummyString.indexOf(match) !== -1) {
+//         let _link = p1.indexOf('http') < 0 ? `http://${match}` : match; let
+//           _target;
+//         // _link = encodeURIComponent(_link);
+//         target = "target='underscoreblank'";
+//         if (hyperLinksMap) {
+//           const _randomKey = `korerandom://${Object.keys(hyperLinksMap).length}`;
+//           hyperLinksMap[_randomKey] = _link;
+//           _link = _randomKey;
+//         }
+//         return `<span class='isLink'><a id='linkEvent'${_target} href="${_link}">${match}</a></span>`;
+//       }
+//       return match;
+//     }
+//     // check for whether to linkify or not
+//     // try {
+//     //     str = decodeURIComponent(str);
+//     // } catch (e) {
+//     //     str = str || '';
+//     // }
+//     if (typeof str === 'number') {
+//       str = str.toString();
+//     }
+//     str = str || '';
 
-    let newStr = ''; let
-      wrapper1;
-    if (responseType === 'user') {
-      str = str.replace(/onerror=/gi, 'abc-error=');
-      wrapper1 = document.createElement('div');
-      newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
-      newStr = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      wrapper1.innerHTML = xssAttack(newStr);
-      if ($(wrapper1).find('a').attr('href')) {
-        str = newStr;
-      } else {
-        str = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(_regExForLink, linkreplacer);
-      }
-    } else {
-      wrapper1 = document.createElement('div');
-      // str = str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-      wrapper1.innerHTML = xssAttack(str);
-      if ($(wrapper1).find('a').attr('href')) {
-        const linkArray = str.match(/<a[^>]*>([^<]+)<\/a>/g);
-        for (let x = 0; x < linkArray.length; x++) {
-          const _newLA = document.createElement('div');
-          let _detectedLink = linkArray[x];
-          _newLA.innerHTML = linkArray[x];
-          // for mailto: links, new line character need to be repaced with %0A
-          if (_detectedLink.indexOf("href='mailto:") > -1 || _detectedLink.indexOf('href="mailto:') > -1) {
-            _detectedLink = _detectedLink.split('\n').join('%0A');
-          }
-          const _randomKey = `korerandom://${Object.keys(hyperLinksMap).length}`;
-          _newLA.innerHTML = _detectedLink;
+//     let newStr = ''; let
+//       wrapper1;
+//     if (responseType === 'user') {
+//       str = str.replace(/onerror=/gi, 'abc-error=');
+//       wrapper1 = document.createElement('div');
+//       newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
+//       newStr = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+//       wrapper1.innerHTML = xssAttack(newStr);
+//       if ($(wrapper1).find('a').attr('href')) {
+//         str = newStr;
+//       } else {
+//         str = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(_regExForLink, linkreplacer);
+//       }
+//     } else {
+//       wrapper1 = document.createElement('div');
+//       // str = str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+//       wrapper1.innerHTML = xssAttack(str);
+//       if ($(wrapper1).find('a').attr('href')) {
+//         const linkArray = str.match(/<a[^>]*>([^<]+)<\/a>/g);
+//         for (let x = 0; x < linkArray.length; x++) {
+//           const _newLA = document.createElement('div');
+//           let _detectedLink = linkArray[x];
+//           _newLA.innerHTML = linkArray[x];
+//           // for mailto: links, new line character need to be repaced with %0A
+//           if (_detectedLink.indexOf("href='mailto:") > -1 || _detectedLink.indexOf('href="mailto:') > -1) {
+//             _detectedLink = _detectedLink.split('\n').join('%0A');
+//           }
+//           const _randomKey = `korerandom://${Object.keys(hyperLinksMap).length}`;
+//           _newLA.innerHTML = _detectedLink;
 
-          const _aEle = _newLA.getElementsByTagName('a');
-          if (_aEle && _aEle[0] && _aEle[0].href) {
-            hyperLinksMap[_randomKey] = _aEle[0].href;
-            _aEle[0].href = _randomKey;
-          }
-          $(_newLA).find('a').attr('target', 'underscoreblank');
-          str = str.replace(linkArray[x], _newLA.innerHTML);
-        }
-      } else {
-        str = wrapper1.innerHTML.replace(_regExForLink, linkreplacer);
-      }
-    }
-    if (ignoreCheckMark) {
-      str = val;
-    } else {
-      str = helpers.checkMarkdowns(str, hyperLinksMap);
-    }
-    const hrefRefs = Object.keys(hyperLinksMap);
-    if (hrefRefs && hrefRefs.length) {
-      hrefRefs.forEach((hrefRef) => {
-        function customStrReplacer() { // custom replacer is used as by default replace() replaces with '$' in place of '$$'
-          return hyperLinksMap[hrefRef];
-        }
-        str = str.replace(hrefRef, customStrReplacer);
-      });
-    }
-    str = str.replaceAll('target="underscoreblank"', 'target="_blank"');
-    str = str.replaceAll("target='underscoreblank'", 'target="_blank"');
-    if (responseType === 'user') {
-      str = str.replace(/abc-error=/gi, 'onerror=');
-    }
-    return helpers.nl2br(str, true);
-  },
-  checkMarkdowns(val, hyperLinksMap) {
-    if (val === '') {
-      return val;
-    }
-    const txtArr = val.split(/\r?\n/);
-    for (let i = 0; i < txtArr.length; i++) {
-      let _lineBreakAdded = false;
-      if (txtArr[i].indexOf('#h6') === 0 || txtArr[i].indexOf('#H6') === 0) {
-        txtArr[i] = `<h6>${txtArr[i].substring(3)}</h6>`;
-        _lineBreakAdded = true;
-      } else if (txtArr[i].indexOf('#h5') === 0 || txtArr[i].indexOf('#H5') === 0) {
-        txtArr[i] = `<h5>${txtArr[i].substring(3)}</h5>`;
-        _lineBreakAdded = true;
-      } else if (txtArr[i].indexOf('#h4') === 0 || txtArr[i].indexOf('#H4') === 0) {
-        txtArr[i] = `<h4>${txtArr[i].substring(3)}</h4>`;
-        _lineBreakAdded = true;
-      } else if (txtArr[i].indexOf('#h3') === 0 || txtArr[i].indexOf('#H3') === 0) {
-        txtArr[i] = `<h3>${txtArr[i].substring(3)}</h3>`;
-        _lineBreakAdded = true;
-      } else if (txtArr[i].indexOf('#h2') === 0 || txtArr[i].indexOf('#H2') === 0) {
-        txtArr[i] = `<h2>${txtArr[i].substring(3)}</h2>`;
-        _lineBreakAdded = true;
-      } else if (txtArr[i].indexOf('#h1') === 0 || txtArr[i].indexOf('#H1') === 0) {
-        txtArr[i] = `<h1>${txtArr[i].substring(3)}</h1>`;
-        _lineBreakAdded = true;
-      } else if (txtArr[i].length === 0) {
-        txtArr[i] = '\r\n';
-        _lineBreakAdded = true;
-      } else if (txtArr[i].indexOf('*') === 0) {
-        if (!isEven(txtArr[i].split('*').length - 1)) {
-          txtArr[i] = `\r\n&#9679; ${txtArr[i].substring(1)}`;
-          _lineBreakAdded = true;
-        }
-      } else if (txtArr[i].indexOf('>>') === 0) {
-        if (txtArr[i].substring(2).indexOf('*') === 0) {
-          if (!isEven(txtArr[i].substring(2).split('*').length - 1)) {
-            txtArr[i] = `\r\n&#9679; ${txtArr[i].substring(3)}`;
-            _lineBreakAdded = true;
-          }
-          txtArr[i] = `<p class="indent">${txtArr[i]}</p>`;
-        } else {
-          txtArr[i] = `<p class="indent">${txtArr[i].substring(2)}</p>`;
-        }
-        _lineBreakAdded = true;
-      } else if (txtArr[i].indexOf('&gt;&gt;') === 0) {
-        if (txtArr[i].substring(8).indexOf('*') === 0) { // add ">>*" for sub bullet point
-          if (!isEven(txtArr[i].substring(8).split('*').length - 1)) {
-            txtArr[i] = `\r\n&#9679; ${txtArr[i].substring(9)}`;
-            _lineBreakAdded = true;
-          }
-          txtArr[i] = `<p class="indent">${txtArr[i]}</p>`;
-        } else {
-          txtArr[i] = `<p class="indent">${txtArr[i].substring(8)}</p>`;
-        }
-        _lineBreakAdded = true;
-      } else if (txtArr[i].indexOf('---') === 0 || txtArr[i].indexOf('___') === 0) {
-        txtArr[i] = `<hr/>${txtArr[i].substring(3)}`;
-        _lineBreakAdded = true;
-      }
-      var j;
-      // Matches Image markup ![test](http://google.com/image.png)
-      if (txtArr[i].indexOf(' ![') === -1) { // replace method trimming last'$' character, to handle this adding ' ![' extra space
-        txtArr[i] = txtArr[i].replace('![', ' ![');
-      }
-      const _matchImage = txtArr[i].match(/\!\[([^\]]+)\](|\s)+\(([^\)])+\)/g);
-      if (_matchImage && _matchImage.length > 0) {
-        for (j = 0; j < _matchImage.length; j++) {
-          const _imgTxt = _matchImage[j].substring(2, _matchImage[j].indexOf(']'));
-          var remainingString = _matchImage[j].substring(_matchImage[j].indexOf(']') + 1).trim();
-          let _imgLink = remainingString.substring(1, remainingString.indexOf(')'));
-          if (hyperLinksMap) {
-            var _randomKey = `korerandom://${Object.keys(hyperLinksMap).length}`;
-            hyperLinksMap[_randomKey] = _imgLink;
-            _imgLink = _randomKey;
-          }
-          _imgLink = `<img src="${_imgLink}" alt="${_imgTxt}">`;
-          const _tempImg = txtArr[i].split(' ');
-          for (let k = 0; k < _tempImg.length; k++) {
-            if (_tempImg[k] === _matchImage[j]) {
-              _tempImg[k] = _imgLink;
-            }
-          }
-          txtArr[i] = _tempImg.join(' ');
-          txtArr[i] = txtArr[i].replace(_matchImage[j], _imgLink);
-        }
-      }
-      // Matches link markup [test](http://google.com/)
-      // var _matchLink = txtArr[i].match(/\[([^\]]+)\](|\s)+\(([^\)])+\)/g);
-      const _matchLink = txtArr[i].match(/\[([^\]]+)\](|\s)\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\)/g);
-      if (_matchLink && _matchLink.length > 0) {
-        for (j = 0; j < _matchLink.length; j++) {
-          const _linkTxt = _matchLink[j].substring(1, _matchLink[j].indexOf(']'));
-          var remainingString = _matchLink[j].substring(_matchLink[j].indexOf(']') + 1).trim();
-          let _linkLink = remainingString.substring(1, remainingString.lastIndexOf(')'));
-          _linkLink = _linkLink.replace(/\\n/g, '%0A');
-          if (hyperLinksMap) {
-            var _randomKey = `korerandom://${Object.keys(hyperLinksMap).length}`;
-            hyperLinksMap[_randomKey] = _linkLink;
-            _linkLink = _randomKey;
-          }
-          _linkLink = `<span class="isLink"><a id="linkEvent" href="${_linkLink}" target="underscoreblank">${helpers.checkMarkdowns(_linkTxt)}</a></span>`;
-          txtArr[i] = txtArr[i].replace(_matchLink[j], _linkLink);
-        }
-      }
-      // Matches bold markup *test* doesnot match * test *, * test*. If all these are required then replace \S with \s
-      const _matchAstrik = txtArr[i].match(/\*\S([^*]*?)\*/g);
-      if (_matchAstrik && _matchAstrik.length > 0) {
-        for (j = 0; j < _matchAstrik.length; j++) {
-          let _boldTxt = _matchAstrik[j];
-          let validBoldGroup = true;
-          if (_boldTxt.includes('*')) {
-            const _tempStr = _boldTxt.replace(/\*/g, '');
-            // var letterNumber = /^[0-9a-zA-Z!@#$%^&()_ +\-=\[\]{};':"\\|,.<>\/?]+$/;
-            if (!(_tempStr && _tempStr.length)) {
-              validBoldGroup = false;
-            }
-          }
-          if (validBoldGroup) {
-            _boldTxt = _boldTxt.substring(1, _boldTxt.length - 1);
-            _boldTxt = `<b>${_boldTxt.trim()}</b>`;
-            txtArr[i] = txtArr[i].replace(_matchAstrik[j], _boldTxt);
-          }
-        }
-      }
-      // For backward compatability who used ~ for Italics
-      // Matches italic markup ~test~ doesnot match ~ test ~, ~test ~, ~ test~. If all these are required then replace \S with \s
-      var _matchItalic = txtArr[i].match(/\~\S([^*]*?)\S\~/g);
-      if (_matchItalic && _matchItalic.length > 0) {
-        for (j = 0; j < _matchItalic.length; j++) {
-          var _italicTxt = _matchItalic[j];
-          if (txtArr[i].indexOf(_italicTxt) === 0 || txtArr[i][txtArr[i].indexOf(_italicTxt) - 1] === ' ' || txtArr[i].indexOf(_italicTxt) !== -1) {
-            _italicTxt = _italicTxt.substring(1, _italicTxt.length - 1);
-            _italicTxt = `<i class="markdownItalic">${_italicTxt}</i>`;
-            txtArr[i] = txtArr[i].replace(_matchItalic[j], _italicTxt);
-          }
-        }
-      }
-      // Matches italic markup _test_ doesnot match _ test _, _test _, _ test_. If all these are required then replace \S with \s
-      var _matchItalic = txtArr[i].match(/\_\S([^*]*?)\S\_/g);
-      if (_matchItalic && _matchItalic.length > 0) {
-        for (j = 0; j < _matchItalic.length; j++) {
-          var _italicTxt = _matchItalic[j];
-          if ((txtArr[i].indexOf(_italicTxt) === 0) || (txtArr[i][txtArr[i].indexOf(_italicTxt) - 1] === ' ') || txtArr[i].indexOf(_italicTxt) !== -1) {
-            let validItalicMark = true;
-            if (txtArr[i][txtArr[i].indexOf(_italicTxt) + _italicTxt.length]) {
-              if (txtArr[i][txtArr[i].indexOf(_italicTxt) + _italicTxt.length] !== ' ') {
-                validItalicMark = false;
-              }
-            }
-            if (validItalicMark) {
-              _italicTxt = `${_italicTxt.substring(1, _italicTxt.length - 1)} `;
-              _italicTxt = `<i class="markdownItalic">${_italicTxt}</i>`;
-              txtArr[i] = txtArr[i].replace(_matchItalic[j], _italicTxt);
-            }
-          }
-        }
-      }
-      // Matches bold markup ~test~ doesnot match ~ test ~, ~test ~, ~ test~. If all these are required then replace \S with \s
-      var _matchItalic = txtArr[i].match(/\~\S([^*]*?)\S\~/g);
-      if (_matchItalic && _matchItalic.length > 0) {
-        for (j = 0; j < _matchItalic.length; j++) {
-          var _italicTxt = _matchItalic[j];
-          if (txtArr[i].indexOf(_italicTxt) === 0 || txtArr[i][txtArr[i].indexOf(_italicTxt) - 1] === ' ' || txtArr[i].indexOf(_italicTxt) !== -1) {
-            _italicTxt = _italicTxt.substring(1, _italicTxt.length - 1);
-            _italicTxt = `<i class="markdownItalic">${_italicTxt}</i>`;
-            txtArr[i] = txtArr[i].replace(_matchItalic[j], _italicTxt);
-          }
-        }
-      }
-      // Matches bold markup ~test~ doesnot match ~ test ~, ~test ~, ~ test~. If all these are required then replace \S with \s
-      const _matchPre = txtArr[i].match(/\`\`\`\S([^*]*?)\S\`\`\`/g);
-      const _matchPre1 = txtArr[i].match(/\'\'\'\S([^*]*?)\S\'\'\'/g);
-      if (_matchPre && _matchPre.length > 0) {
-        for (j = 0; j < _matchPre.length; j++) {
-          var _preTxt = _matchPre[j];
-          _preTxt = _preTxt.substring(3, _preTxt.length - 3);
-          _preTxt = `<pre>${_preTxt}</pre>`;
-          txtArr[i] = txtArr[i].replace(_matchPre[j], _preTxt);
-        }
-        _lineBreakAdded = true;
-      }
-      if (_matchPre1 && _matchPre1.length > 0) {
-        for (j = 0; j < _matchPre1.length; j++) {
-          var _preTxt = _matchPre1[j];
-          _preTxt = _preTxt.substring(3, _preTxt.length - 3);
-          _preTxt = `<pre>${_preTxt}</pre>`;
-          txtArr[i] = txtArr[i].replace(_matchPre1[j], _preTxt);
-        }
-        _lineBreakAdded = true;
-      }
-      if (!_lineBreakAdded && i > 0) {
-        txtArr[i] = `\r\n${txtArr[i]}`;
-      }
-    }
-    val = txtArr.join('');
-    return val;
-  },
-};
+//           const _aEle = _newLA.getElementsByTagName('a');
+//           if (_aEle && _aEle[0] && _aEle[0].href) {
+//             hyperLinksMap[_randomKey] = _aEle[0].href;
+//             _aEle[0].href = _randomKey;
+//           }
+//           $(_newLA).find('a').attr('target', 'underscoreblank');
+//           str = str.replace(linkArray[x], _newLA.innerHTML);
+//         }
+//       } else {
+//         str = wrapper1.innerHTML.replace(_regExForLink, linkreplacer);
+//       }
+//     }
+//     if (ignoreCheckMark) {
+//       str = val;
+//     } else {
+//       str = helpers.checkMarkdowns(str, hyperLinksMap);
+//     }
+//     const hrefRefs = Object.keys(hyperLinksMap);
+//     if (hrefRefs && hrefRefs.length) {
+//       hrefRefs.forEach((hrefRef) => {
+//         function customStrReplacer() { // custom replacer is used as by default replace() replaces with '$' in place of '$$'
+//           return hyperLinksMap[hrefRef];
+//         }
+//         str = str.replace(hrefRef, customStrReplacer);
+//       });
+//     }
+//     str = str.replaceAll('target="underscoreblank"', 'target="_blank"');
+//     str = str.replaceAll("target='underscoreblank'", 'target="_blank"');
+//     if (responseType === 'user') {
+//       str = str.replace(/abc-error=/gi, 'onerror=');
+//     }
+//     return helpers.nl2br(str, true);
+//   },
+//   checkMarkdowns(val, hyperLinksMap) {
+//     if (val === '') {
+//       return val;
+//     }
+//     const txtArr = val.split(/\r?\n/);
+//     for (let i = 0; i < txtArr.length; i++) {
+//       let _lineBreakAdded = false;
+//       if (txtArr[i].indexOf('#h6') === 0 || txtArr[i].indexOf('#H6') === 0) {
+//         txtArr[i] = `<h6>${txtArr[i].substring(3)}</h6>`;
+//         _lineBreakAdded = true;
+//       } else if (txtArr[i].indexOf('#h5') === 0 || txtArr[i].indexOf('#H5') === 0) {
+//         txtArr[i] = `<h5>${txtArr[i].substring(3)}</h5>`;
+//         _lineBreakAdded = true;
+//       } else if (txtArr[i].indexOf('#h4') === 0 || txtArr[i].indexOf('#H4') === 0) {
+//         txtArr[i] = `<h4>${txtArr[i].substring(3)}</h4>`;
+//         _lineBreakAdded = true;
+//       } else if (txtArr[i].indexOf('#h3') === 0 || txtArr[i].indexOf('#H3') === 0) {
+//         txtArr[i] = `<h3>${txtArr[i].substring(3)}</h3>`;
+//         _lineBreakAdded = true;
+//       } else if (txtArr[i].indexOf('#h2') === 0 || txtArr[i].indexOf('#H2') === 0) {
+//         txtArr[i] = `<h2>${txtArr[i].substring(3)}</h2>`;
+//         _lineBreakAdded = true;
+//       } else if (txtArr[i].indexOf('#h1') === 0 || txtArr[i].indexOf('#H1') === 0) {
+//         txtArr[i] = `<h1>${txtArr[i].substring(3)}</h1>`;
+//         _lineBreakAdded = true;
+//       } else if (txtArr[i].length === 0) {
+//         txtArr[i] = '\r\n';
+//         _lineBreakAdded = true;
+//       } else if (txtArr[i].indexOf('*') === 0) {
+//         if (!isEven(txtArr[i].split('*').length - 1)) {
+//           txtArr[i] = `\r\n&#9679; ${txtArr[i].substring(1)}`;
+//           _lineBreakAdded = true;
+//         }
+//       } else if (txtArr[i].indexOf('>>') === 0) {
+//         if (txtArr[i].substring(2).indexOf('*') === 0) {
+//           if (!isEven(txtArr[i].substring(2).split('*').length - 1)) {
+//             txtArr[i] = `\r\n&#9679; ${txtArr[i].substring(3)}`;
+//             _lineBreakAdded = true;
+//           }
+//           txtArr[i] = `<p class="indent">${txtArr[i]}</p>`;
+//         } else {
+//           txtArr[i] = `<p class="indent">${txtArr[i].substring(2)}</p>`;
+//         }
+//         _lineBreakAdded = true;
+//       } else if (txtArr[i].indexOf('&gt;&gt;') === 0) {
+//         if (txtArr[i].substring(8).indexOf('*') === 0) { // add ">>*" for sub bullet point
+//           if (!isEven(txtArr[i].substring(8).split('*').length - 1)) {
+//             txtArr[i] = `\r\n&#9679; ${txtArr[i].substring(9)}`;
+//             _lineBreakAdded = true;
+//           }
+//           txtArr[i] = `<p class="indent">${txtArr[i]}</p>`;
+//         } else {
+//           txtArr[i] = `<p class="indent">${txtArr[i].substring(8)}</p>`;
+//         }
+//         _lineBreakAdded = true;
+//       } else if (txtArr[i].indexOf('---') === 0 || txtArr[i].indexOf('___') === 0) {
+//         txtArr[i] = `<hr/>${txtArr[i].substring(3)}`;
+//         _lineBreakAdded = true;
+//       }
+//       var j;
+//       // Matches Image markup ![test](http://google.com/image.png)
+//       if (txtArr[i].indexOf(' ![') === -1) { // replace method trimming last'$' character, to handle this adding ' ![' extra space
+//         txtArr[i] = txtArr[i].replace('![', ' ![');
+//       }
+//       const _matchImage = txtArr[i].match(/\!\[([^\]]+)\](|\s)+\(([^\)])+\)/g);
+//       if (_matchImage && _matchImage.length > 0) {
+//         for (j = 0; j < _matchImage.length; j++) {
+//           const _imgTxt = _matchImage[j].substring(2, _matchImage[j].indexOf(']'));
+//           var remainingString = _matchImage[j].substring(_matchImage[j].indexOf(']') + 1).trim();
+//           let _imgLink = remainingString.substring(1, remainingString.indexOf(')'));
+//           if (hyperLinksMap) {
+//             var _randomKey = `korerandom://${Object.keys(hyperLinksMap).length}`;
+//             hyperLinksMap[_randomKey] = _imgLink;
+//             _imgLink = _randomKey;
+//           }
+//           _imgLink = `<img src="${_imgLink}" alt="${_imgTxt}">`;
+//           const _tempImg = txtArr[i].split(' ');
+//           for (let k = 0; k < _tempImg.length; k++) {
+//             if (_tempImg[k] === _matchImage[j]) {
+//               _tempImg[k] = _imgLink;
+//             }
+//           }
+//           txtArr[i] = _tempImg.join(' ');
+//           txtArr[i] = txtArr[i].replace(_matchImage[j], _imgLink);
+//         }
+//       }
+//       // Matches link markup [test](http://google.com/)
+//       // var _matchLink = txtArr[i].match(/\[([^\]]+)\](|\s)+\(([^\)])+\)/g);
+//       const _matchLink = txtArr[i].match(/\[([^\]]+)\](|\s)\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\)/g);
+//       if (_matchLink && _matchLink.length > 0) {
+//         for (j = 0; j < _matchLink.length; j++) {
+//           const _linkTxt = _matchLink[j].substring(1, _matchLink[j].indexOf(']'));
+//           var remainingString = _matchLink[j].substring(_matchLink[j].indexOf(']') + 1).trim();
+//           let _linkLink = remainingString.substring(1, remainingString.lastIndexOf(')'));
+//           _linkLink = _linkLink.replace(/\\n/g, '%0A');
+//           if (hyperLinksMap) {
+//             var _randomKey = `korerandom://${Object.keys(hyperLinksMap).length}`;
+//             hyperLinksMap[_randomKey] = _linkLink;
+//             _linkLink = _randomKey;
+//           }
+//           _linkLink = `<span class="isLink"><a id="linkEvent" href="${_linkLink}" target="underscoreblank">${helpers.checkMarkdowns(_linkTxt)}</a></span>`;
+//           txtArr[i] = txtArr[i].replace(_matchLink[j], _linkLink);
+//         }
+//       }
+//       // Matches bold markup *test* doesnot match * test *, * test*. If all these are required then replace \S with \s
+//       const _matchAstrik = txtArr[i].match(/\*\S([^*]*?)\*/g);
+//       if (_matchAstrik && _matchAstrik.length > 0) {
+//         for (j = 0; j < _matchAstrik.length; j++) {
+//           let _boldTxt = _matchAstrik[j];
+//           let validBoldGroup = true;
+//           if (_boldTxt.includes('*')) {
+//             const _tempStr = _boldTxt.replace(/\*/g, '');
+//             // var letterNumber = /^[0-9a-zA-Z!@#$%^&()_ +\-=\[\]{};':"\\|,.<>\/?]+$/;
+//             if (!(_tempStr && _tempStr.length)) {
+//               validBoldGroup = false;
+//             }
+//           }
+//           if (validBoldGroup) {
+//             _boldTxt = _boldTxt.substring(1, _boldTxt.length - 1);
+//             _boldTxt = `<b>${_boldTxt.trim()}</b>`;
+//             txtArr[i] = txtArr[i].replace(_matchAstrik[j], _boldTxt);
+//           }
+//         }
+//       }
+//       // For backward compatability who used ~ for Italics
+//       // Matches italic markup ~test~ doesnot match ~ test ~, ~test ~, ~ test~. If all these are required then replace \S with \s
+//       var _matchItalic = txtArr[i].match(/\~\S([^*]*?)\S\~/g);
+//       if (_matchItalic && _matchItalic.length > 0) {
+//         for (j = 0; j < _matchItalic.length; j++) {
+//           var _italicTxt = _matchItalic[j];
+//           if (txtArr[i].indexOf(_italicTxt) === 0 || txtArr[i][txtArr[i].indexOf(_italicTxt) - 1] === ' ' || txtArr[i].indexOf(_italicTxt) !== -1) {
+//             _italicTxt = _italicTxt.substring(1, _italicTxt.length - 1);
+//             _italicTxt = `<i class="markdownItalic">${_italicTxt}</i>`;
+//             txtArr[i] = txtArr[i].replace(_matchItalic[j], _italicTxt);
+//           }
+//         }
+//       }
+//       // Matches italic markup _test_ doesnot match _ test _, _test _, _ test_. If all these are required then replace \S with \s
+//       var _matchItalic = txtArr[i].match(/\_\S([^*]*?)\S\_/g);
+//       if (_matchItalic && _matchItalic.length > 0) {
+//         for (j = 0; j < _matchItalic.length; j++) {
+//           var _italicTxt = _matchItalic[j];
+//           if ((txtArr[i].indexOf(_italicTxt) === 0) || (txtArr[i][txtArr[i].indexOf(_italicTxt) - 1] === ' ') || txtArr[i].indexOf(_italicTxt) !== -1) {
+//             let validItalicMark = true;
+//             if (txtArr[i][txtArr[i].indexOf(_italicTxt) + _italicTxt.length]) {
+//               if (txtArr[i][txtArr[i].indexOf(_italicTxt) + _italicTxt.length] !== ' ') {
+//                 validItalicMark = false;
+//               }
+//             }
+//             if (validItalicMark) {
+//               _italicTxt = `${_italicTxt.substring(1, _italicTxt.length - 1)} `;
+//               _italicTxt = `<i class="markdownItalic">${_italicTxt}</i>`;
+//               txtArr[i] = txtArr[i].replace(_matchItalic[j], _italicTxt);
+//             }
+//           }
+//         }
+//       }
+//       // Matches bold markup ~test~ doesnot match ~ test ~, ~test ~, ~ test~. If all these are required then replace \S with \s
+//       var _matchItalic = txtArr[i].match(/\~\S([^*]*?)\S\~/g);
+//       if (_matchItalic && _matchItalic.length > 0) {
+//         for (j = 0; j < _matchItalic.length; j++) {
+//           var _italicTxt = _matchItalic[j];
+//           if (txtArr[i].indexOf(_italicTxt) === 0 || txtArr[i][txtArr[i].indexOf(_italicTxt) - 1] === ' ' || txtArr[i].indexOf(_italicTxt) !== -1) {
+//             _italicTxt = _italicTxt.substring(1, _italicTxt.length - 1);
+//             _italicTxt = `<i class="markdownItalic">${_italicTxt}</i>`;
+//             txtArr[i] = txtArr[i].replace(_matchItalic[j], _italicTxt);
+//           }
+//         }
+//       }
+//       // Matches bold markup ~test~ doesnot match ~ test ~, ~test ~, ~ test~. If all these are required then replace \S with \s
+//       const _matchPre = txtArr[i].match(/\`\`\`\S([^*]*?)\S\`\`\`/g);
+//       const _matchPre1 = txtArr[i].match(/\'\'\'\S([^*]*?)\S\'\'\'/g);
+//       if (_matchPre && _matchPre.length > 0) {
+//         for (j = 0; j < _matchPre.length; j++) {
+//           var _preTxt = _matchPre[j];
+//           _preTxt = _preTxt.substring(3, _preTxt.length - 3);
+//           _preTxt = `<pre>${_preTxt}</pre>`;
+//           txtArr[i] = txtArr[i].replace(_matchPre[j], _preTxt);
+//         }
+//         _lineBreakAdded = true;
+//       }
+//       if (_matchPre1 && _matchPre1.length > 0) {
+//         for (j = 0; j < _matchPre1.length; j++) {
+//           var _preTxt = _matchPre1[j];
+//           _preTxt = _preTxt.substring(3, _preTxt.length - 3);
+//           _preTxt = `<pre>${_preTxt}</pre>`;
+//           txtArr[i] = txtArr[i].replace(_matchPre1[j], _preTxt);
+//         }
+//         _lineBreakAdded = true;
+//       }
+//       if (!_lineBreakAdded && i > 0) {
+//         txtArr[i] = `\r\n${txtArr[i]}`;
+//       }
+//     }
+//     val = txtArr.join('');
+//     return val;
+//   },
+// };
 
 function isEven(n) {
   n = Number(n);
@@ -737,8 +701,8 @@ function extend() {
 
 function chatWindow(config) {
   const me = this;
-  me.config = config;
-  me.initVars();
+  me.initVars(config);
+
 }
 // converts v1 webhooks url to v2 automatically
 chatWindow.prototype.reWriteWebHookURL = function (chatConfig) {
@@ -883,15 +847,15 @@ chatWindow.prototype.updateOnlineStatus = function () {
 
 chatWindow.prototype.resetPingMessage = function () {
   const me = this;
-  clearTimeout(me._pingTimer);
-  me._pingTimer = setTimeout(() => {
+  clearTimeout(me.config.pingPong.timer);
+  me.config.pingPong.timer = setTimeout(() => {
     const messageToBot = {};
     messageToBot.type = 'ping';
     me.bot.sendMessage(messageToBot, () => {
 
     });
     me.resetPingMessage();
-  }, me._pingTime);
+  }, me.config.pingPong.interval);
 };
 window.onresize = function (event) {
   if (event.target == window) {
@@ -960,9 +924,7 @@ window.onresize = function (event) {
   }
   /* Handling expand and collapse chat-container height */
 };
-window.onresize = function (event) {
-  chatInitialize.setCollapsedModeStyles();
-};
+
 chatWindow.prototype.handleImagePreview = function () {
   const modal = document.getElementById('myModal');
 
@@ -1035,14 +997,14 @@ chatWindow.prototype.getStoreTypeByKey = function (key) {
 };
 chatWindow.prototype.init = function (cfg) {
   const me = this;
-  this.setPrivateVarToContext(this);
-  isRecordingStarted = false;
-  cfg.botOptions.test = false;
+  me.setPrivateVarToContext(this);
+  //isRecordingStarted = false;
+  //me.config.botOptions.test = false;
   this.config = extend({
     chatTitle: 'Kore.ai Bot Chat',
     container: 'body',
     allowIframe: false,
-    botOptions: cfg.botOptions,
+    botOptions: me.config.botOptions,
   }, me.config);
 
   me.config.chatTitle = 'Kore.ai Bot Chat';
@@ -1050,17 +1012,17 @@ chatWindow.prototype.init = function (cfg) {
   me.config.allowIframe = false;
   // me.config.allowIframe='Kore.ai Bot Chat';
 
-  koreAPIUrl = cfg.botOptions.koreAPIUrl;
-  bearerToken = cfg.botOptions.bearer;
-  // speechServerUrl = cfg.botOptions.speechSocketUrl;
-  speechPrefixURL = cfg.botOptions.koreSpeechAPIUrl;
-  ttsServerUrl = cfg.botOptions.ttsSocketUrl;
-  userIdentity = cfg.botOptions.userIdentity;
-  if (cfg.botOptions.recorderWorkerPath && cfg.botOptions.recorderWorkerPath.trim().length > 0) {
-    recorderWorkerPath = cfg.botOptions.recorderWorkerPath.trim();
-  }
-  if (cfg && cfg.chatContainer) {
-    delete cfg.chatContainer;
+  //koreAPIUrl = me.config.botOptions.koreAPIUrl;
+  //bearerToken = me.config.botOptions.bearer;
+  // speechServerUrl = me.config.botOptions.speechSocketUrl;
+  //speechPrefixURL = me.config.botOptions.koreSpeechAPIUrl;
+  //ttsServerUrl = me.config.botOptions.ttsSocketUrl;
+  //userIdentity = me.config.botOptions.userIdentity;
+  // if (me.config.botOptions.recorderWorkerPath && me.config.botOptions.recorderWorkerPath.trim().length > 0) {
+  //   recorderWorkerPath = me.config.botOptions.recorderWorkerPath.trim();
+  // }
+  if (me.config && me.config.chatContainer) {
+    delete me.config.chatContainer;
   }
 
   this.reWriteWebHookURL(this.config);
@@ -1147,10 +1109,17 @@ chatWindow.prototype.init = function (cfg) {
   attachEventListener();
   // me.show();
 };
-chatWindow.prototype.initVars = function () {
+chatWindow.prototype.initVars = function (config) {
   const me = this;
+  me.config=config;
   me.plugins = {};
-  chatInitialize = me//new chatWindow(cfg);
+  me.bot=bot;
+  me.vars={};
+
+  me.vars._escPressed=0;
+  me.helpers=KoreHelpers.helpers;
+  //chatInitialize = me//new chatWindow(cfg);
+  me.config.botOptions.test = false;
   me.customTemplateObj = new customTemplate(me);
 };
 chatWindow.prototype.initi18n = function () {
@@ -1187,8 +1156,9 @@ chatWindow.prototype.initi18n = function () {
 };
 chatWindow.prototype.seti18n = function (lang) {
   const me = this;
+  let botMessages;
   me.i18n.selectedLanguage = lang;
-  me.config.botMessages = botMessages = me.i18n.langFiles[me.i18n.selectedLanguage];
+  botMessages=me.config.botMessages  = me.i18n.langFiles[me.i18n.selectedLanguage];
   botMessages.availableLanguages = (me.config.i18n && me.config.i18n.availableLanguages) || false;
   botMessages.selectedLanguage = me.i18n.selectedLanguage;
 
@@ -1216,21 +1186,24 @@ chatWindow.prototype.updatei18nDirection = function () {
   }
 };
 chatWindow.prototype.setPrivateVarToContext = function (_this) {
-  _this.messagesQueue = messagesQueue,
-  _this.historyLoading = historyLoading,
-  _this.loadHistory = loadHistory;
-  _this.accessToken = accessToken;
+  let me=this;
+  me.messagesQueue=[];
+
+  //_this.messagesQueue = messagesQueue,
+  //_this.historyLoading = historyLoading,
+  //_this.loadHistory = loadHistory;
+  //_this.accessToken = accessToken;
   _this.bot = bot;
   // _this._chatContainer =  _this.config.chatContainer;
-  _this.EVENTS = EVENTS;
-  _this.chatInitialize = chatInitialize;
-  _this.botMessages = botMessages;
-  _this.attachmentInfo = attachmentInfo;
-  _this._botInfo = _botInfo;
+  //_this.EVENTS = EVENTS;
+  //_this.chatInitialize = me;
+  // _this.botMessages = botMessages;
+  //_this.attachmentInfo = attachmentInfo;
+  //_this._botInfo = _botInfo;
   // _this.customTemplateObj=customTemplateObj;
-  _this.helpers = helpers;
-  _this._pingTimer = _pingTimer;
-  _this._pingTime = _pingTime;
+  //_this.helpers = helpers;
+  //_this._pingTimer = _pingTimer;
+  //_this._pingTime = _pingTime;
 };
 chatWindow.prototype.destroy = function () {
   const me = this;
@@ -1249,14 +1222,16 @@ chatWindow.prototype.destroy = function () {
       me.skipedInit = true;
     }
   }
-  if (ttsAudioSource) {
-    ttsAudioSource.stop();
-  }
-  me.isTTSOn = false;
-  if (_ttsContext) {
-    _ttsContext.close();
-    _ttsContext = null;
-  }
+  // if (ttsAudioSource) {
+  //   ttsAudioSource.stop();
+  // }
+  //me.isTTSOn = false;
+  // if (_ttsContext) {
+  //   _ttsContext.close();
+  //   _ttsContext = null;
+  // }
+  window.removeEventListener('online', me.updateOnlineStatus);
+  window.removeEventListener('offline', me.updateOnlineStatus);
 };
 
 chatWindow.prototype.resetWindow = function () {
@@ -1273,6 +1248,15 @@ chatWindow.prototype.bindEvents = function () {
   const me = this;
   me.bindCustomEvents();
   const _chatContainer = me.config.chatContainer;
+  window.onresize = function (event) {
+    me.setCollapsedModeStyles();
+  };
+  window.onbeforeunload = function () {
+    if (me && $(me.config.chatContainer).length > 0) {
+      me.destroy();
+      // return null;
+    }
+  };
   // todo:raj
   //  _chatContainer.draggable({
   //      handle: _chatContainer.find(".kore-chat-header .header-title"),
@@ -1288,7 +1272,7 @@ chatWindow.prototype.bindEvents = function () {
     const _bodyContainer = $(me.config.container).find('.kore-chat-body');
     _bodyContainer.css('bottom', _footerContainer.outerHeight());
     me.prevComposeSelection = window.getSelection();
-    prevRange = me.prevComposeSelection.rangeCount > 0 && me.prevComposeSelection.getRangeAt(0);
+    me.prevRange = me.prevComposeSelection.rangeCount > 0 && me.prevComposeSelection.getRangeAt(0);
     if (this.innerText.length > 0) {
       _chatContainer.find('.chatInputBoxPlaceholder').css('display', 'none');
       _chatContainer.find('.sendButton').removeClass('disabled');
@@ -1308,10 +1292,10 @@ chatWindow.prototype.bindEvents = function () {
   });
   _chatContainer.on('click', '.chatInputBox', (event) => {
     me.prevComposeSelection = window.getSelection();
-    prevRange = me.prevComposeSelection.rangeCount > 0 && me.prevComposeSelection.getRangeAt(0);
+    me.prevRange = me.prevComposeSelection.rangeCount > 0 && me.prevComposeSelection.getRangeAt(0);
   });
   _chatContainer.on('blur', '.chatInputBox', (event) => {
-    _escPressed = 0;
+    me.vars._escPressed = 0;
   });
   // _chatContainer.off('click', '.botResponseAttachments').on('click', '.botResponseAttachments', function (event) {
   //   window.open($(this).attr('fileid'), '_blank');
@@ -1367,16 +1351,16 @@ chatWindow.prototype.bindEvents = function () {
 
       me.sendMessageToBot(_this, me.attachmentInfo);
     } else if (event.keyCode === 27) {
-      _escPressed++;
-      if (_escPressed > 1) {
-        _escPressed = 0;
+      me.vars._escPressed++;
+      if (me.vars._escPressed > 1) {
+        me.vars._escPressed = 0;
         stop();
         this.innerText = '';
         $('.attachment').empty();
-        fileUploaderCounter = 0;
-        setTimeout(() => {
-          setCaretEnd((document.getElementsByClassName('chatInputBox')));
-        }, 100);
+        //fileUploaderCounter = 0;
+        // setTimeout(() => {
+        //   me.setCaretEnd((document.getElementsByClassName('chatInputBox')));
+        // }, 100);
       }
     }
   });
@@ -1392,20 +1376,20 @@ chatWindow.prototype.bindEvents = function () {
     event.preventDefault();
     me.sendMessageToBot(_this, me.attachmentInfo);
   });
-  _chatContainer.off('click', '.notRecordingMicrophone').on('click', '.notRecordingMicrophone', (event) => {
-    if (ttsAudioSource) {
-      ttsAudioSource.stop();
-    }
-    if (me.config.isSpeechEnabled) {
-      getSIDToken();
-    }
-  });
-  _chatContainer.off('click', '.recordingMicrophone').on('click', '.recordingMicrophone', (event) => {
-    stop();
-    setTimeout(() => {
-      setCaretEnd(document.getElementsByClassName('chatInputBox'));
-    }, 350);
-  });
+  // _chatContainer.off('click', '.notRecordingMicrophone').on('click', '.notRecordingMicrophone', (event) => {
+  //   if (ttsAudioSource) {
+  //     ttsAudioSource.stop();
+  //   }
+  //   if (me.config.isSpeechEnabled) {
+  //     getSIDToken();
+  //   }
+  // });
+  // _chatContainer.off('click', '.recordingMicrophone').on('click', '.recordingMicrophone', (event) => {
+  //   stop();
+  //   setTimeout(() => {
+  //     setCaretEnd(document.getElementsByClassName('chatInputBox'));
+  //   }, 350);
+  // });
   // _chatContainer.off('click', '.attachmentBtn').on('click', '.attachmentBtn', (event) => {
   //   debugger;
   //   if (fileUploaderCounter == 1) {
@@ -1444,12 +1428,12 @@ chatWindow.prototype.bindEvents = function () {
     if (_clipboardData) {
       _htmlData = me.helpers.nl2br(_clipboardData.getData('text').escapeHTML(), false);
       if (_htmlData) {
-        insertHtmlData(_this, _htmlData);
+        me.insertHtmlData(_this, _htmlData);
       }
     }
-    setTimeout(() => {
-      setCaretEnd(_this);
-    }, 100);
+    // setTimeout(() => {
+    //   me.setCaretEnd(_this);
+    // }, 100);
   });
   _chatContainer.off('click', '.sendChat').on('click', '.sendChat', (event) => {
     const _footerContainer = $(me.config.container).find('.kore-chat-footer');
@@ -1563,16 +1547,16 @@ chatWindow.prototype.bindEvents = function () {
   });
 
   _chatContainer.off('click', '.close-btn').on('click', '.close-btn', (event) => {
-    $('.recordingMicrophone').trigger('click');
-    if (ttsAudioSource) {
-      ttsAudioSource.stop();
-    }
-    me.isTTSOn = false;
+    // $('.recordingMicrophone').trigger('click');
+    // if (ttsAudioSource) {
+    //   ttsAudioSource.stop();
+    // }
+    // me.isTTSOn = false;
     me.destroy();
-    if (_ttsContext) {
-      _ttsContext.close();
-      _ttsContext = null;
-    }
+    // if (_ttsContext) {
+    //   _ttsContext.close();
+    //   _ttsContext = null;
+    // }
 
     if (me.config.multiPageApp && me.config.multiPageApp.enable) {
       me.removeLocalStoreItem('kr-cw-state');
@@ -1606,10 +1590,10 @@ chatWindow.prototype.bindEvents = function () {
         $('.kore-chat-overlay').hide();
       }
     }
-    $('.recordingMicrophone').trigger('click');
-    if (ttsAudioSource) {
-      ttsAudioSource.stop();
-    }
+    // $('.recordingMicrophone').trigger('click');
+    // if (ttsAudioSource) {
+    //   ttsAudioSource.stop();
+    // }
   });
 
   _chatContainer.off('click', '.expand-btn').on('click', '.expand-btn', function (event) {
@@ -1675,32 +1659,32 @@ chatWindow.prototype.bindEvents = function () {
       $('.closeElePreview').trigger('click');
     }
   });
-  _chatContainer.off('click', '.quickreplyLeftIcon').on('click', '.quickreplyLeftIcon', (event) => {
-    const _quickReplesDivs = event.currentTarget.parentElement.getElementsByClassName('buttonTmplContentChild');
-    if (_quickReplesDivs.length) {
-      const _scrollParentDiv = event.target.parentElement.getElementsByClassName('quick_replies_btn_parent');
-      const _totalWidth = _scrollParentDiv[0].scrollLeft;
-      let _currWidth = 0;
-      for (let i = 0; i < _quickReplesDivs.length; i++) {
-        _currWidth += (_quickReplesDivs[i].offsetWidth + 10);
-        if (_currWidth > _totalWidth) {
-          // _scrollParentDiv[0].scrollLeft = (_totalWidth - _quickReplesDivs[i].offsetWidth+20);
-          $(_scrollParentDiv).animate({
-            scrollLeft: (_totalWidth - _quickReplesDivs[i].offsetWidth - 50),
-          }, 'slow', () => {
-            // deciding to enable left and right scroll icons
-            const rightIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyRightIcon');
-            rightIcon[0].classList.remove('hide');
-            if (_scrollParentDiv[0].scrollLeft <= 0) {
-              const leftIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyLeftIcon');
-              leftIcon[0].classList.add('hide');
-            }
-          });
-          break;
-        }
-      }
-    }
-  });
+  // _chatContainer.off('click', '.quickreplyLeftIcon').on('click', '.quickreplyLeftIcon', (event) => {
+  //   const _quickReplesDivs = event.currentTarget.parentElement.getElementsByClassName('buttonTmplContentChild');
+  //   if (_quickReplesDivs.length) {
+  //     const _scrollParentDiv = event.target.parentElement.getElementsByClassName('quick_replies_btn_parent');
+  //     const _totalWidth = _scrollParentDiv[0].scrollLeft;
+  //     let _currWidth = 0;
+  //     for (let i = 0; i < _quickReplesDivs.length; i++) {
+  //       _currWidth += (_quickReplesDivs[i].offsetWidth + 10);
+  //       if (_currWidth > _totalWidth) {
+  //         // _scrollParentDiv[0].scrollLeft = (_totalWidth - _quickReplesDivs[i].offsetWidth+20);
+  //         $(_scrollParentDiv).animate({
+  //           scrollLeft: (_totalWidth - _quickReplesDivs[i].offsetWidth - 50),
+  //         }, 'slow', () => {
+  //           // deciding to enable left and right scroll icons
+  //           const rightIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyRightIcon');
+  //           rightIcon[0].classList.remove('hide');
+  //           if (_scrollParentDiv[0].scrollLeft <= 0) {
+  //             const leftIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyLeftIcon');
+  //             leftIcon[0].classList.add('hide');
+  //           }
+  //         });
+  //         break;
+  //       }
+  //     }
+  //   }
+  // });
   // _chatContainer.off('click', '.quickreplyRightIcon').on('click', '.quickreplyRightIcon', (event) => {
   //   const _quickReplesDivs = event.currentTarget.parentElement.getElementsByClassName('buttonTmplContentChild');
   //   if (_quickReplesDivs.length) {
@@ -1763,58 +1747,58 @@ chatWindow.prototype.bindEvents = function () {
     setTimeout(() => {
       me.resetWindow();
     });
-    $('.recordingMicrophone').trigger('click');
-    if (ttsAudioSource) {
-      ttsAudioSource.stop();
-    }
+    // $('.recordingMicrophone').trigger('click');
+    // if (ttsAudioSource) {
+    //   ttsAudioSource.stop();
+    // }
   });
-  _chatContainer.off('click', '.ttspeaker').on('click', '.ttspeaker', (event) => {
-    if (me.config.isTTSEnabled) {
-      if (me.isTTSOn) {
-        if (ttsAudioSource) {
-          ttsAudioSource.stop();
-        }
-        cancelTTSConnection();
-        me.isTTSOn = false;
-        $('#ttspeaker')[0].pause();
-        if (me.config.ttsInterface && me.config.ttsInterface === 'webapi') {
-          const synth = window.speechSynthesis;
-          synth.pause();
-        } else if (me.config.ttsInterface === 'awspolly') {
-          if (me.isTTSOn === false) {
-            // isTTSOn = false;
-            gainNode.gain.value = 0; // 10 %
-            $('.ttspeakerDiv').addClass('ttsOff');
-          }
-        }
-        $('.ttspeakerDiv').addClass('ttsOff');
-      } else {
-        if (me.config.ttsInterface && me.config.ttsInterface === 'webapi') {
-          _ttsConnection = me.speakWithWebAPI();
-        } else if (me.config.ttsInterface && me.config.ttsInterface === 'awspolly') {
-          gainNode.gain.value = 1;
-        } else {
-          _ttsConnection = createSocketForTTS();
-        }
-        me.isTTSOn = true;
-        $('.ttspeakerDiv').removeClass('ttsOff');
-      }
-    }
-  });
+  // _chatContainer.off('click', '.ttspeaker').on('click', '.ttspeaker', (event) => {
+  //   if (me.config.isTTSEnabled) {
+  //     if (me.isTTSOn) {
+  //       if (ttsAudioSource) {
+  //         ttsAudioSource.stop();
+  //       }
+  //       cancelTTSConnection();
+  //       me.isTTSOn = false;
+  //       $('#ttspeaker')[0].pause();
+  //       if (me.config.ttsInterface && me.config.ttsInterface === 'webapi') {
+  //         const synth = window.speechSynthesis;
+  //         synth.pause();
+  //       } else if (me.config.ttsInterface === 'awspolly') {
+  //         if (me.isTTSOn === false) {
+  //           // isTTSOn = false;
+  //           gainNode.gain.value = 0; // 10 %
+  //           $('.ttspeakerDiv').addClass('ttsOff');
+  //         }
+  //       }
+  //       $('.ttspeakerDiv').addClass('ttsOff');
+  //     } else {
+  //       if (me.config.ttsInterface && me.config.ttsInterface === 'webapi') {
+  //         _ttsConnection = me.speakWithWebAPI();
+  //       } else if (me.config.ttsInterface && me.config.ttsInterface === 'awspolly') {
+  //         gainNode.gain.value = 1;
+  //       } else {
+  //         _ttsConnection = createSocketForTTS();
+  //       }
+  //       me.isTTSOn = true;
+  //       $('.ttspeakerDiv').removeClass('ttsOff');
+  //     }
+  //   }
+  // });
 
-  const element = document.querySelector('.droppable');
-  function callback(files) {
-    // Here, we simply log the Array of files to the console.
-    if (fileUploaderCounter == 1) {
-      alert('You can upload only one file');
-      return;
-    }
-    cnvertFiles(this, files[0]);
-    if (files.length > 1) {
-      alert('You can upload only one file');
-    }
-  }
-  me.makeDroppable(element, callback);
+  // const element = document.querySelector('.droppable');
+  // function callback(files) {
+  //   // Here, we simply log the Array of files to the console.
+  //   if (fileUploaderCounter == 1) {
+  //     alert('You can upload only one file');
+  //     return;
+  //   }
+  //   cnvertFiles(this, files[0]);
+  //   if (files.length > 1) {
+  //     alert('You can upload only one file');
+  //   }
+  // }
+  //me.makeDroppable(element, callback);
   me.bindSDKEvents();
 };
 
@@ -2054,7 +2038,7 @@ chatWindow.prototype.sendMessageToBot = function (chatInput, renderMsg, msgObjec
   const _footerContainer = $(me.config.chatContainer).find('.kore-chat-footer');
   const clientMessageId = new Date().getTime();
   let msgData = {};
-  fileUploaderCounter = 0;
+  // fileUploaderCounter = 0;
   // to send \n to server for new lines
   chatInput.html(chatInput.html().replaceAll('<br>', '\n'));
   if (me.attachmentInfo && Object.keys(me.attachmentInfo).length) {
@@ -2155,11 +2139,12 @@ chatWindow.prototype.sendMessageToBot = function (chatInput, renderMsg, msgObjec
 };
 
 chatWindow.prototype.handleWebHookResponse = function (msgsData) {
+  let me=this;
   const SUBSEQUENT_RENDER_DELAY = 500;
   if (msgsData && msgsData.length) {
     msgsData.forEach((msgData, index) => {
       setTimeout(() => {
-        chatInitialize.renderMessage(msgData);
+        me.renderMessage(msgData);
       }, (index >= 1) ? SUBSEQUENT_RENDER_DELAY : 0);
     });
   }
@@ -2234,12 +2219,12 @@ chatWindow.prototype.renderMessage = function (msgData) {
   me.customTemplateObj.extension = extension;
   me.graphLibGlob = me.config.graphLib || 'd3';
   if (msgData.type === 'bot_response') {
-    waiting_for_message = false;
+    me.waiting_for_message = false;
     setTimeout(() => {
       $('.typingIndicator').css('background-image', `url(${msgData.icon})`);
     }, 500);
     setTimeout(() => {
-      if (!waiting_for_message) {
+      if (!me.waiting_for_message) {
         if (me.typingIndicatorTimer) {
           clearTimeout(me.typingIndicatorTimer);
         }
@@ -2247,7 +2232,7 @@ chatWindow.prototype.renderMessage = function (msgData) {
       }
     }, 500);
   } else {
-    waiting_for_message = false;
+    me.waiting_for_message = false;
   }
   const _chatContainer = $(me.config.chatContainer).find('.chat-container');
   if (msgData.message && msgData.message[0] && msgData.message[0].cInfo && msgData.message[0].cInfo.attachments) {
@@ -2269,7 +2254,7 @@ chatWindow.prototype.renderMessage = function (msgData) {
     //   });
     // } else 
     if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'wait_for_response') { // to show typing indicator until next response receive
-      waiting_for_message = true;
+      me.waiting_for_message = true;
       $('.typingIndicatorContent').css('display', 'block');
       return;
     } 
@@ -3716,15 +3701,15 @@ chatWindow.prototype.chatHistory = function (res) {
 };
 chatWindow.prototype.carouselTemplateCount = 0;
 
-function IsJsonString() {
-  try {
-    JSON.parse(str);
-  } catch (e) {
-    return false;
-  }
-  return true;
-}
-function insertHtmlData(_txtBox, _html) {
+// function IsJsonString() {
+//   try {
+//     JSON.parse(str);
+//   } catch (e) {
+//     return false;
+//   }
+//   return true;
+// }
+chatWindow.prototype.insertHtmlData=function (_txtBox, _html) {
   const _input = _txtBox;
   var sel;
   var range;
@@ -3756,23 +3741,23 @@ function insertHtmlData(_txtBox, _html) {
   }
   _input.appendChild(html);
 }
-function setCaretEnd(_this) {
-  let sel;
-  if (_this && _this.item(0) && _this.item(0).innerText.length) {
-    const range = document.createRange();
-    range.selectNodeContents(_this[0]);
-    range.collapse(false);
-    const sel1 = window.getSelection();
-    sel1.removeAllRanges();
-    sel1.addRange(range);
-    prevRange = range;
-  } else {
-    prevRange = false;
-    if (_this && _this[0]) {
-      _this[0].focus();
-    }
-  }
-}
+// chatWindow.prototype.setCaretEnd= function (_this) {
+//   let me=this;
+//   if (_this && _this.item(0) && _this.item(0).innerText.length) {
+//     const range = document.createRange();
+//     range.selectNodeContents(_this[0]);
+//     range.collapse(false);
+//     const sel1 = window.getSelection();
+//     sel1.removeAllRanges();
+//     sel1.addRange(range);
+//     me.prevRange = range;
+//   } else {
+//     me.prevRange = false;
+//     if (_this && _this[0]) {
+//       _this[0].focus();
+//     }
+//   }
+// }
 function strSplit(str) {
   return (str.split('.'));
 }
@@ -3818,44 +3803,39 @@ function strSplit(str) {
          });
      }
  } */
-window.onbeforeunload = function () {
-  if (chatInitialize && $(chatInitialize.config.chatContainer).length > 0) {
-    chatInitialize.destroy();
-    // return null;
-  }
-};
-chatWindow.prototype.addListener = function (evtName, trgFunc) {
-  if (!_eventQueue) {
-    _eventQueue = {};
-  }
-  if (evtName && evtName.trim().length > 0) {
-    if (!_eventQueue[evtName]) {
-      _eventQueue[evtName] = [];
-    }
-    if (typeof trgFunc === 'function') {
-      _eventQueue[evtName].push(trgFunc);
-    }
-  }
-};
-chatWindow.prototype.removeListener = function (evtName) {
-  if (_eventQueue && _eventQueue[evtName]) {
-    delete _eventQueue[evtName];
-  }
-};
 
-chatWindow.prototype.callListener = function (evtName, data) {
-  if (_eventQueue && _eventQueue[evtName]) {
-    for (let i = 0; i < _eventQueue[evtName].length; i++) {
-      if (typeof _eventQueue[evtName][i] === 'function') {
-        _eventQueue[evtName][i].call(this, data);
-      }
-    }
-  }
-};
-chatWindow.prototype.show = function () {
+// chatWindow.prototype.addListener = function (evtName, trgFunc) {
+//   if (!_eventQueue) {
+//     _eventQueue = {};
+//   }
+//   if (evtName && evtName.trim().length > 0) {
+//     if (!_eventQueue[evtName]) {
+//       _eventQueue[evtName] = [];
+//     }
+//     if (typeof trgFunc === 'function') {
+//       _eventQueue[evtName].push(trgFunc);
+//     }
+//   }
+// };
+// chatWindow.prototype.removeListener = function (evtName) {
+//   if (_eventQueue && _eventQueue[evtName]) {
+//     delete _eventQueue[evtName];
+//   }
+// };
+
+// chatWindow.prototype.callListener = function (evtName, data) {
+//   if (_eventQueue && _eventQueue[evtName]) {
+//     for (let i = 0; i < _eventQueue[evtName].length; i++) {
+//       if (typeof _eventQueue[evtName][i] === 'function') {
+//         _eventQueue[evtName][i].call(this, data);
+//       }
+//     }
+//   }
+// };
+chatWindow.prototype.show = function (config) {
   // todo:raj
   const me = this;
-  this.init(me.config);
+  me.init(config);
   const cfg = me.config;
   //  if ($('body').find('.kore-chat-window').length > 0) {
   //      return false;
@@ -3888,7 +3868,7 @@ chatWindow.prototype.getJWT = function (options, callback) {
 
     },
     error(err) {
-      chatWindowInstance.showError(err.responseText);
+      // chatWindowInstance.showError(err.responseText);
     },
   });
 };
@@ -3904,45 +3884,45 @@ chatWindow.prototype.assertion = function (options, callback) {
   options.chatHistory = me.chatHistory.bind(me);
   options.botDetails = me.botDetails;
   // callback(null, options);
-  setTimeout(() => {
-    if (me && me.initToken) {
-      me.initToken(options);
-    }
-  }, 2000);
+  // setTimeout(() => {
+  //   if (me && me.initToken) {
+  //     me.initToken(options);
+  //   }
+  // }, 2000);
 };
 
 chatWindow.prototype.addWidgetEvents = function (cfg) {
+  let me=this;
   if (cfg) {
     const wizSDK = cfg.widgetSDKInstace;
     wizSDK.events.onPostback = function (data) {
       $('.chatInputBox').text(data.payload);
-      chatInitialize.sendMessageToBot($('.chatInputBox'), data.utterance, data);
+      me.sendMessageToBot($('.chatInputBox'), data.utterance, data);
     };
   }
 };
 
 chatWindow.prototype.setWidgetInstance = function (widgetSDKInstace) {
+  let me=this;
   if (widgetSDKInstace) {
-    chatInitialize.config.widgetSDKInstace = widgetSDKInstace;
-    this.addWidgetEvents(chatInitialize.config);
+    me.config.widgetSDKInstace = widgetSDKInstace;
+    me.addWidgetEvents(me.config);
   }
 };
-chatWindow.prototype.destroy = function () {
-  const me = this;
-  if (chatInitialize && chatInitialize.destroy) {
-    _eventQueue = {};
-    chatInitialize.destroy();
-  }
-  if (_ttsContext) {
-    _ttsContext.close();
-    _ttsContext = null;
-  }
-  window.removeEventListener('online', me.updateOnlineStatus);
-  window.removeEventListener('offline', me.updateOnlineStatus);
-};
-chatWindow.prototype.initToken = function (options) {
-  assertionToken = `bearer ${options.accessToken}`;
-};
+// chatWindow.prototype.destroy = function () {
+//   const me = this;
+//   if (chatInitialize && chatInitialize.destroy) {
+//     //_eventQueue = {};
+//     chatInitialize.destroy();
+//   }
+//   // if (_ttsContext) {
+//   //   _ttsContext.close();
+//   //   _ttsContext = null;
+//   // }
+// };
+// chatWindow.prototype.initToken = function (options) {
+//   assertionToken = `bearer ${options.accessToken}`;
+// };
 
 chatWindow.prototype.hideError = function () {
   $('.errorMsgBlock').removeClass('showError');
@@ -3970,8 +3950,9 @@ chatWindow.prototype.botDetails = function (response, botInfo) {
 //  }
 
 chatWindow.prototype.closeConversationSession = function () {
-  if (chatInitialize) {
-    chatInitialize.closeConversationSession();
+  let me=this;
+  if (me) {
+    me.closeConversationSession();
   }
 };
 chatWindow.prototype.bottomSliderAction = function (action, appendElement) {
@@ -3989,40 +3970,40 @@ chatWindow.prototype.bottomSliderAction = function (action, appendElement) {
   }
 }
 /** ***********************************       Microphone code      ********************************************* */
-let final_transcript = '';
-let recognizing = false;
-let recognition = null;
-let prevStr = '';
-setTimeout(() => {
-  if (chatInitialize && chatInitialize.config && chatInitialize.config.allowGoogleSpeech) {
-    if (window.initGapi) {
-      initGapi();
-    } else {
-      console.warn("Please uncomment Google Speech files('speech/app.js','speech/key.js' and 'client_api.js' in index.html");
-    }
-  }
-}, 2000);
-function isChrome() {
-  const isChromium = window.chrome;
-  const winNav = window.navigator;
-  const vendorName = winNav.vendor;
-  const isOpera = winNav.userAgent.indexOf('OPR') > -1;
-  const isIEedge = winNav.userAgent.indexOf('Edge') > -1;
-  const isIOSChrome = winNav.userAgent.match('CriOS');
+// let final_transcript = '';
+// let recognizing = false;
+// let recognition = null;
+// let prevStr = '';
+// setTimeout(() => {
+//   if (chatInitialize && chatInitialize.config && chatInitialize.config.allowGoogleSpeech) {
+//     if (window.initGapi) {
+//       initGapi();
+//     } else {
+//       console.warn("Please uncomment Google Speech files('speech/app.js','speech/key.js' and 'client_api.js' in index.html");
+//     }
+//   }
+// }, 2000);
+// function isChrome() {
+//   const isChromium = window.chrome;
+//   const winNav = window.navigator;
+//   const vendorName = winNav.vendor;
+//   const isOpera = winNav.userAgent.indexOf('OPR') > -1;
+//   const isIEedge = winNav.userAgent.indexOf('Edge') > -1;
+//   const isIOSChrome = winNav.userAgent.match('CriOS');
 
-  if (isIOSChrome) {
-    return true;
-  } if (
-    isChromium !== null
-         && typeof isChromium !== 'undefined'
-         && vendorName === 'Google Inc.'
-         && isOpera === false
-         && isIEedge === false
-  ) {
-    return true;
-  }
-  return false;
-}
+//   if (isIOSChrome) {
+//     return true;
+//   } if (
+//     isChromium !== null
+//          && typeof isChromium !== 'undefined'
+//          && vendorName === 'Google Inc.'
+//          && isOpera === false
+//          && isIEedge === false
+//   ) {
+//     return true;
+//   }
+//   return false;
+// }
 chatWindow.prototype.unfreezeUIOnHistoryLoadingFail = function () {
   const me = this;
   setTimeout((me) => {
@@ -4033,552 +4014,552 @@ chatWindow.prototype.unfreezeUIOnHistoryLoadingFail = function () {
     }
   }, 20000, me);
 };
-if ('webkitSpeechRecognition' in window && isChrome()) {
-  recognition = new window.webkitSpeechRecognition();
-  final_transcript = '';
-  recognition.continuous = true;
-  recognition.interimResults = true;
+// if ('webkitSpeechRecognition' in window && isChrome()) {
+//   recognition = new window.webkitSpeechRecognition();
+//   final_transcript = '';
+//   recognition.continuous = true;
+//   recognition.interimResults = true;
 
-  recognition.onstart = function () {
-    prevStr = '';
-    recognizing = true;
-    $('.recordingMicrophone').css('display', 'block');
-    $('.notRecordingMicrophone').css('display', 'none');
-  };
+//   recognition.onstart = function () {
+//     prevStr = '';
+//     recognizing = true;
+//     $('.recordingMicrophone').css('display', 'block');
+//     $('.notRecordingMicrophone').css('display', 'none');
+//   };
 
-  recognition.onerror = function (event) {
-    console.log(event.error);
-    $('.recordingMicrophone').trigger('click');
-    $('.recordingMicrophone').css('display', 'none');
-    $('.notRecordingMicrophone').css('display', 'block');
-  };
+//   recognition.onerror = function (event) {
+//     console.log(event.error);
+//     $('.recordingMicrophone').trigger('click');
+//     $('.recordingMicrophone').css('display', 'none');
+//     $('.notRecordingMicrophone').css('display', 'block');
+//   };
 
-  recognition.onend = function () {
-    recognizing = false;
-    $('.recordingMicrophone').trigger('click');
-    $('.recordingMicrophone').css('display', 'none');
-    $('.notRecordingMicrophone').css('display', 'block');
-  };
+//   recognition.onend = function () {
+//     recognizing = false;
+//     $('.recordingMicrophone').trigger('click');
+//     $('.recordingMicrophone').css('display', 'none');
+//     $('.notRecordingMicrophone').css('display', 'block');
+//   };
 
-  recognition.onresult = function (event) {
-    final_transcript = '';
-    let interim_transcript = '';
-    for (let i = event.resultIndex; i < event.results.length; ++i) {
-      if (event.results[i].isFinal) {
-        final_transcript += event.results[i][0].transcript;
-      } else {
-        interim_transcript += event.results[i][0].transcript;
-      }
-    }
-    final_transcript = capitalize(final_transcript);
-    final_transcript = linebreak(final_transcript);
-    interim_transcript = linebreak(interim_transcript);
-    if (final_transcript !== '') {
-      prevStr += final_transcript;
-    }
-    // console.log('Interm: ',interim_transcript);
-    // console.log('final: ',final_transcript);
-    if (recognizing) {
-      $('.chatInputBox').html(`${prevStr}${interim_transcript}`);
-      $('.sendButton').removeClass('disabled');
-    }
+//   recognition.onresult = function (event) {
+//     final_transcript = '';
+//     let interim_transcript = '';
+//     for (let i = event.resultIndex; i < event.results.length; ++i) {
+//       if (event.results[i].isFinal) {
+//         final_transcript += event.results[i][0].transcript;
+//       } else {
+//         interim_transcript += event.results[i][0].transcript;
+//       }
+//     }
+//     final_transcript = capitalize(final_transcript);
+//     final_transcript = linebreak(final_transcript);
+//     interim_transcript = linebreak(interim_transcript);
+//     if (final_transcript !== '') {
+//       prevStr += final_transcript;
+//     }
+//     // console.log('Interm: ',interim_transcript);
+//     // console.log('final: ',final_transcript);
+//     if (recognizing) {
+//       $('.chatInputBox').html(`${prevStr}${interim_transcript}`);
+//       $('.sendButton').removeClass('disabled');
+//     }
 
-    setTimeout(() => {
-      setCaretEnd(document.getElementsByClassName('chatInputBox'));
-      document.getElementsByClassName('chatInputBox')[0].scrollTop = document.getElementsByClassName('chatInputBox')[0].scrollHeight;
-    }, 350);
-  };
-}
+//     setTimeout(() => {
+//       setCaretEnd(document.getElementsByClassName('chatInputBox'));
+//       document.getElementsByClassName('chatInputBox')[0].scrollTop = document.getElementsByClassName('chatInputBox')[0].scrollHeight;
+//     }, 350);
+//   };
+// }
 
-const two_line = /\n\n/g;
-const one_line = /\n/g;
-function linebreak(s) {
-  return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
-}
+// const two_line = /\n\n/g;
+// const one_line = /\n/g;
+// function linebreak(s) {
+//   return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
+// }
 
-function capitalize(s) {
-  return s.replace(s.substr(0, 1), (m) => m.toUpperCase());
-}
-function startGoogleWebKitRecognization() {
-  if (recognizing) {
-    recognition.stop();
-    return;
-  }
-  final_transcript = '';
-  recognition.lang = 'en-US';
-  recognition.start();
-}
-function startGoogleSpeech() {
-  if (rec) {
-    rec.record();
-    $('.recordingMicrophone').css('display', 'block');
-    $('.notRecordingMicrophone').css('display', 'none');
-    console.log('recording...');
-    intervalKey = setInterval(() => {
-      rec.export16kMono((blob) => {
-        console.log(new Date());
-        if (chatInitialize.config.allowGoogleSpeech) {
-          sendBlobToSpeech(blob, 'LINEAR16', 16000);
-        } else {
-          socketSend(blob);
-        }
-        rec.clear();
-      }, 'audio/x-raw');
-    }, 1000);
-  }
-}
+// function capitalize(s) {
+//   return s.replace(s.substr(0, 1), (m) => m.toUpperCase());
+// }
+// function startGoogleWebKitRecognization() {
+//   if (recognizing) {
+//     recognition.stop();
+//     return;
+//   }
+//   final_transcript = '';
+//   recognition.lang = 'en-US';
+//   recognition.start();
+// }
+// function startGoogleSpeech() {
+//   if (rec) {
+//     rec.record();
+//     $('.recordingMicrophone').css('display', 'block');
+//     $('.notRecordingMicrophone').css('display', 'none');
+//     console.log('recording...');
+//     intervalKey = setInterval(() => {
+//       rec.export16kMono((blob) => {
+//         console.log(new Date());
+//         if (chatInitialize.config.allowGoogleSpeech) {
+//           sendBlobToSpeech(blob, 'LINEAR16', 16000);
+//         } else {
+//           socketSend(blob);
+//         }
+//         rec.clear();
+//       }, 'audio/x-raw');
+//     }, 1000);
+//   }
+// }
 
-function getSIDToken() {
-  if (chatInitialize.config.allowGoogleSpeech) {
-    if (recognition) { // using webkit speech recognition
-      startGoogleWebKitRecognization();
-    } else { // using google cloud speech API
-      micEnable();
-    }
-  } else {
-    if (!speechPrefixURL) {
-      console.warn('Please provide speech socket url');
-      return false;
-    }
-    $.ajax({
-      url: `${speechPrefixURL}asr/wss/start?email=${userIdentity}`,
-      type: 'post',
-      headers: { Authorization: (bearerToken) || assertionToken },
-      dataType: 'json',
-      success(data) {
-        sidToken = data.link;
-        micEnable();
-      },
-      error(err) {
-        console.log(err);
-      },
-    });
-  }
-}
-function micEnable() {
-  if (isRecordingStarted) {
-    return;
-  }
-  if (!navigator.getUserMedia) {
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-  }
-  if (navigator.getUserMedia) {
-    isRecordingStarted = true;
-    navigator.getUserMedia({
-      audio: true,
-    }, success, (e) => {
-      isRecordingStarted = false;
-      alert('Please enable the microphone permission for this page');
-    });
-  } else {
-    isRecordingStarted = false;
-    alert('getUserMedia is not supported in this browser.');
-  }
-}
+// function getSIDToken() {
+//   if (chatInitialize.config.allowGoogleSpeech) {
+//     if (recognition) { // using webkit speech recognition
+//       startGoogleWebKitRecognization();
+//     } else { // using google cloud speech API
+//       micEnable();
+//     }
+//   } else {
+//     if (!speechPrefixURL) {
+//       console.warn('Please provide speech socket url');
+//       return false;
+//     }
+//     $.ajax({
+//       url: `${speechPrefixURL}asr/wss/start?email=${userIdentity}`,
+//       type: 'post',
+//       headers: { Authorization: (bearerToken) || assertionToken },
+//       dataType: 'json',
+//       success(data) {
+//         sidToken = data.link;
+//         micEnable();
+//       },
+//       error(err) {
+//         console.log(err);
+//       },
+//     });
+//   }
+// }
+// function micEnable() {
+//   if (isRecordingStarted) {
+//     return;
+//   }
+//   if (!navigator.getUserMedia) {
+//     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+//   }
+//   if (navigator.getUserMedia) {
+//     isRecordingStarted = true;
+//     navigator.getUserMedia({
+//       audio: true,
+//     }, success, (e) => {
+//       isRecordingStarted = false;
+//       alert('Please enable the microphone permission for this page');
+//     });
+//   } else {
+//     isRecordingStarted = false;
+//     alert('getUserMedia is not supported in this browser.');
+//   }
+// }
 
-function afterMicEnable() {
-  if (navigator.getUserMedia) {
-    if (!rec) {
-      isRecordingStarted = false;
-      console.error('Recorder undefined');
-      return;
-    }
-    if (_connection) {
-      cancel();
-    }
-    try {
-      _connection = createSocket();
-    } catch (e) {
-      isRecordingStarted = false;
-      console.log(e);
-      console.error('Web socket not supported in the browser');
-    }
-  }
-}
+// function afterMicEnable() {
+//   if (navigator.getUserMedia) {
+//     if (!rec) {
+//       isRecordingStarted = false;
+//       console.error('Recorder undefined');
+//       return;
+//     }
+//     if (_connection) {
+//       cancel();
+//     }
+//     try {
+//       _connection = createSocket();
+//     } catch (e) {
+//       isRecordingStarted = false;
+//       console.log(e);
+//       console.error('Web socket not supported in the browser');
+//     }
+//   }
+// }
 
-function success(e) {
-  isListening = true;
-  mediaStream = e;
-  if (!context) {
-    const Context = window.AudioContext || window.webkitAudioContext;
-    context = new Context();
-  }
-  mediaStreamSource = context.createMediaStreamSource(mediaStream);
-  window.userSpeechAnalyser = context.createAnalyser();
-  mediaStreamSource.connect(window.userSpeechAnalyser);
-  console.log('Mediastream created');
-  if (_connection) {
-    _connection.close();
-    _connection = null;
-  }
-  if (rec) {
-    rec.stop();
-    rec.clear();
-    // rec.destroy();
-    rec = null;
-  }
-  rec = new Recorder(mediaStreamSource, {
-    workerPath: recorderWorkerPath,
-  });
-  console.log('Recorder Initialized');
-  _permission = true;
-  if (!chatInitialize.config.allowGoogleSpeech) {
-    afterMicEnable();
-  } else {
-    startGoogleSpeech();
-  }
-  setTimeout(() => {
-    setCaretEnd(document.getElementsByClassName('chatInputBox'));
-  }, 600);
-}
+// function success(e) {
+//   isListening = true;
+//   mediaStream = e;
+//   if (!context) {
+//     const Context = window.AudioContext || window.webkitAudioContext;
+//     context = new Context();
+//   }
+//   mediaStreamSource = context.createMediaStreamSource(mediaStream);
+//   window.userSpeechAnalyser = context.createAnalyser();
+//   mediaStreamSource.connect(window.userSpeechAnalyser);
+//   console.log('Mediastream created');
+//   if (_connection) {
+//     _connection.close();
+//     _connection = null;
+//   }
+//   if (rec) {
+//     rec.stop();
+//     rec.clear();
+//     // rec.destroy();
+//     rec = null;
+//   }
+//   rec = new Recorder(mediaStreamSource, {
+//     workerPath: recorderWorkerPath,
+//   });
+//   console.log('Recorder Initialized');
+//   _permission = true;
+//   if (!chatInitialize.config.allowGoogleSpeech) {
+//     afterMicEnable();
+//   } else {
+//     startGoogleSpeech();
+//   }
+//   setTimeout(() => {
+//     setCaretEnd(document.getElementsByClassName('chatInputBox'));
+//   }, 600);
+// }
 
-function cancel() {
-  // Stop the regular sending of audio (if present) and disconnect microphone
-  clearInterval(intervalKey);
-  isRecordingStarted = false;
-  if ($('.recordingMicrophone')) {
-    $('.recordingMicrophone').css('display', 'none');
-  }
-  if ($('.notRecordingMicrophone')) {
-    $('.notRecordingMicrophone').css('display', 'block');
-  }
-  if (mediaStream !== null && mediaStream && mediaStream.getTracks()[0].enabled) {
-    const track = mediaStream.getTracks()[0];
-    track.stop();
-  }
-  if (_connection) {
-    _connection.close();
-    _connection = null;
-  }
-  if (rec) {
-    rec.stop();
-    rec.clear();
-  }
-  sidToken = '';
-}
+// function cancel() {
+//   // Stop the regular sending of audio (if present) and disconnect microphone
+//   clearInterval(intervalKey);
+//   isRecordingStarted = false;
+//   if ($('.recordingMicrophone')) {
+//     $('.recordingMicrophone').css('display', 'none');
+//   }
+//   if ($('.notRecordingMicrophone')) {
+//     $('.notRecordingMicrophone').css('display', 'block');
+//   }
+//   if (mediaStream !== null && mediaStream && mediaStream.getTracks()[0].enabled) {
+//     const track = mediaStream.getTracks()[0];
+//     track.stop();
+//   }
+//   if (_connection) {
+//     _connection.close();
+//     _connection = null;
+//   }
+//   if (rec) {
+//     rec.stop();
+//     rec.clear();
+//   }
+//   sidToken = '';
+// }
 
-function socketSend(item) {
-  if (_connection) {
-    const state = _connection.readyState;
-    if (state === 1) {
-      if (item instanceof Blob) {
-        if (item.size > 0) {
-          _connection.send(item);
-          // console.log('Send: blob: ' + item.type + ', ' + item.size);
-        } else {
-          // console.log('Send: blob: ' + item.type + ', ' + item.size);
-        }
-      } else {
-        console.log(item);
-        _connection.send(item);
-        // console.log('send tag: '+ item);
-      }
-    } else {
-      isRecordingStarted = false;
-      console.error('Web Socket readyState != 1: ', state, `failed to send :${item.type}, ${item.size}`);
-      cancel();
-    }
-  } else {
-    isRecordingStarted = false;
-    console.error('No web socket connection: failed to send: ', item);
-  }
-}
+// function socketSend(item) {
+//   if (_connection) {
+//     const state = _connection.readyState;
+//     if (state === 1) {
+//       if (item instanceof Blob) {
+//         if (item.size > 0) {
+//           _connection.send(item);
+//           // console.log('Send: blob: ' + item.type + ', ' + item.size);
+//         } else {
+//           // console.log('Send: blob: ' + item.type + ', ' + item.size);
+//         }
+//       } else {
+//         console.log(item);
+//         _connection.send(item);
+//         // console.log('send tag: '+ item);
+//       }
+//     } else {
+//       isRecordingStarted = false;
+//       console.error('Web Socket readyState != 1: ', state, `failed to send :${item.type}, ${item.size}`);
+//       cancel();
+//     }
+//   } else {
+//     isRecordingStarted = false;
+//     console.error('No web socket connection: failed to send: ', item);
+//   }
+// }
 
-function createSocket() {
-  window.ENABLE_MICROPHONE = true;
-  window.SPEECH_SERVER_SOCKET_URL = sidToken;
-  const serv_url = window.SPEECH_SERVER_SOCKET_URL;
-  const userEmail = userIdentity;
-  window.WebSocket = window.WebSocket || window.MozWebSocket;
-  const url = `${serv_url}&${CONTENT_TYPE}&email=${userEmail}`;
-  const _connection = new WebSocket(url);
-  // User is connected to server
-  _connection.onopen = function (e) {
-    console.log('User connected');
-    _user_connection = true;
-    rec.record();
-    $('.recordingMicrophone').css('display', 'block');
-    $('.notRecordingMicrophone').css('display', 'none');
-    console.log('recording...');
-    prevStr = '';
-    intervalKey = setInterval(() => {
-      rec.export16kMono((blob) => {
-        socketSend(blob);
-        rec.clear();
-      }, 'audio/x-raw');
-    }, INTERVAL);
-  };
-  // On receving message from server
-  _connection.onmessage = function (msg) {
-    const { data } = msg;
-    let interim_transcript = '';
-    // console.log(data);
-    if (data instanceof Object && !(data instanceof Blob)) {
-      console.log('Got object that is not a blob');
-    } else if (data instanceof Blob) {
-      console.log('Got Blob');
-    } else {
-      const res = JSON.parse(data);
-      if (isListening && res.status === 0) {
-        interim_transcript = res.result.hypotheses[0].transcript;
-        if (res.result.final) {
-          prevStr += `${res.result.hypotheses[0].transcript} `;
-          interim_transcript = '';
-        }
+// function createSocket() {
+//   window.ENABLE_MICROPHONE = true;
+//   window.SPEECH_SERVER_SOCKET_URL = sidToken;
+//   const serv_url = window.SPEECH_SERVER_SOCKET_URL;
+//   const userEmail = userIdentity;
+//   window.WebSocket = window.WebSocket || window.MozWebSocket;
+//   const url = `${serv_url}&${CONTENT_TYPE}&email=${userEmail}`;
+//   const _connection = new WebSocket(url);
+//   // User is connected to server
+//   _connection.onopen = function (e) {
+//     console.log('User connected');
+//     _user_connection = true;
+//     rec.record();
+//     $('.recordingMicrophone').css('display', 'block');
+//     $('.notRecordingMicrophone').css('display', 'none');
+//     console.log('recording...');
+//     prevStr = '';
+//     intervalKey = setInterval(() => {
+//       rec.export16kMono((blob) => {
+//         socketSend(blob);
+//         rec.clear();
+//       }, 'audio/x-raw');
+//     }, INTERVAL);
+//   };
+//   // On receving message from server
+//   _connection.onmessage = function (msg) {
+//     const { data } = msg;
+//     let interim_transcript = '';
+//     // console.log(data);
+//     if (data instanceof Object && !(data instanceof Blob)) {
+//       console.log('Got object that is not a blob');
+//     } else if (data instanceof Blob) {
+//       console.log('Got Blob');
+//     } else {
+//       const res = JSON.parse(data);
+//       if (isListening && res.status === 0) {
+//         interim_transcript = res.result.hypotheses[0].transcript;
+//         if (res.result.final) {
+//           prevStr += `${res.result.hypotheses[0].transcript} `;
+//           interim_transcript = '';
+//         }
 
-        console.log('Interm: ', interim_transcript);
-        console.log('final: ', prevStr);
-        $('.chatInputBox').html(`${prevStr}${interim_transcript}`);
-        setTimeout(() => {
-          setCaretEnd(document.getElementsByClassName('chatInputBox'));
-          document.getElementsByClassName('chatInputBox')[0].scrollTop = document.getElementsByClassName('chatInputBox')[0].scrollHeight;
-        }, 350);
-        /* if (res.result.final) {
-                     var final_result = res.result.hypotheses[0].transcript;
-                     $('.chatInputBox').html($('.chatInputBox').html() + ' ' + final_result);
-                     setTimeout(function () {
-                         setCaretEnd(document.getElementsByClassName("chatInputBox"));
-                         document.getElementsByClassName('chatInputBox')[0].scrollTop = document.getElementsByClassName('chatInputBox')[0].scrollHeight;
-                     }, 350);
-                 } else {
-                     //$('.chatInputBox').html($('.chatInputBox').html() + ' '+ res.result.hypotheses[0].transcript);
-                     console.log('Not final: ', res.result.hypotheses[0].transcript);
-                 } */
-      } else {
-        console.log('Server error : ', res.status);
-      }
-    }
-  };
-  // If server is closed
-  _connection.onclose = function (e) {
-    if ($('.chatInputBox').text() !== '' && chatInitialize.config.autoEnableSpeechAndTTS) {
-      const me = window.chatContainerConfig;
-      me.sendMessageToBot($('.chatInputBox'));
-    }
-    isRecordingStarted = false;
-    console.log('Server is closed');
-    console.log(e);
-    cancel();
-  };
-  // If there is an error while sending or receving data
-  _connection.onerror = function (e) {
-    console.log('Error : ', e);
-  };
-  return _connection;
-}
+//         console.log('Interm: ', interim_transcript);
+//         console.log('final: ', prevStr);
+//         $('.chatInputBox').html(`${prevStr}${interim_transcript}`);
+//         setTimeout(() => {
+//           setCaretEnd(document.getElementsByClassName('chatInputBox'));
+//           document.getElementsByClassName('chatInputBox')[0].scrollTop = document.getElementsByClassName('chatInputBox')[0].scrollHeight;
+//         }, 350);
+//         /* if (res.result.final) {
+//                      var final_result = res.result.hypotheses[0].transcript;
+//                      $('.chatInputBox').html($('.chatInputBox').html() + ' ' + final_result);
+//                      setTimeout(function () {
+//                          setCaretEnd(document.getElementsByClassName("chatInputBox"));
+//                          document.getElementsByClassName('chatInputBox')[0].scrollTop = document.getElementsByClassName('chatInputBox')[0].scrollHeight;
+//                      }, 350);
+//                  } else {
+//                      //$('.chatInputBox').html($('.chatInputBox').html() + ' '+ res.result.hypotheses[0].transcript);
+//                      console.log('Not final: ', res.result.hypotheses[0].transcript);
+//                  } */
+//       } else {
+//         console.log('Server error : ', res.status);
+//       }
+//     }
+//   };
+//   // If server is closed
+//   _connection.onclose = function (e) {
+//     if ($('.chatInputBox').text() !== '' && chatInitialize.config.autoEnableSpeechAndTTS) {
+//       const me = window.chatContainerConfig;
+//       me.sendMessageToBot($('.chatInputBox'));
+//     }
+//     isRecordingStarted = false;
+//     console.log('Server is closed');
+//     console.log(e);
+//     cancel();
+//   };
+//   // If there is an error while sending or receving data
+//   _connection.onerror = function (e) {
+//     console.log('Error : ', e);
+//   };
+//   return _connection;
+// }
 
-function stop() {
-  if ($('.chatInputBox').text() !== '' && chatInitialize.config.autoEnableSpeechAndTTS) {
-    const me = window.chatContainerConfig;
-    me.sendMessageToBot($('.chatInputBox'));
-  }
-  clearInterval(intervalKey);
-  $('.recordingMicrophone').css('display', 'none');
-  $('.notRecordingMicrophone').css('display', 'block');
-  if (rec) {
-    rec.stop();
-    isListening = false;
-    console.log('stopped recording..');
-    setTimeout(() => {
-      if (_connection) {
-        _connection.close();
-        _connection = null;
-      }
-    }, 1000); // waiting to send and receive last message
+// function stop() {
+//   if ($('.chatInputBox').text() !== '' && chatInitialize.config.autoEnableSpeechAndTTS) {
+//     const me = window.chatContainerConfig;
+//     me.sendMessageToBot($('.chatInputBox'));
+//   }
+//   clearInterval(intervalKey);
+//   $('.recordingMicrophone').css('display', 'none');
+//   $('.notRecordingMicrophone').css('display', 'block');
+//   if (rec) {
+//     rec.stop();
+//     isListening = false;
+//     console.log('stopped recording..');
+//     setTimeout(() => {
+//       if (_connection) {
+//         _connection.close();
+//         _connection = null;
+//       }
+//     }, 1000); // waiting to send and receive last message
 
-    rec.export16kMono((blob) => {
-      socketSend(blob);
-      rec.clear();
-      if (_connection) {
-        _connection.close();
-      }
-      const track = mediaStream.getTracks()[0];
-      track.stop();
-      rec.destroy();
-      isRecordingStarted = false;
-    }, 'audio/x-raw');
-  } else {
-    console.error('Recorder undefined');
-  }
-  if (recognizing) {
-    recognition.stop();
-    recognizing = false;
-  }
-}
+//     rec.export16kMono((blob) => {
+//       socketSend(blob);
+//       rec.clear();
+//       if (_connection) {
+//         _connection.close();
+//       }
+//       const track = mediaStream.getTracks()[0];
+//       track.stop();
+//       rec.destroy();
+//       isRecordingStarted = false;
+//     }, 'audio/x-raw');
+//   } else {
+//     console.error('Recorder undefined');
+//   }
+//   if (recognizing) {
+//     recognition.stop();
+//     recognizing = false;
+//   }
+// }
 
-$(window).on('beforeunload', () => {
-  cancel();
-});
+// $(window).on('beforeunload', () => {
+//   cancel();
+// });
 
 /** ***********************************    Microphone code end here    ************************************* */
 
 /** ***********************************    TTS code start here         ************************************* */
 
-chatWindow.prototype.speakWithWebAPI = function (_txtToSpeak) {
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
-    // Create a new instance of SpeechSynthesisUtterance.
-    const msg = new SpeechSynthesisUtterance();
-    msg.text = _txtToSpeak;
-    //  msg.voice = speechSynthesis.getVoices().filter(function(voice) {
-    //      return voice.default===true;
-    //     })[0];
-    // Queue this utterance.
-    window.speechSynthesis.speak(msg);
-  } else {
-    console.warn("KORE:Your browser doesn't support TTS(Speech Synthesiser)");
-  }
-};
+// chatWindow.prototype.speakWithWebAPI = function (_txtToSpeak) {
+//   if ('speechSynthesis' in window) {
+//     window.speechSynthesis.cancel();
+//     // Create a new instance of SpeechSynthesisUtterance.
+//     const msg = new SpeechSynthesisUtterance();
+//     msg.text = _txtToSpeak;
+//     //  msg.voice = speechSynthesis.getVoices().filter(function(voice) {
+//     //      return voice.default===true;
+//     //     })[0];
+//     // Queue this utterance.
+//     window.speechSynthesis.speak(msg);
+//   } else {
+//     console.warn("KORE:Your browser doesn't support TTS(Speech Synthesiser)");
+//   }
+// };
 
-function createSocketForTTS() {
-  if (!ttsServerUrl) {
-    console.warn('Please provide tts socket url');
-    return false;
-  }
-  window.TTS_SOCKET_URL = ttsServerUrl;
-  const serv_url = window.TTS_SOCKET_URL;
-  const userEmail = userIdentity;
-  window.WebSocket = window.WebSocket || window.MozWebSocket;
-  const _ttsConnection = new WebSocket(serv_url);
-  _ttsConnection.binaryType = 'arraybuffer';
-  // User is connected to server
-  _ttsConnection.onopen = function (e) {
-    socketSendTTSMessage(_txtToSpeak);
-  };
-  // On receving message from server
-  _ttsConnection.onmessage = function (msg) {
-    _txtToSpeak = '';
-    if (typeof msg.data === 'string') {
-      // do nothing
-    } else {
-      const _data = msg.data;
-      if (chatInitialize.isTTSOn) {
-        playsound(_data);
-      }
-    }
-  };
-  // If server is closed
-  _ttsConnection.onclose = function (e) {
-    // tts socket closed
-  };
-  // If there is an error while sending or receving data
-  _ttsConnection.onerror = function (e) {
-    console.log('Error : ', e);
-  };
-  return _ttsConnection;
-}
+// function createSocketForTTS() {
+//   if (!ttsServerUrl) {
+//     console.warn('Please provide tts socket url');
+//     return false;
+//   }
+//   window.TTS_SOCKET_URL = ttsServerUrl;
+//   const serv_url = window.TTS_SOCKET_URL;
+//   const userEmail = userIdentity;
+//   window.WebSocket = window.WebSocket || window.MozWebSocket;
+//   const _ttsConnection = new WebSocket(serv_url);
+//   _ttsConnection.binaryType = 'arraybuffer';
+//   // User is connected to server
+//   _ttsConnection.onopen = function (e) {
+//     socketSendTTSMessage(_txtToSpeak);
+//   };
+//   // On receving message from server
+//   _ttsConnection.onmessage = function (msg) {
+//     _txtToSpeak = '';
+//     if (typeof msg.data === 'string') {
+//       // do nothing
+//     } else {
+//       const _data = msg.data;
+//       if (chatInitialize.isTTSOn) {
+//         playsound(_data);
+//       }
+//     }
+//   };
+//   // If server is closed
+//   _ttsConnection.onclose = function (e) {
+//     // tts socket closed
+//   };
+//   // If there is an error while sending or receving data
+//   _ttsConnection.onerror = function (e) {
+//     console.log('Error : ', e);
+//   };
+//   return _ttsConnection;
+// }
 
-function cancelTTSConnection() {
-  if (_ttsConnection) {
-    _ttsConnection.close();
-    _ttsConnection = null;
-  }
-}
-function socketSendTTSMessage(item) {
-  if (_ttsConnection) {
-    const state = _ttsConnection.readyState;
-    if (state === 1) {
-      const auth = (bearerToken) || assertionToken;
-      const _message = {
-        message: item,
-        user: _botInfo.name,
-        authorization: auth,
-      };
-      _ttsConnection.send(JSON.stringify(_message));
-    } else {
-      console.error('Web Socket readyState != 1: ', state);
-      cancelTTSConnection();
-    }
-  } else {
-    console.error('No web socket connection: failed to send');
-  }
-}
-function initTTSAudioContext() {
-  if (!_ttsContext) {
-    if (!window.AudioContext) {
-      if (!window.webkitAudioContext) {
-        console.error('Your browser does not support any AudioContext and cannot play back this audio.');
-        return;
-      }
-      window.AudioContext = window.webkitAudioContext;
-    }
-    _ttsContext = new AudioContext();
-  }
-}
-initTTSAudioContext();
-function playsound(raw) {
-  _ttsContext.decodeAudioData(raw, (buffer) => {
-    if (!buffer) {
-      console.error('failed to decode:', 'buffer null');
-      return;
-    }
-    try {
-      if (ttsAudioSource) {
-        ttsAudioSource.stop();
-      }
-      ttsAudioSource = _ttsContext.createBufferSource();
-      ttsAudioSource.buffer = buffer;
-      ttsAudioSource.connect(_ttsContext.destination);
-      ttsAudioSource.start(0);
-      ttsAudioSource.addEventListener('ended', () => {
-        setTimeout(() => {
-          if (chatInitialize.isTTSOn && chatInitialize.config.autoEnableSpeechAndTTS) {
-            $('.notRecordingMicrophone').trigger('click');
-          }
-        }, 350);
-      });
-    } catch (e) {
-    }
-  }, (error) => {
-    console.error('failed to decode:', error);
-  });
-}
+// function cancelTTSConnection() {
+//   if (_ttsConnection) {
+//     _ttsConnection.close();
+//     _ttsConnection = null;
+//   }
+// }
+// function socketSendTTSMessage(item) {
+//   if (_ttsConnection) {
+//     const state = _ttsConnection.readyState;
+//     if (state === 1) {
+//       const auth = (bearerToken) || assertionToken;
+//       const _message = {
+//         message: item,
+//         user: _botInfo.name,
+//         authorization: auth,
+//       };
+//       _ttsConnection.send(JSON.stringify(_message));
+//     } else {
+//       console.error('Web Socket readyState != 1: ', state);
+//       cancelTTSConnection();
+//     }
+//   } else {
+//     console.error('No web socket connection: failed to send');
+//   }
+// }
+// function initTTSAudioContext() {
+//   if (!_ttsContext) {
+//     if (!window.AudioContext) {
+//       if (!window.webkitAudioContext) {
+//         console.error('Your browser does not support any AudioContext and cannot play back this audio.');
+//         return;
+//       }
+//       window.AudioContext = window.webkitAudioContext;
+//     }
+//     _ttsContext = new AudioContext();
+//   }
+// }
+// initTTSAudioContext();
+// function playsound(raw) {
+//   _ttsContext.decodeAudioData(raw, (buffer) => {
+//     if (!buffer) {
+//       console.error('failed to decode:', 'buffer null');
+//       return;
+//     }
+//     try {
+//       if (ttsAudioSource) {
+//         ttsAudioSource.stop();
+//       }
+//       ttsAudioSource = _ttsContext.createBufferSource();
+//       ttsAudioSource.buffer = buffer;
+//       ttsAudioSource.connect(_ttsContext.destination);
+//       ttsAudioSource.start(0);
+//       ttsAudioSource.addEventListener('ended', () => {
+//         setTimeout(() => {
+//           if (chatInitialize.isTTSOn && chatInitialize.config.autoEnableSpeechAndTTS) {
+//             $('.notRecordingMicrophone').trigger('click');
+//           }
+//         }, 350);
+//       });
+//     } catch (e) {
+//     }
+//   }, (error) => {
+//     console.error('failed to decode:', error);
+//   });
+// }
 /** ****************************** TTS code end here ********************************************* */
 /** *****************************    Function for Attachment ********************************************** */
 
-chatWindow.prototype.makeDroppable = function (element, callback) {
-  const input = document.createElement('input');
-  input.setAttribute('type', 'file');
-  input.setAttribute('multiple', false);
-  input.style.display = 'none';
+// chatWindow.prototype.makeDroppable = function (element, callback) {
+//   const input = document.createElement('input');
+//   input.setAttribute('type', 'file');
+//   input.setAttribute('multiple', false);
+//   input.style.display = 'none';
 
-  input.addEventListener('change', triggerCallback);
-  element.appendChild(input);
+//   input.addEventListener('change', triggerCallback);
+//   element.appendChild(input);
 
-  element.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    element.classList.add('dragover');
-  });
+//   element.addEventListener('dragover', (e) => {
+//     e.preventDefault();
+//     e.stopPropagation();
+//     element.classList.add('dragover');
+//   });
 
-  element.addEventListener('dragleave', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    element.classList.remove('dragover');
-  });
+//   element.addEventListener('dragleave', (e) => {
+//     e.preventDefault();
+//     e.stopPropagation();
+//     element.classList.remove('dragover');
+//   });
 
-  element.addEventListener('drop', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    element.classList.remove('dragover');
-    triggerCallback(e);
-  });
+//   element.addEventListener('drop', (e) => {
+//     e.preventDefault();
+//     e.stopPropagation();
+//     element.classList.remove('dragover');
+//     triggerCallback(e);
+//   });
 
-  /* element.addEventListener('click', function() {
-       input.value = null;
-       input.click();
-     }); */
+//   /* element.addEventListener('click', function() {
+//        input.value = null;
+//        input.click();
+//      }); */
 
-  function triggerCallback(e) {
-    let files;
-    if (e.dataTransfer) {
-      files = e.dataTransfer.files;
-    } else if (e.target) {
-      files = e.target.files;
-    }
-    callback.call(null, files);
-  }
-};
+//   function triggerCallback(e) {
+//     let files;
+//     if (e.dataTransfer) {
+//       files = e.dataTransfer.files;
+//     } else if (e.target) {
+//       files = e.target.files;
+//     }
+//     callback.call(null, files);
+//   }
+// };
 // function cnvertFiles(_this, _file, customFileName) {
 //   const _scope = _this; const
 //     recState = {};
@@ -4927,40 +4908,40 @@ chatWindow.prototype.makeDroppable = function (element, callback) {
 //   onComponentReady(_this, _data);
 // }
 /** *************************************************** ke.uploader file code ********************************************* */
-function MultipartData() {
-  this.boundary = `--------MultipartData${Math.random()}`;
-  this._fields = [];
-}
-MultipartData.prototype.append = function (key, value) {
-  this._fields.push([key, value]);
-};
-MultipartData.prototype.toString = function () {
-  const { boundary } = this;
-  let body = '';
-  this._fields.forEach((field) => {
-    body += `--${boundary}\r\n`;
-    // file upload
-    if (field[1].data) {
-      const file = field[1];
-      if (file.fileName) {
-        body += `Content-Disposition: form-data; name="${field[0]}"; filename="${file.fileName}"`;
-      } else {
-        body += `Content-Disposition: form-data; name="${field[0]}"`;
-      }
-      body += '\r\n';
-      if (file.type) {
-        body += 'Content-Type: UTF-8; charset=ISO-8859-1\r\n';
-      }
-      body += 'Content-Transfer-Encoding: base64\r\n';
-      body += `\r\n${file.data}\r\n`; // base64 data
-    } else {
-      body += `Content-Disposition: form-data; name="${field[0]}";\r\n\r\n`;
-      body += `${field[1]}\r\n`;
-    }
-  });
-  body += `--${boundary}--`;
-  return body;
-};
+// function MultipartData() {
+//   this.boundary = `--------MultipartData${Math.random()}`;
+//   this._fields = [];
+// }
+// MultipartData.prototype.append = function (key, value) {
+//   this._fields.push([key, value]);
+// };
+// MultipartData.prototype.toString = function () {
+//   const { boundary } = this;
+//   let body = '';
+//   this._fields.forEach((field) => {
+//     body += `--${boundary}\r\n`;
+//     // file upload
+//     if (field[1].data) {
+//       const file = field[1];
+//       if (file.fileName) {
+//         body += `Content-Disposition: form-data; name="${field[0]}"; filename="${file.fileName}"`;
+//       } else {
+//         body += `Content-Disposition: form-data; name="${field[0]}"`;
+//       }
+//       body += '\r\n';
+//       if (file.type) {
+//         body += 'Content-Type: UTF-8; charset=ISO-8859-1\r\n';
+//       }
+//       body += 'Content-Transfer-Encoding: base64\r\n';
+//       body += `\r\n${file.data}\r\n`; // base64 data
+//     } else {
+//       body += `Content-Disposition: form-data; name="${field[0]}";\r\n\r\n`;
+//       body += `${field[1]}\r\n`;
+//     }
+//   });
+//   body += `--${boundary}--`;
+//   return body;
+// };
 // function Uploader(element, options) {
 //   this.options = options;
 //   this.$element = element;
@@ -4976,35 +4957,35 @@ MultipartData.prototype.toString = function () {
 //   progressChange: $.Event('progress.ke.uploader'),
 //   success: $.Event('success.ke.uploader'),
 // };
-function getConnection(_this) {
-  return new kfrm.net.HttpRequest();
-}
+// function getConnection(_this) {
+//   return new kfrm.net.HttpRequest();
+// }
 
-function loadListener(_this, evt) {
-  if ($('.upldIndc').is(':visible')) {
-    _this.events.success.params = $.parseJSON(evt.target.response);
-    attachmentInfo.fileId = _this.events.success.params.fileId;
-    $('.sendButton').removeClass('disabled');
-    $('.kore-chat-window').addClass('kore-chat-attachment');
-    $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
-    fileUploaderCounter = 1;
-    $('.upldIndc').remove();
-    _this.$element.trigger(_this.events.success);
-  }
-}
+// function loadListener(_this, evt) {
+//   if ($('.upldIndc').is(':visible')) {
+//     _this.events.success.params = $.parseJSON(evt.target.response);
+//     attachmentInfo.fileId = _this.events.success.params.fileId;
+//     $('.sendButton').removeClass('disabled');
+//     $('.kore-chat-window').addClass('kore-chat-attachment');
+//     $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
+//     fileUploaderCounter = 1;
+//     $('.upldIndc').remove();
+//     _this.$element.trigger(_this.events.success);
+//   }
+// }
 
-function errorListener(_this, evt) {
-  _this.events.error.params = evt;
-  _this.$element.trigger(_this.events.error);
-}
+// function errorListener(_this, evt) {
+//   _this.events.error.params = evt;
+//   _this.$element.trigger(_this.events.error);
+// }
 
-function progressListener(_this, evt) {
-}
+// function progressListener(_this, evt) {
+// }
 
-function setOptions(_this, opts) {
-  _this.options = opts;
-  return _this;
-}
+// function setOptions(_this, opts) {
+//   _this.options = opts;
+//   return _this;
+// }
 
 // function commitFile(_this) {
 //   const _scope = _this;
@@ -5200,34 +5181,34 @@ function setOptions(_this, opts) {
 /** **********************************************************************************************************************************************
  ********************************************** kore.ai framework file ******************************************************************************
  *********************************************************************************************************************************************** */
-+(function () {
-  function getHTTPConnecton() {
-    let xhr = false;
-    xhr = new XMLHttpRequest();
-    if (xhr) {
-      return xhr;
-    } if (typeof XDomainRequest !== 'undefined') {
-      return new XDomainRequest();
-    }
-    return xhr;
-  }
+// +(function () {
+//   function getHTTPConnecton() {
+//     let xhr = false;
+//     xhr = new XMLHttpRequest();
+//     if (xhr) {
+//       return xhr;
+//     } if (typeof XDomainRequest !== 'undefined') {
+//       return new XDomainRequest();
+//     }
+//     return xhr;
+//   }
 
-  function HttpRequest() {
-    const xhr = getHTTPConnecton();
-    if (!xhr) {
-      throw 'Unsupported HTTP Connection';
-    }
-    try {
-      xhr.withCredentials = true;
-    } catch (e) {
-    }
-    xhr.onreadystatechange = function () {
-      return xhr.onReadyStateChange && xhr.onReadyStateChange.call(xhr);
-    };
-    return xhr;
-  }
-  kfrm.net.HttpRequest = HttpRequest;
-}());
+//   function HttpRequest() {
+//     const xhr = getHTTPConnecton();
+//     if (!xhr) {
+//       throw 'Unsupported HTTP Connection';
+//     }
+//     try {
+//       xhr.withCredentials = true;
+//     } catch (e) {
+//     }
+//     xhr.onreadystatechange = function () {
+//       return xhr.onReadyStateChange && xhr.onReadyStateChange.call(xhr);
+//     };
+//     return xhr;
+//   }
+//   kfrm.net.HttpRequest = HttpRequest;
+// }());
 
 //  return {
 //      initToken: initToken,

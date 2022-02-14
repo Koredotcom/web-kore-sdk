@@ -1,6 +1,6 @@
 import $ from '../libs/korejquery'
 class KoreHelpers{
-    helpers = {
+    static helpers = {
         'nl2br': function (str, runEmojiCheck) {
              //todo:raj
                //  if (runEmojiCheck) {

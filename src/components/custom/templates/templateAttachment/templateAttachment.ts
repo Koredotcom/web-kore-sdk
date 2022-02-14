@@ -6,7 +6,7 @@ class TemplateAttachment {
     renderMessage(msgData: any) {
         let me: any = this;
         let $ = me.cwInstance.$;
-        let helpersObj = new helpers();
+        let helpersObj = helpers;
 
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.type == 'image' || msgData.message[0].component.type == 'audio' || msgData.message[0].component.type == 'video' || msgData.message[0].component.type == 'link')) {
             me.messageHtml = $(me.getTemplateString()).tmpl({

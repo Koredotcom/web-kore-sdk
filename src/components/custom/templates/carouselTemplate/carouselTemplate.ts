@@ -6,7 +6,7 @@ class CarouselTemplate {
   renderMessage(msgData: any) {
     const me: any = this;
     let $ = me.cwInstance.$;
-    const helpersObj = new helpers();
+    const helpersObj = helpers;
     const carouselEles = [];
 
     if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'carousel') {

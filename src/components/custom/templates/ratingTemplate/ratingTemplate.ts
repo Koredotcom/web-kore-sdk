@@ -5,7 +5,7 @@ class RatingTemplate {
     renderMessage(msgData: any) {
         let me: any = this;
         let $ = me.cwInstance.$;
-        let helpersObj = new helpers();
+        let helpersObj = helpers;
 
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.template_type === "feedbackTemplate" && (msgData.message[0].component.payload.view === "star" || msgData.message[0].component.payload.view === "emojis"))) {
             me.messageHtml = $(me.getTemplateString('ratingTemplate')).tmpl({

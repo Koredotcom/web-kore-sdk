@@ -5,7 +5,7 @@ class BarChartTemplate {
   renderMessage(msgData: any) {
     const me: any = this;
   let $ = me.cwInstance.$;
-    const helpersObj = new helpers();
+    const helpersObj = helpers;
 
     if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type === 'barchart') {
       me.messageHtml = $(me.getTemplateString('barchartTemplate')).tmpl({

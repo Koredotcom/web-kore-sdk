@@ -6,7 +6,7 @@ class ListViewTemplate {
     renderMessage(msgData: any) {
         let me: any = this;
         let $ = me.cwInstance.$;
-        let helpersObj = new helpers();
+        let helpersObj = helpers;
 
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "listView") {
             me.messageHtml = $(me.getTemplateString('templatelistView')).tmpl({
@@ -58,7 +58,7 @@ class ListViewTemplate {
         let me: any = this;
         let chatWindowInstance = me.cwInstance;
         let $ = me.cwInstance.$;
-        let helpersObj = new helpers();
+        let helpersObj = helpers;
         var msgData = $("li.fromOtherUsers.with-icon.listView").data();
         if (msgData.message[0].component.payload.seeMore) {
             msgData.message[0].component.payload.seeMore = false;
