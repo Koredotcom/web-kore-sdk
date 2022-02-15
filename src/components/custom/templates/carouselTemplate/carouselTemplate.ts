@@ -57,10 +57,10 @@ class CarouselTemplate {
         type = type.toLowerCase();
       }
       if (type == 'postback' || type == 'text') {
-        chatWindowInstance.assignValueToInput($(selectedTarget).attr('actual-value') || $(selectedTarget).attr('value'));
+        //chatWindowInstance.assignValueToInput($(selectedTarget).attr('actual-value') || $(selectedTarget).attr('value'));
         // var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
         const _innerText = ($(selectedTarget)[0] && $(selectedTarget)[0].innerText) ? $(selectedTarget)[0].innerText.trim() : '' || ($(selectedTarget) && $(selectedTarget).attr('data-value')) ? $(selectedTarget).attr('data-value').trim() : '';
-        chatWindowInstance.sendMessage(_innerText);
+        chatWindowInstance.sendMessage($(selectedTarget).attr('actual-value') || $(selectedTarget).attr('value'),{renderMsg:_innerText});
       } else if (type == 'url' || type == 'web_url') {
         if ($(selectedTarget).attr('msgData') !== undefined) {
           let msgData;

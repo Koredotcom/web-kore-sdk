@@ -47,14 +47,16 @@ class FormTemplate {
                 for (var i = 0; i < passwordLength; i++) {
                     selectedValue = selectedValue + "*";
                 }
-                chatWindowInstance.assignValueToInput(textPwd);
+                //chatWindowInstance.assignValueToInput(textPwd);
                 $(messageHtml).find(".formMainComponent form").addClass("hide");
+                chatWindowInstance.sendMessage(textPwd,{renderMsg:selectedValue}, msgData);
             } else if (inputForm_id.find("input[type='password']").length == 0) {
-                chatWindowInstance.assignValueToInput(inputForm_id.find("#email").val());
+                //chatWindowInstance.assignValueToInput(inputForm_id.find("#email").val());
                 selectedValue = inputForm_id.find("#email").val();
                 $(messageHtml).find(".formMainComponent form").addClass("hide");
+                chatWindowInstance.sendMessage(inputForm_id.find("#email").val(),{renderMsg:selectedValue}, msgData);
             }
-            chatWindowInstance.sendMessage(selectedValue, msgData);
+            
         });
     }
     getTemplateString() {

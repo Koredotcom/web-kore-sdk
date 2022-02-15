@@ -191,8 +191,8 @@ class ListWidgetTemplate {
         _innerText = actionObj.payload;
         var eData: any = {};
         eData.payload = _self.innerText || actionObj.title;
-        chatWindowInstance.assignValueToInput(_innerText);
-        chatWindowInstance.sendMessage(eData.payload);
+        //chatWindowInstance.assignValueToInput(_innerText);
+        chatWindowInstance.sendMessage(_innerText,{renderMsg:eData.payload});
       }
       if (_self && $(_self).hasClass("dropdown-contentWidgt")) {
         $(_self).hide();
@@ -207,8 +207,8 @@ class ListWidgetTemplate {
       } else {
         _innerText = $(_self).attr('data-value');
         var postBack = $(_self).attr('data-title');
-        chatWindowInstance.assignValueToInput(_innerText) 
-        chatWindowInstance.sendMessage(postBack);
+        //chatWindowInstance.assignValueToInput(_innerText) 
+        chatWindowInstance.sendMessage(_innerText,{renderMsg:postBack});
         $(".kore-action-sheet .list-template-sheet").animate({ height: 'toggle' });
         chatWindowInstance.bottomSliderAction("hide");
         $(".listViewTmplContentBox").css({ "pointer-events": "none" });

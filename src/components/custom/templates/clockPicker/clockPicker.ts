@@ -71,7 +71,7 @@ class ClockPickerTemplate {
                 }
                 var amorpm = clockPickerObj.amOrPm;
                 var clockValue = hours + ':' + minutes + ' ' + amorpm;
-                chatWindowInstance.assignValueToInput(clockValue);
+                //chatWindowInstance.assignValueToInput(clockValue);
                 chatWindowInstance.sendMessage(clockValue);
             }
         });

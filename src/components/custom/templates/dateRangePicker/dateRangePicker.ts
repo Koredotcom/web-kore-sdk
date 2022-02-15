@@ -45,7 +45,7 @@ class DateRangePickerTemplate {
                 var startViewDate = moment(startdateValue).format('MM-DD-YYYY') || moment();
                 var endViewDate = moment(enddateValue).format('MM-DD-YYYY') || moment();
                 var _innerText = startViewDate + ' to ' + endViewDate;
-                chatWindowInstance.assignValueToInput(_innerText);
+                //chatWindowInstance.assignValueToInput(_innerText);
                 chatWindowInstance.sendMessage(_innerText);
                 chatWindowInstance.bottomSliderAction('hide');
                 me.daterangeInput.data('dateRangePicker').clear();

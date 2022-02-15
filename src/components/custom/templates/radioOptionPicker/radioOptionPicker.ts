@@ -23,8 +23,8 @@ class RadioOptionPickerTemplate {
         $(me.messageHtml).find(".confirmBTN").click(function () {
             var radioOptionPostbackMsg = target.find('.radioOptionName').attr('data-value');
             var radioOptionTitle = target.find('.radioOptionName').attr('data-title');
-            chatWindowInstance.assignValueToInput(radioOptionPostbackMsg);
-            chatWindowInstance.sendMessage(radioOptionTitle);
+            //chatWindowInstance.assignValueToInput(radioOptionPostbackMsg);
+            chatWindowInstance.sendMessage(radioOptionPostbackMsg,{renderMsg:radioOptionTitle});
             $(me.messageHtml).find(".confirmBTN").css({ "display": "block" });
             chatWindowInstance.bottomSliderAction('hide');
         });

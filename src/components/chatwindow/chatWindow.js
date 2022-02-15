@@ -1261,6 +1261,15 @@ chatWindow.prototype.resetWindow = function () {
   me.bot.init(me.config.botOptions);
 };
 
+chatWindow.prototype.sendMessageWithWithChatInput=function(chatInput){
+  let me=this;
+  if (chatInput.text().trim() === '') {
+    return;
+  }
+  me.sendMessageToBot(chatInput.text());
+  chatInput.html(chatInput.html().replaceAll('<br>', '\n'));
+  chatInput.html('');
+}
 chatWindow.prototype.bindEvents = function () {
   const me = this;
   me.bindCustomEvents();
@@ -1349,7 +1358,7 @@ chatWindow.prototype.bindEvents = function () {
          });
      }); */
   _chatContainer.off('keydown', '.chatInputBox').on('keydown', '.chatInputBox', function (event) {
-    const _this = $(this);
+    const chatInput = $(this);
     const _footerContainer = $(me.config.container).find('.kore-chat-footer');
     const _bodyContainer = $(me.config.container).find('.kore-chat-body');
     _bodyContainer.css('bottom', _footerContainer.outerHeight());
@@ -1365,8 +1374,7 @@ chatWindow.prototype.bindEvents = function () {
         $('.recordingMicrophone').trigger('click');
       }
       event.preventDefault();
-
-      me.sendMessageToBot(_this, me.attachmentInfo);
+      me.sendMessageWithWithChatInput(chatInput);
     } else if (event.keyCode === 27) {
       me.vars._escPressed++;
       if (me.vars._escPressed > 1) {
@@ -1391,7 +1399,7 @@ chatWindow.prototype.bindEvents = function () {
       $('.recordingMicrophone').trigger('click');
     }
     event.preventDefault();
-    me.sendMessageToBot(_this, me.attachmentInfo);
+    me.sendMessageWithWithChatInput(chatInput);
   });
   // _chatContainer.off('click', '.notRecordingMicrophone').on('click', '.notRecordingMicrophone', (event) => {
   //   if (ttsAudioSource) {
@@ -1454,7 +1462,7 @@ chatWindow.prototype.bindEvents = function () {
   });
   _chatContainer.off('click', '.sendChat').on('click', '.sendChat', (event) => {
     const _footerContainer = $(me.config.container).find('.kore-chat-footer');
-    me.sendMessageToBot(_footerContainer.find('.chatInputBox'));
+    me.sendMessageWithWithChatInput(_footerContainer.find('.chatInputBox'));
   });
 
   _chatContainer.off('click', 'li a').on('click', 'li a', function (e) {
@@ -1490,78 +1498,78 @@ chatWindow.prototype.bindEvents = function () {
       me.openExternalLink(a_link);
     }
   });
-  _chatContainer.off('click', '.carouselImageContent').on('click', '.carouselImageContent', function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    let type = $(this).attr('type');
-    if (type) {
-      type = type.toLowerCase();
-    }
-    if (type == 'postback' || type == 'text') {
-      $('.chatInputBox').text($(this).attr('actual-value') || $(this).attr('value'));
-      // var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
-      const _innerText = ($(this)[0] && $(this)[0].innerText) ? $(this)[0].innerText.trim() : '' || ($(this) && $(this).attr('data-value')) ? $(this).attr('data-value').trim() : '';
-      me.sendMessageToBot($('.chatInputBox'), _innerText);
-    } else if (type == 'url' || type == 'web_url') {
-      if ($(this).attr('msgData') !== undefined) {
-        let msgData;
-        try {
-          msgData = JSON.parse($(this).attr('msgData'));
-        } catch (err) {
+  // _chatContainer.off('click', '.carouselImageContent').on('click', '.carouselImageContent', function (e) {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //   let type = $(this).attr('type');
+  //   if (type) {
+  //     type = type.toLowerCase();
+  //   }
+  //   if (type == 'postback' || type == 'text') {
+  //     $('.chatInputBox').text($(this).attr('actual-value') || $(this).attr('value'));
+  //     // var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
+  //     const _innerText = ($(this)[0] && $(this)[0].innerText) ? $(this)[0].innerText.trim() : '' || ($(this) && $(this).attr('data-value')) ? $(this).attr('data-value').trim() : '';
+  //     me.sendMessageToBot($('.chatInputBox'), _innerText);
+  //   } else if (type == 'url' || type == 'web_url') {
+  //     if ($(this).attr('msgData') !== undefined) {
+  //       let msgData;
+  //       try {
+  //         msgData = JSON.parse($(this).attr('msgData'));
+  //       } catch (err) {
 
-        }
-        if (msgData && msgData.message && msgData.message[0].component && (msgData.message[0].component.formData || (msgData.message[0].component.payload && msgData.message[0].component.payload.formData))) {
-          if (msgData.message[0].component.formData) {
-            msgData.message[0].component.payload.formData = msgData.message[0].component.formData;
-          }
-          me.renderWebForm(msgData);
-          return;
-        }
-      }
-      let a_link = $(this).attr('url');
-      if (a_link.indexOf('http:') < 0 && a_link.indexOf('https:') < 0) {
-        a_link = `http:////${a_link}`;
-      }
-      me.openExternalLink(a_link);
-    }
-    if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[1] === 'likeDiv') {
-      $('.likeImg').addClass('hide');
-      $('.likedImg').removeClass('hide');
-      $('.likeDislikeDiv').addClass('dummy');
-    }
-    if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[1] === 'disLikeDiv') {
-      $('.disLikeImg').addClass('hide');
-      $('.disLikedImg').removeClass('hide');
-      $('.likeDislikeDiv').addClass('dummy');
-    }
+  //       }
+  //       if (msgData && msgData.message && msgData.message[0].component && (msgData.message[0].component.formData || (msgData.message[0].component.payload && msgData.message[0].component.payload.formData))) {
+  //         if (msgData.message[0].component.formData) {
+  //           msgData.message[0].component.payload.formData = msgData.message[0].component.formData;
+  //         }
+  //         me.renderWebForm(msgData);
+  //         return;
+  //       }
+  //     }
+  //     let a_link = $(this).attr('url');
+  //     if (a_link.indexOf('http:') < 0 && a_link.indexOf('https:') < 0) {
+  //       a_link = `http:////${a_link}`;
+  //     }
+  //     me.openExternalLink(a_link);
+  //   }
+  //   if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[1] === 'likeDiv') {
+  //     $('.likeImg').addClass('hide');
+  //     $('.likedImg').removeClass('hide');
+  //     $('.likeDislikeDiv').addClass('dummy');
+  //   }
+  //   if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[1] === 'disLikeDiv') {
+  //     $('.disLikeImg').addClass('hide');
+  //     $('.disLikedImg').removeClass('hide');
+  //     $('.likeDislikeDiv').addClass('dummy');
+  //   }
 
-    if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[0] === 'checkboxBtn') {
-      const checkboxSelection = $(e.currentTarget.parentElement.parentElement).find('.checkInput:checked');
-      const selectedValue = [];
-      const toShowText = [];
-      for (let i = 0; i < checkboxSelection.length; i++) {
-        selectedValue.push($(checkboxSelection[i]).attr('value'));
-        toShowText.push($(checkboxSelection[i]).attr('text'));
-      }
-      $('.chatInputBox').text(`${$(this).attr('title')}: ${selectedValue.toString()}`);
-      me.sendMessageToBot($('.chatInputBox'), toShowText.toString());
-    }
-    if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[0] === 'quickReply') {
-      const _parentQuikReplyEle = e.currentTarget.parentElement.parentElement;
-      const _leftIcon = _parentQuikReplyEle.parentElement.parentElement.querySelectorAll('.quickreplyLeftIcon');
-      const _rightIcon = _parentQuikReplyEle.parentElement.parentElement.querySelectorAll('.quickreplyRightIcon');
-      setTimeout(() => {
-        _parentQuikReplyEle.parentElement.parentElement.getElementsByClassName('user-account')[0].classList.remove('marginT50');
-        _parentQuikReplyEle.parentElement.parentElement.removeChild(_leftIcon[0]);
-        _parentQuikReplyEle.parentElement.parentElement.removeChild(_rightIcon[0]);
-        _parentQuikReplyEle.parentElement.removeChild(_parentQuikReplyEle);
-      }, 50);
-    }
-    setTimeout(() => {
-      const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
-      _chatInput.focus();
-    }, 600);
-  });
+  //   if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[0] === 'checkboxBtn') {
+  //     const checkboxSelection = $(e.currentTarget.parentElement.parentElement).find('.checkInput:checked');
+  //     const selectedValue = [];
+  //     const toShowText = [];
+  //     for (let i = 0; i < checkboxSelection.length; i++) {
+  //       selectedValue.push($(checkboxSelection[i]).attr('value'));
+  //       toShowText.push($(checkboxSelection[i]).attr('text'));
+  //     }
+  //     $('.chatInputBox').text(`${$(this).attr('title')}: ${selectedValue.toString()}`);
+  //     me.sendMessageToBot($('.chatInputBox'), toShowText.toString());
+  //   }
+  //   if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[0] === 'quickReply') {
+  //     const _parentQuikReplyEle = e.currentTarget.parentElement.parentElement;
+  //     const _leftIcon = _parentQuikReplyEle.parentElement.parentElement.querySelectorAll('.quickreplyLeftIcon');
+  //     const _rightIcon = _parentQuikReplyEle.parentElement.parentElement.querySelectorAll('.quickreplyRightIcon');
+  //     setTimeout(() => {
+  //       _parentQuikReplyEle.parentElement.parentElement.getElementsByClassName('user-account')[0].classList.remove('marginT50');
+  //       _parentQuikReplyEle.parentElement.parentElement.removeChild(_leftIcon[0]);
+  //       _parentQuikReplyEle.parentElement.parentElement.removeChild(_rightIcon[0]);
+  //       _parentQuikReplyEle.parentElement.removeChild(_parentQuikReplyEle);
+  //     }, 50);
+  //   }
+  //   setTimeout(() => {
+  //     const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
+  //     _chatInput.focus();
+  //   }, 600);
+  // });
 
   _chatContainer.off('click', '.close-btn').on('click', '.close-btn', (event) => {
     // $('.recordingMicrophone').trigger('click');
@@ -2040,82 +2048,62 @@ chatWindow.prototype.render = function (chatWindowHtml) {
   me.bindEvents();
 };
 
-chatWindow.prototype.sendMessageToBot = function (chatInput, renderMsg, msgObject) {
+
+/**
+ * Send message to bot including rendering 
+ *
+ * @param {String} messageText message text to send
+ * 
+ * @param {String} options.renderMsg override message to show in UI
+ *  
+ * @param {Object} messageObject.customdata customdata to send bot
+ * @param {Object} messageObject.message.metaTags metaTags to send bot
+ * @param {Object} messageObject.message.nlMeta nlMeta to send bot
+*/
+chatWindow.prototype.sendMessageToBot = function (messageText, options, messageObject) {
   const me = this;
-  if (chatInput.text().trim() === '' && $('.attachment').html().trim().length == 0) {
-    return;
-  }
-  if (msgObject && msgObject.message && msgObject.message.length && msgObject.message[0] && msgObject.message[0].component && msgObject.message[0].component.payload && msgObject.message[0].component.payload.ignoreCheckMark) {
-    var { ignoreCheckMark } = msgObject.message[0].component.payload;
-  }
-  if (me.config.allowLocation) {
-    me.bot.fetchUserLocation();
-  }
-  const _bodyContainer = $(me.config.chatContainer).find('.kore-chat-body');
-  const _footerContainer = $(me.config.chatContainer).find('.kore-chat-footer');
   const clientMessageId = new Date().getTime();
-  let msgData = {};
-  // fileUploaderCounter = 0;
-  // to send \n to server for new lines
-  chatInput.html(chatInput.html().replaceAll('<br>', '\n'));
-  if (me.attachmentInfo && Object.keys(me.attachmentInfo).length) {
-    msgData = {
-      type: 'currentUser',
-      message: [{
-        type: 'text',
-        cInfo: {
-          body: chatInput.text(),
-          attachments: [me.attachmentInfo],
-        },
-        clientMessageId,
-      }],
-      createdOn: clientMessageId,
-    };
-    $('.attachment').html('');
-    $('.kore-chat-window').removeClass('kore-chat-attachment');
-    document.getElementById('captureAttachmnts').value = '';
-  } else {
-    me.attachmentInfo = {};
-    msgData = {
-      type: 'currentUser',
-      message: [{
-        type: 'text',
-        cInfo: { body: chatInput.text() },
-        clientMessageId,
-      }],
-      createdOn: clientMessageId,
-    };
+  let msgData = {
+    type: 'currentUser',
+    message: [{
+      type: 'text',
+      cInfo: { 
+        body: messageText 
+      },
+      clientMessageId,
+    }],
+    createdOn: clientMessageId,
+  };
+  let messageToBot = {
+    clientMessageId:clientMessageId,
+    resourceid :'/bot.message',
+    message:{
+      body:messageText
+    }
+  };
+  
+
+  if (options && options.renderMsg && typeof options.renderMsg === 'string') {
+    msgData.message[0].cInfo.body = options.renderMsg;
+    messageToBot.message.renderMsg = options.renderMsg;
   }
 
-  const messageToBot = {};
-  messageToBot.clientMessageId = clientMessageId;
-  if (Object.keys(me.attachmentInfo).length > 0 && chatInput.text().trim().length) {
-    me.attachmentInfo.fileId = attachmentInfo.fileId;
-    messageToBot.message = { body: chatInput.text().trim(), attachments: [me.attachmentInfo] };
-  } else if (Object.keys(me.attachmentInfo).length > 0) {
-    me.attachmentInfo.fileId = attachmentInfo.fileId;
-    messageToBot.message = { attachments: [me.attachmentInfo] };
-  } else {
-    messageToBot.message = { body: chatInput.text().trim() };
+  if(messageObject){
+    extend(messageToBot,messageObject);
   }
-  messageToBot.resourceid = '/bot.message';
+  // if (msgObject && msgObject.customdata) {
+  //   messageToBot.message.customdata = msgObject.customdata;
+  // }
+  // if (msgObject && msgObject.metaTags) {
+  //   messageToBot.message.metaTags = msgObject.metaTags;
+  // }
 
-  if (renderMsg && typeof renderMsg === 'string') {
-    messageToBot.message.renderMsg = renderMsg;
-  }
-  if (msgObject && msgObject.customdata) {
-    messageToBot.message.customdata = msgObject.customdata;
-  }
-  if (msgObject && msgObject.metaTags) {
-    messageToBot.message.metaTags = msgObject.metaTags;
-  }
-
-  if (msgObject && (msgObject.nlmeta || msgObject.nlMeta)) {
-    messageToBot.message.nlMeta = msgObject.nlmeta || msgObject.nlMeta;
-  }
+  // if (msgObject && (msgObject.nlmeta || msgObject.nlMeta)) {
+  //   messageToBot.message.nlMeta = msgObject.nlmeta || msgObject.nlMeta;
+  // }
   if (me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) {
     me.sendMessageViaWebHook(
-      chatInput.text(),
+      messageText,
       (msgsData) => {
         me.handleWebHookResponse(msgsData);
       },
@@ -2136,11 +2124,19 @@ chatWindow.prototype.sendMessageToBot = function (chatInput, renderMsg, msgObjec
       }
     });
   }
-  me.attachmentInfo = {};
-  chatInput.html('');
-  $('.sendButton').addClass('disabled');
-  _bodyContainer.css('bottom', _footerContainer.outerHeight());
+  
   me.resetPingMessage();
+  me.postSendMessageToBot();
+  me.renderMessage(msgData);
+};
+
+chatWindow.prototype.postSendMessageToBot = function () {
+  let me=this;
+  const _bodyContainer = $(me.config.chatContainer).find('.kore-chat-body');
+  const _footerContainer = $(me.config.chatContainer).find('.kore-chat-footer');
+  _footerContainer.find('.sendButton').addClass('disabled');
+  _bodyContainer.css('bottom', _footerContainer.outerHeight());
+
   $('.typingIndicatorContent').css('display', 'block');
   if (me.typingIndicatorTimer) {
     clearTimeout(me.typingIndicatorTimer);
@@ -2148,12 +2144,7 @@ chatWindow.prototype.sendMessageToBot = function (chatInput, renderMsg, msgObjec
   me.typingIndicatorTimer = setTimeout(() => {
     $('.typingIndicatorContent').css('display', 'none');
   }, me.config.maxTypingIndicatorTime || 10000);
-  if (renderMsg && typeof renderMsg === 'string') {
-    msgData.message[0].cInfo.body = renderMsg;
-  }
-  msgData.message[0].cInfo.ignoreCheckMark = ignoreCheckMark;
-  me.renderMessage(msgData);
-};
+}
 
 chatWindow.prototype.handleWebHookResponse = function (msgsData) {
   let me=this;
@@ -3859,6 +3850,7 @@ chatWindow.prototype.show = function (config) {
   //  }
   cfg.chatHistory = this.chatHistory;
   cfg.handleError = this.showError;
+  debugger;
   if (cfg.widgetSDKInstace) {
     this.addWidgetEvents(cfg);
   }
@@ -3940,10 +3932,9 @@ chatWindow.prototype.SDKcallbackWraper = function () {
 chatWindow.prototype.addWidgetEvents = function (cfg) {
   let me=this;
   if (cfg) {
-    const wizSDK = cfg.widgetSDKInstace;
-    wizSDK.events.onPostback = function (data) {
-      $('.chatInputBox').text(data.payload);
-      me.sendMessageToBot($('.chatInputBox'), data.utterance, data);
+    var wizSDK = cfg.widgetSDKInstace;
+    wizSDK.events.onPostback = function (data) { 
+      me.sendMessageToBot(data.payload,{renderMsg:data.utterance});
     };
   }
 };
@@ -5307,11 +5298,22 @@ chatWindow.prototype.assignValueToInput = function (value) {
   const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
   _chatInput.text(value);
 };
-chatWindow.prototype.sendMessage = function (payload, options) {
+
+/**
+ * Send message to bot including rendering 
+ * @param {String} messageText message text to send
+ * 
+ * @param {String} options.renderMsg override message to show in UI
+ *  
+ * @param {Object} messageObject.customdata customdata to send bot
+ * @param {Object} messageObject.message.metaTags metaTags to send bot
+ * @param {Object} messageObject.message.nlMeta nlMeta to send bot
+*/
+chatWindow.prototype.sendMessage = function (messageText,options, messageObject) {
   const me = this;
-  const _chatContainer = me.config.chatContainer;
-  const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
-  me.sendMessageToBot(_chatInput, payload, options);
+  // const _chatContainer = me.config.chatContainer;
+  // const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
+  me.sendMessageToBot(messageText, options, messageObject);
 };
 
 chatWindow.prototype.appendPickerHTMLtoFooter = function(HTML){

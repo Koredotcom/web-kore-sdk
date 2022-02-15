@@ -56,7 +56,7 @@ class RatingTemplate {
                 }
             }
             if (silderValue === false) {
-                chatWindowInstance.assignValueToInput(_innerText);
+                //chatWindowInstance.assignValueToInput(_innerText);
                 chatWindowInstance.sendMessage(_innerText);
                 $(".ratingMainComponent").css({ "pointer-events": "none" });
             }
@@ -65,16 +65,16 @@ class RatingTemplate {
                 if (_innerText == msgData.message[0].component.payload.starArrays.length) {
                     var messageTodisplay = msgData.message[0].component.payload.messageTodisplay;
                     chatWindowInstance.renderMessage(msgData);
-                    chatWindowInstance.assignValueToInput(_innerText + " :" + messageTodisplay);
+                    //chatWindowInstance.assignValueToInput(_innerText + " :" + messageTodisplay);
                     chatWindowInstance.sendMessage( _innerText + " :" + messageTodisplay);
                 } else if ($(".suggestionInput").val() == "") {
                     chatWindowInstance.renderMessage(msgData);
-                    chatWindowInstance.assignValueToInput(_innerText);
+                    //chatWindowInstance.assignValueToInput(_innerText);
                     chatWindowInstance.sendMessage(_innerText)
                 } else {
                     var messageDisplay = $(".suggestionInput").val();
                     chatWindowInstance.renderMessage(msgData);
-                    chatWindowInstance.assignValueToInput(_innerText + " :" + messageDisplay)
+                    //chatWindowInstance.assignValueToInput(_innerText + " :" + messageDisplay)
                     chatWindowInstance.sendMessage( _innerText + " :" + messageDisplay);
                 }
                 chatWindowInstance.bottomSliderAction("hide");
@@ -132,7 +132,7 @@ class RatingTemplate {
                 $(".kore-action-sheet").find(".emojiComponent").append('<div class="ratingStar">' + messageTodisplay + '</div><div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>')
             }
             if (sliderValue === false) {
-                chatWindowInstance.assignValueToInput(emojiValue)
+                //chatWindowInstance.assignValueToInput(emojiValue)
                 chatWindowInstance.sendMessage(emojiValue);
             }
             $(".emojiComponent").off('click', '.submitBtn').on('click', '.submitBtn', function () {
@@ -140,16 +140,16 @@ class RatingTemplate {
                 if (emojiValue == "5") {
                     var messageTodisplay = msgData.message[0].component.payload.messageTodisplay
                     chatWindowInstance.renderMessage(msgData);
-                    chatWindowInstance.assignValueToInput(emojiValue + " :" + messageTodisplay)
-                    chatWindowInstance.sendMessage("Rating" + ': ' + emojiValue + " and " + messageTodisplay);
+                    //chatWindowInstance.assignValueToInput(emojiValue + " :" + messageTodisplay)
+                    chatWindowInstance.sendMessage(emojiValue + " :" + messageTodisplay,{renderMsg:"Rating" + ': ' + emojiValue + " and " + messageTodisplay});
                 } else if ($(".suggestionInput").val() == "") {
                     chatWindowInstance.renderMessage(msgData);
-                    chatWindowInstance.assignValueToInput(emojiValue)
+                    //chatWindowInstance.assignValueToInput(emojiValue)
                     chatWindowInstance.sendMessage( emojiValue);
                 } else {
                     var messageDisplay = $(".suggestionInput").val();
                     chatWindowInstance.renderMessage(msgData);
-                    chatWindowInstance.assignValueToInput(emojiValue + " :" + messageDisplay)
+                    //chatWindowInstance.assignValueToInput(emojiValue + " :" + messageDisplay)
                     chatWindowInstance.sendMessage( emojiValue + " :" + messageDisplay);
                 }
                 chatWindowInstance.bottomSliderAction("hide");

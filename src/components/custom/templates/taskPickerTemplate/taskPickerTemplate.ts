@@ -18,8 +18,8 @@ class TaskPickerTemplate {
         $(me.messageHtml).find(".btnTask").click(function (e: any) {
             var taskPostbackMsg = $(e.currentTarget).find('.taskName').attr('data-value');
             var taskTitle = $(e.currentTarget).find('.taskName').attr('data-title');
-            chatWindowInstance.assignValueToInput(taskPostbackMsg);
-            chatWindowInstance.sendMessage(taskTitle);
+            //chatWindowInstance.assignValueToInput(taskPostbackMsg);
+            chatWindowInstance.sendMessage(taskPostbackMsg,{renderMsg:taskTitle});
             chatWindowInstance.bottomSliderAction('hide');
 
         });

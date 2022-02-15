@@ -38,7 +38,7 @@ class DatePickerTemplate {
         $(me.messageHtml).off('click', ".confirmBTN").on('click', '.confirmBTN', function () {
             var startViewDate = moment(startdateValue).format('MM-DD-YYYY') || moment();
             var _innerText = startViewDate;
-            chatWindowInstance.assignValueToInput(_innerText);
+            //chatWindowInstance.assignValueToInput(_innerText);
             chatWindowInstance.sendMessage(_innerText);
             chatWindowInstance.bottomSliderAction('hide');
             me.daterangeInput.data('dateRangePicker').clear();

@@ -25,8 +25,8 @@ class DropdownTemplate {
             e.preventDefault();
             e.stopPropagation();
             let selectedTarget = e.currentTarget;
-            chatWindowInstance.assignValueToInput(selectedTarget.value);
-            chatWindowInstance.sendMessage(selectedTarget.selectedValue);
+            //chatWindowInstance.assignValueToInput(selectedTarget.value);
+            chatWindowInstance.sendMessage(selectedTarget.value,{renderMsg:selectedTarget.selectedValue});
             // var k = $.Event('keydown', { which: 13 });
             // k.keyCode = 13
             // $('.chatInputBox').trigger(k);
