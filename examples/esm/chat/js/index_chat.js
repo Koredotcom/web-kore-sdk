@@ -12,10 +12,18 @@ let pickerConfig = {};
 // chatWindowInstance.installPlugin(Korei18nPlugin);
 //chatWindowInstance.installPlugin(new KoreFileUploaderPlugin());
 chatWindowInstance.installPlugin(new KorePickersPlugin(pickerConfig));
-chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){
-    chatWindowInstance.setJWT(res.jwt);
-    chatWindowInstance.show();
 
-},function(errRes){
-    console.log(errRes);
-});
+// chatConfig.JWTAsertion=function(commitJWT){
+//     chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){
+//         chatWindowInstance.setJWT(res.jwt);
+//         commitJWT();
+//     },function(errRes){
+//         console.log(errRes);
+//     });
+//  };
+//  chatWindowInstance.show();
+ 
+ 
+chatWindowInstance.on("jwt_success", (message,event) => {console.log(message);});
+chatWindowInstance.show();
+

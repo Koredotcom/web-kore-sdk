@@ -9,6 +9,12 @@ botOptionsWiz.clientId = "PLEASE_ENTER_CLIENT_ID";
 botOptionsWiz.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 
 
+// botOptionsWiz.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
+botOptionsWiz.userIdentity = 'rajasekhar.balla@kore.com';// Provide users email id here
+botOptionsWiz.botInfo = { name: "SDKBot", "_id": "st-b9889c46-218c-58f7-838f-73ae9203488c" }; // bot name is case sensitive
+// botOptionsWiz.clientId = "cs-1e845b00-81ad-5757-a1e7-d0f6fea227e9";
+// botOptionsWizbotOptions.clientSecret = "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=";
+
 // botOptionsWiz.JWTUrl ="https://demo.kore.net/users/sts";
 // botOptionsWiz.userIdentity = 'rukmini.natti@kore.com';//koreGenerateUUID();// Provide users email id here
 // botOptionsWiz.botInfo = {name:"Metlife Mockbot","_id":"st-37f07942-d602-517d-bf99-a78db107e6e7"};// bot name is case sensitive

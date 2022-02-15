@@ -18,16 +18,37 @@ chatConfig.widgetSDKInstace=wSdk;
 let chatWindowInstance = new chatWindow(chatConfig);
 
 
-chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){
-    chatWindowInstance.setJWT(res.jwt);
-    chatWindowInstance.show();
+// chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){
+//     chatWindowInstance.setJWT(res.jwt);
+//     chatWindowInstance.show();
 
+//     wSdk.setJWT(res.jwt);
+//     wSdk.show(widgetsConfig, wizSelector);
+
+// },function(errRes){
+
+// });
+
+// chatConfig.JWTAsertion=function(commitJWT){
+//     chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){
+//         chatWindowInstance.setJWT(res.jwt);
+//         wSdk.setJWT(res.jwt);
+//         wSdk.show(widgetsConfig, wizSelector);
+//         commitJWT();
+//     },function(errRes){
+//         console.log(errRes);
+//     });
+//  };
+
+
+chatWindowInstance.on("jwt_success", (res,event) => {
+    debugger;
     wSdk.setJWT(res.jwt);
     wSdk.show(widgetsConfig, wizSelector);
-
-},function(errRes){
-
 });
+
+ chatWindowInstance.show();
+
 
 
            

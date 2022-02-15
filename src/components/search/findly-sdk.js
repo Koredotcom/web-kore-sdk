@@ -14345,13 +14345,14 @@ FindlySDK.prototype.openPanel = function (panelName, resPopUp, heightToggle) {
     $(".sdkBotIcon").addClass("selected");
     localPanelDetail[panelName] = "";
     _self.clearWidgetPolling();
-    $(_self.config.container.content).hide(
-      "slide",
-      {
-        direction: _self.config.direction === "left" ? "left" : "right",
-      },
-      500
-    );
+    // $(_self.config.container.content).hide(
+    //   "slide",
+    //   {
+    //     direction: _self.config.direction === "left" ? "left" : "right",
+    //   },
+    //   500
+    // );
+    $(_self.config.container.content).hide();
     return false;
   }
 
@@ -14433,13 +14434,14 @@ FindlySDK.prototype.openPanel = function (panelName, resPopUp, heightToggle) {
       $(_self.config.container.content).hide();
     }
 
-    $(_self.config.container.content).show(
-      "slide",
-      {
-        direction: _self.config.direction, //$.jStorage.get('menuPosition')
-      },
-      250
-    );
+    $(_self.config.container.content).show();
+    // $(_self.config.container.content).show(
+    //   "slide",
+    //   {
+    //     direction: _self.config.direction, //$.jStorage.get('menuPosition')
+    //   },
+    //   250
+    // );
     $(_self.config.container.content).html(
       '<div class="loaderRing"><div></div><div></div><div></div><div></div></div>'
     );
@@ -16881,13 +16883,14 @@ FindlySDK.prototype.setChatFocus = function () {
   }
 
   if ($(_self.config.container.content).is(":visible")) {
-    $(_self.config.container.content).hide(
-      "slide",
-      {
-        direction: _self.config.direction, //$.jStorage.get('menuPosition')
-      },
-      500
-    );
+    // $(_self.config.container.content).hide(
+    //   "slide",
+    //   {
+    //     direction: _self.config.direction, //$.jStorage.get('menuPosition')
+    //   },
+    //   500
+    // );
+    $(_self.config.container.content).hide();
   }
 
   $(".chatInputBox").focus();

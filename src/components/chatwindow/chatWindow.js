@@ -3,6 +3,7 @@ import requireKr from '../../../kore-bot-sdk-client';
 import customTemplate from '../custom/customTemplate';
 import KRPerfectScrollbar from 'perfect-scrollbar';
 import KoreHelpers from '../../utils/helpers'
+import EventEmitter from '../../utils/EventEmiter'
 import './chatWindow.scss';
 
 const bot = requireKr('/KoreBot.js').instance();
@@ -699,11 +700,27 @@ function extend() {
   return arguments[0];
 }
 
-function chatWindow(config) {
-  const me = this;
-  me.initVars(config);
+// function chatWindow(config) {
+//   const me = this;
+//   EventEmitter.call(this);
+//   me.initVars(config);
 
+// }
+
+class chatWindow extends EventEmitter{
+  EVENTS={
+    JWT_SUCCESS:'jwt_success'
+  }
+  constructor(config){
+    super();
+    const me = this;
+    this.config={};
+    //EventEmitter.call(this);
+    me.initVars(config);
+  }
 }
+
+
 // converts v1 webhooks url to v2 automatically
 chatWindow.prototype.reWriteWebHookURL = function (chatConfig) {
   if (chatConfig.botOptions && chatConfig.botOptions.webhookConfig && chatConfig.botOptions.webhookConfig.apiVersion && chatConfig.botOptions.webhookConfig.apiVersion === 2) {
@@ -1027,7 +1044,7 @@ chatWindow.prototype.init = function (cfg) {
 
   this.reWriteWebHookURL(this.config);
   window._chatHistoryLoaded = false;
-  me.config.botOptions.assertionFn = me.assertion.bind(me);
+  me.JWTSetup();
   me.initi18n();
   me.seti18n((me.config && me.config.i18n && me.config.i18n.defaultLanguage) || 'en');
   window.chatContainerConfig = me;
@@ -1072,7 +1089,7 @@ chatWindow.prototype.init = function (cfg) {
   me.config.chatTitle = tempTitle;
   if (!me.config.minimizeMode) {
     me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
-    me.config.botOptions.callback(null, me.config.botOptions);
+    // me.config.botOptions.callback(null, me.config.botOptions);
     if (me.config.multiPageApp && me.config.multiPageApp.enable) {
       me.setLocalStoreItem('kr-cw-state', 'open');
       me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
@@ -3872,24 +3889,53 @@ chatWindow.prototype.getJWT = function (options, callback) {
     },
   });
 };
+
+chatWindow.prototype.JWTSetup = function(){
+  let me=this;
+  me.config.botOptions.assertionFn = me.assertionFn.bind(me);
+  if(!(me.config && me.config.JWTAsertion)){
+    me.setupInternalAssertionFunction();
+  } 
+}
+chatWindow.prototype.setupInternalAssertionFunction=function (){
+  const me = this;
+  me.getJWT(me.config.botOptions).then(function(res){
+    me.emit(me.EVENTS.JWT_SUCCESS, res);
+    me.setJWT(res.jwt);
+    me.config.botOptions.callback(null, me.config.botOptions);
+  },function(errRes){
+      console.log(errRes);
+  });
+}
 chatWindow.prototype.setJWT = function (jwtToken) {
   const me = this;
   const options = me.config.botOptions;
   options.assertion = jwtToken;
 };
-chatWindow.prototype.assertion = function (options, callback) {
+chatWindow.prototype.assertionFn = function (options, callback) {
   const me = this;
   options.callback = callback;
   options.handleError = me.showError;
   options.chatHistory = me.chatHistory.bind(me);
   options.botDetails = me.botDetails;
-  // callback(null, options);
+  
+  if(me.config && me.config.JWTAsertion){
+    me.config.JWTAsertion(me.SDKcallbackWraper.bind(me));
+  }else if(options.assertion){//check for reconnect case
+    me.setupInternalAssertionFunction();
+  }
+  //me.config.botOptions.callback(null, me.config.botOptions);
+  //callback(null, options);
   // setTimeout(() => {
   //   if (me && me.initToken) {
   //     me.initToken(options);
   //   }
   // }, 2000);
 };
+chatWindow.prototype.SDKcallbackWraper = function () {
+  const me = this;
+  me.config.botOptions.callback(null, me.config.botOptions);
+}
 
 chatWindow.prototype.addWidgetEvents = function (cfg) {
   let me=this;
