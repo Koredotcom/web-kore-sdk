@@ -1931,7 +1931,7 @@ chatWindow.prototype.bindSDKEvents = function () {
           }
         }
         if (me.loadHistory && me.historyLoading) {
-          messagesQueue.push(tempData);
+          me.messagesQueue.push(tempData);
         } else if (me.config.supportDelayedMessages) {
           me.pushTorenderMessagesQueue(tempData);
         } else {
