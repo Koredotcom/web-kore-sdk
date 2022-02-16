@@ -6,7 +6,7 @@ import searchTemplate from './searchTemplate'
 
 import PubSub from 'pubsub-js'
 
-//import './css/findly-sdk.scss'
+import './css/findly-sdk.scss'
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 // import './findly-demo.scss'

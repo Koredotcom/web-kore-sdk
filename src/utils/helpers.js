@@ -292,7 +292,11 @@ class KoreHelpers{
             return this.nl2br(str, true);
         },
         'checkMarkdowns': function (val, hyperLinksMap) {
-            if(val===''){
+            function isEven(n) {
+              n = Number(n);
+              return n === 0 || !!(n && !(n % 2));
+            }
+             if(val===''){
                 return val;
             }
             var txtArr = val.split(/\r?\n/);
@@ -489,5 +493,176 @@ class KoreHelpers{
             return val;
         }
     };
+    static {
+        debugger;
+        String.prototype.isNotAllowedHTMLTags = function () {
+          const wrapper = document.createElement("div");
+          wrapper.innerHTML = this;
+
+          const setFlags = {
+            isValid: true,
+            key: "",
+          };
+          try {
+            if (
+              $(wrapper).find("script").length ||
+              $(wrapper).find("video").length ||
+              $(wrapper).find("audio").length
+            ) {
+              setFlags.isValid = false;
+            }
+            if (
+              $(wrapper).find("link").length &&
+              $(wrapper).find("link").attr("href").indexOf("script") !== -1
+            ) {
+              if (detectScriptTag.test($(wrapper).find("link").attr("href"))) {
+                setFlags.isValid = false;
+              } else {
+                setFlags.isValid = true;
+              }
+            }
+            if (
+              $(wrapper).find("a").length &&
+              $(wrapper).find("a").attr("href").indexOf("script") !== -1
+            ) {
+              if (detectScriptTag.test($(wrapper).find("a").attr("href"))) {
+                setFlags.isValid = false;
+              } else {
+                setFlags.isValid = true;
+              }
+            }
+            if (
+              $(wrapper).find("img").length &&
+              $(wrapper).find("img").attr("src").indexOf("script") !== -1
+            ) {
+              if (detectScriptTag.test($(wrapper).find("img").attr("href"))) {
+                setFlags.isValid = false;
+              } else {
+                setFlags.isValid = true;
+              }
+            }
+            if ($(wrapper).find("object").length) {
+              setFlags.isValid = false;
+            }
+
+            return setFlags;
+          } catch (e) {
+            return setFlags;
+          }
+        };
+
+        String.prototype.escapeHTML = function () {
+          // '&': '&amp;',
+          const escapeTokens = {
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#x27;",
+          };
+          const htmlTags = /[<>"']/g;
+          return `${this}`.replace(htmlTags, (match) => escapeTokens[match]);
+        };
+
+        String.prototype.replaceAll = function (search, replacement) {
+          const target = this;
+          return target.replace(new RegExp(search, "g"), replacement);
+        };
+
+        if (!String.prototype.includes) {
+          String.prototype.includes = function (search, start) {
+            if (search instanceof RegExp) {
+              throw TypeError("first argument must not be a RegExp");
+            }
+            if (start === undefined) {
+              start = 0;
+            }
+            return this.indexOf(search, start) !== -1;
+          };
+        }
+        String.prototype.isNotAllowedHTMLTags = function () {
+          const wrapper = document.createElement("div");
+          wrapper.innerHTML = this;
+
+          const setFlags = {
+            isValid: true,
+            key: "",
+          };
+          try {
+            if (
+              $(wrapper).find("script").length ||
+              $(wrapper).find("video").length ||
+              $(wrapper).find("audio").length
+            ) {
+              setFlags.isValid = false;
+            }
+            if (
+              $(wrapper).find("link").length &&
+              $(wrapper).find("link").attr("href").indexOf("script") !== -1
+            ) {
+              if (detectScriptTag.test($(wrapper).find("link").attr("href"))) {
+                setFlags.isValid = false;
+              } else {
+                setFlags.isValid = true;
+              }
+            }
+            if (
+              $(wrapper).find("a").length &&
+              $(wrapper).find("a").attr("href").indexOf("script") !== -1
+            ) {
+              if (detectScriptTag.test($(wrapper).find("a").attr("href"))) {
+                setFlags.isValid = false;
+              } else {
+                setFlags.isValid = true;
+              }
+            }
+            if (
+              $(wrapper).find("img").length &&
+              $(wrapper).find("img").attr("src").indexOf("script") !== -1
+            ) {
+              if (detectScriptTag.test($(wrapper).find("img").attr("href"))) {
+                setFlags.isValid = false;
+              } else {
+                setFlags.isValid = true;
+              }
+            }
+            if ($(wrapper).find("object").length) {
+              setFlags.isValid = false;
+            }
+
+            return setFlags;
+          } catch (e) {
+            return setFlags;
+          }
+        };
+
+        String.prototype.escapeHTML = function () {
+          // '&': '&amp;',
+          const escapeTokens = {
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#x27;",
+          };
+          const htmlTags = /[<>"']/g;
+          return `${this}`.replace(htmlTags, (match) => escapeTokens[match]);
+        };
+
+        String.prototype.replaceAll = function (search, replacement) {
+          const target = this;
+          return target.replace(new RegExp(search, "g"), replacement);
+        };
+
+        if (!String.prototype.includes) {
+          String.prototype.includes = function (search, start) {
+            if (search instanceof RegExp) {
+              throw TypeError("first argument must not be a RegExp");
+            }
+            if (start === undefined) {
+              start = 0;
+            }
+            return this.indexOf(search, start) !== -1;
+          };
+        }
+    }
 } 
 export default KoreHelpers

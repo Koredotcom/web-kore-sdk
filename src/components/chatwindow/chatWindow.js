@@ -8,668 +8,39 @@ import './chatWindow.scss';
 
 const bot = requireKr('/KoreBot.js').instance();
 
-//let prevRange;
-//const INTERVAL = 250;
-//let _pingTimer; 
-//const _pingTime = 30000;
 
-// let botMessages = {};
-// const _botInfo = {};
-// const detectScriptTag = /<script\b[^>]*>([\s\S]*?)/gm;
-// let _eventQueue = {};
-// const carouselEles = [];
-// let prevRange; let accessToken; let koreAPIUrl; let fileToken; let fileUploaderCounter = 0; let bearerToken = ''; let assertionToken = ''; const messagesQueue = []; const
-//   historyLoading = false;
-// const speechServerUrl = ''; let userIdentity = ''; let isListening = false; let isRecordingStarted = false; let speechPrefixURL = ''; let sidToken = ''; let carouselTemplateCount = 0; let me.waiting_for_message = false; const
-//   loadHistory = false;
-// const EVENTS = {
-//   // chat window exposed events
-//   OPEN_OVERRIDE: 'cw:open:override',
-//   MESSAGE_OVERRIDE: 'cw:message:override',
-// };
-// let target;
-/** ***************** Mic variable initilization ****************** */
-// const _exports = {};
-// let _template; const
-//   _this = {};
-// const { navigator } = window;
-// let mediaStream; let mediaStreamSource; let rec; let _connection; let intervalKey; let
-//   context;
-// let _permission = false;
-// let _user_connection = false;
-// const CONTENT_TYPE = 'content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)16000,+format=(string)S16LE,+channels=(int)1';
-
-// let recorderWorkerPath = '../libs/recorderWorker.js';
-
-/** *************** Mic initilization code end here *********************** */
-
-/** ***************************** TTS variable initialization ************* */
-// let _ttsContext = null; let _ttsConnection = null; let ttsServerUrl = ''; let ttsAudioSource = null; let _txtToSpeak = ''; const
-//   optionIndex = 65; // Audio context
-/** ************************ TTS initialization code end here ************* */
-
-/** ************************* file upload variable ****************************** */
-// const appConsts = {};
-// let attachmentInfo = {};
-// const allowedFileTypes = ['m4a', 'amr', 'aac', 'wav', 'mp3', 'mp4', 'mov', '3gp', 'flv', 'png', 'jpg', 'jpeg', 'gif', 'bmp', 'csv', 'txt', 'json', 'pdf', 'doc', 'dot', 'docx', 'docm',
-//   'dotx', 'dotm', 'xls', 'xlt', 'xlm', 'xlsx', 'xlsm', 'xltx', 'xltm', 'xlsb', 'xla', 'xlam', 'xll', 'xlw', 'ppt', 'pot', 'pps', 'pptx', 'pptm', 'potx', 'potm', 'ppam',
-//   'ppsx', 'ppsm', 'sldx', 'sldm', 'zip', 'rar', 'tar', 'wpd', 'wps', 'rtf', 'msg', 'dat', 'sdf', 'vcf', 'xml', '3ds', '3dm', 'max', 'obj', 'ai', 'eps', 'ps', 'svg', 'indd', 'pct', 'accdb',
-//   'db', 'dbf', 'mdb', 'pdb', 'sql', 'apk', 'cgi', 'cfm', 'csr', 'css', 'htm', 'html', 'jsp', 'php', 'xhtml', 'rss', 'fnt', 'fon', 'otf', 'ttf', 'cab', 'cur', 'dll', 'dmp', 'drv', '7z', 'cbr',
-//   'deb', 'gz', 'pkg', 'rpm', 'zipx', 'bak', 'avi', 'm4v', 'mpg', 'rm', 'swf', 'vob', 'wmv', '3gp2', '3g2', 'asf', 'asx', 'srt', 'wma', 'mid', 'aif', 'iff', 'm3u', 'mpa', 'ra', 'aiff', 'tiff'];
-//appConsts.CHUNK_SIZE = 1024 * 1024;
-// const filetypes = {}; const audio = ['m4a', 'amr', 'wav', 'aac', 'mp3']; const video = ['mp4', 'mov', '3gp', 'flv']; const
-//   image = ['png', 'jpg', 'jpeg'];
-// filetypes.audio = audio;
-// filetypes.video = video;
-// filetypes.image = image;
-// filetypes.file = { limit: { size: 25 * 1024 * 1024, msg: 'Please limit the individual file upload size to 25 MB or lower' } };
-// filetypes.determineFileType = function (extension) {
-//   extension = extension.toLowerCase();
-//   if ((filetypes.image.indexOf(extension) > -1)) {
-//     return 'image';
-//   } if ((filetypes.video.indexOf(extension) > -1)) {
-//     return 'video';
-//   } if ((filetypes.audio.indexOf(extension) > -1)) {
-//     return 'audio';
-//   }
-//   return 'attachment';
-// };
-
-// const kfrm = {};
-// kfrm.net = {};
-// window.PieChartCount = 0;
-// window.barchartCount = 0;
-// window.linechartCount = 0;
-// const available_charts = [];
-//let chatInitialize;
-//const customTemplateObj = {};
-//window.chartColors = ['#75b0fe', '#f78083', '#99ed9e', '#fde296', '#26344a', '#5f6bf7', '#b3bac8', '#99a1fd', '#9cebf9', '#f7c7f4'];
-/** ************************File upload variable end here ************************* */
-//let me.vars._escPressed = 0;
-String.prototype.isNotAllowedHTMLTags = function () {
-  const wrapper = document.createElement('div');
-  wrapper.innerHTML = this;
-
-  const setFlags = {
-    isValid: true,
-    key: '',
-  };
-  try {
-    if ($(wrapper).find('script').length || $(wrapper).find('video').length || $(wrapper).find('audio').length) {
-      setFlags.isValid = false;
-    }
-    if ($(wrapper).find('link').length && $(wrapper).find('link').attr('href').indexOf('script') !== -1) {
-      if (detectScriptTag.test($(wrapper).find('link').attr('href'))) {
-        setFlags.isValid = false;
-      } else {
-        setFlags.isValid = true;
-      }
-    }
-    if ($(wrapper).find('a').length && $(wrapper).find('a').attr('href').indexOf('script') !== -1) {
-      if (detectScriptTag.test($(wrapper).find('a').attr('href'))) {
-        setFlags.isValid = false;
-      } else {
-        setFlags.isValid = true;
-      }
-    }
-    if ($(wrapper).find('img').length && $(wrapper).find('img').attr('src').indexOf('script') !== -1) {
-      if (detectScriptTag.test($(wrapper).find('img').attr('href'))) {
-        setFlags.isValid = false;
-      } else {
-        setFlags.isValid = true;
-      }
-    }
-    if ($(wrapper).find('object').length) {
-      setFlags.isValid = false;
-    }
-
-    return setFlags;
-  } catch (e) {
-    return setFlags;
+class chatWindow extends EventEmitter{
+  EVENTS={
+    JWT_SUCCESS:'jwt_success'
   }
-};
-
-String.prototype.escapeHTML = function () {
-  // '&': '&amp;',
-  const escapeTokens = {
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#x27;',
-  };
-  const htmlTags = /[<>"']/g;
-  return (`${this}`).replace(htmlTags, (match) => escapeTokens[match]);
-};
-
-String.prototype.replaceAll = function (search, replacement) {
-  const target = this;
-  return target.replace(new RegExp(search, 'g'), replacement);
-};
-
-if (!String.prototype.includes) {
-  String.prototype.includes = function (search, start) {
-    if (search instanceof RegExp) {
-      throw TypeError('first argument must not be a RegExp');
-    }
-    if (start === undefined) { start = 0; }
-    return this.indexOf(search, start) !== -1;
-  };
+  constructor(config){
+    super();
+    const me = this;
+    this.config={};
+    //EventEmitter.call(this);
+    me.initVars(config);
+  }
 }
 
-function findSortedIndex(array, value) {
+
+chatWindow.prototype.findSortedIndex = function (array, value) {
   let low = 0;
   let high = array.length;
 
   while (low < high) {
-    const mid = low + high >>> 1;
+    const mid = (low + high) >>> 1;
     if (array[mid] < value) low = mid + 1;
     else high = mid;
   }
   return low;
-}
+};
 
-function xssAttack(txtStr) {
-  //   if (compObj && compObj[0] && compObj[0].componentType === "text") {
-
-  let textHasXSS;
-  if (txtStr) {
-    textHasXSS = txtStr.isNotAllowedHTMLTags();
+chatWindow.prototype.extend=function() {
+  if (typeof Array.isArray === 'undefined') {
+    Array.isArray = function (obj) {
+      return Object.prototype.toString.call(obj) === '[object Array]';
+    };
   }
-  if (textHasXSS && !textHasXSS.isValid) {
-    txtStr = txtStr.escapeHTML();
-  }
-  return txtStr;
-  // return compObj[0].componentBody;
-}
-
-// var helpers = {
-//   nl2br(str, runEmojiCheck) {
-//     // todo:raj
-//     //  if (runEmojiCheck) {
-//     //      str = window.emojione.shortnameToImage(str);
-//     //  }
-//     str = str.replace(/(?:\r\n|\r|\n)/g, '<br />');
-//     return str;
-//   },
-//   br2nl(str) {
-//     str = str.replace(/<br \/>/g, '\n');
-//     return str;
-//   },
-//   formatAMPM(date) {
-//     let hours = date.getHours();
-//     let minutes = date.getMinutes();
-//     let seconds = date.getSeconds();
-//     const ampm = hours >= 12 ? 'pm' : 'am';
-//     hours %= 12;
-//     hours = hours || 12; // the hour '0' should be '12'
-//     minutes = minutes < 10 ? `0${minutes}` : minutes;
-//     seconds = seconds < 10 ? `0${seconds}` : seconds;
-//     const strTime = `${hours}:${minutes}:${seconds} ${ampm}`;
-//     return strTime;
-//   },
-//   formatDate(date) {
-//     let d = new Date(date);
-//     if (isNaN(d.getTime())) {
-//       const _tmpDate = new Date().getTime();
-//       d = new Date(_tmpDate);
-//     }
-//     return `${d.toDateString()} at ${helpers.formatAMPM(d)}`;
-//   },
-//   convertMDtoHTML(val, responseType, msgItem) {
-//     if (typeof val === 'object') {
-//       try {
-//         val = JSON.stringify(val);
-//       } catch (error) {
-//         val = '';
-//       }
-//     }
-//     const hyperLinksMap = {};
-//     const mdre = {};
-//     if (msgItem && msgItem.cInfo && msgItem.cInfo.ignoreCheckMark) {
-//       var { ignoreCheckMark } = msgItem.cInfo;
-//     }
-//     // mdre.date = new RegExp(/\\d\(\s*(.{10})\s*\)/g);
-//     mdre.date = new RegExp(/\\d\(\s*(.{10})\s*(?:,\s*["'](.+?)["']\s*)?\)/g);
-//     mdre.time = new RegExp(/\\t\(\s*(.{8}\.\d{0,3})\s*\)/g);
-//     // mdre.datetime = new RegExp(/\\dt\(\s*(.{10})[T](.{12})([z]|[Z]|[+-]\d{4})\s*\)/g);
-//     mdre.datetime = new RegExp(/\\(d|dt|t)\(\s*([-0-9]{10}[T][0-9:.]{12})([z]|[Z]|[+-]\d{4})[\s]*,[\s]*["']([a-zA-Z\W]+)["']\s*\)/g);
-//     mdre.num = new RegExp(/\\#\(\s*(\d*.\d*)\s*\)/g);
-//     mdre.curr = new RegExp(/\\\$\((\d*.\d*)[,](\s*[\"\']\s*\w{3}\s*[\"\']\s*)\)|\\\$\((\d*.\d*)[,](\s*\w{3}\s*)\)/g);
-
-//     const regEx = {};
-//     regEx.SPECIAL_CHARS = /[\=\`\~\!@#\$\%\^&\*\(\)_\-\+\{\}\:"\[\];\',\.\/<>\?\|\\]+/;
-//     regEx.EMAIL = /^[-a-z0-9~!$%^&*_=+}{\']+(\.[-a-z0-9~!$%^&*_=+}{\']+)*@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,255})+$/i;
-//     regEx.MENTION = /(^|\s|\\n|")@([^\s]*)(?:[\s]\[([^\]]*)\])?["]?/gi;
-//     regEx.HASHTAG = /(^|\s|\\n)#(\S+)/g;
-//     regEx.NEWLINE = /\n/g;
-//     const _regExForLink = /((?:http\:\/\/|https\:\/\/|www\.)+\S*\.(?:(?:\.\S)*[^\,\s\.])*\/?)/gi;
-//     // var _regExForMarkdownLink = /\[([^\]]+)\](|\s)+\(([^\)])+\)/g;
-//     const _regExForMarkdownLink = /\[([^\]]+)\](|\s)\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\)?/g;
-//     let str = val || '';
-//     const mmntns = {};
-//     mmntns.sd = new RegExp(/^(d{1})[^d]|[^d](d{1})[^d]/g);
-//     mmntns.dd = new RegExp(/^(d{2})[^d]|[^d](d{2})[^d]/g);
-//     mmntns.fy = new RegExp(/(y{4})|y{2}/g);
-//     const regexkeys = Object.keys(mdre);
-//     function matchmap(regexval, stringval) {
-//       let da;
-//       const matches = [];
-//       while ((da = regexval.exec(stringval)) !== null) {
-//         const keypair = {};
-//         keypair.index = da.index;
-//         keypair.matchexp = da[0];
-//         if (da.length > 1) {
-//           for (let n = 1; n < da.length; n++) {
-//             const mstr = `matchval${n.toString()}`;
-//             keypair[mstr] = da[n];
-//           }
-//         }
-//         matches.push(keypair);
-//       }
-//       return matches;
-//     }
-//     function ucreplacer(match) {
-//       return match.toUpperCase();
-//     }
-//     for (let j = 0; j < regexkeys.length; j++) {
-//       var k;
-//       switch (regexkeys[j]) {
-//         case 'date':
-//           var strvald = str;
-//           var datematcharray = matchmap(mdre.date, strvald);
-//           if (datematcharray.length) {
-//             for (k = 0; k < datematcharray.length; k++) {
-//               // var fdate = moment(datematcharray[k].matchval).format('DD,dd,MM,YYY');
-//               let fdate = new Date(datematcharray[k].matchval1).toLocaleDateString();
-//               fdate = ` ${fdate.toString()} `;
-//               str = str.replace(datematcharray[k].matchexp.toString(), fdate);
-//             }
-//           }
-//           break;
-//         case 'time':
-//           var strvalt = str;
-//           var timematcharray = matchmap(mdre.time, strvalt);
-//           if (timematcharray.length) {
-//             for (k = 0; k < timematcharray.length; k++) {
-//               let ftime = new Date(timematcharray[k].matchval1).toLocaleTimeString();
-//               ftime = ` ${ftime.toString()} `;
-//               str = str.replace(timematcharray[k].matchexp.toString(), ftime);
-//             }
-//           }
-//           break;
-//         case 'datetime':
-//           var strvaldt = str;
-//           var dtimematcharray = matchmap(mdre.datetime, strvaldt);
-//           if (dtimematcharray.length) {
-//             for (k = 0; k < dtimematcharray.length; k++) {
-//               let ms = '';
-//               const mergekeylength = Object.keys(dtimematcharray[k]).length - 2;
-//               for (let l = 2; l < mergekeylength; l++) {
-//                 const keystr = `matchval${l.toString()}`;
-//                 ms += dtimematcharray[k][keystr];
-//               }
-//               const foptionstring = `matchval${mergekeylength.toString()}`;
-//               let fmtstr = dtimematcharray[k][foptionstring];
-//               fmtstr = fmtstr.replace(mmntns.fy, ucreplacer);
-//               fmtstr = fmtstr.replace(mmntns.dd, ucreplacer);
-//               fmtstr = fmtstr.replace(mmntns.sd, ucreplacer);
-//               // var fdtime = new Date(dtimematcharray[k].matchval).toLocaleString();
-//               let fdtime = moment(ms).format(fmtstr);
-//               fdtime = ` ${fdtime.toString()} `;
-//               str = str.replace(dtimematcharray[k].matchexp.toString(), fdtime);
-//             }
-//           }
-//           break;
-//         case 'num':
-//           var strnumval = str;
-//           var nummatcharray = matchmap(mdre.num, strnumval);
-//           if (nummatcharray.length) {
-//             for (k = 0; k < nummatcharray.length; k++) {
-//               let fnum = Number(nummatcharray[k].matchval1).toLocaleString();
-//               fnum = ` ${fnum.toString()} `;
-//               str = str.replace(nummatcharray[k].matchexp.toString(), fnum);
-//             }
-//           }
-//           break;
-//         case 'curr':
-//           var strcurval = str;
-//           var currmatcharray = matchmap(mdre.curr, strcurval);
-//           var browserLang = window.navigator.language || window.navigator.browserLanguage;
-//           var curcode = new RegExp(/\w{3}/);
-//           if (currmatcharray.length) {
-//             for (k = 0; k < currmatcharray.length; k++) {
-//               const currops = {}; var
-//                 fcode;
-//               currops.style = 'currency';
-//               if (currmatcharray[k].matchval2) {
-//                 fcode = curcode.exec(currmatcharray[k].matchval2);
-//               }
-//               currops.currency = fcode[0].toString();
-//               let fcurr = Number(currmatcharray[k].matchval1).toLocaleString(browserLang, currops);
-//               // check for browser support if browser doesnot suppor we get the same value back and we append the currency Code
-//               if (currmatcharray[k].matchval1.toString() === fcurr.toString()) {
-//                 fcurr = ` ${fcurr.toString()} ${currops.currency}`;
-//               } else {
-//                 fcurr = ` ${fcurr.toString()} `;
-//               }
-//               str = str.replace(currmatcharray[k].matchexp.toString(), fcurr);
-//             }
-//           }
-//           break;
-//       }
-//     }
-//     function nextLnReplacer(match, p1, offset, string) {
-//       return '<br/>';
-//     }
-//     function ignoreWords(str) {
-//       const _words = ['onclick', 'onmouse', 'onblur', 'onscroll', 'onStart'];
-//       _words.forEach((word) => {
-//         const regEx = new RegExp(word, 'ig');
-//         str = str.replace(regEx, '');
-//       });
-//       return str;
-//     }
-//     const nextln = regEx.NEWLINE;
-//     function linkreplacer(match, p1, offset, string) {
-//       let dummyString = string.replace(_regExForMarkdownLink, '[]');
-//       dummyString = ignoreWords(dummyString);
-//       if (dummyString.indexOf(match) !== -1) {
-//         let _link = p1.indexOf('http') < 0 ? `http://${match}` : match; let
-//           _target;
-//         // _link = encodeURIComponent(_link);
-//         target = "target='underscoreblank'";
-//         if (hyperLinksMap) {
-//           const _randomKey = `korerandom://${Object.keys(hyperLinksMap).length}`;
-//           hyperLinksMap[_randomKey] = _link;
-//           _link = _randomKey;
-//         }
-//         return `<span class='isLink'><a id='linkEvent'${_target} href="${_link}">${match}</a></span>`;
-//       }
-//       return match;
-//     }
-//     // check for whether to linkify or not
-//     // try {
-//     //     str = decodeURIComponent(str);
-//     // } catch (e) {
-//     //     str = str || '';
-//     // }
-//     if (typeof str === 'number') {
-//       str = str.toString();
-//     }
-//     str = str || '';
-
-//     let newStr = ''; let
-//       wrapper1;
-//     if (responseType === 'user') {
-//       str = str.replace(/onerror=/gi, 'abc-error=');
-//       wrapper1 = document.createElement('div');
-//       newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
-//       newStr = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-//       wrapper1.innerHTML = xssAttack(newStr);
-//       if ($(wrapper1).find('a').attr('href')) {
-//         str = newStr;
-//       } else {
-//         str = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(_regExForLink, linkreplacer);
-//       }
-//     } else {
-//       wrapper1 = document.createElement('div');
-//       // str = str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-//       wrapper1.innerHTML = xssAttack(str);
-//       if ($(wrapper1).find('a').attr('href')) {
-//         const linkArray = str.match(/<a[^>]*>([^<]+)<\/a>/g);
-//         for (let x = 0; x < linkArray.length; x++) {
-//           const _newLA = document.createElement('div');
-//           let _detectedLink = linkArray[x];
-//           _newLA.innerHTML = linkArray[x];
-//           // for mailto: links, new line character need to be repaced with %0A
-//           if (_detectedLink.indexOf("href='mailto:") > -1 || _detectedLink.indexOf('href="mailto:') > -1) {
-//             _detectedLink = _detectedLink.split('\n').join('%0A');
-//           }
-//           const _randomKey = `korerandom://${Object.keys(hyperLinksMap).length}`;
-//           _newLA.innerHTML = _detectedLink;
-
-//           const _aEle = _newLA.getElementsByTagName('a');
-//           if (_aEle && _aEle[0] && _aEle[0].href) {
-//             hyperLinksMap[_randomKey] = _aEle[0].href;
-//             _aEle[0].href = _randomKey;
-//           }
-//           $(_newLA).find('a').attr('target', 'underscoreblank');
-//           str = str.replace(linkArray[x], _newLA.innerHTML);
-//         }
-//       } else {
-//         str = wrapper1.innerHTML.replace(_regExForLink, linkreplacer);
-//       }
-//     }
-//     if (ignoreCheckMark) {
-//       str = val;
-//     } else {
-//       str = helpers.checkMarkdowns(str, hyperLinksMap);
-//     }
-//     const hrefRefs = Object.keys(hyperLinksMap);
-//     if (hrefRefs && hrefRefs.length) {
-//       hrefRefs.forEach((hrefRef) => {
-//         function customStrReplacer() { // custom replacer is used as by default replace() replaces with '$' in place of '$$'
-//           return hyperLinksMap[hrefRef];
-//         }
-//         str = str.replace(hrefRef, customStrReplacer);
-//       });
-//     }
-//     str = str.replaceAll('target="underscoreblank"', 'target="_blank"');
-//     str = str.replaceAll("target='underscoreblank'", 'target="_blank"');
-//     if (responseType === 'user') {
-//       str = str.replace(/abc-error=/gi, 'onerror=');
-//     }
-//     return helpers.nl2br(str, true);
-//   },
-//   checkMarkdowns(val, hyperLinksMap) {
-//     if (val === '') {
-//       return val;
-//     }
-//     const txtArr = val.split(/\r?\n/);
-//     for (let i = 0; i < txtArr.length; i++) {
-//       let _lineBreakAdded = false;
-//       if (txtArr[i].indexOf('#h6') === 0 || txtArr[i].indexOf('#H6') === 0) {
-//         txtArr[i] = `<h6>${txtArr[i].substring(3)}</h6>`;
-//         _lineBreakAdded = true;
-//       } else if (txtArr[i].indexOf('#h5') === 0 || txtArr[i].indexOf('#H5') === 0) {
-//         txtArr[i] = `<h5>${txtArr[i].substring(3)}</h5>`;
-//         _lineBreakAdded = true;
-//       } else if (txtArr[i].indexOf('#h4') === 0 || txtArr[i].indexOf('#H4') === 0) {
-//         txtArr[i] = `<h4>${txtArr[i].substring(3)}</h4>`;
-//         _lineBreakAdded = true;
-//       } else if (txtArr[i].indexOf('#h3') === 0 || txtArr[i].indexOf('#H3') === 0) {
-//         txtArr[i] = `<h3>${txtArr[i].substring(3)}</h3>`;
-//         _lineBreakAdded = true;
-//       } else if (txtArr[i].indexOf('#h2') === 0 || txtArr[i].indexOf('#H2') === 0) {
-//         txtArr[i] = `<h2>${txtArr[i].substring(3)}</h2>`;
-//         _lineBreakAdded = true;
-//       } else if (txtArr[i].indexOf('#h1') === 0 || txtArr[i].indexOf('#H1') === 0) {
-//         txtArr[i] = `<h1>${txtArr[i].substring(3)}</h1>`;
-//         _lineBreakAdded = true;
-//       } else if (txtArr[i].length === 0) {
-//         txtArr[i] = '\r\n';
-//         _lineBreakAdded = true;
-//       } else if (txtArr[i].indexOf('*') === 0) {
-//         if (!isEven(txtArr[i].split('*').length - 1)) {
-//           txtArr[i] = `\r\n&#9679; ${txtArr[i].substring(1)}`;
-//           _lineBreakAdded = true;
-//         }
-//       } else if (txtArr[i].indexOf('>>') === 0) {
-//         if (txtArr[i].substring(2).indexOf('*') === 0) {
-//           if (!isEven(txtArr[i].substring(2).split('*').length - 1)) {
-//             txtArr[i] = `\r\n&#9679; ${txtArr[i].substring(3)}`;
-//             _lineBreakAdded = true;
-//           }
-//           txtArr[i] = `<p class="indent">${txtArr[i]}</p>`;
-//         } else {
-//           txtArr[i] = `<p class="indent">${txtArr[i].substring(2)}</p>`;
-//         }
-//         _lineBreakAdded = true;
-//       } else if (txtArr[i].indexOf('&gt;&gt;') === 0) {
-//         if (txtArr[i].substring(8).indexOf('*') === 0) { // add ">>*" for sub bullet point
-//           if (!isEven(txtArr[i].substring(8).split('*').length - 1)) {
-//             txtArr[i] = `\r\n&#9679; ${txtArr[i].substring(9)}`;
-//             _lineBreakAdded = true;
-//           }
-//           txtArr[i] = `<p class="indent">${txtArr[i]}</p>`;
-//         } else {
-//           txtArr[i] = `<p class="indent">${txtArr[i].substring(8)}</p>`;
-//         }
-//         _lineBreakAdded = true;
-//       } else if (txtArr[i].indexOf('---') === 0 || txtArr[i].indexOf('___') === 0) {
-//         txtArr[i] = `<hr/>${txtArr[i].substring(3)}`;
-//         _lineBreakAdded = true;
-//       }
-//       var j;
-//       // Matches Image markup ![test](http://google.com/image.png)
-//       if (txtArr[i].indexOf(' ![') === -1) { // replace method trimming last'$' character, to handle this adding ' ![' extra space
-//         txtArr[i] = txtArr[i].replace('![', ' ![');
-//       }
-//       const _matchImage = txtArr[i].match(/\!\[([^\]]+)\](|\s)+\(([^\)])+\)/g);
-//       if (_matchImage && _matchImage.length > 0) {
-//         for (j = 0; j < _matchImage.length; j++) {
-//           const _imgTxt = _matchImage[j].substring(2, _matchImage[j].indexOf(']'));
-//           var remainingString = _matchImage[j].substring(_matchImage[j].indexOf(']') + 1).trim();
-//           let _imgLink = remainingString.substring(1, remainingString.indexOf(')'));
-//           if (hyperLinksMap) {
-//             var _randomKey = `korerandom://${Object.keys(hyperLinksMap).length}`;
-//             hyperLinksMap[_randomKey] = _imgLink;
-//             _imgLink = _randomKey;
-//           }
-//           _imgLink = `<img src="${_imgLink}" alt="${_imgTxt}">`;
-//           const _tempImg = txtArr[i].split(' ');
-//           for (let k = 0; k < _tempImg.length; k++) {
-//             if (_tempImg[k] === _matchImage[j]) {
-//               _tempImg[k] = _imgLink;
-//             }
-//           }
-//           txtArr[i] = _tempImg.join(' ');
-//           txtArr[i] = txtArr[i].replace(_matchImage[j], _imgLink);
-//         }
-//       }
-//       // Matches link markup [test](http://google.com/)
-//       // var _matchLink = txtArr[i].match(/\[([^\]]+)\](|\s)+\(([^\)])+\)/g);
-//       const _matchLink = txtArr[i].match(/\[([^\]]+)\](|\s)\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\)/g);
-//       if (_matchLink && _matchLink.length > 0) {
-//         for (j = 0; j < _matchLink.length; j++) {
-//           const _linkTxt = _matchLink[j].substring(1, _matchLink[j].indexOf(']'));
-//           var remainingString = _matchLink[j].substring(_matchLink[j].indexOf(']') + 1).trim();
-//           let _linkLink = remainingString.substring(1, remainingString.lastIndexOf(')'));
-//           _linkLink = _linkLink.replace(/\\n/g, '%0A');
-//           if (hyperLinksMap) {
-//             var _randomKey = `korerandom://${Object.keys(hyperLinksMap).length}`;
-//             hyperLinksMap[_randomKey] = _linkLink;
-//             _linkLink = _randomKey;
-//           }
-//           _linkLink = `<span class="isLink"><a id="linkEvent" href="${_linkLink}" target="underscoreblank">${helpers.checkMarkdowns(_linkTxt)}</a></span>`;
-//           txtArr[i] = txtArr[i].replace(_matchLink[j], _linkLink);
-//         }
-//       }
-//       // Matches bold markup *test* doesnot match * test *, * test*. If all these are required then replace \S with \s
-//       const _matchAstrik = txtArr[i].match(/\*\S([^*]*?)\*/g);
-//       if (_matchAstrik && _matchAstrik.length > 0) {
-//         for (j = 0; j < _matchAstrik.length; j++) {
-//           let _boldTxt = _matchAstrik[j];
-//           let validBoldGroup = true;
-//           if (_boldTxt.includes('*')) {
-//             const _tempStr = _boldTxt.replace(/\*/g, '');
-//             // var letterNumber = /^[0-9a-zA-Z!@#$%^&()_ +\-=\[\]{};':"\\|,.<>\/?]+$/;
-//             if (!(_tempStr && _tempStr.length)) {
-//               validBoldGroup = false;
-//             }
-//           }
-//           if (validBoldGroup) {
-//             _boldTxt = _boldTxt.substring(1, _boldTxt.length - 1);
-//             _boldTxt = `<b>${_boldTxt.trim()}</b>`;
-//             txtArr[i] = txtArr[i].replace(_matchAstrik[j], _boldTxt);
-//           }
-//         }
-//       }
-//       // For backward compatability who used ~ for Italics
-//       // Matches italic markup ~test~ doesnot match ~ test ~, ~test ~, ~ test~. If all these are required then replace \S with \s
-//       var _matchItalic = txtArr[i].match(/\~\S([^*]*?)\S\~/g);
-//       if (_matchItalic && _matchItalic.length > 0) {
-//         for (j = 0; j < _matchItalic.length; j++) {
-//           var _italicTxt = _matchItalic[j];
-//           if (txtArr[i].indexOf(_italicTxt) === 0 || txtArr[i][txtArr[i].indexOf(_italicTxt) - 1] === ' ' || txtArr[i].indexOf(_italicTxt) !== -1) {
-//             _italicTxt = _italicTxt.substring(1, _italicTxt.length - 1);
-//             _italicTxt = `<i class="markdownItalic">${_italicTxt}</i>`;
-//             txtArr[i] = txtArr[i].replace(_matchItalic[j], _italicTxt);
-//           }
-//         }
-//       }
-//       // Matches italic markup _test_ doesnot match _ test _, _test _, _ test_. If all these are required then replace \S with \s
-//       var _matchItalic = txtArr[i].match(/\_\S([^*]*?)\S\_/g);
-//       if (_matchItalic && _matchItalic.length > 0) {
-//         for (j = 0; j < _matchItalic.length; j++) {
-//           var _italicTxt = _matchItalic[j];
-//           if ((txtArr[i].indexOf(_italicTxt) === 0) || (txtArr[i][txtArr[i].indexOf(_italicTxt) - 1] === ' ') || txtArr[i].indexOf(_italicTxt) !== -1) {
-//             let validItalicMark = true;
-//             if (txtArr[i][txtArr[i].indexOf(_italicTxt) + _italicTxt.length]) {
-//               if (txtArr[i][txtArr[i].indexOf(_italicTxt) + _italicTxt.length] !== ' ') {
-//                 validItalicMark = false;
-//               }
-//             }
-//             if (validItalicMark) {
-//               _italicTxt = `${_italicTxt.substring(1, _italicTxt.length - 1)} `;
-//               _italicTxt = `<i class="markdownItalic">${_italicTxt}</i>`;
-//               txtArr[i] = txtArr[i].replace(_matchItalic[j], _italicTxt);
-//             }
-//           }
-//         }
-//       }
-//       // Matches bold markup ~test~ doesnot match ~ test ~, ~test ~, ~ test~. If all these are required then replace \S with \s
-//       var _matchItalic = txtArr[i].match(/\~\S([^*]*?)\S\~/g);
-//       if (_matchItalic && _matchItalic.length > 0) {
-//         for (j = 0; j < _matchItalic.length; j++) {
-//           var _italicTxt = _matchItalic[j];
-//           if (txtArr[i].indexOf(_italicTxt) === 0 || txtArr[i][txtArr[i].indexOf(_italicTxt) - 1] === ' ' || txtArr[i].indexOf(_italicTxt) !== -1) {
-//             _italicTxt = _italicTxt.substring(1, _italicTxt.length - 1);
-//             _italicTxt = `<i class="markdownItalic">${_italicTxt}</i>`;
-//             txtArr[i] = txtArr[i].replace(_matchItalic[j], _italicTxt);
-//           }
-//         }
-//       }
-//       // Matches bold markup ~test~ doesnot match ~ test ~, ~test ~, ~ test~. If all these are required then replace \S with \s
-//       const _matchPre = txtArr[i].match(/\`\`\`\S([^*]*?)\S\`\`\`/g);
-//       const _matchPre1 = txtArr[i].match(/\'\'\'\S([^*]*?)\S\'\'\'/g);
-//       if (_matchPre && _matchPre.length > 0) {
-//         for (j = 0; j < _matchPre.length; j++) {
-//           var _preTxt = _matchPre[j];
-//           _preTxt = _preTxt.substring(3, _preTxt.length - 3);
-//           _preTxt = `<pre>${_preTxt}</pre>`;
-//           txtArr[i] = txtArr[i].replace(_matchPre[j], _preTxt);
-//         }
-//         _lineBreakAdded = true;
-//       }
-//       if (_matchPre1 && _matchPre1.length > 0) {
-//         for (j = 0; j < _matchPre1.length; j++) {
-//           var _preTxt = _matchPre1[j];
-//           _preTxt = _preTxt.substring(3, _preTxt.length - 3);
-//           _preTxt = `<pre>${_preTxt}</pre>`;
-//           txtArr[i] = txtArr[i].replace(_matchPre1[j], _preTxt);
-//         }
-//         _lineBreakAdded = true;
-//       }
-//       if (!_lineBreakAdded && i > 0) {
-//         txtArr[i] = `\r\n${txtArr[i]}`;
-//       }
-//     }
-//     val = txtArr.join('');
-//     return val;
-//   },
-// };
-
-function isEven(n) {
-  n = Number(n);
-  return n === 0 || !!(n && !(n % 2));
-}
-if (typeof Array.isArray === 'undefined') {
-  Array.isArray = function (obj) {
-    return Object.prototype.toString.call(obj) === '[object Array]';
-  };
-}
-function extend() {
   var rec = function (obj) {
     const recRes = {};
     if (typeof obj === 'object' && !Array.isArray(obj)) {
@@ -700,27 +71,6 @@ function extend() {
   return arguments[0];
 }
 
-// function chatWindow(config) {
-//   const me = this;
-//   EventEmitter.call(this);
-//   me.initVars(config);
-
-// }
-
-class chatWindow extends EventEmitter{
-  EVENTS={
-    JWT_SUCCESS:'jwt_success'
-  }
-  constructor(config){
-    super();
-    const me = this;
-    this.config={};
-    //EventEmitter.call(this);
-    me.initVars(config);
-  }
-}
-
-
 // converts v1 webhooks url to v2 automatically
 chatWindow.prototype.reWriteWebHookURL = function (chatConfig) {
   if (chatConfig.botOptions && chatConfig.botOptions.webhookConfig && chatConfig.botOptions.webhookConfig.apiVersion && chatConfig.botOptions.webhookConfig.apiVersion === 2) {
@@ -730,7 +80,7 @@ chatWindow.prototype.reWriteWebHookURL = function (chatConfig) {
   }
 };
 // iframe of child window events //
-function attachEventListener() {
+chatWindow.prototype.attachEventListener =function() {
   // Create IE + others compatible event handler
   const eventMethod = window.addEventListener ? 'addEventListener' : 'attachEvent';
   const eventer = window[eventMethod];
@@ -749,7 +99,7 @@ function attachEventListener() {
     }
   }, false);
 }
-function postMessageToChildIframes(iframe, postPayload) {
+chatWindow.prototype.postMessageToChildIframes=function(iframe, postPayload) {
   if (iframe && iframe.length && iframe[0] && iframe[0].contentWindow && postPayload) {
     iframe[0].contentWindow.postMessage(postPayload, '*');
   }
@@ -757,7 +107,7 @@ function postMessageToChildIframes(iframe, postPayload) {
 // iframe of child window events ends//
 
 // inline model for iframes starts here//
-function openModal(template, showClose) {
+chatWindow.prototype.openModal=function(template, showClose) {
   const chatBodyModal = $('#chatBodyModal');
   const close = document.getElementsByClassName('closeChatBodyModal')[0];
   close.onclick = function () {
@@ -769,7 +119,7 @@ function openModal(template, showClose) {
       metaData: {},
     };
     const iframe = chatBodyModal.find('iframe');
-    postMessageToChildIframes(iframe, postPayload);
+    me.postMessageToChildIframes(iframe, postPayload);
     chatBodyModal.hide();
     $('.kore-chat-window').removeClass('modelOpen');
   };
@@ -803,9 +153,10 @@ function openModal(template, showClose) {
 // inline model for iframes starts ends//
 
 // form event actions starts here //
-function formAction(event) {
+chatWindow.prototype.formAction=function(event) {
+  let me=this;
   if (event && event.action === 'formSubmit') {
-    openModal();
+    me.openModal();
     if ($('.kore-chat-body .uiformComponent').length) {
       $('.kore-chat-body .uiformComponent').closest('.inlineIframeContainer').css('display', 'none');
     }
@@ -814,7 +165,7 @@ function formAction(event) {
       $('.kore-chat-body .uiformComponent').closest('.inlineIframeContainer').css('display', 'none');
     }
   } else if (event.action === 'formClose') {
-    openModal();
+    me.openModal();
     if ($('.kore-chat-body .uiformComponent').length) {
       $('.kore-chat-body .uiformComponent').closest('.inlineIframeContainer').css('display', 'none');
     }
@@ -837,7 +188,7 @@ chatWindow.prototype.renderWebForm = function (msgData, returnTemplate) {
       if (returnTemplate) {
         return popupHtml;
       }
-      openModal(popupHtml[0], true);
+      me.openModal(popupHtml[0], true);
     }
   }
 };
@@ -873,73 +224,6 @@ chatWindow.prototype.resetPingMessage = function () {
     });
     me.resetPingMessage();
   }, me.config.pingPong.interval);
-};
-window.onresize = function (event) {
-  if (event.target == window) {
-    const _width = $('#chatContainer').width() - 400;
-    // $('.kore-chat-window').attr('style','left: '+_width+'+px');
-  }
-  if (($('.kore-chat-window').width() > 400) || (document.getElementsByClassName('kore-chat-window').length && document.getElementsByClassName('kore-chat-window')[0].classList.contains('expanded'))) {
-    const _koreChatWindowHeight = $('.kore-chat-window').width();
-    $('.carousel').attr('style', `width: ${_koreChatWindowHeight - 85}px !important`);
-  } else {
-    $('.carousel').attr('style', 'width: 300px !important');
-  }
-  for (var i = 0; i < carouselEles.length; i++) {
-    carouselEles[i].computeResize();
-  }
-
-  // handling quick replies
-  // const quickReplyDivs = document.querySelectorAll('.quickReplies');
-  // for (var i = 0; i < quickReplyDivs.length; i++) {
-  //   const btnsParentDiv = quickReplyDivs[i].querySelectorAll('.quick_replies_btn_parent');
-  //   const leftScrollBtn = quickReplyDivs[i].querySelectorAll('.quickreplyLeftIcon');
-  //   const rightScrollBtn = quickReplyDivs[i].querySelectorAll('.quickreplyRightIcon');
-  //   if (btnsParentDiv[0].hasChildNodes()) {
-  //     if (btnsParentDiv[0].scrollLeft > 0) {
-  //       leftScrollBtn[0].classList.remove('hide');
-  //     } else {
-  //       leftScrollBtn[0].classList.add('hide');
-  //     }
-  //     if (btnsParentDiv[0].offsetWidth < btnsParentDiv[0].scrollWidth) {
-  //       rightScrollBtn[0].classList.remove('hide');
-  //     } else {
-  //       rightScrollBtn[0].classList.add('hide');
-  //     }
-  //   }
-  // }
-
-  /* Handling for full size table */
-  if ($('.kore-chat-window').width() > 460) {
-    $('.accordionTable').each(function () {
-      if ($(this).hasClass('responsive')) {
-        $(this).addClass('hide');
-      }
-    });
-    $('.tablechartDiv').each(function () {
-      if (!$(this).hasClass('regular')) {
-        $(this).removeClass('hide');
-      }
-    });
-  } else {
-    $('.accordionTable').each(function () {
-      if ($(this).hasClass('responsive')) {
-        $(this).removeClass('hide');
-      }
-    });
-    $('.tablechartDiv').each(function () {
-      if (!$(this).hasClass('regular')) {
-        $(this).addClass('hide');
-      }
-    });
-  }
-  /* Handling for table ends */
-  /* Handling expand and collapse chat-container height */
-  $('.chat-container').scrollTop($('.chat-container')[0].scrollHeight);
-  if (me.chatPSObj && me.chatPSObj.update) {
-    me.chatPSObj.update();
-  }
-  /* Handling expand and collapse chat-container height */
 };
 
 chatWindow.prototype.handleImagePreview = function () {
@@ -984,8 +268,78 @@ chatWindow.prototype.isMobile = function () {
     return false;
   }
 };
-chatWindow.prototype.setCollapsedModeStyles = function () {
-  $('.kore-chat-window').css({ left: $('body').width() - 400, width: '400px' });
+chatWindow.prototype.setCollapsedModeStyles = function (){
+  $('.kore-chat-window').css({left:$('body').width()-400,width:'400px'});
+}
+chatWindow.prototype.onWindowResize = function (event) {
+  let me=this;
+  me.setCollapsedModeStyles();
+    if (event.target == window) {
+      const _width = $('#chatContainer').width() - 400;
+      // $('.kore-chat-window').attr('style','left: '+_width+'+px');
+    }
+    if (($('.kore-chat-window').width() > 400) || (document.getElementsByClassName('kore-chat-window').length && document.getElementsByClassName('kore-chat-window')[0].classList.contains('expanded'))) {
+      const _koreChatWindowHeight = $('.kore-chat-window').width();
+      $('.carousel').attr('style', `width: ${_koreChatWindowHeight - 85}px !important`);
+    } else {
+      $('.carousel').attr('style', 'width: 300px !important');
+    }
+    // for (var i = 0; i < carouselEles.length; i++) {
+    //   carouselEles[i].computeResize();
+    // }
+  
+    // handling quick replies
+    // const quickReplyDivs = document.querySelectorAll('.quickReplies');
+    // for (var i = 0; i < quickReplyDivs.length; i++) {
+    //   const btnsParentDiv = quickReplyDivs[i].querySelectorAll('.quick_replies_btn_parent');
+    //   const leftScrollBtn = quickReplyDivs[i].querySelectorAll('.quickreplyLeftIcon');
+    //   const rightScrollBtn = quickReplyDivs[i].querySelectorAll('.quickreplyRightIcon');
+    //   if (btnsParentDiv[0].hasChildNodes()) {
+    //     if (btnsParentDiv[0].scrollLeft > 0) {
+    //       leftScrollBtn[0].classList.remove('hide');
+    //     } else {
+    //       leftScrollBtn[0].classList.add('hide');
+    //     }
+    //     if (btnsParentDiv[0].offsetWidth < btnsParentDiv[0].scrollWidth) {
+    //       rightScrollBtn[0].classList.remove('hide');
+    //     } else {
+    //       rightScrollBtn[0].classList.add('hide');
+    //     }
+    //   }
+    // }
+  
+    /* Handling for full size table */
+    if ($('.kore-chat-window').width() > 460) {
+      $('.accordionTable').each(function () {
+        if ($(this).hasClass('responsive')) {
+          $(this).addClass('hide');
+        }
+      });
+      $('.tablechartDiv').each(function () {
+        if (!$(this).hasClass('regular')) {
+          $(this).removeClass('hide');
+        }
+      });
+    } else {
+      $('.accordionTable').each(function () {
+        if ($(this).hasClass('responsive')) {
+          $(this).removeClass('hide');
+        }
+      });
+      $('.tablechartDiv').each(function () {
+        if (!$(this).hasClass('regular')) {
+          $(this).addClass('hide');
+        }
+      });
+    }
+    /* Handling for table ends */
+    /* Handling expand and collapse chat-container height */
+    $('.chat-container').scrollTop($('.chat-container')[0].scrollHeight);
+    if (me.chatPSObj && me.chatPSObj.update) {
+      me.chatPSObj.update();
+    }
+    /* Handling expand and collapse chat-container height */
+
 };
 chatWindow.prototype.setLocalStoreItem = function (key, value) {
   const me = this;
@@ -1017,7 +371,7 @@ chatWindow.prototype.init = function (cfg) {
   me.setPrivateVarToContext(this);
   //isRecordingStarted = false;
   //me.config.botOptions.test = false;
-  this.config = extend({
+  this.config = me.extend({
     chatTitle: 'Kore.ai Bot Chat',
     container: 'body',
     allowIframe: false,
@@ -1123,7 +477,7 @@ chatWindow.prototype.init = function (cfg) {
   me.addBottomSlider();
   window.addEventListener('online', me.updateOnlineStatus);
   window.addEventListener('offline', me.updateOnlineStatus);
-  attachEventListener();
+  me.attachEventListener();
   // me.show();
 };
 chatWindow.prototype.initVars = function (config) {
@@ -1165,10 +519,10 @@ chatWindow.prototype.initi18n = function () {
     me.config.i18n = me.plugins.Korei18nPlugin.config;
   }
   if (me.config && me.config.i18n && me.config.i18n.languageStrings) {
-    me.i18n.langFiles = extend(me.i18n.langFiles, me.config.i18n.languageStrings);
+    me.i18n.langFiles = me.extend(me.i18n.langFiles, me.config.i18n.languageStrings);
   }
   if (me.config && me.config.i18n && me.config.i18n.rtlLanguages) {
-    me.i18n.rtlLanguages = extend(me.i18n.rtlLanguages, me.config.i18n.rtlLanguages);
+    me.i18n.rtlLanguages = me.extend(me.i18n.rtlLanguages, me.config.i18n.rtlLanguages);
   }
 };
 chatWindow.prototype.seti18n = function (lang) {
@@ -1275,7 +629,7 @@ chatWindow.prototype.bindEvents = function () {
   me.bindCustomEvents();
   const _chatContainer = me.config.chatContainer;
   window.onresize = function (event) {
-    me.setCollapsedModeStyles();
+    me.onWindowResize(event);
   };
   window.onbeforeunload = function () {
     if (me && $(me.config.chatContainer).length > 0) {
@@ -1493,7 +847,7 @@ chatWindow.prototype.bindEvents = function () {
       popupHtml[0].onload = function (iFrameEvent) {
         console.log(iFrameEvent);
       };
-      openModal(popupHtml[0], true);
+      me.openModal(popupHtml[0], true);
     } else {
       me.openExternalLink(a_link);
     }
@@ -2089,7 +1443,7 @@ chatWindow.prototype.sendMessageToBot = function (messageText, options, messageO
   }
 
   if(messageObject){
-    extend(messageToBot,messageObject);
+    me.extend(messageToBot,messageObject);
   }
   // if (msgObject && msgObject.customdata) {
   //   messageToBot.message.customdata = msgObject.customdata;
@@ -2244,10 +1598,10 @@ chatWindow.prototype.renderMessage = function (msgData) {
   }
   const _chatContainer = $(me.config.chatContainer).find('.chat-container');
   if (msgData.message && msgData.message[0] && msgData.message[0].cInfo && msgData.message[0].cInfo.attachments) {
-    extension = strSplit(msgData.message[0].cInfo.attachments[0].fileName);
+    extension = msgData.message[0].cInfo.attachments[0].fileName.split('.');
   }
   if (msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.url) {
-    extension = strSplit(msgData.message[0].component.payload.url);
+    extension = msgData.message[0].component.payload.url.split('.');
     _extractedFileName = msgData.message[0].component.payload.url.replace(/^.*[\\\/]/, '');
   }
 
@@ -2833,7 +2187,7 @@ chatWindow.prototype.renderMessage = function (msgData) {
           msgEles.each((i, ele) => {
             msgTimeStamps.push(parseInt($(ele).attr('data-time')));
           });
-          const insertAtIndex = findSortedIndex(msgTimeStamps, msgData.createdOnTimemillis);
+          const insertAtIndex = me.findSortedIndex(msgTimeStamps, msgData.createdOnTimemillis);
 
           if (insertAtIndex > 0) {
             const insertAfterEle = msgEles[insertAtIndex];
@@ -3055,104 +2409,6 @@ chatWindow.prototype.getChatTemplate = function (tempType) {
          </div>\
      </div> \
  </script>';
-
-//  var msgTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-//          {{if msgData.message}} \
-//              {{each(key, msgItem) msgData.message}} \
-//                  {{if msgItem.cInfo && msgItem.type === "text"}} \
-//                      <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-//                           class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}}\ {{if msgData.icon}}with-icon{{/if}} {{if msgData.fromAgent}}from-agent{{/if}}"> \
-//                          {{if msgData.createdOn}}<div aria-hidden="true" aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-//                          {{if msgData.icon}}<div aria-hidden="true"  aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})" title="User Avatar"></div> </div> {{/if}} \
-//                          <div class="messageBubble" aria-live="assertive">\
-//                              <div> \
-//                                  {{if msgData.type === "bot_response"}} \
-//                                      {{if msgItem.component  && msgItem.component.type =="error"}} \
-//                                          <span style="color:${msgItem.component.payload.color}">{{html helpers.convertMDtoHTML(msgItem.component.payload.text, "bot",msgItem)}} </span>\
-//                                      {{else}} \
-//                                          <span class="simpleMsg" {{if msgData}}msgData="${JSON.stringify(msgData)}" {{/if}}>{{html helpers.convertMDtoHTML(msgItem.cInfo.body, "bot",msgItem)}}</span> \
-//                                          {{if msgItem.component && msgItem.component.payload && msgItem.component.payload.videoUrl}}\
-//                                              <div class="videoEle"><video width="300" controls><source src="${msgItem.component.payload.videoUrl}" type="video/mp4"></video></div>\
-//                                          {{/if}}\
-//                                          {{if msgItem.component && msgItem.component.payload && msgItem.component.payload.audioUrl}}\
-//                                              <div class="audioEle"><audio width="180" controls><source src="${msgItem.component.payload.audioUrl}"></audio></div>\
-//                                          {{/if}}\
-//                                      {{/if}} \
-//                                  {{else}} \
-//                                      {{if msgItem.cInfo.renderMsg && msgItem.cInfo.renderMsg !== ""}}\
-//                                          {{html helpers.convertMDtoHTML(msgItem.cInfo.renderMsg, "user",msgItem)}} \
-//                                      {{else}}\
-//                                          {{html helpers.convertMDtoHTML(msgItem.cInfo.body, "user",msgItem)}} \
-//                                      {{/if}}\
-//                                  {{/if}} \
-//                              </div>\
-//                              {{if msgItem.cInfo && msgItem.cInfo.emoji}} \
-//                                  <span class="emojione emojione-${msgItem.cInfo.emoji[0].code}">${msgItem.cInfo.emoji[0].title}</span> \
-//                              {{/if}} \
-//                              {{if msgItem.cInfo.attachments}} \
-//                                  <div class="msgCmpt attachments" fileid="${msgItem.cInfo.attachments[0].fileId}"> \
-//                                      <div class="uploadedFileIcon"> \
-//                                          {{if msgItem.cInfo.attachments[0].fileType == "image"}} \
-//                                              <span class="icon cf-icon icon-photos_active"></span> \
-//                                          {{else msgItem.cInfo.attachments[0].fileType == "audio"}}\
-//                                              <span class="icon cf-icon icon-files_audio"></span> \
-//                                          {{else msgItem.cInfo.attachments[0].fileType == "video"}} \
-//                                              <span class="icon cf-icon icon-video_active"></span> \
-//                                          {{else}} \
-//                                              {{if extension[1]=="xlsx" || extension[1]=="xls" || extension[1]=="docx" || extension[1]=="doc" || extension[1]=="pdf" || extension[1]=="ppsx" || extension[1]=="pptx" || extension[1]=="ppt" || extension[1]=="zip" || extension[1]=="rar"}}\
-//                                                  <span class="icon cf-icon icon-files_${extension[1]}"></span> \
-//                                              {{else extension[1]}}\
-//                                                  <span class="icon cf-icon icon-files_other_doc"></span> \
-//                                              {{/if}}\
-//                                          {{/if}}\
-//                                      </div> \
-//                                      <div class="curUseruploadedFileName">${msgItem.cInfo.attachments[0].fileName}</div> \
-//                                  </div> \
-//                              {{/if}} \
-//                              {{if msgData.isError}} \
-//                                  <div class="errorMsg">Send Failed. Please resend.</div> \
-//                              {{/if}} \
-//                          </div> \
-//                      </li> \
-//                  {{/if}} \
-//              {{/each}} \
-//          {{/if}} \
-//      </scipt>';
-//          var templateAttachment = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-//      {{if msgData.message}} \
-//          {{each(key, msgItem) msgData.message}} \
-//              {{if msgItem.component && msgItem.component.payload.url}} \
-//                  <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-//                      class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
-//                      {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-//                      {{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-//                      <div class="messageBubble">\
-//                          {{if msgItem.component.payload.url}} \
-//                              <div class="msgCmpt botResponseAttachments" fileid="${msgItem.component.payload.url}"> \
-//                                  <div class="uploadedFileIcon"> \
-//                                      {{if msgItem.component.type == "image"}} \
-//                                          <span class="icon cf-icon icon-photos_active"></span> \
-//                                      {{else msgItem.component.type == "audio"}}\
-//                                          <span class="icon cf-icon icon-files_audio"></span> \
-//                                      {{else msgItem.component.type == "video"}} \
-//                                          <span class="icon cf-icon icon-video_active"></span> \
-//                                      {{else}} \
-//                                          {{if extension[1]=="xlsx" || extension[1]=="xls" || extension[1]=="docx" || extension[1]=="doc" || extension[1]=="pdf" || extension[1]=="ppsx" || extension[1]=="pptx" || extension[1]=="ppt" || extension[1]=="zip" || extension[1]=="rar"}}\
-//                                              <span class="icon cf-icon icon-files_${extension[1]}"></span> \
-//                                          {{else extension[1]}}\
-//                                              <span class="icon cf-icon icon-files_other_doc"></span> \
-//                                          {{/if}}\
-//                                      {{/if}}\
-//                                  </div> \
-//                                  <div class="botuploadedFileName">${extractedFileName}</div> \
-//                              </div> \
-//                          {{/if}} \
-//                      </div> \
-//                  </li> \
-//              {{/if}} \
-//          {{/each}} \
-//      {{/if}} \
-//  </scipt>';
  var popupTemplate = '<script id="kore_popup_tmpl" type="text/x-jquery-tmpl"> \
          <div class="kore-auth-layover">\
              <div class="kore-auth-popup"> \
@@ -3160,440 +2416,10 @@ chatWindow.prototype.getChatTemplate = function (tempType) {
                  <iframe id="authIframe" src="${link_url}"></iframe> \
              </div> \
          </div>\
- </script>';
-//  var buttonTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-//      {{if msgData.message}} \
-//          <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-//              class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
-//              <div class="buttonTmplContent"> \
-//                  {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-//                  {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-//                  <ul class="buttonTmplContentBox">\
-//                      <li class="buttonTmplContentHeading"> \
-//                          {{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
-//                          {{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
-//                              <span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
-//                          {{/if}} \
-//                      </li>\
-//                      {{each(key, msgItem) msgData.message[0].component.payload.buttons}} \
-//                          <a>\
-//                              <li {{if msgData}}msgData="${JSON.stringify(msgData)}"{{/if}} {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} {{if msgItem.payload}}actual-value="${msgItem.payload}"{{/if}} {{if msgItem.url}}url="${msgItem.url}"{{/if}} class="buttonTmplContentChild" data-value="${msgItem.value}" type="${msgItem.type}">\
-//                                  ${msgItem.title}\
-//                              </li> \
-//                          </a> \
-//                      {{/each}} \
-//                  </ul>\
-//              </div>\
-//          </li> \
-//      {{/if}} \
-//  </scipt>';
-
-//  var pieChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-//      {{if msgData.message}} \
-//          <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-//              class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon piechart"> \
-//              {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-//              {{if msgData.icon}}<div class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-//              {{if msgData.message[0].component.payload.text}}<div class="messageBubble pieChart">\
-//                  <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
-//              </div>{{/if}}\
-//              <div id="d3Pie">\
-//              </div>\
-//              <div class="piechartDiv">\
-//                  <div class="lineChartChildDiv" id="piechart${msgData.messageId}"></div>\
-//              </div>\
-//          </li> \
-//      {{/if}} \
-//  </scipt>';
-
-//  var barchartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-//      {{if msgData.message}} \
-//          <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-//              class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon barchart"> \
-//              {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-//              {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-//              {{if msgData.message[0].component.payload.text}}<div class="messageBubble barchart">\
-//                  <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
-//              </div>{{/if}}\
-//              <div class="barchartDiv">\
-//                  <div class="lineChartChildDiv" id="barchart${msgData.messageId}"></div>\
-//              </div>\
-//          </li> \
-//      {{/if}} \
-//  </scipt>';
-//  var linechartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-//      {{if msgData.message}} \
-//          <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-//              class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon linechart"> \
-//              {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-//              {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-//              {{if msgData.message[0].component.payload.text}}<div class="messageBubble linechart">\
-//                  <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
-//              </div>{{/if}}\
-//              <div class="linechartDiv">\
-//                  <div class="lineChartChildDiv" id="linechart${msgData.messageId}"></div>\
-//              </div>\
-//          </li> \
-//      {{/if}} \
-//  </scipt>';
-//  var miniTableChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-//      {{if msgData.message}} \
-//          <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-//              class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
-//              {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-//              {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-//              {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
-//                  <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
-//              </div>{{/if}}\
-//              {{each(key, table) msgData.message[0].component.payload.elements}}\
-//                  <div class="minitableDiv">\
-//                      <div style="overflow-x:auto; padding: 0 8px;">\
-//                          <table cellspacing="0" cellpadding="0">\
-//                              <tr class="headerTitle">\
-//                                  {{each(key, tableHeader) table.primary}} \
-//                                      <th {{if tableHeader[1]}}style="text-align:${tableHeader[1]};" {{/if}}>${tableHeader[0]}</th>\
-//                                  {{/each}} \
-//                              </tr>\
-//                              {{each(key, additional) table.additional}} \
-//                                  <tr>\
-//                                      {{each(cellkey, cellValue) additional}} \
-//                                          <td  {{if cellkey === additional.length-1}}colspan="2"{{/if}}  {{if table.primary[cellkey][1]}}style="text-align:${table.primary[cellkey][1]};" {{/if}} title="${cellValue}">${cellValue}</td>\
-//                                      {{/each}} \
-//                                  </tr>\
-//                              {{/each}} \
-//                          </table>\
-//                      </div>\
-//                  </div>\
-//              {{/each}}\
-//          </li> \
-//      {{/if}} \
-//  </scipt>';
-//  var miniTableHorizontalTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-//      {{if msgData.message}} \
-//      <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-//          class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
-//          {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-//          {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-//          {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
-//              <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
-//          </div>{{/if}}\
-//          <div class="carousel" id="carousel-one-by-one" style="height: 0px;">\
-//              {{each(key, table) msgData.message[0].component.payload.elements}}\
-//                  <div class="slide">\
-//                      <div class="minitableDiv">\
-//                          <div style="overflow-x:auto; padding: 0 8px;">\
-//                              <table cellspacing="0" cellpadding="0">\
-//                                  <tr class="headerTitle">\
-//                                      {{each(key, tableHeader) table.primary}} \
-//                                          <th {{if tableHeader[1]}}style="text-align:${tableHeader[1]};" {{/if}}>${tableHeader[0]}</th>\
-//                                      {{/each}} \
-//                                  </tr>\
-//                                  {{each(key, additional) table.additional}} \
-//                                      <tr>\
-//                                          {{each(cellkey, cellValue) additional}} \
-//                                              <td  {{if cellkey === additional.length-1}}colspan="2"{{/if}}  {{if table.primary[cellkey][1]}}style="text-align:${table.primary[cellkey][1]};" {{/if}} title="${cellValue}">${cellValue}</td>\
-//                                          {{/each}} \
-//                                      </tr>\
-//                                  {{/each}} \
-//                              </table>\
-//                          </div>\
-//                      </div>\
-//                  </div>\
-//              {{/each}}\
-//          </div>\
-//      </li> \
-//      {{/if}} \
-//  </scipt>';
-//  var tableChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-//      {{if msgData.message}} \
-//          <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-//              class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
-//              {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-//              {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-//              {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
-//                  <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
-//              </div>{{/if}}\
-//              <div class="tablechartDiv {{if msgData.message[0].component.payload.table_design && msgData.message[0].component.payload.table_design == "regular"}}regular{{else}}hide{{/if}}">\
-//                  <div style="overflow-x:auto; padding: 0 8px;">\
-//                      <table cellspacing="0" cellpadding="0">\
-//                          <tr class="headerTitle">\
-//                              {{each(key, tableHeader) msgData.message[0].component.payload.columns}} \
-//                                  <th {{if tableHeader[1]}}style="text-align:${tableHeader[1]};"{{/if}}>${tableHeader[0]}</th>\
-//                              {{/each}} \
-//                          </tr>\
-//                          {{each(key, tableRow) msgData.message[0].component.payload.elements}} \
-//                              {{if tableRow.Values.length>1}}\
-//                                  <tr {{if key > 4}}class="hide"{{/if}}>\
-//                                      {{each(cellkey, cellValue) tableRow.Values}} \
-//                                          <td  {{if cellkey === tableRow.Values.length-1}}colspan="2"{{/if}} class=" {{if key == 0}} addTopBorder {{/if}}" {{if msgData.message[0].component.payload.columns[cellkey][1]}}style="text-align:${msgData.message[0].component.payload.columns[cellkey][1]};" {{/if}} title="${cellValue}">${cellValue}</td>\
-//                                      {{/each}} \
-//                                  </tr>\
-//                              {{/if}}\
-//                          {{/each}} \
-//                      </table>\
-//                  </div>\
-//                  {{if msgData.message[0].component.payload.elements.length > 5 && msgData.message[0].component.payload.table_design && msgData.message[0].component.payload.table_design == "regular"}}<div class="showMore">Show more</div>{{/if}}\
-//              </div>\
-//               <div class="accordionTable {{if msgData.message[0].component.payload.table_design && msgData.message[0].component.payload.table_design == "regular"}}hide{{else}}responsive{{/if}}">\
-//                  {{each(key, tableRow) msgData.message[0].component.payload.elements}} \
-//                      {{if key < 4}}\
-//                          <div class="accordionRow">\
-//                              {{each(cellkey, cellValue) tableRow.Values}} \
-//                                  {{if cellkey < 2}}\
-//                                      <div class="accordionCol">\
-//                                          <div class="colTitle hideSdkEle">${msgData.message[0].component.payload.columns[cellkey][0]}</div>\
-//                                          <div class="colVal">${cellValue}</div>\
-//                                      </div>\
-//                                  {{else}}\
-//                                      <div class="accordionCol hideSdkEle">\
-//                                          <div class="colTitle">${msgData.message[0].component.payload.columns[cellkey][0]}</div>\
-//                                          <div class="colVal">${cellValue}</div>\
-//                                      </div>\
-//                                  {{/if}}\
-//                              {{/each}} \
-//                              <span class="fa fa-caret-right tableBtn"></span>\
-//                          </div>\
-//                      {{/if}}\
-//                  {{/each}} \
-//                  <div class="showMore">Show more</div>\
-//              </div>\
-//          </li> \
-//      {{/if}} \
-//  </scipt>';
-
-
-//  var carouselTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-//      {{if msgData.message}} \
-//          <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-//              class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
-//              {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-//              {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-//              {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
-//                  <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
-//              </div>{{/if}}\
-//              <div class="carousel" id="carousel-one-by-one" style="height: 0px;">\
-//                  {{each(key, msgItem) msgData.message[0].component.payload.elements}} \
-//                      <div class="slide">\
-//                          {{if msgItem.image_url}} \
-//                              <div class="carouselImageContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
-//                                  <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
-//                              </div> \
-//                          {{/if}} \
-//                          <div class="carouselTitleBox"> \
-//                              <p class="carouselTitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</p> \
-//                              {{if msgItem.subtitle}}<p class="carouselDescription">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</p>{{/if}} \
-//                              {{if msgItem.default_action && msgItem.default_action.type === "web_url"}}<div class="listItemPath carouselDefaultAction" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
-//                              {{if msgItem.buttons}} \
-//                                  {{each(key, msgBtn) msgItem.buttons}} \
-//                                      <div {{if msgBtn.payload}}value="${msgBtn.payload}"{{/if}} {{if msgBtn.url}}url="${msgBtn.url}"{{/if}} class="listItemPath carouselButton" data-value="${msgBtn.value}" type="${msgBtn.type}">\
-//                                          ${msgBtn.title}\
-//                                      </div> \
-//                                  {{/each}} \
-//                              {{/if}} \
-//                          </div>\
-//                      </div>\
-//                  {{/each}} \
-//              </div>\
-//          </li> \
-//      {{/if}}\
-//  </scipt>';
-
-//  var quickReplyTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-//      {{if msgData.message}} \
-//          <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-//              class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon quickReplies"> \
-//              <div class="buttonTmplContent"> \
-//                  {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-//                  {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar marginT50" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-//                  {{if msgData.message[0].component.payload.text}} \
-//                      <div class="buttonTmplContentHeading quickReply"> \
-//                          {{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
-//                          {{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
-//                              <span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
-//                          {{/if}} \
-//                      </div>\
-//                      {{/if}} \
-//                      {{if msgData.message[0].component.payload.quick_replies && msgData.message[0].component.payload.quick_replies.length}} \
-//                      <div class="fa fa-chevron-left quickreplyLeftIcon hide"></div><div class="fa fa-chevron-right quickreplyRightIcon"></div>\
-//                          <div class="quick_replies_btn_parent"><div class="autoWidth">\
-//                              {{each(key, msgItem) msgData.message[0].component.payload.quick_replies}} \
-//                                  <div class="buttonTmplContentChild quickReplyDiv"> <span {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} class="quickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.content_type}">\
-//                                      {{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} <span class="quickreplyText {{if msgItem.image_url}}with-img{{/if}}">${msgItem.title}</span></span>\
-//                                  </div> \
-//                              {{/each}} \
-//                          </div>\
-//                      </div>\
-//                  {{/if}} \
-//              </div>\
-//          </li> \
-//      {{/if}} \
-//  </scipt>';
-//  var listTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-//      {{if msgData.message}} \
-//          <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-//              class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
-//              <div class="listTmplContent"> \
-//                  {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-//                  {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-//                  <ul class="listTmplContentBox"> \
-//                      {{if msgData.message[0].component.payload.text || msgData.message[0].component.payload.heading}} \
-//                          <li class="listTmplContentHeading"> \
-//                              {{if msgData.type === "bot_response" && msgData.message[0].component.payload.heading}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.heading, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
-//                              {{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
-//                                  <span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
-//                              {{/if}} \
-//                          </li> \
-//                      {{/if}} \
-//                      {{each(key, msgItem) msgData.message[0].component.payload.elements}} \
-//                          {{if msgData.message[0].component.payload.buttons}} \
-//                              {{if key<= 2 }}\
-//                                  <li class="listTmplContentChild"> \
-//                                      {{if msgItem.image_url}} \
-//                                          <div class="listRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
-//                                              <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
-//                                          </div> \
-//                                      {{/if}} \
-//                                      <div class="listLeftContent"> \
-//                                          <div class="listItemTitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
-//                                          {{if msgItem.subtitle}}<div class="listItemSubtitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
-//                                          {{if msgItem.default_action && msgItem.default_action.url}}<div class="listItemPath" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
-//                                          {{if msgItem.buttons}}\
-//                                          <div> \
-//                                              <span class="buyBtn" {{if msgItem.buttons[0].type}}type="${msgItem.buttons[0].type}"{{/if}} {{if msgItem.buttons[0].url}}url="${msgItem.buttons[0].url}"{{/if}} {{if msgItem.buttons[0].payload}}value="${msgItem.buttons[0].payload}"{{/if}}>{{if msgItem.buttons[0].title}}${msgItem.buttons[0].title}{{else}}Buy{{/if}}</span> \
-//                                          </div> \
-//                                          {{/if}}\
-//                                      </div>\
-//                                  </li> \
-//                              {{/if}}\
-//                          {{else}} \
-//                              <li class="listTmplContentChild"> \
-//                                  {{if msgItem.image_url}} \
-//                                      <div class="listRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
-//                                          <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';" /> \
-//                                      </div> \
-//                                  {{/if}} \
-//                                  <div class="listLeftContent"> \
-//                                      <div class="listItemTitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
-//                                      {{if msgItem.subtitle}}<div class="listItemSubtitle">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
-//                                      {{if msgItem.default_action && msgItem.default_action.url}}<div class="listItemPath" type="url" url="${msgItem.default_action.url}">${msgItem.default_action.url}</div>{{/if}} \
-//                                      {{if msgItem.buttons}}\
-//                                      <div> \
-//                                          <span class="buyBtn" {{if msgItem.buttons[0].type}}type="${msgItem.buttons[0].type}"{{/if}} {{if msgItem.buttons[0].url}}url="${msgItem.buttons[0].url}"{{/if}} {{if msgItem.buttons[0].payload}}value="${msgItem.buttons[0].payload}"{{/if}}>{{if msgItem.buttons[0].title}}${msgItem.buttons[0].title}{{else}}Buy{{/if}}</span> \
-//                                      </div> \
-//                                      {{/if}}\
-//                                  </div>\
-//                              </li> \
-//                          {{/if}} \
-//                      {{/each}} \
-//                      </li> \
-//                      {{if msgData.message[0].component.AlwaysShowGlobalButtons || (msgData.message[0].component.payload.elements.length > 3 && msgData.message[0].component.payload.buttons)}}\
-//                      <li class="viewMoreList"> \
-//                          <span class="viewMore" url="{{if msgData.message[0].component.payload.buttons[0].url}}${msgData.message[0].component.payload.buttons[0].url}{{/if}}" type="${msgData.message[0].component.payload.buttons[0].type}" value="{{if msgData.message[0].component.payload.buttons[0].payload}}${msgData.message[0].component.payload.buttons[0].payload}{{else}}${msgData.message[0].component.payload.buttons[0].title}{{/if}}">${msgData.message[0].component.payload.buttons[0].title}</span> \
-//                      </li> \
-//                      {{/if}}\
-//                  </ul> \
-//              </div> \
-//          </li> \
-//      {{/if}} \
-//  </scipt>';
-//  var listActionSheetTemplate = '<script id="chat-window-listTemplate" type="text/x-jqury-tmpl">\
-//  <div class="list-template-sheet hide">\
-//   {{if msgData.message}} \
-//     <div class="sheetHeader">\
-//       <span class="choose">${msgData.message[0].component.payload.heading}</span>\
-//       <button class="close-button" title="Close"><img src="data:image/svg+xml;base64,           PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button>\
-//     </div>\
-//     <div class="listTemplateContainer" >\
-//          <div class="displayMonth">\
-//              {{each(key, tab) tabs}} \
-//                  <span class="tabs" data-tabid="${tab}"><span class="btnBG">${tab}</span></span>\
-//              {{/each}}\
-//          </div>\
-//            <ul class="displayListValues">\
-//                {{each(key, msgItem) dataItems}} \
-//                     <li class="listViewTmplContentChild"> \
-//                           {{if msgItem.image_url}} \
-//                               <div class="listViewRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
-//                                  <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
-//                              </div> \
-//                          {{/if}} \
-//                              <div class="listViewLeftContent" data-url="${msgItem.default_action.url}" data-title="${msgItem.default_action.title}" data-value="${msgItem.default_action.title}"> \
-//                                 <span class="titleDesc">\
-//                                     <div class="listViewItemTitle" title="${msgItem.title}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
-//                                      {{if msgItem.subtitle}}<div class="listViewItemSubtitle" title="${msgItem.subtitle}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
-//                                  </span>\
-//                                      {{if msgItem.value}}<div class="listViewItemValue" title="${msgItem.value}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.value, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.value, "user")}} {{/if}}</div>{{/if}} \
-//                              </div>\
-//                      </li> \
-//                 {{/each}} \
-//             </ul> \
-//     </div>\
-// {{/if}}\
-// </div>\
-// </script>';
-// var iframe = '<script id="chat_message_tmpl" type="text/x-jquery-tmpl"> \
-//          {{if link_url}}\
-//             {{if (msgData && msgData.renderType ==="inline")}}\
-//                  <li class="inlineIframeContainer"> \
-//                      <div class="iframeBubble"> \
-//                              <div class="uiformComponent">\
-//                              <div id="closeInlineModel" role="region" aria-live="polite" aria-atomic="true" aira-label="close Form" class="loading_form iframeLoader"></div>\
-//                              <iframe id="inlineIframeModal" src="${link_url}"></iframe> \
-//                              </div>\
-//                      </div>\
-//                  </li> \
-//              {{else}}\
-//                  <iframe role="region" aria-live="polite" aria-atomic="true" aira-label="Loadig Form" id="iframeModal" src="${link_url}"></iframe> \
-//              {{/if}}\
-//          {{else}}\
-//              <div role="region" aria-live="polite" aria-atomic="true" class="failedIframe">Failed to load iFrame</div>\
-//          {{/if}}\
-//      </script>';
-//  if (tempType === "message") {
-//      return msgTemplate;
-//  } 
+ </script>'; 
  if (tempType === "popup") {
      return popupTemplate;
  } 
-//  if (tempType === "templatebutton") {// done
-//      return buttonTemplate;
-//  } 
-//  if (tempType === "templatelist") {
-//      return listTemplate;
-//  } 
-//  if (tempType === "templatequickreply") {
-//      return quickReplyTemplate;
-//  } 
-//  if (tempType === "templateAttachment") {
-//      return templateAttachment;
-//  }
-//  if (tempType === "carouselTemplate") {
-//      return carouselTemplate;
-//  }
-//  if (tempType === "pieChartTemplate") {
-//      return pieChartTemplate;
-//  }
-//  if (tempType === "tableChartTemplate") {
-//      return tableChartTemplate;
-//  }
-//  if (tempType === "miniTableChartTemplate") {
-//      return miniTableChartTemplate;
-//  }
-//  if (tempType === "miniTableHorizontalTemplate") {
-//      return miniTableHorizontalTemplate;
-//  }
-//  else if (tempType === "barchartTemplate") {
-//      return barchartTemplate;
-//  }
-//  else if (tempType === "linechartTemplate") {
-//      return linechartTemplate;
-//  }
-//  else if (tempType === "actionSheetTemplate") {
-//      return listActionSheetTemplate;
-//  }
-//  else if (tempType === "iframe") {
-//      return iframe;
-//  }
  else {
      return chatWindowTemplate;
  }
@@ -3709,14 +2535,6 @@ chatWindow.prototype.chatHistory = function (res) {
 };
 chatWindow.prototype.carouselTemplateCount = 0;
 
-// function IsJsonString() {
-//   try {
-//     JSON.parse(str);
-//   } catch (e) {
-//     return false;
-//   }
-//   return true;
-// }
 chatWindow.prototype.insertHtmlData=function (_txtBox, _html) {
   const _input = _txtBox;
   var sel;
@@ -3749,105 +2567,15 @@ chatWindow.prototype.insertHtmlData=function (_txtBox, _html) {
   }
   _input.appendChild(html);
 }
-// chatWindow.prototype.setCaretEnd= function (_this) {
-//   let me=this;
-//   if (_this && _this.item(0) && _this.item(0).innerText.length) {
-//     const range = document.createRange();
-//     range.selectNodeContents(_this[0]);
-//     range.collapse(false);
-//     const sel1 = window.getSelection();
-//     sel1.removeAllRanges();
-//     sel1.addRange(range);
-//     me.prevRange = range;
-//   } else {
-//     me.prevRange = false;
-//     if (_this && _this[0]) {
-//       _this[0].focus();
-//     }
-//   }
-// }
-function strSplit(str) {
-  return (str.split('.'));
-}
-/* function fetchBotDetails(botData,botInfo) {
-     if(botData && botData.userInfo && botData.authorization) {
-         $.ajax({
-             type: "GET",
-             url: koreAPIUrl + "1.1/users/"+botData.userInfo.userId+"/builder/streams/"+botInfo.taskBotId,
-             dataType: "json",
-             headers: {
-                 Authorization: "bearer " + botData.authorization.accessToken
-             },
-             success: function (res) {
-                 var _speechEnabledForBot = false;
-                 for(var i=0; i<res.channels.length;i++) {
-                     if(res.channels[i].type === "rtm") {
-                         _speechEnabledForBot = res.channels[i].sttEnabled || false;
-                         break;
-                     }
-                 }
-                 var _microPhoneEle = document.getElementsByClassName("sdkFooterIcon microphoneBtn")[0];
-                 var _ttsSpeakerEle = document.getElementsByClassName("sdkFooterIcon ttspeakerDiv")[0];
-                 if(!_speechEnabledForBot) {
-                     if(_microPhoneEle) {
-                         _microPhoneEle.remove();
-                     }
-                     if(_ttsSpeakerEle) {
-                         _ttsSpeakerEle.remove();
-                     }
-                 }
-                 else {
-                     if(_microPhoneEle) {
-                         _microPhoneEle.classList.remove("hide");
-                     }
-                     if(_ttsSpeakerEle) {
-                         _ttsSpeakerEle.classList.remove("hide");
-                     }
-                 }
-             },
-             error: function (msg) {
-                 console.log("Failed to fetch bot details.");
-             }
-         });
-     }
- } */
 
-// chatWindow.prototype.addListener = function (evtName, trgFunc) {
-//   if (!_eventQueue) {
-//     _eventQueue = {};
-//   }
-//   if (evtName && evtName.trim().length > 0) {
-//     if (!_eventQueue[evtName]) {
-//       _eventQueue[evtName] = [];
-//     }
-//     if (typeof trgFunc === 'function') {
-//       _eventQueue[evtName].push(trgFunc);
-//     }
-//   }
-// };
-// chatWindow.prototype.removeListener = function (evtName) {
-//   if (_eventQueue && _eventQueue[evtName]) {
-//     delete _eventQueue[evtName];
-//   }
-// };
-
-// chatWindow.prototype.callListener = function (evtName, data) {
-//   if (_eventQueue && _eventQueue[evtName]) {
-//     for (let i = 0; i < _eventQueue[evtName].length; i++) {
-//       if (typeof _eventQueue[evtName][i] === 'function') {
-//         _eventQueue[evtName][i].call(this, data);
-//       }
-//     }
-//   }
-// };
 chatWindow.prototype.show = function (config) {
   // todo:raj
   const me = this;
   me.init(config);
   const cfg = me.config;
-  //  if ($('body').find('.kore-chat-window').length > 0) {
-  //      return false;
-  //  }
+   if ($('body').find('.kore-chat-window').length > 0) {
+       return false;
+   }
   cfg.chatHistory = this.chatHistory;
   cfg.handleError = this.showError;
   debugger;
@@ -3916,13 +2644,6 @@ chatWindow.prototype.assertionFn = function (options, callback) {
   }else if(options.assertion){//check for reconnect case
     me.setupInternalAssertionFunction();
   }
-  //me.config.botOptions.callback(null, me.config.botOptions);
-  //callback(null, options);
-  // setTimeout(() => {
-  //   if (me && me.initToken) {
-  //     me.initToken(options);
-  //   }
-  // }, 2000);
 };
 chatWindow.prototype.SDKcallbackWraper = function () {
   const me = this;
@@ -3982,9 +2703,6 @@ chatWindow.prototype.botDetails = function (response, botInfo) {
          fetchBotDetails(response,botInfo);
      }, 50); */
 };
-//  chatWindow.prototype.chatHistory = function (res) {
-//      chatInitialize.chatHistory.call(chatInitialize,res);
-//  }
 
 chatWindow.prototype.closeConversationSession = function () {
   let me=this;
@@ -4006,41 +2724,7 @@ chatWindow.prototype.bottomSliderAction = function (action, appendElement) {
 
   }
 }
-/** ***********************************       Microphone code      ********************************************* */
-// let final_transcript = '';
-// let recognizing = false;
-// let recognition = null;
-// let prevStr = '';
-// setTimeout(() => {
-//   if (chatInitialize && chatInitialize.config && chatInitialize.config.allowGoogleSpeech) {
-//     if (window.initGapi) {
-//       initGapi();
-//     } else {
-//       console.warn("Please uncomment Google Speech files('speech/app.js','speech/key.js' and 'client_api.js' in index.html");
-//     }
-//   }
-// }, 2000);
-// function isChrome() {
-//   const isChromium = window.chrome;
-//   const winNav = window.navigator;
-//   const vendorName = winNav.vendor;
-//   const isOpera = winNav.userAgent.indexOf('OPR') > -1;
-//   const isIEedge = winNav.userAgent.indexOf('Edge') > -1;
-//   const isIOSChrome = winNav.userAgent.match('CriOS');
 
-//   if (isIOSChrome) {
-//     return true;
-//   } if (
-//     isChromium !== null
-//          && typeof isChromium !== 'undefined'
-//          && vendorName === 'Google Inc.'
-//          && isOpera === false
-//          && isIEedge === false
-//   ) {
-//     return true;
-//   }
-//   return false;
-// }
 chatWindow.prototype.unfreezeUIOnHistoryLoadingFail = function () {
   const me = this;
   setTimeout((me) => {
@@ -4051,1225 +2735,7 @@ chatWindow.prototype.unfreezeUIOnHistoryLoadingFail = function () {
     }
   }, 20000, me);
 };
-// if ('webkitSpeechRecognition' in window && isChrome()) {
-//   recognition = new window.webkitSpeechRecognition();
-//   final_transcript = '';
-//   recognition.continuous = true;
-//   recognition.interimResults = true;
 
-//   recognition.onstart = function () {
-//     prevStr = '';
-//     recognizing = true;
-//     $('.recordingMicrophone').css('display', 'block');
-//     $('.notRecordingMicrophone').css('display', 'none');
-//   };
-
-//   recognition.onerror = function (event) {
-//     console.log(event.error);
-//     $('.recordingMicrophone').trigger('click');
-//     $('.recordingMicrophone').css('display', 'none');
-//     $('.notRecordingMicrophone').css('display', 'block');
-//   };
-
-//   recognition.onend = function () {
-//     recognizing = false;
-//     $('.recordingMicrophone').trigger('click');
-//     $('.recordingMicrophone').css('display', 'none');
-//     $('.notRecordingMicrophone').css('display', 'block');
-//   };
-
-//   recognition.onresult = function (event) {
-//     final_transcript = '';
-//     let interim_transcript = '';
-//     for (let i = event.resultIndex; i < event.results.length; ++i) {
-//       if (event.results[i].isFinal) {
-//         final_transcript += event.results[i][0].transcript;
-//       } else {
-//         interim_transcript += event.results[i][0].transcript;
-//       }
-//     }
-//     final_transcript = capitalize(final_transcript);
-//     final_transcript = linebreak(final_transcript);
-//     interim_transcript = linebreak(interim_transcript);
-//     if (final_transcript !== '') {
-//       prevStr += final_transcript;
-//     }
-//     // console.log('Interm: ',interim_transcript);
-//     // console.log('final: ',final_transcript);
-//     if (recognizing) {
-//       $('.chatInputBox').html(`${prevStr}${interim_transcript}`);
-//       $('.sendButton').removeClass('disabled');
-//     }
-
-//     setTimeout(() => {
-//       setCaretEnd(document.getElementsByClassName('chatInputBox'));
-//       document.getElementsByClassName('chatInputBox')[0].scrollTop = document.getElementsByClassName('chatInputBox')[0].scrollHeight;
-//     }, 350);
-//   };
-// }
-
-// const two_line = /\n\n/g;
-// const one_line = /\n/g;
-// function linebreak(s) {
-//   return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
-// }
-
-// function capitalize(s) {
-//   return s.replace(s.substr(0, 1), (m) => m.toUpperCase());
-// }
-// function startGoogleWebKitRecognization() {
-//   if (recognizing) {
-//     recognition.stop();
-//     return;
-//   }
-//   final_transcript = '';
-//   recognition.lang = 'en-US';
-//   recognition.start();
-// }
-// function startGoogleSpeech() {
-//   if (rec) {
-//     rec.record();
-//     $('.recordingMicrophone').css('display', 'block');
-//     $('.notRecordingMicrophone').css('display', 'none');
-//     console.log('recording...');
-//     intervalKey = setInterval(() => {
-//       rec.export16kMono((blob) => {
-//         console.log(new Date());
-//         if (chatInitialize.config.allowGoogleSpeech) {
-//           sendBlobToSpeech(blob, 'LINEAR16', 16000);
-//         } else {
-//           socketSend(blob);
-//         }
-//         rec.clear();
-//       }, 'audio/x-raw');
-//     }, 1000);
-//   }
-// }
-
-// function getSIDToken() {
-//   if (chatInitialize.config.allowGoogleSpeech) {
-//     if (recognition) { // using webkit speech recognition
-//       startGoogleWebKitRecognization();
-//     } else { // using google cloud speech API
-//       micEnable();
-//     }
-//   } else {
-//     if (!speechPrefixURL) {
-//       console.warn('Please provide speech socket url');
-//       return false;
-//     }
-//     $.ajax({
-//       url: `${speechPrefixURL}asr/wss/start?email=${userIdentity}`,
-//       type: 'post',
-//       headers: { Authorization: (bearerToken) || assertionToken },
-//       dataType: 'json',
-//       success(data) {
-//         sidToken = data.link;
-//         micEnable();
-//       },
-//       error(err) {
-//         console.log(err);
-//       },
-//     });
-//   }
-// }
-// function micEnable() {
-//   if (isRecordingStarted) {
-//     return;
-//   }
-//   if (!navigator.getUserMedia) {
-//     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-//   }
-//   if (navigator.getUserMedia) {
-//     isRecordingStarted = true;
-//     navigator.getUserMedia({
-//       audio: true,
-//     }, success, (e) => {
-//       isRecordingStarted = false;
-//       alert('Please enable the microphone permission for this page');
-//     });
-//   } else {
-//     isRecordingStarted = false;
-//     alert('getUserMedia is not supported in this browser.');
-//   }
-// }
-
-// function afterMicEnable() {
-//   if (navigator.getUserMedia) {
-//     if (!rec) {
-//       isRecordingStarted = false;
-//       console.error('Recorder undefined');
-//       return;
-//     }
-//     if (_connection) {
-//       cancel();
-//     }
-//     try {
-//       _connection = createSocket();
-//     } catch (e) {
-//       isRecordingStarted = false;
-//       console.log(e);
-//       console.error('Web socket not supported in the browser');
-//     }
-//   }
-// }
-
-// function success(e) {
-//   isListening = true;
-//   mediaStream = e;
-//   if (!context) {
-//     const Context = window.AudioContext || window.webkitAudioContext;
-//     context = new Context();
-//   }
-//   mediaStreamSource = context.createMediaStreamSource(mediaStream);
-//   window.userSpeechAnalyser = context.createAnalyser();
-//   mediaStreamSource.connect(window.userSpeechAnalyser);
-//   console.log('Mediastream created');
-//   if (_connection) {
-//     _connection.close();
-//     _connection = null;
-//   }
-//   if (rec) {
-//     rec.stop();
-//     rec.clear();
-//     // rec.destroy();
-//     rec = null;
-//   }
-//   rec = new Recorder(mediaStreamSource, {
-//     workerPath: recorderWorkerPath,
-//   });
-//   console.log('Recorder Initialized');
-//   _permission = true;
-//   if (!chatInitialize.config.allowGoogleSpeech) {
-//     afterMicEnable();
-//   } else {
-//     startGoogleSpeech();
-//   }
-//   setTimeout(() => {
-//     setCaretEnd(document.getElementsByClassName('chatInputBox'));
-//   }, 600);
-// }
-
-// function cancel() {
-//   // Stop the regular sending of audio (if present) and disconnect microphone
-//   clearInterval(intervalKey);
-//   isRecordingStarted = false;
-//   if ($('.recordingMicrophone')) {
-//     $('.recordingMicrophone').css('display', 'none');
-//   }
-//   if ($('.notRecordingMicrophone')) {
-//     $('.notRecordingMicrophone').css('display', 'block');
-//   }
-//   if (mediaStream !== null && mediaStream && mediaStream.getTracks()[0].enabled) {
-//     const track = mediaStream.getTracks()[0];
-//     track.stop();
-//   }
-//   if (_connection) {
-//     _connection.close();
-//     _connection = null;
-//   }
-//   if (rec) {
-//     rec.stop();
-//     rec.clear();
-//   }
-//   sidToken = '';
-// }
-
-// function socketSend(item) {
-//   if (_connection) {
-//     const state = _connection.readyState;
-//     if (state === 1) {
-//       if (item instanceof Blob) {
-//         if (item.size > 0) {
-//           _connection.send(item);
-//           // console.log('Send: blob: ' + item.type + ', ' + item.size);
-//         } else {
-//           // console.log('Send: blob: ' + item.type + ', ' + item.size);
-//         }
-//       } else {
-//         console.log(item);
-//         _connection.send(item);
-//         // console.log('send tag: '+ item);
-//       }
-//     } else {
-//       isRecordingStarted = false;
-//       console.error('Web Socket readyState != 1: ', state, `failed to send :${item.type}, ${item.size}`);
-//       cancel();
-//     }
-//   } else {
-//     isRecordingStarted = false;
-//     console.error('No web socket connection: failed to send: ', item);
-//   }
-// }
-
-// function createSocket() {
-//   window.ENABLE_MICROPHONE = true;
-//   window.SPEECH_SERVER_SOCKET_URL = sidToken;
-//   const serv_url = window.SPEECH_SERVER_SOCKET_URL;
-//   const userEmail = userIdentity;
-//   window.WebSocket = window.WebSocket || window.MozWebSocket;
-//   const url = `${serv_url}&${CONTENT_TYPE}&email=${userEmail}`;
-//   const _connection = new WebSocket(url);
-//   // User is connected to server
-//   _connection.onopen = function (e) {
-//     console.log('User connected');
-//     _user_connection = true;
-//     rec.record();
-//     $('.recordingMicrophone').css('display', 'block');
-//     $('.notRecordingMicrophone').css('display', 'none');
-//     console.log('recording...');
-//     prevStr = '';
-//     intervalKey = setInterval(() => {
-//       rec.export16kMono((blob) => {
-//         socketSend(blob);
-//         rec.clear();
-//       }, 'audio/x-raw');
-//     }, INTERVAL);
-//   };
-//   // On receving message from server
-//   _connection.onmessage = function (msg) {
-//     const { data } = msg;
-//     let interim_transcript = '';
-//     // console.log(data);
-//     if (data instanceof Object && !(data instanceof Blob)) {
-//       console.log('Got object that is not a blob');
-//     } else if (data instanceof Blob) {
-//       console.log('Got Blob');
-//     } else {
-//       const res = JSON.parse(data);
-//       if (isListening && res.status === 0) {
-//         interim_transcript = res.result.hypotheses[0].transcript;
-//         if (res.result.final) {
-//           prevStr += `${res.result.hypotheses[0].transcript} `;
-//           interim_transcript = '';
-//         }
-
-//         console.log('Interm: ', interim_transcript);
-//         console.log('final: ', prevStr);
-//         $('.chatInputBox').html(`${prevStr}${interim_transcript}`);
-//         setTimeout(() => {
-//           setCaretEnd(document.getElementsByClassName('chatInputBox'));
-//           document.getElementsByClassName('chatInputBox')[0].scrollTop = document.getElementsByClassName('chatInputBox')[0].scrollHeight;
-//         }, 350);
-//         /* if (res.result.final) {
-//                      var final_result = res.result.hypotheses[0].transcript;
-//                      $('.chatInputBox').html($('.chatInputBox').html() + ' ' + final_result);
-//                      setTimeout(function () {
-//                          setCaretEnd(document.getElementsByClassName("chatInputBox"));
-//                          document.getElementsByClassName('chatInputBox')[0].scrollTop = document.getElementsByClassName('chatInputBox')[0].scrollHeight;
-//                      }, 350);
-//                  } else {
-//                      //$('.chatInputBox').html($('.chatInputBox').html() + ' '+ res.result.hypotheses[0].transcript);
-//                      console.log('Not final: ', res.result.hypotheses[0].transcript);
-//                  } */
-//       } else {
-//         console.log('Server error : ', res.status);
-//       }
-//     }
-//   };
-//   // If server is closed
-//   _connection.onclose = function (e) {
-//     if ($('.chatInputBox').text() !== '' && chatInitialize.config.autoEnableSpeechAndTTS) {
-//       const me = window.chatContainerConfig;
-//       me.sendMessageToBot($('.chatInputBox'));
-//     }
-//     isRecordingStarted = false;
-//     console.log('Server is closed');
-//     console.log(e);
-//     cancel();
-//   };
-//   // If there is an error while sending or receving data
-//   _connection.onerror = function (e) {
-//     console.log('Error : ', e);
-//   };
-//   return _connection;
-// }
-
-// function stop() {
-//   if ($('.chatInputBox').text() !== '' && chatInitialize.config.autoEnableSpeechAndTTS) {
-//     const me = window.chatContainerConfig;
-//     me.sendMessageToBot($('.chatInputBox'));
-//   }
-//   clearInterval(intervalKey);
-//   $('.recordingMicrophone').css('display', 'none');
-//   $('.notRecordingMicrophone').css('display', 'block');
-//   if (rec) {
-//     rec.stop();
-//     isListening = false;
-//     console.log('stopped recording..');
-//     setTimeout(() => {
-//       if (_connection) {
-//         _connection.close();
-//         _connection = null;
-//       }
-//     }, 1000); // waiting to send and receive last message
-
-//     rec.export16kMono((blob) => {
-//       socketSend(blob);
-//       rec.clear();
-//       if (_connection) {
-//         _connection.close();
-//       }
-//       const track = mediaStream.getTracks()[0];
-//       track.stop();
-//       rec.destroy();
-//       isRecordingStarted = false;
-//     }, 'audio/x-raw');
-//   } else {
-//     console.error('Recorder undefined');
-//   }
-//   if (recognizing) {
-//     recognition.stop();
-//     recognizing = false;
-//   }
-// }
-
-// $(window).on('beforeunload', () => {
-//   cancel();
-// });
-
-/** ***********************************    Microphone code end here    ************************************* */
-
-/** ***********************************    TTS code start here         ************************************* */
-
-// chatWindow.prototype.speakWithWebAPI = function (_txtToSpeak) {
-//   if ('speechSynthesis' in window) {
-//     window.speechSynthesis.cancel();
-//     // Create a new instance of SpeechSynthesisUtterance.
-//     const msg = new SpeechSynthesisUtterance();
-//     msg.text = _txtToSpeak;
-//     //  msg.voice = speechSynthesis.getVoices().filter(function(voice) {
-//     //      return voice.default===true;
-//     //     })[0];
-//     // Queue this utterance.
-//     window.speechSynthesis.speak(msg);
-//   } else {
-//     console.warn("KORE:Your browser doesn't support TTS(Speech Synthesiser)");
-//   }
-// };
-
-// function createSocketForTTS() {
-//   if (!ttsServerUrl) {
-//     console.warn('Please provide tts socket url');
-//     return false;
-//   }
-//   window.TTS_SOCKET_URL = ttsServerUrl;
-//   const serv_url = window.TTS_SOCKET_URL;
-//   const userEmail = userIdentity;
-//   window.WebSocket = window.WebSocket || window.MozWebSocket;
-//   const _ttsConnection = new WebSocket(serv_url);
-//   _ttsConnection.binaryType = 'arraybuffer';
-//   // User is connected to server
-//   _ttsConnection.onopen = function (e) {
-//     socketSendTTSMessage(_txtToSpeak);
-//   };
-//   // On receving message from server
-//   _ttsConnection.onmessage = function (msg) {
-//     _txtToSpeak = '';
-//     if (typeof msg.data === 'string') {
-//       // do nothing
-//     } else {
-//       const _data = msg.data;
-//       if (chatInitialize.isTTSOn) {
-//         playsound(_data);
-//       }
-//     }
-//   };
-//   // If server is closed
-//   _ttsConnection.onclose = function (e) {
-//     // tts socket closed
-//   };
-//   // If there is an error while sending or receving data
-//   _ttsConnection.onerror = function (e) {
-//     console.log('Error : ', e);
-//   };
-//   return _ttsConnection;
-// }
-
-// function cancelTTSConnection() {
-//   if (_ttsConnection) {
-//     _ttsConnection.close();
-//     _ttsConnection = null;
-//   }
-// }
-// function socketSendTTSMessage(item) {
-//   if (_ttsConnection) {
-//     const state = _ttsConnection.readyState;
-//     if (state === 1) {
-//       const auth = (bearerToken) || assertionToken;
-//       const _message = {
-//         message: item,
-//         user: _botInfo.name,
-//         authorization: auth,
-//       };
-//       _ttsConnection.send(JSON.stringify(_message));
-//     } else {
-//       console.error('Web Socket readyState != 1: ', state);
-//       cancelTTSConnection();
-//     }
-//   } else {
-//     console.error('No web socket connection: failed to send');
-//   }
-// }
-// function initTTSAudioContext() {
-//   if (!_ttsContext) {
-//     if (!window.AudioContext) {
-//       if (!window.webkitAudioContext) {
-//         console.error('Your browser does not support any AudioContext and cannot play back this audio.');
-//         return;
-//       }
-//       window.AudioContext = window.webkitAudioContext;
-//     }
-//     _ttsContext = new AudioContext();
-//   }
-// }
-// initTTSAudioContext();
-// function playsound(raw) {
-//   _ttsContext.decodeAudioData(raw, (buffer) => {
-//     if (!buffer) {
-//       console.error('failed to decode:', 'buffer null');
-//       return;
-//     }
-//     try {
-//       if (ttsAudioSource) {
-//         ttsAudioSource.stop();
-//       }
-//       ttsAudioSource = _ttsContext.createBufferSource();
-//       ttsAudioSource.buffer = buffer;
-//       ttsAudioSource.connect(_ttsContext.destination);
-//       ttsAudioSource.start(0);
-//       ttsAudioSource.addEventListener('ended', () => {
-//         setTimeout(() => {
-//           if (chatInitialize.isTTSOn && chatInitialize.config.autoEnableSpeechAndTTS) {
-//             $('.notRecordingMicrophone').trigger('click');
-//           }
-//         }, 350);
-//       });
-//     } catch (e) {
-//     }
-//   }, (error) => {
-//     console.error('failed to decode:', error);
-//   });
-// }
-/** ****************************** TTS code end here ********************************************* */
-/** *****************************    Function for Attachment ********************************************** */
-
-// chatWindow.prototype.makeDroppable = function (element, callback) {
-//   const input = document.createElement('input');
-//   input.setAttribute('type', 'file');
-//   input.setAttribute('multiple', false);
-//   input.style.display = 'none';
-
-//   input.addEventListener('change', triggerCallback);
-//   element.appendChild(input);
-
-//   element.addEventListener('dragover', (e) => {
-//     e.preventDefault();
-//     e.stopPropagation();
-//     element.classList.add('dragover');
-//   });
-
-//   element.addEventListener('dragleave', (e) => {
-//     e.preventDefault();
-//     e.stopPropagation();
-//     element.classList.remove('dragover');
-//   });
-
-//   element.addEventListener('drop', (e) => {
-//     e.preventDefault();
-//     e.stopPropagation();
-//     element.classList.remove('dragover');
-//     triggerCallback(e);
-//   });
-
-//   /* element.addEventListener('click', function() {
-//        input.value = null;
-//        input.click();
-//      }); */
-
-//   function triggerCallback(e) {
-//     let files;
-//     if (e.dataTransfer) {
-//       files = e.dataTransfer.files;
-//     } else if (e.target) {
-//       files = e.target.files;
-//     }
-//     callback.call(null, files);
-//   }
-// };
-// function cnvertFiles(_this, _file, customFileName) {
-//   const _scope = _this; const
-//     recState = {};
-//   if (_file && _file.size) {
-//     if (_file.size > filetypes.file.limit.size) {
-//       alert(filetypes.file.limit.msg);
-//       return;
-//     }
-//   }
-//   if (_file && customFileName) {
-//     _file.name = customFileName;
-//   }
-//   if (_file && (_file.name || customFileName)) {
-//     const _fileName = customFileName || _file.name;
-//     const fileType = _fileName.split('.').pop().toLowerCase();
-//     recState.name = _fileName;
-//     recState.mediaName = getUID();
-//     recState.fileType = _fileName.split('.').pop().toLowerCase();
-//     let uploadFn;
-//     if ((filetypes.image.indexOf(recState.fileType) > -1)) {
-//       recState.type = 'image';
-//       recState.uploadFn = 'acceptFileRecording';
-//     } else if ((filetypes.video.indexOf(recState.fileType) > -1)) {
-//       recState.type = 'video';
-//       recState.uploadFn = 'acceptVideoRecording';
-//     } else if ((filetypes.audio.indexOf(recState.fileType) > -1)) {
-//       recState.type = 'audio';
-//       recState.uploadFn = 'acceptFile';
-//     } else {
-//       recState.type = 'attachment';
-//       recState.componentSize = _file.size;
-//       recState.uploadFn = 'acceptFile';
-//     }
-//     if (allowedFileTypes && allowedFileTypes.indexOf(fileType) !== -1) {
-//       if (recState.type === 'audio' || recState.type === 'video') {
-//         // read duration;
-//         const rd = new FileReader();
-//         rd.onload = function (e) {
-//           const blob = new Blob([e.target.result], { type: _file.type }); // create a blob of buffer
-//           const url = (URL || webkitURL).createObjectURL(blob); // create o-URL of blob
-//           const video = document.createElement(recState.type); // create video element
-//           video.preload = 'metadata'; // preload setting
-//           if (video.readyState === 0) {
-//             video.addEventListener('loadedmetadata', (evt) => { // whenshow duration
-//               const _dur = Math.round(evt.target.duration);
-//               if (recState.type === 'audio') {
-//                 (URL || webkitURL).revokeObjectURL(url); // fallback for webkit
-//                 getFileToken(_this, _file, recState);
-//               }
-//             });
-//             if (recState.type === 'video') {
-//               video.addEventListener('loadeddata', (e) => {
-//                 recState.resulttype = getDataURL(video);
-//                 (URL || webkitURL).revokeObjectURL(url); // fallback for webkit
-//                 getFileToken(_this, _file, recState);
-//               });
-//             }
-//             video.src = url; // start video load
-//           } else {
-//             (URL || webkitURL).revokeObjectURL(url); // fallback for webkit
-//             getFileToken(_this, _file, recState);
-//           }
-//         };
-//         rd.readAsArrayBuffer(_file);
-//       } else if (_file.type.indexOf('image') !== (-1)) {
-//         const imgRd = new FileReader();
-//         imgRd.onload = function (e) {
-//           const blob = new Blob([e.target.result], { type: _file.type }); // create a blob of buffer
-//           const url = (URL || webkitURL).createObjectURL(blob); // create o-URL of blob
-//           const img = new Image();
-//           img.src = url;
-//           img.onload = function () {
-//             recState.resulttype = getDataURL(img);
-//             getFileToken(_this, _file, recState);
-//           };
-//         };
-//         imgRd.readAsArrayBuffer(_file);
-//       } else {
-//         getFileToken(_this, _file, recState);
-//       }
-//     } else {
-//       alert('SDK not supported this type of file');
-//     }
-//   }
-// }
-// function getUID(pattern) {
-//   let _pattern = pattern || 'xxxxyx';
-//   _pattern = _pattern.replace(/[xy]/g, (c) => {
-//     const r = Math.random() * 16 | 0;
-//     const v = c === 'x' ? r : (r & 0x3 | 0x8);
-//     return v.toString(16);
-//   });
-//   return _pattern;
-// }
-// function getDataURL(src) {
-//   const thecanvas = document.createElement('canvas');
-//   thecanvas.height = 180;
-//   thecanvas.width = 320;
-
-//   const context = thecanvas.getContext('2d');
-//   context.drawImage(src, 0, 0, thecanvas.width, thecanvas.height);
-//   const dataURL = thecanvas.toDataURL();
-//   return dataURL;
-// }
-// function acceptAndUploadFile(_this, file, recState) {
-//   const _scope = _this; let
-//     ele;
-//   const uc = getfileuploadConf(recState);
-//   uc.chunkUpload = file.size > appConsts.CHUNK_SIZE;
-//   uc.chunkSize = appConsts.CHUNK_SIZE;
-//   uc.file = file;
-//   if (uc.chunkUpload) {
-//     notifyFlie(_scope, recState);
-//     ele = $('.chatInputBox');
-//     initiateRcorder(recState, ele);
-//     ele.uploader(uc);
-//   } else {
-//     const reader = new FileReader();
-//     reader.onloadend = function (evt) {
-//       if (evt.target.readyState === FileReader.DONE) { // DONE == 2
-//         const converted = reader.result.replace(/^.*;base64,/, '');
-//         const relt = reader.result;
-//         const resultGet = converted;
-//         recState.resulttype = resultGet;
-//         acceptFileRecording(_scope, recState, ele);
-//       }
-//     };
-//     reader.readAsDataURL(file);
-//   }
-// }
-// function getFileToken(_obj, _file, recState) {
-//   const me = chatInitialize;
-//   let auth = (bearerToken) || assertionToken;
-//   let url = `${koreAPIUrl}1.1/attachment/file/token`;
-//   if (me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) {
-//     url = `${koreAPIUrl}attachments/${me.config.botOptions.webhookConfig.streamId}/${me.config.botOptions.webhookConfig.channelType}/token`;
-//     auth = `bearer ${me.config.botOptions.webhookConfig.token}`;
-//   }
-//   $.ajax({
-//     type: 'POST',
-//     url,
-//     dataType: 'json',
-//     headers: {
-//       Authorization: auth,
-//     },
-//     success(response) {
-//       fileToken = response.fileToken;
-//       acceptAndUploadFile(_obj, _file, recState);
-//     },
-//     error(msg) {
-//       chatInitialize.config.botOptions._reconnecting = true;
-//       _self.showError('Failed to upload file.Please try again');
-//       if (msg.responseJSON && msg.responseJSON.errors && msg.responseJSON.errors.length && msg.responseJSON.errors[0].httpStatus === '401') {
-//         setTimeout(() => {
-//           _self.hideError();
-//         }, 5000);
-//         $('.kore-chat-window .reload-btn').trigger('click');
-//       }
-//       console.log('Oops, something went horribly wrong');
-//     },
-//   });
-// }
-// function getfileuploadConf(_recState) {
-//   const me = chatInitialize;
-//   appConsts.UPLOAD = {
-//     FILE_ENDPOINT: `${koreAPIUrl}1.1/attachment/file`,
-//     FILE_TOKEN_ENDPOINT: `${koreAPIUrl}1.1/attachment/file/token`,
-//     FILE_CHUNK_ENDPOINT: `${koreAPIUrl}1.1/attachment/file/:fileID/chunk`,
-//   };
-//   _accessToke = `bearer ${chatInitialize.accessToken}`;
-//   if (me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) {
-//     // appConsts.UPLOAD.FILE_ENDPOINT=koreAPIUrl + "attachments/file/"+me.config.botOptions.webhookConfig.streamId+"/"+me.config.botOptions.webhookConfig.channelType;
-//     _accessToke = `bearer ${me.config.botOptions.webhookConfig.token}`;
-//     appConsts.UPLOAD = {
-//       FILE_ENDPOINT: `${koreAPIUrl}attachments/file/${me.config.botOptions.webhookConfig.streamId}/${me.config.botOptions.webhookConfig.channelType}`,
-//       FILE_TOKEN_ENDPOINT: `${koreAPIUrl}attachments/${me.config.botOptions.webhookConfig.streamId}/${me.config.botOptions.webhookConfig.channelType}/token`,
-//       FILE_CHUNK_ENDPOINT: `${koreAPIUrl}attachments/${me.config.botOptions.webhookConfig.streamId}/${me.config.botOptions.webhookConfig.channelType}/token/:fileID/chunk`,
-//     };
-//   }
-//   _uploadConfg = {};
-//   _uploadConfg.url = appConsts.UPLOAD.FILE_ENDPOINT.replace(':fileID', fileToken);
-//   _uploadConfg.tokenUrl = appConsts.UPLOAD.FILE_TOKEN_ENDPOINT;
-//   _uploadConfg.chunkUrl = appConsts.UPLOAD.FILE_CHUNK_ENDPOINT.replace(':fileID', fileToken);
-//   _uploadConfg.fieldName = 'file';
-//   _uploadConfg.data = {
-//     fileExtension: _recState.fileType,
-//     fileContext: 'workflows',
-//     thumbnailUpload: false,
-//     filename: _recState.name,
-//   };
-//   _uploadConfg.headers = {
-//     Authorization: _accessToke,
-//   };
-//   return _uploadConfg;
-// }
-// function notifyFlie(_this, _recState, _tofileId) {
-//   var _this = _this;
-//   const _data = {};
-//   _data.meta = {
-//     thumbNail: _recState.resulttype ? _recState.resulttype : undefined,
-//   };
-//   _data.values = {
-//     componentId: _recState.mediaName,
-//     componentType: _recState.type,
-//     componentFileId: _tofileId,
-//     componentData: {
-//       filename: _recState.name,
-//     },
-
-//   };
-//   if (_recState.componentSize) {
-//     _data.values.componentSize = _recState.componentSize;
-//   }
-//   onComponentReady(_this, _data);
-// }
-// function initiateRcorder(_recState, ele) {
-//   const _scope = this;
-//   ele = ele || _scope.ele;
-//   ele.on('success.ke.uploader', (e) => {
-//     onFileToUploaded(_scope, e, _recState);
-//   });
-//   ele.on('error.ke.uploader', onUploadError);
-// }
-// function onFileToUploaded(_this, evt, _recState) {
-//   var _this = _this;
-//   const _data = evt.params;
-//   if (!_data || !_data.fileId) {
-//     onError();
-//     return;
-//   }
-//   if (_recState.mediaName) {
-//     const _tofileId = _data.fileId;
-//     notifyfileCmpntRdy(_this, _recState, _tofileId);
-//   }
-// }
-// function onUploadError(_this, evt, _recState) {
-//   const _scope = _this;
-//   _recfileLisnr.onError({
-//     code: 'UPLOAD_FAILED',
-//   });
-//   _scope.removeCmpt(_recState);
-// }
-// function onError() {
-//   alert('Failed to upload content. Try again');
-//   attachmentInfo = {};
-//   $('.attachment').html('');
-//   $('.sendButton').addClass('disabled');
-//   fileUploaderCounter = 0;
-// }
-// function onComponentReady(_this, data) {
-//   var _this = _this;
-//   let _src;
-//   let _imgCntr; let _img; let base64Matcher; let http;
-//   let _cmptVal; let
-//     _cmpt;
-//   if (!_cmpt) {
-//     _cmpt = $('<div/>').attr({
-//       class: `msgCmpt ${data.values.componentType} ${data.values.componentId}`,
-//     });
-//     _cmpt.data('value', data.values);
-
-//     if (!data.values.componentFileId && data.values.componentType !== 'contact' && data.values.componentType !== 'location' && data.values.componentType !== 'filelink' && data.values.componentType !== 'alert' && data.values.componentType !== 'email') {
-//       _cmpt.append('<div class="upldIndc"></div>');
-//     }
-//     if (data.values.componentType === 'attachment') {
-//       let fileType; let
-//         _fn;
-//       if (data.values.componentDescription) {
-//         fileType = data.values.componentDescription.split('.').pop().toLowerCase();
-//       } else {
-//         fileType = data.values.componentData.filename.split('.').pop().toLowerCase();
-//       }
-//       if (fileType === 'xls' || fileType === 'xlsx') {
-//         _cmpt.append('<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_excel"></span></div>');
-//         _cmpt.append(`<div class="uploadedFileName">${data.values.componentData.filename}</div>`);
-//       } else if (fileType === 'docx' || fileType === 'doc') {
-//         _cmpt.append('<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_word"></span></div>');
-//         _cmpt.append(`<div class="uploadedFileName">${data.values.componentData.filename}</div>`);
-//       } else if (fileType === 'pdf') {
-//         _cmpt.append('<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_pdf"></span></div>');
-//         _cmpt.append(`<div class="uploadedFileName">${data.values.componentData.filename}</div>`);
-//       } else if (fileType === 'ppsx' || fileType === 'pptx' || fileType === 'ppt') {
-//         _cmpt.append('<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_ppt"></span></div>');
-//         _cmpt.append(`<div class="uploadedFileName">${data.values.componentData.filename}</div>`);
-//       } else if (fileType === 'zip' || fileType === 'rar') {
-//         _cmpt.append('<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_zip"></span></div>');
-//         _cmpt.append(`<div class="uploadedFileName">${data.values.componentData.filename}</div>`);
-//       } else {
-//         _cmpt.append('<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_other_doc"></span></div>');
-//         _cmpt.append(`<div class="uploadedFileName">${data.values.componentData.filename}</div>`);
-//       }
-//     }
-//     if (data.values.componentType === 'image') {
-//       _cmpt.append('<div class="uploadedFileIcon"><span class="icon cf-icon icon-photos_active"></span></div>');
-//       _cmpt.append(`<div class="uploadedFileName">${data.values.componentData.filename}</div>`);
-//     }
-//     if (data.values.componentType === 'audio') {
-//       _cmpt.append('<div class="uploadedFileIcon"><span class="icon cf-icon icon-files_audio"></span></div>');
-//       _cmpt.append(`<div class="uploadedFileName">${data.values.componentData.filename}</div>`);
-//     }
-//     if (data.values.componentType === 'video') {
-//       _cmpt.append('<div class="uploadedFileIcon"><span class="icon cf-icon icon-video_active"></span></div>');
-//       _cmpt.append(`<div class="uploadedFileName">${data.values.componentData.filename}</div>`);
-//     }
-//   }
-//   _cmpt.append('<div class="removeAttachment"><span>&times;</span></div>');
-//   $('.footerContainer').find('.attachment').html(_cmpt);
-//   $('.chatInputBox').focus();
-//   chatInitialize.attachmentInfo.fileName = data.values.componentData.filename;
-//   chatInitialize.attachmentInfo.fileType = data.values.componentType;
-//   $('.sendButton').removeClass('disabled');
-// }
-// function acceptFileRecording(_this, _recState, ele) {
-//   const _scope = _this;
-//   const _uc = getfileuploadConf(_recState);
-//   const _imageCntn = _recState.resulttype;
-//   notifyfileCmpntRdy(_scope, _recState);
-//   _uc.data[_uc.fieldName] = {
-//     fileName: _recState.name,
-//     data: _imageCntn,
-//     type: 'image/png',
-//   };
-//   _uc.data.thumbnail = {
-//     fileName: `${_recState.name}_thumb`,
-//     data: _imageCntn,
-//     type: 'image/png',
-//   };
-//   ele = $('.chatInputBox');
-//   initiateRcorder(_recState, ele);
-//   ele.uploader(_uc);
-// }
-// function notifyfileCmpntRdy(_this, _recState, _tofileId) {
-//   var _this = _this;
-//   const _data = {};
-//   _data.meta = {
-//     thumbNail: _recState.resulttype,
-//   };
-//   _data.values = {
-//     componentId: _recState.mediaName,
-//     componentType: _recState.type,
-//     componentFileId: _tofileId,
-//     componentData: {
-//       filename: _recState.name,
-//     },
-//   };
-//   onComponentReady(_this, _data);
-// }
-/** *************************************************** ke.uploader file code ********************************************* */
-// function MultipartData() {
-//   this.boundary = `--------MultipartData${Math.random()}`;
-//   this._fields = [];
-// }
-// MultipartData.prototype.append = function (key, value) {
-//   this._fields.push([key, value]);
-// };
-// MultipartData.prototype.toString = function () {
-//   const { boundary } = this;
-//   let body = '';
-//   this._fields.forEach((field) => {
-//     body += `--${boundary}\r\n`;
-//     // file upload
-//     if (field[1].data) {
-//       const file = field[1];
-//       if (file.fileName) {
-//         body += `Content-Disposition: form-data; name="${field[0]}"; filename="${file.fileName}"`;
-//       } else {
-//         body += `Content-Disposition: form-data; name="${field[0]}"`;
-//       }
-//       body += '\r\n';
-//       if (file.type) {
-//         body += 'Content-Type: UTF-8; charset=ISO-8859-1\r\n';
-//       }
-//       body += 'Content-Transfer-Encoding: base64\r\n';
-//       body += `\r\n${file.data}\r\n`; // base64 data
-//     } else {
-//       body += `Content-Disposition: form-data; name="${field[0]}";\r\n\r\n`;
-//       body += `${field[1]}\r\n`;
-//     }
-//   });
-//   body += `--${boundary}--`;
-//   return body;
-// };
-// function Uploader(element, options) {
-//   this.options = options;
-//   this.$element = element;
-//   if (!this.options.chunkUpload) {
-//     startUpload(this);
-//   } else {
-//     startChunksUpload(this);
-//   }
-// }
-// const _cls = Uploader.prototype;
-// _cls.events = {
-//   error: $.Event('error.ke.uploader'),
-//   progressChange: $.Event('progress.ke.uploader'),
-//   success: $.Event('success.ke.uploader'),
-// };
-// function getConnection(_this) {
-//   return new kfrm.net.HttpRequest();
-// }
-
-// function loadListener(_this, evt) {
-//   if ($('.upldIndc').is(':visible')) {
-//     _this.events.success.params = $.parseJSON(evt.target.response);
-//     attachmentInfo.fileId = _this.events.success.params.fileId;
-//     $('.sendButton').removeClass('disabled');
-//     $('.kore-chat-window').addClass('kore-chat-attachment');
-//     $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
-//     fileUploaderCounter = 1;
-//     $('.upldIndc').remove();
-//     _this.$element.trigger(_this.events.success);
-//   }
-// }
-
-// function errorListener(_this, evt) {
-//   _this.events.error.params = evt;
-//   _this.$element.trigger(_this.events.error);
-// }
-
-// function progressListener(_this, evt) {
-// }
-
-// function setOptions(_this, opts) {
-//   _this.options = opts;
-//   return _this;
-// }
-
-// function commitFile(_this) {
-//   const _scope = _this;
-//   const _conc = getConnection(_this);
-//   const _mdat = new MultipartData();
-//   _conc.addEventListener('load', (evt) => {
-//     if (evt.target.status === 200) {
-//       if (_scope.$element.parent().length) {
-//         loadListener(_scope, evt);
-//       }
-//     } else {
-//       errorListener(_scope, evt);
-//     }
-//   }, false);
-//   _conc.addEventListener('error', (evt) => {
-//     errorListener(_scope, evt);
-//   }, false);
-//   _conc.withCredentials = false;
-//   _conc.open('PUT', _this.options.chunkUrl.replace(/\/chunk/, ''));
-
-//   if (_this.options.headers) {
-//     for (const header in _this.options.headers) {
-//       _conc.setRequestHeader(header, _this.options.headers[header]);
-//     }
-//   }
-//   _mdat.append('totalChunks', _scope.totalChunks);
-//   _mdat.append('messageToken', _scope.messageToken);
-//   if (_this.options.data) {
-//     for (const key in _this.options.data) {
-//       _mdat.append(key, _this.options.data[key]);
-//     }
-//   }
-//   _conc.setRequestHeader('Content-Type', `multipart/form-data; boundary=${_mdat.boundary}`);
-//   _conc.send(_mdat.toString());
-// }
-
-// function uploadChunk(_this) {
-//   const _scope = _this;
-//   const _conc = getConnection(_this);
-//   const _mdat = new MultipartData();
-//   _conc.addEventListener('load', (evt) => {
-//     if (evt.target.status === 200) {
-//       _scope.currChunk++;
-//       if (!_scope.$element.parent().length) {
-
-//       } else if (_scope.currChunk === _scope.totalChunks) {
-//         commitFile(_scope);
-//       } else {
-//         initUploadChunk(_scope);
-//       }
-//     } else {
-//       errorListener(_scope, evt);
-//     }
-//   }, false);
-//   _conc.addEventListener('error', (evt) => {
-//     errorListener(_scope, evt);
-//   }, false);
-//   _conc.withCredentials = false;
-//   _conc.open('POST', _this.options.chunkUrl);
-
-//   if (_this.options.headers) {
-//     for (const header in _this.options.headers) {
-//       _conc.setRequestHeader(header, _this.options.headers[header]);
-//     }
-//   }
-//   _mdat.append('chunkNo', _scope.currChunk);
-//   _mdat.append('messageToken', _scope.messageToken);
-//   _mdat.append('chunk', {
-//     data: _scope.chunk,
-//     fileName: _scope.options.file.name,
-//   });
-//   _conc.setRequestHeader('Content-Type', `multipart/form-data; boundary=${_mdat.boundary}`);
-//   _conc.send(_mdat.toString());
-// }
-
-// function initUploadChunk(_this) {
-//   const _scope = _this;
-//   const { file } = _scope.options;
-//   const start = _scope.options.chunkSize * (_scope.currChunk);
-//   const stop = (_scope.currChunk === _scope.totalChunks - 1) ? file.size : (_scope.currChunk + 1) * _scope.options.chunkSize;
-//   const reader = new FileReader();
-//   const blob = file.slice(start, stop);
-//   reader.onloadend = function (evt) {
-//     if (evt.target.readyState === FileReader.DONE && _scope.$element.parent().length) { // DONE == 2
-//       let dataObj = evt.target.result;
-//       dataObj = dataObj.replace(/^.*;base64,/, '');
-//       dataObj = dataObj.replace('data:application/octet-stream;base64,', '');
-//       _scope.chunk = dataObj;
-//       if (_scope.currChunk < _scope.totalChunks && _scope.$element.parent().length) {
-//         uploadChunk(_scope);
-//       }
-//     } else {
-//       errorListener(_scope, evt);
-//     }
-//   };
-//   reader.readAsDataURL(blob);
-// }
-
-// function startChunksUpload(_this) {
-//   const _scope = _this;
-//   const _conc = getConnection(_this);
-//   _conc.addEventListener('error', (evt) => {
-//     errorListener(_scope, evt);
-//   }, false);
-//   _conc.addEventListener('load', (evt) => {
-//     if (evt.target.status === 200) {
-//       _scope.messageToken = JSON.parse(evt.target.response).fileToken;
-//       _scope.totalChunks = Math.floor(_scope.options.file.size / _scope.options.chunkSize) + 1;
-//       _scope.currChunk = 0;
-//       _scope.options.chunkUrl = _scope.options.chunkUrl.replace(':token', _scope.messageToken);
-//       if (_scope.$element.parent().length) {
-//         initUploadChunk(_scope);
-//       }
-//     } else {
-//       errorListener(_scope, evt);
-//     }
-//   }, false);
-//   _conc.withCredentials = false;
-//   _conc.open('POST', _this.options.tokenUrl);
-//   if (_this.options.headers) {
-//     for (const header in _this.options.headers) {
-//       _conc.setRequestHeader(header, _this.options.headers[header]);
-//     }
-//   }
-//   _conc.send();
-// }
-// function startUpload(_this) {
-//   const _scope = _this;
-//   _conc = getConnection(_this),
-//   _mdat = new MultipartData();
-//   if (_conc.upload && _conc.upload.addEventListener) {
-//     _conc.upload.addEventListener('progress', (evt) => {
-//       progressListener(_scope, evt);
-//     }, false);
-//   }
-//   _conc.addEventListener('load', (evt) => {
-//     if (_scope.$element.parent().length) {
-//       loadListener(_scope, evt);
-//     }
-//   }, false);
-//   _conc.addEventListener('error', (evt) => {
-//     errorListener(_scope, evt);
-//   }, false);
-//   _conc.withCredentials = false;
-//   _conc.open('POST', _this.options.url);
-
-//   if (_this.options.headers) {
-//     for (const header in _this.options.headers) {
-//       _conc.setRequestHeader(header, _this.options.headers[header]);
-//     }
-//   }
-//   if (_this.options.data) {
-//     for (const key in _this.options.data) {
-//       _mdat.append(key, _this.options.data[key]);
-//     }
-//   }
-//   _conc.setRequestHeader('Content-Type', `multipart/form-data; boundary=${_mdat.boundary}`);
-//   _conc.send(_mdat.toString());
-// }
-
-
-
-// listen to chart click
-
-// const old = $.fn.uploader;
-
-// $.fn.uploader = function (option) {
-//   const _args = Array.prototype.slice.call(arguments, 1);
-//   return this.each(function () {
-//     const $this = $(this);
-//     let data = '';// $this.data('ke.uploader'),
-//     options = typeof option === 'object' && option;
-
-//     if (!data) {
-//       $this.data('ke.uploader', (data = new Uploader($this, options)));
-//     } else if (option) {
-//       if (typeof option === 'string' && data[option]) {
-//         data[option].apply(data, _args);
-//       } else if (options) {
-//         startUpload(setOptions(data, options));
-//       }
-//     }
-//     return option && data[option] && data[option].apply(data, _args);
-//   });
-// };
-
-// $.fn.uploader.Constructor = Uploader;
-
-// $.fn.uploader.noConflict = function () {
-//   $.fn.uploader = old;
-//   return this;
-// };
-/** **********************************************************************************************************************************************
- ********************************************** kore.ai framework file ******************************************************************************
- *********************************************************************************************************************************************** */
-// +(function () {
-//   function getHTTPConnecton() {
-//     let xhr = false;
-//     xhr = new XMLHttpRequest();
-//     if (xhr) {
-//       return xhr;
-//     } if (typeof XDomainRequest !== 'undefined') {
-//       return new XDomainRequest();
-//     }
-//     return xhr;
-//   }
-
-//   function HttpRequest() {
-//     const xhr = getHTTPConnecton();
-//     if (!xhr) {
-//       throw 'Unsupported HTTP Connection';
-//     }
-//     try {
-//       xhr.withCredentials = true;
-//     } catch (e) {
-//     }
-//     xhr.onreadystatechange = function () {
-//       return xhr.onReadyStateChange && xhr.onReadyStateChange.call(xhr);
-//     };
-//     return xhr;
-//   }
-//   kfrm.net.HttpRequest = HttpRequest;
-// }());
-
-//  return {
-//      initToken: initToken,
-//      addListener: addListener,
-//      removeListener: removeListener,
-//      show: show,
-//      destroy: destroy,
-//      showError: showError,
-//      botDetails: botDetails,
-//      chatHistory: chatHistory,
-//      getSDKInstance:function(){
-//          return bot;
-//      },
-//      instance:chatInitialize,
-//      sdkInstance:bot,
-//      chatWindow:chatWindow,
-//      addWidgetEvents:addWidgetEvents,
-//      setWidgetInstance:setWidgetInstance,
-//      closeConversationSession:closeConversationSession
-//  };
-
-// Actual chatwindow.js koreBotChat function code end here
-//    return chatWindow
-// })(korejquery,KRPerfectScrollbar)
 chatWindow.prototype.$ = $;
 chatWindow.prototype.installPlugin = function (plugin) {
   const me = this;
