@@ -15,15 +15,14 @@ import ListWidgetTemplate from './templates/listWidgetTemplate/listWidgetTemplat
 import MiniTableChartTemplate from './templates/miniTableTemplate/miniTableTemplate';
 import CarouselTemplate from './templates/carouselTemplate/carouselTemplate';
 import ListViewTemplate from './templates/listViewTemplate/listViewTemplate';
-import LineChartTemplate from './templates/lineChartTemplate/lineChartTemplate';
-import BarChartTemplate from './templates/barChartTemplate/barChartTemplate';
-import PieChartTemplate from './templates/pieChartTemplate/pieChartTemplate';
-import DatePickerTemplate from './templates/datePicker/datePicker';
-import DateRangePickerTemplate from './templates/dateRangePicker/dateRangePicker';
-import MessageTemplate from './templates/messageTemplate/messageTemplate';
-import ClockPickerTemplate from './templates/clockPicker/clockPicker';
-import RadioOptionPickerTemplate from './templates/radioOptionPicker/radioOptionPicker';
-import TaskPickerTemplate from './templates/taskPickerTemplate/taskPickerTemplate';
+// import LineChartTemplate from './templates/lineChartTemplate/lineChartTemplate';
+// import BarChartTemplate from './templates/barChartTemplate/barChartTemplate';
+// import PieChartTemplate from './templates/pieChartTemplate/pieChartTemplate';
+
+//import MessageTemplate from './templates/messageTemplate/messageTemplate';
+
+
+
 import IframeTemplate from './templates/iframeTemplate/iframeTemplate';
 import './customTemplate.css';
 import '../../../libs/purejscarousel.css';
@@ -38,7 +37,7 @@ import '../../../libs/purejscarousel.css';
 
 	customTemplate.prototype.installTemplate = function (template) {
 		this.templates.push(template);
-		template.cwInstance=this.hostInstance;
+		template.hostInstance=this.hostInstance;
 	};
 
 	customTemplate.prototype.installDefaultTemplates = function () {
@@ -59,16 +58,19 @@ import '../../../libs/purejscarousel.css';
 		this.installTemplate(new CarouselTemplate());
 		this.installTemplate(new MiniTableChartTemplate());
 		this.installTemplate(new ListViewTemplate());
-		this.installTemplate(new PieChartTemplate());
-		this.installTemplate(new BarChartTemplate());
-		this.installTemplate(new LineChartTemplate());
+	
+		// this.installTemplate(new PieChartTemplate());
+		// this.installTemplate(new BarChartTemplate());
+		// this.installTemplate(new LineChartTemplate());
+
 		this.installTemplate(new DatePickerTemplate());
 		this.installTemplate(new DateRangePickerTemplate());
 		this.installTemplate(new ClockPickerTemplate());
 		this.installTemplate(new RadioOptionPickerTemplate());
 		this.installTemplate(new TaskPickerTemplate());
+
 		this.installTemplate(new IframeTemplate());
-		this.installTemplate(new MessageTemplate());
+		//this.installTemplate(new MessageTemplate());
 
 	};
 	/**

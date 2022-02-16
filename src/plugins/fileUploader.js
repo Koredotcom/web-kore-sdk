@@ -27,7 +27,7 @@ class KoreFileUploaderPlugin {
 
   onInit() {
     let me = this;
-    let $ = me.cwInstance.$;
+    let $ = me.hostInstance.$;
     me.ele = $(me.getTemplateString());
     me.bindEvents();
     me.appendFileUploaderElementToChatwindow();
@@ -86,14 +86,19 @@ class KoreFileUploaderPlugin {
     });
   }
 
-  onChatWindowInit() {
-    this.onInit();
+  onHostCreate() {
+    let me = this;
+    let cwInstance=me.hostInstance;
+    cwInstance.on("viewInit", (chatWindowEle) => {
+        debugger;
+        me.onInit();
+    });
   }
-
+  
   appendFileUploaderElementToChatwindow() {
     let me = this;
-    let chatWindowInstance = me.cwInstance;
-    let $ = me.cwInstance.$;
+    let chatWindowInstance = me.hostInstance;
+    let $ = me.hostInstance.$;
     const _chatContainer = chatWindowInstance.config.chatContainer;
     _chatContainer.find('.kore-chat-footer .footerContainer').append(me.ele);
   }
@@ -186,12 +191,12 @@ class KoreFileUploaderPlugin {
 
   getFileToken(_obj, _file, recState) {
     let me = this;
-    let $ = me.cwInstance.$;
-    let auth = "bearer " + me.cwInstance.config.botOptions.accessToken;
-    let url = me.cwInstance.config.botOptions.koreAPIUrl + '1.1/attachment/file/token';
-    if (me.cwInstance.config && me.cwInstance.config && me.cwInstance.config.botOptions && me.cwInstance.config.botOptions.webhookConfig && me.cwInstance.config.botOptions.webhookConfig.enable) {
-      url = me.cwInstance.config.botOptions.koreAPIUrl + 'attachments/' + me.cwInstance.config.botOptions.webhookConfig.streamId + '/' + me.cwInstance.config.botOptions.webhookConfig.channelType + '/token';
-      auth = "bearer " + me.cwInstance.config.botOptions.webhookConfig.token;
+    let $ = me.hostInstance.$;
+    let auth = "bearer " + me.hostInstance.config.botOptions.accessToken;
+    let url = me.hostInstance.config.botOptions.koreAPIUrl + '1.1/attachment/file/token';
+    if (me.hostInstance.config && me.hostInstance.config && me.hostInstance.config.botOptions && me.hostInstance.config.botOptions.webhookConfig && me.hostInstance.config.botOptions.webhookConfig.enable) {
+      url = me.hostInstance.config.botOptions.koreAPIUrl + 'attachments/' + me.hostInstance.config.botOptions.webhookConfig.streamId + '/' + me.hostInstance.config.botOptions.webhookConfig.channelType + '/token';
+      auth = "bearer " + me.hostInstance.config.botOptions.webhookConfig.token;
     }
     $.ajax({
       type: 'POST',
@@ -269,18 +274,18 @@ class KoreFileUploaderPlugin {
   getfileuploadConf(_recState) {
     const me = this;
     me.appConsts.UPLOAD = {
-      FILE_ENDPOINT: me.cwInstance.config.botOptions.koreAPIUrl + '1.1/attachment/file',
-      FILE_TOKEN_ENDPOINT: me.cwInstance.config.botOptions.koreAPIUrl + '1.1/attachment/file/token',
-      FILE_CHUNK_ENDPOINT: me.cwInstance.config.botOptions.koreAPIUrl + '1.1/attachment/file/:fileID/chunk',
+      FILE_ENDPOINT: me.hostInstance.config.botOptions.koreAPIUrl + '1.1/attachment/file',
+      FILE_TOKEN_ENDPOINT: me.hostInstance.config.botOptions.koreAPIUrl + '1.1/attachment/file/token',
+      FILE_CHUNK_ENDPOINT: me.hostInstance.config.botOptions.koreAPIUrl + '1.1/attachment/file/:fileID/chunk',
     };
-    let _accessToken = "bearer " + me.cwInstance.config.botOptions.accessToken;
+    let _accessToken = "bearer " + me.hostInstance.config.botOptions.accessToken;
     if (me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) {
       // appConsts.UPLOAD.FILE_ENDPOINT=koreAPIUrl + "attachments/file/"+me.config.botOptions.webhookConfig.streamId+"/"+me.config.botOptions.webhookConfig.channelType;
-      _accessToken = "bearer " + me.cwInstance.config.botOptions.accessToken;
+      _accessToken = "bearer " + me.hostInstance.config.botOptions.accessToken;
       me.appConsts.UPLOAD = {
-        FILE_ENDPOINT: me.cwInstance.config.botOptions.koreAPIUrl + 'attachments/file/' + me.cwInstance.config.botOptions.webhookConfig.streamId + '/' + me.cwInstance.config.botOptions.webhookConfig.channelType,
-        FILE_TOKEN_ENDPOINT: me.cwInstance.config.botOptions.koreAPIUrl + 'attachments/' + me.cwInstance.config.botOptions.webhookConfig.streamId + '/' + me.cwInstance.config.botOptions.webhookConfig.channelType + '/token',
-        FILE_CHUNK_ENDPOINT: me.cwInstance.config.botOptions.koreAPIUrl + 'attachments/' + me.cwInstance.config.botOptions.webhookConfig.streamId + '/' + me.cwInstance.config.botOptions.webhookConfig.channelType + '/token/:fileID/chunk',
+        FILE_ENDPOINT: me.hostInstance.config.botOptions.koreAPIUrl + 'attachments/file/' + me.hostInstance.config.botOptions.webhookConfig.streamId + '/' + me.hostInstance.config.botOptions.webhookConfig.channelType,
+        FILE_TOKEN_ENDPOINT: me.hostInstance.config.botOptions.koreAPIUrl + 'attachments/' + me.hostInstance.config.botOptions.webhookConfig.streamId + '/' + me.hostInstance.config.botOptions.webhookConfig.channelType + '/token',
+        FILE_CHUNK_ENDPOINT: me.hostInstance.config.botOptions.koreAPIUrl + 'attachments/' + me.hostInstance.config.botOptions.webhookConfig.streamId + '/' + me.hostInstance.config.botOptions.webhookConfig.channelType + '/token/:fileID/chunk',
       };
     }
     let _uploadConfg = {};
@@ -324,7 +329,7 @@ class KoreFileUploaderPlugin {
   onComponentReady(_this, data) {
     debugger;
     let me = this;
-    let $ = me.cwInstance.$;
+    let $ = me.hostInstance.$;
     let _cmpt;
     if (!_cmpt) {
       _cmpt = $('<div/>').attr({
@@ -379,14 +384,14 @@ class KoreFileUploaderPlugin {
     _cmpt.append('<div class="removeAttachment"><span>&times;</span></div>');
     $('.footerContainer').find('.attachment').html(_cmpt);
     $('.chatInputBox').focus();
-    me.cwInstance.chatInitialize.attachmentInfo.fileName = data.values.componentData.filename;
-    me.cwInstance.chatInitialize.attachmentInfo.fileType = data.values.componentType;
+    me.hostInstance.chatInitialize.attachmentInfo.fileName = data.values.componentData.filename;
+    me.hostInstance.chatInitialize.attachmentInfo.fileType = data.values.componentType;
     $('.sendButton').removeClass('disabled');
   }
 
   acceptFileRecording(_this, _recState, ele) {
     const me = this;
-    let $ = me.cwInstance.$;
+    let $ = me.hostInstance.$;
     const _uc = me.getfileuploadConf(_recState);
     const _imageCntn = _recState.resulttype;
     me.notifyfileCmpntRdy(_this, _recState);

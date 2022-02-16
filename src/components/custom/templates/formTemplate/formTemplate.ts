@@ -4,7 +4,7 @@ import  './formTemplate.scss';
 class FormTemplate {
     renderMessage(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "form_template") {
@@ -18,8 +18,8 @@ class FormTemplate {
     }
     bindEvents(messageHtml: any) {
         let me: any = this;
-        let chatWindowInstance = me.cwInstance;
-        let $ = me.cwInstance.$;
+        let chatWindowInstance = me.hostInstance;
+        let $ = me.hostInstance.$;
         $(messageHtml).find(".formMainComponent").on('keydown', function (e: any) {
             if (e.keyCode == 13) {
                 e.preventDefault();

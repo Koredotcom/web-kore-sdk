@@ -5,7 +5,7 @@ import './templateAttachment.scss';
 class TemplateAttachment {
     renderMessage(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.type == 'image' || msgData.message[0].component.type == 'audio' || msgData.message[0].component.type == 'video' || msgData.message[0].component.type == 'link')) {
@@ -19,7 +19,7 @@ class TemplateAttachment {
     }
     bindEvents(messageHtml:any) {
         let me :any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         $(messageHtml).off('click', '.botResponseAttachments').on('click', '.botResponseAttachments', function (event: any) {
             event.preventDefault();
             event.stopPropagation();

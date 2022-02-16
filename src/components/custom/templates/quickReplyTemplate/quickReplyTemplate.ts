@@ -5,7 +5,7 @@ class QuickReplyTemplate {
 
     renderMessage(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "quick_replies") {
@@ -19,8 +19,8 @@ class QuickReplyTemplate {
     }
     bindEvents(messageHtml:any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
-        let chatWindowInstance = me.cwInstance;
+        let $ = me.hostInstance.$;
+        let chatWindowInstance = me.hostInstance;
         const quickReplyDivs = document.querySelectorAll('.quickReplies');
         for (var i = 0; i < quickReplyDivs.length; i++) {
             const btnsParentDiv: any = quickReplyDivs[i].querySelectorAll('.quick_replies_btn_parent');

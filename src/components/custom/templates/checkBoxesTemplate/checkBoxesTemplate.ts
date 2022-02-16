@@ -4,7 +4,7 @@ import './checkBoxesTemplate.scss';
 class CheckBoxesTemplate {
     renderMessage(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "multi_select") {
@@ -18,8 +18,8 @@ class CheckBoxesTemplate {
     }
     bindEvents() {
         let me: any = this;
-        let chatWindowInstance = me.cwInstance;
-        let $ = me.cwInstance.$;
+        let chatWindowInstance = me.hostInstance;
+        let $ = me.hostInstance.$;
         const _chatContainer = chatWindowInstance.config.chatContainer;
         _chatContainer.off('click', '.checkboxBtn').on('click', '.checkboxBtn', function (e: any) {
             let selectedTarget = e.currentTarget;

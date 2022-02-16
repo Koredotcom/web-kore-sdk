@@ -5,7 +5,7 @@ class ListViewTemplate {
 
     renderMessage(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "listView") {
@@ -23,8 +23,8 @@ class ListViewTemplate {
     }
     bindEvents(messageHtml: any) {
         let me: any = this;
-        let chatWindowInstance = me.cwInstance;
-        let $ = me.cwInstance.$;
+        let chatWindowInstance = me.hostInstance;
+        let $ = me.hostInstance.$;
         var _innerText;
         $(messageHtml).off('click', '.listViewTmplContent .seeMoreList').on('click', '.listViewTmplContent .seeMoreList', function () {
             if ($(".list-template-sheet").length !== 0) {
@@ -56,8 +56,8 @@ class ListViewTemplate {
     }
     listViewTabs() {
         let me: any = this;
-        let chatWindowInstance = me.cwInstance;
-        let $ = me.cwInstance.$;
+        let chatWindowInstance = me.hostInstance;
+        let $ = me.hostInstance.$;
         let helpersObj = helpers;
         var msgData = $("li.fromOtherUsers.with-icon.listView").data();
         if (msgData.message[0].component.payload.seeMore) {
@@ -101,8 +101,8 @@ class ListViewTemplate {
     }
     valueClick(_self: any, actionObj: any) {
         let me: any = this;
-        let chatWindowInstance = me.cwInstance;
-        let $ = me.cwInstance.$;
+        let chatWindowInstance = me.hostInstance;
+        let $ = me.hostInstance.$;
         var _innerText;
         if (actionObj) {
             if (actionObj.type === "url") {

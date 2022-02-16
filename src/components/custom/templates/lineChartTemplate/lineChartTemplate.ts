@@ -5,7 +5,7 @@ import './lineChartTemplate.scss';
 class LineChartTemplate {
     renderMessage(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         let helpersObj = helpers;
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "linechart") {
             me.messageHtml = $(me.getTemplateString('linechartTemplate')).tmpl({
@@ -19,7 +19,7 @@ class LineChartTemplate {
     }
     bindEvents(msgData: any) {
         let me: any = this;
-        let chatWindowInstance = me.cwInstance;
+        let chatWindowInstance = me.hostInstance;
         KoreGraphAdapter.drawlineChartTemplate(msgData,me.messageHtml);
 
         setTimeout(() => {

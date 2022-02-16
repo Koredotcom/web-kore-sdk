@@ -4,7 +4,7 @@ import './tableListTemplate.scss';
 class TableListTemplate {
 	renderMessage(msgData: any) {
 		let me: any = this;
-		let $ = me.cwInstance.$;
+		let $ = me.hostInstance.$;
 		let helpersObj = helpers;
 
 		if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "tableList") {
@@ -18,7 +18,7 @@ class TableListTemplate {
 	}
 	bindEvents(messageHtml: any) {
 		let me: any = this;
-		let $ = me.cwInstance.$;
+		let $ = me.hostInstance.$;
 		$(messageHtml).off('click', '.listViewItemValue.actionLink,.listTableDetailsDesc').on('click', '.listViewItemValue.actionLink,.listTableDetailsDesc', function (e: any) {
 			var _self = e.currentTarget;
 			me.valueClick(_self);
@@ -26,8 +26,8 @@ class TableListTemplate {
 	}
 	valueClick(_self: any, actionObj: any) {
 		let me: any = this;
-		let chatWindowInstance = me.cwInstance;
-		let $ = me.cwInstance.$;
+		let chatWindowInstance = me.hostInstance;
+		let $ = me.hostInstance.$;
 		var _innerText;
 		if (actionObj) {
 			if (actionObj.type === "url") {

@@ -4,7 +4,7 @@ import './ratingTemplate.scss';
 class RatingTemplate {
     renderMessage(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.template_type === "feedbackTemplate" && (msgData.message[0].component.payload.view === "star" || msgData.message[0].component.payload.view === "emojis"))) {
@@ -18,8 +18,8 @@ class RatingTemplate {
     }
     bindEvents(messageHtml: any) {
         let me: any = this;
-        let chatWindowInstance = me.cwInstance;
-        let $ = me.cwInstance.$;
+        let chatWindowInstance = me.hostInstance;
+        let $ = me.hostInstance.$;
         $(messageHtml).find(".ratingMainComponent").off('click', '[type*="radio"]').on('click', '[type*="radio"]', function (e: any) {
             var _innerText: any = $(e.currentTarget).attr('value');
             var msgData: any;

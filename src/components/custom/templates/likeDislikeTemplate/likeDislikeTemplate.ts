@@ -5,7 +5,7 @@ import './likeDislikeTemplate.scss';
 class LikeDislikeTemplate {
     renderMessage(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "like_dislike") {
@@ -19,8 +19,8 @@ class LikeDislikeTemplate {
     }
     bindEvents(messageHtml: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
-        let chatWindowInstance = me.cwInstance;
+        let $ = me.hostInstance.$;
+        let chatWindowInstance = me.hostInstance;
         $(messageHtml).off('click', '.likeDislikeDiv').on('click', '.likeDislikeDiv', function (e: any) {
             e.preventDefault();
             e.stopPropagation();

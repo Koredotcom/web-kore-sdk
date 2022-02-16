@@ -5,7 +5,7 @@ class TableChartTemplate {
 
     renderMessage(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "table") {
@@ -19,7 +19,7 @@ class TableChartTemplate {
     }
     bindEvents() {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         setTimeout(() => {
             const acc = document.getElementsByClassName('accordionRow');
             for (var i = 0; i < acc.length; i++) {

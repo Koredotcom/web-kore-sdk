@@ -5,7 +5,7 @@ import './carouselTemplate.scss';
 class CarouselTemplate {
   renderMessage(msgData: any) {
     const me: any = this;
-    let $ = me.cwInstance.$;
+    let $ = me.hostInstance.$;
     const helpersObj = helpers;
     const carouselEles = [];
 
@@ -16,7 +16,7 @@ class CarouselTemplate {
       });
       setTimeout(() => {
         const me: any = this;
-        const chatWindowInstance = me.cwInstance;
+        const chatWindowInstance = me.hostInstance;
         $('.carousel:last').addClass(`carousel${chatWindowInstance.carouselTemplateCount}`);
         const count = $(`.carousel${chatWindowInstance.carouselTemplateCount}`).children().length;
         if (count > 1) {
@@ -46,8 +46,8 @@ class CarouselTemplate {
 
   bindEvents(messageHtml: any) {
     const me: any = this;
-    let $ = me.cwInstance.$;
-    const chatWindowInstance = me.cwInstance;
+    let $ = me.hostInstance.$;
+    const chatWindowInstance = me.hostInstance;
     $(messageHtml).off('click', '.carouselImageContent').on('click', '.carouselImageContent', (e: any) => {
       e.preventDefault();
       e.stopPropagation();

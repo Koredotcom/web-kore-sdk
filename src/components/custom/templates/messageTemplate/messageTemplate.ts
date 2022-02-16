@@ -6,9 +6,9 @@ class MessageTemplate {
 
     renderMessage(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         let helpersObj = helpers;
-        let chatWindowInstance = me.cwInstance;
+        let chatWindowInstance = me.hostInstance;
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.formData && msgData.message[0].component.payload.formData.renderType === 'inline') {
             msgData.renderType = 'inline';
             me.messageHtml = chatWindowInstance.renderWebForm(msgData, true);

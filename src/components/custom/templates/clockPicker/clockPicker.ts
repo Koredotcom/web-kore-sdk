@@ -11,7 +11,7 @@ class ClockPickerTemplate {
     clockPickerInputContainer: any;
     renderMessage(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "clockTemplate") {
             me.messageHtml = $(me.getTemplateString());
             me.initiateClockPicker();
@@ -24,8 +24,8 @@ class ClockPickerTemplate {
     }
     bindEvents() {
         let me: any = this;
-        let $ = me.cwInstance.$;
-        let chatWindowInstance = me.cwInstance;
+        let $ = me.hostInstance.$;
+        let chatWindowInstance = me.hostInstance;
         $(me.messageHtml).find(".btn.btn-sm.btn-default.clockpicker-button.am-button").click(function () {
             $(me.messageHtml).find(".btn.btn-sm.btn-default.clockpicker-button.pm-button").css({ "opacity": "0.4" });
             $(me.messageHtml).find(".btn.btn-sm.btn-default.clockpicker-button.am-button").css({ "opacity": "1" });
@@ -49,8 +49,8 @@ class ClockPickerTemplate {
     }
     initiateClockPicker() {
         let me: any = this;
-        let $ = me.cwInstance.$;
-        let chatWindowInstance = me.cwInstance;
+        let $ = me.hostInstance.$;
+        let chatWindowInstance = me.hostInstance;
         installClockPicker($);
         if (this.defaultClockerPickerConfig.appendTo !== 'messageBubble') {
             chatWindowInstance.bottomSliderAction('show', me.messageHtml);
@@ -91,7 +91,7 @@ class ClockPickerTemplate {
     bindDataToTemplate(msgData: any) {
         var clockInput = this.clockPickerInputContainer;
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         var showAmorPm: any = $(me.messageHtml).find('#clockPickerInput').data('clockpicker');
         showAmorPm.amOrPm = "AM";
         showAmorPm.options.default = "12:00";

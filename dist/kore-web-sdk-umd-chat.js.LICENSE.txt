@@ -1,12 +1,4 @@
 /*!
- * ClockPicker v0.0.7 (http://weareoutman.github.io/clockpicker/)
- * Copyright 2014 Wang Shenwei.
- * Licensed under MIT (https://github.com/weareoutman/clockpicker/blob/gh-pages/LICENSE)
- * Change History:
- * 	#kore:change 1: added parent element option to configure
- */
-
-/*!
  * Sizzle CSS Selector Engine v2.3.6
  * https://sizzlejs.com/
  *
@@ -40,6 +32,16 @@
  */
 
 /*!
+ * jQuery Templates Plugin 1.0.0pre
+ * http://github.com/jquery/jquery-tmpl
+ * Requires jQuery 1.4.2
+ *
+ * Copyright 2011, Software Freedom Conservancy, Inc.
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ */
+
+/*!
  * perfect-scrollbar v1.5.2
  * Copyright 2021 Hyunje Jun, MDBootstrap and Contributors
  * Licensed under MIT
@@ -58,7 +60,3 @@
  *
  * Copyright (c) Jon Nylander
  */
-
-//! moment.js
-
-//! moment.js locale configuration

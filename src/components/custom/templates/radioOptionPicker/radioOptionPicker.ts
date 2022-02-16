@@ -4,7 +4,7 @@ class RadioOptionPickerTemplate {
 
     renderMessage(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "radioOptionTemplate") {
             me.messageHtml = $(me.getTemplateString());
             me.initiateRadioOptionPicker(msgData);
@@ -13,8 +13,8 @@ class RadioOptionPickerTemplate {
     }
     bindEvents() {
         let me: any = this;
-        let $ = me.cwInstance.$;
-        let chatWindowInstance = me.cwInstance;
+        let $ = me.hostInstance.$;
+        let chatWindowInstance = me.hostInstance;
         let target: any;
         $(me.messageHtml).find(".btnAccount").click(function (event: any) {
             target = $(event.currentTarget);
@@ -37,8 +37,8 @@ class RadioOptionPickerTemplate {
     }
     initiateRadioOptionPicker(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
-        let chatWindowInstance = me.cwInstance;
+        let $ = me.hostInstance.$;
+        let chatWindowInstance = me.hostInstance;
         // let accountData: any = me.getRadioOptions();
         let accountData: any = msgData.message[0].component.payload.radioOptions;
         chatWindowInstance.bottomSliderAction('show', me.messageHtml);
@@ -108,7 +108,7 @@ class RadioOptionPickerTemplate {
     }
     getradioOptionsPickerTemplate(radioOptionConfig: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         var $radioOptionsContent = $('<div class="radioOptionMenuPicker"></div>');
         radioOptionConfig.forEach(function (radioOption: any) {
             var radioOptionHtml = $('<label class="radioButton"><div class="btnAccount">\

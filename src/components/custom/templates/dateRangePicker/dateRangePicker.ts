@@ -19,7 +19,7 @@ class DateRangePickerTemplate {
     daterangeInput: any;
     renderMessage(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "daterange") {
             me.messageHtml = $(me.getTemplateString('datePickerTemplate'));
             me.initiateDatePicker(msgData);
@@ -32,8 +32,8 @@ class DateRangePickerTemplate {
     }
     bindEvents() {
         let me: any = this;
-        let chatWindowInstance = me.cwInstance;
-        let $ = me.cwInstance.$;
+        let chatWindowInstance = me.hostInstance;
+        let $ = me.hostInstance.$;
         let startdateValue: any;
         let enddateValue: any;
         let showEndDateValue: any;
@@ -83,8 +83,8 @@ class DateRangePickerTemplate {
     }
     initiateDatePicker(msgData: any) {
         let me: any = this;
-        let chatWindowInstance = me.cwInstance;
-        let $ = me.cwInstance.$;
+        let chatWindowInstance = me.hostInstance;
+        let $ = me.hostInstance.$;
         installDateRangeFunctions($, moment);
         if (this.defaultDateRangePickerConfig.appendTo !== 'messageBubble') {
             chatWindowInstance.bottomSliderAction('show', me.messageHtml);
@@ -140,7 +140,7 @@ class DateRangePickerTemplate {
 
     bindDataToTemplate(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         $(me.messageHtml).find(".showStartdate .showStartMonth").html(moment().format('ddd,MMM DD'));
         $(me.messageHtml).find('.showStartdate .showStartYear').html(new Date().getFullYear());
         $(me.messageHtml).find('.showEnddate .showEndYear').html(new Date().getFullYear());

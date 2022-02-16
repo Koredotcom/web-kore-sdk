@@ -19,7 +19,7 @@ class DatePickerTemplate {
     daterangeInput: any;
     renderMessage(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "dateTemplate") {
             me.messageHtml = $(me.getTemplateString('datePickerTemplate'));
             me.initiateDatePicker(msgData);
@@ -32,8 +32,8 @@ class DatePickerTemplate {
     }
     bindEvents() {
         let me: any = this;
-        let chatWindowInstance = me.cwInstance;
-        let $ = me.cwInstance.$;
+        let chatWindowInstance = me.hostInstance;
+        let $ = me.hostInstance.$;
         let startdateValue: any;
         $(me.messageHtml).off('click', ".confirmBTN").on('click', '.confirmBTN', function () {
             var startViewDate = moment(startdateValue).format('MM-DD-YYYY') || moment();
@@ -63,8 +63,8 @@ class DatePickerTemplate {
     }
     initiateDatePicker(msgData: any) {
         let me: any = this;
-        let chatWindowInstance = me.cwInstance;
-        let $ = me.cwInstance.$;
+        let chatWindowInstance = me.hostInstance;
+        let $ = me.hostInstance.$;
         installDateRangeFunctions($, moment);
         if (this.defaultDatePickerConfig.appendTo !== 'messageBubble') {
             chatWindowInstance.bottomSliderAction('show', me.messageHtml);
@@ -121,7 +121,7 @@ class DatePickerTemplate {
 
     addClickEventCalender(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         $(me.messageHtml).find(".showStartdate .showStartMonth").html(moment().format('ddd,MMM DD'));
         $(me.messageHtml).find('.showStartdate .showStartYear').html(new Date().getFullYear());
         $(me.messageHtml).find(".datePickerContainer").removeClass("hide");

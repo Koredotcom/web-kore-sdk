@@ -4,6 +4,7 @@ import customTemplate from '../custom/customTemplate';
 import KRPerfectScrollbar from 'perfect-scrollbar';
 import KoreHelpers from '../../utils/helpers'
 import EventEmitter from '../../utils/EventEmiter'
+import MessageTemplate from '../custom/templates/messageTemplate/messageTemplate';
 import './chatWindow.scss';
 
 const bot = requireKr('/KoreBot.js').instance();
@@ -11,7 +12,8 @@ const bot = requireKr('/KoreBot.js').instance();
 
 class chatWindow extends EventEmitter{
   EVENTS={
-    JWT_SUCCESS:'jwt_success'
+    JWT_SUCCESS:'jwt_success',
+    VIEW_INIT:'viewInit'
   }
   constructor(config){
     super();
@@ -492,6 +494,9 @@ chatWindow.prototype.initVars = function (config) {
   //chatInitialize = me//new chatWindow(cfg);
   me.config.botOptions.test = false;
   me.customTemplateObj = new customTemplate(me);
+  me.messageTemplate=new MessageTemplate();
+  me.messageTemplate.hostInstance=me;
+  me.installCallbackForPlugins();
 };
 chatWindow.prototype.initi18n = function () {
   const me = this;
@@ -1374,11 +1379,11 @@ chatWindow.prototype.bindIframeEvents = function (authPopup) {
   }, true);
 };
 
-chatWindow.prototype.invokePluginCallbacksForCWInstance = function(){
+chatWindow.prototype.installCallbackForPlugins = function(){
   const me = this;
   Object.keys(me.plugins).forEach(function(pluginName){
-    if(me.plugins[pluginName].onChatWindowInit) { 
-      me.plugins[pluginName].onChatWindowInit();
+    if(me.plugins[pluginName].onHostCreate) { 
+      me.plugins[pluginName].onHostCreate();
     }
   });
 }
@@ -1386,8 +1391,7 @@ chatWindow.prototype.invokePluginCallbacksForCWInstance = function(){
 chatWindow.prototype.render = function (chatWindowHtml) {
   const me = this;
   $(me.config.container).append(chatWindowHtml);
-  me.invokePluginCallbacksForCWInstance();
-
+  me.emit(me.EVENTS.VIEW_INIT,chatWindowHtml);
   if (me.config.container !== 'body') {
     $(me.config.container).addClass('pos-relative');
     $(me.config.chatContainer).addClass('pos-absolute');
@@ -1620,6 +1624,8 @@ chatWindow.prototype.renderMessage = function (msgData) {
       $('.typingIndicatorContent').css('display', 'block');
       return;
     } 
+
+    messageHtml=me.messageTemplate.renderMessage(msgData);
     // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'list') {
     //   messageHtml = $(me.getChatTemplate('templatelist')).tmpl({
     //     msgData,
@@ -2740,10 +2746,10 @@ chatWindow.prototype.$ = $;
 chatWindow.prototype.installPlugin = function (plugin) {
   const me = this;
   me.plugins[plugin.name] = plugin;
-  plugin.cwInstance = this;
-  // if(plugin.onPluginInstall){
-  //   plugin.onPluginInstall();
-  // }
+  plugin.hostInstance = this;
+  if(plugin.onHostCreate) { 
+    plugin.onHostCreate();
+  }
 };
 chatWindow.prototype.scrollTop = function () {
   const me = this;

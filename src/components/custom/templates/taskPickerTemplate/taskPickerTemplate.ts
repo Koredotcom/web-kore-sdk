@@ -4,7 +4,7 @@ class TaskPickerTemplate {
 
     renderMessage(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "taskPickerTemplate") {
             me.messageHtml = $(me.getTemplateString());
             me.initiateTaskPicker(msgData);
@@ -13,8 +13,8 @@ class TaskPickerTemplate {
     }
     bindEvents() {
         let me: any = this;
-        let $ = me.cwInstance.$;
-        let chatWindowInstance = me.cwInstance;
+        let $ = me.hostInstance.$;
+        let chatWindowInstance = me.hostInstance;
         $(me.messageHtml).find(".btnTask").click(function (e: any) {
             var taskPostbackMsg = $(e.currentTarget).find('.taskName').attr('data-value');
             var taskTitle = $(e.currentTarget).find('.taskName').attr('data-title');
@@ -30,8 +30,8 @@ class TaskPickerTemplate {
     }
     initiateTaskPicker(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
-        let chatWindowInstance = me.cwInstance;
+        let $ = me.hostInstance.$;
+        let chatWindowInstance = me.hostInstance;
         // let accountData: any = me.getTaskMenuItems();
         let accountData: any = msgData.message[0].component.payload.tasks;
         chatWindowInstance.bottomSliderAction('show', me.messageHtml);
@@ -95,7 +95,7 @@ class TaskPickerTemplate {
     }
     getTaskPickerOptions(taskPickerConfig: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         var $taskContent = $('<div class="taskMenuPicker"></div>');
         taskPickerConfig.forEach(function (task: any) {
             var taskHtml = $('<div class="btnTask">\

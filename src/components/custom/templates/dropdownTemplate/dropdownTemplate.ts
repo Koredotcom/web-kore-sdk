@@ -5,7 +5,7 @@ import './dropdownTemplate.scss';
 class DropdownTemplate {
     renderMessage(msgData: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
+        let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "dropdown_template") {
@@ -19,8 +19,8 @@ class DropdownTemplate {
     }
     bindEvents(messageHtml: any) {
         let me: any = this;
-        let $ = me.cwInstance.$;
-        let chatWindowInstance = me.cwInstance;
+        let $ = me.hostInstance.$;
+        let chatWindowInstance = me.hostInstance;
         $(messageHtml).find('.selectTemplateDropdowm').on('change', function (e: any) {
             e.preventDefault();
             e.stopPropagation();

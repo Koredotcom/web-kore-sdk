@@ -4,7 +4,7 @@ import './listWidgetTemplate.scss';
 class ListWidgetTemplate {
   renderMessage(msgData: any) {
     let me: any = this;
-    let $ = me.cwInstance.$;
+    let $ = me.hostInstance.$;
     let helpersObj = helpers;
 
     if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "listWidget") {
@@ -21,7 +21,7 @@ class ListWidgetTemplate {
   }
   bindEvents(ele: any, templateType: any, bindingData: any) {
     let me: any = this;
-    let $ = me.cwInstance.$;
+    let $ = me.hostInstance.$;
     var _self: any = this;
     var $ele = $(ele);
     if (templateType === 'TabbedList' || templateType === 'listWidget') {
@@ -179,8 +179,8 @@ class ListWidgetTemplate {
   }
   valueClick(_self: any, actionObj: any) {
     let me: any = this;
-    let chatWindowInstance = me.cwInstance;
-    let $ = me.cwInstance.$;
+    let chatWindowInstance = me.hostInstance;
+    let $ = me.hostInstance.$;
     var _innerText;
     if (actionObj) {
       if (actionObj.type === "url") {

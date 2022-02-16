@@ -1,4 +1,8 @@
-
+import DatePickerTemplate from '../components/custom/templates/datePicker/datePicker';
+import DateRangePickerTemplate from '../components/custom/templates/dateRangePicker/dateRangePicker';
+import ClockPickerTemplate from '../components/custom/templates/clockPicker/clockPicker';
+import RadioOptionPickerTemplate from '../components/custom/templates/radioOptionPicker/radioOptionPicker';
+import TaskPickerTemplate from '../components/custom/templates/taskPickerTemplate/taskPickerTemplate';
 class KorePickersPlugin {
     name = 'KorePickersPlugin';
     config = {
@@ -115,17 +119,33 @@ class KorePickersPlugin {
             ...pickerConfig
         }
     }
-    onChatWindowInit() {
-        this.onInit();
+    onHostCreate() {
+        let me = this;
+        let cwInstance=me.hostInstance;
+        cwInstance.on("viewInit", (chatWindowEle) => {
+            debugger;
+            me.onInit();
+        });
+       
     }
     onInit() {
         let me = this;
+        me.installPickerTemplates();
         me.appendPickersToChatWindow();
+    }
+    installPickerTemplates(){
+        let me=this;
+        let templateManager = me.hostInstance.customTemplateObj;
+        templateManager.installTemplate(new DatePickerTemplate());
+		templateManager.installTemplate(new DateRangePickerTemplate());
+		templateManager.installTemplate(new ClockPickerTemplate());
+		templateManager.installTemplate(new RadioOptionPickerTemplate());
+		templateManager.installTemplate(new TaskPickerTemplate());
     }
     appendPickersToChatWindow() {
         let me = this;
-        let $ = me.cwInstance.$;
-        let chatWindowInstance = me.cwInstance;
+        let $ = me.hostInstance.$;
+        let chatWindowInstance = me.hostInstance;
         if (this.config && this.config.showClockPickerIcon) {
             me.pickerHTML = $(me.getClockPickerTemplateString());
             chatWindowInstance.appendPickerHTMLtoFooter(me.pickerHTML);
@@ -194,8 +214,8 @@ class KorePickersPlugin {
     }
     bindEvents(element) {
         let me = this;
-        let $ = me.cwInstance.$;
-        let chatWindowInstance = me.cwInstance;
+        let $ = me.hostInstance.$;
+        let chatWindowInstance = me.hostInstance;
         $(element).on('click', '.sdkClock.clockBtn', function (event) {
             var tempMessageData = {
                 message: [
