@@ -9,7 +9,10 @@ import './chatWindow.scss';
 
 const bot = requireKr('/KoreBot.js').instance();
 
-
+/**
+ * chatWindow is the UI chat widget to send and receive messages from Kore.ai platform 
+ * @class
+ */
 class chatWindow extends EventEmitter{
   EVENTS={
     JWT_SUCCESS:'jwt_success',
@@ -37,40 +40,18 @@ chatWindow.prototype.findSortedIndex = function (array, value) {
   return low;
 };
 
-chatWindow.prototype.extend=function() {
-  if (typeof Array.isArray === 'undefined') {
-    Array.isArray = function (obj) {
-      return Object.prototype.toString.call(obj) === '[object Array]';
-    };
-  }
-  var rec = function (obj) {
-    const recRes = {};
-    if (typeof obj === 'object' && !Array.isArray(obj)) {
-      for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          if (typeof obj[key] === 'object') {
-            recRes[key] = rec(obj[key]);
-          } else {
-            recRes[key] = obj[key];
+chatWindow.prototype.extend=function(target, source) {
+  for (var prop in source) {
+      if (source.hasOwnProperty(prop)) {
+          if (target[prop] && typeof source[prop] === 'object') {
+              deepObjectExtend(target[prop], source[prop]);
           }
-        }
+          else {
+              target[prop] = source[prop];
+          }
       }
-      return recRes;
-    }
-    return obj;
-  };
-  for (let i = 1; i < arguments.length; i++) {
-    for (const key in arguments[i]) {
-      if (arguments[i].hasOwnProperty(key)) {
-        if (typeof arguments[i][key] === 'object') {
-          arguments[0][key] = rec(arguments[i][key]);
-        } else {
-          arguments[0][key] = arguments[i][key];
-        }
-      }
-    }
   }
-  return arguments[0];
+  return target;
 }
 
 // converts v1 webhooks url to v2 automatically
@@ -1407,18 +1388,8 @@ chatWindow.prototype.render = function (chatWindowHtml) {
 };
 
 
-/**
- * Send message to bot including rendering 
- *
- * @param {String} messageText message text to send
- * 
- * @param {String} options.renderMsg override message to show in UI
- *  
- * @param {Object} messageObject.customdata customdata to send bot
- * @param {Object} messageObject.message.metaTags metaTags to send bot
- * @param {Object} messageObject.message.nlMeta nlMeta to send bot
-*/
-chatWindow.prototype.sendMessageToBot = function (messageText, options, messageObject) {
+
+chatWindow.prototype.sendMessageToBot = function (messageText, options, serverMessageObject,clientMessageObject) {
   const me = this;
   const clientMessageId = new Date().getTime();
   let msgData = {
@@ -1447,7 +1418,7 @@ chatWindow.prototype.sendMessageToBot = function (messageText, options, messageO
   }
 
   if(messageObject){
-    me.extend(messageToBot,messageObject);
+    me.extend(messageToBot,serverMessageObject);
   }
   // if (msgObject && msgObject.customdata) {
   //   messageToBot.message.customdata = msgObject.customdata;
@@ -1485,6 +1456,9 @@ chatWindow.prototype.sendMessageToBot = function (messageText, options, messageO
   
   me.resetPingMessage();
   me.postSendMessageToBot();
+  if(clientMessageObject){
+    me.extend(msgData,clientMessageObject);
+  }
   me.renderMessage(msgData);
 };
 
@@ -2774,18 +2748,23 @@ chatWindow.prototype.assignValueToInput = function (value) {
 /**
  * Send message to bot including rendering 
  * @param {String} messageText message text to send
- * 
- * @param {String} options.renderMsg override message to show in UI
- *  
- * @param {Object} messageObject.customdata customdata to send bot
- * @param {Object} messageObject.message.metaTags metaTags to send bot
- * @param {Object} messageObject.message.nlMeta nlMeta to send bot
+ * @param {Object} [options] additional options
+ * @param {Object} options.renderMsg override message to show in UI
+ * @param {Object} [serverMessageObject] overrides the properties of message object before sending to websocket
+ * @param {Object} serverMessageObject.customdata customdata to send bot
+ * @param {Object} serverMessageObject.message.metaTags metaTags to send bot
+ * @param {Object} serverMessageObject.message.nlMeta nlMeta to send bot
+ * @param {Object} [clientMessageObject] overrides the properties of message object before sending to UI renderMessage method
+ * @param {Object} clientMessageObject.createdOn customdata to send bot
+ * @param {Object} clientMessageObject.message.clientMessageId metaTags to send bot
+ * @param {Object} clientMessageObject.message.cInfo.body nlMeta to send bot
+ * @param clientMessageObject.____ and more
 */
-chatWindow.prototype.sendMessage = function (messageText,options, messageObject) {
+chatWindow.prototype.sendMessage = function (messageText,options, serverMessageObject,clientMessageObject) {
   const me = this;
   // const _chatContainer = me.config.chatContainer;
   // const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
-  me.sendMessageToBot(messageText, options, messageObject);
+  me.sendMessageToBot(messageText, options, serverMessageObject,clientMessageObject);
 };
 
 chatWindow.prototype.appendPickerHTMLtoFooter = function(HTML){
