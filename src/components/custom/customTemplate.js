@@ -63,11 +63,11 @@ import '../../../libs/purejscarousel.css';
 		// this.installTemplate(new BarChartTemplate());
 		// this.installTemplate(new LineChartTemplate());
 
-		this.installTemplate(new DatePickerTemplate());
-		this.installTemplate(new DateRangePickerTemplate());
-		this.installTemplate(new ClockPickerTemplate());
-		this.installTemplate(new RadioOptionPickerTemplate());
-		this.installTemplate(new TaskPickerTemplate());
+		// this.installTemplate(new DatePickerTemplate());
+		// this.installTemplate(new DateRangePickerTemplate());
+		// this.installTemplate(new ClockPickerTemplate());
+		// this.installTemplate(new RadioOptionPickerTemplate());
+		// this.installTemplate(new TaskPickerTemplate());
 
 		this.installTemplate(new IframeTemplate());
 		//this.installTemplate(new MessageTemplate());
