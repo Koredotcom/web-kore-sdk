@@ -527,6 +527,9 @@ KoreBot.prototype.onLogIn = function(err, data) {
 		this.options.accessToken = this.accessToken;
 		this.WebClient.user.accessToken = this.accessToken;
 		this.userInfo = data;
+    if (this.options && this.options.jwtgrantSuccessCB) {
+      this.options.jwtgrantSuccessCB(data);
+    }
 		this.cbBotDetails(data,this.options.botInfo);
 		this.RtmClient = new clients.KoreRtmClient({}, this.options);
 		this.emit("rtm_client_initialized");

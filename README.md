@@ -325,6 +325,13 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 ```
 
 ###Release History:
+V9.1.8 [Minor] on 19-Feb-2021: Master branch
+    1.Theme customization
+    2.Agent Desktop plugin
+    3.jquery ui library upgrade
+    4.Added Advaned list, Advanced multilist, Card, Propose Times, Default card templates
+    5.Webhook and other bugfixes
+    
 V9.1.0 [Minor] on 29-Oct-2021: Master branch
     1.Webhook support
  	2.Bug fixes
