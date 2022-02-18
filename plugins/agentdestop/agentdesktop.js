@@ -27,6 +27,7 @@ $(document).ready(function () {
 
 
 function AgentDesktop(uuId, aResponse) {
+    this.authResponse = null;
     console.log("agentdesktop uuId", uuId);
     /*if (uuId && uuId.length > 0) {
         localStorage.setItem("kr-cw-uid", uuId)
@@ -1692,10 +1693,20 @@ function dragElement(elmnt) {
             socket.on("ice-candidate", handleNewICECandidateMsg);
             socket.on("offer", handleOffer);
             socket.on("stop_cobrowse", stopCoBrowse);
+            peer = createPeer();
+            peer.onicecandidate = e => {
+                if (e.candidate) {
+                    const payload = {
+                    conversationId : cobrowseRequest.conversationId,
+                    candidate: e.candidate
+                    }
+                    console.log("cobrowse >>> emitting ice-candidate", payload)
+                    socket.emit("ice-candidate", payload)
+                }
+            }
             
             function handleOffer(incoming) {
                 console.log("cobrowse >>> handlingOffer ", incoming);
-                peer = createPeer();
                 const desc = new RTCSessionDescription(incoming.sdp);
                 peer.setRemoteDescription(desc).then(() => {
                 }).then(() => {
@@ -2058,26 +2069,29 @@ function dragElement(elmnt) {
                 sendDCMessage(JSON.stringify(STOP_MESSAGE))
             }
             function createPeer() {
-                var peerConn = new RTCPeerConnection(new RTCPeerConnection({
+                var peerConn = new RTCPeerConnection({
                     iceServers: [
                         {
-                            urls: ["stun:stun.l.google.com:19302"]
+                            urls: ['stun:stun.l.google.com:19302',
+                            'stun:stun1.l.google.com:19302',
+                            'stun:stun2.l.google.com:19302',
+                            'stun:stun.l.google.com:19302?transport=udp']
                         }
                     ]
-                }));
+                });
                 return peerConn;
             }
             function handleNewICECandidateMsg(incoming) {
                 console.log("cobrowse >>> handlingIceCandidate ", incoming)
                 const candidate = new RTCIceCandidate(incoming.candidate);
         
-                peer.addIceCandidate(candidate)
+                peer.addIceCandidate(incoming.candidate)
                     .catch(e => console.log(e));
             }
         }
     }
     function autoStartCobrowse() {
-        if (authResponse && authResponse.userInfo) {
+        if (this.authResponse && this.authResponse.userInfo) {
             console.log("cobrowse >>> starting cobrowse")
             let cobrowseRequest = localStorage.getItem("cobrowseRequest");
             console.log(cobrowseRequest);
