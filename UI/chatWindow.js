@@ -921,7 +921,8 @@
                 }, me._pingTime);
             }
             window.onresize = function (event) {
-                if (event.target == window) {
+                if (event.target === window) {
+                     chatInitialize.setCollapsedModeStyles();
                     var _width = $('#chatContainer').width() - 400;
                     //$('.kore-chat-window').attr('style','left: '+_width+'+px');
                 }
@@ -989,11 +990,6 @@
                     me.chatPSObj.update()
                 }
                 /* Handling expand and collapse chat-container height */
-            };
-            window.onresize = function(event) {
-                if(event.target===window){
-                    chatInitialize.setCollapsedModeStyles();
-                }
             };
             chatWindow.prototype.handleImagePreview= function() {
                 var modal = document.getElementById('myModal');
