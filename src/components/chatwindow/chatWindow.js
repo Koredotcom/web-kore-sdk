@@ -1,10 +1,11 @@
 import $ from '../../libs/korejquery';
 import requireKr from '../../../kore-bot-sdk-client';
 import customTemplate from '../custom/customTemplate';
-import KRPerfectScrollbar from 'perfect-scrollbar';
 import KoreHelpers from '../../utils/helpers'
 import EventEmitter from '../../utils/EventEmiter'
 import MessageTemplate from '../custom/templates/messageTemplate/messageTemplate';
+import KRPerfectScrollbar from 'perfect-scrollbar';
+import './../../libs/perfectscroll/css/perfect-scrollbar.min.css'
 import './chatWindow.scss';
 
 const bot = requireKr('/KoreBot.js').instance();
@@ -41,10 +42,11 @@ chatWindow.prototype.findSortedIndex = function (array, value) {
 };
 
 chatWindow.prototype.extend=function(target, source) {
+  let me=this;
   for (var prop in source) {
       if (source.hasOwnProperty(prop)) {
           if (target[prop] && typeof source[prop] === 'object') {
-              deepObjectExtend(target[prop], source[prop]);
+              me.extend(target[prop], source[prop]);
           }
           else {
               target[prop] = source[prop];
@@ -1417,7 +1419,7 @@ chatWindow.prototype.sendMessageToBot = function (messageText, options, serverMe
     messageToBot.message.renderMsg = options.renderMsg;
   }
 
-  if(messageObject){
+  if(serverMessageObject){
     me.extend(messageToBot,serverMessageObject);
   }
   // if (msgObject && msgObject.customdata) {
