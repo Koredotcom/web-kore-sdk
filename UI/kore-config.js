@@ -22,7 +22,8 @@
     **/
     botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
     botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
-
+    botOptions.brandingAPIUrl = botOptions.koreAPIUrl +'websdkthemes/'+  botOptions.botInfo._id+'/activetheme';
+    botOptions.enableThemes = true;
 // for webhook based communication use following option 
 // botOptions.webhookConfig={
 //     enable:true,
