@@ -3790,7 +3790,108 @@
                     }
                 }
             }
-
+            chatWindow.prototype.applyVariableValue = function(key,value,type){
+                try{
+                    var cssPrefix = "--sdk-chat-custom-";
+                    var cssVariable = "";
+                    cssVariable = cssPrefix + '-' + type +'-' +key;
+                    // console.log(cssVariable+":",value);
+                    if(value === 'square'){
+                        value = '12px 12px 2px 12px'
+                    }else if(value === 'circle'){
+                        value = '20px 20px 20px 20px'
+                    }
+                    if(cssVariable){
+                        document.documentElement.style.setProperty(cssVariable, value);
+                    }
+                } catch(e){
+                    console.log(e);
+                }
+                
+            }
+            chatWindow.prototype.applySDKBranding = function (response) {
+                if (response && response.activeTheme) {
+                    for (var key in response) {
+                    switch (key){
+                        case 'generalAttributes':
+                        if(key  && typeof response[key] === 'object') {
+                            for (var property in response[key]){
+                                this.applyVariableValue(property,response[key][property],key);
+                            }
+                        }
+                        break;
+                        case 'botMessage':
+                        if(key  && typeof response[key] === 'object') {
+                            for (var property in response[key]){
+                                this.applyVariableValue(property,response[key][property],key);
+                            }
+                        }
+                        break;
+                        case 'userMessage':
+                        if(key  && typeof response[key] === 'object') {
+                            for (var property in response[key]){
+                                this.applyVariableValue(property,response[key][property],key);
+                            }
+                        }
+                        break;
+                        case 'widgetHeader':
+                        if(key  && typeof response[key] === 'object') {
+                            for (var property in response[key]){
+                                this.applyVariableValue(property,response[key][property],key);
+                            }
+                        }
+                        break;
+                        case 'widgetBody':
+                        case 'widgetFooter':
+                        if(key  && typeof response[key] === 'object') {
+                            for (var property in response[key]){
+                                this.applyVariableValue(property,response[key][property],key);
+                            }
+                        }
+                        break;
+                        case 'widgetBody':
+                        if(key  && typeof response[key] === 'object') {
+                            for (var property in response[key]){
+                                if(key === 'backgroundImage' && response[key] && response[key]['useBackgroundImage']){
+                                    $(".kore-chat-body").css("background-image", "url(" + response[key]['backgroundImage'] + ")");
+                                } else {
+                                    this.applyVariableValue(property,response[key][property],key);
+                                }
+                            }
+                        }
+                        case 'buttons':
+                            if(key  && typeof response[key] === 'object') {
+                                for (var property in response[key]){
+                                    this.applyVariableValue(property,response[key][property],key);
+                                }
+                            }
+                        break;
+                        case 'digitalViews':
+                            var defaultTheme = 'defaultTheme-kore';
+                            if(response && response[key] && response[key].panelTheme){
+                              var digitalViewsThemeMapping = {
+                                  'theme_one':"defaultTheme-kore",
+                                  'theme_two':"darkTheme-kore",
+                                  'theme_three':"defaultTheme-kora",
+                                  'theme_four':"darkTheme-kora"
+                              }
+                              if(digitalViewsThemeMapping[response[key].panelTheme]){
+                                defaultTheme = digitalViewsThemeMapping[response[key].panelTheme];
+                                $('.kr-wiz-menu-chat').addClass(defaultTheme);
+                                $('.kr-wiz-menu-chat').removeClass('defaultTheme-kore');
+                                
+                              }
+                            }
+                        default:
+                        break;
+                    }
+                   }
+                    $(".kore-chat-window").addClass('customBranding-theme');
+                }
+            };
+            this.applySDKBranding = function (res) {
+                chatInitialize.applySDKBranding.call(chatInitialize,res);
+            }
             function IsJsonString() {
                 try {
                     JSON.parse(str);
@@ -5542,7 +5643,8 @@
                 chatWindow:chatWindow,
                 addWidgetEvents:addWidgetEvents,
                 setWidgetInstance:setWidgetInstance,
-                closeConversationSession:closeConversationSession
+                closeConversationSession:closeConversationSession,
+                applySDKBranding:applySDKBranding
             };
 
             //Actual chatwindow.js koreBotChat function code end here
