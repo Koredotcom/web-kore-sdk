@@ -25,7 +25,7 @@ class chatWindow extends EventEmitter{
   }
   EVENTS={
     /**
-     * jwtSuccess will be triggered once the jwt toket received from API.
+     * jwtSuccess will be triggered once the jwt token received from API.
      *
      * @event chatWindow#jwtSuccess
      * @type {Object}
@@ -2147,7 +2147,7 @@ chatWindow.prototype.assignValueToInput = function (value) {
 };
 
 /**
- * Send message to bot including rendering 
+ * [#]{@link chatWindow#sendMessage} Send message to bot including rendering 
  * @param {String} messageText message text to send
  * @param {Object} [options] additional options
  * @param {Object} options.renderMsg override message to show in UI
