@@ -24,10 +24,155 @@ class chatWindow extends EventEmitter{
     const me = this;
     this.config={};
     //EventEmitter.call(this);
-    me.initVars(config);
+    me.init(config);
   }
 }
 
+chatWindow.prototype.init = function (config) {
+  const me = this;
+  me.config=me.extend(me.config,config);
+  me.plugins = {};
+  me.bot=bot;
+  me.vars={};
+  me.vars._escPressed=0;
+  me.helpers=KoreHelpers.helpers;
+  //chatInitialize = me//new chatWindow(cfg);
+  me.config.botOptions.test = false;
+  me.customTemplateObj = new customTemplate(me);
+  me.messageTemplate=new MessageTemplate();
+  me.messageTemplate.hostInstance=me;
+  me.installCallbackForPlugins();
+};
+
+chatWindow.prototype.installCallbackForPlugins = function(){
+  const me = this;
+  Object.keys(me.plugins).forEach(function(pluginName){
+    if(me.plugins[pluginName].onHostCreate) { 
+      me.plugins[pluginName].onHostCreate();
+    }
+  });
+}
+
+chatWindow.prototype.show = function (config) {
+  // todo:raj
+  const me = this;
+  me.initShow(config);
+  const cfg = me.config;
+   if ($('body').find('.kore-chat-window').length > 0) {
+       return false;
+   }
+  cfg.chatHistory = this.chatHistory;
+  cfg.handleError = this.showError;
+  debugger;
+  if (cfg.widgetSDKInstace) {
+    this.addWidgetEvents(cfg);
+  }
+  //  chatInitialize = me//new chatWindow(cfg);
+  //  chatInitialize.customTemplateObj = new customTemplate(cfg,chatInitialize);
+
+  // return this;
+};
+chatWindow.prototype.initShow = function (config) {
+  const me = this;
+  this.config = me.extend(config||me.config,{
+    chatTitle: 'Kore.ai Bot Chat',
+    container: 'body',
+    allowIframe: false,
+    botOptions: me.config.botOptions,
+  });
+  me.messagesQueue=[];
+
+  me.config.chatTitle = 'Kore.ai Bot Chat';
+  me.config.container = 'body';
+  me.config.allowIframe = false;
+
+  if (me.config && me.config.chatContainer) {
+    delete me.config.chatContainer;
+  }
+
+  me.reWriteWebHookURL(me.config);
+  window._chatHistoryLoaded = false;
+  me.JWTSetup();
+  me.initi18n();
+  me.seti18n((me.config && me.config.i18n && me.config.i18n.defaultLanguage) || 'en');
+  me.config.botOptions.botInfo.name = me.config.botOptions.botInfo.name.escapeHTML();
+  me._botInfo = me.config.botOptions.botInfo;
+  me.config.botOptions.botInfo = {
+    chatBot: me._botInfo.name, taskBotId: me._botInfo._id, customData: me._botInfo.customData, metaTags: me._botInfo.metaTags, tenanturl: me._botInfo.tenanturl,
+  };
+  const tempTitle = me._botInfo.name;
+  me.config.chatTitle = me.config.botMessages.connecting;
+  if (me.config.multiPageApp && me.config.multiPageApp.enable) {
+    var cwState = me.getLocalStoreItem('kr-cw-state');
+    var maintainContext = !!cwState;
+    if (maintainContext && me.getLocalStoreItem('kr-cw-uid')) {
+      me.config.botOptions.userIdentity = userIdentity = me.getLocalStoreItem('kr-cw-uid');
+    }
+    me.config.botOptions.maintainContext = maintainContext;
+  }
+  me.config.userAgentIE = navigator.userAgent.indexOf('Trident/') !== -1;
+  const mobileBrowserOpened = me.isMobile();
+  if (mobileBrowserOpened) {
+    me.config.isSendButton = true;
+  }
+  me.config.ttsInterface = me.config.ttsInterface || 'webapi';
+  me.loadHistory = me.config.loadHistory || false;
+  me.historyLoading = !!me.loadHistory;
+  me.config.botOptions.loadHistory = me.config.loadHistory;
+  me.config.botOptions.chatHistory = me.config.chatHistory;
+  me.config.botOptions.handleError = me.config.handleError;
+  me.config.botOptions.googleMapsAPIKey = me.config.googleMapsAPIKey;
+  /* autoEnableSpeechAndTTS will on if and only if both tts and mic are enabled */
+  if (me.config.isTTSEnabled && (me.config.isSpeechEnabled || me.config.allowGoogleSpeech) && me.config.autoEnableSpeechAndTTS) {
+    me.isTTSOn = true;
+    setTimeout(() => {
+      $('.ttspeakerDiv').removeClass('ttsOff');
+    }, 350);
+  }
+  const chatWindowHtml = $(me.getChatTemplate()).tmpl(me.config);
+  me.config.chatContainer = chatWindowHtml;
+  me.updatei18nDirection();
+
+  me.config.chatTitle = tempTitle;
+  if (!me.config.minimizeMode) {
+    me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
+    // me.config.botOptions.callback(null, me.config.botOptions);
+    if (me.config.multiPageApp && me.config.multiPageApp.enable) {
+      me.setLocalStoreItem('kr-cw-state', 'open');
+      me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
+      setTimeout(() => {
+        if (cwState === 'minimized') {
+          $('.kore-chat-window button.minimize-btn').trigger('click');
+        }
+      }, 500);
+    }
+  } else {
+    chatWindowHtml.addClass('minimize');
+    chatWindowHtml.find('.minimized-title').html(`Talk to ${me.config.chatTitle}`);
+    me.skipedInit = true;
+    if (me.config.multiPageApp && me.config.multiPageApp.enable && maintainContext) {
+      setTimeout(() => {
+        if (cwState === 'open') {
+          $('.kore-chat-window .minimized .messages').trigger('click');
+        } else if (cwState === 'minimized') {
+          $('.kore-chat-window .minimized .messages').trigger('click');
+          $('.kore-chat-window button.minimize-btn').trigger('click');
+        }
+      }, 500);
+    }
+  }
+  if (me.config.allowLocation) {
+    me.bot.fetchUserLocation();
+  }
+  me.render(chatWindowHtml);
+  me.unfreezeUIOnHistoryLoadingFail.call(me);
+  me.updateOnlineStatus();
+  me.addBottomSlider();
+  window.addEventListener('online', me.updateOnlineStatus);
+  window.addEventListener('offline', me.updateOnlineStatus);
+  me.attachEventListener();
+  // me.show();
+};
 
 chatWindow.prototype.findSortedIndex = function (array, value) {
   let low = 0;
@@ -351,136 +496,7 @@ chatWindow.prototype.getStoreTypeByKey = function (key) {
   }
   return storage;
 };
-chatWindow.prototype.init = function (cfg) {
-  const me = this;
-  me.setPrivateVarToContext(this);
-  //isRecordingStarted = false;
-  //me.config.botOptions.test = false;
-  this.config = me.extend({
-    chatTitle: 'Kore.ai Bot Chat',
-    container: 'body',
-    allowIframe: false,
-    botOptions: me.config.botOptions,
-  }, me.config);
 
-  me.config.chatTitle = 'Kore.ai Bot Chat';
-  me.config.container = 'body';
-  me.config.allowIframe = false;
-  // me.config.allowIframe='Kore.ai Bot Chat';
-
-  //koreAPIUrl = me.config.botOptions.koreAPIUrl;
-  //bearerToken = me.config.botOptions.bearer;
-  // speechServerUrl = me.config.botOptions.speechSocketUrl;
-  //speechPrefixURL = me.config.botOptions.koreSpeechAPIUrl;
-  //ttsServerUrl = me.config.botOptions.ttsSocketUrl;
-  //userIdentity = me.config.botOptions.userIdentity;
-  // if (me.config.botOptions.recorderWorkerPath && me.config.botOptions.recorderWorkerPath.trim().length > 0) {
-  //   recorderWorkerPath = me.config.botOptions.recorderWorkerPath.trim();
-  // }
-  if (me.config && me.config.chatContainer) {
-    delete me.config.chatContainer;
-  }
-
-  this.reWriteWebHookURL(this.config);
-  window._chatHistoryLoaded = false;
-  me.JWTSetup();
-  me.initi18n();
-  me.seti18n((me.config && me.config.i18n && me.config.i18n.defaultLanguage) || 'en');
-  window.chatContainerConfig = me;
-  me.config.botOptions.botInfo.name = me.config.botOptions.botInfo.name.escapeHTML();
-  me._botInfo = me.config.botOptions.botInfo;
-  me.config.botOptions.botInfo = {
-    chatBot: me._botInfo.name, taskBotId: me._botInfo._id, customData: me._botInfo.customData, metaTags: me._botInfo.metaTags, tenanturl: me._botInfo.tenanturl,
-  };
-  const tempTitle = me._botInfo.name;
-  me.config.chatTitle = me.config.botMessages.connecting;
-  if (me.config.multiPageApp && me.config.multiPageApp.enable) {
-    var cwState = me.getLocalStoreItem('kr-cw-state');
-    var maintainContext = !!cwState;
-    if (maintainContext && me.getLocalStoreItem('kr-cw-uid')) {
-      me.config.botOptions.userIdentity = userIdentity = me.getLocalStoreItem('kr-cw-uid');
-    }
-    me.config.botOptions.maintainContext = maintainContext;
-  }
-  me.config.userAgentIE = navigator.userAgent.indexOf('Trident/') !== -1;
-  const mobileBrowserOpened = me.isMobile();
-  if (mobileBrowserOpened) {
-    me.config.isSendButton = true;
-  }
-  me.config.ttsInterface = me.config.ttsInterface || 'webapi';
-  me.loadHistory = me.config.loadHistory || false;
-  me.historyLoading = !!me.loadHistory;
-  me.config.botOptions.loadHistory = me.config.loadHistory;
-  me.config.botOptions.chatHistory = me.config.chatHistory;
-  me.config.botOptions.handleError = me.config.handleError;
-  me.config.botOptions.googleMapsAPIKey = me.config.googleMapsAPIKey;
-  /* autoEnableSpeechAndTTS will on if and only if both tts and mic are enabled */
-  if (me.config.isTTSEnabled && (me.config.isSpeechEnabled || me.config.allowGoogleSpeech) && me.config.autoEnableSpeechAndTTS) {
-    me.isTTSOn = true;
-    setTimeout(() => {
-      $('.ttspeakerDiv').removeClass('ttsOff');
-    }, 350);
-  }
-  const chatWindowHtml = $(me.getChatTemplate()).tmpl(me.config);
-  me.config.chatContainer = chatWindowHtml;
-  me.updatei18nDirection();
-
-  me.config.chatTitle = tempTitle;
-  if (!me.config.minimizeMode) {
-    me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
-    // me.config.botOptions.callback(null, me.config.botOptions);
-    if (me.config.multiPageApp && me.config.multiPageApp.enable) {
-      me.setLocalStoreItem('kr-cw-state', 'open');
-      me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
-      setTimeout(() => {
-        if (cwState === 'minimized') {
-          $('.kore-chat-window button.minimize-btn').trigger('click');
-        }
-      }, 500);
-    }
-  } else {
-    chatWindowHtml.addClass('minimize');
-    chatWindowHtml.find('.minimized-title').html(`Talk to ${me.config.chatTitle}`);
-    me.skipedInit = true;
-    if (me.config.multiPageApp && me.config.multiPageApp.enable && maintainContext) {
-      setTimeout(() => {
-        if (cwState === 'open') {
-          $('.kore-chat-window .minimized .messages').trigger('click');
-        } else if (cwState === 'minimized') {
-          $('.kore-chat-window .minimized .messages').trigger('click');
-          $('.kore-chat-window button.minimize-btn').trigger('click');
-        }
-      }, 500);
-    }
-  }
-  if (me.config.allowLocation) {
-    me.bot.fetchUserLocation();
-  }
-  me.render(chatWindowHtml);
-  me.unfreezeUIOnHistoryLoadingFail.call(me);
-  me.updateOnlineStatus();
-  me.addBottomSlider();
-  window.addEventListener('online', me.updateOnlineStatus);
-  window.addEventListener('offline', me.updateOnlineStatus);
-  me.attachEventListener();
-  // me.show();
-};
-chatWindow.prototype.initVars = function (config) {
-  const me = this;
-  me.config=config;
-  me.plugins = {};
-  me.bot=bot;
-  me.vars={};
-
-  me.vars._escPressed=0;
-  me.helpers=KoreHelpers.helpers;
-  //chatInitialize = me//new chatWindow(cfg);
-  me.config.botOptions.test = false;
-  me.customTemplateObj = new customTemplate(me);
-  me.messageTemplate=new MessageTemplate();
-  me.messageTemplate.hostInstance=me;
-  me.installCallbackForPlugins();
-};
 chatWindow.prototype.initi18n = function () {
   const me = this;
   me.i18n = {
@@ -543,26 +559,6 @@ chatWindow.prototype.updatei18nDirection = function () {
   } else {
     me.config.chatContainer.attr('dir', 'ltr');
   }
-};
-chatWindow.prototype.setPrivateVarToContext = function (_this) {
-  let me=this;
-  me.messagesQueue=[];
-
-  //_this.messagesQueue = messagesQueue,
-  //_this.historyLoading = historyLoading,
-  //_this.loadHistory = loadHistory;
-  //_this.accessToken = accessToken;
-  _this.bot = bot;
-  // _this._chatContainer =  _this.config.chatContainer;
-  //_this.EVENTS = EVENTS;
-  //_this.chatInitialize = me;
-  // _this.botMessages = botMessages;
-  //_this.attachmentInfo = attachmentInfo;
-  //_this._botInfo = _botInfo;
-  // _this.customTemplateObj=customTemplateObj;
-  //_this.helpers = helpers;
-  //_this._pingTimer = _pingTimer;
-  //_this._pingTime = _pingTime;
 };
 chatWindow.prototype.destroy = function () {
   const me = this;
@@ -769,14 +765,14 @@ chatWindow.prototype.bindEvents = function () {
   //   }
   //   $('#captureAttachmnts').trigger('click');
   // });
-  _chatContainer.off('click', '.removeAttachment').on('click', '.removeAttachment', function (event) {
-    $(this).parents('.msgCmpt').remove();
-    $('.kore-chat-window').removeClass('kore-chat-attachment');
-    fileUploaderCounter = 0;
-    me.attachmentInfo = {};
-    $('.sendButton').addClass('disabled');
-    document.getElementById('captureAttachmnts').value = '';
-  });
+  // _chatContainer.off('click', '.removeAttachment').on('click', '.removeAttachment', function (event) {
+  //   $(this).parents('.msgCmpt').remove();
+  //   $('.kore-chat-window').removeClass('kore-chat-attachment');
+  //   fileUploaderCounter = 0;
+  //   me.attachmentInfo = {};
+  //   $('.sendButton').addClass('disabled');
+  //   document.getElementById('captureAttachmnts').value = '';
+  // });
   // _chatContainer.off('change', '#captureAttachmnts').on('change', '#captureAttachmnts', function (event) {
   //   const file = $('#captureAttachmnts').prop('files')[0];
   //   if (file && file.size) {
@@ -1011,15 +1007,15 @@ chatWindow.prototype.bindEvents = function () {
          }
      }); */
 
-  // dateClockPickers();
-  if (window.KorePickers) {
-    const pickerConfig = {
-      chatWindowInstance: me,
-      chatConfig: me.config,
-    };
-    const korePicker = new KorePickers(pickerConfig);
-    korePicker.init();
-  }
+  // // dateClockPickers();
+  // if (window.KorePickers) {
+  //   const pickerConfig = {
+  //     chatWindowInstance: me,
+  //     chatConfig: me.config,
+  //   };
+  //   const korePicker = new KorePickers(pickerConfig);
+  //   korePicker.init();
+  // }
   $(document).on('keyup', (evt) => {
     if (evt.keyCode == 27) {
       $('.closeImagePreview').trigger('click');
@@ -1224,9 +1220,9 @@ chatWindow.prototype.bindSDKEvents = function () {
           }
           if (tempData.message[0].component && tempData.message[0].component.payload && tempData.message[0].component.payload.text) {
             tempData.message[0].cInfo.body = tempData.message[0].component.payload.text;
-            if (chatContainerConfig && chatContainerConfig.pickerMainConfig) {
+            if (me && me.pickerMainConfig) {
               let pickerConfig = {};
-              pickerConfig = chatContainerConfig.pickerMainConfig;
+              pickerConfig = me.pickerMainConfig;
               if (tempData.message[0].component.payload.template_type == 'daterange') {
                 tempData.message[0].cInfo.body = tempData.message[0].component.payload.text_message;
                 pickerConfig[1].dateRangeConfig.format = tempData.message[0].component.payload.format;
@@ -1362,14 +1358,6 @@ chatWindow.prototype.bindIframeEvents = function (authPopup) {
   }, true);
 };
 
-chatWindow.prototype.installCallbackForPlugins = function(){
-  const me = this;
-  Object.keys(me.plugins).forEach(function(pluginName){
-    if(me.plugins[pluginName].onHostCreate) { 
-      me.plugins[pluginName].onHostCreate();
-    }
-  });
-}
 
 chatWindow.prototype.render = function (chatWindowHtml) {
   const me = this;
@@ -1552,14 +1540,20 @@ chatWindow.prototype.closeConversationSession = function () {
   });
 };
 
+chatWindow.prototype.showTypingIndicator = function () {
+  let me=this;
+  $('.typingIndicatorContent').css('display', 'block');
+};
+chatWindow.prototype.hideTypingIndicator = function () {
+  $('.typingIndicatorContent').css('display', 'none');
+};
 chatWindow.prototype.renderMessage = function (msgData) {
-  const me = this; let messageHtml = ''; let extension = ''; let
-    _extractedFileName = '';
+  const me = this; let messageHtml = ''; let extension = '';
   const { helpers } = me;
   msgData.createdOnTimemillis = new Date(msgData.createdOn).valueOf();
   me.customTemplateObj.helpers = me.helpers;
   me.customTemplateObj.extension = extension;
-  me.graphLibGlob = me.config.graphLib || 'd3';
+  //me.graphLibGlob = me.config.graphLib || 'd3';
   if (msgData.type === 'bot_response') {
     me.waiting_for_message = false;
     setTimeout(() => {
@@ -1570,20 +1564,20 @@ chatWindow.prototype.renderMessage = function (msgData) {
         if (me.typingIndicatorTimer) {
           clearTimeout(me.typingIndicatorTimer);
         }
-        $('.typingIndicatorContent').css('display', 'none');
+        me.hideTypingIndicator()
       }
     }, 500);
   } else {
     me.waiting_for_message = false;
   }
-  const _chatContainer = $(me.config.chatContainer).find('.chat-container');
-  if (msgData.message && msgData.message[0] && msgData.message[0].cInfo && msgData.message[0].cInfo.attachments) {
-    extension = msgData.message[0].cInfo.attachments[0].fileName.split('.');
-  }
-  if (msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.url) {
-    extension = msgData.message[0].component.payload.url.split('.');
-    _extractedFileName = msgData.message[0].component.payload.url.replace(/^.*[\\\/]/, '');
-  }
+  // const _chatContainer = $(me.config.chatContainer).find('.chat-container');
+  // if (msgData.message && msgData.message[0] && msgData.message[0].cInfo && msgData.message[0].cInfo.attachments) {
+  //   extension = msgData.message[0].cInfo.attachments[0].fileName.split('.');
+  // }
+  // if (msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.url) {
+  //   extension = msgData.message[0].component.payload.url.split('.');
+  //   _extractedFileName = msgData.message[0].component.payload.url.replace(/^.*[\\\/]/, '');
+  // }
 
   /* checking for matched custom template */
   messageHtml = me.customTemplateObj.renderMessage(msgData);
@@ -1597,7 +1591,7 @@ chatWindow.prototype.renderMessage = function (msgData) {
     // } else 
     if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'wait_for_response') { // to show typing indicator until next response receive
       me.waiting_for_message = true;
-      $('.typingIndicatorContent').css('display', 'block');
+      me.showTypingIndicator();
       return;
     } 
 
@@ -2550,25 +2544,7 @@ chatWindow.prototype.insertHtmlData=function (_txtBox, _html) {
   _input.appendChild(html);
 }
 
-chatWindow.prototype.show = function (config) {
-  // todo:raj
-  const me = this;
-  me.init(config);
-  const cfg = me.config;
-   if ($('body').find('.kore-chat-window').length > 0) {
-       return false;
-   }
-  cfg.chatHistory = this.chatHistory;
-  cfg.handleError = this.showError;
-  debugger;
-  if (cfg.widgetSDKInstace) {
-    this.addWidgetEvents(cfg);
-  }
-  //  chatInitialize = me//new chatWindow(cfg);
-  //  chatInitialize.customTemplateObj = new customTemplate(cfg,chatInitialize);
 
-  // return this;
-};
 
 chatWindow.prototype.getJWT = function (options, callback) {
   const jsonData = {

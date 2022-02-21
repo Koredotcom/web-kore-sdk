@@ -48,6 +48,7 @@ botOptions.clientSecret = "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=";
 
 chatConfig = {
     botOptions: botOptions,
+    container:'body',
     allowIframe: false, 			// set true, opens authentication links in popup window, default value is "false"
     isSendButton: false, 			// set true, to show send button below the compose bar
     isTTSEnabled: false,			// set true, to hide speaker icon
