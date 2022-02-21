@@ -3838,7 +3838,6 @@
                             }
                         }
                         break;
-                        case 'widgetBody':
                         case 'widgetFooter':
                         if(key  && typeof response[key] === 'object') {
                             for (var property in response[key]){
@@ -3849,7 +3848,7 @@
                         case 'widgetBody':
                         if(key  && typeof response[key] === 'object') {
                             for (var property in response[key]){
-                                if(key === 'backgroundImage' && response[key] && response[key]['useBackgroundImage']){
+                                if(property === 'backgroundImage' && response[key] && response[key]['useBackgroundImage']){
                                     $(".kore-chat-body").css("background-image", "url(" + response[key]['backgroundImage'] + ")");
                                 } else {
                                     this.applyVariableValue(property,response[key][property],key);
