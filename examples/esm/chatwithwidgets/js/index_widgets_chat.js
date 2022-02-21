@@ -41,7 +41,7 @@ let chatWindowInstance = new chatWindow(chatConfig);
 //  };
 
 
-chatWindowInstance.on("jwt_success", (res,event) => {
+chatWindowInstance.on("jwtSuccess", (res,event) => {
     debugger;
     wSdk.setJWT(res.jwt);
     wSdk.show(widgetsConfig, wizSelector);

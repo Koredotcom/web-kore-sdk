@@ -10508,7 +10508,7 @@ FindlySDK.prototype.initKorePicker = function (findlyConfig) {
   setTimeout(() => {
     if (window.KorePickers) {
       this.config = findlyConfig;
-      this.config.chatContainer = $(".search-container");
+      this.chatEle = $(".search-container");
       var pickerConfig = {
         chatWindowInstance: this,
         chatConfig: this.config,

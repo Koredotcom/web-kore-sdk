@@ -20,7 +20,7 @@ class CheckBoxesTemplate {
         let me: any = this;
         let chatWindowInstance = me.hostInstance;
         let $ = me.hostInstance.$;
-        const _chatContainer = chatWindowInstance.config.chatContainer;
+        const _chatContainer = chatWindowInstance.chatEle;
         _chatContainer.off('click', '.checkboxBtn').on('click', '.checkboxBtn', function (e: any) {
             let selectedTarget = e.currentTarget;
             e.preventDefault();

@@ -99,7 +99,7 @@ class KoreFileUploaderPlugin {
     let me = this;
     let chatWindowInstance = me.hostInstance;
     let $ = me.hostInstance.$;
-    const _chatContainer = chatWindowInstance.config.chatContainer;
+    const _chatContainer = chatWindowInstance.chatEle;
     _chatContainer.find('.kore-chat-footer .footerContainer').append(me.ele);
   }
 

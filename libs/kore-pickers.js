@@ -144,35 +144,35 @@ KorePickers.prototype.init = function (mainConfig) {
     if (chatWindowInstance.config.pickersConfig.showDateRangePickerIcon) {
        this.showDateRangeIconToFooter();
     //    KorePickers.prototype.showDateRangePicker(mainConfig);
-       chatWindowInstance.config.chatContainer.on('click', '.sdkRangeCalender.calenderBtn', function (event) {
+       chatWindowInstance.chatEle.on('click', '.sdkRangeCalender.calenderBtn', function (event) {
        KorePickers.prototype.showDateRangePicker(mainConfig);
         });
     }
     if (chatWindowInstance.config.pickersConfig.showDatePickerIcon) {
         this.showDateIconToFooter();
         // KorePickers.prototype.showDatePicker(mainConfig);
-        chatWindowInstance.config.chatContainer.on('click', '.sdkCalender.calenderBtn', function (event) {
+        chatWindowInstance.chatEle.on('click', '.sdkCalender.calenderBtn', function (event) {
         KorePickers.prototype.showDatePicker(mainConfig);
          });
      }
      if (chatWindowInstance.config.pickersConfig.showClockPickerIcon) {
         this.showClockIconToFooter();
         // KorePickers.prototype.showDatePicker(mainConfig);
-        chatWindowInstance.config.chatContainer.on('click', '.sdkClock.clockBtn', function (event) {
+        chatWindowInstance.chatEle.on('click', '.sdkClock.clockBtn', function (event) {
         KorePickers.prototype.showClockPicker(mainConfig);
          });
      }
      if (chatWindowInstance.config.pickersConfig.showradioOptionMenuPickerIcon) {
         this.showAccountIconToFooter();
         // KorePickers.prototype.showDatePicker(mainConfig);
-        chatWindowInstance.config.chatContainer.on('click', '.sdkAccount.accountBtn', function (event) {
+        chatWindowInstance.chatEle.on('click', '.sdkAccount.accountBtn', function (event) {
         KorePickers.prototype.showradioOptionsPicker(mainConfig);
          });
      }
      if (chatWindowInstance.config.pickersConfig.showTaskMenuPickerIcon) {
         this.addTaskIconToFooter();
         // KorePickers.prototype.showDatePicker(mainConfig);
-        chatWindowInstance.config.chatContainer.on('click', '.sdkMenu.menuBtn', function (event) {
+        chatWindowInstance.chatEle.on('click', '.sdkMenu.menuBtn', function (event) {
         KorePickers.prototype.showTaskPicker(mainConfig);
          });
      }

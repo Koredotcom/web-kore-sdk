@@ -24,6 +24,6 @@ chatWindowInstance.installPlugin(new KorePickersPlugin(pickerConfig));
 //  chatWindowInstance.show();
  
  
-chatWindowInstance.on("jwt_success", (message,event) => {console.log(message);});
+chatWindowInstance.on("jwtSuccess", (message,event) => {console.log(message);});
 chatWindowInstance.show();
 

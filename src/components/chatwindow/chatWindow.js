@@ -15,16 +15,31 @@ const bot = requireKr('/KoreBot.js').instance();
  * @class
  */
 class chatWindow extends EventEmitter{
-  EVENTS={
-    JWT_SUCCESS:'jwt_success',
-    VIEW_INIT:'viewInit'
-  }
+  chatEle;
   constructor(config){
     super();
     const me = this;
     this.config={};
     //EventEmitter.call(this);
     me.init(config);
+  }
+  EVENTS={
+    /**
+     * jwtSuccess will be triggered once the jwt toket received from API.
+     *
+     * @event chatWindow#jwtSuccess
+     * @type {Object}
+     * @property {String} jwt - jwt token from server response .
+     */
+    JWT_SUCCESS:'jwtSuccess',
+    /**
+     * viewInit will be triggered once the chat window dom element is attached to provided container.
+     *
+     * @event chatWindow#viewInit
+     * @type {object}
+     * @property {Object} chatEle - chat window dom element .
+     */
+    VIEW_INIT:'viewInit'
   }
 }
 
@@ -76,19 +91,14 @@ chatWindow.prototype.initShow = function (config) {
   const me = this;
   this.config = me.extend(config||me.config,{
     chatTitle: 'Kore.ai Bot Chat',
-    container: 'body',
     allowIframe: false,
     botOptions: me.config.botOptions,
   });
   me.messagesQueue=[];
 
   me.config.chatTitle = 'Kore.ai Bot Chat';
-  me.config.container = 'body';
   me.config.allowIframe = false;
 
-  if (me.config && me.config.chatContainer) {
-    delete me.config.chatContainer;
-  }
 
   me.reWriteWebHookURL(me.config);
   window._chatHistoryLoaded = false;
@@ -130,7 +140,7 @@ chatWindow.prototype.initShow = function (config) {
     }, 350);
   }
   const chatWindowHtml = $(me.getChatTemplate()).tmpl(me.config);
-  me.config.chatContainer = chatWindowHtml;
+  me.chatEle = chatWindowHtml;
   me.updatei18nDirection();
 
   me.config.chatTitle = tempTitle;
@@ -537,8 +547,8 @@ chatWindow.prototype.seti18n = function (lang) {
   botMessages.availableLanguages = (me.config.i18n && me.config.i18n.availableLanguages) || false;
   botMessages.selectedLanguage = me.i18n.selectedLanguage;
 
-  if (me.config.chatContainer) {
-    const chatEle = me.config.chatContainer;
+  if (me.chatEle) {
+    const chatEle = me.chatEle;
     chatEle.find('.endChatContainerText').html(botMessages.endofchat);
 
     chatEle.find('.close-btn').attr('title', botMessages.closeText);
@@ -555,9 +565,9 @@ chatWindow.prototype.seti18n = function (lang) {
 chatWindow.prototype.updatei18nDirection = function () {
   const me = this;
   if (me.i18n.rtlLanguages.indexOf(me.i18n.selectedLanguage) > -1) {
-    me.config.chatContainer.attr('dir', 'rtl');
+    me.chatEle.attr('dir', 'rtl');
   } else {
-    me.config.chatContainer.attr('dir', 'ltr');
+    me.chatEle.attr('dir', 'ltr');
   }
 };
 chatWindow.prototype.destroy = function () {
@@ -568,12 +578,12 @@ chatWindow.prototype.destroy = function () {
     me.bot.destroy();
   }
   me.messagesQueue = [];
-  if (me.config && me.config.chatContainer) {
+  if (me.config && me.chatEle) {
     if (!me.config.minimizeMode) {
-      me.config.chatContainer.remove();
+      me.chatEle.remove();
     } else {
-      me.config.chatContainer.find('.kore-chat-header .header-title').html(me.config.botMessages.reconnecting);
-      me.config.chatContainer.addClass('minimize');
+      me.chatEle.find('.kore-chat-header .header-title').html(me.config.botMessages.reconnecting);
+      me.chatEle.addClass('minimize');
       me.skipedInit = true;
     }
   }
@@ -591,8 +601,8 @@ chatWindow.prototype.destroy = function () {
 
 chatWindow.prototype.resetWindow = function () {
   const me = this;
-  me.config.chatContainer.find('.kore-chat-header .header-title').html(me.config.botMessages.reconnecting);
-  // me.config.chatContainer.find('.chat-container').html("");
+  me.chatEle.find('.kore-chat-header .header-title').html(me.config.botMessages.reconnecting);
+  // me.chatEle.find('.chat-container').html("");
   me.bot.close();
   me.config.botOptions.maintainContext = false;
   me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
@@ -611,12 +621,12 @@ chatWindow.prototype.sendMessageWithWithChatInput=function(chatInput){
 chatWindow.prototype.bindEvents = function () {
   const me = this;
   me.bindCustomEvents();
-  const _chatContainer = me.config.chatContainer;
+  const _chatContainer = me.chatEle;
   window.onresize = function (event) {
     me.onWindowResize(event);
   };
   window.onbeforeunload = function () {
-    if (me && $(me.config.chatContainer).length > 0) {
+    if (me && $(me.chatEle).length > 0) {
       me.destroy();
       // return null;
     }
@@ -1322,7 +1332,7 @@ chatWindow.prototype.bindSDKEvents = function () {
 chatWindow.prototype.bindCustomEvents = function () {
   // hook to add custom events
   const me = this;
-  const _chatContainer = me.config.chatContainer;
+  const _chatContainer = me.chatEle;
   // add additional events or override events in this method
   // e.stopImmediatePropagation(); would be useful to override
 };
@@ -1330,7 +1340,7 @@ chatWindow.prototype.onBotReady = function () {
   // hook to add custom events
   const me = this;
 
-  const _chatContainer = me.config.chatContainer;
+  const _chatContainer = me.chatEle;
   // actual implementation starts here
   me.accessToken = me.config.botOptions.accessToken;
   const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
@@ -1362,16 +1372,16 @@ chatWindow.prototype.bindIframeEvents = function (authPopup) {
 chatWindow.prototype.render = function (chatWindowHtml) {
   const me = this;
   $(me.config.container).append(chatWindowHtml);
-  me.emit(me.EVENTS.VIEW_INIT,chatWindowHtml);
+  me.emit(me.EVENTS.VIEW_INIT,{chatEle:chatWindowHtml});
   if (me.config.container !== 'body') {
     $(me.config.container).addClass('pos-relative');
-    $(me.config.chatContainer).addClass('pos-absolute');
+    $(me.chatEle).addClass('pos-absolute');
   }
   if (me.config.widgetSDKInstace) {
-    me.config.chatContainer.find('.kr-wiz-menu-chat').show();
+    me.chatEle.find('.kr-wiz-menu-chat').show();
   }
   me.setCollapsedModeStyles();
-  me.chatPSObj = new KRPerfectScrollbar(me.config.chatContainer.find('.chat-container').get(0), {
+  me.chatPSObj = new KRPerfectScrollbar(me.chatEle.find('.chat-container').get(0), {
     suppressScrollX: true,
   });
   me.bindEvents();
@@ -1454,8 +1464,8 @@ chatWindow.prototype.sendMessageToBot = function (messageText, options, serverMe
 
 chatWindow.prototype.postSendMessageToBot = function () {
   let me=this;
-  const _bodyContainer = $(me.config.chatContainer).find('.kore-chat-body');
-  const _footerContainer = $(me.config.chatContainer).find('.kore-chat-footer');
+  const _bodyContainer = $(me.chatEle).find('.kore-chat-body');
+  const _footerContainer = $(me.chatEle).find('.kore-chat-footer');
   _footerContainer.find('.sendButton').addClass('disabled');
   _bodyContainer.css('bottom', _footerContainer.outerHeight());
 
@@ -1570,7 +1580,7 @@ chatWindow.prototype.renderMessage = function (msgData) {
   } else {
     me.waiting_for_message = false;
   }
-  // const _chatContainer = $(me.config.chatContainer).find('.chat-container');
+  const _chatContainer = $(me.chatEle).find('.chat-container');
   // if (msgData.message && msgData.message[0] && msgData.message[0].cInfo && msgData.message[0].cInfo.attachments) {
   //   extension = msgData.message[0].cInfo.attachments[0].fileName.split('.');
   // }
@@ -1596,549 +1606,7 @@ chatWindow.prototype.renderMessage = function (msgData) {
     } 
 
     messageHtml=me.messageTemplate.renderMessage(msgData);
-    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'list') {
-    //   messageHtml = $(me.getChatTemplate('templatelist')).tmpl({
-    //     msgData,
-    //     helpers,
-    //     extension,
-    //   });
-    // } 
-    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'quick_replies') {
-    //   messageHtml = $(me.getChatTemplate('templatequickreply')).tmpl({
-    //     msgData,
-    //     helpers,
-    //     extension,
-    //   });
-    //   setTimeout(() => {
-    //     const evt = document.createEvent('HTMLEvents');
-    //     evt.initEvent('resize', true, false);
-    //     window.dispatchEvent(evt);
-    //   }, 150);
-    // } 
-    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'carousel') {
-    //   messageHtml = $(me.getChatTemplate('carouselTemplate')).tmpl({
-    //     msgData,
-    //     helpers,
-    //     extension,
-    //   });
-
-    //   setTimeout(() => {
-    //     $('.carousel:last').addClass(`carousel${carouselTemplateCount}`);
-    //     const count = $(`.carousel${carouselTemplateCount}`).children().length;
-    //     if (count > 1) {
-    //       const carouselOneByOne = new PureJSCarousel({
-    //         carousel: `.carousel${carouselTemplateCount}`,
-    //         slide: '.slide',
-    //         oneByOne: true,
-    //       });
-    //       $(`.carousel${carouselTemplateCount}`).parent().show();
-    //       $(`.carousel${carouselTemplateCount}`).attr('style', 'height: 100% !important');
-    //       carouselEles.push(carouselOneByOne);
-    //     }
-    //     // window.dispatchEvent(new Event('resize'));
-    //     const evt = document.createEvent('HTMLEvents');
-    //     evt.initEvent('resize', true, false);
-    //     window.dispatchEvent(evt);
-    //     carouselTemplateCount += 1;
-    //     _chatContainer.animate({
-    //       scrollTop: _chatContainer.prop('scrollHeight'),
-    //     }, 0);
-    //   });
-    // } 
-    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.type == 'image' || msgData.message[0].component.type == 'audio' || msgData.message[0].component.type == 'video' || msgData.message[0].component.type == 'link')) {
-    //   messageHtml = $(me.getChatTemplate('templateAttachment')).tmpl({
-    //     msgData,
-    //     helpers,
-    //     extension,
-    //     extractedFileName: _extractedFileName,
-    //   });
-    // } 
-    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'table') {
-    //   messageHtml = $(me.getChatTemplate('tableChartTemplate')).tmpl({
-    //     msgData,
-    //     helpers,
-    //     extension,
-    //   });
-    //   setTimeout(() => {
-    //     const acc = document.getElementsByClassName('accordionRow');
-    //     for (var i = 0; i < acc.length; i++) {
-    //       acc[i].onclick = function () {
-    //         this.classList.toggle('open');
-    //       };
-    //     }
-    //     const showFullTableModal = document.getElementsByClassName('showMore');
-    //     for (var i = 0; i < showFullTableModal.length; i++) {
-    //       showFullTableModal[i].onclick = function () {
-    //         const parentli = this.parentNode.parentElement;
-    //         $('#dialog').empty();
-    //         $('#dialog').html($(parentli).find('.tablechartDiv').html());
-    //         $('.hello').clone().appendTo('.goodbye');
-    //         const modal = document.getElementById('myPreviewModal');
-    //         $('.largePreviewContent').empty();
-    //         // $(".largePreviewContent").html($(parentli).find('.tablechartDiv').html());
-    //         $(parentli).find('.tablechartDiv').clone().appendTo('.largePreviewContent');
-    //         modal.style.display = 'block';
-    //         // Get the <span> element that closes the modal
-    //         const span = document.getElementsByClassName('closeElePreview')[0];
-    //         // When the user clicks on <span> (x), close the modal
-    //         span.onclick = function () {
-    //           modal.style.display = 'none';
-    //           $('.largePreviewContent').removeClass('addheight');
-    //         };
-    //       };
-    //     }
-    //   }, 350);
-    // } 
-    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'mini_table') {
-    //   if (msgData.message[0].component.payload.layout == 'horizontal') {
-    //     messageHtml = $(me.getChatTemplate('miniTableHorizontalTemplate')).tmpl({
-    //       msgData,
-    //       helpers,
-    //       extension,
-    //     });
-    //     setTimeout(() => {
-    //       $('.carousel:last').addClass(`carousel${carouselTemplateCount}`);
-    //       const count = $(`.carousel${carouselTemplateCount}`).children().length;
-    //       if (count > 1) {
-    //         const carouselOneByOne = new PureJSCarousel({
-    //           carousel: `.carousel${carouselTemplateCount}`,
-    //           slide: '.slide',
-    //           oneByOne: true,
-    //         });
-    //         $(`.carousel${carouselTemplateCount}`).parent().show();
-    //         $(`.carousel${carouselTemplateCount}`).attr('style', 'height: 100% !important');
-    //         carouselEles.push(carouselOneByOne);
-    //       }
-    //       // window.dispatchEvent(new Event('resize'));
-    //       const evt = document.createEvent('HTMLEvents');
-    //       evt.initEvent('resize', true, false);
-    //       window.dispatchEvent(evt);
-    //       carouselTemplateCount += 1;
-    //       _chatContainer.animate({
-    //         scrollTop: _chatContainer.prop('scrollHeight'),
-    //       }, 0);
-    //     });
-    //   } else {
-    //     messageHtml = $(me.getChatTemplate('miniTableChartTemplate')).tmpl({
-    //       msgData,
-    //       helpers,
-    //       extension,
-    //     });
-    //   }
-    // }
-    //  else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'multi_select') {
-    //   messageHtml = $(this.getChatTemplate('checkBoxesTemplate')).tmpl({
-    //     msgData,
-    //     helpers,
-    //     extension,
-    //   });
-    // } 
-    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'like_dislike') {
-    //   messageHtml = $(this.getChatTemplate('likeDislikeTemplate')).tmpl({
-    //     msgData,
-    //     helpers,
-    //     extension,
-    //   });
-    //} 
-    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'piechart') {
-    //   messageHtml = $(me.getChatTemplate('pieChartTemplate')).tmpl({
-    //     msgData,
-    //     helpers,
-    //     extension,
-    //   });
-    //   // storing the type of the graph to be displayed.
-    //   if (me.config.graphLib === 'google') {
-    //     setTimeout(() => {
-    //       google.charts.load('current', { packages: ['corechart'] });
-    //       google.charts.setOnLoadCallback(drawChart);
-    //       function drawChart() {
-    //         const data = new google.visualization.DataTable();
-    //         data.addColumn('string', 'Task');
-    //         data.addColumn('number', 'Hours per Day');
-    //         if (msgData.message[0].component.payload.elements && msgData.message[0].component.payload.elements[0].displayValue) {
-    //           data.addColumn({ type: 'string', role: 'tooltip' });
-    //         }
-    //         const pieChartData = [];
-    //         const piechartElements = msgData.message[0].component.payload.elements;
-    //         for (let i = 0; i < piechartElements.length; i++) {
-    //           const arr = [`${piechartElements[i].title} \n${piechartElements[i].value}`];
-    //           arr.push(parseFloat(piechartElements[i].value));
-    //           if (piechartElements[i].displayValue) {
-    //             arr.push(piechartElements[i].displayValue);
-    //           }
-    //           pieChartData.push(arr);
-    //         }
-    //         data.addRows(pieChartData);
-    //         const options = {
-    //           chartArea: {
-    //             left: '3%',
-    //             top: '3%',
-    //             height: '94%',
-    //             width: '94%',
-    //           },
-    //           pieSliceTextStyle: {},
-    //           colors: window.chartColors,
-    //           legend: {
-    //             textStyle: {
-    //               color: '#b3bac8',
-    //             },
-    //           },
-    //         };
-
-    //         if (piechartElements.length === 1) { // if only element, then deault donut chart
-    //           options.pieHole = 0.5;
-    //           options.pieSliceTextStyle.color = 'black';
-    //         }
-    //         if (msgData.message[0].component.payload.pie_type) { // chart based on user requireent
-    //           if (msgData.message[0].component.payload.pie_type === 'donut') {
-    //             options.pieHole = 0.6;
-    //             options.pieSliceTextStyle.color = 'black';
-    //             options.legend.position = 'none';
-    //           } else if (msgData.message[0].component.payload.pie_type === 'donut_legend') {
-    //             options.pieHole = 0.6;
-    //             options.pieSliceTextStyle.color = 'black';
-    //           }
-    //         }
-    //         const _piechartObj = {
-    //           id: `piechart${msgData.messageId}`, data, options, type: 'piechart',
-    //         };
-    //         available_charts.push(_piechartObj);
-    //         const container = document.getElementById(`piechart${msgData.messageId}`);
-    //         const chart = new google.visualization.PieChart(container);
-    //         chart.draw(data, options);
-    //         // window.PieChartCount = window.PieChartCount + 1;
-    //       }
-    //     }, 150);
-    //   } else if (me.graphLibGlob === 'd3') {
-    //     if (msgData.message[0].component.payload.pie_type === undefined) {
-    //       msgData.message[0].component.payload.pie_type = 'regular';
-    //     }
-    //     if (msgData.message[0].component.payload.pie_type) {
-    //       // define data
-    //       dimens = {};
-    //       dimens.width = 300;
-    //       dimens.height = 200;
-    //       dimens.legendRectSize = 10;
-    //       dimens.legendSpacing = 2.4;
-    //       if (msgData.message[0].component.payload.pie_type === 'regular') {
-    //         setTimeout(() => {
-    //           const _piechartObj = { id: `piechart${msgData.messageId}`, data: msgData, type: 'regular' };
-    //           available_charts.push(_piechartObj);
-    //           KoreGraphAdapter.drawD3Pie(msgData, dimens, `#piechart${msgData.messageId}`, 12);
-    //           // window.PieChartCount = window.PieChartCount + 1;
-    //         }, 150);
-    //       } else if (msgData.message[0].component.payload.pie_type === 'donut') {
-    //         setTimeout(() => {
-    //           const _piechartObj = { id: `piechart${msgData.messageId}`, data: msgData, type: 'donut' };
-    //           available_charts.push(_piechartObj);
-    //           KoreGraphAdapter.drawD3PieDonut(msgData, dimens, `#piechart${msgData.messageId}`, 12, 'donut');
-    //           // window.PieChartCount = window.PieChartCount + 1;
-    //         }, 150);
-    //       } else if (msgData.message[0].component.payload.pie_type === 'donut_legend') {
-    //         setTimeout(() => {
-    //           const _piechartObj = { id: `piechart${msgData.messageId}`, data: msgData, type: 'donut_legend' };
-    //           available_charts.push(_piechartObj);
-    //           KoreGraphAdapter.drawD3PieDonut(msgData, dimens, `#piechart${msgData.messageId}`, 12, 'donut_legend');
-    //           // window.PieChartCount = window.PieChartCount + 1;
-    //         }, 150);
-    //       }
-    //     }
-    //   }
-    //   setTimeout(() => {
-    //     $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
-    //     handleChartOnClick();
-    //   }, 200);
-    // }
-    //  else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'barchart') {
-    //   messageHtml = $(me.getChatTemplate('barchartTemplate')).tmpl({
-    //     msgData,
-    //     helpers,
-    //     extension,
-    //   });
-    //   if (me.graphLibGlob === 'google') {
-    //     setTimeout(() => {
-    //       google.charts.load('current', { packages: ['corechart', 'bar'] });
-    //       google.charts.setOnLoadCallback(drawChart);
-    //       function drawChart() {
-    //         let customToolTips = false;
-    //         const data = new google.visualization.DataTable();
-    //         data.addColumn('string', 'y');
-    //         // adding legend labels
-    //         for (var i = 0; i < msgData.message[0].component.payload.elements.length; i++) {
-    //           const currEle = msgData.message[0].component.payload.elements[i];
-    //           data.addColumn('number', currEle.title);
-    //           // checking for display values ( custom tooltips)
-    //           if (currEle.displayValues && currEle.displayValues.length) {
-    //             data.addColumn({ type: 'string', role: 'tooltip' });
-    //             customToolTips = true;
-    //           }
-    //         }
-
-    //         // filling rows
-    //         const totalLines = msgData.message[0].component.payload.elements.length;
-    //         for (var i = 0; i < msgData.message[0].component.payload.X_axis.length; i++) {
-    //           const arr = [];
-    //           arr.push(msgData.message[0].component.payload.X_axis[i]);
-    //           for (let j = 0; j < totalLines; j++) {
-    //             arr.push(parseFloat(msgData.message[0].component.payload.elements[j].values[i]));
-    //             if (customToolTips) {
-    //               arr.push(msgData.message[0].component.payload.elements[j].displayValues[i]);
-    //             }
-    //           }
-    //           data.addRow(arr);
-    //         }
-    //         const options = {
-    //           chartArea: {
-    //             height: '70%',
-    //             width: '80%',
-    //           },
-    //           legend: {
-    //             position: 'top',
-    //             alignment: 'end',
-    //             maxLines: 3,
-    //             textStyle: {
-    //               color: '#b3bac8',
-    //             },
-    //           },
-    //           hAxis: {
-    //             gridlines: {
-    //               color: 'transparent',
-    //             },
-    //             textStyle: {
-    //               color: '#b3bac8',
-    //             },
-    //           },
-    //           vAxis: {
-    //             gridlines: {
-    //               color: 'transparent',
-    //             },
-    //             textStyle: {
-    //               color: '#b3bac8',
-    //             },
-    //             baselineColor: 'transparent',
-    //           },
-    //           animation: {
-    //             duration: 500,
-    //             easing: 'out',
-    //             startup: true,
-    //           },
-    //           bar: { groupWidth: '25%' },
-    //           colors: window.chartColors,
-    //         };
-
-    //         // horizontal chart, then increase size of bard
-    //         if (msgData.message[0].component.payload.direction !== 'vertical') {
-    //           options.bar.groupWidth = '45%';
-    //           options.hAxis.baselineColor = '#b3bac8';
-    //         }
-    //         // stacked chart
-    //         if (msgData.message[0].component.payload.stacked) {
-    //           options.isStacked = true;
-    //           options.bar.groupWidth = '25%';
-    //         }
-    //         const _barchartObj = {
-    //           id: `barchart${msgData.messageId}`, direction: msgData.message[0].component.payload.direction, data, options, type: 'barchart',
-    //         };
-    //         available_charts.push(_barchartObj);
-    //         const container = document.getElementById(`barchart${msgData.messageId}`);
-    //         let chart = null;
-    //         if (msgData.message[0].component.payload.direction === 'vertical') {
-    //           chart = new google.visualization.ColumnChart(container);
-    //         } else {
-    //           chart = new google.visualization.BarChart(container);
-    //         }
-    //         chart.draw(data, options);
-    //         // window.barchartCount = window.barchartCount + 1;
-    //       }
-    //     }, 150);
-    //   } else if (me.graphLibGlob === 'd3') {
-    //     var dimens = {};
-    //     dimens.outerWidth = 350;
-    //     dimens.outerHeight = 300;
-    //     dimens.innerHeight = 200;
-    //     dimens.legendRectSize = 15;
-    //     dimens.legendSpacing = 4;
-    //     if (msgData.message[0].component.payload.direction === undefined) {
-    //       msgData.message[0].component.payload.direction = 'horizontal';
-    //     }
-    //     if (msgData.message[0].component.payload.direction === 'horizontal' && !msgData.message[0].component.payload.stacked) {
-    //       setTimeout(() => {
-    //         dimens.innerWidth = 180;
-    //         const _barchartObj = { id: `Legend_barchart${msgData.messageId}`, data: msgData, type: 'barchart' };
-    //         available_charts.push(_barchartObj);
-    //         KoreGraphAdapter.drawD3barHorizontalbarChart(msgData, dimens, `#barchart${msgData.messageId}`, 12);
-    //         // window.barchartCount = window.barchartCount + 1;
-    //       }, 250);
-    //     } else if (msgData.message[0].component.payload.direction === 'vertical' && msgData.message[0].component.payload.stacked) {
-    //       setTimeout(() => {
-    //         dimens.outerWidth = 350;
-    //         dimens.innerWidth = 270;
-    //         const _barchartObj = { id: `barchart${msgData.messageId}`, data: msgData, type: 'stackedBarchart' };
-    //         available_charts.push(_barchartObj);
-    //         KoreGraphAdapter.drawD3barVerticalStackedChart(msgData, dimens, `#barchart${msgData.messageId}`, 12);
-    //         // window.barchartCount = window.barchartCount + 1;
-    //       }, 250);
-    //     } else if (msgData.message[0].component.payload.direction === 'horizontal' && msgData.message[0].component.payload.stacked) {
-    //       setTimeout(() => {
-    //         dimens.innerWidth = 180;
-    //         const _barchartObj = { id: `barchart${msgData.messageId}`, data: msgData, type: 'stackedBarchart' };
-    //         available_charts.push(_barchartObj);
-    //         KoreGraphAdapter.drawD3barStackedChart(msgData, dimens, `#barchart${msgData.messageId}`, 12);
-    //         // window.barchartCount = window.barchartCount + 1;
-    //       }, 250);
-    //     } else if (msgData.message[0].component.payload.direction === 'vertical' && !msgData.message[0].component.payload.stacked) {
-    //       setTimeout(() => {
-    //         dimens.innerWidth = 240;
-    //         const _barchartObj = { id: `barchart${msgData.messageId}`, data: msgData, type: 'barchart' };
-    //         available_charts.push(_barchartObj);
-    //         KoreGraphAdapter.drawD3barChart(msgData, dimens, `#barchart${msgData.messageId}`, 12);
-    //         // window.barchartCount = window.barchartCount + 1;
-    //       }, 250);
-    //     }
-    //   }
-    //   setTimeout(() => {
-    //     $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
-    //     handleChartOnClick();
-    //   }, 300);
-    // } 
-    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'linechart') {
-    //   messageHtml = $(me.getChatTemplate('linechartTemplate')).tmpl({
-    //     msgData,
-    //     helpers,
-    //     extension,
-    //   });
-    //   if (me.graphLibGlob === 'google') {
-    //     setTimeout(() => {
-    //       google.charts.load('current', { packages: ['corechart', 'line'] });
-    //       google.charts.setOnLoadCallback(drawChart);
-    //       function drawChart() {
-    //         let customToolTips = false;
-    //         const data = new google.visualization.DataTable();
-    //         data.addColumn('string', 'y');
-    //         // adding legend labels
-    //         for (var i = 0; i < msgData.message[0].component.payload.elements.length; i++) {
-    //           const currEle = msgData.message[0].component.payload.elements[i];
-    //           data.addColumn('number', currEle.title);
-    //           // checking for display values ( custom tooltips)
-    //           if (currEle.displayValues && currEle.displayValues.length) {
-    //             data.addColumn({ type: 'string', role: 'tooltip' });
-    //             customToolTips = true;
-    //           }
-    //         }
-
-    //         // filling rows
-    //         const totalLines = msgData.message[0].component.payload.elements.length;
-    //         for (var i = 0; i < msgData.message[0].component.payload.X_axis.length; i++) {
-    //           const arr = [];
-    //           arr.push(msgData.message[0].component.payload.X_axis[i]);
-    //           for (let j = 0; j < totalLines; j++) {
-    //             arr.push(parseFloat(msgData.message[0].component.payload.elements[j].values[i]));
-    //             if (customToolTips) {
-    //               arr.push(msgData.message[0].component.payload.elements[j].displayValues[i]);
-    //             }
-    //           }
-    //           data.addRow(arr);
-    //         }
-
-    //         const options = {
-    //           curveType: 'function',
-    //           chartArea: {
-    //             height: '70%',
-    //             width: '80%',
-    //           },
-    //           legend: {
-    //             position: 'top',
-    //             alignment: 'end',
-    //             maxLines: 3,
-    //             textStyle: {
-    //               color: '#b3bac8',
-    //             },
-    //           },
-    //           hAxis: {
-    //             gridlines: {
-    //               color: 'transparent',
-    //             },
-    //             textStyle: {
-    //               color: '#b3bac8',
-    //             },
-    //           },
-    //           vAxis: {
-    //             gridlines: {
-    //               color: 'transparent',
-    //             },
-    //             textStyle: {
-    //               color: '#b3bac8',
-    //             },
-    //             baselineColor: 'transparent',
-    //           },
-    //           lineWidth: 3,
-    //           animation: {
-    //             duration: 500,
-    //             easing: 'out',
-    //             startup: true,
-    //           },
-    //           colors: window.chartColors,
-    //         };
-    //         const lineChartObj = {
-    //           id: `linechart${msgData.messageId}`, data, options, type: 'linechart',
-    //         };
-    //         available_charts.push(lineChartObj);
-    //         const container = document.getElementById(`linechart${msgData.messageId}`);
-
-    //         const chart = new google.visualization.LineChart(container);
-    //         chart.draw(data, options);
-    //         // window.linechartCount = window.linechartCount + 1;
-    //       }
-    //     }, 150);
-    //   } else if (me.graphLibGlob === 'd3') {
-    //     setTimeout(() => {
-    //       const dimens = {};
-    //       dimens.outerWidth = 380;
-    //       dimens.outerHeight = 350;
-    //       dimens.innerWidth = 230;
-    //       dimens.innerHeight = 250;
-    //       dimens.legendRectSize = 15;
-    //       dimens.legendSpacing = 4;
-    //       const _linechartObj = { id: `linechart${msgData.messageId}`, data: msgData, type: 'linechart' };
-    //       available_charts.push(_linechartObj);
-    //       //  KoreGraphAdapter.drawD3lineChart(msgData, dimens, '#linechart'+window.linechartCount, 12);
-    //       KoreGraphAdapter.drawD3lineChartV2(msgData, dimens, `#linechart${msgData.messageId}`, 12);
-    //       // window.linechartCount = window.linechartCount + 1;
-    //     }, 250);
-    //     /*                    setTimeout(function(){
-    //                                      $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
-    //                                      handleChartOnClick();
-    //                                  },300); */
-    //   }
-    //   setTimeout(() => {
-    //     $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
-    //     handleChartOnClick();
-    //   }, 200);
-    // }
-    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.formData && msgData.message[0].component.payload.formData.renderType === 'inline') {
-    //   msgData.renderType = 'inline';
-    //   messageHtml = me.renderWebForm(msgData, true);
-    // } 
-    // else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'live_agent') {
-    //   msgData.fromAgent = true;
-
-    //   if (msgData.message[0].component && msgData.message[0].component.payload) {
-    //     msgData.message[0].cInfo.body = msgData.message[0].component.payload.text || '';
-    //   }
-    //   messageHtml = $(me.getChatTemplate('message')).tmpl({
-    //     msgData,
-    //     helpers,
-    //     extension,
-    //   });
-    // }
-    //  else {
-    //   messageHtml = $(me.getChatTemplate('message')).tmpl({
-    //     msgData,
-    //     helpers,
-    //     extension,
-    //   });
-    // }
-
+    
     // For Agent presence
     if (msgData.type === 'bot_response') {
       if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'live_agent') {
@@ -2152,7 +1620,7 @@ chatWindow.prototype.renderMessage = function (msgData) {
   // _chatContainer.find('li').attr('aria-hidden','true');//for mac voiceover bug with aria-live
 
   if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.sliderView && !msgData.message[0].component.payload.fromHistory) {
-    bottomSliderAction('show', messageHtml);
+    me.bottomSliderAction('show', messageHtml);
   } else {
     // ignore message(msgId) if it is already in viewport
     if ($(`.kore-chat-window .chat-container li#${msgData.messageId}`).length < 1 || (msgData.renderType === 'inline')) {
@@ -2185,48 +1653,13 @@ chatWindow.prototype.renderMessage = function (msgData) {
   }
   me.handleImagePreview();
 
-  // me.formatMessages(messageHtml);
   if (me.chatPSObj && me.chatPSObj.update) {
     me.chatPSObj.update();
   }
   _chatContainer.animate({
     scrollTop: _chatContainer.prop('scrollHeight'),
   }, 100);
-  if (msgData.type === 'bot_response' && me.isTTSOn && me.config.isTTSEnabled && !me.minimized && !me.historyLoading) {
-    if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.type === 'template') {
-      _txtToSpeak = '';
-    } else {
-      try {
-        _txtToSpeak = msgData.message[0].component.payload.text ? msgData.message[0].component.payload.text.replace(/\r?\n/g, '. .') : '';
-        _txtToSpeak = helpers.checkMarkdowns(_txtToSpeak);
-        // replacing extra new line or line characters
-        _txtToSpeak = _txtToSpeak.replace('___', '<hr/>');
-        _txtToSpeak = _txtToSpeak.replace('---', '<hr/>');
-      } catch (e) {
-        _txtToSpeak = '';
-      }
-    }
-    if (msgData.message[0].component && msgData.message[0].component.payload.speech_hint) {
-      _txtToSpeak = msgData.message[0].component.payload.speech_hint;
-    }
-    if (me.config.ttsInterface && me.config.ttsInterface === 'webapi') {
-      _ttsConnection = me.speakWithWebAPI(_txtToSpeak);
-    } else if (me.config.ttsInterface && me.config.ttsInterface === 'awspolly') {
-      if (!window.speakTextWithAWSPolly) {
-        console.warn("Please uncomment amazon polly files 'plugins/aws-sdk-2.668.0.min.js' and'plugins/kore-aws-polly.js' in index.html");
-      } else {
-        speakTextWithAWSPolly(_txtToSpeak);
-      }
-    } else if (!_ttsConnection || (_ttsConnection.readyState && _ttsConnection.readyState !== 1)) {
-      try {
-        _ttsConnection = createSocketForTTS();
-      } catch (e) {
-        console.log(e);
-      }
-    } else {
-      socketSendTTSMessage(_txtToSpeak);
-    }
-  }
+
 };
 
 chatWindow.prototype.pushTorenderMessagesQueue = function (msgItem) {
@@ -2267,10 +1700,6 @@ chatWindow.prototype.checkForMsgQueue = function () {
   }
 };
 
-chatWindow.prototype.formatMessages = function (msgContainer) {
-  /* adding target to a tags */
-  $(msgContainer).find('a').attr('target', '_blank');
-};
 
 chatWindow.prototype.openPopup = function (link_url) {
   const me = this;
@@ -2662,12 +2091,6 @@ chatWindow.prototype.botDetails = function (response, botInfo) {
      }, 50); */
 };
 
-chatWindow.prototype.closeConversationSession = function () {
-  let me=this;
-  if (me) {
-    me.closeConversationSession();
-  }
-};
 chatWindow.prototype.bottomSliderAction = function (action, appendElement) {
   $(".kore-action-sheet").animate({ height: 'toggle' });
   if (action == 'hide') {
@@ -2705,12 +2128,12 @@ chatWindow.prototype.installPlugin = function (plugin) {
 };
 chatWindow.prototype.scrollTop = function () {
   const me = this;
-  const _chatContainer = me.config.chatContainer;
+  const _chatContainer = me.chatEle;
   _chatContainer.scrollTop($('.chat-container').prop('scrollHeight'));
 };
 chatWindow.prototype.focusInputTextbox = function () {
   const me = this;
-  const _chatContainer = me.config.chatContainer;
+  const _chatContainer = me.chatEle;
   setTimeout(() => {
     const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
     _chatInput.focus();
@@ -2718,7 +2141,7 @@ chatWindow.prototype.focusInputTextbox = function () {
 };
 chatWindow.prototype.assignValueToInput = function (value) {
   const me = this;
-  const _chatContainer = me.config.chatContainer;
+  const _chatContainer = me.chatEle;
   const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
   _chatInput.text(value);
 };
@@ -2740,14 +2163,14 @@ chatWindow.prototype.assignValueToInput = function (value) {
 */
 chatWindow.prototype.sendMessage = function (messageText,options, serverMessageObject,clientMessageObject) {
   const me = this;
-  // const _chatContainer = me.config.chatContainer;
+  // const _chatContainer = me.chatEle;
   // const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
   me.sendMessageToBot(messageText, options, serverMessageObject,clientMessageObject);
 };
 
 chatWindow.prototype.appendPickerHTMLtoFooter = function(HTML){
   const me = this;
-  const _chatContainer = me.config.chatContainer;
+  const _chatContainer = me.chatEle;
  _chatContainer.find('.kore-chat-footer .footerContainer').append(HTML);
 }
 
