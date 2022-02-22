@@ -316,7 +316,7 @@
 
 
  /* Multi select checkbox css starts here */
-.kore-chat-window .kore-action-sheet{
+.kore-chat-window .kore-action-sheet {
     position: absolute;
     width: 100%;
     max-height: 100%;
@@ -504,7 +504,8 @@
     padding-top: 8px;
     position: absolute;
     right: 10px;
-    top: 5px;
+    /* top: -10px; */
+    top: 0px;
     color:var(--sdk-chat-window-list-template-close-btn-color);
     background:none;
     opacity:1;
@@ -514,7 +515,7 @@
     line-height:inherit;
     border:none;
 }
-.kore-chat-window .kore-chat-body .listViewTmplContent .listViewTmplContentBox{
+.kore-chat-window .listViewTmplContent .listViewTmplContentBox{
 	float:left;
 	color:var(--sdk-chat-window-list-view-color);
 	border-radius: 12px;
@@ -526,9 +527,9 @@
 	margin: 0;
 	width:100%;
 }
-.kore-chat-window .kore-chat-body .listViewTmplContent .listViewLeftContent{
+.kore-chat-window .listViewTmplContent .listViewLeftContent{
     width: 100%;
-    padding: 0 10px;
+    padding: 10px;
     vertical-align: middle;
     display: flex;	
     align-items: center;	
@@ -537,7 +538,7 @@
 .kore-chat-window .listViewTmplContent .listViewTmplContentChild:hover {
     background-color: rgba(10, 10, 10, 0.08);
 }
-.kore-chat-window .kore-chat-body .listViewTmplContent .listViewRightContent{
+.kore-chat-window .listViewTmplContent .listViewRightContent{
     cursor: pointer;
     display: table-cell;
     width: 60px;
@@ -545,13 +546,13 @@
     padding-left: 10px;
 
 }
-.kore-chat-window .kore-chat-body .listViewRightContent img{
+.kore-chat-window .listViewRightContent img{
 	height: 36px;
 	width: 36px;
     border-radius: 50%;
     
 }
-.kore-chat-window .kore-chat-body .listViewTmplContent .listViewTmplContentChild{
+.kore-chat-window .listViewTmplContent .listViewTmplContentChild{
 	border-top: 1px solid var(--sdk-chat-window-checkbox-border);
 	margin-bottom:10px;
     width: 100%;
@@ -559,16 +560,17 @@
     box-shadow: var(--sdk-chat-widow-primary-box-shadow);
     background-color: var(--sdk-chat-widow-default-white);
     /* background-color: var(--sdk-chat-widow-chat-button-active-color); */
-    height: 56px;
+     min-height: 56px;
+    height: auto;
     display: flex;	
     align-items: center;	
     flex-wrap: wrap;	
     cursor: pointer;
 }
-.kore-chat-window .kore-chat-body .listViewTmplContent .listViewTmplContentChild:hover{
+.kore-chat-window .listViewTmplContent .listViewTmplContentChild:hover{
     /* background-color: rgba(10, 10, 10, 0.08); */
 }
-.kore-chat-window .kore-chat-body .listViewTmplContent .listViewItemSubtitle{
+.kore-chat-window .listViewTmplContent .listViewItemSubtitle{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -578,12 +580,12 @@
     font-weight: normal;
     font-stretch: normal;
     font-style: normal;
-    line-height: normal;
+    line-height: 1.43;
     letter-spacing: 0.27px;
     color: var(--sdk-chat-window-list-template-sub-title-color);
       
 }
-.kore-chat-window .kore-chat-body .listViewTmplContent .listViewItemValue{
+.kore-chat-window .listViewTmplContent .listViewItemValue{
     
     display: inline-block;
     margin-left: 15px; 
@@ -603,12 +605,12 @@
     white-space: nowrap; */
       
 }
-.kore-chat-window .kore-chat-body .listViewTmplContent .listItemPath{
+.kore-chat-window .listViewTmplContent .listItemPath{
 	font-size:12px;
 	color: var(--sdk-chat-window-viewmore-btn-color);
     cursor: pointer;
 }
-.kore-chat-window .kore-chat-body .listViewTmplContent .buyBtn{
+.kore-chat-window .listViewTmplContent .buyBtn{
 	background: var(--sdk-chat-window-pie-chart-background);
     border: 0;
     color: var(--sdk-chat-window-viewmore-btn-color)!important;
@@ -619,11 +621,11 @@
     font-size: 12px;
     text-align: right;
 }
-.kore-chat-window .kore-chat-body .listViewTmplContentBox li:first-child{
+.kore-chat-window .listViewTmplContentBox li:first-child{
 	margin-top:0!important;
 	border-top:0;
 }
-.kore-chat-window .kore-chat-body .listViewTmplContent .listViewTmplContentHeading{
+.kore-chat-window .listViewTmplContent .listViewTmplContentHeading{
 	padding:10px;
     background:  var(--sdk-chat-widow-bot-chat-bubble-background-color);
     margin-bottom: 10px;
@@ -638,9 +640,11 @@
     letter-spacing: -0.11px;
     color: var(--sdk-chat-widow-bot-chat-bubble-text-color);
 }
-.kore-chat-window .kore-chat-body .listViewTmplContent .listViewLeftContent .titleDesc{
+.kore-chat-window .listViewTmplContent .listViewLeftContent .titleDesc{
     display: inline-block;
     width:60%;
+    /* width: 100%; */
+    position: relative;
 }
 
 .kore-chat-window .kore-chat-body .listViewItemTitle {	
@@ -653,13 +657,13 @@
     text-overflow: ellipsis;	
     white-space: nowrap;	
 }
-.kore-chat-window .kore-chat-body .listViewTmplContent .seeMoreList{
+.kore-chat-window .listViewTmplContent .seeMoreList{
 	text-align: center;
     border-top: 1px solid var(--sdk-chat-window-checkbox-border);
     padding: 10px;
     margin: 0;
 }
-.kore-chat-window .kore-chat-body .listViewTmplContent .seeMoreList{
+.kore-chat-window .listViewTmplContent .seeMoreList{
 	border: 0;
     background: none;
     color: var(--sdk-chat-widow-primary-blue-color);    
@@ -1026,16 +1030,6 @@
 }
 /* --TABBLE LIST ENDS HERE--*/
 
- .kore-chat-window .kore-chat-body .listTmplContent .listTmplContentBox .listTmplContentChild.hide{
-    display: none !important;
-}
-.kore-chat-window .kore-chat-body .listTmplContent .listTmplContentBox .listTmplContentChild_show_more{
-    text-align: center;
-    border-top: 1px solid var(--sdk-chat-window-checkbox-border);
-    padding: 10px;
-    background-color: #ffffff;
-    cursor: pointer;
-}
 
  
  /* remove inline-block whitespace */
@@ -1289,8 +1283,11 @@
     animation: message-left ease-in-out 2s forwards;
     margin: 0;
     width: 100%;
+    list-style: none;
 }
-
+.kore-chat-window .listViewTmplContent .listViewTmplContentBox .hide{
+  display:none !important;
+}
 .kore-chat-window .listViewTmplContent.noShadow .listViewTmplContentBox .listViewTmplContentHeading {
     margin-bottom: 0;
     list-style-type: none;
@@ -1322,6 +1319,7 @@
     overflow: auto;
     max-height: 400px;
     padding: 10px;
+    position:relative;
 }
 
 .kore-chat-window .listViewTmplContent.noShadow .listViewTmplContentChild {
@@ -1345,7 +1343,7 @@
 
 .kore-chat-window .listViewTmplContent .listViewLeftContent {
     width: 100%;
-    padding: 0 10px;
+    padding: 10px;
     vertical-align: middle;
     display: flex;
     align-items: center;
@@ -1369,8 +1367,8 @@
 }
 
 .kore-chat-window .listViewTmplContent .listViewItemSubtitle {
-    width: 102px;
-    height: 18px;
+    /* width: 102px; */
+    height: auto;
     font-size: 11px;
     font-weight: normal;
     font-stretch: normal;
@@ -1378,9 +1376,11 @@
     line-height: normal;
     letter-spacing: 0.27px;
     color: #77869e;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow: inherit;
+    text-overflow: inherit;
+    white-space: normal;
+    margin-top: 4px;
+    position: relative;
 }
 
 .kore-chat-window .listViewTmplContent .listViewItemValue {
@@ -1856,7 +1856,7 @@
     position: relative;
     margin: 10px 0 0 !important;
 }
-.kore-chat-window .kore-chat-body .listViewTmplContentChild .meetingActionButtons .dropdown-contentWidgt {
+.kore-chat-window .listViewTmplContentChild .meetingActionButtons .dropdown-contentWidgt {
     bottom: 50px;
     max-height: 200px;
     border: 1px solid var(--sdk-chat-widow-primary-border-color);
@@ -2055,7 +2055,6 @@
 }
 /*-- Tabbedlist -ended   ---*/
 
-
 /* --- Banking feedback template css starts here -- */
 .kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-experience-content .content-heading{
     font-weight: normal;
@@ -2093,13 +2092,7 @@
     margin-top: 0;
 }
 .kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-experience-content .bankingFeedBackTemplate-content-experience .checkInput{
-    position: relative !important;
-    opacity: 1 !important;
-    /* z-index: 1; */
-    height: 20px;
-    width: 20px;
-    cursor: pointer;
-    margin-top: 0;
+
 }
 .kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-experience-content .bankingFeedBackTemplate-content-experience .content-list-view{
     align-items: center;
@@ -2109,8 +2102,6 @@
     top: 5px;
 }
 .kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-experience-content .bankingFeedBackTemplate-content-experience .checkInput-label{
-    position: absolute !important;
-    margin-left: 6px;
     cursor: pointer;
     font-weight: normal;
 
@@ -2145,6 +2136,7 @@
     padding: 5px 10px 5px 14px;
     left: 0px;
     top: 5px;
+    cursor: pointer;
 }
 .kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .experience-feedback-listItems .feedback-listItem .checkbox{
     margin-top: 5px;
@@ -2170,18 +2162,22 @@
 .kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .buttons-div .feedback-submit .submitBtn{
     font-size: 14px;
     color: #fff;
-    background: #009dab;
+    background: var(--sdk-chat-widow-chat-button-active-color);
     height: 34px;
     padding: 0px 20px !important;
     width: auto;
     border-radius: 3px;
-    border: 1px solid #009dab;
+    border: 1px solid var(--sdk-chat-widow-chat-button-active-color);
     margin-left: 0;
     outline: 0;
 }
 .kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .buttons-div .feedback-submit .submitBtn:hover{
-    background: #018490;
-    border: 1px solid #018490;
+    /* background: #018490;
+    border: 1px solid #018490; */
+    background-color: var(--sdk-chat-widow-chat-button-inactive-background-color);
+    border: 2px solid var(--sdk-chat-widow-chat-button-inactive-text-color);
+    color: var(--sdk-chat-widow-chat-button-inactive-text-color);
+
 }
 .kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .buttons-div .feedback-cancel .cancelBtn{
     font-size: 14px;
@@ -2203,15 +2199,163 @@
 }
 
 .kore-chat-window .bankingFeedBackTemplate .feedback-listItem .checkbox.styledCSS input[type="checkbox"]:checked + label::after {
+    background-size: 16px;
+    display: inline-block;
+    background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjxzdmcgd2lkdGg9IjE2cHgiIGhlaWdodD0iMTJweCIgdmlld0JveD0iMCAwIDE2IDEyIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPg0KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNTMuMiAoNzI2NDMpIC0gaHR0cHM6Ly9za2V0Y2hhcHAuY29tIC0tPg0KICAgIDx0aXRsZT5jaGVjay13aGl0ZTwvdGl0bGU+DQogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+DQogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+DQogICAgICAgIDxnIGlkPSJjaGVjay13aGl0ZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsIC0yLjAwMDAwMCkiIGZpbGwtcnVsZT0ibm9uemVybyI+DQogICAgICAgICAgICA8cG9seWdvbiBpZD0iUGF0aCIgZmlsbC1vcGFjaXR5PSIwIiBmaWxsPSIjRDhEOEQ4IiBwb2ludHM9IjAgMCAxNiAwIDE2IDE2IDAgMTYiPjwvcG9seWdvbj4NCiAgICAgICAgICAgIDxwYXRoIGQ9Ik0xNC4yLDIuODM1IEMxNC40LDIuNjIgMTQuNzMzLDIuNjEgMTQuOTQ1LDIuODExIEMxNS4xNDUsMyAxNS4xNjUsMy4zMDkgMTUuMDAyLDMuNTIzIEwxNC45NjksMy41NjMgTDYuMDQ5LDEzLjE2NSBDNS44NTksMTMuMzcgNS41NDUsMTMuMzg5IDUuMzMzLDEzLjIxNSBMNS4yOTUsMTMuMTggTDEuMDQ1LDguOTUzIEMwLjg0LDguNzQ3IDAuODM3LDguNDEgMS4wNCw4LjIgQzEuMjMzLDguMDAzIDEuNTQsNy45ODkgMS43NDgsOC4xNiBMMS43ODUsOC4xOTQgTDUuNjUsMTIuMDQgTDE0LjIsMi44MzUgWiIgaWQ9IlBhdGgiIGZpbGw9IiNGRkZGRkYiPjwvcGF0aD4NCiAgICAgICAgPC9nPg0KICAgIDwvZz4NCjwvc3ZnPg==) !important;
+    width: 16px;
+    height: 16px;
+    content: "";
+    background-repeat: no-repeat;
+    left: 1px;
+    top: 3px;
+    border: 0;
+    padding: 0;
+    /* background: var(--sdk-chat-widow-chat-button-active-color) !important;
+    border: 1px solid var(--sdk-chat-widow-chat-button-active-color); */
+}
+.kore-chat-window .bankingFeedBackTemplate .feedback-listItem .checkbox.styledCSS input[type="checkbox"]:checked + label::before {
     background-size: 10px 20px;
     display: inline-block;
     background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjxzdmcgd2lkdGg9IjE2cHgiIGhlaWdodD0iMTJweCIgdmlld0JveD0iMCAwIDE2IDEyIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPg0KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNTMuMiAoNzI2NDMpIC0gaHR0cHM6Ly9za2V0Y2hhcHAuY29tIC0tPg0KICAgIDx0aXRsZT5jaGVjay13aGl0ZTwvdGl0bGU+DQogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+DQogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+DQogICAgICAgIDxnIGlkPSJjaGVjay13aGl0ZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsIC0yLjAwMDAwMCkiIGZpbGwtcnVsZT0ibm9uemVybyI+DQogICAgICAgICAgICA8cG9seWdvbiBpZD0iUGF0aCIgZmlsbC1vcGFjaXR5PSIwIiBmaWxsPSIjRDhEOEQ4IiBwb2ludHM9IjAgMCAxNiAwIDE2IDE2IDAgMTYiPjwvcG9seWdvbj4NCiAgICAgICAgICAgIDxwYXRoIGQ9Ik0xNC4yLDIuODM1IEMxNC40LDIuNjIgMTQuNzMzLDIuNjEgMTQuOTQ1LDIuODExIEMxNS4xNDUsMyAxNS4xNjUsMy4zMDkgMTUuMDAyLDMuNTIzIEwxNC45NjksMy41NjMgTDYuMDQ5LDEzLjE2NSBDNS44NTksMTMuMzcgNS41NDUsMTMuMzg5IDUuMzMzLDEzLjIxNSBMNS4yOTUsMTMuMTggTDEuMDQ1LDguOTUzIEMwLjg0LDguNzQ3IDAuODM3LDguNDEgMS4wNCw4LjIgQzEuMjMzLDguMDAzIDEuNTQsNy45ODkgMS43NDgsOC4xNiBMMS43ODUsOC4xOTQgTDUuNjUsMTIuMDQgTDE0LjIsMi44MzUgWiIgaWQ9IlBhdGgiIGZpbGw9IiNGRkZGRkYiPjwvcGF0aD4NCiAgICAgICAgPC9nPg0KICAgIDwvZz4NCjwvc3ZnPg==);
-    width: 10px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     content: "";
     background-repeat: no-repeat;
-    left: 3px;
-    top: -2px;
+    left: 0px;
+    top: 0px;
+    background-position: center;
+    background: var(--sdk-chat-widow-chat-button-active-color) !important;
+    border: 1px solid var(--sdk-chat-widow-chat-button-active-color);
 }
 
 /* --- Banking feedback template css Ends here -- */
+
+
+/* Radio Buttons Global styles */
+
+.radiobutton-custom-type {
+    display: block;
+}
+
+.radiobutton-custom-type .radio-custom {
+    opacity: 0;
+    position: absolute;
+    cursor: pointer;
+    margin: 0;
+    height: auto;
+}
+.radiobutton-custom-type .radio-custom + .radio-custom-label {
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+    position: relative;
+    font-size: 14px;
+    color: #202124;
+    margin: 0;
+    font-weight: normal;
+    padding-left: 28px;
+}
+.radiobutton-custom-type .radio-custom + .radio-custom-label::before {
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    top: 0;
+    padding: 0;
+    margin-right: 12px;
+    text-align: center;
+    border-radius: 2px;
+    border: solid 1px #9B9B9B;
+    background-color: #ffffff;
+    margin-top: -3px;
+    border-radius: 100px;
+    left: 0;
+    position: absolute;
+    top: 5px;
+}
+.radiobutton-custom-type .radio-custom:hover:not([disabled]):checked + .radio-custom-label {
+    color: #202124;
+}
+.radiobutton-custom-type .radio-custom:hover:not([disabled]):checked + .radio-custom-label::before {
+    border: solid 1px #022554;
+}
+.radiobutton-custom-type .radio-custom:hover:not([disabled]) + .radio-custom-label {
+    color: #022554;
+}
+.radiobutton-custom-type .radio-custom:hover:not([disabled]) + .radio-custom-label::before {
+    border: solid 1px #202124;
+}
+.radiobutton-custom-type .radio-custom:checked + .radio-custom-label::before {
+    content: "";
+    color: #ffffff;
+    font-size: 12px;
+    background-color: #022554;
+    border: 1px solid #022554;
+    box-shadow: inset 0 0 0 3px #ffffff;
+}
+.radiobutton-custom-type .radio-custom:checked:focus + .radio-custom-label {
+    color: #202124;
+}
+.radiobutton-custom-type .radio-custom:checked:disabled + .radio-custom-label {
+    /* color: #022554; */
+}
+.radiobutton-custom-type .radio-custom:checked:disabled + .radio-custom-label::before {
+    border: solid 1px #022554;
+    box-shadow: inset 0 0 0 3px #ffffff;
+    background-color: #022554;
+}
+.radiobutton-custom-type .radio-custom:disabled + .radio-custom-label {
+    /* color: #022554; */
+}
+.radiobutton-custom-type .radio-custom:disabled + .radio-custom-label::before {
+    border: solid 1px #022554;
+}
+.radiobutton-custom-type .radio-custom:focus + .radio-custom-label {
+    /* color: #022554; */
+}
+.radiobutton-custom-type .radio-custom:focus + .radio-custom-label::before {
+    border: 1px solid #022554;
+}
+
+
+.kore-chat-window .listViewTmplContent .listViewLeftContent .titleDesc .listViewItemSubtitle .tooltiptext{
+    visibility: hidden;
+    width: 200px;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    left: 50px;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    top: 100%;
+    margin-top: 16px;
+    white-space: normal;
+    background-color: #26344a;
+    max-width: 200px;
+    text-align: center;
+    padding: 10px 15px;
+    line-height: 1.33;
+    font-size: 12px;
+    color: #fff;
+    transition: 0.3s all ease;
+}
+.kore-chat-window .listViewTmplContent .listViewLeftContent .titleDesc .listViewItemSubtitle .tooltiptext::after{
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #26344a transparent;
+}
+
+.kore-chat-window .listViewTmplContent .listViewLeftContent .titleDesc .listViewItemSubtitle:hover .tooltiptext{
+    visibility: visible;
+    opacity: 1;
+}
+.kore-chat-window ul.chat-container li.fromOtherUsers.listView{
+    z-index: 1;
+}

@@ -4,6 +4,10 @@
 		this.chatInitialize=chatInitialize;
 		this.helpers = null;
 		this.extension = null;
+		this.KRPerfectScrollbar;
+        if (window.PerfectScrollbar && typeof PerfectScrollbar === 'function') {
+            this.KRPerfectScrollbar = window.PerfectScrollbar;
+        }
 	}
 	
 	/**
@@ -26,7 +30,6 @@
 				'helpers': this.helpers,
 				'extension': this.extension
 			});
-			this.bindEvents(messageHtml);
 		} else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "like_dislike") {
 			messageHtml = $(this.getChatTemplate("likeDislikeTemplate")).tmpl({
 				'msgData': msgData,
@@ -90,8 +93,9 @@
 				'extension': this.extension
 			});
 			this.templateEvents(messageHtml, 'listWidget');
-			$(messageHtml).data(msgData);
-		} else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "quick_replies_welcome") {
+			 $(messageHtml).data(msgData);
+		}
+		 else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "quick_replies_welcome") {
             messageHtml = $(this.getChatTemplate("quick_replies_welcome")).tmpl({
                 'msgData': msgData,
                 'helpers': this.helpers,
@@ -99,7 +103,7 @@
 			});
 			if(msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.meta && msgData.message[0].component.payload.meta.custSegId){
 				var botConfigDetails = this.cfg;
-                $.ajax({
+                                  $.ajax({
 					//url: this.cfg.botOptions.brandingAPIUrl,
 					url: this.cfg.botOptions.koreAPIUrl + '/workbench/sdkData?objectId=hamburgermenu&objectId=brandingwidgetdesktop',
 					headers: {
@@ -129,7 +133,8 @@
 				});
 			}
 			
-		} else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.template_type === "bankingFeedbackTemplate")) {
+		}
+		else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.template_type === "bankingFeedbackTemplate")) {
 			messageHtml = $(this.getChatTemplate("bankingFeedbackTemplate")).tmpl({
 				'msgData': msgData,
 				'helpers': this.helpers,
@@ -244,13 +249,12 @@
 			};
 			print(JSON.stringify(message)); 
 		*/
-		
 		var checkBoxesTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			{{if msgData.message}} \
-            <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+			<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
 					<div class = "listTmplContent"> \
-                        {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-						{{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+						{{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+						{{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
 						<ul class="{{if msgData.message[0].component.payload.fromHistory}} dummy listTmplContentBox  {{else}} listTmplContentBox{{/if}} "> \
 							{{if msgData.message[0].component.payload.title || msgData.message[0].component.payload.heading}} \
 								<li class="listTmplContentHeading"> \
@@ -262,26 +266,21 @@
 							{{/if}} \
 							{{each(key, msgItem) msgData.message[0].component.payload.elements}} \
 								{{if msgData.message[0].component.payload.buttons}} \
-									<li class="listTmplContentChild noMargin {{if key > 4}}hide{{/if}}"> \
+									<li class="listTmplContentChild"> \
 										<div class="checkbox checkbox-primary styledCSS checkboxesDiv"> \
 											<input  class = "checkInput" type="checkbox" text = "${msgItem.title}" value = "${msgItem.value}" id="${msgItem.value}${msgData.messageId}"> \
 											<label for="${msgItem.value}${msgData.messageId}">{{html helpers.convertMDtoHTML(msgItem.title, "bot")}}</label> \
 										</div> \
-                                    </li> \
-                                {{/if}} \
-                            {{/each}} \
-                            {{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload &&  msgData.message[0].component.payload.elements && msgData.message[0].component.payload.elements.length > 5}}\
-                            <li class="listTmplContentChild listTmplContentChild_show_more"> \
-                                  <div classs="show-more">Show More</div>\
-                             </li> \
-                            {{/if}}\
-                            <div class="{{if msgData.message[0].component.payload.fromHistory}} hide  {{else}} checkboxButtons {{/if}} "> \
-                                {{each(key, buttonData) msgData.message[0].component.payload.buttons}} \
-                                    <div class="checkboxBtn" value=${buttonData.payload} title="${buttonData.title}"> \
-                                        ${buttonData.title} \
-                                    </div> \
-                                {{/each}} \
-                            </div> \
+									</li> \
+								{{/if}} \
+							{{/each}} \
+							<div class="{{if msgData.message[0].component.payload.fromHistory}} hide  {{else}} checkboxButtons {{/if}} "> \
+								{{each(key, buttonData) msgData.message[0].component.payload.buttons}} \
+									<div class="checkboxBtn" value=${buttonData.payload} title="${buttonData.title}"> \
+										${buttonData.title} \
+									</div> \
+								{{/each}} \
+							</div> \
 						</ul> \
 					</div> \
 				</li> \
@@ -703,17 +702,17 @@ print(JSON.stringify(message)); */
 					{{/if}} \
 					<div class="listItems">\
 						{{each(key, msgItem) msgData.message[0].component.payload.elements}} \
-							{{if (msgData.message[0].component.payload.seeMore && key < msgData.message[0].component.payload.moreCount) || (!msgData.message[0].component.payload.seeMore)}}\
-								<li class="listViewTmplContentChild"> \
+							{{if (msgData.message[0].component.payload.seeMore && (!msgData.message[0].component.payload.seeMoreAction && (key < msgData.message[0].component.payload.moreCount)) || (msgData.message[0].component.payload.seeMoreAction &&  msgData.message[0].component.payload.seeMoreAction !=="slider") || (msgData.message[0].component.payload.seeMoreAction &&  (msgData.message[0].component.payload.seeMoreAction ==="slider") && (key < msgData.message[0].component.payload.moreCount ))) || (!msgData.message[0].component.payload.seeMore)}}\
+								<li class="listViewTmplContentChild {{if msgData.message[0].component.payload.seeMore && (key > msgData.message[0].component.payload.moreCount-1)}}hide{{/if}}"> \
 									{{if msgItem.image_url}} \
 										<div class="listViewRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
 											<img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
 										</div> \
 									{{/if}} \
-									<div class="listViewLeftContent" data-url="${msgItem.default_action.url}" data-title="${msgItem.default_action.title}" data-value="${msgItem.default_action.title}"> \
+									<div class="listViewLeftContent" data-url="${msgItem.default_action.url}" data-title="${msgItem.default_action.title}" data-value="${msgItem.default_action.payload}"> \
 										<span class="titleDesc">\
-											<div class="listViewItemTitle" title="${msgItem.title}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
-											{{if msgItem.subtitle}}<div class="listViewItemSubtitle" title="${msgItem.subtitle}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
+											<div class="listViewItemTitle" {{if !msgItem.tooltip}}title="${msgItem.title}"{{/if}}>{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
+											{{if msgItem.subtitle}}<div class="listViewItemSubtitle" {{if !msgItem.tooltip}}title="${msgItem.subtitle}"{{/if}}>{{if msgItem.tooltip}}<span class="tooltiptext">{{html helpers.convertMDtoHTML(msgItem.tooltip, "bot")}}</span>{{/if}}{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
 										</span>\
 										{{if msgItem.value}}<div class="listViewItemValue" {{if msgItem && msgItem.color}}style="color:${msgItem.color}"{{/if}} title=${msgItem.value}>{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.value, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.value, "user")}} {{/if}}</div>{{/if}} \
 									</div>\
@@ -723,7 +722,7 @@ print(JSON.stringify(message)); */
 					</div>\
 					{{if msgData.message[0].component.payload.seeMore}}\
 						<li class="seeMore"> \
-							<span class="seeMoreList">Show more</span> \
+							<span class="seeMoreList">{{if  msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.seeMoreTitle}}${msgData.message[0].component.payload.seeMoreTitle} {{else}}Show more{{/if}}</span> \
 						</li> \
 					{{/if}}\
 				</ul> \
@@ -752,7 +751,7 @@ print(JSON.stringify(message)); */
 								 <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
 							 </div> \
 						 {{/if}} \
-							 <div class="listViewLeftContent" data-url="${msgItem.default_action.url}" data-title="${msgItem.default_action.title}" data-value="${msgItem.default_action.title}"> \
+							 <div class="listViewLeftContent" data-url="${msgItem.default_action.url}" data-title="${msgItem.default_action.title}" data-value="${msgItem.default_action.payload}"> \
 								<span class="titleDesc">\
 									<div class="listViewItemTitle" title="${msgItem.title}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
 									 {{if msgItem.subtitle}}<div class="listViewItemSubtitle" title="${msgItem.subtitle}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
@@ -1117,7 +1116,7 @@ print(JSON.stringify(message)); */
                             {{if msgData.message[0].component.payload.quick_replies && msgData.message[0].component.payload.quick_replies.length}} \
                                 <div class="quick_replies_btn_parent"><div class="autoWidth">\
                                     {{each(key, msgItem) msgData.message[0].component.payload.quick_replies}} \
-                                        <div class="buttonTmplContentChild quickReplyDiv displayInline"> <span actual-value="${msgItem.title}" {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} class="buttonQuickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.content_type}">\
+                                        <div class="buttonTmplContentChild quickReplyDiv displayInline"> <span {{if msgItem.payload}} actual-value="${msgItem.payload}" {{/if}} value="${msgItem.title}" class="buttonQuickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.content_type}">\
                                             {{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} <span class="quickreplyText {{if msgItem.image_url}}with-img{{/if}}">${msgItem.title}</span></span>\
                                         </div> \
                                     {{/each}} \
@@ -1403,9 +1402,9 @@ print(JSON.stringify(message)); */
 					<div class="bankingFeedBackTemplate-content-experience">\
 						{{if msgData && msgData.message[0].component.payload.experienceContent}}\
 							{{each(key, experience) msgData.message[0].component.payload.experienceContent}}\
-								<div class="content-list-view">\
-									<input  class = "checkInput" type="radio" text = "${experience.value}" value = "${experience.value}" id="${experience.id}${msgData.messageId}" actionObj="${JSON.stringify(experience)}"> \
-									<label for="${experience.id}${msgData.messageId}" class="checkInput-label">${experience.value}</label> \
+								<div class="content-list-view radiobutton-custom-type">\
+									<input  class="checkInput radio-custom" type="radio" text = "${experience.value}" value = "${experience.value}" id="${experience.id}${msgData.messageId}" actionObj="${JSON.stringify(experience)}"> \
+									<label for="${experience.id}${msgData.messageId}" class="checkInput-label radio-custom-label">${experience.value}</label> \
 								</div>\
 							{{/each}}\
 						{{/if}}\
@@ -1470,10 +1469,9 @@ print(JSON.stringify(message)); */
             return quick_replies_welcome;
 		}else if(tempType === "listWidget"){
 			return listWidget;
-		} else if (tempType === "bankingFeedbackTemplate") {
-            return bankingFeedbackTemplate;
-        } 
 		} 
+		else if (tempType === "bankingFeedbackTemplate") {
+            return bankingFeedbackTemplate;
         } 
 		else {
 			return "";
@@ -1494,20 +1492,9 @@ print(JSON.stringify(message)); */
     };
 
 	customTemplate.prototype.bindEvents = function (messageHtml) {
-		$(messageHtml).off('click', '.listTmplContentChild_show_more').on('click', '.listTmplContentChild_show_more', function (e) {
-           		 var _parentElement = e.currentTarget.parentElement;
-           		 var hiddenElementsArray = $(_parentElement).find('.hide');
-            		for (var i = 0; i < hiddenElementsArray.length; i++) {
-                		if ($(hiddenElementsArray[i]).hasClass('hide')) {
-                    			$(hiddenElementsArray[i]).removeClass('hide')
-               			 }
-           		 }
-           		 var currentTarget = e.currentTarget;
-           		 $(currentTarget).addClass('hide');
-	        });
-
 		chatInitialize=this.chatInitialize;
 		helpers=this.helpers;
+		KRPerfectScrollbar = this.KRPerfectScrollbar;
 		$(messageHtml).find('.selectTemplateDropdowm').on('change', function (e) {
 			e.preventDefault();
 			e.stopPropagation();
@@ -1691,19 +1678,41 @@ print(JSON.stringify(message)); */
 				// listViewTabs();
 				
 				var msgData = $(e.currentTarget).closest("li.fromOtherUsers.with-icon.listView").data();
-				if(msgData.message[0].component.payload.seeMore){
-					msgData.message[0].component.payload.seeMore=false;
-				}
-				if(!(msgData.message[0].component.payload.sliderView)){
-					msgData.message[0].component.payload.sliderView=true;
-				}
-				
-				messageHtml = $(customTemplate.prototype.getChatTemplate("templatelistView")).tmpl({
-					'msgData': msgData,
-					'helpers': helpers,
-				});
-				$(messageHtml).find(".listViewTmplContent .extra-info").hide();
-				bottomSliderAction('show',messageHtml);
+				if ((msgData.message[0].component.payload.seeMoreAction === 'slider') || (!msgData.message[0].component.payload.seeMoreAction)) {
+                    if (msgData.message[0].component.payload.seeMore) {
+                        msgData.message[0].component.payload.seeMore = false;
+                    }
+                    if (!(msgData.message[0].component.payload.sliderView)) {
+                        msgData.message[0].component.payload.sliderView = true;
+                    }
+                    messageHtml = $(customTemplate.prototype.getChatTemplate("templatelistView")).tmpl({
+                        'msgData': msgData,
+                        'helpers': helpers,
+                        // 'extension': extension
+                    });
+                    $(messageHtml).find(".listViewTmplContent .extra-info").hide();
+                    bottomSliderAction('show', messageHtml)
+					setTimeout(function () {
+					if (KRPerfectScrollbar) {
+						this.contentPSObj = null;
+						if (!this.contentPSObj) {
+							this.contentPSObj = new KRPerfectScrollbar($(messageHtml).find(".listItems").get(0), {
+								suppressScrollX: true
+							});
+						}
+					} else {
+						this.contentPSObj.update();
+					}
+				}, 500)
+                } else if ((msgData.message[0].component.payload.seeMoreAction === 'inline')) {
+                    var parentElement = $(e.currentTarget.closest(".listViewTmplContentBox"));
+                    var childElements = $(parentElement).find('.listViewTmplContentChild.hide');
+                    if (childElements && childElements.length) {
+                        $(parentElement).find('.listViewTmplContentChild.hide').removeClass('hide');
+                        $(parentElement).find('.seeMore').addClass('hide');
+                    }
+
+                }
 			}
 		});
 		$(messageHtml).find(".listViewLeftContent").on('click', function (e) {
@@ -1712,7 +1721,7 @@ print(JSON.stringify(message)); */
 			if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
 				a_link = "http:////" + a_link;
 			}
-			this.openExternalLink(a_link);
+			customTemplate.prototype.openExternalLink(a_link);
 		 }else{
 			var _innerText= $(this).attr('data-value');
 			var postBack=$(this).attr('data-title');
@@ -1943,7 +1952,7 @@ print(JSON.stringify(message)); */
 			 }
 		}
 
-		this.openExternalLink = function (link_url) {
+		customTemplate.prototype.openExternalLink = function (link_url) {
 			var a = document.createElement("a");
 			a.href = link_url;
 			a.target = "_blank";
@@ -2129,7 +2138,7 @@ print(JSON.stringify(message)); */
 		   }
 		  };
 		   /* list widget template actions end here */
-
+        /* banking feedback changes starts here */
 		customTemplate.prototype.bankingFeedbackTemplateEvents = function(messageHtml){
 			var me = this;
 			var _chatContainer = me.chatInitialize.config.chatContainer;
@@ -2241,6 +2250,7 @@ print(JSON.stringify(message)); */
 			return false;
 		}
 
+		/* banking feedback changes ends here */
 	    window.customTemplate=customTemplate;	
 
 	return {
