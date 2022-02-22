@@ -555,6 +555,7 @@
     padding: 0 6px;
     min-height: auto;
     height: 40px;
+    display: none;
 }
 
 .kore-chat-window .kore-chat-header .chat-box-controls .reload-btn {
