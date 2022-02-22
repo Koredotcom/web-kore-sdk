@@ -2,6 +2,7 @@ const path=require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const TerserPlugin = require("terser-webpack-plugin");
 
 let config= {
     mode:"none",//none || development || production
@@ -124,6 +125,7 @@ module.exports= function(env,argv){
         outputModule: true,
       }
     } else if (env.target_module === 'umd') {
+        config.output.path= path.resolve(__dirname,'dist/umd')
         config.output.libraryTarget = "umd";
         config.entry={
           Chat: {
@@ -167,6 +169,19 @@ module.exports= function(env,argv){
     }
     if (env.kore_env==='prod') {
         config.mode='production';
+        config.optimization= {
+          minimize: true,
+          minimizer: [
+            new TerserPlugin({
+              extractComments: false,
+              terserOptions: {
+                format: {
+                  comments: false,
+                },
+              },
+            }),
+          ],
+        }
     }
     
     return config;
