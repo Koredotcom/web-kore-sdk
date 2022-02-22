@@ -5,7 +5,7 @@ import {Korei18nPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {KoreFileUploaderPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {KorePickersPlugin } from '../../../../../dist/kore-web-sdk.esm.browser.js';
 
-let chatWindowInstance = new chatWindow(chatConfig);
+let chatWindowInstance = new chatWindow();
 let pickerConfig = {};
 
 
@@ -24,6 +24,6 @@ chatWindowInstance.installPlugin(new KorePickersPlugin(pickerConfig));
 //  chatWindowInstance.show();
  
  
+chatWindowInstance.show(chatConfig);
 chatWindowInstance.on("jwtSuccess", (message,event) => {console.log(message);});
-chatWindowInstance.show();
 

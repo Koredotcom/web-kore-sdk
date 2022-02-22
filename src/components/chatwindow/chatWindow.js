@@ -7,6 +7,7 @@ import MessageTemplate from '../custom/templates/messageTemplate/messageTemplate
 import KRPerfectScrollbar from 'perfect-scrollbar';
 import './../../libs/perfectscroll/css/perfect-scrollbar.min.css'
 import './chatWindow.scss';
+import chatConfig from './config/kore-config'
 
 const bot = requireKr('/KoreBot.js').instance();
 
@@ -101,16 +102,16 @@ class chatWindow extends EventEmitter{
   }
 }
 
-chatWindow.prototype.init = function (config) {
+chatWindow.prototype.init = function () {
   const me = this;
-  me.config=me.extend(me.config,config);
+  //me.config=me.extend(me.config,config);
   me.plugins = {};
   me.bot=bot;
   me.vars={};
   me.vars._escPressed=0;
   me.helpers=KoreHelpers.helpers;
   //chatInitialize = me//new chatWindow(cfg);
-  me.config.botOptions.test = false;
+  //me.config.botOptions.test = false;
   me.customTemplateObj = new customTemplate(me);
   me.messageTemplate=new MessageTemplate();
   me.messageTemplate.hostInstance=me;
@@ -146,7 +147,8 @@ chatWindow.prototype.show = function (config) {
 };
 chatWindow.prototype.initShow = function (config) {
   const me = this;
-  this.config = me.extend(config||me.config,{
+  me.config=me.extend(chatConfig,config);
+  this.config = me.extend(me.config,{
     chatTitle: 'Kore.ai Bot Chat',
     allowIframe: false,
     botOptions: me.config.botOptions,
@@ -155,7 +157,6 @@ chatWindow.prototype.initShow = function (config) {
 
   me.config.chatTitle = 'Kore.ai Bot Chat';
   me.config.allowIframe = false;
-
 
   me.reWriteWebHookURL(me.config);
   window._chatHistoryLoaded = false;
