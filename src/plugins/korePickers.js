@@ -148,29 +148,35 @@ class KorePickersPlugin {
         let chatWindowInstance = me.hostInstance;
         if (this.config && this.config.showClockPickerIcon) {
             me.pickerHTML = $(me.getClockPickerTemplateString());
-            chatWindowInstance.appendPickerHTMLtoFooter(me.pickerHTML);
+            me.appendPickerHTMLtoChatWindowFooter(me.pickerHTML);
             me.bindEvents(me.pickerHTML);
         }
         if (this.config && this.config.showDatePickerIcon) {
             me.pickerHTML = $(me.getDatePickerTemplateString());
-            chatWindowInstance.appendPickerHTMLtoFooter(me.pickerHTML);
+            me.appendPickerHTMLtoChatWindowFooter(me.pickerHTML);
             me.bindEvents(me.pickerHTML);
         }
         if (this.config && this.config.showDateRangePickerIcon) {
             me.pickerHTML = $(me.getDateRangePickerTemplateString());
-            chatWindowInstance.appendPickerHTMLtoFooter(me.pickerHTML);
+            me.appendPickerHTMLtoChatWindowFooter(me.pickerHTML);
             me.bindEvents(me.pickerHTML);
         }
         if (this.config && this.config.showTaskMenuPickerIcon) {
             me.pickerHTML = $(me.getTaskPickerTemplateString());
-            chatWindowInstance.appendPickerHTMLtoFooter(me.pickerHTML);
+            me.appendPickerHTMLtoChatWindowFooter(me.pickerHTML);
             me.bindEvents(me.pickerHTML);
         }
         if (this.config && this.config.showradioOptionMenuPickerIcon) {
             me.pickerHTML = $(me.getRadioOptionPickerTemplateString());
-            chatWindowInstance.appendPickerHTMLtoFooter(me.pickerHTML);
+            me.appendPickerHTMLtoChatWindowFooter(me.pickerHTML);
             me.bindEvents(me.pickerHTML);
         }
+    }
+    appendPickerHTMLtoChatWindowFooter(pickerHTML){
+        let me = this;
+        let chatWindowInstance = me.hostInstance;
+        const _chatContainer = chatWindowInstance.chatEle;
+        _chatContainer.find('.kore-chat-footer .footerContainer').append(pickerHTML);        
     }
     getClockPickerTemplateString() {
         var clockFooterTemplate = '<div class="sdkFooterIcon clock"> \

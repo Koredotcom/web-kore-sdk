@@ -33,13 +33,71 @@ class chatWindow extends EventEmitter{
      */
     JWT_SUCCESS:'jwtSuccess',
     /**
+     * beforeViewInit will be triggered before the chat window dom element is attached to provided container.
+     *
+     * @event chatWindow#beforeViewInit
+     * @type {object}
+     * @property {Object} chatEle - chat window dom element .
+     */
+    BEFORE_VIEW_INIT:'beforeViewInit',
+    /**
      * viewInit will be triggered once the chat window dom element is attached to provided container.
      *
      * @event chatWindow#viewInit
      * @type {object}
      * @property {Object} chatEle - chat window dom element .
      */
-    VIEW_INIT:'viewInit'
+    VIEW_INIT:'viewInit',
+    /**
+     * beforeRenderMessage will be triggered before appending the message html to chatwindow
+     *
+     * @event chatWindow#beforeRenderMessage
+     * @type {object}
+     * @property {Object} messageHtml message bubble html content
+     * @property {Object} msgData message data
+    */
+    BEFORE_RENDER_MSG:'beforeRenderMessage',
+     /**
+     * afterRenderMessage will be triggered after appending the message html to chatwindow
+     *
+     * @event chatWindow#afterRenderMessage
+     * @type {object}
+     * @property {Object} messageHtml message bubble html content
+     * @property {Object} msgData message data
+     */
+    AFTER_RENDER_MSG:'afterRenderMessage',
+    /**
+     * onWSOpen will be triggered on new websocket connection open
+     *
+     * @event chatWindow#onWSOpen
+     */
+    ON_WS_OPEN:'onWSOpen',
+     /**
+     * onWSMessage will be triggered on new message received from websocket
+     *
+     * @event chatWindow#onWSMessage
+     * @type {object}
+     * @property {Object} messageData - message data received from websocket
+     */
+    ON_WS_MESSAGE:'onWSMessage',
+    /**
+     * onWSMessage will be triggered on new message received from websocket
+     *
+     * @event chatWindow#beforeWSSendMessage
+     * @type {object}
+     * @property {Object} messageToBot - message data to be sent to to websocket
+     */
+     BEFORE_WS_SEND_MESSAGE:'beforeWSSendMessage',
+     /**
+     * onChatHistoryResponse will be triggered on chatHistory API response
+     *
+     * @event chatWindow#onChatHistoryResponse
+     * @type {object}
+     * @property {Object} historyResponse - chatHistory API response
+     */
+      ON_CHAT_HISTORY_RESPONSE:'onChatHistoryResponse'
+
+
   }
 }
 
@@ -76,9 +134,8 @@ chatWindow.prototype.show = function (config) {
    if ($('body').find('.kore-chat-window').length > 0) {
        return false;
    }
-  cfg.chatHistory = this.chatHistory;
-  cfg.handleError = this.showError;
-  debugger;
+  //cfg.chatHistory = this.chatHistory;
+  //cfg.handleError = this.showError;
   if (cfg.widgetSDKInstace) {
     this.addWidgetEvents(cfg);
   }
@@ -341,14 +398,15 @@ chatWindow.prototype.addBottomSlider = function () {
   $('.kore-chat-window').append(actionSheetTemplate);
 };
 chatWindow.prototype.updateOnlineStatus = function () {
+  let me=this;
   if (typeof (navigator.onLine) === 'boolean') {
     if (navigator.onLine) {
-      this.hideError();
+      me.hideError();
       if (bot && bot.RtmClient) {
         bot.getHistory({ forHistorySync: true, limit: 30 });
       }
     } else {
-      this.showError('You are currently offline');
+      me.showError('You are currently offline');
     }
   }
 };
@@ -1205,6 +1263,7 @@ chatWindow.prototype.bindSDKEvents = function () {
   // hook to add custom events
   const me = this;
   me.bot.on('open', (response) => {
+    me.emit(me.EVENTS.ON_WS_OPEN);
     me.onBotReady();
   });
 
@@ -1213,7 +1272,12 @@ chatWindow.prototype.bindSDKEvents = function () {
     if (me.popupOpened === true) {
       $('.kore-auth-popup .close-popup').trigger('click');
     }
-    const tempData = JSON.parse(message.data);
+
+    let tempData = JSON.parse(message.data);
+    me.emit('onmessage1', tempData);
+    me.emit(me.EVENTS.ON_WS_MESSAGE,{
+      messageData:tempData,
+    });
 
     if (tempData.from === 'bot' && tempData.type === 'bot_response') {
       if (tempData && tempData.message && tempData.message.length) {
@@ -1371,6 +1435,7 @@ chatWindow.prototype.bindIframeEvents = function (authPopup) {
 
 chatWindow.prototype.render = function (chatWindowHtml) {
   const me = this;
+  me.emit(me.EVENTS.BEFORE_VIEW_INIT,{chatEle:chatWindowHtml});
   $(me.config.container).append(chatWindowHtml);
   me.emit(me.EVENTS.VIEW_INIT,{chatEle:chatWindowHtml});
   if (me.config.container !== 'body') {
@@ -1445,6 +1510,9 @@ chatWindow.prototype.sendMessageToBot = function (messageText, options, serverMe
       me.attachmentInfo ? { attachments: [me.attachmentInfo] } : null,
     );
   } else {
+    me.emit(me.EVENTS.BEFORE_WS_SEND_MESSAGE,{
+      messageToBot:messageToBot,
+    });
     me.bot.sendMessage(messageToBot, (err) => {
       if (err && err.message) {
         setTimeout(() => {
@@ -1558,8 +1626,11 @@ chatWindow.prototype.hideTypingIndicator = function () {
   $('.typingIndicatorContent').css('display', 'none');
 };
 chatWindow.prototype.renderMessage = function (msgData) {
-  const me = this; let messageHtml = ''; let extension = '';
+  const me = this; 
   const { helpers } = me;
+  const _chatContainer = $(me.chatEle).find('.chat-container');
+  let messageHtml = ''; 
+  let extension = '';
   msgData.createdOnTimemillis = new Date(msgData.createdOn).valueOf();
   me.customTemplateObj.helpers = me.helpers;
   me.customTemplateObj.extension = extension;
@@ -1567,7 +1638,7 @@ chatWindow.prototype.renderMessage = function (msgData) {
   if (msgData.type === 'bot_response') {
     me.waiting_for_message = false;
     setTimeout(() => {
-      $('.typingIndicator').css('background-image', `url(${msgData.icon})`);
+      _chatContainer.find('.typingIndicator').css('background-image', `url(${msgData.icon})`);
     }, 500);
     setTimeout(() => {
       if (!me.waiting_for_message) {
@@ -1580,16 +1651,7 @@ chatWindow.prototype.renderMessage = function (msgData) {
   } else {
     me.waiting_for_message = false;
   }
-  const _chatContainer = $(me.chatEle).find('.chat-container');
-  // if (msgData.message && msgData.message[0] && msgData.message[0].cInfo && msgData.message[0].cInfo.attachments) {
-  //   extension = msgData.message[0].cInfo.attachments[0].fileName.split('.');
-  // }
-  // if (msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.url) {
-  //   extension = msgData.message[0].component.payload.url.split('.');
-  //   _extractedFileName = msgData.message[0].component.payload.url.replace(/^.*[\\\/]/, '');
-  // }
 
-  /* checking for matched custom template */
   messageHtml = me.customTemplateObj.renderMessage(msgData);
   if (!messageHtml && msgData && msgData.message && msgData.message[0]) {
     // if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'button') {
@@ -1618,6 +1680,12 @@ chatWindow.prototype.renderMessage = function (msgData) {
   }
   _chatContainer.find('li').attr('aria-live', 'off');
   // _chatContainer.find('li').attr('aria-hidden','true');//for mac voiceover bug with aria-live
+
+  me.emit(me.EVENTS.BEFORE_RENDER_MSG,{
+    messageHtml:messageHtml,
+    msgData:msgData
+  });
+
 
   if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.sliderView && !msgData.message[0].component.payload.fromHistory) {
     me.bottomSliderAction('show', messageHtml);
@@ -1659,7 +1727,10 @@ chatWindow.prototype.renderMessage = function (msgData) {
   _chatContainer.animate({
     scrollTop: _chatContainer.prop('scrollHeight'),
   }, 100);
-
+  me.emit(me.EVENTS.AFTER_RENDER_MSG,{
+    messageHtml:messageHtml,
+    msgData:msgData
+  });
 };
 
 chatWindow.prototype.pushTorenderMessagesQueue = function (msgItem) {
@@ -1844,6 +1915,9 @@ chatWindow.prototype.historyLoadingComplete = function () {
 
 chatWindow.prototype.chatHistory = function (res) {
   const me = this;
+  me.emit(me.EVENTS.ON_CHAT_HISTORY_RESPONSE,{
+    historyResponse:res,
+  });
   if (res[2] === 'historysync') {
     // setTimeout(function () {
     if (res && res[1] && res[1].messages.length > 0) {
@@ -2139,12 +2213,12 @@ chatWindow.prototype.focusInputTextbox = function () {
     _chatInput.focus();
   }, 600);
 };
-chatWindow.prototype.assignValueToInput = function (value) {
-  const me = this;
-  const _chatContainer = me.chatEle;
-  const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
-  _chatInput.text(value);
-};
+// chatWindow.prototype.assignValueToInput = function (value) {
+//   const me = this;
+//   const _chatContainer = me.chatEle;
+//   const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
+//   _chatInput.text(value);
+// };
 
 /**
  * [#]{@link chatWindow#sendMessage} Send message to bot including rendering 
@@ -2168,10 +2242,10 @@ chatWindow.prototype.sendMessage = function (messageText,options, serverMessageO
   me.sendMessageToBot(messageText, options, serverMessageObject,clientMessageObject);
 };
 
-chatWindow.prototype.appendPickerHTMLtoFooter = function(HTML){
-  const me = this;
-  const _chatContainer = me.chatEle;
- _chatContainer.find('.kore-chat-footer .footerContainer').append(HTML);
-}
+// chatWindow.prototype.appendPickerHTMLtoFooter = function(HTML){
+//   const me = this;
+//   const _chatContainer = me.chatEle;
+//  _chatContainer.find('.kore-chat-footer .footerContainer').append(HTML);
+// }
 
 export default chatWindow;
