@@ -174,7 +174,7 @@ chatWindow.prototype.initShow = function (config) {
     var cwState = me.getLocalStoreItem('kr-cw-state');
     var maintainContext = !!cwState;
     if (maintainContext && me.getLocalStoreItem('kr-cw-uid')) {
-      me.config.botOptions.userIdentity = userIdentity = me.getLocalStoreItem('kr-cw-uid');
+      me.config.botOptions.userIdentity = me.getLocalStoreItem('kr-cw-uid');
     }
     me.config.botOptions.maintainContext = maintainContext;
   }
@@ -279,6 +279,7 @@ chatWindow.prototype.reWriteWebHookURL = function (chatConfig) {
 };
 // iframe of child window events //
 chatWindow.prototype.attachEventListener =function() {
+  let me=this;
   // Create IE + others compatible event handler
   const eventMethod = window.addEventListener ? 'addEventListener' : 'attachEvent';
   const eventer = window[eventMethod];
@@ -289,7 +290,7 @@ chatWindow.prototype.attachEventListener =function() {
       const { data } = e;
       switch (data.event) {
         case 'formEvent':
-          formAction(e.data);
+          me.formAction(e.data);
           break;
         default:
           break;
@@ -306,6 +307,7 @@ chatWindow.prototype.postMessageToChildIframes=function(iframe, postPayload) {
 
 // inline model for iframes starts here//
 chatWindow.prototype.openModal=function(template, showClose) {
+  let me=this;
   const chatBodyModal = $('#chatBodyModal');
   const close = document.getElementsByClassName('closeChatBodyModal')[0];
   close.onclick = function () {
@@ -429,7 +431,7 @@ chatWindow.prototype.handleImagePreview = function () {
   const modal = document.getElementById('myModal');
 
   // Get the image and insert it inside the modal - use its "alt" text as a caption
-  const img = document.getElementById('myImg');
+  //const img = document.getElementById('myImg');
   const modalImg = document.getElementById('img01');
   const captionText = document.getElementById('caption');
   if (document.querySelectorAll('.messageBubble img').length > 0) {
@@ -474,7 +476,7 @@ chatWindow.prototype.onWindowResize = function (event) {
   let me=this;
   me.setCollapsedModeStyles();
     if (event.target == window) {
-      const _width = $('#chatContainer').width() - 400;
+      //const _width = $('#chatContainer').width() - 400;
       // $('.kore-chat-window').attr('style','left: '+_width+'+px');
     }
     if (($('.kore-chat-window').width() > 400) || (document.getElementsByClassName('kore-chat-window').length && document.getElementsByClassName('kore-chat-window')[0].classList.contains('expanded'))) {
@@ -700,7 +702,7 @@ chatWindow.prototype.bindEvents = function () {
   //          containment: "document",
   //          minWidth: 400
   //      });
-  _chatContainer.off('keyup', '.chatInputBox').on('keyup', '.chatInputBox', function (event) {
+  _chatContainer.off('keyup', '.chatInputBox').on('keyup', '.chatInputBox', function () {
     const _footerContainer = $(me.config.container).find('.kore-chat-footer');
     const _bodyContainer = $(me.config.container).find('.kore-chat-body');
     _bodyContainer.css('bottom', _footerContainer.outerHeight());
@@ -714,7 +716,7 @@ chatWindow.prototype.bindEvents = function () {
       _chatContainer.find('.sendButton').addClass('disabled');
     }
   });
-  _chatContainer.on('click', '.chatInputBoxPlaceholder', (event) => {
+  _chatContainer.on('click', '.chatInputBoxPlaceholder', () => {
     _chatContainer.find('.chatInputBox').trigger('click');
     _chatContainer.find('.chatInputBox').trigger('focus');
   });
@@ -723,11 +725,11 @@ chatWindow.prototype.bindEvents = function () {
     me.seti18n(selectedValue);
     me.updatei18nDirection();
   });
-  _chatContainer.on('click', '.chatInputBox', (event) => {
+  _chatContainer.on('click', '.chatInputBox', () => {
     me.prevComposeSelection = window.getSelection();
     me.prevRange = me.prevComposeSelection.rangeCount > 0 && me.prevComposeSelection.getRangeAt(0);
   });
-  _chatContainer.on('blur', '.chatInputBox', (event) => {
+  _chatContainer.on('blur', '.chatInputBox', () => {
     me.vars._escPressed = 0;
   });
   // _chatContainer.off('click', '.botResponseAttachments').on('click', '.botResponseAttachments', function (event) {
@@ -797,14 +799,14 @@ chatWindow.prototype.bindEvents = function () {
     }
   });
   _chatContainer.off('click', '.sendButton').on('click', '.sendButton', (event) => {
-    const _this = $('.chatInputBox');
-    if ($('.upldIndc').is(':visible')) {
-      alert('Uploading file, please wait...');
-      return;
-    }
-    if ($('.recordingMicrophone').is(':visible')) {
-      $('.recordingMicrophone').trigger('click');
-    }
+    //const _this = $('.chatInputBox');
+    // if ($('.upldIndc').is(':visible')) {
+    //   alert('Uploading file, please wait...');
+    //   return;
+    // }
+    // if ($('.recordingMicrophone').is(':visible')) {
+    //   $('.recordingMicrophone').trigger('click');
+    // }
     event.preventDefault();
     me.sendMessageWithWithChatInput(chatInput);
   });
