@@ -5,10 +5,6 @@ var widgetsConfig=KoreWidgetsSDK.widgetsConfig;
 var KoreWidgetSDK=KoreWidgetsSDK.KoreWidgetSDK;
 
 
-var wizSelector = {
-    menu: ".kr-wiz-menu-chat",
-    content: ".kr-wiz-content-chat"
-}
 var wSdk = new KoreWidgetSDK(widgetsConfig);
 
 chatConfig.widgetSDKInstace=wSdk;
@@ -17,16 +13,12 @@ var chatWindowInstance = new chatWindow(chatConfig);
 
 
 
-chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){
-    chatWindowInstance.setJWT(res.jwt);
-    chatWindowInstance.show();
 
+chatWindowInstance.on("jwtSuccess", (res,event) => {
     wSdk.setJWT(res.jwt);
-    wSdk.show(widgetsConfig, wizSelector);
-
-},function(errRes){
-
+    wSdk.show(widgetsConfig);
 });
 
+ chatWindowInstance.show();
 
            

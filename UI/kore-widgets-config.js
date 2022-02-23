@@ -22,7 +22,11 @@ botOptionsWiz.botInfo = { name: "SDKBot", "_id": "st-b9889c46-218c-58f7-838f-73a
 // botOptionsWiz.clientSecret="klGYBUVsDsuFVk7VHkyZHtH4+E/HEAosHT0WDc0KHnY=";
 
 var widgetsConfig = {
-    botOptions: botOptionsWiz
+    botOptions: botOptionsWiz,
+    container :{
+        menu: ".kr-wiz-menu-chat",
+        content: ".kr-wiz-content-chat"
+    }
 };
 
 export default widgetsConfig;

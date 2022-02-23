@@ -4,7 +4,7 @@ var chatConfig=KoreChatSDK.chatConfig;
 var chatWindow=KoreChatSDK.chatWindow;
 
 
-var chatWindowInstance = new chatWindow(chatConfig);
+var chatWindowInstance = new chatWindow();
 
 // chatWindow.prototype.show=function(){
 //     console.log('overridedn')
@@ -13,7 +13,7 @@ var chatWindowInstance = new chatWindow(chatConfig);
 //chatWindowInstance.installPlugin(Korei18nPlugin);
 chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){
     chatWindowInstance.setJWT(res.jwt);
-    chatWindowInstance.show();
+    chatWindowInstance.show(chatConfig);
 
 },function(errRes){
 

@@ -104,7 +104,7 @@ class chatWindow extends EventEmitter{
 
 chatWindow.prototype.init = function () {
   const me = this;
-  //me.config=me.extend(me.config,config);
+  me.config=me.extend(me.config,chatConfig);
   me.plugins = {};
   me.bot=bot;
   me.vars={};
@@ -1277,7 +1277,6 @@ chatWindow.prototype.bindSDKEvents = function () {
     }
 
     let tempData = JSON.parse(message.data);
-    me.emit('onmessage1', tempData);
     me.emit(me.EVENTS.ON_WS_MESSAGE,{
       messageData:tempData,
     });

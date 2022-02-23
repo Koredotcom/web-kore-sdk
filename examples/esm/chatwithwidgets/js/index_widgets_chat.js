@@ -8,14 +8,11 @@ import {
 
 } from '../../../../../dist/kore-web-sdk.esm.browser.js';
 
-const wizSelector = {
-    menu: ".kr-wiz-menu-chat",
-    content: ".kr-wiz-content-chat"
-}
+let chatWindowInstance = new chatWindow();
 let wSdk = new KoreWidgetSDK(widgetsConfig);
 
 chatConfig.widgetSDKInstace=wSdk;
-let chatWindowInstance = new chatWindow(chatConfig);
+
 
 
 // chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){
@@ -23,7 +20,7 @@ let chatWindowInstance = new chatWindow(chatConfig);
 //     chatWindowInstance.show();
 
 //     wSdk.setJWT(res.jwt);
-//     wSdk.show(widgetsConfig, wizSelector);
+//     wSdk.show(widgetsConfig);
 
 // },function(errRes){
 
@@ -33,7 +30,7 @@ let chatWindowInstance = new chatWindow(chatConfig);
 //     chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){
 //         chatWindowInstance.setJWT(res.jwt);
 //         wSdk.setJWT(res.jwt);
-//         wSdk.show(widgetsConfig, wizSelector);
+//         wSdk.show(widgetsConfig);
 //         commitJWT();
 //     },function(errRes){
 //         console.log(errRes);
@@ -42,9 +39,8 @@ let chatWindowInstance = new chatWindow(chatConfig);
 
 
 chatWindowInstance.on("jwtSuccess", (res,event) => {
-    debugger;
     wSdk.setJWT(res.jwt);
-    wSdk.show(widgetsConfig, wizSelector);
+    wSdk.show(widgetsConfig);
 });
 
  chatWindowInstance.show();

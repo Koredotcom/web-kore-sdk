@@ -186,10 +186,11 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     }; //********************original widget.js start */
 
 
-    KoreWidgetSDK.prototype.show = function (dataConfig, sel) {
+    KoreWidgetSDK.prototype.show = function (config) {
       var _self = this;
+      _self.extend(_self.config,config);
       var initialWidgetData=_self.vars.initialWidgetData;
-      _self.config.container = sel || {}; //#TODO :need to remove below line on prod
+      //_self.config.container = sel || {}; //#TODO :need to remove below line on prod
 
       window.koreWidgetSDKInstance = _self;
 
@@ -5590,6 +5591,21 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         };
       }
     };
+    KoreWidgetSDK.prototype.extend=function(target, source) {
+      let me=this;
+      for (var prop in source) {
+          if (source.hasOwnProperty(prop)) {
+              if (target[prop] && typeof source[prop] === 'object') {
+                  me.extend(target[prop], source[prop]);
+              }
+              else {
+                  target[prop] = source[prop];
+              }
+          }
+      }
+      return target;
+    }
+    
 
 //     return KoreWidgetSDK;
 //   }(koreJquery, korejstz,KRPerfectScrollbar);
