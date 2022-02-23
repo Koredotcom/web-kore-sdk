@@ -2142,69 +2142,69 @@ print(JSON.stringify(message)); */
 		customTemplate.prototype.bankingFeedbackTemplateEvents = function(messageHtml){
 			var me = this;
 			var _chatContainer = me.chatInitialize.config.chatContainer;
-			_chatContainer.off('click', '.bankingFeedBackTemplate-experience-content [type*="radio"]').on('click', '.bankingFeedBackTemplate-experience-content [type*="radio"]', function (e) {
+			$(messageHtml).off('click', '.bankingFeedBackTemplate-experience-content [type*="radio"]').on('click', '.bankingFeedBackTemplate-experience-content [type*="radio"]', function (e) {
 				var currentTargetId = $(e.currentTarget).attr('id');
 				var msgData = $(messageHtml).data();
-				var experienceContentArray = $('.bankingFeedBackTemplate-content-experience').find('[type*="radio"]');
-				var empathyMessageArray = $('.bankingFeedBackTemplate').find('.empathy-message');
+				var experienceContentArray = $(messageHtml).find('[type*="radio"]');
+				var empathyMessageArray =$(messageHtml).find('.empathy-message');
 				for (var i = 0; i < empathyMessageArray.length; i++) {
-					if (!$(empathyMessageArray[i]).hasClass('hide')) {
-						$(empathyMessageArray[i]).addClass('hide');
+					if (!$(messageHtml).find(empathyMessageArray[i]).hasClass('hide')) {
+						$(messageHtml).find(empathyMessageArray[i]).addClass('hide');
 					}
 				}
 				for (var i = 0; i < experienceContentArray.length; i++) {
-					if ((currentTargetId != $(experienceContentArray[i]).attr('id')) && ($(experienceContentArray[i]).prop('checked'))) {
-						$(experienceContentArray[i]).prop('checked', false);
-					} else if ((currentTargetId === $(experienceContentArray[i]).attr('id')) && ($(experienceContentArray[i]).prop('checked'))) {
-						if ($('.empathy-message#' + currentTargetId).hasClass('hide')) {
-							$('.empathy-message#' + currentTargetId).removeClass('hide')
+					if ((currentTargetId != $(experienceContentArray[i]).attr('id')) && ($(messageHtml).find(experienceContentArray[i]).prop('checked'))) {
+						$(messageHtml).find(experienceContentArray[i]).prop('checked', false);
+					} else if ((currentTargetId === $(messageHtml).find(experienceContentArray[i]).attr('id')) && ($(messageHtml).find(experienceContentArray[i]).prop('checked'))) {
+						if ($(messageHtml).find('.empathy-message#' + currentTargetId).hasClass('hide')) {
+							$(messageHtml).find('.empathy-message#' + currentTargetId).removeClass('hide')
 						}
 					}
 				}
-				if ($('.bankingFeedBackTemplate-feedback-content').hasClass('hide')) {
-					$('.bankingFeedBackTemplate-feedback-content').removeClass('hide');
+				if ($(messageHtml).find('.bankingFeedBackTemplate-feedback-content').hasClass('hide')) {
+					$(messageHtml).find('.bankingFeedBackTemplate-feedback-content').removeClass('hide');
 					// $('.empathy-message').removeClass('hide');
 				}
 			});
-			_chatContainer.off('click', '.bankingFeedBackTemplate-feedback-content .buttons-div .feedback-submit').on('click', '.bankingFeedBackTemplate-feedback-content .buttons-div .feedback-submit', function (e) {
+			$(messageHtml).off('click', '.bankingFeedBackTemplate-feedback-content .buttons-div .feedback-submit').on('click', '.bankingFeedBackTemplate-feedback-content .buttons-div .feedback-submit', function (e) {
 				var msgData = $(messageHtml).data();
 				if (msgData && msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.experienceContent) {
 					var contentArray = msgData.message[0].component.payload.experienceContent;
 					var payload = {};
 					payload.selectedFeedback = [];
-					var experienceContentArray = $('.bankingFeedBackTemplate-content-experience').find('[type*="radio"]');
+					var experienceContentArray = $(messageHtml).find('[type*="radio"]');
 					for (var i = 0; i < experienceContentArray.length; i++) {
-						if ($(experienceContentArray[i]).prop('checked')) {
+						if ($(messageHtml).find(experienceContentArray[i]).prop('checked')) {
 							var selectedExperience = $(experienceContentArray[i]).attr('actionObj');
 							var parsedSelectedExperienceObj = JSON.parse(selectedExperience);
 							delete parsedSelectedExperienceObj.empathyMessage;
 							payload.selectedExperience = parsedSelectedExperienceObj;
 						}
 					}
-					var feedbackOptionsArray = $('.experience-feedback-listItems').find('[type*="checkbox"]');
+					var feedbackOptionsArray = $(messageHtml).find('.experience-feedback-listItems').find('[type*="checkbox"]');
 					for (var i = 0; i < feedbackOptionsArray.length; i++) {
-						if ($(feedbackOptionsArray[i]).prop('checked')) {
+						if ($(messageHtml).find(feedbackOptionsArray[i]).prop('checked')) {
 							var actionObj = $(feedbackOptionsArray[i]).attr('actionObj');
 							var parsedActionObj = JSON.parse(actionObj);
 							payload.selectedFeedback.push(parsedActionObj);
 						}
 					}
-					var userSuggestion = $("#bankingSuggestionInput").val();
+					var userSuggestion = $(messageHtml).find("#bankingSuggestionInput").val();
 					payload.userSuggestion = userSuggestion;
-					console.log(JSON.stringify(payload));
+					// console.log(payload);
 					var displayMessage = msgData.message[0].component.payload.messageToDisplay;
 					$('.chatInputBox').text(JSON.stringify(payload));
-					$('.kore-chat-window .bankingFeedBackTemplate').addClass('disabled');
+					$(messageHtml).find('.bankingFeedBackTemplate').addClass('disabled');
 					me.chatInitialize.sendMessage($('.chatInputBox'), displayMessage, msgData);
 				}
 			});
-			_chatContainer.off('click', '.bankingFeedBackTemplate-feedback-content .buttons-div .feedback-cancel').on('click', '.bankingFeedBackTemplate-feedback-content .buttons-div .feedback-cancel', function (e) {
+			$(messageHtml).off('click', '.bankingFeedBackTemplate-feedback-content .buttons-div .feedback-cancel').on('click', '.bankingFeedBackTemplate-feedback-content .buttons-div .feedback-cancel', function (e) {
 				var msgData = $(messageHtml).data();
 				if (msgData && msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.experienceContent) {
 					var contentArray = msgData.message[0].component.payload.experienceContent;
 					var payload = {};
 					payload.selectedFeedback = [];
-					var experienceContentArray = $('.bankingFeedBackTemplate-content-experience').find('[type*="radio"]');
+					var experienceContentArray = $(messageHtml).find('[type*="radio"]');
 					for (var i = 0; i < experienceContentArray.length; i++) {
 						if ($(experienceContentArray[i]).prop('checked')) {
 							$(experienceContentArray[i]).prop('checked', false)
@@ -2214,26 +2214,26 @@ print(JSON.stringify(message)); */
 							payload.selectedExperience = parsedSelectedExperienceObj;
 						}
 					}
-					var feedbackOptionsArray = $('.experience-feedback-listItems').find('[type*="checkbox"]');
+					var feedbackOptionsArray = $(messageHtml).find('.experience-feedback-listItems').find('[type*="checkbox"]');
 					for (var i = 0; i < feedbackOptionsArray.length; i++) {
-						if ($(feedbackOptionsArray[i]).prop('checked')) {
-							$(feedbackOptionsArray[i]).prop('checked', false);
+						if ($(messageHtml).find(feedbackOptionsArray[i]).prop('checked')) {
+							$(messageHtml).find(feedbackOptionsArray[i]).prop('checked', false);
 							var actionObj = $(feedbackOptionsArray[i]).attr('actionObj');
 							var parsedActionObj = JSON.parse(actionObj);
 							payload.selectedFeedback.push(parsedActionObj);
 						}
 					}
-					var userSuggestion = $("#bankingSuggestionInput").val("");
-					var userSuggestion = $("#bankingSuggestionInput").val();
+					var userSuggestion = $(messageHtml).find("#bankingSuggestionInput").val("");
+					var userSuggestion = $(messageHtml).find("#bankingSuggestionInput").val();
 					payload.userSuggestion = userSuggestion;
-					console.log(JSON.stringify(payload));
+					// console.log(payload);
 					var displayMessage = msgData.message[0].component.payload.messageToDisplay;
 					$('.chatInputBox').text('Cancel');
-					$('.kore-chat-window .bankingFeedBackTemplate').addClass('disabled');
+					$(messageHtml).find('.bankingFeedBackTemplate').addClass('disabled');
 					me.chatInitialize.sendMessage($('.chatInputBox'), 'Cancel', msgData);
 				}
 			});
-		};
+		};	
 
 		customTemplate.prototype.toCheckBankingFeedbackTemplate = function(msgData){
 			if(msgData && msgData.message[0] && msgData.message[0].cInfo && msgData.message[0].cInfo.body ) {
