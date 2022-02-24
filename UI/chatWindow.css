@@ -784,6 +784,8 @@
     background-color: var(--sdk-chat-window-body-bg);
     font-family: "Lato", sans-serif;
     font-size: 14px;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .lineChartChildDiv .mouse-over-effects .mouse-per-line text {
