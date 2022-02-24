@@ -2817,7 +2817,7 @@
                             <ul class="chat-container"></ul> \
                         </div> \
                         <div class="typingIndicatorContent"><div class="typingIndicator"></div><div class="movingDots"></div></div> \
-                        <div class="kore-chat-footer disableFooter">' + chatFooterTemplate + '{{if isSendButton}}<div class="sendBtnCnt"><button class="sendButton disabled" type="button">Send</button></div>{{/if}}</div> \
+                        <div class="kore-chat-footer disableFooter">' + chatFooterTemplate + '{{if isSendButton}}<div class="sendBtnCnt"><button class="sendButton disabled" type="button"></button></div>{{/if}}</div> \
                          <div id="myModal" class="modalImagePreview">\
                               <span class="closeImagePreview">&times;</span>\
                               <img class="modal-content-imagePreview" id="img01">\
