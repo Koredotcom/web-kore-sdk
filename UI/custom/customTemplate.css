@@ -3624,7 +3624,8 @@
 .card-template {
 	border-radius: 8px;
 	background: #FFFFFF;
-	width: 349px;
+	/* width: 349px; */
+	width: 100%;
 	height: auto;
 	margin: 0 auto 10px;
 	position: relative;
@@ -3829,6 +3830,7 @@
 
 .card-template .card-body .card-data-list .card-block-text {
 	padding: 0 20px 0 0;
+	flex: 1;
 }
 
 .card-template .card-body .card-data-list .card-block-text .title-text {
@@ -3911,6 +3913,7 @@
 
 .card-template .card-body .card-title-block .card-block {
 	padding-left: 15px;
+	width: calc(100% - 29px);
 }
 
 .card-template .card-body .card-title-block .card-block .title-text {
@@ -3923,9 +3926,11 @@
 .card-template .card-body .card-title-block .card-block .title-text.card-text-overflow {
 	overflow: hidden;
 	text-overflow: ellipsis;
-	width: 176px;
+	/* width: 176px; */
+	/* width: calc(100% - 190px); */
 	white-space: nowrap;
-	padding-right: 10px;
+	/* padding-right: 10px; */
+	padding-right: 110px;
 }
 
 .card-template .card-body .card-title-block .card-block .title-desc {
@@ -3938,6 +3943,7 @@
 .card-template .card-body .card-title-block .card-block-img {
 	width: 40px;
 	height: 40px;
+	flex-shrink: 0;
 }
 
 .card-template .card-body .card-title-block .card-block-img .icon-text {
