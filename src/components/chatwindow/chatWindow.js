@@ -2049,7 +2049,27 @@ chatWindow.prototype.insertHtmlData=function (_txtBox, _html) {
   _input.appendChild(html);
 }
 
+chatWindow.prototype.getJWTByAPIKey = function (API_KEY_CONFIG) {
+  // const jsonData = {
+  //   clientId: options.clientId,
+  //   clientSecret: options.clientSecret,
+  //   identity: options.userIdentity,
+  //   aud: '',
+  //   isAnonymous: false,
+  // };
+  return $.ajax({
+    url: API_KEY_CONFIG.bootstrapURL||'http://localhost:9000/examples/bootstrap.json',
+    type: 'get',
+    // data: jsonData,
+    dataType: 'json',
+    success(data) {
 
+    },
+    error(err) {
+      // chatWindowInstance.showError(err.responseText);
+    },
+  });
+};
 
 chatWindow.prototype.getJWT = function (options, callback) {
   const jsonData = {
@@ -2077,7 +2097,12 @@ chatWindow.prototype.JWTSetup = function(){
   let me=this;
   me.config.botOptions.assertionFn = me.assertionFn.bind(me);
   if(!(me.config && me.config.JWTAsertion)){
-    me.setupInternalAssertionFunction();
+    if(me.config && me.config.API_KEY_CONFIG && me.config.API_KEY_CONFIG.KEY && me.config.API_KEY_CONFIG.KEY!='YOUR_API_KEY'){
+      me.setupInternalAssertionFunctionWithAPIKey();
+    }else{
+      me.setupInternalAssertionFunction();
+    }
+
   } 
 }
 chatWindow.prototype.setupInternalAssertionFunction=function (){
@@ -2090,6 +2115,22 @@ chatWindow.prototype.setupInternalAssertionFunction=function (){
       console.log(errRes);
   });
 }
+
+chatWindow.prototype.setupInternalAssertionFunctionWithAPIKey=function (){
+  const me = this;
+  me.getJWTByAPIKey(me.config.botOptions).then(function(res){
+    me.emit(me.EVENTS.JWT_SUCCESS, res);
+    me.setJWT(res.jwt);
+    if(res.botInfo){
+      me.config.botOptions.botInfo.chatBot=res.botInfo.name;
+      me.config.botOptions.botInfo.taskBotId=res.botInfo._id;
+    }
+    me.config.botOptions.callback(null, me.config.botOptions);
+  },function(errRes){
+      console.log(errRes);
+  });
+}
+
 chatWindow.prototype.setJWT = function (jwtToken) {
   const me = this;
   const options = me.config.botOptions;
@@ -2101,11 +2142,14 @@ chatWindow.prototype.assertionFn = function (options, callback) {
   options.handleError = me.showError;
   options.chatHistory = me.chatHistory.bind(me);
   options.botDetails = me.botDetails;
-  
   if(me.config && me.config.JWTAsertion){
     me.config.JWTAsertion(me.SDKcallbackWraper.bind(me));
   }else if(options.assertion){//check for reconnect case
-    me.setupInternalAssertionFunction();
+    if(me.config && me.config.API_KEY_CONFIG){
+      me.setupInternalAssertionFunctionWithAPIKey();
+    }else{
+      me.setupInternalAssertionFunction();
+    }
   }
 };
 chatWindow.prototype.SDKcallbackWraper = function () {

@@ -26,6 +26,7 @@ chatConfig.widgetSDKInstace=wSdk;
 
 // });
 
+
 // chatConfig.JWTAsertion=function(commitJWT){
 //     chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){
 //         chatWindowInstance.setJWT(res.jwt);
@@ -38,13 +39,20 @@ chatConfig.widgetSDKInstace=wSdk;
 //  };
 
 
+// chatWindowInstance.on("jwtSuccess", (res,event) => {
+//     wSdk.setJWT(res.jwt);
+//     wSdk.show(widgetsConfig);
+// });
+// chatWindowInstance.show();
+
+
+
+
+//todo:raj:identity needs to be passed
+//jwt retry needs discussion
+chatConfig.API_KEY_CONFIG.KEY="xyz";
 chatWindowInstance.on("jwtSuccess", (res,event) => {
     wSdk.setJWT(res.jwt);
     wSdk.show(widgetsConfig);
 });
-
- chatWindowInstance.show();
-
-
-
-           
+chatWindowInstance.show(chatConfig);           
