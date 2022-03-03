@@ -128,27 +128,34 @@ module.exports= function(env,argv){
         config.output.path= path.resolve(__dirname,'dist/umd')
         config.output.libraryTarget = "umd";
         config.entry={
-          Chat: {
+          KoreChatSDK: {
             import: "./src/index_umd_chat.ts",
             filename: 'kore-web-sdk-umd-chat.js',
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
-          Widgets:{
+          KoreWidgetsSDK:{
             import: "./src/index_umd_widgets.ts",
             filename: 'kore-web-sdk-umd-widgets.js',
-            // dependOn: 'chat',
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
-          Search:{
+          KoreSearchSDK:{
             import: "./src/index_umd_search.ts",
             filename: 'kore-web-sdk-umd-search.js',
-            // dependOn: 'chat',
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          }
-          //search: "./src/index_umd_search.ts"
+          },
+          KorePickersPluginSDK: {
+            import: "./src/index_plugins/korepicker_umd.ts",
+            filename: 'plugins/kore-picker-plugin-umd.js',
+            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+          },
+          KoreGraphTemplatesPluginSDK: {
+            import: "./src/index_plugins/graphTemplates_umd.ts",
+            filename: 'plugins/kore-graph-templates-plugin-umd.js',
+            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+          },
         }
         config.output.library = {
-          name: 'Kore[name]SDK',
+          name: '[name]',
           type: 'assign-properties',
         }//["KoreChatSDK","KoreWidgetsSDK","KoreSearchSDK"];
         //config.output.umdNamedDefine= true;

@@ -4,13 +4,15 @@ import {chatConfig,chatWindow} from '../../../../../dist/kore-web-sdk.esm.browse
 import {Korei18nPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {KoreFileUploaderPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {KorePickersPlugin } from '../../../../../dist/kore-web-sdk.esm.browser.js';
+import {GraphTemplatesPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 
 let chatWindowInstance = new chatWindow();
 
 // chatWindowInstance.installPlugin(Korei18nPlugin);
 //chatWindowInstance.installPlugin(new KoreFileUploaderPlugin());
-let pickerConfig = {};
-chatWindowInstance.installPlugin(new KorePickersPlugin(pickerConfig));
+
+chatWindowInstance.installPlugin(new KorePickersPlugin({}));
+chatWindowInstance.installPlugin(new GraphTemplatesPlugin());
 
 
 

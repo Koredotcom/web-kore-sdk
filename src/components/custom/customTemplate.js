@@ -15,9 +15,7 @@ import ListWidgetTemplate from './templates/listWidgetTemplate/listWidgetTemplat
 import MiniTableChartTemplate from './templates/miniTableTemplate/miniTableTemplate';
 import CarouselTemplate from './templates/carouselTemplate/carouselTemplate';
 import ListViewTemplate from './templates/listViewTemplate/listViewTemplate';
-// import LineChartTemplate from './templates/lineChartTemplate/lineChartTemplate';
-// import BarChartTemplate from './templates/barChartTemplate/barChartTemplate';
-// import PieChartTemplate from './templates/pieChartTemplate/pieChartTemplate';
+
 
 //import MessageTemplate from './templates/messageTemplate/messageTemplate';
 
