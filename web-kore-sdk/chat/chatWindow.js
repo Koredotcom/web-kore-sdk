@@ -1607,9 +1607,9 @@
                             $('.disableFooter').removeClass('disableFooter');
                         });
                     }
-                    // if(!me.config.botOptions._reconnecting){
-                    //     me.defaultWelcomeMsg();
-                    // }
+                    if(!me.config.botOptions._reconnecting){
+                        me.defaultWelcomeMsg();
+                    }
                 });
 
                 bot.on("message", function (message) {
