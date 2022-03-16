@@ -15,6 +15,8 @@ With just few lines of code, you can embed our Kore.ai chat widget into your app
 
 [Message Templates](https://developer.kore.ai/docs/bots/sdks/message-templates/)
 
+[API Referernce](https://rajasekharba-kore.github.io/web-kore-sdk/)
+
 
 
 # Kore.ai Web SDK for developers
