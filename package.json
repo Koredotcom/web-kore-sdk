@@ -9,8 +9,10 @@
     "serve-umd": "webpack-dev-server --env=kore_env=dev  --env=component=chat  --env=target_module=umd",
     "serve": "webpack-dev-server --env=kore_env=dev --env=component=chat --env=target_module=esm --mode development",
     "doc": "jsdoc -c jsdoc.json",
+    "eslint": "./node_modules/.bin/eslint 'src/**/*.{ts,js}'",
+    "eslint-fix": "./node_modules/.bin/eslint --fix 'src/**/*.{ts,js}'",
     "prettier": "./node_modules/.bin/prettier --check 'src/**/*.{ts,js}'",
-    "eslint": "./node_modules/.bin/eslint 'src/**/*.{ts,js}' "
+    "prettier-fix": "./node_modules/.bin/prettier --write 'src/**/*.{ts,js}'"
   },
   "main": "dist/kore-web-sdk.esm.browser.js",
   "module": "dist/kore-web-sdk.esm.browser.js",
