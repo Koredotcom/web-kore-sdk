@@ -37,7 +37,8 @@ npm run eslint
 npm run eslint-fix
 
 npm run prettier
-npm run prettier-fix 
+npm run prettier-fix
+npm run prettier-v (verbose for detailed errors) 
 
 ```
 

@@ -12,6 +12,7 @@
     "eslint": "./node_modules/.bin/eslint 'src/**/*.{ts,js}'",
     "eslint-fix": "./node_modules/.bin/eslint --fix 'src/**/*.{ts,js}'",
     "prettier": "./node_modules/.bin/prettier --check 'src/**/*.{ts,js}'",
+    "prettier-v": "./node_modules/.bin/prettier --debug-check 'src/**/*.{ts,js}'",
     "prettier-fix": "./node_modules/.bin/prettier --write 'src/**/*.{ts,js}'"
   },
   "main": "dist/kore-web-sdk.esm.browser.js",
