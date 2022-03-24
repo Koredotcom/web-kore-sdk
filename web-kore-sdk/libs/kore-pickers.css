@@ -265,6 +265,7 @@
     top: 13px;
     color: #17151d;
     padding-left:10px;
+    font-size: 16px;
 }
 .kore-chat-window .kore-action-sheet  .taskMenuPicker .btnTask .displayIcon{
     /* width:100%; */
@@ -489,6 +490,7 @@
     cursor: pointer;
     position: absolute;
     right: 15px;
+    top: 0;
 }
 .kore-chat-window .kore-action-sheet .datePickerContainer .headerCalendar{
     height:56px;
@@ -678,6 +680,7 @@
     cursor: pointer;
     position: absolute;
     right: 15px;
+    top: 5px;
 }
 .kore-chat-window .kore-action-sheet .dateRangePickerContainer .headerCalendar{
     height:56px;
@@ -819,16 +822,20 @@
     font-size:12px;
 }
 .dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.tmp.first-date-selected{
-    background-color: #e94848!important;
+    /* background-color: #e94848!important; */
+    background-color: rgb(97, 104, 231)!important;
 }
 .dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.tmp.checked.last-date-selected{
-    background-color: #e94848!important;
+    /* background-color: #e94848!important; */
+    background-color: rgb(97, 104, 231)!important;
 }
 .dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.first-date-selected{
-    background-color: #e94848!important;
+    /* background-color: #e94848!important; */
+    background-color: rgb(97, 104, 231)!important;
 }
 .dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.last-date-selected{
-    background-color: #e94848!important;
+    /* background-color: #e94848!important; */
+    background-color: rgb(97, 104, 231)!important;
 }
 .dateRangePickerContainer .date-picker-wrapper .month-wrapper table .day.toMonth.valid{
     border-radius: 50%!important;
@@ -886,3 +893,12 @@
 }
     
 /*DateRangePicker CSS end*/
+
+/* custom styles for PSCU  first here*/
+.kore-chat-window.PSCU .kore-action-sheet .datePickerContainer .confirmBTN{
+    background: var(--sdk-chat-widow-chat-button-active-color);
+}
+.kore-chat-window.PSCU .kore-action-sheet .dateRangePickerContainer .confirmBTN{
+    background: var(--sdk-chat-widow-chat-button-active-color);
+}
+/* custom styles for PSCU  ends here*/

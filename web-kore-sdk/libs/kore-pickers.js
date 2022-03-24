@@ -48,6 +48,10 @@
     this.chatConfig = mainConfig[1];
     var _korePickers = mainConfig[0].chatConfig.chatContainer;
     this._korePickers=_korePickers;
+    this.KRPerfectScrollbar;
+    if (window.PerfectScrollbar && typeof PerfectScrollbar === 'function') {
+        this.KRPerfectScrollbar = window.PerfectScrollbar;
+    }
 }
     KorePickers.prototype.showTaskMenuItems=function(actionsData){
         return actionsData;
@@ -103,6 +107,7 @@
 KorePickers.prototype.init = function (mainConfig) {
     mainConfig=this.mainConfig;
     chatWindowInstance=this.chatWindowInstance;
+    KRPerfectScrollbar = this.KRPerfectScrollbar;
     if (chatWindowInstance.config.pickersConfig.showDateRangePickerIcon) {
        this.showDateRangeIconToFooter();
     //    KorePickers.prototype.showDateRangePicker(mainConfig);
@@ -136,6 +141,16 @@ KorePickers.prototype.init = function (mainConfig) {
         // KorePickers.prototype.showDatePicker(mainConfig);
         chatWindowInstance.config.chatContainer.on('click', '.sdkMenu.menuBtn', function (event) {
         KorePickers.prototype.showTaskPicker(mainConfig);
+            setTimeout(function () {
+                if (KRPerfectScrollbar) {
+                    this.contentPSObj = null;
+                    if (!this.contentPSObj) {
+                        this.contentPSObj = new KRPerfectScrollbar($('.kore-action-sheet').find(".taskMenuPicker").get(0), {
+                            suppressScrollX: true
+                        });
+                    }
+                }
+            }, 500)
          });
      }
 }

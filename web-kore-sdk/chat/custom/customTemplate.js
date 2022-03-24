@@ -1723,7 +1723,7 @@ print(JSON.stringify(message)); */
 			}
 			customTemplate.prototype.openExternalLink(a_link);
 		 }else{
-			var _innerText= $(this).attr('data-value');
+			var _innerText= $(this).attr('data-value') || $(this).attr('data-title');
 			var postBack=$(this).attr('data-title');
 			chatInitialize.sendMessage($('.chatInputBox').text(_innerText), postBack);
 			$(".listViewTmplContentBox").css({"pointer-events":"none"});
@@ -1941,7 +1941,7 @@ print(JSON.stringify(message)); */
 				if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
 					a_link = "http:////" + a_link;
 				}
-				this.openExternalLink(a_link);
+				chatInitialize.openExternalLink(a_link);
 			 }else{
 				var _innerText= $(_self).attr('data-value');
 				var postBack=$(_self).attr('data-title');

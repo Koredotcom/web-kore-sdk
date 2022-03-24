@@ -1023,6 +1023,9 @@
                     bot.fetchUserLocation();
                 }
                 me.render(chatWindowHtml);
+                if(me.config.isFromPSCU){
+                    $(".kore-chat-window").addClass('PSCU'); 
+                }
                 unfreezeUIOnHistoryLoadingFail();
                 
             };
@@ -1607,9 +1610,9 @@
                             $('.disableFooter').removeClass('disableFooter');
                         });
                     }
-                    if(!me.config.botOptions._reconnecting){
-                        me.defaultWelcomeMsg();
-                    }
+                    // if(!me.config.botOptions._reconnecting){
+                    //     me.defaultWelcomeMsg();
+                    // }
                 });
 
                 bot.on("message", function (message) {
