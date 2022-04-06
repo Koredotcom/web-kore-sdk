@@ -2250,7 +2250,8 @@
                 }
                 if (msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.url) {
                     extension = strSplit(msgData.message[0].component.payload.url);
-                    _extractedFileName = msgData.message[0].component.payload.url.replace(/^.*[\\\/]/, '');
+                    _extractedFileName = msgData.message[0].component.payload.name ? msgData.message[0].component.payload.name : msgData.message[0].component.payload.url.replace(/^.*[\\\/]/, '');
+                    // _extractedFileName = msgData.message[0].component.payload.url.replace(/^.*[\\\/]/, '');
                 }
 
                 /* checking for matched custom template */
