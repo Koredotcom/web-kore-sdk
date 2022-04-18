@@ -2050,20 +2050,15 @@ chatWindow.prototype.insertHtmlData=function (_txtBox, _html) {
 }
 
 chatWindow.prototype.getJWTByAPIKey = function (API_KEY_CONFIG) {
-  // const jsonData = {
-  //   clientId: options.clientId,
-  //   clientSecret: options.clientSecret,
-  //   identity: options.userIdentity,
-  //   aud: '',
-  //   isAnonymous: false,
-  // };
+  const jsonData = {
+    apiKey:API_KEY_CONFIG.KEY
+  };
   return $.ajax({
-    url: API_KEY_CONFIG.bootstrapURL||'http://localhost:9000/examples/bootstrap.json',
-    type: 'get',
-    // data: jsonData,
+    url: API_KEY_CONFIG.bootstrapURL||'https://bots.kore.ai/api/platform/websdk',
+    type: 'post',
+    data: jsonData,
     dataType: 'json',
     success(data) {
-
     },
     error(err) {
       // chatWindowInstance.showError(err.responseText);
@@ -2097,7 +2092,7 @@ chatWindow.prototype.JWTSetup = function(){
   let me=this;
   me.config.botOptions.assertionFn = me.assertionFn.bind(me);
   if(!(me.config && me.config.JWTAsertion)){
-    if(me.config && me.config.API_KEY_CONFIG && me.config.API_KEY_CONFIG.KEY && me.config.API_KEY_CONFIG.KEY!='YOUR_API_KEY'){
+    if(me.config && me.config.botOptions.API_KEY_CONFIG && me.config.botOptions.API_KEY_CONFIG.KEY && me.config.botOptions.API_KEY_CONFIG.KEY!='YOUR_API_KEY'){
       me.setupInternalAssertionFunctionWithAPIKey();
     }else{
       me.setupInternalAssertionFunction();
@@ -2118,11 +2113,11 @@ chatWindow.prototype.setupInternalAssertionFunction=function (){
 
 chatWindow.prototype.setupInternalAssertionFunctionWithAPIKey=function (){
   const me = this;
-  me.getJWTByAPIKey(me.config.botOptions).then(function(res){
+  me.getJWTByAPIKey(me.config.botOptions.API_KEY_CONFIG).then(function(res){
     me.emit(me.EVENTS.JWT_SUCCESS, res);
     me.setJWT(res.jwt);
     if(res.botInfo){
-      me.config.botOptions.botInfo.chatBot=res.botInfo.name;
+      me.config.chatTitle = me.config.botOptions.botInfo.chatBot=res.botInfo.name;
       me.config.botOptions.botInfo.taskBotId=res.botInfo._id;
     }
     me.config.botOptions.callback(null, me.config.botOptions);
@@ -2145,7 +2140,7 @@ chatWindow.prototype.assertionFn = function (options, callback) {
   if(me.config && me.config.JWTAsertion){
     me.config.JWTAsertion(me.SDKcallbackWraper.bind(me));
   }else if(options.assertion){//check for reconnect case
-    if(me.config && me.config.API_KEY_CONFIG){
+    if(me.config && me.config.botOptions.API_KEY_CONFIG){
       me.setupInternalAssertionFunctionWithAPIKey();
     }else{
       me.setupInternalAssertionFunction();

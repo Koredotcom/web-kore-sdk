@@ -3,8 +3,12 @@ var chatConfig={};
 
 var botOptions = {};
 botOptions.logLevel = 'debug';
-botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
-// botOptions.koreAPIUrl = "https://qa1-bots.kore.ai/api/";
+//botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
+botOptions.koreAPIUrl = "https://qa-bots.kore.ai/api/";
+botOptions.API_KEY_CONFIG={
+    bootstrapURL:botOptions.koreAPIUrl+'platform/websdk',
+    KEY:'YOUR_API_KEY'
+},
 botOptions.koreSpeechAPIUrl = "";//deprecated
 //botOptions.bearer = "bearer xyz-------------------";
 //botOptions.ttsSocketUrl = '';//deprecated
@@ -55,10 +59,6 @@ botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 
 chatConfig = {
     botOptions: botOptions,
-    API_KEY_CONFIG:{
-        bootstrapURL:'http://localhost:9000/examples/bootstrap.json',
-        KEY:'YOUR_API_KEY'
-    },
     container:'body',
     allowIframe: false, 			// set true, opens authentication links in popup window, default value is "false"
     isSendButton: false, 			// set true, to show send button below the compose bar
