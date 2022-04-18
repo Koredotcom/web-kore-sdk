@@ -1304,7 +1304,16 @@
                     _escPressed = 0;
                 });
                 _chatContainer.off('click', '.botResponseAttachments').on('click', '.botResponseAttachments', function (event) {
-                    window.open($(this).attr('fileid'), '_blank');
+                    var thisEle = this;
+                    if($(event.currentTarget).attr('download')==='true'){
+                        var dlink = document.createElement('a');
+                        dlink.download = $(event.currentTarget).find('.botuploadedFileName').text();
+                        dlink.href = $(thisEle).attr('fileid');
+                        dlink.click();
+                        dlink.remove();
+                    }else{
+                        window.open($(thisEle).attr('fileid'), '_blank');
+                    } 
                 });
                 /*_chatContainer.off('click', '.attachments').on('click', '.attachments', function (event) {
                     var attachFileID = $(this).attr('fileid');
@@ -2252,6 +2261,10 @@
                     extension = strSplit(msgData.message[0].component.payload.url);
                     _extractedFileName = msgData.message[0].component.payload.name ? msgData.message[0].component.payload.name : msgData.message[0].component.payload.url.replace(/^.*[\\\/]/, '');
                     // _extractedFileName = msgData.message[0].component.payload.url.replace(/^.*[\\\/]/, '');
+                    if(msgData.message[0].component.payload.fileName){
+                        _extractedFileName=msgData.message[0].component.payload.fileName;
+                        extension=strSplit(_extractedFileName);
+                    }
                 }
 
                 /* checking for matched custom template */
@@ -3210,7 +3223,7 @@
                                 {{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
                                 <div class="messageBubble">\
                                     {{if msgItem.component.payload.url}} \
-                                        <div class="msgCmpt botResponseAttachments" fileid="${msgItem.component.payload.url}"> \
+                                        <div class="msgCmpt botResponseAttachments"  download="${msgItem.component.payload.download}" fileid="${msgItem.component.payload.url}"> \
                                             <div class="uploadedFileIcon"> \
                                                 {{if msgItem.component.type == "image"}} \
                                                     <span class="icon cf-icon icon-photos_active"></span> \
