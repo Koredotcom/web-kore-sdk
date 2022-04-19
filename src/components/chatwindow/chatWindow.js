@@ -96,9 +96,9 @@ class chatWindow extends EventEmitter{
      * @type {object}
      * @property {Object} historyResponse - chatHistory API response
      */
-      ON_CHAT_HISTORY_RESPONSE:'onChatHistoryResponse'
+      ON_CHAT_HISTORY_RESPONSE:'onChatHistoryResponse',
 
-
+      ON_KEY_DOWN: 'onKeyDown'
   }
 }
 
@@ -768,6 +768,14 @@ chatWindow.prototype.bindEvents = function () {
      }); */
   _chatContainer.off('keydown', '.chatInputBox').on('keydown', '.chatInputBox', function (event) {
     const chatInput = $(this);
+    let chatWindowEvent = {stopFurtherExecution: false}
+    me.emit(me.EVENTS.ON_KEY_DOWN,{
+      event:event,
+      chatWindowEvent: chatWindowEvent
+    });
+    if(chatWindowEvent.stopFurtherExecution){
+      return false;
+    }
     const _footerContainer = $(me.config.container).find('.kore-chat-footer');
     const _bodyContainer = $(me.config.container).find('.kore-chat-body');
     _bodyContainer.css('bottom', _footerContainer.outerHeight());
@@ -1464,7 +1472,8 @@ chatWindow.prototype.sendMessageToBot = function (messageText, options, serverMe
     message: [{
       type: 'text',
       cInfo: { 
-        body: messageText 
+        body: messageText,
+        // 'attachments': serverMessageObject.message.attachments 
       },
       clientMessageId,
     }],
@@ -1473,10 +1482,12 @@ chatWindow.prototype.sendMessageToBot = function (messageText, options, serverMe
   let messageToBot = {
     clientMessageId:clientMessageId,
     resourceid :'/bot.message',
-    message:{
-      body:messageText
-    }
   };
+if(messageText.trim().length){
+  messageToBot["message"] = { 
+    body: messageText.trim()
+  }
+}
   
 
   if (options && options.renderMsg && typeof options.renderMsg === 'string') {
@@ -1486,6 +1497,9 @@ chatWindow.prototype.sendMessageToBot = function (messageText, options, serverMe
 
   if(serverMessageObject){
     me.extend(messageToBot,serverMessageObject);
+  }
+  if(serverMessageObject){   //extended msgData for attachements 
+    me.extend(msgData.message[0].cInfo,serverMessageObject.message);
   }
   // if (msgObject && msgObject.customdata) {
   //   messageToBot.message.customdata = msgObject.customdata;
@@ -1804,27 +1818,6 @@ chatWindow.prototype.getChatTemplate = function (tempType) {
          <div role="textbox" class="chatInputBox" contenteditable="true" placeholder="${botMessages.message}"></div> \
          {{/if}} \
      <div class="attachment"></div> \
-     {{if isTTSEnabled}} \
-         <div class="sdkFooterIcon ttspeakerDiv ttsOff"> \
-             <button class="ttspeaker" title="Talk to speak"> \
-                 <span class="ttsSpeakerEnable"></span> \
-                 <span class="ttsSpeakerDisable"></span> \
-                 <span style="display:none;"><audio id="ttspeaker" controls="" autoplay="" name="media"><source src="" type="audio/wav"></audio></span>\
-             </button> \
-         </div> \
-     {{/if}} \
-     {{if isSpeechEnabled}}\
-     <div class="sdkFooterIcon microphoneBtn"> \
-         <button class="notRecordingMicrophone" title="Microphone On"> \
-             <i class="microphone"></i> \
-         </button> \
-         <button class="recordingMicrophone" title="Microphone Off" > \
-             <i class="microphone"></i> \
-             <span class="recordingGif"></span> \
-         </button> \
-         <div id="textFromServer"></div> \
-     </div> \
-     {{/if}}\
      {{if !(isSendButton)}}<div class="chatSendMsg">${botMessages.entertosend}</div>{{/if}} \
  </div>';
 

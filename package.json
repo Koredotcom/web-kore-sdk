@@ -33,6 +33,7 @@
   ],
   "dependencies": {
     "@types/jquery": "^3.5.6",
+    "aws-sdk": "^2.1102.0",
     "d3": "^7.1.1",
     "express": "~4.9.0",
     "jquery": "^3.6.0",
@@ -40,12 +41,14 @@
     "jquery.tmpl": "0.0.2",
     "moment": "^2.24.0",
     "perfect-scrollbar": "^1.5.2",
-    "pubsub-js": "^1.9.4"
+    "pubsub-js": "^1.9.4",
+    "util": "^0.12.4"
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",
     "@babel/plugin-proposal-class-static-block": "^7.16.7",
     "@babel/preset-env": "^7.15.6",
+    "@types/node": "^17.0.23",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "@typescript-eslint/parser": "^5.3.1",
     "babel-loader": "^8.2.2",
