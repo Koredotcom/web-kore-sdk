@@ -39,6 +39,7 @@ class chatWindow extends EventEmitter{
      * @event chatWindow#beforeViewInit
      * @type {object}
      * @property {Object} chatEle - chat window dom element .
+     * @property {Object} chatWindowEvent
      */
     BEFORE_VIEW_INIT:'beforeViewInit',
     /**
@@ -47,6 +48,7 @@ class chatWindow extends EventEmitter{
      * @event chatWindow#viewInit
      * @type {object}
      * @property {Object} chatEle - chat window dom element .
+     * @property {Object} chatWindowEvent
      */
     VIEW_INIT:'viewInit',
     /**
@@ -56,6 +58,7 @@ class chatWindow extends EventEmitter{
      * @type {object}
      * @property {Object} messageHtml message bubble html content
      * @property {Object} msgData message data
+     * @property {Object} chatWindowEvent
     */
     BEFORE_RENDER_MSG:'beforeRenderMessage',
      /**
@@ -65,6 +68,7 @@ class chatWindow extends EventEmitter{
      * @type {object}
      * @property {Object} messageHtml message bubble html content
      * @property {Object} msgData message data
+     * @property {Object} chatWindowEvent
      */
     AFTER_RENDER_MSG:'afterRenderMessage',
     /**
@@ -79,6 +83,7 @@ class chatWindow extends EventEmitter{
      * @event chatWindow#onWSMessage
      * @type {object}
      * @property {Object} messageData - message data received from websocket
+     * @property {Object} chatWindowEvent
      */
     ON_WS_MESSAGE:'onWSMessage',
     /**
@@ -87,6 +92,7 @@ class chatWindow extends EventEmitter{
      * @event chatWindow#beforeWSSendMessage
      * @type {object}
      * @property {Object} messageToBot - message data to be sent to to websocket
+     * @property {Object} chatWindowEvent
      */
      BEFORE_WS_SEND_MESSAGE:'beforeWSSendMessage',
      /**
@@ -95,9 +101,17 @@ class chatWindow extends EventEmitter{
      * @event chatWindow#onChatHistoryResponse
      * @type {object}
      * @property {Object} historyResponse - chatHistory API response
+     * @property {Object} chatWindowEvent
      */
       ON_CHAT_HISTORY_RESPONSE:'onChatHistoryResponse',
-
+     /**
+     * onKeyDownEvent will be triggered on Keydown Event
+     *
+     * @event chatWindow#onKeyDownEvent
+     * @type {object}
+     * @property {Object} keyDownEvent 
+     * @property {Object} chatWindowEvent
+     */
       ON_KEY_DOWN: 'onKeyDown'
   }
 }
@@ -768,7 +782,7 @@ chatWindow.prototype.bindEvents = function () {
      }); */
   _chatContainer.off('keydown', '.chatInputBox').on('keydown', '.chatInputBox', function (event) {
     const chatInput = $(this);
-    let chatWindowEvent = {stopFurtherExecution: false}
+    let chatWindowEvent = {stopFurtherExecution: false};
     me.emit(me.EVENTS.ON_KEY_DOWN,{
       event:event,
       chatWindowEvent: chatWindowEvent
@@ -1273,8 +1287,12 @@ chatWindow.prototype.sendWebhookOnConnectEvent = function () {
 chatWindow.prototype.bindSDKEvents = function () {
   // hook to add custom events
   const me = this;
+  let chatWindowEvent = {stopFurtherExecution: false};
   me.bot.on('open', (response) => {
-    me.emit(me.EVENTS.ON_WS_OPEN);
+    me.emit(me.EVENTS.ON_WS_OPEN, {messageData:messageData,chatWindowEvent:chatWindowEvent});
+    if(chatWindowEvent.stopFurtherExecution){
+      return false;
+    }
     me.onBotReady();
   });
 
@@ -1285,9 +1303,14 @@ chatWindow.prototype.bindSDKEvents = function () {
     }
 
     let tempData = JSON.parse(message.data);
+    let chatWindowEvent = {stopFurtherExecution: false};
     me.emit(me.EVENTS.ON_WS_MESSAGE,{
       messageData:tempData,
+      chatWindowEvent:chatWindowEvent
     });
+    if(chatWindowEvent.stopFurtherExecution){
+      return false;
+    }
 
     if (tempData.from === 'bot' && tempData.type === 'bot_response') {
       if (tempData && tempData.message && tempData.message.length) {
@@ -1445,9 +1468,13 @@ chatWindow.prototype.bindIframeEvents = function (authPopup) {
 
 chatWindow.prototype.render = function (chatWindowHtml) {
   const me = this;
-  me.emit(me.EVENTS.BEFORE_VIEW_INIT,{chatEle:chatWindowHtml});
+  let chatWindowEvent = {stopFurtherExecution: false};
+  me.emit(me.EVENTS.BEFORE_VIEW_INIT,{chatEle:chatWindowHtml,chatWindowEvent:chatWindowEvent});
   $(me.config.container).append(chatWindowHtml);
-  me.emit(me.EVENTS.VIEW_INIT,{chatEle:chatWindowHtml});
+  me.emit(me.EVENTS.VIEW_INIT,{chatEle:chatWindowHtml,chatWindowEvent:chatWindowEvent});
+  if(chatWindowEvent.stopFurtherExecution){
+    return false;
+  }
   if (me.config.container !== 'body') {
     $(me.config.container).addClass('pos-relative');
     $(me.chatEle).addClass('pos-absolute');
@@ -1498,7 +1525,7 @@ if(messageText.trim().length){
   if(serverMessageObject){
     me.extend(messageToBot,serverMessageObject);
   }
-  if(serverMessageObject){   //extended msgData for attachements 
+  if(serverMessageObject){   //extended msgData for attachements
     me.extend(msgData.message[0].cInfo,serverMessageObject.message);
   }
   // if (msgObject && msgObject.customdata) {
@@ -1526,9 +1553,14 @@ if(messageText.trim().length){
       me.attachmentInfo ? { attachments: [me.attachmentInfo] } : null,
     );
   } else {
+    let chatWindowEvent = {stopFurtherExecution: false};
     me.emit(me.EVENTS.BEFORE_WS_SEND_MESSAGE,{
       messageToBot:messageToBot,
+      chatWindowEvent:chatWindowEvent
     });
+    if(chatWindowEvent.stopFurtherExecution){
+      return false;
+    }
     me.bot.sendMessage(messageToBot, (err) => {
       if (err && err.message) {
         setTimeout(() => {
@@ -1696,11 +1728,15 @@ chatWindow.prototype.renderMessage = function (msgData) {
   }
   _chatContainer.find('li').attr('aria-live', 'off');
   // _chatContainer.find('li').attr('aria-hidden','true');//for mac voiceover bug with aria-live
-
+  let chatWindowEvent = {stopFurtherExecution: false};
   me.emit(me.EVENTS.BEFORE_RENDER_MSG,{
     messageHtml:messageHtml,
-    msgData:msgData
+    msgData:msgData,
+    chatWindowEvent:chatWindowEvent
   });
+  if(chatWindowEvent.stopFurtherExecution){
+    return false;
+  }
 
 
   if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.sliderView && !msgData.message[0].component.payload.fromHistory) {
@@ -1910,9 +1946,14 @@ chatWindow.prototype.historyLoadingComplete = function () {
 
 chatWindow.prototype.chatHistory = function (res) {
   const me = this;
+  let chatWindowEvent = {stopFurtherExecution: false};
   me.emit(me.EVENTS.ON_CHAT_HISTORY_RESPONSE,{
     historyResponse:res,
+    chatWindowEvent:chatWindowEvent
   });
+  if(chatWindowEvent.stopFurtherExecution){
+    return false;
+  }
   if (res[2] === 'historysync') {
     // setTimeout(function () {
     if (res && res[1] && res[1].messages.length > 0) {
