@@ -2114,6 +2114,12 @@ chatWindow.prototype.setupInternalAssertionFunction=function (){
 chatWindow.prototype.setupInternalAssertionFunctionWithAPIKey=function (){
   const me = this;
   me.getJWTByAPIKey(me.config.botOptions.API_KEY_CONFIG).then(function(res){
+    if(me.config.widgetSDKInstace && res.botInfo){
+      var widgetsConfig=me.config.widgetSDKInstace.config;
+      widgetsConfig.botOptions.botInfo.name=res.botInfo.name;
+      widgetsConfig.botOptions.botInfo._id=res.botInfo._id;
+      widgetsConfig.botOptions.userIdentity=res.ity;
+    }
     me.emit(me.EVENTS.JWT_SUCCESS, res);
     me.setJWT(res.jwt);
     if(res.botInfo){
