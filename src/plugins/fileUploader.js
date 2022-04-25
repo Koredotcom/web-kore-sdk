@@ -1,9 +1,11 @@
+import $ from 'jquery';
 class KoreFileUploaderPlugin {
   name= "KoreFileUploaderPlugin";
   static filetypes = {};
   static allowedFileTypes = {};
   static appConsts = {};
   static fileToken = "";
+  static boundary = "";
   constructor() {
     this.filetypes = {
       audio: ['m4a', 'amr', 'wav', 'aac', 'mp3'],
@@ -15,9 +17,17 @@ class KoreFileUploaderPlugin {
         }
       }
     };
+    this.fileUploaderCounter;
     this.appConsts = {
       CHUNK_SIZE: 1024 * 1024
     };
+    this.xhrValue,
+    this.xhr,
+    this._conc,
+    this._mdat,
+    this.boundary,
+    this._fields = [];
+    this.attachmentFileId
     this.allowedFileTypes = ['m4a', 'amr', 'aac', 'wav', 'mp3', 'mp4', 'mov', '3gp', 'flv', 'png', 'jpg', 'jpeg', 'gif', 'bmp', 'csv', 'txt', 'json', 'pdf', 'doc', 'dot', 'docx', 'docm',
       'dotx', 'dotm', 'xls', 'xlt', 'xlm', 'xlsx', 'xlsm', 'xltx', 'xltm', 'xlsb', 'xla', 'xlam', 'xll', 'xlw', 'ppt', 'pot', 'pps', 'pptx', 'pptm', 'potx', 'potm', 'ppam',
       'ppsx', 'ppsm', 'sldx', 'sldm', 'zip', 'rar', 'tar', 'wpd', 'wps', 'rtf', 'msg', 'dat', 'sdf', 'vcf', 'xml', '3ds', '3dm', 'max', 'obj', 'ai', 'eps', 'ps', 'svg', 'indd', 'pct', 'accdb',
@@ -53,14 +63,14 @@ class KoreFileUploaderPlugin {
       });
     };
 
-    $.fn.uploader.Constructor = me.Uploader();
+    // $.fn.uploader.Constructor = me.Uploader();
 
     $.fn.uploader.noConflict = function () {
       $.fn.uploader = old;
       return this;
     };
 
-    const _cls = Uploader.prototype;
+    const _cls =me.Uploader.prototype;
     _cls.events = {
       error: $.Event('error.ke.uploader'),
       progressChange: $.Event('progress.ke.uploader'),
@@ -71,11 +81,11 @@ class KoreFileUploaderPlugin {
 
   bindEvents() {
     let me = this;
-    me.ele.off('click', '.attachmentBtn').on('click', '.attachmentBtn', (event) => {
-      me.ele.find('#captureAttachmnts').trigger('click');
+    me.hostInstance.chatEle.off('click', '.attachmentBtn').on('click', '.attachmentBtn', (event) => {
+      me.hostInstance.chatEle.find('#captureAttachmnts').trigger('click');
     });
-    me.ele.off('change', '#captureAttachmnts').on('change', '#captureAttachmnts', function (event) {
-      const file = me.ele.find('#captureAttachmnts').prop('files')[0];
+    me.hostInstance.chatEle.off('change', '#captureAttachmnts').on('change', '#captureAttachmnts', function (event) {
+      const file = me.hostInstance.chatEle.find('#captureAttachmnts').prop('files')[0];
       if (file && file.size) {
         if (file.size > me.filetypes.file.limit.size) {
           alert(me.filetypes.file.limit.msg);
@@ -84,14 +94,79 @@ class KoreFileUploaderPlugin {
       }
       me.convertFiles(this, file);
     });
+    me.hostInstance.chatEle.off('click', '.removeAttachment').on('click', '.removeAttachment', function (event) {
+      $(me.hostInstance.chatEle).find('.removeAttachment').parents('.msgCmpt').remove();
+      $('.kore-chat-window').removeClass('kore-chat-attachment');
+      this.fileUploaderCounter = 0;
+      me.hostInstance.attachmentInfo = {};
+      $('.sendButton').addClass('disabled');
+      document.getElementById("captureAttachmnts").value = "";
+  });
   }
 
   onHostCreate() {
     let me = this;
     let cwInstance=me.hostInstance;
     cwInstance.on("viewInit", (chatWindowEle) => {
-        debugger;
         me.onInit();
+    });
+    cwInstance.on("onKeyDown", (data) => {
+      var chatInput = me.hostInstance.chatEle.find(".chatInputBox");
+      const _footerContainer = $(me.hostInstance.chatEle).find('.kore-chat-footer');
+      const _bodyContainer = $(me.hostInstance.chatEle).find('.kore-chat-body');
+      _bodyContainer.css('bottom', _footerContainer.outerHeight());
+      if (event.keyCode === 13) {
+          if (event.shiftKey) {
+              return;
+          }
+          if ($('.upldIndc').is(':visible')) {
+              alert('Uploading file, please wait...');
+              return;
+          }
+          if ($('.recordingMicrophone').is(':visible')) {
+              $('.recordingMicrophone').trigger('click');
+          }
+          event.preventDefault();
+        var serverMessageObject = {};
+        serverMessageObject.message = {};
+        serverMessageObject.message.attachments = [];
+        if (this.attachmentFileId) {
+          me.hostInstance.attachmentInfo.fileId = this.attachmentFileId;
+        }
+        if (me.hostInstance.attachmentInfo) {
+          data.chatWindowEvent.stopFurtherExecution = true;
+          serverMessageObject.message.attachments[0] = me.hostInstance.attachmentInfo;
+          var clientMessageObject = {};
+          clientMessageObject.message = [];
+          clientMessageObject.message[0] = {};
+          clientMessageObject.message[0].cInfo = {};
+          clientMessageObject.message[0].cInfo = serverMessageObject.message;
+          me.hostInstance.sendMessage(chatInput.text(), me.hostInstance.attachmentInfo, serverMessageObject, clientMessageObject);
+          me.hostInstance.attachmentInfo = {};
+          me.hostInstance.on("afterRenderMessage", (chatWindowData) => {
+            $('.attachment').html('');
+            $('.kore-chat-window').removeClass('kore-chat-attachment');
+            document.getElementById("captureAttachmnts").value = "";
+            chatInput.html("");
+            $('.sendButton').addClass('disabled');
+            _bodyContainer.css('bottom', _footerContainer.outerHeight());
+          });
+        }
+          return;
+      }
+      else if (event.keyCode === 27) {
+          _escPressed++;
+          if (_escPressed > 1) {
+              _escPressed = 0;
+              stop();
+              this.innerText = "";
+              $('.attachment').empty();
+              this.fileUploaderCounter = 0;
+              setTimeout(function () {
+                  setCaretEnd((document.getElementsByClassName("chatInputBox")));
+              }, 100);
+          }
+      }
     });
   }
   
@@ -244,7 +319,6 @@ class KoreFileUploaderPlugin {
   }
 
   acceptAndUploadFile(_this, file, recState) {
-    debugger;
     let me = this;
     let ele;
     const uc = me.getfileuploadConf(recState);
@@ -327,7 +401,6 @@ class KoreFileUploaderPlugin {
   }
 
   onComponentReady(_this, data) {
-    debugger;
     let me = this;
     let $ = me.hostInstance.$;
     let _cmpt;
@@ -384,8 +457,9 @@ class KoreFileUploaderPlugin {
     _cmpt.append('<div class="removeAttachment"><span>&times;</span></div>');
     $('.footerContainer').find('.attachment').html(_cmpt);
     $('.chatInputBox').focus();
-    me.hostInstance.chatInitialize.attachmentInfo.fileName = data.values.componentData.filename;
-    me.hostInstance.chatInitialize.attachmentInfo.fileType = data.values.componentType;
+    me.hostInstance.attachmentInfo = {};
+    me.hostInstance.attachmentInfo.fileName = data.values.componentData.filename;
+    me.hostInstance.attachmentInfo.fileType = data.values.componentType;
     $('.sendButton').removeClass('disabled');
   }
 
@@ -429,9 +503,9 @@ class KoreFileUploaderPlugin {
 
   initiateRcorder(_recState, ele) {
     const me = this;
-    ele = ele || _scope.ele;
+    ele = ele || me.ele;
     ele.on('success.ke.uploader', (e) => {
-      me.onFileToUploaded(_scope, e, _recState);
+      me.onFileToUploaded(me, e, _recState);
     });
     ele.on('error.ke.uploader', me.onUploadError);
   }
@@ -460,12 +534,45 @@ class KoreFileUploaderPlugin {
   onError() {
     let me = this;
     alert('Failed to upload content. Try again');
-    attachmentInfo = {};
+    me.hostInstance.attachmentInfo = {};
     me.ele.find('.attachment').html('');
     me.ele.find('.sendButton').addClass('disabled');
-    fileUploaderCounter = 0;
+    this.fileUploaderCounter = 0;
   }
-
+   MultipartData() {
+    this.boundary = "--------MultipartData" + Math.random();
+    this._fields = [];
+}
+MultipartDataAppend(key, value) {
+    this._fields.push([key, value]);
+};
+MultipartDatatoString () {
+    var boundary = this._mdat.boundary;
+    var body = "";
+    this._fields.forEach(function (field) {
+        body += "--" + boundary + "\r\n";
+        // file upload
+        if (field[1].data) {
+            var file = field[1];
+            if (file.fileName) {
+                body += "Content-Disposition: form-data; name=\"" + field[0] + "\"; filename=\"" + file.fileName + "\"";
+            } else {
+                body += "Content-Disposition: form-data; name=\"" + field[0] + "\"";
+            }
+            body += "\r\n";
+            if (file.type) {
+                body += "Content-Type: UTF-8; charset=ISO-8859-1\r\n";
+            }
+            body += "Content-Transfer-Encoding: base64\r\n";
+            body += "\r\n" + file.data + "\r\n"; //base64 data
+        } else {
+            body += "Content-Disposition: form-data; name=\"" + field[0] + "\";\r\n\r\n";
+            body += field[1] + "\r\n";
+        }
+    });
+    body += "--" + boundary + "--";
+    return body;
+};
   Uploader(element, options, z) {
     let me = z;
     this.options = options;
@@ -480,36 +587,36 @@ class KoreFileUploaderPlugin {
   startUpload(_this) {
   let me = this;
   const _scope = _this;
-  _conc = me.getConnection(_this),
-    _mdat = new MultipartData();
-  if (_conc.upload && _conc.upload.addEventListener) {
-    _conc.upload.addEventListener('progress', (evt) => {
+  this._conc = me.getConnection(_this),
+    this._mdat = new me.MultipartData();
+  if (this._conc.upload && this._conc.upload.addEventListener) {
+    this._conc.upload.addEventListener('progress', (evt) => {
       me.progressListener(_scope, evt);
     }, false);
   }
-  _conc.addEventListener('load', (evt) => {
+  this._conc.addEventListener('load', (evt) => {
     if (_scope.$element.parent().length) {
       me.loadListener(_scope, evt);
     }
   }, false);
-  _conc.addEventListener('error', (evt) => {
+  this._conc.addEventListener('error', (evt) => {
     me.errorListener(_scope, evt);
   }, false);
-  _conc.withCredentials = false;
-  _conc.open('POST', _this.options.url);
+  this._conc.withCredentials = false;
+  this._conc.open('POST', _this.options.url);
 
   if (_this.options.headers) {
     for (const header in _this.options.headers) {
-      _conc.setRequestHeader(header, _this.options.headers[header]);
+      this._conc.setRequestHeader(header, _this.options.headers[header]);
     }
   }
   if (_this.options.data) {
     for (const key in _this.options.data) {
-      _mdat.append(key, _this.options.data[key]);
+      me.MultipartDataAppend(key, _this.options.data[key]);
     }
   }
-  _conc.setRequestHeader('Content-Type', `multipart/form-data; boundary=${_mdat.boundary}`);
-  _conc.send(_mdat.toString());
+  this._conc.setRequestHeader('Content-Type', `multipart/form-data; boundary=${this._mdat.boundary}`);
+  this._conc.send(me.MultipartDatatoString());
 }
 
 startChunksUpload(_this) {
@@ -543,25 +650,53 @@ startChunksUpload(_this) {
 }
 
 getConnection(_this) {
+  let me = this;
   const kfrm = {};
   kfrm.net = {};
-  return new kfrm.net.HttpRequest();
+  return me.HttpRequest();
+}
+ getHTTPConnecton() {
+   this.xhrValue = false;
+  this.xhrValue = new XMLHttpRequest();
+  if (this.xhrValue) {
+      return this.xhrValue;
+  } else if (typeof XDomainRequest !== "undefined") {
+      return new XDomainRequest();
+  }
+  return this.xhrValue;
 }
 
+ HttpRequest() {
+   let me = this;
+   this.xhr = me.getHTTPConnecton();
+  if (!this.xhr) {
+      throw "Unsupported HTTP Connection";
+  }
+  try {
+      this.xhr.withCredentials = true;
+  } catch (e) {
+  }
+  // this.xhr.onreadystatechange = function () {
+  //     return this.xhr.onReadyStateChange && this.xhr.onReadyStateChange.call(this.xhr);
+  // };
+  return this.xhr;
+}
+// kfrm.net.HttpRequest = me.HttpRequest;
 progressListener(_this, evt) {
   console.log(evt);
 }
 
 loadListener(_this, evt) {
   let me = this;
-  if (me.ele.find('.upldIndc').is(':visible')) {
+  if (me.hostInstance.chatEle.find(".upldIndc").is(':visible')) {
     _this.events.success.params = $.parseJSON(evt.target.response);
-    attachmentInfo.fileId = _this.events.success.params.fileId;
-    me.ele.find('.sendButton').removeClass('disabled');
-    me.ele.find('.kore-chat-window').addClass('kore-chat-attachment');
-    me.ele.find('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
-    fileUploaderCounter = 1;
-    me.ele.find('.upldIndc').remove();
+    this.attachmentFileId = _this.events.success.params.fileId;
+    me.hostInstance.attachmentInfo.fileId = _this.events.success.params.fileId;
+    me.hostInstance.chatEle.find('.sendButton').removeClass('disabled');
+    me.hostInstance.chatEle.addClass('kore-chat-attachment');
+    me.hostInstance.chatEle.find('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
+    this.fileUploaderCounter = 1;
+    me.hostInstance.chatEle.find(".upldIndc").remove();
     _this.$element.trigger(_this.events.success);
   }
 }
@@ -599,7 +734,7 @@ uploadChunk(_this) {
   let me = this;
   const _scope = _this;
   const _conc = me.getConnection(_this);
-  const _mdat = new MultipartData();
+   this._mdat = new MultipartData();
   _conc.addEventListener('load', (evt) => {
     if (evt.target.status === 200) {
       _scope.currChunk++;
@@ -625,21 +760,21 @@ uploadChunk(_this) {
       _conc.setRequestHeader(header, _this.options.headers[header]);
     }
   }
-  _mdat.append('chunkNo', _scope.currChunk);
-  _mdat.append('messageToken', _scope.messageToken);
-  _mdat.append('chunk', {
+  me.MultipartDataAppend('chunkNo', _scope.currChunk);
+  me.MultipartDataAppend('messageToken', _scope.messageToken);
+  me.MultipartDataAppend('chunk', {
     data: _scope.chunk,
     fileName: _scope.options.file.name,
   });
-  _conc.setRequestHeader('Content-Type', `multipart/form-data; boundary=${_mdat.boundary}`);
-  _conc.send(_mdat.toString());
+  _conc.setRequestHeader('Content-Type', `multipart/form-data; boundary=${this._mdat.boundary}`);
+  _conc.send(me.MultipartDatatoString());
 }
 
 commitFile(_this) {
   let me = this;
   const _scope = _this;
   const _conc = getConnection(_this);
-  const _mdat = new MultipartData();
+   this._mdat = new MultipartData();
   _conc.addEventListener('load', (evt) => {
     if (evt.target.status === 200) {
       if (_scope.$element.parent().length) {
@@ -660,15 +795,15 @@ commitFile(_this) {
       _conc.setRequestHeader(header, _this.options.headers[header]);
     }
   }
-  _mdat.append('totalChunks', _scope.totalChunks);
-  _mdat.append('messageToken', _scope.messageToken);
+  me.MultipartDataAppend('totalChunks', _scope.totalChunks);
+  me.MultipartDataAppend('messageToken', _scope.messageToken);
   if (_this.options.data) {
     for (const key in _this.options.data) {
-      _mdat.append(key, _this.options.data[key]);
+      me.MultipartDataAppend(key, _this.options.data[key]);
     }
   }
-  _conc.setRequestHeader('Content-Type', `multipart/form-data; boundary=${_mdat.boundary}`);
-  _conc.send(_mdat.toString());
+  _conc.setRequestHeader('Content-Type', `multipart/form-data; boundary=${this._mdat.boundary}`);
+  _conc.send(me.MultipartDatatoString());
 }
 
 setOptions(_this, opts) {

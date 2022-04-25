@@ -153,6 +153,16 @@ module.exports= function(env,argv){
             filename: 'plugins/kore-graph-templates-plugin-umd.js',
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
+          SpeechToTextPluginSDK: {
+            import: "./src/index_plugins/speechtotext_umd.ts",
+            filename: 'plugins/speech-to-text-plugin-umd.js',
+            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+          },
+          TtsSpeechPluginSDK: {
+            import: "./src/index_plugins/ttsspeech_umd.ts",
+            filename: 'plugins/tts-speech-plugin-umd.js',
+            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+          },
         }
         config.output.library = {
           name: '[name]',

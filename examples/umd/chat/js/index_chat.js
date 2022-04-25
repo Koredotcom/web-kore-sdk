@@ -5,7 +5,8 @@ var chatWindow=KoreChatSDK.chatWindow;
 
 var KorePickersPlugin=KorePickersPluginSDK.KorePickersPlugin;
 var GraphTemplatesPlugin=KoreGraphTemplatesPluginSDK.GraphTemplatesPlugin;
-
+var SpeechToTextPlugin=SpeechToTextPluginSDK.SpeechToTextPlugin;
+var TtsSpeechPlugin=TtsSpeechPluginSDK.TtsSpeechPlugin;
 
 var chatWindowInstance = new chatWindow();
 
@@ -22,6 +23,8 @@ botOptions.clientSecret = "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=";
 
 chatWindowInstance.installPlugin(new KorePickersPlugin());
 chatWindowInstance.installPlugin(new GraphTemplatesPlugin());
+chatWindowInstance.installPlugin(new SpeechToTextPlugin());
+chatWindowInstance.installPlugin(new TtsSpeechPlugin());
 
 chatConfig.JWTAsertion=function(commitJWT){
     chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){

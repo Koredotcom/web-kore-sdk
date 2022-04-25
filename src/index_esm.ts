@@ -5,6 +5,8 @@ import Korei18nPlugin from './plugins/i18n';
 import KoreFileUploaderPlugin from './plugins/fileUploader';
 import KorePickersPlugin from './plugins/korePickers';
 import GraphTemplatesPlugin from './plugins/graphTemplatesPlugin';
+import SpeechToTextPlugin from './plugins/textSpeechPlugins/speechToTextPlugin';
+import TtsSpeechPlugin from './plugins/textSpeechPlugins/ttsSpeechPlugin';
 
 
 import KoreWidgetSDK from '../UI/kore-widgets';
@@ -24,5 +26,7 @@ export {
   KorePickersPlugin,
   GraphTemplatesPlugin,
   KRSearch,
-  KRSearchConfig
+  KRSearchConfig,
+  SpeechToTextPlugin,
+  TtsSpeechPlugin
 };
