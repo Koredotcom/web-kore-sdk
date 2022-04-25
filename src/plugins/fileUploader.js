@@ -111,7 +111,6 @@ class KoreFileUploaderPlugin {
         me.onInit();
     });
     cwInstance.on("onKeyDown", (data) => {
-      data.chatWindowEvent.stopFurtherExecution = true;
       var chatInput = me.hostInstance.chatEle.find(".chatInputBox");
       const _footerContainer = $(me.hostInstance.chatEle).find('.kore-chat-footer');
       const _bodyContainer = $(me.hostInstance.chatEle).find('.kore-chat-body');
@@ -131,9 +130,18 @@ class KoreFileUploaderPlugin {
         var serverMessageObject = {};
         serverMessageObject.message = {};
         serverMessageObject.message.attachments = [];
-        me.hostInstance.attachmentInfo.fileId =this.attachmentFileId;
-        serverMessageObject.message.attachments[0] = me.hostInstance.attachmentInfo;
-          me.hostInstance.sendMessage(chatInput.text(), me.hostInstance.attachmentInfo,serverMessageObject );
+        if (this.attachmentFileId) {
+          me.hostInstance.attachmentInfo.fileId = this.attachmentFileId;
+        }
+        if (me.hostInstance.attachmentInfo) {
+          data.chatWindowEvent.stopFurtherExecution = true;
+          serverMessageObject.message.attachments[0] = me.hostInstance.attachmentInfo;
+          var clientMessageObject = {};
+          clientMessageObject.message = [];
+          clientMessageObject.message[0] = {};
+          clientMessageObject.message[0].cInfo = {};
+          clientMessageObject.message[0].cInfo = serverMessageObject.message;
+          me.hostInstance.sendMessage(chatInput.text(), me.hostInstance.attachmentInfo, serverMessageObject, clientMessageObject);
           me.hostInstance.attachmentInfo = {};
           me.hostInstance.on("afterRenderMessage", (chatWindowData) => {
             $('.attachment').html('');
@@ -143,6 +151,7 @@ class KoreFileUploaderPlugin {
             $('.sendButton').addClass('disabled');
             _bodyContainer.css('bottom', _footerContainer.outerHeight());
           });
+        }
           return;
       }
       else if (event.keyCode === 27) {

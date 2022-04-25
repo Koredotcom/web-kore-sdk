@@ -25,10 +25,12 @@ chatWindowInstance.installPlugin(new TtsSpeechPlugin());
 
 
 //OPTION #1 with APIKEY
-chatConfig.botOptions.API_KEY_CONFIG.KEY="kx0f5u6hbh5hcaybo8j";
+// chatConfig.botOptions.API_KEY_CONFIG.KEY="kx0f5u6hbh5hcaybo8j";
+// chatWindowInstance.show(chatConfig);
+
+chatConfig.botOptions.koreAPIUrl = "https://qa-bots.kore.ai/api/";//temporary
+chatConfig.botOptions.API_KEY_CONFIG.KEY="57ea0771ed7a49f9b1c47c64bbc59914dbf9a236d09d4272a7526645199219f1st0f";
 chatWindowInstance.show(chatConfig);
-
-
 
 
 

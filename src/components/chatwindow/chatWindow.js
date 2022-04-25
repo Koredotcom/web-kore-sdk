@@ -1289,7 +1289,7 @@ chatWindow.prototype.bindSDKEvents = function () {
   const me = this;
   let chatWindowEvent = {stopFurtherExecution: false};
   me.bot.on('open', (response) => {
-    me.emit(me.EVENTS.ON_WS_OPEN, {messageData:messageData,chatWindowEvent:chatWindowEvent});
+    me.emit(me.EVENTS.ON_WS_OPEN, {messageData:"",chatWindowEvent:chatWindowEvent});
     if(chatWindowEvent.stopFurtherExecution){
       return false;
     }
@@ -1524,9 +1524,6 @@ if(messageText.trim().length){
 
   if(serverMessageObject){
     me.extend(messageToBot,serverMessageObject);
-  }
-  if(serverMessageObject){   //extended msgData for attachements
-    me.extend(msgData.message[0].cInfo,serverMessageObject.message);
   }
   // if (msgObject && msgObject.customdata) {
   //   messageToBot.message.customdata = msgObject.customdata;
