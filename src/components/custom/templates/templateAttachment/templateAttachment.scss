@@ -1,5 +1,5 @@
 .kore-chat-window .botResponseAttachments {
-    color: var(--sdk-chat-widow-primary-font-color);
+    color: var(--sdk-chat-window-bot-bubble-font-clr);
     padding: 2px 5px;
     width: 100%;
     margin: 2px 0;
@@ -23,5 +23,5 @@
 
 .kore-chat-window .uploadedFileName {
     border-top: 1px solid var(--sdk-chat-widow-primary-border-color);
-    color: var(--sdk-chat-widow-primary-font-color);
+    color: var(--sdk-chat-window-bot-bubble-font-clr);
 }

@@ -509,6 +509,7 @@ KoreBot.prototype.onLogIn = function(err, data) {
 		this.cbBotDetails(data,this.options.botInfo);
 		this.RtmClient = new clients.KoreRtmClient({}, this.options);
 		this.emit("rtm_client_initialized");
+    this.emit(WEB_EVENTS.JWT_GRANT_SUCCESS,{jwtgrantsuccess : data});
 		this.RtmClient.start({
 			"botInfo": this.options.botInfo
 		});
@@ -1136,7 +1137,8 @@ module.exports = BaseAPIClient;
 module.exports.WEB = {
   RATE_LIMITED: 'rate_limited',
   WEB_HOOK_READY:'webhook_ready',
-  WEB_HOOK_RECONNECTED:'webhook_reconnected'
+  WEB_HOOK_RECONNECTED:'webhook_reconnected',
+  JWT_GRANT_SUCCESS : 'jwtgrantsuccess'
 };
 
 module.exports.RTM = {

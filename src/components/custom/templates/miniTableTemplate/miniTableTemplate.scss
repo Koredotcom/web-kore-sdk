@@ -1,7 +1,7 @@
 .kore-chat-window .minitableDiv {
     clear: both;
     border-radius: 4px;
-    background-color: var(--sdk-chat-widow-default-white);
+    background-color: var(--sdk-chat-window-bot-bubble-bg);
     margin-top: 10px;
     box-shadow: 0 1px 7px 0 rgba(157, 157, 157, 0.58);
 }
@@ -14,7 +14,7 @@
     text-align: left;
     padding: 10px;
     font-size: 15px;
-    color: var(--sdk-chat-widow-primary-font-color);
+    color: var(--sdk-chat-window-bot-bubble-font-clrr);
     font-weight: bold;
 }
 

@@ -50,7 +50,7 @@
     line-height: 1.54;
     letter-spacing: -0.1px;
     text-align: left;
-    color: var(--sdk-chat-widow-primary-font-color);
+    color: var(--sdk-chat-window-bot-bubble-font-clr);
     max-width: 230px;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -101,7 +101,7 @@
     background-color: rgb(169 169 169 / 20%)  !important;
     border: solid 1px var(--sdk-chat-widow-primary-border-color) !important;
     z-index: 1;
-    color: var(--sdk-chat-widow-primary-font-color) !important;
+    color: var(--sdk-chat-window-bot-bubble-font-clrr) !important;
     font-size: 18px !important;
     padding-top: 8px;
 }

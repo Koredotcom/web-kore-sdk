@@ -51,9 +51,9 @@
 }
 
 .kore-chat-window .listTmplContent .buyBtn {
-    background: var(--sdk-chat-widow-default-white);
+    // background: var(--sdk-chat-widow-default-white);
     border: 0;
-    color: #0079FF!important;
+    color: var(--sdk-chat-window-btn-default-bg) !important;
     cursor: pointer;
     float: right;
     font-weight: bold;
@@ -87,7 +87,7 @@
     font-weight: 600;
     line-height: 1.54;
     letter-spacing: -0.1px;
-    color: var(--sdk-chat-widow-primary-font-color);
+    color: var(--sdk-chat-window-bot-bubble-font-clr);
 }
 
 .kore-chat-window .listTmplContent .viewMoreList {

@@ -15,8 +15,8 @@
 
 .kore-chat-window .buttonTmplContent .buttonTmplContentHeading {
     text-align: left;
-    color: #2A2A2A;
-    background: #F0F0F0;
+    color: var(--sdk-chat-window-bot-bubble-font-clr);
+    background: var(--sdk-chat-window-bot-bubble-bg);
     margin: 0!important;
     padding: 10px;
     border-top-left-radius: 10px;
@@ -26,13 +26,20 @@
 
 
 .kore-chat-window .buttonTmplContent .buttonTmplContentChild {
-    color: #3292FF;
+    color: var(--sdk-chat-window-btn-font-clr);
     border-top: 1px solid var(--sdk-chat-widow-primary-bg-color);
     padding: 10px;
     margin: 0 !important;
     text-align: center;
     cursor: pointer;
+    background-color: var(--sdk-chat-window-btn-default-bg);
 }
+.kore-chat-window .buttonTmplContent .buttonTmplContentChild:hover{
+    color: var(--sdk-chat-window-btn-hover-font-clr);
+    /* border-color: var(--sdk-chat-window-btn-hover-border-clr); */
+    background-color: var(--sdk-chat-window-btn-hover-bg);
+}
+
 [dir="rtl"].kore-chat-window .buttonTmplContent .buttonTmplContentBox{
     float:right;
 }

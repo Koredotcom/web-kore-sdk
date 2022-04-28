@@ -87,7 +87,8 @@ chatConfig = {
     },
     pingPong:{
         interval:30000 //In milli sec, To keep the websocket alive skd send ping message in this interval      
-    }
+    },
+    enableThemes : true //set true to apply the branding configured
 };
 /* 
    allowGoogleSpeech will use Google cloud service api.

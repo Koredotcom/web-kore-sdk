@@ -16,13 +16,13 @@
     border-top-right-radius: 10px;
 }
 .kore-chat-window .quickReplyTemplate .quickReplyTemplContentChild .quickReply {
-    border: 1px solid var(--sdk-chat-widow-primary-blue-color);
+    border: 1px solid var(--sdk-chat-window-btn-border-clr);
     padding: 4px 13px;
     border-radius: 20px;
     display: table;
     white-space: nowrap;
-    color: var(--sdk-chat-widow-primary-blue-color);
-    background: var(--sdk-chat-widow-default-white);
+    color: var(--sdk-chat-window-btn-font-clr);
+    background: var(--sdk-chat-window-btn-default-bg);
     transition: background-color 200ms linear;
     -webkit-transition: background-color 200ms linear;
     -moz-transition: background-color 200ms linear;
@@ -43,8 +43,9 @@
 }
 
 .kore-chat-window .quickReplyTemplate .quickReplyTemplContentChild .quickReply:hover {
-    background: var(--sdk-chat-widow-primary-blue-color);
-    color: var(--sdk-chat-widow-default-white);
+    background: var(--sdk-chat-window-btn-hover-bg);
+    color: var(--sdk-chat-window-btn-hover-font-clr);
+    border: 1px solid var(--sdk-chat-window-btn-hover-border-clr);
 }
 .kore-chat-window .quickReplyTemplate .quickReplyTemplContentChild img {
     max-width: 100%;

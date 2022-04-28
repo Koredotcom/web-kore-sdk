@@ -5,7 +5,8 @@ import KoreHelpers from '../../utils/helpers'
 import EventEmitter from '../../utils/EventEmiter'
 import MessageTemplate from '../custom/templates/messageTemplate/messageTemplate';
 import KRPerfectScrollbar from 'perfect-scrollbar';
-import './../../libs/perfectscroll/css/perfect-scrollbar.min.css'
+import './../../libs/perfectscroll/css/perfect-scrollbar.min.css';
+import './../../libs/emojione.sprites.css';
 import './chatWindow.scss';
 import chatConfig from './config/kore-config'
 
@@ -112,7 +113,16 @@ class chatWindow extends EventEmitter{
      * @property {Object} keyDownEvent 
      * @property {Object} chatWindowEvent
      */
-      ON_KEY_DOWN: 'onKeyDown'
+      ON_KEY_DOWN: 'onKeyDown',
+      /**
+     * jwtGrantSuccess will be triggered on jwt grant success API response
+     *
+     * @event chatWindow#jwtGrantSuccess
+     * @type {object}
+     * @property {Object} jwtgrantsuccess -  jwt grant success API response
+     * @property {Object} chatWindowEvent
+     */
+       JWT_GRANT_SUCCESS : 'jwtGrantSuccess'
   }
 }
 
@@ -1425,6 +1435,11 @@ chatWindow.prototype.bindSDKEvents = function () {
   me.bot.on('webhook_reconnected', (response) => {
     me.onBotReady();
   });
+
+  me.bot.on('jwtgrantsuccess', (response) => {
+    me.config.jwtGrantSuccessInformation = response.jwtgrantsuccess;
+    me.getBrandingInformation(response.jwtgrantsuccess);
+  });
 };
 chatWindow.prototype.bindCustomEvents = function () {
   // hook to add custom events
@@ -2291,6 +2306,126 @@ chatWindow.prototype.focusInputTextbox = function () {
     _chatInput.focus();
   }, 600);
 };
+chatWindow.prototype.getBrandingInformation = function(options){
+  let me=this;
+  if (me.config && me.config.enableThemes) {
+      var brandingAPIUrl = (me.config.botOptions.brandingAPIUrl || '').replace(':appId', me.config.botOptions.botInfo.taskBotId);
+      $.ajax({
+          url: brandingAPIUrl,
+          type: 'get',
+          headers: {
+            'Authorization': "bearer " + options.authorization.accessToken,
+          },
+          dataType: 'json',
+          success: function (data) {  
+                  me.applySDKBranding(data);
+          },
+          error: function (err) {
+              console.log(err);
+          }
+      });
+  }
+
+}
+chatWindow.prototype.applySDKBranding = function (response) {
+  const me = this;
+  if (response && response.activeTheme) {
+      for (var key in response) {
+      switch (key){
+          case 'generalAttributes':
+          if(key  && typeof response[key] === 'object') {
+              for (var property in response[key]){
+                me.applyVariableValue(property,response[key][property],key);
+              }
+          }
+          break;
+          case 'botMessage':
+          if(key  && typeof response[key] === 'object') {
+              for (var property in response[key]){
+                me.applyVariableValue(property,response[key][property],key);
+              }
+          }
+          break;
+          case 'userMessage':
+          if(key  && typeof response[key] === 'object') {
+              for (var property in response[key]){
+                me.applyVariableValue(property,response[key][property],key);
+              }
+          }
+          break;
+          case 'widgetHeader':
+          if(key  && typeof response[key] === 'object') {
+              for (var property in response[key]){
+                me.applyVariableValue(property,response[key][property],key);
+              }
+          }
+          break;
+          case 'widgetFooter':
+          if(key  && typeof response[key] === 'object') {
+              for (var property in response[key]){
+                me.applyVariableValue(property,response[key][property],key);
+              }
+          }
+          break;
+          case 'widgetBody':
+          if(key  && typeof response[key] === 'object') {
+              for (var property in response[key]){
+                  if(property === 'backgroundImage' && response[key] && response[key]['useBackgroundImage']){
+                      $(".kore-chat-body").css("background-image", "url(" + response[key]['backgroundImage'] + ")");
+                  } else {
+                    me.applyVariableValue(property,response[key][property],key);
+                  }
+              }
+          }
+          case 'buttons':
+              if(key  && typeof response[key] === 'object') {
+                  for (var property in response[key]){
+                    me.applyVariableValue(property,response[key][property],key);
+                  }
+              }
+          break;
+          case 'digitalViews':
+              var defaultTheme = 'defaultTheme-kore';
+              if(response && response[key] && response[key].panelTheme){
+                var digitalViewsThemeMapping = {
+                    'theme_one':"defaultTheme-kore",
+                    'theme_two':"darkTheme-kore",
+                    'theme_three':"defaultTheme-kora",
+                    'theme_four':"darkTheme-kora"
+                }
+                if(digitalViewsThemeMapping[response[key].panelTheme]){
+                  defaultTheme = digitalViewsThemeMapping[response[key].panelTheme];
+                  $('.kr-wiz-menu-chat').addClass(defaultTheme);
+                  $('.kr-wiz-menu-chat').removeClass('defaultTheme-kore');
+                  
+                }
+              }
+          default:
+          break;
+      }
+     }
+      $(".kore-chat-window").addClass('customBranding-theme');
+  }
+};
+chatWindow.prototype.applyVariableValue = function(key,value,type){
+  try{
+      var cssPrefix = "--sdk-chat-custom-";
+      var cssVariable = "";
+      cssVariable = cssPrefix + '-' + type +'-' +key;
+       console.log(cssVariable+":",value);
+      if(value === 'square'){
+          value = '12px 12px 2px 12px'
+      }else if(value === 'circle'){
+          value = '20px 20px 20px 20px'
+      }
+      if(cssVariable){
+          document.documentElement.style.setProperty(cssVariable, value);
+      }
+  } catch(e){
+      console.log(e);
+  }
+  
+}
 // chatWindow.prototype.assignValueToInput = function (value) {
 //   const me = this;
 //   const _chatContainer = me.chatEle;
