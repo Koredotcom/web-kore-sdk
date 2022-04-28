@@ -6,7 +6,6 @@ import EventEmitter from '../../utils/EventEmiter'
 import MessageTemplate from '../custom/templates/messageTemplate/messageTemplate';
 import KRPerfectScrollbar from 'perfect-scrollbar';
 import './../../libs/perfectscroll/css/perfect-scrollbar.min.css';
-import './../../libs/emojione.sprites.css';
 import './chatWindow.scss';
 import chatConfig from './config/kore-config'
 
