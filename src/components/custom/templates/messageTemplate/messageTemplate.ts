@@ -8,7 +8,11 @@ class MessageTemplate {
         let me: any = this;
         let $ = me.hostInstance.$;
         let helpersObj = helpers;
+        let extension = '';
         let chatWindowInstance = me.hostInstance;
+        if (msgData.message && msgData.message[0] && msgData.message[0].cInfo && msgData.message[0].cInfo.attachments&& msgData.message[0].cInfo.attachments.length && msgData.message[0].cInfo.attachments[0].fileName) {
+            extension = msgData.message[0].cInfo.attachments[0].fileName.split('.');
+        }
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.formData && msgData.message[0].component.payload.formData.renderType === 'inline') {
             msgData.renderType = 'inline';
             me.messageHtml = chatWindowInstance.renderWebForm(msgData, true);
@@ -18,14 +22,17 @@ class MessageTemplate {
             if (msgData.message[0].component && msgData.message[0].component.payload) {
                 msgData.message[0].cInfo.body = msgData.message[0].component.payload.text || '';
             }
+            
             me.messageHtml = $(me.getTemplateString('message')).tmpl({
                 'msgData': msgData,
-                'helpers': helpersObj.helpers
+                'helpers': helpersObj.helpers,
+                'extension':extension
             });
         } else {
             me.messageHtml = $(me.getTemplateString('message')).tmpl({
                 'msgData': msgData,
-                'helpers': helpersObj.helpers
+                'helpers': helpersObj.helpers,
+                'extension':extension
             });
         }
         return me.messageHtml;
@@ -66,7 +73,7 @@ class MessageTemplate {
                             {{if msgItem.cInfo && msgItem.cInfo.emoji}} \
                                 <span class="emojione emojione-${msgItem.cInfo.emoji[0].code}">${msgItem.cInfo.emoji[0].title}</span> \
                             {{/if}} \
-                            {{if msgItem.cInfo.attachments}} \
+                            {{if msgItem.cInfo.attachments &&  msgData.message[0].cInfo.attachments[0].fileName}} \
                                 <div class="msgCmpt attachments" fileid="${msgItem.cInfo.attachments[0].fileId}"> \
                                     <div class="uploadedFileIcon"> \
                                         {{if msgItem.cInfo.attachments[0].fileType == "image"}} \
