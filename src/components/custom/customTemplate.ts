@@ -16,6 +16,8 @@ import MiniTableChartTemplate from './templates/miniTableTemplate/miniTableTempl
 import CarouselTemplate from './templates/carouselTemplate/carouselTemplate';
 import ListViewTemplate from './templates/listViewTemplate/listViewTemplate';
 import IframeTemplate from './templates/iframeTemplate/iframeTemplate';
+import SystemTemplate from './templates/systemTemplate/systemTemplate';
+
 import './customTemplate.css';
 import '../../../libs/purejscarousel.css';
 //(function($){
@@ -55,6 +57,7 @@ class customTemplate {
 	this.installTemplate(new CarouselTemplate());
 	this.installTemplate(new MiniTableChartTemplate());
 	this.installTemplate(new ListViewTemplate());
+	this.installTemplate(new SystemTemplate());
 
 
 	this.installTemplate(new IframeTemplate());

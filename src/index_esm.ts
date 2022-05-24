@@ -7,6 +7,7 @@ import KorePickersPlugin from './plugins/korePickers';
 import GraphTemplatesPlugin from './plugins/graphTemplatesPlugin';
 import SpeechToTextPlugin from './plugins/textSpeechPlugins/speechToTextPlugin';
 import TtsSpeechPlugin from './plugins/textSpeechPlugins/ttsSpeechPlugin';
+import AgentDesktopPlugin from './plugins/agentDesktop/agentdesktop';
 
 
 import KoreWidgetSDK from '../UI/kore-widgets';
@@ -28,5 +29,6 @@ export {
   KRSearch,
   KRSearchConfig,
   SpeechToTextPlugin,
-  TtsSpeechPlugin
+  TtsSpeechPlugin,
+  AgentDesktopPlugin
 };

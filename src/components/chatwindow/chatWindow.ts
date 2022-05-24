@@ -117,7 +117,7 @@ class chatWindow extends EventEmitter{
      *
      * @event chatWindow#jwtGrantSuccess
      * @type {object}
-     * @property {Object} jwtgrantsuccess -  jwt grant success API response
+     * @property {Object} jwtGrantSuccess -  jwt grant success API response
      * @property {Object} chatWindowEvent
      */
        JWT_GRANT_SUCCESS : 'jwtGrantSuccess'
@@ -1436,6 +1436,7 @@ bindSDKEvents  () {
   me.bot.on('jwtgrantsuccess', (response: { jwtgrantsuccess: any; }) => {
     me.config.jwtGrantSuccessInformation = response.jwtgrantsuccess;
     me.getBrandingInformation(response.jwtgrantsuccess);
+    me.emit(me.EVENTS.JWT_GRANT_SUCCESS, response.jwtgrantsuccess);
   });
 };
 bindCustomEvents  () {

@@ -443,4 +443,3 @@ class AudioPlayer {
         return this.generateTonesSuite(Object.assign({ 'ringingTone': ringingTone, 'busyTone': busyTone }, this.dtmfSuite));
     }
 }
-export default AudioPlayer;

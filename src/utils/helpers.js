@@ -1,11 +1,12 @@
 import $ from '../libs/korejquery'
+import emojione from '../libs/emoji';
 class KoreHelpers{
     static helpers = {
         'nl2br': function (str, runEmojiCheck) {
              //todo:raj
-               //  if (runEmojiCheck) {
-               //      str = window.emojione.shortnameToImage(str);
-               //  }
+                if (runEmojiCheck) {
+                    str = emojione.shortnameToImage(str);
+                }
             str = str.replace(/(?:\r\n|\r|\n)/g, '<br />');
             return str;
         },
