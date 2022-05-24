@@ -303,7 +303,7 @@ class KoreFileUploaderPlugin {
         me.acceptAndUploadFile(_obj, _file, recState);
       },
       error(msg: { responseJSON: { errors: string | any[]; }; }) {
-        me.chatInitialize.config.botOptions._reconnecting = true;
+        me.hostInstance.config.botOptions._reconnecting = true;
         // _self.showError('Failed to upload file.Please try again');
         if (msg.responseJSON && msg.responseJSON.errors && msg.responseJSON.errors.length && msg.responseJSON.errors[0].httpStatus === '401') {
           // setTimeout(() => {
