@@ -33,6 +33,7 @@
   ],
   "dependencies": {
     "@types/jquery": "^3.5.6",
+    "@types/pubsub-js": "^1.8.3",
     "aws-sdk": "^2.1102.0",
     "d3": "^7.1.1",
     "express": "~4.9.0",
