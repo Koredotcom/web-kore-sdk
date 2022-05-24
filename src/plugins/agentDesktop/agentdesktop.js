@@ -733,8 +733,8 @@ class AgentDesktopPlugin  {
                         .then(stream => {
                             this.screenSharingStream = stream;
                             this.screenSharingStream.getVideoTracks()[0].onended = function () {
-                                this.sendVideo(this.callDetails.videoCall);
-                                this.sendControlMessage('screenshare_end');
+                                me.sendVideo(me.callDetails.videoCall);
+                                me.sendControlMessage('screenshare_end');
                             };
                         });
                 }
