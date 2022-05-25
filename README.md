@@ -55,7 +55,7 @@ Kore.ai SDK for web enables you to talk to Kore.ai bots over a web socket. This 
 First, install kore web SDK via the [npm](https://www.npmjs.com/get-npm) package manager:
 
 ```bash
-npm install --save git+ssh://github.com:RajasekharBa-Kore/web-kore-sdk.git#wsdk2
+npm install --save git+https://github.com/RajasekharBa-Kore/web-kore-sdk.git#KIO546/dev-kore-web-sdk-ts
 ```
 
 Get chatWindow and chatConfig objects on your index:
