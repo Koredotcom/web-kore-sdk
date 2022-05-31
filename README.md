@@ -87,7 +87,7 @@ class customTemplateComponent{
   } 
 }
 
-chatWindowInstance.customTemplateObj.installTemplate(new customTemplateComponent());
+chatWindowInstance.templateManager.installTemplate(new customTemplateComponent());
 ```
 Other framework UI components can also be injected with this. Samples for Angular and React are here
 
