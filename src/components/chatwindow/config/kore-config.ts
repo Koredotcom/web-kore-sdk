@@ -3,7 +3,7 @@ var chatConfig:any={};
 
 var botOptions:any = {};
 botOptions.logLevel = 'debug';
-botOptions.koreAPIUrl = "https://qa-bots.kore.ai/api/";
+botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
 botOptions.API_KEY_CONFIG={
     bootstrapURL:botOptions.koreAPIUrl+'platform/websdk',
     KEY:'YOUR_API_KEY'
@@ -17,29 +17,6 @@ botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id
 botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
 botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
 botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
-
-
-
-
-// botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
-// botOptions.userIdentity = 'rajasekhar.balla@kore.com';// Provide users email id here
-// botOptions.botInfo = { name: "SDKBot", "_id": "st-b9889c46-218c-58f7-838f-73ae9203488c" }; // bot name is case sensitive
-// botOptions.clientId = "cs-1e845b00-81ad-5757-a1e7-d0f6fea227e9";
-// botOptions.clientSecret = "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=";
-
-
-// botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
-// botOptions.userIdentity = 'rakesh.manda@kore.com';// Provide users email id here
-// botOptions.botInfo = { name: "sdk2.0", "_id": "st-9d3aeb34-9872-5f55-a88b-19e127f9f519" }; // bot name is case sensitive
-// botOptions.clientId = "cs-2b645542-7d2f-5440-9d3a-db0166af9560";
-// botOptions.clientSecret = "XzJ0zcoF6wY1onfVdvBNsv8uwzpjz4jtkGQJfxq8wVY=" ;
-
-
-// botOptions.JWTUrl ="https://demo.kore.net/users/sts";
-// botOptions.userIdentity = 'rukmini.natti@kore.com';//koreGenerateUUID();// Provide users email id here
-// botOptions.botInfo = {name:"Metlife Mockbot","_id":"st-37f07942-d602-517d-bf99-a78db107e6e7"};// bot name is case sensitive
-// botOptions.clientId = "cs-94ba582c-a464-5324-a082-c17585679ef8"; 
-// botOptions.clientSecret="klGYBUVsDsuFVk7VHkyZHtH4+E/HEAosHT0WDc0KHnY=";
 
 
 // for webhook based communication use following option 
