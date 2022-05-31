@@ -1,9 +1,9 @@
 import * as j$ from '../../libs/korejquery';
 import requireKr from '../../../kore-bot-sdk-client';
-import customTemplate from '../custom/customTemplate';
+import TemplateManager from '../../templatemanager/templateManager';
 import KoreHelpers from '../../utils/helpers';
 import EventEmitter from '../../utils/EventEmiter'
-import MessageTemplate from '../custom/templates/messageTemplate/messageTemplate';
+import MessageTemplate from '../../templatemanager/templates/messageTemplate/messageTemplate';
 import KRPerfectScrollbar from 'perfect-scrollbar';
 import './../../libs/perfectscroll/css/perfect-scrollbar.min.css';
 import './chatWindow.scss';
@@ -148,7 +148,7 @@ init  (config:any) {
   me.helpers=KoreHelpers.helpers;
   //chatInitialize = me//new chatWindow(cfg);
   //me.config.botOptions.test = false;
-  me.customTemplateObj = new customTemplate(me);
+  me.templateManager = new TemplateManager(me);
   me.messageTemplate=new MessageTemplate();
   me.messageTemplate.hostInstance=me;
   me.installCallbackForPlugins();
@@ -181,7 +181,7 @@ show  (config:any) {
     this.addWidgetEvents(cfg);
   }
   //  chatInitialize = me//new chatWindow(cfg);
-  //  chatInitialize.customTemplateObj = new customTemplate(cfg,chatInitialize);
+  //  chatInitialize.templateManager = new customTemplate(cfg,chatInitialize);
 
   // return this;
 };
@@ -404,7 +404,7 @@ renderWebForm  (msgData:any, returnTemplate:any) {
       //   helpers: me.helpers,
       //   link_url: msgData.message[0].component.payload.formData.formLink,
       // });
-      const popupHtml =  me.customTemplateObj.renderMessage(msgData)
+      const popupHtml =  me.templateManager.renderMessage(msgData)
       if (returnTemplate) {
         return popupHtml;
       }
@@ -1691,8 +1691,8 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   let messageHtml = ''; 
   let extension = '';
   msgData.createdOnTimemillis = new Date(msgData.createdOn).valueOf();
-  me.customTemplateObj.helpers = me.helpers;
-  me.customTemplateObj.extension = extension;
+  me.templateManager.helpers = me.helpers;
+  me.templateManager.extension = extension;
   //me.graphLibGlob = me.config.graphLib || 'd3';
   if (msgData.type === 'bot_response') {
     me.waiting_for_message = false;
@@ -1711,7 +1711,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
     me.waiting_for_message = false;
   }
 
-  messageHtml = me.customTemplateObj.renderMessage(msgData);
+  messageHtml = me.templateManager.renderMessage(msgData);
   if (!messageHtml && msgData && msgData.message && msgData.message[0]) {
     // if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'button') {
     //   messageHtml = $(me.getChatTemplate('templatebutton')).tmpl({

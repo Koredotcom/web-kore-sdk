@@ -154,7 +154,7 @@ chatWindow.prototype.init = function () {
   me.helpers=KoreHelpers.helpers;
   //chatInitialize = me//new chatWindow(cfg);
   //me.config.botOptions.test = false;
-  me.customTemplateObj = new customTemplate(me);
+  me.templateManager = new customTemplate(me);
   me.messageTemplate=new MessageTemplate();
   me.messageTemplate.hostInstance=me;
   me.installCallbackForPlugins();
@@ -183,7 +183,7 @@ chatWindow.prototype.show = function (config) {
     this.addWidgetEvents(cfg);
   }
   //  chatInitialize = me//new chatWindow(cfg);
-  //  chatInitialize.customTemplateObj = new customTemplate(cfg,chatInitialize);
+  //  chatInitialize.templateManager = new customTemplate(cfg,chatInitialize);
 
   // return this;
 };
@@ -426,7 +426,7 @@ chatWindow.prototype.renderWebForm = function (msgData, returnTemplate) {
       //   helpers: me.helpers,
       //   link_url: msgData.message[0].component.payload.formData.formLink,
       // });
-      const popupHtml =  me.customTemplateObj.renderMessage(msgData)
+      const popupHtml =  me.templateManager.renderMessage(msgData)
       if (returnTemplate) {
         return popupHtml;
       }
@@ -1705,8 +1705,8 @@ chatWindow.prototype.renderMessage = function (msgData) {
   let messageHtml = ''; 
   let extension = '';
   msgData.createdOnTimemillis = new Date(msgData.createdOn).valueOf();
-  me.customTemplateObj.helpers = me.helpers;
-  me.customTemplateObj.extension = extension;
+  me.templateManager.helpers = me.helpers;
+  me.templateManager.extension = extension;
   //me.graphLibGlob = me.config.graphLib || 'd3';
   if (msgData.type === 'bot_response') {
     me.waiting_for_message = false;
@@ -1725,7 +1725,7 @@ chatWindow.prototype.renderMessage = function (msgData) {
     me.waiting_for_message = false;
   }
 
-  messageHtml = me.customTemplateObj.renderMessage(msgData);
+  messageHtml = me.templateManager.renderMessage(msgData);
   if (!messageHtml &amp;&amp; msgData &amp;&amp; msgData.message &amp;&amp; msgData.message[0]) {
     // if (msgData.message[0] &amp;&amp; msgData.message[0].component &amp;&amp; msgData.message[0].component.payload &amp;&amp; msgData.message[0].component.payload.template_type == 'button') {
     //   messageHtml = $(me.getChatTemplate('templatebutton')).tmpl({

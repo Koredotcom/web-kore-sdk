@@ -1,0 +1,129 @@
+.kore-chat-window .tablechart .tablechartDiv,
+.kore-chat-window .largePreviewContent .tablehartDiv {
+    clear: both;
+    left: -30px;
+    position: relative;
+    top: 18px;
+    margin: 0px -22px 13px 0px;
+    border-radius: 4px;
+    background-color: var(--sdk-chat-widow-default-white);
+    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+}
+
+.kore-chat-window .tablechartDiv table {
+    border-collapse: collapse;
+}
+
+.kore-chat-window .tablechartDiv tr {
+    border-bottom: 1px solid #dfdfdf;
+}
+
+.kore-chat-window .tablechartDiv tr.headerTitle {
+    border-bottom: solid 1px #99ed9e;
+}
+
+.kore-chat-window .tablechart .tablechartDiv tr.bottomThickBorder,
+.kore-chat-window .largePreviewContent .tablechartDiv tr.bottomThickBorder {
+    border-bottom: 3px solid #d6d6d6;
+}
+
+.kore-chat-window .tablechart .profile-photo {
+    top: 30px !important;
+}
+
+.kore-chat-window .kore-chat-window.expanded .tablechart .profile-photo {
+    top: 30px !important;
+}
+
+.kore-chat-window .tablechart .tablechartDiv table,
+.kore-chat-window .largePreviewContent .tablechartDiv table {
+    width: 100%;
+}
+.kore-chat-window .tablechart .tablechartDiv table td,
+.kore-chat-window .tablechart .tablechartDiv table th {
+    padding: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 200px !important;
+    font-size: 14px;
+    color: var(--sdk-chat-window-bot-bubble-font-clrr);
+    text-align: left;
+}
+
+.kore-chat-window .largePreviewContent .tablechartDiv table td,
+.kore-chat-window .largePreviewContent .tablechartDiv table th {
+    padding: 17px;
+    /* white-space: nowrap; */
+    font-size: 14px;
+    color: var(--sdk-chat-window-bot-bubble-font-clrr);
+    text-align: left;
+    max-width: 200px;
+}
+
+.kore-chat-window .tablechart tr:last-child,
+.kore-chat-window .largePreviewContent tr:last-child {
+    border: none;
+}
+.kore-chat-window .messageBubble.tableChart {
+    margin-bottom: 10px;
+}
+
+.kore-chat-window #myPreviewModal .tablechartDiv .hide {
+    display: table-row;
+}
+
+.kore-chat-window #myPreviewModal .tablechartDiv .showMore {
+    display: none;
+}
+.kore-chat-window .largePreviewContent .tablechartDiv {
+    display: block !important;
+    background: var(--sdk-chat-widow-default-white);
+    padding: 10px;
+    border: 30px solid var(--sdk-chat-widow-primary-bg-color);
+    border-top: 52px solid var(--sdk-chat-widow-primary-bg-color);
+}
+.kore-chat-window .messageBubble.tableChart {
+    margin-bottom: 10px;
+}
+
+[dir="rtl"].kore-chat-window .tablechart .tablechartDiv{
+    right: 20px;
+    width: 100%;
+}
+
+
+/* Accordian Table css starts here */
+.kore-chat-window .accordionTable {
+    clear: both;
+    padding: 14px;
+    margin-left: -37px;
+    border-radius: 4px;
+    background-color: var(--sdk-chat-widow-default-white);
+    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+}
+
+.kore-chat-window .accordionTable .tableBtn {
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #b3bac8;
+    margin-top: 10px;
+}
+
+.kore-chat-window .accordionTable .tableBtn:before {
+    content: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iOXB4IiBoZWlnaHQ9IjE2cHgiIHZpZXdCb3g9IjAgMCA5IDE2IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPCEtLSBHZW5lcmF0b3I6IFNrZXRjaCA1Mi4zICg2NzI5NykgLSBodHRwOi8vd3d3LmJvaGVtaWFuY29kaW5nLmNvbS9za2V0Y2ggLS0+CiAgICA8dGl0bGU+Y2FyZXRSaWdodEdyYXk8L3RpdGxlPgogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0iaWNvbnMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xOTkuMDAwMDAwLCAtMjI2LjAwMDAwMCkiIGZpbGw9IiM4QTk1OUYiPgogICAgICAgICAgICA8cGF0aCBkPSJNMjA3LjU2NDk4LDIzMy4xODEwNTIgQzIwNy43NTk3NTYsMjMzLjM3NTgyOCAyMDcuODU3MTQzLDIzMy42MDY0OCAyMDcuODU3MTQzLDIzMy44NzMwMTYgQzIwNy44NTcxNDMsMjM0LjEzOTU1MiAyMDcuNzU5NzU2LDIzNC4zNzAyMDQgMjA3LjU2NDk4LDIzNC41NjQ5OCBMMjAwLjY3NjA5MSwyNDEuNDUzODY5IEMyMDAuNDgxMzE1LDI0MS42NDg2NDUgMjAwLjI1MDY2MywyNDEuNzQ2MDMyIDE5OS45ODQxMjcsMjQxLjc0NjAzMiBDMTk5LjcxNzU5MSwyNDEuNzQ2MDMyIDE5OS40ODY5MzksMjQxLjY0ODY0NSAxOTkuMjkyMTYzLDI0MS40NTM4NjkgQzE5OS4wOTczODcsMjQxLjI1OTA5MyAxOTksMjQxLjAyODQ0MSAxOTksMjQwLjc2MTkwNSBMMTk5LDIyNi45ODQxMjcgQzE5OSwyMjYuNzE3NTkxIDE5OS4wOTczODcsMjI2LjQ4NjkzOSAxOTkuMjkyMTYzLDIyNi4yOTIxNjMgQzE5OS40ODY5MzksMjI2LjA5NzM4NyAxOTkuNzE3NTkxLDIyNiAxOTkuOTg0MTI3LDIyNiBDMjAwLjI1MDY2MywyMjYgMjAwLjQ4MTMxNSwyMjYuMDk3Mzg3IDIwMC42NzYwOTEsMjI2LjI5MjE2MyBMMjA3LjU2NDk4LDIzMy4xODEwNTIgWiIgaWQ9ImNhcmV0UmlnaHRHcmF5Ij48L3BhdGg+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=');
+}
+
+.kore-chat-window .accordionTable .showMore {
+    font-size: 14px;
+    line-height: 0.86;
+    letter-spacing: -0.1px;
+    text-align: center;
+    color: #5f6bf7;
+    margin-top: 16px;
+    cursor: pointer;
+}
+
+/*Accordion table css ends here */

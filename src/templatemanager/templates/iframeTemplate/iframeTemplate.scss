@@ -1,0 +1,31 @@
+.inlineIframeContainer .iframeBubble {
+    border-radius: 10px;
+    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+}
+.chatBodyModal .failedIframe {
+    padding: 28%;
+    text-align: center;
+    height: 100%;
+    z-index: 999;
+    background: white;
+}
+.inlineIframeContainer .iframeBubble {
+    border-radius: 10px;
+    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+}
+.uiformComponent {
+    position: relative;
+    min-height: 350px;
+}
+.uiformComponent #inlineIframeModal {
+    width: 100%;
+    height: 350px;
+    background: none;
+    border: none;
+}
+.uiformComponent #nlineIframeModal .closeForm {
+    display: none !important;
+}
+.uiformComponent #nlineIframeModal .closeForm {
+    display: none !important;
+}

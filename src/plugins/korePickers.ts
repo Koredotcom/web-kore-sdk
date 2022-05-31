@@ -1,8 +1,8 @@
-import DatePickerTemplate from '../components/custom/templates/datePicker/datePicker';
-import DateRangePickerTemplate from '../components/custom/templates/dateRangePicker/dateRangePicker';
-import ClockPickerTemplate from '../components/custom/templates/clockPicker/clockPicker';
-import RadioOptionPickerTemplate from '../components/custom/templates/radioOptionPicker/radioOptionPicker';
-import TaskPickerTemplate from '../components/custom/templates/taskPickerTemplate/taskPickerTemplate';
+import DatePickerTemplate from '../templatemanager/templates/datePicker/datePicker';
+import DateRangePickerTemplate from '../templatemanager/templates/dateRangePicker/dateRangePicker';
+import ClockPickerTemplate from '../templatemanager/templates/clockPicker/clockPicker';
+import RadioOptionPickerTemplate from '../templatemanager/templates/radioOptionPicker/radioOptionPicker';
+import TaskPickerTemplate from '../templatemanager/templates/taskPickerTemplate/taskPickerTemplate';
 class KorePickersPlugin {
     name = 'KorePickersPlugin';
     config = {
@@ -136,7 +136,7 @@ class KorePickersPlugin {
     }
     installPickerTemplates(){
         let me=this;
-        let templateManager = me.hostInstance.customTemplateObj;
+        let templateManager = me.hostInstance.templateManager;
         templateManager.installTemplate(new DatePickerTemplate());
 		templateManager.installTemplate(new DateRangePickerTemplate());
 		templateManager.installTemplate(new ClockPickerTemplate());

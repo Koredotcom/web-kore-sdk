@@ -2,7 +2,7 @@
 import PerfectScrollbar from "perfect-scrollbar";
 import requireKr from "../../../kore-bot-sdk-client";
 import korejquery from "../../libs/korejquery";
-import customTemplate from '../custom/customTemplate';
+import TemplateManager from '../../templatemanager/templateManager';
 import searchTemplate from './searchTemplate'
 import addPolyFils from '../../utils/kore-polyfills';
 
@@ -10619,7 +10619,7 @@ class FindlySDK {
         defaultBotMessage.message[0].component = messageData;
       }
       defaultBotMessage.messageId = koreGenerateUUID();
-      var messageHtml = _self.customTemplateObj.renderMessage(defaultBotMessage);
+      var messageHtml = _self.templateManager.renderMessage(defaultBotMessage);
       if (!messageHtml || !messageHtml.length) {
         if (messageData && messageData.type && messageData.type === "template") {
           if (
@@ -11627,9 +11627,9 @@ class FindlySDK {
 
   initializeCustomTemplate(findlyConfig: any) {
     var _self:any = this;
-    _self.customTemplateObj = new customTemplate(_self);
-    _self.customTemplateObj.helpers = helpers;
-    _self.customTemplateObj.config = findlyConfig;
+    _self.templateManager = new TemplateManager(_self);
+    _self.templateManager.helpers = helpers;
+    _self.templateManager.config = findlyConfig;
     _self.searchTemplateObj = new searchTemplate(_self);
     _self.initializeCustomTemplateEvent();
   };

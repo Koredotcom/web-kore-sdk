@@ -1,0 +1,185 @@
+.kore-chat-window .kore-chat-body .dummy.listTableContainerDiv{
+    pointer-events: none;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv{
+    background-color: var(--sdk-chat-widow-default-white);
+    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    border-radius: 10px;  
+}
+
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainerDivRepet{
+    width: 100%;
+}
+
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableHeader .listTableHeaderTitle{
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--sdk-chat-widow-primary-font-color);
+    width: 100%;
+    display: block;
+    float: left;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableHeader .listtableHeaderFilters{
+    width: 120px;
+    display: block;
+    float: left;
+    text-align: right;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableHeader .listtableHeaderFilters .filterIcon{
+    width: 15px;
+    cursor: pointer;
+    display: inline-block;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableHeader .listtableHeaderFilters .sortingIcon{
+    width: 15px;
+    cursor: pointer;
+    display: inline-block;
+    margin-left: 20px;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer{
+    padding: 0 15px;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv{
+    border-bottom: 1px solid var(--sdk-chat-widow-primary-border-color);
+     padding: 15px 0;
+     display: inline-block;
+     width: 100%;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .titleActions .listViewItemValue{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv:nth-last-child(1){
+    border-bottom: 0;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails{
+    float: left;
+    width: 100%;
+    vertical-align: top;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsTitle{
+    /* margin: 0 0 15px 0; */
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--sdk-chat-widow-primary-font-color);
+    width: 58%;
+    display: inline-block;  
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainerDivRepet .listTableDetails .listTableHeader .listTableHeaderDesc{  
+    display: inline-block;
+    vertical-align: top;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc{
+    margin: 0 0 15px 0;
+    font-size: 14px;
+    font-weight: bold;  
+    padding:10px;
+    color: var(--sdk-chat-widow-primary-font-color);
+    border-bottom: 1px solid var(--sdk-chat-window-table-border-color);
+    display: table;
+    width: 100%;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.pointerStyle:hover{
+    cursor:pointer;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.largeImg{    
+    margin-bottom: 10px;
+    padding: 10px;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.mediumImg{   
+    margin-bottom: 10px;
+    padding: 10px;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.smallImg{  
+    margin-bottom: 10px;
+     padding: 10px;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listViewItemValue.actionLink.actiontitle{
+    text-decoration: underline;
+    cursor: pointer;
+    display:inline-block;
+}
+
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc:nth-last-child(1){
+    margin-bottom: 0;
+    border-bottom: 0;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .listTableDetailsDescSub {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 0 5px 0 10px;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .titleActions{
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .listTableDetailsDescSub .listTableDetailsDescName{
+    font-size: 12px;
+    font-weight: normal;
+    /* color: #26344a; */
+    margin: 0
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .listTableDetailsDescSub .listTableDetailsDescValue{
+    font-size: 16px;
+    font-weight: 500;
+    /* color: #26344a; */
+    padding-top: 5px;
+    margin: 0;
+}
+
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.largeImg .listTableBigImgConytainer{
+    width: 40px;
+    height: 40px;
+    display: table-cell;
+    vertical-align: middle;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.mediumImg .listTableBigImgConytainer{
+    width: 30px;
+    height: 30px;
+    display: table-cell;
+    vertical-align: middle;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc.smallImg .listTableBigImgConytainer{
+    width: 20px;
+    height: 20px;    
+    display: table-cell;
+    vertical-align: middle;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainer .listTableDetailsBorderDiv .listTableDetails .listTableDetailsDesc .listTableBigImgConytainer img{ 
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainerDivRepet .seeMoreFooter{
+    padding: 0 15px;
+    text-align: center;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainerDivRepet .seeMoreFooter .seeMoreLink{
+    cursor: pointer;
+    color: var(--sdk-chat-widow-primary-blue-color);
+    font-size: 14px;
+    font-weight: normal;  
+    border-top: 1px solid var(--sdk-chat-widow-primary-border-color);
+    padding: 15px 0;
+    display: block;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainerDivRepet .listTableDetails .listTableHeader{
+    margin: 0 0 15px 0;
+    font-size: 14px;
+    font-weight: bold;    
+    padding:10px;
+    color: var(--sdk-chat-widow-primary-font-color);
+    display: block;
+}
+
+
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainerDivRepet .listTableDetails .listTableHeader .listTableHeaderDesc .headerDesc{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.kore-chat-window .kore-chat-body .listTableContainerDiv .listTableContainerDivRepet .listTableDetails .listTableDetailsDescName.pointer:hover{
+   cursor: pointer !important;
+}

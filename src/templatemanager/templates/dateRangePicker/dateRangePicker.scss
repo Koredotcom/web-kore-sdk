@@ -1,0 +1,228 @@
+   
+    /*DateRangePicker CSS start*/
+    .kore-chat-window .sdkFooterIcon.rangeCalender .sdkRangeCalender.calenderBtn .Rangecalender{
+        background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjJweCIgaGVpZ2h0PSIyMnB4IiB2aWV3Qm94PSIwIDAgMjIgMjIiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUzLjIgKDcyNjQzKSAtIGh0dHBzOi8vc2tldGNoYXBwLmNvbSAtLT4KICAgIDx0aXRsZT5JY29uPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGcgaWQ9IlR3by1Ub25lLUljb25zIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjQ5LjAwMDAwMCwgLTU2LjAwMDAwMCkiIGlkPSJDYWxlbmRhciI+CiAgICAgICAgICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDIyMC4wMDAwMDAsIDQwLjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPGcgaWQ9Ikljb24iIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI5LjAwMDAwMCwgMTYuMDAwMDAwKSI+CiAgICAgICAgICAgICAgICAgICAgPHBhdGggZD0iTTAuNSw4LjUgTDAuNSw0IEMwLjUsMy43MjQgMC43MjQsMy41IDEsMy41IEwyMSwzLjUgQzIxLjI3NiwzLjUgMjEuNSwzLjcyNCAyMS41LDQgTDIxLjUsOC41IEwwLjUsOC41IFogTTUsMTcuNSBDNC43MjQsMTcuNSA0LjUsMTcuMjc2IDQuNSwxNyBMNC41LDE0IEM0LjUsMTMuNzI0IDQuNzI0LDEzLjUgNSwxMy41IEw4LDEzLjUgQzguMjc2LDEzLjUgOC41LDEzLjcyNCA4LjUsMTQgTDguNSwxNyBDOC41LDE3LjI3NiA4LjI3NiwxNy41IDgsMTcuNSBMNSwxNy41IFoiIGlkPSJGaWxsIiBmaWxsPSIjREFGM0ZGIj48L3BhdGg+CiAgICAgICAgICAgICAgICAgICAgPHBhdGggZD0iTTIxLDMgTDEsMyBDMC40NDgsMyAwLDMuNDQ4IDAsNCBMMCwyMSBDMCwyMS41NTIgMC40NDgsMjIgMSwyMiBMMjEsMjIgQzIxLjU1MiwyMiAyMiwyMS41NTIgMjIsMjEgTDIyLDQgQzIyLDMuNDQ4IDIxLjU1MiwzIDIxLDMgTDIxLDMgWiBNMSwyMSBMMjEsMjEgTDIxLDQgTDEsNCBMMSwyMSBaIE0xNSwzIEwxNSwwLjUgQzE1LDAuMjI1IDE1LjIyNSwwIDE1LjUsMCBDMTUuNzc1LDAgMTYsMC4yMjUgMTYsMC41IEwxNiwzIE02LDMgTDYsMC41IEM2LDAuMjI1IDYuMjI1LDAgNi41LDAgQzYuNzc1LDAgNywwLjIyNSA3LDAuNSBMNywzIEw2LDMgWiBNOCwxMyBMNSwxMyBDNC40NDgsMTMgNCwxMy40NDggNCwxNCBMNCwxNyBDNCwxNy41NTIgNC40NDgsMTggNSwxOCBMOCwxOCBDOC41NTIsMTggOSwxNy41NTIgOSwxNyBMOSwxNCBDOSwxMy40NDggOC41NTIsMTMgOCwxMyBMOCwxMyBaIE01LDE3IEw4LDE3IEw4LDE0IEw1LDE0IEw1LDE3IFogTTEsOSBMMjEsOSBMMjEsOCBMMSw4IEwxLDkgWiIgaWQ9Ik91dGxpbmUiIGZpbGw9IiMxRkI2RkYiPjwvcGF0aD4KICAgICAgICAgICAgICAgIDwvZz4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+');
+        background-size: 100% 100%;
+        width: 21px;
+        height: 21px;
+        margin: -4px;
+        display: block;
+    }
+    .dateRangePickerContainer .sdkFooterIcon.rangeCalenderBtn{
+        opacity:0;
+    }
+    .dateRangePickerContainer .close-button{
+        cursor: pointer;
+        color: #AAAAAA;
+        background: none;
+        border: none;
+        opacity: 1;
+        outline: none;
+        font-size: 30px;
+        float:right;
+        line-height: inherit;
+        margin-right: 30px;
+        margin-top:5px;
+        padding: 0 6px;
+    }
+    .dateRangePickerContainer{
+        position: relative;
+        padding-bottom: 57px;
+    }
+    .dateRangePickerContainer .headerCalendar{
+        height:56px;
+        padding:20px;
+    }
+    .dateRangePickerContainer table thead tr:nth-child(2) {
+        color: #ccc;
+    }
+    .dateRangePickerContainer .headerCalendar .choose{
+        font-size: 20px;
+        font-weight: bold;
+        color: #000000;
+    }
+    .dateRangePickerContainer .headerCalendar .close-button{
+        margin: 0;
+        padding-top: 8px;
+        cursor: pointer;
+    }
+    .dateRangePickerContainer .headerCalendar{
+        height:56px;
+        padding:16px 20px;
+    }
+    .dateRangePickerContainer .showDatevalues{
+        height: 84px;
+        width: 100%;
+        background-color: #f2f3f5;
+        padding: 15px;
+        display: table;
+    }
+    .dateRangePickerContainer .showDatevalues .showStartdate, .kore-chat-window .kore-action-sheet .dateRangePickerContainer .showDatevalues .showEnddate{
+        display: table-cell;
+        width:50%;
+        text-align:center;
+        position: relative;
+    }
+    .dateRangePickerContainer .showDatevalues .showStartdate::after{
+        content: '-';
+        color:#000;
+        position: absolute;
+        right: -5px;
+        top: 25%;
+        font-size: 30px;
+    }
+    .dateRangePickerContainer .showDatevalues .showStartdate .showStartYear{
+        font-size: 14px;
+        font-weight: 500;
+        color: #677180;
+        margin-right:79px;
+    }
+    .dateRangePickerContainer .showDatevalues .showStartdate .showStartMonth{
+        font-size: 24px;
+        font-weight: bold;
+        color: #000000;
+    }
+        
+    .dateRangePickerContainer .showDatevalues .showEnddate .showEndYear{
+        font-size: 14px;
+        font-weight: 500;
+        color: #677180;
+        margin-right:79px;
+    }
+    .dateRangePickerContainer .showDatevalues .showEnddate .showEndMonth{
+        font-size: 24px;
+        font-weight: bold;
+        color: #000000;
+    }
+    .dateRangePickerContainer .daterangepicker{
+        width: 288px !important;
+        position: relative;
+        top: auto !important;
+        left: auto !important;
+        margin: 0 auto;
+        border: 0;
+        background: transparent;
+        /* margin-top: 32px; */
+    }
+    .dateRangePickerContainer .daterangepicker.drop-up:after{
+        display: none;
+    }
+    .dateRangePickerContainer .daterangepicker.drop-up:before{
+        display: none;
+    }
+   .hide .dateRangePickerContainer .confirmBTN{
+        opacity: 0 ;
+    }
+    .dateRangePickerContainer .confirmBTN{
+        position: absolute;
+        height: 54px;
+        z-index: 100;
+        background: #009dab;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 500;
+        color: #fff;
+        opacity: 1;
+        line-height: 54px;
+        transition: opacity 1.5s ease-in-out;
+        -moz-transition: opacity 1.5s ease-in-out;
+        -webkit-transition: opacity 1.5s ease-in-out;
+    }
+    .darkTheme.kore-chat-window .kore-action-sheet .dateRangePickerContainer .confirmBTN{
+        background: #0047CC;
+    }
+    .dateRangePickerContainer .daterangepicker .drp-calendar.right{
+        padding: 8px 8px 0 8px;
+    }
+    .dateRangePickerContainer .daterangepicker .drp-buttons{
+        display: none;
+    }
+    .dateRangePickerContainer .applyBtn{
+        outline: none;
+        height: 54px;
+        display: none;
+    }
+    .dateRangePickerContainer .daterangepicker td.active, .kore-chat-window .kore-action-sheet .dateRangePickerContainer .daterangepicker td.active:hover{
+        background-color: #e94848;
+    }
+    .dateRangePickerContainer .daterangepicker .calendar-table th, .kore-chat-window .kore-action-sheet .dateRangePickerContainer .daterangepicker .calendar-table td{
+        border-radius: 50%;
+        height: 32px;
+    }
+    .dateRangePickerContainer .daterangepicker .drp-calendar.right {
+        position: absolute !important;
+        right: 35px !important;
+        top: 0 !important;
+        margin-top:-8px !important;
+    }
+    .dateRangePickerContainer .daterangepicker .drp-calendar.right tbody {
+        display: none !important;
+    }
+    .dateRangePickerContainer .daterangepicker .drp-calendar.right thead > tr:nth-child(2) {
+        display: none !important;
+    }
+    .dateRangePickerContainer .daterangepicker .drp-calendar.right th.month {
+        display: none !important;
+    }
+    .dateRangePickerContainer .daterangepicker .drp-calendar.right thead th.prev.available{
+        position: absolute;
+        left: -217px;
+        top: 17px;
+    }
+    .dateRangePickerContainer .daterangepicker .drp-calendar.left {
+        padding:0px !important;
+        margin-left: 15px !important;
+    }
+    .dateRangePickerContainer .date-picker-wrapper{
+        font-size: 15px !important;
+        display:flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .dateRangePickerContainer .date-picker-wrapper .month-wrapper table th{
+        font-size:12px;
+    }
+    .dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.tmp.first-date-selected{
+        background-color: #e94848!important;
+    }
+    .dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.tmp.checked.last-date-selected{
+        background-color: #e94848!important;
+    }
+    .dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.first-date-selected{
+        background-color: #e94848!important;
+    }
+    .dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.last-date-selected{
+        background-color: #e94848!important;
+    }
+    .dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.real-today{
+        background-color: #cdecfa;
+        border-radius: 50%!important;
+        height: 24px!important;
+    }
+    .dateRangePickerContainer .date-picker-wrapper .month-wrapper table .day.toMonth.valid{
+        border-radius: 50%!important;
+        height: 23px!important;
+        width: 26px!important;
+    }
+    .dateRangePickerContainer .date-picker-wrapper .month-wrapper{
+        text-align: center;
+        width: 225px;
+        height: 221px;
+    }
+    .dateRangePickerContainer .date-picker-wrapper .month-wrapper table {
+        width: 100%!important;
+        /* display: table!important; */
+        height: 100%!important;
+    }
+    .dateRangePickerContainer .date-picker-wrapper table .caption .next, .date-picker-wrapper table .caption .prev {
+        border-radius: 50%!important;
+        height: 37px!important;
+        width: 35px!important;
+        font-size: 16px!important;
+    }
+        
+        /*DateRangePicker CSS end*/
+        

@@ -1,6 +1,6 @@
-import LineChartTemplate from '../components/custom/templates/lineChartTemplate/lineChartTemplate';
-import BarChartTemplate from '../components/custom/templates/barChartTemplate/barChartTemplate';
-import PieChartTemplate from '../components/custom/templates/pieChartTemplate/pieChartTemplate';
+import LineChartTemplate from '../templatemanager/templates/lineChartTemplate/lineChartTemplate';
+import BarChartTemplate from '../templatemanager/templates/barChartTemplate/barChartTemplate';
+import PieChartTemplate from '../templatemanager/templates/pieChartTemplate/pieChartTemplate';
 
 class GraphTemplatesPlugin {
     name = 'GraphTemplatesPlugin';
@@ -28,7 +28,7 @@ class GraphTemplatesPlugin {
     }
     installPickerTemplates(){
         let me=this;
-        let templateManager = me.hostInstance.customTemplateObj;
+        let templateManager = me.hostInstance.templateManager;
         templateManager.installTemplate(new LineChartTemplate());
 		templateManager.installTemplate(new BarChartTemplate());
 		templateManager.installTemplate(new PieChartTemplate());
