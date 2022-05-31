@@ -72,3 +72,36 @@ chatWindowInstance.show(chatConfig);
 
 ```
 
+## 💡 Custom Templates
+
+In addition to the kore message templates, new custom templates can be intstalled into kore chat window with *installTemplate* method
+
+```bash
+class customTemplateComponent{
+  renderMessage(msgData){
+      if(msgData?.message[0]?.component?.payload?.template_type==='custom_stock_template'){
+          return '<h2>My Template HTML</h2>';      
+      }else{
+          return false;
+      }
+  } 
+}
+
+chatWindowInstance.customTemplateObj.installTemplate(new customTemplateComponent());
+```
+Other framework UI components can also be injected with this. Samples for Angular and React are here
+
+## 💡 Plugins
+
+Kore's chatwindow functionlity can be extended with the help of plugins.Newly created plugins can be installed with *installPlugin* method
+
+```bash
+class KoreCustomPlugin{
+  
+}
+
+chatWindowInstance.installPlugin(new KoreCustomPlugin());
+```
+Kore offered plugins are listed here
+
+
