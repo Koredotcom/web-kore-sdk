@@ -1,8 +1,15 @@
-var KoreGraphAdapter = (function($) {
+import * as d3 from "d3";
+import korejquery from '../src/libs/korejquery';
+import { GoogleCharts} from 'google-charts';
+import chatConfig from '../src/components/chatwindow/config/kore-config';
+
+var KoreGraphAdapter = (function($,d3) {
+    const chartColors = ['#75b0fe', '#f78083', '#99ed9e', '#fde296', '#26344a', '#5f6bf7', '#b3bac8', '#99a1fd', '#9cebf9', '#f7c7f4'];
+    const available_charts = [];
     function drawD3Pie(msgData, dimens, selection, scaleLegend) {
         var payload=msgData;//msgData.message[0].component.payload
         var widthDivision=3;
-        legendCenterOffset=0;
+        var legendCenterOffset=0;
         if(msgData.message){
             payload=msgData.message[0].component.payload;
         }else{
@@ -133,7 +140,7 @@ var KoreGraphAdapter = (function($) {
 
         //MOUSE HOVER ENABLE
         // mouse event handlers are attached to path so they need to come after its definition
-        path.on('mouseover', function(d) {  // when mouse enters div      
+        path.on('mouseover', function(e,d) {  // when mouse enters div      
             var total = d3.sum(dataset.map(function(d) { // calculate the total number of tickets in the dataset         
                 return (d.enabled) ? d.count : 0; // checking to see if the entry is enabled. if it isn't, we return 0 and cause other percentages to increase                                      
             }));                                                      
@@ -164,9 +171,9 @@ var KoreGraphAdapter = (function($) {
             tooltip.style('display', 'none'); // hide tooltip for that element
         });
 
-        path.on('mousemove', function(d) { // when mouse moves                  
-        tooltip.style('top', (d3.event.layerY + 10) + 'px') // always 10px below the cursor
-        .style('left', (d3.event.layerX + 10) + 'px'); // always 10px to the right of the mouse
+        path.on('mousemove', function(e,d) { // when mouse moves                  
+        tooltip.style('top', (e.layerY + 10) + 'px') // always 10px below the cursor
+        .style('left', (e.layerX + 10) + 'px'); // always 10px to the right of the mouse
         });
 
        svg.append("g")
@@ -250,11 +257,11 @@ var KoreGraphAdapter = (function($) {
                     return d; 
                 }
             })
-            .on("mouseover", function(d) {  
+            .on("mouseover", function(e,d) {  
                 if(d.length > 15) {
                     tt_legend.attr('class','only-show tooltip-legend');      
-                    tt_legend.html(d).style("left", (d3.event.pageX - 1090) + "px")     
-                    .style("top", (d3.event.pageY - 164) + "px");
+                    tt_legend.html(d).style("left", (e.pageX - 1090) + "px")     
+                    .style("top", (e.pageY - 164) + "px");
                 }   
             })                  
             .on("mouseout", function(d) {       
@@ -337,11 +344,11 @@ var KoreGraphAdapter = (function($) {
                 }
             })
             // .attr('fill', '#8a959f')
-            .on("mouseover", function(d) {  
+            .on("mouseover", function(e,d) {  
                 if(d.length > 15) {
                     tt_legend.attr('class','only-show tooltip-legend');      
-                    tt_legend.html(d).style("left", (d3.event.pageX - 1090) + "px")     
-                    .style("top", (d3.event.pageY - 164) + "px");
+                    tt_legend.html(d).style("left", (e.pageX - 1090) + "px")     
+                    .style("top", (e.pageY - 164) + "px");
                 }   
             })                  
             .on("mouseout", function(d) {       
@@ -617,9 +624,9 @@ var KoreGraphAdapter = (function($) {
             });
         }
     else {  */
-            g.on('mousemove', function(d) { // when mouse moves                  
-            tooltip.style('top', (d3.event.layerY + 10) + 'px') // always 10px below the cursor
-            .style('left', (d3.event.layerX + 10) + 'px'); // always 10px to the right of the mouse
+            g.on('mousemove', function(e,d) { // when mouse moves                  
+            tooltip.style('top', (e.layerY + 10) + 'px') // always 10px below the cursor
+            .style('left', (e.layerX + 10) + 'px'); // always 10px to the right of the mouse
             });
     //    }
 
@@ -669,11 +676,11 @@ var KoreGraphAdapter = (function($) {
                     }
                 })
                 // .attr('fill', '#8a959f')
-                .on("mouseover", function(d) {     
+                .on("mouseover", function(e,d) {     
                     if(d.length > 11) {
                         tt_legend.attr('class','only-show tooltip-legend');      
-                        tt_legend.html(d).style("left", (d3.event.pageX - 1090) + "px")     
-                        .style("top", (d3.event.pageY - 164) + "px");
+                        tt_legend.html(d).style("left", (e.pageX - 1090) + "px")     
+                        .style("top", (e.pageY - 164) + "px");
                     }
                 })                  
                 .on("mouseout", function(d) {       
@@ -742,11 +749,11 @@ var KoreGraphAdapter = (function($) {
                     }
                 })
                 // .attr('fill', '#8a959f')
-                .on("mouseover", function(d) {   
+                .on("mouseover", function(e,d) {   
                     if(d.length > 15) {
                         tt_legend.attr('class','only-show tooltip-legend');      
-                        tt_legend.html(d).style("left", (d3.event.pageX - 1090) + "px")     
-                        .style("top", (d3.event.pageY - 164) + "px");
+                        tt_legend.html(d).style("left", (e.pageX - 1090) + "px")     
+                        .style("top", (e.pageY - 164) + "px");
                     }  
                 })                  
                 .on("mouseout", function(d) {    
@@ -931,8 +938,8 @@ var KoreGraphAdapter = (function($) {
         .on("mouseover", function() { tooltip.style("display", null); })
         .on("mouseout", function() { tooltip.style("display", "none"); })
         .on("mousemove", function(d) {
-          var xPosition = d3.mouse(this)[0] - 5;
-          var yPosition = d3.mouse(this)[1] - 5;
+          var xPosition = d3.pointer(event)[0] - 5;
+          var yPosition = d3.pointer(event)[1] - 5;
           if(this.attributes.dispVal) {
             var dispTrack = this.attributes.dispVal.value;
           }
@@ -1003,10 +1010,10 @@ var KoreGraphAdapter = (function($) {
             else {
                 return d; 
             }
-           }).on("mouseover", function(d) {     
+           }).on("mouseover", function(e,d) {     
             tt_legend.attr('class','only-show tooltip-legend');      
-            tt_legend.html(d).style("left", (d3.event.pageX - 1042) + "px")     
-            .style("top", (d3.event.pageY - 178) + "px");
+            tt_legend.html(d).style("left", (e.pageX - 1042) + "px")     
+            .style("top", (e.pageY - 178) + "px");
         })                  
         .on("mouseout", function(d) {       
             tt_legend.attr('class', 'no-show tooltip-legend');
@@ -1161,16 +1168,16 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
 // D3 v4
 
         if($('#myPreviewModal').css('display') === 'block') {
-           var x = d3.event.pageX - document.querySelector('.chartContainerDiv').getBoundingClientRect().x + 10;
-           var y = d3.event.pageY - document.querySelector('.chartContainerDiv').getBoundingClientRect().y + 10;
+           var x = e.pageX - document.querySelector('.chartContainerDiv').getBoundingClientRect().x + 10;
+           var y = e.pageY - document.querySelector('.chartContainerDiv').getBoundingClientRect().y + 10;
         }
         else {
             // if(mainDiv.indexOf('.widgetContParent') == 0) {
             //     mainDiv = mainDiv.slice(17);
             // }
             // var x = d3.event.pageX - document.getElementById(mainDiv.slice(1)).getBoundingClientRect().x + 10;
-            var x = d3.event.pageX - document.querySelector(mainDiv).getBoundingClientRect().x + 10;
-            var y = d3.event.pageY - document.querySelector(mainDiv).getBoundingClientRect().y + 10;
+            var x = e.pageX - document.querySelector(mainDiv).getBoundingClientRect().x + 10;
+            var y = e.pageY - document.querySelector(mainDiv).getBoundingClientRect().y + 10;
             // var y = d3.event.pageY - document.getElementById(mainDiv.slice(1)).getBoundingClientRect().y + 10;
         }
 
@@ -1180,8 +1187,8 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
         else {
             var ttLabel = d.value;
         }
-      var xPosition = d3.mouse(this)[0] - 5;
-      var yPosition = d3.mouse(this)[1] - 5;
+      var xPosition = d3.pointer(event)[0] - 5;
+      var yPosition = d3.pointer(event)[1] - 5;
       tooltip.attr("transform", "translate(" + x + "," + y + ")");
       tooltip.select("text").text(ttLabel);
     }).attr("fill", function (d) {
@@ -1368,7 +1375,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
         moveTooltip: function (pie) {
             d3.selectAll("#" + pie.cssPrefix + "tooltip" + horBarTooltip.currentTooltip)
                 .attr("transform", function (d) {
-                    var mouseCoords = d3.mouse(this.parentNode);
+                    var mouseCoords = d3.pointer(this.parentNode);
                     var x = mouseCoords[0] + 4 + 2;
                     var y = mouseCoords[1] - (2 * 4) - 2;
                     return "translate(" + x + "," + y + ")";
@@ -1534,7 +1541,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
                 .on("mouseout", function() { tooltip.style("display", "none"); })
                 .on("mousemove", function(d) {
                   var xPosition = 1.25 * this.parentNode.transform.baseVal[0].matrix.e; //d3.mouse(this)[0]-5;
-                  var yPosition = d3.mouse(this)[1]-5;
+                  var yPosition = d3.pointer(event)[1]-5;
                   if(d.dispVal) {
                     var ttVal = d.dispVal;
                   }
@@ -1618,10 +1625,10 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
                 else {
                     return d; 
                 }
-               }).on("mouseover", function(d) {     
+               }).on("mouseover", function(e,d) {     
                     tt_legend.attr('class','only-show tooltip-legend');      
-                    tt_legend.html(d).style("left", (d3.event.pageX - 1042) + "px")     
-                    .style("top", (d3.event.pageY - 178) + "px");
+                    tt_legend.html(d).style("left", (e.pageX - 1042) + "px")     
+                    .style("top", (e.pageY - 178) + "px");
                     })                  
                 .on("mouseout", function(d) {       
                     tt_legend.attr('class', 'no-show tooltip-legend');
@@ -1764,8 +1771,8 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
               .on("mouseover", function() { tooltip.style("display", null); })
                 .on("mouseout", function() { tooltip.style("display", "none"); })
                 .on("mousemove", function(d) {
-                  var xPosition = d3.mouse(this)[0] - 5;
-                  var yPosition = d3.mouse(this)[1] - 5;
+                  var xPosition = d3.pointer(event)[0] - 5;
+                  var yPosition = d3.pointer(event)[1] - 5;
                   if(this.attributes.dispVal) {
                     var dispTrack =  this.attributes.dispVal.value;
                   }
@@ -1833,8 +1840,8 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
                 }
                }).on("mouseover", function(d) {     
                     tt_legend.attr('class','only-show tooltip-legend');      
-                    tt_legend.html(d).style("left", (d3.event.pageX - 1042) + "px")     
-                    .style("top", (d3.event.pageY - 178) + "px");
+                    tt_legend.html(d).style("left", (e.pageX - 1042) + "px")     
+                    .style("top", (e.pageY - 178) + "px");
                 })                  
                 .on("mouseout", function(d) {       
                     tt_legend.attr('class', 'no-show tooltip-legend');
@@ -1869,7 +1876,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
             .range(['#5bc8c4','#4a9af2','#8ecb60','#e7cc61','#eeaf4b','#ef7e63','#8e8eb7','#6483c3','#2249ab','#f352b7']); 
         var payload=msgData;//msgData.message[0].component.payload
         var widthDivision=3;
-        legendCenterOffset=0;
+        var legendCenterOffset=0;
         if(msgData.message){
             payload=msgData.message[0].component.payload;
         }else{
@@ -2051,7 +2058,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
                         .style("opacity", "1");
                 })
                 .on('mousemove', function() { // mouse moving over canvas
-                    var mouse = d3.mouse(this);
+                    var mouse = d3.pointer(event);
 /*                    d3.select(".mouse-line"+selection.slice(10))
                         .attr("d", function() {
                             var d = "M" + mouse[0] + "," + height;
@@ -2065,8 +2072,9 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
                                 bisect = d3.bisector(function(d) {
                                     return d.date;
                                 }).right;
-                            idx = bisect(d.values, xDate);
-
+                            var idx = bisect(d.values, xDate);
+                            var  pos;
+                            var xtempLC;
                             var beginning = 0,
                                 end = lines[i].getTotalLength() + 2,
                                 target = null;
@@ -2159,10 +2167,10 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
                 else {
                     return d; 
                 }
-            }).on("mouseover", function(d) {     
+            }).on("mouseover", function(e,d) {     
                 tt_legend.attr('class','only-show tooltip-legend');      
-                tt_legend.html(d).style("left", (d3.event.pageX - 1042) + "px")     
-                .style("top", (d3.event.pageY - 178) + "px");
+                tt_legend.html(d).style("left", (e.pageX - 1042) + "px")     
+                .style("top", (e.pageY - 178) + "px");
             })                  
             .on("mouseout", function(d) {       
                 tt_legend.attr('class', 'no-show tooltip-legend');
@@ -2170,6 +2178,481 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
 
         }
 
+    function drawlineChartTemplate(msgData, element) {
+        if (chatConfig && chatConfig.graphLib === 'google') {
+            setTimeout(() => {
+                GoogleCharts.charts.load('current', { packages: ['corechart', 'line'] });
+                GoogleCharts.charts.setOnLoadCallback(drawChart);
+                function drawChart() {
+                    let customToolTips = false;
+                    const data = new GoogleCharts.visualization.DataTable();
+                    data.addColumn('string', 'y');
+                    // adding legend labels
+                    for (var i = 0; i < msgData.message[0].component.payload.elements.length; i++) {
+                        const currEle = msgData.message[0].component.payload.elements[i];
+                        data.addColumn('number', currEle.title);
+                        // checking for display values ( custom tooltips)
+                        if (currEle.displayValues && currEle.displayValues.length) {
+                            data.addColumn({ type: 'string', role: 'tooltip' });
+                            customToolTips = true;
+                        }
+                    }
+
+                    // filling rows
+                    const totalLines = msgData.message[0].component.payload.elements.length;
+                    for (var i = 0; i < msgData.message[0].component.payload.X_axis.length; i++) {
+                        const arr = [];
+                        arr.push(msgData.message[0].component.payload.X_axis[i]);
+                        for (let j = 0; j < totalLines; j++) {
+                            arr.push(parseFloat(msgData.message[0].component.payload.elements[j].values[i]));
+                            if (customToolTips) {
+                                arr.push(msgData.message[0].component.payload.elements[j].displayValues[i]);
+                            }
+                        }
+                        data.addRow(arr);
+                    }
+
+                    const options = {
+                        curveType: 'function',
+                        chartArea: {
+                            height: '70%',
+                            width: '80%',
+                        },
+                        legend: {
+                            position: 'top',
+                            alignment: 'end',
+                            maxLines: 3,
+                            textStyle: {
+                                color: '#b3bac8',
+                            },
+                        },
+                        hAxis: {
+                            gridlines: {
+                                color: 'transparent',
+                            },
+                            textStyle: {
+                                color: '#b3bac8',
+                            },
+                        },
+                        vAxis: {
+                            gridlines: {
+                                color: 'transparent',
+                            },
+                            textStyle: {
+                                color: '#b3bac8',
+                            },
+                            baselineColor: 'transparent',
+                        },
+                        lineWidth: 3,
+                        animation: {
+                            duration: 500,
+                            easing: 'out',
+                            startup: true,
+                        },
+                        colors: chartColors,
+                    };
+                    const lineChartObj = {
+                        id: `linechart${msgData.messageId}`, data, options, type: 'linechart',
+                    };
+                    available_charts.push(lineChartObj);
+                    const container = element;
+
+                    const chart = new GoogleCharts.visualization.LineChart(container);
+                    chart.draw(data, options);
+                    // window.linechartCount = window.linechartCount + 1;
+                }
+            }, 150);
+        } else if (chatConfig && chatConfig.graphLib === 'd3') {
+            setTimeout(() => {
+                const dimens = {};
+                dimens.outerWidth = 380;
+                dimens.outerHeight = 350;
+                dimens.innerWidth = 230;
+                dimens.innerHeight = 250;
+                dimens.legendRectSize = 15;
+                dimens.legendSpacing = 4;
+                const _linechartObj = { id: `linechart${msgData.messageId}`, data: msgData, type: 'linechart' };
+                available_charts.push(_linechartObj);
+                //  KoreGraphAdapter.drawD3lineChart(msgData, dimens, '#linechart'+window.linechartCount, 12);
+                this.drawD3lineChartV2(msgData, dimens, `#linechart${msgData.messageId}`, 12);
+                // window.linechartCount = window.linechartCount + 1;
+            }, 250);
+            /*                    setTimeout(function(){
+                                             $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
+                                             handleChartOnClick();
+                                         },300); */
+        }
+    }
+
+    function drawBarChartTemplate(msgData, element) {
+        if (chatConfig.graphLib === 'google') {
+            setTimeout(() => {
+                GoogleCharts.charts.load('current', { packages: ['corechart', 'bar'] });
+                GoogleCharts.charts.setOnLoadCallback(drawChart);
+                function drawChart() {
+                    let customToolTips = false;
+                    const data = new GoogleCharts.visualization.DataTable();
+                    data.addColumn('string', 'y');
+                    // adding legend labels
+                    for (var i = 0; i < msgData.message[0].component.payload.elements.length; i++) {
+                        const currEle = msgData.message[0].component.payload.elements[i];
+                        data.addColumn('number', currEle.title);
+                        // checking for display values ( custom tooltips)
+                        if (currEle.displayValues && currEle.displayValues.length) {
+                            data.addColumn({ type: 'string', role: 'tooltip' });
+                            customToolTips = true;
+                        }
+                    }
+
+                    // filling rows
+                    const totalLines = msgData.message[0].component.payload.elements.length;
+                    for (var i = 0; i < msgData.message[0].component.payload.X_axis.length; i++) {
+                        const arr = [];
+                        arr.push(msgData.message[0].component.payload.X_axis[i]);
+                        for (let j = 0; j < totalLines; j++) {
+                            arr.push(parseFloat(msgData.message[0].component.payload.elements[j].values[i]));
+                            if (customToolTips) {
+                                arr.push(msgData.message[0].component.payload.elements[j].displayValues[i]);
+                            }
+                        }
+                        data.addRow(arr);
+                    }
+                    const options = {
+                        chartArea: {
+                            height: '70%',
+                            width: '80%',
+                        },
+                        legend: {
+                            position: 'top',
+                            alignment: 'end',
+                            maxLines: 3,
+                            textStyle: {
+                                color: '#b3bac8',
+                            },
+                        },
+                        hAxis: {
+                            gridlines: {
+                                color: 'transparent',
+                            },
+                            textStyle: {
+                                color: '#b3bac8',
+                            },
+                        },
+                        vAxis: {
+                            gridlines: {
+                                color: 'transparent',
+                            },
+                            textStyle: {
+                                color: '#b3bac8',
+                            },
+                            baselineColor: 'transparent',
+                        },
+                        animation: {
+                            duration: 500,
+                            easing: 'out',
+                            startup: true,
+                        },
+                        bar: { groupWidth: '25%' },
+                        colors: window.chartColors,
+                    };
+
+                    // horizontal chart, then increase size of bard
+                    if (msgData.message[0].component.payload.direction !== 'vertical') {
+                        options.bar.groupWidth = '45%';
+                        options.hAxis.baselineColor = '#b3bac8';
+                    }
+                    // stacked chart
+                    if (msgData.message[0].component.payload.stacked) {
+                        options.isStacked = true;
+                        options.bar.groupWidth = '25%';
+                    }
+                    const _barchartObj = {
+                        id: `barchart${msgData.messageId}`, direction: msgData.message[0].component.payload.direction, data, options, type: 'barchart',
+                    };
+                    available_charts.push(_barchartObj);
+                    const container = element;
+                    let chart = null;
+                    if (msgData.message[0].component.payload.direction === 'vertical') {
+                        chart = new GoogleCharts.visualization.ColumnChart(container);
+                    } else {
+                        chart = new GoogleCharts.visualization.BarChart(container);
+                    }
+                    chart.draw(data, options);
+                    // window.barchartCount = window.barchartCount + 1;
+                }
+            }, 150);
+        } else if (chatConfig.graphLib === 'd3') {
+            var dimens = {};
+            dimens.outerWidth = 350;
+            dimens.outerHeight = 300;
+            dimens.innerHeight = 200;
+            dimens.legendRectSize = 15;
+            dimens.legendSpacing = 4;
+            if (msgData.message[0].component.payload.direction === undefined) {
+                msgData.message[0].component.payload.direction = 'horizontal';
+            }
+            if (msgData.message[0].component.payload.direction === 'horizontal' && !msgData.message[0].component.payload.stacked) {
+                setTimeout(() => {
+                    dimens.innerWidth = 180;
+                    const _barchartObj = { id: `Legend_barchart${msgData.messageId}`, data: msgData, type: 'barchart' };
+                    available_charts.push(_barchartObj);
+                    this.drawD3barHorizontalbarChart(msgData, dimens, `#barchart${msgData.messageId}`, 12);
+                    // window.barchartCount = window.barchartCount + 1;
+                }, 250);
+            } else if (msgData.message[0].component.payload.direction === 'vertical' && msgData.message[0].component.payload.stacked) {
+                setTimeout(() => {
+                    dimens.outerWidth = 350;
+                    dimens.innerWidth = 270;
+                    const _barchartObj = { id: `barchart${msgData.messageId}`, data: msgData, type: 'stackedBarchart' };
+                    available_charts.push(_barchartObj);
+                    this.drawD3barVerticalStackedChart(msgData, dimens, `#barchart${msgData.messageId}`, 12);
+                    // window.barchartCount = window.barchartCount + 1;
+                }, 250);
+            } else if (msgData.message[0].component.payload.direction === 'horizontal' && msgData.message[0].component.payload.stacked) {
+                setTimeout(() => {
+                    dimens.innerWidth = 180;
+                    const _barchartObj = { id: `barchart${msgData.messageId}`, data: msgData, type: 'stackedBarchart' };
+                    available_charts.push(_barchartObj);
+                    this.drawD3barStackedChart(msgData, dimens, `#barchart${msgData.messageId}`, 12);
+                    // window.barchartCount = window.barchartCount + 1;
+                }, 250);
+            } else if (msgData.message[0].component.payload.direction === 'vertical' && !msgData.message[0].component.payload.stacked) {
+                setTimeout(() => {
+                    dimens.innerWidth = 240;
+                    const _barchartObj = { id: `barchart${msgData.messageId}`, data: msgData, type: 'barchart' };
+                    available_charts.push(_barchartObj);
+                    this.drawD3barChart(msgData, dimens, `#barchart${msgData.messageId}`, 12);
+                    // window.barchartCount = window.barchartCount + 1;
+                }, 250);
+            }
+        }
+    }
+
+    function drawPieChartTemplate(msgData, element) {
+        if (chatConfig.graphLib === 'google') {
+            setTimeout(() => {
+                GoogleCharts.charts.load('current', { packages: ['corechart'] });
+                GoogleCharts.charts.setOnLoadCallback(drawChart);
+                function drawChart() {
+                    const data = new GoogleCharts.visualization.DataTable();
+                    data.addColumn('string', 'Task');
+                    data.addColumn('number', 'Hours per Day');
+                    if (msgData.message[0].component.payload.elements && msgData.message[0].component.payload.elements[0].displayValue) {
+                        data.addColumn({ type: 'string', role: 'tooltip' });
+                    }
+                    const pieChartData = [];
+                    const piechartElements = msgData.message[0].component.payload.elements;
+                    for (let i = 0; i < piechartElements.length; i++) {
+                        const arr = [`${piechartElements[i].title} \n${piechartElements[i].value}`];
+                        arr.push(parseFloat(piechartElements[i].value));
+                        if (piechartElements[i].displayValue) {
+                            arr.push(piechartElements[i].displayValue);
+                        }
+                        pieChartData.push(arr);
+                    }
+                    data.addRows(pieChartData);
+                    const options = {
+                        chartArea: {
+                            left: '3%',
+                            top: '3%',
+                            height: '94%',
+                            width: '94%',
+                        },
+                        pieSliceTextStyle: {},
+                        colors: window.chartColors,
+                        legend: {
+                            textStyle: {
+                                color: '#b3bac8',
+                            },
+                        },
+                    };
+
+                    if (piechartElements.length === 1) { // if only element, then deault donut chart
+                        options.pieHole = 0.5;
+                        options.pieSliceTextStyle.color = 'black';
+                    }
+                    if (msgData.message[0].component.payload.pie_type) { // chart based on user requireent
+                        if (msgData.message[0].component.payload.pie_type === 'donut') {
+                            options.pieHole = 0.6;
+                            options.pieSliceTextStyle.color = 'black';
+                            options.legend.position = 'none';
+                        } else if (msgData.message[0].component.payload.pie_type === 'donut_legend') {
+                            options.pieHole = 0.6;
+                            options.pieSliceTextStyle.color = 'black';
+                        }
+                    }
+                    const _piechartObj = {
+                        id: `piechart${msgData.messageId}`, data, options, type: 'piechart',
+                    };
+                    available_charts.push(_piechartObj);
+                    const container = element;
+                    const chart = new GoogleCharts.visualization.PieChart(container);
+                    chart.draw(data, options);
+                    // window.PieChartCount = window.PieChartCount + 1;
+                }
+            }, 150);
+        } else if (chatConfig.graphLib === 'd3') {
+            if (msgData.message[0].component.payload.pie_type === undefined) {
+                msgData.message[0].component.payload.pie_type = 'regular';
+            }
+            if (msgData.message[0].component.payload.pie_type) {
+                // define data
+                var dimens = {};
+                dimens.width = 300;
+                dimens.height = 200;
+                dimens.legendRectSize = 10;
+                dimens.legendSpacing = 2.4;
+                if (msgData.message[0].component.payload.pie_type === 'regular') {
+                    setTimeout(() => {
+                        const _piechartObj = { id: `piechart${msgData.messageId}`, data: msgData, type: 'regular' };
+                        available_charts.push(_piechartObj);
+                        this.drawD3Pie(msgData, dimens, `#piechart${msgData.messageId}`, 12);
+                        // window.PieChartCount = window.PieChartCount + 1;
+                    }, 150);
+                } else if (msgData.message[0].component.payload.pie_type === 'donut') {
+                    setTimeout(() => {
+                        const _piechartObj = { id: `piechart${msgData.messageId}`, data: msgData, type: 'donut' };
+                        available_charts.push(_piechartObj);
+                        this.drawD3PieDonut(msgData, dimens, `#piechart${msgData.messageId}`, 12, 'donut');
+                        // window.PieChartCount = window.PieChartCount + 1;
+                    }, 150);
+                } else if (msgData.message[0].component.payload.pie_type === 'donut_legend') {
+                    setTimeout(() => {
+                        const _piechartObj = { id: `piechart${msgData.messageId}`, data: msgData, type: 'donut_legend' };
+                        available_charts.push(_piechartObj);
+                        this.drawD3PieDonut(msgData, dimens, `#piechart${msgData.messageId}`, 12, 'donut_legend');
+                        // window.PieChartCount = window.PieChartCount + 1;
+                    }, 150);
+                }
+            }
+        }
+
+    }
+    function handleChartOnClick() {
+        $('.piechartDiv,.barchartDiv, .linechartDiv').click((e) => {
+          const firstEleId = e.currentTarget.firstElementChild.getAttribute('id');
+          // get chart data
+          let chart = null;
+          let data = null;
+          let container = null;
+          for (let i = 0; i < available_charts.length; i++) {
+            if (available_charts[i].id == firstEleId) {
+              data = jQuery.extend({}, available_charts[i]);
+              this.zoomChart();
+              break;
+            }
+          }
+          if (chatConfig && chatConfig.graphLib === 'd3') {
+            this.zoomChart();
+            if (data.data.message[0].component.payload.pie_type === undefined) {
+              data.data.message[0].component.payload.pie_type = 'regular';
+            }
+            if (data.data.message[0].component.payload.template_type !== 'linechart' && data.data.message[0].component.payload.template_type !== 'piechart') {
+              var dimens = {};
+              dimens.outerWidth = 650;
+              dimens.outerHeight = 460;
+              dimens.innerWidth = 450;
+              dimens.innerHeight = 350;
+              dimens.legendRectSize = 15;
+              dimens.legendSpacing = 4;
+              $('.chartContainerDiv').html('');
+              if (data.data.message[0].component.payload.template_type === 'barchart' && data.data.message[0].component.payload.direction === 'vertical' && data.type === 'barchart') {
+                dimens.innerWidth = 500;
+                this.drawD3barChart(data.data, dimens, '.chartContainerDiv', 12);
+              } else if (data.data.message[0].component.payload.template_type === 'barchart' && data.data.message[0].component.payload.direction === 'horizontal' && data.type === 'stackedBarchart') {
+                this.drawD3barStackedChart(data.data, dimens, '.chartContainerDiv', 12);
+              } else if (data.data.message[0].component.payload.template_type === 'barchart' && data.data.message[0].component.payload.direction === 'vertical' && data.type === 'stackedBarchart') {
+                dimens.innerWidth = 550;
+                this.drawD3barVerticalStackedChart(data.data, dimens, '.chartContainerDiv', 12);
+              } else if (data.data.message[0].component.payload.template_type === 'barchart' && data.data.message[0].component.payload.direction === 'horizontal' && data.type === 'barchart') {
+                dimens.outerWidth = 650;
+                dimens.outerHeight = 350;
+                dimens.innerWidth = 450;
+                dimens.innerHeight = 310;
+                this.drawD3barHorizontalbarChart(data.data, dimens, '.chartContainerDiv', 12);
+              }
+            } else if (data.data.message[0].component.payload.template_type === 'linechart') {
+              var dimens = {};
+              dimens.outerWidth = 650;
+              dimens.outerHeight = 450;
+              dimens.innerWidth = 480;
+              dimens.innerHeight = 350;
+              dimens.legendRectSize = 15;
+              dimens.legendSpacing = 4;
+              $('.chartContainerDiv').html('');
+              //  KoreGraphAdapter.drawD3lineChart(data.data, dimens, '.chartContainerDiv', 12);
+              this.drawD3lineChartV2(data.data, dimens, '.chartContainerDiv', 12);
+            } else if (data.data.message[0].component.payload.pie_type) {
+              var dimens = {};
+              dimens.width = 600;
+              dimens.height = 400;
+              dimens.legendRectSize = 15;
+              dimens.legendSpacing = 4;
+              $('chartContainerDiv').html('');
+              if (data.data.message[0].component.payload.pie_type === 'regular') {
+                this.drawD3Pie(data.data, dimens, '.chartContainerDiv', 16);
+              } else if (data.data.message[0].component.payload.pie_type === 'donut') {
+                this.drawD3PieDonut(data.data, dimens, '.chartContainerDiv', 16, 'donut');
+              } else if (data.data.message[0].component.payload.pie_type === 'donut_legend') {
+                $('chartContainerDiv').html('');
+                this.drawD3PieDonut(data.data, dimens, '.chartContainerDiv', 16, 'donut_legend');
+              }
+            }
+          } else if (chatConfig && chatConfig.graphLib === 'google') {
+            if (data.type === 'piechart') {
+              google.charts.load('current', { packages: ['corechart'] });
+              google.charts.setOnLoadCallback(drawChart);
+              function drawChart() {
+                container = document.getElementsByClassName('chartContainerDiv');
+                chart = new google.visualization.PieChart(container[0]);
+              }
+            } else if (data.type === 'linechart') {
+              google.charts.load('current', { packages: ['corechart', 'line'] });
+              google.charts.setOnLoadCallback(drawChart);
+              function drawChart() {
+                container = document.getElementsByClassName('chartContainerDiv');
+                chart = new google.visualization.LineChart(container[0]);
+              }
+            } else if (data.type === 'barchart') {
+              google.charts.load('current', { packages: ['corechart', 'bar'] });
+              google.charts.setOnLoadCallback(drawChart);
+              function drawChart() {
+                container = document.getElementsByClassName('chartContainerDiv');
+                if (data.direction === 'vertical') {
+                  chart = new google.visualization.ColumnChart(container[0]);
+                } else {
+                  chart = new google.visualization.BarChart(container[0]);
+                }
+              }
+            }
+            setTimeout(() => {
+              const chartAreaObj = { height: '85%', width: '85%' };
+              data.options.chartArea = chartAreaObj;
+              google.visualization.events.addListener(chart, 'ready', () => {
+                setTimeout(() => {
+                  $('.largePreviewContent .chartContainerDiv').css('height', '91%');
+                });
+              });
+              chart.draw(data.data, data.options);
+            }, 200);
+          }
+        });
+      }
+      function zoomChart() {
+        const modal = document.getElementById('myPreviewModal');
+        $('.largePreviewContent').empty();
+        $('.largePreviewContent').addClass('addheight');
+        $('.largePreviewContent').html("<div class='chartContainerDiv'></div>");
+        modal.style.display = 'block';
+        // Get the <span> element that closes the modal
+        const span = document.getElementsByClassName('closeElePreview')[0];
+      
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+          modal.style.display = 'none';
+          $('.largePreviewContent').removeClass('addheight');
+        };
+      }
     return {
         drawD3Pie: drawD3Pie,
         drawD3PieDonut: drawD3PieDonut,
@@ -2177,6 +2660,13 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
         drawD3barStackedChart: drawD3barStackedChart,
         drawD3barVerticalStackedChart: drawD3barVerticalStackedChart,
         drawD3barHorizontalbarChart: drawD3barHorizontalbarChart,
-        drawD3lineChartV2:drawD3lineChartV2
+        drawD3lineChartV2:drawD3lineChartV2,
+        drawlineChartTemplate:drawlineChartTemplate,
+        drawBarChartTemplate:drawBarChartTemplate,
+        drawPieChartTemplate:drawPieChartTemplate,
+        handleChartOnClick:handleChartOnClick,
+        zoomChart:zoomChart
     }
-})($);
+})(korejquery,d3);
+
+export default KoreGraphAdapter

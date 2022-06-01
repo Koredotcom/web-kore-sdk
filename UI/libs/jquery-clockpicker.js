@@ -6,12 +6,13 @@
  * 	#kore:change 1: added parent element option to configure
  */
 
-; (function () {
-	var $ = window.jQuery,
-		$win = $(window),
+//  (function () {
+	// var $ = window.jQuery,
+ 	
+function installClockPicker($){
+	var	$win = $(window),
 		$doc = $(document),
 		$body;
-
 	// Can I use inline svg ?
 	var svgNS = 'http://www.w3.org/2000/svg',
 		svgSupported = 'SVGAngle' in window && (function () {
@@ -741,4 +742,6 @@
 			}
 		});
 	};
-}());
+}
+	export default installClockPicker;
+// }());

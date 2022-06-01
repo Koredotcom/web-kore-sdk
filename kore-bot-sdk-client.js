@@ -1,4 +1,4 @@
-requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/KoreBot.js":[function(require,module,exports){
+let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/KoreBot.js":[function(require,module,exports){
 var clients = require('./index.js');
 var EventEmitter = require('events');
 var inherits = require('inherits');
@@ -218,7 +218,6 @@ KoreBot.prototype.convertWebhookResposeToMessages=function(resBody){
       console.log("it is array")
       textData.forEach(function(entry,index) {
           var clientMessageId = new Date().getTime()+index;
-          var textORJSON=isJson(entry.val || entry);
           msgData = {
               'type': "bot_response",
               'messageId':entry.messageId || clientMessageId,
@@ -230,31 +229,11 @@ KoreBot.prototype.convertWebhookResposeToMessages=function(resBody){
                       'body': entry.val || entry,//for v2 and v1 respectively 
                       'attachments': ""
                   },
-                  "component":{}
+                  "component": isJson(entry.val || entry),//for v2 and v1 respectively 
                   //'clientMessageId': clientMessageId
               }],
 
           };
-          if(textORJSON.payload){
-            msgData.message[0].component.payload=textORJSON.payload;
-            msgData.message[0].component.type=textORJSON.type;
-          }else if(textORJSON.text){
-            msgData.message[0].component.payload={
-              text:textORJSON.text
-            }
-            msgData.message[0].component.type='template'
-          }else{
-            msgData.message[0].component.payload={
-              text:textORJSON
-            }
-            msgData.message[0].component.type='text'
-          }
-          if (msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.text) {
-              msgData.message[0].cInfo.body = msgData.message[0].component.payload.text;
-          }
-          if(msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)){
-            msgData.message[0].cInfo.body = msgData.message[0].component.payload.text || "";
-          }
           msgsData.push(msgData);
       });
   } else {
@@ -533,6 +512,7 @@ KoreBot.prototype.onLogIn = function(err, data) {
 		this.cbBotDetails(data,this.options.botInfo);
 		this.RtmClient = new clients.KoreRtmClient({}, this.options);
 		this.emit("rtm_client_initialized");
+    this.emit(WEB_EVENTS.JWT_GRANT_SUCCESS,{jwtgrantsuccess : data});
 		this.RtmClient.start({
 			"botInfo": this.options.botInfo
 		});
@@ -630,7 +610,6 @@ KoreBot.prototype.reWriteWebhookConfig=function (config){
     config.webhookConfig.channelType=channelType;
   }
 }
-var _instance;
 module.exports.instance = function(){
 	_chatHistoryLoaded = false;
 	  _instance=new KoreBot();
@@ -1163,7 +1142,8 @@ module.exports = BaseAPIClient;
 module.exports.WEB = {
   RATE_LIMITED: 'rate_limited',
   WEB_HOOK_READY:'webhook_ready',
-  WEB_HOOK_RECONNECTED:'webhook_reconnected'
+  WEB_HOOK_RECONNECTED:'webhook_reconnected',
+  JWT_GRANT_SUCCESS : 'jwtgrantsuccess'
 };
 
 module.exports.RTM = {
@@ -1774,6 +1754,14 @@ HistoryApi.prototype.history = function history(opts, optCb,config) {
 	var _api = '/botmessages/rtm';
 
   if(config && config.webhookConfig && config.webhookConfig.enable){
+    // var streamId=config.botInfo.taskBotId;
+    // var channelType='ivr';
+    // var webhookURL=config.webhookConfig.webhookURL;
+    // //check for mulitple webhook url version
+    // var patternStr='hookInstance/'
+    // if(webhookURL.indexOf(patternStr)>-1){
+    //   channelType=webhookURL.substring(webhookURL.indexOf(patternStr)+patternStr.length,webhookURL.length)
+    // }
     _api='/chathistory/'+config.webhookConfig.streamId+'/'+config.webhookConfig.channelType
   }
 
@@ -17211,3 +17199,5 @@ process.chdir = function (dir) {
 process.umask = function() { return 0; };
 
 },{}]},{},[]);
+
+export default requireKr;

@@ -1,0 +1,163 @@
+/* ClockPicker CSS start */
+.clockPickerContainer .sdkFooterIcon.clock {
+    opacity: 0;
+}
+.kore-chat-window .sdkFooterIcon.clock .sdkClock.clockBtn .clock {
+    background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA2NCA2NDsiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDY0IDY0IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48c3R5bGUgdHlwZT0idGV4dC9jc3MiPgoJLnN0MHtmaWxsOiMxMzQ1NjM7fQo8L3N0eWxlPjxnPjxnIGlkPSJJY29uLUNsb2NrIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgzNzguMDAwMDAwLCA0MjguMDAwMDAwKSI+PHBhdGggY2xhc3M9InN0MCIgZD0iTS0zNDYuMS0zNzMuMWMtMTIuNiwwLTIyLjktMTAuMy0yMi45LTIyLjljMC0xMi42LDEwLjMtMjIuOSwyMi45LTIyLjkgICAgIGMxMi42LDAsMjIuOSwxMC4zLDIyLjksMjIuOUMtMzIzLjEtMzgzLjQtMzMzLjQtMzczLjEtMzQ2LjEtMzczLjFMLTM0Ni4xLTM3My4xeiBNLTM0Ni4xLTQxNi41Yy0xMS4zLDAtMjAuNCw5LjItMjAuNCwyMC40ICAgICBzOS4yLDIwLjQsMjAuNCwyMC40czIwLjQtOS4yLDIwLjQtMjAuNFMtMzM0LjgtNDE2LjUtMzQ2LjEtNDE2LjVMLTM0Ni4xLTQxNi41eiIgaWQ9IkZpbGwtMTMxIi8+PHBvbHlsaW5lIGNsYXNzPSJzdDAiIGlkPSJGaWxsLTEzMiIgcG9pbnRzPSItMzM4LjksLTM4NC4zIC0zNDcuNCwtMzkyLjggLTM0Ny40LC00MDguMyAtMzQ0LjcsLTQwOC4zIC0zNDQuNywtMzkzLjkgICAgICAtMzM3LC0zODYuMiAtMzM4LjksLTM4NC4zICAgICIvPjwvZz48L2c+PC9zdmc+");
+    background-size: 100% 100%;
+    width: 21px;
+    height: 21px;
+    margin: -4px;
+    display: block;
+}
+.clockPickerContainer .clockpicker-popover {
+    width: 100% !important;
+    position: relative;
+    top: auto !important;
+    left: auto !important;
+    margin: 0 auto;
+    border: 0;
+    background: transparent;
+    max-width: 100%;
+    /* margin-top: 32px; */
+    box-shadow: none;
+}
+.clockPickerContainer .clockpicker-popover .arrow {
+    display: none;
+}
+.clockPickerContainer .clockpicker-popover .popover-title {
+    height: 84px;
+    background-color: #f2f3f5;
+    padding: 26px 70px 26px 26px;
+    font-size: 54px;
+    border: 0;
+}
+.clockPickerContainer .clockpicker-popover .popover-title span.clockpicker-span-hours {
+    font-size: 54px;
+    color: #000000 !important;
+    opacity: 0.3;
+}
+.clockPickerContainer .clockpicker-popover .popover-title .clockpicker-span-hours.text-primary {
+    opacity: 1;
+}
+.clockPickerContainer .clockpicker-popover .popover-title .clockpicker-span-minutes.text-primary {
+    opacity: 1;
+}
+.clockPickerContainer .clockpicker-popover .popover-title span.clockpicker-span-minutes {
+    font-size: 54px;
+    color: #000000 !important;
+    opacity: 0.3;
+}
+.darkTheme .clockPickerContainer .clockpicker-popover .popover-title {
+    height: 84px;
+    background-color: #2e2c34;
+    padding: 26px 70px 26px 26px;
+    font-size: 54px;
+}
+.darkTheme .clockPickerContainer .clockpicker-popover .popover-title span.clockpicker-span-hours {
+    font-size: 54px;
+    color: #ffffff !important;
+}
+.darkTheme .clockPickerContainer .clockpicker-popover .popover-title span.clockpicker-span-minutes {
+    font-size: 54px;
+    color: #ffffff !important;
+}
+.hide .clockPickerContainer .confirmBTN {
+    opacity: 0;
+}
+.clockPickerContainer .confirmBTN {
+    position: absolute;
+    height: 54px;
+    background: #009dab;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+    opacity: 1;
+    line-height: 54px;
+    transition: opacity 1.5s ease-in-out;
+    -moz-transition: opacity 1.5s ease-in-out;
+    -webkit-transition: opacity 1.5s ease-in-out;
+}
+.darkTheme .clockPickerContainer .confirmBTN {
+    background: #0047cc;
+}
+.clockPickerContainer .headerClock {
+    height: 56px;
+    padding: 17px;
+    position: relative;
+}
+.clockPickerContainer .headerClock .choose {
+    font-size: 20px;
+    font-weight: bold;
+    color: #000000;
+}
+.clockPickerContainer .headerClock .closeButton {
+    cursor: pointer;
+    color: #aaaaaa;
+    background: none;
+    border: none;
+    opacity: 1;
+    outline: none;
+    font-size: 30px;
+    float: right;
+    line-height: inherit;
+    margin-top: 5px;
+    padding: 0 6px;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
+.clockPickerContainer .clockpicker-popover .clockpicker-button.am-button,
+.clockPickerContainer .clockpicker-popover .clockpicker-button.pm-button {
+    margin-left: 0 !important;
+    padding: 3px !important;
+    border: 0;
+    border-radius: 4px !important;
+    display: flex;
+    background: transparent;
+    color: #000000;
+}
+.darkTheme.kore-chat-window .clockPickerContainer .clockpicker-popover .clockpicker-button.am-button,
+.darkTheme.kore-chat-window .clockPickerContainer .clockpicker-popover .clockpicker-button.pm-button {
+    color: #ffffff;
+}
+.clockPickerContainer .clockpicker-popover .clockpicker-am-pm-block {
+    right: 0;
+    position: absolute;
+    top: 0;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.clockPickerContainer {
+    padding-bottom: 54px;
+    position: relative;
+}
+.clockPickerContainer .clockpicker-popover .clockpicker-span-am-pm {
+    display: none;
+}
+.clockPickerContainer .clockpicker-popover .popover-content {
+    background-color: transparent;
+}
+.clockPickerContainer .clockpicker-popover .popover-content .clockpicker-plate {
+    width: 196px;
+    height: 196px;
+    margin: 0 auto !important;
+    background-color: #eeeeee;
+    border: 1px solid #eeeeee;
+}
+.clockPickerContainer #clockPickerInput .hide {
+    display: none !important;
+}
+.darkTheme .clockPickerContainer .clockpicker-popover .popover-content .clockpicker-plate {
+    background-color: #2e2c34;
+    border: 1px solid #2e2c34;
+}
+/* ClockPicker CSS end */

@@ -1,0 +1,94 @@
+.kore-chat-window .piechartDiv .legend-title {
+    fill: #8a959f;
+}
+.kore-chat-window .piechartDiv .legend-value {
+    fill: #26344a;
+}
+.kore-chat-window .piechartDiv .chart-disp-val{
+    fill: #26344a;
+}
+.kore-chat-window .piechart .piechartDiv {
+    display: block;
+    border-radius: 4px;
+    clear: both;
+    width: 353px;
+    margin-left: -45px;
+    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    cursor: pointer;
+}
+
+.kore-chat-window .piechart .messageBubble.pieChart {
+    margin-bottom: 10px;
+}
+
+.kore-chat-window .piechart .profile-photo {
+    top: 45px !important;
+}
+
+.kore-chat-window .piechart .piechartDiv {
+    display: block;
+    border-radius: 4px;
+    clear: both;
+    width: 353px;
+    margin-left: -45px;
+    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    cursor: pointer;
+    background: #fff;
+}
+
+.kore-chat-window .piechart .piechartDiv .legend-tooltip-pie-chart {
+    position: absolute;
+    background: #fff;
+    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    height: 150px;
+    overflow-y: scroll;
+ }
+
+
+.kore-chat-window .legend-tooltip-pie-chart::-webkit-scrollbar {
+   width: 4px;
+}
+
+.kore-chat-window .legend-tooltip-pie-chart::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+
+.kore-chat-window .legend-tooltip-pie-chart::-webkit-scrollbar-thumb {
+ background-color: darkgrey;
+ outline: 1px solid slategrey;
+}
+
+.kore-chat-window .legend-tooltip-pie-chart {
+    background: #fff;
+    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    height: 105px;
+    padding-bottom: 6px;
+    overflow-y: scroll;
+ } 
+
+.kore-chat-window .piechart .messageBubble.pieChart {
+    margin-bottom: 10px;
+}
+.kore-chat-window .piechart .profile-photo {
+    top: 30px !important;
+}
+
+/* pie chart polylines and labels start */
+.kore-chat-window polyline{
+    opacity: .3;
+    stroke: black;
+    stroke-width: 1px;
+    fill: none;
+}
+
+.kore-chat-window .labelName tspan {
+    font-style: normal;
+    font-weight: 700;
+}
+
+.kore-chat-window .labelName {
+    font-size: 0.9em;
+    font-style: italic;
+}
+/* pie chart polylines and labels end */

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+    <title>accordionIcon-pp</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="accordionIcon-pp" fill-rule="nonzero">
+            <circle id="Oval" fill="#E1E0FC" cx="10" cy="10" r="10"></circle>
+            <path d="M14.172,12.04 C14.562,11.65 14.562,11.01 14.172,10.62 L11.002,7.45 C10.8151554,7.26277191 10.5615095,7.15755597 10.297,7.15755597 C10.0324905,7.15755597 9.77884459,7.26277191 9.592,7.45 L6.422,10.62 C6.022,11.01 6.022,11.65 6.412,12.04 C6.802,12.43 13.782,12.43 14.172,12.04 Z" id="Path" fill="#4741FA"></path>
+        </g>
+    </g>
+</svg>
