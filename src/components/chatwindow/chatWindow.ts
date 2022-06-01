@@ -7,7 +7,7 @@ import MessageTemplate from '../../templatemanager/templates/messageTemplate/mes
 import KRPerfectScrollbar from 'perfect-scrollbar';
 import './../../libs/perfectscroll/css/perfect-scrollbar.min.css';
 import './chatWindow.scss';
-import './../../libs/emojione.sprites.css';
+//import './../../libs/emojione.sprites.css';
 import chatConfig from './config/kore-config'
 
 const bot = requireKr('/KoreBot.js').instance();
