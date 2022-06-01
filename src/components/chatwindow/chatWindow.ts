@@ -2191,7 +2191,7 @@ assertionFn (options:any, callback:any) {
   if(me.config && me.config.JWTAsertion){
     me.config.JWTAsertion(me.SDKcallbackWraper.bind(me));
   }else if(options.assertion){//check for reconnect case
-    if(me.config && me.config.botOptions.API_KEY_CONFIG){
+    if(me.config && me.config.botOptions.API_KEY_CONFIG && me.config.botOptions.API_KEY_CONFIG.KEY!='YOUR_API_KEY'){
       me.setupInternalAssertionFunctionWithAPIKey();
     }else{
       me.setupInternalAssertionFunction();
