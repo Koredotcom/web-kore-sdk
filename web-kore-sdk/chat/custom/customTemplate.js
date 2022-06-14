@@ -2010,7 +2010,7 @@ print(JSON.stringify(message)); */
 			if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
 				a_link = "http:////" + a_link;
 			}
-			this.openExternalLink(a_link);
+			chatInitialize.openExternalLink(a_link);
 		 }else{
 			var _innerText= $(this).attr('data-value');
 			var postBack=$(this).attr('data-title');
