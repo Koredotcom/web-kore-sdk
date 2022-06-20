@@ -98,7 +98,7 @@ class SpeechToTextPlugin {
             }
         });
         $(me.pickerHTML).off('click', '.recordingMicrophone').on('click', '.recordingMicrophone', function (event: any) {
-            stop();
+            me.stop();
             setTimeout(function () {
                 me.setCaretEnd(document.getElementsByClassName("chatInputBox"));
             }, 350);
