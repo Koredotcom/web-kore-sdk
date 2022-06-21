@@ -828,7 +828,7 @@ bindEvents  () {
   });
 
   _chatContainer.off('click', '.sendButton').on('click', '.sendButton', (event: { preventDefault: () => void; }) => {
-    const chatInput:any = $(this);
+    const chatInput:any =  _chatContainer.find('.chatInputBox');
     //const _this = $('.chatInputBox');
     // if ($('.upldIndc').is(':visible')) {
     //   alert('Uploading file, please wait...');
