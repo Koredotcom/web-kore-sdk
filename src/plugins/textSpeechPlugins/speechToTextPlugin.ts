@@ -150,20 +150,20 @@ class SpeechToTextPlugin {
 
             this.recognition.onstart = function () {
                 this.prevStr = "";
-                this.recognizing = true;
+                me.recognizing = true;
                 $('.recordingMicrophone').css('display', 'block');
                 $('.notRecordingMicrophone').css('display', 'none');
             };
 
             this.recognition.onerror = function (event: { error: any; }) {
                 console.log(event.error);
-                $('.recordingMicrophone').trigger('click');
+                // $('.recordingMicrophone').trigger('click');
                 $('.recordingMicrophone').css('display', 'none');
                 $('.notRecordingMicrophone').css('display', 'block');
             };
 
             this.recognition.onend = function () {
-                this.recognizing = false;
+                me.recognizing = false;
                 $('.recordingMicrophone').trigger('click');
                 $('.recordingMicrophone').css('display', 'none');
                 $('.notRecordingMicrophone').css('display', 'block');
@@ -187,7 +187,7 @@ class SpeechToTextPlugin {
                 }
                 //console.log('Interm: ',interim_transcript);
                 //console.log('final: ',final_transcript);
-                if (this.recognizing) {
+                if (me.recognizing) {
                     $('.chatInputBox').html(this.prevStr + "" + interim_transcript);
                     $('.sendButton').removeClass('disabled');
                 }
@@ -507,34 +507,9 @@ class SpeechToTextPlugin {
         // clearInterval(this.intervalKey);
         $('.recordingMicrophone').css('display', 'none');
         $('.notRecordingMicrophone').css('display', 'block');
-        if (this.rec) {
-            this.rec.stop();
-            this.isListening = false;
-            console.log('stopped recording..');
-            setTimeout(function () {
-                if (me._connection) {
-                    me._connection.close();
-                    me._connection = null;
-                }
-            }, 1000); // waiting to send and receive last message
-
-            this.rec.export16kMono(function (blob: any) {
-                me.socketSend(blob);
-                me.rec.clear();
-                if (me._connection) {
-                    me._connection.close();
-                }
-                var track = me.mediaStream.getTracks()[0];
-                track.stop();
-                me.rec.destroy();
-                me.isRecordingStarted = false;
-            }, 'audio/x-raw');
-        } else {
-            console.error('Recorder undefined');
-        }
-        if (this.recognizing) {
-            this.recognition.stop();
-            this.recognizing = false;
+        if (me.recognizing) {
+            me.recognition.stop();
+            me.recognizing = false;
         }
     };
 
