@@ -319,6 +319,9 @@
           if(infoEle && infoEle.length){
             $('html').addClass('error');
             $('.kr-sdkEmptyState .emptyDes').html(hashObj.errorObj.message);
+            if(hashObj && hashObj.errorObj && hashObj.errorObj.errorTitle){
+                $('.kr-sdkEmptyState .emptyTitle').html(hashObj.errorObj.errorTitle);
+            }
           }else{
             window.alert(hashObj.errorObj.message);
           }
