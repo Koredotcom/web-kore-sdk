@@ -517,7 +517,7 @@
                         }  else if (txtArr[i].indexOf('>>') === 0) {
                             if(txtArr[i].substring(2).indexOf('*') === 0){
                                 if (!isEven(txtArr[i].substring(2).split('*').length - 1)) {
-                                    txtArr[i] = '\r\n&#9679; ' + txtArr[i].substring(3);
+                                    txtArr[i] = '&#9679; ' + txtArr[i].substring(3);
                                     _lineBreakAdded = true;
                                 }
                                 txtArr[i] = '<p class="indent">' + txtArr[i] + '</p>';
@@ -528,7 +528,7 @@
                         } else if (txtArr[i].indexOf('&gt;&gt;') === 0) {
                             if(txtArr[i].substring(8).indexOf('*') === 0){ // add ">>*" for sub bullet point 
                                 if (!isEven(txtArr[i].substring(8).split('*').length - 1)) {
-                                    txtArr[i] = '\r\n&#9679; ' + txtArr[i].substring(9);
+                                    txtArr[i] = '&#9679; ' + txtArr[i].substring(9);
                                     _lineBreakAdded = true;
                                 }
                                 txtArr[i] = '<p class="indent">' + txtArr[i] + '</p>';
