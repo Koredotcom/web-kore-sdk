@@ -1,8 +1,8 @@
-import $ from '../src/libs/korejquery';
+import $ from '../../libs/korejquery';
 import PerfectScrollbar from 'perfect-scrollbar';
-import requireKr from '../kore-bot-sdk-client'
-import './kore-widgets.css'
-import addPolyFils from '../src/utils/kore-polyfills';
+import requireKr from '../../../kore-bot-sdk-client'
+import './styles/kore-widgets.css'
+import addPolyFils from '../../utils/kore-polyfills';
 import { AnyMxRecord, AnyPtrRecord } from 'dns';
 
 // //"use strict";

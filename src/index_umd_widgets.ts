@@ -37,8 +37,8 @@
 // import Korei18nPlugin from './plugins/i18n';
 // import KoreFileUploaderPlugin from './plugins/fileUploader';
 
-import KoreWidgetSDK from '../UI/kore-widgets';
-import widgetsConfig from '../UI/kore-widgets-config';
+import KoreWidgetSDK from './components/widgets/kore-widgets'//'./components/widgets/kore-widgets';
+import widgetsConfig from './components/widgets/config/kore-widgets-config';
 // import KorePickersPlugin from './plugins/korePickers';
 
 

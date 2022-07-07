@@ -1,5 +1,5 @@
-import installDateRangeFunctions from '../../../../UI/libs/jquery.daterangepicker';
-import '../../../../UI/libs/daterangepicker.css';
+import installDateRangeFunctions from '../../../libs/jquery-daterangepicker/jquery.daterangepicker';
+import '../../../libs/jquery-daterangepicker/daterangepicker.css';
 import moment from 'moment';
 import './datePicker.scss';
 class DatePickerTemplate {

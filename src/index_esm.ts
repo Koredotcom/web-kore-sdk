@@ -10,8 +10,8 @@ import TtsSpeechPlugin from './plugins/textSpeechPlugins/ttsSpeechPlugin';
 import AgentDesktopPlugin from './plugins/agentDesktop/agentdesktop';
 
 
-import KoreWidgetSDK from '../UI/kore-widgets';
-import widgetsConfig from '../UI/kore-widgets-config';
+import KoreWidgetSDK from './components/widgets/kore-widgets';
+import widgetsConfig from './components/widgets/config/kore-widgets-config';
 
 import KRSearch from './components/search/findly-sdk';
 import KRSearchConfig from './components/search/config/findly-config';
