@@ -1,5 +1,5 @@
 import * as j$ from '../../libs/korejquery';
-import requireKr from '../../../kore-bot-sdk-client';
+import requireKr from '../base-sdk/kore-bot-sdk-client';
 import TemplateManager from '../../templatemanager/templateManager';
 import KoreHelpers from '../../utils/helpers';
 import EventEmitter from '../../utils/EventEmiter'

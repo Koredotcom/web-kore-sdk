@@ -1,6 +1,6 @@
 
 import helpers from '../../../utils/helpers';
-import KoreGraphAdapter from '../../../../libs/KoreGraphAdapter';
+import KoreGraphAdapter from '../../../libs/kore-graph-adapter/KoreGraphAdapter';
 import './pieChartTemplate.scss';
 
 class PieChartTemplate {

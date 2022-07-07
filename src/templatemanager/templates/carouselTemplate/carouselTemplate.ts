@@ -1,5 +1,5 @@
 import helpers from '../../../utils/helpers';
-import PureJSCarousel from '../../../../libs/purejscarousel';
+import PureJSCarousel from '../../../libs/purejscarousel/purejscarousel';
 import './carouselTemplate.scss';
 
 class CarouselTemplate {

@@ -1,6 +1,6 @@
 
 import PerfectScrollbar from "perfect-scrollbar";
-import requireKr from "../../../kore-bot-sdk-client";
+import requireKr from "../base-sdk/kore-bot-sdk-client";
 import korejquery from "../../libs/korejquery";
 import TemplateManager from '../../templatemanager/templateManager';
 import searchTemplate from './searchTemplate'

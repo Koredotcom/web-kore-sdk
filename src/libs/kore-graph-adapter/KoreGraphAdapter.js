@@ -1,7 +1,7 @@
 import * as d3 from "d3";
-import korejquery from '../src/libs/korejquery';
+import korejquery from '../../libs/korejquery';
 import { GoogleCharts} from 'google-charts';
-import chatConfig from '../src/components/chatwindow/config/kore-config';
+import chatConfig from '../../components/chatwindow/config/kore-config';
 
 var KoreGraphAdapter = (function($,d3) {
     const chartColors = ['#75b0fe', '#f78083', '#99ed9e', '#fde296', '#26344a', '#5f6bf7', '#b3bac8', '#99a1fd', '#9cebf9', '#f7c7f4'];

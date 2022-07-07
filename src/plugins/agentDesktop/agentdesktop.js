@@ -9,7 +9,7 @@
 
 import AudioCodesUA from './ac_webrtc';
 import * as koreJquery from '../../libs/korejquery';
-import requireKr from '../../../kore-bot-sdk-client';
+import requireKr from '../../components/base-sdk/kore-bot-sdk-client';
 import './agentdesktop.css';
 import moment from 'moment';
 
