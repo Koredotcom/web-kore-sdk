@@ -237,7 +237,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         }
 
         $(_self.config.container.menu).addClass('kr-wiz-menu-css');
-        $(_self.config.container.menu).addClass('defaultTheme-kore');
+        // $(_self.config.container.menu).addClass('defaultTheme-kore');
         $(_self.config.container.menu).append(dataHTML);
 
 

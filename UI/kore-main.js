@@ -219,21 +219,19 @@
         }
 
         function getBrandingInformation(options) {
-            if (hashObj && hashObj.jwt) {
+            if (chatConfig.botOptions.enableThemes) {
                 var brandingAPIUrl = (chatConfig.botOptions.brandingAPIUrl || '').replace(':appId', chatConfig.botOptions.botInfo._id);
                 $.ajax({
                     url: brandingAPIUrl,
                     headers: {
-                        'tenantId': chatConfig.botOptions.accountId,
                         'Authorization': "bearer " + options.authorization.accessToken,
-                        'Accept-Language': 'en_US',
-                        'Accepts-version': '1',
-                        'state': 'published'
                     },
                     type: 'get',
                     dataType: 'json',
                     success: function (data) {
-                        options.botDetails = koreBot.botDetails(data);
+                        if(koreBot && koreBot.applySDKBranding) {
+                            koreBot.applySDKBranding(data);
+                        }
                         if (koreBot && koreBot.initToken) {
                             koreBot.initToken(options);
                         }
@@ -244,6 +242,9 @@
                 });
             }
 
+        }
+        function onJWTGrantSuccess(options){
+            getBrandingInformation(options);
         }
         function onJWTGrantError(res){
             if (hashObj && hashObj.jwt) {
@@ -274,24 +275,27 @@
             }
         }
         var chatConfig = window.KoreSDK.chatConfig;
+        if (hashObj && hashObj.ity) {
+            uuId = hashObj.ity;
+        }
         chatConfig.botOptions.userIdentity = uuId;
         chatConfig.botOptions.assertionFn = assertion;
-        chatConfig.botOptions.jwtgrantSuccessCB = getBrandingInformation;
+        chatConfig.botOptions.jwtgrantSuccessCB = onJWTGrantSuccess;
         chatConfig.onJWTGrantError=onJWTGrantError;
         if (hashObj && hashObj.botInfo) {
             chatConfig.botOptions.botInfo = hashObj.botInfo;
         }
 
-        if (hashObj.koreAPIUrl) {
-            chatConfig.botOptions.koreAPIUrl = hashObj.koreAPIUrl + '/api/';
-            chatConfig.botOptions.brandingAPIUrl = chatConfig.botOptions.koreAPIUrl + '1.1/smartassist/apps/:appId/settings/widget';
+        if (hashObj && hashObj.koreAPIUrl) {
+            chatConfig.botOptions.koreAPIUrl = hashObj.koreAPIUrl + 'api/';
+            chatConfig.botOptions.brandingAPIUrl = chatConfig.botOptions.koreAPIUrl +'websdkthemes/'+  hashObj.botInfo._id+'/activetheme';
         }
 
-        if (hashObj.brand && hashObj.brand.headerTitle) {
+        if (hashObj && hashObj.brand && hashObj.brand.headerTitle) {
             chatConfig.chatTitleOverride = hashObj.brand.headerTitle;
         }
         //chatConfig.tasktotrigger="Write To Us";    
-        if (hashObj.tasktotrigger) {
+        if (hashObj && hashObj.tasktotrigger) {
             chatConfig.tasktotrigger = hashObj.tasktotrigger;
         }
 

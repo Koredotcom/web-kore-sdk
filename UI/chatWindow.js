@@ -3141,7 +3141,7 @@
                         <ul class="chat-container"></ul> \
                     </div> \
                     <div class="typingIndicatorContent"><div class="typingIndicator"></div><div class="movingDots"></div></div> \
-                    <div class="kore-chat-footer disableFooter">' + chatFooterTemplate + '{{if isSendButton}}<div class="sendBtnCnt"><button class="sendButton disabled" type="button">${botMessages.sendText}</button></div>{{/if}}</div> \
+                    <div class="kore-chat-footer disableFooter">' + chatFooterTemplate + '{{if isSendButton}}<div class="sendBtnCnt"><button class="sendButton disabled devendar" type="button"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTAuMzM4NTQ0IDQuNzc5MkMtMC4wODIyNjIgNC45MzMyNSAtMC4xMTk4NzkgNS41MTM4MiAwLjI3NjkwNSA1LjcyMjA3TDUuNTIxNjQgOC40Nzg1Nkw4LjI3NTc5IDEzLjcyMjJDOC40ODQxMSAxNC4xMTg4IDkuMDY0MDEgMTQuMDgwMyA5LjIxODExIDEzLjY1OTdMMTMuOTY3NCAwLjY5NTMyQzE0LjExODYgMC4yODI0MzYgMTMuNzE3NyAtMC4xMTg1NzcgMTMuMzA0OCAwLjAzMjU4MjJMMC4zMzg1NDQgNC43NzkyWk0xLjc4OTI2IDUuMzUxMTJMMTEuNDYyNiAxLjgwNzA3TDUuODA2OTkgNy40NjI3MUwxLjc4OTI2IDUuMzUxMTJaTTYuNTM3NDkgOC4xOTMyTDEyLjE5MzEgMi41Mzc1Nkw4LjY1MTkzIDEyLjIxMzhMNi41Mzc0OSA4LjE5MzJaIiBmaWxsPSIjOUFBMEE2Ii8+Cjwvc3ZnPgo="></button></div>{{/if}}</div> \
                      <div id="myModal" class="modalImagePreview">\
                           <span class="closeImagePreview">&times;</span>\
                           <img class="modal-content-imagePreview" id="img01">\

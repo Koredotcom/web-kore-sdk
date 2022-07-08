@@ -56,7 +56,7 @@
 	margin-top: 11px;
 }
 @media(max-width: 767px) {
-	.kore-chat-window {
+	/* .kore-chat-window {
 		left: 5px!important;
 		right: 5px!important;
 		top: 5px!important;
@@ -65,7 +65,7 @@
 		height: auto!important;
 		min-width: 100px;
 		max-height: 100%;
-	}
+	} */
 }
 .kore-chat-window.expanded{
     min-width: 330px;

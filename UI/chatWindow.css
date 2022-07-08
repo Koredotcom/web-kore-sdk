@@ -477,7 +477,7 @@
     display: block;
 }
 @media(max-width: 767px) {
-    .kore-chat-window {
+    /* .kore-chat-window {
         left: 5px!important;
         right: 5px!important;
         top: 5px!important;
@@ -487,7 +487,7 @@
         min-width: 100px;
         max-height: 100%;
         margin-left:68px;
-    }
+    } */
 }
 @media(max-width: 479px) {
     .kr-wiz-container{
@@ -1176,6 +1176,7 @@
     display: table-cell;
     padding: 10px 10px 7px 0;
     border: none;
+    background-color:transparent !important;
 }
 
 .kore-chat-window .buttonTmplContent .buttonTmplContentChild .quickReply {
