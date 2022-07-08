@@ -2460,7 +2460,7 @@
     text-align: left;
     padding: 10px;
     font-size: 15px;
-    color: var(--sdk-chat-window-bot-bubble-font-clrr);
+    color: var(--sdk-chat-window-bot-bubble-font-clr);
     font-weight: bold;
 }
 
