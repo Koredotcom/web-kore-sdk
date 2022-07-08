@@ -1832,7 +1832,7 @@
     background-color: rgb(169 169 169 / 20%)  !important;
     border: solid 1px var(--sdk-chat-widow-primary-border-color) !important;
     z-index: 1;
-    color: var(--sdk-chat-window-bot-bubble-font-clrr) !important;
+    color: var(--sdk-chat-window-bot-bubble-font-clr) !important;
     font-size: 18px !important;
     padding-top: 8px;
 }
@@ -2025,7 +2025,7 @@
     white-space: nowrap;
     max-width: 200px !important;
     font-size: 14px;
-    color: var(--sdk-chat-window-bot-bubble-font-clrr);
+    color: var(--sdk-chat-window-bot-bubble-font-clr);
     text-align: left;
 }
 
@@ -2034,7 +2034,7 @@
     padding: 17px;
     /* white-space: nowrap; */
     font-size: 14px;
-    color: var(--sdk-chat-window-bot-bubble-font-clrr);
+    color: var(--sdk-chat-window-bot-bubble-font-clr);
     text-align: left;
     max-width: 200px;
 }
@@ -2296,7 +2296,7 @@
 .kore-chat-window .accordionRow .colVal {
     font-size: 14px;
     text-align: left;
-    color: var(--sdk-chat-window-bot-bubble-font-clrr);
+    color: var(--sdk-chat-window-bot-bubble-font-clr);
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -2460,7 +2460,7 @@
     text-align: left;
     padding: 10px;
     font-size: 15px;
-    color: var(--sdk-chat-window-bot-bubble-font-clrr);
+    color: var(--sdk-chat-window-bot-bubble-font-clr);
     font-weight: bold;
 }
 
