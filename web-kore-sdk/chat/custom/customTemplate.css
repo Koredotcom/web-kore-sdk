@@ -2130,6 +2130,9 @@
     /* z-index: 1; */
     /* height: 20px;
     width: 20px; */ 
+    margin: 0;
+    font-size: 0px;
+    cursor: pointer;
 }
 .kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .experience-feedback-listItems .feedback-listItem{
     align-items: center;
@@ -2372,19 +2375,19 @@
 .kore-chat-window.PSCU .kore-chat-header .chat-box-controls .minimize-btn{
     display: block !important;
 }
-.kore-chat-window.PSCU .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .buttons-div .feedback-submit .submitBtn{
+/* .kore-chat-window.PSCU .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .buttons-div .feedback-submit .submitBtn{
     background: var(--sdk-chat-widow-chat-button-active-color);
     border: 1px solid var(--sdk-chat-widow-chat-button-active-color);
-}
-.kore-chat-window.PSCU .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .buttons-div .feedback-submit .submitBtn:hover{
+} */
+/* .kore-chat-window.PSCU .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .buttons-div .feedback-submit .submitBtn:hover{
     background-color: var(--sdk-chat-widow-chat-button-inactive-background-color);
     border: 2px solid var(--sdk-chat-widow-chat-button-inactive-text-color);
     color: var(--sdk-chat-widow-chat-button-inactive-text-color);
-}
-.kore-chat-window.PSCU .radiobutton-custom-type .radio-custom:checked + .radio-custom-label::before {
+} */
+/* .kore-chat-window.PSCU .radiobutton-custom-type .radio-custom:checked + .radio-custom-label::before {
     background-color: #022554;
     border: 1px solid #022554 !important;
-}
+} */
 .kore-chat-window.PSCU .bankingFeedBackTemplate .feedback-listItem .checkbox.styledCSS input[type="checkbox"]:checked + label::before {
     background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjxzdmcgd2lkdGg9IjE2cHgiIGhlaWdodD0iMTJweCIgdmlld0JveD0iMCAwIDE2IDEyIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPg0KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNTMuMiAoNzI2NDMpIC0gaHR0cHM6Ly9za2V0Y2hhcHAuY29tIC0tPg0KICAgIDx0aXRsZT5jaGVjay13aGl0ZTwvdGl0bGU+DQogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+DQogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+DQogICAgICAgIDxnIGlkPSJjaGVjay13aGl0ZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsIC0yLjAwMDAwMCkiIGZpbGwtcnVsZT0ibm9uemVybyI+DQogICAgICAgICAgICA8cG9seWdvbiBpZD0iUGF0aCIgZmlsbC1vcGFjaXR5PSIwIiBmaWxsPSIjRDhEOEQ4IiBwb2ludHM9IjAgMCAxNiAwIDE2IDE2IDAgMTYiPjwvcG9seWdvbj4NCiAgICAgICAgICAgIDxwYXRoIGQ9Ik0xNC4yLDIuODM1IEMxNC40LDIuNjIgMTQuNzMzLDIuNjEgMTQuOTQ1LDIuODExIEMxNS4xNDUsMyAxNS4xNjUsMy4zMDkgMTUuMDAyLDMuNTIzIEwxNC45NjksMy41NjMgTDYuMDQ5LDEzLjE2NSBDNS44NTksMTMuMzcgNS41NDUsMTMuMzg5IDUuMzMzLDEzLjIxNSBMNS4yOTUsMTMuMTggTDEuMDQ1LDguOTUzIEMwLjg0LDguNzQ3IDAuODM3LDguNDEgMS4wNCw4LjIgQzEuMjMzLDguMDAzIDEuNTQsNy45ODkgMS43NDgsOC4xNiBMMS43ODUsOC4xOTQgTDUuNjUsMTIuMDQgTDE0LjIsMi44MzUgWiIgaWQ9IlBhdGgiIGZpbGw9IiNGRkZGRkYiPjwvcGF0aD4NCiAgICAgICAgPC9nPg0KICAgIDwvZz4NCjwvc3ZnPg==);
     background-color: var(--sdk-chat-widow-chat-button-active-color) !important;
@@ -2392,13 +2395,13 @@
 .kore-chat-window.PSCU .bankingFeedBackTemplate .feedback-listItem .checkbox.styledCSS input[type="checkbox"]:checked + label::after {
     background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjxzdmcgd2lkdGg9IjE2cHgiIGhlaWdodD0iMTJweCIgdmlld0JveD0iMCAwIDE2IDEyIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPg0KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNTMuMiAoNzI2NDMpIC0gaHR0cHM6Ly9za2V0Y2hhcHAuY29tIC0tPg0KICAgIDx0aXRsZT5jaGVjay13aGl0ZTwvdGl0bGU+DQogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+DQogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+DQogICAgICAgIDxnIGlkPSJjaGVjay13aGl0ZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsIC0yLjAwMDAwMCkiIGZpbGwtcnVsZT0ibm9uemVybyI+DQogICAgICAgICAgICA8cG9seWdvbiBpZD0iUGF0aCIgZmlsbC1vcGFjaXR5PSIwIiBmaWxsPSIjRDhEOEQ4IiBwb2ludHM9IjAgMCAxNiAwIDE2IDE2IDAgMTYiPjwvcG9seWdvbj4NCiAgICAgICAgICAgIDxwYXRoIGQ9Ik0xNC4yLDIuODM1IEMxNC40LDIuNjIgMTQuNzMzLDIuNjEgMTQuOTQ1LDIuODExIEMxNS4xNDUsMyAxNS4xNjUsMy4zMDkgMTUuMDAyLDMuNTIzIEwxNC45NjksMy41NjMgTDYuMDQ5LDEzLjE2NSBDNS44NTksMTMuMzcgNS41NDUsMTMuMzg5IDUuMzMzLDEzLjIxNSBMNS4yOTUsMTMuMTggTDEuMDQ1LDguOTUzIEMwLjg0LDguNzQ3IDAuODM3LDguNDEgMS4wNCw4LjIgQzEuMjMzLDguMDAzIDEuNTQsNy45ODkgMS43NDgsOC4xNiBMMS43ODUsOC4xOTQgTDUuNjUsMTIuMDQgTDE0LjIsMi44MzUgWiIgaWQ9IlBhdGgiIGZpbGw9IiNGRkZGRkYiPjwvcGF0aD4NCiAgICAgICAgPC9nPg0KICAgIDwvZz4NCjwvc3ZnPg==) !important;
 }
-.kore-chat-window.PSCU .bankingFeedBackTemplate .feedback-listItem .checkbox.styledCSS input[type="checkbox"]:checked + label::after {
+/* .kore-chat-window.PSCU .bankingFeedBackTemplate .feedback-listItem .checkbox.styledCSS input[type="checkbox"]:checked + label::after {
     left: 1px;
     top: 3px;
-}
-.kore-chat-window.PSCU .bankingFeedBackTemplate .feedback-listItem .checkbox.styledCSS input[type="checkbox"]:checked + label::after {
+} */
+/* .kore-chat-window.PSCU .bankingFeedBackTemplate .feedback-listItem .checkbox.styledCSS input[type="checkbox"]:checked + label::after {
     background: var(--sdk-chat-widow-chat-button-active-color) !important;
     border: 1px solid var(--sdk-chat-widow-chat-button-active-color);
-}
+}  */
 
 /* custom styles for PSCU  ends here*/
