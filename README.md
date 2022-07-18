@@ -102,6 +102,6 @@ class KoreCustomPlugin{
 
 chatWindowInstance.installPlugin(new KoreCustomPlugin());
 ```
-Kore offered plugins are listed here
+Kore offered plugins are listed [here](./docs/plugins)
 
 
