@@ -9,14 +9,14 @@ import './../../libs/perfectscroll/css/perfect-scrollbar.min.css';
 import './chatWindow.scss';
 //import './../../libs/emojione.sprites.css';
 import chatConfig from './config/kore-config'
+//import GreeetingsPlugin from '../../plugins/greetings/greetings-plugin'
 
 const bot = requireKr('/KoreBot.js').instance();
 
 declare const document:any;
-// declare const $:any; 
 const $:any = j$.default ;
 declare const callListener:any;
-declare const KorePickers:any;
+
 
 declare const window:any;
 
@@ -125,17 +125,10 @@ class chatWindow extends EventEmitter{
   }
   
  constructor(){
-
- super(null);
+  super(null);
   this.chatEle;
-  // this.me = this;
-  const me:any = this;
   this.config={};
-  //EventEmitter.call(this);
-   this.init(this.config);
-
-
-
+  this.init(this.config);
 }
 
 init  (config:any) {
@@ -144,19 +137,18 @@ init  (config:any) {
   me.plugins = {};
   me.bot=bot;
   me.vars={};
-  me.vars._escPressed=0;
   me.helpers=KoreHelpers.helpers;
-  //chatInitialize = me//new chatWindow(cfg);
-  //me.config.botOptions.test = false;
   me.templateManager = new TemplateManager(me);
   me.messageTemplate=new MessageTemplate();
   me.messageTemplate.hostInstance=me;
   me.installCallbackForPlugins();
+  me.installDefaultPlugins();
 }
 
-
-
-
+installDefaultPlugins(){
+  const me:any = this;
+  //me.installPlugin(new GreeetingsPlugin());
+}
 
 installCallbackForPlugins (){
   const me:any = this;
@@ -168,22 +160,15 @@ installCallbackForPlugins (){
 }
 
 show  (config:any) {
-  // todo:raj
   const me:any = this;
   me.initShow(config);
   const cfg = me.config;
    if ($('body').find('.kore-chat-window').length > 0) {
        return false;
    }
-  //cfg.chatHistory = this.chatHistory;
-  //cfg.handleError = this.showError;
   if (cfg.widgetSDKInstace) {
     this.addWidgetEvents(cfg);
   }
-  //  chatInitialize = me//new chatWindow(cfg);
-  //  chatInitialize.templateManager = new customTemplate(cfg,chatInitialize);
-
-  // return this;
 };
 initShow  (config:any) {
   const me:any = this;
@@ -230,13 +215,7 @@ initShow  (config:any) {
   me.config.botOptions.chatHistory = me.config.chatHistory;
   me.config.botOptions.handleError = me.config.handleError;
   me.config.botOptions.googleMapsAPIKey = me.config.googleMapsAPIKey;
-  /* autoEnableSpeechAndTTS will on if and only if both tts and mic are enabled */
-  if (me.config.isTTSEnabled && (me.config.isSpeechEnabled || me.config.allowGoogleSpeech) && me.config.autoEnableSpeechAndTTS) {
-    me.isTTSOn = true;
-    setTimeout(() => {
-      $('.ttspeakerDiv').removeClass('ttsOff');
-    }, 350);
-  }
+ 
   const chatWindowHtml = (<any> $(me.getChatTemplate())).tmpl(me.config);
   me.chatEle = chatWindowHtml;
   me.updatei18nDirection();
@@ -701,7 +680,6 @@ sendMessageWithWithChatInput(chatInput:any){
 }
 bindEvents  () {
   const me:any = this;
-  me.bindCustomEvents();
   const _chatContainer = me.chatEle;
   window.onresize = function (event:any) {
     me.onWindowResize(event);
@@ -712,16 +690,6 @@ bindEvents  () {
       // return null;
     }
   };
-  // todo:raj
-  //  _chatContainer.draggable({
-  //      handle: _chatContainer.find(".kore-chat-header .header-title"),
-  //      containment: "document",
-  //  })
-  //      .resizable({
-  //          handles: "n, e, w, s",
-  //          containment: "document",
-  //          minWidth: 400
-  //      });
   _chatContainer.off('keyup', '.chatInputBox').on('keyup', '.chatInputBox',  (event:any) => {
     const _footerContainer = $(me.config.container).find('.kore-chat-footer');
     const _bodyContainer = $(me.config.container).find('.kore-chat-body');
@@ -749,43 +717,6 @@ bindEvents  () {
     me.prevComposeSelection = window.getSelection();
     me.prevRange = me.prevComposeSelection.rangeCount > 0 && me.prevComposeSelection.getRangeAt(0);
   });
-  _chatContainer.on('blur', '.chatInputBox', () => {
-    me.vars._escPressed = 0;
-  });
-  // _chatContainer.off('click', '.botResponseAttachments').on('click', '.botResponseAttachments', function (event) {
-  //   window.open($(this).attr('fileid'), '_blank');
-  // });
-  /* _chatContainer.off('click', '.attachments').on('click', '.attachments', function (event) {
-         var attachFileID = $(this).attr('fileid');
-         var auth = (bearerToken) ? bearerToken : assertionToken;
-         $.ajax({
-             type: "GET",
-             url: koreAPIUrl + "1.1/attachment/file/" + attachFileID + "/url",
-             headers: {
-                 Authorization: auth
-             },
-             success: function (response) {
-                 var downloadUrl = response.fileUrl;
-                 if (downloadUrl.indexOf("?") < 0) {
-                     downloadUrl += "?download=1";
-                 } else {
-                     downloadUrl += "&download=1";
-                 }
-
-                 var save = document.createElement('a');
-                 document.body.appendChild(save);
-                 save.href = downloadUrl;
-                 save.target = '_blank';
-                 save.download = 'unknown file';
-                 save.style.dislay = 'none !important;';
-                 save.click();
-                 save.remove();
-             },
-             error: function (msg) {
-                 console.log("Oops, something went horribly wrong");
-             }
-         });
-     }); */
   _chatContainer.off('keydown', '.chatInputBox').on('keydown', '.chatInputBox',  (event:any) => {
     const chatInput:any = $(event.currentTarget);
     let chatWindowEvent = {stopFurtherExecution: false};
@@ -803,102 +734,17 @@ bindEvents  () {
       if (event.shiftKey) {
         return;
       }
-      if ($('.upldIndc').is(':visible')) {
-        alert('Uploading file, please wait...');
-        return;
-      }
-      if ($('.recordingMicrophone').is(':visible')) {
-        $('.recordingMicrophone').trigger('click');
-      }
       event.preventDefault();
       me.sendMessageWithWithChatInput(chatInput);
-    } else if (event.keyCode === 27) {
-      me.vars._escPressed++;
-      if (me.vars._escPressed > 1) {
-        me.vars._escPressed = 0;
-        stop();
-        chatInput.innerText = '';
-        $('.attachment').empty();
-        //fileUploaderCounter = 0;
-        // setTimeout(() => {
-        //   me.setCaretEnd((document.getElementsByClassName('chatInputBox')));
-        // }, 100);
-      }
-    }
+    } 
   });
 
   _chatContainer.off('click', '.sendButton').on('click', '.sendButton', (event: { preventDefault: () => void; }) => {
     const chatInput:any =  _chatContainer.find('.chatInputBox');
-    //const _this = $('.chatInputBox');
-    // if ($('.upldIndc').is(':visible')) {
-    //   alert('Uploading file, please wait...');
-    //   return;
-    // }
-    // if ($('.recordingMicrophone').is(':visible')) {
-    //   $('.recordingMicrophone').trigger('click');
-    // }
     event.preventDefault();
     me.sendMessageWithWithChatInput(chatInput);
   });
-  // _chatContainer.off('click', '.notRecordingMicrophone').on('click', '.notRecordingMicrophone', (event) => {
-  //   if (ttsAudioSource) {
-  //     ttsAudioSource.stop();
-  //   }
-  //   if (me.config.isSpeechEnabled) {
-  //     getSIDToken();
-  //   }
-  // });
-  // _chatContainer.off('click', '.recordingMicrophone').on('click', '.recordingMicrophone', (event) => {
-  //   stop();
-  //   setTimeout(() => {
-  //     setCaretEnd(document.getElementsByClassName('chatInputBox'));
-  //   }, 350);
-  // });
-  // _chatContainer.off('click', '.attachmentBtn').on('click', '.attachmentBtn', (event) => {
-  //   debugger;
-  //   if (fileUploaderCounter == 1) {
-  //     alert('You can upload only one file');
-  //     return;
-  //   }
-  //   if ($('.upldIndc').is(':visible')) {
-  //     alert('Uploading file, please wait...');
-  //     return;
-  //   }
-  //   $('#captureAttachmnts').trigger('click');
-  // });
-  // _chatContainer.off('click', '.removeAttachment').on('click', '.removeAttachment', function (event) {
-  //   $(this).parents('.msgCmpt').remove();
-  //   $('.kore-chat-window').removeClass('kore-chat-attachment');
-  //   fileUploaderCounter = 0;
-  //   me.attachmentInfo = {};
-  //   $('.sendButton').addClass('disabled');
-  //   document.getElementById('captureAttachmnts').value = '';
-  // });
-  // _chatContainer.off('change', '#captureAttachmnts').on('change', '#captureAttachmnts', function (event) {
-  //   const file = $('#captureAttachmnts').prop('files')[0];
-  //   if (file && file.size) {
-  //     if (file.size > filetypes.file.limit.size) {
-  //       alert(filetypes.file.limit.msg);
-  //       return;
-  //     }
-  //   }
-  //   cnvertFiles(this, file);
-  // });
-  _chatContainer.off('paste', '.chatInputBox').on('paste', '.chatInputBox', (event: { preventDefault: () => void; clipboardData: any; originalEvent: { clipboardData: any; }; }) => {
-    event.preventDefault();
-    const _this = document.getElementsByClassName('chatInputBox');
-    const _clipboardData = event.clipboardData || (event.originalEvent && event.originalEvent.clipboardData) || window.clipboardData;
-    let _htmlData = '';
-    if (_clipboardData) {
-      _htmlData = me.helpers.nl2br(_clipboardData.getData('text').escapeHTML(), false);
-      if (_htmlData) {
-        me.insertHtmlData(_this, _htmlData);
-      }
-    }
-    // setTimeout(() => {
-    //   me.setCaretEnd(_this);
-    // }, 100);
-  });
+  
   _chatContainer.off('click', '.sendChat').on('click', '.sendChat', (event: any) => {
     const _footerContainer = $(me.config.container).find('.kore-chat-footer');
     me.sendMessageWithWithChatInput(_footerContainer.find('.chatInputBox'));
@@ -937,91 +783,10 @@ bindEvents  () {
       me.openExternalLink(a_link);
     }
   });
-  // _chatContainer.off('click', '.carouselImageContent').on('click', '.carouselImageContent', function (e) {
-  //   e.preventDefault();
-  //   e.stopPropagation();
-  //   let type = $(this).attr('type');
-  //   if (type) {
-  //     type = type.toLowerCase();
-  //   }
-  //   if (type == 'postback' || type == 'text') {
-  //     $('.chatInputBox').text($(this).attr('actual-value') || $(this).attr('value'));
-  //     // var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
-  //     const _innerText = ($(this)[0] && $(this)[0].innerText) ? $(this)[0].innerText.trim() : '' || ($(this) && $(this).attr('data-value')) ? $(this).attr('data-value').trim() : '';
-  //     me.sendMessageToBot($('.chatInputBox'), _innerText);
-  //   } else if (type == 'url' || type == 'web_url') {
-  //     if ($(this).attr('msgData') !== undefined) {
-  //       let msgData;
-  //       try {
-  //         msgData = JSON.parse($(this).attr('msgData'));
-  //       } catch (err) {
-
-  //       }
-  //       if (msgData && msgData.message && msgData.message[0].component && (msgData.message[0].component.formData || (msgData.message[0].component.payload && msgData.message[0].component.payload.formData))) {
-  //         if (msgData.message[0].component.formData) {
-  //           msgData.message[0].component.payload.formData = msgData.message[0].component.formData;
-  //         }
-  //         me.renderWebForm(msgData);
-  //         return;
-  //       }
-  //     }
-  //     let a_link = $(this).attr('url');
-  //     if (a_link.indexOf('http:') < 0 && a_link.indexOf('https:') < 0) {
-  //       a_link = `http:////${a_link}`;
-  //     }
-  //     me.openExternalLink(a_link);
-  //   }
-  //   if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[1] === 'likeDiv') {
-  //     $('.likeImg').addClass('hide');
-  //     $('.likedImg').removeClass('hide');
-  //     $('.likeDislikeDiv').addClass('dummy');
-  //   }
-  //   if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[1] === 'disLikeDiv') {
-  //     $('.disLikeImg').addClass('hide');
-  //     $('.disLikedImg').removeClass('hide');
-  //     $('.likeDislikeDiv').addClass('dummy');
-  //   }
-
-  //   if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[0] === 'checkboxBtn') {
-  //     const checkboxSelection = $(e.currentTarget.parentElement.parentElement).find('.checkInput:checked');
-  //     const selectedValue = [];
-  //     const toShowText = [];
-  //     for (let i = 0; i < checkboxSelection.length; i++) {
-  //       selectedValue.push($(checkboxSelection[i]).attr('value'));
-  //       toShowText.push($(checkboxSelection[i]).attr('text'));
-  //     }
-  //     $('.chatInputBox').text(`${$(this).attr('title')}: ${selectedValue.toString()}`);
-  //     me.sendMessageToBot($('.chatInputBox'), toShowText.toString());
-  //   }
-  //   if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[0] === 'quickReply') {
-  //     const _parentQuikReplyEle = e.currentTarget.parentElement.parentElement;
-  //     const _leftIcon = _parentQuikReplyEle.parentElement.parentElement.querySelectorAll('.quickreplyLeftIcon');
-  //     const _rightIcon = _parentQuikReplyEle.parentElement.parentElement.querySelectorAll('.quickreplyRightIcon');
-  //     setTimeout(() => {
-  //       _parentQuikReplyEle.parentElement.parentElement.getElementsByClassName('user-account')[0].classList.remove('marginT50');
-  //       _parentQuikReplyEle.parentElement.parentElement.removeChild(_leftIcon[0]);
-  //       _parentQuikReplyEle.parentElement.parentElement.removeChild(_rightIcon[0]);
-  //       _parentQuikReplyEle.parentElement.removeChild(_parentQuikReplyEle);
-  //     }, 50);
-  //   }
-  //   setTimeout(() => {
-  //     const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
-  //     _chatInput.focus();
-  //   }, 600);
-  // });
+  
 
   _chatContainer.off('click', '.close-btn').on('click', '.close-btn', (event: any) => {
-    // $('.recordingMicrophone').trigger('click');
-    // if (ttsAudioSource) {
-    //   ttsAudioSource.stop();
-    // }
-    // me.isTTSOn = false;
     me.destroy();
-    // if (_ttsContext) {
-    //   _ttsContext.close();
-    //   _ttsContext = null;
-    // }
-
     if (me.config.multiPageApp && me.config.multiPageApp.enable) {
       me.removeLocalStoreItem('kr-cw-state');
       me.removeLocalStoreItem('kr-cw-uid');
@@ -1036,59 +801,30 @@ bindEvents  () {
     if (me.minimized === true) {
       _chatContainer.removeClass('minimize');
       me.minimized = false;
-      if (me.expanded === false) {
-        /* _chatContainer.draggable({
-                     handle: _chatContainer.find(".kore-chat-header .header-title"),
-                     containment: "window",
-                     scroll: false
-                 }); */
-      }
     } else {
       _chatContainer.addClass('minimize');
-      if (me.expanded === false && _chatContainer.hasClass('ui-draggable')) {
-        // _chatContainer.draggable("destroy");
-      }
       _chatContainer.find('.minimized-title').html(`Talk to ${me.config.chatTitle}`);
       me.minimized = true;
       if (me.expanded === true) {
         $('.kore-chat-overlay').hide();
       }
     }
-    // $('.recordingMicrophone').trigger('click');
-    // if (ttsAudioSource) {
-    //   ttsAudioSource.stop();
-    // }
   });
 
   _chatContainer.off('click', '.expand-btn').on('click', '.expand-btn',  (event: any) => {
-    if ($('.kore-chat-overlay').length === 0) {
-      $(me.config.container).append('<div class="kore-chat-overlay"></div>');
-    }
     if (me.expanded === true) {
       me.setCollapsedModeStyles();
-      $('.kore-chat-overlay').hide();
       $(this).attr('title', 'Expand');
       _chatContainer.removeClass('expanded');
       $('.expand-btn-span').removeClass('fa-compress');
       $('.expand-btn-span').addClass('fa-expand');
       me.expanded = false;
       $('.chat-container').scrollTop($('.chat-container')[0].scrollHeight);
-      /* _chatContainer.draggable({
-                  handle: _chatContainer.find(".kore-chat-header .header-title"),
-                  containment: "parent",
-                  scroll: false
-              }).resizable({
-                  handles: "n, e, w, s",
-                  containment: "html",
-                  minWidth: 400
-              }); */
     } else {
-      $('.kore-chat-overlay').show();
       $(this).attr('title', 'Collapse');
       _chatContainer.addClass('expanded');
       $('.expand-btn-span').addClass('fa-compress');
       $('.expand-btn-span').removeClass('fa-expand');
-      // _chatContainer.draggable("destroy").resizable("destroy");
       me.expanded = true;
     }
     const evt = document.createEvent('HTMLEvents');
@@ -1102,80 +838,14 @@ bindEvents  () {
       me.chatPSObj.update();
     }
   });
-  /* $('body').on('click', '.kore-chat-overlay, .kore-chat-window .minimize-btn', function () {
-         if (me.expanded === true) {
-             $('.kore-chat-window .expand-btn').trigger('click');
-         }
-     }); */
 
-  // // dateClockPickers();
-  // if (window.KorePickers) {
-  //   const pickerConfig = {
-  //     chatWindowInstance: me,
-  //     chatConfig: me.config,
-  //   };
-  //   const korePicker = new KorePickers(pickerConfig);
-  //   korePicker.init();
-  // }
   $(document).on('keyup', (evt: { keyCode: number; }) => {
     if (evt.keyCode == 27) {
       $('.closeImagePreview').trigger('click');
       $('.closeElePreview').trigger('click');
     }
   });
-  // _chatContainer.off('click', '.quickreplyLeftIcon').on('click', '.quickreplyLeftIcon', (event) => {
-  //   const _quickReplesDivs = event.currentTarget.parentElement.getElementsByClassName('buttonTmplContentChild');
-  //   if (_quickReplesDivs.length) {
-  //     const _scrollParentDiv = event.target.parentElement.getElementsByClassName('quick_replies_btn_parent');
-  //     const _totalWidth = _scrollParentDiv[0].scrollLeft;
-  //     let _currWidth = 0;
-  //     for (let i = 0; i < _quickReplesDivs.length; i++) {
-  //       _currWidth += (_quickReplesDivs[i].offsetWidth + 10);
-  //       if (_currWidth > _totalWidth) {
-  //         // _scrollParentDiv[0].scrollLeft = (_totalWidth - _quickReplesDivs[i].offsetWidth+20);
-  //         $(_scrollParentDiv).animate({
-  //           scrollLeft: (_totalWidth - _quickReplesDivs[i].offsetWidth - 50),
-  //         }, 'slow', () => {
-  //           // deciding to enable left and right scroll icons
-  //           const rightIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyRightIcon');
-  //           rightIcon[0].classList.remove('hide');
-  //           if (_scrollParentDiv[0].scrollLeft <= 0) {
-  //             const leftIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyLeftIcon');
-  //             leftIcon[0].classList.add('hide');
-  //           }
-  //         });
-  //         break;
-  //       }
-  //     }
-  //   }
-  // });
-  // _chatContainer.off('click', '.quickreplyRightIcon').on('click', '.quickreplyRightIcon', (event) => {
-  //   const _quickReplesDivs = event.currentTarget.parentElement.getElementsByClassName('buttonTmplContentChild');
-  //   if (_quickReplesDivs.length) {
-  //     const _scrollParentDiv = event.target.parentElement.getElementsByClassName('quick_replies_btn_parent');
-  //     const _totalWidth = event.target.parentElement.offsetWidth;
-  //     let _currWidth = 0;
-  //     // calculation for moving element scroll
-  //     for (let i = 0; i < _quickReplesDivs.length; i++) {
-  //       _currWidth += (_quickReplesDivs[i].offsetWidth + 10);
-  //       if (_currWidth > _totalWidth) {
-  //         // _scrollParentDiv[0].scrollLeft = _currWidth;
-  //         $(_scrollParentDiv).animate({
-  //           scrollLeft: (_scrollParentDiv[0].scrollLeft + _quickReplesDivs[i].offsetWidth + 20),
-  //         }, 'slow', () => {
-  //           // deciding to enable left and right scroll icons
-  //           const leftIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyLeftIcon');
-  //           leftIcon[0].classList.remove('hide');
-  //           if ((_scrollParentDiv[0].scrollLeft + _totalWidth + 10) >= _scrollParentDiv[0].scrollWidth) {
-  //             const rightIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyRightIcon');
-  //             rightIcon[0].classList.add('hide');
-  //           }
-  //         });
-  //         break;
-  //       }
-  //     }
-  //   }
-  // });
+  
   _chatContainer.off('click', '.minimized').on('click', '.minimized,.minimized-title', (event: any) => {
     if (me.config.multiPageApp && me.config.multiPageApp.enable) {
       me.setLocalStoreItem('kr-cw-state', 'open');
@@ -1186,16 +856,8 @@ bindEvents  () {
       if (me.config.multiPageApp && me.config.multiPageApp.enable) {
         me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
       }
-      bot.init(me.config.botOptions, me.config.messageHistoryLimit);
+      me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
       me.skipedInit = false;
-    }
-    /* _chatContainer.draggable({
-             handle: _chatContainer.find(".kore-chat-header .header-title"),
-             containment: "window",
-             scroll: false
-         }); */
-    if (me.expanded === true) {
-      $('.kore-chat-overlay').show();
     }
     const evt = document.createEvent('HTMLEvents');
     evt.initEvent('resize', true, false);
@@ -1211,58 +873,7 @@ bindEvents  () {
     setTimeout(() => {
       me.resetWindow();
     });
-    // $('.recordingMicrophone').trigger('click');
-    // if (ttsAudioSource) {
-    //   ttsAudioSource.stop();
-    // }
   });
-  // _chatContainer.off('click', '.ttspeaker').on('click', '.ttspeaker', (event) => {
-  //   if (me.config.isTTSEnabled) {
-  //     if (me.isTTSOn) {
-  //       if (ttsAudioSource) {
-  //         ttsAudioSource.stop();
-  //       }
-  //       cancelTTSConnection();
-  //       me.isTTSOn = false;
-  //       $('#ttspeaker')[0].pause();
-  //       if (me.config.ttsInterface && me.config.ttsInterface === 'webapi') {
-  //         const synth = window.speechSynthesis;
-  //         synth.pause();
-  //       } else if (me.config.ttsInterface === 'awspolly') {
-  //         if (me.isTTSOn === false) {
-  //           // isTTSOn = false;
-  //           gainNode.gain.value = 0; // 10 %
-  //           $('.ttspeakerDiv').addClass('ttsOff');
-  //         }
-  //       }
-  //       $('.ttspeakerDiv').addClass('ttsOff');
-  //     } else {
-  //       if (me.config.ttsInterface && me.config.ttsInterface === 'webapi') {
-  //         _ttsConnection = me.speakWithWebAPI();
-  //       } else if (me.config.ttsInterface && me.config.ttsInterface === 'awspolly') {
-  //         gainNode.gain.value = 1;
-  //       } else {
-  //         _ttsConnection = createSocketForTTS();
-  //       }
-  //       me.isTTSOn = true;
-  //       $('.ttspeakerDiv').removeClass('ttsOff');
-  //     }
-  //   }
-  // });
-
-  // const element = document.querySelector('.droppable');
-  // function callback(files) {
-  //   // Here, we simply log the Array of files to the console.
-  //   if (fileUploaderCounter == 1) {
-  //     alert('You can upload only one file');
-  //     return;
-  //   }
-  //   cnvertFiles(this, files[0]);
-  //   if (files.length > 1) {
-  //     alert('You can upload only one file');
-  //   }
-  // }
-  //me.makeDroppable(element, callback);
   me.bindSDKEvents();
 };
 
@@ -1304,13 +915,13 @@ bindSDKEvents  () {
     me.onBotReady();
   });
 
-  me.bot.on('message', (message: { data: string; }) => {
+  me.bot.on('message', (response: { data: string; }) => {
     // actual implementation starts here
     if (me.popupOpened === true) {
       $('.kore-auth-popup .close-popup').trigger('click');
     }
 
-    let tempData = JSON.parse(message.data);
+    let tempData = JSON.parse(response.data);
     let chatWindowEvent = {stopFurtherExecution: false};
     me.emit(me.EVENTS.ON_WS_MESSAGE,{
       messageData:tempData,
@@ -1320,108 +931,21 @@ bindSDKEvents  () {
       return false;
     }
 
-    if (tempData.from === 'bot' && tempData.type === 'bot_response') {
-      if (tempData && tempData.message && tempData.message.length) {
-        if (tempData.message[0]) {
-          if (!tempData.message[0].cInfo) {
-            tempData.message[0].cInfo = {};
-          }
-          if (tempData.message[0].component && !tempData.message[0].component.payload.text) {
-            try {
-              tempData.message[0].component = JSON.parse(tempData.message[0].component.payload);
-            } catch (err) {
-              tempData.message[0].component = tempData.message[0].component.payload;
-            }
-          }
-          if (tempData.message[0].component && tempData.message[0].component.payload && tempData.message[0].component.payload.text) {
-            tempData.message[0].cInfo.body = tempData.message[0].component.payload.text;
-            if (me && me.pickerMainConfig) {
-              let pickerConfig:any = {};
-              pickerConfig = me.pickerMainConfig;
-              if (tempData.message[0].component.payload.template_type == 'daterange') {
-                tempData.message[0].cInfo.body = tempData.message[0].component.payload.text_message;
-                pickerConfig[1].dateRangeConfig.format = tempData.message[0].component.payload.format;
-                pickerConfig[1].dateRangeConfig.startDate = tempData.message[0].component.payload.startDate;
-                pickerConfig[1].dateRangeConfig.endDate = tempData.message[0].component.payload.endDate;
-                if (tempData.message[0].component.payload.title) {
-                  pickerConfig[1].daterangepicker.title = tempData.message[0].component.payload.title;
-                }
-                // $('.typingIndicatorContent').css('display', 'block');
-                KorePickers.prototype.showDateRangePicker(pickerConfig);
-                // $('.typingIndicatorContent').css('display', 'none');
-              }
-              console.log(JSON.stringify(tempData.message));
-              if (tempData.message[0].component.payload.template_type == 'dateTemplate') {
-                tempData.message[0].cInfo.body = tempData.message[0].component.payload.text_message;
-                pickerConfig[1].dateConfig.format = tempData.message[0].component.payload.format;
-                pickerConfig[1].dateConfig.startDate = tempData.message[0].component.payload.startDate;
-                pickerConfig[1].dateConfig.showdueDate = tempData.message[0].component.payload.showdueDate;
-                pickerConfig[1].dateConfig.endDate = tempData.message[0].component.payload.endDate;
-                // pickerConfig.dateConfig.selectedDate="Selected Date";
-                // pickerConfig.dateConfig.selectedDate=tempData.message[0].component.payload.selectedDate;
-                // if(tempData.message[0].component.payload.showdueDate){
-
-                //     pickerConfig.dateConfig.paymentDue="Payment Due Date";
-
-                //     pickerConfig.dateConfig.paymentDue=tempData.message[0].component.payload.paymentDue;
-                // }
-
-                if (tempData.message[0].component.payload.title) {
-                  pickerConfig[1].datepicker.title = tempData.message[0].component.payload.title;
-                }
-
-                // $('.typingIndicatorContent').css('display', 'block');
-                KorePickers.prototype.showDatePicker(pickerConfig);
-                // $('.typingIndicatorContent').css('display', 'none');
-              }
-              if (tempData.message[0].cInfo.body.indexOf('clockPicker') > -1) {
-                KorePickers.prototype.showClockPicker(pickerConfig);
-              }
-            }
-          }
-          if (tempData.message[0].component && tempData.message[0].component.payload && (tempData.message[0].component.payload.videoUrl || tempData.message[0].component.payload.audioUrl)) {
-            tempData.message[0].cInfo.body = tempData.message[0].component.payload.text || '';
-          }
-        }
-        if (me.loadHistory && me.historyLoading) {
-          me.messagesQueue.push(tempData);
-        } else if (me.config.supportDelayedMessages) {
-          me.pushTorenderMessagesQueue(tempData);
+    let msgData=me.parseSocketMessage(response.data);
+    if (me.loadHistory && me.historyLoading) {
+        me.messagesQueue.push(msgData)
+    } else {
+        if (me.config.supportDelayedMessages) {
+            me.pushTorenderMessagesQueue(msgData)
         } else {
-          me.renderMessage(tempData);
+            me.renderMessage(msgData)
         }
-      }
-    } else if (tempData.from === 'self' && tempData.type === 'user_message') {
-      const tempmsg = tempData.message;
-      let msgData = {};
-      if (tempmsg && tempmsg.attachments && tempmsg.attachments[0] && tempmsg.attachments[0].fileId) {
-        msgData = {
-          type: 'currentUser',
-          message: [{
-            type: 'text',
-            cInfo: { body: tempmsg.body, attachments: tempmsg.attachments },
-            clientMessageId: tempData.id,
-          }],
-          createdOn: tempData.id,
-        };
-      } else {
-        msgData = {
-          type: 'currentUser',
-          message: [{
-            type: 'text',
-            cInfo: { body: tempmsg.body },
-            clientMessageId: tempData.id,
-          }],
-          createdOn: tempData.id,
-        };
-      }
-      me.renderMessage(msgData);
     }
-    if (tempData.type === 'appInvalidNotification') {
-      setTimeout(() => {
-        $('.trainWarningDiv').addClass('showMsg');
-      }, 2000);
-    }
+    // if (msgData.type === 'appInvalidNotification') {
+    //   setTimeout(() => {
+    //     $('.trainWarningDiv').addClass('showMsg');
+    //   }, 2000);
+    // }
   });
 
   me.bot.on('webhook_ready', (response: any) => {
@@ -1440,17 +964,106 @@ bindSDKEvents  () {
     me.emit(me.EVENTS.JWT_GRANT_SUCCESS, response.jwtgrantsuccess);
   });
 };
-bindCustomEvents  () {
-  // hook to add custom events
-  const me:any = this;
-  const _chatContainer = me.chatEle;
-  // add additional events or override events in this method
-  // e.stopImmediatePropagation(); would be useful to override
-};
+parseSocketMessage(msgString:string){
+  let me:any=this;
+  let msgData;
+  let tempData= JSON.parse(msgString);
+  if (tempData.from === 'bot' && tempData.type === 'bot_response') {
+    if (tempData && tempData.message && tempData.message.length) {
+      if (tempData.message[0]) {
+        if (!tempData.message[0].cInfo) {
+          tempData.message[0].cInfo = {};
+        }
+        if (tempData.message[0].component && !tempData.message[0].component.payload.text) {
+          try {
+            tempData.message[0].component = JSON.parse(tempData.message[0].component.payload);
+          } catch (err) {
+            tempData.message[0].component = tempData.message[0].component.payload;
+          }
+        }
+        if (tempData.message[0].component && tempData.message[0].component.payload && tempData.message[0].component.payload.text) {
+          tempData.message[0].cInfo.body = tempData.message[0].component.payload.text;
+          // if (me && me.pickerMainConfig) {
+          //   let pickerConfig:any = {};
+          //   pickerConfig = me.pickerMainConfig;
+          //   if (tempData.message[0].component.payload.template_type == 'daterange') {
+          //     tempData.message[0].cInfo.body = tempData.message[0].component.payload.text_message;
+          //     pickerConfig[1].dateRangeConfig.format = tempData.message[0].component.payload.format;
+          //     pickerConfig[1].dateRangeConfig.startDate = tempData.message[0].component.payload.startDate;
+          //     pickerConfig[1].dateRangeConfig.endDate = tempData.message[0].component.payload.endDate;
+          //     if (tempData.message[0].component.payload.title) {
+          //       pickerConfig[1].daterangepicker.title = tempData.message[0].component.payload.title;
+          //     }
+          //     // $('.typingIndicatorContent').css('display', 'block');
+          //     KorePickers.prototype.showDateRangePicker(pickerConfig);
+          //     // $('.typingIndicatorContent').css('display', 'none');
+          //   }
+          //   console.log(JSON.stringify(tempData.message));
+          //   if (tempData.message[0].component.payload.template_type == 'dateTemplate') {
+          //     tempData.message[0].cInfo.body = tempData.message[0].component.payload.text_message;
+          //     pickerConfig[1].dateConfig.format = tempData.message[0].component.payload.format;
+          //     pickerConfig[1].dateConfig.startDate = tempData.message[0].component.payload.startDate;
+          //     pickerConfig[1].dateConfig.showdueDate = tempData.message[0].component.payload.showdueDate;
+          //     pickerConfig[1].dateConfig.endDate = tempData.message[0].component.payload.endDate;
+          //     // pickerConfig.dateConfig.selectedDate="Selected Date";
+          //     // pickerConfig.dateConfig.selectedDate=tempData.message[0].component.payload.selectedDate;
+          //     // if(tempData.message[0].component.payload.showdueDate){
+
+          //     //     pickerConfig.dateConfig.paymentDue="Payment Due Date";
+
+          //     //     pickerConfig.dateConfig.paymentDue=tempData.message[0].component.payload.paymentDue;
+          //     // }
+
+          //     if (tempData.message[0].component.payload.title) {
+          //       pickerConfig[1].datepicker.title = tempData.message[0].component.payload.title;
+          //     }
+
+          //     // $('.typingIndicatorContent').css('display', 'block');
+          //     KorePickers.prototype.showDatePicker(pickerConfig);
+          //     // $('.typingIndicatorContent').css('display', 'none');
+          //   }
+          //   if (tempData.message[0].cInfo.body.indexOf('clockPicker') > -1) {
+          //     KorePickers.prototype.showClockPicker(pickerConfig);
+          //   }
+          // }
+        }
+        if (tempData.message[0].component && tempData.message[0].component.payload && (tempData.message[0].component.payload.videoUrl || tempData.message[0].component.payload.audioUrl)) {
+          tempData.message[0].cInfo.body = tempData.message[0].component.payload.text || '';
+        }
+      }
+    }
+    msgData=tempData;
+  } else if (tempData.from === 'self' && tempData.type === 'user_message') {
+    const tempmsg = tempData.message;
+    if (tempmsg && tempmsg.attachments && tempmsg.attachments[0] && tempmsg.attachments[0].fileId) {
+      msgData = {
+        type: 'currentUser',
+        message: [{
+          type: 'text',
+          cInfo: { body: tempmsg.body, attachments: tempmsg.attachments },
+          clientMessageId: tempData.id,
+        }],
+        createdOn: tempData.id,
+      };
+    } else {
+      msgData = {
+        type: 'currentUser',
+        message: [{
+          type: 'text',
+          cInfo: { body: tempmsg.body },
+          clientMessageId: tempData.id,
+        }],
+        createdOn: tempData.id,
+      };
+    }
+    me.renderMessage(msgData);
+  }
+  return msgData;
+}
+
 onBotReady  () {
   // hook to add custom events
   const me:any = this;
-
   const _chatContainer = me.chatEle;
   // actual implementation starts here
   me.accessToken = me.config.botOptions.accessToken;
@@ -1459,8 +1072,8 @@ onBotReady  () {
   _chatContainer.find('.kore-chat-header .disabled').prop('disabled', false).removeClass('disabled');
   if (!me.loadHistory) {
     setTimeout(() => {
-      $('.chatInputBox').focus();
-      $('.disableFooter').removeClass('disableFooter');
+      _chatContainer.find('.chatInputBox').focus();
+      _chatContainer.find('.disableFooter').removeClass('disableFooter');
     });
   }
 };
@@ -1685,15 +1298,13 @@ hideTypingIndicator  () {
   $('.typingIndicatorContent').css('display', 'none');
 };
 renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | number | Date; type: string; icon: any; message: { component: { payload: { fromHistory: any; }; }; }[]; messageId: any; renderType: string; fromHistorySync: any; } | any) {
-  const me:any = this; 
-  const { helpers } = me;
-  const _chatContainer = $(me.chatEle).find('.chat-container');
-  let messageHtml = ''; 
-  let extension = '';
+
+  let me:any = this;
+  let _chatContainer = $(me.chatEle).find('.chat-container');
+  let messageHtml=me.generateMessageDOM(msgData);
+    
   msgData.createdOnTimemillis = new Date(msgData.createdOn).valueOf();
-  me.templateManager.helpers = me.helpers;
-  me.templateManager.extension = extension;
-  //me.graphLibGlob = me.config.graphLib || 'd3';
+
   if (msgData.type === 'bot_response') {
     me.waiting_for_message = false;
     setTimeout(() => {
@@ -1711,7 +1322,6 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
     me.waiting_for_message = false;
   }
 
-  messageHtml = me.templateManager.renderMessage(msgData);
   if (!messageHtml && msgData && msgData.message && msgData.message[0]) {
     // if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'button') {
     //   messageHtml = $(me.getChatTemplate('templatebutton')).tmpl({
@@ -1726,7 +1336,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
       return;
     } 
 
-    messageHtml=me.messageTemplate.renderMessage(msgData);
+    //messageHtml=me.messageTemplate.renderMessage(msgData);
     
     // For Agent presence
     if (msgData.type === 'bot_response') {
@@ -1795,6 +1405,15 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
     msgData:msgData
   });
 };
+
+generateMessageDOM(msgData:any){
+  const me:any = this; 
+  let messageHtml = me.templateManager.renderMessage(msgData);
+  if (!messageHtml && msgData && msgData.message && msgData.message[0]) {
+    messageHtml=me.messageTemplate.renderMessage(msgData);
+  }
+  return messageHtml;
+}
 
 pushTorenderMessagesQueue  (msgItem: any) {
   const me:any = this;
@@ -2059,40 +1678,39 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
     }
   }
 };
-carouselTemplateCount = 0;
 
-insertHtmlData(_txtBox: any, _html: any) {
-  const _input = _txtBox;
-  var sel;
-  var range;
-  var prevRange;
-  var node;
-  sel = window.getSelection();
-  if (sel.rangeCount > 0) {
-    range = sel.getRangeAt(0);
-    range.deleteContents();
-  }
-  prevRange = prevRange || range;
-  if (prevRange) {
-    node = document.createElement('span');
-    prevRange.insertNode(node);
-    const _span = document.createElement('span');
-    _span.innerHTML = _html;
-    prevRange.insertNode(_span);
-    prevRange.setEndAfter(node);
-    prevRange.setStartAfter(node);
-    prevRange.collapse(false);
-    sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(prevRange);
-    const focused = document.activeElement;
-    if (focused && !(focused.className == 'chatInputBox')) {
-      _input.focus();
-    }
-    return _input;
-  }
-  _input.appendChild(_html);
-}
+// insertHtmlData(_txtBox: any, _html: any) {
+//   const _input = _txtBox;
+//   var sel;
+//   var range;
+//   var prevRange;
+//   var node;
+//   sel = window.getSelection();
+//   if (sel.rangeCount > 0) {
+//     range = sel.getRangeAt(0);
+//     range.deleteContents();
+//   }
+//   prevRange = prevRange || range;
+//   if (prevRange) {
+//     node = document.createElement('span');
+//     prevRange.insertNode(node);
+//     const _span = document.createElement('span');
+//     _span.innerHTML = _html;
+//     prevRange.insertNode(_span);
+//     prevRange.setEndAfter(node);
+//     prevRange.setStartAfter(node);
+//     prevRange.collapse(false);
+//     sel = window.getSelection();
+//     sel.removeAllRanges();
+//     sel.addRange(prevRange);
+//     const focused = document.activeElement;
+//     if (focused && !(focused.className == 'chatInputBox')) {
+//       _input.focus();
+//     }
+//     return _input;
+//   }
+//   _input.appendChild(_html);
+// }
 
 getJWTByAPIKey (API_KEY_CONFIG: { KEY: any; bootstrapURL: any; }) {
   const jsonData = {
@@ -2220,20 +1838,7 @@ setWidgetInstance  (widgetSDKInstace:any) {
     me.addWidgetEvents(me.config);
   }
 };
-// destroy = function () {
-//   const me:any = this;
-//   if (chatInitialize && chatInitialize.destroy) {
-//     //_eventQueue = {};
-//     chatInitialize.destroy();
-//   }
-//   // if (_ttsContext) {
-//   //   _ttsContext.close();
-//   //   _ttsContext = null;
-//   // }
-// };
-// initToken = function (options) {
-//   assertionToken = `bearer ${options.accessToken}`;
-// };
+
 
 hideError  () {
   $('.errorMsgBlock').removeClass('showError');
@@ -2249,12 +1854,6 @@ showError (response:any) {
     $('.errorMsgBlock').text(response);
     $('.errorMsgBlock').addClass('showError');
   }
-};
-botDetails (response:any, botInfo:any) {
-  /* Remove hide class for tts and speech if sppech not enabled for this bot */
-  /* setTimeout(function () {
-         fetchBotDetails(response,botInfo);
-     }, 50); */
 };
 
 bottomSliderAction  (action:any, appendElement:any) {
@@ -2425,12 +2024,6 @@ applyVariableValue (key:any,value:any,type:any){
   }
   
 }
-// assignValueToInput = function (value) {
-//   const me:any = this;
-//   const _chatContainer = me.chatEle;
-//   const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
-//   _chatInput.text(value);
-// };
 
 /**
  * [#]{@link chatWindow#sendMessage} Send message to bot including rendering 
@@ -2449,18 +2042,10 @@ applyVariableValue (key:any,value:any,type:any){
 */
 sendMessage (messageText:any,options:any, serverMessageObject:any,clientMessageObject:any) {
   const me:any = this;
-  // const _chatContainer = me.chatEle;
-  // const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
   me.sendMessageToBot(messageText, options, serverMessageObject,clientMessageObject);
 };
   
 }
-
-// appendPickerHTMLtoFooter = function(HTML){
-//   const me:any = this;
-//   const _chatContainer = me.chatEle;
-//  _chatContainer.find('.kore-chat-footer .footerContainer').append(HTML);
-// }
 (chatWindow.prototype as any).$ = $;
 
 export default chatWindow;
