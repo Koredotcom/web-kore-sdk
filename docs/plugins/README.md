@@ -13,9 +13,9 @@ chatWindowInstance.installPlugin(new SamplePlugin(config));
 
 | Plugin  | Description | Installation Guide
 | ------------- | ------------- |------------- |
-| Kore Pickers | Adds pickers like date and clock to chatwindow compose bar  |[Guide ](./file-uploader) 
-| Graph Templates| Adds file upload capability to chatwindow compose bar  |[Guide](./file-uploader)  
-| Agent Desktop | Adds pickers like date and clock to chatwindow compose bar  |[Guide ](./file-uploader) 
+| Kore Pickers | Adds pickers like date and clock to chatwindow compose bar  |[Guide ](./kore-pickers) 
+| Graph Templates| Adds file upload capability to chatwindow compose bar  |[Guide](./graph-templates)  
+| Agent Desktop | Adds pickers like date and clock to chatwindow compose bar  |[Guide ](./agent-desktop) 
 
 
 
