@@ -3,13 +3,6 @@ Plugins will be the useful to enhance the chat window's functionality to next le
 
 ## External Plugins
 External plugins will be deloped by kore and should be installed explicitly by the application developer as follows based on the requirement
-```js
-import { SamplePlugin } from 'kore-web-sdk';
-const config={
-  'key':'value'
-}
-chatWindowInstance.installPlugin(new SamplePlugin(config));
-```
 
 | Plugin  | Description | Installation Guide
 | ------------- | ------------- |------------- |
