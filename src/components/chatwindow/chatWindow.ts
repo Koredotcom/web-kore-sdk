@@ -710,7 +710,6 @@ bindEvents  () {
     }
   });
   
-
   _chatContainer.on('click', '.close-btn', (event: any) => {
     me.destroy();
     if (me.config.multiPageApp && me.config.multiPageApp.enable) {

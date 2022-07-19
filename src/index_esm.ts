@@ -13,8 +13,6 @@ import AgentDesktopPlugin from './plugins/agentDesktop/agentdesktop';
 import KoreWidgetSDK from './components/widgets/kore-widgets';
 import widgetsConfig from './components/widgets/config/kore-widgets-config';
 
-import KRSearch from './components/search/findly-sdk';
-import KRSearchConfig from './components/search/config/findly-config';
 
 
 export {
@@ -26,8 +24,6 @@ export {
   KoreFileUploaderPlugin,
   KorePickersPlugin,
   GraphTemplatesPlugin,
-  KRSearch,
-  KRSearchConfig,
   WebKitSTT,
   TtsSpeechPlugin,
   AgentDesktopPlugin
