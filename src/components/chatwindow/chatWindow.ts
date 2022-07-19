@@ -161,14 +161,15 @@ installCallbackForPlugins (){
 
 show  (config:any) {
   const me:any = this;
-  me.initShow(config);
   const cfg = me.config;
-   if ($('body').find('.kore-chat-window').length > 0) {
-       return false;
-   }
   if (cfg.widgetSDKInstace) {
     this.addWidgetEvents(cfg);
   }
+  me.initShow(config);
+  if ($('body').find('.kore-chat-window').length > 0) {
+      return false;
+  }
+ 
 };
 initShow  (config:any) {
   const me:any = this;
@@ -468,78 +469,12 @@ isMobile () {
     return false;
   }
 };
-setCollapsedModeStyles (){
-  $('.kore-chat-window').css({left:$('body').width()-400,width:'400px'});
-}
 onWindowResize (event:any) {
   let me:any=this;
-  me.setCollapsedModeStyles();
-    if (event.target == window) {
-      //const _width = $('#chatContainer').width() - 400;
-      // $('.kore-chat-window').attr('style','left: '+_width+'+px');
-    }
-    if (($('.kore-chat-window').width() > 400) || (document.getElementsByClassName('kore-chat-window').length && document.getElementsByClassName('kore-chat-window')[0].classList.contains('expanded'))) {
-      const _koreChatWindowHeight = $('.kore-chat-window').width();
-      $('.carousel').attr('style', `width: ${_koreChatWindowHeight - 85}px !important`);
-    } else {
-      $('.carousel').attr('style', 'width: 300px !important');
-    }
-    // for (var i = 0; i < carouselEles.length; i++) {
-    //   carouselEles[i].computeResize();
-    // }
-  
-    // handling quick replies
-    // const quickReplyDivs = document.querySelectorAll('.quickReplies');
-    // for (var i = 0; i < quickReplyDivs.length; i++) {
-    //   const btnsParentDiv = quickReplyDivs[i].querySelectorAll('.quick_replies_btn_parent');
-    //   const leftScrollBtn = quickReplyDivs[i].querySelectorAll('.quickreplyLeftIcon');
-    //   const rightScrollBtn = quickReplyDivs[i].querySelectorAll('.quickreplyRightIcon');
-    //   if (btnsParentDiv[0].hasChildNodes()) {
-    //     if (btnsParentDiv[0].scrollLeft > 0) {
-    //       leftScrollBtn[0].classList.remove('hide');
-    //     } else {
-    //       leftScrollBtn[0].classList.add('hide');
-    //     }
-    //     if (btnsParentDiv[0].offsetWidth < btnsParentDiv[0].scrollWidth) {
-    //       rightScrollBtn[0].classList.remove('hide');
-    //     } else {
-    //       rightScrollBtn[0].classList.add('hide');
-    //     }
-    //   }
-    // }
-  
-    /* Handling for full size table */
-    if ($('.kore-chat-window').width() > 460) {
-      $('.accordionTable').each( () => {
-        if ($(this).hasClass('responsive')) {
-          $(this).addClass('hide');
-        }
-      });
-      $('.tablechartDiv').each( () => {
-        if (!$(this).hasClass('regular')) {
-          $(this).removeClass('hide');
-        }
-      });
-    } else {
-      $('.accordionTable').each( () => {
-        if ($(this).hasClass('responsive')) {
-          $(this).removeClass('hide');
-        }
-      });
-      $('.tablechartDiv').each( () => {
-        if (!$(this).hasClass('regular')) {
-          $(this).addClass('hide');
-        }
-      });
-    }
-    /* Handling for table ends */
-    /* Handling expand and collapse chat-container height */
     $('.chat-container').scrollTop($('.chat-container')[0].scrollHeight);
     if (me.chatPSObj && me.chatPSObj.update) {
       me.chatPSObj.update();
     }
-    /* Handling expand and collapse chat-container height */
-
 };
 setLocalStoreItem  (key:any, value:any) {
   const me:any = this;
@@ -647,14 +582,6 @@ destroy  () {
       me.skipedInit = true;
     }
   }
-  // if (ttsAudioSource) {
-  //   ttsAudioSource.stop();
-  // }
-  //me.isTTSOn = false;
-  // if (_ttsContext) {
-  //   _ttsContext.close();
-  //   _ttsContext = null;
-  // }
   window.removeEventListener('online', me.updateOnlineStatus);
   window.removeEventListener('offline', me.updateOnlineStatus);
 };
@@ -687,10 +614,9 @@ bindEvents  () {
   window.onbeforeunload = function () {
     if (me && $(me.chatEle).length > 0) {
       me.destroy();
-      // return null;
     }
   };
-  _chatContainer.off('keyup', '.chatInputBox').on('keyup', '.chatInputBox',  (event:any) => {
+  _chatContainer.on('keyup', '.chatInputBox',  (event:any) => {
     const _footerContainer = $(me.config.container).find('.kore-chat-footer');
     const _bodyContainer = $(me.config.container).find('.kore-chat-body');
     _bodyContainer.css('bottom', _footerContainer.outerHeight());
@@ -717,7 +643,7 @@ bindEvents  () {
     me.prevComposeSelection = window.getSelection();
     me.prevRange = me.prevComposeSelection.rangeCount > 0 && me.prevComposeSelection.getRangeAt(0);
   });
-  _chatContainer.off('keydown', '.chatInputBox').on('keydown', '.chatInputBox',  (event:any) => {
+  _chatContainer.on('keydown', '.chatInputBox',  (event:any) => {
     const chatInput:any = $(event.currentTarget);
     let chatWindowEvent = {stopFurtherExecution: false};
     me.emit(me.EVENTS.ON_KEY_DOWN,{
@@ -739,18 +665,18 @@ bindEvents  () {
     } 
   });
 
-  _chatContainer.off('click', '.sendButton').on('click', '.sendButton', (event: { preventDefault: () => void; }) => {
+  _chatContainer.on('click', '.sendButton', (event: { preventDefault: () => void; }) => {
     const chatInput:any =  _chatContainer.find('.chatInputBox');
     event.preventDefault();
     me.sendMessageWithWithChatInput(chatInput);
   });
   
-  _chatContainer.off('click', '.sendChat').on('click', '.sendChat', (event: any) => {
+  _chatContainer.on('click', '.sendChat', (event: any) => {
     const _footerContainer = $(me.config.container).find('.kore-chat-footer');
     me.sendMessageWithWithChatInput(_footerContainer.find('.chatInputBox'));
   });
 
-  _chatContainer.off('click', 'li a').on('click', 'li a',  (e: any) => {
+  _chatContainer.on('click', 'li a',  (e: any) => {
     e.preventDefault();
     const a_link = $(this).attr('href');
     const _trgt = $(this).attr('target');
@@ -785,7 +711,7 @@ bindEvents  () {
   });
   
 
-  _chatContainer.off('click', '.close-btn').on('click', '.close-btn', (event: any) => {
+  _chatContainer.on('click', '.close-btn', (event: any) => {
     me.destroy();
     if (me.config.multiPageApp && me.config.multiPageApp.enable) {
       me.removeLocalStoreItem('kr-cw-state');
@@ -794,7 +720,7 @@ bindEvents  () {
     }
   });
 
-  _chatContainer.off('click', '.minimize-btn').on('click', '.minimize-btn', (event: any) => {
+  _chatContainer.on('click', '.minimize-btn', (event: any) => {
     if (me.config.multiPageApp && me.config.multiPageApp.enable) {
       me.setLocalStoreItem('kr-cw-state', 'minimized');
     }
@@ -813,7 +739,6 @@ bindEvents  () {
 
   _chatContainer.off('click', '.expand-btn').on('click', '.expand-btn',  (event: any) => {
     if (me.expanded === true) {
-      me.setCollapsedModeStyles();
       $(this).attr('title', 'Expand');
       _chatContainer.removeClass('expanded');
       $('.expand-btn-span').removeClass('fa-compress');
@@ -846,7 +771,7 @@ bindEvents  () {
     }
   });
   
-  _chatContainer.off('click', '.minimized').on('click', '.minimized,.minimized-title', (event: any) => {
+  _chatContainer.on('click', '.minimized,.minimized-title', (event: any) => {
     if (me.config.multiPageApp && me.config.multiPageApp.enable) {
       me.setLocalStoreItem('kr-cw-state', 'open');
     }
@@ -866,7 +791,7 @@ bindEvents  () {
     }, 100);
   });
 
-  _chatContainer.off('click', '.reload-btn').on('click', '.reload-btn',  (event: any) => {
+  _chatContainer.on('click', '.reload-btn',  (event: any) => {
     me.config.botOptions.forceReconnecting = false;// make it to true if reconnect button should not trigger on connect message
     $(this).addClass('disabled').prop('disabled', true);
     $('.close-btn').addClass('disabled').prop('disabled', true);
@@ -983,49 +908,6 @@ parseSocketMessage(msgString:string){
         }
         if (tempData.message[0].component && tempData.message[0].component.payload && tempData.message[0].component.payload.text) {
           tempData.message[0].cInfo.body = tempData.message[0].component.payload.text;
-          // if (me && me.pickerMainConfig) {
-          //   let pickerConfig:any = {};
-          //   pickerConfig = me.pickerMainConfig;
-          //   if (tempData.message[0].component.payload.template_type == 'daterange') {
-          //     tempData.message[0].cInfo.body = tempData.message[0].component.payload.text_message;
-          //     pickerConfig[1].dateRangeConfig.format = tempData.message[0].component.payload.format;
-          //     pickerConfig[1].dateRangeConfig.startDate = tempData.message[0].component.payload.startDate;
-          //     pickerConfig[1].dateRangeConfig.endDate = tempData.message[0].component.payload.endDate;
-          //     if (tempData.message[0].component.payload.title) {
-          //       pickerConfig[1].daterangepicker.title = tempData.message[0].component.payload.title;
-          //     }
-          //     // $('.typingIndicatorContent').css('display', 'block');
-          //     KorePickers.prototype.showDateRangePicker(pickerConfig);
-          //     // $('.typingIndicatorContent').css('display', 'none');
-          //   }
-          //   console.log(JSON.stringify(tempData.message));
-          //   if (tempData.message[0].component.payload.template_type == 'dateTemplate') {
-          //     tempData.message[0].cInfo.body = tempData.message[0].component.payload.text_message;
-          //     pickerConfig[1].dateConfig.format = tempData.message[0].component.payload.format;
-          //     pickerConfig[1].dateConfig.startDate = tempData.message[0].component.payload.startDate;
-          //     pickerConfig[1].dateConfig.showdueDate = tempData.message[0].component.payload.showdueDate;
-          //     pickerConfig[1].dateConfig.endDate = tempData.message[0].component.payload.endDate;
-          //     // pickerConfig.dateConfig.selectedDate="Selected Date";
-          //     // pickerConfig.dateConfig.selectedDate=tempData.message[0].component.payload.selectedDate;
-          //     // if(tempData.message[0].component.payload.showdueDate){
-
-          //     //     pickerConfig.dateConfig.paymentDue="Payment Due Date";
-
-          //     //     pickerConfig.dateConfig.paymentDue=tempData.message[0].component.payload.paymentDue;
-          //     // }
-
-          //     if (tempData.message[0].component.payload.title) {
-          //       pickerConfig[1].datepicker.title = tempData.message[0].component.payload.title;
-          //     }
-
-          //     // $('.typingIndicatorContent').css('display', 'block');
-          //     KorePickers.prototype.showDatePicker(pickerConfig);
-          //     // $('.typingIndicatorContent').css('display', 'none');
-          //   }
-          //   if (tempData.message[0].cInfo.body.indexOf('clockPicker') > -1) {
-          //     KorePickers.prototype.showClockPicker(pickerConfig);
-          //   }
-          // }
         }
         if (tempData.message[0].component && tempData.message[0].component.payload && (tempData.message[0].component.payload.videoUrl || tempData.message[0].component.payload.audioUrl)) {
           tempData.message[0].cInfo.body = tempData.message[0].component.payload.text || '';
@@ -1056,7 +938,7 @@ parseSocketMessage(msgString:string){
         createdOn: tempData.id,
       };
     }
-    me.renderMessage(msgData);
+    //me.renderMessage(msgData);
   }
   return msgData;
 }
@@ -1109,7 +991,6 @@ render  (chatWindowHtml: any) {
   if (me.config.widgetSDKInstace) {
     me.chatEle.find('.kr-wiz-menu-chat').show();
   }
-  me.setCollapsedModeStyles();
   me.chatPSObj = new KRPerfectScrollbar(me.chatEle.find('.chat-container').get(0), {
     suppressScrollX: true,
   });
@@ -1170,7 +1051,7 @@ if(messageText.trim().length){
       },
       (err: any) => {
         setTimeout(() => {
-          $('.typingIndicatorContent').css('display', 'none');
+          me.hideTypingIndicator();
           $(`.kore-chat-window [data-time="${clientMessageId}"]`).find('.messageBubble').append('<div class="errorMsg">Send Failed. Please resend.</div>');
         }, 350);
       },
@@ -1209,12 +1090,12 @@ postSendMessageToBot () {
   _footerContainer.find('.sendButton').addClass('disabled');
   _bodyContainer.css('bottom', _footerContainer.outerHeight());
 
-  $('.typingIndicatorContent').css('display', 'block');
+  me.showTypingIndicator();
   if (me.typingIndicatorTimer) {
     clearTimeout(me.typingIndicatorTimer);
   }
   me.typingIndicatorTimer = setTimeout(() => {
-    $('.typingIndicatorContent').css('display', 'none');
+    me.hideTypingIndicator();
   }, me.config.maxTypingIndicatorTime || 10000);
 }
 
@@ -1302,9 +1183,9 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   let me:any = this;
   let _chatContainer = $(me.chatEle).find('.chat-container');
   let messageHtml=me.generateMessageDOM(msgData);
-    if(msgData?.createdOn){
-      msgData.createdOnTimemillis = new Date(msgData.createdOn).valueOf();
-    }
+  if(msgData?.createdOn){
+    msgData.createdOnTimemillis = new Date(msgData.createdOn).valueOf();
+  }
 
   if (msgData?.type === 'bot_response') {
     me.waiting_for_message = false;
@@ -1361,38 +1242,38 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   }
 
 
-  if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.sliderView && !msgData.message[0].component.payload.fromHistory) {
-    me.bottomSliderAction('show', messageHtml);
-  } else {
+  // if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.sliderView && !msgData.message[0].component.payload.fromHistory) {
+  //   me.bottomSliderAction('show', messageHtml);
+  // } else {
     // ignore message(msgId) if it is already in viewport
-    if ($(`.kore-chat-window .chat-container li#${msgData?.messageId}`).length < 1 || (msgData?.renderType === 'inline')) {
-      if (msgData?.type === 'bot_response' && msgData?.fromHistorySync) {
-        const msgTimeStamps: number[] = [];
-        const msgEles = $('.kore-chat-window .chat-container>li');
-        if (msgEles.length) {
-          msgEles.each((i: any, ele: any) => {
-            msgTimeStamps.push(parseInt($(ele).attr('data-time')));
-          });
-          const insertAtIndex = me.findSortedIndex(msgTimeStamps, msgData.createdOnTimemillis);
+  if ($(`.kore-chat-window .chat-container li#${msgData?.messageId}`).length < 1 || (msgData?.renderType === 'inline')) {
+    if (msgData?.type === 'bot_response' && msgData?.fromHistorySync) {
+      const msgTimeStamps: number[] = [];
+      const msgEles = $('.kore-chat-window .chat-container>li');
+      if (msgEles.length) {
+        msgEles.each((i: any, ele: any) => {
+          msgTimeStamps.push(parseInt($(ele).attr('data-time')));
+        });
+        const insertAtIndex = me.findSortedIndex(msgTimeStamps, msgData.createdOnTimemillis);
 
-          if (insertAtIndex > 0) {
-            const insertAfterEle = msgEles[insertAtIndex];
-            if (insertAfterEle) {
-              $(messageHtml).insertBefore(insertAfterEle);
-            } else {
-              _chatContainer.append(messageHtml);
-            }
+        if (insertAtIndex > 0) {
+          const insertAfterEle = msgEles[insertAtIndex];
+          if (insertAfterEle) {
+            $(messageHtml).insertBefore(insertAfterEle);
           } else {
-            _chatContainer.prepend(messageHtml);
+            _chatContainer.append(messageHtml);
           }
         } else {
-          _chatContainer.append(messageHtml);
+          _chatContainer.prepend(messageHtml);
         }
       } else {
         _chatContainer.append(messageHtml);
       }
+    } else {
+      _chatContainer.append(messageHtml);
     }
   }
+  //}
   me.handleImagePreview();
 
   if (me.chatPSObj && me.chatPSObj.update) {
@@ -1607,16 +1488,11 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
       $('.historyLoadingDiv').addClass('showMsg');
       res[1].messages.forEach((msgData: { messageId: any; message: { cInfo: { body: string; }; }[]; } | any, index: number) => {
         setTimeout((messagesQueue) => {
-          // try {
-          //     msgData.message[0].cInfo.body = JSON.parse(msgData.message[0].cInfo.body);
-          //     msgData.message[0].component = msgData.message[0].cInfo.body;
-          //     me.renderMessage(msgData);
-          // } catch (e) {
-          //     me.renderMessage(msgData);
-          // }
+         
           const _ignoreMsgs = messagesQueue.filter((queMsg: { messageId: any; }) => queMsg.messageId === msgData.messageId);
           // dont show the the history message if we already have same message came from socket connect
           if (!_ignoreMsgs.length) {
+            msgData.fromHistory=true;
             try {
               msgData.message[0].cInfo.body = JSON.parse(msgData.message[0].cInfo.body);
               if (msgData.message[0].cInfo.body && msgData.message[0].cInfo.body.text) {
@@ -1679,39 +1555,6 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
     }
   }
 };
-
-// insertHtmlData(_txtBox: any, _html: any) {
-//   const _input = _txtBox;
-//   var sel;
-//   var range;
-//   var prevRange;
-//   var node;
-//   sel = window.getSelection();
-//   if (sel.rangeCount > 0) {
-//     range = sel.getRangeAt(0);
-//     range.deleteContents();
-//   }
-//   prevRange = prevRange || range;
-//   if (prevRange) {
-//     node = document.createElement('span');
-//     prevRange.insertNode(node);
-//     const _span = document.createElement('span');
-//     _span.innerHTML = _html;
-//     prevRange.insertNode(_span);
-//     prevRange.setEndAfter(node);
-//     prevRange.setStartAfter(node);
-//     prevRange.collapse(false);
-//     sel = window.getSelection();
-//     sel.removeAllRanges();
-//     sel.addRange(prevRange);
-//     const focused = document.activeElement;
-//     if (focused && !(focused.className == 'chatInputBox')) {
-//       _input.focus();
-//     }
-//     return _input;
-//   }
-//   _input.appendChild(_html);
-// }
 
 getJWTByAPIKey (API_KEY_CONFIG: { KEY: any; bootstrapURL: any; }) {
   const jsonData = {
