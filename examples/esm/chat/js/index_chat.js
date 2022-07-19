@@ -5,7 +5,7 @@ import {Korei18nPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {KoreFileUploaderPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {KorePickersPlugin } from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {GraphTemplatesPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
-import {SpeechToTextPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
+import {WebKitSTT} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {TtsSpeechPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {AgentDesktopPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 let chatWindowInstance = new chatWindow();
@@ -15,8 +15,8 @@ chatWindowInstance.installPlugin(new KoreFileUploaderPlugin());
 
 chatWindowInstance.installPlugin(new KorePickersPlugin({}));
 chatWindowInstance.installPlugin(new GraphTemplatesPlugin());
-chatWindowInstance.installPlugin(new SpeechToTextPlugin());
-// chatWindowInstance.installPlugin(new TtsSpeechPlugin());
+chatWindowInstance.installPlugin(new WebKitSTT());
+chatWindowInstance.installPlugin(new TtsSpeechPlugin());
 chatWindowInstance.installPlugin(new AgentDesktopPlugin());
 
 

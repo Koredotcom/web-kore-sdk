@@ -916,7 +916,7 @@ function startGoogleSpeech() {
    const  intervalKey = setInterval(function () {
       rec.export16kMono(function (blob: any) {
         if (window.allowGoogleSpeech) {
-          sendBlobToSpeech(blob, "LINEAR16", 16000);
+          // sendBlobToSpeech(blob, "LINEAR16", 16000);
         } else {
           window.socketSend(blob);
         }

@@ -1,4 +1,4 @@
-import customTemplate from '../TemplateManager'
+import customTemplate from '../templateManager'
 
 function stockTemplate(){
 

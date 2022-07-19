@@ -1,5 +1,5 @@
 
-import TtsSpeechPlugin from '../plugins/textSpeechPlugins/ttsSpeechPlugin';
+import TtsSpeechPlugin from '../plugins/SSTPlugins/ttsSpeechPlugin';
 
 export {
     TtsSpeechPlugin
