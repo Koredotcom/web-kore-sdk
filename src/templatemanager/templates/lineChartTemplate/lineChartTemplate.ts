@@ -7,7 +7,7 @@ class LineChartTemplate {
         let me: any = this;
         let $ = me.hostInstance.$;
         let helpersObj = helpers;
-        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "linechart") {
+        if (msgData?.message[0]?.component?.payload?.template_type === "linechart") {
             me.messageHtml = $(me.getTemplateString('linechartTemplate')).tmpl({
                 'msgData': msgData,
                 'helpers': helpersObj.helpers

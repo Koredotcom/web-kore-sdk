@@ -8,7 +8,7 @@ class DropdownTemplate {
         let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
-        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "dropdown_template") {
+        if (msgData?.message[0]?.component?.payload?.template_type === "dropdown_template") {
             me.messageHtml = $(me.getTemplateString('dropdown_template')).tmpl({
                 'msgData': msgData,
                 'helpers': helpersObj.helpers

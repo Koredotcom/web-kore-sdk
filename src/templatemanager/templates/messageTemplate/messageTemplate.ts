@@ -16,7 +16,7 @@ class MessageTemplate {
         if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.formData && msgData.message[0].component.payload.formData.renderType === 'inline') {
             msgData.renderType = 'inline';
             me.messageHtml = chatWindowInstance.renderWebForm(msgData, true);
-        } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'live_agent') {
+        } else if (msgData?.message[0]?.component?.payload?.template_type === 'live_agent') {
             msgData.fromAgent = true;
 
             if (msgData.message[0].component && msgData.message[0].component.payload) {

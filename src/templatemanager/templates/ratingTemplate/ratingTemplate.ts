@@ -7,7 +7,7 @@ class RatingTemplate {
         let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
-        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.template_type === "feedbackTemplate" && (msgData.message[0].component.payload.view === "star" || msgData.message[0].component.payload.view === "emojis"))) {
+        if (msgData?.message[0]?.component?.payload && (msgData?.message[0]?.component?.payload?.template_type === "feedbackTemplate" && (msgData.message[0].component.payload.view === "star" || msgData.message[0].component.payload.view === "emojis"))) {
             me.messageHtml = $(me.getTemplateString('ratingTemplate')).tmpl({
                 'msgData': msgData,
                 'helpers': helpersObj.helpers

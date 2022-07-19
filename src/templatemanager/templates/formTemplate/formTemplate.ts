@@ -7,7 +7,7 @@ class FormTemplate {
         let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
-        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "form_template") {
+        if (msgData?.message[0]?.component?.payload?.template_type === "form_template") {
             me.messageHtml = $(me.getTemplateString('formTemplate')).tmpl({
                 'msgData': msgData,
                 'helpers': helpersObj.helpers

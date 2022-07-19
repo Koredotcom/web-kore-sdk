@@ -9,7 +9,7 @@ class CarouselTemplate {
     const helpersObj = helpers;
     const carouselEles = [];
 
-    if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'carousel') {
+    if (msgData?.message[0]?.component?.payload?.template_type === 'carousel') {
       me.messageHtml = $(me.getTemplateString('carouselTemplate')).tmpl({
         msgData,
         helpers: helpersObj.helpers,

@@ -7,7 +7,7 @@ class CheckBoxesTemplate {
         let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
-        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "multi_select") {
+        if (msgData?.message[0]?.component?.payload?.template_type === "multi_select") {
             me.messageHtml = $(me.getTemplateString('checkBoxesTemplate')).tmpl({
                 'msgData': msgData,
                 'helpers': helpersObj.helpers

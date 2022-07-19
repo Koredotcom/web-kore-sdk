@@ -8,7 +8,7 @@ class TemplateAttachment {
         let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
-        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.type == 'image' || msgData.message[0].component.type == 'audio' || msgData.message[0].component.type == 'video' || msgData.message[0].component.type == 'link')) {
+        if (msgData?.message[0]?.component?.payload && (msgData.message[0].component.type == 'image' || msgData.message[0].component.type == 'audio' || msgData.message[0].component.type == 'video' || msgData.message[0].component.type == 'link')) {
             me.messageHtml = $(me.getTemplateString()).tmpl({
                 'msgData': msgData,
                 'helpers': helpersObj.helpers

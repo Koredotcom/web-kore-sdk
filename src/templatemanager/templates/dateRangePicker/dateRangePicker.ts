@@ -20,7 +20,7 @@ class DateRangePickerTemplate {
     renderMessage(msgData: any) {
         let me: any = this;
         let $ = me.hostInstance.$;
-        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "daterange") {
+        if (msgData?.message[0]?.component?.payload?.template_type === "daterange") {
             me.messageHtml = $(me.getTemplateString('datePickerTemplate'));
             me.initiateDatePicker(msgData);
             me.bindDataToTemplate(msgData)

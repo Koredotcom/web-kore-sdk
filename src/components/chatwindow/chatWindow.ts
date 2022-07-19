@@ -1302,10 +1302,11 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   let me:any = this;
   let _chatContainer = $(me.chatEle).find('.chat-container');
   let messageHtml=me.generateMessageDOM(msgData);
-    
-  msgData.createdOnTimemillis = new Date(msgData.createdOn).valueOf();
+    if(msgData?.createdOn){
+      msgData.createdOnTimemillis = new Date(msgData.createdOn).valueOf();
+    }
 
-  if (msgData.type === 'bot_response') {
+  if (msgData?.type === 'bot_response') {
     me.waiting_for_message = false;
     setTimeout(() => {
       _chatContainer.find('.typingIndicator').css('background-image', `url(${msgData.icon})`);
@@ -1364,8 +1365,8 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
     me.bottomSliderAction('show', messageHtml);
   } else {
     // ignore message(msgId) if it is already in viewport
-    if ($(`.kore-chat-window .chat-container li#${msgData.messageId}`).length < 1 || (msgData.renderType === 'inline')) {
-      if (msgData.type === 'bot_response' && msgData.fromHistorySync) {
+    if ($(`.kore-chat-window .chat-container li#${msgData?.messageId}`).length < 1 || (msgData?.renderType === 'inline')) {
+      if (msgData?.type === 'bot_response' && msgData?.fromHistorySync) {
         const msgTimeStamps: number[] = [];
         const msgEles = $('.kore-chat-window .chat-container>li');
         if (msgEles.length) {
@@ -1406,7 +1407,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   });
 };
 
-generateMessageDOM(msgData:any){
+generateMessageDOM(msgData?:any){
   const me:any = this; 
   let messageHtml = me.templateManager.renderMessage(msgData);
   if (!messageHtml && msgData && msgData.message && msgData.message[0]) {
@@ -1438,7 +1439,7 @@ checkForMsgQueue  () {
   if (me.renderMessagesQueue.length && !me.msgRenderingProgress) {
     const tempData = me.renderMessagesQueue.shift();
     let delay = 0;
-    if (tempData.message && tempData.message.length && tempData.message[0] && tempData.message[0].component && tempData.message[0].component.payload && tempData.message[0].component.payload.renderDelay) {
+    if (tempData?.message[0]?.component?.payload?.renderDelay) {
       delay = tempData.message[0].component.payload.renderDelay || 0;
     }
     me.msgRenderingProgress = true;

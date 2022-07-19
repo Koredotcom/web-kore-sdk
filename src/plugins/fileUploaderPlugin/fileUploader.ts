@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import './fileUploader.scss';
 declare const document:any;
 declare const _recfileLisnr:any;
 declare const XDomainRequest:any;
@@ -9,6 +10,8 @@ class KoreFileUploaderPlugin {
    appConsts:any = {};
    fileToken:any = "";
    boundary:any = "";
+   prevRange:any;
+   sel1:any;
   fileUploaderCounter: any;
   xhrValue: any;
   xhr: any;
@@ -115,12 +118,29 @@ class KoreFileUploaderPlugin {
       $(me.hostInstance.chatEle).find('.removeAttachment').parents('.msgCmpt').remove();
       $('.kore-chat-window').removeClass('kore-chat-attachment');
       me.fileUploaderCounter = 0;
+      me.attachmentFileId = "";
       me.hostInstance.attachmentInfo = {};
       $('.sendButton').addClass('disabled');
       document.getElementById("captureAttachmnts").value = "";
   });
   }
-
+   setCaretEnd(_this: any) {
+    var sel;
+    if (_this && _this.item(0) && _this.item(0).innerText.length) {
+        var range = document.createRange();
+        range.selectNodeContents(_this[0]);
+        range.collapse(false);
+        this.sel1 = window.getSelection();
+        this.sel1.removeAllRanges();
+        this.sel1.addRange(range);
+        this.prevRange = range;
+    } else {
+        this.prevRange = false;
+        if (_this && _this[0]) {
+            _this[0].focus();
+        }
+    }
+}
   onHostCreate() {
     let me = this;
     let cwInstance=me.hostInstance;
@@ -151,7 +171,7 @@ class KoreFileUploaderPlugin {
         if (this.attachmentFileId) {
           me.hostInstance.attachmentInfo.fileId = this.attachmentFileId;
         }
-        if (me.hostInstance.attachmentInfo) {
+        if (me.hostInstance.attachmentInfo && Object.keys(me.hostInstance.attachmentInfo) && Object.keys(me.hostInstance.attachmentInfo).length) {
           data.chatWindowEvent.stopFurtherExecution = true;
           serverMessageObject.message.attachments[0] = me.hostInstance.attachmentInfo;
           var clientMessageObject:any = {};
@@ -181,7 +201,7 @@ class KoreFileUploaderPlugin {
               $('.attachment').empty();
               this.fileUploaderCounter = 0;
               setTimeout(function () {
-                  setCaretEnd((document.getElementsByClassName("chatInputBox")));
+                 me.setCaretEnd((document.getElementsByClassName("chatInputBox")));
               }, 100);
           }
       }
@@ -832,7 +852,7 @@ setOptions(_this: { options: any; }, opts: any) {
 
 getTemplateString() {
   var fileUploader = '<div class="sdkFooterIcon"> \
-        <button class="sdkAttachment attachmentBtn" title="i18"> \
+        <button class="sdkAttachment attachmentBtn" title="Attachment"> \
             <i class="paperclip"></i> \
         </button> \
         <input type="file" name="Attachment" class="filety" id="captureAttachmnts"> \

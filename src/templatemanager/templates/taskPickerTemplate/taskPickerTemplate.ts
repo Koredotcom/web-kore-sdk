@@ -5,7 +5,7 @@ class TaskPickerTemplate {
     renderMessage(msgData: any) {
         let me: any = this;
         let $ = me.hostInstance.$;
-        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "taskPickerTemplate") {
+        if (msgData?.message[0]?.component?.payload?.template_type === "taskPickerTemplate") {
             me.messageHtml = $(me.getTemplateString());
             me.initiateTaskPicker(msgData);
             me.bindEvents();

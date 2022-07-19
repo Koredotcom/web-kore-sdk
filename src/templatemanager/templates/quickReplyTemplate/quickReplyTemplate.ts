@@ -8,7 +8,7 @@ class QuickReplyTemplate {
         let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
-        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "quick_replies") {
+        if (msgData?.message[0]?.component?.payload?.template_type === "quick_replies") {
             me.messageHtml = $(me.getTemplateString()).tmpl({
                 'msgData': msgData,
                 'helpers': helpersObj.helpers

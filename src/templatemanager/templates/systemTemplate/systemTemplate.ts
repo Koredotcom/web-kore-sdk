@@ -7,7 +7,7 @@ class SystemTemplate {
         let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
-        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "SYSTEM") {
+        if (msgData?.message[0]?.component?.payload?.template_type === "SYSTEM") {
             if (msgData.message[0].component && msgData.message[0].component.payload) {
                 msgData.message[0].cInfo.body = msgData.message[0].component.payload.text || "";
             }
