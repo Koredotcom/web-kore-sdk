@@ -66,7 +66,7 @@ class KorePickersPlugin {
             "heading": "Choose Task"
         },
         radiooption:{
-            showOnFooter:true,
+            showOnFooter:false,
             "heading": "Please choose",
             "radioOptions": [
                 {

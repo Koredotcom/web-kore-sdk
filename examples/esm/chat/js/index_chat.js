@@ -17,7 +17,7 @@ chatWindowInstance.installPlugin(new KorePickersPlugin({}));
 chatWindowInstance.installPlugin(new GraphTemplatesPlugin());
 chatWindowInstance.installPlugin(new SpeechToTextPlugin());
 // chatWindowInstance.installPlugin(new TtsSpeechPlugin());
-//chatWindowInstance.installPlugin(new AgentDesktopPlugin());
+chatWindowInstance.installPlugin(new AgentDesktopPlugin());
 
 
 

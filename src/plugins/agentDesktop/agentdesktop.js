@@ -37,8 +37,8 @@ class AgentDesktopPlugin  {
     onInit() {
         let me = this;
         this.appendVideoAudioElemnts()
-        this.koreCoBrowse = me.koreCoBrowse({});
-        this.rrweb = me.rrweb({});
+        this.koreCoBrowse = me.koreCoBrowseInit({});
+        this.rrweb = me.rrwebInit({});
     }
 
     appendVideoAudioElemnts(){
@@ -887,7 +887,7 @@ class AgentDesktopPlugin  {
             serverConfig.addresses = this.callDetails.addresses;
             serverConfig.domain = this.callDetails.domain;
             serverConfig.iceServers = [this.callDetails.domain];
-            this.initSipStack({ user: uuId, displayName: uuId, password: '' }, serverConfig);
+            me.initSipStack({ user: uuId, displayName: uuId, password: '' }, serverConfig);
         }
         this._makeCall = function () {
             var sipURI = this.callDetails.sipURI;
@@ -2159,7 +2159,7 @@ class AgentDesktopPlugin  {
         }
     }
 
-    koreCoBrowse = function (exports) {
+    koreCoBrowseInit = function (exports) {
         let me = this;
         exports.agentclient = me.AgentDesktop;
         exports.initialize = me.cobrowseInitialize;
@@ -2179,7 +2179,7 @@ class AgentDesktopPlugin  {
         return exports;
     };
     ///////////////////////////////////// rrweb //////////////////////////////////////////////////////////////
-    rrweb = function (exports) {
+    rrwebInit = function (exports) {
         'use strict';
 
         /*! *****************************************************************************
