@@ -7,8 +7,8 @@ External plugins will be deloped by kore and should be installed explicitly by t
 | Plugin  | Description | Installation Guide
 | ------------- | ------------- |------------- |
 | Kore Pickers | Adds pickers like date and clock to chatwindow compose bar  |[Guide ](./kore-pickers) 
-| Graph Templates| Adds file upload capability to chatwindow compose bar  |[Guide](./graph-templates)  
-| Agent Desktop | Adds pickers like date and clock to chatwindow compose bar  |[Guide ](./agent-desktop) 
+| Graph Templates| Adds Graph templates like Bar-chart, Line-chart and Pie-chart  |[Guide](./graph-templates)  
+| Agent Desktop | Adds the ablity to the customer's chatwindow to interact with an agent  |[Guide ](./agent-desktop) 
 
 
 

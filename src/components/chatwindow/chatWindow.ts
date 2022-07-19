@@ -1854,7 +1854,7 @@ applyVariableValue (key:any,value:any,type:any){
       var cssPrefix = "--sdk-chat-custom-";
       var cssVariable = "";
       cssVariable = cssPrefix + '-' + type +'-' +key;
-       console.log(cssVariable+":",value);
+      //  console.log(cssVariable+":",value);
       if(value === 'square'){
           value = '12px 12px 2px 12px'
       }else if(value === 'circle'){
