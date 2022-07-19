@@ -161,9 +161,8 @@ installCallbackForPlugins (){
 
 show  (config:any) {
   const me:any = this;
-  const cfg = me.config;
-  if (cfg.widgetSDKInstace) {
-    this.addWidgetEvents(cfg);
+  if (config.widgetSDKInstace) {
+    this.addWidgetEvents(config);
   }
   me.initShow(config);
   if ($('body').find('.kore-chat-window').length > 0) {
@@ -1488,7 +1487,7 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
       res[1].messages.forEach((msgData: { messageId: any; message: { cInfo: { body: string; }; }[]; } | any, index: number) => {
         setTimeout((messagesQueue) => {
          
-          const _ignoreMsgs = messagesQueue.filter((queMsg: { messageId: any; }) => queMsg.messageId === msgData.messageId);
+          const _ignoreMsgs = messagesQueue.filter((queMsg: { messageId: any; }) => queMsg?.messageId === msgData?.messageId);
           // dont show the the history message if we already have same message came from socket connect
           if (!_ignoreMsgs.length) {
             msgData.fromHistory=true;

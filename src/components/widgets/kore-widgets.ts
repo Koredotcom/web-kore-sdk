@@ -5316,103 +5316,103 @@ getTemplateMethods  () {
 };
 
 openPanelForWindow  (panelName:any, resPopUp:any, heightToggle:any) {
-  this.openPanel.call(window.koreWidgetSDKInstance, panelName, resPopUp, heightToggle);
+  window.koreWidgetSDKInstance.openPanel.call(window.koreWidgetSDKInstance, panelName, resPopUp, heightToggle);
 };
 
 filterTabsForWindow  (parentId:any, subpanelId:any, filterId:any) {
-  this.filterTabs.call(window.koreWidgetSDKInstance, parentId, subpanelId, filterId);
+  window.koreWidgetSDKInstance.filterTabs.call(window.koreWidgetSDKInstance, parentId, subpanelId, filterId);
 };
 
 viewMorePanelForWindow  (obj:any) {
-  this.viewMorePanel.call(window.koreWidgetSDKInstance, obj);
+  window.koreWidgetSDKInstance.viewMorePanel.call(window.koreWidgetSDKInstance, obj);
 };
 
 scrollDataForWindow  (paneldata:any, filterdata:any, panelType:any, e:any) {
-  this.scrollData.call(window.koreWidgetSDKInstance, paneldata, filterdata, panelType, e);
+  window.koreWidgetSDKInstance.scrollData.call(window.koreWidgetSDKInstance, paneldata, filterdata, panelType, e);
 };
 
 removeViewMoreForWindow  () {
-  this.removeViewMore.call(window.koreWidgetSDKInstance);
+  window.koreWidgetSDKInstance.removeViewMore.call(window.koreWidgetSDKInstance);
 };
 
 meetingTimerForWindow  (tdata:any, m_Data:any, index:any) {
- this.meetingTimer.call(window.koreWidgetSDKInstance, tdata, m_Data, index);
+  window.koreWidgetSDKInstance.meetingTimer.call(window.koreWidgetSDKInstance, tdata, m_Data, index);
 };
 
 passHashTagForWindow  (uttarence:any) {
-  this.passHashTag.call(window.koreWidgetSDKInstance, uttarence);
+  window.koreWidgetSDKInstance.passHashTag.call(window.koreWidgetSDKInstance, uttarence);
 };
 
 openArticleForWindow  (kId:any) {
-  this.openArticle.call(window.koreWidgetSDKInstance, kId);
+  window.koreWidgetSDKInstance.openArticle.call(window.koreWidgetSDKInstance, kId);
 };
 
 openAnnouncementForWindow  (kId:any) {
-  this.openAnnouncement.call(window.koreWidgetSDKInstance, kId);
+  window.koreWidgetSDKInstance.openAnnouncement.call(window.koreWidgetSDKInstance, kId);
 };
 
 openLinkForWindow  (url:any) {
-  window.openLink.call(window.koreWidgetSDKInstance, url);
+  window.koreWidgetSDKInstance.openLink.call(window.koreWidgetSDKInstance, url);
 };
 
 passTaskUtterancesForWindow  (e:any, actionIndex:any) {
-  this.passTaskUtterances.call(window.koreWidgetSDKInstance, e, actionIndex);
+  window.koreWidgetSDKInstance.passTaskUtterances.call(window.koreWidgetSDKInstance, e, actionIndex);
 };
 
 passUtterancesForWindow (idss:any, message:any, evt:any) {
-  this.passUtterances.call(window.koreWidgetSDKInstance, idss, message, evt);
+  window.koreWidgetSDKInstance.passUtterances.call(window.koreWidgetSDKInstance, idss, message, evt);
 };
 
 checkCurrentUserForWindow  (oId:any, aId:any) {
-  this.checkCurrentUser.call(window.koreWidgetSDKInstance, oId, aId);
+  window.koreWidgetSDKInstance.checkCurrentUser.call(window.koreWidgetSDKInstance, oId, aId);
 };
 
 showDropdownForWindow (obj:any) {
-  this.showDropdown.call(window.koreWidgetSDKInstance, obj);
+  window.koreWidgetSDKInstance.showDropdown.call(window.koreWidgetSDKInstance, obj);
 };
 
 addArticleAnnouncementForWindow  (type:any) {
- this.addArticleAnnouncement.call(window.koreWidgetSDKInstance, type);
+  window.koreWidgetSDKInstance.addArticleAnnouncement.call(window.koreWidgetSDKInstance, type);
 };
 
 refreshElementForWindow  (type: any, refreshType: any) {
-  this.refreshElement.call(window.koreWidgetSDKInstance, type, refreshType);
+  window.koreWidgetSDKInstance.refreshElement.call(window.koreWidgetSDKInstance, type, refreshType);
 };
 
 passMeetingUtterancesForWindow (_this: any) {
-  this.passMeetingUtterances.call(window.koreWidgetSDKInstance, _this);
+  window.koreWidgetSDKInstance.passMeetingUtterances.call(window.koreWidgetSDKInstance, _this);
 };
 
 taskkActionForWindow (tId: any, taskName: any, e: any) {
-  this.taskkAction.call(window.koreWidgetSDKInstance, tId, taskName, e);
+  window.koreWidgetSDKInstance.taskkAction.call(window.koreWidgetSDKInstance, tId, taskName, e);
 };
 
 removeTaskSelectionForWindow () {
-  this.removeTaskSelection.call(window.koreWidgetSDKInstance);
+  window.koreWidgetSDKInstance.removeTaskSelection.call(window.koreWidgetSDKInstance);
 };
 
 taskSendForWindow (type: any) {
-  this.taskSend.call(window.koreWidgetSDKInstance, type);
+  window.koreWidgetSDKInstance.taskSend.call(window.koreWidgetSDKInstance, type);
 };
 
 taskCheckboxForWindow  (taskId: any) {
-  this.taskCheckbox.call(window.koreWidgetSDKInstance, taskId);
+  window.koreWidgetSDKInstance.taskCheckbox.call(window.koreWidgetSDKInstance, taskId);
 };
 
 popupActionForWindow  (data: any, title: any, _this: any) {
-  this.popupAction.call(window.koreWidgetSDKInstance, data, title, _this);
+  window.koreWidgetSDKInstance.popupAction.call(window.koreWidgetSDKInstance, data, title, _this);
 };
 
 toggelMeetingActionBtnForWindow  (id: any, e: any) {
-  this.toggelMeetingActionBtn.call(window.koreWidgetSDKInstance, id, e);
+  window.koreWidgetSDKInstance.toggelMeetingActionBtn.call(window.koreWidgetSDKInstance, id, e);
 };
 
 hexToRGBMeetingForWindow  (hex: any, alpha: any) {
-  this.hexToRGBMeeting.call(window.koreWidgetSDKInstance, hex, alpha);
+  window.koreWidgetSDKInstance.hexToRGBMeeting.call(window.koreWidgetSDKInstance, hex, alpha);
 };
 
 isURLForWindow  (str: any) {
-  this.isURL.call(window.koreWidgetSDKInstance, str);
+  window.koreWidgetSDKInstance.isURL.call(window.koreWidgetSDKInstance, str);
 };
 
 
