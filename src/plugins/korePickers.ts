@@ -6,12 +6,29 @@ import TaskPickerTemplate from '../templatemanager/templates/taskPickerTemplate/
 class KorePickersPlugin {
     name = 'KorePickersPlugin';
     config = {
-        showDatePickerIcon: true,           //set true to show datePicker icon
-        showDateRangePickerIcon: true,      //set true to show dateRangePicker icon
-        showClockPickerIcon: true,          //set true to show clockPicker icon
-        showTaskMenuPickerIcon: true,       //set true to show TaskMenu Template icon
-        showradioOptionMenuPickerIcon: true, //set true to show Radio Option Template icon,
-        taskMenuConfig: {
+        clock:{
+            showOnFooter:false,
+            text: "display",
+            title: "Please choose",
+        },
+        daterange:{
+            showOnFooter:false,
+            text: "display",
+            title: "Please choose",
+            format: 'DD-MM-YYYY',
+            startDate: '',
+            endDate: ''
+        },
+        date:{
+            showOnFooter:false,
+            text: "display",
+            title: "Please choose",
+            format: 'DD-MM-YYYY',
+            startDate: '',
+            endDate: ''
+        },
+        task:{
+            showOnFooter:false,
             "tasks": [
                 {
                     "title": "Get balance",
@@ -48,7 +65,8 @@ class KorePickersPlugin {
             ],
             "heading": "Choose Task"
         },
-        radioOptionsMenuConfig: {
+        radiooption:{
+            showOnFooter:true,
             "heading": "Please choose",
             "radioOptions": [
                 {
@@ -92,39 +110,19 @@ class KorePickersPlugin {
                     }
                 },
             ]
-        },
-        clockPickerConfig: {
-            text: "display",
-            title: "Please choose",
-        },
-        datePickerConfig: {
-            text: "display",
-            title: "Please choose",
-            format: 'DD-MM-YYYY',
-            startDate: '',
-            endDate: ''
-        },
-        dateRangePickerConfig: {
-            text: "display",
-            title: "Please choose",
-            format: 'DD-MM-YYYY',
-            startDate: '',
-            endDate: ''
         }
+
     };
     pickerHTML:any;
     hostInstance: any;
     constructor(pickerConfig:any) {
-        this.config = {
-            ...this.config,
-            ...pickerConfig
-        }
+        let me = this;
+        me.extend(this.config,pickerConfig);
     }
     onHostCreate() {
         let me = this;
         let cwInstance=me.hostInstance;
         cwInstance.on("viewInit", (chatWindowEle:any) => {
-            debugger;
             me.onInit();
         });
        
@@ -147,27 +145,27 @@ class KorePickersPlugin {
         let me = this;
         let $ = me.hostInstance.$;
         let chatWindowInstance = me.hostInstance;
-        if (this.config && this.config.showClockPickerIcon) {
+        if (this.config && this.config?.clock?.showOnFooter) {
             me.pickerHTML = $(me.getClockPickerTemplateString());
             me.appendPickerHTMLtoChatWindowFooter(me.pickerHTML);
             me.bindEvents(me.pickerHTML);
         }
-        if (this.config && this.config.showDatePickerIcon) {
+        if (this.config && this.config?.date?.showOnFooter) {
             me.pickerHTML = $(me.getDatePickerTemplateString());
             me.appendPickerHTMLtoChatWindowFooter(me.pickerHTML);
             me.bindEvents(me.pickerHTML);
         }
-        if (this.config && this.config.showDateRangePickerIcon) {
+        if (this.config && this.config?.daterange?.showOnFooter) {
             me.pickerHTML = $(me.getDateRangePickerTemplateString());
             me.appendPickerHTMLtoChatWindowFooter(me.pickerHTML);
             me.bindEvents(me.pickerHTML);
         }
-        if (this.config && this.config.showTaskMenuPickerIcon) {
+        if (this.config && this.config?.task?.showOnFooter) {
             me.pickerHTML = $(me.getTaskPickerTemplateString());
             me.appendPickerHTMLtoChatWindowFooter(me.pickerHTML);
             me.bindEvents(me.pickerHTML);
         }
-        if (this.config && this.config.showradioOptionMenuPickerIcon) {
+        if (this.config && this.config?.radiooption.showOnFooter) {
             me.pickerHTML = $(me.getRadioOptionPickerTemplateString());
             me.appendPickerHTMLtoChatWindowFooter(me.pickerHTML);
             me.bindEvents(me.pickerHTML);
@@ -223,93 +221,166 @@ class KorePickersPlugin {
         let me = this;
         let $ = me.hostInstance.$;
         let chatWindowInstance = me.hostInstance;
-        $(element).on('click', '.sdkClock.clockBtn', function (event:any) {
-            var tempMessageData = {
-                message: [
-                    {
-                        component: {
-                            payload: {
-                                template_type: "clockTemplate",
-                                text: me.config.clockPickerConfig.text,
-                                title: me.config.clockPickerConfig.title,
-                            },
-                            type: "template"
-                        },
-                    }
-                ]
-            }
-            chatWindowInstance.renderMessage(tempMessageData);
+        $(element).on('click', '.sdkClock.clockBtn',  (event:any)=> {
+            this.showClockPicker()
         });
-        $(element).on('click', '.sdkCalender.calenderBtn', function (event: any) {
-            var tempMessageData = {
-                message: [
-                    {
-                        component: {
-                            payload: {
-                                template_type: "dateTemplate",
-                                text: me.config.datePickerConfig.text,
-                                title: me.config.datePickerConfig.title,
-                                format:me.config.datePickerConfig.format,
-                                startDate: me.config.datePickerConfig.startDate,
-                                endDate:me.config.datePickerConfig.endDate
-                            },
-                            type: "template"
-                        },
-                    }
-                ]
-            }
-            chatWindowInstance.renderMessage(tempMessageData);
+        $(element).on('click', '.sdkCalender.calenderBtn',  (event: any)=> {
+            this.showDatePicker()
         });
-        $(element).on('click', '.sdkRangeCalender.calenderBtn', function (event: any) {
-            var tempMessageData = {
-                message: [
-                    {
-                        component: {
-                            payload: {
-                                template_type: "daterange",
-                                text: me.config.dateRangePickerConfig.text,
-                                title: me.config.dateRangePickerConfig.title,
-                            },
-                            type: "template"
-                        },
-                    }
-                ]
-            }
-            chatWindowInstance.renderMessage(tempMessageData);
+        $(element).on('click', '.sdkRangeCalender.calenderBtn',  (event: any)=> {
+            this.showDateRangePicker();
         });
-        $(element).on('click', '.sdkAccount.accountBtn', function (event: any) {
-            var tempMessageData = {
-                message: [
-                    {
-                        component: {
-                            "payload": {
-                                "template_type": "radioOptionTemplate",
-                                "heading": me.config.radioOptionsMenuConfig.heading,
-                                "radioOptions": me.config.radioOptionsMenuConfig.radioOptions,
-                            }
-                        },
-                    }
-                ]
-            }
-            chatWindowInstance.renderMessage(tempMessageData);// radio options
+        $(element).on('click', '.sdkAccount.accountBtn',  (event: any) => {
+            this.showRadioOptionPicker();
         });
-        $(element).on('click', '.sdkMenu.menuBtn', function (event: any) {
-            var tempMessageData = {
-                message: [
-                    {
-                        component: {
-                            "payload": {
-                                "template_type": "taskPickerTemplate",
-                                "tasks": me.config.taskMenuConfig.tasks,
-                                "heading": me.config.taskMenuConfig.heading,
-                            },
-                        },
-                    }
-                ]
-            }
-            chatWindowInstance.renderMessage(tempMessageData);
+        $(element).on('click', '.sdkMenu.menuBtn', (event: any) => {
+            this.showTaskPicker();
         });
     }
+
+    showClockPicker = (options?:any) =>  {
+        let me = this;
+        if(options){
+            me.config.clock = {
+                ...me.config.clock,
+                ...options
+            }
+        }
+        let $ = me.hostInstance.$;
+        let chatWindowInstance = me.hostInstance;
+        var tempMessageData = {
+            message: [
+                {
+                    component: {
+                        payload: {
+                            template_type: "clockTemplate",
+                            text: me.config.clock.text,
+                            title: me.config.clock.title,
+                        },
+                        type: "template"
+                    },
+                }
+            ]
+        }
+        chatWindowInstance.renderMessage(tempMessageData);
+    }
+    showDatePicker=(options?:any)=> {
+        let me = this;
+        if(options){
+            me.config.date = {
+                ...me.config.date,
+                ...options
+            }
+        }
+        let $ = me.hostInstance.$;
+        let chatWindowInstance = me.hostInstance;
+        var tempMessageData = {
+            message: [
+                {
+                    component: {
+                        payload: {
+                            template_type: "dateTemplate",
+                            text: me.config.date.text,
+                            title: me.config.date.title,
+                            format: me.config.date.format,
+                            startDate: me.config.date.startDate,
+                            endDate: me.config.date.endDate
+                        },
+                        type: "template"
+                    },
+                }
+            ]
+        }
+        chatWindowInstance.renderMessage(tempMessageData);
+    }
+
+    showDateRangePicker=(options?:any)=>  {
+        let me = this;
+        if(options){
+            me.config.daterange = {
+                ...me.config.daterange,
+                ...options
+            }
+        }
+        let $ = me.hostInstance.$;
+        let chatWindowInstance = me.hostInstance;
+        var tempMessageData = {
+            message: [
+                {
+                    component: {
+                        payload: {
+                            template_type: "daterange",
+                            text: me.config.daterange.text,
+                            title: me.config.daterange.title,
+                        },
+                        type: "template"
+                    },
+                }
+            ]
+        }
+        chatWindowInstance.renderMessage(tempMessageData);
+    }
+
+    showRadioOptionPicker=(options?:any)=>  {
+        let me = this;
+        if(options){
+            me.config.radiooption.radioOptions = options;
+        }
+        let $ = me.hostInstance.$;
+        let chatWindowInstance = me.hostInstance;
+        var tempMessageData = {
+            message: [
+                {
+                    component: {
+                        "payload": {
+                            "template_type": "radioOptionTemplate",
+                            "heading": me.config.radiooption.heading,
+                            "radioOptions": me.config.radiooption.radioOptions,
+                        }
+                    },
+                }
+            ]
+        }
+        chatWindowInstance.renderMessage(tempMessageData);// radio options
+    }
+
+    showTaskPicker=(options?:any)=> {
+        let me = this;
+        if(options){
+            me.config.task.tasks = options;
+        }
+        let $ = me.hostInstance.$;
+        let chatWindowInstance = me.hostInstance;
+        var tempMessageData = {
+            message: [
+                {
+                    component: {
+                        "payload": {
+                            "template_type": "taskPickerTemplate",
+                            "tasks": me.config.task.tasks,
+                            "heading": me.config.task.heading,
+                        },
+                    },
+                }
+            ]
+        }
+        chatWindowInstance.renderMessage(tempMessageData);
+    }
+    extend(target:any, source:any) {
+        let me:any=this;
+        for (var prop in source) {
+            if (source.hasOwnProperty(prop)) {
+                if (target[prop] && typeof source[prop] === 'object') {
+                    me.extend(target[prop], source[prop]);
+                }
+                else {
+                    target[prop] = source[prop];
+                }
+            }
+        }
+        return target;
+      }
+
 }
 export default KorePickersPlugin;
 // export default {
