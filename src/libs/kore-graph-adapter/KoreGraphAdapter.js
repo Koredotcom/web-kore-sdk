@@ -426,7 +426,7 @@ var KoreGraphAdapter = (function($,d3) {
         var sum = 0;
         var payload=msgData;//msgData.message[0].component.payload
         var widthDivision=3;
-        legendCenterOffset=0;
+        var legendCenterOffset=0;
         if(msgData.message){
             payload=msgData.message[0].component.payload;
         }else{
@@ -594,7 +594,7 @@ var KoreGraphAdapter = (function($,d3) {
           //  var percent = Math.round(1000 * d.data.count / total) / 10; // calculate percent
           //  tooltip.select('.label').html(d.data.label); // set current label           
             if($('#myPreviewModal').css('display') === 'block') {
-                if(d.data.dispVal) {
+                if(d.data && d.data.dispVal) {
                     tooltip.select('#myPreviewModal .countDonut').html(d.data.dispVal); // set current count
                 }
                 else {
@@ -602,7 +602,7 @@ var KoreGraphAdapter = (function($,d3) {
                 }
             }            
             else {
-                if(d.data.dispVal) {
+                if(d.data && d.data.dispVal) {
                     tooltip.select('.countDonut').html(d.data.dispVal); // set current count       
                 }
                 else {
@@ -837,7 +837,7 @@ var KoreGraphAdapter = (function($,d3) {
             
         var payload=msgData;//msgData.message[0].component.payload
         var widthDivision=3;
-        legendCenterOffset=0;
+        var legendCenterOffset=0;
         if(msgData.message){
             payload=msgData.message[0].component.payload;
         }else{
@@ -1421,7 +1421,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
         var groupChartData = [];
         var payload=msgData;//msgData.message[0].component.payload
         var widthDivision=3;
-        legendCenterOffset=0;
+        var legendCenterOffset=0;
         if(msgData.message){
             payload=msgData.message[0].component.payload;
         }else{
@@ -1663,7 +1663,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
             g = svg.append("g").attr("transform", "translate(" + 70 + "," + margin.top + ")");
         var payload=msgData;//msgData.message[0].component.payload
         var widthDivision=3;
-        legendCenterOffset=0;
+        var legendCenterOffset=0;
         if(msgData.message){
             payload=msgData.message[0].component.payload;
         }else{
@@ -1707,7 +1707,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
 
         for(var i=0; i<data.length; i++) {
             var sum = 0;
-            for(key in data[i]) {
+            for(var key in data[i]) {
                 if(key !== 'xAxis' && key !== 'dispVal') {
                     sum = sum + data[i][key];
                 }
