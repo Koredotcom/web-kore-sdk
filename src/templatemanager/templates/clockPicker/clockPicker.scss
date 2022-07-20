@@ -11,10 +11,10 @@
     display: block;
 }
 .clockPickerContainer .clockpicker-popover {
-    width: 100% !important;
+    width: 100%;
     position: relative;
-    top: auto !important;
-    left: auto !important;
+    top: auto;
+    left: auto;
     margin: 0 auto;
     border: 0;
     background: transparent;
@@ -34,7 +34,7 @@
 }
 .clockPickerContainer .clockpicker-popover .popover-title span.clockpicker-span-hours {
     font-size: 54px;
-    color: #000000 !important;
+    color: #000000;
     opacity: 0.3;
 }
 .clockPickerContainer .clockpicker-popover .popover-title .clockpicker-span-hours.text-primary {
@@ -45,7 +45,7 @@
 }
 .clockPickerContainer .clockpicker-popover .popover-title span.clockpicker-span-minutes {
     font-size: 54px;
-    color: #000000 !important;
+    color: #000000;
     opacity: 0.3;
 }
 .darkTheme .clockPickerContainer .clockpicker-popover .popover-title {
@@ -56,11 +56,11 @@
 }
 .darkTheme .clockPickerContainer .clockpicker-popover .popover-title span.clockpicker-span-hours {
     font-size: 54px;
-    color: #ffffff !important;
+    color: #ffffff;
 }
 .darkTheme .clockPickerContainer .clockpicker-popover .popover-title span.clockpicker-span-minutes {
     font-size: 54px;
-    color: #ffffff !important;
+    color: #ffffff;
 }
 .hide .clockPickerContainer .confirmBTN {
     opacity: 0;
@@ -113,10 +113,10 @@
 }
 .clockPickerContainer .clockpicker-popover .clockpicker-button.am-button,
 .clockPickerContainer .clockpicker-popover .clockpicker-button.pm-button {
-    margin-left: 0 !important;
-    padding: 3px !important;
+    margin-left: 0;
+    padding: 3px;
     border: 0;
-    border-radius: 4px !important;
+    border-radius: 4px;
     display: flex;
     background: transparent;
     color: #000000;
@@ -149,12 +149,12 @@
 .clockPickerContainer .clockpicker-popover .popover-content .clockpicker-plate {
     width: 196px;
     height: 196px;
-    margin: 0 auto !important;
+    margin: 0 auto;
     background-color: #eeeeee;
     border: 1px solid #eeeeee;
 }
 .clockPickerContainer #clockPickerInput .hide {
-    display: none !important;
+    display: none;
 }
 .darkTheme .clockPickerContainer .clockpicker-popover .popover-content .clockpicker-plate {
     background-color: #2e2c34;

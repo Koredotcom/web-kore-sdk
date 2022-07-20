@@ -1,5 +1,6 @@
 import helpers from '../../../utils/helpers';
 import KoreGraphAdapter from '../../../libs/kore-graph-adapter/KoreGraphAdapter';
+import './barChartTemplate.scss';
 
 class BarChartTemplate {
   renderMessage(msgData: any) {

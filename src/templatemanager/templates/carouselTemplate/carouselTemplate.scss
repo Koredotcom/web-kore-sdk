@@ -1,7 +1,7 @@
 
 .kore-chat-window .carousel {
-    margin: 0 !important;
-    width: 300px !important;
+    margin: 0;
+    width: 300px;
 }
 .kore-chat-window .carousel:hover .purejscarousel-btn.purejscarousel-btn-prev{
     display: block;
@@ -95,24 +95,24 @@
 }
 
 .kore-chat-window .purejscarousel-btn {
-    width: 30px !important;
-    height: 30px !important;
-    border-radius: 4px !important;
-    background-color: rgb(169 169 169 / 20%)  !important;
-    border: solid 1px var(--sdk-chat-widow-primary-border-color) !important;
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    background-color: rgb(169 169 169 / 20%) ;
+    border: solid 1px var(--sdk-chat-widow-primary-border-color);
     z-index: 1;
-    color: var(--sdk-chat-window-bot-bubble-font-clrr) !important;
-    font-size: 18px !important;
+    color: var(--sdk-chat-window-bot-bubble-font-clr);
+    font-size: 18px;
     padding-top: 8px;
 }
 
 .kore-chat-window .purejscarousel-btn:hover {
-    background-color: var(--sdk-chat-widow-primary-border-color) !important;
+    background-color: var(--sdk-chat-widow-primary-border-color);
 }
 
 .kore-chat-window .purejscarousel-btn.purejscarousel-btn-prev {
-    -webkit-transform: none !important;
-    transform: none !important;
+    -webkit-transform: none;
+    transform: none;
     padding: 0;
     display: none;
 }
@@ -123,12 +123,12 @@
 
 .kore-chat-window .purejscarousel-btn.purejscarousel-btn-prev.hideNow,
 .kore-chat-window .purejscarousel-btn.purejscarousel-btn-next.hideNow {
-    display: none !important;
+    display: none;
 }
 
 .kore-chat-window .purejscarousel-btn.purejscarousel-btn-next {
-    -webkit-transform: none !important;
-    transform: none !important;
+    -webkit-transform: none;
+    transform: none;
     padding: 0;
     display: none;
 }

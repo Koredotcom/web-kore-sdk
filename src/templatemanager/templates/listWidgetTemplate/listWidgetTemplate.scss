@@ -52,7 +52,7 @@
    
 }
 .kore-chat-window .kore-chat-body .tab-list-template .sheetHeader .headerRight .headerActionBTN{
-    background: var(--sdk-chat-widow-btn-light-color) !important;
+    background: var(--sdk-chat-widow-btn-light-color);
     color: var(--sdk-chat-widow-primary-blue-color);
     position: relative;
     max-width: 110px;
@@ -91,7 +91,7 @@
     text-align: center;
     padding-top: 10px;
     cursor: pointer;
-    position: relative !important;
+    position: relative;
     top: auto;
     right: auto;
     left: auto;
@@ -295,7 +295,7 @@
    padding: 0;
 }
 .kore-chat-window .kore-chat-body .pie-chart-template  .tab-list-template .listViewTmplContentChild .meetingActionButtons .actionBtns{
-    margin-right:0 !important; 
+    margin-right:0; 
 }
 .kore-chat-window .kore-chat-body .tab-list-template .listTemplateContainer .displayListValues .listViewLeftContent.marginRightZero{
     margin-right:0;
@@ -347,7 +347,7 @@
     position: absolute;
     top: 2px;
     right: 0;
-    white-space: normal !important;
+    white-space: normal;
 }
 .kore-chat-window .kore-chat-body .tab-list-template .listTemplateContainer .displayListValues .listViewLeftContent .listViewItemValue.top10{
     top: 10px;
@@ -369,18 +369,18 @@
 
 
 .kore-chat-window .kore-chat-body .tab-list-template .listViewTmplContentChild .meetingActionButtons.float .actionBtns {
-    flex: none !important;
+    flex: none;
     float: left;
     padding: 0 10px;
     border-radius: 4px;
-    margin-right: 7px !important;
+    margin-right: 7px;
     margin-top: 10px;
     cursor: pointer;
-    border: 0 !important;
+    border: 0;
     letter-spacing: 1.24px;
     font-weight: bold;
     height: 32px;
-    background: var(--sdk-chat-widow-btn-light-color) !important;
+    background: var(--sdk-chat-widow-btn-light-color);
     color: var(--sdk-chat-widow-primary-blue-color);
     font-size: 10px;
     text-transform: uppercase;
@@ -412,13 +412,13 @@
     /* float: none; */
     padding: 0 10px;
     border-radius: 4px;
-    margin-right: 7px !important;
+    margin-right: 7px;
     cursor: pointer;
-    border: 0 !important;
+    border: 0;
     letter-spacing: 1.24px;
     font-weight: bold;
     height: 32px;
-    background: var(--sdk-chat-widow-btn-light-color) !important;
+    background: var(--sdk-chat-widow-btn-light-color);
     color: var(--sdk-chat-widow-primary-blue-color);
     font-size: 10px;
     text-transform: uppercase;
@@ -450,12 +450,12 @@
 .kore-chat-window .kore-chat-body .tab-list-template .listViewTmplContentChild .meetingActionButtons .actionBtns.dropbtnWidgt {
     bottom: auto;
     position: relative;
-    /* margin: 10px 0 0 !important; */
+    /* margin: 10px 0 0; */
 }
 .kore-chat-window .kore-chat-body .tab-list-template .listViewTmplContentChild .meetingActionButtons.float .actionBtns.dropbtnWidgt {
     bottom: auto;
     position: relative;
-    margin: 10px 0 0 !important;
+    margin: 10px 0 0;
 }
 .kore-chat-window .kore-chat-body .listViewTmplContentChild .meetingActionButtons .dropdown-contentWidgt {
     bottom: 50px;

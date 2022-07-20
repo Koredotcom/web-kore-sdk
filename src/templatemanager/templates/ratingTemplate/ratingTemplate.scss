@@ -26,7 +26,7 @@
     color: var(--sdk-chat-widow-secondary-font-color);
  }
  .kore-chat-window .rating-main-component .ratingMainComponent .suggestionsMainComponent .submitButton{
-    position: relative !important;
+    position: relative;
     text-align: left;
     padding-bottom: 0;
     bottom: 0;    
@@ -59,7 +59,7 @@
     color: var(--sdk-chat-widow-secondary-font-color);
  }
  .kore-chat-window .rating-main-component .emojiComponent .suggestionsMainComponent .submitButton{
-    position: relative !important;
+    position: relative;
     text-align: left;
     padding-bottom: 0;
     bottom: 0; 

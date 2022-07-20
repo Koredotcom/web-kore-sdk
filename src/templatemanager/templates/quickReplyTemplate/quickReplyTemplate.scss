@@ -10,7 +10,7 @@
     text-align: left;
     color: #2A2A2A;
     background: #F0F0F0;
-    margin: 0 !important;
+    margin: 0;
     padding: 10px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
@@ -86,7 +86,7 @@
     color: #3292FF;
     border-top: 1px solid var(--sdk-chat-widow-primary-bg-color);
     padding: 10px;
-    margin: 0 !important;
+    margin: 0;
     text-align: center;
     cursor: pointer;
 }

@@ -14,7 +14,7 @@
     text-align: left;
     padding: 10px;
     font-size: 15px;
-    color: var(--sdk-chat-window-bot-bubble-font-clrr);
+    color: var(--sdk-chat-window-bot-bubble-font-clr);
     font-weight: bold;
 }
 
@@ -25,7 +25,7 @@
     padding: 10px;
     font-size: 15px;
     color: #8a959f;
-    max-width: 190px !important;
+    max-width: 190px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -61,11 +61,11 @@
 }
 
 .kore-chat-window .tablechart .profile-photo {
-    top: 30px !important;
+    top: 30px;
 }
 
 .kore-chat-window .kore-chat-window.expanded .tablechart .profile-photo {
-    top: 30px !important;
+    top: 30px;
 }
 
 .kore-chat-window .tablechart .tablechartDiv table,
@@ -78,7 +78,7 @@
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    max-width: 200px !important;
+    max-width: 200px;
     font-size: 14px;
     color: var(--sdk-chat-widow-primary-font-color);
     text-align: left;
@@ -110,7 +110,7 @@
     display: none;
 }
 .kore-chat-window .largePreviewContent .tablechartDiv {
-    display: block !important;
+    display: block;
     background: var(--sdk-chat-widow-default-white);
     padding: 10px;
     border: 30px solid var(--sdk-chat-widow-primary-bg-color);

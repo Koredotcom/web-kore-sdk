@@ -93,10 +93,10 @@
     color: #000000;
 }
  .datePickerContainer .daterangepicker{
-    width: 288px !important;
+    width: 288px;
     position: relative;
-    top: auto !important;
-    left: auto !important;
+    top: auto;
+    left: auto;
     margin: 0 auto;
     border: 0;
     background: transparent;
@@ -151,7 +151,7 @@
     height: 32px;
 }
 .datePickerContainer .date-picker-wrapper{
-    font-size: 15px !important;
+    font-size: 15px;
 }
 .datePickerContainer .date-picker-wrapper .month-wrapper table th{
     font-size:12px;
