@@ -26,7 +26,7 @@ First, install kore web SDK via the [npm](https://www.npmjs.com/get-npm) package
 npm install --save git+https://github.com/Koredotcom/web-kore-sdk.git#v2/sneakpeek
 ```
 
-Get chatWindow and chatConfig objects on your index:
+Get chatWindow and chatConfig
 
 ```js
 import { chatConfig, chatWindow } from 'kore-web-sdk';
@@ -34,22 +34,8 @@ import { chatConfig, chatWindow } from 'kore-web-sdk';
 ```
 Configure ChatConfig
 
-<details>
- <summary>Option 1 (under construction)</summary>
-	
-```js
-
-chatConfig.API_KEY_CONFIG.KEY="MY_API_KEY";
-
-```
-	
-</details>
 
 
-<details>
-	
- <summary>Option 2</summary>
-	
 ```js
 
 let botOptions=chatConfig.botOptions;
@@ -59,10 +45,13 @@ let botOptions=chatConfig.botOptions;
  botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
  botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
  botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+ /* 
+ Important Note: These keys are provided here for quick demos to generate JWT token at client side but not for Production environment.
+ Refer below document for JWT token generation at server side. Client Id and Client secret should maintained at server end.
+ https://developer.kore.ai/docs/bots/sdks/user-authorization-and-assertion/
+ **/
 
 ```
-</details>
-
 
 
 Create chat window instance and trigger show method
@@ -71,6 +60,59 @@ var chatWindowInstance = new chatWindow(chatConfig);
 chatWindowInstance.show(chatConfig);
 
 ```
+<details>
+ <summary>Without npm</summary>
+
+include the following script in your html file and configure bot configurations 
+
+```js
+
+<script  src="../../../dist/umd/kore-web-sdk-umd-chat.js"></script>
+<script>
+        //chat window declaration
+        var chatConfig=KoreChatSDK.chatConfig;
+        var chatWindow=KoreChatSDK.chatWindow;
+        
+        //create chat window instance
+        var chatWindowInstance = new chatWindow();
+
+        //configure bot configurations
+        var botOptions=chatConfig.botOptions;
+        botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
+        botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';
+        botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
+        botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
+        botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+	/* 
+	Important Note: These keys are provided here for quick demos to generate JWT token at client side but not for Production environment.
+	Refer below document for JWT token generation at server side. Client Id and Client secret should maintained at server end.
+	https://developer.kore.ai/docs/bots/sdks/user-authorization-and-assertion/
+	**/
+
+        //show chatwindow
+        chatWindowInstance.show(chatConfig);
+
+</script>
+
+```
+	
+</details>
+
+
+<details>
+ <summary>For quick demo</summary>
+ 
+ 
+
+####  Instructions
+	1.Open examples/umd/chat-with-plugins/index.html  
+	2.configure bot configurations   
+	3.Open same file in any browser 
+	
+
+ 
+
+</details>
 
 ## 💡 Custom Templates
 
