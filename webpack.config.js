@@ -164,6 +164,11 @@ module.exports= function(env,argv){
             filename: 'plugins/tts-speech-plugin-umd.js',
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
+          AgentDeskTopPluginSDK: {
+            import: "./src/index_plugins/agentDesktop_umd.ts",
+            filename: 'plugins/agent-desktop-umd.js',
+            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+          },
         }
         config.output.library = {
           name: '[name]',

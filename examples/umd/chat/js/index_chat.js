@@ -5,6 +5,7 @@ var chatWindow=KoreChatSDK.chatWindow;
 
 // var KorePickersPlugin=KorePickersPluginSDK.KorePickersPlugin;
 // var GraphTemplatesPlugin=KoreGraphTemplatesPluginSDK.GraphTemplatesPlugin;
+// var AgentDeskTopPlugin = AgentDeskTopPluginSDK.AgentDesktopPlugin;
 // var SpeechToTextPlugin=SpeechToTextPluginSDK.SpeechToTextPlugin;
 // var TtsSpeechPlugin=TtsSpeechPluginSDK.TtsSpeechPlugin;
 
@@ -31,9 +32,9 @@ botOptions.clientSecret = "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=";
 // chatWindow.prototype.show=function(){
 //     console.log('overridedn')
 // }
-
 // chatWindowInstance.installPlugin(new KorePickersPlugin());
 // chatWindowInstance.installPlugin(new GraphTemplatesPlugin());
+// chatWindowInstance.installPlugin(new AgentDeskTopPlugin())
 // chatWindowInstance.installPlugin(new SpeechToTextPlugin());
 // chatWindowInstance.installPlugin(new TtsSpeechPlugin());
 
