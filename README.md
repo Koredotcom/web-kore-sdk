@@ -63,7 +63,7 @@ Click [here](/docs/sdkdeveloper) to explore different vairations how SDK can be 
 
 ### Other options
 <details>
- <summary>Without npm</summary>
+ <summary>Legacy</summary>
 
 include the following script in your html file and configure bot configurations 
 
