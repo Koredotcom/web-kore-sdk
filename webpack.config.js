@@ -131,7 +131,7 @@ module.exports= function(env,argv){
         config.entry={
           KoreChatSDK: {
             import: "./src/index_umd_chat.ts",
-            filename: 'kore-web-sdk-umd-chat.js',
+            filename: 'kore-web-sdk-umd-chat.min.js',
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
           KoreWidgetsSDK:{
