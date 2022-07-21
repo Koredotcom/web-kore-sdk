@@ -6,7 +6,7 @@ import EventEmitter from '../../utils/EventEmiter'
 import MessageTemplate from '../../templatemanager/templates/messageTemplate/messageTemplate';
 import KRPerfectScrollbar from 'perfect-scrollbar';
 import './../../libs/perfectscroll/css/perfect-scrollbar.min.css';
-import './chatWindow.scss';
+import './sass/chatWindow.scss';
 //import './../../libs/emojione.sprites.css';
 import chatConfig from './config/kore-config'
 //import GreeetingsPlugin from '../../plugins/greetings/greetings-plugin'
@@ -1188,7 +1188,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   if (msgData?.type === 'bot_response') {
     me.waiting_for_message = false;
     setTimeout(() => {
-      _chatContainer.find('.typingIndicator').css('background-image', `url(${msgData.icon})`);
+      $(me.chatEle).find('.typingIndicator').css('background-image', `url(${msgData.icon})`);
     }, 500);
     setTimeout(() => {
       if (!me.waiting_for_message) {
