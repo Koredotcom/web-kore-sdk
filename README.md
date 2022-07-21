@@ -5,8 +5,6 @@ With just few lines of code, you can embed our Kore.ai chat widget into your app
 
 [Bot SDKs](https://developer.kore.ai/docs/bots/kore-web-sdk/)
 
-[Web SDK Tutorial](https://developer.kore.ai/docs/bots/sdks/kore-ai-web-sdk-tutorial/)
-
 [Web Socket Endpoints and Events](https://developer.kore.ai/docs/bots/sdks/bots-platform-api-reference/)
 
 [SDK Security](https://developer.kore.ai/docs/bots/sdks/user-authorization-and-assertion/)
@@ -60,6 +58,10 @@ var chatWindowInstance = new chatWindow(chatConfig);
 chatWindowInstance.show(chatConfig);
 
 ```
+### Examples
+Click [here](/docs/sdkdeveloper) to explore different vairations how SDK can be consumed 
+
+### Other options
 <details>
  <summary>Without npm</summary>
 
