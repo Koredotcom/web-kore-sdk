@@ -984,6 +984,7 @@ render  (chatWindowHtml: any) {
   const me:any = this;
   let chatWindowEvent = {stopFurtherExecution: false};
   me.emit(me.EVENTS.BEFORE_VIEW_INIT,{chatEle:chatWindowHtml,chatWindowEvent:chatWindowEvent});
+  me.bindEvents();
   $(me.config.container).append(chatWindowHtml);
   me.emit(me.EVENTS.VIEW_INIT,{chatEle:chatWindowHtml,chatWindowEvent:chatWindowEvent});
   if(chatWindowEvent.stopFurtherExecution){
@@ -999,7 +1000,6 @@ render  (chatWindowHtml: any) {
   me.chatPSObj = new KRPerfectScrollbar(me.chatEle.find('.chat-container').get(0), {
     suppressScrollX: true,
   });
-  me.bindEvents();
 };
 
 
