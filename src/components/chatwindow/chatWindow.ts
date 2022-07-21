@@ -1756,6 +1756,9 @@ focusInputTextbox () {
 getBrandingInformation(options:any){
   let me:any = this;
   if (me.config && me.config.enableThemes) {
+      if(!me.config.botOptions.brandingAPIUrl){
+          me.config.botOptions.brandingAPIUrl = me.config.botOptions.koreAPIUrl +'websdkthemes/'+  me.config.botOptions.botInfo.taskBotId+'/activetheme';
+      }
       var brandingAPIUrl = (me.config.botOptions.brandingAPIUrl || '').replace(':appId', me.config.botOptions.botInfo.taskBotId);
       $.ajax({
           url: brandingAPIUrl,
