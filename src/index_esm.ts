@@ -5,8 +5,9 @@ import Korei18nPlugin from './plugins/i18n';
 import KoreFileUploaderPlugin from './plugins/fileUploaderPlugin/fileUploader';
 import KorePickersPlugin from './plugins/korePickers';
 import GraphTemplatesPlugin from './plugins/graphTemplatesPlugin';
-import WebKitSTT from './plugins/SSTPlugins/WebKitSTTPlugin/WebKitSTTPlugin';
-import TtsSpeechPlugin from './plugins/SSTPlugins/ttsSpeechPlugin';
+import WebKitSTT from './plugins/STTPlugins/WebKitSTTPlugin/WebKitSTTPlugin';
+import WebKitTTS from './plugins/TTSPlugins/WebKitTTSPlugin/WebKitTTSPlugin';
+import speakTextWithAWSPolly from './plugins/TTSPlugins/KoreAWSPollyPlugin/kore-aws-polly';
 import AgentDesktopPlugin from './plugins/agentDesktop/agentdesktop';
 
 
@@ -25,6 +26,7 @@ export {
   KorePickersPlugin,
   GraphTemplatesPlugin,
   WebKitSTT,
-  TtsSpeechPlugin,
+  WebKitTTS,
+  speakTextWithAWSPolly,
   AgentDesktopPlugin
 };

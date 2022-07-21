@@ -1,5 +1,5 @@
 
-import WebKitSTT from '../plugins/SSTPlugins/WebKitSTTPlugin/WebKitSTTPlugin';
+import WebKitSTT from '../plugins/STTPlugins/WebKitSTTPlugin/WebKitSTTPlugin';
 
 export {
     WebKitSTT
