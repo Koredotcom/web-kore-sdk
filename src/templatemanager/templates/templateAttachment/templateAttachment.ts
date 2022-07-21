@@ -7,11 +7,15 @@ class TemplateAttachment {
         let me: any = this;
         let $ = me.hostInstance.$;
         let helpersObj = helpers;
-
+        let extension = '';
+        if (msgData?.message[0]?.component?.payload?.fileName) {
+            extension = msgData.message[0].component.payload.fileName.split('.');
+        }
         if (msgData?.message[0]?.component?.payload && (msgData.message[0].component.type == 'image' || msgData.message[0].component.type == 'audio' || msgData.message[0].component.type == 'video' || msgData.message[0].component.type == 'link')) {
             me.messageHtml = $(me.getTemplateString()).tmpl({
                 'msgData': msgData,
-                'helpers': helpersObj.helpers
+                'helpers': helpersObj.helpers,
+                'extension':extension
             });
             me.bindEvents(me.messageHtml);
             return me.messageHtml;

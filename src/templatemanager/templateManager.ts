@@ -16,6 +16,8 @@ import CarouselTemplate from './templates/carouselTemplate/carouselTemplate';
 import ListViewTemplate from './templates/listViewTemplate/listViewTemplate';
 import IframeTemplate from './templates/iframeTemplate/iframeTemplate';
 import SystemTemplate from './templates/systemTemplate/systemTemplate';
+import AdvancedListTemplate from './templates/advancedListTemplate/advancedListTemplate';
+import CardTemplate from './templates/cardTemplate/cardTemplate';
 
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
@@ -57,6 +59,8 @@ class TemplateManager {
 	this.installTemplate(new MiniTableChartTemplate());
 	this.installTemplate(new ListViewTemplate());
 	this.installTemplate(new SystemTemplate());
+	this.installTemplate(new AdvancedListTemplate());
+	this.installTemplate(new CardTemplate());
 
 
 	this.installTemplate(new IframeTemplate());

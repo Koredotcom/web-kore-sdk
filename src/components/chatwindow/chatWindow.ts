@@ -302,6 +302,13 @@ attachEventListener (iframe:any, postPayload:any) {
     iframe[0].contentWindow.postMessage(postPayload, '*');
   }
 }
+postMessageToChildIframes (iframe: any,postPayload: any) {
+  if(iframe && iframe.length && iframe[0] && iframe[0].contentWindow && postPayload){
+      iframe[0].contentWindow.postMessage(
+          postPayload, '*'
+    );
+  }
+};
 // iframe of child window events ends//
 
 // inline model for iframes starts here//
