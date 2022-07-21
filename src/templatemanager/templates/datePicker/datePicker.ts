@@ -20,7 +20,7 @@ class DatePickerTemplate {
     renderMessage(msgData: any) {
         let me: any = this;
         let $ = me.hostInstance.$;
-        if (msgData?.message[0]?.component?.payload?.template_type === "dateTemplate") {
+        if (msgData?.message[0]?.component?.payload?.template_type === "dateTemplate" && !msgData.fromHistory) {
             me.messageHtml = $(me.getTemplateString('datePickerTemplate'));
             me.initiateDatePicker(msgData);
             me.addClickEventCalender(msgData)
@@ -82,17 +82,21 @@ class DatePickerTemplate {
             inline: true,
             container: $(me.messageHtml),
         };
-        if (msgData.message[0].component.payload.startDate) {
+        if (msgData?.message[0]?.component?.payload?.startDate) {
             datePickerConfig.startDate = msgData.message[0].component.payload.startDate;
         }
-        if (msgData.message[0].component.payload.endDate) {
+        if (msgData?.message[0]?.component?.payload?.endDate) {
             datePickerConfig.endDate = msgData.message[0].component.payload.endDate;
         }
-        if (msgData.message[0].component.payload.showdueDate) {
+        if (msgData?.message[0]?.component?.payload?.showdueDate) {
             datePickerConfig.showdueDate = msgData.message[0].component.payload.showdueDate;
         }
-        if (msgData.message[0].component.payload.format) {
+        if (msgData?.message[0]?.component?.payload?.format) {
             datePickerConfig.format = msgData.message[0].component.payload.format;
+            let givenFormat = msgData.message[0].component.payload.format;
+            if(!msgData.message[0].component.payload.startDate){
+                datePickerConfig.startDate=moment(new Date()).format(givenFormat);
+            }
         }
         $.extend(this.defaultDatePickerConfig, datePickerConfig)
         me.daterangeInput = $(me.messageHtml).find('#calender').dateRangePicker(this.defaultDatePickerConfig);

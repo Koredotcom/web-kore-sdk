@@ -20,7 +20,7 @@ class DateRangePickerTemplate {
     renderMessage(msgData: any) {
         let me: any = this;
         let $ = me.hostInstance.$;
-        if (msgData?.message[0]?.component?.payload?.template_type === "daterange") {
+        if (msgData?.message[0]?.component?.payload?.template_type === "daterange"  && !msgData.fromHistory) {
             me.messageHtml = $(me.getTemplateString('datePickerTemplate'));
             me.initiateDatePicker(msgData);
             me.bindDataToTemplate(msgData)
@@ -101,17 +101,24 @@ class DateRangePickerTemplate {
             inline: true,
             container: $(me.messageHtml),
         };
-        if (msgData.message[0].component.payload.startDate) {
+        if (msgData?.message[0]?.component?.payload?.startDate) {
             datePickerConfig.startDate = msgData.message[0].component.payload.startDate;
         }
-        if (msgData.message[0].component.payload.endDate) {
+        if (msgData?.message[0]?.component?.payload?.endDate) {
             datePickerConfig.endDate = msgData.message[0].component.payload.endDate;
         }
-        if (msgData.message[0].component.payload.showdueDate) {
+        if (msgData?.message[0]?.component?.payload?.showdueDate) {
             datePickerConfig.showdueDate = msgData.message[0].component.payload.showdueDate;
         }
-        if (msgData.message[0].component.payload.format) {
+        if (msgData?.message[0]?.component?.payload?.format) {
             datePickerConfig.format = msgData.message[0].component.payload.format;
+            let givenFormat = msgData.message[0].component.payload.format;
+            if(!msgData.message[0].component.payload.startDate){
+                datePickerConfig.startDate=moment(new Date()).format(givenFormat);
+            }
+            if(!msgData.message[0].component.payload.endDate){
+                datePickerConfig.endDate=(moment(new Date()).add(3, 'M')).format(givenFormat);
+            }
         }
         $.extend(this.defaultDateRangePickerConfig, datePickerConfig)
         me.daterangeInput = $(me.messageHtml).find('#rangeCalenderBtn').dateRangePicker(this.defaultDateRangePickerConfig);
