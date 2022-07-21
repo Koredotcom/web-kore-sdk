@@ -10,13 +10,27 @@
     
 </body>
 
-<!-- <script  src="../../../dist/umd/plugins/kore-picker-plugin-umd.js"></script>
-<script  src="../../../dist/umd/plugins/kore-graph-templates-plugin-umd.js"></script>
-<script  src="../../../dist/umd/plugins/agent-desktop-umd.js"></script> -->
 <script  src="../../../dist/umd/kore-web-sdk-umd-chat.js"></script>
+<script>
+        //chat window declaration
+        var chatConfig=KoreChatSDK.chatConfig;
+        var chatWindow=KoreChatSDK.chatWindow;
+        
+        //create chat window instance
+        var chatWindowInstance = new chatWindow();
 
+        //configure bot configurations
+        var botOptions=chatConfig.botOptions;
+        botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
+        botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';
+        botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
+        botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
+        botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 
-<script src="js/index_chat.js"></script>
+        //show chatwindow
+        chatWindowInstance.show(chatConfig);
+
+</script>
 
 
 </html>

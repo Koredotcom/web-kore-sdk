@@ -5,71 +5,51 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kore Web SDK</title>
+
+    <script  src="../../../dist/umd/kore-web-sdk-umd-chat.js"></script>
+    <script  src="../../../dist/umd/plugins/kore-picker-plugin-umd.js"></script>
+    <script  src="../../../dist/umd/plugins/kore-graph-templates-plugin-umd.js"></script>
+    <script  src="../../../dist/umd/plugins/agent-desktop-umd.js"></script>
+
+    <script>
+        //chat window declaration
+        var chatConfig=KoreChatSDK.chatConfig;
+        var chatWindow=KoreChatSDK.chatWindow;
+
+        //plugins declaration
+        var KorePickersPlugin=KorePickersPluginSDK.KorePickersPlugin;
+        var GraphTemplatesPlugin=KoreGraphTemplatesPluginSDK.GraphTemplatesPlugin;
+        var AgentDeskTopPlugin = AgentDeskTopPluginSDK.AgentDesktopPlugin;
+        var SpeechToTextPlugin=SpeechToTextPluginSDK.SpeechToTextPlugin;
+        var TtsSpeechPlugin=TtsSpeechPluginSDK.TtsSpeechPlugin;
+
+        
+        //create chat window instance
+        var chatWindowInstance = new chatWindow();
+
+
+        //configure bot configurations
+        var botOptions=chatConfig.botOptions;
+        botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
+        botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
+        botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
+        botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
+        botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+
+
+        //install plugins
+        chatWindowInstance.installPlugin(new KorePickersPlugin());
+        chatWindowInstance.installPlugin(new GraphTemplatesPlugin());
+        chatWindowInstance.installPlugin(new AgentDeskTopPlugin())
+        chatWindowInstance.installPlugin(new SpeechToTextPlugin());
+        chatWindowInstance.installPlugin(new TtsSpeechPlugin());
+
+
+        //show chatwindow
+        chatWindowInstance.show(chatConfig);
+
+    </script> 
 </head>
-<body>
-    
+<body>   
 </body>
-
-<script  src="../../../dist/umd/plugins/kore-picker-plugin-umd.js"></script>
-<script  src="../../../dist/umd/plugins/kore-graph-templates-plugin-umd.js"></script>
-<script  src="../../../dist/umd/plugins/agent-desktop-umd.js"></script>
-
-<script>
-    
-
-var chatConfig=KoreChatSDK.chatConfig;
-var chatWindow=KoreChatSDK.chatWindow;
-
-var KorePickersPlugin=KorePickersPluginSDK.KorePickersPlugin;
-var GraphTemplatesPlugin=KoreGraphTemplatesPluginSDK.GraphTemplatesPlugin;
-var AgentDeskTopPlugin = AgentDeskTopPluginSDK.AgentDesktopPlugin;
-var SpeechToTextPlugin=SpeechToTextPluginSDK.SpeechToTextPlugin;
-var TtsSpeechPlugin=TtsSpeechPluginSDK.TtsSpeechPlugin;
-
-var chatWindowInstance = new chatWindow();
-
-var botOptions=chatConfig.botOptions;
-
-botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
-botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
-botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
-botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
-botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
-
-
-
-
-botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
-botOptions.userIdentity = 'rajasekhar.balla@kore.com';// Provide users email id here
-botOptions.botInfo = { name: "SDKBot", "_id": "st-b9889c46-218c-58f7-838f-73ae9203488c" }; // bot name is case sensitive
-botOptions.clientId = "cs-1e845b00-81ad-5757-a1e7-d0f6fea227e9";
-botOptions.clientSecret = "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=";
-
-
-// chatWindow.prototype.show=function(){
-//     console.log('overridedn')
-// }
-chatWindowInstance.installPlugin(new KorePickersPlugin());
-chatWindowInstance.installPlugin(new GraphTemplatesPlugin());
-chatWindowInstance.installPlugin(new AgentDeskTopPlugin())
-chatWindowInstance.installPlugin(new SpeechToTextPlugin());
-chatWindowInstance.installPlugin(new TtsSpeechPlugin());
-
-// chatConfig.JWTAsertion=function(commitJWT){
-//     chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){
-//         chatWindowInstance.setJWT(res.jwt);
-//         commitJWT();
-//     },function(errRes){
-//         console.log(errRes);
-//     });
-//  };
- chatWindowInstance.show(chatConfig);
-
-</script>
-<script  src="../../../dist/umd/kore-web-sdk-umd-chat.js"></script>
-
-
-<script src="js/index_chat.js"></script>
-
-
 </html>

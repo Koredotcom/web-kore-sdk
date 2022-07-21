@@ -3,7 +3,6 @@ import emojione from '../libs/emoji';
 class KoreHelpers{
     static helpers = {
         'nl2br': function (str, runEmojiCheck) {
-             //todo:raj
                 if (runEmojiCheck) {
                     str = emojione.shortnameToImage(str);
                 }
