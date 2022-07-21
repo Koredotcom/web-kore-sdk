@@ -58,11 +58,5 @@ chatConfig = {
     },
     enableThemes : true //set true to apply the branding configured    
 };
-/* 
-   allowGoogleSpeech will use Google cloud service api.
-   Google speech key is required for all browsers except chrome.
-   On Windows 10, Microsoft Edge will support speech recognization.
-*/
 
-// KoreSDK.chatConfig = chatConfig;
 export default chatConfig;
