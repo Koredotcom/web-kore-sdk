@@ -1,4 +1,4 @@
-##  Advance multi select template
+##  Card Template
 
 ###### Preview
 
