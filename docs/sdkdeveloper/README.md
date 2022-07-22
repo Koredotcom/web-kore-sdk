@@ -23,7 +23,7 @@ Run
 npm run serve
 ```
 
-Open chat(ESM) example
+Open chat -modern(ESM) example
 
 ```bash
 http://localhost:9000/examples/esm/chat/
@@ -34,26 +34,73 @@ http://localhost:9000/examples/esm/chat/
 Other examples
 
 <details>
- <summary>Chat(UMD)</summary>
+ <summary>Chat with plugins -modern(ESM)</summary>
+ 
+ Configure bot details in examples/esm/chat-with-plugins/js/index_chat.js and open below link
+ 
+```bash
+http://localhost:9000/examples/esm/chat-with-plugins
+```
+</details>
+
+
+
+
+<details>
+ <summary>Chat with widgets -modern(ESM)</summary>
+ 
+ Configure bot details and widget config in examples/esm/chat-with-widgets/js/index_widgets_chat.js and open below link
+ 
+```bash
+http://localhost:9000/examples/esm/chat-with-widgets
+```
+</details>
+
+
+
+
+
+<details>
+ <summary>Chat -legacy(UMD)</summary>
  
  
 ## 💡 Chat(UMD)
  Configure bot details in examples/umd/chat/index.html and open below link
  
 ```bash
-http://localhost:9000/examples
+http://localhost:9000/examples/umd/chat
 ```
 </details>
 
+
+
 <details>
- <summary>Chat with widgets(ESM)</summary>
+ <summary>Chat with plugins -legacy(UMD)</summary>
  
- Configure bot details in examples/esm/chatwithwidgets/js/index_widgets_chat.js and open below link
+ 
+## 💡 Chat(UMD)
+ Configure bot details in examples/umd/chat-with-plugins/index.html and open below link
  
 ```bash
-http://localhost:9000/examples
+http://localhost:9000/examples/umd/chat-with-plugins
 ```
 </details>
+
+
+
+<details>
+ <summary>Chat with widgets -legacy(UMD)</summary>
+ 
+ 
+## 💡 Chat(UMD)
+ Configure bot details in examples/umd/chat-with-widgets/index.html and open below link
+ 
+```bash
+http://localhost:9000/examples/umd/chat-with-widgets
+```
+</details>
+
+
 
 ## 💡 Build
 
