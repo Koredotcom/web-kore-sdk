@@ -69,7 +69,7 @@ include the following script in your html file and configure bot configurations
 
 ```js
 
-<script  src="https://cdn.jsdelivr.net/gh/RajasekharBa-Kore/web-kore-sdk@v2-9.3.0-rc-1/dist/umd/kore-web-sdk-umd-chat.min.js"></script>
+<script  src="https://cdn.jsdelivr.net/gh/Koredotcom/web-kore-sdk@v2-9.3.0/dist/umd/kore-web-sdk-umd-chat.min.js"></script>
 <script>
         //chat window declaration
         var chatConfig=KoreChatSDK.chatConfig;
@@ -133,7 +133,7 @@ class customTemplateComponent{
 
 chatWindowInstance.templateManager.installTemplate(new customTemplateComponent());
 ```
-Other framework UI components can also be injected with this. Samples for Angular and React are here
+Other framework UI components like angular and react can also be injected with this
 
 ## 💡 Plugins
 
