@@ -1617,7 +1617,9 @@ setupInternalAssertionFunction (){
   me.getJWT(me.config.botOptions).then(function(res: { jwt: any; }){
     me.emit(me.EVENTS.JWT_SUCCESS, res);
     me.setJWT(res.jwt);
-    me.config.botOptions.callback(null, me.config.botOptions);
+    if(me.config.botOptions.callback){
+      me.config.botOptions.callback(null, me.config.botOptions);
+    }
   },function(errRes: any){
       console.log(errRes);
   });

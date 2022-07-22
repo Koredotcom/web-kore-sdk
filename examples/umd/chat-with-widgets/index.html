@@ -7,78 +7,76 @@
     <title>Kore Web SDK</title>
 </head>
 <body>
+    <script  src="../../../dist/umd/kore-web-sdk-umd-chat.min.js"></script>
+    <script  src="../../../dist/umd/kore-web-sdk-umd-widgets.js"></script>
+    <script>
+        var chatConfig=KoreChatSDK.chatConfig;
+        var chatWindow=KoreChatSDK.chatWindow;
+
+        var widgetsConfig=KoreWidgetsSDK.widgetsConfig;
+        var KoreWidgetSDK=KoreWidgetsSDK.KoreWidgetSDK;
+
+        //configure chatConfig
+        var botOptions=chatConfig.botOptions;
+        botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
+        botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
+        botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
+        botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
+        botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+        /* 
+        Important Note: These keys are provided here for quick demos to generate JWT token at client side but not for Production environment.
+        Refer below document for JWT token generation at server side. Client Id and Client secret should maintained at server end.
+        https://developer.kore.ai/docs/bots/sdks/user-authorization-and-assertion/
+        **/
+
+
+        //configure widgetsConfig
+        let botOptionsWiz=widgetsConfig.botOptions;
+        botOptionsWiz.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
+        botOptionsWiz.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
+        botOptionsWiz.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
+        botOptionsWiz.clientId = "PLEASE_ENTER_CLIENT_ID";
+        botOptionsWiz.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+        /* 
+        Important Note: These keys are provided here for quick demos to generate JWT token at client side but not for Production environment.
+        Refer below document for JWT token generation at server side. Client Id and Client secret should maintained at server end.
+        https://developer.kore.ai/docs/bots/sdks/user-authorization-and-assertion/
+        **/
+
+
+
+        //create chat window reference
+        let chatWindowInstance = new chatWindow();
+        //create widgetsdk reference
+        let wSdk = new KoreWidgetSDK(widgetsConfig);
+        //establish connection between both
+        chatConfig.widgetSDKInstace=wSdk;
+
+
+
+
+        //OPTION #1 with own JWT Service
+        chatWindowInstance.on("jwtSuccess", (res,event) => {
+            wSdk.setJWT(res.jwt);
+            wSdk.show(widgetsConfig);
+        });
+        chatWindowInstance.show(chatConfig);
+
+
+
+
+        // //OPTION #2 with own JWT Service
+        // chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){
+        //     chatWindowInstance.setJWT(res.jwt);
+        //     chatWindowInstance.show();
+
+        //     wSdk.setJWT(res.jwt);
+        //     wSdk.show(widgetsConfig);
+
+        // },function(errRes){
+
+        // });
+    </script>
     
 </body>
-<script  src="../../../dist/umd/kore-web-sdk-umd-chat.min.js"></script>
-<script  src="../../../dist/umd/kore-web-sdk-umd-widgets.js"></script>
-<script>
-    var chatConfig=KoreChatSDK.chatConfig;
-    var chatWindow=KoreChatSDK.chatWindow;
-
-    var widgetsConfig=KoreWidgetsSDK.widgetsConfig;
-    var KoreWidgetSDK=KoreWidgetsSDK.KoreWidgetSDK;
-
-    //configure chatConfig
-    var botOptions=chatConfig.botOptions;
-    botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
-    botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
-    botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
-    botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
-    botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
-    /* 
-    Important Note: These keys are provided here for quick demos to generate JWT token at client side but not for Production environment.
-    Refer below document for JWT token generation at server side. Client Id and Client secret should maintained at server end.
-    https://developer.kore.ai/docs/bots/sdks/user-authorization-and-assertion/
-    **/
-
-
-    //configure widgetsConfig
-    let botOptionsWiz=widgetsConfig.botOptions;
-    botOptionsWiz.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
-    botOptionsWiz.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
-    botOptionsWiz.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
-    botOptionsWiz.clientId = "PLEASE_ENTER_CLIENT_ID";
-    botOptionsWiz.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
-    /* 
-    Important Note: These keys are provided here for quick demos to generate JWT token at client side but not for Production environment.
-    Refer below document for JWT token generation at server side. Client Id and Client secret should maintained at server end.
-    https://developer.kore.ai/docs/bots/sdks/user-authorization-and-assertion/
-    **/
-
-
-
-    //create chat window reference
-    let chatWindowInstance = new chatWindow();
-    //create widgetsdk reference
-    let wSdk = new KoreWidgetSDK(widgetsConfig);
-    //establish connection between both
-    chatConfig.widgetSDKInstace=wSdk;
-
-
-
-
-    //OPTION #1 with own JWT Service
-    chatWindowInstance.on("jwtSuccess", (res,event) => {
-        wSdk.setJWT(res.jwt);
-        wSdk.show(widgetsConfig);
-    });
-    chatWindowInstance.show(chatConfig);
-
-
-
-
-    // //OPTION #2 with own JWT Service
-    // chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){
-    //     chatWindowInstance.setJWT(res.jwt);
-    //     chatWindowInstance.show();
-
-    //     wSdk.setJWT(res.jwt);
-    //     wSdk.show(widgetsConfig);
-
-    // },function(errRes){
-
-    // });
-</script>
-
-
 </html>
