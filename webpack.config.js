@@ -154,21 +154,16 @@ module.exports= function(env,argv){
             filename: 'plugins/kore-graph-templates-plugin-umd.js',
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
-          // WebKitSTTPluginSDK: {
-          //   import: "./src/index_plugins/speechtotext_umd.ts",
-          //   filename: 'plugins/speech-to-text-plugin-umd.js',
-          //   chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          // },
-          // WebKitTTSPluginSDK: {
-          //   import: "./src/index_plugins/ttsspeech_umd.ts",
-          //   filename: 'plugins/tts-speech-plugin-umd.js',
-          //   chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          // },
-          // KoreAWSPollyTTSPluginSDK: {
-          //   import: "./src/index_plugins/ttsspeech_umd.ts",
-          //   filename: 'plugins/tts-speech-plugin-umd.js',
-          //   chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          // },
+          WebKitSTTPluginSDK: {
+            import: "./src/index_plugins/WebKitSTT_umd.ts",
+            filename: 'plugins/webapi-stt-plugin-umd.js',
+            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+          },
+          BrowserTTSPluginSDK: {
+            import: "./src/index_plugins/BrowserTTS_umd.ts",
+            filename: 'plugins/browser-tts-umd-plugin-umd.js',
+            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+          },
           AgentDeskTopPluginSDK: {
             import: "./src/index_plugins/agentDesktop_umd.ts",
             filename: 'plugins/agent-desktop-umd.js',
@@ -178,14 +173,7 @@ module.exports= function(env,argv){
         config.output.library = {
           name: '[name]',
           type: 'assign-properties',
-        }//["KoreChatSDK","KoreWidgetsSDK","KoreSearchSDK"];
-        //config.output.umdNamedDefine= true;
-        //config.output.filename = 'kore-web-sdk-umd-[name].js';
-        // function(entryKey, entryValue) {
-        //     if (entryKey === 'umd_chat') return 'KoreChatSDK';
-        //     if (entryKey === 'umd_widgets') return 'KoreWidgetsSDK';
-        //     if (entryKey === 'umd_search') return 'KoreSearchSDK';
-        // }
+        }
     }
 
     if (env.kore_env==='dev') {
