@@ -9,6 +9,8 @@ External plugins will be deloped by kore and should be installed explicitly by t
 | Kore Pickers | Adds pickers like date and clock to chatwindow compose bar  |[Guide ](./kore-pickers) 
 | Graph Templates| Adds Graph templates like Bar-chart, Line-chart and Pie-chart  |[Guide](./graph-templates)  
 | Agent Desktop | Adds the ablity to the customer's chatwindow to interact with an agent  |[Guide ](./agent-desktop) 
+| WEBKIT STT| Add speech to text capabilty via browsers(Webkit) speech to text engine  |[Guide](./webkit-stt)  
+| Browser TTS | Adds text to speech ability via browser's Web Speech API  |[Guide ](./browser-tts) 
 
 
 
