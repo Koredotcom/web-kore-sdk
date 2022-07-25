@@ -1,10 +1,6 @@
 # WebKit STT Plugin
 
-The Web Speech API is used to incorporate voice data into SDK.The Web Speech API has: SpeechRecognition(Speech to text)
-
-## Browser compatibility
-
-[Compatibility ](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API#browser_compatibility) 
+The Webkit STT is to integrate speech to text capability into chatwindow.This plugin uses [Web_Speech_API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API). Refer browser compatability [here](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API#browser_compatibility)  
 
 
 ## Installation Sample for WEB-KIT STT
