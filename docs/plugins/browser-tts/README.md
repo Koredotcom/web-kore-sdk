@@ -7,7 +7,7 @@ The Web Speech API is used to incorporate voice data into SDK.The Web Speech API
 import { BrowserTTS } from 'kore-web-sdk';
 
 
-chatWindowInstance.installPlugin(new TtsSpeechPlugin());
+chatWindowInstance.installPlugin(new BrowserTTSPlugin());
 ```
 
 ## For UMD Installations
