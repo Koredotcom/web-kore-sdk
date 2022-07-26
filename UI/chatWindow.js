@@ -533,7 +533,7 @@
                                 }
                                 txtArr[i] = '<p class="indent">' + txtArr[i] + '</p>';
                             }else{
-                            txtArr[i] = '<p class="indent">' + txtArr[i].substring(8) + '</p>';
+                                multipleIndentation(txtArr, i); // For multiple indentations Ex: >>>>>Indent = "  >Indent"
                             }
                             _lineBreakAdded = true;
                         } else if (txtArr[i].indexOf('---') === 0 || txtArr[i].indexOf('___') === 0) {
@@ -689,6 +689,28 @@
                     return Object.prototype.toString.call(obj) === '[object Array]';
                 }
             };
+            var previousValue;
+            function multipleIndentation(txtArr, i, value) {
+                var indentIndex;
+                var paragraphIndex;
+                var actualValue;
+                if (!value) {
+                    previousValue = txtArr[i].substring(8);
+                    txtArr[i] = '<div class="indent">' + txtArr[i].substring(8) + '</div>';
+                } else {
+                    txtArr[i] = '<div class="indent">' + txtArr[i] + '</div>';
+                    if (previousValue.indexOf('&gt;&gt;') === -1) {
+                        indentIndex = txtArr[i].indexOf("&gt;&gt;");
+                        paragraphIndex = txtArr[i].indexOf("</div>");
+                        actualValue = txtArr[i].slice(indentIndex, paragraphIndex);
+                        txtArr[i] = txtArr[i].replace(actualValue, previousValue);
+                    }
+                }
+                if (previousValue.indexOf('&gt;&gt;') === 0) {
+                    previousValue = previousValue.substring(8);
+                    multipleIndentation(txtArr, i, true);
+                }
+            }
             function extend() {
                 var rec = function (obj) {
                     var recRes = {};
