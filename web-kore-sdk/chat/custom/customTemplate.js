@@ -1466,11 +1466,17 @@ print(JSON.stringify(message)); */
 	{{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.sliderView}}<button class="close-btn" title="Close"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button> {{/if}}\
 	{{if msgData && msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
 	{{if msgData && msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+	{{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.openPreviewModal && msgData.message[0].component.payload.seeMoreAction === "modal"}}\
+		<div class="preview-modal-header">\
+			<div class="preview-modal-title">{{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.previewModalTitle}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.previewModalTitle, "bot")}}{{else}}Upcoming meetings{{/if}}</div>\
+			<button class="advancedlist-template-close" title="Close"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTMiIHZpZXdCb3g9IjAgMCAxMiAxMyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMS43NjU5IDEuNjUwNTlDMTEuOTkgMS4zNzg2OCAxMS45NjE2IDAuOTYxNTk0IDExLjY5MDMgMC42OTAzMjdDMTEuNDAzMSAwLjQwMzEwMyAxMC45NTI0IDAuMzg4MTI1IDEwLjY4MzcgMC42NTY4NzJMNiA1LjM0MDUyTDEuMzE2MzUgMC42NTY4NzJMMS4yNjk5MyAwLjYxNDcwNkMwLjk5ODAyOCAwLjM5MDYyOSAwLjU4MDk0IDAuNDE5MDYgMC4zMDk2NzMgMC42OTAzMjdDMC4wMjI0NDg4IDAuOTc3NTUxIDAuMDA3NDcwNTcgMS40MjgyNiAwLjI3NjIxOCAxLjY5N0w0Ljk1OTg3IDYuMzgwNjVMMC4zNDMxNjQgMTAuOTk3NEwwLjMwMDk5OCAxMS4wNDM4QzAuMDc2OTIwNyAxMS4zMTU3IDAuMTA1MzUxIDExLjczMjggMC4zNzY2MTkgMTIuMDA0QzAuNjYzODQzIDEyLjI5MTMgMS4xMTQ1NSAxMi4zMDYyIDEuMzgzMyAxMi4wMzc1TDYgNy40MjA3OUwxMC42MTY3IDEyLjAzNzVMMTAuNjYzMSAxMi4wNzk3QzEwLjkzNSAxMi4zMDM3IDExLjM1MjEgMTIuMjc1MyAxMS42MjM0IDEyLjAwNEMxMS45MTA2IDExLjcxNjggMTEuOTI1NiAxMS4yNjYxIDExLjY1NjggMTAuOTk3NEw3LjA0MDEzIDYuMzgwNjVMMTEuNzIzOCAxLjY5N0wxMS43NjU5IDEuNjUwNTlaIiBmaWxsPSIjMjAyMTI0Ii8+Cjwvc3ZnPgo="></button>\
+		</div>\
+	{{/if}}\
 	{{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.listViewType !="button"}}\
 		<div class="main-title-text-block">\
 			<div class="title-main {{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && !msgData.message[0].component.payload.isSortEnabled && !msgData.message[0].component.payload.isSearchEnabled && !msgData.message[0].component.payload.isButtonAvailable}}w-100{{/if}}">\
 				{{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.title}}\
-					<div class="title-main {{if msgData.message[0].component.payload.description}}main-title{{/if}} {{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && !msgData.message[0].component.payload.isSortEnabled && !msgData.message[0].component.payload.isSearchEnabled && !msgData.message[0].component.payload.isButtonAvailable}}w-100{{/if}}">${msgData.message[0].component.payload.title}</div>\
+					<div class="title-main {{if msgData.message[0].component.payload.description}}main-title{{/if}} {{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && !msgData.message[0].component.payload.isSortEnabled && !msgData.message[0].component.payload.isSearchEnabled && !msgData.message[0].component.payload.isButtonAvailable}}w-100{{/if}}">{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.title, "bot")}}</div>\
 				{{/if}}\
 				{{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.description}}\
 					<div class="desc-title">${msgData.message[0].component.payload.description}</div>\
@@ -1483,7 +1489,7 @@ print(JSON.stringify(message)); */
 							<ul  class="more-button-info hide" style="list-style:none;">\
 								<button class="close_btn" title="Close"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button>\
 									{{each(filterOptionKey, filterOption) msgData.message[0].component.payload.filterOptions}} \
-											<li><button class="button_" {{if filterOption && filterOption.type}}type="${filterOption.type}"{{/if}} value="${filterOption.payload}">{{if filterOption && filterOption.icon}}<img src="${filterOption.icon}">{{/if}} {{html helpers.convertMDtoHTML(filterOption.title, "bot")}}</button></li>\
+											<li><button class="button_"  {{if filterOption && filterOption.type}}type="${filterOption.type}"{{/if}} value="${filterOption.payload}" {{if filterOption.url}}url="${filterOption.ur}"{{/if}}>{{if filterOption && filterOption.icon}}<img src="${filterOption.icon}">{{/if}} {{html helpers.convertMDtoHTML(filterOption.title, "bot")}}</button></li>\
 									{{/each}}\
 							</ul>\
 						</div>\
@@ -1505,7 +1511,7 @@ print(JSON.stringify(message)); */
 					{{each(headerOptionKey,headerOption) msgData.message[0].component.payload.headerOptions}}\
 					{{if headerOption && headerOption.type === "button"}}\
 							<div class="if-button-mode">\
-								<button class="button-">${headerOption.label}</button>\
+								<button class="button-" type="${headerOption.type}" {{if headerOption.url}}url="${headerOption.url}"{{/if}} title="{{html helpers.convertMDtoHTML(headerOption.label, "bot")}}" value="${headerOption.payload}">{{html helpers.convertMDtoHTML(headerOption.label, "bot")}}</button>\
 							</div>\
 						{{/if}}\
 					{{/each}}\
@@ -1514,22 +1520,22 @@ print(JSON.stringify(message)); */
 		</div>\
 		{{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.tableHeading}}\
 		<div class="small-title-sec">\
-			<div class="left-title">${msgData.message[0].component.payload.tableHeading.rightLabel}</div>\
-			<div class="right-title">${msgData.message[0].component.payload.tableHeading.leftLabel}</div>\
+			<div class="left-title">{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.tableHeading.rightLabel, "bot")}}</div>\
+			<div class="right-title">{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.tableHeading.leftLabel, "bot")}}</div>\
 		</div>\
 		{{/if}}\
 		{{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.listViewType == "nav" && msgData.message[0].component.payload.navHeaders && msgData.message[0].component.payload.navHeaders.length}}\
 			<div class="callendar-tabs">\
 				{{each(i,navheader) msgData.message[0].component.payload.navHeaders}}\
-					<div class="month-tab {{if i==0}}active-month{{/if}}" id="${navheader.id}">${navheader.title}</div>\
+					<div class="month-tab {{if i==0}}active-month{{/if}}" id="${navheader.id}">{{html helpers.convertMDtoHTML(navheader.title, "bot")}}</div>\
 				{{/each}}\
 			</div>\
 		{{/if}}\
 		{{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.listItems && msgData.message[0].component.payload.listItems.length}} \
 			{{each(key, listItem) msgData.message[0].component.payload.listItems}} \
 			   {{if  (msgData.message[0].component.payload.listItemDisplayCount &&  msgData.message[0].component.payload.listItemDisplayCount > key && (((!msgData.message[0].component.payload.seeMoreAction )||(msgData.message[0].component.payload.seeMoreAction && msgData.message[0].component.payload.seeMoreAction === "slider") || (msgData.message[0].component.payload.seeMoreAction && msgData.message[0].component.payload.seeMoreAction === "modal"))) || (!msgData.message[0].component.payload.listItemDisplayCount) || (msgData.message[0].component.payload.listItemDisplayCount && msgData.message[0].component.payload.seeMoreAction &&  msgData.message[0].component.payload.seeMoreAction === "inline")) }}\
-					<div class="multiple-accor-rows {{if msgData.message[0].component.payload.listItemDisplayCount &&  msgData.message[0].component.payload.listItemDisplayCount < key && msgData.message[0].component.payload.seeMoreAction === "inline"}}hide inline{{/if}} {{if listItem && listItem.type && listItem.type=== "view"}}if-template-view-type{{/if}}" id="{{if listItem && listItem.navId}}${listItem.navId}{{/if}}" actionObj="${JSON.stringify(listItem)}">\
-						<div class="accor-header-top">\
+					<div class="multiple-accor-rows {{if msgData.message[0].component.payload.listItemDisplayCount &&  msgData.message[0].component.payload.listItemDisplayCount < key && msgData.message[0].component.payload.seeMoreAction === "inline"}}hide inline{{/if}} {{if listItem && listItem.type && listItem.type=== "view"}}if-template-view-type{{/if}}" id="{{if listItem && listItem.navId}}${listItem.navId}{{/if}}" type="${listItem.type}" actionObj="${JSON.stringify(listItem)}" {{if listItem.elementStyles}}style="{{each(styleKey,listItemStyle) listItem.elementStyles}}${styleKey}:${listItemStyle};{{/each}}"{{/if}}>\
+						<div class="accor-header-top"  {{if listItem.headerStyles}}style="{{each(styleKey,style) listItem.headerStyles}}${styleKey}:${style};{{/each}}"{{/if}}>\
 							{{if listItem && listItem.icon || listItem.iconText}}\
 								<div class="img-block {{if listItem.iconShape}}${listItem.iconShape}{{/if}} {{if listItem.imageSize}}${listItem.imageSize}{{/if}}">\
 									{{if listItem && listItem.icon}}\
@@ -1539,12 +1545,12 @@ print(JSON.stringify(message)); */
 									{{/if}}\
 								</div>\
 							{{/if}}\
-							<div class="content-block {{if !listItem.icon && !listItem.iconText}}pd-0{{/if}}">\
+							<div class="content-block {{if !listItem.icon && !listItem.iconText}}pd-0{{/if}} {{if listItem && !listItem.headerOptions}}w-100{{/if}}">\
 								{{if listItem && listItem.title}}\
 									<div class="title-text" {{if listItem && listItem.titleStyles}}style="{{each(styleKey,style) listItem.titleStyles}}${styleKey}:${style};{{/each}}"{{/if}}>{{html helpers.convertMDtoHTML(listItem.title, "bot")}}</div>\
 								{{/if}}\
 								{{if listItem && listItem.description}}\
-									<div class="title-desc" {{if listItem && listItem.descriptionStyles}}style="{{each(styleKey,style) listItem.descriptionStyles}}${styleKey}:${style};{{/each}}"{{/if}}>{{html helpers.convertMDtoHTML(listItem.description, "bot")}}</div>\
+									<div class="title-desc {{if listItem && listItem.descriptionIcon}}desciptionIcon{{/if}} {{if listItem && listItem.descriptionIconAlignment && (listItem.descriptionIconAlignment==="right")}}if-icon-right{{else listItem && (listItem.descriptionIconAlignment && (listItem.descriptionIconAlignment==="left")) || !listItem.descriptionIconAlignment}}if-icon-left{{/if}}" {{if listItem && listItem.descriptionStyles}}style="{{each(styleKey,style) listItem.descriptionStyles}}${styleKey}:${style};{{/each}}"{{/if}}>{{if listItem && listItem.descriptionIcon}}<span class="desc-icon"><img  src="${listItem.descriptionIcon}"></span>{{/if}}{{html helpers.convertMDtoHTML(listItem.description, "bot")}}</div>\
 								{{/if}}\
 							</div>\
 							{{if listItem && listItem.headerOptions && listItem.headerOptions.length}}\
@@ -1585,7 +1591,7 @@ print(JSON.stringify(message)); */
 								{{/each}}\
 							{{/if}}\
 						</div>\
-						<div class="accor-inner-content" {{if listItem && listItem.isCollapsed}}style="display:block;"{{/if}}>\
+						<div class="accor-inner-content {{if listItem && listItem.isCollapsed}}displayBlock{{/if}}"    {{if listItem.contentStyles}}style="{{each(styleKey,style) listItem.contentStyles}}${styleKey}:${style};{{/each}}"{{/if}}>\
 							{{if listItem && listItem.view == "default" && listItem.textInformation && listItem.textInformation.length}}\
 							{{each(i,textInfo) listItem.textInformation}}\
 								<div class="details-content {{if textInfo && textInfo.iconAlignment && (textInfo.iconAlignment==="right")}}if-icon-right{{else textInfo && (textInfo.iconAlignment && (textInfo.iconAlignment==="left")) || !textInfo.iconAlignment}}if-icon-left{{/if}}">\
@@ -1607,22 +1613,22 @@ print(JSON.stringify(message)); */
 								  {{if (listItem && listItem.seeMoreAction && listItem.seeMoreAction === "dropdown") || (listItem && listItem.seeMoreAction && listItem.seeMoreAction === "slider") || (listItem && !listItem.seeMoreAction)}}\
 										{{each(i,button) listItem.buttons}}\
 											{{if (listItem && listItem.buttonsLayout && listItem.buttonsLayout.displayLimit && listItem.buttonsLayout.displayLimit.count && (i < listItem.buttonsLayout.displayLimit.count)) || (listItem && !listItem.buttonsLayout && i < 2) || (listItem && !listItem.buttonsLayout && listItem.buttons.length === 3)}}\
-												<button class="button_" type="${button.type}" title="${button.title}" value="${button.payload}"><img src="${button.icon}">{{html helpers.convertMDtoHTML(button.title, "bot")}}</button>\
+												<button class="button_" type="${button.type}" {{if button.url}}url="${button.url}"{{/if}} title="${button.title}" value="${button.payload}"><img src="${button.icon}">{{html helpers.convertMDtoHTML(button.title, "bot")}}</button>\
 											{{/if}}\
 										{{/each}}\
 									{{else (listItem && listItem.seeMoreAction && listItem.seeMoreAction === "inline")}}\
 										{{each(i,button) listItem.buttons}}\
-												<button class="button_ {{if !((listItem && listItem.buttonsLayout && listItem.buttonsLayout.displayLimit && listItem.buttonsLayout.displayLimit.count && (i < listItem.buttonsLayout.displayLimit.count)) || (listItem && !listItem.buttonsLayout && i < 2) || (listItem && !listItem.buttonsLayout && listItem.buttons.length === 3))}} hide {{/if}}" type="${button.type}" title="${button.title}" value="${button.payload}"><img src="${button.icon}">${button.title}</button>\
+												<button class="button_ {{if !((listItem && listItem.buttonsLayout && listItem.buttonsLayout.displayLimit && listItem.buttonsLayout.displayLimit.count && (i < listItem.buttonsLayout.displayLimit.count)) || (listItem && !listItem.buttonsLayout && i < 2) || (listItem && !listItem.buttonsLayout && listItem.buttons.length === 3))}} hide {{/if}}" type="${button.type}" title="${button.title}" {{if button.url}}url="${button.url}"{{/if}} value="${button.payload}"><img src="${button.icon}">${button.title}</button>\
 										{{/each}}\
 									{{/if}}\
 										{{if (listItem && listItem.buttonsLayout && listItem.buttonsLayout.displayLimit && listItem.buttonsLayout.displayLimit.count && listItem.buttonsLayout.displayLimit.count < listItem.buttons.length) || (listItem && !listItem.buttonsLayout && listItem.buttons.length > 3)}}\
-												<button class=" more-btn" actionObj="${JSON.stringify(listItem)}"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAADCAYAAABI4YUMAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBNYyxDcJQDET/OREwBhukA0pG+COwQaCnSCR6+BswAqwBTeYB4eOcKJbss89+xnLbtyl5dsfp++6GpFhszhmoWvJXPq/LI7zVrluTvCqHWsAtTDM/SI7RByDZS2McIdK1g54h1yq9OxszG+HpAAVgqgxl9tztbsZG7fMPUTQuCUr8UX4AAAAASUVORK5CYII=">More</button>\
+												<button class=" more-btn" actionObj="${JSON.stringify(listItem)}"><img {{if listItem.seeMoreIcon}}src=${listItem.seeMoreIcon}{{else}} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAADCAYAAABI4YUMAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBNYyxDcJQDET/OREwBhukA0pG+COwQaCnSCR6+BswAqwBTeYB4eOcKJbss89+xnLbtyl5dsfp++6GpFhszhmoWvJXPq/LI7zVrluTvCqHWsAtTDM/SI7RByDZS2McIdK1g54h1yq9OxszG+HpAAVgqgxl9tztbsZG7fMPUTQuCUr8UX4AAAAASUVORK5CYII="{{/if}}>{{if listItem.seeMoreTitle}}{{html helpers.convertMDtoHTML(listItem.seeMoreTitle, "bot")}} {{else}}More{{/if}}</button>\
 												{{if (listItem && listItem.seeMoreAction && listItem.seeMoreAction === "dropdown") || (listItem && !listItem.seeMoreAction)}}\
 													<ul  class="more-button-info" style="list-style:none;">\
 													<button class="close_btn" title="Close"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button>\
 														{{each(key, button) listItem.buttons}} \
 															{{if key >= 2}}\
-																<li><button class="button_" type="${button.type}" value="${button.payload}"><img src="${button.icon}">{{html helpers.convertMDtoHTML(button.title, "bot")}}</button></li>\
+																<li><button class="button_" {{if button.url}}url="${button.url}"{{/if}} type="${button.type}" value="${button.payload}"><img src="${button.icon}">{{html helpers.convertMDtoHTML(button.title, "bot")}}</button></li>\
 															{{/if}}\
 														{{/each}}\
 													</ul>\
@@ -1659,7 +1665,7 @@ print(JSON.stringify(message)); */
 												{{/each}}\
 												{{if (list.rowData.length > 6)}}\
 														<div class="column-table-more">\
-															<div class="title-name"><span>More <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAALCAYAAACzkJeoAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACDSURBVHgBdY7BDYMwDEW/E+612gWs0gE6Qtmkm7ACGzADI7ABG5AJIAMgQozEIUDewQf/Z/lDdso/brAcAZmWny/289QnoY8wPzqAmrNgdeQEe1h3Ap1LaD1QMSKgMpeKxtZxDsAyJJfyLlsE+iIslXPOUy7QHeUCpRD5/LBC4o8kUDaUO0VusgMydwAAAABJRU5ErkJggg=="></div>\
+															<div class="title-name"><span>{{if listItem.seeMoreTitle}}{{html helpers.convertMDtoHTML(listItem.seeMoreTitle, "bot")}}{{else}}More{{/if}} <img {{if listItem.seeMoreIcon}}src="${listItem.seeMoreIcon}"{{else}}src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAALCAYAAACzkJeoAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACDSURBVHgBdY7BDYMwDEW/E+612gWs0gE6Qtmkm7ACGzADI7ABG5AJIAMgQozEIUDewQf/Z/lDdso/brAcAZmWny/289QnoY8wPzqAmrNgdeQEe1h3Ap1LaD1QMSKgMpeKxtZxDsAyJJfyLlsE+iIslXPOUy7QHeUCpRD5/LBC4o8kUDaUO0VusgMydwAAAABJRU5ErkJggg=="{{/if}}></div>\
 														</div>\
 												 {{/if}}\
 											</div>\
@@ -1698,9 +1704,9 @@ print(JSON.stringify(message)); */
 			{{if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.seeMore && msgData.message[0].component.payload.listItems.length > msgData.message[0].component.payload.listItemDisplayCount) || (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.listItems.length > msgData.message[0].component.payload.listItemDisplayCount)}}\
 				<div class="see-more-data">\
 				    {{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (!msgData.message[0].component.payload.seeMoreVisibity || (msgData.message[0].component.payload.seeMoreVisibity && msgData.message[0].component.payload.seeMoreVisibity === "link"))}}\
-						<span>{{if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.seeMoreTitle)}} ${msgData.message[0].component.payload.seeMoreTitle} {{else}}See more{{/if}} <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAALCAYAAACzkJeoAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACDSURBVHgBdY7BDYMwDEW/E+612gWs0gE6Qtmkm7ACGzADI7ABG5AJIAMgQozEIUDewQf/Z/lDdso/brAcAZmWny/289QnoY8wPzqAmrNgdeQEe1h3Ap1LaD1QMSKgMpeKxtZxDsAyJJfyLlsE+iIslXPOUy7QHeUCpRD5/LBC4o8kUDaUO0VusgMydwAAAABJRU5ErkJggg=="></span>\
+						<span>{{if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.seeMoreTitle)}}{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.seeMoreTitle, "bot")}} {{else}}See more{{/if}} <img {{if msgData.message[0].component.payload.seeMoreIcon}} src="${msgData.message[0].component.payload.seeMoreIcon}" {{else}} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAALCAYAAACzkJeoAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACDSURBVHgBdY7BDYMwDEW/E+612gWs0gE6Qtmkm7ACGzADI7ABG5AJIAMgQozEIUDewQf/Z/lDdso/brAcAZmWny/289QnoY8wPzqAmrNgdeQEe1h3Ap1LaD1QMSKgMpeKxtZxDsAyJJfyLlsE+iIslXPOUy7QHeUCpRD5/LBC4o8kUDaUO0VusgMydwAAAABJRU5ErkJggg=="{{/if}}></span>\
 					{{else msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.seeMoreVisibity  && msgData.message[0].component.payload.seeMoreVisibity === "button")}}\
-							<button class="button_seemore" >{{if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.seeMoreIcon)}}<img src="${msgData.message[0].component.payload.seeMoreIcon.seeMoreIcon}">{{/if}}{{if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.seeMoreTitle)}} ${msgData.message[0].component.payload.seeMoreTitle} {{else}}See more{{/if}}</button>\
+							<button class="button_seemore" >{{if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.seeMoreIcon)}}<img src="${msgData.message[0].component.payload.seeMoreIcon}">{{/if}}{{if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.seeMoreTitle)}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.seeMoreTitle, "bot")}} {{else}}See more{{/if}}</button>\
 					{{/if}}\
 				</div>\
 			{{/if}}\
@@ -1730,11 +1736,11 @@ print(JSON.stringify(message)); */
 			<div class="tags-data">\
 				{{each(i,listItem) msgData.message[0].component.payload.listItems}}\
 				   {{if (msgData.message[0].component.payload.listItemDisplayCount && i < msgData.message[0].component.payload.listItemDisplayCount && ((msgData.message[0].component.payload.seeMoreAction === "slider") || (msgData.message[0].component.payload.seeMoreAction === "modal"))) || !msgData.message[0].component.payload.listItemDisplayCount || (msgData.message[0].component.payload.listItemDisplayCount && msgData.message[0].component.payload.seeMoreAction === "inline")}}\
-						<div class="tag-name {{if msgData.message[0].component.payload.listItemDisplayCount && i > msgData.message[0].component.payload.listItemDisplayCount && msgData.message[0].component.payload.seeMoreAction === "inline"}}hide inline{{/if}}" type="${listItem.type}" value="${listItem.payload}">${listItem.title}</div>\
+						<div class="tag-name {{if msgData.message[0].component.payload.listItemDisplayCount && i > msgData.message[0].component.payload.listItemDisplayCount && msgData.message[0].component.payload.seeMoreAction === "inline"}}hide inline{{/if}}" type="${listItem.type}" value="${listItem.payload}">{{html helpers.convertMDtoHTML(listItem.title, "bot")}}</div>\
 					{{/if}}\
 				{{/each}}\
 				{{if (msgData.message[0].component.payload.seeMore && msgData.message[0].component.payload.listItems.length > msgData.message[0].component.payload.listItemDisplayCount) || (msgData.message[0].component.payload.listItems.length > msgData.message[0].component.payload.listItemDisplayCount)}}\
-					<div class="more-tags see-more-data">${msgData.message[0].component.payload.listItems.length - msgData.message[0].component.payload.listItemDisplayCount} More <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAALCAYAAACzkJeoAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACDSURBVHgBdY7BDYMwDEW/E+612gWs0gE6Qtmkm7ACGzADI7ABG5AJIAMgQozEIUDewQf/Z/lDdso/brAcAZmWny/289QnoY8wPzqAmrNgdeQEe1h3Ap1LaD1QMSKgMpeKxtZxDsAyJJfyLlsE+iIslXPOUy7QHeUCpRD5/LBC4o8kUDaUO0VusgMydwAAAABJRU5ErkJggg=="></div>\
+					<div class="more-tags see-more-data">${msgData.message[0].component.payload.listItems.length - msgData.message[0].component.payload.listItemDisplayCount}{{if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.seeMoreTitle)}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.seeMoreTitle, "bot")}} {{else}}More{{/if}} <img {{if msgData.message[0].component.payload.seeMoreIcon}} src="${msgData.message[0].component.payload.seeMoreIcon}" {{else}} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAALCAYAAACzkJeoAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACDSURBVHgBdY7BDYMwDEW/E+612gWs0gE6Qtmkm7ACGzADI7ABG5AJIAMgQozEIUDewQf/Z/lDdso/brAcAZmWny/289QnoY8wPzqAmrNgdeQEe1h3Ap1LaD1QMSKgMpeKxtZxDsAyJJfyLlsE+iIslXPOUy7QHeUCpRD5/LBC4o8kUDaUO0VusgMydwAAAABJRU5ErkJggg=="{{/if}}></div>\
 				{{/if}}\
 			</div>\
 		{{/if}}\
@@ -1743,6 +1749,7 @@ print(JSON.stringify(message)); */
 </li>\
 	{{/if}}\
 	</scipt>';
+
 
 	
 		if (tempType === "dropdown_template") {
@@ -2539,7 +2546,7 @@ print(JSON.stringify(message)); */
 			return false;
 		}
 
-			/* advanced List template actions start here */
+	/* advanced List template actions start here */
 	customTemplate.prototype.advancedListTemplateEvents = function (ele, msgData) {
 		if (this.chatInitialize) {
 			chatInitialize = this.chatInitialize;
@@ -2627,10 +2634,55 @@ print(JSON.stringify(message)); */
 			var childElementCount = parentElementChildrenArray[1].childElementCount;
 			var actionObj = $(e.currentTarget).parent().attr('actionObj');
 			var parsedActionObj = JSON.parse(actionObj);
-			if ((childElementCount > 0) && parsedActionObj.isAccordian) {
-				$(obj).find(".action-icon-acc").toggleClass("rotate-icon");
-				$(obj).closest('.multiple-accor-rows').find(".accor-inner-content").toggle(300);
+			var type= parentElement.getAttribute('type');
+			if (type && type == "postback" || type == "text") {
+				$('.chatInputBox').text(parsedActionObj.payload ||parsedActionObj.title);
+				var _innerText = parsedActionObj.renderMessage || parsedActionObj.title;
+				chatInitialize.sendMessage($('.chatInputBox'), _innerText);
+				$ele.find(".advanced-list-wrapper").css({"pointer-events":"none"});
+			} else if (type && type == "url" || type == "web_url") {
+				if ($(this).attr('msgData') !== undefined) {
+					var msgData;
+					try {
+						msgData = JSON.parse($(this).attr('msgData'));
+					} catch (err) {
+
+					}
+					if (msgData && msgData.message && msgData.message[0].component && (msgData.message[0].component.formData || (msgData.message[0].component.payload && msgData.message[0].component.payload.formData))) {
+						if (msgData.message[0].component.formData) {
+							msgData.message[0].component.payload.formData = msgData.message[0].component.formData;
+						}
+						chatInitialize.renderWebForm(msgData);
+						return;
+					}
+				}
+				var a_link = parsedActionObj.url;
+				if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
+					a_link = "http:////" + a_link;
+				}
+				chatInitialize.openExternalLink(a_link);
+			}else{
+				if ((childElementCount > 0) && parsedActionObj.isAccordian) {
+					$(obj).find(".action-icon-acc").toggleClass("rotate-icon");
+					$(obj).closest('.multiple-accor-rows').find(".accor-inner-content").toggle(300);
+				}
+				var iconRotation;
+				if(parsedActionObj && parsedActionObj.headerOptions && parsedActionObj.headerOptions.length){
+					for(var i=0;i<parsedActionObj.headerOptions.length;i++){
+						var val = parsedActionObj.headerOptions[i];
+						if(val && val.type==='icon' && val.iconRotation){
+							iconRotation = val.iconRotation;
+						}
+					}
+					if($(obj).find(".action-icon-acc").hasClass('rotate-icon')){
+						$(obj).find(".action-icon-acc.rotate-icon").css('transform', 'rotate('+iconRotation+'deg)');
+					}else{
+						$(obj).find(".action-icon-acc").css('transform', '');
+					}
+				}
 			}
+
+
 		});
 		$ele.off('click', '.advanced-list-wrapper .main-title-text-block .search-block .search_icon').on('click', '.advanced-list-wrapper .main-title-text-block .search-block .search_icon', function (e) {
 			var obj = this;
@@ -2758,12 +2810,10 @@ print(JSON.stringify(message)); */
 				$(".largePreviewContent").empty();
 				modal.style.display = "block";
 				var span = document.getElementsByClassName("closeElePreview")[0];
-				span.onclick = function () {
-					modal.style.display = "none";
-					$(".largePreviewContent").removeClass("addheight");
-				}
+				$(span).addClass('hide');
 				if (messageData.message[0].component.payload.seeMore) {
 					messageData.message[0].component.payload.seeMore = false;
+					messageData.message[0].component.payload.openPreviewModal = true;
 					messageData.message[0].component.payload.listItemDisplayCount = msgData.message[0].component.payload.listItems.length+1;
 				}
 				messageHtml = $(customTemplate.prototype.getChatTemplate("advancedListTemplate")).tmpl({
@@ -2772,6 +2822,11 @@ print(JSON.stringify(message)); */
 				});
 				$(messageHtml).find(".advanced-list-wrapper .extra-info").hide();
 				$(".largePreviewContent").append(messageHtml);
+				var closeElement =  document.getElementsByClassName('advancedlist-template-close')[0];
+				closeElement.onclick = function () {
+					modal.style.display = "none";
+					$(".largePreviewContent").removeClass("addheight");
+				}
 				$(".largePreviewContent .fromOtherUsers ").css('list-style','none');
 				customTemplate.prototype.advancedListTemplateEvents(messageHtml, messageData);
 			}
@@ -2928,7 +2983,7 @@ print(JSON.stringify(message)); */
 				var modalPreview = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 				<div class="advanced-list-wrapper img-with-title with-accordion if-multiple-accordions-list">\
 					<div class="multiple-accor-rows">\
-							<div class="accor-inner-content">\
+							<div class="accor-inner-content"   {{if listItem.contentStyles}}style="{{each(styleKey,style) listItem.contentStyles}}${styleKey}:${style};{{/each}}"{{/if}}>\
 									<div class="inner-acc-table-sec">\
 										{{each(i,list) listItem.tableListData}}\
 											{{if list.rowData && list.rowData.length}}\
