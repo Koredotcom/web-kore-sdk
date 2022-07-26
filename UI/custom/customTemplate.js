@@ -3213,7 +3213,7 @@ var advancedListTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tm
 				}
 				var _tempWin = window.open(a_link, "_blank");
 			 }else{
-				var _innerText= $(_self).attr('data-value');
+				var _innerText= $(_self).attr('data-value') || $(_self).attr('data-title');
 				var postBack=$(_self).attr('data-title');
 				chatInitialize.sendMessage($('.chatInputBox').text(_innerText), postBack);
 			 $(".kore-action-sheet .list-template-sheet").animate({ height: 'toggle' });
