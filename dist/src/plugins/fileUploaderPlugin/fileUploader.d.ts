@@ -1,5 +1,3 @@
-/// <reference types="jquery" />
-/// <reference types="jquery" />
 import './fileUploader.scss';
 declare class KoreFileUploaderPlugin {
     name: string;
@@ -54,7 +52,7 @@ declare class KoreFileUploaderPlugin {
         type: any;
         name: any;
     }, _tofileId: undefined): void;
-    initiateRcorder(_recState: any, ele: JQuery<HTMLElement>): void;
+    initiateRcorder(_recState: any, ele: any): void;
     onFileToUploaded(_this: this, evt: {
         params: any;
     }, _recState: any): void;

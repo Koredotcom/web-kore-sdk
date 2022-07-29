@@ -539,7 +539,7 @@ class KoreFileUploaderPlugin {
     me.onComponentReady(me, _data);
   }
 
-  initiateRcorder(_recState: any, ele: JQuery<HTMLElement>) {
+  initiateRcorder(_recState: any, ele: any) {
     const me = this;
     ele = ele || me.ele;
     ele.on('success.ke.uploader', (e: any) => {

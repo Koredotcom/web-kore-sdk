@@ -1,4 +1,3 @@
-/// <reference types="jquery" />
 import './styles/kore-widgets.css';
 declare class KoreWidgetSDK {
     vars: any;
@@ -18,7 +17,7 @@ declare class KoreWidgetSDK {
     openPanel(panelName: any, resPopUp: any, heightToggle: any): false | undefined;
     checkWidgetSwitchEditor(newPanel: any, oldPanel: any): boolean;
     prepareRenderData(panelName: any): void;
-    getServerDataGen(url: any, method: any, payload: any, _params: any): JQuery.jqXHR<any>;
+    getServerDataGen(url: any, method: any, payload: any, _params: any): any;
     getServerData(url: any, method: any, payload: any, _params: any, passedJson: any): any;
     getCacheDataByWidgetId(widgetId: any): any;
     getPanelDataByPanelId(panelId: any): any;

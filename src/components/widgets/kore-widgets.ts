@@ -2899,7 +2899,7 @@ prepareRenderData  (panelName:any) {
   }
 };
 
-getServerDataGen  (url:any, method:any, payload:any, _params:any) {
+getServerDataGen  (url:any, method:any, payload:any, _params:any):any {
   var _self:any = this;
   var config = _self.config;
   url = _self.resolveUrl(url, {
