@@ -325,6 +325,10 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 ```
 
 ###Release History:
+V9.3.0 [Minor] on 23-July-2022: Master branch
+	1. Enhancement to link template to support download
+	2. Bug fixes
+	
 V9.1.8 [Minor] on 19-Feb-2021: Master branch
     1.Theme customization
     2.Agent Desktop plugin
