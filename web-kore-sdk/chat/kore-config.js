@@ -50,11 +50,11 @@
   
 
   if(chatConfig.isFromFinastra){
-    botOptions.JWTUrl = "https://staging-bankassist.korebots.com/finastra-wrapper/token";
+    botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
     botOptions.brandingAPIUrl = "";
     botOptions.userIdentity = '';// Provide users email id here
-    botOptions.botInfo = { name: "Banking Assist", "_id": "",customData:{"rtmType":"web"}}; // bot name is case sensitive
-    botOptions.accountId = "5fad6c9a694b34300513832e";  
+    botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "",customData:{"rtmType":"web"}}; // bot name is case sensitive
+    botOptions.accountId = "PLEASE_ENTER_ACCOUNT_ID";  
 
     botOptions.botInfo.customData.accessToken = getCookie("accessToken");
     botOptions.botInfo.customData.source = getCookie("source");
