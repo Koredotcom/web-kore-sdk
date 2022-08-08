@@ -47,6 +47,7 @@ module.exports = function (grunt) {
             'chatWindow.js',
             'libs/jquery.daterangepicker.js',
             'libs/jquery-clockpicker.js',
+            '../libs/kore-pickers.js',
             '../libs/emoji.js',
             '../libs/recorder.js',
             '../libs/recorderWorker.js',
