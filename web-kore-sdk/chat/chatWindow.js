@@ -1695,6 +1695,12 @@
                                 if(tempData.message[0].component.payload.title){
                                     korePicker.pickerSubconfig.daterangepicker.title=tempData.message[0].component.payload.title;
                                 }
+                                if(tempData.message[0].component.payload.dateSeperator){
+                                    korePicker.pickerSubconfig.dateRangeConfig.dateSeperator=tempData.message[0].component.payload.dateSeperator;
+                                }
+                                if(tempData.message[0].component.payload.expectedFormat){
+                                    korePicker.pickerSubconfig.dateRangeConfig.expectedFormat=tempData.message[0].component.payload.expectedFormat;
+                                }
                                 $('.typingIndicatorContent').css('display', 'block');
                                 korePicker.showDateRangePicker(korePicker.mainConfig);
                             }

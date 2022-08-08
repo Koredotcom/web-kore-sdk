@@ -359,7 +359,7 @@ KorePickers.prototype.showDateRangePicker = function (mainConfig) {
         inline: true,
         container:  _korePickers.find('.kore-action-sheet .dateRangePickerContainer'),
     };
-    $.extend(defaultlibConfig, mainConfig[1].dateRangeConfig)
+    $.extend( mainConfig[1].dateRangeConfig,defaultlibConfig)
     daterangeInput =  _korePickers.find('.kore-action-sheet .dateRangePickerContainer #rangeCalenderBtn').dateRangePicker(defaultlibConfig)
     this.addDateRangeListener(mainConfig);
 }
@@ -397,9 +397,19 @@ KorePickers.prototype.addDateRangeListener = function (mainConfig) {
             _korePickers.find(".kore-action-sheet .dateRangePickerContainer .showEnddate .showEndMonth").html("Select");
         }
         else if ((showStartDateValue !== null) && (showEndDateValue !== null)) {
-            var startViewDate = moment(startdateValue).format('MM-DD-YYYY') || moment();
-            var endViewDate = moment(enddateValue).format('MM-DD-YYYY') || moment();
-            var _innerText = startViewDate + ' to ' + endViewDate;
+            if(mainConfig[1].dateRangeConfig.expectedFormat){
+                var formatToSend = mainConfig[1].dateRangeConfig.expectedFormat;
+            }else{
+                var formatToSend = 'MM-DD-YYYY';
+            }
+            if(mainConfig[1].dateRangeConfig.dateSeperator){
+                var dateSepartor = mainConfig[1].dateRangeConfig.dateSeperator;
+            }else{
+                var dateSepartor = 'to';
+            }
+            var startViewDate = moment(startdateValue).format(formatToSend) || moment();
+            var endViewDate = moment(enddateValue).format(formatToSend) || moment();
+            var _innerText = startViewDate + ' '+dateSepartor+' ' + endViewDate;
             _korePickers.find('.footerContainer.pos-relative .chatInputBox').text(_innerText);
             var e = $.Event("keydown");
             e.keyCode = 13;
@@ -436,6 +446,7 @@ KorePickers.prototype.addClickEventRangeCalender = function (mainConfig) {
     _korePickers.find(".kore-action-sheet .dateRangePickerContainer .date-picker-wrapper").css({ "border": "0px", "background-color": "white" });
     _korePickers.find(".kore-action-sheet .dateRangePickerContainer .month-wrapper").css({ "border": "0px" });
     _korePickers.find(".kore-action-sheet .dateRangePickerContainer .headerCalendar .choose").html(mainConfig[1].daterangepicker.title);
+    _korePickers.find(".kore-action-sheet .dateRangePickerContainer .date-picker-wrapper .month-wrapper .real-today").addClass("first-date-selected");
     _self.bottomSlider('show', _korePickers.find(".dateRangePickerContainer"));
     _korePickers.find(".kore-action-sheet .dateRangePickerContainer .confirmBTN").css({
         "display": "block"
