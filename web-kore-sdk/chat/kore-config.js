@@ -62,14 +62,14 @@
     botOptions.botInfo.customData.uniqueUserId = getCookie("uniqueUserId");
 
   } else if(!chatConfig.isFromDeflect) {
-    botOptions.koreAPIUrl = "https://bankingassistant-qa.kore.ai/workbench/api";
+    botOptions.koreAPIUrl = "PLEASE_ENTER_KOREAPIURL_HERE";
     botOptions.brandingAPIUrl = botOptions.koreAPIUrl + '/workbench/sdkData?objectId=hamburgermenu&objectId=brandingwidgetdesktop';
-    botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
-    botOptions.userIdentity = '';// Provide users email id here
-    botOptions.botInfo = { name: "Bank Assist Dev", "_id": "st-beed09f6-1b54-508d-8c6c-9eab34d85466",customData:{"rtmType":"web"}}; // bot name is case sensitive
-    botOptions.clientId = "cs-de823b51-faed-503d-bc37-017d2abeac41";
-    botOptions.clientSecret = "JSAgeh/lUsvurI2oDVmh9/UqyHMHJZ3NLCW8N8XChAQ=";
-    botOptions.accountId = "60238b260d183d1a288c7647"
+    botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
+    botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
+    botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
+    botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
+    botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+    botOptions.accountId = "PLEASE_ENTER_ACCOUNT_ID";
  }
 
   function getCookie(cname) {
