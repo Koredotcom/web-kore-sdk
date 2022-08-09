@@ -22,7 +22,7 @@
         //plugins declaration
         var KorePickersPlugin=KorePickersPluginSDK.KorePickersPlugin;
         var GraphTemplatesPlugin=KoreGraphTemplatesPluginSDK.GraphTemplatesPlugin;
-        // var AgentDeskTopPlugin = AgentDeskTopPluginSDK.AgentDesktopPlugin;
+        var AgentDeskTopPlugin = AgentDeskTopPluginSDK.AgentDesktopPlugin;
         var WebKitSTTPlugin=WebKitSTTPluginSDK.WebKitSTT;
         var BrowserTTSPlugin=BrowserTTSPluginSDK.BrowserTTS;
 
@@ -43,7 +43,7 @@
         //install plugins
         chatWindowInstance.installPlugin(new KorePickersPlugin());
         chatWindowInstance.installPlugin(new GraphTemplatesPlugin());
-        // chatWindowInstance.installPlugin(new AgentDeskTopPlugin())
+        chatWindowInstance.installPlugin(new AgentDeskTopPlugin())
         chatWindowInstance.installPlugin(new WebKitSTTPlugin());
         chatWindowInstance.installPlugin(new BrowserTTSPlugin());
 
