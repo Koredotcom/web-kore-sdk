@@ -7,7 +7,6 @@ import GraphTemplatesPlugin from './plugins/graphTemplatesPlugin';
 import WebKitSTT from './plugins/STTPlugins/WebKitSTTPlugin/WebKitSTTPlugin';
 import BrowserTTS from './plugins/TTSPlugins/BrowserTTSPlugin/BrowserTTSPlugin';
 import speakTextWithAWSPolly from './plugins/TTSPlugins/KoreAWSPollyPlugin/kore-aws-polly';
-import AgentDesktopPlugin from './plugins/agentDesktop/agentdesktop';
 import KoreWidgetSDK from './components/widgets/kore-widgets';
 import widgetsConfig from './components/widgets/config/kore-widgets-config';
-export { chatConfig, chatWindow, widgetsConfig, KoreWidgetSDK, Korei18nPlugin, KoreFileUploaderPlugin, KorePickersPlugin, GraphTemplatesPlugin, WebKitSTT, BrowserTTS, speakTextWithAWSPolly, AgentDesktopPlugin };
+export { chatConfig, chatWindow, widgetsConfig, KoreWidgetSDK, Korei18nPlugin, KoreFileUploaderPlugin, KorePickersPlugin, GraphTemplatesPlugin, WebKitSTT, BrowserTTS, speakTextWithAWSPolly, };
