@@ -149,6 +149,15 @@
 			 this.advancedListTemplateEvents(messageHtml,msgData);
 			 $(messageHtml).data(msgData);
 		}
+		else if(msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "articleTemplate"){
+			messageHtml = $(this.getChatTemplate("articleTemplate")).tmpl({
+				'msgData': msgData,
+				 'helpers': this.helpers,
+				'extension': this.extension
+			});
+			 $(messageHtml).data(msgData);
+			 this.articleTemplateEvents(messageHtml,msgData);
+		}
 		else if (msgData && msgData.message[0] && msgData.message[0].cInfo && msgData.message[0].cInfo.body && this.toCheckBankingFeedbackTemplate(msgData)) {
 			return;
 		}
@@ -1754,6 +1763,47 @@ print(JSON.stringify(message)); */
 	{{/if}}\
 	</scipt>';
 
+	var articleTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+	{{if msgData.message}} \
+		<li {{if msgData.type !== "bot_response"}} id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+		   <div class="article-template">\
+				{{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+				{{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+				{{if msgData.message[0].component.payload.sliderView}} <button class="close-button" title="Close"><img src="data:image/svg+xml;base64, PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button>{{/if}}\
+					<div class="article-template-content" actionObj="${JSON.stringify(msgData.message[0].component.payload)}">\
+						{{if msgData.message[0].component.payload.elements.length}}\
+						    <div class="article-template-elements">\
+								{{each(key,value) msgData.message[0].component.payload.elements}}\
+								      {{if ((key <  msgData.message[0].component.payload.displayLimit) && (msgData.message[0].component.payload.seemoreAction === "slider")) || (msgData.message[0].component.payload.seemoreAction !== "slider") || !msgData.message[0].component.payload.displayLimit }}\
+											<div class="media-block media-blue {{if (key >=  msgData.message[0].component.payload.displayLimit) && (msgData.message[0].component.payload.seemoreAction === "inline")}}hide{{/if}}" {{if value.styles}}style="{{each(styleKey,style) value.styles}}${styleKey}:${style};{{/each}}"{{/if}} actionObj="${JSON.stringify(value)}">\
+												<div class="media-header">{{html helpers.convertMDtoHTML(value.title, "bot")}}</div>\
+													<div class="media-desc">{{html helpers.convertMDtoHTML(value.description, "bot")}}</div>\
+												<div class="media-space-between">\
+													<div class="media-icon-block">\
+														<div class="media-icon">\
+															<img src="${value.icon}"/>\
+														</div>\
+														<div class="media-icon-desc">\
+														<div class="media-icon-desc-data">{{html helpers.convertMDtoHTML(value.createdOn, "bot")}}</div>\
+														<div class="media-icon-desc-data">{{html helpers.convertMDtoHTML(value.updatedOn, "bot")}}</div>\
+														</div>\
+													</div>\
+													<div><button class="btn-primary btn" actionObj="${JSON.stringify(value.button)}" type="${value.button.type}" {{if value.button.type === "url"}}url="${value.button.url}"{{/if}} {{if value.button.styles}}style="{{each(styleKey,style) value.button.styles}}${styleKey}:${style};{{/each}}"{{/if}}>${value.button.title}</button></div>\
+												</div>\
+											</div>\
+										{{/if}}\
+								{{/each}}\
+							</div>\
+						{{/if}}\
+						{{if msgData.message[0].component.payload.showmore || (msgData.message[0].component.payload.elements.length > msgData.message[0].component.payload.displayLimit)}}\
+							<div class="article-show-more" {{if  msgData.message[0].component.payload.showMoreStyles}}style="{{each(styleKey,style) msgData.message[0].component.payload.showMoreStyles}}${styleKey}:${style};{{/each}}"{{/if}}>{{if msgData.message[0].component.payload.seeMoreTitle}}${msgData.message[0].component.payload.seeMoreTitle}{{else}}Show more{{/if}}</div>\
+						{{/if}}\
+					</div>\
+		   </div>\
+		</li>\
+		{{/if}} \
+	</script>';
+
 	
 		if (tempType === "dropdown_template") {
 			return dropdownTemplate;
@@ -1782,6 +1832,9 @@ print(JSON.stringify(message)); */
         } 
 		else if(tempType === "advancedListTemplate"){
 			return advancedListTemplate;
+		} 
+		else if(tempType === "articleTemplate"){
+			return articleTemplate;
 		} 
 		else {
 			return "";
@@ -3099,6 +3152,100 @@ print(JSON.stringify(message)); */
 		});
 	}
 	/* advanced List template actions end here */
+
+	customTemplate.prototype.articleTemplateEvents = function (ele, messageData) {
+		if (this.chatInitialize) {
+			chatInitialize = this.chatInitialize;
+		}
+		if (this.helpers) {
+			helpers = this.helpers;
+		}
+		if (this.extension) {
+			extension = this.extension;
+		}
+		var me = this;
+		var $ele = $(ele);
+		var messageData = $(ele).data();
+		var _chatContainer = chatInitialize.config.chatContainer;
+		$(ele).off('click', '.article-template-content .article-template-elements .media-block .btn-primary').on('click', '.article-template-content .article-template-elements .media-block .btn-primary', function (e) {
+			e.stopPropagation();
+			var type = $(e.currentTarget).attr('type');
+			if (type) {
+				type = type.toLowerCase();
+			}
+			if (type == "postback" || type == "text") {
+				var actionObj = $(e.currentTarget).attr('actionObj');
+				var parsedActionObj = JSON.parse(actionObj);
+				var messageToBot;
+				if (parsedActionObj.payload) {
+					messageToBot = parsedActionObj.payload;
+				} else {
+					messageToBot = parsedActionObj.title;
+				}
+				bottomSliderAction('hide');
+				chatInitialize.sendMessage($('.chatInputBox').text(messageToBot), parsedActionObj.title);
+				$(_chatContainer).find('.article-template-content').css({ "pointer-events": "none" });
+			} else if (type == "url" || type == "web_url") {
+				var a_link = $(this).attr('url');
+				if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
+					a_link = "http:////" + a_link;
+				}
+				chatInitialize.openExternalLink(a_link);
+			}
+		});
+		$(ele).off('click', '.article-template-content .article-show-more').on('click', '.article-template-content .article-show-more', function (e) {
+			var templateInfo = $(e.currentTarget).closest('.article-template-content');
+			var templateActionObj = $(templateInfo).attr('actionObj');
+			var parsedtemplateActionObj = JSON.parse(templateActionObj);
+			var type = parsedtemplateActionObj.seemoreAction;
+			if (!type || (type === 'slider')) {
+				messageData.message[0].component.payload.displayLimit = messageData.message[0].component.payload.elements.length;
+				messageData.message[0].component.payload.showmore = false;
+				messageData.message[0].component.payload.sliderView = true;
+				var template = $(customTemplate.prototype.getChatTemplate("articleTemplate")).tmpl({
+					'msgData': messageData,
+					'helpers': helpers,
+				});
+				$(template).find(".article-template .extra-info").hide();
+				//$(".kore-action-sheet").append(listValues);
+				customTemplate.prototype.articleTemplateEvents(template, messageData)
+				bottomSliderAction('show', template);
+			} else if (type === 'inline') {
+				var hiddenElements = $(ele).find('.article-template .article-template-content .article-template-elements .media-block.hide');
+				$(hiddenElements).removeClass('hide');
+				var _templateInfo = $(e.currentTarget).closest('.article-template-content');
+				$(_templateInfo).find('.article-show-more').addClass('hide');
+
+			}
+		});
+		$(ele).off('click', '.article-template .close-button').on('click', '.article-template .close-button', function (e) {
+			bottomSliderAction('hide');
+		});
+		$(ele).off('click', '.article-template-content .article-template-elements .media-block ').on('click', '.article-template-content .article-template-elements .media-block', function (e) {
+			var _actionObj = $(e.currentTarget).attr('actionObj');
+			var parsedActionObj = JSON.parse(_actionObj);
+			if (parsedActionObj.hasOwnProperty('default_action')) {
+				var default_action = parsedActionObj.default_action;
+				var type = parsedActionObj.default_action.type;
+				if (type == "url" || type == "web_url") {
+					var a_link = default_action.url;
+					if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
+						a_link = "http:////" + a_link;
+					}
+					chatInitialize.openExternalLink(a_link);
+
+				} else if (type === "postback") {
+					var payload = parsedActionObj.default_action.payload;
+					var messageToDisplay = parsedActionObj.default_action.messageToDisplay || parsedActionObj.title;
+					bottomSliderAction('hide');
+					chatInitialize.sendMessage($('.chatInputBox').text(payload), messageToDisplay);
+					$(_chatContainer).find('.article-template-content').css({ "pointer-events": "none" });
+				}
+
+			}
+
+		});
+	}
 
 	    window.customTemplate=customTemplate;	
 

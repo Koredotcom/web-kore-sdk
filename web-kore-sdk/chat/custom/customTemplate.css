@@ -4027,3 +4027,118 @@ white-space: nowrap;
  /* advanced-list */
 
 /* advanced list template styles ends here */
+
+/* Article template css starts here */
+.media-block.media-blue {
+    padding: 20px 20px;
+    border: 1px solid #0D6EFD;
+    box-shadow: -5px 0px 0px #0D6EFD;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  .media-block.media-blue .media-header {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+    padding-bottom: 8px;
+  }
+  .media-block.media-blue .media-desc {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 16px;
+    color: #202124;
+    padding-bottom: 14px;
+  }
+  .media-block.media-blue .media-space-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .media-block.media-blue .media-space-between .media-icon-block {
+    display: flex;
+    align-items: center;
+  }
+  .media-block.media-blue .media-space-between .media-icon-block .media-icon {
+    width: 34px;
+    height: 34px;
+    background: #E7F1FF;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .media-block.media-blue .media-space-between .media-icon-block .media-icon-desc {
+    padding-left: 10px;
+  }
+  .media-block.media-blue .media-space-between .media-icon-block .media-icon-desc .media-icon-desc-data {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    color: #696C70;
+  }
+  .media-block.media-blue .media-space-between .btn-primary {
+    border: 1px solid transparent;
+    background: #0D6EFD;
+    padding: 0px 20px;
+    height: 34px;
+    font-size: 12px;
+    border-radius: 4px;
+    color: #fff;
+    min-width: 60px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s all ease-in;
+  }
+  .media-block.media-blue .media-space-between .btn-primary:hover {
+    background: #0156d4;
+    color: #fff;
+  }
+  .media-block.media-blue .media-space-between .btn-primary:focus {
+    border: solid 1px #1372ff;
+    outline: none;
+    box-shadow: none !important;
+  }
+  .article-show-more{
+    color: #0D6EFD;
+    text-align: center;
+    padding: 5px;
+    cursor: pointer;
+  }
+
+  .kore-chat-window .kore-action-sheet .article-template {
+	overflow-y: auto;
+	animation-name: fadeInBottom;
+	animation-duration: 1s;
+	animation-fill-mode: both;
+	padding: 15px;
+	margin-top: 30px;
+}
+.article-template .close-button{
+    cursor: pointer;
+    margin: 0;
+    padding-top: 8px;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    color:var(--sdk-chat-window-list-template-close-btn-color);
+    background:none;
+    opacity:1;
+    outline:none;
+    font-size:30px;
+    float:right;
+    line-height:inherit;
+    border:none;
+}
+@keyframes fadeInBottom {
+    from {
+        opacity: 0;
+        height: 0;
+    }
+    to { 
+        opacity: 1;
+        height: 462px; 
+    }
+}
+
+/* Article template css ends here */
