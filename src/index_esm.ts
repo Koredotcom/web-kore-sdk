@@ -8,7 +8,7 @@ import GraphTemplatesPlugin from './plugins/graphTemplatesPlugin';
 import WebKitSTT from './plugins/STTPlugins/WebKitSTTPlugin/WebKitSTTPlugin';
 import BrowserTTS from './plugins/TTSPlugins/BrowserTTSPlugin/BrowserTTSPlugin';
 import speakTextWithAWSPolly from './plugins/TTSPlugins/KoreAWSPollyPlugin/kore-aws-polly';
-// import AgentDesktopPlugin from './plugins/agentDesktop/agentdesktop';
+import AgentDesktopPlugin from './plugins/agentDesktop/agentdesktop.js';
 
 
 import KoreWidgetSDK from './components/widgets/kore-widgets';
@@ -28,5 +28,5 @@ export {
   WebKitSTT,
   BrowserTTS,
   speakTextWithAWSPolly,
-  // AgentDesktopPlugin
+  AgentDesktopPlugin
 };

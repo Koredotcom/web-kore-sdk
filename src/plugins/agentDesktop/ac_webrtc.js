@@ -12928,4 +12928,4 @@ let AudioCodesWebRTCWrapper = {
         },
     },
 };
-export default AudioCodesUA;
+export {AudioCodesUA};

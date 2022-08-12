@@ -4,7 +4,7 @@
  * (c) 2014-2021 Guillermo Rauch
  * Released under the MIT License.
  */
-import AudioCodesUA from './ac_webrtc';
+import {AudioCodesUA} from './ac_webrtc';
 import * as koreJquery from '../../libs/korejquery';
 import requireKr from '../../components/base-sdk/kore-bot-sdk-client';
 import './agentdesktop.css';

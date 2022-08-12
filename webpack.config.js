@@ -79,7 +79,7 @@ let config= {
           files: 'src/**/*.ts,src/**/*.js',
           failOnError: true,
           failOnWarning: true,
-          //exclude:['src/components/chatwindow/chatWindow.js']
+          exclude:["src/plugins/agentDesktop/*"]
         })
         // new HtmlWebpackPlugin() 
           
@@ -186,17 +186,19 @@ module.exports= function(env,argv){
     if (env.kore_env==='prod') {
         config.mode='production';
         config.optimization= {
-          minimize: true,
-          minimizer: [
-            new TerserPlugin({
-              extractComments: false,
-              terserOptions: {
-                format: {
-                  comments: false,
-                },
-              },
-            }),
-          ],
+          // minimize: true,
+          minimize: false,
+
+          // minimizer: [
+          //   new TerserPlugin({
+          //     extractComments: false,
+          //     terserOptions: {
+          //       format: {
+          //         comments: false,
+          //       },
+          //     },
+          //   }),
+          // ],
         }
     }
     
