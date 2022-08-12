@@ -1,4 +1,5 @@
 {
+  
   "compilerOptions": {
     "types" : ["node"],
     "typeRoots": ["node_modules/@types"],
@@ -98,5 +99,7 @@
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
-  }
+  },
+  "include": ["src/*"],
+  "exclude":["src/plugins/agentDesktop/*", "node_modules"],
 }
