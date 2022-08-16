@@ -517,7 +517,7 @@
                         }  else if (txtArr[i].indexOf('>>') === 0) {
                             if(txtArr[i].substring(2).indexOf('*') === 0){
                                 if (!isEven(txtArr[i].substring(2).split('*').length - 1)) {
-                                    txtArr[i] = '\r\n&#9679; ' + txtArr[i].substring(3);
+                                    txtArr[i] = '&#9679; ' + txtArr[i].substring(3);
                                     _lineBreakAdded = true;
                                 }
                                 txtArr[i] = '<p class="indent">' + txtArr[i] + '</p>';
@@ -528,12 +528,12 @@
                         } else if (txtArr[i].indexOf('&gt;&gt;') === 0) {
                             if(txtArr[i].substring(8).indexOf('*') === 0){ // add ">>*" for sub bullet point 
                                 if (!isEven(txtArr[i].substring(8).split('*').length - 1)) {
-                                    txtArr[i] = '\r\n&#9679; ' + txtArr[i].substring(9);
+                                    txtArr[i] = '&#9679; ' + txtArr[i].substring(9);
                                     _lineBreakAdded = true;
                                 }
                                 txtArr[i] = '<p class="indent">' + txtArr[i] + '</p>';
                             }else{
-                            txtArr[i] = '<p class="indent">' + txtArr[i].substring(8) + '</p>';
+                                multipleIndentation(txtArr, i);
                             }
                             _lineBreakAdded = true;
                         } else if (txtArr[i].indexOf('---') === 0 || txtArr[i].indexOf('___') === 0) {
@@ -683,6 +683,28 @@
             function isEven(n) {
                 n = Number(n);
                 return n === 0 || !!(n && !(n % 2));
+            }
+            var previousValue;
+            function multipleIndentation(txtArr, i, value) {
+                var indentIndex;
+                var paragraphIndex;
+                var actualValue;
+                if (!value) {
+                    previousValue = txtArr[i].substring(8);
+                    txtArr[i] = '<div class="indent">' + txtArr[i].substring(8) + '</div>';
+                } else {
+                    txtArr[i] = '<div class="indent">' + txtArr[i] + '</div>';
+                    if (previousValue.indexOf('&gt;&gt;') === -1) {
+                        indentIndex = txtArr[i].indexOf("&gt;&gt;");
+                        paragraphIndex = txtArr[i].indexOf("</div>");
+                        actualValue = txtArr[i].slice(indentIndex, paragraphIndex);
+                        txtArr[i] = txtArr[i].replace(actualValue, previousValue);
+                    }
+                }
+                if (previousValue.indexOf('&gt;&gt;') === 0) {
+                    previousValue = previousValue.substring(8);
+                    multipleIndentation(txtArr, i, true);
+                }
             }
             if (typeof Array.isArray === 'undefined') {
                 Array.isArray = function (obj) {

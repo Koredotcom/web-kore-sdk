@@ -862,7 +862,14 @@
 
 .kore-chat-window ul.chat-container li .messageBubble p.indent {
     padding-left: 10px;
+    margin: 0;
     /* border-left: 6px solid #DDD; */
+}
+
+.kore-chat-window ul.chat-container li .messageBubble .indent{
+	padding-left: 10px;
+    margin: 0;
+    /* display: inline-block; */
 }
 
 .kore-chat-window ul.chat-container li .messageBubble pre {
