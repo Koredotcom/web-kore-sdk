@@ -78,8 +78,7 @@ let config= {
         new ESLintPlugin({
           files: 'src/**/*.ts,src/**/*.js',
           failOnError: true,
-          failOnWarning: true,
-          exclude:["src/plugins/agentDesktop/*"]
+          failOnWarning: true
         })
         // new HtmlWebpackPlugin() 
           
@@ -164,11 +163,11 @@ module.exports= function(env,argv){
             filename: 'plugins/browser-tts-umd-plugin-umd.js',
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
-          AgentDeskTopPluginSDK: {
-            import: "./src/index_plugins/agentDesktop_umd.ts",
-            filename: 'plugins/agent-desktop-umd.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          }
+          // AgentDeskTopPluginSDK: {
+          //   import: "./src/index_plugins/agentDesktop_umd.ts",
+          //   filename: 'plugins/agent-desktop-umd.js',
+          //   chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+          // }
         }
         config.output.library = {
           name: '[name]',

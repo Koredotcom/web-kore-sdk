@@ -11664,7 +11664,7 @@
  */
 class AudioCodesUA {
     constructor() {
-        return (
+       
             (this._isInitialized = !1),
             (this.serverConfig = {}),
             (this.account = { user: null, userAuth: null, displayName: null, password: null, registerExpires: 600, useSessionTimer: !1 }),
@@ -11723,7 +11723,7 @@ class AudioCodesUA {
             (this.VIDEO = Symbol("video")),
             (this.RECVONLY_VIDEO = Symbol("recvonly_video")),
             AudioCodesUA.instance
-        );
+       
     }
     version() {
         return "1.14.1";
