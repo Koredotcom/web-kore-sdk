@@ -1149,7 +1149,8 @@ var ratingTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			  <div class="emojis-data">\
 			  {{each(key, msgItem) msgData.message[0].component.payload.thumpsUpDownArrays}}\
 			  <div class="ratingValue emoji-rating">\
-				 <div class="rating" id="rating_${msgItem.thumpUpId}" value="${msgItem.value}"></div></div>\
+				 <div class="rating" id="rating_${msgItem.thumpUpId}" value="${msgItem.value}"></div>\
+				 <div class="emoji-desc">${msgItem.reviewText}</div></div>\
 			  {{/each}}\
 			  </div>\
 			  {{else msgData.message[0].component.payload.view == "NPS"}}\
@@ -1159,7 +1160,8 @@ var ratingTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			  <div class="rating-numbers-data">\
 			  {{each(key, msgItem) msgData.message[0].component.payload.numbersArrays}}\
 			  <div class="ratingValue">\
-				 <div class="rating" id="rating_${msgItem.numberId}" {{if msgItem.color}}style="background:${msgItem.color}" {{/if}} value="${msgItem.value}">${msgItem.numberId}</div></div>\
+				 <div class="rating" id="rating_${msgItem.numberId}" {{if msgItem.color}}style="background:${msgItem.color}" {{/if}} value="${msgItem.value}">${msgItem.numberId}</div>\
+				 <div class="emoji-desc">${msgItem.reviewText}</div></div>\
 			  {{/each}}\
 			  </div>\
 			  {{/if}}\
