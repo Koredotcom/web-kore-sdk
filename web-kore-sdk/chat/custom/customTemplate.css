@@ -4142,3 +4142,35 @@ white-space: nowrap;
 }
 
 /* Article template css ends here */
+
+.bankassist-template-attachment .bankassist-attachments{
+    border: 1px solid var(--sdk-chat-widow-primary-border-color);
+    /* display: inline-block; */
+    font-size: 12px;
+    cursor: pointer;
+    background: var(--sdk-chat-widow-default-white);
+    position: relative;
+    border-radius: 5px;
+    padding-top: 4px;
+    color: var(--sdk-chat-widow-primary-font-color);
+    padding: 2px 5px;
+    /* width: 100%;
+    margin: 2px 0; */
+    display: block;
+    width: 40px;
+    text-align: center;
+    margin: 10px auto 0 auto;
+ }
+ .bankassist-template-attachment .bankassist-attachments .uploadIcon{
+    padding: 5px;
+    text-align: center;
+ }
+ .bankassist-template-attachment .bankassist-attachments .uploadIcon .attachment-icon{
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAArRJREFUOBHNk9lL1FEUx8+5v1m0GaJFDCqIguwhH7TAhyLIhVKQoqKBolnK3MZIrRlpgx4iKWexglkUYTatmDBaHlo0if6BIEIxgoaIDMQXq7Gx3++e7h1TpMV69Dzc++N3zv3cc77nXIDFZvg/CQWDfcvT8P0SByhDoFUE+AYQ4u4GexgRSTLYv0D+UKzkK02/JIKxXKOxYl2eKV+n6OqQqMoTij0gomwyC4J8gcQ2jeiugjorKDg0lcn0p8bTKVVV7QK4T2RH3nC8acGM/MHEDo5aEhgeVJlqIo2SyPCKUce2I8LW1ES6TlH054G47a8gTyiyUwPtloK4nxGsRA7dyFiV0OR+c73tPRLeAYKi4oI1I0Kggj+CPMFYBXFM6BRlDye+WpQWQKavdDfaXssDnnjcREC1Quynr0Y/rhcCpX4DdYQjlUK8iKIo1RrxDULgawZQdrkajgzL4EAyaaYv2iMBGWxrdPRPa6pbZHZP+nRykeYLxao550EQJXBSC4Fju2LUVbQct76V/hu9vUvT4+nHot3P3U7HOW8wWkfAS4ToJdKf7VpnV2KLKCOoI2W3aESRyOQyGFj5qZ+Qzkhk2bdJdUA0eiALCcScYqZaxBhUWSyW6TmQqmk+hszZ2mQbAeCFzGAoc9fa3skAf09yhTqFg+LGh21Ox0VvINbMgZwGvaG0td46JmOkZUsT4hWbWeET+cPtPHpG7tK8XTfztEx6ABBvu5z2qx2BqIuQrDk5S0pPHrOMz0TNrDMDSfhhkg9vmu/whOL5XM0MIYNet4SEImfE/BzONWHZrxB5LgtCZO1isOL+7uhm0TUmJ5pIeyEGsMfV6PCJcpxC/AMm0JefsNsn5l84+z33aL3h6CGu0VlRxlrhHFUYXDjd4HgmA6+H+zaa9eZPNTV7P88eXPz7D7bgIIOYUOjZAAAAAElFTkSuQmCC);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    height: 18px;
+    width: 18px;
+    display: block;
+    background-position: center;
+ }

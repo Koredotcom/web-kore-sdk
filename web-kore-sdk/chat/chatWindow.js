@@ -2742,7 +2742,6 @@
                         <div role="textbox" class="chatInputBox" contenteditable="true" placeholder="${botMessages.message}"></div> \
                         {{/if}} \
                     <div class="footerIonsContainer">\
-                    <div class="attachment"></div> \
                     {{if isTTSEnabled}} \
                         <div class="sdkFooterIcon ttspeakerDiv ttsOff"> \
                             <button class="ttspeaker" title="Text to Speech"> \
@@ -2766,12 +2765,13 @@
                     {{/if}}\
                     <div class="sdkFooterIcon"> \
                         <button class="sdkAttachment attachmentBtn" title="Attachment"> \
-                            <i class="paperclip"></i> \
+                            <div class="attachmentIcon"></div> \
                         </button> \
                         <input type="file" name="Attachment" class="filety" id="captureAttachmnts" title="Upload attachment"> \
                     </div> \
                     {{if !(isSendButton)}}<div class="chatSendMsg">Press enter to send</div>{{/if}} \
                     </div>\
+                    <div class="attachment"></div> \
                 </div>';
 
                 var chatWindowTemplate = '<script id="chat_window_tmpl" type="text/x-jqury-tmpl"> \
@@ -4534,7 +4534,7 @@
                 }
             };
             function getFileToken(_obj, _file, recState) {
-                var auth = (bearerToken) ? bearerToken : assertionToken;
+                var auth = "bearer " + window.jwtDetails.authorization.accessToken;
                 $.ajax({
                     type: "POST",
                     url: koreAPIUrl + "1.1/attachment/file/token",
@@ -4548,10 +4548,10 @@
                     },
                     error: function (msg) {
                         chatInitialize.config.botOptions._reconnecting=true;
-                        _self.showError("Failed to upload file.Please try again");
+                        showError("Failed to upload file.Please try again");
                         if(msg.responseJSON && msg.responseJSON.errors && msg.responseJSON.errors.length && msg.responseJSON.errors[0].httpStatus==="401"){
                             setTimeout(function(){
-                                _self.hideError();
+                                hideError();
                             },5000);
                             $(".kore-chat-window .reload-btn").trigger("click");
                         }

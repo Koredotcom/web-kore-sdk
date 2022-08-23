@@ -158,6 +158,19 @@
 			 $(messageHtml).data(msgData);
 			 this.articleTemplateEvents(messageHtml,msgData);
 		}
+		else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == "attachment") {
+			if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.text) {
+				messageHtml = $(this.getChatTemplate("bankAssistAttachment")).tmpl({
+					'msgData': msgData,
+					'helpers': this.helpers,
+				   'extension': this.extension
+				});
+				this.bankAssistAttachmentEvents(messageHtml);
+			}
+			setTimeout(function () {
+				$(".attachmentIcon").trigger('click');
+			});
+		} 
 		else if (msgData && msgData.message[0] && msgData.message[0].cInfo && msgData.message[0].cInfo.body && this.toCheckBankingFeedbackTemplate(msgData)) {
 			return;
 		}
@@ -1804,6 +1817,27 @@ print(JSON.stringify(message)); */
 		{{/if}} \
 	</script>';
 
+	var bankAssistAttachment = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+    {{if msgData.message}} \
+        {{each(key, msgItem) msgData.message}} \
+            {{if msgItem.cInfo && msgItem.type === "text"}} \
+                <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
+                    {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+                    {{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+                    <div class="messageBubble bankassist-template-attachment">\
+                                 <span class="simpleMsg" {{if msgData}}msgData="${JSON.stringify(msgData)}" {{/if}}>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload && msgData.message[0].component.payload.text, "bot",msgItem)}}</span> \
+                            <div class="bankassist-attachments"> \
+                                <div class="uploadIcon"> \
+                                        <span class="attachment-icon"></span> \
+                                </div> \
+                            </div> \
+                    </div> \
+                </li> \
+            {{/if}} \
+        {{/each}} \
+    {{/if}} \
+    </scipt>';
+
 	
 		if (tempType === "dropdown_template") {
 			return dropdownTemplate;
@@ -1836,6 +1870,9 @@ print(JSON.stringify(message)); */
 		else if(tempType === "articleTemplate"){
 			return articleTemplate;
 		} 
+		else if(tempType === "bankAssistAttachment") {
+            return bankAssistAttachment;
+        }
 		else {
 			return "";
 		}
@@ -3152,7 +3189,7 @@ print(JSON.stringify(message)); */
 		});
 	}
 	/* advanced List template actions end here */
-
+     /* article template events starts here */
 	customTemplate.prototype.articleTemplateEvents = function (ele, messageData) {
 		if (this.chatInitialize) {
 			chatInitialize = this.chatInitialize;
@@ -3246,6 +3283,19 @@ print(JSON.stringify(message)); */
 
 		});
 	}
+
+	 /* article template events Ends here */
+
+	    /* Bank Assist attachment events starts here */
+		customTemplate.prototype.bankAssistAttachmentEvents = function (ele) {
+			$(ele).off('click', '.bankassist-attachments .uploadIcon').on('click', '.bankassist-attachments .uploadIcon', function (e) {
+				e.stopPropagation();
+				setTimeout(function () {
+					$(".attachmentIcon").trigger('click');
+				});
+			});
+		};
+		/* Bank Assist attachment events ends here */
 
 	    window.customTemplate=customTemplate;	
 
