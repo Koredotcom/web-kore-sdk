@@ -2732,6 +2732,9 @@ print(JSON.stringify(message)); */
 				$('.chatInputBox').text(parsedActionObj.payload ||parsedActionObj.title);
 				var _innerText = parsedActionObj.renderMessage || parsedActionObj.title;
 				chatInitialize.sendMessage($('.chatInputBox'), _innerText);
+				bottomSliderAction('hide');
+				var container = chatInitialize.config.chatContainer;
+				$(container).find(".advanced-list-wrapper").css({"pointer-events":"none"});
 				$ele.find(".advanced-list-wrapper").css({"pointer-events":"none"});
 			} else if (type && type == "url" || type == "web_url") {
 				if ($(this).attr('msgData') !== undefined) {
