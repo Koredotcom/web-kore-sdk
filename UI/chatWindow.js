@@ -2288,6 +2288,10 @@
                         extension=strSplit(_extractedFileName);
                     }
                 }
+                if (msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.fileUrl) {
+                    extension = strSplit(msgData.message[0].component.payload.fileUrl);
+                    _extractedFileName = msgData.message[0].component.payload.fileUrl.replace(/^.*[\\\/]/, '');
+                }
 
                 /* checking for matched custom template */
                 messageHtml = me.customTemplateObj.renderMessage(msgData);
@@ -2912,7 +2916,8 @@
                         messageHtml = $(me.getChatTemplate("message")).tmpl({
                             'msgData': msgData,
                             'helpers': helpers,
-                            'extension': extension
+                            'extension': extension,
+                            'extractedFileName': _extractedFileName
                         });
                     }
 
@@ -3186,8 +3191,21 @@
                                             {{if msgData.type === "bot_response"}} \
                                                 {{if msgItem.component  && msgItem.component.type =="error"}} \
                                                     <span style="color:${msgItem.component.payload.color}">{{html helpers.convertMDtoHTML(msgItem.component.payload.text, "bot",msgItem)}} </span>\
-                                                {{else}} \
+                                                    {{else}} \
+                                                    {{if msgItem.component && msgItem.component.type == "message" && msgItem.component.payload.fileUrl}} \
+                                                     <div class="msgCmpt botResponseAttachments" fileid="${msgItem.component.payload.fileUrl}"> \
+                                                        <div class="uploadedFileIcon"> \
+                                                          {{if extension[extension.length-1]=="xlsx" || extension[extension.length-1]=="xls" || extension[extension.length-1]=="docx" || extension[extension.length-1]=="doc" || extension[extension.length-1]=="pdf" || extension[extension.length-1]=="ppsx" || extension[extension.length-1]=="pptx" || extension[extension.length-1]=="ppt" || extension[extension.length-1]=="zip" || extension[extension.length-1]=="rar"}}\
+                                                             <span class="icon cf-icon icon-files_${extension[extension.length-1]}"></span> \
+                                                          {{else extension[extension.length-1]}}\
+                                                             <span class="icon cf-icon icon-files_other_doc"></span> \
+                                                          {{/if}}\
+                                                        </div> \
+                                                        <div class="botuploadedFileName">${extractedFileName}</div> \
+                                                    </div> \
+                                                    {{else}} \
                                                     <span class="simpleMsg" {{if msgData}}msgData="${JSON.stringify(msgData)}" {{/if}}>{{html helpers.convertMDtoHTML(msgItem.cInfo.body, "bot",msgItem)}}</span> \
+                                                    {{/if}} \
                                                     {{if msgItem.component && msgItem.component.payload && msgItem.component.payload.videoUrl}}\
                                                         <div class="videoEle"><video width="300" controls><source src="${msgItem.component.payload.videoUrl}" type="video/mp4"></video></div>\
                                                     {{/if}}\
@@ -3248,7 +3266,7 @@
                                         <div class="msgCmpt botResponseAttachments"  download="${msgItem.component.payload.download}" fileid="${msgItem.component.payload.url}"> \
                                             <div class="uploadedFileIcon"> \
                                                 {{if msgItem.component.type == "image"}} \
-                                                    <span class="icon cf-icon icon-photos_active"></span> \
+                                                <img class="image-size" src="${msgItem.component.payload.url}"> \
                                                 {{else msgItem.component.type == "audio"}}\
                                                     <span class="icon cf-icon icon-files_audio"></span> \
                                                 {{else msgItem.component.type == "video"}} \
