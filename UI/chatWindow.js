@@ -3778,7 +3778,12 @@
                                 //dont show the the history message if we already have same message came from socket connect  
                                 if (!_ignoreMsgs.length) {
                                     try {
-                                        msgData.message[0].cInfo.body = JSON.parse(msgData.message[0].cInfo.body);
+                                        var parsedBodyResponse = JSON.parse(msgData.message[0].cInfo.body);
+                                        if(parsedBodyResponse && (typeof parsedBodyResponse === 'number')){
+                                            msgData.message[0].cInfo.body = msgData.message[0].cInfo.body.toString();
+                                        } else {
+                                            msgData.message[0].cInfo.body = parsedBodyResponse;
+                                        }
                                         if (msgData.message[0].cInfo.body && msgData.message[0].cInfo.body.text) {
                                             msgData.message[0].cInfo.body = msgData.message[0].cInfo.body.text;
                                         }
