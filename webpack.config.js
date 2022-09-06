@@ -185,19 +185,17 @@ module.exports= function(env,argv){
     if (env.kore_env==='prod') {
         config.mode='production';
         config.optimization= {
-          // minimize: true,
-          minimize: false,
-
-          // minimizer: [
-          //   new TerserPlugin({
-          //     extractComments: false,
-          //     terserOptions: {
-          //       format: {
-          //         comments: false,
-          //       },
-          //     },
-          //   }),
-          // ],
+          minimize: true,
+          minimizer: [
+            new TerserPlugin({
+              extractComments: false,
+              terserOptions: {
+                format: {
+                  comments: false,
+                },
+              },
+            }),
+          ],
         }
     }
     
