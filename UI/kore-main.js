@@ -366,6 +366,6 @@
 
         
         
-    });
+    };
 
 })(jQuery || (window.KoreSDK && window.KoreSDK.dependencies && window.KoreSDK.dependencies.jQuery));
