@@ -946,10 +946,10 @@
                 var me=chatInitialize;
                 if (event.target === window) {
                      chatInitialize.setCollapsedModeStyles();
-                    var _width = $('#chatContainer').width() - 400;
+                    var _width = $('#chatContainer').width() - 480;
                     //$('.kore-chat-window').attr('style','left: '+_width+'+px');
                 }
-                if (($('.kore-chat-window').width() > 400) || (document.getElementsByClassName('kore-chat-window').length && document.getElementsByClassName('kore-chat-window')[0].classList.contains('expanded'))) {
+                if (($('.kore-chat-window').width() > 480) || (document.getElementsByClassName('kore-chat-window').length && document.getElementsByClassName('kore-chat-window')[0].classList.contains('expanded'))) {
                     var _koreChatWindowHeight = $('.kore-chat-window').width();
                     $('.carousel').attr('style', 'width: ' + (_koreChatWindowHeight - 85) + 'px !important');
                 } else {
@@ -1059,7 +1059,7 @@
                 }
             }
             chatWindow.prototype.setCollapsedModeStyles = function (){
-                $('.kore-chat-window').css({left:$('body').width()-400,width:'400px'});
+                $('.kore-chat-window').css({left:$('body').width()-480,width:'480px'});
             }
             chatWindow.prototype.setLocalStoreItem = function (key,value){
                 var me=this;
@@ -1293,7 +1293,7 @@
                     .resizable({
                         handles: "n, e, w, s",
                         containment: "document",
-                        minWidth: 400
+                        minWidth: 480
                     });
                 _chatContainer.off('keyup', '.chatInputBox').on('keyup', '.chatInputBox', function (event) {
                     var _footerContainer = $(me.config.container).find('.kore-chat-footer');
