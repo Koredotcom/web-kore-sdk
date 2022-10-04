@@ -16,7 +16,8 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   var WEB_EVENTS=clients.CLIENT_EVENTS.WEB;
   var jstz = require('./jstz.js');
   var noop = lodash.noop;
-  
+  var historyOffset = 0;
+  var previousHistoryLoading= false;
   if(typeof window !== "undefined"){
     window.kore = window.kore || {};
     window.kore.botsdk = window.kore.botsdk || {};
@@ -49,6 +50,8 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     this.debug=debug;
     this.userLocation=userLocation;
     //this.removeClass=removeClass;
+    this.historyOffset = 0;
+    this.previousHistoryLoading = false;
   }
   var userLocation = {
       "city": "",
@@ -442,13 +445,17 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     var __opts__ = {};
     __opts__.forward = opts.forward;
     __opts__.limit = opts.limit || 10; // 10 is the max size.
+    __opts__.offset = this.historyOffset;
+    this.historyOffset = this.historyOffset +( opts.limit?  opts.limit : 10);
       
     if (__opts__.forward) {
       if (this.latestId)
         __opts__.msgId = this.latestId;
     } else {
-      if (this.oldestId)
+      if(!this.previousHistoryLoading){
+        if (this.oldestId)
         __opts__.msgId = this.oldestId;
+      }
     }
   
     __opts__.botInfo = this.options.botInfo;
