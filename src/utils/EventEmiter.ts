@@ -56,7 +56,7 @@ class EventEmiter{
     }
     // If second parameter is not given first one has to be callback and it will run on any event.
     // If event parameter is an array then it will add cb to all members of array
-    on(event: any, cb: any, once:any){
+    on(event: any, cb?: any, once?:any){
         if(!cb){
             cb = event;
             event = false;
@@ -87,7 +87,7 @@ class EventEmiter{
         throw TypeError("Event has to be string or array of strings or false/undefined to receive all events.");
     }
 
-    once(event: any, cb: any){
+    once(event: any, cb?: any){
         return this.on(event, cb, true);
     }
 
