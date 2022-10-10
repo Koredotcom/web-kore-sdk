@@ -718,6 +718,7 @@ bindEvents  () {
   
   _chatContainer.on('click', '.close-btn', (event: any) => {
     me.destroy();
+    bot.historyOffset = 0;
     if (me.config.multiPageApp && me.config.multiPageApp.enable) {
       me.removeLocalStoreItem('kr-cw-state');
       me.removeLocalStoreItem('kr-cw-uid');
@@ -803,6 +804,19 @@ bindEvents  () {
     setTimeout(() => {
       me.resetWindow();
     });
+  });
+
+  _chatContainer.find('.kore-chat-body .chat-container').on('scroll',(event: any) => {
+    if (me?.config?.history?.paginatedScroll?.enable) {
+      var div = $(event.currentTarget);
+      if (div[0].scrollHeight - div.scrollTop() == div.height()) {
+        bot.previousHistoryLoading = false;
+      }
+      else if (div.scrollTop() == 0) {
+        bot.previousHistoryLoading = true;
+        bot.getHistory({limit:(me?.config?.history?.paginatedScroll?.batchSize)});
+      }
+    }
   });
   me.bindSDKEvents();
 };
@@ -1275,7 +1289,12 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
         _chatContainer.append(messageHtml);
       }
     } else {
-      _chatContainer.append(messageHtml);
+      if(bot && !bot.previousHistoryLoading){
+        _chatContainer.append(messageHtml);
+      }else{
+        _chatContainer.prepend(messageHtml);
+      }
+
     }
   }
   //}
@@ -1284,9 +1303,11 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   if (me.chatPSObj && me.chatPSObj.update) {
     me.chatPSObj.update();
   }
+  if(bot && !bot.previousHistoryLoading){
   _chatContainer.animate({
     scrollTop: _chatContainer.prop('scrollHeight'),
   }, 100);
+  }
   me.emit(me.EVENTS.AFTER_RENDER_MSG,{
     messageHtml:messageHtml,
     msgData:msgData
@@ -1491,6 +1512,10 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
     if (res && res[1] && res[1].messages.length > 0) {
       $('.chat-container').hide();
       $('.historyLoadingDiv').addClass('showMsg');
+      if(bot.previousHistoryLoading){
+        res[1].messages =  res[1].messages.sort((a:any, b:any) => a['createdOn'].localeCompare(b['createdOn']));
+        res[1].messages = res[1].messages.reverse()
+      }
       res[1].messages.forEach((msgData: { messageId: any; message: { cInfo: { body: string; }; }[]; } | any, index: number) => {
         setTimeout((messagesQueue) => {
          
@@ -1535,11 +1560,13 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
           if (index === res[1].messages.length - 1) {
             setTimeout((messagesQueue) => {
               $('.chat-container').show();
-              $('.chat-container').animate({
-                scrollTop: $('.chat-container').prop('scrollHeight'),
-              }, 2500);
               $('.historyLoadingDiv').removeClass('showMsg');
-              $('.chat-container').append("<div class='endChatContainer'><span class='endChatContainerText'>End of chat history</span></div>");
+              if(!bot.previousHistoryLoading){
+                  $('.chat-container').animate({
+                    scrollTop: $('.chat-container').prop('scrollHeight'),
+                  }, 2500);
+                  $('.chat-container').append("<div class='endChatContainer'><span class='endChatContainerText'>End of chat history</span></div>");
+              }
               if (messagesQueue.length) {
                 messagesQueue.forEach((msg: any, currIndex: number) => {
                   me.renderMessage(msg);
