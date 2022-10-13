@@ -59,7 +59,7 @@ chatWindowInstance.show(chatConfig);
 
 ```
 ### Examples
-Click [here](/docs/sdkdeveloper) to explore different vairations how SDK can be consumed 
+Click [here](/docs/sdkdeveloper) to explore different variations how SDK can be consumed 
 
 ### Other options
 <details>
