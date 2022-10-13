@@ -8,7 +8,7 @@ class PieChartTemplate {
         let me: any = this;
         let $ = me.hostInstance.$;
         let helpersObj = helpers;
-        if (msgData?.message[0]?.component?.payload?.template_type === "piechart") {
+        if (msgData?.message?.[0]?.component?.payload?.template_type === "piechart") {
             me.messageHtml = $(me.getTemplateString('pieChartTemplate')).tmpl({
                 'msgData': msgData,
                 'helpers': helpersObj.helpers

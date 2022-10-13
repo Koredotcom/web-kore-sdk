@@ -7,7 +7,7 @@ class AdvancedMultiSelectTemplate {
         let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
-        if (msgData?.message[0]?.component?.payload?.template_type === "advanced_multi_select") {
+        if (msgData?.message?.[0]?.component?.payload?.template_type === "advanced_multi_select") {
             me.messageHtml = $(me.getTemplateString('advancedMultiSelect')).tmpl({
                 'msgData': msgData,
                 'helpers': helpersObj.helpers

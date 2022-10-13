@@ -296,6 +296,44 @@
 				padding-left: 5px;
 			}
 		}
+		li.no-animate-messge-bubble{
+			.messageBubble{
+				animation:none;
+			}
+		}
+		.paginted-history-loader{
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			position: sticky;
+			top: 0;
+			z-index: 99;
+			.historyWarningTextDiv {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin: -10px 0 12px 0;
+				background: transparent;
+				padding: 10px;
+				border-radius: 4px;
+				box-shadow: 0 6px 20px 0 rgb(0 0 0 / 15%);
+				position: relative;
+				background: #fff;
+				span{
+					img{
+						width: 16px;
+						height: 16px;
+						position: relative;
+						top: 1px;
+					}
+				}
+				.warningTip{
+					margin: 0;
+					font-size: 14px;
+					margin-left: 8px;
+				}
+			}
+		}
 	}
 	.sendBtnCnt {
 		.disabled {

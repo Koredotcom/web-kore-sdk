@@ -5,7 +5,7 @@ class RadioOptionPickerTemplate {
     renderMessage(msgData: any) {
         let me: any = this;
         let $ = me.hostInstance.$;
-        if (msgData?.message[0]?.component?.payload?.template_type === "radioOptionTemplate" && !msgData.fromHistory) {
+        if (msgData?.message?.[0]?.component?.payload?.template_type === "radioOptionTemplate" && !msgData.fromHistory) {
             me.messageHtml = $(me.getTemplateString());
             me.initiateRadioOptionPicker(msgData);
             me.bindEvents();

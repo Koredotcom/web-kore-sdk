@@ -130,7 +130,7 @@ class chatWindow extends EventEmitter{
   this.config={};
   this.init(this.config);
 }
-
+paginatedScrollMsgDiv: any = $('<div class="temp-message-div"><ul class="prev-message-list"></ul></div>');
 init  (config:any) {
   const me:any = this;
   me.config=me.extend(me.config,chatConfig);
@@ -814,6 +814,16 @@ bindEvents  () {
       }
       else if (div.scrollTop() == 0) {
         bot.previousHistoryLoading = true;
+        let message = me?.config?.history?.paginatedScroll?.loadingLabel || 'Loading chat history..';
+        let paginatedHistoryLoader = $('<div class="paginted-history-loader">\
+                                          <div class="historyWarningTextDiv displayTable">  \
+                                             <span><img class="loadingHistory" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAARCAYAAAA7bUf6AAAAAXNSR0IArs4c6QAAAYZJREFUOBGtVLFKA0EQfbMiiERQEgjpRQt/wULB/opIFCuJvb1iKdprbbASDaa4L9DCX7BQ7CVwQcEggph13t7t3RlivMKBsDsz701mZ9+eYNjaNyX0e9saDmCxZJv1mrQ6zxDcayxEqXyOxmo/TzN5B2fXDbxFT7D2VH9rgK3FeV3pM848cTnLirQ6e0q60lw1lx+11bziHD5Oi1tcZVfAkyIYOYRM3GF69gHvr4uwX8sY2AMFVDwIkA3srLcFnAFb9B2I3GJqchNbQTcDJ7uLsIqPz0s91koS6WKmMm+SIfojRL8WIIuF+QdAlBSpks+ZBEkA7gijOkgBumGeR80sMLzG1OcMilgep3wDseWUxyEWsTnzmMKUr51ILw3wForYy2AhhSlfO3FKjGO8xiKWxymfgw1THnXAaxxnzMd68ajQuLcAeE1UnA5+K+R1kgmuS/4/KdY3xbdgB0fe/XMVs49m/Zi4uBPPiN/Qibrj5qJHl12+GU/7WYTRoe+J0xFlMOZ78g1n4achujvX7QAAAABJRU5ErkJggg=="></span>                \
+                                             <p class="headerTip warningTip">'+message+'</p>\
+                                            </div>\
+                                        </div>');
+        if(!(_chatContainer.find('.paginted-history-loader').length)){
+          $(paginatedHistoryLoader).insertBefore(_chatContainer.find('.chat-container li:first'));
+        }
         bot.getHistory({limit:(me?.config?.history?.paginatedScroll?.batchSize)});
       }
     }
@@ -1292,7 +1302,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
       if(bot && !bot.previousHistoryLoading){
         _chatContainer.append(messageHtml);
       }else{
-        _chatContainer.prepend(messageHtml);
+        $(this.paginatedScrollMsgDiv).find('.prev-message-list').append(messageHtml);
       }
 
     }
@@ -1472,12 +1482,34 @@ getChatTemplate (tempType: string) {
 
 historyLoadingComplete () {
   const me:any = this;
+  const _chatContainer = me.chatEle;
   setTimeout((me) => {
     $('.chatInputBox').focus();
     $('.disableFooter').removeClass('disableFooter');
     me.historyLoading = false;
     if (me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) {
       me.getBotMetaData();
+    }
+    if ($(this.paginatedScrollMsgDiv).find('.prev-message-list li').length > 0 && bot.previousHistoryLoading) {
+      let paginatedLi = $(this.paginatedScrollMsgDiv).find('.prev-message-list li');
+      if (paginatedLi && paginatedLi.length) {
+        for (var i = 0; i < paginatedLi.length; i++) {
+          var tempLi = $(paginatedLi[i]);
+          tempLi.addClass('no-animate-messge-bubble')
+        }
+      }
+      let _existingLi = $(this.paginatedScrollMsgDiv).find('.prev-message-list li');
+      $(this.paginatedScrollMsgDiv).find('.prev-message-list li').insertBefore(_chatContainer.find('.chat-container li:first'));
+      let _heightTobeScrolled = 0;
+      if (_existingLi && _existingLi.length) {
+        for (var i = 0; i < _existingLi.length; i++) {
+          var tempLi = $(_existingLi[i]);
+          _heightTobeScrolled = _heightTobeScrolled + tempLi.height();
+        }
+      }
+      _chatContainer.find('.chat-container').scrollTop(_heightTobeScrolled);
+      $(this.paginatedScrollMsgDiv).find('.prev-message-list').empty();
+      _chatContainer.find('.paginted-history-loader').remove();
     }
   }, 0, me);
 };
@@ -1510,11 +1542,9 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
   } else if (me.loadHistory) {
     me.historyLoading = true;
     if (res && res[1] && res[1].messages.length > 0) {
-      $('.chat-container').hide();
-      $('.historyLoadingDiv').addClass('showMsg');
-      if(bot.previousHistoryLoading){
-        res[1].messages =  res[1].messages.sort((a:any, b:any) => a['createdOn'].localeCompare(b['createdOn']));
-        res[1].messages = res[1].messages.reverse()
+      if(!bot.previousHistoryLoading){
+        $('.chat-container').hide();
+        $('.historyLoadingDiv').addClass('showMsg');
       }
       res[1].messages.forEach((msgData: { messageId: any; message: { cInfo: { body: string; }; }[]; } | any, index: number) => {
         setTimeout((messagesQueue) => {

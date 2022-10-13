@@ -59,7 +59,8 @@ chatConfig = {
     history:{
         paginatedScroll: {
             enable : true,  // set true to load history when the user scrolls up.
-            batchSize  : 10 // To configure the number of messages to load when the user scroll
+            batchSize  : 10, // To configure the number of messages to load when the user scroll,
+            loadingLabel:'Loading old messages' // Loading label will be displayed when the user uses paginated scroll
         } 
     }
 };

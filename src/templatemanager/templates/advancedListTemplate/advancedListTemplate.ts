@@ -7,7 +7,7 @@ class AdvancedListTemplate {
         let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
-        if (msgData?.message[0]?.component?.payload?.template_type === "advancedListTemplate") {
+        if (msgData?.message?.[0]?.component?.payload?.template_type === "advancedListTemplate") {
             me.messageHtml = $(me.getTemplateString('advancedListTemplate')).tmpl({
                 'msgData': msgData,
                 'helpers': helpersObj.helpers

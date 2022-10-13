@@ -20,7 +20,7 @@ class DatePickerTemplate {
     renderMessage(msgData: any) {
         let me: any = this;
         let $ = me.hostInstance.$;
-        if (msgData?.message[0]?.component?.payload?.template_type === "dateTemplate" && !msgData.fromHistory) {
+        if (msgData?.message?.[0]?.component?.payload?.template_type === "dateTemplate" && !msgData.fromHistory) {
             me.messageHtml = $(me.getTemplateString('datePickerTemplate'));
             me.initiateDatePicker(msgData);
             me.addClickEventCalender(msgData)

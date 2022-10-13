@@ -9,7 +9,7 @@ class ListTemplate {
         let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
-        if (msgData?.message[0]?.component?.payload?.template_type === "list") {
+        if (msgData?.message?.[0]?.component?.payload?.template_type === "list") {
             me.messageHtml = $(me.getTemplateString()).tmpl({
                 'msgData': msgData,
                 'helpers': helpersObj.helpers

@@ -7,7 +7,7 @@ class CardTemplate {
         let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
-        if (msgData?.message[0]?.component?.payload?.template_type === "cardTemplate") {
+        if (msgData?.message?.[0]?.component?.payload?.template_type === "cardTemplate") {
             me.messageHtml = $(me.getTemplateString('cardTemplate')).tmpl({
                 'msgData': msgData,
                 'helpers': helpersObj.helpers

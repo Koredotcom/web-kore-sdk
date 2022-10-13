@@ -8,7 +8,7 @@ class BarChartTemplate {
   let $ = me.hostInstance.$;
     const helpersObj = helpers;
 
-    if (msgData?.message[0]?.component?.payload?.template_type === 'barchart') {
+    if (msgData?.message?.[0]?.component?.payload?.template_type === 'barchart') {
       me.messageHtml = $(me.getTemplateString('barchartTemplate')).tmpl({
         msgData,
         helpers: helpersObj.helpers,

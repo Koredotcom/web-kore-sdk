@@ -104,6 +104,7 @@ declare class chatWindow extends EventEmitter {
         JWT_GRANT_SUCCESS: string;
     };
     constructor();
+    paginatedScrollMsgDiv: any;
     init(config: any): void;
     installDefaultPlugins(): void;
     installCallbackForPlugins(): void;
