@@ -540,9 +540,9 @@ class AdvancedListTemplate {
 				me.openExternalLink(a_link);
 			}
 			if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[0] === 'submitBtn') {
-				var checkboxSelection = $(e.currentTarget.parentElement.parentElement).find('.option-input:checked')
-				var selectedValue = [];
-				var postBack:any = [];
+				const checkboxSelection:any = $(e.currentTarget.parentElement.parentElement).find('.option-input:checked')
+				const selectedValue:any = [];
+				const postBack:any = [];
                 var _innerText;
 				for (var i = 0; i < checkboxSelection.length; i++) {
 					selectedValue.push($(checkboxSelection[i]).attr('value'));

@@ -86,9 +86,9 @@ class QuickReplyTemplate {
             }
 
             if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[0] === 'checkboxBtn') {
-                const checkboxSelection = $(e.currentTarget.parentElement.parentElement).find('.checkInput:checked');
-                const selectedValue = [];
-                const toShowText = [];
+                const checkboxSelection:any = $(e.currentTarget.parentElement.parentElement).find('.checkInput:checked');
+                const selectedValue:any = [];
+                const toShowText:any = [];
                 for (let i = 0; i < checkboxSelection.length; i++) {
                     selectedValue.push($(checkboxSelection[i]).attr('value'));
                     toShowText.push($(checkboxSelection[i]).attr('text'));
