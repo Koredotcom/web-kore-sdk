@@ -3,6 +3,16 @@ import KoreGraphAdapter from '../../../libs/kore-graph-adapter/KoreGraphAdapter'
 import './barChartTemplate.scss';
 
 class BarChartTemplate {
+  config: any={
+    graphLib:'d3'
+};
+constructor(config:any) {
+    config=config ||{};
+    this.config = {
+        ...this.config,
+        ...config
+    }
+}
   renderMessage(msgData: any) {
     const me: any = this;
   let $ = me.hostInstance.$;
@@ -22,7 +32,7 @@ class BarChartTemplate {
   bindEvents(msgData: any) {
     const me: any = this;
     const chatWindowInstance = me.hostInstance;
-    KoreGraphAdapter.drawBarChartTemplate(msgData, me.messageHtml);
+    KoreGraphAdapter.drawBarChartTemplate(msgData, me.messageHtml,me.config);
     setTimeout(() => {
       chatWindowInstance.scrollTop();
       // $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));

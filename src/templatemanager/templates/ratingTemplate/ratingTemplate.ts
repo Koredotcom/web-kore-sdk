@@ -7,7 +7,7 @@ class RatingTemplate {
         let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
-        if (msgData?.message?.[0]?.component?.payload && (msgData?.message[0]?.component?.payload?.template_type === "feedbackTemplate" && (msgData.message[0].component.payload.view === "star" || msgData.message[0].component.payload.view === "emojis"))) {
+        if (msgData?.message[0]?.component?.payload && (msgData.message[0].component.payload.template_type && (msgData.message[0].component.payload.template_type === "feedbackTemplate" && (msgData.message[0].component.payload.view==="star"|| msgData.message[0].component.payload.view ==="emojis" || msgData.message[0].component.payload.view === "CSAT"|| msgData.message[0].component.payload.view ==="ThumbsUpDown" || msgData.message[0].component.payload.view === "NPS") ))){
             me.messageHtml = $(me.getTemplateString('ratingTemplate')).tmpl({
                 'msgData': msgData,
                 'helpers': helpersObj.helpers
@@ -85,8 +85,13 @@ class RatingTemplate {
             chatWindowInstance.bottomSliderAction("hide");
             e.stopPropagation();
         });
-        $(messageHtml).find(".emojiComponent").off('click', '.rating').on('click', '.rating', function (e: any) {
-            var msgData = $(messageHtml).data();
+        $(messageHtml).find(".emojiComponent,.thumpsUpDownComponent,.numbersComponent").off('click','.rating').on('click','.rating',function(e: any){
+            var msgData: any;
+            if ($(messageHtml).data().tmplItem && $(messageHtml).data().tmplItem.data && $(messageHtml).data().tmplItem.data.msgData) {
+                msgData = $(messageHtml).data().tmplItem.data.msgData
+            } else {
+                msgData = $(messageHtml).data();
+            }
             var sliderValue = msgData.message[0].component.payload.sliderView;
             if ($(messageHtml).find(".emojiComponent .active").length == "0") {
                 $(".emojiElement").remove();
@@ -112,13 +117,19 @@ class RatingTemplate {
             }
             if ($(selectedTarget).attr("value") < "5") {
                 $(".ratingStar").remove();
-                if ($(".submitButton")) {
+                if($(".submitButton")){
                     $(".submitButton").remove();
                 }
-                if ($(".suggestionsMainComponent").length > 0) {
+                if($(".suggestionsMainComponent").length > 0){
                     $(".suggestionsMainComponent").remove();
                 }
+                if( $(".kore-action-sheet").find(".thumpsUpDownComponent").length){
+                $(".kore-action-sheet").find(".thumpsUpDownComponent").append(me.suggestionComponent());
+                }else if($(".kore-action-sheet").find(".numbersComponent").length){
+                    $(".kore-action-sheet").find(".numbersComponent").append(me.suggestionComponent());
+                }else{
                 $(".kore-action-sheet").find(".emojiComponent").append(me.suggestionComponent());
+                }
 
             } else {
                 if ($(".submitButton")) {
@@ -129,13 +140,19 @@ class RatingTemplate {
                 }
                 var messageTodisplay = msgData.message[0].component.payload.messageTodisplay;
                 $(".suggestionsMainComponent").remove();
-                $(".kore-action-sheet").find(".emojiComponent").append('<div class="ratingStar">' + messageTodisplay + '</div><div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>')
+                if( $(".kore-action-sheet").find(".thumpsUpDownComponent").length){
+                    $(".kore-action-sheet").find(".thumpsUpDownComponent").append('<div class="ratingStar">'+messageTodisplay+'</div><div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>')
+                }else  if( $(".kore-action-sheet").find(".numbersComponent").length){
+                    $(".kore-action-sheet").find(".numbersComponent").append('<div class="ratingStar">'+messageTodisplay+'</div><div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>')
+                }else{
+                $(".kore-action-sheet").find(".emojiComponent").append('<div class="ratingStar">'+messageTodisplay+'</div><div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>')
+                }
             }
             if (sliderValue === false) {
                 //chatWindowInstance.assignValueToInput(emojiValue)
                 chatWindowInstance.sendMessage(emojiValue);
             }
-            $(".emojiComponent").off('click', '.submitBtn').on('click', '.submitBtn', function () {
+            $(".emojiComponent,.thumpsUpDownComponent,.numbersComponent").off('click','.submitBtn').on('click','.submitBtn',function(e: any){
                 msgData.message[0].component.payload.sliderView = false;
                 if (emojiValue == "5") {
                     var messageTodisplay = msgData.message[0].component.payload.messageTodisplay
@@ -157,7 +174,7 @@ class RatingTemplate {
             });
 
         });
-        $(messageHtml).find(".buttonTmplContent .emojiComponent .close-btn").click(function (e: any) {
+        $(messageHtml).find(".buttonTmplContent .emojiComponent .close-btn,.buttonTmplContent .thumpsUpDownComponent .close-btn,.buttonTmplContent .numbersComponent .close-btn").click(function(e: any){
             chatWindowInstance.bottomSliderAction("hide");
 
             e.stopPropagation();
@@ -172,12 +189,13 @@ class RatingTemplate {
 </div>'
     }
     getTemplateString() {
-        var ratingTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+        var ratingTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
         <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
             <div class="buttonTmplContent"> \
                     {{if msgData.createdOn && !msgData.message[0].component.payload.sliderView}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                     {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+                    <div class="{{if msgData.message[0].component.payload.fromHistory}} dummy messageBubble {{else}}messageBubble{{/if}}"> \
                     {{if msgData.message[0].component.payload.fromHistory}}<ul class="fromHistory listTempView">\
                                   ${msgData.message[0].cInfo.body}</ul>\
                     {{else}}<ul class="listTmplContentBox rating-main-component"> \
@@ -192,20 +210,46 @@ class RatingTemplate {
                            {{/each}}\
                         </div>\
                       </div>\
-                      {{else msgData.message[0].component.payload.view == "emojis"}}\
-                      <div class="emojiComponent">\
+                      {{else msgData.message[0].component.payload.view == "emojis" || msgData.message[0].component.payload.view === "CSAT"}}\
+                      <div class="emojiComponent{{if msgData.message[0].component.payload.view === "CSAT"}} version2 {{else}} version1 {{/if}}">\
                       {{if msgData.message[0].component.payload.sliderView}}<button class="close-btn" title="Close"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button> {{/if}}\
-                      {{if msgData.message[0].component.payload.text}}<div class="templateHeading">${msgData.message[0].component.payload.text}</div>{{else}}Rate the chat session{{/if}}\
+                      {{if msgData.message[0].component.payload.text}}<div class="templateHeading text-heading-info">${msgData.message[0].component.payload.text}</div>{{else}}Rate the chat session{{/if}}\
+                      <div class="emojis-data">\
                       {{each(key, msgItem) msgData.message[0].component.payload.smileyArrays}}\
+                      <div class="emoji-rating">\
                          <div class="rating" id="rating_${msgItem.smileyId}" value="${msgItem.value}"></div>\
+                         <div class="emoji-desc">${msgItem.reviewText}</div>\
+                         </div>\
                       {{/each}}\
+                      </div>\
+                      {{else msgData.message[0].component.payload.view == "ThumbsUpDown"}}\
+                      <div class="thumpsUpDownComponent">\
+                      {{if msgData.message[0].component.payload.sliderView}}<button class="close-btn" title="Close"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button> {{/if}}\
+                      {{if msgData.message[0].component.payload.text}}<div class="templateHeading text-heading-info">${msgData.message[0].component.payload.text}</div>{{else}}Rate the chat session{{/if}}\
+                      <div class="emojis-data">\
+                      {{each(key, msgItem) msgData.message[0].component.payload.thumpsUpDownArrays}}\
+                      <div class="ratingValue emoji-rating">\
+                         <div class="rating" id="rating_${msgItem.thumpUpId}" value="${msgItem.value}"></div>\
+                         <div class="emoji-desc">${msgItem.reviewText}</div></div>\
+                      {{/each}}\
+                      </div>\
+                      {{else msgData.message[0].component.payload.view == "NPS"}}\
+                      <div class="numbersComponent">\
+                      {{if msgData.message[0].component.payload.sliderView}}<button class="close-btn" title="Close"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button> {{/if}}\
+                      {{if msgData.message[0].component.payload.text}}<div class="templateHeading text-heading-info">${msgData.message[0].component.payload.text}</div>{{else}}Rate the chat session{{/if}}\
+                      <div class="rating-numbers-data">\
+                      {{each(key, msgItem) msgData.message[0].component.payload.numbersArrays}}\
+                      <div class="ratingValue">\
+                         <div class="rating" id="rating_${msgItem.numberId}" {{if msgItem.color}}style="background:${msgItem.color}" {{/if}} value="${msgItem.value}">${msgItem.numberId}</div>\
+                         <div class="emoji-desc">${msgItem.reviewText}</div>\</div>\
+                      {{/each}}\
+                      </div>\
                       {{/if}}\
-                   </ul>{{/if}}\
+                   </ul>{{/if}}</div>\
             </div>\
             </li>\
         {{/if}} \
         </script>';
-
         return ratingTemplate;
     }
 

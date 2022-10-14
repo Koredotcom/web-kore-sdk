@@ -138,6 +138,32 @@ class QuickReplyTemplate {
                 }
             }
         });
+        $(messageHtml).off('click', '.quickreplyLeftIcon').on('click', '.quickreplyLeftIcon', function (event: any) {
+            const _quickReplesDivs = event.currentTarget.parentElement.getElementsByClassName('quickReplyTemplContentChild');
+            if(_quickReplesDivs.length) {
+                const _scrollParentDiv = event.target.parentElement.getElementsByClassName('quick_replies_btn_parent');
+                const _totalWidth = _scrollParentDiv[0].scrollLeft;
+                let _currWidth = 0;
+                for(let i=0;i<_quickReplesDivs.length;i++) {
+                    _currWidth += (_quickReplesDivs[i].offsetWidth+10);
+                    if(_currWidth > _totalWidth) {
+                        //_scrollParentDiv[0].scrollLeft = (_totalWidth - _quickReplesDivs[i].offsetWidth+20);
+                        $(_scrollParentDiv).animate({
+                            scrollLeft: (_totalWidth - _quickReplesDivs[i].offsetWidth-50)
+                        },'slow',function(){
+                            // deciding to enable left and right scroll icons
+                            const rightIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyRightIcon');
+                            rightIcon[0].classList.remove('hide');
+                            if(_scrollParentDiv[0].scrollLeft <= 0) {
+                                const leftIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyLeftIcon');
+                                leftIcon[0].classList.add('hide');
+                            }
+                        });
+                        break;
+                    }
+                }
+            }
+        });
     }
     getTemplateString() {
         var quickReplyTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \

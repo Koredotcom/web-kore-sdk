@@ -5,6 +5,7 @@ import PieChartTemplate from '../templatemanager/templates/pieChartTemplate/pieC
 class GraphTemplatesPlugin {
     name = 'GraphTemplatesPlugin';
     config = {
+        graphLib: "d3" // or google
     };
     hostInstance: any;
     constructor(config:any) {
@@ -29,9 +30,9 @@ class GraphTemplatesPlugin {
     installPickerTemplates(){
         let me=this;
         let templateManager = me.hostInstance.templateManager;
-        templateManager.installTemplate(new LineChartTemplate());
-		templateManager.installTemplate(new BarChartTemplate());
-		templateManager.installTemplate(new PieChartTemplate());
+        templateManager.installTemplate(new LineChartTemplate({}));
+		templateManager.installTemplate(new BarChartTemplate({}));
+		templateManager.installTemplate(new PieChartTemplate({}));
     }
     
 }
