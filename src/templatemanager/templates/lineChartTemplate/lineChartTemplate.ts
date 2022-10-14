@@ -6,7 +6,7 @@ class LineChartTemplate {
     config: any={
         graphLib:'d3'
     };
-    constructor(config:any) {
+    constructor(config?:any) {
         config=config ||{};
         this.config = {
             ...this.config,
