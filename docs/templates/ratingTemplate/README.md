@@ -37,7 +37,9 @@ print(JSON.stringify(message));
 
 <img width="302" alt="image" src="https://user-images.githubusercontent.com/53572776/195780280-7d35a0c9-d60e-4990-8001-1a85780fb457.png">
 
+###### Message Payload
 
+```js
 var message = {
     "type": "template",
     "payload": {
@@ -60,11 +62,13 @@ for(var i=1;i<=5;i++){
     message.payload.smileyArrays.push(smileyArray);
 }
 print(JSON.stringify(message));
-
+```
 
 <img width="304" alt="image" src="https://user-images.githubusercontent.com/53572776/195780545-4fb8e286-c73b-4cfc-b200-b2481721fabe.png">
 
+###### Message Payload
 
+```js
 var message = {
     "type": "template",
     "payload": {
@@ -88,10 +92,12 @@ for(var i=0;i<=10;i++){
     message.payload.numbersArrays.push(numberArray);
 }
 print(JSON.stringify(message)); 
-
+```
 <img width="301" alt="image" src="https://user-images.githubusercontent.com/53572776/195780717-6181d60f-6258-4874-bf1b-d6b3558fea68.png">
 
+###### Message Payload
 
+```js
 var message = {
     "type": "template",
     "payload": {
@@ -114,4 +120,4 @@ for(var i=0;i<=1;i++){
     message.payload.thumpsUpDownArrays.push(thumpsUpDownArray);
 }
 print(JSON.stringify(message)); 
-
+```
