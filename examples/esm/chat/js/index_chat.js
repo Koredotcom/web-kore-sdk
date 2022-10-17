@@ -1,11 +1,10 @@
 
 
-import {chatConfig,chatWindow, AgentDesktopPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
+import {chatConfig,chatWindow} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 
 
 let chatWindowInstance = new chatWindow();
 
-chatWindowInstance.installPlugin(new AgentDesktopPlugin()); 
 //OPTION #1
 let botOptions=chatConfig.botOptions;
 
