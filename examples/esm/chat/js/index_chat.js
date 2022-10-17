@@ -1,15 +1,14 @@
 
 
-import {chatConfig,chatWindow, AgentDesktopPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
+import {chatConfig,chatWindow} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 
 
 let chatWindowInstance = new chatWindow();
 
-chatWindowInstance.installPlugin(new AgentDesktopPlugin()); 
 //OPTION #1
 let botOptions=chatConfig.botOptions;
 
-botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
+botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE"; 
 botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
 botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
 botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";

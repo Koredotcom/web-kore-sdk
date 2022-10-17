@@ -1,5 +1,5 @@
-// import AgentDesktopPlugin from '../plugins/agentDesktop/agentdesktop';
+import AgentDesktopPlugin from '../plugins/agentDesktop/agentdesktop';
 
-// export {
-//     AgentDesktopPlugin
-// };
+export {
+    AgentDesktopPlugin
+};
