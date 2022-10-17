@@ -9,12 +9,12 @@ chatWindowInstance.installPlugin(new AgentDesktopPlugin());
 //OPTION #1
 let botOptions=chatConfig.botOptions;
 
-botOptions.koreAPIUrl = "https://bots.kore.ai/api";
-botOptions.JWTUrl = "https://demo.kore.net/users/sts"; // "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
-botOptions.userIdentity = 'User1@mailinator.com';// Provide users email id here
-botOptions.botInfo = { name: "instanceBot", "_id": "st-0512508f-d7d9-55b5-8afb-54e12c89483e" }; // bot name is case sensitive
-botOptions.clientId = "cs-5b8374a3-57f6-5784-b25e-5a5beb4bc5ac";
-botOptions.clientSecret = "aYMaRSyU4QAXvGK0YLE/ITvu1bAqIje+ujktiRounOo=";
+botOptions.koreAPIUrl = "PLEASE_ENTER_APIURL_HERE";
+botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE"; 
+botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
+botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
+botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
+botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 
 /* 
 Important Note: These keys are provided here for quick demos to generate JWT token at client side but not for Production environment.

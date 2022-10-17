@@ -19,14 +19,14 @@
   "module": "dist/kore-web-sdk.esm.browser.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:KambagiriswamyBo-Kore/web-kore-sdk.git#v2/9.3.0"
+    "url": "git@github.com:Koredotcom/web-kore-sdk.git#v2/9.3.0"
   },
   "author": "Rajasekhar Balla",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/KambagiriswamyBo-Kore/web-kore-sdk/issues"
+    "url": "https://github.com/Koredotcom/web-kore-sdk/issues"
   },
-  "homepage": "https://github.com/KambagiriswamyBo-Kore/web-kore-sdk#readme",
+  "homepage": "https://github.com/Koredotcom/web-kore-sdk#readme",
   "sideEffects": [
     "**/*.css",
     "**/*.scss"
@@ -35,7 +35,6 @@
     "@types/jquery": "^3.5.6",
     "@types/pubsub-js": "^1.8.3",
     "aws-sdk": "^2.1102.0",
-    "babel-runtime": "^6.26.0",
     "d3": "^7.1.1",
     "express": "~4.9.0",
     "jquery": "^3.6.0",
