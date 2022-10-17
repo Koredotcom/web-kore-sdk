@@ -3,6 +3,16 @@ import helpers from '../../../utils/helpers';
 import KoreGraphAdapter from '../../../libs/kore-graph-adapter/KoreGraphAdapter';
 import './lineChartTemplate.scss';
 class LineChartTemplate {
+    config: any={
+        graphLib:'d3'
+    };
+    constructor(config?:any) {
+        config=config ||{};
+        this.config = {
+            ...this.config,
+            ...config
+        }
+    }
     renderMessage(msgData: any) {
         let me: any = this;
         let $ = me.hostInstance.$;
@@ -20,7 +30,7 @@ class LineChartTemplate {
     bindEvents(msgData: any) {
         let me: any = this;
         let chatWindowInstance = me.hostInstance;
-        KoreGraphAdapter.drawlineChartTemplate(msgData,me.messageHtml);
+        KoreGraphAdapter.drawlineChartTemplate(msgData,me.messageHtml,me.config);
 
         setTimeout(() => {
             // $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));

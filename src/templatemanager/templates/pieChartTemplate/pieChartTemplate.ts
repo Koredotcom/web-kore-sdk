@@ -4,6 +4,16 @@ import KoreGraphAdapter from '../../../libs/kore-graph-adapter/KoreGraphAdapter'
 import './pieChartTemplate.scss';
 
 class PieChartTemplate {
+    config: any={
+        graphLib:'d3'
+    };
+    constructor(config?:any) {
+        config=config ||{};
+        this.config = {
+            ...this.config,
+            ...config
+        }
+    }
     renderMessage(msgData: any) {
         let me: any = this;
         let $ = me.hostInstance.$;
@@ -21,7 +31,7 @@ class PieChartTemplate {
     bindEvents(msgData: any) {
         let me: any = this;
         let chatWindowInstance = me.hostInstance;
-        KoreGraphAdapter.drawPieChartTemplate(msgData, me.messageHtml);
+        KoreGraphAdapter.drawPieChartTemplate(msgData, me.messageHtml,me.config);
         setTimeout(() => {
             // $('.chat-container').scrollTop($('.chat-container').prop('scrollHeight'));
             chatWindowInstance.scrollTop();

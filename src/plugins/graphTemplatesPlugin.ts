@@ -5,6 +5,7 @@ import PieChartTemplate from '../templatemanager/templates/pieChartTemplate/pieC
 class GraphTemplatesPlugin {
     name = 'GraphTemplatesPlugin';
     config = {
+        graphLib: "d3" // or google
     };
     hostInstance: any;
     constructor(config:any) {

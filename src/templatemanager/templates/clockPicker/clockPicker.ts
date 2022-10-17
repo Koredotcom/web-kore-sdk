@@ -105,8 +105,8 @@ class ClockPickerTemplate {
         }
         $(me.messageHtml).find(".btn.btn-sm.btn-default.btn-block.clockpicker-button").hide();
         setTimeout(function () {
-            $(me.messageHtml).find(".clockpicker-popover").css({ "display": "block", "top": "75px ", "left": "80.5px", });
-            $(me.messageHtml).find(".clockpicker-popover .clockpicker-plate").css({ "margin-left": "25px" });
+            $(me.messageHtml).find(".clockpicker-popover").css({ "display": "block"});
+            $(me.messageHtml).find(".clockpicker-popover .clockpicker-plate").css({ "margin-left": "80px" });
             $(me.messageHtml).find(".btn.btn-sm.btn-default.clockpicker-button.pm-button").css({ "opacity": "0.4" });
         }, 0);
         if (me.defaultClockerPickerConfig && me.defaultClockerPickerConfig.appendTo !== 'slider') {

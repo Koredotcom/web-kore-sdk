@@ -1,6 +1,8 @@
 declare class GraphTemplatesPlugin {
     name: string;
-    config: {};
+    config: {
+        graphLib: string;
+    };
     hostInstance: any;
     constructor(config: any);
     onHostCreate(): void;

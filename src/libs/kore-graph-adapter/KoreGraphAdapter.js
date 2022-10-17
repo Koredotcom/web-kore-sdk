@@ -2178,7 +2178,8 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
 
         }
 
-    function drawlineChartTemplate(msgData, element) {
+    function drawlineChartTemplate(msgData, element,config) {
+        chatConfig.graphLib = config.graphLib;
         if (chatConfig && chatConfig.graphLib === 'google') {
             setTimeout(() => {
                 GoogleCharts.charts.load('current', { packages: ['corechart', 'line'] });
@@ -2284,7 +2285,8 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
         }
     }
 
-    function drawBarChartTemplate(msgData, element) {
+    function drawBarChartTemplate(msgData, element,config) {
+        chatConfig.graphLib = config.graphLib;
         if (chatConfig.graphLib === 'google') {
             setTimeout(() => {
                 GoogleCharts.charts.load('current', { packages: ['corechart', 'bar'] });
@@ -2428,7 +2430,8 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
         }
     }
 
-    function drawPieChartTemplate(msgData, element) {
+    function drawPieChartTemplate(msgData, element,config) {
+        chatConfig.graphLib = config.graphLib;
         if (chatConfig.graphLib === 'google') {
             setTimeout(() => {
                 GoogleCharts.charts.load('current', { packages: ['corechart'] });
