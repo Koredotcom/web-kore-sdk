@@ -8,7 +8,6 @@ let chatWindowInstance = new chatWindow();
 //OPTION #1
 let botOptions=chatConfig.botOptions;
 
-botOptions.koreAPIUrl = "PLEASE_ENTER_APIURL_HERE";
 botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE"; 
 botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
 botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
