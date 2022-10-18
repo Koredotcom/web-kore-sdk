@@ -637,7 +637,8 @@
 .kore-chat-window.minimize .kore-chat-body,
 .kore-chat-window.minimize .kore-chat-footer,
 .kore-chat-window.minimize .kore-chat-header,
-.kore-chat-window.minimize .kr-wiz-menu-chat {
+.kore-chat-window.minimize .kr-wiz-menu-chat,
+.kore-chat-window.minimize .powred-by-info {
     display: none !important;
 }
 
@@ -3005,4 +3006,33 @@
 }
 #chatContainer{
     display: none;/*remove this minimizeMode false*/
+}
+
+.kore-chat-window.if-free-credits-bot .kore-chat-body{
+    bottom: 109px !important;
+}
+.kore-chat-window.if-free-credits-bot .kore-chat-footer{
+    bottom: 47px !important;
+}
+.kore-chat-window .powred-by-info{
+    display: none;
+}
+
+.kore-chat-window.if-free-credits-bot .powred-by-info{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 47px;
+    z-index: 1;
+    border-top: 1px solid #D7D8D9;
+}
+.kore-chat-window.if-free-credits-bot .powred-by-info .title{
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 17px;
+    color: #121314;
+    opacity: 0.5;
 }

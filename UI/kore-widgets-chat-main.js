@@ -243,6 +243,10 @@
 
         }
         function onJWTGrantSuccess(options){
+            if(hashObj.isAttribution){
+                $('.kore-chat-window').addClass('if-free-credits-bot');
+            }
+
             getBrandingInformation(options);
         }
         function onJWTGrantError(res){
