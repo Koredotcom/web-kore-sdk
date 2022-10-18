@@ -3028,11 +3028,17 @@
     height: 47px;
     z-index: 1;
     border-top: 1px solid #D7D8D9;
+    text-decoration: none !important;
 }
 .kore-chat-window.if-free-credits-bot .powred-by-info .title{
+    display: flex;
+    align-items: center;
     font-weight: 600;
     font-size: 14px;
     line-height: 17px;
-    color: #121314;
+    color: #121314 !important;
+    cursor: pointer;
+}
+.kore-chat-window.if-free-credits-bot .powred-by-info .title span{
     opacity: 0.5;
 }
