@@ -72,8 +72,6 @@ class AgentDesktopPlugin {
                 if (Notification.permission !== "granted") return;
                 // this.closeDesktopNotification();
                 let _self: any = this;
-                // console.log(event.messageData?.message)
-                console.log(event.messageData?.message[0]?.component?.payload?.payload?.text)
                 const text = event.messageData?.message[0]?.component?.payload?.payload?.text;
                 const image = "";
                 const title = "Agent is available now";
@@ -89,11 +87,11 @@ class AgentDesktopPlugin {
                         event.target.close();
                     }
                 }
-                let notification: any
-                if (document.hidden) {
+                let notification:any
+                if(document.hidden){
                     notification = new Notification("You have a new notification ", options);
-                }
-                if (notification) {
+                }   
+                if(notification){
                     notification.onclick = function (event: any) {
                         window.parent.focus();
                         notification.close();
@@ -141,7 +139,7 @@ class AgentDesktopPlugin {
             // console.log("message", message)
             var tempData = JSON.parse(message.data);
             console.log("tempData >>>>>>>>>>", tempData);
-
+            
             if (!tempData) return;
             if (tempData.from === "bot" && tempData.type === "events" && tempData.message.type === "message_read") {
                 $(".sentIndicator").text("Read");
