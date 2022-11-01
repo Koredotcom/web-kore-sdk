@@ -3,7 +3,7 @@ var chatConfig:any={};
 
 var botOptions:any = {};
 botOptions.logLevel = 'debug';
-botOptions.koreAPIUrl = "https://uat.kore.ai/api/";
+botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
 
 botOptions.API_KEY_CONFIG={
     bootstrapURL:botOptions.koreAPIUrl+'platform/websdk',

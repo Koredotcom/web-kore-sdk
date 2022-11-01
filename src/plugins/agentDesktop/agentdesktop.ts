@@ -39,31 +39,7 @@ class AgentDesktopPlugin {
         let me: any = this;
         this.appendVideoAudioElemnts()
 
-        // send type event from user to agent
-        me.hostInstance.on('onKeyDown', ({ event }: any) => {
-            if (event.keyCode !== 13 && event.which <= 90 && event.which >= 48 || event.which >= 96 && event.which <= 105) {
-                if (this.typingCount == 0) {
-                    var messageToBot: any = {};
-                    // messageToBot["clientMessageId"] = new Date().getTime();
-                    messageToBot["event"] = "typing";
-                    messageToBot["message"] = {
-                        "body": "",
-                        "type": ""
-                    }
-                    messageToBot["resourceid"] = "/bot.message";
-                    // me.hostInstance.sendMessageToBot('', '', messageToBot)
-                    me.hostInstance.bot.sendMessage(messageToBot, (err: any) => {
-                        if (err && err.message) {
-                            console.log("Failed to send reciept", err, event.msgData)
-                        }
-                    });
-                    this.typingCount = 1;
-                }
-                clearTimeout(me.typingTimer);
-                me.typingTimer = setTimeout(me.doneTyping(), this.doneTypingInterval);
-
-            }
-        });
+   
 
         // typing event style setting for anget and bot typing
         me.hostInstance.on('onWSMessage', (event: any) => {
@@ -108,31 +84,7 @@ class AgentDesktopPlugin {
                 $('.typingIndicator').text('Bot');
             }
         });
-        // sent event style setting in user chat
-        me.hostInstance.on('afterRenderMessage', (event: any) => {
-            if (event.msgData?.type === "currentUser") {
-                const msg = event.msgData.message;
-                if (!event.messageHtml.children('.sentIndicator').length) {
-                    event.messageHtml.append('<div class="sentIndicator" style="visibility: visible;">sent</div>');
-                }
-            } else {
-                // send read event from user to agent
-                if (event.msgData?.message[0]?.component?.payload?.template_type == 'live_agent') {
-                    const messageToBot: any = {};
-                    messageToBot["event"] = "message_read";
-                    messageToBot["message"] = {
-                        "body": "",
-                        "type": ""
-                    }
-                    messageToBot["resourceid"] = "/bot.message";
-                    me.hostInstance.bot.sendMessage(messageToBot, (err: any) => {
-                        if (err && err.message) {
-                            console.log("Failed to send reciept", err, event.msgData)
-                        }
-                    });
-                }
-            }
-        });
+    
 
         // read event style setting in user chat
         me.hostInstance.bot.on('message', (message: any) => {
@@ -173,23 +125,5 @@ class AgentDesktopPlugin {
         return target;
     }
 
-    doneTyping() {
-        const me: any = this;
-        console.log("User stopped typing");
-        var messageToBot: any = {};
-        messageToBot["event"] = "stop_typing";
-        messageToBot["message"] = {
-            "body": "",
-            "type": ""
-        }
-        messageToBot["resourceid"] = "/bot.message";
-        // me.hostInstance.sendMessageToBot('', '', messageToBot)
-        me.hostInstance.bot.sendMessage(messageToBot, (err: any) => {
-            if (err && err.message) {
-                console.log("Failed to send reciept", err)
-            }
-        });
-        this.typingCount = 0;
-    }
 }
 export default AgentDesktopPlugin;

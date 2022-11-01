@@ -23,11 +23,11 @@ chatWindowInstance.installPlugin(new AgentDesktopPlugin());
 //OPTION #1
 let botOptions = chatConfig.botOptions;
 
-botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
-botOptions.userIdentity = 'santhoshvishal.veerannapet@kore.com';// Provide users email id here
-botOptions.botInfo = { name: "Instance03", "_id": "st-b42e4f0d-3807-5866-90a3-57ed98505fe9" }; // bot name is case sensitive
-botOptions.clientId = "cs-394f098f-3914-5822-9d34-4bbafe081593";
-botOptions.clientSecret = "jBUKsjR/kVqmb5ovSMAvprT1ED7p8zob5Ya/4G4WlOY=";
+botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
+botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
+botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
+botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
+botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 
 /*
 Important Note: These keys are provided here for quick demos to generate JWT token at client side but not for Production environment.
