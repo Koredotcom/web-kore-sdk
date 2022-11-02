@@ -78,7 +78,6 @@ class AgentDesktopPlugin {
             }
         });
     }
-
     appendVideoAudioElemnts() {
         let me: any = this;
         let cwInstance = me.hostInstance;
