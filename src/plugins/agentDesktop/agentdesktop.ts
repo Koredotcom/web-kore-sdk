@@ -1,15 +1,10 @@
 import AgentDesktopPluginScript from './agentdesktop-script';
-import * as j$ from '../../libs/korejquery';
-import { event } from 'jquery';
 
-const $: any = j$.default;
 
 class AgentDesktopPlugin {
     name: any = 'AgentDesktopPlugin';
     config: any = {};
     agentDesktopInfo: any;
-    typingCount = 0;
-    doneTypingInterval = 500;
     constructor(config?: any) {
         this.config = {
             ...this.config,
@@ -32,15 +27,14 @@ class AgentDesktopPlugin {
 
     }
     onInit() {
-        console.log(Notification.permission, "message")
+        // let me = this;
+        this.appendVideoAudioElemnts()
+        // this.koreCoBrowse = me.koreCoBrowseInit({});
+        // this.rrweb = me.rrwebInit({});
         if (Notification.permission === "default") {
             Notification.requestPermission();
         }
         let me: any = this;
-
-
-
-        // typing event style setting for anget and bot typing
         me.hostInstance.on('onWSMessage', (event: any) => {
             console.log("websocketEvents", event)
             if (event.messageData.type === "bot_response" && event.messageData?.message[0]?.component?.payload?.payload?.text) {
@@ -83,6 +77,31 @@ class AgentDesktopPlugin {
                 $('.typingIndicator').text('Bot');
             }
         });
+    }
+
+    appendVideoAudioElemnts() {
+        let me: any = this;
+        let cwInstance = me.hostInstance;
+        let chatEle = cwInstance.chatEle;
+        let localVideoElement = '<video id="kore_local_video" autoplay="autoplay" playsinline style="width:0px;height:0px"></video>';
+        let remoteVideoElement = '<video id="kore_remote_video" autoplay="autoplay" playsinline style="width:0px;height:0px"></video>';
+        chatEle.append(localVideoElement);
+        chatEle.append(remoteVideoElement);
+    }
+
+    extend(target: any, source: any) {
+        let me: any = this;
+        for (var prop in source) {
+            if (source.hasOwnProperty(prop)) {
+                if (target[prop] && typeof source[prop] === 'object') {
+                    me.extend(target[prop], source[prop]);
+                }
+                else {
+                    target[prop] = source[prop];
+                }
+            }
+        }
+        return target;
     }
 }
 export default AgentDesktopPlugin;
