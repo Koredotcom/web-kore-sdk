@@ -4430,14 +4430,13 @@
                 }
             }
 
-            function getSIDToken() {
+            function getSIDToken() {                
                 if(chatInitialize.config.allowGoogleSpeech) {
-                    if(recognition) { // using webkit speech recognition
-                        startGoogleWebKitRecognization();
-                    }
-                    else { // using google cloud speech API
-                        micEnable();
-                    }
+                    // using google cloud speech API
+                    micEnable();
+                }else if(recognition) { 
+                    // using webkit speech recognition
+                    startGoogleWebKitRecognization();
                 }
                 else {
                     if(!speechPrefixURL){
@@ -4586,7 +4585,7 @@
                     }
                 } else {
                     isRecordingStarted = false;
-                    console.error('No web socket connection: failed to send: ', item);
+                    //console.error('No web socket connection: failed to send: ', item);
                 }
             }
 
@@ -4701,7 +4700,7 @@
                         }
                         var track = mediaStream.getTracks()[0];
                         track.stop();
-                        rec.destroy();
+                        //rec.destroy();
                         isRecordingStarted = false;
                     }, 'audio/x-raw');
                 } else {
