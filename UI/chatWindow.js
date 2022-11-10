@@ -3823,7 +3823,9 @@
                                             scrollTop: $('.chat-container').prop("scrollHeight")
                                         }, 2500);
                                         $('.historyLoadingDiv').removeClass('showMsg');
-                                        $('.chat-container').append("<div class='endChatContainer'><span class='endChatContainerText'>End of chat history</span></div>");
+                                        if(!me.config.multiPageApp.enable){
+                                            $('.chat-container').append("<div class='endChatContainer'><span class='endChatContainerText'>End of chat history</span></div>");
+                                        }
                                         if(messagesQueue.length){
                                             messagesQueue.forEach(function(msg, currIndex){
                                                 me.renderMessage(msg);
