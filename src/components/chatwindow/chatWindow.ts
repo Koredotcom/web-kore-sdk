@@ -21,9 +21,24 @@ declare const callListener:any;
 declare const window:any;
 
 
+/**
+ * ChatWindow class
+ *
+ * @decorator Class
+ */
 class chatWindow extends EventEmitter{
  chatEle: any;
   config: {};
+
+
+   /**
+     * @eventProperty
+     */
+    testEvent:any;
+
+ /**
+     * @event
+ */
   EVENTS={
     /**
      * jwtSuccess will be triggered once the jwt token received from API.
@@ -158,6 +173,7 @@ installCallbackForPlugins (){
     }
   });
 }
+
 
 show  (config:any) {
   const me:any = this;

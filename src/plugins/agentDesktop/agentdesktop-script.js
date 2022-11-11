@@ -25,7 +25,7 @@ import requireKr from '../../components/base-sdk/kore-bot-sdk-client';
 import './agentdesktop.css';
 import moment from 'moment';
 
-
+ /** @ignore */
 class AgentDesktopPluginScript  {
     name = 'AgentDesktopPlugin';
     config ={};

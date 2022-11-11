@@ -1,7 +1,8 @@
 import AgentDesktopPluginScript from './agentdesktop-script';
 
 
-class AgentDesktopPlugin {
+ /** @ignore */
+ class AgentDesktopPlugin {
     name: any = 'AgentDesktopPlugin';
     config: any = {};
     agentDesktopInfo :any;
@@ -21,6 +22,7 @@ class AgentDesktopPlugin {
                 me.onInit();
                 this.config=me.extend(me,response)
                 //me.AgentDesktop(response.userInfo.userId, response);
+                 /** @ignore */
                 this.agentDesktopInfo = new AgentDesktopPluginScript(this.config);
             }
         });
