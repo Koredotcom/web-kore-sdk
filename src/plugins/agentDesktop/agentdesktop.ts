@@ -1,12 +1,9 @@
 import AgentDesktopPluginScript from './agentdesktop-script';
-import * as j$ from '../../libs/korejquery';
-
-const $: any = j$.default;
-
 class AgentDesktopPlugin {
     name: any = 'AgentDesktopPlugin';
     config: any = {};
     agentDesktopInfo: any;
+    $: any;
     constructor(config?: any) {
         this.config = {
             ...this.config,
@@ -30,21 +27,22 @@ class AgentDesktopPlugin {
     }
     onInit() {
         let me: any = this;
+        this.$ = me.hostInstance.$;
         this.appendVideoAudioElemnts()
 
         // agent connected and disconnected events
         me.hostInstance.on('onWSMessage', (event: any) => {
             if (event.messageData?.message?.type === 'agent_connected') {
-                localStorage.setItem("isAgentConnected", "true")
+                localStorage.setItem("kr-agent-status", "connected")
             } else if (event.messageData?.message?.type === 'agent_disconnected') {
-                localStorage.setItem("isAgentConnected", "false")
+                localStorage.setItem("kr-agent-status", "disconneted")
             }
         });
 
         // sent event style setting in user chat 
         me.hostInstance.on('afterRenderMessage', (event: any) => {
 
-            if (localStorage.getItem("isAgentConnected") != "true") return;
+            if (localStorage.getItem("kr-agent-status") != "connected") return;
 
             if (event.msgData?.type === "currentUser") {
                 const msg = event.msgData.message;
@@ -57,11 +55,11 @@ class AgentDesktopPlugin {
                         if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === msg[0].clientMessageId) {
 
                             if (tempData.message.type === "message_delivered") {
-                                if ($("#" + tempData.message.clientMessageId + " .sentIndicator").text() !== 'Read') {
-                                    $("#" + tempData.message.clientMessageId + " .sentIndicator").text("Delivered");
+                                if (this.$("#" + tempData.message.clientMessageId + " .sentIndicator").text() !== 'Read') {
+                                    this.$("#" + tempData.message.clientMessageId + " .sentIndicator").text("Delivered");
                                 }
                             } else if (tempData.message.type === "message_read") {
-                                $("#" + tempData.message.clientMessageId + " .sentIndicator").text("Read");
+                                this.$("#" + tempData.message.clientMessageId + " .sentIndicator").text("Read");
                             }
 
                         }
@@ -81,7 +79,7 @@ class AgentDesktopPlugin {
                     messageToBot["resourceid"] = "/bot.message";
                     me.hostInstance.bot.sendMessage(messageToBot, (err: any) => {});
 
-                    if ($('#' + msgId).is(':visible')) {
+                    if (this.$('#' + msgId).is(':visible')) {
                         messageToBot.event = 'message_read'
                         me.hostInstance.bot.sendMessage(messageToBot, (err: any) => {});
                     }
