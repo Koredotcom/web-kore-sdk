@@ -81,6 +81,7 @@ var AgentDesktopPlugin = /** @class */ (function () {
         // agent connected and disconnected events
         me.hostInstance.on('onWSMessage', function (event) {
             var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+            // Agent Status 
             if (((_b = (_a = event.messageData) === null || _a === void 0 ? void 0 : _a.message) === null || _b === void 0 ? void 0 : _b.type) === 'agent_connected') {
                 localStorage.setItem("kr-agent-status", "connected");
             }
@@ -108,21 +109,23 @@ var AgentDesktopPlugin = /** @class */ (function () {
                 // remove bot typing while agent being connected
                 _this.$('.typingIndicatorContent').css('display', 'none');
                 var msg_1 = event.msgData.message;
-                if (!event.messageHtml.children('.sentIndicator').length) {
-                    event.messageHtml.append('<div class="sentIndicator">Sent</div>');
+                var extraInfoEle = event.messageHtml.find('.extra-info');
+                if (!extraInfoEle.children('.sentIndicator').length) {
+                    extraInfoEle.append('<div class="sentIndicator"></div>');
                     // changing indicator text for specific message on deliver and read events
                     me.hostInstance.bot.on('message', function (message) {
                         var tempData = JSON.parse(message.data);
                         if (!tempData)
                             return;
                         if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === msg_1[0].clientMessageId) {
+                            var ele = _this.$("#" + tempData.message.clientMessageId + " .sentIndicator");
                             if (tempData.message.type === "message_delivered") {
-                                if (_this.$("#" + tempData.message.clientMessageId + " .sentIndicator").text() !== 'Read') {
-                                    _this.$("#" + tempData.message.clientMessageId + " .sentIndicator").text("Delivered");
+                                if (!ele.hasClass('read')) {
+                                    ele.addClass("delivered");
                                 }
                             }
                             else if (tempData.message.type === "message_read") {
-                                _this.$("#" + tempData.message.clientMessageId + " .sentIndicator").text("Read");
+                                ele.removeClass("delivered").addClass("read");
                             }
                         }
                     });
@@ -198,7 +201,7 @@ var AgentDesktopPlugin = /** @class */ (function () {
 /******/ function(__webpack_require__) { // webpackRuntimeModules
 /******/ /* webpack/runtime/getFullHash */
 /******/ (() => {
-/******/ 	__webpack_require__.h = () => ("9024fe724cacd0eb259e")
+/******/ 	__webpack_require__.h = () => ("db32b4d4adce7042361e")
 /******/ })();
 /******/ 
 /******/ }
