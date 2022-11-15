@@ -457,3 +457,9 @@ li.fromCurrentUser .sentIndicator {
 	right: 8px;
 	color: var(--sdk-chat-widow-secondary-font-color);
 }
+.agent-type-icon{
+	background-image: var(--sdk-chat-widow-agent-icon) !important;
+	position: relative;
+	top: 5px;
+
+}

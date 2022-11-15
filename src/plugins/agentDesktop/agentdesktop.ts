@@ -7,6 +7,9 @@ import AgentDesktopPluginScript from './agentdesktop-script';
     config: any = {};
     agentDesktopInfo: any;
     $: any;
+    isTyping: boolean = false;
+    typingTimer: any;
+    stopTypingInterval: number = 500;
     constructor(config?: any) {
         this.config = {
             ...this.config,
@@ -34,12 +37,50 @@ import AgentDesktopPluginScript from './agentdesktop-script';
         this.$ = me.hostInstance.$;
         this.appendVideoAudioElemnts()
 
+            // send type event from user to agent
+            me.hostInstance.on('onKeyDown', ({ event }: any) => {
+                if (event.keyCode !== 13 && event.which <= 90 && event.which >= 48 || event.which >= 96 && event.which <= 105 && localStorage.getItem("kr-agent-status") === "connected") {
+                    if (!this.isTyping) {
+                        var messageToBot: any = {};
+                        messageToBot["event"] = "typing";
+                        messageToBot["message"] = {
+                            "body": "",
+                            "type": ""
+                        }
+                        messageToBot["resourceid"] = "/bot.message";
+                        me.hostInstance.bot.sendMessage(messageToBot, (err: any) => {
+                            if (err && err.message) {
+                                console.log("Failed to send reciept", err, event.msgData)
+                            }
+                        });
+                        this.isTyping = true;
+                    }
+                    clearTimeout(this.typingTimer);
+                    this.typingTimer = setTimeout(() => me.sendStopTypingEvent(), this.stopTypingInterval);
+                   
+    
+                } else if (event.keyCode === 13) {
+                    clearTimeout(this.typingTimer)
+                    me.sendStopTypingEvent()
+                }
+            });
+
         // agent connected and disconnected events
         me.hostInstance.on('onWSMessage', (event: any) => {
             if (event.messageData?.message?.type === 'agent_connected') {
                 localStorage.setItem("kr-agent-status", "connected")
             } else if (event.messageData?.message?.type === 'agent_disconnected') {
                 localStorage.setItem("kr-agent-status", "disconneted")
+            }
+
+            // type indicator style changes when agent is being connected
+            if (event.messageData?.message?.author?.type === 'AGENT' && event.messageData.message.type === 'typing' && localStorage.getItem("kr-agent-status") === "connected") {
+                this.$('.typingIndicatorContent').css('display', 'block');
+                this.$('.typingIndicator').addClass('agent-type-icon');
+            } else if (event.messageData?.message?.author?.type === 'AGENT' && event.messageData.message.type === 'stoptyping' && localStorage.getItem("kr-agent-status") === "connected") {
+                this.$('.typingIndicatorContent').css('display', 'none');
+            } else if (localStorage.getItem("kr-agent-status") !== "conneted"){
+                this.$('.typingIndicator').removeClass('agent-type-icon');
             }
         });
 
@@ -49,10 +90,14 @@ import AgentDesktopPluginScript from './agentdesktop-script';
             if (localStorage.getItem("kr-agent-status") != "connected") return;
 
             if (event.msgData?.type === "currentUser") {
+                // remove bot typing while agent being connected
+                this.$('.typingIndicatorContent').css('display', 'none');
+
                 const msg = event.msgData.message;
                 if (!event.messageHtml.children('.sentIndicator').length) {
                     event.messageHtml.append('<div class="sentIndicator">Sent</div>');
 
+                    // changing indicator text for specific message on deliver and read events
                     me.hostInstance.bot.on('message', (message: any) => {
                         var tempData = JSON.parse(message.data);
                         if (!tempData) return;
@@ -87,11 +132,9 @@ import AgentDesktopPluginScript from './agentdesktop-script';
                         messageToBot.event = 'message_read'
                         me.hostInstance.bot.sendMessage(messageToBot, (err: any) => {});
                     }
-
                 }
             }
         });
-
     }
 
     appendVideoAudioElemnts() {
@@ -117,6 +160,23 @@ import AgentDesktopPluginScript from './agentdesktop-script';
             }
         }
         return target;
+    }
+
+    sendStopTypingEvent() {
+        const me: any = this;
+        var messageToBot: any = {};
+        messageToBot["event"] = "stop_typing";
+        messageToBot["message"] = {
+            "body": "",
+            "type": ""
+        }
+        messageToBot["resourceid"] = "/bot.message";
+        me.hostInstance.bot.sendMessage(messageToBot, (err: any) => {
+            if (err && err.message) {
+                console.log("Failed to send reciept", err)
+            }
+        });
+        this.isTyping = false;
     }
 }
 export default AgentDesktopPlugin;
