@@ -2,6 +2,7 @@ declare class AgentDesktopPlugin {
     name: any;
     config: any;
     agentDesktopInfo: any;
+    $: any;
     constructor(config?: any);
     onHostCreate(): void;
     onInit(): void;
