@@ -100,6 +100,6 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
-  "include": ["*"],
-  "exclude":[ "node_modules"],
+  "include": [ "src/components/chatWindow/*", "src/plugins/*.ts","src/plugins/STTPlugins/WebKitSTTPlugin/*.ts","src/plugins/TTSPlugins/BrowserTTSPlugin/*.ts"],
+  "exclude":[  "node_modules"],
 }

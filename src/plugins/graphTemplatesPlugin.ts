@@ -2,6 +2,11 @@ import LineChartTemplate from '../templatemanager/templates/lineChartTemplate/li
 import BarChartTemplate from '../templatemanager/templates/barChartTemplate/barChartTemplate';
 import PieChartTemplate from '../templatemanager/templates/pieChartTemplate/pieChartTemplate';
 
+/**
+ *  Graph template plugin class
+ *
+ * @decorator Class
+ */
 class GraphTemplatesPlugin {
     name = 'GraphTemplatesPlugin';
     config = {
@@ -27,6 +32,9 @@ class GraphTemplatesPlugin {
         let me = this;
         me.installPickerTemplates();
     }
+    /**
+     * To install the pickers templates
+     */
     installPickerTemplates(){
         let me=this;
         let templateManager = me.hostInstance.templateManager;
