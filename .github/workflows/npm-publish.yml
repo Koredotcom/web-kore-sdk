@@ -1,7 +1,7 @@
 # This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
 # For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
 
-name: Node.js Package 
+name: Kore-web-sdk
 
 on:
   push:
@@ -16,19 +16,19 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: npm ci
-      - run: npm run build
-
-  publish-npm:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
           registry-url: https://registry.npmjs.org/
           scope: '@uday_test'
-      - run: node npmPublish.js && cd dist && npm publish --access public
+      - name: Installing the dependencies   
+        run: npm ci
+      - name: Run the UMD build
+        run: npm run build-umd
+      - name: Run ESM build
+        run: npm run build
+      - name: Prepare the files for npm publish
+        run: node npmPublish.js
+      - name: Publish the package
+        run: cd dist && npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.TOKENNPM }}
+
+
