@@ -1,8 +1,9 @@
 var fs = require('fs');
 const execSync = require('child_process').execSync;
 
-execSync('cd dist && npm init --scope=uday_test -y');
 let packageJSON = fs.readFileSync('package.json',  {encoding:'utf8', flag:'r'} );
+execSync('cd dist && npm init --scope=uday_test -y');
+
 let parsedPackageJSON = JSON.parse(packageJSON);
 var publishJSON = `
 {
