@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-umd": "webpack --env=kore_env=prod --env=target_module=umd",
-    "build": "webpack --env=kore_env=prod  --env=target_module=esm && && node npmPublish.js",
+    "build": "webpack --env=kore_env=prod  --env=target_module=esm && node npmPublish.js",
     "serve-umd": "webpack-dev-server --env=kore_env=dev  --env=component=chat  --env=target_module=umd",
     "serve": "webpack-dev-server --env=kore_env=dev --env=component=chat --env=target_module=esm --mode development",
     "doc": "jsdoc -c jsdoc.json",
