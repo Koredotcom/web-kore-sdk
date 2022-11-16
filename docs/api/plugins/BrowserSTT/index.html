@@ -1,0 +1,117 @@
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>BrowserTTS</title><meta name="description" content="Documentation for BrowserTTS"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container">
+<div class="table-cell" id="tsd-search" data-base=".">
+<div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<div class="field">
+<div id="tsd-toolbar-links"></div></div>
+<ul class="results">
+<li class="state loading">Preparing search index...</li>
+<li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">BrowserTTS</a></div>
+<div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
+<div class="container container-main">
+<div class="col-8 col-content">
+<div class="tsd-page-title">
+<h2>BrowserTTS</h2></div>
+<div class="tsd-panel tsd-typography">
+<a href="#koreai-sdk" id="koreai-sdk" style="color: inherit; text-decoration: none;">
+  <h1>Kore.ai SDK</h1>
+</a>
+<p>Kore.ai offers Bots SDKs as a set of platform-specific client libraries that provide a quick and convenient way to integrate Kore.ai Bots chat capability into custom applications.</p>
+<p>With just few lines of code, you can embed our Kore.ai chat widget into your applications to enable end-users to interact with your applications using Natural Language. For more information, refer to</p>
+<p><a href="https://developer.kore.ai/docs/bots/kore-web-sdk/">Bot SDKs</a></p>
+<p><a href="https://developer.kore.ai/docs/bots/sdks/bots-platform-api-reference/">Web Socket Endpoints and Events</a></p>
+<p><a href="https://developer.kore.ai/docs/bots/sdks/user-authorization-and-assertion/">SDK Security</a></p>
+<p><a href="https://developer.kore.ai/docs/bots/sdks/sdk-app-registration/">SDK App Registration</a></p>
+<p><a href="https://developer.kore.ai/docs/bots/sdks/message-templates/">Message Templates</a></p>
+<p><a href="https://rajasekharba-kore.github.io/web-kore-sdk/">API Referernce</a></p>
+
+<a href="#💡-getting-started" id="💡-getting-started" style="color: inherit; text-decoration: none;">
+  <h2>💡 Getting Started</h2>
+</a>
+<p>First, install kore web SDK via the <a href="https://www.npmjs.com/get-npm">npm</a> package manager:</p>
+<pre><code class="language-bash"><span class="hl-0">npm install --save git+https://github.com:Koredotcom/web-kore-sdk.git#v2/9.3.0</span>
+</code></pre>
+<p>Get chatWindow and chatConfig</p>
+<pre><code class="language-js"><span class="hl-1">import</span><span class="hl-0"> { </span><span class="hl-2">chatConfig</span><span class="hl-0">, </span><span class="hl-2">chatWindow</span><span class="hl-0"> } </span><span class="hl-1">from</span><span class="hl-0"> </span><span class="hl-3">&#39;kore-web-sdk&#39;</span><span class="hl-0">;</span><br/>
+</code></pre>
+<p>Configure ChatConfig</p>
+<pre><code class="language-js"><br/><span class="hl-4">let</span><span class="hl-0"> </span><span class="hl-2">botOptions</span><span class="hl-0">=</span><span class="hl-2">chatConfig</span><span class="hl-0">.</span><span class="hl-2">botOptions</span><span class="hl-0">;</span><br/><span class="hl-0">    </span><br/><span class="hl-0"> </span><span class="hl-2">botOptions</span><span class="hl-0">.</span><span class="hl-2">JWTUrl</span><span class="hl-0"> = </span><span class="hl-3">&quot;PLEASE_ENTER_JWTURL_HERE&quot;</span><span class="hl-0">;</span><br/><span class="hl-0"> </span><span class="hl-2">botOptions</span><span class="hl-0">.</span><span class="hl-2">userIdentity</span><span class="hl-0"> = </span><span class="hl-3">&#39;PLEASE_ENTER_USER_EMAIL_ID&#39;</span><span class="hl-0">;</span><span class="hl-5">// Provide users email id here</span><br/><span class="hl-0"> </span><span class="hl-2">botOptions</span><span class="hl-0">.</span><span class="hl-2">botInfo</span><span class="hl-0"> = { </span><span class="hl-2">name:</span><span class="hl-0"> </span><span class="hl-3">&quot;PLEASE_ENTER_BOT_NAME&quot;</span><span class="hl-0">, </span><span class="hl-3">&quot;_id&quot;</span><span class="hl-2">:</span><span class="hl-0"> </span><span class="hl-3">&quot;PLEASE_ENTER_BOT_ID&quot;</span><span class="hl-0"> }; </span><span class="hl-5">// bot name is case sensitive</span><br/><span class="hl-0"> </span><span class="hl-2">botOptions</span><span class="hl-0">.</span><span class="hl-2">clientId</span><span class="hl-0"> = </span><span class="hl-3">&quot;PLEASE_ENTER_CLIENT_ID&quot;</span><span class="hl-0">;</span><br/><span class="hl-0"> </span><span class="hl-2">botOptions</span><span class="hl-0">.</span><span class="hl-2">clientSecret</span><span class="hl-0"> = </span><span class="hl-3">&quot;PLEASE_ENTER_CLIENT_SECRET&quot;</span><span class="hl-0">;</span><br/><span class="hl-0"> </span><span class="hl-5">/* </span><br/><span class="hl-5"> Important Note: These keys are provided here for quick demos to generate JWT token at client side but not for Production environment.</span><br/><span class="hl-5"> Refer below document for JWT token generation at server side. Client Id and Client secret should maintained at server end.</span><br/><span class="hl-5"> https://developer.kore.ai/docs/bots/sdks/user-authorization-and-assertion/</span><br/><span class="hl-5"> **/</span><br/>
+</code></pre>
+<p>Create chat window instance and trigger show method</p>
+<pre><code class="language-js"><span class="hl-4">var</span><span class="hl-0"> </span><span class="hl-2">chatWindowInstance</span><span class="hl-0"> = </span><span class="hl-4">new</span><span class="hl-0"> </span><span class="hl-6">chatWindow</span><span class="hl-0">(</span><span class="hl-2">chatConfig</span><span class="hl-0">);</span><br/><span class="hl-2">chatWindowInstance</span><span class="hl-0">.</span><span class="hl-6">show</span><span class="hl-0">(</span><span class="hl-2">chatConfig</span><span class="hl-0">);</span><br/>
+</code></pre>
+
+<a href="#examples" id="examples" style="color: inherit; text-decoration: none;">
+  <h3>Examples</h3>
+</a>
+<p>Click <a href="/docs/sdkdeveloper">here</a> to explore different variations how SDK can be consumed </p>
+
+<a href="#other-options" id="other-options" style="color: inherit; text-decoration: none;">
+  <h3>Other options</h3>
+</a>
+<details>
+ <summary>Legacy</summary>
+
+<p>include the following script in your html file and configure bot configurations </p>
+<pre><code class="language-js"><br/><span class="hl-7">&lt;</span><span class="hl-8">script</span><span class="hl-0">  </span><span class="hl-9">src</span><span class="hl-0">=</span><span class="hl-3">&quot;https://cdn.jsdelivr.net/gh/Koredotcom/web-kore-sdk@v2-9.3.0/dist/umd/kore-web-sdk-umd-chat.min.js&quot;</span><span class="hl-7">&gt;&lt;/</span><span class="hl-8">script</span><span class="hl-7">&gt;</span><br/><span class="hl-7">&lt;</span><span class="hl-8">script</span><span class="hl-7">&gt;</span><br/><span class="hl-0">        //chat window declaration</span><br/><span class="hl-0">        var chatConfig=KoreChatSDK.chatConfig;</span><br/><span class="hl-0">        var chatWindow=KoreChatSDK.chatWindow;</span><br/><span class="hl-0">        </span><br/><span class="hl-0">        //create chat window instance</span><br/><span class="hl-0">        var chatWindowInstance = new chatWindow();</span><br/><br/><span class="hl-0">        //configure bot configurations</span><br/><span class="hl-0">        var botOptions=chatConfig.botOptions;</span><br/><span class="hl-0">        botOptions.JWTUrl = &quot;PLEASE_ENTER_JWTURL_HERE&quot;;</span><br/><span class="hl-0">        botOptions.userIdentity = &#39;PLEASE_ENTER_USER_EMAIL_ID&#39;;</span><br/><span class="hl-0">        botOptions.botInfo = </span><span class="hl-4">{</span><span class="hl-10"> </span><span class="hl-2">name</span><span class="hl-10">: </span><span class="hl-3">&quot;PLEASE_ENTER_BOT_NAME&quot;</span><span class="hl-10">, </span><span class="hl-3">&quot;_id&quot;</span><span class="hl-10">: </span><span class="hl-3">&quot;PLEASE_ENTER_BOT_ID&quot;</span><span class="hl-10"> </span><span class="hl-4">}</span><span class="hl-0">; // bot name is case sensitive</span><br/><span class="hl-0">        botOptions.clientId = &quot;PLEASE_ENTER_CLIENT_ID&quot;;</span><br/><span class="hl-0">        botOptions.clientSecret = &quot;PLEASE_ENTER_CLIENT_SECRET&quot;;</span><br/><span class="hl-0">    /* </span><br/><span class="hl-0">    Important Note: These keys are provided here for quick demos to generate JWT token at client side but not for Production environment.</span><br/><span class="hl-0">    Refer below document for JWT token generation at server side. Client Id and Client secret should maintained at server end.</span><br/><span class="hl-0">    https://developer.kore.ai/docs/bots/sdks/user-authorization-and-assertion/</span><br/><span class="hl-0">    **/</span><br/><br/><span class="hl-0">        //show chatwindow</span><br/><span class="hl-0">        chatWindowInstance.show(chatConfig);</span><br/><br/><span class="hl-7">&lt;/</span><span class="hl-8">script</span><span class="hl-7">&gt;</span><br/>
+</code></pre>
+</details>
+
+
+<details>
+ <summary>For quick demo</summary>
+ 
+ 
+
+
+<a href="#instructions" id="instructions" style="color: inherit; text-decoration: none;">
+  <h4>Instructions</h4>
+</a>
+<pre><code><span class="hl-0">1.</span><span class="hl-2">Open</span><span class="hl-0"> </span><span class="hl-2">examples</span><span class="hl-0">/</span><span class="hl-2">umd</span><span class="hl-0">/</span><span class="hl-2">chat</span><span class="hl-0">-</span><span class="hl-1">with</span><span class="hl-0">-</span><span class="hl-2">plugins</span><span class="hl-0">/</span><span class="hl-2">index</span><span class="hl-0">.</span><span class="hl-2">html</span><span class="hl-0">  </span><br/><span class="hl-0">2.</span><span class="hl-2">configure</span><span class="hl-0"> </span><span class="hl-2">bot</span><span class="hl-0"> </span><span class="hl-2">configurations</span><span class="hl-0">   </span><br/><span class="hl-0">3.</span><span class="hl-2">Open</span><span class="hl-0"> </span><span class="hl-2">same</span><span class="hl-0"> </span><span class="hl-2">file</span><span class="hl-0"> </span><span class="hl-4">in</span><span class="hl-0"> </span><span class="hl-2">any</span><span class="hl-0"> </span><span class="hl-2">browser</span><span class="hl-0"> </span>
+</code></pre>
+</details>
+
+
+<a href="#💡-custom-templates" id="💡-custom-templates" style="color: inherit; text-decoration: none;">
+  <h2>💡 Custom Templates</h2>
+</a>
+<p>In addition to the kore message templates, new custom templates can be intstalled into kore chat window with <em>installTemplate</em> method</p>
+<pre><code class="language-bash"><span class="hl-0">class customTemplateComponent{</span><br/><span class="hl-0">  renderMessage(msgData){</span><br/><span class="hl-0">      if(msgData?.message[0]?.component?.payload?.template_type===</span><span class="hl-3">&#39;custom_stock_template&#39;</span><span class="hl-0">){</span><br/><span class="hl-0">          </span><span class="hl-1">return</span><span class="hl-0"> </span><span class="hl-3">&#39;&lt;h2&gt;My Template HTML&lt;/h2&gt;&#39;</span><span class="hl-0">;      </span><br/><span class="hl-0">      }else{</span><br/><span class="hl-0">          </span><span class="hl-1">return</span><span class="hl-0"> </span><span class="hl-6">false</span><span class="hl-0">;</span><br/><span class="hl-0">      }</span><br/><span class="hl-0">  } </span><br/><span class="hl-0">}</span><br/><br/><span class="hl-0">chatWindowInstance.templateManager.installTemplate(new </span><span class="hl-6">customTemplateComponent</span><span class="hl-0">());</span>
+</code></pre>
+<p>Other framework UI components like angular and react can also be injected with this</p>
+
+<a href="#💡-plugins" id="💡-plugins" style="color: inherit; text-decoration: none;">
+  <h2>💡 Plugins</h2>
+</a>
+<p>Kore&#39;s chatwindow functionlity can be extended with the help of plugins.Newly created plugins can be installed with <em>installPlugin</em> method</p>
+<pre><code class="language-bash"><span class="hl-0">class KoreCustomPlugin{</span><br/><span class="hl-0">  </span><br/><span class="hl-0">}</span><br/><br/><span class="hl-0">chatWindowInstance.installPlugin(new </span><span class="hl-6">KoreCustomPlugin</span><span class="hl-0">());</span>
+</code></pre>
+<p>Kore offered plugins are listed <a href="./docs/plugins">here</a></p>
+</div></div>
+<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+<div class="tsd-navigation settings">
+<details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility">
+<h4 class="uppercase">Member Visibility</h4><form>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div>
+<div class="tsd-theme-toggle">
+<h4 class="uppercase">Theme</h4><select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<nav class="tsd-navigation primary">
+<details class="tsd-index-accordion" open><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Modules</h3></summary>
+<div class="tsd-accordion-details">
+<ul>
+<li class="current selected"><a href="modules.html">BrowserTTS</a>
+<ul></ul></li></ul></div></details></nav>
+<nav class="tsd-navigation secondary menu-sticky">
+<ul>
+<li class="tsd-kind-class"><a href="classes/BrowserTTS.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-128-path"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)" id="icon-128-text"></path></svg>BrowserTTS</a></li></ul></nav></div></div>
+<div class="container tsd-generator">
+<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
+<div class="overlay"></div><script src="assets/main.js"></script></body></html>

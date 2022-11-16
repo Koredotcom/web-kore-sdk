@@ -21,9 +21,24 @@ declare const callListener:any;
 declare const window:any;
 
 
+/**
+ * ChatWindow class
+ *
+ * @decorator Class
+ */
 class chatWindow extends EventEmitter{
  chatEle: any;
   config: {};
+
+
+   /**
+     * @eventProperty
+     */
+    testEvent:any;
+
+ /**
+     * @event
+ */
   EVENTS={
     /**
      * jwtSuccess will be triggered once the jwt token received from API.
@@ -158,6 +173,7 @@ installCallbackForPlugins (){
     }
   });
 }
+
 
 show  (config:any) {
   const me:any = this;
@@ -805,29 +821,30 @@ bindEvents  () {
       me.resetWindow();
     });
   });
-
-  _chatContainer.find('.kore-chat-body .chat-container').on('scroll',(event: any) => {
-    if (me?.config?.history?.paginatedScroll?.enable) {
+  if (me?.config?.history?.paginatedScroll?.enable) {
+    _chatContainer.find('.kore-chat-body .chat-container').on('scroll', (event: any) => {
       var div = $(event.currentTarget);
       if (div[0].scrollHeight - div.scrollTop() == div.height()) {
         bot.previousHistoryLoading = false;
       }
       else if (div.scrollTop() == 0) {
-        bot.previousHistoryLoading = true;
-        let message = me?.config?.history?.paginatedScroll?.loadingLabel || 'Loading chat history..';
-        let paginatedHistoryLoader = $('<div class="paginted-history-loader">\
-                                          <div class="historyWarningTextDiv displayTable">  \
-                                             <span><img class="loadingHistory" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAARCAYAAAA7bUf6AAAAAXNSR0IArs4c6QAAAYZJREFUOBGtVLFKA0EQfbMiiERQEgjpRQt/wULB/opIFCuJvb1iKdprbbASDaa4L9DCX7BQ7CVwQcEggph13t7t3RlivMKBsDsz701mZ9+eYNjaNyX0e9saDmCxZJv1mrQ6zxDcayxEqXyOxmo/TzN5B2fXDbxFT7D2VH9rgK3FeV3pM848cTnLirQ6e0q60lw1lx+11bziHD5Oi1tcZVfAkyIYOYRM3GF69gHvr4uwX8sY2AMFVDwIkA3srLcFnAFb9B2I3GJqchNbQTcDJ7uLsIqPz0s91koS6WKmMm+SIfojRL8WIIuF+QdAlBSpks+ZBEkA7gijOkgBumGeR80sMLzG1OcMilgep3wDseWUxyEWsTnzmMKUr51ILw3wForYy2AhhSlfO3FKjGO8xiKWxymfgw1THnXAaxxnzMd68ajQuLcAeE1UnA5+K+R1kgmuS/4/KdY3xbdgB0fe/XMVs49m/Zi4uBPPiN/Qibrj5qJHl12+GU/7WYTRoe+J0xFlMOZ78g1n4achujvX7QAAAABJRU5ErkJggg=="></span>                \
-                                             <p class="headerTip warningTip">'+message+'</p>\
-                                            </div>\
-                                        </div>');
-        if(!(_chatContainer.find('.paginted-history-loader').length)){
-          $(paginatedHistoryLoader).insertBefore(_chatContainer.find('.chat-container li:first'));
+        if (bot.paginatedScrollDataAvailable) {
+          bot.previousHistoryLoading = true;
+          let message = me?.config?.history?.paginatedScroll?.loadingLabel || 'Loading chat history..';
+          let paginatedHistoryLoader = $('<div class="paginted-history-loader">\
+                                              <div class="historyWarningTextDiv displayTable">  \
+                                                <span><img class="loadingHistory" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAARCAYAAAA7bUf6AAAAAXNSR0IArs4c6QAAAYZJREFUOBGtVLFKA0EQfbMiiERQEgjpRQt/wULB/opIFCuJvb1iKdprbbASDaa4L9DCX7BQ7CVwQcEggph13t7t3RlivMKBsDsz701mZ9+eYNjaNyX0e9saDmCxZJv1mrQ6zxDcayxEqXyOxmo/TzN5B2fXDbxFT7D2VH9rgK3FeV3pM848cTnLirQ6e0q60lw1lx+11bziHD5Oi1tcZVfAkyIYOYRM3GF69gHvr4uwX8sY2AMFVDwIkA3srLcFnAFb9B2I3GJqchNbQTcDJ7uLsIqPz0s91koS6WKmMm+SIfojRL8WIIuF+QdAlBSpks+ZBEkA7gijOkgBumGeR80sMLzG1OcMilgep3wDseWUxyEWsTnzmMKUr51ILw3wForYy2AhhSlfO3FKjGO8xiKWxymfgw1THnXAaxxnzMd68ajQuLcAeE1UnA5+K+R1kgmuS/4/KdY3xbdgB0fe/XMVs49m/Zi4uBPPiN/Qibrj5qJHl12+GU/7WYTRoe+J0xFlMOZ78g1n4achujvX7QAAAABJRU5ErkJggg=="></span>                \
+                                                <p class="headerTip warningTip">'+ message + '</p>\
+                                                </div>\
+                                            </div>');
+          if (!(_chatContainer.find('.paginted-history-loader').length)) {
+            $(paginatedHistoryLoader).insertBefore(_chatContainer.find('.chat-container li:first'));
+          }
+          bot.getHistory({ limit: (me?.config?.history?.paginatedScroll?.batchSize) });
         }
-        bot.getHistory({limit:(me?.config?.history?.paginatedScroll?.batchSize)});
       }
-    }
-  });
+    });
+  }
   me.bindSDKEvents();
 };
 

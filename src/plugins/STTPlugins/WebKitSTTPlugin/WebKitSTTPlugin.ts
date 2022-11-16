@@ -1,7 +1,11 @@
 import BaseSTT from "../BaseSTT";
 declare  const window:any;
 
-
+/**
+ *  WekKitSTT Plugin class
+ *
+ * @decorator Class
+ */
 class WebKitSTT extends BaseSTT {
     name = 'WebKitSTT';
     config = {

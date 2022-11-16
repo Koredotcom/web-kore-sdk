@@ -1,6 +1,11 @@
 import BaseTTS  from "../BaseTTS";
 declare  const window:any;
 
+/**
+ *  Browser TTSPlugin class
+ *
+ * @decorator Class
+ */
 class BrowserTTS extends BaseTTS {
     name = 'BrowserTTS';
     _ttsConnection:any;

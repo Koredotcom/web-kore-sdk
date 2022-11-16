@@ -1,5 +1,10 @@
 import './greetings-plugin.scss'
 
+/**
+ * Greetings plugin class
+ *
+ * @decorator Class
+ */
 class GreatingsPlugin {
     $:any;
     ele:any;
