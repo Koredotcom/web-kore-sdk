@@ -29,6 +29,6 @@ jobs:
           node-version: 16
           registry-url: https://registry.npmjs.org/
           scope: '@uday_test'
-      - run: cd dist && npm publish --access public
+      - run: node npmPublish.js && cd dist && npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.TOKENNPM }}
