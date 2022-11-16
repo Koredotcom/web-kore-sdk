@@ -18,6 +18,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   var noop = lodash.noop;
   var historyOffset = 0;
   var previousHistoryLoading= false;
+  var paginatedScrollDataAvailable = true;
   if(typeof window !== "undefined"){
     window.kore = window.kore || {};
     window.kore.botsdk = window.kore.botsdk || {};
@@ -52,6 +53,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     //this.removeClass=removeClass;
     this.historyOffset = 0;
     this.previousHistoryLoading = false;
+    this.paginatedScrollDataAvailable = true;
   }
   var userLocation = {
       "city": "",
@@ -338,6 +340,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     
     var clientresp = {};
     clientresp.moreAvailable = data.moreAvailable;
+    this.paginatedScrollDataAvailable = data.moreAvailable;
     clientresp.messages = [];
     clientresp.forward = true;
     clientresp.afterMessageId = this.latestId;
@@ -390,6 +393,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     
     var clientresp = {};
     clientresp.moreAvailable = data.moreAvailable;
+    this.paginatedScrollDataAvailable = data.moreAvailable;
     clientresp.messages = [];
     clientresp.backward = true;
     clientresp.beforeMessageId = this.oldestId;

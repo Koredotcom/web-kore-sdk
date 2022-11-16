@@ -122,7 +122,6 @@ class AgentDesktopPlugin {
                 // send read event from user to agent 
                 if (event.msgData?.message[0]?.component?.payload?.template_type == 'live_agent') {
                     const messageToBot: any = {};
-
                     const msgId = event.msgData.messageId;
                     messageToBot["event"] = "message_delivered";
                     messageToBot["message"] = {
