@@ -76,6 +76,13 @@ class AgentDesktopPlugin {
                 localStorage.setItem("kr-agent-status", "disconneted")
             }
 
+            // when agent send the message, hide the type indicator
+            if (event.messageData.message) {
+                if (event?.messageData?.message[0]?.type === 'text' && event?.messageData?.author?.type === 'AGENT') {
+                    this.$('.typingIndicatorContent').css('display', 'none');
+                }
+            }
+
             // type indicator style changes when agent is being connected
             if (event.messageData?.message?.author?.type === 'AGENT' && event.messageData.message.type === 'typing' && localStorage.getItem("kr-agent-status") === "connected") {
                 this.$('.typingIndicatorContent').css('display', 'block');
