@@ -2094,7 +2094,7 @@ class AgentDesktopPluginScript  {
 
             }
             function processEvent(evt) {
-                var limit = 100;
+                var limit = 16 * 1024;
                 const START_MESSAGE = { "type": "start_event_msg" };
                 const STOP_MESSAGE = { "type": "stop_event_msg" };
                 //dataChannel.send(JSON.stringify(START_MESSAGE));
