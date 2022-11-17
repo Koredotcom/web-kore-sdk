@@ -6562,3 +6562,686 @@
     position: absolute;
     right: 4px;
 }
+
+/* Article template css starts here */
+.media-block.media-blue {
+    padding: 20px 20px;
+    border: 1px solid #0D6EFD;
+    box-shadow: -5px 0px 0px #0D6EFD;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  .media-block.media-blue .media-header {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+    padding-bottom: 8px;
+  }
+  .media-block.media-blue .media-desc {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 16px;
+    color: #202124;
+    padding-bottom: 14px;
+  }
+  .media-block.media-blue .media-space-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .media-block.media-blue .media-space-between .media-icon-block {
+    display: flex;
+    align-items: center;
+  }
+  .media-block.media-blue .media-space-between .media-icon-block .media-icon {
+    width: 34px;
+    height: 34px;
+    background: #E7F1FF;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .media-block.media-blue .media-space-between .media-icon-block .media-icon-desc {
+    padding-left: 10px;
+  }
+  .media-block.media-blue .media-space-between .media-icon-block .media-icon-desc .media-icon-desc-data {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    color: #696C70;
+  }
+  .media-block.media-blue .media-space-between .btn-primary {
+    border: 1px solid transparent;
+    background: #0D6EFD;
+    padding: 0px 20px;
+    height: 34px;
+    font-size: 12px;
+    border-radius: 4px;
+    color: #fff;
+    min-width: 60px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s all ease-in;
+  }
+  .media-block.media-blue .media-space-between .btn-primary:hover {
+    background: #0156d4;
+    color: #fff;
+  }
+  .media-block.media-blue .media-space-between .btn-primary:focus {
+    border: solid 1px #1372ff;
+    outline: none;
+    box-shadow: none !important;
+  }
+  .article-show-more{
+    color: #0D6EFD;
+    text-align: center;
+    padding: 5px;
+    cursor: pointer;
+  }
+
+  .kore-chat-window .kore-action-sheet .article-template {
+	overflow-y: auto;
+	animation-name: fadeInBottom;
+	animation-duration: 1s;
+	animation-fill-mode: both;
+	padding: 15px;
+	margin-top: 30px;
+}
+.article-template .close-button{
+    cursor: pointer;
+    margin: 0;
+    padding-top: 8px;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    color:var(--sdk-chat-window-list-template-close-btn-color);
+    background:none;
+    opacity:1;
+    outline:none;
+    font-size:30px;
+    float:right;
+    line-height:inherit;
+    border:none;
+}
+@keyframes fadeInBottom {
+    from {
+        opacity: 0;
+        height: 0;
+    }
+    to { 
+        opacity: 1;
+        height: 462px; 
+    }
+}
+
+/* Article template css ends here */
+
+/* Reset pin template Styles Starts here */
+
+.reset-pin-template {
+    display: inline-block;
+    width: 100%;
+    padding: 25px;
+    /* margin-bottom: 10%; */
+  }
+  
+  .reset-pin-template .hading-text {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 36px;
+    color: #000000;
+    position: relative;
+    /* text-align: center; */
+  }
+  
+  .reset-pin-template .hading-text .close-button {
+    position: absolute;
+    right: -12px;
+    top: -10px;
+    background: #ffffff;
+    border: 0;
+  }
+  
+  .reset-pin-template .hading-text .close-button img {
+    cursor: pointer;
+  }
+  
+  .reset-pin-template .desc-text {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    color: #000000;
+  }
+  
+  
+  
+  .reset-pin-template .enter-pin-inputs,
+  .reset-pin-template .reenter-pin-inputs {
+    margin: 20px 0 10px 0;
+    display: flex;
+    align-items: center;
+    position: relative;
+    justify-content: center;
+  }
+  
+  
+  .reset-pin-template .enter-pin-inputs input,
+  .reset-pin-template .reenter-pin-inputs input {
+    background: #F8F9FC;
+    border: 1px solid #738794;
+    border-radius: 4px;
+    width: 40px;
+    height: 40px;
+    margin-right: 15px;
+    padding: 0;
+    -webkit-appearance: none;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 32px;
+    color: #313131;
+    text-align: center;
+  }
+  
+  
+  .reset-pin-template .enter-pin-inputs input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  
+  .enter-pin-inputs input[type=number],
+  .reenter-pin-inputs input[type=number] {
+    -moz-appearance: textfield;
+  }
+  
+  
+  
+  .reset-pin-template .reset-pin-generation {
+    text-align: center;
+    margin-top: 15px;
+  }
+  
+  .reset-pin-template .reset-pin-generation .enter-pin-info {
+    margin-bottom: 20px;
+  }
+  
+  .reset-pin-template .reset-pin-generation .error-message-info {
+    margin-top: 20px;
+    font-size: 12px;
+    color: red;
+  }
+  
+  .reset-pin-template .reset-pin-generation .resetpin-button-group {
+    margin-top: 20px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }
+  
+  .reset-pin-template .reset-pin-generation .resetpin-button-group .reset-btn {
+    padding: 8px 21px;
+    border-radius: 25px;
+    background: #9B1E26;
+    border: 1px solid #FFFFFF;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 14px;
+    font-weight: 600;
+    color: #FFFFFF;
+  }
+  
+  .reset-pin-template .reset-pin-generation .resetpin-button-group .reset-btn .button-title {
+    padding-right: 3px;
+  }
+  
+  .reset-pin-template .reset-pin-generation .resetpin-button-group .reset-btn.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  /* Reset pin template Styles ends here */
+
+  /* quick replies welcome template styles starts here */
+  .kore-chat-window .buttonTmplContent .buttonTmplContentChild.quickReplyDiv.displayInline {
+    display: inline-block;
+    padding: 10px 10px 0 0;
+    border: none;
+}
+
+.kore-chat-window .buttonTmplContent .buttonTmplContentChild.quickReplyDiv.displayInline .quickReply {
+    border: 1px solid var(--sdk-chat-widow-primary-font-color);
+    color: var(--sdk-chat-widow-primary-blue-color);
+    font-size: 12px;
+    border-radius: 6px;
+}
+.kore-chat-window .buttonTmplContent .buttonTmplContentChild.quickReplyDiv.displayInline .quickReply:hover{
+    background:var(--sdk-chat-widow-primary-font-color); 
+    border: 1px solid var(--sdk-chat-widow-primary-font-color);
+    color: var(--sdk-chat-widow-default-white);
+}
+.kore-chat-window .buttonTmplContent .buttonTmplContentChild.quickReplyDiv.displayInline .buttonQuickReply {
+	color: var(--sdk-chat-window-user-bubble-bg) !important;
+}
+
+ /* quick replies welcome template styles ends here */
+
+ /* OTP validations */
+
+.mashreq-otp-validation.hide {
+    display: none;
+  }
+  
+  .otp-validations {
+    display: inline-block;
+    width: 100%;
+    padding: 25px;
+    /* margin-bottom: 10%; */
+  }
+  
+  .otp-validations .hading-text {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 36px;
+    color: #000000;
+    position: relative;
+    /* text-align: center; */
+  }
+  
+  .otp-validations .hading-text .close-button {
+    position: absolute;
+    position: absolute;
+    right: -12px;
+    background: #ffffff;
+    border: 0;
+    top: -10px;
+  }
+  
+  .otp-validations .hading-text .close-button img {
+    cursor: pointer;
+  }
+  
+  .otp-validations .desc-text {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 22px;
+    color: #000000;
+    /* text-align: center; */
+  }
+  
+  .otp-validations .phone-number-block {
+    margin: 20px 0 10px 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .otp-validations .phone-number-block .icon-block {
+    background: #FCE9E6;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  
+  .otp-validations .phone-number-block .number-phone {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 26px;
+    color: #000000;
+  }
+  
+  .otp-validations .text-tip {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 22px;
+    color: #FF5E00;
+  }
+  
+  .otp-validations .otp-block-inputs,
+  .otp-validations .enter-pin-inputs,
+  .otp-validations .reenter-pin-inputs {
+    margin: 20px 0 10px 0;
+    display: flex;
+    align-items: center;
+    position: relative;
+    justify-content: center;
+  }
+  .otp-validations .otp-block-inputs .input-block{
+    position: relative;
+  }
+  .otp-validations .otp-block-inputs input {
+    background: #F8F9FC;
+    border: 2px solid #9B1E26;
+    border-radius: 4px;
+    /* width: 40px; */
+    height: 40px;
+    margin-right: 0;
+    padding: 10;
+    -webkit-appearance: none;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 32px;
+    color: #313131;
+    /* text-align: center; */
+  }
+  
+  .otp-validations .enter-pin-inputs input,
+  .otp-validations .reenter-pin-inputs input {
+    background: #F8F9FC;
+    border: 1px solid #738794;
+    border-radius: 4px;
+    width: 40px;
+    height: 40px;
+    margin-right: 15px;
+    padding: 0;
+    -webkit-appearance: none;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 32px;
+    color: #313131;
+    text-align: center;
+  }
+  
+  .otp-validations .otp-block-inputs input::-webkit-outer-spin-button,
+  .otp-validations .otp-block-inputs input::-webkit-inner-spin-button,
+  .otp-validations .enter-pin-inputs input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  .otp-validations .otp-block-inputs input[type=number],
+  .enter-pin-inputs input[type=number],
+  .reenter-pin-inputs input[type=number] {
+    -moz-appearance: textfield;
+  }
+  
+  .otp-validations .respond-time {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 22px;
+    color: #424242;
+  }
+  
+  .otp-validations .respond-time span {
+    color: #FF5E00;
+  }
+  
+  .otp-validations .reset-pin-generation {
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  .otp-validations .reset-pin-generation .enter-pin-info {
+    margin-bottom: 20px;
+  }
+  
+  .otp-validations .reset-pin-generation .error-message-info {
+    margin-top: 20px;
+    font-size: 12px;
+    color: red;
+  }
+  
+  .otp-validations .reset-pin-generation .resetpin-button-group {
+    margin-top: 20px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }
+  
+  .otp-validations .reset-pin-generation .resetpin-button-group .reset-btn {
+    padding: 8px 21px;
+    border-radius: 5px;
+    background: #9B1E26;
+    border: 1px solid #FFFFFF;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 14px;
+    font-weight: 600;
+    color: #FFFFFF;
+  }
+  
+  .otp-validations .reset-pin-generation .resetpin-button-group .reset-btn .button-title {
+    padding-right: 3px;
+  }
+  
+  .otp-validations .reset-pin-generation .resetpin-button-group .reset-btn.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  
+  .otp-validations .otp-content .otp-btn-group {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin-top: 20px;
+    /* padding: 0 10px; */
+  }
+  .otp-validations .otp-content .otp-btn-group button{
+    border-radius: 25px;
+  }
+  .otp-validations .otp-content .otp-btn-group .otp-btn.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .otp-validations .otp-content .otp-btn-group .otp-btn {
+    padding: 8px 21px;
+    /* border-radius: 5px; */
+    background: #9B1E26;
+    border: 1px solid #FFFFFF;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 14px;
+    font-weight: 600;
+    color: #FFFFFF;
+  }
+  .otp-validations .otp-content .otp-btn-group .otp-resend {
+    padding: 8px 21px;
+    /* border-radius: 5px; */
+    background: #FFFFFF;
+    border: 1px solid #9B1E26;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 14px;
+    font-weight: 600;
+    color: #9B1E26;
+    margin-left: 15px;
+  }
+  .otp-validations .otp-content .otp-btn-group .otp-btn .button-title {
+    padding-right: 3px;
+  }
+  
+  .otp-validations .otp-content .otp-block-inputs .eye-icon {
+    height: 18px;
+    width: 18px;
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+    top: 10px;
+  }
+  .otp-validations input:focus {
+    outline: 1px solid #9B1E26;
+  }
+  .otp-validations .resend-information img{
+    height: 34px;
+    width: 34px;
+    margin-right: 10px;
+  }
+  .otp-validations .resend-information span{
+   font-size: 12px;
+  }
+  
+  
+  /* otp validation Template */
+
+  /* --- Banking feedback template css starts here -- */
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-experience-content .content-heading{
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 19px;
+    margin: 16px 0;
+}
+.kore-chat-window .bankingFeedBackTemplate{
+    border-radius: 0px 10px 10px 10px;
+    width: 100%;
+    padding: 10px !important;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-experience-content{
+    border-radius: 0px 10px 10px 10px;
+    width: 80%;
+    padding: 0px !important;
+    cursor: pointer;
+}
+.kore-chat-window .bankingFeedBackTemplate .empathy-message{
+    border-top: 1px solid #BDC1C6;
+    border-bottom: 1px solid #BDC1C6;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+.kore-chat-window .bankingFeedBackTemplate.disabled{
+    pointer-events: none !important;
+    opacity: 0.5 !important;
+
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-experience-content .bankingFeedBackTemplate-content-experience{
+    background: #FFFFFF;
+    border-radius: 7px;
+    padding: 5px 0px;
+    margin-bottom: 20px; /*need to add based on conditional */
+    margin-top: 0;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-experience-content .bankingFeedBackTemplate-content-experience .checkInput{
+    position: relative !important;
+    opacity: 1 !important;
+    /* z-index: 1; */
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+    margin-top: 0;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-experience-content .bankingFeedBackTemplate-content-experience .content-list-view{
+    align-items: center;
+    padding: 10px 10px 10px 14px;
+    height: 40px;
+    left: 0px;
+    top: 5px;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-experience-content .bankingFeedBackTemplate-content-experience .checkInput-label{
+    position: absolute !important;
+    margin-left: 6px;
+    cursor: pointer;
+    font-weight: normal;
+
+}
+
+
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .feebackList-heading{
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 19px;
+    margin: 16px 0;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content{
+    border-radius: 0px 10px 10px 10px;
+    width: 100%;
+    padding: 0px !important;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .experience-feedback-listItems{
+    background: #FFFFFF;
+    border-radius: 7px;
+    padding: 5px 0px;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .experience-feedback-listItems .checkInput{
+    /* position: relative !important;
+    opacity: 1 !important;
+    /* z-index: 1; */
+    /* height: 20px;
+    width: 20px; */ 
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .experience-feedback-listItems .feedback-listItem{
+    align-items: center;
+    padding: 5px 10px 5px 14px;
+    left: 0px;
+    top: 5px;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .experience-feedback-listItems .feedback-listItem .checkbox{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .experience-feedback-listItems .checkInput-label{
+    position: absolute !important;
+    margin-left: 4px;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .suggestions-component .feedback-suggestionInput{
+    width: 100%;
+    background: #FFFFFF;
+    border: 1px solid #BDC1C6;
+    box-sizing: border-box;
+    border-radius: 8px;
+    margin: 10px 0px;
+    resize: none !important;
+    padding: 10px 10px;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .buttons-div{
+    display: flex;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .buttons-div .feedback-submit .submitBtn{
+    font-size: 14px;
+    color: #fff;
+    background: #009dab;
+    height: 34px;
+    padding: 0px 20px !important;
+    width: auto;
+    border-radius: 3px;
+    border: 1px solid #009dab;
+    margin-left: 0;
+    outline: 0;
+	cursor: pointer;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .buttons-div .feedback-submit .submitBtn:hover{
+    background: #018490;
+    border: 1px solid #018490;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .buttons-div .feedback-cancel .cancelBtn{
+    font-size: 14px;
+    color: #fff;
+    height: 34px;
+    padding: 0px 20px !important;
+    width: auto;
+    border-radius: 3px;
+    outline: 0;
+    background: #FFFFFF;
+    color: #202124;
+    border: 1px solid #BDC1C6;
+    box-sizing: border-box;
+    margin-left: 10px;
+    cursor: pointer;
+}
+.kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content.hide{
+    display: none !important;
+}
+
+.kore-chat-window .bankingFeedBackTemplate .feedback-listItem .checkbox.styledCSS input[type="checkbox"]:checked + label::after {
+    background-size: 10px 20px;
+    display: inline-block;
+    background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjxzdmcgd2lkdGg9IjE2cHgiIGhlaWdodD0iMTJweCIgdmlld0JveD0iMCAwIDE2IDEyIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPg0KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNTMuMiAoNzI2NDMpIC0gaHR0cHM6Ly9za2V0Y2hhcHAuY29tIC0tPg0KICAgIDx0aXRsZT5jaGVjay13aGl0ZTwvdGl0bGU+DQogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+DQogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+DQogICAgICAgIDxnIGlkPSJjaGVjay13aGl0ZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsIC0yLjAwMDAwMCkiIGZpbGwtcnVsZT0ibm9uemVybyI+DQogICAgICAgICAgICA8cG9seWdvbiBpZD0iUGF0aCIgZmlsbC1vcGFjaXR5PSIwIiBmaWxsPSIjRDhEOEQ4IiBwb2ludHM9IjAgMCAxNiAwIDE2IDE2IDAgMTYiPjwvcG9seWdvbj4NCiAgICAgICAgICAgIDxwYXRoIGQ9Ik0xNC4yLDIuODM1IEMxNC40LDIuNjIgMTQuNzMzLDIuNjEgMTQuOTQ1LDIuODExIEMxNS4xNDUsMyAxNS4xNjUsMy4zMDkgMTUuMDAyLDMuNTIzIEwxNC45NjksMy41NjMgTDYuMDQ5LDEzLjE2NSBDNS44NTksMTMuMzcgNS41NDUsMTMuMzg5IDUuMzMzLDEzLjIxNSBMNS4yOTUsMTMuMTggTDEuMDQ1LDguOTUzIEMwLjg0LDguNzQ3IDAuODM3LDguNDEgMS4wNCw4LjIgQzEuMjMzLDguMDAzIDEuNTQsNy45ODkgMS43NDgsOC4xNiBMMS43ODUsOC4xOTQgTDUuNjUsMTIuMDQgTDE0LjIsMi44MzUgWiIgaWQ9IlBhdGgiIGZpbGw9IiNGRkZGRkYiPjwvcGF0aD4NCiAgICAgICAgPC9nPg0KICAgIDwvZz4NCjwvc3ZnPg==);
+    width: 10px;
+    height: 20px;
+    content: "";
+    background-repeat: no-repeat;
+    left: 3px;
+    top: -2px;
+}
+
+/* --- Banking feedback template css Ends here -- */

@@ -1523,7 +1523,7 @@
                         me.openExternalLink(a_link)
                     }
                 });
-                _chatContainer.off('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn,.viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent,.listRightContent,.checkboxBtn,.likeDislikeDiv').on('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn, .viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent,.listRightContent,.checkboxBtn,.likeDislikeDiv', function (e) {
+                _chatContainer.off('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn,.viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent,.listRightContent,.checkboxBtn,.likeDislikeDiv,.buttonQuickReply').on('click', '.buttonTmplContentBox li,.listTmplContentChild .buyBtn, .viewMoreList .viewMore,.listItemPath,.quickReply,.carouselImageContent,.listRightContent,.checkboxBtn,.likeDislikeDiv,.buttonQuickReply', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
                     var type = $(this).attr('type');
@@ -2048,7 +2048,7 @@
                 me.bindEvents();
             };
 
-            chatWindow.prototype.sendMessage = function (chatInput, renderMsg,msgObject) {
+            chatWindow.prototype.sendMessage = function (chatInput, renderMsg,msgObject,isMessageTobeHidden) {
                 var me = this;
                 me.stopSpeaking();
                 if (chatInput.text().trim() === "" && $('.attachment').html().trim().length == 0) {
@@ -2180,7 +2180,9 @@
                     msgData.message[0].cInfo.body = renderMsg;
                 }
                 msgData.message[0].cInfo.ignoreCheckMark=ignoreCheckMark;
-                me.renderMessage(msgData);
+                if(!isMessageTobeHidden){
+                    me.renderMessage(msgData);
+                }
             };
                  
             chatWindow.prototype.handleWebHookResponse = function (msgsData) {
@@ -2943,7 +2945,7 @@
                 _chatContainer.find('li').attr('aria-live','off');
                 //_chatContainer.find('li').attr('aria-hidden','true');//for mac voiceover bug with aria-live
    
-                if(msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.sliderView && !msgData.message[0].component.payload.fromHistory){
+                if(msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.sliderView && (!msgData.message[0].component.payload.fromHistory && !msgData.fromHistory)){
                     bottomSliderAction('show',messageHtml);
                 }else{
                     //ignore message(msgId) if it is already in viewport                     
