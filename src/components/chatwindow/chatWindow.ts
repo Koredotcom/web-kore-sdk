@@ -735,6 +735,7 @@ bindEvents  () {
   _chatContainer.on('click', '.close-btn', (event: any) => {
     me.destroy();
     bot.historyOffset = 0;
+    bot.previousHistoryLoading = false;
     if (me.config.multiPageApp && me.config.multiPageApp.enable) {
       me.removeLocalStoreItem('kr-cw-state');
       me.removeLocalStoreItem('kr-cw-uid');
@@ -1527,6 +1528,7 @@ historyLoadingComplete () {
       _chatContainer.find('.chat-container').scrollTop(_heightTobeScrolled);
       $(this.paginatedScrollMsgDiv).find('.prev-message-list').empty();
       _chatContainer.find('.paginted-history-loader').remove();
+      bot.previousHistoryLoading = false;
     }
   }, 0, me);
 };
