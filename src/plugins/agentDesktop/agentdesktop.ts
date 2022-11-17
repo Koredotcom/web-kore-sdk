@@ -1,4 +1,4 @@
-import AgentDesktopPluginScript from './agentdesktop-script';
+import { AgentDesktopPluginScript } from './agentdesktop-script';
 
 
  /** @ignore */

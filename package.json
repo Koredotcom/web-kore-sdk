@@ -1,6 +1,6 @@
 {
-  "name": "kore-web-sdk",
-  "version": "9.3.0",
+  "name": "@uday_test/kore-web-sdk",
+  "version": "9.6.0",
   "description": "Kore.ai offers Bots SDKs as a set of platform-specific client libraries that provide a quick and convenient way to integrate Kore.ai Bots chat capability into custom applications",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -13,8 +13,7 @@
     "doc-graphTemplates": "typedoc --cleanOutputDir false  --excludeNotDocumented  --out docs/api/plugins/graphTemplates   --entryPoints src/plugins/graphTemplatesPlugin.ts --name GraphTemplate",
     "doc-WebKitSTT": "typedoc --cleanOutputDir false  --excludeNotDocumented  --out docs/api/plugins/WebKitSTT   --entryPoints src/plugins/STTPlugins/WebKitSTTPlugin/WebKitSTTPlugin.ts --name WebKitSTT",
     "doc-BrowserTTS": "typedoc --cleanOutputDir false  --excludeNotDocumented  --out docs/api/plugins/BrowserSTT  --entryPoints src/plugins/TTSPlugins/BrowserTTSPlugin/BrowserTTSPlugin.ts --name BrowserTTS",
-
-    "doc": "npm run doc-chatwindow &&  npm run doc-korepickers && npm run doc-graphTemplates && npm run doc-WebKitSTT && npm run doc-BrowserTTS",
+    "doc": "npm run doc-chatwindow &&  npm run doc-korepickers && npm run doc-graphTemplates && npm run doc-WebKitSTT && npm run doc-BrowserTTS && npm run doc-agentdesktop",
  
 
     "eslint": "./node_modules/.bin/eslint 'src/**/*.{ts,js}'",
