@@ -12,7 +12,7 @@ import korejquery from 'jquery'
 (function(jQuery){
 	var oldManip = jQuery.fn.domManip, tmplItmAtt = "_tmplitem", htmlExpr = /^[^<]*(<[\w\W]+>)[^>]*$|\{\{\! /,
 		newTmplItems = {}, wrappedItems = {}, appendToTmplItems, topTmplItem = { key: 0, data: {} }, itemKey = 0, cloneIndex = 0, stack = [];
-
+	var jQtemplates={};
 	function newTmplItem( options, parentItem, fn, data ) {
 		// Returns a template item data structure for a new rendered instance of a template (a 'template item').
 		// The content field is a hierarchical array of strings and nested items (to be
@@ -122,7 +122,11 @@ import korejquery from 'jquery'
 			if ( topLevel ) {
 				// This is a top-level tmpl call (not from a nested template using {{tmpl}})
 				parentItem = topTmplItem;
-				tmpl = jQuery.template[tmpl] || jQuery.template( null, tmpl );
+				if(tmpl && tmpl.id && jQtemplates && jQtemplates[tmpl.id]){
+					tmpl=jQtemplates[tmpl.id]
+				}else{
+					tmpl = jQuery.template[tmpl] || jQuery.template( null, tmpl );
+				}
 				wrappedItems = {}; // Any wrapped items will be rebuilt, since this is top level
 			} else if ( !tmpl ) {
 				// The template item is already associated with DOM - this is a refresh.
@@ -185,7 +189,13 @@ import korejquery from 'jquery'
 				}
 				if ( tmpl.nodeType ) {
 					// If this is a template block, use cached copy, or generate tmpl function and cache.
-					tmpl = jQuery.data( tmpl, "tmpl" ) || jQuery.data( tmpl, "tmpl", buildTmplFn( tmpl.innerHTML ));
+					if(tmpl && tmpl.id && jQtemplates && jQtemplates[tmpl.id]){
+                        tmpl=jQtemplates[tmpl.id]
+                    }else{
+						var templateId=tmpl.id;
+						tmpl = jQuery.data( tmpl, "tmpl" ) || jQuery.data( tmpl, "tmpl", buildTmplFn( tmpl.innerHTML ));
+						jQtemplates[templateId]=tmpl;
+                    }
 					// Issue: In IE, if the container element is not a script block, the innerHTML will remove quotes from attribute values whenever the value does not include white space.
 					// This means that foo="${x}" will not work if the value of x includes white space: foo="${x}" -> foo=value of x.
 					// To correct this, include space in tag: foo="${ x }" -> foo="value of x"
@@ -269,6 +279,14 @@ import korejquery from 'jquery'
 			cloneIndex++;
 		}
 	});
+
+
+	jQuery.extend({
+		installPreCompiledTemplates:function(preJQtemplates){
+			jQuery.extend(jQtemplates,preJQtemplates);
+		}
+	});
+
 
 	//========================== Private helper functions, used by code above ==========================
 

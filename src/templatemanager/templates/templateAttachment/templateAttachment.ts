@@ -32,7 +32,7 @@ class TemplateAttachment {
         });
     }
     getTemplateString() {
-        var templateAttachment = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+        var templateAttachment = '<script id="chat_attachment_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
             {{each(key, msgItem) msgData.message}} \
                 {{if msgItem.component && msgItem.component.payload.url}} \

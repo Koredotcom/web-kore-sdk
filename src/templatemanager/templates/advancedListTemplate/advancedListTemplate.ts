@@ -458,7 +458,7 @@ class AdvancedListTemplate {
 			}
 
 			function buildPreviewModalTemplate(listItem: any) {
-				var modalPreview = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+				var modalPreview = '<script id="chat_adv_list_tmpl" type="text/x-jqury-tmpl"> \
 				<div class="advanced-list-wrapper img-with-title with-accordion if-multiple-accordions-list">\
 					<div class="multiple-accor-rows">\
 							<div class="accor-inner-content">\
