@@ -577,7 +577,7 @@ class AdvancedListTemplate {
 		});
     }
     getTemplateString() {
-        var advancedListTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+        var advancedListTemplate = '<script id="chat_adv_list_tmpl" type="text/x-jqury-tmpl"> \
 	{{if msgData.message}} \
 	<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
 	{{if msgData && msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
