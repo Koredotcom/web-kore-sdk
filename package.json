@@ -1,6 +1,6 @@
 {
   "name": "@uday_test/kore-web-sdk",
-  "version": "9.6.0",
+  "version": "9.9.0",
   "description": "Kore.ai offers Bots SDKs as a set of platform-specific client libraries that provide a quick and convenient way to integrate Kore.ai Bots chat capability into custom applications",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -52,6 +52,7 @@
     "util": "^0.12.4"
   },
   "devDependencies": {
+    "fs-extra": "^10.1.0",
     "@babel/core": "^7.15.5",
     "@babel/plugin-proposal-class-static-block": "^7.16.7",
     "@babel/preset-env": "^7.15.6",

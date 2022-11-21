@@ -1,12 +1,20 @@
 # This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
 # For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
 
+# On push commit id publish / dist folder upload
+# on TAG pubish
+# dist folder structure in typescript publish
+# chat config interaces & chatwindow.ts
+
 name: Kore-web-sdk
 
 on:
   push:
     branches:
       - v2/dev 
+  release:
+    types: [published]
+
 
 jobs:
   build:
@@ -24,10 +32,8 @@ jobs:
         run: npm run build-umd
       - name: Run ESM build
         run: npm run build
-      - name: Prepare the files for npm publish
+      - name: Prepare and npm publish the build
         run: node npmPublish.js
-      - name: Publish the package
-        run: cd dist && npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.TOKENNPM }}
 
