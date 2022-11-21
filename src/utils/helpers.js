@@ -241,6 +241,7 @@ class KoreHelpers{
                     str = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(_regExForLink, linkreplacer);
                 }
             } else {
+                str = str.replace(/onerror=/gi, 'abc-error=');
                 wrapper1 = document.createElement('div');
                 //str = str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
                 wrapper1.innerHTML = xssAttack(str);
@@ -267,7 +268,7 @@ class KoreHelpers{
                         str = str.replace(linkArray[x], _newLA.innerHTML);
                     }
                 } else {
-                    str = wrapper1.innerHTML.replace(_regExForLink, linkreplacer);
+                    str = wrapper1.innerHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(_regExForLink, linkreplacer);
                 }
             }
             if(ignoreCheckMark){
@@ -286,9 +287,9 @@ class KoreHelpers{
             }
             str = str.replaceAll('target="underscoreblank"', 'target="_blank"');
             str = str.replaceAll("target='underscoreblank'", 'target="_blank"');
-            if (responseType === 'user') {
+            // if (responseType === 'user') {
                 str = str.replace(/abc-error=/gi, 'onerror=');
-            }
+            // }
             return this.nl2br(str, true);
         },
         'checkMarkdowns': function (val, hyperLinksMap) {

@@ -98,7 +98,7 @@ class CardTemplate {
 			}
 		});
         function buildCardPreview(card: any) {
-            var cardPreview = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+            var cardPreview = '<script id="chat_card_tmpl_preview" type="text/x-jqury-tmpl"> \
             <div class="card-template">\
                 <div class="card-body" {{if (card && card.cardStyles)}}style="{{each(styleKey,style) card.cardStyles}}${styleKey} : ${style};{{/each}}"{{/if}} {{if card.type}}type="${card.type}{{/if}}" actionObj="${JSON.stringify(card)}">\
                     {{if card && card.cardHeading && (!card.cardHeading.icon && !card.cardHeading.description)}}\
@@ -179,7 +179,7 @@ class CardTemplate {
 
     }
     getTemplateString() {
-	var cardTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+	var cardTemplate = '<script id="chat_card_tmpl" type="text/x-jqury-tmpl"> \
 	{{if msgData.message}} \
 	<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
 		{{if msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.cards && msgData.message[0].component.payload.cards.length}}\

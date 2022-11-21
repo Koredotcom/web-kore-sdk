@@ -189,7 +189,7 @@ class RatingTemplate {
 </div>'
     }
     getTemplateString() {
-        var ratingTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+        var ratingTemplate='<script id="chat_rating_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
         <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
             <div class="buttonTmplContent"> \

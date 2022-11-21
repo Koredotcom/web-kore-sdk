@@ -100,7 +100,7 @@
     cursor: pointer;
 }
 .kore-chat-window .kore-chat-body .listViewTmplContent .buyBtn{
-	background: var(--sdk-chat-window-pie-chart-background);
+	background: var(--sdk-chat-window-bg-color);
     border: 0;
     color: var(--sdk-chat-window-viewmore-btn-color)!important;
     cursor: pointer;
@@ -176,7 +176,7 @@
     z-index: 9;
     bottom: 0;
     /* box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.22); */
-    background: var(--sdk-chat-window-pie-chart-background);
+    background: var(--sdk-chat-window-bg-color);
     height: 400px;
     cursor: default;
     overflow-y: auto;

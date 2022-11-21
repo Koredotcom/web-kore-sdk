@@ -1345,6 +1345,9 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
 generateMessageDOM(msgData?:any){
   const me:any = this; 
   let messageHtml = me.templateManager.renderMessage(msgData);
+  if(messageHtml==='_ignore_message_render_'){
+    return "";
+  }
   if (!messageHtml && msgData && msgData.message && msgData.message[0]) {
     messageHtml=me.messageTemplate.renderMessage(msgData);
   }

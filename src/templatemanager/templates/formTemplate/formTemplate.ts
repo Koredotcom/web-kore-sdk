@@ -60,7 +60,7 @@ class FormTemplate {
         });
     }
     getTemplateString() {
-        var formTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+        var formTemplate = '<script id="chat_form_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
         <li {{if msgData.type !== "bot_response"}} id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
             <div class="buttonTmplContent"> \

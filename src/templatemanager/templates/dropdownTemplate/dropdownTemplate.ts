@@ -35,7 +35,7 @@ class DropdownTemplate {
 
     }
     getTemplateString() {
-        var dropdownTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+        var dropdownTemplate = '<script id="chat_dropdown_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
             <li {{if msgData.type !== "bot_response"}} id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
                 <div class="dropDowntmplContent"> \

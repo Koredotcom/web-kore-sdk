@@ -25,7 +25,7 @@
     padding: 6px 12px;
     font-size: 14px;
     line-height: 1.42857143;
-    background-color: var(--sdk-chat-window-pie-chart-background);
+    background-color: var(--sdk-chat-window-bg-color);
     background-image: none;
     border: 1px solid var(--sdk-chat-window-input-border);
     border-radius: 4px;
@@ -40,7 +40,7 @@
     background: var(--sdk-chat-widow-secondary-font-color);
     padding: 4px 8px;
     border-radius: 4px;
-    color: var(--sdk-chat-window-pie-chart-background);
+    color: var(--sdk-chat-window-bg-color);
     float: right;
     cursor: pointer;
     z-index:2;

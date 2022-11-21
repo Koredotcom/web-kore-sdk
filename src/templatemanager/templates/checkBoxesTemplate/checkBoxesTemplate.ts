@@ -77,7 +77,7 @@ class CheckBoxesTemplate {
         });
     }
     getTemplateString() {
-        var checkBoxesTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+        var checkBoxesTemplate = '<script id="chat_checkbox_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
         <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
                 <div class = "checkboxes-template"> \
