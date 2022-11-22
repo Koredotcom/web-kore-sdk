@@ -98,6 +98,7 @@
             window.linechartCount = 0;
             var available_charts = [];
             var chatInitialize;
+            var recognizer;
             var customTemplateObj = {};
             window.chartColors = ['#75b0fe', '#f78083', '#99ed9e', '#fde296', '#26344a', '#5f6bf7', '#b3bac8', '#99a1fd', '#9cebf9', '#f7c7f4'];
             /**************************File upload variable end here **************************/
@@ -1121,7 +1122,7 @@
                 me.config.botOptions.handleError=me.config.handleError;
                 me.config.botOptions.googleMapsAPIKey=me.config.googleMapsAPIKey;
                 /* autoEnableSpeechAndTTS will on if and only if both tts and mic are enabled */
-                if (me.config.isTTSEnabled && (me.config.isSpeechEnabled || me.config.allowGoogleSpeech) && me.config.autoEnableSpeechAndTTS) {
+                if (me.config.isTTSEnabled && me.config.isSpeechEnabled && me.config.autoEnableSpeechAndTTS) {
                     me.isTTSOn = true;
                     setTimeout(function () {
                         $('.ttspeakerDiv').removeClass('ttsOff');
@@ -4298,7 +4299,7 @@
             var recognition = null;
             var prevStr = "";
             setTimeout(function(){
-                if(chatInitialize && chatInitialize.config && chatInitialize.config.allowGoogleSpeech) {
+                if(chatInitialize && chatInitialize.config && chatInitialize.config.stt && chatInitialize.config.stt.vendor === 'google') {
                     if(window.initGapi){
                         initGapi();
                     }else{
@@ -4411,7 +4412,7 @@
                     return;
                 }
                 final_transcript = '';
-                recognition.lang = 'en-US';
+                recognition.lang = chatInitialize.config.stt.webapi.recognitionLanguage;
                 recognition.start();
             }
             function startGoogleSpeech() {
@@ -4423,7 +4424,7 @@
                     intervalKey = setInterval(function () {
                         rec.export16kMono(function (blob) {
                             console.log(new Date());
-                            if (chatInitialize.config.allowGoogleSpeech) {
+                            if (chatInitialize.config.stt.vendor === 'google') {
                                 sendBlobToSpeech(blob, 'LINEAR16', 16000);
                             }
                             else {
@@ -4435,32 +4436,19 @@
                 }
             }
 
-            function getSIDToken() {                
-                if(chatInitialize.config.allowGoogleSpeech) {
+            function getSIDToken() {      
+                if(chatInitialize.config.stt.vendor === 'azure'){
+                    if (recognizer != null) {
+                        RecognizerStop(SDK, recognizer);
+                    }
+                    recognizer = RecognizerSetup(SDK, chatInitialize.config.stt.azure.recognitionMode, chatInitialize.config.stt.azure.recognitionLanguage, 0, chatInitialize.stt.azure.subscriptionKey);
+                    RecognizerStart(SDK, recognizer);
+                } else if(chatInitialize.config.stt.vendor === 'google'){
                     // using google cloud speech API
                     micEnable();
-                }else if(recognition) { 
+                } else if(chatInitialize.config.stt.vendor === 'webapi') {
                     // using webkit speech recognition
                     startGoogleWebKitRecognization();
-                }
-                else {
-                    if(!speechPrefixURL){
-                        console.warn("Please provide speech socket url");
-                        return false;
-                    }
-                    $.ajax({
-                        url: speechPrefixURL+"asr/wss/start?email="+userIdentity,
-                        type: 'post',
-                         headers: {"Authorization": (bearerToken) ? bearerToken : assertionToken},
-                        dataType: 'json',
-                        success: function (data) {
-                            sidToken = data.link;
-                            micEnable();
-                        },
-                        error: function (err) {
-                            console.log(err);
-                        }
-                    });
                 }
             }
             function micEnable() {
@@ -4531,7 +4519,7 @@
                 });
                 console.log('Recorder Initialized');
                 _permission = true;
-                if (!chatInitialize.config.allowGoogleSpeech) {
+                if (chatInitialize.config.stt.vendor === 'google') {
                     afterMicEnable();
                 }
                 else {

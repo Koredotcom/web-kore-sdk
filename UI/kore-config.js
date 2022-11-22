@@ -43,10 +43,24 @@
         botOptions:botOptions,
         allowIframe: false, 			// set true, opens authentication links in popup window, default value is "false"
         isSendButton: false, 			// set true, to show send button below the compose bar
-        isTTSEnabled: false,			// set true, to hide speaker icon
-        ttsInterface:'webapi',        // webapi or awspolly , where default is webapi
-        isSpeechEnabled: false,			// set true, to hide mic icon
-        allowGoogleSpeech: true,		// set true, to use Google speech engine instead KORE.AI engine.This feature requires valid Google speech API key. (Place it in 'web-kore-sdk/libs/speech/key.js')
+        isTTSEnabled: true,			// set true, to hide speaker icon
+        ttsInterface:'webapi',          // webapi or awspolly , where default is webapi
+        isSpeechEnabled: true,			// set true, to hide mic icon
+        stt:{
+            vendor: 'webapi',           //'webapi'|'azure'|'google' //uses respective settings from the following keys and uncomments respective files in index.html
+            azure:{
+                subscriptionKey: '',
+                recognitionLanguage: 'en-US',
+                recognitionMode: 'Interactive' //Interactive/Dictation/Conversation/Interactive
+            },
+           google:{
+            apiKey:"",
+            recognitionLanguage:"en-US"
+           },
+           webapi:{
+            recognitionLanguage: 'en-US'
+           }
+        },
         allowLocation: true,			// set false, to deny sending location to server
         loadHistory: true,				// set true to load recent chat history
         messageHistoryLimit: 10,		// set limit to load recent chat history

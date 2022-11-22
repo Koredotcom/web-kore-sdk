@@ -17,9 +17,9 @@
 var apiKey = apiKey || {};
 var gapi = gapi || {};
 var gapiLoaded = false;
-
 /* eslint-disable no-unused-vars */
 function initGapi () {
+  apiKey = chatContainerConfig.config.stt.google.apiKey;
   if (!apiKey) {
     return false;
   }
@@ -126,7 +126,7 @@ function sendBytesToSpeech (bytes, encoding, rate, callback) {
       },
       config: {
         encoding: encoding,
-        languageCode: "en-US",
+        languageCode: chatContainerConfig.config.stt.google.recognitionLanguage,
         sampleRateHertz: rate,
       },
     };
