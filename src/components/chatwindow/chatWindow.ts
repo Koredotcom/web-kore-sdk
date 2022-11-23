@@ -30,12 +30,6 @@ class chatWindow extends EventEmitter{
  chatEle: any;
   config: {};
 
-
-   /**
-     * @eventProperty
-     */
-    testEvent:any;
-
  /**
      * @event
  */
@@ -175,7 +169,7 @@ installCallbackForPlugins (){
 }
 
 
-show  (config:any) {
+public show  (config:any) {
   const me:any = this;
   if (config.widgetSDKInstace) {
     this.addWidgetEvents(config);
@@ -1810,7 +1804,7 @@ unfreezeUIOnHistoryLoadingFail () {
 };
 
 
-installPlugin  (plugin:any) {
+public installPlugin  (plugin:any) {
   const me:any = this;
   me.plugins[plugin.name] = plugin;
   plugin.hostInstance = this; 

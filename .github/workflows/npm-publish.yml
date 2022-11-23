@@ -15,7 +15,6 @@ on:
   release:
     types: [published]
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,8 +31,8 @@ jobs:
         run: npm run build-umd
       - name: Run ESM build
         run: npm run build
-      - name: Prepare and npm publish the build
-        run: node npmPublish.js
+      - name: Prepare and publish the build
+        run: node npmPublish.js --commitId=${{github.sha}} --triggerEvent=${{github.event_name}}
         env:
           NODE_AUTH_TOKEN: ${{secrets.TOKENNPM }}
 

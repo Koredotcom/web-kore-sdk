@@ -38,8 +38,14 @@ let parsedPackageJSON = JSON.parse(packageJSON);
 let npmPublishVersion;
 if(args.triggerEvent == 'push'){
     let pckVersion = parsedPackageJSON.version.split('.');
+    let commitIdWithZero;
+    if(args.commitId.startsWith('0')){
+        commitIdWithZero = args.commitId;
+    }else{
+        commitIdWithZero = '0'+args.commitId
+    }
 
-    npmPublishVersion = pckVersion[0] + '.' + pckVersion[1] +'.'+ args.commitId;
+    npmPublishVersion = pckVersion[0] + '.' + pckVersion[1] +'.'+ commitIdWithZero;
 
 }else{
     npmPublishVersion = parsedPackageJSON.version;
@@ -51,6 +57,7 @@ var publishJSON = `
     "version": "${npmPublishVersion}",
     "description": "${parsedPackageJSON.description}",
     "main": "dist/kore-web-sdk.esm.browser.js",
+   "types": "dist/src/index_esm.d.ts",
     "scripts": {
         "test": ""
     },

@@ -1,7 +1,62 @@
 // var KoreSDK = KoreSDK || {};
-var chatConfig:any={};
 
-var botOptions:any = {};
+interface   MultiPageApp{
+    enable: boolean;
+    userIdentityStore: string;
+    chatWindowStateStore: string;
+}
+
+interface PingPong {
+    interval:number;
+}
+
+export interface ChatConfig {
+    botOptions?:BotOptions;
+    container?:string;
+    allowIframe?: boolean;
+    isSendButton?: boolean;
+    allowLocation?:boolean;
+    loadHistory?: boolean
+    messageHistoryLimit?: number;
+    googleMapsAPIKey?:string;           
+    minimizeMode?: boolean;
+    multiPageApp?: MultiPageApp;
+    supportDelayedMessages?: boolean;  
+    pingPong?:PingPong;
+    enableThemes? : boolean;
+    history?:any;
+}
+
+interface KoreAPIConfig{
+    bootstrapURL:string;
+    KEY:string;
+}
+
+interface WebhookConfig{
+    enable:boolean;
+    webhookURL:string;
+    apiVersion:number
+}
+
+interface BotOptions {
+    logLevel?:string;
+    koreAPIUrl?:string;
+    API_KEY_CONFIG?:KoreAPIConfig;
+    koreSpeechAPIUrl?:string;
+    JWTUrl?:string;
+    userIdentity?:string;
+    botInfo?:any;
+    clientId?:string;
+    clientSecret?:string;
+    webhookConfig?:WebhookConfig
+
+}
+
+
+
+// let chatConfig:ChatConfig={};
+
+var botOptions:BotOptions = {};
 botOptions.logLevel = 'debug';
 botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
 
@@ -36,8 +91,11 @@ botOptions.webhookConfig={
 //     port: 'PORT_TO_BE_REWRITTEN'
 // };
 
-chatConfig = {
+let chatConfig:ChatConfig = {
     botOptions: botOptions,
+    /**
+     * Container value as string
+     */
     container:'body',
     allowIframe: false, 			// set true, opens authentication links in popup window, default value is "false"
     isSendButton: false, 			// set true, to show send button below the compose bar
