@@ -332,6 +332,7 @@
                         }
                         if (koreBot && koreBot.initToken) {
                             koreBot.initToken(options.authorization);
+                            console.log(options);
                         }
                     },
                     error: function (err) {
