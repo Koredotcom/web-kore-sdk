@@ -69,10 +69,15 @@ body{
     align-items: center;
     min-height: 60px;
     padding: 14px 30px;
+    flex-wrap: wrap;
+}
+.kore-chat-window .msgCmpt{
+    max-width: 320px !important;
 }
 .kore-chat-window .sdkFooterIcon{
-    position: relative;
-    top: 1px;
+    position: absolute !important;
+    right: 30px;
+    top: 22px !important;
 }
 .kore-chat-window .sdkFooterIcon button.notRecordingMicrophone{
     top: -1px;
@@ -126,9 +131,14 @@ body{
 }
 .kore-chat-window .kore-chat-footer .sdkFooterIcon.ttspeakerDiv{
     margin-right: 15px;
+    right: 73px !important;
 }
 .kore-chat-window .kore-chat-footer .sdkFooterIcon.microphoneBtn{
     margin-right: 15px;
+    right: 44px !important;
+}
+.attachment{
+    margin-top: 10px;
 }
 .kore-chat-window .kore-chat-footer .recordingMicrophone .recordingGif{
     display: none;
@@ -302,6 +312,7 @@ body{
   .kore-chat-window .kore-chat-footer .chatInputBox{
     max-height: 56px !important;
     margin-bottom: 0 !important;
+    padding-right: 80px !important; 
   }
   [contenteditable=true]:empty:before{
     font-weight: normal !important;
@@ -309,6 +320,7 @@ body{
     line-height: 17px !important;
     color: var(--sdk-chat-window-footer-input-placeholder) !important;
   }
+  
 
 
 @media (max-width: 767px){
