@@ -218,31 +218,7 @@
 
         }
 
-        function getBrandingInformation(options) {
-            if (chatConfig.botOptions.enableThemes) {
-                var brandingAPIUrl = (chatConfig.botOptions.brandingAPIUrl || '').replace(':appId', chatConfig.botOptions.botInfo._id);
-                $.ajax({
-                    url: brandingAPIUrl,
-                    headers: {
-                        'Authorization': "bearer " + options.authorization.accessToken,
-                    },
-                    type: 'get',
-                    dataType: 'json',
-                    success: function (data) {
-                        if(koreBot && koreBot.applySDKBranding) {
-                            koreBot.applySDKBranding(data);
-                        }
-                        if (koreBot && koreBot.initToken) {
-                            koreBot.initToken(options);
-                        }
-                    },
-                    error: function (err) {
-                        console.log(err);
-                    }
-                });
-            }
 
-        }
         function onJWTGrantSuccess(options){
             getBrandingInformation(options);
         }
@@ -355,7 +331,7 @@
                             koreBot.applySDKBranding(data);
                         }
                         if (koreBot && koreBot.initToken) {
-                            koreBot.initToken(options);
+                            koreBot.initToken(options.authorization);
                         }
                     },
                     error: function (err) {
