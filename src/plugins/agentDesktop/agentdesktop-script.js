@@ -94,6 +94,7 @@ class AgentDesktopPluginScript  {
         this.showVideo = false;
         this.screenSharingStream = null;
         this.agentProfileIcon = null;
+        this.maskClassList = null;
         this.phoneConfig = {
             reconnectIntervalMin: 2, // Minimum interval between WebSocket reconnection attempts. (seconds)
             reconnectIntervalMax: 30, // Maximum interval between WebSocket reconnection attempts (seconds)
@@ -657,6 +658,8 @@ class AgentDesktopPluginScript  {
                 }
             } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'cobrowse') {
                 console.log("cobrowse request ", msgJson.message);
+                _self.maskClassList = msgJson.message.blockClasses;
+                _self.cobrowseMaskFields(msgJson.message);
                 _self.agentProfileIcon = _self.userIcon;
                 if (msgJson.message.profileIcon && msgJson.message.profileIcon !== 'undefined') {
                     _self.agentProfileIcon = msgJson.message.profileIcon;
@@ -1064,6 +1067,13 @@ class AgentDesktopPluginScript  {
         if (cobrowsetoolbar) {
             cobrowsetoolbar.remove();
         }
+        console.log("cobrowse >>> koreCoBrowseUnMakingFields");
+        for(var i =0;i< this.maskClassList.length > 0; i++){
+             document.querySelectorAll('.'+this.maskClassList[i]).forEach(item => {
+                 item.classList.remove('rr-block');
+             });
+        }
+        this.maskClassList = null;
     }
     closeChannel = function () {
         if (this.dataChannel && this.dataChannel.readyState === 'open') {
@@ -2174,6 +2184,15 @@ class AgentDesktopPluginScript  {
                 this.vonbtnimg.src = visibilityOffImage
             }
         }
+    }
+
+    cobrowseMaskFields = function (e) {
+       console.log("cobrowse >>> koreCoBrowseMakingFields initialize");
+       for(var i =0;i< e.blockClasses.length > 0; i++){
+            document.querySelectorAll('.'+e.blockClasses[i]).forEach(item => {
+                item.classList.add('rr-block');
+            });
+       }
     }
 
     koreCoBrowseInit = function (exports) {
@@ -4733,6 +4752,18 @@ class AgentDesktopPluginScript  {
                     }
                 };
                 this.genAdds = function (n, target) {
+                    for(var i =0;i< me.maskClassList.length > 0; i++) {
+                        if (n && n.classList && n.classList.contains(me.maskClassList[i])) {
+                            n.classList.add('rr-block');
+                            takeFullSnapshot(false);
+                            return;
+                        }
+                        if (target && target.classList && target.classList.contains(me.maskClassList[i])) {
+                            target.classList.add('rr-block');
+                            takeFullSnapshot(false);
+                            return;
+                        }  
+                   }
                     if (n && n.getAttribute && n.getAttribute('do-not-mutate') === 'true') {
                         return;
                     }
