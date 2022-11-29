@@ -95,6 +95,7 @@ class AgentDesktopPluginScript  {
         this.screenSharingStream = null;
         this.agentProfileIcon = null;
         this.maskClassList = null;
+        this.maskPatternList = null;
         this.phoneConfig = {
             reconnectIntervalMin: 2, // Minimum interval between WebSocket reconnection attempts. (seconds)
             reconnectIntervalMax: 30, // Maximum interval between WebSocket reconnection attempts (seconds)
@@ -596,6 +597,7 @@ class AgentDesktopPluginScript  {
                 var duration = moment.duration(end.diff(start));
                 var seconds = duration.asSeconds();
                 obj['timespent'] = seconds;
+                obj['domain'] =  window.location.hostname; 
             }
 
             localStorage.setItem("pagesVisited", JSON.stringify(pagesVisitedArray));
@@ -659,6 +661,10 @@ class AgentDesktopPluginScript  {
             } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'cobrowse') {
                 console.log("cobrowse request ", msgJson.message);
                 _self.maskClassList = msgJson.message.blockClasses;
+                _self.maskPatternList = msgJson.message.patternList;
+                if(_self.maskPatternList){
+                _self.scanElement(document.body, _self.maskPatternList);
+                }
                 _self.cobrowseMaskFields(msgJson.message);
                 _self.agentProfileIcon = _self.userIcon;
                 if (msgJson.message.profileIcon && msgJson.message.profileIcon !== 'undefined') {
@@ -1068,12 +1074,15 @@ class AgentDesktopPluginScript  {
             cobrowsetoolbar.remove();
         }
         console.log("cobrowse >>> koreCoBrowseUnMakingFields");
-        for(var i =0;i< this.maskClassList.length > 0; i++){
-             document.querySelectorAll('.'+this.maskClassList[i]).forEach(item => {
-                 item.classList.remove('rr-block');
-             });
+        if(this.maskClassList){
+            for(var i =0;i< this.maskClassList.length > 0; i++){
+                document.querySelectorAll('.'+this.maskClassList[i]).forEach(item => {
+                    item.classList.remove('rr-block');
+                });
+           }
         }
-        this.maskClassList = null;
+        this.maskClassList = [];
+        this.maskPatternList = [];
     }
     closeChannel = function () {
         if (this.dataChannel && this.dataChannel.readyState === 'open') {
@@ -2195,6 +2204,53 @@ class AgentDesktopPluginScript  {
        }
     }
 
+     scanElement= (element, patternArray) =>{
+        var children = element.childNodes;
+        if (!children || children.length === 0) {
+            return;
+        }
+        console.log("children===", children);
+        for (var i = 0; i < children.length; i++) {
+            var value = "";
+            var childElement = children[i];
+            if (childElement.nodeName === 'TEXTAREA' || childElement.nodeName === 'INPUT') {
+                value = childElement.value;
+            } else if (childElement && childElement.childNodes && childElement.childNodes.length) {
+                value = childElement.childNodes[0].data;
+            }
+            if (value) {
+                // compare the value with patternArray
+                console.log('value>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', value)
+                for (var j = 0; j < patternArray.length; j++) {
+                    var resExp = this.strToRegEx(patternArray[j]);
+                    var matchedStrings = value.match(resExp);
+                    console.log(matchedStrings )
+                    if (matchedStrings && matchedStrings.length > 0) {
+                        // console.log("value===", value, childElement.classList);
+                        if (childElement.nodeName === 'TEXTAREA' || childElement.nodeName === 'INPUT') {
+                            childElement.classList.add("rr-block")
+                        } else {
+                            childElement.classList.add("rr-mask")
+                        }
+                        
+                    }
+                }
+            }
+            this.scanElement(childElement, patternArray);
+        }
+    }
+
+    strToRegEx = function (str) {
+        let i1 = str.indexOf("/")
+        if (i1 != -1) {
+        str = str.substr(i1+1);
+        }
+        let i2 = str.lastIndexOf("/");
+        if (i2 != -1) {
+            str = str.substr(0, i2)
+        }
+        return new RegExp(str)
+    }
     koreCoBrowseInit = function (exports) {
         let me = this;
         exports.agentclient = me.AgentDesktop;
@@ -4763,6 +4819,9 @@ class AgentDesktopPluginScript  {
                             takeFullSnapshot(false);
                             return;
                         }  
+                   }
+                   if(me.maskPatternList){
+                        me.scanElement(n, me.maskPatternList);
                    }
                     if (n && n.getAttribute && n.getAttribute('do-not-mutate') === 'true') {
                         return;
