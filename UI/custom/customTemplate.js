@@ -3690,6 +3690,7 @@ var bankingFeedbackTemplate = '<script id="chat-window-listTemplate" type="text/
 			}
 			if(sliderValue===false){
 				chatInitialize.sendMessage($('.chatInputBox').text(emojiValue),emojiValue);
+				$(".rating-main-component").css({"pointer-events":"none"});
 			}
 			$(".emojiComponent,.thumpsUpDownComponent,.numbersComponent").off('click','.submitBtn').on('click','.submitBtn',function(e){
 				msgData.message[0].component.payload.sliderView=false;
