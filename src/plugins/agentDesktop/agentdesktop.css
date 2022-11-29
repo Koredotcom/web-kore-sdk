@@ -427,11 +427,11 @@
     transform: translate(-50%,-50%);
     opacity: .3;
 }
-.rr-block {
+/* .rr-block { 
     border-color: red !important;
     border-width: 1px;
     border-style: solid;
-}
+ } */
 
 .agent-bot {
     display: block;
