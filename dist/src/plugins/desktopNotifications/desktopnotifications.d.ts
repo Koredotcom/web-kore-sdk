@@ -1,13 +1,11 @@
-declare class AgentDesktopPlugin {
+declare class KoreDesktopNotificationPlugin {
     name: any;
     config: any;
-    agentDesktopInfo: any;
-    typingCount: number;
-    doneTypingInterval: number;
+    isOutTabFocus: boolean;
     constructor(config?: any);
     onHostCreate(): void;
     onInit(): void;
     appendVideoAudioElemnts(): void;
     extend(target: any, source: any): any;
 }
-export default AgentDesktopPlugin;
+export default KoreDesktopNotificationPlugin;

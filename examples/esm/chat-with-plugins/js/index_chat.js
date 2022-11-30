@@ -5,6 +5,7 @@ import { GraphTemplatesPlugin } from '../../../../../dist/kore-web-sdk.esm.brows
 import { WebKitSTT } from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import { BrowserTTS } from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import { AgentDesktopPlugin } from '../../../../../dist/kore-web-sdk.esm.browser.js';
+import { KoreDesktopNotificationPlugin } from '../../../../kore-web-sdk.esm.browser.js';
 
 
 let chatWindowInstance = new chatWindow();
@@ -16,6 +17,7 @@ chatWindowInstance.installPlugin(new GraphTemplatesPlugin());
 chatWindowInstance.installPlugin(new WebKitSTT());
 chatWindowInstance.installPlugin(new BrowserTTS());
 chatWindowInstance.installPlugin(new AgentDesktopPlugin());
+chatWindowInstance.installPlugin(new KoreDesktopNotificationPlugin());
 
 
 
