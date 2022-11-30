@@ -85,7 +85,7 @@ class RatingTemplate {
             chatWindowInstance.bottomSliderAction("hide");
             e.stopPropagation();
         });
-        $(messageHtml).find(".emojiComponent,.thumpsUpDownComponent,.numbersComponent").off('click','.rating').on('click','.rating',function(e: any){
+        $(messageHtml).find(".emojiComponent,.thumpsUpDownComponent,.numbersComponent").off('click','.emoji-rating,.numbers-rating').on('click','.emoji-rating,.numbers-rating',function(e:any){
             var msgData: any;
             if ($(messageHtml).data().tmplItem && $(messageHtml).data().tmplItem.data && $(messageHtml).data().tmplItem.data.msgData) {
                 msgData = $(messageHtml).data().tmplItem.data.msgData
@@ -93,9 +93,10 @@ class RatingTemplate {
                 msgData = $(messageHtml).data();
             }
             var sliderValue = msgData.message[0].component.payload.sliderView;
-            if ($(messageHtml).find(".emojiComponent .active").length == "0") {
-                $(".emojiElement").remove();
-            }
+            if($(messageHtml).find(".emojiComponent .emoji-rating.active").length==="0"){
+				$(".emojiComponent .emoji-rating").removeClass("active");
+				$(".emojiElement").remove();
+			}
             let selectedTarget = e.currentTarget;
             var emojiValue = $(selectedTarget).attr("value");
             $(e.currentTarget).addClass("active");
@@ -216,7 +217,7 @@ class RatingTemplate {
                       {{if msgData.message[0].component.payload.text}}<div class="templateHeading text-heading-info">${msgData.message[0].component.payload.text}</div>{{else}}Rate the chat session{{/if}}\
                       <div class="emojis-data">\
                       {{each(key, msgItem) msgData.message[0].component.payload.smileyArrays}}\
-                      <div class="emoji-rating">\
+                      <div class="emoji-rating" value="${msgItem.value}">\
                          <div class="rating" id="rating_${msgItem.smileyId}" value="${msgItem.value}"></div>\
                          <div class="emoji-desc">${msgItem.reviewText}</div>\
                          </div>\
@@ -228,7 +229,7 @@ class RatingTemplate {
                       {{if msgData.message[0].component.payload.text}}<div class="templateHeading text-heading-info">${msgData.message[0].component.payload.text}</div>{{else}}Rate the chat session{{/if}}\
                       <div class="emojis-data">\
                       {{each(key, msgItem) msgData.message[0].component.payload.thumpsUpDownArrays}}\
-                      <div class="ratingValue emoji-rating">\
+                      <div class="ratingValue emoji-rating" value="${msgItem.value}">\
                          <div class="rating" id="rating_${msgItem.thumpUpId}" value="${msgItem.value}"></div>\
                          <div class="emoji-desc">${msgItem.reviewText}</div></div>\
                       {{/each}}\
@@ -239,8 +240,8 @@ class RatingTemplate {
                       {{if msgData.message[0].component.payload.text}}<div class="templateHeading text-heading-info">${msgData.message[0].component.payload.text}</div>{{else}}Rate the chat session{{/if}}\
                       <div class="rating-numbers-data">\
                       {{each(key, msgItem) msgData.message[0].component.payload.numbersArrays}}\
-                      <div class="ratingValue">\
-                         <div class="rating" id="rating_${msgItem.numberId}" {{if msgItem.color}}style="background:${msgItem.color}" {{/if}} value="${msgItem.value}">${msgItem.numberId}</div>\
+                      <div class="ratingValue numbers-rating" value="${msgItem.value}">\
+                         <div class="rating" id="rating_${msgItem.numberId}"  value="${msgItem.value}">${msgItem.numberId}</div>\
                          <div class="emoji-desc">${msgItem.reviewText}</div>\</div>\
                       {{/each}}\
                       </div>\
