@@ -4520,9 +4520,7 @@
                 console.log('Recorder Initialized');
                 _permission = true;
                 if (chatInitialize.config.stt.vendor === 'google') {
-                    afterMicEnable();
-                }
-                else {
+                    // afterMicEnable();
                     startGoogleSpeech();
                 }
                 setTimeout(function () {
