@@ -32,14 +32,13 @@ class KoreDesktopNotificationPlugin {
         })
 
         let me: any = this;
-        this.appendVideoAudioElemnts()
         me.hostInstance.on('onWSMessage', (event: any) => {
 
             if (event.messageData?.message?.type === 'agent_connected') {
                 var snd = new Audio('https://uat.kore.ai/agents/sounds/Basic%20Alert%20High.mp3');
                 snd.play();
             }
-            
+
             if (event.messageData.type === "bot_response" && event.messageData?.message[0]?.component?.payload?.payload?.text) {
                 if (Notification.permission !== "granted") return;
                 const text = event.messageData?.message[0]?.component?.payload?.payload?.text;
@@ -53,7 +52,7 @@ class KoreDesktopNotificationPlugin {
                         event.target.close();
                     }
                 }
-                let notification: any             
+                let notification: any
                 if (me.isOutTabFocus) {
                     notification = new Notification("You have a new notification ", options);
                     var snd = new Audio('https://uat.kore.ai/agents/sounds/Basic%20Alert%20High.mp3');
@@ -68,17 +67,6 @@ class KoreDesktopNotificationPlugin {
             }
         });
     }
-
-    appendVideoAudioElemnts() {
-        let me: any = this;
-        let cwInstance = me.hostInstance;
-        let chatEle = cwInstance.chatEle;
-        let localVideoElement = '<video id="kore_local_video" autoplay="autoplay" playsinline style="width:0px;height:0px"></video>';
-        let remoteVideoElement = '<video id="kore_remote_video" autoplay="autoplay" playsinline style="width:0px;height:0px"></video>';
-        chatEle.append(localVideoElement);
-        chatEle.append(remoteVideoElement);
-    }
-
     extend(target: any, source: any) {
         let me: any = this;
         for (var prop in source) {
