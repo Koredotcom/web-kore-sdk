@@ -1,7 +1,5 @@
-import { DesktopNotificationPluginScript } from "../desktopNotifications/desktopnotifications-script";
-
 class KoreDesktopNotificationPlugin {
-    name: any = 'KoreDesktopNotificationPlugin ';
+    name: string = 'KoreDesktopNotificationPlugin ';
     config: any = {};
     isOutTabFocus: boolean = false
     constructor(config?: any) {
