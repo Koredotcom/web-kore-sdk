@@ -1319,7 +1319,8 @@
 }
 .kore-chat-window .rating-main-component .emojiComponent.version2 .emojis-data .emoji-rating {
 	width: 63px;
-    height: 60px;
+	min-height: 60px;
+    height: auto;
     padding-right: 10px;
     text-align: center;
     flex: 1 1;
@@ -1327,53 +1328,53 @@
 }
 .kore-chat-window .rating-main-component .emojiComponent.version2 .emojis-data .emoji-rating:hover #rating_1, 
 .kore-chat-window .rating-main-component .emojiComponent.version2 .emojis-data .emoji-rating:hover #rating_2{
-    width: 49px;
-    height: 49px;
+    width: 45px;
+    height: 45px;
     border-radius: 100%;
     background-color: #F0B4BF !important;
     border: 7px solid #F0B4BF;
 }
 .kore-chat-window .rating-main-component .emojiComponent.version2 .emojis-data .emoji-rating:hover #rating_3{
-    width: 49px;
-    height: 49px;
+    width: 45px;
+    height: 45px;
     border-radius: 100%;
     background-color: #FCF1CD !important;
     border: 7px solid #FCF1CD;
 }
 .kore-chat-window .rating-main-component .emojiComponent.version2 .emojis-data .emoji-rating:hover #rating_4, 
 .kore-chat-window .rating-main-component .emojiComponent.version2 .emojis-data .emoji-rating:hover #rating_5{
-    width: 49px;
-    height: 49px;
+    width: 45px;
+    height: 45px;
     border-radius: 100%;
     background-color: #CDF0E0 !important;
     border: 7px solid #CDF0E0;
 }
 .kore-chat-window .rating-main-component .emojiComponent.version2 .emojis-data .emoji-rating.active #rating_1, 
 .kore-chat-window .rating-main-component .emojiComponent.version2 .emojis-data .emoji-rating.active #rating_2{
-    width: 49px;
-    height: 49px;
+    width: 45px;
+    height: 45px;
     border-radius: 100%;
     background-color: #F0B4BF !important;
     border: 7px solid #F0B4BF;
 }
 .kore-chat-window .rating-main-component .emojiComponent.version2 .emojis-data .emoji-rating.active #rating_3{
-    width: 49px;
-    height: 49px;
+    width: 45px;
+    height: 45px;
     border-radius: 100%;
     background-color: #FCF1CD !important;
     border: 7px solid #FCF1CD;
 }
 .kore-chat-window .rating-main-component .emojiComponent.version2 .emojis-data .emoji-rating.active #rating_4, 
 .kore-chat-window .rating-main-component .emojiComponent.version2 .emojis-data .emoji-rating.active #rating_5{
-    width: 49px;
-    height: 49px;
+    width: 45px;
+    height: 45px;
     border-radius: 100%;
     background-color: #CDF0E0 !important;
     border: 7px solid #CDF0E0;
 }
-.kore-chat-window .rating-main-component .emojiComponent.version2 .emojis-data .emoji-rating:hover .emoji-desc{
+/* .kore-chat-window .rating-main-component .emojiComponent.version2 .emojis-data .emoji-rating:hover .emoji-desc{
     display: none;
-}
+} */
 .kore-chat-window .rating-main-component .emojiComponent.version2 .emojis-data .emoji-rating.active .emoji-desc{
     display: none;
 }
@@ -1412,15 +1413,23 @@
 }
 .kore-chat-window .rating-main-component .emojiComponent.version2 .emojis-data .emoji-rating .emoji-desc{
     margin-top: 4px;
+	display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
 }
 .kore-chat-window .rating-main-component .thumpsUpDownComponent .emojis-data .emoji-rating .emoji-desc{
-    white-space: nowrap;
+	white-space: nowrap;
+    overflow: hidden;
+    width: 100%;
+    text-overflow: ellipsis;
 }
 .kore-chat-window .rating-main-component .emojiComponent.version2 .emojis-data .emoji-rating .emoji-desc, .kore-chat-window .rating-main-component .thumpsUpDownComponent .emojis-data .emoji-rating .emoji-desc, .kore-chat-window .rating-main-component .numbersComponent .emojis-data .emoji-rating .emoji-desc{
     font-weight: 400;
     font-size: 10px;
     line-height: 12px;
     color: #5F6368;
+	cursor: pointer;
 }
 .kore-chat-window .rating-main-component .thumpsUpDownComponent .emojis-data {
 	display: flex;
@@ -1433,13 +1442,12 @@
 }
 .kore-chat-window .rating-main-component .thumpsUpDownComponent .emojis-data .emoji-rating {
     width: auto;
-    /* padding-right: 20px; */
-    /* text-align: center; */
     align-items: center;
     display: flex;
     flex: 1 1;
     padding: 5px;
     cursor: pointer;
+	overflow: hidden;
 }
 .kore-chat-window .rating-main-component .thumpsUpDownComponent .emojis-data .emoji-rating:hover,
 .kore-chat-window .rating-main-component .thumpsUpDownComponent .emojis-data .emoji-rating.active {
