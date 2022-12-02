@@ -314,9 +314,24 @@ reWriteWebHookURL  (chatConfig:any) {
 };
 // iframe of child window events //
 attachEventListener (iframe:any, postPayload:any) {
-  if (iframe && iframe.length && iframe[0] && iframe[0].contentWindow && postPayload) {
-    iframe[0].contentWindow.postMessage(postPayload, '*');
-  }
+    // Create IE + others compatible event handler
+    let me:any=this;
+    var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+    var eventer = window[eventMethod];
+    var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+    // Listen to message from child window
+    eventer(messageEvent, function (e:any) {
+        if (e.data && e.data.event) {
+            var data = e.data;
+            switch (data.event) {
+                case 'formEvent':
+                    me.formAction(e.data);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }, false);
 }
 postMessageToChildIframes (iframe: any,postPayload: any) {
   if(iframe && iframe.length && iframe[0] && iframe[0].contentWindow && postPayload){
