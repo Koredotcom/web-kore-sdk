@@ -2217,6 +2217,8 @@ class AgentDesktopPluginScript  {
                 value = childElement.value;
             } else if (childElement && childElement.childNodes && childElement.childNodes.length) {
                 value = childElement.childNodes[0].data;
+            } else if (childElement && childElement.childNodes && childElement.childNodes.length === 0) {
+                value = childElement.data;
             }
             if (value) {
                 // compare the value with patternArray
@@ -2229,6 +2231,8 @@ class AgentDesktopPluginScript  {
                         // console.log("value===", value, childElement.classList);
                         if (childElement.nodeName === 'TEXTAREA' || childElement.nodeName === 'INPUT') {
                             childElement.classList.add("rr-block")
+                        }else if(childElement && childElement.childNodes?.length === 0) {
+                            childElement.parentElement.classList.add("rr-mask")
                         } else {
                             childElement.classList.add("rr-mask")
                         }
