@@ -13,10 +13,7 @@
     "doc-graphTemplates": "typedoc --cleanOutputDir false  --excludeNotDocumented  --out docs/api/plugins/graphTemplates   --entryPoints src/plugins/graphTemplatesPlugin.ts --name GraphTemplate",
     "doc-WebKitSTT": "typedoc --cleanOutputDir false  --excludeNotDocumented  --out docs/api/plugins/WebKitSTT   --entryPoints src/plugins/STTPlugins/WebKitSTTPlugin/WebKitSTTPlugin.ts --name WebKitSTT",
     "doc-BrowserTTS": "typedoc --cleanOutputDir false  --excludeNotDocumented  --out docs/api/plugins/BrowserSTT  --entryPoints src/plugins/TTSPlugins/BrowserTTSPlugin/BrowserTTSPlugin.ts --name BrowserTTS",
-
     "doc": "npm run doc-chatwindow &&  npm run doc-korepickers && npm run doc-graphTemplates && npm run doc-WebKitSTT && npm run doc-BrowserTTS",
- 
-
     "eslint": "./node_modules/.bin/eslint 'src/**/*.{ts,js}'",
     "eslint-fix": "./node_modules/.bin/eslint --fix 'src/**/*.{ts,js}'",
     "prettier": "./node_modules/.bin/prettier --check 'src/**/*.{ts,js}'",
@@ -62,6 +59,7 @@
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "@typescript-eslint/parser": "^5.3.1",
     "babel-loader": "^8.2.2",
+    "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.3.0",
     "eslint": "^8.11.0",
     "eslint-config-prettier": "^8.5.0",

@@ -13,6 +13,7 @@
     <script  src="../../../dist/umd/plugins/agent-desktop-umd.js"></script>
     <script  src="../../../dist/umd/plugins/webapi-stt-plugin-umd.js"></script>
     <script  src="../../../dist/umd/plugins/browser-tts-umd-plugin-umd.js"></script>
+    <script  src="../../../dist/umd/plugins/desktopNotifications-umd-plugin-umd.js"></script>
 
     <script>
         //chat window declaration
@@ -25,6 +26,7 @@
         var AgentDeskTopPlugin = AgentDeskTopPluginSDK.AgentDesktopPlugin;
         var WebKitSTTPlugin=WebKitSTTPluginSDK.WebKitSTT;
         var BrowserTTSPlugin=BrowserTTSPluginSDK.BrowserTTS;
+        var KoreDesktopNotificationPluginSDK = KoreDesktopNotificationPluginSDK.desktopNotifications;
 
         
         //create chat window instance
@@ -46,6 +48,7 @@
         chatWindowInstance.installPlugin(new AgentDeskTopPlugin())
         chatWindowInstance.installPlugin(new WebKitSTTPlugin());
         chatWindowInstance.installPlugin(new BrowserTTSPlugin());
+        chatWindowInstance.installPlugin(new KoreDesktopNotificationPluginSDK());
 
 
         //show chatwindow

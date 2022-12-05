@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 let config= {
     mode:"none",//none || development || production
@@ -79,7 +80,13 @@ let config= {
           files: 'src/**/*.ts,src/**/*.js',
           failOnError: true,
           failOnWarning: true
-        })
+        }),
+
+        new CopyPlugin({
+          patterns: [
+            { from: "src/assets", to: "assets" },
+          ],
+        }),
         // new HtmlWebpackPlugin() 
           
     ],
@@ -173,11 +180,11 @@ module.exports= function(env,argv){
             filename: 'plugins/browser-tts-umd-plugin-umd.js',
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
-          // AgentDeskTopPluginSDK: {
-          //   import: "./src/index_plugins/agentDesktop_umd.ts",
-          //   filename: 'plugins/agent-desktop-umd.js',
-          //   chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          // }
+          KoreDesktopNotificationPluginSDK: {
+            import: "./src/index_plugins/KoreDesktopNotification_umd.ts",
+            filename: 'plugins/kore-desktop-notification-umd.js',
+            chunkLoading: false,
+          },
         }
         config.output.library = {
           name: '[name]',
