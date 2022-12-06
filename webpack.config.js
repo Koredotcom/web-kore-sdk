@@ -174,6 +174,11 @@ module.exports= function(env,argv){
             filename: 'plugins/browser-tts-umd-plugin-umd.js',
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
+          // AgentDeskTopPluginSDK: {
+// import: "./src/index_plugins/agentDesktop_umd.ts",
+// filename: 'plugins/agent-desktop-umd.js',
+// chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+// }
           KoreDesktopNotificationPluginSDK: {
             import: "./src/index_plugins/KoreDesktopNotification_umd.ts",
             filename: 'plugins/kore-desktop-notification-umd.js',
