@@ -9,4 +9,5 @@ import BrowserTTS from './plugins/TTSPlugins/BrowserTTSPlugin/BrowserTTSPlugin';
 import AgentDesktopPlugin from './plugins/agentDesktop/agentdesktop';
 import KoreWidgetSDK from './components/widgets/kore-widgets';
 import widgetsConfig from './components/widgets/config/kore-widgets-config';
-export { chatConfig, chatWindow, widgetsConfig, KoreWidgetSDK, Korei18nPlugin, KoreFileUploaderPlugin, KorePickersPlugin, GraphTemplatesPlugin, WebKitSTT, BrowserTTS, AgentDesktopPlugin };
+import KoreDesktopNotificationPlugin from "./plugins/desktopNotifications/desktopnotifications";
+export { chatConfig, chatWindow, widgetsConfig, KoreWidgetSDK, Korei18nPlugin, KoreFileUploaderPlugin, KorePickersPlugin, GraphTemplatesPlugin, WebKitSTT, BrowserTTS, AgentDesktopPlugin, KoreDesktopNotificationPlugin };

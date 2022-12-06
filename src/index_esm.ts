@@ -15,7 +15,7 @@ import AgentDesktopPlugin from './plugins/agentDesktop/agentdesktop';
 import KoreWidgetSDK from './components/widgets/kore-widgets';
 import widgetsConfig from './components/widgets/config/kore-widgets-config';
 
-
+import KoreDesktopNotificationPlugin from "./plugins/desktopNotifications/desktopnotifications";
 
 export {
   chatConfig,
@@ -29,5 +29,6 @@ export {
   WebKitSTT,
   BrowserTTS,
   //speakTextWithAWSPolly,
-  AgentDesktopPlugin
+  AgentDesktopPlugin,
+  KoreDesktopNotificationPlugin
 };
