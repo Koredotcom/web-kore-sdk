@@ -3,7 +3,6 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
-const CopyPlugin = require("copy-webpack-plugin");
 
 let config= {
     mode:"none",//none || development || production
@@ -81,12 +80,7 @@ let config= {
           failOnError: true,
           failOnWarning: true
         }),
-
-        new CopyPlugin({
-          patterns: [
-            { from: "src/assets", to: "assets" },
-          ],
-        }),
+        
         // new HtmlWebpackPlugin() 
           
     ],
