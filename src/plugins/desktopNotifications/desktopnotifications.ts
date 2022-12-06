@@ -3,7 +3,7 @@ class KoreDesktopNotificationPlugin {
     config: any = {};
     isTabActive: boolean = true;
 
-    notificationSound = "/assets/notification.mp3";
+    notificationSound = "/assets/plugins/KoredesktopNotifications/desktopNotificationAudio/notification.mp3";
     constructor() {}
 
     onHostCreate() {
@@ -25,9 +25,13 @@ class KoreDesktopNotificationPlugin {
           });
 
         me.hostInstance.on('onWSMessage', (event: any) => {
-
+            // debugger
+            // console.log(me.notificationSound)
+            console.log(this.notificationSound)
             if (event.messageData?.message?.type === 'agent_connected') {
-                var snd = new Audio(this.notificationSound);
+                console.log(this.notificationSound)
+                var snd = new Audio(me.notificationSound);
+                console.log('lay')
                 snd.play();
             }
 
@@ -37,7 +41,6 @@ class KoreDesktopNotificationPlugin {
                 const text = event.messageData?.message[0]?.component?.payload?.payload?.text;
                 const options = {
                     body: text,
-                    icon: "/assets/smartassist-logo.png",
                     sound: this.notificationSound,
                     requireInteraction: false,
                     onclick: (event: any) => {
