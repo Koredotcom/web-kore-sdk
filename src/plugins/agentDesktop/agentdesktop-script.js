@@ -1076,9 +1076,11 @@ class AgentDesktopPluginScript  {
         console.log("cobrowse >>> koreCoBrowseUnMakingFields");
         if(this.maskClassList){
             for(var i =0;i< this.maskClassList.length > 0; i++){
-                document.querySelectorAll('.'+this.maskClassList[i]).forEach(item => {
-                    item.classList.remove('rr-block');
-                });
+                if(this.this.maskClassList[i] !== ''){
+                    document.querySelectorAll('.'+this.maskClassList[i]).forEach(item => {
+                        item.classList.remove('rr-block');
+                    });
+               }
            }
         }
         this.maskClassList = [];
@@ -2198,6 +2200,9 @@ class AgentDesktopPluginScript  {
     cobrowseMaskFields = function (e) {
        console.log("cobrowse >>> koreCoBrowseMakingFields initialize");
        for(var i =0;i< e.blockClasses.length > 0; i++){
+            if(e.blockClasses[i] === ''){
+                return false
+            }
             document.querySelectorAll('.'+e.blockClasses[i]).forEach(item => {
                 item.classList.add('rr-block');
             });
@@ -2217,6 +2222,8 @@ class AgentDesktopPluginScript  {
                 value = childElement.value;
             } else if (childElement && childElement.childNodes && childElement.childNodes.length) {
                 value = childElement.childNodes[0].data;
+            } else if (childElement && childElement.childNodes && childElement.childNodes.length === 0) {
+                value = childElement.data;
             }
             if (value) {
                 // compare the value with patternArray
@@ -2229,6 +2236,8 @@ class AgentDesktopPluginScript  {
                         // console.log("value===", value, childElement.classList);
                         if (childElement.nodeName === 'TEXTAREA' || childElement.nodeName === 'INPUT') {
                             childElement.classList.add("rr-block")
+                        }else if(childElement && childElement.childNodes?.length === 0) {
+                            childElement.parentElement.classList.add("rr-mask")
                         } else {
                             childElement.classList.add("rr-mask")
                         }
@@ -4809,6 +4818,7 @@ class AgentDesktopPluginScript  {
                 };
                 this.genAdds = function (n, target) {
                     for(var i =0;i< me.maskClassList.length > 0; i++) {
+                      if(me.maskClassList[i] !== ''){
                         if (n && n.classList && n.classList.contains(me.maskClassList[i])) {
                             n.classList.add('rr-block');
                             takeFullSnapshot(false);
@@ -4818,7 +4828,8 @@ class AgentDesktopPluginScript  {
                             target.classList.add('rr-block');
                             takeFullSnapshot(false);
                             return;
-                        }  
+                        }
+                      } 
                    }
                    if(me.maskPatternList){
                         me.scanElement(n, me.maskPatternList);
