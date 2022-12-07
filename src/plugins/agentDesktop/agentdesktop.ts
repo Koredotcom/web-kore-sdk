@@ -33,10 +33,27 @@ class AgentDesktopPlugin {
 
     }
     onInit() {
-
         let me: any = this;
         this.$ = me.hostInstance.$;
         this.appendVideoAudioElemnts();
+        localStorage.setItem('isCurrentTab', '1')
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === 'visible') {
+                localStorage.setItem('isCurrentTab', '1')
+
+                // send read event after user come back to current tab
+                const messageToBot: any = {};
+                messageToBot["event"] = "message_read";
+                messageToBot["message"] = {
+                    "body": "",
+                    "type": ""
+                }
+                messageToBot["resourceid"] = "/bot.message";
+                me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+            } else {
+                localStorage.setItem('isCurrentTab', '0')
+            }
+        });
 
         // send type event from user to agent
         me.hostInstance.on('onKeyDown', ({ event }: any) => {
@@ -123,6 +140,13 @@ class AgentDesktopPlugin {
                             }
 
                         }
+                        // change the indicator to read when agent switch the slot to other user
+                        else if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === 'all') {
+                            var ele = this.$(" .sentIndicator");
+                            if (tempData.message.type === "message_read") {
+                                ele.removeClass("delivered").addClass("read");
+                            }
+                        }
                     });
                 }
             } else {
@@ -138,7 +162,8 @@ class AgentDesktopPlugin {
                     messageToBot["resourceid"] = "/bot.message";
                     me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
 
-                    if (this.$('#' + msgId).is(':visible')) {
+                    // send read event when user being in current tab
+                    if (localStorage.getItem('isCurrentTab') === '1') {
                         messageToBot.event = 'message_read'
                         me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
                     }
