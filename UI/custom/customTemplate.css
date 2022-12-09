@@ -1355,13 +1355,19 @@
     background-color: #CDF0E0 !important;
     border: 7px solid #CDF0E0;
 }
-.kore-chat-window .rating-main-component .emojiComponent.version2 .emojis-data .emoji-rating.active #rating_1, 
-.kore-chat-window .rating-main-component .emojiComponent.version2 .emojis-data .emoji-rating.active #rating_2{
+.kore-chat-window .rating-main-component .emojiComponent.version2 .emojis-data .emoji-rating.active #rating_1{
     width: 45px;
     height: 45px;
     border-radius: 100%;
     background-color: #F0B4BF !important;
     border: 7px solid #F0B4BF;
+}
+.kore-chat-window .rating-main-component .emojiComponent.version2 .emojis-data .emoji-rating.active #rating_2{
+    width: 45px;
+    height: 45px;
+    border-radius: 100%;
+    background-color: #F7D9DF !important;
+    border: 7px solid #F7D9DF;
 }
 .kore-chat-window .rating-main-component .emojiComponent.version2 .emojis-data .emoji-rating.active #rating_3{
     width: 45px;
