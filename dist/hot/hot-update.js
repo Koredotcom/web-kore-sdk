@@ -77,7 +77,7 @@ chatConfig = {
 /******/ function(__webpack_require__) { // webpackRuntimeModules
 /******/ /* webpack/runtime/getFullHash */
 /******/ (() => {
-/******/ 	__webpack_require__.h = () => ("fc65d297b270a93e9402")
+/******/ 	__webpack_require__.h = () => ("c3088b0930156e955814")
 /******/ })();
 /******/ 
 /******/ }
