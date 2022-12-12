@@ -1,6 +1,9 @@
 import BaseSTT from "../BaseSTT";
 declare  const window:any;
 
+export interface WebKitSTTConfig {
+    lang:string;
+}
 /**
  *  WekKitSTT Plugin class
  *
@@ -8,9 +11,7 @@ declare  const window:any;
  */
 class WebKitSTT extends BaseSTT {
     name = 'WebKitSTT';
-    config = {
-        lang: 'en-US'
-    };
+    config:WebKitSTTConfig;
     recognition: any;
     final_transcript: string | undefined;
     recognizing: any;
@@ -18,16 +19,13 @@ class WebKitSTT extends BaseSTT {
     one_line = /\n/g;
     prevRange: any;
     hostInstance: any;
-    constructor(mainconfig: any) {
+    constructor(mainconfig: WebKitSTTConfig) {
         // config = config || {};
         // this.config = {
         //     ...this.config,
         // }
         super();
-        this.config = {
-            ...this.config,
-            ...mainconfig
-        }
+        this.config = mainconfig;
 
     }
     onHostCreate() {
