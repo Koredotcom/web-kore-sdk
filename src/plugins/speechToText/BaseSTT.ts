@@ -31,9 +31,9 @@ class BaseSTT {
         let me:any = this;
         let $ = me.hostInstance.$;
         $(me.pickerHTML).on('click', '.notRecordingMicrophone', function (event: any) {
-        if(me.onRecordButtonClick){
-            me.onRecordButtonClick();
-        }
+            if(me.onRecordButtonClick){
+                me.onRecordButtonClick();
+            }
         });
         $(me.pickerHTML).on('click', '.recordingMicrophone', function (event: any) {
             me.stop();
