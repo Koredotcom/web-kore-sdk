@@ -10,6 +10,7 @@ class AgentDesktopPlugin {
     isTyping: boolean = false;
     typingTimer: any;
     stopTypingInterval: number = 500;
+    isTabActive: boolean = true
     constructor(config?: any) {
         this.config = {
             ...this.config,
@@ -33,10 +34,25 @@ class AgentDesktopPlugin {
 
     }
     onInit() {
-
         let me: any = this;
         this.$ = me.hostInstance.$;
         this.appendVideoAudioElemnts();
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === 'visible') {
+                this.isTabActive = true
+                // send read event after user come back to current tab
+                const messageToBot: any = {};
+                messageToBot["event"] = "message_read";
+                messageToBot["message"] = {
+                    "body": "",
+                    "type": ""
+                }
+                messageToBot["resourceid"] = "/bot.message";
+                me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+            } else {
+                this.isTabActive = false
+            }
+        });
 
         // send type event from user to agent
         me.hostInstance.on('onKeyDown', ({ event }: any) => {
@@ -123,6 +139,13 @@ class AgentDesktopPlugin {
                             }
 
                         }
+                        // change the indicator to read when agent switch the slot to other user
+                        else if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === 'all') {
+                            var ele = this.$(" .sentIndicator");
+                            if (tempData.message.type === "message_read") {
+                                ele.removeClass("delivered").addClass("read");
+                            }
+                        }
                     });
                 }
             } else {
@@ -138,7 +161,8 @@ class AgentDesktopPlugin {
                     messageToBot["resourceid"] = "/bot.message";
                     me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
 
-                    if (this.$('#' + msgId).is(':visible')) {
+                    // send read event when user being in current tab
+                    if (this.isTabActive) {
                         messageToBot.event = 'message_read'
                         me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
                     }

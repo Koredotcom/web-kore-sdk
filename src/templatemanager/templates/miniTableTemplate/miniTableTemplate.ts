@@ -57,7 +57,7 @@ class MiniTableChartTemplate {
     }
     getTemplateString(template_type: string) {
 
-        var miniTableHorizontalTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+        var miniTableHorizontalTemplate = '<script id="chat_mini_table_hori_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
         <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
             class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
@@ -94,7 +94,7 @@ class MiniTableChartTemplate {
         {{/if}} \
     </scipt>';
 
-        var miniTableChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+        var miniTableChartTemplate = '<script id="chat_mini_table_chart_tmpl" type="text/x-jqury-tmpl"> \
     {{if msgData.message}} \
         <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
             class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \

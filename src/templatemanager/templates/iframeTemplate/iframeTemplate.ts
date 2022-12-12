@@ -22,7 +22,7 @@ class IframeTemplate {
 
     }
     getTemplateString() {
-        var iframe = '<script id="chat_message_tmpl" type="text/x-jquery-tmpl"> \
+        var iframe = '<script id="chat_iframe_tmpl" type="text/x-jquery-tmpl"> \
         {{if link_url}}\
            {{if (msgData && msgData.renderType ==="inline")}}\
                 <li class="inlineIframeContainer"> \

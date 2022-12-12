@@ -64,7 +64,7 @@ class TableListTemplate {
 
 	}
 	getTemplateString() {
-		var tableListTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+		var tableListTemplate = '<script id="chat_table_list_tmpl" type="text/x-jqury-tmpl"> \
  {{if msgData.message}} \
 	 <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
 		 <div class="listTmplContent"> \

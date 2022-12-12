@@ -79,7 +79,8 @@ let config= {
           files: 'src/**/*.ts,src/**/*.js',
           failOnError: true,
           failOnWarning: true
-        })
+        }),
+        
         // new HtmlWebpackPlugin() 
           
     ],
@@ -174,10 +175,15 @@ module.exports= function(env,argv){
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
           // AgentDeskTopPluginSDK: {
-          //   import: "./src/index_plugins/agentDesktop_umd.ts",
-          //   filename: 'plugins/agent-desktop-umd.js',
-          //   chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          // }
+// import: "./src/index_plugins/agentDesktop_umd.ts",
+// filename: 'plugins/agent-desktop-umd.js',
+// chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+// }
+          KoreDesktopNotificationPluginSDK: {
+            import: "./src/index_plugins/KoreDesktopNotification_umd.ts",
+            filename: 'plugins/kore-desktop-notification-umd.js',
+            chunkLoading: false,
+          },
         }
         config.output.library = {
           name: '[name]',

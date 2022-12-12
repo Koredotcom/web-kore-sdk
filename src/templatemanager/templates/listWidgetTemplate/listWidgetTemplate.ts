@@ -217,7 +217,7 @@ class ListWidgetTemplate {
 
   }
   getTemplateString() {
-    var listWidget = '<script id="chat-window-listTemplate" type="text/x-jqury-tmpl">\
+    var listWidget = '<script id="chat_list_widget_tmpl" type="text/x-jqury-tmpl">\
         {{if msgData.message}} \
         <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
             <div class="listTmplContent"> \

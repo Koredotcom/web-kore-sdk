@@ -178,7 +178,7 @@
      cursor: pointer;
  }
  .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .multiCheckboxBtn .viewMore,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .multiCheckboxBtn .viewMore{
-     color: var(--sdk-chat-widow-default-white);
+     color: var(--sdk-chat-widow-default-white) !important;
  }
  .kore-chat-window .kore-chat-body .listTmplContent.advancedMultiSelect .listTmplContentBox .multiCheckboxBtn:hover,.kore-chat-window .kore-action-sheet .listTmplContent.advancedMultiSelect .listTmplContentBox .multiCheckboxBtn:hover{
      opacity: 1;
