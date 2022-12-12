@@ -5,7 +5,7 @@ import {KoreFileUploaderPlugin} from '../../../../../dist/kore-web-sdk.esm.brows
 import {KorePickersPlugin } from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {GraphTemplatesPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {WebKitSTT} from '../../../../../dist/kore-web-sdk.esm.browser.js';
-import {BrowserTTS,AzureSTTConfig,WebKitSTTConfig, AzureTTS} from '../../../../../dist/kore-web-sdk.esm.browser.js';
+import {BrowserTTS,AzureSTTConfig,WebKitSTTConfig, AzureTTS, KoreDesktopNotificationPlugin } from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {AgentDesktopPlugin, GoogleSTT, GoogleSTTConfig, AzureSTT, GoogleTTS} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 
 
