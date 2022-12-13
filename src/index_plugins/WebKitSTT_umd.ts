@@ -1,5 +1,5 @@
 
-import WebKitSTT from '../plugins/STTPlugins/WebKitSTTPlugin/WebKitSTTPlugin';
+import WebKitSTT from '../plugins/speechToText/WebKitSTT/WebKitSTT';
 
 export {
     WebKitSTT
