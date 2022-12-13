@@ -11,6 +11,10 @@ External plugins will be deloped by kore and should be installed explicitly by t
 | Agent Desktop | Adds the ablity to the customer's chatwindow to interact with an agent  |[Guide ](./agent-desktop) 
 | WEBKIT STT| Add speech to text capabilty via browsers(Webkit) speech to text engine  |[Guide](./webkit-stt)  
 | Browser TTS | Adds text to speech ability via browser's Web Speech API  |[Guide ](./browser-tts) 
+| Google STT | Adds speech to text ability via Google Speech API  |[Guide ](./google-stt) 
+| Google TTS | Adds text to speech ability via Google Speech API  |[Guide ](./google-tts) 
+| Azure STT | Adds speech to text ability via Azure Speech API  |[Guide ](./azure-stt) 
+| Azure TTS | Adds text to speech ability via Azure Speech API  |[Guide ](./azure-tts) 
 
 
 
