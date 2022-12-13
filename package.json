@@ -21,6 +21,9 @@
     "prettier-fix": "./node_modules/.bin/prettier --write 'src/**/*.{ts,js}'"
   },
   "main": "dist/src/index_esm",
+  "bin": {
+    "kore-web-sdk":"dist/src/index_esm"
+  },
   "module": "dist/kore-web-sdk.esm.browser.js",
   "repository": {
     "type": "git",
@@ -45,6 +48,7 @@
     "jquery": "^3.6.0",
     "jquery-ui": "^1.12.1",
     "jquery.tmpl": "0.0.2",
+    "microsoft-cognitiveservices-speech-sdk": "^1.24.1",
     "moment": "^2.24.0",
     "perfect-scrollbar": "^1.5.2",
     "pubsub-js": "^1.9.4",
@@ -64,6 +68,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-webpack-plugin": "^3.1.1",
+    "fs-extra": "^10.1.0",
     "google-charts": "^2.0.0",
     "html-webpack-plugin": "^5.3.2",
     "imports-loader": "^3.0.0",
