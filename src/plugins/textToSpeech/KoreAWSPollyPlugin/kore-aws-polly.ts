@@ -7,7 +7,7 @@ class speakTextWithAWSPolly extends BaseTTS {
     config = {
         'AWS.config.region': 'ap-south-1', // Region
         'AWS.config.credentials': new AWS.CognitoIdentityCredentials({
-            IdentityPoolId: 'ap-south-1:d72faab2-3634-47f9-ac21-16adbf40fd86',
+            IdentityPoolId: 'ap-south-1:API_KEY',
         })
     }
     queue: any;
