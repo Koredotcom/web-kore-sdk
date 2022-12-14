@@ -1,15 +1,25 @@
-# Browser TTS Plugin
+# Google TTS Plugin
 
-The Browser TTS is to integrate text to speech capability into chatwindow.This plugin uses [SpeechSynthesis API](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis).
-Refer browser compatability [here](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis#browser_compatibility)  
+The Google TTS is to integrate text to speech capability into chatwindow.This plugin uses [SpeechSynthesis API](https://cloud.google.com/text-to-speech).
+ 
 
 ## Installation
 
 ```js
-import { BrowserTTS } from 'kore-web-sdk';
+import { GoogleTTS } from 'kore-web-sdk';
+
+let options = {
+   "key" :'API_KEY',
+  voice:{
+  "languageCode": "en-AU",
+  "name": "en-AU-Neural2-B",
+  "ssmlGender": "MALE"
+},
+audioConfig:{ "audioEncoding": "MP3" }
+}
 
 
-chatWindowInstance.installPlugin(new BrowserTTSPlugin());
+chatWindowInstance.installPlugin(new GoogleTTS(options));
 ```
 
 ## For UMD Installations
@@ -18,21 +28,30 @@ chatWindowInstance.installPlugin(new BrowserTTSPlugin());
  <summary>Click here</summary>
 	<br>
   
-  1. Include BrowserTTS_umd.ts in index.html
+  1. Include google-tts-umd-plugin-umd.js in index.html
 
 ```js
-<script  src="PATH_TO_FILE/BrowserTTS_umd.ts"></script>
+<script  src="PATH_TO_FILE/google-tts-umd-plugin-umd.js"></script>
 
 ```
 2. Get plugin reference
 
 ```js
- var BrowserTTSPlugin=BrowserTTSPluginSDK.BrowserTTS;
+ var GoogleTTSPlugin=GoogleTTSPluginSDK.GoogleTTS;
 ```
 3. Install plugin
 
 ```js
- chatWindowInstance.installPlugin(new BrowserTTSPlugin());
+let options = {
+   "key" :'API_KEY',
+  voice:{
+  "languageCode": "en-AU",
+  "name": "en-AU-Neural2-B",
+  "ssmlGender": "MALE"
+},
+audioConfig:{ "audioEncoding": "MP3" }
+}
+ chatWindowInstance.installPlugin(new GoogleTTSPlugin(options));
 ```
   
  </details>
