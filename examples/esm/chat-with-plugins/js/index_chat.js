@@ -16,12 +16,12 @@ let chatWindowInstance = new chatWindow();
 chatWindowInstance.installPlugin(new KoreFileUploaderPlugin());
 chatWindowInstance.installPlugin(new KorePickersPlugin({}));
 chatWindowInstance.installPlugin(new GraphTemplatesPlugin());
-chatWindowInstance.installPlugin(new GoogleTTS({key:'AIzaSyD0jXmg7ecQ-1frjFbCk1KfK0QnG3wEFKI', voice:{
-  "languageCode": "en-AU",
-  "name": "en-AU-Neural2-B",
-  "ssmlGender": "MALE"
-},
-audioConfig:{ "audioEncoding": "MP3" }}));
+// chatWindowInstance.installPlugin(new GoogleTTS({key:'AIzaSyD0jXmg7ecQ-1frjFbCk1KfK0QnG3wEFKI', voice:{
+//   "languageCode": "en-AU",
+//   "name": "en-AU-Neural2-B",
+//   "ssmlGender": "MALE"
+// },
+// audioConfig:{ "audioEncoding": "MP3" }}));
 
 //chatWindowInstance.installPlugin(new GoogleSTT({key:'AIzaSyD0jXmg7ecQ-1frjFbCk1KfK0QnG3wEFKI',languageCode: 'en'}));
 chatWindowInstance.installPlugin(new AzureSTT(
@@ -30,12 +30,12 @@ chatWindowInstance.installPlugin(new AzureSTT(
     region:'eastus'
   }
 ));
-// chatWindowInstance.installPlugin(new AzureTTS(
-//   {
-//     key:'1c3d715909f5423aad4c66214c19c7b0',
-//     region:'eastus'
-//   }
-// ));
+chatWindowInstance.installPlugin(new AzureTTS(
+  {
+    key:'1c3d715909f5423aad4c66214c19c7b0',
+    region:'eastus'
+  }
+));
 // chatWindowInstance.installPlugin(new BrowserTTS());
 chatWindowInstance.installPlugin(new AgentDesktopPlugin());
 chatWindowInstance.installPlugin(new KoreDesktopNotificationPlugin());

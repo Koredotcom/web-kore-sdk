@@ -18,6 +18,8 @@ declare class GoogleTTS extends BaseTTS {
     config: GoogleTTSConfig;
     _txtToSpeak: string;
     isPlaying: boolean;
+    audioInterval: any;
+    currentAudio: any;
     constructor(mainconfig: GoogleTTSConfig);
     onHostCreate(): void;
     onInit(): void;
