@@ -651,7 +651,7 @@
     width: 100%;
     z-index: 9;
     bottom: 0;
-    /* box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.22); */
+    box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.22);
     background: var(--sdk-chat-window-pie-chart-background);
     height: 400px;
     cursor: default;
@@ -719,7 +719,7 @@
         font-size: 14px;       
     }
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth .tabs:last-child{
-        float: right;
+        /* float: right; */
     }
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth .tabs.active {
      
@@ -6877,7 +6877,10 @@
   }
   
   
-  
+  .reset-pin-template input:focus {
+    outline: 1px solid #738794 !important;
+    border-color: #738794 !important;
+  }
   .reset-pin-template .enter-pin-inputs,
   .reset-pin-template .reenter-pin-inputs {
     margin: 20px 0 10px 0;
@@ -7089,6 +7092,7 @@
     font-size: 20px;
     line-height: 32px;
     color: #313131;
+	letter-spacing: 3px;
     /* text-align: center; */
   }
   

@@ -3820,7 +3820,7 @@ var bankingFeedbackTemplate = '<script id="chat-window-listTemplate" type="text/
 				}
 				var _tempWin = window.open(a_link, "_blank");
 			 }else{
-				var _innerText= $(_self).attr('data-value');
+				var _innerText= $(_self).attr('data-value') || $(_self).attr('data-title');
 				var postBack=$(_self).attr('data-title');
 				chatInitialize.sendMessage($('.chatInputBox').text(_innerText), postBack);
 			 $(".kore-action-sheet .list-template-sheet").animate({ height: 'toggle' });
@@ -5753,7 +5753,7 @@ var bankingFeedbackTemplate = '<script id="chat-window-listTemplate" type="text/
 				var displayMessage = msgData.message[0].component.payload.messageToDisplay;
 				$('.chatInputBox').text(JSON.stringify(payload));
 				$(messageHtml).find('.bankingFeedBackTemplate').addClass('disabled');
-				me.chatInitialize.sendMessage($('.chatInputBox'), displayMessage, msgData);
+				me.chatInitialize.sendMessage($('.chatInputBox'), displayMessage, msgData, true);
 			}
 		});
 		$(messageHtml).off('click', '.bankingFeedBackTemplate-feedback-content .buttons-div .feedback-cancel').on('click', '.bankingFeedBackTemplate-feedback-content .buttons-div .feedback-cancel', function (e) {
