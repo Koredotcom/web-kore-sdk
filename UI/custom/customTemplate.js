@@ -5699,7 +5699,7 @@ var message= {
 				var displayMessage = msgData.message[0].component.payload.messageToDisplay;
 				$('.chatInputBox').text(JSON.stringify(payload));
 				$(messageHtml).find('.bankingFeedBackTemplate').addClass('disabled');
-				me.chatInitialize.sendMessage($('.chatInputBox'), displayMessage, msgData);
+				me.chatInitialize.sendMessage($('.chatInputBox'), displayMessage, msgData, true);
 			}
 		});
 		$(messageHtml).off('click', '.bankingFeedBackTemplate-feedback-content .buttons-div .feedback-cancel').on('click', '.bankingFeedBackTemplate-feedback-content .buttons-div .feedback-cancel', function (e) {
