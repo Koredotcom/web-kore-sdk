@@ -15,7 +15,7 @@ External plugins will be deloped by kore and should be installed explicitly by t
 | Google TTS | Adds text to speech ability via Google Speech API  |[Guide ](./google-tts) 
 | Azure STT | Adds speech to text ability via Azure Speech API  |[Guide ](./azure-stt) 
 | Azure TTS | Adds text to speech ability via Azure Speech API  |[Guide ](./azure-tts) 
-| kore-aws-stt-polly | Adds speech to text with aws api  |[Guide ](./kore-aws-stt-polly) 
+| kore-aws-stt-polly | Adds speech to text with aws api  |[Guide ](./kore-aws-ts-polly) 
 
 
 
