@@ -45,7 +45,7 @@ class SpeakTextWithAWSPolly extends BaseTTS {
 
     checkForQueue() {
         var me = this;
-        if (this.queue.length && this.audioStatus === 'idle') {
+        if (this.queue && this.queue.length && this.audioStatus === 'idle') {
             var currentUtterance = this.queue.shift();
             me.speakTextReq(currentUtterance)
         }
