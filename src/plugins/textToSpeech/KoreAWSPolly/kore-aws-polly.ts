@@ -2,16 +2,31 @@ import BaseTTS from "../BaseTTS";
 import * as AWS from 'aws-sdk';
 declare const document: any;
 declare const window: any;
-class speakTextWithAWSPolly extends BaseTTS {
+export interface SpeakTextAWSPollyConfig {
+    region:string;
+    identityCredentials:any;
+}
+
+class SpeakTextWithAWSPolly extends BaseTTS {
     name = 'speakTextWithAWSPollyClass';
-    config = {
-        'AWS.config.region': 'ap-south-1', // Region
-        'AWS.config.credentials': new AWS.CognitoIdentityCredentials({
-            IdentityPoolId: 'ap-south-1:API_KEY',
-        })
-    }
+    
+    config:any;
     queue: any;
     audioStatus: string | undefined;
+
+    constructor(mainConfig:SpeakTextAWSPollyConfig){
+        super();
+
+        if(!mainConfig.identityCredentials){
+            console.error('Please configure the AWS Identity credentials');
+        }
+     
+        this.config = {
+            'AWS.config.region': mainConfig.region || 'ap-south-1',
+            'AWS.config.credentials': new AWS.CognitoIdentityCredentials(mainConfig.identityCredentials)
+        };
+    }
+
     onHostCreate() {
         let me: any = this;
         let cwInstance = me.hostInstance;
@@ -150,4 +165,4 @@ class speakTextWithAWSPolly extends BaseTTS {
 
 
 }
-export default speakTextWithAWSPolly;
+export default SpeakTextWithAWSPolly;

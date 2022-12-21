@@ -20,6 +20,13 @@ class AzureTTS extends BaseTTS {
     constructor(mainconfig:AzureTTSConfig) {
         super();
         this.config = mainconfig;
+        if(!this.config.key){
+            console.error("Please configure the Azure TTS API-KEY");
+        }
+
+        if(!this.config.region){
+            this.config.region = 'eastus';
+        }
 
         this.speechConfig = SpeechConfig.fromSubscription(this.config.key, this.config.region);
         this.player = new SpeakerAudioDestination();

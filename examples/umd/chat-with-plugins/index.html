@@ -1,50 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kore Web SDK</title>
 </head>
-<body>   
-    <script  src="../../../dist/umd/kore-web-sdk-umd-chat.min.js"></script>
-    <script  src="../../../dist/umd/plugins/kore-picker-plugin-umd.js"></script>
-    <script  src="../../../dist/umd/plugins/kore-graph-templates-plugin-umd.js"></script>
-    <script  src="../../../dist/umd/plugins/agent-desktop-umd.js"></script>
-    <script  src="../../../dist/umd/plugins/webapi-stt-plugin-umd.js"></script>
-    <script  src="../../../dist/umd/plugins/browser-tts-umd-plugin-umd.js"></script>
+
+<body>
+    <script src="../../../dist/umd/kore-web-sdk-umd-chat.min.js"></script>
+    <script src="../../../dist/umd/plugins/kore-picker-plugin-umd.js"></script>
+    <script src="../../../dist/umd/plugins/kore-graph-templates-plugin-umd.js"></script>
+    <script src="../../../dist/umd/plugins/agent-desktop-umd.js"></script>
+    <script src="../../../dist/umd/plugins/webapi-stt-plugin-umd.js"></script>
+    <script src="../../../dist/umd/plugins/browser-tts-umd-plugin-umd.js"></script>
     <script src="../../../dist/umd/plugins/kore-desktop-notification-umd.js"></script>
+    <script src="../../../dist/umd/plugins/koreawspolly-st-umd-plugin-umd.js"></script>
 
     <script>
         //chat window declaration
-        var chatConfig=KoreChatSDK.chatConfig;
-        var chatWindow=KoreChatSDK.chatWindow;
+        var chatConfig = KoreChatSDK.chatConfig;
+        var chatWindow = KoreChatSDK.chatWindow;
 
         //plugins declaration
-        var KorePickersPlugin=KorePickersPluginSDK.KorePickersPlugin;
-        var GraphTemplatesPlugin=KoreGraphTemplatesPluginSDK.GraphTemplatesPlugin;
+        var KorePickersPlugin = KorePickersPluginSDK.KorePickersPlugin;
+        var GraphTemplatesPlugin = KoreGraphTemplatesPluginSDK.GraphTemplatesPlugin;
         var AgentDeskTopPlugin = AgentDeskTopPluginSDK.AgentDesktopPlugin;
-        var WebKitSTTPlugin=WebKitSTTPluginSDK.WebKitSTT;
-        var BrowserTTSPlugin=BrowserTTSPluginSDK.BrowserTTS;
+        var WebKitSTTPlugin = WebKitSTTPluginSDK.WebKitSTT;
+        var BrowserTTSPlugin = BrowserTTSPluginSDK.BrowserTTS;
         var KoreDesktopNotificationPluginSDK = KoreDesktopNotificationPluginSDK.KoreDesktopNotificationPlugin;
+        var SpeakTextWithAWSPolly = KoreAWSPollySTSDK.SpeakTextWithAWSPolly;
 
-        
+
         //create chat window instance
         var chatWindowInstance = new chatWindow();
 
 
         //configure bot configurations
-        var botOptions=chatConfig.botOptions;
+        var botOptions = chatConfig.botOptions;
         botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
         botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
         botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
         botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
         botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 
-      
 
 
-      
+
+
 
         //install plugins
         chatWindowInstance.installPlugin(new KorePickersPlugin());
@@ -54,10 +58,20 @@
         chatWindowInstance.installPlugin(new BrowserTTSPlugin());
         chatWindowInstance.installPlugin(new KoreDesktopNotificationPluginSDK());
 
+        var options = {
+            region: 'REGION',
+            identityCredentials: {
+                IdentityPoolId: 'IDENTITY-POOL-ID'
+            }
+
+        }
+        chatWindowInstance.installPlugin(new SpeakTextWithAWSPolly(options));
+
 
         //show chatwindow
         chatWindowInstance.show(chatConfig);
 
-    </script> 
+    </script>
 </body>
+
 </html>

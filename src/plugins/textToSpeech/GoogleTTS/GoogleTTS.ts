@@ -33,9 +33,23 @@ class GoogleTTS extends BaseTTS {
         super();
         this.config = mainconfig;
 
+        if(!this.config.key){
+            console.error('Please configure the Google TTS API-KEY');
+        }
+        if(!this.config.voice){
+            this.config.voice = {
+                  "languageCode": "en-US",
+                  "name": "en-US-Neural2-J",
+                  "ssmlGender": "MALE"
+                };
+                
+            }
 
+            if(!this.config.audioConfig){
+                this.config.audioConfig = { "audioEncoding": "MP3" };
+            }
+        }
 
-    }
     onHostCreate() {
         this.hostInstance.on("viewInit", (chatWindowEle: any) => {
             this.onInit();
