@@ -1,7 +1,7 @@
 
 # Kore-AWS-STT-POLLY Plugin
 
-The Kore-AWS-TS-POLLY is to integrate speack text capability into chatwindow.
+The Kore-AWS-TS-POLLY is to integrate speak text capability into chatwindow.
  
 
 ## Installation
