@@ -712,6 +712,7 @@
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth{
       width: 40%;
       margin: 0 auto;
+	  text-align: center;
     }
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayMonth .tabs {
         color: var(--sdk-chat-window-list-template-sub-title-color);
