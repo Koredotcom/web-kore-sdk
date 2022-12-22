@@ -26,6 +26,14 @@ class GoogleSTT extends BaseSTT {
 
         super();
         this.config = mainconfig;
+
+        if(!this.config.key){
+            console.error('Please configure the Google STT API-KEY');
+        }
+        if(!this.config.languageCode){
+            this.config.languageCode = 'en';
+
+        }
     }
     onHostCreate() {
         $ = korejquery;

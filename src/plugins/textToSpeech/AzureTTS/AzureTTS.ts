@@ -1,4 +1,4 @@
-import { CancellationDetails, CancellationReason, PhraseListGrammar, ResultReason, SpeechConfig, SpeechRecognizer, SpeechSynthesizer } from 'microsoft-cognitiveservices-speech-sdk';
+import { CancellationDetails, SpeakerAudioDestination, PhraseListGrammar, ResultReason, SpeechConfig, SpeechRecognizer, SpeechSynthesizer, AudioConfig } from 'microsoft-cognitiveservices-speech-sdk';
 import $ from 'jquery'
 import BaseTTS from '../BaseTTS';
 
@@ -15,14 +15,24 @@ class AzureTTS extends BaseTTS {
     private speechSynthesizer:any;
     config:AzureTTSConfig;
     _txtToSpeak:string ='';
+    player:any;
   
     constructor(mainconfig:AzureTTSConfig) {
         super();
         this.config = mainconfig;
+        if(!this.config.key){
+            console.error("Please configure the Azure TTS API-KEY");
+        }
+
+        if(!this.config.region){
+            this.config.region = 'eastus';
+        }
 
         this.speechConfig = SpeechConfig.fromSubscription(this.config.key, this.config.region);
+        this.player = new SpeakerAudioDestination();
+        var audioConfig  = AudioConfig.fromSpeakerOutput(this.player);
     
-        this.speechSynthesizer = new SpeechSynthesizer(this.speechConfig);
+        this.speechSynthesizer = new SpeechSynthesizer(this.speechConfig, audioConfig);
 
     }
     onHostCreate() {
@@ -40,9 +50,11 @@ class AzureTTS extends BaseTTS {
         if(!$('.ttspeakerDiv').hasClass('ttsOff')){
             // var synth = window.speechSynthesis;
             // synth.pause();
+            this.stop();
             $('.ttspeakerDiv').addClass('ttsOff');
         } else {
             $('.ttspeakerDiv').removeClass('ttsOff');
+            this.player.resume();
             this.hostInstance.on("afterRenderMessage", (chatWindowData: { msgData: any; }) => {
                 var msgData= chatWindowData.msgData;
                 if (msgData?.type === "bot_response" && !this.hostInstance.minimized && !this.hostInstance.historyLoading) {
@@ -73,10 +85,7 @@ class AzureTTS extends BaseTTS {
     }
 
     stop(){
-
-        $('.recordingMicrophone').css('display', 'none');
-        $('.notRecordingMicrophone').css('display', 'block');
-
+        this.player.pause();
     }
 
   

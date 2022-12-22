@@ -26,14 +26,30 @@ class GoogleTTS extends BaseTTS {
     config: GoogleTTSConfig;
     _txtToSpeak: string = '';
     isPlaying:boolean = false;
+    audioInterval:any;
+    currentAudio:any;
 
     constructor(mainconfig: GoogleTTSConfig) {
         super();
         this.config = mainconfig;
 
+        if(!this.config.key){
+            console.error('Please configure the Google TTS API-KEY');
+        }
+        if(!this.config.voice){
+            this.config.voice = {
+                  "languageCode": "en-US",
+                  "name": "en-US-Neural2-J",
+                  "ssmlGender": "MALE"
+                };
+                
+            }
 
+            if(!this.config.audioConfig){
+                this.config.audioConfig = { "audioEncoding": "MP3" };
+            }
+        }
 
-    }
     onHostCreate() {
         this.hostInstance.on("viewInit", (chatWindowEle: any) => {
             this.onInit();
@@ -61,17 +77,17 @@ class GoogleTTS extends BaseTTS {
 
     OnSpeakerButtonClick() {
         let audioList: any = [];
-        let audioIndex = 0;
-       
 
         this.listenChangesinArray(audioList, async (changes:any, index:any)=>{
-          let audioInterval =   setInterval(e=>{
+          this.audioInterval =   setInterval(e=>{
                 if(this.isPlaying){
                     return;
                 }
-                let currentAUdio = audioList.splice(0,1)[0];
-                         currentAUdio.audio.play();
-                         clearInterval(audioInterval);
+                this.currentAudio = audioList.splice(0,1)[0];
+                if(this.currentAudio){
+                    this.currentAudio.audio.play();
+                }
+                         clearInterval(this.audioInterval);
 
             }, 500)
          
@@ -81,9 +97,14 @@ class GoogleTTS extends BaseTTS {
         if (!$('.ttspeakerDiv').hasClass('ttsOff')) {
             // var synth = window.speechSynthesis;
             // synth.pause();
+            this.stop();
             $('.ttspeakerDiv').addClass('ttsOff');
         } else {
             $('.ttspeakerDiv').removeClass('ttsOff');
+
+            if(this.isPlaying && this.currentAudio){
+                this.currentAudio.audio.play();
+            }
         
             this.hostInstance.on("afterRenderMessage", async (chatWindowData: { msgData: any; }) => {
                 var msgData = chatWindowData.msgData;
@@ -135,8 +156,10 @@ class GoogleTTS extends BaseTTS {
 
     stop() {
 
-        $('.recordingMicrophone').css('display', 'none');
-        $('.notRecordingMicrophone').css('display', 'block');
+        clearInterval(this.audioInterval);
+        if(this.isPlaying && this.currentAudio){
+            this.currentAudio.audio.pause();
+        }
 
     }
 

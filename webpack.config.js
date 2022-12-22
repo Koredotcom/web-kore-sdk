@@ -174,6 +174,37 @@ module.exports= function(env,argv){
             filename: 'plugins/browser-tts-umd-plugin-umd.js',
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
+          GoogleSTTPluginSDK:{
+            import: "./src/index_plugins/GoogleSTT_umd.ts",
+            filename: 'plugins/google-stt-umd-plugin-umd.js',
+            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+
+          },
+          GoogleTTSPluginSDK:{
+            import: "./src/index_plugins/GoogleTTS_umd.ts",
+            filename: 'plugins/google-tts-umd-plugin-umd.js',
+            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+
+          },
+
+          AzureSTTPluginSDK:{
+            import: "./src/index_plugins/AzureSTT_umd.ts",
+            filename: 'plugins/azure-stt-umd-plugin-umd.js',
+            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+
+          },
+          AzureTTSPluginSDK:{
+            import: "./src/index_plugins/AzureTTS_umd.ts",
+            filename: 'plugins/azure-tts-umd-plugin-umd.js',
+            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+
+          },
+          KoreAWSPollySTSDK:{
+            import: "./src/index_plugins/KoreAWSST_umd.ts",
+            filename: 'plugins/koreawspolly-st-umd-plugin-umd.js',
+            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+
+          },
           // AgentDeskTopPluginSDK: {
 // import: "./src/index_plugins/agentDesktop_umd.ts",
 // filename: 'plugins/agent-desktop-umd.js',

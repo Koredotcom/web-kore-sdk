@@ -10,6 +10,7 @@ declare class AzureTTS extends BaseTTS {
     private speechSynthesizer;
     config: AzureTTSConfig;
     _txtToSpeak: string;
+    player: any;
     constructor(mainconfig: AzureTTSConfig);
     onHostCreate(): void;
     onInit(): void;

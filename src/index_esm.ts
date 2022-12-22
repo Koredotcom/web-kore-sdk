@@ -11,7 +11,7 @@ import AzureSTT from './plugins/speechToText/AzureSTT/AzureSTT';
 import BrowserTTS from './plugins/textToSpeech/BrowserTTS/BrowserTTS';
 import AzureTTS from './plugins/textToSpeech/AzureTTS/AzureTTS';
 // import AgentDesktopPlugin from './plugins/agentDesktop/agentdesktop';
-//import speakTextWithAWSPolly from './plugins/TTSPlugins/KoreAWSPollyPlugin/kore-aws-polly';
+import SpeakTextWithAWSPolly from './plugins/textToSpeech/KoreAWSPolly/kore-aws-polly';
 import AgentDesktopPlugin from './plugins/agentDesktop/agentdesktop';
 import WebKitSTTConfig from './plugins/speechToText/WebKitSTT/WebKitSTT';
 import KoreWidgetSDK from './components/widgets/kore-widgets';
@@ -25,6 +25,7 @@ import GoogleTTS from './plugins/textToSpeech/GoogleTTS/GoogleTTS';
 import GoogleTTSConfig from './plugins/textToSpeech/GoogleTTS/GoogleTTS';
 import GoogleVoiceConfig from  './plugins/textToSpeech/GoogleTTS/GoogleTTS';
 import GoogleAudioConfig from  './plugins/textToSpeech/GoogleTTS/GoogleTTS';
+import SpeakTextAWSPollyConfig from './plugins/textToSpeech/KoreAWSPolly/kore-aws-polly';
 
 export {
   chatConfig,
@@ -48,7 +49,8 @@ export {
   GoogleTTSConfig,
   GoogleVoiceConfig,
   GoogleAudioConfig,
-  //speakTextWithAWSPolly,
+  SpeakTextWithAWSPolly,
   AgentDesktopPlugin,
-  KoreDesktopNotificationPlugin
+  KoreDesktopNotificationPlugin,
+  SpeakTextAWSPollyConfig
 };
