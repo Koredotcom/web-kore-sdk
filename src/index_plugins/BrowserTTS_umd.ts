@@ -1,5 +1,5 @@
 
-import BrowserTTS from '../plugins/TTSPlugins/BrowserTTSPlugin/BrowserTTSPlugin';
+import BrowserTTS from '../plugins/textToSpeech/BrowserTTS/BrowserTTS';
 
 export {
     BrowserTTS
