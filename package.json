@@ -1,6 +1,6 @@
 {
   "name": "kore-web-sdk",
-  "version": "9.3.0",
+  "version": "9.3.11",
   "description": "Kore.ai offers Bots SDKs as a set of platform-specific client libraries that provide a quick and convenient way to integrate Kore.ai Bots chat capability into custom applications",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -24,7 +24,7 @@
   "module": "dist/kore-web-sdk.esm.browser.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:Koredotcom/web-kore-sdk.git#v2/9.3.0"
+    "url": "git@github.com:Koredotcom/web-kore-sdk.git#v2/9.3.11"
   },
   "author": "Rajasekhar Balla",
   "license": "MIT",
