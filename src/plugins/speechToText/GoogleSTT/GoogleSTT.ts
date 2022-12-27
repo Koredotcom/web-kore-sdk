@@ -1,7 +1,7 @@
-import BaseSTT from "../BaseSTT";
+import  {BaseSTT } from "../BaseSTT";
 
-import korejquery from '../../../libs/korejquery';
-import Recorder from './recorder';
+import { korejquery } from '../../../libs/korejquery';
+import { Recorder } from './recorder';
 // declare const Recorder:any;
 declare const window: any;
 declare const navigator: any;
@@ -260,4 +260,4 @@ class GoogleSTT extends BaseSTT {
     }
 
 }
-export default GoogleSTT;
+export { GoogleSTT };

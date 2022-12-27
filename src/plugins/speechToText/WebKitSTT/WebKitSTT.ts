@@ -1,4 +1,4 @@
-import BaseSTT from "../BaseSTT";
+import {BaseSTT} from "../BaseSTT";
 declare  const window:any;
 
 export interface WebKitSTTConfig {

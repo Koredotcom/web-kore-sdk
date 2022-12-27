@@ -1,5 +1,5 @@
 import { CancellationDetails, CancellationReason, PhraseListGrammar, ResultReason, SpeechConfig, SpeechRecognizer, SpeechSynthesizer } from 'microsoft-cognitiveservices-speech-sdk';
-import BaseSTT from '../BaseSTT';
+import { BaseSTT } from '../BaseSTT';
 import $ from 'jquery'
 
 export interface AzureSTTConfig {

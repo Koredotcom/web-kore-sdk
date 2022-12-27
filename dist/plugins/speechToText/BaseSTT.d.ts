@@ -5,4 +5,4 @@ declare class BaseSTT {
     getSpeechToTextTemplateString(): string;
     bindEvents(): void;
 }
-export default BaseSTT;
+export { BaseSTT };

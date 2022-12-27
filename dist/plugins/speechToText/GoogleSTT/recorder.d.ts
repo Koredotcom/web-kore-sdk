@@ -18,4 +18,4 @@ declare class Recorder {
     exportSpeex(cb: any, type: any): void;
     forceDownload(blob: any, filename: any): void;
 }
-export default Recorder;
+export { Recorder };

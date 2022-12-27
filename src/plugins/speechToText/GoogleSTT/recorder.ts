@@ -504,6 +504,6 @@ throw(new Error(\"Buffer was of incorrect sample length.\"));\
 
 }
 
-export default Recorder;
+export  { Recorder };
 
 

@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import korejquery from '../../libs/korejquery';
+import { korejquery } from '../../libs/korejquery';
 import { GoogleCharts} from 'google-charts';
 import chatConfig from '../../components/chatwindow/config/kore-config';
 

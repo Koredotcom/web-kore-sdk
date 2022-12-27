@@ -43,4 +43,4 @@ class BaseSTT {
         });
     }
 }
-export default BaseSTT;
+export  { BaseSTT };

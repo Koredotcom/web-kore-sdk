@@ -1,4 +1,4 @@
-import BaseSTT from "../BaseSTT";
+import { BaseSTT } from "../BaseSTT";
 export interface GoogleSTTConfig {
     key: string;
     languageCode: string;
@@ -45,4 +45,4 @@ declare class GoogleSTT extends BaseSTT {
     startSTTRecognization(): void;
     onRecordButtonClick(): void;
 }
-export default GoogleSTT;
+export { GoogleSTT };

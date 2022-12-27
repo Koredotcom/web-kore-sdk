@@ -503,4 +503,4 @@ import korejquery from 'jquery'
 	}
 })(korejquery);
 
-export default korejquery;
+export  { korejquery};

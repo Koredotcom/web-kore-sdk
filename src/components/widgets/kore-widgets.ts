@@ -1,4 +1,4 @@
-import $ from '../../libs/korejquery';
+import { korejquery as $ } from '../../libs/korejquery';
 import PerfectScrollbar from 'perfect-scrollbar';
 import requireKr from '../base-sdk/kore-bot-sdk-client'
 import './styles/kore-widgets.css'
@@ -3402,7 +3402,7 @@ bindTemplateEvents  (ele:any, templateType:any, bindingData:any) {
       listContainer.hide();
     });
   } else if (templateType === 'filterTemplate') {
-    $ele.on('click', '.open-filters', function (e) {
+    $ele.on('click', '.open-filters', function (e:any) {
      let selectedFilter = $(e.currentTarget).attr('id');
       if (selectedFilter) {
         var selectedFilterIndex = bindingData.filterOptions.findIndex(function (item:any) {
@@ -3464,7 +3464,7 @@ bindTemplateEvents  (ele:any, templateType:any, bindingData:any) {
         }
       }
     });
-    $ele.on('click', '.wid-filter-close', function (e) {
+    $ele.on('click', '.wid-filter-close', function (e:any) {
       $(e.target).closest(".widgetContParent").find(".filesCntr").show();
       $(e.target).closest(".widgetContParent").find(".filterTemplateCntr").remove();
       e.stopPropagation();
@@ -3812,7 +3812,7 @@ bindTemplateEvents  (ele:any, templateType:any, bindingData:any) {
       e.stopPropagation();
       e.stopImmediatePropagation();
     })
-    $ele.off('click', '.menuIconMobile').on('click', '.menuIconMobile', function (e) {
+    $ele.off('click', '.menuIconMobile').on('click', '.menuIconMobile', function (e:any) {
       e.stopPropagation();
       e.stopImmediatePropagation();
     })

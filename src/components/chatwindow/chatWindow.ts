@@ -1,4 +1,4 @@
-import * as j$ from '../../libs/korejquery';
+import {korejquery as j$ } from '../../libs/korejquery';
 import requireKr from '../base-sdk/kore-bot-sdk-client';
 import TemplateManager from '../../templatemanager/templateManager';
 import KoreHelpers from '../../utils/helpers';
@@ -14,7 +14,7 @@ import chatConfig from './config/kore-config'
 const bot = requireKr('/KoreBot.js').instance();
 
 declare const document:any;
-const $:any = j$.default ;
+const $:any = j$ ;
 declare const callListener:any;
 
 

@@ -1,4 +1,4 @@
-import BaseSTT from "../BaseSTT";
+import { BaseSTT } from "../BaseSTT";
 export interface WebKitSTTConfig {
     lang: string;
 }

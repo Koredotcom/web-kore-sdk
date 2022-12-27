@@ -1,4 +1,4 @@
-import $ from '../libs/korejquery'
+import {korejquery as $} from '../libs/korejquery'
 import emojione from '../libs/emoji';
 class KoreHelpers{
     static helpers = {

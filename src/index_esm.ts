@@ -6,7 +6,7 @@ import KoreFileUploaderPlugin from './plugins/fileUploader/fileUploader';
 import KorePickersPlugin from './plugins/korePickers';
 import GraphTemplatesPlugin from './plugins/graphTemplatesPlugin';
 import WebKitSTT from './plugins/speechToText/WebKitSTT/WebKitSTT';
-import GoogleSTT from './plugins/speechToText/GoogleSTT/GoogleSTT';
+import {GoogleSTT, GoogleSTTConfig } from './plugins/speechToText/GoogleSTT/GoogleSTT';
 import AzureSTT from './plugins/speechToText/AzureSTT/AzureSTT';
 import BrowserTTS from './plugins/textToSpeech/BrowserTTS/BrowserTTS';
 import AzureTTS from './plugins/textToSpeech/AzureTTS/AzureTTS';
@@ -18,7 +18,6 @@ import KoreWidgetSDK from './components/widgets/kore-widgets';
 import widgetsConfig from './components/widgets/config/kore-widgets-config';
 
 import KoreDesktopNotificationPlugin from "./plugins/desktopNotifications/desktopnotifications";
-import GoogleSTTConfig from './plugins/speechToText/GoogleSTT/GoogleSTT';
 import AzureSTTConfig from './plugins/speechToText/AzureSTT/AzureSTT';
 import AzureTTSConfig  from './plugins/textToSpeech/AzureTTS/AzureTTS';
 import GoogleTTS from './plugins/textToSpeech/GoogleTTS/GoogleTTS';
