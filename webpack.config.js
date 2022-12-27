@@ -5,7 +5,7 @@ const ESLintPlugin = require('eslint-webpack-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
 
 let config= {
-    mode:"none",//none || development || production
+    mode:"production",//none || development || production
     entry:'',
     module:{
         rules:[
