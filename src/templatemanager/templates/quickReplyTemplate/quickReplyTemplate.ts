@@ -2,7 +2,10 @@
 import helpers from '../../../utils/helpers';
 import './quickReplyTemplate.scss';
 class QuickReplyTemplate {
-
+    template_type:string="quick_replies";
+    config={
+        hideOptionsOnClick:true
+    }
     renderMessage(msgData: any) {
         let me: any = this;
         let $ = me.hostInstance.$;
@@ -27,15 +30,19 @@ class QuickReplyTemplate {
             const leftScrollBtn = quickReplyDivs[i].querySelectorAll('.quickreplyLeftIcon');
             const rightScrollBtn = quickReplyDivs[i].querySelectorAll('.quickreplyRightIcon');
             if (btnsParentDiv && btnsParentDiv[0] && btnsParentDiv[0].hasChildNodes()) {
-                if (btnsParentDiv[0].scrollLeft > 0) {
-                    leftScrollBtn[0].classList.remove('hide');
-                } else {
-                    leftScrollBtn[0].classList.add('hide');
+                if (leftScrollBtn && leftScrollBtn.length && leftScrollBtn[0] && leftScrollBtn[0].classList) {
+                    if (btnsParentDiv[0].scrollLeft > 0) {
+                        leftScrollBtn[0].classList.remove('hide');
+                    } else {
+                        leftScrollBtn[0].classList.add('hide');
+                    }
                 }
-                if (btnsParentDiv[0].offsetWidth < btnsParentDiv[0].scrollWidth) {
-                    rightScrollBtn[0].classList.remove('hide');
-                } else {
-                    rightScrollBtn[0].classList.add('hide');
+                if (rightScrollBtn && rightScrollBtn.length && rightScrollBtn[0] && rightScrollBtn[0].classList) {
+                    if (btnsParentDiv[0].offsetWidth < btnsParentDiv[0].scrollWidth) {
+                        rightScrollBtn[0].classList.remove('hide');
+                    } else {
+                        rightScrollBtn[0].classList.add('hide');
+                    }
                 }
             }
         }
@@ -100,12 +107,14 @@ class QuickReplyTemplate {
                 const _parentQuikReplyEle = e.currentTarget.parentElement.parentElement;
                 const _leftIcon = _parentQuikReplyEle.parentElement.parentElement.querySelectorAll('.quickreplyLeftIcon');
                 const _rightIcon = _parentQuikReplyEle.parentElement.parentElement.querySelectorAll('.quickreplyRightIcon');
+                if(me.config.hideOptionsOnClick){
                 setTimeout(() => {
                     _parentQuikReplyEle.parentElement.parentElement.getElementsByClassName('user-account')[0].classList.remove('marginT50');
                     _parentQuikReplyEle.parentElement.parentElement.removeChild(_leftIcon[0]);
                     _parentQuikReplyEle.parentElement.parentElement.removeChild(_rightIcon[0]);
                     _parentQuikReplyEle.parentElement.removeChild(_parentQuikReplyEle);
                 }, 50);
+            }
             }
             // setTimeout(() => {
                 chatWindowInstance.focusInputTextbox();
