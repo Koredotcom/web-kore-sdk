@@ -31,7 +31,7 @@ class AgentDesktopPlugin {
                 this.agentDesktopInfo = new AgentDesktopPluginScript(this.config);
             }
         });
-
+        me.removeEmptyBubblesInTemplate();
     }
     onInit() {
         let me: any = this;
@@ -112,7 +112,7 @@ class AgentDesktopPlugin {
 
         // sent event style setting in user chat 
         me.hostInstance.on('afterRenderMessage', (event: any) => {
-
+            if(!event.messageHtml) return false;
             if (localStorage.getItem("kr-agent-status") != "connected") return;
 
             if (event.msgData?.type === "currentUser") {
@@ -211,6 +211,21 @@ class AgentDesktopPlugin {
             }
         });
         this.isTyping = false;
+    }
+
+    removeEmptyBubblesInTemplate() {
+        let me: any = this;
+        let cwInstance = me.hostInstance;
+        class customTemplateComponent {
+            renderMessage(msgData: any) {
+                if (msgData?.type === "currentUser" && msgData?.message[0]?.cInfo?.body === "") {
+                    return '_ignore_message_render_';
+                } else {
+                    return false;
+                }
+            }
+        }
+        cwInstance.templateManager.installTemplate(new customTemplateComponent());
     }
 }
 export default AgentDesktopPlugin;
