@@ -14,5 +14,6 @@ declare class AgentDesktopPlugin {
     appendVideoAudioElemnts(): void;
     extend(target: any, source: any): any;
     sendStopTypingEvent(): void;
+    removeEmptyBubbles(event: any): void;
 }
 export default AgentDesktopPlugin;
