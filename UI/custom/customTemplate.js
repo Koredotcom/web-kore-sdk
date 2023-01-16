@@ -72,6 +72,20 @@
 				$(messageHtml).css({"pointer-events":"none"});
 			}
 		} else if(msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.template_type === "feedbackTemplate" && (msgData.message[0].component.payload.view==="star"|| msgData.message[0].component.payload.view ==="emojis" || msgData.message[0].component.payload.view === "CSAT"|| msgData.message[0].component.payload.view ==="ThumbsUpDown" || msgData.message[0].component.payload.view === "NPS") )){
+			var thumpsUpDownArrays;
+            if(msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.thumpsUpDownArrays){
+                thumpsUpDownArrays = msgData.message[0].component.payload.thumpsUpDownArrays;
+                msgData.message[0].component.payload.thumpsUpDownArrays = [];
+                thumpsUpDownArrays.forEach(function(eachValue){
+                    if(eachValue && eachValue.reviewText.toLocaleLowerCase() && (!eachValue.reviewText.toLocaleLowerCase().includes('un') && !eachValue.reviewText.toLocaleLowerCase().includes('dis') )){
+                        eachValue.thumpUpId = 0;
+                        msgData.message[0].component.payload.thumpsUpDownArrays[0]=eachValue;
+                    }else if(eachValue && eachValue.reviewText.toLocaleLowerCase() && (eachValue.reviewText.toLocaleLowerCase().includes('un') || eachValue.reviewText.toLocaleLowerCase().includes('dis') )){
+                        eachValue.thumpUpId = 1;
+                        msgData.message[0].component.payload.thumpsUpDownArrays[1] =eachValue;
+                    }
+                })
+            }
 			messageHtml = $(this.getChatTemplate("ratingTemplate")).tmpl({
 				'msgData': msgData,
 				 'helpers': this.helpers,
