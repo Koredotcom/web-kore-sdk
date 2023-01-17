@@ -31,6 +31,7 @@ class AgentDesktopPlugin {
                 this.agentDesktopInfo = new AgentDesktopPluginScript(this.config);
             }
         });
+        console.log('from onHostCreate');
         me.removeEmptyBubblesInTemplate();
     }
     onInit() {
@@ -216,9 +217,11 @@ class AgentDesktopPlugin {
     removeEmptyBubblesInTemplate() {
         let me: any = this;
         let cwInstance = me.hostInstance;
+        console.log('in removeEmptyBubblesInTemplate fn',cwInstance);
         class customTemplateComponent {
             renderMessage(msgData: any) {
                 if (msgData?.type === "currentUser" && msgData?.message[0]?.cInfo?.body === "") {
+                    console.log('removeEmptyBubblesInTemplate if ',cwInstance);
                     return '_ignore_message_render_';
                 } else {
                     return false;
