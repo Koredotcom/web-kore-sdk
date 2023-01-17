@@ -175,13 +175,13 @@ module.exports= function(env,argv){
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
           GoogleSTTPluginSDK:{
-            import: "./src/index_plugins/GoogleSTT_umd.ts",
+            import: "./src/index_plugins/googleSTT_umd.ts",
             filename: 'plugins/google-stt-umd-plugin-umd.js',
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
 
           },
           GoogleTTSPluginSDK:{
-            import: "./src/index_plugins/GoogleTTS_umd.ts",
+            import: "./src/index_plugins/googleTTS_umd.ts",
             filename: 'plugins/google-tts-umd-plugin-umd.js',
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
 
