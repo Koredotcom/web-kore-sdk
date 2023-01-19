@@ -218,7 +218,8 @@ class AgentDesktopPlugin {
         let cwInstance = me.hostInstance;
         class customTemplateComponent {
             renderMessage(msgData: any) {
-                if (msgData?.type === "currentUser" && msgData?.message[0]?.cInfo?.body === "") {
+                console.log('msgData',msgData);
+                if (msgData?.message[0]?.cInfo?.body === "" || !msgData?.message[0]?.cInfo?.body) {
                     return '_ignore_message_render_';
                 } else {
                     return false;
