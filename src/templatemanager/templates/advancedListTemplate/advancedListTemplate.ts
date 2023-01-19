@@ -106,6 +106,7 @@ class AdvancedListTemplate {
                 _innerText = parsedActionObj.payload ||parsedActionObj.title;
 				var postBack = parsedActionObj.renderMessage || parsedActionObj.title;
 				chatWindowInstance.sendMessage(_innerText,{renderMsg:postBack});
+				chatWindowInstance.bottomSliderAction('hide');
 				$ele.find(".advanced-list-wrapper").css({"pointer-events":"none"});
 			} else if (type && type == "url" || type == "web_url") {
 				if ($(me).attr('msgData') !== undefined) {
@@ -128,6 +129,7 @@ class AdvancedListTemplate {
 					a_link = "http:////" + a_link;
 				}
 				me.openExternalLink(a_link);
+				chatWindowInstance.bottomSliderAction('hide');
 			}else{
 				if ((childElementCount > 0) && parsedActionObj.isAccordian) {
 					$(selectedTarget).find(".action-icon-acc").toggleClass("rotate-icon");
