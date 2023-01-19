@@ -221,7 +221,7 @@ class AgentDesktopPlugin {
         class customTemplateComponent {
             renderMessage(msgData: any) {
                 console.log('msgData',msgData);
-                if (msgData?.type === "currentUser" && msgData?.message[0]?.cInfo?.body === "") {
+                if (msgData?.type === "currentUser" && msgData?.message[0]?.cInfo?.body === "" && !msgData.message.body) {
                     console.log('removeEmptyBubblesInTemplate if ',cwInstance);
                     return '_ignore_message_render_';
                 } else {

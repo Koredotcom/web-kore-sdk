@@ -977,7 +977,7 @@ parseSocketMessage(msgString:string){
       }
     }
     msgData=tempData;
-  } else if (tempData.from === 'self' && tempData.type === 'user_message') {
+  } else if (tempData.from === 'self' && tempData.type === 'user_message' && tempData.event !=="stop_typing" && tempData.event !=="typing"&& tempData.event !=="message_read") {
     const tempmsg = tempData.message;
     if (tempmsg && tempmsg.attachments && tempmsg.attachments[0] && tempmsg.attachments[0].fileId) {
       msgData = {
