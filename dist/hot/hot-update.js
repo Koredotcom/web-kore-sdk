@@ -1,253 +1,137 @@
 self["webpackHotUpdatekore_web_sdk"]("esm",{
 
-/***/ "./src/plugins/agentDesktop/agentdesktop.ts":
-/*!**************************************************!*\
-  !*** ./src/plugins/agentDesktop/agentdesktop.ts ***!
-  \**************************************************/
+/***/ "./src/templatemanager/templates/tableTemplate/tableTemplate.ts":
+/*!**********************************************************************!*\
+  !*** ./src/templatemanager/templates/tableTemplate/tableTemplate.ts ***!
+  \**********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _agentdesktop_script__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./agentdesktop-script */ "./src/plugins/agentDesktop/agentdesktop-script.js");
-var __assign = (undefined && undefined.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
+/* harmony import */ var _utils_helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../utils/helpers */ "./src/utils/helpers.js");
+/* harmony import */ var _tableTemplate_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tableTemplate.scss */ "./src/templatemanager/templates/tableTemplate/tableTemplate.scss");
 
-/** @ignore */
-var AgentDesktopPlugin = /** @class */ (function () {
-    function AgentDesktopPlugin(config) {
-        this.name = 'AgentDesktopPlugin';
-        this.config = {};
-        this.isTyping = false;
-        this.stopTypingInterval = 500;
-        this.isTabActive = true;
-        this.config = __assign(__assign({}, this.config), config);
+
+var TableChartTemplate = /** @class */ (function () {
+    function TableChartTemplate() {
     }
-    AgentDesktopPlugin.prototype.onHostCreate = function () {
-        var _this = this;
+    TableChartTemplate.prototype.renderMessage = function (msgData) {
+        var _a, _b, _c, _d;
         var me = this;
-        var cwInstance = me.hostInstance;
-        cwInstance.on("jwtGrantSuccess", function (response) {
-            if (!_this.agentDesktopInfo) {
-                me.onInit();
-                _this.config = me.extend(me, response);
-                //me.AgentDesktop(response.userInfo.userId, response);
-                /** @ignore */
-                _this.agentDesktopInfo = new _agentdesktop_script__WEBPACK_IMPORTED_MODULE_0__["default"](_this.config);
-            }
-        });
-        me.removeEmptyBubblesInTemplate();
-    };
-    AgentDesktopPlugin.prototype.onInit = function () {
-        var _this = this;
-        var me = this;
-        this.$ = me.hostInstance.$;
-        this.appendVideoAudioElemnts();
-        document.addEventListener("visibilitychange", function () {
-            if (document.visibilityState === 'visible') {
-                _this.isTabActive = true;
-                // send read event after user come back to current tab
-                var messageToBot = {};
-                messageToBot["event"] = "message_read";
-                messageToBot["message"] = {
-                    "body": "",
-                    "type": ""
-                };
-                messageToBot["resourceid"] = "/bot.message";
-                me.hostInstance.bot.sendMessage(messageToBot, function (err) { });
-            }
-            else {
-                _this.isTabActive = false;
-            }
-        });
-        // send type event from user to agent
-        me.hostInstance.on('onKeyDown', function (_a) {
-            var event = _a.event;
-            if (event.keyCode !== 13 && event.which <= 90 && event.which >= 48 || event.which >= 96 && event.which <= 105 && localStorage.getItem("kr-agent-status") === "connected") {
-                if (!_this.isTyping) {
-                    var messageToBot = {};
-                    messageToBot["event"] = "typing";
-                    messageToBot["message"] = {
-                        "body": "",
-                        "type": ""
-                    };
-                    messageToBot["resourceid"] = "/bot.message";
-                    me.hostInstance.bot.sendMessage(messageToBot, function (err) {
-                        if (err && err.message) {
-                            console.log("Failed to send reciept", err, event.msgData);
-                        }
-                    });
-                    _this.isTyping = true;
-                }
-                clearTimeout(_this.typingTimer);
-                _this.typingTimer = setTimeout(function () { return me.sendStopTypingEvent(); }, _this.stopTypingInterval);
-            }
-            else if (event.keyCode === 13) {
-                clearTimeout(_this.typingTimer);
-                me.sendStopTypingEvent();
-            }
-        });
-        // agent connected and disconnected events
-        me.hostInstance.on('onWSMessage', function (event) {
-            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
-            // Agent Status 
-            if (((_b = (_a = event.messageData) === null || _a === void 0 ? void 0 : _a.message) === null || _b === void 0 ? void 0 : _b.type) === 'agent_connected') {
-                localStorage.setItem("kr-agent-status", "connected");
-            }
-            else if (((_d = (_c = event.messageData) === null || _c === void 0 ? void 0 : _c.message) === null || _d === void 0 ? void 0 : _d.type) === 'agent_disconnected') {
-                localStorage.setItem("kr-agent-status", "disconneted");
-            }
-            // when agent send the message, hide the type indicator
-            if (event.messageData.message) {
-                if (((_f = (_e = event === null || event === void 0 ? void 0 : event.messageData) === null || _e === void 0 ? void 0 : _e.message[0]) === null || _f === void 0 ? void 0 : _f.type) === 'text' && ((_h = (_g = event === null || event === void 0 ? void 0 : event.messageData) === null || _g === void 0 ? void 0 : _g.author) === null || _h === void 0 ? void 0 : _h.type) === 'AGENT') {
-                    _this.$('.typingIndicatorContent').css('display', 'none');
-                }
-            }
-            // type indicator style changes when agent is being connected
-            if (((_l = (_k = (_j = event.messageData) === null || _j === void 0 ? void 0 : _j.message) === null || _k === void 0 ? void 0 : _k.author) === null || _l === void 0 ? void 0 : _l.type) === 'AGENT' && event.messageData.message.type === 'typing' && localStorage.getItem("kr-agent-status") === "connected") {
-                _this.$('.typingIndicatorContent').css('display', 'block');
-                _this.$('.typingIndicator').addClass('agent-type-icon');
-            }
-            else if (((_p = (_o = (_m = event.messageData) === null || _m === void 0 ? void 0 : _m.message) === null || _o === void 0 ? void 0 : _o.author) === null || _p === void 0 ? void 0 : _p.type) === 'AGENT' && event.messageData.message.type === 'stoptyping' && localStorage.getItem("kr-agent-status") === "connected") {
-                _this.$('.typingIndicatorContent').css('display', 'none');
-            }
-            else if (localStorage.getItem("kr-agent-status") !== "conneted") {
-                _this.$('.typingIndicator').removeClass('agent-type-icon');
-            }
-        });
-        // sent event style setting in user chat 
-        me.hostInstance.on('afterRenderMessage', function (event) {
-            var _a, _b, _c, _d, _e;
-            if (!event.messageHtml)
-                return false;
-            if (localStorage.getItem("kr-agent-status") != "connected")
-                return;
-            if (((_a = event.msgData) === null || _a === void 0 ? void 0 : _a.type) === "currentUser") {
-                // remove bot typing while agent being connected
-                _this.$('.typingIndicatorContent').css('display', 'none');
-                var msg_1 = event.msgData.message;
-                var extraInfoEle = event.messageHtml.find('.extra-info');
-                if (!extraInfoEle.children('.sentIndicator').length) {
-                    extraInfoEle.append('<div class="sentIndicator"></div>');
-                    // changing indicator text for specific message on deliver and read events
-                    me.hostInstance.bot.on('message', function (message) {
-                        var tempData = JSON.parse(message.data);
-                        if (!tempData)
-                            return;
-                        if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === msg_1[0].clientMessageId) {
-                            var ele = _this.$("#" + tempData.message.clientMessageId + " .sentIndicator");
-                            if (tempData.message.type === "message_delivered") {
-                                if (!ele.hasClass('read')) {
-                                    ele.addClass("delivered");
-                                }
-                            }
-                            else if (tempData.message.type === "message_read") {
-                                ele.removeClass("delivered").addClass("read");
-                            }
-                        }
-                        // change the indicator to read when agent switch the slot to other user
-                        else if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === 'all') {
-                            var ele = _this.$(" .sentIndicator");
-                            if (tempData.message.type === "message_read") {
-                                ele.removeClass("delivered").addClass("read");
-                            }
-                        }
-                    });
-                }
-            }
-            else {
-                // send read event from user to agent 
-                if (((_e = (_d = (_c = (_b = event.msgData) === null || _b === void 0 ? void 0 : _b.message[0]) === null || _c === void 0 ? void 0 : _c.component) === null || _d === void 0 ? void 0 : _d.payload) === null || _e === void 0 ? void 0 : _e.template_type) == 'live_agent') {
-                    var messageToBot = {};
-                    var msgId = event.msgData.messageId;
-                    messageToBot["event"] = "message_delivered";
-                    messageToBot["message"] = {
-                        "body": "",
-                        "type": ""
-                    };
-                    messageToBot["resourceid"] = "/bot.message";
-                    me.hostInstance.bot.sendMessage(messageToBot, function (err) { });
-                    // send read event when user being in current tab
-                    if (_this.isTabActive) {
-                        messageToBot.event = 'message_read';
-                        me.hostInstance.bot.sendMessage(messageToBot, function (err) { });
-                    }
-                }
-            }
-        });
-    };
-    AgentDesktopPlugin.prototype.appendVideoAudioElemnts = function () {
-        var me = this;
-        var cwInstance = me.hostInstance;
-        var chatEle = cwInstance.chatEle;
-        var localVideoElement = '<video id="kore_local_video" autoplay="autoplay" playsinline style="width:0px;height:0px"></video>';
-        var remoteVideoElement = '<video id="kore_remote_video" autoplay="autoplay" playsinline style="width:0px;height:0px"></video>';
-        chatEle.append(localVideoElement);
-        chatEle.append(remoteVideoElement);
-    };
-    AgentDesktopPlugin.prototype.extend = function (target, source) {
-        var me = this;
-        for (var prop in source) {
-            if (source.hasOwnProperty(prop)) {
-                if (target[prop] && typeof source[prop] === 'object') {
-                    me.extend(target[prop], source[prop]);
-                }
-                else {
-                    target[prop] = source[prop];
-                }
-            }
+        var $ = me.hostInstance.$;
+        var helpersObj = _utils_helpers__WEBPACK_IMPORTED_MODULE_1__["default"];
+        if (((_d = (_c = (_b = (_a = msgData === null || msgData === void 0 ? void 0 : msgData.message) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.component) === null || _c === void 0 ? void 0 : _c.payload) === null || _d === void 0 ? void 0 : _d.template_type) === "table") {
+            me.messageHtml = $(me.getTemplateString()).tmpl({
+                'msgData': msgData,
+                'helpers': helpersObj.helpers
+            });
+            me.bindEvents();
+            return me.messageHtml;
         }
-        return target;
     };
-    AgentDesktopPlugin.prototype.sendStopTypingEvent = function () {
+    TableChartTemplate.prototype.bindEvents = function () {
         var me = this;
-        var messageToBot = {};
-        messageToBot["event"] = "stop_typing";
-        messageToBot["message"] = {
-            "body": "",
-            "type": ""
-        };
-        messageToBot["resourceid"] = "/bot.message";
-        me.hostInstance.bot.sendMessage(messageToBot, function (err) {
-            if (err && err.message) {
-                console.log("Failed to send reciept", err);
+        var $ = me.hostInstance.$;
+        setTimeout(function () {
+            var acc = document.getElementsByClassName('accordionRow');
+            for (var i = 0; i < acc.length; i++) {
+                var accordian = acc[i];
+                accordian.onclick = function (e) {
+                    var selectedAcc = e.currentTarget;
+                    selectedAcc.classList.toggle('open');
+                };
             }
-        });
-        this.isTyping = false;
-    };
-    AgentDesktopPlugin.prototype.removeEmptyBubblesInTemplate = function () {
-        var me = this;
-        var cwInstance = me.hostInstance;
-        var customTemplateComponent = /** @class */ (function () {
-            function customTemplateComponent() {
+            var showFullTableModal = document.getElementsByClassName('showMore');
+            for (var j = 0; j < showFullTableModal.length; j++) {
+                var element = showFullTableModal[j];
+                element.onclick = function (e) {
+                    var selectedTarget = e.currentTarget;
+                    var parentli = selectedTarget.parentElement;
+                    // const tableChartDiv =  $(parentli).closest('.tableChart'); can be uncommented if using tableChartDiv
+                    $('#dialog').empty();
+                    $('#dialog').html($(parentli).find('.tablechartDiv').html());
+                    $('.hello').clone().appendTo('.goodbye');
+                    var modal = document.getElementById('myPreviewModal');
+                    $('.largePreviewContent').empty();
+                    // $(".largePreviewContent").html($(parentli).find('.tablechartDiv').html());
+                    console.log($(parentli).find('.tablechartDiv'));
+                    $(parentli).clone().appendTo('.largePreviewContent');
+                    modal.style.display = 'block';
+                    // Get the <span> element that closes the modal
+                    var span = document.getElementsByClassName('closeElePreview')[0];
+                    // When the user clicks on <span> (x), close the modal
+                    span.onclick = function () {
+                        modal.style.display = 'none';
+                        $('.largePreviewContent').removeClass('addheight');
+                    };
+                };
             }
-            customTemplateComponent.prototype.renderMessage = function (msgData) {
-                var _a, _b, _c, _d;
-                console.log('msgData', msgData);
-                if ((msgData === null || msgData === void 0 ? void 0 : msgData.type) === "currentUser" && ((_b = (_a = msgData === null || msgData === void 0 ? void 0 : msgData.message[0]) === null || _a === void 0 ? void 0 : _a.cInfo) === null || _b === void 0 ? void 0 : _b.body) === "" || !((_d = (_c = msgData === null || msgData === void 0 ? void 0 : msgData.message[0]) === null || _c === void 0 ? void 0 : _c.cInfo) === null || _d === void 0 ? void 0 : _d.body)) {
-                    return '_ignore_message_render_';
-                }
-                else {
-                    return false;
-                }
-            };
-            return customTemplateComponent;
-        }());
-        cwInstance.templateManager.installTemplate(new customTemplateComponent());
+        }, 350);
     };
-    return AgentDesktopPlugin;
+    TableChartTemplate.prototype.getTemplateString = function () {
+        var tableChartTemplate = '<script id="chat_table_tmpl" type="text/x-jqury-tmpl"> \
+        {{if msgData.message}} \
+            <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+                class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
+                {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
+                {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
+                {{if msgData.message[0].component.payload.text}}<div class="messageBubble tableChart">\
+                    <span>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}}</span>\
+                </div>{{/if}}\
+                <div class="tablechartDiv {{if msgData.message[0].component.payload.table_design && msgData.message[0].component.payload.table_design == "regular"}}regular{{else}}hide{{/if}}">\
+                    <div style="overflow-x:auto; padding: 0 8px;">\
+                        <table cellspacing="0" cellpadding="0">\
+                            <tr class="headerTitle">\
+                                {{each(key, tableHeader) msgData.message[0].component.payload.columns}} \
+                                    <th {{if tableHeader[1]}}style="text-align:${tableHeader[1]};"{{/if}}>${tableHeader[0]}</th>\
+                                {{/each}} \
+                            </tr>\
+                            {{each(key, tableRow) msgData.message[0].component.payload.elements}} \
+                                {{if tableRow.Values.length>1}}\
+                                    <tr {{if key > 4}}class="hide"{{/if}}>\
+                                        {{each(cellkey, cellValue) tableRow.Values}} \
+                                            <td  {{if cellkey === tableRow.Values.length-1}}colspan="2"{{/if}} class=" {{if key == 0}} addTopBorder {{/if}}" {{if msgData.message[0].component.payload.columns[cellkey][1]}}style="text-align:${msgData.message[0].component.payload.columns[cellkey][1]};" {{/if}} title="${cellValue}">${cellValue}</td>\
+                                        {{/each}} \
+                                    </tr>\
+                                {{/if}}\
+                            {{/each}} \
+                        </table>\
+                    </div>\
+                    {{if msgData.message[0].component.payload.elements.length > 5 && msgData.message[0].component.payload.table_design && msgData.message[0].component.payload.table_design == "regular"}}<div class="showMore">Show more</div>{{/if}}\
+                </div>\
+                 <div class="accordionTable {{if msgData.message[0].component.payload.table_design && msgData.message[0].component.payload.table_design == "regular"}}hide{{else}}responsive{{/if}}">\
+                    {{each(key, tableRow) msgData.message[0].component.payload.elements}} \
+                        {{if key < 4}}\
+                            <div class="accordionRow">\
+                                {{each(cellkey, cellValue) tableRow.Values}} \
+                                    {{if cellkey < 2}}\
+                                        <div class="accordionCol">\
+                                            <div class="colTitle hideSdkEle">${msgData.message[0].component.payload.columns[cellkey][0]}</div>\
+                                            <div class="colVal">${cellValue}</div>\
+                                        </div>\
+                                    {{else}}\
+                                        <div class="accordionCol hideSdkEle">\
+                                            <div class="colTitle">${msgData.message[0].component.payload.columns[cellkey][0]}</div>\
+                                            <div class="colVal">${cellValue}</div>\
+                                        </div>\
+                                    {{/if}}\
+                                {{/each}} \
+                                <span class="fa fa-caret-right tableBtn"></span>\
+                            </div>\
+                        {{/if}}\
+                    {{/each}} \
+                    <div class="showMore">Show more</div>\
+                </div>\
+            </li> \
+        {{/if}} \
+    </scipt>';
+        return tableChartTemplate;
+    };
+    return TableChartTemplate;
 }());
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AgentDesktopPlugin);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TableChartTemplate);
 
 
 /***/ })
@@ -256,7 +140,7 @@ var AgentDesktopPlugin = /** @class */ (function () {
 /******/ function(__webpack_require__) { // webpackRuntimeModules
 /******/ /* webpack/runtime/getFullHash */
 /******/ (() => {
-/******/ 	__webpack_require__.h = () => ("0707a9c925a769b7996d")
+/******/ 	__webpack_require__.h = () => ("592f52760e43234ae010")
 /******/ })();
 /******/ 
 /******/ }

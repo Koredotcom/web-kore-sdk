@@ -44,7 +44,7 @@ class TableChartTemplate {
                     // $(".largePreviewContent").html($(parentli).find('.tablechartDiv').html());
                     console.log($(parentli).find('.tablechartDiv'));
 
-                   $('.tablechartDiv').clone().appendTo('.largePreviewContent');
+                   $(parentli).clone().appendTo('.largePreviewContent');
                     modal.style.display = 'block';
                     // Get the <span> element that closes the modal
                     const span: any = document.getElementsByClassName('closeElePreview')[0];
