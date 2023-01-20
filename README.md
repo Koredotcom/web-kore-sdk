@@ -21,7 +21,7 @@ With just few lines of code, you can embed our Kore.ai chat widget into your app
 First, install kore web SDK via the [npm](https://www.npmjs.com/get-npm) package manager:
 
 ```bash
-npm install --save git+https://github.com:Koredotcom/web-kore-sdk.git#v2/9.3.0
+npm install --save git+https://github.com:Koredotcom/web-kore-sdk.git#v2/10.0.0
 ```
 
 Get chatWindow and chatConfig
@@ -69,7 +69,7 @@ include the following script in your html file and configure bot configurations
 
 ```js
 
-<script  src="https://cdn.jsdelivr.net/gh/Koredotcom/web-kore-sdk@v2-9.3.0/dist/umd/kore-web-sdk-umd-chat.min.js"></script>
+<script  src="https://cdn.jsdelivr.net/gh/Koredotcom/web-kore-sdk@v2-10.0.0/dist/umd/kore-web-sdk-umd-chat.min.js"></script>
 <script>
         //chat window declaration
         var chatConfig=KoreChatSDK.chatConfig;
