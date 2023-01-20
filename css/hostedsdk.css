@@ -4,11 +4,11 @@ body{
 }
 .kore-chat-window{
     position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    -webkit-transform: translate(-50%,-50%) !important;
-    -ms-transform: translate(-50%,-50%) !important;
-    transform: translate(-50%,-50%) !important;
+    /* top: 50% !important; */
+    left: 5% !important;
+    /* -webkit-transform: translate(-50%,-50%) !important; */
+    /* -ms-transform: translate(-50%,-50%) !important; */
+    /* transform: translate(-50%,-50%) !important; */
     max-height: 100% !important;
     height: 100% !important;
     box-shadow: var(--sdk-chat-window-box-shadow) !important;
@@ -17,6 +17,7 @@ body{
     font-family: 'Inter';
     width: 480px;
     min-width: 480px;
+    margin: 0 auto;
 }
 .kore-chat-window .kore-chat-header{
     border-top-left-radius: 20px !important;
