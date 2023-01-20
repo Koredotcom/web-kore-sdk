@@ -325,6 +325,22 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 ```
 
 ###Release History:
+
+v10.0.0 [Major] on 21-Jan-2023: Master branch
+	Features
+		1.Integrated BankAssist SDK templates into platform SDK
+		2.Integrated Feedback Templates
+		3.Azure Speech to text introduced
+
+	Bugfixes
+		1.Google and WebAPI's STT bugfixes
+		2.indentation with unordered list markdown CSS fix
+		3.Supporting fileUrl and image in attachment template
+		4.Number parse issue for message node with large Integers
+		5.The dropdown template CSS issue fixed
+		6.Hiding end of chat history label for multipage apps
+
+
 V9.3.0 [Minor] on 23-July-2022: Master branch
 	1. Enhancement to link template to support download
 	2. Bug fixes
