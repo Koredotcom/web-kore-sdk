@@ -326,9 +326,8 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 
 v10.0.0 [Major] on 21-Jan-2023: Master branch
 	Features
-		1.Integrated BankAssist SDK templates into platform SDK
-		2.Integrated Feedback Templates
-		3.Azure Speech to text introduced
+		1.Integrated Feedback Templates
+		2.Azure Speech to text introduced
 
 	Bugfixes
 		1.Google and WebAPI's STT bugfixes
