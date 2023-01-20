@@ -321,10 +321,8 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 	//     webhookURL:'PLEASE_PROVIDE_WEBHOOK_URL',
 	//     apiVersion:2	
 	// }		
-
+# Release History
 ```
-
-###Release History:
 
 v10.0.0 [Major] on 21-Jan-2023: Master branch
 	Features
