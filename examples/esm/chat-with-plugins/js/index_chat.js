@@ -5,6 +5,7 @@ import {KoreFileUploaderPlugin} from '../../../../../dist/kore-web-sdk.esm.brows
 import {KorePickersPlugin } from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {GraphTemplatesPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {WebKitSTT, SpeakTextWithAWSPolly} from '../../../../../dist/kore-web-sdk.esm.browser.js';
+import {SearchSuggestionsPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 
 import {BrowserTTS,AzureSTTConfig,WebKitSTTConfig, AzureTTS, KoreDesktopNotificationPlugin } from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {AgentDesktopPlugin, GoogleSTT, GoogleSTTConfig, AzureSTT, GoogleTTS} from '../../../../../dist/kore-web-sdk.esm.browser.js';
@@ -16,13 +17,21 @@ let chatWindowInstance = new chatWindow();
 chatWindowInstance.installPlugin(new KoreFileUploaderPlugin());
 chatWindowInstance.installPlugin(new KorePickersPlugin({}));
 chatWindowInstance.installPlugin(new GraphTemplatesPlugin());
-chatWindowInstance.installPlugin( new SpeakTextWithAWSPolly({
+chatWindowInstance.installPlugin(new SpeakTextWithAWSPolly({
   region:'REGION',
   identityCredentials : {
     IdentityPoolId: 'IDENTITY-POOL-ID'
   }
 
 }));
+// chatWindowInstance.installPlugin(new SearchSuggestionsPlugin({
+//   botOptions:{
+//     koreAPIUrl:'PROVIDE_SEARCHASSIST_BASE_URL',
+//     API_KEY:"PROVIDE_API_KEY"
+//   }
+// }));
+
+
 // chatWindowInstance.installPlugin(new GoogleTTS({key:'API_KEY', voice:{
 //   "languageCode": "en-US",
 //   "name": "en-US-Neural2-J",
