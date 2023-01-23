@@ -215,6 +215,12 @@ module.exports= function(env,argv){
             filename: 'plugins/kore-desktop-notification-umd.js',
             chunkLoading: false,
           },
+          SearchSuggestionsPluginSDK: {
+            import: "./src/index_plugins/SearchSuggestions_umd.ts",
+            filename: 'plugins/search-suggestions-umd.js',
+            chunkLoading: false,
+          },
+
         }
         config.output.library = {
           name: '[name]',

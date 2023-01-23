@@ -23,4 +23,5 @@ import GoogleTTSConfig from './plugins/textToSpeech/GoogleTTS/GoogleTTS';
 import GoogleVoiceConfig from './plugins/textToSpeech/GoogleTTS/GoogleTTS';
 import GoogleAudioConfig from './plugins/textToSpeech/GoogleTTS/GoogleTTS';
 import SpeakTextAWSPollyConfig from './plugins/textToSpeech/KoreAWSPolly/kore-aws-polly';
-export { chatConfig, chatWindow, widgetsConfig, KoreWidgetSDK, Korei18nPlugin, KoreFileUploaderPlugin, KorePickersPlugin, GraphTemplatesPlugin, WebKitSTT, GoogleSTT, AzureSTT, BrowserTTS, AzureTTS, GoogleSTTConfig, AzureSTTConfig, AzureTTSConfig, WebKitSTTConfig, GoogleTTS, GoogleTTSConfig, GoogleVoiceConfig, GoogleAudioConfig, SpeakTextWithAWSPolly, AgentDesktopPlugin, KoreDesktopNotificationPlugin, SpeakTextAWSPollyConfig };
+import SearchSuggestionsPlugin from './plugins/searchSuggestions/searchSuggestions';
+export { chatConfig, chatWindow, widgetsConfig, KoreWidgetSDK, Korei18nPlugin, KoreFileUploaderPlugin, KorePickersPlugin, GraphTemplatesPlugin, WebKitSTT, GoogleSTT, AzureSTT, BrowserTTS, AzureTTS, GoogleSTTConfig, AzureSTTConfig, AzureTTSConfig, WebKitSTTConfig, GoogleTTS, GoogleTTSConfig, GoogleVoiceConfig, GoogleAudioConfig, SpeakTextWithAWSPolly, AgentDesktopPlugin, KoreDesktopNotificationPlugin, SpeakTextAWSPollyConfig, SearchSuggestionsPlugin };
