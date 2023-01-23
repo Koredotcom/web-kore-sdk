@@ -6,7 +6,7 @@ Search Suggestions plugin is collection of Typeahead (Auto Complete) and Query S
 
 ```js
 
-import { Search Suggestion Plugin } from 'kore-web-sdk';
+import { SearchSuggestionsPlugin } from 'kore-web-sdk';
 
 const config = {
   botOptions:{
