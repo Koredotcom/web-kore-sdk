@@ -37,7 +37,7 @@ class TemplateManager {
 	}
 
 	installTemplate  (template: any) {
-		this.templates.push(template);
+		this.templates.unshift(template);
 		template.hostInstance = this.hostInstance;
 	};
 	installDefaultTemplates() {
