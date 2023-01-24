@@ -7405,3 +7405,28 @@
 }
 
 /* --- Banking feedback template css Ends here -- */
+
+/* System Template css starts here */
+.kore-chat-window .chat-container .messageBubble .system-template {
+    position: relative;
+    border-bottom: 1px solid var(--sdk-chat-widow-primary-border-color);
+    margin-bottom: 28px;
+    font-weight: 400;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.kore-chat-window .chat-container .messageBubble .system-template-msg {
+    position: relative;
+    top: 8px;
+    background: var(--sdk-chat-widow-default-white);
+    padding: 0px 10px;
+    display: initial;
+    width: 137px;
+    color: #333;
+    margin-left: 20px;
+    margin-top: 43x;
+    font-weight: bold;
+    font-size: 12px;
+}
+/* System Template css ends here */

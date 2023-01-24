@@ -247,6 +247,17 @@
 			this.bankingFeedbackTemplateEvents(messageHtml);
 			$(messageHtml).data(msgData);
 		}
+		else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type === "SYSTEM") {
+			if (msgData.message[0].component && msgData.message[0].component.payload) {
+				msgData.message[0].cInfo.body = msgData.message[0].component.payload.text || "";
+			}
+			messageHtml = $(this.getChatTemplate("systemTemplate")).tmpl({
+				'msgData': msgData,
+				'helpers': this.helpers,
+				'extension': this.extension
+			});
+			$(messageHtml).data(msgData);
+		}
 	   return messageHtml;
 	
 		return "";
@@ -3158,6 +3169,19 @@ var message= {
 	</li>\
 	{{/if}}\
     </script>';
+	var systemTemplate = '<script id="chat_system_tmpl" type="text/x-jqury-tmpl"> \
+    {{if msgData.message}} \
+        {{each(key, msgItem) msgData.message}} \
+            {{if msgItem.cInfo && msgItem.type === "text"}} \
+            <div class="messageBubble"> \
+                <div class = "system-template"> \
+                        <span class = "system-template-msg"> {{html helpers.convertMDtoHTML(msgItem.cInfo.body, "bot", msgItem)}}</span> \
+                    </div> \
+                </div> \
+            {{/if}} \
+        {{/each}} \
+    {{/if}} \
+</script>';
 		if (tempType === "dropdown_template") {
 			return dropdownTemplate;
 		} else if (tempType === "checkBoxesTemplate") {
@@ -3212,6 +3236,9 @@ var message= {
         } else if (tempType === "bankingFeedbackTemplate") {
             return bankingFeedbackTemplate;
         } 
+		else if (tempType === "systemTemplate") {
+            return systemTemplate;
+        }
 		else {
 			return "";
 		}
