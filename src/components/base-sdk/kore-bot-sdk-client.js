@@ -600,6 +600,11 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
         console.error("koreAnonymousFn is not a function");
       }
     }
+    if(options.loadHistory){
+      this.paginatedScrollDataAvailable = true;
+    }else{
+      this.paginatedScrollDataAvailable = false;
+    }
     this.reWriteWebhookConfig(options)
   };
   
