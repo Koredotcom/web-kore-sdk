@@ -3677,10 +3677,18 @@ var message= {
 		$(messageHtml).find(".emojiComponent,.thumpsUpDownComponent,.numbersComponent").off('click','.emoji-rating,.numbers-rating').on('click','.emoji-rating,.numbers-rating',function(e){
 			var msgData=$(messageHtml).data();
 			var sliderValue=msgData.message[0].component.payload.sliderView;
-			if($(messageHtml).find(".emojiComponent .emoji-rating.active").length==="0"){
+			if($(messageHtml).find(".emojiComponent .emoji-rating.active").length !=="0"){
 				$(".emojiComponent .emoji-rating").removeClass("active");
 				$(".emojiElement").remove();
 			}
+			if($(messageHtml).find(".thumpsUpDownComponent .emoji-rating.active").length!=="0"){
+                $(".thumpsUpDownComponent .emoji-rating").removeClass("active");
+                $(".emojiElement").remove();
+            }
+            if($(messageHtml).find(".numbersComponent .numbers-rating.active").length!=="0"){
+                $(".numbersComponent .numbers-rating").removeClass("active");
+                $(".emojiElement").remove();
+            }
 			var emojiValue=$(this).attr("value");
 			$(e.currentTarget).addClass("active");
 			if($(messageHtml).find(".emojiComponent.version2").length === 0 && $(messageHtml).find(".thumpsUpDownComponent").length === 0 && $(messageHtml).find('.numbersComponent').length === 0){
@@ -3750,7 +3758,11 @@ var message= {
 				}else{
 					var messageDisplay=$(".suggestionInput").val();
 					chatInitialize.renderMessage(msgData);
-                    chatInitialize.sendMessage($('.chatInputBox').text(emojiValue +" :"+ messageDisplay),emojiValue +" :"+ messageDisplay);
+					if(messageDisplay){
+						chatInitialize.sendMessage($('.chatInputBox').text(emojiValue +" :"+ messageDisplay),emojiValue +" :"+ messageDisplay);
+						}else{
+							chatInitialize.sendMessage($('.chatInputBox').text(emojiValue),emojiValue);
+						}
 				}
 				bottomSliderAction("hide");
 				msgData.message[0].component.payload.sliderView=true;
