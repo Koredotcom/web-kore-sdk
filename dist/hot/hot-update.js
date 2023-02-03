@@ -80,7 +80,7 @@ if (!chatConfig.loadHistory) { // pagination scroll will be enabled only when lo
 /******/ function(__webpack_require__) { // webpackRuntimeModules
 /******/ /* webpack/runtime/getFullHash */
 /******/ (() => {
-/******/ 	__webpack_require__.h = () => ("5a6028fba831de87f6f8")
+/******/ 	__webpack_require__.h = () => ("09cf17c357d6a28d345a")
 /******/ })();
 /******/ 
 /******/ }

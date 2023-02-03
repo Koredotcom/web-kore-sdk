@@ -449,7 +449,7 @@
     width: 100%;
     height: 35px;
     border-radius: 4px;
-    background-color: var(--sdk-chat-window-btn-label-color);
+    background-color: #1E90FF;
     font-size: 14px;
     font-weight: 500;
     line-height: normal;
@@ -464,10 +464,17 @@
     cursor:pointer;
 }
 .kore-chat-window .ratingStar{
-    font-family: LATOBold;
+   //  font-family: LATOBold;
     font-size: 17px;
     letter-spacing: .09px;
     margin: 15px 0;
+}
+.kore-action-sheet .rating-main-component {
+   margin: 0;
+   padding: 20px 20px 10px 20px;
+}
+.kore-action-sheet .rating-main-component .text-heading-info{
+   padding-right: 30px;
 }
 .kore-chat-window .emojiComponent .rating.active{
    top:-12px;
