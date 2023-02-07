@@ -31,6 +31,19 @@ class AgentDesktopPlugin {
                 this.agentDesktopInfo = new AgentDesktopPluginScript(this.config);
             }
         });
+        me.hostInstance.on('beforeViewInit', (chatEle: any) => {
+            me.hostInstance.chatEle.off('click', '.close-btn').on('click', '.close-btn',  (event: any)=> {
+                const messageToBot: any = {};
+                messageToBot["clientMessageId"] = new Date().getTime();
+                messageToBot["event"] = "close_agent_chat";
+                messageToBot["message"] = {
+                    "body": "",
+                    "type": ""
+                }
+                messageToBot["resourceid"] = "/bot.message";
+                me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+            });
+        })
         me.removeEmptyBubblesInTemplate();
     }
     onInit() {
