@@ -715,9 +715,10 @@ bindEvents  () {
 
   _chatContainer.on('click', 'li a',  (e: any) => {
     e.preventDefault();
-    const a_link = $(this).attr('href');
-    const _trgt = $(this).attr('target');
-    const msgDataText = $(e.currentTarget).closest('span.simpleMsg').attr('msgData') || '';
+    let targetEle = $(e.currentTarget);
+    const a_link = targetEle.attr('href');
+    const _trgt = targetEle.attr('target');
+    const msgDataText = $(targetEle).closest('span.simpleMsg').attr('msgData') || '';
     let msgData;
     if (msgDataText) {
       try {
