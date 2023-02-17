@@ -232,6 +232,9 @@ class AgentDesktopPlugin {
         class customTemplateComponent {
             renderMessage(msgData: any) {
                 console.log('msgData',msgData);
+                if (msgData?.message[0]?.component?.payload?.template_type === "live_agent" && !msgData?.message[0]?.component?.payload?.text.trim().length) {
+                    return '_ignore_message_render_';
+                }
                 if (msgData?.message[0]?.cInfo?.body === "" || !msgData?.message[0]?.cInfo?.body) {
                     return '_ignore_message_render_';
                 } else {
