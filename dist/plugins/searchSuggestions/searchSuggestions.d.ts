@@ -40,11 +40,11 @@ declare class SearchSuggestionsPlugin {
     onHostCreate(): void;
     onInit(): void;
     getAppDetails(): void;
-    getWebsdkAPICall(options: any, callback: any): JQuery.jqXHR<any>;
+    getWebsdkAPICall(options: any, callback: any): Promise<any>;
     getAccesToken(): void;
     getSearchInterface(): void;
-    getSearchInterfaceAPICall(callback: any): JQuery.jqXHR<any>;
-    getJWTGrantAPICall(options: any, callback: any): JQuery.jqXHR<any>;
+    getSearchInterfaceAPICall(callback: any): Promise<any>;
+    getJWTGrantAPICall(options: any, callback: any): Promise<any>;
     getAutoSuggestionTemplate: () => string;
     bindEvents(): void;
     setCaret(): void;

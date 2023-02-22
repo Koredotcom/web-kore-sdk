@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "declaration": true,
+        "esModuleInterop": true,
+        "inlineSourceMap": false,
+        "lib": [
+            "esnext",
+            "es2015",
+            "dom"
+        ],
+        "listEmittedFiles": false,
+        "listFiles": false,
+        "moduleResolution": "node",
+        "noFallthroughCasesInSwitch": true,
+        "pretty": true,
+        "resolveJsonModule": true,
+        "rootDir": "src",
+        "skipLibCheck": true,
+        "strict": true,
+        "traceResolution": false,
+        "types": ["node"],
+        "baseUrl": "."
+    },
+    "compileOnSave": false,
+    "exclude": ["node_modules", "dist"],
+    "include": [ "src/components/chatWindow/*", "src/plugins/*.ts","src/plugins/STTPlugins/WebKitSTTPlugin/*.ts","src/plugins/TTSPlugins/BrowserTTSPlugin/*.ts"],
+}
