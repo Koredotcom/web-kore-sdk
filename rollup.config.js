@@ -28,7 +28,7 @@ export default {
     onwarn(warning, warn) {
         if (
             warning.code === 'UNUSED_EXTERNAL_IMPORT' &&
-            warning.source === './src/index.ts'
+            warning.source === './src/index_esm_rollup.ts'
         ) {
             // Suppress warning for unused export
             return;
