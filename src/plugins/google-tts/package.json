@@ -1,0 +1,8 @@
+{
+  "name": "kore-web-sdk/plugins/google-tts",
+  "types": "../../index_plugins/googleTTS_umd.d.ts",
+  "main": "../../esm/plugins/google-tts-umd-plugin-umd.js",
+  "module": "../../esm/plugins/google-tts-umd-plugin-umd.js",
+  "es2015": "../../esm/plugins/google-tts-umd-plugin-umd.js",
+  "sideEffects": false
+}

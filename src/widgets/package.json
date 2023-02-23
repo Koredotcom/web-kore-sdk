@@ -1,0 +1,8 @@
+{
+  "name": "kore-web-sdk/widgets",
+  "types": "../index_umd_widgets.d.ts",
+  "main": "../esm/kore-web-sdk-umd-widgets.js",
+  "module": "../esm/kore-web-sdk-umd-widgets.js",
+  "es2015": "../esm/kore-web-sdk-umd-widgets.js",
+  "sideEffects": false
+}

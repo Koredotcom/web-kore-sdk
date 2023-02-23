@@ -1,0 +1,8 @@
+{
+  "name": "kore-web-sdk/plugins/azure-stt",
+  "types": "../../index_plugins/AzureSTT_umd.d.ts",
+  "main": "../../esm/plugins/azure-stt-umd-plugin-umd.js",
+  "module": "../../esm/plugins/azure-stt-umd-plugin-umd.js",
+  "es2015": "../../esm/plugins/azure-stt-umd-plugin-umd.js",
+  "sideEffects": false
+}

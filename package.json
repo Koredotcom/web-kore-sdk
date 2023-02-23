@@ -6,6 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-umd": "webpack --env=kore_env=prod --env=target_module=umd",
     "build": "webpack --env=kore_env=prod  --env=target_module=esm",
+    "rollup:build": "npx rollup -c",
     "serve-umd": "webpack-dev-server --env=kore_env=dev  --env=component=chat  --env=target_module=umd",
     "serve": "webpack-dev-server --env=kore_env=dev --env=component=chat --env=target_module=esm --mode development",
     "doc-chatwindow": "typedoc   --excludeNotDocumented  --out docs/api/chatwindow  --entryPoints  src/components/chatwindow/chatWindow.ts --name chatWindow  --cname ChatWindow ",
@@ -52,17 +53,17 @@
       "es2015": "./dist/esm/plugins/kore-picker-plugin-umd.js",
       "default": "./dist/esm/plugins/kore-picker-plugin-umd.js"
     },
-    "./plugins/graphTemplates": {
+    "./plugins/graph-templates": {
       "types": "./dist/index_plugins/graphTemplates_umd.d.ts",
       "es2015": "./dist/esm/plugins/kore-graph-templates-plugin-umd.js",
       "default": "./dist/esm/plugins/kore-graph-templates-plugin-umd.js"
     },
-    "./plugins/webKitSTT": {
+    "./plugins/webKit-stt": {
       "types": "./dist/index_plugins/WebKitSTT_umd.d.ts",
       "es2015": "./dist/esm/plugins/webapi-stt-plugin-umd.js",
       "default": "./dist/esm/plugins/webapi-stt-plugin-umd.js"
     },
-    "./plugins/browserTTS": {
+    "./plugins/browser-tts": {
       "types": "./dist/index_plugins/BrowserTTS_umd.d.ts",
       "es2015": "./dist/esm/plugins/browser-tts-umd-plugin-umd.js",
       "default": "./dist/esm/plugins/browser-tts-umd-plugin-umd.js"
@@ -142,7 +143,7 @@
     "google-charts": "^2.0.0",
     "html-webpack-plugin": "^5.3.2",
     "imports-loader": "^3.0.0",
-    "jsdoc": "^3.6.10",
+    "jsdoc": "4.0.2",
     "postcss": "^8.3.7",
     "postcss-css-variables": "^0.18.0",
     "postcss-loader": "^6.1.1",
@@ -153,9 +154,11 @@
     "terser-webpack-plugin": "^5.3.1",
     "ts-loader": "^9.2.6",
     "typedoc-plugin-rename-defaults": "^0.6.4",
-    "typescript": "^4.4.3",
     "webpack": "^5.54.0",
     "webpack-cli": "~5.0.0",
-    "webpack-dev-server": "^4.2.1"
+    "webpack-dev-server": "^4.2.1",
+    "rollup": "^3.17.2",
+    "rollup-plugin-typescript2": "^0.34.1",
+    "typescript": "^4.9.5"
   }
 }

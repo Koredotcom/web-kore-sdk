@@ -1,0 +1,8 @@
+{
+  "name": "kore-web-sdk/plugins/webKit-stt",
+  "types": "../../index_plugins/WebKitSTT_umd.d.ts",
+  "main": "../../esm/plugins/webapi-stt-plugin-umd.js",
+  "module": "../../esm/plugins/webapi-stt-plugin-umd.js",
+  "es2015": "../../esm/plugins/webapi-stt-plugin-umd.js",
+  "sideEffects": false
+}

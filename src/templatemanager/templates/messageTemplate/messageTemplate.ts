@@ -1,6 +1,6 @@
 
 import helpers from '../../../utils/helpers';
-import './messageTemplate.scss';
+// import './messageTemplate.scss';
 
 class MessageTemplate {
 

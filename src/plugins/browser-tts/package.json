@@ -1,0 +1,8 @@
+{
+  "name": "kore-web-sdk/plugins/browser-tts",
+  "types": "../../index_plugins/BrowserTTS_umd.d.ts",
+  "main": "../../esm/plugins/browser-tts-umd-plugin-umd.js",
+  "module": "../../esm/plugins/browser-tts-umd-plugin-umd.js",
+  "es2015": "../../esm/plugins/browser-tts-umd-plugin-umd.js",
+  "sideEffects": false
+}
