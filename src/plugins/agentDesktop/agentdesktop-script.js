@@ -595,8 +595,8 @@ class AgentDesktopPluginScript  {
                 var start = moment(obj.timestamp);
                 var end = moment();
                 var duration = moment.duration(end.diff(start));
-                var seconds = duration.asSeconds();
-                obj['timespent'] = seconds;
+                var milliseconds = duration.asMilliseconds();
+                obj['timespent'] = milliseconds;
                 obj['domain'] =  window.location.hostname; 
             }
 
