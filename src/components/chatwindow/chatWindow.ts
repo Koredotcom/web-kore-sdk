@@ -1336,7 +1336,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
       if(bot && !bot.previousHistoryLoading){
         _chatContainer.append(messageHtml);
       }else{
-        $(this.paginatedScrollMsgDiv).find('.prev-message-list').append(messageHtml);
+        $(this.paginatedScrollMsgDiv).find('.prev-message-list').append($(messageHtml).addClass('previousMessage'));
       }
 
     }
@@ -1527,16 +1527,16 @@ historyLoadingComplete () {
     if (me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) {
       me.getBotMetaData();
     }
-    if ($(this.paginatedScrollMsgDiv).find('.prev-message-list li').length > 0 && bot.previousHistoryLoading) {
-      let paginatedLi = $(this.paginatedScrollMsgDiv).find('.prev-message-list li');
+    if ($(this.paginatedScrollMsgDiv).find('.prev-message-list li.previousMessage').length > 0 && bot.previousHistoryLoading) {
+      let paginatedLi = $(this.paginatedScrollMsgDiv).find('.prev-message-list li.previousMessage');
       if (paginatedLi && paginatedLi.length) {
         for (var i = 0; i < paginatedLi.length; i++) {
           var tempLi = $(paginatedLi[i]);
           tempLi.addClass('no-animate-messge-bubble')
         }
       }
-      let _existingLi = $(this.paginatedScrollMsgDiv).find('.prev-message-list li');
-      $(this.paginatedScrollMsgDiv).find('.prev-message-list li').insertBefore(_chatContainer.find('.chat-container li:first'));
+      let _existingLi = $(this.paginatedScrollMsgDiv).find('.prev-message-list li.previousMessage');
+      $(this.paginatedScrollMsgDiv).find('.prev-message-list li.previousMessage').insertBefore(_chatContainer.find('.chat-container li:first'));
       let _heightTobeScrolled = 0;
       if (_existingLi && _existingLi.length) {
         for (var i = 0; i < _existingLi.length; i++) {

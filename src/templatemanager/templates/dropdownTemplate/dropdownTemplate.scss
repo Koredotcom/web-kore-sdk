@@ -2,6 +2,11 @@
     border: 1px solid var(--sdk-chat-window-dropdown-border);
     height: 25px;
     background: var(--sdk-chat-window-bg-color);
+    width: 100%;
+    cursor: pointer;
+}
+.dropDowntmplContent .dropdownTemplatesValues{
+    cursor: pointer;
 }
 .dropDowntmplContent .templateHeading{
     margin-bottom: 10px;
