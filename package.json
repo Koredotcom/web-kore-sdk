@@ -21,8 +21,8 @@
     "prettier-v": "./node_modules/.bin/prettier --debug-check 'src/**/*.{ts,js}'",
     "prettier-fix": "./node_modules/.bin/prettier --write 'src/**/*.{ts,js}'"
   },
-  "main": "dist/index_umd_chat.d.ts",
-  "module": "dist/esm/kore-web-sdk-umd-chat.min.js",
+  "main": "dist/esm/export.js",
+  "module": "dist/esm/export.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:Koredotcom/web-kore-sdk.git#v2/9.3.0"
@@ -35,81 +35,9 @@
   "homepage": "https://github.com/Koredotcom/web-kore-sdk#readme",
   "sideEffects": [
     "**/*.css",
-    "**/*.scss"
+    "**/*.scss",
+    "src/exports/exports.js"
   ],
-  "exports": {
-    ".": {
-      "types": "./dist/index_umd_chat.d.ts",
-      "es2015": "./dist/esm/kore-web-sdk-umd-chat.min.js",
-      "default": "./dist/esm/kore-web-sdk-umd-chat.min.js"
-    },
-    "./widgets": {
-      "types": "./dist/index_umd_widgets.d.ts",
-      "es2015": "./dist/esm/kore-web-sdk-umd-widgets.js",
-      "default": "./dist/esm/kore-web-sdk-umd-widgets.js"
-    },
-    "./plugins/pickers": {
-      "types": "./dist/index_plugins/korepicker_umd.d.ts",
-      "es2015": "./dist/esm/plugins/kore-picker-plugin-umd.js",
-      "default": "./dist/esm/plugins/kore-picker-plugin-umd.js"
-    },
-    "./plugins/graph-templates": {
-      "types": "./dist/index_plugins/graphTemplates_umd.d.ts",
-      "es2015": "./dist/esm/plugins/kore-graph-templates-plugin-umd.js",
-      "default": "./dist/esm/plugins/kore-graph-templates-plugin-umd.js"
-    },
-    "./plugins/webKit-stt": {
-      "types": "./dist/index_plugins/WebKitSTT_umd.d.ts",
-      "es2015": "./dist/esm/plugins/webapi-stt-plugin-umd.js",
-      "default": "./dist/esm/plugins/webapi-stt-plugin-umd.js"
-    },
-    "./plugins/browser-tts": {
-      "types": "./dist/index_plugins/BrowserTTS_umd.d.ts",
-      "es2015": "./dist/esm/plugins/browser-tts-umd-plugin-umd.js",
-      "default": "./dist/esm/plugins/browser-tts-umd-plugin-umd.js"
-    },
-    "./plugins/agent-desktop": {
-      "types": "./dist/index_plugins/agentDesktop_umd.d.ts",
-      "es2015": "./dist/esm/plugins/agent-desktop-umd.js",
-      "default": "./dist/esm/plugins/agent-desktop-umd.js"
-    },
-    "./plugins/google-stt": {
-      "types": "./dist/index_plugins/googleSTT_umd.d.ts",
-      "es2015": "./dist/esm/plugins/google-stt-umd-plugin-umd.js",
-      "default": "./dist/esm/plugins/google-stt-umd-plugin-umd.js"
-    },
-    "./plugins/google-tts": {
-      "types": "./dist/index_plugins/googleTTS_umd.d.ts",
-      "es2015": "./dist/esm/plugins/google-tts-umd-plugin-umd.js",
-      "default": "./dist/esm/plugins/google-tts-umd-plugin-umd.js"
-    },
-    "./plugins/azure-stt": {
-      "types": "./dist/index_plugins/AzureSTT_umd.d.ts",
-      "es2015": "./dist/esm/plugins/azure-stt-umd-plugin-umd.js",
-      "default": "./dist/esm/plugins/azure-stt-umd-plugin-umd.js"
-    },
-    "./plugins/azure-tts": {
-      "types": "./dist/index_plugins/AzureTTS_umd.d.ts",
-      "es2015": "./dist/esm/plugins/azure-tts-umd-plugin-umd.js",
-      "default": "./dist/esm/plugins/azure-tts-umd-plugin-umd.js"
-    },
-    "./plugins/aws-st": {
-      "types": "./dist/index_plugins/KoreAWSST_umd.d.ts",
-      "es2015": "./dist/esm/plugins/koreawspolly-st-umd-plugin-umd.js",
-      "default": "./dist/esm/plugins/koreawspolly-st-umd-plugin-umd.js"
-    },
-    "./plugins/desktop-notification": {
-      "types": "./dist/index_plugins/KoreDesktopNotification_umd.d.ts",
-      "es2015": "./dist/esm/plugins/kore-desktop-notification-umd.js",
-      "default": "./dist/esm/plugins/kore-desktop-notification-umd.js"
-    },
-    "./plugins/search-suggestions": {
-      "types": "./dist/index_plugins/SearchSuggestions_umd.d.ts",
-      "es2015": "./dist/esm/plugins/search-suggestions-umd.js",
-      "default": "./dist/esm/plugins/search-suggestions-umd.js"
-    },
-    "./package.json": "./package.json"
-  },
   "dependencies": {
     "aws-sdk": "^2.1102.0",
     "d3": "^7.1.1",
@@ -124,16 +52,17 @@
     "util": "^0.12.4"
   },
   "devDependencies": {
-    "@types/jquery": "^3.5.6",
-    "@types/pubsub-js": "^1.8.3",
     "@babel/core": "^7.15.5",
     "@babel/plugin-proposal-class-static-block": "^7.16.7",
     "@babel/preset-env": "^7.15.6",
     "@types/aws-sdk": "^2.7.0",
+    "@types/jquery": "^3.5.6",
     "@types/node": "^17.0.45",
+    "@types/pubsub-js": "^1.8.3",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "@typescript-eslint/parser": "^5.3.1",
     "babel-loader": "^8.2.2",
+    "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.3.0",
     "eslint": "^8.11.0",
     "eslint-config-prettier": "^8.5.0",
@@ -148,17 +77,18 @@
     "postcss-css-variables": "^0.18.0",
     "postcss-loader": "^6.1.1",
     "prettier": "^2.6.0",
+    "rollup": "^3.17.2",
+    "rollup-plugin-typescript2": "^0.34.1",
     "sass": "^1.42.1",
     "sass-loader": "^12.1.0",
     "style-loader": "^3.3.0",
     "terser-webpack-plugin": "^5.3.1",
     "ts-loader": "^9.2.6",
     "typedoc-plugin-rename-defaults": "^0.6.4",
+    "typescript": "^4.9.5",
     "webpack": "^5.54.0",
     "webpack-cli": "~5.0.0",
     "webpack-dev-server": "^4.2.1",
-    "rollup": "^3.17.2",
-    "rollup-plugin-typescript2": "^0.34.1",
-    "typescript": "^4.9.5"
+    "webpack-bundle-analyzer": "^4.8.0"
   }
 }
