@@ -69,7 +69,7 @@ class AgentDesktopPlugin {
 
         // send type event from user to agent
         me.hostInstance.on('onKeyDown', ({ event }: any) => {
-            if (event.keyCode !== 13 && event.which <= 90 && event.which >= 48 || event.which >= 96 && event.which <= 105 && localStorage.getItem("kr-agent-status") === "connected") {
+            if (event.keyCode !== 13 && (event.which <= 90 && event.which >= 48) || (event.which >= 96 && event.which <= 105) || (event.which >= 186 && event.which <= 222) || (event.keyCode === 32 || event.keyCode === 8) && localStorage.getItem("kr-agent-status") === "connected") {
                 if (!this.isTyping) {
                     var messageToBot: any = {};
                     messageToBot["event"] = "typing";
