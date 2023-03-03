@@ -1499,6 +1499,9 @@
 .kore-action-sheet .rating-main-component .text-heading-info{
     padding-right: 30px;
 }
+.kore-chat-window .rating-main-component .close-btn .img{
+	pointer-events: none;
+}
 
   /* End */
 
