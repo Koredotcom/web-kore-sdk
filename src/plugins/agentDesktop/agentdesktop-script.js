@@ -2143,17 +2143,24 @@ class AgentDesktopPluginScript  {
                 me.sendDCMessage(JSON.stringify(STOP_MESSAGE))
             }
             function createPeer() {
-                var peerConn = new RTCPeerConnection({
-                    iceServers: [
-                        {
-                            urls: ['stun:stun.l.google.com:19302',
-                                'stun:stun1.l.google.com:19302',
-                                'stun:stun2.l.google.com:19302',
-                                'stun:stun.l.google.com:19302?transport=udp']
-                        }
-                    ]
-                });
-                return peerConn;
+                try {
+                    var peerConn = new RTCPeerConnection({
+                        iceServers: [
+                            {
+                                urls: ['stun:stun.l.google.com:19302',
+                                    'stun:stun1.l.google.com:19302',
+                                    'stun:stun2.l.google.com:19302',
+                                    'stun:stun.l.google.com:19302?transport=udp']
+                            }
+                        ]
+                    });
+                    return peerConn;
+
+                } catch (err) {
+                    var peerConn = new RTCPeerConnection();
+                    return peerConn;
+
+                }
             }
             function handleNewICECandidateMsg(incoming) {
                 console.log("cobrowse >>> handlingIceCandidate ", incoming)
