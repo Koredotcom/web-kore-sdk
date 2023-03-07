@@ -479,7 +479,7 @@ handleImagePreview  () {
         e.stopImmediatePropagation();
         modal.style.display = 'block';
         modalImg.src = $(e.currentTarget).attr('src');
-        captionText.innerHTML = $(e.currentTarget).attr('alt');
+        captionText.innerHTML = $(e.currentTarget).attr('alt') || '';
       });
     }
   }
