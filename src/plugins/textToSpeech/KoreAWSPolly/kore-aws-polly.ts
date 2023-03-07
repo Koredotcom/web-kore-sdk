@@ -1,5 +1,6 @@
 import BaseTTS from "../BaseTTS";
-import * as AWS from 'aws-sdk';
+import { Polly } from "@aws-sdk/client-polly";
+import { getSynthesizeSpeechUrl } from "@aws-sdk/polly-request-presigner";
 declare const document: any;
 declare const window: any;
 export interface SpeakTextAWSPollyConfig {
@@ -21,10 +22,10 @@ class SpeakTextWithAWSPolly extends BaseTTS {
             console.error('Please configure the AWS Identity credentials');
         }
      
-        this.config = {
-            'AWS.config.region': mainConfig.region || 'ap-south-1',
-            'AWS.config.credentials': new AWS.CognitoIdentityCredentials(mainConfig.identityCredentials)
-        };
+        // this.config = {
+        //     'AWS.config.region': mainConfig.region || 'ap-south-1',
+        //     'AWS.config.credentials': new AWS.CognitoIdentityCredentials(mainConfig.identityCredentials)
+        // };
     }
 
     onHostCreate() {
@@ -65,17 +66,30 @@ class SpeakTextWithAWSPolly extends BaseTTS {
         speechParams.Text = textToSpeak;//document.getElementById("textEntry").value;
 
         // Create the Polly service object and presigner object
-        var polly: any = new AWS.Polly({ apiVersion: '2016-06-10' });
-        var signer = new (AWS.Polly.Presigner as any)(speechParams, polly)
+        // var polly: any = new Polly({ apiVersion: '2016-06-10' });
+        // var signer = new (Polly.Presigner as any)(speechParams, polly);
+
+        (async () => {
+            try {
+                let url = await getSynthesizeSpeechUrl({
+                  client: new Polly({ apiVersion: '2016-06-10' }),
+                  params: speechParams,
+                });
+                console.log(url);
+
+            } catch(error) {
+                document.getElementById('result').innerHTML = error;
+            }
+        })();
 
         // Create presigned URL of synthesized speech file
-        signer.getSynthesizeSpeechUrl(speechParams, function (error: any, url: any) {
-            if (error) {
-                document.getElementById('result').innerHTML = error;
-            } else {
-                me.playFromUrl(url);
-            }
-        });
+        // signer.getSynthesizeSpeechUrl(speechParams, function (error: any, url: any) {
+        //     if (error) {
+        //         document.getElementById('result').innerHTML = error;
+        //     } else {
+        //         me.playFromUrl(url);
+        //     }
+        // });
     }
 
     initAudioContext() {
