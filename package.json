@@ -21,8 +21,8 @@
     "prettier-v": "./node_modules/.bin/prettier --debug-check 'src/**/*.{ts,js}'",
     "prettier-fix": "./node_modules/.bin/prettier --write 'src/**/*.{ts,js}'"
   },
-  "main": "dist/esm/export.js",
-  "module": "dist/esm/export.js",
+  "main": "dist/esm/exports.js",
+  "module": "dist/esm/exports.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:Koredotcom/web-kore-sdk.git#v2/9.3.0"
