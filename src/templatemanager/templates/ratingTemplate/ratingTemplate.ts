@@ -115,7 +115,7 @@ class RatingTemplate {
             chatWindowInstance.bottomSliderAction("hide");
             e.stopPropagation();
         });
-        $(messageHtml).find(".emojiComponent,.thumpsUpDownComponent,.numbersComponent").off('click','.emoji-rating,.numbers-rating').on('click','.emoji-rating,.numbers-rating',function(e:any){
+        $(messageHtml).find(".emojiComponent,.thumpsUpDownComponent,.numbersComponent").off('click','.emoji-rating').on('click','.emoji-rating',function(e:any){
             var msgData: any;
             if ($(messageHtml).data().tmplItem && $(messageHtml).data().tmplItem.data && $(messageHtml).data().tmplItem.data.msgData) {
                 msgData = $(messageHtml).data().tmplItem.data.msgData
@@ -131,8 +131,8 @@ class RatingTemplate {
                 $(".thumpsUpDownComponent .emoji-rating").removeClass("active");
                 $(".emojiElement").remove();
             }
-            if($(messageHtml).find(".numbersComponent .numbers-rating.active").length!=="0"){
-                $(".numbersComponent .numbers-rating").removeClass("active");
+            if($(messageHtml).find(".numbersComponent .emoji-rating.active").length!=="0"){
+                $(".numbersComponent .emoji-rating").removeClass("active");
                 $(".emojiElement").remove();
             }
             let selectedTarget = e.currentTarget;
@@ -189,7 +189,7 @@ class RatingTemplate {
                 $(".kore-action-sheet").find(".emojiComponent").append('<div class="ratingStar">'+messageTodisplay+'</div><div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>')
                 }
             }
-        }else{
+        }else if(msgData.message[0].component.payload.sliderView){
 			msgData.message[0].component.payload.sliderView=false;
 			msgData.message[0].component.payload.selectedValue = JSON.parse(dataIdValue);
 			chatWindowInstance.renderMessage(msgData);
