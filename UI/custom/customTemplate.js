@@ -80,7 +80,12 @@
 					var eachReviewText;
 					var splitWords;
 					var resultValue = [];
-					if (eachValue && eachValue.reviewText) {
+						if(eachValue && eachValue.thumpUpId && eachValue.thumpUpId === "positive"){
+							msgData.message[0].component.payload.thumpsUpDownArrays[0] = eachValue;
+						}else if(eachValue && eachValue.thumpUpId && eachValue.thumpUpId === "negative"){
+							msgData.message[0].component.payload.thumpsUpDownArrays[1] = eachValue;
+						}
+						else if (eachValue && eachValue.reviewText && (eachValue.thumpUpId !== "positive" && eachValue.thumpUpId !== "negative")) {
 						eachReviewText = eachValue.reviewText.toLocaleLowerCase();
 						splitWords = eachReviewText.split(' ');
 						resultValue = splitWords.filter(option => option.startsWith('un') || option.startsWith('dis') || option.startsWith('no'));
@@ -1233,8 +1238,8 @@ var ratingTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			  {{if msgData.message[0].component.payload.text}}<div class="templateHeading text-heading-info">${msgData.message[0].component.payload.text}</div>{{else}}Rate the chat session{{/if}}\
 			  <div class="emojis-data">\
 			  {{each(key, msgItem) msgData.message[0].component.payload.thumpsUpDownArrays}}\
-			  <div class="ratingValue emoji-rating" value="${msgItem.value}" data-id="${msgItem.thumpUpId}">\
-				 <div class="rating" id="rating_${msgItem.thumpUpId}" value="${msgItem.value}"></div>\
+			  <div class="ratingValue emoji-rating" value="${msgItem.value}" data-id="${key}">\
+			    <div class="rating" id="rating_${key}" value="${msgItem.value}"></div>\
 				 <div class="emoji-desc" title="${msgItem.reviewText}">${msgItem.reviewText}</div></div>\
 			  {{/each}}\
 			  </div>\
