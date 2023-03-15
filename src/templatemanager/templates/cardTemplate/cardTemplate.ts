@@ -75,19 +75,19 @@ class CardTemplate {
 				var actionObj = $(me).attr('actionObj');
 				var parsedActionObj = JSON.parse(actionObj);
 				let modal: any = document.getElementById('myPreviewModal');
-				$(".largePreviewContent").empty();
+				$(".koreLargePreviewContent").empty();
 				modal.style.display = "block";
 				let span:any = document.getElementsByClassName("closeElePreview")[0];
 				span.onclick = function () {
 					modal.style.display = "none";
-					$(".largePreviewContent").empty();
-					$(".largePreviewContent").removeClass("addheight");
-					$(".largePreviewContent").removeClass('card-template-modal')
+					$(".koreLargePreviewContent").empty();
+					$(".koreLargePreviewContent").removeClass("addheight");
+					$(".koreLargePreviewContent").removeClass('card-template-modal')
 				}
-				$(".largePreviewContent").append($(buildCardPreview(parsedActionObj)).tmpl({
+				$(".koreLargePreviewContent").append($(buildCardPreview(parsedActionObj)).tmpl({
 					card: parsedActionObj
 				}));
-				$(".largePreviewContent").addClass('card-template-modal');
+				$(".koreLargePreviewContent").addClass('card-template-modal');
 
 			} else if (type === 'url' || type == 'web_url') {
 				var a_link = $(me).attr('title');

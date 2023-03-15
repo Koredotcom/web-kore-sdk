@@ -262,7 +262,7 @@ class AdvancedListTemplate {
 						'msgData': messageData,
 						'helpers': helpersObj.helpers,
 					});
-					$(me.messageHtml).find(".advanced-list-wrapper .extra-info").hide();
+					$(me.messageHtml).find(".extra-info").hide();
                     chatWindowInstance.bottomSliderAction('show', me.messageHtml);
 					me.bindEvents(me.messageHtml, messageData);
 				}

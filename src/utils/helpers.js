@@ -102,6 +102,17 @@ class KoreHelpers{
                 return txtStr;
                 //return compObj[0].componentBody;
             }
+            function sanitizeXSS(input) {
+                var sanitizedInput = input
+                                          .replace(/</g, "&lt;")
+                                          .replace(/>/g, "&gt;")
+                                          .replace(/"/g, "&quot;")
+                                          .replace(/'/g, "&#x27;")
+                                          .replace(/\//g, "&#x2F;")
+                                          .replace(/\(/g, "&#40;")
+                                          .replace(/\)/g, "&#41;");
+                return sanitizedInput;
+              }
             for (var j = 0; j < regexkeys.length; j++) {
                 var k;
                 switch (regexkeys[j]) {
@@ -230,6 +241,7 @@ class KoreHelpers{
             
             var newStr = '', wrapper1;
             if (responseType === 'user') {
+                str = sanitizeXSS(str);
                 str = str.replace(/onerror=/gi, 'abc-error=');
                 wrapper1 = document.createElement('div');
                 newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
@@ -241,6 +253,7 @@ class KoreHelpers{
                     str = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(_regExForLink, linkreplacer);
                 }
             } else {
+                str = sanitizeXSS(str);
                 str = str.replace(/onerror=/gi, 'abc-error=');
                 wrapper1 = document.createElement('div');
                 //str = str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
@@ -285,8 +298,8 @@ class KoreHelpers{
                     str = str.replace(hrefRef, customStrReplacer);
                 });
             }
-            str = str.replaceAll('target="underscoreblank"', 'target="_blank"');
-            str = str.replaceAll("target='underscoreblank'", 'target="_blank"');
+            str = str.koreReplaceAll('target="underscoreblank"', 'target="_blank"');
+            str = str.koreReplaceAll("target='underscoreblank'", 'target="_blank"');
             // if (responseType === 'user') {
                 str = str.replace(/abc-error=/gi, 'onerror=');
             // }
@@ -297,6 +310,17 @@ class KoreHelpers{
               n = Number(n);
               return n === 0 || !!(n && !(n % 2));
             }
+            function sanitizeXSS(input) {
+                var sanitizedInput = input
+                                          .replace(/</g, "&lt;")
+                                          .replace(/>/g, "&gt;")
+                                          .replace(/"/g, "&quot;")
+                                          .replace(/'/g, "&#x27;")
+                                          .replace(/\//g, "&#x2F;")
+                                          .replace(/\(/g, "&#40;")
+                                          .replace(/\)/g, "&#41;");
+                return sanitizedInput;
+              }
              if(val===''){
                 return val;
             }
@@ -371,7 +395,7 @@ class KoreHelpers{
                             hyperLinksMap[_randomKey] = _imgLink;
                             _imgLink = _randomKey;
                         }
-                        _imgLink = '<img src="' + _imgLink + '" alt="' + _imgTxt + '">';
+                        _imgLink = '<img src="' + _imgLink + '" alt="' + sanitizeXSS(_imgTxt) + '">';
                         var _tempImg = txtArr[i].split(' ');
                         for (var k = 0; k < _tempImg.length; k++) {
                             if (_tempImg[k] === _matchImage[j]) {
@@ -563,7 +587,7 @@ class KoreHelpers{
           return `${this}`.replace(htmlTags, (match) => escapeTokens[match]);
         };
 
-        String.prototype.replaceAll = function (search, replacement) {
+        String.prototype.koreReplaceAll = function (search, replacement) {
           const target = this;
           return target.replace(new RegExp(search, "g"), replacement);
         };
@@ -647,7 +671,7 @@ class KoreHelpers{
           return `${this}`.replace(htmlTags, (match) => escapeTokens[match]);
         };
 
-        String.prototype.replaceAll = function (search, replacement) {
+        String.prototype.koreReplaceAll = function (search, replacement) {
           const target = this;
           return target.replace(new RegExp(search, "g"), replacement);
         };

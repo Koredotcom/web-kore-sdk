@@ -638,8 +638,8 @@ sendMessageWithWithChatInput(chatInput:any){
   if (chatInput.text().trim() === '') {
     return;
   }
+  chatInput.html(chatInput.text().koreReplaceAll("<br>", "\n"));
   me.sendMessageToBot(chatInput.text());
-  chatInput.html(chatInput.html().replaceAll('<br>', '\n'));
   chatInput.html('');
 }
 bindEvents  () {
