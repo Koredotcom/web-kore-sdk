@@ -161,7 +161,7 @@
                 });
             };
 
-            String.prototype.replaceAll = function (search, replacement) {
+            String.prototype.koreReplaceAll = function (search, replacement) {
                 var target = this;
                 return target.replace(new RegExp(search, 'g'), replacement);
             };
@@ -204,6 +204,17 @@
                 //return compObj[0].componentBody;
 
             }
+            function sanitizeXSS(input) {
+                var sanitizedInput = input
+                                          .replace(/</g, "&lt;")
+                                          .replace(/>/g, "&gt;")
+                                          .replace(/"/g, "&quot;")
+                                          .replace(/'/g, "&#x27;")
+                                          .replace(/\//g, "&#x2F;")
+                                          .replace(/\(/g, "&#40;")
+                                          .replace(/\)/g, "&#41;");
+                return sanitizedInput;
+              }
 
             var helpers = {
                 'nl2br': function (str, runEmojiCheck) {
@@ -421,6 +432,7 @@
                     
                     var newStr = '', wrapper1;
                     if (responseType === 'user') {
+                        str = sanitizeXSS(str);
                         str = str.replace(/onerror=/gi, 'abc-error=');
                         wrapper1 = document.createElement('div');
                         newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
@@ -432,6 +444,7 @@
                             str = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(_regExForLink, linkreplacer);
                         }
                     } else {
+                        str = sanitizeXSS(str);
                         str = str.replace(/onerror=/gi, 'abc-error=');
                         wrapper1 = document.createElement('div');
                         //str = str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
@@ -476,8 +489,8 @@
                             str = str.replace(hrefRef, customStrReplacer);
                         });
                     }
-                    str = str.replaceAll('target="underscoreblank"', 'target="_blank"');
-                    str = str.replaceAll("target='underscoreblank'", 'target="_blank"');
+                    str = str.koreReplaceAll('target="underscoreblank"', 'target="_blank"');
+                    str = str.koreReplaceAll("target='underscoreblank'", 'target="_blank"');
                     // if (responseType === 'user') {
                         str = str.replace(/abc-error=/gi, 'onerror=');
                     // }
@@ -558,7 +571,7 @@
                                     hyperLinksMap[_randomKey] = _imgLink;
                                     _imgLink = _randomKey;
                                 }
-                                _imgLink = '<img src="' + _imgLink + '" alt="' + _imgTxt + '">';
+                                _imgLink = '<img src="' + _imgLink + '" alt="' + sanitizeXSS(_imgTxt) + '">';
                                 var _tempImg = txtArr[i].split(' ');
                                 for (var k = 0; k < _tempImg.length; k++) {
                                     if (_tempImg[k] === _matchImage[j]) {
@@ -2062,7 +2075,7 @@
                 var msgData = {};
                 fileUploaderCounter = 0;
                 //to send \n to server for new lines
-                chatInput.html(chatInput.html().replaceAll("<br>", "\n"));
+                chatInput.html(chatInput.text().koreReplaceAll("<br>", "\n"));
                 if (me.attachmentInfo && Object.keys(me.attachmentInfo).length) {
                     msgData = {
                         'type': "currentUser",

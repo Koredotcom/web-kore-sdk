@@ -3847,6 +3847,13 @@ var message= {
 			});
 
 			$($(listValues).find(".tabs")[0]).addClass("active");
+			if($(".kore-action-sheet").length === 0){
+				$('.kore-chat-window').remove('.kore-action-sheet');
+				var actionSheetTemplate='<div class="kore-action-sheet hide">\
+				<div class="actionSheetContainer"></div>\
+				</div>';
+				$('.kore-chat-window').append(actionSheetTemplate);
+			}
 			$(".kore-action-sheet").append(listValues);
 			$(".kore-action-sheet .list-template-sheet").removeClass("hide");
 			this.bottomSliderAction('show',$(".list-template-sheet"));
@@ -4002,6 +4009,7 @@ var message= {
 			if (type && type == "postback" || type == "text") {
 				$('.chatInputBox').text(parsedActionObj.payload ||parsedActionObj.title);
 				var _innerText = parsedActionObj.renderMessage || parsedActionObj.title;
+				bottomSliderAction('hide');
 				chatInitialize.sendMessage($('.chatInputBox'), _innerText);
 				$ele.find(".advanced-list-wrapper").css({"pointer-events":"none"});
 			} else if (type && type == "url" || type == "web_url") {

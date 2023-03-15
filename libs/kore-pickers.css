@@ -543,45 +543,45 @@
     border-radius: 50%;
     height: 32px;
 }
-.datePickerContainer .date-picker-wrapper{
+.kore-chat-window  .datePickerContainer .date-picker-wrapper{
     font-size: 15px !important;
 }
-.datePickerContainer .date-picker-wrapper .month-wrapper table th{
+.kore-chat-window  .datePickerContainer .date-picker-wrapper .month-wrapper table th{
     font-size:12px;
 }
-.datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.tmp.first-date-selected{
+.kore-chat-window .datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.tmp.first-date-selected{
     background-color: #e94848!important;
 }
-.datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.tmp.checked.last-date-selected{
+.kore-chat-window .datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.tmp.checked.last-date-selected{
     background-color: #e94848!important;
 }
-.datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.first-date-selected{
+.kore-chat-window .datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.first-date-selected{
     background-color: #e94848!important;
 }
-.datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.last-date-selected{
+.kore-chat-window .datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.last-date-selected{
     background-color: #e94848!important;
 }
-.datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.real-today{
+.kore-chat-window .datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.real-today{
     background-color: #cdecfa;
     border-radius: 50%!important;
     height: 24px!important;
 }
-.datePickerContainer .date-picker-wrapper .month-wrapper table .day.toMonth.valid{
+.kore-chat-window .datePickerContainer .date-picker-wrapper .month-wrapper table .day.toMonth.valid{
     border-radius: 50%!important;
     height: 24px!important;
     width: 26px!important;
 }
-.datePickerContainer .date-picker-wrapper .month-wrapper table {
+.kore-chat-window .datePickerContainer .date-picker-wrapper .month-wrapper table {
     width: 100%!important;
     /* display: table!important; */
     height: 100%!important;
 }
-.datePickerContainer .date-picker-wrapper .month-wrapper{
+.kore-chat-window .datePickerContainer .date-picker-wrapper .month-wrapper{
     text-align: center;
     width: 225px;
     height: 221px;
 }
-.datePickerContainer .date-picker-wrapper table .caption .next, .date-picker-wrapper table .caption .prev {
+.kore-chat-window .datePickerContainer .date-picker-wrapper table .caption .next, .date-picker-wrapper table .caption .prev {
     border-radius: 50%!important;
     height: 37px!important;
     width: 35px!important;
@@ -766,48 +766,48 @@
     padding:0px !important;
     margin-left: 15px !important;
 }
-.dateRangePickerContainer .date-picker-wrapper{
+.kore-chat-window .dateRangePickerContainer .date-picker-wrapper{
     font-size: 15px !important;
-    display:flex;
+    display:flex !important;
     align-items: center;
     justify-content: center;
 }
-.dateRangePickerContainer .date-picker-wrapper .month-wrapper table th{
+.kore-chat-window .dateRangePickerContainer .date-picker-wrapper .month-wrapper table th{
     font-size:12px;
 }
-.dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.tmp.first-date-selected{
+.kore-chat-window .dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.tmp.first-date-selected{
     background-color: #e94848!important;
 }
-.dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.tmp.checked.last-date-selected{
+.kore-chat-window .dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.tmp.checked.last-date-selected{
     background-color: #e94848!important;
 }
-.dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.first-date-selected{
+.kore-chat-window .dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.first-date-selected{
     background-color: #e94848!important;
 }
-.dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.last-date-selected{
+.kore-chat-window .dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.last-date-selected{
     background-color: #e94848!important;
 }
-.dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.real-today{
+.kore-chat-window .dateRangePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.real-today{
     background-color: #cdecfa;
     border-radius: 50%!important;
     height: 24px!important;
 }
-.dateRangePickerContainer .date-picker-wrapper .month-wrapper table .day.toMonth.valid{
+.kore-chat-window .dateRangePickerContainer .date-picker-wrapper .month-wrapper table .day.toMonth.valid{
     border-radius: 50%!important;
     height: 23px!important;
     width: 26px!important;
 }
-.dateRangePickerContainer .date-picker-wrapper .month-wrapper{
+.kore-chat-window .dateRangePickerContainer .date-picker-wrapper .month-wrapper{
     text-align: center;
     width: 225px;
     height: 221px;
 }
-.dateRangePickerContainer .date-picker-wrapper .month-wrapper table {
+.kore-chat-window .dateRangePickerContainer .date-picker-wrapper .month-wrapper table {
     width: 100%!important;
     /* display: table!important; */
     height: 100%!important;
 }
-.dateRangePickerContainer .date-picker-wrapper table .caption .next, .date-picker-wrapper table .caption .prev {
+.kore-chat-window .dateRangePickerContainer .date-picker-wrapper table .caption .next, .date-picker-wrapper table .caption .prev {
     border-radius: 50%!important;
     height: 37px!important;
     width: 35px!important;

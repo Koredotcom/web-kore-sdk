@@ -788,7 +788,7 @@
     background-size: 100% 100%;
 }
 
-.lineChartChildDiv .mouse-over-effects .mouse-per-line text {
+.kore-chat-window .lineChartChildDiv .mouse-over-effects .mouse-per-line text {
     font-size: 12px;
 }
 
@@ -1163,11 +1163,21 @@
     cursor: pointer;
     background-color: var(--sdk-chat-window-btn-default-bg);
 }
+.kore-chat-window .buttonTmplContent .buttonTmplContentChild.quickReplyDiv{
+    /* border-color: var(--sdk-chat-window-btn-hover-border-clr); */
+    background: none !important;
+}
 .kore-chat-window .buttonTmplContent .buttonTmplContentChild:hover{
     color: var(--sdk-chat-window-btn-hover-font-clr);
     /* border-color: var(--sdk-chat-window-btn-hover-border-clr); */
     background-color: var(--sdk-chat-window-btn-hover-bg);
 }
+.kore-chat-window .buttonTmplContent .buttonTmplContentChild.quickReplyDiv:hover{
+    color: var(--sdk-chat-window-btn-hover-font-clr);
+    /* border-color: var(--sdk-chat-window-btn-hover-border-clr); */
+    background: none !important;
+}
+
 
 .kore-chat-window .quick_replies_btn_parent {
     overflow: hidden;
@@ -1485,8 +1495,8 @@
 }
 
 .kore-chat-window .imgCntr,
-.uploadedFileName,
-.uploadedFileIcon {
+.kore-chat-window .uploadedFileName,
+.kore-chat-window .uploadedFileIcon {
     padding: 5px;
     text-align: center;
 }
@@ -2792,7 +2802,7 @@
 /* Pie chart ends here*/
 
  /* iframe modal */
- .chatBodyModal{
+ .kore-chat-window  .chatBodyModal{
     display: none;
     background: white;
     width: 100%;
@@ -2801,7 +2811,7 @@
     position: absolute;
     z-index: 100000;
 }
-.animate-bottom {
+.kore-chat-window  .animate-bottom {
     position: absolute;
     -webkit-animation-name: animatebottom;
     -webkit-animation-duration: 0.4s;
@@ -2816,12 +2826,12 @@
     from{ bottom:-550px; opacity:1 } 
     to{ bottom:0; opacity:1}
   }
-.chatBodyModal iframe{
+.kore-chat-window .chatBodyModal iframe{
     border: none;
     height: 100%;
     width: 100%;
 }
-.chatBodyModal .loading_form{
+.kore-chat-window .chatBodyModal .loading_form{
     position: absolute;
     top: 45%;
     left: 45%;
@@ -2838,12 +2848,12 @@
     0% { transform: rotate(0deg);}
     100% { transform: rotate(360deg);}
   }
-.chatBodyModal #chatBodyModalContent{
+.kore-chat-window .chatBodyModal #chatBodyModalContent{
     z-index: 99;
     position: relative;
     height: 100%;
 }
-.chatBodyModal .closeChatBodyModal{
+.kore-chat-window .chatBodyModal .closeChatBodyModal{
     z-index: 9999;
     position: absolute;
     right: 10px;
@@ -2856,7 +2866,7 @@
     height: 14px;
     background-repeat: no-repeat;
 }
-.chatBodyModal .failedIframe{
+.kore-chat-window .chatBodyModal .failedIframe{
     padding: 28%;
     text-align: center;
     height: 100%;
