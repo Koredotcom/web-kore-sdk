@@ -2870,7 +2870,7 @@ print(JSON.stringify(message)); */
 		});
 		$ele.off('click', '.advanced-list-wrapper .see-more-data').on("click", '.advanced-list-wrapper .see-more-data', function (e) {
 			var messageData = $(ele).data();
-			if (messageData && messageData.message[0] && messageData.message[0].component && messageData.message[0].component.payload && messageData.message[0].component.payload.seeMoreAction === 'slider') {
+			if (messageData && messageData.message[0] && messageData.message[0].component && messageData.message[0].component.payload && ((messageData.message[0].component.payload.seeMoreAction === 'slider') || !messageData.message[0].component.payload.seeMoreAction)) {
 				if ($(".list-template-sheet").length !== 0) {
 					$(".list-template-sheet").remove();
 				} else if ($(".list-template-sheet").length === 0) {
