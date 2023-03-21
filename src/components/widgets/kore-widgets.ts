@@ -4575,7 +4575,7 @@ setChatFocus  () {
   }
 
   if ($(_self.config.container.content).is(':visible')) {
-    $(_self.config.container.content).hide(500,"slide", {
+    $(_self.config.container.content).hide(500,"linear", {
       direction: _self.config.direction //$.jStorage.get('menuPosition')
 
     } as any);
