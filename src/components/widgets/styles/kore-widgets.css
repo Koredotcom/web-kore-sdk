@@ -1168,6 +1168,14 @@
 }
 .kr-wiz-content-css .tab-list-template .listViewTmplContentChild .wid-temp-showMoreBottom .headerTitleMore .wid-temp-showMoreClose {
     float: right;
+    background-image: var(--sdk-close-icon);
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 17px;
+    height: 17px;
+    margin-left: 20px;
+    cursor: pointer;
+    background-position: center;
 }
 
 .kr-wiz-content-css .tab-list-template .listViewTmplContentChild .wid-temp-showMoreBottom .headerTitleMore .wid-temp-showMoreClose .closeCross {

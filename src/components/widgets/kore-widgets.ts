@@ -4,6 +4,7 @@ import requireKr from '../base-sdk/kore-bot-sdk-client'
 import './styles/kore-widgets.css'
 import addPolyFils from '../../utils/kore-polyfills';
 import { AnyMxRecord, AnyPtrRecord } from 'dns';
+import KoreGraphAdapter from '../../libs/kore-graph-adapter/KoreGraphAdapter';
 
 // //"use strict";
 declare const window: any;
@@ -23,7 +24,6 @@ declare const zipType:any;
 declare const devpType:any;
 declare const dobjType:any;
 declare const sketchType:any;
-declare const KoreGraphAdapter:any;
 
 
 
@@ -1068,7 +1068,7 @@ getTemplate  (type:any) {
               {{/if}}\
           </div>\
       </script>';
-  var filesTemplate = '<script id="chat_message_files_tmpl" type="text/x-jqury-tmpl"> \
+  var filesTemplate = '<script id="chat_files_tmpl" type="text/x-jqury-tmpl"> \
           <div class="filesCntr" >\
               {{each(key, msgItem) tempdata.elements}} \
                   {{if panelDetail.viewmore}}\
@@ -1113,7 +1113,7 @@ getTemplate  (type:any) {
               {{/if}}\
           </div>\
       </script>';
-  var defaultFilesTemplate = '<script id="chat_message_defaultFiles_tmpl" type="text/x-jqury-tmpl"> \
+  var defaultFilesTemplate = '<script id="chat_defaultFiles_tmpl" type="text/x-jqury-tmpl"> \
           <div class="filesCntr" >\
               {{each(key, msgItem) tempdata.elements}} \
                   {{if panelDetail.viewmore}}\
@@ -1965,7 +1965,7 @@ getTemplate  (type:any) {
                            {{/if}}\
                          </div>\
                          <div class="wid-temp-showMoreBottom hide">\
-                         <div class="headerTitleMore">MORE<span class="wid-temp-showMoreClose"><img src="libs/images/closeCross.png" class="closeCross"></span></div>\
+                         <div class="headerTitleMore">MORE<span class="wid-temp-showMoreClose"></span></div>\
                            {{each(key, content) tempdata.content}} \
                              <div class="wid-temp-contentDiv">\
                                {{if content.image && content.image.image_type === "image"}}\
@@ -2141,7 +2141,7 @@ getTemplate  (type:any) {
                           {{/if}}\
                         </div>\
                         <div class="wid-temp-showMoreBottom hide">\
-                        <div class="headerTitleMore">MORE<span class="wid-temp-showMoreClose"><img src="libs/images/closeCross.png" class="closeCross"></span></div>\
+                        <div class="headerTitleMore">MORE<span class="wid-temp-showMoreClose"></span></div>\
                           {{each(key, content) tempdata.details}} \
                             <div class="wid-temp-contentDiv">\
                               {{if content.image && content.image.image_type === "image"}}\
@@ -2317,7 +2317,7 @@ getTemplate  (type:any) {
                               {{/if}}\
                             </div>\
                             <div class="wid-temp-showMoreBottom hide">\
-                            <div class="headerTitleMore">MORE<span class="wid-temp-showMoreClose"><img src="libs/images/closeCross.png" class="closeCross"></span></div>\
+                            <div class="headerTitleMore">MORE<span class="wid-temp-showMoreClose"></span></div>\
                             <div class="moreItemsScroll">\
                             {{each(key, content) tempdata.details}} \
                                 <div class="wid-temp-contentDiv">\
@@ -4575,7 +4575,7 @@ setChatFocus  () {
   }
 
   if ($(_self.config.container.content).is(':visible')) {
-    $(_self.config.container.content).hide(500,"slide", {
+    $(_self.config.container.content).hide(500,"linear", {
       direction: _self.config.direction //$.jStorage.get('menuPosition')
 
     } as any);
