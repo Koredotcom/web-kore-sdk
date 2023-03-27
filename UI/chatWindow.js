@@ -1029,7 +1029,7 @@
                 }
                 /* Handling expand and collapse chat-container height */
             };
-            chatWindow.prototype.handleImagePreview= function() {
+            chatWindow.prototype.handleImagePreview = function () {
                 var modal = document.getElementById('myModal');
 
                 // Get the image and insert it inside the modal - use its "alt" text as a caption
@@ -1043,8 +1043,55 @@
                             e.stopPropagation();
                             e.stopImmediatePropagation();
                             modal.style.display = "block";
+                            var image = $(modal).find('.image-preview')[0];
                             modalImg.src = this.src;
                             captionText.innerHTML = this.alt;
+                            var scale = 1,
+                                panning = false,
+                                pointX = 0,
+                                pointY = 0,
+                                start = { x: 0, y: 0 },
+                                zoom = document.getElementById("zoom");
+
+                            function setTransform(type) {
+                                if (type) {
+                                    $(image).find('.modal-content-imagePreview').css({ 'transform': 'scale(' + scale + ')' });
+                                } else {
+                                    $(image).find('.modal-content-imagePreview')[0].style.transform = "translate(" + pointX + "px, " + pointY + "px) scale(" + scale + ")";
+                                }
+                            }
+
+                            image.onmousedown = function (e) {
+                                e.preventDefault();
+                                start = { x: e.clientX - pointX, y: e.clientY - pointY };
+                                panning = true;
+                            }
+
+                            image.onmouseup = function (e) {
+                                panning = false;
+                            }
+
+                            image.onmousemove = function (e) {
+                                e.preventDefault();
+                                if (!panning) {
+                                    return;
+                                }
+                                pointX = (e.clientX - start.x);
+                                pointY = (e.clientY - start.y);
+                                setTransform();
+                            }
+
+                            image.onwheel = function (e) {
+                                e.preventDefault();
+                                var xs = (e.clientX - pointX) / scale,
+                                    ys = (e.clientY - pointY) / scale,
+                                    delta = (e.wheelDelta ? e.wheelDelta : -e.deltaY);
+                                (delta > 0) ? (scale *= 1.2) : (scale /= 1.2);
+                                pointX = e.clientX - xs * scale;
+                                pointY = e.clientY - ys * scale;
+
+                                setTransform('onwheen');
+                            }
                         });
                     }
                 }
@@ -1062,6 +1109,7 @@
                 // When the user clicks on <span> (x), close the modal
                 span.onclick = function () {
                     modal.style.display = "none";
+                    $(modal).find('.modal-content-imagePreview').css({ 'transform': 'none' })
                 }
             }
             chatWindow.prototype.isMobile = function() {
@@ -3176,10 +3224,12 @@
                     </div> \
                     <div class="typingIndicatorContent"><div class="typingIndicator"></div><div class="movingDots"></div></div> \
                     <div class="kore-chat-footer disableFooter">' + chatFooterTemplate + '{{if isSendButton}}<div class="sendBtnCnt"><button class="sendButton disabled" type="button">${botMessages.sendText}</button></div>{{/if}}</div> \
-                     <div id="myModal" class="modalImagePreview">\
-                          <span class="closeImagePreview">&times;</span>\
-                          <img class="modal-content-imagePreview" id="img01">\
-                          <div id="caption"></div>\
+                    <div id="myModal" class="modalImagePreview">\
+                         <span class="closeImagePreview">&times;</span>\
+                         <div class="image-preview">\
+                            <img class="modal-content-imagePreview" id="img01">\
+                         </div>\
+                         <div id="caption"></div>\
                     </div>\
                     <div id="chatBodyModal" class="chatBodyModal animate-bottom">\
                     <span class="closeChatBodyModal" aira-label="Close Form" role="button" tabindex="0" aria-atomic="true"></span>\
