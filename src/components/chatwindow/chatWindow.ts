@@ -204,7 +204,7 @@ initShow  (config:any) {
   me.JWTSetup();
   me.initi18n();
   me.seti18n((me.config && me.config.i18n && me.config.i18n.defaultLanguage) || 'en');
-  me.config.botOptions.botInfo.name = me.config.botOptions.botInfo.name.escapeHTML();
+  me.config.botOptions.botInfo.name = KoreHelpers.prototypes.escapeHTML(me.config.botOptions.botInfo.name);
   me._botInfo = me.config.botOptions.botInfo;
   me.config.botOptions.botInfo = {
     chatBot: me._botInfo.name, taskBotId: me._botInfo._id, customData: me._botInfo.customData, metaTags: me._botInfo.metaTags, tenanturl: me._botInfo.tenanturl,
@@ -638,7 +638,7 @@ sendMessageWithWithChatInput(chatInput:any){
   if (chatInput.text().trim() === '') {
     return;
   }
-  chatInput.html(chatInput.text().koreReplaceAll("<br>", "\n"));
+  chatInput.html(KoreHelpers.prototypes.koreReplaceAll(chatInput.text(),"<br>", "\n"));
   me.sendMessageToBot(chatInput.text());
   chatInput.html('');
 }
