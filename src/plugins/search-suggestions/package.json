@@ -1,8 +1,0 @@
-{
-  "name": "kore-web-sdk/plugins/search-suggestions",
-  "types": "../../index_plugins/SearchSuggestions_umd.d.ts",
-  "main": "../../esm/plugins/search-suggestions-umd.js",
-  "module": "../../esm/plugins/search-suggestions-umd.js",
-  "es2015": "../../esm/plugins/search-suggestions-umd.js",
-  "sideEffects": false
-}

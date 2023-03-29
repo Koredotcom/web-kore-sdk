@@ -1,8 +1,0 @@
-{
-  "name": "kore-web-sdk/plugins/graph-templates",
-  "types": "../../index_plugins/graphTemplates_umd.d.ts",
-  "main": "../../esm/plugins/kore-graph-templates-plugin-umd.js",
-  "module": "../../esm/plugins/kore-graph-templates-plugin-umd.js",
-  "es2015": "../../esm/plugins/kore-graph-templates-plugin-umd.js",
-  "sideEffects": false
-}

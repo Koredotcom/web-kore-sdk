@@ -1,8 +1,0 @@
-{
-  "name": "kore-web-sdk/plugins/azure-tts",
-  "types": "../../index_plugins/AzureTTS_umd.d.ts",
-  "main": "../../esm/plugins/azure-tts-umd-plugin-umd.js",
-  "module": "../../esm/plugins/azure-tts-umd-plugin-umd.js",
-  "es2015": "../../esm/plugins/azure-tts-umd-plugin-umd.js",
-  "sideEffects": false
-}

@@ -1,8 +1,0 @@
-{
-  "name": "kore-web-sdk/plugins/desktop-notification",
-  "types": "../../index_plugins/KoreDesktopNotification_umd.d.ts",
-  "main": "../../esm/plugins/kore-desktop-notification-umd.js",
-  "module": "../../esm/plugins/kore-desktop-notification-umd.js",
-  "es2015": "../../esm/plugins/kore-desktop-notification-umd.js",
-  "sideEffects": false
-}
