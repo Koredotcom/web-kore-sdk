@@ -103,9 +103,9 @@
             window.chartColors = ['#75b0fe', '#f78083', '#99ed9e', '#fde296', '#26344a', '#5f6bf7', '#b3bac8', '#99a1fd', '#9cebf9', '#f7c7f4'];
             /**************************File upload variable end here **************************/
             var _escPressed = 0;
-            String.prototype.isNotAllowedHTMLTags = function () {
+            chatWindow.prototype.isNotAllowedHTMLTags = function (txtStr) {
                 var wrapper = document.createElement('div');
-                wrapper.innerHTML = this;
+                wrapper.innerHTML = txtStr;
 
                 var setFlags = {
                     isValid: true,
@@ -147,7 +147,7 @@
                 }
             };
 
-            String.prototype.escapeHTML = function () {
+            chatWindow.prototype.escapeHTML = function (txtStr) {
                 //'&': '&amp;',
                 var escapeTokens = {
                     '<': '&lt;',
@@ -156,25 +156,25 @@
                     "'": '&#x27;'
                 };
                 var htmlTags = /[<>"']/g;
-                return ('' + this).replace(htmlTags, function (match) {
+                return ('' + txtStr).replace(htmlTags, function (match) {
                     return escapeTokens[match];
                 });
             };
 
-            String.prototype.koreReplaceAll = function (search, replacement) {
-                var target = this;
+            chatWindow.prototype.koreReplaceAll = function (str,search, replacement) {
+                var target = str;
                 return target.replace(new RegExp(search, 'g'), replacement);
             };
             
-            if (!String.prototype.includes) {
-              String.prototype.includes = function(search, start) {
+            if (!chatWindow.prototype.includes) {
+                chatWindow.prototype.includes = function(str,search, start) {
                 'use strict';
 
                 if (search instanceof RegExp) {
                   throw TypeError('first argument must not be a RegExp');
                 } 
                 if (start === undefined) { start = 0; }
-                return this.indexOf(search, start) !== -1;
+                return str.indexOf(search, start) !== -1;
               };
             }
 
@@ -195,10 +195,10 @@
 
                 var textHasXSS;
                 if (txtStr) {
-                    textHasXSS = txtStr.isNotAllowedHTMLTags();
+                    textHasXSS = chatInitialize.isNotAllowedHTMLTags(txtStr);
                 }
                 if (textHasXSS && !textHasXSS.isValid) {
-                    txtStr = txtStr.escapeHTML();
+                    txtStr = chatInitialize.escapeHTML(txtStr);
                 }
                 return txtStr;
                 //return compObj[0].componentBody;
@@ -489,8 +489,8 @@
                             str = str.replace(hrefRef, customStrReplacer);
                         });
                     }
-                    str = str.koreReplaceAll('target="underscoreblank"', 'target="_blank"');
-                    str = str.koreReplaceAll("target='underscoreblank'", 'target="_blank"');
+                    str = chatInitialize.koreReplaceAll(str,'target="underscoreblank"', 'target="_blank"');
+                    // str = str.koreReplaceAll("target='underscoreblank'", 'target="_blank"');
                     // if (responseType === 'user') {
                         str = str.replace(/abc-error=/gi, 'onerror=');
                     // }
@@ -606,7 +606,7 @@
                             for (j = 0; j < _matchAstrik.length; j++) {
                                 var _boldTxt = _matchAstrik[j];
                                 var validBoldGroup = true;
-                                if(_boldTxt.includes('*')){
+                                if(chatInitialize.includes(_boldTxt,'*')){
                                     var _tempStr = _boldTxt.replace(/\*/g,'');
                                     // var letterNumber = /^[0-9a-zA-Z!@#$%^&()_ +\-=\[\]{};':"\\|,.<>\/?]+$/;
                                     if (!(_tempStr && _tempStr.length)) {
@@ -1157,7 +1157,7 @@
                     sendFailedMessage.MAX_RETRIES=me.config.sendFailedMessage.MAX_RETRIES
                 }
                 window.chatContainerConfig = me;
-                me.config.botOptions.botInfo.name = me.config.botOptions.botInfo.name.escapeHTML();
+                me.config.botOptions.botInfo.name = this.escapeHTML(me.config.botOptions.botInfo.name);
                 me._botInfo = me.config.botOptions.botInfo;
                 me.config.botOptions.botInfo = { chatBot: me._botInfo.name, taskBotId: me._botInfo._id, customData: me._botInfo.customData, metaTags: me._botInfo.metaTags, tenanturl: me._botInfo.tenanturl };
                 var tempTitle = me._botInfo.name;
@@ -1528,7 +1528,7 @@
                     var _clipboardData = event.clipboardData || (event.originalEvent && event.originalEvent.clipboardData) || window.clipboardData;
                     var _htmlData = '';
                     if (_clipboardData) {
-                        _htmlData = me.helpers.nl2br(_clipboardData.getData('text').escapeHTML(), false);
+                        _htmlData = me.helpers.nl2br(chatInitialize.escapeHTML(_clipboardData.getData('text')), false);
                         if (_htmlData) {
                             insertHtmlData(_this, _htmlData);
                         }
@@ -2123,7 +2123,7 @@
                 var msgData = {};
                 fileUploaderCounter = 0;
                 //to send \n to server for new lines
-                chatInput.html(chatInput.text().koreReplaceAll("<br>", "\n"));
+                chatInput.html(chatInitialize.koreReplaceAll(chatInput.text(),"<br>", "\n"));
                 if (me.attachmentInfo && Object.keys(me.attachmentInfo).length) {
                     msgData = {
                         'type': "currentUser",
