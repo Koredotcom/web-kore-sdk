@@ -92,7 +92,7 @@ function guiSendDTMF(key) {
 function initSipStack_c2c(account, config) {
     phone.setOAuthToken(config.accessToken);
     phone.setServerConfig(config.serverConfig.addresses, config.serverConfig.domain, config.serverConfig.iceServers);
-    phone.setAccount(account.user, account.displayName, account.password);
+    phone.setAccount(account.user, account.displayName, account.user, account.user);
     phone.setDtmfOptions(true, null, null);
 
     // Set phone API listeners
