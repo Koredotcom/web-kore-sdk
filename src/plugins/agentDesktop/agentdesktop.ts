@@ -68,6 +68,7 @@ class AgentDesktopPlugin {
                 }
             } else {
                 this.isTabActive = false
+                this.hasMsgSent = false;
             }
         });
 
