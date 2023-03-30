@@ -11,6 +11,7 @@ class AgentDesktopPlugin {
     typingTimer: any;
     stopTypingInterval: number = 500;
     isTabActive: boolean = true
+    hasMsgSent: boolean = false;
     constructor(config?: any) {
         this.config = {
             ...this.config,
@@ -32,7 +33,7 @@ class AgentDesktopPlugin {
             }
         });
         me.hostInstance.on('beforeViewInit', (chatEle: any) => {
-            me.hostInstance.chatEle.off('click', '.close-btn').on('click', '.close-btn',  (event: any)=> {
+            me.hostInstance.chatEle.off('click', '.close-btn').on('click', '.close-btn', (event: any) => {
                 const messageToBot: any = {};
                 messageToBot["clientMessageId"] = new Date().getTime();
                 messageToBot["event"] = "close_agent_chat";
@@ -54,14 +55,17 @@ class AgentDesktopPlugin {
             if (document.visibilityState === 'visible') {
                 this.isTabActive = true
                 // send read event after user come back to current tab
-                const messageToBot: any = {};
-                messageToBot["event"] = "message_read";
-                messageToBot["message"] = {
-                    "body": "",
-                    "type": ""
+                if (this.hasMsgSent) {
+                    const messageToBot: any = {};
+                    messageToBot["event"] = "message_read";
+                    messageToBot["message"] = {
+                        "body": "",
+                        "type": ""
+                    }
+                    messageToBot["resourceid"] = "/bot.message";
+                    me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+                    this.hasMsgSent = false;
                 }
-                messageToBot["resourceid"] = "/bot.message";
-                me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
             } else {
                 this.isTabActive = false
             }
@@ -109,6 +113,7 @@ class AgentDesktopPlugin {
             if (event.messageData.message) {
                 if (event?.messageData?.message[0]?.type === 'text' && event?.messageData?.author?.type === 'AGENT') {
                     this.$('.typingIndicatorContent').css('display', 'none');
+                    this.hasMsgSent = true;
                 }
             }
 
@@ -125,7 +130,7 @@ class AgentDesktopPlugin {
 
         // sent event style setting in user chat 
         me.hostInstance.on('afterRenderMessage', (event: any) => {
-            if(!event.messageHtml) return false;
+            if (!event.messageHtml) return false;
             if (localStorage.getItem("kr-agent-status") != "connected") return;
 
             if (event.msgData?.type === "currentUser") {

@@ -8,6 +8,7 @@ declare class AgentDesktopPlugin {
     typingTimer: any;
     stopTypingInterval: number;
     isTabActive: boolean;
+    hasMsgSent: boolean;
     constructor(config?: any);
     onHostCreate(): void;
     onInit(): void;
