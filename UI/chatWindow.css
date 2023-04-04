@@ -3013,6 +3013,6 @@
     border: 1px solid #eee;
     border-radius: 5px;
 }
-#chatContainer{
+#kr_chatContainer{
     display: none;/*remove this minimizeMode false*/
 }

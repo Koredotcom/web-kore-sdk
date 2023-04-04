@@ -940,7 +940,7 @@ function AgentDesktop(uuId, aResponse) {
         _self.updateGui();
     });
     if (!koreJquery("#toast").length) {
-        koreJquery("#chatContainer").append(`<div id="toast"></div>`);
+        koreJquery("#kr_chatContainer").append(`<div id="toast"></div>`);
     }
 
 }
