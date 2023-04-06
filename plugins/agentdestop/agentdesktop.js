@@ -2084,10 +2084,11 @@ function dragElement(elmnt) {
                   } catch (err) {
                     console.log("cobrowse >>> error from peer connection failed")
                     var peerConn = new RTCPeerConnection();
+                    return peerConn;
                   }
             }
             function handleNewICECandidateMsg(incoming) {
-                console.log("cobrowse >>> handlingIceCandidate ", incoming)
+                console.log("cobrowse >>> handlingIceCandidate ", incoming, peer)
                 const candidate = new RTCIceCandidate(incoming.candidate);
         
                 peer.addIceCandidate(incoming.candidate)
