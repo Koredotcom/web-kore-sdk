@@ -2084,6 +2084,7 @@ function dragElement(elmnt) {
                   } catch (err) {
                     console.log("cobrowse >>> error from peer connection failed")
                     var peerConn = new RTCPeerConnection();
+                    return peerConn;
                   }
             }
             function handleNewICECandidateMsg(incoming) {
