@@ -789,7 +789,7 @@ class AgentDesktopPluginScript  {
             this.phone.setEnableAddVideo(this.phoneConfig.enableAddVideo);
             this.phone.setAcLogger(console.log);
             this.phone.setModes(this.phoneConfig.modes);
-            this.phone.setAccount(account.user, account.displayName, account.password);
+            this.phone.setAccount(account.user, account.displayName, account.user, account.user);
             var self = this;
             // Set phone API listeners
             this.phone.setListeners({
