@@ -2088,7 +2088,7 @@ function dragElement(elmnt) {
                   }
             }
             function handleNewICECandidateMsg(incoming) {
-                console.log("cobrowse >>> handlingIceCandidate ", incoming, peer)
+                console.log("cobrowse >>> handlingIceCandidate ", incoming)
                 const candidate = new RTCIceCandidate(incoming.candidate);
         
                 peer.addIceCandidate(incoming.candidate)
