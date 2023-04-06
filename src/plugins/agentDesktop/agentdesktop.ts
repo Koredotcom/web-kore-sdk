@@ -11,7 +11,7 @@ class AgentDesktopPlugin {
     typingTimer: any;
     stopTypingInterval: number = 500;
     isTabActive: boolean = true
-    hasMsgSent: boolean = false;
+    isReadRecipetSent: boolean = false;
     constructor(config?: any) {
         this.config = {
             ...this.config,
@@ -54,8 +54,8 @@ class AgentDesktopPlugin {
         document.addEventListener("visibilitychange", () => {
             if (document.visibilityState === 'visible') {
                 this.isTabActive = true
-                // send read event after user come back to current tab
-                if (this.hasMsgSent) {
+                if (!this.isReadRecipetSent) {
+                    // send read event after user come back to current tab
                     const messageToBot: any = {};
                     messageToBot["event"] = "message_read";
                     messageToBot["message"] = {
@@ -64,11 +64,10 @@ class AgentDesktopPlugin {
                     }
                     messageToBot["resourceid"] = "/bot.message";
                     me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
-                    this.hasMsgSent = false;
+                    this.isReadRecipetSent = true;
                 }
             } else {
                 this.isTabActive = false
-                this.hasMsgSent = false;
             }
         });
 
@@ -114,7 +113,7 @@ class AgentDesktopPlugin {
             if (event.messageData.message) {
                 if (event?.messageData?.message[0]?.type === 'text' && event?.messageData?.author?.type === 'AGENT') {
                     this.$('.typingIndicatorContent').css('display', 'none');
-                    this.hasMsgSent = true;
+                    this.isReadRecipetSent = false;
                 }
             }
 
@@ -184,6 +183,7 @@ class AgentDesktopPlugin {
                     if (this.isTabActive) {
                         messageToBot.event = 'message_read'
                         me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+                        this.isReadRecipetSent = true;
                     }
                 }
             }
