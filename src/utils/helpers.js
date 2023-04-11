@@ -241,8 +241,9 @@ class KoreHelpers{
             
             var newStr = '', wrapper1;
             if (responseType === 'user') {
-                str = sanitizeXSS(str);
-                str = str.replace(/onerror=/gi, 'abc-error=');
+                // str = sanitizeXSS(str);
+                str = str.replace(/onerror=/gi, '');
+                str = str.replace(/onmouseover=/gi, '');
                 wrapper1 = document.createElement('div');
                 newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
                 newStr = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -253,8 +254,9 @@ class KoreHelpers{
                     str = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(_regExForLink, linkreplacer);
                 }
             } else {
-                str = sanitizeXSS(str);
-                str = str.replace(/onerror=/gi, 'abc-error=');
+                // str = sanitizeXSS(str);
+                str = str.replace(/onerror=/gi, '');
+                str = str.replace(/onmouseover=/gi, '');
                 wrapper1 = document.createElement('div');
                 //str = str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
                 wrapper1.innerHTML = xssAttack(str);
@@ -301,7 +303,7 @@ class KoreHelpers{
             str = KoreHelpers.prototypes.koreReplaceAll(str,'target="underscoreblank"', 'target="_blank"');
             // str = str.koreReplaceAll("target='underscoreblank'", 'target="_blank"');
             // if (responseType === 'user') {
-                str = str.replace(/abc-error=/gi, 'onerror=');
+                // str = str.replace(/abc-error=/gi, 'onerror=');
             // }
             return this.nl2br(str, true);
         },
@@ -395,7 +397,7 @@ class KoreHelpers{
                             hyperLinksMap[_randomKey] = _imgLink;
                             _imgLink = _randomKey;
                         }
-                        _imgLink = '<img src="' + _imgLink + '" alt="' + sanitizeXSS(_imgTxt) + '">';
+                        _imgLink = '<img src="' + _imgLink + '" alt="' + _imgTxt + '">';
                         var _tempImg = txtArr[i].split(' ');
                         for (var k = 0; k < _tempImg.length; k++) {
                             if (_tempImg[k] === _matchImage[j]) {
