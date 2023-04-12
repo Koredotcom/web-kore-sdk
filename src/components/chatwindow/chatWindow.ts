@@ -138,6 +138,7 @@ class chatWindow extends EventEmitter{
      */
        JWT_GRANT_SUCCESS : 'jwtGrantSuccess'
   }
+  sendFailedMessage: any;
   
  constructor(){
   super(null);
@@ -188,6 +189,11 @@ show  (config:any) {
 };
 initShow  (config:any) {
   const me:any = this;
+  this.sendFailedMessage={
+    messageId:null,
+    MAX_RETRIES:3,
+    retryCount:0
+};
   me.config=me.extend(chatConfig,config);
   this.config = me.extend(me.config,{
     chatTitle: 'Kore.ai Bot Chat',
@@ -204,6 +210,9 @@ initShow  (config:any) {
   me.JWTSetup();
   me.initi18n();
   me.seti18n((me.config && me.config.i18n && me.config.i18n.defaultLanguage) || 'en');
+  if(me.config && me.config.sendFailedMessage && me.config.sendFailedMessage.hasOwnProperty('MAX_RETRIES')){
+    this.sendFailedMessage.MAX_RETRIES=me.config.sendFailedMessage.MAX_RETRIES
+}
   me.config.botOptions.botInfo.name = KoreHelpers.prototypes.escapeHTML(me.config.botOptions.botInfo.name);
   me._botInfo = me.config.botOptions.botInfo;
   me.config.botOptions.botInfo = {
@@ -802,6 +811,14 @@ bindEvents  () {
       me.chatPSObj.update();
     }
   });
+  _chatContainer.off('click', '.retry').on('click', '.retry',  (event:any) => {
+    var target=$(event.target);
+    _chatContainer.find(".failed-text").remove();  
+    _chatContainer.find(".retry-icon").remove();
+    _chatContainer.find(".retry-text").text('Retrying...');
+    this.sendFailedMessage.messageId=target.closest('.fromCurrentUser').attr('id');
+    _chatContainer.find(".reload-btn").trigger('click',{isReconnect:true});
+});
 
   $(document).on('keyup', (evt: { keyCode: number; }) => {
     if (evt.keyCode == 27) {
@@ -1021,6 +1038,16 @@ onBotReady  () {
       _chatContainer.find('.disableFooter').removeClass('disableFooter');
     });
   }
+  if(this.sendFailedMessage.messageId){
+    var msgEle=_chatContainer.find('#'+this.sendFailedMessage.messageId);
+    msgEle.find('.errorMsg').remove();
+    var msgTxt=msgEle.find('.messageBubble').text().trim();
+    _chatContainer.find('.chatInputBox').text(msgTxt);
+    msgEle.remove();
+    me.sendMessageWithWithChatInput($('.chatInputBox'));
+    // me.sendMessage($('.chatInputBox').text());
+
+}
 };
 bindIframeEvents  (authPopup: { on: (arg0: string, arg1: string, arg2: () => void) => void; find: (arg0: string) => any[]; }) {
   const me:any = this;
@@ -1062,9 +1089,13 @@ render  (chatWindowHtml: any) {
 
 
 
-sendMessageToBot  (messageText: { trim: () => { (): any; new(): any; length: any; }; }, options: { renderMsg: any; }, serverMessageObject: any,clientMessageObject: any) {
+sendMessageToBot  (messageText:any, options: { renderMsg: any; }, serverMessageObject: any,clientMessageObject: any) {
   const me:any = this;
-  const clientMessageId = new Date().getTime();
+  let clientMessageId = new Date().getTime();
+  if(this.sendFailedMessage.messageId){
+    clientMessageId=this.sendFailedMessage.messageId;
+    this.sendFailedMessage.messageId=null;
+}
   let msgData:any = {
     type: 'currentUser',
     message: [{
@@ -1081,7 +1112,7 @@ sendMessageToBot  (messageText: { trim: () => { (): any; new(): any; length: any
     clientMessageId:clientMessageId,
     resourceid :'/bot.message',
   };
-if(messageText.trim().length){
+if(messageText && messageText.trim() && messageText.trim().length){
   messageToBot["message"] = { 
     body: messageText.trim()
   }
@@ -1114,8 +1145,15 @@ if(messageText.trim().length){
       },
       (err: any) => {
         setTimeout(() => {
-          me.hideTypingIndicator();
-          $(`.kore-chat-window [data-time="${clientMessageId}"]`).find('.messageBubble').append('<div class="errorMsg">Send Failed. Please resend.</div>');
+          var failedMsgEle = $('.kore-chat-window [id="' + clientMessageId + '"]');
+          failedMsgEle.find('.messageBubble').append('<div class="errorMsg hide"><span class="failed-text">Send Failed </span><div class="retry"><span class="retry-icon"></span><span class="retry-text">Retry</span></div></div>');
+          if (this.sendFailedMessage.retryCount < this.sendFailedMessage.MAX_RETRIES) {
+            failedMsgEle.find('.retry').trigger('click');
+            this.sendFailedMessage.retryCount++;
+          } else {
+            failedMsgEle.find('.errorMsg').removeClass('hide');
+            me.hideTypingIndicator();
+          }
         }, 350);
       },
       me.attachmentInfo ? { attachments: [me.attachmentInfo] } : null,
@@ -1132,7 +1170,15 @@ if(messageText.trim().length){
     me.bot.sendMessage(messageToBot, (err: { message: any; }) => {
       if (err && err.message) {
         setTimeout(() => {
-          $(`.kore-chat-window [data-time="${clientMessageId}"]`).find('.messageBubble').append('<div class="errorMsg">Send Failed. Please resend.</div>');
+          var failedMsgEle = $('.kore-chat-window [id="' + clientMessageId + '"]');
+          failedMsgEle.find('.messageBubble').append('<div class="errorMsg hide"><span class="failed-text">Send Failed </span><div class="retry"><span class="retry-icon"></span><span class="retry-text">Retry</span></div></div>');
+          if (this.sendFailedMessage.retryCount < this.sendFailedMessage.MAX_RETRIES) {
+            failedMsgEle.find('.retry').trigger('click');
+            this.sendFailedMessage.retryCount++;
+          } else {
+            failedMsgEle.find('.errorMsg').removeClass('hide');
+            me.hideTypingIndicator();
+          }
         }, 350);
       }
     });
@@ -1251,6 +1297,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   }
 
   if (msgData?.type === 'bot_response') {
+    this.sendFailedMessage.retryCount=0;
     me.waiting_for_message = false;
     setTimeout(() => {
       $(me.chatEle).find('.typingIndicator').css('background-image', `url(${msgData.icon})`);
