@@ -1,0 +1,34 @@
+export default PureJSCarousel;
+declare function PureJSCarousel(settings: any): void;
+declare class PureJSCarousel {
+    constructor(settings: any);
+    carousel: any;
+    slides: any;
+    btnNext: any;
+    btnPrev: any;
+    activeIndex: any;
+    oneByOne: any;
+    speed: any;
+    delay: any;
+    effect: any;
+    infinite: any;
+    autoplay: any;
+    autoplayDelay: any;
+    autoplayDirection: any;
+    autoplayTimer: NodeJS.Timeout | null;
+    minPos: number | null;
+    slidesToShow: number | null;
+    maxIndex: number | null;
+    isEnabled: number | null;
+    build(): void;
+    slidesContainer: HTMLDivElement | undefined;
+    dotsContainer: HTMLDivElement | undefined;
+    dots: any[] | undefined;
+    computeResize(): void;
+    enableControl(): void;
+    disableControl(): void;
+    goToNextSlide(): void;
+    goToPrevSlide(): void;
+    goToSlide(n: any, dir: any, trigger: any): void;
+    destroy(): void;
+}
