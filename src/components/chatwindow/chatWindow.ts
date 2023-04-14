@@ -280,8 +280,8 @@ initShow  (config:any) {
   me.unfreezeUIOnHistoryLoadingFail.call(me);
   me.updateOnlineStatus();
   me.addBottomSlider();
-  window.addEventListener('online', me.updateOnlineStatus);
-  window.addEventListener('offline', me.updateOnlineStatus);
+  window.addEventListener('online', me.updateOnlineStatus.bind(me));
+  window.addEventListener('offline', me.updateOnlineStatus.bind(me));
   me.attachEventListener();
   // me.show();
 };
@@ -447,15 +447,15 @@ addBottomSlider  () {
   $('.kore-chat-window').append(actionSheetTemplate);
 };
 updateOnlineStatus () {
-  let me:any=this;
+
   if (typeof (navigator.onLine) === 'boolean') {
     if (navigator.onLine) {
-      me.hideError();
+      this.hideError();
       if (bot && bot.RtmClient) {
         bot.getHistory({ forHistorySync: true, limit: 30 });
       }
     } else {
-      me.showError('You are currently offline');
+      this.showError('You are currently offline');
     }
   }
 };
