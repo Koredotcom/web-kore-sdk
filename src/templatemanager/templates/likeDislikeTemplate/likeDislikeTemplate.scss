@@ -1,4 +1,4 @@
-.likeDislikeDiv{
+.kore-chat-window .likeDislikeDiv{
     display: inline-block;
     border: 1px solid var(--sdk-chat-window-like-border-color);
     border-radius: 50%;
@@ -7,6 +7,6 @@
     text-align: center;
     cursor: pointer;
 }
-.likeDislikeDiv img { 
+.kore-chat-window .likeDislikeDiv img { 
     width: 20px;
 }

@@ -138,6 +138,7 @@ class chatWindow extends EventEmitter{
      */
        JWT_GRANT_SUCCESS : 'jwtGrantSuccess'
   }
+  sendFailedMessage: any;
   
  constructor(){
   super(null);
@@ -188,6 +189,11 @@ show  (config:any) {
 };
 initShow  (config:any) {
   const me:any = this;
+  this.sendFailedMessage={
+    messageId:null,
+    MAX_RETRIES:3,
+    retryCount:0
+};
   me.config=me.extend(chatConfig,config);
   this.config = me.extend(me.config,{
     chatTitle: 'Kore.ai Bot Chat',
@@ -204,7 +210,10 @@ initShow  (config:any) {
   me.JWTSetup();
   me.initi18n();
   me.seti18n((me.config && me.config.i18n && me.config.i18n.defaultLanguage) || 'en');
-  me.config.botOptions.botInfo.name = me.config.botOptions.botInfo.name.escapeHTML();
+  if(me.config && me.config.sendFailedMessage && me.config.sendFailedMessage.hasOwnProperty('MAX_RETRIES')){
+    this.sendFailedMessage.MAX_RETRIES=me.config.sendFailedMessage.MAX_RETRIES
+}
+  me.config.botOptions.botInfo.name = KoreHelpers.prototypes.escapeHTML(me.config.botOptions.botInfo.name);
   me._botInfo = me.config.botOptions.botInfo;
   me.config.botOptions.botInfo = {
     chatBot: me._botInfo.name, taskBotId: me._botInfo._id, customData: me._botInfo.customData, metaTags: me._botInfo.metaTags, tenanturl: me._botInfo.tenanturl,
@@ -271,8 +280,8 @@ initShow  (config:any) {
   me.unfreezeUIOnHistoryLoadingFail.call(me);
   me.updateOnlineStatus();
   me.addBottomSlider();
-  window.addEventListener('online', me.updateOnlineStatus);
-  window.addEventListener('offline', me.updateOnlineStatus);
+  window.addEventListener('online', me.updateOnlineStatus.bind(me));
+  window.addEventListener('offline', me.updateOnlineStatus.bind(me));
   me.attachEventListener();
   // me.show();
 };
@@ -438,15 +447,15 @@ addBottomSlider  () {
   $('.kore-chat-window').append(actionSheetTemplate);
 };
 updateOnlineStatus () {
-  let me:any=this;
+
   if (typeof (navigator.onLine) === 'boolean') {
     if (navigator.onLine) {
-      me.hideError();
+      this.hideError();
       if (bot && bot.RtmClient) {
         bot.getHistory({ forHistorySync: true, limit: 30 });
       }
     } else {
-      me.showError('You are currently offline');
+      this.showError('You are currently offline');
     }
   }
 };
@@ -479,7 +488,7 @@ handleImagePreview  () {
         e.stopImmediatePropagation();
         modal.style.display = 'block';
         modalImg.src = $(e.currentTarget).attr('src');
-        captionText.innerHTML = $(e.currentTarget).attr('alt');
+        captionText.innerHTML = $(e.currentTarget).attr('alt') || '';
       });
     }
   }
@@ -638,8 +647,8 @@ sendMessageWithWithChatInput(chatInput:any){
   if (chatInput.text().trim() === '') {
     return;
   }
+  chatInput.html(KoreHelpers.prototypes.koreReplaceAll(chatInput.text(),"<br>", "\n"));
   me.sendMessageToBot(chatInput.text());
-  chatInput.html(chatInput.html().replaceAll('<br>', '\n'));
   chatInput.html('');
 }
 bindEvents  () {
@@ -802,6 +811,14 @@ bindEvents  () {
       me.chatPSObj.update();
     }
   });
+  _chatContainer.off('click', '.retry').on('click', '.retry',  (event:any) => {
+    var target=$(event.target);
+    _chatContainer.find(".failed-text").remove();  
+    _chatContainer.find(".retry-icon").remove();
+    _chatContainer.find(".retry-text").text('Retrying...');
+    this.sendFailedMessage.messageId=target.closest('.fromCurrentUser').attr('id');
+    _chatContainer.find(".reload-btn").trigger('click',{isReconnect:true});
+});
 
   $(document).on('keyup', (evt: { keyCode: number; }) => {
     if (evt.keyCode == 27) {
@@ -1021,6 +1038,16 @@ onBotReady  () {
       _chatContainer.find('.disableFooter').removeClass('disableFooter');
     });
   }
+  if(this.sendFailedMessage.messageId){
+    var msgEle=_chatContainer.find('#'+this.sendFailedMessage.messageId);
+    msgEle.find('.errorMsg').remove();
+    var msgTxt=msgEle.find('.messageBubble').text().trim();
+    _chatContainer.find('.chatInputBox').text(msgTxt);
+    msgEle.remove();
+    me.sendMessageWithWithChatInput($('.chatInputBox'));
+    // me.sendMessage($('.chatInputBox').text());
+
+}
 };
 bindIframeEvents  (authPopup: { on: (arg0: string, arg1: string, arg2: () => void) => void; find: (arg0: string) => any[]; }) {
   const me:any = this;
@@ -1062,9 +1089,13 @@ render  (chatWindowHtml: any) {
 
 
 
-sendMessageToBot  (messageText: { trim: () => { (): any; new(): any; length: any; }; }, options: { renderMsg: any; }, serverMessageObject: any,clientMessageObject: any) {
+sendMessageToBot  (messageText:any, options: { renderMsg: any; }, serverMessageObject: any,clientMessageObject: any) {
   const me:any = this;
-  const clientMessageId = new Date().getTime();
+  let clientMessageId = new Date().getTime();
+  if(this.sendFailedMessage.messageId){
+    clientMessageId=this.sendFailedMessage.messageId;
+    this.sendFailedMessage.messageId=null;
+}
   let msgData:any = {
     type: 'currentUser',
     message: [{
@@ -1081,7 +1112,7 @@ sendMessageToBot  (messageText: { trim: () => { (): any; new(): any; length: any
     clientMessageId:clientMessageId,
     resourceid :'/bot.message',
   };
-if(messageText.trim().length){
+if(messageText && messageText.trim() && messageText.trim().length){
   messageToBot["message"] = { 
     body: messageText.trim()
   }
@@ -1114,8 +1145,15 @@ if(messageText.trim().length){
       },
       (err: any) => {
         setTimeout(() => {
-          me.hideTypingIndicator();
-          $(`.kore-chat-window [data-time="${clientMessageId}"]`).find('.messageBubble').append('<div class="errorMsg">Send Failed. Please resend.</div>');
+          var failedMsgEle = $('.kore-chat-window [id="' + clientMessageId + '"]');
+          failedMsgEle.find('.messageBubble').append('<div class="errorMsg hide"><span class="failed-text">Send Failed </span><div class="retry"><span class="retry-icon"></span><span class="retry-text">Retry</span></div></div>');
+          if (this.sendFailedMessage.retryCount < this.sendFailedMessage.MAX_RETRIES) {
+            failedMsgEle.find('.retry').trigger('click');
+            this.sendFailedMessage.retryCount++;
+          } else {
+            failedMsgEle.find('.errorMsg').removeClass('hide');
+            me.hideTypingIndicator();
+          }
         }, 350);
       },
       me.attachmentInfo ? { attachments: [me.attachmentInfo] } : null,
@@ -1132,7 +1170,15 @@ if(messageText.trim().length){
     me.bot.sendMessage(messageToBot, (err: { message: any; }) => {
       if (err && err.message) {
         setTimeout(() => {
-          $(`.kore-chat-window [data-time="${clientMessageId}"]`).find('.messageBubble').append('<div class="errorMsg">Send Failed. Please resend.</div>');
+          var failedMsgEle = $('.kore-chat-window [id="' + clientMessageId + '"]');
+          failedMsgEle.find('.messageBubble').append('<div class="errorMsg hide"><span class="failed-text">Send Failed </span><div class="retry"><span class="retry-icon"></span><span class="retry-text">Retry</span></div></div>');
+          if (this.sendFailedMessage.retryCount < this.sendFailedMessage.MAX_RETRIES) {
+            failedMsgEle.find('.retry').trigger('click');
+            this.sendFailedMessage.retryCount++;
+          } else {
+            failedMsgEle.find('.errorMsg').removeClass('hide');
+            me.hideTypingIndicator();
+          }
         }, 350);
       }
     });
@@ -1251,6 +1297,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   }
 
   if (msgData?.type === 'bot_response') {
+    this.sendFailedMessage.retryCount=0;
     me.waiting_for_message = false;
     setTimeout(() => {
       $(me.chatEle).find('.typingIndicator').css('background-image', `url(${msgData.icon})`);
@@ -1336,7 +1383,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
       if(bot && !bot.previousHistoryLoading){
         _chatContainer.append(messageHtml);
       }else{
-        $(this.paginatedScrollMsgDiv).find('.prev-message-list').append(messageHtml);
+        $(this.paginatedScrollMsgDiv).find('.prev-message-list').append($(messageHtml).addClass('previousMessage'));
       }
 
     }
@@ -1527,16 +1574,16 @@ historyLoadingComplete () {
     if (me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) {
       me.getBotMetaData();
     }
-    if ($(this.paginatedScrollMsgDiv).find('.prev-message-list li').length > 0 && bot.previousHistoryLoading) {
-      let paginatedLi = $(this.paginatedScrollMsgDiv).find('.prev-message-list li');
+    if ($(this.paginatedScrollMsgDiv).find('.prev-message-list li.previousMessage').length > 0 && bot.previousHistoryLoading) {
+      let paginatedLi = $(this.paginatedScrollMsgDiv).find('.prev-message-list li.previousMessage');
       if (paginatedLi && paginatedLi.length) {
         for (var i = 0; i < paginatedLi.length; i++) {
           var tempLi = $(paginatedLi[i]);
           tempLi.addClass('no-animate-messge-bubble')
         }
       }
-      let _existingLi = $(this.paginatedScrollMsgDiv).find('.prev-message-list li');
-      $(this.paginatedScrollMsgDiv).find('.prev-message-list li').insertBefore(_chatContainer.find('.chat-container li:first'));
+      let _existingLi = $(this.paginatedScrollMsgDiv).find('.prev-message-list li.previousMessage');
+      $(this.paginatedScrollMsgDiv).find('.prev-message-list li.previousMessage').insertBefore(_chatContainer.find('.chat-container li:first'));
       let _heightTobeScrolled = 0;
       if (_existingLi && _existingLi.length) {
         for (var i = 0; i < _existingLi.length; i++) {

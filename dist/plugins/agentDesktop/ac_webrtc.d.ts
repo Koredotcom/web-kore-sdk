@@ -12,26 +12,8 @@ export class AudioCodesUA {
         useSessionTimer: boolean;
     };
     constraints: {
-        chrome: {
-            audio: boolean;
-            video: boolean;
-        };
-        firefox: {
-            audio: boolean;
-            video: boolean;
-        };
-        safari: {
-            audio: boolean;
-            video: boolean;
-        };
-        ios_safari: {
-            audio: boolean;
-            video: boolean;
-        };
-        other: {
-            audio: boolean;
-            video: boolean;
-        };
+        audio: boolean;
+        video: boolean;
     };
     chromiumBased: {
         n: string;
@@ -44,13 +26,18 @@ export class AudioCodesUA {
         chrome_rtp_timeout_fix: number;
         sbc_ha_pairs_mode: undefined;
         ringing_header_mode: undefined;
+        sbc_switch_register5xx_mode: boolean;
+        cache_register_auth_mode: boolean;
+        check_remote_sdp_mode: boolean;
     };
+    credentials: any[];
     listeners: {};
     registerExtraHeaders: any;
     jssipUA: any;
     browser: string;
     browserVersion: number;
     browserName: string;
+    os: string;
     reconnectMin: number;
     reconnectMax: number;
     activeCalls: number;
@@ -85,25 +72,31 @@ export class AudioCodesUA {
         getUserMedia: (e: any) => Promise<MediaStream>;
         hasDisplayMedia: () => (options?: DisplayMediaStreamOptions | undefined) => Promise<MediaStream>;
         getDisplayMedia: () => Promise<MediaStream>;
+        mediaDevices: {
+            enumerateDevices: () => Promise<MediaDeviceInfo[]>;
+            addDeviceChangeListener(e: any): void;
+            removeDeviceChangeListener(e: any): void;
+        };
         checkAvailableDevices(): Promise<boolean>;
         transceiver: {
-            setDirection(e: any, s: any): void;
+            setDirection(e: any, i: any): void;
         };
         stream: {
             getInfo(e: any): Promise<string>;
         };
         connection: {
             getTransceiversInfo(e: any): Promise<string>;
-            getTransceiver(e: any, s: any): any;
-            addEventListener: (e: any, s: any, i: any) => Promise<void>;
+            getTransceiver(e: any, i: any): any;
+            addEventListener: (e: any, i: any, s: any) => Promise<void>;
             getDTMFSender(e: any): any;
-            addVideo(e: any, s: any, i: any, t: any, o: any): any;
-            removeVideo(e: any, s: any): Promise<void>;
-            replaceSenderTrack(e: any, s: any, i: any): any;
-            getStats(e: any, s: any): any;
+            addVideo(e: any, i: any, s: any, t: any, o: any): any;
+            removeVideo(e: any, i: any): Promise<void>;
+            replaceSenderTrack(e: any, i: any, s: any): any;
+            getStats(e: any, i: any): any;
         };
     };
     replacedCall: any;
+    codecFilter: {} | null;
     AUDIO: symbol;
     VIDEO: symbol;
     RECVONLY_VIDEO: symbol;
@@ -111,42 +104,49 @@ export class AudioCodesUA {
     getBrowserName(): string;
     getBrowser(): string;
     getBrowserVersion(): number;
+    getOS(): string;
     getWR(): {
         getUserMedia: (e: any) => Promise<MediaStream>;
         hasDisplayMedia: () => (options?: DisplayMediaStreamOptions | undefined) => Promise<MediaStream>;
         getDisplayMedia: () => Promise<MediaStream>;
+        mediaDevices: {
+            enumerateDevices: () => Promise<MediaDeviceInfo[]>;
+            addDeviceChangeListener(e: any): void;
+            removeDeviceChangeListener(e: any): void;
+        };
         checkAvailableDevices(): Promise<boolean>;
         transceiver: {
-            setDirection(e: any, s: any): void;
+            setDirection(e: any, i: any): void;
         };
         stream: {
             getInfo(e: any): Promise<string>;
         };
         connection: {
             getTransceiversInfo(e: any): Promise<string>;
-            getTransceiver(e: any, s: any): any;
-            addEventListener: (e: any, s: any, i: any) => Promise<void>;
+            getTransceiver(e: any, i: any): any;
+            addEventListener: (e: any, i: any, s: any) => Promise<void>;
             getDTMFSender(e: any): any;
-            addVideo(e: any, s: any, i: any, t: any, o: any): any;
-            removeVideo(e: any, s: any): Promise<void>;
-            replaceSenderTrack(e: any, s: any, i: any): any;
-            getStats(e: any, s: any): any;
+            addVideo(e: any, i: any, s: any, t: any, o: any): any;
+            removeVideo(e: any, i: any): Promise<void>;
+            replaceSenderTrack(e: any, i: any, s: any): any;
+            getStats(e: any, i: any): any;
         };
     };
     checkAvailableDevices(): Promise<boolean>;
     getServerAddress(): any;
-    setOAuthToken(e: any, s?: boolean): void;
+    setOAuthToken(e: any, i?: boolean): void;
     setUserAgent(e: any): void;
     u17: any;
-    setChromeAudioConstraints(e: any): void;
-    setConstraints(e: any, s: any, i: any): void;
+    setConstraints(e: any, i: any, s: any): void;
+    setConstraint(e: any, i: any, s: any): void;
     setBrowsersConstraints(e: any): void;
-    setServerConfig(e: any, s: any, i?: any[]): void;
-    setReconnectIntervals(e: any, s: any): void;
-    setAccount(e: any, s: any, i: any, t: any): void;
+    setCodecFilter(e: any): void;
+    setServerConfig(e: any, i: any, s?: any[]): void;
+    setReconnectIntervals(e: any, i: any): void;
+    setAccount(e: any, i: any, s: any, t: any): void;
     setRegisterExpires(e: any): void;
     setUseSessionTimer(e: any): void;
-    setDtmfOptions(e: any, s?: null, i?: null): void;
+    setDtmfOptions(e: any, i?: null, s?: null): void;
     setEnableAddVideo(e: any): void;
     getEnableAddVideo(): boolean;
     getAccount(): {
@@ -158,19 +158,20 @@ export class AudioCodesUA {
         useSessionTimer: boolean;
     };
     setListeners(e: any): void;
-    setJsSipLogger(e: any): void;
     setAcLogger(e: any): void;
+    setJsSipLogger(e: any): void;
     isInitialized(): boolean;
     setModes(e?: {}): void;
     _normalizeModes(): void;
     init(e?: boolean): void;
     deinit(): void;
     setRegisterExtraHeaders(e: any): void;
+    getRegisterExtraHeaders(): any;
     login(): void;
     logout(): void;
-    switchSBC(): void;
+    switchSBC(e?: boolean): any;
     getNumberOfSBC(): any;
-    setWebSocketKeepAlive(e: any, s?: boolean, i?: boolean, t?: number, o?: boolean): void;
+    setWebSocketKeepAlive(e: any, i?: boolean, s?: boolean, t?: number, o?: boolean): void;
     _pingLog(): string;
     _visibilityLog(e: any): void;
     _activeCallsLog(e: any): void;
@@ -191,26 +192,41 @@ export class AudioCodesUA {
     };
     _get_content_type(e: any): any;
     _set_connection_listener(e: any): void;
-    _sdp_checking(e: any, s: any): undefined;
+    _check_remote_sdp(e: any, i: any): void;
+    _check_remote_m(e: any, i: any): void;
+    _sdp_checking(e: any, i: any): undefined;
     _set_senders_dscp(e: any): void;
-    _set_dscp(e: any, s: any, i: any): Promise<any>;
+    _set_dscp(e: any, i: any, s: any): Promise<any>;
+    _cf_unpack(e: any): {} | null;
+    _cf_pack(e: any): any;
+    _cf_str(e: any): string;
+    _cf_match(e: any, i: any): boolean;
+    _cf_find(e: any, i: any): any[];
+    _cf_filter(e: any, i: any, s: any): undefined;
     _convertIceList(e: any): any[];
     _randomToken(e: any): string;
     _detectBrowser(): void;
-    _callOptions(e: any, s: any, i?: null, t?: null): {
-        mediaConstraints: {
-            audio: any;
-        };
+    _detectOS(): void;
+    _detectOS1(): void;
+    _detectOS2(): void;
+    _mediaConstraints(e: any): {
+        audio: any;
+    };
+    _callOptions(e: any, i: any, s?: null, t?: null): {
+        mediaConstraints: any;
         pcConfig: {
             iceServers: any;
         };
         extraHeaders: any;
     };
-    call(e: any, s: any, i?: null, t?: null): any;
-    sendMessage(e: any, s: any, i?: string): Promise<any>;
+    call(e: any, i: any, s?: null, t?: null): any;
+    sendMessage(e: any, i: any, s?: string): Promise<any>;
     isScreenSharingSupported(): any;
     openScreenSharing(): any;
     closeScreenSharing(e: any): void;
     setNetworkPriority(e: any): void;
     networkPriority: any;
+    subscribe(...e: any[]): any;
+    notify(...e: any[]): any;
+    addCredential(e: any): void;
 }

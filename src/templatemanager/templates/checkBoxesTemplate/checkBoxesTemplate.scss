@@ -1,9 +1,9 @@
-.checkboxButtons{
+.kore-chat-window .checkboxButtons{
     text-align: center;
     border-top: 1px solid var(--sdk-chat-window-checkbox-border);
     padding: 10px;
 }
-.checkboxBtn{
+.kore-chat-window .checkboxBtn{
     cursor: pointer;
     background-color: var(--sdk-chat-widow-primary-blue-color);
     color: var(---sdk-chat-window-bg-color);
@@ -40,11 +40,11 @@
 }
 /* ends  css for listtemplate classes*/
 /* Check box styles */ 
-.checkboxesDiv{
+.kore-chat-window .checkboxesDiv{
     width: 100%;
     position:relative;
 }
-.checkbox.styledCSS label {
+.kore-chat-window .checkbox.styledCSS label {
     display: inline-block;
     vertical-align: middle;
     position: relative;
@@ -55,7 +55,7 @@
     line-height: 17px;
     color:var(--sdk-chat-widow-primary-font-color);
 }
-.checkbox.styledCSS label::before {
+.kore-chat-window .checkbox.styledCSS label::before {
     content: "";
     display: inline-block;
     position: absolute;
@@ -70,7 +70,7 @@
     -o-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
     transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
 }
-.checkbox.styledCSS label::after {
+.kore-chat-window .checkbox.styledCSS label::after {
     content:"";
     display: inline-block;
     position: absolute;
@@ -85,10 +85,10 @@
     color: var(--sdk-chat-window-checkbox-label-after-color);
 }
 
-.floatNone{
+.kore-chat-window .floatNone{
     float:none;
 }
-.checkbox.styledCSS input[type="checkbox"]:checked + label::after {
+.kore-chat-window .checkbox.styledCSS input[type="checkbox"]:checked + label::after {
     background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNXB4IiBoZWlnaHQ9IjRweCIgdmlld0JveD0iMCAwIDUgNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNTIuMyAoNjcyOTcpIC0gaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoIC0tPgogICAgPHRpdGxlPmNoZWNrVGlja0ljb25XaGl0ZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxwYXRoIGQ9Ik00LjI0NjY1MTc5LDAuNDU3NTg5Mjg2IEM0LjI5ODczNTM4LDAuNTA5NjcyODc5IDQuMzI0Nzc2NzksMC41NzI5MTYyOTUgNC4zMjQ3NzY3OSwwLjY0NzMyMTQyOSBDNC4zMjQ3NzY3OSwwLjcyMTcyNjU2MyA0LjI5ODczNTM4LDAuNzg0OTY5OTc4IDQuMjQ2NjUxNzksMC44MzcwNTM1NzEgTDEuODQ3MDk4MjEsMy4yMzY2MDcxNCBDMS43OTUwMTQ2MiwzLjI4ODY5MDc0IDEuNzMxNzcxMjEsMy4zMTQ3MzIxNCAxLjY1NzM2NjA3LDMuMzE0NzMyMTQgQzEuNTgyOTYwOTQsMy4zMTQ3MzIxNCAxLjUxOTcxNzUyLDMuMjg4NjkwNzQgMS40Njc2MzM5MywzLjIzNjYwNzE0IEwwLjA3ODEyNSwxLjg0NzA5ODIxIEMwLjAyNjA0MTQwNjIsMS43OTUwMTQ2MiAwLDEuNzMxNzcxMjEgMCwxLjY1NzM2NjA3IEMwLDEuNTgyOTYwOTQgMC4wMjYwNDE0MDYyLDEuNTE5NzE3NTIgMC4wNzgxMjUsMS40Njc2MzM5MyBMMC40NTc1ODkyODYsMS4wODgxNjk2NCBDMC41MDk2NzI4NzksMS4wMzYwODYwNSAwLjU3MjkxNjI5NSwxLjAxMDA0NDY0IDAuNjQ3MzIxNDI5LDEuMDEwMDQ0NjQgQzAuNzIxNzI2NTYyLDEuMDEwMDQ0NjQgMC43ODQ5Njk5NzgsMS4wMzYwODYwNSAwLjgzNzA1MzU3MSwxLjA4ODE2OTY0IEwxLjY1NzM2NjA3LDEuOTExMjcyMzIgTDMuNDg3NzIzMjEsMC4wNzgxMjUgQzMuNTM5ODA2ODEsMC4wMjYwNDE0MDYzIDMuNjAzMDUwMjIsMCAzLjY3NzQ1NTM2LDAgQzMuNzUxODYwNDksMCAzLjgxNTEwMzkxLDAuMDI2MDQxNDA2MyAzLjg2NzE4NzUsMC4wNzgxMjUgTDQuMjQ2NjUxNzksMC40NTc1ODkyODYgWiIgaWQ9ImNoZWNrVGlja0ljb25XaGl0ZSIgZmlsbD0iI0ZGRkZGRiI+PC9wYXRoPgogICAgPC9nPgo8L3N2Zz4=');
     background-size: 10px 20px;
     display: inline-block;
@@ -98,7 +98,7 @@
     background-repeat: no-repeat;
     left: 5px;
 }
-.checkbox.styledCSS input[type="checkbox"]:indeterminate + label::after {
+.kore-chat-window .checkbox.styledCSS input[type="checkbox"]:indeterminate + label::after {
     display: block;
     content: "";
     width: 10px;
@@ -108,25 +108,25 @@
     margin-left: -16.5px;
     margin-top: 7px;
 }
-.checkbox-primary input[type="checkbox"]:checked + label::before {
+.kore-chat-window .checkbox-primary input[type="checkbox"]:checked + label::before {
     background-color: var(--sdk-chat-widow-primary-blue-color);
     border-color: var(--sdk-chat-widow-primary-blue-color);
     content:"";
 }
-.checkbox-primary input[type="checkbox"]:checked + label::after {
+.kore-chat-window .checkbox-primary input[type="checkbox"]:checked + label::after {
     color: var(--sdk-chat-widow-default-white);
     content:"";
 }
 
 
-.checkboxBtnText{
+.kore-chat-window .checkboxBtnText{
     border: 0;
     background: none;
     color: var(--sdk-chat-window-viewmore-btn-color)!important;
     font-size: 15px;
     cursor: pointer;
 }
-.checkInput{
+.kore-chat-window .checkInput{
     position: absolute;
     opacity: 0;
     z-index: 1;

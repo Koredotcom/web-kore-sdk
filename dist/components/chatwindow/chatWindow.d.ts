@@ -115,6 +115,7 @@ declare class chatWindow extends EventEmitter {
        */
         JWT_GRANT_SUCCESS: string;
     };
+    sendFailedMessage: any;
     constructor();
     paginatedScrollMsgDiv: any;
     init(config: any): void;
@@ -157,13 +158,7 @@ declare class chatWindow extends EventEmitter {
         find: (arg0: string) => any[];
     }): void;
     render(chatWindowHtml: any): false | undefined;
-    sendMessageToBot(messageText: {
-        trim: () => {
-            (): any;
-            new (): any;
-            length: any;
-        };
-    }, options: {
+    sendMessageToBot(messageText: any, options: {
         renderMsg: any;
     }, serverMessageObject: any, clientMessageObject: any): false | undefined;
     postSendMessageToBot(): void;

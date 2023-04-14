@@ -7,11 +7,11 @@
     margin: -4px;
     display: block;
 }
-.TaskPickerContainer {
+.kore-chat-window .TaskPickerContainer {
     height: 462px;
     overflow-y: auto;
 }
-.TaskPickerContainer .taskMenuHeader .closeSheet {
+.kore-chat-window .TaskPickerContainer .taskMenuHeader .closeSheet {
     cursor: pointer;
     background: none;
     border: none;
@@ -20,19 +20,19 @@
     top: 21px;
     right: 20px;
 }
-.TaskPickerContainer .taskMenuHeader .taskHeading {
+.kore-chat-window .TaskPickerContainer .taskMenuHeader .taskHeading {
     line-height: 2.5;
     margin-left: 17px;
     font-size: 20px;
     font-weight: bold;
     color: #000000;
 }
-.taskMenuPicker {
+.kore-chat-window .TaskPickerContainer .taskMenuPicker {
     height: calc(100% - 58px);
     padding: 20px 30px;
     overflow-y: auto;
 }
-.taskMenuPicker .btnTask {
+.kore-chat-window .TaskPickerContainer .taskMenuPicker .btnTask {
     height: 56px;
     box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
     background-color: #ffffff;
@@ -41,10 +41,10 @@
     cursor: pointer;
     margin-bottom: 10px;
 }
-.taskMenuPicker .btnTask .taskIcon {
+.kore-chat-window .TaskPickerContainer .taskMenuPicker .btnTask .taskIcon {
     margin-right: 15px;
 }
-.taskMenuPicker .btnTask .taskName {
+.kore-chat-window .TaskPickerContainer .taskMenuPicker .btnTask .taskName {
     display: inline-block;
     overflow: hidden;
     white-space: nowrap;
@@ -55,10 +55,10 @@
     color: #17151d;
     padding-left: 10px;
 }
-.taskMenuPicker .btnTask .displayIcon {
+.kore-chat-window .TaskPickerContainer .taskMenuPicker .btnTask .displayIcon {
     width: 100%;
 }
-.taskMenuPicker .btnTask .imageIcon {
+.kore-chat-window .TaskPickerContainer .taskMenuPicker .btnTask .imageIcon {
     width: 30px;
     height: 30px;
     margin: 5px 3px;

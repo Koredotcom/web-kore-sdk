@@ -16,7 +16,12 @@ class RatingTemplate {
                     var eachReviewText;
                     var splitWords;
                     var resultValue = [];
-                    if (eachValue && eachValue.reviewText) {
+                    if(eachValue && eachValue.thumpUpId && eachValue.thumpUpId === "positive"){
+                        msgData.message[0].component.payload.thumpsUpDownArrays[0] = eachValue;
+                    }else if(eachValue && eachValue.thumpUpId && eachValue.thumpUpId === "negative"){
+                        msgData.message[0].component.payload.thumpsUpDownArrays[1] = eachValue;
+                    }
+                    else if (eachValue && eachValue.reviewText && (eachValue.thumpUpId !== "positive" && eachValue.thumpUpId !== "negative")) {
                         eachReviewText = eachValue.reviewText.toLocaleLowerCase();
                         splitWords = eachReviewText.split(' ');
                         resultValue = splitWords.filter((option:any) => option.startsWith('un') || option.startsWith('dis') || option.startsWith('no'));
@@ -38,6 +43,11 @@ class RatingTemplate {
             me.hostInstance.bottomSliderAction('show', me.messageHtml);
             }
             me.bindEvents(me.messageHtml);
+            if(msgData && msgData.message && msgData.message.length && msgData.message[0]&& msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.selectedValue === 0 || msgData.message[0].component.payload.selectedValue !== 0)){
+				$(me.messageHtml).find('.numbersComponent .ratingValue.emoji-rating #rating_'+msgData.message[0].component.payload.selectedValue+'').parent().addClass("active");
+				$(me.messageHtml).find('.thumpsUpDownComponent .ratingValue.emoji-rating #rating_'+msgData.message[0].component.payload.selectedValue+'').parent().addClass("active");
+				$(me.messageHtml).find('.emojiComponent.version2 .emoji-rating #rating_'+msgData.message[0].component.payload.selectedValue+'').parent().addClass("active");
+			}
             return me.messageHtml;
         }
     }
@@ -110,7 +120,7 @@ class RatingTemplate {
             chatWindowInstance.bottomSliderAction("hide");
             e.stopPropagation();
         });
-        $(messageHtml).find(".emojiComponent,.thumpsUpDownComponent,.numbersComponent").off('click','.emoji-rating,.numbers-rating').on('click','.emoji-rating,.numbers-rating',function(e:any){
+        $(messageHtml).find(".emojiComponent,.thumpsUpDownComponent,.numbersComponent").off('click','.emoji-rating').on('click','.emoji-rating',function(e:any){
             var msgData: any;
             if ($(messageHtml).data().tmplItem && $(messageHtml).data().tmplItem.data && $(messageHtml).data().tmplItem.data.msgData) {
                 msgData = $(messageHtml).data().tmplItem.data.msgData
@@ -126,12 +136,13 @@ class RatingTemplate {
                 $(".thumpsUpDownComponent .emoji-rating").removeClass("active");
                 $(".emojiElement").remove();
             }
-            if($(messageHtml).find(".numbersComponent .numbers-rating.active").length!=="0"){
-                $(".numbersComponent .numbers-rating").removeClass("active");
+            if($(messageHtml).find(".numbersComponent .emoji-rating.active").length!=="0"){
+                $(".numbersComponent .emoji-rating").removeClass("active");
                 $(".emojiElement").remove();
             }
             let selectedTarget = e.currentTarget;
             var emojiValue = $(selectedTarget).attr("value");
+            var dataIdValue = $(selectedTarget).attr("data-id");
             $(e.currentTarget).addClass("active");
             if ($(selectedTarget).attr("id") == "rating_1" && $("#rating_1.active")) {
                 $("<img class='emojiElement' />").attr('src', 'libs/images/emojis/gifs/rating_1.gif').appendTo(selectedTarget)
@@ -149,6 +160,7 @@ class RatingTemplate {
                 $("<img class='emojiElement' />").attr('src', 'libs/images/emojis/gifs/rating_5.gif').appendTo(selectedTarget)
                 $(e.currentTarget).removeClass("active");
             }
+            if(msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.view !== "CSAT" && msgData.message[0].component.payload.view !== "NPS" && msgData.message[0].component.payload.view !== "ThumbsUpDown")){
             if ($(selectedTarget).attr("value") < "5") {
                 $(".ratingStar").remove();
                 if($(".submitButton")){
@@ -182,6 +194,14 @@ class RatingTemplate {
                 $(".kore-action-sheet").find(".emojiComponent").append('<div class="ratingStar">'+messageTodisplay+'</div><div class="submitButton"><button type="button" class="submitBtn">Submit</button></div>')
                 }
             }
+        }else if(msgData.message[0].component.payload.sliderView){
+			msgData.message[0].component.payload.sliderView=false;
+			msgData.message[0].component.payload.selectedValue = JSON.parse(dataIdValue);
+			chatWindowInstance.renderMessage(msgData);
+            chatWindowInstance.sendMessage( emojiValue);
+			chatWindowInstance.bottomSliderAction("hide");
+			msgData.message[0].component.payload.sliderView=true;
+		}
             if (sliderValue === false) {
                 //chatWindowInstance.assignValueToInput(emojiValue)
                 chatWindowInstance.sendMessage(emojiValue);
@@ -255,7 +275,7 @@ class RatingTemplate {
                       {{if msgData.message[0].component.payload.text}}<div class="templateHeading text-heading-info">${msgData.message[0].component.payload.text}</div>{{else}}Rate the chat session{{/if}}\
                       <div class="emojis-data">\
                       {{each(key, msgItem) msgData.message[0].component.payload.smileyArrays}}\
-                      <div class="emoji-rating" value="${msgItem.value}">\
+                      <div class="emoji-rating" value="${msgItem.value}" data-id="${msgItem.smileyId}">\
                          <div class="rating" id="rating_${msgItem.smileyId}" value="${msgItem.value}"></div>\
                          <div class="emoji-desc" title="${msgItem.reviewText}">${msgItem.reviewText}</div>\
                          </div>\
@@ -267,8 +287,8 @@ class RatingTemplate {
                       {{if msgData.message[0].component.payload.text}}<div class="templateHeading text-heading-info">${msgData.message[0].component.payload.text}</div>{{else}}Rate the chat session{{/if}}\
                       <div class="emojis-data">\
                       {{each(key, msgItem) msgData.message[0].component.payload.thumpsUpDownArrays}}\
-                      <div class="ratingValue emoji-rating" value="${msgItem.value}">\
-                         <div class="rating" id="rating_${msgItem.thumpUpId}" value="${msgItem.value}"></div>\
+                       <div class="ratingValue emoji-rating" value="${msgItem.value}" data-id="${key}">\
+                         <div class="rating" id="rating_${key}" value="${msgItem.value}"></div>\
                          <div class="emoji-desc"  title="${msgItem.reviewText}">${msgItem.reviewText}</div></div>\
                       {{/each}}\
                       </div>\
@@ -278,7 +298,7 @@ class RatingTemplate {
                       {{if msgData.message[0].component.payload.text}}<div class="templateHeading text-heading-info">${msgData.message[0].component.payload.text}</div>{{else}}Rate the chat session{{/if}}\
                       <div class="rating-numbers-data">\
                       {{each(key, msgItem) msgData.message[0].component.payload.numbersArrays}}\
-                      <div class="ratingValue numbers-rating" value="${msgItem.value}">\
+                      <div class="ratingValue emoji-rating" value="${msgItem.value}" data-id="${msgItem.numberId}">\
                          <div class="rating" id="rating_${msgItem.numberId}"  value="${msgItem.value}">${msgItem.numberId}</div>\
                          <div class="emoji-desc" title="${msgItem.reviewText}">${msgItem.reviewText}</div>\</div>\
                       {{/each}}\

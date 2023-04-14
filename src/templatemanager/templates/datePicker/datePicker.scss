@@ -1,5 +1,5 @@
  /* DatePicker CSS start */
-  .datePickerContainer .sdkFooterIcon.calender{
+  .kore-chat-window .datePickerContainer .sdkFooterIcon.calender{
     opacity:0;
 }
 .kore-chat-window  .sdkFooterIcon.singleCalender .sdkCalender.calenderBtn .calender{
@@ -10,7 +10,7 @@
     margin: -4px;
     display: block;
 }
- .datePickerContainer .close-button{
+ .kore-chat-window .datePickerContainer .close-button{
     cursor: pointer;
     color: #AAAAAA;
     background: none;
@@ -24,28 +24,28 @@
     margin-top:5px;
     padding: 0 6px;
 }
- .datePickerContainer .date-picker-wrapper {
+ .kore-chat-window .datePickerContainer .date-picker-wrapper {
     display:flex;
     align-items: center;
     justify-content: center;
 }
- .datePickerContainer{
+ .kore-chat-window .datePickerContainer{
     position: relative;
     padding-bottom: 57px;
 }
- .datePickerContainer .headerCalendar{
+ .kore-chat-window .datePickerContainer .headerCalendar{
     height:56px;
     padding:20px;
 }
- .datePickerContainer table thead tr:nth-child(2) {
+ .kore-chat-window .datePickerContainer table thead tr:nth-child(2) {
     color: #ccc;
 }
- .datePickerContainer .headerCalendar .choose{
+ .kore-chat-window .datePickerContainer .headerCalendar .choose{
     font-size: 20px;
     font-weight: bold;
     color: #000000;
 }
- .datePickerContainer .headerCalendar .close-button{
+ .kore-chat-window .datePickerContainer .headerCalendar .close-button{
     margin: 0;
     padding-top: 8px;
     cursor: pointer;
@@ -53,46 +53,46 @@
     right: 10px;
     top: 0;
 }
- .datePickerContainer .headerCalendar{
+ .kore-chat-window .datePickerContainer .headerCalendar{
     height:56px;
     padding:16px 20px;
     position: relative;
 }
- .datePickerContainer .showDatevalues{
+ .kore-chat-window .datePickerContainer .showDatevalues{
     height: 84px;
     width: 100%;
     background-color: #f2f3f5;
     padding: 15px;
     display: table;
 }
- .datePickerContainer .showDatevalues .showStartdate,  .datePickerContainer .showDatevalues .showEnddate{
+ .kore-chat-window .datePickerContainer .showDatevalues .showStartdate,  .kore-chat-window .datePickerContainer .showDatevalues .showEnddate{
     display: table-cell;
     /* width:50%; */
     text-align:center;
     position: relative;
 }
- .datePickerContainer .showDatevalues .showStartdate .showStartYear{
+ .kore-chat-window .datePickerContainer .showDatevalues .showStartdate .showStartYear{
     font-size: 14px;
     font-weight: 500;
     color: #677180;
     margin-right:79px;
 }
- .datePickerContainer .showDatevalues .showStartdate .showStartMonth{
+ .kore-chat-window .datePickerContainer .showDatevalues .showStartdate .showStartMonth{
     font-size: 24px;
     font-weight: bold;
     color: #000000;
 }
- .datePickerContainer .showDatevalues .showEnddate .showEndYear{
+ .kore-chat-window .datePickerContainer .showDatevalues .showEnddate .showEndYear{
     font-size: 14px;
     font-weight: 500;
     color: #677180;
 }
- .datePickerContainer .showDatevalues .showEnddate .showEndMonth{
+ .kore-chat-window .datePickerContainer .showDatevalues .showEnddate .showEndMonth{
     font-size: 24px;
     font-weight: bold;
     color: #000000;
 }
- .datePickerContainer .daterangepicker{
+ .kore-chat-window .datePickerContainer .daterangepicker{
     width: 288px;
     position: relative;
     top: auto;
@@ -102,16 +102,16 @@
     background: transparent;
     /* margin-top: 32px; */
 }
- .datePickerContainer .daterangepicker.drop-up:after{
+ .kore-chat-window .datePickerContainer .daterangepicker.drop-up:after{
     display: none;
 }
- .datePickerContainer .daterangepicker.drop-up:before{
+ .kore-chat-window .datePickerContainer .daterangepicker.drop-up:before{
     display: none;
 }
 .kore-chat-window .kore-action-sheet.hide .datePickerContainer .confirmBTN{
     opacity: 0 ;
 }
- .datePickerContainer .confirmBTN{
+ .kore-chat-window .datePickerContainer .confirmBTN{
     position: absolute;
     z-index: 100;
     height: 54px;
@@ -129,66 +129,66 @@
     -moz-transition: opacity 1.5s ease-in-out;
     -webkit-transition: opacity 1.5s ease-in-out;
 }
-.darkTheme .datePickerContainer .confirmBTN{
+.darkTheme.kore-chat-window .datePickerContainer .confirmBTN{
     background: #0047CC;
 }
- .datePickerContainer .daterangepicker .drp-calendar.right{
+ .kore-chat-window .datePickerContainer .daterangepicker .drp-calendar.right{
     padding: 8px 8px 0 8px;
 }
- .datePickerContainer .daterangepicker .drp-buttons{
+ .kore-chat-window .datePickerContainer .daterangepicker .drp-buttons{
     display: none;
 }
- .datePickerContainer .applyBtn{
+ .kore-chat-window .datePickerContainer .applyBtn{
     outline: none;
     height: 54px;
     display: none;
 }
- .datePickerContainer .daterangepicker td.active,  .datePickerContainer .daterangepicker td.active:hover{
+ .kore-chat-window .datePickerContainer .daterangepicker td.active,  .kore-chat-window .datePickerContainer .daterangepicker td.active:hover{
     background-color: #e94848;
 }
- .datePickerContainer .daterangepicker .calendar-table th,  .datePickerContainer .daterangepicker .calendar-table td{
+ .kore-chat-window .datePickerContainer .daterangepicker .calendar-table th,  .kore-chat-window .datePickerContainer .daterangepicker .calendar-table td{
     border-radius: 50%;
     height: 32px;
 }
-.datePickerContainer .date-picker-wrapper{
+.kore-chat-window .datePickerContainer .date-picker-wrapper{
     font-size: 15px;
 }
-.datePickerContainer .date-picker-wrapper .month-wrapper table th{
+.kore-chat-window .datePickerContainer .date-picker-wrapper .month-wrapper table th{
     font-size:12px;
 }
-.datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.tmp.first-date-selected{
+.kore-chat-window .datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.tmp.first-date-selected{
     background-color: #e94848!important;
 }
-.datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.tmp.checked.last-date-selected{
+.kore-chat-window .datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.tmp.checked.last-date-selected{
     background-color: #e94848!important;
 }
-.datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.first-date-selected{
+.kore-chat-window .datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.first-date-selected{
     background-color: #e94848!important;
 }
-.datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.last-date-selected{
+.kore-chat-window .datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.checked.last-date-selected{
     background-color: #e94848!important;
 }
-.datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.real-today{
+.kore-chat-window .datePickerContainer .date-picker-wrapper .month-wrapper .day.toMonth.valid.real-today{
     background-color: #cdecfa;
     border-radius: 50%!important;
     height: 24px!important;
 }
-.datePickerContainer .date-picker-wrapper .month-wrapper table .day.toMonth.valid{
+.kore-chat-window .datePickerContainer .date-picker-wrapper .month-wrapper table .day.toMonth.valid{
     border-radius: 50%!important;
     height: 24px!important;
     width: 26px!important;
 }
-.datePickerContainer .date-picker-wrapper .month-wrapper table {
+.kore-chat-window .datePickerContainer .date-picker-wrapper .month-wrapper table {
     width: 100%!important;
     /* display: table!important; */
     height: 100%!important;
 }
-.datePickerContainer .date-picker-wrapper .month-wrapper{
+.kore-chat-window .datePickerContainer .date-picker-wrapper .month-wrapper{
     text-align: center;
     width: 225px;
     height: 221px;
 }
-.datePickerContainer .date-picker-wrapper table .caption .next, .date-picker-wrapper table .caption .prev {
+.kore-chat-window .datePickerContainer .date-picker-wrapper table .caption .next, .date-picker-wrapper table .caption .prev {
     border-radius: 50%!important;
     height: 37px!important;
     width: 35px!important;

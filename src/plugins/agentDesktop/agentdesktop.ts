@@ -11,6 +11,7 @@ class AgentDesktopPlugin {
     typingTimer: any;
     stopTypingInterval: number = 500;
     isTabActive: boolean = true
+    isReadRecipetSent: boolean = false;
     constructor(config?: any) {
         this.config = {
             ...this.config,
@@ -32,7 +33,7 @@ class AgentDesktopPlugin {
             }
         });
         me.hostInstance.on('beforeViewInit', (chatEle: any) => {
-            me.hostInstance.chatEle.off('click', '.close-btn').on('click', '.close-btn',  (event: any)=> {
+            me.hostInstance.chatEle.off('click', '.close-btn').on('click', '.close-btn', (event: any) => {
                 const messageToBot: any = {};
                 messageToBot["clientMessageId"] = new Date().getTime();
                 messageToBot["event"] = "close_agent_chat";
@@ -53,15 +54,18 @@ class AgentDesktopPlugin {
         document.addEventListener("visibilitychange", () => {
             if (document.visibilityState === 'visible') {
                 this.isTabActive = true
-                // send read event after user come back to current tab
-                const messageToBot: any = {};
-                messageToBot["event"] = "message_read";
-                messageToBot["message"] = {
-                    "body": "",
-                    "type": ""
+                if (!this.isReadRecipetSent) {
+                    // send read event after user come back to current tab
+                    const messageToBot: any = {};
+                    messageToBot["event"] = "message_read";
+                    messageToBot["message"] = {
+                        "body": "",
+                        "type": ""
+                    }
+                    messageToBot["resourceid"] = "/bot.message";
+                    me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+                    this.isReadRecipetSent = true;
                 }
-                messageToBot["resourceid"] = "/bot.message";
-                me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
             } else {
                 this.isTabActive = false
             }
@@ -69,7 +73,7 @@ class AgentDesktopPlugin {
 
         // send type event from user to agent
         me.hostInstance.on('onKeyDown', ({ event }: any) => {
-            if (event.keyCode !== 13 && event.which <= 90 && event.which >= 48 || event.which >= 96 && event.which <= 105 && localStorage.getItem("kr-agent-status") === "connected") {
+            if (event.keyCode !== 13 && (event.which <= 90 && event.which >= 48) || (event.which >= 96 && event.which <= 105) || (event.which >= 186 && event.which <= 222) || (event.keyCode === 32 || event.keyCode === 8) && localStorage.getItem("kr-agent-status") === "connected") {
                 if (!this.isTyping) {
                     var messageToBot: any = {};
                     messageToBot["event"] = "typing";
@@ -109,6 +113,7 @@ class AgentDesktopPlugin {
             if (event.messageData.message) {
                 if (event?.messageData?.message[0]?.type === 'text' && event?.messageData?.author?.type === 'AGENT') {
                     this.$('.typingIndicatorContent').css('display', 'none');
+                    this.isReadRecipetSent = false;
                 }
             }
 
@@ -125,7 +130,7 @@ class AgentDesktopPlugin {
 
         // sent event style setting in user chat 
         me.hostInstance.on('afterRenderMessage', (event: any) => {
-            if(!event.messageHtml) return false;
+            if (!event.messageHtml) return false;
             if (localStorage.getItem("kr-agent-status") != "connected") return;
 
             if (event.msgData?.type === "currentUser") {
@@ -178,6 +183,7 @@ class AgentDesktopPlugin {
                     if (this.isTabActive) {
                         messageToBot.event = 'message_read'
                         me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+                        this.isReadRecipetSent = true;
                     }
                 }
             }
@@ -231,8 +237,10 @@ class AgentDesktopPlugin {
         let cwInstance = me.hostInstance;
         class customTemplateComponent {
             renderMessage(msgData: any) {
-                console.log('msgData',msgData);
-                if (msgData?.message[0]?.cInfo?.body === "" || !msgData?.message[0]?.cInfo?.body) {
+                if (msgData?.message[0]?.component?.payload?.template_type === "live_agent" && !msgData?.message[0]?.component?.payload?.text.trim().length) {
+                    return '_ignore_message_render_';
+                }
+                if (msgData?.message[0]?.cInfo?.body === "") {
                     return '_ignore_message_render_';
                 } else {
                     return false;

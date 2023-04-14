@@ -1,11 +1,11 @@
 /* card template info start */
 
-.card-template .card-body .card-data {
+.kore-chat-window .card-template .card-body .card-data {
 	/* border: 1px solid #85B7FE; */
 	border-radius: 0 0 8px 8px;
 }
 
-.card-template .card-body .card-title {
+.kore-chat-window .card-template .card-body .card-title {
 	/* background: #E7F1FF; */
 	color: #07377F;
 	border-radius: 8px 8px 0px 0px;
@@ -19,11 +19,11 @@
 
 /* card template success start */
 
-.card-template.card-success .card-body .card-data {
+.kore-chat-window .card-template.card-success .card-body .card-data {
 	border: 1px solid #93D3A2;
 }
 
-.card-template.card-success .card-body .card-title {
+.kore-chat-window .card-template.card-success .card-body .card-title {
 	background: #EAF6EC;
 	color: #135423;
 	border-radius: 8px 8px 0px 0px;
@@ -38,11 +38,11 @@
 /* card template card solid info start */
 
 
-/* .card-template .card-body .card-data{
+/* .kore-chat-window .card-template .card-body .card-data{
     border: 1px solid #0D6EFD;
 } */
 
-.card-template .card-body .card-title {
+.kore-chat-window .card-template .card-body .card-title {
 	/* background: #0D6EFD; */
 	color: #FFFFFF;
 	border-radius: 8px 8px 0px 0px;
@@ -56,7 +56,7 @@
 
 /* card template card solid full info start */
 
-.card-template .card-body .card-title {
+.kore-chat-window .card-template .card-body .card-title {
 	font-weight: 600;
 	font-size: 16px;
 	line-height: 20px;
@@ -64,7 +64,7 @@
 	padding: 14px 14px 8px 14px;
 }
 
-.card-template .card-body {
+.kore-chat-window .card-template .card-body {
 	background: #FFFFFF;
 	color: #202124;
 	border-radius: 10px;
@@ -78,13 +78,13 @@
 
 /* card template card img info start */
 
-.card-template.card-img-info .card-body {
+.kore-chat-window .card-template.card-img-info .card-body {
 	border: 1px solid #E4E5E7;
 	box-shadow: 0px 1px 2px #bdc1c6;
 	border-radius: 8px;
 }
 
-.card-template.card-img-info .card-body .card-title-block {
+.kore-chat-window .card-template.card-img-info .card-body .card-title-block {
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
@@ -97,14 +97,14 @@
 
 /* card template card img overflowmenu info start */
 
-.card-template .card-body {
+.kore-chat-window .card-template .card-body {
 	border: 1px solid #E4E5E7;
 	box-shadow: 0px 1px 2px #bdc1c6;
 	border-radius: 8px;
 	cursor: pointer;
 }
 
-.card-template .card-body .card-title-block {
+.kore-chat-window .card-template .card-body .card-title-block {
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
@@ -112,21 +112,21 @@
 	position: relative;
 }
 
-.card-template .card-body .card-title-block.left-border {
+.kore-chat-window .card-template .card-body .card-title-block.left-border {
 	padding: 10px 10px !important;
 }
 
-.card-template .card-body .card-title-block.left-border .card-block {
+.kore-chat-window .card-template .card-body .card-title-block.left-border .card-block {
 	border-radius: 4px !important;
 }
 
-.card-template .card-body .card-title-block .card-text-action {
+.kore-chat-window .card-template .card-body .card-title-block .card-text-action {
 	position: absolute;
 	right: 10px;
 	top: 10px;
 }
 
-.card-template .card-body .card-title-block .more-button-info {
+.kore-chat-window .card-template .card-body .card-title-block .more-button-info {
 	list-style: none;
 	display: none;
 	position: absolute;
@@ -142,11 +142,11 @@
 	z-index: 99;
 }
 
-.card-template .card-body .card-title-block .more-button-info li {
+.kore-chat-window .card-template .card-body .card-title-block .more-button-info li {
 	margin: 0;
 }
 
-.card-template .card-body .card-title-block .more-button-info li .button_ {
+.kore-chat-window .card-template .card-body .card-title-block .more-button-info li .button_ {
 	margin: 5px 0;
 	float: right;
 	border: 0;
@@ -161,7 +161,7 @@
 	width: 100%;
 }
 
-.card-template .card-body .card-title-block .more-button-info .close_btn {
+.kore-chat-window .card-template .card-body .card-title-block .more-button-info .close_btn {
 	cursor: pointer;
 	border: none;
 	outline: none;
@@ -179,47 +179,47 @@
 	float: right;
 }
 
-.card-template .card-body .card-title-block .more-button-info .close_btn:hover {
+.kore-chat-window .card-template .card-body .card-title-block .more-button-info .close_btn:hover {
 	background: #DFE7F5;
 }
 
 
-/* .card-template .card-body .card-data{
+/* .kore-chat-window .card-template .card-body .card-data{
     padding: 20px 10px;
 } */
 
-.card-template .card-body .card-data-list {
+.kore-chat-window .card-template .card-body .card-data-list {
 	/* display: flex; */
 	align-items: center;
 	justify-content: flex-start;
 }
 
-.card-template .card-body .card-data-list .card-block-text {
+.kore-chat-window .card-template .card-body .card-data-list .card-block-text {
 	padding: 0 20px 0 0;
 	flex: 1;
 }
 
-.card-template .card-body .card-data-list .card-block-text .title-text {
+.kore-chat-window .card-template .card-body .card-data-list .card-block-text .title-text {
 	font-weight: 600;
 	font-size: 16px;
 	line-height: 20px;
 	color: #202124;
 }
 
-.card-template .card-body .card-data-list .card-block-text .title-desc {
+.kore-chat-window .card-template .card-body .card-data-list .card-block-text .title-desc {
 	font-weight: normal;
 	font-size: 13px;
 	line-height: 20px;
 	color: #9AA0A6;
 }
 
-.card-template .card-body .card-data-btn.btn-info .card-btn {
+.kore-chat-window .card-template .card-body .card-data-btn.btn-info .card-btn {
 	background: #0D6EFD;
 	border: 1px solid #0D6EFD;
 	color: #fff;
 }
 
-.card-template .card-body-info {
+.kore-chat-window .card-template .card-body-info {
 	width: 5px;
 	height: 100%;
 	background: #0D6EFD;
@@ -227,14 +227,14 @@
 	border-radius: 10px;
 }
 
-.card-template .card-body .card-title-block .card-text-action .card-action-data {
+.kore-chat-window .card-template .card-body .card-title-block .card-text-action .card-action-data {
 	color: #BDC1C6;
 	font-weight: normal;
 	font-size: 12px;
 	line-height: 20px;
 }
 
-.card-template .card-body .card-title-block .card-text-action .icon {
+.kore-chat-window .card-template .card-body .card-title-block .card-text-action .icon {
 	cursor: pointer;
 	margin-left: 5px;
 }
@@ -245,13 +245,13 @@
 
 /* card template card simple data info start */
 
-.card-template.card-simple-data-info .card-body {
+.kore-chat-window .card-template.card-simple-data-info .card-body {
 	border: 1px solid #E4E5E7;
 	box-shadow: 0px 1px 2px #bdc1c6;
 	border-radius: 8px;
 }
 
-.card-template.card-simple-data-info .card-body .card-title-block {
+.kore-chat-window .card-template.card-simple-data-info .card-body .card-title-block {
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
@@ -259,7 +259,7 @@
 	position: relative;
 }
 
-.card-template.card-simple-data-info .card-body .card-title-block .card-block {
+.kore-chat-window .card-template.card-simple-data-info .card-body .card-title-block .card-block {
 	border-left: 5px solid #0d6efd;
 	border-radius: 4px;
 }
@@ -267,7 +267,7 @@
 
 /* card template card simple data info end */
 
-.card-template .card-body .card-data-btn .card-btn {
+.kore-chat-window .card-template .card-body .card-data-btn .card-btn {
 	border-radius: 0px 0px 10px 10px;
 	width: 100%;
 	padding: 14px 0;
@@ -277,19 +277,19 @@
 	cursor: pointer;
 }
 
-.card-template .card-body .card-title-block .card-block {
+.kore-chat-window .card-template .card-body .card-title-block .card-block {
 	padding-left: 15px;
 	width: calc(100% - 29px);
 }
 
-.card-template .card-body .card-title-block .card-block .title-text {
+.kore-chat-window .card-template .card-body .card-title-block .card-block .title-text {
 	font-weight: 600;
 	font-size: 16px;
 	line-height: 20px;
 	color: #202124;
 }
 
-.card-template .card-body .card-title-block .card-block .title-text.card-text-overflow {
+.kore-chat-window .card-template .card-body .card-title-block .card-block .title-text.card-text-overflow {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	/* width: 176px; */
@@ -299,20 +299,20 @@
 	padding-right: 110px;
 }
 
-.card-template .card-body .card-title-block .card-block .title-desc {
+.kore-chat-window .card-template .card-body .card-title-block .card-block .title-desc {
 	font-weight: normal;
 	font-size: 13px;
 	line-height: 20px;
 	color: #9AA0A6;
 }
 
-.card-template .card-body .card-title-block .card-block-img {
+.kore-chat-window .card-template .card-body .card-title-block .card-block-img {
 	width: 40px;
 	height: 40px;
 	flex-shrink: 0;
 }
 
-.card-template .card-body .card-title-block .card-block-img .icon-text {
+.kore-chat-window .card-template .card-body .card-title-block .card-block-img .icon-text {
 	width: 40px;
 	height: 40px;
 	vertical-align: middle;
@@ -326,25 +326,25 @@
 	color: #FFFF;
 }
 
-.card-template .card-body .card-title-block .card-block-img.small {
+.kore-chat-window .card-template .card-body .card-title-block .card-block-img.small {
 	width: 16px;
 	height: 16px;
 }
 
-.card-template .card-body .card-title-block .card-block-img.small img {
+.kore-chat-window .card-template .card-body .card-title-block .card-block-img.small img {
 	width: 16px;
 	height: 16px;
 }
 
-.card-template .card-body .card-title-block .card-block-img img {
+.kore-chat-window .card-template .card-body .card-title-block .card-block-img img {
 	vertical-align: middle;
 }
 
-.card-template .card-body .card-title-block .card-block-img.circle-img img {
+.kore-chat-window .card-template .card-body .card-title-block .card-block-img.circle-img img {
 	border-radius: 100%;
 }
 
-.card-template .card-body .card-title {
+.kore-chat-window .card-template .card-body .card-title {
 	font-weight: 500;
 	font-size: 14px;
 	line-height: 20px;
@@ -354,11 +354,11 @@
 	white-space: nowrap;
 }
 
-.card-data {
+.kore-chat-window .card-template  .card-data {
 	padding: 10px 15px;
 }
 
-.card-data .card-data-list .card-text {
+.kore-chat-window .card-template .card-data .card-data-list .card-text {
 	color: #3C4043;
 	font-weight: 500;
 	font-size: 12px;
@@ -369,36 +369,36 @@
 	margin: 5px 0;
 }
 
-.card-data .card-data-list .card-text.icon {
+.kore-chat-window .card-template .card-data .card-data-list .card-text.icon {
 	top: -16px;
 }
 
-.card-data .card-data-list .card-text .card-text-icon.if-icon-right .icon-img {
+.kore-chat-window .card-template .card-data .card-data-list .card-text .card-text-icon.if-icon-right .icon-img {
 	width: auto;
 	position: absolute;
 	right: 4px;
 }
 
-.card-data .card-data-list .card-text .card-text-icon {
+.kore-chat-window .card-template .card-data .card-data-list .card-text .card-text-icon {
 	width: 25px;
 	padding: 5px 10px 0 0;
 }
 
-.card-data .card-data-list .card-text .card-text-icon img {
+.kore-chat-window .card-template .card-data .card-data-list .card-text .card-text-icon img {
 	vertical-align: middle;
 }
 
-.card-data .card-data-list .card-text .card-text-action {
+.kore-chat-window .card-template .card-data .card-data-list .card-text .card-text-action {
 	position: absolute;
 	right: 0;
 	transform: rotate(180deg);
 }
 
-.card-data .card-data-list.card-display-flex {
+.kore-chat-window .card-template .card-data .card-data-list.card-display-flex {
 	display: flex;
 }
 
-.largePreviewContent.card-template-modal {
+.kore-chat-window .koreLargePreviewContent.card-template-modal {
 	width: 350px !important;
 }
 

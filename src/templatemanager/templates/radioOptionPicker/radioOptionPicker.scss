@@ -38,7 +38,7 @@
 
     color: #000000;
 }
-.radioOptionMenuPicker {
+.kore-chat-window .radioOptionMenuPicker {
     height: calc(100% - 109px);
     padding: 0px 20px 0 20px;
     overflow-y: auto;
@@ -64,7 +64,7 @@
     -moz-transition: opacity 1.5s ease-in-out;
     -webkit-transition: opacity 1.5s ease-in-out;
 }
-.radioOptionMenuPicker .btnAccount {
+.kore-chat-window .radioOptionMenuPicker .btnAccount {
     height: 50px;
     /* box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58); */
     background-color: #ffffff;
@@ -74,28 +74,28 @@
     margin-bottom: 10px;
     display: table;
 }
-.radioOptionMenuPicker .radioButton .btnAccount {
+.kore-chat-window .radioOptionMenuPicker .radioButton .btnAccount {
     position: relative;
     background-color: white;
 }
-.radioOptionMenuPicker .btnAccount {
+.kore-chat-window .radioOptionMenuPicker .btnAccount {
     display: block;
     cursor: pointer;
     user-select: none;
 }
-.radioOptionMenuPicker .radioButton {
+.kore-chat-window .radioOptionMenuPicker .radioButton {
     /* display:table; */
     width: 61%;
 }
-.radioOptionMenuPicker .radioButton .radioValue {
+.kore-chat-window .radioOptionMenuPicker .radioButton .radioValue {
     display: table-cell;
 }
-.radioOptionMenuPicker .radioButton .btnAccount input {
+.kore-chat-window .radioOptionMenuPicker .radioButton .btnAccount input {
     position: absolute;
     opacity: 0;
     cursor: pointer;
 }
-.radioOptionMenuPicker .radioButton .btnAccount .checkmark {
+.kore-chat-window .radioOptionMenuPicker .radioButton .btnAccount .checkmark {
     position: absolute;
     top: 0;
     left: 0;
@@ -106,18 +106,18 @@
     border: solid 1px #d8d8d8;
     background-color: #ffffff;
 }
-.radioOptionMenuPicker .radioButton .btnAccount input:checked ~ .checkmark {
+.kore-chat-window .radioOptionMenuPicker .radioButton .btnAccount input:checked ~ .checkmark {
     background-color: white;
 }
-.radioOptionMenuPicker .radioButton .btnAccount .checkmark:after {
+.kore-chat-window .radioOptionMenuPicker .radioButton .btnAccount .checkmark:after {
     content: "";
     position: absolute;
     display: none;
 }
-.radioOptionMenuPicker .radioButton .btnAccount input:checked ~ .checkmark:after {
+.kore-chat-window .radioOptionMenuPicker .radioButton .btnAccount input:checked ~ .checkmark:after {
     display: block;
 }
-.radioOptionMenuPicker .radioButton .btnAccount .checkmark:after {
+.kore-chat-window .radioOptionMenuPicker .radioButton .btnAccount .checkmark:after {
     top: 7px;
     left: 7px;
     width: 14px;
@@ -125,10 +125,10 @@
     border-radius: 50%;
     background: #007ee5;
 }
-.radioOptionMenuPicker .btnAccount .accountIcon {
+.kore-chat-window .radioOptionMenuPicker .btnAccount .accountIcon {
     margin-right: 15px;
 }
-.radioOptionMenuPicker .btnAccount .radioOptionName {
+.kore-chat-window .radioOptionMenuPicker .btnAccount .radioOptionName {
     display: inline-block;
     overflow: hidden;
     white-space: nowrap;
@@ -145,7 +145,7 @@
     letter-spacing: -0.12px;
     color: #222222;
 }
-.radioOptionMenuPicker .btnAccount .radioOptionValue {
+.kore-chat-window .radioOptionMenuPicker .btnAccount .radioOptionValue {
     padding-left: 40px;
     margin-top: 4px;
     overflow: hidden;

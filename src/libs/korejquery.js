@@ -49,7 +49,8 @@ import korejquery from 'jquery'
 		prependTo: "prepend",
 		insertBefore: "before",
 		insertAfter: "after",
-		replaceAll: "replaceWith"
+		replaceAll: "replaceWith",
+		koreReplaceAll:"replaceWith"
 	}, function( name, original ) {
 		jQuery.fn[ name ] = function( selector ) {
 			var ret = [], insert = jQuery( selector ), elems, i, l, tmplItems,

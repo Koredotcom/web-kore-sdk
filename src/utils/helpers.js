@@ -94,14 +94,25 @@ class KoreHelpers{
             
                 var textHasXSS;
                 if (txtStr) {
-                    textHasXSS = txtStr.isNotAllowedHTMLTags();
+                    textHasXSS = KoreHelpers.prototypes.isNotAllowedHTMLTags(txtStr);
                 }
                 if (textHasXSS && !textHasXSS.isValid) {
-                    txtStr = txtStr.escapeHTML();
+                    txtStr = KoreHelpers.prototypes.escapeHTML(txtStr);
                 }
                 return txtStr;
                 //return compObj[0].componentBody;
             }
+            function sanitizeXSS(input) {
+                var sanitizedInput = input
+                                          .replace(/</g, "&lt;")
+                                          .replace(/>/g, "&gt;")
+                                          .replace(/"/g, "&quot;")
+                                          .replace(/'/g, "&#x27;")
+                                          .replace(/\//g, "&#x2F;")
+                                          .replace(/\(/g, "&#40;")
+                                          .replace(/\)/g, "&#41;");
+                return sanitizedInput;
+              }
             for (var j = 0; j < regexkeys.length; j++) {
                 var k;
                 switch (regexkeys[j]) {
@@ -230,7 +241,9 @@ class KoreHelpers{
             
             var newStr = '', wrapper1;
             if (responseType === 'user') {
-                str = str.replace(/onerror=/gi, 'abc-error=');
+                // str = sanitizeXSS(str);
+                str = str.replace(/onerror=/gi, '');
+                str = str.replace(/onmouseover=/gi, '');
                 wrapper1 = document.createElement('div');
                 newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
                 newStr = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -241,7 +254,9 @@ class KoreHelpers{
                     str = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(_regExForLink, linkreplacer);
                 }
             } else {
-                str = str.replace(/onerror=/gi, 'abc-error=');
+                // str = sanitizeXSS(str);
+                str = str.replace(/onerror=/gi, '');
+                str = str.replace(/onmouseover=/gi, '');
                 wrapper1 = document.createElement('div');
                 //str = str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
                 wrapper1.innerHTML = xssAttack(str);
@@ -285,10 +300,10 @@ class KoreHelpers{
                     str = str.replace(hrefRef, customStrReplacer);
                 });
             }
-            str = str.replaceAll('target="underscoreblank"', 'target="_blank"');
-            str = str.replaceAll("target='underscoreblank'", 'target="_blank"');
+            str = KoreHelpers.prototypes.koreReplaceAll(str,'target="underscoreblank"', 'target="_blank"');
+            // str = str.koreReplaceAll("target='underscoreblank'", 'target="_blank"');
             // if (responseType === 'user') {
-                str = str.replace(/abc-error=/gi, 'onerror=');
+                // str = str.replace(/abc-error=/gi, 'onerror=');
             // }
             return this.nl2br(str, true);
         },
@@ -297,6 +312,17 @@ class KoreHelpers{
               n = Number(n);
               return n === 0 || !!(n && !(n % 2));
             }
+            function sanitizeXSS(input) {
+                var sanitizedInput = input
+                                          .replace(/</g, "&lt;")
+                                          .replace(/>/g, "&gt;")
+                                          .replace(/"/g, "&quot;")
+                                          .replace(/'/g, "&#x27;")
+                                          .replace(/\//g, "&#x2F;")
+                                          .replace(/\(/g, "&#40;")
+                                          .replace(/\)/g, "&#41;");
+                return sanitizedInput;
+              }
              if(val===''){
                 return val;
             }
@@ -406,7 +432,7 @@ class KoreHelpers{
                     for (j = 0; j < _matchAstrik.length; j++) {
                         var _boldTxt = _matchAstrik[j];
                         var validBoldGroup = true;
-                        if(_boldTxt.includes('*')){
+                        if(KoreHelpers.prototypes.includes(_boldTxt, '*')){
                             var _tempStr = _boldTxt.replace(/\*/g,'');
                             // var letterNumber = /^[0-9a-zA-Z!@#$%^&()_ +\-=\[\]{};':"\\|,.<>\/?]+$/;
                             if (!(_tempStr && _tempStr.length)) {
@@ -494,10 +520,10 @@ class KoreHelpers{
             return val;
         }
     };
-    static {
-        String.prototype.isNotAllowedHTMLTags = function () {
+    static prototypes ={
+        "isNotAllowedHTMLTags" : function (txtStr) {
           const wrapper = document.createElement("div");
-          wrapper.innerHTML = this;
+          wrapper.innerHTML = txtStr;
 
           const setFlags = {
             isValid: true,
@@ -549,9 +575,9 @@ class KoreHelpers{
           } catch (e) {
             return setFlags;
           }
-        };
+        },
 
-        String.prototype.escapeHTML = function () {
+        "escapeHTML" : function (txtStr) {
           // '&': '&amp;',
           const escapeTokens = {
             "<": "&lt;",
@@ -560,109 +586,25 @@ class KoreHelpers{
             "'": "&#x27;",
           };
           const htmlTags = /[<>"']/g;
-          return `${this}`.replace(htmlTags, (match) => escapeTokens[match]);
-        };
+          return `${''+txtStr}`.replace(htmlTags, (match) => escapeTokens[match]);
+        },
 
-        String.prototype.replaceAll = function (search, replacement) {
-          const target = this;
+        "koreReplaceAll" :function (str,search, replacement) {
+          const target = str;
           return target.replace(new RegExp(search, "g"), replacement);
-        };
+        },
 
-        if (!String.prototype.includes) {
-          String.prototype.includes = function (search, start) {
+        // if (!String.prototype.includes) {
+          "includes" : function (str,search, start) {
             if (search instanceof RegExp) {
               throw TypeError("first argument must not be a RegExp");
             }
             if (start === undefined) {
               start = 0;
             }
-            return this.indexOf(search, start) !== -1;
-          };
-        }
-        String.prototype.isNotAllowedHTMLTags = function () {
-          const wrapper = document.createElement("div");
-          wrapper.innerHTML = this;
-
-          const setFlags = {
-            isValid: true,
-            key: "",
-          };
-          try {
-            if (
-              $(wrapper).find("script").length ||
-              $(wrapper).find("video").length ||
-              $(wrapper).find("audio").length
-            ) {
-              setFlags.isValid = false;
-            }
-            if (
-              $(wrapper).find("link").length &&
-              $(wrapper).find("link").attr("href").indexOf("script") !== -1
-            ) {
-              if (detectScriptTag.test($(wrapper).find("link").attr("href"))) {
-                setFlags.isValid = false;
-              } else {
-                setFlags.isValid = true;
-              }
-            }
-            if (
-              $(wrapper).find("a").length &&
-              $(wrapper).find("a").attr("href").indexOf("script") !== -1
-            ) {
-              if (detectScriptTag.test($(wrapper).find("a").attr("href"))) {
-                setFlags.isValid = false;
-              } else {
-                setFlags.isValid = true;
-              }
-            }
-            if (
-              $(wrapper).find("img").length &&
-              $(wrapper).find("img").attr("src").indexOf("script") !== -1
-            ) {
-              if (detectScriptTag.test($(wrapper).find("img").attr("href"))) {
-                setFlags.isValid = false;
-              } else {
-                setFlags.isValid = true;
-              }
-            }
-            if ($(wrapper).find("object").length) {
-              setFlags.isValid = false;
-            }
-
-            return setFlags;
-          } catch (e) {
-            return setFlags;
+            return str.indexOf(search, start) !== -1;
           }
-        };
-
-        String.prototype.escapeHTML = function () {
-          // '&': '&amp;',
-          const escapeTokens = {
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#x27;",
-          };
-          const htmlTags = /[<>"']/g;
-          return `${this}`.replace(htmlTags, (match) => escapeTokens[match]);
-        };
-
-        String.prototype.replaceAll = function (search, replacement) {
-          const target = this;
-          return target.replace(new RegExp(search, "g"), replacement);
-        };
-
-        if (!String.prototype.includes) {
-          String.prototype.includes = function (search, start) {
-            if (search instanceof RegExp) {
-              throw TypeError("first argument must not be a RegExp");
-            }
-            if (start === undefined) {
-              start = 0;
-            }
-            return this.indexOf(search, start) !== -1;
-          };
-        }
+        // }
     }
 } 
 export default KoreHelpers

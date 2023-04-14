@@ -8,4 +8,13 @@ declare class KoreHelpers {
         convertMDtoHTML: (val: any, responseType: any, msgItem: any) => any;
         checkMarkdowns: (val: any, hyperLinksMap: any) => any;
     };
+    static prototypes: {
+        isNotAllowedHTMLTags: (txtStr: any) => {
+            isValid: boolean;
+            key: string;
+        };
+        escapeHTML: (txtStr: any) => string;
+        koreReplaceAll: (str: any, search: any, replacement: any) => any;
+        includes: (str: any, search: any, start: any) => boolean;
+    };
 }

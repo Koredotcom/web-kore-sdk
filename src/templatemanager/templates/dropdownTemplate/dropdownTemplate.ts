@@ -46,8 +46,8 @@ class DropdownTemplate {
                         <select class="selectTemplateDropdowm">\
                         <option>select</option> \
                             {{each(key, msgItem) msgData.message[0].component.payload.elements}} \
-                                <option xyz = ${msgData.message[0].component.selectedValue} {{if msgData.message[0].component.selectedValue === msgItem.value}}selected{{/if}} class = "dropdownTemplatesValues" type = "postback" value="${msgItem.value}"> \
-                                    ${msgItem.title}\
+                            <option xyz = "${msgData.message[0].component.selectedValue} {{if msgData.message[0].component.selectedValue === msgItem.value}}selected{{/if}}" class = "dropdownTemplatesValues" title = "${msgItem.title}" type = "postback" value="${msgItem.value}"> \
+                                {{if msgItem.title.length > 32}}${msgItem.title.substr(0,32)}...{{else}}${msgItem.title}{{/if}}\
                                 </option> \
                             {{/each}} \
                         </select> \
