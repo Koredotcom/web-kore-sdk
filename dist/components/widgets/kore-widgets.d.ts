@@ -102,10 +102,7 @@ declare class KoreWidgetSDK {
     toggelMeetingActionBtnForWindow(id: any, e: any): void;
     hexToRGBMeetingForWindow(hex: any, alpha: any): void;
     isURLForWindow(str: any): void;
-    getMeetingSlot(duration: any): {
-        start: any;
-        end: any;
-    }[];
+    getMeetingSlot(duration: any): any;
     getDateArray(start: any, end: any): any[];
     cloneMessage1(obj: any): any;
     compare(a: any, b: any): number;

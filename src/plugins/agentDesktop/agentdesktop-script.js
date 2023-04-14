@@ -595,8 +595,8 @@ class AgentDesktopPluginScript  {
                 var start = moment(obj.timestamp);
                 var end = moment();
                 var duration = moment.duration(end.diff(start));
-                var seconds = duration.asSeconds();
-                obj['timespent'] = seconds;
+                var milliseconds = duration.asMilliseconds();
+                obj['timespent'] = milliseconds;
                 obj['domain'] =  window.location.hostname; 
             }
 
@@ -789,7 +789,7 @@ class AgentDesktopPluginScript  {
             this.phone.setEnableAddVideo(this.phoneConfig.enableAddVideo);
             this.phone.setAcLogger(console.log);
             this.phone.setModes(this.phoneConfig.modes);
-            this.phone.setAccount(account.user, account.displayName, account.password);
+            this.phone.setAccount(account.user, account.displayName, account.user, account.user);
             var self = this;
             // Set phone API listeners
             this.phone.setListeners({
@@ -2143,17 +2143,24 @@ class AgentDesktopPluginScript  {
                 me.sendDCMessage(JSON.stringify(STOP_MESSAGE))
             }
             function createPeer() {
-                var peerConn = new RTCPeerConnection({
-                    iceServers: [
-                        {
-                            urls: ['stun:stun.l.google.com:19302',
-                                'stun:stun1.l.google.com:19302',
-                                'stun:stun2.l.google.com:19302',
-                                'stun:stun.l.google.com:19302?transport=udp']
-                        }
-                    ]
-                });
-                return peerConn;
+                try {
+                    var peerConn = new RTCPeerConnection({
+                        iceServers: [
+                            {
+                                urls: ['stun:stun.l.google.com:19302',
+                                    'stun:stun1.l.google.com:19302',
+                                    'stun:stun2.l.google.com:19302',
+                                    'stun:stun.l.google.com:19302?transport=udp']
+                            }
+                        ]
+                    });
+                    return peerConn;
+
+                } catch (err) {
+                    var peerConn = new RTCPeerConnection();
+                    return peerConn;
+
+                }
             }
             function handleNewICECandidateMsg(incoming) {
                 console.log("cobrowse >>> handlingIceCandidate ", incoming)

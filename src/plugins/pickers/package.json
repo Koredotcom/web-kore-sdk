@@ -1,8 +1,0 @@
-{
-  "name": "kore-web-sdk/plugins/pickers",
-  "types": "../../index_plugins/korepicker_umd.d.ts",
-  "main": "../../esm/plugins/kore-picker-plugin-umd.js",
-  "module": "../../esm/plugins/kore-picker-plugin-umd.js",
-  "es2015": "../../esm/plugins/kore-picker-plugin-umd.js",
-  "sideEffects": false
-}

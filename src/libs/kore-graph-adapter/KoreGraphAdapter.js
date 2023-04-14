@@ -10,6 +10,7 @@ var KoreGraphAdapter = (function($,d3) {
         var payload=msgData;//msgData.message[0].component.payload
         var widthDivision=3;
         var legendCenterOffset=0;
+        var fromWidgets = false;
         if(msgData.message){
             payload=msgData.message[0].component.payload;
         }else{
@@ -94,10 +95,13 @@ var KoreGraphAdapter = (function($,d3) {
         });
 
         var totalHeightLegends = (dataset.length-4)*(legendRectSize + legendSpacing + 20);
-
+        var height = totalHeightLegends + 23;
+        if(height < 0){
+            height = 0;
+        }
         var legendTooltipSvg = legendTooltip.append("svg")
             .attr("width", "150")
-            .attr("height", totalHeightLegends + 23);
+            .attr("height", height);
 
 
         // define tooltip
@@ -427,6 +431,7 @@ var KoreGraphAdapter = (function($,d3) {
         var payload=msgData;//msgData.message[0].component.payload
         var widthDivision=3;
         var legendCenterOffset=0;
+        var fromWidgets  =false;
         if(msgData.message){
             payload=msgData.message[0].component.payload;
         }else{
@@ -838,6 +843,7 @@ var KoreGraphAdapter = (function($,d3) {
         var payload=msgData;//msgData.message[0].component.payload
         var widthDivision=3;
         var legendCenterOffset=0;
+        var fromWidgets = false;
         if(msgData.message){
             payload=msgData.message[0].component.payload;
         }else{
@@ -1422,6 +1428,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
         var payload=msgData;//msgData.message[0].component.payload
         var widthDivision=3;
         var legendCenterOffset=0;
+        var fromWidgets = false;
         if(msgData.message){
             payload=msgData.message[0].component.payload;
         }else{
@@ -1485,7 +1492,9 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
 
         var z = d3.scaleOrdinal()
             .range(['#5bc8c4','#4a9af2','#8ecb60','#e7cc61','#eeaf4b','#ef7e63','#8e8eb7','#6483c3','#2249ab','#f352b7']);
-
+            var widthDivision=3;
+            var legendCenterOffset=0;
+            var fromWidgets = false;
         if(msgData.message){
             payload=msgData.message[0].component.payload;
         }else{
@@ -1664,6 +1673,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
         var payload=msgData;//msgData.message[0].component.payload
         var widthDivision=3;
         var legendCenterOffset=0;
+        var fromWidgets = false;
         if(msgData.message){
             payload=msgData.message[0].component.payload;
         }else{
@@ -1877,6 +1887,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
         var payload=msgData;//msgData.message[0].component.payload
         var widthDivision=3;
         var legendCenterOffset=0;
+        var fromWidgets = false;
         if(msgData.message){
             payload=msgData.message[0].component.payload;
         }else{

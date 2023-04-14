@@ -1,8 +1,0 @@
-{
-  "name": "kore-web-sdk/plugins/agent-desktop",
-  "types": "../../index_plugins/agentDesktop_umd.d.ts",
-  "main": "../../esm/plugins/agent-desktop-umd.js",
-  "module": "../../esm/plugins/agent-desktop-umd.js",
-  "es2015": "../../esm/plugins/agent-desktop-umd.js",
-  "sideEffects": false
-}

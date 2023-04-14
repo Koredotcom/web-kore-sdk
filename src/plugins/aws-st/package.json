@@ -1,8 +1,0 @@
-{
-  "name": "kore-web-sdk/plugins/aws-st",
-  "types": "../../index_plugins/KoreAWSST_umd.d.ts",
-  "main": "../../esm/plugins/koreawspolly-st-umd-plugin-umd.js",
-  "module": "../../esm/plugins/koreawspolly-st-umd-plugin-umd.js",
-  "es2015": "../../esm/plugins/koreawspolly-st-umd-plugin-umd.js",
-  "sideEffects": false
-}

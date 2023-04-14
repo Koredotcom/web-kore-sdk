@@ -6,7 +6,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-umd": "webpack --env=kore_env=prod --env=target_module=umd",
     "build": "webpack --env=kore_env=prod  --env=target_module=esm",
-    "rollup:build": "npx rollup -c",
     "serve-umd": "webpack-dev-server --env=kore_env=dev  --env=component=chat  --env=target_module=umd",
     "serve": "webpack-dev-server --env=kore_env=dev --env=component=chat --env=target_module=esm --mode development",
     "doc-chatwindow": "typedoc   --excludeNotDocumented  --out docs/api/chatwindow  --entryPoints  src/components/chatwindow/chatWindow.ts --name chatWindow  --cname ChatWindow ",
@@ -21,8 +20,8 @@
     "prettier-v": "./node_modules/.bin/prettier --debug-check 'src/**/*.{ts,js}'",
     "prettier-fix": "./node_modules/.bin/prettier --write 'src/**/*.{ts,js}'"
   },
-  "main": "dist/esm/export.js",
-  "module": "dist/esm/export.js",
+  "main": "dist/esm/exports.js",
+  "module": "dist/esm/exports.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:Koredotcom/web-kore-sdk.git#treeshak-poc-1.1"

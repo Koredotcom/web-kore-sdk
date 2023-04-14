@@ -62,6 +62,9 @@ chatConfig = {
             batchSize  : 10, // To configure the number of messages to load when the user scroll,
             loadingLabel:'Loading old messages' // Loading label will be displayed when the user uses paginated scroll
         } 
+    },
+    sendFailedMessage:{ //Number of retries on message send failed
+        MAX_RETRIES:3
     }
 };
 

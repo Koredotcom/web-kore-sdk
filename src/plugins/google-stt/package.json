@@ -1,8 +1,0 @@
-{
-  "name": "kore-web-sdk/plugins/google-stt",
-  "types": "../../index_plugins/googleSTT_umd.d.ts",
-  "main": "../../esm/plugins/google-stt-umd-plugin-umd.js",
-  "module": "../../esm/plugins/google-stt-umd-plugin-umd.js",
-  "es2015": "../../esm/plugins/google-stt-umd-plugin-umd.js",
-  "sideEffects": false
-}

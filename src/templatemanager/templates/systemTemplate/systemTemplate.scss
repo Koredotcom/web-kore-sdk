@@ -1,4 +1,4 @@
-.system-template {
+.kore-chat-window .system-template {
     position: relative;
     border-bottom: 1px solid var(--sdk-chat-widow-primary-border-color);
     margin-bottom: 30px;
@@ -6,7 +6,7 @@
     margin-top: 20px;
 }
 
-.system-template-msg {
+.kore-chat-window .system-template-msg {
     position: relative;
     top: 12px;
     background: var(--sdk-chat-widow-default-white);

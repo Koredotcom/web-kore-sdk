@@ -4,6 +4,7 @@ import requireKr from '../base-sdk/kore-bot-sdk-client'
 import './styles/kore-widgets.css'
 import addPolyFils from '../../utils/kore-polyfills';
 import { AnyMxRecord, AnyPtrRecord } from 'dns';
+import KoreGraphAdapter from '../../libs/kore-graph-adapter/KoreGraphAdapter';
 
 // //"use strict";
 declare const window: any;
@@ -23,7 +24,6 @@ declare const zipType:any;
 declare const devpType:any;
 declare const dobjType:any;
 declare const sketchType:any;
-declare const KoreGraphAdapter:any;
 
 
 
@@ -246,7 +246,7 @@ var helpers:any = {
     }
   },
   'checkForlineWidget': function checkForlineWidget(arr:any, key:any) {
-    var dayTypeTracker = [];
+    var dayTypeTracker:any = [];
 
     for (var k = 0; k < arr.length; k++) {
       dayTypeTracker[k] = helpers.getTimeline(arr[k].data.duration.start, "fulldate", "meetings");
@@ -533,7 +533,7 @@ show  (config:any) {
         });
       }
       initialWidgetData.panels = response;
-      var panelData = [];
+      var panelData:any = [];
   
       for (var i = 0; i < initialWidgetData.panels.length; i++) {
         //todo: deviation :adding "id" from "_id"
@@ -677,7 +677,7 @@ modifyJSON  (count:any) {
 
 
 getTemplate  (type:any) {
-  var menuTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl">\
+  var menuTemplate = '<script id="chat_message_menu_tmpl" type="text/x-jqury-tmpl">\
         <div class="menuItemCntr">\
         <div class="sdkBotIcon" {{if botDetails && botDetails.name}} title="${botDetails.name}"{{/if}}>\
         <img aria-hidden="true" class="menuIconMobile" onClick="openPanel(\'closePanel\',\'' + " " + '\',\'' + "true" + '\')"  src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNDcwcHgiIGhlaWdodD0iNDcwcHgiIHZpZXdCb3g9IjAgMCA0NzAgNDcwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPCEtLSBHZW5lcmF0b3I6IFNrZXRjaCA1My4yICg3MjY0MykgLSBodHRwczovL3NrZXRjaGFwcC5jb20gLS0+CiAgICA8dGl0bGU+bWVudS1pY29uPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9Im1lbnUtaWNvbiIgZmlsbD0iIzc2NzY4OCIgZmlsbC1ydWxlPSJub256ZXJvIj4KICAgICAgICAgICAgPHBhdGggZD0iTTUzLjMzMywxMDYuNjY3IEw0MTYsMTA2LjY2NyBDNDQ1LjQxNywxMDYuNjY3IDQ2OS4zMzMsODIuNzQgNDY5LjMzMyw1My4zMzQgQzQ2OS4zMzMsMjMuOTI4IDQ0NS40MTcsMCA0MTYsMCBMNTMuMzMzLDAgQzIzLjkxNywwIDAsMjMuOTI3IDAsNTMuMzMzIEMwLDgyLjczOSAyMy45MTcsMTA2LjY2NyA1My4zMzMsMTA2LjY2NyBaIiBpZD0iUGF0aCI+PC9wYXRoPgogICAgICAgICAgICA8cGF0aCBkPSJNNDE2LDE4MS4zMzMgTDUzLjMzMywxODEuMzMzIEMyMy45MTcsMTgxLjMzMyAwLDIwNS4yNiAwLDIzNC42NjcgQzAsMjY0LjA3NCAyMy45MTcsMjg4IDUzLjMzMywyODggTDQxNiwyODggQzQ0NS40MTcsMjg4IDQ2OS4zMzMsMjY0LjA3MyA0NjkuMzMzLDIzNC42NjcgQzQ2OS4zMzMsMjA1LjI2MSA0NDUuNDE3LDE4MS4zMzMgNDE2LDE4MS4zMzMgWiIgaWQ9IlBhdGgiPjwvcGF0aD4KICAgICAgICAgICAgPHBhdGggZD0iTTQxNiwzNjIuNjY3IEw1My4zMzMsMzYyLjY2NyBDMjMuOTE3LDM2Mi42NjcgMCwzODYuNTk0IDAsNDE2IEMwLDQ0NS40MDYgMjMuOTE3LDQ2OS4zMzMgNTMuMzMzLDQ2OS4zMzMgTDQxNiw0NjkuMzMzIEM0NDUuNDE3LDQ2OS4zMzMgNDY5LjMzMyw0NDUuNDA2IDQ2OS4zMzMsNDE2IEM0NjkuMzMzLDM4Ni41OTQgNDQ1LjQxNywzNjIuNjY3IDQxNiwzNjIuNjY3IFoiIGlkPSJQYXRoIj48L3BhdGg+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=" >\
@@ -704,7 +704,7 @@ getTemplate  (type:any) {
           </div>\
         </div>\
       </script>';
-  var widgetHeader = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var widgetHeader = '<script id="chat_message_widgetHeader_tmpl" type="text/x-jqury-tmpl"> \
           <div class="headerLeft">\
             <p class="headerWidgetTitle newHeader">${widgetData.title}</p>\
             {{if tempData && tempData.description}}\
@@ -751,7 +751,7 @@ getTemplate  (type:any) {
             </div>\
           {{/if}}\
       </script>';
-  var mainTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var mainTemplate = '<script id="chat_message_widget_tmpl" type="text/x-jqury-tmpl"> \
           <div class="mainTemplateCntr" role="heading" id="${widgetData._id}" {{if panelDetail}}panelDetail="${JSON.stringify(panelDetail)}{{/if}}">\
               <div class="widgetTitle">\
               <img class="menuIconMobile" tabindex="0"  onClick="openPanel(\'closePanel\',\'' + " " + '\',\'' + "true" + '\')"  src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNDcwcHgiIGhlaWdodD0iNDcwcHgiIHZpZXdCb3g9IjAgMCA0NzAgNDcwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPCEtLSBHZW5lcmF0b3I6IFNrZXRjaCA1My4yICg3MjY0MykgLSBodHRwczovL3NrZXRjaGFwcC5jb20gLS0+CiAgICA8dGl0bGU+bWVudS1pY29uPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9Im1lbnUtaWNvbiIgZmlsbD0iIzc2NzY4OCIgZmlsbC1ydWxlPSJub256ZXJvIj4KICAgICAgICAgICAgPHBhdGggZD0iTTUzLjMzMywxMDYuNjY3IEw0MTYsMTA2LjY2NyBDNDQ1LjQxNywxMDYuNjY3IDQ2OS4zMzMsODIuNzQgNDY5LjMzMyw1My4zMzQgQzQ2OS4zMzMsMjMuOTI4IDQ0NS40MTcsMCA0MTYsMCBMNTMuMzMzLDAgQzIzLjkxNywwIDAsMjMuOTI3IDAsNTMuMzMzIEMwLDgyLjczOSAyMy45MTcsMTA2LjY2NyA1My4zMzMsMTA2LjY2NyBaIiBpZD0iUGF0aCI+PC9wYXRoPgogICAgICAgICAgICA8cGF0aCBkPSJNNDE2LDE4MS4zMzMgTDUzLjMzMywxODEuMzMzIEMyMy45MTcsMTgxLjMzMyAwLDIwNS4yNiAwLDIzNC42NjcgQzAsMjY0LjA3NCAyMy45MTcsMjg4IDUzLjMzMywyODggTDQxNiwyODggQzQ0NS40MTcsMjg4IDQ2OS4zMzMsMjY0LjA3MyA0NjkuMzMzLDIzNC42NjcgQzQ2OS4zMzMsMjA1LjI2MSA0NDUuNDE3LDE4MS4zMzMgNDE2LDE4MS4zMzMgWiIgaWQ9IlBhdGgiPjwvcGF0aD4KICAgICAgICAgICAgPHBhdGggZD0iTTQxNiwzNjIuNjY3IEw1My4zMzMsMzYyLjY2NyBDMjMuOTE3LDM2Mi42NjcgMCwzODYuNTk0IDAsNDE2IEMwLDQ0NS40MDYgMjMuOTE3LDQ2OS4zMzMgNTMuMzMzLDQ2OS4zMzMgTDQxNiw0NjkuMzMzIEM0NDUuNDE3LDQ2OS4zMzMgNDY5LjMzMyw0NDUuNDA2IDQ2OS4zMzMsNDE2IEM0NjkuMzMzLDM4Ni41OTQgNDQ1LjQxNywzNjIuNjY3IDQxNiwzNjIuNjY3IFoiIGlkPSJQYXRoIj48L3BhdGg+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=">\
@@ -801,7 +801,7 @@ getTemplate  (type:any) {
               </div>\
           </div>\
       </script>';
-  var viewMoreTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var viewMoreTemplate = '<script id="chat_message_viewMore_tmpl" type="text/x-jqury-tmpl"> \
           <div role="contentinfo" class="viewMoreCntr" id="${widgetData._id}">\
               <div class="widgetTitle"><i class="icon-Arrow-Material viewMoreBack" onclick="removeViewMore()"></i> ${widgetData.name}</div>\
               <div class="taskSelectCntr"><i class="icon-Close1" onclick="removeTaskSelection()"></i> <span class="taskCount">1 task selected</span></div>\
@@ -836,7 +836,7 @@ getTemplate  (type:any) {
               </div>\
           </div>\
       </script>';
-  var meetingTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var meetingTemplate = '<script id="chat_message_meeting_tmpl" type="text/x-jqury-tmpl"> \
           <div class="meetingWidget_Root" > \
               <div class="meetingWidget_Box">\
                   {{each(key, myMsgItem) tempdata.elements}} \
@@ -965,7 +965,7 @@ getTemplate  (type:any) {
           </div>  \
       </scipt>';
 
-  var tasksTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var tasksTemplate = '<script id="chat_message_tasks_tmpl" type="text/x-jqury-tmpl"> \
           <div class="allTaskCntr"   payload="{{if tempdata && tempdata.buttons && tempdata.buttons.length && tempdata.buttons[0].api}}${tempdata.buttons[0].api}{{/if}}">\
               {{each(key, msgItem) tempdata.elements}} \
                   {{if panelDetail.viewmore}}\
@@ -1068,7 +1068,7 @@ getTemplate  (type:any) {
               {{/if}}\
           </div>\
       </script>';
-  var filesTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var filesTemplate = '<script id="chat_files_tmpl" type="text/x-jqury-tmpl"> \
           <div class="filesCntr" >\
               {{each(key, msgItem) tempdata.elements}} \
                   {{if panelDetail.viewmore}}\
@@ -1113,7 +1113,7 @@ getTemplate  (type:any) {
               {{/if}}\
           </div>\
       </script>';
-  var defaultFilesTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var defaultFilesTemplate = '<script id="chat_defaultFiles_tmpl" type="text/x-jqury-tmpl"> \
           <div class="filesCntr" >\
               {{each(key, msgItem) tempdata.elements}} \
                   {{if panelDetail.viewmore}}\
@@ -1208,7 +1208,7 @@ getTemplate  (type:any) {
               {{/if}}\
           </div>\
       </script>';
-  var knowledgeTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var knowledgeTemplate = '<script id="chat_message_knowledge_tmpl" type="text/x-jqury-tmpl"> \
       <div class="knowledgeCntr"  >\
           {{each(key, msgItem) tempdata.elements}} \
               {{if panelDetail.viewmore}}\
@@ -1305,7 +1305,7 @@ getTemplate  (type:any) {
           {{/if}}\
           </div>\
       </scipt>';
-  var announcementTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var announcementTemplate = '<script id="chat_message_announcement_tmpl" type="text/x-jqury-tmpl"> \
           <div class="announcementCntr" >\
               {{each(key, msgItem) tempdata.elements}} \
                   {{if panelDetail.viewmore}}\
@@ -1407,7 +1407,7 @@ getTemplate  (type:any) {
               {{/if}}\
           </div>\
       </scipt>';
-  var hashtagTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var hashtagTemplate = '<script id="chat_message_hashtag_tmpl" type="text/x-jqury-tmpl"> \
           <div class="trendingHashtagCntr"  >\
               {{each(key, msgItem) tempdata.elements}} \
                   {{if panelDetail.viewmore}}\
@@ -1436,7 +1436,7 @@ getTemplate  (type:any) {
               {{/if}}\
           </div>\
       </scipt>';
-  var skillsTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var skillsTemplate = '<script id="chat_message_skills_tmpl" type="text/x-jqury-tmpl"> \
           <div class="skillsCntr"  >\
               {{each(key, msgItem) tempdata.actions}} \
                   {{if panelDetail.viewmore}}\
@@ -1463,7 +1463,7 @@ getTemplate  (type:any) {
               {{/if}}\
           </div>\
       </scipt>';
-  var chartListTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var chartListTemplate = '<script id="chat_message_chartList_tmpl" type="text/x-jqury-tmpl"> \
           <div class="" style="margin-top: 11px;">\
               {{each(key, msgItem) tempdata.elements}} \
               <div style="position: relative; max-width: 25%; max-height: 25%; width: calc(100%/${tempdata.elements.length} - 5px);height: calc(100%/${tempdata.elements.length} - 5px);\
@@ -1485,7 +1485,7 @@ getTemplate  (type:any) {
               {{/if}}\
           </div>\
       </scipt>';
-  var popUpTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var popUpTemplate = '<script id="chat_message_popup_tmpl" type="text/x-jqury-tmpl"> \
           <div class="popupPreview" id="preview_${tempdata[0].id}"></div>\
           <div class="defaultPopupCntr" id="popup_${tempdata[0].id}">\
               <div class="popupContentCntr">\
@@ -1503,18 +1503,18 @@ getTemplate  (type:any) {
               </div>\
           </div>\
       </scipt>';
-  var defaultTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var defaultTemplate = '<script id="chat_message_default_tmpl" type="text/x-jqury-tmpl"> \
           <div class="defaultTemplateCntr">\
               Panel need to define\
           </div>\
       </scipt>';
-  var errorTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var errorTemplate = '<script id="chat_message_error_tmpl" type="text/x-jqury-tmpl"> \
           <div class="errorTemplateCntr">\
               <div class="imgCntr"> <img class="img img-fluid" src="assets/images/widget/widgetError.png"></div>\
               <div class="oopsErrorText">Oops!! Something went wrong!</div>\
           </div>\
       </scipt>';
-  var ErrorTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var ErrorTemplate = '<script id="chat_Error_tmpl" type="text/x-jqury-tmpl"> \
                             <div class="errorTemplateCntr {{if tempdata && !tempdata.templateType}}notFound{{/if}} {{if tempdata && tempdata.templateType}}${tempdata.templateType}{{/if}}">\
                                 <div class="imgCntr"></div>\
                                 {{if tempdata && tempdata.templateType && !tempdata.elements}}\
@@ -1534,7 +1534,7 @@ getTemplate  (type:any) {
                                 </div>\
                             </div>\
                           </scipt>';
-  var AuthRequired = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var AuthRequired = '<script id="chat_message_authRequired_tmpl" type="text/x-jqury-tmpl"> \
                             <div class="errorTemplateCntr authRequired">\
                                 <div aria-hidden="true" class="imgCntr"></div>\
                                 <div role="heddi" class="oopsErrorTitle">Authorization Needed!</div>\
@@ -1543,7 +1543,7 @@ getTemplate  (type:any) {
                                 </div>\
                             </div>\
                           </scipt>';
-  var filterTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var filterTemplate = '<script id="chat_message_filter_tmpl" type="text/x-jqury-tmpl"> \
         <div class="filterTemplateCntr">\
             <div class="wiz-filters">\
             <div class="wix-filter-header">Filters<span class="wid-filter-close"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAANlJREFUKBWdkkEKwjAQRWdSqBfwHDmEPYTgBVwXvIWCO8GlG6GHaA/hObxAC3Xan5AmrUkFZ1OY+S//Txo+3x6a6HPlbLM/HQ9vWqnL/bmVvq2IVKkAidBO+q7GIMVZqKuhBaPgxMwvEdEp2EOioTUMHL4HeeFip2bsosUEmCEF0lgnf+AEQrSEDRiB0J+BaISwEZidvBN6qPFW/6uZY+iGnXBkbD/0J3AJcZYXBly7nBj083esQXBExTQKby+1h8WI4I7o/oW11XirqmSmBgMXzwHh18PUgBkAXhfn47Oroz4AAAAASUVORK5CYII=" class="closeCross"></span></div>\
@@ -1604,7 +1604,7 @@ getTemplate  (type:any) {
             </div>\
         </div>\
      </scipt>';
-  var filterOptionsTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var filterOptionsTemplate = '<script id="chat_message_filterOptions_tmpl" type="text/x-jqury-tmpl"> \
                   <div class="filterOptionsTemplateCtrl">\
                       <div class="sortBy">\
                             <div class="wix-filter-header">${"Select  "+ filterSelectedItems.title}<span class="wid-filter-close"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAANlJREFUKBWdkkEKwjAQRWdSqBfwHDmEPYTgBVwXvIWCO8GlG6GHaA/hObxAC3Xan5AmrUkFZ1OY+S//Txo+3x6a6HPlbLM/HQ9vWqnL/bmVvq2IVKkAidBO+q7GIMVZqKuhBaPgxMwvEdEp2EOioTUMHL4HeeFip2bsosUEmCEF0lgnf+AEQrSEDRiB0J+BaISwEZidvBN6qPFW/6uZY+iGnXBkbD/0J3AJcZYXBly7nBj083esQXBExTQKby+1h8WI4I7o/oW11XirqmSmBgMXzwHh18PUgBkAXhfn47Oroz4AAAAASUVORK5CYII=" class="closeCross"></span></div>\
@@ -1860,7 +1860,7 @@ getTemplate  (type:any) {
                  {{/if}}\
                 </div>\
              </script>';
-  var barChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var barChartTemplate = '<script id="chat_message_barchart_tmpl" type="text/x-jqury-tmpl"> \
              <div class="bar-chart-template" >\
                <div class="tab-list-template" mainObj="${JSON.stringify(tempdata)}">\
                  {{if tempdata}} \
@@ -1965,7 +1965,7 @@ getTemplate  (type:any) {
                            {{/if}}\
                          </div>\
                          <div class="wid-temp-showMoreBottom hide">\
-                         <div class="headerTitleMore">MORE<span class="wid-temp-showMoreClose"><img src="libs/images/closeCross.png" class="closeCross"></span></div>\
+                         <div class="headerTitleMore">MORE<span class="wid-temp-showMoreClose"></span></div>\
                            {{each(key, content) tempdata.content}} \
                              <div class="wid-temp-contentDiv">\
                                {{if content.image && content.image.image_type === "image"}}\
@@ -2036,7 +2036,7 @@ getTemplate  (type:any) {
                </div>\
              </div>\
            </scipt>';
-  var lineChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var lineChartTemplate = '<script id="chat_message_lineChart_tmpl" type="text/x-jqury-tmpl"> \
             <div class="line-chart-template">\
               <div class="tab-list-template" mainObj="${JSON.stringify(tempdata)}">\
                 {{if tempdata}} \
@@ -2141,7 +2141,7 @@ getTemplate  (type:any) {
                           {{/if}}\
                         </div>\
                         <div class="wid-temp-showMoreBottom hide">\
-                        <div class="headerTitleMore">MORE<span class="wid-temp-showMoreClose"><img src="libs/images/closeCross.png" class="closeCross"></span></div>\
+                        <div class="headerTitleMore">MORE<span class="wid-temp-showMoreClose"></span></div>\
                           {{each(key, content) tempdata.details}} \
                             <div class="wid-temp-contentDiv">\
                               {{if content.image && content.image.image_type === "image"}}\
@@ -2212,7 +2212,7 @@ getTemplate  (type:any) {
               </div>\
             </div>\
          </scipt>';
-  var pieChartTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+  var pieChartTemplate = '<script id="chat_message_pieChart_tmpl" type="text/x-jqury-tmpl"> \
                 <div class="pie-chart-template">\
                   <div class="tab-list-template" mainObj="${JSON.stringify(tempdata)}">\
                     {{if tempdata}} \
@@ -2317,7 +2317,7 @@ getTemplate  (type:any) {
                               {{/if}}\
                             </div>\
                             <div class="wid-temp-showMoreBottom hide">\
-                            <div class="headerTitleMore">MORE<span class="wid-temp-showMoreClose"><img src="libs/images/closeCross.png" class="closeCross"></span></div>\
+                            <div class="headerTitleMore">MORE<span class="wid-temp-showMoreClose"></span></div>\
                             <div class="moreItemsScroll">\
                             {{each(key, content) tempdata.details}} \
                                 <div class="wid-temp-contentDiv">\
@@ -3034,8 +3034,8 @@ getServerData  (url:any, method:any, payload:any, _params:any, passedJson:any) {
 
       if (!responseData || responseData && _typeof(responseData) !== 'object' || _typeof(responseData) === 'object' && responseData.data && !responseData.data.length) {
         // if response is not an object //
-        responseData.templateType = 'somthingWentWrong';
-        responseData.errMsg = 'Oops! Something went wrong.';
+        // responseData.templateType = 'somthingWentWrong';
+        // responseData.errMsg = 'Oops! Something went wrong.';
 
         if (typeof responseData === 'string') {
           var responseCopy = responseData;
@@ -4196,7 +4196,7 @@ getResolveMeeting  (obj:any) {
 
   if (obj && obj.elements && obj.elements.length) {
     for (let i = 0; i < obj.elements.length; i++) {
-      var temp = [];
+      var temp:any = [];
       var actionsArr = obj.elements[i].actions;
 
       for (var k = 0; k < actionsArr.length; k++) {
@@ -4575,7 +4575,7 @@ setChatFocus  () {
   }
 
   if ($(_self.config.container.content).is(':visible')) {
-    $(_self.config.container.content).hide(500,"slide", {
+    $(_self.config.container.content).hide(500,"linear", {
       direction: _self.config.direction //$.jStorage.get('menuPosition')
 
     } as any);
@@ -5419,7 +5419,7 @@ isURLForWindow  (str: any) {
 getMeetingSlot  (duration:any) {
   var _self = this;
 
-  var slots = [];
+  var slots:any = [];
   var myStart = new Date(duration.start);
   var myEnd = new Date(duration.end);
   let days = _self.getDateArray(myStart, myEnd);
