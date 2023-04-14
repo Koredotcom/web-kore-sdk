@@ -70,6 +70,10 @@ let config= {
             //   },
         ]
     },
+    stats: {
+      // Display bailout reasons
+      optimizationBailout: true,
+    },
     plugins:[
       new CopyPlugin({
         patterns: [
@@ -329,6 +333,8 @@ module.exports= function(env,argv){
         config.mode='production';
         config.optimization= {
           minimize: true,
+          innerGraph: true,
+          usedExports: true,
           minimizer: [
             new TerserPlugin({
               extractComments: false,
