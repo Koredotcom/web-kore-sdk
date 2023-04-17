@@ -1847,80 +1847,6 @@ print(JSON.stringify(message)); */
     {{/if}} \
     </scipt>';
 
-
-	// var checkListTemplate =  '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
-	// {{if msgData.message}} \
-	// 	<li {{if msgData.type !== "bot_response"}} id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
-	// 	   <div class="check-list-template">\
-	// 	   		{{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
-	// 			{{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-	// 				{{if msgData.message[0].component.payload.sliderView}} <button class="close-button" title="Close"><img src="data:image/svg+xml;base64, PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button>{{/if}}\
-	// 				<div class="check-list-template-content">\
-	// 					{{if msgData.message[0].component.payload.title}}<div class="templateHeading">${msgData.message[0].component.payload.title}</div>{{/if}}\
-	// 					{{if msgData.message[0].component.payload.elements}}\
-	// 					   <div class="check-list-elements">\
-	// 					   		{{each(key,element) msgData.message[0].component.payload.elements}}\
-	// 							  <div class="checklist-element">\
-	// 							    <div class="checklist-heading">\
-	// 									<div class="headig-with-progress">\
-	// 										<div class="element-title-block">${element.title}\</div>\
-	// 										{{if element.taskProgress}}\
-	// 											<div class="title-progress">\
-	// 												${element.taskProgress}	\
-	// 											</div>\
-	// 										{{/if}}\
-	// 									</div>\
-	// 									{{if element.optionInformation}}\
-	// 									  <div class="checklist-options">\
-	// 									    {{each(optionkey,option) element.optionInformation}}\
-	// 										   <div class="option-info">\
-	// 										     <div class="option-title">${option.title}</div>\
-	// 											 <div class="option-value">${option.value}</div>\
-	// 										   </div>\
-	// 										{{/each}}\
-	// 									  </div>\
-	// 									{{/if}}\
-	// 								</div>\
-	// 								{{if element.subElements}}\
-	// 								  <div class="checklist-subElements hide">\
-	// 								     {{each(subElementKey,subElement) element.subElements}}\
-	// 									    <div class="subelement-info">\
-	// 										    <div class="subelement-header">\
-	// 											   <div class="subelemt-title-text">${subElement.title}</div>\
-	// 												{{if subElement.icon}}\
-	// 													<div class="icon-block">\
-	// 														<img src="${subElement.icon}"\
-	// 													</div>\
-	// 												{{/if}}\
-	// 											</div>\
-	// 											</div>\
-	// 											{{if subElement.values}}\
-	// 											    <div class="subelemnt-values">\
-	// 												    {{each(valkey,val) subElement.values}}\
-	// 													    <div class="subelement-value">\
-	// 													   		<span class="val-title">${val.title}</span>\
-	// 															{{if val.icon}}\
-	// 																	<span class="val-icon"><img src="${val.icon}"></span>\
-	// 															{{/if}}\
-	// 															<span class="val-value">${val.value}</span>\
-	// 														</div>\
-	// 													{{/each}}\
-	// 												</div>\
-	// 											{{/if}}\
-	// 										</div>\
-	// 								     {{/each}}\
-	// 								  </div>\
-	// 								{{/if}}\
-	// 							  </div>\
-	// 							{{/each}}\
-	// 					   </div>\
-	// 					{{/if}}\
-	// 				</div>\
-	// 	   </div>\
-	// 	</li>\
-	// 	{{/if}} \
-	// </script>';
-
 	var checkListTemplate =  '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 	{{if msgData.message}} \
 		<li {{if msgData.type !== "bot_response"}} id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
@@ -1945,9 +1871,9 @@ print(JSON.stringify(message)); */
 												</div>\
 											{{/if}}\
 										</div>\
-										{{if element.optionInformation}}\
+										{{if element.subInformation}}\
 										  <div class="checklist-options">\
-										    {{each(optionkey,option) element.optionInformation}}\
+										    {{each(optionkey,option) element.subInformation}}\
 											   <div class="option-info">\
 											     <div class="option-title">${option.title}</div>\
 												 <div class="option-value">${option.value}</div>\
