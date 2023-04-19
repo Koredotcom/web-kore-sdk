@@ -4255,6 +4255,9 @@ white-space: nowrap;
     border-radius: 10px;
     margin-bottom: 15px;
 }
+.check-list-elements .checklist-element.clickable{
+    cursor: pointer;
+}
 .check-list-elements .checklist-element .checklist-heading {
     padding: 14px 20px;
     position: relative;

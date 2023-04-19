@@ -1859,7 +1859,7 @@ print(JSON.stringify(message)); */
 						{{if msgData.message[0].component.payload.elements}}\
 						   <div class="check-list-elements">\
 						   		{{each(key,element) msgData.message[0].component.payload.elements}}\
-								  <div class="checklist-element" {{if element.elementStyles}}style="{{each(styleKey,style) element.elementStyles}}${styleKey}:${style};{{/each}}"{{/if}} id="${element.id}">\
+								  <div class="checklist-element {{if element.default_action}}clickable{{/if}}" {{if element.elementStyles}}style="{{each(styleKey,style) element.elementStyles}}${styleKey}:${style};{{/each}}"{{/if}} id="${element.id}" {{if element.default_action}}actionObj="${JSON.stringify(element.default_action)}"{{/if}}>\
 								    <div class="checklist-heading">\
 										<div class="headig-with-progress">\
 											<div class="element-title-block">${element.title}\</div>\
@@ -3393,8 +3393,24 @@ print(JSON.stringify(message)); */
 		}
 		$(ele).off('click','.subelement-info').on('click','.subelement-info',function(e){
 			var actionObj =  $(e.currentTarget).attr('actionObj');
-			var parsedActionObj = JSON.parse(actionObj);
 			if(actionObj){
+			var parsedActionObj = JSON.parse(actionObj);
+			 var type = parsedActionObj.type;
+			 if(type == 'postback'){
+				 var payload = parsedActionObj.payload;
+				 var rendermessage = parsedActionObj.title;
+				 $('.chatInputBox').text(payload);
+				 chatInitialize.sendMessage($('.chatInputBox'),rendermessage,messageData);
+			 }else if(type == 'url'){
+				 var link = parsedActionObj.url;
+				 chatInitialize.openExternalLink(link);
+			 }
+			}
+		})
+		$(ele).off('click','.checklist-element').on('click','.checklist-element',function(e){
+			var actionObj =  $(e.currentTarget).attr('actionObj');
+			if(actionObj){
+			var parsedActionObj = JSON.parse(actionObj);
 			 var type = parsedActionObj.type;
 			 if(type == 'postback'){
 				 var payload = parsedActionObj.payload;
@@ -3410,8 +3426,8 @@ print(JSON.stringify(message)); */
 		$(ele).off('click','.subelement-info .subelement-header .icon-block').on('click','.subelement-info .subelement-header .icon-block',function(e){
 		  e.stopPropagation();
 		   var actionObj =  $(e.currentTarget).attr('actionObj');
-		   var parsedActionObj = JSON.parse(actionObj);
 		   if(actionObj){
+			var parsedActionObj = JSON.parse(actionObj);
 			var type = parsedActionObj.type;
 			if(type == 'postback'){
 				var payload = parsedActionObj.payload;
