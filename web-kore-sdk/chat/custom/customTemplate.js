@@ -1886,28 +1886,27 @@ print(JSON.stringify(message)); */
 									  <div class="checklist-subElements">\
 									     {{each(subElementKey,subElement) element.subElements}}\
 										    <div class="subelement-info" {{if subElement.default_action}}actionObj="${JSON.stringify(subElement.default_action)}"{{/if}}>\
-											    <div class="subelement-header">\
-												   <div class="subelemt-title-text">${subElement.title}</div>\
-													{{if subElement.rightContent && subElement.rightContent.icon}}\
-														<div class="icon-block" actionObj="${JSON.stringify(subElement.rightContent.default_action)}">\
-															<img src="${subElement.rightContent.icon}"\
+													<div class="subelement-header">\
+														<div class="subelemt-title-text">${subElement.title}</div>\
+														{{if subElement.rightContent && subElement.rightContent.icon}}\
+															<div class="icon-block" actionObj="${JSON.stringify(subElement.rightContent.default_action)}">\
+																<img src="${subElement.rightContent.icon}">\
+															</div>\
+														{{/if}}\
+													</div>\
+													{{if subElement.values}}\
+														<div class="subelemnt-values">\
+															{{each(valkey,val) subElement.values}}\
+																<div class="subelement-value">\
+																	<span class="val-title">${val.title}</span>\
+																	{{if val.icon}}\
+																			<span class="val-icon"><img src="${val.icon}"></span>\
+																	{{/if}}\
+																	<span class="val-value">${val.value}</span>\
+																</div>\
+															{{/each}}\
 														</div>\
 													{{/if}}\
-												</div>\
-												</div>\
-												{{if subElement.values}}\
-												    <div class="subelemnt-values">\
-													    {{each(valkey,val) subElement.values}}\
-														    <div class="subelement-value">\
-														   		<span class="val-title">${val.title}</span>\
-																{{if val.icon}}\
-																		<span class="val-icon"><img src="${val.icon}"></span>\
-																{{/if}}\
-																<span class="val-value">${val.value}</span>\
-															</div>\
-														{{/each}}\
-													</div>\
-												{{/if}}\
 											</div>\
 									     {{/each}}\
 									  </div>\
