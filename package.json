@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-umd": "webpack --env=kore_env=prod --env=target_module=umd",
-    "build": "webpack --env=kore_env=prod  --env=target_module=esm",
+    "build-esm": "webpack --env=kore_env=prod  --env=target_module=esm",
+    "build":"npm run-script build-umd && npm run-script build-esm",
     "serve-umd": "webpack-dev-server --env=kore_env=dev  --env=component=chat  --env=target_module=umd",
     "serve": "webpack-dev-server --env=kore_env=dev --env=component=chat --env=target_module=esm --mode development",
     "doc-chatwindow": "typedoc   --excludeNotDocumented  --out docs/api/chatwindow  --entryPoints  src/components/chatwindow/chatWindow.ts --name chatWindow  --cname ChatWindow ",
@@ -18,7 +19,10 @@
     "eslint-fix": "./node_modules/.bin/eslint --fix 'src/**/*.{ts,js}'",
     "prettier": "./node_modules/.bin/prettier --check 'src/**/*.{ts,js}'",
     "prettier-v": "./node_modules/.bin/prettier --debug-check 'src/**/*.{ts,js}'",
-    "prettier-fix": "./node_modules/.bin/prettier --write 'src/**/*.{ts,js}'"
+    "prettier-fix": "./node_modules/.bin/prettier --write 'src/**/*.{ts,js}'",
+    "npm-publish-dev": "npm run-script build && node ./scripts/npm-publish.js --name=@koredev/kore-web-sdk --tag=dev --trigger=manual",
+    "npm-publish-dev-auto": "npm run-script build && node ./scripts/npm-publish.js --name=@koredev/kore-web-sdk --tag=dev --trigger=auto",
+    "npm-publish-prod": "npm run-script build && node ./scripts/npm-publish.js --name=kore-web-sdk --tag=prod --trigger=manual"
   },
   "main": "dist/index_esm",
   "module": "dist/kore-web-sdk.esm.browser.js",
