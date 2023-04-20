@@ -1,5 +1,6 @@
 var fs = require('fs');
 const fse = require('fs-extra');
+const readline = require('readline');
 const execSync = require('child_process').execSync;
 
 function getArgs () {
@@ -56,15 +57,57 @@ function updateDatePackageJSONWithArgs(args,packageJSON){
             console.error("Please provide commitId, Example: npm run-script npm-publish-dev -- --commitId=5e2b86a17e2c5c9ce479ffd3c24fbc3a82beff68");
             return;
         }
-
+    }
+    if(args.tag==='prod'){
+        if(args.version){
+            packageJSON.version= packageJSON.version;
+        }else{
+            console.error("Please provide version, Example: npm run-script npm-publish-prod -- --version=10.0.0");
+            return;
+        }
     }
     return packageJSON;
 }
 function publish(packageJSON){
-    writePackageJSON(packageJSON);   
+    writePackageJSON(packageJSON);  
+    if(args.trigger==='auto'){
+        runPublish();        
+    }else{
+        takeConfirmation(function(){
+            runPublish();
+        });
+    } 
+}
+function runPublish(){
     execSync('cd '+TEMP_DIR+' && npm publish --access public');
 }
+function takeConfirmation(successCB, failureCB) {
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+    })
+    rl.question(
+        'Are you sure you want to continue with this config? (y/n) ',
+        (answer) => {
+            if (
+                answer.toLowerCase() === 'y' ||
+                answer.toLowerCase() === 'yes'
+            ) {
+                if(successCB){
+                    successCB()
+                }
+            } else {
+                console.log('Cancelled.');
+                if(failureCB){
+                    failureCB()
+                }
+            }
+            rl.close()
+        }
+    )
+}
 const args = getArgs();
+console.log("ARGS"+JSON.stringify(args));
 const TEMP_DIR = "./.temp";
 let packageJSON={};
 

@@ -107,7 +107,7 @@ http://localhost:9000/examples/umd/chat-with-widgets
 ```bash
 npm run build (builds both esm and umd)
 npm run build-umd (for umd build)
-npm run build-umd (for esm build)
+npm run build-esm (for esm build)
 ```
 
 ## 💡 ESLint
@@ -124,9 +124,19 @@ npm run prettier-v (verbose for detailed errors)
 
 ## 💡 NPM Publish
 
+Development
+
 ```bash
 npm run-script npm-publish-dev -- --commitId=5e2b86a17e2c5c9ce479ffd3c24fbc3a82beff68
 
 ```
-this will adds in koredev scope as @koredev/kore-web-sdk with version X.X.X-rc.5e2b86a
+this will publish in "koredev" scope as @koredev/kore-web-sdk with version X.X.X-rc.5e2b86a
+
+Production
+
+```bash
+npm run-script npm-publish-prod -- --version=10.0.0
+
+```
+this will publish as kore-web-sdk with version 10.0.0
 
