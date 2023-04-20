@@ -169,11 +169,6 @@ module.exports= function(env,argv){
             filename: 'plugins/agent-desktop-umd.js',
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
-          BrowserTTSPluginSDK: {
-            import: "./src/index_plugins/BrowserTTS_umd.ts",
-            filename: 'plugins/browser-tts-umd-plugin-umd.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          },
           GoogleSTTPluginSDK:{
             import: "./src/index_plugins/googleSTT_umd.ts",
             filename: 'plugins/google-stt-umd-plugin-umd.js',
@@ -218,6 +213,11 @@ module.exports= function(env,argv){
           SearchSuggestionsPluginSDK: {
             import: "./src/index_plugins/SearchSuggestions_umd.ts",
             filename: 'plugins/search-suggestions-umd.js',
+            chunkLoading: false,
+          },
+          FileUploadPluginSDK: {
+            import: "./src/index_plugins/fileUpload_umd.ts",
+            filename: 'plugins/file-upload-umd.js',
             chunkLoading: false,
           },
 

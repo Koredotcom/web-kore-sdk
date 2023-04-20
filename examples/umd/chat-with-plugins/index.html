@@ -18,6 +18,7 @@
     <script src="../../../dist/umd/plugins/kore-desktop-notification-umd.js"></script>
     <script src="../../../dist/umd/plugins/koreawspolly-st-umd-plugin-umd.js"></script>
     <script src="../../../dist/umd/plugins/search-suggestions-umd.js"></script>
+    <script src="../../../dist/umd/plugins/file-upload-umd.js"></script>
 
     <script>
         //chat window declaration
@@ -33,6 +34,7 @@
         var KoreDesktopNotificationPluginSDK = KoreDesktopNotificationPluginSDK.KoreDesktopNotificationPlugin;
         var SpeakTextWithAWSPolly = KoreAWSPollySTSDK.SpeakTextWithAWSPolly;
         var SearchSuggestionsPlugin= SearchSuggestionsPluginSDK.SearchSuggestionsPlugin;
+        var FileUploadPlugin = FileUploadPluginSDK.FileUploadPlugin;
 
 
         //create chat window instance
@@ -59,6 +61,7 @@
         chatWindowInstance.installPlugin(new WebKitSTTPlugin());
         chatWindowInstance.installPlugin(new BrowserTTSPlugin());
         chatWindowInstance.installPlugin(new KoreDesktopNotificationPluginSDK());
+        // chatWindowInstance.installPlugin(new FileUploadPlugin()); // FileUpload plugin 
 
         var options = {
             region: 'REGION',
@@ -67,7 +70,7 @@
             }
 
         }
-        chatWindowInstance.installPlugin(new SpeakTextWithAWSPolly(options));
+        // chatWindowInstance.installPlugin(new SpeakTextWithAWSPolly(options));
 
 
         // chatWindowInstance.installPlugin(new SearchSuggestionsPlugin({
