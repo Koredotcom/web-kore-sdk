@@ -1256,14 +1256,16 @@
 }
 
 .kore-chat-window .listTmplContent .listLeftContent {
-    display: table-cell;
-    vertical-align: top;
+    display: block;
+    width: 100%;
 }
 
 .kore-chat-window .listTmplContent .listRightContent {
-    width: 65px;
-    height: 60px;
-    cursor: pointer;
+    display: block;
+    flex-shrink: 0;
+    margin-right: 10px;
+    position: relative;
+    top: 3px;
 }
 
 .kore-chat-window .listRightContent img {
@@ -1275,9 +1277,10 @@
 .kore-chat-window .listTmplContent .listTmplContentChild {
     border-top: 1px solid var(--sdk-chat-widow-primary-bg-color);
     padding: 10px;
-    margin: 0;
+    margin: 0 !important;
     width: 100%;
-    display: table;
+    display: flex !important;
+    min-height: 80px;
 }
 
 .kore-chat-window .listTmplContent .listItemSubtitle {
