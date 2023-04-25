@@ -207,6 +207,11 @@ module.exports= function(env,argv){
           import: "./src/index_plugins/SearchSuggestions.ts",
           filename: 'plugins/search-suggestions.js',
           chunkLoading: false,
+        },
+        FileUploadPluginSDK: {
+          import: "./src/index_plugins/fileUpload_umd.ts",
+          filename: 'plugins/file-upload-umd.js',
+          chunkLoading: false,
         }
       }
       config.output.path= path.resolve(__dirname,'dist/esm');
@@ -315,7 +320,13 @@ module.exports= function(env,argv){
             import: "./src/index_plugins/SearchSuggestions.ts",
             filename: 'plugins/search-suggestions-umd.js',
             chunkLoading: false,
+          },
+          FileUploadPluginSDK: {
+            import: "./src/index_plugins/fileUpload_umd.ts",
+            filename: 'plugins/file-upload-umd.js',
+            chunkLoading: false,
           }
+
         }
         config.output.library = {
           name: '[name]',
