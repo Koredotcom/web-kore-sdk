@@ -20,7 +20,7 @@
     "prettier-v": "./node_modules/.bin/prettier --debug-check 'src/**/*.{ts,js}'",
     "prettier-fix": "./node_modules/.bin/prettier --write 'src/**/*.{ts,js}'"
   },
-  "main": "dist/esm/exports.js",
+  "main": "dist/esm/exports",
   "module": "dist/esm/exports.js",
   "repository": {
     "type": "git",
