@@ -210,7 +210,7 @@ module.exports= function(env,argv){
         },
         FileUploadPluginSDK: {
           import: "./src/index_plugins/fileUpload_umd.ts",
-          filename: 'plugins/file-upload-umd.js',
+          filename: 'plugins/file-upload.js',
           chunkLoading: false,
         }
       }

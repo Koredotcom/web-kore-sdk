@@ -14,3 +14,4 @@ export {AzureTTS} from './plugins/azure-tts-plugin.js';
 export {SpeakTextWithAWSPolly} from './plugins/koreawspolly-st-plugin.js';
 export {KoreDesktopNotificationPlugin} from './plugins/kore-desktop-notification.js';
 export {SearchSuggestionsPlugin} from './plugins/search-suggestions.js';
+export {KoreFileUploaderPlugin} from './plugins/file-upload.js';
