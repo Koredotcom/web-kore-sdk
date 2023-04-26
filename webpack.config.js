@@ -345,7 +345,6 @@ module.exports= function(env,argv){
         config.mode='production';
         config.optimization= {
           minimize: true,
-          innerGraph: true,
           usedExports: true,
           minimizer: [
             new TerserPlugin({

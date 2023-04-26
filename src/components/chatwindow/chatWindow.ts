@@ -1962,8 +1962,7 @@ applySDKBranding  (response:any) {
           }
           break;
           case 'widgetBody':
-          case 'buttons':
-            if(key  && typeof response[key] === 'object') {
+          if(key  && typeof response[key] === 'object') {
               for (var property in response[key]){
                   if(property === 'backgroundImage' && response[key] && response[key]['useBackgroundImage']){
                       $(".kore-chat-body").css("background-image", "url(" + response[key]['backgroundImage'] + ")");
@@ -1971,30 +1970,30 @@ applySDKBranding  (response:any) {
                     me.applyVariableValue(property,response[key][property],key);
                   }
               }
-            }
-            if(key  && typeof response[key] === 'object') {
-                for (var property in response[key]){
-                  me.applyVariableValue(property,response[key][property],key);
-                }
-            }
+          }
+          case 'buttons':
+              if(key  && typeof response[key] === 'object') {
+                  for (var property in response[key]){
+                    me.applyVariableValue(property,response[key][property],key);
+                  }
+              }
           break;
           case 'digitalViews':
-            var defaultTheme = 'defaultTheme-kore';
-            if(response && response[key] && response[key].panelTheme){
-              var digitalViewsThemeMapping:any = {
-                  'theme_one':"defaultTheme-kore",
-                  'theme_two':"darkTheme-kore",
-                  'theme_three':"defaultTheme-kora",
-                  'theme_four':"darkTheme-kora"
+              var defaultTheme = 'defaultTheme-kore';
+              if(response && response[key] && response[key].panelTheme){
+                var digitalViewsThemeMapping:any = {
+                    'theme_one':"defaultTheme-kore",
+                    'theme_two':"darkTheme-kore",
+                    'theme_three':"defaultTheme-kora",
+                    'theme_four':"darkTheme-kora"
+                }
+                if(digitalViewsThemeMapping[response[key].panelTheme]){
+                  defaultTheme = digitalViewsThemeMapping[response[key].panelTheme];
+                  $('.kr-wiz-menu-chat').addClass(defaultTheme);
+                  $('.kr-wiz-menu-chat').removeClass('defaultTheme-kore');
+                  
+                }
               }
-              if(digitalViewsThemeMapping[response[key].panelTheme]){
-                defaultTheme = digitalViewsThemeMapping[response[key].panelTheme];
-                $('.kr-wiz-menu-chat').addClass(defaultTheme);
-                $('.kr-wiz-menu-chat').removeClass('defaultTheme-kore');
-                
-              }
-            }
-            break;
           default:
           break;
       }
