@@ -72,7 +72,7 @@ class SearchSuggestionsPlugin {
     }
 
     //make Websdk API Call
-    getWebsdkAPICall(options: any, callback: any) {
+    getWebsdkAPICall(options: any, callback: any): Promise<any> {
         let me: any = this;
         var jsonData: any = {};
         if (options?.userMailId) jsonData['identity'] = options?.userMailId;
@@ -87,7 +87,7 @@ class SearchSuggestionsPlugin {
             },
             error: function (err) {
             }
-        });
+        }) as any;
     }
     //get authorization,AccessToken & userInfo
     getAccesToken() {
@@ -123,7 +123,7 @@ class SearchSuggestionsPlugin {
         });
     }
     //make SearchInterrface API Call
-    getSearchInterfaceAPICall(callback: any) {
+    getSearchInterfaceAPICall(callback: any): Promise<any> {
         let me: any = this;
         return $.ajax({
             url: me.config?.botOptions?.koreAPIUrl + "/searchassistapi/searchsdk/stream/" + me.options.botInfo.taskBotId + "/" + me.options.searchIndexID + "/searchInterface",
@@ -138,10 +138,10 @@ class SearchSuggestionsPlugin {
             },
             error: function (err) {
             }
-        });
+        }) as any;
     }
     //make JWTGrant API Call
-    getJWTGrantAPICall(options: any, callback: any) {
+    getJWTGrantAPICall(options: any, callback: any): Promise<any> {
         let me: any = this;
         let payload: any = {
             assertion: me.options.assertion,
@@ -161,7 +161,7 @@ class SearchSuggestionsPlugin {
             },
             error: function (err) {
             }
-        });
+        }) as any;
     }
     //suggestion template
     getAutoSuggestionTemplate = function () {

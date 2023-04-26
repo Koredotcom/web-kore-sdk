@@ -16,7 +16,6 @@ declare class WebKitSTT extends BaseSTT {
     two_line: RegExp;
     one_line: RegExp;
     prevRange: any;
-    hostInstance: any;
     constructor(mainconfig: WebKitSTTConfig);
     onHostCreate(): void;
     onInit(): void;

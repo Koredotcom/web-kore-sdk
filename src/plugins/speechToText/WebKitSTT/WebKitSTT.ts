@@ -18,7 +18,6 @@ class WebKitSTT extends BaseSTT {
     two_line = /\n\n/g;
     one_line = /\n/g;
     prevRange: any;
-    hostInstance: any;
     constructor(mainconfig: WebKitSTTConfig) {
         // config = config || {};
         // this.config = {
