@@ -17,9 +17,9 @@ jobs:
           node-version: 16
           registry-url: https://registry.npmjs.org/
           scope: '@koredev'
-     - name: Installing the dependencies   
+      - name: Installing the dependencies
         run: npm ci
-      - name: Run build and publish
+      - name: Runing build and publish
         run: npm run-script npm-publish-dev-auto -- --commitId=${{github.sha}}
         env:
           NODE_AUTH_TOKEN: ${{secrets.TOKENNPM}}
