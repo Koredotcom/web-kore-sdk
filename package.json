@@ -25,8 +25,9 @@
     "npm-publish-prod": "npm run-script build && node ./scripts/npm-publish.js --name=kore-web-sdk --tag=prod --trigger=manual"
   },
   "main": "dist/esm/exports.js",
-  "types": "dist/esm/exports.d.ts",
+  "typings": "dist/esm/exports.d.ts",
   "module": "dist/esm/exports.js",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git@github.com:Koredotcom/web-kore-sdk.git#v2/9.3.0"
