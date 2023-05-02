@@ -11,27 +11,27 @@ let config= {
     entry:'',
     module:{
         rules:[
-          // {
-          //   test: /\.(js)$/,
-          //   exclude: /node_modules/,
-          //   use: "babel-loader",
-          // },
+          {
+            test: /\.(js)$/,
+            exclude: /node_modules/,
+            use: "babel-loader",
+          },
             {
                 test: /\.ts/,
                 use: 'ts-loader',
                 include:[path.resolve(__dirname,'src'),path.resolve(__dirname,'UI')]
             },
-            {
-              test: /\.js$/,
-              exclude: /(node_modules|bower_componentss)/,
-              use: {
-                loader: 'babel-loader',
-                options: {
-                  presets: ['@babel/preset-env'],
-                  plugins: ['@babel/plugin-transform-runtime']
-                }
-              }
-            },
+            // {
+            //   test: /\.js$/,
+            //   exclude: /(node_modules|bower_componentss)/,
+            //   use: {
+            //     loader: 'babel-loader',
+            //     options: {
+            //       presets: ['@babel/preset-env'],
+            //       plugins: ['@babel/plugin-transform-runtime']
+            //     }
+            //   }
+            // },
               {
                 test: /\.css|.scss$/,
                 use: [
