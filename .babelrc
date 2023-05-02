@@ -2,9 +2,6 @@
   "sourceType": "unambiguous",
   "presets": ["@babel/preset-env"],
   "plugins": [
-    "@babel/plugin-transform-runtime",
-    [
-      "@babel/plugin-proposal-class-static-block"
-    ]
+    "@babel/plugin-transform-runtime"
   ]
 }
