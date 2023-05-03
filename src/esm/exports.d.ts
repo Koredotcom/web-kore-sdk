@@ -15,7 +15,7 @@ export{WebKitSTT}from"./plugins/webapi-stt-plugin.js";
 // @ts-ignore
 export{BrowserTTS}from"./plugins/browser-tts-plugin.js";
 // @ts-ignore
-export{AgentDesktopPlugin}from"./plugins/agent-desktop.js";
+// export{AgentDesktopPlugin}from"./plugins/agent-desktop.js";
 // @ts-ignore
 export{GoogleSTT}from"./plugins/google-stt-plugin.js";
 // @ts-ignore

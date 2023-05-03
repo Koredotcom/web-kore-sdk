@@ -162,11 +162,11 @@ module.exports= function(env,argv){
           filename: 'plugins/browser-tts-plugin.js',
           chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
         },
-        AgentDeskTopPluginSDK: {
-          import: "./src/index_plugins/agentDesktop.ts",
-          filename: 'plugins/agent-desktop.js',
-          chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-        },
+        // AgentDeskTopPluginSDK: {
+        //   import: "./src/index_plugins/agentDesktop.ts",
+        //   filename: 'plugins/agent-desktop.js',
+        //   chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+        // },
         GoogleSTTPluginSDK:{
           import: "./src/index_plugins/googleSTT.ts",
           filename: 'plugins/google-stt-plugin.js',
