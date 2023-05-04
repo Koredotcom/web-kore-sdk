@@ -139,7 +139,6 @@ class chatWindow extends EventEmitter{
        JWT_GRANT_SUCCESS : 'jwtGrantSuccess'
   }
   sendFailedMessage: any;
-  bot:any;
   
  constructor(){
   super(null);
@@ -1395,22 +1394,17 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   if (me.chatPSObj && me.chatPSObj.update) {
     me.chatPSObj.update();
   }
-  me.adjustScrollonRenderMessage(msgData);
+  if(bot && !bot.previousHistoryLoading){
+    _chatContainer.animate({
+      scrollTop: _chatContainer.prop('scrollHeight'),
+    }, 100);
+  }
   me.emit(me.EVENTS.AFTER_RENDER_MSG,{
     messageHtml:messageHtml,
     msgData:msgData
   });
 };
 
-adjustScrollonRenderMessage(msgData:any) {
-  let me = this;
-  const _chatContainer = me.chatEle;
-  if (me.bot && !me.bot.previousHistoryLoading) {
-    _chatContainer.animate({
-      scrollTop: _chatContainer.prop('scrollHeight'),
-    }, 100);
-  }
-}
 
 generateMessageDOM(msgData?:any){
   const me:any = this; 
