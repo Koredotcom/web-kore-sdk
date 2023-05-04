@@ -6,7 +6,7 @@ export {KorePickersPlugin} from './plugins/kore-picker-plugin.js';
 export {GraphTemplatesPlugin} from './plugins/kore-graph-templates-plugin.js';
 export {WebKitSTT} from './plugins/webapi-stt-plugin.js';
 export {BrowserTTS} from './plugins/browser-tts-plugin.js';
-// export {AgentDesktopPlugin} from './plugins/agent-desktop.js';
+export {AgentDesktopPlugin} from './plugins/agent-desktop.js';
 export {GoogleSTT} from './plugins/google-stt-plugin.js';
 export {GoogleTTS} from './plugins/google-tts-plugin.js';
 export {AzureSTT} from './plugins/azure-stt-plugin.js';

@@ -24,7 +24,7 @@
     "npm-publish-dev-auto": "npm run-script build && node ./scripts/npm-publish.js --name=@koredev/kore-web-sdk --tag=dev --trigger=auto",
     "npm-publish-prod": "npm run-script build && node ./scripts/npm-publish.js --name=kore-web-sdk --tag=prod --trigger=manual"
   },
-  "typings": "dist/esm/exports.d.ts",
+  "main": "dist/esm/exports.js",
   "module": "dist/esm/exports.js",
   "types": "dist/esm/exports.d.ts",
   "repository": {
@@ -40,7 +40,8 @@
   "sideEffects": [
     "**/*.css",
     "**/*.scss",
-    "src/exports/exports.js"
+    "src/exports/exports.js",
+    "src/exports/exports.d.ts"
   ],
   "dependencies": {
     "aws-sdk": "^2.1102.0",
