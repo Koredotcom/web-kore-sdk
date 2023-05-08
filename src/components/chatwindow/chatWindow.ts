@@ -200,6 +200,7 @@ initShow  (config:any) {
     allowIframe: false,
     botOptions: me.config.botOptions,
   });
+  me.config.botOptions.$=me.$;
   me.messagesQueue=[];
 
   me.config.chatTitle = 'Kore.ai Bot Chat';
@@ -847,8 +848,12 @@ bindEvents  () {
     }, 100);
   });
 
-  _chatContainer.on('click', '.reload-btn',  (event: any) => {
-    me.config.botOptions.forceReconnecting = false;// make it to true if reconnect button should not trigger on connect message
+  _chatContainer.on('click', '.reload-btn',  (event: any,data:any) => {
+    if(data && data.isReconnect){
+        me.config.botOptions.forceReconnecting=true;
+    }else{
+        me.config.botOptions.forceReconnecting=false;//make it to true if reconnect button should not trigger on connect message
+    }
     $(this).addClass('disabled').prop('disabled', true);
     $('.close-btn').addClass('disabled').prop('disabled', true);
     setTimeout(() => {
