@@ -11,12 +11,206 @@
  * AudioCodes WebRTC API v1.18.0
  * © 2022 AudioCodes Ltd. All rights reserved.
  *
- */ class AudioCodesUA {
-     JsSipInit() {
+ */ 
+
+let AudioCodesWebRTCWrapper = {
+    getUserMedia: (e) => (
+        AudioCodesUA.ac_log(
+            `[webrtc] getUserMedia constraints=${JSON.stringify(e)}`
+        ),
+        navigator.mediaDevices.getUserMedia(e)
+    ),
+    hasDisplayMedia: () =>
+        navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia,
+    getDisplayMedia: () => (
+        AudioCodesUA.ac_log('[webrtc] getDisplayMedia'),
+        navigator.mediaDevices.getDisplayMedia({ video: !0 })
+    ),
+    mediaDevices: {
+        enumerateDevices: () =>
+            navigator.mediaDevices && navigator.mediaDevices.enumerateDevices
+                ? navigator.mediaDevices.enumerateDevices()
+                : Promise.reject('WebRTC is not supported'),
+        addDeviceChangeListener(e) {
+            navigator.mediaDevices &&
+                navigator.mediaDevices.addEventListener('devicechange', e)
+        },
+        removeDeviceChangeListener(e) {
+            navigator.mediaDevices &&
+                navigator.mediaDevices.removeEventListener('devicechange', e)
+        },
+    },
+    checkAvailableDevices() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia)
+            return Promise.reject('WebRTC is not supported')
+        let e = !1,
+            i = !1,
+            s = !1
+        return navigator.mediaDevices.enumerateDevices().then(
+            (t) => (
+                t.forEach(function (t) {
+                    switch (t.kind) {
+                        case 'videoinput':
+                            e = !0
+                            break
+                        case 'audioinput':
+                            i = !0
+                            break
+                        case 'audiooutput':
+                            s = !0
+                    }
+                }),
+                void 0 === navigator.webkitGetUserMedia && (s = !0),
+                s
+                    ? i
+                        ? Promise.resolve(e)
+                        : Promise.reject(
+                              'Missing a microphone! Please connect one and reload'
+                          )
+                    : Promise.reject(
+                          'Missing a speaker! Please connect one and reload'
+                      )
+            )
+        )
+    },
+    transceiver: {
+        setDirection(e, i) {
+            let s = ''
+            null !== e.sender.track
+                ? (s = e.sender.track.kind)
+                : null !== e.receiver.track && (s = e.receiver.track.kind),
+                AudioCodesUA.ac_log(
+                    `[webrtc] set ${s} transceiver direction=${i}`
+                ),
+                (e.direction = i)
+        },
+    },
+    stream: {
+        getInfo(e) {
+            function i(e) {
+                return e.length > 0 ? e[0].enabled.toString() : '-'
+            }
+            return null === e
+                ? Promise.resolve('stream is null')
+                : Promise.resolve(
+                      `audio: ${i(e.getAudioTracks())} video: ${i(
+                          e.getVideoTracks()
+                      )}`
+                  )
+        },
+    },
+    connection: {
+        getTransceiversInfo(e) {
+            function i(e) {
+                return null === e
+                    ? 'none'
+                    : `d=${e.direction} c=${e.currentDirection}`
+            }
+            let s = e.getTransceivers(),
+                t = AudioCodesUA.instance
+                    .getWR()
+                    .connection.getTransceiver(e, 'audio'),
+                o = AudioCodesUA.instance
+                    .getWR()
+                    .connection.getTransceiver(e, 'video')
+            return Promise.resolve(`(${s.length}) audio ${i(t)} video ${i(o)}`)
+        },
+        getTransceiver(e, i) {
+            for (let s of e.getTransceivers()) {
+                if (
+                    null !== s.sender &&
+                    null !== s.sender.track &&
+                    s.sender.track.kind === i
+                )
+                    return s
+                if (
+                    null !== s.receiver &&
+                    null !== s.receiver.track &&
+                    s.receiver.track.kind === i
+                )
+                    return s
+            }
+            return null
+        },
+        addEventListener: (e, i, s) => (
+            AudioCodesUA.ac_log(`[webrtc] Connection addEventListener ${i}`),
+            'track' !== i
+                ? Promise.reject(`Wrong event name: ${i}`)
+                : (e.addEventListener(i, s), Promise.resolve())
+        ),
+        getDTMFSender(e) {
+            let i = e
+                .getSenders()
+                .find((e) => e.track && 'audio' === e.track.kind)
+            if (i && i.dtmf) return i.dtmf
+        },
+        addVideo(e, i, s, t, o) {
+            AudioCodesUA.ac_log('[webrtc] Connection addVideo')
+            let n = AudioCodesUA.instance
+                .getWR()
+                .connection.getTransceiver(e, 'video')
+            if (null !== n) {
+                let e = t ? 'sendrecv' : 'sendonly'
+                AudioCodesUA.instance.getWR().transceiver.setDirection(n, e)
+            }
+            return null === n || (null === n.sender.track && !o)
+                ? (AudioCodesUA.ac_log(
+                      '[webrtc] addVideo (connection addTrack)'
+                  ),
+                  e.addTrack(s, i),
+                  Promise.resolve(!0))
+                : (AudioCodesUA.ac_log(
+                      '[webrtc] addVideo (video transceiver sender replaceTrack)'
+                  ),
+                  n.sender.replaceTrack(s).then(() => !1))
+        },
+        removeVideo(e, i) {
+            AudioCodesUA.ac_log('[webrtc] Connection removeVideo')
+            let s = AudioCodesUA.instance
+                .getWR()
+                .connection.getTransceiver(e, 'video')
+            if (null === s) return Promise.reject('no video transceiver found')
+            if ((e.removeTrack(s.sender), i))
+                for (let e of i.getVideoTracks()) i.removeTrack(e), e.stop()
+            return Promise.resolve()
+        },
+        replaceSenderTrack(e, i, s) {
+            AudioCodesUA.ac_log(`[webrtc] ReplaceSenderTrack ${i}`)
+            let t = null
+            for (let s of e.getSenders())
+                if (null !== s.track && s.track.kind === i) {
+                    t = s
+                    break
+                }
+            if (null === t) return Promise.reject(`No ${i} sender`)
+            let o = 'audio' === i ? s.getAudioTracks() : s.getVideoTracks()
+            return 0 === o.length
+                ? Promise.reject(`No ${i} track`)
+                : t.replaceTrack(o[0])
+        },
+        getStats(e, i) {
+            let s = ''
+            return e.getStats(null).then(
+                (e) => (
+                    e.forEach((e) => {
+                        if (i.includes(e.type)) {
+                            s += ' {'
+                            let i = !0
+                            for (let t of Object.keys(e))
+                                i ? (i = !1) : (s += ','), (s += t + '=' + e[t])
+                            s += '} \r\n'
+                        }
+                    }),
+                    s
+                )
+            )
+        },
+    },
+}
+class AudioCodesUA {
+     JsSipInit = function() {
          !(function (e) {
-             if ('object' == typeof exports && 'undefined' != typeof module)
-                 module.exports = e()
-             else if ('function' == typeof define && define.amd) define([], e)
+             if ('function' == typeof define && define.amd) define([], e)
              else {
                  ;('undefined' != typeof window
                      ? window
@@ -34111,198 +34305,5 @@ class AudioCodesSDP {
         return e.join('\r\n') + '\r\n'
     }
 }
-let AudioCodesWebRTCWrapper = {
-    getUserMedia: (e) => (
-        AudioCodesUA.ac_log(
-            `[webrtc] getUserMedia constraints=${JSON.stringify(e)}`
-        ),
-        navigator.mediaDevices.getUserMedia(e)
-    ),
-    hasDisplayMedia: () =>
-        navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia,
-    getDisplayMedia: () => (
-        AudioCodesUA.ac_log('[webrtc] getDisplayMedia'),
-        navigator.mediaDevices.getDisplayMedia({ video: !0 })
-    ),
-    mediaDevices: {
-        enumerateDevices: () =>
-            navigator.mediaDevices && navigator.mediaDevices.enumerateDevices
-                ? navigator.mediaDevices.enumerateDevices()
-                : Promise.reject('WebRTC is not supported'),
-        addDeviceChangeListener(e) {
-            navigator.mediaDevices &&
-                navigator.mediaDevices.addEventListener('devicechange', e)
-        },
-        removeDeviceChangeListener(e) {
-            navigator.mediaDevices &&
-                navigator.mediaDevices.removeEventListener('devicechange', e)
-        },
-    },
-    checkAvailableDevices() {
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia)
-            return Promise.reject('WebRTC is not supported')
-        let e = !1,
-            i = !1,
-            s = !1
-        return navigator.mediaDevices.enumerateDevices().then(
-            (t) => (
-                t.forEach(function (t) {
-                    switch (t.kind) {
-                        case 'videoinput':
-                            e = !0
-                            break
-                        case 'audioinput':
-                            i = !0
-                            break
-                        case 'audiooutput':
-                            s = !0
-                    }
-                }),
-                void 0 === navigator.webkitGetUserMedia && (s = !0),
-                s
-                    ? i
-                        ? Promise.resolve(e)
-                        : Promise.reject(
-                              'Missing a microphone! Please connect one and reload'
-                          )
-                    : Promise.reject(
-                          'Missing a speaker! Please connect one and reload'
-                      )
-            )
-        )
-    },
-    transceiver: {
-        setDirection(e, i) {
-            let s = ''
-            null !== e.sender.track
-                ? (s = e.sender.track.kind)
-                : null !== e.receiver.track && (s = e.receiver.track.kind),
-                AudioCodesUA.ac_log(
-                    `[webrtc] set ${s} transceiver direction=${i}`
-                ),
-                (e.direction = i)
-        },
-    },
-    stream: {
-        getInfo(e) {
-            function i(e) {
-                return e.length > 0 ? e[0].enabled.toString() : '-'
-            }
-            return null === e
-                ? Promise.resolve('stream is null')
-                : Promise.resolve(
-                      `audio: ${i(e.getAudioTracks())} video: ${i(
-                          e.getVideoTracks()
-                      )}`
-                  )
-        },
-    },
-    connection: {
-        getTransceiversInfo(e) {
-            function i(e) {
-                return null === e
-                    ? 'none'
-                    : `d=${e.direction} c=${e.currentDirection}`
-            }
-            let s = e.getTransceivers(),
-                t = AudioCodesUA.instance
-                    .getWR()
-                    .connection.getTransceiver(e, 'audio'),
-                o = AudioCodesUA.instance
-                    .getWR()
-                    .connection.getTransceiver(e, 'video')
-            return Promise.resolve(`(${s.length}) audio ${i(t)} video ${i(o)}`)
-        },
-        getTransceiver(e, i) {
-            for (let s of e.getTransceivers()) {
-                if (
-                    null !== s.sender &&
-                    null !== s.sender.track &&
-                    s.sender.track.kind === i
-                )
-                    return s
-                if (
-                    null !== s.receiver &&
-                    null !== s.receiver.track &&
-                    s.receiver.track.kind === i
-                )
-                    return s
-            }
-            return null
-        },
-        addEventListener: (e, i, s) => (
-            AudioCodesUA.ac_log(`[webrtc] Connection addEventListener ${i}`),
-            'track' !== i
-                ? Promise.reject(`Wrong event name: ${i}`)
-                : (e.addEventListener(i, s), Promise.resolve())
-        ),
-        getDTMFSender(e) {
-            let i = e
-                .getSenders()
-                .find((e) => e.track && 'audio' === e.track.kind)
-            if (i && i.dtmf) return i.dtmf
-        },
-        addVideo(e, i, s, t, o) {
-            AudioCodesUA.ac_log('[webrtc] Connection addVideo')
-            let n = AudioCodesUA.instance
-                .getWR()
-                .connection.getTransceiver(e, 'video')
-            if (null !== n) {
-                let e = t ? 'sendrecv' : 'sendonly'
-                AudioCodesUA.instance.getWR().transceiver.setDirection(n, e)
-            }
-            return null === n || (null === n.sender.track && !o)
-                ? (AudioCodesUA.ac_log(
-                      '[webrtc] addVideo (connection addTrack)'
-                  ),
-                  e.addTrack(s, i),
-                  Promise.resolve(!0))
-                : (AudioCodesUA.ac_log(
-                      '[webrtc] addVideo (video transceiver sender replaceTrack)'
-                  ),
-                  n.sender.replaceTrack(s).then(() => !1))
-        },
-        removeVideo(e, i) {
-            AudioCodesUA.ac_log('[webrtc] Connection removeVideo')
-            let s = AudioCodesUA.instance
-                .getWR()
-                .connection.getTransceiver(e, 'video')
-            if (null === s) return Promise.reject('no video transceiver found')
-            if ((e.removeTrack(s.sender), i))
-                for (let e of i.getVideoTracks()) i.removeTrack(e), e.stop()
-            return Promise.resolve()
-        },
-        replaceSenderTrack(e, i, s) {
-            AudioCodesUA.ac_log(`[webrtc] ReplaceSenderTrack ${i}`)
-            let t = null
-            for (let s of e.getSenders())
-                if (null !== s.track && s.track.kind === i) {
-                    t = s
-                    break
-                }
-            if (null === t) return Promise.reject(`No ${i} sender`)
-            let o = 'audio' === i ? s.getAudioTracks() : s.getVideoTracks()
-            return 0 === o.length
-                ? Promise.reject(`No ${i} track`)
-                : t.replaceTrack(o[0])
-        },
-        getStats(e, i) {
-            let s = ''
-            return e.getStats(null).then(
-                (e) => (
-                    e.forEach((e) => {
-                        if (i.includes(e.type)) {
-                            s += ' {'
-                            let i = !0
-                            for (let t of Object.keys(e))
-                                i ? (i = !1) : (s += ','), (s += t + '=' + e[t])
-                            s += '} \r\n'
-                        }
-                    }),
-                    s
-                )
-            )
-        },
-    },
-}
+
 export default AudioCodesUA;
