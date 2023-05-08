@@ -34305,4 +34305,4 @@ let AudioCodesWebRTCWrapper = {
         },
     },
 }
-export {AudioCodesUA};
+export default AudioCodesUA;

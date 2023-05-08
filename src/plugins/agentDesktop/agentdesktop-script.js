@@ -17,7 +17,7 @@
  */
 
 
-import {AudioCodesUA} from './ac_webrtc';
+import AudioCodesUA from './ac_webrtc';
  //import { io } from "socket.io-client";
 // import * as JsSIP from 'jssip';
 import * as koreJquery from '../../libs/korejquery';

@@ -213,6 +213,9 @@ module.exports= function(env,argv){
           chunkLoading: false,
         }
       }
+      config.experiments = {
+        outputModule: true,
+      };
       config.output.path= path.resolve(__dirname,'dist/esm');
       config.output.libraryTarget = "module";
       // config.output.filename = 'kore-web-sdk.esm.browser.js';
