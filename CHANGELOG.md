@@ -1,4 +1,13 @@
 
+### 10.1.0
+
+- Release Apr 16, 2023
+* Bug fixes
+  * Tree shaking for esm modules
+  * Retry logic on failed message
+  * CSS namespacing for jquery libs
+  * Agent Desktop plugin bug fixes
+
 ### 10.0.0
 
 - Release Jan 21, 2023

@@ -1376,6 +1376,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     this.user.accessToken = clientOpts.accessToken;
     this.botInfo = clientOpts.botInfo || {};
     this.CLIENT_EVENTS=CLIENT_EVENTS.RTM;
+    this.$=clientOpts.$
     this.debug=debug;
   }
   
@@ -1420,6 +1421,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       console.log(e && e.stack);
     }
     if(data && data.errors && (data.errors[0].code === 'TOKEN_EXPIRED' || data.errors[0].code === 401 || data.errors[0].msg === 'token expired')){
+        var $=this.$;
         $(".reload-btn").trigger('click',{isReconnect:true});
         data.error='token_expired';
     }

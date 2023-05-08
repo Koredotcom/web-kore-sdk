@@ -139,7 +139,6 @@ class chatWindow extends EventEmitter{
        JWT_GRANT_SUCCESS : 'jwtGrantSuccess'
   }
   sendFailedMessage: any;
-  bot:any;
   
  constructor(){
   super(null);
@@ -201,6 +200,7 @@ initShow  (config:any) {
     allowIframe: false,
     botOptions: me.config.botOptions,
   });
+  me.config.botOptions.$=me.$;
   me.messagesQueue=[];
 
   me.config.chatTitle = 'Kore.ai Bot Chat';
@@ -848,8 +848,12 @@ bindEvents  () {
     }, 100);
   });
 
-  _chatContainer.on('click', '.reload-btn',  (event: any) => {
-    me.config.botOptions.forceReconnecting = false;// make it to true if reconnect button should not trigger on connect message
+  _chatContainer.on('click', '.reload-btn',  (event: any,data:any) => {
+    if(data && data.isReconnect){
+        me.config.botOptions.forceReconnecting=true;
+    }else{
+        me.config.botOptions.forceReconnecting=false;//make it to true if reconnect button should not trigger on connect message
+    }
     $(this).addClass('disabled').prop('disabled', true);
     $('.close-btn').addClass('disabled').prop('disabled', true);
     setTimeout(() => {
@@ -1395,22 +1399,17 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   if (me.chatPSObj && me.chatPSObj.update) {
     me.chatPSObj.update();
   }
-  me.adjustScrollonRenderMessage(msgData);
+  if(bot && !bot.previousHistoryLoading){
+    _chatContainer.animate({
+      scrollTop: _chatContainer.prop('scrollHeight'),
+    }, 100);
+  }
   me.emit(me.EVENTS.AFTER_RENDER_MSG,{
     messageHtml:messageHtml,
     msgData:msgData
   });
 };
 
-adjustScrollonRenderMessage(msgData:any) {
-  let me = this;
-  const _chatContainer = me.chatEle;
-  if (me.bot && !me.bot.previousHistoryLoading) {
-    _chatContainer.animate({
-      scrollTop: _chatContainer.prop('scrollHeight'),
-    }, 100);
-  }
-}
 
 generateMessageDOM(msgData?:any){
   const me:any = this; 
