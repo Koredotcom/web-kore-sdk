@@ -942,14 +942,16 @@ bindSDKEvents  () {
     }
 
     let msgData=me.parseSocketMessage(response.data);
-    if (me.loadHistory && me.historyLoading) {
+    if (msgData) {
+      if (me.loadHistory && me.historyLoading) {
         me.messagesQueue.push(msgData)
-    } else {
+      } else {
         if (me.config.supportDelayedMessages) {
-            me.pushTorenderMessagesQueue(msgData)
+          me.pushTorenderMessagesQueue(msgData)
         } else {
-            me.renderMessage(msgData)
+          me.renderMessage(msgData)
         }
+      }
     }
     // if (msgData.type === 'appInvalidNotification') {
     //   setTimeout(() => {
@@ -1446,7 +1448,7 @@ checkForMsgQueue  () {
   if (me.renderMessagesQueue.length && !me.msgRenderingProgress) {
     const tempData = me.renderMessagesQueue.shift();
     let delay = 0;
-    if (tempData?.message[0]?.component?.payload?.renderDelay) {
+    if (tempData?.message?.[0]?.component?.payload?.renderDelay) {
       delay = tempData.message[0].component.payload.renderDelay || 0;
     }
     me.msgRenderingProgress = true;

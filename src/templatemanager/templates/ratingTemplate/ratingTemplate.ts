@@ -7,7 +7,7 @@ class RatingTemplate {
         let $ = me.hostInstance.$;
         let helpersObj = helpers;
 
-        if (msgData?.message[0]?.component?.payload && (msgData.message[0].component.payload.template_type && (msgData.message[0].component.payload.template_type === "feedbackTemplate" && (msgData.message[0].component.payload.view==="star"|| msgData.message[0].component.payload.view ==="emojis" || msgData.message[0].component.payload.view === "CSAT"|| msgData.message[0].component.payload.view ==="ThumbsUpDown" || msgData.message[0].component.payload.view === "NPS") ))){
+        if (msgData?.message?.[0]?.component?.payload && (msgData.message[0].component.payload.template_type && (msgData.message[0].component.payload.template_type === "feedbackTemplate" && (msgData.message[0].component.payload.view==="star"|| msgData.message[0].component.payload.view ==="emojis" || msgData.message[0].component.payload.view === "CSAT"|| msgData.message[0].component.payload.view ==="ThumbsUpDown" || msgData.message[0].component.payload.view === "NPS") ))){
             var thumpsUpDownArrays;
             if (msgData && msgData?.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.thumpsUpDownArrays) {
                 thumpsUpDownArrays = msgData.message[0].component.payload.thumpsUpDownArrays;
