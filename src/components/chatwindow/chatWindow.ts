@@ -946,7 +946,9 @@ bindSDKEvents  () {
         me.messagesQueue.push(msgData)
     } else {
         if (me.config.supportDelayedMessages) {
-            me.pushTorenderMessagesQueue(msgData)
+          if(msgData){
+            me.pushTorenderMessagesQueue(msgData);
+          }
         } else {
             me.renderMessage(msgData)
         }
@@ -1446,9 +1448,9 @@ checkForMsgQueue  () {
   if (me.renderMessagesQueue.length && !me.msgRenderingProgress) {
     const tempData = me.renderMessagesQueue.shift();
     let delay = 0;
-    if (tempData?.message?.[0]?.component?.payload?.renderDelay) {
-      delay = tempData.message[0].component.payload.renderDelay || 0;
-    }
+      if (tempData?.message?.[0]?.component?.payload?.renderDelay) {
+        delay = tempData.message[0].component.payload.renderDelay || 0;
+      }
     me.msgRenderingProgress = true;
     setTimeout(() => {
       me.renderMessage(tempData);
