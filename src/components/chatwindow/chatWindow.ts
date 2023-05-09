@@ -1446,7 +1446,7 @@ checkForMsgQueue  () {
   if (me.renderMessagesQueue.length && !me.msgRenderingProgress) {
     const tempData = me.renderMessagesQueue.shift();
     let delay = 0;
-    if (tempData?.message[0]?.component?.payload?.renderDelay) {
+    if (tempData?.message?.[0]?.component?.payload?.renderDelay) {
       delay = tempData.message[0].component.payload.renderDelay || 0;
     }
     me.msgRenderingProgress = true;
