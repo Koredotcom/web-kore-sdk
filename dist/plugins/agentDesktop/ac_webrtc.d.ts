@@ -1,6 +1,7 @@
-export class AudioCodesUA {
+export default AudioCodesUA;
+declare class AudioCodesUA {
     static getSessionStatusName(e: any): string;
-    JsSipInit(): void;
+    JsSipInit: () => void;
     _isInitialized: boolean;
     serverConfig: {};
     account: {
