@@ -601,6 +601,15 @@ class AgentDesktopPluginScript  {
                 var rejectCall = koreJquery("#rejectcall");
                 var acceptCall = koreJquery("#acceptcall");
                 rejectCall.off('click').on('click', function (event) {
+                    const payload = _self.callDetails;
+                    payload['type'] = "call_agent_webrtc_rejected"
+                    const messageToBot = {};
+                    messageToBot["event"] = "event";
+                    messageToBot["message"] = {
+                        "body": _self.callDetails,
+                        "type": ""
+                    }
+                    botInstance.sendMessage(messageToBot, (err) => { });
                     if (_self.activeCall) {
                         _self.activeCall.terminate();
                     }
@@ -608,6 +617,16 @@ class AgentDesktopPluginScript  {
                     toastContainer.empty();
                 });
                 acceptCall.off('click').on('click', function (event) {
+                    const payload = _self.callDetails;
+                    payload['type'] = "call_agent_webrtc_accepted"
+                    const messageToBot = {};
+                    messageToBot["event"] = "event";
+                    messageToBot["message"] = {
+                        "body": _self.callDetails,
+                        "type": ""
+                    }
+                    botInstance.sendMessage(messageToBot, (err) => { });
+                    
                     _self.addAudioVideoContainer();
                     _self.callConnecting(_self.callDetails.videoCall, _self.callDetails.firstName);
 
