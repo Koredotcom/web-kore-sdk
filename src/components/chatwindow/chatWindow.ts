@@ -1347,7 +1347,10 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
     }
   }
   _chatContainer.find('li').attr('aria-live', 'off');
-  // _chatContainer.find('li').attr('aria-hidden','true');//for mac voiceover bug with aria-live
+  _chatContainer.find('li .messageBubble').attr('aria-hidden','true');//for mac voiceover bug with aria-live
+  _chatContainer.find('.endChatContainer').attr('aria-live', 'off');
+  _chatContainer.find('.endChatContainer').attr('aria-hidden','true');//for mac voiceover bug with aria-live
+  
   let chatWindowEvent = {stopFurtherExecution: false};
   me.emit(me.EVENTS.BEFORE_RENDER_MSG,{
     messageHtml:messageHtml,
