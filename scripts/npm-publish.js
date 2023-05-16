@@ -31,6 +31,9 @@ function writePackageJSON(packageJSON){
 function copyDistrubution(){
     fse.copySync("./dist", TEMP_DIR+'/dist',{overwrite:true});
 }
+function copyReadMeFile(){
+    fse.copySync("README.md", TEMP_DIR+'/README.md',{overwrite:true});
+}
 function deleteUnWantedKeys(json){
     const unwantedKeys=['dependencies','devDependencies','scripts'];
     unwantedKeys.forEach((key)=>{
@@ -112,6 +115,7 @@ const TEMP_DIR = "./.temp";
 let packageJSON={};
 
 copyDistrubution();
+copyReadMeFile();
  packageJSON=readPackageJSON();
  packageJSON=deleteUnWantedKeys(packageJSON);
  packageJSON=updateDatePackageJSONWithArgs(args,packageJSON);//ex:version number and name 
