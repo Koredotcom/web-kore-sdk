@@ -85,7 +85,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     if(userLocation.country !== "") {
       return;
     }
-    console.log("Fetching user location");
+    //console.log("Fetching user location");
     var options=this.options;
     var successCallback =  function(position){
       if(options.googleMapsAPIKey){
