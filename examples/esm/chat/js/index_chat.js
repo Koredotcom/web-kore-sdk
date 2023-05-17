@@ -1,6 +1,6 @@
 
 
-import {chatConfig,chatWindow} from '../../../../../dist/kore-web-sdk.esm.browser.js';
+import {chatConfig,chatWindow} from '../../../../../dist/esm/kore-web-sdk-chat.min.js';
 
 
 let chatWindowInstance = new chatWindow();
