@@ -29,7 +29,7 @@
   "module": "dist/esm/exports.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:Koredotcom/web-kore-sdk.git#v2/9.3.0"
+    "url": "git@github.com:Koredotcom/web-kore-sdk.git#v2/10.1.0"
   },
   "author": "Rajasekhar Balla",
   "license": "MIT",
