@@ -432,6 +432,15 @@ function AgentDesktop(uuId, aResponse) {
             var rejectCall = koreJquery("#rejectcall");
             var acceptCall = koreJquery("#acceptcall");
             rejectCall.off('click').on('click', function (event) {
+                var payload = _self.callDetails;
+                payload['type'] = "call_agent_webrtc_rejected";
+                var messageToBot = {};
+                messageToBot["event"] = "event";
+                messageToBot["message"] = {
+                "body": _self.callDetails,
+                "type": ""
+                };
+                botInstance.sendMessage(messageToBot, function (err) {});
                 if (_self.activeCall) {
                     _self.activeCall.terminate();
                 }
@@ -439,6 +448,15 @@ function AgentDesktop(uuId, aResponse) {
                 toastContainer.empty();
             });
             acceptCall.off('click').on('click', function (event) {
+                var payload = _self.callDetails;
+                payload['type'] = "call_agent_webrtc_accepted";
+                var messageToBot = {};
+                messageToBot["event"] = "event";
+                messageToBot["message"] = {
+                "body": _self.callDetails,
+                "type": ""
+                };
+                botInstance.sendMessage(messageToBot, function (err) {});
                 _self.addAudioVideoContainer();
                 _self.callConnecting(_self.callDetails.videoCall, _self.callDetails.firstName);
 
