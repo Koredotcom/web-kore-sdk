@@ -1611,6 +1611,43 @@ historyLoadingComplete () {
   }, 0, me);
 };
 
+historySyncing(msgData:any,res:any,index:any){
+  const me:any = this;
+  try {
+    msgData.message[0].cInfo.body = JSON.parse(msgData.message[0].cInfo.body);
+    if (msgData.message[0].cInfo.body && msgData.message[0].cInfo.body.text) {
+      msgData.message[0].cInfo.body = msgData.message[0].cInfo.body.text;
+    }
+    msgData.message[0].component = msgData.message[0].cInfo.body;
+    if (msgData.message[0].component.payload.template_type === 'dropdown_template') {
+      msgData.message[0].component.payload.fromHistory = true;
+      msgData.message[0].component.selectedValue = res[1].messages[index + 1].message[0].cInfo.body;
+    }
+    if (msgData.message[0].component.payload.template_type === 'multi_select' || msgData.message[0].component.payload.template_type === 'advanced_multi_select') {
+      msgData.message[0].component.payload.fromHistory = true;
+    }
+    if (msgData.message[0].component.payload.template_type === 'form_template') {
+      msgData.message[0].component.payload.fromHistory = true;
+    }
+    if (msgData.message[0].component.payload.template_type === 'tableList') {
+      msgData.message[0].component.payload.fromHistory = true;
+    }
+    if (msgData.message[0].component.payload.template_type === 'listView') {
+      msgData.message[0].component.payload.fromHistory = true;
+    }
+    // if (msgData.message[0].component.payload.template_type === 'feedbackTemplate') {
+    //     msgData.message[0].component.payload.fromHistory = true;
+    //     msgData.message[0].cInfo.body="Rate this chat session";
+    // }
+    if (msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)) {
+      msgData.message[0].cInfo.body = '';
+    }
+    me.renderMessage(msgData);
+  } catch (e) {
+    me.renderMessage(msgData);
+  }
+}
+
 chatHistory  (res: { messages: string | any[]; }[] | any) {
   const me:any = this;
   let chatWindowEvent = {stopFurtherExecution: false};
@@ -1628,6 +1665,7 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
         setTimeout(() => {
           if (msgData.type === 'outgoing' || msgData.type === 'bot_response') {
             // if ($('.kore-chat-window .chat-container li#' + msgData.messageId).length < 1) {
+              me.historySyncing(msgData,res,index);
             msgData.fromHistorySync = true;
             me.renderMessage(msgData);
             // }
@@ -1650,39 +1688,7 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
           // dont show the the history message if we already have same message came from socket connect
           if (!_ignoreMsgs.length) {
             msgData.fromHistory=true;
-            try {
-              msgData.message[0].cInfo.body = JSON.parse(msgData.message[0].cInfo.body);
-              if (msgData.message[0].cInfo.body && msgData.message[0].cInfo.body.text) {
-                msgData.message[0].cInfo.body = msgData.message[0].cInfo.body.text;
-              }
-              msgData.message[0].component = msgData.message[0].cInfo.body;
-              if (msgData.message[0].component.payload.template_type === 'dropdown_template') {
-                msgData.message[0].component.payload.fromHistory = true;
-                msgData.message[0].component.selectedValue = res[1].messages[index + 1].message[0].cInfo.body;
-              }
-              if (msgData.message[0].component.payload.template_type === 'multi_select' || msgData.message[0].component.payload.template_type === 'advanced_multi_select') {
-                msgData.message[0].component.payload.fromHistory = true;
-              }
-              if (msgData.message[0].component.payload.template_type === 'form_template') {
-                msgData.message[0].component.payload.fromHistory = true;
-              }
-              if (msgData.message[0].component.payload.template_type === 'tableList') {
-                msgData.message[0].component.payload.fromHistory = true;
-              }
-              if (msgData.message[0].component.payload.template_type === 'listView') {
-                msgData.message[0].component.payload.fromHistory = true;
-              }
-              // if (msgData.message[0].component.payload.template_type === 'feedbackTemplate') {
-              //     msgData.message[0].component.payload.fromHistory = true;
-              //     msgData.message[0].cInfo.body="Rate this chat session";
-              // }
-              if (msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)) {
-                msgData.message[0].cInfo.body = '';
-              }
-              me.renderMessage(msgData);
-            } catch (e) {
-              me.renderMessage(msgData);
-            }
+            me.historySyncing(msgData,res,index);
           }
           if (index === res[1].messages.length - 1) {
             setTimeout((messagesQueue) => {
