@@ -45,3 +45,44 @@ chatWindowInstance.on("viewInit", (event) => {
 });
 chatWindowInstance.show(chatConfig);
 ```
+## Custom Codes
+
+### How to pass customData to bot from SDK ?
+
+To send some additional information along with user message, custom data will be useful.This can be done by setting the customData object on botOptions.botInfo.
+
+###### Code Sample for sending customData
+Setting custom data which will be added to all the further messages sent
+```js
+ botOptions.botInfo.customData={
+        someinfo:"tobot"
+ }
+```
+To update previously added customData, simply update customData key with new object to futher messages
+```js
+ botOptions.botInfo.customData={
+        newInfo:"tobot2"
+ }
+```
+To remove previously added customData to futher messages
+```js
+ delete botOptions.botInfo.customData;
+```
+
+### How to pass meta tags to bot from SDK ?
+
+To send meta tags information along with user message by setting the metaTags object on botOptions.botInfo.
+
+###### Code Sample for sending meta tags
+Setting meta tags which will be added to all the further messages sent
+```js
+ botOptions.botInfo.metaTags=["premium_user"];
+```
+To update previously added metat tags, simply update metaTags key with new array to futher messages
+```js
+ botOptions.botInfo.metaTags=["regular_user"];
+```
+To remove previously added customData to futher messages
+```js
+ delete botOptions.botInfo.metaTags;
+```
