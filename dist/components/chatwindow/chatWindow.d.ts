@@ -198,6 +198,7 @@ declare class chatWindow extends EventEmitter {
     openExternalLink(link_url: any): void;
     getChatTemplate(tempType: string): string;
     historyLoadingComplete(): void;
+    historySyncing(msgData: any, res: any, index: any): void;
     chatHistory(res: {
         messages: string | any[];
     }[] | any): false | undefined;

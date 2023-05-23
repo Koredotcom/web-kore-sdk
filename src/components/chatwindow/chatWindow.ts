@@ -11,6 +11,8 @@ import './sass/chatWindow.scss';
 import chatConfig from './config/kore-config'
 //import GreeetingsPlugin from '../../plugins/greetings/greetings-plugin'
 
+import welcomeScreeContainer from '../../preact/templates/base/welcomeScreeContainer/welcomeScreeContainer'
+
 const bot = requireKr('/KoreBot.js').instance();
 
 declare const document:any;
@@ -1077,6 +1079,10 @@ render  (chatWindowHtml: any) {
   let chatWindowEvent = {stopFurtherExecution: false};
   me.emit(me.EVENTS.BEFORE_VIEW_INIT,{chatEle:chatWindowHtml,chatWindowEvent:chatWindowEvent});
   me.bindEvents();
+
+  let welcomeScreeContainerHTML=new welcomeScreeContainer(me).getHTML();
+  chatWindowHtml.append(welcomeScreeContainerHTML);
+  
   $(me.config.container).append(chatWindowHtml);
   me.emit(me.EVENTS.VIEW_INIT,{chatEle:chatWindowHtml,chatWindowEvent:chatWindowEvent});
   if(chatWindowEvent.stopFurtherExecution){

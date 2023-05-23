@@ -17,7 +17,7 @@ let config= {
             use: "babel-loader",
           },
             {
-                test: /\.ts/,
+                test: /\.ts|.tsx/,
                 use: 'ts-loader',
                 include:[path.resolve(__dirname,'src'),path.resolve(__dirname,'UI')]
             },
@@ -95,7 +95,7 @@ let config= {
       // new HtmlWebpackPlugin() 
     ],
     resolve:{
-        extensions:['.js','.ts']
+        extensions:['.js','.ts','.tsx']
     },
     output: {
         publicPath:"",
