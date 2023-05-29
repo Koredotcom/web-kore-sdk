@@ -30,7 +30,7 @@ class KoreFileUploaderPlugin {
     this.filetypes = {
       audio: ['m4a', 'amr', 'wav', 'aac', 'mp3'],
       video: ['mp4', 'mov', '3gp', 'flv'],
-      image: ['png', 'jpg', 'jpeg'],
+      image: ['png', 'jpg', 'jpeg','gif'],
       file: {
         limit: {
           size: 25 * 1024 * 1024, msg: 'Please limit the individual file upload size to 25 MB or lower'
