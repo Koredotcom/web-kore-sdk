@@ -8,10 +8,11 @@ import KRPerfectScrollbar from 'perfect-scrollbar';
 import './../../libs/perfectscroll/css/perfect-scrollbar.min.css';
 import './sass/chatWindow.scss';
 //import './../../libs/emojione.sprites.css';
-import chatConfig from './config/kore-config'
+import chatConfig from './config/kore-config';
 //import GreeetingsPlugin from '../../plugins/greetings/greetings-plugin'
 
-import welcomeScreeContainer from '../../preact/templates/base/welcomeScreeContainer/welcomeScreeContainer'
+// import welcomeScreeContainer from '../../preact/templates/base/welcomeScreeContainer/welcomeScreeContainer';
+import ChatContainer from '../../preact/templates/base/chatContainer/chatContainer';
 
 const bot = requireKr('/KoreBot.js').instance();
 
@@ -519,11 +520,11 @@ isMobile () {
   }
 };
 onWindowResize (event:any) {
-  let me:any=this;
-    $('.chat-container').scrollTop($('.chat-container')[0].scrollHeight);
-    if (me.chatPSObj && me.chatPSObj.update) {
-      me.chatPSObj.update();
-    }
+  // let me:any=this;
+  //   $('.chat-container').scrollTop($('.chat-container')[0].scrollHeight);
+  //   if (me.chatPSObj && me.chatPSObj.update) {
+  //     me.chatPSObj.update();
+  //   }
 };
 setLocalStoreItem  (key:any, value:any) {
   const me:any = this;
@@ -1080,10 +1081,13 @@ render  (chatWindowHtml: any) {
   me.emit(me.EVENTS.BEFORE_VIEW_INIT,{chatEle:chatWindowHtml,chatWindowEvent:chatWindowEvent});
   me.bindEvents();
 
-  let welcomeScreeContainerHTML=new welcomeScreeContainer(me).getHTML();
-  chatWindowHtml.append(welcomeScreeContainerHTML);
+  // let welcomeScreeContainerHTML=new welcomeScreeContainer(me).getHTML();
+  // chatWindowHtml.append(welcomeScreeContainerHTML);
+
+  let ChatContainerHTML=new ChatContainer(me).getHTML();
+  //chatWindowHtml.append(ChatContainerHTML);
   
-  $(me.config.container).append(chatWindowHtml);
+  $(me.config.container).append(ChatContainerHTML);
   me.emit(me.EVENTS.VIEW_INIT,{chatEle:chatWindowHtml,chatWindowEvent:chatWindowEvent});
   if(chatWindowEvent.stopFurtherExecution){
     return false;

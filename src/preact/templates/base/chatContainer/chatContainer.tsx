@@ -3,23 +3,46 @@
 import './chatContainer.scss';
 import {h} from 'preact';
 import render from 'preact-render-to-string';
-
+import welcomeScreeContainer from '../welcomeScreeContainer/welcomeScreeContainer';
+import avatarComponent from '../avatarComponent/avatarComponent';
+import chatWidget from '../chatWidget/chatWidget';
+import chatWidgetHeader from '../chatWidgetHeader/chatWidgetHeader';
+import chatWidgetBody from '../chatWidgetBody/chatWidgetBody';
+import chatWidgetComposeBar from '../chatWidgetComposeBar/chatWidgetComposeBar';
 class ChatContainer {
     element:any;
     hostInstance: any;
+    welcomeCompponent: any;
+    avatarComponentRef :any;
+    chatWidgetRef: any;
+    chatWidgetHeaderRef :any;
+    chatWidgetBodyRef:any;
+    chatWidgetComposeBarRef:any;
     constructor(hostInstance:any){
-        this.hostInstance=hostInstance;
+        this.hostInstance = hostInstance;
+        this.welcomeCompponent = new welcomeScreeContainer(this.hostInstance).FunctionalComponent;
+        this.avatarComponentRef = new avatarComponent(this.hostInstance).FunctionalComponent;
+        this.chatWidgetRef = new chatWidget(this.hostInstance).FunctionalComponent;
+        this.chatWidgetHeaderRef = new chatWidgetHeader(this.hostInstance).FunctionalComponent;
+        this.chatWidgetBodyRef = new chatWidgetBody(this.hostInstance).FunctionalComponent;
+        this.chatWidgetComposeBarRef = new chatWidgetComposeBar(this.hostInstance).FunctionalComponent;
     }
     FunctionalComponent (props:any) {
         const handleClick = () => {
             console.log('Button clicked!');
         };
         return (
-            <div className='test'>
-            <h1>Hello, World!</h1>
-            <button onClick={handleClick}>click</button>
-            <p>This is a virtual DOM element created from a functional component.</p>
-          </div>
+            <div className='chat-window-main-section' aria-label='chat-window-section'>
+                {/* <this.chatWidgetRef />
+                <this.welcomeCompponent /> */}
+                {/* <this.welcomeCompponent /> */}
+                {/* <this.avatarComponentRef /> */}
+                <div className='chat-widgetwrapper-main-container'>
+                    <this.chatWidgetHeaderRef />
+                    <this.chatWidgetBodyRef />
+                    <this.chatWidgetComposeBarRef />
+                </div>
+            </div>
         );
     } 
     getHTML() {

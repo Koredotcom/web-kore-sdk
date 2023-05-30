@@ -1,0 +1,333 @@
+@import '../chatContainer/variables.scss';
+.avatar-variations-footer {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    .avatar-actions {
+        display: flex;
+        align-items: flex-end;
+        position: relative;
+        .content-info {
+            display: flex;
+            flex-direction: column;
+            width: auto;
+            flex: auto;
+            align-items: flex-end;
+            // position: absolute;
+            transition: 0.3s all ease;
+            transform-origin: bottom right 60px;
+            animation: bounce-in-bala 1s ease forwards;
+            .text-content {
+                background: #FFFFFF;
+                border: 1px solid #E4E5E7;
+                box-shadow: 0px 4px 12px 2px rgba(32, 33, 36, 0.12);
+                border-radius: 4px;
+                display: inline-block;
+                padding: 11px;
+                position: relative;
+                margin-bottom: 8px;  
+                transition: 0.2s all ease;
+                &.two{
+                    animation: bounce-in-right 1s ease forwards;
+                }         
+                &.three{
+                    transform-origin: bottom;
+                    animation: bounce-in-one 1.5s ease forwards;    
+                    transition-delay: 1s;                
+                }                     
+                h4 {
+                    font-weight: 600;
+                    font-size: $font-s-16;
+                    line-height: 19px;
+                    color: #000000;
+                    margin-bottom: 4px;
+                    white-space: nowrap;
+                }
+                .help-text-content {
+                    font-weight: 400;
+                    font-size: 14px;
+                    line-height: 17px;
+                    color: #000000;
+                    white-space: nowrap;
+                }
+                .close-avatar-content {
+                    position: absolute;
+                    top: -8px;
+                    right: -8px;
+                    width: 20px;
+                    height: 20px;
+                    background: #FFFFFF;
+                    border: 1px solid #E4E5E7;
+                    border-radius: 32px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                }
+            }
+            .primary-button {
+                background: #4B4EDE;
+                box-shadow: 0px 4px 12px 2px rgba(32, 33, 36, 0.12);
+                border-radius: 4px;
+                height: 40px;
+                padding: 10px 16px;
+                font-weight: 500;
+                font-size: 14px;
+                line-height: 20px;
+                color: #FFFFFF;
+                border: 0;
+                white-space: nowrap;
+                transform-origin: bottom;
+                animation: bounce-in-two 1.8s ease forwards;    
+                transition-delay: 1s; 
+            }
+        }
+        .avatar-bg {
+            background: #4B4EDE;
+            box-shadow: 0px 4px 6px -1px rgba(16, 24, 40, 0.1), 0px 2px 4px -2px rgba(16, 24, 40, 0.1);
+            border-radius: 32px;
+            width: 48px;
+            height: 48px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-left: 10px;
+            border: 0;
+            cursor: pointer;
+            position: relative;
+            .un-read-msg {
+                position: absolute;
+                right: 0;
+                top: 0;
+                background: #03904E;
+                border: 1px solid #FFFFFF;
+                border-radius: 32px;
+                padding: 0;
+                min-width: 14px;
+                min-height: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+                font-size: 8px;
+                line-height: 10px;
+                color: #FFFFFF;
+            }
+        }
+        &.variation-1 {
+            .content-info {
+                .text-content {
+                    border-radius: 8px 2px 8px 8px;
+                }
+            }
+            .avatar-bg {
+                border-radius: 32px 4px 32px 32px;
+
+                .un-read-msg {
+                    right: -3px;
+                    top: -1px;
+                }
+            }
+        }
+        &.variation-2 {
+            .content-info {
+                .text-content {
+                    &:first-child {
+                        border-radius: 8px;
+                    }
+                    border-radius: 32px;
+                }
+                .primary-button {
+                    border-radius: 32px;
+                }
+            }
+            .avatar-bg {
+                border-radius: 32px;
+                width: 68px;
+            }
+        }
+        &.variation-3 {
+            .content-info {
+                .text-content {
+                    border-radius: 4px 4px 2px 4px;
+                }
+            }
+            .avatar-bg {
+                border-radius: 4px;
+
+                .un-read-msg {
+                    right: -1px;
+                    top: -1px;
+                }
+            }
+        }
+    }
+}
+
+
+// @keyframes remove-hidden {
+//     0% {
+//       overflow: hidden;
+//     }
+//     100% { overflow: inherit; }
+// }
+
+@keyframes bounce-in-right {
+    0% {
+        position: fixed;
+        right: 99px;
+        bottom: 40px;
+        opacity: 0;
+    }
+    60% {
+        position: fixed;
+        right: 99px;
+        bottom: 40px;
+        opacity: 0.5;
+    }
+    80% {
+        position: fixed;
+        right: 99px;
+        bottom: 40px;
+        opacity: 1;
+    }
+    100% {
+       position: relative;
+       opacity: 1;
+    }
+}
+
+@keyframes bounce-in-one {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(0);
+        opacity: 0.5;
+    }
+    80% {
+        transform: scale(0);
+        opacity: 0.8;
+    }
+    100% { transform:  none;opacity: 1;}
+}
+
+@keyframes bounce-in-two {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(0);
+        opacity: 0.5;
+    }
+    80% {
+        transform: scale(0);
+        opacity: 0.8;
+    }
+    100% { transform:  none;opacity: 1;}
+}
+@keyframes bounce-in-bala {
+    0% {
+        transform: scale(0);
+    }
+    60% {
+        transform: scale(0);
+    }
+    80% {
+        transform: scale(0);
+    }
+    100% { transform:  none;opacity: 1;}
+}
+// @keyframes bounce-in-two {
+//     0% {
+//         display: none;
+//     }
+//     100% { display: none;}
+// }
+
+// @keyframes bounce-in-three {
+//     0% {
+//         display: none;
+//     }
+//     100% { display: none;}
+// }
+
+
+
+
+
+
+////////
+/// 
+// @-webkit-keyframes run {
+// 0% {
+//     right: 0;
+//     position: absolute;
+//   }
+//   100% {
+//     left: 0;    
+//     position: relative;
+//   }
+// }
+
+// @keyframes remove-hidden {
+//   0% {
+//     overflow: hidden;
+//   }
+//   100% { overflow: inherit;
+//   }
+// }
+
+// @keyframes bounce-in-right {
+//     0% {
+//         display: none;
+//         opacity: 0;
+//         position: absolute;
+//         transform-origin: bottom;
+//         transform: scale(0);    
+//     }
+//     60% {
+//       opacity: 0.5;
+//       position: relative;
+//       transform: none; 
+//     }
+//     80% {
+//         opacity: 1;
+//         position: relative;
+//       transform: none; 
+//     }
+//     100% {display: block; opacity: 1;position: relative;
+//         transform: none; }
+// }
+
+// @keyframes bounce-in-one {
+//     0% {
+//         display: none;
+//         width: 0px;
+//     }
+//     60% {
+//         display: none;
+//     }
+//     80% {
+//         display: none;
+//     }
+//     100% { display: block;width: auto;}
+// }
+
+// @keyframes bounce-in-two {
+//     0% {
+//         display: none;
+//     }
+//     100% { display: none;}
+// }
+
+// @keyframes bounce-in-three {
+//     0% {
+//         display: none;
+//     }
+//     100% { display: none;}
+// }

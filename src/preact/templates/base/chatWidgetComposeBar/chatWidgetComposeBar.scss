@@ -1,0 +1,294 @@
+
+
+.chat-widget-composebar{
+    display: inline-block;
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 0px 0px 4px 4px;
+    .voice-speak-msg-info{
+        margin-bottom: 45px;
+        text-align: right;
+        padding: 10px 16px 0px 16px;
+        display: block;
+        .voice-msg-bubble{
+            display: inline-block;
+            border: 1px solid #4B4EDE;
+            border-radius: 12px 4px 12px 12px;
+            max-width: 90%;
+            text-align: left;
+            padding: 7px 12px;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 17px;
+            color: #4B4EDE;
+            &.speak-done-bg{
+                background: rgba(75, 78, 222, 0.05);
+            }
+        }
+    }
+    .compose-bar-wrapper{
+        background: rgba(105, 117, 134, 0.1);
+        border-radius: 0px 0px 4px 4px;
+        padding: 16px;
+        display: flex;
+        align-items: flex-start;
+        &.if-voice-compose{
+            align-items: center;
+            padding: 13px 16px;
+            .compose-text-area{
+                display: none;
+            }
+            .compose-voice-text{
+                width: 100%;
+                text-align: center;
+                position: relative;
+                display: block;
+                .voice-compose-btn{
+                    width: 50px;
+                    height: 50px;
+                    background: #4B4EDE;
+                    border: 2px solid #FFFFFF;
+                    border-radius: 62px;
+                    padding: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0 auto;
+                    position: absolute;
+                    top: -42px;
+                    right: 0;
+                    left: 0;
+                    cursor: pointer;
+                }
+                .speak-info{
+                    font-weight: 400;
+                    font-size: 11px;
+                    line-height: 16px;
+                    color: #697586;
+                    margin-top: 10px;
+                }
+            }
+            .action-btn{
+                margin-top: 0;
+            }
+            .voice-btn{
+                margin-top: 0;
+            }
+        }
+        .action-btn{
+            width: 20px;
+            height: 20px;
+            border: 0;
+            padding: 0;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 12px;
+            margin-right: 8px;
+            flex-shrink: 0;
+            figure{
+                line-height: 0;
+                img{
+                    width: 100%;
+                    height: 100%;
+                }
+            }                
+        }
+        .compose-text-area{
+            position: relative;
+            width: 100%;
+            border-radius: 4px;
+            line-height: 1px;
+            .emoji-btn{
+                width: 20px;
+                height: 20px;
+                border: 0;
+                padding: 0;
+                background: transparent;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: absolute;
+                right: 12px;
+                top: 12px;
+                figure{
+                    line-height: 0;
+                }
+            }
+            .typing-text-area{
+                width: 100%;
+                padding: 12px 35px 12px 12px;
+                resize: none;
+                background: #FFFFFF;
+                border: 1px solid #E5E5E5;
+                border-radius: 4px;
+                height: 44px;
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 17px;                
+                color: #202939;
+                font-family: 'Inter';
+                &::placeholder{
+                    color: #9AA4B2;
+                }
+                &:focus{
+                    border: 0.5px solid #4B4EDE;
+                }
+                &:active{
+                    border: 0.5px solid #4B4EDE;
+                }
+                &:focus-visible{
+                    outline-color: #4B4EDE;
+                    outline-offset: 0px;
+                    outline-style: solid;
+                }
+            }
+        }
+        .compose-voice-text{
+            display: none;
+        }
+        .voice-btn{
+            width: 20px;
+            height: 20px;
+            border: 0;
+            padding: 0;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 12px;
+            margin-left: 8px;
+            flex-shrink: 0;
+            figure{
+                line-height: 0px;
+            }
+        }
+        .send-btn{
+            width: 41px;
+            height: 44px;
+            background: #4B4EDE;
+            border-radius: 4px;
+            padding: 0;
+            border: 0;
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+    }
+}
+
+
+// Attachment Wrapper
+
+.attachment-wrapper-data{
+    background: rgba(105, 117, 134, 0.1);
+    border-radius: 0px 0px 4px 4px;
+    padding: 16px 16px 0px 16px;
+    .select-file-block{
+        background: #FFFFFF;
+        border-radius: 4px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        .inputfile-btn{
+            width: 100%;
+            position: relative;
+            background: #FFFFFF;
+            border: 1px solid #E5E5E5;
+            border-radius: 4px;
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 24px;
+            color: #4B4EDE;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            input{
+                position: absolute;
+                opacity: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                top: 0px;
+                font-size: 0px;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+// Attached Items
+.uploaded-attachment-data{
+    background: #FFFFFF;
+    border-radius: 4px;
+    padding: 8px 16px;
+    display: inline-block;
+    width: 100%;
+    .uploaded-item{
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+        width: 100%;
+        .img-block{
+            width: 56px;
+            height: 56px;
+            background: #EEF2F6;
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .content-data{
+            width: 100%;
+            h1{
+                font-weight: 500;
+                font-size: 14px;
+                line-height: 17px;
+                color: #202939;
+                margin-bottom: 8px;
+            }
+            .progress-percentage{
+                height: 5px;
+                width: 100%;
+                background: #EEF2F6;
+                border-radius: 4px;
+                margin: 8px 0;
+                div{
+                    height: 100%;
+                    background: #4B4EDE;
+                    border-radius: 4px;
+                    width: 70%;
+                }
+            }
+            p{
+                font-weight: 400;
+                font-size: 12px;
+                line-height: 18px;
+                color: #737373;
+            }
+        }
+        .delete-upload{
+            cursor: pointer;
+            line-height: normal;
+            margin-left: 8px;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            figure{
+                line-height: 0;
+            }
+        }
+    }
+}
+
+// END

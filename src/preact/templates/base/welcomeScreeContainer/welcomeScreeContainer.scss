@@ -1,5 +1,99 @@
-.test{
-    color: red;
-    position: fixed;
-    top: 0;
+
+
+.welcome-chat-section {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #F8FAFC;
+    box-shadow: 0px 4px 12px 2px rgba(32,33,36,0.12);
+    .welcome-header {
+        position: relative;
+        &.variation-1 {
+            .welcome-header-bg {
+                padding: 32px 16px 42px 16px;
+                .logo-img {
+                    display: none;
+                }                
+            }
+            .bg-logo{
+                display: flex;
+            }
+        }
+        &.variation-2 {
+            .welcome-header-bg {
+                padding: 32px 16px 32px 16px;
+                .logo-img {
+                    display: none;
+                }
+            }
+            .bg-logo {
+                position: absolute;
+                top: 0;
+                left: 0;
+                border: 3px solid #121314;
+                box-shadow: none;
+                display: flex;
+            }
+        }
+        .welcome-header-bg {
+            background: #4B4EDE;
+            border-radius: 4px 4px 0px 0px;
+            padding: 32px 16px;
+            .logo-img {
+                margin-bottom: 18px;
+            }
+            h1 {
+                font-weight: 600;
+                font-size: 36px;
+                line-height: 44px;
+                color: rgba(255, 255, 255, 0.6);
+                margin-bottom: 6px;
+            }
+            h2 {
+                font-weight: 700;
+                font-size: 18px;
+                line-height: 22px;
+                color: #FFFFFF;
+                margin-bottom: 6px;
+            }
+            p {
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 17px;
+                color: #FFFFFF;
+            }
+        }
+        .bg-logo {
+            width: 56px;
+            height: 56px;
+            background: #FFFFFF;
+            box-shadow: 0px 10px 15px -3px rgba(16, 24, 40, 0.1), 0px 4px 6px -4px rgba(16, 24, 40, 0.1);
+            border-radius: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            margin: -30px 0 10px 16px;
+            display: none;
+        }
+    }
+    .welcome-interactions {
+        flex: 1 1 auto;
+        overflow: auto;
+    }
+    .powerdby-info {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 16px;
+        background: #F8FAFC;
+        height: 28px;
+        p {
+            font-weight: 500;
+            font-size: 10px;
+            line-height: 12px;
+            color: #9AA4B2;
+            margin-right: 5px;
+            flex-shrink: 0;
+        }
+    }
 }
