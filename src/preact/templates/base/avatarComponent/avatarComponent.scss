@@ -1,8 +1,19 @@
 @import '../chatContainer/variables.scss';
 .avatar-variations-footer {
-    position: absolute;
-    bottom: 0;
-    right: 0;
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    // position: absolute;
+    // bottom: 0;
+    // right: 0;
+    overflow: inherit;
+    animation: remove-hidden 0.1s ease forwards;
+    @keyframes remove-hidden {
+        0% {
+          overflow: hidden;
+        }
+        100% { overflow: inherit; }
+    }
     .avatar-actions {
         display: flex;
         align-items: flex-end;
@@ -15,8 +26,28 @@
             align-items: flex-end;
             // position: absolute;
             transition: 0.3s all ease;
-            transform-origin: bottom right 60px;
-            animation: bounce-in-bala 1s ease forwards;
+            // transform: scale(0) translateX(100%);
+            // animation: leftrun 1s ease-in forwards 1s;
+            // opacity: 0;
+            @-webkit-keyframes leftrun {
+                0% {
+                    transform: translateX(100%);
+                    opacity: 0;
+                    height: 48px;
+                    background-color: red;
+                }
+        
+                60% {
+                    transform: none;
+                    opacity: 0.5;
+                    height: auto;
+                }
+        
+                100% {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
             .text-content {
                 background: #FFFFFF;
                 border: 1px solid #E4E5E7;
@@ -25,16 +56,7 @@
                 display: inline-block;
                 padding: 11px;
                 position: relative;
-                margin-bottom: 8px;  
-                transition: 0.2s all ease;
-                &.two{
-                    animation: bounce-in-right 1s ease forwards;
-                }         
-                &.three{
-                    transform-origin: bottom;
-                    animation: bounce-in-one 1.5s ease forwards;    
-                    transition-delay: 1s;                
-                }                     
+                margin-bottom: 8px;                 
                 h4 {
                     font-weight: 600;
                     font-size: $font-s-16;
@@ -77,9 +99,6 @@
                 color: #FFFFFF;
                 border: 0;
                 white-space: nowrap;
-                transform-origin: bottom;
-                animation: bounce-in-two 1.8s ease forwards;    
-                transition-delay: 1s; 
             }
         }
         .avatar-bg {
@@ -166,168 +185,33 @@
     }
 }
 
+.animation {
+    animation-name: slide-up;
+    animation-duration: 1.5s;
+    animation-fill-mode: forwards;
+    opacity: 0; /* Start with opacity 0 to hide the elements initially */
+  }
 
-// @keyframes remove-hidden {
-//     0% {
-//       overflow: hidden;
-//     }
-//     100% { overflow: inherit; }
-// }
 
-@keyframes bounce-in-right {
+  @keyframes slide-up {
     0% {
-        position: fixed;
-        right: 99px;
-        bottom: 40px;
-        opacity: 0;
-    }
-    60% {
-        position: fixed;
-        right: 99px;
-        bottom: 40px;
-        opacity: 0.5;
-    }
-    80% {
-        position: fixed;
-        right: 99px;
-        bottom: 40px;
-        opacity: 1;
+      opacity: 0;
+      transform: translateY(100%); /* Move the elements 100% down */
     }
     100% {
-       position: relative;
-       opacity: 1;
+      opacity: 1;
+      transform: translateY(0); /* Move the elements to their original position */
     }
-}
-
-@keyframes bounce-in-one {
-    0% {
-        transform: scale(0);
-        opacity: 0;
-    }
-    60% {
-        transform: scale(0);
-        opacity: 0.5;
-    }
-    80% {
-        transform: scale(0);
-        opacity: 0.8;
-    }
-    100% { transform:  none;opacity: 1;}
-}
-
-@keyframes bounce-in-two {
-    0% {
-        transform: scale(0);
-        opacity: 0;
-    }
-    60% {
-        transform: scale(0);
-        opacity: 0.5;
-    }
-    80% {
-        transform: scale(0);
-        opacity: 0.8;
-    }
-    100% { transform:  none;opacity: 1;}
-}
-@keyframes bounce-in-bala {
-    0% {
-        transform: scale(0);
-    }
-    60% {
-        transform: scale(0);
-    }
-    80% {
-        transform: scale(0);
-    }
-    100% { transform:  none;opacity: 1;}
-}
-// @keyframes bounce-in-two {
-//     0% {
-//         display: none;
-//     }
-//     100% { display: none;}
-// }
-
-// @keyframes bounce-in-three {
-//     0% {
-//         display: none;
-//     }
-//     100% { display: none;}
-// }
-
-
-
-
-
-
-////////
-/// 
-// @-webkit-keyframes run {
-// 0% {
-//     right: 0;
-//     position: absolute;
-//   }
-//   100% {
-//     left: 0;    
-//     position: relative;
-//   }
-// }
-
-// @keyframes remove-hidden {
-//   0% {
-//     overflow: hidden;
-//   }
-//   100% { overflow: inherit;
-//   }
-// }
-
-// @keyframes bounce-in-right {
-//     0% {
-//         display: none;
-//         opacity: 0;
-//         position: absolute;
-//         transform-origin: bottom;
-//         transform: scale(0);    
-//     }
-//     60% {
-//       opacity: 0.5;
-//       position: relative;
-//       transform: none; 
-//     }
-//     80% {
-//         opacity: 1;
-//         position: relative;
-//       transform: none; 
-//     }
-//     100% {display: block; opacity: 1;position: relative;
-//         transform: none; }
-// }
-
-// @keyframes bounce-in-one {
-//     0% {
-//         display: none;
-//         width: 0px;
-//     }
-//     60% {
-//         display: none;
-//     }
-//     80% {
-//         display: none;
-//     }
-//     100% { display: block;width: auto;}
-// }
-
-// @keyframes bounce-in-two {
-//     0% {
-//         display: none;
-//     }
-//     100% { display: none;}
-// }
-
-// @keyframes bounce-in-three {
-//     0% {
-//         display: none;
-//     }
-//     100% { display: none;}
-// }
+  }
+  
+  .animation:nth-child(1) {
+    animation-delay: 1s; /* Delay the animation of the first element by 0.5 seconds */
+  }
+  
+  .animation:nth-child(2) {
+    animation-delay: 1.5s; /* Delay the animation of the second element by 1 second */
+  }
+  
+  .animation:nth-child(3) {
+    animation-delay: 2s; /* Delay the animation of the third element by 1.5 seconds */
+  }

@@ -9,6 +9,7 @@ import chatWidget from '../chatWidget/chatWidget';
 import chatWidgetHeader from '../chatWidgetHeader/chatWidgetHeader';
 import chatWidgetBody from '../chatWidgetBody/chatWidgetBody';
 import chatWidgetComposeBar from '../chatWidgetComposeBar/chatWidgetComposeBar';
+import actionsBottomSlider from '../actionsBottomSlider/actionsBottomSlider';
 class ChatContainer {
     element:any;
     hostInstance: any;
@@ -18,6 +19,7 @@ class ChatContainer {
     chatWidgetHeaderRef :any;
     chatWidgetBodyRef:any;
     chatWidgetComposeBarRef:any;
+    actionsBottomSliderRef:any;
     constructor(hostInstance:any){
         this.hostInstance = hostInstance;
         this.welcomeCompponent = new welcomeScreeContainer(this.hostInstance).FunctionalComponent;
@@ -26,6 +28,7 @@ class ChatContainer {
         this.chatWidgetHeaderRef = new chatWidgetHeader(this.hostInstance).FunctionalComponent;
         this.chatWidgetBodyRef = new chatWidgetBody(this.hostInstance).FunctionalComponent;
         this.chatWidgetComposeBarRef = new chatWidgetComposeBar(this.hostInstance).FunctionalComponent;
+        this.actionsBottomSliderRef = new actionsBottomSlider(this.hostInstance).FunctionalComponent;
     }
     FunctionalComponent (props:any) {
         const handleClick = () => {
@@ -42,6 +45,7 @@ class ChatContainer {
                     <this.chatWidgetBodyRef />
                     <this.chatWidgetComposeBarRef />
                 </div>
+                {/* <this.actionsBottomSliderRef /> */}
             </div>
         );
     } 

@@ -10,6 +10,35 @@
     transition: transform 1s;
     transform-origin: 100% 100%;
     &.minimize{               
-        transform: scale(0);
+        animation: bounce-in 0.5s ease forwards;
+    }
+    &.minimizeQuick{   
+        transform-origin: top left;            
+        animation: quick 0.3s ease forwards;
+    }
+    &.minimizeSmooth{   
+        transform-origin: top left;            
+        animation: quick 1s ease forwards;
     }
 }
+
+
+@keyframes quick {
+    0% {
+      opacity: 0;
+      transform: scale(0);
+    }
+    100% { opacity: 1;transform: scale(1);}
+  }
+@keyframes bounce-in {
+    0% {
+      opacity: 0;
+      transform: scale(.3);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    70% { transform:translate(-10px)}
+    100% { transform: scale(1);}
+  }

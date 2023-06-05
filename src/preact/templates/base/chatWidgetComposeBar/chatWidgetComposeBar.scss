@@ -26,12 +26,38 @@
             }
         }
     }
+    @keyframes voiceAnim {
+        0% {
+          transform: translate(0px);          
+        }
+        100% {
+            transform: translate(5px);
+        }
+    }
+    @keyframes right-to-left-slide-anim {
+        0% {
+          opacity: 0;
+          transform: translateX(100%); /* Move the elements 100% down */
+        }
+        80% {
+            opacity: 0.5;
+            transform: translateX(10px); /* Move the elements to their original position */
+        }
+        100% {
+          opacity: 1;
+          transform: translate(0); /* Move the elements to their original position */
+        }
+    }
     .compose-bar-wrapper{
         background: rgba(105, 117, 134, 0.1);
         border-radius: 0px 0px 4px 4px;
         padding: 16px;
         display: flex;
         align-items: flex-start;
+        animation-name: right-to-left-slide-anim;
+        animation-duration: 0.3s;
+        animation-fill-mode: forwards;
+        opacity: 0;
         &.if-voice-compose{
             align-items: center;
             padding: 13px 16px;
@@ -59,6 +85,10 @@
                     right: 0;
                     left: 0;
                     cursor: pointer;
+                    animation-name: voiceAnim;
+                    animation-duration: 0.5s;
+                    animation-fill-mode: forwards;
+                    animation-iteration-count: infinite;
                 }
                 .speak-info{
                     font-weight: 400;

@@ -34,7 +34,7 @@ export default class chatWidgetBody {
                         </div>
                         <div className="bottom-info">
                             <div className="time-tamp"><time>2:32pm, Today</time></div>
-                            <div className="read-text">Read</div>
+                            <div className="read-text">Read <i className="sdkv3-read-status"></i></div>
                         </div>
                     </div>
                 </div>
@@ -83,6 +83,16 @@ export default class chatWidgetBody {
                         <button className="kr-btn">Know about Kore.ai</button>
                         <button className="kr-btn">Just browsing!</button>
                         <button className="kr-btn">I’m a Kore.ai customer with a question</button>
+                    </div>
+                </div>
+                <div className="thumbnails-wrapper forms-thumbnails">
+                    <div className="thumbnail-data-content">
+                        <div className="icon-block">
+                            <i className="sdkv3-file"></i>
+                        </div>
+                        <h1>Form name</h1>
+                        <p>Hello, its really great to see you here. Tell us just a few details about you and we are just ready to start</p>
+                        <button className="link-btn">Fill the form</button>
                     </div>
                 </div>
             </div>

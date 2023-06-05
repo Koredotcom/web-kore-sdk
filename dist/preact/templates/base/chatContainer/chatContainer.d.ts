@@ -9,6 +9,7 @@ declare class ChatContainer {
     chatWidgetHeaderRef: any;
     chatWidgetBodyRef: any;
     chatWidgetComposeBarRef: any;
+    actionsBottomSliderRef: any;
     constructor(hostInstance: any);
     FunctionalComponent(props: any): h.JSX.Element;
     getHTML(): any;

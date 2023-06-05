@@ -1,0 +1,112 @@
+@font-face {
+  font-family: 'SDKV3Icons';
+  src:  url('./fonts/SDKV3Icons.eot?c830d');
+  src:  url('./fonts/SDKV3Icons.eot?c830d#iefix') format('embedded-opentype'),
+    url('./fonts/SDKV3Icons.ttf?c830d') format('truetype'),
+    url('./fonts/SDKV3Icons.woff?c830d') format('woff'),
+    url('./fonts/SDKV3Icons.svg?c830d#SDKV3Icons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="sdkv3-"], [class*=" sdkv3-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'SDKV3Icons' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.sdkv3-emoji-happy:before {
+  content: "\e900";
+}
+.sdkv3-microphone:before {
+  content: "\e901";
+}
+.sdkv3-close:before {
+  content: "\e902";
+}
+.sdkv3-read-status:before {
+  content: "\e903";
+}
+.sdkv3-failed-status:before {
+  content: "\e904";
+}
+.sdkv3-check:before {
+  content: "\e905";
+}
+.sdkv3-download:before {
+  content: "\e906";
+}
+.sdkv3-video-play:before {
+  content: "\e907";
+  color: #697586;
+}
+.sdkv3-clock:before {
+  content: "\e908";
+}
+.sdkv3-kb-data:before {
+  content: "\e909";
+}
+.sdkv3-document-text:before {
+  content: "\e90a";
+}
+.sdkv3-music-note:before {
+  content: "\e90b";
+}
+.sdkv3-wahoo:before {
+  content: "\e90c";
+}
+.sdkv3-failed-info:before {
+  content: "\e90d";
+}
+.sdkv3-changelogs:before {
+  content: "\e90e";
+}
+.sdkv3-trophy:before {
+  content: "\e90f";
+}
+.sdkv3-file:before {
+  content: "\e910";
+}
+.sdkv3-article:before {
+  content: "\e911";
+}
+.sdkv3-send:before {
+  content: "\e912";
+}
+.sdkv3-keypad-virtual:before {
+  content: "\e913";
+}
+.sdkv3-warning:before {
+  content: "\e914";
+}
+.sdkv3-bot-settings:before {
+  content: "\e915";
+}
+.sdkv3-cheveron-right:before {
+  content: "\e916";
+}
+.sdkv3-back-arrow:before {
+  content: "\e917";
+}
+.sdkv3-help:before {
+  content: "\e918";
+}
+.sdkv3-support:before {
+  content: "\e919";
+}
+.sdkv3-hamgerger:before {
+  content: "\e91a";
+}
+.sdkv3-attachment:before {
+  content: "\e91b";
+}

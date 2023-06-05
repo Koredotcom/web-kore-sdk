@@ -1,0 +1,62 @@
+
+
+
+
+
+
+
+.chat-actions-bottom-wraper{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    border-radius: 4px;
+    z-index: 99;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    justify-content: flex-end; 
+    transition: 0.3s all ease-in-out;
+    &.close-bottom-slide{
+        animation-name: closeBottomToTopAnim;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+    }
+    @keyframes closeBottomToTopAnim {
+        0% {
+          transform: translateY(0%);
+        }
+        100% {
+            opacity: 0;
+            transform: translateY(100%);
+            display: none;
+        }
+    }   
+    @keyframes slideBottomToTopAnim {
+        0% {
+          opacity: 0;
+          transform: translateY(100%);
+        }
+        80% {
+            opacity: 1;
+            transform: translateY(-10px);
+        }
+        100% {
+          opacity: 1;
+          transform: translate(0);
+        }
+    }   
+    .actions-contnet-data{
+        max-height: 75%;
+        width: 100%;
+        overflow: auto;
+        animation-name: slideBottomToTopAnim;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+        opacity: 0;
+        background: #FFFFFF;
+        border-radius: 4px 4px 0px 0px;
+    }
+}

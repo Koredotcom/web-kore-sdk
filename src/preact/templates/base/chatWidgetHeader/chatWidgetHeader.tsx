@@ -33,19 +33,22 @@ export default class chatWidgetHeader {
                 </div>
                 <div className="actions-info">
                     <button className="btn-action">
-                        <figure>
+                        {/* <figure>
                             <img src="/images/help.svg" alt="back button" />
-                        </figure>
+                        </figure> */}
+                        <i className="sdkv3-help"></i>
                     </button>
                     <button className="btn-action">
-                        <figure>
+                        {/* <figure>
                             <img src="/images/support.svg" alt="back button" />
-                        </figure>
+                        </figure> */}
+                        <i className="sdkv3-support"></i>
                     </button>
                     <button className="btn-action">
-                        <figure>
+                        {/* <figure>
                             <img src="/images/close-large.svg" alt="back button" />
-                        </figure>
+                        </figure> */}
+                        <i className="sdkv3-close"></i>
                     </button>
                 </div>
             </div>

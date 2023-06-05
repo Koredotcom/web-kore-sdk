@@ -34,7 +34,9 @@ export default class welcomeScreeContainer {
                     </div>
                 </header>
                 <div className="welcome-interactions" aria-label="welcome message screen">
-                    
+                    <div className="start-conversations-wrapper">
+                        <div className=""></div>
+                    </div>
                 </div>
                 <footer>
                     <div className="powerdby-info">
