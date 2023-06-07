@@ -39,12 +39,12 @@ class ChatContainer {
                 {/* <this.chatWidgetRef />
                 <this.welcomeCompponent /> */}
                 {/* <this.welcomeCompponent /> */}
-                {/* <this.avatarComponentRef /> */}
-                <div className='chat-widgetwrapper-main-container'>
+                <this.avatarComponentRef />
+                {/* <div className='chat-widgetwrapper-main-container'>
                     <this.chatWidgetHeaderRef />
                     <this.chatWidgetBodyRef />
                     <this.chatWidgetComposeBarRef />
-                </div>
+                </div> */}
                 {/* <this.actionsBottomSliderRef /> */}
             </div>
         );

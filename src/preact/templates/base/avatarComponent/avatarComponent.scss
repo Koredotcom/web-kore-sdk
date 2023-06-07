@@ -101,6 +101,15 @@
                 white-space: nowrap;
             }
         }
+
+        .bounce2 {
+            animation: bounce2 2s ease infinite;
+          }
+          @keyframes bounce2 {
+              0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+              40% {transform: translateY(-30px);}
+              60% {transform: translateY(-15px);}
+        }
         .avatar-bg {
             background: #4B4EDE;
             box-shadow: 0px 4px 6px -1px rgba(16, 24, 40, 0.1), 0px 2px 4px -2px rgba(16, 24, 40, 0.1);
@@ -116,6 +125,23 @@
             border: 0;
             cursor: pointer;
             position: relative;
+            // animation: bounce2 0.8s ease forwards;  
+            transition: transform 1s;
+            transform-origin: 100% 100%;
+            animation: bounce-in-avatar 0.2s ease forwards;   
+            
+            @keyframes bounce-in-avatar {
+                0% {
+                  opacity: 0;
+                  transform: scale(.3);
+                }
+                50% {
+                  opacity: 1;
+                  transform: scale(1);
+                }
+                70% { transform:translateY(20px)}
+                100% { transform: scale(1) translate(0);}
+              }
             .un-read-msg {
                 position: absolute;
                 right: 0;
@@ -193,6 +219,21 @@
   }
 
 
+  @keyframes avatarBubbleAnim {
+    0% {
+      opacity: 0;
+      transform: translateY(10px); /* Move the elements 100% down */
+    }
+    80% {
+        opacity: 1;
+        transform: translateY(-10px); /* Move the elements to their original position */
+    }
+    100% {
+      opacity: 1;
+      transform: translate(0); /* Move the elements to their original position */
+    }
+}
+
   @keyframes slide-up {
     0% {
       opacity: 0;
@@ -200,7 +241,7 @@
     }
     100% {
       opacity: 1;
-      transform: translateY(0); /* Move the elements to their original position */
+      transform: translate(0); /* Move the elements to their original position */
     }
   }
   
