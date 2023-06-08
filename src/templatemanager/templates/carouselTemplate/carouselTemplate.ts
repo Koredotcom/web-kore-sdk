@@ -17,6 +17,7 @@ class CarouselTemplate {
       setTimeout(() => {
         const me: any = this;
         const chatWindowInstance = me.hostInstance;
+        chatWindowInstance.carouselTemplateCount=chatWindowInstance.carouselTemplateCount?chatWindowInstance.carouselTemplateCount:0;
         $('.carousel:last').addClass(`carousel${chatWindowInstance.carouselTemplateCount}`);
         const count = $(`.carousel${chatWindowInstance.carouselTemplateCount}`).children().length;
         if (count > 1) {
