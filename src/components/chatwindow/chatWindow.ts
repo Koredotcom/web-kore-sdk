@@ -1414,7 +1414,7 @@ prepareAriaTagsOnMessage(msgData:any){
   let me:any=this;
   let _chatContainer = $(me.chatEle).find('.chat-container');
   _chatContainer.find('li').attr('aria-live', 'off');
-  _chatContainer.find('li .messageBubble').attr('aria-hidden','true');//for mac voiceover bug with aria-live
+  // _chatContainer.find('li .messageBubble').attr('aria-hidden','true');//for mac voiceover bug with aria-live
   _chatContainer.find('li .extra-info').attr('aria-hidden','true');//for mac voiceover bug with aria-live
   _chatContainer.find('.endChatContainer').attr('aria-live', 'off');
   _chatContainer.find('.endChatContainer').attr('aria-hidden','true');//for mac voiceover bug with aria-live
@@ -1537,7 +1537,7 @@ getChatTemplate (tempType: string) {
                  <p class="headerTip warningTip">Something went wrong.Please try again later.</p> \
              </div> \
          </div> \
-         <div role="log" aria-live="polite" aria-atomic="true" class="kore-chat-body"> \
+         <div role="log" aria-live="polite" aria-atomic="true" aria-relevant="additions" class="kore-chat-body"> \
              <div class="errorMsgBlock"> \
              </div> \
              <ul class="chat-container"></ul> \
