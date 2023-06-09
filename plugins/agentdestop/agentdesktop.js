@@ -871,7 +871,7 @@ function AgentDesktop(uuId, aResponse) {
         var serverConfig = {};
         serverConfig.addresses = this.callDetails.addresses;
         serverConfig.domain = this.callDetails.domain;
-        serverConfig.iceServers = [this.callDetails.domain];
+        serverConfig.iceServers = this.callDetails.iceServers || [];
         this.initSipStack({ user: 'Anonymous', displayName: uuId, password: '' }, serverConfig);
     }
     this._makeCall = function() {
