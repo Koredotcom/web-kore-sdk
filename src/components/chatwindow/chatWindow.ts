@@ -248,6 +248,8 @@ initShow  (config:any) {
   me.config.botOptions.handleError = me.config.handleError;
   me.config.botOptions.googleMapsAPIKey = me.config.googleMapsAPIKey;
  
+  me.eventMapper = [];
+
   let chatWindowHtml:any;
   if (me.config.UI.version == 'v2') {
     chatWindowHtml = (<any> $(me.getChatTemplate())).tmpl(me.config)
@@ -907,7 +909,7 @@ bindEvents  () {
 
 bindEventsV3() {
   const me:any = this;
-  document.querySelector('.typing-text-area').addEventListener('keydown', (event: any) => {
+  me.addEventListener('.typing-text-area', 'keydown', (event: any) => {
     if (event.keyCode == 13) {
       if (event.shiftKey) {
         return;
@@ -918,14 +920,14 @@ bindEventsV3() {
     } 
   })
 
-  document.querySelector('.send-btn').addEventListener('click', (event: any) => {
+  me.addEventListener('.send-btn', 'click', (event: any) => {
     const inputEle = document.querySelector('.typing-text-area');
     event.preventDefault();
     me.sendMessageToBot(inputEle.value);
     inputEle.value = '';
   })
 
-  document.querySelector('.minimized-chat').addEventListener('click', (event: any) => {
+  me.addEventListener('.minimized-chat', 'click', () => {
     if (me.config.multiPageApp && me.config.multiPageApp.enable) {
       me.setLocalStoreItem('kr-cw-state', 'open');
     }
@@ -938,8 +940,30 @@ bindEventsV3() {
       me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
       me.skipedInit = false;
     }
-  });
+  })
+
+  me.addEventListener('.sdkv3-close', 'click', () => {
+    document.querySelector('.chat-window-main-section').classList.add('minimize-chat');
+  })
+
+  me.addEventListener('.back-to-chat', 'click', () => {
+    document.querySelector('.chat-window-main-section').classList.add('minimize-chat');
+  })
+
   me.bindSDKEvents();
+}
+
+addEventListener(domEleCl: any, event: any, cb: any){
+  const me: any = this;
+  me.eventMapper.push({ domEleCl, event, cb });
+  document.querySelector(domEleCl).addEventListener(event, cb);
+}
+
+removeEventListener(domEleCl: any, event: any){
+  const me:any = this;
+  const ele = me.eventMapper.filter((el: any) => el.domEleCl == domEleCl && el.event == event);
+  document.querySelector(domEleCl).removeEventListener(event, ele[0].cb);
+  me.eventMapper = me.eventMapper.filter((e: any) => e.domEleCl != domEleCl)
 }
 
 getBotMetaData  () {
