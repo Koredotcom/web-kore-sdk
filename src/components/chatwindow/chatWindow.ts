@@ -12,7 +12,10 @@ import chatConfig from './config/kore-config';
 //import GreeetingsPlugin from '../../plugins/greetings/greetings-plugin'
 
 // import welcomeScreeContainer from '../../preact/templates/base/welcomeScreeContainer/welcomeScreeContainer';
-import ChatContainer from '../../preact/templates/base/chatContainer/chatContainer';
+
+import { getHTML } from '../../templatemanager/base/domManager';
+import { ChatContainer } from '../../templatemanager/base/chatContainer/chatContainer';
+import { Message } from '../../templatemanager/templates/v3/message/message';
 
 const bot = requireKr('/KoreBot.js').instance();
 
@@ -245,7 +248,14 @@ initShow  (config:any) {
   me.config.botOptions.handleError = me.config.handleError;
   me.config.botOptions.googleMapsAPIKey = me.config.googleMapsAPIKey;
  
-  const chatWindowHtml = (<any> $(me.getChatTemplate())).tmpl(me.config);
+  let chatWindowHtml:any;
+  if (me.config.UI.version == 'v2') {
+    chatWindowHtml = (<any> $(me.getChatTemplate())).tmpl(me.config)
+  } else {
+    chatWindowHtml = getHTML(ChatContainer, {}, me);
+    chatWindowHtml=$(chatWindowHtml);
+  }
+
   me.chatEle = chatWindowHtml;
   me.updatei18nDirection();
 
@@ -263,8 +273,10 @@ initShow  (config:any) {
       }, 500);
     }
   } else {
-    chatWindowHtml.addClass('minimize');
-    chatWindowHtml.find('.minimized-title').html(`Talk to ${me.config.chatTitle}`);
+    if (me.config.UI.version == 'v2') {
+      chatWindowHtml.addClass('minimize');
+      chatWindowHtml.find('.minimized-title').html(`Talk to ${me.config.chatTitle}`);
+    }
     me.skipedInit = true;
     if (me.config.multiPageApp && me.config.multiPageApp.enable && maintainContext) {
       setTimeout(() => {
@@ -281,6 +293,9 @@ initShow  (config:any) {
     me.bot.fetchUserLocation();
   }
   me.render(chatWindowHtml);
+  if (me.config.UI.version == 'v3') {
+    document.querySelector('.chat-window-main-section').classList.add('minimize-chat');
+  }
   me.unfreezeUIOnHistoryLoadingFail.call(me);
   me.updateOnlineStatus();
   me.addBottomSlider();
@@ -890,6 +905,43 @@ bindEvents  () {
   me.bindSDKEvents();
 };
 
+bindEventsV3() {
+  const me:any = this;
+  document.querySelector('.typing-text-area').addEventListener('keydown', (event: any) => {
+    if (event.keyCode == 13) {
+      if (event.shiftKey) {
+        return;
+      }
+      event.preventDefault();
+      me.sendMessageToBot(event.target.value);
+      event.target.value = '';
+    } 
+  })
+
+  document.querySelector('.send-btn').addEventListener('click', (event: any) => {
+    const inputEle = document.querySelector('.typing-text-area');
+    event.preventDefault();
+    me.sendMessageToBot(inputEle.value);
+    inputEle.value = '';
+  })
+
+  document.querySelector('.minimized-chat').addEventListener('click', (event: any) => {
+    if (me.config.multiPageApp && me.config.multiPageApp.enable) {
+      me.setLocalStoreItem('kr-cw-state', 'open');
+    }
+    document.querySelector('.chat-window-main-section').classList.remove('minimize-chat');
+    me.minimized = false;
+    if (me.skipedInit) {
+      if (me.config.multiPageApp && me.config.multiPageApp.enable) {
+        me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
+      }
+      me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
+      me.skipedInit = false;
+    }
+  });
+  me.bindSDKEvents();
+}
+
 getBotMetaData  () {
   const me:any = this;
   me.bot.getBotMetaData((res: any) => {
@@ -1079,15 +1131,18 @@ render  (chatWindowHtml: any) {
   const me:any = this;
   let chatWindowEvent = {stopFurtherExecution: false};
   me.emit(me.EVENTS.BEFORE_VIEW_INIT,{chatEle:chatWindowHtml,chatWindowEvent:chatWindowEvent});
-  me.bindEvents();
+  if (me.config.UI.version == 'v2') {
+    me.bindEvents();
+  }
 
   // let welcomeScreeContainerHTML=new welcomeScreeContainer(me).getHTML();
   // chatWindowHtml.append(welcomeScreeContainerHTML);
 
-  let ChatContainerHTML=new ChatContainer(me).getHTML();
-  //chatWindowHtml.append(ChatContainerHTML);
+  // let ChatContainerHTML= renderMessage(ChatContainer, {});
+
+  // chatWindowHtml.append(ChatContainerHTML);
   
-  $(me.config.container).append(ChatContainerHTML);
+  $(me.config.container).append(chatWindowHtml);
   me.emit(me.EVENTS.VIEW_INIT,{chatEle:chatWindowHtml,chatWindowEvent:chatWindowEvent});
   if(chatWindowEvent.stopFurtherExecution){
     return false;
@@ -1099,9 +1154,14 @@ render  (chatWindowHtml: any) {
   if (me.config.widgetSDKInstace) {
     me.chatEle.find('.kr-wiz-menu-chat').show();
   }
-  me.chatPSObj = new KRPerfectScrollbar(me.chatEle.find('.chat-container').get(0), {
-    suppressScrollX: true,
-  });
+  if (me.config.UI.version == 'v2') {
+    me.chatPSObj = new KRPerfectScrollbar(me.chatEle.find('.chat-container').get(0), {
+      suppressScrollX: true,
+    });
+  }
+  if(me.config.UI.version == 'v3') {
+    me.bindEventsV3();
+  }
 };
 
 
@@ -1410,7 +1470,9 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
     }
   }
   //}
-  me.handleImagePreview();
+  if (me.config.UI.version == 'v2') {
+    me.handleImagePreview();
+  }
 
   if (me.chatPSObj && me.chatPSObj.update) {
     me.chatPSObj.update();
@@ -1429,12 +1491,17 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
 
 generateMessageDOM(msgData?:any){
   const me:any = this; 
-  let messageHtml = me.templateManager.renderMessage(msgData);
-  if(messageHtml==='_ignore_message_render_'){
-    return "";
-  }
-  if (!messageHtml && msgData && msgData.message && msgData.message[0]) {
-    messageHtml=me.messageTemplate.renderMessage(msgData);
+  let messageHtml;
+  if (me.config.UI.version == 'v2') {
+    messageHtml = me.templateManager.renderMessage(msgData);
+    if(messageHtml==='_ignore_message_render_'){
+      return "";
+    }
+    if (!messageHtml && msgData && msgData.message && msgData.message[0]) {
+      messageHtml=me.messageTemplate.renderMessage(msgData);
+    }    
+  } else {
+    messageHtml = getHTML(Message, msgData, me); 
   }
   return messageHtml;
 }

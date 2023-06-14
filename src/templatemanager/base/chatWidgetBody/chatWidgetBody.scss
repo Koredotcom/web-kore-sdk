@@ -3,6 +3,7 @@
     flex: 1 1 auto;
     background: #FFFFFF;
     overflow: auto;
+    height: calc(100vh - 220px); // Need to remove
 }
 
 // Agent Bubble
@@ -248,7 +249,7 @@
 .bot-bubble-comp{
     display: flex;
     width: 100%;
-    justify-content: flex-end;
+    justify-content: flex-start;
     padding: 0px 16px;
     margin: 12px 0;
     animation-name: bubbleAnim;
