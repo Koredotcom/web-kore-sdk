@@ -65,6 +65,9 @@ chatConfig = {
     },
     sendFailedMessage:{ //Number of retries on message send failed
         MAX_RETRIES:3
+    },
+    UI:{
+        version:"v3"
     }
 };
 
