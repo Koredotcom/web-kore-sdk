@@ -27,9 +27,9 @@ class CarouselTemplate {
             oneByOne: true,
           });
           $(`.carousel${chatWindowInstance.carouselTemplateCount}`).parent().show();
-          $(`.carousel${chatWindowInstance.carouselTemplateCount}`).attr('style', 'height: 100% !important');
           carouselEles.push(carouselOneByOne);
         }
+        $(`.carousel${chatWindowInstance.carouselTemplateCount}`).attr('style', 'height: 100% !important');
         window.dispatchEvent(new Event('resize'));
         const evt = document.createEvent('HTMLEvents');
         evt.initEvent('resize', true, false);
