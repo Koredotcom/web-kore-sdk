@@ -15,7 +15,7 @@ import chatConfig from './config/kore-config';
 
 import { getHTML } from '../../templatemanager/base/domManager';
 import { Message } from '../../templatemanager/templates/v3/message/message';
-import { ChatWidget } from '../../templatemanager/base/chatWidget/chatWidget';
+import { ChatContainer } from '../../templatemanager/base/chatContainer/chatContainer';
 
 const bot = requireKr('/KoreBot.js').instance();
 
@@ -256,7 +256,7 @@ initShow  (config:any) {
   if (me.config.UI.version == 'v2') {
     chatWindowHtml = (<any> $(me.getChatTemplate())).tmpl(me.config)
   } else {
-    chatWindowHtml = getHTML(ChatWidget, {}, me);
+    chatWindowHtml = getHTML(ChatContainer, {}, me);
     chatWindowHtml=$(chatWindowHtml);
   }
 
@@ -298,7 +298,7 @@ initShow  (config:any) {
   }
   me.render(chatWindowHtml);
   if (me.config.UI.version == 'v3') {
-    document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimizeSmooth');
+    document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimizeSmooth');
   }
   me.unfreezeUIOnHistoryLoadingFail.call(me);
   me.updateOnlineStatus();
@@ -933,7 +933,8 @@ bindEventsV3() {
     if (me.config.multiPageApp && me.config.multiPageApp.enable) {
       me.setLocalStoreItem('kr-cw-state', 'open');
     }
-    document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimizeSmooth');
+    document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimizeSmooth');
+    document.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
     me.minimized = false;
     if (me.skipedInit) {
       if (me.config.multiPageApp && me.config.multiPageApp.enable) {
@@ -945,11 +946,13 @@ bindEventsV3() {
   })
 
   me.addEventListener('.sdkv3-close', 'click', () => {
-    document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimizeSmooth');
+    document.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
+    document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimizeSmooth');
   })
 
   me.addEventListener('.back-to-chat', 'click', () => {
-    document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimizeSmooth');
+    document.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
+    document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimizeSmooth');
   })
 
   if (me?.config.history.paginatedScroll.enable) {

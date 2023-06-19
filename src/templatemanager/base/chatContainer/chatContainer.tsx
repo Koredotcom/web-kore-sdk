@@ -2,18 +2,17 @@
 
 import './chatContainer.scss';
 import { h } from 'preact';
-import { ChatWidgetHeader } from '../chatWidgetHeader/chatWidgetHeader';
-import { ChatWidgetBody } from '../chatWidgetBody/chatWidgetBody';
-import { ChatWidgetComposeBar } from '../chatWidgetComposeBar/chatWidgetComposeBar';
+import { ChatWidget } from '../chatWidget/chatWidget';
+import { AvatarComponent } from '../avatarComponent/avatarComponent';
 
 export function ChatContainer(props: any) {
 
     return (
         <div class='chat-window-main-section' aria-label='chat-window-section'>
-            <ChatWidgetHeader />
-            <ChatWidgetBody />
-            <ChatWidgetComposeBar props={props} />
+           <ChatWidget />
+           <AvatarComponent />
         </div>
+
     );
 
 }

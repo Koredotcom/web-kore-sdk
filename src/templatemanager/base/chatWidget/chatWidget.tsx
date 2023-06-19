@@ -2,14 +2,16 @@
 
 import './chatWidget.scss';
 import { h } from 'preact';
-import { AvatarComponent } from '../avatarComponent/avatarComponent';
-import { ChatContainer } from '../chatContainer/chatContainer';
-export function ChatWidget() {
+import { ChatWidgetHeader } from '../chatWidgetHeader/chatWidgetHeader';
+import { ChatWidgetBody } from '../chatWidgetBody/chatWidgetBody';
+import { ChatWidgetComposeBar } from '../chatWidgetComposeBar/chatWidgetComposeBar';
+export function ChatWidget(props: any) {
 
     return (
         <div className='chat-widgetwrapper-main-container'>
-            <AvatarComponent />
-            <ChatContainer />
+            <ChatWidgetHeader />
+            <ChatWidgetBody />
+            <ChatWidgetComposeBar props={props} />
         </div>
     );
 }
