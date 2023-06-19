@@ -1,4 +1,5 @@
 
+@import '../avatarComponent/avatarComponent.scss';
 
 .chat-widgetwrapper-main-container{
     height: 100%;
@@ -9,16 +10,46 @@
     flex-direction: column;
     transition: transform 1s;
     transform-origin: 100% 100%;
-    &.minimize{               
+    &.minimize{
         animation: bounce-in 0.5s ease forwards;
-    }
+        position: absolute;
+        box-shadow: none;
+        background: transparent;
+        height: 220px;
+        width: 260px;
+        bottom: 0;
+        right: 0;    
+        .chat-window-main-section {
+          display: none;
+        }
+      }
     &.minimizeQuick{   
         transform-origin: top left;            
         animation: quick 0.3s ease forwards;
+        position: absolute;
+        box-shadow: none;
+        background: transparent;
+        height: 220px;
+        width: 260px;
+        bottom: 0;
+        right: 0;    
+        .chat-window-main-section {
+          display: none;
+        }
     }
     &.minimizeSmooth{   
         transform-origin: top left;            
         animation: quick 1s ease forwards;
+        position: absolute;
+        box-shadow: none;
+        background: transparent;
+        height: 220px;
+        width: 260px;
+        bottom: 0;
+        right: 0;    
+        .chat-window-main-section {
+          display: none;
+        }
     }
 }
 

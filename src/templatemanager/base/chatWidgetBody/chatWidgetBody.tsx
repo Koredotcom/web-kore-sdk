@@ -7,7 +7,7 @@ export function ChatWidgetBody() {
 
     return (
         <div className="chat-widget-body-wrapper" aria-label="chat widget body">
-            <div className="chat-container"></div>
+            <div className="prev-message-list"></div>
             {/* <div className="agent-bubble-comp">
                 <div className="agent-bubble-content">
                     <div className="top-info">

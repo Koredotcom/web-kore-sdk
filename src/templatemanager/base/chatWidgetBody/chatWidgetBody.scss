@@ -4,6 +4,9 @@
     background: #FFFFFF;
     overflow: auto;
     height: calc(100vh - 220px); // Need to remove
+    .prev-message-list {
+        display: none;
+    }
 }
 
 // Agent Bubble

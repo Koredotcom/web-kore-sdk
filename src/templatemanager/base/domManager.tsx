@@ -21,7 +21,7 @@ class DomManager {
       }),
       domContainer
     );
-    return domContainer;
+    return domContainer.childNodes[0];
   }
 }
 

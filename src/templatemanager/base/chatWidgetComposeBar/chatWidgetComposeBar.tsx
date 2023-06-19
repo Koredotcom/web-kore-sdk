@@ -88,7 +88,7 @@ export function ChatWidgetComposeBar(props: any) {
                             <img src="/images/emoji.svg" alt="image" />
                         </figure>
                     </button>
-                    <textarea className="typing-text-area" id="typing-text-area" placeholder="Type a message"></textarea>
+                    <textarea className="typing-text-area disableComposeBar" id="typing-text-area" placeholder="Type a message"></textarea>
                 </div>
                 <div className="compose-voice-text">
                     <button className="voice-compose-btn">
