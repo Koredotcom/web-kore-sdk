@@ -9,7 +9,7 @@ export function Message(props: any) {
             {/* {msgData.message[0].cInfo.body} */}
             {/* {msgData.message.forEach((msgItem: any, key: any) => { */}
                 { msgData.type !== 'bot_response' ? (
-                    <div className="agent-bubble-comp" id={helpers.formatDate(msgData.createdOn)}>
+                    <div className="agent-bubble-comp" id={msgData.messageId}>
                         <div className="agent-bubble-content">
                             <div className="top-info">
                                 <div className="time-tamp"><time>{helpers.formatDate(msgData.createdOn)}</time></div>

@@ -211,6 +211,11 @@
     }
 }
 
+.disableComposeBar {
+    pointer-events: none;
+    opacity: 0.4;
+}
+
 
 // Attachment Wrapper
 
