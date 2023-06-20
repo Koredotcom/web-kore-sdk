@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'SDKV3Icons';
-  src:  url('./fonts/SDKV3Icons.eot?c830d');
-  src:  url('./fonts/SDKV3Icons.eot?c830d#iefix') format('embedded-opentype'),
-    url('./fonts/SDKV3Icons.ttf?c830d') format('truetype'),
-    url('./fonts/SDKV3Icons.woff?c830d') format('woff'),
-    url('./fonts/SDKV3Icons.svg?c830d#SDKV3Icons') format('svg');
+  src:  url('./fonts/SDKV3Icons.eot?wpyxuz');
+  src:  url('./fonts/SDKV3Icons.eot?wpyxuz#iefix') format('embedded-opentype'),
+    url('./fonts/SDKV3Icons.ttf?wpyxuz') format('truetype'),
+    url('./fonts/SDKV3Icons.woff?wpyxuz') format('woff'),
+    url('./fonts/SDKV3Icons.svg?wpyxuz#SDKV3Icons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.sdkv3-search:before {
+  content: "\e91c";
+}
 .sdkv3-emoji-happy:before {
   content: "\e900";
 }
