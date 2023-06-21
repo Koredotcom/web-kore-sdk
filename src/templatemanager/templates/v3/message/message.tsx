@@ -16,8 +16,8 @@ export function Message(props: any) {
                                 <div className="you-text">You</div>
                             </div>
                             <div className="bubble-msg-with-img">
-                                <div className="bubble-msg">{msgData.message[0].cInfo.body}
-                                </div>
+                                {/* <div className="bubble-msg">{msgData.message[0].cInfo.body}</div> */}
+                                <div className="bubble-msg">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's</div>
                                 <div className="agent-img">
                                     <figure>
                                         <img src="/images/avatar-bot.svg" alt='avatr img' />
@@ -40,7 +40,8 @@ export function Message(props: any) {
                                 <div className="time-tamp"><time>{helpers.formatDate(msgData.createdOn)}</time></div>
                             </div>
                             <div className="bubble-msg-with-img">
-                                <div className="bubble-msg">{msgData.message[0].cInfo.body}</div>
+                                {/* <div className="bubble-msg">{msgData.message[0].cInfo.body}</div> */}
+                                <div className="bubble-msg">A lightweight and extensible directive for fancy popover creation. Selector: '[ngbPopover]'. Exported as: 'ngbPopover'. Inputs</div>
                                 <div className="bot-img">
                                     <figure>
                                         <img src="/images/avatar-bot.svg" alt='avatr img' />
