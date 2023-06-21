@@ -1235,7 +1235,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
       }
     }
   }
-  me.prepareAriaTagsOnMessage(msgData);
+  me.prepareAriaTagsOnMessage(msgData,messageHtml);
   let chatWindowEvent = {stopFurtherExecution: false};
   me.emit(me.EVENTS.BEFORE_RENDER_MSG,{
     messageHtml:messageHtml,
@@ -1292,14 +1292,25 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
     msgData:msgData
   });
 };
-prepareAriaTagsOnMessage(msgData:any){
+prepareAriaTagsOnMessage(msgData:any,messageHtml:any){
+  let isMacOS=navigator.userAgent.includes("Macintosh") || navigator.userAgent.includes("Mac OS X");
+  let HACK_TIMER=2000;//this timer is handle back to back messages for mac voice over,keep this value more than the duration between messages
+  let $messageHtml=$(messageHtml);
   let me:any=this;
   let _chatContainer = $(me.chatEle).find('.chat-container');
   _chatContainer.find('li').attr('aria-live', 'off');
-  // _chatContainer.find('li .messageBubble').attr('aria-hidden','true');//for mac voiceover bug with aria-live
   _chatContainer.find('li .extra-info').attr('aria-hidden','true');//for mac voiceover bug with aria-live
   _chatContainer.find('.endChatContainer').attr('aria-live', 'off');
   _chatContainer.find('.endChatContainer').attr('aria-hidden','true');//for mac voiceover bug with aria-live
+
+  if(isMacOS){
+    $messageHtml.attr("data-aria-timer-running","true");
+    $messageHtml.attr("aria-live","polite");
+    setTimeout(()=>{
+      $messageHtml.removeAttr("data-aria-timer-running");
+    },HACK_TIMER);
+    _chatContainer.find('li .messageBubble:not([data-aria-timer-running])').attr('aria-hidden','true');//for mac voiceover bug with aria-live
+  }
 }
 generateMessageDOM(msgData?:any){
   const me:any = this; 
