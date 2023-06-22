@@ -1338,7 +1338,9 @@
 
 
 /* slider actions */
-
+.kore-chat-window .kore-action-sheet{
+	display: block !important;
+}
 .kore-chat-window .kore-action-sheet .advanced-list-wrapper {
 	/* height:462px; */
 	overflow-y: auto;
