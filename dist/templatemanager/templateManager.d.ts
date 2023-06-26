@@ -6,6 +6,7 @@ declare class TemplateManager {
     constructor(hostInstance: any);
     installTemplate(template: any): void;
     installDefaultTemplates(): void;
+    installDefaultTemplatesV3(): void;
     renderMessage(msgData: any): string;
 }
 export default TemplateManager;

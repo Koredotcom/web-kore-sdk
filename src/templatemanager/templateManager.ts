@@ -18,6 +18,8 @@ import IframeTemplate from './templates/iframeTemplate/iframeTemplate';
 import SystemTemplate from './templates/systemTemplate/systemTemplate';
 import AdvancedListTemplate from './templates/advancedListTemplate/advancedListTemplate';
 import CardTemplate from './templates/cardTemplate/cardTemplate';
+import MessageTemplate from './templates/v3/message/message';
+import ActionsBottomSliderTemplate from './templates/v3/actionsButtonSlider/actionsBottomSlider';
 
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
@@ -33,16 +35,21 @@ class TemplateManager {
 		// this.helpers = null;
 		// this.extension = null;
 		this.templates = [];
-		this.installDefaultTemplates();
+		if (hostInstance.config.UI.version === 'v2') {
+		    this.installDefaultTemplates();
+		} else {
+            this.installDefaultTemplatesV3();
+		}
+
 	}
 
 	installTemplate  (template: any) {
 		this.templates.unshift(template);
 		template.hostInstance = this.hostInstance;
 	};
+
 	installDefaultTemplates() {
-		
-		this.installTemplate(new ButtonTemplate());
+	this.installTemplate(new ButtonTemplate());
 	this.installTemplate(new ListTemplate());
 	this.installTemplate(new QuickReplyTemplate());
 	this.installTemplate(new TemplateAttachment());
@@ -61,11 +68,13 @@ class TemplateManager {
 	this.installTemplate(new SystemTemplate());
 	this.installTemplate(new AdvancedListTemplate());
 	this.installTemplate(new CardTemplate());
-
-
 	this.installTemplate(new IframeTemplate());
-
 	}
+
+	installDefaultTemplatesV3() {
+		this.installTemplate(new MessageTemplate());
+		this.installTemplate(new ActionsBottomSliderTemplate());
+		}
 
 	renderMessage  (msgData: any) {
 		var messageHtml = '';

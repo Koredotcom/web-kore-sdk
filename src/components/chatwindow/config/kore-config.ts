@@ -55,7 +55,19 @@ chatConfig = {
     pingPong:{
         interval:30000 //In milli sec, To keep the websocket alive skd send ping message in this interval      
     },
-    enableThemes : true, //set true to apply the branding configured    ,
+    enableThemes : false, //set true to apply the branding configured    ,
+    branding: {
+        body: {
+            user_message: {
+                bg_color: "#0D6EFD",
+                color: "#000000"
+            },
+            bot_message: {
+                bg_color: "#000000",
+                color: "#0D6EFD"
+            }
+        }
+    },
     history:{
         paginatedScroll: {
             enable : true,  // set true to load history when the user scrolls up.

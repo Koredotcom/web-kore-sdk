@@ -11,7 +11,7 @@ export function ChatWidget(props: any) {
         <div className='chat-widgetwrapper-main-container'>
             <ChatWidgetHeader />
             <ChatWidgetBody />
-            <ChatWidgetComposeBar props={props} />
+            <ChatWidgetComposeBar {...props} />
         </div>
     );
 }

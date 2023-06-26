@@ -1,9 +1,9 @@
-
+@import '../variables.scss';
 .chat-widget-body-wrapper{
     flex: 1 1 auto;
     background: #FFFFFF;
     overflow: auto;
-    height: calc(100vh - 220px); // Need to remove
+    height: calc(100vh - 330px); // Need to remove
     .prev-message-list {
         display: none;
     }
@@ -149,12 +149,12 @@
             margin: 2px 0;
             position: relative;
             .bubble-msg{
-                background: #4B4EDE;
+                background: $--sdk-chat-window-user-message-bg-color;
                 border-radius: 8px 8px 2px 8px;
                 font-weight: 400;
                 font-size: 14px;
                 line-height: 17px;
-                color: #FFFFFF;
+                color: $--sdk-chat-window-user-message-color;
                 padding: 8px 12px;
                 margin: 2px 0;
             }
@@ -382,12 +382,12 @@
             justify-content: center;
             flex-wrap: wrap;
             .bubble-msg{
-                background: #F0F1F2;
+                background: $--sdk-chat-window-bot-message-bg-color;
                 border-radius: 8px 8px 2px 8px;
                 font-weight: 400;
                 font-size: 14px;
                 line-height: 17px;
-                color: #000000;
+                color: $--sdk-chat-window-bot-message-color;
                 padding: 8px 12px;
                 margin: 2px 0;
             }

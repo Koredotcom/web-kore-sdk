@@ -148,6 +148,10 @@ declare class chatWindow extends EventEmitter {
     resetWindow(): void;
     sendMessageWithWithChatInput(chatInput: any): void;
     bindEvents(): void;
+    bindEventsV3(): void;
+    handleEventsWelcomeScreen(): void;
+    addEventListener(querySelector: any, event: any, cb: any): void;
+    removeEventListener(querySelector: any, event: any): void;
     getBotMetaData(): void;
     sendWebhookOnConnectEvent(): void;
     bindSDKEvents(): void;
@@ -230,6 +234,7 @@ declare class chatWindow extends EventEmitter {
     getBrandingInformation(options: any): void;
     applySDKBranding(response: any): void;
     applyVariableValue(key: any, value: any, type: any): void;
+    setBranding(brandingData?: any): void;
     /**
      * [#]{@link chatWindow#sendMessage} Send message to bot including rendering
      * @param {String} messageText message text to send
