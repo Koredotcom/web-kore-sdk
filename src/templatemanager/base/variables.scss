@@ -31,3 +31,9 @@ $font-s-31:1.9375rem;
 $font-s-32:2rem;
 $font-s-33:2.0625rem;
 $font-s-40:2.5rem;
+
+
+$--sdk-chat-window-user-message-bg-color: var(--v3-sdk-chat-branding--user_message-bg_color);
+$--sdk-chat-window-user-message-color: var(--v3-sdk-chat-branding--user_message-color);
+$--sdk-chat-window-bot-message-bg-color: var(--v3-sdk-chat-branding--bot_message-bg_color);
+$--sdk-chat-window-bot-message-color: var(--v3-sdk-chat-branding--bot_message-color);

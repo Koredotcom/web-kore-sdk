@@ -4,7 +4,7 @@ import './chatWidgetComposeBar.scss';
 import { h } from 'preact';
 
 export function ChatWidgetComposeBar(props: any) {
-    const me = props.props.hostInstance;
+    const me = props.hostInstance;
     const handleClick =  (event: any) => {}
 
     return (

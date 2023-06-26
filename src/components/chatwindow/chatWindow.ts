@@ -16,6 +16,7 @@ import chatConfig from './config/kore-config';
 import { getHTML } from '../../templatemanager/base/domManager';
 import { Message } from '../../templatemanager/templates/v3/message/message';
 import { ChatContainer } from '../../templatemanager/base/chatContainer/chatContainer';
+import BrandingManager from '../../templatemanager/templates/v3/brandingManager';
 
 const bot = requireKr('/KoreBot.js').instance();
 
@@ -160,6 +161,7 @@ init  (config:any) {
   me.bot=bot;
   me.vars={};
   me.helpers=KoreHelpers.helpers;
+  me.brandingManager = new BrandingManager();
   me.templateManager = new TemplateManager(me);
   me.messageTemplate=new MessageTemplate();
   me.messageTemplate.hostInstance=me;
@@ -209,6 +211,7 @@ initShow  (config:any) {
   me.config.botOptions.$=me.$;
   me.messagesQueue=[];
 
+  me.initial = true;
   me.config.chatTitle = 'Kore.ai Bot Chat';
   me.config.allowIframe = false;
 
@@ -298,7 +301,8 @@ initShow  (config:any) {
   }
   me.render(chatWindowHtml);
   if (me.config.UI.version == 'v3') {
-    document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimizeSmooth');
+    document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+    document.querySelector('.welcome-chat-section').classList.add('hide');
   }
   me.unfreezeUIOnHistoryLoadingFail.call(me);
   me.updateOnlineStatus();
@@ -860,6 +864,10 @@ bindEvents  () {
       if (me.config.multiPageApp && me.config.multiPageApp.enable) {
         me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
       }
+      if (me.initial) {
+        me.bot.logInComplete(); // Start api call & ws
+        me.initial = false;
+      }
       // me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
       me.skipedInit = false;
     }
@@ -929,11 +937,31 @@ bindEventsV3() {
     inputEle.value = '';
   })
 
+  me.addEventListener('.start-conv-button', 'click', (event: any) => {
+    me.handleEventsWelcomeScreen();
+  })
+
+  me.addEventListener('.search-send', 'click', (event: any) => {
+    me.handleEventsWelcomeScreen();
+    const inputEle = document.querySelector('.start-conv-input');
+    me.sendMessageToBot(inputEle.value);
+    inputEle.value = '';
+  })
+
+
   me.addEventListener('.avatar-variations-footer', 'click', () => {
     if (me.config.multiPageApp && me.config.multiPageApp.enable) {
       me.setLocalStoreItem('kr-cw-state', 'open');
     }
-    document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimizeSmooth');
+
+    if (me.initial) {
+      me.bot.logInComplete(); // Start api call & ws
+      me.initial = false;
+      document.querySelector('.welcome-chat-section').classList.remove('hide');
+    } else {
+      document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+    }
+
     document.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
     me.minimized = false;
     if (me.skipedInit) {
@@ -945,14 +973,14 @@ bindEventsV3() {
     }
   })
 
-  me.addEventListener('.sdkv3-close', 'click', () => {
+  me.addEventListener('.btn-action-close', 'click', () => {
     document.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
-    document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimizeSmooth');
+    document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
   })
 
   me.addEventListener('.back-to-chat', 'click', () => {
     document.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
-    document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimizeSmooth');
+    document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
   })
 
   if (me?.config.history.paginatedScroll.enable) {
@@ -986,17 +1014,26 @@ bindEventsV3() {
   me.bindSDKEvents();
 }
 
-addEventListener(domEleCl: any, event: any, cb: any){
-  const me: any = this;
-  me.eventMapper.push({ domEleCl, event, cb });
-  document.querySelector(domEleCl).addEventListener(event, cb);
+handleEventsWelcomeScreen() {
+  document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+  document.querySelector('.welcome-chat-section').classList.add('hide');
 }
 
-removeEventListener(domEleCl: any, event: any){
+addEventListener(querySelector: any, event: any, cb: any) {
+  const me: any = this;
+  if (me.eventMapper.filter((el: any) => el.querySelector === querySelector && el.event == event).length) {
+    console.log('An event already registered with the class');
+    return;
+  }
+  me.eventMapper.push({ querySelector, event, cb });
+  document.querySelector(querySelector)?.addEventListener(event, cb);
+}
+
+removeEventListener(querySelector: any, event: any) {
   const me:any = this;
-  const ele = me.eventMapper.filter((el: any) => el.domEleCl == domEleCl && el.event == event);
-  document.querySelector(domEleCl).removeEventListener(event, ele[0].cb);
-  me.eventMapper = me.eventMapper.filter((e: any) => e.domEleCl != domEleCl)
+  const ele = me.eventMapper.filter((el: any) => el.querySelector == querySelector && el.event == event);
+  document.querySelector(querySelector).removeEventListener(event, ele[0].cb);
+  me.eventMapper.splice(me.eventMapper.findIndex((el: any) => el.querySelector == querySelector && el.event == event), 1);
 }
 
 getBotMetaData  () {
@@ -1087,7 +1124,7 @@ bindSDKEvents  () {
     if (me.config.enableThemes) {
       me.getBrandingInformation(response.jwtgrantsuccess);
     } else {
-      me.bot.logInComplete();
+      me.setBranding();
     }
     me.emit(me.EVENTS.JWT_GRANT_SUCCESS, response.jwtgrantsuccess);
   });
@@ -1224,7 +1261,11 @@ render  (chatWindowHtml: any) {
     me.chatPSObj = new KRPerfectScrollbar(me.chatEle.find('.chat-container').get(0), {
       suppressScrollX: true,
     });
-  }
+  } // else {
+  //   me.chatPSObj = new KRPerfectScrollbar(document.querySelector('.chat-widget-body-wrapper'), {
+  //     suppressScrollX: true,
+  //   });
+  // }
   if(me.config.UI.version == 'v3') {
     me.bindEventsV3();
   }
@@ -1586,7 +1627,8 @@ generateMessageDOM(msgData?:any){
       messageHtml=me.messageTemplate.renderMessage(msgData);
     }    
   } else {
-    messageHtml = getHTML(Message, msgData, me); 
+    // messageHtml = getHTML(Message, msgData, me); 
+    messageHtml = me.templateManager.renderMessage(msgData);
   }
   return messageHtml;
 }
@@ -1745,7 +1787,6 @@ historyLoadingComplete () {
     $('.chatInputBox').focus();
     $('.disableFooter').removeClass('disableFooter');
     if (me.config.UI.version == 'v3') {
-      console.log('hcomp');
       document.querySelectorAll('.typing-text-area')[0].classList.remove('disableComposeBar');
     }
     me.historyLoading = false;
@@ -1892,9 +1933,20 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
                   $('.chat-container').append("<div class='endChatContainer'><span class='endChatContainerText'>End of chat history</span></div>");
                 } else {
                   const chatContainer = document.querySelector('.chat-widget-body-wrapper');
-                  const endChatContainer = document.createElement('div');
-                  endChatContainer.textContent = 'End of chat history';
-                  chatContainer.appendChild(endChatContainer);
+                  const dateSeparator = document.createElement('div');
+                  dateSeparator.classList.add('date-saperator');
+                  const lineBorder1 = document.createElement('div');
+                  lineBorder1.classList.add('line-border');
+                  const dateText = document.createElement('div');
+                  dateText.classList.add('date-text');
+                  dateText.textContent = 'End of chat history';
+                  const lineBorder2 = document.createElement('div');
+                  lineBorder2.classList.add('line-border');
+                  dateSeparator.appendChild(lineBorder1);
+                  dateSeparator.appendChild(dateText);
+                  dateSeparator.appendChild(lineBorder2);
+
+                  chatContainer.appendChild(dateSeparator);
                   chatContainer.scrollTo({
                     top: chatContainer.scrollHeight,
                     behavior: 'smooth'
@@ -2143,92 +2195,95 @@ getBrandingInformation(options:any){
   }
 
 }
-applySDKBranding  (response:any) {
-  const me:any = this;
-  if (response && response.activeTheme) {
-      for (var key in response) {
-      switch (key){
-          case 'generalAttributes':
-          if(key  && typeof response[key] === 'object') {
-              for (var property in response[key]){
-                me.applyVariableValue(property,response[key][property],key);
-              }
-          }
-          break;
-          case 'botMessage':
-          if(key  && typeof response[key] === 'object') {
-              for (var property in response[key]){
-                me.applyVariableValue(property,response[key][property],key);
-              }
-          }
-          break;
-          case 'userMessage':
-          if(key  && typeof response[key] === 'object') {
-              for (var property in response[key]){
-                me.applyVariableValue(property,response[key][property],key);
-              }
-          }
-          break;
-          case 'widgetHeader':
-          if(key  && typeof response[key] === 'object') {
-              for (var property in response[key]){
-                me.applyVariableValue(property,response[key][property],key);
-              }
-          }
-          break;
-          case 'widgetFooter':
-          if(key  && typeof response[key] === 'object') {
-              for (var property in response[key]){
-                me.applyVariableValue(property,response[key][property],key);
-              }
-          }
-          break;
-          case 'widgetBody':
-          if(key  && typeof response[key] === 'object') {
-              for (var property in response[key]){
-                  if(property === 'backgroundImage' && response[key] && response[key]['useBackgroundImage']){
-                      $(".kore-chat-body").css("background-image", "url(" + response[key]['backgroundImage'] + ")");
-                  } else {
-                    me.applyVariableValue(property,response[key][property],key);
-                  }
-              }
-          }
-          case 'buttons':
-              if(key  && typeof response[key] === 'object') {
-                  for (var property in response[key]){
-                    me.applyVariableValue(property,response[key][property],key);
-                  }
-              }
-          break;
-          case 'digitalViews':
-              var defaultTheme = 'defaultTheme-kore';
-              if(response && response[key] && response[key].panelTheme){
-                var digitalViewsThemeMapping:any = {
-                    'theme_one':"defaultTheme-kore",
-                    'theme_two':"darkTheme-kore",
-                    'theme_three':"defaultTheme-kora",
-                    'theme_four':"darkTheme-kora"
+  applySDKBranding(response: any) {
+    const me: any = this;
+    if (me.config.UI.version === 'v2') {
+      if (response && response.activeTheme) {
+        for (var key in response) {
+          switch (key) {
+            case 'generalAttributes':
+              if (key && typeof response[key] === 'object') {
+                for (var property in response[key]) {
+                  me.applyVariableValue(property, response[key][property], key);
                 }
-                if(digitalViewsThemeMapping[response[key].panelTheme]){
+              }
+              break;
+            case 'botMessage':
+              if (key && typeof response[key] === 'object') {
+                for (var property in response[key]) {
+                  me.applyVariableValue(property, response[key][property], key);
+                }
+              }
+              break;
+            case 'userMessage':
+              if (key && typeof response[key] === 'object') {
+                for (var property in response[key]) {
+                  me.applyVariableValue(property, response[key][property], key);
+                }
+              }
+              break;
+            case 'widgetHeader':
+              if (key && typeof response[key] === 'object') {
+                for (var property in response[key]) {
+                  me.applyVariableValue(property, response[key][property], key);
+                }
+              }
+              break;
+            case 'widgetFooter':
+              if (key && typeof response[key] === 'object') {
+                for (var property in response[key]) {
+                  me.applyVariableValue(property, response[key][property], key);
+                }
+              }
+              break;
+            case 'widgetBody':
+              if (key && typeof response[key] === 'object') {
+                for (var property in response[key]) {
+                  if (property === 'backgroundImage' && response[key] && response[key]['useBackgroundImage']) {
+                    $(".kore-chat-body").css("background-image", "url(" + response[key]['backgroundImage'] + ")");
+                  } else {
+                    me.applyVariableValue(property, response[key][property], key);
+                  }
+                }
+              }
+            case 'buttons':
+              if (key && typeof response[key] === 'object') {
+                for (var property in response[key]) {
+                  me.applyVariableValue(property, response[key][property], key);
+                }
+              }
+              break;
+            case 'digitalViews':
+              var defaultTheme = 'defaultTheme-kore';
+              if (response && response[key] && response[key].panelTheme) {
+                var digitalViewsThemeMapping: any = {
+                  'theme_one': "defaultTheme-kore",
+                  'theme_two': "darkTheme-kore",
+                  'theme_three': "defaultTheme-kora",
+                  'theme_four': "darkTheme-kora"
+                }
+                if (digitalViewsThemeMapping[response[key].panelTheme]) {
                   defaultTheme = digitalViewsThemeMapping[response[key].panelTheme];
                   $('.kr-wiz-menu-chat').addClass(defaultTheme);
                   $('.kr-wiz-menu-chat').removeClass('defaultTheme-kore');
-                  
+
                 }
               }
-          default:
-          break;
+            default:
+              break;
+          }
+        }
+        $(".kore-chat-window").addClass('customBranding-theme');
       }
-     }
-      $(".kore-chat-window").addClass('customBranding-theme');
-  }
+    } else {
+      me.setBranding(response);
+    }
 
-  if (me.config.UI.version == 'v3') {
-    document.querySelector('.content-text h2').textContent = 'Your personal assistant';
-  }
+    if (me.config.UI.version == 'v3') {
+      document.querySelector('.content-text h2').textContent = 'Your personal assistant';
+    }
 
-  me.bot.logInComplete();
-};
+  };
 applyVariableValue (key:any,value:any,type:any){
   try{
       var cssPrefix = "--sdk-chat-custom-";
@@ -2248,6 +2303,12 @@ applyVariableValue (key:any,value:any,type:any){
   }
   
 }
+
+  setBranding(brandingData?: any) {
+    const me: any = this;
+    me.config.branding = brandingData ? brandingData : me.config.branding;
+    me.brandingManager.applyBranding(me.config.branding);
+  }
 
 /**
  * [#]{@link chatWindow#sendMessage} Send message to bot including rendering 
