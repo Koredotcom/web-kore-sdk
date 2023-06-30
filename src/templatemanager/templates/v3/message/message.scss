@@ -1,0 +1,401 @@
+// Agent Bubble
+.agent-bubble-comp{
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    padding: 0px 16px;
+    margin: 12px 0;
+    animation-name: bubbleAnim;
+    animation-duration: 0.8s;
+    animation-fill-mode: forwards;
+    opacity: 0;
+    .agent-bubble-content{
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: flex-end;
+        max-width: 100%;
+        padding-left: 10%;
+        transition: 0.5s all ease;
+        &:hover{
+            .bubble-msg-with-img{
+                .bubble-msg{
+                    // background-color: rgb(0, 0, 0, 0.18);
+                }                
+            }            
+        }
+        &.if-agent-img{
+            padding-right: 32px;
+            .bubble-msg-with-img{
+                .agent-img{
+                    display: block;
+                }
+            }
+        }       
+        &.small_text{
+            .top-info {
+                .time-tamp{
+                    font-size: 10px;
+                    line-height: 12px;
+                }
+                .you-text{
+                    font-size: 10px;
+                    line-height: 12px;
+                }
+            }
+            .bubble-msg-with-img{
+                .bubble-msg{
+                    font-size: 12px;
+                    line-height: 15px;
+                }
+            } 
+            .bottom-info {
+                .time-tamp{
+                    font-size: 10px;
+                    line-height: 12px;
+                }
+                .read-text{
+                    font-size: 10px;
+                    line-height: 12px;
+                }
+            }          
+        }
+        &.large_text{
+            .top-info {
+                .time-tamp{
+                    font-size: 14px;
+                    line-height: 17px;
+                }
+                .you-text{
+                    font-size: 14px;
+                    line-height: 17px;
+                }
+            }
+            .bubble-msg-with-img{
+                .bubble-msg{
+                    font-size: 16px;
+                    line-height: 19px;
+                }
+            }   
+            .bottom-info {
+                .time-tamp{
+                    font-size: 14px;
+                    line-height: 17px;
+                }
+                .read-text{
+                    font-size: 14px;
+                    line-height: 17px;
+                }
+            }           
+        }
+        &.chat-bubble-style-1{
+            .bubble-msg-with-img{
+                .bubble-msg{
+                    border-radius: 16px;
+                }
+            }
+        } 
+        &.chat-bubble-style-2{
+            .bubble-msg-with-img{
+                .bubble-msg{
+                    border-radius: 8px 2px 8px 8px;
+                }
+            }
+        }
+        &.hover-show-copy{  
+            &:hover{
+                .bubble-msg-with-img{
+                    .copy-bubble{
+                        display: block;
+                    }
+                }
+            }          
+        }
+        .top-info{
+            display: flex;
+            align-items: center;
+            .time-tamp{
+                font-weight: 400;
+                font-size: 12px;
+                line-height: 15px;
+                margin-right: 4px;
+                color: #697586;
+            }
+            .you-text{
+                font-weight: 600;
+                font-size: 12px;
+                line-height: 15px;
+                color: #697586;
+            }
+        }
+        .bubble-msg-with-img{
+            display: flex;
+            align-items: flex-end;
+            flex-direction: column;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 2px 0;
+            position: relative;
+            .bubble-msg{
+                // background: $--sdk-chat-window-user-message-bg-color;
+                border-radius: 8px 8px 2px 8px;
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 17px;
+                // color: $--sdk-chat-window-user-message-color;
+                padding: 8px 12px;
+                margin: 2px 0;
+            }
+            .copy-bubble{
+                position: absolute;
+                left: -24px;
+                top: auto;
+                z-index: 1;
+                cursor: pointer;
+                display: none;
+            }
+            .agent-img{
+                position: absolute;
+                right: -32px;
+                bottom: 0;
+                width: 24px;
+                height: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                display: none;
+                figure{
+                    line-height: normal;
+                    width: 100%;
+                    height: 100%;
+                    img{
+                        border: 1.5px solid #FFFFFF;
+                        border-radius: 100px;
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+            }
+        }
+        .bottom-info{
+            display: flex;
+            align-items: center;
+            .time-tamp{
+                font-weight: 400;
+                font-size: 12px;
+                line-height: 15px;
+                color: #697586;
+                margin-right: 4px;
+            }
+            .read-text{
+                font-weight: 500;
+                font-size: 11px;
+                line-height: 13px;
+                color: #697586;
+                display: flex;
+                align-items: center;
+                i{
+                    color: #22C55E;
+                    font-size: 10px;
+                    margin-left: 5px;
+                }
+            }
+        }
+    }
+}
+
+// Agent Bubble
+.bot-bubble-comp{
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    padding: 0px 16px;
+    margin: 12px 0;
+    animation-name: bubbleAnim;
+    animation-duration: 0.8s;
+    animation-fill-mode: forwards;
+    opacity: 0;
+    .bot-bubble-content{
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        max-width: 100%;
+        padding-left: 32px;
+        justify-content: flex-start;
+        align-items: flex-start;
+        padding-right: 10%;
+        padding-left: 32px;
+        transition: 0.5s all ease;  
+        &:hover{
+            .bubble-msg-with-img{
+                .bubble-msg{
+                    // background-color: rgb(0, 0, 0, 0.18);
+                }                
+            }
+        }
+        &.small_text{
+            .top-info {
+                .time-tamp{
+                    font-size: 10px;
+                    line-height: 12px;
+                }
+                .you-text{
+                    font-size: 10px;
+                    line-height: 12px;
+                }
+            }
+            .bubble-msg-with-img{
+                .bubble-msg{
+                    font-size: 12px;
+                    line-height: 15px;
+                }
+            } 
+            .bottom-info {
+                .time-tamp{
+                    font-size: 10px;
+                    line-height: 12px;
+                }
+                .read-text{
+                    font-size: 10px;
+                    line-height: 12px;
+                }
+            }          
+        }
+        &.large_text{
+            .top-info {
+                .time-tamp{
+                    font-size: 14px;
+                    line-height: 17px;
+                }
+                .you-text{
+                    font-size: 14px;
+                    line-height: 17px;
+                }
+            }
+            .bubble-msg-with-img{
+                .bubble-msg{
+                    font-size: 16px;
+                    line-height: 19px;
+                }
+            }   
+            .bottom-info {
+                .time-tamp{
+                    font-size: 14px;
+                    line-height: 17px;
+                }
+                .read-text{
+                    font-size: 14px;
+                    line-height: 17px;
+                }
+            }           
+        }
+        &.chat-bubble-style-1{
+            .bubble-msg-with-img{
+                .bubble-msg{
+                    border-radius: 16px;
+                }
+            }
+        } 
+        &.chat-bubble-style-2{
+            .bubble-msg-with-img{
+                .bubble-msg{
+                    border-radius: 8px 2px 8px 8px;
+                }
+            }
+        }
+        &.hover-show-copy{  
+            &:hover{
+                .bubble-msg-with-img{
+                    .copy-bubble{
+                        display: block;
+                    }
+                }
+            }          
+        }
+        .top-info{
+            display: flex;
+            align-items: center;
+            .time-tamp{
+                font-weight: 400;
+                font-size: 12px;
+                line-height: 15px;
+                margin-left: 4px;
+                color: #697586;
+            }
+            .you-text{
+                font-weight: 600;
+                font-size: 12px;
+                line-height: 15px;
+                color: #697586;
+            }
+        }
+        .bubble-msg-with-img{
+            display: flex;
+            align-items: flex-start;
+            margin: 4px 0;
+            position: relative;
+            flex-direction: column;
+            justify-content: center;
+            flex-wrap: wrap;
+            .bubble-msg{
+                // background: '$--sdk-chat-window-bot-message-bg_color';
+                border-radius: 8px 8px 2px 8px;
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 17px;
+                // color: $--sdk-chat-window-bot-message-color;
+                padding: 8px 12px;
+                margin: 2px 0;
+            }
+            .copy-bubble{
+                position: absolute;
+                right: -24px;
+                top: auto;
+                z-index: 1;
+                cursor: pointer;
+                display: none;
+            }
+            .bot-img{
+                position: absolute;
+                right: auto;
+                left: -32px;
+                top: 0;
+                bottom: auto;
+                width: 24px;
+                height: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                figure{
+                    line-height: normal;
+                    width: 100%;
+                    height: 100%;
+                    img{
+                        border: 1.5px solid #FFFFFF;
+                        border-radius: 100px;
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+            }
+        }
+        .bottom-info{
+            display: flex;
+            align-items: center;
+            .time-tamp{
+                font-weight: 400;
+                font-size: 12px;
+                line-height: 15px;
+                color: #697586;
+                margin-right: 4px;
+            }
+            .read-text{
+                font-weight: 500;
+                font-size: 11px;
+                line-height: 13px;
+                color: #697586;
+            }
+        }
+    }
+}

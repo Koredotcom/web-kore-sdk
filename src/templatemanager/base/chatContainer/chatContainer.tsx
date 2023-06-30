@@ -2,6 +2,7 @@
 
 import './chatContainer.scss';
 import { h } from 'preact';
+import { useState } from 'preact/hooks';
 import { ChatWidget } from '../chatWidget/chatWidget';
 import { AvatarComponent } from '../avatarComponent/avatarComponent';
 import { WelcomeScreenContainer } from '../../base/welcomeScreenContainer/welcomeScreenContainer';
@@ -9,11 +10,18 @@ import { WelcomeScreenContainer } from '../../base/welcomeScreenContainer/welcom
 
 export function ChatContainer(props: any) {
 
-    return (
+    const hostInstance = props.hostInstance;
+    const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
+    hostInstance.on('onBrandingUpdate', function (event: any) {
+        console.log('Branding Data: ', event.brandingData);
+        updateBrandingInfo(event.brandingData)
+    });    return (
         <div class='chat-window-main-section' aria-label='chat-window-section'>
-            <ChatWidget />
-            <WelcomeScreenContainer {...props} />
-            <AvatarComponent />
+            <ChatWidget {...props} />
+            { brandingInfo.welcome_screen.show &&
+                <WelcomeScreenContainer {...props} />
+            }
+            <AvatarComponent {...props} />
         </div>
 
     );

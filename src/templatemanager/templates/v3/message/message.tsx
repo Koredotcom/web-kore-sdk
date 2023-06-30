@@ -1,19 +1,17 @@
+import './message.scss';
 import { h, Fragment } from 'preact';
+import { useState } from 'preact/hooks';
 import BaseChatTemplate  from '../baseChatTemplate';
 import KoreHelpers from '../../../../utils/helpers';
 
 export function Message(props: any) {
-    let msgData = props.msgData;
+    const msgData = props.msgData;
+    const hostInstance = props.hostInstance;
+    const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
+    hostInstance.on('onBrandingUpdate', function (event: any) {
+        updateBrandingInfo(event.brandingData)
+    });
     const helpers = KoreHelpers.helpers;
-
-    const msgStyling = props.hostInstance.activeTheme?.body;
-
-    const msgBotBackgroundColor = msgStyling?.bot_message.bg_color || '#000';
-    const msgBotColor = msgStyling?.bot_message.color || '#fff';
-    const msgUserBackgroundColor = msgStyling?.bot_message.bg_color || '#ddd';
-    const msgUserColor = msgStyling?.bot_message.color || '#000';
-
-    const chatBubble = props.hostInstance.activeTheme?.chat_bubble;
 
     if (msgData.message) {
         return (
@@ -30,7 +28,7 @@ export function Message(props: any) {
                                                 <div className="time-tamp"><time>{helpers.formatDate(msgData.createdOn)}</time></div>
                                             </div>
                                             <div className="bubble-msg-with-img">
-                                                <div className="bubble-msg">{msgItem.cInfo.body}</div>
+                                                <div className="bubble-msg" style={{ background: brandingInfo.body.bot_message.bg_color, color: brandingInfo.body.bot_message.color }}>{msgItem.cInfo.body}</div>
                                                 <div className="bot-img">
                                                     <figure>
                                                         <img src="/images/avatar-bot.svg" alt='avatr img' />
@@ -52,7 +50,7 @@ export function Message(props: any) {
                                                 <div className="you-text">You</div>
                                             </div>
                                             <div className="bubble-msg-with-img">
-                                                <div className="bubble-msg">{msgItem.cInfo.renderMsg && msgItem.cInfo.renderMsg !== '' ? msgItem.cInfo.renderMsg : msgItem.cInfo.body}
+                                                <div className="bubble-msg" style={{ background: brandingInfo.body.user_message.bg_color, color: brandingInfo.body.user_message.color }}>{msgItem.cInfo.renderMsg && msgItem.cInfo.renderMsg !== '' ? msgItem.cInfo.renderMsg : msgItem.cInfo.body}
                                                 </div>
                                                 <div className="agent-img">
                                                     <figure>

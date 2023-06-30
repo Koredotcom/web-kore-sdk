@@ -1,4 +1,5 @@
 // var KoreSDK = KoreSDK || {};
+import BrandingJSON from '../sass/brandingJSON'; // To do
 var chatConfig:any={};
 
 var botOptions:any = {};
@@ -56,18 +57,7 @@ chatConfig = {
         interval:30000 //In milli sec, To keep the websocket alive skd send ping message in this interval      
     },
     enableThemes : false, //set true to apply the branding configured    ,
-    branding: {
-        body: {
-            user_message: {
-                bg_color: "#0D6EFD",
-                color: "#000000"
-            },
-            bot_message: {
-                bg_color: "#000000",
-                color: "#0D6EFD"
-            }
-        }
-    },
+    branding: BrandingJSON,
     history:{
         paginatedScroll: {
             enable : true,  // set true to load history when the user scrolls up.
