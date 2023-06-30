@@ -254,7 +254,7 @@ initShow  (config:any) {
   me.eventMapper = [];
 
   me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
-  
+
   let chatWindowHtml:any;
   if (me.config.UI.version == 'v2') {
     chatWindowHtml = (<any> $(me.getChatTemplate())).tmpl(me.config)
@@ -1281,9 +1281,11 @@ render  (chatWindowHtml: any) {
   //     suppressScrollX: true,
   //   });
   // }
-  if(me.config.UI.version == 'v3') {
-    me.bindEventsV3();
-  }
+  setTimeout(() => {
+    if (me.config.UI.version == 'v3') {
+      me.bindEventsV3();
+    }
+  }, 5000);
 };
 
 
