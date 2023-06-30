@@ -9,7 +9,7 @@ export function ChatWidget(props: any) {
 
     return (
         <div className='chat-widgetwrapper-main-container'>
-            <ChatWidgetHeader />
+            <ChatWidgetHeader {...props}/>
             <ChatWidgetBody />
             <ChatWidgetComposeBar {...props} />
         </div>

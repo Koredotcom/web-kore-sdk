@@ -1,3 +1,4 @@
+import './message.scss';
 import { h } from 'preact';
 import BaseChatTemplate from '../baseChatTemplate';
 export declare function Message(props: any): h.JSX.Element | undefined;

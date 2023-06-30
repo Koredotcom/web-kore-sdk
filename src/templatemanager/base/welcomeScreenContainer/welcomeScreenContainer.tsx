@@ -2,107 +2,75 @@
 
 import './welcomeScreenContainer.scss';
 import { h } from 'preact';
+import { useState } from 'preact/hooks';
 
 export function WelcomeScreenContainer(props: any) {
-    const me = props.hostInstance;
+    const hostInstance = props.hostInstance;
+    const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
+    hostInstance.on('onBrandingUpdate', function (event: any) {
+        updateBrandingInfo(event.brandingData)
+    });
     const wsLayout: any = {
-        1: 'welcome-header',
-        2: 'welcome-header variation-1',
-        3: 'welcome-header variation-2'
+        "regular": 'welcome-header',
+        "medium": 'welcome-header variation-1',
+        "large": 'welcome-header variation-2'
     };
-    const ws = props?.welcome_screen;
-    const wsLayoutIndex = ws?.layout || 1;
-    const wsTitle = ws?.title?.name || 'Test';
-    const wsTitleColor = ws?.title.color || '#000';
-    const wsSubTitle = ws?.sub_title.name || 'Welcome to Kore.ai';
-    const wsSubTitleColor = ws?.sub_title.color || '#fff';
-    const wsNote = ws?.note.name || 'Our community is ready to help.';
-    const wsLogo = ws?.logo.logo_url || '/images/sc-small.svg';
-    const wsBackgroundColor = ws?.background.color || '#4B4EDE';
-    const wsBackgroundUrl = '$(ws?.background.img)' || "url('/images/standardcharteredlogo.svg')";
-
-    const wsStarterSection =  ws?.starter_section.show || true;
-    const wsStarterSectionIcon = ws?.starter_section.icon.show || true;
-    const wsStarterSectionTitle = ws?.starter_section.title || 'Start New Conversation';
-    const wsStarterSectionSubText = ws?.starter_section.sub_text || 'I’m your personal assistant I’m here to help';
-    const wsStartSectionQuickStart = ws?.starter_section.quick_start_buttons.show || true;
-    const wsStartSectionQuickStartType = ws?.starter_section.quick_start_buttons.input || 'search';
-    const wsStartSectionButtons = ws?.starter_section.quick_start_buttons.buttons || [{"title": 'Contact Sales',
-    "action": {
-        "type": "postback|url", //postback
-        "value": "http://abc.com|help",
-    }}]
-
-
+    const startButtonsLayout: any = {
+        "slack": "quick-start-buttons-container",
+        "stack": "quick-start-buttons-container stacked-buttons"
+    }
     const handleStartEvent = (e: any) => {
-        me.sendMessageToBot(e);
-        me.handleEventsWelcomeScreen();
+        hostInstance.sendMessageToBot(e);
+        hostInstance.handleEventsWelcomeScreen();
     }
 
     return (
         <div className="welcome-chat-section" aria-label="welcome message screen">
-            <header className={wsLayout[wsLayoutIndex]} aria-label="welcome header">
-                <div className="welcome-header-bg" style={{backgroundColor: wsBackgroundColor, background: wsBackgroundUrl}}>
+            <header className={wsLayout[brandingInfo.welcome_screen.layout]} aria-label="welcome header">
+                <div className="welcome-header-bg" style={{ backgroundColor: brandingInfo.welcome_screen.background.color }}>
                     <div className="logo-img">
                         <figure>
-                            <img src={wsLogo} alt="log-img" />
+                            <img src={brandingInfo.welcome_screen.logo.logo_url} alt="log-img" />
                         </figure>
                     </div>
-                    <h1 style={{color: wsTitleColor}}>{wsTitle}</h1>
-                    <h2 style={{color: wsSubTitleColor}}>{wsSubTitle}</h2>
-                    <p>{wsNote}</p>
+                    <h1 style={{ color: brandingInfo.welcome_screen.title.color }}>{brandingInfo.welcome_screen.title.name}</h1>
+                    <h2 style={{ color: brandingInfo.welcome_screen.sub_title.color }}>{brandingInfo.welcome_screen.sub_title.name}</h2>
+                    <p style={{ color: brandingInfo.welcome_screen.note.color }}>{brandingInfo.welcome_screen.note.name}</p>
                 </div>
                 <div className="bg-logo">
                     <figure>
-                        <img src={wsLogo} alt="log-img" />
+                        <img src={brandingInfo.welcome_screen.logo.logo_url} alt="log-img" />
                     </figure>
                 </div>
             </header>
-          {wsStarterSection && <div className="welcome-interactions" aria-label="welcome message screen">
+            {brandingInfo.welcome_screen.starter_box.show && <div className="welcome-interactions" aria-label="welcome message screen">
                 <section className="start-conversations-wrapper">
                     <div className="start-conv-sec">
                         <div className="conv-starter-box">
-                            {wsStarterSectionIcon && <div className="bot_icon">
+                            {brandingInfo.welcome_screen.starter_box.icon.show && <div className="bot_icon">
                                 <i className="sdkv3-bot-settings"></i>
-                            </div> }
+                            </div>}
                             <div className="conv-starter-content-info">
-                                <div className="conv-starter-title">{wsStarterSectionTitle}</div>
-                                <div className="conv-starter-desc">{wsStarterSectionSubText}</div>
+                                <div className="conv-starter-title">{brandingInfo.welcome_screen.starter_box.title}</div>
+                                <div className="conv-starter-desc">{brandingInfo.welcome_screen.starter_box.sub_text}</div>
                             </div>
                         </div>
-                        <div className="quick-start-buttons-container">
+                        <div className={startButtonsLayout[brandingInfo.welcome_screen.starter_box.quick_start_buttons.style]}>
                             {
-                                wsStartSectionButtons.map((ele: any) => (
-                                    <button className="quick-start-btn" onClick={() =>handleStartEvent(ele.title)}>
+                                brandingInfo.welcome_screen.starter_box.quick_start_buttons.buttons.map((ele: any) => (
+                                    <button className="quick-start-btn" onClick={() => handleStartEvent(ele.title)}>
                                         <span className="emoji-symbol">&#128512;</span>
                                         <span>{ele.title}</span>
                                     </button>
                                 ))
                             }
-{/* 
-                            <button className="quick-start-btn">
-                                <span className="emoji-symbol">&#128512;</span>
-                                <span>Free trail</span>
-                            </button>
-                            <button className="quick-start-btn">
-                                <span className="emoji-symbol">&#128512;</span>
-                                <span>Support</span>
-                            </button>
-                            <button className="quick-start-btn">
-                                <span className="emoji-symbol">&#128512;</span>
-                                <span>Know about Kore.ai</span>
-                            </button>
-                            <button className="quick-start-btn">
-                                <span className="emoji-symbol">&#128512;</span>
-                                <span>Just checking about the site</span>
-                            </button> */}
                         </div>
-                        { wsStartSectionQuickStart &&  wsStartSectionQuickStartType=== 'button' && <button className="start-conv-button">
+                        {brandingInfo.welcome_screen.starter_box.quick_start_buttons.show && brandingInfo.welcome_screen.starter_box.quick_start_buttons.input === 'button' && <button className="start-conv-button">
                             <span>Start New Conversation</span>
                             <i className="sdkv3-check"></i>
                         </button>}
 
-                        {wsStartSectionQuickStart && wsStartSectionQuickStartType === 'search' && <div className="start-conv-search-block">
+                        {brandingInfo.welcome_screen.starter_box.quick_start_buttons.show && brandingInfo.welcome_screen.starter_box.quick_start_buttons.input === 'search' && <div className="start-conv-search-block">
                             <div className="start-conv-search">
                                 <i className="sdkv3-search search-icon"></i>
                                 <input className="start-conv-input" type="text" placeholder="Search"></input>
@@ -113,7 +81,7 @@ export function WelcomeScreenContainer(props: any) {
                         </div>}
                     </div>
                 </section>
-            </div> }
+            </div>}
             <footer>
                 <div className="powerdby-info">
                     <p>Powered by</p>
