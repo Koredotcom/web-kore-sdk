@@ -4,8 +4,8 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    background: #F8FAFC;
-    box-shadow: 0px 4px 12px 2px rgba(32,33,36,0.12);
+    background: var(--welcome-bg);
+    box-shadow: var(--welcome-shadow);
     .welcome-header {
         position: relative;
         &.variation-1 {
@@ -36,7 +36,7 @@
             }
         }
         .welcome-header-bg {
-            // background: #4B4EDE;
+            background: var(--global-theme-color);
             border-radius: 4px 4px 0px 0px;
             padding: 32px 16px;
             .logo-img {
@@ -46,21 +46,21 @@
                 font-weight: 600;
                 font-size: 36px;
                 line-height: 44px;
-                color: rgba(255, 255, 255, 0.6);
+                color: var(--welcome-header-h1-text-color);
                 margin-bottom: 6px;
             }
             h2 {
                 font-weight: 700;
                 font-size: 18px;
                 line-height: 22px;
-                color: #FFFFFF;
+                color: var(--welcome-header-text-color);
                 margin-bottom: 6px;
             }
             p {
                 font-weight: 400;
                 font-size: 14px;
                 line-height: 17px;
-                color: #FFFFFF;
+                color: var(--welcome-header-text-color);
             }
         }
         .bg-logo {
@@ -109,8 +109,8 @@
     display: inline-block;
     width: 100%;
     .start-conv-sec{
-        background: #FFFFFF;
-        border: 1px solid #E4E5E7;
+        background: var(--welcome-start-conv-bg);
+        border: 1px solid var(--welcome-start-conv-border);
         border-radius: 4px;
         padding: 15px;
         .conv-starter-box{
@@ -121,7 +121,7 @@
                 height: 40px;
                 flex-shrink: 0;
                 margin-right: 8px;
-                background: #E3E8EF;
+                background: var(--welcome-start-conv-bot-bg);
                 border-radius: 24px;
                 padding: 10px;
                 display: flex;
@@ -136,13 +136,13 @@
                     font-weight: 600;
                     font-size: 14px;
                     line-height: 17px;
-                    color: #202124;
+                    color: var(--welcome-start-conv-bot-title);
                 }
                 .conv-starter-desc{
                     font-weight: 400;
                     font-size: 12px;
                     line-height: 18px;
-                    color: #4B5565;
+                    color: var(--welcome-start-conv-bot-desc);
                     margin-top: 3px;
                 }
             }
@@ -158,8 +158,8 @@
                 }
             }
             .quick-start-btn{
-                background: #FFFFFF;
-                border: 1px solid #E5E5E5;
+                background: var(--welcome-start-conv-quick-btn-bg);
+                border: 1px solid var(--welcome-start-conv-quick-btn-border);
                 border-radius: 4px;
                 height: 40px;
                 padding: 10px 15px;
@@ -168,7 +168,7 @@
                 font-weight: 500;
                 font-size: 14px;
                 line-height: 20px;
-                color: #404040; 
+                color: var(--welcome-start-conv-quick-btn-text); 
                 cursor: pointer;
                 .emoji-symbol{
                     width: 20px;
@@ -181,7 +181,7 @@
         }
         .start-conv-button{
             margin-top: 16px;
-            background: #4B4EDE;
+            background: var(--welcome-start-conv-button-bg);
             border-radius: 4px;
             width: 100%;
             display: flex;
@@ -189,11 +189,11 @@
             text-align: left;
             padding: 10px 16px;
             height: 40px;
-            border: 1px solid #4B4EDE;
+            border: 1px solid var(--welcome-start-conv-button-border);
             font-weight: 400;
             font-size: 14px;
             line-height: 20px;
-            color: #FFFFFF;
+            color: var(--welcome-start-conv-button-color);
             cursor: pointer;
             span{
                 width: 100%;
@@ -220,7 +220,7 @@
                     color: #9AA4B2;
                 }
                 input{
-                    background: #FFFFFF;
+                    background: var(--welcome-start-conv-search-bg);
                     border: 1px solid #BDC1C6;
                     border-radius: 4px;
                     width: 100%;
@@ -237,7 +237,7 @@
                         line-height: 20px;
                     }
                     &:focus{
-                        border: solid 1px #4B4EDE;
+                        border: solid 1px ;
                     }
                     &:active{
                         border: solid 1px #4B4EDE;
@@ -253,15 +253,15 @@
                 }
             }
             .search-send{
-                background: #4B4EDE;
+                background: var(--welcome-start-conv-button-bg);
                 border-radius: 4px;
                 padding: 8px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                border: 1px solid #4B4EDE;
+                border: 1px solid var(--welcome-start-conv-button-border);
                 font-size: 14px;
-                color: #FFFFFF;
+                color: var(--welcome-start-conv-button-color);
                 cursor: pointer;
                 width: 34px;
                 height: 34px;

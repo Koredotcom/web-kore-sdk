@@ -10,37 +10,6 @@
 }
 
 
-@keyframes bubbleAnim {
-    0% {
-      opacity: 0;
-      transform: translateY(100%); /* Move the elements 100% down */
-    }
-    80% {
-        opacity: 0.8;
-        transform: translateY(0px); /* Move the elements to their original position */
-    }
-    100% {
-      opacity: 1;
-      transform: translate(0); /* Move the elements to their original position */
-    }
-}
-
-@keyframes left-to-right-slide-anim {
-    0% {
-      opacity: 0;
-      transform: translateX(-100%); /* Move the elements 100% down */
-    }
-    80% {
-        opacity: 0.5;
-        transform: translateX(0px); /* Move the elements to their original position */
-    }
-    100% {
-      opacity: 1;
-      transform: translate(0); /* Move the elements to their original position */
-    }
-}
-
-
 
 // Date Saperator
 

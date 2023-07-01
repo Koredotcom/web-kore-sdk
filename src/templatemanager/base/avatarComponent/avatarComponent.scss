@@ -8,16 +8,11 @@
     // right: 0;
     overflow: inherit;
     animation: remove-hidden 0.1s ease forwards;
-    @keyframes remove-hidden {
-        0% {
-          overflow: hidden;
-        }
-        100% { overflow: inherit; }
-    }
     .avatar-actions {
         display: flex;
         align-items: flex-end;
         position: relative;
+        gap: 10px;
         .content-info {
             display: flex;
             flex-direction: column;
@@ -104,14 +99,9 @@
 
         .bounce2 {
             animation: bounce2 2s ease infinite;
-          }
-          @keyframes bounce2 {
-              0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-              40% {transform: translateY(-30px);}
-              60% {transform: translateY(-15px);}
         }
         .avatar-bg {
-            // background: #4B4EDE;
+            background: #4B4EDE;
             box-shadow: 0px 4px 6px -1px rgba(16, 24, 40, 0.1), 0px 2px 4px -2px rgba(16, 24, 40, 0.1);
             border-radius: 32px;
             width: 48px;
@@ -121,27 +111,13 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            margin-left: 10px;
             border: 0;
             cursor: pointer;
             position: relative;
             // animation: bounce2 0.8s ease forwards;  
             transition: transform 1s;
             transform-origin: 100% 100%;
-            animation: bounce-in-avatar 0.2s ease forwards;   
-            
-            @keyframes bounce-in-avatar {
-                0% {
-                  opacity: 0;
-                  transform: scale(.3);
-                }
-                50% {
-                  opacity: 1;
-                  transform: scale(1);
-                }
-                70% { transform:translateY(20px)}
-                100% { transform: scale(1) translate(0);}
-              }
+            animation: bounce-in-avatar 0.2s ease forwards;                           
             .un-read-msg {
                 position: absolute;
                 right: 0;
@@ -211,6 +187,11 @@
     }
     &.avatar-minimize {
         display: none;
+        // .avatar-actions {
+        //     .content-info{
+        //         display: none;
+        //     }
+        // }
     }
 }
 
@@ -218,44 +199,14 @@
     animation-name: slide-up;
     animation-duration: 1.5s;
     animation-fill-mode: forwards;
-    opacity: 0; /* Start with opacity 0 to hide the elements initially */
-  }
-
-
-  @keyframes avatarBubbleAnim {
-    0% {
-      opacity: 0;
-      transform: translateY(10px); /* Move the elements 100% down */
-    }
-    80% {
-        opacity: 1;
-        transform: translateY(-10px); /* Move the elements to their original position */
-    }
-    100% {
-      opacity: 1;
-      transform: translate(0); /* Move the elements to their original position */
-    }
+    opacity: 0;
 }
-
-  @keyframes slide-up {
-    0% {
-      opacity: 0;
-      transform: translateY(100%); /* Move the elements 100% down */
-    }
-    100% {
-      opacity: 1;
-      transform: translate(0); /* Move the elements to their original position */
-    }
-  }
-  
-  .animation:nth-child(1) {
-    animation-delay: 1s; /* Delay the animation of the first element by 0.5 seconds */
-  }
-  
-  .animation:nth-child(2) {
-    animation-delay: 1.5s; /* Delay the animation of the second element by 1 second */
-  }
-  
-  .animation:nth-child(3) {
-    animation-delay: 2s; /* Delay the animation of the third element by 1.5 seconds */
-  }
+.animation:nth-child(1) {
+    animation-delay: 1s;
+}
+.animation:nth-child(2) {
+    animation-delay: 1.5s;
+}
+.animation:nth-child(3) {
+    animation-delay: 2s;
+}

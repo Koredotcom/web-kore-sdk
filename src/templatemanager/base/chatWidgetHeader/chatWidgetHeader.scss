@@ -52,6 +52,9 @@
             right: 16px;
             top: 16px;
             z-index: 1;
+            .btn-action{
+                color: #FFFFFF;
+            }
         }
         &.transparent-style{
             background: linear-gradient(180deg, rgba(75, 78, 222, 0.7) 0%, rgba(255, 255, 255, 0) 100%);

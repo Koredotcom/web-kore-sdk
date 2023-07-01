@@ -1,3 +1,67 @@
+@import "./animations.scss";
+
+.default-theme{
+
+    --global-theme-color:#4B4EDE;
+    --global-white:#FFFFFF;
+    --gloabl-text-color:#202124;
+    --gloabl-text-desc-color:#4B5565;
+    --gloabl-border-color:#E4E5E7;
+    --gloabl-border-color-1:#BDC1C6;
+
+    // Welcome screen Variables
+        --welcome-bg:#F8FAFC;
+        --welcome-shadow:0px 4px 12px 2px rgba(32,33,36,0.12);
+        --welcome-header-bg:#4B4EDE;
+        --welcome-header-h1-text-color:#fff9;
+        --welcome-header-text-color:#FFFFFF;
+        --welcome-start-conv-bg:#FFFFFF;
+        --welcome-start-conv-border:#E4E5E7;
+        --welcome-start-conv-bot-bg:#E3E8EF;
+        --welcome-start-conv-bot-title:#202124;
+        --welcome-start-conv-bot-desc:#4B5565;
+        --welcome-start-conv-quick-btn-bg:#FFFFFF;
+        --welcome-start-conv-quick-btn-border:#E5E5E5;
+        --welcome-start-conv-quick-btn-text:#404040;
+        --welcome-start-conv-search-bg:#FFFFFF;
+        --welcome-start-conv-search-border:#BDC1C6;
+        --welcome-start-conv-button-bg:#4B4EDE;
+        --welcome-start-conv-button-border:#4B4EDE;
+        --welcome-start-conv-button-color:#FFFFFF;
+    // End
+}
+
+.dark-theme{
+
+    --global-theme-color:#DE6449;
+    --global-white:#FFFFFF;
+    --gloabl-text-color:#202124;
+    --gloabl-text-desc-color:#4B5565;
+    --gloabl-border-color:#E4E5E7;
+    --gloabl-border-color-1:#BDC1C6;
+
+    // Welcome screen Variables
+        --welcome-bg:#F8FAFC;
+        --welcome-shadow:0px 4px 12px 2px rgba(32,33,36,0.12);
+        --welcome-header-bg:#DE6449;
+        --welcome-header-h1-text-color:#fff9;
+        --welcome-header-text-color:#FFFFFF;
+        --welcome-start-conv-bg:#FFFFFF;
+        --welcome-start-conv-border:#E4E5E7;
+        --welcome-start-conv-bot-bg:#E3E8EF;
+        --welcome-start-conv-bot-title:#202124;
+        --welcome-start-conv-bot-desc:#4B5565;
+        --welcome-start-conv-quick-btn-bg:#FFFFFF;
+        --welcome-start-conv-quick-btn-border:#E5E5E5;
+        --welcome-start-conv-quick-btn-text:#404040;
+        --welcome-start-conv-search-bg:#FFFFFF;
+        --welcome-start-conv-search-border:#BDC1C6;
+        --welcome-start-conv-button-bg:#DE6449;
+        --welcome-start-conv-button-border:#DE6449;
+        --welcome-start-conv-button-color:#FFFFFF;
+    // End
+}
+
 
 
 // STANDARD SIZES

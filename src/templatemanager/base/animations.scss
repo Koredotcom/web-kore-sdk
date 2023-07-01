@@ -1,0 +1,223 @@
+// Avatar animations
+
+@keyframes remove-hidden {
+    0% {
+      overflow: hidden;
+    }
+    100% { 
+        overflow: inherit; 
+    }
+}
+
+@keyframes bounce2 {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-30px);}
+    60% {transform: translateY(-15px);}
+}
+@keyframes bounce-in-avatar {
+    0% {
+      opacity: 0;
+      transform: scale(.3);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    70% { transform:translateY(20px)}
+    100% { transform: scale(1) translate(0);}
+}
+
+@keyframes avatarBubbleAnim {
+    0% {
+      opacity: 0;
+      transform: translateY(10px); /* Move the elements 100% down */
+    }
+    80% {
+        opacity: 1;
+        transform: translateY(-10px); /* Move the elements to their original position */
+    }
+    100% {
+      opacity: 1;
+      transform: translate(0); /* Move the elements to their original position */
+    }
+}
+
+@keyframes slide-up {
+    0% {
+        opacity: 0;
+        transform: translateY(100%); /* Move the elements 100% down */
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0); /* Move the elements to their original position */
+    }
+}
+
+// End Avatar animations
+
+// Chat open animations
+@keyframes quick {
+    0% {
+      opacity: 0;
+      transform: scale(0);
+    }
+    100% { 
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+@keyframes bounce-in {
+    0% {
+      opacity: 0;
+      transform: scale(.3);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    70% { 
+        transform:translate(-10px)
+    }
+    100% { 
+        transform: scale(1);
+    }
+}
+
+// End
+
+// Bubble animations
+
+@keyframes bubbleAnim {
+    0% {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    80% {
+        opacity: 0.8;
+        transform: translateY(0px);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(0);
+    }
+}
+
+// End
+
+// Left to right template animations
+
+@keyframes left-to-right-slide-anim {
+    0% {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+    80% {
+        opacity: 0.5;
+        transform: translateX(0px);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(0);
+    }
+}
+
+// End
+
+// Right to Left template animations
+
+@keyframes right-to-left-slide-anim {
+    0% {
+      opacity: 0;
+      transform: translateX(100%); /* Move the elements 100% down */
+    }
+    80% {
+        opacity: 0.5;
+        transform: translateX(10px); /* Move the elements to their original position */
+    }
+    100% {
+      opacity: 1;
+      transform: translate(0); /* Move the elements to their original position */
+    }
+}
+
+// Voice recording animations
+
+@keyframes recording {
+    from {
+        transform: scale( 1.1 );
+        box-shadow: 0 0 0 0 rgba(#4B4EDE, 0.2),
+          0 0 0 1px rgba(#4B4EDE, 0.2),
+          0 0 0 3px rgba(#4B4EDE, 0.2),
+          0 0 0 5px rgba(#4B4EDE, 0.2);
+    }
+
+    50% {
+        transform: none;
+    }
+
+    to {
+        transform: scale( 1.1 );
+        box-shadow: 0 0 0 0 rgba(#4B4EDE, 0.2),
+          0 0 0 3px rgba(#4B4EDE, 0.2),
+          0 0 0 6px rgba(#4B4EDE, 0),
+          0 0 0 10px rgba(#4B4EDE, 0);
+    }
+}
+
+@keyframes voiceAnim {
+    from {
+        transform: scale( 1.1 );
+    }
+    0% {
+        box-shadow: 0 0 0 0 rgba(#4B4EDE, 0.2),
+          0 0 0 1px rgba(#4B4EDE, 0.2),
+          0 0 0 3px rgba(#4B4EDE, 0.2),
+          0 0 0 5px rgba(#4B4EDE, 0.2);
+        // transform: scale(1.1);
+      }
+      50% {
+        transform: none;
+    }
+      100% {
+        box-shadow: 0 0 0 0 rgba(#4B4EDE, 0.2),
+          0 0 0 4px rgba(#4B4EDE, 0.2),
+          0 0 0 20px rgba(#4B4EDE, 0),
+          0 0 0 30px rgba(#4B4EDE, 0);
+        // transform: scale(0.9);
+        transform: scale( 1.1 );
+    }
+    to {
+        transform: scale( 1.1 );
+    }
+}
+
+// End
+
+// Bottom slider open close animations
+
+@keyframes closeBottomToTopAnim {
+    0% {
+      transform: translateY(0%);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(100%);
+        display: none;
+    }
+}   
+@keyframes slideBottomToTopAnim {
+    0% {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    80% {
+        opacity: 1;
+        transform: translateY(-10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(0);
+    }
+}   
+
+// End
