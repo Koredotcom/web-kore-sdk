@@ -347,6 +347,8 @@
                 // color: $--sdk-chat-window-bot-message-color;
                 padding: 8px 12px;
                 margin: 2px 0;
+                word-break: break-word;
+                white-space: break-spaces;
             }
             .copy-bubble{
                 position: absolute;

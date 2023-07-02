@@ -41,6 +41,37 @@
     --gloabl-border-color-1:#BDC1C6;
 
     // Welcome screen Variables
+        --welcome-bg:#121926;
+        --welcome-shadow:0px 4px 12px 2px rgba(32, 33, 36, 0.12);
+        --welcome-header-bg:#202939;
+        --welcome-header-h1-text-color:#9AA4B2;
+        --welcome-header-text-color:#FFF;
+        --welcome-start-conv-bg:#202939;
+        --welcome-start-conv-border:#364152;
+        --welcome-start-conv-bot-bg:#364152;
+        --welcome-start-conv-bot-title:#FFF;
+        --welcome-start-conv-bot-desc:#9AA4B2;
+        --welcome-start-conv-quick-btn-bg:#FFFFFF;
+        --welcome-start-conv-quick-btn-border:#E5E5E5;
+        --welcome-start-conv-quick-btn-text:#404040;
+        --welcome-start-conv-search-bg:#FFFFFF;
+        --welcome-start-conv-search-border:#BDC1C6;
+        --welcome-start-conv-button-bg:#4B4EDE;
+        --welcome-start-conv-button-border:#4B4EDE;
+        --welcome-start-conv-button-color:#FFFFFF;
+    // End
+}
+
+.theme-1{
+
+    --global-theme-color:#DE6449;
+    --global-white:#FFFFFF;
+    --gloabl-text-color:#202124;
+    --gloabl-text-desc-color:#4B5565;
+    --gloabl-border-color:#E4E5E7;
+    --gloabl-border-color-1:#BDC1C6;
+
+    // Welcome screen Variables
         --welcome-bg:#F8FAFC;
         --welcome-shadow:0px 4px 12px 2px rgba(32,33,36,0.12);
         --welcome-header-bg:#DE6449;
