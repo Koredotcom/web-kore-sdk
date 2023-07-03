@@ -941,7 +941,7 @@ bindSDKEvents  () {
       return false;
     }
 
-    let msgData=me.parseSocketMessage(response.data);
+    let msgData=me.parseSocketMessage(JSON.stringify(tempData));
     if (msgData) {
       if (me.loadHistory && me.historyLoading) {
         me.messagesQueue.push(msgData)
