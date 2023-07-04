@@ -8,10 +8,10 @@ export function AvatarComponent(props: any) {
     const hostInstance = props.hostInstance;
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
     hostInstance.on('onBrandingUpdate', function (event: any) {
-        updateBrandingInfo(event.brandingData)
+        updateBrandingInfo({...event.brandingData})
     });
 
-    const aShape = {
+    const aShape: any = {
         "rounded": "avatar-actions",
         "balloon": "avatar-actions variation-1",
         "rectangle": "avatar-actions variation-2",
@@ -19,7 +19,7 @@ export function AvatarComponent(props: any) {
     }
     return (
         <div className="avatar-variations-footer" aria-label="avatar footer">
-            <div className="avatar-actions variation-2" aria-label="avatar actions">
+            <div className={aShape[brandingInfo.chat_bubble.style]} aria-label="avatar actions">
                 <div className="content-info">
                     <div className="text-content animation" role="contentinfo" aria-labelledby="helojohn">
                         <h4 id="helojohn">Hello Jhon</h4>

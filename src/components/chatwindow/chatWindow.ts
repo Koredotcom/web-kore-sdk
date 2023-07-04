@@ -301,8 +301,9 @@ initShow  (config:any) {
   }
   me.render(chatWindowHtml);
   if (me.config.UI.version == 'v3') {
-    document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
-    document.querySelector('.welcome-chat-section').classList.add('hide');
+    if (me.config.branding.welcome_screen.show) {
+      document.querySelector('.welcome-chat-section').classList.add('hide');
+    }
   }
   me.unfreezeUIOnHistoryLoadingFail.call(me);
   me.updateOnlineStatus();
@@ -930,6 +931,18 @@ bindEventsV3() {
     } 
   })
 
+  me.addEventListener('.start-conv-input', 'keydown', (event: any) => {
+    if (event.keyCode == 13) {
+      if (event.shiftKey) {
+        return;
+      }
+      me.handleEventsWelcomeScreen();
+      event.preventDefault();
+      me.sendMessageToBot(event.target.value);
+      event.target.value = '';
+    } 
+  })
+
   me.addEventListener('.send-btn', 'click', (event: any) => {
     const inputEle = document.querySelector('.typing-text-area');
     event.preventDefault();
@@ -957,7 +970,11 @@ bindEventsV3() {
     if (me.initial) {
       me.bot.logInComplete(); // Start api call & ws
       me.initial = false;
-      document.querySelector('.welcome-chat-section').classList.remove('hide');
+      if (me.config.branding.welcome_screen.show) {  
+        document.querySelector('.welcome-chat-section').classList.remove('hide');
+      } else {
+        document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+      }
     } else {
       document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
     }
@@ -979,7 +996,12 @@ bindEventsV3() {
   })
 
   me.addEventListener('.back-to-chat', 'click', () => {
-    document.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
+    if (me.config.branding.welcome_screen.show) {
+      document.querySelector('.welcome-chat-section').classList.remove('hide');
+      document.querySelector('.avatar-variations-footer').classList.add('avatar-minimize')
+    } else {
+      document.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
+    }
     document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
   })
 
@@ -2310,16 +2332,16 @@ applyVariableValue (key:any,value:any,type:any){
 
   switchView(type: any) {
     const me: any = this;
-    if (type === 'avatar') {
+    if (type == 'avatar') {
       document.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize');
       document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
       document.querySelector('.welcome-chat-section')?.classList.add('hide');
     }
-    else if (type === 'welcome') {
+    else if (type == 'welcome') {
       document.querySelector('.welcome-chat-section')?.classList.remove('hide');
       document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
       document.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
-    } else if (type === 'chat') {
+    } else if (type == 'chat') {
       document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
       document.querySelector('.welcome-chat-section')?.classList.add('hide');
       document.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');

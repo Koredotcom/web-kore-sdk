@@ -14,7 +14,7 @@ export function ChatContainer(props: any) {
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
     hostInstance.on('onBrandingUpdate', function (event: any) {
         console.log('Branding Data: ', event.brandingData);
-        updateBrandingInfo(event.brandingData)
+        updateBrandingInfo({...event.brandingData})
     });    return (
         <div class='chat-window-main-section default-theme' aria-label='chat-window-section'>
             <ChatWidget {...props} />
