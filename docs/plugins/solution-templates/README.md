@@ -5,10 +5,8 @@ Solution Templates plugin is collection of templates which are specfic to soluti
 
 | Template  | Description |  Details
 | ------------- | ------------- |------------- |
-| Quick replies welcome | Shows a formatted text message to the user with clickable text choices.
-  |[Guide ](../../templates/quickRepliesWelcome) 
-| Search Results| Shows a formatted text message to the user with clickable text choices.
-  |[Guide ](../../templates/barChartTemplate)
+| Quick replies welcome | Shows a formatted text message to the user with clickable text choices.|[Guide ](../../templates/quickRepliesWelcome) 
+| Search Results| Shows a formatted text message to the user with clickable text choices.|[Guide ](../../templates/barChartTemplate)
 
 ## How to install
 
