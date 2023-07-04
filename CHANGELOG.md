@@ -1,4 +1,13 @@
 
+### 10.1.1
+
+- SDK Release July 4, 2023
+* Bug fixes
+  * Reconnect on token expiry 
+  * ADA mac safari voiceover bug fixes
+  * Support for .gif fileType
+  * Multiple carouselTemplate fix
+  * Solutions templates plugin added
 ### 10.1.0
 
 - Release Apr 16, 2023
