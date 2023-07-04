@@ -51,3 +51,29 @@
 .kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent form .hide{
     display:none;
 }
+
+.kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent .btn-group {
+    margin: 15px 0 0 0;
+    text-align: center;
+}
+.kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent .btn-group .btn-info {
+    min-width: 80px;
+    height: 30px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-right: 10px;
+    background-color: #0d6efd;
+    border: solid 1px transparent;
+    color: #fff;
+}
+.kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent .btn-group .btn-url-postback {
+    min-width: 80px;
+    height: 30px;
+    border-radius: 4px;
+    font-size: 14px;
+    border: solid 1px transparent;
+    cursor: pointer;
+    margin-right: 10px;
+    color: #0d6efd;
+}

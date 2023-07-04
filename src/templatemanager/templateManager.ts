@@ -42,7 +42,7 @@ class TemplateManager {
 	};
 	installDefaultTemplates() {
 		
-		this.installTemplate(new ButtonTemplate());
+	this.installTemplate(new ButtonTemplate());
 	this.installTemplate(new ListTemplate());
 	this.installTemplate(new QuickReplyTemplate());
 	this.installTemplate(new TemplateAttachment());
