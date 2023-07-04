@@ -153,6 +153,11 @@ module.exports= function(env,argv){
             filename: 'plugins/kore-graph-templates-plugin.js',
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
+          KoreSolutionsTemplatesPlugin: {
+            import: "./src/index_plugins/solutionsTemplates.ts",
+            filename: 'plugins/kore-solutions-plugin.js',
+            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+          },
           WebKitSTTPluginSDK: {
             import: "./src/index_plugins/WebKitSTT.ts",
             filename: 'plugins/webapi-stt-plugin.js',
@@ -254,6 +259,11 @@ module.exports= function(env,argv){
           KoreGraphTemplatesPluginSDK: {
             import: "./src/index_plugins/graphTemplates.ts",
             filename: 'plugins/kore-graph-templates-plugin-umd.js',
+            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+          },
+          KoreSolutionsTemplatesPluginSDK: {
+            import: "./src/index_plugins/solutionsTemplates.ts",
+            filename: 'plugins/kore-solutions-plugin-umd.js',
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
           WebKitSTTPluginSDK: {
