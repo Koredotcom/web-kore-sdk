@@ -2,7 +2,8 @@
 
 ###### Preview
 
-![searchResults](https://user-images.githubusercontent.com/58174664/148945067-332cdf1b-fd76-41e3-b2da-bb58b0bb0e5b.PNG)
+<img width="493" alt="Screenshot 2023-07-04 at 6 03 18 PM" src="https://github.com/Koredotcom/web-kore-sdk/assets/29255055/7080ca3a-2915-4c05-97a6-cc28dc134910">
+
 
 ###### Message Payload
 
