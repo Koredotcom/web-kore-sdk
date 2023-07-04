@@ -261,7 +261,7 @@ module.exports= function(env,argv){
             filename: 'plugins/kore-graph-templates-plugin-umd.js',
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
-          KoreSolutionsTemplatesPlugin: {
+          KoreSolutionsTemplatesPluginSDK: {
             import: "./src/index_plugins/solutionsTemplates.ts",
             filename: 'plugins/kore-solutions-plugin-umd.js',
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
