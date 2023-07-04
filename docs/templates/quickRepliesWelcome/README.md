@@ -2,7 +2,8 @@
 
 ###### Preview
 
-![qucikRepliesWelcome](https://user-images.githubusercontent.com/58174664/148945067-332cdf1b-fd76-41e3-b2da-bb58b0bb0e5b.PNG)
+![qucikRepliesWelcome]<img width="487" alt="Screenshot 2023-07-04 at 6 04 01 PM" src="https://github.com/Koredotcom/web-kore-sdk/assets/29255055/cb049c4f-9b42-4f32-98c8-9fb2222f2c12">
+
 
 ###### Message Payload
 ```js
