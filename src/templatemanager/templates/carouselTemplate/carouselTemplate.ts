@@ -49,7 +49,7 @@ class CarouselTemplate {
     const me: any = this;
     let $ = me.hostInstance.$;
     const chatWindowInstance = me.hostInstance;
-    $(messageHtml).off('click', '.carouselImageContent').on('click', '.carouselImageContent', (e: any) => {
+    $(messageHtml).off('click', '.carouselImageContent,.listItemPath').on('click', '.carouselImageContent,.listItemPath', (e: any) => {
       e.preventDefault();
       e.stopPropagation();
       const selectedTarget = e.currentTarget;
