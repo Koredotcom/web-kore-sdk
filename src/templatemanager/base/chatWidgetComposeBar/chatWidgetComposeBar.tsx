@@ -1,10 +1,12 @@
 
 
+import IconsManager from '../iconsManager';
 import './chatWidgetComposeBar.scss';
 import { h } from 'preact';
 
 export function ChatWidgetComposeBar(props: any) {
     const me = props.hostInstance;
+    const iconHelper = new IconsManager();
     const handleClick =  (event: any) => {}
 
     return (
@@ -74,18 +76,18 @@ export function ChatWidgetComposeBar(props: any) {
             <div className="compose-bar-wrapper" aria-label="compose footer">
                 <button className="action-btn">
                     <figure>
-                        <img src="/images/hamberger.svg" alt="image" />
+                        <img src={iconHelper.getIcon('hamberger')} alt="image" />
                     </figure>
                 </button>
                 <button className="action-btn">
                     <figure>
-                        <img src="/images/attachment.svg" alt="image" />
+                        <img src={iconHelper.getIcon('attachment')} alt="image" />
                     </figure>
                 </button>
                 <div className="compose-text-area">
                     <button className="emoji-btn">
                         <figure>
-                            <img src="/images/emoji.svg" alt="image" />
+                            <img src={iconHelper.getIcon('emoji')} alt="image" />
                         </figure>
                     </button>
                     <textarea className="typing-text-area disableComposeBar" id="typing-text-area" placeholder="Type a message"></textarea>
@@ -93,19 +95,19 @@ export function ChatWidgetComposeBar(props: any) {
                 <div className="compose-voice-text">
                     <button className="voice-compose-btn">
                         <figure>
-                            <img src="/images/send.svg" alt="image" />
+                            <img src={iconHelper.getIcon('send')} alt="image" />
                         </figure>
                     </button>
                     <p className="speak-info">Tap microphone to speak</p>
                 </div>
                 <button className="voice-btn">
                     <figure>
-                        <img src="/images/voice.svg" alt="image" />
+                        <img src={iconHelper.getIcon('voice')} alt="image" />
                     </figure>
                 </button>
                 <button className="send-btn">
                         <figure>
-                            <img src="/images/send.svg" alt="image" />
+                            <img src={iconHelper.getIcon('send')} alt="image" />
                         </figure>
                     </button>
             </div>

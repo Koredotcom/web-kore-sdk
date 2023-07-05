@@ -3,9 +3,11 @@
 import './avatarComponent.scss';
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
+import IconsManager from '../iconsManager';
 
 export function AvatarComponent(props: any) {
     const hostInstance = props.hostInstance;
+    const iconHelper = new IconsManager();
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
     hostInstance.on('onBrandingUpdate', function (event: any) {
         updateBrandingInfo({...event.brandingData})
@@ -26,7 +28,7 @@ export function AvatarComponent(props: any) {
                         <p className="help-text-content">Welcome to support</p>
                         <span className="close-avatar-content" role="contentinfo" aria-label="close">
                             <figure>
-                                <img src="/images/close.svg" alt="close" />
+                                <img src={iconHelper.getIcon('close_icon')} alt="close" />
                             </figure>
                         </span>
                     </div>
@@ -38,7 +40,7 @@ export function AvatarComponent(props: any) {
                 <button className="avatar-bg" style={{ background: brandingInfo.chat_bubble.primary_color }}>
                     <span className="un-read-msg">2</span>
                     <figure>
-                        <img src="/images/avatar.svg" alt="Elephant at sunset" />
+                        <img src={iconHelper.getIcon('avatar_icon')} alt="Elephant at sunset" />
                     </figure>
                 </button>
             </div>

@@ -3,9 +3,11 @@
 import './chatWidgetHeader.scss';
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
+import IconsManager from '../iconsManager';
 
 export function ChatWidgetHeader(props: any) {
     const hostInstance = props.hostInstance;
+    const iconHelper = new IconsManager();
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
     hostInstance.on('onBrandingUpdate', function (event: any) {
         updateBrandingInfo({...event.brandingData})
@@ -21,13 +23,13 @@ export function ChatWidgetHeader(props: any) {
         <div className={hSizeObj[brandingInfo.header.size]} aria-label="chat widget header">
             <button className="back-to-chat" aria-label="back to welcome screen">
                 <figure>
-                    <img src="/images/arrow-back.svg" alt="back button" />
+                    <img src={iconHelper.getIcon('arrow_back')} alt="back button" />
                 </figure>
             </button>
             <div className="info-content-data">
                { brandingInfo.header.icon.show && <div className="img-block">
                     <figure>
-                        <img src={brandingInfo.header.icon.icon_url} alt="back button" />
+                        <img src={brandingInfo.header.icon.icon_url} alt="icon" />
                     </figure>
                 </div> }
                 <div className="content-text">
@@ -50,7 +52,7 @@ export function ChatWidgetHeader(props: any) {
                 </button>
                 { brandingInfo.header.buttons.close.show && <button className="btn-action btn-action-close">
                     <figure>
-                            <img src={ brandingInfo.header.buttons.close.icon } alt="back button" />
+                            <img src={iconHelper.getIcon('close_large')} alt="back button" />
                         </figure>
                     {/* <i className="sdkv3-close"></i> */}
                 </button>}

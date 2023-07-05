@@ -3,9 +3,11 @@
 import './welcomeScreenContainer.scss';
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
+import IconsManager from '../iconsManager';
 
 export function WelcomeScreenContainer(props: any) {
     const hostInstance = props.hostInstance;
+    const iconHelper = new IconsManager();
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
     hostInstance.on('onBrandingUpdate', function (event: any) {
         updateBrandingInfo({...event.brandingData})
@@ -86,7 +88,7 @@ export function WelcomeScreenContainer(props: any) {
                 <div className="powerdby-info">
                     <p>Powered by</p>
                     <figure>
-                        <img src="/images/korelogo.svg" alt="kore-img" />
+                        <img src={iconHelper.getIcon('kore_logo')} alt="kore-img" />
                     </figure>
                 </div>
             </footer>
