@@ -12,9 +12,8 @@
     // Welcome screen Variables
         --welcome-bg:#F8FAFC;
         --welcome-shadow:0px 4px 12px 2px rgba(32,33,36,0.12);
-        --welcome-header-bg:#4B4EDE;
-        --welcome-header-h1-text-color:#fff9;
-        --welcome-header-text-color:#FFFFFF;
+        --welcome-header-bg: var(--v3-sdk-chat-branding--welcome_screen-background-color);
+        --welcome-header-text-color: var(--v3-sdk-chat-branding--welcome_screen-top_fonts-color);
         --welcome-start-conv-bg:#FFFFFF;
         --welcome-start-conv-border:#E4E5E7;
         --welcome-start-conv-bot-bg:#E3E8EF;
@@ -25,9 +24,9 @@
         --welcome-start-conv-quick-btn-text:#404040;
         --welcome-start-conv-search-bg:#FFFFFF;
         --welcome-start-conv-search-border:#BDC1C6;
-        --welcome-start-conv-button-bg:#4B4EDE;
+        --welcome-start-conv-button-bg: var(--v3-sdk-chat-branding--welcome_screen-starter_box-start_conv_button_color);
         --welcome-start-conv-button-border:#4B4EDE;
-        --welcome-start-conv-button-color:#FFFFFF;
+        --welcome-start-conv-button-color:var(--v3-sdk-chat-branding--welcome_screen-starter_box-start_conv_text_color);
     // End
 }
 

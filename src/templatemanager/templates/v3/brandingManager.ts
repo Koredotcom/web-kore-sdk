@@ -9,9 +9,10 @@ class BrandingManager {
                                 if (property.includes('color')) {
                                   this.applyVariableValue(property, data[key][subKey][property], key, subKey);
                                 }
-                                if (property == 'starter_box') {
-                                    this.applyVariableValue(property, data[key][subKey][property], key, subKey);
-                                }
+                            }
+                            if (subKey == 'starter_box') {
+                                this.applyVariableValue('start_conv_text_color', data[key][subKey]['start_conv_text']['color'], 'welcome_screen', 'starter_box');
+                                this.applyVariableValue('start_conv_button_color', data[key][subKey]['start_conv_button']['color'], 'welcome_screen', 'starter_box');
                             }
                         }
                     case 'body':

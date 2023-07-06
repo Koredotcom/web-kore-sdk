@@ -29,19 +29,19 @@ export function WelcomeScreenContainer(props: any) {
     return (
         <div className="welcome-chat-section" aria-label="welcome message screen">
             <header className={wsLayout[brandingInfo.welcome_screen.layout]} aria-label="welcome header">
-                <div className="welcome-header-bg" style={{ backgroundColor: brandingInfo.welcome_screen.background.color }}>
+                <div className="welcome-header-bg">
                     <div className="logo-img">
                         <figure>
-                            <img src={brandingInfo.welcome_screen.logo.logo_url} alt="log-img" />
+                            <img src={iconHelper.getIcon('sc_small')} alt="log-img" />
                         </figure>
                     </div>
-                    <h1 style={{ color: brandingInfo.welcome_screen.title.color }}>{brandingInfo.welcome_screen.title.name}</h1>
-                    <h2 style={{ color: brandingInfo.welcome_screen.sub_title.color }}>{brandingInfo.welcome_screen.sub_title.name}</h2>
-                    <p style={{ color: brandingInfo.welcome_screen.note.color }}>{brandingInfo.welcome_screen.note.name}</p>
+                    <h1>{brandingInfo.welcome_screen.title.name}</h1>
+                    <h2>{brandingInfo.welcome_screen.sub_title.name}</h2>
+                    <p>{brandingInfo.welcome_screen.note.name}</p>
                 </div>
                 <div className="bg-logo">
                     <figure>
-                        <img src={brandingInfo.welcome_screen.logo.logo_url} alt="log-img" />
+                        <img src={iconHelper.getIcon('sc_small')} alt="log-img" />
                     </figure>
                 </div>
             </header>
@@ -61,7 +61,7 @@ export function WelcomeScreenContainer(props: any) {
                             {
                                 brandingInfo.welcome_screen.starter_box.quick_start_buttons.buttons.map((ele: any) => (
                                     <button className="quick-start-btn" onClick={() => handleStartEvent(ele.title)}>
-                                        <span className="emoji-symbol">&#128512;</span>
+                                        {/* <span className="emoji-symbol">&#128512;</span> */}
                                         <span>{ele.title}</span>
                                     </button>
                                 ))

@@ -15,6 +15,7 @@ import chatConfig from './config/kore-config';
 
 import { getHTML } from '../../templatemanager/base/domManager';
 import { Message } from '../../templatemanager/templates/v3/message/message';
+import { DateSeparator } from '../../templatemanager/base/misc/dateSeparator/dateSeparator';
 import { ChatContainer } from '../../templatemanager/base/chatContainer/chatContainer';
 import BrandingManager from '../../templatemanager/templates/v3/brandingManager';
 
@@ -1955,19 +1956,7 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
                   $('.chat-container').append("<div class='endChatContainer'><span class='endChatContainerText'>End of chat history</span></div>");
                 } else {
                   const chatContainer = document.querySelector('.chat-widget-body-wrapper');
-                  const dateSeparator = document.createElement('div');
-                  dateSeparator.classList.add('date-saperator');
-                  const lineBorder1 = document.createElement('div');
-                  lineBorder1.classList.add('line-border');
-                  const dateText = document.createElement('div');
-                  dateText.classList.add('date-text');
-                  dateText.textContent = 'End of chat history';
-                  const lineBorder2 = document.createElement('div');
-                  lineBorder2.classList.add('line-border');
-                  dateSeparator.appendChild(lineBorder1);
-                  dateSeparator.appendChild(dateText);
-                  dateSeparator.appendChild(lineBorder2);
-
+                  const dateSeparator = getHTML(DateSeparator, 'End of chat history', me);                  
                   chatContainer.appendChild(dateSeparator);
                   chatContainer.scrollTo({
                     top: chatContainer.scrollHeight,

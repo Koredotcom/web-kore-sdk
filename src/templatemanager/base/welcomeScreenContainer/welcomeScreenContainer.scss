@@ -36,7 +36,7 @@
             }
         }
         .welcome-header-bg {
-            background: var(--global-theme-color);
+            background: var( --welcome-header-bg);
             border-radius: 4px 4px 0px 0px;
             padding: 32px 16px;
             .logo-img {
@@ -46,7 +46,7 @@
                 font-weight: 600;
                 font-size: 36px;
                 line-height: 44px;
-                color: var(--welcome-header-h1-text-color);
+                color: var(--welcome-header-text-color);
                 margin-bottom: 6px;
             }
             h2 {

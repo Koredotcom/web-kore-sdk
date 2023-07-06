@@ -24,7 +24,7 @@ export function AvatarComponent(props: any) {
             <div className={aShape[brandingInfo.chat_bubble.style]} aria-label="avatar actions">
                 <div className="content-info">
                     <div className="text-content animation" role="contentinfo" aria-labelledby="helojohn">
-                        <h4 id="helojohn">Hello Jhon</h4>
+                        <h4 id="helojohn">Hello {hostInstance.config.botOptions.userIdentity}</h4>
                         <p className="help-text-content">Welcome to support</p>
                         <span className="close-avatar-content" role="contentinfo" aria-label="close">
                             <figure>
@@ -35,7 +35,7 @@ export function AvatarComponent(props: any) {
                     <div className="text-content animation" role="contentinfo" aria-label="paragraph text">
                         <p className="help-text-content">Can I help you any way?</p>
                     </div>
-                    <button className="primary-button animation">Send message</button>
+                    <button className="primary-button animation" style={{ background: brandingInfo.chat_bubble.secondary_color }}>Send message</button>
                 </div>
                 <button className="avatar-bg" style={{ background: brandingInfo.chat_bubble.primary_color }}>
                     <span className="un-read-msg">2</span>

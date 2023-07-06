@@ -3,10 +3,12 @@ import { h, Fragment } from 'preact';
 import { useState } from 'preact/hooks';
 import BaseChatTemplate  from '../baseChatTemplate';
 import KoreHelpers from '../../../../utils/helpers';
+import IconsManager from '../../../base/iconsManager';
 
 export function Message(props: any) {
     const msgData = props.msgData;
     const hostInstance = props.hostInstance;
+    const iconHelper = new IconsManager();
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
     hostInstance.on('onBrandingUpdate', function (event: any) {
         updateBrandingInfo({...event.brandingData})
@@ -25,28 +27,32 @@ export function Message(props: any) {
                                         <div className="bot-bubble-content chat-bubble-style-1">
                                             <div className="top-info">
                                                 <div className="you-text">Kore.ai Bot</div>
-                                                <div className="time-tamp"><time>{helpers.formatDate(msgData.createdOn)}</time></div>
+                                                { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="time-tamp">
+                                                    <time>{helpers.formatDate(msgData.createdOn)}</time>
+                                                </div> }
                                             </div>
                                             <div className="bubble-msg-with-img">
                                                 <div className="bubble-msg" style={{ background: brandingInfo.body.bot_message.bg_color, color: brandingInfo.body.bot_message.color }}>{msgItem.cInfo.body}</div>
                                                 <div className="bot-img">
                                                     <figure>
-                                                        <img src="/images/avatar-bot.svg" alt='avatr img' />
+                                                        <img src={iconHelper.getIcon('avatar_bot')} alt='avatr img' />
                                                     </figure>
                                                 </div>
                                                 <div className="copy-bubble">
                                                     <img src="/images/arrow-back.svg" alt="back button" />
                                                 </div>
                                             </div>
-                                            {/* <div className="bottom-info">
-                                            <div className="time-tamp"><time>2:32pm, Today</time></div>
-                                        </div> */}
+                                            { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
+                                                <div className="time-tamp"><time>{helpers.formatDate(msgData.createdOn)}</time></div>
+                                            </div> }
                                         </div>
                                     </div>)) : (
                                     <div className="agent-bubble-comp" id={msgData.messageId}>
                                         <div className="agent-bubble-content">
                                             <div className="top-info">
-                                                <div className="time-tamp"><time>{helpers.formatDate(msgData.createdOn)}</time></div>
+                                                    { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="time-tamp">
+                                                        <time>{helpers.formatDate(msgData.createdOn)}</time>
+                                                    </div> }
                                                 <div className="you-text">You</div>
                                             </div>
                                             <div className="bubble-msg-with-img">
@@ -61,10 +67,10 @@ export function Message(props: any) {
                                                     <img src="/images/arrow-back.svg" alt="back button" />
                                                 </div>
                                             </div>
-                                            {/* <div className="bottom-info">
-                                            <div className="time-tamp"><time>2:32pm, Today</time></div>
-                                            <div className="read-text">Read <i className="sdkv3-read-status"></i></div>
-                                        </div> */}
+                                                { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
+                                                    <div className="time-tamp"><time>{helpers.formatDate(msgData.createdOn)}</time></div>
+                                                    {/* <div className="read-text">Read <i className="sdkv3-read-status"></i></div> */}
+                                                </div> }
                                         </div>
                                     </div>)
                             )

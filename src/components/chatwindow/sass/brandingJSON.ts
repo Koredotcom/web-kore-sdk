@@ -19,7 +19,7 @@ const BrandingJSON = {
         "animation": "slide",
         "expand_animation": "quick",
         "primary_color": "#00fff0",
-        "secondary_color": ""
+        "secondary_color": "#ff0000"
     },
     "welcome_screen": {
         "show": true,
@@ -41,10 +41,10 @@ const BrandingJSON = {
         },
         "background": {"color": "#4B4EDE"},
         "top_fonts": {
-            "color": "#0D6EFD"
+            "color": "#00ff00"
         },
         "bottom_background": {
-            "color": "#0D6EFD"
+            "color": "#D6EFD"
         },
         "templates": [],
         "starter_box": {
@@ -55,35 +55,35 @@ const BrandingJSON = {
             "title": "Kore.AI",
             "sub_text": "Your personal assistant",
             "start_conv_button": {
-                "color": ""
+                "color": "#0000ff"
             },
             "start_conv_text": {
-                "color": ""
+                "color": "#00ff00"
             },
             "quick_start_buttons": {
                 "show": true,
                 "style": "stack",
                 "buttons": [{
-                        "title": "Contact Sales",
-                        "action": {
-                            "type": "postback|url",
-                            "value": "http://abc.com"
-                        }
-                    },
-                    {
-                        "title": "Contact us",
-                        "action": {
-                            "type": "postback",
-                            "value": "qqqw"
-                        }
-                    },
-                    {
-                        "title": "Products",
-                        "action": {
-                            "type": "postback",
-                            "value": "qqqw"
-                        }
+                    "title": "Contact Sales",
+                    "action": {
+                        "type": "postback|url",
+                        "value": "http://abc.com"
                     }
+                },
+                {
+                    "title": "Contact us",
+                    "action": {
+                        "type": "postback",
+                        "value": "qqqw"
+                    }
+                },
+                {
+                    "title": "Products",
+                    "action": {
+                        "type": "postback",
+                        "value": "qqqw"
+                    }
+                }
                 ],
                 "input": "search",
                 "action": {
@@ -168,28 +168,28 @@ const BrandingJSON = {
         },
         "buttons": {
             "menu": {
-                "show": false,
+                "show": true,
                 "icon": "url|icomoon",
                 "action": [{
-                        "title": "Get Balance",
-                        "type": "postback|url",
-                        "value": "http://abc.com|getbalance",
-                        "icon": "url|icomoon"
-                    },
-                    {
-                        "title": "Get Transactions",
-                        "type": "postback|url",
-                        "value": "http://abc.com|gettransacations",
-                        "icon": "url|icomoon"
-                    }
+                    "title": "Get Balance",
+                    "type": "postback|url",
+                    "value": "http://abc.com|getbalance",
+                    "icon": "url|icomoon"
+                },
+                {
+                    "title": "Get Transactions",
+                    "type": "postback|url",
+                    "value": "http://abc.com|gettransacations",
+                    "icon": "url|icomoon"
+                }
                 ]
             },
             "emoji": {
-                "show": true,
+                "show": false,
                 "icon": "url|icomoon"
             },
             "microphone": {
-                "show": false,
+                "show": true,
                 "icon": "url|icomoon"
             },
             "attachment": {
@@ -235,10 +235,10 @@ const BrandingJSON = {
             }
         },
         "time_stamp": {
-            "show": true,
+            "show": false,
             "show_type": "hover",
-            "position": "2",
-            "separator": "2",
+            "position": "bottom",
+            "separator": "rounded",
             "color": ""
         },
         "icon": {
@@ -247,6 +247,7 @@ const BrandingJSON = {
             "bot_icon": true,
             "agent_icon": true
         },
+        "bubbl_style": "rounded",
         "primaryColor": "#3f42d4",
         "primaryHoverColor": "#de4bbc",
         "secondaryColor": "#3639e6",

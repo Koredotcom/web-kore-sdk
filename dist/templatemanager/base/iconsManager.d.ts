@@ -1,6 +1,8 @@
 export default IconsManager;
 declare class IconsManager {
     icons: {
+        avatar_bot: string;
+        sc_small: string;
         close_large: string;
         arrow_back: string;
         voice: string;
@@ -13,6 +15,8 @@ declare class IconsManager {
         avatar_icon: string;
     };
     getIcons(): {
+        avatar_bot: string;
+        sc_small: string;
         close_large: string;
         arrow_back: string;
         voice: string;

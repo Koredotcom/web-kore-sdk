@@ -3,10 +3,15 @@
 import IconsManager from '../iconsManager';
 import './chatWidgetComposeBar.scss';
 import { h } from 'preact';
+import { useState } from 'preact/hooks';
 
 export function ChatWidgetComposeBar(props: any) {
-    const me = props.hostInstance;
+    const hostInstance = props.hostInstance;
     const iconHelper = new IconsManager();
+    const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
+    hostInstance.on('onBrandingUpdate', function (event: any) {
+        updateBrandingInfo({...event.brandingData})
+    });
     const handleClick =  (event: any) => {}
 
     return (
@@ -74,23 +79,23 @@ export function ChatWidgetComposeBar(props: any) {
                 </div>
             </div>
             <div className="compose-bar-wrapper" aria-label="compose footer">
-                <button className="action-btn">
+                { brandingInfo.footer.buttons.menu.show && <button className="action-btn">
                     <figure>
                         <img src={iconHelper.getIcon('hamberger')} alt="image" />
                     </figure>
-                </button>
-                <button className="action-btn">
+                </button> }
+                { brandingInfo.footer.buttons.attachment.show && <button className="action-btn">
                     <figure>
                         <img src={iconHelper.getIcon('attachment')} alt="image" />
                     </figure>
-                </button>
+                </button> }
                 <div className="compose-text-area">
-                    <button className="emoji-btn">
+                    { brandingInfo.footer.buttons.emoji.show &&  <button className="emoji-btn">
                         <figure>
                             <img src={iconHelper.getIcon('emoji')} alt="image" />
                         </figure>
-                    </button>
-                    <textarea className="typing-text-area disableComposeBar" id="typing-text-area" placeholder="Type a message"></textarea>
+                    </button> }
+                    <textarea className="typing-text-area disableComposeBar" id="typing-text-area" placeholder={brandingInfo.footer.compose_bar.placeholder}></textarea>
                 </div>
                 <div className="compose-voice-text">
                     <button className="voice-compose-btn">
@@ -100,11 +105,11 @@ export function ChatWidgetComposeBar(props: any) {
                     </button>
                     <p className="speak-info">Tap microphone to speak</p>
                 </div>
-                <button className="voice-btn">
+                { brandingInfo.footer.buttons.microphone.show && <button className="voice-btn">
                     <figure>
                         <img src={iconHelper.getIcon('voice')} alt="image" />
                     </figure>
-                </button>
+                </button> }
                 <button className="send-btn">
                         <figure>
                             <img src={iconHelper.getIcon('send')} alt="image" />
