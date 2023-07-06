@@ -227,7 +227,7 @@ declare const BrandingJSON: {
             bot_icon: boolean;
             agent_icon: boolean;
         };
-        bubbl_style: string;
+        bubble_style: string;
         primaryColor: string;
         primaryHoverColor: string;
         secondaryColor: string;

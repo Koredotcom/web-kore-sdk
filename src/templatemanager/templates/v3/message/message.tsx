@@ -14,6 +14,11 @@ export function Message(props: any) {
         updateBrandingInfo({...event.brandingData})
     });
     const helpers = KoreHelpers.helpers;
+    const cbStyle: any = {
+        rounded: 'bot-bubble-content',
+        balloon: 'bot-bubble-content chat-bubble-style-1',
+        rectange: 'bot-bubble-content chat-bubble-style-2'
+    }
 
     if (msgData.message) {
         return (
@@ -24,7 +29,7 @@ export function Message(props: any) {
                             return (
                                 msgData.type === 'bot_response' ? (
                                     msgItem.component && msgItem.component.type === 'error' ? ('') : (<div className="bot-bubble-comp" id={msgData.messageId}>
-                                        <div className="bot-bubble-content chat-bubble-style-1">
+                                        <div className={cbStyle[brandingInfo.body.bubble_style]}>
                                             <div className="top-info">
                                                 <div className="you-text">Kore.ai Bot</div>
                                                 { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="time-tamp">

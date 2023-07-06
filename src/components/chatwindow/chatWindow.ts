@@ -971,7 +971,7 @@ bindEventsV3() {
     if (me.initial) {
       me.bot.logInComplete(); // Start api call & ws
       me.initial = false;
-      if (me.config.branding.welcome_screen.show) {  
+      if (me.config.branding.welcome_screen.show) {
         document.querySelector('.welcome-chat-section').classList.remove('hide');
       } else {
         document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
@@ -2321,23 +2321,34 @@ applyVariableValue (key:any,value:any,type:any){
 
   switchView(type: any) {
     const me: any = this;
+    if (me.initial) {
+      me.bot.logInComplete(); // Start api call & ws
+      me.initial = false;
+    }
     if (type == 'avatar') {
       document.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize');
       document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
       document.querySelector('.welcome-chat-section')?.classList.add('hide');
     }
     else if (type == 'welcome') {
-      document.querySelector('.welcome-chat-section')?.classList.remove('hide');
-      document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+      if (me.config.branding.welcome_scree.show) {
+        document.querySelector('.welcome-chat-section')?.classList.remove('hide');
+        document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+      } else {
+        document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+      }
       document.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
     } else if (type == 'chat') {
       document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
       document.querySelector('.welcome-chat-section')?.classList.add('hide');
       document.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
     } else {
-      document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
-      document.querySelector('.welcome-chat-section')?.classList.add('hide');
-      document.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize');
+      me.destroy();
+      me.initShow(me.config);
+      // document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+      // document.querySelector('.welcome-chat-section')?.classList.add('hide');
+      // document.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize');
+
     }
   }
 

@@ -247,7 +247,7 @@ const BrandingJSON = {
             "bot_icon": true,
             "agent_icon": true
         },
-        "bubbl_style": "rounded",
+        "bubble_style": "rounded",
         "primaryColor": "#3f42d4",
         "primaryHoverColor": "#de4bbc",
         "secondaryColor": "#3639e6",
