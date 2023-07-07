@@ -21,9 +21,41 @@ export function WelcomeScreenContainer(props: any) {
         "slack": "quick-start-buttons-container",
         "stack": "quick-start-buttons-container stacked-buttons"
     }
+
     const handleStartEvent = (e: any) => {
         hostInstance.sendMessageToBot(e);
-        hostInstance.handleEventsWelcomeScreen();
+        handleEventsWelcomeScreen();
+    }
+    
+    hostInstance.removeEventListener('.start-conv-button', 'click');
+    hostInstance.addEventListener('.start-conv-button', 'click', (event: any) => {
+        handleEventsWelcomeScreen();
+    })
+
+    hostInstance.removeEventListener('.search-send', 'click');
+    hostInstance.addEventListener('.search-send', 'click', (event: any) => {
+        handleEventsWelcomeScreen();
+        const inputEle: any = document.querySelector('.start-conv-input');
+        hostInstance.sendMessageToBot(inputEle.value);
+        inputEle.value = '';
+    })
+
+    hostInstance.removeEventListener('.start-conv-input', 'keydown');
+    hostInstance.addEventListener('.start-conv-input', 'keydown', (event: any) => {
+        if (event.keyCode == 13) {
+            if (event.shiftKey) {
+                return;
+            }
+            handleEventsWelcomeScreen();
+            event.preventDefault();
+            hostInstance.sendMessageToBot(event.target.value);
+            event.target.value = '';
+        }
+    })
+
+    const handleEventsWelcomeScreen = () => {
+        document.querySelector('.chat-widgetwrapper-main-container')?.classList.add('minimize');
+        document.querySelector('.welcome-chat-section')?.classList.add('hide');
     }
 
     return (
