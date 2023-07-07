@@ -8,7 +8,7 @@
     --gloabl-text-desc-color:#4B5565;
     --gloabl-border-color:#E4E5E7;
     --gloabl-border-color-1:#BDC1C6;
-
+    --scrollbar-bg:#aaaaaa;
     // Welcome screen Variables
         --welcome-bg:#F8FAFC;
         --welcome-shadow:0px 4px 12px 2px rgba(32,33,36,0.12);
@@ -27,6 +27,8 @@
         --welcome-start-conv-button-bg: var(--v3-sdk-chat-branding--welcome_screen-starter_box-start_conv_button_color);
         --welcome-start-conv-button-border:#4B4EDE;
         --welcome-start-conv-button-color:var(--v3-sdk-chat-branding--welcome_screen-starter_box-start_conv_text_color);
+        --welcome-footer-bg:#F8FAFC;
+        --welecome-footer-text-color:#9AA4B2;
     // End
 
     // Chat Widget Header Variables;
@@ -81,7 +83,7 @@
     --gloabl-text-desc-color:#4B5565;
     --gloabl-border-color:#E4E5E7;
     --gloabl-border-color-1:#BDC1C6;
-
+    --scrollbar-bg:#697586;
     // Welcome screen Variables
         --welcome-bg:#121926;
         --welcome-shadow:0px 4px 12px 2px rgba(32, 33, 36, 0.12);
@@ -101,15 +103,17 @@
         --welcome-start-conv-button-bg:#4B4EDE;
         --welcome-start-conv-button-border:#4B4EDE;
         --welcome-start-conv-button-color:#FFFFFF;
+        --welcome-footer-bg:#202939;
+        --welecome-footer-text-color:#FFFFFF;
     // End
 
     // Chat Widget Header Variables;
         --chat-widget-header-bg:#121926;
         --chat-widget-header-border:#202939;
         --chat-widget-header-bg-large:#202939;
-        --chat-widget-header-bg-large-info-bg:#FFFFFF;
+        --chat-widget-header-bg-large-info-bg:#121926;
         --chat-widget-header-bg-large-actions-color:#FFFFFF;
-        --chat-widget-header-bot-name-color:#000000;
+        --chat-widget-header-bot-name-color:#FFFFFF;
         --chat-widget-header-bot-name-desc:#697586;
         --chat-widget-header-actions-color:#697586;
         --chat-widget-header-img-border:#FFFFFF;
@@ -154,6 +158,7 @@
     --gloabl-text-desc-color:#4B5565;
     --gloabl-border-color:#E4E5E7;
     --gloabl-border-color-1:#BDC1C6;
+    --scrollbar-bg:var(--global-theme-color);
 
     // Welcome screen Variables
         --welcome-bg:#F8FAFC;
@@ -174,6 +179,8 @@
         --welcome-start-conv-button-bg:#DE6449;
         --welcome-start-conv-button-border:#DE6449;
         --welcome-start-conv-button-color:#FFFFFF;
+        --welcome-footer-bg:#F8FAFC;
+        --welecome-footer-text-color:#9AA4B2;
     // End
 
     // Chat Widget Header Variables;

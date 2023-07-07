@@ -102,13 +102,13 @@
         align-items: center;
         justify-content: center;
         padding: 6px 16px;
-        background: #F8FAFC;
+        background: var(--welcome-footer-bg);
         height: 28px;
         p {
             font-weight: 500;
             font-size: 10px;
             line-height: 12px;
-            color: #9AA4B2;
+            color: var(--welecome-footer-text-color);
             margin-right: 5px;
             flex-shrink: 0;
         }
@@ -284,6 +284,27 @@
                 height: 34px;
                 flex-shrink: 0;
             }
+        }
+    }
+}
+
+// Pramotional Banners
+
+.pramotional-banner-wrapper-container{
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+    .banner-img{
+        display: inline-block;
+        width: 100%;
+        img{
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            // max-height: 180px;
+            border-radius: 4px;
         }
     }
 }

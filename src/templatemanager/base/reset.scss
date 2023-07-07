@@ -51,12 +51,12 @@ table {
 	border-spacing: 0;
 }
 :focus-visible{
-	outline-color: #4B4EDE;
+	outline-color: var(--global-theme-color);
     outline-offset: 1px;
     outline-style: auto;
 }
 // *:focus{
-// 	outline-color: #4B4EDE;
+// 	outline-color: var(--global-theme-color);
 //     outline-offset: 1px;
 //     outline-style: auto;
 // }
@@ -64,10 +64,10 @@ table {
 
 img{
 	&:focus{
-		outline-color: #4B4EDE;
+		outline-color: var(--global-theme-color);
 		outline-offset: 1px;
 		outline-style: auto;
-		outline: 1px solid #4B4EDE;
+		outline: 1px solid var(--global-theme-color);
 	}
 }
 button{
@@ -86,7 +86,7 @@ body::-webkit-scrollbar {
     cursor: pointer;
   }
   ::-webkit-scrollbar-thumb {
-    background-color: #aaa;
+    background-color: var(--scrollbar-bg);
     border-radius: 7px;
     transition: background-color 0.2s linear, width 0.2s ease-in-out;
     -webkit-transition: background-color 0.2s linear, width 0.2s ease-in-out;
