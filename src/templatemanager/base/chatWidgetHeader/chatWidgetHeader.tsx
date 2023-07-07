@@ -29,7 +29,7 @@ export function ChatWidgetHeader(props: any) {
             <div className="info-content-data">
                { brandingInfo.header.icon.show && <div className="img-block">
                     <figure>
-                        <img src={brandingInfo.header.icon.icon_url} alt="icon" />
+                        <img src={iconHelper.getIcon('avatar_bot')} alt="icon" />
                     </figure>
                 </div> }
                 <div className="content-text">

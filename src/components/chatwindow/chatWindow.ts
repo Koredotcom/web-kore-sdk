@@ -968,16 +968,28 @@ bindEventsV3() {
       me.setLocalStoreItem('kr-cw-state', 'open');
     }
 
-    if (me.initial) {
-      me.bot.logInComplete(); // Start api call & ws
-      me.initial = false;
+    if (!me.config.builderFlag) {
+      if (me.initial) {
+        me.bot.logInComplete(); // Start api call & ws
+        me.initial = false;
+        if (me.config.branding.welcome_screen.show) {
+          document.querySelector('.welcome-chat-section').classList.remove('hide');
+        } else {
+          document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+        }
+      } else {
+        document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+      }
+    } else {
+      if (me.initial) {
+        me.bot.logInComplete(); // Start api call & ws
+        me.initial = false;
+      }
       if (me.config.branding.welcome_screen.show) {
         document.querySelector('.welcome-chat-section').classList.remove('hide');
       } else {
         document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
       }
-    } else {
-      document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
     }
 
     document.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
@@ -2310,13 +2322,21 @@ applyVariableValue (key:any,value:any,type:any){
   
 }
 
-  setBranding(brandingData?: any) {
+  setBranding(brandingData?: any, type?: any) {
     const me: any = this;
     me.config.branding = brandingData ? brandingData : me.config.branding;
     me.brandingManager.applyBranding(me.config.branding);
     me.emit("onBrandingUpdate", {
       brandingData: brandingData ? brandingData : me.config.branding
     });
+
+    if (type == 'welcome' && me.config.builderFlag) {
+      if (me.config.branding.welcome_screen.show) {
+        document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+      } else {
+        document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+      }
+    }
   }
 
   switchView(type: any) {
@@ -2331,24 +2351,17 @@ applyVariableValue (key:any,value:any,type:any){
       document.querySelector('.welcome-chat-section')?.classList.add('hide');
     }
     else if (type == 'welcome') {
-      if (me.config.branding.welcome_scree.show) {
-        document.querySelector('.welcome-chat-section')?.classList.remove('hide');
-        document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
-      } else {
-        document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
-      }
+      document.querySelector('.welcome-chat-section')?.classList.remove('hide');
+      document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
       document.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
     } else if (type == 'chat') {
       document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
       document.querySelector('.welcome-chat-section')?.classList.add('hide');
       document.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
     } else {
-      me.destroy();
-      me.initShow(me.config);
-      // document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
-      // document.querySelector('.welcome-chat-section')?.classList.add('hide');
-      // document.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize');
-
+      document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+      document.querySelector('.welcome-chat-section')?.classList.add('hide');
+      document.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize');
     }
   }
 

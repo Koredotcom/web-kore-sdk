@@ -234,7 +234,7 @@ declare class chatWindow extends EventEmitter {
     getBrandingInformation(options: any): void;
     applySDKBranding(response: any): void;
     applyVariableValue(key: any, value: any, type: any): void;
-    setBranding(brandingData?: any): void;
+    setBranding(brandingData?: any, type?: any): void;
     switchView(type: any): void;
     /**
      * [#]{@link chatWindow#sendMessage} Send message to bot including rendering

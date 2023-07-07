@@ -70,7 +70,8 @@ chatConfig = {
     },
     UI:{
         version:"v3"
-    }
+    },
+    builderFlag: false
 };
 
 if (!chatConfig.loadHistory) { // pagination scroll will be enabled only when loadHistory flag is true
