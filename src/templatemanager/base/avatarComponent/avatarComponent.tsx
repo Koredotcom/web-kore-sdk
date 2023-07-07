@@ -42,6 +42,7 @@ export function AvatarComponent(props: any) {
                     <figure>
                         <img src={iconHelper.getIcon('avatar_icon')} alt="Elephant at sunset" />
                     </figure>
+                    <p className="minimize-text">Minimize Text</p>
                 </button>
             </div>
         </div>

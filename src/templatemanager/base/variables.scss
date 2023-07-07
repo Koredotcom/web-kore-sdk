@@ -28,6 +28,49 @@
         --welcome-start-conv-button-border:#4B4EDE;
         --welcome-start-conv-button-color:var(--v3-sdk-chat-branding--welcome_screen-starter_box-start_conv_text_color);
     // End
+
+    // Chat Widget Header Variables;
+        --chat-widget-header-bg:#ffffff;
+        --chat-widget-header-border:#EEF2F6;
+        --chat-widget-header-bg-large:linear-gradient(180deg, #4B4EDE 0%, #4B4EDE 40.67%, rgba(255, 255, 255, 0) 80.38%);
+        --chat-widget-header-bg-large-info-bg:#FFFFFF;
+        --chat-widget-header-bg-large-actions-color:#FFFFFF;
+        --chat-widget-header-bot-name-color:#000000;
+        --chat-widget-header-bot-name-desc:#697586;
+        --chat-widget-header-actions-color:#697586;
+        --chat-widget-header-img-border:#FFFFFF;
+    // End
+
+    // Chat Widget Body Variables;
+        --chat-widget-body-bg:#FFFFFF;
+    // End
+
+    // Chat Widget Footer Variables;
+        --chat-widget-footer-bg:#FFFFFF;
+        --chat-widget-compose-bar-bg:rgba(105, 117, 134, 0.1);
+        --chat-widget-compose-bar-text-area-bg:#FFFFFF;
+        --chat-widget-compose-bar-text-area-border:#E5E5E5;
+        --chat-widget-compose-bar-text-area-color:#202939;
+        --chat-widget-compose-bar-text-area-placeholder-color:#202939;
+    // End
+
+    // Bot Bubble Messages Variables
+        --bot-bubble-text-color:#697586;
+        --bot-bubble-msg-bg:#F0F1F2;
+        --bot-bubble-msg-bg-hover:#E3E4E5;
+        --bot-bubble-msg-color:#000000;
+        --bot-bubble-img-border:#FFFFFF;
+    //End   
+
+    // Agent Bubble Messages Variables
+        --agent-bubble-text-color:#697586;
+        --agent-bubble-msg-bg:#4B4EDE;
+        --agent-bubble-msg-bg-hover:#393BC5;
+        --agent-bubble-msg-color:#FFFFFF;
+        --agent-bubble-img-border:#FFFFFF;
+        --agent-bubble-read-status-icon-color:#22C55E;
+    //End
+
 }
 
 .dark-theme{
@@ -59,6 +102,48 @@
         --welcome-start-conv-button-border:#4B4EDE;
         --welcome-start-conv-button-color:#FFFFFF;
     // End
+
+    // Chat Widget Header Variables;
+        --chat-widget-header-bg:#121926;
+        --chat-widget-header-border:#202939;
+        --chat-widget-header-bg-large:#202939;
+        --chat-widget-header-bg-large-info-bg:#FFFFFF;
+        --chat-widget-header-bg-large-actions-color:#FFFFFF;
+        --chat-widget-header-bot-name-color:#000000;
+        --chat-widget-header-bot-name-desc:#697586;
+        --chat-widget-header-actions-color:#697586;
+        --chat-widget-header-img-border:#FFFFFF;
+    // End
+
+    // Chat Widget Body Variables;
+        --chat-widget-body-bg:#121926;
+    // End
+
+    // Chat Widget Footer Variables;
+        --chat-widget-footer-bg:#FFFFFF;
+        --chat-widget-compose-bar-bg:#202939;
+        --chat-widget-compose-bar-text-area-bg:#121926;
+        --chat-widget-compose-bar-text-area-border:#364152;
+        --chat-widget-compose-bar-text-area-color:#FFFFFF;
+        --chat-widget-compose-bar-text-area-placeholder-color:#697586;
+    // End
+
+    // Bot Bubble Messages Variables
+        --bot-bubble-text-color:#697586;
+        --bot-bubble-msg-bg:#364152;
+        --bot-bubble-msg-bg-hover:#364152;
+        --bot-bubble-msg-color:#FFFFFF;
+        --bot-bubble-img-border:#FFFFFF;
+    //End   
+
+    // Agent Bubble Messages Variables
+        --agent-bubble-text-color:#697586;
+        --agent-bubble-msg-bg:#4B4EDE;
+        --agent-bubble-msg-bg-hover:#393BC5;
+        --agent-bubble-msg-color:#FFFFFF;
+        --agent-bubble-img-border:#FFFFFF;
+        --agent-bubble-read-status-icon-color:#22C55E;
+    //End
 }
 
 .theme-1{
@@ -90,6 +175,50 @@
         --welcome-start-conv-button-border:#DE6449;
         --welcome-start-conv-button-color:#FFFFFF;
     // End
+
+    // Chat Widget Header Variables;
+        --chat-widget-header-bg:#ffffff;
+        --chat-widget-header-border:#EEF2F6;
+        --chat-widget-header-bg-large:linear-gradient(180deg, #4B4EDE 0%, #4B4EDE 40.67%, rgba(255, 255, 255, 0) 80.38%);
+        --chat-widget-header-bg-large-info-bg:#FFFFFF;
+        --chat-widget-header-bg-large-actions-color:#FFFFFF;
+        --chat-widget-header-bot-name-color:#000000;
+        --chat-widget-header-bot-name-desc:#697586;
+        --chat-widget-header-actions-color:#697586;
+        --chat-widget-header-img-border:#FFFFFF;
+    // End
+    
+    // Chat Widget Body Variables;
+        --chat-widget-body-bg:#FFFFFF;
+    // End
+
+    // Chat Widget Footer Variables;
+        --chat-widget-footer-bg:#FFFFFF;
+        --chat-widget-compose-bar-bg:rgba(105, 117, 134, 0.1);
+        --chat-widget-compose-bar-text-area-bg:#FFFFFF;
+        --chat-widget-compose-bar-text-area-border:#E5E5E5;
+        --chat-widget-compose-bar-text-area-color:#202939;
+        --chat-widget-compose-bar-text-area-placeholder-color:#202939;
+    // End
+
+    // Bot Bubble Messages Variables
+        --bot-bubble-text-color:#697586;
+        --bot-bubble-msg-bg:#F0F1F2;
+        --bot-bubble-msg-bg-hover:#F0F1F2;
+        --bot-bubble-msg-color:#000000;
+        --bot-bubble-img-border:#FFFFFF;
+    //End   
+    
+    // Agent Bubble Messages Variables
+        --agent-bubble-text-color:#697586;
+        --agent-bubble-msg-bg:#DE6449;
+        --agent-bubble-msg-bg-hover:#DE6449;
+        --agent-bubble-msg-color:#FFFFFF;
+        --agent-bubble-img-border:#FFFFFF;
+        --agent-bubble-read-status-icon-color:#22C55E;
+    //End
+
+
 }
 
 

@@ -59,7 +59,7 @@ export function WelcomeScreenContainer(props: any) {
     }
 
     return (
-        <div className="welcome-chat-section" aria-label="welcome message screen">
+        <div className="welcome-chat-section minimize" aria-label="welcome message screen">
             <header className={wsLayout[brandingInfo.welcome_screen.layout]} aria-label="welcome header">
                 <div className="welcome-header-bg">
                     <div className="logo-img">

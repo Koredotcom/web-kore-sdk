@@ -3,7 +3,7 @@
 .chat-widget-composebar{
     display: inline-block;
     width: 100%;
-    background: #FFFFFF;
+    background: var(--chat-widget-footer-bg);
     border-radius: 0px 0px 4px 4px;
     .voice-speak-msg-info{
         margin-bottom: 45px;
@@ -27,7 +27,7 @@
         }
     }
     .compose-bar-wrapper{
-        background: rgba(105, 117, 134, 0.1);
+        background: var(--chat-widget-compose-bar-bg);
         border-radius: 0px 0px 4px 4px;
         padding: 16px;
         display: flex;
@@ -142,17 +142,17 @@
                 width: 100%;
                 padding: 12px 35px 12px 12px;
                 resize: none;
-                background: #FFFFFF;
-                border: 1px solid #E5E5E5;
+                background: var(--chat-widget-compose-bar-text-area-bg);
+                border: 1px solid var(--chat-widget-compose-bar-text-area-border);
                 border-radius: 4px;
                 height: 44px;
                 font-weight: 400;
                 font-size: 14px;
                 line-height: 17px;                
-                color: #202939;
+                color: var(--chat-widget-compose-bar-text-area-color);
                 font-family: 'Inter';
                 &::placeholder{
-                    color: #9AA4B2;
+                    color: var(--chat-widget-compose-bar-text-area-placeholder-color);
                 }
                 &:focus{
                     border: 0.5px solid #4B4EDE;
