@@ -187,8 +187,21 @@
                 line-height: 20px;
                 color: var(--welcome-start-conv-quick-btn-text); 
                 cursor: pointer;
+                position: relative;                
+                &.hovered-default-bg{
+                    background: var(--global-theme-color);
+                    color: var(--global-white);
+                }
                 &:hover{
                     background: rgba(0, 0, 0, 0.05);
+                }
+                .new-item{
+                    position: absolute;
+                    right: -14px;
+                    top: -16px;
+                    width: 30px;
+                    height: 30px;
+                    z-index: 1;
                 }
                 .emoji-symbol{
                     width: 20px;

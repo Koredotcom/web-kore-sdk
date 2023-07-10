@@ -97,13 +97,14 @@ export function WelcomeScreenContainer(props: any) {
                                     <button className="quick-start-btn" onClick={() => handleStartEvent(ele.title)}>
                                         {/* <span className="emoji-symbol">&#128512;</span> */}
                                         <span>{ele.title}</span>
+                                        {/* <img className="new-item" src="https://hbchat.senseforth.com/HDFC_Chat/assets/new.png" /> */}
                                     </button>
                                 ))
                             }
                         </div>
                         {brandingInfo.welcome_screen.starter_box.quick_start_buttons.show && brandingInfo.welcome_screen.starter_box.quick_start_buttons.input === 'button' && <button className="start-conv-button">
                             <span>Start New Conversation</span>
-                            <i className="sdkv3-check"></i>
+                            <i className="sdkv3-cheveron-right"></i>
                         </button>}
 
                         {brandingInfo.welcome_screen.starter_box.quick_start_buttons.show && brandingInfo.welcome_screen.starter_box.quick_start_buttons.input === 'search' && <div className="start-conv-search-block">
