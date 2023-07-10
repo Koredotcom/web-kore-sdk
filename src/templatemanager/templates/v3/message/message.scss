@@ -112,6 +112,30 @@
                 }
             }          
         }
+        &.time-stamp-show-hover{
+            .top-info {
+                .time-tamp{
+                    display: none;
+                }
+            }
+            &.bottom-info{
+                .time-tamp{
+                    display: none;
+                }
+            }
+            &:hover{
+                .top-info {
+                    .time-tamp{
+                        display: block;
+                    }
+                }
+                .bottom-info {
+                    .time-tamp{
+                        display: block;
+                    }
+                }
+            } 
+        }
         .top-info{
             display: flex;
             align-items: center;
@@ -153,6 +177,8 @@
                 top: auto;
                 z-index: 1;
                 cursor: pointer;
+                font-size: 14px;
+                color: var(--bot-bubble-text-color);
                 display: none;
             }
             .agent-img{
@@ -313,6 +339,30 @@
                 }
             }          
         }
+        &.time-stamp-show-hover{
+            .top-info {
+                .time-tamp{
+                    display: none;
+                }
+            }
+            &.bottom-info{
+                .time-tamp{
+                    display: none;
+                }
+            }
+            &:hover{
+                .top-info {
+                    .time-tamp{
+                        display: block;
+                    }
+                }
+                .bottom-info {
+                    .time-tamp{
+                        display: block;
+                    }
+                }
+            } 
+        }
         .top-info{
             display: flex;
             align-items: center;
@@ -356,6 +406,8 @@
                 top: auto;
                 z-index: 1;
                 cursor: pointer;
+                font-size: 14px;
+                color: var(--bot-bubble-text-color);
                 display: none;
             }
             .bot-img{

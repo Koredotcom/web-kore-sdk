@@ -51,10 +51,10 @@ export function ChatWidgetHeader(props: any) {
                     <i className="sdkv3-support"></i>
                 </button>
                 { brandingInfo.header.buttons.close.show && <button className="btn-action btn-action-close">
-                    <figure>
+                    {/* <figure>
                             <img src={iconHelper.getIcon('close_large')} alt="back button" />
-                        </figure>
-                    {/* <i className="sdkv3-close"></i> */}
+                        </figure> */}
+                    <i className="sdkv3-close"></i>
                 </button>}
             </div>
         </div>

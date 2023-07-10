@@ -41,6 +41,9 @@
                 background: rgba(75, 78, 222, 0.07);
                 border: 1px solid transparent;
                 color: #4B4EDE;
+                &:hover{
+                    background: linear-gradient(0deg, rgba(75, 78, 222, 0.07) 0%, rgba(75, 78, 222, 0.07) 100%), rgba(75, 78, 222, 0.07);
+                }
             }
         }
         &.button-variation-2{
@@ -48,6 +51,9 @@
                 background: #4B4EDE;
                 border: 1px solid #4B4EDE;
                 color: #FFFFFF;
+                &:hover{
+                    background: linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), #4B4EDE;
+                }
             }
         }
         .kr-btn{
@@ -62,6 +68,10 @@
             cursor: pointer;
             margin: 4px;
             text-align: center;
+            transition: 0.2s all ease;
+            &:hover{
+                background: rgba(0, 0, 0, 0.05);
+            }
         }
     }
 }

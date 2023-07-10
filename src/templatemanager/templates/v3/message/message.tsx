@@ -15,9 +15,9 @@ export function Message(props: any) {
     });
     const helpers = KoreHelpers.helpers;
     const cbStyle: any = {
-        rounded: 'bot-bubble-content',
-        balloon: 'bot-bubble-content chat-bubble-style-1',
-        rectange: 'bot-bubble-content chat-bubble-style-2'
+        rounded: 'bot-bubble-content hover-show-copy',
+        balloon: 'bot-bubble-content chat-bubble-style-1 hover-show-copy',
+        rectange: 'bot-bubble-content chat-bubble-style-2 hover-show-copy'
     }
 
     if (msgData.message) {
@@ -44,7 +44,7 @@ export function Message(props: any) {
                                                     </figure>
                                                 </div>
                                                 <div className="copy-bubble">
-                                                    <img src="/images/arrow-back.svg" alt="back button" />
+                                                    <i className="sdkv3-copy"></i>
                                                 </div>
                                             </div>
                                             { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
@@ -53,7 +53,7 @@ export function Message(props: any) {
                                         </div>
                                     </div>)) : (
                                     <div className="agent-bubble-comp" id={msgData.messageId}>
-                                        <div className="agent-bubble-content">
+                                        <div className="agent-bubble-content hover-show-copy">
                                             <div className="top-info">
                                                     { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="time-tamp">
                                                         <time>{helpers.formatDate(msgData.createdOn)}</time>
@@ -69,7 +69,7 @@ export function Message(props: any) {
                                                     </figure>
                                                 </div>
                                                 <div className="copy-bubble">
-                                                    <img src="/images/arrow-back.svg" alt="back button" />
+                                                    <i className="sdkv3-copy"></i>
                                                 </div>
                                             </div>
                                                 { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
