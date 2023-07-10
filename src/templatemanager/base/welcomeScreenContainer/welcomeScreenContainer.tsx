@@ -2,7 +2,7 @@
 
 import './welcomeScreenContainer.scss';
 import { h } from 'preact';
-import { useState } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
 import IconsManager from '../iconsManager';
 
 export function WelcomeScreenContainer(props: any) {
@@ -26,38 +26,40 @@ export function WelcomeScreenContainer(props: any) {
         hostInstance.sendMessageToBot(e);
         handleEventsWelcomeScreen();
     }
-    
-    hostInstance.removeEventListener('.start-conv-button', 'click');
-    hostInstance.addEventListener('.start-conv-button', 'click', (event: any) => {
-        handleEventsWelcomeScreen();
-    })
-
-    hostInstance.removeEventListener('.search-send', 'click');
-    hostInstance.addEventListener('.search-send', 'click', (event: any) => {
-        handleEventsWelcomeScreen();
-        const inputEle: any = document.querySelector('.start-conv-input');
-        hostInstance.sendMessageToBot(inputEle.value);
-        inputEle.value = '';
-    })
-
-    hostInstance.removeEventListener('.start-conv-input', 'keydown');
-    hostInstance.addEventListener('.start-conv-input', 'keydown', (event: any) => {
-        if (event.keyCode == 13) {
-            if (event.shiftKey) {
-                return;
-            }
-            handleEventsWelcomeScreen();
-            event.preventDefault();
-            hostInstance.sendMessageToBot(event.target.value);
-            event.target.value = '';
-        }
-    })
 
     const handleEventsWelcomeScreen = () => {
         document.querySelector('.chat-widgetwrapper-main-container')?.classList.add('minimize');
         document.querySelector('.welcome-chat-section')?.classList.add('hide');
     }
+    
+    useEffect(() => {
+        hostInstance.removeEventListener('.start-conv-button', 'click');
+        hostInstance.addEventListener('.start-conv-button', 'click', (event: any) => {
+            handleEventsWelcomeScreen();
+        })
 
+        hostInstance.removeEventListener('.search-send', 'click');
+        hostInstance.addEventListener('.search-send', 'click', (event: any) => {
+            handleEventsWelcomeScreen();
+            const inputEle: any = document.querySelector('.start-conv-input');
+            hostInstance.sendMessageToBot(inputEle.value);
+            inputEle.value = '';
+        })
+
+        hostInstance.removeEventListener('.start-conv-input', 'keydown');
+        hostInstance.addEventListener('.start-conv-input', 'keydown', (event: any) => {
+            if (event.keyCode == 13) {
+                if (event.shiftKey) {
+                    return;
+                }
+                handleEventsWelcomeScreen();
+                event.preventDefault();
+                hostInstance.sendMessageToBot(event.target.value);
+                event.target.value = '';
+            }
+        })
+    }, []);
+    
     return (
         <div className="welcome-chat-section minimize" aria-label="welcome message screen">
             <header className={wsLayout[brandingInfo.welcome_screen.layout]} aria-label="welcome header">
