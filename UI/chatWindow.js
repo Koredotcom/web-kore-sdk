@@ -433,8 +433,9 @@
                     var newStr = '', wrapper1;
                     if (responseType === 'user') {
                         // str = sanitizeXSS(str);
-                        str = str.replace(/onerror=/gi, '');
-                        str = str.replace(/onmouseover=/gi, '');
+                        // str = str.replace(/onerror=/gi, '');
+                        // str = str.replace(/onmouseover=/gi, '');
+                        str = DOMPurify.sanitize(str,{  ADD_TAGS: ['iframe']})
                         wrapper1 = document.createElement('div');
                         newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
                         newStr = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -446,8 +447,9 @@
                         }
                     } else {
                         // str = sanitizeXSS(str);
-                        str = str.replace(/onerror=/gi, '');
-                        str = str.replace(/onmouseover=/gi, '');
+                        // str = str.replace(/onerror=/gi, '');
+                        // str = str.replace(/onmouseover=/gi, '');
+                        str = DOMPurify.sanitize(str,{  ADD_TAGS: ['iframe']})
                         wrapper1 = document.createElement('div');
                         //str = str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
                         wrapper1.innerHTML = xssAttack(str);
@@ -496,6 +498,7 @@
                     // if (responseType === 'user') {
                         // str = str.replace(/abc-error=/gi, 'onerror=');
                     // }
+                    str = DOMPurify.sanitize(str,{  ADD_TAGS: ['iframe']})
                     return helpers.nl2br(str, true);
                 },
                 'checkMarkdowns': function (val, hyperLinksMap) {
