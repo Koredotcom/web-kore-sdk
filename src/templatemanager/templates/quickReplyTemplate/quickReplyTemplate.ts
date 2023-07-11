@@ -25,10 +25,10 @@ class QuickReplyTemplate {
         let $ = me.hostInstance.$;
         let chatWindowInstance = me.hostInstance;
         const quickReplyDivs = document.querySelectorAll('.quickReplies');
-        for (var i = 0; i < quickReplyDivs.length; i++) {
-            const btnsParentDiv: any = quickReplyDivs[i].querySelectorAll('.quick_replies_btn_parent');
-            const leftScrollBtn = quickReplyDivs[i].querySelectorAll('.quickreplyLeftIcon');
-            const rightScrollBtn = quickReplyDivs[i].querySelectorAll('.quickreplyRightIcon');
+        // for (var i = 0; i < quickReplyDivs.length; i++) {
+            const btnsParentDiv: any = $(messageHtml).find('.quick_replies_btn_parent');
+            const leftScrollBtn =  $(messageHtml).find('.quickreplyLeftIcon');
+            const rightScrollBtn =  $(messageHtml).find('.quickreplyRightIcon');
             if (btnsParentDiv && btnsParentDiv[0] && btnsParentDiv[0].hasChildNodes()) {
                 if (leftScrollBtn && leftScrollBtn.length && leftScrollBtn[0] && leftScrollBtn[0].classList) {
                     if (btnsParentDiv[0].scrollLeft > 0) {
@@ -45,7 +45,7 @@ class QuickReplyTemplate {
                     }
                 }
             }
-        }
+        // }
         $(messageHtml).off('click', '.quickReply').on('click', '.quickReply', function (e: any) {
             e.preventDefault();
             e.stopPropagation();
