@@ -56,6 +56,14 @@ class ButtonTemplate {
                     a_link = `http:////${a_link}`;
                 }
                 chatWindowInstance.openExternalLink(a_link);
+            }else {
+                if ($(selectedTarget).find('a')) {
+                    let a_link = $(selectedTarget).find('a').attr('href');
+                    if (a_link.indexOf('http:') < 0 && a_link.indexOf('https:') < 0) {
+                        a_link = `http:////${a_link}`;
+                    }
+                    chatWindowInstance.openExternalLink(a_link);
+                }
             }
             if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[1] === 'likeDiv') {
                 $('.likeImg').addClass('hide');
