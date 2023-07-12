@@ -16,8 +16,15 @@ export function ChatContainer(props: any) {
         console.count('Branding Call');
         console.log('Branding Data: ', event.brandingData);
         updateBrandingInfo({...event.brandingData})
-    });    return (
-        <div class='chat-window-main-section default-theme' aria-label='chat-window-section'>
+    });
+
+    const themeType: any = {
+        light: 'chat-window-main-section light-theme',
+        dark: 'chat-window-main-section dark-theme'
+    }
+
+    return (
+        <div className={themeType[brandingInfo.general.themeType]} aria-label='chat-window-section'>
             <ChatWidget {...props} />
             { brandingInfo.welcome_screen.show &&
                 <WelcomeScreenContainer {...props} />

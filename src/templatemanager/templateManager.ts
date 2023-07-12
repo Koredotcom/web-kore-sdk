@@ -19,8 +19,8 @@ import SystemTemplate from './templates/systemTemplate/systemTemplate';
 import AdvancedListTemplate from './templates/advancedListTemplate/advancedListTemplate';
 import CardTemplate from './templates/cardTemplate/cardTemplate';
 import MessageTemplate from './templates/v3/message/message';
-import ActionsBottomSliderTemplate from './templates/v3/actionsButtonSlider/actionsBottomSlider';
-
+import DigitalFormTemplate from './templates/v3/digitalForm/digitalForm';
+import TemplateButton from './templates/v3/button/button';
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
 //(function($){
@@ -72,8 +72,9 @@ class TemplateManager {
 	}
 
 	installDefaultTemplatesV3() {
-		this.installTemplate(new MessageTemplate());
-		this.installTemplate(new ActionsBottomSliderTemplate());
+		// this.installTemplate(new MessageTemplate());
+		this.installTemplate(new DigitalFormTemplate());
+		this.installTemplate(new TemplateButton());
 		}
 
 	renderMessage  (msgData: any) {

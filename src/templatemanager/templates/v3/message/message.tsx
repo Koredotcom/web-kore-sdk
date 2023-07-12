@@ -20,6 +20,20 @@ export function Message(props: any) {
         rectange: 'bot-bubble-content chat-bubble-style-2 hover-show-copy'
     }
 
+    const ubStyle: any = {
+        rounded: 'agent-bubble-content hover-show-copy',
+        balloon: 'agent-bubble-content chat-bubble-style-1 hover-show-copy',
+        rectange: 'agent-bubble-content chat-bubble-style-2 hover-show-copy'
+    }
+
+    let botStyle = cbStyle[brandingInfo.body.bubble_style]
+    let userStyle = ubStyle[brandingInfo.body.bubble_style]
+
+    if (brandingInfo.body.time_stamp.show_type == 'hover') {
+      botStyle = botStyle + ' time-stamp-show-hover';
+      userStyle = userStyle + ' time-stamp-show-hover';
+    }
+
     if (msgData.message) {
         return (
             <Fragment>
@@ -29,7 +43,7 @@ export function Message(props: any) {
                             return (
                                 msgData.type === 'bot_response' ? (
                                     msgItem.component && msgItem.component.type === 'error' ? ('') : (<div className="bot-bubble-comp" id={msgData.messageId}>
-                                        <div className={cbStyle[brandingInfo.body.bubble_style]}>
+                                        <div className={botStyle}>
                                             <div className="top-info">
                                                 <div className="you-text">Kore.ai Bot</div>
                                                 { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="time-tamp">
@@ -37,7 +51,7 @@ export function Message(props: any) {
                                                 </div> }
                                             </div>
                                             <div className="bubble-msg-with-img">
-                                                <div className="bubble-msg" style={{ background: brandingInfo.body.bot_message.bg_color, color: brandingInfo.body.bot_message.color }}>{msgItem.cInfo.body}</div>
+                                                <div className="bubble-msg">{msgItem.cInfo.body}</div>
                                                 <div className="bot-img">
                                                     <figure>
                                                         <img src={iconHelper.getIcon('avatar_bot')} alt='avatr img' />
@@ -53,7 +67,7 @@ export function Message(props: any) {
                                         </div>
                                     </div>)) : (
                                     <div className="agent-bubble-comp" id={msgData.messageId}>
-                                        <div className="agent-bubble-content hover-show-copy">
+                                        <div className={userStyle}>
                                             <div className="top-info">
                                                     { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="time-tamp">
                                                         <time>{helpers.formatDate(msgData.createdOn)}</time>
@@ -61,7 +75,7 @@ export function Message(props: any) {
                                                 <div className="you-text">You</div>
                                             </div>
                                             <div className="bubble-msg-with-img">
-                                                <div className="bubble-msg" style={{ background: brandingInfo.body.user_message.bg_color, color: brandingInfo.body.user_message.color }}>{msgItem.cInfo.renderMsg && msgItem.cInfo.renderMsg !== '' ? msgItem.cInfo.renderMsg : msgItem.cInfo.body}
+                                                <div className="bubble-msg">{msgItem.cInfo.renderMsg && msgItem.cInfo.renderMsg !== '' ? msgItem.cInfo.renderMsg : msgItem.cInfo.body}
                                                 </div>
                                                 <div className="agent-img">
                                                     <figure>

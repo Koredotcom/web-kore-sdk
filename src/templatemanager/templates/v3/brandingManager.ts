@@ -3,6 +3,10 @@ class BrandingManager {
         for (var key in data) {
             for (var subKey in data[key]) {
                 switch (key) {
+                    case 'chat_bubble': 
+                        this.applyVariableValue('primary_color', data[key]['primary_color'], key, 'bg');
+                        this.applyVariableValue('secondary_color', data[key]['secondary_color'], key, 'bg');
+                        break;
                     case 'welcome_screen':
                         if (key == 'welcome_screen' && typeof data[key][subKey] === 'object') {
                             for (var property in data[key][subKey]) {
@@ -15,6 +19,16 @@ class BrandingManager {
                                 this.applyVariableValue('start_conv_button_color', data[key][subKey]['start_conv_button']['color'], 'welcome_screen', 'starter_box');
                             }
                         }
+                    case 'header':
+                        if (key == 'header' && typeof data[key][subKey] === 'object') {
+                            for (var property in data[key][subKey]) {
+                                if (property.includes('color')) {
+                                    this.applyVariableValue(property, data[key][subKey][property], key, subKey);
+                                }
+                            }
+                            this.applyVariableValue('bg_color', data[key]['bg_color'], key, 'bg');
+                        }
+                        break;
                     case 'body':
                         if (key == 'body' && (subKey == 'user_message' || subKey == 'bot_message') && typeof data[key][subKey] === 'object') {
                             for (var property in data[key][subKey]) {
@@ -22,6 +36,15 @@ class BrandingManager {
                             }
                         }
                         break;
+                    case 'footer':
+                        if (key == 'footer' && typeof data[key][subKey] === 'object') {
+                            for (var property in data[key][subKey]) {
+                                if (property.includes('color')) {
+                                    this.applyVariableValue(property, data[key][subKey][property], key, subKey);
+                                }
+                            }
+                            this.applyVariableValue('bg_color', data[key]['bg_color'], key, 'bg');
+                        }
                     default:
                         break;
                 }

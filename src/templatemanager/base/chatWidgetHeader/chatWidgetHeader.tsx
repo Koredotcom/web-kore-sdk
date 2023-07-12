@@ -33,8 +33,8 @@ export function ChatWidgetHeader(props: any) {
                     </figure>
                 </div> }
                 <div className="content-text">
-                    <h1 aria-label="bot name" style={{color: brandingInfo.header.title.color}}>{brandingInfo.header.title.name}</h1>
-                    <h2 aria-label="bot desc" style={{color: brandingInfo.header.header?.sub_title.color}}>{brandingInfo.header.sub_title.name}</h2>
+                    <h1 aria-label="bot name">{brandingInfo.header.title.name}</h1>
+                    <h2 aria-label="bot desc">{brandingInfo.header.sub_title.name}</h2>
                 </div>
             </div>
             <div className="actions-info">
@@ -51,10 +51,10 @@ export function ChatWidgetHeader(props: any) {
                     <i className="sdkv3-support"></i>
                 </button>
                 { brandingInfo.header.buttons.close.show && <button className="btn-action btn-action-close">
-                    {/* <figure>
+                    <figure>
                             <img src={iconHelper.getIcon('close_large')} alt="back button" />
-                        </figure> */}
-                    <i className="sdkv3-close"></i>
+                        </figure>
+                    {/* <i className="sdkv3-close"></i> */}
                 </button>}
             </div>
         </div>

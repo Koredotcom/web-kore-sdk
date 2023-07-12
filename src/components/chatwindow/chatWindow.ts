@@ -16,8 +16,10 @@ import chatConfig from './config/kore-config';
 import { getHTML } from '../../templatemanager/base/domManager';
 import { Message } from '../../templatemanager/templates/v3/message/message';
 import { DateSeparator } from '../../templatemanager/base/misc/dateSeparator/dateSeparator';
+import { HistoryLoader } from '../../templatemanager/base/misc/historyLoaderMsg/historyLoaderMsg';
 import { ChatContainer } from '../../templatemanager/base/chatContainer/chatContainer';
 import BrandingManager from '../../templatemanager/templates/v3/brandingManager';
+import { ActionsBottomSlider } from '../../templatemanager/base/actionsButtonSlider/actionsBottomSlider';
 
 const bot = requireKr('/KoreBot.js').instance();
 
@@ -301,11 +303,6 @@ initShow  (config:any) {
     me.bot.fetchUserLocation();
   }
   me.render(chatWindowHtml);
-  if (me.config.UI.version == 'v3') {
-    if (me.config.branding.welcome_screen.show) {
-      document.querySelector('.welcome-chat-section').classList.add('hide');
-    }
-  }
   me.unfreezeUIOnHistoryLoadingFail.call(me);
   me.updateOnlineStatus();
   me.addBottomSlider();
@@ -923,6 +920,9 @@ bindEventsV3() {
   const me:any = this;
   me.addEventListener('.typing-text-area', 'keydown', (event: any) => {
     if (event.keyCode == 13) {
+      if (event.target.value.trim() === '') {
+        return;
+      }
       if (event.shiftKey) {
         return;
       }
@@ -934,6 +934,9 @@ bindEventsV3() {
 
   me.addEventListener('.send-btn', 'click', (event: any) => {
     const inputEle = document.querySelector('.typing-text-area');
+    if (inputEle.value.trim() === '') {
+      return;
+    }
     event.preventDefault();
     me.sendMessageToBot(inputEle.value);
     inputEle.value = '';
@@ -949,7 +952,7 @@ bindEventsV3() {
         me.bot.logInComplete(); // Start api call & ws
         me.initial = false;
         if (me.config.branding.welcome_screen.show) {
-          document.querySelector('.welcome-chat-section').classList.remove('hide');
+          document.querySelector('.welcome-chat-section').classList.add('minimize');
         } else {
           document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
         }
@@ -962,7 +965,7 @@ bindEventsV3() {
         me.initial = false;
       }
       if (me.config.branding.welcome_screen.show) {
-        document.querySelector('.welcome-chat-section').classList.remove('hide');
+        document.querySelector('.welcome-chat-section').classList.add('minimize');
       } else {
         document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
       }
@@ -986,7 +989,7 @@ bindEventsV3() {
 
   me.addEventListener('.back-to-chat', 'click', () => {
     if (me.config.branding.welcome_screen.show) {
-      document.querySelector('.welcome-chat-section').classList.remove('hide');
+      document.querySelector('.welcome-chat-section').classList.add('minimize');
       document.querySelector('.avatar-variations-footer').classList.add('avatar-minimize')
     } else {
       document.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
@@ -1006,15 +1009,10 @@ bindEventsV3() {
           document.querySelectorAll('.typing-text-area')[0].classList.add('disableComposeBar');
           bot.previousHistoryLoading = true;
           var message = me?.config?.history?.paginatedScroll?.loadingLabel || 'Loading chat history..';
-          var paginatedHistoryLoader = document.createElement('div');
-          paginatedHistoryLoader.classList.add('paginted-history-loader');
-          paginatedHistoryLoader.innerHTML = '<div class="historyWarningTextDiv displayTable">  \
-                                            <span><img class="loadingHistory" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAARCAYAAAA7bUf6AAAAAXNSR0IArs4c6QAAAYZJREFUOBGtVLFKA0EQfbMiiERQEgjpRQt/wULB/opIFCuJvb1iKdprbbASDaa4L9DCX7BQ7CVwQcEggph13t7t3RlivMKBsDsz701mZ9+eYNjaNyX0e9saDmCxZJv1mrQ6zxDcayxEqXyOxmo/TzN5B2fXDbxFT7D2VH9rgK3FeV3pM848cTnLirQ6e0q60lw1lx+11bziHD5Oi1tcZVfAkyIYOYRM3GF69gHvr4uwX8sY2AMFVDwIkA3srLcFnAFb9B2I3GJqchNbQTcDJ7uLsIqPz0s91koS6WKmMm+SIfojRL8WIIuF+QdAlBSpks+ZBEkA7gijOkgBumGeR80sMLzG1OcMilgep3wDseWUxyEWsTnzmMKUr51ILw3wForYy2AhhSlfO3FKjGO8xiKWxymfgw1THnXAaxxnzMd68ajQuLcAeE1UnA5+K+R1kgmuS/4/KdY3xbdgB0fe/XMVs49m/Zi4uBPPiN/Qibrj5qJHl12+GU/7WYTRoe+J0xFlMOZ78g1n4achujvX7QAAAABJRU5ErkJggg=="></span>                \
-                                            <p class="headerTip warningTip">'+ message + '</p>\
-                                          </div>';
+          const historyLoader = getHTML(HistoryLoader, message, me);
           var firstLi = document.querySelectorAll('.chat-widget-body-wrapper > div')[0];
-          if (!(document.querySelectorAll('.paginted-history-loader').length)) {
-            document.querySelector('.chat-widget-body-wrapper').insertBefore(paginatedHistoryLoader, firstLi);
+          if (!(document.querySelectorAll('.history-loading-wrapper').length)) {
+            document.querySelector('.chat-widget-body-wrapper').insertBefore(historyLoader, firstLi);
           }
           bot.getHistory({ limit: (me?.config?.history?.paginatedScroll?.batchSize) });
         }
@@ -1633,8 +1631,14 @@ generateMessageDOM(msgData?:any){
       messageHtml=me.messageTemplate.renderMessage(msgData);
     }    
   } else {
-    // messageHtml = getHTML(Message, msgData, me); 
     messageHtml = me.templateManager.renderMessage(msgData);
+    if(messageHtml==='_ignore_message_render_'){
+      return "";
+    }
+    if (!messageHtml && msgData && msgData.message && msgData.message[0]) {
+      messageHtml = getHTML(Message, msgData, me); 
+      // messageHtml = me.templateManager.renderMessage(msgData);
+    } 
   }
   return messageHtml;
 }
@@ -1839,9 +1843,9 @@ historyLoadingComplete () {
     let prevMessageListContainer = document.querySelectorAll('.prev-message-list')[0];
     prevMessageListContainer.innerHTML = '';
 
-    let pagintedHistoryLoader = document.querySelector('.paginted-history-loader');
-    if (pagintedHistoryLoader) {
-      pagintedHistoryLoader.remove();
+    let historyLoader = document.querySelector('.history-loading-wrapper');
+    if (historyLoader) {
+      historyLoader.remove();
     }
     bot.previousHistoryLoading = false;
     }
@@ -2114,18 +2118,28 @@ showError (response:any) {
   }
 };
 
-bottomSliderAction  (action:any, appendElement:any) {
-  $(".kore-action-sheet").animate({ height: 'toggle' });
-  if (action == 'hide') {
-    $(".kore-action-sheet").innerHTML = '';
-    $(".kore-action-sheet").addClass("hide");
+bottomSliderAction(action: any, appendElement: any) {
+  const me: any = this;
+  if (me.config.UI.version == 'v2') {
+    $(".kore-action-sheet").animate({ height: 'toggle' });
+    if (action == 'hide') {
+      $(".kore-action-sheet").innerHTML = '';
+      $(".kore-action-sheet").addClass("hide");
+    } else {
+      $(".kore-action-sheet").removeClass("hide");
+      $(".kore-action-sheet .actionSheetContainer").empty();
+      setTimeout(function () {
+        $(".kore-action-sheet .actionSheetContainer").append(appendElement);
+      }, 200);
+     }
   } else {
-    $(".kore-action-sheet").removeClass("hide");
-    $(".kore-action-sheet .actionSheetContainer").empty();
-    setTimeout(function () {
-      $(".kore-action-sheet .actionSheetContainer").append(appendElement);
-    }, 200);
-
+    const actionSlider: any = getHTML(ActionsBottomSlider, '', me);
+    actionSlider.querySelector('.chat-actions-bottom-wraper > .actions-contnet-data').appendChild(appendElement);
+    const parent = document.querySelector('.chat-window-main-section');
+    parent.appendChild(actionSlider);
+    document.querySelector('.chat-actions-bottom-wraper').addEventListener('click',() => {
+      document.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
+    })
   }
 }
 
@@ -2319,11 +2333,11 @@ applyVariableValue (key:any,value:any,type:any){
     if (type == 'avatar') {
       document.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize');
       document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
-      document.querySelector('.welcome-chat-section')?.classList.add('hide');
+      document.querySelector('.welcome-chat-section')?.classList.remove('minimize');
     }
     else if (type == 'welcome') {
       if (me.config.branding.welcome_screen.show) {
-      document.querySelector('.welcome-chat-section')?.classList.remove('hide');
+      document.querySelector('.welcome-chat-section')?.classList.add('minimize');
       document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
       } else {
         document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
@@ -2331,11 +2345,11 @@ applyVariableValue (key:any,value:any,type:any){
       document.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
     } else if (type == 'chat') {
       document.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
-      document.querySelector('.welcome-chat-section')?.classList.add('hide');
+      document.querySelector('.welcome-chat-section')?.classList.remove('minimize');
       document.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
     } else {
       document.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
-      document.querySelector('.welcome-chat-section')?.classList.add('hide');
+      document.querySelector('.welcome-chat-section')?.classList.remove('minimize');
       document.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize');
     }
   }

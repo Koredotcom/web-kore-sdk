@@ -1,6 +1,6 @@
 @import "./animations.scss";
 
-.default-theme{
+.light-theme{
 
     --global-theme-color:#4B4EDE;
     --global-white:#FFFFFF;
@@ -9,6 +9,11 @@
     --gloabl-border-color:#E4E5E7;
     --gloabl-border-color-1:#BDC1C6;
     --scrollbar-bg:#aaaaaa;
+    // Avatar Variables
+        --avatar-bg: var(--v3-sdk-chat-branding--chat_bubble-bg-primary_color);
+        --avatar-send-msg-bg: var(--v3-sdk-chat-branding--chat_bubble-bg-secondary_color);
+    // End
+
     // Welcome screen Variables
         --welcome-bg:#F8FAFC;
         --welcome-shadow:0px 4px 12px 2px rgba(32,33,36,0.12);
@@ -32,13 +37,13 @@
     // End
 
     // Chat Widget Header Variables;
-        --chat-widget-header-bg:#ffffff;
+        --chat-widget-header-bg: var(--v3-sdk-chat-branding--header-bg-bg_color);
         --chat-widget-header-border:#EEF2F6;
-        --chat-widget-header-bg-large:linear-gradient(180deg, #4B4EDE 0%, #4B4EDE 40.67%, rgba(255, 255, 255, 0) 80.38%);
+        --chat-widget-header-bg-large:linear-gradient(180deg, var(--v3-sdk-chat-branding--header-bg-bg_color) 0%, var(--v3-sdk-chat-branding--header-bg-bg_color) 40.67%, rgba(255, 255, 255, 0) 80.38%);
         --chat-widget-header-bg-large-info-bg:#FFFFFF;
         --chat-widget-header-bg-large-actions-color:#FFFFFF;
-        --chat-widget-header-bot-name-color:#000000;
-        --chat-widget-header-bot-name-desc:#697586;
+        --chat-widget-header-bot-name-color: var(--v3-sdk-chat-branding--header-title-color);
+        --chat-widget-header-bot-name-desc: var(--v3-sdk-chat-branding--header-sub_title-color);
         --chat-widget-header-actions-color:#697586;
         --chat-widget-header-img-border:#FFFFFF;
     // End
@@ -48,8 +53,8 @@
     // End
 
     // Chat Widget Footer Variables;
-        --chat-widget-footer-bg:#FFFFFF;
-        --chat-widget-compose-bar-bg:rgba(105, 117, 134, 0.1);
+        --chat-widget-footer-bg: var(--v3-sdk-chat-branding--footer-bg-bg_color);
+        --chat-widget-compose-bar-bg:rgba(var(--v3-sdk-chat-branding--footer-compose_bar-bg_color), 0.1);
         --chat-widget-compose-bar-text-area-bg:#FFFFFF;
         --chat-widget-compose-bar-text-area-border:#E5E5E5;
         --chat-widget-compose-bar-text-area-color:#202939;
@@ -58,17 +63,17 @@
 
     // Bot Bubble Messages Variables
         --bot-bubble-text-color:#697586;
-        --bot-bubble-msg-bg:#F0F1F2;
+        --bot-bubble-msg-bg: var(--v3-sdk-chat-branding--body-bot_message-bg_color);
         --bot-bubble-msg-bg-hover:#E3E4E5;
-        --bot-bubble-msg-color:#000000;
+        --bot-bubble-msg-color: var(--v3-sdk-chat-branding--body-bot_message-color);
         --bot-bubble-img-border:#FFFFFF;
     //End   
 
     // Agent Bubble Messages Variables
         --agent-bubble-text-color:#697586;
-        --agent-bubble-msg-bg:#4B4EDE;
+        --agent-bubble-msg-bg: var(--v3-sdk-chat-branding--body-user_message-bg_color);
         --agent-bubble-msg-bg-hover:#393BC5;
-        --agent-bubble-msg-color:#FFFFFF;
+        --agent-bubble-msg-color: var(--v3-sdk-chat-branding--body-user_message-color);
         --agent-bubble-img-border:#FFFFFF;
         --agent-bubble-read-status-icon-color:#22C55E;
     //End
@@ -107,12 +112,16 @@
     --gloabl-border-color:#E4E5E7;
     --gloabl-border-color-1:#BDC1C6;
     --scrollbar-bg:#697586;
+    // Avatar Variables
+        --avatar-bg: var(--v3-sdk-chat-branding--chat_bubble-bg-primary_color);
+        --avatar-send-msg-bg: var(--v3-sdk-chat-branding--chat_bubble-bg-secondary_color);
+    // End
+
     // Welcome screen Variables
         --welcome-bg:#121926;
         --welcome-shadow:0px 4px 12px 2px rgba(32, 33, 36, 0.12);
-        --welcome-header-bg:#202939;
-        --welcome-header-h1-text-color:#9AA4B2;
-        --welcome-header-text-color:#FFF;
+        --welcome-header-bg: var(--v3-sdk-chat-branding--welcome_screen-background-color);
+        --welcome-header-text-color: var(--v3-sdk-chat-branding--welcome_screen-top_fonts-color);;
         --welcome-start-conv-bg:#202939;
         --welcome-start-conv-border:#364152;
         --welcome-start-conv-bot-bg:#364152;
@@ -123,21 +132,21 @@
         --welcome-start-conv-quick-btn-text:#404040;
         --welcome-start-conv-search-bg:#FFFFFF;
         --welcome-start-conv-search-border:#BDC1C6;
-        --welcome-start-conv-button-bg:#4B4EDE;
+        --welcome-start-conv-button-bg: var(--v3-sdk-chat-branding--welcome_screen-starter_box-start_conv_button_color);
         --welcome-start-conv-button-border:#4B4EDE;
-        --welcome-start-conv-button-color:#FFFFFF;
+        --welcome-start-conv-button-color:var(--v3-sdk-chat-branding--welcome_screen-starter_box-start_conv_text_color);
         --welcome-footer-bg:#202939;
         --welecome-footer-text-color:#FFFFFF;
     // End
 
     // Chat Widget Header Variables;
-        --chat-widget-header-bg:#121926;
+        --chat-widget-header-bg: var(--v3-sdk-chat-branding--header-bg-bg_color);
         --chat-widget-header-border:#202939;
         --chat-widget-header-bg-large:#202939;
         --chat-widget-header-bg-large-info-bg:#121926;
         --chat-widget-header-bg-large-actions-color:#FFFFFF;
-        --chat-widget-header-bot-name-color:#FFFFFF;
-        --chat-widget-header-bot-name-desc:#697586;
+        --chat-widget-header-bot-name-color: var(--v3-sdk-chat-branding--header-title-color);
+        --chat-widget-header-bot-name-desc: var(--v3-sdk-chat-branding--header-sub_title-color);
         --chat-widget-header-actions-color:#697586;
         --chat-widget-header-img-border:#FFFFFF;
     // End
@@ -147,8 +156,8 @@
     // End
 
     // Chat Widget Footer Variables;
-        --chat-widget-footer-bg:#FFFFFF;
-        --chat-widget-compose-bar-bg:#202939;
+        --chat-widget-footer-bg: var(--v3-sdk-chat-branding--footer-bg-bg_color);
+        --chat-widget-compose-bar-bg: var(--v3-sdk-chat-branding--footer-compose_bar-bg_color);
         --chat-widget-compose-bar-text-area-bg:#121926;
         --chat-widget-compose-bar-text-area-border:#364152;
         --chat-widget-compose-bar-text-area-color:#FFFFFF;
@@ -157,17 +166,17 @@
 
     // Bot Bubble Messages Variables
         --bot-bubble-text-color:#697586;
-        --bot-bubble-msg-bg:#364152;
+        --bot-bubble-msg-bg: var(--v3-sdk-chat-branding--body-bot_message-bg_color);
         --bot-bubble-msg-bg-hover:#364152;
-        --bot-bubble-msg-color:#FFFFFF;
+        --bot-bubble-msg-color: var(--v3-sdk-chat-branding--body-bot_message-color);
         --bot-bubble-img-border:#FFFFFF;
     //End   
 
     // Agent Bubble Messages Variables
         --agent-bubble-text-color:#697586;
-        --agent-bubble-msg-bg:#4B4EDE;
+        --agent-bubble-msg-bg: var(--v3-sdk-chat-branding--body-user_message-bg_color);
         --agent-bubble-msg-bg-hover:#393BC5;
-        --agent-bubble-msg-color:#FFFFFF;
+        --agent-bubble-msg-color: var(--v3-sdk-chat-branding--body-user_message-color);
         --agent-bubble-img-border:#FFFFFF;
         --agent-bubble-read-status-icon-color:#22C55E;
     //End

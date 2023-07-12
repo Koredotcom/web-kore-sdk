@@ -1,7 +1,8 @@
 const BrandingJSON = {
     "general": {
         "bot_icon": "url",
-        "size": "small|medium|large"
+        "size": "small|medium|large",
+        "themeType": "light"
     },
     "chat_bubble": {
         "style": "rectangle",
@@ -112,7 +113,7 @@ const BrandingJSON = {
         "icon": {
             "show": true,
             "icon_url": "/images/avatar-bot.svg",
-            "color": ""
+            "color": "#ffffff"
         },
         "title": {
             "name": "kore.ai",
@@ -159,10 +160,10 @@ const BrandingJSON = {
     },
     "footer": {
         "bg_color": "#0D6EFD",
-        "layout": "voice",
+        "layout": "input",
         "style": "translucent",
         "compose_bar": {
-            "bg_color": "#0D6EFD",
+            "bg_color": "#000000",
             "outline-color": "#0D6EFD",
             "placeholder": "Type Here ....ssss"
         },
@@ -235,7 +236,7 @@ const BrandingJSON = {
             }
         },
         "time_stamp": {
-            "show": false,
+            "show": true,
             "show_type": "hover",
             "position": "bottom",
             "separator": "rounded",

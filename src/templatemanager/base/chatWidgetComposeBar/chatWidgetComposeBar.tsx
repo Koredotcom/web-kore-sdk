@@ -14,6 +14,10 @@ export function ChatWidgetComposeBar(props: any) {
     });
     const handleClick =  (event: any) => {}
 
+    const inputType: any = {
+        input: 'compose-bar-wrapper',
+        voice: 'compose-bar-wrapper if-voice-compose'
+    }
     return (
         <div className="chat-widget-composebar" aria-label="chat widget compose">
             <div className="voice-speak-msg-info" style="display:none">
@@ -78,7 +82,7 @@ export function ChatWidgetComposeBar(props: any) {
                     </div>
                 </div>
             </div>
-            <div className="compose-bar-wrapper" aria-label="compose footer">
+            <div className={inputType[brandingInfo.footer.layout]} aria-label="compose footer">
                 { brandingInfo.footer.buttons.menu.show && <button className="action-btn">
                     <figure>
                         <img src={iconHelper.getIcon('hamberger')} alt="image" />
@@ -105,16 +109,16 @@ export function ChatWidgetComposeBar(props: any) {
                     </button>
                     <p className="speak-info">Tap microphone to speak</p>
                 </div>
-                { brandingInfo.footer.buttons.microphone.show && <button className="voice-btn">
+                { brandingInfo.footer.layout === 'input' && brandingInfo.footer.buttons.microphone.show && <button className="voice-btn">
                     <figure>
                         <img src={iconHelper.getIcon('voice')} alt="image" />
                     </figure>
                 </button> }
-                <button className="send-btn">
+                { brandingInfo.footer.layout === 'input' && <button className="send-btn">
                         <figure>
                             <img src={iconHelper.getIcon('send')} alt="image" />
                         </figure>
-                    </button>
+                    </button> }
             </div>
         </div>
     );

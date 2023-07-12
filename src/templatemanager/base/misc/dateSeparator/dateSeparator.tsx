@@ -16,16 +16,10 @@ export function DateSeparator(props: any) {
     }
 
     return (
-        // <div className={dsStyle[brandingInfo.body.time_stamp.separator]}>
-        //     <div className="line-border"></div>
-        //     <div className="date-text">{text}</div>
-        //     <div className="line-border"></div>
-        // </div>
-        <div className="history-loading-wrapper">
-            <div className="history-bg-content">
-                <div className="loader-history"></div>
-                <div className="title-loading">Loading Old Messages</div>
-            </div>
+        <div className={dsStyle[brandingInfo.body.time_stamp.separator]}>
+            <div className="line-border"></div>
+            <div className="date-text">{text}</div>
+            <div className="line-border"></div>
         </div>
     );
 }

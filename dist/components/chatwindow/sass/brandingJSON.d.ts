@@ -2,6 +2,7 @@ declare const BrandingJSON: {
     general: {
         bot_icon: string;
         size: string;
+        themeType: string;
     };
     chat_bubble: {
         style: string;
