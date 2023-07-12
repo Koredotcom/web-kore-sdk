@@ -28,8 +28,8 @@ export function WelcomeScreenContainer(props: any) {
     }
 
     const handleEventsWelcomeScreen = () => {
-        document.querySelector('.chat-widgetwrapper-main-container')?.classList.add('minimize');
-        document.querySelector('.welcome-chat-section')?.classList.remove('minimize');
+        hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container')?.classList.add('minimize');
+        hostInstance.chatEle.querySelector('.welcome-chat-section')?.classList.remove('minimize');
     }
     
     useEffect(() => {
