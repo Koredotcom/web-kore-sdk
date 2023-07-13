@@ -12,16 +12,31 @@ export function ChatWidgetComposeBar(props: any) {
     hostInstance.on('onBrandingUpdate', function (event: any) {
         updateBrandingInfo({...event.brandingData})
     });
-    const handleClick =  (event: any) => {}
 
-    const inputType: any = {
+    const inputTypeObj: any = {
         input: 'compose-bar-wrapper',
         voice: 'compose-bar-wrapper if-voice-compose'
+    }
+
+    const handleVoice =  (event: any) => {
+        if (hostInstance.chatEle.querySelector('.compose-voice-text').style.display == 'none') {
+            hostInstance.chatEle.querySelector('.compose-voice-text').style.display = 'block';
+        }
+        brandingInfo.footer.layout = 'voice';
+        updateBrandingInfo({...brandingInfo})
+    }
+
+    const handleKeyboard = () => {
+        if (hostInstance.chatEle.querySelector('.compose-voice-text').style.display == 'block') {
+            hostInstance.chatEle.querySelector('.compose-voice-text').style.display = 'none';
+        }
+        brandingInfo.footer.layout = 'input';
+        updateBrandingInfo({...brandingInfo})
     }
     return (
         <div className="chat-widget-composebar" aria-label="chat widget compose">
             <div className="voice-speak-msg-info" style="display:none">
-                <div className="voice-msg-bubble">I would like to know my account balance</div>
+                <div className="voice-msg-bubble"></div>
             </div>
             <div className="attachment-wrapper-data" style="display:none">
                 <div className="select-file-block">
@@ -82,7 +97,7 @@ export function ChatWidgetComposeBar(props: any) {
                     </div>
                 </div>
             </div>
-            <div className={inputType[brandingInfo.footer.layout]} aria-label="compose footer">
+            <div className={inputTypeObj[brandingInfo.footer.layout]} aria-label="compose footer">
                 { brandingInfo.footer.buttons.menu.show && <button className="action-btn">
                     <figure>
                         <img src={iconHelper.getIcon('hamberger')} alt="image" />
@@ -104,12 +119,33 @@ export function ChatWidgetComposeBar(props: any) {
                 <div className="compose-voice-text">
                     <button className="voice-compose-btn">
                         <figure>
-                            <img src={iconHelper.getIcon('send')} alt="image" />
+                            <img src={iconHelper.getIcon('microphone')} alt="image" />
                         </figure>
                     </button>
                     <p className="speak-info">Tap microphone to speak</p>
                 </div>
-                { brandingInfo.footer.layout === 'input' && brandingInfo.footer.buttons.microphone.show && <button className="voice-btn">
+                <div className="compose-voice-text-recording">
+                    <button className="voice-compose-btn-recording">
+                        <figure>
+                            <img src={iconHelper.getIcon('speaking')} alt="image" />
+                        </figure>
+                    </button>
+                    <p className="speak-info">Listening. Tap to end</p>
+                </div>
+                <div className="compose-voice-text-end">
+                    <button className="voice-compose-btn-end">
+                        <figure>
+                            <img src={iconHelper.getIcon('send')} alt="image" />
+                        </figure>
+                    </button>
+                    <p className="speak-info">Tap to send</p>
+                </div>
+                { brandingInfo.footer.layout === 'voice' && brandingInfo.footer.buttons.microphone.show && <button className="key-board" onClick={handleKeyboard}>
+                    <figure>
+                        <img src={iconHelper.getIcon('keyboard')} alt="image" />
+                    </figure>
+                </button> }
+                { brandingInfo.footer.layout === 'input' && brandingInfo.footer.buttons.microphone.show && <button className="voice-btn" onClick={handleVoice}>
                     <figure>
                         <img src={iconHelper.getIcon('voice')} alt="image" />
                     </figure>

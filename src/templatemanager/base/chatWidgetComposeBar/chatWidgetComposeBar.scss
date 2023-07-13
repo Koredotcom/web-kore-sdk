@@ -67,7 +67,77 @@
                     right: 0;
                     left: 0;
                     cursor: pointer;
-                    animation: recording 2s infinite ease-in-out;
+                    animation: recording 2s infinite ease-in-out;                    
+                }
+                .speak-info{
+                    font-weight: 400;
+                    font-size: 11px;
+                    line-height: 16px;
+                    color: #697586;
+                    margin-top: 10px;
+                }
+            }
+            .compose-voice-text-recording{
+                width: 100%;
+                text-align: center;
+                position: relative;
+                display: none;
+                animation-name: bubbleAnim;
+                animation-duration: 0.5s;
+                animation-fill-mode: forwards;
+                opacity: 0;
+                .voice-compose-btn-recording{
+                    width: 50px;
+                    height: 50px;
+                    background: #4B4EDE;
+                    border: 2px solid #FFFFFF;
+                    border-radius: 62px;
+                    padding: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0 auto;
+                    position: absolute;
+                    top: -42px;
+                    right: 0;
+                    left: 0;
+                    cursor: pointer;
+                    animation: recording 2s infinite ease-in-out;                    
+                }
+                .speak-info{
+                    font-weight: 400;
+                    font-size: 11px;
+                    line-height: 16px;
+                    color: #697586;
+                    margin-top: 10px;
+                }
+            }
+            .compose-voice-text-end{
+                width: 100%;
+                text-align: center;
+                position: relative;
+                display: none;
+                animation-name: bubbleAnim;
+                animation-duration: 0.5s;
+                animation-fill-mode: forwards;
+                opacity: 0;
+                .voice-compose-btn-end{
+                    width: 50px;
+                    height: 50px;
+                    background: #4B4EDE;
+                    border: 2px solid #FFFFFF;
+                    border-radius: 62px;
+                    padding: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0 auto;
+                    position: absolute;
+                    top: -42px;
+                    right: 0;
+                    left: 0;
+                    cursor: pointer;
+                    animation: recording 2s infinite ease-in-out;                    
                 }
                 .speak-info{
                     font-weight: 400;
@@ -169,6 +239,28 @@
         }
         .compose-voice-text{
             display: none;
+        }
+        .compose-voice-text-recording {
+            display: none;
+        }
+        .compose-voice-text-end {
+            display: none;
+        }
+        .key-board{
+            width: 20px;
+            height: 20px;
+            border: 0;
+            padding: 0;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 12px;
+            margin-left: 8px;
+            flex-shrink: 0;
+            figure{
+                line-height: 0px;
+            }
         }
         .voice-btn{
             width: 20px;

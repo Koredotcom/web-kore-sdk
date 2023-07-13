@@ -1,6 +1,9 @@
 export default IconsManager;
 declare class IconsManager {
     icons: {
+        keyboard: string;
+        speaking: string;
+        microphone: string;
         banner: string;
         avatar_bot: string;
         sc_small: string;
@@ -16,6 +19,9 @@ declare class IconsManager {
         avatar_icon: string;
     };
     getIcons(): {
+        keyboard: string;
+        speaking: string;
+        microphone: string;
         banner: string;
         avatar_bot: string;
         sc_small: string;

@@ -159,7 +159,7 @@ const BrandingJSON = {
         }
     },
     "footer": {
-        "bg_color": "#0D6EFD",
+        "bg_color": "#ffffff",
         "layout": "input",
         "style": "translucent",
         "compose_bar": {

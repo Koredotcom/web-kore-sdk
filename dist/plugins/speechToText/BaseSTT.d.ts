@@ -4,5 +4,6 @@ declare class BaseSTT {
     installSpeechToTextTemplate(): void;
     getSpeechToTextTemplateString(): string;
     bindEvents(): void;
+    bindEventsV3(): void;
 }
 export default BaseSTT;

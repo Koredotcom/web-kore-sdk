@@ -58,22 +58,31 @@ class WebKitSTT extends BaseSTT {
             this.recognition.onstart = function () {
                 this.prevStr = "";
                 me.recognizing = true;
-                $('.recordingMicrophone').css('display', 'block');
-                $('.notRecordingMicrophone').css('display', 'none');
+                if (me.hostInstance.config.UI.version == 'v2') {
+                    $('.recordingMicrophone').css('display', 'block');
+                    $('.notRecordingMicrophone').css('display', 'none');
+                } else {
+                    me.hostInstance.chatEle.querySelector('.compose-voice-text').style.display = 'none';
+                    me.hostInstance.chatEle.querySelector('.compose-voice-text-recording').style.display = 'block';
+                }
             };
 
             this.recognition.onerror = function (event: { error: any; }) {
                 console.log(event.error);
-                // $('.recordingMicrophone').trigger('click');
-                $('.recordingMicrophone').css('display', 'none');
-                $('.notRecordingMicrophone').css('display', 'block');
+                if (me.hostInstance.config.UI.version == 'v2') {
+                    // $('.recordingMicrophone').trigger('click');
+                    $('.recordingMicrophone').css('display', 'none');
+                    $('.notRecordingMicrophone').css('display', 'block');
+                }
             };
 
             this.recognition.onend = function () {
                 me.recognizing = false;
-                $('.recordingMicrophone').trigger('click');
-                $('.recordingMicrophone').css('display', 'none');
-                $('.notRecordingMicrophone').css('display', 'block');
+                if (me.hostInstance.config.UI.version == 'v2') {
+                    $('.recordingMicrophone').trigger('click');
+                    $('.recordingMicrophone').css('display', 'none');
+                    $('.notRecordingMicrophone').css('display', 'block');
+                }
             };
 
             this.recognition.onresult = function (event: { resultIndex: any; results: string | any[]; }) {
@@ -93,13 +102,22 @@ class WebKitSTT extends BaseSTT {
                     this.prevStr += this.final_transcript;
                 }
                 if (me.recognizing) {
-                    $('.chatInputBox').html(this.prevStr + "" + interim_transcript);
-                    $('.sendButton').removeClass('disabled');
+                    if (me.hostInstance.config.UI.version == 'v2') {
+                        $('.chatInputBox').html(this.prevStr + "" + interim_transcript);
+                        $('.sendButton').removeClass('disabled');
+                    } else {
+                        me.hostInstance.chatEle.querySelector('.voice-speak-msg-info').style.display = 'block';
+                        me.hostInstance.chatEle.querySelector('.voice-msg-bubble').textContent = this.prevStr + '' + interim_transcript;
+                    }
                 }
 
                 setTimeout(function () {
-                    me.setCaretEnd(document.getElementsByClassName("chatInputBox"));
-                    document.getElementsByClassName('chatInputBox')[0].scrollTop = document.getElementsByClassName('chatInputBox')[0].scrollHeight;
+                    if (me.hostInstance.config.UI.version == 'v2') {
+                      me.setCaretEnd(document.getElementsByClassName("chatInputBox"));
+                      document.getElementsByClassName('chatInputBox')[0].scrollTop = document.getElementsByClassName('chatInputBox')[0].scrollHeight;
+                    } else {
+                        me.setCaretEnd(me.hostInstance.chatEle.getElementsByClassName('voice-msg-bubble'));
+                    }
                 }, 350);
             };
         }
@@ -167,13 +185,15 @@ class WebKitSTT extends BaseSTT {
     stop() {
         let me = this;
         let $ = me.hostInstance.$;
-        if ($('.chatInputBox').text() !== '' && me.hostInstance.config.autoEnableSpeechAndTTS) {
-            var chatConfig = window.chatContainerConfig;
-            chatConfig.sendMessage($('.chatInputBox'));
+        if (me.hostInstance.config.UI.version == 'v2') {
+            if ($('.chatInputBox').text() !== '' && me.hostInstance.config.autoEnableSpeechAndTTS) {
+                var chatConfig = window.chatContainerConfig;
+                chatConfig.sendMessage($('.chatInputBox'));
+            }
+            // clearInterval(this.intervalKey);
+            $('.recordingMicrophone').css('display', 'none');
+            $('.notRecordingMicrophone').css('display', 'block');
         }
-        // clearInterval(this.intervalKey);
-        $('.recordingMicrophone').css('display', 'none');
-        $('.notRecordingMicrophone').css('display', 'block');
         if (me.recognizing) {
             me.recognition.stop();
             me.recognizing = false;
