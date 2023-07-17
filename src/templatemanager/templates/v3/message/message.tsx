@@ -98,6 +98,8 @@ export function Message(props: any) {
                 }
             </Fragment>
         )
+    } else {
+        return null;
     }
 }
 
