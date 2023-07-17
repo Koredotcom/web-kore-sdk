@@ -55,10 +55,19 @@
     // Chat Widget Footer Variables;
         --chat-widget-footer-bg: var(--v3-sdk-chat-branding--footer-bg-bg_color);
         --chat-widget-compose-bar-bg:rgba(var(--v3-sdk-chat-branding--footer-compose_bar-bg_color), 0.1);
+        --chat-widget-compose-bar-border:rgba(105, 117, 134, 0.05);
         --chat-widget-compose-bar-text-area-bg:#FFFFFF;
         --chat-widget-compose-bar-text-area-border:#E5E5E5;
         --chat-widget-compose-bar-text-area-color:#202939;
         --chat-widget-compose-bar-text-area-placeholder-color:#202939;
+        --chat-widget-compose-bar-voice-speak-info-text:#697586;
+        --chat-widget-compose-bar-voice-icon-bg:#4B4EDE;
+        --chat-widget-compose-bar-voice-icon-border:#FFFFFF;
+        --chat-widget-compose-bar-voice-icon-color:#FFFFFF;
+        --chat-widget-compose-bar-voice-speak-msg-bg:#FFFFFF;
+        --chat-widget-compose-bar-voice-speak-msg-selected-bg:rgba(75, 78, 222, 0.05);
+        --chat-widget-compose-bar-voice-speak-msg-color:#4B4EDE;
+        --chat-widget-compose-bar-voice-speak-msg-border:#4B4EDE;
     // End
 
     // Bot Bubble Messages Variables
@@ -158,10 +167,19 @@
     // Chat Widget Footer Variables;
         --chat-widget-footer-bg: var(--v3-sdk-chat-branding--footer-bg-bg_color);
         --chat-widget-compose-bar-bg: var(--v3-sdk-chat-branding--footer-compose_bar-bg_color);
+        --chat-widget-compose-bar-border:rgba(105, 117, 134, 0.05);
         --chat-widget-compose-bar-text-area-bg:#121926;
         --chat-widget-compose-bar-text-area-border:#364152;
         --chat-widget-compose-bar-text-area-color:#FFFFFF;
         --chat-widget-compose-bar-text-area-placeholder-color:#697586;
+        --chat-widget-compose-bar-voice-speak-info-text:#697586;
+        --chat-widget-compose-bar-voice-icon-bg:#4B4EDE;
+        --chat-widget-compose-bar-voice-icon-border:#FFFFFF;
+        --chat-widget-compose-bar-voice-icon-color:#FFFFFF;
+        --chat-widget-compose-bar-voice-speak-msg-bg:#FFFFFF;
+        --chat-widget-compose-bar-voice-speak-msg-selected-bg:rgba(75, 78, 222, 0.05);
+        --chat-widget-compose-bar-voice-speak-msg-color:#4B4EDE;
+        --chat-widget-compose-bar-voice-speak-msg-border:#4B4EDE;
     // End
 
     // Bot Bubble Messages Variables
@@ -258,10 +276,19 @@
     // Chat Widget Footer Variables;
         --chat-widget-footer-bg:#FFFFFF;
         --chat-widget-compose-bar-bg:rgba(105, 117, 134, 0.1);
+        --chat-widget-compose-bar-border:rgba(105, 117, 134, 0.05);
         --chat-widget-compose-bar-text-area-bg:#FFFFFF;
         --chat-widget-compose-bar-text-area-border:#E5E5E5;
         --chat-widget-compose-bar-text-area-color:#202939;
         --chat-widget-compose-bar-text-area-placeholder-color:#202939;
+        --chat-widget-compose-bar-voice-speak-info-text:#697586;
+        --chat-widget-compose-bar-voice-icon-bg:#4B4EDE;
+        --chat-widget-compose-bar-voice-icon-border:#FFFFFF;
+        --chat-widget-compose-bar-voice-icon-color:#FFFFFF;
+        --chat-widget-compose-bar-voice-speak-msg-bg:#FFFFFF;
+        --chat-widget-compose-bar-voice-speak-msg-selected-bg:rgba(75, 78, 222, 0.05);
+        --chat-widget-compose-bar-voice-speak-msg-color:#4B4EDE;
+        --chat-widget-compose-bar-voice-speak-msg-border:#4B4EDE;
     // End
 
     // Bot Bubble Messages Variables

@@ -120,7 +120,13 @@
             // animation: bounce2 0.8s ease forwards;  
             transition: transform 1s;
             transform-origin: 100% 100%;
-            animation: bounce-in-avatar 0.2s ease forwards;                           
+            animation: bounce-in-avatar 0.2s ease forwards;       
+            .default-avater-icon{
+
+            }   
+            .close-avater-icon{
+                display: none;
+            }
             .un-read-msg {
                 position: absolute;
                 right: 0;
@@ -141,6 +147,14 @@
             }
             .minimize-text{
                 display: none;
+            }
+            &.click-to-rotate-icon{
+                .default-avater-icon{
+                    display: none;
+                }
+                .close-avater-icon{
+                    display: block;
+                }
             }
         }
         &.variation-1 {
@@ -192,12 +206,11 @@
         }
     }
     &.avatar-minimize {
-        display: none;
-        // .avatar-actions {
-        //     .content-info{
-        //         display: none;
-        //     }
-        // }
+        .avatar-actions {
+            .content-info{
+                display: none;
+            }
+        }
     }
     &.avatar-minimize-text{
         .avatar-actions {

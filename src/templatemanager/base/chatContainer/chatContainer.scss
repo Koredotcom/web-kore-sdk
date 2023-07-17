@@ -3,7 +3,7 @@
 
 .chat-window-main-section {
   position: absolute;
-  height: calc(100% - 80px);
+  height: calc(100% - 136px);
   border-radius: 4px;
   right: 40px;
   bottom: 40px;
@@ -11,4 +11,8 @@
   width: 372px;
   transition: 0.2s all ease;
   font-family: "Inter";
+  &.minimize-chat{
+    height: 0px;
+    width: 0px;
+  }
 }

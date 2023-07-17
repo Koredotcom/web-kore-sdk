@@ -39,8 +39,11 @@ export function AvatarComponent(props: any) {
                 </div>
                 <button className="avatar-bg" style={{ background: brandingInfo.chat_bubble.primary_color }}>
                     <span className="un-read-msg">2</span>
-                    <figure>
+                    <figure className="default-avater-icon">
                         <img src={iconHelper.getIcon('avatar_icon')} alt="Elephant at sunset" />
+                    </figure>
+                    <figure className="close-avater-icon rotateIn">
+                        <img src={iconHelper.getIcon('close_chat_avatar')} alt="Elephant at sunset" />
                     </figure>
                     <p className="minimize-text">Minimize Text</p>
                 </button>
