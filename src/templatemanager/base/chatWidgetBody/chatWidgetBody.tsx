@@ -87,7 +87,7 @@ export function ChatWidgetBody() {
                     <p>Hello, its really great to see you here. Tell us just a few details about you and we are just ready to start</p>
                     <button className="link-btn">Fill the form</button>
                 </div>
-            </div> */}
+            </div> */}            
         </div>
     );
 }

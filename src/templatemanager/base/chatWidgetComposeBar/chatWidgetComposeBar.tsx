@@ -161,6 +161,17 @@ export function ChatWidgetComposeBar(props: any) {
                         </figure>
                     </button> }
             </div>
+
+
+            {/* <div className="typing-indicator-wraper">
+                <div className="bot-icon">
+                    <figure>
+                        <img src=""></img>
+                    </figure>
+                </div>
+                <p>Agent typing</p>
+                <div class="dot-flashing"></div>
+            </div> */}
         </div>
     );
 } 

@@ -12,17 +12,21 @@ export function Menu(props: any) {
     });
 
     const closeMenu = () => {
-        hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
+        hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');
+        setTimeout(() => {
+            hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');        
+        }, 150);
     }
 
     return (
-        <div style={{height: '300px'}}>
-            <div style={{display: 'flex'}}>Menu
-                <span className="menu-close" role="contentinfo" aria-label="close" onClick={closeMenu}>
+        <div>
+            <div className="actions-slider-header-menu">
+                <h1>Menu</h1>
+                <button className="menu-close" role="contentinfo" aria-label="close" onClick={closeMenu}>
                     <figure>
                         <img src={iconHelper.getIcon('close_icon')} alt="close" />
                     </figure>
-                </span>
+                </button>
             </div>
             <div class="button-template-container">
                 <div class="button-temp full-width-buttons button-variation-3">
