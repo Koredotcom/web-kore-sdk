@@ -33,13 +33,13 @@ export function WelcomeScreenContainer(props: any) {
     }
     
     useEffect(() => {
-        hostInstance.removeEventListener('.start-conv-button', 'click');
-        hostInstance.addEventListener('.start-conv-button', 'click', (event: any) => {
+        hostInstance.eventManager.removeEventListener('.start-conv-button', 'click');
+        hostInstance.eventManager.addEventListener('.start-conv-button', 'click', (event: any) => {
             handleEventsWelcomeScreen();
         })
 
-        hostInstance.removeEventListener('.search-send', 'click');
-        hostInstance.addEventListener('.search-send', 'click', (event: any) => {
+        hostInstance.eventManager.removeEventListener('.search-send', 'click');
+        hostInstance.eventManager.addEventListener('.search-send', 'click', (event: any) => {
             const inputEle: any = document.querySelector('.start-conv-input');
             if (inputEle.value.trim() === '') {
                 return;
@@ -49,8 +49,8 @@ export function WelcomeScreenContainer(props: any) {
             inputEle.value = '';
         })
 
-        hostInstance.removeEventListener('.start-conv-input', 'keydown');
-        hostInstance.addEventListener('.start-conv-input', 'keydown', (event: any) => {
+        hostInstance.eventManager.removeEventListener('.start-conv-input', 'keydown');
+        hostInstance.eventManager.addEventListener('.start-conv-input', 'keydown', (event: any) => {
             if (event.keyCode == 13) {
                 if (event.target.value.trim() === '') {
                     return;

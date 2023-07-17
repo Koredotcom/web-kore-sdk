@@ -18,6 +18,7 @@ import { Message } from '../../templatemanager/templates/v3/message/message';
 import { DateSeparator } from '../../templatemanager/base/misc/dateSeparator/dateSeparator';
 import { HistoryLoader } from '../../templatemanager/base/misc/historyLoaderMsg/historyLoaderMsg';
 import { ChatContainer } from '../../templatemanager/base/chatContainer/chatContainer';
+import EventManager from '../../templatemanager/base/eventManager';
 import BrandingManager from '../../templatemanager/templates/v3/brandingManager';
 import { ActionsBottomSlider } from '../../templatemanager/base/actionsButtonSlider/actionsBottomSlider';
 
@@ -164,6 +165,7 @@ init  (config:any) {
   me.bot=bot;
   me.vars={};
   me.helpers=KoreHelpers.helpers;
+  me.eventManager = new EventManager(me);
   me.brandingManager = new BrandingManager();
   me.templateManager = new TemplateManager(me);
   me.messageTemplate=new MessageTemplate();
@@ -254,10 +256,9 @@ initShow  (config:any) {
   me.config.botOptions.handleError = me.config.handleError;
   me.config.botOptions.googleMapsAPIKey = me.config.googleMapsAPIKey;
  
-  me.eventMapper = [];
-
   me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
 
+  setTimeout(() => {
   let chatWindowHtml:any;
   if (me.config.UI.version == 'v2') {
     chatWindowHtml = (<any> $(me.getChatTemplate())).tmpl(me.config)
@@ -309,6 +310,7 @@ initShow  (config:any) {
   window.addEventListener('offline', me.updateOnlineStatus.bind(me));
   me.attachEventListener();
   // me.show();
+}, 700);
 };
 
 findSortedIndex  (array:any, value:any) {
@@ -931,7 +933,7 @@ bindEvents  () {
 
 bindEventsV3() {
   const me:any = this;
-  me.addEventListener('.typing-text-area', 'keydown', (event: any) => {
+  me.eventManager.addEventListener('.typing-text-area', 'keydown', (event: any) => {
     if (event.keyCode == 13) {
       if (event.target.value.trim() === '') {
         return;
@@ -945,7 +947,7 @@ bindEventsV3() {
     } 
   })
 
-  me.addEventListener('.send-btn', 'click', (event: any) => {
+  me.eventManager.addEventListener('.send-btn', 'click', (event: any) => {
     const inputEle = me.chatEle.querySelector('.typing-text-area');
     if (inputEle.value.trim() === '') {
       return;
@@ -955,7 +957,7 @@ bindEventsV3() {
     inputEle.value = '';
   })
 
-  me.addEventListener('.avatar-variations-footer', 'click', () => {
+  me.eventManager.addEventListener('.avatar-variations-footer', 'click', () => {
     if (me.config.multiPageApp && me.config.multiPageApp.enable) {
       me.setLocalStoreItem('kr-cw-state', 'open');
     }
@@ -995,12 +997,12 @@ bindEventsV3() {
     }
   })
 
-  me.addEventListener('.btn-action-close', 'click', () => {
+  me.eventManager.addEventListener('.btn-action-close', 'click', () => {
     me.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
     me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
   })
 
-  me.addEventListener('.back-to-chat', 'click', () => {
+  me.eventManager.addEventListener('.back-to-chat', 'click', () => {
     if (me.config.branding.welcome_screen.show) {
       me.chatEle.querySelector('.welcome-chat-section').classList.add('minimize');
       me.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize')
@@ -1034,23 +1036,6 @@ bindEventsV3() {
   }
 
   me.bindSDKEvents();
-}
-
-addEventListener(querySelector: any, event: any, cb: any) {
-  const me: any = this;
-  if (me.eventMapper.filter((el: any) => el.querySelector === querySelector && el.event == event).length) {
-    console.log('An event already registered with the class');
-    return;
-  }
-  me.eventMapper.push({ querySelector, event, cb });
-  me.chatEle.querySelector(querySelector)?.addEventListener(event, cb);
-}
-
-removeEventListener(querySelector: any, event: any) {
-  const me:any = this;
-  const ele = me.eventMapper.filter((el: any) => el.querySelector == querySelector && el.event == event);
-  me.chatEle.querySelector(querySelector)?.removeEventListener(event, ele[0]?.cb);
-  me.eventMapper.splice(me.eventMapper.findIndex((el: any) => el.querySelector == querySelector && el.event == event), 1);
 }
 
 getBotMetaData  () {
@@ -2162,11 +2147,10 @@ bottomSliderAction(action: any, appendElement: any) {
   } else {
     const actionSlider: any = getHTML(ActionsBottomSlider, '', me);
     actionSlider.querySelector('.chat-actions-bottom-wraper > .actions-contnet-data').appendChild(appendElement);
-    const parent = me.chatEle.querySelector('.chat-window-main-section');
-    parent.appendChild(actionSlider);
-    me.chatEle.querySelector('.chat-actions-bottom-wraper').addEventListener('click',() => {
-      me.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
-    })
+    me.chatEle.appendChild(actionSlider);
+    // me.chatEle.querySelector('.chat-actions-bottom-wraper').addEventListener('click',() => {
+    //   me.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
+    // })
   }
 }
 

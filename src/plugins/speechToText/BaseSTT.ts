@@ -69,11 +69,13 @@ class BaseSTT {
         });
 
         chatEle.querySelector('.voice-compose-btn-end').addEventListener('click', () => {
-            me.hostInstance.sendMessageToBot(chatEle.querySelector(".voice-msg-bubble").textContent);
-            chatEle.querySelector(".voice-msg-bubble").textContent = '';
-            me.hostInstance.chatEle.querySelector('.voice-speak-msg-info').style.display = 'none';
-            chatEle.querySelector('.compose-voice-text-end').style.display = 'none';
-            chatEle.querySelector('.compose-voice-text').style.display = 'block';
+            if (chatEle.querySelector(".voice-msg-bubble").textContent.trim() !== '') {
+                me.hostInstance.sendMessageToBot(chatEle.querySelector(".voice-msg-bubble").textContent);
+                chatEle.querySelector(".voice-msg-bubble").textContent = '';
+                chatEle.querySelector('.voice-speak-msg-info').style.display = 'none';
+                chatEle.querySelector('.compose-voice-text-end').style.display = 'none';
+                chatEle.querySelector('.compose-voice-text').style.display = 'block';
+            }
         });
     }
 }

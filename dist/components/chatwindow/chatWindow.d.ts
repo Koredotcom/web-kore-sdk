@@ -149,8 +149,6 @@ declare class chatWindow extends EventEmitter {
     sendMessageWithWithChatInput(chatInput: any): void;
     bindEvents(): void;
     bindEventsV3(): void;
-    addEventListener(querySelector: any, event: any, cb: any): void;
-    removeEventListener(querySelector: any, event: any): void;
     getBotMetaData(): void;
     sendWebhookOnConnectEvent(): void;
     bindSDKEvents(): void;

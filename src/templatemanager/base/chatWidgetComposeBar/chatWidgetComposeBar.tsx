@@ -1,9 +1,11 @@
 
 
+import { getHTML } from '../domManager';
 import IconsManager from '../iconsManager';
 import './chatWidgetComposeBar.scss';
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
+import { Menu } from '../../base/menu/menu';
 
 export function ChatWidgetComposeBar(props: any) {
     const hostInstance = props.hostInstance;
@@ -19,19 +21,22 @@ export function ChatWidgetComposeBar(props: any) {
     }
 
     const handleVoice =  (event: any) => {
-        if (hostInstance.chatEle.querySelector('.compose-voice-text').style.display == 'none') {
-            hostInstance.chatEle.querySelector('.compose-voice-text').style.display = 'block';
-        }
+        hostInstance.chatEle.querySelector('.compose-voice-text').style.display = 'block';
         brandingInfo.footer.layout = 'voice';
         updateBrandingInfo({...brandingInfo})
     }
 
     const handleKeyboard = () => {
-        if (hostInstance.chatEle.querySelector('.compose-voice-text').style.display == 'block') {
-            hostInstance.chatEle.querySelector('.compose-voice-text').style.display = 'none';
-        }
+        hostInstance.chatEle.querySelector('.compose-voice-text').style.display = 'none';
+        hostInstance.chatEle.querySelector('.voice-speak-msg-info').style.display = 'none';
+        hostInstance.chatEle.querySelector('.compose-voice-text-end').style.display = 'none';
+        hostInstance.chatEle.querySelector('.compose-voice-text-recording').style.display = 'none';
         brandingInfo.footer.layout = 'input';
         updateBrandingInfo({...brandingInfo})
+    }
+
+    const handleHamberger = () => {
+        hostInstance.bottomSliderAction('', getHTML(Menu, '', hostInstance)) 
     }
     return (
         <div className="chat-widget-composebar" aria-label="chat widget compose">
@@ -99,7 +104,7 @@ export function ChatWidgetComposeBar(props: any) {
             </div>
             <div className={inputTypeObj[brandingInfo.footer.layout]} aria-label="compose footer">
                 { brandingInfo.footer.buttons.menu.show && <button className="action-btn">
-                    <figure>
+                    <figure className="hamberger-menu" onClick={handleHamberger}>
                         <img src={iconHelper.getIcon('hamberger')} alt="image" />
                     </figure>
                 </button> }
