@@ -40,6 +40,12 @@
     background-color: var(--sdk-chat-window-btn-hover-bg);
 }
 
+.kore-chat-window .buttonTmplContent .buttonTmplContentHeading img{
+    max-width: 100%;
+    height: auto;
+    padding-top: 5px;
+}
+
 [dir="rtl"].kore-chat-window .buttonTmplContent .buttonTmplContentBox{
     float:right;
 }
