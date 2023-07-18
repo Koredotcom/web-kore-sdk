@@ -19,8 +19,8 @@ export function ChatContainer(props: any) {
     });
 
     const themeType: any = {
-        light: 'chat-window-main-section light-theme',
-        dark: 'chat-window-main-section dark-theme'
+        light: 'chat-window-main-section minimize-chat light-theme',
+        dark: 'chat-window-main-section minimize-chat dark-theme'
     }
 
     return (

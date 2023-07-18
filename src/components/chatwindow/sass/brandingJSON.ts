@@ -5,7 +5,7 @@ const BrandingJSON = {
         "themeType": "light"
     },
     "chat_bubble": {
-        "style": "rectangle",
+        "style": "rounded",
         "icon": {
             "icon_url": "url2",
             "size": "medium",
@@ -19,8 +19,8 @@ const BrandingJSON = {
         "alignment": "block",
         "animation": "slide",
         "expand_animation": "quick",
-        "primary_color": "#00fff0",
-        "secondary_color": "#ff0000"
+        "primary_color": "#4B4EDE",
+        "secondary_color": "#4B4EDE"
     },
     "welcome_screen": {
         "show": true,
@@ -29,23 +29,23 @@ const BrandingJSON = {
             "logo_url": "/images/sc-small.svg"
         },
         "title": {
-            "name": "kore.ai",
+            "name": "Hello",
             "color": "#ffffff"
         },
         "sub_title": {
-            "name": "Welcome to VA",
+            "name": "Welcome to Kore.ai",
             "color": "#ffffff"
         },
         "note": {
-            "name": "Your personal assistant",
+            "name": "Our Community is ready to help you to join our best platform",
             "color": "#ffffff"
         },
         "background": {"color": "#4B4EDE"},
         "top_fonts": {
-            "color": "#00ff00"
+            "color": "#ffffff"
         },
         "bottom_background": {
-            "color": "#D6EFD"
+            "color": "#4B4EDE"
         },
         "templates": [],
         "starter_box": {
@@ -53,17 +53,17 @@ const BrandingJSON = {
             "icon": {
                 "show": true
             },
-            "title": "Kore.AI",
-            "sub_text": "Your personal assistant",
+            "title": "Start New Conversation",
+            "sub_text": "I'm your personal assistant I'm here to help",
             "start_conv_button": {
-                "color": "#0000ff"
+                "color": "#4B4EDE"
             },
             "start_conv_text": {
-                "color": "#00ff00"
+                "color": "#ffffff"
             },
             "quick_start_buttons": {
                 "show": true,
-                "style": "stack",
+                "style": "slack",
                 "buttons": [{
                     "title": "Contact Sales",
                     "action": {
@@ -72,21 +72,35 @@ const BrandingJSON = {
                     }
                 },
                 {
-                    "title": "Contact us",
+                    "title": "Free Trail",
                     "action": {
                         "type": "postback",
                         "value": "qqqw"
                     }
                 },
                 {
-                    "title": "Products",
+                    "title": "Support",
+                    "action": {
+                        "type": "postback",
+                        "value": "qqqw"
+                    }
+                },
+                {
+                    "title": "Hours of Operation",
+                    "action": {
+                        "type": "postback",
+                        "value": "qqqw"
+                    }
+                },
+                {
+                    "title": "Just checking",
                     "action": {
                         "type": "postback",
                         "value": "qqqw"
                     }
                 }
                 ],
-                "input": "search",
+                "input": "button",
                 "action": {
                     "type": "postback|url",
                     "value": "http://abc.comrf"
@@ -107,8 +121,8 @@ const BrandingJSON = {
         }
     },
     "header": {
-        "bg_color": "#0D6EFD",
-        "size": "large",
+        "bg_color": "#ffffff",
+        "size": "compact",
         "style": "translucent",
         "icon": {
             "show": true,
@@ -116,12 +130,12 @@ const BrandingJSON = {
             "color": "#ffffff"
         },
         "title": {
-            "name": "kore.ai",
-            "color": "#0D6EFD"
+            "name": "Bot",
+            "color": "#000000"
         },
         "sub_title": {
-            "name": "your personal assistant",
-            "color": "#0D6EFD"
+            "name": "Your personal assistant",
+            "color": "#000000"
         },
         "buttons": {
             "close": {
@@ -141,7 +155,7 @@ const BrandingJSON = {
                 "icon": "url|icomoon"
             },
             "help": {
-                "show": "true|false",
+                "show": true,
                 "action": {
                     "type": "postback|url",
                     "value": "http://abc.coms",
@@ -159,13 +173,13 @@ const BrandingJSON = {
         }
     },
     "footer": {
-        "bg_color": "#ffffff",
+        "bg_color": "#EEF2F6",
         "layout": "input",
         "style": "translucent",
         "compose_bar": {
             "bg_color": "#000000",
             "outline-color": "#0D6EFD",
-            "placeholder": "Type Here ....ssss"
+            "placeholder": "Type Here..."
         },
         "buttons": {
             "menu": {
@@ -211,12 +225,12 @@ const BrandingJSON = {
             "style": "1|2|3"
         },
         "user_message": {
-            "bg_color": "#ff0000",
+            "bg_color": "#4B4EDE",
             "color": "#ffffff"
         },
         "bot_message": {
-            "bg_color": "#00ff00",
-            "color": "#0000ff"
+            "bg_color": "#EEF2F6",
+            "color": "#000000"
         },
         "agent_message": {
             "bg_color": "#0D6EFD",
@@ -237,9 +251,9 @@ const BrandingJSON = {
         },
         "time_stamp": {
             "show": true,
-            "show_type": "hover",
-            "position": "bottom",
-            "separator": "rounded",
+            "show_type": "always",
+            "position": "top",
+            "separator": "line",
             "color": ""
         },
         "icon": {

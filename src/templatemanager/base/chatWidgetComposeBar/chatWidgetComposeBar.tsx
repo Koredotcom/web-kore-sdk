@@ -145,7 +145,7 @@ export function ChatWidgetComposeBar(props: any) {
                     </button>
                     <p className="speak-info">Tap to send</p>
                 </div>
-                { brandingInfo.footer.layout === 'voice' && brandingInfo.footer.buttons.microphone.show && <button className="key-board" onClick={handleKeyboard}>
+                { brandingInfo.footer.layout === 'voice' && <button className="key-board" onClick={handleKeyboard}>
                     <figure>
                         <img src={iconHelper.getIcon('keyboard')} alt="image" />
                     </figure>
@@ -163,15 +163,15 @@ export function ChatWidgetComposeBar(props: any) {
             </div>
 
 
-            {/* <div className="typing-indicator-wraper">
+            <div className="typing-indicator-wraper">
                 <div className="bot-icon">
                     <figure>
                         <img src=""></img>
                     </figure>
                 </div>
-                <p>Agent typing</p>
+                <p>Typing</p>
                 <div class="dot-flashing"></div>
-            </div> */}
+            </div>
         </div>
     );
 } 

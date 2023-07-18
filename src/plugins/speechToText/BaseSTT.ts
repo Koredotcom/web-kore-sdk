@@ -57,6 +57,9 @@ class BaseSTT {
             }
             chatEle.querySelector('.compose-voice-text').style.display = 'none';
             chatEle.querySelector('.compose-voice-text-recording').style.display = 'block';
+            chatEle.querySelectorAll('.action-btn')[0].style.display = 'none';
+            chatEle.querySelectorAll('.action-btn')[1].style.display = 'none';
+            chatEle.querySelector('.key-board').style.display = 'none';
         });
 
         chatEle.querySelector('.voice-compose-btn-recording').addEventListener('click', () => {
@@ -66,15 +69,20 @@ class BaseSTT {
             }, 350);
             chatEle.querySelector('.compose-voice-text-recording').style.display = 'none';
             chatEle.querySelector('.compose-voice-text-end').style.display = 'block';
+            chatEle.querySelector('.voice-msg-bubble').classList.add('speak-done-bg');
         });
 
         chatEle.querySelector('.voice-compose-btn-end').addEventListener('click', () => {
-            if (chatEle.querySelector(".voice-msg-bubble").textContent.trim() !== '') {
+            if (chatEle.querySelector('.voice-msg-bubble').textContent.trim() !== '') {
+                chatEle.querySelector('.voice-msg-bubble').classList.remove('speak-done-bg');
                 me.hostInstance.sendMessageToBot(chatEle.querySelector(".voice-msg-bubble").textContent);
-                chatEle.querySelector(".voice-msg-bubble").textContent = '';
+                chatEle.querySelector('.voice-msg-bubble').textContent = '';
                 chatEle.querySelector('.voice-speak-msg-info').style.display = 'none';
                 chatEle.querySelector('.compose-voice-text-end').style.display = 'none';
                 chatEle.querySelector('.compose-voice-text').style.display = 'block';
+                chatEle.querySelectorAll('.action-btn')[0].style.display = 'block';
+                chatEle.querySelectorAll('.action-btn')[1].style.display = 'flex';
+                chatEle.querySelector('.key-board').style.display = 'block';
             }
         });
     }

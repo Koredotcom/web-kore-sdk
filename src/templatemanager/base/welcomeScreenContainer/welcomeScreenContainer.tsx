@@ -135,11 +135,6 @@ export function WelcomeScreenContainer(props: any) {
                             <img src={iconHelper.getIcon('banner')} alt="log-img" />
                         </figure>
                     </a>
-                    <a href="#" target="_blank" className="banner-img" aria-label="Hdfc pramotional banner">
-                        <figure>
-                            <img src={iconHelper.getIcon('banner')} alt="log-img" />
-                        </figure>
-                    </a>
                 </article> }
             </div>        
             <footer>

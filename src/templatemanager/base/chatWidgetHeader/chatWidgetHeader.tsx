@@ -2,7 +2,7 @@
 
 import './chatWidgetHeader.scss';
 import { h } from 'preact';
-import { useState } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
 import IconsManager from '../iconsManager';
 
 export function ChatWidgetHeader(props: any) {
@@ -18,6 +18,25 @@ export function ChatWidgetHeader(props: any) {
         "regular": "chat-widget-header regular",
         "large": "chat-widget-header large "
     }
+
+    useEffect(() => {
+        hostInstance.eventManager.addEventListener('.btn-action-close', 'click', () => {
+            hostInstance.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
+            hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
+            hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+            hostInstance.chatEle.classList.add('minimize-chat');
+        })
+
+        hostInstance.eventManager.addEventListener('.back-to-chat', 'click', () => {
+            if (hostInstance.config.branding.welcome_screen.show) {
+                hostInstance.chatEle.querySelector('.welcome-chat-section').classList.add('minimize');
+                hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize')
+            } else {
+                hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
+            }
+            hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+        })
+    })
 
     return (
         <div className={hSizeObj[brandingInfo.header.size]} aria-label="chat widget header">
@@ -38,18 +57,18 @@ export function ChatWidgetHeader(props: any) {
                 </div>
             </div>
             <div className="actions-info">
-                <button className="btn-action">
+               { brandingInfo.header.buttons.help.show && <button className="btn-action">
                     {/* <figure>
                             <img src="/images/help.svg" alt="back button" />
                         </figure> */}
                     <i className="sdkv3-help"></i>
-                </button>
-                <button className="btn-action">
+                </button> }
+                { brandingInfo.header.buttons.live_agent.show && <button className="btn-action">
                     {/* <figure>
                             <img src="/images/support.svg" alt="back button" />
                         </figure> */}
                     <i className="sdkv3-support"></i>
-                </button>
+                </button> }
                 { brandingInfo.header.buttons.close.show && <button className="btn-action btn-action-close">
                     <figure>
                             <img src={iconHelper.getIcon('close_large')} alt="back button" />

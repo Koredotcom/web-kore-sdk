@@ -17,6 +17,7 @@ declare class IconsManager {
         kore_logo: string;
         close_icon: string;
         avatar_icon: string;
+        close_chat_avatar: string;
     };
     getIcons(): {
         keyboard: string;
@@ -35,6 +36,7 @@ declare class IconsManager {
         kore_logo: string;
         close_icon: string;
         avatar_icon: string;
+        close_chat_avatar: string;
     };
     getIcon(icon: any): any;
 }

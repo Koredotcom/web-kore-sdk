@@ -19,6 +19,12 @@ export function AvatarComponent(props: any) {
         "rectangle": "avatar-actions variation-2",
         "square": "avatar-actions variation-3"
     }
+
+    const closeHelp = (e: any) => {
+        e?.stopPropagation();
+        hostInstance.chatEle.querySelector('.content-info').remove();
+    }
+
     return (
         <div className="avatar-variations-footer" aria-label="avatar footer">
             <div className={aShape[brandingInfo.chat_bubble.style]} aria-label="avatar actions">
@@ -26,7 +32,7 @@ export function AvatarComponent(props: any) {
                     <div className="text-content animation-slide-up" role="contentinfo" aria-labelledby="helojohn">
                         <h4 id="helojohn">Hello {hostInstance.config.botOptions.userIdentity}</h4>
                         <p className="help-text-content">Welcome to support</p>
-                        <span className="close-avatar-content" role="contentinfo" aria-label="close">
+                        <span className="close-avatar-content" role="contentinfo" aria-label="close" onClick={closeHelp}>
                             <figure>
                                 <img src={iconHelper.getIcon('close_icon')} alt="close" />
                             </figure>

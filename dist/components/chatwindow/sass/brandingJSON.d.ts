@@ -128,7 +128,7 @@ declare const BrandingJSON: {
                 icon: string;
             };
             help: {
-                show: string;
+                show: boolean;
                 action: {
                     type: string;
                     value: string;

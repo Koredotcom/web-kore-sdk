@@ -44,12 +44,12 @@ export function Message(props: any) {
                                 msgData.type === 'bot_response' ? (
                                     msgItem.component && msgItem.component.type === 'error' ? ('') : (<div className="bot-bubble-comp" id={msgData.messageId}>
                                         <div className={botStyle}>
-                                            <div className="top-info">
+                                            { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
                                                 <div className="you-text">Kore.ai Bot</div>
-                                                { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="time-tamp">
-                                                    <time>{helpers.formatDate(msgData.createdOn)}</time>
-                                                </div> }
-                                            </div>
+                                                <div className="time-tamp">
+                                                    <time>{helpers.formatAMPMDay(msgData.createdOn)}</time>
+                                                </div> 
+                                            </div> }
                                             <div className="bubble-msg-with-img">
                                                 <div className="bubble-msg">{msgItem.cInfo.body}</div>
                                                 <div className="bot-img">
@@ -62,18 +62,19 @@ export function Message(props: any) {
                                                 </div>
                                             </div>
                                             { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
-                                                <div className="time-tamp"><time>{helpers.formatDate(msgData.createdOn)}</time></div>
+                                                <div className="you-text">Kore.ai Bot</div>
+                                                <div className="time-tamp"><time>{helpers.formatAMPMDay(msgData.createdOn)}</time></div>
                                             </div> }
                                         </div>
                                     </div>)) : (
                                     <div className="agent-bubble-comp" id={msgData.messageId}>
                                         <div className={userStyle}>
-                                            <div className="top-info">
-                                                    { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="time-tamp">
-                                                        <time>{helpers.formatDate(msgData.createdOn)}</time>
-                                                    </div> }
-                                                <div className="you-text">You</div>
-                                            </div>
+                                            { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
+                                                    <div className="time-tamp">
+                                                        <time>{helpers.formatAMPMDay(msgData.createdOn)}</time>
+                                                    </div>
+                                                    <div className="you-text">You</div>
+                                            </div> }
                                             <div className="bubble-msg-with-img">
                                                 <div className="bubble-msg">{msgItem.cInfo.renderMsg && msgItem.cInfo.renderMsg !== '' ? msgItem.cInfo.renderMsg : msgItem.cInfo.body}
                                                 </div>
@@ -87,7 +88,8 @@ export function Message(props: any) {
                                                 </div>
                                             </div>
                                                 { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
-                                                    <div className="time-tamp"><time>{helpers.formatDate(msgData.createdOn)}</time></div>
+                                                    <div className="time-tamp"><time>{helpers.formatAMPMDay(msgData.createdOn)}</time></div>
+                                                    <div className="you-text">You</div>
                                                     {/* <div className="read-text">Read <i className="sdkv3-read-status"></i></div> */}
                                                 </div> }
                                         </div>
