@@ -28,7 +28,7 @@ export function WelcomeScreenContainer(props: any) {
     }
 
     const handleEventsWelcomeScreen = () => {
-        hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container')?.classList.add('minimize');
+        hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container')?.classList.add('slideInRight');
         hostInstance.chatEle.querySelector('.welcome-chat-section')?.classList.remove('minimize');
     }
     

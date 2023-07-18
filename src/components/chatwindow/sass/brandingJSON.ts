@@ -177,9 +177,9 @@ const BrandingJSON = {
         "layout": "input",
         "style": "translucent",
         "compose_bar": {
-            "bg_color": "#000000",
-            "outline-color": "#0D6EFD",
-            "placeholder": "Type Here..."
+            "bg_color": "#fffffe",
+            "outline-color": "#E5E5E5",
+            "placeholder": "Type a message"
         },
         "buttons": {
             "menu": {
@@ -208,7 +208,7 @@ const BrandingJSON = {
                 "icon": "url|icomoon"
             },
             "attachment": {
-                "show": true,
+                "show": false,
                 "icon": "url|icomoon"
             }
         }

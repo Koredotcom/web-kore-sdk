@@ -135,7 +135,7 @@ export function ChatWidgetComposeBar(props: any) {
                             <img src={iconHelper.getIcon('speaking')} alt="image" />
                         </figure>
                     </button>
-                    <p className="speak-info">Listening. Tap to end</p>
+                    <p className="speak-info">Listening... Tap to end</p>
                 </div>
                 <div className="compose-voice-text-end">
                     <button className="voice-compose-btn-end">

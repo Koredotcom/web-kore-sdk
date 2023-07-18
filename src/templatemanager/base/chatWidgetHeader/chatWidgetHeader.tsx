@@ -22,8 +22,12 @@ export function ChatWidgetHeader(props: any) {
     useEffect(() => {
         hostInstance.eventManager.addEventListener('.btn-action-close', 'click', () => {
             hostInstance.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
-            hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
-            hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+            hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize');
+            if (hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('slideInRight')) {
+              hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('slideInRight');
+            } else {
+                hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+            }
             hostInstance.chatEle.classList.add('minimize-chat');
         })
 
@@ -34,9 +38,13 @@ export function ChatWidgetHeader(props: any) {
             } else {
                 hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
             }
-            hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+            if (hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('slideInRight')) {
+                hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('slideInRight');
+            } else {
+                hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+            }
         })
-    })
+    }, [])
 
     return (
         <div className={hSizeObj[brandingInfo.header.size]} aria-label="chat widget header">

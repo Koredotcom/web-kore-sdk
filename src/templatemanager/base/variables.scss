@@ -53,11 +53,11 @@
     // End
 
     // Chat Widget Footer Variables;
-        --chat-widget-footer-bg: var(--v3-sdk-chat-branding--footer-bg-bg_color);
-        --chat-widget-compose-bar-bg:rgba(var(--v3-sdk-chat-branding--footer-compose_bar-bg_color), 0.1);
+        --chat-widget-footer-bg: #FFFFFF;
+        --chat-widget-compose-bar-bg: var(--v3-sdk-chat-branding--footer-bg-bg_color);
         --chat-widget-compose-bar-border:rgba(105, 117, 134, 0.05);
-        --chat-widget-compose-bar-text-area-bg:#FFFFFF;
-        --chat-widget-compose-bar-text-area-border:#E5E5E5;
+        --chat-widget-compose-bar-text-area-bg: var(--v3-sdk-chat-branding--footer-compose_bar-bg_color);
+        --chat-widget-compose-bar-text-area-border: var(--v3-sdk-chat-branding--footer-compose_bar-outline-color)   //#E5E5E5;
         --chat-widget-compose-bar-text-area-color:#202939;
         --chat-widget-compose-bar-text-area-placeholder-color:#202939;
         --chat-widget-compose-bar-voice-speak-info-text:#697586;
@@ -165,11 +165,11 @@
     // End
 
     // Chat Widget Footer Variables;
-        --chat-widget-footer-bg: var(--v3-sdk-chat-branding--footer-bg-bg_color);
-        --chat-widget-compose-bar-bg: var(--v3-sdk-chat-branding--footer-compose_bar-bg_color);
+        --chat-widget-footer-bg: #202939;
+        --chat-widget-compose-bar-bg: var(--v3-sdk-chat-branding--footer-bg-bg_color);
         --chat-widget-compose-bar-border:rgba(105, 117, 134, 0.05);
-        --chat-widget-compose-bar-text-area-bg:#121926;
-        --chat-widget-compose-bar-text-area-border:#364152;
+        --chat-widget-compose-bar-text-area-bg: var(--v3-sdk-chat-branding--footer-compose_bar-bg_color);
+        --chat-widget-compose-bar-text-area-border: var(--v3-sdk-chat-branding--footer-compose_bar-outline-color)  // #364152;
         --chat-widget-compose-bar-text-area-color:#FFFFFF;
         --chat-widget-compose-bar-text-area-placeholder-color:#697586;
         --chat-widget-compose-bar-voice-speak-info-text:#697586;

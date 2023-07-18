@@ -58,7 +58,9 @@ class BaseSTT {
             chatEle.querySelector('.compose-voice-text').style.display = 'none';
             chatEle.querySelector('.compose-voice-text-recording').style.display = 'block';
             chatEle.querySelectorAll('.action-btn')[0].style.display = 'none';
-            chatEle.querySelectorAll('.action-btn')[1].style.display = 'none';
+            if (this.hostInstance.config.branding.footer.buttons.attachment.show) {
+              chatEle.querySelectorAll('.action-btn')[1].style.display = 'none';
+            }
             chatEle.querySelector('.key-board').style.display = 'none';
         });
 
@@ -81,7 +83,9 @@ class BaseSTT {
                 chatEle.querySelector('.compose-voice-text-end').style.display = 'none';
                 chatEle.querySelector('.compose-voice-text').style.display = 'block';
                 chatEle.querySelectorAll('.action-btn')[0].style.display = 'block';
-                chatEle.querySelectorAll('.action-btn')[1].style.display = 'flex';
+                if (this.hostInstance.config.branding.footer.buttons.attachment.show) {
+                  chatEle.querySelectorAll('.action-btn')[1].style.display = 'flex';
+                }
                 chatEle.querySelector('.key-board').style.display = 'block';
             }
         });
