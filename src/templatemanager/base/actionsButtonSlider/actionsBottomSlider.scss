@@ -13,19 +13,38 @@
     flex-direction: column;
     justify-content: flex-end; 
     transition: 0.3s all ease-in-out;
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+    -webkit-animation-duration: 0.5s;
+    animation-duration: 0.5s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    display: flex;
     &.close-bottom-slide{
-        animation-name: closeBottomToTopAnim;
-        animation-duration: 1s;
-        animation-fill-mode: forwards;
+        -webkit-animation-name: fadeOut;
+        animation-name: fadeOut;
+        -webkit-animation-duration: 0.5s;
+        animation-duration: 0.5s;
+        -webkit-animation-fill-mode: both;
+        animation-fill-mode: both;
+        .actions-contnet-data{
+            -webkit-animation-name: fadeInDown;
+            animation-name: fadeInDown;
+            -webkit-animation-duration: 1s;
+            animation-duration: 1s;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+        }
     }
     .actions-contnet-data{
         max-height: 75%;
         width: 100%;
-        // overflow: auto;
-        animation-name: slideBottomToTopAnim;
+        -webkit-animation-name: fadeInUp;
+        animation-name: fadeInUp;
+        -webkit-animation-duration: 1s;
         animation-duration: 1s;
-        animation-fill-mode: forwards;
-        opacity: 0;
+        -webkit-animation-fill-mode: both;
+        animation-fill-mode: both;
         background: #FFFFFF;
         border-radius: 4px 4px 0px 0px;
     }

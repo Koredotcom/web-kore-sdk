@@ -71,11 +71,11 @@ export function Message(props: any) {
                                     <div className="agent-bubble-comp if-animation-bubble" id={msgData.messageId}>
                                         <div className={userStyle}>
                                             { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">                                                    
+                                                    <span className="copied-text">Copied</span>
                                                     <div className="time-tamp">
                                                         <time>{helpers.formatAMPMDay(msgData.createdOn)}</time>
                                                     </div>
-                                                    <div className="you-text">You</div>
-                                                    <span className="copied-text">Copied</span>
+                                                    <div className="you-text">You</div>                                                    
                                             </div> }
                                             <div className="bubble-msg-with-img">
                                                 <div className="bubble-msg">{msgItem.cInfo.renderMsg && msgItem.cInfo.renderMsg !== '' ? msgItem.cInfo.renderMsg : msgItem.cInfo.body}
