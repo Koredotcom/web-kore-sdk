@@ -158,7 +158,7 @@ declare const BrandingJSON: {
             menu: {
                 show: boolean;
                 icon: string;
-                action: {
+                actions: {
                     title: string;
                     type: string;
                     value: string;

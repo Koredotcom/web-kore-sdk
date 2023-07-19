@@ -4,12 +4,20 @@ import BaseChatTemplate from '../baseChatTemplate';
 import './button.scss';
 import { h, Fragment } from 'preact';
 import { useState } from 'preact/hooks';
-import MessageTemplate, { Message } from '../message/message';
+import { Message } from '../message/message';
 export function Button(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
     const handleButtonEvent = (e: any) => {
-        hostInstance.sendMessageToBot(e);
+        if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
+            hostInstance.sendMessage(e.payload || e.value, { renderMsg: e.title });
+        } else if (e.type == 'url' || e.type == 'web_url') {
+            let link = e.url;
+            if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
+                link = `http:////${link}`;
+            }
+            hostInstance.openExternalLink(link);
+        }
     }
     const messageobj = {
         msgData: msgData,
@@ -24,7 +32,7 @@ export function Button(props: any) {
                         <div className="button-temp button-variation-2">
                             {
                                 msgData.message[0].component.payload.buttons.map((ele: any) => (
-                                    <button className="kr-btn" onClick={() => handleButtonEvent(ele.title)}>{ele.title}
+                                    <button className="kr-btn" onClick={() => handleButtonEvent(ele)}>{ele.title}
                                     </button>
                                 ))
                             }

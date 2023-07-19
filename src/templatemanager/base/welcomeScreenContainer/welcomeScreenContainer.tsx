@@ -23,8 +23,18 @@ export function WelcomeScreenContainer(props: any) {
     }
 
     const handleStartEvent = (e: any) => {
-        hostInstance.sendMessageToBot(e);
-        handleEventsWelcomeScreen();
+        if (e.action.type.toLowerCase() == 'postback' || e.action.type.toLowerCase() == 'text') {
+            setTimeout(() => {
+                hostInstance.sendMessage(e.action.value, { renderMsg: e.title });
+            }, 1800);
+            handleEventsWelcomeScreen();
+        } else if (e.action.type == 'url' || e.action.type == 'web_url') {
+            let link = e.action.value;
+            if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
+                link = `http:////${link}`;
+            }
+            hostInstance.openExternalLink(link);
+        }
     }
 
     const handleEventsWelcomeScreen = () => {
@@ -45,8 +55,10 @@ export function WelcomeScreenContainer(props: any) {
                 return;
             }
             handleEventsWelcomeScreen();
-            hostInstance.sendMessageToBot(inputEle.value);
-            inputEle.value = '';
+            setTimeout(() => {
+                hostInstance.sendMessageToBot(inputEle.value);
+                inputEle.value = '';
+            });
         })
 
         hostInstance.eventManager.removeEventListener('.start-conv-input', 'keydown');
@@ -60,8 +72,10 @@ export function WelcomeScreenContainer(props: any) {
                 }
                 handleEventsWelcomeScreen();
                 event.preventDefault();
-                hostInstance.sendMessageToBot(event.target.value);
-                event.target.value = '';
+                setTimeout(() => {
+                    hostInstance.sendMessageToBot(event.target.value);
+                    event.target.value = '';
+                }, 2000)
             }
         })
     }, []);
@@ -100,7 +114,7 @@ export function WelcomeScreenContainer(props: any) {
                         <div className={startButtonsLayout[brandingInfo.welcome_screen.starter_box.quick_start_buttons.style]}>
                             {
                                 brandingInfo.welcome_screen.starter_box.quick_start_buttons.buttons.map((ele: any) => (
-                                    <button className="quick-start-btn" onClick={() => handleStartEvent(ele.title)}>
+                                    <button className="quick-start-btn" onClick={() => handleStartEvent(ele)}>
                                         {/* <span className="emoji-symbol">&#128512;</span> */}
                                         <span>{ele.title}</span>
                                         {/* <img className="new-item" src="https://hbchat.senseforth.com/HDFC_Chat/assets/new.png" /> */}

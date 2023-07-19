@@ -36,6 +36,7 @@ export function ChatWidgetHeader(props: any) {
                 hostInstance.chatEle.querySelector('.welcome-chat-section').classList.add('minimize');
                 hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize')
             } else {
+                hostInstance.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
                 hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
             }
             if (hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {

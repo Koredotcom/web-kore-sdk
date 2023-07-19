@@ -67,36 +67,36 @@ const BrandingJSON = {
                 "buttons": [{
                     "title": "Contact Sales",
                     "action": {
-                        "type": "postback|url",
-                        "value": "http://abc.com"
+                        "type": "postback",
+                        "value": "Contact Sales"
                     }
                 },
                 {
                     "title": "Free Trail",
                     "action": {
                         "type": "postback",
-                        "value": "qqqw"
+                        "value": "Free Trail"
                     }
                 },
                 {
                     "title": "Support",
                     "action": {
                         "type": "postback",
-                        "value": "qqqw"
+                        "value": "Support"
                     }
                 },
                 {
                     "title": "Hours of Operation",
                     "action": {
                         "type": "postback",
-                        "value": "qqqw"
+                        "value": "Hours of Operation"
                     }
                 },
                 {
-                    "title": "Just checking",
+                    "title": "Kore.ai",
                     "action": {
-                        "type": "postback",
-                        "value": "qqqw"
+                        "type": "url",
+                        "value": "https://kore.ai/"
                     }
                 }
                 ],
@@ -185,16 +185,22 @@ const BrandingJSON = {
             "menu": {
                 "show": true,
                 "icon": "url|icomoon",
-                "action": [{
+                "actions": [{
                     "title": "Get Balance",
-                    "type": "postback|url",
-                    "value": "http://abc.com|getbalance",
+                    "type": "postback",
+                    "value": "Get Balance",
                     "icon": "url|icomoon"
                 },
                 {
                     "title": "Get Transactions",
-                    "type": "postback|url",
-                    "value": "http://abc.com|gettransacations",
+                    "type": "postback",
+                    "value": "Get Transactions",
+                    "icon": "url|icomoon"
+                },
+                {
+                    "title": "Kore.ai",
+                    "type": "url",
+                    "value": "https://kore.ai/",
                     "icon": "url|icomoon"
                 }
                 ]

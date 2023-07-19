@@ -34,6 +34,20 @@ export function Message(props: any) {
       userStyle = userStyle + ' time-stamp-show-hover';
     }
 
+    const onCopy = (event: any, value: any) => {
+        var dummy = document.createElement('textarea');
+        document.body.appendChild(dummy);
+        dummy.value = JSON.stringify(value);
+        dummy.select();
+        document.execCommand('copy');
+        document.body.removeChild(dummy);
+        console.log('event: ', event);
+        // event.target.innerText = 'Copied!'
+        setTimeout(() => {
+            // event.target.innerText = ''
+        }, 500);
+    }
+
     if (msgData.message) {
         return (
             <Fragment>
@@ -49,7 +63,7 @@ export function Message(props: any) {
                                                 <div className="time-tamp">
                                                     <time>{helpers.formatAMPMDay(msgData.createdOn)}</time>
                                                 </div>      
-                                                <span className="copied-text">Copied</span>                                           
+                                                {/* <span className="copied-text">Copied</span>                                            */}
                                             </div> }
                                             <div className="bubble-msg-with-img">
                                                 <div className="bubble-msg">{msgItem.cInfo.body}</div>
@@ -58,7 +72,7 @@ export function Message(props: any) {
                                                         <img src={iconHelper.getIcon('avatar_bot')} alt='avatr img' />
                                                     </figure>
                                                 </div>
-                                                <div className="copy-bubble">
+                                                <div className="copy-bubble" onClick={ () => onCopy(event, msgItem.cInfo.body)}>
                                                     <i className="sdkv3-copy"></i>
                                                 </div>
                                             </div>
@@ -71,7 +85,7 @@ export function Message(props: any) {
                                     <div className="agent-bubble-comp if-animation-bubble" id={msgData.messageId}>
                                         <div className={userStyle}>
                                             { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">                                                    
-                                                    <span className="copied-text">Copied</span>
+                                                    {/* <span className="copied-text">Copied</span> */}
                                                     <div className="time-tamp">
                                                         <time>{helpers.formatAMPMDay(msgData.createdOn)}</time>
                                                     </div>
@@ -85,7 +99,7 @@ export function Message(props: any) {
                                                         <img src="/images/avatar-bot.svg" alt='avatr img' />
                                                     </figure>
                                                 </div>
-                                                <div className="copy-bubble">
+                                                <div className="copy-bubble" onClick={ () => onCopy(event, msgItem.cInfo.renderMsg && msgItem.cInfo.renderMsg !== '' ? msgItem.cInfo.renderMsg : msgItem.cInfo.body)}>
                                                     <i className="sdkv3-copy"></i>
                                                 </div>
                                             </div>

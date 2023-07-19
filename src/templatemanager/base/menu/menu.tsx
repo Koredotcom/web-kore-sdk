@@ -18,6 +18,19 @@ export function Menu(props: any) {
         }, 150);
     }
 
+    const handleButtonEvent = (e: any) => {
+        if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
+            hostInstance.sendMessage(e.value, { renderMsg: e.title });
+            closeMenu();
+        } else if (e.type == 'url' || e.type == 'web_url') {
+            let link = e.value;
+            if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
+                link = `http:////${link}`;
+            }
+            hostInstance.openExternalLink(link);
+        }
+    }
+
     return (
         <div>
             <div className="actions-slider-header-menu">
@@ -30,9 +43,23 @@ export function Menu(props: any) {
             </div>
             <div class="button-template-container">
                 <div class="button-temp full-width-buttons button-variation-3">
-                    <button class="kr-btn"><span>Contact Sales</span></button>
-                    <button class="kr-btn"><span>Contact us</span></button>
-                    <button class="kr-btn"><span>Products</span></button>
+                    <button class="kr-btn" onClick={() => handleButtonEvent({
+                        "title": "Get Balance",
+                        "type": "postback",
+                        "value": "Get Balance",
+                        "icon": "url|icomoon"
+                    })}><span>Get Balance</span></button>
+                    <button class="kr-btn" onClick={() => handleButtonEvent({
+                        "title": "Kore.ai",
+                        "type": "url",
+                        "value": "https://kore.ai/",
+                        "icon": "url|icomoon"
+                    })}><span>Kore.ai</span></button>
+                    {
+                        brandingInfo.footer.buttons.menu.actions.map((ele: any) => {
+                            <button class="kr-btn" onClick={() => handleButtonEvent(ele)}><span>{}</span></button>
+                        })
+                    }
                 </div>
             </div>
         </div>

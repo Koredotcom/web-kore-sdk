@@ -88,6 +88,7 @@ class WebKitSTT extends BaseSTT {
             this.recognition.onresult = function (event: { resultIndex: any; results: string | any[]; }) {
                 this.final_transcript = '';
                 var interim_transcript = '';
+                console.log('result: ', event.results);
                 for (var i = event.resultIndex; i < event.results.length; ++i) {
                     if (event.results[i].isFinal) {
                         this.final_transcript += event.results[i][0].transcript;

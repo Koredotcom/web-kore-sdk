@@ -89,6 +89,30 @@ class BaseSTT {
                 chatEle.querySelector('.key-board').style.display = 'block';
             }
         });
+
+        chatEle.querySelector('.cancel-sepak').addEventListener('click', () => {
+            me.stop();
+            chatEle.querySelector('.voice-msg-bubble').textContent = '';
+            chatEle.querySelector('.voice-speak-msg-info').style.display = 'none';
+            chatEle.querySelector('.compose-voice-text-recording').style.display = 'none';
+            chatEle.querySelector('.compose-voice-text').style.display = 'block';
+            chatEle.querySelectorAll('.action-btn')[0].style.display = 'block';
+            if (this.hostInstance.config.branding.footer.buttons.attachment.show) {
+                chatEle.querySelectorAll('.action-btn')[1].style.display = 'flex';
+            }
+            chatEle.querySelector('.key-board').style.display = 'block';
+        });
+
+        chatEle.querySelector('.remove-voice-text').addEventListener('click', () => {
+            if (!me.recognizing) {
+                chatEle.querySelector('.voice-msg-bubble').classList.remove('speak-done-bg');
+                chatEle.querySelector('.compose-voice-text-end').style.display = 'none';
+                chatEle.querySelector('.compose-voice-text-recording').style.display = 'block';
+                me.onRecordButtonClick();
+            }
+            chatEle.querySelector('.voice-msg-bubble').textContent = '';
+            chatEle.querySelector('.voice-speak-msg-info').style.display = 'none';
+        });
     }
 }
 export default BaseSTT;
