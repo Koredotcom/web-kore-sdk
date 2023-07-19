@@ -8,6 +8,56 @@ export function ChatWidgetBody() {
     return (
         <div className="chat-widget-body-wrapper" aria-label="chat widget body">
             <div className="prev-message-list"></div>
+            <section className="card-template-wrapper" aria-label="card template sdk">
+                <div className="card-warpper-info">
+                    <h1>Policies</h1>
+                    <button className="card-content-sec">
+                        <div className="top-sec-card">
+                            <h1>1043693</h1>
+                            <span className="tag-name">Active</span>
+                        </div>
+                        <div className="middle-sec-card">
+                            <p>Auto</p>
+                        </div>
+                        <div className="bottom-sec-card">
+                            <h2>Expiration</h2>
+                            <p>
+                                <time>Oct-25-2023</time>
+                            </p>
+                        </div>
+                    </button>
+                    <button className="card-content-sec">
+                        <div className="top-sec-card">
+                            <h1>1043693</h1>
+                            <span className="tag-name">Active</span>
+                        </div>
+                        <div className="middle-sec-card">
+                            <p>Auto</p>
+                        </div>
+                        <div className="bottom-sec-card">
+                            <h2>Expiration</h2>
+                            <p>
+                                <time>Oct-25-2023</time>
+                            </p>
+                        </div>
+                    </button>
+                    <button className="card-content-sec">
+                        <div className="top-sec-card">
+                            <h1>1043693</h1>
+                            <span className="tag-name">Active</span>
+                        </div>
+                        <div className="middle-sec-card">
+                            <p>Auto</p>
+                        </div>
+                        <div className="bottom-sec-card">
+                            <h2>Expiration</h2>
+                            <p>
+                                <time>Oct-25-2023</time>
+                            </p>
+                        </div>
+                    </button>
+                </div>
+            </section>
             {/* <div className="agent-bubble-comp">
                 <div className="agent-bubble-content">
                     <div className="top-info">
