@@ -5,10 +5,12 @@
     justify-content: flex-end;
     padding: 0px 16px;
     margin: 12px 0;
-    animation-name: bubbleAnim;
-    animation-duration: 0.8s;
-    animation-fill-mode: forwards;
-    opacity: 0;
+    &.if-animation-bubble{
+        animation-name: bubbleAnim;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+        opacity: 0;
+    }
     .agent-bubble-content{
         display: flex;
         flex-wrap: wrap;
@@ -151,7 +153,6 @@
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
-                margin-right: 4px;
                 color: var(--agent-bubble-text-color);
             }
             .you-text{
@@ -159,6 +160,9 @@
                 font-size: 12px;
                 line-height: 15px;
                 color: var(--agent-bubble-text-color);
+            }
+            .copied-text{
+                @extend .you-text;
             }
         }
         .bubble-msg-with-img{
@@ -215,12 +219,12 @@
         .bottom-info{
             display: flex;
             align-items: center;
+            gap: 4px;
             .time-tamp{
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
                 color: var(--agent-bubble-text-color);
-                margin-right: 4px;
             }
             .you-text{
                 font-weight: 600;
@@ -252,10 +256,12 @@
     justify-content: flex-start;
     padding: 0px 16px;
     margin: 12px 0;
-    animation-name: bubbleAnim;
-    animation-duration: 0.8s;
-    animation-fill-mode: forwards;
-    opacity: 0;
+    &.if-animation-bubble{
+        animation-name: bubbleAnim;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+        opacity: 0;
+    }
     .bot-bubble-content{
         display: flex;
         flex-wrap: wrap;
@@ -388,11 +394,11 @@
         .top-info{
             display: flex;
             align-items: center;
+            gap: 4px;
             .time-tamp{
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
-                margin-left: 4px;
                 color: var(--bot-bubble-text-color);
             }
             .you-text{
@@ -400,6 +406,9 @@
                 font-size: 12px;
                 line-height: 15px;
                 color: var(--bot-bubble-text-color);
+            }
+            .copied-text{
+                @extend .you-text;
             }
         }
         .bubble-msg-with-img{
@@ -459,6 +468,7 @@
         .bottom-info{
             display: flex;
             align-items: center;
+            gap: 4px;
             .time-tamp{
                 font-weight: 400;
                 font-size: 12px;
@@ -469,7 +479,6 @@
                 font-weight: 600;
                 font-size: 12px;
                 line-height: 15px;
-                margin-right: 4px;
                 color: var(--bot-bubble-text-color);
             }
             .read-text{

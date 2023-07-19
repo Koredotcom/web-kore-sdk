@@ -11,6 +11,23 @@
         text-align: right;
         padding: 10px 16px 0px 16px;
         display: block;
+        position: relative;
+        .remove-voice-text{
+            position: absolute;
+            top: 4px;
+            right: 8px;
+            width: 16px;
+            height: 16px;
+            background: #FFFFFF;
+            border: 1px solid #E4E5E7;
+            border-radius: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 10px;
+            z-index: 1;
+        }
         .voice-msg-bubble{
             display: inline-block;
             border: 1px solid var(--chat-widget-compose-bar-voice-speak-msg-border);
@@ -82,16 +99,35 @@
             }
             .compose-voice-text-recording{
                 @extend .compose-voice-text;
-                animation: none !important;
                 opacity: 1 !important;
+                -webkit-animation-name: zoomIn;
+                animation-name: zoomIn !important;
+                -webkit-animation-duration: 1s;
+                animation-duration: 1s;
+                -webkit-animation-fill-mode: both;
+                animation-fill-mode: both;
                 .voice-compose-btn-recording{
                     @extend .voice-compose-btn;
                     animation: recording 2s infinite ease-in-out;
-                }                
+                    .speak-info{
+                        margin-top: 15px;
+                    }
+                }           
+                .cancel-sepak{
+                    background: transparent;
+                    border: 0;
+                    padding: 2px 8px;
+                    color: var(--bot-colors-intent, #4B4EDE);
+                    text-align: center;
+                    font-size: 11px;
+                    font-weight: 600;
+                    line-height: 16px;
+                    margin-top: 4px;
+                }     
             }
             .compose-voice-text-end{
                 @extend .compose-voice-text;
-                animation: none !important;
+                // animation: none !important;
                 opacity: 1 !important;
                 .voice-compose-btn-end{
                     @extend .voice-compose-btn;
@@ -368,7 +404,8 @@
     position: absolute;
     top: -28px;
     left: 0;
-    width: 100%;
+    width: auto;
+    min-width: 120px;
     display: none;
     align-items: center;
     gap: 20px;
@@ -384,11 +421,11 @@
     }
     .dot-flashing {
         position: relative;
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
         border-radius: 5px;
-        background-color: #9AA4B2;
-        color: #9AA4B2;
+        background-color: #697586;
+        color: #697586;
         animation: dot-flashing 1s infinite linear alternate;
         animation-delay: 0.5s;
         &::before{
@@ -397,11 +434,11 @@
             position: absolute;
             top: 0;
             left: -15px;
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 5px;
-            background-color: #9AA4B2;
-            color: #9AA4B2;
+            background-color: #697586;
+            color: #697586;
             animation: dot-flashing 1s infinite alternate;
             animation-delay: 0s;
         }
@@ -411,22 +448,13 @@
             position: absolute;
             top: 0;
             left: 15px;
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 5px;
-            background-color: #9AA4B2;
-            color: #9AA4B2;
+            background-color: #697586;
+            color: #697586;
             animation: dot-flashing 1s infinite alternate;
             animation-delay: 1s;
         }
     }
 }
-  
-  @keyframes dot-flashing {
-    0% {
-      background-color: #9AA4B2;
-    }
-    50%, 100% {
-      opacity: 0.5;
-    }
-  }

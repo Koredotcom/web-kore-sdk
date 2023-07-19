@@ -41,6 +41,9 @@ export function ChatWidgetComposeBar(props: any) {
     return (
         <div className="chat-widget-composebar" aria-label="chat widget compose">
             <div className="voice-speak-msg-info" style="display:none">
+                <button className="remove-voice-text">
+                    <i className="sdkv3-close"></i>
+                </button>
                 <div className="voice-msg-bubble"></div>
             </div>
             <div className="attachment-wrapper-data" style="display:none">
@@ -129,13 +132,14 @@ export function ChatWidgetComposeBar(props: any) {
                     </button>
                     <p className="speak-info">Tap microphone to speak</p>
                 </div>
-                <div className="compose-voice-text-recording">
+                <div className="compose-voice-text-recording zoomIn">
                     <button className="voice-compose-btn-recording">
                         <figure>
                             <img src={iconHelper.getIcon('speaking')} alt="image" />
                         </figure>
                     </button>
                     <p className="speak-info">Listening... Tap to end</p>
+                    <button className="cancel-sepak">Cancel</button>
                 </div>
                 <div className="compose-voice-text-end">
                     <button className="voice-compose-btn-end">

@@ -42,13 +42,14 @@ export function Message(props: any) {
                         if (msgItem.cInfo && msgItem.type === 'text') {
                             return (
                                 msgData.type === 'bot_response' ? (
-                                    msgItem.component && msgItem.component.type === 'error' ? ('') : (<div className="bot-bubble-comp" id={msgData.messageId}>
+                                    msgItem.component && msgItem.component.type === 'error' ? ('') : (<div className="bot-bubble-comp if-animation-bubble" id={msgData.messageId}>
                                         <div className={botStyle}>
-                                            { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
+                                            { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">                                                
                                                 <div className="you-text">Kore.ai Bot</div>
                                                 <div className="time-tamp">
                                                     <time>{helpers.formatAMPMDay(msgData.createdOn)}</time>
-                                                </div> 
+                                                </div>      
+                                                <span className="copied-text">Copied</span>                                           
                                             </div> }
                                             <div className="bubble-msg-with-img">
                                                 <div className="bubble-msg">{msgItem.cInfo.body}</div>
@@ -67,13 +68,14 @@ export function Message(props: any) {
                                             </div> }
                                         </div>
                                     </div>)) : (
-                                    <div className="agent-bubble-comp" id={msgData.messageId}>
+                                    <div className="agent-bubble-comp if-animation-bubble" id={msgData.messageId}>
                                         <div className={userStyle}>
-                                            { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
+                                            { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">                                                    
                                                     <div className="time-tamp">
                                                         <time>{helpers.formatAMPMDay(msgData.createdOn)}</time>
                                                     </div>
                                                     <div className="you-text">You</div>
+                                                    <span className="copied-text">Copied</span>
                                             </div> }
                                             <div className="bubble-msg-with-img">
                                                 <div className="bubble-msg">{msgItem.cInfo.renderMsg && msgItem.cInfo.renderMsg !== '' ? msgItem.cInfo.renderMsg : msgItem.cInfo.body}
