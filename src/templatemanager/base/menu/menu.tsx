@@ -43,22 +43,10 @@ export function Menu(props: any) {
             </div>
             <div class="button-template-container">
                 <div class="button-temp full-width-buttons button-variation-3">
-                    <button class="kr-btn" onClick={() => handleButtonEvent({
-                        "title": "Get Balance",
-                        "type": "postback",
-                        "value": "Get Balance",
-                        "icon": "url|icomoon"
-                    })}><span>Get Balance</span></button>
-                    <button class="kr-btn" onClick={() => handleButtonEvent({
-                        "title": "Kore.ai",
-                        "type": "url",
-                        "value": "https://kore.ai/",
-                        "icon": "url|icomoon"
-                    })}><span>Kore.ai</span></button>
                     {
-                        brandingInfo.footer.buttons.menu.actions.map((ele: any) => {
-                            <button class="kr-btn" onClick={() => handleButtonEvent(ele)}><span>{}</span></button>
-                        })
+                        brandingInfo.footer.buttons.menu.actions.map((ele: any) => (
+                            <button class="kr-btn" onClick={() => handleButtonEvent(ele)}><span>{ ele.title }</span></button>
+                        ))
                     }
                 </div>
             </div>

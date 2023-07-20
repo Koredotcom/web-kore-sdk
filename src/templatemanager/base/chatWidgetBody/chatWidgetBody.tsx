@@ -8,7 +8,7 @@ export function ChatWidgetBody() {
     return (
         <div className="chat-widget-body-wrapper" aria-label="chat widget body">
             <div className="prev-message-list"></div>
-            <section className="card-template-wrapper" aria-label="card template sdk">
+            {/* <section className="card-template-wrapper" aria-label="card template sdk">
                 <div className="card-warpper-info">
                     <h1>Policies</h1>
                     <button className="card-content-sec">
@@ -57,7 +57,7 @@ export function ChatWidgetBody() {
                         </div>
                     </button>
                 </div>
-            </section>
+            </section> */}
             {/* <div className="agent-bubble-comp">
                 <div className="agent-bubble-content">
                     <div className="top-info">

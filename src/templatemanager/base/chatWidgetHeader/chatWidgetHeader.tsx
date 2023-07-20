@@ -20,6 +20,7 @@ export function ChatWidgetHeader(props: any) {
     }
 
     useEffect(() => {
+        hostInstance.eventManager.removeEventListener('.btn-action-close', 'click');
         hostInstance.eventManager.addEventListener('.btn-action-close', 'click', () => {
             hostInstance.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
             hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize');
@@ -31,6 +32,7 @@ export function ChatWidgetHeader(props: any) {
             hostInstance.chatEle.classList.add('minimize-chat');
         })
 
+        hostInstance.eventManager.removeEventListener('.back-to-chat', 'click');
         hostInstance.eventManager.addEventListener('.back-to-chat', 'click', () => {
             if (hostInstance.config.branding.welcome_screen.show) {
                 hostInstance.chatEle.querySelector('.welcome-chat-section').classList.add('minimize');
@@ -45,7 +47,7 @@ export function ChatWidgetHeader(props: any) {
                 hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
             }
         })
-    }, [])
+    })
 
     return (
         <div className={hSizeObj[brandingInfo.header.size]} aria-label="chat widget header">

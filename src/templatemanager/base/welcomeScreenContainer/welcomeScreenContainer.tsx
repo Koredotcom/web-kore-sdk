@@ -24,9 +24,10 @@ export function WelcomeScreenContainer(props: any) {
 
     const handleStartEvent = (e: any) => {
         if (e.action.type.toLowerCase() == 'postback' || e.action.type.toLowerCase() == 'text') {
+            const timeout = hostInstance.historyLoading ? 2200 : 200
             setTimeout(() => {
                 hostInstance.sendMessage(e.action.value, { renderMsg: e.title });
-            }, 1800);
+            }, timeout);
             handleEventsWelcomeScreen();
         } else if (e.action.type == 'url' || e.action.type == 'web_url') {
             let link = e.action.value;
@@ -55,10 +56,11 @@ export function WelcomeScreenContainer(props: any) {
                 return;
             }
             handleEventsWelcomeScreen();
+            const timeout = hostInstance.historyLoading ? 2200 : 200
             setTimeout(() => {
                 hostInstance.sendMessageToBot(inputEle.value);
                 inputEle.value = '';
-            });
+            }, timeout);
         })
 
         hostInstance.eventManager.removeEventListener('.start-conv-input', 'keydown');
@@ -72,13 +74,14 @@ export function WelcomeScreenContainer(props: any) {
                 }
                 handleEventsWelcomeScreen();
                 event.preventDefault();
+                const timeout = hostInstance.historyLoading ? 2200 : 200
                 setTimeout(() => {
                     hostInstance.sendMessageToBot(event.target.value);
                     event.target.value = '';
-                }, 2000)
+                }, timeout)
             }
         })
-    }, []);
+    });
     
     return (
         <div className="welcome-chat-section" aria-label="welcome message screen">

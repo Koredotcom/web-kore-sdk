@@ -1634,7 +1634,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
         scrollTop: _chatContainer.prop('scrollHeight'),
       }, 100);
     } else {
-      scrollHeight = (me.historyLoading || eleHeight < 500) ? me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight : scrollHeight < 700 ? scrollHeight - 400 : scrollHeight - 250;
+      scrollHeight = (me.historyLoading || eleHeight < 300) ? me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight : scrollHeight - me.chatEle.querySelector('.chat-widget-body-wrapper').clientHeight/2;
       me.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
         top: scrollHeight,
         behavior: 'smooth'
@@ -1983,7 +1983,7 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
               }
               if (messagesQueue.length) {
                 messagesQueue.forEach((msg: any, currIndex: number) => {
-                  me.renderMessage(msg);
+                      me.renderMessage(msg);
                   if (messagesQueue.length - 1 === currIndex) {
                     messagesQueue = [];
                     me.historyLoadingComplete();

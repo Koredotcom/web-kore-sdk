@@ -65,13 +65,15 @@ class BaseSTT {
         });
 
         chatEle.querySelector('.voice-compose-btn-recording').addEventListener('click', () => {
-            me.stop();
-            setTimeout(function () {
-                me.setCaretEnd(chatEle.getElementsByClassName('voice-msg-bubble'));
-            }, 350);
-            chatEle.querySelector('.compose-voice-text-recording').style.display = 'none';
-            chatEle.querySelector('.compose-voice-text-end').style.display = 'block';
-            chatEle.querySelector('.voice-msg-bubble').classList.add('speak-done-bg');
+            if (chatEle.querySelector('.voice-msg-bubble').textContent.trim() !== '') {
+                me.stop();
+                setTimeout(function () {
+                    me.setCaretEnd(chatEle.getElementsByClassName('voice-msg-bubble'));
+                }, 350);
+                chatEle.querySelector('.compose-voice-text-recording').style.display = 'none';
+                chatEle.querySelector('.compose-voice-text-end').style.display = 'block';
+                chatEle.querySelector('.voice-msg-bubble').classList.add('speak-done-bg');
+            }
         });
 
         chatEle.querySelector('.voice-compose-btn-end').addEventListener('click', () => {
@@ -104,14 +106,23 @@ class BaseSTT {
         });
 
         chatEle.querySelector('.remove-voice-text').addEventListener('click', () => {
-            if (!me.recognizing) {
+            chatEle.querySelector('.voice-msg-bubble').textContent = '';
+            chatEle.querySelector('.voice-speak-msg-info').style.display = 'none';
+            if (me.recognizing) {
+                me.stop();
+                chatEle.querySelector('.compose-voice-text-recording').style.display = 'none';
+                chatEle.querySelector('.compose-voice-text').style.display = 'block';
+                chatEle.querySelectorAll('.action-btn')[0].style.display = 'block';
+                if (this.hostInstance.config.branding.footer.buttons.attachment.show) {
+                    chatEle.querySelectorAll('.action-btn')[1].style.display = 'flex';
+                }
+                chatEle.querySelector('.key-board').style.display = 'block';
+            } else {
                 chatEle.querySelector('.voice-msg-bubble').classList.remove('speak-done-bg');
                 chatEle.querySelector('.compose-voice-text-end').style.display = 'none';
                 chatEle.querySelector('.compose-voice-text-recording').style.display = 'block';
                 me.onRecordButtonClick();
             }
-            chatEle.querySelector('.voice-msg-bubble').textContent = '';
-            chatEle.querySelector('.voice-speak-msg-info').style.display = 'none';
         });
     }
 }

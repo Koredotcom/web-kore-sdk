@@ -42,10 +42,12 @@ export function Message(props: any) {
         document.execCommand('copy');
         document.body.removeChild(dummy);
         console.log('event: ', event);
-        // event.target.innerText = 'Copied!'
+        event.target.classList.remove('sdkv3-copy');
+        event.target.classList.add('sdkv3-check');
         setTimeout(() => {
-            // event.target.innerText = ''
-        }, 500);
+            event.target.classList.remove('sdkv3-check');
+            event.target.classList.add('sdkv3-copy');
+        }, 800);
     }
 
     if (msgData.message) {
