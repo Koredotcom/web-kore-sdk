@@ -104,6 +104,19 @@
 
 // End
 
+// Voice show animation
+
+@keyframes voiceShowAnim {
+  0% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0%);
+  }
+}
+
 // Left to right template animations
 
 @keyframes left-to-right-slide-anim {

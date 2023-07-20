@@ -48,6 +48,59 @@ export function card(props: any) {
                                 ))
                             }
                         </div>
+                    </section>                    
+                </div>
+            </Fragment>
+        );
+    }
+    else if(msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.type === 'details'){
+        return(
+            <Fragment>
+                <div>
+                    <section className="card-template-wrapper-view-more-details" aria-label="card template sdk">
+                        <button className="card-content-sec">
+                            <div className="top-sec-card">
+                                <h1>1043003</h1>
+                                <span className="tag-name">Active</span>
+                            </div>
+                            <div className="middle-sec-card">
+                                <p>Auto</p>
+                            </div>
+                            <div className="bottom-sec-card">
+                                <h2>Premium amount</h2>
+                                <p>$588</p>
+                            </div>
+                            <div className="middle-sec-card">
+                                <p>Amount Due for next 7/12 monthly installments</p>
+                                <span className="amount-text">$343</span>
+                            </div>
+                            <div className="border-divider"></div>
+                            <div className="bottom-sec-card">
+                                <h2>6th Installment: <span>Due</span></h2>
+                            </div>
+                            <div className="more-sec-card">
+                                <h2>Payment Amount</h2>
+                                <p>$49</p>
+                            </div>
+                            <div className="more-sec-card">
+                                <h2>Payment due date</h2>
+                                <p>Apr/25/2023</p>
+                            </div>
+                            <div className="border-divider"></div>
+                            <div className="middle-sec-card">
+                                <p>Effective</p>
+                                <span className="amount-text">Oct/26/2023</span>
+                            </div>
+                            <div className="middle-sec-card">
+                                <p>Expiration</p>
+                                <span className="amount-text">Oct/25/2023</span>
+                            </div>
+                            <div className="middle-sec-card">
+                                <p>Vehicles</p>
+                                <span className="clickble-text">Tesla Cybertruck, BMW M3 (+1)</span>
+                            </div>
+                            <button className="view-more-btn">View more</button>
+                        </button>
                     </section>
                 </div>
             </Fragment>

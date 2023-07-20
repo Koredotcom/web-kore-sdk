@@ -12,6 +12,7 @@
         padding: 10px 16px 0px 16px;
         display: block;
         position: relative;
+        margin-bottom: 40px;
         .remove-voice-text{
             position: absolute;
             top: 4px;
@@ -58,7 +59,6 @@
         &.if-voice-compose{
             align-items: center;
             padding: 13px 16px;
-            margin-top: 36px;
             .compose-text-area{
                 display: none;
             }
@@ -67,7 +67,7 @@
                 text-align: center;
                 position: relative;
                 display: block;
-                animation-name: bubbleAnim;
+                animation-name: voiceShowAnim;
                 animation-duration: 0.5s;
                 animation-fill-mode: forwards;
                 opacity: 0;
@@ -127,7 +127,10 @@
             }
             .compose-voice-text-end{
                 @extend .compose-voice-text;
-                // animation: none !important;
+                animation-name: bubbleAnim;
+                animation-duration: 0.5s;
+                animation-fill-mode: forwards;
+                opacity: 0;
                 opacity: 1 !important;
                 .voice-compose-btn-end{
                     @extend .voice-compose-btn;
