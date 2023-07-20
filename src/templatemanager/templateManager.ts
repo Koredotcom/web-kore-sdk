@@ -21,6 +21,7 @@ import CardTemplate from './templates/cardTemplate/cardTemplate';
 import MessageTemplate from './templates/v3/message/message';
 import DigitalFormTemplate from './templates/v3/digitalForm/digitalForm';
 import TemplateButton from './templates/v3/button/button';
+import cardTemplate from './templates/v3/cardTemplate/cardTemplate';
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
 //(function($){
@@ -75,7 +76,8 @@ class TemplateManager {
 		// this.installTemplate(new MessageTemplate());
 		this.installTemplate(new DigitalFormTemplate());
 		this.installTemplate(new TemplateButton());
-		}
+		this.installTemplate(new cardTemplate());
+	}
 
 	renderMessage  (msgData: any) {
 		var messageHtml = '';
