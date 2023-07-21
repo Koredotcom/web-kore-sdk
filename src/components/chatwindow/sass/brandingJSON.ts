@@ -174,7 +174,7 @@ const BrandingJSON = {
     },
     "footer": {
         "bg_color": "#EEF2F6",
-        "layout": "input",
+        "layout": "keypad",
         "style": "translucent",
         "compose_bar": {
             "bg_color": "#fffffe",
@@ -268,7 +268,7 @@ const BrandingJSON = {
             "bot_icon": true,
             "agent_icon": true
         },
-        "bubble_style": "rounded",
+        "bubble_style": "balloon",
         "primaryColor": "#3f42d4",
         "primaryHoverColor": "#de4bbc",
         "secondaryColor": "#3639e6",

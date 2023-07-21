@@ -14,8 +14,8 @@ export function WelcomeScreenContainer(props: any) {
     });
     const wsLayout: any = {
         "regular": 'welcome-header',
-        "medium": 'welcome-header variation-1',
-        "large": 'welcome-header variation-2'
+        "large": 'welcome-header variation-1',
+        "medium": 'welcome-header variation-2'
     };
     const startButtonsLayout: any = {
         "slack": "quick-start-buttons-container",

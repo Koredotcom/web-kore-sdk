@@ -16,7 +16,7 @@ export function ChatWidgetComposeBar(props: any) {
     });
 
     const inputTypeObj: any = {
-        input: 'compose-bar-wrapper',
+        keypad: 'compose-bar-wrapper',
         voice: 'compose-bar-wrapper if-voice-compose'
     }
 
@@ -31,7 +31,7 @@ export function ChatWidgetComposeBar(props: any) {
         hostInstance.chatEle.querySelector('.voice-speak-msg-info').style.display = 'none';
         hostInstance.chatEle.querySelector('.compose-voice-text-end').style.display = 'none';
         hostInstance.chatEle.querySelector('.compose-voice-text-recording').style.display = 'none';
-        brandingInfo.footer.layout = 'input';
+        brandingInfo.footer.layout = 'keypad';
         updateBrandingInfo({...brandingInfo})
     }
 
@@ -154,12 +154,12 @@ export function ChatWidgetComposeBar(props: any) {
                         <img src={iconHelper.getIcon('keyboard')} alt="image" />
                     </figure>
                 </button> }
-                { brandingInfo.footer.layout === 'input' && brandingInfo.footer.buttons.microphone.show && <button className="voice-btn" onClick={handleVoice}>
+                { brandingInfo.footer.layout === 'keypad' && brandingInfo.footer.buttons.microphone.show && <button className="voice-btn" onClick={handleVoice}>
                     <figure>
                         <img src={iconHelper.getIcon('voice')} alt="image" />
                     </figure>
                 </button> }
-                { brandingInfo.footer.layout === 'input' && <button className="send-btn">
+                { brandingInfo.footer.layout === 'keypad' && <button className="send-btn">
                         <figure>
                             <img src={iconHelper.getIcon('send')} alt="image" />
                         </figure>

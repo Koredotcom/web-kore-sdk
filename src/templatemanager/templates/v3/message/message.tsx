@@ -15,15 +15,15 @@ export function Message(props: any) {
     });
     const helpers = KoreHelpers.helpers;
     const cbStyle: any = {
-        rounded: 'bot-bubble-content hover-show-copy',
-        balloon: 'bot-bubble-content chat-bubble-style-1 hover-show-copy',
-        rectange: 'bot-bubble-content chat-bubble-style-2 hover-show-copy'
+        balloon: 'bot-bubble-content hover-show-copy',
+        rounded: 'bot-bubble-content chat-bubble-style-1 hover-show-copy',
+        rectangle: 'bot-bubble-content chat-bubble-style-2 hover-show-copy'
     }
 
     const ubStyle: any = {
-        rounded: 'agent-bubble-content hover-show-copy',
-        balloon: 'agent-bubble-content chat-bubble-style-1 hover-show-copy',
-        rectange: 'agent-bubble-content chat-bubble-style-2 hover-show-copy'
+        balloon: 'agent-bubble-content hover-show-copy',
+        rounded: 'agent-bubble-content chat-bubble-style-1 hover-show-copy',
+        rectangle: 'agent-bubble-content chat-bubble-style-2 hover-show-copy'
     }
 
     let botStyle = cbStyle[brandingInfo.body.bubble_style]
