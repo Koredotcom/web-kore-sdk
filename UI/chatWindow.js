@@ -4123,6 +4123,7 @@
             }*/
             window.onbeforeunload = function () {
                 if (chatInitialize && $(chatInitialize.config.chatContainer).length > 0) {
+                    chatInitialize.stopSpeaking();
                     chatInitialize.destroy();
                     //return null;
                 }
