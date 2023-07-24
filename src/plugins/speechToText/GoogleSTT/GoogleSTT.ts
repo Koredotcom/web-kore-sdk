@@ -1,6 +1,7 @@
 import BaseSTT from "../BaseSTT";
 
-import korejquery from '../../../libs/korejquery';
+//import korejquery from '../../../libs/korejquery';
+declare const korejquery:any;
 import Recorder from './recorder';
 // declare const Recorder:any;
 declare const window: any;

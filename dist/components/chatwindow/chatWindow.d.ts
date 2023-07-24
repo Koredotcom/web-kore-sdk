@@ -121,7 +121,7 @@ declare class chatWindow extends EventEmitter {
     init(config: any): void;
     installDefaultPlugins(): void;
     installCallbackForPlugins(): void;
-    show(config: any): false | undefined;
+    show(config: any): void;
     initShow(config: any): void;
     findSortedIndex(array: any, value: any): number;
     extend(target: any, source: any): any;
@@ -206,13 +206,13 @@ declare class chatWindow extends EventEmitter {
     getJWTByAPIKey(API_KEY_CONFIG: {
         KEY: any;
         bootstrapURL: any;
-    }): any;
+    }): Promise<any>;
     getJWT(options: {
         clientId: any;
         clientSecret: any;
         userIdentity: any;
         JWTUrl: any;
-    }, callback: any): any;
+    }, callback: any): Promise<any>;
     JWTSetup(): void;
     setupInternalAssertionFunction(): void;
     setupInternalAssertionFunctionWithAPIKey(): void;
@@ -233,6 +233,7 @@ declare class chatWindow extends EventEmitter {
     applyVariableValue(key: any, value: any, type: any): void;
     setBranding(brandingData?: any, type?: any): void;
     switchView(type: any): void;
+    makeApiCall(): void;
     /**
      * [#]{@link chatWindow#sendMessage} Send message to bot including rendering
      * @param {String} messageText message text to send

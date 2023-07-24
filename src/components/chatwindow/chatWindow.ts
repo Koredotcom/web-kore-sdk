@@ -1,4 +1,4 @@
-import * as j$ from '../../libs/korejquery';
+// import * as j$ from '../../libs/korejquery';
 import requireKr from '../base-sdk/kore-bot-sdk-client';
 import TemplateManager from '../../templatemanager/templateManager';
 import KoreHelpers from '../../utils/helpers';
@@ -25,7 +25,7 @@ import { ActionsBottomSlider } from '../../templatemanager/base/actionsButtonSli
 const bot = requireKr('/KoreBot.js').instance();
 
 declare const document:any;
-const $:any = j$.default ;
+declare const $:any;
 declare const callListener:any;
 
 
@@ -157,7 +157,7 @@ class chatWindow extends EventEmitter{
   this.config={};
   this.init(this.config);
 }
-paginatedScrollMsgDiv: any = $('<div class="temp-message-div"><ul class="prev-message-list"></ul></div>');
+paginatedScrollMsgDiv: any = "";//$('<div class="temp-message-div"><ul class="prev-message-list"></ul></div>');
 init  (config:any) {
   const me:any = this;
   me.config=me.extend(me.config,chatConfig);
@@ -195,9 +195,9 @@ show  (config:any) {
     this.addWidgetEvents(config);
   }
   me.initShow(config);
-  if ($('body').find('.kore-chat-window').length > 0) {
-      return false;
-  }
+  // if ($('body').find('.kore-chat-window').length > 0) {
+  //     return false;
+  // }
  
 };
 initShow  (config:any) {
@@ -467,11 +467,11 @@ renderWebForm  (msgData:any, returnTemplate:any) {
 };
 // form event actions ends here //
 addBottomSlider  () {
-  $('.kore-chat-window').remove('.kore-action-sheet');
-  const actionSheetTemplate = '<div class="kore-action-sheet hide">\
- <div class="actionSheetContainer"></div>\
- </div>';
-  $('.kore-chat-window').append(actionSheetTemplate);
+//   $('.kore-chat-window').remove('.kore-action-sheet');
+//   const actionSheetTemplate = '<div class="kore-action-sheet hide">\
+//  <div class="actionSheetContainer"></div>\
+//  </div>';
+//   $('.kore-chat-window').append(actionSheetTemplate);
 };
 updateOnlineStatus () {
 
@@ -1249,7 +1249,14 @@ render  (chatWindowHtml: any) {
 
   // chatWindowHtml.append(ChatContainerHTML);
   
-  $(me.config.container).append(chatWindowHtml);
+  
+  if (me.config.container instanceof HTMLElement) {
+    me.config.container.appendChild(chatWindowHtml);
+  } else {
+    console.log('qs: ', document.querySelector(me.config.container));
+    document.querySelector(me.config.container).appendChild(chatWindowHtml);
+  }
+  
   me.emit(me.EVENTS.VIEW_INIT,{chatEle:chatWindowHtml,chatWindowEvent:chatWindowEvent});
   if(chatWindowEvent.stopFurtherExecution){
     return false;
@@ -1824,8 +1831,8 @@ historyLoadingComplete () {
   const me:any = this;
   const _chatContainer = me.chatEle;
   setTimeout((me) => {
-    $('.chatInputBox').focus();
-    $('.disableFooter').removeClass('disableFooter');
+    // $('.chatInputBox').focus();
+    // $('.disableFooter').removeClass('disableFooter');
     if (me.config.UI.version == 'v3') {
       me.chatEle.querySelectorAll('.typing-text-area')[0].classList.remove('disableComposeBar');
     }
@@ -1949,8 +1956,8 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
     me.historyLoading = true;
     if (res && res[1] && res[1].messages.length > 0) {
       if(!bot.previousHistoryLoading){
-        $('.chat-container').hide();
-        $('.historyLoadingDiv').addClass('showMsg');
+        // $('.chat-container').hide();
+        // $('.historyLoadingDiv').addClass('showMsg');
       }
       res[1].messages.forEach((msgData: { messageId: any; message: { cInfo: { body: string; }; }[]; } | any, index: number) => {
         setTimeout((messagesQueue) => {
@@ -1963,8 +1970,8 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
           }
           if (index === res[1].messages.length - 1) {
             setTimeout((messagesQueue) => {
-              $('.chat-container').show();
-              $('.historyLoadingDiv').removeClass('showMsg');
+              // $('.chat-container').show();
+              // $('.historyLoadingDiv').removeClass('showMsg');
               if(!bot.previousHistoryLoading){
                 if (me.config.UI.version == 'v2') {
                   $('.chat-container').animate({
@@ -2006,17 +2013,37 @@ getJWTByAPIKey (API_KEY_CONFIG: { KEY: any; bootstrapURL: any; }) {
   const jsonData = {
     apiKey:API_KEY_CONFIG.KEY
   };
-  return $.ajax({
-    url: API_KEY_CONFIG.bootstrapURL||'https://bots.kore.ai/api/platform/websdk',
-    type: 'post',
-    data: jsonData,
-    dataType: 'json',
-    success(data: any) {
+  // return $.ajax({
+  //   url: API_KEY_CONFIG.bootstrapURL||'https://bots.kore.ai/api/platform/websdk',
+  //   type: 'post',
+  //   data: jsonData,
+  //   dataType: 'json',
+  //   success(data: any) {
+  //   },
+  //   error(err: any) {
+  //     // chatWindowInstance.showError(err.responseText);
+  //   },
+  // });
+
+  const apiUrl = API_KEY_CONFIG.bootstrapURL || 'https://bots.kore.ai/api/platform/websdk';
+  let res: any;
+  return fetch(apiUrl, {
+    method: 'POST',
+    body: JSON.stringify(jsonData),
+    headers: {
+      'Content-Type': 'application/json'
     },
-    error(err: any) {
-      // chatWindowInstance.showError(err.responseText);
-    },
-  });
+    mode: 'cors'
+  })
+    .then(response => {
+      if (!response.ok) {
+        console.error('Error in response');
+      }
+      return response.json();
+    })
+    .catch(error => {
+      console.error(error)
+    });
 };
 
 getJWT (options: { clientId: any; clientSecret: any; userIdentity: any; JWTUrl: any; }, callback: any) {
@@ -2027,18 +2054,37 @@ getJWT (options: { clientId: any; clientSecret: any; userIdentity: any; JWTUrl: 
     aud: '',
     isAnonymous: false,
   };
-  return $.ajax({
-    url: options.JWTUrl,
-    type: 'post',
-    data: jsonData,
-    dataType: 'json',
-    success(data: any) {
+  // return $.ajax({
+  //   url: options.JWTUrl,
+  //   type: 'post',
+  //   data: jsonData,
+  //   dataType: 'json',
+  //   success(data: any) {
 
+  //   },
+  //   error(err: any) {
+  //     // chatWindowInstance.showError(err.responseText);
+  //   },
+  // });
+
+  let res: any;
+  return fetch(options.JWTUrl, {
+    method: 'POST',
+    body: JSON.stringify(jsonData),
+    headers: {
+      'Content-Type': 'application/json'
     },
-    error(err: any) {
-      // chatWindowInstance.showError(err.responseText);
-    },
-  });
+    mode: 'cors'
+  })
+    .then(response => {
+      if (!response.ok) {
+        console.error('Error in response');
+      }
+      return response.json();
+    })
+    .catch(error => {
+      console.error(error)
+    });
 };
 
 JWTSetup (){
@@ -2133,7 +2179,7 @@ setWidgetInstance  (widgetSDKInstace:any) {
 
 
 hideError  () {
-  $('.errorMsgBlock').removeClass('showError');
+  // $('.errorMsgBlock').removeClass('showError');
 };
 showError (response:any) {
   try {
@@ -2216,20 +2262,41 @@ getBrandingInformation(options:any){
           me.config.botOptions.brandingAPIUrl = me.config.botOptions.koreAPIUrl +'websdkthemes/'+  me.config.botOptions.botInfo.taskBotId+'/activetheme';
       }
       var brandingAPIUrl = (me.config.botOptions.brandingAPIUrl || '').replace(':appId', me.config.botOptions.botInfo.taskBotId);
-      $.ajax({
-          url: brandingAPIUrl,
-          type: 'get',
-          headers: {
-            'Authorization': "bearer " + options.authorization.accessToken,
-          },
-          dataType: 'json',
-          success: function (data: any) {  
-                  me.applySDKBranding(data);
-          },
-          error: function (err: any) {
-              console.log(err);
-          }
+      // $.ajax({
+      //     url: brandingAPIUrl,
+      //     type: 'get',
+      //     headers: {
+      //       'Authorization': "bearer " + options.authorization.accessToken,
+      //     },
+      //     dataType: 'json',
+      //     success: function (data: any) {  
+      //             me.applySDKBranding(data);
+      //     },
+      //     error: function (err: any) {
+      //         console.log(err);
+      //     }
+      // });
+
+    fetch(brandingAPIUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'bearer ' + options.authorization.accessToken,
+      },
+      mode: 'cors'
+    })
+      .then(response => {
+        if (!response.ok) {
+          console.error('Error in response');
+        }
+        return response.json();
+      })
+      .then(data => {
+        me.applySDKBranding(data);
+      })
+      .catch(error => {
+        console.log(error);
       });
+
   }
 
 }
@@ -2407,6 +2474,10 @@ applyVariableValue (key:any,value:any,type:any){
     }
   }
 
+  makeApiCall() {
+
+  }
+
 /**
  * [#]{@link chatWindow#sendMessage} Send message to bot including rendering 
  * @param {String} messageText message text to send
@@ -2428,6 +2499,6 @@ sendMessage (messageText:any,options:any, serverMessageObject:any,clientMessageO
 };
   
 }
-(chatWindow.prototype as any).$ = $;
+//(chatWindow.prototype as any).$ = $;
 
 export default chatWindow;
