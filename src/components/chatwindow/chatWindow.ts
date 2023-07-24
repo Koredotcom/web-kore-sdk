@@ -879,7 +879,7 @@ bindEvents  () {
         me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
       }
       if (me.initial) {
-        me.bot.logInComplete(); // Start api call & ws
+        // me.bot.logInComplete(); // Start api call & ws
         me.initial = false;
       }
       // me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
@@ -965,7 +965,7 @@ bindEventsV3() {
 
       if (!me.config.builderFlag) {
         if (me.initial) {
-          me.bot.logInComplete(); // Start api call & ws
+          // me.bot.logInComplete(); // Start api call & ws
           me.initial = false;
           if (me.config.branding.welcome_screen.show) {
             me.chatEle.querySelector('.welcome-chat-section').classList.add('minimize');
@@ -977,7 +977,7 @@ bindEventsV3() {
         }
       } else {
         if (me.initial) {
-          me.bot.logInComplete(); // Start api call & ws
+          // me.bot.logInComplete(); // Start api call & ws
           me.initial = false;
         }
         if (me.config.branding.welcome_screen.show) {
@@ -1342,15 +1342,15 @@ if(messageText && messageText.trim() && messageText.trim().length){
       },
       (err: any) => {
         setTimeout(() => {
-          var failedMsgEle = $('.kore-chat-window [id="' + clientMessageId + '"]');
-          failedMsgEle.find('.messageBubble').append('<div class="errorMsg hide"><span class="failed-text">Send Failed </span><div class="retry"><span class="retry-icon"></span><span class="retry-text">Retry</span></div></div>');
-          if (this.sendFailedMessage.retryCount < this.sendFailedMessage.MAX_RETRIES) {
-            failedMsgEle.find('.retry').trigger('click');
-            this.sendFailedMessage.retryCount++;
-          } else {
-            failedMsgEle.find('.errorMsg').removeClass('hide');
-            me.hideTypingIndicator();
-          }
+          // var failedMsgEle = $('.kore-chat-window [id="' + clientMessageId + '"]');
+          // failedMsgEle.find('.messageBubble').append('<div class="errorMsg hide"><span class="failed-text">Send Failed </span><div class="retry"><span class="retry-icon"></span><span class="retry-text">Retry</span></div></div>');
+          // if (this.sendFailedMessage.retryCount < this.sendFailedMessage.MAX_RETRIES) {
+          //   failedMsgEle.find('.retry').trigger('click');
+          //   this.sendFailedMessage.retryCount++;
+          // } else {
+          //   failedMsgEle.find('.errorMsg').removeClass('hide');
+          //   me.hideTypingIndicator();
+          // }
         }, 350);
       },
       me.attachmentInfo ? { attachments: [me.attachmentInfo] } : null,
@@ -2427,7 +2427,7 @@ applyVariableValue (key:any,value:any,type:any){
   switchView(type: any) {
     const me: any = this;
     if (me.initial) {
-      me.bot.logInComplete(); // Start api call & ws
+      // me.bot.logInComplete(); // Start api call & ws
       me.initial = false;
     }
     if (type == 'avatar') {
