@@ -7,15 +7,8 @@ import { getHTML } from '../../../base/domManager';
 
 export function DigitalFormExtension(props: any) {
     return (
-        <div>
-            <h1>Action Slider Content</h1>
-            <h1>Action Slider</h1>
-            <h1>Action Slider</h1>
-            <h1>Action Slider</h1>
-            <h1>Action Slider</h1>
-            <h1>Action Slider</h1>
-            <h1>Action Slider</h1>
-            <h1>Action Slider</h1>
+        <div style={{ height: '300px'}}>
+            <iframe style={{ height: '100%', width: '100%' }} src={props.msgData.message[0].component.formData.formLink}></iframe>
         </div>
     );
 }
@@ -24,7 +17,7 @@ export function DigitalForm(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
     const handleForm = () => {
-        hostInstance.bottomSliderAction('', getHTML(DigitalFormExtension, '', hostInstance))
+        hostInstance.bottomSliderAction('', getHTML(DigitalFormExtension, msgData, hostInstance))
     }
     if (msgData?.message?.[0]?.component?.payload?.template_type === 'button' && msgData?.message?.[0]?.component?.formData) {
         return (
@@ -34,9 +27,13 @@ export function DigitalForm(props: any) {
                         <div className="icon-block">
                             <i className="sdkv3-file"></i>
                         </div>
-                        <h1>Form name</h1>
-                        <p>Hello, its really great to see you here. Tell us just a few details about you and we are just ready to start</p>
-                        <button className="link-btn" onClick={handleForm}>Fill the form</button>
+                        <h1>InsureAssist Login</h1>
+                        <p>Please click login below to enter your credentials.</p>
+                        {
+                            msgData.message[0].component.payload.buttons.map((ele: any) => (
+                                <button className="link-btn" onClick={handleForm}>{ele.title}</button>
+                            ))
+                        }
                     </div>
                 </div>
             </div>
