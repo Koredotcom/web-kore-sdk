@@ -131,7 +131,7 @@ class stackedCards {
         var zIndexArr = [];
         var relArr = [];
 
-        var layout = this.config.layout;
+        var c = 'slide' || this.config.layout;
 
         var maxCntDivisor = Math.max(prevCnt, nextCnt);
         var prevDivisor = 100 / (maxCntDivisor);
