@@ -1,33 +1,10 @@
-.stacked {
-
-}
-
-// .slider li:nth-child(n) {
-//     background-color: #3599db;
-// }
-
-// .slider li:nth-child(2n) {
-//     background-color: #e61b77;
-// }
-
-// .slider li:nth-child(3n) {
-//     background-color: #00bcd4;
-// }
-
-// .slider li:nth-child(4n) {
-//     background-color: #f4b251;
-// }
-
-// .slider li:nth-child(5n) {
-//     background-color: #8e4497;
-// }
-
 .stacked-cards {
     position: relative;
     display: flex;
     align-items: center;
     gap: 6px;
-    .left-click{
+
+    .left-click {
         border-radius: 32px;
         background: var(--generic-white, #FFF);
         box-shadow: 0px 4px 12px 2px rgba(32, 33, 36, 0.12);
@@ -38,13 +15,21 @@
         justify-content: center;
         align-items: center;
         gap: 10px;
-        border: 0;            
+        border: 0;
         cursor: pointer;
         flex-shrink: 0;
-        &:disabled{
+
+        &:disabled-click {
             color: #D7D8D9;
+            pointer-events: none;
+            cursor: no-drop;
         }
     }
+
+    .right-click {
+        @extend .left-click;
+    }
+
     ul {
         position: relative;
         width: 100%;
@@ -52,14 +37,16 @@
         margin: 0;
         padding: 0;
         height: 200px !important;
-        li{
+
+        li {
             cursor: pointer;
             list-style: none;
             width: 65%;
             position: absolute;
             left: 50%;
             transition: 0.5s ease transform;
-            &.active{
+
+            &.active {
                 cursor: default;
                 transition: 0.5s ease transform;
             }
@@ -84,13 +71,15 @@
 
 // carousel
 
-.carousel-static-text{
+.carousel-static-text {
     padding: 6px 12px;
-    .carousel-content{
+
+    .carousel-content {
         display: flex;
         align-items: center;
         gap: 6px;
-        .left-click{
+
+        .left-click {
             border-radius: 32px;
             background: var(--generic-white, #FFF);
             box-shadow: 0px 4px 12px 2px rgba(32, 33, 36, 0.12);
@@ -101,17 +90,21 @@
             justify-content: center;
             align-items: center;
             gap: 10px;
-            border: 0;            
+            border: 0;
             cursor: pointer;
             flex-shrink: 0;
-            &:disabled{
+            z-index: 100;
+
+            &:disabled {
                 color: #D7D8D9;
             }
         }
-        .carousel-wrapper{
+
+        .carousel-wrapper {
             display: flex;
             width: 100%;
-            .empty-card-car{
+
+            .empty-card-car {
                 width: 30px;
                 height: 100px;
                 border-radius: 0px 4px 4px 0px;
@@ -123,7 +116,8 @@
                 margin-left: -10px;
                 z-index: 9;
             }
-            .empty-card-car-1{
+
+            .empty-card-car-1 {
                 width: 30px;
                 height: 80px;
                 border-radius: 0px 4px 4px 0px;

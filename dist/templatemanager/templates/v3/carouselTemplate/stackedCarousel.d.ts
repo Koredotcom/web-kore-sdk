@@ -1,13 +1,14 @@
 declare class stackedCards {
     config: any;
     defaults: any;
-    element: any;
     els: any;
     parent: any | null;
+    hostInstance: any;
     constructor(options: any);
     private bind;
     init(): void;
     private draw;
+    private setActiveElement;
     private reCalculateTransformsOnClick;
     private detectSwipe;
     private extend;

@@ -4,10 +4,13 @@ class stackedCards {
         layout: 'slide', // slide, fanOut
         onClick: undefined, // onclick event provided
         transformOrigin: "center", // css transformOrigin
+        id: '',
+        hostInstance: '',
+        buttons: false
     }
-    element: any;
     els: any;
     parent: any | null;
+    hostInstance: any;
 
     constructor(options: any) {
         if (options == null) {
@@ -16,6 +19,7 @@ class stackedCards {
 
         this.draw = this.bind(this.draw, this);
         this.config = this.extend(options, this.defaults);
+        this.hostInstance = this.config.hostInstance;
     }
 
     private bind(fn: any, me: any) {
@@ -25,7 +29,6 @@ class stackedCards {
     }
 
     init() {
-        // this.element = window.document.documentElement;
         if (document.readyState === "interactive" || document.readyState === "complete") {
             this.draw();
         } else {
@@ -34,108 +37,142 @@ class stackedCards {
     }
 
     private draw() {
-        var me = this;
-        var selector = this.config.selector;
+        const me = this;
+        const selector = this.config.selector;
 
-        this.els = document.querySelectorAll(selector + " li");
-        var els = this.els;
+        this.els = this.hostInstance.chatEle.querySelectorAll(selector + " li");
+        const els = this.els;
 
         this.parent = els[0]?.parentNode;
 
-        var getItemHeight: any = els[0]?.getBoundingClientRect().height;
+        const getItemHeight: any = els[0]?.getBoundingClientRect().height;
 
-        /*var liWidth = 0;
-        for(var q = 0;q<els.length; q++) {
+        /*const liWidth = 0;
+        for(const q = 0;q<els.length; q++) {
             liWidth = liWidth + els[q].getBoundingClientRect().width;
         }*/
 
         if (els && els[0]?.parentNode) {
-          els[0].parentNode.style.height = parseInt(getItemHeight) + "px";
+            els[0].parentNode.style.height = parseInt(getItemHeight) + "px";
         }
 
-        // to get the active element's position, we will have to know if elements are in even/odd count
-        var lenAdjust = (els.length % 2 == 0 ? -2 : -1)
+        const lenAdjust = (els.length % 2 == 0 ? -2 : -1)
 
-        // oneHalf if the centerPoint - things go left and right from here
-        var oneHalf = (els.length + lenAdjust) / 2;
+        const oneHalf = (els.length + lenAdjust) / 2;
+        let currentEleIndex = oneHalf;
 
-        var activeTransform = "translate(" + -50 + "%, 0%)  scale(1)";
+        const activeTransform = "translate(" + -50 + "%, 0%)  scale(1)";
 
-        this.detectSwipe();
+        if (me.config.buttons) {
+            let nextCount: any = 0;
+            let prevCount: any = els.length;
 
+            prevCount = oneHalf;
+            nextCount = (oneHalf + 1) % 2 == 0 ? oneHalf + 1 : oneHalf;
 
-        Array.prototype.forEach.call(els, function (el) {
+            me.setActiveElement(els, els[oneHalf], nextCount, prevCount, activeTransform);
+            const leftButton = this.hostInstance.chatEle.querySelector('.' + me.config.id + ' .left-click');
+            const rightButton = this.hostInstance.chatEle.querySelector('.' + me.config.id + ' .right-click');
+            leftButton?.addEventListener('click', () => {
+                if (prevCount !== 0) {
+                    let currentEle = els[currentEleIndex - 1];
+                    nextCount = nextCount + 1;
+                    prevCount = prevCount - 1;
+                    currentEleIndex = currentEleIndex - 1;
+                    me.setActiveElement(els, currentEle, nextCount, prevCount, activeTransform);
+                    if (prevCount == 0) {
+                        leftButton.classList.add('disabled-click');
+                    }
+                }
+            })
+            rightButton?.addEventListener('click', () => {
+                if (nextCount !== 0) {
+                    let currentEle = els[currentEleIndex + 1];
+                    nextCount = nextCount - 1;
+                    prevCount = prevCount + 1;
+                    currentEleIndex = currentEleIndex + 1;
 
-            el.style.transformOrigin = me.config.transformOrigin;
-
-            el.addEventListener("click", function () {
-
-                var clickedEl = el;
-                var nextCnt = 0;
-                var prevCnt = 0;
-
-                do {
-                    // While there is a next sibling, loop
-                    var next = clickedEl.nextElementSibling;
-                    nextCnt = nextCnt + 1;
-
-                } while (clickedEl = clickedEl.nextElementSibling);
-
-                // re-initialize the clickedEl to do the same for prev elements
-                clickedEl = el;
-
-                do {
-                    // While there is a prev sibling, loop
-                    var prev = clickedEl.previousElementSibling;
-                    prevCnt = prevCnt + 1;
-                } while (clickedEl = clickedEl.previousElementSibling);
-
-                me.reCalculateTransformsOnClick(nextCnt - 1, prevCnt - 1)
-
-                me.loopNodeList(els, function (el: any) {
-                    el.classList.remove("active");
-                })
-
-                el.classList.add("active");
-                el.classList.add(me.config.layout)
-
-
-
-                el.style.zIndex = els.length * 5;
-                el.style.transform = activeTransform;
-
-                if (me.config.onClick !== undefined) {
-                    me.config.onClick(el);
+                    me.setActiveElement(els, currentEle, nextCount, prevCount, activeTransform);
+                    if (nextCount == 0) {
+                        rightButton.classList.add('disabled-click');
+                    }
                 }
 
-            });
-        });
+            })
+        } else {
+            this.detectSwipe();
+            Array.prototype.forEach.call(els, function (el) {
+                el.style.transformOrigin = me.config.transformOrigin;
 
-        els[oneHalf]?.click();
+                el?.addEventListener("click", function () {
+                    let clickedEl = el;
+                    let nextCnt = 0;
+                    let prevCnt = 0;
+
+                    do {
+                        // While there is a next sibling, loop
+                        const next = clickedEl.nextElementSibling;
+                        nextCnt = nextCnt + 1;
+
+                    } while (clickedEl = clickedEl.nextElementSibling);
+
+                    // re-initialize the clickedEl to do the same for prev elements
+                    clickedEl = el;
+
+                    do {
+                        // While there is a prev sibling, loop
+                        const prev = clickedEl.previousElementSibling;
+                        prevCnt = prevCnt + 1;
+                    } while (clickedEl = clickedEl.previousElementSibling);
+
+                    me.reCalculateTransformsOnClick(nextCnt - 1, prevCnt - 1)
+                    me.setActiveElement(els, el, nextCnt - 1, prevCnt - 1, activeTransform)
+                });
+            });
+            els[oneHalf]?.click();
+        }
 
     }
 
+    private setActiveElement(els: any, el: any, nextCount: any, prevCount: any, activeTransform: any) {
+        const me: any = this;
+        me.reCalculateTransformsOnClick(nextCount, prevCount)
+
+        me.loopNodeList(els, function (el: any) {
+            el.classList.remove("active");
+        })
+
+        el.classList.add("active");
+        el.classList.add(me.config.layout)
+
+
+        el.style.zIndex = els.length * 5;
+        el.style.transform = activeTransform;
+
+        if (me.config.onClick !== undefined) {
+            me.config.onClick(el);
+        }
+    }
+
     private reCalculateTransformsOnClick(nextCnt: any, prevCnt: any) {
+        let z = 10;
+        const els = this.nodelistToArray(this.els);
 
-        var z = 10;
-
-        var els = this.nodelistToArray(this.els);
-
-        var scale = 1,
+        let scale = 1,
             translateX = 0,
             rotateVal = 0,
             rotate = "";
-        var rotateNegStart = 0 // ((75 / els.length) * (oneHalf))*-1;
+        let rotateNegStart = 0 // ((75 / els.length) * (oneHalf))*-1;
 
-        var transformArr = [];
-        var zIndexArr = [];
-        var relArr = [];
+        const transformArr = [];
+        const zIndexArr = [];
+        const relArr = [];
 
-        var c = 'slide' || this.config.layout;
+        let layout = 'slide' || this.config.layout;
 
-        var maxCntDivisor = Math.max(prevCnt, nextCnt);
-        var prevDivisor = 100 / (maxCntDivisor);
-        var nextDivisor = 100 / (maxCntDivisor);
+        const maxCntDivisor = Math.max(prevCnt, nextCnt);
+        const prevDivisor = 100 / (maxCntDivisor);
+        const nextDivisor = 100 / (maxCntDivisor);
 
         if (prevCnt > nextCnt) {
             scale = 0 + (100 / (prevCnt + 1)) / 100;
@@ -143,10 +180,10 @@ class stackedCards {
             scale = 1 - ((prevCnt) * (1 / (nextCnt + 1)));
         }
 
-        var rotatePrevStart = ((prevCnt * 10 / (prevCnt) * prevCnt)) * -1;
-        var rotateNextStart = ((nextCnt * 10 / (nextCnt)));
+        let rotatePrevStart = ((prevCnt * 10 / (prevCnt) * prevCnt)) * -1;
+        let rotateNextStart = ((nextCnt * 10 / (nextCnt)));
 
-        for (var i = 0; i < prevCnt; i++) {
+        for (let i = 0; i < prevCnt; i++) {
             switch (layout) {
                 case "slide":
                     if (i > 0) {
@@ -175,8 +212,7 @@ class stackedCards {
 
             }
 
-            var styleStr = "translate(" + translateX + "%, 0%)  scale(" + scale + ") " + rotate;
-
+            const styleStr = "translate(" + translateX + "%, 0%)  scale(" + scale + ") " + rotate;
             z = z + 1;
 
             els[i].style.transform = styleStr;
@@ -184,14 +220,12 @@ class stackedCards {
 
         }
 
-        // we are going for active element, so make it higher
         z = z - 1;
-
-        var j = 0;
+        let j = 0;
 
         rotateNegStart = 0;
         scale = 1;
-        for (var i: number = prevCnt + 1; i < nextCnt + prevCnt + 1; i++) {
+        for (let i: number = prevCnt + 1; i < nextCnt + prevCnt + 1; i++) {
             j = j + 1;
             switch (layout) {
                 case "slide":
@@ -216,7 +250,7 @@ class stackedCards {
 
             z = z - 1;
 
-            var styleStr = "translate(" + translateX + "%, 0%)  scale(" + scale + ") " + rotate;
+            const styleStr = "translate(" + translateX + "%, 0%)  scale(" + scale + ") " + rotate;
 
             els[i].style.transform = styleStr;
             els[i].style.zIndex = z;
@@ -227,22 +261,21 @@ class stackedCards {
     }
 
     private detectSwipe() {
-        var me = this;
-        var regionEl = document.querySelector(me.config.selector);
+        const me = this;
+        const regionEl = this.hostInstance.chatEle.querySelector(me.config.selector);
 
         me.detectSwipeDir(regionEl, function (swipedir: any) {
-            var activeEl: any = document.querySelector(me.config.selector + " li.active");
+            const activeEl: any = me.config.hostInstance.chatEle.querySelector(me.config.selector + " li.active");
             if (swipedir == 'left') {
                 activeEl.nextElementSibling.click();
             } else if (swipedir == "right") {
                 activeEl.previousElementSibling.click();
             }
         })
-
     }
 
     private extend(custom: any, defaults: any) {
-        var key, value;
+        let key, value;
         for (key in defaults) {
             value = defaults[key];
             if (custom[key] == null) {
@@ -253,8 +286,8 @@ class stackedCards {
     }
 
     private nodelistToArray(nodelist: any) {
-        var results: any = [];
-        var i, element;
+        const results: any = [];
+        let i, element;
         for (i = 0; i < nodelist.length; i++) {
             element = nodelist[i];
             results.push(element);
@@ -263,7 +296,7 @@ class stackedCards {
     }
 
     private loopNodeList(els: any, callback: any, scope?: any) {
-        for (var i = 0; i < els.length; i++) {
+        for (let i = 0; i < els.length; i++) {
             callback.call(scope, els[i])
         }
     }
@@ -272,22 +305,22 @@ class stackedCards {
     private scrolledIn(el: any, offset: any) {
         if (typeof el == 'undefined') return;
 
-        var elemTop = el.getBoundingClientRect().top;
-        var elemBottom = el.getBoundingClientRect().bottom;
+        const elemTop = el.getBoundingClientRect().top;
+        const elemBottom = el.getBoundingClientRect().bottom;
 
-        var scrolledInEl = (elemTop >= 0) && (elemTop <= window.innerHeight);
+        const scrolledInEl = (elemTop >= 0) && (elemTop <= window.innerHeight);
         return scrolledInEl;
 
     }
 
     private detectSwipeDir(el: any, callback: any) {
-        var touchsurface: any = el,
+        let touchsurface: any = el,
             swipedir: any,
             startX: any,
             startY: any,
             distX: any,
             distY: any,
-            threshold: number= 75, //required min distance traveled to be considered swipe
+            threshold: number = 75, //required min distance traveled to be considered swipe
             restraint: number = 100, // maximum distance allowed at the same time in perpendicular direction
             allowedTime: number = 300, // maximum time allowed to travel that distance
             elapsedTime: any,
@@ -295,7 +328,7 @@ class stackedCards {
             handleswipe: any = callback || function (swipedir: any) { }
 
         touchsurface?.addEventListener('touchstart', function (e: any) {
-            var touchobj = e.changedTouches[0]
+            const touchobj = e.changedTouches[0]
             swipedir = 'none'
             // dist = 0
             startX = touchobj.pageX
@@ -309,7 +342,7 @@ class stackedCards {
         }, false)
 
         touchsurface?.addEventListener('touchend', function (e: any) {
-            var touchobj = e.changedTouches[0]
+            const touchobj = e.changedTouches[0]
             distX = touchobj.pageX - startX // get horizontal dist traveled by finger while in contact with surface
             distY = touchobj.pageY - startY // get vertical dist traveled by finger while in contact with surface
             elapsedTime = new Date().getTime() - startTime // get time elapsed
@@ -329,10 +362,3 @@ class stackedCards {
 }
 
 export default stackedCards
-
-// var stackedCard = new stackedCards({
-//     selector: '.featured',
-//     layout: "slide",
-//     transformOrigin: "center",
-// });
-// stackedCard.init();
