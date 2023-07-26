@@ -29,12 +29,27 @@ export class QuickRepliesWelcome {
                 chatWindowInstance.sendMessage(payload, { renderMsg: _innerText });
 
             } else if (targetType == "url" || targetType == "web_url") {
-                let a_link = target.attr('url');
-                if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
-                    a_link = "http:////" + a_link;
+                if (target.attr('msgData') !== undefined) {
+                    let msgData;
+                    try {
+                        msgData = JSON.parse(target.attr('msgData'));
+                    } catch (err) {
+                      console.log(err);
+                    }
+                    if (msgData && msgData.message && msgData.message[0].component && (msgData.message[0].component.formData || (msgData.message[0].component.payload && msgData.message[0].component.payload.formData))) {
+                        if (msgData.message[0].component.formData) {
+                            msgData.message[0].component.payload.formData = msgData.message[0].component.formData;
+                        }
+                        chatWindowInstance.renderWebForm(msgData);
+                        return;
+                    }
                 }
-                // let _tempWin = window.open(a_link, "_blank");
-                chatWindowInstance.openExternalLink(a_link)
+                let a_link = target.attr('url');
+                if (a_link && (a_link.indexOf('http:') < 0 && a_link.indexOf('https:') < 0)) {
+                    a_link = `http:////${a_link}`;
+                }
+                chatWindowInstance.openExternalLink(a_link);
+            }
             }
 
         });
