@@ -714,7 +714,7 @@ class AdvancedListTemplate {
 									{{/each}}\
 								{{/if}}\
 							</div>\
-							<div class="accor-inner-content {{if listItem && listItem.isCollapsed}}displayBlock{{/if}}"    {{if listItem.contentStyles}}style="{{each(styleKey,style) listItem.contentStyles}}${styleKey}:${style};{{/each}}"{{/if}}>\
+							<div class="accor-inner-content {{if listItem && !listItem.isCollapsed}}displayBlock{{/if}}"    {{if listItem.contentStyles}}style="{{each(styleKey,style) listItem.contentStyles}}${styleKey}:${style};{{/each}}"{{/if}}>\
 								{{if listItem && listItem.view == "default" && listItem.textInformation && listItem.textInformation.length}}\
 								{{each(i,textInfo) listItem.textInformation}}\
 									<div class="details-content {{if textInfo && textInfo.iconAlignment && (textInfo.iconAlignment==="right")}}if-icon-right{{else textInfo && (textInfo.iconAlignment && (textInfo.iconAlignment==="left")) || !textInfo.iconAlignment}}if-icon-left{{/if}}">\
