@@ -1113,6 +1113,7 @@ bindSDKEvents  () {
   });
 
   me.bot.on('webhook_ready', (response: any) => {
+    me.setBranding();
     if (!me.config.loadHistory) {
       me.getBotMetaData();
     }
