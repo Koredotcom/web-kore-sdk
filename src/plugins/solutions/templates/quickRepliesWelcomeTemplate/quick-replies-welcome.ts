@@ -29,7 +29,7 @@ export class QuickRepliesWelcome {
                 chatWindowInstance.sendMessage(payload, { renderMsg: _innerText });
 
             } else if (targetType == "url" || targetType == "web_url") {
-                let a_link = $(this).attr('url');
+                let a_link = target.attr('url');
                 if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
                     a_link = "http:////" + a_link;
                 }
@@ -59,7 +59,7 @@ export class QuickRepliesWelcome {
                         {{if msgData.message[0].component.payload.quick_replies && msgData.message[0].component.payload.quick_replies.length}} \
                             <div class="quick_replies_btn_parent"><div class="autoWidth">\
                                     {{each(key, msgItem) msgData.message[0].component.payload.quick_replies}} \
-                                        <div class="quickRepliesChild quickReplyDiv displayInline"> <span {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} actual-value="${msgItem.value}" class="buttonQuickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.content_type}">\
+                                        <div class="quickRepliesChild quickReplyDiv displayInline"> <span {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} actual-value="${msgItem.value}" class="buttonQuickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.type}" {{if msgItem.url}}url="${msgItem.url}"{{/if}}>\
                                             {{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} <span class="quickreplyText {{if msgItem.image_url}}with-img{{/if}}">${msgItem.title}</span></span>\
                                         </div> \
                                     {{/each}} \
@@ -69,7 +69,7 @@ export class QuickRepliesWelcome {
                         {{if msgData.message[0].component.payload.buttons && msgData.message[0].component.payload.buttons.length}} \
                             <div class="quick_replies_btn_parent"><div class="autoWidth">\
                                 {{each(key, msgItem) msgData.message[0].component.payload.buttons}} \
-                                    <div class="quickRepliesChild quickReplyDiv displayInline"> <span {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} actual-value="${msgItem.value}" class="buttonQuickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.content_type}">\
+                                    <div class="quickRepliesChild quickReplyDiv displayInline"> <span {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} actual-value="${msgItem.value}" class="buttonQuickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.type}" {{if msgItem.url}}url="${msgItem.url}"{{/if}}>\
                                         {{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} <span class="quickreplyText {{if msgItem.image_url}}with-img{{/if}}">${msgItem.title}</span></span>\
                                     </div> \
                                 {{/each}} \
