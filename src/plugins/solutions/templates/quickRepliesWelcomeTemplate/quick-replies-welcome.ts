@@ -50,7 +50,6 @@ export class QuickRepliesWelcome {
                 }
                 chatWindowInstance.openExternalLink(a_link);
             }
-            }
 
         });
 
