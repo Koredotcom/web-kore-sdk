@@ -22,6 +22,8 @@ import MessageTemplate from './templates/v3/message/message';
 import DigitalFormTemplate from './templates/v3/digitalForm/digitalForm';
 import TemplateButton from './templates/v3/button/button';
 import cardTemplate from './templates/v3/cardTemplate/cardTemplate';
+import Carousel from './templates/v3/carouselTemplate/carouselTemplate';
+import QuickRepliesTemplate from './templates/v3/quickReplies/quickReplies';
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
 //(function($){
@@ -77,6 +79,8 @@ class TemplateManager {
 		this.installTemplate(new DigitalFormTemplate());
 		this.installTemplate(new TemplateButton());
 		this.installTemplate(new cardTemplate());
+		// this.installTemplate(new Carousel());
+		this.installTemplate(new QuickRepliesTemplate());
 	}
 
 	renderMessage  (msgData: any) {

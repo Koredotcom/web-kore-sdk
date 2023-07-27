@@ -1,7 +1,115 @@
+import { getHTML } from '../../../base/domManager';
 import BaseChatTemplate from '../baseChatTemplate';
+import IconsManager from '../../../base/iconsManager';
 import './cardTemplate.scss';
 import { h, Fragment } from 'preact';
-import { Message } from '../message/message';
+
+
+export function cardSliderExtension(props: any) {
+    const sliderData = props.msgData;
+    const iconHelper = new IconsManager();
+    const hostInstance = props.hostInstance;
+    const closeMenu = () => {
+        hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');
+        setTimeout(() => {
+            hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
+        }, 150);
+    }
+    const openAccordionDetails = (e: any,i: any) =>{
+        if( hostInstance.chatEle.querySelectorAll('.accordion_collapse')[i].classList.contains('collapse_data')){
+            hostInstance.chatEle.querySelectorAll('.accordion_collapse')[i].classList.remove('collapse_data');
+        } else {
+            hostInstance.chatEle.querySelectorAll('.accordion_collapse')[i].classList.add('collapse_data');
+        }  
+    }
+    return (
+        <div className="menu-wrapper-data-actions">
+            <div className="actions-slider-header-menu">
+                <h1>{sliderData.sliderTitle}</h1>
+                <button className="menu-close" role="contentinfo" aria-label="close" onClick={closeMenu}>
+                    <figure>
+                        <img src={iconHelper.getIcon('close_icon')} alt="close" />
+                    </figure>
+                </button>
+            </div>
+            <div className="iner-data-scroll-wraper">
+                <section className="card-info-more-details" aria-label="card template sdk">
+                    {
+                        sliderData.sliderInfo.map((ele: any) => (
+                            <div>
+                                <div className="top-sec-card">
+                                    <h1>{ele.topSection.title}</h1>
+                                    <span style={ele.topSection.details.styles} className="tag-name">{ele.topSection.details.title}</span>
+                                </div>
+                                {
+                                    ele.middleSection.items.map((item: any) => (
+                                        <div className="middle-sec-card">
+                                            <div class="img-with-text">
+                                                <img src={item.icon} />
+                                                <p>{item.title}</p>
+                                            </div>
+                                            <div class="right-title">
+                                                <p>{item.value}</p>
+                                            </div>
+                                        </div>
+                                    ))
+                                }
+                                {
+                                    ele.bottomSection.items.map((val: any) => (
+                                        <div className="bottom-sec-card small-font-sec">
+                                            <div class="img-with-text">
+                                                <p style={val.titleStyles}>{val.title}</p>
+                                            </div>
+                                            <div class="right-title">
+                                                {val.icon && <img src={val.icon} />}
+                                                <p style={val.titleStyles}>{val.value}</p>
+                                            </div>
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                        ))
+                    }
+                </section>
+                <div className="accordion-wrapper" id="accordion">
+                    {
+                        sliderData.sliderInfo.map((ele: any) => (
+                            ele.moreInfo.map((item: any,i: any) => (
+                                <div className="accordion_item" onClick={() => openAccordionDetails(event,i)}>
+                                    <button className="accordion_heading" aria-expanded="true">
+                                        <p>{item.title}</p>
+                                        <div className="arrow-icon">
+                                            <i className="sdkv3-cheveron-right"></i>
+                                        </div>
+                                    </button>
+                                    <div className="accordion_collapse">
+                                        <div className="accordion_body">
+                                            <div className="card-acc-temp-sec">
+                                                {
+                                                    item.items.map((val: any) => (
+                                                        <div className="card-acc-temp">
+                                                            <div className="left-data">
+                                                                <h1 style={val.nameStyles}>{val.name}</h1>
+                                                                { val.description  && <p>{val.description}</p>}
+                                                            </div>
+                                                            <div className="right-data">
+                                                                <p>{val.value}</p>
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        ))
+                    }
+                </div>
+            </div>
+        </div>
+    );
+}
 
 export function card(props: any) {
     const hostInstance = props.hostInstance;
@@ -19,9 +127,11 @@ export function card(props: any) {
                 link = `http:////${link}`;
             }
             hostInstance.openExternalLink(link);
+        } else if (e.type == 'slider') {
+            hostInstance.bottomSliderAction('', getHTML(cardSliderExtension, e, hostInstance));
         }
     }
-    if (msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.type === 'modern') {
+    if (msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'modern') {
         return (
             <Fragment>
                 <div>
@@ -48,59 +158,60 @@ export function card(props: any) {
                                 ))
                             }
                         </div>
-                    </section>                    
+                    </section>
                 </div>
             </Fragment>
         );
-    }
-    else if(msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.type === 'details'){
-        return(
+    } else if (msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'details') {
+        return (
             <Fragment>
                 <div>
                     <section className="card-template-wrapper-view-more-details" aria-label="card template sdk">
-                        <button className="card-content-sec">
-                            <div className="top-sec-card">
-                                <h1>1043003</h1>
-                                <span className="tag-name">Active</span>
-                            </div>
-                            <div className="middle-sec-card">
-                                <p>Auto</p>
-                            </div>
-                            <div className="bottom-sec-card">
-                                <h2>Premium amount</h2>
-                                <p>$588</p>
-                            </div>
-                            <div className="middle-sec-card">
-                                <p>Amount Due for next 7/12 monthly installments</p>
-                                <span className="amount-text">$343</span>
-                            </div>
-                            <div className="border-divider"></div>
-                            <div className="bottom-sec-card">
-                                <h2>6th Installment: <span>Due</span></h2>
-                            </div>
-                            <div className="more-sec-card">
-                                <h2>Payment Amount</h2>
-                                <p>$49</p>
-                            </div>
-                            <div className="more-sec-card">
-                                <h2>Payment due date</h2>
-                                <p>Apr/25/2023</p>
-                            </div>
-                            <div className="border-divider"></div>
-                            <div className="middle-sec-card">
-                                <p>Effective</p>
-                                <span className="amount-text">Oct/26/2023</span>
-                            </div>
-                            <div className="middle-sec-card">
-                                <p>Expiration</p>
-                                <span className="amount-text">Oct/25/2023</span>
-                            </div>
-                            <div className="middle-sec-card">
-                                <p>Vehicles</p>
-                                <span className="clickble-text">Tesla Cybertruck, BMW M3 (+1)</span>
-                            </div>
-                            <button className="view-more-btn">View more</button>
-                        </button>
+                        {
+                            msgData.message[0].component.payload.cards.cardDescription.map((ele: any) => (
+                                <div className="card-content-sec">
+                                    <div className="top-sec-card">
+                                        <h1>{ele.topSection.title}</h1>
+                                        <span style={ele.topSection.details.styles} className="tag-name">{ele.topSection.details.title}</span>
+                                    </div>
+                                    <div className="middle-sec-card">
+                                        <p>{ele.topSection.subTitle}</p>
+                                    </div>
+                                    {
+                                        ele.topSection.items.map((val: any) => (
+                                            <div className="bottom-sec-card">
+                                                <h2 style={val.titleStyles}>{val.title}</h2>
+                                                <p style={val.valueStyles}>{val.value}</p>
+                                            </div>
+                                        ))
+                                    }
+                                    <div className="border-divider"></div>
+                                    {
+                                        ele.middleSection.items.map((val: any) => (
+                                            <div className="bottom-sec-card">
+                                                <h2 style={val.titleStyles}>{val.title}<span style={val.subTitleStyles}>{val.subTitle}</span></h2>
+                                                <p style={val.valueStyles}>{val.value}</p>
+                                            </div>
+                                        ))
+                                    }
+                                    <div className="border-divider"></div>
+                                    {
+                                        ele.bottomSection.items.map((val: any) => (
+                                            <div className="bottom-sec-card">
+                                                <h2 style={val.titleStyles}>{val.title}</h2>
+                                                <p style={val.valueStyles}>{val.value}</p>
+                                            </div>
+                                        ))
+                                    }
+                                    {
+                                        msgData.message[0].component.payload.cards.buttonActions.map((button: any) => (
+                                            <button className="view-more-btn" onClick={() => handleButtonEvent(button)} >{button.title}</button>
+                                        ))
+                                    }
+                                </div>
+                            ))
+                        }
+
                     </section>
                 </div>
             </Fragment>
