@@ -18,7 +18,8 @@
         border: 0;
         cursor: pointer;
         flex-shrink: 0;
-
+        position: relative;
+        z-index: 99;
         &:disabled-click {
             color: #D7D8D9;
             pointer-events: none;

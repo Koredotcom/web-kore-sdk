@@ -86,7 +86,7 @@ export function QuickReply(props: any) {
     }, 50);
     return (
 
-        <div className="quick-replies button-temp button-variation-2">
+        <div className="quick-replies quick-temp">
             <button className="quick-left-click">
                 <i className="sdkv3-cheveron-left"></i>
             </button>
