@@ -75,11 +75,21 @@ class GoogleSTT extends BaseSTT {
 
     uiCallback(r: any) {
         if (r.results && r.results[0]) {
-            $('.chatInputBox').html($('.chatInputBox').html() + ' ' + r.results[0].alternatives[0].transcript);
+            if (this.hostInstance.config.UI.version == 'v2') {
+                $('.chatInputBox').html($('.chatInputBox').html() + ' ' + r.results[0].alternatives[0].transcript);
+                setTimeout(() => {
+                    this.setCaretEnd((document as any).getElementsByClassName("chatInputBox"));
+                    document.getElementsByClassName('chatInputBox')[0].scrollTop = document.getElementsByClassName('chatInputBox')[0].scrollHeight;
+                }, 350);
+        } else {
+            if (this.hostInstance.chatEle.querySelector('.voice-speak-msg-info').style.getPropertyValue('display') != 'block') {
+                this.hostInstance.chatEle.querySelector('.voice-speak-msg-info').style.display = 'block';
+            }
+            this.hostInstance.chatEle.querySelector('.voice-msg-bubble').textContent = r.results[0].alternatives[0].transcript;
             setTimeout(() => {
-                this.setCaretEnd((document as any).getElementsByClassName("chatInputBox"));
-                document.getElementsByClassName('chatInputBox')[0].scrollTop = document.getElementsByClassName('chatInputBox')[0].scrollHeight;
-            }, 350);
+                this.setCaretEnd(this.hostInstance.chatEle.getElementsByClassName('voice-msg-bubble'));
+            }, 350)
+        }
         }
         else if (r.code === 403) {
             this.gapiLoaded = false;
@@ -114,7 +124,7 @@ class GoogleSTT extends BaseSTT {
         }
         var speechSender: any = new FileReader();
         speechSender.addEventListener('loadend', () => {
-            this.sendBytesToSpeech(btoa(speechSender.result), encoding, rate, this.uiCallback);
+            this.sendBytesToSpeech(btoa(speechSender.result), encoding, rate, this.uiCallback.bind(this));
         });
         speechSender.readAsBinaryString(blob);
     }
@@ -169,8 +179,13 @@ class GoogleSTT extends BaseSTT {
     startGoogleSpeech(rec: any) {
         if (rec) {
             rec.record();
-            $('.recordingMicrophone').css('display', 'block');
-            $('.notRecordingMicrophone').css('display', 'none');
+            if (this.hostInstance.config.UI.version == 'v2') {
+                $('.recordingMicrophone').css('display', 'block');
+                $('.notRecordingMicrophone').css('display', 'none');
+            } else {
+                this.hostInstance.chatEle.querySelector('.compose-voice-text').style.display = 'none';
+                this.hostInstance.chatEle.querySelector('.compose-voice-text-recording').style.display = 'block';
+            }
             console.log('recording...');
             this.intervalKey = setInterval(() => {
                 rec.export16kMono((blob: any) => {
@@ -216,7 +231,11 @@ class GoogleSTT extends BaseSTT {
         this.startGoogleSpeech(rec);
 
         setTimeout(() => {
+            if (this.hostInstance.config.UI.version == 'v2') {
             this.setCaretEnd(document.getElementsByClassName("chatInputBox"));
+            } else {
+                this.setCaretEnd(this.hostInstance.chatEle.getElementsByClassName('voice-msg-bubble'));
+            }
         }, 600);
     }
 
