@@ -34,6 +34,14 @@
     cursor: pointer;
     background-color: var(--sdk-chat-window-btn-default-bg);
 }
+.kore-chat-window .buttonTmplContent .buttonTmplContentBox a {
+    display: inline-block;
+    width: 100%;
+}
+.kore-chat-window .buttonTmplContent .buttonTmplContentHeading .isLink a {
+    color: var(--sdk-chat-window-btn-link-color) !important;
+    width: auto;
+}
 .kore-chat-window .buttonTmplContent .buttonTmplContentChild:hover{
     color: var(--sdk-chat-window-btn-hover-font-clr);
     /* border-color: var(--sdk-chat-window-btn-hover-border-clr); */
