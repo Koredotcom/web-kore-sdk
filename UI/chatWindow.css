@@ -27,6 +27,7 @@
     /* button colors chat window */
 
     --sdk-chat-window-btn-default-bg:#FFFFFF;
+    --sdk-chat-window-btn-link-color:#0D6EFD;
     --sdk-chat-window-btn-border-clr:#009dab;
     --sdk-chat-window-btn-font-clr:#009dab;
     --sdk-chat-window-btn-hover-bg:#009dab;
@@ -102,6 +103,7 @@
     /* button colors chat window */
 
     --sdk-chat-window-btn-default-bg:#262626;
+    --sdk-chat-window-btn-link-color:#0D6EFD;
     --sdk-chat-window-btn-border-clr:#262626;
     --sdk-chat-window-btn-font-clr:#fff;
     --sdk-chat-window-btn-hover-bg:#3a3a3a;
@@ -176,6 +178,7 @@
     /* button colors chat window */
 
     --sdk-chat-window-btn-default-bg:#0D6EFD;
+    --sdk-chat-window-btn-link-color:#0D6EFD;
     --sdk-chat-window-btn-border-clr:#0D6EFD;
     --sdk-chat-window-btn-font-clr:#ffffff;
     --sdk-chat-window-btn-hover-bg:#0659d2;
@@ -251,6 +254,7 @@
     /* button colors chat window */
 
     --sdk-chat-window-btn-default-bg:#3a3a3a;
+    --sdk-chat-window-btn-link-color:#0D6EFD;
     --sdk-chat-window-btn-border-clr:#3a3a3a;
     --sdk-chat-window-btn-font-clr:#d48440;
     --sdk-chat-window-btn-hover-bg:#201f1f;
@@ -326,6 +330,7 @@
     /* button colors chat window */
 
     --sdk-chat-window-btn-default-bg:var(--sdk-chat-custom--buttons-defaultButtonColor);
+    --sdk-chat-window-btn-link-color:#0D6EFD;
     --sdk-chat-window-btn-border-clr:#009dab;
     --sdk-chat-window-btn-font-clr:var(--sdk-chat-custom--buttons-defaultFontColor);
     --sdk-chat-window-btn-hover-bg:var(--sdk-chat-custom--buttons-onHoverButtonColor);
@@ -804,7 +809,7 @@
 }
 
 .kore-chat-window a {
-    color: var(--sdk-chat-window-btn-default-bg);
+    color: var(--sdk-chat-window-btn-link-color);
     text-decoration: none;
 }
 
@@ -1145,7 +1150,14 @@
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
-
+.kore-chat-window .buttonTmplContent .buttonTmplContentBox a {
+    display: inline-block;
+    width: 100%;
+}
+.kore-chat-window .buttonTmplContent .buttonTmplContentHeading .isLink a {
+    color: var(--sdk-chat-window-btn-link-color) !important;
+    width: auto;
+}
 .kore-chat-window .buttonTmplContent .buttonTmplContentHeading.quickReply {
     display: table;
     font-size: 14px;
