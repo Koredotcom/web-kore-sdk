@@ -17,27 +17,20 @@ class CarouselTemplate {
       setTimeout(() => {
         const me: any = this;
         const chatWindowInstance = me.hostInstance;
-        chatWindowInstance.carouselTemplateCount=chatWindowInstance.carouselTemplateCount?chatWindowInstance.carouselTemplateCount:0;
-        $('.carousel:last').addClass(`carousel${chatWindowInstance.carouselTemplateCount}`);
-        const count = $(`.carousel${chatWindowInstance.carouselTemplateCount}`).children().length;
+        const count = $(me.messageHtml).find(' .carousel').children().length;
         if (count > 1) {
           const carouselOneByOne = new PureJSCarousel({
-            carousel: `.carousel${chatWindowInstance.carouselTemplateCount}`,
-            slide: '.slide',
+            carousel: `#${msgData.messageId} .carousel`,
+            slide: `#${msgData.messageId} .slide`,
             oneByOne: true,
           });
-          $(`.carousel${chatWindowInstance.carouselTemplateCount}`).parent().show();
-          carouselEles.push(carouselOneByOne);
         }
-        $(`.carousel${chatWindowInstance.carouselTemplateCount}`).attr('style', 'height: 100% !important');
+        $(me.messageHtml).find('.carousel').attr('style', 'height: 100% !important');
         window.dispatchEvent(new Event('resize'));
         const evt = document.createEvent('HTMLEvents');
         evt.initEvent('resize', true, false);
         window.dispatchEvent(evt);
         chatWindowInstance.carouselTemplateCount += 1;
-        // _chatContainer.animate({
-        //   scrollTop: _chatContainer.prop('scrollHeight'),
-        // }, 0);
         chatWindowInstance.scrollTop();
       });
       me.bindEvents(me.messageHtml);
@@ -58,8 +51,6 @@ class CarouselTemplate {
         type = type.toLowerCase();
       }
       if (type == 'postback' || type == 'text') {
-        //chatWindowInstance.assignValueToInput($(selectedTarget).attr('actual-value') || $(selectedTarget).attr('value'));
-        // var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
         const _innerText = ($(selectedTarget)[0] && $(selectedTarget)[0].innerText) ? $(selectedTarget)[0].innerText.trim() : '' || ($(selectedTarget) && $(selectedTarget).attr('data-value')) ? $(selectedTarget).attr('data-value').trim() : '';
         chatWindowInstance.sendMessage($(selectedTarget).attr('actual-value') || $(selectedTarget).attr('value'),{renderMsg:_innerText});
       } else if (type == 'url' || type == 'web_url') {
@@ -85,10 +76,6 @@ class CarouselTemplate {
         chatWindowInstance.openExternalLink(a_link);
       }
       chatWindowInstance.focusInputTextbox();
-      // setTimeout(() => {
-      //   const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
-      //   _chatInput.focus();
-      // }, 600);
     });
   }
 

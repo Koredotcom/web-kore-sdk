@@ -284,6 +284,7 @@ initShow  (config:any) {
   window.addEventListener('online', me.updateOnlineStatus.bind(me));
   window.addEventListener('offline', me.updateOnlineStatus.bind(me));
   me.attachEventListener();
+  $(me.chatEle).append(me.paginatedScrollMsgDiv);
   // me.show();
 };
 
@@ -863,11 +864,14 @@ bindEvents  () {
   if (me?.config?.history?.paginatedScroll?.enable) {
     _chatContainer.find('.kore-chat-body .chat-container').on('scroll', (event: any) => {
       var div = $(event.currentTarget);
+      if(bot.previousHistoryLoading){
+        return false;
+      }
       if (div[0].scrollHeight - div.scrollTop() == div.height()) {
         bot.previousHistoryLoading = false;
       }
       else if (div.scrollTop() == 0) {
-        if (bot.paginatedScrollDataAvailable) {
+        if (bot.paginatedScrollDataAvailable && !bot.previousHistoryLoading) {
           bot.previousHistoryLoading = true;
           let message = me?.config?.history?.paginatedScroll?.loadingLabel || 'Loading chat history..';
           let paginatedHistoryLoader = $('<div class="paginted-history-loader">\
@@ -1617,10 +1621,14 @@ historyLoadingComplete () {
         }
       }
       _chatContainer.find('.chat-container').scrollTop(_heightTobeScrolled);
+    } 
+    if($(this.paginatedScrollMsgDiv).find('.prev-message-list').children().length){
       $(this.paginatedScrollMsgDiv).find('.prev-message-list').empty();
-      _chatContainer.find('.paginted-history-loader').remove();
-      bot.previousHistoryLoading = false;
     }
+    if(_chatContainer.find('.paginted-history-loader')){
+      _chatContainer.find('.paginted-history-loader').remove();
+    }
+    bot.previousHistoryLoading = false;
   }, 0, me);
 };
 
