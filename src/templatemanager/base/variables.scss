@@ -412,3 +412,40 @@ $font-s-31:1.9375rem;
 $font-s-32:2rem;
 $font-s-33:2.0625rem;
 $font-s-40:2.5rem;
+
+// Button primary
+
+.kr-button-primary{
+    border-radius: 4px;
+    padding: 9px 16px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    width: 100%;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.2s all ease;
+    background: var(--button-temp-bg-variation-2);
+    border: 1px solid var(--button-temp-variation-2-border);
+    color: var(--button-temp-variation-2-color);
+    &:hover{
+        background: var(--button-temp-bg-variation-2-hover);
+    }
+}
+.kr-button-secondary{
+    width: 100%;
+    background: var(--button-temp-bg);
+    border: 1px solid var(--button-temp-border);
+    border-radius: 4px;
+    padding: 9px 16px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: var(--button-temp-color);
+    cursor: pointer;
+    text-align: center;
+    transition: 0.2s all ease;
+    &:hover{
+        background: var(--button-temp-bg-hover);
+    }
+}
