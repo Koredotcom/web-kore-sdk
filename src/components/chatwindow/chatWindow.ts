@@ -649,7 +649,7 @@ sendMessageWithWithChatInput(chatInput:any){
   if (chatInput.text().trim() === '') {
     return;
   }
-  chatInput.html(KoreHelpers.prototypes.koreReplaceAll(chatInput.text(),"<br>", "\n"));
+  chatInput.text(KoreHelpers.prototypes.koreReplaceAll(chatInput.text(),"<br>", "\n"));
   me.sendMessageToBot(chatInput.text());
   chatInput.html('');
 }
