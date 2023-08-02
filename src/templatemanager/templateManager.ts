@@ -24,6 +24,16 @@ import TemplateButton from './templates/v3/button/button';
 import cardTemplate from './templates/v3/cardTemplate/cardTemplate';
 import Carousel from './templates/v3/carouselTemplate/carouselTemplate';
 import QuickRepliesTemplate from './templates/v3/quickReplies/quickReplies';
+import TableTemplate from './templates/v3/table/table';
+import TemplateTableList from './templates/v3/tableList/tableList';
+import RadioOptionsTemplate from './templates/v3/radioOptions/radioOptions';
+import MiniTableTemplate from './templates/v3/miniTable/miniTable';
+import TemplateListView from './templates/v3/listView/listView';
+import TemplateList from './templates/v3/list/list';
+import TemplateDropdown from './templates/v3/dropdown/dropdown';
+import TemplateCheckBoxes from './templates/v3/checkBoxes/checkBoxes';
+import TemplateAdvancedMultiSelect from './templates/v3/advancedMutliSelect/advancedMultiSelect';
+import TemplateAdvancedList from './templates/v3/advancedList/advancedList';
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
 //(function($){
@@ -81,6 +91,16 @@ class TemplateManager {
 		this.installTemplate(new cardTemplate());
 		this.installTemplate(new Carousel());
 		this.installTemplate(new QuickRepliesTemplate());
+		this.installTemplate(new TableTemplate());
+		this.installTemplate(new TemplateTableList());
+		this.installTemplate(new RadioOptionsTemplate());
+		this.installTemplate(new MiniTableTemplate());
+		this.installTemplate(new TemplateListView());
+		this.installTemplate(new TemplateList());
+		this.installTemplate(new TemplateDropdown());
+		this.installTemplate(new TemplateCheckBoxes());
+		this.installTemplate(new TemplateAdvancedMultiSelect());
+		this.installTemplate(new TemplateAdvancedList());
 	}
 
 	renderMessage  (msgData: any) {
