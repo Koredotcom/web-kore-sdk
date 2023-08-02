@@ -82,6 +82,8 @@ class stackedCards {
                     me.setActiveElement(els, currentEle, nextCount, prevCount, activeTransform);
                     if (prevCount == 0) {
                         leftButton.classList.add('disabled-click');
+                    } else {
+                        rightButton.classList.remove('disabled-click');  
                     }
                 }
             })
@@ -95,6 +97,8 @@ class stackedCards {
                     me.setActiveElement(els, currentEle, nextCount, prevCount, activeTransform);
                     if (nextCount == 0) {
                         rightButton.classList.add('disabled-click');
+                    } else {
+                        leftButton.classList.remove('disabled-click');
                     }
                 }
 

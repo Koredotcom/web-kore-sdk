@@ -95,14 +95,6 @@ export function QuickReply(props: any) {
                     <button className="kr-btn quick-buttons" onClick={() => handleQuickReply(ele)}>{ele.title}</button>
                 ))
                 }
-                {msgData.message[0].component.payload.quick_replies.map((ele: any) => (
-                    <button className="kr-btn quick-buttons" onClick={() => handleQuickReply(ele)}>{ele.title}</button>
-                ))
-                }
-                {msgData.message[0].component.payload.quick_replies.map((ele: any) => (
-                    <button className="kr-btn quick-buttons" onClick={() => handleQuickReply(ele)}>{ele.title}</button>
-                ))
-                }
             </div>
             <button className="quick-right-click">
                 <i className="sdkv3-cheveron-right"></i>
