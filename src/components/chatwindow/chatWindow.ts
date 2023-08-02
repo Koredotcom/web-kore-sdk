@@ -883,6 +883,7 @@ bindEvents  () {
           if (!(_chatContainer.find('.paginted-history-loader').length)) {
             $(paginatedHistoryLoader).insertBefore(_chatContainer.find('.chat-container li:first'));
           }
+          _chatContainer.find('.kore-chat-footer').addClass('disableFooter');
           bot.getHistory({ limit: (me?.config?.history?.paginatedScroll?.batchSize) });
         }
       }
@@ -1597,8 +1598,6 @@ historyLoadingComplete () {
   const me:any = this;
   const _chatContainer = me.chatEle;
   setTimeout((me) => {
-    $('.chatInputBox').focus();
-    $('.disableFooter').removeClass('disableFooter');
     me.historyLoading = false;
     if (me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) {
       me.getBotMetaData();
@@ -1629,6 +1628,8 @@ historyLoadingComplete () {
       _chatContainer.find('.paginted-history-loader').remove();
     }
     bot.previousHistoryLoading = false;
+    $('.chatInputBox').focus();
+    $('.disableFooter').removeClass('disableFooter');
   }, 0, me);
 };
 
