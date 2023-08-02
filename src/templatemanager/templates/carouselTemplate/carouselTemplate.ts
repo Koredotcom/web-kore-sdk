@@ -26,12 +26,10 @@ class CarouselTemplate {
           });
         }
         $(me.messageHtml).find('.carousel').attr('style', 'height: 100% !important');
-        window.dispatchEvent(new Event('resize'));
-        const evt = document.createEvent('HTMLEvents');
-        evt.initEvent('resize', true, false);
-        window.dispatchEvent(evt);
-        chatWindowInstance.carouselTemplateCount += 1;
-        chatWindowInstance.scrollTop();
+        // window.dispatchEvent(new Event('resize'));
+        // const evt = document.createEvent('HTMLEvents');
+        // evt.initEvent('resize', true, false);
+        // window.dispatchEvent(evt);
       });
       me.bindEvents(me.messageHtml);
       return me.messageHtml;

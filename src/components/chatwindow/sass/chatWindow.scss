@@ -1274,6 +1274,9 @@
 	animation-name: animatebottom;
 	animation-duration: 0.4s;
 }
+.temp-message-div{
+	visibility: hidden;
+}
 [dir="rtl"].kore-chat-window {
 	.kore-chat-header {
 		padding: 0 20px 0 0px;

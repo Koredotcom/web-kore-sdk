@@ -83,7 +83,7 @@ export class QuickRepliesWelcome {
                         {{if msgData.message[0].component.payload.buttons && msgData.message[0].component.payload.buttons.length}} \
                             <div class="quick_replies_btn_parent"><div class="autoWidth">\
                                 {{each(key, msgItem) msgData.message[0].component.payload.buttons}} \
-                                    <div class="quickRepliesChild quickReplyDiv displayInline"> <span {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} actual-value="${msgItem.value}" class="buttonQuickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.type}" {{if msgItem.url}}url="${msgItem.url}"{{/if}}>\
+                                    <div class="quickRepliesChild quickReplyDiv displayInline"> <span {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} actual-value="{{if msgItem.value}}${msgItem.value}{{else}}${msgItem.title}{{/if}}" class="buttonQuickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.type}" {{if msgItem.url}}url="${msgItem.url}"{{/if}}>\
                                         {{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} <span class="quickreplyText {{if msgItem.image_url}}with-img{{/if}}">${msgItem.title}</span></span>\
                                     </div> \
                                 {{/each}} \
