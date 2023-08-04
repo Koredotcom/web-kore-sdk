@@ -130,9 +130,9 @@ export function Carousel(props: any) {
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'carousel') {
         setTimeout(() => {
-            const btnsParentDiv: any = hostInstance.chatEle.querySelector('.list-carousel');
-            const leftScrollBtn = hostInstance.chatEle.querySelector('.carousel-left-click');
-            const rightScrollBtn = hostInstance.chatEle.querySelector('.carousel-right-click');
+            const btnsParentDiv: any = hostInstance.chatEle.querySelector(`[data-id='${msgData.messageId}']`);
+            const leftScrollBtn = hostInstance.chatEle.querySelector(`[data-button-left='${msgData.messageId}']`);
+            const rightScrollBtn = hostInstance.chatEle.querySelector(`[data-button-right='${msgData.messageId}']`);
             if (btnsParentDiv && btnsParentDiv.hasChildNodes()) {
                 if (leftScrollBtn) {
                     if (btnsParentDiv.scrollLeft > 0) {
@@ -194,11 +194,11 @@ export function Carousel(props: any) {
             })
         }, 50);
         return (
-            <div className="list-template-carousel-wrapper">
-                <button className="carousel-left-click">
+            <div className="list-template-carousel-wrapper" id={msgData.messageId}>
+                <button className="carousel-left-click" data-button-left={msgData.messageId}>
                     <i className="sdkv3-cheveron-left"></i>
                 </button>
-                <div className="list-carousel">
+                <div className="list-carousel" data-id={msgData.messageId}>
                     {msgData.message[0].component.payload.elements.map((ele: any) => (
                         <div className="list-carousel-item">
                             <div className="img-block">
@@ -235,7 +235,7 @@ export function Carousel(props: any) {
                         </div>
                     ))}
                 </div>
-                <button className="carousel-right-click">
+                <button className="carousel-right-click" data-button-right={msgData.messageId}>
                     <i className="sdkv3-cheveron-right"></i>
                 </button>
             </div>
