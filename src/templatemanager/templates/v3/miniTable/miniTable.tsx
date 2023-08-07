@@ -33,19 +33,37 @@ export function MiniTable(props: any) {
                     </button>
                     <div className="mini-table" c-parent-id={msgData.messageId}>
                         {msgData.message[0].component.payload.elements.map((ele: any) => (
-                            <table className="mini-table-item" c-items-id={msgData.messageId}>
-                                <tr>
-                                    { ele.primary.map((e: any) => (
-                                        <th>{e[0]}</th>
-                                    ))}
-                                </tr>
-                                {ele.additional.map((el: any) => (
+                            // <table className="mini-table-item" c-items-id={msgData.messageId}>
+                            //     <tr>
+                            //         { ele.primary.map((e: any) => (
+                            //             <th>{e[0]}</th>
+                            //         ))}
+                            //     </tr>
+                            //     {ele.additional.map((el: any) => (
+                            //         <tr>
+                            //             { el.map((e: any) => (
+                            //                 <td>{e}</td>
+                            //             ))}
+                            //         </tr>
+                            //     ))}
+                            // </table>
+                            <table className="mini-table-regular-view" c-items-id={msgData.messageId}>
+                                <thead>
                                     <tr>
-                                        { el.map((e: any) => (
-                                            <td>{e}</td>
+                                        { ele.primary.map((e: any) => (
+                                        <th>{e[0]}</th>
                                         ))}
                                     </tr>
-                                ))}
+                                </thead>
+                                <tbody>
+                                    {ele.additional.map((el: any) => (
+                                        <tr>
+                                            { el.map((e: any) => (
+                                                <td>{e}</td>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </tbody>
                             </table>
                         ))}
                     </div>

@@ -35,6 +35,7 @@ export function Table(props: any) {
                                 ))}
                             </tbody>
                         </table>
+                        <button className="show-more-btn">Show More</button>
                     </section>
                 </section>
             </Fragment>
@@ -46,16 +47,73 @@ export function Table(props: any) {
             <Fragment>
                 <div className='table-container'>
                     <Message {...messageobj} />
-                        { msgData.message[0].component.payload.elements.map((ele: any) => (
-                            <div style={{display: 'flex'}}>
-                                { ele.Values.map((e: any, i: any) => (
-                                    <div className={i >= 2 ? 'hide': ''}>
-                                        <div className={i < 2 ? 'hide' : ''}>{msgData.message[0].component.payload.columns[i]}</div>
-                                        <div>{e}</div>
-                                    </div>
-                                ))}
+                    {/* { msgData.message[0].component.payload.elements.map((ele: any) => (
+    <div style={{display: 'flex'}}>
+        { ele.Values.map((e: any, i: any) => (
+            <div className={i >= 2 ? 'hide': ''}>
+                <div className={i < 2 ? 'hide' : ''}>{msgData.message[0].component.payload.columns[i]}</div>
+                <div>{e}</div>
+            </div>
+        ))}
+    </div>
+))} */}
+                    <div className="table-response-wrapper-container">
+                        <div className="table-response-wrapper">
+                            <div className="acc-block-content">
+                                <div className="info-blcok">
+                                    <h1>SI</h1>
+                                    <p>1</p>
+                                </div>
+                                <div className="info-blcok">
+                                    <h1>Name</h1>
+                                    <p>Peter</p>
+                                </div>
+                                <div className="icon-block">
+                                    <i className="sdkv3-cheveron-right"></i>
+                                </div>
                             </div>
-                        ))}
+                            <div className="acc-block-content">
+                                <div className="info-blcok">
+                                    <h1>SI</h1>
+                                    <p>1</p>
+                                </div>
+                                <div className="info-blcok">
+                                    <h1>Name</h1>
+                                    <p>Peter</p>
+                                </div>
+                                <div className="icon-block">
+                                    <i className="sdkv3-cheveron-right"></i>
+                                </div>
+                            </div>
+                            <div className="acc-block-content">
+                                <div className="info-blcok">
+                                    <h1>SI</h1>
+                                    <p>1</p>
+                                </div>
+                                <div className="info-blcok">
+                                    <h1>Name</h1>
+                                    <p>Peter</p>
+                                </div>
+                                <div className="icon-block">
+                                    <i className="sdkv3-cheveron-right"></i>
+                                </div>
+                            </div>
+                            <div className="acc-block-content">
+                                <div className="info-blcok">
+                                    <h1>SI</h1>
+                                    <p>1</p>
+                                </div>
+                                <div className="info-blcok">
+                                    <h1>Name</h1>
+                                    <p>Peter</p>
+                                </div>
+                                <div className="icon-block">
+                                    <i className="sdkv3-cheveron-right"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <button className="show-more-btn">Show More</button>
+                    </div>
                 </div>
             </Fragment>
         );
