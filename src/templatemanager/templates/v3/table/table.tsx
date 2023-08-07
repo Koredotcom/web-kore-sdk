@@ -14,23 +14,29 @@ export function Table(props: any) {
     if (msgData.message?.[0]?.component?.payload?.template_type == 'table' && msgData.message[0].component.payload?.table_design == 'regular') {
         return (
             <Fragment>
-                <div className='table-container'>
+                <section class="table-wrapper-main-container">
                     <Message {...messageobj} />
-                    <table>
-                        <tr>
-                            { msgData.message[0].component.payload.columns.map((ele: any) => (
-                                <th>{ele[0]}</th>
-                            ))}
-                        </tr>
-                        { msgData.message[0].component.payload.elements.map((ele: any) => (
-                            <tr>
-                                { ele.Values.map((e: any) => (
-                                    <td>{e}</td>
+                    <section class="table-wrapper-section">
+                        <table className="table-regular-view">
+                            <thead>
+                                <tr>
+                                    { msgData.message[0].component.payload.columns.map((ele: any) => (
+                                        <th>{ele[0]}</th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                { msgData.message[0].component.payload.elements.map((ele: any) => (
+                                    <tr>
+                                        { ele.Values.map((e: any) => (
+                                            <td>{e}</td>
+                                        ))}
+                                    </tr>
                                 ))}
-                            </tr>
-                        ))}
-                    </table>
-                </div>
+                            </tbody>
+                        </table>
+                    </section>
+                </section>
             </Fragment>
         );
     }
@@ -43,8 +49,8 @@ export function Table(props: any) {
                         { msgData.message[0].component.payload.elements.map((ele: any) => (
                             <div style={{display: 'flex'}}>
                                 { ele.Values.map((e: any, i: any) => (
-                                    <div>
-                                        <div>{msgData.message[0].component.payload.columns[i]}</div>
+                                    <div className={i >= 2 ? 'hide': ''}>
+                                        <div className={i < 2 ? 'hide' : ''}>{msgData.message[0].component.payload.columns[i]}</div>
                                         <div>{e}</div>
                                     </div>
                                 ))}

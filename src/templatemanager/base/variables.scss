@@ -429,6 +429,11 @@ $font-s-40:2.5rem;
     background: var(--button-temp-bg-variation-2);
     border: 1px solid var(--button-temp-variation-2-border);
     color: var(--button-temp-variation-2-color);
+    &.lg{
+        padding: 10px 16px;
+        height: 40px;
+        font-size: 14px;
+    }
     &:hover{
         background: var(--button-temp-bg-variation-2-hover);
     }
@@ -447,6 +452,11 @@ $font-s-40:2.5rem;
     cursor: pointer;
     text-align: center;
     transition: 0.2s all ease;
+    &.lg{
+        padding: 10px 16px;
+        height: 40px;
+        font-size: 14px;
+    }
     &:hover{
         background: var(--button-temp-bg-hover);
     }

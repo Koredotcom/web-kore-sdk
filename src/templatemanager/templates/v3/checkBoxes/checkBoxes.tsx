@@ -13,7 +13,13 @@ export function CheckBoxes(props: any) {
     }
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'multi_select') {
         return (
-            <div>Check Boxes</div>
+            <div className="checkbox-item">
+                <input id="checkbox-1" className="checkbox-input" type="checkbox" />
+                <label for="checkbox-1" className="checkbox-label">
+                    <div className="title">Checkbox item</div>
+                    <div className="desc-text-checkbox">Checkbox item</div>
+                </label>
+            </div>
         );
     }
 }

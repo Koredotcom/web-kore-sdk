@@ -1,0 +1,145 @@
+
+
+.dropdwon-wrapper-section{
+    padding: 12px 10px 12px 16px;
+    display: inline-block;
+    width: 100%;
+    .dropdwon-wrapper-contaner{
+        display: flex;
+        padding: 16px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        width: 100%;
+        border-radius: 4px;
+        background: var(--gray-modern-50, #F8FAFC);
+        .heading-block{
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            h1{
+                width: 100%;
+                color: var(--kora-grey-grey-dark-1, #202124);
+                font-size: 14px;
+                font-weight: 700;
+                line-height: normal;
+            }
+            .close-dropdown{
+                width: 16px;
+                height: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 0;
+                background: transparent;
+                color: #202124;
+                font-size: 14px;
+                cursor: pointer;
+                padding: 0;
+                flex-shrink: 0;
+            }
+        }
+        .dropdown-temp{
+            width: 100%;
+            .label-text{
+                color: var(--neutral-900, #171717);
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 20px;
+                margin-bottom: 4px;
+            }
+            .drp-menu-wrapper{
+                position: relative;
+                width: 100%;
+                &.show-drp{
+                    .menu-content-list-drp{
+                        display: block;
+                    }
+                }
+                .drp-btn{
+                    width: 100%;
+                    border-radius: 6px;
+                    border: 1px solid var(--neutral-200, #E5E5E5);
+                    background: var(--generic-white, #FFF);
+                    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+                    display: flex;
+                    height: 40px;
+                    padding: 8px 12px;
+                    align-items: center;
+                    gap: 12px;
+                    text-align: left;
+                    color: #171717;
+                    font-size: 14px;
+                    font-weight: 400;
+                    line-height: 20px;
+                    span{
+                        width: 100%;
+                    }
+                    i{
+                        width: 20px;
+                        height: 20px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: #697586;
+                        transform: rotate(-90deg);
+                        flex-shrink: 0;
+                    }
+                }
+                .menu-content-list-drp{
+                    display: none;
+                    position: absolute;
+                    width: 100%;
+                    left: 0;
+                    bottom: 44px;
+                    border-radius: 4px;
+                    border: 1px solid var(--gray-neutral-200, #E5E7EB);
+                    box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.10), 0px 4px 6px -1px rgba(16, 24, 40, 0.10);
+                    background: #fff;
+                    z-index: 9;
+                    margin-top: 2px;
+                    li{
+                        border-radius: 4px 4px 0px 0px;
+                        background: #FFF;
+                        display: flex;
+                        padding: 8px 16px;
+                        align-items: center;
+                        align-self: stretch;
+                        gap: 10px;
+                        cursor: pointer;
+                        transition: 0.2s all ease;
+                        list-style-type: none;
+                        &.active-list-option{
+                            background: var(--gray-modern-50, #F8FAFC);
+                            i{
+                                display: flex;
+                            }
+                        }
+                        &:hover{
+                            background: var(--gray-modern-50, #F8FAFC);
+                            i{
+                                display: flex;
+                            }
+                        }
+                        p{
+                            width: 100%;
+                            color: var(--gray-modern-900, #121926);
+                            font-size: 14px;
+                            font-weight: 500;
+                            line-height: 20px;
+                        }
+                        i{
+                            color: #155EEF;
+                            width: 16px;
+                            height: 16px;                            
+                            align-items: center;
+                            justify-content: center;
+                            display: none;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
