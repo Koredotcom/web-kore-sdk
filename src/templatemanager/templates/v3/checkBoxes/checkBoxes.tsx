@@ -11,14 +11,31 @@ export function CheckBoxes(props: any) {
         msgData: msgData,
         hostInstance: hostInstance
     }
+
+    const onSubmit = () => {
+        let selectedValues: any= [];
+        const selectedItems = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${msgData.messageId}:checked`);
+        selectedItems.forEach((ele: any) => {
+            selectedValues.push(ele.value);
+        });
+        hostInstance.sendMessage(selectedValues.toString(), {renderMsg: ''});
+    }
+
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'multi_select') {
         return (
-            <div className="checkbox-item">
-                <input id="checkbox-1" className="checkbox-input" type="checkbox" />
-                <label for="checkbox-1" className="checkbox-label">
-                    <div className="title">Checkbox item</div>
-                    <div className="desc-text-checkbox">Checkbox item</div>
-                </label>
+            <div className="checkbox-wrapper">
+                <div className="checkbox-container">
+                    { msgData?.message?.[0]?.component?.payload?.elements.map((ele: any, ind: any) => (
+                        <div className="checkbox-item">
+                            <input id={`checkbox-${ind}`} className={`checkbox-input-${msgData.messageId}`} type="checkbox" value={ele.value} />
+                            <label for={`checkbox-${ind}`} className="checkbox-label">
+                                <div className="title">{ele.title}</div>
+                                {/* <div className="desc-text-checkbox">Checkbox item</div> */}
+                            </label>
+                        </div>
+                    ))}
+                </div>
+                <button className="kr-button-primary" onClick={onSubmit}>{msgData?.message?.[0]?.component?.payload?.buttons[0].title}</button>
             </div>
         );
     }

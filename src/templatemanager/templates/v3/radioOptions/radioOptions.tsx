@@ -7,21 +7,29 @@ import { Message } from '../message/message';
 export function RadioOptions(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
+    const [selectItem, setSelectedItem] = useState({title: '', value: ''});
     const messageobj = {
         msgData: msgData,
         hostInstance: hostInstance
     }
 
-    const selectedItem  = () => {
-
+    const selectedItem  = (e: any) => {
+        setSelectedItem(e);
     }
+
+    const onSubmit = () => {
+        if (selectItem.title && selectItem.value) {
+            hostInstance.sendMessage(selectItem.value, { renderMsg: selectItem.title});
+        }
+    }
+
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'radioOptionTemplate' && !msgData.fromHistory) {
         return (
             <div className="radio-button-wrapper">
                 <div>{msgData?.message?.[0]?.component?.payload.heading}</div>
                 { msgData?.message?.[0]?.component?.payload.radioOptions.map((ele: any, ind: any) => (
                     <div className="radio-padding">
-                        <div className="radio-button-item">
+                        <div className="radio-button-item" onClick={() => selectedItem(ele.postback)}>
                             <input id={`radio-${ind}`} name="radio" className="radio-input" type="radio" />
                             <label for={`radio-${ind}`} className="radio-label">
                                 <div className="radio-title">{ele.title}</div>
@@ -30,7 +38,7 @@ export function RadioOptions(props: any) {
                         </div>
                     </div>
                 ))}
-                <button className="kr-button-primary" onClick={selectedItem}>Confirm</button>
+                <button className="kr-button-primary" onClick={onSubmit}>Confirm</button>
             </div>
         );
     }
