@@ -19,6 +19,12 @@ class BrowserTTS extends BaseTTS {
     onInit() {
         let me = this;
         me.installTextToSpeechTemplate();
+        //  To stop speaking long messages on refresh/reload
+        window.addEventListener("beforeunload", (event: any) => {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+        });
     }
 
     OnSpeakerButtonClick(){
