@@ -5,7 +5,7 @@ const BrandingJSON = {
         "themeType": "light"
     },
     "chat_bubble": {
-        "style": "rounded",
+        "style": "balloon",
         "icon": {
             "icon_url": "url2",
             "size": "medium",
@@ -19,11 +19,11 @@ const BrandingJSON = {
         "alignment": "block",
         "animation": "slide",
         "expand_animation": "quick",
-        "primary_color": "#4B4EDE",
-        "secondary_color": "#4B4EDE"
+        "primary_color": "#0D8BD2",
+        "secondary_color": "#0D8BD2"
     },
     "welcome_screen": {
-        "show": true,
+        "show": false,
         "layout": "medium",
         "logo": {
             "logo_url": "/images/sc-small.svg"
@@ -40,7 +40,7 @@ const BrandingJSON = {
             "name": "Our Community is ready to help you to join our best platform",
             "color": "#ffffff"
         },
-        "background": {"color": "#4B4EDE"},
+        "background": { "color": "#4B4EDE" },
         "top_fonts": {
             "color": "#ffffff"
         },
@@ -130,12 +130,12 @@ const BrandingJSON = {
             "color": "#ffffff"
         },
         "title": {
-            "name": "Bot",
+            "name": "InsureAssist",
             "color": "#000000"
         },
         "sub_title": {
-            "name": "Your personal assistant",
-            "color": "#000000"
+            "name": "",
+            "color": ""
         },
         "buttons": {
             "close": {
@@ -173,36 +173,50 @@ const BrandingJSON = {
         }
     },
     "footer": {
-        "bg_color": "#EEF2F6",
-        "layout": "keypad",
+        "bg_color": "#ffffff",
+        "layout": "voice",
         "style": "translucent",
         "compose_bar": {
             "bg_color": "#fffffe",
-            "outline-color": "#E5E5E5",
+            "outline-color": "#0D6EFD",
             "placeholder": "Type a message"
         },
         "buttons": {
             "menu": {
                 "show": true,
                 "icon": "url|icomoon",
-                "actions": [{
-                    "title": "Get Balance",
-                    "type": "postback",
-                    "value": "Get Balance",
-                    "icon": "url|icomoon"
-                },
-                {
-                    "title": "Get Transactions",
-                    "type": "postback",
-                    "value": "Get Transactions",
-                    "icon": "url|icomoon"
-                },
-                {
-                    "title": "Kore.ai",
-                    "type": "url",
-                    "value": "https://kore.ai/",
-                    "icon": "url|icomoon"
-                }
+                "actions": [
+                    {
+                        "title": "Buy Policy",
+                        "type": "postback",
+                        "value": "BuyPolicy",
+                    },
+                    {
+                        "title": "Renew Policy",
+                        "type": "postback",
+                        "value": "RenewPolicy",
+                    },
+                    {
+                        "title": "Raise Claim",
+                        "type": "postback",
+                        "value": "RaiseClaim",
+                    },
+                    {
+                        "title": "Roadside Assistance",
+                        "type": "postback",
+                        "value": "RoadsideAssistance",
+                    },
+                    {
+                        "title": "Emergency Assistance",
+                        "type": "postback",
+                        "value": "EmergencyAssistance",
+                    },
+                    {
+                        "title": "Start New Conversation",
+                        "type": "postback",
+                        "value": "StartNewConversation",
+                    },
+                
                 ]
             },
             "emoji": {
@@ -231,11 +245,11 @@ const BrandingJSON = {
             "style": "1|2|3"
         },
         "user_message": {
-            "bg_color": "#4B4EDE",
+            "bg_color": "#0D8BD2",
             "color": "#ffffff"
         },
         "bot_message": {
-            "bg_color": "#EEF2F6",
+            "bg_color": "#F0F1F2",
             "color": "#000000"
         },
         "agent_message": {

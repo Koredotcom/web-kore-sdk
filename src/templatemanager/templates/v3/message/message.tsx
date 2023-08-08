@@ -60,8 +60,8 @@ export function Message(props: any) {
                                 msgData.type === 'bot_response' ? (
                                     msgItem.component && msgItem.component.type === 'error' ? ('') : (<div className="bot-bubble-comp if-animation-bubble" id={msgData.messageId}>
                                         <div className={botStyle}>
-                                            { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">                                                
-                                                <div className="you-text">Kore.ai Bot</div>
+                                            { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
+                                                <div className="you-text"></div>
                                                 <div className="time-tamp">
                                                     <time>{helpers.formatAMPMDay(msgData.createdOn)}</time>
                                                 </div>      
@@ -74,9 +74,9 @@ export function Message(props: any) {
                                                         <img src={iconHelper.getIcon('avatar_bot')} alt='avatr img' />
                                                     </figure>
                                                 </div>
-                                                <div className="copy-bubble" onClick={ () => onCopy(event, msgItem.cInfo.body)}>
+                                                {/* <div className="copy-bubble">
                                                     <i className="sdkv3-copy"></i>
-                                                </div>
+                                                </div> */}
                                             </div>
                                             { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
                                                 <div className="you-text">Kore.ai Bot</div>
@@ -101,9 +101,9 @@ export function Message(props: any) {
                                                         <img src="/images/avatar-bot.svg" alt='avatr img' />
                                                     </figure>
                                                 </div>
-                                                <div className="copy-bubble" onClick={ () => onCopy(event, msgItem.cInfo.renderMsg && msgItem.cInfo.renderMsg !== '' ? msgItem.cInfo.renderMsg : msgItem.cInfo.body)}>
+                                                {/* <div className="copy-bubble" onClick={ () => onCopy(event, msgItem.cInfo.renderMsg && msgItem.cInfo.renderMsg !== '' ? msgItem.cInfo.renderMsg : msgItem.cInfo.body)}>
                                                     <i className="sdkv3-copy"></i>
-                                                </div>
+                                                </div> */}
                                             </div>
                                                 { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
                                                     <div className="time-tamp"><time>{helpers.formatAMPMDay(msgData.createdOn)}</time></div>

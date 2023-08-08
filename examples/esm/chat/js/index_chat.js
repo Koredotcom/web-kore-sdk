@@ -12,6 +12,12 @@ botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_I
 botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
 botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 
+botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
+botOptions.userIdentity = 'sainath';// Provide users email id here
+botOptions.botInfo = { name: "SDK3.0", "_id": "st-96430dcc-567d-51d8-8110-ad7a4ea4005c" }; // bot name is case sensitive
+botOptions.clientId = "cs-0c4feb21-72f9-53ac-ba7d-5954279f9a4f";
+botOptions.clientSecret = "WR/JP4kNwfYcEMLkX6eD1Z2O9eaIX2ax4cM5pQq1COk=";
+
 
 /* 
 Important Note: These keys are provided here for quick demos to generate JWT token at client side but not for Production environment.

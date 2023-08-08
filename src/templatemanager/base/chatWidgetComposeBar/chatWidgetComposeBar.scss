@@ -270,7 +270,7 @@
         .send-btn{
             width: 41px;
             height: 44px;
-            background: var(--global-theme-color);
+            background: var(--chat-widget-compose-bar-voice-icon-bg);
             border-radius: 4px;
             padding: 0;
             border: 0;
@@ -406,14 +406,14 @@
 .typing-indicator-wraper{
     position: absolute;
     top: -28px;
-    left: 0;
+    left: 10px;
     width: auto;
     min-width: 120px;
     display: none;
     align-items: center;
     gap: 20px;
     padding: 4px 0;
-    background: #fff;
+    // background: #fff;
     z-index: 9;
     p{
         color: var(--gray-modern-500, #697586);

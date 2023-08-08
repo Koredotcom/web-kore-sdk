@@ -165,15 +165,12 @@ export function ChatWidgetComposeBar(props: any) {
                         </figure>
                     </button> }
             </div>
-
-
             <div className="typing-indicator-wraper">
                 <div className="bot-icon">
-                    <figure>
-                        <img src=""></img>
+                    <figure className="default-avater-icon">
+                        <img style={{height:'24px',width:'24px'}} src={iconHelper.getIcon('avatar_bot')} alt="Elephant at sunset" />
                     </figure>
                 </div>
-                <p>Typing</p>
                 <div class="dot-flashing"></div>
             </div>
         </div>

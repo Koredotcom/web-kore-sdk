@@ -29,7 +29,7 @@ export function Button(props: any) {
                 <div>
                     <Message {...messageobj} />
                     <div className="button-template-container">
-                        <div className="button-temp button-variation-2">
+                        <div className="button-temp">
                             {
                                 msgData.message[0].component.payload.buttons.map((ele: any) => (
                                     <button className="kr-btn" onClick={() => handleButtonEvent(ele)}>{ele.title}

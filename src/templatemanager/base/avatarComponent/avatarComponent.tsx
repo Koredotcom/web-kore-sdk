@@ -30,8 +30,8 @@ export function AvatarComponent(props: any) {
             <div className={aShape[brandingInfo.chat_bubble.style]} aria-label="avatar actions">
                 <div className="content-info">
                     <div className="text-content animation-slide-up" role="contentinfo" aria-labelledby="helojohn">
-                        <h4 id="helojohn">Hello {hostInstance.config.botOptions.userIdentity}</h4>
-                        <p className="help-text-content">Welcome to support</p>
+                        <h4 id="helojohn">Hello!</h4>
+                        <p className="help-text-content">Welcome to InsureAssist</p>
                         <span className="close-avatar-content" role="contentinfo" aria-label="close" onClick={closeHelp}>
                             <figure>
                                 <img src={iconHelper.getIcon('close_icon')} alt="close" />
@@ -39,9 +39,9 @@ export function AvatarComponent(props: any) {
                         </span>
                     </div>
                     <div className="text-content animation-slide-up" role="contentinfo" aria-label="paragraph text">
-                        <p className="help-text-content">Can I help you any way?</p>
+                        <p className="help-text-content">How can I help you?</p>
                     </div>
-                    <button className="primary-button animation-slide-up" style={{ background: brandingInfo.chat_bubble.secondary_color }}>Send message</button>
+                    <button className="primary-button animation-slide-up" style={{ background: brandingInfo.chat_bubble.secondary_color }}>Talk to me</button>
                 </div>
                 <button className="avatar-bg" style={{ background: brandingInfo.chat_bubble.primary_color }}>
                     <span className="un-read-msg">2</span>

@@ -15,12 +15,12 @@ export function cardSliderExtension(props: any) {
             hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
         }, 150);
     }
-    const openAccordionDetails = (e: any,i: any) =>{
-        if( hostInstance.chatEle.querySelectorAll('.accordion_collapse')[i].classList.contains('collapse_data')){
+    const openAccordionDetails = (e: any, i: any) => {
+        if (hostInstance.chatEle.querySelectorAll('.accordion_collapse')[i].classList.contains('collapse_data')) {
             hostInstance.chatEle.querySelectorAll('.accordion_collapse')[i].classList.remove('collapse_data');
         } else {
             hostInstance.chatEle.querySelectorAll('.accordion_collapse')[i].classList.add('collapse_data');
-        }  
+        }
     }
     return (
         <div className="menu-wrapper-data-actions">
@@ -74,8 +74,8 @@ export function cardSliderExtension(props: any) {
                 <div className="accordion-wrapper" id="accordion">
                     {
                         sliderData.sliderInfo.map((ele: any) => (
-                            ele.moreInfo.map((item: any,i: any) => (
-                                <div className="accordion_item" onClick={() => openAccordionDetails(event,i)}>
+                            ele.moreInfo.map((item: any, i: any) => (
+                                <div className="accordion_item" onClick={() => openAccordionDetails(event, i)}>
                                     <button className="accordion_heading" aria-expanded="true">
                                         <p>{item.title}</p>
                                         <div className="arrow-icon">
@@ -90,7 +90,7 @@ export function cardSliderExtension(props: any) {
                                                         <div className="card-acc-temp">
                                                             <div className="left-data">
                                                                 <h1 style={val.nameStyles}>{val.name}</h1>
-                                                                { val.description  && <p>{val.description}</p>}
+                                                                {val.description && <p>{val.description}</p>}
                                                             </div>
                                                             <div className="right-data">
                                                                 <p>{val.value}</p>
@@ -143,7 +143,7 @@ export function card(props: any) {
                                     <button className="card-content-sec" onClick={() => handleButtonEvent(ele.actions)}>
                                         <div className="top-sec-card">
                                             <h1>{ele.topSection.title}</h1>
-                                            <span style={ele.topSection.details.styles} className="tag-name">{ele.topSection.details.title}</span>
+                                            {ele.topSection.details && <span style={ele.topSection.details.styles} className="tag-name">{ele.topSection.details.title}</span>}
                                         </div>
                                         <div className="middle-sec-card">
                                             <p>{ele.middleSection.title}</p>
@@ -216,6 +216,8 @@ export function card(props: any) {
                 </div>
             </Fragment>
         );
+    } else {
+
     }
 }
 
