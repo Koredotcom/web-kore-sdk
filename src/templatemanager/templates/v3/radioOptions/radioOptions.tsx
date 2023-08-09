@@ -26,7 +26,7 @@ export function RadioOptions(props: any) {
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'radioOptionTemplate' && !msgData.fromHistory) {
         return (
             <div className="radio-button-wrapper">
-                <div>{msgData?.message?.[0]?.component?.payload.heading}</div>
+                <h1>{msgData?.message?.[0]?.component?.payload.heading}</h1>
                 { msgData?.message?.[0]?.component?.payload.radioOptions.map((ele: any, ind: any) => (
                     <div className="radio-padding">
                         <div className="radio-button-item" onClick={() => selectedItem(ele.postback)}>
@@ -38,7 +38,7 @@ export function RadioOptions(props: any) {
                         </div>
                     </div>
                 ))}
-                <button className="kr-button-primary" onClick={onSubmit}>Confirm</button>
+                <button className="kr-button-primary lg" onClick={onSubmit}>Confirm</button>
             </div>
         );
     }

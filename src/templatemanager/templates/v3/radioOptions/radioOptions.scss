@@ -1,8 +1,16 @@
 
-.radio-padding{
-    padding: 10px;
+.radio-button-wrapper{
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    h1{
+        color: var(--kora-grey-grey-dark-1, #202124);
+        font-size: 14px;
+        font-weight: 700;
+        line-height: normal;
+    }
 }
-
 .radio-button-item{
     display: flex;
     align-items: center;
