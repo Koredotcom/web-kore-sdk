@@ -380,9 +380,6 @@ openModal(template:any, showClose:any) {
   } else {
     $('.kore-chat-window').removeClass('modelOpen');
     chatBodyModal.find('.closeChatBodyModal').css('display', 'none');
-    setTimeout(() => {
-      chatBodyModal.find('#chatBodyModalContent').empty();
-    }, 1000);
     chatBodyModal.hide();
     $('.kore-chat-window').removeClass('modelOpen');
   }
