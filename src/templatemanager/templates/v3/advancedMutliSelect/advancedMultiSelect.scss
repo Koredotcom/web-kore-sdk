@@ -1,0 +1,89 @@
+.list-view-action-template-wrapper{
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    h1{
+        color: var(--kora-grey-grey-dark-1, #202124);
+        font-size: 14px;
+        font-weight: 700;
+        line-height: normal;
+    }
+    .list-content-details{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+        &.if-checkbox-select-all{
+            .list-data-temp{
+                .img-with-content-block {
+                    .checkbox-item {
+                        flex-shrink: 0;
+                        .checkbox-input {
+                            + .checkbox-label{
+                                padding-left: 18px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .list-data-temp{
+            border-radius: 4px;
+            border: 1px solid var(--kora-grey-grey-light-3, #E4E5E7);
+            background: var(--generic-white, #FFF);
+            display: flex;
+            padding: 12px;
+            align-items: flex-start;
+            gap: 12px;
+            align-self: stretch;
+            flex-direction: column;
+            .img-with-content-block{
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+                width: 100%;
+                .img-block{
+                    width: 56px;
+                    height: 56px;
+                    flex-shrink: 0;
+                    &.small-img{
+                        height: 32px;
+                        width: 32px;
+                    }
+                    &.medium-img{
+                        height: 40px;
+                        width: 40px;
+                    }
+                    figure{
+                        width: 100%;
+                        height: 100%;
+                        line-height: normal;
+                        img{
+                            width: 100%;
+                            height: 100%;
+                            border-radius: 4px;
+                            object-fit: cover;
+                        }
+                    }
+                }
+                .content-details{
+                    width: 100%;
+                    h1{
+                        color: var(--kora-grey-grey-dark-1, #202124);
+                        font-size: 14px;
+                        font-weight: 700;
+                        line-height: normal;
+                    }
+                    p{
+                        color: var(--gray-modern-700, #364152);
+                        font-size: 12px;
+                        font-weight: 400;
+                        line-height: normal;
+                        margin-top: 8px;
+                    }
+                }
+            }
+        }
+    }
+}

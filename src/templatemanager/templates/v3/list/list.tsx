@@ -3,17 +3,86 @@ import './list.scss';
 import { h, Fragment } from 'preact';
 import { useState } from 'preact/hooks';
 import { Message } from '../message/message';
+import IconsManager from '../../../base/iconsManager';
+import { getHTML } from '../../../base/domManager';
+
+export function ListMore(props: any) {
+    const iconHelper = new IconsManager();
+    const hostInstance = props.hostInstance;
+    const msgData = props.msgData.msgData;
+    const closeMenu = () => {
+        hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');
+        setTimeout(() => {
+            hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
+        }, 150);
+    }
+
+    return (
+        <div className="menu-wrapper-data-actions">
+            <div className="actions-slider-header-menu">
+                <h1>Best Collections</h1>
+                <button className="menu-close" role="contentinfo" aria-label="close" onClick={closeMenu}>
+                    <figure>
+                        <img src={iconHelper.getIcon('close_icon')} alt="close" />
+                    </figure>
+                </button>
+            </div>
+            <div className="iner-data-scroll-wraper">
+                See More
+            </div>
+        </div>
+    )
+}
 
 export function List(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
-    const messageobj = {
+    const messageObj = {
         msgData: msgData,
         hostInstance: hostInstance
     }
+
+    const handleClick = (e: any) => {
+        if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
+            hostInstance.sendMessage(e.title || e.payload || e.value, { renderMsg: e.title });
+        } else if (e.type == 'url' || e.type == 'web_url') {
+            let link = e.fallback_url || e.url;
+            if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
+                link = `http:////${link}`;
+            }
+            hostInstance.openExternalLink(link);
+        }
+    }
+
+    const openSeeMoreTab = () => {
+        hostInstance.bottomSliderAction('', getHTML(ListMore, messageObj, hostInstance));
+    }
+
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'list') {
         return (
-            <div>List</div>
+            <div className="list-action-template-wrapper">
+                <h1>Best Collections</h1>
+                <div className="list-content-details">
+                    {msgData.message[0].component.payload.elements.map((ele: any, ind: any) => (
+                        ( ind < 3 &&
+                        <div className="list-data-temp">
+                            <div className="img-with-content-block">
+                                <div className="img-block">
+                                    <figure>
+                                        <img src={ele.image_url} />
+                                    </figure>
+                                </div>
+                                <div className="content-details">
+                                    <h1>{ele.title}</h1>
+                                    <p>{ele.subtitle}</p>
+                                </div>
+                            </div>
+                            {ele.buttons && ele.buttons[0] && <button className="kr-button-blue-light" onClick={() => handleClick(ele.buttons[0])}>{ele.buttons[0].title}</button>}
+                            {!ele.buttons && <a className="link-exteranl-list" href="#" target="_blank" onClick={() => handleClick(ele.default_action)}>{ele.default_action.url}</a>}
+                        </div>)))}
+                </div>
+                { msgData.message[0].component.payload.elements.length > 3 && <button className="show-more-btn" onClick={openSeeMoreTab}>See More</button>}
+            </div>
         );
     }
 }
