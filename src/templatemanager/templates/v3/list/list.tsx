@@ -17,6 +17,19 @@ export function ListMore(props: any) {
         }, 150);
     }
 
+    const handleClick = (e: any) => {
+        if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
+            hostInstance.sendMessage(e.title || e.payload || e.value, { renderMsg: e.title });
+            closeMenu();
+        } else if (e.type == 'url' || e.type == 'web_url') {
+            let link = e.fallback_url || e.url;
+            if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
+                link = `http:////${link}`;
+            }
+            hostInstance.openExternalLink(link);
+        }
+    }
+
     return (
         <div className="menu-wrapper-data-actions">
             <div className="actions-slider-header-menu">
@@ -28,7 +41,26 @@ export function ListMore(props: any) {
                 </button>
             </div>
             <div className="iner-data-scroll-wraper">
-                See More
+                <div className="list-action-template-wrapper">
+                    <div className="list-content-details">
+                        {msgData.message[0].component.payload.elements.map((ele: any, ind: any) => (
+                            <div className="list-data-temp">
+                                <div className="img-with-content-block">
+                                    <div className="img-block">
+                                        <figure>
+                                            <img src={ele.image_url} />
+                                        </figure>
+                                    </div>
+                                    <div className="content-details">
+                                        <h1>{ele.title}</h1>
+                                        <p>{ele.subtitle}</p>
+                                    </div>
+                                </div>
+                                {ele.buttons && ele.buttons[0] && <button className="kr-button-blue-light" onClick={() => handleClick(ele.buttons[0])}>{ele.buttons[0].title}</button>}
+                                {!ele.buttons && <a className="link-exteranl-list" href="#" target="_blank" onClick={() => handleClick(ele.default_action)}>{ele.default_action.url}</a>}
+                            </div>))}
+                    </div>
+                </div> 
             </div>
         </div>
     )

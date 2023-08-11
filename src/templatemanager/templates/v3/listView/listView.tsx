@@ -10,11 +10,30 @@ export function ListViewMore(props: any) {
     const iconHelper = new IconsManager();
     const hostInstance = props.hostInstance;
     const msgData = props.msgData.msgData;
+    const [selectedTab, setSelectedTab] = useState(Object.keys(msgData?.message?.[0]?.component?.payload?.moreData)[0]);
+
     const closeMenu = () => {
         hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');
         setTimeout(() => {
             hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
         }, 150);
+    }
+
+    const handleClick = (e: any) => {
+        if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
+            hostInstance.sendMessage(e.title || e.payload || e.value, { renderMsg: e.title });
+            closeMenu();
+        } else if (e.type == 'url' || e.type == 'web_url') {
+            let link = e.url;
+            if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
+                link = `http:////${link}`;
+            }
+            hostInstance.openExternalLink(link);
+        }
+    }
+
+    const onTabChange = (e: any) => {
+        setSelectedTab(e);
     }
 
     return (
@@ -28,7 +47,26 @@ export function ListViewMore(props: any) {
                 </button>
             </div>
             <div className="iner-data-scroll-wraper">
-                See More
+                <div className="list-view-action-template-wrapper">
+                    {Object.keys(msgData?.message?.[0]?.component?.payload?.moreData).map((e: any) => (<div onClick={() => onTabChange(e)}>{e}</div>))}
+                    <div className="list-content-details">
+                        {msgData?.message?.[0]?.component?.payload?.moreData[selectedTab].map((ele: any, ind: any) => (
+                            <div className="list-data-temp">
+                                <div className="img-with-content-block" onClick={() => handleClick(ele.default_action)}>
+                                    <div className="img-block small-img">
+                                        <figure>
+                                            {ele.image_url && <img src={ele.image_url} />}
+                                        </figure>
+                                    </div>
+                                    <div className="content-details">
+                                        <h1>{ele.title}</h1>
+                                        <p>{ele.subtitle}</p>
+                                    </div>
+                                    <div className="price-tag">{ele.value}</div>
+                                </div>
+                            </div>))}
+                    </div>
+                </div>
             </div>
         </div>
     )
