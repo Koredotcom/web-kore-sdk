@@ -4,7 +4,6 @@ import IconsManager from '../../../base/iconsManager';
 import './cardTemplate.scss';
 import { h, Fragment } from 'preact';
 
-
 export function cardSliderExtension(props: any) {
     const sliderData = props.msgData;
     const iconHelper = new IconsManager();
@@ -22,6 +21,36 @@ export function cardSliderExtension(props: any) {
             hostInstance.chatEle.querySelectorAll('.accordion_collapse')[i].classList.add('collapse_data');
         }
     }
+
+    /**
+   * Define the tab state and set state active by default
+   */
+
+
+
+    /**
+     * handle previous and current tabindex 
+     * @param tabIndex 
+     */
+    const handleTabChange = (event: any) => {
+        const tabHeader = hostInstance.chatEle.querySelectorAll('.tab-item');
+        tabHeader.forEach((ele: any, i: any) => {
+            if (i == event) {
+                ele.classList.add('active');
+            } else {
+                ele.classList.remove('active');
+            }
+        })
+        const tabInfo = hostInstance.chatEle.querySelectorAll('.tab-pane');
+        tabInfo.forEach((ele: any, i: any) => {
+            if (i == event) {
+                ele.classList.add('active');
+            } else {
+                ele.classList.remove('active');
+            }
+        })
+    };
+
     return (
         <div className="menu-wrapper-data-actions">
             <div className="actions-slider-header-menu">
@@ -38,11 +67,14 @@ export function cardSliderExtension(props: any) {
                         sliderData.sliderInfo.map((ele: any) => (
                             <div>
                                 <div className="top-sec-card">
+                                    <img src={ele.topSection.icon} />
                                     <h1>{ele.topSection.title}</h1>
                                     <span style={ele.topSection.details.styles} className="tag-name">{ele.topSection.details.title}</span>
+
+
                                 </div>
                                 {
-                                    ele.middleSection.items.map((item: any) => (
+                                    ele?.middleSection?.items?.map((item: any) => (
                                         <div className="middle-sec-card">
                                             <div class="img-with-text">
                                                 <img src={item.icon} />
@@ -58,6 +90,7 @@ export function cardSliderExtension(props: any) {
                                     ele.bottomSection.items.map((val: any) => (
                                         <div className="bottom-sec-card small-font-sec">
                                             <div class="img-with-text">
+                                                {val.icon && <img src={val.icon} />}
                                                 <p style={val.titleStyles}>{val.title}</p>
                                             </div>
                                             <div class="right-title">
@@ -75,8 +108,8 @@ export function cardSliderExtension(props: any) {
                     {
                         sliderData.sliderInfo.map((ele: any) => (
                             ele.moreInfo.map((item: any, i: any) => (
-                                <div className="accordion_item" onClick={() => openAccordionDetails(event, i)}>
-                                    <button className="accordion_heading" aria-expanded="true">
+                                <div className="accordion_item">
+                                    <button className="accordion_heading" aria-expanded="true" onClick={() => openAccordionDetails(event, i)}>
                                         <p>{item.title}</p>
                                         <div className="arrow-icon">
                                             <i className="sdkv3-cheveron-right"></i>
@@ -84,6 +117,50 @@ export function cardSliderExtension(props: any) {
                                     </button>
                                     <div className="accordion_collapse">
                                         <div className="accordion_body">
+                                            <div className="tab-data">
+                                                {/* middle section tab */}
+                                                {item.title.includes("Policy Discounts") &&
+                                                    <div>
+                                                        <div className="tabs">
+                                                            <div className="tab-header tab">
+                                                                {item.vehicles.map((tab: any, index: any) => (
+                                                                    <div
+                                                                        key={index}
+                                                                        onClick={() => handleTabChange(index)} id={index}
+                                                                        className={index == 0 ? "tab-item active" : "tab-item"}
+                                                                    >
+                                                                        <h2 className="title">{tab.title} <br /> {tab.subTitle}</h2>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                            <div className="tab-content">
+                                                                {item.vehicles.map((tab: any, index: any) => (
+                                                                    <div
+                                                                        key={index}
+                                                                        className={index == 0 ? "tab-pane active" : "tab-pane"}
+                                                                    >
+                                                                        <h2 className="sub-title f-style">{tab.info}</h2>
+                                                                        {tab.content.map((tab: any) => (
+                                                                            <div className="mt-15 clearfix p-bottom border-bottom">
+                                                                                <div className="f-left">
+                                                                                    {tab.name && <p className=" f-style-gray f-style">
+                                                                                        {tab.name}
+                                                                                    </p>}
+                                                                                </div>
+                                                                                <div className="f-right">
+                                                                                    {tab.value && <p className="f-right f-style-gray f-style">{tab.value}</p>}
+                                                                                </div>
+                                                                            </div>
+                                                                        ))}
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+
+
                                             <div className="card-acc-temp-sec">
                                                 {
                                                     item.items.map((val: any) => (
@@ -91,23 +168,48 @@ export function cardSliderExtension(props: any) {
                                                             <div className="left-data">
                                                                 <h1 style={val.nameStyles}>{val.name}</h1>
                                                                 {val.description && <p>{val.description}</p>}
+                                                                {val.subTitle && <p className="mt-5">{val.subTitle}</p>}
+                                                                {/* {
+                                                                     val.itemDescriptions.map((val: any) => (
+                                                                        <div>
+                                                                             <h1 style={val.type}>{val.type}</h1>
+                                                                        </div>
+                                                                    ))
+                                                                } */}
+                                                                {/* {
+                                                                     val.description.moreInfo.map((val:any) => (
+                                                                        <div>
+                                                                             <h1 style={val.type}>{val.name}</h1>
+                                                                        </div>
+                                                                    ))
+                                                                } */}
                                                             </div>
                                                             <div className="right-data">
                                                                 <p>{val.value}</p>
+                                                                {val.subTitleValue && <p className="mt-5">{val.subTitleValue}</p>}
+                                                                {/* {
+                                                                     val.description.moreInfo.map((val:any) => (
+                                                                        <div>
+                                                                            <p>{val.value}</p>
+                                                                        </div>
+                                                                    ))
+                                                                } */}
                                                             </div>
                                                         </div>
                                                     ))
                                                 }
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
+
                             ))
                         ))
                     }
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 
@@ -118,6 +220,8 @@ export function card(props: any) {
         msgData: msgData,
         hostInstance: hostInstance
     }
+
+
     const handleButtonEvent = (e: any) => {
         if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
             hostInstance.sendMessage(e.value, { renderMsg: e.title });
@@ -138,6 +242,8 @@ export function card(props: any) {
                     <section className="card-template-wrapper" aria-label="card template sdk">
                         <div className="card-warpper-info">
                             <h1>{msgData.message[0].component.payload.cards.cardHeading.title}</h1>
+                            <p style={msgData.valueStyles}>{msgData.message[0].component.payload.cards}</p>
+
                             {
                                 msgData.message[0].component.payload.cards.cardDescription.map((ele: any) => (
                                     <button className="card-content-sec" onClick={() => handleButtonEvent(ele.actions)}>
@@ -146,7 +252,7 @@ export function card(props: any) {
                                             {ele.topSection.details && <span style={ele.topSection.details.styles} className="tag-name">{ele.topSection.details.title}</span>}
                                         </div>
                                         <div className="middle-sec-card">
-                                            <p>{ele.middleSection.title}</p>
+                                            <h1>{ele.middleSection.title}</h1>
                                         </div>
                                         <div className="bottom-sec-card">
                                             <h2>{ele.bottomSection.title}</h2>
@@ -163,6 +269,9 @@ export function card(props: any) {
             </Fragment>
         );
     } else if (msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'details') {
+
+
+
         return (
             <Fragment>
                 <div>
@@ -171,26 +280,26 @@ export function card(props: any) {
                             msgData.message[0].component.payload.cards.cardDescription.map((ele: any) => (
                                 <div className="card-content-sec">
                                     <div className="top-sec-card">
+                                        <img src={ele.topSection.icon} /> 
                                         <h1>{ele.topSection.title}</h1>
                                         <span style={ele.topSection.details.styles} className="tag-name">{ele.topSection.details.title}</span>
+
                                     </div>
-                                    <div className="middle-sec-card">
-                                        <p>{ele.topSection.subTitle}</p>
+                                    <div className="middle-sec-card"> 
+                                    <h1>{ele.topSection.subTitle}</h1>
                                     </div>
                                     {
                                         ele.topSection.items.map((val: any) => (
-                                            <div className="bottom-sec-card">
+                                            <div style={val?.borderStyles} className="bottom-sec-card"> 
                                                 <h2 style={val.titleStyles}>{val.title}</h2>
                                                 <p style={val.valueStyles}>{val.value}</p>
                                             </div>
                                         ))
                                     }
-                                    <div className="border-divider"></div>
                                     {
-                                        ele.middleSection.items.map((val: any) => (
+                                        ele?.middleSection?.items.map((val: any) => (
                                             <div className="bottom-sec-card">
-                                                <h2 style={val.titleStyles}>{val.title}<span style={val.subTitleStyles}>{val.subTitle}</span></h2>
-                                                <p style={val.valueStyles}>{val.value}</p>
+                                                <h2 style={val.titleStyles}>{val.title}<span style={val.subTitleStyles}>{val.subTitle}</span></h2>                                                <p style={val.valueStyles}>{val.value}</p>
                                             </div>
                                         ))
                                     }
