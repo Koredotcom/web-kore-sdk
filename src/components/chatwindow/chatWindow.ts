@@ -9,7 +9,6 @@ import './../../libs/perfectscroll/css/perfect-scrollbar.min.css';
 import './sass/chatWindow.scss';
 //import './../../libs/emojione.sprites.css';
 import chatConfig from './config/kore-config';
-//import GreeetingsPlugin from '../../plugins/greetings/greetings-plugin'
 
 // import welcomeScreeContainer from '../../preact/templates/base/welcomeScreeContainer/welcomeScreeContainer';
 
