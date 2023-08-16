@@ -10,7 +10,7 @@ import './sass/chatWindow.scss';
 //import './../../libs/emojione.sprites.css';
 import chatConfig from './config/kore-config';
 
-// import welcomeScreeContainer from '../../preact/templates/base/welcomeScreeContainer/welcomeScreeContainer';
+import welcomeScreeContainer from '../../preact/templates/base/welcomeScreeContainer/welcomeScreeContainer';
 
 import { getHTML } from '../../templatemanager/base/domManager';
 import { Message } from '../../templatemanager/templates/v3/message/message';
