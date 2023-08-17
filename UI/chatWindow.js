@@ -435,7 +435,7 @@
                         // str = sanitizeXSS(str);
                         // str = str.replace(/onerror=/gi, '');
                         // str = str.replace(/onmouseover=/gi, '');
-                        str = DOMPurify.sanitize(str,{  ADD_TAGS: ['iframe']})
+                        str = DOMPurify.sanitize(str,{ ALLOWED_TAGS: ['a'] ,  ADD_TAGS: ['iframe']})
                         wrapper1 = document.createElement('div');
                         newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
                         newStr = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -449,7 +449,7 @@
                         // str = sanitizeXSS(str);
                         // str = str.replace(/onerror=/gi, '');
                         // str = str.replace(/onmouseover=/gi, '');
-                        str = DOMPurify.sanitize(str,{  ADD_TAGS: ['iframe']})
+                        str = DOMPurify.sanitize(str,{  ALLOWED_TAGS: ['a'] , ADD_TAGS: ['iframe']})
                         wrapper1 = document.createElement('div');
                         //str = str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
                         wrapper1.innerHTML = xssAttack(str);
@@ -2128,7 +2128,7 @@
                 var msgData = {};
                 fileUploaderCounter = 0;
                 //to send \n to server for new lines
-                chatInput.html(chatInitialize.koreReplaceAll(chatInput.text(),"<br>", "\n"));
+                chatInput.text(chatInitialize.koreReplaceAll(chatInput.text(),"<br>", "\n"));
                 if (me.attachmentInfo && Object.keys(me.attachmentInfo).length) {
                     msgData = {
                         'type': "currentUser",
