@@ -1,4 +1,11 @@
+### 10.1.9
 
+- SDK Release Aug 19, 2023
+* Bug fixes
+  * carousel template bugfixes with multiple 
+  * quick reply template bugfixes
+  * Bugfix for back to back form trigger within 1 sec with continuous loading
+  * Added a config to send acknowledgement on bot response.Configuration available at chatConfig.botOptions.enableAck
 ### 10.1.1
 
 - SDK Release July 4, 2023
