@@ -119,6 +119,7 @@
             font-size: 14px;
             font-weight: 500;
             width: 100%;
+            text-align: left !important;
         }
 
         p {
@@ -238,6 +239,7 @@
         align-items: center;
         margin-bottom: 12px;
         gap: 10px;
+
         h1 {
             color: var(--kora-grey-grey-dark-1, #202124);
             font-size: 18px;
@@ -435,7 +437,7 @@
         cursor: pointer;
 
         .left-data {
-            width: 100%;
+            width: 70%;
 
             h1 {
                 color: var(--gray-900, #101828);
@@ -450,10 +452,15 @@
                 font-weight: 500;
                 line-height: 20px;
             }
+
+            .temp-data {
+                color: #101828;
+            }
         }
 
         .right-data {
             flex-shrink: 0;
+            width: 20%;
 
             p {
                 color: var(--gray-900, #101828);
@@ -474,7 +481,7 @@
     margin: 15px 0;
     float: left;
     width: 32.33%;
-    height: 51px;   
+    height: 51px;
 
     margin-left: 0;
     border-radius: 4px 4px 0px 0px;
@@ -555,7 +562,11 @@
 .p-bottom {
     padding-bottom: 15px
 }
-.p-bottom:last-child{padding-bottom: 0;}
+
+.p-bottom:last-child {
+    padding-bottom: 0;
+}
+
 .border-bottom:last-child {
     border-bottom: 1px solid transparent;
 }
@@ -566,4 +577,62 @@
 
 .mt-5 {
     margin-top: 5px
+}
+
+.tab-left {
+    line-height: 35px;
+    padding-top: 10px;
+}
+.pd-top{
+    padding-top:10px;
+}
+.accordion-wrapper .accordion_item .accordion_collapse_tab:not(.collapse_data) {
+    display: none;
+    animation: none !important;
+}
+
+.accordion-wrapper .accordion_item .accordion_collapse_tab {
+    transition: height 0.35s ease;
+    display: block;
+    -webkit-animation-name: slideOutDown;
+    animation-name: slideOutDown;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+.tab-content {
+    padding: 0 25px;
+}
+
+.tab-accordian-data {
+    .left-data {
+        line-height: 30px;
+    }
+}
+
+.accordion-wrapper.accordian-container {
+    padding: 0px;
+}
+
+.card-acc-temp.pd-0 {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.card-acc-temp.pd-0 .sub-title {
+    padding-top: 0;
+}
+
+.sub-title-style {
+    padding-left: 10px;
+    font-weight: 400;
+    padding-top: 0;
+    color: #101828;
+    padding-bottom: 14px;
+}
+.tab-data-style{
+    overflow: auto;
+    padding: 0 15px;
 }

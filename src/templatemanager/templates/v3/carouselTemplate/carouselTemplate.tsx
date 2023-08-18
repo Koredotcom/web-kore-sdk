@@ -7,15 +7,17 @@ import stackedCards from './stackedCarousel'
 export function Carousel(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
-
     const messageobj = {
         msgData: msgData,
         hostInstance: hostInstance
     }
 
+
+
+
     const handleButtonEvent = (e: any) => {
         if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
-            hostInstance.sendMessage(e.payload || e.value, { renderMsg: e.title });
+            // hostInstance.sendMessage(e.payload || e.value, { renderMsg: e.title });
         } else if (e.type == 'url' || e.type == 'web_url') {
             let link = e.url;
             if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
@@ -24,12 +26,10 @@ export function Carousel(props: any) {
             hostInstance.openExternalLink(link);
         }
     }
-
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'carousel' && msgData?.message?.[0]?.component?.payload?.carousel_type == 'stacked') {
         const stackClass = msgData.messageId + ' stacked stacked-cards';
         const leftCheButton = msgData.messageId + ' left-click';
         const rightCheButton = msgData.messageId + ' right-click';
-
         const stackedCard = new stackedCards({
             hostInstance: hostInstance,
             selector: '.' + msgData.messageId,
@@ -49,22 +49,6 @@ export function Carousel(props: any) {
                 </button>
                 <ul class="slider">
                     <li class="item">
-                        <button className="card-content-sec">
-                            <div className="top-sec-card">
-                                <h1>1043693</h1>
-                                <span className="tag-name">Active</span>
-                            </div>
-                            <div className="middle-sec-card">
-                                <p>Auto</p>
-                            </div>
-                            <div className="bottom-sec-card">
-                                <h2>Premium amount</h2>
-                                <p>
-                                    <time>$588</time>
-                                </p>
-                            </div>
-                            <button className="view-more-btn">View more</button>
-                        </button>
                     </li>
                     <li class="item">
                         <button className="card-content-sec">
@@ -199,41 +183,38 @@ export function Carousel(props: any) {
                     <i className="sdkv3-cheveron-left"></i>
                 </button>
                 <div className="list-carousel" data-id={msgData.messageId}>
-                    {msgData.message[0].component.payload.elements.map((ele: any) => (
-                        <div className="list-carousel-item">
+                    {
+                        <div className="list-carousel-item card-content-sec">
                             <div className="img-block">
-                                <figure>
-                                    <img src={ele.image_url} />
-                                </figure>
+                                <div className="top-sec-card">
+                                    <img src={msgData.message[0].component?.payload.elements[0].items[0].topSection.icon} />
+                                    <h1>{msgData.message[0].component?.payload.elements[0].items[0].topSection.title}</h1>
+                                    {msgData.message[0].component?.payload.elements[0].items[0].topSection.details && <span style={msgData.message[0].component?.payload.elements[0].items[0].topSection.details.styles} className="tag-name">{msgData.message[0].component?.payload.elements[0].items[0].topSection.details.title}</span>}
+                                </div>
+                                {
+                                    msgData.message[0].component?.payload.elements[0].items[0].topSection.items.map((ele: any) => (
+                                        <div>
+                                            <div style={ele.titleStyles} className="middle-sec-card">
+                                                <h1>{ele.title}</h1>
+                                                <h2>{ele.value}</h2>
+                                            </div>
+
+                                        </div>
+                                    ))
+                                }
                             </div>
-                            <div className="content-block">
-                                <div className="heading-block">
-                                    <h1>{ele.title}</h1>
-                                    {/* <p>$34.88</p> */}
-                                </div>
-                                <p>{ele.subtitle}</p>
-                                <div className="rating-block">
-                                    <figure>
-                                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEuOTU1MzYgNi4wODEyTDUuOTE0NjYgNS42NTA5N0w3LjUzMTc2IDEuODExODlDNy43MDY5MyAxLjM5NjA0IDguMjk2MiAxLjM5NjA0IDguNDcxMzcgMS44MTE4OUwxMC4wODg1IDUuNjUwOTdMMTQuMDQ0NyA2LjA4MTJDMTQuNDc3IDYuMTI4MjEgMTQuNjU1NyA2LjY2MDEzIDE0LjMzOTUgNi45NTg2NkwxMS4zNjI5IDkuNzY5MDRMMTIuMjAxMyAxMy44ODkzQzEyLjI5MDEgMTQuMzI1NCAxMS44MTY2IDE0LjY1NzkgMTEuNDM2NiAxNC40MjYzTDguMDAxNTcgMTIuMzMzOUw0LjU2MzI3IDE0LjQyNjVDNC4xODMwNyAxNC42NTc5IDMuNzA5NyAxNC4zMjUxIDMuNzk4NzcgMTMuODg5TDQuNjQwMjEgOS43NjkwNEwxLjY2MDY2IDYuOTU4ODVDMS4zNDQyIDYuNjYwMzggMS41MjI5MSA2LjEyODE5IDEuOTU1MzYgNi4wODEyWiIgZmlsbD0iI0Y1OUUwQiIvPgo8L3N2Zz4K" />
-                                    </figure>
-                                    <figure>
-                                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEuOTU1MzYgNi4wODEyTDUuOTE0NjYgNS42NTA5N0w3LjUzMTc2IDEuODExODlDNy43MDY5MyAxLjM5NjA0IDguMjk2MiAxLjM5NjA0IDguNDcxMzcgMS44MTE4OUwxMC4wODg1IDUuNjUwOTdMMTQuMDQ0NyA2LjA4MTJDMTQuNDc3IDYuMTI4MjEgMTQuNjU1NyA2LjY2MDEzIDE0LjMzOTUgNi45NTg2NkwxMS4zNjI5IDkuNzY5MDRMMTIuMjAxMyAxMy44ODkzQzEyLjI5MDEgMTQuMzI1NCAxMS44MTY2IDE0LjY1NzkgMTEuNDM2NiAxNC40MjYzTDguMDAxNTcgMTIuMzMzOUw0LjU2MzI3IDE0LjQyNjVDNC4xODMwNyAxNC42NTc5IDMuNzA5NyAxNC4zMjUxIDMuNzk4NzcgMTMuODg5TDQuNjQwMjEgOS43NjkwNEwxLjY2MDY2IDYuOTU4ODVDMS4zNDQyIDYuNjYwMzggMS41MjI5MSA2LjEyODE5IDEuOTU1MzYgNi4wODEyWiIgZmlsbD0iI0Y1OUUwQiIvPgo8L3N2Zz4K" />
-                                    </figure>
-                                    <figure>
-                                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEuOTU1MzYgNi4wODEyTDUuOTE0NjYgNS42NTA5N0w3LjUzMTc2IDEuODExODlDNy43MDY5MyAxLjM5NjA0IDguMjk2MiAxLjM5NjA0IDguNDcxMzcgMS44MTE4OUwxMC4wODg1IDUuNjUwOTdMMTQuMDQ0NyA2LjA4MTJDMTQuNDc3IDYuMTI4MjEgMTQuNjU1NyA2LjY2MDEzIDE0LjMzOTUgNi45NTg2NkwxMS4zNjI5IDkuNzY5MDRMMTIuMjAxMyAxMy44ODkzQzEyLjI5MDEgMTQuMzI1NCAxMS44MTY2IDE0LjY1NzkgMTEuNDM2NiAxNC40MjYzTDguMDAxNTcgMTIuMzMzOUw0LjU2MzI3IDE0LjQyNjVDNC4xODMwNyAxNC42NTc5IDMuNzA5NyAxNC4zMjUxIDMuNzk4NzcgMTMuODg5TDQuNjQwMjEgOS43NjkwNEwxLjY2MDY2IDYuOTU4ODVDMS4zNDQyIDYuNjYwMzggMS41MjI5MSA2LjEyODE5IDEuOTU1MzYgNi4wODEyWiIgZmlsbD0iI0Y1OUUwQiIvPgo8L3N2Zz4K" />
-                                    </figure>
-                                    <figure>
-                                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9Ikljb24gLyBTdGFyIC8gRmlsbGVkIj4KPHBhdGggaWQ9IlZlY3RvciIgZD0iTTEuOTU1MzYgNi4wODEyTDUuOTE0NjYgNS42NTA5N0w3LjUzMTc2IDEuODExODlDNy43MDY5MyAxLjM5NjA0IDguMjk2MiAxLjM5NjA0IDguNDcxMzcgMS44MTE4OUwxMC4wODg1IDUuNjUwOTdMMTQuMDQ0NyA2LjA4MTJDMTQuNDc3IDYuMTI4MjEgMTQuNjU1NyA2LjY2MDEzIDE0LjMzOTUgNi45NTg2NkwxMS4zNjI5IDkuNzY5MDRMMTIuMjAxMyAxMy44ODkzQzEyLjI5MDEgMTQuMzI1NCAxMS44MTY2IDE0LjY1NzkgMTEuNDM2NiAxNC40MjYzTDguMDAxNTcgMTIuMzMzOUw0LjU2MzI3IDE0LjQyNjVDNC4xODMwNyAxNC42NTc5IDMuNzA5NyAxNC4zMjUxIDMuNzk4NzcgMTMuODg5TDQuNjQwMjEgOS43NjkwNEwxLjY2MDY2IDYuOTU4ODVDMS4zNDQyIDYuNjYwMzggMS41MjI5MSA2LjEyODE5IDEuOTU1MzYgNi4wODEyWiIgZmlsbD0iI0NERDVERiIvPgo8L2c+Cjwvc3ZnPgo=" />
-                                    </figure>
-                                    <figure>
-                                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9Ikljb24gLyBTdGFyIC8gRmlsbGVkIj4KPHBhdGggaWQ9IlZlY3RvciIgZD0iTTEuOTU1MzYgNi4wODEyTDUuOTE0NjYgNS42NTA5N0w3LjUzMTc2IDEuODExODlDNy43MDY5MyAxLjM5NjA0IDguMjk2MiAxLjM5NjA0IDguNDcxMzcgMS44MTE4OUwxMC4wODg1IDUuNjUwOTdMMTQuMDQ0NyA2LjA4MTJDMTQuNDc3IDYuMTI4MjEgMTQuNjU1NyA2LjY2MDEzIDE0LjMzOTUgNi45NTg2NkwxMS4zNjI5IDkuNzY5MDRMMTIuMjAxMyAxMy44ODkzQzEyLjI5MDEgMTQuMzI1NCAxMS44MTY2IDE0LjY1NzkgMTEuNDM2NiAxNC40MjYzTDguMDAxNTcgMTIuMzMzOUw0LjU2MzI3IDE0LjQyNjVDNC4xODMwNyAxNC42NTc5IDMuNzA5NyAxNC4zMjUxIDMuNzk4NzcgMTMuODg5TDQuNjQwMjEgOS43NjkwNEwxLjY2MDY2IDYuOTU4ODVDMS4zNDQyIDYuNjYwMzggMS41MjI5MSA2LjEyODE5IDEuOTU1MzYgNi4wODEyWiIgZmlsbD0iI0NERDVERiIvPgo8L2c+Cjwvc3ZnPgo=" />
-                                    </figure>
-                                </div>
-                                <button className="kr-button-secondary" onClick={() => handleButtonEvent(ele.buttons[0])}>{ele.buttons[0].title}</button>
-                                <button className="kr-button-primary" onClick={() => handleButtonEvent(ele.buttons[1])}>{ele.buttons[1].title}</button>
+                            {
+                                msgData.message[0].component?.payload.elements[0].items[0].bottomSection.items.map((ele: any) => (
+                                    <div className="bottom-sec-card">
+                                        <h1>{ele.title}</h1>
+                                        <h2 style={ele.titleStyles}>{ele.value}</h2>
+                                    </div>
+                                ))}
+                            <div className="button-block">
+                                <button className="kr-button-secondary" onClick={() => handleButtonEvent("test")}>Pay more</button>
                             </div>
                         </div>
-                    ))}
+                    }
                 </div>
                 <button className="carousel-right-click" data-button-right={msgData.messageId}>
                     <i className="sdkv3-cheveron-right"></i>
