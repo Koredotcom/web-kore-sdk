@@ -324,6 +324,17 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 # Release History
 ```
 
+v10.1.9 [Minor] on 19-Aug-2023: Master branch
+	Features
+		1.Added a config to send acknowledgement on bot response.Configuration available at chatConfig.botOptions.enableAck
+		2.Support for .gif fileType
+                3.Feedback templates added
+                4.Solutions templates plugin added
+
+	Bugfixes
+		1.XSS bug fix
+                2.Styling issues fix
+
 v10.0.0 [Major] on 21-Jan-2023: Master branch
 	Features
 		1.Integrated Feedback Templates
