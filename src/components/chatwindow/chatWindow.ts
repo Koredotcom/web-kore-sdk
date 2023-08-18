@@ -881,6 +881,7 @@ bindEvents  () {
             $(paginatedHistoryLoader).insertBefore(_chatContainer.find('.chat-container li:first'));
           }
           _chatContainer.find('.kore-chat-footer').addClass('disableFooter');
+          _chatContainer.find('.kore-chat-footer .chatInputBox').blur();
           bot.getHistory({ limit: (me?.config?.history?.paginatedScroll?.batchSize) });
         }
       }
