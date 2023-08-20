@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'SDKV3Icons';
-  src:  url('./fonts/SDKV3Icons.eot?1slxt2');
-  src:  url('./fonts/SDKV3Icons.eot?1slxt2#iefix') format('embedded-opentype'),
-    url('./fonts/SDKV3Icons.ttf?1slxt2') format('truetype'),
-    url('./fonts/SDKV3Icons.woff?1slxt2') format('woff'),
-    url('./fonts/SDKV3Icons.svg?1slxt2#SDKV3Icons') format('svg');
+  src:  url('./fonts/SDKV3Icons.eot?ue4i04');
+  src:  url('./fonts/SDKV3Icons.eot?ue4i04#iefix') format('embedded-opentype'),
+    url('./fonts/SDKV3Icons.ttf?ue4i04') format('truetype'),
+    url('./fonts/SDKV3Icons.woff?ue4i04') format('woff'),
+    url('./fonts/SDKV3Icons.svg?ue4i04#SDKV3Icons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.sdkv3-elipse:before {
+  content: "\e91f";
+}
+.sdkv3-elipse-horizantal:before {
+  content: "\e920";
+}
+.sdkv3-filter:before {
+  content: "\e921";
+}
 .sdkv3-cheveron-left:before {
   content: "\e91e";
 }

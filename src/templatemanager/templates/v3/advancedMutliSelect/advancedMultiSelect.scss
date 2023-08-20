@@ -17,9 +17,10 @@
         padding: 5px;
 
         .multi-select-list-item {
+            margin-bottom: 20px;
             .checkbox-item {
                 &.select-all {
-                    padding: 10px;
+                    margin: 10px 0;
                 }
             }
 
@@ -28,6 +29,7 @@
                 font-size: 14px;
                 font-weight: 700;
                 line-height: normal;
+                margin-bottom: 10px;
             }
 
             .list-content-details {
@@ -41,7 +43,7 @@
                         .img-with-content-block {
                             .checkbox-item {
                                 flex-shrink: 0;
-
+                                padding: 0;
                                 .checkbox-input {
                                     +.checkbox-label {
                                         padding-left: 18px;

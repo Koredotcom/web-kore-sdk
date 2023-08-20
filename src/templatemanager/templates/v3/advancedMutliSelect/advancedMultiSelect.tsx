@@ -115,7 +115,7 @@ export function AdvancedMultiSelect(props: any) {
                                 {ele.collection.map((e: any, ind: any) => (
                                     <div className="list-data-temp">
                                         <div className="img-with-content-block" onClick={event => handleSelect(event, index, ind)}>
-                                            <div className="checkbox-item select-all">
+                                            <div className="checkbox-item">
                                                 <input id={`checkbox-${index}-${ind}`} className={`checkbox-input checkbox-input-${index} checkbox-input-${index}-${ind}`} type="checkbox" value={e.value} />
                                                 <label for={`checkbox-${index}-${ind}`} className="checkbox-label"></label>
                                             </div>

@@ -476,6 +476,10 @@ $font-s-40:2.5rem;
     cursor: pointer;
     text-align: center;
     transition: 0.2s all ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
     &.lg{
         padding: 10px 16px;
         height: 40px;
