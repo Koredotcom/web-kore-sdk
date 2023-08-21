@@ -11,10 +11,6 @@ export function Carousel(props: any) {
         msgData: msgData,
         hostInstance: hostInstance
     }
-
-
-
-
     const handleButtonEvent = (e: any) => {
         if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
             // hostInstance.sendMessage(e.payload || e.value, { renderMsg: e.title });
@@ -134,57 +130,109 @@ export function Carousel(props: any) {
                 }
             }
 
-            leftScrollBtn.addEventListener('click', () => {
-                const btnsParentDivWidth = btnsParentDiv.scrollLeft;
-                const qButtons = btnsParentDiv.querySelectorAll('.list-carousel-item');
-                let curWidth = 0;
-                if (qButtons.length > 0) {
-                    qButtons.forEach((ele: any) => {
-                        curWidth = curWidth + ele.offsetWidth + 10;
-                        if (curWidth > btnsParentDivWidth) {
-                            btnsParentDiv.scrollTo({
-                                left: btnsParentDiv.offsetHeight - ele.offsetHeight - 50,
-                                behavior: 'smooth'
-                            });
-                            rightScrollBtn.classList.remove('hide');;
-                            if (btnsParentDiv.scrollLeft <= 0) {
-                                leftScrollBtn.classList.add('hide');;
-                            }
-                        }
+            // leftScrollBtn.addEventListener('click', () => {
+            //     const btnsParentDivWidth = btnsParentDiv.scrollLeft;
+            //     const qButtons = btnsParentDiv.querySelectorAll('.list-carousel-item');
+            //     let curWidth = 0;
+            //     if (qButtons.length > 0) {
+            //         qButtons.forEach((ele: any) => {
+            //             curWidth = curWidth + ele.offsetWidth + 10;
+            //             if (curWidth > btnsParentDivWidth) {
+            //                 btnsParentDiv.scrollTo({
+            //                     left: btnsParentDiv.offsetHeight - ele.offsetHeight - 50,
+            //                     behavior: 'smooth'
+            //                 });
+            //                 rightScrollBtn.classList.remove('hide');;
+            //                 if (btnsParentDiv.scrollLeft <= 0) {
+            //                     leftScrollBtn.classList.add('hide');;
+            //                 }
+            //             }
 
-                    })
-                }
-            })
-            rightScrollBtn.addEventListener('click', () => {
-                const btnsParentDivWidth = btnsParentDiv.offsetWidth;
-                const qButtons = btnsParentDiv.querySelectorAll('.list-carousel-item');
-                let curWidth = 0;
-                if (qButtons.length > 0) {
-                    qButtons.forEach((ele: any) => {
-                        curWidth = curWidth + ele.offsetWidth + 10;
-                        if (curWidth > btnsParentDivWidth) {
-                            btnsParentDiv.scrollTo({
-                                left: btnsParentDiv.scrollLeft + ele.offsetWidth + 20,
-                                behavior: 'smooth'
-                            });
-                            leftScrollBtn.classList.remove('hide');;
-                            if (btnsParentDiv.scrollLeft + btnsParentDivWidth + 10 >= btnsParentDiv.scrollWidth) {
-                                rightScrollBtn.classList.add('hide');
-                            }
-                        }
+            //         })
+            //     }
+            // })
+            // rightScrollBtn.addEventListener('click', () => {
+            //     const btnsParentDivWidth = btnsParentDiv.offsetWidth;
+            //     const qButtons = btnsParentDiv.querySelectorAll('.list-carousel-item');
+            //     let curWidth = 0;
+            //     if (qButtons.length > 0) {
+            //         qButtons.forEach((ele: any) => {
+            //             curWidth = curWidth + ele.offsetWidth + 10;
+            //             if (curWidth > btnsParentDivWidth) {
+            //                 btnsParentDiv.scrollTo({
+            //                     left: btnsParentDiv.scrollLeft + ele.offsetWidth + 20,
+            //                     behavior: 'smooth'
+            //                 });
+            //                 leftScrollBtn.classList.remove('hide');;
+            //                 if (btnsParentDiv.scrollLeft + btnsParentDivWidth + 10 >= btnsParentDiv.scrollWidth) {
+            //                     rightScrollBtn.classList.add('hide');
+            //                 }
+            //             }
 
-                    })
-                }
-            })
+            //         })
+            //     }
+            // })
         }, 50);
-        return (
-            <div className="list-template-carousel-wrapper" id={msgData.messageId}>
-                <button className="carousel-left-click" data-button-left={msgData.messageId}>
-                    <i className="sdkv3-cheveron-left"></i>
-                </button>
-                <div className="list-carousel" data-id={msgData.messageId}>
-                    {
-                        <div className="list-carousel-item card-content-sec">
+        console.log(msgData, 'msgData')
+        if (msgData?.message?.[0]?.component?.payload?.template_type == 'carousel') {
+            if (msgData.message[0].component?.payload.elements[0].items.length > 1) {
+                console.log('test1');
+                return (
+                    <div>
+                        {
+                            msgData.message[0].component?.payload.elements[0].items.map((ele: any) => (
+                                <div>
+                                    <div className="list-carousel-item card-content-sec">
+                                        <div className="img-block">
+                                            <div className="top-sec-card">
+                                                {ele.topSection.icon && <img src={ele.topSection.icon} />}
+                                                {ele.topSection.title && <h1>{ele.topSection.title}</h1>}<br />
+                                                {ele.topSection.details && <span style={ele.topSection.details.styles} className="tag-name">{ele.topSection.details.title}</span>}
+                                            </div>
+                                            <div className="middle-section">
+                                                <div className="card-acc-temp-sec">
+                                                    <div className="card-acc-temp">
+                                                        <div className="left-data">
+                                                            {ele.middleSection.title && <h2>{ele.middleSection.title}</h2>}
+                                                            {ele.middleSection.title && <h1>{ele.middleSection.subTitle}</h1>}
+
+                                                        </div>
+                                                        <div className="right-data">
+                                                            {ele.middleSection.value && <h3>{ele.middleSection.value}</h3>}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                {
+                                                    ele.bottomSection.items.map((ele: any) => (
+                                                        <div>
+                                                            {/* <div className="bottom-sec-card text-right"> */}
+                                                            <div className="card-acc-temp-sec">
+                                                                <div className="card-acc-temp">
+                                                                    <div className="left-data">
+                                                                        {ele.title && <p style={ele.titleStyles}>{ele.title}</p>}
+                                                                    </div>
+                                                                    <div className="right-data">
+                                                                        {ele.value && <p style={ele.titleStyles}>{ele.value}</p>}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        // </div>
+                                                    ))
+                                                }
+                                                <div className="button-block">
+                                                    <button className="kr-button-secondary" onClick={() => handleButtonEvent("test")}>Pay more</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            ))
+                        }
+                        {/* <div className="list-carousel-item card-content-sec">
                             <div className="img-block">
                                 <div className="top-sec-card">
                                     <img src={msgData.message[0].component?.payload.elements[0].items[0].topSection.icon} />
@@ -205,7 +253,7 @@ export function Carousel(props: any) {
                             </div>
                             {
                                 msgData.message[0].component?.payload.elements[0].items[0].bottomSection.items.map((ele: any) => (
-                                    <div className="bottom-sec-card">
+                                    <div className="bottom-sec-card text-right">
                                         <h1>{ele.title}</h1>
                                         <h2 style={ele.titleStyles}>{ele.value}</h2>
                                     </div>
@@ -213,14 +261,63 @@ export function Carousel(props: any) {
                             <div className="button-block">
                                 <button className="kr-button-secondary" onClick={() => handleButtonEvent("test")}>Pay more</button>
                             </div>
+                        </div> */}
+                    </div>
+                )
+            }
+            else {
+                console.log('test3')
+                return (
+                    <div className="list-template-carousel-wrapper" id={msgData.messageId}>
+                        <button className="carousel-left-click" data-button-left={msgData.messageId}>
+                            <i className="sdkv3-cheveron-left"></i>
+                        </button>
+                        <div className="list-carousel single-item" data-id={msgData.messageId}>
+                            {
+                                <div className="list-carousel-item card-content-sec">
+                                    <div className="img-block">
+                                        <div className="top-sec-card">
+                                            <img src={msgData.message[0].component?.payload.elements[0].items[0].topSection.icon} />
+                                            <h1>{msgData.message[0].component?.payload.elements[0].items[0].topSection.title}</h1>
+                                            {msgData.message[0].component?.payload.elements[0].items[0].topSection.details && <span style={msgData.message[0].component?.payload.elements[0].items[0].topSection.details.styles} className="tag-name">{msgData.message[0].component?.payload.elements[0].items[0].topSection.details.title}</span>}
+                                        </div>
+                                        {
+                                            msgData.message[0].component?.payload.elements[0].items[0].topSection.items.map((ele: any) => (
+                                                <div>
+                                                    <div style={ele.titleStyles} className="middle-sec-card">
+                                                        <h1>{ele.title}</h1>
+                                                        <h2>{ele.value}</h2>
+                                                    </div>
+
+                                                </div>
+                                            ))
+                                        }
+                                    </div>
+                                    {
+                                        msgData.message[0].component?.payload.elements[0].items[0].bottomSection.items.map((ele: any) => (
+                                            <div className="bottom-sec-card text-right">
+                                                <h1>{ele.title}</h1>
+                                                <h2 style={ele.titleStyles}>{ele.value}</h2>
+                                            </div>
+                                        ))}
+                                    <div className="button-block">
+                                        <button className="kr-button-secondary" onClick={() => handleButtonEvent("test")}>Pay more</button>
+                                    </div>
+                                </div>
+                            }
                         </div>
-                    }
-                </div>
-                <button className="carousel-right-click" data-button-right={msgData.messageId}>
-                    <i className="sdkv3-cheveron-right"></i>
-                </button>
-            </div>
-        )
+                        <button className="carousel-right-click" data-button-right={msgData.messageId}>
+                            <i className="sdkv3-cheveron-right"></i>
+                        </button>
+                    </div>
+                )
+            }
+
+        }
+        // else if (msgData?.message?.[0]?.component?.payload?.template_type != 'carousel') {
+
+        // }
+
     }
 }
 
