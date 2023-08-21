@@ -35,7 +35,7 @@ class TemplateForm extends BaseChatTemplate {
     hostInstance: any = this;
 
     renderMessage(msgData: any) {
-        return this.getHTMLFromPreact(TemplateForm, msgData, this.hostInstance);
+        return this.getHTMLFromPreact(Form, msgData, this.hostInstance);
     }
 }
 
