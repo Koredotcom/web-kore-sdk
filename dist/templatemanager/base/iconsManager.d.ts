@@ -18,6 +18,7 @@ declare class IconsManager {
         close_icon: string;
         avatar_icon: string;
         close_chat_avatar: string;
+        minus_icon: string;
     };
     getIcons(): {
         keyboard: string;
@@ -37,6 +38,7 @@ declare class IconsManager {
         close_icon: string;
         avatar_icon: string;
         close_chat_avatar: string;
+        minus_icon: string;
     };
     getIcon(icon: any): any;
 }
