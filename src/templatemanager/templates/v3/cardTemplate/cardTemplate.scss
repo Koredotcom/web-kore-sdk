@@ -66,6 +66,9 @@
             line-height: 18px;
         }
     }
+    .middle-sec-card.middle-sec-card-style{
+        padding-top:0;
+    }
 
     .middle-sec-card {
         display: flex;
@@ -106,6 +109,10 @@
         }
     }
 
+    .bottom-sec-card.bottom-sec-card-style {
+        gap: 87px;
+    }
+
     .bottom-sec-card {
         display: flex;
         align-items: center;
@@ -129,6 +136,10 @@
             font-weight: 500;
             line-height: normal;
             flex-shrink: 0;
+        }
+
+        img {
+            vertical-align: middle;
         }
     }
 

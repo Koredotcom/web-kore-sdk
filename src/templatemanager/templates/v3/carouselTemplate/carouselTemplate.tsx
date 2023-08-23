@@ -173,10 +173,8 @@ export function Carousel(props: any) {
             //     }
             // })
         }, 50);
-        console.log(msgData, 'msgData')
         if (msgData?.message?.[0]?.component?.payload?.template_type == 'carousel') {
             if (msgData.message[0].component?.payload.elements[0].items.length > 1) {
-                console.log('test1');
                 return (
                     <div>
                         {
@@ -266,7 +264,6 @@ export function Carousel(props: any) {
                 )
             }
             else {
-                console.log('test3')
                 return (
                     <div className="list-template-carousel-wrapper" id={msgData.messageId}>
                         <button className="carousel-left-click" data-button-left={msgData.messageId}>

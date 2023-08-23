@@ -120,53 +120,13 @@ export function cardSliderExtension(props: any) {
                                 <div className="accordion_item">
                                     <button className="accordion_heading" aria-expanded="true" onClick={() => openAccordionDetails(event, i)}>
                                         <p>{item.title}</p>
+                                        <p style={item?.valueStyle}>{item.value}</p>
                                         <div className="arrow-icon">
                                             <i className="sdkv3-cheveron-right"></i>
                                         </div>
                                     </button>
                                     <div className="accordion_collapse">
                                         <div className="accordion_body">
-                                            {/* <div className="tab-data">
-                                                <div>
-                                                    <div className="tabs">
-                                                        <div className="tab-header tab">
-                                                            {item.vehicles && item.vehicles.map((tab: any, index: any) => (
-                                                                <div
-                                                                    key={index}
-                                                                    onClick={() => handleTabChange(index)} id={index}
-                                                                    className={index == 0 ? "tab-item active" : "tab-item"}
-                                                                >
-                                                                    <h2 className="title">{tab.title} <br /> {tab.subTitle}</h2>
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                        <div className="tab-content">
-                                                            {item.vehicles && item.vehicles.map((tab: any, index: any) => (
-                                                                <div
-                                                                    key={index}
-                                                                    className={index == 0 ? "tab-pane active" : "tab-pane"}
-                                                                >
-                                                                    <h2 className="sub-title f-style">{tab.info}</h2>
-                                                                    {tab.content.map((tab: any) => (
-                                                                        <div className="mt-15 clearfix p-bottom border-bottom">
-                                                                            <div className="f-left">
-                                                                                {tab.name && <p className=" f-style-gray f-style">
-                                                                                    {tab.name}
-                                                                                </p>}
-                                                                            </div>
-                                                                            <div className="f-right">
-                                                                                {tab.value && <p className="f-right f-style-gray f-style">{tab.value}</p>}
-                                                                            </div>
-                                                                        </div>
-                                                                    ))}
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div> */}
-
-
                                             <div className="card-acc-temp-sec">
                                                 {
                                                     item.items.map((val: any, index: any) => (
@@ -215,62 +175,6 @@ export function cardSliderExtension(props: any) {
                         ))
                     }
                 </div>
-                {/*main accroidian start */}
-                {/* {
-                        sliderData.sliderInfo.map((ele: any) => (
-                            ele.moreInfo.map((item: any, i: any) => (
-                                // main accroidian start
-                                <div className="accordion_item">
-    
-                                    <div className="accordion_collapse">
-                                        <div className="accordion_body">
-                                            <div className="tab-data">
-                                                <div className="tab-data-style">
-                                                    <div className="tabs">
-                                                        <div className="tab-header tab">
-                                                            {item.vehicles && item.vehicles.map((tab: any, index: any) => (
-                                                                <div
-                                                                    key={index}
-                                                                    onClick={() => handleTabChange(index)} id={index}
-                                                                    className={index == 0 ? "tab-item active" : "tab-item"}
-                                                                >
-                                                                    <h2 className="title">{tab.title} <br /> {tab.subTitle}</h2>
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                        <div className="tab-content">
-                                                            {item.vehicles && item.vehicles.map((tab: any, index: any) => (
-                                                                <div
-                                                                    key={index}
-                                                                    className={index == 0 ? "tab-pane active" : "tab-pane"}
-                                                                >
-                                                                    <h2 className="sub-title f-style">{tab.info}</h2>
-                                                                    {tab.content.map((tab: any) => (
-                                                                        <div className="mt-15 clearfix p-bottom border-bottom">
-                                                                            <div className="f-left">
-                                                                                {tab.name && <p className=" f-style-gray f-style">
-                                                                                    {tab.name}
-                                                                                </p>}
-                                                                            </div>
-                                                                            <div className="f-right">
-                                                                                {tab.value && <p className="f-right f-style-gray f-style">{tab.value}</p>}
-                                                                            </div>
-                                                                        </div>
-                                                                    ))}
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                // main accroidian End
-                            ))
-                        ))
-                    } */}
-                {/*main accroidian End */}
                 <div className="tab-data-style">
                     {/* tab accroidian start */}
                     {
@@ -332,6 +236,7 @@ export function cardSliderExtension(props: any) {
                                                 <div className="accordion_item">
                                                     <button className="accordion_heading" aria-expanded="true" onClick={() => openAccordionTab(event, i)}>
                                                         <p>{tab.title}</p>
+                                                        <p style={tab?.valueStyle}>{tab.value}</p>
                                                         <div className="arrow-icon">
                                                             <i className="sdkv3-cheveron-right"></i>
                                                         </div>
@@ -372,7 +277,7 @@ export function cardSliderExtension(props: any) {
                                                                                 <div className="card-acc-temp-sec">
                                                                                     <div className="card-acc-temp">
                                                                                         <div className="left-data">
-                                                                                            <h2>{val.type}</h2>
+                                                                                            {val.type && <h2>{val.type}</h2>}
                                                                                             {val.name && <p>{val.name}</p>}
                                                                                         </div>
                                                                                         <div className="right-data">
@@ -399,20 +304,6 @@ export function cardSliderExtension(props: any) {
                                                                     }
                                                                 </div>
                                                             ))}
-                                                            {/* {
-                                                                    tab.items[0].itemDescriptions && tab.items[0].itemDescriptions.map((val: any, i: any) => (
-                                                                        <div className="card-acc-temp-sec tab-accordian-data">
-                                                                            <div className="card-acc-temp">
-                                                                                <div className="left-data">
-                                                                                    <h2 style={val.nameStyles}>{val.name}</h2>
-                                                                                </div>
-                                                                                <div className="right-data">
-                                                                                    {val.value && <p className="mt-5">{val.value}</p>}
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    ))
-                                                                } */}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -465,20 +356,35 @@ export function card(props: any) {
                             <p style={msgData.valueStyles}>{msgData.message[0].component.payload.cards}</p>
 
                             {
-                                msgData.message[0].component.payload.cards.cardDescription.map((ele: any) => (
+                                msgData.message[0].component?.payload?.cards?.cardDescription?.map((ele: any) => (
                                     <button className="card-content-sec" onClick={() => handleButtonEvent(ele.actions)}>
                                         <div className="top-sec-card">
                                             <h1>{ele.topSection.title}</h1>
-                                            {ele.topSection.details && <span style={ele.topSection.details.styles} className="tag-name">{ele.topSection.details.title}</span>}
+                                            {ele.topSection?.details && <span style={ele.topSection?.details?.styles} className="tag-name">{ele.topSection.details?.title}</span>}
                                         </div>
-                                        <div className="middle-sec-card">
-                                            <h1>{ele.middleSection.title}</h1>
+                                        <div className="middle-sec-card  middle-sec-card-style">
+                                            <img src={ele.middleSection?.icon} />
+                                            {ele.middleSection?.title && <h1>{ele.middleSection?.title}</h1>}
                                         </div>
-                                        <div className="bottom-sec-card">
-                                            <h2>{ele.bottomSection.title}</h2>
-                                            <p>
-                                                <time>{ele.bottomSection.details.title}</time>
-                                            </p>
+                                        <div className="bottom-sec-card bottom-sec-card-style">
+                                            {
+                                                ele?.bottomSection?.items?.map((ele: any) => (
+                                                    <div className="bottom-sec-style">
+                                                        <div className="card-acc-temp-sec">
+                                                            <div className="left-data">
+                                                                {ele?.title && <h2> <img src={ele.icon && ele.icon} /> {ele?.title}</h2>}
+                                                            </div>
+                                                            <div className="right-data">
+                                                                <p>
+                                                                    {ele?.value && <time>{ele?.value}</time>}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+
+
+
+                                                    </div>
+                                                ))}
                                         </div>
                                     </button>
                                 ))
@@ -500,32 +406,32 @@ export function card(props: any) {
                             msgData.message[0].component.payload.cards.cardDescription.map((ele: any) => (
                                 <div className="card-content-sec">
                                     <div className="top-sec-card">
-                                        <img src={ele.topSection.icon} />
-                                        <h1>{ele.topSection.title}</h1>
-                                        <span style={ele.topSection.details.styles} className="tag-name">{ele.topSection.details.title}</span>
+                                        <img src={ele.topSection?.icon} />
+                                        {ele.topSection.title && <h1>{ele.topSection.title}</h1>}
+                                        {ele.topSection.details.title && <span style={ele.topSection.details.styles} className="tag-name">{ele.topSection.details.title}</span>}
 
                                     </div>
                                     <div className="middle-sec-card">
-                                        <h1>{ele.topSection.subTitle}</h1>
+                                        {ele.topSection.subTitle && <h1>{ele.topSection.subTitle}</h1>}
                                     </div>
                                     {
                                         ele.topSection.items.map((val: any) => (
                                             <div style={val?.borderStyles} className="bottom-sec-card">
-                                                <h2 style={val.titleStyles}>{val.title}</h2>
-                                                <p style={val.valueStyles}>{val.value}</p>
+                                                {val.title && <h2 style={val.titleStyles}>{val.title}</h2>}
+                                                {val.value && <p style={val.valueStyles}>{val.value}</p>}
                                             </div>
                                         ))
                                     }
                                     <div className="bottom-sec-card">
-                                        <div style={ele.middleSection.borderStyles}>
-                                            {ele.middleSection.title && <h2 style={ele.middleSection.titleStyles}>{ele.middleSection.title}</h2>}
+                                        <div style={ele.middleSection && ele.middleSection?.borderStyles}>
+                                            {ele.middleSection?.title && <h2 style={ele.middleSection.titleStyles}>{ele.middleSection?.title}</h2>}
                                         </div>
 
                                     </div>
                                     {
                                         ele?.middleSection?.items.map((val: any) => (
                                             <div className="bottom-sec-card">
-                                                <h2>{val.title}<span style={val.subTitleStyles}>{val.subTitle}</span></h2>                                                <p style={val.valueStyles}>{val.value}</p>
+                                                {val.title && <h2>{val.title} {val.subTitle && <span style={val.subTitleStyles && val.subTitleStyles}>{val.subTitle}</span>}</h2>}                                              <p style={val.valueStyles}>{val.value}</p>
                                             </div>
                                         ))
                                     }
