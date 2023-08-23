@@ -79,8 +79,9 @@ export function cardSliderExtension(props: any) {
                                     <img src={ele.topSection.icon} />
                                     <h1>{ele.topSection.title}</h1>
                                     <span style={ele.topSection.details.styles} className="tag-name">{ele.topSection.details.title}</span>
-
-
+                                </div>
+                                <div>
+                                    {ele.topSection.details.subTitle && <h2 style={ele.topSection?.details?.subTitleStyles}>{ele.topSection.details.subTitle}</h2>}
                                 </div>
                                 {
                                     ele?.middleSection?.items?.map((item: any) => (
@@ -371,13 +372,15 @@ export function card(props: any) {
                                                 ele?.bottomSection?.items?.map((ele: any) => (
                                                     <div className="bottom-sec-style">
                                                         <div className="card-acc-temp-sec">
-                                                            <div className="left-data">
-                                                                {ele?.title && <h2> <img src={ele.icon && ele.icon} /> {ele?.title}</h2>}
-                                                            </div>
-                                                            <div className="right-data">
-                                                                <p>
-                                                                    {ele?.value && <time>{ele?.value}</time>}
-                                                                </p>
+                                                            <div className="card-acc-temp">
+                                                                <div className="left-data">
+                                                                    {ele?.title && <h2> <img src={ele.icon && ele.icon} /> {ele?.title}</h2>}
+                                                                </div>
+                                                                <div className="right-data">
+                                                                    <p>
+                                                                        {ele?.value && <time>{ele?.value}</time>}
+                                                                    </p>
+                                                                </div>
                                                             </div>
                                                         </div>
 
