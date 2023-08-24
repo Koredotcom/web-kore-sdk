@@ -647,11 +647,6 @@
     animation: none !important;
 }
 
-.accordion-wrapper .accordion_item .accordion_collapse_tab:not(.collapse_data) {
-    display: none;
-    animation: none !important;
-}
-
 .accordion-wrapper .accordion_item .accordion_collapse_tab {
     transition: height 0.35s ease;
     display: block;
