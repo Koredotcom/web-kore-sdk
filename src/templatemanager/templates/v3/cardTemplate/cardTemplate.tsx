@@ -17,17 +17,18 @@ export function cardSliderExtension(props: any) {
     const openAccordionDetails = (e: any, i: any) => {
         if (hostInstance.chatEle.querySelectorAll('.accordion_collapse')[i].classList.contains('collapse_data')) {
             hostInstance.chatEle.querySelectorAll('.accordion_collapse')[i].classList.remove('collapse_data');
-        }
-        else if (hostInstance.chatEle.querySelectorAll('.accordion_collapse_tab')[i].classList.contains('collapse_data')) {
-            hostInstance.chatEle.querySelectorAll('.accordion_collapse_tab')[i].classList.remove('collapse_data');
-        }
-        else {
+        } else {
             hostInstance.chatEle.querySelectorAll('.accordion_collapse')[i].classList.add('collapse_data');
-            hostInstance.chatEle.querySelectorAll('.accordion_collapse_tab')[i].classList.add('collapse_data');
         }
     }
 
-
+    const openAccordionTab = (e: any, i: any) => {
+        if (hostInstance.chatEle.querySelectorAll('.accordion_collapse_tab')[i].classList.contains('collapse_data')) {
+            hostInstance.chatEle.querySelectorAll('.accordion_collapse_tab')[i].classList.remove('collapse_data');
+        } else {
+            hostInstance.chatEle.querySelectorAll('.accordion_collapse_tab')[i].classList.add('collapse_data');
+        }
+    }
 
     /**
      * handle previous and current tabindex 
@@ -180,17 +181,17 @@ export function cardSliderExtension(props: any) {
                     {
                         sliderData?.sliderInfo?.map((ele: any) => (
                             ele?.vehicles?.map((tab: any, index: any) => (
-                                <div className="tabs">
-                                    <div style={tab?.tabStyle && tab?.tabStyle} className="tab-header">
-                                        <div
-                                            key={index}
-                                            onClick={() => handleTabChange(index)} id={index}
-                                            className={index == 0 ? "tab-item active" : "tab-item"}
-                                        >
-                                            <h2 className="title">{tab.title} <br /> {tab.subTitle}</h2>
+                                    <div className="tabs">
+                                        <div style={tab?.tabStyle && tab?.tabStyle} className="tab-header">
+                                            <div
+                                                key={index}
+                                                onClick={() => handleTabChange(index)} id={index}
+                                                className={index == 0 ? "tab-item active" : "tab-item"}
+                                            >
+                                                <h2 className="title">{tab.title} <br /> {tab.subTitle}</h2>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                             )
                             )
                         ))
@@ -226,15 +227,15 @@ export function cardSliderExtension(props: any) {
                         ))
                     }
                     {
-                        sliderData.sliderInfo.map((ele: any) => (
-                            ele.vehicles.map((tab: any, index: any) => (
+                        sliderData?.sliderInfo?.map((ele: any) => (
+                            ele?.vehicles?.map((tab: any, index: any) => (
                                 <div className="tabs">
                                     <div key={index}
                                         className={index == 0 ? "tab-accordian active" : "tab-accordian"}>
                                         {tab.items && tab.items.map((tab: any, i: any) => (
                                             <div className="accordion-wrapper accordian-container">
                                                 <div className="accordion_item">
-                                                    <button className="accordion_heading" aria-expanded="true" onClick={() => openAccordionDetails(event, i)}>
+                                                    <button className="accordion_heading" aria-expanded="true" onClick={() => openAccordionTab(event, i)}>
                                                         {tab.title && <p>{tab.title}</p>}
                                                         <p style={tab?.valueStyle}>{tab.value}</p>
                                                         <div className="arrow-icon">
