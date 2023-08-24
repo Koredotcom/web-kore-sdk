@@ -17,18 +17,17 @@ export function cardSliderExtension(props: any) {
     const openAccordionDetails = (e: any, i: any) => {
         if (hostInstance.chatEle.querySelectorAll('.accordion_collapse')[i].classList.contains('collapse_data')) {
             hostInstance.chatEle.querySelectorAll('.accordion_collapse')[i].classList.remove('collapse_data');
-        } else {
-            hostInstance.chatEle.querySelectorAll('.accordion_collapse')[i].classList.add('collapse_data');
         }
-    }
-
-    const openAccordionTab = (e: any, i: any) => {
-        if (hostInstance.chatEle.querySelectorAll('.accordion_collapse_tab')[i].classList.contains('collapse_data')) {
+        else if (hostInstance.chatEle.querySelectorAll('.accordion_collapse_tab')[i].classList.contains('collapse_data')) {
             hostInstance.chatEle.querySelectorAll('.accordion_collapse_tab')[i].classList.remove('collapse_data');
-        } else {
+        }
+        else {
+            hostInstance.chatEle.querySelectorAll('.accordion_collapse')[i].classList.add('collapse_data');
             hostInstance.chatEle.querySelectorAll('.accordion_collapse_tab')[i].classList.add('collapse_data');
         }
     }
+
+
 
     /**
      * handle previous and current tabindex 
@@ -179,10 +178,10 @@ export function cardSliderExtension(props: any) {
                 <div className="tab-data-style">
                     {/* tab accroidian start */}
                     {
-                        sliderData.sliderInfo.map((ele: any) => (
-                            ele.vehicles.map((tab: any, index: any) => (
+                        sliderData?.sliderInfo?.map((ele: any) => (
+                            ele?.vehicles?.map((tab: any, index: any) => (
                                 <div className="tabs">
-                                    <div className="tab-header">
+                                    <div style={tab?.tabStyle && tab?.tabStyle} className="tab-header">
                                         <div
                                             key={index}
                                             onClick={() => handleTabChange(index)} id={index}
@@ -198,8 +197,8 @@ export function cardSliderExtension(props: any) {
                     }
                     {/* tab accroidian End */}
                     {
-                        sliderData.sliderInfo.map((ele: any) => (
-                            ele.vehicles.map((tab: any, index: any) => (
+                        sliderData?.sliderInfo?.map((ele: any) => (
+                            ele?.vehicles?.map((tab: any, index: any) => (
                                 <div className="tabs">
                                     <div className="tab-content">
                                         <div
@@ -235,8 +234,8 @@ export function cardSliderExtension(props: any) {
                                         {tab.items && tab.items.map((tab: any, i: any) => (
                                             <div className="accordion-wrapper accordian-container">
                                                 <div className="accordion_item">
-                                                    <button className="accordion_heading" aria-expanded="true" onClick={() => openAccordionTab(event, i)}>
-                                                        <p>{tab.title}</p>
+                                                    <button className="accordion_heading" aria-expanded="true" onClick={() => openAccordionDetails(event, i)}>
+                                                        {tab.title && <p>{tab.title}</p>}
                                                         <p style={tab?.valueStyle}>{tab.value}</p>
                                                         <div className="arrow-icon">
                                                             <i className="sdkv3-cheveron-right"></i>
@@ -249,7 +248,7 @@ export function cardSliderExtension(props: any) {
                                                                     <div className="card-acc-temp-sec tab-accordian-data">
                                                                         <div className="card-acc-temp card-accordian">
                                                                             <div className="left-data">
-                                                                                <h2 style={val.nameStyles}>{val.name}</h2>
+                                                                                test45<h2 style={val.nameStyles}>{val.name}</h2>
                                                                                 <p style={val.valueStyle} className="title">{val.subTitle}</p>
                                                                             </div>
                                                                             <div className="right-data">
@@ -274,7 +273,7 @@ export function cardSliderExtension(props: any) {
                                                                     </div>
                                                                     {
                                                                         val.itemDescriptions && val.itemDescriptions.map((val: any, i: any) => (
-                                                                            <div>
+                                                                            <div style={val?.borderStyle && val?.borderStyle}>
                                                                                 <div className="card-acc-temp-sec">
                                                                                     <div className="card-acc-temp">
                                                                                         <div className="left-data">
@@ -348,6 +347,7 @@ export function card(props: any) {
         }
     }
     if (msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'modern') {
+        // Active Section Template Start
         return (
             <Fragment>
                 <div>
@@ -360,11 +360,11 @@ export function card(props: any) {
                                 msgData.message[0].component?.payload?.cards?.cardDescription?.map((ele: any) => (
                                     <button className="card-content-sec" onClick={() => handleButtonEvent(ele.actions)}>
                                         <div className="top-sec-card">
+                                            <img src={ele.topSection?.icon} />
                                             <h1>{ele.topSection.title}</h1>
                                             {ele.topSection?.details && <span style={ele.topSection?.details?.styles} className="tag-name">{ele.topSection.details?.title}</span>}
                                         </div>
                                         <div className="middle-sec-card  middle-sec-card-style">
-                                            <img src={ele.middleSection?.icon} />
                                             {ele.middleSection?.title && <h1>{ele.middleSection?.title}</h1>}
                                         </div>
                                         <div className="bottom-sec-card bottom-sec-card-style">
@@ -384,8 +384,6 @@ export function card(props: any) {
                                                             </div>
                                                         </div>
 
-
-
                                                     </div>
                                                 ))}
                                         </div>
@@ -397,6 +395,7 @@ export function card(props: any) {
                 </div>
             </Fragment>
         );
+        // Active Section Template End
     } else if (msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'details') {
 
 
@@ -432,9 +431,9 @@ export function card(props: any) {
 
                                     </div>
                                     {
-                                        ele?.middleSection?.items.map((val: any) => (
+                                        ele?.middleSection?.items?.map((val: any) => (
                                             <div className="bottom-sec-card">
-                                                {val.title && <h2>{val.title} {val.subTitle && <span style={val.subTitleStyles && val.subTitleStyles}>{val.subTitle}</span>}</h2>}                                              <p style={val.valueStyles}>{val.value}</p>
+                                                {val?.title && <h2>{val?.title} {val?.subTitle && <span style={val?.subTitleStyles && val.subTitleStyles}>{val?.subTitle}</span>}</h2>}                                              <p style={val.valueStyles}>{val.value}</p>
                                             </div>
                                         ))
                                     }

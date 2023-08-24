@@ -518,7 +518,6 @@
 
     .tab-header {
         float: left;
-        width: 32.2%;
         margin-right: 3px;
         height: 51px;
 
@@ -641,6 +640,11 @@
 
 .pd-20 {
     padding-top: 20px
+}
+
+.accordion-wrapper .accordion_item .accordion_collapse_tab:not(.collapse_data) {
+    display: none;
+    animation: none !important;
 }
 
 .accordion-wrapper .accordion_item .accordion_collapse_tab:not(.collapse_data) {
