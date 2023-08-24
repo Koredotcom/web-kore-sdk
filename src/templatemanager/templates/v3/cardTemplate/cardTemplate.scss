@@ -114,13 +114,16 @@
         .bottom-sec-style {
             width: 100%;
         }
-       .card-acc-temp{
-        width:100%;
-       }
+
+        .card-acc-temp {
+            width: 100%;
+        }
+
         .card-acc-temp-sec {
             padding: 0;
         }
     }
+
     .bottom-sec-card {
         display: flex;
         align-items: center;
@@ -448,10 +451,11 @@
 .card-acc-temp-sec {
     .card-acc-temp {
         display: flex;
-        width: 321px;
+        // width: 321px;
         padding: 0 0px 10px 0px;
         align-items: flex-start;
         gap: 15px;
+        overflow: hidden;
         border-bottom: 1px solid rgba(154, 160, 166, 0.2);
 
         &:last-child {
@@ -642,26 +646,26 @@
     padding-top: 20px
 }
 
-.accordion-wrapper .accordion_item .accordion_collapse_tab:not(.collapse_data) {
+// .accordion-wrapper .accordion_item .accordion_collapse_tab {
+//     transition: height .35s ease;
+//     display: block;
+//     -webkit-animation-name: slideOutDown;
+//     animation-name: slideOutDown;
+//     -webkit-animation-duration: 1s;
+//     animation-duration: 1s;
+//     -webkit-animation-fill-mode: both;
+//     animation-fill-mode: both;
+//     &:not(.collapse_data) {
+//         display: none;
+//         animation: none !important;
+//     }
+// }
+.accordion_collapse_tab {
     display: none;
-    animation: none !important;
 }
 
-.accordion-wrapper .accordion_item .accordion_collapse_tab {
-    transition: height 0.35s ease;
+.accordion_collapse_tab.collapse_data {
     display: block;
-    -webkit-animation-name: slideOutDown;
-    animation-name: slideOutDown;
-    -webkit-animation-duration: 1s;
-    animation-duration: 1s;
-    -webkit-animation-fill-mode: both;
-    animation-fill-mode: both;
-}
-
-.tab-accordian-data {
-    .left-data {
-        line-height: 30px;
-    }
 }
 
 .accordion-wrapper.accordian-container {
@@ -677,13 +681,9 @@
     padding-top: 0;
 }
 
-// .sub-title-style {
-//     padding-left: 10px;
-//     font-weight: 400;
-//     padding-top: 0;
-//     color: #101828;
-//     padding-bottom: 10px;
-// }
+.border-style {
+    border-bottom: 1px solid var(--card-temp-border-divided-bg);
+}
 
 .tab-data-style {
     overflow: auto;
@@ -691,8 +691,6 @@
 }
 
 .card-acc-temp-sec .card-acc-temp .left-data.data-style {
-    width: 100%;
-
     .sub-title {
         float: left
     }

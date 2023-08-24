@@ -77,8 +77,8 @@ export function cardSliderExtension(props: any) {
                             <div>
                                 <div className="top-sec-card">
                                     <img src={ele.topSection.icon} />
-                                    <h1>{ele.topSection.title}</h1>
-                                    <span style={ele.topSection.details.styles} className="tag-name">{ele.topSection.details.title}</span>
+                                    {ele.topSection.title && <h1>{ele.topSection.title}</h1>}
+                                    {ele.topSection.details.title && <span style={ele.topSection.details.styles} className="tag-name">{ele.topSection.details.title}</span>}
                                 </div>
                                 <div>
                                     {ele.topSection.details.subTitle && <h2 style={ele.topSection?.details?.subTitleStyles}>{ele.topSection.details.subTitle}</h2>}
@@ -88,10 +88,10 @@ export function cardSliderExtension(props: any) {
                                         <div className="middle-sec-card">
                                             <div class="img-with-text">
                                                 <img src={item.icon} />
-                                                <p>{item.title}</p>
+                                                {item.title && <p>{item.title}</p>}
                                             </div>
                                             <div class="right-title">
-                                                <p>{item.value}</p>
+                                                {item.value && <p>{item.value}</p>}
                                             </div>
                                         </div>
                                     ))
@@ -101,11 +101,11 @@ export function cardSliderExtension(props: any) {
                                         <div className="bottom-sec-card small-font-sec">
                                             <div class="img-with-text">
                                                 {val.icon && <img src={val.icon} />}
-                                                <p style={val.titleStyles}>{val.title}</p>
+                                                {val.title && <p style={val.titleStyles}>{val.title}</p>}
                                             </div>
                                             <div class="right-title">
                                                 {val.icon && <img src={val.icon} />}
-                                                <p style={val.titleStyles}>{val.value}</p>
+                                                {val.value && <p style={val.titleStyles}>{val.value}</p>}
                                             </div>
                                         </div>
                                     ))
@@ -134,22 +134,22 @@ export function cardSliderExtension(props: any) {
                                                         <div className="card-acc-temp card-accordian">
                                                             <div className="left-data">
                                                                 <div key={index}>
-                                                                    <h1 className="t-data">{val.name}</h1>
+                                                                    {val.name && <h1 className="t-data">{val.name}</h1>}
                                                                     {val.description && <p>{val.description}</p>}
                                                                     {val.subTitle && <p className="mt-5">{val.subTitle}</p>}
                                                                 </div>
                                                                 <div className="tab-header tab tab-left">
                                                                     {val.itemDescriptions && val.itemDescriptions.map((tab: any, index: any) => (
                                                                         <div key={index} >
-                                                                            <h2 style={val.nameStyles}>{tab.type}</h2>
-                                                                            <p style={val.valueStyle} className="title">{tab.name}</p>
+                                                                            {tab.type && <h2 style={val.nameStyles}>{tab.type}</h2>}
+                                                                            {tab.name && <p style={val.valueStyle} className="title">{tab.name}</p>}
                                                                         </div>
                                                                     ))}
                                                                 </div>
                                                             </div>
                                                             <div className="right-data">
                                                                 <div>
-                                                                    <p>{val.value}</p>
+                                                                    {val.value && <p>{val.value}</p>}
                                                                     {val.subTitleValue && <p className="mt-5">{val.subTitleValue}</p>}
                                                                     {/* {{moreInfoValue} && <p>{moreInfoValue}</p> */}
 
@@ -157,13 +157,12 @@ export function cardSliderExtension(props: any) {
                                                                 <div className="tab-header tab tab-right">
                                                                     {val.itemDescriptions && val.itemDescriptions.map((tab: any, index: any) => (
                                                                         <div key={index} className="tab-p">
-                                                                            <p style={tab.valueStyle}>{tab.value}</p>
+                                                                            {tab.value && <p style={tab.valueStyle}>{tab.value}</p>}
                                                                         </div>
                                                                     ))}
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                     ))
                                                 }
                                             </div>
@@ -181,17 +180,17 @@ export function cardSliderExtension(props: any) {
                     {
                         sliderData?.sliderInfo?.map((ele: any) => (
                             ele?.vehicles?.map((tab: any, index: any) => (
-                                    <div className="tabs">
-                                        <div style={tab?.tabStyle && tab?.tabStyle} className="tab-header">
-                                            <div
-                                                key={index}
-                                                onClick={() => handleTabChange(index)} id={index}
-                                                className={index == 0 ? "tab-item active" : "tab-item"}
-                                            >
-                                                <h2 className="title">{tab.title} <br /> {tab.subTitle}</h2>
-                                            </div>
+                                <div className="tabs">
+                                    <div style={tab?.tabStyle && tab?.tabStyle} className="tab-header">
+                                        <div
+                                            key={index}
+                                            onClick={() => handleTabChange(index)} id={index}
+                                            className={index == 0 ? "tab-item active" : "tab-item"}
+                                        >
+                                            {tab.title && <h2 className="title">{tab.title} <br /> {tab.subTitle}</h2>}
                                         </div>
                                     </div>
+                                </div>
                             )
                             )
                         ))
@@ -249,8 +248,8 @@ export function cardSliderExtension(props: any) {
                                                                     <div className="card-acc-temp-sec tab-accordian-data">
                                                                         <div className="card-acc-temp card-accordian">
                                                                             <div className="left-data">
-                                                                                test45<h2 style={val.nameStyles}>{val.name}</h2>
-                                                                                <p style={val.valueStyle} className="title">{val.subTitle}</p>
+                                                                                {val.name && <h2 style={val.nameStyles}>{val.name}</h2>}
+                                                                                {val.subTitle && <p style={val.valueStyle} className="title">{val.subTitle}</p>}
                                                                             </div>
                                                                             <div className="right-data">
                                                                                 {val.value && <p className="mt-5">{val.value}</p>}
@@ -262,12 +261,14 @@ export function cardSliderExtension(props: any) {
                                                             ))}
 
                                                             {tab.items && tab.items.map((val: any, i: any) => (
-                                                                <div>
+                                                                <div className="border-style">
                                                                     <div className="card-acc-temp-sec tab-accordian-data">
                                                                         <div className="card-acc-temp">
-                                                                            <div className="left-data data-style">
-                                                                                <h2 className="sub-title" style={val.nameStyles}>{val.name}</h2>
-                                                                                {val.value && <p style={val.nameStyles} className="mt-5">{val.value}</p>}
+                                                                            <div className="left-data">
+                                                                               {val.name && <h2 className="sub-title" style={val.nameStyles}>{val.name}</h2>}
+                                                                            </div>
+                                                                            <div className="right-data">
+                                                                            {val.name && <h2 className="sub-title" style={val.nameStyles}>{val.name}</h2>}
                                                                             </div>
 
                                                                         </div>
@@ -291,7 +292,7 @@ export function cardSliderExtension(props: any) {
                                                                                         <div className="card-acc-temp-sec tab-accordian-data">
                                                                                             <div className="card-acc-temp pd-0">
                                                                                                 <div className="left-data left-bottom-data">
-                                                                                                    <p>{val.name}</p>
+                                                                                                    {val.name && <p>{val.name}</p>}
                                                                                                 </div>
                                                                                                 <div className="right-data text-value">
                                                                                                     {val.value && <p>{val.value}</p>}
@@ -354,15 +355,15 @@ export function card(props: any) {
                 <div>
                     <section className="card-template-wrapper" aria-label="card template sdk">
                         <div className="card-warpper-info">
-                            <h1>{msgData.message[0].component.payload.cards.cardHeading.title}</h1>
-                            <p style={msgData.valueStyles}>{msgData.message[0].component.payload.cards}</p>
+                            {msgData.message[0].component.payload.cards.cardHeading.title && <h1>{msgData.message[0].component.payload.cards.cardHeading.title}</h1>}
+                            {msgData.message[0].component.payload.cards && <p style={msgData.valueStyles}>{msgData.message[0].component.payload.cards}</p>}
 
                             {
                                 msgData.message[0].component?.payload?.cards?.cardDescription?.map((ele: any) => (
                                     <button className="card-content-sec" onClick={() => handleButtonEvent(ele.actions)}>
                                         <div className="top-sec-card">
                                             <img src={ele.topSection?.icon} />
-                                            <h1>{ele.topSection.title}</h1>
+                                            {ele.topSection.title && <h1>{ele.topSection.title}</h1>}
                                             {ele.topSection?.details && <span style={ele.topSection?.details?.styles} className="tag-name">{ele.topSection.details?.title}</span>}
                                         </div>
                                         <div className="middle-sec-card  middle-sec-card-style">
@@ -398,9 +399,6 @@ export function card(props: any) {
         );
         // Active Section Template End
     } else if (msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'details') {
-
-
-
         return (
             <Fragment>
                 <div>
@@ -427,7 +425,16 @@ export function card(props: any) {
                                     }
                                     <div className="bottom-sec-card">
                                         <div style={ele.middleSection && ele.middleSection?.borderStyles}>
-                                            {ele.middleSection?.title && <h2 style={ele.middleSection.titleStyles}>{ele.middleSection?.title}</h2>}
+                                            <div className="card-acc-temp-sec">
+                                                <div className="card-acc-temp">
+                                                    <div className="left-data">
+                                                        {ele.middleSection?.title && <h2 style={ele.middleSection.titleStyles}>{ele.middleSection?.title}</h2>}
+                                                    </div>
+                                                    <div className="right-data">
+                                                        {ele.middleSection.value && <p style={ele.middleSection.titleStyles}>{ele.middleSection.value}</p>}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
 
                                     </div>
@@ -442,8 +449,8 @@ export function card(props: any) {
                                     {
                                         ele.bottomSection.items.map((val: any) => (
                                             <div className="bottom-sec-card">
-                                                <h2 style={val.titleStyles}>{val.title}</h2>
-                                                <p style={val.valueStyles}>{val.value}</p>
+                                                {val.title && <h2 style={val.titleStyles}>{val.title}</h2>}
+                                                {val.value && <p style={val.valueStyles}>{val.value}</p>}
                                             </div>
                                         ))
                                     }
