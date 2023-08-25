@@ -499,7 +499,7 @@
 
         .right-data {
             flex-shrink: 0;
-            width: 40%;
+            width: 37%;
 
             p {
                 color: var(--gray-900, #101828);
@@ -626,6 +626,7 @@
 }
 
 .card-acc-temp-sec {
+    width: 100%;
     padding: 0 5px;
 }
 

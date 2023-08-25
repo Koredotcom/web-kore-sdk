@@ -22,11 +22,11 @@ export function cardSliderExtension(props: any) {
         }
     }
 
-    const openAccordionTab = (e: any, i: any) => {
-        if (hostInstance.chatEle.querySelectorAll('.accordion_collapse_tab')[i].classList.contains('collapse_data')) {
-            hostInstance.chatEle.querySelectorAll('.accordion_collapse_tab')[i].classList.remove('collapse_data');
+    const openAccordionTab = (e: any, index: any, i: any) => {
+        if (hostInstance.chatEle.querySelector(`[data-kr-ct-acc='acc_${index}_${i}'`).classList.contains('collapse_data')) {
+            hostInstance.chatEle.querySelector(`[data-kr-ct-acc='acc_${index}_${i}'`).classList.remove('collapse_data');
         } else {
-            hostInstance.chatEle.querySelectorAll('.accordion_collapse_tab')[i].classList.add('collapse_data');
+            hostInstance.chatEle.querySelector(`[data-kr-ct-acc='acc_${index}_${i}'`).classList.add('collapse_data');
         }
     }
 
@@ -130,34 +130,34 @@ export function cardSliderExtension(props: any) {
                                         <div className="accordion_body">
                                             <div className="card-acc-temp-sec">
                                                 {
-                                                    item.items.map((val: any, index: any) => (
+                                                    item.items?.map((val: any, index: any) => (
                                                         <div className="card-acc-temp card-accordian">
                                                             <div className="left-data">
                                                                 <div key={index}>
-                                                                    {val.name && <h1 className="t-data">{val.name}</h1>}
-                                                                    {val.description && <p>{val.description}</p>}
-                                                                    {val.subTitle && <p className="mt-5">{val.subTitle}</p>}
+                                                                    {val?.name && <h1 className="t-data">{val?.name}</h1>}
+                                                                    {val?.description && <p>{val.description}</p>}
+                                                                    {val?.subTitle && <p className="mt-5">{val?.subTitle}</p>}
                                                                 </div>
                                                                 <div className="tab-header tab tab-left">
                                                                     {val.itemDescriptions && val.itemDescriptions.map((tab: any, index: any) => (
                                                                         <div key={index} >
-                                                                            {tab.type && <h2 style={val.nameStyles}>{tab.type}</h2>}
-                                                                            {tab.name && <p style={val.valueStyle} className="title">{tab.name}</p>}
+                                                                            {tab?.type && <h2 style={val?.nameStyles && val?.nameStyles}>{tab?.type}</h2>}
+                                                                            {tab?.name && <p style={val?.valueStyle && val?.valueStyle} className="title">{tab.name}</p>}
                                                                         </div>
                                                                     ))}
                                                                 </div>
                                                             </div>
                                                             <div className="right-data">
                                                                 <div>
-                                                                    {val.value && <p>{val.value}</p>}
-                                                                    {val.subTitleValue && <p className="mt-5">{val.subTitleValue}</p>}
+                                                                    {val?.value && <p>{val?.value}</p>}
+                                                                    {val?.subTitleValue && <p className="mt-5">{val?.subTitleValue}</p>}
                                                                     {/* {{moreInfoValue} && <p>{moreInfoValue}</p> */}
 
                                                                 </div>
                                                                 <div className="tab-header tab tab-right">
-                                                                    {val.itemDescriptions && val.itemDescriptions.map((tab: any, index: any) => (
+                                                                    {val?.itemDescriptions && val.itemDescriptions.map((tab: any, index: any) => (
                                                                         <div key={index} className="tab-p">
-                                                                            {tab.value && <p style={tab.valueStyle}>{tab.value}</p>}
+                                                                            {tab?.value && <p style={tab?.valueStyle}>{tab?.value}</p>}
                                                                         </div>
                                                                     ))}
                                                                 </div>
@@ -234,14 +234,14 @@ export function cardSliderExtension(props: any) {
                                         {tab.items && tab.items.map((tab: any, i: any) => (
                                             <div className="accordion-wrapper accordian-container">
                                                 <div className="accordion_item">
-                                                    <button className="accordion_heading" aria-expanded="true" onClick={() => openAccordionTab(event, i)}>
+                                                    <button className="accordion_heading" aria-expanded="true" onClick={() => openAccordionTab(event, index, i)}>
                                                         {tab.title && <p>{tab.title}</p>}
                                                         <p style={tab?.valueStyle}>{tab.value}</p>
                                                         <div className="arrow-icon">
                                                             <i className="sdkv3-cheveron-right"></i>
                                                         </div>
                                                     </button>
-                                                    <div className="accordion_collapse_tab">
+                                                    <div className="accordion_collapse_tab" data-kr-ct-acc={`acc_${index}_${i}`}>
                                                         <div className="accordion_body">
                                                             {tab.subitems && tab.subitems.map((val: any, i: any) => (
                                                                 <div>
@@ -265,10 +265,10 @@ export function cardSliderExtension(props: any) {
                                                                     <div className="card-acc-temp-sec tab-accordian-data">
                                                                         <div className="card-acc-temp">
                                                                             <div className="left-data">
-                                                                               {val.name && <h2 className="sub-title" style={val.nameStyles}>{val.name}</h2>}
+                                                                                {val.name && <h2 className="sub-title" style={val.nameStyles}>{val.name}</h2>}
                                                                             </div>
                                                                             <div className="right-data">
-                                                                            {val.name && <h2 className="sub-title" style={val.nameStyles}>{val.name}</h2>}
+                                                                                {val.value && <h2 className="sub-title" style={val.nameStyles}>{val.value}</h2>}
                                                                             </div>
 
                                                                         </div>
@@ -407,19 +407,18 @@ export function card(props: any) {
                             msgData.message[0].component.payload.cards.cardDescription.map((ele: any) => (
                                 <div className="card-content-sec">
                                     <div className="top-sec-card">
-                                        <img src={ele.topSection?.icon} />
-                                        {ele.topSection.title && <h1>{ele.topSection.title}</h1>}
-                                        {ele.topSection.details.title && <span style={ele.topSection.details.styles} className="tag-name">{ele.topSection.details.title}</span>}
-
+                                        <img src={ele?.topSection?.icon} />
+                                        {ele?.topSection?.title && <h1>{ele?.topSection?.title}</h1>}
+                                        {ele?.topSection?.details?.title && <span style={ele?.topSection?.details?.styles} className="tag-name">{ele?.topSection?.details?.title}</span>}
                                     </div>
                                     <div className="middle-sec-card">
-                                        {ele.topSection.subTitle && <h1>{ele.topSection.subTitle}</h1>}
+                                        {ele.topSection?.subTitle && <h1>{ele.topSection?.subTitle}</h1>}
                                     </div>
                                     {
                                         ele.topSection.items.map((val: any) => (
                                             <div style={val?.borderStyles} className="bottom-sec-card">
-                                                {val.title && <h2 style={val.titleStyles}>{val.title}</h2>}
-                                                {val.value && <p style={val.valueStyles}>{val.value}</p>}
+                                                {val?.title && <h2 style={val?.titleStyles && val?.titleStyles}>{val?.title}</h2>}
+                                                {val?.value && <p style={val?.titleStyles && val?.valueStyles}>{val?.value}</p>}
                                             </div>
                                         ))
                                     }
@@ -428,10 +427,10 @@ export function card(props: any) {
                                             <div className="card-acc-temp-sec">
                                                 <div className="card-acc-temp">
                                                     <div className="left-data">
-                                                        {ele.middleSection?.title && <h2 style={ele.middleSection.titleStyles}>{ele.middleSection?.title}</h2>}
+                                                        {ele.middleSection?.title && <h2 style={ele.middleSection?.titleStyles}>{ele.middleSection?.title}</h2>}
                                                     </div>
                                                     <div className="right-data">
-                                                        {ele.middleSection.value && <p style={ele.middleSection.titleStyles}>{ele.middleSection.value}</p>}
+                                                        {ele.middleSection?.value && <p style={ele.middleSection?.titleStyles}>{ele.middleSection?.value}</p>}
                                                     </div>
                                                 </div>
                                             </div>
@@ -447,10 +446,18 @@ export function card(props: any) {
                                     }
                                     <div className="border-divider"></div>
                                     {
-                                        ele.bottomSection.items.map((val: any) => (
+                                        ele.bottomSection?.items.map((val: any) => (
                                             <div className="bottom-sec-card">
-                                                {val.title && <h2 style={val.titleStyles}>{val.title}</h2>}
-                                                {val.value && <p style={val.valueStyles}>{val.value}</p>}
+                                                <div className="card-acc-temp-sec">
+                                                    <div className="card-acc-temp">
+                                                        <div className="left-data">
+                                                            {val?.title && <h2 style={val.titleStyles}> {val.title}</h2>}
+                                                        </div>
+                                                        <div className="right-data">
+                                                            {val?.value && <p style={val.valueStyles}>{val.value}</p>}
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         ))
                                     }
