@@ -37,30 +37,26 @@ export function cardSliderExtension(props: any) {
     const handleTabChange = (event: any) => {
         const tabHeader = hostInstance.chatEle.querySelectorAll('.tab-item');
         tabHeader.forEach((ele: any, i: any) => {
-            if (i == event) {
-                ele.classList.add('active');
-            } else {
-                ele.classList.remove('active');
-            }
+            setActive(i, event, ele)
         })
         const tabInfo = hostInstance.chatEle.querySelectorAll('.tab-pane');
         tabInfo.forEach((ele: any, i: any) => {
-            if (i == event) {
-                ele.classList.add('active');
-            } else {
-                ele.classList.remove('active');
-            }
+            setActive(i, event, ele)
         })
         const tabmoreInfo = hostInstance.chatEle.querySelectorAll('.tab-accordian');
         tabmoreInfo.forEach((ele: any, i: any) => {
-            if (i == event) {
-                ele.classList.add('active');
-            } else {
-                ele.classList.remove('active');
-            }
+            setActive(i, event, ele)
         })
     };
-         
+
+    const setActive = (i: any, event: any, ele: any) => {
+        if (i == event) {
+            ele.classList.add('active');
+        } else {
+            ele.classList.remove('active');
+        }
+    }
+    
     const selectionChange = (event: any) => {
         const selectedOption = event.target.value;
         const selectedIndex = event.target.selectedIndex;
