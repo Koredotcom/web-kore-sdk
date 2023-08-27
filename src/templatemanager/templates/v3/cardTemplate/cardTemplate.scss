@@ -449,9 +449,9 @@
 }
 
 .card-acc-temp-sec {
+    width: 100%;
     .card-acc-temp {
         display: flex;
-        // width: 321px;
         padding: 0 0px 10px 0px;
         align-items: flex-start;
         gap: 15px;
@@ -484,7 +484,6 @@
             p {
                 color: var(--kora-grey-grey-medium-1, #9AA0A6);
                 font-size: 14px;
-                font-weight: 500;
                 line-height: 20px;
             }
 
@@ -505,7 +504,6 @@
                 color: var(--gray-900, #101828);
                 text-align: right;
                 font-size: 14px;
-                font-weight: 500;
                 line-height: 20px;
             }
         }
@@ -516,10 +514,6 @@
 
 // tab css
 .tabs {
-    .tab-content {
-        padding: 0px 8px 6px;
-    }
-
     .tab-header {
         float: left;
         margin-right: 3px;
@@ -574,93 +568,33 @@
     display: block;
 }
 
-.f-style-gray {
-    font-size: 10px;
-    color: #667085;
-}
-
-.f-style {
-    font-size: 14px;
-}
 
 .sub-title {
     font-weight: 600;
     clear: both;
-    padding-top: 10px;
+    padding: 15px 0 5px;
 }
 
-.f-style-gray {
-    color: #667085;
-}
-
-.f-right {
-    float: right;
-}
-
-.f-left {
-    float: left;
-}
-
-.mt-15 {
-    margin-top: 12px;
-}
-
-.clearfix {
-    overflow: auto;
-}
 
 .border-bottom {
     border-bottom: 1px solid #EAECF0;
 }
 
 .p-bottom {
-    padding-bottom: 15px
+    padding: 10px 0;
 }
 
-.p-bottom:last-child {
-    padding-bottom: 0;
-}
 
-.border-bottom:last-child {
-    border-bottom: 1px solid transparent;
-}
 
-.card-acc-temp-sec {
-    width: 100%;
-    padding: 0 5px;
-}
-
-.mt-5 {
-    margin-top: 5px
-}
 
 .tab-left {
     line-height: 35px;
     padding-top: 10px;
 }
 
-.pd-top {
-    padding-top: 10px;
-}
 
-.pd-20 {
-    padding-top: 20px
-}
 
-// .accordion-wrapper .accordion_item .accordion_collapse_tab {
-//     transition: height .35s ease;
-//     display: block;
-//     -webkit-animation-name: slideOutDown;
-//     animation-name: slideOutDown;
-//     -webkit-animation-duration: 1s;
-//     animation-duration: 1s;
-//     -webkit-animation-fill-mode: both;
-//     animation-fill-mode: both;
-//     &:not(.collapse_data) {
-//         display: none;
-//         animation: none !important;
-//     }
-// }
+
 .accordion_collapse_tab {
     display: none;
 }
@@ -679,7 +613,7 @@
 }
 
 .card-acc-temp.pd-0 .sub-title {
-    padding-top: 0;
+    padding: 10px 0;
 }
 
 .border-style {
@@ -689,6 +623,14 @@
 .tab-data-style {
     overflow: auto;
     padding: 0 15px;
+
+    select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid var(--welcome-start-conv-quick-btn-border);
+        border-radius: 4px;
+        font-size: 14px;
+    }
 }
 
 .card-acc-temp-sec .card-acc-temp .left-data.data-style {

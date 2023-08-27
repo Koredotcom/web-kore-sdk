@@ -60,6 +60,13 @@ export function cardSliderExtension(props: any) {
             }
         })
     };
+         
+    const selectionChange = (event: any) => {
+        const selectedOption = event.target.value;
+        const selectedIndex = event.target.selectedIndex;
+        handleTabChange(selectedIndex);
+    }
+
     return (
         <div className="menu-wrapper-data-actions">
             <div className="actions-slider-header-menu">
@@ -179,42 +186,59 @@ export function cardSliderExtension(props: any) {
                     {/* tab accroidian start */}
                     {
                         sliderData?.sliderInfo?.map((ele: any) => (
-                            ele?.vehicles?.map((tab: any, index: any) => (
-                                <div className="tabs">
-                                    <div style={tab?.tabStyle && tab?.tabStyle} className="tab-header">
-                                        <div
-                                            key={index}
-                                            onClick={() => handleTabChange(index)} id={index}
-                                            className={index == 0 ? "tab-item active" : "tab-item"}
-                                        >
-                                            {tab.title && <h2 className="title">{tab.title} <br /> {tab.subTitle}</h2>}
+                            <div>
+                                {ele.vehicles?.length > 2 ? ele?.vehicles?.map((tab: any, index: any) => (
+                                    <div className="tabs">
+                                        <div style={tab?.tabStyle && tab?.tabStyle} className="tab-header">
+                                            <div
+                                                key={index}
+                                                onClick={() => handleTabChange(index)} id={index}
+                                                className={index == 0 ? "tab-item active" : "tab-item"}
+                                            >
+                                                {tab.title && <h2 className="title">{tab.title} <br /> {tab.subTitle}</h2>}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            )
-                            )
+                                )) :
+                                    <div>
+                                        {
+                                            <select onChange={selectionChange}>
+                                                {ele?.vehicles?.map((tab: any, index: any) => (
+                                                    <option key={index} value={tab.title}>
+                                                        {tab.title} <br /> {tab.subTitle}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        }
+                                    </div>
+                                }
+                            </div>
                         ))
                     }
+
                     {/* tab accroidian End */}
                     {
                         sliderData?.sliderInfo?.map((ele: any) => (
                             ele?.vehicles?.map((tab: any, index: any) => (
                                 <div className="tabs">
-                                    <div className="tab-content">
-                                        <div
-                                            key={index}
-                                            className={index == 0 ? "tab-pane active" : "tab-pane"}
-                                        >
-                                            <h2 className="sub-title f-style  pd-20">{tab.info}</h2>
+                                    <div
+                                        key={index}
+                                        className={index == 0 ? "tab-pane active" : "tab-pane"}>
+                                        <div>
+                                            <h2 className="sub-title">{tab.info}</h2>
                                             {tab.content.map((tab: any) => (
-                                                <div className="mt-15 clearfix p-bottom border-bottom">
-                                                    <div className="f-left">
-                                                        {tab.name && <p className=" f-style-gray f-style">
-                                                            {tab.name}
-                                                        </p>}
-                                                    </div>
-                                                    <div className="f-right">
-                                                        {tab.value && <p className="f-right f-style-gray f-style">{tab.value}</p>}
+                                                <div className="clearfix p-bottom border-bottom">
+                                                    <div className="card-acc-temp-sec tab-accordian-data">
+                                                        <div className="card-acc-temp card-accordian">
+                                                            <div className="left-data">
+                                                                {tab.name && <p>
+                                                                    {tab.name}
+                                                                </p>}
+                                                            </div>
+                                                            <div className="right-data">
+                                                                {tab.value && <p>{tab.value}</p>}
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             ))}
@@ -461,7 +485,6 @@ export function card(props: any) {
                                             </div>
                                         ))
                                     }
-
                                     {
                                         msgData.message[0].component.payload.cards.buttonActions.map((button: any) => (
                                             <button className="view-more-btn" onClick={() => handleButtonEvent(button)} >{button.title}</button>
