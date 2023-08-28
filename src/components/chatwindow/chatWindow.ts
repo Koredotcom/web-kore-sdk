@@ -1551,14 +1551,9 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
     }
   }
   if (me.config.UI.version == 'v2') {
-    _chatContainer.find('li').attr('aria-live', 'off');
-    _chatContainer.find('li .messageBubble').attr('aria-hidden','true');//for mac voiceover bug with aria-live
-    _chatContainer.find('li .extra-info').attr('aria-hidden','true');//for mac voiceover bug with aria-live
-    _chatContainer.find('.endChatContainer').attr('aria-live', 'off');
-    _chatContainer.find('.endChatContainer').attr('aria-hidden','true');//for mac voiceover bug with aria-live
+    me.prepareAriaTagsOnMessage(msgData,messageHtml);
   }
 
-  me.prepareAriaTagsOnMessage(msgData,messageHtml);
   let chatWindowEvent = {stopFurtherExecution: false};
   me.emit(me.EVENTS.BEFORE_RENDER_MSG,{
     messageHtml:messageHtml,
@@ -1901,12 +1896,14 @@ historyLoadingComplete () {
     }
     bot.previousHistoryLoading = false;
     }
-    if(_chatContainer.find('.paginted-history-loader')){
-      _chatContainer.find('.paginted-history-loader').remove();
+    if (me.config.UI.version == 'v2') {
+      if (_chatContainer.find('.paginted-history-loader')) {
+        _chatContainer.find('.paginted-history-loader').remove();
+      }
+      bot.previousHistoryLoading = false;
+      $('.chatInputBox').focus();
+      $('.disableFooter').removeClass('disableFooter');
     }
-    bot.previousHistoryLoading = false;
-    $('.chatInputBox').focus();
-    $('.disableFooter').removeClass('disableFooter');
   }, 0, me);
 };
 
