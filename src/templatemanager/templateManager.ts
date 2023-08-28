@@ -35,6 +35,7 @@ import TemplateCheckBoxes from './templates/v3/checkBoxes/checkBoxes';
 import TemplateAdvancedMultiSelect from './templates/v3/advancedMutliSelect/advancedMultiSelect';
 import TemplateAdvancedList from './templates/v3/advancedList/advancedList';
 import TemplateForm from './templates/v3/formTemplate/formTemplate';
+import TemplateDatePicker from './templates/v3/datePicker/datePicker';
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
 //(function($){
@@ -103,6 +104,7 @@ class TemplateManager {
 		this.installTemplate(new TemplateAdvancedMultiSelect());
 		this.installTemplate(new TemplateAdvancedList());
 		this.installTemplate(new TemplateForm());
+		this.installTemplate(new TemplateDatePicker());
 	}
 
 	renderMessage  (msgData: any) {

@@ -363,10 +363,18 @@
             .table-list-data{
                 display: flex;
                 flex-wrap: wrap;
+                &.if-column-type{
+                    .table-body-data{
+                        flex: 1 1 50%;
+                        flex-direction: row;
+                        align-items: center;
+                    }
+                }
                 .table-body-data{
                     display: flex;
-                    align-items: center;
-                    flex: 1 1 50%;
+                    align-items: flex-start;
+                    flex-direction: column;
+                    flex: 1 1 33.333%;
                     padding: 10px;
                     gap: 10px;
                     .img_block{
