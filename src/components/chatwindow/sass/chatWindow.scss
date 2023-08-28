@@ -143,7 +143,7 @@
 		}
 	}
 	a {
-		color: var(--sdk-chat-window-btn-default-bg);
+		color: var(--sdk-chat-window-btn-link-color);
 		text-decoration: none;
 	}
 	ul.chat-container {
@@ -1273,6 +1273,9 @@
 	-webkit-animation-duration: 0.4s;
 	animation-name: animatebottom;
 	animation-duration: 0.4s;
+}
+.temp-message-div{
+	visibility: hidden;
 }
 [dir="rtl"].kore-chat-window {
 	.kore-chat-header {

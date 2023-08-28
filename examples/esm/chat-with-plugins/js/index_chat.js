@@ -6,6 +6,7 @@ import {KorePickersPlugin } from '../../../../../dist/kore-web-sdk.esm.browser.j
 import {GraphTemplatesPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {WebKitSTT, SpeakTextWithAWSPolly} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {SearchSuggestionsPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
+import {SolutionsTemplatesPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 
 import {BrowserTTS,AzureSTTConfig,WebKitSTTConfig, AzureTTS, KoreDesktopNotificationPlugin } from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {AgentDesktopPlugin, GoogleSTT, GoogleSTTConfig, AzureSTT, GoogleTTS} from '../../../../../dist/kore-web-sdk.esm.browser.js';
@@ -55,7 +56,7 @@ chatWindowInstance.installPlugin(new AzureTTS(
 // chatWindowInstance.installPlugin(new BrowserTTS());
 chatWindowInstance.installPlugin(new AgentDesktopPlugin());
 chatWindowInstance.installPlugin(new KoreDesktopNotificationPlugin());
-
+// chatWindowInstance.installPlugin(new SolutionsTemplatesPlugin());
 
 
 

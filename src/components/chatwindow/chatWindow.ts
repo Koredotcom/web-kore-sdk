@@ -309,6 +309,7 @@ initShow  (config:any) {
   window.addEventListener('online', me.updateOnlineStatus.bind(me));
   window.addEventListener('offline', me.updateOnlineStatus.bind(me));
   me.attachEventListener();
+  $(me.chatEle).append(me.paginatedScrollMsgDiv);
   // me.show();
 }, 700);
 };
@@ -416,9 +417,6 @@ openModal(template:any, showClose:any) {
   } else {
     $('.kore-chat-window').removeClass('modelOpen');
     chatBodyModal.find('.closeChatBodyModal').css('display', 'none');
-    setTimeout(() => {
-      chatBodyModal.find('#chatBodyModalContent').empty();
-    }, 1000);
     chatBodyModal.hide();
     $('.kore-chat-window').removeClass('modelOpen');
   }
@@ -688,7 +686,7 @@ sendMessageWithWithChatInput(chatInput:any){
   if (chatInput.text().trim() === '') {
     return;
   }
-  chatInput.html(KoreHelpers.prototypes.koreReplaceAll(chatInput.text(),"<br>", "\n"));
+  chatInput.text(KoreHelpers.prototypes.koreReplaceAll(chatInput.text(),"<br>", "\n"));
   me.sendMessageToBot(chatInput.text());
   chatInput.html('');
 }
@@ -907,11 +905,14 @@ bindEvents  () {
   if (me?.config?.history?.paginatedScroll?.enable) {
     _chatContainer.find('.kore-chat-body .chat-container').on('scroll', (event: any) => {
       var div = $(event.currentTarget);
+      if(bot.previousHistoryLoading){
+        return false;
+      }
       if (div[0].scrollHeight - div.scrollTop() == div.height()) {
         bot.previousHistoryLoading = false;
       }
       else if (div.scrollTop() == 0) {
-        if (bot.paginatedScrollDataAvailable) {
+        if (bot.paginatedScrollDataAvailable && !bot.previousHistoryLoading) {
           bot.previousHistoryLoading = true;
           let message = me?.config?.history?.paginatedScroll?.loadingLabel || 'Loading chat history..';
           let paginatedHistoryLoader = $('<div class="paginted-history-loader">\
@@ -923,6 +924,8 @@ bindEvents  () {
           if (!(_chatContainer.find('.paginted-history-loader').length)) {
             $(paginatedHistoryLoader).insertBefore(_chatContainer.find('.chat-widget-body-wrapper li:first'));
           }
+          _chatContainer.find('.kore-chat-footer').addClass('disableFooter');
+          _chatContainer.find('.kore-chat-footer .chatInputBox').blur();
           bot.getHistory({ limit: (me?.config?.history?.paginatedScroll?.batchSize) });
         }
       }
@@ -1093,7 +1096,7 @@ bindSDKEvents  () {
       return false;
     }
 
-    let msgData=me.parseSocketMessage(response.data);
+    let msgData=me.parseSocketMessage(JSON.stringify(tempData));
     if (msgData) {
       if (me.loadHistory && me.historyLoading) {
         me.messagesQueue.push(msgData)
@@ -1555,6 +1558,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
     _chatContainer.find('.endChatContainer').attr('aria-hidden','true');//for mac voiceover bug with aria-live
   }
 
+  me.prepareAriaTagsOnMessage(msgData,messageHtml);
   let chatWindowEvent = {stopFurtherExecution: false};
   me.emit(me.EVENTS.BEFORE_RENDER_MSG,{
     messageHtml:messageHtml,
@@ -1647,8 +1651,26 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
     msgData:msgData
   });
 };
+prepareAriaTagsOnMessage(msgData:any,messageHtml:any){
+  let isMacOS=navigator.userAgent.includes("Macintosh") || navigator.userAgent.includes("Mac OS X");
+  let HACK_TIMER=2000;//this timer is handle back to back messages for mac voice over,keep this value more than the duration between messages
+  let $messageHtml=$(messageHtml);
+  let me:any=this;
+  let _chatContainer = $(me.chatEle).find('.chat-container');
+  _chatContainer.find('li').attr('aria-live', 'off');
+  _chatContainer.find('li .extra-info').attr('aria-hidden','true');//for mac voiceover bug with aria-live
+  _chatContainer.find('.endChatContainer').attr('aria-live', 'off');
+  _chatContainer.find('.endChatContainer').attr('aria-hidden','true');//for mac voiceover bug with aria-live
 
-
+  if(isMacOS){
+    $messageHtml.attr("data-aria-timer-running","true");
+    $messageHtml.attr("aria-live","polite");
+    setTimeout(()=>{
+      $messageHtml.removeAttr("data-aria-timer-running");
+    },HACK_TIMER);
+    _chatContainer.find('li .messageBubble:not([data-aria-timer-running])').attr('aria-hidden','true');//for mac voiceover bug with aria-live
+  }
+}
 generateMessageDOM(msgData?:any){
   const me:any = this; 
   let messageHtml;
@@ -1779,7 +1801,7 @@ getChatTemplate (tempType: string) {
                  <p class="headerTip warningTip">Something went wrong.Please try again later.</p> \
              </div> \
          </div> \
-         <div role="log" aria-live="polite" aria-atomic="true" class="kore-chat-body"> \
+         <div role="log" aria-live="polite" aria-atomic="true" aria-relevant="additions" class="kore-chat-body"> \
              <div class="errorMsgBlock"> \
              </div> \
              <ul class="chat-container"></ul> \
@@ -1851,9 +1873,9 @@ historyLoadingComplete () {
         }
       }
       _chatContainer.find('.chat-container').scrollTop(_heightTobeScrolled);
+    } 
+    if($(this.paginatedScrollMsgDiv).find('.prev-message-list').children().length){
       $(this.paginatedScrollMsgDiv).find('.prev-message-list').empty();
-      _chatContainer.find('.paginted-history-loader').remove();
-      bot.previousHistoryLoading = false;
     }
 
     if (me.config.UI.version == 'v3' && me.chatEle.querySelectorAll('.prev-message-list > div').length > 0 && bot.previousHistoryLoading){
@@ -1879,6 +1901,12 @@ historyLoadingComplete () {
     }
     bot.previousHistoryLoading = false;
     }
+    if(_chatContainer.find('.paginted-history-loader')){
+      _chatContainer.find('.paginted-history-loader').remove();
+    }
+    bot.previousHistoryLoading = false;
+    $('.chatInputBox').focus();
+    $('.disableFooter').removeClass('disableFooter');
   }, 0, me);
 };
 

@@ -25,27 +25,33 @@ class QuickReplyTemplate {
         let $ = me.hostInstance.$;
         let chatWindowInstance = me.hostInstance;
         const quickReplyDivs = document.querySelectorAll('.quickReplies');
-        for (var i = 0; i < quickReplyDivs.length; i++) {
-            const btnsParentDiv: any = quickReplyDivs[i].querySelectorAll('.quick_replies_btn_parent');
-            const leftScrollBtn = quickReplyDivs[i].querySelectorAll('.quickreplyLeftIcon');
-            const rightScrollBtn = quickReplyDivs[i].querySelectorAll('.quickreplyRightIcon');
-            if (btnsParentDiv && btnsParentDiv[0] && btnsParentDiv[0].hasChildNodes()) {
-                if (leftScrollBtn && leftScrollBtn.length && leftScrollBtn[0] && leftScrollBtn[0].classList) {
-                    if (btnsParentDiv[0].scrollLeft > 0) {
-                        leftScrollBtn[0].classList.remove('hide');
-                    } else {
-                        leftScrollBtn[0].classList.add('hide');
+        // for (var i = 0; i < quickReplyDivs.length; i++) {
+            const btnsParentDiv: any = $(messageHtml).find('.quick_replies_btn_parent');
+            const leftScrollBtn =  $(messageHtml).find('.quickreplyLeftIcon');
+            const rightScrollBtn =  $(messageHtml).find('.quickreplyRightIcon');
+            setTimeout(() => {
+                if (btnsParentDiv && btnsParentDiv[0] && btnsParentDiv[0].hasChildNodes()) {
+                    if (leftScrollBtn && leftScrollBtn.length && leftScrollBtn[0] && leftScrollBtn[0].classList) {
+                        if (btnsParentDiv[0].scrollLeft > 0) {
+                            leftScrollBtn[0].classList.remove('hide');
+                        } else {
+                            if(!$(leftScrollBtn[0]).hasClass('hide')){
+                                leftScrollBtn[0].classList.add('hide');
+                            }
+                        }
                     }
-                }
-                if (rightScrollBtn && rightScrollBtn.length && rightScrollBtn[0] && rightScrollBtn[0].classList) {
-                    if (btnsParentDiv[0].offsetWidth < btnsParentDiv[0].scrollWidth) {
-                        rightScrollBtn[0].classList.remove('hide');
-                    } else {
-                        rightScrollBtn[0].classList.add('hide');
+                    if (rightScrollBtn && rightScrollBtn.length && rightScrollBtn[0] && rightScrollBtn[0].classList) {
+                        if (btnsParentDiv[0].offsetWidth < btnsParentDiv[0].scrollWidth) {
+                            rightScrollBtn[0].classList.remove('hide');
+                        } else {
+                            if(!$(rightScrollBtn[0]).hasClass('hide')){
+                                rightScrollBtn[0].classList.add('hide');
+                            }
+                        }
                     }
-                }
-            }
-        }
+                } 
+            }, 1000);
+        // }
         $(messageHtml).off('click', '.quickReply').on('click', '.quickReply', function (e: any) {
             e.preventDefault();
             e.stopPropagation();
@@ -191,7 +197,7 @@ class QuickReplyTemplate {
                         </div>\
                         {{/if}} \
                         {{if msgData.message[0].component.payload.quick_replies && msgData.message[0].component.payload.quick_replies.length}} \
-                        <div class="fa fa-chevron-left quickreplyLeftIcon hide"></div><div class="fa fa-chevron-right quickreplyRightIcon"></div>\
+                        <div class="fa fa-chevron-left quickreplyLeftIcon hide"></div><div class="fa fa-chevron-right quickreplyRightIcon hide"></div>\
                             <div class="quick_replies_btn_parent"><div class="autoWidth">\
                                 {{each(key, msgItem) msgData.message[0].component.payload.quick_replies}} \
                                     <div class="quickReplyTemplContentChild quickReplyDiv"> <span {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} class="quickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.content_type}" {{if msgItem.url}}url="${msgItem.url}"{{/if}}>\

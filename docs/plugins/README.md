@@ -18,6 +18,7 @@ External plugins will be deloped by kore and should be installed explicitly by t
 | Azure TTS | Adds text to speech ability via Azure Speech API  |[Guide ](./azure-tts) 
 | kore-aws-st-polly | Adds speak text with AWS api  |[Guide ](./kore-aws-st-polly) 
 | Search Suggestions | Adds Typeahead and query suggestions to chatwindow compose bar  |[Guide ](./search-suggestions) 
+| Solutions Templates | Adds Solution specfic templates |[Guide ](./solution-templates) 
 
 
 

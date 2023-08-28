@@ -220,7 +220,8 @@ class KorePickersPlugin {
     hostInstance: any;
     constructor(pickerConfig:any) {
         let me = this;
-        me.extend(this.config,pickerConfig);
+        // me.extend(this.config,pickerConfig);
+        this.config = {...this.config,...pickerConfig}
     }
     onHostCreate() {
         let me = this;

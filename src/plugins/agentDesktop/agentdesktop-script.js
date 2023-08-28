@@ -1053,7 +1053,7 @@ class AgentDesktopPluginScript  {
             var serverConfig = {};
             serverConfig.addresses = this.callDetails.addresses;
             serverConfig.domain = this.callDetails.domain;
-            serverConfig.iceServers = [this.callDetails.domain];
+            serverConfig.iceServers = this.callDetails.iceServers || [];
             me.initSipStack({ user: uuId, displayName: uuId, password: '' }, serverConfig);
         }
         this._makeCall = function () {

@@ -38,9 +38,9 @@ class TaskPickerTemplate {
         $(me.messageHtml).append(me.getTaskPickerOptions(accountData));
         $(me.messageHtml).find(".searchInput").hide();
         $(me.messageHtml).removeClass("hide");
-        if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.heading) {
+        // if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.heading) {
             $(me.messageHtml).find('.taskHeading').html(msgData.message[0].component.payload.heading);
-        }
+        // }
     }
     getTemplateString() {
         return '<div class="TaskPickerContainer hide">\
