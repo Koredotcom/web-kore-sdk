@@ -1403,11 +1403,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   if (me.chatPSObj && me.chatPSObj.update) {
     me.chatPSObj.update();
   }
-  if(bot && !bot.previousHistoryLoading){
-    _chatContainer.animate({
-      scrollTop: _chatContainer.prop('scrollHeight'),
-    }, 100);
-  }
+  me.updateScrollOnMessageRender(msgData);
   me.emit(me.EVENTS.AFTER_RENDER_MSG,{
     messageHtml:messageHtml,
     msgData:msgData
@@ -1432,6 +1428,40 @@ prepareAriaTagsOnMessage(msgData:any,messageHtml:any){
     },HACK_TIMER);
     _chatContainer.find('li .messageBubble:not([data-aria-timer-running])').attr('aria-hidden','true');//for mac voiceover bug with aria-live
   }
+}
+updateScrollOnMessageRender(msgData: any){
+  const me: any = this; 
+  let _chatContainer = $(me.chatEle).find('.chat-container');
+  const debounceScrollingCall: any = me.debounceScrollingHide(me.removeScrollingHide, 500);
+  if(bot && !bot.previousHistoryLoading){
+    if (msgData?.type === 'bot_response') {
+      _chatContainer.addClass('scrolling'); // start hiding scroll on message arrival
+      _chatContainer.animate({
+        scrollTop: _chatContainer.prop('scrollHeight'),
+      }, 100);
+      debounceScrollingCall(); // stop hiding scroll on message arrival
+    } else {
+      _chatContainer.animate({
+        scrollTop: _chatContainer.prop('scrollHeight'),
+      }, 100);
+    }
+  }
+}
+removeScrollingHide() {
+  const me = this;
+  let _chatContainer = $(me.chatEle).find('.chat-container');
+      setTimeout(()=>{
+        _chatContainer.removeClass('scrolling');
+      },1500);
+}
+debounceScrollingHide(func: any, delay: any) {
+  let timeoutId: any;
+  return () => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func.call(this);
+    }, delay);
+  };
 }
 generateMessageDOM(msgData?:any){
   const me:any = this; 
