@@ -2,6 +2,8 @@ import BaseChatTemplate from '../baseChatTemplate';
 import { h, Fragment } from 'preact';
 import { useState } from 'preact/hooks';
 import { Message } from '../message/message';
+import './paymentMethod.scss';
+
 
 export function Payment(props: any) {
     const hostInstance = props.hostInstance;
@@ -21,7 +23,7 @@ export function Payment(props: any) {
             hostInstance.openExternalLink(link);
         }
     }
-    if (msgData?.message?.[0]?.component?.payload?.template_type == 'list') {
+    if (msgData?.message?.[0]?.component?.payload?.template_type == 'insureAssistListTemplate') {
         return (
             <div className="list-style">
                 <div className="card-acc-temp">
@@ -39,14 +41,39 @@ export function Payment(props: any) {
                                         {val.subtitle && <p>{val.subtitle}</p>}
                                     </div>
                                     <div className="right-data">
-                                        {val.value && <p>{val.value}</p>}
+                                        {
+                                            val?.titleValue?.map((item: any) => (
+                                                <div>
+                                                    <div className="right-data">
+                                                        {item.iconValue && <img src={item?.iconValue} alt="icon" />}
+                                                        {item?.textValue && <h1 style={item?.valueStyle && item.valueStyle}>{item?.textValue}</h1>}
+                                                    </div>
+                                                </div>
+                                            ))
+                                        }
                                     </div>
+                                </div>
+
+                                {
+                                    val?.description?.map((item: any) => (
+                                        <div>
+                                            <div className="left-data">
+                                                {item?.title && <p>{item?.title}</p>}
+                                            </div>
+                                            <div className="right-data">
+                                                {item?.title && <p>{item?.value}</p>}
+                                            </div>
+                                        </div>
+                                    ))
+                                }
+                                <div>
                                 </div>
                             </div>
                         ))
                     }
-                    {/* payement methods end*/}
-
+                    {
+                        <button style={msgData?.message?.[0]?.component?.payload?.buttons?.buttonStyle} className="view-renewal-btn">{msgData?.message?.[0]?.component?.payload?.buttons?.title}</button>
+                    }
                 </div>
             </div>
         );

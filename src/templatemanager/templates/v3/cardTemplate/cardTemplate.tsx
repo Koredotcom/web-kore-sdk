@@ -32,7 +32,7 @@ export function cardSliderExtension(props: any) {
 
     /**
      * handle previous and current tabindex 
-     * @param tabIndex 
+     * @param event 
      */
     const handleTabChange = (event: any) => {
         const tabHeader = hostInstance.chatEle.querySelectorAll('.tab-item');
@@ -49,6 +49,12 @@ export function cardSliderExtension(props: any) {
         })
     };
 
+    /**
+    * handle previous and current tabindex 
+    * @param i :  return the index  
+    * @param event : return the index of current event 
+    * @param ele : using for active and inactive the class
+    */
     const setActive = (i: any, event: any, ele: any) => {
         if (i == event) {
             ele.classList.add('active');
@@ -56,13 +62,16 @@ export function cardSliderExtension(props: any) {
             ele.classList.remove('active');
         }
     }
-    
+
+    /**
+     * handle the selections basis on select the select box
+     * @param event : return the index of current event 
+    */
     const selectionChange = (event: any) => {
         const selectedOption = event.target.value;
         const selectedIndex = event.target.selectedIndex;
         handleTabChange(selectedIndex);
     }
-
     return (
         <div className="menu-wrapper-data-actions">
             <div className="actions-slider-header-menu">
@@ -374,9 +383,9 @@ export function card(props: any) {
             <Fragment>
                 <div>
                     <section className="card-template-wrapper" aria-label="card template sdk">
-                        <div className="card-warpper-info">
-                            {msgData.message[0].component.payload.cards.cardHeading.title && <h1>{msgData.message[0].component.payload.cards.cardHeading.title}</h1>}
-                            {msgData.message[0].component.payload.cards && <p style={msgData.valueStyles}>{msgData.message[0].component.payload.cards}</p>}
+                        <div className="card-warpper-info card-style">
+                            {msgData.message[0]?.component?.payload?.cards.cardHeading?.title && <h1 id="card-style-header">{msgData.message[0]?.component?.payload?.cards?.cardHeading?.title}</h1>}
+                            {msgData.message[0]?.component?.payload?.cards && <p style={msgData.valueStyles}>{msgData.message[0]?.component?.payload?.cards}</p>}
 
                             {
                                 msgData.message[0].component?.payload?.cards?.cardDescription?.map((ele: any) => (
@@ -423,73 +432,106 @@ export function card(props: any) {
             <Fragment>
                 <div>
                     <section className="card-template-wrapper-view-more-details" aria-label="card template sdk">
-                        {
-                            msgData.message[0].component.payload.cards.cardDescription.map((ele: any) => (
-                                <div className="card-content-sec">
-                                    <div className="top-sec-card">
-                                        <img src={ele?.topSection?.icon} />
-                                        {ele?.topSection?.title && <h1>{ele?.topSection?.title}</h1>}
-                                        {ele?.topSection?.details?.title && <span style={ele?.topSection?.details?.styles} className="tag-name">{ele?.topSection?.details?.title}</span>}
-                                    </div>
-                                    <div className="middle-sec-card">
-                                        {ele.topSection?.subTitle && <h1>{ele.topSection?.subTitle}</h1>}
-                                    </div>
-                                    {
-                                        ele.topSection.items.map((val: any) => (
-                                            <div style={val?.borderStyles} className="bottom-sec-card">
-                                                {val?.title && <h2 style={val?.titleStyles && val?.titleStyles}>{val?.title}</h2>}
-                                                {val?.value && <p style={val?.titleStyles && val?.valueStyles}>{val?.value}</p>}
-                                            </div>
-                                        ))
-                                    }
-                                    <div className="bottom-sec-card">
-                                        <div style={ele.middleSection && ele.middleSection?.borderStyles}>
+                        <div className="card-warpper-info card-style">
+                            {msgData.message[0]?.component?.payload?.cards.cardHeading?.title && <h1 id="card-style-header">{msgData.message[0]?.component?.payload?.cards?.cardHeading?.title}</h1>}
+                            {msgData.message[0]?.component?.payload?.cards && <p style={msgData.valueStyles}>{msgData.message[0]?.component?.payload?.cards}</p>}
+                            {
+                                msgData.message[0].component.payload.cards.cardDescription.map((ele: any) => (
+                                    <div className="card-content-sec">
+                                        {/* Top Section Start */}
+                                        <div className="top-sec-card">
                                             <div className="card-acc-temp-sec">
                                                 <div className="card-acc-temp">
                                                     <div className="left-data">
-                                                        {ele.middleSection?.title && <h2 style={ele.middleSection?.titleStyles}>{ele.middleSection?.title}</h2>}
+                                                        {ele?.topSection?.title && <h1 style={ele?.topSection?.subTitleStyles && ele?.topSection?.subTitleStyles}><img src={ele?.topSection?.icon} /> {ele?.topSection?.title}</h1>}
+                                                        {ele.topSection?.subTitle && <h2 style={ele?.topSection?.subTitleStyles && ele?.topSection?.subTitleStyles}>{ele.topSection?.subTitle}</h2>}
                                                     </div>
                                                     <div className="right-data">
-                                                        {ele.middleSection?.value && <p style={ele.middleSection?.titleStyles}>{ele.middleSection?.value}</p>}
+                                                        {ele?.topSection?.details?.title && <span style={ele?.topSection?.details?.styles} className="tag-name">{ele?.topSection?.details?.title}</span>}
                                                     </div>
+                                                    {
+                                                        ele.topSection?.items.map((val: any) => (
+                                                            <div style={val?.borderStyles} className="gap-style">
+                                                                <div className="left-data">
+                                                                    {val?.title && <h3 style={val?.titleStyles && val?.titleStyles}>{val?.title}</h3>}
+                                                                </div>
+                                                                <div className="right-data">
+                                                                    {val?.value && <p style={val?.titleStyles && val?.valueStyles}>{val?.value}</p>}
+
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
-
-                                    </div>
-                                    {
-                                        ele?.middleSection?.items?.map((val: any) => (
-                                            <div className="bottom-sec-card">
-                                                {val?.title && <h2>{val?.title} {val?.subTitle && <span style={val?.subTitleStyles && val.subTitleStyles}>{val?.subTitle}</span>}</h2>}                                              <p style={val.valueStyles}>{val.value}</p>
-                                            </div>
-                                        ))
-                                    }
-                                    <div className="border-divider"></div>
-                                    {
-                                        ele.bottomSection?.items.map((val: any) => (
-                                            <div className="bottom-sec-card">
+                                        <div className="border-divider"></div>
+                                        {/* Top Section End */}
+                                        {/* Middle Section Start */}
+                                        <div className="middle-sec-card">
+                                            <div style={ele.middleSection && ele.middleSection?.borderStyles}>
                                                 <div className="card-acc-temp-sec">
                                                     <div className="card-acc-temp">
                                                         <div className="left-data">
-                                                            {val?.title && <h2 style={val.titleStyles}> {val.title}</h2>}
+                                                            {ele.middleSection?.title && <h2 style={ele.middleSection?.titleStyles}>{ele.middleSection?.title}</h2>}
                                                         </div>
                                                         <div className="right-data">
-                                                            {val?.value && <p style={val.valueStyles}>{val.value}</p>}
+                                                            {ele.middleSection?.value && <p style={ele.middleSection?.titleStyles}>{ele.middleSection?.value}</p>}
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        ))
-                                    }
-                                    {
-                                        msgData.message[0].component.payload.cards.buttonActions.map((button: any) => (
-                                            <button className="view-more-btn" onClick={() => handleButtonEvent(button)} >{button.title}</button>
-                                        ))
-                                    }
-                                </div>
-                            ))
-                        }
+                                            {
+                                                ele?.middleSection?.items?.map((val: any) => (
+                                                    <div className="card-acc-temp-sec">
+                                                        <div className="card-acc-temp">
+                                                            <div className="left-data">
+                                                                {val?.title && <h2>{val?.title} {val?.subTitle && <span style={val?.subTitleStyles && val.subTitleStyles}>{val?.subTitle}</span>}</h2>}
+                                                            </div>
+                                                            <div className="right-data">
+                                                                <p style={val.valueStyles}>{val.value}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
+                                        {/* Middle Section End */}
 
+                                        {/* Bottom Section Start */}
+                                        <div className="bottom-sec-card">
+                                            {
+                                                ele.bottomSection?.items.map((val: any) => (
+                                                    <div className="card-acc-temp-sec">
+                                                        <div className="card-acc-temp">
+                                                            <div className="left-data">
+                                                                {val?.title && <h2 style={val.titleStyles}> {val.title}</h2>}
+                                                            </div>
+                                                            <div className="right-data">
+                                                                {val?.value && <p style={val.valueStyles}>{val.value}</p>}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                ))
+                                            }
+                                            {
+                                                ele.bottomSection?.buttons?.map((button: any) => (
+                                                    <button className="view-more-btn" onClick={() => handleButtonEvent(button)} >{button?.buttonTitle}</button>
+                                                ))
+                                            }
+                                        </div>
+                                    </div>
+                                ))
+                            }
+                            {
+                                msgData.message[0].component.payload.cards.buttonActions?.map((button: any) => (
+                                    <div className="card-content-sec">
+                                        <button className="view-more view-more-btn" onClick={() => handleButtonEvent(button)} >{button.title}</button>
+                                    </div>
+                                ))
+                            }
+                        </div>
                     </section>
                 </div>
             </Fragment>
@@ -499,11 +541,11 @@ export function card(props: any) {
     }
 }
 
-class cardTemplate extends BaseChatTemplate {
+class cardTemplateDemo extends BaseChatTemplate {
     hostInstance: any = this;
     renderMessage(msgData: any) {
         return this.getHTMLFromPreact(card, msgData, this.hostInstance);
     }
 }
 
-export default cardTemplate;
+export default cardTemplateDemo;

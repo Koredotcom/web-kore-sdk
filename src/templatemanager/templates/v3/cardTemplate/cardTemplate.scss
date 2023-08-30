@@ -16,7 +16,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: flex-start;
-        gap: 12px;
+        // gap: 12px;
 
         h1 {
             color: var(--card-heading-title);
@@ -74,6 +74,7 @@
     .middle-sec-card {
         display: flex;
         align-items: flex-start;
+        flex-flow: column;
         gap: 10px;
         width: 100%;
 
@@ -126,6 +127,7 @@
 
     .bottom-sec-card {
         display: flex;
+        flex-flow: column;
         align-items: center;
         gap: 10px;
         width: 100%;
@@ -185,7 +187,22 @@
         height: 30px;
         text-align: center;
         margin-top: 5px;
+        font-size: 14px;
         background-color: var(--card-temp-view-more-border);
+    }
+
+    .view-more-btn.confirmation-btn {
+        margin-right: 10px;
+        width: 43%;
+        margin-left: 10px;
+        padding: 4px 5px;
+        float: left;
+        height: 38px;
+
+        img {
+            vertical-align: middle;
+            margin-right: 5px
+        }
     }
 }
 
@@ -201,6 +218,15 @@
     animation-fill-mode: both;
 }
 
+.card-style {
+    #card-style-header {
+        color: var(--card-temp-bg);
+        border-radius: 4px 4px 0 0;
+        padding: 14px;
+        background-color: var(--card-temp-view-more-color);
+        width: 100%;
+    }
+}
 
 .menu-wrapper-data-actions {
     display: flex;
@@ -450,13 +476,15 @@
 
 .card-acc-temp-sec {
     width: 100%;
+
     .card-acc-temp {
-        display: flex;
-        padding: 0 0px 10px 0px;
+        display: block;
+        // padding: 0 0px 10px 0px;
         align-items: flex-start;
         gap: 15px;
         overflow: hidden;
         border-bottom: 1px solid rgba(154, 160, 166, 0.2);
+        line-height: 25px;
 
         &:last-child {
             border: 0;
@@ -473,6 +501,10 @@
 
         .left-data {
             width: 60%;
+
+            img {
+                vertical-align: middle;
+            }
 
             h1 {
                 color: var(--gray-900, #101828);
@@ -492,6 +524,9 @@
             }
 
             h2 {
+                font-size: 14px;
+            }
+            h3{
                 font-size: 14px;
             }
         }
