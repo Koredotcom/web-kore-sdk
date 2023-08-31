@@ -72,7 +72,7 @@ export function Payment(props: any) {
                         ))
                     }
                     {
-                        msgData?.message?.[0]?.component?.payload?.buttons.map((button: any) => (
+                        msgData?.message?.[0]?.component?.payload?.buttons?.map((button: any) => (
                             <button style={button?.buttonStyle} className="view-renewal-btn" onClick={() => handleButtonEvent(button)}>{button?.buttonTitle}</button>
                         ))
                     }
