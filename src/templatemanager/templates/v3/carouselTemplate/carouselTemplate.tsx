@@ -97,7 +97,7 @@ export function Carousel(props: any) {
                                 <div className="border-divider"></div>
                                 <div className="bottom-sec-card">
                                     {
-                                        ele.bottomSection.items.map((val: any) => (
+                                        ele.bottomSection?.items?.map((val: any) => (
                                             <div className="card-acc-temp">
                                                 <div className="left-data">
                                                     {val?.title && <h2 style={val?.titleStyles && val?.titleStyles}>{val?.title}</h2>}
