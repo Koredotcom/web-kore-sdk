@@ -29,6 +29,25 @@
     }
 }
 
+.card-warpper-info {
+    .view-more-btn {
+        border-radius: 4px;
+        border: 1px solid var(--card-temp-view-more-border);
+        width: 100%;
+        background: var(--card-temp-view-more-bg);
+        padding: 5px 12px;
+        color: var(--card-temp-bg);
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 18px;
+        height: 30px;
+        text-align: center;
+        margin-top: 5px;
+        font-size: 14px;
+        background-color: var(--card-temp-view-more-border);
+    }
+}
+
 .card-content-sec {
     display: flex;
     padding: 12px;
@@ -39,6 +58,23 @@
     border: 1px solid var(--card-temp-border);
     background: var(--card-temp-bg);
     text-align: left;
+
+    .view-more-btn {
+        border-radius: 4px;
+        border: 1px solid var(--card-temp-view-more-border);
+        width: 100%;
+        background: var(--card-temp-view-more-bg);
+        padding: 5px 12px;
+        color: var(--card-temp-bg);
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 18px;
+        height: 30px;
+        text-align: center;
+        margin-top: 5px;
+        font-size: 14px;
+        background-color: var(--card-temp-view-more-border);
+    }
 
     .top-sec-card {
         display: flex;
@@ -526,7 +562,8 @@
             h2 {
                 font-size: 14px;
             }
-            h3{
+
+            h3 {
                 font-size: 14px;
             }
         }

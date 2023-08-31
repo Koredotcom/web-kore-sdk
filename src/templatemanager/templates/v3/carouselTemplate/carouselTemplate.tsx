@@ -110,8 +110,12 @@ export function Carousel(props: any) {
                                         ))
                                     }
                                 </div>
-
-                                <button className="view-more-btn">{ele.buttons[0].title}</button>
+                                {
+                                    
+                                    ele?.buttons?.map((button: any) => (
+                                        <button className="view-more-btn" onClick={() => handleButtonEvent(button)}>{button?.buttonTitle}</button>
+                                    ))
+                                }
                             </button>
                         </li>))}
                 </ul>

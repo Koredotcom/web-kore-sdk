@@ -88,28 +88,28 @@ export function cardSliderExtension(props: any) {
                         sliderData.sliderInfo.map((ele: any) => (
                             <div>
                                 <div className="top-sec-card">
-                                    <img src={ele.topSection.icon} />
-                                    {ele.topSection.title && <h1>{ele.topSection.title}</h1>}
-                                    {ele.topSection.details.title && <span style={ele.topSection.details.styles} className="tag-name">{ele.topSection.details.title}</span>}
+                                    <img src={ele?.topSection?.icon} />
+                                    {ele?.topSection?.title && <h1>{ele?.topSection?.title}</h1>}
+                                    {ele?.topSection?.details?.title && <span style={ele?.topSection?.details?.styles} className="tag-name">{ele?.topSection?.details?.title}</span>}
                                 </div>
                                 <div>
-                                    {ele.topSection.details.subTitle && <h2 style={ele.topSection?.details?.subTitleStyles}>{ele.topSection.details.subTitle}</h2>}
+                                    {ele?.topSection?.details?.subTitle && <h2 style={ele?.topSection?.details?.subTitleStyles}>{ele?.topSection?.details?.subTitle}</h2>}
                                 </div>
                                 {
                                     ele?.middleSection?.items?.map((item: any) => (
                                         <div className="middle-sec-card">
                                             <div class="img-with-text">
-                                                <img src={item.icon} />
-                                                {item.title && <p>{item.title}</p>}
+                                                <img src={item?.icon} />
+                                                {item?.title && <p>{item?.title}</p>}
                                             </div>
                                             <div class="right-title">
-                                                {item.value && <p>{item.value}</p>}
+                                                {item?.value && <p>{item?.value}</p>}
                                             </div>
                                         </div>
                                     ))
                                 }
                                 {
-                                    ele.bottomSection.items.map((val: any) => (
+                                    ele?.bottomSection?.items?.map((val: any) => (
                                         <div className="bottom-sec-card small-font-sec">
                                             <div class="img-with-text">
                                                 {val.icon && <img src={val.icon} />}
@@ -391,12 +391,12 @@ export function card(props: any) {
                                 msgData.message[0].component?.payload?.cards?.cardDescription?.map((ele: any) => (
                                     <button className="card-content-sec" onClick={() => handleButtonEvent(ele.actions)}>
                                         <div className="top-sec-card">
-                                            <img src={ele.topSection?.icon} />
-                                            {ele.topSection.title && <h1>{ele.topSection.title}</h1>}
-                                            {ele.topSection?.details && <span style={ele.topSection?.details?.styles} className="tag-name">{ele.topSection.details?.title}</span>}
+                                            <img src={ele?.topSection?.icon} />
+                                            {ele?.topSection?.title && <h1>{ele?.topSection?.title}</h1>}
+                                            {ele?.topSection?.details && <span style={ele?.topSection?.details?.styles} className="tag-name">{ele?.topSection?.details?.title}</span>}
                                         </div>
                                         <div className="middle-sec-card  middle-sec-card-style">
-                                            {ele.middleSection?.title && <h1>{ele.middleSection?.title}</h1>}
+                                            {ele?.middleSection?.title && <h1>{ele?.middleSection?.title}</h1>}
                                         </div>
                                         <div className="bottom-sec-card bottom-sec-card-style">
                                             {
@@ -469,14 +469,14 @@ export function card(props: any) {
                                         {/* Top Section End */}
                                         {/* Middle Section Start */}
                                         <div className="middle-sec-card">
-                                            <div style={ele.middleSection && ele.middleSection?.borderStyles}>
+                                            <div style={ele?.middleSection && ele?.middleSection?.borderStyles}>
                                                 <div className="card-acc-temp-sec">
                                                     <div className="card-acc-temp">
                                                         <div className="left-data">
-                                                            {ele.middleSection?.title && <h2 style={ele.middleSection?.titleStyles}>{ele.middleSection?.title}</h2>}
+                                                            {ele?.middleSection?.title && <h2 style={ele?.middleSection?.titleStyles}>{ele?.middleSection?.title}</h2>}
                                                         </div>
                                                         <div className="right-data">
-                                                            {ele.middleSection?.value && <p style={ele.middleSection?.titleStyles}>{ele.middleSection?.value}</p>}
+                                                            {ele?.middleSection?.value && <p style={ele?.middleSection?.titleStyles}>{ele?.middleSection?.value}</p>}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -501,7 +501,7 @@ export function card(props: any) {
                                         {/* Bottom Section Start */}
                                         <div className="bottom-sec-card">
                                             {
-                                                ele.bottomSection?.items.map((val: any) => (
+                                                ele.bottomSection?.items?.map((val: any) => (
                                                     <div className="card-acc-temp-sec">
                                                         <div className="card-acc-temp">
                                                             <div className="left-data">
@@ -517,7 +517,7 @@ export function card(props: any) {
                                             }
                                             {
                                                 ele.bottomSection?.buttons?.map((button: any) => (
-                                                    <button className="view-more-btn" onClick={() => handleButtonEvent(button)} >{button?.buttonTitle}</button>
+                                                        <button className="view-more-btn" onClick={() => handleButtonEvent(button)}>{button?.buttonTitle}</button>
                                                 ))
                                             }
                                         </div>
@@ -526,9 +526,7 @@ export function card(props: any) {
                             }
                             {
                                 msgData.message[0].component.payload.cards.buttonActions?.map((button: any) => (
-                                    <div className="card-content-sec">
                                         <button className="view-more view-more-btn" onClick={() => handleButtonEvent(button)} >{button.title}</button>
-                                    </div>
                                 ))
                             }
                         </div>
