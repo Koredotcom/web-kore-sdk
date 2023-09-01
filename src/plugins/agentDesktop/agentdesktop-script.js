@@ -194,7 +194,7 @@ class AgentDesktopPluginScript  {
         let me = this;
         this.authResponse = null;
         let cwInstance = this.config.hostInstance;
-        let botInstance = cwInstance.bot;
+        let botInstance = cwInstance?.bot;
         console.log("agentdesktop uuId", uuId);
         /*if (uuId && uuId.length > 0) {
             localStorage.setItem("kr-cw-uid", uuId)
@@ -625,7 +625,10 @@ class AgentDesktopPluginScript  {
                         "body": _self.callDetails,
                         "type": ""
                     }
-                    botInstance.sendMessage(messageToBot, (err) => { });
+
+                    if (botInstance) {
+                        botInstance.sendMessage(messageToBot, (err) => { });
+                    }
                     if (_self.activeCall) {
                         _self.activeCall.terminate();
                     }
@@ -641,7 +644,10 @@ class AgentDesktopPluginScript  {
                         "body": _self.callDetails,
                         "type": ""
                     }
-                    botInstance.sendMessage(messageToBot, (err) => { });
+
+                    if (botInstance) {
+                        botInstance.sendMessage(messageToBot, (err) => { });
+                    }
                     
                     _self.addAudioVideoContainer();
                     _self.callConnecting(_self.callDetails.videoCall, _self.callDetails.firstName);
@@ -744,108 +750,111 @@ class AgentDesktopPluginScript  {
         console.log("window.KoreSDK", window.KoreSDK, uuId)
         var events = requireKr('/KoreBot.js').instance();
         var originalSendMessageFunction = events.sendMessage;
-        botInstance.sendMessage = function sendMessage(message, optCb) {
-            var pagesVisited = localStorage.getItem("pagesVisited");
-            var pagesVisitedArray = [];
-            if (pagesVisited && pagesVisited != '[]') {
-                pagesVisitedArray = JSON.parse(pagesVisited);
-                // calculate time spent on last item
-                var obj = pagesVisitedArray[0];
-                var start = moment(obj.timestamp);
-                var end = moment();
-                var duration = moment.duration(end.diff(start));
-                var milliseconds = duration.asMilliseconds();
-                obj['timespent'] = milliseconds;
-                obj['domain'] =  window.location.hostname; 
+        var overrideFlag = false;
+        if (botInstance) {
+            botInstance.sendMessage = function sendMessage(message, optCb) {
+                var pagesVisited = localStorage.getItem("pagesVisited");
+                var pagesVisitedArray = [];
+                if (pagesVisited && pagesVisited != '[]') {
+                    pagesVisitedArray = JSON.parse(pagesVisited);
+                    // calculate time spent on last item
+                    var obj = pagesVisitedArray[0];
+                    var start = moment(obj.timestamp);
+                    var end = moment();
+                    var duration = moment.duration(end.diff(start));
+                    var milliseconds = duration.asMilliseconds();
+                    obj['timespent'] = milliseconds;
+                    obj['domain'] =  window.location.hostname;
+                }
+
+                localStorage.setItem("pagesVisited", JSON.stringify(pagesVisitedArray));
+
+                message["agentDesktopMeta"] = { "pagesVisited": pagesVisitedArray };
+                originalSendMessageFunction.call(this, message, optCb);
             }
 
-            localStorage.setItem("pagesVisited", JSON.stringify(pagesVisitedArray));
+            botInstance.on('message', (message) => {
+                overrideCloseButton();
+                var msgJson = JSON.parse(message.data);
+                if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'call_agent_webrtc') {
+                    //koreJquery("#rejectPhone").show();
+                    _self.callDetails = msgJson.message;
+                    _self.agentProfileIcon = _self.userIcon;
+                    if (_self.callDetails.profileIcon && _self.callDetails.profileIcon !== 'undefined') {
+                        _self.agentProfileIcon = _self.callDetails.profileIcon;
+                    }
+                    console.log('payload=', msgJson.message);
+                    _self.callAccepted = false;
+                    _self.showPhonePanel = true;
 
-            message["agentDesktopMeta"] = { "pagesVisited": pagesVisitedArray };
-            originalSendMessageFunction.call(this, message, optCb);
-        }
-        var overrideFlag = false;
-        botInstance.on('message', (message) => {
-            overrideCloseButton();
-            var msgJson = JSON.parse(message.data);
-            if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'call_agent_webrtc') {
-                //koreJquery("#rejectPhone").show();
-                _self.callDetails = msgJson.message;
-                _self.agentProfileIcon = _self.userIcon;
-                if (_self.callDetails.profileIcon && _self.callDetails.profileIcon !== 'undefined') {
-                    _self.agentProfileIcon = _self.callDetails.profileIcon;
-                }
-                console.log('payload=', msgJson.message);
-                _self.callAccepted = false;
-                _self.showPhonePanel = true;
-
-                if (_self.callDetails.restoreCall) {
+                    if (_self.callDetails.restoreCall) {
+                        if (_self.activeCall) {
+                            _self.activeCall.terminate();
+                        }
+                        _self.callAgent();
+                        _self.callAccepted = true;
+                        _self.showVideo = true;
+                    } else {
+                        this.showIncomingCallMessage(_self.callDetails.videoCall, _self.callDetails.firstName);
+                    }
+                } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'terminate_agent_webrtc') {
+                    _self.removeAudoVideoContainer()
+                    _self.showPhonePanel = false;
+                    _self.showVideo = false;
                     if (_self.activeCall) {
                         _self.activeCall.terminate();
+                        _self.phone.deinit();
                     }
-                    _self.callAgent();
-                    _self.callAccepted = true;
-                    _self.showVideo = true;
-                } else {
-                    this.showIncomingCallMessage(_self.callDetails.videoCall, _self.callDetails.firstName);
-                }
-            } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'terminate_agent_webrtc') {
-                _self.removeAudoVideoContainer()
-                _self.showPhonePanel = false;
-                _self.showVideo = false;
-                if (_self.activeCall) {
-                    _self.activeCall.terminate();
-                    _self.phone.deinit();
-                }
-                var toastContainer = koreJquery("#toast");
-                toastContainer.empty();
-            }  // webrtc_screenshare will be sent, when in video call
-            else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'webrtc_screenshare') {
-                /*if (_self.activeCall) {
-                    _self.screenShare(msgJson.message);
-                }*/
-                this.showScreenShareMessage(_self.callDetails.videoCall, _self.callDetails.firstName);
-            } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'webrtc_screenshare_cancel') {
-                if (!_self.callDetails.videoCall) {
-                    //_self.activeCall.stopSendingVideo();
-                    _self.sendVideo(false);
-                }
-                if (_self.screenSharingStream) {
-                    _self.phone.closeScreenSharing();
-                }
+                    var toastContainer = koreJquery("#toast");
+                    toastContainer.empty();
+                }  // webrtc_screenshare will be sent, when in video call
+                else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'webrtc_screenshare') {
+                    /*if (_self.activeCall) {
+                        _self.screenShare(msgJson.message);
+                    }*/
+                    this.showScreenShareMessage(_self.callDetails.videoCall, _self.callDetails.firstName);
+                } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'webrtc_screenshare_cancel') {
+                    if (!_self.callDetails.videoCall) {
+                        //_self.activeCall.stopSendingVideo();
+                        _self.sendVideo(false);
+                    }
+                    if (_self.screenSharingStream) {
+                        _self.phone.closeScreenSharing();
+                    }
 
-                if (_self.activeCall && _self.activeCall.isScreenSharing()) {
-                    _self.activeCall.stopScreenSharing();
-                }
-            } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'cobrowse') {
-                console.log("cobrowse request ", msgJson.message);
-                _self.maskClassList = msgJson.message.blockClasses;
-                _self.maskPatternList = msgJson.message.patternList;
-                if(_self.maskPatternList){
-                _self.scanElement(document.body, _self.maskPatternList);
-                }
-                _self.cobrowseMaskFields(msgJson.message);
-                _self.agentProfileIcon = _self.userIcon;
-                if (msgJson.message.profileIcon && msgJson.message.profileIcon !== 'undefined') {
-                    _self.agentProfileIcon = msgJson.message.profileIcon;
-                }
+                    if (_self.activeCall && _self.activeCall.isScreenSharing()) {
+                        _self.activeCall.stopScreenSharing();
+                    }
+                } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'cobrowse') {
+                    console.log("cobrowse request ", msgJson.message);
+                    _self.maskClassList = msgJson.message.blockClasses;
+                    _self.maskPatternList = msgJson.message.patternList;
+                        if (_self.maskPatternList) {
+                    _self.scanElement(document.body, _self.maskPatternList);
+                    }
+                    _self.cobrowseMaskFields(msgJson.message);
+                    _self.agentProfileIcon = _self.userIcon;
+                    if (msgJson.message.profileIcon && msgJson.message.profileIcon !== 'undefined') {
+                        _self.agentProfileIcon = msgJson.message.profileIcon;
+                    }
 
-                this.showCobrowseRequest(msgJson.message);
-            } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'close_cobrowse') {
-                var toastContainer = koreJquery("#toast");
-                toastContainer.empty();
-                this.stopCoBrowse(false);
-            } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'clear_pagevisit_history') {
-                localStorage.removeItem("pagesVisited");
-                var pagesVisitedArray = [];
-                var pageTitle = this.getPageTitle();
-                pagesVisitedArray.push({
-                    page: pageTitle,
-                    timestamp: new moment()
-                });
-                localStorage.setItem("pagesVisited", JSON.stringify(pagesVisitedArray))
-            }
-        });
+                    this.showCobrowseRequest(msgJson.message);
+                } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'close_cobrowse') {
+                    var toastContainer = koreJquery("#toast");
+                    toastContainer.empty();
+                    this.stopCoBrowse(false);
+                } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'clear_pagevisit_history') {
+                    localStorage.removeItem("pagesVisited");
+                    var pagesVisitedArray = [];
+                    var pageTitle = this.getPageTitle();
+                    pagesVisitedArray.push({
+                        page: pageTitle,
+                        timestamp: new moment()
+                    });
+                    localStorage.setItem("pagesVisited", JSON.stringify(pagesVisitedArray))
+                }
+            });
+        }
         this.getPageTitle = function () {
             var title = document.title;
             var metaTags = document.getElementsByTagName("meta");
@@ -1920,7 +1929,7 @@ class AgentDesktopPluginScript  {
         function initialize(me) {
             console.log("cobrowse >>> joining room ", cobrowseRequest.conversationId);
             addCobrowseAttribute(me);
-            me.socket.emit("start_cobrowse", { "conversationId": cobrowseRequest.conversationId });
+            me.socket.emit("start_cobrowse", { "conversationId": '1000' });
             me.socket.on("ice-candidate", handleNewICECandidateMsg);
             me.socket.on("offer", handleOffer);
             me.socket.on("stop_cobrowse", me.stopCoBrowse);
@@ -4985,7 +4994,7 @@ class AgentDesktopPluginScript  {
                     }
                 };
                 this.genAdds = function (n, target) {
-                    for(var i =0;i< me.maskClassList.length > 0; i++) {
+                    for(var i =0;i< me.maskClassList?.length > 0; i++) {
                       if(me.maskClassList[i] !== ''){
                         if (n && n.classList && n.classList.contains(me.maskClassList[i])) {
                             n.classList.add('rr-block');

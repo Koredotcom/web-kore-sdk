@@ -12,6 +12,9 @@ class AgentDesktopPlugin {
     stopTypingInterval: number = 500;
     isTabActive: boolean = true
     isReadRecipetSent: boolean = false;
+
+    authInfo: any;
+
     constructor(config?: any) {
         this.config = {
             ...this.config,
@@ -45,6 +48,26 @@ class AgentDesktopPlugin {
                 me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
             });
         })
+
+        me.hostInstance.on('viewInit', (chatEle: any) => {
+            me.hostInstance.$('.kore-chat-window.minimize').append(`
+            <div class=""></div>
+            <input type="text" id='cobrowseInput'>
+            `);
+            me.hostInstance.$('.kore-chat-window.minimize').on('keypress', '#cobrowseInput', (e: any) => {
+                if (e.which == 13 && this.authInfo) {
+                    this.validateOTP(me.hostInstance.$('#cobrowseInput').val());
+                    return false;
+                }
+            })
+        });
+
+        me.hostInstance.on('jwtSuccess', (data: any) => {
+            if (!this.authInfo) {
+                this.getAuthInfo(data);
+            }
+        });
+
         me.removeEmptyBubblesInTemplate();
     }
     onInit() {
@@ -249,6 +272,91 @@ class AgentDesktopPlugin {
             }
         }
         cwInstance.templateManager.installTemplate(new customTemplateComponent());
+    }
+
+    getAuthInfo(data: any) {
+        let me: any = this;
+        let cwInstance = me.hostInstance;
+
+        const _payload: any = {
+            assertion: data.jwt,
+            botInfo: {
+                chatBot: "Bot",
+                taskBotId: cwInstance._botInfo._id
+            },
+            token: {}
+        }
+
+        fetch(cwInstance.config.botOptions.koreAPIUrl + "oAuth/token/jwtgrant", {
+            "headers": {
+                "content-type": "application/json",
+            },
+            "body": JSON.stringify(_payload),
+            "method": "POST",
+        })
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+                throw new Error('Something went wrong');
+            })
+            .then((res: any) => {
+                this.authInfo = res;
+                this.agentDesktopInfo = new AgentDesktopPluginScript({...res, excludeRTM: true});
+            }).catch(err => {
+                console.error(err)
+                // this.authInfo = null;
+            })
+    }
+
+    validateOTP(otp: string) {
+        let me: any = this;
+        let cwInstance = me.hostInstance;
+        const url = new URL(cwInstance.config.botOptions.koreAPIUrl);
+
+        const _payload = {
+            otp: otp
+        }
+
+        fetch(url.protocol + '//' + url.host + '/agentassist/api/v1/otp/validateOtp', {
+            "headers": {
+                "content-type": "application/json",
+                "Authorization": "Bearer " + this.authInfo.authorization.accessToken,
+                "iId": cwInstance._botInfo._id,
+                "accountId": this.authInfo.userInfo.accountId
+            },
+            "body": JSON.stringify(_payload),
+            "method": "POST",
+        })
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+                throw new Error('Something went wrong');
+            })
+            .then((res: any) => {
+                console.log(res)
+
+                this.agentDesktopInfo.koreCoBrowse.initialize(res);
+            }).catch(err => {
+                console.log(err);
+                const mockData = {
+                    "orgId": "o-76285927-1068-503c-bd34-d48fa5b381e8",
+                    "iId": "st-2be3f2f0-4a4f-5eba-b598-cb1bb5e1e9d4",
+                    "conversationId": "c-a5da507-d2e8-44ae-a882-68a79c81bc98",
+                    "type": "cobrowse",
+                    "cobrowseUrl": "https://uat-app.smartassist.ai",
+                    "blockClasses": [],
+                    "patternList": [],
+                    "aId": "a-eb9a985-c792-4472-8511-1eb79244a3bb",
+                    "firstName": "VenuGopal",
+                    "lastName": "M",
+                    "profileIcon": "no-avatar",
+                    "id": 940935,
+                    excludeRTM: true
+                }
+                this.agentDesktopInfo.koreCoBrowse.initialize(mockData);
+            })
     }
 }
 export default AgentDesktopPlugin;
