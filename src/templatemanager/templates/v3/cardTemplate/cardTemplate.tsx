@@ -428,7 +428,7 @@ export function card(props: any) {
         );
         // Active Section Template End
     } else if (msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'details') {
-        return (
+\        return (
             <Fragment>
                 <div>
                     <section className="card-template-wrapper-view-more-details" aria-label="card template sdk">
@@ -525,8 +525,8 @@ export function card(props: any) {
                                 ))
                             }
                             {
-                                msgData.message[0].component.payload.cards.buttonActions?.map((button: any) => (
-                                        <button className="view-more view-more-btn" onClick={() => handleButtonEvent(button)} >{button.title}</button>
+                                msgData.message[0]?.component?.payload?.buttonActions?.map((button: any) => (
+                                        <button style={button?.buttonStyle} className="view-more view-more-btn" onClick={() => handleButtonEvent(button)} >{button.title}</button>
                                 ))
                             }
                         </div>
