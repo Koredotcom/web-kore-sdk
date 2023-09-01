@@ -34,6 +34,9 @@ import TemplateDropdown from './templates/v3/dropdown/dropdown';
 import TemplateCheckBoxes from './templates/v3/checkBoxes/checkBoxes';
 import TemplateAdvancedMultiSelect from './templates/v3/advancedMutliSelect/advancedMultiSelect';
 import TemplateAdvancedList from './templates/v3/advancedList/advancedList';
+import insureAssistCardTemplate from './templates/v3/insureAssistTemplates/insureAssistCardTemplate/insureAssistCardTemplate';
+import insureAssistCarousel from './templates/v3/insureAssistTemplates/insureAssistCarouselTemplate/insureAssistCarouselTemplate';
+import insureAssistPaymentMethod from './templates/v3/insureAssistTemplates/insureAssistPaymentMethod/insureAssistPaymentMethod';
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
 //(function($){
@@ -101,6 +104,9 @@ class TemplateManager {
 		this.installTemplate(new TemplateCheckBoxes());
 		this.installTemplate(new TemplateAdvancedMultiSelect());
 		this.installTemplate(new TemplateAdvancedList());
+		this.installTemplate(new insureAssistCardTemplate());
+		this.installTemplate(new insureAssistCarousel());
+		this.installTemplate(new insureAssistPaymentMethod());
 	}
 
 	renderMessage  (msgData: any) {
