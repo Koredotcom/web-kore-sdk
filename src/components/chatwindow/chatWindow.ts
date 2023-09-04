@@ -172,7 +172,6 @@ init  (config:any) {
   me.messageTemplate.hostInstance=me;
   me.installCallbackForPlugins();
   me.installDefaultPlugins();
-  me.config.brandingCopy = me.config.branding;
 }
 
 installDefaultPlugins(){
@@ -220,6 +219,7 @@ initShow  (config:any) {
   me.initial = true;
   me.config.chatTitle = 'Kore.ai Bot Chat';
   me.config.allowIframe = false;
+  me.config.brandingCopy = me.config.branding;
 
   me.reWriteWebHookURL(me.config);
   window._chatHistoryLoaded = false;
