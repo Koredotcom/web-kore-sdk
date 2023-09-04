@@ -428,7 +428,7 @@ export function card(props: any) {
         );
         // Active Section Template End
     } else if (msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'details') {
-\        return (
+        return (
             <Fragment>
                 <div>
                     <section className="card-template-wrapper-view-more-details" aria-label="card template sdk">
