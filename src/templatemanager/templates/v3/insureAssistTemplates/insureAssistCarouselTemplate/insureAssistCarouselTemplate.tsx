@@ -40,7 +40,6 @@ export function Carousel(props: any) {
         setTimeout(() => {
             stackedCard.init();
         }, 300)
-        console.log(msgData,'msgData')
         return (
             <div className={stackClass}>
                 <button className={leftCheButton}>

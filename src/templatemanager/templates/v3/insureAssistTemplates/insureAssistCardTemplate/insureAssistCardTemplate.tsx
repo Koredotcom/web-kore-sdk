@@ -428,7 +428,6 @@ export function card(props: any) {
         );
         // Active Section Template End
     } else if (msgData?.message?.[0]?.component?.payload?.template_type === 'insureAssistCardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'details') {
-        console.log(msgData, 'msgData msgData 000000000')
         return (
             <Fragment>
                 <div>
@@ -451,7 +450,7 @@ export function card(props: any) {
                                                         {ele?.topSection?.details?.title && <span style={ele?.topSection?.details?.styles} className="tag-name">{ele?.topSection?.details?.title}</span>}
                                                     </div>
                                                     {
-                                                        ele.topSection?.items.map((val: any) => (
+                                                        ele?.topSection?.items.map((val: any) => (
                                                             <div style={val?.borderStyles} className="gap-style">
                                                                 <div className="left-data">
                                                                     {val?.title && <h3 style={val?.titleStyles && val?.titleStyles}>{val?.title}</h3>}
@@ -500,7 +499,7 @@ export function card(props: any) {
                                         {/* Bottom Section Start */}
                                         <div className="bottom-sec-card">
                                             {
-                                                ele.bottomSection?.items?.map((val: any) => (
+                                                ele?.bottomSection?.items?.map((val: any) => (
                                                     <div className="card-acc-temp-sec">
                                                         <div className="card-acc-temp">
                                                             <div className="left-data">
@@ -515,7 +514,7 @@ export function card(props: any) {
                                                 ))
                                             }
                                             {
-                                                ele.bottomSection?.buttons?.map((button: any) => (
+                                                ele?.bottomSection?.buttons?.map((button: any) => (
                                                     <button className="view-more-btn" onClick={() => handleButtonEvent(button)}>{button?.buttonTitle}</button>
                                                 ))
                                             }
@@ -523,8 +522,13 @@ export function card(props: any) {
                                     </div>
                                 ))
                             }
+                             {
+                                msgData.message[0]?.component?.payload?.cards?.buttonActions?.map((button: any) => (
+                                    <button style={button?.buttonStyle} className="view-more view-more-btn" onClick={() => handleButtonEvent(button)} >{button.title}</button>
+                                ))
+                            }
                             {
-                                msgData.message[0].component.payload.buttonActions?.map((button: any) => (
+                                msgData.message[0]?.component?.payload?.buttonActions?.map((button: any) => (
                                     <button style={button?.buttonStyle} className="view-more view-more-btn" onClick={() => handleButtonEvent(button)} >{button.title}</button>
                                 ))
                             }
