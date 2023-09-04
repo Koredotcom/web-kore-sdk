@@ -172,6 +172,7 @@ init  (config:any) {
   me.messageTemplate.hostInstance=me;
   me.installCallbackForPlugins();
   me.installDefaultPlugins();
+  me.config.brandingCopy = me.config.branding;
 }
 
 installDefaultPlugins(){

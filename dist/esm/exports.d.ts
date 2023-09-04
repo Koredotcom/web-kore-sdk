@@ -11,6 +11,8 @@ export{KorePickersPlugin}from"./plugins/kore-picker-plugin.js";
 // @ts-ignore
 export{GraphTemplatesPlugin}from"./plugins/kore-graph-templates-plugin.js";
 // @ts-ignore
+export {SolutionsTemplatesPlugin} from './plugins/kore-solutions-plugin.js'
+// @ts-ignore
 export{WebKitSTT}from"./plugins/webapi-stt-plugin.js";
 // @ts-ignore
 export{BrowserTTS}from"./plugins/browser-tts-plugin.js";

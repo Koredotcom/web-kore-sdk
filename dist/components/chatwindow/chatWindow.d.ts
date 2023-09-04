@@ -191,6 +191,7 @@ declare class chatWindow extends EventEmitter {
         renderType: string;
         fromHistorySync: any;
     } | any): false | undefined;
+    prepareAriaTagsOnMessage(msgData: any, messageHtml: any): void;
     generateMessageDOM(msgData?: any): any;
     pushTorenderMessagesQueue(msgItem: any): void;
     startRenderEventLoop(): void;
