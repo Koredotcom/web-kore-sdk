@@ -41,6 +41,10 @@
 	-moz-border-radius: 4px;
 	border-radius: 4px;
 	z-index: 1030;
+
+	&.chatwindow-cobrowse-open{
+		right: 50px !important;
+	}
 	.errorMsg {
 		position: absolute;
 		width: 300px;

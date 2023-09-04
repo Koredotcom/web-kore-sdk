@@ -1929,7 +1929,7 @@ class AgentDesktopPluginScript  {
         function initialize(me) {
             console.log("cobrowse >>> joining room ", cobrowseRequest.conversationId);
             addCobrowseAttribute(me);
-            me.socket.emit("start_cobrowse", { "conversationId": '1000' });
+            me.socket.emit("start_cobrowse", { "conversationId": cobrowseRequest.conversationId });
             me.socket.on("ice-candidate", handleNewICECandidateMsg);
             me.socket.on("offer", handleOffer);
             me.socket.on("stop_cobrowse", me.stopCoBrowse);

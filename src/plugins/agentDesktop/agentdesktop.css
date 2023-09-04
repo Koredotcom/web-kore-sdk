@@ -593,3 +593,113 @@ li.fromCurrentUser .sentIndicator.read{
 	top: 5px;
 
 }
+
+@-webkit-keyframes slideOutUpcobrowser {
+    0% {
+        -webkit-transform: translateY(60px);
+        transform: translateY(60px);
+        opacity: 0;
+    }
+
+    100% {
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutUpcobrowser {
+    0% {
+        -webkit-transform: translateY(60px);
+        transform: translateY(60px);
+        opacity: 0;
+    }
+
+    100% {
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.cobrowser-wrapper-elipse {
+    position: absolute;
+    right: -22px;
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    height: auto;
+    top: auto;
+    bottom: 0;
+}
+.cobrowser-wrapper-elipse.open-cobrowser .co-bowser-options {
+    display: block;
+}
+.cobrowser-wrapper-elipse.open-input-browse .co-bowser-options .input-box-co-browser {
+    display: block;
+}
+.cobrowser-wrapper-elipse .elipse-btn {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+.cobrowser-wrapper-elipse .co-bowser-options {
+    position: absolute;
+    top: -78px;
+    left: -41px;
+    display: none;
+    -webkit-animation-name: slideOutUpcobrowser;
+    animation-name: slideOutUpcobrowser;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+.cobrowser-wrapper-elipse .co-bowser-options .btn-co-browser {
+    border-radius: 32px;
+    background: var(--bot-colors-intent,#4B4EDE);
+    box-shadow: 0px 2px 4px -2px rgba(16,24,40,0.1), 0px 4px 6px -1px rgba(16,24,40,0.1);
+    display: inline-flex;
+    height: 34px;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border: 0;
+    width: 34px;
+    cursor: pointer;
+}
+.cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser {
+    position: absolute;
+    bottom: auto;
+    top: -115px;
+    border-radius: 4px;
+    background: #FFF;
+    box-shadow: 0px 4px 6px -4px rgba(16,24,40,0.1), 0px 10px 15px -3px rgba(16,24,40,0.1);
+    display: flex;
+    width: 363px;
+    padding: 24px 12px;
+    flex-direction: column;
+    left: auto;
+    right: 0;
+    display: none;
+}
+.cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser .label-text {
+    color: var(--neutral-900,#171717);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    margin-bottom: 4px;
+}
+.cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input {
+    border-radius: 6px;
+    border: 1px solid var(--neutral-200,#E5E5E5);
+    background: var(--generic-white,#FFF);
+    box-shadow: 0px 1px 2px 0px rgba(16,24,40,0.05);
+    height: 40px;
+    padding: 8px 12px;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+}
