@@ -10,9 +10,11 @@ import { Menu } from '../../base/menu/menu';
 export function ChatWidgetComposeBar(props: any) {
     const hostInstance = props.hostInstance;
     const iconHelper = new IconsManager();
-    const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.brandingCopy);
+    const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
     hostInstance.on('onBrandingUpdate', function (event: any) {
-        updateBrandingInfo({...event.brandingData})
+        let brandingData = event.brandingData;
+        brandingData = JSON.parse(JSON.stringify(brandingData))
+        updateBrandingInfo({...brandingData})
     });
 
     const inputTypeObj: any = {

@@ -212,7 +212,6 @@ initShow  (config:any) {
     chatTitle: 'Kore.ai Bot Chat',
     allowIframe: false,
     botOptions: me.config.botOptions,
-    brandingCopy: me.config.branding
   });
   me.config.botOptions.$=me.$;
   me.messagesQueue=[];
