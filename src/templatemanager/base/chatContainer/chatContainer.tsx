@@ -1,5 +1,5 @@
 
-
+import "preact/debug";
 import './chatContainer.scss';
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
