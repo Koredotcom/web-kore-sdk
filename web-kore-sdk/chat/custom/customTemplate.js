@@ -1826,26 +1826,37 @@ print(JSON.stringify(message)); */
 		{{/if}} \
 	</script>';
 
-	var bankAssistAttachment = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+	var bankAssistAttachment = '<script id="attachmentTemplate" type="text/x-jqury-tmpl"> \
     {{if msgData.message}} \
         {{each(key, msgItem) msgData.message}} \
             {{if msgItem.cInfo && msgItem.type === "text"}} \
                 <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
                     {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                     {{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-                    <div class="messageBubble bankassist-template-attachment">\
-                                 <span class="simpleMsg" {{if msgData}}msgData="${JSON.stringify(msgData)}" {{/if}}>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload && msgData.message[0].component.payload.text, "bot",msgItem)}}</span> \
-                            <div class="bankassist-attachments"> \
-                                <div class="uploadIcon"> \
-                                        <span class="attachment-icon"></span> \
+                    <div class="bankassist-template-attachment">\
+                        <div class="messageBubble">\
+                                <span class="simpleMsg" {{if msgData}}msgData="${JSON.stringify(msgData)}" {{/if}}>{{html helpers.convertMDtoHTML(msgData.message[0].component.payload && msgData.message[0].component.payload.text, "bot",msgItem)}}</span> \
+                                <div class="bankassist-attachments"> \
+                                    <div class="uploadIcon"> \
+                                            <span class="attachment-icon"></span> \
+                                    </div> \
                                 </div> \
-                            </div> \
-                    </div> \
+                        </div> \
+                        {{if msgData.message[0].component.payload.buttons}}\
+                          <div class="attachment-buttons">\
+                            <div class="autoWidth">\
+                              {{each(key,button) msgData.message[0].component.payload.buttons}}\
+                                  <div class="atch-btn" title="${button.title}" type="${button.type}" {{if button.type === "postback"}}value="${button.payload}"{{else button.type === "url"}}value="${button.url}"{{/if}}><span class="btn-title">${button.title}</span></div>\
+                              {{/each}}\
+                            </div>\
+                          </div>\
+                        {{/if}}\
+                    <div>\
                 </li> \
             {{/if}} \
         {{/each}} \
     {{/if}} \
-    </scipt>';
+</scipt>';
 
 	var checkListTemplate =  '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 	{{if msgData.message}} \
@@ -3477,12 +3488,25 @@ print(JSON.stringify(message)); */
 
 	    /* Bank Assist attachment events starts here */
 		customTemplate.prototype.bankAssistAttachmentEvents = function (ele) {
+			chatInitialize=this.chatInitialize;
+			helpers=this.helpers;
 			$(ele).off('click', '.bankassist-attachments .uploadIcon').on('click', '.bankassist-attachments .uploadIcon', function (e) {
 				e.stopPropagation();
 				setTimeout(function () {
 					$(".attachmentIcon").trigger('click');
 				});
 			});
+			$(ele).off('click','.atch-btn').on('click','.atch-btn',function(e){
+				let type = $(e.currentTarget).attr('type');
+				if(type === 'postback'){
+				  let messageToBot = $(e.currentTarget).attr('value')||$(e.currentTarget).attr('title');
+				  $('.chatInputBox').text(messageToBot);
+				  chatInitialize.sendMessage($('.chatInputBox'),$(e.currentTarget).attr('title'));
+				}else if((type== 'url') || (type === 'web_url')){
+				  let url = $(e.currentTarget).attr('value');
+				  chatInitialize.openExternalLink(url);
+				}
+			  })
 		};
 		/* Bank Assist attachment events ends here */
 

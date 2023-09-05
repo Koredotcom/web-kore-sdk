@@ -4174,7 +4174,34 @@ white-space: nowrap;
     display: block;
     background-position: center;
  }
-
+.bankassist-template-attachment .attachment-buttons{
+    overflow: hidden;
+}
+.bankassist-template-attachment .attachment-buttons .atch-btn{
+    display: inline-block;
+    padding: 10px 10px 0 0;
+    border: none;
+}
+.bankassist-template-attachment .attachment-buttons .atch-btn .btn-title{
+    border: 1px solid var(--sdk-chat-widow-primary-font-color);
+    padding: 4px 13px;
+    border-radius: 20px;
+    display: table;
+    text-align: left;
+    color: var(--sdk-chat-widow-chat-button-active-text-color);
+    background: var(--sdk-chat-widow-chat-button-active-color);
+    transition: background-color 200ms linear;
+    -webkit-transition: background-color 200ms linear;
+    -moz-transition: background-color 200ms linear;
+    -o-transition: background-color 200ms linear;
+    -ms-transition: background-color 200ms linear;
+    cursor: pointer;
+}
+.bankassist-template-attachment .attachment-buttons .atch-btn .btn-title:hover{
+    background:var(--sdk-chat-widow-primary-font-color); 
+    border: 1px solid var(--sdk-chat-widow-primary-font-color);
+    color: var(--sdk-chat-widow-default-white);
+}
 
  /* check list tmplate css starts here*/
 
