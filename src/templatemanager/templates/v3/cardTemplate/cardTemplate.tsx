@@ -188,34 +188,33 @@ export function cardSliderExtension(props: any) {
                     }
                 </div>
                 <div className="tab-data-style">
-                    {/* tab accroidian start */}
                     {
                         sliderData?.sliderInfo?.map((ele: any) => (
                             <div>
-                                {ele.vehicles?.length > 2 ? ele?.vehicles?.map((tab: any, index: any) => (
-                                    <div className="tabs">
-                                        <div style={tab?.tabStyle && tab?.tabStyle} className="tab-header">
-                                            <div
-                                                key={index}
-                                                onClick={() => handleTabChange(index)} id={index}
-                                                className={index == 0 ? "tab-item active" : "tab-item"}
-                                            >
-                                                {tab.title && <h2 className="title">{tab.title} <br /> {tab.subTitle}</h2>}
+                                {ele.vehicles?.length > 3 ? (
+                                    <div>
+                                        <select onChange={selectionChange}>
+                                            {ele?.vehicles?.map((tab: any, index: any) => (
+                                                <option key={index} value={tab.title}>
+                                                    {tab.title} <br /> {tab.subTitle}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                ) :
+                                    ele?.vehicles?.map((tab: any, index: any) => (
+                                        <div className="tabs">
+                                            <div style={tab?.tabStyle && tab?.tabStyle} className="tab-header">
+                                                <div
+                                                    key={index}
+                                                    onClick={() => handleTabChange(index)} id={index}
+                                                    className={index == 0 ? "tab-item active" : "tab-item"}
+                                                >
+                                                    {tab.title && <h2 className="title">{tab.title} <br /> {tab.subTitle}</h2>}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                )) :
-                                    <div>
-                                        {
-                                            <select onChange={selectionChange}>
-                                                {ele?.vehicles?.map((tab: any, index: any) => (
-                                                    <option key={index} value={tab.title}>
-                                                        {tab.title} <br /> {tab.subTitle}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        }
-                                    </div>
+                                    ))
                                 }
                             </div>
                         ))
