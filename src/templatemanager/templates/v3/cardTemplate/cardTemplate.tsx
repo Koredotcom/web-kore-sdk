@@ -517,7 +517,7 @@ export function card(props: any) {
                                             }
                                             {
                                                 ele.bottomSection?.buttons?.map((button: any) => (
-                                                        <button className="view-more-btn" onClick={() => handleButtonEvent(button)}>{button?.buttonTitle}</button>
+                                                    <button className="view-more-btn" onClick={() => handleButtonEvent(button)}>{button?.buttonTitle}</button>
                                                 ))
                                             }
                                         </div>
@@ -525,8 +525,13 @@ export function card(props: any) {
                                 ))
                             }
                             {
+                                msgData.message[0]?.component?.payload?.cards?.buttonActions?.map((button: any) => (
+                                    <button style={button?.buttonStyle} className="view-more view-more-btn" onClick={() => handleButtonEvent(button)} >{button.title}</button>
+                                ))
+                            }
+                            {
                                 msgData.message[0]?.component?.payload?.buttonActions?.map((button: any) => (
-                                        <button style={button?.buttonStyle} className="view-more view-more-btn" onClick={() => handleButtonEvent(button)} >{button.title}</button>
+                                    <button style={button?.buttonStyle} className="view-more view-more-btn" onClick={() => handleButtonEvent(button)} >{button.title}</button>
                                 ))
                             }
                         </div>
