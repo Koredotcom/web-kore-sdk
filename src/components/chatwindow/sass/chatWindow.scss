@@ -42,8 +42,20 @@
 	border-radius: 4px;
 	z-index: 1030;
 
-	&.chatwindow-cobrowse-open{
-		right: 50px !important;
+	&.chatwindow-cobrowse-open {
+		right: 28px !important;
+
+		&.minimize {
+			padding-right: 30px;
+
+			.minimized {
+				right: 30px;
+			}
+
+			.minimized-title {
+				margin-right: 50px;
+			}
+		}
 	}
 	.errorMsg {
 		position: absolute;

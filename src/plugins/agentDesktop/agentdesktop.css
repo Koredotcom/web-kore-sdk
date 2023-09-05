@@ -29,6 +29,10 @@
     margin: 16px;
     z-index: 9;
 }
+.initial-video-audio-container.cobrowser-intial-width{
+    width: 360px;
+    margin: 16px auto;
+}
 .initial-video-audio-container .ad-img-block{
     display: flex;
     width: 40px;
@@ -622,9 +626,12 @@ li.fromCurrentUser .sentIndicator.read{
     }
 }
 
-.cobrowser-wrapper-elipse {
+.kore-chat-window.minimize:hover .cobrowser-wrapper-elipse .elipse-btn {
+    display: block;
+}
+.kore-chat-window.minimize .cobrowser-wrapper-elipse {
     position: absolute;
-    right: -22px;
+    right: 5px;
     display: flex;
     flex-direction: column;
     width: auto;
@@ -632,18 +639,22 @@ li.fromCurrentUser .sentIndicator.read{
     top: auto;
     bottom: 0;
 }
-.cobrowser-wrapper-elipse.open-cobrowser .co-bowser-options {
+.kore-chat-window.minimize .cobrowser-wrapper-elipse.open-cobrowser .elipse-btn {
+    display: block !important;
+}
+.kore-chat-window.minimize .cobrowser-wrapper-elipse.open-cobrowser .co-bowser-options {
     display: block;
 }
-.cobrowser-wrapper-elipse.open-input-browse .co-bowser-options .input-box-co-browser {
+.kore-chat-window.minimize .cobrowser-wrapper-elipse.open-input-browse .co-bowser-options .input-box-co-browser {
     display: block;
 }
-.cobrowser-wrapper-elipse .elipse-btn {
+.kore-chat-window.minimize .cobrowser-wrapper-elipse .elipse-btn {
     width: 20px;
     height: 20px;
     cursor: pointer;
+    display: none;
 }
-.cobrowser-wrapper-elipse .co-bowser-options {
+.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options {
     position: absolute;
     top: -78px;
     left: -41px;
@@ -655,7 +666,7 @@ li.fromCurrentUser .sentIndicator.read{
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
 }
-.cobrowser-wrapper-elipse .co-bowser-options .btn-co-browser {
+.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .btn-co-browser {
     border-radius: 32px;
     background: var(--bot-colors-intent,#4B4EDE);
     box-shadow: 0px 2px 4px -2px rgba(16,24,40,0.1), 0px 4px 6px -1px rgba(16,24,40,0.1);
@@ -669,7 +680,7 @@ li.fromCurrentUser .sentIndicator.read{
     width: 34px;
     cursor: pointer;
 }
-.cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser {
+.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser {
     position: absolute;
     bottom: auto;
     top: -115px;
@@ -684,22 +695,95 @@ li.fromCurrentUser .sentIndicator.read{
     right: 0;
     display: none;
 }
-.cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser .label-text {
+.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser .label-text {
     color: var(--neutral-900,#171717);
     font-size: 14px;
     font-weight: 500;
     line-height: 20px;
     margin-bottom: 4px;
 }
-.cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input {
-    border-radius: 6px;
-    border: 1px solid var(--neutral-200,#E5E5E5);
-    background: var(--generic-white,#FFF);
-    box-shadow: 0px 1px 2px 0px rgba(16,24,40,0.05);
+.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input {
     height: 40px;
-    padding: 8px 12px;
+    padding: 8px 10px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
     width: 100%;
+    border-radius: 8px !important;
+    border: 1px solid var(--gray-300,#D0D5DD);
+    background: var(--base-white,#FFF);
+    box-shadow: 0px 1px 2px 0px rgba(16,24,40,0.05);
+    color: var(--gray-900,#101828);
+    outline: 0;
+}
+.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input::placeholder {
+    color: var(--gray-500,#667085);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+}
+.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:focus {
+    border: 1px solid var(--primary-300,#84ADFF);
+    box-shadow: 0px 0px 0px 4px #EFF4FF, 0px 1px 2px 0px rgba(16,24,40,0.05);
+}
+.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:active {
+    border: 1px solid var(--primary-300,#84ADFF);
+    box-shadow: 0px 0px 0px 4px #EFF4FF, 0px 1px 2px 0px rgba(16,24,40,0.05);
+}
+.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:disabled {
+    border: 1px solid var(--gray-300,#D0D5DD);
+    background: var(--gray-50,#F9FAFB);
+    pointer-events: none;
+    cursor: not-allowed;
+}
+.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input.error {
+    border: 1px solid var(--error-300,#FDA29B);
+    background: var(--base-white,#FFF);
+}
+.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input.error:focus {
+    box-shadow: 0px 0px 0px 4px #FEE4E2, 0px 1px 2px 0px rgba(16,24,40,0.05);
+}
+.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:read-only {
+    border: 1px solid var(--gray-300,#D0D5DD);
+    background: var(--gray-50,#F9FAFB);
+}
+.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:-moz-read-only {
+    border: 1px solid var(--gray-300,#D0D5DD);
+    background: var(--gray-50,#F9FAFB);
+}
+.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser .error-msg {
+    color: var(--error-500,#F04438);
     font-size: 14px;
     font-weight: 400;
     line-height: 20px;
+    margin-top: 4px;
+}
+.rr-block {
+    border-radius: 6px !important;
+    border: 1px solid var(--neutral-300,#D4D4D4) !important;
+    background: var(--gray-modern-50,#F8FAFC) !important;
+    box-shadow: 0px 2px 4px -2px rgba(16,24,40,0.1), 0px 4px 6px -1px rgba(16,24,40,0.1) !important;
+    padding: 0 !important;
+    right: 10px !important;
+    left: auto !important;
+    top: auto !important;
+    bottom: 160px !important;
+    height: auto !important;
+    display: flex !important;
+    padding: 12px 8px !important;
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 16px;
+}
+.rr-block [do-not-mutate] {
+    padding: 0 !important;
+    background: transparent !important;
+    width: 16px !important;
+    height: 16px !important;
+    margin: 0 auto !important;
+}
+.rr-block [do-not-mutate] img {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
 }
