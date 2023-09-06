@@ -948,16 +948,6 @@ bindEventsV3() {
     } 
   })
 
-  me.eventManager.addEventListener('.send-btn', 'click', (event: any) => {
-    const inputEle = me.chatEle.querySelector('.typing-text-area');
-    if (inputEle.value.trim() === '') {
-      return;
-    }
-    event.preventDefault();
-    me.sendMessageToBot(inputEle.value);
-    inputEle.value = '';
-  })
-
   me.eventManager.addEventListener('.avatar-variations-footer', 'click', () => {
     const avatarMinimizeStyle = me.config.branding.chat_bubble.minimise.theme == 'rectangle' ? 'avatar-minimize-text' : 'avatar-minimize';
     if (!me.chatEle.querySelector('.avatar-bg').classList.contains('click-to-rotate-icon')) {
