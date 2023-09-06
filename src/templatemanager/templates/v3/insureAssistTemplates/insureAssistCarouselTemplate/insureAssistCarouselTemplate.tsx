@@ -35,7 +35,7 @@ export function Carousel(props: any) {
             layout: "slide",
             transformOrigin: "center",
             id: msgData.messageId,
-            buttons: false // To show/hide buttons
+            buttons: true // To show/hide buttons
         });
         setTimeout(() => {
             stackedCard.init();

@@ -376,7 +376,6 @@ export function card(props: any) {
             hostInstance.bottomSliderAction('', getHTML(cardSliderExtension, e, hostInstance));
         }
     }
-    console.log(msgData,'msgData')
     if (msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'modern') {
         // Active Section Template Start
         return (
