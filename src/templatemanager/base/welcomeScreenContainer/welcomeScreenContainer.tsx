@@ -24,7 +24,7 @@ export function WelcomeScreenContainer(props: any) {
 
     const handleStartEvent = (e: any) => {
         if (e.action.type.toLowerCase() == 'postback' || e.action.type.toLowerCase() == 'text') {
-            const timeout = hostInstance.historyLoading ? 2200 : 200
+            const timeout = hostInstance.historyLoading ? 3500 : 200
             setTimeout(() => {
                 hostInstance.sendMessage(e.action.value, { renderMsg: e.title });
             }, timeout);
@@ -56,7 +56,7 @@ export function WelcomeScreenContainer(props: any) {
                 return;
             }
             handleEventsWelcomeScreen();
-            const timeout = hostInstance.historyLoading ? 2200 : 200
+            const timeout = hostInstance.historyLoading ? 3500 : 200
             setTimeout(() => {
                 hostInstance.sendMessageToBot(inputEle.value);
                 inputEle.value = '';
@@ -74,7 +74,7 @@ export function WelcomeScreenContainer(props: any) {
                 }
                 handleEventsWelcomeScreen();
                 event.preventDefault();
-                const timeout = hostInstance.historyLoading ? 2200 : 200
+                const timeout = hostInstance.historyLoading ? 3500 : 200
                 setTimeout(() => {
                     hostInstance.sendMessageToBot(event.target.value);
                     event.target.value = '';
