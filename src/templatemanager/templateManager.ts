@@ -36,6 +36,9 @@ import TemplateAdvancedMultiSelect from './templates/v3/advancedMutliSelect/adva
 import TemplateAdvancedList from './templates/v3/advancedList/advancedList';
 import TemplateForm from './templates/v3/formTemplate/formTemplate';
 import TemplateDatePicker from './templates/v3/datePicker/datePicker';
+import TemplatePieChart from './templates/v3/pieChart/pieChart';
+import TemplateBarChart from './templates/v3/barChart/barChart';
+import TemplateLineChart from './templates/v3/lineChart/lineChart';
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
 //(function($){
@@ -105,6 +108,9 @@ class TemplateManager {
 		this.installTemplate(new TemplateAdvancedList());
 		this.installTemplate(new TemplateForm());
 		this.installTemplate(new TemplateDatePicker());
+		this.installTemplate(new TemplatePieChart());
+		this.installTemplate(new TemplateBarChart());
+		this.installTemplate(new TemplateLineChart());
 	}
 
 	renderMessage  (msgData: any) {
