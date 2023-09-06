@@ -176,6 +176,7 @@ class AgentDesktopPlugin {
                         "body": "",
                         "type": ""
                     }
+                    messageToBot['messageId'] = msgId;
                     messageToBot["resourceid"] = "/bot.message";
                     me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
 

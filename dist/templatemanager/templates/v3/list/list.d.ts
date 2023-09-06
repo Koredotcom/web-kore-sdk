@@ -1,6 +1,7 @@
 import BaseChatTemplate from '../baseChatTemplate';
 import './list.scss';
 import { h } from 'preact';
+export declare function ListMore(props: any): h.JSX.Element;
 export declare function List(props: any): h.JSX.Element | undefined;
 declare class TemplateList extends BaseChatTemplate {
     hostInstance: any;

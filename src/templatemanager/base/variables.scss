@@ -461,3 +461,31 @@ $font-s-40:2.5rem;
         background: var(--button-temp-bg-hover);
     }
 }
+
+.kr-button-blue-light{
+    width: 100%;
+    background: #EAF1FC;
+    border: 1px solid #EAF1FC;
+    border-radius: 4px;
+    padding: 5px 16px;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 18px;
+    height: 30px;
+    color: #2B75E4;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.2s all ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    &.lg{
+        padding: 10px 16px;
+        height: 40px;
+        font-size: 14px;
+    }
+    &:hover{
+        background: #EAF1FC;
+    }
+}

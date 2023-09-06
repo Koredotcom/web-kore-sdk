@@ -5,6 +5,7 @@ import Korei18nPlugin from './plugins/i18n';
 import KoreFileUploaderPlugin from './plugins/fileUploader/fileUploader';
 import KorePickersPlugin from './plugins/korePickers';
 import GraphTemplatesPlugin from './plugins/graphTemplatesPlugin';
+import SolutionsTemplatesPlugin from './plugins/solutions/solutionsPlugin';
 import WebKitSTT from './plugins/speechToText/WebKitSTT/WebKitSTT';
 import GoogleSTT from './plugins/speechToText/GoogleSTT/GoogleSTT';
 import AzureSTT from './plugins/speechToText/AzureSTT/AzureSTT';
@@ -37,6 +38,7 @@ export {
   KoreFileUploaderPlugin,
   KorePickersPlugin,
   GraphTemplatesPlugin,
+  SolutionsTemplatesPlugin,
   WebKitSTT,
   GoogleSTT,
   AzureSTT,

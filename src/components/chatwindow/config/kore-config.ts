@@ -10,6 +10,9 @@ botOptions.API_KEY_CONFIG={
     bootstrapURL:botOptions.koreAPIUrl+'platform/websdk',
     KEY:'YOUR_API_KEY'
 },
+botOptions.enableAck={ // set true, to send acknowledgment to server on receiving response from bot 
+    delivery:false
+}
 botOptions.koreSpeechAPIUrl = "";//deprecated
 //botOptions.bearer = "bearer xyz-------------------";
 //botOptions.ttsSocketUrl = '';//deprecated

@@ -188,34 +188,33 @@ export function cardSliderExtension(props: any) {
                     }
                 </div>
                 <div className="tab-data-style">
-                    {/* tab accroidian start */}
                     {
                         sliderData?.sliderInfo?.map((ele: any) => (
                             <div>
-                                {ele.vehicles?.length > 2 ? ele?.vehicles?.map((tab: any, index: any) => (
-                                    <div className="tabs">
-                                        <div style={tab?.tabStyle && tab?.tabStyle} className="tab-header">
-                                            <div
-                                                key={index}
-                                                onClick={() => handleTabChange(index)} id={index}
-                                                className={index == 0 ? "tab-item active" : "tab-item"}
-                                            >
-                                                {tab.title && <h2 className="title">{tab.title} <br /> {tab.subTitle}</h2>}
+                                {ele.vehicles?.length > 3 ? (
+                                    <div>
+                                        <select onChange={selectionChange}>
+                                            {ele?.vehicles?.map((tab: any, index: any) => (
+                                                <option key={index} value={tab.title}>
+                                                    {tab.title} <br /> {tab.subTitle}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                ) :
+                                    ele?.vehicles?.map((tab: any, index: any) => (
+                                        <div className="tabs">
+                                            <div style={tab?.tabStyle && tab?.tabStyle} className="tab-header">
+                                                <div
+                                                    key={index}
+                                                    onClick={() => handleTabChange(index)} id={index}
+                                                    className={index == 0 ? "tab-item active" : "tab-item"}
+                                                >
+                                                    {tab.title && <h2 className="title">{tab.title} <br /> {tab.subTitle}</h2>}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                )) :
-                                    <div>
-                                        {
-                                            <select onChange={selectionChange}>
-                                                {ele?.vehicles?.map((tab: any, index: any) => (
-                                                    <option key={index} value={tab.title}>
-                                                        {tab.title} <br /> {tab.subTitle}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        }
-                                    </div>
+                                    ))
                                 }
                             </div>
                         ))
@@ -377,7 +376,8 @@ export function card(props: any) {
             hostInstance.bottomSliderAction('', getHTML(cardSliderExtension, e, hostInstance));
         }
     }
-    if (msgData?.message?.[0]?.component?.payload?.template_type === 'insureAssistCardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'modern') {
+    console.log(msgData,'msgData')
+    if (msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'modern') {
         // Active Section Template Start
         return (
             <Fragment>
@@ -427,13 +427,13 @@ export function card(props: any) {
             </Fragment>
         );
         // Active Section Template End
-    } else if (msgData?.message?.[0]?.component?.payload?.template_type === 'insureAssistCardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'details') {
+    } else if (msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'details') {
         return (
             <Fragment>
                 <div>
                     <section className="card-template-wrapper-view-more-details" aria-label="card template sdk">
                         <div className="card-warpper-info card-style">
-                            {msgData.message[0]?.component?.payload?.cards.cardHeading?.title && <h1 style={msgData.message[0]?.component?.payload?.cards?.cardHeading?.cardHeadingStyle}>{msgData.message[0]?.component?.payload?.cards?.cardHeading?.title}</h1>}
+                            {msgData.message[0]?.component?.payload?.cards.cardHeading?.title && <h1 id="card-style-header">{msgData.message[0]?.component?.payload?.cards?.cardHeading?.title}</h1>}
                             {msgData.message[0]?.component?.payload?.cards && <p style={msgData.valueStyles}>{msgData.message[0]?.component?.payload?.cards}</p>}
                             {
                                 msgData.message[0].component.payload.cards.cardDescription.map((ele: any) => (
@@ -450,7 +450,7 @@ export function card(props: any) {
                                                         {ele?.topSection?.details?.title && <span style={ele?.topSection?.details?.styles} className="tag-name">{ele?.topSection?.details?.title}</span>}
                                                     </div>
                                                     {
-                                                        ele?.topSection?.items.map((val: any) => (
+                                                        ele.topSection?.items.map((val: any) => (
                                                             <div style={val?.borderStyles} className="gap-style">
                                                                 <div className="left-data">
                                                                     {val?.title && <h3 style={val?.titleStyles && val?.titleStyles}>{val?.title}</h3>}
@@ -465,17 +465,19 @@ export function card(props: any) {
                                                 </div>
                                             </div>
                                         </div>
-                                        {/* <div className="border-divider"></div> */}
+                                        <div className="border-divider"></div>
                                         {/* Top Section End */}
                                         {/* Middle Section Start */}
-                                        <div style={ele?.middleSection && ele?.middleSection?.borderStyles} className="middle-sec-card">
-                                            <div className="card-acc-temp-sec">
-                                                <div className="card-acc-temp">
-                                                    <div className="left-data">
-                                                        {ele?.middleSection?.title && <h2 style={ele?.middleSection?.titleStyles}>{ele?.middleSection?.title}</h2>}
-                                                    </div>
-                                                    <div className="right-data">
-                                                        {ele?.middleSection?.value && <p style={ele?.middleSection?.titleStyles}>{ele?.middleSection?.value}</p>}
+                                        <div className="middle-sec-card">
+                                            <div style={ele?.middleSection && ele?.middleSection?.borderStyles}>
+                                                <div className="card-acc-temp-sec">
+                                                    <div className="card-acc-temp">
+                                                        <div className="left-data">
+                                                            {ele?.middleSection?.title && <h2 style={ele?.middleSection?.titleStyles}>{ele?.middleSection?.title}</h2>}
+                                                        </div>
+                                                        <div className="right-data">
+                                                            {ele?.middleSection?.value && <p style={ele?.middleSection?.titleStyles}>{ele?.middleSection?.value}</p>}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -499,7 +501,7 @@ export function card(props: any) {
                                         {/* Bottom Section Start */}
                                         <div className="bottom-sec-card">
                                             {
-                                                ele?.bottomSection?.items?.map((val: any) => (
+                                                ele.bottomSection?.items?.map((val: any) => (
                                                     <div className="card-acc-temp-sec">
                                                         <div className="card-acc-temp">
                                                             <div className="left-data">
@@ -514,7 +516,7 @@ export function card(props: any) {
                                                 ))
                                             }
                                             {
-                                                ele?.bottomSection?.buttons?.map((button: any) => (
+                                                ele.bottomSection?.buttons?.map((button: any) => (
                                                     <button className="view-more-btn" onClick={() => handleButtonEvent(button)}>{button?.buttonTitle}</button>
                                                 ))
                                             }
@@ -522,7 +524,7 @@ export function card(props: any) {
                                     </div>
                                 ))
                             }
-                             {
+                            {
                                 msgData.message[0]?.component?.payload?.cards?.buttonActions?.map((button: any) => (
                                     <button style={button?.buttonStyle} className="view-more view-more-btn" onClick={() => handleButtonEvent(button)} >{button.title}</button>
                                 ))
@@ -541,6 +543,7 @@ export function card(props: any) {
 
     }
 }
+
 
 class insureAssistCardTemplate extends BaseChatTemplate {
     hostInstance: any = this;

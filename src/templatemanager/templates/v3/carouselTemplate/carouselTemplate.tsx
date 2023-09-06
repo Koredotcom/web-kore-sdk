@@ -48,78 +48,25 @@ export function Carousel(props: any) {
                     <i className="sdkv3-cheveron-left"></i>
                 </button>
                 <ul class="slider">
-                    <li class="item">
-                        <button className="card-content-sec">
-                            <div className="top-sec-card">
-                                <h1>1043693</h1>
-                                <span className="tag-name">Active</span>
-                            </div>
-                            <div className="middle-sec-card">
-                                <p>Auto</p>
-                            </div>
-                            <div className="bottom-sec-card">
-                                <h2>Premium amount</h2>
-                                <p>
-                                    <time>$588</time>
-                                </p>
-                            </div>
-                            <button className="view-more-btn">View more</button>
-                        </button>
-                    </li>
-                    <li class="item">
-                        <button className="card-content-sec">
-                            <div className="top-sec-card">
-                                <h1>1043693</h1>
-                                <span className="tag-name">Active</span>
-                            </div>
-                            <div className="middle-sec-card">
-                                <p>Auto</p>
-                            </div>
-                            <div className="bottom-sec-card">
-                                <h2>Premium amount</h2>
-                                <p>
-                                    <time>$588</time>
-                                </p>
-                            </div>
-                            <button className="view-more-btn">View more</button>
-                        </button>
-                    </li>
-                    <li class="item">
-                        <button className="card-content-sec">
-                            <div className="top-sec-card">
-                                <h1>1043693</h1>
-                                <span className="tag-name">Active</span>
-                            </div>
-                            <div className="middle-sec-card">
-                                <p>Auto</p>
-                            </div>
-                            <div className="bottom-sec-card">
-                                <h2>Premium amount</h2>
-                                <p>
-                                    <time>$588</time>
-                                </p>
-                            </div>
-                            <button className="view-more-btn">View more</button>
-                        </button>
-                    </li>
-                    <li class="item">
-                        <button className="card-content-sec">
-                            <div className="top-sec-card">
-                                <h1>1043693</h1>
-                                <span className="tag-name">Active</span>
-                            </div>
-                            <div className="middle-sec-card">
-                                <p>Auto</p>
-                            </div>
-                            <div className="bottom-sec-card">
-                                <h2>Premium amount</h2>
-                                <p>
-                                    <time>$588</time>
-                                </p>
-                            </div>
-                            <button className="view-more-btn">View more</button>
-                        </button>
-                    </li>
+                    {msgData.message[0].component.payload.elements.map((item: any) => (
+                        <li class="item">
+                            <button className="card-content-sec">
+                                <div className="top-sec-card">
+                                    <h1>{item.topSection.title}</h1>
+                                    {/* <span className="tag-name">Active</span> */}
+                                </div>
+                                <div className="middle-sec-card">
+                                    <p>{item.middleSection.description}</p>
+                                </div>
+                                <div className="bottom-sec-card">
+                                    <h2>{item.bottomSection.title}</h2>
+                                    <p>
+                                        <time>{item.bottomSection.description}</time>
+                                    </p>
+                                </div>
+                                <button className="view-more-btn">{item.buttons[0].title}</button>
+                            </button>
+                        </li>))}
                 </ul>
                 <button className={rightCheButton}>
                     <i className="sdkv3-cheveron-right"></i>
@@ -128,7 +75,7 @@ export function Carousel(props: any) {
         );
     }
 
-    if (msgData?.message?.[0]?.component?.payload?.template_type == 'carousel') {
+    if (msgData?.message?.[0]?.component?.payload?.template_type == 'carousel' && msgData?.message?.[0]?.component?.payload?.carousel_type != 'stacked') {
         setTimeout(() => {
             const btnsParentDiv: any = hostInstance.chatEle.querySelector(`[data-id='${msgData.messageId}']`);
             const leftScrollBtn = hostInstance.chatEle.querySelector(`[data-button-left='${msgData.messageId}']`);
