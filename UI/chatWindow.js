@@ -790,6 +790,11 @@
                 this.reWriteWebHookURL(this.config)
                 window._chatHistoryLoaded = false;
                 this.init();
+                updateOnlineStatus();
+                addBottomSlider();
+                window.addEventListener('online', updateOnlineStatus);
+                window.addEventListener('offline', updateOnlineStatus);
+                attachEventListener();
             }
             //converts v1 webhooks url to v2 automatically
             chatWindow.prototype.reWriteWebHookURL = function (chatConfig) {
@@ -935,14 +940,12 @@
         function updateOnlineStatus() {
             if ("boolean" === typeof(navigator["onLine"])) {
                 if (navigator.onLine) {
-                    $('.kore-chat-footer').removeClass('disableFooter');
                     this.hideError();
                     if(bot && bot.RtmClient){
                             bot.getHistory({forHistorySync:true,limit:30});                           
                     }
 
                 } else {
-                    $('.kore-chat-footer').addClass('disableFooter');
                     this.showError("You are currently offline")
                 }
             }
@@ -1230,11 +1233,6 @@
                 }
                 me.render(chatWindowHtml);
                 me.unfreezeUIOnHistoryLoadingFail.call(me);
-                updateOnlineStatus();
-                addBottomSlider();
-                window.addEventListener('online', updateOnlineStatus);
-                window.addEventListener('offline', updateOnlineStatus);
-                attachEventListener();
             };
             chatWindow.prototype.initi18n = function () {
                 var me = this;
