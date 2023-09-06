@@ -521,9 +521,10 @@
         overflow: hidden;
         border-bottom: 1px solid rgba(154, 160, 166, 0.2);
         line-height: 25px;
-
+        padding: 0;
         &:last-child {
             border: 0;
+            // padding: 0;
         }
 
         cursor: pointer;
@@ -537,7 +538,7 @@
 
         .left-data {
             width: 60%;
-
+            float:left;
             img {
                 vertical-align: middle;
             }
@@ -571,7 +572,8 @@
         .right-data {
             flex-shrink: 0;
             width: 37%;
-
+            float:right;
+            text-align: right;
             p {
                 color: var(--gray-900, #101828);
                 text-align: right;

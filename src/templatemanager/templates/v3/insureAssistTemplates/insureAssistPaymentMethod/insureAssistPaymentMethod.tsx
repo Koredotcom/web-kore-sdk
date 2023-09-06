@@ -1,8 +1,8 @@
 import BaseChatTemplate from '../../baseChatTemplate';
+import './insureAssistpaymentMethod.scss';
 import { h, Fragment } from 'preact';
 import { useState } from 'preact/hooks';
 import { Message } from '../../message/message';
-import './insureAssistPaymentMethod.scss';
 
 
 export function Payment(props: any) {
@@ -71,12 +71,17 @@ export function Payment(props: any) {
                             </div>
                         ))
                     }
-                    {
-                      
-                        msgData?.message?.[0]?.component?.payload?.buttons?.map((button: any) => (
-                            <button style={button?.buttonStyle} className="view-renewal-btn" onClick={() => handleButtonEvent(button)}>{button?.buttonTitle}</button>
-                        ))
+
+                    {msgData?.message?.[0]?.component?.payload?.buttons &&
+                        <div className="btn-group">
+                            {
+                                msgData?.message?.[0]?.component?.payload?.buttons?.map((button: any) => (
+                                    <button style={button?.buttonStyle} className="view-renewal-btn" onClick={() => handleButtonEvent(button)}>{button?.buttonTitle}</button>
+                                ))
+                            }
+                        </div>
                     }
+
                 </div>
             </div>
         );
