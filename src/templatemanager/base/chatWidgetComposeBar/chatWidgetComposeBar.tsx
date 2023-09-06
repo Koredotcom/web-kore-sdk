@@ -4,7 +4,7 @@ import { getHTML } from '../domManager';
 import IconsManager from '../iconsManager';
 import './chatWidgetComposeBar.scss';
 import { h } from 'preact';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { Menu } from '../../base/menu/menu';
 
 export function ChatWidgetComposeBar(props: any) {
@@ -38,6 +38,20 @@ export function ChatWidgetComposeBar(props: any) {
     const handleHamberger = () => {
         hostInstance.bottomSliderAction('', getHTML(Menu, '', hostInstance)) 
     }
+
+    useEffect(() => {
+        hostInstance.eventManager.removeEventListener('.send-btn', 'click');
+        hostInstance.eventManager.addEventListener('.send-btn', 'click', (event: any) => {
+            const inputEle = hostInstance.chatEle.querySelector('.typing-text-area');
+            if (inputEle.value.trim() === '') {
+                return;
+            }
+            event.preventDefault();
+            hostInstance.sendMessageToBot(inputEle.value);
+            inputEle.value = '';
+        })
+    });
+
     return (
         <div className="chat-widget-composebar" aria-label="chat widget compose">
             <div className="voice-speak-msg-info" style="display:none">
