@@ -133,6 +133,11 @@
 		background-repeat: no-repeat;
 		background-size: 100% 100%;
 		ul.chat-container {
+			&.scrolling{
+				.ps__rail-y{
+					display: none !important;
+				}
+			}
 			position: absolute;
 			bottom: 0;
 			right: 0;
