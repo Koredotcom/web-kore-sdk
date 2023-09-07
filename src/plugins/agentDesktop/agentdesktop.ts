@@ -319,7 +319,8 @@ class AgentDesktopPlugin {
             token: {}
         }
 
-        fetch(cwInstance.config.botOptions.koreAPIUrl + "oAuth/token/jwtgrant", {
+        const url = new URL(cwInstance.config.botOptions.koreAPIUrl);
+        fetch(url.protocol + '//' + url.host + '/api/oAuth/token/jwtgrant', {
             "headers": {
                 "content-type": "application/json",
             },
@@ -373,6 +374,22 @@ class AgentDesktopPlugin {
             }).catch(err => {
                 me.hostInstance.$('#krOTPErrorMsg').show();
                 me.hostInstance.$('#cobrowseInput').addClass('error');
+                const mockData = {
+                    "orgId": "o-76285927-1068-503c-bd34-d48fa5b381e8",
+                    "iId": "st-2be3f2f0-4a4f-5eba-b598-cb1bb5e1e9d4",
+                    "conversationId": "c-a5da507-d2e8-44ae-a882-68a79c81bc98",
+                    "type": "cobrowse",
+                    "cobrowseUrl": "https://uat-app.smartassist.ai",
+                    "blockClasses": [],
+                    "patternList": [],
+                    "aId": "a-eb9a985-c792-4472-8511-1eb79244a3bb",
+                    "firstName": "VenuGopal",
+                    "lastName": "M",
+                    "profileIcon": "no-avatar",
+                    "id": 940935,
+                    excludeRTM: true
+                }
+                this.agentDesktopInfo.koreCoBrowse.initialize(mockData);
             })
     }
 }
