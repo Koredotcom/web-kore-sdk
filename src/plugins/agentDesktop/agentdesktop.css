@@ -32,6 +32,8 @@
 .initial-video-audio-container.cobrowser-intial-width{
     width: 360px;
     margin: 16px auto;
+    position: relative;
+    z-index: 99999;
 }
 .initial-video-audio-container .ad-img-block{
     display: flex;
