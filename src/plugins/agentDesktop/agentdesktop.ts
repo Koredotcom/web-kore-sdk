@@ -14,6 +14,7 @@ class AgentDesktopPlugin {
     isReadRecipetSent: boolean = false;
 
     authInfo: any;
+    cobrowseSession: any;
 
     constructor(config?: any) {
         this.config = {
@@ -335,7 +336,7 @@ class AgentDesktopPlugin {
             })
             .then((res: any) => {
                 this.authInfo = res;
-                this.agentDesktopInfo = new AgentDesktopPluginScript({...res, excludeRTM: true});
+                this.cobrowseSession = new AgentDesktopPluginScript({...res, excludeRTM: true});
             }).catch(err => {
                 console.error(err)
                 // this.authInfo = null;
@@ -370,26 +371,11 @@ class AgentDesktopPlugin {
             .then((res: any) => {
                 me.hostInstance.$('.cobrowser-wrapper-elipse').toggleClass('open-cobrowser open-input-browse');
                 me.hostInstance.$('#cobrowseInput').val('').removeClass('error');
-                this.agentDesktopInfo.koreCoBrowse.initialize(res);
+                this.cobrowseSession.koreCoBrowse.initialize(res);
             }).catch(err => {
                 me.hostInstance.$('#krOTPErrorMsg').show();
                 me.hostInstance.$('#cobrowseInput').addClass('error');
-                const mockData = {
-                    "orgId": "o-76285927-1068-503c-bd34-d48fa5b381e8",
-                    "iId": "st-2be3f2f0-4a4f-5eba-b598-cb1bb5e1e9d4",
-                    "conversationId": "c-a5da507-d2e8-44ae-a882-68a79c81bc98",
-                    "type": "cobrowse",
-                    "cobrowseUrl": "https://uat-app.smartassist.ai",
-                    "blockClasses": [],
-                    "patternList": [],
-                    "aId": "a-eb9a985-c792-4472-8511-1eb79244a3bb",
-                    "firstName": "VenuGopal",
-                    "lastName": "M",
-                    "profileIcon": "no-avatar",
-                    "id": 940935,
-                    excludeRTM: true
-                }
-                this.agentDesktopInfo.koreCoBrowse.initialize(mockData);
+                
             })
     }
 }

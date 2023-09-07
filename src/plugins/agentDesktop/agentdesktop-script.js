@@ -382,7 +382,7 @@ class AgentDesktopPluginScript  {
                 `<div id="video_view" class="video-view- audio-view-">
             <div class="agent-profile-img">
                 <img style='height: 30px; width:30px; top:0px;left:0px;position: absolute; border-radius: 50%;'
-                    src="${_self.agentProfileIcon}"> 
+                    src="${_self.agentProfileIcon}" alt='Agent' onerror="this.style.display='none'"> 
             </div>
             <div class="title">Connected ${videoAudoStr} Call...</div>
             <div class="audio-info">Disconnecting ${videoAudoStr} call doesn't end conversation</div>
@@ -510,7 +510,7 @@ class AgentDesktopPluginScript  {
                 <div id="video_view" class="video-view- audio-view-">
                     <div class="agent-profile-img">
                         <img style='height: 30px; width:30px; top:0px;left:0px;position: absolute; border-radius: 50%;'
-                            src="${_self.agentProfileIcon}"> 
+                            src="${_self.agentProfileIcon}" alt='Agent' onerror="this.style.display='none'"> 
                     </div>
                     <div class="title">Connecting ${videoAudoStr} Call...</div>
                     <div class="audio-info">Disconnecting ${videoAudoStr} call doesn't end conversation</div>
@@ -542,7 +542,7 @@ class AgentDesktopPluginScript  {
             var incomingCall = `
         <div class="initial-video-audio-container">
             <div class="ad-img-block">
-                <img src="${_self.agentProfileIcon}" />
+                <img src="${_self.agentProfileIcon}" alt='Agent' onerror="this.style.display='none'"/>
             </div>
             <div class="content-desc">
                 <div class="name">${agentName}</div>
@@ -596,7 +596,7 @@ class AgentDesktopPluginScript  {
             var incomingCall = `
         <div class="initial-video-audio-container">
             <div class="ad-img-block">
-                <img src="${_self.agentProfileIcon}" />
+                <img src="${_self.agentProfileIcon}" alt='Agent' onerror="this.style.display='none'"/>
             </div>
             <div class="content-desc">
                 <div class="name">${agentName}</div>
@@ -689,7 +689,7 @@ class AgentDesktopPluginScript  {
             var cobrowseRequestHML = `
         <div class="initial-video-audio-container cobrowser-intial-width">
             <div class="ad-img-block">
-                <img src="${_self.agentProfileIcon}" />
+                <img src="${_self.agentProfileIcon}" alt='Agent' onerror="this.style.display='none'"/>
             </div>
             <div class="content-desc">
                 <div class="name">${agentName}</div>
@@ -2101,7 +2101,7 @@ class AgentDesktopPluginScript  {
                 var cobrowseRequestHML = `
                 <div class="initial-video-audio-container cobrowser-intial-width" do-not-mutate="true">
                     <div class="ad-img-block">
-                        <img src="${_self.agentProfileIcon}" />
+                        <img src="${_self.agentProfileIcon}" alt='Agent' onerror="this.style.display='none'"/>
                     </div>
                     <div class="content-desc">
                         <div class="name">${agentName}</div>
