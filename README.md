@@ -330,6 +330,7 @@ v10.1.10 [Minor] on 09-Sept-2023: Master branch
 	Bugfixes
                 1.whitelisted Notes|notes protocol
                 2.Widgets immediate api call issue fix
+                3.fixed grunt issue for generating minified SDK 
 
 v10.1.9 [Minor] on 19-Aug-2023: Master branch
 	Features
