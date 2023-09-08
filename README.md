@@ -323,6 +323,13 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 	// }		
 # Release History
 ```
+v10.1.10 [Minor] on 09-Sept-2023: Master branch
+	Features
+		1.Support for .log fileType for file uploads
+
+	Bugfixes
+                1.whitelisted Notes|notes protocol
+                2.Widgets immediate api call issue fix
 
 v10.1.9 [Minor] on 19-Aug-2023: Master branch
 	Features
