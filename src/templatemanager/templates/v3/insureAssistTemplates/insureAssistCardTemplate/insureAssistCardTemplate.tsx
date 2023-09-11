@@ -380,7 +380,6 @@ export function card(props: any) {
             hostInstance.bottomSliderAction('', getHTML(cardSliderExtension, e, hostInstance));
         }
     }
-    console.log(msgData, 'msgData msgData')
     if (msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'modern') {
         // Active Section Template Start
         return (
@@ -388,7 +387,7 @@ export function card(props: any) {
                 <div>
                     <section className="card-template-wrapper" aria-label="card template sdk">
                         <div className="card-warpper-info card-style">
-                            test33{msgData.message[0]?.component?.payload?.cards.cardHeading?.title && <h1 style={msgData.message[0]?.component?.payload?.cards?.cardHeading?.cardHeadingStyle} id="card-style-header">{msgData.message[0]?.component?.payload?.cards?.cardHeading?.title}</h1>}
+                            {msgData.message[0]?.component?.payload?.cards.cardHeading?.title && <h1 style={msgData.message[0]?.component?.payload?.cards?.cardHeading?.cardHeadingStyle} id="card-style-header">{msgData.message[0]?.component?.payload?.cards?.cardHeading?.title}</h1>}
                             {msgData.message[0]?.component?.payload?.cards && <p style={msgData.valueStyles}>{msgData.message[0]?.component?.payload?.cards}</p>}
 
                             {
@@ -445,13 +444,12 @@ export function card(props: any) {
         );
         // Active Section Template End
     } else if (msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'details') {
-        console.log(msgData, '12212 msgData')
         return (
             <Fragment>
                 <div>
                     <section className="card-template-wrapper-view-more-details" aria-label="card template sdk">
                         <div className="card-warpper-info card-style">
-                            test22 {msgData.message[0]?.component?.payload?.cards.cardHeading?.title && <h1 style={msgData.message[0]?.component?.payload?.cards?.cardHeading?.cardHeadingStyle} id="card-style-header">{msgData.message[0]?.component?.payload?.cards?.cardHeading?.title}</h1>}
+                             {msgData.message[0]?.component?.payload?.cards.cardHeading?.title && <h1 style={msgData.message[0]?.component?.payload?.cards?.cardHeading?.cardHeadingStyle} id="card-style-header">{msgData.message[0]?.component?.payload?.cards?.cardHeading?.title}</h1>}
                             {msgData.message[0]?.component?.payload?.cards && <p style={msgData.valueStyles}>{msgData.message[0]?.component?.payload?.cards}</p>}
                             {
                                 msgData.message[0].component.payload.cards.cardDescription.map((ele: any) => (
