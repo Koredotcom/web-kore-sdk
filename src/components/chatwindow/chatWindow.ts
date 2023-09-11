@@ -21,7 +21,7 @@ import { ChatContainer } from '../../templatemanager/base/chatContainer/chatCont
 import EventManager from '../../templatemanager/base/eventManager';
 import BrandingManager from '../../templatemanager/templates/v3/brandingManager';
 import { ActionsBottomSlider } from '../../templatemanager/base/actionsButtonSlider/actionsBottomSlider';
-
+import { ActionsModal } from '../../templatemanager/base/actionsModal/actionsModal';
 const bot = requireKr('/KoreBot.js').instance();
 
 declare const document:any;
@@ -2196,6 +2196,13 @@ bottomSliderAction(action: any, appendElement: any) {
     //   me.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
     // })
   }
+}
+
+modalAction(appendElement: any) {
+  const me: any = this;
+  const modal: any = getHTML(ActionsModal, '', me);
+  // modal.querySelector('.modal-container').appendChild(appendElement);
+  me.chatEle.appendChild(modal);
 }
 
 unfreezeUIOnHistoryLoadingFail () {
