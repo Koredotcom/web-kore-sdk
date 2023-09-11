@@ -114,7 +114,7 @@ export function WelcomeScreenContainer(props: any) {
                                 <div className="conv-starter-desc">{brandingInfo.welcome_screen.starter_box.sub_text}</div>
                             </div>
                         </div>
-                        <div className={startButtonsLayout[brandingInfo.welcome_screen.starter_box.quick_start_buttons.style]}>
+                        {brandingInfo.welcome_screen.starter_box.quick_start_buttons.buttons.length > 0 && <div className={startButtonsLayout[brandingInfo.welcome_screen.starter_box.quick_start_buttons.style]}>
                             {
                                 brandingInfo.welcome_screen.starter_box.quick_start_buttons.buttons.map((ele: any) => (
                                     <button className="quick-start-btn" onClick={() => handleStartEvent(ele)}>
@@ -124,7 +124,7 @@ export function WelcomeScreenContainer(props: any) {
                                     </button>
                                 ))
                             }
-                        </div>
+                        </div>}
                         {brandingInfo.welcome_screen.starter_box.quick_start_buttons.show && brandingInfo.welcome_screen.starter_box.quick_start_buttons.input === 'button' && <button className="start-conv-button">
                             <span>Start New Conversation</span>
                             <i className="sdkv3-cheveron-right"></i>
@@ -141,18 +141,40 @@ export function WelcomeScreenContainer(props: any) {
                         </div>}
                     </div>
                 </section> }
-                { brandingInfo.welcome_screen.starter_box.show && <article className="pramotional-banner-wrapper-container">
-                    <a href="#" target="_blank" className="banner-img" aria-label="Hdfc pramotional banner">
-                        <figure>
-                            <img src={iconHelper.getIcon('banner')} alt="log-img" />
-                        </figure>
-                    </a>
-                    <a href="#" target="_blank" className="banner-img" aria-label="Hdfc pramotional banner">
-                        <figure>
-                            <img src={iconHelper.getIcon('banner')} alt="log-img" />
-                        </figure>
-                    </a>
-                </article> }
+                { brandingInfo.welcome_screen.static_links.show && <div className="padding-wrapper-content">
+                        <div className="adv-parent-temp-wrapper">
+                            <div className="main-heading-wrapper">
+                                <h1>Links</h1>
+                            </div>
+
+                            {brandingInfo.welcome_screen.static_links.links.map((item: any, index: any) => (
+                                <div className='adv-parent-acc-list'>
+                                    <div className="advanced-list-template-wrapper">
+                                        <div className="img-block">
+                                            <img src={iconHelper.getIcon('link_logo')} />
+                                        </div>
+                                        {(item.title || item.description) && <div className="titles-info-block">
+                                            <h1>{item.title}</h1>
+                                            <p>{item.description}</p>
+                                        </div>}
+                                        <div className="right-actions-content">
+                                            <button className="arrow-icon">
+                                                <i className="sdkv3-cheveron-right"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>))}
+                        </div>
+                    </div>
+                }
+                {brandingInfo.welcome_screen.promotional_content.show && <article className="pramotional-banner-wrapper-container">
+                    {brandingInfo.welcome_screen.promotional_content.promotions.map((ele: any) => (
+                        <a href="#" target="_blank" className="banner-img" aria-label="pramotional banner">
+                            <figure>
+                                <img src={ele.banner} alt="log-img" />
+                            </figure>
+                        </a>))}
+                </article>}
             </div>        
             <footer>
                 <div className="powerdby-info">

@@ -1,7 +1,7 @@
 const BrandingJSON = {
     "general": {
         "bot_icon": "url",
-        "size": "small|medium|large",
+        "size": "small",
         "themeType": "light"
     },
     "chat_bubble": {
@@ -9,11 +9,11 @@ const BrandingJSON = {
         "icon": {
             "icon_url": "url2",
             "size": "medium",
-            "shape": "square"
+            "shape": "square" 
         },
         "minimise": {
             "icon": "url4",
-            "theme": "rectangle"
+            "theme": "rounded"
         },
         "sound": "themeOne",
         "alignment": "block",
@@ -95,29 +95,54 @@ const BrandingJSON = {
                 {
                     "title": "Kore.ai",
                     "action": {
-                        "type": "url",
+                        "type": "postback",
                         "value": "https://kore.ai/"
                     }
                 }
                 ],
                 "input": "button",
                 "action": {
-                    "type": "postback|url",
-                    "value": "http://abc.comrf"
+                    "type": "postback",
+                    "value": "Hello"
                 }
             },
-            "static_links": {
-                "show": false,
-                "layout": "carousel",
-                "links": [{
-                    "title": "qqqs",
-                    "description": "",
-                    "action": {
-                        "type": "postback|url",
-                        "value": "http://abc.com|h"
-                    }
-                }]
-            }
+        },
+        "static_links": {
+            "show": true,
+            "layout": "carousel",
+            "links": [{
+                "title": "Community",
+                "description": "The US mobile number comes with two sims cards meant for GSM & LTE",
+                "action": {
+                    "type": "url",
+                    "value": "https://kore.ai/"
+                }
+            },
+            {
+                "title": "Community",
+                "description": "The US mobile number comes with two sims cards meant for GSM & LTE",
+                "action": {
+                    "type": "url",
+                    "value": "https://kore.ai/"
+                }
+            }]
+        },
+        "promotional_content": {
+            "show": true,
+            "promotions": [{
+                "banner": "https://picsum.photos/seed/picsum/200/300",
+                "action": {
+                    "type": "url",
+                    "value": "http://abc.com"
+                }
+            },
+            {
+                "banner": "https://picsum.photos/seed/picsum/200/300",
+                "action": {
+                    "type": "url",
+                    "value": "http://abc.com"
+                }
+            }]
         }
     },
     "header": {

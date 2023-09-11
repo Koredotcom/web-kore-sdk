@@ -35,6 +35,15 @@ class BrandingManager {
                                 this.applyVariableValue(property, data[key][subKey][property], key, subKey);
                             }
                         }
+
+                        if (key == 'body' && subKey == 'background' && typeof data[key][subKey] === 'object') {
+                            if (data[key][subKey]['type'] == 'color') {
+                                this.applyVariableValue('bg', data[key][subKey]['color'], key, subKey);
+                            } else {
+                                const imgData = 'url(\''+(data[key][subKey]['img'])+'\') rgba(0, 0, 0, 0.25) fixed center'; 
+                                this.applyVariableValue('bg', imgData, key, subKey);
+                            }
+                        }
                         break;
                     case 'footer':
                         if (key == 'footer' && typeof data[key][subKey] === 'object') {

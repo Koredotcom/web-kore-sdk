@@ -49,7 +49,7 @@
     // End
 
     // Chat Widget Body Variables;
-        --chat-widget-body-bg:#FFFFFF;
+        --chat-widget-body-bg:var(--v3-sdk-chat-branding--body-background-bg);
     // End
 
     // Chat Widget Footer Variables;
@@ -176,7 +176,7 @@
     // End
 
     // Chat Widget Body Variables;
-        --chat-widget-body-bg:#121926;
+        --chat-widget-body-bg: var(--v3-sdk-chat-branding--body-background-bg)         // #121926;
     // End
 
     // Chat Widget Footer Variables;
