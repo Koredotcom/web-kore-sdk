@@ -3,6 +3,40 @@ import './table.scss';
 import { h, Fragment } from 'preact';
 import { useState } from 'preact/hooks';
 import { Message } from '../message/message';
+import { getHTML } from '../../../base/domManager';
+
+
+export function TableMore(props: any) {
+    const msgData: any = props.msgData.msgData;
+    const hostInstance: any = props.hostInstance;
+ 
+    return (
+        <Fragment>
+            <section class="table-wrapper-main-container">
+                <section class="table-wrapper-section">
+                    <table className="table-regular-view">
+                        <thead>
+                            <tr>
+                                { msgData.message[0].component.payload.columns.map((ele: any) => (
+                                    <th>{ele[0]}</th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            { msgData.message[0].component.payload.elements.map((ele: any) => (
+                                <tr>
+                                    { ele.Values.map((e: any) => (
+                                        <td>{e}</td>
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </section>
+            </section>
+        </Fragment>
+    );
+}
 
 export function Table(props: any) {
     const hostInstance = props.hostInstance;
@@ -10,6 +44,10 @@ export function Table(props: any) {
     const messageobj = {
         msgData: msgData,
         hostInstance: hostInstance
+    }
+
+    const handleShowMore = () => {
+        hostInstance.modalAction('', getHTML(TableMore, messageobj, hostInstance));
     }
     if (msgData.message?.[0]?.component?.payload?.template_type == 'table' && msgData.message[0].component.payload?.table_design == 'regular') {
         return (
@@ -35,7 +73,7 @@ export function Table(props: any) {
                                 ))}
                             </tbody>
                         </table>
-                        <button className="show-more-btn">Show More</button>
+                        <button className="show-more-btn" onClick={handleShowMore}>Show More</button>
                     </section>
                 </section>
             </Fragment>
@@ -72,7 +110,7 @@ export function Table(props: any) {
                             </div>
                         ))}
                         </div>
-                        <button className="show-more-btn">Show More</button>
+                        <button className="show-more-btn" onClick={handleShowMore}>Show More</button>
                     </div>
                 </div>
             </Fragment>

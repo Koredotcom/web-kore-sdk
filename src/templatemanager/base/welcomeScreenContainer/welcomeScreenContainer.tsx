@@ -141,29 +141,27 @@ export function WelcomeScreenContainer(props: any) {
                         </div>}
                     </div>
                 </section> }
-                { brandingInfo.welcome_screen.static_links.show && <div className="padding-wrapper-content">
-                        <div className="adv-parent-temp-wrapper">
+                { brandingInfo.welcome_screen.static_links.show && <div className="link-wrapper-content">
+                        <div className="link-temp-wrapper">
                             <div className="main-heading-wrapper">
                                 <h1>Links</h1>
                             </div>
 
                             {brandingInfo.welcome_screen.static_links.links.map((item: any, index: any) => (
-                                <div className='adv-parent-acc-list'>
-                                    <div className="advanced-list-template-wrapper">
-                                        <div className="img-block">
-                                            <img src={iconHelper.getIcon('link_logo')} />
-                                        </div>
-                                        {(item.title || item.description) && <div className="titles-info-block">
-                                            <h1>{item.title}</h1>
-                                            <p>{item.description}</p>
-                                        </div>}
-                                        <div className="right-actions-content">
-                                            <button className="arrow-icon">
-                                                <i className="sdkv3-cheveron-right"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>))}
+                            <div className="link-list-template-wrapper">
+                                <div className="img-block">
+                                    <img src={iconHelper.getIcon('link_logo')} />
+                                </div>
+                                {(item.title || item.description) && <div className="titles-info-block">
+                                    <h1>{item.title}</h1>
+                                    <p>{item.description}</p>
+                                </div>}
+                                <div className="right-actions-content">
+                                    <button className="arrow-icon">
+                                        <i className="sdkv3-cheveron-right"></i>
+                                    </button>
+                                </div>
+                            </div>))}
                         </div>
                     </div>
                 }
