@@ -231,7 +231,7 @@ export function cardSliderExtension(props: any) {
                                     <div
                                         key={index}
                                         className={index == 0 ? "tab-pane active" : "tab-pane"}>
-                                        <div>
+                                        {/* <div> */}
                                             <h2 className="sub-title">{tab.info}</h2>
                                             <div className="clearfix p-bottom border-bottom">
                                                 <div className="card-acc-temp-sec tab-accordian-data">
@@ -253,7 +253,7 @@ export function cardSliderExtension(props: any) {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                // </div>
                             )
                             )
                         ))
@@ -392,33 +392,35 @@ export function card(props: any) {
 
                             {
                                 msgData.message[0].component?.payload?.cards?.cardDescription?.map((ele: any) => (
-                                    <button className="card-content-sec" onClick={() => handleButtonEvent(ele.actions)}>
-                                        {ele?.topSection &&
-                                            <div className="top-sec-card">
-                                                <div className="card-acc-temp-sec">
-                                                    <div className="card-acc-temp card-accordian">
-                                                        <div className="left-data">
-                                                            {ele?.topSection?.title && <h1 style={ele.topSection.titleStyle}><img src={ele?.topSection?.icon} />{ele?.topSection?.title}</h1>}
-                                                        </div>
-                                                        <div className="right-data">
-                                                            {ele?.topSection?.details && <span style={ele?.topSection?.details?.styles} className="tag-name">{ele?.topSection?.details?.title}</span>}
+                                    <button className="card-content-sec" style={ele?.borderStyles && ele.borderStyles} onClick={() => handleButtonEvent(ele.actions)}>
+                                        <div className="card-acc-temp-sec">
+                                            <div className="card-acc-temp">
+                                                {ele?.topSection &&
+                                                    <div className="top-sec-card">
+                                                        <div className="gap-style card-accordian">
+                                                            <div className="left-data">
+                                                                {ele?.topSection?.title && <h1 style={ele.topSection.titleStyle}><img src={ele?.topSection?.icon} />{ele?.topSection?.title}</h1>}
+                                                            </div>
+                                                            <div className="right-data">
+                                                                {ele?.topSection?.details && <span style={ele?.topSection?.details?.styles} className="tag-name">{ele?.topSection?.details?.title}</span>}
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        }
-                                        {ele?.middleSection &&
-                                            <div className="middle-sec-card  middle-sec-card-style">
-                                                {ele?.middleSection?.title && <h1>{ele?.middleSection?.title}</h1>}
-                                            </div>
-                                        }
-                                        {ele?.bottomSection &&
-                                            <div className="bottom-sec-card bottom-sec-card-style">
-                                                {
-                                                    ele?.bottomSection?.items?.map((ele: any) => (
-                                                        <div className="bottom-sec-style">
-                                                            <div className="card-acc-temp-sec">
-                                                                <div className="card-acc-temp">
+                                                }
+                                                {ele?.middleSection &&
+                                                    <div className="middle-sec-card  middle-sec-card-style">
+                                                        <div className="gap-style">
+                                                            <div className="left-data">
+                                                                {ele?.middleSection?.title && <h1>{ele?.middleSection?.title}</h1>}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                {ele?.bottomSection &&
+                                                    <div className="bottom-sec-card bottom-sec-card-style">
+                                                        {
+                                                            ele?.bottomSection?.items?.map((ele: any) => (
+                                                                <div className="bottom-sec-style">
                                                                     <div className="left-data">
                                                                         {ele?.title && <h2> {ele?.title}</h2>}
                                                                     </div>
@@ -428,12 +430,13 @@ export function card(props: any) {
                                                                         </p>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-
-                                                        </div>
-                                                    ))}
+                                                            ))}
+                                                    </div>
+                                                }
                                             </div>
-                                        }
+
+                                        </div>
+
                                     </button>
                                 ))
                             }
@@ -449,7 +452,7 @@ export function card(props: any) {
                 <div>
                     <section className="card-template-wrapper-view-more-details" aria-label="card template sdk">
                         <div className="card-warpper-info card-style">
-                             {msgData.message[0]?.component?.payload?.cards.cardHeading?.title && <h1 style={msgData.message[0]?.component?.payload?.cards?.cardHeading?.cardHeadingStyle} id="card-style-header">{msgData.message[0]?.component?.payload?.cards?.cardHeading?.title}</h1>}
+                            {msgData.message[0]?.component?.payload?.cards.cardHeading?.title && <h1 style={msgData.message[0]?.component?.payload?.cards?.cardHeading?.cardHeadingStyle} id="card-style-header">{msgData.message[0]?.component?.payload?.cards?.cardHeading?.title}</h1>}
                             {msgData.message[0]?.component?.payload?.cards && <p style={msgData.valueStyles}>{msgData.message[0]?.component?.payload?.cards}</p>}
                             {
                                 msgData.message[0].component.payload.cards.cardDescription.map((ele: any) => (
@@ -457,7 +460,7 @@ export function card(props: any) {
                                         {/* Top Section Start */}
                                         <div className="top-sec-card">
                                             <div className="card-acc-temp-sec">
-                                                <div className="card-acc-temp">
+                                                <div className="card-acc-temp" style={ele?.borderStyles && ele?.borderStyles}>
                                                     <div className="gap-style">
                                                         <div className="left-data">
                                                             {ele?.topSection?.title && <h1 style={ele?.topSection?.titleStyle && ele?.topSection?.titleStyle}><img src={ele?.topSection?.icon} /> {ele?.topSection?.title}</h1>}
@@ -494,28 +497,29 @@ export function card(props: any) {
                                             ele?.middleSection &&
                                             <div className="middle-sec-card" style={ele?.middleSection && ele?.middleSection?.borderStyles}>
                                                 <div className="card-acc-temp-sec">
-                                                    <div className="card-acc-temp">
-                                                        <div className="left-data">
-                                                            {ele?.middleSection?.title && <h2 style={ele?.middleSection?.titleStyles}>{ele?.middleSection?.title}</h2>}
-                                                        </div>
-                                                        <div className="right-data">
-                                                            {ele?.middleSection?.value && <p style={ele?.middleSection?.titleStyles}>{ele?.middleSection?.value}</p>}
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                {
-                                                    ele?.middleSection?.items?.map((val: any) => (
-                                                        <div>
+                                                    <div className="card-acc-temp" style={ele?.borderStyles && ele?.borderStyles}>
+                                                        <div className="gap-style">
                                                             <div className="left-data">
-                                                                {val?.title && <h2>{val?.title} {val?.subTitle && <span style={val?.subTitleStyles && val.subTitleStyles}>{val?.subTitle}</span>}</h2>}
+                                                                {ele?.middleSection?.title && <h2 style={ele?.middleSection?.titleStyles}>{ele?.middleSection?.title}</h2>}
                                                             </div>
                                                             <div className="right-data">
-                                                                <p style={val.valueStyles}>{val.value}</p>
+                                                                {ele?.middleSection?.value && <p style={ele?.middleSection?.titleStyles}>{ele?.middleSection?.value}</p>}
                                                             </div>
                                                         </div>
-                                                    ))
-                                                }
+                                                        {
+                                                            ele?.middleSection?.items?.map((val: any) => (
+                                                                <div className="gap-style">
+                                                                    <div className="left-data">
+                                                                        {val?.title && <h2>{val?.title} {val?.subTitle && <span style={val?.subTitleStyles && val.subTitleStyles}>{val?.subTitle}</span>}</h2>}
+                                                                    </div>
+                                                                    <div className="right-data">
+                                                                        <p style={val.valueStyles}>{val.value}</p>
+                                                                    </div>
+                                                                </div>
+                                                            ))
+                                                        }
+                                                    </div>
+                                                </div>
                                             </div>
                                         }
                                         {/* Middle Section End */}
@@ -524,7 +528,7 @@ export function card(props: any) {
                                         {ele.bottomSection &&
                                             <div className="bottom-sec-card">
                                                 <div className="card-acc-temp-sec">
-                                                    <div className="card-acc-temp">
+                                                    <div className="card-acc-temp" style={ele?.borderStyles && ele?.borderStyles}>
                                                         {
                                                             ele.bottomSection?.items?.map((val: any) => (
                                                                 <div className="gap-style">

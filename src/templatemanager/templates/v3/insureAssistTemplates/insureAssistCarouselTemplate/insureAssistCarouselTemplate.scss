@@ -196,7 +196,7 @@
 
 .card-content-sec {
     display: flex;
-    padding: 12px;
+    // padding: 12px;
     flex-direction: column;
     gap: 8px;
     width: 100%;
@@ -206,7 +206,7 @@
     text-align: left;
 
     .top-sec-card {
-        display: flex;
+        display: contents;
         align-items: center;
         width: 100%;
         gap: 10px;
@@ -333,7 +333,7 @@
 
 .card-content-sec {
     display: flex;
-    padding: 12px;
+    // padding: 12px;
     flex-direction: column;
     gap: 8px;
     width: 100%;
