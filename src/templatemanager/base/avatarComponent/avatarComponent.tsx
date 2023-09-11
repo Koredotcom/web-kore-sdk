@@ -21,7 +21,10 @@ export function AvatarComponent(props: any) {
     }
 
     let avatarStyle = aShape[brandingInfo.chat_bubble.style];
-    avatarStyle = brandingInfo.chat_bubble.alignment == 'block' ? avatarStyle + ' bubble-align-block' : avatarStyle;
+
+    if (brandingInfo.chat_bubble.alignment == 'block') {
+        avatarStyle = avatarStyle + ' bubble-align-block';
+    }
 
     const closeHelp = (e: any) => {
         e?.stopPropagation();

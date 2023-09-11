@@ -30,8 +30,16 @@ export function Message(props: any) {
     let userStyle = ubStyle[brandingInfo.body.bubble_style]
 
     if (brandingInfo.body.time_stamp.show_type == 'hover') {
-      botStyle = botStyle + ' time-stamp-show-hover';
-      userStyle = userStyle + ' time-stamp-show-hover';
+        botStyle = botStyle + ' time-stamp-show-hover';
+        userStyle = userStyle + ' time-stamp-show-hover';
+    }
+
+    if (brandingInfo.body.font.size == 'small') {
+        botStyle = botStyle + ' small_text';
+        userStyle = userStyle + ' small_text';
+    } else if (brandingInfo.body.font.size == 'large') {
+        botStyle = botStyle + ' large_text';
+        userStyle = userStyle + ' large_text';  
     }
 
     const onCopy = (event: any, value: any) => {

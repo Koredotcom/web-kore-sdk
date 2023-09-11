@@ -53,7 +53,8 @@
             }
         }
         .welcome-header-bg {
-            background: var( --welcome-header-bg);
+            background: var( --welcome-header-bg) no-repeat;
+            background-size: cover;
             border-radius: 4px 4px 0px 0px;
             padding: 32px 16px;
             .logo-img {
@@ -329,6 +330,19 @@
     padding: 0 16px 16px 16px;
     display: inline-block;
     width: 100%;
+    .main-heading-wrapper{
+        width: 100%;
+        h1{
+            color: var(--kora-grey-grey-dark-1, #202124);
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 20px;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
     .link-temp-wrapper{
         width: 100%;
         box-shadow: 0px 1px 2px -1px rgba(16, 24, 40, 0.10), 0px 1px 3px 0px rgba(16, 24, 40, 0.10);
@@ -342,17 +356,10 @@
         align-items: flex-start;
         gap: 12px;
         align-self: stretch;
-        .main-heading-wrapper{
-            width: 100%;
-            h1{
-                color: var(--kora-grey-grey-dark-1, #202124);
-                font-size: 18px;
-                font-weight: 600;
-                line-height: 20px;
-                width: 100%;
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
+        &.carousel-temp-links{
+            display: block;
+            .main-heading-wrapper{
+                margin-bottom: 12px;
             }
         }
     }
@@ -440,6 +447,50 @@
             background: transparent;
             padding: 0;
             cursor: pointer;
+        }
+    }
+}
+
+.carousel-temp-links{
+    display: flex;
+    align-items: center;
+    position: relative;
+    gap: 10px;
+
+    .carousel-left-click {
+        position: absolute;
+        border-radius: 32px;
+        background: var(--global-white);
+        box-shadow: 0px 4px 12px 2px rgba(32, 33, 36, 0.12);
+        display: flex;
+        width: 32px;
+        height: 32px;
+        padding: 10px;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        border: 0;
+        left: 15px;
+        top: auto;
+        cursor: pointer;
+        flex-shrink: 0;
+        z-index: 9;
+        &.hide {
+           display: none;
+        }
+    }
+    .carousel-right-click {
+        @extend .carousel-left-click;
+        left: auto;
+        right: 15px;
+    }
+    .carousel-link-temp-wrapper{
+        display: flex;
+        overflow: hidden;
+        gap: 10px;
+        .link-list-template-wrapper{
+            width: 90%;
+            flex-shrink: 0;
         }
     }
 }

@@ -154,13 +154,13 @@
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--agent-bubble-text-color);
+                color: var(--time-stamp-color);
             }
             .you-text{
                 font-weight: 600;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--agent-bubble-text-color);
+                color: var(--name-color);
             }
             .copied-text{
                 @extend .you-text;
@@ -191,7 +191,7 @@
                 z-index: 1;
                 cursor: pointer;
                 font-size: 14px;
-                color: var(--bot-bubble-text-color);
+                color: var(--time-stamp-color);
                 display: none;
             }
             .agent-img{
@@ -225,19 +225,19 @@
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--agent-bubble-text-color);
+                color: var(--time-stamp-color);
             }
             .you-text{
                 font-weight: 600;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--agent-bubble-text-color);
+                color: var(--name-color);
             }
             .read-text{
                 font-weight: 500;
                 font-size: 11px;
                 line-height: 13px;
-                color: var(--agent-bubble-text-color);
+                color: var(--time-stamp-color);
                 display: flex;
                 align-items: center;
                 i{
@@ -400,13 +400,13 @@
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--bot-bubble-text-color);
+                color: var(--time-stamp-color);
             }
             .you-text{
                 font-weight: 600;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--bot-bubble-text-color);
+                color: var(--name-color);
             }
             .copied-text{
                 @extend .you-text;
@@ -439,7 +439,7 @@
                 z-index: 1;
                 cursor: pointer;
                 font-size: 14px;
-                color: var(--bot-bubble-text-color);
+                color: var(--time-stamp-color);
                 display: none;
             }
             .bot-img{
@@ -474,19 +474,19 @@
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--bot-bubble-text-color);
+                color: var(--time-stamp-color);
             }
             .you-text{
                 font-weight: 600;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--bot-bubble-text-color);
+                color: var(--name-color);
             }
             .read-text{
                 font-weight: 500;
                 font-size: 11px;
                 line-height: 13px;
-                color: var(--bot-bubble-text-color);
+                color: var(--time-stamp-color);
             }
         }
     }

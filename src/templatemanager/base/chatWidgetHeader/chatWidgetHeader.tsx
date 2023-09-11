@@ -69,16 +69,16 @@ export function ChatWidgetHeader(props: any) {
             </div>
             <div className="actions-info">
                { brandingInfo.header.buttons.help.show && <button className="btn-action">
-                    {/* <figure>
-                            <img src="/images/help.svg" alt="back button" />
-                        </figure> */}
-                    <i className="sdkv3-help"></i>
+                    <figure>
+                            <img src={iconHelper.getIcon('help')} alt="back button" />
+                        </figure>
+                    {/* <i className="sdkv3-help"></i> */}
                 </button> }
                 { brandingInfo.header.buttons.live_agent.show && <button className="btn-action">
-                    {/* <figure>
-                            <img src="/images/support.svg" alt="back button" />
-                        </figure> */}
-                    <i className="sdkv3-support"></i>
+                    <figure>
+                            <img src={iconHelper.getIcon('support')} alt="back button" />
+                        </figure>
+                    {/* <i className="sdkv3-support"></i> */}
                 </button> }
                 { brandingInfo.header.buttons.close.show && <button className="btn-action btn-action-close">
                     <figure>

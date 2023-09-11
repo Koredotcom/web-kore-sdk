@@ -40,7 +40,11 @@ const BrandingJSON = {
             "name": "Our Community is ready to help you to join our best platform",
             "color": "#ffffff"
         },
-        "background": {"color": "#4B4EDE"},
+        "background": {
+            "type": "image",
+            "color": "#4B4EDE",
+            "img": "https://picsum.photos/seed/picsum/200/300"
+        },
         "top_fonts": {
             "color": "#ffffff"
         },
@@ -246,9 +250,9 @@ const BrandingJSON = {
     },
     "body": {
         "background": {
-            "type": "image",
-            "color": "#0D6EFD",
-            "img": "https://abc.com"
+            "type": "color",
+            "color": "#FFFFFF",
+            "img": "https://picsum.photos/id/237/200/300"
         },
         "font": {
             "family": "Impact",
@@ -285,7 +289,7 @@ const BrandingJSON = {
             "show_type": "always",
             "position": "top",
             "separator": "line",
-            "color": ""
+            "color": "#0000FF"
         },
         "icon": {
             "show": true,

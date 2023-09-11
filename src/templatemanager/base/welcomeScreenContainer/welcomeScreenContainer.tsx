@@ -4,6 +4,7 @@ import './welcomeScreenContainer.scss';
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import IconsManager from '../iconsManager';
+import CarouselButtons from '../../templates/v3/carouselTemplate/carouselButtons';
 
 export function WelcomeScreenContainer(props: any) {
     const hostInstance = props.hostInstance;
@@ -41,6 +42,19 @@ export function WelcomeScreenContainer(props: any) {
     const handleEventsWelcomeScreen = () => {
         hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container')?.classList.add('fadeIn');
         hostInstance.chatEle.querySelector('.welcome-chat-section')?.classList.remove('minimize');
+    }
+
+    if (brandingInfo.welcome_screen.static_links.show && brandingInfo.welcome_screen.static_links.layout == 'carousel') {
+        setTimeout(() => {
+            const carouselButtons = new CarouselButtons({
+                hostInstance,
+                id: 'welcome_screen_carousel',
+                class: 'hide',
+                lsWidth: 40,
+                rsWidth: 20
+            });
+            carouselButtons.init();
+        }, 50);
     }
     
     useEffect(() => {
@@ -141,14 +155,14 @@ export function WelcomeScreenContainer(props: any) {
                         </div>}
                     </div>
                 </section> }
-                { brandingInfo.welcome_screen.static_links.show && <div className="link-wrapper-content">
+                { brandingInfo.welcome_screen.static_links.show && brandingInfo.welcome_screen.static_links.layout == 'list' && <div className="link-wrapper-content">
                         <div className="link-temp-wrapper">
                             <div className="main-heading-wrapper">
                                 <h1>Links</h1>
                             </div>
 
                             {brandingInfo.welcome_screen.static_links.links.map((item: any, index: any) => (
-                            <div className="link-list-template-wrapper">
+                            <div className="link-list-template-wrapper" onClick={() => handleStartEvent(item)}>
                                 <div className="img-block">
                                     <img src={iconHelper.getIcon('link_logo')} />
                                 </div>
@@ -165,9 +179,43 @@ export function WelcomeScreenContainer(props: any) {
                         </div>
                     </div>
                 }
+                { brandingInfo.welcome_screen.static_links.show && brandingInfo.welcome_screen.static_links.layout == 'carousel' &&  <div className="link-wrapper-content">
+                    <div className="link-temp-wrapper carousel-temp-links">
+                        <div className="main-heading-wrapper">
+                            <h1>Links</h1>
+                        </div>
+
+                        <div className="carousel-temp-links">
+                            <button className="carousel-left-click" c-left-button-id="welcome_screen_carousel">
+                                <i className="sdkv3-cheveron-left"></i>
+                            </button>
+                            <div className="carousel-link-temp-wrapper" c-parent-id="welcome_screen_carousel">
+                                {brandingInfo.welcome_screen.static_links.links.map((item: any, index: any) => (
+                                        <div className="link-list-template-wrapper" c-items-id="welcome_screen_carousel" onClick={() => handleStartEvent(item)}>
+                                            <div className="img-block">
+                                                <img src={iconHelper.getIcon('link_logo')} />
+                                            </div>
+                                            {(item.title || item.description) && <div className="titles-info-block">
+                                                <h1>{item.title}</h1>
+                                                <p>{item.description}</p>
+                                            </div>}
+                                            <div className="right-actions-content">
+                                                <button className="arrow-icon">
+                                                    <i className="sdkv3-cheveron-right"></i>
+                                                </button>
+                                            </div>
+                                    </div>))}
+                            </div>
+                            <button className="carousel-right-click" c-right-button-id="welcome_screen_carousel">
+                                <i className="sdkv3-cheveron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    </div>
+                }
                 {brandingInfo.welcome_screen.promotional_content.show && <article className="pramotional-banner-wrapper-container">
                     {brandingInfo.welcome_screen.promotional_content.promotions.map((ele: any) => (
-                        <a href="#" target="_blank" className="banner-img" aria-label="pramotional banner">
+                        <a className="banner-img" aria-label="pramotional banner" onClick={() => handleStartEvent(ele)}>
                             <figure>
                                 <img src={ele.banner} alt="log-img" />
                             </figure>
