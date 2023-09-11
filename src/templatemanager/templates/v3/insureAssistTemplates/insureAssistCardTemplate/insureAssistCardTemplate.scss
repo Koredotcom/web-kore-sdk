@@ -16,7 +16,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: flex-start;
-        // gap: 12px;
+        gap: 0px;
 
         h1 {
             color: var(--card-heading-title);
@@ -254,15 +254,15 @@
     animation-fill-mode: both;
 }
 
-.card-style {
-    #card-style-header {
-        color: var(--card-temp-bg);
-        border-radius: 4px 4px 0 0;
-        padding: 14px;
-        background-color: var(--card-temp-view-more-color);
-        width: 100%;
-    }
-}
+// .card-style {
+//     #card-style-header {
+//         color: var(--card-temp-bg);
+//         border-radius: 4px 4px 0 0;
+//         padding: 14px;
+//         background-color: var(--card-temp-view-more-color);
+//         width: 100%;
+//     }
+// }
 
 .menu-wrapper-data-actions {
     display: flex;
@@ -439,7 +439,7 @@
 // Accordon styles
 
 .accordion-wrapper {
-    padding: 10px 15px;
+    padding: 0px 15px;
     display: inline-block;
     width: 100%;
 
@@ -507,11 +507,17 @@
 
 .card-acc-temp-sec .card-acc-temp.card-accordian {
     padding-top: 10px;
-    padding-bottom: 0;
+    padding-bottom: 10px;
+    width: 100%;
 }
+
 
 .card-acc-temp-sec {
     width: 100%;
+
+    img {
+        vertical-align: middle;
+    }
 
     .card-acc-temp {
         display: block;
@@ -520,40 +526,49 @@
         gap: 15px;
         overflow: hidden;
         border-bottom: 1px solid rgba(154, 160, 166, 0.2);
-        line-height: 25px;
+        // line-height: 25px;
         padding: 0;
-        &:last-child {
-            border: 0;
-            // padding: 0;
-        }
-
+        width: 100%;
         cursor: pointer;
 
-        .left-bottom-data {
-            p {
-                margin-bottom: 7px;
+        // .left-bottom-data {
+        //     p {
+        //         margin-bottom: 7px;
+        //     }
+        // }
+        .set-top-gap {
+            clear: both;
+            padding: 7px 0;
+
+            .left-data {
+                width: 55%;
+            }
+
+            .right-data {
+                width: 45%;
             }
         }
 
-
         .left-data {
-            width: 60%;
-            float:left;
+            width: 45%;
+            float: left;
+            position: relative;
+
             img {
                 vertical-align: middle;
+                margin-right: 5px;
             }
 
             h1 {
                 color: var(--gray-900, #101828);
                 font-size: 14px;
                 font-weight: 400;
-                line-height: 20px;
+                // line-height: 20px;
             }
 
             p {
                 color: var(--kora-grey-grey-medium-1, #9AA0A6);
                 font-size: 14px;
-                line-height: 20px;
             }
 
             .temp-data {
@@ -571,9 +586,10 @@
 
         .right-data {
             flex-shrink: 0;
-            width: 37%;
-            float:right;
+            width: 55%;
+            float: right;
             text-align: right;
+
             p {
                 color: var(--gray-900, #101828);
                 text-align: right;
@@ -582,6 +598,11 @@
             }
         }
     }
+
+    // & :last-child {
+    //     border-bottom: 0;
+    //     // padding: 0;
+    // }
 }
 
 
@@ -654,10 +675,6 @@
     border-bottom: 1px solid #EAECF0;
 }
 
-.p-bottom {
-    padding: 10px 0;
-}
-
 
 
 
@@ -694,26 +711,51 @@
     border-bottom: 1px solid var(--card-temp-border-divided-bg);
 }
 
+.border-style:last-child {
+    border-bottom: 0px;
+}
+
 .tab-data-style {
     overflow: auto;
-    padding: 0 15px;
-
-    select {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid var(--welcome-start-conv-quick-btn-border);
-        border-radius: 4px;
-        font-size: 14px;
-    }
+    padding: 10px 15px;
 }
+
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--welcome-start-conv-quick-btn-border);
+    border-radius: 4px;
+    font-size: 14px;
+}
+
 
 .card-acc-temp-sec .card-acc-temp .left-data.data-style {
     .sub-title {
         float: left
     }
+}
 
-    .mt-5 {
-        float: right;
-        margin-top: 15px;
-    }
+.gap-style {
+    overflow: hidden;
+    clear: both;
+    padding-bottom: 5px;
+}
+
+.gap-style-accordian {
+    overflow: hidden;
+    clear: both;
+    padding: 5px 0;
+}
+
+.p-r-5 {
+    padding: 0 5px
+}
+
+.circle {
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    top: 9px;
+    border-radius: 50px;
+    background: #12B76A;
 }

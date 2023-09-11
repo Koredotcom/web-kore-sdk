@@ -35,7 +35,7 @@ export function cardSliderExtension(props: any) {
             <div className="iner-data-scroll-wraper">
                 <section className="card-info-more-details" aria-label="card template sdk">
                     {
-                        sliderData.sliderInfo.map((ele: any) => (
+                        sliderData?.sliderInfo?.map((ele: any) => (
                             <div>
                                 <div className="top-sec-card">
                                     <h1>{ele.topSection.title}</h1>
@@ -73,8 +73,8 @@ export function cardSliderExtension(props: any) {
                 </section>
                 <div className="accordion-wrapper" id="accordion">
                     {
-                        sliderData.sliderInfo.map((ele: any) => (
-                            ele.moreInfo.map((item: any, i: any) => (
+                        sliderData?.sliderInfo?.map((ele: any) => (
+                            ele?.moreInfo?.map((item: any, i: any) => (
                                 <div className="accordion_item" onClick={() => openAccordionDetails(event, i)}>
                                     <button className="accordion_heading" aria-expanded="true">
                                         <p>{item.title}</p>

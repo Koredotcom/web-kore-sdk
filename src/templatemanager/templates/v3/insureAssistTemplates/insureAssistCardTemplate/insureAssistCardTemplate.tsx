@@ -87,11 +87,13 @@ export function cardSliderExtension(props: any) {
                     {
                         sliderData.sliderInfo.map((ele: any) => (
                             <div>
-                                <div className="top-sec-card">
-                                    <img src={ele?.topSection?.icon} />
-                                    {ele?.topSection?.title && <h1>{ele?.topSection?.title}</h1>}
-                                    {ele?.topSection?.details?.title && <span style={ele?.topSection?.details?.styles} className="tag-name">{ele?.topSection?.details?.title}</span>}
-                                </div>
+                                {ele?.topSection &&
+                                    <div className="top-sec-card">
+                                        <img src={ele?.topSection?.icon} />
+                                        {ele?.topSection?.title && <h1>{ele?.topSection?.title}</h1>}
+                                        {ele?.topSection?.details?.title && <span style={ele?.topSection?.details?.styles} className="tag-name">{ele?.topSection?.details?.title}</span>}
+                                    </div>
+                                }
                                 <div>
                                     {ele?.topSection?.details?.subTitle && <h2 style={ele?.topSection?.details?.subTitleStyles}>{ele?.topSection?.details?.subTitle}</h2>}
                                 </div>
@@ -126,68 +128,69 @@ export function cardSliderExtension(props: any) {
                         ))
                     }
                 </section>
-                <div className="accordion-wrapper" id="accordion">
+                <section>
                     {
-                        sliderData.sliderInfo.map((ele: any) => (
-                            ele.moreInfo.map((item: any, i: any) => (
-                                <div className="accordion_item">
-                                    <button className="accordion_heading" aria-expanded="true" onClick={() => openAccordionDetails(event, i)}>
-                                        <p>{item.title}</p>
-                                        <p style={item?.valueStyle}>{item.value}</p>
-                                        <div className="arrow-icon">
-                                            <i className="sdkv3-cheveron-right"></i>
-                                        </div>
-                                    </button>
-                                    <div className="accordion_collapse">
-                                        <div className="accordion_body">
-                                            <div className="card-acc-temp-sec">
-                                                {
-                                                    item.items?.map((val: any, index: any) => (
-                                                        <div className="card-acc-temp card-accordian">
-                                                            <div className="left-data">
-                                                                <div key={index}>
-                                                                    {val?.name && <h1 className="t-data">{val?.name}</h1>}
-                                                                    {val?.description && <p>{val.description}</p>}
-                                                                    {val?.subTitle && <p className="mt-5">{val?.subTitle}</p>}
-                                                                </div>
-                                                                <div className="tab-header tab tab-left">
-                                                                    {val.itemDescriptions && val.itemDescriptions.map((tab: any, index: any) => (
-                                                                        <div key={index} >
-                                                                            {tab?.type && <h2 style={val?.nameStyles && val?.nameStyles}>{tab?.type}</h2>}
-                                                                            {tab?.name && <p style={val?.valueStyle && val?.valueStyle} className="title">{tab.name}</p>}
-                                                                        </div>
-                                                                    ))}
-                                                                </div>
-                                                            </div>
-                                                            <div className="right-data">
-                                                                <div>
-                                                                    {val?.value && <p>{val?.value}</p>}
-                                                                    {val?.subTitleValue && <p className="mt-5">{val?.subTitleValue}</p>}
-                                                                    {/* {{moreInfoValue} && <p>{moreInfoValue}</p> */}
-
-                                                                </div>
-                                                                <div className="tab-header tab tab-right">
-                                                                    {val?.itemDescriptions && val.itemDescriptions.map((tab: any, index: any) => (
-                                                                        <div key={index} className="tab-p">
-                                                                            {tab?.value && <p style={tab?.valueStyle}>{tab?.value}</p>}
-                                                                        </div>
-                                                                    ))}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    ))
-                                                }
+                        sliderData?.sliderInfo?.map((ele: any) => (
+                            ele?.moreInfo?.map((item: any, i: any) => (
+                                <div className="accordion-wrapper" id="accordion">
+                                    <div class="accordion_item">
+                                        <button className="accordion_heading" aria-expanded="true" onClick={() => openAccordionDetails(event, i)}>
+                                            <p>{item.title}</p>
+                                            <p style={item?.valueStyle}>{item.value}</p>
+                                            <div className="arrow-icon">
+                                                <i className="sdkv3-cheveron-right"></i>
                                             </div>
+                                        </button>
+                                        <div className="accordion_collapse">
+                                            <div className="accordion_body">
+                                                <div className="card-acc-temp-sec">
+                                                    {
+                                                        item?.items?.map((val: any, index: any) => (
+                                                            <div className="card-acc-temp card-accordian">
+                                                                <div className="left-data">
+                                                                    <div key={index}>
+                                                                        {val?.name && <h1 className="t-data">{val?.name}</h1>}
+                                                                        {val?.description && <p>{val.description}</p>}
+                                                                        {val?.subTitle && <p className="mt-5">{val?.subTitle}</p>}
+                                                                    </div>
+                                                                    <div className="tab-header tab tab-left">
+                                                                        {val?.itemDescriptions && val?.itemDescriptions?.map((tab: any, index: any) => (
+                                                                            <div key={index} >
+                                                                                {tab?.type && <h2 style={val?.nameStyles && val?.nameStyles}>{tab?.type}</h2>}
+                                                                                {tab?.name && <p style={val?.valueStyle && val?.valueStyle} className="title">{tab.name}</p>}
+                                                                            </div>
+                                                                        ))}
+                                                                    </div>
+                                                                </div>
+                                                                <div className="right-data">
+                                                                    <div>
+                                                                        {val?.value && <p>{val?.value}</p>}
+                                                                        {val?.subTitleValue && <p className="mt-5">{val?.subTitleValue}</p>}
+                                                                        {/* {{moreInfoValue} && <p>{moreInfoValue}</p> */}
 
+                                                                    </div>
+                                                                    <div className="tab-header tab tab-right">
+                                                                        {val?.itemDescriptions && val?.itemDescriptions?.map((tab: any, index: any) => (
+                                                                            <div key={index} className="tab-p">
+                                                                                {tab?.value && <p style={tab?.valueStyle}>{tab?.value}</p>}
+                                                                            </div>
+                                                                        ))}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                    }
+                                                </div>
+
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-
                             ))
                         ))
                     }
-                </div>
-                <div className="tab-data-style">
+                </section>
+                <div className="tab-data-style gap-style">
                     {
                         sliderData?.sliderInfo?.map((ele: any) => (
                             <div>
@@ -230,22 +233,24 @@ export function cardSliderExtension(props: any) {
                                         className={index == 0 ? "tab-pane active" : "tab-pane"}>
                                         <div>
                                             <h2 className="sub-title">{tab.info}</h2>
-                                            {tab.content.map((tab: any) => (
-                                                <div className="clearfix p-bottom border-bottom">
-                                                    <div className="card-acc-temp-sec tab-accordian-data">
-                                                        <div className="card-acc-temp card-accordian">
-                                                            <div className="left-data">
-                                                                {tab.name && <p>
-                                                                    {tab.name}
-                                                                </p>}
+                                            <div className="clearfix p-bottom border-bottom">
+                                                <div className="card-acc-temp-sec tab-accordian-data">
+                                                    <div className="card-acc-temp">
+                                                        {tab.content.map((tab: any) => (
+                                                            <div className="gap-style-accordian card-accordian">
+                                                                <div className="left-data">
+                                                                    {tab.name && <p>
+                                                                        {tab.name}
+                                                                    </p>}
+                                                                </div>
+                                                                <div className="right-data">
+                                                                    {tab.value && <p>{tab.value}</p>}
+                                                                </div>
                                                             </div>
-                                                            <div className="right-data">
-                                                                {tab.value && <p>{tab.value}</p>}
-                                                            </div>
-                                                        </div>
+                                                        ))}
                                                     </div>
                                                 </div>
-                                            ))}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -271,12 +276,12 @@ export function cardSliderExtension(props: any) {
                                                     </button>
                                                     <div className="accordion_collapse_tab" data-kr-ct-acc={`acc_${index}_${i}`}>
                                                         <div className="accordion_body">
-                                                            {tab.subitems && tab.subitems.map((val: any, i: any) => (
-                                                                <div>
-                                                                    <div className="card-acc-temp-sec tab-accordian-data">
-                                                                        <div className="card-acc-temp card-accordian">
+                                                            <div className="card-acc-temp-sec tab-accordian-data">
+                                                                <div className="card-acc-temp card-accordian">
+                                                                    {tab.subitems && tab.subitems.map((val: any, i: any) => (
+                                                                        <div className="gap-style">
                                                                             <div className="left-data">
-                                                                                {val.name && <h2 style={val.nameStyles}>{val.name}</h2>}
+                                                                                {val?.type && <span className="circle"></span>}{val.name && <h2 style={val.nameStyles}>{val.name}</h2>}
                                                                                 {val.subTitle && <p style={val.valueStyle} className="title">{val.subTitle}</p>}
                                                                             </div>
                                                                             <div className="right-data">
@@ -284,61 +289,60 @@ export function cardSliderExtension(props: any) {
                                                                                 {val.subTitleValue && <p>{val.subTitleValue}</p>}
                                                                             </div>
                                                                         </div>
-                                                                    </div>
-                                                                </div>
-                                                            ))}
 
-                                                            {tab.items && tab.items.map((val: any, i: any) => (
-                                                                <div className="border-style">
-                                                                    <div className="card-acc-temp-sec tab-accordian-data">
-                                                                        <div className="card-acc-temp">
+                                                                    ))}
+
+                                                                    {tab.items && tab.items.map((val: any, i: any) => (
+                                                                        <div className="border-style gap-style p-r-5">
                                                                             <div className="left-data">
                                                                                 {val.name && <h2 className="sub-title" style={val.nameStyles}>{val.name}</h2>}
                                                                             </div>
                                                                             <div className="right-data">
                                                                                 {val.value && <h2 className="sub-title" style={val.nameStyles}>{val.value}</h2>}
                                                                             </div>
-
-                                                                        </div>
-                                                                    </div>
-                                                                    {
-                                                                        val.itemDescriptions && val.itemDescriptions.map((val: any, i: any) => (
-                                                                            <div style={val?.borderStyle && val?.borderStyle}>
-                                                                                <div className="card-acc-temp-sec">
-                                                                                    <div className="card-acc-temp">
-                                                                                        <div className="left-data">
-                                                                                            {val.type && <h2>{val.type}</h2>}
-                                                                                            {val.name && <p>{val.name}</p>}
-                                                                                        </div>
-                                                                                        <div className="right-data">
-                                                                                            {val.value && <p style={val.titleStyle}>{val.value}</p>}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                {
-                                                                                    val.limits && val.limits.map((val: any, i: any) => (
-                                                                                        <div className="card-acc-temp-sec tab-accordian-data">
-                                                                                            <div className="card-acc-temp pd-0">
-                                                                                                <div className="left-data left-bottom-data">
-                                                                                                    {val.name && <p>{val.name}</p>}
-                                                                                                </div>
-                                                                                                <div className="right-data text-value">
-                                                                                                    {val.value && <p>{val.value}</p>}
-                                                                                                </div>
+                                                                            {
+                                                                                val.itemDescriptions && val.itemDescriptions.map((val: any, i: any) => (
+                                                                                    <div className="set-top-gap">
+                                                                                        <div className="gap-style" style={val?.borderStyle && val?.borderStyle}>
+                                                                                            <div className="left-data">
+                                                                                                {val.type && <h2>{val.type}</h2>}
+                                                                                                {val.name && <p>{val.name}</p>}
+                                                                                            </div>
+                                                                                            <div className="right-data">
+                                                                                                {val.value && <p style={val.titleStyle}>{val.value}</p>}
                                                                                             </div>
                                                                                         </div>
-                                                                                    ))
-                                                                                }
-                                                                            </div>
-                                                                        ))
-                                                                    }
+                                                                                        {
+                                                                                            val.limits && <div className="set-gap-style">
+                                                                                                {
+                                                                                                    val.limits && val.limits.map((val: any, i: any) => (
+                                                                                                        <div className="gap-style tab-accordian-data">
+                                                                                                            {/* <div className="pd-0"> */}
+                                                                                                            <div className="left-data left-bottom-data">
+                                                                                                                {val.name && <p>{val.name}</p>}
+                                                                                                            </div>
+                                                                                                            <div className="right-data text-value">
+                                                                                                                {val.value && <p>{val.value}</p>}
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        // </div>
+                                                                                                    ))
+                                                                                                }
+                                                                                            </div>
+
+                                                                                        }
+                                                                                    </div>
+
+                                                                                ))
+                                                                            }
+                                                                        </div>
+                                                                    ))}
                                                                 </div>
-                                                            ))}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-
                                         ))}
                                     </div>
                                 </div>
@@ -376,6 +380,7 @@ export function card(props: any) {
             hostInstance.bottomSliderAction('', getHTML(cardSliderExtension, e, hostInstance));
         }
     }
+    console.log(msgData, 'msgData msgData')
     if (msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'modern') {
         // Active Section Template Start
         return (
@@ -383,40 +388,53 @@ export function card(props: any) {
                 <div>
                     <section className="card-template-wrapper" aria-label="card template sdk">
                         <div className="card-warpper-info card-style">
-                            {msgData.message[0]?.component?.payload?.cards.cardHeading?.title && <h1 id="card-style-header">{msgData.message[0]?.component?.payload?.cards?.cardHeading?.title}</h1>}
+                            test33{msgData.message[0]?.component?.payload?.cards.cardHeading?.title && <h1 style={msgData.message[0]?.component?.payload?.cards?.cardHeading?.cardHeadingStyle} id="card-style-header">{msgData.message[0]?.component?.payload?.cards?.cardHeading?.title}</h1>}
                             {msgData.message[0]?.component?.payload?.cards && <p style={msgData.valueStyles}>{msgData.message[0]?.component?.payload?.cards}</p>}
 
                             {
                                 msgData.message[0].component?.payload?.cards?.cardDescription?.map((ele: any) => (
                                     <button className="card-content-sec" onClick={() => handleButtonEvent(ele.actions)}>
-                                        <div className="top-sec-card">
-                                            <img src={ele?.topSection?.icon} />
-                                            {ele?.topSection?.title && <h1>{ele?.topSection?.title}</h1>}
-                                            {ele?.topSection?.details && <span style={ele?.topSection?.details?.styles} className="tag-name">{ele?.topSection?.details?.title}</span>}
-                                        </div>
-                                        <div className="middle-sec-card  middle-sec-card-style">
-                                            {ele?.middleSection?.title && <h1>{ele?.middleSection?.title}</h1>}
-                                        </div>
-                                        <div className="bottom-sec-card bottom-sec-card-style">
-                                            {
-                                                ele?.bottomSection?.items?.map((ele: any) => (
-                                                    <div className="bottom-sec-style">
-                                                        <div className="card-acc-temp-sec">
-                                                            <div className="card-acc-temp">
-                                                                <div className="left-data">
-                                                                    {ele?.title && <h2> <img src={ele.icon && ele.icon} /> {ele?.title}</h2>}
-                                                                </div>
-                                                                <div className="right-data">
-                                                                    <p>
-                                                                        {ele?.value && <time>{ele?.value}</time>}
-                                                                    </p>
+                                        {ele?.topSection &&
+                                            <div className="top-sec-card">
+                                                <div className="card-acc-temp-sec">
+                                                    <div className="card-acc-temp card-accordian">
+                                                        <div className="left-data">
+                                                            {ele?.topSection?.title && <h1 style={ele.topSection.titleStyle}><img src={ele?.topSection?.icon} />{ele?.topSection?.title}</h1>}
+                                                        </div>
+                                                        <div className="right-data">
+                                                            {ele?.topSection?.details && <span style={ele?.topSection?.details?.styles} className="tag-name">{ele?.topSection?.details?.title}</span>}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        {ele?.middleSection &&
+                                            <div className="middle-sec-card  middle-sec-card-style">
+                                                {ele?.middleSection?.title && <h1>{ele?.middleSection?.title}</h1>}
+                                            </div>
+                                        }
+                                        {ele?.bottomSection &&
+                                            <div className="bottom-sec-card bottom-sec-card-style">
+                                                {
+                                                    ele?.bottomSection?.items?.map((ele: any) => (
+                                                        <div className="bottom-sec-style">
+                                                            <div className="card-acc-temp-sec">
+                                                                <div className="card-acc-temp">
+                                                                    <div className="left-data">
+                                                                        {ele?.title && <h2> {ele?.title}</h2>}
+                                                                    </div>
+                                                                    <div className="right-data">
+                                                                        <p>
+                                                                            {ele?.value && <time>{ele?.value}</time>}
+                                                                        </p>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
 
-                                                    </div>
-                                                ))}
-                                        </div>
+                                                        </div>
+                                                    ))}
+                                            </div>
+                                        }
                                     </button>
                                 ))
                             }
@@ -427,27 +445,35 @@ export function card(props: any) {
         );
         // Active Section Template End
     } else if (msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'details') {
+        console.log(msgData, '12212 msgData')
         return (
             <Fragment>
                 <div>
                     <section className="card-template-wrapper-view-more-details" aria-label="card template sdk">
                         <div className="card-warpper-info card-style">
-                            {msgData.message[0]?.component?.payload?.cards.cardHeading?.title && <h1 id="card-style-header">{msgData.message[0]?.component?.payload?.cards?.cardHeading?.title}</h1>}
+                            test22 {msgData.message[0]?.component?.payload?.cards.cardHeading?.title && <h1 style={msgData.message[0]?.component?.payload?.cards?.cardHeading?.cardHeadingStyle} id="card-style-header">{msgData.message[0]?.component?.payload?.cards?.cardHeading?.title}</h1>}
                             {msgData.message[0]?.component?.payload?.cards && <p style={msgData.valueStyles}>{msgData.message[0]?.component?.payload?.cards}</p>}
                             {
                                 msgData.message[0].component.payload.cards.cardDescription.map((ele: any) => (
-                                    <div className="card-content-sec">
+                                    <div className="card-content-sec p0">
                                         {/* Top Section Start */}
                                         <div className="top-sec-card">
                                             <div className="card-acc-temp-sec">
                                                 <div className="card-acc-temp">
-                                                    <div className="left-data">
-                                                        {ele?.topSection?.title && <h1 style={ele?.topSection?.subTitleStyles && ele?.topSection?.subTitleStyles}><img src={ele?.topSection?.icon} /> {ele?.topSection?.title}</h1>}
-                                                        {ele.topSection?.subTitle && <h2 style={ele?.topSection?.subTitleStyles && ele?.topSection?.subTitleStyles}>{ele.topSection?.subTitle}</h2>}
+                                                    <div className="gap-style">
+                                                        <div className="left-data">
+                                                            {ele?.topSection?.title && <h1 style={ele?.topSection?.titleStyle && ele?.topSection?.titleStyle}><img src={ele?.topSection?.icon} /> {ele?.topSection?.title}</h1>}
+                                                        </div>
+                                                        <div className="right-data">
+                                                            {ele?.topSection?.details?.title && <span style={ele?.topSection?.details?.styles} className="tag-name">{ele?.topSection?.details?.title}</span>}
+                                                        </div>
                                                     </div>
-                                                    <div className="right-data">
-                                                        {ele?.topSection?.details?.title && <span style={ele?.topSection?.details?.styles} className="tag-name">{ele?.topSection?.details?.title}</span>}
+                                                    <div className="gap-style">
+                                                        <div className="left-data">
+                                                            {ele.topSection?.subTitle && <h2 style={ele?.topSection?.subTitleStyles && ele?.topSection?.subTitleStyles}>{ele.topSection?.subTitle}</h2>}
+                                                        </div>
                                                     </div>
+
                                                     {
                                                         ele.topSection?.items.map((val: any) => (
                                                             <div style={val?.borderStyles} className="gap-style">
@@ -456,7 +482,6 @@ export function card(props: any) {
                                                                 </div>
                                                                 <div className="right-data">
                                                                     {val?.value && <p style={val?.titleStyles && val?.valueStyles}>{val?.value}</p>}
-
                                                                 </div>
                                                             </div>
                                                         ))
@@ -464,11 +489,12 @@ export function card(props: any) {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="border-divider"></div>
+                                        {/* <div className="border-divider"></div> */}
                                         {/* Top Section End */}
                                         {/* Middle Section Start */}
-                                        <div className="middle-sec-card">
-                                            <div style={ele?.middleSection && ele?.middleSection?.borderStyles}>
+                                        {
+                                            ele?.middleSection &&
+                                            <div className="middle-sec-card" style={ele?.middleSection && ele?.middleSection?.borderStyles}>
                                                 <div className="card-acc-temp-sec">
                                                     <div className="card-acc-temp">
                                                         <div className="left-data">
@@ -479,11 +505,10 @@ export function card(props: any) {
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            {
-                                                ele?.middleSection?.items?.map((val: any) => (
-                                                    <div className="card-acc-temp-sec">
-                                                        <div className="card-acc-temp">
+
+                                                {
+                                                    ele?.middleSection?.items?.map((val: any) => (
+                                                        <div>
                                                             <div className="left-data">
                                                                 {val?.title && <h2>{val?.title} {val?.subTitle && <span style={val?.subTitleStyles && val.subTitleStyles}>{val?.subTitle}</span>}</h2>}
                                                             </div>
@@ -491,35 +516,39 @@ export function card(props: any) {
                                                                 <p style={val.valueStyles}>{val.value}</p>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                ))
-                                            }
-                                        </div>
+                                                    ))
+                                                }
+                                            </div>
+                                        }
                                         {/* Middle Section End */}
 
                                         {/* Bottom Section Start */}
-                                        <div className="bottom-sec-card">
-                                            {
-                                                ele.bottomSection?.items?.map((val: any) => (
-                                                    <div className="card-acc-temp-sec">
-                                                        <div className="card-acc-temp">
-                                                            <div className="left-data">
-                                                                {val?.title && <h2 style={val.titleStyles}> {val.title}</h2>}
-                                                            </div>
-                                                            <div className="right-data">
-                                                                {val?.value && <p style={val.valueStyles}>{val.value}</p>}
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                        {ele.bottomSection &&
+                                            <div className="bottom-sec-card">
+                                                <div className="card-acc-temp-sec">
+                                                    <div className="card-acc-temp">
+                                                        {
+                                                            ele.bottomSection?.items?.map((val: any) => (
+                                                                <div className="gap-style">
+                                                                    <div className="left-data">
+                                                                        {val?.title && <h2 style={val.titleStyles}> {val.title}</h2>}
+                                                                    </div>
+                                                                    <div className="right-data">
+                                                                        {val?.value && <p style={val.valueStyles}>{val.value}</p>}
+                                                                    </div>
+                                                                </div>
+                                                            ))
 
-                                                ))
-                                            }
-                                            {
-                                                ele.bottomSection?.buttons?.map((button: any) => (
-                                                    <button className="view-more-btn" onClick={() => handleButtonEvent(button)}>{button?.buttonTitle}</button>
-                                                ))
-                                            }
-                                        </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                                {
+                                                    ele.bottomSection?.buttons?.map((button: any) => (
+                                                        <button style={button?.buttonStyle} className="view-more-btn" onClick={() => handleButtonEvent(button)}>{button?.buttonTitle}</button>
+                                                    ))
+                                                }
+                                            </div>
+                                        }
                                     </div>
                                 ))
                             }
