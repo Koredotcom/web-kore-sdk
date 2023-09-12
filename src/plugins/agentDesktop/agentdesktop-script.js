@@ -154,6 +154,8 @@ class AgentDesktopPluginScript  {
     koreCoBrowse;
     rrweb;
     authResponse;
+    agentDefaultProfileIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDMiIHZpZXdCb3g9IjAgMCA0OCA0MyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIxNF8xMTA3NDgpIj4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0iI0VBRjFGQyIvPgo8cGF0aCBkPSJNMjIgMjIuMjVDMjUuNTg5OSAyMi4yNSAyOC41IDE5LjMzOTkgMjguNSAxNS43NUMyOC41IDEyLjE2MDEgMjUuNTg5OSA5LjI1IDIyIDkuMjVDMTguNDEwMiA5LjI1IDE1LjUgMTIuMTYwMSAxNS41IDE1Ljc1QzE1LjUgMTkuMzM5OSAxOC40MTAyIDIyLjI1IDIyIDIyLjI1WiIgZmlsbD0iIzJCNzVFNCIvPgo8cGF0aCBkPSJNNi44MzMzNyA0MS43NUM2LjgzMzM3IDMzLjM3MzcgMTMuNjIzNyAyNi41ODMzIDIyIDI2LjU4MzNDMzAuMzc2NCAyNi41ODMzIDM3LjE2NjcgMzMuMzczNyAzNy4xNjY3IDQxLjc1SDYuODMzMzdaIiBmaWxsPSIjMkI3NUU0Ii8+CjwvZz4KPHJlY3QgeD0iMS4yNSIgeT0iMC43NSIgd2lkdGg9IjQxLjUiIGhlaWdodD0iNDEuNSIgcng9IjIwLjc1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8yMTRfMTEwNzQ4Ij4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K';
+
     constructor(config,response) {
         this.config = {
             ...this.config,
@@ -382,7 +384,7 @@ class AgentDesktopPluginScript  {
                 `<div id="video_view" class="video-view- audio-view-">
             <div class="agent-profile-img">
                 <img style='height: 30px; width:30px; top:0px;left:0px;position: absolute; border-radius: 50%;'
-                    src="${_self.agentProfileIcon}" alt='Agent' onerror="this.style.display='none'"> 
+                    src="${_self.agentProfileIcon}" alt='Agent' onerror="this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDMiIHZpZXdCb3g9IjAgMCA0OCA0MyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIxNF8xMTA3NDgpIj4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0iI0VBRjFGQyIvPgo8cGF0aCBkPSJNMjIgMjIuMjVDMjUuNTg5OSAyMi4yNSAyOC41IDE5LjMzOTkgMjguNSAxNS43NUMyOC41IDEyLjE2MDEgMjUuNTg5OSA5LjI1IDIyIDkuMjVDMTguNDEwMiA5LjI1IDE1LjUgMTIuMTYwMSAxNS41IDE1Ljc1QzE1LjUgMTkuMzM5OSAxOC40MTAyIDIyLjI1IDIyIDIyLjI1WiIgZmlsbD0iIzJCNzVFNCIvPgo8cGF0aCBkPSJNNi44MzMzNyA0MS43NUM2LjgzMzM3IDMzLjM3MzcgMTMuNjIzNyAyNi41ODMzIDIyIDI2LjU4MzNDMzAuMzc2NCAyNi41ODMzIDM3LjE2NjcgMzMuMzczNyAzNy4xNjY3IDQxLjc1SDYuODMzMzdaIiBmaWxsPSIjMkI3NUU0Ii8+CjwvZz4KPHJlY3QgeD0iMS4yNSIgeT0iMC43NSIgd2lkdGg9IjQxLjUiIGhlaWdodD0iNDEuNSIgcng9IjIwLjc1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8yMTRfMTEwNzQ4Ij4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K'"> 
             </div>
             <div class="title">Connected ${videoAudoStr} Call...</div>
             <div class="audio-info">Disconnecting ${videoAudoStr} call doesn't end conversation</div>
@@ -510,7 +512,7 @@ class AgentDesktopPluginScript  {
                 <div id="video_view" class="video-view- audio-view-">
                     <div class="agent-profile-img">
                         <img style='height: 30px; width:30px; top:0px;left:0px;position: absolute; border-radius: 50%;'
-                            src="${_self.agentProfileIcon}" alt='Agent' onerror="this.style.display='none'"> 
+                            src="${_self.agentProfileIcon}" alt='Agent' onerror="this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDMiIHZpZXdCb3g9IjAgMCA0OCA0MyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIxNF8xMTA3NDgpIj4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0iI0VBRjFGQyIvPgo8cGF0aCBkPSJNMjIgMjIuMjVDMjUuNTg5OSAyMi4yNSAyOC41IDE5LjMzOTkgMjguNSAxNS43NUMyOC41IDEyLjE2MDEgMjUuNTg5OSA5LjI1IDIyIDkuMjVDMTguNDEwMiA5LjI1IDE1LjUgMTIuMTYwMSAxNS41IDE1Ljc1QzE1LjUgMTkuMzM5OSAxOC40MTAyIDIyLjI1IDIyIDIyLjI1WiIgZmlsbD0iIzJCNzVFNCIvPgo8cGF0aCBkPSJNNi44MzMzNyA0MS43NUM2LjgzMzM3IDMzLjM3MzcgMTMuNjIzNyAyNi41ODMzIDIyIDI2LjU4MzNDMzAuMzc2NCAyNi41ODMzIDM3LjE2NjcgMzMuMzczNyAzNy4xNjY3IDQxLjc1SDYuODMzMzdaIiBmaWxsPSIjMkI3NUU0Ii8+CjwvZz4KPHJlY3QgeD0iMS4yNSIgeT0iMC43NSIgd2lkdGg9IjQxLjUiIGhlaWdodD0iNDEuNSIgcng9IjIwLjc1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8yMTRfMTEwNzQ4Ij4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K'"> 
                     </div>
                     <div class="title">Connecting ${videoAudoStr} Call...</div>
                     <div class="audio-info">Disconnecting ${videoAudoStr} call doesn't end conversation</div>
@@ -542,7 +544,7 @@ class AgentDesktopPluginScript  {
             var incomingCall = `
         <div class="initial-video-audio-container">
             <div class="ad-img-block">
-                <img src="${_self.agentProfileIcon}" alt='Agent' onerror="this.style.display='none'"/>
+                <img src="${_self.agentProfileIcon}" alt='Agent' onerror="this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDMiIHZpZXdCb3g9IjAgMCA0OCA0MyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIxNF8xMTA3NDgpIj4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0iI0VBRjFGQyIvPgo8cGF0aCBkPSJNMjIgMjIuMjVDMjUuNTg5OSAyMi4yNSAyOC41IDE5LjMzOTkgMjguNSAxNS43NUMyOC41IDEyLjE2MDEgMjUuNTg5OSA5LjI1IDIyIDkuMjVDMTguNDEwMiA5LjI1IDE1LjUgMTIuMTYwMSAxNS41IDE1Ljc1QzE1LjUgMTkuMzM5OSAxOC40MTAyIDIyLjI1IDIyIDIyLjI1WiIgZmlsbD0iIzJCNzVFNCIvPgo8cGF0aCBkPSJNNi44MzMzNyA0MS43NUM2LjgzMzM3IDMzLjM3MzcgMTMuNjIzNyAyNi41ODMzIDIyIDI2LjU4MzNDMzAuMzc2NCAyNi41ODMzIDM3LjE2NjcgMzMuMzczNyAzNy4xNjY3IDQxLjc1SDYuODMzMzdaIiBmaWxsPSIjMkI3NUU0Ii8+CjwvZz4KPHJlY3QgeD0iMS4yNSIgeT0iMC43NSIgd2lkdGg9IjQxLjUiIGhlaWdodD0iNDEuNSIgcng9IjIwLjc1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8yMTRfMTEwNzQ4Ij4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K'"/>
             </div>
             <div class="content-desc">
                 <div class="name">${agentName}</div>
@@ -596,7 +598,7 @@ class AgentDesktopPluginScript  {
             var incomingCall = `
         <div class="initial-video-audio-container">
             <div class="ad-img-block">
-                <img src="${_self.agentProfileIcon}" alt='Agent' onerror="this.style.display='none'"/>
+                <img src="${_self.agentProfileIcon}" alt='Agent' onerror="this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDMiIHZpZXdCb3g9IjAgMCA0OCA0MyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIxNF8xMTA3NDgpIj4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0iI0VBRjFGQyIvPgo8cGF0aCBkPSJNMjIgMjIuMjVDMjUuNTg5OSAyMi4yNSAyOC41IDE5LjMzOTkgMjguNSAxNS43NUMyOC41IDEyLjE2MDEgMjUuNTg5OSA5LjI1IDIyIDkuMjVDMTguNDEwMiA5LjI1IDE1LjUgMTIuMTYwMSAxNS41IDE1Ljc1QzE1LjUgMTkuMzM5OSAxOC40MTAyIDIyLjI1IDIyIDIyLjI1WiIgZmlsbD0iIzJCNzVFNCIvPgo8cGF0aCBkPSJNNi44MzMzNyA0MS43NUM2LjgzMzM3IDMzLjM3MzcgMTMuNjIzNyAyNi41ODMzIDIyIDI2LjU4MzNDMzAuMzc2NCAyNi41ODMzIDM3LjE2NjcgMzMuMzczNyAzNy4xNjY3IDQxLjc1SDYuODMzMzdaIiBmaWxsPSIjMkI3NUU0Ii8+CjwvZz4KPHJlY3QgeD0iMS4yNSIgeT0iMC43NSIgd2lkdGg9IjQxLjUiIGhlaWdodD0iNDEuNSIgcng9IjIwLjc1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8yMTRfMTEwNzQ4Ij4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K'"/>
             </div>
             <div class="content-desc">
                 <div class="name">${agentName}</div>
@@ -689,15 +691,13 @@ class AgentDesktopPluginScript  {
             var cobrowseRequestHML = `
         <div class="initial-video-audio-container cobrowser-intial-width">
             <div class="ad-img-block">
-                <img src="${_self.agentProfileIcon}" alt='Agent' onerror="this.style.display='none'"/>
+                <img src="${_self.agentProfileIcon}" alt='Agent' onerror="this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDMiIHZpZXdCb3g9IjAgMCA0OCA0MyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIxNF8xMTA3NDgpIj4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0iI0VBRjFGQyIvPgo8cGF0aCBkPSJNMjIgMjIuMjVDMjUuNTg5OSAyMi4yNSAyOC41IDE5LjMzOTkgMjguNSAxNS43NUMyOC41IDEyLjE2MDEgMjUuNTg5OSA5LjI1IDIyIDkuMjVDMTguNDEwMiA5LjI1IDE1LjUgMTIuMTYwMSAxNS41IDE1Ljc1QzE1LjUgMTkuMzM5OSAxOC40MTAyIDIyLjI1IDIyIDIyLjI1WiIgZmlsbD0iIzJCNzVFNCIvPgo8cGF0aCBkPSJNNi44MzMzNyA0MS43NUM2LjgzMzM3IDMzLjM3MzcgMTMuNjIzNyAyNi41ODMzIDIyIDI2LjU4MzNDMzAuMzc2NCAyNi41ODMzIDM3LjE2NjcgMzMuMzczNyAzNy4xNjY3IDQxLjc1SDYuODMzMzdaIiBmaWxsPSIjMkI3NUU0Ii8+CjwvZz4KPHJlY3QgeD0iMS4yNSIgeT0iMC43NSIgd2lkdGg9IjQxLjUiIGhlaWdodD0iNDEuNSIgcng9IjIwLjc1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8yMTRfMTEwNzQ4Ij4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K'"/>
             </div>
             <div class="content-desc">
                 <div class="name">${agentName}</div>
                 <div class="type-text">is requesting a CoBrowse session with you</div>
             </div>
             <div class="controls-v-a">
-                <button id="rejectcall" class="decline">Decline</button>
-                <button id="acceptcall" class="accept">Accept</button>
                 <img id="rejectcall" src="${rejectIcon}"/>
                 <img id="acceptcall" src= "${acceptIcon}"/>
             </div>
@@ -2101,15 +2101,13 @@ class AgentDesktopPluginScript  {
                 var cobrowseRequestHML = `
                 <div class="initial-video-audio-container cobrowser-intial-width" do-not-mutate="true">
                     <div class="ad-img-block">
-                        <img src="${_self.agentProfileIcon}" alt='Agent' onerror="this.style.display='none'"/>
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDMiIHZpZXdCb3g9IjAgMCA0OCA0MyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIxNF8xMTA3NDgpIj4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0iI0VBRjFGQyIvPgo8cGF0aCBkPSJNMjIgMjIuMjVDMjUuNTg5OSAyMi4yNSAyOC41IDE5LjMzOTkgMjguNSAxNS43NUMyOC41IDEyLjE2MDEgMjUuNTg5OSA5LjI1IDIyIDkuMjVDMTguNDEwMiA5LjI1IDE1LjUgMTIuMTYwMSAxNS41IDE1Ljc1QzE1LjUgMTkuMzM5OSAxOC40MTAyIDIyLjI1IDIyIDIyLjI1WiIgZmlsbD0iIzJCNzVFNCIvPgo8cGF0aCBkPSJNNi44MzMzNyA0MS43NUM2LjgzMzM3IDMzLjM3MzcgMTMuNjIzNyAyNi41ODMzIDIyIDI2LjU4MzNDMzAuMzc2NCAyNi41ODMzIDM3LjE2NjcgMzMuMzczNyAzNy4xNjY3IDQxLjc1SDYuODMzMzdaIiBmaWxsPSIjMkI3NUU0Ii8+CjwvZz4KPHJlY3QgeD0iMS4yNSIgeT0iMC43NSIgd2lkdGg9IjQxLjUiIGhlaWdodD0iNDEuNSIgcng9IjIwLjc1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8yMTRfMTEwNzQ4Ij4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K" alt='Agent'/>
                     </div>
                     <div class="content-desc">
                         <div class="name">${agentName}</div>
                         <div class="type-text">${data.confirmMessage}</div>
                     </div>
                     <div class="controls-v-a">
-                        <button id="rejectcall" class="decline">Decline</button>
-                        <button id="acceptcall" class="accept">Accept</button>
                         <img id="rejectcall" src="${rejectIcon}"/>
                         <img id="acceptcall" src= "${acceptIcon}"/>
                     </div>
