@@ -39,6 +39,8 @@ import TemplateDatePicker from './templates/v3/datePicker/datePicker';
 import TemplatePieChart from './templates/v3/pieChart/pieChart';
 import TemplateBarChart from './templates/v3/barChart/barChart';
 import TemplateLineChart from './templates/v3/lineChart/lineChart';
+import TemplateLikeDislike from './templates/v3/likeDislike/likeDislike';
+import TemplateFeedback from './templates/v3/feedback/feedback';
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
 //(function($){
@@ -111,6 +113,8 @@ class TemplateManager {
 		this.installTemplate(new TemplatePieChart());
 		this.installTemplate(new TemplateBarChart());
 		this.installTemplate(new TemplateLineChart());
+		this.installTemplate(new TemplateLikeDislike());
+		this.installTemplate(new TemplateFeedback());
 	}
 
 	renderMessage  (msgData: any) {

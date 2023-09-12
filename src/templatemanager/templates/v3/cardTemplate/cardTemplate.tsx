@@ -216,6 +216,10 @@ export function card(props: any) {
                 </div>
             </Fragment>
         );
+    } else if(msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate') {
+        return (
+            <div>Card Regular template</div>
+        )
     }
 }
 
