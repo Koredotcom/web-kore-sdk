@@ -6,7 +6,7 @@ import { Message } from '../message/message';
 import { getHTML } from '../../../base/domManager';
 
 
-export function TableMore(props: any) {
+export function TableMore(props: any)  {
     const msgData: any = props.msgData.msgData;
     const hostInstance: any = props.hostInstance;
  
