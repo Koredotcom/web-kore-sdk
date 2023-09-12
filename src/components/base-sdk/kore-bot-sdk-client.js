@@ -314,7 +314,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   };
   
   KoreBot.prototype.sendAck = function(msg) {
-    if (this.options?.enableAck.delivery) {
+    if (this.options?.enableAck?.delivery) {
       if (msg.data && JSON.parse(msg.data)?.type == "bot_response") {
         var reply = {};
         reply["clientMessageId"] = JSON.parse(msg.data).timestamp;
