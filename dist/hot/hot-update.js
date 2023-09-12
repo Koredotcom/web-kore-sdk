@@ -1,44 +1,53 @@
 self["webpackHotUpdatekore_web_sdk"]("esm",{
 
-/***/ "./src/preact/templates/base/welcomeScreeContainer/welcomeScreeContainer.tsx":
-/*!***********************************************************************************!*\
-  !*** ./src/preact/templates/base/welcomeScreeContainer/welcomeScreeContainer.tsx ***!
-  \***********************************************************************************/
+/***/ "./src/plugins/textToSpeech/BaseTTS.ts":
+/*!*********************************************!*\
+  !*** ./src/plugins/textToSpeech/BaseTTS.ts ***!
+  \*********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _welcomeScreeContainer_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./welcomeScreeContainer.scss */ "./src/preact/templates/base/welcomeScreeContainer/welcomeScreeContainer.scss");
-/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-/* harmony import */ var preact_render_to_string__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! preact-render-to-string */ "./node_modules/preact-render-to-string/dist/index.module.js");
-
-
-
-var welcomeScreeContainer = /** @class */ (function () {
-    function welcomeScreeContainer(hostInstance) {
-        this.hostInstance = hostInstance;
+var BaseTTS = /** @class */ (function () {
+    function BaseTTS() {
     }
-    welcomeScreeContainer.prototype.FunctionalComponent = function (props) {
-        var handleClick = function () {
-            console.log('Button clicked!');
-        };
-        return ((0,preact__WEBPACK_IMPORTED_MODULE_1__.h)("div", { className: 'test' },
-            (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)("h1", null, "Welcome Screen"),
-            (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)("button", { onClick: handleClick }, "click"),
-            (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)("p", null, "some thing")));
-    };
-    welcomeScreeContainer.prototype.getHTML = function () {
+    BaseTTS.prototype.appendPickerHTMLtoChatWindowFooter = function (pickerHTML) {
         var me = this;
-        me.element = document.createElement("div");
-        me.element.className = "chat-container";
-        me.element = (0,preact_render_to_string__WEBPACK_IMPORTED_MODULE_2__["default"])(this.FunctionalComponent({ hostInsance: this.hostInstance }), me.element);
-        return me.element;
+        var chatWindowInstance = me.hostInstance;
+        var _chatContainer = chatWindowInstance.chatEle;
+        _chatContainer.find('.kore-chat-footer .footerContainer').append(pickerHTML);
     };
-    return welcomeScreeContainer;
+    BaseTTS.prototype.installTextToSpeechTemplate = function () {
+        var me = this;
+        var $ = me.hostInstance.$;
+        me.pickerHTML = $(me.getTextToSpeechTemplateString());
+        me.appendPickerHTMLtoChatWindowFooter(me.pickerHTML);
+        me.bindEvents();
+    };
+    BaseTTS.prototype.getTextToSpeechTemplateString = function () {
+        var textToSpeechTemplate = '<div class="sdkFooterIcon ttspeakerDiv ttsOff"> \
+        <button class="ttspeaker" title="Talk to speak"> \
+            <span class="ttsSpeakerEnable"></span> \
+            <span class="ttsSpeakerDisable"></span> \
+            <span style="display:none;"><audio id="ttspeaker" controls="" autoplay="" name="media"><source src="" type="audio/wav"></audio></span>\
+        </button> \
+    </div> ';
+        return textToSpeechTemplate;
+    };
+    BaseTTS.prototype.bindEvents = function () {
+        var me = this;
+        var $ = me.hostInstance.$;
+        $(me.pickerHTML).on('click', '.ttspeaker', function (event) {
+            if (me.OnSpeakerButtonClick) {
+                me.OnSpeakerButtonClick();
+            }
+        });
+    };
+    return BaseTTS;
 }());
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (welcomeScreeContainer);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BaseTTS);
 
 
 /***/ })
@@ -47,7 +56,7 @@ var welcomeScreeContainer = /** @class */ (function () {
 /******/ function(__webpack_require__) { // webpackRuntimeModules
 /******/ /* webpack/runtime/getFullHash */
 /******/ (() => {
-/******/ 	__webpack_require__.h = () => ("7426037f349010ba152d")
+/******/ 	__webpack_require__.h = () => ("3b64199de54790bcf14b")
 /******/ })();
 /******/ 
 /******/ }

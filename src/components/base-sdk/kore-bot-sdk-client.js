@@ -309,9 +309,26 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this.oldestId = this.oldestId || msg.messageId;
     }
   
+    this.sendAck(msg);
     this.emit(RTM_EVENTS.MESSAGE, msg);
   };
   
+  KoreBot.prototype.sendAck = function(msg) {
+    if (this.options?.enableAck?.delivery) {
+      if (msg.data && JSON.parse(msg.data)?.type == "bot_response") {
+        var reply = {};
+        reply["clientMessageId"] = JSON.parse(msg.data).timestamp;
+        reply["type"] = "ack",
+        reply["replyto"] = JSON.parse(msg.data).timestamp;
+        reply["status"] = "delivered";
+        reply["key"] = JSON.parse(msg.data)?.key;
+        this.RtmClient.sendMessage(reply, (err) => {
+          console.log('Error occurred in sending ack: ', err);
+        });
+      }
+    }
+  }
+
   /*
   close's the WS connection.
   */
@@ -521,7 +538,14 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this.RtmClient = new clients.KoreRtmClient({}, this.options);
       this.emit("rtm_client_initialized");
       this.emit(WEB_EVENTS.JWT_GRANT_SUCCESS,{jwtgrantsuccess : data});
-      this.RtmClient.start({
+    }
+  };
+
+  /*
+  start conversation after getting jwtgrant and theme
+  */
+  KoreBot.prototype.logInComplete = function() {
+    this.RtmClient.start({
         "botInfo": this.options.botInfo
       });
       this.RtmClient.on(RTM_EVENTS.MESSAGE, bind(this.onMessage, this));
@@ -533,8 +557,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
           _me.emit("rtm:"+RTM_CLIENT_EVENTS[rtmClientEvent],eventData);
         });
       });
-    }
-  };
+  }
   
   /*
   validates the JWT claims and issue's access token for valid user.

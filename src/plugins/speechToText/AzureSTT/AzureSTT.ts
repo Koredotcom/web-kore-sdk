@@ -42,10 +42,15 @@ class AzureSTT extends BaseSTT {
     }
     
     onRecordButtonClick() {
+      if (this.hostInstance.config.UI.version == 'v2') {
         $('.recordingMicrophone').css('display', 'block');
         $('.notRecordingMicrophone').css('display', 'none');
+      }
         this.speechToText().then(text=>{
+          this.hostInstance.chatEle.querySelector('.voice-speak-msg-info').style.display = 'block';
+          this.hostInstance.chatEle.querySelector('.voice-msg-bubble').textContent = text;
             console.log('translated text ', text);
+            if (this.hostInstance.config.UI.version == 'v2') {
             $('.chatInputBox').html($('.chatInputBox').html() + ' ' + text);
 
             setTimeout( () => {
@@ -54,6 +59,7 @@ class AzureSTT extends BaseSTT {
                 $('.recordingMicrophone').css('display', 'none');
                 $('.notRecordingMicrophone').css('display', 'block');
           }, 350);
+        }
 
         });
 

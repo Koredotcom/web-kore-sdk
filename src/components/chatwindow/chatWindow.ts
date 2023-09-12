@@ -8,11 +8,20 @@ import KRPerfectScrollbar from 'perfect-scrollbar';
 import './../../libs/perfectscroll/css/perfect-scrollbar.min.css';
 import './sass/chatWindow.scss';
 //import './../../libs/emojione.sprites.css';
-import chatConfig from './config/kore-config'
+import chatConfig from './config/kore-config';
 //import GreeetingsPlugin from '../../plugins/greetings/greetings-plugin'
 
-import welcomeScreeContainer from '../../preact/templates/base/welcomeScreeContainer/welcomeScreeContainer'
+// import welcomeScreeContainer from '../../preact/templates/base/welcomeScreeContainer/welcomeScreeContainer';
 
+import { getHTML } from '../../templatemanager/base/domManager';
+import { Message } from '../../templatemanager/templates/v3/message/message';
+import { DateSeparator } from '../../templatemanager/base/misc/dateSeparator/dateSeparator';
+import { HistoryLoader } from '../../templatemanager/base/misc/historyLoaderMsg/historyLoaderMsg';
+import { ChatContainer } from '../../templatemanager/base/chatContainer/chatContainer';
+import EventManager from '../../templatemanager/base/eventManager';
+import BrandingManager from '../../templatemanager/templates/v3/brandingManager';
+import { ActionsBottomSlider } from '../../templatemanager/base/actionsButtonSlider/actionsBottomSlider';
+import { ActionsModal } from '../../templatemanager/base/actionsModal/actionsModal';
 const bot = requireKr('/KoreBot.js').instance();
 
 declare const document:any;
@@ -156,6 +165,8 @@ init  (config:any) {
   me.bot=bot;
   me.vars={};
   me.helpers=KoreHelpers.helpers;
+  me.eventManager = new EventManager(me);
+  me.brandingManager = new BrandingManager();
   me.templateManager = new TemplateManager(me);
   me.messageTemplate=new MessageTemplate();
   me.messageTemplate.hostInstance=me;
@@ -205,6 +216,7 @@ initShow  (config:any) {
   me.config.botOptions.$=me.$;
   me.messagesQueue=[];
 
+  me.initial = true;
   me.config.chatTitle = 'Kore.ai Bot Chat';
   me.config.allowIframe = false;
 
@@ -244,7 +256,15 @@ initShow  (config:any) {
   me.config.botOptions.handleError = me.config.handleError;
   me.config.botOptions.googleMapsAPIKey = me.config.googleMapsAPIKey;
  
-  const chatWindowHtml = (<any> $(me.getChatTemplate())).tmpl(me.config);
+  me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
+
+  let chatWindowHtml:any;
+  if (me.config.UI.version == 'v2') {
+    chatWindowHtml = (<any> $(me.getChatTemplate())).tmpl(me.config)
+  } else {
+    chatWindowHtml = getHTML(ChatContainer, {}, me);
+  }
+
   me.chatEle = chatWindowHtml;
   me.updatei18nDirection();
 
@@ -262,8 +282,10 @@ initShow  (config:any) {
       }, 500);
     }
   } else {
-    chatWindowHtml.addClass('minimize');
-    chatWindowHtml.find('.minimized-title').html(`Talk to ${me.config.chatTitle}`);
+    if (me.config.UI.version == 'v2') {
+      chatWindowHtml.addClass('minimize');
+      chatWindowHtml.find('.minimized-title').html(`Talk to ${me.config.chatTitle}`);
+    }
     me.skipedInit = true;
     if (me.config.multiPageApp && me.config.multiPageApp.enable && maintainContext) {
       setTimeout(() => {
@@ -286,6 +308,7 @@ initShow  (config:any) {
   window.addEventListener('online', me.updateOnlineStatus.bind(me));
   window.addEventListener('offline', me.updateOnlineStatus.bind(me));
   me.attachEventListener();
+  $(me.chatEle).append(me.paginatedScrollMsgDiv);
   // me.show();
 };
 
@@ -392,9 +415,6 @@ openModal(template:any, showClose:any) {
   } else {
     $('.kore-chat-window').removeClass('modelOpen');
     chatBodyModal.find('.closeChatBodyModal').css('display', 'none');
-    setTimeout(() => {
-      chatBodyModal.find('#chatBodyModalContent').empty();
-    }, 1000);
     chatBodyModal.hide();
     $('.kore-chat-window').removeClass('modelOpen');
   }
@@ -519,11 +539,11 @@ isMobile () {
   }
 };
 onWindowResize (event:any) {
-  let me:any=this;
-    $('.chat-container').scrollTop($('.chat-container')[0].scrollHeight);
-    if (me.chatPSObj && me.chatPSObj.update) {
-      me.chatPSObj.update();
-    }
+  // let me:any=this;
+  //   $('.chat-container').scrollTop($('.chat-container')[0].scrollHeight);
+  //   if (me.chatPSObj && me.chatPSObj.update) {
+  //     me.chatPSObj.update();
+  //   }
 };
 setLocalStoreItem  (key:any, value:any) {
   const me:any = this;
@@ -593,25 +613,35 @@ seti18n (lang:any) {
 
   if (me.chatEle) {
     const chatEle = me.chatEle;
-    chatEle.find('.endChatContainerText').html(botMessages.endofchat);
+    if (me.config.UI.version == 'v2') {
+      chatEle.find('.endChatContainerText').html(botMessages.endofchat);
 
-    chatEle.find('.close-btn').attr('title', botMessages.closeText);
-    chatEle.find('.expand-btn').attr('title', botMessages.expandText);
-    chatEle.find('.minimize-btn').attr('title', botMessages.minimizeText);
-    chatEle.find('.reload-btn').attr('title', botMessages.reconnectText);
-    chatEle.find('.sdkAttachment.attachmentBtn').attr('title', botMessages.attachmentText);
+      chatEle.find('.close-btn').attr('title', botMessages.closeText);
+      chatEle.find('.expand-btn').attr('title', botMessages.expandText);
+      chatEle.find('.minimize-btn').attr('title', botMessages.minimizeText);
+      chatEle.find('.reload-btn').attr('title', botMessages.reconnectText);
+      chatEle.find('.sdkAttachment.attachmentBtn').attr('title', botMessages.attachmentText);
 
-    chatEle.find('.chatInputBox').attr('placeholder', botMessages.message);
-    chatEle.find('.sendButton').html(botMessages.sendText);
-    chatEle.find('.chatSendMsg').html(botMessages.entertosend);
+      chatEle.find('.chatInputBox').attr('placeholder', botMessages.message);
+      chatEle.find('.sendButton').html(botMessages.sendText);
+      chatEle.find('.chatSendMsg').html(botMessages.entertosend);
+    }
   }
 };
 updatei18nDirection () {
   const me:any = this;
   if (me.i18n.rtlLanguages.indexOf(me.i18n.selectedLanguage) > -1) {
-    me.chatEle.attr('dir', 'rtl');
+    if (me.config.UI.version == 'v2') {
+      me.chatEle.attr('dir', 'rtl');
+    } else {
+      me.chatEle.setAttribute('dir', 'rtl');
+    }
   } else {
-    me.chatEle.attr('dir', 'ltr');
+    if (me.config.UI.version == 'v2') {
+      me.chatEle.attr('dir', 'ltr');
+    } else {
+      me.chatEle.setAttribute('dir', 'ltr');
+    }
   }
 };
 destroy  () {
@@ -626,8 +656,10 @@ destroy  () {
     if (!me.config.minimizeMode) {
       me.chatEle.remove();
     } else {
-      me.chatEle.find('.kore-chat-header .header-title').html(me.config.botMessages.reconnecting);
-      me.chatEle.addClass('minimize');
+      if (me.config.UI.version == 'v2') {
+        me.chatEle.find('.kore-chat-header .header-title').html(me.config.botMessages.reconnecting);
+        me.chatEle.addClass('minimize');
+      }
       me.skipedInit = true;
     }
   }
@@ -637,7 +669,9 @@ destroy  () {
 
 resetWindow () {
   const me:any = this;
-  me.chatEle.find('.kore-chat-header .header-title').html(me.config.botMessages.reconnecting);
+  if (me.config.UI.version == 'v2') {
+    me.chatEle.find('.kore-chat-header .header-title').html(me.config.botMessages.reconnecting);
+  }
   // me.chatEle.find('.chat-container').html("");
   me.bot.close();
   me.config.botOptions.maintainContext = false;
@@ -650,7 +684,7 @@ sendMessageWithWithChatInput(chatInput:any){
   if (chatInput.text().trim() === '') {
     return;
   }
-  chatInput.html(KoreHelpers.prototypes.koreReplaceAll(chatInput.text(),"<br>", "\n"));
+  chatInput.text(KoreHelpers.prototypes.koreReplaceAll(chatInput.text(),"<br>", "\n"));
   me.sendMessageToBot(chatInput.text());
   chatInput.html('');
 }
@@ -840,7 +874,11 @@ bindEvents  () {
       if (me.config.multiPageApp && me.config.multiPageApp.enable) {
         me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
       }
-      me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
+      if (me.initial) {
+        me.bot.logInComplete(); // Start api call & ws
+        me.initial = false;
+      }
+      // me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
       me.skipedInit = false;
     }
     const evt = document.createEvent('HTMLEvents');
@@ -865,11 +903,14 @@ bindEvents  () {
   if (me?.config?.history?.paginatedScroll?.enable) {
     _chatContainer.find('.kore-chat-body .chat-container').on('scroll', (event: any) => {
       var div = $(event.currentTarget);
+      if(bot.previousHistoryLoading){
+        return false;
+      }
       if (div[0].scrollHeight - div.scrollTop() == div.height()) {
         bot.previousHistoryLoading = false;
       }
       else if (div.scrollTop() == 0) {
-        if (bot.paginatedScrollDataAvailable) {
+        if (bot.paginatedScrollDataAvailable && !bot.previousHistoryLoading) {
           bot.previousHistoryLoading = true;
           let message = me?.config?.history?.paginatedScroll?.loadingLabel || 'Loading chat history..';
           let paginatedHistoryLoader = $('<div class="paginted-history-loader">\
@@ -879,8 +920,10 @@ bindEvents  () {
                                                 </div>\
                                             </div>');
           if (!(_chatContainer.find('.paginted-history-loader').length)) {
-            $(paginatedHistoryLoader).insertBefore(_chatContainer.find('.chat-container li:first'));
+            $(paginatedHistoryLoader).insertBefore(_chatContainer.find('.chat-widget-body-wrapper li:first'));
           }
+          _chatContainer.find('.kore-chat-footer').addClass('disableFooter');
+          _chatContainer.find('.kore-chat-footer .chatInputBox').blur();
           bot.getHistory({ limit: (me?.config?.history?.paginatedScroll?.batchSize) });
         }
       }
@@ -888,6 +931,117 @@ bindEvents  () {
   }
   me.bindSDKEvents();
 };
+
+bindEventsV3() {
+  const me:any = this;
+  me.eventManager.addEventListener('.typing-text-area', 'keydown', (event: any) => {
+    if (event.keyCode == 13) {
+      if (event.target.value.trim() === '') {
+        return;
+      }
+      if (event.shiftKey) {
+        return;
+      }
+      event.preventDefault();
+      me.sendMessageToBot(event.target.value);
+      event.target.value = '';
+    } 
+  })
+
+  me.eventManager.addEventListener('.avatar-variations-footer', 'click', () => {
+    const avatarMinimizeStyle = me.config.branding.chat_bubble.minimise.theme == 'rectangle' ? 'avatar-minimize-text' : 'avatar-minimize';
+    if (!me.chatEle.querySelector('.avatar-bg').classList.contains('click-to-rotate-icon')) {
+      if (me.config.multiPageApp && me.config.multiPageApp.enable) {
+        me.setLocalStoreItem('kr-cw-state', 'open');
+      }
+
+      if (!me.config.builderFlag) {
+        if (me.initial) {
+          me.chatEle.querySelector('.content-text h1').textContent = me.config.botMessages.connecting;
+          setTimeout(() => {
+            me.bot.logInComplete(); // Start api call & ws
+          }, 1500);
+          setTimeout(() => {
+            me.chatEle.querySelector('.content-text h1').textContent = me.config.branding.header.title.name;
+          }, 2500);
+          me.initial = false;
+          if (me.config.branding.welcome_screen.show) {
+            me.chatEle.querySelector('.welcome-chat-section').classList.add('minimize');
+          } else {
+            me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+          }
+        } else {
+          me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+        }
+      } else {
+        if (me.initial) {
+          me.chatEle.querySelector('.content-text h1').textContent = me.config.botMessages.connecting;
+          setTimeout(() => {
+            me.bot.logInComplete(); // Start api call & ws
+          }, 1500);
+          setTimeout(() => {
+            me.chatEle.querySelector('.content-text h1').textContent = me.config.branding.header.title.name;
+          }, 2500);
+          me.initial = false;
+        }
+        if (me.config.branding.welcome_screen.show) {
+          me.chatEle.querySelector('.welcome-chat-section').classList.add('minimize');
+        } else {
+          me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+        }
+      }
+
+      me.chatEle.classList.remove('minimize-chat');
+      me.chatEle.querySelector('.avatar-variations-footer').classList.add(avatarMinimizeStyle);
+      me.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
+      me.minimized = false;
+      if (me.skipedInit) {
+        if (me.config.multiPageApp && me.config.multiPageApp.enable) {
+          me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
+        }
+        // me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
+        me.skipedInit = false;
+      }
+    } else {
+      me.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
+      me.chatEle.querySelector('.avatar-variations-footer').classList.remove(avatarMinimizeStyle)
+      if (me.config.branding.welcome_screen.show) {
+        me.chatEle.querySelector('.welcome-chat-section').classList.remove('minimize');
+      }
+      if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
+        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
+      } else {
+        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+      }
+      me.chatEle.classList.add('minimize-chat');
+    }
+  })
+
+  if (me?.config.history.paginatedScroll.enable) {
+    var chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
+
+    chatContainer.addEventListener('scroll', (event: any) => {
+      var div = event.currentTarget;
+      if (div.scrollHeight - div.scrollTop === div.clientHeight) {
+        bot.previousHistoryLoading = false;
+      } else if (div.scrollTop === 0) {
+        if (bot.paginatedScrollDataAvailable) {
+          me.chatEle.querySelectorAll('.typing-text-area')[0].classList.add('disableComposeBar');
+          bot.previousHistoryLoading = true;
+          var message = me?.config?.history?.paginatedScroll?.loadingLabel || 'Loading chat history..';
+          const historyLoader = getHTML(HistoryLoader, message, me);
+          var firstLi = me.chatEle.querySelectorAll('.chat-widget-body-wrapper > div')[0];
+          if (!(me.chatEle.querySelectorAll('.history-loading-wrapper').length)) {
+            me.chatEle.querySelector('.chat-widget-body-wrapper').insertBefore(historyLoader, firstLi);
+          }
+          bot.getHistory({ limit: (me?.config?.history?.paginatedScroll?.batchSize) });
+        }
+      }
+    });
+  }
+
+  me.bindSDKEvents();
+}
 
 getBotMetaData  () {
   const me:any = this;
@@ -943,7 +1097,7 @@ bindSDKEvents  () {
       return false;
     }
 
-    let msgData=me.parseSocketMessage(response.data);
+    let msgData=me.parseSocketMessage(JSON.stringify(tempData));
     if (msgData) {
       if (me.loadHistory && me.historyLoading) {
         me.messagesQueue.push(msgData)
@@ -974,7 +1128,11 @@ bindSDKEvents  () {
 
   me.bot.on('jwtgrantsuccess', (response: { jwtgrantsuccess: any; }) => {
     me.config.jwtGrantSuccessInformation = response.jwtgrantsuccess;
-    me.getBrandingInformation(response.jwtgrantsuccess);
+    if (me.config.enableThemes) {
+      me.getBrandingInformation(response.jwtgrantsuccess);
+    } else {
+      me.setBranding();
+    }
     me.emit(me.EVENTS.JWT_GRANT_SUCCESS, response.jwtgrantsuccess);
   });
 };
@@ -1038,13 +1196,19 @@ onBotReady  () {
   const _chatContainer = me.chatEle;
   // actual implementation starts here
   me.accessToken = me.config.botOptions.accessToken;
+  if (me.config.UI.version == 'v2') {
   const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
   _chatContainer.find('.kore-chat-header .header-title').html(me.config.chatTitle).attr('title', me.config.chatTitle);
   _chatContainer.find('.kore-chat-header .disabled').prop('disabled', false).removeClass('disabled');
+  }
   if (!me.loadHistory) {
     setTimeout(() => {
-      _chatContainer.find('.chatInputBox').focus();
-      _chatContainer.find('.disableFooter').removeClass('disableFooter');
+      if (me.config.UI.version == 'v2') {
+        _chatContainer.find('.chatInputBox').focus();
+        _chatContainer.find('.disableFooter').removeClass('disableFooter');
+      } else {
+        me.chatEle.querySelectorAll('.typing-text-area')[0].classList.remove('disableComposeBar');
+      }
     });
   }
   if(this.sendFailedMessage.messageId){
@@ -1078,10 +1242,16 @@ render  (chatWindowHtml: any) {
   const me:any = this;
   let chatWindowEvent = {stopFurtherExecution: false};
   me.emit(me.EVENTS.BEFORE_VIEW_INIT,{chatEle:chatWindowHtml,chatWindowEvent:chatWindowEvent});
-  me.bindEvents();
+  if (me.config.UI.version == 'v2') {
+    me.bindEvents();
+  }
 
-  let welcomeScreeContainerHTML=new welcomeScreeContainer(me).getHTML();
-  chatWindowHtml.append(welcomeScreeContainerHTML);
+  // let welcomeScreeContainerHTML=new welcomeScreeContainer(me).getHTML();
+  // chatWindowHtml.append(welcomeScreeContainerHTML);
+
+  // let ChatContainerHTML= renderMessage(ChatContainer, {});
+
+  // chatWindowHtml.append(ChatContainerHTML);
   
   $(me.config.container).append(chatWindowHtml);
   me.emit(me.EVENTS.VIEW_INIT,{chatEle:chatWindowHtml,chatWindowEvent:chatWindowEvent});
@@ -1089,15 +1259,26 @@ render  (chatWindowHtml: any) {
     return false;
   }
   if (me.config.container !== 'body') {
-    $(me.config.container).addClass('pos-relative');
-    $(me.chatEle).addClass('pos-absolute');
+    if (me.config.UI.version == 'v2') {
+      $(me.config.container).addClass('pos-relative');
+      $(me.chatEle).addClass('pos-absolute');
+    }
   }
   if (me.config.widgetSDKInstace) {
     me.chatEle.find('.kr-wiz-menu-chat').show();
   }
-  me.chatPSObj = new KRPerfectScrollbar(me.chatEle.find('.chat-container').get(0), {
-    suppressScrollX: true,
-  });
+  if (me.config.UI.version == 'v2') {
+    me.chatPSObj = new KRPerfectScrollbar(me.chatEle.find('.chat-container').get(0), {
+      suppressScrollX: true,
+    });
+  } // else {
+  //   me.chatPSObj = new KRPerfectScrollbar(document.querySelector('.chat-widget-body-wrapper'), {
+  //     suppressScrollX: true,
+  //   });
+  // }
+  if (me.config.UI.version == 'v3') {
+    me.bindEventsV3();
+  }
 };
 
 
@@ -1207,10 +1388,12 @@ if(messageText && messageText.trim() && messageText.trim().length){
 
 postSendMessageToBot () {
   let me:any=this;
-  const _bodyContainer = $(me.chatEle).find('.kore-chat-body');
-  const _footerContainer = $(me.chatEle).find('.kore-chat-footer');
-  _footerContainer.find('.sendButton').addClass('disabled');
-  _bodyContainer.css('bottom', _footerContainer.outerHeight());
+  if (me.config.UI.version == 'v2') {
+    const _bodyContainer = $(me.chatEle).find('.kore-chat-body');
+    const _footerContainer = $(me.chatEle).find('.kore-chat-footer');
+    _footerContainer.find('.sendButton').addClass('disabled');
+    _bodyContainer.css('bottom', _footerContainer.outerHeight());
+  }
 
   me.showTypingIndicator();
   if (me.typingIndicatorTimer) {
@@ -1295,15 +1478,29 @@ closeConversationSession  () {
 
 showTypingIndicator  () {
   let me:any=this;
-  $('.typingIndicatorContent').css('display', 'block');
+  if (me.config.UI.version == 'v2') {
+    $('.typingIndicatorContent').css('display', 'block');
+  } else {
+    me.chatEle.querySelector('.typing-indicator-wraper').style.display = 'flex';
+  }
 };
 hideTypingIndicator  () {
-  $('.typingIndicatorContent').css('display', 'none');
+  let me: any = this;
+  if (me.config.UI.version == 'v2') {
+    $('.typingIndicatorContent').css('display', 'none');
+  } else {
+    me.chatEle.querySelector('.typing-indicator-wraper').style.display = 'none';
+  }
 };
 renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | number | Date; type: string; icon: any; message: { component: { payload: { fromHistory: any; }; }; }[]; messageId: any; renderType: string; fromHistorySync: any; } | any) {
 
   let me:any = this;
-  let _chatContainer = $(me.chatEle).find('.chat-container');
+  let _chatContainer;
+  if (me.config.UI.version == 'v2') {
+    _chatContainer = $(me.chatEle).find('.chat-container');
+  } else {
+    _chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
+  }
   let messageHtml=me.generateMessageDOM(msgData);
   if(msgData?.createdOn){
     msgData.createdOnTimemillis = new Date(msgData.createdOn).valueOf();
@@ -1313,7 +1510,9 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
     this.sendFailedMessage.retryCount=0;
     me.waiting_for_message = false;
     setTimeout(() => {
-      $(me.chatEle).find('.typingIndicator').css('background-image', `url(${msgData.icon})`);
+      if (me.config.UI.version == 'v2') {
+        $(me.chatEle).find('.typingIndicator').css('background-image', `url(${msgData.icon})`);
+      }
     }, 500);
     setTimeout(() => {
       if (!me.waiting_for_message) {
@@ -1352,11 +1551,9 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
       }
     }
   }
-  _chatContainer.find('li').attr('aria-live', 'off');
-  _chatContainer.find('li .messageBubble').attr('aria-hidden','true');//for mac voiceover bug with aria-live
-  _chatContainer.find('li .extra-info').attr('aria-hidden','true');//for mac voiceover bug with aria-live
-  _chatContainer.find('.endChatContainer').attr('aria-live', 'off');
-  _chatContainer.find('.endChatContainer').attr('aria-hidden','true');//for mac voiceover bug with aria-live
+  if (me.config.UI.version == 'v2') {
+    me.prepareAriaTagsOnMessage(msgData,messageHtml);
+  }
 
   let chatWindowEvent = {stopFurtherExecution: false};
   me.emit(me.EVENTS.BEFORE_RENDER_MSG,{
@@ -1373,7 +1570,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   //   me.bottomSliderAction('show', messageHtml);
   // } else {
     // ignore message(msgId) if it is already in viewport
-  if ($(`.kore-chat-window .chat-container li#${msgData?.messageId}`).length < 1 || (msgData?.renderType === 'inline')) {
+  if (me.config.UI.version == 'v2' && $(`.kore-chat-window .chat-container li#${msgData?.messageId}`).length < 1 || (msgData?.renderType === 'inline')) {
     if (msgData?.type === 'bot_response' && msgData?.fromHistorySync) {
       const msgTimeStamps: number[] = [];
       const msgEles = $('.kore-chat-window .chat-container>li');
@@ -1405,32 +1602,91 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
 
     }
   }
+  let eleHeight, scrollHeight;
+  if (me.config.UI.version == 'v3' && me.chatEle.querySelectorAll('.chat-widget-body-wrapper > div#'+ msgData?.messageId).length < 1 || (msgData?.renderType === 'inline')) {
+    if (msgData?.type === 'bot_response' && msgData?.fromHistorySync) {
+    } else {
+      scrollHeight = me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight;
+      if (bot && !bot.previousHistoryLoading) {
+        const chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
+        if (me.historyLoading) {
+          messageHtml.classList.remove('if-animation-bubble');
+        }
+        chatContainer.appendChild(messageHtml);
+        eleHeight = messageHtml.offsetHeight;
+      } else {
+        messageHtml.classList.remove('if-animation-bubble');
+        me.chatEle.querySelector('.prev-message-list').appendChild(messageHtml);
+      }
+    }
+  }
   //}
-  me.handleImagePreview();
+  if (me.config.UI.version == 'v2') {
+    me.handleImagePreview();
+  }
 
   if (me.chatPSObj && me.chatPSObj.update) {
     me.chatPSObj.update();
   }
-  if(bot && !bot.previousHistoryLoading){
-    _chatContainer.animate({
-      scrollTop: _chatContainer.prop('scrollHeight'),
-    }, 100);
+  if (bot && !bot.previousHistoryLoading) {
+    if (me.config.UI.version == 'v2') {
+      _chatContainer.animate({
+        scrollTop: _chatContainer.prop('scrollHeight'),
+      }, 100);
+    } else {
+      scrollHeight = (me.historyLoading || eleHeight < 300) ? me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight : scrollHeight - me.chatEle.querySelector('.chat-widget-body-wrapper').clientHeight/2;
+      me.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
+        top: scrollHeight,
+        behavior: 'smooth'
+      });
+    }
   }
+
   me.emit(me.EVENTS.AFTER_RENDER_MSG,{
     messageHtml:messageHtml,
     msgData:msgData
   });
 };
+prepareAriaTagsOnMessage(msgData:any,messageHtml:any){
+  let isMacOS=navigator.userAgent.includes("Macintosh") || navigator.userAgent.includes("Mac OS X");
+  let HACK_TIMER=2000;//this timer is handle back to back messages for mac voice over,keep this value more than the duration between messages
+  let $messageHtml=$(messageHtml);
+  let me:any=this;
+  let _chatContainer = $(me.chatEle).find('.chat-container');
+  _chatContainer.find('li').attr('aria-live', 'off');
+  _chatContainer.find('li .extra-info').attr('aria-hidden','true');//for mac voiceover bug with aria-live
+  _chatContainer.find('.endChatContainer').attr('aria-live', 'off');
+  _chatContainer.find('.endChatContainer').attr('aria-hidden','true');//for mac voiceover bug with aria-live
 
-
+  if(isMacOS){
+    $messageHtml.attr("data-aria-timer-running","true");
+    $messageHtml.attr("aria-live","polite");
+    setTimeout(()=>{
+      $messageHtml.removeAttr("data-aria-timer-running");
+    },HACK_TIMER);
+    _chatContainer.find('li .messageBubble:not([data-aria-timer-running])').attr('aria-hidden','true');//for mac voiceover bug with aria-live
+  }
+}
 generateMessageDOM(msgData?:any){
   const me:any = this; 
-  let messageHtml = me.templateManager.renderMessage(msgData);
-  if(messageHtml==='_ignore_message_render_'){
-    return "";
-  }
-  if (!messageHtml && msgData && msgData.message && msgData.message[0]) {
-    messageHtml=me.messageTemplate.renderMessage(msgData);
+  let messageHtml;
+  if (me.config.UI.version == 'v2') {
+    messageHtml = me.templateManager.renderMessage(msgData);
+    if(messageHtml==='_ignore_message_render_'){
+      return "";
+    }
+    if (!messageHtml && msgData && msgData.message && msgData.message[0]) {
+      messageHtml=me.messageTemplate.renderMessage(msgData);
+    }    
+  } else {
+    messageHtml = me.templateManager.renderMessage(msgData);
+    if(messageHtml==='_ignore_message_render_'){
+      return "";
+    }
+    if (!messageHtml && msgData && msgData.message && msgData.message[0]) {
+      messageHtml = getHTML(Message, msgData, me); 
+      // messageHtml = me.templateManager.renderMessage(msgData);
+    } 
   }
   return messageHtml;
 }
@@ -1541,7 +1797,7 @@ getChatTemplate (tempType: string) {
                  <p class="headerTip warningTip">Something went wrong.Please try again later.</p> \
              </div> \
          </div> \
-         <div role="log" aria-live="polite" aria-atomic="true" class="kore-chat-body"> \
+         <div role="log" aria-live="polite" aria-atomic="true" aria-relevant="additions" class="kore-chat-body"> \
              <div class="errorMsgBlock"> \
              </div> \
              <ul class="chat-container"></ul> \
@@ -1588,11 +1844,14 @@ historyLoadingComplete () {
   setTimeout((me) => {
     $('.chatInputBox').focus();
     $('.disableFooter').removeClass('disableFooter');
+    if (me.config.UI.version == 'v3') {
+      me.chatEle.querySelectorAll('.typing-text-area')[0].classList.remove('disableComposeBar');
+    }
     me.historyLoading = false;
     if (me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) {
       me.getBotMetaData();
     }
-    if ($(this.paginatedScrollMsgDiv).find('.prev-message-list li.previousMessage').length > 0 && bot.previousHistoryLoading) {
+    if (me.config.UI.version == 'v2' && $(this.paginatedScrollMsgDiv).find('.prev-message-list li.previousMessage').length > 0 && bot.previousHistoryLoading) {
       let paginatedLi = $(this.paginatedScrollMsgDiv).find('.prev-message-list li.previousMessage');
       if (paginatedLi && paginatedLi.length) {
         for (var i = 0; i < paginatedLi.length; i++) {
@@ -1610,9 +1869,41 @@ historyLoadingComplete () {
         }
       }
       _chatContainer.find('.chat-container').scrollTop(_heightTobeScrolled);
+    } 
+    if($(this.paginatedScrollMsgDiv).find('.prev-message-list').children().length){
       $(this.paginatedScrollMsgDiv).find('.prev-message-list').empty();
-      _chatContainer.find('.paginted-history-loader').remove();
+    }
+
+    if (me.config.UI.version == 'v3' && me.chatEle.querySelectorAll('.prev-message-list > div').length > 0 && bot.previousHistoryLoading){
+      let prevMessageList = me.chatEle.querySelectorAll('.prev-message-list > div');
+      let chatContainerList = me.chatEle.querySelectorAll('.chat-widget-body-wrapper > div');
+
+      let heightToBeScrolled = 0;
+
+      for (var i = 0; i < prevMessageList.length; i++) {
+        var tempLi = prevMessageList[i];
+        me.chatEle.querySelector('.chat-widget-body-wrapper').insertBefore(tempLi, chatContainerList[0]);
+        heightToBeScrolled += tempLi.offsetHeight;
+     }
+
+    me.chatEle.querySelector('.chat-widget-body-wrapper').scrollTop = heightToBeScrolled;
+
+    let prevMessageListContainer = me.chatEle.querySelectorAll('.prev-message-list')[0];
+    prevMessageListContainer.innerHTML = '';
+
+    let historyLoader = me.chatEle.querySelector('.history-loading-wrapper');
+    if (historyLoader) {
+      historyLoader.remove();
+    }
+    bot.previousHistoryLoading = false;
+    }
+    if (me.config.UI.version == 'v2') {
+      if (_chatContainer.find('.paginted-history-loader')) {
+        _chatContainer.find('.paginted-history-loader').remove();
+      }
       bot.previousHistoryLoading = false;
+      $('.chatInputBox').focus();
+      $('.disableFooter').removeClass('disableFooter');
     }
   }, 0, me);
 };
@@ -1701,14 +1992,24 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
               $('.chat-container').show();
               $('.historyLoadingDiv').removeClass('showMsg');
               if(!bot.previousHistoryLoading){
+                if (me.config.UI.version == 'v2') {
                   $('.chat-container').animate({
                     scrollTop: $('.chat-container').prop('scrollHeight'),
                   }, 2500);
                   $('.chat-container').append("<div class='endChatContainer'><span class='endChatContainerText'>End of chat history</span></div>");
+                } else {
+                  const chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
+                  const dateSeparator = getHTML(DateSeparator, 'End of chat history', me);                  
+                  chatContainer.appendChild(dateSeparator);
+                  chatContainer.scrollTo({
+                    top: chatContainer.scrollHeight,
+                    behavior: 'smooth'
+                  });
+                }
               }
               if (messagesQueue.length) {
                 messagesQueue.forEach((msg: any, currIndex: number) => {
-                  me.renderMessage(msg);
+                      me.renderMessage(msg);
                   if (messagesQueue.length - 1 === currIndex) {
                     messagesQueue = [];
                     me.historyLoadingComplete();
@@ -1873,27 +2174,47 @@ showError (response:any) {
   }
 };
 
-bottomSliderAction  (action:any, appendElement:any) {
-  $(".kore-action-sheet").animate({ height: 'toggle' });
-  if (action == 'hide') {
-    $(".kore-action-sheet").innerHTML = '';
-    $(".kore-action-sheet").addClass("hide");
+bottomSliderAction(action: any, appendElement: any) {
+  const me: any = this;
+  if (me.config.UI.version == 'v2') {
+    $(".kore-action-sheet").animate({ height: 'toggle' });
+    if (action == 'hide') {
+      $(".kore-action-sheet").innerHTML = '';
+      $(".kore-action-sheet").addClass("hide");
+    } else {
+      $(".kore-action-sheet").removeClass("hide");
+      $(".kore-action-sheet .actionSheetContainer").empty();
+      setTimeout(function () {
+        $(".kore-action-sheet .actionSheetContainer").append(appendElement);
+      }, 200);
+     }
   } else {
-    $(".kore-action-sheet").removeClass("hide");
-    $(".kore-action-sheet .actionSheetContainer").empty();
-    setTimeout(function () {
-      $(".kore-action-sheet .actionSheetContainer").append(appendElement);
-    }, 200);
-
+    const actionSlider: any = getHTML(ActionsBottomSlider, '', me);
+    actionSlider.querySelector('.chat-actions-bottom-wraper > .actions-contnet-data').appendChild(appendElement);
+    me.chatEle.appendChild(actionSlider);
+    // me.chatEle.querySelector('.chat-actions-bottom-wraper').addEventListener('click',() => {
+    //   me.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
+    // })
   }
+}
+
+modalAction(appendElement: any) {
+  const me: any = this;
+  const modal: any = getHTML(ActionsModal, '', me);
+  // modal.querySelector('.modal-container').appendChild(appendElement);
+  me.chatEle.appendChild(modal);
 }
 
 unfreezeUIOnHistoryLoadingFail () {
   const me:any = this;
   setTimeout((me) => {
     if (me.loadHistory) {
-      $('.chatInputBox').focus();
-      $('.disableFooter').removeClass('disableFooter');
+      if (me.config.UI.version == 'v2') {
+        $('.chatInputBox').focus();
+        $('.disableFooter').removeClass('disableFooter');
+      } else {
+        me.chatEle.querySelectorAll('.typing-text-area')[0].classList.remove('disableComposeBar')
+      }
       me.historyLoading = false;
     }
   }, 20000, me);
@@ -1945,86 +2266,90 @@ getBrandingInformation(options:any){
   }
 
 }
-applySDKBranding  (response:any) {
-  const me:any = this;
-  if (response && response.activeTheme) {
-      for (var key in response) {
-      switch (key){
-          case 'generalAttributes':
-          if(key  && typeof response[key] === 'object') {
-              for (var property in response[key]){
-                me.applyVariableValue(property,response[key][property],key);
-              }
-          }
-          break;
-          case 'botMessage':
-          if(key  && typeof response[key] === 'object') {
-              for (var property in response[key]){
-                me.applyVariableValue(property,response[key][property],key);
-              }
-          }
-          break;
-          case 'userMessage':
-          if(key  && typeof response[key] === 'object') {
-              for (var property in response[key]){
-                me.applyVariableValue(property,response[key][property],key);
-              }
-          }
-          break;
-          case 'widgetHeader':
-          if(key  && typeof response[key] === 'object') {
-              for (var property in response[key]){
-                me.applyVariableValue(property,response[key][property],key);
-              }
-          }
-          break;
-          case 'widgetFooter':
-          if(key  && typeof response[key] === 'object') {
-              for (var property in response[key]){
-                me.applyVariableValue(property,response[key][property],key);
-              }
-          }
-          break;
-          case 'widgetBody':
-          if(key  && typeof response[key] === 'object') {
-              for (var property in response[key]){
-                  if(property === 'backgroundImage' && response[key] && response[key]['useBackgroundImage']){
-                      $(".kore-chat-body").css("background-image", "url(" + response[key]['backgroundImage'] + ")");
-                  } else {
-                    me.applyVariableValue(property,response[key][property],key);
-                  }
-              }
-          }
-          case 'buttons':
-              if(key  && typeof response[key] === 'object') {
-                  for (var property in response[key]){
-                    me.applyVariableValue(property,response[key][property],key);
-                  }
-              }
-          break;
-          case 'digitalViews':
-              var defaultTheme = 'defaultTheme-kore';
-              if(response && response[key] && response[key].panelTheme){
-                var digitalViewsThemeMapping:any = {
-                    'theme_one':"defaultTheme-kore",
-                    'theme_two':"darkTheme-kore",
-                    'theme_three':"defaultTheme-kora",
-                    'theme_four':"darkTheme-kora"
+  applySDKBranding(response: any) {
+    const me: any = this;
+    if (me.config.UI.version === 'v2') {
+      if (response && response.activeTheme) {
+        for (var key in response) {
+          switch (key) {
+            case 'generalAttributes':
+              if (key && typeof response[key] === 'object') {
+                for (var property in response[key]) {
+                  me.applyVariableValue(property, response[key][property], key);
                 }
-                if(digitalViewsThemeMapping[response[key].panelTheme]){
+              }
+              break;
+            case 'botMessage':
+              if (key && typeof response[key] === 'object') {
+                for (var property in response[key]) {
+                  me.applyVariableValue(property, response[key][property], key);
+                }
+              }
+              break;
+            case 'userMessage':
+              if (key && typeof response[key] === 'object') {
+                for (var property in response[key]) {
+                  me.applyVariableValue(property, response[key][property], key);
+                }
+              }
+              break;
+            case 'widgetHeader':
+              if (key && typeof response[key] === 'object') {
+                for (var property in response[key]) {
+                  me.applyVariableValue(property, response[key][property], key);
+                }
+              }
+              break;
+            case 'widgetFooter':
+              if (key && typeof response[key] === 'object') {
+                for (var property in response[key]) {
+                  me.applyVariableValue(property, response[key][property], key);
+                }
+              }
+              break;
+            case 'widgetBody':
+              if (key && typeof response[key] === 'object') {
+                for (var property in response[key]) {
+                  if (property === 'backgroundImage' && response[key] && response[key]['useBackgroundImage']) {
+                    $(".kore-chat-body").css("background-image", "url(" + response[key]['backgroundImage'] + ")");
+                  } else {
+                    me.applyVariableValue(property, response[key][property], key);
+                  }
+                }
+              }
+            case 'buttons':
+              if (key && typeof response[key] === 'object') {
+                for (var property in response[key]) {
+                  me.applyVariableValue(property, response[key][property], key);
+                }
+              }
+              break;
+            case 'digitalViews':
+              var defaultTheme = 'defaultTheme-kore';
+              if (response && response[key] && response[key].panelTheme) {
+                var digitalViewsThemeMapping: any = {
+                  'theme_one': "defaultTheme-kore",
+                  'theme_two': "darkTheme-kore",
+                  'theme_three': "defaultTheme-kora",
+                  'theme_four': "darkTheme-kora"
+                }
+                if (digitalViewsThemeMapping[response[key].panelTheme]) {
                   defaultTheme = digitalViewsThemeMapping[response[key].panelTheme];
                   $('.kr-wiz-menu-chat').addClass(defaultTheme);
                   $('.kr-wiz-menu-chat').removeClass('defaultTheme-kore');
-                  
+
                 }
               }
-          default:
-          break;
+            default:
+              break;
+          }
+        }
+        $(".kore-chat-window").addClass('customBranding-theme');
       }
-     }
-      $(".kore-chat-window").addClass('customBranding-theme');
-  }
-};
+    } else {
+      me.setBranding(response);
+    }
+  };
 applyVariableValue (key:any,value:any,type:any){
   try{
       var cssPrefix = "--sdk-chat-custom-";
@@ -2044,6 +2369,83 @@ applyVariableValue (key:any,value:any,type:any){
   }
   
 }
+
+  setBranding(brandingData?: any, type?: any) {
+    const me: any = this;
+    me.config.branding = brandingData ? brandingData : me.config.branding;
+    me.brandingManager.applyBranding(me.config.branding);
+    me.emit("onBrandingUpdate", {
+      brandingData: brandingData ? brandingData : me.config.branding
+    });
+
+    if (type == 'welcome' && me.config.builderFlag) {
+      if (me.config.branding.welcome_screen.show) {
+        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+        setTimeout(() => {
+          me.chatEle.querySelector('.welcome-chat-section')?.classList.add('minimize');
+        }, 300);
+      } else {
+        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+      }
+    }
+  }
+
+  switchView(type: any) {
+    const me: any = this;
+    const avatarMinimizeStyle = me.config.branding.chat_bubble.minimise.theme == 'rectangle' ? 'avatar-minimize-text' : 'avatar-minimize';
+    if (me.initial) {
+      me.chatEle.querySelector('.content-text h1').textContent = me.config.botMessages.connecting;
+      setTimeout(() => {
+        me.bot.logInComplete(); // Start api call & ws
+      }, 1500);
+      setTimeout(() => {
+        me.chatEle.querySelector('.content-text h1').textContent = me.config.branding.header.title.name;
+      }, 2500);
+      me.initial = false;
+    }
+    if (type == 'avatar') {
+      me.chatEle.classList.add('minimize-chat');
+      me.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
+      me.chatEle.querySelector('.avatar-variations-footer').classList.remove(avatarMinimizeStyle);
+      if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
+        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
+      } else {
+        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+      }
+      me.chatEle.querySelector('.welcome-chat-section')?.classList.remove('minimize');
+    }
+    else if (type == 'welcome') {
+      me.chatEle.classList.remove('minimize-chat');
+      if (me.config.branding.welcome_screen.show) {
+        me.chatEle.querySelector('.welcome-chat-section')?.classList.add('minimize');
+        if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
+          me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
+        } else {
+          me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+        }
+      } else {
+        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+      }
+      me.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
+      me.chatEle.querySelector('.avatar-variations-footer').classList.add(avatarMinimizeStyle);
+    } else if (type == 'chat') {
+      me.chatEle.classList.remove('minimize-chat');
+      me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+      me.chatEle.querySelector('.welcome-chat-section')?.classList.remove('minimize');
+      me.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
+      me.chatEle.querySelector('.avatar-variations-footer').classList.add(avatarMinimizeStyle);
+    } else {
+      me.chatEle.classList.remove('minimize-chat');
+      if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
+        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
+      } else {
+        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+      }
+      me.chatEle.querySelector('.welcome-chat-section')?.classList.remove('minimize');
+      me.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
+      me.chatEle.querySelector('.avatar-variations-footer').classList.remove(avatarMinimizeStyle);
+    }
+  }
 
 /**
  * [#]{@link chatWindow#sendMessage} Send message to bot including rendering 

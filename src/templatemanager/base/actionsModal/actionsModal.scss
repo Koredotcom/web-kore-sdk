@@ -1,0 +1,97 @@
+
+
+.full-action-modal-wrapper{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+    &.if-modal-slide{
+        border-radius: 4px;
+        background: var(--kore-grey-kore-white, #FFF);
+        box-shadow: 0px 0px 82px 0px rgba(0, 0, 0, 0.24);
+        top: 40px;
+        left: 20px;
+        width: calc(100% - 445px);
+        height: calc(100% - 80px);
+        -webkit-animation-name: slideInRight;
+        animation-name: slideInRight;
+        -webkit-animation-duration: 1s;
+        animation-duration: 1s;
+        -webkit-animation-fill-mode: both;
+        animation-fill-mode: both;
+        .modal_backdrop{
+            display: none;
+        }
+        .modal-dialog-action{
+            width: 100%;
+            height: 100%;
+            display: block;
+            .modal-content-action{
+                animation: none;
+                height: 100%;
+                max-height: 100%;
+            }
+        }
+    }
+    .modal_backdrop{
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.60);
+        position: absolute;
+        z-index: -1;
+    }
+    .modal-dialog-action{
+        width: 600px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        .modal-content-action{
+            border-radius: 4px;
+            background: #FFF;
+            width: 100%;
+            max-height: 80%;
+            display: flex;
+            flex-direction: column;
+            -webkit-animation-name: zoomIn;
+            animation-name: zoomIn;
+            -webkit-animation-duration: 1s;
+            animation-duration: 1s;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+            .modal_header{
+                display: flex;
+                align-items: center;
+                padding: 16px;
+                flex-shrink: 0;
+                h1{
+                    width: 100%;
+                    color: var(--kora-grey-grey-dark-1, #202124);
+                    font-size: 14px;
+                    font-weight: 700;
+                    line-height: normal;
+                }
+                .close_modal{
+                    width: 16px;
+                    height: 16px;
+                    border: 0;
+                    padding: 0;
+                    background: transparent;
+                    font-size: 16px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: #202124;
+                }
+            }
+            .modal_body_actions{
+                flex: 1 1 auto;
+                overflow: auto;
+            }
+        }
+    }
+}

@@ -8,7 +8,7 @@
 ###### Message Payload
 
 ```javascript
-{
+var message = {
 	"type": "template",
 	"payload": {
 		"template_type": "cardTemplate",
@@ -139,6 +139,6 @@
 		]
 	}
 }
-
+print(JSON.stingify(message));
 
 

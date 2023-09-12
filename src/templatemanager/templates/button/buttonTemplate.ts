@@ -56,6 +56,14 @@ class ButtonTemplate {
                     a_link = `http:////${a_link}`;
                 }
                 chatWindowInstance.openExternalLink(a_link);
+            }else {
+                if ($(selectedTarget).find('a')) {
+                    let a_link = $(selectedTarget).find('a').attr('href');
+                    if (a_link.indexOf('http:') < 0 && a_link.indexOf('https:') < 0) {
+                        a_link = `http:////${a_link}`;
+                    }
+                    chatWindowInstance.openExternalLink(a_link);
+                }
             }
             if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[1] === 'likeDiv') {
                 $('.likeImg').addClass('hide');
@@ -103,7 +111,7 @@ class ButtonTemplate {
         var buttonTemplate = '<script id="chat_button_tmpl" type="text/x-jqury-tmpl"> \
             {{if msgData.message}} \
                 <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
-                    class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+                    class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
                     <div class="buttonTmplContent"> \
                         {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                         {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \

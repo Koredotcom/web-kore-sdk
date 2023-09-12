@@ -9,7 +9,7 @@
 .kore-chat-window .quickReplyTemplate .quickReplyHeading{
     text-align: left;
     color: #2A2A2A;
-    background: #F0F0F0;
+    background-color: var(--sdk-chat-window-bot-bubble-bg);
     margin: 0;
     padding: 10px;
     border-top-left-radius: 10px;
