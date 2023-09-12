@@ -453,7 +453,7 @@
         .accordion_heading {
             width: 100%;
             text-align: left;
-            display: flex;
+            display: block;
             align-items: center;
             gap: 10px;
             min-height: 50px;
@@ -501,6 +501,13 @@
                 display: none;
                 animation: none !important;
             }
+        }
+        .left-data{
+            float: left;
+            width:70%;
+        }
+        .right-data{
+            float: right;
         }
     }
 }
@@ -755,7 +762,7 @@ select {
     width: 8px;
     height: 8px;
     position: absolute;
-    top: 9px;
+    top: 5px;
     border-radius: 50px;
     background: #12B76A;
 }
