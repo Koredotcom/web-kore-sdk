@@ -1,5 +1,5 @@
 import BaseChatTemplate from '../baseChatTemplate';
-import './formTemplate.scss';
+import './feedback.scss';
 import { h, Fragment } from 'preact';
 import { useState } from 'preact/hooks';
 import { Message } from '../message/message';
