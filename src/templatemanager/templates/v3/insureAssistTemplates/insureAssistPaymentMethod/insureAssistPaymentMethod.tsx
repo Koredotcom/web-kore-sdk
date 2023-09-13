@@ -27,7 +27,7 @@ export function Payment(props: any) {
         return (
             <div className="list-style">
                 <div className="card-acc-temp">
-                    <div className="card-style card-style-header">
+                    <div className="card-style card-style-header" style={msgData?.message?.[0]?.component?.payload?.titleStyle}>
                         {msgData?.message?.[0]?.component?.payload.title && <h2>{msgData?.message?.[0]?.component?.payload.title}</h2>}
                     </div>
                     {/* payement methods start*/}

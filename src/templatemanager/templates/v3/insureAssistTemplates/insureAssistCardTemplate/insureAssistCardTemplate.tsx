@@ -172,7 +172,7 @@ export function cardSliderExtension(props: any) {
                                                                     </div>
                                                                     <div className="right-data">
                                                                         {val?.value && <p>{val?.value}</p>}
-                                                                        test {val?.subTitleValue && <p style={val?.valueStyle && val?.valueStyle} className="mt-5">{val?.subTitleValue}</p>}
+                                                                        {val?.subTitleValue && <p style={val?.valueStyle && val?.valueStyle} className="mt-5">{val?.subTitleValue}</p>}
                                                                         {/* {{moreInfoValue} && <p>{moreInfoValue}</p> */}
 
                                                                         <div className="tab-header tab tab-right">
