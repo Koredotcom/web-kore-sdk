@@ -2040,7 +2040,7 @@ class AgentDesktopPluginScript  {
                     }
                 } else if (obj.type === 'fullsnapshot') {
                     console.log("taking fullsnapshot");
-                    me.ACKrrweb.record.takeFullSnapshot(true);
+                    me.rrweb.record.takeFullSnapshot(true);
                 } else if (obj.type === 'set_request_control') {
                     me.requestAccepted = obj.data;
                     if (me.releasebtnimg) {
@@ -2278,7 +2278,7 @@ class AgentDesktopPluginScript  {
                                 });
                                 elements[0].dispatchEvent(e);
                                 const ENTER_KEY_MSG = { "type": "enterkey_dispatched" };
-                                this.sendDCMessage(JSON.stringify(ENTER_KEY_MSG));
+                                me.sendDCMessage(JSON.stringify(ENTER_KEY_MSG));
                             }, 100);
                         }
                     }
