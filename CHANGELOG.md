@@ -1,3 +1,12 @@
+### 10.1.10
+
+- SDK Release Sept 09, 2023
+* Features
+  * support for .log fileType for file uploads
+* Bug fixes
+  * whitelisted Notes|notes protocol
+  * scroll bar jumping issue fix
+  * Agent Desktop Voice co-browse issue fix
 ### 10.1.9
 
 - SDK Release Aug 19, 2023
