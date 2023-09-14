@@ -26,7 +26,16 @@ export function Form(props: any) {
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'form_template') {
         return (
-            <div>Form Temaplte</div>
+            <div className="form-template-wrapper-container">
+                <div className="form-temp-content">
+                    <h1>Fill the form</h1>
+                    <div className="form-input-wrapper">
+                        <label>Enter Password</label>
+                        <input type="text" placeholder="Enter password"></input>
+                    </div>
+                    <button className="kr-button-primary lg">Submit</button>
+                </div>
+            </div>
         );
     }
 }

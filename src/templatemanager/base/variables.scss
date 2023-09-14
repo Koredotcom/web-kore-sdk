@@ -20,17 +20,17 @@
         --welcome-header-bg: var(--v3-sdk-chat-branding--welcome_screen-background-color);
         --welcome-header-text-color: var(--v3-sdk-chat-branding--welcome_screen-top_fonts-color);
         --welcome-start-conv-bg:#FFFFFF;
-        --welcome-start-conv-border:#E4E5E7;
+        --welcome-start-conv-border:var(--gloabl-border-color);
         --welcome-start-conv-bot-bg:#E3E8EF;
-        --welcome-start-conv-bot-title:#202124;
-        --welcome-start-conv-bot-desc:#4B5565;
+        --welcome-start-conv-bot-title:var(--gloabl-text-color);
+        --welcome-start-conv-bot-desc:var(--gloabl-text-desc-color);
         --welcome-start-conv-quick-btn-bg:#FFFFFF;
         --welcome-start-conv-quick-btn-border:#E5E5E5;
         --welcome-start-conv-quick-btn-text:#404040;
         --welcome-start-conv-search-bg:#FFFFFF;
         --welcome-start-conv-search-border:#BDC1C6;
         --welcome-start-conv-button-bg: var(--v3-sdk-chat-branding--welcome_screen-starter_box-start_conv_button_color);
-        --welcome-start-conv-button-border:#4B4EDE;
+        --welcome-start-conv-button-border:var(--global-theme-color);
         --welcome-start-conv-button-color:var(--v3-sdk-chat-branding--welcome_screen-starter_box-start_conv_text_color);
         --welcome-footer-bg: var(--v3-sdk-chat-branding--welcome_screen-bottom_background-color);   //  #F8FAFC
         --welecome-footer-text-color:#9AA4B2;
@@ -61,13 +61,13 @@
         --chat-widget-compose-bar-text-area-color:#202939;
         --chat-widget-compose-bar-text-area-placeholder-color:#202939;
         --chat-widget-compose-bar-voice-speak-info-text:#697586;
-        --chat-widget-compose-bar-voice-icon-bg:#4B4EDE;
+        --chat-widget-compose-bar-voice-icon-bg:var(--global-theme-color);
         --chat-widget-compose-bar-voice-icon-border:#FFFFFF;
         --chat-widget-compose-bar-voice-icon-color:#FFFFFF;
         --chat-widget-compose-bar-voice-speak-msg-bg:#FFFFFF;
         --chat-widget-compose-bar-voice-speak-msg-selected-bg:rgba(75, 78, 222, 0.05);
-        --chat-widget-compose-bar-voice-speak-msg-color:#4B4EDE;
-        --chat-widget-compose-bar-voice-speak-msg-border:#4B4EDE;
+        --chat-widget-compose-bar-voice-speak-msg-color:var(--global-theme-color);
+        --chat-widget-compose-bar-voice-speak-msg-border:var(--global-theme-color);
     // End
 
     // Bot Bubble Messages Variables
@@ -111,28 +111,35 @@
         --button-temp-bg-hover:rgba(0, 0, 0, 0.05);
         --button-temp-bg-variation-1:rgba(75, 78, 222, 0.07);
         --button-temp-variation-1-border:transparent;
-        --button-temp-variation-1-color:#4B4EDE;
+        --button-temp-variation-1-color:var(--global-theme-color);
         --button-temp-bg-variation-1-hover:linear-gradient(0deg, rgba(75, 78, 222, 0.07) 0%, rgba(75, 78, 222, 0.07) 100%), rgba(75, 78, 222, 0.07);
-        --button-temp-bg-variation-2:#4B4EDE;
-        --button-temp-variation-2-border:#4B4EDE;
+        --button-temp-bg-variation-2:var(--global-theme-color);
+        --button-temp-variation-2-border:var(--global-theme-color);
         --button-temp-variation-2-color:#FFFFFF;
-        --button-temp-bg-variation-2-hover:linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), #4B4EDE;
+        --button-temp-bg-variation-2-hover:linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), var(--global-theme-color);
         // End
 
         // Card Template
         --card-main-wrapper-bg:#F8F9FA;
-        --card-main-wrapper-border:#E4E5E7;
-        --card-heading-title:#202124;
-        --card-temp-border:#E4E5E7;
+        --card-main-wrapper-border:var(--gloabl-border-color);
+        --card-heading-title:var(--gloabl-text-color);
+        --card-temp-border:var(--gloabl-border-color);
         --card-temp-bg:#FFFFFF;
-        --card-temp-color:#202124;
+        --card-temp-color:var(--gloabl-text-color);
         --card-temp-h1-color:#000;
         --card-temp-p-color:#697586;   
         --card-temp-view-more-bg:#FFFFFF;
-        --card-temp-view-more-color:#4B4EDE;
-        --card-temp-view-more-border:#4B4EDE;
+        --card-temp-view-more-color:var(--global-theme-color);
+        --card-temp-view-more-border:var(--global-theme-color);
         --card-temp-border-divided-bg:#EBECED;
         // End     
+
+        // Form Template
+        --form-temp-bg:#F8FAFC;
+        --form-temp--text-color:var(--gloabl-text-color);
+        --form-temp-input-bg:#FFFFFF;
+        --form-temp-input-box-shadow:0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+        --form-temp-input-placeholder:#A3A3A3;
 }   
 
 .dark-theme{
@@ -165,7 +172,7 @@
         --welcome-start-conv-search-bg:#FFFFFF;
         --welcome-start-conv-search-border:#BDC1C6;
         --welcome-start-conv-button-bg: var(--v3-sdk-chat-branding--welcome_screen-starter_box-start_conv_button_color);
-        --welcome-start-conv-button-border:#4B4EDE;
+        --welcome-start-conv-button-border:var(--global-theme-color);
         --welcome-start-conv-button-color:var(--v3-sdk-chat-branding--welcome_screen-starter_box-start_conv_text_color);
         --welcome-footer-bg: var(--v3-sdk-chat-branding--welcome_screen-bottom_background-color);   //  #202939
         --welecome-footer-text-color:#FFFFFF;
@@ -196,13 +203,13 @@
         --chat-widget-compose-bar-text-area-color:#FFFFFF;
         --chat-widget-compose-bar-text-area-placeholder-color:#697586;
         --chat-widget-compose-bar-voice-speak-info-text:#697586;
-        --chat-widget-compose-bar-voice-icon-bg:#4B4EDE;
+        --chat-widget-compose-bar-voice-icon-bg:var(--global-theme-color);
         --chat-widget-compose-bar-voice-icon-border:#FFFFFF;
         --chat-widget-compose-bar-voice-icon-color:#FFFFFF;
         --chat-widget-compose-bar-voice-speak-msg-bg:#FFFFFF;
         --chat-widget-compose-bar-voice-speak-msg-selected-bg:rgba(75, 78, 222, 0.05);
-        --chat-widget-compose-bar-voice-speak-msg-color:#4B4EDE;
-        --chat-widget-compose-bar-voice-speak-msg-border:#4B4EDE;
+        --chat-widget-compose-bar-voice-speak-msg-color:var(--global-theme-color);
+        --chat-widget-compose-bar-voice-speak-msg-border:var(--global-theme-color);
     // End
 
     // Bot Bubble Messages Variables
@@ -246,26 +253,26 @@
         --button-temp-bg-hover:rgba(0, 0, 0, 0.05);
         --button-temp-bg-variation-1:rgba(75, 78, 222, 0.07);
         --button-temp-variation-1-border:transparent;
-        --button-temp-variation-1-color:#4B4EDE;
+        --button-temp-variation-1-color:var(--global-theme-color);
         --button-temp-bg-variation-1-hover:linear-gradient(0deg, rgba(75, 78, 222, 0.07) 0%, rgba(75, 78, 222, 0.07) 100%), rgba(75, 78, 222, 0.07);
-        --button-temp-bg-variation-2:#4B4EDE;
-        --button-temp-variation-2-border:#4B4EDE;
+        --button-temp-bg-variation-2:var(--global-theme-color);
+        --button-temp-variation-2-border:var(--global-theme-color);
         --button-temp-variation-2-color:#FFFFFF;
-        --button-temp-bg-variation-2-hover:linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), #4B4EDE;
+        --button-temp-bg-variation-2-hover:linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), var(--global-theme-color);
         // End
 
         // Card Template
         --card-main-wrapper-bg:#F8F9FA;
-        --card-main-wrapper-border:#E4E5E7;
-        --card-heading-title:#202124;
-        --card-temp-border:#E4E5E7;
+        --card-main-wrapper-border:var(--gloabl-border-color);
+        --card-heading-title:var(--gloabl-text-color);
+        --card-temp-border:var(--gloabl-border-color);
         --card-temp-bg:#FFFFFF;
-        --card-temp-color:#202124;
+        --card-temp-color:var(--gloabl-text-color);
         --card-temp-h1-color:#000;
         --card-temp-p-color:#697586;   
         --card-temp-view-more-bg:#FFFFFF;
-        --card-temp-view-more-color:#4B4EDE;
-        --card-temp-view-more-border:#4B4EDE;
+        --card-temp-view-more-color:var(--global-theme-color);
+        --card-temp-view-more-border:var(--global-theme-color);
         --card-temp-border-divided-bg:#EBECED;
         // End
 }
@@ -287,10 +294,10 @@
         --welcome-header-h1-text-color:#fff9;
         --welcome-header-text-color:#FFFFFF;
         --welcome-start-conv-bg:#FFFFFF;
-        --welcome-start-conv-border:#E4E5E7;
+        --welcome-start-conv-border:var(--gloabl-border-color);
         --welcome-start-conv-bot-bg:#E3E8EF;
-        --welcome-start-conv-bot-title:#202124;
-        --welcome-start-conv-bot-desc:#4B5565;
+        --welcome-start-conv-bot-title:var(--gloabl-text-color);
+        --welcome-start-conv-bot-desc:var(--gloabl-text-desc-color);
         --welcome-start-conv-quick-btn-bg:#FFFFFF;
         --welcome-start-conv-quick-btn-border:#E5E5E5;
         --welcome-start-conv-quick-btn-text:#404040;
@@ -306,7 +313,7 @@
     // Chat Widget Header Variables;
         --chat-widget-header-bg:#ffffff;
         --chat-widget-header-border:#EEF2F6;
-        --chat-widget-header-bg-large:linear-gradient(180deg, #4B4EDE 0%, #4B4EDE 40.67%, rgba(255, 255, 255, 0) 80.38%);
+        --chat-widget-header-bg-large:linear-gradient(180deg, var(--global-theme-color) 0%, var(--global-theme-color) 40.67%, rgba(255, 255, 255, 0) 80.38%);
         --chat-widget-header-bg-large-info-bg:#FFFFFF;
         --chat-widget-header-bg-large-actions-color:#FFFFFF;
         --chat-widget-header-bot-name-color:#000000;
@@ -328,13 +335,13 @@
         --chat-widget-compose-bar-text-area-color:#202939;
         --chat-widget-compose-bar-text-area-placeholder-color:#202939;
         --chat-widget-compose-bar-voice-speak-info-text:#697586;
-        --chat-widget-compose-bar-voice-icon-bg:#4B4EDE;
+        --chat-widget-compose-bar-voice-icon-bg:var(--global-theme-color);
         --chat-widget-compose-bar-voice-icon-border:#FFFFFF;
         --chat-widget-compose-bar-voice-icon-color:#FFFFFF;
         --chat-widget-compose-bar-voice-speak-msg-bg:#FFFFFF;
         --chat-widget-compose-bar-voice-speak-msg-selected-bg:rgba(75, 78, 222, 0.05);
-        --chat-widget-compose-bar-voice-speak-msg-color:#4B4EDE;
-        --chat-widget-compose-bar-voice-speak-msg-border:#4B4EDE;
+        --chat-widget-compose-bar-voice-speak-msg-color:var(--global-theme-color);
+        --chat-widget-compose-bar-voice-speak-msg-border:var(--global-theme-color);
     // End
 
     // Bot Bubble Messages Variables
@@ -378,26 +385,26 @@
         --button-temp-bg-hover:rgba(0, 0, 0, 0.05);
         --button-temp-bg-variation-1:rgba(75, 78, 222, 0.07);
         --button-temp-variation-1-border:transparent;
-        --button-temp-variation-1-color:#4B4EDE;
+        --button-temp-variation-1-color:var(--global-theme-color);
         --button-temp-bg-variation-1-hover:linear-gradient(0deg, rgba(75, 78, 222, 0.07) 0%, rgba(75, 78, 222, 0.07) 100%), rgba(75, 78, 222, 0.07);
-        --button-temp-bg-variation-2:#4B4EDE;
-        --button-temp-variation-2-border:#4B4EDE;
+        --button-temp-bg-variation-2:var(--global-theme-color);
+        --button-temp-variation-2-border:var(--global-theme-color);
         --button-temp-variation-2-color:#FFFFFF;
-        --button-temp-bg-variation-2-hover:linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), #4B4EDE;
+        --button-temp-bg-variation-2-hover:linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), var(--global-theme-color);
         // End
 
         // Card Template
         --card-main-wrapper-bg:#F8F9FA;
-        --card-main-wrapper-border:#E4E5E7;
-        --card-heading-title:#202124;
-        --card-temp-border:#E4E5E7;
+        --card-main-wrapper-border:var(--gloabl-border-color);
+        --card-heading-title:var(--gloabl-text-color);
+        --card-temp-border:var(--gloabl-border-color);
         --card-temp-bg:#FFFFFF;
-        --card-temp-color:#202124;
+        --card-temp-color:var(--gloabl-text-color);
         --card-temp-h1-color:#000;
         --card-temp-p-color:#697586;   
         --card-temp-view-more-bg:#FFFFFF;
-        --card-temp-view-more-color:#4B4EDE;
-        --card-temp-view-more-border:#4B4EDE;
+        --card-temp-view-more-color:var(--global-theme-color);
+        --card-temp-view-more-border:var(--global-theme-color);
         --card-temp-border-divided-bg:#EBECED;
         // End
 
