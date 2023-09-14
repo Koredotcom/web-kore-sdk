@@ -1,9 +1,7 @@
 import './actionsModal.scss';
 import { h } from 'preact';
-import IconSVG from '../icons';
 
 export function ActionsModal(props: any) {
-    const icons = new IconSVG();
     return (
         <div class="full-action-modal-wrapper">
             <div className="modal_backdrop"></div>

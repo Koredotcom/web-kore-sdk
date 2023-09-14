@@ -438,3 +438,140 @@
         }
     }
 }
+
+.regular-card-temp-container{
+    padding: 0 16px;
+    display: inline-block;
+    width: 100%;
+    .rugular-card-temp{
+        border-radius: 8px;
+        background: var(--kora-grey-white, #FFF);
+        display: inline-block;
+        width: 100%;
+        box-shadow: 0px 1px 2px 0px #BDC1C6;
+        .card-r-h-1{
+            width: 100%;        
+            display: flex;
+            align-items: normal;
+            padding: 10px;
+            gap: 15px;
+            .border-block{
+                width: 4px;
+                flex-shrink: 0;
+                border-radius: 9px;
+                background: var(--kora-red-red-highlight, #DD3646);
+            }
+            .img-block{
+                flex-shrink: 0;
+                width: 40px;
+                height: 40px;
+                &.xs{
+                    width: 16px;
+                    height: 16px;
+                }
+                &.lg{
+                    width: 60px;
+                    height: 60px;     
+                }
+                &.xlg{
+                    width: 80px;
+                    height: 80px;
+                }
+                figure{
+                    line-height: 0px;
+                }
+                img{
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 8px;
+                    &.radius-100{
+                        border-radius: 100%;
+                    }
+                }
+            }
+            .titles-info-block{
+                width: 100%;
+                // overflow: hidden;
+                // white-space: nowrap;
+                // text-overflow: ellipsis;
+                h1{
+                    color: var(--kora-grey-grey-dark-1, #202124);
+                    font-size: 16px;
+                    font-weight: 600;
+                    line-height: normal;
+                    // overflow: hidden;
+                    // white-space: nowrap;
+                    // text-overflow: ellipsis;
+                    // width: 100%;
+                }
+                p{
+                    color: var(--kora-grey-grey-dark-3, #5F6368);
+                    font-size: 14px;
+                    font-weight: 400;
+                    line-height: normal;
+                    letter-spacing: 0.271px;
+                    // overflow: hidden;
+                    // white-space: nowrap;
+                    // text-overflow: ellipsis;
+                    // width: 100%;
+                }
+            }
+        }
+        .r-header-card{
+            border-radius: 8px 8px 0px 0px;
+            background: var(--kora-blue-blue-light, #E7F1FF);
+            padding: 14px;
+            color: var(--kora-blue-blue-dark, #07377F);
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            border: 1px solid var(--kora-blue-blue-medium, #85B7FE);
+            h1{
+                margin: 0;
+            }
+        }
+        .r-body-card{
+            padding: 10px 14px;
+            border: 1px solid var(--kora-blue-blue-medium, #85B7FE);
+            border-radius: 0px 0px 8px 8px;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 8px;
+            .row-list-info{
+                display: flex;
+                align-items: flex-start;
+                gap: 14px;
+                figure{
+                    line-height: 0;
+                    position: relative;
+                    top: 2px;
+                    img{
+                        width: 16px;
+                        height: 16px;
+                    }
+                }
+                p{
+                    color: var(--kora-grey-grey-dark-3, #5F6368);
+                    font-size: 12px;
+                    font-weight: 500;
+                    line-height: 19px;
+                    letter-spacing: 0.3px;
+                }
+            }
+        }
+        .btn-action-card{
+            width: 100%;
+            border-radius: 0px 0px 8px 8px;
+            background: var(--kora-blue-blue-highlight, #0D6EFD);
+            border: 1px solid var(--kora-blue-blue-highlight, #0D6EFD);
+            padding: 13px;
+            text-align: center;
+            color: var(--kora-grey-white, #FFF);
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+        }
+    }
+}
