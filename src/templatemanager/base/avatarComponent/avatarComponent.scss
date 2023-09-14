@@ -8,6 +8,10 @@
     // right: 0;
     overflow: inherit;
     animation: remove-hidden 0.1s ease forwards;
+    @media (max-width: $media-mobile) {
+        bottom: 15px;
+        right: 10px;
+    }
     .avatar-actions {
         display: flex;
         align-items: flex-end;
@@ -47,8 +51,8 @@
                 }
             }
             .text-content {
-                background: #FFFFFF;
-                border: 1px solid #E4E5E7;
+                background: var(--global-white-bg);
+                border: 1px solid var(--gloabl-border-color);
                 box-shadow: 0px 4px 12px 2px rgba(32, 33, 36, 0.12);
                 border-radius: 4px;
                 display: inline-block;
@@ -59,7 +63,7 @@
                     font-weight: 600;
                     font-size: $font-s-16;
                     line-height: 19px;
-                    color: #000000;
+                    color: var(--avatar-text-colr);
                     margin-bottom: 4px;
                     white-space: nowrap;
                 }
@@ -67,7 +71,7 @@
                     font-weight: 400;
                     font-size: 14px;
                     line-height: 17px;
-                    color: #000000;
+                    color: var(--avatar-text-colr);
                     white-space: nowrap;
                 }
                 .close-avatar-content {
@@ -76,8 +80,8 @@
                     right: -8px;
                     width: 20px;
                     height: 20px;
-                    background: #FFFFFF;
-                    border: 1px solid #E4E5E7;
+                    background: var(--global-white-bg);
+                    border: 1px solid var(--gloabl-border-color);
                     border-radius: 32px;
                     display: flex;
                     align-items: center;
@@ -94,7 +98,7 @@
                 font-weight: 500;
                 font-size: 14px;
                 line-height: 20px;
-                color: #FFFFFF;
+                color: var(--global-white);
                 border: 0;
                 white-space: nowrap;
             }
@@ -132,7 +136,7 @@
                 right: 0;
                 top: 0;
                 background: #03904E;
-                border: 1px solid #FFFFFF;
+                border: 1px solid var(--global-white-bg);
                 border-radius: 32px;
                 padding: 0;
                 min-width: 14px;
@@ -143,7 +147,7 @@
                 font-weight: 700;
                 font-size: 8px;
                 line-height: 10px;
-                color: #FFFFFF;
+                color: var(--global-white);
             }
             .minimize-text{
                 display: none;
@@ -227,7 +231,7 @@
                 width: 370px;
                 justify-content: space-between;
                 .minimize-text{
-                    color: var(--generic-white, #FFF);
+                    color: var(--global-white);
                     text-align: justify;
                     font-size: 14px;
                     font-weight: 500;

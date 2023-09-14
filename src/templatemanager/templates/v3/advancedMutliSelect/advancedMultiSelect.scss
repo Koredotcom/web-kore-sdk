@@ -5,7 +5,7 @@
     gap: 16px;
 
     h1 {
-        color: var(--kora-grey-grey-dark-1, #202124);
+        color: var(--gloabl-text-color);
         font-size: 14px;
         font-weight: 700;
         line-height: normal;
@@ -25,7 +25,7 @@
             }
 
             h1 {
-                color: var(--kora-grey-grey-dark-1, #202124);
+                color: var(--gloabl-text-color);
                 font-size: 14px;
                 font-weight: 700;
                 line-height: normal;
@@ -56,8 +56,8 @@
 
                 .list-data-temp {
                     border-radius: 4px;
-                    border: 1px solid var(--kora-grey-grey-light-3, #E4E5E7);
-                    background: var(--generic-white, #FFF);
+                    border: 1px solid var(--gloabl-border-color);
+                    background: var(--gloabl-text-desc-color);
                     display: flex;
                     padding: 12px;
                     align-items: flex-start;
@@ -104,7 +104,7 @@
                             width: 100%;
 
                             h1 {
-                                color: var(--kora-grey-grey-dark-1, #202124);
+                                color: var(--gloabl-text-color);
                                 font-size: 14px;
                                 font-weight: 700;
                                 line-height: normal;

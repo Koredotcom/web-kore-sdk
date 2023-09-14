@@ -41,14 +41,14 @@
         gap: 10px;
         .mini-table-regular-view{
             border-radius: 4px;
-            border: 1px solid var(--kora-grey-grey-light-3, #E4E5E7);
+            border: 1px solid var(--gloabl-border-color);
             width: 270px;
             flex-shrink: 0;
             thead{
                 th{
                     padding: 8px 12px;
-                    border-bottom: 1px solid var(--gray-modern-200, #E3E8EF);
-                    color: var(--generic-black, #000);
+                    border-bottom: 1px solid var(--table-border);
+                    color: var(--table-header-text-color);
                     font-size: 11px;
                     font-weight: 600;
                     line-height: normal;
@@ -61,7 +61,7 @@
                 tr{
                     &:nth-child(odd){
                         td{
-                            background: var(--gray-modern-50, #F8FAFC);
+                            background: var(--table-body-tr-bg);
                         }
                     }
                     &:last-child{
@@ -73,8 +73,8 @@
                 td{
                     padding: 12px;
                     text-align: left;
-                    border-bottom: 1px solid var(--gray-modern-200, #E3E8EF);
-                    color: var(--generic-black, #000);
+                    border-bottom: 1px solid var(--table-border);
+                    color: var(--table-header-text-color);
                     font-size: 12px;
                     font-weight: 400;
                     line-height: 18px;

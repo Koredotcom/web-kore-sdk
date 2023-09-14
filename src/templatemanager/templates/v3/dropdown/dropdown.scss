@@ -20,7 +20,7 @@
             gap: 10px;
             h1{
                 width: 100%;
-                color: var(--kora-grey-grey-dark-1, #202124);
+                color: var(--gloabl-text-color);
                 font-size: 14px;
                 font-weight: 700;
                 line-height: normal;
@@ -33,7 +33,7 @@
                 justify-content: center;
                 border: 0;
                 background: transparent;
-                color: #202124;
+                color: var(--gloabl-text-color);
                 font-size: 14px;
                 cursor: pointer;
                 padding: 0;
@@ -43,7 +43,7 @@
         .dropdown-temp{
             width: 100%;
             .label-text{
-                color: var(--neutral-900, #171717);
+                color: var(--gloabl-text-color);
                 font-size: 14px;
                 font-weight: 500;
                 line-height: 20px;
@@ -60,8 +60,8 @@
                 .drp-btn{
                     width: 100%;
                     border-radius: 6px;
-                    border: 1px solid var(--neutral-200, #E5E5E5);
-                    background: var(--generic-white, #FFF);
+                    border: 1px solid var(--gloabl-border-color);
+                    background: var(--gloabl-text-desc-color);
                     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
                     display: flex;
                     height: 40px;
@@ -69,7 +69,7 @@
                     align-items: center;
                     gap: 12px;
                     text-align: left;
-                    color: #171717;
+                    color: var(--gloabl-text-color);
                     font-size: 14px;
                     font-weight: 400;
                     line-height: 20px;

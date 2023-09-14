@@ -69,7 +69,7 @@
                 flex-shrink: 0;
                 h1{
                     width: 100%;
-                    color: var(--kora-grey-grey-dark-1, #202124);
+                    color: var(--gloabl-text-color);
                     font-size: 14px;
                     font-weight: 700;
                     line-height: normal;
@@ -85,7 +85,7 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    color: #202124;
+                    color: var(--gloabl-text-color);
                 }
             }
             .modal_body_actions{

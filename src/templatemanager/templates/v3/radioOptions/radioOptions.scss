@@ -5,7 +5,7 @@
     flex-direction: column;
     gap: 20px;
     h1{
-        color: var(--kora-grey-grey-dark-1, #202124);
+        color: var(--gloabl-text-color);
         font-size: 14px;
         font-weight: 700;
         line-height: normal;
@@ -31,13 +31,13 @@
             margin: 0;
             padding-left: 36px;
             .radio-title{
-                color: var(--kore-grey-kore-grey-dark-1, #121314);
+                color: var(--gloabl-text-color);
                 font-size: 14px;
                 font-weight: 400;
                 line-height: normal;
             }
             .radio-desc{
-                color: var(--gray-500, #667085);
+                color: var(--radio-desc-text-clr);
                 font-size: 14px;
                 font-weight: 400;
                 line-height: 20px;
@@ -52,8 +52,8 @@
                 padding: 0;
                 text-align: center;
                 border-radius: 10px;
-                border: 1px solid var(--gray-300, #D0D5DD);
-                background: var(--base-white, #FFF);
+                border: 1px solid var(--radio-border);
+                background: var(--radio-bg);
                 margin-top: 0px;
                 border-radius: 100px;
                 left: 0;
@@ -65,9 +65,9 @@
             + .radio-label{
                 &::before{
                     content: "";
-                    background-color: #4B4EDE;
-                    border: 1px solid #4B4EDE;
-                    box-shadow: inset 0 0 0 6px #FFFFFF;
+                    background-color: var(--global-theme-color);
+                    border: 1px solid var(--global-theme-color);
+                    box-shadow: var(--radio-checked-shadow);
                 }
             }
             &:disabled{

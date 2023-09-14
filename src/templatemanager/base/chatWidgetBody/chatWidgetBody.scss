@@ -27,12 +27,12 @@
         border-radius: 4px;
         &.agent-joined-variation-1{
             .agent-name{
-                background: #EEF2F6;
+                background: var(--agent-joined-bg);
                 margin: 4px 0;
             }
         }
         &.agent-joined-variation-2{
-            border: 1px solid #E3E8EF;
+            border: 1px solid var(--agent-joined-border);
             .agent-name{
                 margin: 6px 0 0px 0;
             }
@@ -52,14 +52,14 @@
                 width: 100%;
                 height: 100%;
                 border-radius: 100%;
-                border: 1.5px solid #FFFFFF;
+                border: 1.5px solid var(--global-white-bg);
             }
         }
         .agent-name{
             font-weight: 600;
             font-size: 12px;
             line-height: 15px;
-            color: #697586;
+            color: var(--agent-joined-text-color);
             padding: 4px 8px;
             display: inline-block;            
             border-radius: 32px;
@@ -68,7 +68,7 @@
             font-weight: 400;
             font-size: 12px;
             line-height: 15px;
-            color: #697586;
+            color: var(--agent-joined-text-color);
         }
     }
 }

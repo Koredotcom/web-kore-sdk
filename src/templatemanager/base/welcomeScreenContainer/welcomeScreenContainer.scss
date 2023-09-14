@@ -53,8 +53,8 @@
             }
         }
         .welcome-header-bg {
-            background: var( --welcome-header-bg) no-repeat;
-            background-size: cover;
+            background: var(--welcome-header-bg) no-repeat;
+            background-size: 100% 100%;
             border-radius: 4px 4px 0px 0px;
             padding: 32px 16px;
             .logo-img {
@@ -263,7 +263,7 @@
                     font-weight: 400;
                     font-size: 14px;
                     line-height: 20px;
-                    color: #202124;
+                    color: var(--gloabl-text-color);
                     &::placeholder{
                         color: #BDC1C6;
                         font-weight: 400;
@@ -333,7 +333,7 @@
     .main-heading-wrapper{
         width: 100%;
         h1{
-            color: var(--kora-grey-grey-dark-1, #202124);
+            color: var(--gloabl-text-color);
             font-size: 18px;
             font-weight: 600;
             line-height: 20px;
@@ -347,7 +347,7 @@
         width: 100%;
         box-shadow: 0px 1px 2px -1px rgba(16, 24, 40, 0.10), 0px 1px 3px 0px rgba(16, 24, 40, 0.10);
         border-radius: 4px;
-        border: 1px solid var(--kora-grey-grey-light-3, #E4E5E7);
+        border: 1px solid var(--gloabl-border-color);
         background: var(--kora-grey-white, #FFF);
         display: flex;
         padding: 16px;
@@ -372,7 +372,7 @@
     padding: 16px;
     gap: 8px;
     border-radius: 4px;
-    border: 1px solid var(--kora-grey-grey-light-3, #E4E5E7);
+    border: 1px solid var(--gloabl-border-color);
     background: var(--kora-grey-white, #FFF);
     .img-block{
         flex-shrink: 0;
@@ -408,7 +408,7 @@
         // white-space: nowrap;
         // text-overflow: ellipsis;
         h1{
-            color: var(--kora-grey-grey-dark-1, #202124);
+            color: var(--gloabl-text-color);
             font-size: 14px;
             font-weight: 600;
             line-height: normal;
