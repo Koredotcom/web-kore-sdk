@@ -522,6 +522,13 @@ class KoreHelpers{
             }
             val = txtArr.join('');
             return val;
+        },
+        'getInnerText': function(val){
+            if(val === ''){
+                return val;
+            }
+            var tempEle = $('<div>'+this.convertMDtoHTML(val,'bot')+'</div>')
+            return tempEle.text();
         }
     };
     static prototypes ={
