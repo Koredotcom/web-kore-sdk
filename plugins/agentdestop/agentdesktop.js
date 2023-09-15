@@ -440,7 +440,7 @@ function AgentDesktop(uuId, aResponse) {
                 "body": _self.callDetails,
                 "type": ""
                 };
-                botInstance.sendMessage(messageToBot, function (err) {});
+                events.sendMessage(messageToBot, function (err) {});
                 if (_self.activeCall) {
                     _self.activeCall.terminate();
                 }
@@ -456,7 +456,7 @@ function AgentDesktop(uuId, aResponse) {
                 "body": _self.callDetails,
                 "type": ""
                 };
-                botInstance.sendMessage(messageToBot, function (err) {});
+                events.sendMessage(messageToBot, function (err) {});
                 _self.addAudioVideoContainer();
                 _self.callConnecting(_self.callDetails.videoCall, _self.callDetails.firstName);
 

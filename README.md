@@ -285,7 +285,7 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 
 ## How to integrate Agent Desktop features 
 1. Goto in index.html and uncomment AgentDesktop files agentdesktop.css,ac_webrtc.min.js,audio_player.js,config.js,libs/c2c.js and agentdesktop.js
-2. Include this file in gruntFile.js if you are using minifed SDK
+2. Include these files in gruntFile.js if you are using minifed SDK
 # How to implement minified SDK
     node js:
 	    Install node js if not installed  https://nodejs.org
