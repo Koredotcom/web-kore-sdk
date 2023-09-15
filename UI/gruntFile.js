@@ -82,6 +82,14 @@ module.exports = function (grunt) {
             '../libs/anonymousassertion.js',
             '../kore-bot-sdk-client.js',
             '../libs/perfect-scrollbar.js',
+            
+            //  Uncomment below lines for AgentDestop plugin
+            // '../plugins/agentdestop/libs/ac_webrtc.min.js',
+            // '../plugins/agentdestop/libs/audio_player.js',
+            // '../plugins/agentdestop/config.js',
+            // '../plugins/agentdestop/libs/c2c.js',
+            // '../plugins/agentdestop/agentdesktop.js',
+
             '../libs/emoji.js',
             '../libs/purejscarousel.js',
             'chatWindow.js',
@@ -102,7 +110,11 @@ module.exports = function (grunt) {
             '../libs/purejscarousel.css',
             '../libs/prefect-scrollbar.css',
             'chatWindow.css',
-            'custom/customTemplate.css'
+            'custom/customTemplate.css',
+
+            //  Uncomment below lines for AgentDestop plugin
+            // '../plugins/agentdestop/agentdesktop.css'
+
         ]
     }
 
