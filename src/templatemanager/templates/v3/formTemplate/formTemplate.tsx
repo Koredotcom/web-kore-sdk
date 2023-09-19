@@ -13,27 +13,24 @@ export function Form(props: any) {
     }
 
     const handleEvent = (e: any) => {
-        if (e.type == 'url' || e.type == 'data-url') {
-            let link = e.url;
-            if (link.indexOf("http:") < 0 && link.indexOf("https:") < 0) {
-                link = "http:////" + link;
-            }
-            window.open(link, "_blank");
-        } else {
-            hostInstance.sendMessage(e.payload, { renderMsg: e.title });
-        }
+        const input: any = hostInstance.chatEle.querySelector('.form-input-wrapper');
+        const inputEle: any = input.querySelector('input[type=\'password\']');
+        hostInstance.sendMessage(inputEle.value, { renderMsg: inputEle.value, msgData });
     }
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'form_template') {
         return (
             <div className="form-template-wrapper-container">
                 <div className="form-temp-content">
-                    <h1>Fill the form</h1>
-                    <div className="form-input-wrapper">
-                        <label>Enter Password</label>
-                        <input type="text" placeholder="Enter password"></input>
-                    </div>
-                    <button className="kr-button-primary lg">Submit</button>
+                    <h1>{msgData?.message?.[0]?.component?.payload.heading}</h1>
+                    {msgData?.message?.[0]?.component?.payload.formFields.map((ele: any) => (
+                        <Fragment>
+                            <div className="form-input-wrapper">
+                                <label>{ele.label}</label>
+                                <input type={ele.type} placeholder={ele.placeholder}></input>
+                            </div>
+                            <button className="kr-button-primary lg" onClick={handleEvent}>{ele.fieldButton.title}</button>
+                        </Fragment>))}
                 </div>
             </div>
         );

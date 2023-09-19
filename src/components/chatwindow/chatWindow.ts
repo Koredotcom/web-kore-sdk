@@ -935,6 +935,11 @@ bindEvents  () {
 bindEventsV3() {
   const me:any = this;
   me.eventManager.addEventListener('.typing-text-area', 'keydown', (event: any) => {
+    let chatWindowEvent = {stopFurtherExecution: false};
+    me.emit(me.EVENTS.ON_KEY_DOWN,{
+      event:event,
+      chatWindowEvent: chatWindowEvent
+    });
     if (event.keyCode == 13) {
       if (event.target.value.trim() === '') {
         return;
@@ -1265,7 +1270,11 @@ render  (chatWindowHtml: any) {
     }
   }
   if (me.config.widgetSDKInstace) {
-    me.chatEle.find('.kr-wiz-menu-chat').show();
+    if (me.config.UI.version == 'v2') {
+      me.chatEle.find('.kr-wiz-menu-chat').show();
+    } else {
+      me.chatEle.querySelector('.kr-wiz-menu-chat').classList.add('show');
+    }
   }
   if (me.config.UI.version == 'v2') {
     me.chatPSObj = new KRPerfectScrollbar(me.chatEle.find('.chat-container').get(0), {

@@ -243,7 +243,7 @@ const BrandingJSON = {
                 "icon": "url|icomoon"
             },
             "attachment": {
-                "show": false,
+                "show": true,
                 "icon": "url|icomoon"
             }
         }

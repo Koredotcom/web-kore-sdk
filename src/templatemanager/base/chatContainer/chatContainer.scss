@@ -21,5 +21,20 @@
   &.minimize-chat{
     height: 0px;
     width: 0px;
+    .kr-wiz-menu-chat {
+      display: none !important;
+    }
   }
+
+  .kr-wiz-menu-chat {
+    display: none;
+		position: absolute;
+		margin-left: -70px;
+		float: left;
+		border: 0;
+		transition: ease-in .33s;
+    &.show {
+      display: block;
+    }
+	}
 }

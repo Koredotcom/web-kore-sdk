@@ -60,19 +60,19 @@ export function ChatWidgetComposeBar(props: any) {
                 </button>
                 <div className="voice-msg-bubble"></div>
             </div>
-            <div className="attachment-wrapper-data" style="display:none">
+            <div className="attachment-wrapper-data hide-attachment">
                 <div className="select-file-block">
-                    <button className="inputfile-btn">
+                    <button className="inputfile-btn inputfile-btn-media">
                         <span>Media</span>
-                        <input type="file" />
+                        <input type="file" id="captureMediaAttachment"/>
                     </button>
-                    <button className="inputfile-btn">
-                        <span>Media</span>
-                        <input type="file" />
+                    <button className="inputfile-btn inputfile-btn-file">
+                        <span>File</span>
+                        <input type="file" id="captureFileAttachment"/>
                     </button>
                 </div>
                 <div className="uploaded-attachment-data">
-                    <div className="uploaded-item">
+                    {/* <div className="uploaded-item">
                         <div className="img-block"></div>
                         <div className="content-data">
                             <h1>Document name.png</h1>
@@ -116,7 +116,7 @@ export function ChatWidgetComposeBar(props: any) {
                                 <img src="/images/close-large.svg" alt="remove" />
                             </figure>
                         </button>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <div className={inputTypeObj[brandingInfo.footer.layout]} aria-label="compose footer">
@@ -125,7 +125,7 @@ export function ChatWidgetComposeBar(props: any) {
                         <img src={iconHelper.getIcon('hamberger')} alt="image" />
                     </figure>
                 </button> }
-                { brandingInfo.footer.buttons.attachment.show && <button className="action-btn">
+                { brandingInfo.footer.buttons.attachment.show && <button className="action-btn attachmentUpload">
                     <figure>
                         <img src={iconHelper.getIcon('attachment')} alt="image" />
                     </figure>

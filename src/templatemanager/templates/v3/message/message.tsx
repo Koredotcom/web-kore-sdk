@@ -58,6 +58,14 @@ export function Message(props: any) {
         }, 800);
     }
 
+    if (msgData?.message[0]?.component?.payload?.template_type === 'live_agent') {
+        msgData.fromAgent = true;
+
+        if (msgData.message[0].component && msgData.message[0].component.payload) {
+            msgData.message[0].cInfo.body = msgData.message[0].component.payload.text || '';
+        }
+    }
+
     if (msgData.message) {
         return (
             <Fragment>
@@ -77,11 +85,16 @@ export function Message(props: any) {
                                             </div> }
                                             <div className="bubble-msg-with-img">
                                                 <div className="bubble-msg">{msgItem.cInfo.body}</div>
-                                                <div className="bot-img">
+                                                {!msgData.fromAgent && <div className="bot-img">
                                                     <figure>
-                                                        <img src={iconHelper.getIcon('avatar_bot')} alt='avatr img' />
+                                                        <img src={msgData.icon} alt='avatr img' />
                                                     </figure>
-                                                </div>
+                                                </div>}
+                                                {msgData.fromAgent && <div className="bot-img">
+                                                    <figure>
+                                                        <img src={msgData.icon} alt='avatr img' />
+                                                    </figure>
+                                                </div>}
                                                 <div className="copy-bubble" onClick={ () => onCopy(event, msgItem.cInfo.body)}>
                                                     <i className="sdkv3-copy"></i>
                                                 </div>

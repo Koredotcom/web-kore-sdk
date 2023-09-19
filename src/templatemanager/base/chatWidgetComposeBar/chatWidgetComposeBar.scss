@@ -334,6 +334,9 @@
             }
         }
     }
+    &.hide-attachment {
+        display: none;
+    }
 }
 
 // Attached Items
