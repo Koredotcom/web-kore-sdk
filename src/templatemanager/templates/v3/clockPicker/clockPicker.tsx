@@ -31,10 +31,9 @@ export function ClockPicker(props: any) {
             dp.show();
         }, []);
         return (
-          <div className="date-picker">
-            <p>{selectedDate}</p>
-            <div id={msgData.messageId}></div>
-            <button className="kr-button-primary" onClick={handleSubmit}>Confirm</button>
+          <div className="date-picker-wrapper-template">
+            <div className="date-picker-calendar" id={msgData.messageId}></div>
+            <button className="kr-button-primary lg" onClick={handleSubmit}>Confirm</button>
           </div>
         );
     }

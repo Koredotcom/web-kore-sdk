@@ -5,7 +5,7 @@
 .air-datepicker-nav {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid var(--adp-border-color-inner);
+  border-bottom: 0px solid var(--adp-border-color-inner);
   min-height: var(--adp-nav-height);
   padding: var(--adp-padding);
   box-sizing: content-box;
@@ -60,10 +60,15 @@
 .air-datepicker-nav--title {
   border-radius: var(--adp-border-radius);
   padding: 0 8px;
+  color: var(--adp-color);
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
 
   i {
     font-style: normal;
-    color: var(--adp-nav-color-secondary);
+    color: var(--adp-color);
     margin-left: .3em;
   }
 

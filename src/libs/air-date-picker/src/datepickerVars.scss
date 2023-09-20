@@ -1,11 +1,11 @@
 /* -------------------------------------------------
     Datepicker vars
    ------------------------------------------------- */
-
+@import "../../../templatemanager/base/variables.scss";
 .air-datepicker {
-  --adp-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --adp-font-family: "Inter";
   --adp-font-size: 14px;
-  --adp-width: 246px; // Day cell width will be equal to 34px
+  --adp-width: 100%; // Day cell width will be equal to 34px
   --adp-z-index: 100;
   --adp-padding: 4px;
   --adp-grid-areas:
@@ -18,52 +18,51 @@
   --adp-transition-ease: ease-out;
   --adp-transition-offset: 8px;
 
-  --adp-background-color: #fff;
-  --adp-background-color-hover: #f0f0f0;
-  --adp-background-color-active: #eaeaea;
-  --adp-background-color-in-range: rgba(92, 196, 239, .1);
-  --adp-background-color-in-range-focused: rgba(92, 196, 239, .2);
-  --adp-background-color-selected-other-month-focused: #8ad5f4;
-  --adp-background-color-selected-other-month: #a2ddf6;
+  --adp-background-color: var(--global-white-bg);
+  --adp-background-color-hover: #F2F4F7;
+  --adp-background-color-active: #F2F4F7;
+  --adp-background-color-in-range: var(--gloabl-text-color);
+  --adp-background-color-in-range-focused: var(--gloabl-text-color);
+  --adp-background-color-selected-other-month-focused: var(--global-theme-color);
+  --adp-background-color-selected-other-month: var(--global-theme-color);
 
-  --adp-color: #4a4a4a;
+  --adp-color: var(--gloabl-text-color);
   --adp-color-secondary: #9c9c9c;
-  --adp-accent-color: #4eb5e6;
+  --adp-accent-color: var(--gloabl-text-color);
   --adp-color-current-date: var(--adp-accent-color);
-  --adp-color-other-month: #dedede;
+  --adp-color-other-month: #9AA4B2;
   --adp-color-disabled: #aeaeae;
   --adp-color-disabled-in-range: #939393;
-  --adp-color-other-month-hover: #c5c5c5;
+  --adp-color-other-month-hover: #F2F4F7;
 
-  --adp-border-color: #dbdbdb;
-  --adp-border-color-inner: #efefef;
-  --adp-border-radius: 4px;
-  --adp-border-color-inline: #d7d7d7;
+  --adp-border-color: #E4E5E7;
+  --adp-border-color-inner: #E4E5E7;
+  --adp-border-radius: 8px;
+  --adp-border-color-inline: #E4E5E7;
 
-  --adp-nav-height: 32px;
+  --adp-nav-height: 36px;
   --adp-nav-arrow-color: var(--adp-color-secondary);
-  --adp-nav-action-size: 32px;
+  --adp-nav-action-size: 36px;
   --adp-nav-color-secondary: var(--adp-color-secondary);
 
-  --adp-day-name-color: #ff9a19;
-  --adp-day-name-color-hover: #8ad5f4;
+  --adp-day-name-color: var(--gloabl-text-color);
+  --adp-day-name-color-hover: var(--global-theme-color);
 
   --adp-day-cell-width: 1fr;
-  --adp-day-cell-height: 32px;
-  --adp-month-cell-height: 42px;
+  --adp-day-cell-height: 42px;
+  --adp-month-cell-height: 40px;
   --adp-year-cell-height: 56px;
 
   --adp-pointer-size: 10px;
   --adp-poiner-border-radius: 2px;
   --adp-pointer-offset: 14px;
 
-  --adp-cell-border-radius: 4px;
+  --adp-cell-border-radius: 100px;
   --adp-cell-background-color-hover: var(--adp-background-color-hover);
-  --adp-cell-background-color-selected: #5cc4ef;
-  --adp-cell-background-color-selected-hover: #45bced;
-  --adp-cell-background-color-in-range: rgba(92, 196, 239, 0.1);
-  --adp-cell-background-color-in-range-hover: rgba(92, 196, 239, 0.2);
-  --adp-cell-border-color-in-range: var(--adp-cell-background-color-selected);
+  --adp-cell-background-color-selected: var(--global-theme-color);
+  --adp-cell-background-color-selected-hover: var(--global-theme-color);
+  --adp-cell-background-color-in-range: #F2F4F7;
+  --adp-cell-background-color-in-range-hover: #F2F4F7;
 
   --adp-btn-height: 32px;
   --adp-btn-color: var(--adp-accent-color);

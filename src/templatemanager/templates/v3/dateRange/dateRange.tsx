@@ -46,10 +46,10 @@ export function DateRangeExt(props: any) {
                 </button>
             </div>
             <div className="iner-data-scroll-wraper">
-                <div className="date-picker">
-                    <p>{selectedDate.from} - {selectedDate.to}</p>
-                    <div id={'cal-' + msgData.messageId}></div>
-                    <button className="kr-button-primary" onClick={handleSubmit}>Confirm</button>
+                <div className="date-picker-wrapper-template">
+                    <h1>{selectedDate.from} - {selectedDate.to}</h1>
+                    <div className="date-picker-calendar" id={'cal-' + msgData.messageId}></div>
+                    <button className="kr-button-primary lg" onClick={handleSubmit}>Confirm</button>
                 </div>
             </div>
         </div>
@@ -87,11 +87,11 @@ export function DateRange(props: any) {
                 dp.show();
             }, []);
             return (
-                <div className="date-picker">
+                <div className="date-picker-wrapper-template">
                     <Message {...msgObj} />
-                    <p>{selectedDate.from} - {selectedDate.to}</p>
-                    <div id={'cal-' + msgData.messageId}></div>
-                    <button className="kr-button-primary" onClick={handleSubmit}>Confirm</button>
+                    <h1>{selectedDate.from} - {selectedDate.to}</h1>
+                    <div  className="date-picker-calendar"id={'cal-' + msgData.messageId}></div>
+                    <button className="kr-button-primary lg" onClick={handleSubmit}>Confirm</button>
                 </div>
             )
         }

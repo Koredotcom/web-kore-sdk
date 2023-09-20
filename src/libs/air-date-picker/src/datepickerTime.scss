@@ -59,7 +59,9 @@ $rangeThumbSize: 12px;
   grid-column-gap: 12px;
   align-items: center;
   position: relative;
-  padding: 0 var(--adp-time-padding-inner);
+  // padding: 0 var(--adp-time-padding-inner);
+  margin: 18px;
+  padding: 50px 0;
 
   .-only-timepicker- & {
     border-top: none;

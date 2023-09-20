@@ -10,9 +10,10 @@
 @import "./datepickerTime.scss";
 
 .air-datepicker {
+  border-radius: 8px;
+  box-shadow: 0px 8px 8px -4px rgba(16, 24, 40, 0.03), 0px 20px 24px -4px rgba(16, 24, 40, 0.08);
   background: var(--adp-background-color);
   border: 1px solid var(--adp-border-color);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
   border-radius: var(--adp-border-radius);
   box-sizing: content-box;
   display: grid;
@@ -58,8 +59,7 @@
   }
 
   &.-inline- {
-    border-color: var(--adp-border-color-inline);
-    box-shadow: none;
+    box-shadow: 0px 8px 8px -4px rgba(16, 24, 40, 0.03), 0px 20px 24px -4px rgba(16, 24, 40, 0.08);
     position: static;
     left: auto;
     right: auto;
@@ -81,7 +81,6 @@
 
     position: fixed;
     width: var(--adp-mobile-width);
-    border: none;
 
     * {
       -webkit-tap-highlight-color: transparent;
