@@ -28,6 +28,7 @@ import GoogleVoiceConfig from  './plugins/textToSpeech/GoogleTTS/GoogleTTS';
 import GoogleAudioConfig from  './plugins/textToSpeech/GoogleTTS/GoogleTTS';
 import SpeakTextAWSPollyConfig from './plugins/textToSpeech/KoreAWSPolly/kore-aws-polly';
 import SearchSuggestionsPlugin from './plugins/searchSuggestions/searchSuggestions';
+import InsureAssistTemplatePlugin from './plugins/insureAssitTemplatePlugin';
 
 export {
   chatConfig,
@@ -56,5 +57,6 @@ export {
   AgentDesktopPlugin,
   KoreDesktopNotificationPlugin,
   SpeakTextAWSPollyConfig,
-  SearchSuggestionsPlugin
+  SearchSuggestionsPlugin,
+  InsureAssistTemplatePlugin
 };
