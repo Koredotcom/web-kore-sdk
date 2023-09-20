@@ -9,11 +9,11 @@ import { getHTML } from '../../../base/domManager';
 export function PieChart(props: any) {
     const msgData = props.msgData;
     return (
-        <div className="pie-chart-template-wrapper">
+        <div className="chart-template-wrapper">
             <div className="d3Pie"></div>
-            <div className="piechartDiv">
-                <div className="lineChartChildDiv" id={`piechart${msgData.messageId}`}>
-                </div>
+            <div className="piechartDiv charts-body-info">
+                <h1>Travelling expenses</h1>
+                <div className="lineChartChildDiv" id={`piechart${msgData.messageId}`}></div>
             </div>
         </div>
 

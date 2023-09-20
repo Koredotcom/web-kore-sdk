@@ -9,10 +9,10 @@ import { getHTML } from '../../../base/domManager';
 export function BarChart(props: any) {
     const msgData = props.msgData;
     return (
-        <div className="bar-chart-template-wrapper">
-            <div className="barchartDiv">
-                <div className="barChartChildDiv" id={`barchart${msgData.messageId}`}>
-                </div>
+        <div className="chart-template-wrapper">
+            <div className="barchartDiv charts-body-info">
+                <h1>Travelling expenses</h1>
+                <div className="barChartChildDiv" id={`barchart${msgData.messageId}`}></div>
             </div>
         </div>
 
