@@ -41,6 +41,9 @@ import TemplateBarChart from './templates/v3/barChart/barChart';
 import TemplateLineChart from './templates/v3/lineChart/lineChart';
 import TemplateLikeDislike from './templates/v3/likeDislike/likeDislike';
 import TemplateFeedback from './templates/v3/feedback/feedback';
+import TemplateDateRange from './templates/v3/dateRange/dateRange';
+import TemplateClockPicker from './templates/v3/clockPicker/clockPicker';
+import TemplateSystem from './templates/v3/system/system';
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
 //(function($){
@@ -115,6 +118,9 @@ class TemplateManager {
 		this.installTemplate(new TemplateLineChart());
 		this.installTemplate(new TemplateLikeDislike());
 		this.installTemplate(new TemplateFeedback());
+		this.installTemplate(new TemplateDateRange());
+		this.installTemplate(new TemplateClockPicker());
+		this.installTemplate(new TemplateSystem());
 	}
 
 	renderMessage  (msgData: any) {

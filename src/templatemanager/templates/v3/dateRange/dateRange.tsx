@@ -1,5 +1,5 @@
 import BaseChatTemplate from '../baseChatTemplate';
-import './datePicker.scss';
+import './dateRange.scss';
 import { h, Fragment } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { Message } from '../message/message';
@@ -7,7 +7,7 @@ import Datepicker from '../../../../libs/air-date-picker/src/datepicker';
 import { getHTML } from '../../../base/domManager';
 import IconsManager from '../../../base/iconsManager';
 
-export function DatePickerExt(props: any) {
+export function DateRangeExt(props: any) {
     const iconHelper = new IconsManager();
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
@@ -20,16 +20,17 @@ export function DatePickerExt(props: any) {
     }
 
     const handleSubmit = () => {
-        hostInstance.sendMessage(selectedDate, { renderMsg: selectedDate });
+        hostInstance.sendMessage(selectedDate.from + ' - ' + selectedDate.to, { renderMsg: selectedDate.from + ' - ' + selectedDate.to });
         closeMenu();
     }
-    const [selectedDate, setSelectedDate] = useState(new Date().toDateString());
+    const [selectedDate, setSelectedDate] = useState({ from: new Date().toDateString(), to: '-' });
 
     useEffect(() => {
         const dp = new Datepicker(`#cal-${msgData.messageId}`, {
             dateFormat: msgData?.message?.[0]?.component?.payload?.format,
+            range: true,
             onSelect: (d: any) => {
-                setSelectedDate(d.formattedDate);
+                setSelectedDate({ from: d.formattedDate[0], to: d.formattedDate[1]});
             }
         });
         dp.show();
@@ -46,7 +47,7 @@ export function DatePickerExt(props: any) {
             </div>
             <div className="iner-data-scroll-wraper">
                 <div className="date-picker">
-                    <p>{selectedDate}</p>
+                    <p>{selectedDate.from} - {selectedDate.to}</p>
                     <div id={'cal-' + msgData.messageId}></div>
                     <button className="kr-button-primary" onClick={handleSubmit}>Confirm</button>
                 </div>
@@ -55,7 +56,7 @@ export function DatePickerExt(props: any) {
     );
 }
 
-export function DatePicker(props: any) {
+export function DateRange(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
     const msgObj = {
@@ -63,23 +64,24 @@ export function DatePicker(props: any) {
         hostInstance
     }
 
-    if (msgData?.message?.[0]?.component?.payload?.template_type == 'dateTemplate' && !msgData?.fromHistory) {
+    if (msgData?.message?.[0]?.component?.payload?.template_type == 'daterange' && !msgData?.fromHistory) {
         if (msgData?.message?.[0]?.component?.payload?.view_type == 'slider') {
-            hostInstance.bottomSliderAction('', getHTML(DatePickerExt, msgData, hostInstance));
+            hostInstance.bottomSliderAction('', getHTML(DateRangeExt, msgData, hostInstance));
             return (
                 <Message {...msgObj} />
             )
         } else {
             const handleSubmit = () => {
-                hostInstance.sendMessage(selectedDate, { renderMsg: selectedDate });
+                hostInstance.sendMessage(selectedDate.from + ' - ' + selectedDate.to, { renderMsg: selectedDate.from + ' - ' + selectedDate.to });
             }
-            const [selectedDate, setSelectedDate] = useState(new Date().toDateString());
+            const [selectedDate, setSelectedDate] = useState({ from: new Date().toDateString(), to: '-' });
 
             useEffect(() => {
                 const dp = new Datepicker(`#cal-${msgData.messageId}`, {
                     dateFormat: msgData?.message?.[0]?.component?.payload?.format,
+                    range: true,
                     onSelect: (d: any) => {
-                        setSelectedDate(d.formattedDate);
+                        setSelectedDate({ from: d.formattedDate[0], to: d.formattedDate[1]});
                     }
                 });
                 dp.show();
@@ -87,7 +89,7 @@ export function DatePicker(props: any) {
             return (
                 <div className="date-picker">
                     <Message {...msgObj} />
-                    <p>{selectedDate}</p>
+                    <p>{selectedDate.from} - {selectedDate.to}</p>
                     <div id={'cal-' + msgData.messageId}></div>
                     <button className="kr-button-primary" onClick={handleSubmit}>Confirm</button>
                 </div>
@@ -100,7 +102,7 @@ class TemplateDatePicker extends BaseChatTemplate {
     hostInstance: any = this;
 
     renderMessage(msgData: any) {
-        return this.getHTMLFromPreact(DatePicker, msgData, this.hostInstance);
+        return this.getHTMLFromPreact(DateRange, msgData, this.hostInstance);
     }
 }
 
