@@ -724,7 +724,10 @@ bindEvents  () {
   _chatContainer.on('click', 'li a',  (e: any) => {
     e.preventDefault();
     let targetEle = $(e.currentTarget);
-    const a_link = targetEle.attr('href');
+    let a_link = targetEle.attr('href');
+    if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
+      a_link = "http:////" + a_link;
+    }
     const _trgt = targetEle.attr('target');
     const msgDataText = $(targetEle).closest('span.simpleMsg').attr('msgData') || '';
     let msgData;
