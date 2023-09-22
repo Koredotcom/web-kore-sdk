@@ -965,7 +965,7 @@ bindEventsV3() {
           me.chatEle.querySelector('.content-text h1').textContent = me.config.botMessages.connecting;
           setTimeout(() => {
             me.bot.logInComplete(); // Start api call & ws
-          }, 1500);
+          }, 2000);
           setTimeout(() => {
             me.chatEle.querySelector('.content-text h1').textContent = me.config.branding.header.title.name;
           }, 2500);
@@ -2406,7 +2406,7 @@ applyVariableValue (key:any,value:any,type:any){
       me.chatEle.querySelector('.content-text h1').textContent = me.config.botMessages.connecting;
       setTimeout(() => {
         me.bot.logInComplete(); // Start api call & ws
-      }, 1500);
+      }, 2000);
       setTimeout(() => {
         me.chatEle.querySelector('.content-text h1').textContent = me.config.branding.header.title.name;
       }, 2500);
