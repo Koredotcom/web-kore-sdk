@@ -537,12 +537,6 @@
         padding: 12px;
         width: 100%;
         cursor: pointer;
-
-        // .left-bottom-data {
-        //     p {
-        //         margin-bottom: 7px;
-        //     }
-        // }
         .set-top-gap {
             clear: both;
             padding: 7px 0;
@@ -766,3 +760,13 @@ select {
     border-radius: 50px;
     background: #12B76A;
 }
+.btn-grp{
+    margin-top: 8px;
+    text-align: center;
+    margin-left: 5px;
+    .confirmation-btn{
+        padding: 10px 40px;
+        margin-right:5px;
+        width: 45%;
+    }
+   }

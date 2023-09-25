@@ -22,7 +22,6 @@ export function Carousel(props: any) {
             hostInstance.openExternalLink(link);
         }
     }
-
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'carousel' && msgData?.message?.[0]?.component?.payload?.carousel_type == 'stacked') {
         const stackClass = msgData.messageId + ' stacked stacked-cards';
         const leftCheButton = msgData.messageId + ' left-click';
@@ -38,6 +37,7 @@ export function Carousel(props: any) {
         setTimeout(() => {
             stackedCard.init();
         }, 300)
+        console.log(msgData.message[0],'msgData?.message?.[0]?')
         return (
             <div className={stackClass}>
                 <button className={leftCheButton}>
@@ -64,6 +64,19 @@ export function Carousel(props: any) {
                                                         {ele?.topSection?.subTitle && <h2 style={ele?.topSection?.subtitleStyle}>{ele?.topSection?.subTitle}</h2>}
                                                     </div>
                                                 </div>
+                                                {
+                                                    ele?.topSection?.items?.map((val: any) => (
+                                                        <div className="gap-style-accordian">
+                                                            <div style={val.leftWidth} className="left-data">
+                                                                {val?.title && <h2 style={val?.titleStyles && val?.titleStyles}>{val?.title}</h2>}
+                                                                <div />
+                                                            </div>
+                                                            <div style={val.rightWidth} className="right-data" >
+                                                                {val?.value && <p style={val?.titleStyles && val?.valueStyles}>{val?.value}</p>}
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                                }
                                             </div>
                                         }
                                         <div className="border-divider"></div>

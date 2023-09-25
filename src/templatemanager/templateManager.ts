@@ -105,7 +105,7 @@ class TemplateManager {
 		this.installTemplate(new DigitalFormTemplate());
 		this.installTemplate(new TemplateButton());
 		this.installTemplate(new cardTemplate());
-		this.installTemplate(new Carousel());
+		// this.installTemplate(new Carousel());
 		this.installTemplate(new QuickRepliesTemplate());
 		this.installTemplate(new TableTemplate());
 		this.installTemplate(new TemplateTableList());
