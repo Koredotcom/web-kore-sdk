@@ -1437,17 +1437,11 @@ updateScrollOnMessageRender(msgData: any){
   let _chatContainer = $(me.chatEle).find('.chat-container');
   const debounceScrollingCall: any = me.debounceScrollingHide(me.removeScrollingHide, 500);
   if(bot && !bot.previousHistoryLoading){
-    if (msgData?.type === 'bot_response') {
-      _chatContainer.addClass('scrolling'); // start hiding scroll on message arrival
-      _chatContainer.animate({
-        scrollTop: _chatContainer.prop('scrollHeight'),
-      }, 100);
-      debounceScrollingCall(); // stop hiding scroll on message arrival
-    } else {
-      _chatContainer.animate({
-        scrollTop: _chatContainer.prop('scrollHeight'),
-      }, 100);
-    }
+    _chatContainer.addClass('scrolling'); // start hiding scroll on message arrival
+    _chatContainer.animate({
+      scrollTop: _chatContainer.prop('scrollHeight'),
+    }, 100);
+    debounceScrollingCall(); // stop hiding scroll on message arrival
   }
 }
 removeScrollingHide() {
