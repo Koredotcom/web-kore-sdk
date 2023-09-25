@@ -18,6 +18,14 @@ class BrandingManager {
                                 this.applyVariableValue('start_conv_text_color', data[key][subKey]['start_conv_text']['color'], 'welcome_screen', 'starter_box');
                                 this.applyVariableValue('start_conv_button_color', data[key][subKey]['start_conv_button']['color'], 'welcome_screen', 'starter_box');
                             }
+                            if (subKey == 'background') {
+                                if (data[key][subKey]['type'] == 'color') {
+                                    this.applyVariableValue('color', data[key][subKey]['color'], key, subKey);
+                                } else {
+                                    const imgData = 'url(\''+(data[key][subKey]['img'])+'\')'; 
+                                    this.applyVariableValue('color', imgData, key, subKey);
+                                } 
+                            }
                         }
                     case 'header':
                         if (key == 'header' && typeof data[key][subKey] === 'object') {
@@ -34,6 +42,23 @@ class BrandingManager {
                             for (var property in data[key][subKey]) {
                                 this.applyVariableValue(property, data[key][subKey][property], key, subKey);
                             }
+                        }
+
+                        if (key == 'body' && subKey == 'background' && typeof data[key][subKey] === 'object') {
+                            if (data[key][subKey]['type'] == 'color') {
+                                this.applyVariableValue('bg', data[key][subKey]['color'], key, subKey);
+                            } else {
+                                const imgData = 'url(\''+(data[key][subKey]['img'])+'\')'; 
+                                this.applyVariableValue('bg', imgData, key, subKey);
+                            }
+                        }
+
+                        if (key == 'body' && subKey == 'time_stamp' && typeof data[key][subKey] == 'object') {
+                            this.applyVariableValue('color', data[key][subKey]['color'], key, subKey);
+                        }
+
+                        if (key == 'body' && subKey == 'agent_message' && typeof data[key][subKey] == 'object') {
+                            this.applyVariableValue('title_color', data[key][subKey]['title']['color'], key, subKey);
                         }
                         break;
                     case 'footer':

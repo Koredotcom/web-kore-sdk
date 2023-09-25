@@ -19,8 +19,8 @@
             right: 8px;
             width: 16px;
             height: 16px;
-            background: #FFFFFF;
-            border: 1px solid #E4E5E7;
+            background: var(--global-white-bg);
+            border: 1px solid var(--gloabl-border-color);
             border-radius: 32px;
             display: flex;
             align-items: center;
@@ -280,6 +280,9 @@
             justify-content: center;
             cursor: pointer;
             margin-left: 8px;
+            figure{
+                line-height: 0;
+            }
         }
     }
 }
@@ -330,6 +333,9 @@
                 cursor: pointer;
             }
         }
+    }
+    &.hide-attachment {
+        display: none;
     }
 }
 

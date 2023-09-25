@@ -70,7 +70,7 @@
                 top: 10px;
                 margin: 0;
                 border-radius: 4px;
-                border: 1px solid var(--kora-grey-grey-light-3, #E4E5E7);
+                border: 1px solid var(--gloabl-border-color);
                 background: var(--generic-white, #FFF);
             }
         }
@@ -78,8 +78,8 @@
             + .checkbox-label{
                 &::before{
                     content: "\e905";
-                    border: 1px solid #2B75E4;
-                    background:#2B75E4;
+                    border: 1px solid var(--global-theme-color);
+                    background:var(--global-theme-color);
                     font-size: 13px;
                     color: #FFFFFF;
                     font-family: 'SDKV3Icons' !important;
@@ -126,7 +126,7 @@
     flex-direction: column;
     gap: 16px;
     h1{
-        color: var(--kora-grey-grey-dark-1, #202124);
+        color: var(--gloabl-text-color);
         font-size: 14px;
         font-weight: 700;
         line-height: normal;
@@ -137,8 +137,8 @@
         gap: 8px;
         .checkbox-item{
             border-radius: 4px;
-            border: 1px solid var(--kora-grey-grey-light-3, #E4E5E7);
-            background: var(--generic-white, #FFF);
+            border: 1px solid var(--gloabl-border-color);
+            background: var(--global-white-bg);
             width: 100%;
             .checkbox-input {
                 + .checkbox-label {

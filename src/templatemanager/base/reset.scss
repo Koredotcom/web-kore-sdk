@@ -92,4 +92,14 @@ body::-webkit-scrollbar {
     transition: background-color 0.2s linear, width 0.2s ease-in-out;
     -webkit-transition: background-color 0.2s linear, width 0.2s ease-in-out;
   }
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+	  -webkit-appearance: none;
+	  margin: 0;
+  }
+
+  /* Firefox */
+  input[type=number] {
+	-moz-appearance: textfield;
+  }
   /********* Scroll bar global css end *********************/

@@ -11,9 +11,31 @@
   width: 372px;
   transition: 0.2s all ease;
   font-family: "Inter";
+  @media (max-width: $media-mobile) {
+    width: calc(100% - 20px);
+    height: calc(100% - 115px);
+    left: 10px;
+    bottom: 20px;
+    top: 40px;
+  }
   &.minimize-chat{
     height: 0px;
     width: 0px;
     right:0;
+    .kr-wiz-menu-chat {
+      display: none !important;
+    }
   }
+
+  .kr-wiz-menu-chat {
+    display: none;
+		position: absolute;
+		margin-left: -70px;
+		float: left;
+		border: 0;
+		transition: ease-in .33s;
+    &.show {
+      display: block;
+    }
+	}
 }

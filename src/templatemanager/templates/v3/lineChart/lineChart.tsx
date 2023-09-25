@@ -9,10 +9,10 @@ import { getHTML } from '../../../base/domManager';
 export function LineChart(props: any) {
     const msgData = props.msgData;
     return (
-        <div className="line-chart-template-wrapper">
-            <div className="linechartDiv">
-                <div className="lineChartChildDiv" id={`linechart${msgData.messageId}`}>
-                </div>
+        <div className="chart-template-wrapper">
+            <div className="linechartDiv charts-body-info">
+                <h1>Travelling expenses</h1>
+                <div className="lineChartChildDiv" id={`linechart${msgData.messageId}`}></div>
             </div>
         </div>
 

@@ -12,7 +12,7 @@
     height: 100%;
     border-radius: 4px;
     box-shadow: 0px 1px 2px -1px rgba(16, 24, 40, 0.10), 0px 1px 3px 0px rgba(16, 24, 40, 0.10);
-    background: var(--generic-white, #FFF);
+    background: var(--global-white-bg);
     &.list-with-border-multi-items{
         .adv-parent-acc-list{
             &:last-child{
@@ -25,7 +25,7 @@
                 position: absolute;
                 width: calc(100% - 20px);
                 height: 1px;
-                background: #E4E5E7;
+                background: var(--gloabl-border-color);
                 bottom: 0;
                 left: 10px;
             }
@@ -39,7 +39,7 @@
         margin-bottom: 10px;
         .tab-name{
             border: 0;
-            color: var(--kora-grey-grey-dark-1, #202124);
+            color: var(--gloabl-text-color);
             font-size: 14px;
             font-weight: 400;
             line-height: 20px;
@@ -104,7 +104,7 @@
         align-items: center;
         gap: 10px;
         h1{
-            color: var(--kora-grey-grey-dark-1, #202124);
+            color: var(--gloabl-text-color);
             font-size: 18px;
             font-weight: 600;
             line-height: 20px;
@@ -130,7 +130,7 @@
                 justify-content: center;
                 font-size: 14px;
                 cursor: pointer;
-                color: #202124;
+                color: var(--gloabl-text-color);
             }
             .input-search{
                 position: absolute;
@@ -223,7 +223,7 @@
                 // white-space: nowrap;
                 // text-overflow: ellipsis;
                 h1{
-                    color: var(--kora-grey-grey-dark-1, #202124);
+                    color: var(--gloabl-text-color);
                     font-size: 16px;
                     font-weight: 600;
                     line-height: normal;
@@ -251,7 +251,7 @@
                 align-items: center;
                 justify-content: flex-end;
                 h1{
-                    color: var(--kora-grey-grey-dark-1, #202124);
+                    color: var(--gloabl-text-color);
                     font-size: 14px;
                     font-weight: 600;
                     line-height: 20px;
@@ -263,7 +263,7 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    color: #202124;
+                    color: var(--gloabl-text-color);
                     border: 0;
                     background: transparent;
                     padding: 0;
@@ -304,7 +304,7 @@
                         align-items: center;
                         justify-content: center;
                         padding: 0;
-                        color: #202124;
+                        color: var(--gloabl-text-color);
                         font-size: 14px;
                         border-radius: 4px;
                         transition: 0.2s all ease;
@@ -324,6 +324,8 @@
             -webkit-animation-fill-mode: both;
             animation-fill-mode: both;
             display: none;
+            position: relative;
+            z-index: 2;
             .list-of-rows{
                 display: flex;
                 flex-direction: column;
@@ -419,7 +421,7 @@
                             margin-bottom: 2px;
                         }
                         h1{
-                            color: var(--kora-grey-grey-dark-1, #202124);
+                            color: var(--gloabl-text-color);
                             font-size: 14px;
                             font-weight: 600;
                             line-height: normal;

@@ -130,7 +130,9 @@ export function AdvancedListExtension(props: any) {
                             <div className={`adv-parent-acc-list ${(!item.isAccordian || !item.isCollapsed) ? `open-acc-adv-temp` : ``}`} data-kr-alt-acc={`${msgData.messageId}_${index}`} style={item?.elementStyles}>
                                 <div className="advanced-list-template-wrapper" onClick={() => handleItem(item)}>
                                     {item.icon && <div className="img-block">
-                                        <img src={item.icon} />
+                                        <figure>
+                                            <img src={item.icon} />
+                                        </figure>
                                     </div>}
                                     {(item.title || item.description) && <div className="titles-info-block">
                                         <h1 style={item?.titleStyles}>{item.title}</h1>

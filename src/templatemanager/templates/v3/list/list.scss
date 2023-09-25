@@ -4,7 +4,7 @@
     flex-direction: column;
     gap: 16px;
     h1{
-        color: var(--kora-grey-grey-dark-1, #202124);
+        color: var(--gloabl-text-color);
         font-size: 14px;
         font-weight: 700;
         line-height: normal;
@@ -16,8 +16,8 @@
         gap: 10px;
         .list-data-temp{
             border-radius: 4px;
-            border: 1px solid var(--kora-grey-grey-light-3, #E4E5E7);
-            background: var(--generic-white, #FFF);
+            border: 1px solid var(--gloabl-border-color);
+            background: var(--global-white-bg);
             display: flex;
             padding: 12px;
             align-items: flex-start;
@@ -56,7 +56,7 @@
                 .content-details{
                     width: 100%;
                     h1{
-                        color: var(--kora-grey-grey-dark-1, #202124);
+                        color: var(--gloabl-text-color);
                         font-size: 14px;
                         font-weight: 700;
                         line-height: normal;
@@ -71,7 +71,7 @@
                 }
             }
             .link-exteranl-list{
-                color: var(--primary-500-main, #2B75E4);
+                color: var(--global-theme-color);
                 font-size: 12px;
                 font-weight: 400;
                 line-height: normal;
@@ -94,7 +94,7 @@
         flex-shrink: 0;
         h1{
             width: 100%;
-            color: var(--kora-grey-grey-dark-1, #202124);
+            color: var(--gloabl-text-color);
             font-size: 14px;
             font-weight: 700;
             line-height: normal;

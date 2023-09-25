@@ -1,7 +1,7 @@
 const BrandingJSON = {
     "general": {
         "bot_icon": "url",
-        "size": "small|medium|large",
+        "size": "small",
         "themeType": "light"
     },
     "chat_bubble": {
@@ -9,11 +9,11 @@ const BrandingJSON = {
         "icon": {
             "icon_url": "url2",
             "size": "medium",
-            "shape": "square"
+            "shape": "square" 
         },
         "minimise": {
             "icon": "url4",
-            "theme": "rectangle"
+            "theme": "rounded"
         },
         "sound": "themeOne",
         "alignment": "block",
@@ -40,7 +40,11 @@ const BrandingJSON = {
             "name": "Our Community is ready to help you to join our best platform",
             "color": "#ffffff"
         },
-        "background": { "color": "#4B4EDE" },
+        "background": {
+            "type": "image",
+            "color": "#4B4EDE",
+            "img": "https://picsum.photos/seed/picsum/200/300"
+        },
         "top_fonts": {
             "color": "#ffffff"
         },
@@ -95,29 +99,54 @@ const BrandingJSON = {
                 {
                     "title": "Kore.ai",
                     "action": {
-                        "type": "url",
+                        "type": "postback",
                         "value": "https://kore.ai/"
                     }
                 }
                 ],
                 "input": "button",
                 "action": {
-                    "type": "postback|url",
-                    "value": "http://abc.comrf"
+                    "type": "postback",
+                    "value": "Hello"
                 }
             },
-            "static_links": {
-                "show": false,
-                "layout": "carousel",
-                "links": [{
-                    "title": "qqqs",
-                    "description": "",
-                    "action": {
-                        "type": "postback|url",
-                        "value": "http://abc.com|h"
-                    }
-                }]
-            }
+        },
+        "static_links": {
+            "show": true,
+            "layout": "carousel",
+            "links": [{
+                "title": "Community",
+                "description": "The US mobile number comes with two sims cards meant for GSM & LTE",
+                "action": {
+                    "type": "url",
+                    "value": "https://kore.ai/"
+                }
+            },
+            {
+                "title": "Community",
+                "description": "The US mobile number comes with two sims cards meant for GSM & LTE",
+                "action": {
+                    "type": "url",
+                    "value": "https://kore.ai/"
+                }
+            }]
+        },
+        "promotional_content": {
+            "show": true,
+            "promotions": [{
+                "banner": "https://picsum.photos/seed/picsum/200/300",
+                "action": {
+                    "type": "url",
+                    "value": "http://abc.com"
+                }
+            },
+            {
+                "banner": "https://picsum.photos/seed/picsum/200/300",
+                "action": {
+                    "type": "url",
+                    "value": "http://abc.com"
+                }
+            }]
         }
     },
     "header": {
@@ -228,16 +257,16 @@ const BrandingJSON = {
                 "icon": "url|icomoon"
             },
             "attachment": {
-                "show": false,
+                "show": true,
                 "icon": "url|icomoon"
             }
         }
     },
     "body": {
         "background": {
-            "type": "image",
-            "color": "#0D6EFD",
-            "img": "https://abc.com"
+            "type": "color",
+            "color": "#FFFFFF",
+            "img": "https://picsum.photos/id/237/200/300"
         },
         "font": {
             "family": "Impact",
@@ -274,7 +303,7 @@ const BrandingJSON = {
             "show_type": "always",
             "position": "top",
             "separator": "line",
-            "color": ""
+            "color": "#0000FF"
         },
         "icon": {
             "show": true,

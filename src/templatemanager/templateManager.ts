@@ -42,6 +42,14 @@ import TemplateLineChart from './templates/v3/lineChart/lineChart';
 import insureAssistCardTemplate from './templates/v3/insureAssistTemplates/insureAssistCardTemplate/insureAssistCardTemplate';
 import insureAssistCarousel from './templates/v3/insureAssistTemplates/insureAssistCarouselTemplate/insureAssistCarouselTemplate';
 import insureAssistPaymentMethod from './templates/v3/insureAssistTemplates/insureAssistPaymentMethod/insureAssistPaymentMethod';
+import TemplateLikeDislike from './templates/v3/likeDislike/likeDislike';
+import TemplateFeedback from './templates/v3/feedback/feedback';
+import TemplateDateRange from './templates/v3/dateRange/dateRange';
+import TemplateClockPicker from './templates/v3/clockPicker/clockPicker';
+import TemplateSystem from './templates/v3/system/system';
+import DateRangePickerTemplate from './templates/v3/dateRange/dateRange';
+import DatePickerExt from './templates/v3/datePicker/datePicker'
+
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
 //(function($){
@@ -117,6 +125,14 @@ class TemplateManager {
 		this.installTemplate(new insureAssistCardTemplate());
 		this.installTemplate(new insureAssistCarousel());
 		this.installTemplate(new insureAssistPaymentMethod());
+		this.installTemplate(new TemplateLikeDislike());
+		this.installTemplate(new TemplateFeedback());
+		this.installTemplate(new TemplateDateRange());
+		this.installTemplate(new TemplateClockPicker());
+		this.installTemplate(new TemplateSystem());
+		this.installTemplate(new DateRangePickerTemplate());
+		this.installTemplate(new DatePickerExt());
+
 	}
 
 	renderMessage  (msgData: any) {
