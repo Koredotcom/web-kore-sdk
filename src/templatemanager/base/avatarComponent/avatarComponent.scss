@@ -1,4 +1,5 @@
 @import '../variables.scss';
+
 .avatar-variations-footer {
     position: fixed;
     bottom: 40px;
@@ -8,18 +9,22 @@
     // right: 0;
     overflow: inherit;
     animation: remove-hidden 0.1s ease forwards;
+
     @media (max-width: $media-mobile) {
         bottom: 15px;
         right: 10px;
     }
+
     .avatar-actions {
         display: flex;
         align-items: flex-end;
         position: relative;
         gap: 10px;
-        &.bubble-align-block{
+
+        &.bubble-align-block {
             flex-direction: column;
         }
+
         .content-info {
             display: flex;
             flex-direction: column;
@@ -28,6 +33,7 @@
             align-items: flex-end;
             // position: absolute;
             transition: 0.3s all ease;
+
             // transform: scale(0) translateX(100%);
             // animation: leftrun 1s ease-in forwards 1s;
             // opacity: 0;
@@ -38,18 +44,19 @@
                     height: 48px;
                     background-color: red;
                 }
-        
+
                 60% {
                     transform: none;
                     opacity: 0.5;
                     height: auto;
                 }
-        
+
                 100% {
                     transform: translateX(0);
                     opacity: 1;
                 }
             }
+
             .text-content {
                 background: var(--global-white-bg);
                 border: 1px solid var(--gloabl-border-color);
@@ -58,7 +65,8 @@
                 display: inline-block;
                 padding: 11px;
                 position: relative;
-                margin-bottom: 8px;                 
+                margin-bottom: 8px;
+
                 h4 {
                     font-weight: 600;
                     font-size: $font-s-16;
@@ -67,6 +75,7 @@
                     margin-bottom: 4px;
                     white-space: nowrap;
                 }
+
                 .help-text-content {
                     font-weight: 400;
                     font-size: 14px;
@@ -74,6 +83,7 @@
                     color: var(--avatar-text-colr);
                     white-space: nowrap;
                 }
+
                 .close-avatar-content {
                     position: absolute;
                     top: -8px;
@@ -89,6 +99,7 @@
                     cursor: pointer;
                 }
             }
+
             .primary-button {
                 background: var(--avatar-send-msg-bg);
                 box-shadow: 0px 4px 12px 2px rgba(32, 33, 36, 0.12);
@@ -107,6 +118,7 @@
         .bounce2 {
             animation: bounce2 2s ease infinite;
         }
+
         .avatar-bg {
             background: var(--avatar-bg);
             box-shadow: 0px 4px 6px -1px rgba(16, 24, 40, 0.1), 0px 2px 4px -2px rgba(16, 24, 40, 0.1);
@@ -124,13 +136,14 @@
             // animation: bounce2 0.8s ease forwards;  
             transition: transform 1s;
             transform-origin: 100% 100%;
-            animation: bounce-in-avatar 0.2s ease forwards;       
-            .default-avater-icon{
+            animation: bounce-in-avatar 0.2s ease forwards;
 
-            }   
-            .close-avater-icon{
+            .default-avater-icon {}
+
+            .close-avater-icon {
                 display: none;
             }
+
             .un-read-msg {
                 position: absolute;
                 right: 0;
@@ -149,27 +162,33 @@
                 line-height: 10px;
                 color: var(--global-white);
             }
-            .minimize-text{
+
+            .minimize-text {
                 display: none;
             }
-            &.click-to-rotate-icon{
-                .default-avater-icon{
+
+            &.click-to-rotate-icon {
+                .default-avater-icon {
                     display: none;
                 }
-                .close-avater-icon{
+
+                .close-avater-icon {
                     display: block;
                 }
+
                 .un-read-msg {
                     display: none;
                 }
             }
         }
+
         &.variation-1 {
             .content-info {
                 .text-content {
                     border-radius: 8px 2px 8px 8px;
                 }
             }
+
             .avatar-bg {
                 border-radius: 32px 4px 32px 32px;
 
@@ -179,29 +198,35 @@
                 }
             }
         }
+
         &.variation-2 {
             .content-info {
                 .text-content {
                     &:first-child {
                         border-radius: 8px;
                     }
+
                     border-radius: 32px;
                 }
+
                 .primary-button {
                     border-radius: 32px;
                 }
             }
+
             .avatar-bg {
                 border-radius: 32px;
                 width: 68px;
             }
         }
+
         &.variation-3 {
             .content-info {
                 .text-content {
                     border-radius: 4px 4px 2px 4px;
                 }
             }
+
             .avatar-bg {
                 border-radius: 4px;
 
@@ -212,25 +237,29 @@
             }
         }
     }
+
     &.avatar-minimize {
         .avatar-actions {
-            .content-info{
+            .content-info {
                 display: none;
             }
         }
     }
-    &.avatar-minimize-text{
+
+    &.avatar-minimize-text {
         .avatar-actions {
-            .content-info{
+            .content-info {
                 display: none;
             }
-            .avatar-bg{
+
+            .avatar-bg {
                 display: flex;
                 align-items: center;
                 flex-direction: row-reverse;
                 width: 370px;
                 justify-content: space-between;
-                .minimize-text{
+
+                .minimize-text {
                     color: var(--global-white);
                     text-align: justify;
                     font-size: 14px;
@@ -249,12 +278,65 @@
     animation-fill-mode: forwards;
     opacity: 0;
 }
+
 .animation-slide-up:nth-child(1) {
     animation-delay: 1s;
 }
+
 .animation-slide-up:nth-child(2) {
     animation-delay: 1.5s;
 }
+
 .animation-slide-up:nth-child(3) {
     animation-delay: 2s;
 }
+
+/*--insureAssist - css --*/
+.insure-assist-theme {
+    .avatar-variations-footer {
+        .avatar-actions.variation-1 {
+            .avatar-bg.click-to-rotate-icon {
+                display: none;
+            }
+
+            .avatar-actions .avatar-bg {
+                display: block;
+            }
+        }
+    }
+
+    .chat-widgetwrapper-main-container {
+        height: 600px;
+    }
+
+    .chat-widget-composebar {
+        .compose-bar-wrapper {
+            .send-btn {
+                background: var(--agent-bubble-msg-bg);
+            }
+        }
+    }
+    .agent-bubble-comp .agent-bubble-content:hover {
+            .agent-bubble-comp{
+                .agent-bubble-content:hover{
+                    .bubble-msg-with-img{
+                        .bubble-msg{
+                            background: var(--agent-bubble-msg-bg);
+                        }
+                    }
+                }
+            }
+        }
+        .chat-widget-composebar{
+            .compose-bar-wrapper.if-voice-compose {
+                .compose-voice-text{
+                    .voice-compose-btn{
+                        background: var(--agent-bubble-msg-bg);
+                    }
+                }
+            }
+        }
+}
+ 
+
+

@@ -37,7 +37,6 @@ export function Carousel(props: any) {
         setTimeout(() => {
             stackedCard.init();
         }, 300)
-        console.log(msgData.message[0],'msgData?.message?.[0]?')
         return (
             <div className={stackClass}>
                 <button className={leftCheButton}>

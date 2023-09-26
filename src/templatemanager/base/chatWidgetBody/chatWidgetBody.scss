@@ -11,9 +11,20 @@
         display: none;
     }
 }
-
 .insure-assist-theme {
     .chat-widget-body-wrapper {
         overflow-x: hidden;
+    }
+    .chat-widget-composebar{
+        .compose-bar-wrapper{
+            .compose-text-area{
+                .typing-text-area:focus{
+                    border: 0.5px solid var(--agent-bubble-msg-bg);
+                }
+                .typing-text-area:focus-visible{
+                    outline-color: var(--agent-bubble-msg-bg);
+                }
+            }
+        }
     }
 }

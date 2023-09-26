@@ -1,4 +1,8 @@
 import insureAssistCardTemplate from '../templatemanager/templates/v3/insureAssistTemplates/insureAssistCardTemplate/insureAssistCardTemplate';
+import insureAssistCarouselTemplate from '../templatemanager/templates/v3/insureAssistTemplates/insureAssistCarouselTemplate/insureAssistCarouselTemplate';
+import insureAssistPaymentMethod from '../templatemanager/templates/v3/insureAssistTemplates/insureAssistPaymentMethod/insureAssistPaymentMethod';
+
+
 /**
  * KorePicker plugin classs
  *
@@ -35,6 +39,8 @@ class InsureAssistTemplatePlugin {
         let me = this;
         let templateManager = me.hostInstance.templateManager;
         templateManager.installTemplate(new insureAssistCardTemplate())
+        templateManager.installTemplate(new insureAssistCarouselTemplate())
+        templateManager.installTemplate(new insureAssistPaymentMethod())
     }
 
     //class Append in body tag

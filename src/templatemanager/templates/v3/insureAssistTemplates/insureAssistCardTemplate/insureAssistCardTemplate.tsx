@@ -572,7 +572,7 @@ export function card(props: any) {
                             <div className="btn-grp">
                             {
                                 msgData.message[0]?.component?.payload?.cards?.buttonActions?.map((button: any) => (
-                                    <button style={button?.styleBtn} className="confirmation-btn" onClick={() => handleButtonEvent(button)} >{button?.title}</button>
+                                    <button style={button?.styleBtn} className="confirmation-btn" onClick={() => handleButtonEvent(button)} ><img class="btn-icon" src={button?.icon} /> {button?.title}</button>
                                 ))
                             }
                             </div>
