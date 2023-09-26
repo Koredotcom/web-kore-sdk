@@ -458,8 +458,6 @@ export function card(props: any) {
         );
         // Active Section Template End
     } else if (msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'details') {
-        console.log(msgData.message[0],'render messafe')
-
         return (
             <Fragment>
                 <div>
@@ -558,23 +556,23 @@ export function card(props: any) {
 
                                                         }
                                                     </div>
+                                                    {
+                                                        ele.bottomSection?.buttons?.map((button: any) => (
+                                                            <button style={button?.buttonStyle} className="view-more-btn" onClick={() => handleButtonEvent(button)}>{button?.buttonTitle}</button>
+                                                        ))
+                                                    }
                                                 </div>
-                                                {
-                                                    ele.bottomSection?.buttons?.map((button: any) => (
-                                                        <button style={button?.buttonStyle} className="view-more-btn" onClick={() => handleButtonEvent(button)}>{button?.buttonTitle}</button>
-                                                    ))
-                                                }
                                             </div>
                                         }
                                     </div>
                                 ))
                             }
                             <div className="btn-grp">
-                            {
-                                msgData.message[0]?.component?.payload?.cards?.buttonActions?.map((button: any) => (
-                                    <button style={button?.styleBtn} className="confirmation-btn" onClick={() => handleButtonEvent(button)} ><img class="btn-icon" src={button?.icon} /> {button?.title}</button>
-                                ))
-                            }
+                                {
+                                    msgData.message[0]?.component?.payload?.cards?.buttonActions?.map((button: any) => (
+                                        <button style={button?.styleBtn} className="confirmation-btn" onClick={() => handleButtonEvent(button)} ><img class="" src={button?.icon} /> {button?.title}</button>
+                                    ))
+                                }
                             </div>
                             {
                                 msgData.message[0]?.component?.payload?.buttonActions?.map((button: any) => (

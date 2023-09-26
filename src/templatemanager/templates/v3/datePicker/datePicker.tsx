@@ -11,7 +11,6 @@ export function DatePickerExt(props: any) {
     const iconHelper = new IconsManager();
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
-
     const closeMenu = () => {
         hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');
         setTimeout(() => {

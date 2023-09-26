@@ -39,7 +39,7 @@ class InsureAssistTemplatePlugin {
         let me = this;
         let templateManager = me.hostInstance.templateManager;
         templateManager.installTemplate(new insureAssistCardTemplate())
-        templateManager.installTemplate(new insureAssistCarouselTemplate())
+        templateManager.installTemplate(new insureAssistCarouselTemplate());
         templateManager.installTemplate(new insureAssistPaymentMethod())
     }
 

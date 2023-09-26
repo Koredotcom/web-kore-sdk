@@ -306,7 +306,7 @@
     }
 
     .chat-widgetwrapper-main-container {
-        height: 600px;
+        height: calc(100vh - 70px);
     }
 
     .chat-widget-composebar {

@@ -83,7 +83,7 @@ class stackedCards {
                     if (prevCount == 0) {
                         leftButton.classList.add('disabled-click');
                     } else {
-                        rightButton.classList.remove('disabled-click');  
+                        rightButton.classList.remove('disabled-click');
                     }
                 }
             })
@@ -146,13 +146,12 @@ class stackedCards {
             el.classList.remove("active");
         })
 
-        el.classList.add("active");
-        el.classList.add(me.config.layout)
-
-
-        el.style.zIndex = els.length * 5;
-        el.style.transform = activeTransform;
-
+        if (el) {
+            el.classList.add("active");
+            el.classList.add(me.config.layout)
+            el.style.zIndex = els.length * 5;
+            el.style.transform = activeTransform;
+        }
         if (me.config.onClick !== undefined) {
             me.config.onClick(el);
         }
@@ -256,8 +255,10 @@ class stackedCards {
 
             const styleStr = "translate(" + translateX + "%, 0%)  scale(" + scale + ") " + rotate;
 
-            els[i].style.transform = styleStr;
-            els[i].style.zIndex = z;
+            if (els[i]) {
+                els[i].style.transform = styleStr;
+                els[i].style.zIndex = z;
+            }
         }
 
 
