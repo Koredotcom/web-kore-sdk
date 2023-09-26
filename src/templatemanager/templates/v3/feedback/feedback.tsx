@@ -36,7 +36,9 @@ export function Feedback(props: any) {
         const value = currentTarget.textContent;
         currentTarget.classList.add('selected-nps');
         currentTarget.parentNode.childNodes.forEach((e: any) => {
-            e.disabled = true;
+            if (currentTarget !== e) {
+                e.disabled = true;
+            }
         })
         hostInstance.sendMessage(value, { renderMsg: value });
     }
@@ -54,7 +56,6 @@ export function Feedback(props: any) {
 
     const handleStar = (item: any) => {
         const stars = hostInstance.chatEle.querySelectorAll(`.star-rating-${msgData.messageId}`);
-        console.log('stars: ', stars);
         stars.forEach((star: any, ind: any) => {
             star.disabled = true;
             if (ind > item.value) {
