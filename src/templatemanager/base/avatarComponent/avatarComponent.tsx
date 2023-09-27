@@ -47,9 +47,9 @@ export function AvatarComponent(props: any) {
                     <div className="text-content animation-slide-up" role="contentinfo" aria-label="paragraph text">
                         <p className="help-text-content">Can I help you any way?</p>
                     </div>
-                    <button className="primary-button animation-slide-up" style={{ background: brandingInfo.chat_bubble.secondary_color }}>Send message</button>
+                    <button className="primary-button animation-slide-up">Send message</button>
                 </div>
-                <button className="avatar-bg" style={{ background: brandingInfo.chat_bubble.primary_color }}>
+                <button className="avatar-bg">
                     <span className="un-read-msg">2</span>
                     <figure className="default-avater-icon">
                         <img src={iconHelper.getIcon('avatar_icon')} alt="Elephant at sunset" />

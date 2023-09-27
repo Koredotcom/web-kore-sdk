@@ -154,13 +154,13 @@
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--agent-bubble-text-color);
+                color: var(--time-stamp-color);    // var(--agent-bubble-text-color);
             }
             .you-text{
                 font-weight: 600;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--agent-bubble-text-color);
+                color: var(--name-color);    // var(--agent-bubble-text-color);
             }
             .copied-text{
                 @extend .you-text;
@@ -229,13 +229,13 @@
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--gloabl-text-color);
+                color: var(--time-stamp-color); // var(--gloabl-text-color);
             }
             .you-text{
                 font-weight: 600;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--gloabl-text-color);
+                color: var(--name-color); // var(--gloabl-text-color);
             }
             .read-text{
                 font-weight: 500;
@@ -404,13 +404,13 @@
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--gloabl-text-color);
+                color: var(--time-stamp-color); // var(--gloabl-text-color);
             }
             .you-text{
                 font-weight: 600;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--gloabl-text-color);
+                color: var(--name-color); // var(--gloabl-text-color);
             }
             .copied-text{
                 @extend .you-text;
@@ -482,13 +482,13 @@
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--gloabl-text-color);
+                color:  var(--time-stamp-color); // var(--gloabl-text-color);
             }
             .you-text{
                 font-weight: 600;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--gloabl-text-color);
+                color: var(--name-color); // var(--gloabl-text-color);
             }
             .read-text{
                 font-weight: 500;
