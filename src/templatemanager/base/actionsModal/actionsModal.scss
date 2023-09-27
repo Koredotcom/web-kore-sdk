@@ -9,7 +9,7 @@
     z-index: 99999;
     &.if-modal-slide{
         border-radius: 4px;
-        background: var(--kore-grey-kore-white, #FFF);
+        background: var(--global-white-bg);
         box-shadow: 0px 0px 82px 0px rgba(0, 0, 0, 0.24);
         top: 40px;
         left: 20px;
@@ -51,7 +51,7 @@
         margin: 0 auto;
         .modal-content-action{
             border-radius: 4px;
-            background: #FFF;
+            background: var(--global-white-bg);
             width: 100%;
             max-height: 80%;
             display: flex;

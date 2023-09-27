@@ -27,6 +27,7 @@
             justify-content: center;
             cursor: pointer;
             font-size: 10px;
+            padding: 0;
             z-index: 1;
             svg{
                 path{
@@ -318,7 +319,7 @@
     border-radius: 0px 0px 4px 4px;
     padding: 16px 16px 0px 16px;
     .select-file-block{
-        background: #FFFFFF;
+        background: var(--global-white-bg);
         border-radius: 4px;
         padding: 16px;
         display: flex;
@@ -327,8 +328,8 @@
         .inputfile-btn{
             width: 100%;
             position: relative;
-            background: #FFFFFF;
-            border: 1px solid #E5E5E5;
+            background: var(--global-white-bg);
+            border: 1px solid var(--global-white-bg);
             border-radius: 4px;
             padding: 12px 20px;
             text-align: center;
@@ -359,7 +360,7 @@
 
 // Attached Items
 .uploaded-attachment-data{
-    background: #FFFFFF;
+    background: var(--global-white-bg);
     border-radius: 4px;
     padding: 8px 16px;
     display: inline-block;
@@ -372,7 +373,7 @@
         .img-block{
             width: 56px;
             height: 56px;
-            background: #EEF2F6;
+            background: var(--gloabl-bg-secondary);
             border-radius: 4px;
             flex-shrink: 0;
             margin-right: 8px;
@@ -386,13 +387,13 @@
                 font-weight: 500;
                 font-size: 14px;
                 line-height: 17px;
-                color: #202939;
+                color: var(--gloabl-text-color);
                 margin-bottom: 8px;
             }
             .progress-percentage{
                 height: 5px;
                 width: 100%;
-                background: #EEF2F6;
+                background: var(--gloabl-bg-secondary);
                 border-radius: 4px;
                 margin: 8px 0;
                 div{
@@ -406,7 +407,7 @@
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 18px;
-                color: #737373;
+                color: var(--gloabl-text-color);
             }
         }
         .delete-upload{
@@ -437,10 +438,10 @@
     align-items: center;
     gap: 20px;
     padding: 4px 0;
-    background: #fff;
+    background: var(--global-white-bg);
     z-index: 9;
     p{
-        color: var(--gray-modern-500, #697586);
+        color: var(--gloabl-text-color);
         font-size: 12px;
         font-weight: 400;
         line-height: 20px;
@@ -451,8 +452,8 @@
         width: 8px;
         height: 8px;
         border-radius: 5px;
-        background-color: #697586;
-        color: #697586;
+        background-color: var(--global-theme-color);
+        color: var(--global-theme-color);
         animation: dot-flashing 1s infinite linear alternate;
         animation-delay: 0.5s;
         &::before{
@@ -464,8 +465,8 @@
             width: 8px;
             height: 8px;
             border-radius: 5px;
-            background-color: #697586;
-            color: #697586;
+            background-color: var(--global-theme-color);
+            color: var(--global-theme-color);
             animation: dot-flashing 1s infinite alternate;
             animation-delay: 0s;
         }
@@ -478,8 +479,8 @@
             width: 8px;
             height: 8px;
             border-radius: 5px;
-            background-color: #697586;
-            color: #697586;
+            background-color: var(--global-theme-color);
+            color: var(--global-theme-color);
             animation: dot-flashing 1s infinite alternate;
             animation-delay: 1s;
         }

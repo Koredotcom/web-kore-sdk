@@ -27,7 +27,7 @@
             }
             .csat-feedback{
                 border-radius: 4px;
-                background: var(--gray-modern-100, #EEF2F6);
+                background: var(--gloabl-bg-secondary);
                 display: flex;
                 padding: 16px;
                 justify-content: center;
@@ -49,7 +49,8 @@
                                     filter: grayscale(1);
                                     + .emoji-details-label{
                                         p{
-                                            color: var(--gray-modern-400, #9AA4B2);
+                                            color: var(--gloabl-text-color);
+                                            opacity: 0.4;
                                         }
                                     }
                                 }
@@ -100,7 +101,7 @@
                             }
                             + .emoji-details-label{
                                 p{
-                                    color: var(--generic-black, #000);
+                                    color: var(--gloabl-text-color);
                                     text-align: center;
                                     font-size: 10px;
                                     font-weight: 400;
@@ -128,9 +129,9 @@
                 .added-feeback-text{
                     padding: 8px;
                     border-radius: 4px;
-                    border: 1px solid var(--gray-modern-200, #E3E8EF);
-                    background: var(--kore-grey-kore-white, #FFF);
-                    color: var(--gray-modern-700, #364152);
+                    border: 1px solid var(--gloabl-border-color);
+                    background: var(--global-white-bg);
+                    color: var(--gloabl-text-color);
                     font-size: 12px;
                     font-style: italic;
                     font-weight: 400;
@@ -155,9 +156,9 @@
                         padding: 0;
                         flex: 1;
                         border-radius: 4px;
-                        background: var(--gray-modern-100, #EEF2F6);
+                        background: var(--gloabl-bg-secondary);
                         border: 0;
-                        color: var(--gray-modern-500, #697586);
+                        color: var(--gloabl-text-color);
                         font-size: 12px;
                         font-style: normal;
                         font-weight: 600;
@@ -165,12 +166,12 @@
                         transition: 0.2s all ease;
                         &:hover{
                             background: var(--global-theme-color);
-                            color: var(--generic-white, #FFF);
+                            color: var(--generic-white);
                         }
                         &.selected-nps{
                             pointer-events: none;
                             background: var(--global-theme-color);
-                            color: var(--generic-white, #FFF);
+                            color: var(--generic-white);
                         }
                         &:disabled{
                             opacity: 0.6;

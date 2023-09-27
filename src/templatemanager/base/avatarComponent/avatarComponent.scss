@@ -87,6 +87,12 @@
                     align-items: center;
                     justify-content: center;
                     cursor: pointer;
+                    padding: 0;
+                    svg{
+                        path{
+                            fill: var(--gloabl-text-color);
+                        }
+                    }
                 }
             }
             .primary-button {

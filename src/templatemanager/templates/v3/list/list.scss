@@ -62,7 +62,7 @@
                         line-height: normal;
                     }
                     p{
-                        color: var(--gray-modern-700, #364152);
+                        color: var(--gloabl-text-color);
                         font-size: 12px;
                         font-weight: 400;
                         line-height: normal;
@@ -110,9 +110,10 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            figure{
-                width: 100%;
-                line-height: 0;
+            svg{
+                path{
+                    fill: var(--gloabl-text-color);
+                }
             }
         }
     }

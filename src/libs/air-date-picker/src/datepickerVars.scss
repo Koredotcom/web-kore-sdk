@@ -3,7 +3,7 @@
    ------------------------------------------------- */
 @import "../../../templatemanager/base/variables.scss";
 .air-datepicker {
-  --adp-font-family: "Inter";
+  --adp-font-family: var(--global-font-family);
   --adp-font-size: 14px;
   --adp-width: 100%; // Day cell width will be equal to 34px
   --adp-z-index: 100;
@@ -19,21 +19,21 @@
   --adp-transition-offset: 8px;
 
   --adp-background-color: var(--global-white-bg);
-  --adp-background-color-hover: #F2F4F7;
-  --adp-background-color-active: #F2F4F7;
+  --adp-background-color-hover: var(--gloabl-bg-secondary);
+  --adp-background-color-active: var(--gloabl-bg-secondary);
   --adp-background-color-in-range: var(--gloabl-text-color);
   --adp-background-color-in-range-focused: var(--gloabl-text-color);
   --adp-background-color-selected-other-month-focused: var(--global-theme-color);
   --adp-background-color-selected-other-month: var(--global-theme-color);
 
   --adp-color: var(--gloabl-text-color);
-  --adp-color-secondary: #9c9c9c;
+  --adp-color-secondary: var(--gloabl-text-color);
   --adp-accent-color: var(--gloabl-text-color);
   --adp-color-current-date: var(--adp-accent-color);
   --adp-color-other-month: #9AA4B2;
   --adp-color-disabled: #aeaeae;
   --adp-color-disabled-in-range: #939393;
-  --adp-color-other-month-hover: #F2F4F7;
+  --adp-color-other-month-hover: var(--gloabl-text-color);
 
   --adp-border-color: #E4E5E7;
   --adp-border-color-inner: #E4E5E7;
@@ -61,8 +61,8 @@
   --adp-cell-background-color-hover: var(--adp-background-color-hover);
   --adp-cell-background-color-selected: var(--global-theme-color);
   --adp-cell-background-color-selected-hover: var(--global-theme-color);
-  --adp-cell-background-color-in-range: #F2F4F7;
-  --adp-cell-background-color-in-range-hover: #F2F4F7;
+  --adp-cell-background-color-in-range: var(--gloabl-text-color);
+  --adp-cell-background-color-in-range-hover: var(--gloabl-text-color);
 
   --adp-btn-height: 32px;
   --adp-btn-color: var(--adp-accent-color);
