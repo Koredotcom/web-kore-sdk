@@ -377,6 +377,11 @@
                 align-items: center;
                 justify-content: center;
                 cursor: pointer;
+                svg{
+                    path{
+                        fill: var(--gloabl-text-color);
+                    }
+                }
             }
         }
         .accordion_collapse{

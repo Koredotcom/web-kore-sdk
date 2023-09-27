@@ -11,7 +11,7 @@
         .checkbox-input{
             &:checked{
                 + .checkbox-label{
-                    background: var(--kora-blue-blue-light, #E7F1FF);
+                    background: var(--gloabl-bg-secondary);
                 }
             }
         }
@@ -45,15 +45,15 @@
             position: relative;
             padding: 10px;
             padding-left: 36px;
-            border-radius: 4px;
+            border-radius: 2px;
             .title{
-                color: var(--kore-grey-kore-grey-dark-1, #121314);
+                color: var(--gloabl-text-color);
                 font-size: 14px;
                 font-weight: 400;
                 line-height: normal;
             }
             .desc-text-checkbox{
-                color: var(--gray-500, #667085);
+                color: var(--gloabl-text-color);
                 font-size: 14px;
                 font-weight: 400;
                 line-height: 20px;
@@ -71,7 +71,7 @@
                 margin: 0;
                 border-radius: 4px;
                 border: 1px solid var(--gloabl-border-color);
-                background: var(--generic-white, #FFF);
+                background: var(--global-white-bg);
             }
         }
         &:checked{
@@ -81,7 +81,7 @@
                     border: 1px solid var(--global-theme-color);
                     background:var(--global-theme-color);
                     font-size: 13px;
-                    color: #FFFFFF;
+                    color: var(--global-white);
                     font-family: 'SDKV3Icons' !important;
                     speak: never;
                     font-style: normal;
@@ -98,7 +98,7 @@
             }
             &:focus{
                 + .checkbox-label{
-                    color: var(--gray-500, #667085);;
+                    color: var(--gloabl-text-color);
                 }
             }
             &:disabled{

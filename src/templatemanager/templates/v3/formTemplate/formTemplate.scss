@@ -45,6 +45,7 @@
                 color: var(--form-temp--text-color);
                 &::placeholder{
                     color: var(--form-temp-input-placeholder);
+                    opacity: 0.5;
                 }
             }
         }

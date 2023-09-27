@@ -77,7 +77,7 @@
                     right: 0;
                     top: 0;
                     z-index: 2;
-                    i{
+                    svg{
                         transform: rotate(90deg);
                     }
                 }
@@ -117,15 +117,16 @@
                 gap: 10px;
                 flex-shrink: 0;
                 cursor: pointer;
-                i{
+                svg{
                     width: 16px;
                     height: 16px;
                     text-align: center;
-                    color: var(--table-desc-text-color);
-                    font-size: 12px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
+                    path{
+                        stroke: var(--gloabl-text-color);
+                    }
                 }
             }
             .hide{

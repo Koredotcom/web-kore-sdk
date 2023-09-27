@@ -45,7 +45,9 @@ export function Carousel(props: any) {
         return (
             <div className={stackClass}>
                 <button className={leftCheButton}>
-                    <i className="sdkv3-cheveron-left"></i>
+                    <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
+                        <path d="M12 15.5L7 10.5L12 5.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </button>
                 <ul class="slider">
                     {msgData.message[0].component.payload.elements.map((item: any) => (
@@ -69,7 +71,9 @@ export function Carousel(props: any) {
                         </li>))}
                 </ul>
                 <button className={rightCheButton}>
-                    <i className="sdkv3-cheveron-right"></i>
+                    <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
+                        <path d="M7 5.5L12 10.5L7 15.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </button>
             </div>
         );
@@ -143,7 +147,9 @@ export function Carousel(props: any) {
         return (
             <div className="list-template-carousel-wrapper" id={msgData.messageId}>
                 <button className="carousel-left-click" data-button-left={msgData.messageId}>
-                    <i className="sdkv3-cheveron-left"></i>
+                    <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
+                        <path d="M12 15.5L7 10.5L12 5.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </button>
                 <div className="list-carousel" data-id={msgData.messageId}>
                     {msgData.message[0].component.payload.elements.map((ele: any) => (
@@ -183,7 +189,9 @@ export function Carousel(props: any) {
                     ))}
                 </div>
                 <button className="carousel-right-click" data-button-right={msgData.messageId}>
-                    <i className="sdkv3-cheveron-right"></i>
+                    <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
+                            <path d="M7 5.5L12 10.5L7 15.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                 </button>
             </div>
         )

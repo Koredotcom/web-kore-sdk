@@ -154,13 +154,13 @@
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--time-stamp-color);
+                color: var(--agent-bubble-text-color);
             }
             .you-text{
                 font-weight: 600;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--name-color);
+                color: var(--agent-bubble-text-color);
             }
             .copied-text{
                 @extend .you-text;
@@ -191,8 +191,12 @@
                 z-index: 1;
                 cursor: pointer;
                 font-size: 14px;
-                color: var(--time-stamp-color);
                 display: none;
+                svg{
+                    path{
+                        fill: var(--gloabl-text-color);
+                    }
+                }
             }
             .agent-img{
                 position: absolute;
@@ -225,19 +229,19 @@
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--time-stamp-color);
+                color: var(--gloabl-text-color);
             }
             .you-text{
                 font-weight: 600;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--name-color);
+                color: var(--gloabl-text-color);
             }
             .read-text{
                 font-weight: 500;
                 font-size: 11px;
                 line-height: 13px;
-                color: var(--time-stamp-color);
+                color: var(--gloabl-text-color);
                 display: flex;
                 align-items: center;
                 i{
@@ -400,13 +404,13 @@
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--time-stamp-color);
+                color: var(--gloabl-text-color);
             }
             .you-text{
                 font-weight: 600;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--name-color);
+                color: var(--gloabl-text-color);
             }
             .copied-text{
                 @extend .you-text;
@@ -439,8 +443,12 @@
                 z-index: 1;
                 cursor: pointer;
                 font-size: 14px;
-                color: var(--time-stamp-color);
                 display: none;
+                svg{
+                    path{
+                        fill: var(--gloabl-text-color);
+                    }
+                }
             }
             .bot-img{
                 position: absolute;
@@ -474,19 +482,19 @@
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--time-stamp-color);
+                color: var(--gloabl-text-color);
             }
             .you-text{
                 font-weight: 600;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--name-color);
+                color: var(--gloabl-text-color);
             }
             .read-text{
                 font-weight: 500;
                 font-size: 11px;
                 line-height: 13px;
-                color: var(--time-stamp-color);
+                color: var(--gloabl-text-color);
             }
         }
     }
@@ -568,7 +576,7 @@
                     text-overflow: ellipsis;
                 }
                 p{
-                    color: var(--gray-modern-400, #9AA4B2);
+                    color: var(--gloabl-text-color);
                     font-size: 12px;
                     font-weight: 400;
                     line-height: normal;
