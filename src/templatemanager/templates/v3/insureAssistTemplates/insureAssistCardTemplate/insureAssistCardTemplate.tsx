@@ -541,7 +541,7 @@ export function card(props: any) {
                                         {ele.bottomSection &&
                                             <div className="bottom-sec-card">
                                                 <div className="card-acc-temp-sec">
-                                                    <div className="card-acc-temp" style={ele?.borderStyles && ele?.borderStyles}>
+                                                    <div className="card-acc-temp">
                                                         {
                                                             ele.bottomSection?.items?.map((val: any) => (
                                                                 <div className="gap-style">
@@ -555,12 +555,13 @@ export function card(props: any) {
                                                             ))
 
                                                         }
+                                                        {
+                                                            ele.bottomSection?.buttons?.map((button: any) => (
+                                                                <button style={button?.buttonStyle} className="view-more-btn viewmore-card-btn" onClick={() => handleButtonEvent(button)}>{button?.buttonTitle}</button>
+                                                            ))
+                                                        }
                                                     </div>
-                                                    {
-                                                        ele.bottomSection?.buttons?.map((button: any) => (
-                                                            <button style={button?.buttonStyle} className="view-more-btn" onClick={() => handleButtonEvent(button)}>{button?.buttonTitle}</button>
-                                                        ))
-                                                    }
+
                                                 </div>
                                             </div>
                                         }

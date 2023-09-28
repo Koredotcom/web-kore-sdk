@@ -608,6 +608,13 @@
     //     border-bottom: 0;
     //     // padding: 0;
     // }
+    .viewmore-card-btn {
+        margin: 0 auto;
+        text-align: center;
+        display: block;
+        padding: 6px 13px;
+        width: 94%;
+    }
 }
 
 
@@ -774,6 +781,7 @@ select {
         padding: 10px 40px;
         margin-right: 5px;
         width: 45%;
+
         img {
             vertical-align: middle;
         }
