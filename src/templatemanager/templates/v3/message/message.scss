@@ -511,6 +511,10 @@
                 display: none;
             }
 
+            // .insureassist-bot-img {
+            //     display: none;
+            // }
+
             .bot-img {
                 position: absolute;
                 right: auto;
@@ -677,6 +681,52 @@
                 .bubble-msg {
                     background: var(--agent-bubble-msg-bg);
                 }
+            }
+        }
+    }
+
+    .bot-img {
+        .bot-chat-icon {
+            display: none;
+        }
+    }
+    .bot-bubble-comp{
+        .bot-bubble-content{
+            .bubble-msg-with-img{
+                .bot-img.insureassist-bot-img {
+                    top: 120px;
+                    left: 0;
+                }
+            }
+        }
+    }
+    
+    .bot-bubble-comp{
+        .bot-bubble-content {
+             padding-left: 0;
+             padding-right: 8%;
+        }
+    }
+    .small-text{
+        font-size: 12px;
+        position: absolute;
+        top: 5px;
+        width: 136px;
+        left: 27px;
+        color: #667085;
+    }
+    .button-template-container{
+        .button-temp .kr-btn{
+            background: #F0F9FF;
+            color: #0086C9;
+            padding: 10px 16px;
+            border: none;
+        }
+    }
+    .bot-bubble-comp{
+        .bot-bubble-content{
+            .top-info .time-tamp {
+                display: none;
             }
         }
     }

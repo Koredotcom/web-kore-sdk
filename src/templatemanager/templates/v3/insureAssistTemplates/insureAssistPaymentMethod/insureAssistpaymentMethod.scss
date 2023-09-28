@@ -4,7 +4,10 @@
         padding: 10px 15px;
     }
     .btn-group{
-        margin-top:10px
+        margin-top:10px;
+        .view-renewal-btn{
+            padding: 10px 16px!important;
+        }
     }
 }
 
@@ -38,7 +41,9 @@
         overflow: auto;
         cursor: pointer;
     }
-
+    .card-acc-temp-sec:hover{
+        background: #EAF1FC;
+    }
     cursor: pointer;
     overflow: auto;
 

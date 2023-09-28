@@ -389,7 +389,7 @@
         border: 1px solid var(--card-temp-view-more-border);
         width: 100%;
         background: var(--card-temp-view-more-bg);
-        padding: 5px 12px;
+        padding: 6px 12px;
         color: var(--card-temp-bg);
         font-size: 12px;
         font-weight: 500;
@@ -400,7 +400,9 @@
         background-color: var(--card-temp-view-more-border);
     }
 
-
+    .view-more-btn:hover{
+        background-color: #0078B5!important;
+    }
     .button-block {
         width: 100%;
 

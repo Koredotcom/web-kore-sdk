@@ -391,7 +391,7 @@ export function card(props: any) {
             hostInstance.bottomSliderAction('', getHTML(cardSliderExtension, e, hostInstance));
         }
     }
-    if (msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'modern') {
+    if (msgData?.message?.[0]?.component?.payload?.template_type === 'insureAssistCardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'modern') {
         // Active Section Template Start
         return (
             <Fragment>
@@ -457,7 +457,7 @@ export function card(props: any) {
             </Fragment>
         );
         // Active Section Template End
-    } else if (msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'details') {
+    } else if (msgData?.message?.[0]?.component?.payload?.template_type === 'insureAssistCardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'details') {
         return (
             <Fragment>
                 <div>

@@ -378,3 +378,8 @@
 }
 
 /*--Tabbed - list --*/
+.insure-assist-theme {
+    .kr-button-primary{
+        background: var(--agent-bubble-msg-bg);
+    }
+}
