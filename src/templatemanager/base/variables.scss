@@ -25,7 +25,7 @@ $media-mobile: 600px;
     --gloabl-text-color:var(--global-primary-text);
     --gloabl-text-desc-color:var(--global-primary-text);
     --gloabl-border-color:var(--gloabl-secondary-color);
-    --scrollbar-bg:var(--global-theme-color);
+    --scrollbar-bg:var(--gloabl-bg-secondary);
 
     // Avatar Variables
         --avatar-bg:var(--v3-sdk-chat-branding--chat_bubble-bg-primary_color);  // var(--global-theme-color); 
@@ -62,13 +62,13 @@ $media-mobile: 600px;
         --welcome-start-conv-button-border:var(--global-theme-color);
         --welcome-start-conv-button-color:var(--v3-sdk-chat-branding--welcome_screen-starter_box-start_conv_text_color); //  var(--global-white);
         --welcome-footer-bg:var(--v3-sdk-chat-branding--welcome_screen-bottom_background-color);  // var(--global-theme-color);
-        --welecome-footer-text-color:var(--global-white);
+        --welecome-footer-text-color:var(--gloabl-text-color);
     // End
 
     // Chat Widget Header Variables;
         --chat-widget-header-bg:var(--v3-sdk-chat-branding--header-bg-bg_color);  // var(--global-white-bg);
         --chat-widget-header-border:var(--gloabl-border-color);
-        --chat-widget-header-bg-large:linear-gradient(180deg, var(--v3-sdk-chat-branding--header-bg-bg_color) 0%, var(--v3-sdk-chat-branding--header-bg-bg_color) 40.67%, rgba(255, 255, 255, 0) 80.38%); // var(--global-theme-color)
+        --chat-widget-header-bg-large:linear-gradient(180deg, var(--global-theme-color) 0%, var(--global-theme-color) 40.67%, rgba(255, 255, 255, 0) 80.38%); // var(--global-theme-color)
         --chat-widget-header-bg-large-info-bg:var(--global-white-bg);
         --chat-widget-header-bg-large-actions-color:var(--global-white);
         --chat-widget-header-bot-name-color:var(--v3-sdk-chat-branding--header-title-color); // var(--gloabl-text-color);
@@ -99,6 +99,8 @@ $media-mobile: 600px;
         --chat-widget-compose-bar-voice-speak-msg-border:var(--global-theme-color);
         --chat-widget-compose-bar-voice-recording-animation-shadow:0 0 0 0 rgba(var(--global-theme-color), 0.2), 0 0 0 1px rgba(var(--global-theme-color), 0.2), 0 0 0 3px rgba(var(--global-theme-color), 0.2), 0 0 0 5px rgba(var(--global-theme-color), 0.2);
         --chat-widget-compose-bar-voice-recording-animation-shadow-zoom:0 0 0 0 rgba(var(--global-theme-color), 0.2),0 0 0 3px rgba(var(--global-theme-color), 0.2),0 0 0 6px rgba(var(--global-theme-color), 0),0 0 0 10px rgba(var(--global-theme-color), 0);
+        --chat-widget-compose-bar-menu-icon-color:var(--gloabl-text-color);
+        --chat-widget-compose-bar-other-icons:var(--gloabl-text-color);
     // End
 
     // Bot Bubble Messages Variables

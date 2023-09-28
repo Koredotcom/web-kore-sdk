@@ -122,7 +122,7 @@ export function ChatWidgetComposeBar(props: any) {
                 </div>
             </div>
             <div className={inputTypeObj[brandingInfo.footer.layout]} aria-label="compose footer">
-                { brandingInfo.footer.buttons.menu.show && <button className="action-btn" type="button" aria-label="Action Hamberger menu" onClick={handleHamberger}>
+                { brandingInfo.footer.buttons.menu.show && <button className="action-btn hamberger-menu" type="button" aria-label="Action Hamberger menu" onClick={handleHamberger}>
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                         <path d="M2.5 3.125C2.15482 3.125 1.875 3.40482 1.875 3.75C1.875 4.09518 2.15482 4.375 2.5 4.375H17.5C17.8452 4.375 18.125 4.09518 18.125 3.75C18.125 3.40482 17.8452 3.125 17.5 3.125H2.5ZM2.5 9.375C2.15482 9.375 1.875 9.65482 1.875 10C1.875 10.3452 2.15482 10.625 2.5 10.625H17.5C17.8452 10.625 18.125 10.3452 18.125 10C18.125 9.65482 17.8452 9.375 17.5 9.375H2.5ZM2.5 15.625C2.15482 15.625 1.875 15.9048 1.875 16.25C1.875 16.5952 2.15482 16.875 2.5 16.875H17.5C17.8452 16.875 18.125 16.5952 18.125 16.25C18.125 15.9048 17.8452 15.625 17.5 15.625H2.5Z" fill="#697586"/>
                     </svg>

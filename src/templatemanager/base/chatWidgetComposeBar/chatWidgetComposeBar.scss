@@ -170,9 +170,16 @@
             margin-right: 8px;
             flex-shrink: 0;
             color: var(--chat-widget-compose-bar-text-area-color);
+            &.hamberger-menu{
+                svg{
+                    path{
+                        fill: var(--chat-widget-compose-bar-menu-icon-color);
+                    }
+                }
+            }
             svg{
                 path{
-                    fill: var(--chat-widget-compose-bar-text-area-color);
+                    fill: var(--chat-widget-compose-bar-other-icons);
                 }
             }            
         }
@@ -262,7 +269,7 @@
             flex-shrink: 0;
             svg{
                 path{
-                    fill: var(--chat-widget-compose-bar-text-area-color);
+                    fill: var(--chat-widget-compose-bar-other-icons);
                 }
             } 
         }
@@ -280,7 +287,7 @@
             flex-shrink: 0;
             svg{
                 path{
-                    fill: var(--chat-widget-compose-bar-text-area-color);
+                    fill: var(--chat-widget-compose-bar-other-icons);
                 }
             } 
         }

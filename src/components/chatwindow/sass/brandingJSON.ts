@@ -4,11 +4,11 @@ const BrandingJSON = {
         "size": "small",
         "themeType": "light",
         "colors":{
-            "primary":"#7A271A",
-            "secondary":"#FEE4E2",
+            "primary":"#444CE7",
+            "secondary":"#EAECF0",
             "primary_text": "#101828",
             "secondary_text": "#FFFFFF",
-            "useColorPaletteOnly": false
+            "useColorPaletteOnly": true
         }
     },
     "chat_bubble": {
