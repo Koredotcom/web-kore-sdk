@@ -694,8 +694,8 @@
         .bot-bubble-content{
             .bubble-msg-with-img{
                 .bot-img.insureassist-bot-img {
-                    top: 120px;
-                    left: 0;
+                    left: -27px;
+                    top: -9px;
                 }
             }
         }
@@ -703,17 +703,9 @@
     
     .bot-bubble-comp{
         .bot-bubble-content {
-             padding-left: 0;
-             padding-right: 8%;
+            padding-left: 16px;
+            padding-right: 7%;
         }
-    }
-    .small-text{
-        font-size: 12px;
-        position: absolute;
-        top: 5px;
-        width: 136px;
-        left: 27px;
-        color: #667085;
     }
     .button-template-container{
         .button-temp .kr-btn{

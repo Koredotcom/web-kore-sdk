@@ -303,6 +303,7 @@
     }
 
     .iner-data-scroll-wraper {
+        height: 100vh;
         flex: 1 1 auto;
         overflow: auto;
     }
@@ -501,11 +502,13 @@
                 animation: none !important;
             }
         }
-        .left-data{
+
+        .left-data {
             float: left;
-            width:70%;
+            width: 70%;
         }
-        .right-data{
+
+        .right-data {
             float: right;
         }
     }
@@ -536,6 +539,7 @@
         padding: 10px;
         width: 100%;
         cursor: pointer;
+
         .set-top-gap {
             clear: both;
             padding: 7px 0;
@@ -760,16 +764,18 @@ select {
     border-radius: 50px;
     background: #12B76A;
 }
-.btn-grp{
+
+.btn-grp {
     margin-top: 8px;
     text-align: center;
     margin-left: 5px;
-    .confirmation-btn{
+
+    .confirmation-btn {
         padding: 10px 40px;
-        margin-right:5px;
+        margin-right: 5px;
         width: 45%;
-        img{
+        img {
             vertical-align: middle;
         }
     }
-   }
+}
