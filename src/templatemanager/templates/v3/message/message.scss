@@ -676,6 +676,12 @@
 /*--insureAssist - css --*/
 .insure-assist-theme {
     .agent-bubble-comp {
+        // For Hiding the timestamp 
+        // .agent-bubble-content{
+        //     .top-info{
+        //         display: none;
+        //     }
+        // }
         .agent-bubble-content:hover {
             .bubble-msg-with-img {
                 .bubble-msg {
@@ -705,6 +711,10 @@
         .bot-bubble-content {
             padding-left: 16px;
             padding-right: 7%;
+            // For Hiding the timestamp 
+            // .top-info{   
+            //     display: none;   
+            // }
         }
     }
     .button-template-container{
@@ -713,13 +723,6 @@
             color: #0086C9;
             padding: 10px 16px;
             border: none;
-        }
-    }
-    .bot-bubble-comp{
-        .bot-bubble-content{
-            .top-info .time-tamp {
-                display: none;
-            }
         }
     }
 }
