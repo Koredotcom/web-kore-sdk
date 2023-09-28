@@ -49,6 +49,7 @@ export function ChatWidgetComposeBar(props: any) {
             event.preventDefault();
             hostInstance.sendMessageToBot(inputEle.value);
             inputEle.value = '';
+            hostInstance.chatEle.querySelector('.send-btn').classList.remove('show');
         })
     });
 
