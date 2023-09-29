@@ -25,6 +25,19 @@
                     outline-color: var(--agent-bubble-msg-bg);
                 }
             }
+            .attachmentUpload{
+                display: none;
+            }
+        }
+    }
+    .chat-widget-header{
+        .actions-info{
+            .btn-action{
+                display: none;
+            }
+            .btn-action.btn-action-close{
+                display: block;
+            }
         }
     }
 }

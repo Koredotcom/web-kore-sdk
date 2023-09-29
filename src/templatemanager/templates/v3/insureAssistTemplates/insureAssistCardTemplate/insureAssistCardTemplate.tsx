@@ -245,12 +245,12 @@ export function cardSliderExtension(props: any) {
                                                 <div className="card-acc-temp">
                                                     {tab.content.map((tab: any) => (
                                                         <div className="gap-style-accordian card-accordian">
-                                                            <div className="left-data">
+                                                            <div className="left-data" style={tab?.LeftStyle}>
                                                                 {tab.name && <p>
                                                                     {tab.name}
                                                                 </p>}
                                                             </div>
-                                                            <div className="right-data">
+                                                            <div className="right-data" style={tab?.RightStyle}>
                                                                 {tab.value && <p>{tab.value}</p>}
                                                             </div>
                                                         </div>
@@ -494,7 +494,7 @@ export function card(props: any) {
                                                                         {val?.title && <h3 style={val?.titleStyles && val?.titleStyles}>{val?.title}</h3>}
                                                                     </div>
                                                                     <div className="right-data">
-                                                                        {val?.value && <p style={val?.titleStyles && val?.valueStyles}>{val?.value}</p>}
+                                                                        {val?.value && <p style={val?.valueStyles && val?.valueStyles}>{val?.value}</p>}
                                                                     </div>
                                                                 </div>
                                                             ))

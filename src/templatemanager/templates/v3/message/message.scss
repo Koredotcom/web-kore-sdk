@@ -716,6 +716,13 @@
                 display: none;   
             }
         }
+        .bot-bubble-content:hover{
+            .bubble-msg-with-img{
+                .bubble-msg {
+                    background: var(--bot-bubble-msg-bg);
+                }
+            }
+        }
     }
     .button-template-container{
         .button-temp .kr-btn{
