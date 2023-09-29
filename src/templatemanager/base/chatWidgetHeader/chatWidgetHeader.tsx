@@ -82,7 +82,7 @@ export function ChatWidgetHeader(props: any) {
                 </button> }
                 { brandingInfo.header.buttons.close.show && <button className="btn-action btn-action-close">
                     <figure>
-                            <img src={iconHelper.getIcon('close_large')} alt="back button" />
+                            <img src={iconHelper.getIcon('minimize_icon')} alt="back button" />
                         </figure>
                     <i className="sdkv3-close"></i>
                 </button>} 
