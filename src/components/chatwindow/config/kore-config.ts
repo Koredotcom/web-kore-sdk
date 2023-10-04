@@ -41,6 +41,9 @@ botOptions.webhookConfig={
 // };
 
 chatConfig = {
+    mockMode:{
+        enable:false
+    },
     botOptions: botOptions,
     container:'body',
     allowIframe: false, 			// set true, opens authentication links in popup window, default value is "false"

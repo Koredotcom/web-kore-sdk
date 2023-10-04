@@ -222,7 +222,11 @@ initShow  (config:any) {
 
   me.reWriteWebHookURL(me.config);
   window._chatHistoryLoaded = false;
-  me.JWTSetup();
+  if(me.config?.mockMode?.enable){
+    me.setBranding()
+  }else{
+    me.JWTSetup();
+  }
   me.initi18n();
   me.seti18n((me.config && me.config.i18n && me.config.i18n.defaultLanguage) || 'en');
   if(me.config && me.config.sendFailedMessage && me.config.sendFailedMessage.hasOwnProperty('MAX_RETRIES')){
@@ -255,9 +259,9 @@ initShow  (config:any) {
   me.config.botOptions.chatHistory = me.config.chatHistory;
   me.config.botOptions.handleError = me.config.handleError;
   me.config.botOptions.googleMapsAPIKey = me.config.googleMapsAPIKey;
- 
+  if(!me.config?.mockMode?.enable){
   me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
-
+  }  
   let chatWindowHtml:any;
   if (me.config.UI.version == 'v2') {
     chatWindowHtml = (<any> $(me.getChatTemplate())).tmpl(me.config)
@@ -310,6 +314,10 @@ initShow  (config:any) {
   me.attachEventListener();
   $(me.chatEle).append(me.paginatedScrollMsgDiv);
   // me.show();
+  if(me.config?.mockMode?.enable){
+    me.onBotReady();
+  }
+
 };
 
 findSortedIndex  (array:any, value:any) {
