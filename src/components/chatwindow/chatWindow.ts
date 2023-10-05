@@ -943,6 +943,11 @@ bindEvents  () {
 bindEventsV3() {
   const me:any = this;
   me.eventManager.addEventListener('.typing-text-area', 'keydown', (event: any) => {
+    if (event.target.value.trim() == '') {
+      me.chatEle.querySelector('.send-btn').classList.remove('show');
+    } else {
+      me.chatEle.querySelector('.send-btn').classList.add('show');
+    }
     let chatWindowEvent = {stopFurtherExecution: false};
     me.emit(me.EVENTS.ON_KEY_DOWN,{
       event:event,
@@ -958,6 +963,7 @@ bindEventsV3() {
       event.preventDefault();
       me.sendMessageToBot(event.target.value);
       event.target.value = '';
+      me.chatEle.querySelector('.send-btn').classList.remove('show');
     } 
   })
 
