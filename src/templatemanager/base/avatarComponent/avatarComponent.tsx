@@ -57,7 +57,6 @@ export function AvatarComponent(props: any) {
                     <figure className="close-avater-icon rotateIn">
                         <img src={iconHelper.getIcon('close_chat_avatar')} alt="Elephant at sunset" />
                     </figure>
-                    <p className="minimize-text"></p>
                 </button>
             </div>
         </div>

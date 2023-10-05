@@ -43,6 +43,16 @@ class BrandingManager {
                 }
             });
 
+            if (data.welcome_screen.background.type == 'image') {
+                const imgData = 'url(\'' + (data.welcome_screen.background.img) + '\')';
+                document.documentElement.style.setProperty('--v3-sdk-chat-branding--welcome_screen-background-color', imgData);
+            }
+
+            if (data.body.background.type == 'image') {
+                const imgData = 'url(\'' + (data.body.background.img) + '\')';
+                document.documentElement.style.setProperty('--v3-sdk-chat-branding--body-background-bg', imgData);
+            }
+
         } else {
             for (var key in data) {
                 for (var subKey in data[key]) {

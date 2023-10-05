@@ -155,9 +155,6 @@
                 line-height: 10px;
                 color: var(--global-white);
             }
-            .minimize-text{
-                display: none;
-            }
             &.click-to-rotate-icon{
                 .default-avater-icon{
                     display: none;
@@ -222,28 +219,6 @@
         .avatar-actions {
             .content-info{
                 display: none;
-            }
-        }
-    }
-    &.avatar-minimize-text{
-        .avatar-actions {
-            .content-info{
-                display: none;
-            }
-            .avatar-bg{
-                display: flex;
-                align-items: center;
-                flex-direction: row-reverse;
-                width: 370px;
-                justify-content: space-between;
-                .minimize-text{
-                    color: var(--global-white);
-                    text-align: justify;
-                    font-size: 14px;
-                    font-weight: 500;
-                    line-height: 20px;
-                    display: block;
-                }
             }
         }
     }

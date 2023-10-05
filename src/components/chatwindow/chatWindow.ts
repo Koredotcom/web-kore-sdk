@@ -968,7 +968,6 @@ bindEventsV3() {
   })
 
   me.eventManager.addEventListener('.avatar-variations-footer', 'click', () => {
-    const avatarMinimizeStyle = me.config.branding.chat_bubble.minimise.theme == 'rectangle' ? 'avatar-minimize-text' : 'avatar-minimize';
     if (!me.chatEle.querySelector('.avatar-bg').classList.contains('click-to-rotate-icon')) {
       if (me.config.multiPageApp && me.config.multiPageApp.enable) {
         me.setLocalStoreItem('kr-cw-state', 'open');
@@ -1011,7 +1010,7 @@ bindEventsV3() {
       }
 
       me.chatEle.classList.remove('minimize-chat');
-      me.chatEle.querySelector('.avatar-variations-footer').classList.add(avatarMinimizeStyle);
+      me.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
       me.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
       me.minimized = false;
       if (me.skipedInit) {
@@ -1023,7 +1022,7 @@ bindEventsV3() {
       }
     } else {
       me.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
-      me.chatEle.querySelector('.avatar-variations-footer').classList.remove(avatarMinimizeStyle)
+      me.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
       if (me.config.branding.welcome_screen.show) {
         me.chatEle.querySelector('.welcome-chat-section').classList.remove('minimize');
       }
@@ -2415,7 +2414,6 @@ applyVariableValue (key:any,value:any,type:any){
 
   switchView(type: any) {
     const me: any = this;
-    const avatarMinimizeStyle = me.config.branding.chat_bubble.minimise.theme == 'rectangle' ? 'avatar-minimize-text' : 'avatar-minimize';
     if (me.initial) {
       me.chatEle.querySelector('.content-text h1').textContent = me.config.botMessages.connecting;
       setTimeout(() => {
@@ -2429,7 +2427,7 @@ applyVariableValue (key:any,value:any,type:any){
     if (type == 'avatar') {
       me.chatEle.classList.add('minimize-chat');
       me.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
-      me.chatEle.querySelector('.avatar-variations-footer').classList.remove(avatarMinimizeStyle);
+      me.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize');
       if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
         me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
       } else {
@@ -2450,13 +2448,13 @@ applyVariableValue (key:any,value:any,type:any){
         me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
       }
       me.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
-      me.chatEle.querySelector('.avatar-variations-footer').classList.add(avatarMinimizeStyle);
+      me.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
     } else if (type == 'chat') {
       me.chatEle.classList.remove('minimize-chat');
       me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
       me.chatEle.querySelector('.welcome-chat-section')?.classList.remove('minimize');
       me.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
-      me.chatEle.querySelector('.avatar-variations-footer').classList.add(avatarMinimizeStyle);
+      me.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
     } else {
       me.chatEle.classList.remove('minimize-chat');
       if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
@@ -2466,7 +2464,7 @@ applyVariableValue (key:any,value:any,type:any){
       }
       me.chatEle.querySelector('.welcome-chat-section')?.classList.remove('minimize');
       me.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
-      me.chatEle.querySelector('.avatar-variations-footer').classList.remove(avatarMinimizeStyle);
+      me.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize');
     }
   }
 
