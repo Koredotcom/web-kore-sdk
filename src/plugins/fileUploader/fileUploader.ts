@@ -1,4 +1,4 @@
-import $ from 'jquery';
+import $ from '../../libs/korejquery';
 import './fileUploader.scss';
 declare const document:any;
 declare const _recfileLisnr:any;
