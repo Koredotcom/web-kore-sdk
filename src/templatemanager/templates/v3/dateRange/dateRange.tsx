@@ -29,8 +29,8 @@ export function DateRangeExt(props: any) {
         const dp = new Datepicker(`#cal-${msgData.messageId}`, {
             dateFormat: msgData?.message?.[0]?.component?.payload?.format,
             range: true,
-            minDate: msgData.message?.[0]?.component?.payload?.startDate,
-            maxDate: msgData.message?.[0]?.component?.payload?.endDate,
+            minDate: msgData.message?.[0]?.component?.payload?.startDate ? msgData.message?.[0]?.component?.payload?.startDate : '',
+            maxDate: msgData.message?.[0]?.component?.payload?.endDate ? msgData.message?.[0]?.component?.payload?.endDate : '',
             disableNavWhenOutOfRange: false,
             onSelect: (d: any) => {
                 setSelectedDate({ from: d.formattedDate[0], to: d.formattedDate[1]});
@@ -83,8 +83,8 @@ export function DateRange(props: any) {
                 const dp = new Datepicker(`#cal-${msgData.messageId}`, {
                     dateFormat: msgData?.message?.[0]?.component?.payload?.format,
                     range: true,
-                    minDate: msgData.message?.[0]?.component?.payload?.startDate,
-                    maxDate: msgData.message?.[0]?.component?.payload?.endDate,
+                    minDate: msgData.message?.[0]?.component?.payload?.startDate ? msgData.message?.[0]?.component?.payload?.startDate : '',
+                    maxDate: msgData.message?.[0]?.component?.payload?.endDate ? msgData.message?.[0]?.component?.payload?.endDate : '',
                     disableNavWhenOutOfRange: false,
                     onSelect: (d: any) => {
                         setSelectedDate({ from: d.formattedDate[0], to: d.formattedDate[1]});

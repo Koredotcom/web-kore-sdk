@@ -28,6 +28,9 @@ export function DatePickerExt(props: any) {
     useEffect(() => {
         const dp = new Datepicker(`#cal-${msgData.messageId}`, {
             dateFormat: msgData?.message?.[0]?.component?.payload?.format,
+            minDate: msgData.message?.[0]?.component?.payload?.startDate ? msgData.message?.[0]?.component?.payload?.startDate : '',
+            maxDate: msgData.message?.[0]?.component?.payload?.endDate ? msgData.message?.[0]?.component?.payload?.endDate : '',
+            disableNavWhenOutOfRange: false,
             onSelect: (d: any) => {
                 setSelectedDate(d.formattedDate);
             }
@@ -78,6 +81,9 @@ export function DatePicker(props: any) {
             useEffect(() => {
                 const dp = new Datepicker(`#cal-${msgData.messageId}`, {
                     dateFormat: msgData?.message?.[0]?.component?.payload?.format,
+                    minDate: msgData.message?.[0]?.component?.payload?.startDate ? msgData.message?.[0]?.component?.payload?.startDate : '',
+                    maxDate: msgData.message?.[0]?.component?.payload?.endDate ? msgData.message?.[0]?.component?.payload?.endDate : '',        
+                    disableNavWhenOutOfRange: false,
                     onSelect: (d: any) => {
                         setSelectedDate(d.formattedDate);
                     }
