@@ -1,8 +1,7 @@
 let c2c_serverConfig = {
-    domain: '192.168.1.241',  //5061 need to mention port???              
-    addresses: ['ws://192.168.1.241:8088'],    
-    //iceServers: ['74.125.140.127:19302', '74.125.143.127:19302']   
-    iceServers: ['sbc-audiocodes-azure.kore.ai:3478']                // Addresses for STUN servers. Can be empty
+  domain: '',           
+  addresses: [],  
+  iceServers: [] // Addresses for STUN servers. Can be empty
 };
 
 
