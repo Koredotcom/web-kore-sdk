@@ -360,6 +360,7 @@ class KoreFileUploaderPlugin {
   acceptAndUploadFile(_this: any, file: Blob, recState: any) {
     let me:any = this;
     let ele: any;
+    let $ = me.hostInstance.$;
     const uc:any = me.getfileuploadConf(recState);
     uc.chunkUpload = file.size > me.appConsts.CHUNK_SIZE;
     uc.chunkSize = me.appConsts.CHUNK_SIZE;
