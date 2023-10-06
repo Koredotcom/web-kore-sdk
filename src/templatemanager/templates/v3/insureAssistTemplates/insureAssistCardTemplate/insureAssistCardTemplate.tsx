@@ -391,6 +391,10 @@ export function card(props: any) {
             hostInstance.bottomSliderAction('', getHTML(cardSliderExtension, e, hostInstance));
         }
     }
+    const response = { futureDate: '2023-12-31' };
+
+    // Store the future date in localStorage
+    localStorage.setItem('futureDate', response.futureDate);
     if (msgData?.message?.[0]?.component?.payload?.template_type === 'insureAssistCardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'modern') {
         // Active Section Template Start
         return (

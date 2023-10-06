@@ -1,6 +1,7 @@
 import insureAssistCardTemplate from '../templatemanager/templates/v3/insureAssistTemplates/insureAssistCardTemplate/insureAssistCardTemplate';
 import insureAssistCarouselTemplate from '../templatemanager/templates/v3/insureAssistTemplates/insureAssistCarouselTemplate/insureAssistCarouselTemplate';
 import insureAssistPaymentMethod from '../templatemanager/templates/v3/insureAssistTemplates/insureAssistPaymentMethod/insureAssistPaymentMethod';
+import insureAssistFormTemplate from '../templatemanager/templates/v3/insureAssistTemplates/insureAsssitFormTemplate/insureAssistFormTemplate';
 
 
 /**
@@ -40,7 +41,8 @@ class InsureAssistTemplatePlugin {
         let templateManager = me.hostInstance.templateManager;
         templateManager.installTemplate(new insureAssistCardTemplate())
         templateManager.installTemplate(new insureAssistCarouselTemplate());
-        templateManager.installTemplate(new insureAssistPaymentMethod())
+        templateManager.installTemplate(new insureAssistPaymentMethod());
+        templateManager.installTemplate(new insureAssistFormTemplate());
     }
 
     //class Append in body tag
