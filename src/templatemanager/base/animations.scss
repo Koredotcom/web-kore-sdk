@@ -498,7 +498,7 @@
   
 @keyframes dot-flashing {
   0% {
-      background-color: #9AA4B2;
+      background-color: var(--gloabl-bg-secondary);
   }
   50%, 100% {
       opacity: 0.5;

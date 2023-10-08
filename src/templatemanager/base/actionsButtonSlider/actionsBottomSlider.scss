@@ -5,6 +5,7 @@
     width: 100%;
     top: 0;
     background: rgba(0, 0, 0, 0.6);
+    // background: var(--gloabl-text-color);
     backdrop-filter: blur(4px);
     border-radius: 4px;
     z-index: 99;
@@ -45,7 +46,7 @@
         animation-duration: 0.5s;
         -webkit-animation-fill-mode: both;
         animation-fill-mode: both;
-        background: #FFFFFF;
+        background: var(--global-white-bg);
         border-radius: 4px 4px 0px 0px;
     }
 }

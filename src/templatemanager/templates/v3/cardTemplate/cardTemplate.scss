@@ -20,9 +20,7 @@
 
         h1 {
             color: var(--card-heading-title);
-            font-family: Inter;
             font-size: 14px;
-            font-style: normal;
             font-weight: 600;
             line-height: normal;
         }
@@ -57,7 +55,7 @@
         .tag-name {
             flex-shrink: 0;
             border-radius: 24px;
-            background: var(--success-50, #F0FDF4);
+            background: var(--gloabl-bg-secondary);
             padding: 2px 10px;
             color: var(--kore-green-kore-green-0, #04AF5F);
             text-align: center;
@@ -197,9 +195,10 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            figure{
-                width: 100%;
-                line-height: 0;
+            svg{
+                path{
+                    fill: var(--gloabl-text-color);
+                }
             }
         }
     }
@@ -233,7 +232,7 @@
 
         span {
             border-radius: 4px;
-            background: var(--kora-blue-blue-light, #E7F1FF);
+            background: var(--gloabl-bg-secondary);
             flex-shrink: 0;
             color: var(--gloabl-text-color);
             text-align: right;
@@ -263,7 +262,7 @@
             }
 
             p {
-                color: var(--kora-grey-grey-dark-3, #5F6368);
+                color: var(--gloabl-text-color);
                 font-size: 14px;
                 font-weight: 400;
                 line-height: normal;
@@ -319,7 +318,7 @@
             p {
                 font-size: 14px;
                 line-height: 20px;
-                color: #101828;
+                color: var(--gloabl-text-color);
                 font-weight: 500;
             }
         }
@@ -344,7 +343,7 @@
         display: inline-block;
         width: 100%;
         border-radius: 6px;
-        border: 1px solid var(--kore-grey-kore-grey-light-1, #F7F9FA);
+        border: 1px solid var(--gloabl-border-color);
         margin: 2px 0;
         .accordion_heading{
             width: 100%;
@@ -353,7 +352,7 @@
             align-items: center;
             gap: 10px;
             min-height: 50px;
-            background: var(--kore-grey-kore-grey-light-1, #F7F9FA);
+            background: var(--gloabl-bg-secondary);
             border: 0;
             padding: 10px;
             &[aria-expanded="true"]{
@@ -363,9 +362,7 @@
             }
             p{
                 color: var(--gloabl-text-color);
-                font-family: Inter;
                 font-size: 14px;
-                font-style: normal;
                 font-weight: 600;
                 line-height: normal;
                 width: 100%;
@@ -377,6 +374,11 @@
                 align-items: center;
                 justify-content: center;
                 cursor: pointer;
+                svg{
+                    path{
+                        fill: var(--gloabl-text-color);
+                    }
+                }
             }
         }
         .accordion_collapse{
@@ -406,18 +408,21 @@
         padding: 10px 10px 10px 0px;
         align-items: flex-start;
         gap: 15px;
-        border-bottom: 1px solid rgba(154, 160, 166, 0.2);
+        border-bottom: 1px solid var(--gloabl-border-color);
+        &:last-child{
+            border: 0;
+        }
         cursor: pointer;
         .left-data{
             width: 100%;
             h1{
-                color: var(--gray-900, #101828);
+                color: var(--gloabl-text-color);
                 font-size: 14px;
                 font-weight: 500;
                 line-height: 20px;
             }
             p{
-                color: var(--kora-grey-grey-medium-1, #9AA0A6);
+                color: var(--gloabl-text-color);
                 font-size: 13px;
                 font-weight: 400;
                 line-height: 20px;
@@ -442,10 +447,10 @@
     width: 100%;
     .rugular-card-temp{
         border-radius: 8px;
-        background: var(--kora-grey-white, #FFF);
+        background: var(--global-white-bg);
         display: inline-block;
         width: 100%;
-        box-shadow: 0px 1px 2px 0px #BDC1C6;
+        box-shadow: 0px 1px 2px 0px var(--gloabl-border-color);
         .card-r-h-1{
             width: 100%;        
             display: flex;
@@ -456,7 +461,7 @@
                 width: 4px;
                 flex-shrink: 0;
                 border-radius: 9px;
-                background: var(--kora-red-red-highlight, #DD3646);
+                background: var(--global-theme-color);
             }
             .img-block{
                 flex-shrink: 0;
@@ -502,7 +507,7 @@
                     // width: 100%;
                 }
                 p{
-                    color: var(--kora-grey-grey-dark-3, #5F6368);
+                    color: var(--gloabl-text-color);
                     font-size: 14px;
                     font-weight: 400;
                     line-height: normal;
@@ -516,20 +521,20 @@
         }
         .r-header-card{
             border-radius: 8px 8px 0px 0px;
-            background: var(--kora-blue-blue-light, #E7F1FF);
+            background: var(--gloabl-bg-secondary);
             padding: 14px;
-            color: var(--kora-blue-blue-dark, #07377F);
+            color: var(--gloabl-text-color);
             font-size: 14px;
             font-weight: 500;
             line-height: 20px;
-            border: 1px solid var(--kora-blue-blue-medium, #85B7FE);
+            border: 1px solid var(--gloabl-border-color);
             h1{
                 margin: 0;
             }
         }
         .r-body-card{
             padding: 10px 14px;
-            border: 1px solid var(--kora-blue-blue-medium, #85B7FE);
+            border: 1px solid var(--gloabl-border-color);
             border-radius: 0px 0px 8px 8px;
             display: flex;
             flex-direction: column;
@@ -549,7 +554,7 @@
                     }
                 }
                 p{
-                    color: var(--kora-grey-grey-dark-3, #5F6368);
+                    color: var(--gloabl-text-color);
                     font-size: 12px;
                     font-weight: 500;
                     line-height: 19px;
@@ -560,11 +565,11 @@
         .btn-action-card{
             width: 100%;
             border-radius: 0px 0px 8px 8px;
-            background: var(--kora-blue-blue-highlight, #0D6EFD);
-            border: 1px solid var(--kora-blue-blue-highlight, #0D6EFD);
+            background: var(--global-theme-color);
+            border: 1px solid var(--global-theme-color);
             padding: 13px;
             text-align: center;
-            color: var(--kora-grey-white, #FFF);
+            color: var(--global-white);
             font-size: 14px;
             font-style: normal;
             font-weight: 500;

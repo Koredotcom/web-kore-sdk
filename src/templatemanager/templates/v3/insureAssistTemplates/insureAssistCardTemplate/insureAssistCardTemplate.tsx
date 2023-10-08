@@ -305,11 +305,11 @@ export function cardSliderExtension(props: any) {
 
                                                                     {tab.items && tab.items.map((val: any, i: any) => (
                                                                         <div className="border-style gap-style p-r-5">
-                                                                            <div className="left-data">
-                                                                                {val.name && <h2 className="sub-title" style={val.nameStyles}>{val.name}</h2>}
+                                                                            <div className="left-data" style={val.leftWidth}>
+                                                                                {val.name && <h2 className="sub-title" style={val?.nameStyles}>{val.name}</h2>}
                                                                             </div>
-                                                                            <div className="right-data">
-                                                                                {val.value && <h2 className="sub-title" style={val.nameStyles}>{val.value}</h2>}
+                                                                            <div className="right-data" style={val.rightWidth}>
+                                                                                {val.value && <h2 className="sub-title" style={val?.nameStyles}>{val.value}</h2>}
                                                                             </div>
                                                                             {
                                                                                 val.itemDescriptions && val.itemDescriptions.map((val: any, i: any) => (
@@ -478,7 +478,7 @@ export function card(props: any) {
                                                 <div className=" card-acc-temp-sec">
                                                     <div className="card-acc-temp">
                                                         <div className="gap-style">
-                                                            <div className="left-data">
+                                                            test123 <div className="left-data">
                                                                 {ele?.topSection?.title && <h1 style={ele?.topSection?.titleStyle && ele?.topSection?.titleStyle}><img src={ele?.topSection?.icon} /> {ele?.topSection?.title}</h1>}
                                                             </div>
                                                             <div className="right-data">

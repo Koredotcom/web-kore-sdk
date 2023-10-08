@@ -2,25 +2,33 @@ const BrandingJSON = {
     "general": {
         "bot_icon": "url",
         "size": "small",
-        "themeType": "light"
+        "themeType": "light",
+        "colors":{
+            "primary":"#444CE7",
+            "secondary":"#EAECF0",
+            "primary_text": "#101828",
+            "secondary_text": "#FFFFFF",
+            "useColorPaletteOnly": true
+        }
     },
     "chat_bubble": {
         "style": "balloon",
         "icon": {
-            "icon_url": "url2",
+            "icon_url": "https://qa-xo.kore.ai:443/api/getMediaStream/market/f-43348414-840f-5e10-8603-40da4d731d41.png?n=4930054647&s=IkRjZFlTdzV5TW1nZ2xlMDhXck9UWHdaSzNKMUpOa2V0NUg2cjVhL2p2NEk9Ig$$",
             "size": "medium",
-            "shape": "square" 
+            "type": "default" 
         },
         "minimise": {
             "icon": "url4",
-            "theme": "rounded"
+            "theme": "rounded",
+            "type": "default"
         },
         "sound": "themeOne",
         "alignment": "block",
         "animation": "slide",
         "expand_animation": "quick",
-        "primary_color": "#0D8BD2",
-        "secondary_color": "#0D8BD2"
+        "primary_color": "#4B4EDE",
+        "secondary_color": "#EAECF0"
     },
     "welcome_screen": {
         "show": false,
@@ -29,19 +37,16 @@ const BrandingJSON = {
             "logo_url": "/images/sc-small.svg"
         },
         "title": {
-            "name": "Hello",
-            "color": "#ffffff"
+            "name": "Hello"
         },
         "sub_title": {
-            "name": "Welcome to Kore.ai",
-            "color": "#ffffff"
+            "name": "Welcome to Kore.ai"
         },
         "note": {
-            "name": "Our Community is ready to help you to join our best platform",
-            "color": "#ffffff"
+            "name": "Our Community is ready to help you to join our best platform"
         },
         "background": {
-            "type": "image",
+            "type": "color",
             "color": "#4B4EDE",
             "img": "https://picsum.photos/seed/picsum/200/300"
         },
@@ -150,14 +155,13 @@ const BrandingJSON = {
         }
     },
     "header": {
-        "bg_color": "#ffffff",
+        "bg_color": "#EAECF0",
         "size": "compact",
-        "style": "translucent",
         "icon": {
             "show": true,
             "icon_url": "/images/avatar-bot.svg",
-            "color": "#ffffff"
         },
+        "icons_color": "#000000",
         "title": {
             "name": "InsureAssist",
             "color": "#000000"
@@ -202,50 +206,36 @@ const BrandingJSON = {
         }
     },
     "footer": {
-        "bg_color": "#ffffff",
-        "layout": "voice",
-        "style": "translucent",
+        "bg_color": "#EAECF0",
+        "layout": "keypad",
         "compose_bar": {
             "bg_color": "#fffffe",
             "outline-color": "#0D6EFD",
             "placeholder": "Type a message"
         },
+        "icons_color": "#000000",
         "buttons": {
             "menu": {
                 "show": true,
-                "icon": "url|icomoon",
-                "actions": [
-                    {
-                        "title": "Buy Policy",
-                        "type": "postback",
-                        "value": "BuyPolicy",
-                    },
-                    {
-                        "title": "Renew Policy",
-                        "type": "postback",
-                        "value": "RenewPolicy",
-                    },
-                    {
-                        "title": "Raise Claim",
-                        "type": "postback",
-                        "value": "RaiseClaim",
-                    },
-                    {
-                        "title": "Roadside Assistance",
-                        "type": "postback",
-                        "value": "RoadsideAssistance",
-                    },
-                    {
-                        "title": "Emergency Assistance",
-                        "type": "postback",
-                        "value": "EmergencyAssistance",
-                    },
-                    {
-                        "title": "Start New Conversation",
-                        "type": "postback",
-                        "value": "StartNewConversation",
-                    },
-                
+                "icon_color": "#000000" ,
+                "actions": [{
+                    "title": "Get Balance",
+                    "type": "postback",
+                    "value": "Get Balance",
+                    "icon": "url|icomoon"
+                },
+                {
+                    "title": "Get Transactions",
+                    "type": "postback",
+                    "value": "Get Transactions",
+                    "icon": "url|icomoon"
+                },
+                {
+                    "title": "Kore.ai",
+                    "type": "url",
+                    "value": "https://kore.ai/",
+                    "icon": "url|icomoon"
+                }
                 ]
             },
             "emoji": {
@@ -274,15 +264,15 @@ const BrandingJSON = {
             "style": "1|2|3"
         },
         "user_message": {
-            "bg_color": "#0D8BD2",
-            "color": "#ffffff"
+            "bg_color": "#4B4EDE",
+            "color": "#FFFFFF"
         },
         "bot_message": {
-            "bg_color": "#F0F1F2",
+            "bg_color": "#EAECF0",
             "color": "#000000"
         },
         "agent_message": {
-            "bg_color": "#0D6EFD",
+            "bg_color": "#4B4EDE",
             "color": "#0D6EFD",
             "separator": "2",
             "icon": {
@@ -310,6 +300,10 @@ const BrandingJSON = {
             "user_icon": false,
             "bot_icon": true,
             "agent_icon": true
+        },
+        "buttons": {
+            "bg_color": "red",
+            "color": "white"
         },
         "bubble_style": "balloon",
         "primaryColor": "#3f42d4",

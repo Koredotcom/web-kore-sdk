@@ -35,7 +35,9 @@ export function QuickReply(props: any) {
     return (
         <div className="quick-replies quick-temp" id={msgData.messageId}>
             <button className="quick-left-click" c-left-button-id={msgData.messageId}>
-                <i className="sdkv3-cheveron-left"></i>
+                <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
+                    <path d="M12 15.5L7 10.5L12 5.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
             </button>
             <div className="quick-replies-buttons" c-parent-id={msgData.messageId}>
                 {msgData.message[0].component.payload.quick_replies.map((ele: any) => (
@@ -44,7 +46,9 @@ export function QuickReply(props: any) {
                 }
             </div>
             <button className="quick-right-click" c-right-button-id={msgData.messageId}>
-                <i className="sdkv3-cheveron-right"></i>
+                <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
+                    <path d="M7 5.5L12 10.5L7 15.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
             </button>
         </div>
 

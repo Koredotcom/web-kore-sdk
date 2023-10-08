@@ -180,14 +180,14 @@
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--time-stamp-color);
+                color: var(--time-stamp-color);    // var(--agent-bubble-text-color);
             }
 
             .you-text {
                 font-weight: 600;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--name-color);
+                color: var(--name-color);    // var(--agent-bubble-text-color);
             }
 
             .copied-text {
@@ -222,8 +222,12 @@
                 z-index: 1;
                 cursor: pointer;
                 font-size: 14px;
-                color: var(--time-stamp-color);
                 display: none;
+                svg{
+                    path{
+                        fill: var(--gloabl-text-color);
+                    }
+                }
             }
 
             .agent-img {
@@ -261,21 +265,21 @@
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--time-stamp-color);
+                color: var(--time-stamp-color); // var(--gloabl-text-color);
             }
 
             .you-text {
                 font-weight: 600;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--name-color);
+                color: var(--name-color); // var(--gloabl-text-color);
             }
 
             .read-text {
                 font-weight: 500;
                 font-size: 11px;
                 line-height: 13px;
-                color: var(--time-stamp-color);
+                color: var(--gloabl-text-color);
                 display: flex;
                 align-items: center;
 
@@ -463,14 +467,14 @@
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--time-stamp-color);
+                color: var(--time-stamp-color); // var(--gloabl-text-color);
             }
 
             .you-text {
                 font-weight: 600;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--name-color);
+                color: var(--name-color); // var(--gloabl-text-color);
             }
 
             .copied-text {
@@ -507,8 +511,12 @@
                 z-index: 1;
                 cursor: pointer;
                 font-size: 14px;
-                color: var(--time-stamp-color);
                 display: none;
+                svg{
+                    path{
+                        fill: var(--gloabl-text-color);
+                    }
+                }
             }
 
             // .insureassist-bot-img {
@@ -551,21 +559,21 @@
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--time-stamp-color);
+                color:  var(--time-stamp-color); // var(--gloabl-text-color);
             }
 
             .you-text {
                 font-weight: 600;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--name-color);
+                color: var(--name-color); // var(--gloabl-text-color);
             }
 
             .read-text {
                 font-weight: 500;
                 font-size: 11px;
                 line-height: 13px;
-                color: var(--time-stamp-color);
+                color: var(--gloabl-text-color);
             }
         }
     }
@@ -655,9 +663,8 @@
                     white-space: nowrap;
                     text-overflow: ellipsis;
                 }
-
-                p {
-                    color: var(--gray-modern-400, #9AA4B2);
+                p{
+                    color: var(--gloabl-text-color);
                     font-size: 12px;
                     font-weight: 400;
                     line-height: normal;
@@ -678,6 +685,9 @@
     .agent-bubble-comp {
         //For Hiding the timestamp 
         .agent-bubble-content{
+            .bubble-msg {
+                background: #0086C9;
+            }
             .top-info{
                 display: none;
             }
@@ -685,7 +695,7 @@
         .agent-bubble-content:hover {
             .bubble-msg-with-img {
                 .bubble-msg {
-                    background: var(--agent-bubble-msg-bg);
+                    background: #0086C9;
                 }
             }
         }

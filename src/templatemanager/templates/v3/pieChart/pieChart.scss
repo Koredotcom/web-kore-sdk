@@ -6,15 +6,15 @@
     width: 100%;
     .charts-body-info{
         border-radius: 4px;
-        border: 1px solid var(--kora-grey-grey-light-3, #E4E5E7);
-        background: #FFF;
+        border: 1px solid var(--gloabl-border-color);
+        background: var(--global-white-bg);
         padding: 16px;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         gap: 15px;
         h1{
-            color: var(--kora-grey-grey-dark-1, #202124);
+            color: var(--gloabl-text-color);
             font-size: 14px;
             font-weight: 700;
             line-height: normal;

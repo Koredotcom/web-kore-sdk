@@ -58,7 +58,7 @@ export function Carousel(props: any) {
                                                         {ele?.topSection?.details?.title && <span style={ele?.topSection?.details?.styles} className="tag-name">{ele?.topSection?.details?.title}</span>}
                                                     </div>
                                                 </div>
-                                                <div className="gap-style-accordian">
+                                                <div className="gap-style">
                                                     <div className="left-data">
                                                         {ele?.topSection?.subTitle && <h2 style={ele?.topSection?.subtitleStyle}>{ele?.topSection?.subTitle}</h2>}
                                                     </div>

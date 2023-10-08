@@ -28,7 +28,7 @@
     &::before{
       content: "";
       position: absolute;
-      background: #155EEF;
+      background: var(--global-theme-color);
       bottom: 4px;
       width: 6px;
       height: 6px;
@@ -85,12 +85,12 @@
   }
 
   &.-selected- {
-    color: #fff;
+    color: var(--global-white);
     border: none;
     background: var(--adp-cell-background-color-selected);
 
     &.-current- {
-      color: #fff;
+      color: var(--global-white);
       background: var(--adp-cell-background-color-selected);
     }
 

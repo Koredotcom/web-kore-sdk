@@ -19,10 +19,10 @@
         .compose-bar-wrapper{
             .compose-text-area{
                 .typing-text-area:focus{
-                    border: 0.5px solid var(--agent-bubble-msg-bg);
+                    border: 0.5px solid #0086C9;
                 }
                 .typing-text-area:focus-visible{
-                    outline-color: var(--agent-bubble-msg-bg);
+                    outline-color: #0086C9;
                 }
             }
             .attachmentUpload{

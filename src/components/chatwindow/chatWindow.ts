@@ -222,7 +222,11 @@ initShow  (config:any) {
 
   me.reWriteWebHookURL(me.config);
   window._chatHistoryLoaded = false;
-  me.JWTSetup();
+  if(me.config?.mockMode?.enable){
+    me.setBranding()
+  }else{
+    me.JWTSetup();
+  }
   me.initi18n();
   me.seti18n((me.config && me.config.i18n && me.config.i18n.defaultLanguage) || 'en');
   if(me.config && me.config.sendFailedMessage && me.config.sendFailedMessage.hasOwnProperty('MAX_RETRIES')){
@@ -255,9 +259,9 @@ initShow  (config:any) {
   me.config.botOptions.chatHistory = me.config.chatHistory;
   me.config.botOptions.handleError = me.config.handleError;
   me.config.botOptions.googleMapsAPIKey = me.config.googleMapsAPIKey;
- 
+  if(!me.config?.mockMode?.enable){
   me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
-
+  }  
   let chatWindowHtml:any;
   if (me.config.UI.version == 'v2') {
     chatWindowHtml = (<any> $(me.getChatTemplate())).tmpl(me.config)
@@ -310,6 +314,10 @@ initShow  (config:any) {
   me.attachEventListener();
   $(me.chatEle).append(me.paginatedScrollMsgDiv);
   // me.show();
+  if(me.config?.mockMode?.enable){
+    me.onBotReady();
+  }
+
 };
 
 findSortedIndex  (array:any, value:any) {
@@ -935,6 +943,11 @@ bindEvents  () {
 bindEventsV3() {
   const me:any = this;
   me.eventManager.addEventListener('.typing-text-area', 'keydown', (event: any) => {
+    if (event.target.value.trim() == '') {
+      me.chatEle.querySelector('.send-btn').classList.remove('show');
+    } else {
+      me.chatEle.querySelector('.send-btn').classList.add('show');
+    }
     let chatWindowEvent = {stopFurtherExecution: false};
     me.emit(me.EVENTS.ON_KEY_DOWN,{
       event:event,
@@ -950,11 +963,11 @@ bindEventsV3() {
       event.preventDefault();
       me.sendMessageToBot(event.target.value);
       event.target.value = '';
+      me.chatEle.querySelector('.send-btn').classList.remove('show');
     } 
   })
 
   me.eventManager.addEventListener('.avatar-variations-footer', 'click', () => {
-    const avatarMinimizeStyle = me.config.branding.chat_bubble.minimise.theme == 'rectangle' ? 'avatar-minimize-text' : 'avatar-minimize';
     if (!me.chatEle.querySelector('.avatar-bg').classList.contains('click-to-rotate-icon')) {
       if (me.config.multiPageApp && me.config.multiPageApp.enable) {
         me.setLocalStoreItem('kr-cw-state', 'open');
@@ -965,7 +978,7 @@ bindEventsV3() {
           me.chatEle.querySelector('.content-text h1').textContent = me.config.botMessages.connecting;
           setTimeout(() => {
             me.bot.logInComplete(); // Start api call & ws
-          }, 1500);
+          }, 2000);
           setTimeout(() => {
             me.chatEle.querySelector('.content-text h1').textContent = me.config.branding.header.title.name;
           }, 2500);
@@ -997,7 +1010,7 @@ bindEventsV3() {
       }
 
       me.chatEle.classList.remove('minimize-chat');
-      me.chatEle.querySelector('.avatar-variations-footer').classList.add(avatarMinimizeStyle);
+      me.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
       me.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
       me.minimized = false;
       if (me.skipedInit) {
@@ -1009,7 +1022,7 @@ bindEventsV3() {
       }
     } else {
       me.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
-      me.chatEle.querySelector('.avatar-variations-footer').classList.remove(avatarMinimizeStyle)
+      me.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
       if (me.config.branding.welcome_screen.show) {
         me.chatEle.querySelector('.welcome-chat-section').classList.remove('minimize');
       }
@@ -2401,12 +2414,11 @@ applyVariableValue (key:any,value:any,type:any){
 
   switchView(type: any) {
     const me: any = this;
-    const avatarMinimizeStyle = me.config.branding.chat_bubble.minimise.theme == 'rectangle' ? 'avatar-minimize-text' : 'avatar-minimize';
     if (me.initial) {
       me.chatEle.querySelector('.content-text h1').textContent = me.config.botMessages.connecting;
       setTimeout(() => {
         me.bot.logInComplete(); // Start api call & ws
-      }, 1500);
+      }, 2000);
       setTimeout(() => {
         me.chatEle.querySelector('.content-text h1').textContent = me.config.branding.header.title.name;
       }, 2500);
@@ -2415,7 +2427,7 @@ applyVariableValue (key:any,value:any,type:any){
     if (type == 'avatar') {
       me.chatEle.classList.add('minimize-chat');
       me.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
-      me.chatEle.querySelector('.avatar-variations-footer').classList.remove(avatarMinimizeStyle);
+      me.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize');
       if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
         me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
       } else {
@@ -2436,13 +2448,13 @@ applyVariableValue (key:any,value:any,type:any){
         me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
       }
       me.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
-      me.chatEle.querySelector('.avatar-variations-footer').classList.add(avatarMinimizeStyle);
+      me.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
     } else if (type == 'chat') {
       me.chatEle.classList.remove('minimize-chat');
       me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
       me.chatEle.querySelector('.welcome-chat-section')?.classList.remove('minimize');
       me.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
-      me.chatEle.querySelector('.avatar-variations-footer').classList.add(avatarMinimizeStyle);
+      me.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
     } else {
       me.chatEle.classList.remove('minimize-chat');
       if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
@@ -2452,7 +2464,7 @@ applyVariableValue (key:any,value:any,type:any){
       }
       me.chatEle.querySelector('.welcome-chat-section')?.classList.remove('minimize');
       me.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
-      me.chatEle.querySelector('.avatar-variations-footer').classList.remove(avatarMinimizeStyle);
+      me.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize');
     }
   }
 

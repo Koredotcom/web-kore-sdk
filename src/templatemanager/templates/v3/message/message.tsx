@@ -89,8 +89,17 @@ export function Message(props: any) {
                                                     <figure>
                                                         <img src={msgData.icon} alt='avatr img' />
                                                     </figure>
+                                                </div>}
+                                                {msgData.fromAgent && <div className="bot-img">
+                                                    <figure>
+                                                        <img src={msgData.icon} alt='avatr img' />
+                                                    </figure>
+                                                </div>}
+                                                <div className="copy-bubble" onClick={ () => onCopy(event, msgItem.cInfo.body)}>
+                                                    <svg width="15" height="16" viewBox="0 0 15 16" fill="none">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M13.123 2.81483C13.1008 2.56823 12.8935 2.375 12.6411 2.375H5.57208L5.52803 2.37698C5.28144 2.39923 5.08821 2.60648 5.08821 2.85887V5.58821H2.35887C2.09164 5.58821 1.875 5.80484 1.875 6.07208V13.1411C1.875 13.4084 2.09164 13.625 2.35887 13.625H9.42792C9.69516 13.625 9.91179 13.4084 9.91179 13.1411V10.4118H12.6411L12.6852 10.4098C12.9318 10.3876 13.125 10.1803 13.125 9.92792V2.85887L13.123 2.81483ZM9.91179 9.44405H12.1573V3.34274H6.05595V5.58821H9.42792C9.69516 5.58821 9.91179 5.80484 9.91179 6.07208V9.44405ZM8.94405 6.55595V12.6573H2.84274V6.55595H8.94405Z" fill="#697586"/>
+                                                    </svg>
                                                 </div>
-                                                }
                                             </div>
                                             { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
                                                 <div className="you-text">Kore.ai Bot</div>
@@ -115,9 +124,14 @@ export function Message(props: any) {
                                                         <img src="/images/avatar-bot.svg" alt='avatr img' />
                                                     </figure>
                                                 </div>
-                                                {/* <div className="copy-bubble" onClick={ () => onCopy(event, msgItem.cInfo.renderMsg && msgItem.cInfo.renderMsg !== '' ? msgItem.cInfo.renderMsg : msgItem.cInfo.body)}>
-                                                    <i className="sdkv3-copy"></i>
-                                                </div> */}
+                                                <div className="copy-bubble" onClick={ () => onCopy(event, msgItem.cInfo.renderMsg && msgItem.cInfo.renderMsg !== '' ? msgItem.cInfo.renderMsg : msgItem.cInfo.body)}>
+                                                    <svg width="15" height="16" viewBox="0 0 15 16" fill="none">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M13.123 2.81483C13.1008 2.56823 12.8935 2.375 12.6411 2.375H5.57208L5.52803 2.37698C5.28144 2.39923 5.08821 2.60648 5.08821 2.85887V5.58821H2.35887C2.09164 5.58821 1.875 5.80484 1.875 6.07208V13.1411C1.875 13.4084 2.09164 13.625 2.35887 13.625H9.42792C9.69516 13.625 9.91179 13.4084 9.91179 13.1411V10.4118H12.6411L12.6852 10.4098C12.9318 10.3876 13.125 10.1803 13.125 9.92792V2.85887L13.123 2.81483ZM9.91179 9.44405H12.1573V3.34274H6.05595V5.58821H9.42792C9.69516 5.58821 9.91179 5.80484 9.91179 6.07208V9.44405ZM8.94405 6.55595V12.6573H2.84274V6.55595H8.94405Z" fill="#697586"/>
+                                                    </svg>
+                                                    {/* <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M13.7804 3.31768C13.967 3.11682 14.2795 3.1067 14.4784 3.29508C14.6656 3.47238 14.6855 3.76232 14.5317 3.96328L14.5008 3.99987L6.13818 12.509C5.95951 12.7013 5.66615 12.7183 5.46746 12.5556L5.43136 12.523L1.44799 8.55964C1.25373 8.36636 1.25144 8.05066 1.44287 7.85451C1.62304 7.66991 1.9106 7.65699 2.10576 7.81726L2.14122 7.84934L5.76405 11.454L13.7804 3.31768Z" fill="#202124"/>
+                                                    </svg> */}
+                                                </div>
                                             </div>
                                                 { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
                                                     <div className="time-tamp"><time>{helpers.formatAMPMDay(msgData.createdOn)}</time></div>

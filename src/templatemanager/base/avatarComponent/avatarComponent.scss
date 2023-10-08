@@ -97,6 +97,12 @@
                     align-items: center;
                     justify-content: center;
                     cursor: pointer;
+                    padding: 0;
+                    svg{
+                        path{
+                            fill: var(--gloabl-text-color);
+                        }
+                    }
                 }
             }
 
@@ -162,13 +168,8 @@
                 line-height: 10px;
                 color: var(--global-white);
             }
-
-            .minimize-text {
-                display: none;
-            }
-
-            &.click-to-rotate-icon {
-                .default-avater-icon {
+            &.click-to-rotate-icon{
+                .default-avater-icon{
                     display: none;
                 }
 
@@ -245,31 +246,6 @@
             }
         }
     }
-
-    &.avatar-minimize-text {
-        .avatar-actions {
-            .content-info {
-                display: none;
-            }
-
-            .avatar-bg {
-                display: flex;
-                align-items: center;
-                flex-direction: row-reverse;
-                width: 370px;
-                justify-content: space-between;
-
-                .minimize-text {
-                    color: var(--global-white);
-                    text-align: justify;
-                    font-size: 14px;
-                    font-weight: 500;
-                    line-height: 20px;
-                    display: block;
-                }
-            }
-        }
-    }
 }
 
 .animation-slide-up {
@@ -302,6 +278,14 @@
             .avatar-actions .avatar-bg {
                 display: block;
             }
+            .avatar-bg {
+                background: #0086C9;
+            }
+        }
+        .avatar-actions .content-info{
+            .primary-button{
+                background: #0086C9;
+            }
         }
     }
 
@@ -312,7 +296,7 @@
     .chat-widget-composebar {
         .compose-bar-wrapper {
             .send-btn {
-                background: var(--agent-bubble-msg-bg);
+                background: #0086C9;
             }
         }
     }
@@ -321,7 +305,7 @@
                 .agent-bubble-content:hover{
                     .bubble-msg-with-img{
                         .bubble-msg{
-                            background: var(--agent-bubble-msg-bg);
+                            background: #0086C9;
                         }
                     }
                 }
@@ -331,7 +315,7 @@
             .compose-bar-wrapper.if-voice-compose {
                 .compose-voice-text{
                     .voice-compose-btn{
-                        background: var(--agent-bubble-msg-bg);
+                        background: #0086C9;
                     }
                 }
             }

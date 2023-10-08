@@ -1,0 +1,86 @@
+/*!
+	Lato font.
+*/
+/* Lato (hairline, regular) */
+
+/* Lato (normal, regular) */
+@font-face {
+  font-family: Lato;
+  font-weight: 400;
+  font-style: normal;
+  text-rendering: optimizeLegibility;
+  src: url("./lato-normal.woff2") format("woff2"), url("./lato-normal.woff") format("woff");
+}
+/* Lato (normal, italic) */
+@font-face {
+  font-family: Lato;
+  font-weight: 400;
+  font-style: italic;
+  text-rendering: optimizeLegibility;
+  src: url("./lato-normal-italic.woff2") format("woff2"), url("./lato-normal-italic.woff") format("woff");
+}
+/* Lato (medium, regular) */
+@font-face {
+  font-family: "Lato Medium";
+  font-weight: 400;
+  font-style: normal;
+  text-rendering: optimizeLegibility;
+  src: url("./lato-medium.woff2") format("woff2"), url("./lato-medium.woff") format("woff");
+}
+/* Lato (medium, italic) */
+@font-face {
+  font-family: "Lato Medium";
+  font-weight: 400;
+  font-style: italic;
+  text-rendering: optimizeLegibility;
+  src: url("./lato-medium-italic.woff2") format("woff2"), url("./lato-medium-italic.woff") format("woff");
+}
+/* Lato (semibold, regular) */
+@font-face {
+  font-family: Lato;
+  font-weight: 500;
+  font-style: normal;
+  text-rendering: optimizeLegibility;
+  src: url("./lato-semibold.woff2") format("woff2"), url("./lato-semibold.woff") format("woff");
+}
+/* Lato (semibold, italic) */
+@font-face {
+  font-family: Lato;
+  font-weight: 500;
+  font-style: italic;
+  text-rendering: optimizeLegibility;
+  src: url("./lato-semibold-italic.woff2") format("woff2"), url("./lato-semibold-italic.woff") format("woff");
+}
+/* Lato (bold, regular) */
+@font-face {
+  font-family: Lato;
+  font-weight: 600;
+  font-style: normal;
+  text-rendering: optimizeLegibility;
+  src: url("./lato-bold.woff2") format("woff2"), url("./lato-bold.woff") format("woff");
+}
+/* Lato (bold, italic) */
+@font-face {
+  font-family: Lato;
+  font-weight: 600;
+  font-style: italic;
+  text-rendering: optimizeLegibility;
+  src: url("./lato-bold-italic.woff2") format("woff2"), url("./lato-bold-italic.woff") format("woff");
+}
+
+/* Lato (black, regular) */
+@font-face {
+  font-family: Lato;
+  font-weight: 900;
+  font-style: normal;
+  text-rendering: optimizeLegibility;
+  src: url("./lato-black.woff2") format("woff2"), url("./lato-black.woff") format("woff");
+}
+/* Lato (black, italic) */
+@font-face {
+  font-family: Lato;
+  font-weight: 900;
+  font-style: italic;
+  text-rendering: optimizeLegibility;
+  src: url("./lato-black-italic.woff2") format("woff2"), url("./lato-black-italic.woff") format("woff");
+}

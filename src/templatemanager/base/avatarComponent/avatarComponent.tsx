@@ -39,17 +39,17 @@ export function AvatarComponent(props: any) {
                         <h4 id="helojohn">Hello!</h4>
                         <p className="help-text-content">Welcome to InsureAssist</p>
                         <span className="close-avatar-content" role="contentinfo" aria-label="close" onClick={closeHelp}>
-                            <figure>
-                                <img src={iconHelper.getIcon('close_icon')} alt="close" />
-                            </figure>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M10.8838 10.0001L16.0669 4.81694C16.311 4.57286 16.311 4.17714 16.0669 3.93306C15.8229 3.68898 15.4271 3.68898 15.1831 3.93306L9.99988 9.11624L4.81694 3.93352C4.57286 3.68944 4.17713 3.68945 3.93306 3.93354C3.68899 4.17762 3.689 4.57335 3.93308 4.81742L9.116 10.0001L3.93306 15.1831C3.68898 15.4272 3.68898 15.8229 3.93306 16.067C4.17714 16.311 4.57286 16.311 4.81694 16.067L9.9999 10.884L15.1831 16.067C15.4272 16.311 15.8229 16.311 16.067 16.0669C16.311 15.8229 16.311 15.4271 16.0669 15.1831L10.8838 10.0001Z" fill="#697586"/>
+                            </svg>
                         </span>
                     </div>
                     <div className="text-content animation-slide-up" role="contentinfo" aria-label="paragraph text">
                         <p className="help-text-content">How can I help you?</p>
                     </div>
-                    <button className="primary-button animation-slide-up" style={{ background: brandingInfo.chat_bubble.secondary_color }}>Talk to me</button>
+                    <button className="primary-button animation-slide-up">Send message</button>
                 </div>
-                <button className="avatar-bg" style={{ background: brandingInfo.chat_bubble.primary_color }}>
+                <button className="avatar-bg">
                     <span className="un-read-msg">2</span>
                     <figure className="default-avater-icon">
                         <img src={iconHelper.getIcon('avatar_icon')} alt="Elephant at sunset" />
@@ -57,7 +57,6 @@ export function AvatarComponent(props: any) {
                     <figure className="close-avater-icon rotateIn">
                         <img src={iconHelper.getIcon('close_chat_avatar')} alt="Elephant at sunset" />
                     </figure>
-                    <p className="minimize-text"></p>
                 </button>
             </div>
         </div>
