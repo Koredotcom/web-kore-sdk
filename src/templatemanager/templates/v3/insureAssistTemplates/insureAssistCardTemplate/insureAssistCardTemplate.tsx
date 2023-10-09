@@ -187,7 +187,6 @@ export function cardSliderExtension(props: any) {
                                                             ))
                                                         }
                                                     </div>
-
                                                 </div>
                                             </div>
                                         </div>
@@ -478,7 +477,7 @@ export function card(props: any) {
                                                 <div className=" card-acc-temp-sec">
                                                     <div className="card-acc-temp">
                                                         <div className="gap-style">
-                                                            test123 <div className="left-data">
+                                                            <div className="left-data">
                                                                 {ele?.topSection?.title && <h1 style={ele?.topSection?.titleStyle && ele?.topSection?.titleStyle}><img src={ele?.topSection?.icon} /> {ele?.topSection?.title}</h1>}
                                                             </div>
                                                             <div className="right-data">
