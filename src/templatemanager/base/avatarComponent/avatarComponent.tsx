@@ -51,18 +51,19 @@ export function AvatarComponent(props: any) {
                 </div>
                 <button className="avatar-bg">
                     <span className="un-read-msg">2</span>
-                    <figure className="default-avater-icon">
+                    {brandingInfo.chat_bubble.icon.type == 'default' && <figure className="default-avater-icon">
                         <img src={iconHelper.getIcon('avatar_icon')} alt="Elephant at sunset" />
-                    </figure>
-                    <figure className="close-avater-icon rotateIn">
+                    </figure>}
+                    {brandingInfo.chat_bubble.minimise.type == 'default' && <figure className="close-avater-icon rotateIn">
                         <img src={iconHelper.getIcon('close_chat_avatar')} alt="Elephant at sunset" />
-                    </figure>
+                    </figure>}
+                    {brandingInfo.chat_bubble.icon.type == 'custom' && <figure>
+                        <img className="custom-img-uploaded" src={brandingInfo.chat_bubble.icon.icon_url} />
+                    </figure>}
+                    {brandingInfo.chat_bubble.minimise.type == 'custom' && <figure>
+                        <img className="custom-img-uploaded-minimize" src={brandingInfo.chat_bubble.minimise.icon} />
+                    </figure>}
                 </button>
-                {/* <button className="button-only-img-avatar">
-                    <figure>
-                        <img src="https://qa-xo.kore.ai:443/api/getMediaStream/market/f-43348414-840f-5e10-8603-40da4d731d41.png?n=4930054647&s=IkRjZFlTdzV5TW1nZ2xlMDhXck9UWHdaSzNKMUpOa2V0NUg2cjVhL2p2NEk9Ig$$" />
-                    </figure>
-                </button> */}
             </div>
         </div>
     );

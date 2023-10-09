@@ -19,7 +19,7 @@ const BrandingJSON = {
             "type": "default" 
         },
         "minimise": {
-            "icon": "url4",
+            "icon": "https://dlnwzkim0wron.cloudfront.net/f-5e428c3b-dee8-5a50-9a3b-19e88e5c9d8e.png",
             "theme": "rounded",
             "type": "default"
         },
@@ -216,7 +216,7 @@ const BrandingJSON = {
         "icons_color": "#000000",
         "buttons": {
             "menu": {
-                "show": true,
+                "show": false,
                 "icon_color": "#000000" ,
                 "actions": [{
                     "title": "Get Balance",

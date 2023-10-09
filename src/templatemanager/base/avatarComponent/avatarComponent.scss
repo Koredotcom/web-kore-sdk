@@ -119,7 +119,7 @@
             border-radius: 32px;
             width: 48px;
             height: 48px;
-            padding: 10px;
+            padding: 0px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -130,10 +130,21 @@
             // animation: bounce2 0.8s ease forwards;  
             transition: transform 1s;
             transform-origin: 100% 100%;
-            animation: bounce-in-avatar 0.2s ease forwards;       
-            .default-avater-icon{
-
-            }   
+            animation: bounce-in-avatar 0.2s ease forwards;  
+            figure{
+                line-height: 0;
+                .custom-img-uploaded{
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 100%;
+                }
+                .custom-img-uploaded-minimize{
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 100%;
+                    display: none;
+                }
+            } 
             .close-avater-icon{
                 display: none;
             }
@@ -165,30 +176,11 @@
                 .un-read-msg {
                     display: none;
                 }
-            }
-        }
-        .button-only-img-avatar{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            border: 0;
-            cursor: pointer;
-            position: relative;
-            transition: transform 1s;
-            transform-origin: 100% 100%;
-            animation: bounce-in-avatar 0.2s ease forwards;
-            width: 48px;
-            height: 48px;
-            background: transparent;
-            padding: 0;
-            line-height: normal;
-            figure{
-                line-height: 0;
-                img{
-                    width: 100%;
-                    height: 100%;
-                    border-radius: 100%;
+                .custom-img-uploaded {
+                    display: none;
+                }
+                .custom-img-uploaded-minimize {
+                    display: block;
                 }
             }
         }
