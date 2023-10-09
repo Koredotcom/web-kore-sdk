@@ -58,6 +58,11 @@ export function AvatarComponent(props: any) {
                         <img src={iconHelper.getIcon('close_chat_avatar')} alt="Elephant at sunset" />
                     </figure>
                 </button>
+                {/* <button className="button-only-img-avatar">
+                    <figure>
+                        <img src="https://qa-xo.kore.ai:443/api/getMediaStream/market/f-43348414-840f-5e10-8603-40da4d731d41.png?n=4930054647&s=IkRjZFlTdzV5TW1nZ2xlMDhXck9UWHdaSzNKMUpOa2V0NUg2cjVhL2p2NEk9Ig$$" />
+                    </figure>
+                </button> */}
             </div>
         </div>
     );
