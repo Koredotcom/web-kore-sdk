@@ -19,6 +19,33 @@ class InsureAssistTemplatePlugin {
     config = {};
     pickerHTML: any;
     hostInstance: any;
+    hamburgerMenu :any =  [
+        {
+          "type": "postback",
+          "title": "Buy Policy",
+          "value": "Buy Policy"
+        },
+        {
+          "type": "postback",
+          "title": "Renew policy",
+          "value": "Renew policy"
+        },
+        {
+          "type": "postback",
+          "title": "Raise claim",
+          "value": "Raise claim"
+        },
+        {
+          "type": "postback",
+          "title": "Claim status",
+          "value": "Claim status"
+        },
+        {
+          "type": "postback",
+          "title": "Emergency Assistance",
+          "value": "Emergency Assistance"
+        }
+      ]
     constructor(config: any) {
         let me = this;
         // me.extend(this.config,pickerConfig);
@@ -30,6 +57,9 @@ class InsureAssistTemplatePlugin {
         cwInstance.on("viewInit", (chatWindowEle: any) => {
             me.onInit();
         });
+        if(cwInstance?.config?.branding?.footer?.buttons?.menu?.actions){
+            cwInstance.config.branding.footer.buttons.menu.actions = this.hamburgerMenu;
+        }
 
     }
     onInit() {
