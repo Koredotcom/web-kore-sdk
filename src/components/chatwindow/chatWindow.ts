@@ -721,7 +721,7 @@ bindEvents  () {
     me.sendMessageWithWithChatInput(_footerContainer.find('.chatInputBox'));
   });
 
-  _chatContainer.on('click', 'li a',  (e: any) => {
+  _chatContainer.on('click', 'li a, .isLink a',  (e: any) => {
     e.preventDefault();
     let targetEle = $(e.currentTarget);
     let a_link = targetEle.attr('href');
