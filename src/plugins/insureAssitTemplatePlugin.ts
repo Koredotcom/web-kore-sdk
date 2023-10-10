@@ -2,6 +2,7 @@ import insureAssistCardTemplate from '../templatemanager/templates/v3/insureAssi
 import insureAssistCarouselTemplate from '../templatemanager/templates/v3/insureAssistTemplates/insureAssistCarouselTemplate/insureAssistCarouselTemplate';
 import insureAssistPaymentMethod from '../templatemanager/templates/v3/insureAssistTemplates/insureAssistPaymentMethod/insureAssistPaymentMethod';
 import insureAssistFormTemplate from '../templatemanager/templates/v3/insureAssistTemplates/insureAsssitFormTemplate/insureAssistFormTemplate';
+import InsureAssistInfoForm from '../templatemanager/templates/v3/insureAssistTemplates/insureAsssitFormTemplate/insureAssistFormInfoTemplate';
 
 
 /**
@@ -43,6 +44,7 @@ class InsureAssistTemplatePlugin {
         templateManager.installTemplate(new insureAssistCarouselTemplate());
         templateManager.installTemplate(new insureAssistPaymentMethod());
         templateManager.installTemplate(new insureAssistFormTemplate());
+        templateManager.installTemplate(new InsureAssistInfoForm());
     }
 
     //class Append in body tag

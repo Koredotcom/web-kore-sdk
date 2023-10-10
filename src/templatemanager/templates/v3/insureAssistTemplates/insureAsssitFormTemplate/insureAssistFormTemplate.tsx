@@ -2,129 +2,104 @@ import BaseChatTemplate from '../../baseChatTemplate';
 import './insureAssistFormTemplate.scss';
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
+import { getHTML } from '../../../../base/domManager';
+import { Message } from '../../message/message';
 
-// Functional component for handling the Insure Assist form and button events
-export function Payment(props: any) {
+// ../../../base/domManager
+// import IconsManager from '../../../../templateManager/base/icons/i';
+
+export function InsureAsssitForm(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
-
-    // Object containing message data and host instance
-    const messageobj = {
-        msgData: msgData,
-        hostInstance: hostInstance
+    const msgObj = {
+        msgData,
+        hostInstance
     }
-
-    // State to manage form data (phoneId and password)
-    const [formData, setFormData] = useState({
-        phoneId: '',
-        password: '',
-    });
-
-    // Function to handle input changes in the form
-    const handleInputChange = (e: any) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    };
-
-    // Function to handle button click events
+    function handleInput(e: any, maxLength: any) {
+        const input = e.target;
+        if (maxLength && input.value.length > maxLength) {
+            input.value = input.value.slice(0, maxLength); // Truncate input if it exceeds maxLength
+        }
+    }
     const handleButtonEvent = (e: any) => {
-        // e.preventDefault(); // Uncomment if needed
-
-        // Logging the button event and payload
+        // e.preventDefault();
         console.log(e, 'event')
-        const payload = formData;
-        console.log(payload, 'payload')
+        // const payload = formData;
+        // Handle button events here
+        if (e.type.toLowerCase() === 'postback' || e.type.toLowerCase() === 'text') {
+            hostInstance.sendMessage(e.value, { renderMsg: e.title });
+        } else if (e.type === 'url' || e.type === 'web_url') {
+            let link = e.value;
+            if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
+                link = `http:///${link}`;
+            }
+            hostInstance.openExternalLink(link);
+        }
 
-        // Handle button events here (you can uncomment and add your logic here)
-        // if (e.type.toLowerCase() === 'postback' || e.type.toLowerCase() === 'text') {
-        //   hostInstance.sendMessage(e.value, { renderMsg: e.title });
-        // } else if (e.type === 'url' || e.type === 'web_url') {
-        //   let link = e.value;
-        //   if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
-        //     link = `http:///${link}`;
-        //   }
-        //   hostInstance.openExternalLink(link);
-        // }
-
-        // Optionally, reset the form after button click
-        setFormData({
-            phoneId: '',
-            password: '',
-        });
+        // Optionally, reset the form
+        // setFormData({
+        //     phoneId: '',
+        //     password: '',
+        // });
     };
-
-    // Function to close the help content
     const closeHelp = (e: any) => {
         hostInstance.chatEle.querySelector('.content-info').remove();
     }
+    if (msgData?.message?.[0]?.component?.payload?.template_type === 'insureAssistFormTemplate' && !msgData?.fromHistory) {
+        console.log(msgData, 'msgData')
+        console.log(msgData?.message[0].component?.payload?.formFields[0], 'msgData')
+        if (msgData?.message?.[0]?.component?.payload?.render_type != 'slider') {
+            // hostInstance.bottomSliderAction('', getHTML(InsureAsssitForm, msgData, hostInstance));
+            return (
+                <Message {...msgObj} />
+            )
+        } else {
+            return (
+                <form className="card-form content-info">
+                    <div className="left-data">
+                        <h2 style={msgData?.message[0].component?.payload?.style}>{msgData?.message[0].component?.payload?.heading}</h2>
+                    </div>
+                    <div className="right-data">
+                        <figure onClick={closeHelp}>
+                            <img src="/images/close-large.svg" alt="remove" />
+                        </figure>
+                    </div>
 
-    // Check if the message payload matches the template_type
-    if (msgData?.message?.[0]?.component?.payload?.template_type === 'insureAssistFormTemplate') {
-        return (
-            <form className="card-form content-info">
-                <div className="left-data">
-                    <h2 style={msgData?.message?.[0]?.component?.nameStyle}>{msgData?.message?.[0]?.component?.name}</h2>
-                </div>
-                <div className="right-data">
-                    <figure>
-                        <span className="close-avatar-content" role="contentinfo" aria-label="close" onClick={closeHelp}>
-                            <img src={msgData?.message?.[0]?.component?.icon} alt="Close" />
-                        </span>
-                    </figure>
-                </div>
-                {msgData.message[0].component.payload.elements.map((ele: any, index: any) => (
-                    <div key={index}>
-                        <div className="login-card">
-                            <label> Phone ID: </label>
-                            <input
-                                type="text"
-                                name="phoneId"
-                                value={formData.phoneId}
-                                onChange={handleInputChange}
-                                required
-                            />
-
+                    <div className="login-card">
+                        {msgData?.message[0].component?.payload?.formFields?.map((ele: any) => (
                             <div>
-                                <label> Phone Pin: </label>
+                                <label> {ele.label && ele.label} </label>
                                 <input
-                                    type="password"
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleInputChange}
-                                    required
+                                    type={ele.type && ele.type}
+                                    id={ele.key && ele.key}
+                                    name={ele.key && ele.key}
+                                    placeholder={ele.placeholder && ele.placeholder}
                                 />
                             </div>
-                            {msgData.message[0].component.payload?.buttons?.map((button: any, btnIndex: any) => (
-                                <button
-                                    key={btnIndex}
-                                    style={button.buttonStyle}
-                                    className="view-more-btn"
-                                    onClick={() => handleButtonEvent(button)}
-                                >
-                                    {button?.buttonTitle}
-                                </button>
-                            ))}
-                        </div>
+                        ))}
+                        {msgData.message[0]?.component?.payload?.buttons?.map((button: any, btnIndex: any) => (
+                            <button
+                                key={btnIndex}
+                                style={button?.buttonStyle}
+                                className="view-more-btn"
+                                onClick={() => handleButtonEvent(button)}
+                            >
+                                {button?.title}
+                            </button>
+                        ))}
                     </div>
-                ))}
-            </form>
-        );
-    } else {
-        return null; // Return null if the template_type doesn't match
+                </form>
+
+            )
+        }
     }
 }
 
-// Class-based template for the chat
-class InsureAssistFormTemplate extends BaseChatTemplate {
-    hostInstance = this; // This line might not be necessary
+class InsureAsssitFormTemplate extends BaseChatTemplate {
+    hostInstance: any = this;
 
-    // Render message using the Payment component
     renderMessage(msgData: any) {
-        return this.getHTMLFromPreact(Payment, msgData, this.hostInstance);
+        return this.getHTMLFromPreact(InsureAsssitForm, msgData, this.hostInstance);
     }
 }
-
-export default InsureAssistFormTemplate;
+export default InsureAsssitFormTemplate;

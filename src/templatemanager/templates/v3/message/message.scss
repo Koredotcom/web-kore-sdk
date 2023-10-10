@@ -710,8 +710,11 @@
         .bot-bubble-content{
             .bubble-msg-with-img{
                 .bot-img.insureassist-bot-img {
-                    left: -27px;
-                    top: -9px;
+                    .bot-img{
+                        left: -11px;
+                        top: -12px;
+                    }
+                   
                 }
             }
         }
@@ -719,7 +722,7 @@
     
     .bot-bubble-comp{
         .bot-bubble-content {
-            padding-left: 16px;
+            padding: 0;
             padding-right: 7%;
             // For Hiding the timestamp 
             .top-info{   

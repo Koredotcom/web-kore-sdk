@@ -11,7 +11,6 @@ export function Form(props: any) {
         msgData: msgData,
         hostInstance: hostInstance
     }
-
     const handleEvent = (e: any) => {
         const input: any = hostInstance.chatEle.querySelector('.form-input-wrapper');
         const inputEle: any = input.querySelector('input[type=\'password\']');
