@@ -259,7 +259,7 @@ const BrandingJSON = {
             "img": "https://picsum.photos/id/237/200/300"
         },
         "font": {
-            "family": "Impact",
+            "family": "Inter",
             "size": "medium",
             "style": "1|2|3"
         },
