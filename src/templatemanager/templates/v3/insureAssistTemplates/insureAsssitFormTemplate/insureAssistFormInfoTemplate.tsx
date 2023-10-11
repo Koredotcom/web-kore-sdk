@@ -16,10 +16,8 @@ export function Form(props: any) {
         const inputEle: any = input.querySelector('input[type=\'password\']');
         hostInstance.sendMessage(inputEle.value, { renderMsg: inputEle.value, msgData });
     }
-    console.log(msgData, '1234msgData')
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'insureAssistLogInForm') {
-        console.log(msgData, 'msgData')
         return (
             <div className="cardFor-info-template">
                 <div className="header">
