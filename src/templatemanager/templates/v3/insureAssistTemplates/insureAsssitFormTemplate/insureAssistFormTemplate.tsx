@@ -15,41 +15,28 @@ export function InsureAsssitForm(props: any) {
         msgData,
         hostInstance
     }
-    function handleInput(e: any, maxLength: any) {
-        const input = e.target;
-        if (maxLength && input.value.length > maxLength) {
-            input.value = input.value.slice(0, maxLength); // Truncate input if it exceeds maxLength
-        }
-    }
+    // function handleInput(e: any, maxLength: any) {
+    //     const input = e.target;
+    //     if (maxLength && input.value.length > maxLength) {
+    //         input.value = input.value.slice(0, maxLength); // Truncate input if it exceeds maxLength
+    //     }
+    // }
     const handleButtonEvent = (e: any) => {
-        // e.preventDefault();
-        console.log(e, 'event')
-        // const payload = formData;
-        // Handle button events here
-        if (e.type.toLowerCase() === 'postback' || e.type.toLowerCase() === 'text') {
+        if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
             hostInstance.sendMessage(e.value, { renderMsg: e.title });
-        } else if (e.type === 'url' || e.type === 'web_url') {
+        } else if (e.type == 'url' || e.type == 'web_url') {
             let link = e.value;
             if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
-                link = `http:///${link}`;
+                link = `http:////${link}`;
             }
             hostInstance.openExternalLink(link);
+        } else if (e.type == 'slider') {
+            hostInstance.bottomSliderAction('', getHTML(InsureAsssitForm, e, hostInstance));
         }
-
-        // Optionally, reset the form
-        // setFormData({
-        //     phoneId: '',
-        //     password: '',
-        // });
-    };
-    const closeHelp = (e: any) => {
-        hostInstance.chatEle.querySelector('.content-info').remove();
     }
     if (msgData?.message?.[0]?.component?.payload?.template_type === 'insureAssistFormTemplate' && !msgData?.fromHistory) {
-        console.log(msgData, 'msgData')
-        console.log(msgData?.message[0].component?.payload?.formFields[0], 'msgData')
         if (msgData?.message?.[0]?.component?.payload?.render_type != 'slider') {
-            // hostInstance.bottomSliderAction('', getHTML(InsureAsssitForm, msgData, hostInstance));
+            hostInstance.bottomSliderAction('', getHTML(InsureAsssitForm, msgData, hostInstance));
             return (
                 <Message {...msgObj} />
             )
@@ -60,7 +47,7 @@ export function InsureAsssitForm(props: any) {
                         <h2 style={msgData?.message[0].component?.payload?.style}>{msgData?.message[0].component?.payload?.heading}</h2>
                     </div>
                     <div className="right-data">
-                        <figure onClick={closeHelp}>
+                        <figure>
                             <img src="/images/close-large.svg" alt="remove" />
                         </figure>
                     </div>
@@ -78,14 +65,7 @@ export function InsureAsssitForm(props: any) {
                             </div>
                         ))}
                         {msgData.message[0]?.component?.payload?.buttons?.map((button: any, btnIndex: any) => (
-                            <button
-                                key={btnIndex}
-                                style={button?.buttonStyle}
-                                className="view-more-btn"
-                                onClick={() => handleButtonEvent(button)}
-                            >
-                                {button?.title}
-                            </button>
+                             <button style={button?.btnStyle} className="view-more-btn kr-button-primary lg info-Btn" type="button" onClick={() => handleButtonEvent(button)}>{button.title}</button>
                         ))}
                     </div>
                 </form>

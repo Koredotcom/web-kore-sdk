@@ -1,6 +1,7 @@
 import BaseChatTemplate from '../../baseChatTemplate';
 import './insureAssistFormTemplate.scss';
 import { h, Fragment } from 'preact';
+import { getHTML } from '../../../../base/domManager';
 import { useState } from 'preact/hooks';
 import { Message } from '../../message/message';
 
@@ -11,13 +12,21 @@ export function Form(props: any) {
         msgData: msgData,
         hostInstance: hostInstance
     }
-    const handleEvent = (e: any) => {
-        const input: any = hostInstance.chatEle.querySelector('.form-input-wrapper');
-        const inputEle: any = input.querySelector('input[type=\'password\']');
-        hostInstance.sendMessage(inputEle.value, { renderMsg: inputEle.value, msgData });
+    const handleButtonEvent = (e: any) => {
+        if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
+            hostInstance.sendMessage(e.value, { renderMsg: e.title });
+        } else if (e.type == 'url' || e.type == 'web_url') {
+            let link = e.value;
+            if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
+                link = `http:////${link}`;
+            }
+            hostInstance.openExternalLink(link);
+        } else if (e.type == 'slider') {
+            hostInstance.bottomSliderAction('', getHTML(Form, e, hostInstance));
+        }
     }
 
-    if (msgData?.message?.[0]?.component?.payload?.template_type == 'insureAssistLogInForm') {
+    if (msgData?.message?.[0]?.component?.payload?.template_type == 'insureAssistPromptTemplate') {
         return (
             <div className="cardFor-info-template">
                 <div className="header">
@@ -29,7 +38,7 @@ export function Form(props: any) {
                 <div className="card-body">
                     <p style={msgData?.message?.[0]?.component?.payload?.descriptionStyle}>{msgData?.message?.[0]?.component?.payload?.description}</p>
                     {msgData?.message?.[0]?.component?.payload?.buttons.map((ele: any) => (
-                        <button style={ele?.btnStyle} className="kr-button-primary lg info-Btn" onClick={handleEvent}>{ele.title}</button>
+                        <button style={ele?.btnStyle} className="kr-button-primary lg info-Btn"  onClick={() => handleButtonEvent(ele)}>{ele.title}</button>
                     ))}
                 </div>
             </div>
