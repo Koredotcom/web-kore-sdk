@@ -323,6 +323,12 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 	// }		
 # Release History
 ```
+v10.1.12 [Minor] on 14-Oct-2023: Master branch
+        Bugfixes
+                1.Chat input white spaces trim issue fix
+                2.Quick replies template console error issue fix
+                3.Agent desktop bot instance issue fix
+
 v10.1.10 [Minor] on 09-Sept-2023: Master branch
 	Features
 		1.Support for .log fileType for file uploads
