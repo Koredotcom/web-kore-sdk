@@ -1,3 +1,13 @@
+### 10.1.12
+
+- SDK Release Oct 14, 2023
+* Bug fixes
+  * webhook chathistory api issue fix on scroll up
+  * table template bugfixes
+  * quick replies template bugfixes
+  * fileUploader plugin bugfixes
+  * scroll bar jumping issue fix for user message
+  * Agent Desktop Voice co-browse issue fix 
 ### 10.1.10
 
 - SDK Release Sept 09, 2023
