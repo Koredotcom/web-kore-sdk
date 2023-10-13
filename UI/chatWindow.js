@@ -1532,26 +1532,10 @@
                     }
                     cnvertFiles(this, file);
                 });
-                _chatContainer.off('paste', '.chatInputBox').on('paste', '.chatInputBox', function (event) {
-                    event.preventDefault();
-                    var _this = document.getElementsByClassName("chatInputBox");
-                    var _clipboardData = event.clipboardData || (event.originalEvent && event.originalEvent.clipboardData) || window.clipboardData;
-                    var _htmlData = '';
-                    if (_clipboardData) {
-                        _htmlData = me.helpers.nl2br(chatInitialize.escapeHTML(_clipboardData.getData('text')), false);
-                        if (_htmlData) {
-                            insertHtmlData(_this, _htmlData);
-                        }
-                    }
-                    setTimeout(function () {
-                        setCaretEnd(_this);
-                    }, 100);
-                });
                 _chatContainer.off('click', '.sendChat').on('click', '.sendChat', function (event) {
                     var _footerContainer = $(me.config.container).find('.kore-chat-footer');
                     me.sendMessage(_footerContainer.find('.chatInputBox'));
                 });
-
                 _chatContainer.off('click', 'li a').on('click', 'li a', function (e) {
                     e.preventDefault();
                     var a_link = $(this).attr('href');
@@ -4034,35 +4018,6 @@
                     return false;
                 }
                 return true;
-            }
-            function insertHtmlData(_txtBox, _html) {
-                var _input = _txtBox;
-                sel = window.getSelection();
-                if (sel.rangeCount > 0) {
-                    range = sel.getRangeAt(0);
-                    range.deleteContents();
-                }
-                prevRange = prevRange ? prevRange : range;
-                if (prevRange) {
-                    node = document.createElement("span");
-                    prevRange.insertNode(node);
-                    var _span = document.createElement("span");
-                    _span.innerHTML = _html;
-                    prevRange.insertNode(_span);
-                    prevRange.setEndAfter(node);
-                    prevRange.setStartAfter(node);
-                    prevRange.collapse(false);
-                    sel = window.getSelection();
-                    sel.removeAllRanges();
-                    sel.addRange(prevRange);
-                    var focused = document.activeElement;
-                    if (focused && !focused.className == "chatInputBox") {
-                        _input.focus();
-                    }
-                    return _input;
-                } else {
-                    _input.appendChild(html);
-                }
             }
             function setCaretEnd(_this) {
                 var sel;
