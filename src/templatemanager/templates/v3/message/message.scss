@@ -682,6 +682,7 @@
 
 /*--insureAssist - css --*/
 .insure-assist-theme {
+    .chat-widgetwrapper-main-container{
     .agent-bubble-comp {
         //For Hiding the timestamp 
         .agent-bubble-content{
@@ -709,6 +710,10 @@
     .bot-bubble-comp{
         .bot-bubble-content{
             .bubble-msg-with-img{
+                .bot-img{
+                    left: -11px;
+                    top: -12px;
+                }
                 .bot-img.insureassist-bot-img {
                     .bot-img{
                         left: -11px;
@@ -720,14 +725,14 @@
         }
     }
     
-    .bot-bubble-comp{
+    .bot-bubble-comp {
         .bot-bubble-content {
             padding: 0;
             padding-right: 7%;
-            // For Hiding the timestamp 
             .top-info{   
                 display: none;   
             }
+           
         }
         .bot-bubble-content:hover{
             .bubble-msg-with-img{
@@ -736,6 +741,7 @@
                 }
             }
         }
+      
     }
     .button-template-container{
         .button-temp .kr-btn{
@@ -745,4 +751,5 @@
             border: none;
         }
     }
+}
 }

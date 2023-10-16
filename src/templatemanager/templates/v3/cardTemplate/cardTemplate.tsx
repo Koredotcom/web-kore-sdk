@@ -174,7 +174,7 @@ export function card(props: any) {
                                 <div className="card-content-sec">
                                     <div className="top-sec-card">
                                         <h1>{ele.topSection.title}</h1>
-                                        <span style={ele.topSection.details.styles} className="tag-name">{ele.topSection.details.title}</span>
+                                        <span style={ele?.topSection?.details?.styles} className="tag-name">{ele?.topSection?.details?.title}</span>
                                     </div>
                                     <div className="middle-sec-card">
                                         <p>{ele.topSection.subTitle}</p>

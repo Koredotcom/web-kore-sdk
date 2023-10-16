@@ -65,6 +65,7 @@ export function WelcomeScreenContainer(props: any) {
 
         hostInstance.eventManager.removeEventListener('.search-send', 'click');
         hostInstance.eventManager.addEventListener('.search-send', 'click', (event: any) => {
+            console.log(event,'event')
             const inputEle: any = document.querySelector('.start-conv-input');
             if (inputEle.value.trim() === '') {
                 return;

@@ -21,6 +21,7 @@ export function ChatWidgetComposeBar(props: any) {
     }
 
     const handleVoice =  (event: any) => {
+        console.log(event,'event')
         hostInstance.chatEle.querySelector('.compose-voice-text').style.display = 'block';
         brandingInfo.footer.layout = 'voice';
         updateBrandingInfo({...brandingInfo})
@@ -42,6 +43,7 @@ export function ChatWidgetComposeBar(props: any) {
     useEffect(() => {
         hostInstance.eventManager.removeEventListener('.send-btn', 'click');
         hostInstance.eventManager.addEventListener('.send-btn', 'click', (event: any) => {
+            console.log(event,'event')
             const inputEle = hostInstance.chatEle.querySelector('.typing-text-area');
             if (inputEle.value.trim() === '') {
                 return;
