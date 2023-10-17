@@ -975,13 +975,9 @@ bindEventsV3() {
 
       if (!me.config.builderFlag) {
         if (me.initial) {
-          me.chatEle.querySelector('.content-text h1').textContent = me.config.botMessages.connecting;
           setTimeout(() => {
             me.bot.logInComplete(); // Start api call & ws
           }, 2000);
-          setTimeout(() => {
-            me.chatEle.querySelector('.content-text h1').textContent = me.config.branding.header.title.name;
-          }, 2500);
           me.initial = false;
           if (me.config.branding.welcome_screen.show) {
             me.chatEle.querySelector('.welcome-chat-section').classList.add('minimize');
@@ -993,13 +989,9 @@ bindEventsV3() {
         }
       } else {
         if (me.initial) {
-          me.chatEle.querySelector('.content-text h1').textContent = me.config.botMessages.connecting;
           setTimeout(() => {
             me.bot.logInComplete(); // Start api call & ws
           }, 1500);
-          setTimeout(() => {
-            me.chatEle.querySelector('.content-text h1').textContent = me.config.branding.header.title.name;
-          }, 2500);
           me.initial = false;
         }
         if (me.config.branding.welcome_screen.show) {
@@ -1149,6 +1141,8 @@ bindSDKEvents  () {
     if (me.config.enableThemes) {
       me.getBrandingInformation(response.jwtgrantsuccess);
     } else {
+      me._botInfo.displayName = me.config.branding.header.title.name ? me.config.branding.header.title.name : me._botInfo.name; // To do - need to do same changes in branding api call
+      me.config.branding.header.title.name = me.config.botMessages.connecting;
       me.setBranding();
     }
     me.emit(me.EVENTS.JWT_GRANT_SUCCESS, response.jwtgrantsuccess);
@@ -1218,6 +1212,9 @@ onBotReady  () {
   const _chatInput = _chatContainer.find('.kore-chat-footer .chatInputBox');
   _chatContainer.find('.kore-chat-header .header-title').html(me.config.chatTitle).attr('title', me.config.chatTitle);
   _chatContainer.find('.kore-chat-header .disabled').prop('disabled', false).removeClass('disabled');
+  } else {
+    me.config.branding.header.title.name = me._botInfo.displayName;
+    me.setBranding();
   }
   if (!me.loadHistory) {
     setTimeout(() => {
@@ -2415,13 +2412,9 @@ applyVariableValue (key:any,value:any,type:any){
   switchView(type: any) {
     const me: any = this;
     if (me.initial) {
-      me.chatEle.querySelector('.content-text h1').textContent = me.config.botMessages.connecting;
       setTimeout(() => {
         me.bot.logInComplete(); // Start api call & ws
       }, 2000);
-      setTimeout(() => {
-        me.chatEle.querySelector('.content-text h1').textContent = me.config.branding.header.title.name;
-      }, 2500);
       me.initial = false;
     }
     if (type == 'avatar') {
