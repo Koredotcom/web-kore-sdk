@@ -13,7 +13,7 @@ With just few lines of code, you can embed our Kore.ai chat widget into your app
 
 [Message Templates](https://developer.kore.ai/docs/bots/sdks/message-templates/)
 
-[API Referernce](https://rajasekharba-kore.github.io/web-kore-sdk/)
+[API Referernce](https://koredotcom.github.io/web-kore-sdk/)
 
 [FAQ's](/docs/faqs) 
 
