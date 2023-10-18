@@ -1259,7 +1259,9 @@ sendMessageViaWebHook  (message: { text: any; }, successCb: any, failureCB: any,
         },
       },
     };
-
+    if(me.config.botOptions.webhookConfig.useSDKChannelResponses){
+      payload.preferredChannelForResponse = 'rtm';
+    }
     if (me.config.botOptions.webhookConfig.apiVersion && me.config.botOptions.webhookConfig.apiVersion === 2) {
       payload.message = {
         type: 'text',
@@ -1304,6 +1306,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
 
   let me:any = this;
   let _chatContainer = $(me.chatEle).find('.chat-container');
+  console.log('msgData: ', msgData);
   let messageHtml=me.generateMessageDOM(msgData);
   if(msgData?.createdOn){
     msgData.createdOnTimemillis = new Date(msgData.createdOn).valueOf();
