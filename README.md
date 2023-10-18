@@ -19,11 +19,7 @@ print(JSON.stringify(message));
 
 
 ## Installation
-- Clone/Download the source
-```bash
-git clone https://github.com/RajasekharBa-Kore/web-kore-sdk.git
-```
-- Install dependencies with following command in root folder
+- Install dependencies
 ```bash
 npm install
 ```
