@@ -45,10 +45,8 @@ export function InsureAsssitForm(props: any) {
         }
         else {
             const stringifiedValues = JSON.stringify(inputValues);
-            console.log(stringifiedValues, 'stringifiedValues');
             hostInstance.sendMessage(stringifiedValues, { renderMsg: e.title });
             setFormSubmitted(true);
-            console.log(formSubmitted, 'inputValue');
         }
     };
 
@@ -91,7 +89,7 @@ export function InsureAsssitForm(props: any) {
 
                     {msgData.message[0]?.component?.payload?.buttons?.map((button: any, btnIndex: any) => (
                         <button
-                            style={button?.btnStyle}
+                            style={button?.style}
                             className="view-more-btn lg info-Btn"
                             type="button"
                             data-key={button.key}
@@ -149,7 +147,7 @@ export function InsureAsssitForm(props: any) {
                             ))}
                             {msgData.message[0]?.component?.payload?.buttons?.map((button: any, btnIndex: any) => (
                                 <button
-                                    style={button?.btnStyle}
+                                    style={button?.style}
                                     className="view-more-btn lg info-Btn"
                                     type="button"
                                     data-key={button.key}
