@@ -1306,7 +1306,6 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
 
   let me:any = this;
   let _chatContainer = $(me.chatEle).find('.chat-container');
-  console.log('msgData: ', msgData);
   let messageHtml=me.generateMessageDOM(msgData);
   if(msgData?.createdOn){
     msgData.createdOnTimemillis = new Date(msgData.createdOn).valueOf();
