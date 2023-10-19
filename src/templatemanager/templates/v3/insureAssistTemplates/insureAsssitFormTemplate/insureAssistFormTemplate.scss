@@ -17,9 +17,9 @@
     }
 
     .login-card {
-        margin-top: 32px;
         padding: 0;
         clear: both;
+        padding-top: 14px;
     }
 
     label {
@@ -28,14 +28,18 @@
         font-style: normal;
         font-weight: 400;
         margin-bottom: 8px;
+        color: #121314;
     }
 
     input {
         width: 100%;
         border: 1px solid #E5E5E5;
-        border-radius: 4px;
+        border-radius: 6px;
         padding: 10px;
         margin-bottom: 10px;
+        box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+        height: 40px;
+        color: #000;
     }
 
     input:focus {
@@ -55,7 +59,9 @@
         padding: 10px 16px;
         border-radius: 4px;
         margin-right: 12px;
-    }:last-child{
+    }
+
+    :last-child {
         margin-right: 0px;
     }
 }
@@ -71,10 +77,11 @@
         width: 100%
     }
 
-    .right-data, .left-data {
+    .right-data,
+    .left-data {
         width: 100%
-    } 
-    
+    }
+
 
     .login-card {
         width: 100%;
@@ -127,8 +134,8 @@
 
 .cardFor-info-template {
     width: 91%;
-    padding-left: 20px;
-    margin-bottom: 20px;
+    padding: 0px;
+    margin: 0 auto;
 
     .header {
         position: relative;
@@ -152,17 +159,28 @@
     }
 
     .info-Btn {
-        color: rgb(0, 134, 201);
-        background: rgb(255, 255, 255);
+        color: #fff;
+        background: rgb(0, 134, 201);
         font-size: 14px;
         font-weight: 500;
         margin-top: 4px;
         border: none;
-        text-align: left;
+        text-align: center;
         padding-left: 4px;
+    }
+    .login-card-container{
+        border: 1px solid #E5E5E5;
+        padding: 10px;
+        border-radius: 0px 0px 4px 4px;
+        margin-bottom: 20px
     }
 }
 
-.close-bottom-slide{
+.close-bottom-slide {
     display: none;
+}
+
+.cardFor-info-template.card-form content-info {
+    padding: 0;
+    margin: 0 auto;
 }

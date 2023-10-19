@@ -409,9 +409,6 @@
         align-items: flex-start;
         gap: 15px;
         border-bottom: 1px solid var(--gloabl-border-color);
-        &:last-child{
-            border: 0;
-        }
         cursor: pointer;
         .left-data{
             width: 100%;
