@@ -239,6 +239,8 @@ initShow  (config:any) {
   };
   const tempTitle = me._botInfo.name;
   me.config.chatTitle = me.config.botMessages.connecting;
+  me._botInfo.displayName = me.config.branding.header.title.name ? me.config.branding.header.title.name : me._botInfo.name; // To do - need to do same changes in branding api call
+  me.config.branding.header.title.name = me.config.botMessages.connecting;
   if (me.config.multiPageApp && me.config.multiPageApp.enable) {
     var cwState = me.getLocalStoreItem('kr-cw-state');
     var maintainContext:any = !!cwState;
@@ -1141,8 +1143,6 @@ bindSDKEvents  () {
     if (me.config.enableThemes) {
       me.getBrandingInformation(response.jwtgrantsuccess);
     } else {
-      me._botInfo.displayName = me.config.branding.header.title.name ? me.config.branding.header.title.name : me._botInfo.name; // To do - need to do same changes in branding api call
-      me.config.branding.header.title.name = me.config.botMessages.connecting;
       me.setBranding();
     }
     me.emit(me.EVENTS.JWT_GRANT_SUCCESS, response.jwtgrantsuccess);
