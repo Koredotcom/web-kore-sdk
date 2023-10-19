@@ -180,14 +180,14 @@
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--time-stamp-color);    // var(--agent-bubble-text-color);
+                color: var(--time-stamp-color); // var(--agent-bubble-text-color);
             }
 
             .you-text {
                 font-weight: 600;
                 font-size: 12px;
                 line-height: 15px;
-                color: var(--name-color);    // var(--agent-bubble-text-color);
+                color: var(--name-color); // var(--agent-bubble-text-color);
             }
 
             .copied-text {
@@ -223,8 +223,9 @@
                 cursor: pointer;
                 font-size: 14px;
                 display: none;
-                svg{
-                    path{
+
+                svg {
+                    path {
                         fill: var(--gloabl-text-color);
                     }
                 }
@@ -512,8 +513,9 @@
                 cursor: pointer;
                 font-size: 14px;
                 display: none;
-                svg{
-                    path{
+
+                svg {
+                    path {
                         fill: var(--gloabl-text-color);
                     }
                 }
@@ -559,7 +561,7 @@
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
-                color:  var(--time-stamp-color); // var(--gloabl-text-color);
+                color: var(--time-stamp-color); // var(--gloabl-text-color);
             }
 
             .you-text {
@@ -663,7 +665,8 @@
                     white-space: nowrap;
                     text-overflow: ellipsis;
                 }
-                p{
+
+                p {
                     color: var(--gloabl-text-color);
                     font-size: 12px;
                     font-weight: 400;
@@ -682,74 +685,82 @@
 
 /*--insureAssist - css --*/
 .insure-assist-theme {
-    .chat-widgetwrapper-main-container{
-    .agent-bubble-comp {
-        //For Hiding the timestamp 
-        .agent-bubble-content{
-            .bubble-msg {
-                background: #0086C9;
-            }
-            .top-info{
-                display: none;
-            }
-        }
-        .agent-bubble-content:hover {
-            .bubble-msg-with-img {
+    .chat-widgetwrapper-main-container {
+        .agent-bubble-comp {
+
+            //For Hiding the timestamp 
+            .agent-bubble-content {
                 .bubble-msg {
                     background: #0086C9;
                 }
-            }
-        }
-    }
 
-    .bot-img {
-        .bot-chat-icon {
-            display: none;
-        }
-    }
-    .bot-bubble-comp{
-        .bot-bubble-content{
-            .bubble-msg-with-img{
-                .bot-img{
-                    left: -11px;
-                    top: -12px;
+                .top-info {
+                    display: none;
                 }
-                .bot-img.insureassist-bot-img {
-                    .bot-img{
-                        left: -11px;
-                        top: -12px;
+            }
+
+            .agent-bubble-content:hover {
+                .bubble-msg-with-img {
+                    .bubble-msg {
+                        background: #0086C9;
                     }
-                   
                 }
             }
         }
-    }
-    
-    .bot-bubble-comp {
-        .bot-bubble-content {
-            padding: 0;
-            padding-right: 7%;
-            .top-info{   
-                display: none;   
+
+        .bot-img {
+            .bot-chat-icon {
+                display: none;
             }
-           
         }
-        .bot-bubble-content:hover{
-            .bubble-msg-with-img{
-                .bubble-msg {
-                    background: var(--bot-bubble-msg-bg);
+
+        .bot-bubble-comp {
+            .bot-bubble-content {
+                .bubble-msg-with-img {
+                    .bot-img {
+                        left: 0;
+                        top: -25px;
+                    }
+
+                    .bot-img.insureassist-bot-img {
+                        .bot-img {
+                            left: -11px;
+                            top: -12px;
+                        }
+
+                    }
                 }
             }
         }
-      
-    }
-    .button-template-container{
-        .button-temp .kr-btn{
-            background: #F0F9FF;
-            color: #0086C9;
-            padding: 10px 16px;
-            border: none;
+
+        .bot-bubble-comp {
+            .bot-bubble-content {
+                padding: 0;
+                padding-right: 7%;
+
+                .top-info {
+                    display: none;
+                }
+
+            }
+
+            .bot-bubble-content:hover {
+                .bubble-msg-with-img {
+                    .bubble-msg {
+                        background: var(--bot-bubble-msg-bg);
+                    }
+                }
+            }
+
+        }
+
+        .button-template-container {
+            .button-temp .kr-btn {
+                background: #F0F9FF;
+                color: #0086C9;
+                padding: 10px 16px;
+                border: none;
+            }
         }
     }
-}
 }

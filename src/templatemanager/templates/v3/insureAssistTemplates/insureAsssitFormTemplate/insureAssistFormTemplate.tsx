@@ -27,7 +27,6 @@ export function InsureAsssitForm(props: any) {
         //   });
         
     };
-    
     const handleFormSubmit = (e:any) => {
         const stringifiedValues = JSON.stringify(inputValues);
         hostInstance.sendMessage(stringifiedValues, { renderMsg: 'Submit' });
@@ -114,7 +113,7 @@ export function InsureAsssitForm(props: any) {
     }
     // const memoizedHandleButtonEvent = useMemo(() => handleButtonEvent, [inputValues]);
 
-    if (msgData?.message?.[0]?.component?.payload?.template_type === 'insureAssistFormTemplate' && !msgData?.fromHistory) {
+    if (msgData?.message?.[0]?.component?.payload?.template_type === 'solutionsFormTemplate' && !msgData?.fromHistory) {
         if (msgData?.message?.[0]?.component?.payload?.render_type != 'slider') {
             let isSliderOpened = false;
             if (!isSliderOpened) {
@@ -132,11 +131,11 @@ export function InsureAsssitForm(props: any) {
                             <div className="header-icon">
                                 <img src={msgData?.message?.[0]?.component?.payload?.icon} />
                             </div>
-                            <h2 style={msgData?.message?.[0]?.component?.payload.headerStyle}>{msgData?.message?.[0]?.component?.payload?.title}</h2>
+                            <h2 style={msgData?.message?.[0]?.component?.payload.heading?.style}>{msgData?.message?.[0]?.component?.payload?.heading?.title}</h2>
                         </div>
                         <div className="login-card-container">
                             <div className="left-data">
-                                <h2 style={msgData?.message[0].component?.payload?.style}>{msgData?.message[0].component?.payload?.heading}</h2>
+                                <h2 style={msgData?.message[0].component?.payload?.description?.style}>{msgData?.message[0].component?.payload?.description?.title}</h2>
                             </div>
                             {/* <div className="right-data">
                             <figure onClick={closeMenu}>
