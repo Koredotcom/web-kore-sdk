@@ -207,7 +207,7 @@ initShow  (config:any) {
     MAX_RETRIES:3,
     retryCount:0
 };
-  me.config=me.extend(chatConfig,config);
+  me.config=me.extend(JSON.parse(JSON.stringify(chatConfig)),config);
   this.config = me.extend(me.config,{
     chatTitle: 'Kore.ai Bot Chat',
     allowIframe: false,
