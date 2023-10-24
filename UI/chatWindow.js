@@ -1007,7 +1007,7 @@
                 }
 
                 /* Handling for full size table */
-                if ($('.kore-chat-window').width() > 460) {
+                if ($('.kore-chat-window').width() > 490) {
                     $(".accordionTable").each(function () {
                         if ($(this).hasClass("responsive")) {
                             $(this).addClass("hide")
@@ -3534,17 +3534,17 @@
                          <div class="accordionTable {{if msgData.message[0].component.payload.table_design && msgData.message[0].component.payload.table_design == "regular"}}hide{{else}}responsive{{/if}}">\
                             {{each(key, tableRow) msgData.message[0].component.payload.elements}} \
                                 {{if key < 4}}\
-                                    <div class="accordionRow">\
+                                    <div class="accordionRow {{if msgData.message[0].component.payload.isExpanded}}open{{/if}}">\
                                         {{each(cellkey, cellValue) tableRow.Values}} \
                                             {{if cellkey < 2}}\
                                                 <div class="accordionCol">\
                                                     <div class="colTitle hideSdkEle">${msgData.message[0].component.payload.columns[cellkey][0]}</div>\
-                                                    <div class="colVal">${cellValue}</div>\
+                                                    <div title="${cellValue}" class="colVal">${cellValue}</div>\
                                                 </div>\
                                             {{else}}\
                                                 <div class="accordionCol hideSdkEle">\
                                                     <div class="colTitle">${msgData.message[0].component.payload.columns[cellkey][0]}</div>\
-                                                    <div class="colVal">${cellValue}</div>\
+                                                    <div title="${cellValue}" class="colVal">${cellValue}</div>\
                                                 </div>\
                                             {{/if}}\
                                         {{/each}} \
