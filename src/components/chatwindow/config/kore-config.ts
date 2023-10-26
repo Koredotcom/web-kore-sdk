@@ -9,6 +9,9 @@ botOptions.API_KEY_CONFIG={
     bootstrapURL:botOptions.koreAPIUrl+'platform/websdk',
     KEY:'YOUR_API_KEY'
 },
+botOptions.enableAck={ // set true, to send acknowledgment to server on receiving response from bot 
+    delivery:false
+}
 botOptions.koreSpeechAPIUrl = "";//deprecated
 //botOptions.bearer = "bearer xyz-------------------";
 //botOptions.ttsSocketUrl = '';//deprecated
@@ -26,6 +29,7 @@ botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 botOptions.webhookConfig={
     enable:false,
     webhookURL:'PLEASE_PROVIDE_WEBHOOK_URL',
+    useSDKChannelResponses: false, //set it to true if you would like to use the responses defined for Web/Mobile SDK Channel
     apiVersion:2
 }
 

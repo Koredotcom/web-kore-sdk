@@ -81,12 +81,12 @@ class GoogleSTT extends BaseSTT {
                 document.getElementsByClassName('chatInputBox')[0].scrollTop = document.getElementsByClassName('chatInputBox')[0].scrollHeight;
             }, 350);
         }
-        else if (r.code === 403) {
+        else if (r?.code === 403 || r?.error?.code === 400) {
             this.gapiLoaded = false;
             if ($('.recordingMicrophone').is(':visible')) {
                 $('.recordingMicrophone').trigger('click');
             }
-            alert(r.message || 'Please provide valid Google speech API key');
+            alert(r.message || r.error.message || 'Please provide valid Google speech API key');
         }
     }
     stop() {
@@ -114,7 +114,7 @@ class GoogleSTT extends BaseSTT {
         }
         var speechSender: any = new FileReader();
         speechSender.addEventListener('loadend', () => {
-            this.sendBytesToSpeech(btoa(speechSender.result), encoding, rate, this.uiCallback);
+            this.sendBytesToSpeech(btoa(speechSender.result), encoding, rate, this.uiCallback.bind(this));
         });
         speechSender.readAsBinaryString(blob);
     }

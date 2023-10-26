@@ -41,6 +41,22 @@
 	-moz-border-radius: 4px;
 	border-radius: 4px;
 	z-index: 1030;
+
+	&.chatwindow-cobrowse-open {
+		right: 28px !important;
+
+		&.minimize {
+			padding-right: 30px;
+
+			.minimized {
+				right: 30px;
+			}
+
+			.minimized-title {
+				margin-right: 50px;
+			}
+		}
+	}
 	.errorMsg {
 		position: absolute;
 		width: 300px;
@@ -117,6 +133,11 @@
 		background-repeat: no-repeat;
 		background-size: 100% 100%;
 		ul.chat-container {
+			&.scrolling{
+				.ps__rail-y{
+					display: none !important;
+				}
+			}
 			position: absolute;
 			bottom: 0;
 			right: 0;

@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import './fileUploader.scss';
 declare const document:any;
 declare const _recfileLisnr:any;
@@ -52,7 +51,8 @@ class KoreFileUploaderPlugin {
       'dotx', 'dotm', 'xls', 'xlt', 'xlm', 'xlsx', 'xlsm', 'xltx', 'xltm', 'xlsb', 'xla', 'xlam', 'xll', 'xlw', 'ppt', 'pot', 'pps', 'pptx', 'pptm', 'potx', 'potm', 'ppam',
       'ppsx', 'ppsm', 'sldx', 'sldm', 'zip', 'rar', 'tar', 'wpd', 'wps', 'rtf', 'msg', 'dat', 'sdf', 'vcf', 'xml', '3ds', '3dm', 'max', 'obj', 'ai', 'eps', 'ps', 'svg', 'indd', 'pct', 'accdb',
       'db', 'dbf', 'mdb', 'pdb', 'sql', 'apk', 'cgi', 'cfm', 'csr', 'css', 'htm', 'html', 'jsp', 'php', 'xhtml', 'rss', 'fnt', 'fon', 'otf', 'ttf', 'cab', 'cur', 'dll', 'dmp', 'drv', '7z', 'cbr',
-      'deb', 'gz', 'pkg', 'rpm', 'zipx', 'bak', 'avi', 'm4v', 'mpg', 'rm', 'swf', 'vob', 'wmv', '3gp2', '3g2', 'asf', 'asx', 'srt', 'wma', 'mid', 'aif', 'iff', 'm3u', 'mpa', 'ra', 'aiff', 'tiff'];
+      'deb', 'gz', 'pkg', 'rpm', 'zipx', 'bak', 'avi', 'm4v', 'mpg', 'rm', 'swf', 'vob', 'wmv', '3gp2', '3g2', 'asf', 'asx', 'srt', 'wma', 'mid', 'aif', 'iff', 'm3u', 'mpa', 'ra', 'aiff', 'tiff',
+      'log'];
   }
 
   onInit() {
@@ -101,6 +101,7 @@ class KoreFileUploaderPlugin {
 
   bindEvents() {
     let me:any = this;
+    let $ = me.hostInstance.$;
     me.hostInstance.chatEle.off('click', '.attachmentBtn').on('click', '.attachmentBtn', (event: any) => {
       me.hostInstance.chatEle.find('#captureAttachmnts').trigger('click');
     });
@@ -143,6 +144,7 @@ class KoreFileUploaderPlugin {
 }
   onHostCreate() {
     let me = this;
+    let $ = me.hostInstance.$;
     let cwInstance=me.hostInstance;
     cwInstance.on("viewInit", (chatWindowEle: any) => {
         me.onInit();
@@ -359,6 +361,7 @@ class KoreFileUploaderPlugin {
   acceptAndUploadFile(_this: any, file: Blob, recState: any) {
     let me:any = this;
     let ele: any;
+    let $ = me.hostInstance.$;
     const uc:any = me.getfileuploadConf(recState);
     uc.chunkUpload = file.size > me.appConsts.CHUNK_SIZE;
     uc.chunkSize = me.appConsts.CHUNK_SIZE;
@@ -727,6 +730,7 @@ progressListener(_this: any, evt: any) {
 
 loadListener(_this: { events: { success: { params: { fileId: any; }; }; }; $element: { trigger: (arg0: any) => void; }; }, evt: { target: { response: string; }; }) {
   let me = this;
+  let $ = me.hostInstance.$;
   if (me.hostInstance.chatEle.find(".upldIndc").is(':visible')) {
     _this.events.success.params = $.parseJSON(evt.target.response);
     this.attachmentFileId = _this.events.success.params.fileId;
