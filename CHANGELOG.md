@@ -1,4 +1,30 @@
+### 10.1.12
 
+- SDK Release Oct 14, 2023
+* Bug fixes
+  * webhook chathistory api issue fix on scroll up
+  * table template bugfixes
+  * quick replies template bugfixes
+  * fileUploader plugin bugfixes
+  * scroll bar jumping issue fix for user message
+  * Agent Desktop Voice co-browse issue fix 
+### 10.1.10
+
+- SDK Release Sept 09, 2023
+* Features
+  * support for .log fileType for file uploads
+* Bug fixes
+  * whitelisted Notes|notes protocol
+  * scroll bar jumping issue fix
+  * Agent Desktop Voice co-browse issue fix
+### 10.1.9
+
+- SDK Release Aug 19, 2023
+* Bug fixes
+  * carousel template bugfixes with multiple 
+  * quick reply template bugfixes
+  * Bugfix for back to back form trigger within 1 sec with continuous loading
+  * Added a config to send acknowledgement on bot response.Configuration available at chatConfig.botOptions.enableAck
 ### 10.1.1
 
 - SDK Release July 4, 2023

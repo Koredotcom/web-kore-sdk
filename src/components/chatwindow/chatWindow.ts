@@ -391,9 +391,6 @@ openModal(template:any, showClose:any) {
   } else {
     $('.kore-chat-window').removeClass('modelOpen');
     chatBodyModal.find('.closeChatBodyModal').css('display', 'none');
-    setTimeout(() => {
-      chatBodyModal.find('#chatBodyModalContent').empty();
-    }, 1000);
     chatBodyModal.hide();
     $('.kore-chat-window').removeClass('modelOpen');
   }
@@ -649,7 +646,7 @@ sendMessageWithWithChatInput(chatInput:any){
   if (chatInput.text().trim() === '') {
     return;
   }
-  chatInput.html(KoreHelpers.prototypes.koreReplaceAll(chatInput.text(),"<br>", "\n"));
+  chatInput.text(KoreHelpers.prototypes.koreReplaceAll(chatInput.text(),"<br>", "\n"));
   me.sendMessageToBot(chatInput.text());
   chatInput.html('');
 }
@@ -724,10 +721,13 @@ bindEvents  () {
     me.sendMessageWithWithChatInput(_footerContainer.find('.chatInputBox'));
   });
 
-  _chatContainer.on('click', 'li a',  (e: any) => {
+  _chatContainer.on('click', 'li a, .isLink a',  (e: any) => {
     e.preventDefault();
     let targetEle = $(e.currentTarget);
-    const a_link = targetEle.attr('href');
+    let a_link = targetEle.attr('href');
+    if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
+      a_link = "http:////" + a_link;
+    }
     const _trgt = targetEle.attr('target');
     const msgDataText = $(targetEle).closest('span.simpleMsg').attr('msgData') || '';
     let msgData;
@@ -884,7 +884,10 @@ bindEvents  () {
             $(paginatedHistoryLoader).insertBefore(_chatContainer.find('.chat-container li:first'));
           }
           _chatContainer.find('.kore-chat-footer').addClass('disableFooter');
-          bot.getHistory({ limit: (me?.config?.history?.paginatedScroll?.batchSize) });
+
+          _chatContainer.find('.kore-chat-footer .chatInputBox').blur();
+          bot.getHistory({ limit: (me?.config?.history?.paginatedScroll?.batchSize) }, me?.config?.botOptions);
+          
         }
       }
     });
@@ -1258,7 +1261,9 @@ sendMessageViaWebHook  (message: { text: any; }, successCb: any, failureCB: any,
         },
       },
     };
-
+    if(me.config.botOptions.webhookConfig.useSDKChannelResponses){
+      payload.preferredChannelForResponse = 'rtm';
+    }
     if (me.config.botOptions.webhookConfig.apiVersion && me.config.botOptions.webhookConfig.apiVersion === 2) {
       payload.message = {
         type: 'text',
@@ -1405,11 +1410,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   if (me.chatPSObj && me.chatPSObj.update) {
     me.chatPSObj.update();
   }
-  if(bot && !bot.previousHistoryLoading){
-    _chatContainer.animate({
-      scrollTop: _chatContainer.prop('scrollHeight'),
-    }, 100);
-  }
+  me.updateScrollOnMessageRender(msgData);
   me.emit(me.EVENTS.AFTER_RENDER_MSG,{
     messageHtml:messageHtml,
     msgData:msgData
@@ -1434,6 +1435,34 @@ prepareAriaTagsOnMessage(msgData:any,messageHtml:any){
     },HACK_TIMER);
     _chatContainer.find('li .messageBubble:not([data-aria-timer-running])').attr('aria-hidden','true');//for mac voiceover bug with aria-live
   }
+}
+updateScrollOnMessageRender(msgData: any){
+  const me: any = this; 
+  let _chatContainer = $(me.chatEle).find('.chat-container');
+  const debounceScrollingCall: any = me.debounceScrollingHide(me.removeScrollingHide, 500);
+  if(bot && !bot.previousHistoryLoading){
+    _chatContainer.addClass('scrolling'); // start hiding scroll on message arrival
+    _chatContainer.animate({
+      scrollTop: _chatContainer.prop('scrollHeight'),
+    }, 100);
+    debounceScrollingCall(); // stop hiding scroll on message arrival
+  }
+}
+removeScrollingHide() {
+  const me = this;
+  let _chatContainer = $(me.chatEle).find('.chat-container');
+      setTimeout(()=>{
+        _chatContainer.removeClass('scrolling');
+      },1500);
+}
+debounceScrollingHide(func: any, delay: any) {
+  let timeoutId: any;
+  return () => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func.call(this);
+    }, delay);
+  };
 }
 generateMessageDOM(msgData?:any){
   const me:any = this; 
