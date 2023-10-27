@@ -223,6 +223,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
         console.log("it is array")
         textData.forEach(function(entry,index) {
             var clientMessageId = new Date().getTime()+index;
+            var textORJSON = isJson(entry.val || entry);
             msgData = {
                 'type': "bot_response",
                 'messageId':entry.messageId || clientMessageId,
@@ -234,11 +235,31 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
                         'body': entry.val || entry,//for v2 and v1 respectively 
                         'attachments': ""
                     },
-                    "component": isJson(entry.val || entry),//for v2 and v1 respectively 
+                    "component": {}
                     //'clientMessageId': clientMessageId
                 }],
   
             };
+            if (textORJSON.payload) {
+              msgData.message[0].component.payload = textORJSON.payload;
+              msgData.message[0].component.type = textORJSON.type;
+            } else if (textORJSON.text) {
+              msgData.message[0].component.payload = {
+                text: textORJSON.text
+              }
+              msgData.message[0].component.type = 'template'
+            } else {
+              msgData.message[0].component.payload = {
+                text: textORJSON
+              }
+              msgData.message[0].component.type = 'text'
+            }
+            if (msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.text) {
+              msgData.message[0].cInfo.body = msgData.message[0].component.payload.text;
+            }
+            if (msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)) {
+              msgData.message[0].cInfo.body = msgData.message[0].component.payload.text || "";
+            }
             msgsData.push(msgData);
         });
     } else {
