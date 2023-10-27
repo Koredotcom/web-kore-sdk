@@ -57,9 +57,14 @@ class BaseSTT {
             }
             chatEle.querySelector('.compose-voice-text').style.display = 'none';
             chatEle.querySelector('.compose-voice-text-recording').style.display = 'block';
-            chatEle.querySelectorAll('.action-btn')[0].style.display = 'none';
-            if (this.hostInstance.config.branding.footer.buttons.attachment.show) {
-              chatEle.querySelectorAll('.action-btn')[1].style.display = 'none';
+            if (chatEle.querySelector('.hamberger-menu')) {
+                chatEle.querySelector('.hamberger-menu').style.display = 'none';
+            }
+            if (chatEle.querySelector('.attachmentUpload')) {
+                chatEle.querySelector('.attachmentUpload').style.display = 'none';
+            }
+            if (chatEle.querySelector('.emoji-btn')) {
+                chatEle.querySelector('.emoji-btn').style.display = 'none';
             }
             chatEle.querySelector('.key-board').style.display = 'none';
         });
@@ -84,9 +89,14 @@ class BaseSTT {
                 chatEle.querySelector('.voice-speak-msg-info').style.display = 'none';
                 chatEle.querySelector('.compose-voice-text-end').style.display = 'none';
                 chatEle.querySelector('.compose-voice-text').style.display = 'block';
-                chatEle.querySelectorAll('.action-btn')[0].style.display = 'block';
-                if (this.hostInstance.config.branding.footer.buttons.attachment.show) {
-                  chatEle.querySelectorAll('.action-btn')[1].style.display = 'flex';
+                if (chatEle.querySelector('.hamberger-menu')) {
+                    chatEle.querySelector('.hamberger-menu').style.display = 'flex';
+                }
+                if (chatEle.querySelector('.attachmentUpload')) {
+                    chatEle.querySelector('.attachmentUpload').style.display = 'flex';
+                }
+                if (chatEle.querySelector('.emoji-btn')) {
+                    chatEle.querySelector('.emoji-btn').style.display = 'flex';
                 }
                 chatEle.querySelector('.key-board').style.display = 'block';
             }
@@ -98,9 +108,14 @@ class BaseSTT {
             chatEle.querySelector('.voice-speak-msg-info').style.display = 'none';
             chatEle.querySelector('.compose-voice-text-recording').style.display = 'none';
             chatEle.querySelector('.compose-voice-text').style.display = 'block';
-            chatEle.querySelectorAll('.action-btn')[0].style.display = 'block';
-            if (this.hostInstance.config.branding.footer.buttons.attachment.show) {
-                chatEle.querySelectorAll('.action-btn')[1].style.display = 'flex';
+            if (chatEle.querySelector('.hamberger-menu')) {
+                chatEle.querySelector('.hamberger-menu').style.display = 'flex';
+            }
+            if (chatEle.querySelector('.attachmentUpload')) {
+                chatEle.querySelector('.attachmentUpload').style.display = 'flex';
+            }
+            if (chatEle.querySelector('.emoji-btn')) {
+                chatEle.querySelector('.emoji-btn').style.display = 'flex';
             }
             chatEle.querySelector('.key-board').style.display = 'block';
         });
@@ -112,9 +127,14 @@ class BaseSTT {
                 me.stop();
                 chatEle.querySelector('.compose-voice-text-recording').style.display = 'none';
                 chatEle.querySelector('.compose-voice-text').style.display = 'block';
-                chatEle.querySelectorAll('.action-btn')[0].style.display = 'block';
-                if (this.hostInstance.config.branding.footer.buttons.attachment.show) {
-                    chatEle.querySelectorAll('.action-btn')[1].style.display = 'flex';
+                if (chatEle.querySelector('.hamberger-menu')) {
+                    chatEle.querySelector('.hamberger-menu').style.display = 'flex';
+                }
+                if (chatEle.querySelector('.attachmentUpload')) {
+                    chatEle.querySelector('.attachmentUpload').style.display = 'flex';
+                }
+                if (chatEle.querySelector('.emoji-btn')) {
+                    chatEle.querySelector('.emoji-btn').style.display = 'flex';
                 }
                 chatEle.querySelector('.key-board').style.display = 'block';
             } else {
