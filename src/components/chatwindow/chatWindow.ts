@@ -1038,7 +1038,8 @@ bindEventsV3() {
         bot.previousHistoryLoading = false;
       } else if (div.scrollTop === 0) {
         if (bot.paginatedScrollDataAvailable) {
-          me.chatEle.querySelectorAll('.typing-text-area')[0].classList.add('disableComposeBar');
+          me.chatEle.querySelector('.typing-text-area').blur();
+          me.chatEle.querySelector('.typing-text-area').classList.add('disableComposeBar');
           bot.previousHistoryLoading = true;
           var message = me?.config?.history?.paginatedScroll?.loadingLabel || 'Loading chat history..';
           const historyLoader = getHTML(HistoryLoader, message, me);
@@ -1222,7 +1223,8 @@ onBotReady  () {
         _chatContainer.find('.chatInputBox').focus();
         _chatContainer.find('.disableFooter').removeClass('disableFooter');
       } else {
-        me.chatEle.querySelectorAll('.typing-text-area')[0].classList.remove('disableComposeBar');
+        me.chatEle.querySelector('.typing-text-area').classList.remove('disableComposeBar');
+        me.chatEle.querySelector('.typing-text-area').focus();
       }
     });
   }
@@ -1861,11 +1863,6 @@ historyLoadingComplete () {
   const me:any = this;
   const _chatContainer = me.chatEle;
   setTimeout((me) => {
-    $('.chatInputBox').focus();
-    $('.disableFooter').removeClass('disableFooter');
-    if (me.config.UI.version == 'v3') {
-      me.chatEle.querySelectorAll('.typing-text-area')[0].classList.remove('disableComposeBar');
-    }
     me.historyLoading = false;
     if (me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) {
       me.getBotMetaData();
@@ -1888,11 +1885,11 @@ historyLoadingComplete () {
         }
       }
       _chatContainer.find('.chat-container').scrollTop(_heightTobeScrolled);
-    } 
-    if($(this.paginatedScrollMsgDiv).find('.prev-message-list').children().length){
-      $(this.paginatedScrollMsgDiv).find('.prev-message-list').empty();
-    }
 
+      if($(this.paginatedScrollMsgDiv).find('.prev-message-list').children().length){
+        $(this.paginatedScrollMsgDiv).find('.prev-message-list').empty();
+      }
+    } 
     if (me.config.UI.version == 'v3' && me.chatEle.querySelectorAll('.prev-message-list > div').length > 0 && bot.previousHistoryLoading){
       let prevMessageList = me.chatEle.querySelectorAll('.prev-message-list > div');
       let chatContainerList = me.chatEle.querySelectorAll('.chat-widget-body-wrapper > div');
@@ -1903,26 +1900,28 @@ historyLoadingComplete () {
         var tempLi = prevMessageList[i];
         me.chatEle.querySelector('.chat-widget-body-wrapper').insertBefore(tempLi, chatContainerList[0]);
         heightToBeScrolled += tempLi.offsetHeight;
-     }
+      }
 
-    me.chatEle.querySelector('.chat-widget-body-wrapper').scrollTop = heightToBeScrolled;
+      me.chatEle.querySelector('.chat-widget-body-wrapper').scrollTop = heightToBeScrolled;
 
-    let prevMessageListContainer = me.chatEle.querySelectorAll('.prev-message-list')[0];
-    prevMessageListContainer.innerHTML = '';
+      let prevMessageListContainer = me.chatEle.querySelectorAll('.prev-message-list')[0];
+      prevMessageListContainer.innerHTML = '';
 
-    let historyLoader = me.chatEle.querySelector('.history-loading-wrapper');
-    if (historyLoader) {
-      historyLoader.remove();
+      let historyLoader = me.chatEle.querySelector('.history-loading-wrapper');
+      if (historyLoader) {
+        historyLoader.remove();
+      }
     }
     bot.previousHistoryLoading = false;
-    }
     if (me.config.UI.version == 'v2') {
       if (_chatContainer.find('.paginted-history-loader')) {
         _chatContainer.find('.paginted-history-loader').remove();
       }
-      bot.previousHistoryLoading = false;
       $('.chatInputBox').focus();
       $('.disableFooter').removeClass('disableFooter');
+    } else {
+      me.chatEle.querySelector('.typing-text-area').classList.remove('disableComposeBar');
+      me.chatEle.querySelector('.typing-text-area').focus();
     }
   }, 0, me);
 };
@@ -2232,7 +2231,8 @@ unfreezeUIOnHistoryLoadingFail () {
         $('.chatInputBox').focus();
         $('.disableFooter').removeClass('disableFooter');
       } else {
-        me.chatEle.querySelectorAll('.typing-text-area')[0].classList.remove('disableComposeBar')
+        me.chatEle.querySelector('.typing-text-area').classList.remove('disableComposeBar');
+        me.chatEle.querySelector('.typing-text-area').focus();
       }
       me.historyLoading = false;
     }
