@@ -1011,7 +1011,6 @@
     max-height: 70px;
     overflow-x: hidden;
     overflow-y: auto;
-    white-space: pre;
 }
 
 .kore-chat-window .kore-chat-footer .chatInputBoxPlaceholder {
