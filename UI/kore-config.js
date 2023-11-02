@@ -46,9 +46,9 @@
         botOptions:botOptions,
         allowIframe: false, 			// set true, opens authentication links in popup window, default value is "false"
         isSendButton: false, 			// set true, to show send button below the compose bar
-        isTTSEnabled: true,			// set true, to hide speaker icon
+        isTTSEnabled: true,			// set true, to show speaker icon
         ttsInterface:'webapi',          // webapi or awspolly , where default is webapi
-        isSpeechEnabled: true,			// set true, to hide mic icon
+        isSpeechEnabled: true,			// set true, to show mic icon
         stt:{
             vendor: 'webapi',           //'webapi'|'azure'|'google' //uses respective settings from the following keys and uncomments respective files in index.html
             azure:{
