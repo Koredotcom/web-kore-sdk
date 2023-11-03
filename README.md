@@ -327,6 +327,7 @@ v10.1.13 [Minor] on 04-Nov-2023: Master branch
         Bugfixes
                 1.Table template bugfixes
                 2.White spaces to special characters issue fix from user
+
 v10.1.12 [Minor] on 14-Oct-2023: Master branch
         Bugfixes
                 1.Chat input white spaces trim issue fix
