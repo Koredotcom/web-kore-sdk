@@ -74,12 +74,6 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       _chatHistoryLoaded = true;
       this.cbBotChatHistory(arguments);
     }
-    else if(_chatHistoryLoaded && arguments && arguments[0] === 'history') {
-      setTimeout(function(){
-              $('.chatInputBox').focus();
-              $('.disableFooter').removeClass('disableFooter');
-          });
-    }
     this.EventEmitter.prototype.emit.apply(this, arguments);
   };
   

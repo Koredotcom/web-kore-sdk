@@ -1047,7 +1047,7 @@ onBotReady  () {
   _chatContainer.find('.kore-chat-header .disabled').prop('disabled', false).removeClass('disabled');
   if (!me.loadHistory) {
     setTimeout(() => {
-      _chatContainer.find('.chatInputBox').focus();
+      me.focusInputTextbox();
       _chatContainer.find('.disableFooter').removeClass('disableFooter');
     });
   }
@@ -1655,10 +1655,15 @@ historyLoadingComplete () {
       _chatContainer.find('.paginted-history-loader').remove();
     }
     bot.previousHistoryLoading = false;
-    $('.chatInputBox').focus();
+    me.historyRenderComplete();
     $('.disableFooter').removeClass('disableFooter');
   }, 0, me);
 };
+
+historyRenderComplete() {
+  const me:any = this;
+  me.focusInputTextbox();
+}
 
 historySyncing(msgData:any,res:any,index:any){
   const me:any = this;
@@ -1935,7 +1940,7 @@ unfreezeUIOnHistoryLoadingFail () {
   const me:any = this;
   setTimeout((me) => {
     if (me.loadHistory) {
-      $('.chatInputBox').focus();
+      me.focusInputTextbox();
       $('.disableFooter').removeClass('disableFooter');
       me.historyLoading = false;
     }
