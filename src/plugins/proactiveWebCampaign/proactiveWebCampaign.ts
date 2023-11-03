@@ -55,12 +55,12 @@ class ProactiveWebCampaignPlugin {
         }, 200);
     };
 
-    installPWCTemplates() {
-        let me = this;
-        let templateManager = me.hostInstance.templateManager;
-        templateManager.installTemplate(new PWCButtonTemplate());
-        templateManager.installTemplate(new PWCBannerTemplate());
-    }
+    // installPWCTemplates() {
+    //     let me = this;
+    //     let templateManager = me.hostInstance.templateManager;
+    //     templateManager.installTemplate(new PWCButtonTemplate());
+    //     templateManager.installTemplate(new PWCBannerTemplate());
+    // }
 }
 
 export default ProactiveWebCampaignPlugin
