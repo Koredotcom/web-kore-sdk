@@ -25,30 +25,52 @@ export function InsureAsssitForm(props: any) {
         // const allRequiredFieldsFilled = Object.keys(inputValues).every((key) => {
         //     return requiredFields.includes(key) && !!inputValues[key];
         //   });
-        
+
     };
-    const handleFormSubmit = (e:any) => {
+    const handleFormSubmit = (e: any) => {
         const stringifiedValues = JSON.stringify(inputValues);
-        hostInstance.sendMessage(stringifiedValues, { renderMsg: 'Submit' });
+        let clientMessageId = new Date().getTime();
+
+        // let msgData: any = {
+        //     type: 'currentUser',
+        //     message: [{
+        //         type: 'text',
+        //         cInfo: {
+        //             body: messageText,
+        //         },
+        //         clientMessageId,
+        //     }],
+        //     createdOn: clientMessageId,
+        // };
+        let messageToBot: any = {
+            clientMessageId: clientMessageId,
+            resourceid: '/bot.message',
+        };
+        if (stringifiedValues && stringifiedValues.trim() && stringifiedValues.trim().length) {
+            messageToBot["message"] = {
+                body: stringifiedValues.trim()
+            }
+        }
+        hostInstance.bot.sendMessage(messageToBot);
         setFormSubmitted(true);
     };
 
     const handleButtonEvent = (e: any) => {
         if (e?.type?.toLowerCase() === 'postback' || e?.type?.toLowerCase() === 'text') {
-          hostInstance.sendMessage(e.value, { renderMsg: e.title });
+            hostInstance.sendMessage(e.value, { renderMsg: e.title });
         } else if (e?.type === 'url' || e?.type === 'web_url') {
-          let link = e.value;
-          if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
-            link = `http:////${link}`;
-          }
-          hostInstance.openExternalLink(link);
+            let link = e.value;
+            if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
+                link = `http:////${link}`;
+            }
+            hostInstance.openExternalLink(link);
         } else {
-          // handle form submission
-          // this part remains the same
-          handleFormSubmit(e);
+            // handle form submission
+            // this part remains the same
+            handleFormSubmit(e);
         }
-      }      
-      
+    }
+
 
     // const closeMenu = () => {
     //     hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');

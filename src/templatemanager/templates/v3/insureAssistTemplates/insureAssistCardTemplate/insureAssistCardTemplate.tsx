@@ -2,7 +2,7 @@ import { getHTML } from '../../../../base/domManager';
 import BaseChatTemplate from '../../baseChatTemplate';
 import IconsManager from '../../../../base/iconsManager';
 import './insureAssistCardTemplate.scss';
-import { h, Fragment, ComponentChild, VNode } from 'preact';
+import { h, Fragment } from 'preact';
 
 export function cardSliderExtension(props: any) {
     const sliderData = props.msgData;

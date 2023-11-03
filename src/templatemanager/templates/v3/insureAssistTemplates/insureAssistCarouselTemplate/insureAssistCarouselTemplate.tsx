@@ -2,9 +2,11 @@ import BaseChatTemplate from '../../baseChatTemplate';
 import './insureAssistCarouselTemplate.scss';
 import { h, Fragment } from 'preact';
 import stackedCards from './stackedCarousel';
+import { useState } from 'preact/hooks';
 export function Carousel(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
+    const [isSliderEnabled, setSliderEnabled] = useState(true);
 
     const messageobj = {
         msgData: msgData,
@@ -14,6 +16,7 @@ export function Carousel(props: any) {
     const handleButtonEvent = (e: any) => {
         if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
             hostInstance.sendMessage(e.payload || e.value, { renderMsg: e.title });
+            setSliderEnabled(false);
         } else if (e.type == 'url' || e.type == 'web_url') {
             let link = e.url;
             if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
@@ -37,12 +40,13 @@ export function Carousel(props: any) {
         setTimeout(() => {
             stackedCard.init();
         }, 300)
+
         return (
             <div className={stackClass}>
-                <button className={leftCheButton}>
+                <button className={leftCheButton} disabled={!isSliderEnabled}>
                     <i className="sdkv3-cheveron-left"></i>
                 </button>
-                <ul class="slider">
+                <ul class={`slider ${isSliderEnabled ? '' : 'disabled-slider'}`}>
                     {msgData.message[0].component.payload.elements.map((ele: any) => (
                         <li class="item card-content-sec" style={ele.sliderStyle}>
                             <button className="card-content-sec">
@@ -125,8 +129,16 @@ export function Carousel(props: any) {
                                             </div>
                                         }
                                         {
-                                            ele?.buttons?.map((button: any) => (
-                                                <button style={button.buttonStyle} className="view-more-btn" onClick={() => handleButtonEvent(button)}>{button?.buttonTitle}</button>
+                                            ele?.buttons?.map((button: any, index: any) => (
+                                                <button
+                                                    style={button.buttonStyle}
+                                                    className={`view-more-btn ${!isSliderEnabled ? 'disabled-button' : ''}`}
+                                                    onClick={() => handleButtonEvent(button)}
+                                                    disabled={!isSliderEnabled}
+                                                    key={index}
+                                                >
+                                                    {button?.buttonTitle}
+                                                </button>
                                             ))
                                         }
                                     </div>
@@ -134,7 +146,7 @@ export function Carousel(props: any) {
                             </button>
                         </li>))}
                 </ul>
-                <button className={rightCheButton}>
+                <button className={rightCheButton} disabled={!isSliderEnabled}>
                     <i className="sdkv3-cheveron-right"></i>
                 </button>
             </div>

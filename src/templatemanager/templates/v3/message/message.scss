@@ -717,9 +717,12 @@
         .bot-bubble-comp {
             .bot-bubble-content {
                 .bubble-msg-with-img {
+                    .bubble-msg{
+                        border-radius: 12px 12px 12px 4px;
+                    }
                     .bot-img {
-                        left: 0;
-                        top: -25px;
+                        position: relative;
+                        left: -3px;
                     }
 
                     .bot-img.insureassist-bot-img {
@@ -727,13 +730,13 @@
                             left: -11px;
                             top: -12px;
                         }
-
                     }
                 }
             }
         }
 
         .bot-bubble-comp {
+            // margin: 30px 0 15px;
             .bot-bubble-content {
                 padding: 0;
                 padding-right: 7%;

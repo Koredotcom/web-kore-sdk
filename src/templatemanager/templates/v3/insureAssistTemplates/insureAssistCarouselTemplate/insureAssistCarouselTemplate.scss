@@ -3,7 +3,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    margin-bottom: 30px;
+    margin-bottom: 35px;
 
     .left-click {
         border-radius: 32px;
@@ -330,6 +330,9 @@
         margin-top: 5px;
         background-color: var(--card-temp-view-more-border);
     }
+    .disabled-button{
+        cursor: not-allowed;
+    }
 }
 
 .card-content-sec {
@@ -454,4 +457,10 @@
         }
     }
 
+}
+
+
+.insure-assist-theme .disabled-slider{
+    cursor: not-allowed;
+    pointer-events: none;
 }

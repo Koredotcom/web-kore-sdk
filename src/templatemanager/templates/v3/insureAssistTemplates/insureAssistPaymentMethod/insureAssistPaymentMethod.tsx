@@ -12,10 +12,14 @@ export function Payment(props: any) {
         msgData: msgData,
         hostInstance: hostInstance
     }
+    const [isEnabled, setEnabled] = useState(true);
+
     const handleButtonEvent = (e: any) => {
         if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
             hostInstance.sendMessage(e.value, { renderMsg: e.title });
+            setEnabled(false);
         } else if (e.type == 'url' || e.type == 'web_url') {
+            setEnabled(false);
             let link = e.value;
             if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
                 link = `http:////${link}`;
@@ -33,7 +37,7 @@ export function Payment(props: any) {
                     {/* payement methods start*/}
                     {
                         msgData?.message?.[0]?.component?.payload.items.map((val: any) => (
-                            <div className="card-acc-temp-sec card-style" onClick={() => handleButtonEvent(val.actions)}>
+                            <div class={`slider ${isEnabled ? '' : 'disabled-slider card-acc-temp-sec card-style'}`} className="card-acc-temp-sec card-style" onClick={() => handleButtonEvent(val.actions)}>
                                 <div>
                                     <div className="left-data">
                                         {val.title && <h1>{val.title}</h1>}
@@ -76,7 +80,7 @@ export function Payment(props: any) {
                         <div className="btn-group">
                             {
                                 msgData?.message?.[0]?.component?.payload?.buttons?.map((button: any) => (
-                                    <button style={button?.buttonStyle} className="view-renewal-btn" onClick={() => handleButtonEvent(button)}>{button?.buttonTitle}</button>
+                                    <button style={button?.buttonStyle} class={`slider ${isEnabled ? '' : 'disabled-slider view-renewal-btn'}`} className="view-renewal-btn" onClick={() => handleButtonEvent(button)}>{button?.buttonTitle}</button>
                                 ))
                             }
                         </div>

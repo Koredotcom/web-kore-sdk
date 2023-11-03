@@ -189,7 +189,7 @@ export function card(props: any) {
                                     }
                                     <div className="border-divider"></div>
                                     {
-                                        ele.middleSection.items.map((val: any) => (
+                                        ele.middleSection?.items?.map((val: any) => (
                                             <div className="bottom-sec-card">
                                                 <h2 style={val.titleStyles}>{val.title}<span style={val.subTitleStyles}>{val.subTitle}</span></h2>
                                                 <p style={val.valueStyles}>{val.value}</p>
