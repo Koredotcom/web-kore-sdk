@@ -2,7 +2,7 @@
 
 - SDK Release Nov 04, 2023
 * Breaking Changes
-  * For the implementations with method override historyLoadingComplete need to be revisted with the newer implementation. Keboard focus implementation got moved to new method historyRenderComplete. This method will focus chat input on appending chathistory to chatwindow. Need to override this method if chat input focus is not needed on chat history loading.
+  * For the implementations with method override historyLoadingComplete need to be revisted with the newer implementation. Keyboard focus implementation got moved to new method historyRenderComplete. This method will focus chat input on appending chathistory to chatwindow. Need to override this method if chat input focus is not needed on chat history loading.
 * Bug fixes
   * added optional webhook config to use sdk channel responses
   * added markdown support in taskpicker template
