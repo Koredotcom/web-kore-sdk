@@ -885,6 +885,7 @@ bindEvents  () {
         me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
       }
       if (me.initial) {
+        me.bot.logInComplete(); // Start api call & ws
         me.initial = false;
       }
       // me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
@@ -976,6 +977,9 @@ bindEventsV3() {
 
       if (!me.config.builderFlag) {
         if (me.initial) {
+          setTimeout(() => {
+            me.bot.logInComplete(); // Start api call & ws
+          }, 2000);
           me.initial = false;
           if (me.config.branding.welcome_screen.show) {
             me.chatEle.querySelector('.welcome-chat-section').classList.add('minimize');
@@ -987,6 +991,9 @@ bindEventsV3() {
         }
       } else {
         if (me.initial) {
+          setTimeout(() => {
+            me.bot.logInComplete(); // Start api call & ws
+          }, 1500);
           me.initial = false;
         }
         if (me.config.branding.welcome_screen.show) {
@@ -2405,6 +2412,9 @@ applyVariableValue (key:any,value:any,type:any){
   switchView(type: any) {
     const me: any = this;
     if (me.initial) {
+      setTimeout(() => {
+        me.bot.logInComplete(); // Start api call & ws
+      }, 2000);
       me.initial = false;
     }
     if (type == 'avatar') {
