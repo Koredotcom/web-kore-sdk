@@ -156,6 +156,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       if(userLocation.latitude !== 0 && userLocation.longitude !== 0) { //passing location for each message
         message["meta"].location = userLocation;
       }
+      this.emit('beforeWSSendMessage', message);
       this.RtmClient.sendMessage(message,optCb);
     }else{
       if(optCb){
