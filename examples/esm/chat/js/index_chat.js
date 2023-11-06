@@ -1,4 +1,4 @@
-import {chatConfig,chatWindow,ProactiveWebCampaignPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
+import {chatConfig,chatWindow,ProactiveWebCampaignPlugin,UserTypingEventsPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {WebKitSTT} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 
 let chatWindowInstance = new chatWindow();
@@ -55,4 +55,5 @@ https://developer.kore.ai/docs/bots/sdks/user-authorization-and-assertion/
 
 chatWindowInstance.installPlugin(new WebKitSTT({ lang: 'en-US' }));
 chatWindowInstance.installPlugin(new ProactiveWebCampaignPlugin());
+chatWindowInstance.installPlugin(new UserTypingEventsPlugin());
 chatWindowInstance.show(chatConfig);

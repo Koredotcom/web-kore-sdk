@@ -29,6 +29,7 @@ import GoogleVoiceConfig from  './plugins/textToSpeech/GoogleTTS/GoogleTTS';
 import GoogleAudioConfig from  './plugins/textToSpeech/GoogleTTS/GoogleTTS';
 import SpeakTextAWSPollyConfig from './plugins/textToSpeech/KoreAWSPolly/kore-aws-polly';
 import SearchSuggestionsPlugin from './plugins/searchSuggestions/searchSuggestions';
+import ProactiveWebCampaignPlugin from './plugins/proactiveWebCampaign/proactiveWebCampaign';
 import UserTypingEventsPlugin from './plugins/userTypingEventsPlugin';
 
 export {
@@ -60,5 +61,6 @@ export {
   SpeakTextAWSPollyConfig,
   SearchSuggestionsPlugin,
   KoreMultiFileUploaderPlugin,
+  ProactiveWebCampaignPlugin,
   UserTypingEventsPlugin
 };
