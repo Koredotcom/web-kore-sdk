@@ -538,14 +538,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this.RtmClient = new clients.KoreRtmClient({}, this.options);
       this.emit("rtm_client_initialized");
       this.emit(WEB_EVENTS.JWT_GRANT_SUCCESS,{jwtgrantsuccess : data});
-    }
-  };
-
-  /*
-  start conversation after getting jwtgrant and theme
-  */
-  KoreBot.prototype.logInComplete = function() {
-    this.RtmClient.start({
+      this.RtmClient.start({
         "botInfo": this.options.botInfo
       });
       this.RtmClient.on(RTM_EVENTS.MESSAGE, bind(this.onMessage, this));
@@ -557,6 +550,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
           _me.emit("rtm:"+RTM_CLIENT_EVENTS[rtmClientEvent],eventData);
         });
       });
+    }  
   }
   
   /*
