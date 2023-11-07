@@ -539,6 +539,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this.RtmClient = new clients.KoreRtmClient({}, this.options);
       this.emit("rtm_client_initialized");
       this.emit(WEB_EVENTS.JWT_GRANT_SUCCESS,{jwtgrantsuccess : data});
+      if (this.options?.pwcConfig?.enable) {
+        this.logInComplete();
+      }
     }
   };
 

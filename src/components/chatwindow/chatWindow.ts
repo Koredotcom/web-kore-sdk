@@ -217,6 +217,7 @@ initShow  (config:any) {
   me.messagesQueue=[];
 
   me.initial = true;
+  me.welcomeScreenOpened = false;
   me.config.chatTitle = 'Kore.ai Bot Chat';
   me.config.allowIframe = false;
 
@@ -237,6 +238,7 @@ initShow  (config:any) {
   me.config.botOptions.botInfo = {
     chatBot: me._botInfo.name, taskBotId: me._botInfo._id, customData: me._botInfo.customData, metaTags: me._botInfo.metaTags, tenanturl: me._botInfo.tenanturl,
   };
+  me.config.botOptions.pwcConfig = me.config.pwcConfig;
   const tempTitle = me._botInfo.name;
   me.config.chatTitle = me.config.botMessages.connecting;
   me._botInfo.displayName = me.config.branding.header.title.name ? me.config.branding.header.title.name : me._botInfo.name; // To do - need to do same changes in branding api call
@@ -976,11 +978,14 @@ bindEventsV3() {
       }
 
       if (!me.config.builderFlag) {
-        if (me.initial) {
-          setTimeout(() => {
-            me.bot.logInComplete(); // Start api call & ws
-          }, 2000);
+        if (!me.welcomeScreenOpened) {
+          if (me.initial) {
+            setTimeout(() => {
+              me.bot.logInComplete(); // Start api call & ws
+            }, 2000);
+          }
           me.initial = false;
+          me.welcomeScreenOpened = true;
           if (me.config.branding.welcome_screen.show) {
             me.chatEle.querySelector('.welcome-chat-section').classList.add('minimize');
           } else {
@@ -1147,6 +1152,9 @@ bindSDKEvents  () {
       me.setBranding();
     }
     me.emit(me.EVENTS.JWT_GRANT_SUCCESS, response.jwtgrantsuccess);
+    if (me.config.pwcConfig.enable) {
+      me.initial = false;
+    }
   });
 };
 parseSocketMessage(msgString:string){

@@ -44,6 +44,10 @@ chatConfig = {
     mockMode:{
         enable:false
     },
+    pwcConfig: {
+        enable: true,
+        container: 'body'
+    },
     botOptions: botOptions,
     container:'body',
     allowIframe: false, 			// set true, opens authentication links in popup window, default value is "false"
