@@ -184,7 +184,7 @@ const BrandingJSON = {
                 "icon": "url|icomoon"
             },
             "reconnect": {
-                "show": "true|false",
+                "show": false,
                 "icon": "url|icomoon"
             },
             "help": {

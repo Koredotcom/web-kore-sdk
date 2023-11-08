@@ -683,12 +683,20 @@ resetWindow () {
   const me:any = this;
   if (me.config.UI.version == 'v2') {
     me.chatEle.find('.kore-chat-header .header-title').html(me.config.botMessages.reconnecting);
+  } else {
+    me._botInfo.displayName = me.config.branding.header.title.name ? me.config.branding.header.title.name : me._botInfo.name; // To do - need to do same changes in branding api call
+    me.config.branding.header.title.name = me.config.botMessages.reconnecting;  
   }
   // me.chatEle.find('.chat-container').html("");
   me.bot.close();
   me.config.botOptions.maintainContext = false;
   me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
   me.bot.init(me.config.botOptions);
+  if (me.config.UI.version == 'v3') {
+    setTimeout(() => {
+      me.bot.logInComplete();
+    }, 3000);
+  }
 };
 
 sendMessageWithWithChatInput(chatInput:any){
@@ -1032,6 +1040,12 @@ bindEventsV3() {
       }
       me.chatEle.classList.add('minimize-chat');
     }
+  })
+
+  me.eventManager.addEventListener('.btn-reconnect', 'click', () => {
+    setTimeout(() => {
+      me.resetWindow();
+    });
   })
 
   if (me?.config.history.paginatedScroll.enable) {
