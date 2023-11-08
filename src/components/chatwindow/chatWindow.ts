@@ -686,6 +686,7 @@ resetWindow () {
     me.config.branding.header.title.name = me.config.botMessages.reconnecting;  
   }
   // me.chatEle.find('.chat-container').html("");
+  me.setBranding();
   me.bot.close();
   me.config.botOptions.maintainContext = false;
   me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
@@ -693,7 +694,7 @@ resetWindow () {
   if (me.config.UI.version == 'v3') {
     setTimeout(() => {
       me.bot.logInComplete();
-    }, 3000);
+    }, 4000);
   }
 };
 
