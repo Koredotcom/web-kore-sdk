@@ -10,6 +10,7 @@
     animation-duration: 1s;
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
+
     &.full-width-buttons {
         flex-direction: column;
     }
@@ -66,7 +67,7 @@
             background: var(--button-temp-bg-hover);
         }
     }
-    
+
     .quick-replies-buttons {
         display: flex;
         overflow: hidden;
@@ -87,11 +88,13 @@
         border: 0;
         cursor: pointer;
         flex-shrink: 0;
-        svg{
-            path{
+
+        svg {
+            path {
                 stroke: var(--gloabl-text-color);
             }
         }
+
         &.hide {
             cursor: not-allowed;
             pointer-events: none !important;
@@ -101,5 +104,12 @@
 
     .quick-right-click {
         @extend .quick-left-click;
+    }
+}
+
+.insure-assist-theme {
+    .quick-buttons {
+        padding: 10px 50px;
+        border-radius: 4px;
     }
 }

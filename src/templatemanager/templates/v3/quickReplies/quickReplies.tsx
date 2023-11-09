@@ -21,35 +21,35 @@ export function QuickReply(props: any) {
         }
         hostInstance.chatEle.querySelector('.quick-replies').remove();
     }
-    setTimeout(() => {
-        const carouselButtons = new CarouselButtons({
-            hostInstance,
-            id: msgData.messageId,
-            class: 'hide',
-            lsWidth: 50,
-            rsWidth: 20
-        });
-        carouselButtons.init();
-    }, 50);
+    // setTimeout(() => {
+    //     const carouselButtons = new CarouselButtons({
+    //         hostInstance,
+    //         id: msgData.messageId,
+    //         class: 'hide',
+    //         lsWidth: 50,
+    //         rsWidth: 20
+    //     });
+    //     carouselButtons.init();
+    // }, 50);
 
     return (
-        <div className="quick-replies quick-temp" id={msgData.messageId}>
-            <button className="quick-left-click" c-left-button-id={msgData.messageId}>
+        <div className="quick-replies quick-temp stack-buttons" id={msgData.messageId}>
+            {/* <button className="quick-left-click" c-left-button-id={msgData.messageId}>
                 <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
                     <path d="M12 15.5L7 10.5L12 5.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-            </button>
+            </button> */}
             <div className="quick-replies-buttons" c-parent-id={msgData.messageId}>
                 {msgData.message[0].component.payload.quick_replies.map((ele: any) => (
                     <button className="kr-btn quick-buttons" c-items-id={msgData.messageId} onClick={() => handleQuickReply(ele)}>{ele.title}</button>
                 ))
                 }
             </div>
-            <button className="quick-right-click" c-right-button-id={msgData.messageId}>
+            {/* <button className="quick-right-click" c-right-button-id={msgData.messageId}>
                 <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
                     <path d="M7 5.5L12 10.5L7 15.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-            </button>
+            </button> */}
         </div>
 
     )
