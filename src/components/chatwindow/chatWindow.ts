@@ -296,10 +296,18 @@ initShow  (config:any) {
     if (me.config.multiPageApp && me.config.multiPageApp.enable && maintainContext) {
       setTimeout(() => {
         if (cwState === 'open') {
-          $('.kore-chat-window .minimized .messages').trigger('click');
+          if (me.config.UI.version == 'v2') {
+            $('.kore-chat-window .minimized .messages').trigger('click');
+          } else {
+            setTimeout(() => {
+              me.chatEle.querySelector('.avatar-variations-footer').click();
+            }, 800);
+          }
         } else if (cwState === 'minimized') {
-          $('.kore-chat-window .minimized .messages').trigger('click');
-          $('.kore-chat-window button.minimize-btn').trigger('click');
+          if (me.config.UI.version == 'v2') {
+            $('.kore-chat-window .minimized .messages').trigger('click');
+            $('.kore-chat-window button.minimize-btn').trigger('click');
+          }
         }
       }, 500);
     }
@@ -990,7 +998,11 @@ bindEventsV3() {
             me.bot.logInComplete(); // Start api call & ws
           }, 2000);
           me.initial = false;
-          if (me.config.branding.welcome_screen.show) {
+          let welcomeScreenSkip = false;
+          if (me.config.multiPageApp && me.config.multiPageApp.enable) {
+            welcomeScreenSkip = me.getLocalStoreItem('kr-cw-welcome-chat');
+          }
+          if (me.config.branding.welcome_screen.show && !welcomeScreenSkip) {
             me.chatEle.querySelector('.welcome-chat-section').classList.add('minimize');
           } else {
             me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
@@ -1024,6 +1036,9 @@ bindEventsV3() {
         me.skipedInit = false;
       }
     } else {
+      if (me.config.multiPageApp && me.config.multiPageApp.enable) {
+        me.setLocalStoreItem('kr-cw-state', 'minimized');
+      }
       me.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
       me.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
       if (me.config.branding.welcome_screen.show) {
