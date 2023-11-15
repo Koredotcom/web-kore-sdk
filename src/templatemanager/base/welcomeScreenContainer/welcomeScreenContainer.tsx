@@ -40,6 +40,7 @@ export function WelcomeScreenContainer(props: any) {
     }
 
     const handleEventsWelcomeScreen = () => {
+        hostInstance.welcomeScreenState = true;
         if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
             hostInstance.setLocalStoreItem('kr-cw-welcome-chat', true);
         }

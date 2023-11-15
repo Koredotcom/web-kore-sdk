@@ -217,6 +217,7 @@ initShow  (config:any) {
   me.messagesQueue=[];
 
   me.initial = true;
+  me.welcomeScreenState = false;
   me.config.chatTitle = 'Kore.ai Bot Chat';
   me.config.allowIframe = false;
 
@@ -993,21 +994,28 @@ bindEventsV3() {
       }
 
       if (!me.config.builderFlag) {
-        if (me.initial) {
-          setTimeout(() => {
-            me.bot.logInComplete(); // Start api call & ws
-          }, 2000);
-          me.initial = false;
-          let welcomeScreenSkip = false;
-          if (me.config.multiPageApp && me.config.multiPageApp.enable) {
-            welcomeScreenSkip = me.getLocalStoreItem('kr-cw-welcome-chat');
+        if (me.config.multiPageApp && me.config.multiPageApp.enable) {
+          me.welcomeScreenState = me.getLocalStoreItem('kr-cw-welcome-chat');
+        }
+        if (!me.welcomeScreenState) {
+          if (me.initial) {
+            setTimeout(() => {
+              me.bot.logInComplete(); // Start api call & ws
+            }, 2000);
           }
-          if (me.config.branding.welcome_screen.show && !welcomeScreenSkip) {
+          me.initial = false;
+          if (me.config.branding.welcome_screen.show) {
             me.chatEle.querySelector('.welcome-chat-section').classList.add('minimize');
           } else {
             me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
           }
         } else {
+          if (me.initial &&me.config.branding.welcome_screen.show) {
+            setTimeout(() => {
+              me.bot.logInComplete(); // Start api call & ws
+            }, 2000);
+            me.initial = false;
+          }
           me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
         }
       } else {
