@@ -1010,7 +1010,7 @@ bindEventsV3() {
             me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
           }
         } else {
-          if (me.initial &&me.config.branding.welcome_screen.show) {
+          if (me.initial) {
             setTimeout(() => {
               me.bot.logInComplete(); // Start api call & ws
             }, 2000);
