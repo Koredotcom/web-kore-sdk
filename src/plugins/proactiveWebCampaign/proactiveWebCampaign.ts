@@ -32,11 +32,11 @@ class ProactiveWebCampaignPlugin {
                 if (data.type == 'pwe_message' && data.event_name == 'pwe_verify') {
                     if (data.body.isEnabled) {
                         this.enablePWC = true;
-                        // this.campInfo = data.body?.campInfo;
-                        // me.bindWindowEvents();
+                        this.campInfo = data.body.campInfo || [];
+                        me.onUrlChange();
                     }
                 }
-                if ((data.type == 'Session_Start' || data.type == 'Bot_Active' || data.type == 'onTaskUpdate') && this.enablePWC) {
+                if (data.type == 'pwe_message' && data.action?.type && data.action?.type !== 'chat' && this.enablePWC) {
                     const htmlEle = me.hostInstance.generateMessageDOM(data);
                     if (me.hostInstance.config.pwcConfig.container instanceof HTMLElement) {
                         me.hostInstanceconfig.pwcConfig.container.appendChild(htmlEle);
@@ -44,14 +44,15 @@ class ProactiveWebCampaignPlugin {
                         document.querySelector(me.hostInstance.config.pwcConfig.container).appendChild(htmlEle);
                     }
                 }
-                if (data.type == 'Session_Start') {
+                if (data.type == 'pwe_message' && data.action?.type && data.action?.type == 'chat' && this.enablePWC) {
                     me.hostInstance.emit('onPWCUpdate', {
                         data: {
                             enable: true,
-                            data: {
-                                buttons: [{ title: 'hi' }, { title: 'hello' }],
-                                messages: [{ text: 'kore' }, { text: 'kora' }]
-                            }
+                            // data: {
+                            //     buttons: [{ title: 'hi' }, { title: 'hello' }],
+                            //     messages: [{ text: 'kore' }, { text: 'kora' }]
+                            // }
+                            data:  data.action.data
                         }
                     })
                 }
@@ -83,7 +84,26 @@ class ProactiveWebCampaignPlugin {
         templateManager.installTemplate(new PWCPostTemplate());
     }
 
-    bindWindowEvents() {
+    onUrlChange() {
+        const me: any = this;
+        let currentUrl = window.location.href;
+        me.sendEvent(currentUrl);
+        console.log('url: ', currentUrl);
+        setTimeout(() => {
+            if (window.location.href !== currentUrl) {
+                me.sendEvent(window.location.href);
+                currentUrl = window.location.href;
+            }
+        });
+
+        window.addEventListener('hashchange', (event: any) => {
+            if (event.oldURL !== event.newURL) {
+                me.sendEvent(event.newURL);
+            }
+        });
+    }
+
+    sendEvent(currentUrl: any) {
         const me: any = this;
         const clientMessageId = new Date().getTime();
         const messageToBot: any = {};
@@ -92,8 +112,6 @@ class ProactiveWebCampaignPlugin {
         messageToBot.resourceid = '/pwe_message';
         messageToBot.iId = me.hostInstance.config.botOptions.botInfo.taskBotId;
         messageToBot.userId = me.hostInstance.config.botOptions.userIdentity;
-        let currentUrl = window.location.href;
-
         this.campInfo.forEach((camp: any) => {
             let urlChecked: boolean = false;
             let eventObj: any = {};
@@ -153,20 +171,6 @@ class ProactiveWebCampaignPlugin {
                 }
             }
         });
-        console.log('url: ', currentUrl);
-        setTimeout(() => {
-            if (window.location.href !== currentUrl) {
-                messageToBot.ruleInfo = window.location.href;
-                me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
-                currentUrl = window.location.href;
-            }
-        })
-        window.addEventListener('hashchange', (event: any) => {
-            if (event.oldURL !== event.newURL) {
-                messageToBot.ruleInfo = event.newURL;
-                me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
-            }
-        })
     }
 }
 
