@@ -24,7 +24,7 @@ const BrandingJSON = {
             "type": "default"
         },
         "sound": "themeOne",
-        "alignment": "block",
+        "alignment": "line",
         "animation": "slide",
         "expand_animation": "quick",
         "primary_color": "#4B4EDE",
