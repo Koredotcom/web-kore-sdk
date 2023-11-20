@@ -26,6 +26,9 @@ class ProactiveWebCampaignPlugin {
         me.hostInstance.on('onWSOpen', (event: any) => {
             me.sendPWCStartEvent();
         });
+        if (!window.localStorage.getItem('kr-pwc')) {
+            window.localStorage.setItem('kr-pwc', 'initilized');
+        }
         me.hostInstance.bot.on('message', (event: any) => {
             if (event && event.data) {
                 const data = JSON.parse(event.data);
@@ -33,7 +36,7 @@ class ProactiveWebCampaignPlugin {
                     if (data.body.isEnabled) {
                         this.enablePWC = true;
                         this.campInfo = data.body.campInfo || [];
-                        me.onUrlChange();
+                        me.eventLoop();
                     }
                 }
                 if (data.type == 'pwe_message' && data.action?.type && data.action?.type !== 'chat' && this.enablePWC) {
@@ -48,11 +51,11 @@ class ProactiveWebCampaignPlugin {
                     me.hostInstance.emit('onPWCUpdate', {
                         data: {
                             enable: true,
-                            // data: {
-                            //     buttons: [{ title: 'hi' }, { title: 'hello' }],
-                            //     messages: [{ text: 'kore' }, { text: 'kora' }]
-                            // }
-                            data:  data.action.data
+                            data: {
+                                buttons: [{ title: 'hi' }, { title: 'hello' }],
+                                messages: [{ text: 'kore' }, { text: 'kora' }]
+                            }
+                            // data:  data.action.data
                         }
                     })
                 }
@@ -84,15 +87,19 @@ class ProactiveWebCampaignPlugin {
         templateManager.installTemplate(new PWCPostTemplate());
     }
 
-    onUrlChange() {
+    eventLoop() {
         const me: any = this;
         let currentUrl = window.location.href;
-        me.sendEvent(currentUrl);
-        console.log('url: ', currentUrl);
+        if (!window.localStorage.getItem('kr-pwc')) {
+            window.localStorage.setItem('prevUrl', currentUrl);
+            me.sendEvent(currentUrl);
+        }
         setTimeout(() => {
-            if (window.location.href !== currentUrl) {
-                me.sendEvent(window.location.href);
-                currentUrl = window.location.href;
+            currentUrl = window.location.href;
+            const prevUrl = window.localStorage.getItem('prevUrl');
+            if (prevUrl !== currentUrl) {
+                me.sendEvent(currentUrl);
+                window.localStorage.setItem('prevUrl', currentUrl);
             }
         });
 
@@ -114,11 +121,17 @@ class ProactiveWebCampaignPlugin {
         messageToBot.userId = me.hostInstance.config.botOptions.userIdentity;
         this.campInfo.forEach((camp: any) => {
             let urlChecked: boolean = false;
-            let eventObj: any = {};
+            let ruleData: any = [];
             let sendEvent: boolean = true;
+            messageToBot.campInfo = {};
+            messageToBot.campInfo.campaignId = camp.campId;
             camp.engagementStrategy.url.forEach((urlItem: any) => {
-                if (urlItem.matchingCondition) {
+                if (urlItem.matchingCondition == 'is') {
                     if (currentUrl == urlItem.value) {
+                        urlChecked = true;
+                    }
+                } else {
+                    if (currentUrl.includes(urlItem.value)) {
                         urlChecked = true;
                     }
                 }
@@ -129,13 +142,16 @@ class ProactiveWebCampaignPlugin {
                     camp.engagementStrategy.rules.forEach((ruleItem: any) => {
                         switch (ruleItem.rule) {
                             case 'user':
-                                eventObj['userInfo'] = 'known';
+                                ruleItem.value = 'known';
+                                ruleData.push(ruleItem);
                                 break;
                             case 'timeSpent':
-                                eventObj['currentTime'] = new Date();
+                                ruleItem.value = new Date();
+                                ruleData.push(ruleItem);
                                 break;
                             case 'pageVisitCount':
-                                eventObj['url'] = currentUrl;
+                                ruleItem.value = currentUrl;
+                                ruleData.push(ruleItem);
                                 break;
                             case 'country':
                                 break;
@@ -144,9 +160,10 @@ class ProactiveWebCampaignPlugin {
                     });
                 } else {
                     if (camp.engagementStrategy.rules.filter((r: any) => r.rule).includes('user')) {
-                        const userRule = camp.engagementStrategy.rules.filter((r: any) => r.rule == 'user');
+                        const userRule = camp.engagementStrategy.rules.find((r: any) => r.rule == 'user');
                         if (userRule.value) {
-                            eventObj['userInfo'] = 'venkat';
+                            userRule.value = 'known';
+                            ruleData.push(userRule);
                         } else {
                             sendEvent = false;
                         }
@@ -154,10 +171,12 @@ class ProactiveWebCampaignPlugin {
                     camp.engagementStrategy.rules.forEach((ruleItem: any) => {
                         switch (ruleItem.rule) {
                             case 'timeSpent':
-                                eventObj['currentTime'] = new Date();
+                                ruleItem.value = new Date();
+                                ruleData.push(ruleItem);
                                 break;
                             case 'pageVisitCount':
-                                eventObj['url'] = currentUrl;
+                                ruleItem.value = currentUrl;
+                                ruleData.push(ruleItem);
                                 break;
                             case 'country':
                                 break;
@@ -165,7 +184,7 @@ class ProactiveWebCampaignPlugin {
                         }
                     });
                 }
-                messageToBot.ruleInfo = eventObj;
+                messageToBot.ruleInfo = ruleData;
                 if (sendEvent) {
                     me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
                 }
