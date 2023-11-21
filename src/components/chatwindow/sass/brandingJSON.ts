@@ -19,7 +19,7 @@ const BrandingJSON = {
             "type": "default" 
         },
         "minimise": {
-            "icon": "url4",
+            "icon": "https://dlnwzkim0wron.cloudfront.net/f-5e428c3b-dee8-5a50-9a3b-19e88e5c9d8e.png",
             "theme": "rounded",
             "type": "default"
         },
@@ -184,7 +184,7 @@ const BrandingJSON = {
                 "icon": "url|icomoon"
             },
             "reconnect": {
-                "show": "true|false",
+                "show": false,
                 "icon": "url|icomoon"
             },
             "help": {
@@ -216,7 +216,7 @@ const BrandingJSON = {
         "icons_color": "#000000",
         "buttons": {
             "menu": {
-                "show": true,
+                "show": false,
                 "icon_color": "#000000" ,
                 "actions": [{
                     "title": "Get Balance",
@@ -259,7 +259,7 @@ const BrandingJSON = {
             "img": "https://picsum.photos/id/237/200/300"
         },
         "font": {
-            "family": "Impact",
+            "family": "Inter",
             "size": "medium",
             "style": "1|2|3"
         },

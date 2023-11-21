@@ -51,12 +51,18 @@ export function AvatarComponent(props: any) {
                 </div>
                 <button className="avatar-bg">
                     <span className="un-read-msg">2</span>
-                    <figure className="default-avater-icon">
+                    {brandingInfo.chat_bubble.icon.type == 'default' && <figure className="default-avater-icon">
                         <img src={iconHelper.getIcon('avatar_icon')} alt="Elephant at sunset" />
-                    </figure>
-                    <figure className="close-avater-icon rotateIn">
+                    </figure>}
+                    {brandingInfo.chat_bubble.minimise.type == 'default' && <figure className="close-avater-icon rotateIn">
                         <img src={iconHelper.getIcon('close_chat_avatar')} alt="Elephant at sunset" />
-                    </figure>
+                    </figure>}
+                    {brandingInfo.chat_bubble.icon.type == 'custom' && <figure>
+                        <img className="custom-img-uploaded" src={brandingInfo.chat_bubble.icon.icon_url} />
+                    </figure>}
+                    {brandingInfo.chat_bubble.minimise.type == 'custom' && <figure>
+                        <img className="custom-img-uploaded-minimize" src={brandingInfo.chat_bubble.minimise.icon} />
+                    </figure>}
                 </button>
             </div>
         </div>

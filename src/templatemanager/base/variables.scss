@@ -15,7 +15,7 @@ $media-mobile: 600px;
     // End
 
     // Font Family
-        --global-font-family:"Inter";
+        --global-font-family: var(--v3-sdk-chat-branding--global-font-family);   // "Inter";
     // End
 
     --global-theme-color:var(--gloabl-primary-color);

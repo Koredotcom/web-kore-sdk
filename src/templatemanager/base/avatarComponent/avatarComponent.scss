@@ -131,7 +131,7 @@
             border-radius: 32px;
             width: 48px;
             height: 48px;
-            padding: 10px;
+            padding: 0px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -147,6 +147,22 @@
             .default-avater-icon {}
 
             .close-avater-icon {
+            animation: bounce-in-avatar 0.2s ease forwards;  
+            figure{
+                line-height: 0;
+                .custom-img-uploaded{
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 100%;
+                }
+                .custom-img-uploaded-minimize{
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 100%;
+                    display: none;
+                }
+            } 
+            .close-avater-icon{
                 display: none;
             }
 
@@ -179,6 +195,12 @@
 
                 .un-read-msg {
                     display: none;
+                }
+                .custom-img-uploaded {
+                    display: none;
+                }
+                .custom-img-uploaded-minimize {
+                    display: block;
                 }
             }
         }
@@ -266,7 +288,7 @@
 .animation-slide-up:nth-child(3) {
     animation-delay: 2s;
 }
-
+}
 /*--insureAssist - css --*/
 .insure-assist-theme {
     .avatar-variations-footer {

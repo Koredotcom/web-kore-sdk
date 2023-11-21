@@ -64,6 +64,12 @@
                         fill: var(--chat-widget-header-bg-large-actions-color);
                     }
                 }
+                &.btn-reconnect{
+                    path{
+                        fill: none;
+                        stroke: var(--chat-widget-header-bg-large-actions-color);
+                    }
+                }
             }
         }
         &.transparent-style{
@@ -162,6 +168,12 @@
             svg{
                 path{
                     fill: var(--chat-widget-header-actions-color);
+                }
+            }
+            &.btn-reconnect{
+                path{
+                    fill: none;
+                    stroke: var(--chat-widget-header-actions-color);
                 }
             }
         }

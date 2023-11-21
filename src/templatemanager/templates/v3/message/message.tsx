@@ -84,7 +84,7 @@ export function Message(props: any) {
                                                 {/* <span className="copied-text">Copied</span>                                            */}
                                             </div> }
                                             <div className="bubble-msg-with-img">
-                                                <div className="bubble-msg">{msgItem.cInfo.body}</div>
+                                                <div className="bubble-msg" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgItem.cInfo.body, "bot",msgItem)}}></div>
                                                 {!msgData.fromAgent && <div className="bot-img">
                                                     <figure>
                                                         <img src={msgData.icon} alt='avatr img' />
@@ -117,7 +117,7 @@ export function Message(props: any) {
                                                     <div className="you-text">You</div>                                                    
                                             </div> }
                                             <div className="bubble-msg-with-img">
-                                                <div className="bubble-msg">{msgItem.cInfo.renderMsg && msgItem.cInfo.renderMsg !== '' ? msgItem.cInfo.renderMsg : msgItem.cInfo.body}
+                                                <div className="bubble-msg" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgItem.cInfo.renderMsg && msgItem.cInfo.renderMsg !== '' ? msgItem.cInfo.renderMsg : msgItem.cInfo.body, "user",msgItem)}}>
                                                 </div>
                                                 <div className="agent-img">
                                                     <figure>

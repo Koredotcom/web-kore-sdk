@@ -12,6 +12,12 @@
   max-width: calc(100% - 80px);
   transition: 0.4s all ease;
   font-family: var(--global-font-family);
+  *{
+    font-family: var(--global-font-family);
+  }
+  &.no-avatar-bg-icon{
+    height: calc(100% - 80px);
+  }
   @media (max-width: $media-mobile) {
     width: calc(100% - 20px);
     height: calc(100% - 115px);

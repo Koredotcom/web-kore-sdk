@@ -156,6 +156,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       if(userLocation.latitude !== 0 && userLocation.longitude !== 0) { //passing location for each message
         message["meta"].location = userLocation;
       }
+      this.emit('beforeWSSendMessage', message);
       this.RtmClient.sendMessage(message,optCb);
     }else{
       if(optCb){
@@ -546,17 +547,17 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   */
   KoreBot.prototype.logInComplete = function() {
     this.RtmClient.start({
-        "botInfo": this.options.botInfo
+      "botInfo": this.options.botInfo
+    });
+    this.RtmClient.on(RTM_EVENTS.MESSAGE, bind(this.onMessage, this));
+    this.RtmClient.on(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, bind(this.onOpenWSConnection, this));
+    //Propagating the events triggered on this.RtmClient to KoreBot instance with ":rtm" prefix
+    var _me=this;
+    Object.keys(RTM_CLIENT_EVENTS).forEach(function(rtmClientEvent){
+      _me.RtmClient.on(RTM_CLIENT_EVENTS[rtmClientEvent],function(eventData){
+        _me.emit("rtm:"+RTM_CLIENT_EVENTS[rtmClientEvent],eventData);
       });
-      this.RtmClient.on(RTM_EVENTS.MESSAGE, bind(this.onMessage, this));
-      this.RtmClient.on(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, bind(this.onOpenWSConnection, this));
-      //Propagating the events triggered on this.RtmClient to KoreBot instance with ":rtm" prefix
-      var _me=this;
-      Object.keys(RTM_CLIENT_EVENTS).forEach(function(rtmClientEvent){
-        _me.RtmClient.on(RTM_CLIENT_EVENTS[rtmClientEvent],function(eventData){
-          _me.emit("rtm:"+RTM_CLIENT_EVENTS[rtmClientEvent],eventData);
-        });
-      });
+    });
   }
   
   /*
