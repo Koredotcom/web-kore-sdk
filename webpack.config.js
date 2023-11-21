@@ -217,6 +217,11 @@ module.exports= function(env,argv){
             import: "./src/index_plugins/fileUpload_umd.ts",
             filename: 'plugins/file-upload.js',
             chunkLoading: false,
+          },
+          ProactiveWebCampaignPluginSDK: {
+            import: "./src/index_plugins/proactiveWebCampaign.ts",
+            filename: 'plugins/proactive-web-campaign.js',
+            chunkLoading: false,
           }
         }
         config.output.path= path.resolve(__dirname,'dist/esm');
@@ -335,6 +340,11 @@ module.exports= function(env,argv){
           FileUploadPluginSDK: {
             import: "./src/index_plugins/fileUpload_umd.ts",
             filename: 'plugins/file-upload-umd.js',
+            chunkLoading: false,
+          },
+          ProactiveWebCampaignPluginSDK: {
+            import: "./src/index_plugins/proactiveWebCampaign.ts",
+            filename: 'plugins/proactive-web-campaign.js',
             chunkLoading: false,
           }
 
