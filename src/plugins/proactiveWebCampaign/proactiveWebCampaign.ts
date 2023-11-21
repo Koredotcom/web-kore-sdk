@@ -1,3 +1,4 @@
+import moment from "moment-timezone";
 import PWCBannerTemplate from "./templates/pwcBannerTemplate/pwcBannerTemplate";
 import PWCButtonTemplate from "./templates/pwcButtonTemplate/pwcButtonTemplate";
 import PWCPostTemplate from "./templates/pwcPostTemplate/pwcPostTemplate";
@@ -39,7 +40,7 @@ class ProactiveWebCampaignPlugin {
                         me.eventLoop();
                     }
                 }
-                if (data.type == 'pwe_message' && data.action?.type && data.action?.type !== 'chat' && this.enablePWC) {
+                if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType !== 'chat' && this.enablePWC) {
                     const htmlEle = me.hostInstance.generateMessageDOM(data);
                     if (me.hostInstance.config.pwcConfig.container instanceof HTMLElement) {
                         me.hostInstanceconfig.pwcConfig.container.appendChild(htmlEle);
@@ -47,15 +48,11 @@ class ProactiveWebCampaignPlugin {
                         document.querySelector(me.hostInstance.config.pwcConfig.container).appendChild(htmlEle);
                     }
                 }
-                if (data.type == 'pwe_message' && data.action?.type && data.action?.type == 'chat' && this.enablePWC) {
+                if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType == 'chat' && this.enablePWC) {
                     me.hostInstance.emit('onPWCUpdate', {
-                        data: {
+                        chatData: {
                             enable: true,
-                            data: {
-                                buttons: [{ title: 'hi' }, { title: 'hello' }],
-                                messages: [{ text: 'kore' }, { text: 'kora' }]
-                            }
-                            // data:  data.action.data
+                            data:  data.body.layoutDesign
                         }
                     })
                 }
@@ -136,13 +133,13 @@ class ProactiveWebCampaignPlugin {
                     }
                 }
             });
-            if (urlChecked) {
+            if (urlChecked && this.checkEngagementHours(camp.engagementStrategy.engagementHours)) {
                 let condition = camp.engagementStrategy.rules[0].operator;
                 if (condition == 'or') {
                     camp.engagementStrategy.rules.forEach((ruleItem: any) => {
                         switch (ruleItem.rule) {
                             case 'user':
-                                ruleItem.value = 'known';
+                                ruleItem.value = 'unknown';
                                 ruleData.push(ruleItem);
                                 break;
                             case 'timeSpent':
@@ -154,15 +151,17 @@ class ProactiveWebCampaignPlugin {
                                 ruleData.push(ruleItem);
                                 break;
                             case 'country':
+                                ruleItem.value = 'India';
+                                ruleData.push(ruleItem);
                                 break;
                             default:
                         }
                     });
                 } else {
-                    if (camp.engagementStrategy.rules.filter((r: any) => r.rule).includes('user')) {
-                        const userRule = camp.engagementStrategy.rules.find((r: any) => r.rule == 'user');
-                        if (userRule.value) {
-                            userRule.value = 'known';
+                    const userRule = camp.engagementStrategy.rules.find((r: any) => r.rule == 'user');
+                    if (userRule) {
+                        if (userRule) {
+                            userRule.value = 'unknown';
                             ruleData.push(userRule);
                         } else {
                             sendEvent = false;
@@ -179,6 +178,8 @@ class ProactiveWebCampaignPlugin {
                                 ruleData.push(ruleItem);
                                 break;
                             case 'country':
+                                ruleItem.value = 'India';
+                                ruleData.push(ruleItem);
                                 break;
                             default:
                         }
@@ -190,6 +191,14 @@ class ProactiveWebCampaignPlugin {
                 }
             }
         });
+    }
+
+    checkEngagementHours(engHours: any) {
+        const tz = engHours.timezone || 'Asia/Kolkata';
+        const currTime = moment().tz(tz);
+        const startTime = moment.tz(engHours.start, 'hh:mm A', tz);     
+        const endTime = moment.tz(engHours.end, 'hh:mm A', tz);       
+        return currTime.isBetween(startTime, endTime)
     }
 }
 
