@@ -91,20 +91,20 @@ class ProactiveWebCampaignPlugin {
             window.localStorage.setItem('prevUrl', currentUrl);
             me.sendEvent(currentUrl);
         }
-        setTimeout(() => {
+        setInterval(() => {
             currentUrl = window.location.href;
             const prevUrl = window.localStorage.getItem('prevUrl');
             if (prevUrl !== currentUrl) {
-                me.sendEvent(currentUrl);
                 window.localStorage.setItem('prevUrl', currentUrl);
+                me.sendEvent(currentUrl);
             }
-        });
+        }, 1000);
 
-        window.addEventListener('hashchange', (event: any) => {
-            if (event.oldURL !== event.newURL) {
-                me.sendEvent(event.newURL);
-            }
-        });
+        // window.addEventListener('hashchange', (event: any) => {
+        //     if (event.oldURL !== event.newURL) {
+        //         me.sendEvent(event.newURL);
+        //     }
+        // });
     }
 
     sendEvent(currentUrl: any) {
