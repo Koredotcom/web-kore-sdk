@@ -239,6 +239,8 @@ initShow  (config:any) {
     chatBot: me._botInfo.name, taskBotId: me._botInfo._id, customData: me._botInfo.customData, metaTags: me._botInfo.metaTags, tenanturl: me._botInfo.tenanturl,
   };
   me.config.botOptions.pwcConfig = me.config.pwcConfig;
+  me.pwcInfo = {};
+  me.pwcInfo.dataFalg = false;
   const tempTitle = me._botInfo.name;
   me.config.chatTitle = me.config.botMessages.connecting;
   me._botInfo.displayName = me.config.branding.header.title.name ? me.config.branding.header.title.name : me._botInfo.name; // To do - need to do same changes in branding api call

@@ -49,12 +49,17 @@ class ProactiveWebCampaignPlugin {
                     }
                 }
                 if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType == 'chat' && this.enablePWC) {
-                    me.hostInstance.emit('onPWCUpdate', {
-                        chatData: {
-                            enable: true,
-                            data:  data.body.layoutDesign
-                        }
-                    })
+                    // me.hostInstance.emit('onPWCUpdate', {
+                    //     chatData: {
+                    //         enable: true,
+                    //         data:  data.body.layoutDesign
+                            
+                    //     }
+                    // })
+                    me.hostInstance.pwcInfo.dataFlag = true;
+                    me.hostInstance.pwcInfo.chatData = {};
+                    me.hostInstance.pwcInfo.chatData.enable = true;
+                    me.hostInstance.pwcInfo.chatData.data = data.body.layoutDesign;
                 }
             }
         });
@@ -194,7 +199,7 @@ class ProactiveWebCampaignPlugin {
     }
 
     checkEngagementHours(engHours: any) {
-        const tz = engHours.timezone || 'Asia/Kolkata';
+        const tz = engHours?.timezone || 'Asia/Kolkata';
         const currTime = moment().tz(tz);
         const startTime = moment.tz(engHours.start, 'hh:mm A', tz);     
         const endTime = moment.tz(engHours.end, 'hh:mm A', tz);       

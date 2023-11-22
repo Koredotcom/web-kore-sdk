@@ -14,9 +14,18 @@ export function AvatarComponent(props: any) {
         updateBrandingInfo({...event.brandingData})
     });
 
-    hostInstance.on('onPWCUpdate', function (event: any) {
-        updatePWCCampaignInfo({...event.chatData})
-    });
+    // hostInstance.on('onPWCUpdate', function (event: any) {
+    //     console.count('pwcUpdate');
+    //     console.log('data: ', event.chatData);
+    //     updatePWCCampaignInfo({...event.chatData})
+    // });
+
+    setInterval(() => {
+        if (hostInstance?.pwcInfo?.dataFlag) {
+            updatePWCCampaignInfo({...hostInstance.pwcInfo.chatData});
+            hostInstance.pwcInfo.dataFlag = false;
+        }
+    }, 500)
 
     const aShape: any = {
         "rounded": "avatar-actions",
@@ -37,13 +46,13 @@ export function AvatarComponent(props: any) {
     }
 
     const handlePWCButtonEvent = (e: any) => {
-        if (e.type == 'url') {
-            let link = e.value;
+        if (e.actionType == 'url') {
+            let link = e.actionValue;
             if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
                 link = `http:////${link}`;
             }
             hostInstance.openExternalLink(link);
-        } else if (e.type == 'reject') {
+        } else if (e.actionType == 'reject') {
             closePWCHelp(e);
         }
     }
@@ -63,6 +72,11 @@ export function AvatarComponent(props: any) {
                 hostInstance.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
                 hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
                 closePWCHelp('');
+                const ele = hostInstance.chatEle.querySelector('pwc-accept');
+                const timeout = hostInstance.historyLoading ? 3500 : 200
+                setTimeout(() => {
+                    hostInstance.sendMessageToBot(ele.getAttribute('data-postback'));
+            }, timeout);
             });
         }
     });
@@ -97,8 +111,8 @@ export function AvatarComponent(props: any) {
                             </span>}
                         </div>))}
                     <div style={{display: 'flex'}}>    
-                    { pwcCampaign.data.buttons.map((ele: any) => (
-                        <button className={`primary-button animation-slide-up ${ele.action.type == 'accept'? 'pwc-accept' : ''}`} onClick={() =>handlePWCButtonEvent(ele.action)}>{ele.text}</button>
+                    { pwcCampaign.data?.buttons?.map((ele: any) => (
+                        <button style={{backgroundColor: ele?.backgroundColor, color: ele?.color}} className={`primary-button animation-slide-up ${ele?.actionType == 'accept'? 'pwc-accept' : ''}`} data-postback={ele?.actionValue} onClick={() =>handlePWCButtonEvent(ele)}>{ele?.text}</button>
                     ))}
                     </div>
                 </div> }
