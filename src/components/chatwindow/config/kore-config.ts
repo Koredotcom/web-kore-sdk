@@ -46,7 +46,8 @@ chatConfig = {
     },
     pwcConfig: {
         enable: true,
-        container: 'body'
+        container: 'body',
+        knownUser: false
     },
     botOptions: botOptions,
     container:'body',
