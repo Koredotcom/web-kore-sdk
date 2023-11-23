@@ -14,15 +14,20 @@ export function AvatarComponent(props: any) {
         updateBrandingInfo({...event.brandingData})
     });
 
-    // hostInstance.on('onPWCUpdate', function (event: any) {
-    //     console.count('pwcUpdate');
-    //     console.log('data: ', event.chatData);
-    //     updatePWCCampaignInfo({...event.chatData})
-    // });
-
     setInterval(() => {
         if (hostInstance?.pwcInfo?.dataFlag) {
-            updatePWCCampaignInfo({...hostInstance.pwcInfo.chatData});
+            let pwcData = hostInstance.pwcInfo.chatData;
+            let messages = pwcData.data.messages;
+            let msgs: any = [];
+            messages.forEach((ele: any) => {
+                const obj = {
+                    type: ele.type,
+                    value: decodeURIComponent(ele.value)
+                }
+                msgs.push(obj);
+            });
+            pwcData.data.messages = msgs;
+            updatePWCCampaignInfo({...pwcData});
             hostInstance.pwcInfo.dataFlag = false;
         }
     }, 500)
