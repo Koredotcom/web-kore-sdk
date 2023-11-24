@@ -304,7 +304,7 @@ initShow  (config:any) {
             $('.kore-chat-window .minimized .messages').trigger('click');
           } else {
             setTimeout(() => {
-              me.chatEle.querySelector('.avatar-variations-footer').click();
+              me.chatEle.querySelector('.avatar-bg').click();
             }, 800);
           }
         } else if (cwState === 'minimized') {
@@ -990,7 +990,7 @@ bindEventsV3() {
     } 
   })
 
-  me.eventManager.addEventListener('.avatar-variations-footer', 'click', () => {
+  me.eventManager.addEventListener('.avatar-bg', 'click', () => {
     if (!me.chatEle.querySelector('.avatar-bg').classList.contains('click-to-rotate-icon')) {
       if (me.config.multiPageApp && me.config.multiPageApp.enable) {
         me.setLocalStoreItem('kr-cw-state', 'open');

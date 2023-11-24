@@ -63,25 +63,27 @@ export function AvatarComponent(props: any) {
     }
 
     const closePWCHelp = (e: any) => {
-        e?.stopPropagation();
         hostInstance.chatEle.querySelector('.content-info').remove();
         updatePWCCampaignInfo({ enable: false, data: { buttons: [], messages: []}});
     }
 
     useEffect(() => {
-        if (hostInstance.plugins.name == 'ProactiveWebCampaingPlugin') {
+        if (hostInstance.plugins?.ProactiveWebCampaingPlugin?.name == 'ProactiveWebCampaingPlugin') {
             hostInstance.eventManager.removeEventListener('.pwc-accept', 'click');
             hostInstance.eventManager.addEventListener('.pwc-accept', 'click', (event: any) => {
+                hostInstance.welcomeScreenState = true;
                 hostInstance.chatEle.classList.remove('minimize-chat');
                 hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
                 hostInstance.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
                 hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
-                closePWCHelp('');
-                const ele = hostInstance.chatEle.querySelector('pwc-accept');
+                const ele = hostInstance.chatEle.querySelector('.pwc-accept');
                 const timeout = hostInstance.historyLoading ? 3500 : 200
                 setTimeout(() => {
-                    hostInstance.sendMessageToBot(ele.getAttribute('data-postback'));
-            }, timeout);
+                    if (ele.getAttribute('data-postback')) {
+                        hostInstance.sendMessageToBot(ele.getAttribute('data-postback'));
+                    }
+                }, timeout);
+                closePWCHelp('');
             });
         }
     });

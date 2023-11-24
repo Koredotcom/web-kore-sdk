@@ -9,6 +9,7 @@ class ProactiveWebCampaignPlugin {
     enablePWC: boolean = false;
     campInfo: any;
     location: any;
+    visible: boolean = true;
     constructor(config: any) {
         config = config || {};
         this.config = { ...this.config, ...config };
@@ -24,6 +25,14 @@ class ProactiveWebCampaignPlugin {
     onInit() {
         const me: any = this;
         me.installPWCTemplates();
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "visible") {
+                me.visible = true;
+                window.sessionStorage.setItem('startTime', new Date().getTime() + '');
+            } else {
+                me.visible = false;
+            }
+        });
         me.hostInstance.on('onWSOpen', (event: any) => {
             me.sendPWCStartEvent();
         });
@@ -45,7 +54,7 @@ class ProactiveWebCampaignPlugin {
                         document.querySelector(me.hostInstance.config.pwcConfig.container).appendChild(htmlEle);
                     }
                 }
-                if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType == 'chat' && this.enablePWC) {
+                if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType == 'chat' && data.body?.layoutDesign && this.enablePWC) {
                     me.hostInstance.pwcInfo.dataFlag = true;
                     me.hostInstance.pwcInfo.chatData = {};
                     me.hostInstance.pwcInfo.chatData.enable = true;
@@ -92,12 +101,16 @@ class ProactiveWebCampaignPlugin {
         }
         setInterval(() => {
             currentUrl = window.location.href;
+            if (me.visible) {
+                me.calculateTimeSpent(currentUrl, 'currentPage');
+            }
             const prevUrl = window.sessionStorage.getItem('prevUrl');
             if (prevUrl !== currentUrl) {
-                me.calculateTimeSpent(prevUrl);
+                // me.calculateTimeSpent(prevUrl, 'pageChange');
                 window.sessionStorage.setItem('prevUrl', currentUrl);
                 window.sessionStorage.setItem('startTime', new Date().getTime() + '');
                 me.sendEvent(currentUrl);
+                me.createTimeSpentObjs();
             }
         }, 1000);
 
@@ -112,7 +125,7 @@ class ProactiveWebCampaignPlugin {
             window.sessionStorage.removeItem('timeSpentArr');
             window.sessionStorage.removeItem('startTime');
             window.sessionStorage.removeItem('prevUrl');
-        })
+        });        
     }
 
     sendEvent(currentUrl: any) {
@@ -144,17 +157,21 @@ class ProactiveWebCampaignPlugin {
                             case 'user':
                                 const user = me.hostInstance.config.pwcConfig.knownUser ? 'known' : 'anonymous';
                                 if (user == ruleItem.value) {
-                                    ruleItem.value = me.hostInstance.config.botOptions.userIdentity;
+                                    ruleItem.value = user;
                                     ruleData.push(ruleItem);
                                 }
                                 break;
                             case 'timeSpent':
                                 let arr: any = window.sessionStorage.getItem('timeSpentArr');
                                 arr = JSON.parse(arr);
-                                const arrEle = arr.find((r: any) => r.campId == camp.campId);
-                                if (arrEle && arrEle.timeSpent && (arrEle.timeSpent > ruleItem.value)) {
+                                const arrInd = arr.findIndex((r: any) => r.campId == camp.campId);
+                                let arrEle = arr[arrInd];
+                                if (arrEle && arrEle.timeSpent && (arrEle.timeSpent >= ruleItem.value)) {
                                     ruleItem.value = arrEle.timeSpent;
                                     ruleData.push(ruleItem);
+                                    arrEle.timeSpent = 0;
+                                    arr[arrInd] = arrEle;
+                                    window.sessionStorage.setItem('timeSpentArr', JSON.stringify(arr));
                                 }
                                 break;
                             case 'pageVisitCount':
@@ -179,8 +196,9 @@ class ProactiveWebCampaignPlugin {
                 } else {
                     const userRule = camp.engagementStrategy.rules.find((r: any) => r.rule == 'user');
                     if (userRule) {
-                        if (userRule) {
-                            userRule.value = 'unknown';
+                        const user = me.hostInstance.config.pwcConfig.knownUser ? 'known' : 'anonymous';
+                        if (user == userRule.value) {
+                            userRule.value = user;
                             ruleData.push(userRule);
                         } else {
                             sendEvent = false;
@@ -191,10 +209,14 @@ class ProactiveWebCampaignPlugin {
                             case 'timeSpent':
                                 let arr: any = window.sessionStorage.getItem('timeSpentArr');
                                 arr = JSON.parse(arr);
-                                const arrEle = arr.find((r: any) => r.campId == camp.campId);
-                                if (arrEle && arrEle.timeSpent && (arrEle.timeSpent > ruleItem.value)) {
+                                const arrInd = arr.findIndex((r: any) => r.campId == camp.campId);
+                                let arrEle = arr[arrInd];
+                                if (arrEle && arrEle.timeSpent && (arrEle.timeSpent >= ruleItem.value)) {
                                     ruleItem.value = arrEle.timeSpent;
                                     ruleData.push(ruleItem);
+                                    arrEle.timeSpent = 0;
+                                    arr[arrInd] = arrEle;
+                                    window.sessionStorage.setItem('timeSpentArr', JSON.stringify(arr));
                                 }
                                 break;
                             case 'pageVisitCount':
@@ -248,7 +270,8 @@ class ProactiveWebCampaignPlugin {
         window.sessionStorage.setItem('timeSpentArr', JSON.stringify(arr));
     }
 
-    calculateTimeSpent(url: any) {
+    calculateTimeSpent(url: any, type: any) {
+        const me: any = this;
         let arr: any = window.sessionStorage.getItem('timeSpentArr');
         arr = JSON.parse(arr);
         this.campInfo.forEach((camp: any) => {
@@ -270,6 +293,10 @@ class ProactiveWebCampaignPlugin {
                 }
             });
         });
+        if (type == 'currentPage') {
+            window.sessionStorage.setItem('startTime', new Date().getTime() + '');
+            me.sendEvent(url);
+        }
     }
 
     getLocationDetails() {
