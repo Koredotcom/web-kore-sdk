@@ -57,6 +57,7 @@ export function AvatarComponent(props: any) {
                 link = `http:////${link}`;
             }
             hostInstance.openExternalLink(link);
+            closePWCHelp(e);
         } else if (e.actionType == 'reject') {
             closePWCHelp(e);
         }
