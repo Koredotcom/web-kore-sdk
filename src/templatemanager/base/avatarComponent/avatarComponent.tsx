@@ -52,10 +52,10 @@ export function AvatarComponent(props: any) {
                 <button className="avatar-bg">
                     <span className="un-read-msg">2</span>
                     {brandingInfo.chat_bubble.icon.type == 'default' && <figure className="default-avater-icon">
-                        <img src={iconHelper.getIcon('avatar_icon')} alt="Elephant at sunset" />
+                        <img src={brandingInfo.chat_bubble.icon.icon_url} alt="Elephant at sunset" />
                     </figure>}
                     {brandingInfo.chat_bubble.minimise.type == 'default' && <figure className="close-avater-icon rotateIn">
-                        <img src={iconHelper.getIcon('close_chat_avatar')} alt="Elephant at sunset" />
+                        <img src={brandingInfo.chat_bubble.minimise.icon} alt="Elephant at sunset" />
                     </figure>}
                     {brandingInfo.chat_bubble.icon.type == 'custom' && <figure>
                         <img className="custom-img-uploaded" src={brandingInfo.chat_bubble.icon.icon_url} />
