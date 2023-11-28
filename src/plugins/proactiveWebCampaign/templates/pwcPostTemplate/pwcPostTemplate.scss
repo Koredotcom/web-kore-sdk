@@ -1,0 +1,48 @@
+
+.campaign-post-banner-data-sec{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 9999999;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(52, 64, 84, 0.70);
+    top: 0;
+    &.small-post-banner{
+        .post-banner-data{
+            width: 350px;
+            max-height: 400px;
+        }
+    }
+    .post-banner-data{
+        border-radius: 4px;
+        background: var(--gray-50, #F9FAFB);
+        box-shadow: 0px 8px 8px -4px rgba(16, 24, 40, 0.03), 0px 20px 24px -4px rgba(16, 24, 40, 0.08);
+        width: 500px;
+        max-width: 500px;
+        max-height: 600px;
+        min-height: 400px;
+        .header-block-info{
+            border-radius: 4px;
+            background: var(--base-white, #FFF);
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .close-post-banner{
+                flex-shrink: 0;
+                line-height: 0;
+                font-size: 16px;
+                cursor: pointer;
+                background: transparent;
+                padding: 0;
+                border: 0;
+            }
+        }
+        .banner-img-data{
+
+        }
+    }
+}
