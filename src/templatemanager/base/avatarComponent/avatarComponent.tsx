@@ -82,6 +82,10 @@ export function AvatarComponent(props: any) {
                 setTimeout(() => {
                     if (ele.getAttribute('data-postback')) {
                         hostInstance.sendMessageToBot(ele.getAttribute('data-postback'));
+                    } else {
+                        if (pwcCampaign && pwcCampaign.data && pwcCampaign.data.messages && pwcCampaign.data.messages.length > 0) {
+                            hostInstance.sendMessageToBot(pwcCampaign.data.messages[pwcCampaign.data.messages.length - 1]['value']);
+                        }
                     }
                 }, timeout);
                 closePWCHelp('');
