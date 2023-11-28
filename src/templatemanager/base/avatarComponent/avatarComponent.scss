@@ -131,6 +131,18 @@
             transition: transform 1s;
             transform-origin: 100% 100%;
             animation: bounce-in-avatar 0.2s ease forwards;  
+            .default-avater-icon {
+                img {
+                    height: 24px;
+                    width: 24px;
+                }
+            }
+            .close-avater-icon {
+                img {
+                    height: 24px;
+                    width: 24px;
+                }
+            }
             figure{
                 line-height: 0;
                 .custom-img-uploaded{
