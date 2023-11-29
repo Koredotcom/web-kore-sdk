@@ -3,12 +3,14 @@ import BaseChatTemplate from '../../../../templatemanager/templates/v3/baseChatT
 import './pwcPostTemplate.scss';
 export function Post(props: any) {
     const msgData = props.msgData;
-    const layoutData = msgData.body?.layoutDesign;
-    let postClass = 'campaign-post-banner-data-sec';
-    if (layoutData?.size == 'small') {
-        postClass = postClass + ' small-post-banner'; 
-    }
-    let messages = layoutData.messages;
+    
+    if (msgData.type == 'pwe_message' && msgData.body.campInfo?.webCampaignType && msgData.body.campInfo?.webCampaignType == 'post' && msgData?.body?.layoutData) {
+        const layoutData = msgData.body?.layoutDesign;
+        let postClass = 'campaign-post-banner-data-sec';
+        if (layoutData?.size == 'small') {
+            postClass = postClass + ' small-post-banner';
+        }
+        let messages = layoutData.messages;
         let msgs: any = [];
         messages.forEach((ele: any) => {
             const obj = {
@@ -22,7 +24,6 @@ export function Post(props: any) {
             const bannerEle: any = document.querySelector('.campaign-post-banner-data-sec');
             bannerEle.remove();
         }
-    if (msgData.type == 'pwe_message' && msgData.body.campInfo?.webCampaignType && msgData.body.campInfo?.webCampaignType == 'post' && msgData?.body?.layoutData) {
         return (
             <div className={postClass}>
                 <div className="post-banner-data">

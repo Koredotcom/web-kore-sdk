@@ -3,10 +3,10 @@ import BaseChatTemplate from '../../../../templatemanager/templates/v3/baseChatT
 import './pwcBannerTemplate.scss';
 export function Banner(props: any) {
     const msgData = props.msgData;
-    const layoutData = msgData.body?.layoutDesign;
-    let bannerClass = 'campaign-banner-sec';
 
     if (msgData.type == 'pwe_message' && msgData.body.campInfo?.webCampaignType && msgData.body.campInfo?.webCampaignType == 'banner' && msgData?.body?.layoutData) {
+        const layoutData = msgData.body?.layoutDesign;
+        let bannerClass = 'campaign-banner-sec';
         if (layoutData.pattern == 'floating') {
             bannerClass = bannerClass + ' floating-banner';
         }
