@@ -14,21 +14,21 @@ const BrandingJSON = {
     "chat_bubble": {
         "style": "rounded",
         "icon": {
-            "icon_url": "https://qa-xo.kore.ai:443/api/getMediaStream/market/f-43348414-840f-5e10-8603-40da4d731d41.png?n=4930054647&s=IkRjZFlTdzV5TW1nZ2xlMDhXck9UWHdaSzNKMUpOa2V0NUg2cjVhL2p2NEk9Ig$$",
+            "icon_url": "icon-1",
             "size": "medium",
             "type": "default" 
         },
         "minimise": {
-            "icon": "https://dlnwzkim0wron.cloudfront.net/f-5e428c3b-dee8-5a50-9a3b-19e88e5c9d8e.png",
+            "icon": "icon-m-3",
             "theme": "rounded",
             "type": "default"
         },
         "sound": "themeOne",
-        "alignment": "block",
+        "alignment": "inline",
         "animation": "slide",
         "expand_animation": "quick",
         "primary_color": "#4B4EDE",
-        "secondary_color": "#EAECF0"
+        "secondary_color": "#FFFFFF"
     },
     "welcome_screen": {
         "show": true,

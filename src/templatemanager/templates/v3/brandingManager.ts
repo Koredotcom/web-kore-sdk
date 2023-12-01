@@ -8,7 +8,7 @@ class BrandingManager {
         if (data.general.colors.useColorPaletteOnly) {
             const colorArr = [
                 { key: '--v3-sdk-chat-branding--chat_bubble-bg-primary_color', type: 'primary' },
-                { key: '--v3-sdk-chat-branding--chat_bubble-bg-secondary_color', type: 'primaryText' },
+                { key: '--v3-sdk-chat-branding--chat_bubble-bg-secondary_color', type: 'secondaryText' },
                 { key: '--v3-sdk-chat-branding--welcome_screen-background-color', type: 'primary' },
                 { key: '--v3-sdk-chat-branding--welcome_screen-top_fonts-color', type: 'secondaryText' },
                 { key: '--v3-sdk-chat-branding--welcome_screen-bottom_background-color', type: 'secondary' },

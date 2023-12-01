@@ -136,11 +136,37 @@
                     height: 24px;
                     width: 24px;
                 }
+                svg {
+                    path {
+                        fill: var(--v3-sdk-chat-branding--chat_bubble-bg-secondary_color);
+                    }
+                }
+                span {
+                    svg {
+                        path {
+                            fill: none;
+                            stroke: var(--v3-sdk-chat-branding--chat_bubble-bg-secondary_color);
+                        }
+                    }
+                }
             }
             .close-avater-icon {
                 img {
                     height: 24px;
                     width: 24px;
+                }
+                svg {
+                    path {
+                        fill: var(--v3-sdk-chat-branding--chat_bubble-bg-secondary_color);
+                    }
+                }
+                span {
+                    svg {
+                        path {
+                            fill: none;
+                            stroke: var(--v3-sdk-chat-branding--chat_bubble-bg-secondary_color);
+                        }
+                    }
                 }
             }
             figure{
