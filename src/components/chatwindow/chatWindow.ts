@@ -2404,7 +2404,9 @@ getBrandingInformation(options:any){
         $(".kore-chat-window").addClass('customBranding-theme');
       }
     } else {
-      me.setBranding(response);
+      if (response && response.activeTheme) {
+        me.setBranding(response?.generalAttributes?.v3);
+      }
     }
   };
 applyVariableValue (key:any,value:any,type:any){
