@@ -23,7 +23,7 @@
         z-index: 99;
 
         &.disabled-click {
-            display: none;
+            // display: none;
             color: #D7D8D9;
             pointer-events: none;
             cursor: no-drop;

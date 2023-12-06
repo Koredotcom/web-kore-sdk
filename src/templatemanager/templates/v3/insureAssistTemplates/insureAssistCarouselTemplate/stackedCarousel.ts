@@ -68,41 +68,44 @@ class stackedCards {
             let prevCount: any = els.length;
 
             prevCount = oneHalf;
-            nextCount = (oneHalf + 1) % 2 == 0 ? oneHalf + 1 : oneHalf;
+            // nextCount = (oneHalf + 1) % 2 == 0 ? oneHalf + 1 : oneHalf;
+            nextCount = oneHalf === 0 ? 1 : 0;
 
             me.setActiveElement(els, els[oneHalf], nextCount, prevCount, activeTransform);
             const leftButton = this.hostInstance.chatEle.querySelector('.' + me.config.id + ' .left-click');
             const rightButton = this.hostInstance.chatEle.querySelector('.' + me.config.id + ' .right-click');
             leftButton?.addEventListener('click', () => {
-                if (prevCount !== 0) {
-                    let currentEle = els[currentEleIndex - 1];
-                    nextCount = nextCount + 1;
-                    prevCount = prevCount - 1;
-                    currentEleIndex = currentEleIndex - 1;
-                    me.setActiveElement(els, currentEle, nextCount, prevCount, activeTransform);
-                    if (prevCount == 0) {
-                        leftButton.classList.add('disabled-click');
-                    } else {
-                        rightButton.classList.remove('disabled-click');
-                    }
+                let currentEle = els[currentEleIndex - 1];
+                if (prevCount >= 0) {
+                  nextCount = nextCount + 1;
+                  prevCount = prevCount - 1;
+                  currentEleIndex = currentEleIndex - 1;
+                  me.setActiveElement(els, currentEle, nextCount, prevCount, activeTransform);
+                  if (prevCount === 0) {
+                    leftButton.classList.add('disabled-click');
+                  }
+                  if (nextCount > 0) {
+                    rightButton.classList.remove('disabled-click');
+                  }
                 }
-            })
-            rightButton?.addEventListener('click', () => {
-                if (nextCount !== 0) {
-                    let currentEle = els[currentEleIndex + 1];
-                    nextCount = nextCount - 1;
-                    prevCount = prevCount + 1;
-                    currentEleIndex = currentEleIndex + 1;
-
-                    me.setActiveElement(els, currentEle, nextCount, prevCount, activeTransform);
-                    if (nextCount == 0) {
-                        rightButton.classList.add('disabled-click');
-                    } else {
-                        leftButton.classList.remove('disabled-click');
-                    }
+              });
+              
+              rightButton?.addEventListener('click', () => {
+                let currentEle = els[currentEleIndex + 1];
+                if (nextCount >= 0) {
+                  nextCount = nextCount - 1;
+                  prevCount = prevCount + 1;
+                  currentEleIndex = currentEleIndex + 1;
+                  me.setActiveElement(els, currentEle, nextCount, prevCount, activeTransform);
+                  if (nextCount === 0) {
+                    rightButton.classList.add('disabled-click');
+                  }
+                  if (prevCount > 0) {
+                    leftButton.classList.remove('disabled-click');
+                  }
                 }
-
-            })
+              });
+              
         } else {
             this.detectSwipe();
             Array.prototype.forEach.call(els, function (el) {
