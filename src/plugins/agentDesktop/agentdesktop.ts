@@ -33,17 +33,17 @@ class AgentDesktopPlugin {
             }
         });
         me.hostInstance.on('beforeViewInit', (chatEle: any) => {
-            me.hostInstance.chatEle.off('click', '.close-btn').on('click', '.close-btn', (event: any) => {
-                const messageToBot: any = {};
-                messageToBot["clientMessageId"] = new Date().getTime();
-                messageToBot["event"] = "close_agent_chat";
-                messageToBot["message"] = {
-                    "body": "",
-                    "type": ""
-                }
-                messageToBot["resourceid"] = "/bot.message";
-                me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
-            });
+            // me.hostInstance.chatEle.off('click', '.close-btn').on('click', '.close-btn', (event: any) => {
+            //     const messageToBot: any = {};
+            //     messageToBot["clientMessageId"] = new Date().getTime();
+            //     messageToBot["event"] = "close_agent_chat";
+            //     messageToBot["message"] = {
+            //         "body": "",
+            //         "type": ""
+            //     }
+            //     messageToBot["resourceid"] = "/bot.message";
+            //     me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+            // });
         })
         me.removeEmptyBubblesInTemplate();
     }
@@ -104,6 +104,11 @@ class AgentDesktopPlugin {
 
             // Agent Status 
             if (event.messageData?.message?.type === 'agent_connected') {
+                me.brandingInfo = {...me.hostInstance.config.branding};
+                me.hostInstance.config.branding.header.title.name = me.hostInstance.config.branding.body.agent_message.title.name;
+                me.hostInstance.setBranding();
+            }
+            if (event.messageData?.message?.type === 'agent_connected') {
                 localStorage.setItem("kr-agent-status", "connected")
             } else if (event.messageData?.message?.type === 'agent_disconnected') {
                 localStorage.setItem("kr-agent-status", "disconneted")
@@ -129,76 +134,88 @@ class AgentDesktopPlugin {
         });
 
         // sent event style setting in user chat 
-        me.hostInstance.on('afterRenderMessage', (event: any) => {
-            if (!event.messageHtml) return false;
-            if (localStorage.getItem("kr-agent-status") != "connected") return;
+        // me.hostInstance.on('afterRenderMessage', (event: any) => {
+        //     if (!event.messageHtml) return false;
+        //     if (localStorage.getItem("kr-agent-status") != "connected") return;
 
-            if (event.msgData?.type === "currentUser") {
-                // remove bot typing while agent being connected
-                this.$('.typingIndicatorContent').css('display', 'none');
+        //     if (event.msgData?.type === "currentUser") {
+        //         // remove bot typing while agent being connected
+        //         this.$('.typingIndicatorContent').css('display', 'none');
 
-                const msg = event.msgData.message;
-                const extraInfoEle = event.messageHtml.find('.extra-info');
-                if (!extraInfoEle.children('.sentIndicator').length) {
-                    extraInfoEle.append('<div class="sentIndicator"></div>');
+        //         const msg = event.msgData.message;
+        //         const extraInfoEle = event.messageHtml.find('.extra-info');
+        //         if (!extraInfoEle.children('.sentIndicator').length) {
+        //             extraInfoEle.append('<div class="sentIndicator"></div>');
 
-                    // changing indicator text for specific message on deliver and read events
-                    me.hostInstance.bot.on('message', (message: any) => {
-                        var tempData = JSON.parse(message.data);
-                        if (!tempData) return;
-                        if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === msg[0].clientMessageId) {
-                            var ele = this.$("#" + tempData.message.clientMessageId + " .sentIndicator");
-                            if (tempData.message.type === "message_delivered") {
-                                if (!ele.hasClass('read')) {
-                                    ele.addClass("delivered");
-                                }
-                            } else if (tempData.message.type === "message_read") {
-                                ele.removeClass("delivered").addClass("read");
-                            }
+        //             // changing indicator text for specific message on deliver and read events
+        //             me.hostInstance.bot.on('message', (message: any) => {
+        //                 var tempData = JSON.parse(message.data);
+        //                 if (!tempData) return;
+        //                 if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === msg[0].clientMessageId) {
+        //                     var ele = this.$("#" + tempData.message.clientMessageId + " .sentIndicator");
+        //                     if (tempData.message.type === "message_delivered") {
+        //                         if (!ele.hasClass('read')) {
+        //                             ele.addClass("delivered");
+        //                         }
+        //                     } else if (tempData.message.type === "message_read") {
+        //                         ele.removeClass("delivered").addClass("read");
+        //                     }
 
-                        }
-                        // change the indicator to read when agent switch the slot to other user
-                        else if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === 'all') {
-                            var ele = this.$(" .sentIndicator");
-                            if (tempData.message.type === "message_read") {
-                                ele.removeClass("delivered").addClass("read");
-                            }
-                        }
-                    });
-                }
-            } else {
-                // send read event from user to agent 
-                if (event.msgData?.message[0]?.component?.payload?.template_type == 'live_agent') {
-                    const messageToBot: any = {};
-                    const msgId = event.msgData.messageId;
-                    messageToBot["event"] = "message_delivered";
-                    messageToBot["message"] = {
-                        "body": "",
-                        "type": ""
-                    }
-                    messageToBot['messageId'] = msgId;
-                    messageToBot["resourceid"] = "/bot.message";
-                    me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+        //                 }
+        //                 // change the indicator to read when agent switch the slot to other user
+        //                 else if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === 'all') {
+        //                     var ele = this.$(" .sentIndicator");
+        //                     if (tempData.message.type === "message_read") {
+        //                         ele.removeClass("delivered").addClass("read");
+        //                     }
+        //                 }
+        //             });
+        //         }
+        //     } else {
+        //         // send read event from user to agent 
+        //         if (event.msgData?.message[0]?.component?.payload?.template_type == 'live_agent') {
+        //             const messageToBot: any = {};
+        //             const msgId = event.msgData.messageId;
+        //             messageToBot["event"] = "message_delivered";
+        //             messageToBot["message"] = {
+        //                 "body": "",
+        //                 "type": ""
+        //             }
+        //             messageToBot['messageId'] = msgId;
+        //             messageToBot["resourceid"] = "/bot.message";
+        //             me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
 
-                    // send read event when user being in current tab
-                    if (this.isTabActive) {
-                        messageToBot.event = 'message_read'
-                        me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
-                        this.isReadRecipetSent = true;
-                    }
-                }
-            }
-        });
+        //             // send read event when user being in current tab
+        //             if (this.isTabActive) {
+        //                 messageToBot.event = 'message_read'
+        //                 me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+        //                 this.isReadRecipetSent = true;
+        //             }
+        //         }
+        //     }
+        // });
     }
 
     appendVideoAudioElemnts() {
         let me: any = this;
         let cwInstance = me.hostInstance;
         let chatEle = cwInstance.chatEle;
-        let localVideoElement = '<video id="kore_local_video" autoplay="autoplay" playsinline style="width:0px;height:0px"></video>';
-        let remoteVideoElement = '<video id="kore_remote_video" autoplay="autoplay" playsinline style="width:0px;height:0px"></video>';
-        chatEle.append(localVideoElement);
-        chatEle.append(remoteVideoElement);
+        const chatEleDiv = chatEle.querySelector('.chat-widgetwrapper-main-container');
+        // let localVideoElement = '<video id="kore_local_video" autoplay="autoplay" playsinline style="width:0px;height:0px"></video>';
+        // let remoteVideoElement = '<video id="kore_remote_video" autoplay="autoplay" playsinline style="width:0px;height:0px"></video>';
+        // chatEle.append(localVideoElement);
+        // chatEle.append(remoteVideoElement);
+        let localVideoElement = document.createElement('video');
+        localVideoElement.id = 'kore_local_video';
+        localVideoElement.width = 0;
+        localVideoElement.height = 0;
+        let remoteVideoElement = document.createElement('video');
+        remoteVideoElement.id = 'kore_remote_video';
+        remoteVideoElement.width = 0;
+        remoteVideoElement.height = 0;
+
+        chatEleDiv.insertBefore(localVideoElement, chatEleDiv.firstChild);
+        chatEleDiv.insertBefore(remoteVideoElement, chatEleDiv.firstChild);
     }
 
     extend(target: any, source: any) {
