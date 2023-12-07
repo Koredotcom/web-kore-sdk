@@ -62,51 +62,53 @@ class stackedCards {
         let currentEleIndex = oneHalf;
 
         const activeTransform = "translate(" + -50 + "%, 0%)  scale(1)";
-
         if (me.config.buttons) {
             let nextCount: any = 0;
             let prevCount: any = els.length;
-
             prevCount = oneHalf;
-            // nextCount = (oneHalf + 1) % 2 == 0 ? oneHalf + 1 : oneHalf;
             nextCount = oneHalf === 0 ? 1 : 0;
-
             me.setActiveElement(els, els[oneHalf], nextCount, prevCount, activeTransform);
             const leftButton = this.hostInstance.chatEle.querySelector('.' + me.config.id + ' .left-click');
             const rightButton = this.hostInstance.chatEle.querySelector('.' + me.config.id + ' .right-click');
+          
+            // Initial state: Disable left button if there are no slides
+            if (els.length > 1) {
+              leftButton.classList.add('disabled-click');
+            }
+          
             leftButton?.addEventListener('click', () => {
-                let currentEle = els[currentEleIndex - 1];
-                if (prevCount >= 0) {
-                  nextCount = nextCount + 1;
-                  prevCount = prevCount - 1;
-                  currentEleIndex = currentEleIndex - 1;
-                  me.setActiveElement(els, currentEle, nextCount, prevCount, activeTransform);
-                  if (prevCount === 0) {
-                    leftButton.classList.add('disabled-click');
-                  }
-                  if (nextCount > 0) {
-                    rightButton.classList.remove('disabled-click');
-                  }
+              let currentEle = els[currentEleIndex - 1];
+              if (prevCount >= 0) {
+                nextCount = nextCount + 1;
+                prevCount = prevCount - 1;
+                currentEleIndex = currentEleIndex - 1;
+                me.setActiveElement(els, currentEle, nextCount, prevCount, activeTransform);
+                if (prevCount === 0) {
+                  leftButton.classList.add('disabled-click');
                 }
-              });
-              
-              rightButton?.addEventListener('click', () => {
-                let currentEle = els[currentEleIndex + 1];
-                if (nextCount >= 0) {
-                  nextCount = nextCount - 1;
-                  prevCount = prevCount + 1;
-                  currentEleIndex = currentEleIndex + 1;
-                  me.setActiveElement(els, currentEle, nextCount, prevCount, activeTransform);
-                  if (nextCount === 0) {
-                    rightButton.classList.add('disabled-click');
-                  }
-                  if (prevCount > 0) {
-                    leftButton.classList.remove('disabled-click');
-                  }
+                if (nextCount > 0) {
+                  rightButton.classList.remove('disabled-click');
                 }
-              });
-              
-        } else {
+              }
+            });
+          
+            rightButton?.addEventListener('click', () => {
+              let currentEle = els[currentEleIndex + 1];
+              if (nextCount >= 0) {
+                nextCount = nextCount - 1;
+                prevCount = prevCount + 1;
+                currentEleIndex = currentEleIndex + 1;
+                me.setActiveElement(els, currentEle, nextCount, prevCount, activeTransform);
+                if (nextCount === 0) {
+                  rightButton.classList.add('disabled-click');
+                }
+                if (prevCount > 0) {
+                  leftButton.classList.remove('disabled-click');
+                }
+              }
+            });
+          }
+          else {
             this.detectSwipe();
             Array.prototype.forEach.call(els, function (el) {
                 el.style.transformOrigin = me.config.transformOrigin;
