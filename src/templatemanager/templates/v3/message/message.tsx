@@ -58,6 +58,18 @@ export function Message(props: any) {
         }, 800);
     }
 
+    let botStyles = {
+        backgroundColor: brandingInfo.general.colors.useColorPaletteOnly ? brandingInfo.general.colors.secondary : brandingInfo.body.bot_message.bg_color,
+        color: brandingInfo.general.colors.useColorPaletteOnly ? brandingInfo.general.colors.primary_text : brandingInfo.body.bot_message.color
+    }
+
+    if (msgData?.fromAgent) {
+        botStyles = {
+            backgroundColor: brandingInfo.general.colors.useColorPaletteOnly ? brandingInfo.general.colors.secondary : brandingInfo.body.agent_message.bg_color,
+            color: brandingInfo.general.colors.useColorPaletteOnly ? brandingInfo.general.colors.primary_text : brandingInfo.body.agent_message.color
+        }
+    }
+
     if (msgData?.message[0]?.component?.payload?.template_type === 'live_agent') {
         msgData.fromAgent = true;
 
@@ -74,7 +86,7 @@ export function Message(props: any) {
                         if (msgItem.cInfo && msgItem.type === 'text') {
                             return (
                                 msgData.type === 'bot_response' ? (
-                                    msgItem.component && msgItem.component.type === 'error' ? ('') : (<div className="bot-bubble-comp if-animation-bubble" id={msgData.messageId}>
+                                    msgItem.component && msgItem.component.type === 'error' ? ('') : (<div className={`bot-bubble-comp if-animation-bubble i${msgData.messageId || msgItem.clientMessageId}`} id={msgData.messageId || msgItem.clientMessageId}>
                                         <div className={botStyle}>
                                             { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">                                                
                                                 <div className="you-text">Kore.ai Bot</div>
@@ -84,7 +96,7 @@ export function Message(props: any) {
                                                 {/* <span className="copied-text">Copied</span>                                            */}
                                             </div> }
                                             <div className="bubble-msg-with-img">
-                                                <div className="bubble-msg" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgItem.cInfo.body, "bot",msgItem)}}></div>
+                                                <div className="bubble-msg" style={botStyles} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgItem.cInfo.body, "bot",msgItem)}}></div>
                                                 {!msgData.fromAgent && <div className="bot-img">
                                                     <figure>
                                                         <img src={msgData.icon} alt='avatr img' />
@@ -107,7 +119,7 @@ export function Message(props: any) {
                                             </div> }
                                         </div>
                                     </div>)) : (
-                                    <div className="agent-bubble-comp if-animation-bubble" id={msgData.messageId}>
+                                    <div className={`agent-bubble-comp if-animation-bubble i${msgData.messageId || msgItem.clientMessageId}`} id={msgData.messageId || msgItem.clientMessageId}>
                                         <div className={userStyle}>
                                             { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">                                                    
                                                     {/* <span className="copied-text">Copied</span> */}
@@ -136,7 +148,6 @@ export function Message(props: any) {
                                                 { brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
                                                     <div className="time-tamp"><time>{helpers.formatAMPMDay(msgData.createdOn)}</time></div>
                                                     <div className="you-text">You</div>
-                                                    {/* <div className="read-text">Read <i className="sdkv3-read-status"></i></div> */}
                                                 </div> }
                                         </div>
                                     </div>

@@ -33,17 +33,17 @@ class AgentDesktopPlugin {
             }
         });
         me.hostInstance.on('beforeViewInit', (chatEle: any) => {
-            // me.hostInstance.chatEle.off('click', '.close-btn').on('click', '.close-btn', (event: any) => {
-            //     const messageToBot: any = {};
-            //     messageToBot["clientMessageId"] = new Date().getTime();
-            //     messageToBot["event"] = "close_agent_chat";
-            //     messageToBot["message"] = {
-            //         "body": "",
-            //         "type": ""
-            //     }
-            //     messageToBot["resourceid"] = "/bot.message";
-            //     me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
-            // });
+            me.hostInstance.chatEle.querySelector('.btn-action-close').addEventListener('click', () => {
+                const messageToBot: any = {};
+                messageToBot["clientMessageId"] = new Date().getTime();
+                messageToBot["event"] = "close_agent_chat";
+                messageToBot["message"] = {
+                    "body": "",
+                    "type": ""
+                }
+                messageToBot["resourceid"] = "/bot.message";
+                me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+            });
         })
         me.removeEmptyBubblesInTemplate();
     }
@@ -104,9 +104,17 @@ class AgentDesktopPlugin {
 
             // Agent Status 
             if (event.messageData?.message?.type === 'agent_connected') {
-                me.brandingInfo = {...me.hostInstance.config.branding};
+                me.brandingInfo = JSON.parse(JSON.stringify(me.hostInstance.config.branding));
                 me.hostInstance.config.branding.header.title.name = me.hostInstance.config.branding.body.agent_message.title.name;
-                me.hostInstance.setBranding();
+                me.hostInstance.config.branding.header.sub_title.name = me.hostInstance.config.branding.body.agent_message.sub_title.name;
+                me.hostInstance.config.branding.header.sub_title.color = me.hostInstance.config.branding.body.agent_message.sub_title.color;
+                me.hostInstance.setBranding(me.hostInstance.config.branding);
+            } else if (event.messageData?.message?.type === 'agent_disconnected') {
+                me.hostInstance.config.branding.header.title.name = me.brandingInfo.header.title.name;
+                me.hostInstance.config.branding.header.sub_title.name = me.brandingInfo.header.sub_title.name;
+                me.hostInstance.config.branding.header.title.color = me.brandingInfo.header.title.color;
+                me.hostInstance.config.branding.header.sub_title.color = me.brandingInfo.header.sub_title.color;
+                me.hostInstance.setBranding(me.hostInstance.config.branding);
             }
             if (event.messageData?.message?.type === 'agent_connected') {
                 localStorage.setItem("kr-agent-status", "connected")
@@ -117,83 +125,100 @@ class AgentDesktopPlugin {
             // when agent send the message, hide the type indicator
             if (event.messageData.message) {
                 if (event?.messageData?.message[0]?.type === 'text' && event?.messageData?.author?.type === 'AGENT') {
-                    this.$('.typingIndicatorContent').css('display', 'none');
+                    me.hostInstance.chatEle.querySelector('.typing-indicator-wraper').style.display = 'none'
                     this.isReadRecipetSent = false;
                 }
             }
 
             // type indicator style changes when agent is being connected
             if (event.messageData?.message?.author?.type === 'AGENT' && event.messageData.message.type === 'typing' && localStorage.getItem("kr-agent-status") === "connected") {
-                this.$('.typingIndicatorContent').css('display', 'block');
-                this.$('.typingIndicator').addClass('agent-type-icon');
+                me.hostInstance.chatEle.querySelector('.typing-indicator-wraper').style.display = 'flex'
             } else if (event.messageData?.message?.author?.type === 'AGENT' && event.messageData.message.type === 'stoptyping' && localStorage.getItem("kr-agent-status") === "connected") {
-                this.$('.typingIndicatorContent').css('display', 'none');
+                me.hostInstance.chatEle.querySelector('.typing-indicator-wraper').style.display = 'none'
             } else if (localStorage.getItem("kr-agent-status") !== "conneted") {
-                this.$('.typingIndicator').removeClass('agent-type-icon');
             }
         });
 
         // sent event style setting in user chat 
-        // me.hostInstance.on('afterRenderMessage', (event: any) => {
-        //     if (!event.messageHtml) return false;
-        //     if (localStorage.getItem("kr-agent-status") != "connected") return;
+        me.hostInstance.on('afterRenderMessage', (event: any) => {
+            if (!event.messageHtml) return false;
+            if (localStorage.getItem("kr-agent-status") != "connected") return;
 
-        //     if (event.msgData?.type === "currentUser") {
-        //         // remove bot typing while agent being connected
-        //         this.$('.typingIndicatorContent').css('display', 'none');
+            if (event.msgData?.type === "currentUser") {
+                me.hostInstance.chatEle.querySelector('.typing-indicator-wraper').style.display = 'none'
 
-        //         const msg = event.msgData.message;
-        //         const extraInfoEle = event.messageHtml.find('.extra-info');
-        //         if (!extraInfoEle.children('.sentIndicator').length) {
-        //             extraInfoEle.append('<div class="sentIndicator"></div>');
+                const msg = event.msgData.message;
+                let extraInfoEle = event.messageHtml.querySelector('.bottom-info');
+                if (!extraInfoEle) {
+                    const ele = document.createElement('div');
+                    ele.classList.add('bottom-info');
+                    event.messageHtml.querySelector('.agent-bubble-content').appendChild(ele);
+                    extraInfoEle = event.messageHtml.querySelector('.bottom-info');
+                }
+                if (!extraInfoEle.querySelectorAll('.read-text').length) {
+                    const ele1 = document.createElement('div');
+                    ele1.textContent = 'Sent';
+                    ele1.classList.add('read-text');
+                    const ele2 = document.createElement('div');
+                    ele2.classList.add('sent');
+                    extraInfoEle.appendChild(ele1);
+                    extraInfoEle.appendChild(ele2);
 
-        //             // changing indicator text for specific message on deliver and read events
-        //             me.hostInstance.bot.on('message', (message: any) => {
-        //                 var tempData = JSON.parse(message.data);
-        //                 if (!tempData) return;
-        //                 if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === msg[0].clientMessageId) {
-        //                     var ele = this.$("#" + tempData.message.clientMessageId + " .sentIndicator");
-        //                     if (tempData.message.type === "message_delivered") {
-        //                         if (!ele.hasClass('read')) {
-        //                             ele.addClass("delivered");
-        //                         }
-        //                     } else if (tempData.message.type === "message_read") {
-        //                         ele.removeClass("delivered").addClass("read");
-        //                     }
+                    // changing indicator text for specific message on deliver and read events
+                    me.hostInstance.bot.on('message', (message: any) => {
+                        var tempData = JSON.parse(message.data);
+                        if (!tempData) return;
+                        if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === msg[0].clientMessageId) {
+                            var ele = me.hostInstance.chatEle.querySelector(`.i${tempData.message.clientMessageId} .bottom-info`);
+                            if (tempData.message.type === "message_delivered") {
+                                if (!ele.querySelectorAll('.delivered').length) {
+                                    const childEle1 = ele.querySelector('.read-text');
+                                    childEle1.textContent = 'Delivered';
+                                    const childEle2 = ele.querySelector('.sent');
+                                    childEle2.classList = [];
+                                    childEle2.classList.add('delivered');
+                                }
+                            } else if (tempData.message.type === "message_read") {
+                                const childEle1 = ele.querySelector('.read-text');
+                                childEle1.textContent = 'Read';
+                                const childEle2 = ele.querySelector('.delivered');
+                                childEle2.classList = [];
+                                childEle2.classList.add('read');
+                            }
 
-        //                 }
-        //                 // change the indicator to read when agent switch the slot to other user
-        //                 else if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === 'all') {
-        //                     var ele = this.$(" .sentIndicator");
-        //                     if (tempData.message.type === "message_read") {
-        //                         ele.removeClass("delivered").addClass("read");
-        //                     }
-        //                 }
-        //             });
-        //         }
-        //     } else {
-        //         // send read event from user to agent 
-        //         if (event.msgData?.message[0]?.component?.payload?.template_type == 'live_agent') {
-        //             const messageToBot: any = {};
-        //             const msgId = event.msgData.messageId;
-        //             messageToBot["event"] = "message_delivered";
-        //             messageToBot["message"] = {
-        //                 "body": "",
-        //                 "type": ""
-        //             }
-        //             messageToBot['messageId'] = msgId;
-        //             messageToBot["resourceid"] = "/bot.message";
-        //             me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+                        }
+                        // change the indicator to read when agent switch the slot to other user
+                        // else if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === 'all') {
+                        //     var ele = this.$(" .sentIndicator");
+                        //     if (tempData.message.type === "message_read") {
+                        //         ele.removeClass("delivered").addClass("read");
+                        //     }
+                        // }
+                    });
+                }
+            } else {
+                // send read event from user to agent 
+                if (event.msgData?.message[0]?.component?.payload?.template_type == 'live_agent') {
+                    const messageToBot: any = {};
+                    const msgId = event.msgData.messageId;
+                    messageToBot["event"] = "message_delivered";
+                    messageToBot["message"] = {
+                        "body": "",
+                        "type": ""
+                    }
+                    messageToBot['messageId'] = msgId;
+                    messageToBot["resourceid"] = "/bot.message";
+                    me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
 
-        //             // send read event when user being in current tab
-        //             if (this.isTabActive) {
-        //                 messageToBot.event = 'message_read'
-        //                 me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
-        //                 this.isReadRecipetSent = true;
-        //             }
-        //         }
-        //     }
-        // });
+                    // send read event when user being in current tab
+                    if (this.isTabActive) {
+                        messageToBot.event = 'message_read'
+                        me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+                        this.isReadRecipetSent = true;
+                    }
+                }
+            }
+        });
     }
 
     appendVideoAudioElemnts() {

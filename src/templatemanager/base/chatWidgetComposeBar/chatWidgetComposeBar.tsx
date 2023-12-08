@@ -190,16 +190,15 @@ export function ChatWidgetComposeBar(props: any) {
                 </button> }
             </div>
 
-
-            <div className="typing-indicator-wraper">
-                <div className="bot-icon">
+            { brandingInfo.body.typing_indicator.show && <div className="typing-indicator-wraper">
+                { brandingInfo.body.typing_indicator && brandingInfo.body.typing_indicator.icon &&<div className="bot-icon">
                     <figure>
-                        <img src=""></img>
+                        <img src={brandingInfo.body.typing_indicator.icon}></img>
                     </figure>
-                </div>
+                </div> }
                 <p>Typing</p>
                 <div class="dot-flashing"></div>
-            </div>
+            </div>}
         </div>
     );
 } 

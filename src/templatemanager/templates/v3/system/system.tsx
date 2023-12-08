@@ -9,10 +9,20 @@ export function System(props: any) {
     const helpers = KoreHelpers.helpers;
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
+    const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
+    hostInstance.on('onBrandingUpdate', function (event: any) {
+        updateBrandingInfo({...event.brandingData})
+    });
     const messageobj = {
         msgData: msgData,
         hostInstance: hostInstance
     }
+
+    let agentBannerClass: any = {
+        '1': 'agent-joined-wrapper',
+        '2': 'agent-joined-wrapper agent-joined-variation-1',
+        '3': 'agent-joined-wrapper agent-joined-variation-2' 
+    };
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'SYSTEM' && !msgData.formHistory) {
         if (msgData.message[0].component && msgData.message[0].component.payload) {
@@ -20,7 +30,7 @@ export function System(props: any) {
         }
         return (
             <div className="agent-joined-banner">
-                <div className="agent-joined-wrapper">
+                <div className={agentBannerClass[brandingInfo.body.agent_message.separator]}>
                     <div className="img-block">
                         <figure>
                             <img src={msgData.icon} alt="agent image" />

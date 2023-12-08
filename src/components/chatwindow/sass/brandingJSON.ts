@@ -8,7 +8,7 @@ const BrandingJSON = {
             "secondary":"#EAECF0",
             "primary_text": "#101828",
             "secondary_text": "#FFFFFF",
-            "useColorPaletteOnly": true
+            "useColorPaletteOnly": false
         }
     },
     "chat_bubble": {
@@ -272,9 +272,9 @@ const BrandingJSON = {
             "color": "#000000"
         },
         "agent_message": {
-            "bg_color": "#4B4EDE",
-            "color": "#0D6EFD",
-            "separator": "2",
+            "bg_color": "#FA8437",
+            "color": "#FFFFFF",
+            "separator": "3",
             "icon": {
                 "show": "true|false",
                 "icon_url": "icomoon|url"
@@ -304,6 +304,10 @@ const BrandingJSON = {
         "buttons": {
             "bg_color": "red",
             "color": "white"
+        },
+        "typing_indicator": {
+            "show": true,
+            "icon": ""
         },
         "bubble_style": "balloon",
         "primaryColor": "#3f42d4",
