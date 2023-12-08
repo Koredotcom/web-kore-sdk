@@ -46,69 +46,50 @@ class stackedCards {
         this.parent = els[0]?.parentNode;
 
         const getItemHeight: any = els[0]?.getBoundingClientRect().height;
-
-        /*const liWidth = 0;
-        for(const q = 0;q<els.length; q++) {
-            liWidth = liWidth + els[q].getBoundingClientRect().width;
-        }*/
-
         if (els && els[0]?.parentNode) {
             els[0].parentNode.style.height = parseInt(getItemHeight) + "px";
         }
-
         const lenAdjust = (els.length % 2 == 0 ? -2 : -1)
-
         const oneHalf = (els.length + lenAdjust) / 2;
-        let currentEleIndex = oneHalf;
-
         const activeTransform = "translate(" + -50 + "%, 0%)  scale(1)";
         if (me.config.buttons) {
             let nextCount: any = 0;
             let prevCount: any = els.length;
-            prevCount = oneHalf;
-            nextCount = oneHalf === 0 ? 1 : 0;
-            me.setActiveElement(els, els[oneHalf], nextCount, prevCount, activeTransform);
+            let currentEleIndex = els.length === 2 ? Math.floor((els.length + lenAdjust) / 2) : Math.floor((els.length + lenAdjust) / 2) - 1; // Adjusted index to start at the second slide
+
+            me.setActiveElement(els, els[currentEleIndex], nextCount, prevCount, activeTransform);
             const leftButton = this.hostInstance.chatEle.querySelector('.' + me.config.id + ' .left-click');
             const rightButton = this.hostInstance.chatEle.querySelector('.' + me.config.id + ' .right-click');
-          
-            // Initial state: Disable left button if there are no slides
-            if (els.length > 1) {
-              leftButton.classList.add('disabled-click');
+
+            // Initial state: Disable left button if there is only one slide
+            if (els.length <= 1 || currentEleIndex === 0) {
+                leftButton.classList.add('disabled-click');
             }
-          
+
+
             leftButton?.addEventListener('click', () => {
-              let currentEle = els[currentEleIndex - 1];
-              if (prevCount >= 0) {
-                nextCount = nextCount + 1;
-                prevCount = prevCount - 1;
-                currentEleIndex = currentEleIndex - 1;
-                me.setActiveElement(els, currentEle, nextCount, prevCount, activeTransform);
-                if (prevCount === 0) {
-                  leftButton.classList.add('disabled-click');
+                if (currentEleIndex > 0) {
+                    let currentEle = els[--currentEleIndex];
+                    me.setActiveElement(els, currentEle, nextCount, prevCount, activeTransform);
+                    rightButton.classList.remove('disabled-click');
+                    if (currentEleIndex === 0) {
+                        leftButton.classList.add('disabled-click');
+                    }
                 }
-                if (nextCount > 0) {
-                  rightButton.classList.remove('disabled-click');
-                }
-              }
             });
-          
+
             rightButton?.addEventListener('click', () => {
-              let currentEle = els[currentEleIndex + 1];
-              if (nextCount >= 0) {
-                nextCount = nextCount - 1;
-                prevCount = prevCount + 1;
-                currentEleIndex = currentEleIndex + 1;
-                me.setActiveElement(els, currentEle, nextCount, prevCount, activeTransform);
-                if (nextCount === 0) {
-                  rightButton.classList.add('disabled-click');
+                if (currentEleIndex < els.length - 1) {
+                    let currentEle = els[++currentEleIndex];
+                    me.setActiveElement(els, currentEle, nextCount, prevCount, activeTransform);
+                    leftButton.classList.remove('disabled-click');
+                    if (currentEleIndex === els.length - 1) {
+                        rightButton.classList.add('disabled-click');
+                    }
                 }
-                if (prevCount > 0) {
-                  leftButton.classList.remove('disabled-click');
-                }
-              }
             });
-          }
-          else {
+        }
+        else {
             this.detectSwipe();
             Array.prototype.forEach.call(els, function (el) {
                 el.style.transformOrigin = me.config.transformOrigin;
@@ -145,129 +126,75 @@ class stackedCards {
 
     private setActiveElement(els: any, el: any, nextCount: any, prevCount: any, activeTransform: any) {
         const me: any = this;
-        me.reCalculateTransformsOnClick(nextCount, prevCount)
+        me.reCalculateTransformsOnClick(nextCount, prevCount);
 
         me.loopNodeList(els, function (el: any) {
             el.classList.remove("active");
-        })
+        });
 
         if (el) {
-            el.classList.add("active");
-            el.classList.add(me.config.layout)
-            el.style.zIndex = els.length * 5;
-            el.style.transform = activeTransform;
-        }
-        if (me.config.onClick !== undefined) {
-            me.config.onClick(el);
+            el.classList?.add("active");
+            el.classList?.add(me.config.layout);
+
+            if (el.style) {
+                el.style.zIndex = els.length * 5;
+                el.style.transform = activeTransform;
+            }
+
+            if (me.config.onClick !== undefined) {
+                me.config.onClick(el);
+            }
         }
     }
 
     private reCalculateTransformsOnClick(nextCnt: any, prevCnt: any) {
-        let z = 10;
         const els = this.nodelistToArray(this.els);
-
-        let scale = 1,
-            translateX = 0,
-            rotateVal = 0,
-            rotate = "";
-        let rotateNegStart = 0 // ((75 / els.length) * (oneHalf))*-1;
-
-        const transformArr = [];
-        const zIndexArr = [];
-        const relArr = [];
-
-        let layout = 'slide' || this.config.layout;
-
-        const maxCntDivisor = Math.max(prevCnt, nextCnt);
-        const prevDivisor = 100 / (maxCntDivisor);
-        const nextDivisor = 100 / (maxCntDivisor);
-
-        if (prevCnt > nextCnt) {
-            scale = 0 + (100 / (prevCnt + 1)) / 100;
-        } else {
-            scale = 1 - ((prevCnt) * (1 / (nextCnt + 1)));
+        const totalSlides = els.length;
+        let z = 10; // Initial z-index value for non-active slides
+        if (totalSlides === 2) {
+            els.forEach((el: any, index: number) => {
+                const zIndex = index === 0 ? 10 : 9; // Assign different z-index values for the two slides
+                const scale = index === 0 ? 1 : 0.7; // Assign different scales for the two slides
+    
+                const translateX = index === 0 ? 0 : 10; // Assign different translation factors for the two slides
+                const styleStr = `translate(${translateX}%, 0%) scale(${scale}) rotate(0deg)`;
+    
+                el.style.transform = styleStr;
+                el.style.zIndex = zIndex.toString();
+            });
         }
 
-        let rotatePrevStart = ((prevCnt * 10 / (prevCnt) * prevCnt)) * -1;
-        let rotateNextStart = ((nextCnt * 10 / (nextCnt)));
+        else {
+            const els = this.nodelistToArray(this.els);
+            let z = 10;
 
-        for (let i = 0; i < prevCnt; i++) {
-            switch (layout) {
-                case "slide":
-                    if (i > 0) {
-                        scale = scale + (100 / (maxCntDivisor + 1)) / 100;
-                    }
+            const layout = 'slide' || this.config.layout;
+            const maxCntDivisor = Math.max(prevCnt, nextCnt);
+            const prevDivisor = 10 / (maxCntDivisor);
+            const nextDivisor = 10 / (maxCntDivisor);
 
-                    translateX = (-50 - ((prevDivisor) * (prevCnt - i)));
+            for (let i = 0; i < prevCnt; i++) {
+                let scale = 0.7 + (50 / (maxCntDivisor + 1)) / 100; // Adjusted scale factor
+                let translateX = (5 - (prevDivisor * (prevCnt - i))) * -1; // Adjusted translation factor
+                let rotate = "rotate(0deg)";
 
-                    rotate = "rotate(0deg)";
-                    break;
-                case "fanOut":
-                    rotateVal = rotatePrevStart;
-
-                    if (i > 0) {
-                        scale = scale + (100 / (maxCntDivisor + 1)) / 100;
-                    }
-                    translateX = (-50 - ((prevDivisor) * (prevCnt - i)));
-                    rotate = "rotate(" + rotateVal + "deg)";
-
-                    rotatePrevStart = rotatePrevStart + ((prevCnt * 10) / prevCnt);
-
-                    break;
-                default:
-                    translateX = (150 - ((prevDivisor * 2) * i)) * -1;
-                    rotate = "rotate(0deg)";
-
+                const styleStr = `translate(${translateX}%, 0%) scale(${scale}) ${rotate}`;
+                z++;
+                els[i].style.transform = styleStr;
+                els[i].style.zIndex = z;
             }
+            z--;
+            for (let i = prevCnt + 1; i < nextCnt + prevCnt + 1; i++) {
+                let scale = 1 - (50 / (maxCntDivisor + 1)) / 100; // Adjusted scale factor
+                let translateX = (-5 + (nextDivisor * (i - prevCnt))) * -1; // Adjusted translation factor
+                let rotate = "rotate(0deg)";
 
-            const styleStr = "translate(" + translateX + "%, 0%)  scale(" + scale + ") " + rotate;
-            z = z + 1;
-
-            els[i].style.transform = styleStr;
-            els[i].style.zIndex = z;
-
-        }
-
-        z = z - 1;
-        let j = 0;
-
-        rotateNegStart = 0;
-        scale = 1;
-        for (let i: number = prevCnt + 1; i < nextCnt + prevCnt + 1; i++) {
-            j = j + 1;
-            switch (layout) {
-                case "slide":
-                    scale = scale - (100 / (maxCntDivisor + 1)) / 100;
-                    translateX = (50 - ((nextDivisor) * (j))) * -1;
-                    rotate = "rotate(0deg)";
-                    break;
-                case "fanOut":
-                    rotateVal = rotateNextStart;
-
-                    scale = scale - (100 / (maxCntDivisor + 1)) / 100;
-                    translateX = (50 - ((nextDivisor) * (j))) * -1;
-                    rotate = "rotate(" + rotateVal + "deg)";
-
-                    rotateNextStart = rotateNextStart + ((nextCnt * 10) / nextCnt);
-                    break;
-                default:
-                    translateX = (50 - ((prevDivisor * 2) * i)) * -1;
-                    rotate = "rotate(0deg)";
-
-            }
-
-            z = z - 1;
-
-            const styleStr = "translate(" + translateX + "%, 0%)  scale(" + scale + ") " + rotate;
-
-            if (els[i]) {
+                z--;
+                const styleStr = `translate(${translateX}%, 0%) scale(${scale}) ${rotate}`;
                 els[i].style.transform = styleStr;
                 els[i].style.zIndex = z;
             }
         }
-
-
-
     }
 
     private detectSwipe() {
