@@ -8,7 +8,7 @@ export function Menu(props: any) {
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
     hostInstance.on('onBrandingUpdate', function (event: any) {
         console.log('Branding Data: ', event.brandingData);
-        updateBrandingInfo({ ...event.brandingData })
+        updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
     });
 
     const closeMenu = () => {

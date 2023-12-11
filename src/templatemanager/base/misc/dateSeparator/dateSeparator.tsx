@@ -6,7 +6,7 @@ export function DateSeparator(props: any) {
     const hostInstance = props.hostInstance;
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
     hostInstance.on('onBrandingUpdate', function (event: any) {
-        updateBrandingInfo({...event.brandingData})
+        updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
     });
     const dsStyle: any = {
         line: 'date-saperator',

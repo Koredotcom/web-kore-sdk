@@ -15,7 +15,7 @@ export function ChatContainer(props: any) {
     hostInstance.on('onBrandingUpdate', function (event: any) {
         console.count('Branding Call');
         console.log('Branding Data: ', event.brandingData);
-        updateBrandingInfo({...event.brandingData})
+        updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
     });
 
     const themeType: any = {

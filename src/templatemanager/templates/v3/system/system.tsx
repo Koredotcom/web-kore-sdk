@@ -11,7 +11,7 @@ export function System(props: any) {
     const msgData = props.msgData;
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
     hostInstance.on('onBrandingUpdate', function (event: any) {
-        updateBrandingInfo({...event.brandingData})
+        updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
     });
     const messageobj = {
         msgData: msgData,

@@ -10,7 +10,7 @@ export function ChatWidgetHeader(props: any) {
     const iconHelper = new IconsManager();
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
     hostInstance.on('onBrandingUpdate', function (event: any) {
-        updateBrandingInfo({...event.brandingData})
+        updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
     });
 
     const hSizeObj: any = {
