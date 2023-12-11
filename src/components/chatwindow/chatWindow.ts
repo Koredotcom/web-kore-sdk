@@ -224,7 +224,7 @@ initShow  (config:any) {
   me.reWriteWebHookURL(me.config);
   window._chatHistoryLoaded = false;
   if(me.config?.mockMode?.enable){
-    me.setBranding()
+    me.setBranding(me.config.branding);
   }else{
     me.JWTSetup();
   }
@@ -695,7 +695,7 @@ resetWindow () {
     me.config.branding.header.title.name = me.config.botMessages.reconnecting;  
   }
   // me.chatEle.find('.chat-container').html("");
-  me.setBranding();
+  me.setBranding(me.config.branding);
   me.bot.close();
   me.config.botOptions.maintainContext = false;
   me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
@@ -1182,7 +1182,7 @@ bindSDKEvents  () {
     if (me.config.enableThemes) {
       me.getBrandingInformation(response.jwtgrantsuccess);
     } else {
-      me.setBranding();
+      me.setBranding(me.config.branding);
     }
     me.emit(me.EVENTS.JWT_GRANT_SUCCESS, response.jwtgrantsuccess);
   });
@@ -1253,7 +1253,7 @@ onBotReady  () {
   _chatContainer.find('.kore-chat-header .disabled').prop('disabled', false).removeClass('disabled');
   } else {
     me.config.branding.header.title.name = me._botInfo.displayName;
-    me.setBranding();
+    me.setBranding(me.config.branding);
   }
   if (!me.loadHistory) {
     setTimeout(() => {
@@ -2405,7 +2405,7 @@ getBrandingInformation(options:any){
       }
     } else {
       if (response && response.activeTheme) {
-        me.setBranding(response?.generalAttributes?.v3);
+        me.setBranding(response?.v3);
       }
     }
   };
@@ -2431,11 +2431,11 @@ applyVariableValue (key:any,value:any,type:any){
 
   setBranding(brandingData?: any, type?: any) {
     const me: any = this;
-    me.config.branding = brandingData ? brandingData : me.config.branding;
-    me.brandingManager.applyBranding(me.config.branding);
+    me.brandingManager.applyBranding(brandingData);
     me.emit("onBrandingUpdate", {
-      brandingData: brandingData ? brandingData : me.config.branding
+      brandingData: brandingData
     });
+    me.config.branding = brandingData;
 
     if (type == 'welcome' && me.config.builderFlag) {
       if (me.config.branding.welcome_screen.show) {

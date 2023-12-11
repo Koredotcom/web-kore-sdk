@@ -10,7 +10,10 @@ export function AvatarComponent(props: any) {
     const iconHelper = new IconsManager();
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
     hostInstance.on('onBrandingUpdate', function (event: any) {
+        console.log('BB: ', JSON.parse(JSON.stringify(hostInstance.config.branding)));
         updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
+        console.log('AB: ', JSON.parse(JSON.stringify(hostInstance.config.branding)));
+        console.log('ABH: ', JSON.parse(JSON.stringify(brandingInfo)));
     });
 
     const aShape: any = {
