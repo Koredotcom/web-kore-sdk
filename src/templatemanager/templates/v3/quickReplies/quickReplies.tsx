@@ -19,7 +19,7 @@ export function QuickReply(props: any) {
             }
             hostInstance.openExternalLink(link);
         }
-        hostInstance.chatEle.querySelector('.quick-replies').remove();
+        hostInstance?.chatEle?.querySelector('.quick-replies')?.remove();
     }
     // setTimeout(() => {
     //     const carouselButtons = new CarouselButtons({
