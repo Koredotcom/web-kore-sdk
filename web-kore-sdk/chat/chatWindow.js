@@ -488,8 +488,11 @@
                             txtArr[i] = '\r\n';
                             _lineBreakAdded = true;
                         } else if (txtArr[i].indexOf('*') === 0) {
-                            if (!isEven(txtArr[i].split('*').length - 1)) {
+                            if (!isEven(txtArr[i].split('*').length - 1) && KoreSDK.chatConfig.masking) {    // Not sure what is the impact
                                 txtArr[i] = '\r\n&#9679; ' + txtArr[i].substring(1);
+                                _lineBreakAdded = true;
+                            } else  {
+                                txtArr[i] = txtArr[i];
                                 _lineBreakAdded = true;
                             }
                         } else if (txtArr[i].indexOf('>>') === 0) {
@@ -875,9 +878,9 @@
                             rightScrollBtn[0].classList.remove('hide');
                         }
                         else {
-                            if(rightScrollBtn && rightScrollBtn[0]){
+                            if(rightScrollBtn &&  rightScrollBtn[0]){
                                 rightScrollBtn[0].classList.add('hide');
-                            }
+                            }   
                         }
                     }
                 }   
@@ -1014,8 +1017,8 @@
                 }else{
                     setTimeout(function(){
                         $(".kore-chat-window").addClass('minimize');
-                        chatWindowHtml.find('.minimized-title').html("Talk to " + me.config.chatTitle);
-                        me.skipedInit=true;
+                    chatWindowHtml.find('.minimized-title').html("Talk to " + me.config.chatTitle);
+                    me.skipedInit=true;
                     });
                     
                 }
@@ -1023,6 +1026,7 @@
                     bot.fetchUserLocation();
                 }
                 me.render(chatWindowHtml);
+                chatWindow.prototype.bot = bot;
                 if(me.config.isFromPSCU){
                     $(".kore-chat-window").addClass('PSCU'); 
                 }
@@ -1104,6 +1108,30 @@
                 });
                 _chatContainer.off('click', '.botResponseAttachments').on('click', '.botResponseAttachments', function (event) {
                     window.open($(this).attr('fileid'), '_blank');
+                });
+                _chatContainer.off('keydown', '.text-as-password').on('keydown', '.text-as-password', function (event) {
+                    if (event.keyCode === 13) {
+                        event.preventDefault();
+                        if ($('.text-as-password').val().length > 0) {
+                            var message = $('.text-as-password').val();
+                            var messageCopy = $('.text-as-password').val();
+                            if(KoreSDK.chatConfig.piiReductionChar){
+                                var piiReductionChar = KoreSDK.chatConfig.piiReductionChar;
+                                message = piiReductionChar + message + piiReductionChar;
+                                var renderMessage = messageCopy.replace(/\w/g, "*");
+                                me.sendMessage($('.chatInputBox').text(message), renderMessage);
+                            }else{
+                                var _renderMessage = messageCopy.replace(/[^\w\s]/gi, '*');
+                                _renderMessage = _renderMessage.replace(/\w/g, "*");
+                                me.sendMessage($('.chatInputBox').text(message), _renderMessage);
+                            }
+
+                            KoreSDK.chatConfig.piiReductionChar = '';
+                            $('.text-as-password').val('');
+                            $('.text-as-password').css('display', 'none');
+                            $('.chatInputBox').css('display','block');
+                        }
+                    }
                 });
                 /*_chatContainer.off('click', '.attachments').on('click', '.attachments', function (event) {
                     var attachFileID = $(this).attr('fileid');
@@ -1225,7 +1253,21 @@
                             return;
                         }
                     }
-                    cnvertFiles(this, file);
+                    if (checkForFileValidation(file)) {
+                        cnvertFiles(this, file);
+                    } else {
+                        alert("Sorry, the file you tried to attach is not supported. Please attach a valid pdf or image file");
+                    }
+                  //  cnvertFiles(this, file);
+                    function checkForFileValidation(file) {
+                        var workbenchAllowedFileTypes = [".pdf", ".jpg", ".jpeg", ".jpe", ".jig", ".jfif", ".jfi", ".heif", ".png", ".img", ".webp"];
+                        var extension = file.name.substring(file.name.lastIndexOf('.'));
+                        if (workbenchAllowedFileTypes.indexOf(extension.toLowerCase()) > -1) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
                 });
                 _chatContainer.off('paste', '.chatInputBox').on('paste', '.chatInputBox', function (event) {
                     event.preventDefault();
@@ -1296,10 +1338,10 @@
                         type = type.toLowerCase();
                     }
                     if (type == "postback" || type == "text") {
-                        $('.chatInputBox').text($(this).attr('actual-value') || $(this).attr('value'));
+                        $('.chatInputBox').text($(this).attr('value') || $(this).attr('actual-value'));
                         //var _innerText = $(this)[0].innerText.trim() || $(this).attr('data-value').trim();
                         if($('.quickReply') && $('.quickReply').length){
-                            var _innerText = $(this).attr('value');
+                            var _innerText = $(this).attr('actual-value');
 			   // _innerText = toTitleCase(_innerText);
                         } else {
                             var _innerText = ($(this)[0] && $(this)[0].innerText) ? $(this)[0].innerText.trim():"" || ($(this) && $(this).attr('data-value'))?$(this).attr('data-value').trim():"";
@@ -1342,15 +1384,38 @@
                     }
 
                     if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[0] === 'checkboxBtn') {
-                        var checkboxSelection = $(e.currentTarget.parentElement.parentElement).find('.checkInput:checked')
-                        var selectedValue = [];
-                        var toShowText = [];
-                        for (var i = 0; i < checkboxSelection.length; i++) {
-                            selectedValue.push($(checkboxSelection[i]).attr('value'));
-                            toShowText.push($(checkboxSelection[i]).attr('text'));
+                        if(e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[1] && e.currentTarget.classList[1] === 'cancel-btn'){
+                            var checkboxSelection = $(e.currentTarget.parentElement.parentElement).find('.checkInput:checked')
+                            var selectedValue = [];
+                            var toShowText = [];
+                            for (var i = 0; i < checkboxSelection.length; i++) {
+                                $(checkboxSelection[i]).prop("checked", false);
+                            }
+                            me.sendMessage(   $('.chatInputBox').text($(e.currentTarget).attr('value')),$(e.currentTarget).attr('title'));
+                            if($(e.currentTarget).closest('.kore-action-sheet')){
+                                bottomSliderAction('hide');
+                            }
+
+                        }else{
+                            var checkboxSelection = $(e.currentTarget.parentElement.parentElement).find('.checkInput:checked')
+                            var selectedValue = [];
+                            var toShowText = [];
+                            for (var i = 0; i < checkboxSelection.length; i++) {
+                                selectedValue.push($(checkboxSelection[i]).attr('value'));
+                                toShowText.push($(checkboxSelection[i]).attr('text'));
+                            }
+                            // $('.chatInputBox').text($(this).attr('title') +': '+ selectedValue.toString());
+                            if (selectedValue && selectedValue.length) {
+                                $('.chatInputBox').text($(this).attr('title') + ': ' + selectedValue.toString());
+                            } else {
+                                $('.chatInputBox').text($(this).attr('title'));
+                            }
+                            me.sendMessage($('.chatInputBox'),toShowText.toString());
+                            if($(e.currentTarget).closest('.kore-action-sheet').length){
+                                bottomSliderAction('hide');
+                            }
                         }
-                        $('.chatInputBox').text($(this).attr('title') +': '+ selectedValue.toString());
-                        me.sendMessage($('.chatInputBox'),toShowText.toString());
+
                     }   
                     if (e.currentTarget.classList && e.currentTarget.classList.length > 0 && e.currentTarget.classList[0] === 'quickReply') {
                         var _parentQuikReplyEle = e.currentTarget.parentElement.parentElement;
@@ -1552,10 +1617,10 @@
                     setTimeout(function(){
                         if(customData && customData.isReconnect){
                             me.resetWindow(true);
-                            me.defaultWelcomeMsg();
+                            //me.defaultWelcomeMsg();
                         }else{
                             me.resetWindow();
-                            me.defaultWelcomeMsg();
+                            //me.defaultWelcomeMsg();
                         }
                     });
                     $('.recordingMicrophone').trigger('click');
@@ -1610,9 +1675,9 @@
                             $('.disableFooter').removeClass('disableFooter');
                         });
                     }
-                    // if(!me.config.botOptions._reconnecting){
-                    //     me.defaultWelcomeMsg();
-                    // }
+                    if(!me.config.botOptions._reconnecting){
+                       // me.defaultWelcomeMsg();
+                    }
                 });
 
                 bot.on("message", function (message) {
@@ -1711,8 +1776,9 @@
                                 if(tempData.message[0].component.payload.showdueDate){
                                 
                                     korePicker.pickerSubconfig.dateConfig.paymentDue="Payment Due Date";
-                                    
-                                    korePicker.pickerSubconfig.dateConfig.paymentDue=tempData.message[0].component.payload.paymentDue;
+                                    if(tempData.message[0].component.payload.paymentDue){
+                                        korePicker.pickerSubconfig.dateConfig.paymentDue=tempData.message[0].component.payload.paymentDue;
+                                    }
                                 }
                                 
                                 if(tempData.message[0].component.payload.title){
@@ -1873,7 +1939,7 @@
                 });
             }
 
-            chatWindow.prototype.sendMessage = function (chatInput, renderMsg,msgObject) {
+            chatWindow.prototype.sendMessage = function (chatInput, renderMsg,msgObject,isMessageTobeHidden) {
                 var me = this;
                 if (chatInput.text().trim() === "" && $('.attachment').html().trim().length == 0) {
                     return;
@@ -1959,11 +2025,13 @@
                     $('.typingIndicatorContent').css('display', 'none');
                 }, 10000);
                 if (renderMsg && typeof renderMsg === 'string') {
-                  //  msgData.message[0].cInfo.body = messageToBot["message"].body;
-		             msgData.message[0].cInfo.body = renderMsg;
+                   //msgData.message[0].cInfo.body = messageToBot["message"].body;
+		   msgData.message[0].cInfo.body = renderMsg;
                 }
                 msgData.message[0].cInfo.ignoreCheckMark=ignoreCheckMark;
-                me.renderMessage(msgData);
+                if(!isMessageTobeHidden){
+                    me.renderMessage(msgData);
+                }
             };
 
             chatWindow.prototype.renderMessage = function (msgData) {
@@ -2572,11 +2640,26 @@
                         },7000);
                     } 
                     else {
+                        if(KoreSDK.chatConfig.masking){
+                            KoreSDK.chatConfig.masking = false;
+                            if(msgData.type !== "bot_response"){
+                                msgData.message[0].cInfo.body = msgData.message[0].cInfo.body.replace(/\w/g, "*");
+                            }
+                        }
                         messageHtml = $(me.getChatTemplate("message")).tmpl({
                             'msgData': msgData,
                             'helpers': helpers,
                             'extension': extension
                         });
+                    }
+                    if(msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.masking){
+                        KoreSDK.chatConfig.masking = true;
+                        if(msgData.message[0].component.payload.piiReductionChar){
+                            KoreSDK.chatConfig.piiReductionChar =  msgData.message[0].component.payload.piiReductionChar;
+                        }
+                        $('.text-as-password').css('display','block');
+                        $('.text-as-password').focus();
+                        $('.chatInputBox').css('display','none');
                     }
                 }
                 _chatContainer.find('li').attr('aria-live','off');
@@ -2743,10 +2826,10 @@
                         {{if userAgentIE}} \
                         <div role="textbox" class="chatInputBox inputCursor" aria-label="Message"aria-label="Message" contenteditable="true" placeholder="${botMessages.message}"></div> \
                         {{else}} \
+                        <input type="password" class="text-as-password" placeholder="${botMessages.message}">\
                         <div role="textbox" class="chatInputBox" contenteditable="true" placeholder="${botMessages.message}"></div> \
                         {{/if}} \
                     <div class="footerIonsContainer">\
-                    <div class="attachment"></div> \
                     {{if isTTSEnabled}} \
                         <div class="sdkFooterIcon ttspeakerDiv ttsOff"> \
                             <button class="ttspeaker" title="Text to Speech"> \
@@ -2770,12 +2853,13 @@
                     {{/if}}\
                     <div class="sdkFooterIcon"> \
                         <button class="sdkAttachment attachmentBtn" title="Attachment"> \
-                            <i class="paperclip"></i> \
+                            <div class="attachmentIcon"></div> \
                         </button> \
                         <input type="file" name="Attachment" class="filety" id="captureAttachmnts" title="Upload attachment"> \
                     </div> \
                     {{if !(isSendButton)}}<div class="chatSendMsg">Press enter to send</div>{{/if}} \
                     </div>\
+                     <div class="attachment"></div> \
                 </div>';
 
                 var chatWindowTemplate = '<script id="chat_window_tmpl" type="text/x-jqury-tmpl"> \
@@ -3209,16 +3293,16 @@
                                         {{if msgData.message[0].component.payload.quick_replies && msgData.message[0].component.payload.quick_replies.length}} \
                                             {{each(key, msgItem) msgData.message[0].component.payload.quick_replies}} \
                                                 <div class="buttonTmplContentChild quickReplyDiv"> <span {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} class="quickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.content_type}">\
-                                                    {{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} <span class="quickreplyText {{if msgItem.image_url}}with-img{{/if}}">${msgItem.title}</span></span>\
-                                                </div> \
-                                            {{/each}} \
+                                            {{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} <span class="quickreplyText {{if msgItem.image_url}}with-img{{/if}}">${msgItem.title}</span></span>\
+                                        </div> \
+                                    {{/each}} \
                                         {{/if}} \
                                         {{if msgData.message[0].component.payload.buttons && msgData.message[0].component.payload.buttons.length}} \
                                             {{each(key, msgItem) msgData.message[0].component.payload.buttons}} \
                                                 <div class="buttonTmplContentChild quickReplyDiv displayInline"> <span actual-value="${msgItem.payload}" {{if msgData}}msgData="${JSON.stringify(msgData)}"{{/if}} {{if msgItem.payload}}value="${msgItem.title}"{{/if}} class="buttonQuickReply {{if msgItem.image_url}}with-img{{/if}}" type="${msgItem.type}" {{if msgItem.url}}url="${msgItem.url}"{{/if}}>\
-                                                    {{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} <span class="quickreplyText {{if msgItem.image_url}}with-img{{/if}}">${msgItem.title}</span></span>\
-                                                </div> \
-                                            {{/each}} \
+						{{if msgItem.image_url}}<img src="${msgItem.image_url}">{{/if}} <span class="quickreplyText {{if msgItem.image_url}}with-img{{/if}}">${msgItem.title}</span></span>\
+						</div> \
+					     {{/each}} \
                                         {{/if}} \
                                     </div>\
                                 </div>\
@@ -3566,7 +3650,7 @@
                 
                 return this;
             };
-
+            
             this.showChatWindow = function(cfg){
                 $(".kore-chat-window").show();
             }
@@ -3664,6 +3748,7 @@
                         "widgetTextColor":"widget-text-color",
                         "widgetBorderColor":"widget-border-color",
                         "widgetDividerColor":"widget-divider-color",
+			            "buttonOutlineColor": "button-outline-color",
                     };
                     var cssVariable = "";
                     for (var key in response) {
@@ -4556,7 +4641,8 @@
                 }
             };
             function getFileToken(_obj, _file, recState) {
-                var auth = (bearerToken) ? bearerToken : assertionToken;
+                var auth = "bearer " + window.jwtDetails.authorization.accessToken;
+                var _self = this;
                 $.ajax({
                     type: "POST",
                     url: koreAPIUrl + "1.1/attachment/file/token",
@@ -4718,6 +4804,10 @@
                 $('.chatInputBox').focus();
                 attachmentInfo.fileName = data.values.componentData.filename;
                 attachmentInfo.fileType = data.values.componentType;
+                if(data &&  data.values &&  data.values.componentFileId){
+                    attachmentInfo.fileId =  data.values.componentFileId;
+                }
+                
                 $('.sendButton').removeClass('disabled');
             };
             function acceptFileRecording(_this, _recState, ele) {

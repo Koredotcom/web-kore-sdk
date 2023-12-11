@@ -272,6 +272,7 @@
     padding: 0;
     position: relative;
     border-radius: 10px;
+    margin-bottom: 15px;
 }
 .kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent .input_group .input-btn-submit{
     position: relative;
@@ -309,9 +310,46 @@
 .kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent .inputMainComponent{
     position: relative;
 }
-.kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent form .hide{
+.formMainComponent form .hide{
     display:none;
 }
+.kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent .btn-group{
+    margin: 15px 0 0 0;
+    text-align: center;
+}
+.kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent .btn-info{
+    min-width: 80px;
+    height: 30px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-right: 10px;
+    background-color: #0d6efd;
+    border: solid 1px transparent;
+    color: #fff;
+}
+.kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent .btn-url-postback{
+    min-width: 80px;
+    height: 30px;
+    border-radius: 4px;
+
+    font-size: 14px;
+    border: solid 1px transparent;
+    cursor: pointer;
+    margin-right: 10px;
+    color: #0d6efd;
+}
+.kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent .templateHeading{
+    text-align: center;
+    font-size: 16px;
+}
+.kore-chat-window .kore-chat-body .buttonTmplContent .messageBubble{
+    width: 300px;
+ }
+ .kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent .errorMessage{
+    text-align: center;
+    color: #ff0000;
+ }
 /* Inline form template css ends here */ 
 
 
@@ -504,8 +542,7 @@
     padding-top: 8px;
     position: absolute;
     right: 10px;
-    /* top: -10px; */
-    top: 0px;
+    top: 5px;
     color:var(--sdk-chat-window-list-template-close-btn-color);
     background:none;
     opacity:1;
@@ -515,7 +552,7 @@
     line-height:inherit;
     border:none;
 }
-.kore-chat-window .listViewTmplContent .listViewTmplContentBox{
+.kore-chat-window .kore-chat-body .listViewTmplContent .listViewTmplContentBox{
 	float:left;
 	color:var(--sdk-chat-window-list-view-color);
 	border-radius: 12px;
@@ -527,18 +564,18 @@
 	margin: 0;
 	width:100%;
 }
-.kore-chat-window .listViewTmplContent .listViewLeftContent{
+.listViewTmplContent .listViewLeftContent{
     width: 100%;
     padding: 10px;
     vertical-align: middle;
-    display: flex;	
-    align-items: center;	
+    display: flex;
+    align-items: center;
     justify-content: space-between;
 }
-.kore-chat-window .listViewTmplContent .listViewTmplContentChild:hover {
+.listViewTmplContent .listViewTmplContentChild:hover {
     background-color: rgba(10, 10, 10, 0.08);
 }
-.kore-chat-window .listViewTmplContent .listViewRightContent{
+ .listViewTmplContent .listViewRightContent{
     cursor: pointer;
     display: table-cell;
     width: 60px;
@@ -546,31 +583,38 @@
     padding-left: 10px;
 
 }
-.kore-chat-window .listViewRightContent img{
+.listViewRightContent img{
 	height: 36px;
 	width: 36px;
     border-radius: 50%;
     
 }
-.kore-chat-window .listViewTmplContent .listViewTmplContentChild{
+.listViewTmplContent .listViewTmplContentChild{
 	border-top: 1px solid var(--sdk-chat-window-checkbox-border);
-	margin-bottom:10px;
-    width: 100%;
     border-radius: 10px;
     box-shadow: var(--sdk-chat-widow-primary-box-shadow);
     background-color: var(--sdk-chat-widow-default-white);
     /* background-color: var(--sdk-chat-widow-chat-button-active-color); */
-     min-height: 56px;
-    height: auto;
-    display: flex;	
+    display: flex !important;	
     align-items: center;	
-    flex-wrap: wrap;	
+    /* flex-wrap: wrap;	 */
+    min-height: 56px;
+    height: auto;
+    width: 100%;
+    border-radius: 10px;
     cursor: pointer;
+    margin-bottom: 20px;
 }
-.kore-chat-window .listViewTmplContent .listViewTmplContentChild:hover{
+.listViewTmplContentBox .list-element .subelements-group{
+    padding: 10px 10px 0 10px !important;
+    background-color: rgba(10, 10, 10, 0.08);
+    margin-bottom: 10px !important;
+
+}
+.listViewTmplContent .listViewTmplContentChild:hover{
     /* background-color: rgba(10, 10, 10, 0.08); */
 }
-.kore-chat-window .listViewTmplContent .listViewItemSubtitle{
+.listViewTmplContent .listViewItemSubtitle{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -580,12 +624,13 @@
     font-weight: normal;
     font-stretch: normal;
     font-style: normal;
-    line-height: 1.43;
+    line-height: normal;
     letter-spacing: 0.27px;
     color: var(--sdk-chat-window-list-template-sub-title-color);
+    position: relative;
       
 }
-.kore-chat-window .listViewTmplContent .listViewItemValue{
+.listViewTmplContent .listViewItemValue{
     
     display: inline-block;
     margin-left: 15px; 
@@ -605,12 +650,12 @@
     white-space: nowrap; */
       
 }
-.kore-chat-window .listViewTmplContent .listItemPath{
+.listViewTmplContent .listItemPath{
 	font-size:12px;
 	color: var(--sdk-chat-window-viewmore-btn-color);
     cursor: pointer;
 }
-.kore-chat-window .listViewTmplContent .buyBtn{
+.listViewTmplContent .buyBtn{
 	background: var(--sdk-chat-window-pie-chart-background);
     border: 0;
     color: var(--sdk-chat-window-viewmore-btn-color)!important;
@@ -621,33 +666,32 @@
     font-size: 12px;
     text-align: right;
 }
-.kore-chat-window .listViewTmplContentBox li:first-child{
+.listViewTmplContentBox li:first-child{
 	margin-top:0!important;
 	border-top:0;
 }
-.kore-chat-window .listViewTmplContent .listViewTmplContentHeading{
+.listViewTmplContent .listViewTmplContentHeading{
 	padding:10px;
     background:  var(--sdk-chat-widow-bot-chat-bubble-background-color);
     margin-bottom: 10px;
     border-radius: 12px 12px 0 0;
-    font-size: 15px;
+    font-size: 14px;
     width: 100%;
-    font-size: 15px;
+    /* font-size: 15px; */
     font-weight: normal;
     font-stretch: normal;
     font-style: normal;
-    line-height: 1.33;
+    line-height: 1.5;
     letter-spacing: -0.11px;
     color: var(--sdk-chat-widow-bot-chat-bubble-text-color);
+    list-style-type: none !important;
 }
-.kore-chat-window .listViewTmplContent .listViewLeftContent .titleDesc{
+.listViewTmplContent .listViewLeftContent .titleDesc{
     display: inline-block;
     width:60%;
-    /* width: 100%; */
-    position: relative;
 }
 
-.kore-chat-window .kore-chat-body .listViewItemTitle {	
+.listViewItemTitle {	
     font-size: 13px;	
     font-weight: 600;	
     line-height: 1.54;	
@@ -657,13 +701,13 @@
     text-overflow: ellipsis;	
     white-space: nowrap;	
 }
-.kore-chat-window .listViewTmplContent .seeMoreList{
+.listViewTmplContent .seeMoreList{
 	text-align: center;
     border-top: 1px solid var(--sdk-chat-window-checkbox-border);
     padding: 10px;
     margin: 0;
 }
-.kore-chat-window .listViewTmplContent .seeMoreList{
+.listViewTmplContent .seeMoreList{
 	border: 0;
     background: none;
     color: var(--sdk-chat-widow-primary-blue-color);    
@@ -812,11 +856,11 @@
     padding-left: 10px;
     }
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .listViewLeftContent{
-        width: 77%;
-        padding: 0 10px;
+        width: 100%;
+        padding: 10px;
         vertical-align: middle;
-        display: flex;	
-        align-items: center;	
+        display: flex;
+        align-items: center;
         justify-content: space-between;
     }
     .kore-chat-window .kore-action-sheet .list-template-sheet .listTemplateContainer .displayListValues .listViewLeftContent .listViewItemTitle{
@@ -1030,6 +1074,16 @@
 }
 /* --TABBLE LIST ENDS HERE--*/
 
+.kore-chat-window .kore-chat-body .listTmplContent .listTmplContentBox .listTmplContentChild.hide{
+    display: none !important;
+}
+.kore-chat-window .kore-chat-body .listTmplContent .listTmplContentBox .listTmplContentChild_show_more{
+    text-align: center;
+    border-top: 1px solid var(--sdk-chat-window-checkbox-border);
+    padding: 10px;
+    background-color: #ffffff;
+    cursor: pointer;
+}
 
  
  /* remove inline-block whitespace */
@@ -1283,11 +1337,8 @@
     animation: message-left ease-in-out 2s forwards;
     margin: 0;
     width: 100%;
-    list-style: none;
 }
-.kore-chat-window .listViewTmplContent .listViewTmplContentBox .hide{
-  display:none !important;
-}
+
 .kore-chat-window .listViewTmplContent.noShadow .listViewTmplContentBox .listViewTmplContentHeading {
     margin-bottom: 0;
     list-style-type: none;
@@ -1319,7 +1370,6 @@
     overflow: auto;
     max-height: 400px;
     padding: 10px;
-    position:relative;
 }
 
 .kore-chat-window .listViewTmplContent.noShadow .listViewTmplContentChild {
@@ -1330,7 +1380,8 @@
     border-radius: 0px;
     box-shadow: none;
     /* background-color:var(--sdk-chat-widow-chat-button-active-color); */
-    height: 56px;
+    min-height: 56px;
+    height: auto;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -1342,12 +1393,13 @@
 }
 
 .kore-chat-window .listViewTmplContent .listViewLeftContent {
-    width: 100%;
-    padding: 10px;
+    /* width: 100%;
+    padding: 0 10px;
     vertical-align: middle;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    height: 100%; */
 }
 
 .kore-chat-window .listViewTmplContent .listViewLeftContent .titleDesc {
@@ -1367,14 +1419,13 @@
 }
 
 .kore-chat-window .listViewTmplContent .listViewItemSubtitle {
-    /* width: 102px; */
     height: auto;
     font-size: 11px;
-    font-weight: normal;
+    font-weight: 400;
     font-stretch: normal;
     font-style: normal;
     line-height: normal;
-    letter-spacing: 0.27px;
+    letter-spacing: .27px;
     color: #77869e;
     overflow: inherit;
     text-overflow: inherit;
@@ -1386,7 +1437,8 @@
 .kore-chat-window .listViewTmplContent .listViewItemValue {
     display: inline-block;
     /* width: 90px; */
-    height: 22px;
+    min-height: 22px;
+    height: auto;
     font-size: 14px;
     font-weight: 900;
     font-stretch: normal;
@@ -1856,7 +1908,7 @@
     position: relative;
     margin: 10px 0 0 !important;
 }
-.kore-chat-window .listViewTmplContentChild .meetingActionButtons .dropdown-contentWidgt {
+.kore-chat-window .kore-chat-body .listViewTmplContentChild .meetingActionButtons .dropdown-contentWidgt {
     bottom: 50px;
     max-height: 200px;
     border: 1px solid var(--sdk-chat-widow-primary-border-color);
@@ -2092,7 +2144,13 @@
     margin-top: 0;
 }
 .kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-experience-content .bankingFeedBackTemplate-content-experience .checkInput{
-
+    position: relative !important;
+    opacity: 1 !important;
+    /* z-index: 1; */
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+    margin-top: 0;
 }
 .kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-experience-content .bankingFeedBackTemplate-content-experience .content-list-view{
     align-items: center;
@@ -2177,9 +2235,9 @@
 .kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .buttons-div .feedback-submit .submitBtn:hover{
     /* background: #018490;
     border: 1px solid #018490; */
-    background: #0156d4;
-    /* border: 2px solid var(--sdk-chat-widow-chat-button-inactive-text-color);
-    color: var(--sdk-chat-widow-chat-button-inactive-text-color); */
+    /* background: #0156d4; */
+    border: 2px solid var(--sdk-chat-widow-chat-button-inactive-text-color);
+    color: var(--sdk-chat-widow-chat-button-inactive-text-color);
 
 }
 .kore-chat-window .bankingFeedBackTemplate .bankingFeedBackTemplate-feedback-content .buttons-div .feedback-cancel .cancelBtn{
@@ -2405,3 +2463,798 @@
 }  */
 
 /* custom styles for PSCU  ends here*/
+
+/* Bank Assist attachment CSS starts here */
+.bankassist-template-attachment .bankassist-attachments{
+    border: 1px solid var(--sdk-chat-widow-primary-border-color);
+    /* display: inline-block; */
+    font-size: 12px;
+    cursor: pointer;
+    background: var(--sdk-chat-widow-default-white);
+    position: relative;
+    border-radius: 5px;
+    padding-top: 4px;
+    color: var(--sdk-chat-widow-primary-font-color);
+    padding: 2px 5px;
+    /* width: 100%;
+    margin: 2px 0; */
+    display: block;
+    width: 40px;
+    text-align: center;
+    margin: 10px auto 0 auto;
+ }
+ .bankassist-template-attachment .bankassist-attachments .uploadIcon{
+    padding: 5px;
+    text-align: center;
+ }
+ .bankassist-template-attachment .bankassist-attachments .uploadIcon .attachment-icon{
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAArRJREFUOBHNk9lL1FEUx8+5v1m0GaJFDCqIguwhH7TAhyLIhVKQoqKBolnK3MZIrRlpgx4iKWexglkUYTatmDBaHlo0if6BIEIxgoaIDMQXq7Gx3++e7h1TpMV69Dzc++N3zv3cc77nXIDFZvg/CQWDfcvT8P0SByhDoFUE+AYQ4u4GexgRSTLYv0D+UKzkK02/JIKxXKOxYl2eKV+n6OqQqMoTij0gomwyC4J8gcQ2jeiugjorKDg0lcn0p8bTKVVV7QK4T2RH3nC8acGM/MHEDo5aEhgeVJlqIo2SyPCKUce2I8LW1ES6TlH054G47a8gTyiyUwPtloK4nxGsRA7dyFiV0OR+c73tPRLeAYKi4oI1I0Kggj+CPMFYBXFM6BRlDye+WpQWQKavdDfaXssDnnjcREC1Quynr0Y/rhcCpX4DdYQjlUK8iKIo1RrxDULgawZQdrkajgzL4EAyaaYv2iMBGWxrdPRPa6pbZHZP+nRykeYLxao550EQJXBSC4Fju2LUVbQct76V/hu9vUvT4+nHot3P3U7HOW8wWkfAS4ToJdKf7VpnV2KLKCOoI2W3aESRyOQyGFj5qZ+Qzkhk2bdJdUA0eiALCcScYqZaxBhUWSyW6TmQqmk+hszZ2mQbAeCFzGAoc9fa3skAf09yhTqFg+LGh21Ox0VvINbMgZwGvaG0td46JmOkZUsT4hWbWeET+cPtPHpG7tK8XTfztEx6ABBvu5z2qx2BqIuQrDk5S0pPHrOMz0TNrDMDSfhhkg9vmu/whOL5XM0MIYNet4SEImfE/BzONWHZrxB5LgtCZO1isOL+7uhm0TUmJ5pIeyEGsMfV6PCJcpxC/AMm0JefsNsn5l84+z33aL3h6CGu0VlRxlrhHFUYXDjd4HgmA6+H+zaa9eZPNTV7P88eXPz7D7bgIIOYUOjZAAAAAElFTkSuQmCC);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    height: 18px;
+    width: 18px;
+    display: block;
+    background-position: center;
+ }
+  /* Bank Assist attachment CSS ends here */
+
+
+   /* OTP validations */
+
+.mashreq-otp-validation.hide {
+    display: none;
+  }
+  
+  .otp-validations {
+    display: inline-block;
+    width: 100%;
+    padding: 25px;
+    min-height: 400px;
+    /* margin-bottom: 10%; */
+  }
+  
+  .otp-validations .hading-text {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 36px;
+    color: #000000;
+    position: relative;
+    /* text-align: center;*/
+  }
+  
+  .otp-validations .hading-text .close-button {
+    position: absolute;
+    position: absolute;
+    right: -12px;
+    background: #ffffff;
+    border: 0;
+    top: -10px;
+  }
+  
+  .otp-validations .hading-text .close-button img {
+    cursor: pointer;
+  }
+  
+  .otp-validations .desc-text {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 22px;
+    color: #000000;
+    /* text-align: center; */
+    font-weight: 500;
+  }
+  
+  .otp-validations .phone-number-block {
+    margin: 20px 0 10px 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .otp-validations .phone-number-block .icon-block {
+    background: #FCE9E6;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  
+  .otp-validations .phone-number-block .number-phone {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 26px;
+    color: #000000;
+  }
+  
+  .otp-validations .text-tip {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 22px;
+    color: #FF5E00;
+  }
+  
+  .otp-validations .otp-block-inputs,
+  .otp-validations .enter-pin-inputs,
+  .otp-validations .reenter-pin-inputs {
+    margin: 20px 0 10px 0;
+    display: flex;
+    align-items: center;
+    position: relative;
+    justify-content: center;
+  }
+  .otp-validations .otp-block-inputs .input-block{
+    position: relative;
+    width: 100%;
+  }
+  .otp-validations .otp-block-inputs input {
+    background: #fff;
+    border: 1px solid #BDC1C6;
+    border-radius: 4px;
+    /* width: 40px; */
+    height: 40px;
+    margin-right: 0;
+    padding: 10;
+    -webkit-appearance: none;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 32px;
+    color: #313131;
+    /* text-align: center; */
+    width: 100%;
+  }
+  
+  .otp-validations .enter-pin-inputs input,
+  .otp-validations .reenter-pin-inputs input {
+    background: #F8F9FC;
+    border: 1px solid #738794;
+    border-radius: 4px;
+    width: 40px;
+    height: 40px;
+    margin-right: 15px;
+    padding: 0;
+    -webkit-appearance: none;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 32px;
+    color: #313131;
+    text-align: center;
+  }
+  
+  .otp-validations .otp-block-inputs input::-webkit-outer-spin-button,
+  .otp-validations .otp-block-inputs input::-webkit-inner-spin-button,
+  .otp-validations .enter-pin-inputs input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  .otp-validations .otp-block-inputs input[type=number],
+  .enter-pin-inputs input[type=number],
+  .reenter-pin-inputs input[type=number] {
+    -moz-appearance: textfield;
+  }
+  
+  .otp-validations .respond-time {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 22px;
+    color: #424242;
+  }
+  
+  .otp-validations .respond-time span {
+    color: #FF5E00;
+  }
+  
+  .otp-validations .reset-pin-generation {
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  .otp-validations .reset-pin-generation .enter-pin-info {
+    margin-bottom: 20px;
+  }
+  
+  .otp-validations .reset-pin-generation .error-message-info {
+    margin-top: 20px;
+    font-size: 12px;
+    color: red;
+  }
+  
+  .otp-validations .reset-pin-generation .resetpin-button-group {
+    margin-top: 20px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }
+  
+  .otp-validations .reset-pin-generation .resetpin-button-group .reset-btn {
+    padding: 8px 21px;
+    border-radius: 5px;
+    background: #9B1E26;
+    border: 1px solid #FFFFFF;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 14px;
+    font-weight: 600;
+    color: #FFFFFF;
+  }
+  
+  .otp-validations .reset-pin-generation .resetpin-button-group .reset-btn .button-title {
+    padding-right: 3px;
+  }
+  
+  .otp-validations .reset-pin-generation .resetpin-button-group .reset-btn.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  
+  .otp-validations .otp-content {
+    margin-bottom: 142px;
+  }
+
+  .otp-validations .otp-content .otp-btn-group {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin-top: 20px;
+    /* padding: 0 10px; */
+  }
+  .otp-validations .otp-content .otp-btn-group button{
+    border-radius: 25px;
+  }
+  .otp-validations .otp-content .otp-btn-group .otp-btn.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .otp-validations .otp-content .otp-btn-group .otp-btn {
+    padding: 8px 21px;
+    /* border-radius: 5px; */
+    background: #9B1E26;
+    border: 1px solid #FFFFFF;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 14px;
+    /* font-weight: 600; */
+    color: #FFFFFF;
+    height: 34px;
+  }
+  .otp-validations .otp-content .otp-btn-group .otp-resend {
+    padding: 8px 21px;
+    /* border-radius: 5px; */
+    background: #FFFFFF;
+    border: 1px solid #9B1E26;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 14px;
+    /* font-weight: 600; */
+    color: #9B1E26;
+    margin-left: 15px;
+  }
+  .otp-validations .otp-content .otp-btn-group .otp-btn .button-title {
+    padding-right: 3px;
+  }
+  
+  .otp-validations .otp-content .otp-block-inputs .eye-icon {
+    height: 18px;
+    width: 18px;
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+    top: 10px;
+  }
+  .otp-validations input:focus {
+    outline: 1px solid #0D6EFD;
+  }
+  .otp-validations .resend-information img{
+    height: 34px;
+    width: 34px;
+    margin-right: 10px;
+  }
+  .otp-validations .resend-information span{
+   font-size: 12px;
+  }
+  
+    /* new CSS */
+
+    .otp-validations .otp-content .otp-more-options {
+        margin: 30px 0 10px 0;
+    }
+  
+    .otp-validations .otp-content .otp-more-options .otp-more-option{
+      cursor: pointer;
+    }
+    .otp-validations .otp-content .otp-btn-group {
+        justify-content: flex-start;
+    }
+  
+  
+    .otp-validations .otp-content .otp-btn-group button {
+        border-radius: 5px;
+    }
+  
+    .otp-validations .otp-block-inputs {
+        justify-content: flex-start;
+    }
+    
+  /* otp validation Template */
+  /* Reset pin template Styles Starts here */
+
+.reset-pin-template {
+    display: inline-block;
+    width: 100%;
+    padding: 25px;
+    /* margin-bottom: 10%; */
+  }
+  
+  .reset-pin-template .hading-text {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 36px;
+    color: #000000;
+    position: relative;
+    /* text-align: center; */
+  }
+  
+  .reset-pin-template .hading-text .close-button {
+    position: absolute;
+    right: -12px;
+    top: -10px;
+    background: #ffffff;
+    border: 0;
+  }
+  
+  .reset-pin-template .hading-text .close-button img {
+    cursor: pointer;
+  }
+  
+  .reset-pin-template .desc-text {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    color: #000000;
+  }
+  
+  
+  
+  .reset-pin-template .enter-pin-inputs,
+  .reset-pin-template .reenter-pin-inputs {
+    margin: 20px 0 10px 0;
+    display: flex;
+    align-items: center;
+    position: relative;
+    justify-content: center;
+  }
+  
+  
+  .reset-pin-template .enter-pin-inputs input,
+  .reset-pin-template .reenter-pin-inputs input {
+    background: #F8F9FC;
+    border: 1px solid #738794;
+    border-radius: 4px;
+    width: 40px;
+    height: 40px;
+    margin-right: 15px;
+    padding: 0;
+    -webkit-appearance: none;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 32px;
+    color: #313131;
+    text-align: center;
+  }
+  
+  
+  .reset-pin-template .enter-pin-inputs input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  
+  .enter-pin-inputs input[type=number],
+  .reenter-pin-inputs input[type=number] {
+    -moz-appearance: textfield;
+  }
+  
+  
+  
+  .reset-pin-template .reset-pin-generation {
+    text-align: center;
+    margin-top: 15px;
+  }
+  
+  .reset-pin-template .reset-pin-generation .enter-pin-info {
+    margin-bottom: 20px;
+  }
+  
+  .reset-pin-template .reset-pin-generation .error-message-info {
+    margin-top: 20px;
+    font-size: 12px;
+    color: red;
+  }
+  
+  .reset-pin-template .reset-pin-generation .resetpin-button-group {
+    margin-top: 20px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }
+  
+  .reset-pin-template .reset-pin-generation .resetpin-button-group .reset-btn {
+    padding: 8px 21px;
+    border-radius: 25px;
+    background: #9B1E26;
+    border: 1px solid #FFFFFF;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 14px;
+    font-weight: 600;
+    color: #FFFFFF;
+  }
+  
+  .reset-pin-template .reset-pin-generation .resetpin-button-group .reset-btn .button-title {
+    padding-right: 3px;
+  }
+  
+  .reset-pin-template .reset-pin-generation .resetpin-button-group .reset-btn.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+
+  /* Tool tip text */
+.listViewTmplContent .listViewLeftContent .titleDesc .listViewItemSubtitle .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    left: 50px;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    top: 100%;
+    margin-top: 16px;
+    white-space: normal;
+    background-color: #26344a;
+    max-width: 200px;
+    text-align: center;
+    padding: 10px 15px;
+    line-height: 1.33;
+    font-size: 12px;
+    color: #fff;
+    transition: 0.3s all ease;
+}
+
+.listViewTmplContent .listViewLeftContent .titleDesc .listViewItemSubtitle .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #26344a transparent;
+}
+
+.listViewTmplContent .listViewLeftContent .titleDesc .listViewItemSubtitle:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+.listViewTmplContent .listViewTmplContentBox .list-element .listViewTmplContentChild .carrot-down.rotate-icon{
+    transform: rotate(180deg);
+}
+
+ul.chat-container li.fromOtherUsers.listView {
+    z-index: 1;
+}
+  
+.attachment-wrapper-data {
+    background: var(--gray-modern-50, #F8FAFC);
+    border-radius: 0px 0px 4px 4px;
+    padding: 16px 16px 16px 16px;
+}
+
+.attachment-wrapper-data .title-block {
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.attachment-wrapper-data .title-block .close-button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    border: 0;
+    cursor: pointer;
+    background: transparent;
+    padding: 0;
+}
+
+.attachment-wrapper-data .title-block .title {
+    margin-bottom: 10px;
+    color: var(--kora-grey-grey-dark-1, #202124);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: normal;
+}
+.attachment-wrapper-data .title-block .description{
+    color: var(--kora-grey-grey-dark-1, #202124);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: normal;
+    margin-bottom: 10px;
+}
+.attachment-wrapper-data .select-file-block {
+    /* background: #FFFFFF; */
+    border-radius: 4px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.attachment-wrapper-data .select-file-block.disabled-buttons {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.attachment-wrapper-data .select-file-block .inputfile-btn {
+    width: 100%;
+    position: relative;
+    background: #FFFFFF;
+    border: 1px solid #E5E5E5;
+    border-radius: 4px;
+    padding: 12px 20px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    color: #4B4EDE;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.attachment-wrapper-data .select-file-block .inputfile-btn .type-img{
+    width: 20px;
+    height: 20px;
+}
+
+.attachment-wrapper-data .select-file-block .inputfile-btn input {
+    position: absolute;
+    opacity: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    font-size: 0px;
+    cursor: pointer;
+}
+
+
+
+.uploaded-attachment-data {
+    /* background: #FFFFFF; */
+    border-radius: 4px;
+    padding: 0;
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.uploaded-attachment-data .uploaded-item {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    width: 100%;
+}
+
+.uploaded-attachment-data .uploaded-item .img-block {
+    width: 56px;
+    height: 56px;
+    background: #EEF2F6;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yLjUgMkMxLjY3NTc4IDIgMSAyLjY3NTc4IDEgMy41VjEyLjVDMSAxMy4zMjQyIDEuNjc1NzggMTQgMi41IDE0SDEzLjVDMTQuMzI0MiAxNCAxNSAxMy4zMjQyIDE1IDEyLjVWMy41QzE1IDIuNjc1NzggMTQuMzI0MiAyIDEzLjUgMkgyLjVaTTIuNSAzSDEzLjVDMTMuNzgxMiAzIDE0IDMuMjE4NzUgMTQgMy41VjEwLjc2NTZMMTAuODcxIDcuNDYyMThDMTAuNjY5NCA3LjI0OTM1IDEwLjMyODggNy4yNTQ4MSAxMC4xMzQxIDcuNDc0TDguNTQyOTcgOS4yNjU2Mkw1LjkwNjE1IDYuNDg1MTdDNS43MDQ1MSA2LjI3MjU0IDUuMzY0MDYgNi4yNzgxMSA1LjE2OTQ5IDYuNDk3MjNMMiAxMC4wNjY0VjMuNUMyIDMuMjE4NzUgMi4yMTg3NSAzIDIuNSAzWk0xMSA0QzEwLjQ0OTIgNCAxMCA0LjQ0OTIyIDEwIDVDMTAgNS41NTA3OCAxMC40NDkyIDYgMTEgNkMxMS41NTA4IDYgMTIgNS41NTA3OCAxMiA1QzEyIDQuNDQ5MjIgMTEuNTUwOCA0IDExIDRaTTUuNTU0NjkgNy41NjY0MUwxMC43MDcgMTNIMi41QzIuMjE4NzUgMTMgMiAxMi43ODEyIDIgMTIuNVYxMS41NzQyTDUuNTU0NjkgNy41NjY0MVpNMTAuNTE1NiA4LjU0Njg4TDE0IDEyLjIxODhWMTIuNUMxNCAxMi43ODEyIDEzLjc4MTIgMTMgMTMuNSAxM0gxMi4wODJMOS4yMzQzOCA5Ljk5MjE5TDEwLjUxNTYgOC41NDY4OFoiIGZpbGw9IiM2OTc1ODYiLz4KPC9zdmc+Cg==");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.uploaded-attachment-data .uploaded-item .content-data {
+    width: 100%;
+}
+
+.uploaded-attachment-data .uploaded-item .content-data h1 {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: #202939;
+    margin: 0 0 8px 0;
+    text-align: left;
+}
+
+.uploaded-attachment-data .uploaded-item .content-data .progress-percentage {
+    height: 5px;
+    width: 100%;
+    background: #EEF2F6;
+    border-radius: 4px;
+    margin: 8px 0;
+}
+
+.uploaded-attachment-data .uploaded-item .content-data .progress-percentage .percentage {
+    height: 100%;
+    background: #4B4EDE;
+    border-radius: 4px;
+    width: 0;
+}
+
+.uploaded-attachment-data .uploaded-item .content-data div {
+    height: 100%;
+    background: #ffffff;
+    border-radius: 4px;
+    width: 70%;
+}
+
+.uploaded-attachment-data .uploaded-item .content-data p {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    color: #737373;
+    margin: 0;
+}
+
+.uploaded-attachment-data .uploaded-item .content-data .info-error-msg{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: transparent;
+    width: 100%;
+    display: none;
+}
+.uploaded-attachment-data .uploaded-item .content-data .info-error-msg span{
+    color: var(--destructive-500-main, #EF4444);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+}
+.uploaded-attachment-data .uploaded-item .delete-upload {
+    cursor: pointer;
+    line-height: normal;
+    margin-left: 8px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+
+.attachment-wrapper-data .proceed-upload {
+    border: 1px solid transparent;
+    background: #0D6EFD;
+    padding: 0 20px;
+    height: 34px;
+    font-size: 12px;
+    border-radius: 4px;
+    color: #fff;
+    min-width: 60px;
+    text-align: center;
+    transition: .2s all ease-in;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    cursor: pointer;
+}
+
+.attachment-wrapper-data .proceed-upload.hide {
+    display: none;
+}
+
+
+
+
+._gallery_template .title {
+    text-align: left;
+    color: var(--sdk-chat-widow-bot-chat-bubble-text-color);
+    background: var(--sdk-chat-widow-bot-chat-bubble-background-color);
+    margin: 0 !important;
+    padding: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+._gallery_template .content-info {
+    padding: 16px;
+    margin-top: 10px;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-radius: 4px;
+    border: 1px solid var(--kora-grey-grey-light-3, #E4E5E7);
+    background: var(--generic-white, #FFF);
+}
+._gallery_template .content-info .gallery-elements{
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+    width: 100%;
+}
+._gallery_template .content-info .description-elements{
+    padding: 0;
+    margin-top: 10px;
+    display: flex;
+    width: 100%;
+    gap: 4px;
+    flex-direction: column;
+}
+._gallery_template .content-info .description-elements .desc-text{
+    color: var(--gray-modern-400, #9AA4B2);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: normal;
+}
+._gallery_template .content-info .description-elements .desc-text:first-child{
+    color: var(--kora-grey-grey-dark-1, #202124);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: normal;
+}
+
+._gallery_template .content-info .gallery-elements .over-lay{
+
+    width: 132px;
+    height: 100px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    border-radius: 4px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--generic-white, #FFF);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: normal;
+    cursor: pointer;
+    z-index: 9;
+}
+._gallery_template .content-info .gallery-elements .gallery-ele{
+    width: 132px;
+    height: 100px;
+    border-radius: 4px;
+}
+._gallery_template .btn-group{
+    overflow: hidden;
+    padding-top: 10px;
+    display:flex;
+    padding: 10px 10px 0 0;
+    border: none;
+}
+
+._gallery_template .btn-group .btn{
+    border: 2px solid var(--sdk-chat-widow-chat-button-active-text-color);
+    color: var(--sdk-chat-widow-chat-button-active-text-color);
+    font-size: 12px;
+    border-radius: 12.5px;
+    font-weight: bold;
+    text-align: left;
+    padding: 4px 13px;
+    background: var(--sdk-chat-widow-chat-button-active-color);
+    margin-right: 10px;
+}
