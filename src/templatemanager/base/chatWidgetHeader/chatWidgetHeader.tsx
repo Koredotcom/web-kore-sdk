@@ -8,7 +8,7 @@ import IconsManager from '../iconsManager';
 export function ChatWidgetHeader(props: any) {
     const hostInstance = props.hostInstance;
     const iconHelper = new IconsManager();
-    const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
+    const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.brandingCopy);
     hostInstance.on('onBrandingUpdate', function (event: any) {
         updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
     });

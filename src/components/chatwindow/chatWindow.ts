@@ -220,6 +220,7 @@ initShow  (config:any) {
   me.welcomeScreenState = false;
   me.config.chatTitle = 'Kore.ai Bot Chat';
   me.config.allowIframe = false;
+  me.config.brandingCopy = JSON.parse(JSON.stringify(me.config.branding));
 
   me.reWriteWebHookURL(me.config);
   window._chatHistoryLoaded = false;

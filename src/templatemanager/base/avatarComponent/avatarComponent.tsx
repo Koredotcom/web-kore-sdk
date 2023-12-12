@@ -8,10 +8,11 @@ import IconsManager from '../iconsManager';
 export function AvatarComponent(props: any) {
     const hostInstance = props.hostInstance;
     const iconHelper = new IconsManager();
-    const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
+    const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.brandingCopy);
     hostInstance.on('onBrandingUpdate', function (event: any) {
-        console.log('BB: ', JSON.parse(JSON.stringify(hostInstance.config.branding)));
+        console.log('BCopy: ', JSON.parse(JSON.stringify(hostInstance.config.brandingCopy)));
         updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
+        console.log('EData: ',event.brandingData );
         console.log('AB: ', JSON.parse(JSON.stringify(hostInstance.config.branding)));
         console.log('ABH: ', JSON.parse(JSON.stringify(brandingInfo)));
     });

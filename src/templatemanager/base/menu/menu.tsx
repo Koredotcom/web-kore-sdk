@@ -5,7 +5,7 @@ import IconsManager from '../iconsManager';
 export function Menu(props: any) {
     const iconHelper = new IconsManager();
     const hostInstance = props.hostInstance;
-    const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
+    const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.brandingCopy);
     hostInstance.on('onBrandingUpdate', function (event: any) {
         console.log('Branding Data: ', event.brandingData);
         updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))

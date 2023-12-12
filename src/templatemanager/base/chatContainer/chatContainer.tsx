@@ -11,7 +11,7 @@ import { WelcomeScreenContainer } from '../../base/welcomeScreenContainer/welcom
 export function ChatContainer(props: any) {
 
     const hostInstance = props.hostInstance;
-    const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
+    const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.brandingCopy);
     hostInstance.on('onBrandingUpdate', function (event: any) {
         console.count('Branding Call');
         console.log('Branding Data: ', event.brandingData);

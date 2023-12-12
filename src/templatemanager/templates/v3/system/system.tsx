@@ -9,7 +9,7 @@ export function System(props: any) {
     const helpers = KoreHelpers.helpers;
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
-    const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
+    const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.brandingCopy);
     hostInstance.on('onBrandingUpdate', function (event: any) {
         updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
     });
