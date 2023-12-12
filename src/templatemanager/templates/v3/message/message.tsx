@@ -1,6 +1,6 @@
 import './message.scss';
 import { h, Fragment } from 'preact';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import BaseChatTemplate  from '../baseChatTemplate';
 import KoreHelpers from '../../../../utils/helpers';
 import IconsManager from '../../../base/iconsManager';
@@ -10,9 +10,7 @@ export function Message(props: any) {
     const hostInstance = props.hostInstance;
     const iconHelper = new IconsManager();
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.brandingCopy);
-    hostInstance.on('onBrandingUpdate', function (event: any) {
-        updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
-    });
+
     const helpers = KoreHelpers.helpers;
     const cbStyle: any = {
         balloon: 'bot-bubble-content hover-show-copy',
@@ -77,6 +75,12 @@ export function Message(props: any) {
             msgData.message[0].cInfo.body = msgData.message[0].component.payload.text || '';
         }
     }
+
+    useEffect(() => {
+        hostInstance.on('onBrandingUpdate', function (event: any) {
+            updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
+        });
+    }, [brandingInfo])
 
     if (msgData.message) {
         return (

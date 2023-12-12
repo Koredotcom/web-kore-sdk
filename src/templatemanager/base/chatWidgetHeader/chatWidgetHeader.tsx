@@ -9,9 +9,6 @@ export function ChatWidgetHeader(props: any) {
     const hostInstance = props.hostInstance;
     const iconHelper = new IconsManager();
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.brandingCopy);
-    hostInstance.on('onBrandingUpdate', function (event: any) {
-        updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
-    });
 
     const hSizeObj: any = {
         "compact": "chat-widget-header",
@@ -47,7 +44,10 @@ export function ChatWidgetHeader(props: any) {
                 hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
             }
         })
-    })
+        hostInstance.on('onBrandingUpdate', function (event: any) {
+            updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
+        });
+    }, [brandingInfo])
 
     return (
         <div className={hSizeObj[brandingInfo.header.size]} aria-label="chat widget header">

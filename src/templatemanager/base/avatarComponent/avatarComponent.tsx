@@ -2,21 +2,14 @@
 
 import './avatarComponent.scss';
 import { h } from 'preact';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import IconsManager from '../iconsManager';
 
 export function AvatarComponent(props: any) {
     const hostInstance = props.hostInstance;
     const iconHelper = new IconsManager();
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.brandingCopy);
-    hostInstance.on('onBrandingUpdate', function (event: any) {
-        console.log('BCopy: ', JSON.parse(JSON.stringify(hostInstance.config.brandingCopy)));
-        updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
-        console.log('EData: ',event.brandingData );
-        console.log('AB: ', JSON.parse(JSON.stringify(hostInstance.config.branding)));
-        console.log('ABH: ', JSON.parse(JSON.stringify(brandingInfo)));
-    });
-
+   
     const aShape: any = {
         "rounded": "avatar-actions",
         "balloon": "avatar-actions variation-1",
@@ -34,6 +27,16 @@ export function AvatarComponent(props: any) {
         e?.stopPropagation();
         hostInstance.chatEle.querySelector('.content-info').remove();
     }
+
+    useEffect(() => {
+        hostInstance.on('onBrandingUpdate', function (event: any) {
+            console.log('BCopy: ', JSON.parse(JSON.stringify(hostInstance.config.brandingCopy)));
+            updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
+            console.log('EData: ',event.brandingData );
+            console.log('AB: ', JSON.parse(JSON.stringify(hostInstance.config.branding)));
+            console.log('ABH: ', JSON.parse(JSON.stringify(brandingInfo)));
+        });
+    }, [brandingInfo])
 
     return (
         <div className="avatar-variations-footer" aria-label="avatar footer">

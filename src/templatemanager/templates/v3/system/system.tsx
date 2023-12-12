@@ -10,9 +10,7 @@ export function System(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.brandingCopy);
-    hostInstance.on('onBrandingUpdate', function (event: any) {
-        updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
-    });
+
     const messageobj = {
         msgData: msgData,
         hostInstance: hostInstance
@@ -23,6 +21,12 @@ export function System(props: any) {
         '2': 'agent-joined-wrapper agent-joined-variation-1',
         '3': 'agent-joined-wrapper agent-joined-variation-2' 
     };
+
+    useEffect(() => {
+        hostInstance.on('onBrandingUpdate', function (event: any) {
+            updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
+        });
+    }, [brandingInfo])
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'SYSTEM' && !msgData.formHistory) {
         if (msgData.message[0].component && msgData.message[0].component.payload) {

@@ -10,9 +10,7 @@ export function WelcomeScreenContainer(props: any) {
     const hostInstance = props.hostInstance;
     const iconHelper = new IconsManager();
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.brandingCopy);
-    hostInstance.on('onBrandingUpdate', function (event: any) {
-        updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
-    });
+
     const wsLayout: any = {
         "regular": 'welcome-header',
         "large": 'welcome-header variation-1',
@@ -99,7 +97,11 @@ export function WelcomeScreenContainer(props: any) {
                 }, timeout)
             }
         })
-    });
+
+        hostInstance.on('onBrandingUpdate', function (event: any) {
+            updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
+        });
+    }, [brandingInfo]);
     
     return (
         <div className="welcome-chat-section" aria-label="welcome message screen">

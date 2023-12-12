@@ -1,15 +1,11 @@
 import './menu.scss';
 import { Fragment, h } from 'preact';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import IconsManager from '../iconsManager';
 export function Menu(props: any) {
     const iconHelper = new IconsManager();
     const hostInstance = props.hostInstance;
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.brandingCopy);
-    hostInstance.on('onBrandingUpdate', function (event: any) {
-        console.log('Branding Data: ', event.brandingData);
-        updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
-    });
 
     const closeMenu = () => {
         hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');
@@ -30,6 +26,13 @@ export function Menu(props: any) {
             hostInstance.openExternalLink(link);
         }
     }
+
+    useEffect(() => {
+        hostInstance.on('onBrandingUpdate', function (event: any) {
+            console.log('Branding Data: ', event.brandingData);
+            updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
+        });
+    }, [brandingInfo])
 
     return (
         <div className="menu-wrapper-data-actions">

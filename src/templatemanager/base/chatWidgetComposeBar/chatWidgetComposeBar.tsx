@@ -11,9 +11,6 @@ export function ChatWidgetComposeBar(props: any) {
     const hostInstance = props.hostInstance;
     const iconHelper = new IconsManager();
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.brandingCopy);
-    hostInstance.on('onBrandingUpdate', function (event: any) {
-        updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
-    });
 
     const inputTypeObj: any = {
         keypad: 'compose-bar-wrapper',
@@ -51,7 +48,10 @@ export function ChatWidgetComposeBar(props: any) {
             inputEle.value = '';
             hostInstance.chatEle.querySelector('.send-btn').classList.remove('show');
         })
-    });
+        hostInstance.on('onBrandingUpdate', function (event: any) {
+            updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
+        });
+    }, [brandingInfo]);
 
     return (
         <div className="chat-widget-composebar" aria-label="chat widget compose">
