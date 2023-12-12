@@ -33,17 +33,17 @@ class AgentDesktopPlugin {
             }
         });
         me.hostInstance.on('beforeViewInit', (chatEle: any) => {
-            me.hostInstance.chatEle.querySelector('.btn-action-close').addEventListener('click', () => {
-                const messageToBot: any = {};
-                messageToBot["clientMessageId"] = new Date().getTime();
-                messageToBot["event"] = "close_agent_chat";
-                messageToBot["message"] = {
-                    "body": "",
-                    "type": ""
-                }
-                messageToBot["resourceid"] = "/bot.message";
-                me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
-            });
+            // me.hostInstance.chatEle.querySelector('.btn-action-close').addEventListener('click', () => {
+            //     const messageToBot: any = {};
+            //     messageToBot["clientMessageId"] = new Date().getTime();
+            //     messageToBot["event"] = "close_agent_chat";
+            //     messageToBot["message"] = {
+            //         "body": "",
+            //         "type": ""
+            //     }
+            //     messageToBot["resourceid"] = "/bot.message";
+            //     me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+            // });
         })
         me.removeEmptyBubblesInTemplate();
     }
