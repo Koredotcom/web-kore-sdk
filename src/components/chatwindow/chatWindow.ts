@@ -2405,7 +2405,7 @@ getBrandingInformation(options:any){
       }
     } else {
       if (response && response.activeTheme) {
-        me.setBranding(response?.generalAttributes?.v3);
+        me.setBranding(response?.v3);
       }
     }
   };
