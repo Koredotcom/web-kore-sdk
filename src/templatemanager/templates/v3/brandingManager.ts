@@ -14,16 +14,13 @@ class BrandingManager {
                 { key: '--v3-sdk-chat-branding--welcome_screen-bottom_background-color', type: 'secondary' },
                 { key: '--v3-sdk-chat-branding--welcome_screen-starter_box-start_conv_text_color', type: 'secondaryText' },
                 { key: '--v3-sdk-chat-branding--welcome_screen-starter_box-start_conv_button_color', type: 'primary' },
-                { key: '--v3-sdk-chat-branding--header-bg-bg_color', type: 'secondaryText' },
                 { key: '--v3-sdk-chat-branding--header-title-color', type: 'primaryText' },
                 { key: '--v3-sdk-chat-branding--header-sub_title-color', type: 'primaryText' },
                 { key: '--v3-sdk-chat-branding--header-icons-color', type: 'primaryText'},
-                { key: '--v3-sdk-chat-branding--footer-compose_bar-bg_color', type: 'secondaryText' },
                 { key: '--v3-sdk-chat-branding--footer-compose_bar-outline-color', type: 'secondary' },
                 { key: '--v3-sdk-chat-branding--footer-bg-bg_color', type: 'secondary' },
                 { key: '--v3-sdk-chat-branding--footer-icons-color', type: 'primaryText' },
                 { key: '--v3-sdk-chat-branding--footer-menu_icon-color', type: 'primaryText' },
-                { key: '--v3-sdk-chat-branding--body-background-bg', type: 'secondaryText' },
                 { key: '--v3-sdk-chat-branding--body-user_message-bg_color', type: 'primary' },
                 { key: '--v3-sdk-chat-branding--body-user_message-color', type: 'secondaryText' },
                 { key: '--v3-sdk-chat-branding--body-bot_message-bg_color', type: 'secondary' },
@@ -47,8 +44,10 @@ class BrandingManager {
                 const imgData = 'url(\'' + (data.welcome_screen.background.img) + '\')';
                 document.documentElement.style.setProperty('--v3-sdk-chat-branding--welcome_screen-background-color', imgData);
             }
-
-            document.documentElement.style.setProperty('--v3-sdk-chat-branding--body-white-background',data.body.background.color);
+            document.documentElement.style.setProperty('--v3-sdk-chat-branding--header-bg-bg_color', data.body.background.color);
+            document.documentElement.style.setProperty('--v3-sdk-chat-branding--footer-compose_bar-bg_color', data.body.background.color);
+            document.documentElement.style.setProperty('--v3-sdk-chat-branding--body-background-bg', data.body.background.color);
+            document.documentElement.style.setProperty('--v3-sdk-chat-branding--body-white-background', data.body.background.color);
 
             if (data.body.background.type == 'image') {
                 const imgData = 'url(\'' + (data.body.background.img) + '\')';
