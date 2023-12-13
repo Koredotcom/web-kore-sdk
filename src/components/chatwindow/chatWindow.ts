@@ -2473,6 +2473,7 @@ applyVariableValue (key:any,value:any,type:any){
   }
 
   switchView(type: any) {
+    const clArr = ['minimize', 'minimizeQuick', 'minimizeSmooth'];
     const me: any = this;
     if (me.initial) {
       setTimeout(() => {
@@ -2487,9 +2488,19 @@ applyVariableValue (key:any,value:any,type:any){
       if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
         me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
       } else {
-        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove(me.config.branding.chat_bubble.expand_animation);
+        const clList1 = me.chatEle.querySelector('.chat-widgetwrapper-main-container');
+        clArr.forEach((ele: any) => {
+          if (clList1?.classList?.contains(ele)) {
+            clList1.classList.remove(ele);
+          }
+        });
       }
-      me.chatEle.querySelector('.welcome-chat-section')?.classList.remove(me.config.branding.chat_bubble.expand_animation);
+      const clList2 = me.chatEle.querySelector('.welcome-chat-section')?.classList;
+      clArr.forEach((ele: any) => {
+        if (clList2?.classList?.contains(ele)) {
+          clList2.classList.remove(ele);
+        }
+      });
     }
     else if (type == 'welcome') {
       me.chatEle.classList.remove('minimize-chat');
@@ -2498,7 +2509,12 @@ applyVariableValue (key:any,value:any,type:any){
         if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
           me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
         } else {
-          me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove(me.config.branding.chat_bubble.expand_animation);
+          const clList = me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList;
+          clArr.forEach((ele: any) => {
+            if (clList?.classList?.contains(ele)) {
+              clList.classList.remove(ele);
+            }
+          });
         }
       } else {
         me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(me.config.branding.chat_bubble.expand_animation);
@@ -2508,7 +2524,12 @@ applyVariableValue (key:any,value:any,type:any){
     } else if (type == 'chat') {
       me.chatEle.classList.remove('minimize-chat');
       me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(me.config.branding.chat_bubble.expand_animation);
-      me.chatEle.querySelector('.welcome-chat-section')?.classList.remove(me.config.branding.chat_bubble.expand_animation);
+      const clList = me.chatEle.querySelector('.welcome-chat-section')?.classList;
+      clArr.forEach((ele: any) => {
+        if (clList?.classList?.contains(ele)) {
+          clList.classList.remove(ele);
+        }
+      });
       me.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
       me.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
     } else {
