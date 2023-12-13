@@ -9,6 +9,44 @@ const BrandingJSON = {
             "primary_text": "#101828",
             "secondary_text": "#FFFFFF",
             "useColorPaletteOnly": false
+        },
+        "sounds": {
+            "enable": true,
+            "on_open": {
+                "name": "Sound1",
+                "type": "default",
+                "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_open.wav"
+            },
+            "on_close": {
+                "name": "Sound1",
+                "type": "default",
+                "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_close.wav"
+            },
+            "on_new_msg": {
+                "name": "Sound1",
+                "type": "default",
+                "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_new_msg.wav"
+            },
+            "on_msg_send": {
+                "name": "Sound1",
+                "type": "default",
+                "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_msg_send.wav"
+            },
+            "on_proactive_msg": {
+                "name": "Sound1",
+                "type": "default",
+                "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_proactive_message.wav"
+            },
+            "on_audio_call": {
+                "name": "Sound1",
+                "type": "default",
+                "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_audio_call.wav"
+            },
+            "on_video_call": {
+                "name": "Sound1",
+                "type": "default",
+                "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_video_call.wav"
+            }
         }
     },
     "chat_bubble": {
@@ -26,7 +64,7 @@ const BrandingJSON = {
         "sound": "themeOne",
         "alignment": "inline",
         "animation": "slide",
-        "expand_animation": "quick",
+        "expand_animation": "minimize",
         "primary_color": "#4B4EDE",
         "secondary_color": "#FFFFFF"
     },
@@ -34,7 +72,8 @@ const BrandingJSON = {
         "show": true,
         "layout": "medium",
         "logo": {
-            "logo_url": "/images/sc-small.svg"
+            "logo_url": "https://dev-xo.kore.ai:443/api/getMediaStream/orgFiles/o-2f31e9d4-dc92-5eaa-acd1-80cc1bd6428b/f-f37b5ada-6cc4-5008-a048-537dd7eb0677.png?n=1653037983&s=IkFSZWs3TTRKbnc0MmVQdzU4S2doR3lpeS9ZQUhxR2hic1ZlL21iVHdwazg9Ig$$",
+            "name": "kore.ai"
         },
         "title": {
             "name": "Hello"
@@ -48,7 +87,8 @@ const BrandingJSON = {
         "background": {
             "type": "color",
             "color": "#4B4EDE",
-            "img": "https://picsum.photos/seed/picsum/200/300"
+            "img": "https://picsum.photos/seed/picsum/200/300",
+            "name": "bg.png"
         },
         "top_fonts": {
             "color": "#ffffff"
@@ -140,6 +180,7 @@ const BrandingJSON = {
             "show": true,
             "promotions": [{
                 "banner": "https://picsum.photos/seed/picsum/200/300",
+                "name": "banner1.png",
                 "action": {
                     "type": "url",
                     "value": "http://abc.com"
@@ -147,6 +188,7 @@ const BrandingJSON = {
             },
             {
                 "banner": "https://picsum.photos/seed/picsum/200/300",
+                "name": "banner2.png",
                 "action": {
                     "type": "url",
                     "value": "http://abc.com"
@@ -159,7 +201,8 @@ const BrandingJSON = {
         "size": "compact",
         "icon": {
             "show": true,
-            "icon_url": "/images/avatar-bot.svg",
+            "icon_url": "icon-1",
+            "type": "default"
         },
         "icons_color": "#000000",
         "title": {
@@ -256,7 +299,8 @@ const BrandingJSON = {
         "background": {
             "type": "color",
             "color": "#FFFFFF",
-            "img": "https://picsum.photos/id/237/200/300"
+            "img": "https://picsum.photos/id/237/200/300",
+            "name": "bg.png"
         },
         "font": {
             "family": "Inter",

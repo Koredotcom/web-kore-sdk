@@ -45,7 +45,7 @@ export function WelcomeScreenContainer(props: any) {
             hostInstance.setLocalStoreItem('kr-cw-welcome-chat', true);
         }
         hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container')?.classList.add('fadeIn');
-        hostInstance.chatEle.querySelector('.welcome-chat-section')?.classList.remove('minimize');
+        hostInstance.chatEle.querySelector('.welcome-chat-section')?.classList.remove(hostInstance.config.branding.chat_bubble.expand_animation);
     }
 
     if (brandingInfo.welcome_screen.static_links.show && brandingInfo.welcome_screen.static_links.layout == 'carousel') {
@@ -64,6 +64,14 @@ export function WelcomeScreenContainer(props: any) {
     useEffect(() => {
         hostInstance.eventManager.removeEventListener('.start-conv-button', 'click');
         hostInstance.eventManager.addEventListener('.start-conv-button', 'click', (event: any) => {
+            const ele = hostInstance.chatEle.querySelector('.start-conv-value');
+            if (ele && ele.getAttribute('data-value')) {
+                const timeout = hostInstance.historyLoading ? 3500 : 200
+                setTimeout(() => {
+                    hostInstance.sendMessageToBot(ele.getAttribute('data-value'));
+                    ele.setAttribute('data-value', '');
+                }, timeout);
+            }
             handleEventsWelcomeScreen();
         })
 
@@ -107,7 +115,7 @@ export function WelcomeScreenContainer(props: any) {
                 <div className="welcome-header-bg">
                     <div className="logo-img">
                         <figure>
-                            <img src={iconHelper.getIcon('sc_small')} alt="log-img" />
+                            <img src={brandingInfo.welcome_screen.logo.logo_url} alt="log-img" />
                         </figure>
                     </div>
                     <h1>{brandingInfo.welcome_screen.title.name}</h1>
@@ -116,7 +124,7 @@ export function WelcomeScreenContainer(props: any) {
                 </div>
                 <div className="bg-logo">
                     <figure>
-                        <img src={iconHelper.getIcon('sc_small')} alt="log-img" />
+                        <img src={brandingInfo.welcome_screen.logo.logo_url} alt="log-img" />
                     </figure>
                 </div>
             </header>
@@ -138,7 +146,7 @@ export function WelcomeScreenContainer(props: any) {
                                 <div className="conv-starter-desc">{brandingInfo.welcome_screen.starter_box.sub_text}</div>
                             </div>
                         </div>
-                        {brandingInfo.welcome_screen.starter_box.quick_start_buttons.buttons.length > 0 && <div className={startButtonsLayout[brandingInfo.welcome_screen.starter_box.quick_start_buttons.style]}>
+                        { brandingInfo.welcome_screen.starter_box.quick_start_buttons.show && brandingInfo.welcome_screen.starter_box.quick_start_buttons.buttons.length > 0 && <div className={startButtonsLayout[brandingInfo.welcome_screen.starter_box.quick_start_buttons.style]}>
                             {
                                 brandingInfo.welcome_screen.starter_box.quick_start_buttons.buttons.map((ele: any) => (
                                     <button className="quick-start-btn" onClick={() => handleStartEvent(ele)}>
@@ -150,7 +158,7 @@ export function WelcomeScreenContainer(props: any) {
                             }
                         </div>}
                         {brandingInfo.welcome_screen.starter_box.quick_start_buttons.show && brandingInfo.welcome_screen.starter_box.quick_start_buttons.input === 'button' && <button className="start-conv-button">
-                            <span>Start New Conversation</span>
+                            <span class="start-conv-value" data-value={brandingInfo.welcome_screen.starter_box.quick_start_buttons.action.value} >{brandingInfo.welcome_screen.starter_box.quick_start_buttons.action.value}</span>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path d="M7 5L12 10L7 15" stroke="white" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>

@@ -105,15 +105,20 @@ class AgentDesktopPlugin {
             // Agent Status 
             if (event.messageData?.message?.type === 'agent_connected') {
                 me.brandingInfo = JSON.parse(JSON.stringify(me.hostInstance.config.branding));
-                me.hostInstance.config.branding.header.title.name = me.hostInstance.config.branding.body.agent_message.title.name;
+                if (me.hostInstance.config.branding.body.agent_message.icon.show) {
+                    me.hostInstance.config.branding.header.icon.show = true;
+                    me.hostInstance.config.branding.header.icon.type = 'custom';
+                    me.hostInstance.config.branding.header.icon.icon_url = 'https://static.intercomassets.com/avatars/5818147/square_128/Screenshot_2022-11-21_151618-1673243950.png';
+                } else {
+                    me.hostInstance.config.branding.header.icon.show = false;
+                }
+                me.hostInstance.config.branding.header.title = me.hostInstance.config.branding.body.agent_message.title;
                 me.hostInstance.config.branding.header.sub_title.name = me.hostInstance.config.branding.body.agent_message.sub_title.name;
-                me.hostInstance.config.branding.header.sub_title.color = me.hostInstance.config.branding.body.agent_message.sub_title.color;
                 me.hostInstance.setBranding(me.hostInstance.config.branding);
             } else if (event.messageData?.message?.type === 'agent_disconnected') {
-                me.hostInstance.config.branding.header.title.name = me.brandingInfo.header.title.name;
+                me.hostInstance.config.branding.header.icon = me.brandingInfo.header.icon;
+                me.hostInstance.config.branding.header.title = me.brandingInfo.header.title;
                 me.hostInstance.config.branding.header.sub_title.name = me.brandingInfo.header.sub_title.name;
-                me.hostInstance.config.branding.header.title.color = me.brandingInfo.header.title.color;
-                me.hostInstance.config.branding.header.sub_title.color = me.brandingInfo.header.sub_title.color;
                 me.hostInstance.setBranding(me.hostInstance.config.branding);
             }
             if (event.messageData?.message?.type === 'agent_connected') {

@@ -48,6 +48,8 @@ class BrandingManager {
                 document.documentElement.style.setProperty('--v3-sdk-chat-branding--welcome_screen-background-color', imgData);
             }
 
+            document.documentElement.style.setProperty('--v3-sdk-chat-branding--body-white-background',data.body.background.color);
+
             if (data.body.background.type == 'image') {
                 const imgData = 'url(\'' + (data.body.background.img) + '\')';
                 document.documentElement.style.setProperty('--v3-sdk-chat-branding--body-background-bg', imgData);
@@ -100,6 +102,7 @@ class BrandingManager {
                             }
 
                             if (key == 'body' && subKey == 'background' && typeof data[key][subKey] === 'object') {
+                                this.applyVariableValue('background', data[key][subKey]['color'], key, 'white');
                                 if (data[key][subKey]['type'] == 'color') {
                                     this.applyVariableValue('bg', data[key][subKey]['color'], key, subKey);
                                 } else {

@@ -17,7 +17,8 @@ export function AvatarComponent(props: any) {
         "rounded": "avatar-actions",
         "balloon": "avatar-actions variation-1",
         "rectangle": "avatar-actions variation-2",
-        "square": "avatar-actions variation-3"
+        "square": "avatar-actions variation-3",
+        "comment": "avatar-actions variation-4"
     }
 
     let avatarStyle = aShape[brandingInfo.chat_bubble.style];
