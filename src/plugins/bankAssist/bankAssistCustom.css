@@ -1,0 +1,104 @@
+/* Header changes */
+.bank-assist-theme .info-content-data .content-text h2 {
+    color:white;
+}
+.bank-assist-theme .back-to-chat {
+    display: none;
+}
+.bank-assist-theme .info-content-data .img-block figure img {
+    border: none;
+}
+/* End of Header changes */
+
+/* Footer changes  */
+.bank-assist-theme .avatar-variations-footer .avatar-actions .avatar-bg {
+    background-color: #3c817c;
+}
+.bank-assist-theme .chat-widget-composebar .compose-bar-wrapper .compose-text-area .typing-text-area:focus-visible {
+    border: 1px solid #adadad;
+    outline-color: #adadad
+}
+.bank-assist-theme .chat-widget-composebar {
+    margin-left: 5%;
+    width:90%;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+}
+.bank-assist-theme .chat-widgetwrapper-main-container {
+    background-color: #ebebeb;
+}
+.bank-assist-theme .chat-widget-composebar .compose-bar-wrapper .send-btn {
+    background-color: #3c817c;
+}
+.bank-assist-theme .chat-widget-composebar .compose-bar-wrapper .compose-text-area .typing-text-area {
+    background-color: #f7f9fa;
+    color: black;
+}
+.bank-assist-theme .chat-widget-composebar .compose-bar-wrapper .compose-text-area .typing-text-area::placeholder {
+    color: #9aa4b2;
+    opacity: 1;
+    /* Firefox */
+}
+.bank-assist-theme .chat-widget-composebar .compose-bar-wrapper .compose-text-area .typing-text-area::-ms-input-placeholder {
+    /* Edge 12-18 */
+    color: #9aa4b2;
+}
+.bank-assist-theme .chat-widget-composebar .compose-bar-wrapper.if-voice-compose .compose-voice-text .voice-compose-btn {
+    background-color: #3f517a;
+}
+.bank-assist-theme .avatar-variations-footer .avatar-actions .content-info {
+    display: none;
+}
+/* End of Footer changes  */
+
+/* Agent bubble changes */
+.bank-assist-theme .agent-bubble-content .bottom-info .botton-info-text {
+    font-size: 12px;
+    color: #777a80;
+}
+
+.bank-assist-theme .agent-bubble-content .bottom-info .botton-info-text .bottom-info-bubble {
+    color:white;
+    background-color: #546b9d;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-top-left-radius: 10px;
+    padding:5px;
+}
+
+.bank-assist-theme .agent-bubble-comp .agent-bubble-content .bottom-info {
+    margin-top: 10px;
+}
+
+.bank-assist-theme .agent-bubble-comp .agent-bubble-content .bubble-msg-with-img .bubble-msg {
+    border-radius: 10px 10px 4px 10px;
+}
+/*End of Agent bubble changes */
+
+/* Bot message bubble */
+.bank-assist-theme .bot-bubble-comp .bot-bubble-content .bubble-msg-with-img .bot-img {
+    display: none;
+}
+.bank-assist-theme .bot-bubble-comp .bot-bubble-content {
+    padding-left:0px;
+}
+.bank-assist-theme .bot-bubble-content .bottom-info .botton-info-text {
+    font-size: 12px;
+    color: #777a80;
+}
+
+.bank-assist-theme .bot-bubble-content .bottom-info .botton-info-text .bottom-info-bubble {
+    background-color: white;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    padding:5px;
+}
+
+.bank-assist-theme .bot-bubble-comp .bot-bubble-content .bottom-info {
+    margin-top: 10px;
+}
+
+.bank-assist-theme .bot-bubble-comp .bot-bubble-content .bubble-msg-with-img .bubble-msg {
+    border-radius: 10px 10px 4px 10px;
+}

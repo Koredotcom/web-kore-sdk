@@ -1,0 +1,22 @@
+.bank-assist-theme .button-template-container .button-variation-3, .bank-assist-theme .button-template-container .button-variation-2 {
+    display: block;
+    text-align: center;
+    padding-top: 15px;
+}
+.bank-assist-theme .button-template-container .button-variation-3 .kr-btn, .bank-assist-theme .button-template-container .button-variation-2 .kr-btn {
+    width:70%;
+    box-shadow: 1px 1px 0px 1px #bebebe;
+}
+.bank-assist-theme .button-template-container .button-variation-3 .kr-btn:hover, .bank-assist-theme .button-template-container .button-variation-2 .kr-btn:hover, .bank-assist-theme .button-template-container .button-variation-2 .kr-btn{
+    background-color: white;
+}
+.bank-assist-theme .button-template-container .quickreply-text {
+    font-size: 14px;
+}
+.bank-assist-theme .button-template-container {
+    text-align: center;
+}
+.bank-assist-theme .button-template-container .button-variation-2 .kr-btn {
+    color:black;
+    border: 1px solid #eaecf0;
+}
