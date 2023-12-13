@@ -324,11 +324,11 @@ const BrandingJSON = {
                 "icon_url": "icomoon|url"
             },
             "title": {
-                "name": "kore.aissss",
+                "name": "Kore Support",
                 "color": "#0D6EFD"
             },
             "sub_title": {
-                "name": "your personal assistants",
+                "name": "Live Agent",
                 "color": "#0D6EFD"
             }
         },
