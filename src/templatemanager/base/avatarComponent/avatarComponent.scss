@@ -130,7 +130,8 @@
             // animation: bounce2 0.8s ease forwards;  
             transition: transform 1s;
             transform-origin: 100% 100%;
-            animation: bounce-in-avatar 0.2s ease forwards;  
+            animation: bounce-in-avatar 0.2s ease forwards;
+            border-radius: 100%;  
             .default-avater-icon {
                 img {
                     height: 24px;
@@ -266,6 +267,26 @@
                 .un-read-msg {
                     right: -1px;
                     top: -1px;
+                }
+            }
+        }
+        &.variation-4 {
+            .avatar-bg {
+                &::before{
+                    content: "";
+                    position: absolute;
+                    width: 10px;
+                    height: 10px;
+                    background: var(--avatar-bg);
+                    left: 1px;
+                    right: -29px;
+                    margin: 0 auto;
+                    z-index: 1;
+                    transform: rotate(3deg);
+                    bottom: 2px;
+                    border: 1px solid var(--avatar-bg);
+                    border-left: 0;
+                    border-top: 0;
                 }
             }
         }

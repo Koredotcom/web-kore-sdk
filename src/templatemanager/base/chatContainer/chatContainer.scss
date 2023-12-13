@@ -12,6 +12,48 @@
   max-width: calc(100% - 80px);
   transition: 0.4s all ease;
   font-family: var(--global-font-family);
+  &.avatar-medium-size{
+    height: calc(100% - 148px);
+    .avatar-variations-footer {
+      .avatar-actions {
+        &.variation-4{
+          .avatar-bg{
+            &::before{
+              left: 4px;
+              right: -35px;
+              transform: rotate(0);
+              bottom: 3px;
+            }
+          }
+        }
+        .avatar-bg{
+          width: 60px;
+          height: 60px;
+        }
+      }
+    }
+  }
+  &.avatar-large-size{
+    height: calc(100% - 160px);
+    .avatar-variations-footer {
+      .avatar-actions {
+        &.variation-4{
+          .avatar-bg{
+            &::before{
+              left: 12px;
+              right: -37px;
+              transform: rotate(0);
+              bottom: 6px;
+            }
+          }
+        }
+        .avatar-bg{
+          width: 72px;
+          height: 72px;
+        }
+      }
+    }
+  }
   *{
     font-family: var(--global-font-family);
   }
