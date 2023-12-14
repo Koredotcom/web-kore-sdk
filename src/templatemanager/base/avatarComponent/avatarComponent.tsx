@@ -23,6 +23,10 @@ export function AvatarComponent(props: any) {
 
     let avatarStyle = aShape[brandingInfo.chat_bubble.style];
 
+    if (brandingInfo.chat_bubble.icon.type == 'custom') {
+        avatarStyle = 'avatar-actions';
+    }
+
     if (brandingInfo.chat_bubble.alignment == 'block') {
         avatarStyle = avatarStyle + ' bubble-align-block';
     }
