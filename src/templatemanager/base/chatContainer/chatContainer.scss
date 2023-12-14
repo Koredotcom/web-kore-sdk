@@ -6,8 +6,8 @@
   height: calc(100% - 136px);
   border-radius: 4px;
   right: 40px;
-  bottom: 40px;
-  top: 40px;
+  bottom: 96px;
+  top: auto;
   width: 372px;
   max-width: calc(100% - 80px);
   transition: 0.4s all ease;
@@ -63,14 +63,17 @@
   @media (max-width: $media-mobile) {
     width: calc(100% - 20px);
     height: calc(100% - 115px);
-    left: 10px;
-    bottom: 20px;
-    top: 40px;
+    right: 10px;
+    bottom: 75px;
     max-width: 100%;
   }
   &.minimize-chat{
     height: 0px;
     width: 0px;
+    top: auto;
+    .welcome-chat-section{
+      transform: scale(0);
+    }
     .kr-wiz-menu-chat {
       display: none !important;
     }
