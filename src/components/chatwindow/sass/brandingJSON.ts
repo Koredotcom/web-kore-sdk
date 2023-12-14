@@ -53,7 +53,7 @@ const BrandingJSON = {
         "style": "rounded",
         "icon": {
             "icon_url": "icon-1",
-            "size": "medium",
+            "size": "small",
             "type": "default" 
         },
         "minimise": {

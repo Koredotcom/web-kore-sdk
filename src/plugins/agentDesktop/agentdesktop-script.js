@@ -620,6 +620,16 @@ class AgentDesktopPluginScript  {
                 toastContainer.id = "toast";
                 document.body.appendChild(toastContainer);
             }
+            let openSound;
+            if (cwInstance.config.branding.general.sounds.enable && cwInstance.config.branding.general.sounds.on_audio_call.url != 'None' && audioVideoStr == 'audio') {
+                openSound = new Audio(cwInstance.config.branding.general.sounds.on_audio_call.url);
+                openSound.loop = true;
+                openSound.play();
+            } else if (cwInstance.config.branding.general.sounds.enable && cwInstance.config.branding.general.sounds.on_video_call.url != 'None' && audioVideoStr == 'video') {
+                openSound = new Audio(cwInstance.config.branding.general.sounds.on_video_call.url);
+                openSound.loop = true;
+                openSound.play();
+            } 
 
             var incomingCall = `
                 <div class="initial-video-audio-container">
@@ -639,7 +649,7 @@ class AgentDesktopPluginScript  {
                         <button id="rejectcall" class="decline-btn">Decline</button>
                         <button id="acceptcall" class="accept-btn">Accept</button>
                     </div>
-                </div>`;
+                </div>`;   
             setTimeout(() => {
                 var toastContainer = koreJquery("#toast");
                 toastContainer.empty();
@@ -648,6 +658,11 @@ class AgentDesktopPluginScript  {
                 var rejectCall = koreJquery("#rejectcall");
                 var acceptCall = koreJquery("#acceptcall");
                 rejectCall.off('click').on('click', function (event) {
+                    if (openSound) {
+                        openSound.pause();
+                        openSound.currentTime = 0;
+                        openSound.remove();
+                    }
                     const payload = _self.callDetails;
                     payload['type'] = "call_agent_webrtc_rejected"
                     const messageToBot = {};
@@ -664,6 +679,11 @@ class AgentDesktopPluginScript  {
                     toastContainer.empty();
                 });
                 acceptCall.off('click').on('click', function (event) {
+                    if (openSound) {
+                        openSound.pause();
+                        openSound.currentTime = 0;
+                        openSound.remove();
+                    }
                     const payload = _self.callDetails;
                     payload['type'] = "call_agent_webrtc_accepted"
                     const messageToBot = {};

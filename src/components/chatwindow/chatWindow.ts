@@ -2495,7 +2495,7 @@ applyVariableValue (key:any,value:any,type:any){
           }
         });
       }
-      const clList2 = me.chatEle.querySelector('.welcome-chat-section')?.classList;
+      const clList2 = me.chatEle.querySelector('.welcome-chat-section');
       clArr.forEach((ele: any) => {
         if (clList2?.classList?.contains(ele)) {
           clList2.classList.remove(ele);
@@ -2509,7 +2509,7 @@ applyVariableValue (key:any,value:any,type:any){
         if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
           me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
         } else {
-          const clList = me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList;
+          const clList = me.chatEle.querySelector('.chat-widgetwrapper-main-container');
           clArr.forEach((ele: any) => {
             if (clList?.classList?.contains(ele)) {
               clList.classList.remove(ele);
@@ -2524,7 +2524,7 @@ applyVariableValue (key:any,value:any,type:any){
     } else if (type == 'chat') {
       me.chatEle.classList.remove('minimize-chat');
       me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(me.config.branding.chat_bubble.expand_animation);
-      const clList = me.chatEle.querySelector('.welcome-chat-section')?.classList;
+      const clList = me.chatEle.querySelector('.welcome-chat-section');
       clArr.forEach((ele: any) => {
         if (clList?.classList?.contains(ele)) {
           clList.classList.remove(ele);
@@ -2537,7 +2537,12 @@ applyVariableValue (key:any,value:any,type:any){
       if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
         me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
       } else {
-        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove(me.config.branding.chat_bubble.expand_animation);
+        const clListArr = me.chatEle.querySelector('.chat-widgetwrapper-main-container');
+        clArr.forEach((ele: any) => {
+          if (clListArr?.classList?.contains(ele)) {
+            clListArr.classList.remove(ele);
+          }
+        });
       }
       me.chatEle.querySelector('.welcome-chat-section')?.classList.remove(me.config.branding.chat_bubble.expand_animation);
       me.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');

@@ -155,7 +155,7 @@ export function WelcomeScreenContainer(props: any) {
                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M11.25 0.5C5.45101 0.5 0.75 5.20101 0.75 11C0.75 16.799 5.45101 21.5 11.25 21.5C17.049 21.5 21.75 16.799 21.75 11C21.75 5.20101 17.049 0.5 11.25 0.5ZM11.2501 2.05566C16.19 2.05566 20.1946 6.06023 20.1946 11.0001C20.1946 15.94 16.19 19.9446 11.2501 19.9446C6.31023 19.9446 2.30566 15.94 2.30566 11.0001C2.30566 6.06023 6.31023 2.05566 11.2501 2.05566ZM11.2822 6.40039C11.7047 6.40039 12.0516 6.711 12.0889 7.10737L12.0922 7.17817V7.25C12.0922 7.67955 11.7295 8.02778 11.2822 8.02778C10.8597 8.02778 10.5127 7.71717 10.4755 7.32079L10.4722 7.25V7.17817C10.4722 6.74861 10.8348 6.40039 11.2822 6.40039ZM11.2499 9.5C11.6556 9.5 11.9888 9.81061 12.0245 10.207L12.0277 10.2778V16.0742C12.0277 16.5037 11.6795 16.852 11.2499 16.852C10.8443 16.852 10.5111 16.5414 10.4753 16.145L10.4722 16.0742V10.2778C10.4722 9.84822 10.8204 9.5 11.2499 9.5Z" fill="white" />
                                 </svg>}
                             </figure>}
-                            {brandingInfo.welcome_screen.starter_box.icon.show && brandingInfo.chat_bubble.icon.type == 'custom' && <figure className="bot_icon">
+                            {brandingInfo.welcome_screen.starter_box.icon.show && brandingInfo.chat_bubble.icon.type == 'custom' && <figure className="bot_icon_image">
                                 <img src={brandingInfo.chat_bubble.icon.icon_url} alt="icon" />
                             </figure>}
                             <div className="conv-starter-content-info">
