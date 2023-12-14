@@ -180,15 +180,19 @@ class AgentDesktopPlugin {
                                     const childEle1 = ele.querySelector('.read-text');
                                     childEle1.textContent = 'Delivered';
                                     const childEle2 = ele.querySelector('.sent');
-                                    childEle2.classList = [];
-                                    childEle2.classList.add('delivered');
+                                    if (childEle2) {
+                                        childEle2.classList = [];
+                                        childEle2.classList.add('delivered');
+                                    }
                                 }
                             } else if (tempData.message.type === "message_read") {
                                 const childEle1 = ele.querySelector('.read-text');
                                 childEle1.textContent = 'Read';
                                 const childEle2 = ele.querySelector('.delivered');
-                                childEle2.classList = [];
-                                childEle2.classList.add('read');
+                                if (childEle2) {
+                                    childEle2.classList = [];
+                                    childEle2.classList.add('read');
+                                }
                             }
 
                         }

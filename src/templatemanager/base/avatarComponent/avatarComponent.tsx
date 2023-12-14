@@ -14,7 +14,7 @@ export function AvatarComponent(props: any) {
     });
 
     const aShape: any = {
-        "rounded": "avatar-actions avatar-gentle-animation",
+        "rounded": "avatar-actions",
         "balloon": "avatar-actions variation-1",
         "rectangle": "avatar-actions variation-2",
         "square": "avatar-actions variation-3",
@@ -25,6 +25,14 @@ export function AvatarComponent(props: any) {
 
     if (brandingInfo.chat_bubble.icon.type == 'custom') {
         avatarStyle = 'avatar-actions';
+    }
+
+    if (brandingInfo.chat_bubble.animation == 'quick') {
+        avatarStyle = avatarStyle + ' avatar-gentle-animation';
+    } else if (brandingInfo.chat_bubble.animation == 'slide') {
+        avatarStyle = avatarStyle + ' avatar-instant-animation';
+    } else if (brandingInfo.chat_bubble.animation == 'crossFade') {
+        avatarStyle = avatarStyle + ' avatar-bounce-animation';
     }
 
     if (brandingInfo.chat_bubble.alignment == 'block') {
