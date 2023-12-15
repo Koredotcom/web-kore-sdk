@@ -116,9 +116,9 @@ class AgentDesktopPlugin {
                 me.hostInstance.config.branding.header.sub_title.name = me.hostInstance.config.branding.body.agent_message.sub_title.name;
                 me.hostInstance.setBranding(me.hostInstance.config.branding);
             } else if (event.messageData?.message?.type === 'agent_disconnected') {
-                me.hostInstance.config.branding.header.icon = me.brandingInfo.header.icon;
-                me.hostInstance.config.branding.header.title = me.brandingInfo.header.title;
-                me.hostInstance.config.branding.header.sub_title.name = me.brandingInfo.header.sub_title.name;
+                me.hostInstance.config.branding.header.icon = me?.brandingInfo?.header?.icon;
+                me.hostInstance.config.branding.header.title = me?.brandingInfo?.header?.title;
+                me.hostInstance.config.branding.header.sub_title.name = me?.brandingInfo?.header?.sub_title?.name;
                 me.hostInstance.setBranding(me.hostInstance.config.branding);
             }
             if (event.messageData?.message?.type === 'agent_connected') {

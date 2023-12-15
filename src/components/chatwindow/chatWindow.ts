@@ -1048,18 +1048,29 @@ bindEventsV3() {
         openSound.play();
       }
     } else {
+      const clArr = ['minimize', 'minimizeQuick', 'minimizeSmooth'];
       if (me.config.multiPageApp && me.config.multiPageApp.enable) {
         me.setLocalStoreItem('kr-cw-state', 'minimized');
       }
       me.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
       me.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
       if (me.config.branding.welcome_screen.show) {
-        me.chatEle.querySelector('.welcome-chat-section').classList.remove(me.config.branding.chat_bubble.expand_animation);
+        const clList = me.chatEle.querySelector('.welcome-chat-section');
+        clArr.forEach((ele: any) => {
+          if (clList?.classList?.contains(ele)) {
+            clList.classList.remove(ele);
+          }
+        });
       }
       if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
         me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
       } else {
-        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove(me.config.branding.chat_bubble.expand_animation);
+        const clList= me.chatEle.querySelector('.chat-widgetwrapper-main-container');
+        clArr.forEach((ele: any) => {
+          if (clList?.classList?.contains(ele)) {
+            clList.classList.remove(ele);
+          }
+        });
       }
       me.chatEle.classList.add('minimize-chat');
       if (me.config.branding.general.sounds.enable && me.config.branding.general.sounds.on_close.url != 'None') {
