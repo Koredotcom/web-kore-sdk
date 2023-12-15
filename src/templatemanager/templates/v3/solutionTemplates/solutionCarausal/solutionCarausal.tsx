@@ -1,12 +1,11 @@
 import BaseChatTemplate from '../../baseChatTemplate';
-import './retailAssistCarausal.scss';
-import '../retailAssist.scss';
+import './solutionCarausal.scss';
 import { h, Fragment } from 'preact';
-import stackedCards from './stackedCarousal'
+import stackedCards from './solutionCarousal'
 import { useState } from 'preact/hooks';
 export function Carousel(props: any) {
     const hostInstance = props.hostInstance;
-    const msgData = props.msgData;
+const msgData = props.msgData;
     const [count, setCount] = useState(0);
 
     const increment = () => {
@@ -33,7 +32,6 @@ export function Carousel(props: any) {
             hostInstance.openExternalLink(link);
         }
     }
-    console.log(msgData, 'msgData')
     // msgData?.message?.[0]?.component?.payload?.carousel_type == 'stacked' retailAssistcarousel
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'retailAssistcarousel' && msgData?.message?.[0]?.component?.payload?.carousel_type == 'stacked') {
         const stackClass = msgData.messageId + ' stacked stacked-cards';
@@ -239,7 +237,7 @@ export function Carousel(props: any) {
     // }
 }
 
-class RetailAssistCarouselTemplate extends BaseChatTemplate {
+class SolutionCarouselTemplate extends BaseChatTemplate {
     hostInstance: any = this;
 
     renderMessage(msgData: any) {
@@ -248,5 +246,5 @@ class RetailAssistCarouselTemplate extends BaseChatTemplate {
 
 }
 
-export default RetailAssistCarouselTemplate;
+export default SolutionCarouselTemplate;
 
