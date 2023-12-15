@@ -44,6 +44,7 @@ import TemplateFeedback from './templates/v3/feedback/feedback';
 import TemplateDateRange from './templates/v3/dateRange/dateRange';
 import TemplateClockPicker from './templates/v3/clockPicker/clockPicker';
 import TemplateSystem from './templates/v3/system/system';
+
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
 //(function($){
