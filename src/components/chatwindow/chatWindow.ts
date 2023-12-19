@@ -399,6 +399,7 @@ postMessageToChildIframes (iframe: any,postPayload: any) {
 // inline model for iframes starts here//
 openModal(template:any, showClose:any) {
   let me:any=this;
+  if (me.config.UI.version == 'v2') {
   const chatBodyModal = $('#chatBodyModal');
   const close = (<any> document).getElementsByClassName('closeChatBodyModal')[0];
   close.onclick = function () {
@@ -438,11 +439,13 @@ openModal(template:any, showClose:any) {
     $('.kore-chat-window').removeClass('modelOpen');
   }
 }
+}
 // inline model for iframes starts ends//
 
 // form event actions starts here //
 formAction(event:any) {
   let me:any=this;
+  if (me.config.UI.version == 'v2') {
   if (event && event.action === 'formSubmit') {
     me.openModal();
     if ($('.kore-chat-body .uiformComponent').length) {
@@ -458,6 +461,7 @@ formAction(event:any) {
       $('.kore-chat-body .uiformComponent').closest('.inlineIframeContainer').css('display', 'none');
     }
   }
+}
 }
 renderWebForm  (msgData:any, returnTemplate:any) {
   const me:any = this;
