@@ -3,19 +3,22 @@ import './solutionCarausal.scss';
 import { h, Fragment } from 'preact';
 import stackedCards from './solutionCarousal'
 import { useState } from 'preact/hooks';
+import { getHTML } from '../../../../base/domManager';
+import IconsManager from '../../../../base/iconsManager';
+
 export function Carousel(props: any) {
     const hostInstance = props.hostInstance;
-const msgData = props.msgData;
+    const msgData = props.msgData;
     const [count, setCount] = useState(0);
 
     const increment = () => {
-      setCount(count + 1);
+        setCount(count + 1);
     };
-  
+
     const decrement = () => {
-      if (count > 0) {
-        setCount(count - 1);
-      }
+        if (count > 0) {
+            setCount(count - 1);
+        }
     };
     const messageobj = {
         msgData: msgData,
@@ -32,7 +35,6 @@ const msgData = props.msgData;
             hostInstance.openExternalLink(link);
         }
     }
-    // msgData?.message?.[0]?.component?.payload?.carousel_type == 'stacked' retailAssistcarousel
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'retailAssistcarousel' && msgData?.message?.[0]?.component?.payload?.carousel_type == 'stacked') {
         const stackClass = msgData.messageId + ' stacked stacked-cards';
         const leftCheButton = msgData.messageId + ' left-click';
@@ -80,11 +82,11 @@ const msgData = props.msgData;
                                                 </div>
                                                 <div className="f-right">
                                                     <button className="decrement" onClick={decrement}>
-                                                    <img alt="decrement" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMuNjI1IDhIMTIuMzc1IiBzdHJva2U9IiNEMEQ1REQiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=" />
+                                                        <img alt="decrement" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMuNjI1IDhIMTIuMzc1IiBzdHJva2U9IiNEMEQ1REQiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=" />
                                                     </button>
                                                     <input className="input-c" type="text" value={count} readOnly />
                                                     <button className="increment" onClick={increment}>
-                                                    <img alt="increment" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTguMDAwMTYgMy4zMzMzNFYxMi42NjY3TTMuMzMzNSA4LjAwMDAxSDEyLjY2NjgiIHN0cm9rZT0iI0ZFRkVGRSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==" />
+                                                        <img alt="increment" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTguMDAwMTYgMy4zMzMzNFYxMi42NjY3TTMuMzMzNSA4LjAwMDAxSDEyLjY2NjgiIHN0cm9rZT0iI0ZFRkVGRSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==" />
                                                     </button>
                                                 </div>
                                             </div>

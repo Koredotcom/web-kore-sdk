@@ -1,4 +1,5 @@
 import SolutionCarouselTemplate from '../templatemanager/templates/v3/solutionTemplates/solutionCarausal/solutionCarausal';
+import ItemSelectionList from '../templatemanager/templates/v3/solutionTemplates/itemSelection/itemSelection';
 
 
 /**
@@ -68,7 +69,8 @@ class RetailAssistTemplatePlugin {
   installinsureAssistTemplates() {
     let me = this;
     let templateManager = me.hostInstance.templateManager;
-    templateManager.installTemplate(new SolutionCarouselTemplate())
+    templateManager.installTemplate(new SolutionCarouselTemplate());
+    templateManager.installTemplate(new ItemSelectionList());
   }
 
   //class Append in body tag

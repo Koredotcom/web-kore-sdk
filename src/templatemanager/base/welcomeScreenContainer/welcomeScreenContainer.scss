@@ -522,3 +522,23 @@
         }
     }
 }
+.retail-assist-theme{
+    .welcome-chat-section{
+        .welcome-header{
+         background: var(--gradient-gray-90060045-deg, linear-gradient(45deg, #101828 0%, #475467 100%));
+                .welcome-header-bg {
+                    background: var(--gradient-gray-90060045-deg, linear-gradient(45deg, #101828 0%, #475467 100%));
+                    h1{
+                        background: var(--gradient-logo-gradient, linear-gradient(45deg, #F5ED47 14.64%, #80F5E8 85.36%));
+                        background-clip: text;
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        font-size: 36px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: normal;
+                    }
+                }
+        }
+    }
+}
