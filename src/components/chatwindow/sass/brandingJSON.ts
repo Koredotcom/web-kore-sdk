@@ -11,7 +11,7 @@ const BrandingJSON = {
             "useColorPaletteOnly": false
         },
         "sounds": {
-            "enable": true,
+            "enable": false,
             "on_open": {
                 "name": "Sound1",
                 "type": "default",
