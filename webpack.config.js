@@ -217,6 +217,11 @@ module.exports= function(env,argv){
             import: "./src/index_plugins/fileUpload_umd.ts",
             filename: 'plugins/file-upload.js',
             chunkLoading: false,
+          },
+          KoreRetailAssistSDK:{
+            import: "./src/index_plugins/retailAssistPlugin.ts",
+            filename: 'plugins/kore-retail-assist-plugin.js',
+            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           }
         }
         config.output.path= path.resolve(__dirname,'dist/esm');
@@ -336,6 +341,11 @@ module.exports= function(env,argv){
             import: "./src/index_plugins/fileUpload_umd.ts",
             filename: 'plugins/file-upload-umd.js',
             chunkLoading: false,
+          },
+          KoreRetailAssistSDK:{
+            import: "./src/index_plugins/retailAssistPlugin.ts",
+            filename: 'plugins/kore-retail-assist-plugin.js',
+            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           }
 
         }
