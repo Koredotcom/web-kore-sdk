@@ -50,6 +50,9 @@ export function ChatWidgetComposeBar(props: any) {
             hostInstance.sendMessageToBot(inputEle.value);
             inputEle.value = '';
             hostInstance.chatEle.querySelector('.send-btn').classList.remove('show');
+            if (hostInstance.chatEle.querySelectorAll('.quick-replies') && hostInstance.chatEle.querySelectorAll('.quick-replies').length > 0) {
+                hostInstance.chatEle.querySelector('.quick-replies').remove();
+              }
         })
     });
 

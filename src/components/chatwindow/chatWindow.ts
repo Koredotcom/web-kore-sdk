@@ -988,6 +988,9 @@ bindEventsV3() {
       me.sendMessageToBot(event.target.value);
       event.target.value = '';
       me.chatEle.querySelector('.send-btn').classList.remove('show');
+      if (me.chatEle.querySelectorAll('.quick-replies') && me.chatEle.querySelectorAll('.quick-replies').length > 0) {
+        me.chatEle.querySelector('.quick-replies').remove();
+      }
     } 
   })
 
