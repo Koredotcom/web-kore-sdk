@@ -590,3 +590,54 @@
         }
     }
 }
+
+.retail-assist-theme{
+    // .chat-window-main-section{
+    //     margin-top: 100px;
+    // }
+    // .top-info{
+    // .you-text{
+    //     display: none;
+    // }
+    // .time-tamp{
+    //     color: #667085;
+    // }
+    .agent-bubble-comp .agent-bubble-content .bubble-msg-with-img .bubble-msg{
+        background: #667085;
+    }
+    .bot-bubble-comp {
+        padding: 0px 6px;
+        margin: 23px 0;
+        .agent-bubble-comp{
+            .agent-bubble-content {
+                .bubble-msg-with-img{
+                    .bubble-msg {
+                        background: #667085;
+                    }
+                }
+                .top-info {
+                    display: none;
+                }
+            }
+        }
+       
+
+        .agent-bubble-content:hover {
+            .bubble-msg-with-img {
+                .bubble-msg {
+                    background: #667085;
+                }
+            }
+        }
+        .bot-bubble-content{
+            .top-info {
+            .you-text{
+                display: none;
+            }
+            .time-tamp{
+                color: #667085;
+            }
+        }
+        }
+    }
+}

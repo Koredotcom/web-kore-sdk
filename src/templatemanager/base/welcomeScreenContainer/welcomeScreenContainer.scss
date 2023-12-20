@@ -522,23 +522,59 @@
         }
     }
 }
-.retail-assist-theme{
-    .welcome-chat-section{
-        .welcome-header{
-         background: var(--gradient-gray-90060045-deg, linear-gradient(45deg, #101828 0%, #475467 100%));
-                .welcome-header-bg {
-                    background: var(--gradient-gray-90060045-deg, linear-gradient(45deg, #101828 0%, #475467 100%));
-                    h1{
-                        background: var(--gradient-logo-gradient, linear-gradient(45deg, #F5ED47 14.64%, #80F5E8 85.36%));
-                        background-clip: text;
-                        -webkit-background-clip: text;
-                        -webkit-text-fill-color: transparent;
-                        font-size: 36px;
-                        font-style: normal;
-                        font-weight: 600;
-                        line-height: normal;
-                    }
+.welcome-chat-section.minimize {
+    height: auto;
+}
+.retail-assist-theme {
+    .welcome-chat-section {
+        margin-top: 84px;
+        height: auto;
+        .link-wrapper-content{
+            display: none;
+        }
+        .pramotional-banner-wrapper-container{
+             display: none;
+        }
+        .start-conversations-wrapper {
+            background: linear-gradient(45deg, #F5ED47 14.64%, #80F5E8 85.36%);
+            .bot_icon {
+                display: none;
+            }
+
+            .start-conv-sec {
+                .start-conv-button {
+                    background: #344054;
                 }
+            }
+        }
+
+        .welcome-header {
+            background: var(--gradient-gray-90060045-deg, linear-gradient(45deg, #101828 0%, #475467 100%));
+
+            .bg-logo {
+                display: none;
+            }
+
+            .welcome-header-bg {
+                background: var(--gradient-gray-90060045-deg, linear-gradient(45deg, #101828 0%, #475467 100%));
+
+                h1 {
+                    background: linear-gradient(45deg, #F5ED47 1%, #80F5E8 34.36%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    font-size: 36px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+                    opacity: 100;
+                }
+            }
+        }
+    }
+
+    .welcome-chat-section {
+        .powerdby-info {
+            background-color: transparent;
         }
     }
 }

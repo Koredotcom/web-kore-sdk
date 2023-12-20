@@ -23,3 +23,26 @@
         display: flex;
     }
 }
+
+.retail-assist-theme{
+    .chat-widget-header{
+        border-radius: 4px 4px 0px 0px;
+        border-bottom: 1px solid var(--gray-modern-100, #EEF2F6);
+        background: var(--gradient-gray-90060045-deg, linear-gradient(45deg, #101828 0%, #475467 100%));
+        .info-content-data {
+            .content-text {
+                color: #fff;
+                h1{
+                    color: #fff;
+                }
+                h2{
+                    color: #fff;
+                }
+            }
+        }
+
+    }
+    .chat-widget-body-wrapper {
+        background: linear-gradient(45deg, rgba(245, 237, 71, 0.12) 14.64%, rgba(128, 245, 232, 0.12) 85.36%);
+    }
+}

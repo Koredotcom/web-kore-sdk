@@ -294,3 +294,83 @@
 .animation-slide-up:nth-child(3) {
     animation-delay: 2s;
 }
+
+.retail-assist-theme {
+    .avatar-variations-footer {
+        .avatar-actions {
+            .avatar-bg {
+                .un-read-msg {
+                    display: none;
+                }
+
+                background: #344054;
+            }
+        }
+    }
+}
+
+.retail-assist-theme {
+    .avatar-variations-footer {
+        .avatar-actions {
+            .avatar-bg.click-to-rotate-icon {
+                display: none;
+            }
+        }
+    }
+}
+
+.retail-assist-theme {
+    .avatar-variations-footer {
+        .avatar-actions {
+            .avatar-bg {
+                .default-avater-icon {
+                    display: block;
+                }
+
+                .close-avater-icon {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    .avatar-actions .content-info {
+        .primary-button {
+            background: #344054;
+        }
+    }
+
+    .chat-widgetwrapper-main-container {
+        height: calc(100vh - 70px);
+    }
+
+    .chat-widget-composebar {
+        .compose-bar-wrapper {
+            .send-btn {
+                background: #344054;
+            }
+        }
+    }
+
+    .agent-bubble-comp .agent-bubble-content:hover {
+        .agent-bubble-comp {
+            .agent-bubble-content:hover {
+                .bubble-msg-with-img {
+                    .bubble-msg {
+                        background: #344054;
+                    }
+                }
+            }
+        }
+    }
+
+    .chat-widget-composebar {
+        .compose-bar-wrapper.if-voice-compose {
+            .compose-voice-text {
+                .voice-compose-btn {
+                    background: #344054;
+                }
+            }
+        }
+    }
+}
