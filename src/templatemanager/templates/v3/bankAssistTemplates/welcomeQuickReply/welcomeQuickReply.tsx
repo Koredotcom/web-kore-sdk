@@ -4,8 +4,6 @@ import { h, Fragment } from 'preact';
 import { Message } from '../../message/message';
 
 export function quickRepliesWelcome(props: any) {
-    // debugger
-    console.log(props);
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
     const handleButtonEvent = (e: any) => {
@@ -28,7 +26,7 @@ export function quickRepliesWelcome(props: any) {
             <Fragment>
                 <div>
                     <Message {...messageobj} />
-                    {msgData.message[0].component.payload.quick_replies && 
+                    {msgData.message[0].component.payload.quick_replies !='' && 
                         <div className="button-template-container">
                             {/* <span class="quickreply-text">Or Choose from these common requests:</span> */}
                             <div className="button-temp button-variation-3">

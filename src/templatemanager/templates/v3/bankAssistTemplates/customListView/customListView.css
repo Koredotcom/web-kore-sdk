@@ -1,0 +1,39 @@
+.bank-assist-theme .list-view-action-template-wrapper .show-more-btn {
+    width: 100%;
+    background: #3c817c;
+    color: white;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    font-size: 14px;
+}
+
+.bank-assist-theme .list-view-action-template-wrapper .list-content-details {
+    border-left: 1px solid #d7d8d9;
+    border-right: 1px solid #d7d8d9;
+}
+.bank-assist-theme .list-view-action-template-wrapper .list-content-details .list-data-temp {
+    border: 1px solid #eaecf0;
+}
+.bank-assist-theme .list-view-action-template-wrapper .list-content-details {
+    display: block;
+}
+.bank-assist-theme .list-view-action-template-wrapper .list-view-heading {
+    background: #3c817c;
+    height: 100%;
+    padding: 15px;
+    color: white;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+.bank-assist-theme .list-view-action-template-wrapper {
+    display: block;
+}
+
+.bank-assist-theme .list-view-action-template-wrapper .list-content-details .list-data-temp .img-with-content-block .price-tag {
+    color:black;
+    font-weight: bold;;
+}
+
+.bank-assist-theme .clickable {
+    cursor: pointer;
+}

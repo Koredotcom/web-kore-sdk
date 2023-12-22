@@ -1,5 +1,8 @@
 import './bankAssistCustom.css'; 
-import welcomeQuickReply from '../../templatemanager/templates/v3/bankAssistTemplates/welcomeQuickReply/welcomeQuickReply'
+import welcomeQuickReply from '../../templatemanager/templates/v3/bankAssistTemplates/welcomeQuickReply/welcomeQuickReply';
+import multiSelect from '../../templatemanager/templates/v3/bankAssistTemplates/disputeCheckboxList/disputeCheckboxList';
+import loginForm from '../../templatemanager/templates/v3/bankAssistTemplates/loginForm/loginForm';
+import customListView from '../../templatemanager/templates/v3/bankAssistTemplates/customListView/customListView';
 /**
  * Bank Assist Script Template plugin classs
  *
@@ -46,6 +49,9 @@ class BankAssistTemplatePlugin {
         let me = this;
         let templateManager = me.hostInstance.templateManager;
         templateManager.installTemplate(new welcomeQuickReply());
+        templateManager.installTemplate(new multiSelect());
+        templateManager.installTemplate(new loginForm());
+        templateManager.installTemplate(new customListView());
     }
 
     //class Append in body tag

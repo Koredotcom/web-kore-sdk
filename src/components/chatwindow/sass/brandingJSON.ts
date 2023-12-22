@@ -163,11 +163,11 @@ const BrandingJSON = {
         },
         "icons_color": "#000000",
         "title": {
-            "name": "Bot",
+            "name": "BankAssist",
             "color": "#000000"
         },
         "sub_title": {
-            "name": "Your personal assistant",
+            "name": "",
             "color": "#000000"
         },
         "buttons": {

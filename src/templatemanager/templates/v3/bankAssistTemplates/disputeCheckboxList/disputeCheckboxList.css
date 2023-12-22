@@ -1,0 +1,61 @@
+.bank-assist-theme .checkboxes-template {
+    border-top: 1px solid var(--sdk-chat-widow-primary-bg-color);
+    padding: 10px;
+    margin: 0;
+    width: 100%;
+    display: table;
+}
+.bank-assist-theme .listTmplContentBox {
+    width: 100%;
+    max-width: 100%;
+    list-style: none;
+    border: 1px solid #cacbcc;
+    border-radius: 4px;
+}
+.bank-assist-theme  .listTmplContentBox .listTmplContentHeading {
+    border-radius: 4px 4px 0px 0px;
+    background: #3c817c;
+    color: white;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: normal;
+    padding: 20px 25px;
+}
+.bank-assist-theme .checkboxes-template .listTmplContent .checkBoxestmplContentChild:last-child {
+    border-radius: 0px 0px 4px 4px;
+}
+.bank-assist-theme .checkboxes-template .listTmplContent .checkBoxestmplContentChild {
+    display: flex;
+    padding: 8px;
+    align-items: flex-start;
+    cursor: pointer;
+    background: white;
+}
+.bank-assist-theme .checkboxes-template .listTmplContent .checkBoxestmplContentChild .checkbox {
+    display: flex;
+    border-bottom: 1px solid #eaecf0;
+    width: 100%;   
+}
+
+.bank-assist-theme .checkboxes-template .listTmplContent .checkBoxestmplContentChild .checkbox label{
+    padding: 7px;
+    font-size: 14px;
+}
+.bank-assist-theme .checkboxButtons .checkboxBtn {
+    background: #3c817c;
+    color: white;
+    width: 100px;
+    padding: 10px;
+    font-size: 15px;
+    box-shadow: none;
+    border: none;
+}
+.bank-assist-theme .checkboxButtons {
+    padding: 12px;
+    text-align: center;
+    background-color: white;
+}
+/* .bank-assist-theme .checkInput {
+    width: 26px;
+} */
+
