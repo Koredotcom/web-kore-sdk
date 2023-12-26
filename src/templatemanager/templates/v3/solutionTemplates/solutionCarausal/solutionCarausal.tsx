@@ -35,34 +35,83 @@ export function Carousel(props: any) {
             hostInstance.openExternalLink(link);
         }
     }
-    if (msgData?.message?.[0]?.component?.payload?.template_type == 'retailAssistcarousel' && msgData?.message?.[0]?.component?.payload?.carousel_type == 'stacked') {
-        const stackClass = msgData.messageId + ' stacked stacked-cards';
-        const leftCheButton = msgData.messageId + ' left-click';
-        const rightCheButton = msgData.messageId + ' right-click';
-
-        const stackedCard = new stackedCards({
-            hostInstance: hostInstance,
-            selector: '.' + msgData.messageId,
-            layout: "slide",
-            transformOrigin: "center",
-            id: msgData.messageId,
-            buttons: true // To show/hide buttons
-        });
+    if (msgData?.message?.[0]?.component?.payload?.template_type == 'retailAssistcarousel') {
         setTimeout(() => {
-            stackedCard.init();
-        }, 300)
+            const btnsParentDiv: any = hostInstance.chatEle.querySelector(`[data-id='${msgData.messageId}']`);
+            const leftScrollBtn = hostInstance.chatEle.querySelector(`[data-button-left='${msgData.messageId}']`);
+            const rightScrollBtn = hostInstance.chatEle.querySelector(`[data-button-right='${msgData.messageId}']`);
+            if (btnsParentDiv && btnsParentDiv.hasChildNodes()) {
+                if (leftScrollBtn) {
+                    if (btnsParentDiv.scrollLeft > 0) {
+                        leftScrollBtn.classList.remove('hide');
+                    } else {
+                        leftScrollBtn.classList.add('hide');
+                    }
+                }
+                if (rightScrollBtn) {
+                    if (btnsParentDiv.offsetWidth < btnsParentDiv.scrollWidth) {
+                        rightScrollBtn.classList.remove('hide');
+                    } else {
+                        rightScrollBtn.classList.add('hide');
+                    }
+                }
+            }
+
+            leftScrollBtn.addEventListener('click', () => {
+                const btnsParentDivWidth = btnsParentDiv.scrollLeft;
+                const qButtons = btnsParentDiv.querySelectorAll('.list-carousel-item');
+                let curWidth = 0;
+                if (qButtons.length > 0) {
+                    qButtons.forEach((ele: any) => {
+                        curWidth = curWidth + ele.offsetWidth + 10;
+                        if (curWidth > btnsParentDivWidth) {
+                            btnsParentDiv.scrollTo({
+                                left: btnsParentDiv.offsetHeight - ele.offsetHeight - 50,
+                                behavior: 'smooth'
+                            });
+                            rightScrollBtn.classList.remove('hide');;
+                            if (btnsParentDiv.scrollLeft <= 0) {
+                                leftScrollBtn.classList.add('hide');;
+                            }
+                        }
+
+                    })
+                }
+            })
+            rightScrollBtn.addEventListener('click', () => {
+                const btnsParentDivWidth = btnsParentDiv.offsetWidth;
+                const qButtons = btnsParentDiv.querySelectorAll('.list-carousel-item');
+                let curWidth = 0;
+                if (qButtons.length > 0) {
+                    qButtons.forEach((ele: any) => {
+                        curWidth = curWidth + ele.offsetWidth + 10;
+                        if (curWidth > btnsParentDivWidth) {
+                            btnsParentDiv.scrollTo({
+                                left: btnsParentDiv.scrollLeft + ele.offsetWidth + 20,
+                                behavior: 'smooth'
+                            });
+                            leftScrollBtn.classList.remove('hide');;
+                            if (btnsParentDiv.scrollLeft + btnsParentDivWidth + 10 >= btnsParentDiv.scrollWidth) {
+                                rightScrollBtn.classList.add('hide');
+                            }
+                        }
+
+                    })
+                }
+            })
+        }, 50);
 
         return (
-            <div className={stackClass}>
-                <button className={leftCheButton}>
+            <div className="list-template-carousel-wrapper" id={msgData.messageId}>
+                <button className="carousel-left-click" data-button-left={msgData.messageId}>
                     <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
                         <path d="M12 15.5L7 10.5L12 5.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </button>
-                <ul class="slider">
+                <div className="list-carousel" data-id={msgData.messageId}>
                     {msgData.message[0].component.payload.elements.map((item: any) => (
 
-                        <li class="item">
+                        <div className="list-carousel-item">
                             <button className="card-content-sec">
                                 <div className="top-sec-card">
                                     <img src={item?.card?.thumbnail} />
@@ -80,7 +129,7 @@ export function Carousel(props: any) {
                                                 <div className="f-left">
                                                     <p className="value-style" style={ele?.valueStyle}>{ele?.value}</p>
                                                 </div>
-                                                <div className="f-right">
+                                                {/* <div className="f-right">
                                                     <button className="decrement" onClick={decrement}>
                                                         <img alt="decrement" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMuNjI1IDhIMTIuMzc1IiBzdHJva2U9IiNEMEQ1REQiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=" />
                                                     </button>
@@ -88,7 +137,7 @@ export function Carousel(props: any) {
                                                     <button className="increment" onClick={increment}>
                                                         <img alt="increment" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTguMDAwMTYgMy4zMzMzNFYxMi42NjY3TTMuMzMzNSA4LjAwMDAxSDEyLjY2NjgiIHN0cm9rZT0iI0ZFRkVGRSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==" />
                                                     </button>
-                                                </div>
+                                                </div> */}
                                             </div>
                                             <p className="summary-text-style" style={ele?.summaryTextStyle}>{ele?.summaryText}</p>
                                             <p className="summary-text-style" >{ele?.itemID}</p>
@@ -108,9 +157,9 @@ export function Carousel(props: any) {
                                     ))
                                 }
                             </button>
-                        </li>))}
-                </ul>
-                <button className={rightCheButton}>
+                        </div>))}
+                </div>
+                <button className="carousel-right-click" data-button-right={msgData.messageId}>
                     <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
                         <path d="M7 5.5L12 10.5L7 15.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>

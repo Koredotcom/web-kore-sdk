@@ -40,7 +40,7 @@ export function QuickReply(props: any) {
                 </svg>
             </button>
             <div className="quick-replies-buttons" c-parent-id={msgData.messageId}>
-                {msgData.message[0].component.payload.quick_replies.map((ele: any) => (
+                {msgData?.message[0]?.component?.payload?.quick_replies?.map((ele: any) => (
                     <button className="kr-btn quick-buttons" c-items-id={msgData.messageId} onClick={() => handleQuickReply(ele)}>{ele.title}</button>
                 ))
                 }

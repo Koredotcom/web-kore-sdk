@@ -1,8 +1,26 @@
+.list-template-carousel-wrapper {
+    .list-carousel-item{
+        .card-content-sec{
+            .middle-sec-card {
+                display: block;
+                p{
+                    margin-bottom: 8px;
+                }
+            }
+        }
+    }
+    // .card-content- {
+       
+    // }
+}
+
 .stacked-cards {
     position: relative;
     display: flex;
     align-items: center;
     gap: 6px;
+
+
 
     .left-click {
         border-radius: 32px;
@@ -40,6 +58,7 @@
         display: flex;
         margin: 0;
         padding: 0;
+        height: 564px !important;
         // height: fit-content !important;
 
         li {
@@ -126,7 +145,8 @@
                             width: 24px;
                             height: 24px;
                             border-radius: 4px;
-                            img{
+
+                            img {
                                 top: 1px;
                             }
                         }

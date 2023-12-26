@@ -15,32 +15,43 @@ export function RetailOrderSelection(props: any) {
     const initialElements = msgData.message[0]?.component?.payload?.elements || [];
     const [elements, setElements] = useState(initialElements);
     const [rerenderKey, setRerenderKey] = useState(0);
+    const [modifiedQty, setModifiedQty] = useState<number | null>(null);
 
     useEffect(() => {
         // Check if elements are being updated when the state changes
-        // console.log('Updated elements:', elements);
+        console.log('Updated elements:', elements);
     }, [elements]);
+
+    // const handleDecrement = (index: any) => {
+    //     setElements((prevElements: any) => {
+    //         const updatedElements = [...prevElements];
+    //         const currentQty = updatedElements[index].qty;
+    //         updatedElements[index].qty = currentQty > 0 ? currentQty - 1 : 0;
+    //         return updatedElements;
+    //     });
+    // };
+
+    // const handleIncrement = (index: any) => {
+    //     setElements((prevElements: any) => {
+    //         const updatedElements = [...prevElements];
+    //         updatedElements[index].qty += 1;
+    //         return updatedElements;
+    //     });
+    // };
 
     const handleDecrement = (index: any) => {
         setElements((prevElements: any) => {
-            return prevElements.map((ele: any, i: any) => {
-                if (i === index && ele.qty > 0) {
-                    return { ...ele, qty: Number(ele.qty) - 1 };
-                }
-                return ele;
-            });
+            const updatedElements = [...prevElements];
+            updatedElements[index].qty = Math.max(0, updatedElements[index].qty - 1);
+            return updatedElements;
         });
     };
 
     const handleIncrement = (index: any) => {
         setElements((prevElements: any) => {
-            return prevElements.map((ele: any, i: any) => {
-                if (i === index) {
-                    console.log(...ele, ele.qty, 'test')
-                    return { ...ele, qty: Number(ele.qty) + 1 };
-                }
-                return ele;
-            });
+            const updatedElements = [...prevElements];
+            updatedElements[index].qty = parseInt(updatedElements[index].qty, 10) + 1;
+            return updatedElements;
         });
     };
 
@@ -70,44 +81,57 @@ export function RetailOrderSelection(props: any) {
     // console.log(msgData?.message[0]?.component?.payload?.card_type, ' test')
     // templates design for the order selection
     if (msgData?.message[0]?.component?.payload?.template_type === "retailOrderSelection" && msgData?.message[0]?.component?.payload?.card_type === 'detail') {
-        console.log(msgData.message[0].component?.payload, 'msgData');
+        // console.log(msgData.message[0].component?.payload, 'msgData');
+        // console.log(msgData.message[0].component?.payload.elements[2].description[0].value, 'msgData');
+        // const stringValue = msgData.message[0]?.component?.payload?.elements[2]?.description[0]?.value || '';
+        // const sanitizedValue = stringValue.replace(/[^0-9.]/g, ''); // Remove non-numeric characters
+        // const numericValue = parseFloat(sanitizedValue); // Convert the sanitized string to a number
+
+        // console.log(typeof (numericValue), 'sanitized and parsed value');
+
+
+
         return (
             <div>
                 <div key={rerenderKey} className="list-action-template-wrapper">
-                    <h2 className="m-title">{msgData.message[0].component?.payload?.title}</h2>
-                    <div className="card-container">
-                        {
-                            msgData.message[0].component?.payload?.elements?.map((ele: any, index: number) => (
-                                // <div>
-                                <div className={`card-template-wrapper ${ele.checkBox === "enabled" ? "check-box-style" : ""}`}>
-                                    <div className="left-section">
-                                        {
-                                            ele.checkBox === "enabled" && (
-                                                <div class="kr-sg-checkbox">
-                                                    <input id="checkbox-1" class="checkbox-custom" type="checkbox" />
-                                                </div>
-                                            )}
+                    {
+                        <div>
+                            <h2 className="m-title">{msgData.message[0].component?.payload?.title}</h2>
+                            <div className="card-container">
+                                {
+                                    msgData.message[0].component?.payload?.elements?.map((ele: any, index: number) => (
+                                        // ele?.flag != "ItemdetailsScreen" && (
+                                        // <div>
+                                        <div className={`card-template-wrapper ${ele.checkBox === "enabled" ? "check-box-style" : ""}`}>
+                                            <div className="left-section">
+                                                {
+                                                    ele.checkBox === "enabled" && (
+                                                        <div class="kr-sg-checkbox">
+                                                            <input id="checkbox-1" class="checkbox-custom" type="checkbox" />
+                                                        </div>
+                                                    )}
 
-                                        <img src={ele?.icon} />
-                                    </div>
-                                    <div className="right-section">
-                                        <div className="top-right-section m-gap">
-                                            <div className="container-details m-gap">
-                                                <div className="f-left-section">
-                                                    <h1 style={ele?.titleStyle}>{ele?.title}</h1>
-                                                </div>
-                                                <div className="f-right-section">
-                                                    <p className="status-style" style={ele?.valueStyle}>{ele?.value}</p>
-                                                </div>
+                                                <img src={ele?.icon} />
                                             </div>
-                                            <div className="sub-title-style">
-                                                <h2 style={ele?.subTitleStyle}>{ele?.subTitle}</h2>
-                                            </div>
+                                            <div className="right-section">
+                                                <div className="top-right-section m-gap">
+                                                    <div className="container-details m-gap">
+                                                        <div className="f-left-section">
+                                                            <h1 style={ele?.titleStyle}>{ele?.title}</h1>
+                                                        </div>
+                                                        <div className="f-right-section">
+                                                            <p className="status-style" style={ele?.valueStyle}>{ele?.value}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="sub-title-style">
+                                                        <h2 style={ele?.subTitleStyle}>{ele?.subTitle}</h2>
+                                                    </div>
 
-                                        </div>
+                                                </div>
 
-                                        {
+                                                {/* {
                                             ele?.description?.map((ele: any) => (
+                                                
                                                 <div className="container-details-section">
                                                     <div className="details-left-section">
                                                         <p style={ele?.detailStyle}>{ele?.title}</p>
@@ -116,73 +140,78 @@ export function RetailOrderSelection(props: any) {
                                                         <p style={ele?.detailStyle}>{ele?.value}</p>
                                                     </div>
                                                 </div>
-                                            ))}
-                                        {
-                                            ele?.flag === "cartScreen" && (
-                                                <div className="set-qty-style" key={index}>
-                                                    <div className="f-right">
-                                                        {/* Your buttons and input fields */}
-                                                        <button className="decrement" onClick={() => handleDecrement(index)}>
-                                                            <img src={ele?.button1?.icon} alt="Decrement" />
-                                                        </button>
-                                                        <input
-                                                            className="input-c"
-                                                            type="text"
-                                                            value={ele?.qty}
-                                                        // onChange={(e) => onChangeHandler(e, index)}
-                                                        />
-                                                        <button className="increment" onClick={() => handleIncrement(index)}>
-                                                            <img src={ele?.button2?.icon} alt="Increment" />
-                                                        </button>
+                                            ))} */}
+                                                {
+                                                    ele?.description?.map((detail: any, detailIndex: number) => (
+                                                        <div className="container-details-section" key={detailIndex}>
+                                                            <div className="details-left-section">
+                                                                <p style={detail?.detailStyle}>{detail?.title}</p>
+                                                            </div>
+                                                            <div className="details-right-section">
+                                                                <p style={detail?.detailStyle}>
+                                                                    {/* Check if flag is "cartScreen" to show the calculated value */}
+                                                                    {ele?.flag === 'cartScreen' ?
+                                                                        `$${parseFloat(detail?.value.replace(/[^0-9.]/g, '')) * parseFloat(elements[index].qty)}`
+                                                                        : detail?.value /* Else, show the default value */}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                                }
 
-                                                        {/* <button className="decrement" onClick={() => decrement(index)}>
-                                                            Decrement
-                                                        </button>
-                                                        <input className="input-c" type="text" value={ele?.qty} readOnly />
-                                                        <button className="increment" onClick={() => increment(index)}>
-                                                            Increment
-                                                        </button> */}
-                                                    </div>
-                                                </div>
-                                            )
-                                        }
-                                    </div>
-                                    {
-                                        ele?.buttons?.map((button: any) => (
-                                            <div className={`buttons-container ${ele.flag === "cartScreen" ? "delete-button" : ""}`}>
-                                                <button style={button?.buttonStyle} className="view-details" onClick={() => handleButtonEvent(button)}>{button?.title}</button>
+                                                {
+                                                    ele?.flag === "cartScreen" && (
+                                                        <div className="set-qty-style" key={index}>
+                                                            <div className="f-right">
+                                                                {/* Your buttons and input fields */}
+                                                                <button className="decrement" onClick={() => handleDecrement(index)}>
+                                                                    <img src={ele?.button1?.icon} alt="Decrement" />
+                                                                </button>
+                                                                <input
+                                                                    className="input-c"
+                                                                    type="text"
+                                                                    value={elements[index].qty}
+                                                                />
+                                                                <button className="increment" onClick={() => handleIncrement(index)}>
+                                                                    <img src={ele?.button2?.icon} alt="Increment" />
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                }
                                             </div>
-                                        ))
-                                    }
-                                </div>
+                                            {
+                                                ele?.buttons?.map((button: any) => (
+                                                    <div className={`buttons-container ${ele.flag === "cartScreen" ? "delete-button" : ""}`}>
+                                                        <button style={button?.buttonStyle} className="view-details" onClick={() => handleButtonEvent(button)}>{button?.title}</button>
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
 
-                                // </div>
-                            ))}
-                    </div>
-                    {
-                        msgData.message[0].component?.payload?.showMore === "true" && (
-                            <div className="show-more">
-                                <p className="m-title">{msgData.message[0].component?.payload?.showMoreTitle}</p>
+                                        // </div>
+                                    ))
+                                }
                             </div>
-                        )}
+                        </div>
+                    }
+
                     {
                         msgData.message[0].component?.payload?.buttons &&
                         <div className="btn-style">
                             {
                                 msgData.message[0].component?.payload?.buttons?.map((button: any) => (
-                                    // <div className="btn-style">
                                     <button style={button?.buttonStyle} className="shopping-btn" onClick={() => handleButtonEvent(button)}>{button?.title}</button>
-
                                 ))}
                         </div>
                     }
-
                 </div>
+
                 {
                     msgData.message[0].component?.payload?.elements?.map((ele: any, index: number) => (
                         ele?.flag === "ItemdetailsScreen" && (
                             <div className="list-action-template-wrapper">
-                                <h2 className="m-title">{msgData.message[0].component?.payload?.title}</h2>
+                                {/* <h2 className="m-title">{ele?.title}</h2> */}
                                 <div className="card-template-wrapper">
                                     <div className="item-details">
                                         <div className="left-section">
@@ -295,7 +324,6 @@ export function RetailOrderSelection(props: any) {
                             </div>
                         )
                     ))}
-
             </div>
         );
     }
