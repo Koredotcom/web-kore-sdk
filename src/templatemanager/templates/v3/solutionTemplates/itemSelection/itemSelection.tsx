@@ -18,6 +18,7 @@ export function RetailOrderSelection(props: any) {
     const [modifiedQty, setModifiedQty] = useState<number | null>(null);
 
 
+
     const handleDecrement = (index: any) => {
         setElements((prevElements: any) => {
             const updatedElements = [...prevElements];
@@ -36,6 +37,7 @@ export function RetailOrderSelection(props: any) {
 
     // Function to handle increment
     const handleButtonEvent = (e: any) => {
+        console.log(e, 'event')
         if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
             hostInstance.sendMessage(e.value, { renderMsg: e.title });
         } else if (e.type == 'url' || e.type == 'web_url') {
@@ -46,6 +48,7 @@ export function RetailOrderSelection(props: any) {
             hostInstance.openExternalLink(link);
         }
     }
+    console.log(msgData, 'msgData msgData')
     if (msgData?.message[0]?.component?.payload?.template_type === "retailOrderSelection" && msgData?.message[0]?.component?.payload?.card_type === 'detail') {
         return (
             <div>
@@ -56,7 +59,7 @@ export function RetailOrderSelection(props: any) {
                             <div className="card-container">
                                 {
                                     msgData.message[0].component?.payload?.elements?.map((ele: any, index: number) => (
-                                        ele?.flag !== "ItemdetailsScreen" && (
+                                        ele?.flag !== "ItemdetailsScreen" && ele?.flag !== "addressTemplate" && ele?.flag !== "cancelOrderTemplate" && (
                                             // <div>
                                             <div className={`card-template-wrapper ${ele.checkBox === "enabled" ? "check-box-style" : ""}`}>
                                                 <div className="left-section">
@@ -66,7 +69,6 @@ export function RetailOrderSelection(props: any) {
                                                                 <input id="checkbox-1" class="checkbox-custom" type="checkbox" />
                                                             </div>
                                                         )}
-
                                                     <img src={ele?.icon} />
                                                 </div>
                                                 <div className="right-section">
@@ -135,16 +137,87 @@ export function RetailOrderSelection(props: any) {
                                                         </div>
                                                     ))
                                                 }
+
                                             </div>
 
-                                            // </div>
                                         )
-                                    ))
+
+                                    )
+                                    )
+
                                 }
+                                {/* { msgData?.message[0]?.component?.payload?.displayLimit === '3' && (
+                                    <div>
+                                      <p className="show-more-title" onClick={handleShowMore}>{msgData?.message[0]?.component?.payload?.showMoreTitle}</p>
+                                    </div>
+                                )} */}
                             </div>
                         </div>
                     }
+                    {
+                        msgData.message[0].component?.payload?.elements?.map((ele: any, index: number) => (
+                            (
+                                ele?.flag === "addressTemplate" && (
+                                    <div className="card-template-wrapper address-template-style" onClick={() => handleButtonEvent(ele.actions)}>
+                                        <div className="left-section">
+                                            <img src={ele?.icon} />
+                                        </div>
+                                        <div className="right-section">
+                                            <div className="top-right-section m-gap">
+                                                <div className="container-details m-gap">
+                                                    <h1 style={ele?.titleStyle}>{ele?.title}</h1>
+                                                    <div className="f-left-section">
+                                                        {
+                                                            ele.values && ele.values?.map((ele: any) => (
+                                                                <p style={ele?.style}>{ele?.title}</p>
+                                                            ))}
+                                                    </div>
+                                                    <div className="f-left-section">
+                                                        <p style={ele?.style}>{ele?.value}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            )
+                        ))
+                    }
+                    {
+                        msgData.message[0].component?.payload?.elements?.map((ele: any, index: number) => (
+                            (
+                                ele?.flag === "cancelOrderTemplate" && (
+                                    <div className="card-template-wrapper cancell-order-template-style" onClick={() => handleButtonEvent(ele.actions)}>
+                                        <div className="left-section">
+                                            <img src={ele?.icon} />
+                                        </div>
+                                        <div className="right-section">
+                                            <div className="top-right-section m-gap">
+                                                <div className="container-details m-gap">
+                                                    <h1 style={ele?.titleStyle}>{ele?.title}</h1>
 
+                                                    {
+                                                        ele.values && ele.values?.map((ele: any) => (
+                                                            <div className="container-details-style ">
+                                                                <div className="f-left-section">
+                                                                    <p style={ele?.style}>{ele?.title}</p>
+                                                                </div>
+                                                                <div className="f-right-section">
+                                                                    <p style={ele?.style}>{ele?.value}</p>
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                    }
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            )
+                        ))
+                    }
                     {
                         msgData.message[0].component?.payload?.buttons &&
                         <div className="btn-style">
@@ -155,11 +228,10 @@ export function RetailOrderSelection(props: any) {
                         </div>
                     }
                 </div>
-
                 {
                     msgData.message[0].component?.payload?.elements?.map((ele: any, index: number) => (
                         ele?.flag === "ItemdetailsScreen" && (
-                            <div className="list-action-template-wrapper">
+                            <div className="list-action-template-wrapper item-detail-screen">
                                 {/* <h2 className="m-title">{ele?.title}</h2> */}
                                 <div className="card-template-wrapper">
                                     <div className="item-details">
