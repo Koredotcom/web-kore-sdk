@@ -1,16 +1,116 @@
 .list-template-carousel-wrapper {
-    .list-carousel-item{
-        .card-content-sec{
+    .list-carousel-item {
+        .card-content-sec {
+            padding: 8px;
+
+            .top-sec-card {
+                position: relative;
+
+                .thumbnail-card-style {
+                    position: absolute;
+                    top: 0;
+                    width: 100%;
+
+                    .thumbnail-text {
+                        padding: 2px 7px;
+                    }
+
+                    .thumbnail-style {
+                        border-radius: 4px;
+                        font-size: 10px;
+                        color: #fff;
+                    }
+
+                    .thumbnail-style-br {
+                        background-color: #1D2939;
+                    }
+
+                    .thumbnail-style-gr {
+                        background-color: #12B76A;
+                    }
+
+                    .p-left {
+                        float: left;
+                        margin-top: 5px;
+                        margin-left: 5px;
+                    }
+
+                    .p-right {
+                        float: right;
+                        margin-top: 5px;
+                        margin-right: 5px;
+                    }
+                }
+
+                img {
+                    width: 100%;
+                }
+            }
+
             .middle-sec-card {
                 display: block;
-                p{
+                position: relative;
+
+                p {
                     margin-bottom: 8px;
                 }
             }
+
+            .set-qty-style {
+                position: relative;
+                top: 19%;
+                left: 60%;
+                z-index: 9999;
+                .input-c {
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 4px;
+                    border: 1px solid #D0D5DD;
+                    color: #27272A;
+                    text-align: center;
+                    margin-left: 7px;
+                    margin-right: 7px;
+                }
+
+                .increment {
+                    background-color: #12B76A;
+                    border: none;
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 4px;
+                    padding: 0;
+
+                    img {
+                        top: 1px;
+                    }
+                }
+
+                .decrement {
+                    background: transparent;
+                    border: 1px solid rgba(0, 0, 0, 0.05);
+                    border-radius: 4px;
+                    width: 24px;
+                    height: 24px;
+                    padding: 0;
+                }
+
+                .value-style {
+                    margin-top: 0;
+                }
+
+                .middle-card-style {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-top: 12px;
+                }
+
+
+            }
         }
     }
+
     // .card-content- {
-       
+
     // }
 }
 
@@ -121,49 +221,6 @@
                 }
 
                 .middle-sec-card {
-                    display: block;
-
-                    .middle-card-style {
-                        display: flex;
-                        justify-content: space-between;
-                        margin-top: 12px;
-
-                        .input-c {
-                            width: 24px;
-                            height: 24px;
-                            border-radius: 4px;
-                            border: 1px solid #D0D5DD;
-                            color: #27272A;
-                            text-align: center;
-                            margin-left: 7px;
-                            margin-right: 7px;
-                        }
-
-                        .increment {
-                            background-color: #12B76A;
-                            border: none;
-                            width: 24px;
-                            height: 24px;
-                            border-radius: 4px;
-
-                            img {
-                                top: 1px;
-                            }
-                        }
-
-                        .decrement {
-                            background: transparent;
-                            border: 1px solid rgba(0, 0, 0, 0.05);
-                            border-radius: 4px;
-                            width: 24px;
-                            height: 24px;
-                        }
-
-                        .value-style {
-                            margin-top: 0;
-                        }
-                    }
-
                     p {
                         margin-top: 12px;
                     }
@@ -257,12 +314,12 @@
 
         .list-carousel-item {
             display: flex;
-            padding: 8px;
+            padding: 0px;
             flex-direction: column;
             align-items: flex-start;
             gap: 12px;
             border-radius: 4px;
-            border: 1px solid var(--gloabl-border-color);
+            border: none;
             background: var(--global-white-bg);
             width: 255px;
             flex-shrink: 0;

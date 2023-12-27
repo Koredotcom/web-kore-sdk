@@ -36,9 +36,7 @@ export function RetailOrderSelection(props: any) {
 
     // Function to handle increment
     const handleButtonEvent = (e: any) => {
-        console.log(e, 'e')
         if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
-            console.log(e.value, { renderMsg: e.title }, 'e.value, { renderMsg: e.title }')
             hostInstance.sendMessage(e.value, { renderMsg: e.title });
         } else if (e.type == 'url' || e.type == 'web_url') {
             let link = e.fallback_url || e.url;
@@ -48,7 +46,6 @@ export function RetailOrderSelection(props: any) {
             hostInstance.openExternalLink(link);
         }
     }
-    console.log(msgData?.message[0]?.component?.payload, 'test template')
     if (msgData?.message[0]?.component?.payload?.template_type === "retailOrderSelection" && msgData?.message[0]?.component?.payload?.card_type === 'detail') {
         return (
             <div>
@@ -110,17 +107,22 @@ export function RetailOrderSelection(props: any) {
                                                             <div className="set-qty-style" key={index}>
                                                                 <div className="f-right">
                                                                     {/* Your buttons and input fields */}
-                                                                    <button className="decrement" onClick={() => handleDecrement(index)}>
-                                                                        <img src={ele?.button1?.icon} alt="Decrement" />
-                                                                    </button>
-                                                                    <input
-                                                                        className="input-c"
-                                                                        type="text"
-                                                                        value={elements[index].qty}
-                                                                    />
-                                                                    <button className="increment" onClick={() => handleIncrement(index)}>
-                                                                        <img src={ele?.button2?.icon} alt="Increment" />
-                                                                    </button>
+                                                                    {ele?.button1?.icon &&
+                                                                        <button className="decrement" onClick={() => handleDecrement(index)}>
+                                                                            {ele?.button1?.icon && <img src={ele?.button1?.icon} alt="Decrement" />}
+                                                                        </button>}
+                                                                    {ele?.button1?.icon &&
+                                                                        <input
+                                                                            className="input-c"
+                                                                            type="text"
+                                                                            value={elements[index].qty}
+                                                                        />
+                                                                    }
+                                                                    {ele?.button2?.icon &&
+                                                                        <button className="increment" onClick={() => handleIncrement(index)}>
+                                                                            {ele?.button2?.icon && <img src={ele?.button2?.icon} alt="Increment" />}
+                                                                        </button>
+                                                                    }
                                                                 </div>
                                                             </div>
                                                         )

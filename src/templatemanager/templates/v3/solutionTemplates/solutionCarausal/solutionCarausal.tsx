@@ -9,24 +9,38 @@ import IconsManager from '../../../../base/iconsManager';
 export function Carousel(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
-    const [count, setCount] = useState(0);
+    // const [count, setCount] = useState(0);
 
-    const increment = () => {
-        setCount(count + 1);
+    const initialElements = msgData.message[0]?.component?.payload?.elements || [];
+    const [elements, setElements] = useState(initialElements);
+    const [rerenderKey, setRerenderKey] = useState(0);
+    const [modifiedQty, setModifiedQty] = useState<number | null>(null);
+
+    const handleDecrement = (index: any) => {
+        setElements((prevElements: any) => {
+            const updatedElements = [...prevElements];
+            updatedElements[index].qty = Math.max(0, updatedElements[index].qty - 1);
+            return updatedElements;
+        });
     };
 
-    const decrement = () => {
-        if (count > 0) {
-            setCount(count - 1);
-        }
+    const handleIncrement = (index: any) => {
+        setElements((prevElements: any) => {
+            const updatedElements = [...prevElements];
+            updatedElements[index].qty = parseInt(updatedElements[index].qty, 10) + 1;
+            return updatedElements;
+        });
     };
+
+
+
     const messageobj = {
         msgData: msgData,
         hostInstance: hostInstance
     }
     const handleButtonEvent = (e: any) => {
         if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
-            hostInstance.sendMessage(e.payload || e.value, { renderMsg: e.title });
+            hostInstance.sendMessage(e.value, { renderMsg: e.title });
         } else if (e.type == 'url' || e.type == 'web_url') {
             let link = e.url;
             if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
@@ -100,34 +114,61 @@ export function Carousel(props: any) {
                 }
             })
         }, 50);
-
         return (
-            <div className="list-template-carousel-wrapper" id={msgData.messageId}>
+            <div key={rerenderKey} className="list-template-carousel-wrapper" id={msgData.messageId}>
                 <button className="carousel-left-click" data-button-left={msgData.messageId}>
                     <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
                         <path d="M12 15.5L7 10.5L12 5.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </button>
                 <div className="list-carousel" data-id={msgData.messageId}>
-                    {msgData.message[0].component.payload.elements.map((item: any) => (
+                    {msgData.message[0].component.payload.elements.map((item: any, index: number) => (
 
                         <div className="list-carousel-item">
                             <button className="card-content-sec">
                                 <div className="top-sec-card">
-                                    <img src={item?.card?.thumbnail} />
+                                    <img src={item?.thumbnail} />
+                                    <img src={item?.button1?.icon} />
                                     <div className="thumbnail-card-style">
-                                        <p className="p-left thumbnail-style thumbnail-style-br thumbnail-text" style={item?.card?.details?.titleStyle}>{item?.card?.details?.title}</p>
-                                        <p className="p-right thumbnail-style thumbnail-style-gr thumbnail-text" style={item?.card?.details?.subTitleStyle}>{item?.card?.details?.subTitle}</p>
+                                        <p className="p-left thumbnail-style thumbnail-style-br thumbnail-text" style={item?.details?.titleStyle}>{item?.details?.title}</p>
+                                        <p className="p-right thumbnail-style thumbnail-style-gr thumbnail-text" style={item?.details?.subTitleStyle}>{item?.details?.subTitle}</p>
                                     </div>
                                 </div>
+                                {/* <div className="middle-sec-card"> */}
+                                <div className="set-qty-style" key={index}>
+                                    <div className="f-right">
+                                        {/* Your buttons and input fields */}
+                                        {item?.button1?.icon &&
+                                            <button style={item?.button1?.buttonStyle} className="decrement" onClick={() => handleDecrement(index)}>
+                                                <img src={item?.button1?.icon} alt="Decrement" />
+                                            </button>
+                                        }
+                                        {item?.button1?.icon &&
+                                            <input
+                                                className="input-c"
+                                                type="text"
+                                                value={elements[index].qty}
+                                            />
+                                        }
+                                        {item?.button2?.icon &&
+                                            <button style={item?.button2?.buttonStyle} className="increment" onClick={() => handleIncrement(index)}>
+                                                <img src={item?.button2?.icon} alt="Increment" />
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+                                {/* </div> */}
                                 {
-                                    item?.card?.items?.map((ele: any) => (
+                                    item?.items?.map((ele: any) => (
                                         <div className="middle-sec-card">
                                             <p className="title-style" style={ele?.titleStyles}>{ele?.title}</p>
                                             <p className="sub-title-style" style={ele?.subTitleStyle}>{ele?.subTitle}</p>
                                             <div className="middle-card-style clear-float">
                                                 <div className="f-left">
-                                                    <p className="value-style" style={ele?.valueStyle}>{ele?.value}</p>
+                                                    <p className="value-style" style={ele?.valueStyle}>
+                                                        `${parseFloat(ele?.value.replace(/[^0-9.]/g, '')) * parseFloat(elements[index].qty)}`
+                                                        {/* {ele?.value} */}
+                                                    </p>
                                                 </div>
                                                 {/* <div className="f-right">
                                                     <button className="decrement" onClick={decrement}>
@@ -138,6 +179,7 @@ export function Carousel(props: any) {
                                                         <img alt="increment" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTguMDAwMTYgMy4zMzMzNFYxMi42NjY3TTMuMzMzNSA4LjAwMDAxSDEyLjY2NjgiIHN0cm9rZT0iI0ZFRkVGRSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==" />
                                                     </button>
                                                 </div> */}
+
                                             </div>
                                             <p className="summary-text-style" style={ele?.summaryTextStyle}>{ele?.summaryText}</p>
                                             <p className="summary-text-style" >{ele?.itemID}</p>
