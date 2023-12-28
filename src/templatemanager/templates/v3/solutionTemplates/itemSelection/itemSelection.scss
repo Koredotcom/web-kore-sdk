@@ -53,9 +53,10 @@
             // Style for the image
             img {
                 max-width: 100%;
-                height: auto;
                 display: block;
-                // border-radius: 5px;
+                object-fit: cover;
+                width: 80px;
+                height: 80px;
             }
 
             .checkbox-custom {

@@ -2,19 +2,31 @@ import BaseChatTemplate from '../../baseChatTemplate';
 import './solutionCarausal.scss';
 import { h, Fragment } from 'preact';
 import stackedCards from './solutionCarousal'
-import { useState } from 'preact/hooks';
+import { useState, useEffect  } from 'preact/hooks';
 import { getHTML } from '../../../../base/domManager';
 import IconsManager from '../../../../base/iconsManager';
 
 export function Carousel(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
-    // const [count, setCount] = useState(0);
+    const messageobj = {
+        msgData: msgData,
+        hostInstance: hostInstance
+    }
 
     const initialElements = msgData.message[0]?.component?.payload?.elements || [];
     const [elements, setElements] = useState(initialElements);
     const [rerenderKey, setRerenderKey] = useState(0);
-    const [modifiedQty, setModifiedQty] = useState<number | null>(null);
+    const [updatedQty, setUpdatedQty] = useState(null);
+    const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+    const [currentQty, setCurrentQty] = useState(null);
+
+    useEffect(() => {
+        // Set initial value for currentQty based on initial slide index
+        if (elements.length > 0) {
+            setCurrentQty(elements[currentSlideIndex]?.qty || null);
+        }
+    }, [elements, currentSlideIndex]);
 
     const handleDecrement = (index: any) => {
         setElements((prevElements: any) => {
@@ -24,23 +36,21 @@ export function Carousel(props: any) {
         });
     };
 
-    const handleIncrement = (index: any) => {
-        setElements((prevElements: any) => {
+    const handleIncrement = (index:any) => {
+        setElements((prevElements:any) => {
             const updatedElements = [...prevElements];
             updatedElements[index].qty = parseInt(updatedElements[index].qty, 10) + 1;
+            const newQty = updatedElements[index].qty;
+            setUpdatedQty(newQty);
             return updatedElements;
         });
     };
 
 
-
-    const messageobj = {
-        msgData: msgData,
-        hostInstance: hostInstance
-    }
     const handleButtonEvent = (e: any) => {
         if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
-            hostInstance.sendMessage(e.value, { renderMsg: e.title });
+            console.log(e.title, { renderMsg: e.value, qty: updatedQty || currentQty},'test payload')
+            hostInstance.sendMessage(e.title, { renderMsg: e.value, qty: updatedQty || currentQty});
         } else if (e.type == 'url' || e.type == 'web_url') {
             let link = e.url;
             if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
@@ -49,6 +59,20 @@ export function Carousel(props: any) {
             hostInstance.openExternalLink(link);
         }
     }
+    const handleLeftClick = () => {
+        setCurrentSlideIndex((prevIndex) => {
+            const newIndex = prevIndex > 0 ? prevIndex - 1 : elements.length - 1;
+            return newIndex;
+        });
+    };
+
+    const handleRightClick = () => {
+        setCurrentSlideIndex((prevIndex) => {
+            const newIndex = prevIndex < elements.length - 1 ? prevIndex + 1 : 0;
+            return newIndex;
+        });
+    };
+
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'retailAssistcarousel') {
         setTimeout(() => {
             const btnsParentDiv: any = hostInstance.chatEle.querySelector(`[data-id='${msgData.messageId}']`);
@@ -116,7 +140,7 @@ export function Carousel(props: any) {
         }, 50);
         return (
             <div key={rerenderKey} className="list-template-carousel-wrapper" id={msgData.messageId}>
-                <button className="carousel-left-click" data-button-left={msgData.messageId}>
+                <button className="carousel-left-click" data-button-left={msgData.messageId} onClick={handleLeftClick}>
                     <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
                         <path d="M12 15.5L7 10.5L12 5.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
@@ -128,7 +152,6 @@ export function Carousel(props: any) {
                             <button className="card-content-sec">
                                 <div className="top-sec-card">
                                     <img src={item?.thumbnail} />
-                                    {/* <img src={item?.button1?.icon} /> */}
                                     <div className="thumbnail-card-style">
                                         <p className="p-left thumbnail-style thumbnail-style-br thumbnail-text" style={item?.details?.titleStyle}>{item?.details?.title}</p>
                                         <p className="p-right thumbnail-style thumbnail-style-gr thumbnail-text" style={item?.details?.subTitleStyle}>{item?.details?.subTitle}</p>
@@ -170,15 +193,6 @@ export function Carousel(props: any) {
                                                         {/* {ele?.value} */}
                                                     </p>
                                                 </div>
-                                                {/* <div className="f-right">
-                                                    <button className="decrement" onClick={decrement}>
-                                                        <img alt="decrement" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMuNjI1IDhIMTIuMzc1IiBzdHJva2U9IiNEMEQ1REQiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=" />
-                                                    </button>
-                                                    <input className="input-c" type="text" value={count} readOnly />
-                                                    <button className="increment" onClick={increment}>
-                                                        <img alt="increment" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTguMDAwMTYgMy4zMzMzNFYxMi42NjY3TTMuMzMzNSA4LjAwMDAxSDEyLjY2NjgiIHN0cm9rZT0iI0ZFRkVGRSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==" />
-                                                    </button>
-                                                </div> */}
                                             </div>
                                             {ele?.summaryText && <p className="summary-text-style" style={ele?.summaryTextStyle}>{ele?.summaryText}</p>}
                                             {ele?.itemID && <p className="summary-text-style" >{ele?.itemID}</p>}
@@ -200,7 +214,7 @@ export function Carousel(props: any) {
                             </button>
                         </div>))}
                 </div>
-                <button className="carousel-right-click" data-button-right={msgData.messageId}>
+                <button className="carousel-right-click" data-button-right={msgData.messageId} onClick={handleRightClick}>
                     <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
                         <path d="M7 5.5L12 10.5L7 15.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>

@@ -200,10 +200,10 @@ export function RetailOrderSelection(props: any) {
                                                         ele.values && ele.values?.map((ele: any) => (
                                                             <div className="container-details-style ">
                                                                 <div className="f-left-section">
-                                                                    <p style={ele?.style}>{ele?.title}</p>
+                                                                    {ele?.title && <p style={ele?.style}>{ele?.title}</p>}
                                                                 </div>
                                                                 <div className="f-right-section">
-                                                                    <p style={ele?.style}>{ele?.value}</p>
+                                                                    {ele?.value && <p style={ele?.style}>{ele?.value}</p>}
                                                                 </div>
                                                             </div>
                                                         ))
