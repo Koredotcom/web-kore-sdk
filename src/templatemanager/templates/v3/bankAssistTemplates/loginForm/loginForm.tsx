@@ -8,6 +8,7 @@ export function customLoginForm(props: any) {
     const msgData = props.msgData;
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    // hostInstance.chatWindow.prototype.updateScrollOnMessageRender = function (e:any) { };
     const handleButtonEvent = () => {
         // Get all elements with the class 'focus-me'
         var elements = document.getElementsByClassName('custom-form-input-wrapper');

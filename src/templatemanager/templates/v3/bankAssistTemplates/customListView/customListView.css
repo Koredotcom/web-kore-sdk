@@ -37,3 +37,6 @@
 .bank-assist-theme .clickable {
     cursor: pointer;
 }
+.bank-assist-theme .chat-actions-bottom-wraper .actions-contnet-data {
+    max-height: 100%;
+}

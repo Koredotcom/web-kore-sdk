@@ -82,8 +82,6 @@ export function CustomList(props: any) {
         hostInstance: hostInstance
     }
     const openSeeMoreTab = () => {
-        
-        debugger
         hostInstance.bottomSliderAction('', getHTML(ListViewMore, messageObj, hostInstance));
     }
 
@@ -102,7 +100,6 @@ export function CustomList(props: any) {
     }
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'listView') {
-        debugger
         return (
             <div className="list-view-action-template-wrapper">
                 <div className="list-view-heading">{msgData.message[0].component.payload.heading} {msgData.message[0].component.payload.text}</div>
