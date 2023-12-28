@@ -128,7 +128,7 @@ export function Carousel(props: any) {
                             <button className="card-content-sec">
                                 <div className="top-sec-card">
                                     <img src={item?.thumbnail} />
-                                    <img src={item?.button1?.icon} />
+                                    {/* <img src={item?.button1?.icon} /> */}
                                     <div className="thumbnail-card-style">
                                         <p className="p-left thumbnail-style thumbnail-style-br thumbnail-text" style={item?.details?.titleStyle}>{item?.details?.title}</p>
                                         <p className="p-right thumbnail-style thumbnail-style-gr thumbnail-text" style={item?.details?.subTitleStyle}>{item?.details?.subTitle}</p>
@@ -166,7 +166,7 @@ export function Carousel(props: any) {
                                             <div className="middle-card-style clear-float">
                                                 <div className="f-left">
                                                     <p className="value-style" style={ele?.valueStyle}>
-                                                        `${parseFloat(ele?.value.replace(/[^0-9.]/g, '')) * parseFloat(elements[index].qty)}`
+                                                        ${parseFloat(ele?.value.replace(/[^0-9.]/g, '')) * parseFloat(elements[index].qty)}
                                                         {/* {ele?.value} */}
                                                     </p>
                                                 </div>
@@ -179,10 +179,9 @@ export function Carousel(props: any) {
                                                         <img alt="increment" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTguMDAwMTYgMy4zMzMzNFYxMi42NjY3TTMuMzMzNSA4LjAwMDAxSDEyLjY2NjgiIHN0cm9rZT0iI0ZFRkVGRSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==" />
                                                     </button>
                                                 </div> */}
-
                                             </div>
-                                            <p className="summary-text-style" style={ele?.summaryTextStyle}>{ele?.summaryText}</p>
-                                            <p className="summary-text-style" >{ele?.itemID}</p>
+                                            {ele?.summaryText && <p className="summary-text-style" style={ele?.summaryTextStyle}>{ele?.summaryText}</p>}
+                                            {ele?.itemID && <p className="summary-text-style" >{ele?.itemID}</p>}
                                         </div>
                                     ))
                                 }

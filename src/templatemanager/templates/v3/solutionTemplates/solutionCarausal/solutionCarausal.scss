@@ -43,24 +43,35 @@
                 }
 
                 img {
-                    width: 100%;
+                    width: 239px;
+                    height: 144px;
+                    margin: 0 auto;
+                    text-align: center;
+                    object-fit: contain;
+                    ;
                 }
             }
 
             .middle-sec-card {
                 display: block;
                 position: relative;
+                padding: 0 0px 0px 10px;
 
                 p {
-                    margin-bottom: 8px;
+                    margin-bottom: 12px;
+                    max-height: 32px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                 }
             }
 
             .set-qty-style {
                 position: relative;
-                top: 19%;
-                left: 60%;
+                top: 22%;
+                left: 63%;
                 z-index: 9999;
+
                 .input-c {
                     width: 24px;
                     height: 24px;
@@ -321,8 +332,10 @@
             border-radius: 4px;
             border: none;
             background: var(--global-white-bg);
-            width: 255px;
+            // width: 255px;
+            width: 82%;
             flex-shrink: 0;
+            max-height: 520px;
 
             .img-block {
                 width: 100%;
