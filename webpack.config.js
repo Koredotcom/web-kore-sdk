@@ -217,6 +217,11 @@ module.exports= function(env,argv){
             import: "./src/index_plugins/fileUpload_umd.ts",
             filename: 'plugins/file-upload.js',
             chunkLoading: false,
+          },
+          MultiFileUploadPluginSDK: {
+            import: "./src/index_plugins/multiFileUpload.ts",
+            filename: 'plugins/multi-file-upload.js',
+            chunkLoading: false,
           }
         }
         config.output.path= path.resolve(__dirname,'dist/esm');
@@ -336,8 +341,12 @@ module.exports= function(env,argv){
             import: "./src/index_plugins/fileUpload_umd.ts",
             filename: 'plugins/file-upload-umd.js',
             chunkLoading: false,
+          },
+          MultiFileUploadPluginSDK: {
+            import: "./src/index_plugins/multiFileUpload.ts",
+            filename: 'plugins/multi-file-upload.js',
+            chunkLoading: false,
           }
-
         }
         config.output.library = {
           name: '[name]',
