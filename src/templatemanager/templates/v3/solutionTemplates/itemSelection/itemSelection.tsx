@@ -35,14 +35,21 @@ function RetailOrderSelection(props: any) {
     // Function to handle payload and send message
     const handleButtonEvent = (e: any) => {
         console.log(e, 'event')
-        if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
+        if (e?.type?.toLowerCase() == 'postback' || e?.type?.toLowerCase() == 'text') {
             hostInstance.sendMessage(e.value, { renderMsg: e.title });
-        } else if (e.type == 'url' || e.type == 'web_url') {
+        } else if (e?.type == 'url' || e?.type == 'web_url') {
             let link = e.fallback_url || e.url;
             if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
                 link = `http:////${link}`;
             }
             hostInstance.openExternalLink(link);
+        } else {
+            let selectedValues:any =[];
+            const selectedItems = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${msgData.messageId}:checked`);
+            selectedItems.forEach((ele: any) => {
+                selectedValues.push(ele.value);
+            });
+            hostInstance.sendMessage(selectedValues.toString(), {renderMsg: e.value});
         }
     }
     console.log(msgData, 'msgData msgData')
@@ -73,7 +80,7 @@ function RetailOrderSelection(props: any) {
                                                     {
                                                         ele.checkBox === "enabled" && (
                                                             <div class="kr-sg-checkbox">
-                                                                <input id="checkbox-1" class="checkbox-custom" type="checkbox" />
+                                                                <input id={`checkbox-${index}`} className={`checkbox-custom checkbox-input-${msgData.messageId}`} type="checkbox" value={ele.value}/>
                                                             </div>
                                                         )}
                                                     <img src={ele?.icon} />
