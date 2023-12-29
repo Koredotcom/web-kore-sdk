@@ -16,7 +16,7 @@ export function RetailOrderSelection(props: any) {
     const [elements, setElements] = useState(initialElements);
     const [rerenderKey, setRerenderKey] = useState(0);
     const [modifiedQty, setModifiedQty] = useState<number | null>(null);
-
+    const [displayLimit, setDisplayLimit] = useState(3);
 
 
     const handleDecrement = (index: any) => {
@@ -49,6 +49,16 @@ export function RetailOrderSelection(props: any) {
         }
     }
     console.log(msgData, 'msgData msgData')
+    const showMore = (e:any) =>{
+        setDisplayLimit(displayLimit + 3);
+    }
+    const filteredElements = elements.filter((ele:any, index:any) => (
+        ele?.flag !== 'ItemdetailsScreen' &&
+        ele?.flag !== 'addressTemplate' &&
+        ele?.flag !== 'cancelOrderTemplate' &&
+        index < displayLimit // Apply the display limit here
+    ));
+
     if (msgData?.message[0]?.component?.payload?.template_type === "retailOrderSelection" && msgData?.message[0]?.component?.payload?.card_type === 'detail') {
         return (
             <div>
@@ -57,11 +67,10 @@ export function RetailOrderSelection(props: any) {
                         <div>
                             <h2 className="m-title">{msgData.message[0].component?.payload?.title}</h2>
                             <div className="card-container">
-                                {
-                                    msgData.message[0].component?.payload?.elements?.map((ele: any, index: number) => (
-                                        ele?.flag !== "ItemdetailsScreen" && ele?.flag !== "addressTemplate" && ele?.flag !== "cancelOrderTemplate" && (
+                            {filteredElements.slice(0, displayLimit).map((ele:any, index:any) => (
+                                        // ele?.flag !== "ItemdetailsScreen" && ele?.flag !== "addressTemplate" && ele?.flag !== "cancelOrderTemplate" && (
                                             // <div>
-                                            <div className={`card-template-wrapper ${ele.checkBox === "enabled" ? "check-box-style" : ""}`}>
+                                            <div key={index} className={`card-template-wrapper ${ele.checkBox === "enabled" ? "check-box-style" : ""}`}>
                                                 <div className="left-section">
                                                     {
                                                         ele.checkBox === "enabled" && (
@@ -143,12 +152,10 @@ export function RetailOrderSelection(props: any) {
                                         )
 
                                     )
-                                    )
-
                                 }
-                                {/* { msgData?.message[0]?.component?.payload?.displayLimit === '3' && (
-                                    <div>
-                                      <p className="show-more-title" onClick={handleShowMore}>{msgData?.message[0]?.component?.payload?.showMoreTitle}</p>
+                                {/* { msgData?.message[0]?.component?.payload?.displayLimit === '3' &&  (
+                                    <div className="show-more-title" onClick={() => showMore(msgData?.message[0]?.component?.payload?.displayLimit)}>
+                                      <p>{msgData?.message[0]?.component?.payload?.showMoreTitle}</p>
                                     </div>
                                 )} */}
                             </div>
@@ -157,7 +164,7 @@ export function RetailOrderSelection(props: any) {
                     {
                         msgData.message[0].component?.payload?.elements?.map((ele: any, index: number) => (
                             (
-                                ele?.flag === "addressTemplate" && (
+                                ele?.flag !== "ItemdetailsScreen" && ele?.flag === "addressTemplate" && ele?.flag !== "cancelOrderTemplate"  && (
                                     <div className="card-template-wrapper address-template-style" onClick={() => handleButtonEvent(ele.actions)}>
                                         <div className="left-section">
                                             <img src={ele?.icon} />
@@ -240,7 +247,7 @@ export function RetailOrderSelection(props: any) {
                                                 <h1 className="title-style" style={ele?.titleStyle}>{ele?.title}</h1>
                                             </div>
                                             <div className="container-details m-gap">
-                                                <h2 className="sub-title-style" style={ele?.subTitleStyle}>{ele?.subTitle}</h2>
+                                              <h2 className="sub-title-style" style={ele?.subTitleStyle}>{ele?.subTitle}</h2>
                                             </div>
                                             {
                                                 ele?.description && ele?.description?.map((ele: any, index: number) => (

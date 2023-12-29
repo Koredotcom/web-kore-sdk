@@ -24,6 +24,20 @@
     .card-container {
         border: 1px solid #E4E5E7;
         background: #fff;
+
+        .show-more-title {
+            background: #F0F1F2;
+            position: relative;
+            top: 0px;
+            margin-top: -4px;
+            p {
+                background: #F0F1F2;
+                text-align: center;
+                color: #101828;
+                font-size: 12px;
+                padding: 10px 0 10px;
+            }
+        }
     }
 
     .card-template-wrapper {
@@ -373,6 +387,10 @@
         width: 10%;
         position: relative;
         top: 5px;
+        img{
+            width: 20px;
+            height: 20px;
+        }
     }
 
     .right-section {
@@ -399,6 +417,10 @@
         // width: 10%;
         // position: relative;
         // top: 5px;
+        img{
+            width:80px;
+            height:80px;
+        }
     }
 
     .right-section {
@@ -421,6 +443,7 @@
     .f-right-section {
         float: right;
         width: 55%;
+
         p {
             font-size: 12px;
             margin-top: 8px;
@@ -430,6 +453,7 @@
     .f-left-section {
         float: left;
         width: 42%;
+
         p {
             font-size: 12px;
             margin-top: 8px;
