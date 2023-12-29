@@ -4,7 +4,7 @@
     flex-direction: column;
     gap: 0px;
     background: #fff;
-    margin: 0 10px;
+    margin: 0 10px 15px;
 
     .m-title {
         color: #101828;
@@ -24,20 +24,6 @@
     .card-container {
         border: 1px solid #E4E5E7;
         background: #fff;
-
-        .show-more-title {
-            background: #F0F1F2;
-            position: relative;
-            top: 0px;
-            margin-top: -4px;
-            p {
-                background: #F0F1F2;
-                text-align: center;
-                color: #101828;
-                font-size: 12px;
-                padding: 10px 0 10px;
-            }
-        }
     }
 
     .card-template-wrapper {
@@ -377,6 +363,23 @@
             float: right;
         }
     }
+
+    
+    .show-more-title {
+        background: #F0F1F2;
+        position: relative;
+        top: 0px;
+        margin-top: -4px;
+        cursor: pointer;
+        p {
+            background: #F0F1F2;
+            text-align: center;
+            color: #101828;
+            font-size: 12px;
+            padding: 10px 0 10px;
+        }
+    }
+
 }
 
 .card-template-wrapper.address-template-style {
@@ -409,7 +412,7 @@
     }
 }
 
-.card-template-wrapper.cancell-order-template-style {
+.card-template-wrapper.cancel-order-template-style {
     cursor: pointer;
 
     .left-section {
@@ -432,7 +435,9 @@
         // right: 28px;
         .container-details-style {
             overflow: auto;
-
+.f-left-section{
+    
+}
             p {
                 font-size: 12px;
                 margin-top: 8px;
