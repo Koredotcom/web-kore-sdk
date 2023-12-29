@@ -217,3 +217,25 @@
         }
     }
 }
+
+
+.retail-assist-theme{
+    .chat-widget-header{
+        .back-to-chat{
+            svg {
+                path{
+                    stroke: #fff;
+                }
+            }
+        }
+        .actions-info {
+            .btn-action{
+                svg {
+                    path{
+                        stroke: #fff;
+                    }
+                }
+            }
+        }
+    }
+}

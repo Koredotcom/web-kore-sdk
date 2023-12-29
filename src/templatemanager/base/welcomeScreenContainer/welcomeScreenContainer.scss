@@ -106,6 +106,7 @@
         }
     }
     .welcome-interactions {
+        background: linear-gradient(45deg, #F5ED47 14.64%, #80F5E8 85.36%);
         flex: 1 1 auto;
         overflow: auto;
     }
@@ -567,13 +568,21 @@
         }
         .start-conversations-wrapper {
             background: linear-gradient(45deg, #F5ED47 14.64%, #80F5E8 85.36%);
+            height: 300px;
             .bot_icon {
                 display: none;
             }
 
             .start-conv-sec {
+                margin-top: 30px;
+                .quick-start-buttons-container {
+                    .quick-start-btn {
+                        font-size: 12px;
+                    }
+                }
                 .start-conv-button {
                     background: #344054;
+                    border:1px solid #344054;
                 }
             }
         }
@@ -597,6 +606,28 @@
                     font-weight: 600;
                     line-height: normal;
                     opacity: 100;
+                    span{
+                        -webkit-text-fill-color: azure;
+                    }
+                }
+                h2{
+                    font-weight: 400;
+                }
+            }
+        }
+        .welcome-interactions{
+            // position: relative;
+            .middle-img{
+                position: absolute;
+                background: #fff;
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                left: 6%;
+                top: 28%;
+                z-index: 99;
+                img{
+                    padding: 16px;
                 }
             }
         }

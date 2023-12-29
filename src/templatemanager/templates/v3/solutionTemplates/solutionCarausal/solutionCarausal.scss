@@ -43,12 +43,12 @@
                 }
 
                 img {
-                    width: 239px;
+                    width: 144px;
                     height: 144px;
                     margin: 0 auto;
                     text-align: center;
                     object-fit: contain;
-                    ;
+                    max-width: 200px;  
                 }
             }
 
@@ -98,7 +98,7 @@
                     width: 24px;
                     height: 24px;
                     border-radius: 4px;
-                    padding: 0;
+                    padding: 3px;
 
                     img {
                         top: 1px;

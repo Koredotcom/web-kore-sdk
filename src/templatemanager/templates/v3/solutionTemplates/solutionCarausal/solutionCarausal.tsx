@@ -48,7 +48,6 @@ export function Carousel(props: any) {
 
 
     const handleButtonEvent = (e: any) => {
-        console.log(e,'event check payload')
         if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
             console.log(e.value,`#${updatedQty || currentQty}`, { renderMsg: e.title }, 'test payload')
             hostInstance.sendMessage(e.value,`#${updatedQty || currentQty}` || currentQty, { renderMsg: e.title });
