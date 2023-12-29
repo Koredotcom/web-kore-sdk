@@ -40,6 +40,10 @@ export function Message(props: any) {
         userStyle = userStyle + ' large_text';  
     }
 
+    if (brandingInfo.body.icon.show && brandingInfo.body.icon.user_icon) {
+        userStyle = userStyle + ' if-agent-img';
+    }
+
     const onCopy = (event: any, value: any) => {
         var dummy = document.createElement('textarea');
         document.body.appendChild(dummy);
@@ -101,12 +105,12 @@ export function Message(props: any) {
                                             </div> }
                                             <div className="bubble-msg-with-img">
                                                 <div className="bubble-msg" style={botStyles} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgItem.cInfo.body, "bot",msgItem)}}></div>
-                                                {!msgData.fromAgent && <div className="bot-img">
+                                                {brandingInfo.body.icon.show && !msgData.fromAgent && <div className="bot-img">
                                                     <figure>
                                                         <img src={msgData.icon} alt='avatr img' />
                                                     </figure>
                                                 </div>}
-                                                {msgData.fromAgent && <div className="bot-img">
+                                                {brandingInfo.body.icon.show && msgData.fromAgent && <div className="bot-img">
                                                     <figure>
                                                         <img src={msgData.icon} alt='avatr img' />
                                                     </figure>
@@ -137,7 +141,7 @@ export function Message(props: any) {
                                                 </div>
                                                 <div className="agent-img">
                                                     <figure>
-                                                        <img src="/images/avatar-bot.svg" alt='avatr img' />
+                                                        <img src="https://dev-xo.kore.ai/assets/websdkthemes/soundImages/user.png" alt='avatr img' />
                                                     </figure>
                                                 </div>
                                                 <div className="copy-bubble" onClick={ () => onCopy(event, msgItem.cInfo.renderMsg && msgItem.cInfo.renderMsg !== '' ? msgItem.cInfo.renderMsg : msgItem.cInfo.body)}>

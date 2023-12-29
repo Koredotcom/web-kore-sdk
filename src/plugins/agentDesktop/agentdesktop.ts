@@ -33,17 +33,17 @@ class AgentDesktopPlugin {
             }
         });
         me.hostInstance.on('beforeViewInit', (chatEle: any) => {
-            me.hostInstance.chatEle.querySelector('.btn-action-close').addEventListener('click', () => {
-                const messageToBot: any = {};
-                messageToBot["clientMessageId"] = new Date().getTime();
-                messageToBot["event"] = "close_agent_chat";
-                messageToBot["message"] = {
-                    "body": "",
-                    "type": ""
-                }
-                messageToBot["resourceid"] = "/bot.message";
-                me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
-            });
+            // me.hostInstance.chatEle.querySelector('.btn-action-close').addEventListener('click', () => {
+            //     const messageToBot: any = {};
+            //     messageToBot["clientMessageId"] = new Date().getTime();
+            //     messageToBot["event"] = "close_agent_chat";
+            //     messageToBot["message"] = {
+            //         "body": "",
+            //         "type": ""
+            //     }
+            //     messageToBot["resourceid"] = "/bot.message";
+            //     me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+            // });
         })
         me.removeEmptyBubblesInTemplate();
     }
@@ -105,15 +105,20 @@ class AgentDesktopPlugin {
             // Agent Status 
             if (event.messageData?.message?.type === 'agent_connected') {
                 me.brandingInfo = JSON.parse(JSON.stringify(me.hostInstance.config.branding));
-                me.hostInstance.config.branding.header.title.name = me.hostInstance.config.branding.body.agent_message.title.name;
+                if (me.hostInstance.config.branding.body.agent_message.icon.show) {
+                    me.hostInstance.config.branding.header.icon.show = true;
+                    me.hostInstance.config.branding.header.icon.type = 'custom';
+                    me.hostInstance.config.branding.header.icon.icon_url = 'https://dev-xo.kore.ai/assets/websdkthemes/soundImages/agent.jpg';
+                } else {
+                    me.hostInstance.config.branding.header.icon.show = false;
+                }
+                me.hostInstance.config.branding.header.title = me.hostInstance.config.branding.body.agent_message.title;
                 me.hostInstance.config.branding.header.sub_title.name = me.hostInstance.config.branding.body.agent_message.sub_title.name;
-                me.hostInstance.config.branding.header.sub_title.color = me.hostInstance.config.branding.body.agent_message.sub_title.color;
                 me.hostInstance.setBranding(me.hostInstance.config.branding);
             } else if (event.messageData?.message?.type === 'agent_disconnected') {
-                me.hostInstance.config.branding.header.title.name = me.brandingInfo.header.title.name;
-                me.hostInstance.config.branding.header.sub_title.name = me.brandingInfo.header.sub_title.name;
-                me.hostInstance.config.branding.header.title.color = me.brandingInfo.header.title.color;
-                me.hostInstance.config.branding.header.sub_title.color = me.brandingInfo.header.sub_title.color;
+                me.hostInstance.config.branding.header.icon = me?.brandingInfo?.header?.icon;
+                me.hostInstance.config.branding.header.title = me?.brandingInfo?.header?.title;
+                me.hostInstance.config.branding.header.sub_title.name = me?.brandingInfo?.header?.sub_title?.name;
                 me.hostInstance.setBranding(me.hostInstance.config.branding);
             }
             if (event.messageData?.message?.type === 'agent_connected') {
@@ -175,15 +180,19 @@ class AgentDesktopPlugin {
                                     const childEle1 = ele.querySelector('.read-text');
                                     childEle1.textContent = 'Delivered';
                                     const childEle2 = ele.querySelector('.sent');
-                                    childEle2.classList = [];
-                                    childEle2.classList.add('delivered');
+                                    if (childEle2) {
+                                        childEle2.classList = [];
+                                        childEle2.classList.add('delivered');
+                                    }
                                 }
                             } else if (tempData.message.type === "message_read") {
                                 const childEle1 = ele.querySelector('.read-text');
                                 childEle1.textContent = 'Read';
                                 const childEle2 = ele.querySelector('.delivered');
-                                childEle2.classList = [];
-                                childEle2.classList.add('read');
+                                if (childEle2) {
+                                    childEle2.classList = [];
+                                    childEle2.classList.add('read');
+                                }
                             }
 
                         }

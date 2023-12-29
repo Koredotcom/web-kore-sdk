@@ -3,7 +3,9 @@
    v2.0 | 20110126
    License: none (public domain)
 */
-
+html, body{
+  font-family: var(--global-font-family);
+}
 *{
 	box-sizing: border-box;
 }

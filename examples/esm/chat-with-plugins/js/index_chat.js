@@ -1,7 +1,7 @@
 
 
 import {chatConfig,chatWindow} from '../../../../../dist/kore-web-sdk.esm.browser.js';
-import {KoreFileUploaderPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
+import {KoreMultiFileUploaderPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {KorePickersPlugin } from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {GraphTemplatesPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {WebKitSTT, SpeakTextWithAWSPolly} from '../../../../../dist/kore-web-sdk.esm.browser.js';
@@ -15,16 +15,17 @@ import {AgentDesktopPlugin, GoogleSTT, GoogleSTTConfig, AzureSTT, GoogleTTS} fro
 let chatWindowInstance = new chatWindow();
 
 
-chatWindowInstance.installPlugin(new KoreFileUploaderPlugin());
-chatWindowInstance.installPlugin(new KorePickersPlugin({}));
-chatWindowInstance.installPlugin(new GraphTemplatesPlugin());
-chatWindowInstance.installPlugin(new SpeakTextWithAWSPolly({
-  region:'REGION',
-  identityCredentials : {
-    IdentityPoolId: 'IDENTITY-POOL-ID'
-  }
+// chatWindowInstance.installPlugin(new KoreFileUploaderPlugin());
+chatWindowInstance.installPlugin(new KoreMultiFileUploaderPlugin());
+// chatWindowInstance.installPlugin(new KorePickersPlugin({}));
+// chatWindowInstance.installPlugin(new GraphTemplatesPlugin());
+// chatWindowInstance.installPlugin(new SpeakTextWithAWSPolly({
+//   region:'REGION',
+//   identityCredentials : {
+//     IdentityPoolId: 'IDENTITY-POOL-ID'
+//   }
 
-}));
+// }));
 // chatWindowInstance.installPlugin(new SearchSuggestionsPlugin({
 //   botOptions:{
 //     koreAPIUrl:'PROVIDE_SEARCHASSIST_BASE_URL',
@@ -41,21 +42,22 @@ chatWindowInstance.installPlugin(new SpeakTextWithAWSPolly({
 // audioConfig:{ "audioEncoding": "MP3" }}));
 
 //chatWindowInstance.installPlugin(new GoogleSTT({key:'API_KEY',languageCode: 'en'}));
-chatWindowInstance.installPlugin(new AzureSTT(
-  {
-    key:'API_KEY',
-    region:'eastus'
-  }
-));
-chatWindowInstance.installPlugin(new AzureTTS(
-  {
-    key:'API_KEY',
-    region:'eastus'
-  }
-));
+// chatWindowInstance.installPlugin(new AzureSTT(
+//   {
+//     key:'API_KEY',
+//     region:'eastus'
+//   }
+// ));
+// chatWindowInstance.installPlugin(new AzureTTS(
+//   {
+//     key:'API_KEY',
+//     region:'eastus'
+//   }
+// ));
 // chatWindowInstance.installPlugin(new BrowserTTS());
+chatWindowInstance.installPlugin(new WebKitSTT({ lang: 'en-US' }));
 chatWindowInstance.installPlugin(new AgentDesktopPlugin());
-chatWindowInstance.installPlugin(new KoreDesktopNotificationPlugin());
+// chatWindowInstance.installPlugin(new KoreDesktopNotificationPlugin());
 // chatWindowInstance.installPlugin(new SolutionsTemplatesPlugin());
 
 
