@@ -46,10 +46,21 @@ function RetailOrderSelection(props: any) {
         } else {
             let selectedValues:any =[];
             const selectedItems = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${msgData.messageId}:checked`);
-            selectedItems.forEach((ele: any) => {
-                selectedValues.push(ele.value);
-            });
-            hostInstance.sendMessage(selectedValues.toString(), {renderMsg: e.value});
+            if(selectedItems?.length){
+                selectedItems.forEach((ele: any) => {
+                    let parsedEleInfo =  JSON.parse(ele.value);
+                    selectedValues.push(  {
+                                    id:parsedEleInfo.value,
+                                    quantity:parsedEleInfo.qty
+                    });
+                });
+                let title = e.title || e.value;
+                let payload = {
+                    title:title,
+                    selectedItems:selectedValues
+                }
+                hostInstance.sendMessage(JSON.stringify(payload), {renderMsg: e.value});
+            }
         }
     }
     console.log(msgData, 'msgData msgData')
@@ -80,7 +91,7 @@ function RetailOrderSelection(props: any) {
                                                     {
                                                         ele.checkBox === "enabled" && (
                                                             <div class="kr-sg-checkbox">
-                                                                <input id={`checkbox-${index}`} className={`checkbox-custom checkbox-input-${msgData.messageId}`} type="checkbox" value={ele.value}/>
+                                                                <input id={`checkbox-${index}`} className={`checkbox-custom checkbox-input-${msgData.messageId}`} type="checkbox" value={JSON.stringify(ele)}/>
                                                             </div>
                                                         )}
                                                     <img src={ele?.icon} />
@@ -372,6 +383,16 @@ class ItemSelectionList extends BaseChatTemplate {
         return this.getHTMLFromPreact(RetailOrderSelection, msgData, this.hostInstance);
     }
 }
+
+// {
+//     title:
+//     selectedItems:[
+//         {
+//             id:,
+//             quantty
+//         }
+//     ]
+// }
 
 export default ItemSelectionList;
 
