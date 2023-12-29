@@ -18,7 +18,6 @@ class KoreMultiFileUploaderPlugin {
   private _conc: any;
   private _mdat: any;
   _fields: any[];
-  attachmentFileId: any;
   hostInstance: any;
   ele: any;
   innerText: any;
@@ -46,12 +45,11 @@ class KoreMultiFileUploaderPlugin {
       CHUNK_SIZE: 1024 * 1024
     };
     this.xhrValue,
-      this.xhr,
-      this._conc,
-      this._mdat,
-      this.boundary,
-      this._fields = [];
-    this.attachmentFileId
+    this.xhr,
+    this._conc,
+    this._mdat,
+    this.boundary,
+    this._fields = [];
     this.allowedFileTypes = ['m4a', 'amr', 'aac', 'wav', 'mp3', 'mp4', 'mov', '3gp', 'flv', 'png', 'jpg', 'jpeg', 'gif', 'bmp', 'csv', 'txt', 'json', 'pdf', 'doc', 'dot', 'docx', 'docm',
       'dotx', 'dotm', 'xls', 'xlt', 'xlm', 'xlsx', 'xlsm', 'xltx', 'xltm', 'xlsb', 'xla', 'xlam', 'xll', 'xlw', 'ppt', 'pot', 'pps', 'pptx', 'pptm', 'potx', 'potm', 'ppam',
       'ppsx', 'ppsm', 'sldx', 'sldm', 'zip', 'rar', 'tar', 'wpd', 'wps', 'rtf', 'msg', 'dat', 'sdf', 'vcf', 'xml', '3ds', '3dm', 'max', 'obj', 'ai', 'eps', 'ps', 'svg', 'indd', 'pct', 'accdb',
@@ -101,6 +99,16 @@ class KoreMultiFileUploaderPlugin {
       }
       me.convertFiles(file);
     })
+    me.hostInstance.eventManager.addEventListener('#captureFileAttachment', 'change', (event: any) => {
+      const file = me.hostInstance.chatEle.querySelector('#captureFileAttachment').files[0];
+      if (file && file.size) {
+        if (file.size > me.filetypes.file.limit.size) {
+          alert(me.filetypes.file.limit.msg);
+          return;
+        }
+      }
+      me.convertFiles(file);
+    })
   }
 
   bytesToMB(bytes: any) {
@@ -124,9 +132,6 @@ class KoreMultiFileUploaderPlugin {
         var serverMessageObject: any = {};
         serverMessageObject.message = {};
         serverMessageObject.message.attachments = [];
-        if (this.attachmentFileId) {
-          me.hostInstance.attachmentInfo.fileId = this.attachmentFileId;
-        }
         if (me.hostInstance.attachmentInfo && Object.keys(me.hostInstance.attachmentInfo) && Object.keys(me.hostInstance.attachmentInfo).length) {
           data.chatWindowEvent.stopFurtherExecution = true;
           serverMessageObject.message.attachments[0] = me.hostInstance.attachmentInfo;
@@ -135,7 +140,7 @@ class KoreMultiFileUploaderPlugin {
           clientMessageObject.message[0] = {};
           clientMessageObject.message[0].cInfo = {};
           clientMessageObject.message[0].cInfo = serverMessageObject.message;
-          me.hostInstance.sendMessage('Attachment sent', me.hostInstance.attachmentInfo, serverMessageObject, clientMessageObject);
+          me.hostInstance.sendMessage('', me.hostInstance.attachmentInfo, serverMessageObject, clientMessageObject);
           me.hostInstance.attachmentInfo = {};
           me.hostInstance.on("afterRenderMessage", (chatWindowData: any) => {
             me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.add('hide-attachment');
@@ -209,7 +214,7 @@ class KoreMultiFileUploaderPlugin {
                 const _dur = Math.round(evt.target.duration);
                 if (recState.type === 'audio') {
                   (URL || webkitURL).revokeObjectURL(url); // fallback for webkit
-                  me.getFileToken(recState. selectedFile);
+                  me.getFileToken(recState, selectedFile);
                 }
               });
               if (recState.type === 'video') {
@@ -404,27 +409,30 @@ class KoreMultiFileUploaderPlugin {
 
   onFileToUploaded(_this: this, evt: any, _recState: any) {
     var me: any = _this;
-    clearTimeout(me.multipartTimeInterval);
-    me.multipartTimeInterval = null;
-    me.hostInstance.attachmentInfo = [];
-    me.hostInstance.attachmentInfo.fileId = _recState.fileToken;
+    // clearTimeout(me.multipartTimeInterval);
+    // me.multipartTimeInterval = null;
     me.hostInstance.attachmentInfo.fileName = _recState.name;
     me.hostInstance.attachmentInfo.fileType = _recState.fileType;
-    if ($(evt.currentTarget).find('.percentage')) {
-      var progressbar = $(evt.currentTarget).find('.percentage');
-      $(progressbar).css({ 'width': 100 + '%' });
-      $(evt.currentTarget).attr('data-value', _recState.fileToken);
-      $(evt.currentTarget).attr('data-name', _recState.name);
-      $(evt.currentTarget).attr('file-size', _recState.sizeInMb);
-      if (_recState.type.includes('image')) {
-        $(evt.currentTarget).attr('data-type', 'image');
-      } else {
-        $(evt.currentTarget).attr('data-type', 'attachment');
-      }
-    }
+    me.hostInstance.attachmentInfo.type = _recState.type;
+    me.hostInstance.attachmentInfo.fileUrl = '';
+    me.hostInstance.attachmentInfo.size = _recState.sizeInMb;
+    // if ($(evt.currentTarget).find('.percentage')) {
+    //   var progressbar = $(evt.currentTarget).find('.percentage');
+    //   $(progressbar).css({ 'width': 100 + '%' });
+    //   $(evt.currentTarget).attr('data-value', _recState.fileToken);
+    //   $(evt.currentTarget).attr('data-name', _recState.name);
+    //   $(evt.currentTarget).attr('file-size', _recState.sizeInMb);
+    //   if (_recState.type.includes('image')) {
+    //     $(evt.currentTarget).attr('data-type', 'image');
+    //   } else {
+    //     $(evt.currentTarget).attr('data-type', 'attachment');
+    //   }
+    // }
     if ($(evt.currentTarget).closest('.attachment-wrapper-data').find('.proceed-upload').hasClass('hide')) {
       $(evt.currentTarget).closest('.attachment-wrapper-data').find('.proceed-upload').removeClass('hide')
     }
+    me.hostInstance.chatEle.querySelector('.typing-text-area').focus();
+
   }
 
   onUploadError(_this: any, evt: any, _recState: any) {
@@ -486,28 +494,28 @@ class KoreMultiFileUploaderPlugin {
     this.options = { options };
     this.$element = element;
 
-    if (element) {
-      const progressbar = element.querySelector('.percentage');
-      me.multipartTimeInterval = setInterval(function () {
-        progressbar.style.width = 10 * 2 + '%';
-      });
-    }
+    // if (element) {
+    //   const progressbar = element.querySelector('.percentage');
+    //   me.multipartTimeInterval = setInterval(function () {
+    //     progressbar.style.width = 10 * 2 + '%';
+    //   });
+    // }
 
     if (!this.options.chunkUpload) {
-      me.startUpload(this.options);
+      me.startUpload(this.options, element);
     } else {
       me.startChunksUpload(this);
     }
   }
 
-  startUpload(_this: { options: { url: any; headers: { [x: string]: any; }; data: { [x: string]: any; }; }; }) {
+  startUpload(_this: { options: { url: any; headers: { [x: string]: any; }; data: { [x: string]: any; }; }; }, ele?: any) {
     let me: any = this;
     const _scope: any = _this;
     this._conc = me.getConnection(_this),
       this._mdat = new me.MultipartData();
     if (this._conc.upload && this._conc.upload.addEventListener) {
       this._conc.upload.addEventListener('progress', (evt: any) => {
-        me.progressListener(_scope, evt);
+        me.progressListener(_scope, evt, ele);
       }, false);
     }
     this._conc.addEventListener('load', (evt: any) => {
@@ -600,12 +608,39 @@ class KoreMultiFileUploaderPlugin {
   }
 
   // kfrm.net.HttpRequest = me.HttpRequest;
-  progressListener(_this: any, evt: any) {
+  progressListener(_this: any, evt: any, ele: any) {
+    if (ele) {
+      let width = (evt.loaded / evt.total) * 100;
+      const progressbar = ele.querySelector('.percentage');
+      const percentageCompletion = ele.querySelector('.percentage-complete');
+      progressbar.style.width = width + '%';
+      let perComp = Math.floor(width) + '% uploaded';
+      percentageCompletion.textContent = perComp;
+    }
     console.log(evt);
   }
 
-  loadListener(_this: any, $element: any, evt: { target: { response: string; }; }) {
+  loadListener(_this: any, evt: { target: { response: string; }; }) {
     let me = this;
+    me.hostInstance.attachmentInfo = {};
+    me.hostInstance.attachmentInfo.fileId = JSON.parse(evt.target.response).fileId;
+    let auth = "bearer " + me.hostInstance.config.botOptions.accessToken;
+    $.ajax({
+      type: 'GET',
+      url: me.hostInstance.config.botOptions.koreAPIUrl + "1.1/attachment/file/" + me.hostInstance.attachmentInfo.fileId + "/url?repeat=true",
+      dataType: 'json',
+      headers: {
+        Authorization: auth,
+      },
+      success(response: any) {
+        me.hostInstance.attachmentInfo.fileUrl = response.fileUrl;
+      },
+      error(msg: any) {
+        if (msg.responseJSON && msg.responseJSON.errors && msg.responseJSON.errors.length && msg.responseJSON.errors[0].httpStatus === '401') {
+          alert(msg.responseJSON.errors[0]);
+        }
+      },
+    });
     this.$element.dispatchEvent(me.successEv);
   }
 
@@ -728,7 +763,10 @@ class KoreMultiFileUploaderPlugin {
             <div class="progress-percentage">\
                 <div class="percentage"></div>\
             </div>\
-            <p class="file-size">'+ selectedFile.sizeInMb + 'MB</p>\
+            <div class="size-completion">\
+              <p class="file-size">'+ selectedFile.sizeInMb + 'MB -</p>\
+              <p class="percentage-complete"> 0% uploaded</p>\
+            </div>\
         </div>\
         <button class="delete-upload">\
                 <img src="data:image/svg+xml;base64, PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+" alt="remove" />\

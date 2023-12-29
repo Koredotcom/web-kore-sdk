@@ -34,3 +34,5 @@ export{KoreDesktopNotificationPlugin}from"./plugins/kore-desktop-notification.js
 export{SearchSuggestionsPlugin}from"./plugins/search-suggestions.js";
 // @ts-ignore
 export {KoreFileUploaderPlugin} from './plugins/file-upload.js';
+// @ts-ignore
+export {KoreMultiFileUploaderPlugin} from './plugins/mulit-file-upload.js';
