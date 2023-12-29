@@ -140,8 +140,6 @@
     align-items: center;
     gap: 6px;
 
-
-
     .left-click {
         border-radius: 32px;
         background: var(--global-white-bg);
@@ -198,7 +196,9 @@
                 img {
                     width: 100%;
                 }
-
+                .view-more-btn{
+                    height: 32px;
+                }
                 .top-sec-card {
                     display: block;
                     position: relative;

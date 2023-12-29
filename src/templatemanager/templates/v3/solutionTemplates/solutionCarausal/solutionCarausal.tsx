@@ -2,7 +2,7 @@ import BaseChatTemplate from '../../baseChatTemplate';
 import './solutionCarausal.scss';
 import { h, Fragment } from 'preact';
 import stackedCards from './solutionCarousal'
-import { useState, useEffect  } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
 import { getHTML } from '../../../../base/domManager';
 import IconsManager from '../../../../base/iconsManager';
 
@@ -36,8 +36,8 @@ export function Carousel(props: any) {
         });
     };
 
-    const handleIncrement = (index:any) => {
-        setElements((prevElements:any) => {
+    const handleIncrement = (index: any) => {
+        setElements((prevElements: any) => {
             const updatedElements = [...prevElements];
             updatedElements[index].qty = parseInt(updatedElements[index].qty, 10) + 1;
             const newQty = updatedElements[index].qty;
@@ -49,8 +49,8 @@ export function Carousel(props: any) {
 
     const handleButtonEvent = (e: any) => {
         if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
-            console.log(e.value, {renderMsg: e.title}, updatedQty || currentQty,'test payload')
-            hostInstance.sendMessage(e.value, {renderMsg: e.title}, updatedQty || currentQty);
+            console.log(e.value,`#${updatedQty || currentQty}`, { renderMsg: e.title }, 'test payload')
+            hostInstance.sendMessage(e.value,`#${updatedQty || currentQty}` || currentQty, { renderMsg: e.title });
         } else if (e.type == 'url' || e.type == 'web_url') {
             let link = e.url;
             if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
