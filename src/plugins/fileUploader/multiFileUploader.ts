@@ -257,7 +257,7 @@ class KoreMultiFileUploaderPlugin {
     let me: any = this;
     let $ = me.hostInstance.$;
     let auth = "bearer " + me.hostInstance.config.botOptions.accessToken;
-    let url = me.hostInstance.config.botOptions.koreAPIUrl + '1.1/attachment/file/token';
+    let url = me.hostInstance.config.botOptions.koreAPIUrl + 'attachment/file/token';
     if (me.hostInstance.config && me.hostInstance.config && me.hostInstance.config.botOptions && me.hostInstance.config.botOptions.webhookConfig && me.hostInstance.config.botOptions.webhookConfig.enable) {
       url = me.hostInstance.config.botOptions.koreAPIUrl + 'attachments/' + me.hostInstance.config.botOptions.webhookConfig.streamId + '/' + me.hostInstance.config.botOptions.webhookConfig.channelType + '/token';
       auth = "bearer " + me.hostInstance.config.botOptions.webhookConfig.token;
@@ -336,9 +336,9 @@ class KoreMultiFileUploaderPlugin {
   getfileuploadConf(_recState: { fileType: any; name: any; }) {
     const me = this;
     me.appConsts.UPLOAD = {
-      FILE_ENDPOINT: me.hostInstance.config.botOptions.koreAPIUrl + '1.1/attachment/file',
-      FILE_TOKEN_ENDPOINT: me.hostInstance.config.botOptions.koreAPIUrl + '1.1/attachment/file/token',
-      FILE_CHUNK_ENDPOINT: me.hostInstance.config.botOptions.koreAPIUrl + '1.1/attachment/file/:fileID/chunk',
+      FILE_ENDPOINT: me.hostInstance.config.botOptions.koreAPIUrl + 'attachment/file',
+      FILE_TOKEN_ENDPOINT: me.hostInstance.config.botOptions.koreAPIUrl + 'attachment/file/token',
+      FILE_CHUNK_ENDPOINT: me.hostInstance.config.botOptions.koreAPIUrl + 'attachment/file/:fileID/chunk',
     };
     let _accessToken = "bearer " + me.hostInstance.config.botOptions.accessToken;
     if (me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) {
@@ -627,7 +627,7 @@ class KoreMultiFileUploaderPlugin {
     let auth = "bearer " + me.hostInstance.config.botOptions.accessToken;
     $.ajax({
       type: 'GET',
-      url: me.hostInstance.config.botOptions.koreAPIUrl + "1.1/attachment/file/" + me.hostInstance.attachmentInfo.fileId + "/url?repeat=true",
+      url: me.hostInstance.config.botOptions.koreAPIUrl + "attachment/file/" + me.hostInstance.attachmentInfo.fileId + "/url?repeat=true",
       dataType: 'json',
       headers: {
         Authorization: auth,
