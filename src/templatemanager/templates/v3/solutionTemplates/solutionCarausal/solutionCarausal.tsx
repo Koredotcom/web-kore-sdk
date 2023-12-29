@@ -49,8 +49,8 @@ export function Carousel(props: any) {
 
     const handleButtonEvent = (e: any) => {
         if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
-            console.log(e.title, { renderMsg: e.value, qty: updatedQty || currentQty},'test payload')
-            hostInstance.sendMessage(e.title, { renderMsg: e.value, qty: updatedQty || currentQty});
+            console.log(e.value, {renderMsg: e.title}, updatedQty || currentQty,'test payload')
+            hostInstance.sendMessage(e.value, {renderMsg: e.title}, updatedQty || currentQty);
         } else if (e.type == 'url' || e.type == 'web_url') {
             let link = e.url;
             if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
