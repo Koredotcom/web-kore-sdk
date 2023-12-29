@@ -34,7 +34,6 @@ function RetailOrderSelection(props: any) {
 
     // Function to handle payload and send message
     const handleButtonEvent = (e: any) => {
-        console.log(e, 'event')
         if (e?.type?.toLowerCase() == 'postback' || e?.type?.toLowerCase() == 'text') {
             hostInstance.sendMessage(e.value, { renderMsg: e.title });
         } else if (e?.type == 'url' || e?.type == 'web_url') {
@@ -63,7 +62,6 @@ function RetailOrderSelection(props: any) {
             }
         }
     }
-    console.log(msgData, 'msgData msgData')
     // const showMore = (e: any) => {
     //     setDisplayLimit(displayLimit + 3);
     // }
@@ -73,7 +71,6 @@ function RetailOrderSelection(props: any) {
     //     ele?.flag !== 'cancelOrderTemplate' &&
     //     index < displayLimit // Apply the display limit here
     // ));
-    console.log(msgData, 'msgData')
     if (msgData?.message[0]?.component?.payload?.template_type === "retailOrderSelection" && msgData?.message[0]?.component?.payload?.card_type === 'detail') {
         return (
             <div>
