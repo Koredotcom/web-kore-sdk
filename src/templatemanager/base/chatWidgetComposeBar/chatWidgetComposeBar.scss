@@ -413,12 +413,18 @@
                     width: 70%;
                 }
             }
-            p{
-                font-weight: 400;
-                font-size: 12px;
-                line-height: 18px;
-                color: var(--gloabl-text-color);
-            }
+            .size-completion {
+                display: flex;
+                .file-size {
+                    padding-right: 3px;
+                }
+                p{
+                    font-weight: 400;
+                    font-size: 12px;
+                    line-height: 18px;
+                    color: var(--gloabl-text-color);
+                }
+            }  
         }
         .delete-upload{
             cursor: pointer;
