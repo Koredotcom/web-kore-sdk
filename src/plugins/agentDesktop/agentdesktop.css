@@ -225,8 +225,8 @@
 }
 .video-audio-chat-container .video-chat- .video-view- .self-video-container {
     position: absolute;
-    width: 158px;
-    height: 60px;
+    width: 30px;
+    height: 80px;
     cursor: move;
     border-radius: 5px;
     background: transparent;
@@ -309,8 +309,8 @@
     bottom: 0;
 }
 .video-audio-chat-container .video-chat- .video-view- .self-video-container .self-video video {
-    width: 158px;
-    height: 60px;
+    width: 130px !important;
+    height: 80px !important;
     background: transparent;
 }
 .video-audio-chat-container .footer-btn-a-v-attch {
@@ -500,7 +500,8 @@
 }
 #agentcontainer.full-screen-video #callcontainer .video-audio-chat-container .video-chat- #audiovideocallcontainer .video-view- video {
     height: 100%;
-    background: linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,0) 68.49%,#000 100%);
+    object-fit: fill;
+    /* background: linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,0) 68.49%,#000 100%); */
 }
 #agentcontainer.full-screen-video #callcontainer .video-audio-chat-container .action-minimize-audio-control .maximize-video .maximize-icon {
     display: none;

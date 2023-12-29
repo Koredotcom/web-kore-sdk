@@ -405,11 +405,6 @@ class AgentDesktopPluginScript  {
                 <div id="agentyou" class="video-user-alphabet">YOU</div>
                 <video id="kore_local_video_tmp" autoplay="autoplay" playsinline style="display: block;"></video>
             </div>
-            <div id="closeselfvideo" class="close-video">
-                <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-                    <path d="M10.8838 10.0001L16.0669 4.81694C16.311 4.57286 16.311 4.17714 16.0669 3.93306C15.8229 3.68898 15.4271 3.68898 15.1831 3.93306L9.99988 9.11624L4.81694 3.93352C4.57286 3.68944 4.17713 3.68945 3.93306 3.93354C3.68899 4.17762 3.689 4.57335 3.93308 4.81742L9.116 10.0001L3.93306 15.1831C3.68898 15.4272 3.68898 15.8229 3.93306 16.067C4.17714 16.311 4.57286 16.311 4.81694 16.067L9.9999 10.884L15.1831 16.067C15.4272 16.311 15.8229 16.311 16.067 16.0669C16.311 15.8229 16.311 15.4271 16.0669 15.1831L10.8838 10.0001Z" fill="#697586"/>
-                </svg>
-            </div>
             </div>
         </div>
        `;
@@ -479,11 +474,11 @@ class AgentDesktopPluginScript  {
                     audiovideocallcontainer.css({ });
                     var showselfvideocontainer = koreJquery("#showselfvideocontainer").hide();
 
-                    var closeselfvideo = koreJquery("#closeselfvideo");
-                    closeselfvideo.off('click').on('click', function (event) {
-                        koreJquery("#selfvideocontainer").hide();
-                        showselfvideocontainer.show();
-                    });
+                    // var closeselfvideo = koreJquery("#closeselfvideo");
+                    // closeselfvideo.off('click').on('click', function (event) {
+                    //     koreJquery("#selfvideocontainer").hide();
+                    //     showselfvideocontainer.show();
+                    // });
                     showselfvideocontainer.off('click').on('click', function (event) {
                         koreJquery("#selfvideocontainer").show();
                         showselfvideocontainer.hide();
@@ -620,6 +615,16 @@ class AgentDesktopPluginScript  {
                 toastContainer.id = "toast";
                 document.body.appendChild(toastContainer);
             }
+            let openSound;
+            if (cwInstance.config.branding.general.sounds.enable && cwInstance.config.branding.general.sounds.on_audio_call.url != 'None' && audioVideoStr == 'audio') {
+                openSound = new Audio(cwInstance.config.branding.general.sounds.on_audio_call.url);
+                openSound.loop = true;
+                openSound.play();
+            } else if (cwInstance.config.branding.general.sounds.enable && cwInstance.config.branding.general.sounds.on_video_call.url != 'None' && audioVideoStr == 'video') {
+                openSound = new Audio(cwInstance.config.branding.general.sounds.on_video_call.url);
+                openSound.loop = true;
+                openSound.play();
+            } 
 
             var incomingCall = `
                 <div class="initial-video-audio-container">
@@ -639,7 +644,7 @@ class AgentDesktopPluginScript  {
                         <button id="rejectcall" class="decline-btn">Decline</button>
                         <button id="acceptcall" class="accept-btn">Accept</button>
                     </div>
-                </div>`;
+                </div>`;   
             setTimeout(() => {
                 var toastContainer = koreJquery("#toast");
                 toastContainer.empty();
@@ -648,6 +653,11 @@ class AgentDesktopPluginScript  {
                 var rejectCall = koreJquery("#rejectcall");
                 var acceptCall = koreJquery("#acceptcall");
                 rejectCall.off('click').on('click', function (event) {
+                    if (openSound) {
+                        openSound.pause();
+                        openSound.currentTime = 0;
+                        openSound.remove();
+                    }
                     const payload = _self.callDetails;
                     payload['type'] = "call_agent_webrtc_rejected"
                     const messageToBot = {};
@@ -664,6 +674,11 @@ class AgentDesktopPluginScript  {
                     toastContainer.empty();
                 });
                 acceptCall.off('click').on('click', function (event) {
+                    if (openSound) {
+                        openSound.pause();
+                        openSound.currentTime = 0;
+                        openSound.remove();
+                    }
                     const payload = _self.callDetails;
                     payload['type'] = "call_agent_webrtc_accepted"
                     const messageToBot = {};

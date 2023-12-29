@@ -13,12 +13,12 @@
         display: flex;
       }
     &.minimizeQuick{   
-        transform-origin: top left;            
+        transform-origin: bottom right;            
         animation: quick 0.3s ease forwards;
         display: flex;
     }
     &.minimizeSmooth{   
-        transform-origin: top left;            
+        transform-origin: bottom right;            
         animation: quick 1s ease forwards;
         display: flex;
     }

@@ -510,7 +510,7 @@ class KoreWidgetSDK {
 
 show  (config:any) {
     var _self:any = this;
-    _self.extend(_self.config, config);
+    _self.config = _self.extend(JSON.parse(JSON.stringify(_self.config)), config);
     var initialWidgetData = _self.vars.initialWidgetData;
     //_self.config.container = sel || {}; //#TODO :need to remove below line on prod
   

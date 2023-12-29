@@ -11,7 +11,7 @@ export function QuickReply(props: any) {
     const hostInstance = props.hostInstance;
     const handleQuickReply = (e: any) => {
         if (e.content_type.toLowerCase() == 'postback' || e.content_type.toLowerCase() == 'text') {
-            hostInstance.sendMessage(JSON.stringify(e.payload) || e.value, { renderMsg: e.title });
+            hostInstance.sendMessage(e.payload || e.value, { renderMsg: e.title });
         } else if (e.content_type == 'url' || e.content_type == 'web_url') {
             let link = e.url;
             if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
