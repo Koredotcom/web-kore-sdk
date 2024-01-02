@@ -43,9 +43,9 @@ function RetailOrderSelection(props: any) {
             }
             hostInstance.openExternalLink(link);
         } 
-        else if (e?.title === "Continue Shopping") {
-            hostInstance.sendMessage(e.value, { renderMsg: e.title });
-        }
+        // else if (e?.title === "Continue Shopping") {
+        //     hostInstance.sendMessage(e.value, { renderMsg: e.title });
+        // }
         else {
             let selectedValues: any = [];
             const selectedItems = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${msgData.messageId}:checked`);
@@ -63,6 +63,23 @@ function RetailOrderSelection(props: any) {
                     selectedItems: selectedValues
                 }
                 hostInstance.sendMessage(JSON.stringify(payload), { renderMsg: e.value });
+            } else {
+                const availableElements = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${msgData.messageId}`);
+                if (availableElements?.length) {
+                    availableElements.forEach((ele: any) => {
+                        let parsedEleInfo = JSON.parse(ele.value);
+                        selectedValues.push({
+                            id: parsedEleInfo.value,
+                            quantity: parsedEleInfo.qty
+                        });
+                    });
+                    let title = e.title || e.value;
+                    let payload = {
+                        title: title,
+                        selectedItems: selectedValues
+                    }
+                    hostInstance.sendMessage(JSON.stringify(payload), { renderMsg: e.value });
+                }
             }
         }
     }
