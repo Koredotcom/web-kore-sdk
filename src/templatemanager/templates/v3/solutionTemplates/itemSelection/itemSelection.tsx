@@ -19,7 +19,7 @@ function RetailOrderSelection(props: any) {
     const handleDecrement = (index: any) => {
         setElements((prevElements: any) => {
             const updatedElements = [...prevElements];
-            updatedElements[index].qty = Math.max(0, updatedElements[index].qty - 1);
+            updatedElements[index].qty = Math.max(1, updatedElements[index].qty - 1);
             return updatedElements;
         });
     };
@@ -31,7 +31,6 @@ function RetailOrderSelection(props: any) {
             return updatedElements;
         });
     };
-
     // Function to handle payload and send message
     const handleButtonEvent = (e: any) => {
         if (e?.type?.toLowerCase() == 'postback' || e?.type?.toLowerCase() == 'text') {
@@ -62,6 +61,7 @@ function RetailOrderSelection(props: any) {
                     title: title,
                     selectedItems: selectedValues
                 }
+                // console.log(JSON.stringify(payload), { renderMsg: e.value },'payload with check  box')
                 hostInstance.sendMessage(JSON.stringify(payload), { renderMsg: e.value });
             }
         }
@@ -75,7 +75,6 @@ function RetailOrderSelection(props: any) {
     //     ele?.flag !== 'cancelOrderTemplate' &&
     //     index < displayLimit // Apply the display limit here
     // ));
-    console.log(msgData, 'msgData')
     if (msgData?.message[0]?.component?.payload?.template_type === "retailOrderSelection" && msgData?.message[0]?.component?.payload?.card_type === 'detail') {
         return (
             <div>
@@ -104,9 +103,9 @@ function RetailOrderSelection(props: any) {
                                                             <div className="f-left-section">
                                                                 <h1 style={ele?.titleStyle}>{ele?.title}</h1>
                                                             </div>
-                                                            <div className="f-right-section">
+                                                            {/* <div className="f-right-section">
                                                                 {ele?.value && <p className="status-style" style={ele?.valueStyle}>{ele?.value}</p>}
-                                                            </div>
+                                                            </div> */}
                                                         </div>
                                                         <div className="sub-title-style">
                                                             <h2 style={ele?.subTitleStyle}>{ele?.subTitle}</h2>
