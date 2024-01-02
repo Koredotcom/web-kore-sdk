@@ -16,5 +16,5 @@ export {KoreDesktopNotificationPlugin} from './plugins/kore-desktop-notification
 export {SearchSuggestionsPlugin} from './plugins/search-suggestions.js';
 export {KoreFileUploaderPlugin} from './plugins/file-upload.js';
 export {SolutionsTemplatesPlugin} from './plugins/kore-solutions-plugin.js';
-export { RetailAssistTemplatePlugin} from './plugins/kore-retail-assist-plugin.js';
 export {KoreMultiFileUploaderPlugin} from './plugins/mulit-file-upload.js';
+export { RetailAssistTemplatePlugin} from './plugins/kore-retail-assist-plugin.js';

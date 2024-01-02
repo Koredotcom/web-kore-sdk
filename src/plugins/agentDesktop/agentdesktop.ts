@@ -292,11 +292,6 @@ class AgentDesktopPlugin {
                 if (msgData?.message[0]?.component?.payload?.template_type === "live_agent" && !msgData?.message[0]?.component?.payload?.text.trim().length) {
                     return '_ignore_message_render_';
                 }
-                if (msgData?.message[0]?.cInfo?.body === "") {
-                    return '_ignore_message_render_';
-                } else {
-                    return false;
-                }
             }
         }
         cwInstance.templateManager.installTemplate(new customTemplateComponent());

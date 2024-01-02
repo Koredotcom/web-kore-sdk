@@ -35,4 +35,4 @@ export{SearchSuggestionsPlugin}from"./plugins/search-suggestions.js";
 // @ts-ignore
 export {KoreFileUploaderPlugin} from './plugins/file-upload.js';
 // @ts-ignore
-export {KoreMultiFileUploaderPlugin} from './plugins/mulit-file-upload.js';
+export {KoreMultiFileUploaderPlugin} from './plugins/multi-file-upload.js';
