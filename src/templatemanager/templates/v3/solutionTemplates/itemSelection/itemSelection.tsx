@@ -42,23 +42,27 @@ function RetailOrderSelection(props: any) {
                 link = `http:////${link}`;
             }
             hostInstance.openExternalLink(link);
-        } else {
-            let selectedValues:any =[];
+        } 
+        else if (e?.title === "Continue Shopping") {
+            hostInstance.sendMessage(e.value, { renderMsg: e.title });
+        }
+        else {
+            let selectedValues: any = [];
             const selectedItems = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${msgData.messageId}:checked`);
-            if(selectedItems?.length){
+            if (selectedItems?.length) {
                 selectedItems.forEach((ele: any) => {
-                    let parsedEleInfo =  JSON.parse(ele.value);
-                    selectedValues.push(  {
-                                    id:parsedEleInfo.value,
-                                    quantity:parsedEleInfo.qty
+                    let parsedEleInfo = JSON.parse(ele.value);
+                    selectedValues.push({
+                        id: parsedEleInfo.value,
+                        quantity: parsedEleInfo.qty
                     });
                 });
                 let title = e.title || e.value;
                 let payload = {
-                    title:title,
-                    selectedItems:selectedValues
+                    title: title,
+                    selectedItems: selectedValues
                 }
-                hostInstance.sendMessage(JSON.stringify(payload), {renderMsg: e.value});
+                hostInstance.sendMessage(JSON.stringify(payload), { renderMsg: e.value });
             }
         }
     }
@@ -71,6 +75,7 @@ function RetailOrderSelection(props: any) {
     //     ele?.flag !== 'cancelOrderTemplate' &&
     //     index < displayLimit // Apply the display limit here
     // ));
+    console.log(msgData, 'msgData')
     if (msgData?.message[0]?.component?.payload?.template_type === "retailOrderSelection" && msgData?.message[0]?.component?.payload?.card_type === 'detail') {
         return (
             <div>
@@ -88,7 +93,7 @@ function RetailOrderSelection(props: any) {
                                                     {
                                                         ele.checkBox === "enabled" && (
                                                             <div class="kr-sg-checkbox">
-                                                                <input id={`checkbox-${index}`} className={`checkbox-custom checkbox-input-${msgData.messageId}`} type="checkbox" value={JSON.stringify(ele)}/>
+                                                                <input id={`checkbox-${index}`} className={`checkbox-custom checkbox-input-${msgData.messageId}`} type="checkbox" value={JSON.stringify(ele)} />
                                                             </div>
                                                         )}
                                                     <img src={ele?.icon} />
@@ -100,7 +105,7 @@ function RetailOrderSelection(props: any) {
                                                                 <h1 style={ele?.titleStyle}>{ele?.title}</h1>
                                                             </div>
                                                             <div className="f-right-section">
-                                                                <p className="status-style" style={ele?.valueStyle}>{ele?.value}</p>
+                                                                {ele?.value && <p className="status-style" style={ele?.valueStyle}>{ele?.value}</p>}
                                                             </div>
                                                         </div>
                                                         <div className="sub-title-style">
