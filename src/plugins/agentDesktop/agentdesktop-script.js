@@ -209,7 +209,9 @@ class AgentDesktopPluginScript  {
             me.autoStartCobrowse();
         }
         var _self = this;
-        this.phone = new AudioCodesUA();
+        if (!this.config.isCobrowseSession) { // DONOT initiate a audiocodes for cobrowse session.
+            this.phone = new AudioCodesUA();
+        }
         this.activeCall = null;
         this.callDetails = null;
         this.callAccepted = false;
