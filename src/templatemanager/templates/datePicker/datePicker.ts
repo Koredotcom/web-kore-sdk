@@ -131,7 +131,7 @@ class DatePickerTemplate {
         $(me.messageHtml).find(".datePickerContainer").removeClass("hide");
         $(me.messageHtml).find(".date-picker-wrapper").css({ "border": "0px", "background-color": "white" });
         $(me.messageHtml).find(".month-wrapper").css({ "border": "0px" });
-        $(me.messageHtml).find(".headerCalendar .choose").html(msgData.message[0].component.payload.title);
+        $(me.messageHtml).find(".headerCalendar .choose").text(msgData.message[0].component.payload.title);
         $(me.messageHtml).find(".confirmBTN").css({
             "display": "none"
         });
