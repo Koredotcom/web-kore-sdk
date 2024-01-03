@@ -42,9 +42,6 @@ function RetailOrderSelection(props: any) {
             }
             hostInstance.openExternalLink(link);
         } 
-        // else if (e?.title === "Continue Shopping") {
-        //     hostInstance.sendMessage(e.value, { renderMsg: e.title });
-        // }
         else {
             let selectedValues: any = [];
             if (e?.type === 'ContinueShopping') {
@@ -83,15 +80,7 @@ function RetailOrderSelection(props: any) {
             }
         }
     }
-    // const showMore = (e: any) => {
-    //     setDisplayLimit(displayLimit + 3);
-    // }
-    // const filteredElements = elements.filter((ele: any, index: any) => (
-    //     ele?.flag !== 'ItemdetailsScreen' &&
-    //     ele?.flag !== 'addressTemplate' &&
-    //     ele?.flag !== 'cancelOrderTemplate' &&
-    //     index < displayLimit // Apply the display limit here
-    // ));
+
     if (msgData?.message[0]?.component?.payload?.template_type === "retailOrderSelection" && msgData?.message[0]?.component?.payload?.card_type === 'detail') {
         return (
             <div>
