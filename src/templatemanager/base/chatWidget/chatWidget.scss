@@ -43,6 +43,8 @@
 
     }
     .chat-widget-body-wrapper {
+        height: calc(100% - 10px) !important;
+        overflow: auto;    
         background: linear-gradient(45deg, rgba(245, 237, 71, 0.12) 14.64%, rgba(128, 245, 232, 0.12) 85.36%);
     }
 }

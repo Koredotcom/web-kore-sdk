@@ -48,7 +48,7 @@
                     margin: 0 auto;
                     text-align: center;
                     object-fit: contain;
-                    max-width: 200px;  
+                    max-width: 200px;
                 }
             }
 
@@ -56,11 +56,12 @@
                 display: block;
                 position: relative;
                 padding: 0 0px 0px 10px;
-                .middle-card-style{
+
+                .middle-card-style {
                     margin-bottom: 10px;
-    margin-top: 10px
+                    margin-top: 10px
                 }
-            
+
                 p {
                     margin-bottom: 8px;
                     max-height: 32px;
@@ -68,7 +69,7 @@
                     overflow: hidden;
                     text-overflow: ellipsis;
                     font-size: 12px;
-            
+
                     &:last-child {
                         margin-bottom: 0;
                     }
@@ -112,26 +113,32 @@
                     width: 24px;
                     height: 24px;
                     padding: 0;
+
+                    img {
+                        position: relative;
+                        top: 2px;
+                    }
                 }
+            
 
-                .value-style {
-                    margin-top: 0;
-                }
-
-                .middle-card-style {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-top: 12px;
-                }
-
-
+            .value-style {
+                margin-top: 0;
             }
+
+            .middle-card-style {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 12px;
+            }
+
+
         }
     }
+}
 
-    // .card-content- {
+// .card-content- {
 
-    // }
+// }
 }
 
 .stacked-cards {
@@ -196,9 +203,11 @@
                 img {
                     width: 100%;
                 }
-                .view-more-btn{
+
+                .view-more-btn {
                     height: 32px;
                 }
+
                 .top-sec-card {
                     display: block;
                     position: relative;
