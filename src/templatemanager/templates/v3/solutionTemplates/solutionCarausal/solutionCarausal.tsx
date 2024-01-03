@@ -31,7 +31,7 @@ export function Carousel(props: any) {
     const handleDecrement = (index: any) => {
         setElements((prevElements: any) => {
             const updatedElements = [...prevElements];
-            updatedElements[index].qty = Math.max(0, updatedElements[index].qty - 1);
+            updatedElements[index].qty = Math.max(1, updatedElements[index].qty - 1);
             return updatedElements;
         });
     };

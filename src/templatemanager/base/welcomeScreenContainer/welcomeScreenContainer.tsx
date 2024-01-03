@@ -110,7 +110,6 @@ export function WelcomeScreenContainer(props: any) {
             updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
         });
     }, [brandingInfo]);
-console.log(hostInstance,'hostInstance')
     return (
         <div className="welcome-chat-section" aria-label="welcome message screen">
             <header className={wsLayout[brandingInfo.welcome_screen.layout]} aria-label="welcome header">
