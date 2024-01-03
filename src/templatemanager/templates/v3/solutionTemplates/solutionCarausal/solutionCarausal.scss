@@ -74,6 +74,18 @@
                         margin-bottom: 0;
                     }
                 }
+
+                .tooltip-style {
+                    position: absolute;
+                    width: 179px;
+                    background: #fff;
+                    z-index: 9999;
+                    border: 1px solid #98A2B3;
+                    border-radius: 4px;
+                    padding: 6px 6px;
+                    right: 0;
+                    top: 40px;
+                }
             }
 
             .set-qty-style {
@@ -119,26 +131,26 @@
                         top: 2px;
                     }
                 }
-            
 
-            .value-style {
-                margin-top: 0;
+
+                .value-style {
+                    margin-top: 0;
+                }
+
+                .middle-card-style {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-top: 12px;
+                }
+
+
             }
-
-            .middle-card-style {
-                display: flex;
-                justify-content: space-between;
-                margin-top: 12px;
-            }
-
-
         }
     }
-}
 
-// .card-content- {
+    // .card-content- {
 
-// }
+    // }
 }
 
 .stacked-cards {
@@ -250,6 +262,8 @@
                 }
 
                 .middle-sec-card {
+                    position: relative;
+
                     p {
                         margin-top: 12px;
                     }
@@ -275,6 +289,18 @@
                     .summary-text-style {
                         color: #344054;
                         font-size: 12px;
+                    }
+
+                    .tooltip-style {
+                        position: absolute;
+                        width: 179px;
+                        background: #fff;
+                        z-index: 9999;
+                        border: 1px solid #98A2B3;
+                        border-radius: 4px;
+                        padding: 6px 6px;
+                        right: 0;
+                        top: 40px;
                     }
                 }
             }

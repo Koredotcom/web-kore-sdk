@@ -20,6 +20,20 @@ export function Carousel(props: any) {
     const [updatedQty, setUpdatedQty] = useState(null);
     const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
     const [currentQty, setCurrentQty] = useState(null);
+    const [showTooltip, setShowTooltip] = useState(false);
+    const [tooltipText, setTooltipText] = useState('');
+
+
+
+    const handleMouseEnter = (text: any) => {
+        setShowTooltip(true);
+        setTooltipText(text);
+    };
+
+    const handleMouseLeave = () => {
+        setShowTooltip(false);
+        setTooltipText('');
+    };
 
     useEffect(() => {
         // Set initial value for currentQty based on initial slide index
@@ -49,8 +63,7 @@ export function Carousel(props: any) {
 
     const handleButtonEvent = (e: any) => {
         if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
-            console.log(e.value,`#${updatedQty || currentQty}`, { renderMsg: e.title }, 'test payload')
-            let payload = e.payload+`#${updatedQty || currentQty}`|| currentQty;
+            let payload = e.payload + `#${updatedQty || currentQty}` || currentQty;
             hostInstance.sendMessage(payload, { renderMsg: e.value });
         } else if (e.type == 'url' || e.type == 'web_url') {
             let link = e.url;
@@ -186,7 +199,18 @@ export function Carousel(props: any) {
                                     item?.items?.map((ele: any) => (
                                         <div className="middle-sec-card">
                                             <p className="title-style" style={ele?.titleStyles}>{ele?.title}</p>
-                                            <p className="sub-title-style" style={ele?.subTitleStyle}>{ele?.subTitle}</p>
+
+                                            <p className="sub-title-style"
+                                                onMouseEnter={() => handleMouseEnter(ele?.subTitle)}
+                                                onMouseLeave={handleMouseLeave}
+                                                key={index} style={ele?.subTitleStyle}>{ele?.subTitle}
+                                            </p>
+                                            {showTooltip && (
+                                                <div className={`custom-tooltip tooltip-style`}>
+                                                    {ele?.subTitle}
+                                                </div>
+                                            )}
+
                                             <div className="middle-card-style clear-float">
                                                 <div className="f-left">
                                                     <p className="value-style" style={ele?.valueStyle}>
