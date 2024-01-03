@@ -47,7 +47,23 @@ function RetailOrderSelection(props: any) {
         // }
         else {
             let selectedValues: any = [];
-            if(e?.type === 'Checkout'){
+            if (e?.type === 'ContinueShopping') {
+                const selectedItems = elements;
+                if (selectedItems?.length) {
+                    selectedItems.forEach((ele: any) => {
+                        selectedValues.push({
+                            id: ele.value,
+                            quantity: ele.qty
+                        });
+                    });
+                    let title = e.title || e.value;
+                    let payload = {
+                        title: title,
+                        selectedItems: selectedValues
+                    }
+                    hostInstance.sendMessage(JSON.stringify(payload), { renderMsg: e.value });
+                }
+            } else {
                 const selectedItems = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${msgData.messageId}:checked`);
                 if (selectedItems?.length) {
                     selectedItems.forEach((ele: any) => {
@@ -63,23 +79,7 @@ function RetailOrderSelection(props: any) {
                         selectedItems: selectedValues
                     }
                     hostInstance.sendMessage(JSON.stringify(payload), { renderMsg: e.value });
-                } 
-            }else if(e?.type === 'ContinueShopping'){
-                const selectedItems = elements;
-                if (selectedItems?.length) {
-                    selectedItems.forEach((ele: any) => {
-                        selectedValues.push({
-                            id: ele.value,
-                            quantity: ele.qty
-                        });
-                    });
-                    let title = e.title || e.value;
-                    let payload = {
-                        title: title,
-                        selectedItems: selectedValues
-                    }
-                    hostInstance.sendMessage(JSON.stringify(payload), { renderMsg: e.value });
-                } 
+                }
             }
         }
     }
