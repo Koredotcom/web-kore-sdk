@@ -439,6 +439,13 @@ openModal(template:any, showClose:any) {
     chatBodyModal.hide();
     $('.kore-chat-window').removeClass('modelOpen');
   }
+} else {
+  if (!template) {
+    me.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');
+    setTimeout(() => {
+        me.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
+    }, 150);
+  }
 }
 }
 // inline model for iframes starts ends//
@@ -461,6 +468,10 @@ formAction(event:any) {
     if ($('.kore-chat-body .uiformComponent').length) {
       $('.kore-chat-body .uiformComponent').closest('.inlineIframeContainer').css('display', 'none');
     }
+  }
+} else {
+  if (event && event.action === 'formSubmit') {
+    me.openModal();
   }
 }
 }
@@ -1735,7 +1746,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
         scrollTop: _chatContainer.prop('scrollHeight'),
       }, 100);
     } else {
-      scrollHeight = (me.historyLoading || eleHeight < 300) ? me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight : scrollHeight - me.chatEle.querySelector('.chat-widget-body-wrapper').clientHeight/2;
+      scrollHeight = me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight;
       me.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
         top: scrollHeight,
         behavior: 'smooth'
