@@ -48,25 +48,10 @@ function RetailOrderSelection(props: any) {
         // }
         else {
             let selectedValues: any = [];
-            const selectedItems = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${msgData.messageId}:checked`);
-            if (selectedItems?.length) {
-                selectedItems.forEach((ele: any) => {
-                    let parsedEleInfo = JSON.parse(ele.value);
-                    selectedValues.push({
-                        id: parsedEleInfo.value,
-                        quantity: parsedEleInfo.qty
-                    });
-                });
-                let title = e.title || e.value;
-                let payload = {
-                    title: title,
-                    selectedItems: selectedValues
-                }
-                hostInstance.sendMessage(JSON.stringify(payload), { renderMsg: e.value });
-            } else {
-                const availableElements = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${msgData.messageId}`);
-                if (availableElements?.length) {
-                    availableElements.forEach((ele: any) => {
+            if(e?.type === 'Checkout'){
+                const selectedItems = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${msgData.messageId}:checked`);
+                if (selectedItems?.length) {
+                    selectedItems.forEach((ele: any) => {
                         let parsedEleInfo = JSON.parse(ele.value);
                         selectedValues.push({
                             id: parsedEleInfo.value,
@@ -79,7 +64,23 @@ function RetailOrderSelection(props: any) {
                         selectedItems: selectedValues
                     }
                     hostInstance.sendMessage(JSON.stringify(payload), { renderMsg: e.value });
-                }
+                } 
+            }else if(e?.type === 'ContinueShopping'){
+                const selectedItems = elements;
+                if (selectedItems?.length) {
+                    selectedItems.forEach((ele: any) => {
+                        selectedValues.push({
+                            id: ele.value,
+                            quantity: ele.qty
+                        });
+                    });
+                    let title = e.title || e.value;
+                    let payload = {
+                        title: title,
+                        selectedItems: selectedValues
+                    }
+                    hostInstance.sendMessage(JSON.stringify(payload), { renderMsg: e.value });
+                } 
             }
         }
     }
