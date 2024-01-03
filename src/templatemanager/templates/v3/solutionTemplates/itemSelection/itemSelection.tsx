@@ -42,27 +42,44 @@ function RetailOrderSelection(props: any) {
             }
             hostInstance.openExternalLink(link);
         } 
-        else if (e?.title === "Continue Shopping") {
-            hostInstance.sendMessage(e.value, { renderMsg: e.title });
-        }
+        // else if (e?.title === "Continue Shopping") {
+        //     hostInstance.sendMessage(e.value, { renderMsg: e.title });
+        // }
         else {
             let selectedValues: any = [];
-            const selectedItems = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${msgData.messageId}:checked`);
-            if (selectedItems?.length) {
-                selectedItems.forEach((ele: any) => {
-                    let parsedEleInfo = JSON.parse(ele.value);
-                    selectedValues.push({
-                        id: parsedEleInfo.value,
-                        quantity: parsedEleInfo.qty
+            if(e?.type === 'Checkout'){
+                const selectedItems = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${msgData.messageId}:checked`);
+                if (selectedItems?.length) {
+                    selectedItems.forEach((ele: any) => {
+                        let parsedEleInfo = JSON.parse(ele.value);
+                        selectedValues.push({
+                            id: parsedEleInfo.value,
+                            quantity: parsedEleInfo.qty
+                        });
                     });
-                });
-                let title = e.title || e.value;
-                let payload = {
-                    title: title,
-                    selectedItems: selectedValues
-                }
-                // console.log(JSON.stringify(payload), { renderMsg: e.value },'payload with check  box')
-                hostInstance.sendMessage(JSON.stringify(payload), { renderMsg: e.value });
+                    let title = e.title || e.value;
+                    let payload = {
+                        title: title,
+                        selectedItems: selectedValues
+                    }
+                    hostInstance.sendMessage(JSON.stringify(payload), { renderMsg: e.value });
+                } 
+            }else if(e?.type === 'ContinueShopping'){
+                const selectedItems = elements;
+                if (selectedItems?.length) {
+                    selectedItems.forEach((ele: any) => {
+                        selectedValues.push({
+                            id: ele.value,
+                            quantity: ele.qty
+                        });
+                    });
+                    let title = e.title || e.value;
+                    let payload = {
+                        title: title,
+                        selectedItems: selectedValues
+                    }
+                    hostInstance.sendMessage(JSON.stringify(payload), { renderMsg: e.value });
+                } 
             }
         }
     }
