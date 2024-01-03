@@ -178,7 +178,7 @@ console.log(hostInstance,'hostInstance')
                             }
                         </div>}
                         {brandingInfo.welcome_screen.starter_box.quick_start_buttons.show && brandingInfo.welcome_screen.starter_box.quick_start_buttons.input === 'button' && <button className="start-conv-button">
-                            <span class="start-conv-value" data-value={brandingInfo.welcome_screen.starter_box.quick_start_buttons.action.value} >{brandingInfo.welcome_screen.starter_box.quick_start_buttons.action.value}</span>
+                            <span class="start-conv-value" data-value={brandingInfo.welcome_screen.starter_box.quick_start_buttons.action.value} >{brandingInfo.welcome_screen.starter_box.quick_start_buttons.action.title}</span>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path d="M7 5L12 10L7 15" stroke="white" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
