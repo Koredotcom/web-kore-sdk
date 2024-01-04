@@ -41,7 +41,7 @@ function RetailOrderSelection(props: any) {
                 link = `http:////${link}`;
             }
             hostInstance.openExternalLink(link);
-        } 
+        }
         else {
             let selectedValues: any = [];
             if (e?.type === 'ContinueShopping') {
@@ -80,7 +80,6 @@ function RetailOrderSelection(props: any) {
             }
         }
     }
-
     if (msgData?.message[0]?.component?.payload?.template_type === "retailOrderSelection" && msgData?.message[0]?.component?.payload?.card_type === 'detail') {
         return (
             <div>
@@ -283,7 +282,12 @@ function RetailOrderSelection(props: any) {
                                                             <p style={ele?.detailStyle}>{ele?.title}</p>
                                                         </div>
                                                         <div className="left-description">
-                                                            <p style={ele?.detailStyle}>{ele?.value}</p>
+                                                            {/* <p style={ele?.detailStyle}>{ele?.value}</p> */}
+                                                            {typeof ele?.value === 'string' && ele?.value.startsWith('https://') ? (
+                                                                <a href={ele?.value} target="_blank" rel="noopener noreferrer">{ele?.value}</a>
+                                                            ) : (
+                                                                <p>{ele?.value}</p>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 ))

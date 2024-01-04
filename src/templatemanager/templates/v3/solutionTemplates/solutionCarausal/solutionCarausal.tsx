@@ -22,17 +22,20 @@ export function Carousel(props: any) {
     const [currentQty, setCurrentQty] = useState(null);
     const [showTooltip, setShowTooltip] = useState(false);
     const [tooltipText, setTooltipText] = useState('');
+    const [tooltipStates, setTooltipStates] = useState([] as boolean[]);
 
 
 
-    const handleMouseEnter = (text: any) => {
-        setShowTooltip(true);
-        setTooltipText(text);
+    const handleMouseEnter = (index: number) => {
+        const updatedStates = [...tooltipStates];
+        updatedStates[index] = true;
+        setTooltipStates(updatedStates);
     };
 
-    const handleMouseLeave = () => {
-        setShowTooltip(false);
-        setTooltipText('');
+    const handleMouseLeave = (index: number) => {
+        const updatedStates = [...tooltipStates];
+        updatedStates[index] = false;
+        setTooltipStates(updatedStates);
     };
 
     useEffect(() => {
@@ -200,12 +203,15 @@ export function Carousel(props: any) {
                                         <div className="middle-sec-card">
                                             <p className="title-style" style={ele?.titleStyles}>{ele?.title}</p>
 
-                                            <p className="sub-title-style"
-                                                onMouseEnter={() => handleMouseEnter(ele?.subTitle)}
-                                                onMouseLeave={handleMouseLeave}
-                                                key={index} style={ele?.subTitleStyle}>{ele?.subTitle}
+                                            <p
+                                                className="sub-title-style"
+                                                onMouseEnter={() => handleMouseEnter(index)}
+                                                onMouseLeave={() => handleMouseLeave(index)}
+                                                style={ele?.subTitleStyle}
+                                            >
+                                                {ele?.subTitle}
                                             </p>
-                                            {showTooltip && (
+                                            {tooltipStates[index] && (
                                                 <div className={`custom-tooltip tooltip-style`}>
                                                     {ele?.subTitle}
                                                 </div>
@@ -214,8 +220,14 @@ export function Carousel(props: any) {
                                             <div className="middle-card-style clear-float">
                                                 <div className="f-left">
                                                     <p className="value-style" style={ele?.valueStyle}>
-                                                        ${parseFloat(ele?.value.replace(/[^0-9.]/g, '')) * parseFloat(elements[index].qty)}
-                                                        {/* {ele?.value} */}
+                                                        {parseFloat(ele?.value.replace(/[^0-9.]/g, '')) > 0
+                                                            ? new Intl.NumberFormat('en-US', {
+                                                                style: 'currency',
+                                                                currency: 'USD',
+                                                            }).format(
+                                                                parseFloat(ele?.value.replace(/[^0-9.]/g, '')) * parseFloat(elements[index]?.qty)
+                                                            )
+                                                            : "N/A"}
                                                     </p>
                                                 </div>
                                             </div>

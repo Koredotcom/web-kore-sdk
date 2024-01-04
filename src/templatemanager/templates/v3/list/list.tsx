@@ -57,7 +57,7 @@ export function ListMore(props: any) {
                                     </div>
                                 </div>
                                 {ele.buttons && ele.buttons[0] && <button className="kr-button-blue-light" onClick={() => handleClick(ele.buttons[0])}>{ele.buttons[0].title}</button>}
-                                {!ele.buttons && <a className="link-exteranl-list" href="#" target="_blank" onClick={() => handleClick(ele.default_action)}>{ele.default_action.url}</a>}
+                                {!ele.buttons && <a className="link-exteranl-list" href="#" target="_blank" onClick={() => handleClick(ele?.default_action)}>{ele?.default_action?.url}</a>}
                             </div>))}
                     </div>
                 </div> 
@@ -89,7 +89,6 @@ export function List(props: any) {
     const openSeeMoreTab = () => {
         hostInstance.bottomSliderAction('', getHTML(ListMore, messageObj, hostInstance));
     }
-
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'list') {
         return (
             <div className="list-action-template-wrapper">
@@ -110,7 +109,7 @@ export function List(props: any) {
                                 </div>
                             </div>
                             {ele.buttons && ele.buttons[0] && <button className="kr-button-blue-light" onClick={() => handleClick(ele.buttons[0])}>{ele.buttons[0].title}</button>}
-                            {!ele.buttons && <a className="link-exteranl-list" href="#" target="_blank" onClick={() => handleClick(ele.default_action)}>{ele.default_action.url}</a>}
+                            {!ele.buttons && <a className="link-exteranl-list" href="#" target="_blank" onClick={() => handleClick(ele?.default_action)}>{ele?.default_action?.url}</a>}
                         </div>)))}
                 </div>
                 { msgData.message[0].component.payload.elements.length > 3 && <button className="show-more-btn" onClick={openSeeMoreTab}>See More</button>}
