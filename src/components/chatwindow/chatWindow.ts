@@ -136,7 +136,16 @@ class chatWindow extends EventEmitter{
      * @property {Object} jwtGrantSuccess -  jwt grant success API response
      * @property {Object} chatWindowEvent
      */
-       JWT_GRANT_SUCCESS : 'jwtGrantSuccess'
+       JWT_GRANT_SUCCESS : 'jwtGrantSuccess',
+     /**
+     * apiFailure will be triggered on API failure
+     *
+     * @event chatWindow#apiFailure
+     * @type {Object}
+     * @property {String} type
+     * @property {Object} errObj
+     */
+      API_FAILURE: 'apiFailure'
   }
   sendFailedMessage: any;
   
@@ -981,6 +990,10 @@ bindSDKEvents  () {
     me.getBrandingInformation(response.jwtgrantsuccess);
     me.emit(me.EVENTS.JWT_GRANT_SUCCESS, response.jwtgrantsuccess);
   });
+
+  me.bot.on('api_failure', (response: {responseError: any; type: any;}) => {
+    me.emit(me.EVENTS.API_FAILURE, { "type": response.type, "responseError": response.responseError });
+  });
 };
 parseSocketMessage(msgString:string){
   let me:any=this;
@@ -1776,6 +1789,7 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
 };
 
 getJWTByAPIKey (API_KEY_CONFIG: { KEY: any; bootstrapURL: any; }) {
+  const me: any = this;
   const jsonData = {
     apiKey:API_KEY_CONFIG.KEY
   };
@@ -1787,12 +1801,14 @@ getJWTByAPIKey (API_KEY_CONFIG: { KEY: any; bootstrapURL: any; }) {
     success(data: any) {
     },
     error(err: any) {
+      me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", responseError: err });
       // chatWindowInstance.showError(err.responseText);
     },
   });
 };
 
 getJWT (options: { clientId: any; clientSecret: any; userIdentity: any; JWTUrl: any; }, callback: any) {
+  const me: any = this;
   const jsonData = {
     clientId: options.clientId,
     clientSecret: options.clientSecret,
@@ -1809,6 +1825,7 @@ getJWT (options: { clientId: any; clientSecret: any; userIdentity: any; JWTUrl: 
 
     },
     error(err: any) {
+      me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", responseError: err });
       // chatWindowInstance.showError(err.responseText);
     },
   });
@@ -1987,7 +2004,7 @@ getBrandingInformation(options:any){
                   me.applySDKBranding(data);
           },
           error: function (err: any) {
-              console.log(err);
+              me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", responseError: err });
           }
       });
   }

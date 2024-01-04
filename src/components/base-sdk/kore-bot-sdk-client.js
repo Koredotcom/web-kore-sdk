@@ -543,6 +543,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
           this.cbErrorToClient(err.message);
         }
       }
+      if (data && data.errors && data.errors[0]) {
+        this.emit(WEB_EVENTS.API_FAILURE,{"type":"XHRObj","responseError" : data.errors[0]});
+      }
       console.error(err && err.stack);
     } else {
       this.accessToken = data.authorization.accessToken;
@@ -551,6 +554,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this.userInfo = data;
       this.cbBotDetails(data,this.options.botInfo);
       this.RtmClient = new clients.KoreRtmClient({}, this.options);
+      this.RtmClient.on('api_failure_client', errObj => {
+        this.emit(WEB_EVENTS.API_FAILURE, errObj);
+      });
       this.emit("rtm_client_initialized");
       this.emit(WEB_EVENTS.JWT_GRANT_SUCCESS,{jwtgrantsuccess : data});
       this.RtmClient.start({
@@ -1186,7 +1192,8 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     RATE_LIMITED: 'rate_limited',
     WEB_HOOK_READY:'webhook_ready',
     WEB_HOOK_RECONNECTED:'webhook_reconnected',
-    JWT_GRANT_SUCCESS : 'jwtgrantsuccess'
+    JWT_GRANT_SUCCESS : 'jwtgrantsuccess',
+    API_FAILURE: 'api_failure'
   };
   
   module.exports.RTM = {
@@ -1451,6 +1458,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     }
     catch(e){
       console.log(e && e.stack);
+    }
+    if (data && data.errors && data.errors[0]) {
+      this.emit('api_failure_client',{"type":"XHRObj","responseError" : data.errors[0]});
     }
     if(data && data.errors && (data.errors[0].code === 'TOKEN_EXPIRED' || data.errors[0].code === 401 || data.errors[0].msg === 'token expired')){
         var $=this.$;
