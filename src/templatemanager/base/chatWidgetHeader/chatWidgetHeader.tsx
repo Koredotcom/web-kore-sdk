@@ -87,7 +87,7 @@ export function ChatWidgetHeader(props: any) {
                 </div>
             </div>
             <div className="actions-info">
-               { brandingInfo.header.buttons.help.show && <a href="#" target="_blank" className="btn-action" aria-label="Help link kore ai products">
+               { brandingInfo.header.buttons.help.show && <a title="Help" href="#" target="_blank" className="btn-action" aria-label="Help link kore ai products">
                     {/* <figure>
                         <img src={iconHelper.getIcon('help')} alt="back button" />
                     </figure> */}
@@ -97,12 +97,12 @@ export function ChatWidgetHeader(props: any) {
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M10.0002 1.11133C5.09102 1.11133 1.11133 5.09102 1.11133 10.0002C1.11133 14.9094 5.09102 18.8891 10.0002 18.8891C14.9094 18.8891 18.8891 14.9094 18.8891 10.0002C18.8891 5.09102 14.9094 1.11133 10.0002 1.11133ZM10.0002 2.4282C14.1821 2.4282 17.5722 5.81831 17.5722 10.0002C17.5722 14.1821 14.1821 17.5722 10.0002 17.5722C5.81831 17.5722 2.4282 14.1821 2.4282 10.0002C2.4282 5.81831 5.81831 2.4282 10.0002 2.4282Z" fill="#697586"/>
                     </svg>
                 </a> }
-                { brandingInfo.header.buttons.reconnect.show && <button className="btn-action btn-reconnect" type="button" aria-label="Reconnect Chat">
+                { brandingInfo.header.buttons.reconnect.show && <button title="Reconnect" className="btn-action btn-reconnect" type="button" aria-label="Reconnect Chat">
                     <svg width="20" height="20" viewBox="0 0 14 14" fill="none">
                         <path d="M12.8333 5.83333C12.8333 5.83333 11.6638 4.23979 10.7136 3.28898C9.76343 2.33816 8.4504 1.75 7 1.75C4.1005 1.75 1.75 4.1005 1.75 7C1.75 9.89949 4.1005 12.25 7 12.25C9.39347 12.25 11.4129 10.6483 12.0448 8.45833M12.8333 5.83333V2.33333M12.8333 5.83333H9.33333" stroke="#697586" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button> }
-                { brandingInfo.header.buttons.live_agent.show && <button className="btn-action" type="button" aria-label="Agent Chat">
+                { brandingInfo.header.buttons.live_agent.show && <button title="Agent Chat" className="btn-action" type="button" aria-label="Agent Chat">
                     {/* <figure>
                             <img src={iconHelper.getIcon('support')} alt="back button" />
                         </figure> */}
@@ -110,7 +110,7 @@ export function ChatWidgetHeader(props: any) {
                             <path d="M9.32692 1.25C2.94321 1.25 2.61719 5.45147 2.59615 8.79057C1.81791 9.09555 1.25 9.84225 1.25 10.6731C1.25 11.7458 2.05454 13.3654 3.26923 13.3654C3.3744 13.3654 3.48483 13.3549 3.59525 13.3444C4.58383 16.41 7.02374 18.75 9.32692 18.75C10.4259 18.75 11.5565 18.2031 12.5503 17.2987C12.1454 17.3618 11.7458 17.4038 11.3462 17.4038H9.32692C7.74414 17.4038 5.53561 15.4425 4.76262 12.524L4.54177 11.7563L3.91076 11.9141C3.52163 12.014 3.32182 12.0192 3.26923 12.0192C3.05364 11.9929 2.59615 11.2252 2.59615 10.6731C2.59615 10.3471 2.93795 10.021 3.3113 10L3.94231 9.95793V9.32692C3.94231 5.14123 4.30514 2.59615 9.32692 2.59615C9.48468 2.59615 11.3724 2.60141 12.6187 2.60667L12.1612 3.53741C12.0928 3.70042 11.8457 4.2473 10.9886 4.95192C10 5.77224 8.28576 6.63462 5.28846 6.63462V7.98077C8.54868 7.98077 10.6152 7.00796 11.851 5.99309C12.5083 5.44621 12.9079 4.90986 13.1603 4.49444C14.5433 5.19907 14.7115 6.59781 14.7115 9.32692V12.645C14.559 14.3382 12.2348 14.7115 11.3462 14.7115H10.6731C10.6731 13.9701 10.0684 13.3654 9.32692 13.3654C8.58549 13.3654 7.98077 13.9701 7.98077 14.7115C7.98077 15.453 8.58549 16.0577 9.32692 16.0577H11.3462C13.2024 16.0577 15.2479 15.2689 15.8736 13.5337H16.7308C17.8403 13.5337 18.75 12.6239 18.75 11.5144V10C18.75 8.89047 17.8403 7.98077 16.7308 7.98077H16.0314C15.963 6.05093 15.6318 4.23678 13.7861 3.29026L14.7852 1.27103L13.7019 1.26578C13.7019 1.26578 9.56355 1.25 9.32692 1.25ZM7.30769 9.32692C6.93434 9.32692 6.63462 9.62665 6.63462 10C6.63462 10.3733 6.93434 10.6731 7.30769 10.6731C7.68104 10.6731 7.98077 10.3733 7.98077 10C7.98077 9.62665 7.68104 9.32692 7.30769 9.32692ZM11.3462 9.32692C10.9728 9.32692 10.6731 9.62665 10.6731 10C10.6731 10.3733 10.9728 10.6731 11.3462 10.6731C11.7195 10.6731 12.0192 10.3733 12.0192 10C12.0192 9.62665 11.7195 9.32692 11.3462 9.32692ZM16.0577 9.32692H16.7308C17.1094 9.32692 17.4038 9.62139 17.4038 10V11.5144C17.4038 11.893 17.1094 12.1875 16.7308 12.1875H16.0577V9.32692Z" fill="#697586"/>
                         </svg>
                 </button> }
-                { brandingInfo.header.buttons.close.show && <button className="btn-action btn-action-close" type="button" aria-label="Close Chat">
+                { brandingInfo.header.buttons.close.show && <button title="Close" className="btn-action btn-action-close" type="button" aria-label="Close Chat">
                     {/* <figure>
                         <img src={iconHelper.getIcon('close_large')} alt="back button" />
                     </figure> */}
