@@ -223,6 +223,9 @@ initShow  (config:any) {
   if(me.config && me.config.sendFailedMessage && me.config.sendFailedMessage.hasOwnProperty('MAX_RETRIES')){
     this.sendFailedMessage.MAX_RETRIES=me.config.sendFailedMessage.MAX_RETRIES
 }
+  if (me.config && me.config.maxReconnectionAPIAttempts) {
+    me.config.botOptions.maxReconnectionAPIAttempts = me.config.maxReconnectionAPIAttempts;
+  }
   me.config.botOptions.botInfo.name = KoreHelpers.prototypes.escapeHTML(me.config.botOptions.botInfo.name);
   me._botInfo = me.config.botOptions.botInfo;
   me.config.botOptions.botInfo = {

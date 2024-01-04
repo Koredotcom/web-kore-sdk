@@ -1959,7 +1959,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     BaseAPIClient.call(this, token, clientOpts);
     this.claims = opts.claims;
     this.retryConfig = clientOpts.retryConfig || {
-      retries: 5,
+      retries: clientOpts.maxReconnectionAPIAttempts || 5,
       factor: 3.9
     };
     this.user = {};
