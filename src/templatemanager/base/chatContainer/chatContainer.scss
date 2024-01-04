@@ -92,8 +92,13 @@
 	}
 }
 .chat-window-main-section.retail-assist-theme{
+  position: fixed;
   height: calc(100% - 50px);
   bottom: 20px;
+  z-index: 9999;
+  .chat-widgetwrapper-main-container{
+    background: var(--global-white-bg);
+  }
   .chat-actions-bottom-wraper {
     .actions-contnet-data{
       height: 100%;
@@ -111,5 +116,16 @@
   }
   .kr-btn{
     flex: 1;
+  .chat-widget-header{
+    .info-content-data{
+      .img-block{
+        figure {
+          img{
+            border: none;
+          }
+        }
+      }
+    }
   }
+}
 }
