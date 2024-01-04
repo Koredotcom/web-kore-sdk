@@ -1933,7 +1933,7 @@ function WebAPIClient(token, opts) {
   BaseAPIClient.call(this, token, clientOpts);
   this.claims = opts.claims;
   this.retryConfig = clientOpts.retryConfig || {
-    retries: 5,
+    retries: clientOpts.maxReconnectionAPIAttempts || 5,
     factor: 3.9
   };
   this.user = {};

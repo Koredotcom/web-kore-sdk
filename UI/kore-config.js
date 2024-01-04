@@ -87,7 +87,8 @@
         },
         sendFailedMessage:{
             MAX_RETRIES:3
-        }
+        },
+        maxReconnectionAPIAttempts: 5  // Number of retries on api failure
     };
      /* 
         allowGoogleSpeech will use Google cloud service api.
