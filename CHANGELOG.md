@@ -1,3 +1,13 @@
+### 10.1.17
+
+- SDK Release Jan 06, 2024
+* Features
+  * Added config for retries count for api reconnect on failure. Configuration available at chatConfig.maxReconnectionAPIAttempts
+  * Added new event apiFailure on chatWindowInstance. this event will be fired when api fails.
+* Bug fixes
+  * xss attack issue fix in few templates
+  * Audio & Video calls issue fix in cobrowse session
+
 ### 10.1.13
 
 - SDK Release Nov 04, 2023
