@@ -196,6 +196,56 @@ class BrandingManager {
             const interRomanVar = 'fonts/Inter-roman.var.woff2?v=3.13';
             const interItalicVar = 'fonts/Inter-italic.var.woff2?v=3.13';
 
+          const fontFiles = ['fonts/Inter-Regular.woff2?v=3.13',
+            'fonts/Inter-Regular.woff?v=3.13',
+            'fonts/Inter-Thin.woff2?v=3.13',
+            'fonts/Inter-Thin.woff?v=3.13',
+            'fonts/Inter-ThinItalic.woff2?v=3.13',
+            'fonts/Inter-ThinItalic.woff?v=3.13',
+            'fonts/Inter-ExtraLight.woff2?v=3.13',
+            'fonts/Inter-ExtraLight.woff?v=3.13',
+            'fonts/Inter-ExtraLightItalic.woff2?v=3.13',
+            'fonts/Inter-ExtraLightItalic.woff?v=3.13',
+            'fonts/Inter-Light.woff2?v=3.13',
+            'fonts/Inter-Light.woff?v=3.13',
+            'fonts/Inter-LightItalic.woff2?v=3.13',
+            'fonts/Inter-LightItalic.woff?v=3.13',
+            'fonts/Inter-Italic.woff2?v=3.13',
+            'fonts/Inter-Italic.woff?v=3.13',
+            'fonts/Inter-Medium.woff2?v=3.13',
+            'fonts/Inter-Medium.woff?v=3.13',
+            'fonts/Inter-MediumItalic.woff2?v=3.13',
+            'fonts/Inter-MediumItalic.woff?v=3.13',
+            'fonts/Inter-SemiBold.woff2?v=3.13',
+            'fonts/Inter-SemiBold.woff?v=3.13',
+            'fonts/Inter-SemiBoldItalic.woff2?v=3.13',
+            'fonts/Inter-SemiBoldItalic.woff?v=3.13',
+            'fonts/Inter-Bold.woff2?v=3.13',
+            'fonts/Inter-Bold.woff?v=3.13',
+            'fonts/Inter-BoldItalic.woff2?v=3.13',
+            'fonts/Inter-BoldItalic.woff?v=3.13',
+            'fonts/Inter-ExtraBold.woff2?v=3.13',
+            'fonts/Inter-ExtraBold.woff?v=3.13',
+            'fonts/Inter-ExtraBoldItalic.woff2?v=3.13',
+            'fonts/Inter-ExtraBoldItalic.woff?v=3.13',
+            'fonts/Inter-Black.woff2?v=3.13',
+            'fonts/Inter-Black.woff?v=3.13',
+            'fonts/Inter-BlackItalic.woff2?v=3.13',
+            'fonts/Inter-BlackItalic.woff?v=3.13',
+            'fonts/Inter-roman.var.woff2?v=3.13',
+            'fonts/Inter-italic.var.woff2?v=3.13'
+          ]
+
+          fontFiles.forEach(function(fontPath) {
+            var fontLink = document.createElement('link');
+            fontLink.rel = 'preload';
+            fontLink.href = fontPath;
+            fontLink.as = 'font';
+            fontLink.type = 'font/woff2';
+            fontLink.crossOrigin = 'anonymous';
+            document.head.appendChild(fontLink);
+          });
+
             styleElement.textContent = `
           @font-face {
             font-family: 'Inter';
@@ -365,6 +415,7 @@ class BrandingManager {
             font-display: swap;
             font-style: normal;
             font-named-instance: 'Regular';
+            font-display: swap;
             src: url('${interRomanVar}') format("woff2");
           }
           @font-face {
@@ -373,6 +424,7 @@ class BrandingManager {
             font-display: swap;
             font-style: italic;
             font-named-instance: 'Italic';
+            font-display: swap;
             src: url('${interItalicVar}') format("woff2");
           }
           `;
@@ -404,6 +456,7 @@ class BrandingManager {
                 font-weight: 400;
                 font-style: normal;
                 text-rendering: optimizeLegibility;
+                font-display: swap;
                 src: url('${latoNormal2}') format("woff2"), url('${latoNormal}') format("woff");
               }
               
@@ -412,6 +465,7 @@ class BrandingManager {
                 font-weight: 400;
                 font-style: italic;
                 text-rendering: optimizeLegibility;
+                font-display: swap;
                 src: url('${latoNormalItalic2}') format("woff2"), url('${latoNormalItalic}') format("woff");
               }
               
@@ -420,6 +474,7 @@ class BrandingManager {
                 font-weight: 400;
                 font-style: normal;
                 text-rendering: optimizeLegibility;
+                font-display: swap;
                 src: url('${latoMedium2}') format("woff2"), url('${latoMedium}') format("woff");
               }
               /* Lato (medium, italic) */
@@ -428,6 +483,7 @@ class BrandingManager {
                 font-weight: 400;
                 font-style: italic;
                 text-rendering: optimizeLegibility;
+                font-display: swap;
                 src: url('${latoMediumItalic2}') format("woff2"), url('${latoMediumItalic}') format("woff");
               }
               /* Lato (semibold, regular) */
@@ -436,6 +492,7 @@ class BrandingManager {
                 font-weight: 500;
                 font-style: normal;
                 text-rendering: optimizeLegibility;
+                font-display: swap;
                 src: url('${latoSemiBold2}') format("woff2"), url('${latoSemiBold}') format("woff");
               }
               /* Lato (semibold, italic) */
@@ -444,6 +501,7 @@ class BrandingManager {
                 font-weight: 500;
                 font-style: italic;
                 text-rendering: optimizeLegibility;
+                font-display: swap;
                 src: url('${latoSemiBoldItalic2}') format("woff2"), url('${latoSemiBoldItalic}') format("woff");
               }
               /* Lato (bold, regular) */
@@ -452,6 +510,7 @@ class BrandingManager {
                 font-weight: 600;
                 font-style: normal;
                 text-rendering: optimizeLegibility;
+                font-display: swap;
                 src: url('${latoBold2}') format("woff2"), url('${latoBold}') format("woff");
               }
               /* Lato (bold, italic) */
@@ -460,6 +519,7 @@ class BrandingManager {
                 font-weight: 600;
                 font-style: italic;
                 text-rendering: optimizeLegibility;
+                font-display: swap;
                 src: url('${latoBoldItalic2}') format("woff2"), url('${latoBoldItalic}') format("woff");
               }
               
@@ -469,6 +529,7 @@ class BrandingManager {
                 font-weight: 900;
                 font-style: normal;
                 text-rendering: optimizeLegibility;
+                font-display: swap;
                 src: url('${latoBlack2}') format("woff2"), url('${latoBlack}) format("woff");
               }
               /* Lato (black, italic) */
@@ -477,6 +538,7 @@ class BrandingManager {
                 font-weight: 900;
                 font-style: italic;
                 text-rendering: optimizeLegibility;
+                font-display: swap;
                 src: url('${latoBlackItalic2}') format("woff2"), url('${latoBlackItalic}') format("woff");
               }
             `;
