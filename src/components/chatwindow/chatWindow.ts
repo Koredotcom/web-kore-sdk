@@ -142,8 +142,8 @@ class chatWindow extends EventEmitter{
      *
      * @event chatWindow#apiFailure
      * @type {Object}
-     * @property {String} type
-     * @property {Object} errObj
+     * @property {String} type - type of error - XHRObj/JqueryXHR
+     * @property {Object} errObj - error object containing error details
      */
       API_FAILURE: 'apiFailure'
   }
@@ -995,7 +995,7 @@ bindSDKEvents  () {
   });
 
   me.bot.on('api_failure', (response: {responseError: any; type: any;}) => {
-    me.emit(me.EVENTS.API_FAILURE, { "type": response.type, "responseError": response.responseError });
+    me.emit(me.EVENTS.API_FAILURE, { "type": response.type, "errObj": response.responseError });
   });
 };
 parseSocketMessage(msgString:string){
@@ -1804,7 +1804,7 @@ getJWTByAPIKey (API_KEY_CONFIG: { KEY: any; bootstrapURL: any; }) {
     success(data: any) {
     },
     error(err: any) {
-      me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", responseError: err });
+      me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err });
       // chatWindowInstance.showError(err.responseText);
     },
   });
@@ -1828,7 +1828,7 @@ getJWT (options: { clientId: any; clientSecret: any; userIdentity: any; JWTUrl: 
 
     },
     error(err: any) {
-      me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", responseError: err });
+      me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err });
       // chatWindowInstance.showError(err.responseText);
     },
   });
@@ -2007,7 +2007,7 @@ getBrandingInformation(options:any){
                   me.applySDKBranding(data);
           },
           error: function (err: any) {
-              me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", responseError: err });
+              me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err });
           }
       });
   }
