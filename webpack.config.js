@@ -23,11 +23,9 @@ let config= {
             },
         {
           test: /\.(woff|woff2|eot|ttf|otf)$/,
-          use: {
-            loader: 'file-loader',
-            options: {
-              name: 'fonts/[name].[ext]',
-            },
+          type: "asset/resource",
+          generator: {
+            filename: 'fonts/[name][ext]',
           },
         },
             // {
@@ -104,10 +102,10 @@ let config= {
       // new HtmlWebpackPlugin() 
     ],
     resolve:{
-        extensions:['.js','.ts','.tsx','.woff','.woff2']
+        extensions:['.js','.ts','.tsx']
     },
     output: {
-        publicPath:"",
+        publicPath:"/",
         filename: 'kore-web-sdk-[name].umd.js',
         path: path.resolve(__dirname,'dist'),
         clean: false,
