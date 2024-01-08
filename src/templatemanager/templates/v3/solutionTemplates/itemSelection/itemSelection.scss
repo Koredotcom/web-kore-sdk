@@ -292,6 +292,7 @@
                 width: 50%;
                 overflow: auto;
                 display: block;
+                float: right;
             }
 
             .decrement {
@@ -342,45 +343,46 @@
 
             .set-qty-style {
                 position: absolute;
-                right: -169px;
-                bottom: -4px;
-            }
+                right: 0;
+                bottom: 0px;
+            
         }
+    }
 
-        .buttons-container {
-            .view-details {
-                width: 100%;
-                float: right;
-                padding: 8px 20px;
-                margin-top: 10px;
-                color: #101828;
-                font-weight: 500;
-                background: #fff;
-            }
-        }
-
-        .buttons-container.delete-button {
-            width: 70%;
+    .buttons-container {
+        .view-details {
+            width: 100%;
             float: right;
-        }
-    }
-
-
-    .show-more-title {
-        background: #F0F1F2;
-        position: relative;
-        top: 0px;
-        margin-top: -4px;
-        cursor: pointer;
-
-        p {
-            background: #F0F1F2;
-            text-align: center;
+            padding: 8px 20px;
+            margin-top: 10px;
             color: #101828;
-            font-size: 12px;
-            padding: 10px 0 10px;
+            font-weight: 500;
+            background: #fff;
         }
     }
+
+    .buttons-container.delete-button {
+        width: 70%;
+        float: right;
+    }
+}
+
+
+.show-more-title {
+    background: #F0F1F2;
+    position: relative;
+    top: 0px;
+    margin-top: -4px;
+    cursor: pointer;
+
+    p {
+        background: #F0F1F2;
+        text-align: center;
+        color: #101828;
+        font-size: 12px;
+        padding: 10px 0 10px;
+    }
+}
 
 }
 
