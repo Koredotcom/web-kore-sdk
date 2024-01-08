@@ -282,12 +282,12 @@ function RetailOrderSelection(props: any) {
                                                             <p style={ele?.detailStyle}>{ele?.title}</p>
                                                         </div>
                                                         <div className="left-description">
-                                                            {/* <p style={ele?.detailStyle}>{ele?.value}</p> */}
-                                                            {typeof ele?.value === 'string' && ele?.value.startsWith('https://') ? (
+                                                            <p style={ele?.detailStyle}>{ele?.value}</p>
+                                                            {/* {typeof ele?.value === 'string' && ele?.value.startsWith('https://') ? (
                                                                 <a href={ele?.value} target="_blank" rel="noopener noreferrer">{ele?.value}</a>
                                                             ) : (
                                                                 <p>{ele?.value}</p>
-                                                            )}
+                                                            )} */}
                                                         </div>
                                                     </div>
                                                 ))
@@ -308,7 +308,12 @@ function RetailOrderSelection(props: any) {
                                                             <p style={ele?.titleStyle}>{ele?.title}</p>
                                                         </div>
                                                         <div className="right-description">
-                                                            <p style={ele?.valueStyle}>{ele?.value}</p>
+                                                        {typeof ele?.value === 'string' && ele?.value.startsWith('https://') ? (
+                                                                <a style={ele?.valueStyle} href={ele?.value} target="_blank" rel="noopener noreferrer">{ele?.value}</a>
+                                                            ) : (
+                                                                <p style={ele?.valueStyle}>{ele?.value}</p>
+                                                            )}
+                                                           {/* test <p style={ele?.valueStyle}>{ele?.value}</p> */}
                                                         </div>
                                                     </div>
                                                 ))
