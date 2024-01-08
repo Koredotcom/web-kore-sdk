@@ -104,11 +104,10 @@ let config= {
       // new HtmlWebpackPlugin() 
     ],
     resolve:{
-        extensions:['.js','.ts','.tsx']
+        extensions:['.js','.ts','.tsx','.woff','.woff2']
     },
     output: {
         publicPath:"",
-        publicPath: 'fonts/',
         filename: 'kore-web-sdk-[name].umd.js',
         path: path.resolve(__dirname,'dist'),
         clean: false,
