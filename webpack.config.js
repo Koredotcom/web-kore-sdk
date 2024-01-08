@@ -89,6 +89,11 @@ let config= {
           { from: path.resolve(__dirname, "src", "esm", "exports.d.ts"), to: path.resolve(__dirname, "dist", "esm") }
         ]
       }),
+      new CopyPlugin({
+        patterns: [
+          { from: path.resolve(__dirname, "fonts"), to: path.resolve(__dirname, "fonts") },
+        ]
+      }),
       new webpack.ProvidePlugin({
         //korejquery: 'jquery',
         jQuery: 'jquery',
