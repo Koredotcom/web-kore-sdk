@@ -108,6 +108,7 @@ let config= {
     },
     output: {
         publicPath:"",
+        publicPath: 'fonts/',
         filename: 'kore-web-sdk-[name].umd.js',
         path: path.resolve(__dirname,'dist'),
         clean: false,
