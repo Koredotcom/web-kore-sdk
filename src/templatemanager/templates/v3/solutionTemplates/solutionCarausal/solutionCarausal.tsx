@@ -20,22 +20,33 @@ export function Carousel(props: any) {
     const [updatedQty, setUpdatedQty] = useState(null);
     const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
     const [currentQty, setCurrentQty] = useState(null);
-    const [showTooltip, setShowTooltip] = useState(false);
-    const [tooltipText, setTooltipText] = useState('');
-    const [tooltipStates, setTooltipStates] = useState([] as boolean[]);
+    const [tooltipStatesSubTitle, setTooltipStatesSubTitle] = useState([] as boolean[]);
+    const [tooltipStatesSummaryText, setTooltipStatesSummaryText] = useState([] as boolean[]);
 
 
 
-    const handleMouseEnter = (index: number) => {
-        const updatedStates = [...tooltipStates];
+    const handleMouseEnterSubTitle = (index: number) => {
+        const updatedStates = [...tooltipStatesSubTitle];
         updatedStates[index] = true;
-        setTooltipStates(updatedStates);
+        setTooltipStatesSubTitle(updatedStates);
     };
 
-    const handleMouseLeave = (index: number) => {
-        const updatedStates = [...tooltipStates];
+    const handleMouseLeaveSubTitle = (index: number) => {
+        const updatedStates = [...tooltipStatesSubTitle];
         updatedStates[index] = false;
-        setTooltipStates(updatedStates);
+        setTooltipStatesSubTitle(updatedStates);
+    };
+
+    const handleMouseEnterSummaryText = (index: number) => {
+        const updatedStates = [...tooltipStatesSummaryText];
+        updatedStates[index] = true;
+        setTooltipStatesSummaryText(updatedStates);
+    };
+
+    const handleMouseLeaveSummaryText = (index: number) => {
+        const updatedStates = [...tooltipStatesSummaryText];
+        updatedStates[index] = false;
+        setTooltipStatesSummaryText(updatedStates);
     };
 
     useEffect(() => {
@@ -205,13 +216,13 @@ export function Carousel(props: any) {
 
                                             <p
                                                 className="sub-title-style"
-                                                onMouseEnter={() => handleMouseEnter(index)}
-                                                onMouseLeave={() => handleMouseLeave(index)}
+                                                onMouseEnter={() => handleMouseEnterSubTitle(index)}
+                                                onMouseLeave={() => handleMouseLeaveSubTitle(index)}
                                                 style={ele?.subTitleStyle}
                                             >
                                                 {ele?.subTitle}
                                             </p>
-                                            {tooltipStates[index] && (
+                                            {tooltipStatesSubTitle[index] && (
                                                 <div className={`custom-tooltip tooltip-style`}>
                                                     {ele?.subTitle}
                                                 </div>
@@ -231,7 +242,24 @@ export function Carousel(props: any) {
                                                     </p>
                                                 </div>
                                             </div>
-                                            {ele?.summaryText && <p className="summary-text-style" style={ele?.summaryTextStyle}>{ele?.summaryText}</p>}
+
+                                            {ele?.summaryText && (
+                                                <div>
+                                                    <p
+                                                        className="summary-text-style"
+                                                        onMouseEnter={() => handleMouseEnterSummaryText(index)}
+                                                        onMouseLeave={() => handleMouseLeaveSummaryText(index)}
+                                                        style={ele?.summaryTextStyle}
+                                                    >
+                                                        {ele?.summaryText}
+                                                    </p>
+                                                    {tooltipStatesSummaryText[index] && (
+                                                        <div className={`custom-tooltip tooltip-style`}>
+                                                            {ele?.summaryText}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
                                             {ele?.itemID && <p className="summary-text-style" >{ele?.itemID}</p>}
                                         </div>
                                     ))

@@ -63,12 +63,13 @@
                 }
 
                 p {
-                    margin-bottom: 8px;
-                    max-height: 32px;
-                    white-space: nowrap;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    max-height: 3em;
+                    line-height: 1.5em;
                     overflow: hidden;
                     text-overflow: ellipsis;
-                    font-size: 12px;
 
                     &:last-child {
                         margin-bottom: 0;
@@ -90,7 +91,7 @@
 
             .set-qty-style {
                 position: relative;
-                top: 22%;
+                top: 24%;
                 left: 63%;
                 z-index: 9999;
 
