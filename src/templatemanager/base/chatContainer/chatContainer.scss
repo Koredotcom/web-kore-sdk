@@ -91,41 +91,73 @@
     }
 	}
 }
-.chat-window-main-section.retail-assist-theme{
+.chat-window-main-section.retail-assist-theme {
   position: fixed;
   height: calc(100% - 50px);
   bottom: 20px;
   z-index: 9999;
-  .chat-widgetwrapper-main-container{
+
+  .chat-widgetwrapper-main-container {
     background: var(--global-white-bg);
   }
+
   .chat-actions-bottom-wraper {
-    .actions-contnet-data{
+    .actions-contnet-data {
       height: 100%;
       max-height: 100%;
-      .menu-wrapper-data-actions{
+
+      .menu-wrapper-data-actions {
         height: 100% !important;
       }
     }
   }
-}
 
-.retail-assist-theme{
-  .button-temp{
-    display: flex;
+  .avatar-variations-footer {
+    .avatar-actions {
+      .content-info {
+        .text-content {
+          display: none !important;
+
+          &.text-heading-one {
+            display: block !important;
+          }
+        }
+
+        >.primary-button {
+          display: none !important;
+        }
+      }
+    }
   }
-  .kr-btn{
-    flex: 1;
-  .chat-widget-header{
-    .info-content-data{
-      .img-block{
+
+  .chat-widget-header {
+    .info-content-data {
+      .img-block {
         figure {
-          img{
+          img {
             border: none;
           }
         }
       }
     }
   }
+  .chat-widget-composebar{
+    .typing-indicator-wraper{
+      min-width: 80px;
+      background: transparent !important;
+    }
+  }
+  .button-template-container{
+    padding-left: 32px;
+  }
 }
+
+.retail-assist-theme {
+  .button-temp {
+    display: flex;
+  }
+
+  .kr-btn {
+    flex: 1;
+  }
 }
