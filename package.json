@@ -42,9 +42,6 @@
     "**/*.scss",
     "src/exports/exports.js"
   ],
-  "files": [
-    "fonts"
-  ],
   "dependencies": {
     "aws-sdk": "^2.1102.0",
     "d3": "^7.1.1",
