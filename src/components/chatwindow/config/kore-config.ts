@@ -54,7 +54,7 @@ chatConfig = {
     googleMapsAPIKey: "",           
     minimizeMode: true,             // set true, to show chatwindow in minimized mode, If false is set remove #chatContainer style in chatwindow.css  
     multiPageApp: {
-        enable: false,              //set true for non SPA(Single page applications)
+        enable: true,              //set true for non SPA(Single page applications)
         userIdentityStore: 'localStorage',//'localStorage || sessionStorage'
         chatWindowStateStore: 'localStorage'//'localStorage || sessionStorage'
     },
