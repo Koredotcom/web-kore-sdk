@@ -9,6 +9,9 @@ import { getHTML } from '../../../../base/domManager'; // Sample import, replace
 function RetailOrderSelection(props: any) {
     const hostInstance = props.hostInstance; // Assigning props
     const msgData = props.msgData;
+    if(msgData?.message[0]?.component?.payload?.payload){
+        msgData.message[0].component.payload = msgData.message[0].component.payload.payload;
+    }
 
     // State initialization
     const initialElements = msgData.message[0]?.component?.payload?.elements || [];

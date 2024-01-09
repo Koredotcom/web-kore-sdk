@@ -9,6 +9,9 @@ import IconsManager from '../../../../base/iconsManager';
 export function Carousel(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
+    if(msgData?.message[0]?.component?.payload?.payload){
+        msgData.message[0].component.payload = msgData.message[0].component.payload.payload;
+    }
     const messageobj = {
         msgData: msgData,
         hostInstance: hostInstance

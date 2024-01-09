@@ -54,6 +54,7 @@ class RetailAssistTemplatePlugin {
     let me = this;
     let $ = me.hostInstance.$;
     $(me.hostInstance.chatEle).addClass('retail-assist-theme');
+    $('head').append("<link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>");
   }
 
   retailCustomization(){
