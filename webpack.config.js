@@ -21,15 +21,6 @@ let config= {
                 use: 'ts-loader',
                 include:[path.resolve(__dirname,'src'),path.resolve(__dirname,'UI')]
             },
-            {
-              test: /\.(woff|woff2|eot|ttf|otf)$/,
-              use: {
-                loader: 'file-loader',
-                options: {
-                  name: 'fonts/[name].[ext]',
-                },
-              },
-            },
             // {
             //   test: /\.js$/,
             //   exclude: /(node_modules|bower_componentss)/,
@@ -89,6 +80,11 @@ let config= {
           { from: path.resolve(__dirname, "src", "esm", "exports.d.ts"), to: path.resolve(__dirname, "dist", "esm") }
         ]
       }),
+      new CopyPlugin({
+        patterns: [
+          { from: path.resolve(__dirname, "fonts"), to: path.resolve(__dirname, "fonts") },
+        ]
+      }),
       new webpack.ProvidePlugin({
         //korejquery: 'jquery',
         jQuery: 'jquery',
@@ -104,7 +100,8 @@ let config= {
       // new HtmlWebpackPlugin() 
     ],
     resolve:{
-        extensions:['.js','.ts','.tsx']
+        extensions:['.js','.ts','.tsx'],
+        modules: ["fonts", "node_modules"]
     },
     output: {
         publicPath:"/",
