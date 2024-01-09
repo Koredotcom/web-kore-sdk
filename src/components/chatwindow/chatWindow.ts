@@ -151,7 +151,7 @@ class chatWindow extends EventEmitter{
   }
   sendFailedMessage: any;
   
- constructor(){
+ constructor() {
   super(null);
   this.chatEle;
   this.config={};
