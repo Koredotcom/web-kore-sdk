@@ -710,11 +710,16 @@
             .content-info {
                 .text-content {
                     h4 {
+                        font-size: 25px;
+                        line-height: 30px;
                         img {
                             vertical-align: middle;
                             position: relative;
                             top: -3px;
                         }
+                    }
+                    .help-text-content{
+                        line-height: 20px;
                     }
                 }
             }
