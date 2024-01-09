@@ -207,7 +207,7 @@ function RetailOrderSelection(props: any) {
                                     </div>
                                 )
                             )
-                        ))
+                        )).slice(0, displayLimit)
                     }
                     {
                         elements?.map((ele: any, index: number) => (
@@ -235,8 +235,6 @@ function RetailOrderSelection(props: any) {
                                                             </div>
                                                         ))
                                                     }
-
-
                                                 </div>
                                             </div>
                                         </div>
