@@ -150,6 +150,15 @@
   .button-template-container{
     padding-left: 32px;
   }
+  .date-saperator{
+      .line-border{
+        width: 150px;
+        margin: 0;
+      }
+      .date-text{
+        display: none !important;
+      }
+  }
 }
 
 .retail-assist-theme {
