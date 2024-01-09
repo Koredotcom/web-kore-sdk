@@ -31,9 +31,6 @@ function writePackageJSON(packageJSON){
 function copyDistrubution(){
     fse.copySync("./dist", TEMP_DIR+'/dist',{overwrite:true});
 }
-function copyFonts(){
-    // fse.copySync("./fonts", TEMP_DIR+'/fonts',{overwrite: true});
-}
 function copyReadMeFile(){
     fse.copySync("README.md", TEMP_DIR+'/README.md',{overwrite:true});
 }
@@ -118,7 +115,6 @@ const TEMP_DIR = "./.temp";
 let packageJSON={};
 
 copyDistrubution();
-copyFonts();
 copyReadMeFile();
  packageJSON=readPackageJSON();
  packageJSON=deleteUnWantedKeys(packageJSON);
