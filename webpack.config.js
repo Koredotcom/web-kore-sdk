@@ -22,7 +22,7 @@ let config= {
                 include:[path.resolve(__dirname,'src'),path.resolve(__dirname,'UI')]
             },
             {
-              test: /\.(woff|woff2)$/,
+              test: /\.(woff|woff2|eot|ttf|otf)$/,
               use: {
                 loader: 'file-loader',
                 options: {
