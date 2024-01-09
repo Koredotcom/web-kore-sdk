@@ -21,15 +21,18 @@ let config= {
                 use: 'ts-loader',
                 include:[path.resolve(__dirname,'src'),path.resolve(__dirname,'UI')]
             },
-          {
-            test: /\.(woff|woff2)$/,
-            use: {
-              loader: 'file-loader',
-              options: {
-                name: 'fonts/[name].[ext]',
-              },
+            {
+              test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+              use: [
+                {
+                  loader: 'file-loader',
+                  options: {
+                    name: '[name].[ext]',
+                    outputPath: 'fonts/'
+                  }
+                }
+              ]
             },
-          },
             // {
             //   test: /\.js$/,
             //   exclude: /(node_modules|bower_componentss)/,
@@ -87,11 +90,6 @@ let config= {
         patterns: [
           { from: path.resolve(__dirname, "src", "esm", "exports.js"), to: path.resolve(__dirname, "dist", "esm") },
           { from: path.resolve(__dirname, "src", "esm", "exports.d.ts"), to: path.resolve(__dirname, "dist", "esm") }
-        ]
-      }),
-      new CopyPlugin({
-        patterns: [
-          { from: path.resolve(__dirname, "fonts"), to: path.resolve(__dirname, "fonts") },
         ]
       }),
       new webpack.ProvidePlugin({
