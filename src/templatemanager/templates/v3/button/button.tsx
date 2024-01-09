@@ -19,15 +19,18 @@ export function Button(props: any) {
             hostInstance.openExternalLink(link);
         }
     }
-    const messageobj = {
+    let messageObj = {
         msgData: msgData,
         hostInstance: hostInstance
     }
     if (msgData?.message?.[0]?.component?.payload?.template_type === 'button' && !msgData?.message?.[0]?.component?.formData) {
+        if (msgData?.fromHistory) {
+            messageObj.msgData.message[0].cInfo.body = messageObj.msgData.message[0].cInfo.body.payload.text;
+        }
         return (
             <Fragment>
                 <div>
-                    <Message {...messageobj} />
+                    <Message {...messageObj} />
                     <div className="button-template-container">
                         <div className="button-temp button-variation-2">
                             {
