@@ -32,6 +32,13 @@ export function QuickReply(props: any) {
         carouselButtons.init();
     }, 50);
 
+    setTimeout(() => {
+        hostInstance.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
+            top: hostInstance.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight,
+            behavior: 'smooth'
+        });
+    }, 100);
+
     return (
         <div className="quick-replies quick-temp" id={msgData.messageId}>
             <button className="quick-left-click" c-left-button-id={msgData.messageId}>
