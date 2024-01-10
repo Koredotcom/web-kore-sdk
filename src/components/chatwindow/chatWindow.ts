@@ -1069,6 +1069,11 @@ bindEventsV3() {
         const openSound = new Audio(me.config.branding.general.sounds.on_open.url);
         openSound.play();
       }
+      const scrollHeight =  me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight;
+      me.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
+        top: scrollHeight,
+        behavior: 'smooth'
+      });
     } else {
       const clArr = ['minimize', 'minimizeQuick', 'minimizeSmooth'];
       if (me.config.multiPageApp && me.config.multiPageApp.enable) {
