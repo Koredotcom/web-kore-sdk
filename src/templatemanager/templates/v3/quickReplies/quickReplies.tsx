@@ -1,7 +1,7 @@
 import BaseChatTemplate from '../baseChatTemplate';
 import './quickReplies.scss';
 import { h, Fragment } from 'preact';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { Message } from '../message/message';
 import { getHTML } from '../../../base/domManager';
 import CarouselButtons from '../carouselTemplate/carouselButtons';
@@ -69,17 +69,20 @@ export function QuickReplies(props: any) {
         msgData: msgData,
         hostInstance: hostInstance
     }
+
     if (msgData?.message?.[0]?.component?.payload?.template_type === 'quick_replies') {
-        setTimeout(() => {
-            if (!msgData.fromHistory) {
-                if (hostInstance.chatEle.querySelectorAll('.quick-replies') && hostInstance.chatEle.querySelectorAll('.quick-replies').length > 0) {
-                    hostInstance.chatEle.querySelector('.quick-replies').remove();   // To remove quick replies container if exists
+        useEffect(() => {
+            setTimeout(() => {
+                if (!msgData.fromHistory) {
+                    if (hostInstance.chatEle.querySelectorAll('.quick-replies') && hostInstance.chatEle.querySelectorAll('.quick-replies').length > 0) {
+                        hostInstance.chatEle.querySelector('.quick-replies').remove();   // To remove quick replies container if exists
+                    }
+                    const quickReply = getHTML(QuickReply, msgData, hostInstance);
+                    const composeBar = hostInstance.chatEle.querySelector('.chat-widget-composebar');
+                    composeBar.insertBefore(quickReply, composeBar.firstChild);
                 }
-                const quickReply = getHTML(QuickReply, msgData, hostInstance);
-                const composeBar = hostInstance.chatEle.querySelector('.chat-widget-composebar');
-                composeBar.insertBefore(quickReply, composeBar.firstChild);
-            }
-        }, 500);
+            }, 500);
+        });
         return (
             <Fragment>
                 <div className='quick-replies-container'>
