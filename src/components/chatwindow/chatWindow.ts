@@ -684,6 +684,8 @@ destroy  () {
         me.chatEle.addClass('minimize');
       }
       me.skipedInit = true;
+      me.initial = true;
+      me.initialChat = true;
     }
   }
   window.removeEventListener('online', me.updateOnlineStatus);
@@ -703,12 +705,13 @@ resetWindow () {
   me.bot.close();
   me.config.botOptions.maintainContext = false;
   me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
+  me.config.botOptions.initialChat = true;
   me.bot.init(me.config.botOptions);
-  if (me.config.UI.version == 'v3') {
-    setTimeout(() => {
-      me.bot.logInComplete();
-    }, 4000);
-  }
+  // if (me.config.UI.version == 'v3') {
+  //   setTimeout(() => {
+  //     me.bot.logInComplete();
+  //   }, 4000);
+  // }
 };
 
 sendMessageWithWithChatInput(chatInput:any){
@@ -1006,11 +1009,17 @@ bindEventsV3() {
         }
         if (!me.welcomeScreenState) {
           if (me.initial) {
-            setTimeout(() => {
-              me.bot.logInComplete(); // Start api call & ws
-            }, 2000);
+            if (me.initialChat) {
+              me.config.botOptions.initialChat = true;
+              me.bot.init(me.config.botOptions);
+              me.initialChat = false;
+            } else {
+              setTimeout(() => {
+                me.bot.logInComplete(); // Start api call & ws
+              }, 2000);
+            }
+            me.initial = false;
           }
-          me.initial = false;
           if (me.config.branding.welcome_screen.show) {
             me.chatEle.querySelector('.welcome-chat-section').classList.add(me.config.branding.chat_bubble.expand_animation);
           } else {
@@ -1018,9 +1027,15 @@ bindEventsV3() {
           }
         } else {
           if (me.initial) {
-            setTimeout(() => {
-              me.bot.logInComplete(); // Start api call & ws
-            }, 2000);
+            if (me.initialChat) {
+              me.config.botOptions.initialChat = true;
+              me.bot.init(me.config.botOptions);
+              me.initialChat = false;
+            } else {
+              setTimeout(() => {
+                me.bot.logInComplete(); // Start api call & ws
+              }, 2000);
+            }
             me.initial = false;
           }
           me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(me.config.branding.chat_bubble.expand_animation);
