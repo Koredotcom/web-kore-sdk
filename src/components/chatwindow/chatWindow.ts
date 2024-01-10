@@ -1108,6 +1108,7 @@ bindEventsV3() {
   })
 
   me.eventManager.addEventListener('.btn-reconnect', 'click', () => {
+    me.chatEle.querySelector('.btn-reconnect').setAttribute('disabled', true);
     setTimeout(() => {
       me.resetWindow();
     });
@@ -1300,6 +1301,9 @@ onBotReady  () {
   } else {
     me.config.branding.header.title.name = me._botInfo.displayName;
     me.setBranding();
+    if (me.chatEle.querySelector('.btn-reconnect') && me.chatEle.querySelector('.btn-reconnect').getAttribute('disabled')) {
+      me.chatEle.querySelector('.btn-reconnect').removeAttribute('disabled');
+    }
   }
   if (!me.loadHistory) {
     setTimeout(() => {

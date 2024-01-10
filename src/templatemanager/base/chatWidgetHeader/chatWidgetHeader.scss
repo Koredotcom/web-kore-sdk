@@ -82,6 +82,9 @@
                         stroke: var(--chat-widget-header-bg-large-actions-color);
                     }
                 }
+                &.btn-reconnect[disabled]{
+                    opacity: 0.5;
+                }
             }
         }
         &.transparent-style{
@@ -213,6 +216,9 @@
                     fill: none;
                     stroke: var(--chat-widget-header-actions-color);
                 }
+            }
+            &.btn-reconnect[disabled]{
+                opacity: 0.5;
             }
         }
     }

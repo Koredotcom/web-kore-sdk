@@ -233,16 +233,16 @@ const BrandingJSON = {
             "help": {
                 "show": true,
                 "action": {
-                    "type": "postback|url",
-                    "value": "http://abc.coms",
+                    "type": "url",
+                    "value": "https://developer.kore.ai/docs/bots/whats-new/whats-new-in-this-release/",
                     "icon": "url|icomoon"
                 }
             },
             "live_agent": {
                 "show": true,
                 "action": {
-                    "type": "postback|url",
-                    "value": "http://abc.cocd",
+                    "type": "postback",
+                    "value": "connect to agent",
                     "icon": "url|icomoon"
                 }
             }
