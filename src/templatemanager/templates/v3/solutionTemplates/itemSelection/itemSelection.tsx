@@ -5,11 +5,12 @@ import { useState } from 'preact/hooks';
 import IconsManager from '../../../../base/iconsManager'; // Sample import, replace with your module
 import { getHTML } from '../../../../base/domManager'; // Sample import, replace with your module
 
+
 // RetailOrderSelection component function
 function RetailOrderSelection(props: any) {
     const hostInstance = props.hostInstance; // Assigning props
     const msgData = props.msgData;
-    if(msgData?.message[0]?.component?.payload?.payload){
+    if (msgData?.message[0]?.component?.payload?.payload) {
         msgData.message[0].component.payload = msgData.message[0].component.payload.payload;
     }
 
@@ -17,6 +18,24 @@ function RetailOrderSelection(props: any) {
     const initialElements = msgData.message[0]?.component?.payload?.elements || [];
     const [elements, setElements] = useState(initialElements);
     const [displayLimit, setDisplayLimit] = useState(3);
+    // const [isChecked, setIsChecked] = useState(false);
+    const [checkboxStates, setCheckboxStates] = useState<boolean[]>(Array(elements.length).fill(false));
+
+    const handleCheckboxClick = (index: number) => {
+        setCheckboxStates((prevState) => {
+            const newState = [...prevState];
+            newState[index] = !newState[index];
+            return newState;
+        });
+    };
+
+    const isButtonDisabled = (buttonTitle: string) => {
+        if (buttonTitle === 'Checkout') {
+            const disabled = checkboxStates.some((state) => !state);
+            return checkboxStates.every((state) => !state);
+        }
+        return false; // If other buttons should not be disabled by checkbox state
+    };
 
     // Handling increment and decrement of quantities
     const handleDecrement = (index: any) => {
@@ -34,6 +53,7 @@ function RetailOrderSelection(props: any) {
             return updatedElements;
         });
     };
+
     // Function to handle payload and send message
     const handleButtonEvent = (e: any) => {
         if (e?.type?.toLowerCase() == 'postback' || e?.type?.toLowerCase() == 'text') {
@@ -83,6 +103,8 @@ function RetailOrderSelection(props: any) {
             }
         }
     }
+
+    let checkboxIndex = 0; // Initialize a shared index variable
     if (msgData?.message[0]?.component?.payload?.template_type === "retailOrderSelection" && msgData?.message[0]?.component?.payload?.card_type === 'detail') {
         return (
             <div>
@@ -100,7 +122,15 @@ function RetailOrderSelection(props: any) {
                                                     {
                                                         ele.checkBox === "enabled" && (
                                                             <div class="kr-sg-checkbox">
-                                                                <input id={`checkbox-${index}`} className={`checkbox-custom checkbox-input-${msgData.messageId}`} type="checkbox" value={JSON.stringify(ele)} />
+                                                                {/* <input id={`checkbox-${index}`} className={`checkbox-custom checkbox-input-${msgData.messageId}`} type="checkbox" value={JSON.stringify(ele)} /> */}
+                                                                <input
+                                                                    id={`checkbox-${index}`}
+                                                                    className={`checkbox-custom checkbox-input-${msgData.messageId}`}
+                                                                    type="checkbox"
+                                                                    checked={!!checkboxStates[index]}
+                                                                    value={JSON.stringify(ele)}
+                                                                    onChange={() => handleCheckboxClick(index)}
+                                                                />
                                                             </div>
                                                         )}
                                                     <img src={ele?.icon} />
@@ -111,14 +141,10 @@ function RetailOrderSelection(props: any) {
                                                             <div className="f-left-section">
                                                                 <h1 style={ele?.titleStyle}>{ele?.title}</h1>
                                                             </div>
-                                                            {/* <div className="f-right-section">
-                                                                {ele?.value && <p className="status-style" style={ele?.valueStyle}>{ele?.value}</p>}
-                                                            </div> */}
                                                         </div>
                                                         <div className="sub-title-style">
                                                             <h2 style={ele?.subTitleStyle}>{ele?.subTitle}</h2>
                                                         </div>
-
                                                     </div>
                                                     {
                                                         ele?.description?.map((detail: any, detailIndex: number) => (
@@ -128,9 +154,11 @@ function RetailOrderSelection(props: any) {
                                                                 </div>
                                                                 <div className="details-right-section">
                                                                     <p style={detail?.detailStyle}>
-                                                                        {/* Check if flag is "cartScreen" to show the calculated value */}
                                                                         {ele?.flag === 'cartScreen' ?
-                                                                            `$${parseFloat(detail?.value.replace(/[^0-9.]/g, '')) * parseFloat(elements[index].qty)}`
+                                                                            new Intl.NumberFormat('en-US', {
+                                                                                style: 'currency',
+                                                                                currency: 'USD',
+                                                                            }).format(parseFloat(detail?.value.replace(/[^0-9.]/g, '')) * parseFloat(elements[index].qty))
                                                                             : detail?.value /* Else, show the default value */}
                                                                     </p>
                                                                 </div>
@@ -246,13 +274,24 @@ function RetailOrderSelection(props: any) {
                             )
                         )).slice(0, displayLimit)
                     }
+                    {/* Button block */}
                     {
                         msgData.message[0].component?.payload?.buttons &&
                         <div className="btn-style">
-                            {
-                                msgData.message[0].component?.payload?.buttons?.map((button: any) => (
-                                    <button style={button?.buttonStyle} className="shopping-btn" onClick={() => handleButtonEvent(button)}>{button?.title}</button>
-                                ))}
+                            {msgData.message[0].component?.payload?.buttons?.map((button: any, buttonIndex: number) => {
+                                const isDisabled = isButtonDisabled(button?.title);
+                                return (
+                                    <button
+                                        key={buttonIndex}
+                                        style={button?.buttonStyle}
+                                        className={`shopping-btn ${isDisabled ? 'disabled' : 'enabled'}`}
+                                        onClick={() => handleButtonEvent(button)}
+                                        disabled={isDisabled}
+                                    >
+                                        {button?.title}
+                                    </button>
+                                );
+                            })}
                         </div>
                     }
 
@@ -309,12 +348,12 @@ function RetailOrderSelection(props: any) {
                                                             <p style={ele?.titleStyle}>{ele?.title}</p>
                                                         </div>
                                                         <div className="right-description">
-                                                        {typeof ele?.value === 'string' && ele?.value.startsWith('https://') ? (
+                                                            {typeof ele?.value === 'string' && ele?.value.startsWith('https://') ? (
                                                                 <a style={ele?.valueStyle} href={ele?.value} target="_blank" rel="noopener noreferrer">{ele?.value}</a>
                                                             ) : (
                                                                 <p style={ele?.valueStyle}>{ele?.value}</p>
                                                             )}
-                                                           {/* test <p style={ele?.valueStyle}>{ele?.value}</p> */}
+                                                            {/* test <p style={ele?.valueStyle}>{ele?.value}</p> */}
                                                         </div>
                                                     </div>
                                                 ))
@@ -388,7 +427,7 @@ function RetailOrderSelection(props: any) {
                         )
                     ))
                 }
-            </div>
+            </div >
         );
     }
 }
