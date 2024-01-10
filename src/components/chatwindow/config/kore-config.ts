@@ -3,6 +3,7 @@ import BrandingJSON from '../sass/brandingJSON'; // To do
 var chatConfig:any={};
 
 var botOptions:any = {};
+botOptions.initialChat = false;
 botOptions.logLevel = 'debug';
 botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
 

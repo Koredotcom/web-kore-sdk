@@ -57,7 +57,7 @@ const BrandingJSON = {
             "type": "default" 
         },
         "minimise": {
-            "icon": "icon-m-3",
+            "icon": "icon-m-1",
             "theme": "rounded",
             "type": "default"
         },
