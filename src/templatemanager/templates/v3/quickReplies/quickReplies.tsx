@@ -32,6 +32,13 @@ export function QuickReply(props: any) {
         carouselButtons.init();
     }, 50);
 
+    setTimeout(() => {
+        hostInstance.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
+            top: hostInstance.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight,
+            behavior: 'smooth'
+        });
+    }, 100);
+
     return (
         <div className="quick-replies quick-temp" id={msgData.messageId}>
             <button className="quick-left-click" c-left-button-id={msgData.messageId}>
@@ -65,6 +72,9 @@ export function QuickReplies(props: any) {
     if (msgData?.message?.[0]?.component?.payload?.template_type === 'quick_replies') {
         setTimeout(() => {
             if (!msgData.fromHistory) {
+                if (hostInstance.chatEle.querySelectorAll('.quick-replies') && hostInstance.chatEle.querySelectorAll('.quick-replies').length > 0) {
+                    hostInstance.chatEle.querySelector('.quick-replies').remove();   // To remove quick replies container if exists
+                }
                 const quickReply = getHTML(QuickReply, msgData, hostInstance);
                 const composeBar = hostInstance.chatEle.querySelector('.chat-widget-composebar');
                 composeBar.insertBefore(quickReply, composeBar.firstChild);

@@ -8,7 +8,7 @@ const BrandingJSON = {
             "secondary":"#EAECF0",
             "primary_text": "#101828",
             "secondary_text": "#FFFFFF",
-            "useColorPaletteOnly": false
+            "useColorPaletteOnly": true
         },
         "sounds": {
             "enable": false,
