@@ -30,6 +30,9 @@ export function ChatWidgetHeader(props: any) {
                 hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove(hostInstance.config.branding.chat_bubble.expand_animation);
             }
             hostInstance.chatEle.classList.add('minimize-chat');
+            if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
+                hostInstance.setLocalStoreItem('kr-cw-state', 'minimized');
+              }
         })
 
         hostInstance.eventManager.removeEventListener('.back-to-chat', 'click');
