@@ -1688,7 +1688,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
     }
   }
   let eleHeight, scrollHeight;
-  if (me.config.UI.version == 'v3' && me.chatEle.querySelectorAll('.chat-widget-body-wrapper > div#'+ msgData?.messageId).length < 1 || (msgData?.renderType === 'inline')) {
+  if (me.config.UI.version == 'v3' && me.chatEle.querySelectorAll('.chat-widget-body-wrapper > div .i'+ msgData?.messageId).length < 1 || (msgData?.renderType === 'inline')) {
     if (msgData?.type === 'bot_response' && msgData?.fromHistorySync) {
     } else {
       scrollHeight = me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight;
@@ -1719,7 +1719,16 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
         me.chatEle.querySelector('.prev-message-list').appendChild(messageHtml);
       }
     }
+
+    if (bot && !bot.previousHistoryLoading) {
+      scrollHeight = (me.historyLoading || eleHeight < 300) ? me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight : scrollHeight - me.chatEle.querySelector('.chat-widget-body-wrapper').clientHeight / 2;
+      me.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
+        top: scrollHeight,
+        behavior: 'smooth'
+      });
+    }
   }
+  
   //}
   if (me.config.UI.version == 'v2') {
     me.handleImagePreview();
@@ -1728,17 +1737,12 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   if (me.chatPSObj && me.chatPSObj.update) {
     me.chatPSObj.update();
   }
+
   if (bot && !bot.previousHistoryLoading) {
     if (me.config.UI.version == 'v2') {
       _chatContainer.animate({
         scrollTop: _chatContainer.prop('scrollHeight'),
       }, 100);
-    } else {
-      scrollHeight = (me.historyLoading || eleHeight < 300) ? me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight : scrollHeight - me.chatEle.querySelector('.chat-widget-body-wrapper').clientHeight/2;
-      me.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
-        top: scrollHeight,
-        behavior: 'smooth'
-      });
     }
   }
 
