@@ -4,7 +4,7 @@ import TemplateManager from '../../templatemanager/templateManager';
 import KoreHelpers from '../../utils/helpers';
 import EventEmitter from '../../utils/EventEmiter'
 import MessageTemplate from '../../templatemanager/templates/messageTemplate/messageTemplate';
-import KRPerfectScrollbar from 'perfect-scrollbar';
+import KRPerfectScrollbar from '../../libs/perfectscroll/perfect-scrollbar';
 import './../../libs/perfectscroll/css/perfect-scrollbar.min.css';
 import './sass/chatWindow.scss';
 //import './../../libs/emojione.sprites.css';
@@ -1556,7 +1556,7 @@ getChatTemplate (tempType: string) {
          {{if userAgentIE}} \
          <div role="textbox" class="chatInputBox inputCursor" aria-label="Message" aria-label="Message" contenteditable="true" placeholder="${botMessages.message}"></div> \
          {{else}} \
-         <div role="textbox" class="chatInputBox" contenteditable="true" placeholder="${botMessages.message}"></div> \
+         <div role="textbox" class="chatInputBox"  aria-label="Message"  contenteditable="true" placeholder="${botMessages.message}"></div> \
          {{/if}} \
      <div class="attachment"></div> \
      {{if !(isSendButton)}}<div class="chatSendMsg">${botMessages.entertosend}</div>{{/if}} \

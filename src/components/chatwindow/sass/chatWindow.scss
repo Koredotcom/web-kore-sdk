@@ -168,7 +168,7 @@
 		text-decoration: none;
 	}
 	ul.chat-container {
-		li {
+		li:not(.ps__rail-y,.ps__rail-x) {
 			// &:first-child {
 			// 	margin-top: 10px;
 			// }
