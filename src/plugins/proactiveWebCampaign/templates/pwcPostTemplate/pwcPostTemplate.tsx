@@ -4,13 +4,13 @@ import './pwcPostTemplate.scss';
 export function Post(props: any) {
     const msgData = props.msgData;
     
-    if (msgData.type == 'pwe_message' && msgData.body.campInfo?.webCampaignType && msgData.body.campInfo?.webCampaignType == 'post' && msgData?.body?.layoutData) {
-        const layoutData = msgData.body?.layoutDesign;
+    if (msgData.type == 'pwe_message' && msgData.body.campInfo?.webCampaignType && msgData.body.campInfo?.webCampaignType == 'post' && msgData?.body?.layoutDesign) {
+        const layoutDesign = msgData.body?.layoutDesign;
         let postClass = 'campaign-post-banner-data-sec';
-        if (layoutData?.size == 'small') {
+        if (layoutDesign?.size == 'small') {
             postClass = postClass + ' small-post-banner';
         }
-        let messages = layoutData.messages;
+        let messages = layoutDesign.messages;
         let msgs: any = [];
         messages.forEach((ele: any) => {
             const obj = {
@@ -19,7 +19,7 @@ export function Post(props: any) {
             }
             msgs.push(obj);
         });
-        layoutData.messages = msgs;
+        layoutDesign.messages = msgs;
         const closePost = () => {
             const bannerEle: any = document.querySelector('.campaign-post-banner-data-sec');
             bannerEle.remove();
@@ -35,7 +35,7 @@ export function Post(props: any) {
                             </svg>
                         </button>
                     </div>
-                    <div className="banner-img-data" dangerouslySetInnerHTML={{__html: layoutData?.messages[0]?.value}}></div>
+                    <div className="banner-img-data" dangerouslySetInnerHTML={{__html: layoutDesign?.messages[0]?.value}}></div>
                 </div>
             </div>
         )

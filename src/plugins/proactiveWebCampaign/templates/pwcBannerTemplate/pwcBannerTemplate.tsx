@@ -4,16 +4,16 @@ import './pwcBannerTemplate.scss';
 export function Banner(props: any) {
     const msgData = props.msgData;
 
-    if (msgData.type == 'pwe_message' && msgData.body.campInfo?.webCampaignType && msgData.body.campInfo?.webCampaignType == 'banner' && msgData?.body?.layoutData) {
-        const layoutData = msgData.body?.layoutDesign;
+    if (msgData.type == 'pwe_message' && msgData.body.campInfo?.webCampaignType && msgData.body.campInfo?.webCampaignType == 'banner' && msgData?.body?.layoutDesign) {
+        const layoutDesign = msgData.body?.layoutDesign;
         let bannerClass = 'campaign-banner-sec';
-        if (layoutData.pattern == 'floating') {
+        if (layoutDesign.pattern == 'floating') {
             bannerClass = bannerClass + ' floating-banner';
         }
-        if (layoutData.placement == 'bottom') {
+        if (layoutDesign.placement == 'bottom') {
             bannerClass = bannerClass + ' position-bottom';
         }
-        let messages = layoutData.messages;
+        let messages = layoutDesign.messages;
         let msgs: any = [];
         messages.forEach((ele: any) => {
             const obj = {
@@ -22,16 +22,16 @@ export function Banner(props: any) {
             }
             msgs.push(obj);
         });
-        layoutData.messages = msgs;
+        layoutDesign.messages = msgs;
         const closeBanner = () => {
             const bannerEle: any = document.querySelector('.campaign-banner-sec');
             bannerEle.remove();
         }
         return (
             <div className={bannerClass}>
-                <div className="banner-data-info" style={{backgroundColor: layoutData?.backgroundColor}}>
-                    <div className="info-p-data" style={{color: layoutData?.color}}>
-                        { layoutData.messages.map((ele: any) => (
+                <div className="banner-data-info" style={{backgroundColor: layoutDesign?.backgroundColor}}>
+                    <div className="info-p-data" style={{color: layoutDesign?.color}}>
+                        { layoutDesign.messages.map((ele: any) => (
                         <p dangerouslySetInnerHTML={{__html: ele.value}}></p>
                         ))}
                     </div>
