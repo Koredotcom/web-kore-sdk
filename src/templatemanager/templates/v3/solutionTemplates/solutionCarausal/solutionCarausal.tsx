@@ -201,6 +201,7 @@ export function Carousel(props: any) {
                                             <input
                                                 className="input-c"
                                                 type="text"
+                                                readOnly
                                                 value={elements[index].qty}
                                             />
                                         }
