@@ -35,6 +35,19 @@ class RetailAssistTemplatePlugin {
     cwInstance.on("beforeWSSendMessage", (chatWindowEle: any) => {
       cwInstance?.chatEle?.querySelector('.quick-replies')?.remove();
     });
+    cwInstance.on("beforeRenderMessage", (e: any) => {
+      if ((e?.msgData?.type === "currentUser") && cwInstance?.isMaskingEnabled && (e.messageHtml).querySelector('.bubble-msg')) {
+        let innerTextContent = (e.messageHtml).querySelector('.bubble-msg').innerText;
+        innerTextContent = innerTextContent.replace(/./g, '*');
+        (e.messageHtml).querySelector('.bubble-msg').innerText = innerTextContent;
+        cwInstance.isMaskingEnabled = false;
+      }
+    });
+    cwInstance.on("onWSMessage", (e: any) => {
+      if (e?.messageData?.type === "bot_response" && e?.messageData?.message?.[0]?.component?.payload?.masking) {
+        cwInstance.isMaskingEnabled = true;
+      }
+    });
   }
 
   onInit() {
