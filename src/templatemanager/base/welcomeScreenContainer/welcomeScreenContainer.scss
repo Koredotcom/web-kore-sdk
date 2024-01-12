@@ -558,8 +558,9 @@
 }
 .retail-assist-theme {
     .welcome-chat-section {
-        margin-top: 84px;
         height: auto;
+        position: absolute;
+        bottom: 10px;
         .link-wrapper-content{
             display: none;
         }
