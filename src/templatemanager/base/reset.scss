@@ -3,6 +3,8 @@
    v2.0 | 20110126
    License: none (public domain)
 */
+@import '../../templatemanager/base/variables.scss';
+
 .chat-window-main-section{
 *{
   font-family: var(--global-font-family);
