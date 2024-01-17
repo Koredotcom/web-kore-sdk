@@ -2326,7 +2326,7 @@ bottomSliderAction(action: any, appendElement: any) {
 modalAction(appendElement: any) {
   const me: any = this;
   const modal: any = getHTML(ActionsModal, '', me);
-  // modal.querySelector('.modal-container').appendChild(appendElement);
+  modal.querySelector('.modal_body_actions').appendChild(appendElement);
   me.chatEle.appendChild(modal);
 }
 
