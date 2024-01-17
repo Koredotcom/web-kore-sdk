@@ -776,9 +776,9 @@ function AgentDesktop(uuId, aResponse) {
             },
             callScreenSharingEnded: function (call, stream) {
                 console.log('phone>>> callScreenSharingEnded', call);
-                //_self.sendControlMessage('screenshare_end');
-                //_self.phone.closeScreenSharing(_self.screenSharingStream);
-                //_self.sendVideo(_self.callDetails.videoCall);
+                _self.sendControlMessage('screenshare_end');
+                _self.phone.closeScreenSharing(_self.screenSharingStream);
+                _self.sendVideo(_self.callDetails.videoCall);
                 _self.screenSharingStream = null;
             },
             outgoingCallProgress: function(call, response) {
@@ -786,6 +786,9 @@ function AgentDesktop(uuId, aResponse) {
             },
     
             callTerminated: function(call, message, cause, redirectTo) {
+                if(self?.screenSharingStream){
+                    this.callScreenSharingEnded(call);
+                }
                 koreJquery("#rejectPhone").show();
                 console.log('phone>>> call terminated callback, cause=%o', cause);
                 if (call !== self.activeCall) {
