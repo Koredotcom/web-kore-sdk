@@ -138,6 +138,9 @@
                     font-weight: 400;
                     line-height: 18px;
                     width: 100%;
+                    &.hide{
+                        display: none;
+                    }
                 }
             }
             .nps-feeback-survey{
@@ -336,4 +339,31 @@
     }
 }
 
-
+.feedback-typing-text-area{
+    width: 100%;
+    padding: 12px 35px 12px 12px;
+    resize: none;
+    background: var(--chat-widget-compose-bar-text-area-bg);
+    border: 1px solid var(--chat-widget-compose-bar-text-area-border);
+    border-radius: 4px;
+    height: 60px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;                
+    color: var(--chat-widget-compose-bar-text-area-color);
+    font-family: 'Inter';
+    &::placeholder{
+        color: #a9a9a9;
+    }
+    &:focus{
+        border: 0.5px solid var(--global-theme-color);
+    }
+    &:active{
+        border: 0.5px solid var(--global-theme-color);
+    }
+    &:focus-visible{
+        outline-color: var(--global-theme-color);
+        outline-offset: 0px;
+        outline-style: solid;
+    }
+}
