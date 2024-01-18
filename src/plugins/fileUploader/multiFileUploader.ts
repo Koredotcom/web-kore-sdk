@@ -26,6 +26,7 @@ class KoreMultiFileUploaderPlugin {
   $element: any;
   chatInitialize: any;
   multipartTimeInterval: any;
+  multipartTimeIntervalCount: any;
   uploadingInProgress: any = false;
   successEv: Event = new Event('success.ke.multifileuploader');
   errorEv: Event = new Event('failure.ke.multifileuploader');
@@ -109,6 +110,7 @@ class KoreMultiFileUploaderPlugin {
       }
       me.convertFiles(file);
     })
+    me.hostInstance.attachmentData = [];
   }
 
   bytesToMB(bytes: any) {
@@ -123,44 +125,51 @@ class KoreMultiFileUploaderPlugin {
       me.onInit();
     });
     cwInstance.on("onKeyDown", (data: any) => {
-      let _escPressed = 0;
-      if (data.event.keyCode === 13) {
-        if (data.event.shiftKey) {
+      if (!me.uploadingInProgress) {
+        let _escPressed = 0;
+        if (data.event.keyCode === 13) {
+          if (data.event.shiftKey) {
+            return;
+          }
+          data.event.preventDefault();
+          if (me.hostInstance.attachmentData && me.hostInstance.attachmentData.length > 0) {
+            me.hostInstance.attachmentData.forEach((attData: any) => {
+              var serverMessageObject: any = {};
+              serverMessageObject.message = {};
+              serverMessageObject.message.attachments = [];
+              data.chatWindowEvent.stopFurtherExecution = true;
+              serverMessageObject.message.attachments[0] = attData;
+              var clientMessageObject: any = {};
+              clientMessageObject.message = [];
+              clientMessageObject.message[0] = {};
+              clientMessageObject.message[0].cInfo = {};
+              clientMessageObject.message[0].cInfo = serverMessageObject.message;
+              me.hostInstance.sendMessage('', attData, serverMessageObject, clientMessageObject);
+              me.hostInstance.attachmentInfo = {};
+              me.hostInstance.on("afterRenderMessage", (chatWindowData: any) => {
+                me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.add('hide-attachment');
+                me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
+                document.getElementById("captureMediaAttachment").value = "";
+              });
+            });
+            me.hostInstance.attachmentData = [];
+          }
           return;
         }
-        data.event.preventDefault();
-        var serverMessageObject: any = {};
-        serverMessageObject.message = {};
-        serverMessageObject.message.attachments = [];
-        if (me.hostInstance.attachmentInfo && Object.keys(me.hostInstance.attachmentInfo) && Object.keys(me.hostInstance.attachmentInfo).length) {
-          data.chatWindowEvent.stopFurtherExecution = true;
-          serverMessageObject.message.attachments[0] = me.hostInstance.attachmentInfo;
-          var clientMessageObject: any = {};
-          clientMessageObject.message = [];
-          clientMessageObject.message[0] = {};
-          clientMessageObject.message[0].cInfo = {};
-          clientMessageObject.message[0].cInfo = serverMessageObject.message;
-          me.hostInstance.sendMessage('', me.hostInstance.attachmentInfo, serverMessageObject, clientMessageObject);
-          me.hostInstance.attachmentInfo = {};
-          me.hostInstance.on("afterRenderMessage", (chatWindowData: any) => {
-            me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.add('hide-attachment');
-            me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
-            document.getElementById("captureMediaAttachment").value = "";
-          });
+        else if (data.event.keyCode === 27) {
+          _escPressed++;
+          if (_escPressed > 1) {
+            _escPressed = 0;
+            stop();
+            this.innerText = "";
+            $('.attachment').empty();
+            this.fileUploaderCounter = 0;
+            setTimeout(function () {
+            }, 100);
+          }
         }
-        return;
-      }
-      else if (data.event.keyCode === 27) {
-        _escPressed++;
-        if (_escPressed > 1) {
-          _escPressed = 0;
-          stop();
-          this.innerText = "";
-          $('.attachment').empty();
-          this.fileUploaderCounter = 0;
-          setTimeout(function () {
-          }, 100);
-        }
+      } else {
+        alert('Upload in progress');
       }
     });
   }
@@ -409,25 +418,30 @@ class KoreMultiFileUploaderPlugin {
 
   onFileToUploaded(_this: this, evt: any, _recState: any) {
     var me: any = _this;
-    // clearTimeout(me.multipartTimeInterval);
-    // me.multipartTimeInterval = null;
+    clearTimeout(me.multipartTimeInterval);
+    me.multipartTimeInterval = null;
+    clearTimeout(me.multipartTimeIntervalCount);
+    me.multipartTimeIntervalCount = null;
     me.hostInstance.attachmentInfo.fileName = _recState.name;
     me.hostInstance.attachmentInfo.fileType = _recState.fileType;
     me.hostInstance.attachmentInfo.type = _recState.type;
     me.hostInstance.attachmentInfo.fileUrl = '';
     me.hostInstance.attachmentInfo.size = _recState.sizeInMb;
-    // if ($(evt.currentTarget).find('.percentage')) {
-    //   var progressbar = $(evt.currentTarget).find('.percentage');
-    //   $(progressbar).css({ 'width': 100 + '%' });
-    //   $(evt.currentTarget).attr('data-value', _recState.fileToken);
-    //   $(evt.currentTarget).attr('data-name', _recState.name);
-    //   $(evt.currentTarget).attr('file-size', _recState.sizeInMb);
-    //   if (_recState.type.includes('image')) {
-    //     $(evt.currentTarget).attr('data-type', 'image');
-    //   } else {
-    //     $(evt.currentTarget).attr('data-type', 'attachment');
-    //   }
-    // }
+    me.hostInstance.attachmentInfo.uniqueId = _recState.uniqueId;
+    if ($(evt.currentTarget).find('.percentage')) {
+      var progressbar = $(evt.currentTarget).find('.percentage');
+      $(progressbar).css({ 'width': 100 + '%' });
+      var progressCount = $(evt.currentTarget).find('.percentage-complete');
+      $(progressCount).text('100% uploaded');
+      $(evt.currentTarget).attr('data-value', _recState.fileToken);
+      $(evt.currentTarget).attr('data-name', _recState.name);
+      $(evt.currentTarget).attr('file-size', _recState.sizeInMb);
+      if (_recState.type.includes('image')) {
+        $(evt.currentTarget).attr('data-type', 'image');
+      } else {
+        $(evt.currentTarget).attr('data-type', 'attachment');
+      }
+    }
     if ($(evt.currentTarget).closest('.attachment-wrapper-data').find('.proceed-upload').hasClass('hide')) {
       $(evt.currentTarget).closest('.attachment-wrapper-data').find('.proceed-upload').removeClass('hide')
     }
@@ -449,6 +463,7 @@ class KoreMultiFileUploaderPlugin {
     let me = this;
     alert('Failed to upload content. Try again');
     me.hostInstance.attachmentInfo = {};
+    me.uploadingInProgress = false;
     me.ele.find('.attachment').html('');
     me.ele.find('.sendButton').addClass('disabled');
     this.fileUploaderCounter = 0;
@@ -493,13 +508,18 @@ class KoreMultiFileUploaderPlugin {
     let me: any = this;
     this.options = { options };
     this.$element = element;
+    me.uploadingInProgress = true;
+    if (element) {
+      const progressbar = element.querySelector('.percentage');
+      me.multipartTimeInterval = setInterval(function () {
+        progressbar.style.width = 10 * 2 + '%';
+      });
 
-    // if (element) {
-    //   const progressbar = element.querySelector('.percentage');
-    //   me.multipartTimeInterval = setInterval(function () {
-    //     progressbar.style.width = 10 * 2 + '%';
-    //   });
-    // }
+      const progressCount = element.querySelector('.percentage-complete');
+      me.multipartTimeIntervalCount = setInterval(function () {
+        progressCount.textContent = 10 * 2 + '% uploaded';
+      });
+    }
 
     if (!this.options.chunkUpload) {
       me.startUpload(this.options, element);
@@ -609,15 +629,15 @@ class KoreMultiFileUploaderPlugin {
 
   // kfrm.net.HttpRequest = me.HttpRequest;
   progressListener(_this: any, evt: any, ele: any) {
-    if (ele) {
-      let width = (evt.loaded / evt.total) * 100;
-      const progressbar = ele.querySelector('.percentage');
-      const percentageCompletion = ele.querySelector('.percentage-complete');
-      progressbar.style.width = width + '%';
-      let perComp = Math.floor(width) + '% uploaded';
-      percentageCompletion.textContent = perComp;
-    }
-    console.log(evt);
+    // if (ele) {
+    //   let width = (evt.loaded / evt.total) * 100;
+    //   const progressbar = ele.querySelector('.percentage');
+    //   const percentageCompletion = ele.querySelector('.percentage-complete');
+    //   progressbar.style.width = width + '%';
+    //   let perComp = Math.floor(width) + '% uploaded';
+    //   percentageCompletion.textContent = perComp;
+    // }
+    console.log('File upload progress: ', evt);
   }
 
   loadListener(_this: any, evt: { target: { response: string; }; }) {
@@ -627,13 +647,15 @@ class KoreMultiFileUploaderPlugin {
     let auth = "bearer " + me.hostInstance.config.botOptions.accessToken;
     $.ajax({
       type: 'GET',
-      url: me.hostInstance.config.botOptions.koreAPIUrl + "/attachment/file/" + me.hostInstance.attachmentInfo.fileId + "/url?repeat=true",
+      url: me.hostInstance.config.botOptions.koreAPIUrl + "attachment/file/" + me.hostInstance.attachmentInfo.fileId + "/url?repeat=true",
       dataType: 'json',
       headers: {
         Authorization: auth,
       },
       success(response: any) {
         me.hostInstance.attachmentInfo.fileUrl = response.fileUrl;
+        me.hostInstance.attachmentData.push(me.hostInstance.attachmentInfo);
+        me.hostInstance.attachmentInfo = {};
       },
       error(msg: any) {
         if (msg.responseJSON && msg.responseJSON.errors && msg.responseJSON.errors.length && msg.responseJSON.errors[0].httpStatus === '401') {
@@ -773,7 +795,44 @@ class KoreMultiFileUploaderPlugin {
         </button>\
     </div>');
     // me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').appendChild(element);
+    let icon;
+    const iconImage = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M2.5 2C1.67578 2 1 2.67578 1 3.5V12.5C1 13.3242 1.67578 14 2.5 14H13.5C14.3242 14 15 13.3242 15 12.5V3.5C15 2.67578 14.3242 2 13.5 2H2.5ZM2.5 3H13.5C13.7812 3 14 3.21875 14 3.5V10.7656L10.871 7.46218C10.6694 7.24935 10.3288 7.25481 10.1341 7.474L8.54297 9.26562L5.90615 6.48517C5.70451 6.27254 5.36406 6.27811 5.16949 6.49723L2 10.0664V3.5C2 3.21875 2.21875 3 2.5 3ZM11 4C10.4492 4 10 4.44922 10 5C10 5.55078 10.4492 6 11 6C11.5508 6 12 5.55078 12 5C12 4.44922 11.5508 4 11 4ZM5.55469 7.56641L10.707 13H2.5C2.21875 13 2 12.7812 2 12.5V11.5742L5.55469 7.56641ZM10.5156 8.54688L14 12.2188V12.5C14 12.7812 13.7812 13 13.5 13H12.082L9.23438 9.99219L10.5156 8.54688Z" fill="#697586"/>
+    </svg>`;
+    const iconAudio = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M13.6004 3.1004C13.6004 2.89068 13.5064 2.69201 13.3442 2.55906C13.182 2.4261 12.9688 2.37286 12.7631 2.41399L5.76311 3.81399C5.43591 3.87943 5.20039 4.16672 5.20039 4.5004V10.8801C4.98145 10.8285 4.74584 10.8004 4.50039 10.8004C3.34059 10.8004 2.40039 11.4272 2.40039 12.2004C2.40039 12.9736 3.34059 13.6004 4.50039 13.6004C5.66019 13.6004 6.60039 12.9736 6.60039 12.2004V6.47426L12.2004 5.35426V9.48005C11.9814 9.42846 11.7458 9.40039 11.5004 9.40039C10.3406 9.40039 9.40039 10.0272 9.40039 10.8004C9.40039 11.5736 10.3406 12.2004 11.5004 12.2004C12.6602 12.2004 13.6004 11.5736 13.6004 10.8004V3.1004Z" fill="#697586"/>
+  </svg>`;
+    const iconVideo = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M2.40039 5.20078C2.40039 4.42758 3.02719 3.80078 3.80039 3.80078H8.00039C8.77359 3.80078 9.40039 4.42758 9.40039 5.20078V10.8008C9.40039 11.574 8.77359 12.2008 8.00039 12.2008H3.80039C3.02719 12.2008 2.40039 11.574 2.40039 10.8008V5.20078Z" fill="#697586"/>
+    <path d="M11.1873 5.97468C10.9502 6.09326 10.8004 6.33564 10.8004 6.60078V9.40078C10.8004 9.66592 10.9502 9.90831 11.1873 10.0269L12.5873 10.7269C12.8043 10.8354 13.062 10.8238 13.2684 10.6962C13.4748 10.5687 13.6004 10.3434 13.6004 10.1008V5.90078C13.6004 5.65818 13.4748 5.43287 13.2684 5.30533C13.062 5.17778 12.8043 5.16619 12.5873 5.27468L11.1873 5.97468Z" fill="#697586"/>
+  </svg>`;
+    const iconAttachment = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M3.7998 3.80039C3.7998 3.02719 4.42661 2.40039 5.1998 2.40039H8.40986C8.78116 2.40039 9.13725 2.54789 9.39981 2.81044L11.7898 5.20039C12.0523 5.46294 12.1998 5.81904 12.1998 6.19034V12.2004C12.1998 12.9736 11.573 13.6004 10.7998 13.6004H5.1998C4.42661 13.6004 3.7998 12.9736 3.7998 12.2004V3.80039ZM5.1998 8.00039C5.1998 7.61379 5.51321 7.30039 5.89981 7.30039H10.0998C10.4864 7.30039 10.7998 7.61379 10.7998 8.00039C10.7998 8.38699 10.4864 8.70039 10.0998 8.70039H5.89981C5.51321 8.70039 5.1998 8.38699 5.1998 8.00039ZM5.89981 10.1004C5.51321 10.1004 5.1998 10.4138 5.1998 10.8004C5.1998 11.187 5.51321 11.5004 5.89981 11.5004H10.0998C10.4864 11.5004 10.7998 11.187 10.7998 10.8004C10.7998 10.4138 10.4864 10.1004 10.0998 10.1004H5.89981Z" fill="#697586"/>
+  </svg>`;
+    if (selectedFile.type == 'image') {
+      icon = iconImage
+    } else if (selectedFile.type == 'audio') {
+      icon = iconAudio;
+    } else if (selectedFile.type == 'video') {
+      icon = iconVideo;
+    } else {
+      icon = iconAttachment;
+    }  
+    element.find('.img-block').html(icon);
+
     $('.chat-window-main-section').find('.uploaded-attachment-data').append(element);
+
+    element.find('.delete-upload').on('click', (e) => {
+      if (!me.uploadingInProgress) {
+        const par = e.currentTarget.parentElement;
+        let uid = par?.id;
+        uid = uid?.substring(3);
+        me.hostInstance.attachmentData = me.hostInstance.attachmentData.filter((ele: any) => ele.uniqueId != uid);
+        par?.remove();
+      } else {
+        alert('Upload in progress');
+      }
+    });
   }
 
 }
