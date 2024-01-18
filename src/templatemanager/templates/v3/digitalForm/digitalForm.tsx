@@ -14,7 +14,7 @@ export function DigitalFormExtension(props: any) {
         }, 150);
     }
     return (
-        <div className="menu-wrapper-data-actions" style={{height: '300px'}}>
+        <div className="menu-wrapper-data-actions" style={{height: '100%'}}>
             <div className="actions-slider-header-menu">
                 <h1></h1>
                 <button className="menu-close" role="contentinfo" aria-label="close" onClick={closeMenu}>
@@ -35,7 +35,7 @@ export function DigitalForm(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
     const handleForm = () => {
-        hostInstance.bottomSliderAction('', getHTML(DigitalFormExtension, msgData, hostInstance))
+        hostInstance.bottomSliderAction('', getHTML(DigitalFormExtension, msgData, hostInstance), true)
     }
     if (msgData?.message?.[0]?.component?.payload?.template_type === 'button' && msgData?.message?.[0]?.component?.formData) {
         return (

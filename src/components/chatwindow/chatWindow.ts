@@ -438,6 +438,13 @@ openModal(template:any, showClose:any) {
     chatBodyModal.hide();
     $('.kore-chat-window').removeClass('modelOpen');
   }
+}  else {
+  if (!template) {
+    me.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');
+    setTimeout(() => {
+        me.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
+    }, 150);
+  }
 }
 }
 // inline model for iframes starts ends//
@@ -460,6 +467,10 @@ formAction(event:any) {
     if ($('.kore-chat-body .uiformComponent').length) {
       $('.kore-chat-body .uiformComponent').closest('.inlineIframeContainer').css('display', 'none');
     }
+  }
+} else {
+  if (event && event.action === 'formSubmit') {
+    me.openModal();
   }
 }
 }
@@ -2299,7 +2310,7 @@ showError (response:any) {
   }
 };
 
-bottomSliderAction(action: any, appendElement: any) {
+bottomSliderAction(action: any, appendElement: any, fullSlide?: any) {
   const me: any = this;
   if (me.config.UI.version == 'v2') {
     $(".kore-action-sheet").animate({ height: 'toggle' });
@@ -2315,6 +2326,9 @@ bottomSliderAction(action: any, appendElement: any) {
      }
   } else {
     const actionSlider: any = getHTML(ActionsBottomSlider, '', me);
+    if (fullSlide) {
+      actionSlider.querySelector('.actions-contnet-data').classList.add('actions-contnet-full-height');
+    }
     actionSlider.querySelector('.chat-actions-bottom-wraper > .actions-contnet-data').appendChild(appendElement);
     me.chatEle.appendChild(actionSlider);
     // me.chatEle.querySelector('.chat-actions-bottom-wraper').addEventListener('click',() => {
