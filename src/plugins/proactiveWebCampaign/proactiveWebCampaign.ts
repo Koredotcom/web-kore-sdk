@@ -140,6 +140,7 @@ class ProactiveWebCampaignPlugin {
         this.campInfo.forEach((camp: any) => {
             let urlChecked: boolean = false;
             let ruleData: any = [];
+            let goalData: any = [];
             let sendEvent: boolean = true;
             messageToBot.campInfo = {};
             messageToBot.campInfo.campId = camp.campId;
@@ -188,9 +189,9 @@ class ProactiveWebCampaignPlugin {
                                 ruleData.push(ruleItem);
                                 break;
                             case 'city':
-                                let loction: any = window.sessionStorage.getItem('pwcLocationData');
-                                loction = JSON.parse(loction);
-                                ruleItem.value = loc;
+                                let loct: any = window.sessionStorage.getItem('pwcLocationData');
+                                loct = JSON.parse(loct);
+                                ruleItem.value = loct;
                                 ruleData.push(ruleItem);
                                 break;
                             default:
@@ -236,16 +237,25 @@ class ProactiveWebCampaignPlugin {
                                 ruleData.push(ruleItem);
                                 break;
                             case 'city':
-                                let loction: any = window.sessionStorage.getItem('pwcLocationData');
-                                loction = JSON.parse(loction);
-                                ruleItem.value = loc;
+                                let loct: any = window.sessionStorage.getItem('pwcLocationData');
+                                loct = JSON.parse(loct);
+                                ruleItem.value = loct;
                                 ruleData.push(ruleItem);
                                 break;
                             default:
                         }
                     });
                 }
+
+                camp.engagementStrategy.goals.forEach((goalItem: any) => {
+                    if (((goalItem.matchingCondition == 'is' && currentUrl == goalItem.value) || (goalItem.matchingCondition == 'contains' && currentUrl?.includes(goalItem.value)))) {
+                        goalData.push(goalItem)
+                    }
+                });
                 messageToBot.ruleInfo = ruleData;
+                if (goalData && goalData.length > 0) {
+                    messageToBot.goalInfo = goalData;
+                }
                 if (sendEvent && ruleData.length > 0) {
                     me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
                 }
