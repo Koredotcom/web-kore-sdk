@@ -33,17 +33,19 @@ class AgentDesktopPlugin {
             }
         });
         me.hostInstance.on('beforeViewInit', (chatEle: any) => {
-            // me.hostInstance.chatEle.querySelector('.btn-action-close').addEventListener('click', () => {
-            //     const messageToBot: any = {};
-            //     messageToBot["clientMessageId"] = new Date().getTime();
-            //     messageToBot["event"] = "close_agent_chat";
-            //     messageToBot["message"] = {
-            //         "body": "",
-            //         "type": ""
-            //     }
-            //     messageToBot["resourceid"] = "/bot.message";
-            //     me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
-            // });
+            if (me.hostInstance.chatEle.querySelectorAll('.btn-action-close') && me.hostInstance.chatEle.querySelectorAll('.btn-action-close').length > 0) {
+                me.hostInstance.chatEle.querySelector('.btn-action-close').addEventListener('click', () => {
+                    const messageToBot: any = {};
+                    messageToBot["clientMessageId"] = new Date().getTime();
+                    messageToBot["event"] = "close_agent_chat";
+                    messageToBot["message"] = {
+                        "body": "",
+                        "type": ""
+                    }
+                    messageToBot["resourceid"] = "/bot.message";
+                    me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+                });
+            }
         })
         me.removeEmptyBubblesInTemplate();
     }
@@ -153,14 +155,14 @@ class AgentDesktopPlugin {
                 me.hostInstance.chatEle.querySelector('.typing-indicator-wraper').style.display = 'none'
 
                 const msg = event.msgData.message;
-                let extraInfoEle = event.messageHtml.querySelector('.bottom-info');
+                let extraInfoEle = event.messageHtml?.querySelector('.bottom-info');
                 if (!extraInfoEle) {
                     const ele = document.createElement('div');
                     ele.classList.add('bottom-info');
-                    event.messageHtml.querySelector('.agent-bubble-content').appendChild(ele);
-                    extraInfoEle = event.messageHtml.querySelector('.bottom-info');
+                    event.messageHtml?.querySelector('.agent-bubble-content')?.appendChild(ele);
+                    extraInfoEle = event.messageHtml?.querySelector('.bottom-info');
                 }
-                if (!extraInfoEle.querySelectorAll('.read-text').length) {
+                if (extraInfoEle && !extraInfoEle?.querySelectorAll('.read-text').length) {
                     const ele1 = document.createElement('div');
                     ele1.textContent = 'Sent';
                     ele1.classList.add('read-text');
