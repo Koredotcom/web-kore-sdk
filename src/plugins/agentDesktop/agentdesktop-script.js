@@ -316,6 +316,7 @@ class AgentDesktopPluginScript  {
             closecallbutton.off('click').on('click', function (event) {
                 if (callConnected) {
                     _self.activeCall.terminate();
+                    sendCallTerminateEvent();
                 }
             });
             var sendSelfVideo = true;
@@ -776,6 +777,22 @@ class AgentDesktopPluginScript  {
             //fall back to clients jquery version
             koreJquery = window.jQuery;
         }
+
+        function sendCallTerminateEvent(){
+            const payload = _self.callDetails;
+            payload['type'] = "call_agent_webrtc_terminated"
+            const messageToBot = {};
+            messageToBot["event"] = "event";
+            messageToBot["message"] = {
+                "body": _self.callDetails,
+                "type": ""
+            }
+
+            if (botInstance) {
+                botInstance.sendMessage(messageToBot, (err) => { });
+            }
+        }
+
         function overrideCloseButton() {
             if (overrideFlag) {
                 return;
@@ -784,6 +801,10 @@ class AgentDesktopPluginScript  {
             if (closeBtns && closeBtns.length > 0) {
                 koreJquery(".close-btn").off('click').on('click', function (event) {
                     koreJquery("#smartassist-menu").show();
+                    if(_self.activeCall && _self.activeCall.isEstablished()){
+                        _self.activeCall.terminate();
+                        sendCallTerminateEvent();
+                    }
                 })
                 overrideFlag = true;
             } else {
