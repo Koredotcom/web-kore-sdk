@@ -157,9 +157,16 @@ class ProactiveWebCampaignPlugin {
                         switch (ruleItem.rule) {
                             case 'user':
                                 const user = me.hostInstance.config.pwcConfig.knownUser ? 'known' : 'anonymous';
-                                if (user == ruleItem.value) {
+                                let arrUser: any = window.sessionStorage.getItem('userArr');
+                                arrUser = JSON.parse(arrUser);
+                                const arrUInd = arrUser.findIndex((r: any) => r.campId == camp.campId);
+                                let arrUEle = arrUser[arrUInd];
+                                if (arrUEle && !arrUEle.eventFired && user == ruleItem.value) {
                                     ruleItem.value = user;
                                     ruleData.push(ruleItem);
+                                    arrUEle.eventFired = true;
+                                    arrUser[arrUInd] = arrUEle;
+                                    window.sessionStorage.setItem('userArr', JSON.stringify(arrUser));        
                                 }
                                 break;
                             case 'timeSpent':
@@ -219,9 +226,16 @@ class ProactiveWebCampaignPlugin {
                     const userRule = camp.engagementStrategy.rules.find((r: any) => r.rule == 'user');
                     if (userRule) {
                         const user = me.hostInstance.config.pwcConfig.knownUser ? 'known' : 'anonymous';
-                        if (user == userRule.value) {
+                        let arrUser: any = window.sessionStorage.getItem('userArr');
+                        arrUser = JSON.parse(arrUser);
+                        const arrUInd = arrUser.findIndex((r: any) => r.campId == camp.campId);
+                        let arrUEle = arrUser[arrUInd];
+                        if (arrUEle && !arrUEle.eventFired && user == userRule.value) {
                             userRule.value = user;
                             ruleData.push(userRule);
+                            arrUEle.eventFired = true;
+                            arrUser[arrUInd] = arrUEle;
+                            window.sessionStorage.setItem('userArr', JSON.stringify(arrUser));
                         } else {
                             sendEvent = false;
                         }
@@ -311,6 +325,7 @@ class ProactiveWebCampaignPlugin {
         let arr: any = [];
         let arrCountry: any = [];
         let arrCity: any = [];
+        let userArr: any = [];
         this.campInfo.forEach((camp: any) => {
             const timeSpentRule = camp.engagementStrategy.rules.find((r: any) => r.rule == 'timeSpent');
             if (timeSpentRule && timeSpentRule.rule) {
@@ -337,10 +352,20 @@ class ProactiveWebCampaignPlugin {
                 }
                 arrCity.push(obj);
             }
+            const userRule = camp.engagementStrategy.rules.find((r: any) => r.rule == 'user');
+            if (userRule && userRule.rule) {
+                const obj = {
+                    campId: camp.campId,
+                    user:  this.hostInstance.config.pwcConfig.knownUser ? 'known' : 'anonymous',
+                    eventFired: false
+                }
+                userArr.push(obj);
+            }
         });
         window.sessionStorage.setItem('timeSpentArr', JSON.stringify(arr));
         window.sessionStorage.setItem('countryArr', JSON.stringify(arrCountry));
         window.sessionStorage.setItem('cityArr', JSON.stringify(arrCity));
+        window.sessionStorage.setItem('userArr', JSON.stringify(userArr));
     }
 
     calculateTimeSpent(url: any, type: any) {
