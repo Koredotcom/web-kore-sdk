@@ -94,15 +94,14 @@ export function Table(props: any) {
         showMore: true
     }
 
-    useEffect(() => {
-        setTimeout(() => {
-            hostInstance.chatEle.querySelector(`.table-show-more-${msgData.messageId}`)?.addEventListener('click', (e: any) => {
-                hostInstance.modalAction(getHTML(TableExt, msgData, hostInstance));
-            });
-        }, 500);
-    });
-
     if (msgData.message?.[0]?.component?.payload?.template_type == 'table') {
+        useEffect(() => {
+            setTimeout(() => {
+                hostInstance.chatEle.querySelector(`.table-show-more-${msgData.messageId}`)?.addEventListener('click', (e: any) => {
+                    hostInstance.modalAction(getHTML(TableExt, msgData, hostInstance));
+                });
+            }, 500);
+        });
         if (msgData?.fromHistory) {
             msgObj.msgData.message[0].cInfo.body = msgObj.msgData.message[0].cInfo.body.payload.text;
         }
