@@ -1,0 +1,25 @@
+.bank-assist-theme .quick-buttons {
+    width: 64px;
+    min-width: 77px;
+    height: 40px;
+    padding: 9px 12px;
+    gap: 4px;
+    text-align: center;
+    background: #A6B2B0;
+    border: 1px solid #5D6066;
+    box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 0px 4px 4px 0px;
+    color: white;
+}
+.bank-assist-theme .quick-button {
+    padding-top:10px;
+    
+}
+.bank-assist-theme .quick-buttons:first-child {
+    box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 4px 0px 0px 4px;
+
+}
+.bank-assist-theme .quick-button .clicked, .bank-assist-theme .quick-buttons:hover {
+    background-color: #55897F;
+}

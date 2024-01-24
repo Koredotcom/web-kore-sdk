@@ -3,6 +3,8 @@ import welcomeQuickReply from '../../templatemanager/templates/v3/bankAssistTemp
 import multiSelect from '../../templatemanager/templates/v3/bankAssistTemplates/disputeCheckboxList/disputeCheckboxList';
 import loginForm from '../../templatemanager/templates/v3/bankAssistTemplates/loginForm/loginForm';
 import customListView from '../../templatemanager/templates/v3/bankAssistTemplates/customListView/customListView';
+import quickReply from '../../templatemanager/templates/v3/bankAssistTemplates/quickReply/quickReply';
+import ratingForm from '../../templatemanager/templates/v3/bankAssistTemplates/ratingForm/ratingForm';
 /**
  * Bank Assist Script Template plugin classs
  *
@@ -52,6 +54,8 @@ class BankAssistTemplatePlugin {
         templateManager.installTemplate(new multiSelect());
         templateManager.installTemplate(new loginForm());
         templateManager.installTemplate(new customListView());
+        templateManager.installTemplate(new quickReply());
+        templateManager.installTemplate(new ratingForm());
     }
 
     //class Append in body tag
@@ -66,8 +70,13 @@ class BankAssistTemplatePlugin {
 
         // Check if the parent div is found
         if (chatWindowMainSection) {
+            let firstName = localStorage.getItem('firstName') || 'You';
+            // Capitalize the first letter of firstName
+            const capitalizedFirstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+            const bubbleImage = capitalizedFirstName.charAt(0) || 'Y';
+
             // Create a new div element
-            var newDiv = "<div class='botton-info-text'>You <span class='bottom-info-bubble'>Y</span> </div>"
+            var newDiv = `<div class='botton-info-text'>${firstName} <span class='bottom-info-bubble'>${bubbleImage}</span> </div>`;
             // Append the new div to the parent div
             chatWindowMainSection.forEach(function (infoContentData) {
                 infoContentData.innerHTML = newDiv;
@@ -79,6 +88,7 @@ class BankAssistTemplatePlugin {
 
         // Check if the parent div is found
         if (chatWindowMainSection) {
+            
             // Create a new div element
             var newDiv = "<div class='botton-info-text'><span class='bottom-info-bubble'><img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADvSURBVHgBxVBNDsFAFP5aVQsbN9CeoNyAGzgCiTSWY4vEiGA7azY9ghtwA3UC3MBadcab0koateSt5r1vvp/3gL9Xn81bRZiRPrqM18oodwxI5zkxp4CcveDwhjgMBD9npC5bOTbUTkEeDagwr6xgNuijd0PU1kRLDy3EnJS3GzEZFkXy2ZxXYJE7egmpBNQl7nsd0YZ90NprMXZ9tjzpNzk0ye2sgFYSvED4gi+VOEkYRwXLC8QooNZNwbUYue94S4/2PWWkEkwh6RA+WzgEXPPKEnAoJmFRW/fZyQd0QdqrQdlrnyJVEW2F4Ff8tB51zVDLrgq7UgAAAABJRU5ErkJggg==' /></span> BankAssist</div>"
             // Append the new div to the parent div

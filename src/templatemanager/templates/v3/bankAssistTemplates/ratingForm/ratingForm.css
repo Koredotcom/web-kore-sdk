@@ -1,0 +1,175 @@
+.bank-assist-theme .bankingFeedBackTemplate-experience-content {
+    background-color:black
+}
+.bank-assist-theme .content-list-view {
+    color:white;
+    padding: 12px 10px 10px 10px;
+}
+
+
+.bank-assist-theme .bankingFeedBackTemplate-content-experience label {
+    margin-right: 20px;
+    cursor: pointer;
+    padding-left: 10px;
+}
+
+.bank-assist-theme .bankingFeedBackTemplate-content-experience input[type="radio"] {
+    display: none;
+}
+
+.bank-assist-theme .bankingFeedBackTemplate-content-experience input[type="radio"]:checked + label {
+    font-weight: bold;
+    background-color: #343434;
+    border-radius: 5px;
+    display: block;
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.bank-assist-theme .checkbox.checkbox-primary.styledCSS.checkboxesDiv {
+    padding: 5px 5px 5px 10px;
+    color:white;
+}
+
+.bank-assist-theme .list-view-feedback-heading {
+    color:white;
+    padding-left:10px;
+    padding-bottom:10px;
+}
+.bank-assist-theme .feedback-listItem .checkInput {
+    transform: scale(1.4);
+}
+.bank-assist-theme .feedback-listItem .checkInput:checked {
+    background-color:red;
+}
+.bank-assist-theme .custom-form-wrapper .custom-form-data-content h1{
+    font-weight: 600 !important;
+    font-size: 20px !important;
+    line-height: 17px !important;
+    color: white !important;
+    margin-bottom: 8px !important;
+    text-align: left !important;
+}
+.bank-assist-theme .custom-form-wrapper .custom-form-body {
+    padding: 5% !important;
+    max-width:100%;
+    background-color: white;
+    padding: 10px;
+    border: 1px solid #eaecf0;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.bank-assist-theme .feedback-form-input-wrapper {
+    width: 44%;
+    margin-top: 10px;
+    display:inline-flex;
+    margin-left: 10px;
+}
+
+.bank-assist-theme .feedback-form-input-wrapper label {
+    margin-top: 5px;;
+    color: var(--form-temp--text-color);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20px;
+    width: 100%;
+    display: block;
+    margin-bottom: 4px;
+}
+.bank-assist-theme .feedback-form-input-wrapper input {
+    width: 100%;
+    display: flex;
+    height: 40px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #bdc1c6;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 20px;
+    color: black;
+}
+.bank-assist-theme .feedback-form-input-wrapper input:focus {
+    border: none !important;
+    outline: 1px solid #bdc1c6 !important;
+    border-bottom: 10px;
+}
+.bank-assist-theme .custom-form-button {
+    background: #3c817c;
+    border: 1px solid #3c817c;
+    color: white;
+    width: auto;
+    height: 40px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 20px;
+}
+.bank-assist-theme .feedback-form-input-wrapper .custom-form-button:only-child {
+    width: 100%;
+}
+.bank-assist-theme .feedback-buttons-div {
+    padding-bottom: 15px;
+}
+.bank-assist-theme .feedback-button {
+    width:100%;
+}
+.bank-assist-theme .feedback-cancel .custom-form-button {
+    color:black;
+    background-color:white;
+}
+.bank-assist-theme .suggestions-component textarea#bankingSuggestionInput {
+    width: 92%;
+    background: #FFFFFF;
+    border: 1px solid #BDC1C6;
+    box-sizing: border-box;
+    border-radius: 5px;
+    margin: 12px 10px 0px 10px;
+    resize: none !important;
+    padding: 10px 10px;
+    height: 80px;
+    font-size:16px;
+}
+.bank-assist-theme .hide {
+    display:none;
+}
+
+/* Define the animation */
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  /* Apply the animation to the element */
+  .bankingFeedBackTemplate-feedback-content {
+    animation: fadeIn 3.5s ease-in-out; /* Adjust the duration and timing function as needed */
+  }
+  
+  /* Initially hide the element */
+  .bankingFeedBackTemplate-feedback-content.hide {
+    display: none;
+  }
+
+  .content-list-view {
+    /* Your existing styles for .content-list-view */
+    /* Add any additional styling you need */
+}
+
+.checkInput-label {
+    display: flex;
+    align-items: center;
+}
+
+.image-container {
+    margin-right: 10px; /* Adjust as needed */
+}
+
+.experience-value {
+    /* Your styles for .experience-value */
+    /* Add any additional styling you need */
+}

@@ -22,6 +22,12 @@ export function quickRepliesWelcome(props: any) {
         hostInstance: hostInstance
     }
     if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type == 'quick_replies_welcome') {
+        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.first_name) {
+
+            // Store the first name in localStorage
+            localStorage.setItem('firstName', msgData.message[0].component.payload.first_name);
+            
+        }
         return (
             <Fragment>
                 <div>
