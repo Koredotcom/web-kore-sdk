@@ -2488,6 +2488,12 @@ getBrandingInformation(options:any){
       }
     } else {
       if (response && response.activeTheme) {
+        if (response && response.v3 && response.v3.header
+          && response.v3.header.title && !response.v3.header.title.name) {
+            me._botInfo.displayName = me._botInfo.name;
+        } else {
+          me._botInfo.displayName = response.v3.header.title.name || 'Bot';
+        }
         me.setBranding(response?.v3);
       }
     }
