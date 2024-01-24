@@ -50,6 +50,9 @@ export function ChatWidgetComposeBar(props: any) {
             hostInstance.sendMessageToBot(inputEle.value);
             inputEle.value = '';
             hostInstance.chatEle.querySelector('.send-btn').classList.remove('show');
+            if (hostInstance.chatEle.querySelectorAll('.quick-replies') && hostInstance.chatEle.querySelectorAll('.quick-replies').length > 0) {
+                hostInstance.chatEle.querySelector('.quick-replies').remove();
+              }
         })
     });
 
@@ -67,11 +70,15 @@ export function ChatWidgetComposeBar(props: any) {
                 <div className="select-file-block">
                     <button className="inputfile-btn inputfile-btn-media" type="button" aria-label="Media">
                         <span>Media</span>
-                        <input type="file" id="captureMediaAttachment"/>
+                        <input type="file" id="captureMediaAttachment" accept="audio/*,video/*,image/*" />
                     </button>
                     <button className="inputfile-btn inputfile-btn-file" type="button" aria-label="File">
                         <span>File</span>
-                        <input type="file" id="captureFileAttachment"/>
+                        <input type="file" id="captureFileAttachment" accept=".bmp, .csv, .txt, .json, .pdf, .doc, .dot, .docx, .docm,
+                        .dotx, .dotm, .xls, .xlt, .xlm, .xlsx, .xlsm, .xltx, .xltm, .xlsb, .xla, .xlam, .xll, .xlw, .ppt, .pot, .pps, .pptx, .pptm, .potx, .potm, .ppam,
+                        .ppsx, .ppsm, .sldx, .sldm, .zip, .rar., .tar, .wpd, .wps, .rtf, .msg, .dat, .sdf, .vcf, .xml, .3ds, .3dm, .max, .obj, .ai, .eps, .ps, .svg, .indd, .pct, .accdb,
+                        .db, .dbf, .mdb, .pdb, .sql, .apk, .cgi, .cfm, .csr, .css, .htm, .html, .jsp, .php, .xhtml, .rss, .fnt, .fon, .otf, .ttf, .cab, .cur, .dll, .dmp, .drv, .7z, .cbr,
+                        .deb, .gz, .pkg, .rpm, .zipx, .bak, .avi, .m4v, .mpg, .rm, .swf, .vob, .wmv, .3gp2, .3g2, .asf, .asx, .srt, .wma, .mid, .aif, .iff, .m3u, .mpa, .ra, .aiff, .tiff"/>
                     </button>
                 </div>
                 <div className="uploaded-attachment-data">
@@ -183,23 +190,22 @@ export function ChatWidgetComposeBar(props: any) {
                         <path d="M10 1.875C8.28613 1.875 6.875 3.28613 6.875 5V10C6.875 11.7139 8.28613 13.125 10 13.125C11.7139 13.125 13.125 11.7139 13.125 10V5C13.125 3.28613 11.7139 1.875 10 1.875ZM10 3.125C11.0352 3.125 11.875 3.96484 11.875 5V10C11.875 11.0352 11.0352 11.875 10 11.875C8.96484 11.875 8.125 11.0352 8.125 10V5C8.125 3.96484 8.96484 3.125 10 3.125ZM5 9.375C4.65482 9.375 4.375 9.65482 4.375 10C4.375 12.876 6.57715 15.2441 9.375 15.5615V16.875H7.5C7.15482 16.875 6.875 17.1548 6.875 17.5C6.875 17.8452 7.15482 18.125 7.5 18.125H12.5C12.8452 18.125 13.125 17.8452 13.125 17.5C13.125 17.1548 12.8452 16.875 12.5 16.875H10.625V15.5615C13.4229 15.2441 15.625 12.876 15.625 10C15.625 9.65482 15.3452 9.375 15 9.375C14.6548 9.375 14.375 9.65482 14.375 10C14.375 12.4072 12.4072 14.375 10 14.375C7.59277 14.375 5.625 12.4072 5.625 10C5.625 9.65482 5.34518 9.375 5 9.375Z" fill="#697586"/>
                     </svg>
                 </button> }
-                { brandingInfo.footer.layout === 'keypad' && <button className="send-btn" type="button" aria-label="Send">
+                { brandingInfo.footer.layout === 'keypad' && <button className="send-btn" type="button" aria-label="Send" style={{backgroundColor: brandingInfo.general.colors.primary}}>
                     <svg width="15" height="14" viewBox="0 0 15 14" fill="none">
                         <path d="M1.67123 5.0568C1.30302 5.19159 1.27011 5.69959 1.61729 5.88181L6.20644 8.29374L8.61632 12.8819C8.79859 13.2289 9.30601 13.1953 9.44085 12.8272L13.5965 1.4834C13.7288 1.12213 13.378 0.771245 13.0167 0.903509L1.67123 5.0568ZM2.9406 5.55723L11.4048 2.45618L6.45612 7.40487L2.9406 5.55723ZM7.0953 8.04405L12.044 3.09537L8.94544 11.5621L7.0953 8.04405Z" fill="white"/>
                     </svg>
                 </button> }
             </div>
 
-
-            <div className="typing-indicator-wraper">
-                <div className="bot-icon">
+            { brandingInfo.body.typing_indicator.show && <div className="typing-indicator-wraper">
+                { brandingInfo.body.typing_indicator && brandingInfo.body.typing_indicator.icon &&<div className="bot-icon">
                     <figure>
-                        <img src=""></img>
+                        <img src={brandingInfo.body.typing_indicator.icon}></img>
                     </figure>
-                </div>
+                </div> }
                 <p>Typing</p>
                 <div class="dot-flashing"></div>
-            </div>
+            </div>}
         </div>
     );
 } 

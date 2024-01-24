@@ -44,6 +44,7 @@ import TemplateFeedback from './templates/v3/feedback/feedback';
 import TemplateDateRange from './templates/v3/dateRange/dateRange';
 import TemplateClockPicker from './templates/v3/clockPicker/clockPicker';
 import TemplateSystem from './templates/v3/system/system';
+import TemplateAttachmentV3 from './templates/v3/templateAttachment/templateAttachment';
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
 //(function($){
@@ -121,6 +122,7 @@ class TemplateManager {
 		this.installTemplate(new TemplateDateRange());
 		this.installTemplate(new TemplateClockPicker());
 		this.installTemplate(new TemplateSystem());
+		this.installTemplate(new TemplateAttachmentV3());
 	}
 
 	renderMessage  (msgData: any) {
@@ -137,6 +139,7 @@ class TemplateManager {
 				templatesIndex++
 			}
 			if (messageHtml) {
+				console.log('Msg HTML: ', messageHtml);
 				return messageHtml;
 			}
 		}

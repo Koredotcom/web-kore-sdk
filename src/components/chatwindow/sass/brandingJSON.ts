@@ -9,32 +9,71 @@ const BrandingJSON = {
             "primary_text": "#101828",
             "secondary_text": "#FFFFFF",
             "useColorPaletteOnly": true
+        },
+        "sounds": {
+            "enable": false,
+            "on_open": {
+                "name": "Sound1",
+                "type": "default",
+                "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_open.wav"
+            },
+            "on_close": {
+                "name": "Sound1",
+                "type": "default",
+                "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_close.wav"
+            },
+            "on_new_msg": {
+                "name": "Sound1",
+                "type": "default",
+                "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_new_msg.wav"
+            },
+            "on_msg_send": {
+                "name": "Sound1",
+                "type": "default",
+                "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_msg_send.wav"
+            },
+            "on_proactive_msg": {
+                "name": "Sound1",
+                "type": "default",
+                "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_proactive_message.wav"
+            },
+            "on_audio_call": {
+                "name": "Sound1",
+                "type": "default",
+                "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_audio_call.wav"
+            },
+            "on_video_call": {
+                "name": "Sound1",
+                "type": "default",
+                "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_video_call.wav"
+            }
         }
     },
     "chat_bubble": {
         "style": "rounded",
         "icon": {
-            "icon_url": "https://qa-xo.kore.ai:443/api/getMediaStream/market/f-43348414-840f-5e10-8603-40da4d731d41.png?n=4930054647&s=IkRjZFlTdzV5TW1nZ2xlMDhXck9UWHdaSzNKMUpOa2V0NUg2cjVhL2p2NEk9Ig$$",
-            "size": "medium",
+            "icon_url": "icon-1",
+            "size": "small",
             "type": "default" 
         },
         "minimise": {
-            "icon": "https://dlnwzkim0wron.cloudfront.net/f-5e428c3b-dee8-5a50-9a3b-19e88e5c9d8e.png",
+            "icon": "icon-m-1",
             "theme": "rounded",
             "type": "default"
         },
         "sound": "themeOne",
-        "alignment": "block",
+        "alignment": "inline",
         "animation": "slide",
-        "expand_animation": "quick",
+        "expand_animation": "minimizeSmooth",
         "primary_color": "#4B4EDE",
-        "secondary_color": "#EAECF0"
+        "secondary_color": "#FFFFFF"
     },
     "welcome_screen": {
         "show": true,
         "layout": "medium",
         "logo": {
-            "logo_url": "/images/sc-small.svg"
+            "logo_url": "https://dev-xo.kore.ai:443/api/getMediaStream/orgFiles/o-2f31e9d4-dc92-5eaa-acd1-80cc1bd6428b/f-f37b5ada-6cc4-5008-a048-537dd7eb0677.png?n=1653037983&s=IkFSZWs3TTRKbnc0MmVQdzU4S2doR3lpeS9ZQUhxR2hic1ZlL21iVHdwazg9Ig$$",
+            "name": "kore.ai"
         },
         "title": {
             "name": "Hello"
@@ -48,7 +87,8 @@ const BrandingJSON = {
         "background": {
             "type": "color",
             "color": "#4B4EDE",
-            "img": "https://picsum.photos/seed/picsum/200/300"
+            "img": "https://picsum.photos/seed/picsum/200/300",
+            "name": "bg.png"
         },
         "top_fonts": {
             "color": "#ffffff"
@@ -140,6 +180,7 @@ const BrandingJSON = {
             "show": true,
             "promotions": [{
                 "banner": "https://picsum.photos/seed/picsum/200/300",
+                "name": "banner1.png",
                 "action": {
                     "type": "url",
                     "value": "http://abc.com"
@@ -147,6 +188,7 @@ const BrandingJSON = {
             },
             {
                 "banner": "https://picsum.photos/seed/picsum/200/300",
+                "name": "banner2.png",
                 "action": {
                     "type": "url",
                     "value": "http://abc.com"
@@ -159,7 +201,8 @@ const BrandingJSON = {
         "size": "compact",
         "icon": {
             "show": true,
-            "icon_url": "/images/avatar-bot.svg",
+            "icon_url": "icon-1",
+            "type": "default"
         },
         "icons_color": "#000000",
         "title": {
@@ -190,16 +233,16 @@ const BrandingJSON = {
             "help": {
                 "show": true,
                 "action": {
-                    "type": "postback|url",
-                    "value": "http://abc.coms",
+                    "type": "url",
+                    "value": "https://developer.kore.ai/docs/bots/whats-new/whats-new-in-this-release/",
                     "icon": "url|icomoon"
                 }
             },
             "live_agent": {
                 "show": true,
                 "action": {
-                    "type": "postback|url",
-                    "value": "http://abc.cocd",
+                    "type": "postback",
+                    "value": "connect to agent",
                     "icon": "url|icomoon"
                 }
             }
@@ -256,7 +299,8 @@ const BrandingJSON = {
         "background": {
             "type": "color",
             "color": "#FFFFFF",
-            "img": "https://picsum.photos/id/237/200/300"
+            "img": "https://picsum.photos/id/237/200/300",
+            "name": "bg.png"
         },
         "font": {
             "family": "Inter",
@@ -272,19 +316,19 @@ const BrandingJSON = {
             "color": "#000000"
         },
         "agent_message": {
-            "bg_color": "#4B4EDE",
-            "color": "#0D6EFD",
-            "separator": "2",
+            "bg_color": "#FA8437",
+            "color": "#FFFFFF",
+            "separator": "3",
             "icon": {
                 "show": "true|false",
                 "icon_url": "icomoon|url"
             },
             "title": {
-                "name": "kore.aissss",
+                "name": "Kore Support",
                 "color": "#0D6EFD"
             },
             "sub_title": {
-                "name": "your personal assistants",
+                "name": "Live Agent",
                 "color": "#0D6EFD"
             }
         },
@@ -304,6 +348,10 @@ const BrandingJSON = {
         "buttons": {
             "bg_color": "red",
             "color": "white"
+        },
+        "typing_indicator": {
+            "show": true,
+            "icon": ""
         },
         "bubble_style": "balloon",
         "primaryColor": "#3f42d4",

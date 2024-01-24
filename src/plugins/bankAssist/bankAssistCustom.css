@@ -103,30 +103,47 @@
     border-radius: 10px 10px 4px 10px;
 }
 
-.button-temp.button-variation-3 button {
+.bank-assist-theme .button-temp.button-variation-3 button {
     opacity: 0;
     transform: translateY(20px) translateX(-20px);
     animation: fadeInFromBottomAndLeft 0.3s ease-out 0.3s forwards;
-  }
-  
-  .button-temp.button-variation-3 button:nth-child(2) {
+}
+
+.bank-assist-theme .button-temp.button-variation-3 button:nth-child(2) {
     animation: fadeInFromBottomAndLeft 0.3s ease-out 0.6s forwards;
-  }
-  
-  .button-temp.button-variation-3 button:nth-child(3) {
+}
+
+.bank-assist-theme .button-temp.button-variation-3 button:nth-child(3) {
     animation: fadeInFromBottomAndLeft 0.3s ease-out 0.7s forwards;
-  }
-  
-  .button-temp.button-variation-3 button:nth-child(4) {
+}
+
+.bank-assist-theme .button-temp.button-variation-3 button:nth-child(4) {
     animation: fadeInFromBottomAndLeft 0.3s ease-out 0.8s forwards;
-  }
-  
-  @keyframes fadeInFromBottomAndLeft {
+}
+
+@keyframes fadeInFromBottomAndLeft {
     to {
-      opacity: 1;
-      transform: translateY(0) translateX(0);
+        opacity: 1;
+        transform: translateY(0) translateX(0);
     }
-  }
+}
+
+.bank-assist-theme .button-template-container .button-temp .kr-btn {
+    background-color: white;
+}
+.bank-assist-theme .button-template-container .button-temp .kr-btn:hover {
+    background-color: white;
+}
+
+.bank-assist-theme .list-view-action-template-wrapper .list-content-details .list-data-temp {
+    background-color: white;
+}
+
+.bank-assist-theme .avatar-variations-footer .avatar-actions .avatar-bg figure .custom-img-uploaded, .bank-assist-theme .avatar-variations-footer .avatar-actions .avatar-bg figure .custom-img-uploaded-minimize {
+    background: #3c817c;
+}
+
+
   
   
   

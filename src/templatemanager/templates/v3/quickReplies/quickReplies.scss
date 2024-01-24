@@ -1,4 +1,4 @@
-.quick-temp {
+.quick-replies {
     display: flex;
     transition: 0.2s all ease;
     align-items: center;
@@ -12,6 +12,9 @@
     animation-fill-mode: both;
     &.full-width-buttons {
         flex-direction: column;
+        .kr-btn {
+            width: 100%;
+        }
     }
 
     &.stack-buttons {
@@ -61,6 +64,7 @@
         margin: 4px;
         text-align: center;
         transition: 0.2s all ease;
+        white-space: nowrap;
 
         &:hover {
             background: var(--button-temp-bg-hover);

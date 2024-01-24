@@ -151,7 +151,7 @@ class chatWindow extends EventEmitter{
   }
   sendFailedMessage: any;
   
- constructor(){
+ constructor() {
   super(null);
   this.chatEle;
   this.config={};
@@ -399,6 +399,7 @@ postMessageToChildIframes (iframe: any,postPayload: any) {
 // inline model for iframes starts here//
 openModal(template:any, showClose:any) {
   let me:any=this;
+  if (me.config.UI.version == 'v2') {
   const chatBodyModal = $('#chatBodyModal');
   const close = (<any> document).getElementsByClassName('closeChatBodyModal')[0];
   close.onclick = function () {
@@ -437,12 +438,21 @@ openModal(template:any, showClose:any) {
     chatBodyModal.hide();
     $('.kore-chat-window').removeClass('modelOpen');
   }
+}  else {
+  if (!template) {
+    me.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');
+    setTimeout(() => {
+        me.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
+    }, 150);
+  }
+}
 }
 // inline model for iframes starts ends//
 
 // form event actions starts here //
 formAction(event:any) {
   let me:any=this;
+  if (me.config.UI.version == 'v2') {
   if (event && event.action === 'formSubmit') {
     me.openModal();
     if ($('.kore-chat-body .uiformComponent').length) {
@@ -458,6 +468,11 @@ formAction(event:any) {
       $('.kore-chat-body .uiformComponent').closest('.inlineIframeContainer').css('display', 'none');
     }
   }
+} else {
+  if (event && event.action === 'formSubmit') {
+    me.openModal();
+  }
+}
 }
 renderWebForm  (msgData:any, returnTemplate:any) {
   const me:any = this;
@@ -680,6 +695,8 @@ destroy  () {
         me.chatEle.addClass('minimize');
       }
       me.skipedInit = true;
+      me.initial = true;
+      me.initialChat = true;
     }
   }
   window.removeEventListener('online', me.updateOnlineStatus);
@@ -699,12 +716,13 @@ resetWindow () {
   me.bot.close();
   me.config.botOptions.maintainContext = false;
   me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
+  me.config.botOptions.initialChat = true;
   me.bot.init(me.config.botOptions);
-  if (me.config.UI.version == 'v3') {
-    setTimeout(() => {
-      me.bot.logInComplete();
-    }, 4000);
-  }
+  // if (me.config.UI.version == 'v3') {
+  //   setTimeout(() => {
+  //     me.bot.logInComplete();
+  //   }, 4000);
+  // }
 };
 
 sendMessageWithWithChatInput(chatInput:any){
@@ -984,6 +1002,9 @@ bindEventsV3() {
       me.sendMessageToBot(event.target.value);
       event.target.value = '';
       me.chatEle.querySelector('.send-btn').classList.remove('show');
+      if (me.chatEle.querySelectorAll('.quick-replies') && me.chatEle.querySelectorAll('.quick-replies').length > 0) {
+        me.chatEle.querySelector('.quick-replies').remove();
+      }
     } 
   })
 
@@ -999,24 +1020,36 @@ bindEventsV3() {
         }
         if (!me.welcomeScreenState) {
           if (me.initial) {
-            setTimeout(() => {
-              me.bot.logInComplete(); // Start api call & ws
-            }, 2000);
+            if (me.initialChat) {
+              me.config.botOptions.initialChat = true;
+              me.bot.init(me.config.botOptions);
+              me.initialChat = false;
+            } else {
+              setTimeout(() => {
+                me.bot.logInComplete(); // Start api call & ws
+              }, 2000);
+            }
+            me.initial = false;
           }
-          me.initial = false;
           if (me.config.branding.welcome_screen.show) {
-            me.chatEle.querySelector('.welcome-chat-section').classList.add('minimize');
+            me.chatEle.querySelector('.welcome-chat-section').classList.add(me.config.branding.chat_bubble.expand_animation);
           } else {
-            me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+            me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(me.config.branding.chat_bubble.expand_animation);
           }
         } else {
           if (me.initial) {
-            setTimeout(() => {
-              me.bot.logInComplete(); // Start api call & ws
-            }, 2000);
+            if (me.initialChat) {
+              me.config.botOptions.initialChat = true;
+              me.bot.init(me.config.botOptions);
+              me.initialChat = false;
+            } else {
+              setTimeout(() => {
+                me.bot.logInComplete(); // Start api call & ws
+              }, 2000);
+            }
             me.initial = false;
           }
-          me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+          me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(me.config.branding.chat_bubble.expand_animation);
         }
       } else {
         if (me.initial) {
@@ -1026,9 +1059,9 @@ bindEventsV3() {
           me.initial = false;
         }
         if (me.config.branding.welcome_screen.show) {
-          me.chatEle.querySelector('.welcome-chat-section').classList.add('minimize');
+          me.chatEle.querySelector('.welcome-chat-section').classList.add(me.config.branding.chat_bubble.expand_animation);
         } else {
-          me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+          me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(me.config.branding.chat_bubble.expand_animation);
         }
       }
 
@@ -1043,25 +1076,50 @@ bindEventsV3() {
         // me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
         me.skipedInit = false;
       }
+      if (me.config.branding.general.sounds.enable && me.config.branding.general.sounds.on_open.url != 'None') {
+        const openSound = new Audio(me.config.branding.general.sounds.on_open.url);
+        openSound.play();
+      }
+      const scrollHeight =  me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight;
+      me.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
+        top: scrollHeight,
+        behavior: 'smooth'
+      });
     } else {
+      const clArr = ['minimize', 'minimizeQuick', 'minimizeSmooth'];
       if (me.config.multiPageApp && me.config.multiPageApp.enable) {
         me.setLocalStoreItem('kr-cw-state', 'minimized');
       }
       me.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
       me.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
       if (me.config.branding.welcome_screen.show) {
-        me.chatEle.querySelector('.welcome-chat-section').classList.remove('minimize');
+        const clList = me.chatEle.querySelector('.welcome-chat-section');
+        clArr.forEach((ele: any) => {
+          if (clList?.classList?.contains(ele)) {
+            clList.classList.remove(ele);
+          }
+        });
       }
       if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
         me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
       } else {
-        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+        const clList= me.chatEle.querySelector('.chat-widgetwrapper-main-container');
+        clArr.forEach((ele: any) => {
+          if (clList?.classList?.contains(ele)) {
+            clList.classList.remove(ele);
+          }
+        });
       }
       me.chatEle.classList.add('minimize-chat');
+      if (me.config.branding.general.sounds.enable && me.config.branding.general.sounds.on_close.url != 'None') {
+        const openSound = new Audio(me.config.branding.general.sounds.on_close.url);
+        openSound.play();
+      }
     }
   })
 
   me.eventManager.addEventListener('.btn-reconnect', 'click', () => {
+    me.chatEle.querySelector('.btn-reconnect').setAttribute('disabled', true);
     setTimeout(() => {
       me.resetWindow();
     });
@@ -1254,6 +1312,9 @@ onBotReady  () {
   } else {
     me.config.branding.header.title.name = me._botInfo.displayName;
     me.setBranding();
+    if (me.chatEle.querySelector('.btn-reconnect') && me.chatEle.querySelector('.btn-reconnect').getAttribute('disabled')) {
+      me.chatEle.querySelector('.btn-reconnect').removeAttribute('disabled');
+    }
   }
   if (!me.loadHistory) {
     setTimeout(() => {
@@ -1662,23 +1723,47 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
     }
   }
   let eleHeight, scrollHeight;
-  if (me.config.UI.version == 'v3' && me.chatEle.querySelectorAll('.chat-widget-body-wrapper > div#'+ msgData?.messageId).length < 1 || (msgData?.renderType === 'inline')) {
+  if (me.config.UI.version == 'v3' && me.chatEle.querySelectorAll('.chat-widget-body-wrapper > div .i'+ msgData?.messageId).length < 1 || (msgData?.renderType === 'inline')) {
     if (msgData?.type === 'bot_response' && msgData?.fromHistorySync) {
     } else {
       scrollHeight = me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight;
       if (bot && !bot.previousHistoryLoading) {
         const chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
         if (me.historyLoading) {
-          messageHtml.classList.remove('if-animation-bubble');
+          messageHtml?.classList?.remove('if-animation-bubble');
         }
-        chatContainer.appendChild(messageHtml);
+        if (messageHtml) {
+          chatContainer.appendChild(messageHtml);
+        }
         eleHeight = messageHtml.offsetHeight;
+        if (!me.historyLoading && me.config.branding.general.sounds.enable) {
+          if (msgData?.type === 'bot_response') {
+            if (me.config.branding.general.sounds.on_open.url != 'None') {
+              const newMsgSound = new Audio(me.config.branding.general.sounds.on_new_msg.url);
+              newMsgSound.play();
+            }
+          } else {
+            if (me.config.branding.general.sounds.on_open.url != 'None') {
+              const msgSendSound = new Audio(me.config.branding.general.sounds.on_msg_send.url);
+              msgSendSound.play();
+            }
+          }
+        }
       } else {
         messageHtml.classList.remove('if-animation-bubble');
         me.chatEle.querySelector('.prev-message-list').appendChild(messageHtml);
       }
     }
+
+    if (bot && !bot.previousHistoryLoading) {
+      scrollHeight = (me.historyLoading || eleHeight < 300) ? me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight : scrollHeight - me.chatEle.querySelector('.chat-widget-body-wrapper').clientHeight / 2;
+      me.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
+        top: scrollHeight,
+        behavior: 'smooth'
+      });
+    }
   }
+  
   //}
   if (me.config.UI.version == 'v2') {
     me.handleImagePreview();
@@ -1687,17 +1772,12 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   if (me.chatPSObj && me.chatPSObj.update) {
     me.chatPSObj.update();
   }
+
   if (bot && !bot.previousHistoryLoading) {
     if (me.config.UI.version == 'v2') {
       _chatContainer.animate({
         scrollTop: _chatContainer.prop('scrollHeight'),
       }, 100);
-    } else {
-      scrollHeight = (me.historyLoading || eleHeight < 300) ? me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight : scrollHeight - me.chatEle.querySelector('.chat-widget-body-wrapper').clientHeight/2;
-      me.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
-        top: scrollHeight,
-        behavior: 'smooth'
-      });
     }
   }
 
@@ -2230,7 +2310,7 @@ showError (response:any) {
   }
 };
 
-bottomSliderAction(action: any, appendElement: any) {
+bottomSliderAction(action: any, appendElement: any, fullSlide?: any) {
   const me: any = this;
   if (me.config.UI.version == 'v2') {
     $(".kore-action-sheet").animate({ height: 'toggle' });
@@ -2246,6 +2326,9 @@ bottomSliderAction(action: any, appendElement: any) {
      }
   } else {
     const actionSlider: any = getHTML(ActionsBottomSlider, '', me);
+    if (fullSlide) {
+      actionSlider.querySelector('.actions-contnet-data').classList.add('actions-contnet-full-height');
+    }
     actionSlider.querySelector('.chat-actions-bottom-wraper > .actions-contnet-data').appendChild(appendElement);
     me.chatEle.appendChild(actionSlider);
     // me.chatEle.querySelector('.chat-actions-bottom-wraper').addEventListener('click',() => {
@@ -2257,7 +2340,7 @@ bottomSliderAction(action: any, appendElement: any) {
 modalAction(appendElement: any) {
   const me: any = this;
   const modal: any = getHTML(ActionsModal, '', me);
-  // modal.querySelector('.modal-container').appendChild(appendElement);
+  modal.querySelector('.modal_body_actions').appendChild(appendElement);
   me.chatEle.appendChild(modal);
 }
 
@@ -2404,7 +2487,9 @@ getBrandingInformation(options:any){
         $(".kore-chat-window").addClass('customBranding-theme');
       }
     } else {
-      me.setBranding(response);
+      if (response && response.activeTheme) {
+        me.setBranding(response?.v3);
+      }
     }
   };
 applyVariableValue (key:any,value:any,type:any){
@@ -2437,17 +2522,18 @@ applyVariableValue (key:any,value:any,type:any){
 
     if (type == 'welcome' && me.config.builderFlag) {
       if (me.config.branding.welcome_screen.show) {
-        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove(me.config.branding.chat_bubble.expand_animation);
         setTimeout(() => {
-          me.chatEle.querySelector('.welcome-chat-section')?.classList.add('minimize');
+          me.chatEle.querySelector('.welcome-chat-section')?.classList.add(me.config.branding.chat_bubble.expand_animation);
         }, 300);
       } else {
-        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(me.config.branding.chat_bubble.expand_animation);
       }
     }
   }
 
   switchView(type: any) {
+    const clArr = ['minimize', 'minimizeQuick', 'minimizeSmooth'];
     const me: any = this;
     if (me.initial) {
       setTimeout(() => {
@@ -2462,28 +2548,48 @@ applyVariableValue (key:any,value:any,type:any){
       if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
         me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
       } else {
-        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+        const clList1 = me.chatEle.querySelector('.chat-widgetwrapper-main-container');
+        clArr.forEach((ele: any) => {
+          if (clList1?.classList?.contains(ele)) {
+            clList1.classList.remove(ele);
+          }
+        });
       }
-      me.chatEle.querySelector('.welcome-chat-section')?.classList.remove('minimize');
+      const clList2 = me.chatEle.querySelector('.welcome-chat-section');
+      clArr.forEach((ele: any) => {
+        if (clList2?.classList?.contains(ele)) {
+          clList2.classList.remove(ele);
+        }
+      });
     }
     else if (type == 'welcome') {
       me.chatEle.classList.remove('minimize-chat');
       if (me.config.branding.welcome_screen.show) {
-        me.chatEle.querySelector('.welcome-chat-section')?.classList.add('minimize');
+        me.chatEle.querySelector('.welcome-chat-section')?.classList.add(me.config.branding.chat_bubble.expand_animation);
         if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
           me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
         } else {
-          me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+          const clList = me.chatEle.querySelector('.chat-widgetwrapper-main-container');
+          clArr.forEach((ele: any) => {
+            if (clList?.classList?.contains(ele)) {
+              clList.classList.remove(ele);
+            }
+          });
         }
       } else {
-        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(me.config.branding.chat_bubble.expand_animation);
       }
       me.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
       me.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
     } else if (type == 'chat') {
       me.chatEle.classList.remove('minimize-chat');
-      me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
-      me.chatEle.querySelector('.welcome-chat-section')?.classList.remove('minimize');
+      me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(me.config.branding.chat_bubble.expand_animation);
+      const clList = me.chatEle.querySelector('.welcome-chat-section');
+      clArr.forEach((ele: any) => {
+        if (clList?.classList?.contains(ele)) {
+          clList.classList.remove(ele);
+        }
+      });
       me.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
       me.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
     } else {
@@ -2491,9 +2597,14 @@ applyVariableValue (key:any,value:any,type:any){
       if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
         me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
       } else {
-        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('minimize');
+        const clListArr = me.chatEle.querySelector('.chat-widgetwrapper-main-container');
+        clArr.forEach((ele: any) => {
+          if (clListArr?.classList?.contains(ele)) {
+            clListArr.classList.remove(ele);
+          }
+        });
       }
-      me.chatEle.querySelector('.welcome-chat-section')?.classList.remove('minimize');
+      me.chatEle.querySelector('.welcome-chat-section')?.classList.remove(me.config.branding.chat_bubble.expand_animation);
       me.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
       me.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize');
     }
