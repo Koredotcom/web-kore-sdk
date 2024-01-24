@@ -72,6 +72,7 @@ export function AvatarComponent(props: any) {
         if (hostInstance.plugins?.ProactiveWebCampaingPlugin?.name == 'ProactiveWebCampaingPlugin') {
             hostInstance.eventManager.removeEventListener('.pwc-accept', 'click');
             hostInstance.eventManager.addEventListener('.pwc-accept', 'click', (event: any) => {
+                window.sessionStorage.setItem('isReconnect', 'false');
                 hostInstance.welcomeScreenState = true;
                 hostInstance.chatEle.classList.remove('minimize-chat');
                 hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');

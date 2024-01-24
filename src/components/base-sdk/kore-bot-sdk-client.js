@@ -1470,6 +1470,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       if(__reconnect__){
         data.url = data.url + "&isReconnect=true";
       }
+      if (!__reconnect__ && window.sessionStorage.getItem('isReconnect') == 'true') {
+        data.url = data.url + "&isReconnect=true";
+      }
       this.authenticated = true;
       //this.activeUserId = data.self.id;
       this.emit(CLIENT_EVENTS.AUTHENTICATED, data);

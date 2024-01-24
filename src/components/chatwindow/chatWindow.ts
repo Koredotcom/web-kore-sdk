@@ -253,6 +253,9 @@ initShow  (config:any) {
     }
     me.config.botOptions.maintainContext = maintainContext;
   }
+  if (me.config.pwcConfig.enable) {
+    window.sessionStorage.setItem('isReconnect', 'true');
+  }
   me.config.userAgentIE = navigator.userAgent.indexOf('Trident/') !== -1;
   const mobileBrowserOpened = me.isMobile();
   if (mobileBrowserOpened) {
@@ -992,6 +995,14 @@ bindEventsV3() {
 
   me.eventManager.addEventListener('.avatar-bg', 'click', () => {
     if (!me.chatEle.querySelector('.avatar-bg').classList.contains('click-to-rotate-icon')) {
+      if(me.config.pwcConfig.enable) {
+        if (window.sessionStorage.getItem('isReconnect') == 'true') {
+          window.sessionStorage.setItem('isReconnect', 'false');
+          setTimeout(() => {
+            me.resetWindow();
+          })
+        }
+      }
       if (me.config.multiPageApp && me.config.multiPageApp.enable) {
         me.setLocalStoreItem('kr-cw-state', 'open');
       }

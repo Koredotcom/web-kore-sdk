@@ -106,11 +106,13 @@ class ProactiveWebCampaignPlugin {
             }
             const prevUrl = window.sessionStorage.getItem('prevUrl');
             if (prevUrl !== currentUrl) {
-                // me.calculateTimeSpent(prevUrl, 'pageChange');
-                window.sessionStorage.setItem('prevUrl', currentUrl);
-                window.sessionStorage.setItem('startTime', new Date().getTime() + '');
-                me.sendEvent(currentUrl, 'pageChange');
-                me.createTimeSpentObjs();
+                setTimeout(() => {
+                    // me.calculateTimeSpent(prevUrl, 'pageChange');
+                    window.sessionStorage.setItem('prevUrl', currentUrl);
+                    window.sessionStorage.setItem('startTime', new Date().getTime() + '');
+                    me.sendEvent(currentUrl, 'pageChange');
+                    me.createTimeSpentObjs();
+                });
             }
         }, 1000);
 
@@ -139,6 +141,7 @@ class ProactiveWebCampaignPlugin {
         messageToBot.userId = me.hostInstance.config.botOptions.userIdentity;
         this.campInfo.forEach((camp: any) => {
             let urlChecked: boolean = false;
+            let goalUrlChecked: boolean = false;
             let ruleData: any = [];
             let goalData: any = [];
             let sendEvent: boolean = true;
@@ -297,17 +300,50 @@ class ProactiveWebCampaignPlugin {
                     });
                 }
 
-                camp.engagementStrategy.goals.forEach((goalItem: any) => {
-                    if (((goalItem.matchingCondition == 'is' && currentUrl == goalItem.value) || (goalItem.matchingCondition == 'contains' && currentUrl?.includes(goalItem.value)))) {
-                        goalData.push(goalItem)
-                    }
-                });
                 messageToBot.ruleInfo = ruleData;
                 if (goalData && goalData.length > 0) {
                     messageToBot.goalInfo = goalData;
                 }
                 if (sendEvent && ruleData.length > 0) {
                     me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+                }
+            }
+
+            if (camp.engagementStrategy.goals && camp.engagementStrategy.goals.length) {
+                let condition = camp.engagementStrategy.goals[0].operator;
+                if (condition == 'or') {
+                    camp.engagementStrategy.goals.forEach((goalItem: any) => {
+                        if (((goalItem.matchingCondition == 'is' && currentUrl == goalItem.value) || (goalItem.matchingCondition == 'contains' && currentUrl?.includes(goalItem.value)))) {
+                            goalData.push(goalItem);
+                            goalUrlChecked = true;
+                        }
+                    });
+                } else {
+                    camp.engagementStrategy.goals.forEach((goalItem: any) => {
+                        if (((goalItem.matchingCondition == 'is' && currentUrl == goalItem.value) || (goalItem.matchingCondition == 'contains' && currentUrl?.includes(goalItem.value)))) {
+                            goalUrlChecked = true;
+                        } else {
+                            goalUrlChecked = false;
+                            return
+                        }
+                    });
+                    if (goalUrlChecked) {
+                        goalData = camp.engagementStrategy.goals;
+                    }
+                }
+                let goalArr: any = window.sessionStorage.getItem('goalArr');
+                goalArr = JSON.parse(goalArr);
+                const goalInd = goalArr.findIndex((r: any) => r.campId == camp.campId);
+                let goalEle = goalArr[goalInd];
+                if (goalEle && !goalEle.eventFired && goalData && goalData.length > 0) {
+                    let messageToBotGoal: any = {}
+                    messageToBotGoal = JSON.parse(JSON.stringify(messageToBot));
+                    messageToBotGoal.ruleInfo = [];
+                    messageToBotGoal.goalInfo = goalData;
+                    me.hostInstance.bot.sendMessage(messageToBotGoal, (err: any) => { });
+                    goalEle.eventFired = true;
+                    goalArr[goalInd] = goalEle;
+                    window.sessionStorage.setItem('goalArr', JSON.stringify(goalArr));
                 }
             }
         });
@@ -326,6 +362,7 @@ class ProactiveWebCampaignPlugin {
         let arrCountry: any = [];
         let arrCity: any = [];
         let userArr: any = [];
+        let goalArr: any = [];
         this.campInfo.forEach((camp: any) => {
             const timeSpentRule = camp.engagementStrategy.rules.find((r: any) => r.rule == 'timeSpent');
             if (timeSpentRule && timeSpentRule.rule) {
@@ -361,11 +398,19 @@ class ProactiveWebCampaignPlugin {
                 }
                 userArr.push(obj);
             }
+            if (camp.engagementStrategy.goals && camp.engagementStrategy.goals.length) {
+                const obj = {
+                    campId: camp.campId,
+                    eventFired: false
+                }
+                goalArr.push(obj);
+            }
         });
         window.sessionStorage.setItem('timeSpentArr', JSON.stringify(arr));
         window.sessionStorage.setItem('countryArr', JSON.stringify(arrCountry));
         window.sessionStorage.setItem('cityArr', JSON.stringify(arrCity));
         window.sessionStorage.setItem('userArr', JSON.stringify(userArr));
+        window.sessionStorage.setItem('goalArr', JSON.stringify(goalArr));
     }
 
     calculateTimeSpent(url: any, type: any) {
