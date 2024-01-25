@@ -215,6 +215,27 @@ export function Message(props: any) {
                                         </div>
                                     </div>
                                 </div> }
+                            { msgItem.component && msgItem.component.payload && (msgItem.component.payload.audioUrl || msgItem.component.payload.videoUrl) &&
+                                <section className="attachment-sended-temp-wrapper attachment-wrap">
+                                <div className="multiple-attchments">
+                                    <div className="attchments-wrap">
+                                        {msgItem.component.payload.audioUrl && <div className="img-attch">
+                                            <figure>
+                                                <audio controls>
+                                                    <source src={msgItem.component.payload.audioUrl} type="audio/ogg"></source>
+                                                </audio>
+                                            </figure>
+                                        </div>}
+                                        {msgItem.component.payload.videoUrl && <div className="img-attch">
+                                            <figure>
+                                                <video width="240" height="145" controls>
+                                                    <source src={msgItem.component.payload.videoUrl} type="video/mp4"></source>
+                                                </video>
+                                            </figure>
+                                        </div>}
+                                    </div>
+                                </div>
+                            </section> }    
                         </div>
                     ))
                 }
