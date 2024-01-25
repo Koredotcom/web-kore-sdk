@@ -20,17 +20,35 @@ export function DateRangeExt(props: any) {
     }
 
     const handleSubmit = () => {
-        hostInstance.sendMessage(selectedDate.from + ' - ' + selectedDate.to, { renderMsg: selectedDate.from + ' - ' + selectedDate.to });
+        hostInstance.sendMessage(selectedDate.from + ' to ' + selectedDate.to, { renderMsg: selectedDate.from + ' to ' + selectedDate.to });
         closeMenu();
     }
-    const [selectedDate, setSelectedDate] = useState({ from: new Date().toDateString(), to: '-' });
+    const [selectedDate, setSelectedDate] = useState({ from: new Date().toDateString(), to: 'Select' });
+
+    const dateFormats: any = {
+        'DD-MM-YYYY': 'dd-MM-yyyy',
+        'MM-DD-YYYY': 'MM-dd-yyyy',
+        'YYYY-MM-DD': 'yyyy-MM-dd',
+        'YYYY-DD-MM': 'yyyy-dd-MM'
+    }
+
+    const getConvertedDate = (date: any, format: any) => {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        const formattedDate = format
+            .replace('DD', day)
+            .replace('MM', month)
+            .replace('YYYY', year);
+        return formattedDate;
+    }
 
     useEffect(() => {
         const dp = new Datepicker(`#cal-${msgData.messageId}`, {
-            dateFormat: msgData?.message?.[0]?.component?.payload?.format,
+            dateFormat: dateFormats[msgData?.message?.[0]?.component?.payload?.format],
             range: true,
-            minDate: msgData.message?.[0]?.component?.payload?.startDate ? msgData.message?.[0]?.component?.payload?.startDate : '',
-            maxDate: msgData.message?.[0]?.component?.payload?.endDate ? msgData.message?.[0]?.component?.payload?.endDate : '',
+            minDate: msgData.message?.[0]?.component?.payload?.startDate ? msgData.message?.[0]?.component?.payload?.startDate : getConvertedDate(new Date(), msgData?.message?.[0]?.component?.payload?.format),
+            maxDate: msgData.message?.[0]?.component?.payload?.endDate ? msgData.message?.[0]?.component?.payload?.endDate : getConvertedDate(new Date(), msgData?.message?.[0]?.component?.payload?.format),        
             disableNavWhenOutOfRange: false,
             onSelect: (d: any) => {
                 setSelectedDate({ from: d.formattedDate[0], to: d.formattedDate[1]});
@@ -67,6 +85,24 @@ export function DateRange(props: any) {
         hostInstance
     }
 
+    const dateFormats: any = {
+        'DD-MM-YYYY': 'dd-MM-yyyy',
+        'MM-DD-YYYY': 'MM-dd-yyyy',
+        'YYYY-MM-DD': 'yyyy-MM-dd',
+        'YYYY-DD-MM': 'yyyy-dd-MM'
+    }
+
+    const getConvertedDate = (date: any, format: any) => {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        const formattedDate = format
+            .replace('DD', day)
+            .replace('MM', month)
+            .replace('YYYY', year);
+        return formattedDate;
+    }
+
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'daterange' && !msgData?.fromHistory) {
         if (msgData?.message?.[0]?.component?.payload?.view_type == 'slider') {
             hostInstance.bottomSliderAction('', getHTML(DateRangeExt, msgData, hostInstance));
@@ -75,16 +111,16 @@ export function DateRange(props: any) {
             )
         } else {
             const handleSubmit = () => {
-                hostInstance.sendMessage(selectedDate.from + ' - ' + selectedDate.to, { renderMsg: selectedDate.from + ' - ' + selectedDate.to });
+                hostInstance.sendMessage(selectedDate.from + ' to ' + selectedDate.to, { renderMsg: selectedDate.from + ' to ' + selectedDate.to });
             }
-            const [selectedDate, setSelectedDate] = useState({ from: new Date().toDateString(), to: '-' });
+            const [selectedDate, setSelectedDate] = useState({ from: new Date().toDateString(), to: 'Select' });
 
             useEffect(() => {
                 const dp = new Datepicker(`#cal-${msgData.messageId}`, {
-                    dateFormat: msgData?.message?.[0]?.component?.payload?.format,
+                    dateFormat: dateFormats[msgData?.message?.[0]?.component?.payload?.format],
                     range: true,
-                    minDate: msgData.message?.[0]?.component?.payload?.startDate ? msgData.message?.[0]?.component?.payload?.startDate : '',
-                    maxDate: msgData.message?.[0]?.component?.payload?.endDate ? msgData.message?.[0]?.component?.payload?.endDate : '',
+                    minDate: msgData.message?.[0]?.component?.payload?.startDate ? msgData.message?.[0]?.component?.payload?.startDate : getConvertedDate(new Date(), msgData?.message?.[0]?.component?.payload?.format),
+                    maxDate: msgData.message?.[0]?.component?.payload?.endDate ? msgData.message?.[0]?.component?.payload?.endDate : getConvertedDate(new Date(), msgData?.message?.[0]?.component?.payload?.format),        
                     disableNavWhenOutOfRange: false,
                     onSelect: (d: any) => {
                         setSelectedDate({ from: d.formattedDate[0], to: d.formattedDate[1]});
