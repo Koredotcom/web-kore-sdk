@@ -206,6 +206,12 @@ export function ChatWidgetComposeBar(props: any) {
                 <p>Typing</p>
                 <div class="dot-flashing"></div>
             </div>}
+            <div className="powerdby-info">
+                <p>Powered by</p>
+                <figure>
+                    <img src={iconHelper.getIcon('kore_logo')} alt="kore-img" />
+                </figure>
+            </div>
         </div>
     );
 } 
