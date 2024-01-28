@@ -9,7 +9,7 @@ import { getHTML } from '../../../base/domManager';
 export function LineChart(props: any) {
     const msgData = props.msgData;
     return (
-        <div className="chart-template-wrapper">
+        <div className="chart-template-wrapper" id={`lc${msgData.messageId}`}>
             <div className="linechartDiv charts-body-info">
                 <h1>{msgData?.message?.[0]?.component?.payload?.text}</h1>
                 <div className="lineChartChildDiv" id={`linechart${msgData.messageId}`}></div>
@@ -36,6 +36,13 @@ export function LineChartBase(props: any) {
                 top: hostInstance.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight,
                 behavior: 'smooth'
             });
+            const ele = hostInstance.chatEle.querySelector(`#lc${msgData.messageId}`);
+            if (ele) {
+                const eleCopy = ele.cloneNode(true); 
+                ele.addEventListener('click', (e: any) => {
+                    hostInstance.modalAction(eleCopy);
+                });
+            }
         }, 400);
 
         return (

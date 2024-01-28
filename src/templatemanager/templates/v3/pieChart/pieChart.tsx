@@ -9,7 +9,7 @@ import { getHTML } from '../../../base/domManager';
 export function PieChart(props: any) {
     const msgData = props.msgData;
     return (
-        <div className="chart-template-wrapper">
+        <div className="chart-template-wrapper" id={`pc${msgData.messageId}`}>
             <div className="d3Pie"></div>
             <div className="piechartDiv charts-body-info">
                 <h1>{msgData?.message?.[0]?.component?.payload?.text}</h1>
@@ -37,6 +37,13 @@ export function PieChartBase(props: any) {
                 top: hostInstance.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight,
                 behavior: 'smooth'
             });
+            const ele = hostInstance.chatEle.querySelector(`#pc${msgData.messageId}`);
+            if (ele) {
+                const eleCopy = ele.cloneNode(true); 
+                ele.addEventListener('click', (e: any) => {
+                    hostInstance.modalAction(eleCopy);
+                });
+            }
         }, 200);
 
         return (
