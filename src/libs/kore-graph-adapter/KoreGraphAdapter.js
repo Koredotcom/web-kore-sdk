@@ -2277,8 +2277,8 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
         } else if (chatConfig && chatConfig.graphLib === 'd3') {
             setTimeout(() => {
                 const dimens = {};
-                dimens.outerWidth = 300;
-                dimens.outerHeight = 340;
+                dimens.outerWidth = 290;
+                dimens.outerHeight = 350;
                 dimens.innerWidth = 230;
                 dimens.innerHeight = 250;
                 dimens.legendRectSize = 15;
@@ -2396,8 +2396,8 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
             }, 150);
         } else if (chatConfig.graphLib === 'd3') {
             var dimens = {};
-            dimens.outerWidth = 300;
-            dimens.outerHeight = 300;
+            dimens.outerWidth = 280;
+            dimens.outerHeight = 280;
             dimens.innerHeight = 200;
             dimens.legendRectSize = 15;
             dimens.legendSpacing = 4;
@@ -2512,7 +2512,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
             if (msgData.message[0].component.payload.pie_type) {
                 // define data
                 var dimens = {};
-                dimens.width = 300;
+                dimens.width = 310;
                 dimens.height = 200;
                 dimens.legendRectSize = 10;
                 dimens.legendSpacing = 2.4;

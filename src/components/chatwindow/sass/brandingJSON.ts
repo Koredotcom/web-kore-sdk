@@ -4,7 +4,7 @@ const BrandingJSON = {
         "size": "small",
         "themeType": "light",
         "colors":{
-            "primary":"#444CE7",
+            "primary":"#491C96",
             "secondary":"#EAECF0",
             "primary_text": "#101828",
             "secondary_text": "#FFFFFF",
@@ -91,7 +91,7 @@ const BrandingJSON = {
             "name": "bg.png"
         },
         "top_fonts": {
-            "color": "#ffffff"
+            "color": "#FFFFFF"
         },
         "bottom_background": {
             "color": "#4B4EDE"
@@ -108,46 +108,47 @@ const BrandingJSON = {
                 "color": "#4B4EDE"
             },
             "start_conv_text": {
-                "color": "#ffffff"
+                "color": "#FFFFFF"
             },
             "quick_start_buttons": {
                 "show": true,
                 "style": "slack",
-                "buttons": [{
-                    "title": "Contact Sales",
-                    "action": {
-                        "type": "postback",
-                        "value": "Contact Sales"
+                "buttons": [
+                    {
+                        "title": "Contact Sales",
+                        "action": {
+                            "type": "postback",
+                            "value": "Contact Sales"
+                        }
+                    },
+                    {
+                        "title": "Free Trail",
+                        "action": {
+                            "type": "postback",
+                            "value": "Free Trail"
+                        }
+                    },
+                    {
+                        "title": "Support",
+                        "action": {
+                            "type": "postback",
+                            "value": "Support"
+                        }
+                    },
+                    {
+                        "title": "What’s the latest?",
+                        "action": {
+                            "type": "postback",
+                            "value": "What’s the latest?"
+                        }
+                    },
+                    {
+                        "title": "Know about Kore.ai",
+                        "action": {
+                            "type": "postback",
+                            "value": "https://kore.ai/"
+                        }
                     }
-                },
-                {
-                    "title": "Free Trail",
-                    "action": {
-                        "type": "postback",
-                        "value": "Free Trail"
-                    }
-                },
-                {
-                    "title": "Support",
-                    "action": {
-                        "type": "postback",
-                        "value": "Support"
-                    }
-                },
-                {
-                    "title": "Hours of Operation",
-                    "action": {
-                        "type": "postback",
-                        "value": "Hours of Operation"
-                    }
-                },
-                {
-                    "title": "Kore.ai",
-                    "action": {
-                        "type": "postback",
-                        "value": "https://kore.ai/"
-                    }
-                }
                 ],
                 "input": "button",
                 "action": {
@@ -159,22 +160,32 @@ const BrandingJSON = {
         "static_links": {
             "show": true,
             "layout": "carousel",
-            "links": [{
-                "title": "Community",
-                "description": "The US mobile number comes with two sims cards meant for GSM & LTE",
-                "action": {
-                    "type": "url",
-                    "value": "https://kore.ai/"
+            "links": [
+                {
+                    "title": "New Products",
+                    "description": "We have some exciting news and have released a few new products!",
+                    "action": {
+                        "type": "url",
+                        "value": "https://kore.ai/"
+                    }
+                },
+                {
+                    "title": "Platform Release",
+                    "description": "Kore.ai Unveils Generative AI, Large Language Models in XO Platform",
+                    "action": {
+                        "type": "url",
+                        "value": "https://kore.ai/"
+                    }
+                },
+                {
+                    "title": "Community",
+                    "description": "Visit our community site and get answers from our experts and user’s like you.",
+                    "action": {
+                        "type": "url",
+                        "value": "https://kore.ai/"
+                    }
                 }
-            },
-            {
-                "title": "Community",
-                "description": "The US mobile number comes with two sims cards meant for GSM & LTE",
-                "action": {
-                    "type": "url",
-                    "value": "https://kore.ai/"
-                }
-            }]
+            ]
         },
         "promotional_content": {
             "show": true,
@@ -183,7 +194,7 @@ const BrandingJSON = {
                 "name": "banner1.png",
                 "action": {
                     "type": "url",
-                    "value": "http://abc.com"
+                    "value": "https://kore.ai"
                 }
             },
             {
@@ -191,7 +202,7 @@ const BrandingJSON = {
                 "name": "banner2.png",
                 "action": {
                     "type": "url",
-                    "value": "http://abc.com"
+                    "value": "https://kore.ai"
                 }
             }]
         }
@@ -219,11 +230,11 @@ const BrandingJSON = {
                 "icon": "/images/close-large.svg"
             },
             "minimise": {
-                "show": "true|false",
+                "show": false,
                 "icon": "url|icomoon"
             },
             "expand": {
-                "show": "true|false",
+                "show": false,
                 "icon": "url|icomoon"
             },
             "reconnect": {
@@ -252,7 +263,7 @@ const BrandingJSON = {
         "bg_color": "#EAECF0",
         "layout": "keypad",
         "compose_bar": {
-            "bg_color": "#fffffe",
+            "bg_color": "#FFFFFE",
             "outline-color": "#E5E5E5",
             "placeholder": "Type a message"
         },
@@ -354,10 +365,10 @@ const BrandingJSON = {
             "icon": ""
         },
         "bubble_style": "balloon",
-        "primaryColor": "#3f42d4",
-        "primaryHoverColor": "#de4bbc",
-        "secondaryColor": "#3639e6",
-        "secondaryHoverColor": "#b1b2f9",
+        "primaryColor": "#3F42D4",
+        "primaryHoverColor": "#DE4BBC",
+        "secondaryColor": "#3639E6",
+        "secondaryHoverColor": "#B1B2F9",
         "img": "6495705b0d5bbd027d2e39ad"
     }
 }

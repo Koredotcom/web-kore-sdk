@@ -47,8 +47,10 @@ export function ListWidget(props: any) {
             <div className="padding-wrapper-content-list-widget">
                 <div className="adv-parent-temp-wrapper-list-widget">
                     <div className="main-heading-wrapper">
-                        {msgData.message[0].component.payload.title && <h1>{msgData.message[0].component.payload.title}</h1>}
-                        {msgData.message[0].component.payload.description && <h3>{msgData.message[0].component.payload.description}</h3>}
+                        <div>
+                            {msgData.message[0].component.payload.title && <h1>{msgData.message[0].component.payload.title}</h1>}
+                            {msgData.message[0].component.payload.description && <p>{msgData.message[0].component.payload.description}</p>}
+                        </div>
                         {msgData && msgData.headerOptions && msgData.headerOptions.type === "text" && msgData.headerOptions.text &&
                             <div className="header-actions">
                                 <p>{msgData.headerOptions.text}</p>
@@ -101,9 +103,9 @@ export function ListWidget(props: any) {
                                 {item.image && item.image.image_type === "image" && item.image.image_src && <div className="img-block">
                                     <img src={item.image.image_src} />
                                 </div>}
-                                {(item.title || item.description) && <div className="titles-info-block">
+                                {(item.title || item.subtitle) && <div className="titles-info-block">
                                     <h1 style={item?.titleStyles}>{item.title}</h1>
-                                    <p>{item.description}</p>
+                                    <p>{item.subtitle}</p>
                                 </div>}
                                 <div className="right-actions-content">
                                         <Fragment>

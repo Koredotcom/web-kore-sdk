@@ -118,15 +118,13 @@
             white-space: nowrap;
             text-overflow: ellipsis;
         }
-        h3{
-            color: var(--gloabl-text-color);
-            font-size: 18px;
-            font-weight: 600;
-            line-height: 20px;
-            width: 100%;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
+        p{
+            padding: 0;
+                white-space: normal;
+                font-size: 13px;
+                letter-spacing: 0.27px;
+                color: #8a959f;
+                text-overflow: ellipsis;
         }
         .header-actions{
             display: flex;
