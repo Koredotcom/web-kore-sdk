@@ -5,14 +5,42 @@ import { useState } from 'preact/hooks';
 import { Message } from '../message/message';
 import { getHTML } from '../../../base/domManager';
 
+export function additionalFeedback(props: any) {
+    const data = {
+        header: 'Describe your feedback',
+        placeholder: 'Anything else you would like to add (optional)',
+        options: [
+            'Didn’t resolve my problem',
+            'Had to give too many details',
+            'Took too long'
+        ],
+        submitButtonText: 'Submit feedback'
+    }
+
+    return(
+        <div className="radio-button-wrapper">
+                <h1>{data.header}</h1>
+                { data.options.map((ele: any, ind: any) => (
+                    <div className="radio-padding">
+                        <div className="radio-button-item">
+                            <input id={`feedback-radio-${ind}`} name="radio-feedback" className="radio-input" value={ele} type="radio" />
+                            <label for={`feedback-radio-${ind}`} className="radio-label">
+                                <div className="radio-title">{ele}</div>
+                                {/* <div className="radio-desc">Radio button item</div> */}
+                            </label>
+                        </div>
+                    </div>
+                ))}
+                <textarea className="feedback-typing-text-area" id="feedback-text" placeholder={data.placeholder}></textarea>
+                <button className="kr-button-primary feedback-text-submit lg">{data.submitButtonText}</button>
+            </div>
+    )
+}
+
 export function Feedback(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
-    const messageObj = {
-        msgData: msgData,
-        hostInstance: hostInstance
-    }
-
+    
     const handleEvent = (e: any) => {
         if (e.type == 'url' || e.type == 'data-url') {
             let link = e.url;
@@ -27,31 +55,77 @@ export function Feedback(props: any) {
 
     const handleEmoji = (event: any, item: any) => {
         const currentTarget = event.currentTarget;
+        let val = item.value;
+        let renderMsg = item.reviewText;
         currentTarget.parentNode.classList.add('selected-cst-feeback');
-        hostInstance.sendMessage(item.value, { renderMsg: item.reviewText });
+        // if (item.smileyId == '5') {
+        //     val = item.value + ': ' + msgData.message[0].component.payload.messageTodisplay;
+        //     renderMsg = item.value + ': ' + msgData.message[0].component.payload.messageTodisplay;
+        // }
+        if (item.smileyId > 3) {
+            hostInstance.sendMessage(val, { renderMsg });
+            closeSlider();
+        } else {
+            if (hostInstance.chatEle.querySelectorAll('.chat-actions-bottom-wraper') && hostInstance.chatEle.querySelectorAll('.chat-actions-bottom-wraper').length > 0) {
+                closeSlider();
+            }
+            setTimeout(() => {
+                hostInstance.bottomSliderAction('', getHTML(additionalFeedback, msgData, hostInstance));
+                setTimeout(() => {
+                    hostInstance.chatEle.querySelector('.feedback-text-submit').addEventListener('click', () => {
+                        const selectedOption = hostInstance.chatEle.querySelector('input[name="radio-feedback"]:checked');
+                        const typedtext = hostInstance.chatEle.querySelector('.feedback-typing-text-area');
+                        const csatDiv = hostInstance.chatEle.querySelector('.added-feeback-text');
+                        if (typedtext && typedtext.value) {
+                            val = val + ': ' + typedtext.value;
+                            renderMsg = renderMsg + ': ' + typedtext.value;
+                        }
+                        if (selectedOption) {
+                            csatDiv.classList.remove('hide');
+                            csatDiv.innerText = selectedOption.value;
+                            val = val + ': ' + selectedOption.value;
+                            renderMsg = renderMsg + ': ' + selectedOption.value;
+                        }
+                        hostInstance.sendMessage(val, { renderMsg });
+                        closeSlider();
+                    });
+                });
+            }, 250);
+        }
     }
 
     const handleNPS = (event: any) => {
         const currentTarget = event.currentTarget;
-        const value = currentTarget.textContent;
+        let value = currentTarget.textContent;
+        let renderMsg = currentTarget.textContent;
         currentTarget.classList.add('selected-nps');
         currentTarget.parentNode.childNodes.forEach((e: any) => {
             if (currentTarget !== e) {
                 e.disabled = true;
             }
-        })
-        hostInstance.sendMessage(value, { renderMsg: value });
+        });
+        // if (value > 8) {
+        //     value = value + ': ' + msgData.message[0].component.payload.messageTodisplay;
+        //     renderMsg = value + ': ' + msgData.message[0].component.payload.messageTodisplay;
+        // }
+        hostInstance.sendMessage(value, { renderMsg });
+        closeSlider();
     }
 
     const handleThumps = (event: any, type: any, item: any) => {
         const currentTarget = event.currentTarget;
+        let val = item.value;
+        let renderMsg = item.reviewText;
         if (type == 'positive') {
             currentTarget.previousSibling.disabled = true;
+            // val = item.value + ': ' + msgData.message[0].component.payload.messageTodisplay;
+            // renderMsg = item.value + ': ' + msgData.message[0].component.payload.messageTodisplay;
         } else {
             currentTarget.nextSibling.disabled = true;
         }
         currentTarget.classList.add('selected-thumb');
-        hostInstance.sendMessage(item.value, { renderMsg: item.reviewText });
+        hostInstance.sendMessage(item.value, { renderMsg });
+        closeSlider();
     }
 
     const handleStar = (item: any) => {
@@ -64,11 +138,19 @@ export function Feedback(props: any) {
         })
         let val = item.value.toString();
         let renderMsg = item.value;
-        if (val == '5') {
-            val = item.value + ': ' + msgData.message[0].component.payload.messageTodisplay;
-            renderMsg = 'Rating: ' + item.value + ' and ' + msgData.message[0].component.payload.messageTodisplay;
-        }
+        // if (val == '5') {
+        //     val = item.value + ': ' + msgData.message[0].component.payload.messageTodisplay;
+        //     renderMsg = item.value + ': ' + msgData.message[0].component.payload.messageTodisplay;
+        // }
         hostInstance.sendMessage(val, { renderMsg });
+        closeSlider();
+    }
+
+    const closeSlider = () => {
+        hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper')?.classList?.add('close-bottom-slide');
+        setTimeout(() => {
+            hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper')?.remove('.chat-actions-bottom-wraper');
+        }, 150);
     }
 
     return (
@@ -85,12 +167,12 @@ export function Feedback(props: any) {
                                 </div>
                             </div>))}
                         </div>
-                        {/* <p className="added-feeback-text">Had to give too many details</p> */}
+                        <p className="added-feeback-text hide"></p>
                     </div>}
                     {msgData.message[0].component.payload.view == 'NPS' && <div className="nps-feeback-survey">
                         <div className="btn-surveys-nps">
                             {msgData.message[0].component.payload.numbersArrays.map((numItem: any) => (
-                                <button className="nps-btn-fdb" style={{ color: numItem.color }} onClick={event => handleNPS(event)} id={numItem.numberId}>{numItem.value}</button>))}
+                                <button className="nps-btn-fdb" style={{ color: numItem?.color }} onClick={event => handleNPS(event)} id={numItem.numberId}>{numItem.value}</button>))}
                         </div>
                         <div className="text-info-survey-indication">
                             <h4>Not at all likely</h4>
@@ -108,7 +190,7 @@ export function Feedback(props: any) {
                             </svg>
                             <span>{msgData.message[0].component.payload.thumpsUpDownArrays[0].reviewText}</span>
                         </button>
-                        <button className="btn-thumb-fdb positive-thumb" onClick={event => handleThumps(event, 'positive', msgData.message[0].component.payload.thumpsUpDownArrays[0])}>
+                        <button className="btn-thumb-fdb positive-thumb" onClick={event => handleThumps(event, 'positive', msgData.message[0].component.payload.thumpsUpDownArrays[1])}>
                             <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
                                 <path d="M3.69238 10.4375C3.69238 9.71263 4.28001 9.125 5.00488 9.125C5.72976 9.125 6.31738 9.71263 6.31738 10.4375V15.6875C6.31738 16.4124 5.72976 17 5.00488 17C4.28001 17 3.69238 16.4124 3.69238 15.6875V10.4375Z" fill="#16A34A" />
                                 <path d="M7.19238 10.2917V15.0434C7.19238 15.7063 7.56689 16.3123 8.15976 16.6087L8.20337 16.6305C8.68937 16.8735 9.22526 17 9.76862 17H14.5077C15.3419 17 16.0601 16.4112 16.2237 15.5932L17.2737 10.3432C17.4903 9.26032 16.6621 8.25 15.5577 8.25H12.4424V4.75C12.4424 3.7835 11.6589 3 10.6924 3C10.2091 3 9.81738 3.39175 9.81738 3.875V4.45833C9.81738 5.21563 9.57176 5.9525 9.11738 6.55833L7.89238 8.19167C7.43801 8.7975 7.19238 9.53437 7.19238 10.2917Z" fill="#16A34A" />
@@ -134,12 +216,21 @@ export function Feedback(props: any) {
 export function FeedbackTemplate(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
+    const msgObj = {
+        msgData,
+        hostInstance
+    }
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'feedbackTemplate' && (msgData.message[0].component.payload.view === "star" || msgData.message[0].component.payload.view === "emojis" || msgData.message[0].component.payload.view === "CSAT" || msgData.message[0].component.payload.view === "ThumbsUpDown" || msgData.message[0].component.payload.view === "NPS")) {
         if (msgData.message[0].component.payload.sliderView) {
-            hostInstance.bottomSliderAction('', getHTML(Feedback, msgData, hostInstance));
-            return (
-                <div>FeebackTemplate</div>
-            )
+            if (msgData?.fromHistory) {
+                msgObj.msgData.message[0].cInfo.body = msgObj.msgData.message[0].cInfo.body.payload.text;
+                <Message {...msgObj} />
+            } else {
+                hostInstance.bottomSliderAction('', getHTML(Feedback, msgData, hostInstance));
+                return (
+                    <Message {...msgObj} />
+                )
+            }
         } else {
             return (
                 <Feedback {...props} />

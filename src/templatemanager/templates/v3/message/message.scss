@@ -436,10 +436,12 @@
                 word-break: break-word;
                 white-space: break-spaces;
                 img {
-                    height: 100%;
                     width: 100%;
-                    object-fit: contain;
                 }
+                p.indent {
+					padding-left: 10px;
+					margin: 0;
+				}
             }
             .copy-bubble{
                 position: absolute;

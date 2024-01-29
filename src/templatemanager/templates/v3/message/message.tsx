@@ -62,6 +62,16 @@ export function Message(props: any) {
         }, 800);
     }
 
+    const download = (url: any, filename: any) => {
+        let link = document.createElement("a");
+        link.download = filename;
+        link.target = "_blank";
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
     let botStyles = {
         backgroundColor: brandingInfo.general.colors.useColorPaletteOnly ? brandingInfo.general.colors.secondary : brandingInfo.body.bot_message.bg_color,
         color: brandingInfo.general.colors.useColorPaletteOnly ? brandingInfo.general.colors.primary_text : brandingInfo.body.bot_message.color
@@ -101,7 +111,7 @@ export function Message(props: any) {
                                             <div className="bubble-msg" style={botStyles} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgItem.cInfo.body, "bot", msgItem) }}></div>
                                             {brandingInfo.body.icon.show && !msgData.fromAgent && <div className="bot-img">
                                                 <figure>
-                                                    <img src={msgData.icon} alt='avatr img' />
+                                                    <img src={msgData && msgData.icon ? msgData.icon : iconHelper.getIcon('kore')} alt='avatr img' />
                                                 </figure>
                                             </div>}
                                             {brandingInfo.body.icon.show && msgData.fromAgent && <div className="bot-img">
@@ -170,7 +180,7 @@ export function Message(props: any) {
                                                 <h2>{msgData.message[0].cInfo.attachments[0].fileName}</h2>
                                                 <p>{`${msgData.message[0].cInfo.attachments[0].size} MB`}</p>
                                             </div>
-                                            <button className="kr-button-blue-light">Download</button>
+                                            <button className="kr-button-blue-light" onClick={() => download(msgData.message[0].cInfo.attachments[0].fileUrl, msgData.message[0].cInfo.attachments[0].fileName?.split('.')?.[0] || 'file')}>Download</button>
                                         </div>
                                     </div>
                                 </section> }
@@ -201,10 +211,31 @@ export function Message(props: any) {
                                                     </audio> }
                                                 <p>{`${msgData.message[0].cInfo.attachments[0].size} MB`}</p>
                                             </div>
-                                            <button className="kr-button-blue-light">Download</button>
+                                            <button className="kr-button-blue-light" onClick={() => download(msgData.message[0].cInfo.attachments[0].fileUrl, msgData.message[0].cInfo.attachments[0].fileName?.split('.')?.[0] || 'file')}>Download</button>
                                         </div>
                                     </div>
                                 </div> }
+                            { msgItem.component && msgItem.component.payload && (msgItem.component.payload.audioUrl || msgItem.component.payload.videoUrl) &&
+                                <section className="attachment-sended-temp-wrapper attachment-wrap">
+                                <div className="multiple-attchments">
+                                    <div className="attchments-wrap">
+                                        {msgItem.component.payload.audioUrl && <div className="img-attch">
+                                            <figure>
+                                                <audio controls>
+                                                    <source src={msgItem.component.payload.audioUrl} type="audio/ogg"></source>
+                                                </audio>
+                                            </figure>
+                                        </div>}
+                                        {msgItem.component.payload.videoUrl && <div className="img-attch">
+                                            <figure>
+                                                <video width="240" height="145" controls>
+                                                    <source src={msgItem.component.payload.videoUrl} type="video/mp4"></source>
+                                                </video>
+                                            </figure>
+                                        </div>}
+                                    </div>
+                                </div>
+                            </section> }    
                         </div>
                     ))
                 }

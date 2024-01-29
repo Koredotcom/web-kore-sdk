@@ -19,17 +19,37 @@ export function Button(props: any) {
             hostInstance.openExternalLink(link);
         }
     }
-    const messageobj = {
+    let messageObj = {
         msgData: msgData,
         hostInstance: hostInstance
     }
     if (msgData?.message?.[0]?.component?.payload?.template_type === 'button' && !msgData?.message?.[0]?.component?.formData) {
+
+        let buttonStyle = 'button-temp';
+        const buttonVariations: any = {
+            'plain': '',
+            'textInverted': 'button-variation-1',
+            'backgroundInverted': 'button-variation-2'
+        }
+
+        buttonStyle = buttonStyle + ' ' + buttonVariations[msgData?.message?.[0]?.component?.payload?.variation];
+        if (msgData?.message?.[0]?.component?.payload?.fullWidth) {
+            buttonStyle = buttonStyle + ' full-width-buttons';
+        }
+
+        if (msgData?.message?.[0]?.component?.payload?.stackedButtons) {
+            buttonStyle = buttonStyle + ' stack-buttons';
+        }
+
+        if (msgData?.fromHistory) {
+            messageObj.msgData.message[0].cInfo.body = messageObj.msgData.message[0].cInfo.body.payload.text;
+        }
         return (
             <Fragment>
                 <div>
-                    <Message {...messageobj} />
+                    <Message {...messageObj} />
                     <div className="button-template-container">
-                        <div className="button-temp button-variation-2">
+                        <div className={buttonStyle}>
                             {
                                 msgData.message[0].component.payload.buttons.map((ele: any) => (
                                     <button className="kr-btn" onClick={() => handleButtonEvent(ele)}>{ele.title}

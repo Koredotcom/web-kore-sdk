@@ -19,6 +19,10 @@ export function ChatWidgetHeader(props: any) {
         "large": "chat-widget-header large "
     }
 
+    const handleHeaderIcon = (data: any) => {
+        hostInstance.sendMessage(data);
+    }
+
     useEffect(() => {
         hostInstance.eventManager.removeEventListener('.btn-action-close', 'click');
         hostInstance.eventManager.addEventListener('.btn-action-close', 'click', () => {
@@ -30,6 +34,19 @@ export function ChatWidgetHeader(props: any) {
                 hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove(hostInstance.config.branding.chat_bubble.expand_animation);
             }
             hostInstance.chatEle.classList.add('minimize-chat');
+            // if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
+            //     hostInstance.setLocalStoreItem('kr-cw-state', 'minimized');
+            //   }
+            hostInstance.destroy();
+            hostInstance.bot.historyOffset = 0;
+            hostInstance.bot.previousHistoryLoading = false;
+            if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
+                hostInstance.removeLocalStoreItem('kr-cw-state');
+                hostInstance.removeLocalStoreItem('kr-cw-uid');
+                hostInstance.config.botOptions.maintainContext = false;
+            }
+            hostInstance.config.branding.header.title.name = hostInstance.config.botMessages.reconnecting;
+            hostInstance.setBranding(hostInstance.config.branding);
         })
 
         hostInstance.eventManager.removeEventListener('.back-to-chat', 'click');
@@ -87,7 +104,7 @@ export function ChatWidgetHeader(props: any) {
                 </div>
             </div>
             <div className="actions-info">
-               { brandingInfo.header.buttons.help.show && <a title="Help" href="#" target="_blank" className="btn-action" aria-label="Help link kore ai products">
+               { brandingInfo.header.buttons.help.show && <a title="Help" href={brandingInfo.header.buttons.help.action.value} target="_blank" className="btn-action" aria-label="Help link kore ai products">
                     {/* <figure>
                         <img src={iconHelper.getIcon('help')} alt="back button" />
                     </figure> */}
@@ -102,7 +119,7 @@ export function ChatWidgetHeader(props: any) {
                         <path d="M12.8333 5.83333C12.8333 5.83333 11.6638 4.23979 10.7136 3.28898C9.76343 2.33816 8.4504 1.75 7 1.75C4.1005 1.75 1.75 4.1005 1.75 7C1.75 9.89949 4.1005 12.25 7 12.25C9.39347 12.25 11.4129 10.6483 12.0448 8.45833M12.8333 5.83333V2.33333M12.8333 5.83333H9.33333" stroke="#697586" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button> }
-                { brandingInfo.header.buttons.live_agent.show && <button title="Agent Chat" className="btn-action" type="button" aria-label="Agent Chat">
+                { brandingInfo.header.buttons.live_agent.show && <button title="Agent Chat" className="btn-action" type="button" aria-label="Agent Chat" onClick={(event) =>handleHeaderIcon(brandingInfo.header.buttons.live_agent.action.value)}>
                     {/* <figure>
                             <img src={iconHelper.getIcon('support')} alt="back button" />
                         </figure> */}

@@ -438,6 +438,13 @@ openModal(template:any, showClose:any) {
     chatBodyModal.hide();
     $('.kore-chat-window').removeClass('modelOpen');
   }
+}  else {
+  if (!template) {
+    me.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');
+    setTimeout(() => {
+        me.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
+    }, 150);
+  }
 }
 }
 // inline model for iframes starts ends//
@@ -460,6 +467,10 @@ formAction(event:any) {
     if ($('.kore-chat-body .uiformComponent').length) {
       $('.kore-chat-body .uiformComponent').closest('.inlineIframeContainer').css('display', 'none');
     }
+  }
+} else {
+  if (event && event.action === 'formSubmit') {
+    me.openModal();
   }
 }
 }
@@ -684,6 +695,8 @@ destroy  () {
         me.chatEle.addClass('minimize');
       }
       me.skipedInit = true;
+      me.initial = true;
+      me.initialChat = true;
     }
   }
   window.removeEventListener('online', me.updateOnlineStatus);
@@ -703,12 +716,13 @@ resetWindow () {
   me.bot.close();
   me.config.botOptions.maintainContext = false;
   me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
+  me.config.botOptions.initialChat = true;
   me.bot.init(me.config.botOptions);
-  if (me.config.UI.version == 'v3') {
-    setTimeout(() => {
-      me.bot.logInComplete();
-    }, 4000);
-  }
+  // if (me.config.UI.version == 'v3') {
+  //   setTimeout(() => {
+  //     me.bot.logInComplete();
+  //   }, 4000);
+  // }
 };
 
 sendMessageWithWithChatInput(chatInput:any){
@@ -1006,11 +1020,17 @@ bindEventsV3() {
         }
         if (!me.welcomeScreenState) {
           if (me.initial) {
-            setTimeout(() => {
-              me.bot.logInComplete(); // Start api call & ws
-            }, 2000);
+            if (me.initialChat) {
+              me.config.botOptions.initialChat = true;
+              me.bot.init(me.config.botOptions);
+              me.initialChat = false;
+            } else {
+              setTimeout(() => {
+                me.bot.logInComplete(); // Start api call & ws
+              }, 2000);
+            }
+            me.initial = false;
           }
-          me.initial = false;
           if (me.config.branding.welcome_screen.show) {
             me.chatEle.querySelector('.welcome-chat-section').classList.add(me.config.branding.chat_bubble.expand_animation);
           } else {
@@ -1018,9 +1038,15 @@ bindEventsV3() {
           }
         } else {
           if (me.initial) {
-            setTimeout(() => {
-              me.bot.logInComplete(); // Start api call & ws
-            }, 2000);
+            if (me.initialChat) {
+              me.config.botOptions.initialChat = true;
+              me.bot.init(me.config.botOptions);
+              me.initialChat = false;
+            } else {
+              setTimeout(() => {
+                me.bot.logInComplete(); // Start api call & ws
+              }, 2000);
+            }
             me.initial = false;
           }
           me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(me.config.branding.chat_bubble.expand_animation);
@@ -1054,6 +1080,11 @@ bindEventsV3() {
         const openSound = new Audio(me.config.branding.general.sounds.on_open.url);
         openSound.play();
       }
+      const scrollHeight =  me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight;
+      me.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
+        top: scrollHeight,
+        behavior: 'smooth'
+      });
     } else {
       const clArr = ['minimize', 'minimizeQuick', 'minimizeSmooth'];
       if (me.config.multiPageApp && me.config.multiPageApp.enable) {
@@ -1088,6 +1119,7 @@ bindEventsV3() {
   })
 
   me.eventManager.addEventListener('.btn-reconnect', 'click', () => {
+    me.chatEle.querySelector('.btn-reconnect').setAttribute('disabled', true);
     setTimeout(() => {
       me.resetWindow();
     });
@@ -1280,6 +1312,9 @@ onBotReady  () {
   } else {
     me.config.branding.header.title.name = me._botInfo.displayName;
     me.setBranding();
+    if (me.chatEle.querySelector('.btn-reconnect') && me.chatEle.querySelector('.btn-reconnect').getAttribute('disabled')) {
+      me.chatEle.querySelector('.btn-reconnect').removeAttribute('disabled');
+    }
   }
   if (!me.loadHistory) {
     setTimeout(() => {
@@ -1688,7 +1723,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
     }
   }
   let eleHeight, scrollHeight;
-  if (me.config.UI.version == 'v3' && me.chatEle.querySelectorAll('.chat-widget-body-wrapper > div#'+ msgData?.messageId).length < 1 || (msgData?.renderType === 'inline')) {
+  if (me.config.UI.version == 'v3' && me.chatEle.querySelectorAll('.chat-widget-body-wrapper > div .i'+ msgData?.messageId).length < 1 || (msgData?.renderType === 'inline')) {
     if (msgData?.type === 'bot_response' && msgData?.fromHistorySync) {
     } else {
       scrollHeight = me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight;
@@ -1719,7 +1754,16 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
         me.chatEle.querySelector('.prev-message-list').appendChild(messageHtml);
       }
     }
+
+    if (bot && !bot.previousHistoryLoading) {
+      scrollHeight = (me.historyLoading || eleHeight < 300) ? me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight : scrollHeight - me.chatEle.querySelector('.chat-widget-body-wrapper').clientHeight / 2;
+      me.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
+        top: scrollHeight,
+        behavior: 'smooth'
+      });
+    }
   }
+  
   //}
   if (me.config.UI.version == 'v2') {
     me.handleImagePreview();
@@ -1728,17 +1772,12 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   if (me.chatPSObj && me.chatPSObj.update) {
     me.chatPSObj.update();
   }
+
   if (bot && !bot.previousHistoryLoading) {
     if (me.config.UI.version == 'v2') {
       _chatContainer.animate({
         scrollTop: _chatContainer.prop('scrollHeight'),
       }, 100);
-    } else {
-      scrollHeight = (me.historyLoading || eleHeight < 300) ? me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight : scrollHeight - me.chatEle.querySelector('.chat-widget-body-wrapper').clientHeight/2;
-      me.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
-        top: scrollHeight,
-        behavior: 'smooth'
-      });
     }
   }
 
@@ -2271,7 +2310,7 @@ showError (response:any) {
   }
 };
 
-bottomSliderAction(action: any, appendElement: any) {
+bottomSliderAction(action: any, appendElement: any, fullSlide?: any) {
   const me: any = this;
   if (me.config.UI.version == 'v2') {
     $(".kore-action-sheet").animate({ height: 'toggle' });
@@ -2287,6 +2326,9 @@ bottomSliderAction(action: any, appendElement: any) {
      }
   } else {
     const actionSlider: any = getHTML(ActionsBottomSlider, '', me);
+    if (fullSlide) {
+      actionSlider.querySelector('.actions-contnet-data').classList.add('actions-contnet-full-height');
+    }
     actionSlider.querySelector('.chat-actions-bottom-wraper > .actions-contnet-data').appendChild(appendElement);
     me.chatEle.appendChild(actionSlider);
     // me.chatEle.querySelector('.chat-actions-bottom-wraper').addEventListener('click',() => {
@@ -2298,7 +2340,7 @@ bottomSliderAction(action: any, appendElement: any) {
 modalAction(appendElement: any) {
   const me: any = this;
   const modal: any = getHTML(ActionsModal, '', me);
-  // modal.querySelector('.modal-container').appendChild(appendElement);
+  modal.querySelector('.modal_body_actions').appendChild(appendElement);
   me.chatEle.appendChild(modal);
 }
 
@@ -2446,6 +2488,12 @@ getBrandingInformation(options:any){
       }
     } else {
       if (response && response.activeTheme) {
+        if (response && response.v3 && response.v3.header
+          && response.v3.header.title && !response.v3.header.title.name) {
+            me._botInfo.displayName = me._botInfo.name;
+        } else {
+          me._botInfo.displayName = response.v3.header.title.name || 'Bot';
+        }
         me.setBranding(response?.v3);
       }
     }

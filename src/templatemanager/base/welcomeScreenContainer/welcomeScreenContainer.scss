@@ -114,7 +114,7 @@
         align-items: center;
         justify-content: center;
         padding: 6px 16px;
-        background: var(--welcome-footer-bg);
+        background: var(--global-white-bg);
         height: 28px;
         p {
             font-weight: 500;
@@ -123,6 +123,9 @@
             color: var(--welecome-footer-text-color);
             margin-right: 5px;
             flex-shrink: 0;
+        }
+        figure {
+            padding: 0 0 3px 0;
         }
     }
 

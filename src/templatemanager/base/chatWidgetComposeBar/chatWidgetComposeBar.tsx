@@ -70,11 +70,15 @@ export function ChatWidgetComposeBar(props: any) {
                 <div className="select-file-block">
                     <button className="inputfile-btn inputfile-btn-media" type="button" aria-label="Media">
                         <span>Media</span>
-                        <input type="file" id="captureMediaAttachment"/>
+                        <input type="file" id="captureMediaAttachment" accept="audio/*,video/*,image/*" />
                     </button>
                     <button className="inputfile-btn inputfile-btn-file" type="button" aria-label="File">
                         <span>File</span>
-                        <input type="file" id="captureFileAttachment"/>
+                        <input type="file" id="captureFileAttachment" accept=".bmp, .csv, .txt, .json, .pdf, .doc, .dot, .docx, .docm,
+                        .dotx, .dotm, .xls, .xlt, .xlm, .xlsx, .xlsm, .xltx, .xltm, .xlsb, .xla, .xlam, .xll, .xlw, .ppt, .pot, .pps, .pptx, .pptm, .potx, .potm, .ppam,
+                        .ppsx, .ppsm, .sldx, .sldm, .zip, .rar., .tar, .wpd, .wps, .rtf, .msg, .dat, .sdf, .vcf, .xml, .3ds, .3dm, .max, .obj, .ai, .eps, .ps, .svg, .indd, .pct, .accdb,
+                        .db, .dbf, .mdb, .pdb, .sql, .apk, .cgi, .cfm, .csr, .css, .htm, .html, .jsp, .php, .xhtml, .rss, .fnt, .fon, .otf, .ttf, .cab, .cur, .dll, .dmp, .drv, .7z, .cbr,
+                        .deb, .gz, .pkg, .rpm, .zipx, .bak, .avi, .m4v, .mpg, .rm, .swf, .vob, .wmv, .3gp2, .3g2, .asf, .asx, .srt, .wma, .mid, .aif, .iff, .m3u, .mpa, .ra, .aiff, .tiff"/>
                     </button>
                 </div>
                 <div className="uploaded-attachment-data">
@@ -202,6 +206,12 @@ export function ChatWidgetComposeBar(props: any) {
                 <p>Typing</p>
                 <div class="dot-flashing"></div>
             </div>}
+            <div className="powerdby-info">
+                <p>Powered by</p>
+                <figure>
+                    <img src={iconHelper.getIcon('kore_logo')} alt="kore-img" />
+                </figure>
+            </div>
         </div>
     );
 } 
