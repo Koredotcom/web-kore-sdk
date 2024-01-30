@@ -96,10 +96,10 @@
                     cursor: pointer;  
                     svg{
                         path{
-                            fill: var(--global-white);
+                            fill: var(--global_white);
                         }
                         rect{
-                            fill: var(--global-white);
+                            fill: var(--global_white);
                         }
                     }             
                 }
@@ -306,7 +306,7 @@
             margin-left: 8px;
             svg{
                 path{
-                    fill: var(--global-white);
+                    fill: var(--global_white);
                 }
             }
             &.show{

@@ -48,7 +48,7 @@
                 position: absolute;
                 top: 0;
                 left: 0;
-                border: 3px solid var(--global-white);
+                border: 3px solid var(--global_white);
                 box-shadow: none;
                 display: flex;
             }
@@ -230,7 +230,7 @@
                 position: relative;                
                 &.hovered-default-bg{
                     background: var(--global-theme-color);
-                    color: var(--global-white);
+                    color: var(--global_white);
                 }
                 &:hover{
                     background: var(--gloabl-secondary-color);
@@ -516,7 +516,7 @@
     .carousel-left-click {
         position: absolute;
         border-radius: 32px;
-        background: var(--global-white);
+        background: var(--global_white);
         box-shadow: 0px 4px 12px 2px rgba(32, 33, 36, 0.12);
         display: flex;
         width: 32px;
