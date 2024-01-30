@@ -21,7 +21,7 @@ export function Menu(props: any) {
     const handleButtonEvent = (e: any) => {
         if (!e.type) {
             let text = e.value;
-            if (text.indexOf('http') < 0 || text.indexOf('www') < 0 || text.indexOf('https') < 0) {
+            if (text.indexOf('http') > 0 || text.indexOf('www') > 0 || text.indexOf('https') > 0) {
                 hostInstance.openExternalLink(text);
             } else {
                 hostInstance.sendMessage(text, { renderMsg: e.title });
