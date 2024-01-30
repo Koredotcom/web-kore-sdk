@@ -130,7 +130,7 @@ export function AvatarComponent(props: any) {
                     </div>
                 </div> }
                 <button className="avatar-bg">
-                    <span className="un-read-msg">2</span>
+                    {/* <span className="un-read-msg">2</span> */}
                     {brandingInfo.chat_bubble.icon.type == 'default' && <figure className="default-avater-icon">
                         <img src={iconHelper.getIcon('avatar_icon')} alt="Elephant at sunset" />
                     </figure>}
