@@ -45,7 +45,6 @@ import TemplateDateRange from './templates/v3/dateRange/dateRange';
 import TemplateClockPicker from './templates/v3/clockPicker/clockPicker';
 import TemplateSystem from './templates/v3/system/system';
 import TemplateAttachmentV3 from './templates/v3/templateAttachment/templateAttachment';
-import TemplateAnswers from '../plugins/answers/templates/answerTemplate/answerTemplate';
 import TemplateListWidget from './templates/v3/listWidget/listWidget';
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
@@ -125,7 +124,6 @@ class TemplateManager {
 		this.installTemplate(new TemplateClockPicker());
 		this.installTemplate(new TemplateSystem());
 		this.installTemplate(new TemplateAttachmentV3());
-		this.installTemplate(new TemplateAnswers());
 		this.installTemplate(new TemplateListWidget());
 	}
 
