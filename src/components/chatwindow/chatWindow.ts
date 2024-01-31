@@ -1118,13 +1118,6 @@ bindEventsV3() {
     }
   })
 
-  me.eventManager.addEventListener('.btn-reconnect', 'click', () => {
-    me.chatEle.querySelector('.btn-reconnect').setAttribute('disabled', true);
-    setTimeout(() => {
-      me.resetWindow();
-    });
-  })
-
   if (me?.config.history.paginatedScroll.enable) {
     var chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
 
