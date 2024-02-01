@@ -108,6 +108,7 @@ class WebKitSTT extends BaseSTT {
                         $('.sendButton').removeClass('disabled');
                     } else {
                         me.hostInstance.chatEle.querySelector('.voice-speak-msg-info').style.display = 'block';
+                        me.hostInstance.chatEle.querySelector('.voice-compose-btn-recording').focus();
                         me.hostInstance.chatEle.querySelector('.voice-msg-bubble').textContent = this.prevStr + '' + interim_transcript;
                     }
                 }
