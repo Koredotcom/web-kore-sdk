@@ -108,6 +108,7 @@
     .welcome-interactions {
         flex: 1 1 auto;
         overflow: auto;
+        background: var(--welcome-footer-bg);
     }
     .powerdby-info {
         display: flex;

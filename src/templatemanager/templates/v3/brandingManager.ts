@@ -11,7 +11,6 @@ class BrandingManager {
         { key: '--v3-sdk-chat-branding--chat_bubble-bg-secondary_color', type: 'secondaryText' },
         { key: '--v3-sdk-chat-branding--welcome_screen-background-color', type: 'primary' },
         { key: '--v3-sdk-chat-branding--welcome_screen-top_fonts-color', type: 'secondaryText' },
-        { key: '--v3-sdk-chat-branding--welcome_screen-bottom_background-color', type: 'secondary' },
         { key: '--v3-sdk-chat-branding--welcome_screen-starter_box-start_conv_text_color', type: 'secondaryText' },
         { key: '--v3-sdk-chat-branding--welcome_screen-starter_box-start_conv_button_color', type: 'primary' },
         { key: '--v3-sdk-chat-branding--header-bg-bg_color', type: 'secondary' },
@@ -49,6 +48,7 @@ class BrandingManager {
       document.documentElement.style.setProperty('--v3-sdk-chat-branding--footer-compose_bar-bg_color', data.body.background.color);
       document.documentElement.style.setProperty('--v3-sdk-chat-branding--body-background-bg', data.body.background.color);
       document.documentElement.style.setProperty('--v3-sdk-chat-branding--body-white-background', data.body.background.color);
+      document.documentElement.style.setProperty('--v3-sdk-chat-branding--welcome_screen-bottom_background-color', data.body.background.color);
 
       if (data.body.background.type == 'image') {
         const imgData = 'url(\'' + (data.body.background.img) + '\')';
