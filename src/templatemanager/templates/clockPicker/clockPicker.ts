@@ -99,7 +99,7 @@ class ClockPickerTemplate {
         clockInput.clockpicker('show').clockpicker('toggleView', 'hours');
         $(me.messageHtml).find("#clockPickerInput").hide();
         if (msgData.message[0].component.payload.title) {
-            $(me.messageHtml).find(".headerClock .choose").html(msgData.message[0].component.payload.title);
+            $(me.messageHtml).find(".headerClock .choose").text(msgData.message[0].component.payload.title);
         } else {
             $(me.messageHtml).find(".headerClock .choose").html("Please Choose");
         }

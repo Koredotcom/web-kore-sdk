@@ -189,7 +189,7 @@ class QuickReplyTemplate {
                     {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                     {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar marginT50" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
                     {{if msgData.message[0].component.payload.text}} \
-                        <div class="quickReplyHeading quickReply"> \
+                        <div class="quickReplyHeading"> \
                             {{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
                             {{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
                                 <span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \

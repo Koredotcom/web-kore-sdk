@@ -31,6 +31,7 @@ botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 botOptions.webhookConfig={
     enable:false,
     webhookURL:'PLEASE_PROVIDE_WEBHOOK_URL',
+    useSDKChannelResponses: false, //set it to true if you would like to use the responses defined for Web/Mobile SDK Channel
     apiVersion:2
 }
 
@@ -75,6 +76,7 @@ chatConfig = {
     sendFailedMessage:{ //Number of retries on message send failed
         MAX_RETRIES:3
     },
+    maxReconnectionAPIAttempts: 5  // Number of retries on api failure
     UI:{
         version:"v3"
     },

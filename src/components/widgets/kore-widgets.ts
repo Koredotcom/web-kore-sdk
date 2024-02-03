@@ -2652,7 +2652,7 @@ openPanel  (panelName:any, resPopUp:any, heightToggle:any) {
 
   makeAPICall = true;
 
-  if (localPanelDetail[panelName] !== undefined) {
+  if (localPanelDetail[panelName] !== undefined && (panelName === oldPanelName)) {
     var currTime = new Date().getTime();
     var deffTime = currTime - localPanelDetail[panelName];
     var seconds = Math.floor(deffTime / 1000);
