@@ -1,0 +1,61 @@
+// Agent Joined Banner
+.agent-joined-banner{
+    display: inline-block;
+    width: 100%;
+    padding: 12px 16px;
+    animation-name: bubbleAnim;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    opacity: 0;
+    .agent-joined-wrapper{
+        text-align: center;
+        padding: 8px;        
+        border-radius: 4px;
+        &.agent-joined-variation-1{
+            .agent-name{
+                background: var(--agent-joined-bg);
+                margin: 4px 0;
+            }
+        }
+        &.agent-joined-variation-2{
+            border: 1px solid var(--agent-joined-border);
+            .agent-name{
+                margin: 6px 0 0px 0;
+            }
+        }
+        .img-block{
+            width: 24px;
+            height: 24px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: -20px;
+            figure{
+                line-height: 0px;
+            }
+            img{
+                width: 100%;
+                height: 100%;
+                border-radius: 100%;
+                border: 1.5px solid var(--global-white-bg);
+            }
+        }
+        .agent-name{
+            font-weight: 600;
+            font-size: 12px;
+            line-height: 15px;
+            color: var(--agent-joined-text-color);
+            padding: 4px 8px;
+            display: inline-block;            
+            border-radius: 32px;
+        }
+        .time-stamp{
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 15px;
+            color: var(--agent-joined-text-color);
+        }
+    }
+}
+// End

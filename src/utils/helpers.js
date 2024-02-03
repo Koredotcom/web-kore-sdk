@@ -26,6 +26,21 @@ class KoreHelpers{
             var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
             return strTime;
         },
+        'formatAMPMDay': function (date) {
+            date = new Date(date);
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            // var seconds = date.getSeconds();
+            var date = date.getDate();
+            var day = new Date().getDate() == date ? 'Today' : new Date().getDate() - 1 == date ? 'Yesterday' : date ;
+            var ampm = hours >= 12 ? 'pm' : 'am';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            // seconds = seconds < 10 ? '0' + seconds : seconds;
+            var strTime = hours + ':' + minutes + ' ' + ampm + ', ' + day;
+            return strTime;
+        },
         'formatDate': function (date) {
             var d = new Date(date);
             if (isNaN(d.getTime())) {
@@ -218,7 +233,7 @@ class KoreHelpers{
                 if (dummyString.indexOf(match) !== -1) {
                     var _link = p1.indexOf('http') < 0 ? 'http://' + match : match, _target;
                     //_link = encodeURIComponent(_link);
-                    var target = "target='underscoreblank'";
+                    var _target = "target='underscoreblank'";
                     if (hyperLinksMap) {
                         var _randomKey = "korerandom://" + Object.keys(hyperLinksMap).length;
                         hyperLinksMap[_randomKey] = _link;
@@ -245,7 +260,7 @@ class KoreHelpers{
                 // str = sanitizeXSS(str);
                 // str = str.replace(/onerror=/gi, '');
                 // str = str.replace(/onmouseover=/gi, '');
-                str = DOMPurify.sanitize(str,{ ALLOWED_TAGS: ['a'] , ADD_TAGS: ['iframe']})
+                str = DOMPurify.sanitize(str,{ ALLOWED_TAGS: ['a'] , ADD_TAGS: ['iframe'], ADD_ATTR: ['target']})
                 wrapper1 = document.createElement('div');
                 newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
                 newStr = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -259,7 +274,7 @@ class KoreHelpers{
                 // str = sanitizeXSS(str);
                 // str = str.replace(/onerror=/gi, '');
                 // str = str.replace(/onmouseover=/gi, '');
-                str = DOMPurify.sanitize(str,{ ALLOWED_TAGS: ['a'] , ADD_TAGS: ['iframe']})
+                str = DOMPurify.sanitize(str,{ ALLOWED_TAGS: ['a'] , ADD_TAGS: ['iframe'], ADD_ATTR: ['target']})
                 wrapper1 = document.createElement('div');
                 //str = str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
                 wrapper1.innerHTML = xssAttack(str);
@@ -308,7 +323,7 @@ class KoreHelpers{
             // if (responseType === 'user') {
                 // str = str.replace(/abc-error=/gi, 'onerror=');
             // }
-            str = DOMPurify.sanitize(str,{  ADD_TAGS: ['iframe']})
+            str = DOMPurify.sanitize(str,{  ADD_TAGS: ['iframe'], ADD_ATTR: ['target']})
             return this.nl2br(str, true);
         },
         'checkMarkdowns': function (val, hyperLinksMap) {

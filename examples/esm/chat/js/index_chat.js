@@ -1,7 +1,5 @@
-
-
-import {chatConfig,chatWindow} from '../../../../../dist/kore-web-sdk.esm.browser.js';
-
+import {chatConfig,chatWindow,AgentDesktopPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
+import {WebKitSTT} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 
 let chatWindowInstance = new chatWindow();
 
@@ -13,6 +11,7 @@ botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id
 botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
 botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
 botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+
 
 /* 
 Important Note: These keys are provided here for quick demos to generate JWT token at client side but not for Production environment.
@@ -53,7 +52,7 @@ https://developer.kore.ai/docs/bots/sdks/user-authorization-and-assertion/
 //   }
   
 //   chatWindowInstance.templateManager.installTemplate(new customTemplateComponent())
- 
- 
-chatWindowInstance.show(chatConfig);
+chatWindowInstance.installPlugin(new AgentDesktopPlugin());
+chatWindowInstance.installPlugin(new WebKitSTT({ lang: 'en-US' }));
 
+chatWindowInstance.show(chatConfig);

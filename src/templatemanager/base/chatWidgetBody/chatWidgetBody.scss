@@ -1,0 +1,11 @@
+@import '../variables.scss';
+.chat-widget-body-wrapper{
+    flex: 1 1 auto;
+    background: var(--chat-widget-body-bg) no-repeat;
+    background-size: cover;
+    overflow: auto;
+    height: calc(100vh - 330px); // Need to remove
+    .prev-message-list {
+        display: none;
+    }
+}

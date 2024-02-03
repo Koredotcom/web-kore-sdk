@@ -1,0 +1,33 @@
+// History Loader css
+
+.history-loading-wrapper{
+    padding: 5px 16px;
+    display: inline-block;
+    width: 100%;
+    .history-bg-content{
+        display: flex;
+        align-items: center;
+        border-radius: 4px;
+        border: 1px solid var(--gloabl-border-color);
+        background: var(--gloabl-bg-secondary);
+        padding: 10px 15px;
+        gap: 10px;
+        min-height: 40px;
+        justify-content: center;
+        .loader-history{
+            border: 2px solid var(--global-white-bg);
+            border-radius: 50%;
+            border-top: 2px solid var(--global-theme-color);
+            width: 16px;
+            height: 16px;
+            -webkit-animation: spinLoader 2s linear infinite;
+            animation: spinLoader 2s linear infinite;
+            flex-shrink: 0;
+        }
+        .title-loading{
+            color: var(--gloabl-text-color);
+            font-size: 14px;
+            font-weight: 500;
+        }
+    }
+}

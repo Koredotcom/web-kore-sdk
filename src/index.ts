@@ -3,6 +3,7 @@ import chatConfig from './components/chatwindow/config/kore-config';
 
 import Korei18nPlugin from './plugins/i18n';
 import KoreFileUploaderPlugin from './plugins/fileUploader/fileUploader';
+import KoreMultiFileUploaderPlugin from './plugins/fileUploader/multiFileUploader';
 import KorePickersPlugin from './plugins/korePickers';
 import GraphTemplatesPlugin from './plugins/graphTemplatesPlugin';
 import SolutionsTemplatesPlugin from './plugins/solutions/solutionsPlugin';
@@ -28,6 +29,7 @@ import GoogleVoiceConfig from  './plugins/textToSpeech/GoogleTTS/GoogleTTS';
 import GoogleAudioConfig from  './plugins/textToSpeech/GoogleTTS/GoogleTTS';
 import SpeakTextAWSPollyConfig from './plugins/textToSpeech/KoreAWSPolly/kore-aws-polly';
 import SearchSuggestionsPlugin from './plugins/searchSuggestions/searchSuggestions';
+import UserTypingEventsPlugin from './plugins/userTypingEventsPlugin';
 
 export {
   chatConfig,
@@ -56,5 +58,7 @@ export {
   AgentDesktopPlugin,
   KoreDesktopNotificationPlugin,
   SpeakTextAWSPollyConfig,
-  SearchSuggestionsPlugin
+  SearchSuggestionsPlugin,
+  KoreMultiFileUploaderPlugin,
+  UserTypingEventsPlugin
 };

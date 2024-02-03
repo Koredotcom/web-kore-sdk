@@ -1,0 +1,25 @@
+
+.chat-widgetwrapper-main-container{
+    height: 100%;
+    box-shadow: var(--chat-widget-box-shadow);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 1s;
+    transform-origin: 100% 100%;
+    display: none;
+    &.minimize{
+        animation: bounce-in 0.5s ease forwards;
+        display: flex;
+      }
+    &.minimizeQuick{   
+        transform-origin: bottom right;            
+        animation: quick 0.3s ease forwards;
+        display: flex;
+    }
+    &.minimizeSmooth{   
+        transform-origin: bottom right;            
+        animation: quick 1s ease forwards;
+        display: flex;
+    }
+}

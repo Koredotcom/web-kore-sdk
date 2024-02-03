@@ -316,7 +316,6 @@ class AgentDesktopPluginScript  {
             closecallbutton.off('click').on('click', function (event) {
                 if (callConnected) {
                     _self.activeCall.terminate();
-                    sendCallTerminateEvent();
                 }
             });
             var sendSelfVideo = true;
@@ -734,22 +733,6 @@ class AgentDesktopPluginScript  {
             //fall back to clients jquery version
             koreJquery = window.jQuery;
         }
-
-        function sendCallTerminateEvent(){
-            const payload = _self.callDetails;
-            payload['type'] = "call_agent_webrtc_terminated"
-            const messageToBot = {};
-            messageToBot["event"] = "event";
-            messageToBot["message"] = {
-                "body": _self.callDetails,
-                "type": ""
-            }
-
-            if (botInstance) {
-                botInstance.sendMessage(messageToBot, (err) => { });
-            }
-        }
-
         function overrideCloseButton() {
             if (overrideFlag) {
                 return;
@@ -758,10 +741,6 @@ class AgentDesktopPluginScript  {
             if (closeBtns && closeBtns.length > 0) {
                 koreJquery(".close-btn").off('click').on('click', function (event) {
                     koreJquery("#smartassist-menu").show();
-                    if(_self.activeCall && _self.activeCall.isEstablished()){
-                        _self.activeCall.terminate();
-                        sendCallTerminateEvent();
-                    }
                 })
                 overrideFlag = true;
             } else {
@@ -1007,9 +986,9 @@ class AgentDesktopPluginScript  {
                 },
                 callScreenSharingEnded: function (call, stream) {
                     console.log('phone>>> callScreenSharingEnded', call);
-                    _self.sendControlMessage('screenshare_end');
-                    _self.phone.closeScreenSharing(_self.screenSharingStream);
-                    _self.sendVideo(_self.callDetails.videoCall);
+                    //_self.sendControlMessage('screenshare_end');
+                    //_self.phone.closeScreenSharing(_self.screenSharingStream);
+                    //_self.sendVideo(_self.callDetails.videoCall);
                     _self.screenSharingStream = null;
                 },
                 outgoingCallProgress: function (call, response) {
@@ -1017,9 +996,6 @@ class AgentDesktopPluginScript  {
                 },
 
                 callTerminated: function (call, message, cause, redirectTo) {
-                    if(self?.screenSharingStream){
-                        this.callScreenSharingEnded(call);
-                    }
                     koreJquery("#rejectPhone").show();
                     console.log('phone>>> call terminated callback, cause=%o', cause);
                     if (call !== self.activeCall) {

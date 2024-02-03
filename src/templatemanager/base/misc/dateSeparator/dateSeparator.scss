@@ -1,0 +1,49 @@
+// Date Saperator
+
+.date-saperator{
+    margin: 20px 16px 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    animation-name: bubbleAnim;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    opacity: 0;
+    &.date-saperator-1{
+        .line-border{
+            display: none;
+        }
+        .date-text{
+            background: var(--date-seperator-bg);
+            border-radius: 32px;            
+        }
+    }
+    &.date-saperator-2{
+        .line-border{
+            display: none;
+        }
+        .date-text{
+            border: 1px solid var(--date-seperator-border);
+            border-radius: 4px;
+            width: 100%;  
+            padding: 7px 8px;       
+        }
+    }
+    .line-border{
+        width: 72px;
+        border: 1px solid var(--date-seperator-line-border);
+        margin: 0 12px;
+    }
+    .date-text{
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 15px;
+        color: var(--date-seperator-color);
+        padding: 4px 8px;
+        position: relative;
+        z-index: 1;
+        flex-shrink: 0;
+        text-align: center;
+    }
+}

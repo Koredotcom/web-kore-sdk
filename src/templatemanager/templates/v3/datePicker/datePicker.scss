@@ -1,0 +1,18 @@
+@import "../../../../libs/air-date-picker/src/datepicker.scss";
+
+.date-picker-wrapper-template{
+    padding: 0 16px 16px 16px;
+    display: inline-block;
+    width: 100%;
+    h1{
+        color: var(--gloabl-text-color);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        margin-bottom: 10px;
+    }
+    .date-picker-calendar{
+        margin-bottom: 10px;
+    }
+}

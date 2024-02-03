@@ -1,7 +1,9 @@
 // var KoreSDK = KoreSDK || {};
+import BrandingJSON from '../sass/brandingJSON'; // To do
 var chatConfig:any={};
 
 var botOptions:any = {};
+botOptions.initialChat = false;
 botOptions.logLevel = 'debug';
 botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
 
@@ -41,6 +43,9 @@ botOptions.webhookConfig={
 // };
 
 chatConfig = {
+    mockMode:{
+        enable:false
+    },
     botOptions: botOptions,
     container:'body',
     allowIframe: false, 			// set true, opens authentication links in popup window, default value is "false"
@@ -59,7 +64,8 @@ chatConfig = {
     pingPong:{
         interval:30000 //In milli sec, To keep the websocket alive skd send ping message in this interval      
     },
-    enableThemes : true, //set true to apply the branding configured    ,
+    enableThemes : false, //set true to apply the branding configured    ,
+    branding: BrandingJSON,
     history:{
         paginatedScroll: {
             enable : true,  // set true to load history when the user scrolls up.
@@ -71,6 +77,10 @@ chatConfig = {
         MAX_RETRIES:3
     },
     maxReconnectionAPIAttempts: 5  // Number of retries on api failure
+    UI:{
+        version:"v3"
+    },
+    builderFlag: false
 };
 
 if (!chatConfig.loadHistory) { // pagination scroll will be enabled only when loadHistory flag is true
