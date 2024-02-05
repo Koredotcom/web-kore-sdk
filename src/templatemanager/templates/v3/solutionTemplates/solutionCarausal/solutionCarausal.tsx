@@ -1,10 +1,7 @@
 import BaseChatTemplate from '../../baseChatTemplate';
 import './solutionCarausal.scss';
-import { h, Fragment } from 'preact';
-import stackedCards from './solutionCarousal'
+import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
-import { getHTML } from '../../../../base/domManager';
-import IconsManager from '../../../../base/iconsManager';
 
 export function Carousel(props: any) {
     const hostInstance = props.hostInstance;
@@ -103,12 +100,24 @@ export function Carousel(props: any) {
             return newIndex;
         });
     };
+    const debounce = <T extends (...args: any[]) => void>(func: T, delay: number) => {
+        let timeoutId: ReturnType<typeof setTimeout>;
+      
+        return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
+          clearTimeout(timeoutId);
+          timeoutId = setTimeout(() => {
+            func.apply(this, args);
+          }, delay);
+        };
+      };
+
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'retailAssistcarousel') {
         setTimeout(() => {
             const btnsParentDiv: any = hostInstance.chatEle.querySelector(`[data-id='${msgData.messageId}']`);
             const leftScrollBtn = hostInstance.chatEle.querySelector(`[data-button-left='${msgData.messageId}']`);
             const rightScrollBtn = hostInstance.chatEle.querySelector(`[data-button-right='${msgData.messageId}']`);
+            
             if (btnsParentDiv && btnsParentDiv.hasChildNodes()) {
                 if (leftScrollBtn) {
                     if (btnsParentDiv.scrollLeft > 0) {
@@ -147,27 +156,38 @@ export function Carousel(props: any) {
                     })
                 }
             })
-            rightScrollBtn.addEventListener('click', () => {
+            const handleRightScroll = debounce(() => {
                 const btnsParentDivWidth = btnsParentDiv.offsetWidth;
                 const qButtons = btnsParentDiv.querySelectorAll('.list-carousel-item');
                 let curWidth = 0;
+            
                 if (qButtons.length > 0) {
-                    qButtons.forEach((ele: any) => {
+                    qButtons.forEach((ele: any, index: number) => {
                         curWidth = curWidth + ele.offsetWidth + 10;
+            
                         if (curWidth > btnsParentDivWidth) {
                             btnsParentDiv.scrollTo({
                                 left: btnsParentDiv.scrollLeft + ele.offsetWidth + 20,
                                 behavior: 'smooth'
                             });
-                            leftScrollBtn.classList.remove('hide');;
-                            if (btnsParentDiv.scrollLeft + btnsParentDivWidth + 10 >= btnsParentDiv.scrollWidth) {
+            
+                            leftScrollBtn.classList.remove('hide');
+            
+                            // Check if the second-to-last item is fully visible
+                            const secondToLastItemVisible =
+                                btnsParentDiv.scrollLeft + btnsParentDivWidth + 10 >= btnsParentDiv.scrollWidth - ele.offsetWidth - 10;
+            
+                            if (secondToLastItemVisible) {
                                 rightScrollBtn.classList.add('hide');
+                            } else {
+                                rightScrollBtn.classList.remove('hide'); // Show the button if there's more content to scroll
                             }
                         }
-
-                    })
+                    });
                 }
-            })
+            }, 200);
+             // Adjust the debounce delay as needed
+            rightScrollBtn.addEventListener('click', handleRightScroll);
         }, 50);
         return (
             <div key={rerenderKey} className="list-template-carousel-wrapper" id={msgData.messageId}>
