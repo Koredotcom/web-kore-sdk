@@ -521,7 +521,8 @@
         display: flex;
         flex-direction: column;
         gap: 8px;
-        max-width: 285px;
+        // max-width: 285px;
+        max-width: 100%;
         .attchments-wrap{
             display: flex;
             gap: 4px;
