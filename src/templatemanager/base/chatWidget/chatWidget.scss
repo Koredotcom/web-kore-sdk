@@ -10,6 +10,7 @@
     display: none;
     &.testFlow {
         display: flex;
+        background-color: #FFF;
     }
     &.minimize{
         animation: bounce-in 0.5s ease forwards;
