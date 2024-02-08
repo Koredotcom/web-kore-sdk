@@ -122,17 +122,22 @@ class WebKitSTT extends BaseSTT {
                     }
                 }, 350);
             };
+        } else {
+            alert('This browser does not support STT');
         }
     }
 
     startWebKitRecognization() {
-        if (this.recognizing) {
-            this.recognition.stop();
-            return;
+        let me: any = this;
+        if ('webkitSpeechRecognition' in window && me.isChrome()) {
+            if (this.recognizing) {
+                this.recognition.stop();
+                return;
+            }
+            this.final_transcript = '';
+            this.recognition.lang = this.config.lang || 'en-US';
+            this.recognition.start();
         }
-        this.final_transcript = '';
-        this.recognition.lang = this.config.lang || 'en-US';
-        this.recognition.start();
     }
 
     isChrome() {
