@@ -1716,7 +1716,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
     }
   }
   let eleHeight, scrollHeight;
-  if (me.config.UI.version == 'v3' && me.chatEle.querySelectorAll('.chat-widget-body-wrapper > div .i'+ msgData?.messageId).length < 1 || (msgData?.renderType === 'inline')) {
+  if (me.config.UI.version == 'v3' && messageHtml && me.chatEle.querySelectorAll('.chat-widget-body-wrapper > div .i'+ msgData?.messageId).length < 1 || (msgData?.renderType === 'inline')) {
     if (msgData?.type === 'bot_response' && msgData?.fromHistorySync) {
     } else {
       scrollHeight = me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight;
