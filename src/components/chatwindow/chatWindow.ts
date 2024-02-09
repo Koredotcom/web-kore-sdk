@@ -2487,6 +2487,7 @@ getBrandingInformation(options:any){
         } else {
           me._botInfo.displayName = response.v3.header.title.name || 'Bot';
         }
+        me.emit('brandingResponse', response);
         me.setBranding(response?.v3);
       }
     }
