@@ -142,7 +142,25 @@
 .bank-assist-theme .avatar-variations-footer .avatar-actions .avatar-bg figure .custom-img-uploaded, .bank-assist-theme .avatar-variations-footer .avatar-actions .avatar-bg figure .custom-img-uploaded-minimize {
     background: #3c817c;
 }
+.bank-assist-theme .agent-joined-banner .agent-joined-wrapper.agent-joined-variation-2 {
+    border: none !important
+}
+.bank-assist-theme .dark-background .agent-joined-banner .agent-joined-wrapper.agent-joined-variation-2 .agent-name {
+    color: white !important
+}
 
+.bank-assist-theme .dark-background {
+    background-color: #171d2a !important;
+}
+
+.bank-assist-theme .dark-background .bubble-msg {
+    background-color:#ffffff;
+    color: #171d2a;
+}
+
+.bank-assist-theme .chat-widget-composebar .compose-bar-wrapper {
+    border-radius: 4px 4px 4px 4px;
+}
 
   
   

@@ -9,10 +9,11 @@ let botOptions=chatConfig.botOptions;
 botOptions.koreAPIUrl =  "https://demo-bankassist.kore.ai/workbench/api";
 botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
 botOptions.userIdentity = 'demouser@bankassist.com';// Provide users email id here
-botOptions.botInfo = { name: "BankAssistSolutionsDemo", "_id": "st-65443d22-e08b-5cad-bba0-7f234f960444" }; // bot name is case sensitive
-botOptions.clientId = "cs-f47c5d4f-0d52-5e9d-b6ff-29f7a0c53c1a";
-botOptions.clientSecret = "Mfspfx3o/UHgWt8gX2QlXQXkMHgfHEJul3LYq2tH6xQ=";
+botOptions.botInfo = { name: "BankAssistSolutionsDemo", "_id": "st-804e5efc-6968-5606-a4fb-d479f7e8c33b" }; // bot name is case sensitive
+botOptions.clientId = "cs-3f08db9c-e06f-55b7-8487-38ee8ca4eae3";
+botOptions.clientSecret = "P8tRvXMrxYtYjul1HdQ+MZ/XrlgBoEPggQlp/qo8YWE=";
 botOptions.accountID = "6544c230c4617f18073de22e";
+botOptions.brandingBotId = "st-65443d22-e08b-5cad-bba0-7f234f960444";
 chatConfig.loadHistory = false
 /* 
 Important Note: These keys are provided here for quick demos to generate JWT token at client side but not for Production environment.
