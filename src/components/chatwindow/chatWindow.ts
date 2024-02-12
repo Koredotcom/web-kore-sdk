@@ -1396,13 +1396,13 @@ render  (chatWindowHtml: any) {
 
 
 
-sendMessageToBot  (messageText:any, options: { renderMsg: any; }, serverMessageObject: any,clientMessageObject: any) {
+sendMessageToBot  (messageText:any, options: { renderMsg: any, campaignInfo: {pweInfo: object} }, serverMessageObject: any,clientMessageObject: any) {
   const me:any = this;
   let clientMessageId = new Date().getTime();
   if(this.sendFailedMessage.messageId){
     clientMessageId=this.sendFailedMessage.messageId;
     this.sendFailedMessage.messageId=null;
-}
+  }
   let msgData:any = {
     type: 'currentUser',
     message: [{
@@ -1419,6 +1419,7 @@ sendMessageToBot  (messageText:any, options: { renderMsg: any; }, serverMessageO
     clientMessageId:clientMessageId,
     resourceid :'/bot.message',
   };
+  if(options?.campaignInfo && options?.campaignInfo?.pweInfo) messageToBot.campaignInfo = {...options.campaignInfo};
 if(messageText && messageText.trim() && messageText.trim().length){
   messageToBot["message"] = { 
     body: messageText.trim()

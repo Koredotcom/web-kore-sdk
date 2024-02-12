@@ -650,9 +650,15 @@ class AgentDesktopPluginScript  {
                 var toastContainer = koreJquery("#toast");
                 toastContainer.empty();
                 toastContainer.append(incomingCall);
-
+                // Hide the toastContainer or #toast when isUserCall is true
                 var rejectCall = koreJquery("#rejectcall");
                 var acceptCall = koreJquery("#acceptcall");
+                if(_self.callDetails.isCallFromUser){
+                    document.getElementById('toast').style.visibility = "hidden";
+                    console.log("Toast is hidden");
+                    this.autoAcceptConversation();
+                }
+                // this.acceptConversationCall();
                 rejectCall.off('click').on('click', function (event) {
                     if (openSound) {
                         openSound.pause();
@@ -675,6 +681,7 @@ class AgentDesktopPluginScript  {
                     toastContainer.empty();
                 });
                 acceptCall.off('click').on('click', function (event) {
+                    console.log("Call is accepted");
                     if (openSound) {
                         openSound.pause();
                         openSound.currentTime = 0;
@@ -708,6 +715,13 @@ class AgentDesktopPluginScript  {
 
                 });
             }, 100);
+        }
+        this.autoAcceptConversation = function(){
+            setTimeout(()=>{
+                console.log(document.getElementById('acceptcall'));
+                document.getElementById('acceptcall').click();
+                console.log("Clicked successfully");
+            },100);
         }
         this.showCobrowseRequest = function (cobrowseRequest) {
             let me = this;
