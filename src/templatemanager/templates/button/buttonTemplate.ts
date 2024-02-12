@@ -20,7 +20,7 @@ class ButtonTemplate {
         let me :any = this;
         let chatWindowInstance = me.hostInstance;
         let $ = me.hostInstance.$;
-        $(messageHtml).off('click', '.buttonTmplContentBox li').on('click', '.buttonTmplContentBox li', (e: any) => {
+        $(messageHtml).off('click', '.buttonTmplContentBox .btn-li').on('click', '.buttonTmplContentBox .btn-li', (e: any) => {
             e.preventDefault();
             e.stopPropagation();
             let selectedTarget = e.currentTarget;
@@ -115,21 +115,21 @@ class ButtonTemplate {
                     <div class="buttonTmplContent"> \
                         {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                         {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-                        <ul class="buttonTmplContentBox">\
-                            <li class="buttonTmplContentHeading"> \
+                        <div class="buttonTmplContentBox">\
+                            <div class="buttonTmplContentHeading btn-li"> \
                                 {{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
                                 {{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \
                                     <span class="emojione emojione-${msgData.message[0].cInfo.emoji[0].code}">${msgData.message[0].cInfo.emoji[0].title}</span> \
                                 {{/if}} \
-                            </li>\
+                            </div>\
                             {{each(key, msgItem) msgData.message[0].component.payload.buttons}} \
                                 <a>\
-                                    <li {{if msgData}}msgData="${JSON.stringify(msgData)}"{{/if}} {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} {{if msgItem.payload}}actual-value="${msgItem.payload}"{{/if}} {{if msgItem.url}}url="${msgItem.url}"{{/if}} class="buttonTmplContentChild" data-value="${msgItem.value}" type="${msgItem.type}">\
+                                    <div {{if msgData}}msgData="${JSON.stringify(msgData)}"{{/if}} {{if msgItem.payload}}value="${msgItem.payload}"{{/if}} {{if msgItem.payload}}actual-value="${msgItem.payload}"{{/if}} {{if msgItem.url}}url="${msgItem.url}"{{/if}} class="buttonTmplContentChild btn-li" data-value="${msgItem.value}" type="${msgItem.type}">\
                                         ${msgItem.title}\
-                                    </li> \
+                                    </div> \
                                 </a> \
                             {{/each}} \
-                        </ul>\
+                        </div>\
                     </div>\
                 </li> \
             {{/if}} \

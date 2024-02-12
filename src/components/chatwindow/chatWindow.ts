@@ -4,7 +4,7 @@ import TemplateManager from '../../templatemanager/templateManager';
 import KoreHelpers from '../../utils/helpers';
 import EventEmitter from '../../utils/EventEmiter'
 import MessageTemplate from '../../templatemanager/templates/messageTemplate/messageTemplate';
-import KRPerfectScrollbar from 'perfect-scrollbar';
+import KRPerfectScrollbar from '../../libs/perfectscroll/perfect-scrollbar';
 import './../../libs/perfectscroll/css/perfect-scrollbar.min.css';
 import './sass/chatWindow.scss';
 //import './../../libs/emojione.sprites.css';
@@ -147,7 +147,16 @@ class chatWindow extends EventEmitter{
      * @property {Object} jwtGrantSuccess -  jwt grant success API response
      * @property {Object} chatWindowEvent
      */
-       JWT_GRANT_SUCCESS : 'jwtGrantSuccess'
+       JWT_GRANT_SUCCESS : 'jwtGrantSuccess',
+     /**
+     * apiFailure will be triggered on API failure
+     *
+     * @event chatWindow#apiFailure
+     * @type {Object}
+     * @property {String} type - type of error - XHRObj/JqueryXHR
+     * @property {Object} errObj - error object containing error details
+     */
+      API_FAILURE: 'apiFailure'
   }
   sendFailedMessage: any;
   
@@ -233,6 +242,9 @@ initShow  (config:any) {
   if(me.config && me.config.sendFailedMessage && me.config.sendFailedMessage.hasOwnProperty('MAX_RETRIES')){
     this.sendFailedMessage.MAX_RETRIES=me.config.sendFailedMessage.MAX_RETRIES
 }
+  if (me.config && me.config.maxReconnectionAPIAttempts) {
+    me.config.botOptions.maxReconnectionAPIAttempts = me.config.maxReconnectionAPIAttempts;
+  }
   me.config.botOptions.botInfo.name = KoreHelpers.prototypes.escapeHTML(me.config.botOptions.botInfo.name);
   me._botInfo = me.config.botOptions.botInfo;
   me.config.botOptions.botInfo = {
@@ -805,10 +817,13 @@ bindEvents  () {
     me.sendMessageWithWithChatInput(_footerContainer.find('.chatInputBox'));
   });
 
-  _chatContainer.on('click', 'li a',  (e: any) => {
+  _chatContainer.on('click', 'li a, .isLink a',  (e: any) => {
     e.preventDefault();
     let targetEle = $(e.currentTarget);
-    const a_link = targetEle.attr('href');
+    let a_link = targetEle.attr('href');
+    if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
+      a_link = "http:////" + a_link;
+    }
     const _trgt = targetEle.attr('target');
     const msgDataText = $(targetEle).closest('span.simpleMsg').attr('msgData') || '';
     let msgData;
@@ -970,7 +985,7 @@ bindEvents  () {
           }
           _chatContainer.find('.kore-chat-footer').addClass('disableFooter');
           _chatContainer.find('.kore-chat-footer .chatInputBox').blur();
-          bot.getHistory({ limit: (me?.config?.history?.paginatedScroll?.batchSize) });
+          bot.getHistory({ limit: (me?.config?.history?.paginatedScroll?.batchSize) }, me?.config?.botOptions);
         }
       }
     });
@@ -1008,7 +1023,7 @@ bindEventsV3() {
     } 
   })
 
-  me.eventManager.addEventListener('.avatar-variations-footer', 'click', () => {
+  me.eventManager.addEventListener('.avatar-bg', 'click', () => {
     if (!me.chatEle.querySelector('.avatar-bg').classList.contains('click-to-rotate-icon')) {
       if (me.config.multiPageApp && me.config.multiPageApp.enable) {
         me.setLocalStoreItem('kr-cw-state', 'open');
@@ -1237,6 +1252,10 @@ bindSDKEvents  () {
     }
     me.emit(me.EVENTS.JWT_GRANT_SUCCESS, response.jwtgrantsuccess);
   });
+
+  me.bot.on('api_failure', (response: {responseError: any; type: any;}) => {
+    me.emit(me.EVENTS.API_FAILURE, { "type": response.type, "errObj": response.responseError });
+  });
 };
 parseSocketMessage(msgString:string){
   let me:any=this;
@@ -1312,7 +1331,7 @@ onBotReady  () {
   if (!me.loadHistory) {
     setTimeout(() => {
       if (me.config.UI.version == 'v2') {
-        _chatContainer.find('.chatInputBox').focus();
+        me.focusInputTextbox();
         _chatContainer.find('.disableFooter').removeClass('disableFooter');
       } else {
         me.chatEle.querySelector('.typing-text-area').classList.remove('disableComposeBar');
@@ -1421,7 +1440,7 @@ sendMessageToBot  (messageText:any, options: { renderMsg: any; }, serverMessageO
   };
 if(messageText && messageText.trim() && messageText.trim().length){
   messageToBot["message"] = { 
-    body: messageText.trim()
+    body: messageText.trim().replace(/\s/g, ' ')
   }
 }
   
@@ -1555,7 +1574,9 @@ sendMessageViaWebHook  (message: { text: any; }, successCb: any, failureCB: any,
         },
       },
     };
-
+    if(me.config.botOptions.webhookConfig.useSDKChannelResponses){
+      payload.preferredChannelForResponse = 'rtm';
+    }
     if (me.config.botOptions.webhookConfig.apiVersion && me.config.botOptions.webhookConfig.apiVersion === 2) {
       payload.message = {
         type: 'text',
@@ -1765,15 +1786,9 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   if (me.chatPSObj && me.chatPSObj.update) {
     me.chatPSObj.update();
   }
-
-  if (bot && !bot.previousHistoryLoading) {
-    if (me.config.UI.version == 'v2') {
-      _chatContainer.animate({
-        scrollTop: _chatContainer.prop('scrollHeight'),
-      }, 100);
-    }
+  if (me.config.UI.version == 'v2') {
+    me.updateScrollOnMessageRender(msgData);
   }
-
   me.emit(me.EVENTS.AFTER_RENDER_MSG,{
     messageHtml:messageHtml,
     msgData:msgData
@@ -1798,6 +1813,34 @@ prepareAriaTagsOnMessage(msgData:any,messageHtml:any){
     },HACK_TIMER);
     _chatContainer.find('li .messageBubble:not([data-aria-timer-running])').attr('aria-hidden','true');//for mac voiceover bug with aria-live
   }
+}
+updateScrollOnMessageRender(msgData: any){
+  const me: any = this; 
+  let _chatContainer = $(me.chatEle).find('.chat-container');
+  const debounceScrollingCall: any = me.debounceScrollingHide(me.removeScrollingHide, 500);
+  if(bot && !bot.previousHistoryLoading){
+    _chatContainer.addClass('scrolling'); // start hiding scroll on message arrival
+    _chatContainer.animate({
+      scrollTop: _chatContainer.prop('scrollHeight'),
+    }, 100);
+    debounceScrollingCall(); // stop hiding scroll on message arrival
+  }
+}
+removeScrollingHide() {
+  const me = this;
+  let _chatContainer = $(me.chatEle).find('.chat-container');
+      setTimeout(()=>{
+        _chatContainer.removeClass('scrolling');
+      },1500);
+}
+debounceScrollingHide(func: any, delay: any) {
+  let timeoutId: any;
+  return () => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func.call(this);
+    }, delay);
+  };
 }
 generateMessageDOM(msgData?:any){
   const me:any = this; 
@@ -1889,7 +1932,7 @@ getChatTemplate (tempType: string) {
          {{if userAgentIE}} \
          <div role="textbox" class="chatInputBox inputCursor" aria-label="Message" aria-label="Message" contenteditable="true" placeholder="${botMessages.message}"></div> \
          {{else}} \
-         <div role="textbox" class="chatInputBox" contenteditable="true" placeholder="${botMessages.message}"></div> \
+         <div role="textbox" class="chatInputBox"  aria-label="Message"  contenteditable="true" placeholder="${botMessages.message}"></div> \
          {{/if}} \
      <div class="attachment"></div> \
      {{if !(isSendButton)}}<div class="chatSendMsg">${botMessages.entertosend}</div>{{/if}} \
@@ -2028,7 +2071,7 @@ historyLoadingComplete () {
       if (_chatContainer.find('.paginted-history-loader')) {
         _chatContainer.find('.paginted-history-loader').remove();
       }
-      $('.chatInputBox').focus();
+      me.historyRenderComplete();
       $('.disableFooter').removeClass('disableFooter');
     } else {
       me.chatEle.querySelector('.typing-text-area').classList.remove('disableComposeBar');
@@ -2036,6 +2079,11 @@ historyLoadingComplete () {
     }
   }, 0, me);
 };
+
+historyRenderComplete() {
+  const me:any = this;
+  me.focusInputTextbox();
+}
 
 historySyncing(msgData:any,res:any,index:any){
   const me:any = this;
@@ -2158,6 +2206,7 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
 };
 
 getJWTByAPIKey (API_KEY_CONFIG: { KEY: any; bootstrapURL: any; }) {
+  const me: any = this;
   const jsonData = {
     apiKey:API_KEY_CONFIG.KEY
   };
@@ -2169,12 +2218,14 @@ getJWTByAPIKey (API_KEY_CONFIG: { KEY: any; bootstrapURL: any; }) {
     success(data: any) {
     },
     error(err: any) {
+      me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err });
       // chatWindowInstance.showError(err.responseText);
     },
   });
 };
 
 getJWT (options: { clientId: any; clientSecret: any; userIdentity: any; JWTUrl: any; }, callback: any) {
+  const me: any = this;
   const jsonData = {
     clientId: options.clientId,
     clientSecret: options.clientSecret,
@@ -2191,6 +2242,7 @@ getJWT (options: { clientId: any; clientSecret: any; userIdentity: any; JWTUrl: 
 
     },
     error(err: any) {
+      me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err });
       // chatWindowInstance.showError(err.responseText);
     },
   });
@@ -2342,7 +2394,7 @@ unfreezeUIOnHistoryLoadingFail () {
   setTimeout((me) => {
     if (me.loadHistory) {
       if (me.config.UI.version == 'v2') {
-        $('.chatInputBox').focus();
+        me.focusInputTextbox();
         $('.disableFooter').removeClass('disableFooter');
       } else {
         me.chatEle.querySelector('.typing-text-area').classList.remove('disableComposeBar');
@@ -2393,7 +2445,7 @@ getBrandingInformation(options:any){
                   me.applySDKBranding(data);
           },
           error: function (err: any) {
-              console.log(err);
+              me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err });
           }
       });
   }

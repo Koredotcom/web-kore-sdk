@@ -45,7 +45,7 @@ class RadioOptionPickerTemplate {
         $(me.messageHtml).append(me.getradioOptionsPickerTemplate(accountData))
         $(me.messageHtml).removeClass("hide");
         if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.heading) {
-            $(me.messageHtml).find('.radioOptionHeading').html(msgData.message[0].component.payload.heading);
+            $(me.messageHtml).find('.radioOptionHeading').text(msgData.message[0].component.payload.heading);
         }
     }
     getTemplateString() {
