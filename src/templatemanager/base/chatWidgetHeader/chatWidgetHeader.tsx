@@ -24,6 +24,15 @@ export function ChatWidgetHeader(props: any) {
     }
 
     useEffect(() => {
+        hostInstance.eventManager.removeEventListener('.btn-reconnect', 'click');
+        hostInstance.eventManager.addEventListener('.btn-reconnect', 'click', (e: any) => {
+            if (!hostInstance.chatEle.querySelector('.btn-reconnect').getAttribute('disabled')) {
+                hostInstance.chatEle.querySelector('.btn-reconnect').setAttribute('disabled', true);
+                setTimeout(() => {
+                    hostInstance.resetWindow();
+                });
+            }
+          });
         hostInstance.eventManager.removeEventListener('.btn-action-close', 'click');
         hostInstance.eventManager.addEventListener('.btn-action-close', 'click', () => {
             hostInstance.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');

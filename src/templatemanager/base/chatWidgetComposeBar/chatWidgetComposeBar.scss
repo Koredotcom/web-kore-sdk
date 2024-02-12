@@ -96,10 +96,10 @@
                     cursor: pointer;  
                     svg{
                         path{
-                            fill: var(--global-white);
+                            fill: var(--global_white);
                         }
                         rect{
-                            fill: var(--global-white);
+                            fill: var(--global_white);
                         }
                     }             
                 }
@@ -306,7 +306,7 @@
             margin-left: 8px;
             svg{
                 path{
-                    fill: var(--global-white);
+                    fill: var(--global_white);
                 }
             }
             &.show{
@@ -500,5 +500,26 @@
             animation: dot-flashing 1s infinite alternate;
             animation-delay: 1s;
         }
+    }
+}
+
+// Powered By
+.powerdby-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 16px;
+    background: var(--global-white-bg);
+    height: 18px;
+    p {
+        font-weight: 500;
+        font-size: 10px;
+        line-height: 12px;
+        color: var(--welecome-footer-text-color);
+        margin-right: 5px;
+        flex-shrink: 0;
+    }
+    figure {
+        padding: 0 0 3px 0;
     }
 }

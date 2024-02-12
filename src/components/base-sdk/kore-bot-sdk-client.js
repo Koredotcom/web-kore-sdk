@@ -1915,6 +1915,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   inherits(RtmApi, BaseApi);
   
   RtmApi.prototype.start = function start(opts, optCb) {
+    opts.language = localStorage.currentBotLanguage || "en";
     var args = {
       opts: opts
     };

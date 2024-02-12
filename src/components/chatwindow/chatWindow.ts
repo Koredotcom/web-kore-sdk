@@ -1118,13 +1118,6 @@ bindEventsV3() {
     }
   })
 
-  me.eventManager.addEventListener('.btn-reconnect', 'click', () => {
-    me.chatEle.querySelector('.btn-reconnect').setAttribute('disabled', true);
-    setTimeout(() => {
-      me.resetWindow();
-    });
-  })
-
   if (me?.config.history.paginatedScroll.enable) {
     var chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
 
@@ -1723,7 +1716,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
     }
   }
   let eleHeight, scrollHeight;
-  if (me.config.UI.version == 'v3' && me.chatEle.querySelectorAll('.chat-widget-body-wrapper > div .i'+ msgData?.messageId).length < 1 || (msgData?.renderType === 'inline')) {
+  if (me.config.UI.version == 'v3' && messageHtml && me.chatEle.querySelectorAll('.chat-widget-body-wrapper > div .i'+ msgData?.messageId).length < 1 || (msgData?.renderType === 'inline')) {
     if (msgData?.type === 'bot_response' && msgData?.fromHistorySync) {
     } else {
       scrollHeight = me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight;
@@ -2488,6 +2481,13 @@ getBrandingInformation(options:any){
       }
     } else {
       if (response && response.activeTheme) {
+        if (response && response.v3 && response.v3.header
+          && response.v3.header.title && !response.v3.header.title.name) {
+            me._botInfo.displayName = me._botInfo.name;
+        } else {
+          me._botInfo.displayName = response.v3.header.title.name || 'Bot';
+        }
+        me.emit('brandingResponse', response);
         me.setBranding(response?.v3);
       }
     }

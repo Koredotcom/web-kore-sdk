@@ -77,6 +77,7 @@ class BaseSTT {
                 }, 350);
                 chatEle.querySelector('.compose-voice-text-recording').style.display = 'none';
                 chatEle.querySelector('.compose-voice-text-end').style.display = 'block';
+                chatEle.querySelector('.voice-compose-btn-end').focus();
                 chatEle.querySelector('.voice-msg-bubble').classList.add('speak-done-bg');
             }
         });
@@ -142,6 +143,19 @@ class BaseSTT {
                 chatEle.querySelector('.compose-voice-text-end').style.display = 'none';
                 chatEle.querySelector('.compose-voice-text-recording').style.display = 'block';
                 me.onRecordButtonClick();
+            }
+        });
+
+        chatEle.querySelector('.voice-compose-btn-recording').addEventListener('keydown', (event: any) => {
+            if (event.key === 'Enter' && chatEle.querySelector('.voice-msg-bubble').textContent.trim() !== '') {
+                chatEle.querySelector('.voice-compose-btn-recording').click();
+                chatEle.querySelector('.voice-compose-btn-end').focus();
+            }
+        });
+
+        chatEle.querySelector('.voice-compose-btn-end').addEventListener('keydown', (event: any) => {
+            if (event.key === 'Enter' && chatEle.querySelector('.voice-msg-bubble').textContent.trim() !== '') {
+                chatEle.querySelector('.voice-compose-btn-end').click();
             }
         });
     }

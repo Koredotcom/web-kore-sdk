@@ -293,7 +293,7 @@ class AgentDesktopPlugin {
         let cwInstance = me.hostInstance;
         class customTemplateComponent {
             renderMessage(msgData: any) {
-                if (msgData?.message[0]?.component?.payload?.template_type === "live_agent" && !msgData?.message[0]?.component?.payload?.text.trim().length) {
+                if (msgData && msgData?.message && msgData?.message[0] && msgData?.message[0]?.component?.payload?.template_type === "live_agent" && !msgData?.message[0]?.component?.payload?.text.trim().length) {
                     return '_ignore_message_render_';
                 }
             }

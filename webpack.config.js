@@ -222,6 +222,11 @@ module.exports= function(env,argv){
             import: "./src/index_plugins/multiFileUpload.ts",
             filename: 'plugins/multi-file-upload.js',
             chunkLoading: false,
+          },
+          AnswersPluginSDK: {
+            import: "./src/index_plugins/answersTemplate.ts",
+            filename: 'plugins/answers-template.js',
+            chunkLoading: false,
           }
         }
         config.output.path= path.resolve(__dirname,'dist/esm');
@@ -345,6 +350,11 @@ module.exports= function(env,argv){
           MultiFileUploadPluginSDK: {
             import: "./src/index_plugins/multiFileUpload.ts",
             filename: 'plugins/multi-file-upload.js',
+            chunkLoading: false,
+          },
+          AnswersPluginSDK: {
+            import: "./src/index_plugins/answersTemplate.ts",
+            filename: 'plugins/answers-template.js',
             chunkLoading: false,
           }
         }

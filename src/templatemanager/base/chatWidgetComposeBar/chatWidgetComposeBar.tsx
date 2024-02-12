@@ -64,7 +64,7 @@ export function ChatWidgetComposeBar(props: any) {
                         <path d="M10.8838 10.0001L16.0669 4.81694C16.311 4.57286 16.311 4.17714 16.0669 3.93306C15.8229 3.68898 15.4271 3.68898 15.1831 3.93306L9.99988 9.11624L4.81694 3.93352C4.57286 3.68944 4.17713 3.68945 3.93306 3.93354C3.68899 4.17762 3.689 4.57335 3.93308 4.81742L9.116 10.0001L3.93306 15.1831C3.68898 15.4272 3.68898 15.8229 3.93306 16.067C4.17714 16.311 4.57286 16.311 4.81694 16.067L9.9999 10.884L15.1831 16.067C15.4272 16.311 15.8229 16.311 16.067 16.0669C16.311 15.8229 16.311 15.4271 16.0669 15.1831L10.8838 10.0001Z" fill="#697586"></path>
                     </svg>
                 </button>
-                <div className="voice-msg-bubble"></div>
+                <div className="voice-msg-bubble" aria-label="entered msg"></div>
             </div>
             <div className="attachment-wrapper-data hide-attachment">
                 <div className="select-file-block">
@@ -160,7 +160,7 @@ export function ChatWidgetComposeBar(props: any) {
                     <p className="speak-info">Tap microphone to speak</p>
                 </div>
                 <div className="compose-voice-text-recording zoomIn">
-                    <button className="voice-compose-btn-recording" type="button" aria-label="Voice recording">
+                    <button className="voice-compose-btn-recording" type="button" aria-label="Voice recording" tabIndex={0}>
                         <svg width="23" height="16" viewBox="0 0 23 16" fill="none">
                             <rect x="10.5137" width="1.97143" height="16" rx="0.985713" fill="white"/>
                             <rect x="15.7715" y="2.66699" width="1.97143" height="10.6667" rx="0.985713" fill="white"/>
@@ -173,7 +173,7 @@ export function ChatWidgetComposeBar(props: any) {
                     <button className="cancel-sepak" type="button" aria-label="Cancel voice recording">Cancel</button>
                 </div>
                 <div className="compose-voice-text-end">
-                    <button className="voice-compose-btn-end" type="button" aria-label="Send button">
+                    <button className="voice-compose-btn-end" type="button" aria-label="Send button" tabIndex={0}>
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                             <path d="M1.33854 5.7792C0.917738 5.93325 0.880121 6.51382 1.2769 6.72207L6.52164 9.47856L9.27579 14.7222C9.48411 15.1188 10.064 15.0803 10.2181 14.6597L14.9674 1.69532C15.1186 1.28244 14.7177 0.881423 14.3048 1.03258L1.33854 5.7792ZM2.78926 6.35112L12.4626 2.80707L6.80699 8.46271L2.78926 6.35112ZM7.53749 9.1932L13.1931 3.53756L9.65193 13.2138L7.53749 9.1932Z" fill="white"/>
                         </svg>
@@ -206,6 +206,12 @@ export function ChatWidgetComposeBar(props: any) {
                 <p>Typing</p>
                 <div class="dot-flashing"></div>
             </div>}
+            <div className="powerdby-info">
+                <p>Powered by</p>
+                <figure>
+                    <img src={iconHelper.getIcon('kore_logo')} alt="kore-img" />
+                </figure>
+            </div>
         </div>
     );
 } 
