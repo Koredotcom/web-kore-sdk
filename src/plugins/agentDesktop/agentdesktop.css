@@ -671,10 +671,10 @@ li.fromCurrentUser .sentIndicator.read{
     }
 }
 
-.kore-chat-window.minimize:hover .cobrowser-wrapper-elipse .elipse-btn {
+.chat-window-main-section:hover .cobrowser-wrapper-elipse .elipse-btn {
     display: block;
 }
-.kore-chat-window.minimize .cobrowser-wrapper-elipse {
+.chat-window-main-section .cobrowser-wrapper-elipse {
     position: absolute;
     right: 5px;
     display: flex;
@@ -684,22 +684,22 @@ li.fromCurrentUser .sentIndicator.read{
     top: auto;
     bottom: 0;
 }
-.kore-chat-window.minimize .cobrowser-wrapper-elipse.open-cobrowser .elipse-btn {
+.chat-window-main-section .cobrowser-wrapper-elipse.open-cobrowser .elipse-btn {
     display: block !important;
 }
-.kore-chat-window.minimize .cobrowser-wrapper-elipse.open-cobrowser .co-bowser-options {
+.chat-window-main-section .cobrowser-wrapper-elipse.open-cobrowser .co-bowser-options {
     display: block;
 }
-.kore-chat-window.minimize .cobrowser-wrapper-elipse.open-input-browse .co-bowser-options .input-box-co-browser {
+.chat-window-main-section .cobrowser-wrapper-elipse.open-input-browse .co-bowser-options .input-box-co-browser {
     display: block;
 }
-.kore-chat-window.minimize .cobrowser-wrapper-elipse .elipse-btn {
+.chat-window-main-section .cobrowser-wrapper-elipse .elipse-btn {
     width: 20px;
     height: 20px;
     cursor: pointer;
     display: none;
 }
-.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options {
+.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options {
     position: absolute;
     top: -78px;
     left: -41px;
@@ -711,7 +711,7 @@ li.fromCurrentUser .sentIndicator.read{
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
 }
-.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .btn-co-browser {
+.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .btn-co-browser {
     border-radius: 32px;
     background: var(--bot-colors-intent,#4B4EDE);
     box-shadow: 0px 2px 4px -2px rgba(16,24,40,0.1), 0px 4px 6px -1px rgba(16,24,40,0.1);
@@ -725,7 +725,7 @@ li.fromCurrentUser .sentIndicator.read{
     width: 34px;
     cursor: pointer;
 }
-.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser {
+.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser {
     position: absolute;
     bottom: auto;
     top: -115px;
@@ -740,14 +740,14 @@ li.fromCurrentUser .sentIndicator.read{
     right: 0;
     display: none;
 }
-.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser .label-text {
+.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser .label-text {
     color: var(--neutral-900,#171717);
     font-size: 14px;
     font-weight: 500;
     line-height: 20px;
     margin-bottom: 4px;
 }
-.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input {
+.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input {
     height: 40px;
     padding: 8px 10px;
     font-size: 16px;
@@ -761,42 +761,42 @@ li.fromCurrentUser .sentIndicator.read{
     color: var(--gray-900,#101828);
     outline: 0;
 }
-.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input::placeholder {
+.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input::placeholder {
     color: var(--gray-500,#667085);
     font-size: 16px;
     font-weight: 400;
     line-height: 24px;
 }
-.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:focus {
+.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:focus {
     border: 1px solid var(--primary-300,#84ADFF);
     box-shadow: 0px 0px 0px 4px #EFF4FF, 0px 1px 2px 0px rgba(16,24,40,0.05);
 }
-.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:active {
+.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:active {
     border: 1px solid var(--primary-300,#84ADFF);
     box-shadow: 0px 0px 0px 4px #EFF4FF, 0px 1px 2px 0px rgba(16,24,40,0.05);
 }
-.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:disabled {
+.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:disabled {
     border: 1px solid var(--gray-300,#D0D5DD);
     background: var(--gray-50,#F9FAFB);
     pointer-events: none;
     cursor: not-allowed;
 }
-.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input.error {
+.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input.error {
     border: 1px solid var(--error-300,#FDA29B);
     background: var(--base-white,#FFF);
 }
-.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input.error:focus {
+.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input.error:focus {
     box-shadow: 0px 0px 0px 4px #FEE4E2, 0px 1px 2px 0px rgba(16,24,40,0.05);
 }
-.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:read-only {
+.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:read-only {
     border: 1px solid var(--gray-300,#D0D5DD);
     background: var(--gray-50,#F9FAFB);
 }
-.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:-moz-read-only {
+.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:-moz-read-only {
     border: 1px solid var(--gray-300,#D0D5DD);
     background: var(--gray-50,#F9FAFB);
 }
-.kore-chat-window.minimize .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser .error-msg {
+.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser .error-msg {
     color: var(--error-500,#F04438);
     font-size: 14px;
     font-weight: 400;
@@ -831,4 +831,27 @@ li.fromCurrentUser .sentIndicator.read{
     width: 100% !important;
     height: 100% !important;
     margin: 0 !important;
+}
+
+div .agent-bubble-comp .agent-bubble-content .bottom-info .sent{
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOCIgaGVpZ2h0PSI4IiB2aWV3Qm94PSIwIDAgOCA4IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8Y2lyY2xlIGN4PSI0IiBjeT0iNCIgcj0iMy4yNSIgc3Ryb2tlPSJ1cmwoI3BhaW50MF9hbmd1bGFyXzEwNzJfNTIzNDMpIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8ZGVmcz4KPHJhZGlhbEdyYWRpZW50IGlkPSJwYWludDBfYW5ndWxhcl8xMDcyXzUyMzQzIiBjeD0iMCIgY3k9IjAiIHI9IjEiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiBncmFkaWVudFRyYW5zZm9ybT0idHJhbnNsYXRlKDQgNCkgcm90YXRlKC0xODApIHNjYWxlKDQpIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzlBQTRCMiIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM5QUE0QjIiIHN0b3Atb3BhY2l0eT0iMCIvPgo8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPgo=");
+    width: 8px;
+    height: 8px;
+    background-repeat: no-repeat;
+    background-position: center
+}
+
+div .agent-bubble-comp .agent-bubble-content .bottom-info .delivered{
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOCIgaGVpZ2h0PSI4IiB2aWV3Qm94PSIwIDAgOCA4IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTQgOEM2LjIwOTE0IDggOCA2LjIwOTE0IDggNEM4IDEuNzkwODYgNi4yMDkxNCAwIDQgMEMxLjc5MDg2IDAgMCAxLjc5MDg2IDAgNEMwIDYuMjA5MTQgMS43OTA4NiA4IDQgOFpNNS44NTM1NSAzLjM1MzU1QzYuMDQ4ODIgMy4xNTgyOSA2LjA0ODgyIDIuODQxNzEgNS44NTM1NSAyLjY0NjQ1QzUuNjU4MjkgMi40NTExOCA1LjM0MTcxIDIuNDUxMTggNS4xNDY0NSAyLjY0NjQ1TDMuNSA0LjI5Mjg5TDIuODUzNTUgMy42NDY0NUMyLjY1ODI5IDMuNDUxMTggMi4zNDE3MSAzLjQ1MTE4IDIuMTQ2NDUgMy42NDY0NUMxLjk1MTE4IDMuODQxNzEgMS45NTExOCA0LjE1ODI5IDIuMTQ2NDUgNC4zNTM1NUwzLjE0NjQ1IDUuMzUzNTVDMy4zNDE3MSA1LjU0ODgyIDMuNjU4MjkgNS41NDg4MiAzLjg1MzU1IDUuMzUzNTVMNS44NTM1NSAzLjM1MzU1WiIgZmlsbD0iIzlBQTRCMiIvPgo8L3N2Zz4K");
+    width: 8px;
+    height: 8px;
+    background-repeat: no-repeat;
+    background-position: center
+}
+div .agent-bubble-comp .agent-bubble-content .bottom-info .read{
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOCIgaGVpZ2h0PSI4IiB2aWV3Qm94PSIwIDAgOCA4IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTQgOEM2LjIwOTE0IDggOCA2LjIwOTE0IDggNEM4IDEuNzkwODYgNi4yMDkxNCAwIDQgMEMxLjc5MDg2IDAgMCAxLjc5MDg2IDAgNEMwIDYuMjA5MTQgMS43OTA4NiA4IDQgOFpNNS44NTM1NSAzLjM1MzU1QzYuMDQ4ODIgMy4xNTgyOSA2LjA0ODgyIDIuODQxNzEgNS44NTM1NSAyLjY0NjQ1QzUuNjU4MjkgMi40NTExOCA1LjM0MTcxIDIuNDUxMTggNS4xNDY0NSAyLjY0NjQ1TDMuNSA0LjI5Mjg5TDIuODUzNTUgMy42NDY0NUMyLjY1ODI5IDMuNDUxMTggMi4zNDE3MSAzLjQ1MTE4IDIuMTQ2NDUgMy42NDY0NUMxLjk1MTE4IDMuODQxNzEgMS45NTExOCA0LjE1ODI5IDIuMTQ2NDUgNC4zNTM1NUwzLjE0NjQ1IDUuMzUzNTVDMy4zNDE3MSA1LjU0ODgyIDMuNjU4MjkgNS41NDg4MiAzLjg1MzU1IDUuMzUzNTVMNS44NTM1NSAzLjM1MzU1WiIgZmlsbD0iIzIyQzU1RSIvPgo8L3N2Zz4K");
+    width: 8px;
+    height: 8px;
+    background-repeat: no-repeat;
+    background-position: center
 }

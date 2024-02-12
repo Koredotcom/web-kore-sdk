@@ -593,8 +593,19 @@ class AgentDesktopPluginScript  {
             if (!toastContainer) {
                 toastContainer = document.createElement("div");
                 toastContainer.id = "toast";
-                koreJquery('.kore-chat-body').prepend(toastContainer);
-                // document.body.appendChild(toastContainer);
+                // koreJquery('.chat-widget-body-wrapper').prepend(toastContainer);
+                document.body.appendChild(toastContainer);
+            }
+
+            let openSound;
+            if (cwInstance.config.branding.general.sounds.enable && cwInstance.config.branding.general.sounds.on_audio_call.url != 'None' && audioVideoStr == 'audio') {
+                openSound = new Audio(cwInstance.config.branding.general.sounds.on_audio_call.url);
+                openSound.loop = true;
+                openSound.play();
+            } else if (cwInstance.config.branding.general.sounds.enable && cwInstance.config.branding.general.sounds.on_video_call.url != 'None' && audioVideoStr == 'video') {
+                openSound = new Audio(cwInstance.config.branding.general.sounds.on_video_call.url);
+                openSound.loop = true;
+                openSound.play();
             }
 
             var incomingCall = `
@@ -871,7 +882,7 @@ class AgentDesktopPluginScript  {
             return title;
         }
         this.addAudioVideoContainer = function () {
-            var koreChatBody = document.getElementsByClassName("kore-chat-body");
+            var koreChatBody = document.getElementsByClassName("chat-widget-body-wrapper");
             var agentcontainer = document.getElementById("agentcontainer");
             if (!agentcontainer) {
                 if (koreChatBody && koreChatBody.length > 0) {
@@ -893,13 +904,13 @@ class AgentDesktopPluginScript  {
             }
             koreChatBody[0].style.top = "0px";
             koreChatBody[0].style.height = "54%";
-            var koreChatWindow = document.getElementsByClassName("kore-chat-window");
+            var koreChatWindow = document.getElementsByClassName("chat-widget-body-wrapper");
             koreChatWindow[0].style.top = "0px";
             koreChatWindow[0].style.maxHeight = '99%';
             koreChatWindow[0].style.height = '97%';
         }
         this.removeAudoVideoContainer = function () {
-            var koreChatBody = document.getElementsByClassName("kore-chat-body");
+            var koreChatBody = document.getElementsByClassName("chat-widget-body-wrapper");
             var agentcontainer = document.getElementById("agentcontainer");
             if (agentcontainer) {
                 agentcontainer.style.display = 'none';

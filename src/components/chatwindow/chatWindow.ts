@@ -1023,7 +1023,7 @@ bindEventsV3() {
     } 
   })
 
-  me.eventManager.addEventListener('.avatar-variations-footer', 'click', () => {
+  me.eventManager.addEventListener('.avatar-bg', 'click', () => {
     if (!me.chatEle.querySelector('.avatar-bg').classList.contains('click-to-rotate-icon')) {
       if (me.config.multiPageApp && me.config.multiPageApp.enable) {
         me.setLocalStoreItem('kr-cw-state', 'open');
@@ -1331,7 +1331,7 @@ onBotReady  () {
   if (!me.loadHistory) {
     setTimeout(() => {
       if (me.config.UI.version == 'v2') {
-        _chatContainer.find('.chatInputBox').focus();
+        me.focusInputTextbox();
         _chatContainer.find('.disableFooter').removeClass('disableFooter');
       } else {
         me.chatEle.querySelector('.typing-text-area').classList.remove('disableComposeBar');
@@ -1786,15 +1786,9 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   if (me.chatPSObj && me.chatPSObj.update) {
     me.chatPSObj.update();
   }
-
-  if (bot && !bot.previousHistoryLoading) {
-    if (me.config.UI.version == 'v2') {
-      _chatContainer.animate({
-        scrollTop: _chatContainer.prop('scrollHeight'),
-      }, 100);
-    }
+  if (me.config.UI.version == 'v2') {
+    me.updateScrollOnMessageRender(msgData);
   }
-
   me.emit(me.EVENTS.AFTER_RENDER_MSG,{
     messageHtml:messageHtml,
     msgData:msgData
@@ -2077,7 +2071,7 @@ historyLoadingComplete () {
       if (_chatContainer.find('.paginted-history-loader')) {
         _chatContainer.find('.paginted-history-loader').remove();
       }
-      $('.chatInputBox').focus();
+      me.historyRenderComplete();
       $('.disableFooter').removeClass('disableFooter');
     } else {
       me.chatEle.querySelector('.typing-text-area').classList.remove('disableComposeBar');
@@ -2400,7 +2394,7 @@ unfreezeUIOnHistoryLoadingFail () {
   setTimeout((me) => {
     if (me.loadHistory) {
       if (me.config.UI.version == 'v2') {
-        $('.chatInputBox').focus();
+        me.focusInputTextbox();
         $('.disableFooter').removeClass('disableFooter');
       } else {
         me.chatEle.querySelector('.typing-text-area').classList.remove('disableComposeBar');
