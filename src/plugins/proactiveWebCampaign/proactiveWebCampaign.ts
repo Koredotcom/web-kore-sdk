@@ -10,6 +10,7 @@ class ProactiveWebCampaignPlugin {
     campInfo: any;
     location: any;
     visible: boolean = true;
+    authInfo: any;
     constructor(config: any) {
         config = config || {};
         this.config = { ...this.config, ...config };
@@ -19,6 +20,11 @@ class ProactiveWebCampaignPlugin {
         let me: any = this;
         me.hostInstance.on("viewInit", (chatWindowEle: any) => {
             me.onInit();
+        });
+        me.hostInstance.on('jwtSuccess', (data: any) => {
+            if (!this.authInfo) {
+                this.getAuthInfo(data);
+            }
         });
     }
 
@@ -35,6 +41,22 @@ class ProactiveWebCampaignPlugin {
         });
         me.hostInstance.on('onWSOpen', (event: any) => {
             me.sendPWCStartEvent();
+            const clientMessageId = new Date().getTime();
+            const payload: any = {
+                'clientMessageId': clientMessageId,
+                'event_name': 'pwe_verify',
+                'resourceid': '/pwe_message',
+                'iId': me.hostInstance.config.botOptions.botInfo.taskBotId,
+                'user': me.hostInstance.config.botOptions.userIdentity,
+                'client': 'sdk',
+                'type': 'pwe_message',
+                'from': 'bot',
+                'botInfo': {
+                    'chatBot': me.hostInstance._botInfo.name,
+                    'taskBotId': me.hostInstance._botInfo._id
+                }
+            }
+            me.sendApiEvent(payload);
         });
         me.hostInstance.bot.on('message', (event: any) => {
             if (event && event.data) {
@@ -453,6 +475,66 @@ class ProactiveWebCampaignPlugin {
             window.sessionStorage.setItem('pwcLocationData', JSON.stringify(coordinates));
         }
         navigator.geolocation.getCurrentPosition(successCb);
+    }
+
+    getAuthInfo(data: any) {
+        let me: any = this;
+        let cwInstance = me.hostInstance;
+
+        const _payload: any = {
+            assertion: data.jwt,
+            botInfo: {
+                chatBot: cwInstance._botInfo.name,
+                taskBotId: cwInstance._botInfo._id
+            },
+            token: {}
+        }
+
+        const url = new URL(cwInstance.config.botOptions.koreAPIUrl);
+        fetch(url.protocol + '//' + url.host + '/api/oAuth/token/jwtgrant', {
+            "headers": {
+                "content-type": "application/json",
+            },
+            "body": JSON.stringify(_payload),
+            "method": "POST",
+        })
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+                throw new Error('Something went wrong');
+            })
+            .then((res: any) => {
+                this.authInfo = res;
+            }).catch(err => {
+                console.error(err)
+            })
+    }
+
+    sendApiEvent(payload: string) {
+        let me: any = this;
+        let cwInstance = me.hostInstance;
+        const url = new URL(cwInstance.config.botOptions.koreAPIUrl);
+
+        fetch(url.protocol + '//' + url.host + '/customerengagement/api/public/bot/' + cwInstance._botInfo._id + '/pweevents', {
+            "headers": {
+                "content-type": "application/json",
+                "Authorization": "bearer " + this.authInfo.authorization.accessToken,
+            },
+            "body": JSON.stringify(payload),
+            "method": "POST",
+        })
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+                throw new Error('Something went wrong');
+            })
+            .then((res: any) => {
+                
+            }).catch(err => {
+                console.log(err);
+            })
     }
 }
 
