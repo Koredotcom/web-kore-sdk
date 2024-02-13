@@ -717,8 +717,10 @@ destroy  () {
       me.skipedInit = true;
     }
   }
-  me.misc.chatOpened = false;
-  me.misc.initial = false;
+  me.misc = {
+    chatOpened: false,
+    initial: false
+  }
   window.removeEventListener('online', me.updateOnlineStatus);
   window.removeEventListener('offline', me.updateOnlineStatus);
 };
