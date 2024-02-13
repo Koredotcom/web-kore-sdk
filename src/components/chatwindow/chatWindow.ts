@@ -225,7 +225,10 @@ initShow  (config:any) {
   me.config.botOptions.$=me.$;
   me.messagesQueue=[];
 
-  me.initial = true;
+  me.misc = {
+    chatOpened: me.config.botOptions.openSocket,
+    initial: false
+  }
   me.welcomeScreenState = false;
   me.config.chatTitle = 'Kore.ai Bot Chat';
   me.config.allowIframe = false;
@@ -250,6 +253,8 @@ initShow  (config:any) {
   me.config.botOptions.botInfo = {
     chatBot: me._botInfo.name, taskBotId: me._botInfo._id, customData: me._botInfo.customData, metaTags: me._botInfo.metaTags, tenanturl: me._botInfo.tenanturl,
   };
+  me.pwcInfo = {};
+  me.pwcInfo.dataFalg = false;
   const tempTitle = me._botInfo.name;
   me.config.chatTitle = me.config.botMessages.connecting;
   me._botInfo.displayName = me.config.branding.header.title.name ? me.config.branding.header.title.name : me._botInfo.name; // To do - need to do same changes in branding api call
@@ -261,6 +266,9 @@ initShow  (config:any) {
       me.config.botOptions.userIdentity = me.getLocalStoreItem('kr-cw-uid');
     }
     me.config.botOptions.maintainContext = maintainContext;
+  }
+  if (me.config.pwcConfig.enable) {
+    window.sessionStorage.setItem('isReconnect', 'true');
   }
   me.config.userAgentIE = navigator.userAgent.indexOf('Trident/') !== -1;
   const mobileBrowserOpened = me.isMobile();
@@ -313,7 +321,7 @@ initShow  (config:any) {
             $('.kore-chat-window .minimized .messages').trigger('click');
           } else {
             setTimeout(() => {
-              me.chatEle.querySelector('.avatar-variations-footer').click();
+              me.chatEle.querySelector('.avatar-bg').click();
             }, 800);
           }
         } else if (cwState === 'minimized') {
@@ -707,10 +715,10 @@ destroy  () {
         me.chatEle.addClass('minimize');
       }
       me.skipedInit = true;
-      me.initial = true;
-      me.initialChat = true;
     }
   }
+  me.misc.chatOpened = false;
+  me.misc.initial = false;
   window.removeEventListener('online', me.updateOnlineStatus);
   window.removeEventListener('offline', me.updateOnlineStatus);
 };
@@ -728,13 +736,8 @@ resetWindow () {
   me.bot.close();
   me.config.botOptions.maintainContext = false;
   me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
-  me.config.botOptions.initialChat = true;
+  me.config.botOptions.openSocket = true;
   me.bot.init(me.config.botOptions);
-  // if (me.config.UI.version == 'v3') {
-  //   setTimeout(() => {
-  //     me.bot.logInComplete();
-  //   }, 4000);
-  // }
 };
 
 sendMessageWithWithChatInput(chatInput:any){
@@ -935,9 +938,9 @@ bindEvents  () {
       if (me.config.multiPageApp && me.config.multiPageApp.enable) {
         me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
       }
-      if (me.initial) {
+      if (!me.misc.chatOpened) {
         me.bot.logInComplete(); // Start api call & ws
-        me.initial = false;
+        me.misc.chatOpened = true;
       }
       // me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
       me.skipedInit = false;
@@ -1025,59 +1028,51 @@ bindEventsV3() {
 
   me.eventManager.addEventListener('.avatar-bg', 'click', () => {
     if (!me.chatEle.querySelector('.avatar-bg').classList.contains('click-to-rotate-icon')) {
+      if(me.config.pwcConfig.enable) {
+        if (window.sessionStorage.getItem('isReconnect') == 'true') {
+          window.sessionStorage.setItem('isReconnect', 'false');
+          setTimeout(() => {
+            me.resetWindow();
+          })
+        }
+      }
       if (me.config.multiPageApp && me.config.multiPageApp.enable) {
         me.setLocalStoreItem('kr-cw-state', 'open');
       }
 
-      if (!me.config.builderFlag) {
-        if (me.config.multiPageApp && me.config.multiPageApp.enable) {
-          me.welcomeScreenState = me.getLocalStoreItem('kr-cw-welcome-chat');
-        }
-        if (!me.welcomeScreenState) {
+      if (me.config.multiPageApp && me.config.multiPageApp.enable) {
+        me.welcomeScreenState = me.getLocalStoreItem('kr-cw-welcome-chat');
+      }
+      if (!me.welcomeScreenState) {
+        if (!me.misc.chatOpened) {
           if (me.initial) {
-            if (me.initialChat) {
-              me.config.botOptions.initialChat = true;
-              me.bot.init(me.config.botOptions);
-              me.initialChat = false;
-            } else {
-              setTimeout(() => {
-                me.bot.logInComplete(); // Start api call & ws
-              }, 2000);
-            }
-            me.initial = false;
-          }
-          if (me.config.branding.welcome_screen.show) {
-            me.chatEle.querySelector('.welcome-chat-section').classList.add(me.config.branding.chat_bubble.expand_animation);
+            me.config.botOptions.openSocket = true;
+            me.bot.init(me.config.botOptions);
           } else {
-            me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(me.config.branding.chat_bubble.expand_animation);
+            setTimeout(() => {
+              me.bot.logInComplete(); // Start api call & ws
+            }, 2000);
           }
-        } else {
-          if (me.initial) {
-            if (me.initialChat) {
-              me.config.botOptions.initialChat = true;
-              me.bot.init(me.config.botOptions);
-              me.initialChat = false;
-            } else {
-              setTimeout(() => {
-                me.bot.logInComplete(); // Start api call & ws
-              }, 2000);
-            }
-            me.initial = false;
-          }
-          me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(me.config.branding.chat_bubble.expand_animation);
-        }
-      } else {
-        if (me.initial) {
-          setTimeout(() => {
-            me.bot.logInComplete(); // Start api call & ws
-          }, 1500);
-          me.initial = false;
+          me.misc.chatOpened = true;
         }
         if (me.config.branding.welcome_screen.show) {
           me.chatEle.querySelector('.welcome-chat-section').classList.add(me.config.branding.chat_bubble.expand_animation);
         } else {
           me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(me.config.branding.chat_bubble.expand_animation);
         }
+      } else {
+        if (!me.misc.chatOpened) {
+          if (me.misc.initial) {
+            me.config.botOptions.openSocket = true;
+            me.bot.init(me.config.botOptions);
+          } else {
+            setTimeout(() => {
+              me.bot.logInComplete(); // Start api call & ws
+            }, 2000);
+          }
+          me.misc.chatOpened = true;
+        }
+        me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(me.config.branding.chat_bubble.expand_animation);
       }
 
       me.chatEle.classList.remove('minimize-chat');
@@ -2564,7 +2559,7 @@ applyVariableValue (key:any,value:any,type:any){
   
 }
 
-  setBranding(brandingData?: any, type?: any) {
+  setBranding(brandingData?: any, type?: any, isEditor?: any) {
     const me: any = this;
     me.config.branding = brandingData ? brandingData : me.config.branding;
     me.brandingManager.applyBranding(me.config.branding);
@@ -2572,7 +2567,7 @@ applyVariableValue (key:any,value:any,type:any){
       brandingData: brandingData ? brandingData : me.config.branding
     });
 
-    if (type == 'welcome' && me.config.builderFlag) {
+    if (type == 'welcome' && isEditor) {
       if (me.config.branding.welcome_screen.show) {
         me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove(me.config.branding.chat_bubble.expand_animation);
         setTimeout(() => {
@@ -2587,12 +2582,6 @@ applyVariableValue (key:any,value:any,type:any){
   switchView(type: any) {
     const clArr = ['minimize', 'minimizeQuick', 'minimizeSmooth'];
     const me: any = this;
-    if (me.initial) {
-      setTimeout(() => {
-        me.bot.logInComplete(); // Start api call & ws
-      }, 2000);
-      me.initial = false;
-    }
     if (type == 'avatar') {
       me.chatEle.classList.add('minimize-chat');
       me.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');

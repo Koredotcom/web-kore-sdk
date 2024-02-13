@@ -560,9 +560,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       });
       this.emit("rtm_client_initialized");
       this.emit(WEB_EVENTS.JWT_GRANT_SUCCESS,{jwtgrantsuccess : data});
-      if (this.options.initialChat) {
+      if (this.options.openSocket) {
         this.logInComplete();
-        this.options.initialChat = false;
+        this.options.openSocket = false;
       }
     }
   };
@@ -1495,6 +1495,12 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     } else {
       if(__reconnect__){
         data.url = data.url + "&isReconnect=true";
+      }
+      if (!__reconnect__ && window.sessionStorage.getItem('isReconnect') == 'true') {
+        data.url = data.url + "&isReconnect=true";
+      }
+      if (window.sessionStorage.getItem('isSkipOnConnect')) {
+        data.url = data.url + window.sessionStorage.getItem('isSkipOnConnect') == 'true' ? "&isSkipOnConnect=true" : "&isSkipOnConnect=false";
       }
       this.authenticated = true;
       //this.activeUserId = data.self.id;

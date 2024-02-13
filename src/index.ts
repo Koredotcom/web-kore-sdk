@@ -30,6 +30,8 @@ import GoogleAudioConfig from  './plugins/textToSpeech/GoogleTTS/GoogleTTS';
 import SpeakTextAWSPollyConfig from './plugins/textToSpeech/KoreAWSPolly/kore-aws-polly';
 import SearchSuggestionsPlugin from './plugins/searchSuggestions/searchSuggestions';
 import UserTypingEventsPlugin from './plugins/userTypingEventsPlugin';
+import ProactiveWebCampaignPlugin from './plugins/proactiveWebCampaign/proactiveWebCampaign';
+import AnswersTemplatesPlugin from './plugins/answers/answersPlugin';
 
 export {
   chatConfig,
@@ -60,5 +62,7 @@ export {
   SpeakTextAWSPollyConfig,
   SearchSuggestionsPlugin,
   KoreMultiFileUploaderPlugin,
-  UserTypingEventsPlugin
+  UserTypingEventsPlugin,
+  AnswersTemplatesPlugin,
+  ProactiveWebCampaignPlugin,
 };

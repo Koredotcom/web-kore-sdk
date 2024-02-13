@@ -2,16 +2,33 @@
 
 import './avatarComponent.scss';
 import { h } from 'preact';
-import { useState } from 'preact/hooks';
-import IconsManager from '../iconsManager';
+import { useEffect, useState } from 'preact/hooks';
 
 export function AvatarComponent(props: any) {
     const hostInstance = props.hostInstance;
-    const iconHelper = new IconsManager();
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
+    const [pwcCampaign, updatePWCCampaignInfo] = useState({ enable: false, data: { buttons: [], messages: []}});
     hostInstance.on('onBrandingUpdate', function (event: any) {
         updateBrandingInfo({...event.brandingData})
     });
+
+    setInterval(() => {
+        if (hostInstance?.pwcInfo?.dataFlag) {
+            let pwcData = hostInstance.pwcInfo.chatData;
+            let messages = pwcData.data.messages;
+            let msgs: any = [];
+            messages.forEach((ele: any) => {
+                const obj = {
+                    type: ele.type,
+                    value: decodeURIComponent(ele.value)
+                }
+                msgs.push(obj);
+            });
+            pwcData.data.messages = msgs;
+            updatePWCCampaignInfo({...pwcData});
+            hostInstance.pwcInfo.dataFlag = false;
+        }
+    }, 500)
 
     const aShape: any = {
         "rounded": "avatar-actions",
@@ -44,26 +61,92 @@ export function AvatarComponent(props: any) {
         hostInstance.chatEle.querySelector('.content-info').remove();
     }
 
+    const triggerAvatar = () => {
+        hostInstance.chatEle.querySelector('.avatar-bg').click();   
+    }
+
+    const closePWCHelp = (e: any) => {
+        hostInstance.chatEle.querySelector('.content-info').remove();
+        updatePWCCampaignInfo({ enable: false, data: { buttons: [], messages: []}});
+    }
+
+    const handlePWCButtonEvent = (e: any) => {
+        if (e.actionType == 'url') {
+            let link = e.actionValue;
+            if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
+                link = `http:////${link}`;
+            }
+            hostInstance.openExternalLink(link);
+            closePWCHelp(e);
+        } else if (e.actionType == 'reject') {
+            closePWCHelp(e);
+        }
+    }
+
+    useEffect(() => {
+        if (hostInstance.config.pwcConfig.enable) {
+            hostInstance.eventManager.removeEventListener('.pwc-accept', 'click');
+            hostInstance.eventManager.addEventListener('.pwc-accept', 'click', (event: any) => {
+                window.sessionStorage.setItem('isReconnect', 'false');
+                hostInstance.welcomeScreenState = true;
+                hostInstance.chatEle.classList.remove('minimize-chat');
+                hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
+                hostInstance.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
+                hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+                const ele = hostInstance.chatEle.querySelector('.pwc-accept');
+                const timeout = hostInstance.historyLoading ? 3500 : 200
+                setTimeout(() => {
+                    if (ele.getAttribute('data-postback')) {
+                        hostInstance.sendMessageToBot(ele.getAttribute('data-postback'));
+                    } else {
+                        if (pwcCampaign && pwcCampaign.data && pwcCampaign.data.messages && pwcCampaign.data.messages.length > 0) {
+                            hostInstance.sendMessageToBot(pwcCampaign.data.messages[pwcCampaign.data.messages.length - 1]['value']);
+                        }
+                    }
+                }, timeout);
+                closePWCHelp('');
+            });
+        }
+    });
+
     return (
         <div className="avatar-variations-footer" aria-label="avatar footer">
             <div className={avatarStyle} aria-label="avatar actions">
-                <div className="content-info">
-                    <div className="text-content animation-slide-up text-heading-one" role="contentinfo" aria-labelledby="helojohn">
-                        <h4 id="helojohn">Hello {hostInstance.config.botOptions.userIdentity}</h4>
-                        <p className="help-text-content">Welcome to support</p>
-                        <span className="close-avatar-content" role="contentinfo" aria-label="close" onClick={closeHelp}>
-                            <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-                                <path d="M10.8838 10.0001L16.0669 4.81694C16.311 4.57286 16.311 4.17714 16.0669 3.93306C15.8229 3.68898 15.4271 3.68898 15.1831 3.93306L9.99988 9.11624L4.81694 3.93352C4.57286 3.68944 4.17713 3.68945 3.93306 3.93354C3.68899 4.17762 3.689 4.57335 3.93308 4.81742L9.116 10.0001L3.93306 15.1831C3.68898 15.4272 3.68898 15.8229 3.93306 16.067C4.17714 16.311 4.57286 16.311 4.81694 16.067L9.9999 10.884L15.1831 16.067C15.4272 16.311 15.8229 16.311 16.067 16.0669C16.311 15.8229 16.311 15.4271 16.0669 15.1831L10.8838 10.0001Z" fill="#697586"/>
-                            </svg>
-                        </span>
+                {hostInstance.config.branding.chat_bubble.proactive.show && !hostInstance.config.pwcConfig.enable && <div className="content-info">
+                    {hostInstance.config.branding.chat_bubble.proactive.messages.map((msg: any, ind: any) => (
+                        <div className="text-content animation-slide-up text-heading-one" role="contentinfo" aria-labelledby={msg.title}>
+                            {msg.header && <h4 id="helojohn">{msg.header + ' ' + hostInstance.config.botOptions.userIdentity}</h4>}
+                            <p className="help-text-content">{msg.title}</p>
+                            {ind == 0 && <span className="close-avatar-content" role="contentinfo" aria-label="close" onClick={closeHelp}>
+                                <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+                                    <path d="M10.8838 10.0001L16.0669 4.81694C16.311 4.57286 16.311 4.17714 16.0669 3.93306C15.8229 3.68898 15.4271 3.68898 15.1831 3.93306L9.99988 9.11624L4.81694 3.93352C4.57286 3.68944 4.17713 3.68945 3.93306 3.93354C3.68899 4.17762 3.689 4.57335 3.93308 4.81742L9.116 10.0001L3.93306 15.1831C3.68898 15.4272 3.68898 15.8229 3.93306 16.067C4.17714 16.311 4.57286 16.311 4.81694 16.067L9.9999 10.884L15.1831 16.067C15.4272 16.311 15.8229 16.311 16.067 16.0669C16.311 15.8229 16.311 15.4271 16.0669 15.1831L10.8838 10.0001Z" fill="#697586" />
+                                </svg>
+                            </span>}
+                        </div>))}
+                    {hostInstance.config.branding.chat_bubble.proactive.buttons.map((btn: any) => (
+                        <button className="primary-button animation-slide-up btn-anim-send" onClick={triggerAvatar}>{btn.title}</button>
+                    ))}
+                </div>}
+
+                {pwcCampaign.enable && <div className="content-info">
+                    {pwcCampaign.data?.messages.map((ele: any, ind: any) => (
+                        <div className="text-content animation-slide-up" role="contentinfo" aria-labelledby="helojohn">
+                            <p className="help-text-content" dangerouslySetInnerHTML={{ __html: ele.value }}></p>
+                            {(ind == 0) && <span className="close-avatar-content" role="contentinfo" aria-label="close" onClick={closePWCHelp}>
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path d="M10.8838 10.0001L16.0669 4.81694C16.311 4.57286 16.311 4.17714 16.0669 3.93306C15.8229 3.68898 15.4271 3.68898 15.1831 3.93306L9.99988 9.11624L4.81694 3.93352C4.57286 3.68944 4.17713 3.68945 3.93306 3.93354C3.68899 4.17762 3.689 4.57335 3.93308 4.81742L9.116 10.0001L3.93306 15.1831C3.68898 15.4272 3.68898 15.8229 3.93306 16.067C4.17714 16.311 4.57286 16.311 4.81694 16.067L9.9999 10.884L15.1831 16.067C15.4272 16.311 15.8229 16.311 16.067 16.0669C16.311 15.8229 16.311 15.4271 16.0669 15.1831L10.8838 10.0001Z" fill="#697586" />
+                                </svg>
+                            </span>}
+                        </div>))}
+                    <div className="pwc-buttons">
+                        {pwcCampaign.data?.buttons?.map((ele: any) => (
+                            <button style={{ backgroundColor: ele?.backgroundColor, color: ele?.color }} className={`primary-button animation-slide-up ${ele?.actionType == 'accept' ? 'pwc-accept' : ''}`} data-postback={ele?.actionValue} onClick={() => handlePWCButtonEvent(ele)}>{ele?.text}</button>
+                        ))}
                     </div>
-                    <div className="text-content animation-slide-up text-heading-two" role="contentinfo" aria-label="paragraph text">
-                        <p className="help-text-content">Can I help you any way?</p>
-                    </div>
-                    <button className="primary-button animation-slide-up btn-anim-send">Send message</button>
-                </div>
+                </div>}
+
                 <button className="avatar-bg">
-                    <span className="un-read-msg">2</span>
+                    {/* <span className="un-read-msg">2</span> */}
                     {brandingInfo.chat_bubble.icon.type == 'default' && <figure className="default-avater-icon">
                         {/* <img src={brandingInfo.chat_bubble.icon.icon_url} alt="Elephant at sunset" /> */}
                         {brandingInfo.chat_bubble.icon.icon_url && brandingInfo.chat_bubble.icon.icon_url == 'icon-1' && <svg width="24" height="18" viewBox="0 0 24 18" fill="none">

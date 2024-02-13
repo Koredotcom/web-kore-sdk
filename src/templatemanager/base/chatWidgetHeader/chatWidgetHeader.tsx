@@ -46,16 +46,20 @@ export function ChatWidgetHeader(props: any) {
             // if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
             //     hostInstance.setLocalStoreItem('kr-cw-state', 'minimized');
             //   }
-            hostInstance.destroy();
-            hostInstance.bot.historyOffset = 0;
-            hostInstance.bot.previousHistoryLoading = false;
-            if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
-                hostInstance.removeLocalStoreItem('kr-cw-state');
-                hostInstance.removeLocalStoreItem('kr-cw-uid');
-                hostInstance.config.botOptions.maintainContext = false;
+            if (!hostInstance.config.pwcConfig.enable) {
+                hostInstance.destroy();
+                hostInstance.misc.initial = true;
+                hostInstance.misc.chatOpened = false;
+                hostInstance.bot.historyOffset = 0;
+                hostInstance.bot.previousHistoryLoading = false;
+                if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
+                    hostInstance.removeLocalStoreItem('kr-cw-state');
+                    hostInstance.removeLocalStoreItem('kr-cw-uid');
+                    hostInstance.config.botOptions.maintainContext = false;
+                }
+                hostInstance.config.branding.header.title.name = hostInstance.config.botMessages.reconnecting;
+                hostInstance.setBranding(hostInstance.config.branding);
             }
-            hostInstance.config.branding.header.title.name = hostInstance.config.botMessages.reconnecting;
-            hostInstance.setBranding(hostInstance.config.branding);
         })
 
         hostInstance.eventManager.removeEventListener('.back-to-chat', 'click');

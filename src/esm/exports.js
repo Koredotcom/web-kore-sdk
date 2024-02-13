@@ -18,3 +18,4 @@ export {KoreFileUploaderPlugin} from './plugins/file-upload.js';
 export {SolutionsTemplatesPlugin} from './plugins/kore-solutions-plugin.js';
 export {KoreMultiFileUploaderPlugin} from './plugins/multi-file-upload.js';
 export {AnswersTemplatesPlugin} from './plugins/answers-template.js';
+export {ProactiveWebCampaignPlugin} from './plugins/proactive-web-campaign.js';

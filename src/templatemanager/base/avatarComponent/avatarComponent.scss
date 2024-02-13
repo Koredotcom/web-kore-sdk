@@ -400,6 +400,10 @@
                 border: 0;
                 white-space: nowrap;
             }
+            .pwc-buttons {
+                display: flex;
+                padding: 0 2px 0 2px ;
+            }
         }
         .bounce2 {
             animation: bounce2 2s ease infinite;

@@ -38,3 +38,5 @@ export {KoreFileUploaderPlugin} from './plugins/file-upload.js';
 export {KoreMultiFileUploaderPlugin} from './plugins/multi-file-upload.js';
 // @ts-ignore
 export {AnswersTemplatesPlugin} from './plugins/answers-template.js';
+// @ts-ignore
+export {ProactiveWebCampaignPlugin} from './plugins/proactive-web-campaign.js';

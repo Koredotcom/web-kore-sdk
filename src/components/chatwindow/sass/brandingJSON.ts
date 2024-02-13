@@ -61,6 +61,26 @@ const BrandingJSON = {
             "theme": "rounded",
             "type": "default"
         },
+        "proactive": {
+            "show": true,
+            "messages": [
+                {
+                    "title": "Welcome to support",
+                    "header": "Hello"
+                },
+                {
+                    "title": "Can I help you any way?",
+                    "header": ""
+                }
+            ],
+            "buttons": [
+                {
+                    "title": "Send Message",
+                    "type": "postback",
+                    "value": ""
+                }
+            ]
+        },
         "sound": "themeOne",
         "alignment": "inline",
         "animation": "slide",
