@@ -1,6 +1,6 @@
 {
   "name": "kore-web-sdk",
-  "version": "v3",
+  "version": "11.0.0",
   "description": "Kore.ai offers Bots SDKs as a set of platform-specific client libraries that provide a quick and convenient way to integrate Kore.ai Bots chat capability into custom applications",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
