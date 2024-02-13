@@ -671,38 +671,38 @@ li.fromCurrentUser .sentIndicator.read{
     }
 }
 
-.chat-window-main-section:hover .cobrowser-wrapper-elipse .elipse-btn {
+.avatar-actions:hover .cobrowser-wrapper-elipse .elipse-btn {
     display: block;
 }
-.chat-window-main-section .cobrowser-wrapper-elipse {
+.avatar-actions .cobrowser-wrapper-elipse {
     position: absolute;
-    right: 5px;
+    right: -15px;
     display: flex;
     flex-direction: column;
     width: auto;
     height: auto;
     top: auto;
-    bottom: 0;
+    bottom: 40px;
 }
-.chat-window-main-section .cobrowser-wrapper-elipse.open-cobrowser .elipse-btn {
+.avatar-actions .cobrowser-wrapper-elipse.open-cobrowser .elipse-btn {
     display: block !important;
 }
-.chat-window-main-section .cobrowser-wrapper-elipse.open-cobrowser .co-bowser-options {
+.avatar-actions .cobrowser-wrapper-elipse.open-cobrowser .co-bowser-options {
     display: block;
 }
-.chat-window-main-section .cobrowser-wrapper-elipse.open-input-browse .co-bowser-options .input-box-co-browser {
+.avatar-actions .cobrowser-wrapper-elipse.open-input-browse .co-bowser-options .input-box-co-browser {
     display: block;
 }
-.chat-window-main-section .cobrowser-wrapper-elipse .elipse-btn {
+.avatar-actions .cobrowser-wrapper-elipse .elipse-btn {
     width: 20px;
     height: 20px;
     cursor: pointer;
     display: none;
 }
-.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options {
+.avatar-actions .cobrowser-wrapper-elipse .co-bowser-options {
     position: absolute;
     top: -78px;
-    left: -41px;
+    left: -35px;
     display: none;
     -webkit-animation-name: slideOutUpcobrowser;
     animation-name: slideOutUpcobrowser;
@@ -711,7 +711,7 @@ li.fromCurrentUser .sentIndicator.read{
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
 }
-.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .btn-co-browser {
+.avatar-actions .cobrowser-wrapper-elipse .co-bowser-options .btn-co-browser {
     border-radius: 32px;
     background: var(--bot-colors-intent,#4B4EDE);
     box-shadow: 0px 2px 4px -2px rgba(16,24,40,0.1), 0px 4px 6px -1px rgba(16,24,40,0.1);
@@ -725,7 +725,7 @@ li.fromCurrentUser .sentIndicator.read{
     width: 34px;
     cursor: pointer;
 }
-.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser {
+.avatar-actions .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser {
     position: absolute;
     bottom: auto;
     top: -115px;
@@ -740,14 +740,14 @@ li.fromCurrentUser .sentIndicator.read{
     right: 0;
     display: none;
 }
-.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser .label-text {
+.avatar-actions .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser .label-text {
     color: var(--neutral-900,#171717);
     font-size: 14px;
     font-weight: 500;
     line-height: 20px;
     margin-bottom: 4px;
 }
-.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input {
+.avatar-actions .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input {
     height: 40px;
     padding: 8px 10px;
     font-size: 16px;
@@ -761,42 +761,42 @@ li.fromCurrentUser .sentIndicator.read{
     color: var(--gray-900,#101828);
     outline: 0;
 }
-.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input::placeholder {
+.avatar-actions .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input::placeholder {
     color: var(--gray-500,#667085);
     font-size: 16px;
     font-weight: 400;
     line-height: 24px;
 }
-.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:focus {
+.avatar-actions .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:focus {
     border: 1px solid var(--primary-300,#84ADFF);
     box-shadow: 0px 0px 0px 4px #EFF4FF, 0px 1px 2px 0px rgba(16,24,40,0.05);
 }
-.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:active {
+.avatar-actions .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:active {
     border: 1px solid var(--primary-300,#84ADFF);
     box-shadow: 0px 0px 0px 4px #EFF4FF, 0px 1px 2px 0px rgba(16,24,40,0.05);
 }
-.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:disabled {
+.avatar-actions .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:disabled {
     border: 1px solid var(--gray-300,#D0D5DD);
     background: var(--gray-50,#F9FAFB);
     pointer-events: none;
     cursor: not-allowed;
 }
-.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input.error {
+.avatar-actions .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input.error {
     border: 1px solid var(--error-300,#FDA29B);
     background: var(--base-white,#FFF);
 }
-.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input.error:focus {
+.avatar-actions .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input.error:focus {
     box-shadow: 0px 0px 0px 4px #FEE4E2, 0px 1px 2px 0px rgba(16,24,40,0.05);
 }
-.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:read-only {
+.avatar-actions .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:read-only {
     border: 1px solid var(--gray-300,#D0D5DD);
     background: var(--gray-50,#F9FAFB);
 }
-.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:-moz-read-only {
+.avatar-actions .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser input:-moz-read-only {
     border: 1px solid var(--gray-300,#D0D5DD);
     background: var(--gray-50,#F9FAFB);
 }
-.chat-window-main-section .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser .error-msg {
+.avatar-actions .cobrowser-wrapper-elipse .co-bowser-options .input-box-co-browser .error-msg {
     color: var(--error-500,#F04438);
     font-size: 14px;
     font-weight: 400;

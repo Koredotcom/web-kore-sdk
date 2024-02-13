@@ -53,7 +53,7 @@ class AgentDesktopPlugin {
         })
 
         me.hostInstance.on('viewInit', (chatEle: any) => {
-            me.hostInstance.$('.chat-window-main-section').append(`
+            me.hostInstance.$('.avatar-actions').append(`
             <div class="cobrowser-wrapper-elipse">
                 <div class="elipse-btn" id='krcobrowseMenu'>
                 <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwIDE2LjEyNUwxMCAxNi4xMTYyTTEwIDEwTDEwIDkuOTkxMjVNMTAgMy44NzVMMTAgMy44NjYyNU0xMCAxNS4yNUMxMC40ODMyIDE1LjI1IDEwLjg3NSAxNS42NDE4IDEwLjg3NSAxNi4xMjVDMTAuODc1IDE2LjYwODIgMTAuNDgzMiAxNyAxMCAxN0M5LjUxNjc1IDE3IDkuMTI1IDE2LjYwODIgOS4xMjUgMTYuMTI1QzkuMTI1IDE1LjY0MTggOS41MTY3NSAxNS4yNSAxMCAxNS4yNVpNMTAgOS4xMjVDMTAuNDgzMiA5LjEyNSAxMC44NzUgOS41MTY3NSAxMC44NzUgMTBDMTAuODc1IDEwLjQ4MzIgMTAuNDgzMiAxMC44NzUgMTAgMTAuODc1QzkuNTE2NzUgMTAuODc1IDkuMTI1IDEwLjQ4MzIgOS4xMjUgMTBDOS4xMjUgOS41MTY3NSA5LjUxNjc1IDkuMTI1IDEwIDkuMTI1Wk0xMCAzQzEwLjQ4MzIgMyAxMC44NzUgMy4zOTE3NSAxMC44NzUgMy44NzVDMTAuODc1IDQuMzU4MjUgMTAuNDgzMiA0Ljc1IDEwIDQuNzVDOS41MTY3NSA0Ljc1IDkuMTI1IDQuMzU4MjUgOS4xMjUgMy44NzVDOS4xMjUgMy4zOTE3NSA5LjUxNjc1IDMgMTAgM1oiIHN0cm9rZT0iIzczNzM3MyIgc3Ryb2tlLXdpZHRoPSIxLjY3IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==" />
@@ -73,8 +73,6 @@ class AgentDesktopPlugin {
 
             me.hostInstance.$('#krOTPErrorMsg').hide();
             
-            me.hostInstance.$('.chat-window-main-section').addClass('chatwindow-cobrowse-open');
-
             me.hostInstance.$('#krcobrowseMenu').click(()=> {
                 me.hostInstance.$('#krOTPErrorMsg').hide();
                 me.hostInstance.$('#cobrowseInput').val('').removeClass('error');
@@ -87,7 +85,7 @@ class AgentDesktopPlugin {
                 me.hostInstance.$('.cobrowser-wrapper-elipse').toggleClass('open-input-browse');
             });
 
-            me.hostInstance.$('.chat-window-main-section').on('keypress', '#cobrowseInput', (e: any) => {
+            me.hostInstance.$('.avatar-actions').on('keypress', '#cobrowseInput', (e: any) => {
                 if (e.which == 13 && this.authInfo) {
                     me.hostInstance.$('#krOTPErrorMsg').hide();
                     me.hostInstance.$('#cobrowseInput').removeClass('error');
