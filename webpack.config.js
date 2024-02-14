@@ -120,7 +120,6 @@ let config= {
         },
         open: ['/examples/esm/chat'],
       },
-    devtool: 'inline-source-map'  
 }
 
 module.exports= function(env,argv){
