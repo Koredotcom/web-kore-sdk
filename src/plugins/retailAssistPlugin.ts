@@ -17,7 +17,7 @@ class RetailAssistTemplatePlugin {
   pickerHTML: any;
   hostInstance: any;
   helpers: any;
-  url: URL | null = null;
+  // url: URL | null = null;
 
   constructor(config: any) {
     const me = this;
@@ -55,10 +55,11 @@ class RetailAssistTemplatePlugin {
       }
     });
     cwInstance.on("onWSOpen", (e: any) => {
-      if (this.url) {
-        const queryParams = this.url.searchParams;
-        const query = queryParams.get('query');
+      // Extracting query parameter from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = urlParams.get('query');
         let stringWithoutQuotes = query?.replace(/"/g, '');
+        // Creating message object
         console.log('Query parameter:', stringWithoutQuotes);
         let clientMessageId = new Date().getTime();
         let messageToBot: any = {
@@ -68,11 +69,7 @@ class RetailAssistTemplatePlugin {
         messageToBot["message"] = {
           body: stringWithoutQuotes
         }
-        console.log(messageToBot, 'messageToBot')
         cwInstance.bot.sendMessage(messageToBot);
-      } else {
-        console.log('URL is not initialized');
-      }
     });
   }
   onViewInit() {
