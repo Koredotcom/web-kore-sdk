@@ -323,6 +323,10 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 	// }		
 # Release History
 ```
+v10.1.17 [Minor] on 06-Jan-2024: Master branch
+        Features
+                1.Added config for retries count for api reconnect on failure. Configuration available at chatConfig.maxReconnectionAPIAttempts
+
 v10.1.13 [Minor] on 04-Nov-2023: Master branch
         Bugfixes
                 1.Table template bugfixes
