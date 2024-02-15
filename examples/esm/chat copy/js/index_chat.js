@@ -1,16 +1,16 @@
-import {chatConfig,chatWindow,AgentDesktopPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
+import {chatConfig,chatWindow,ProactiveWebCampaignPlugin,UserTypingEventsPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {WebKitSTT} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 
 let chatWindowInstance = new chatWindow();
 
 //My Local
 let botOptions=chatConfig.botOptions;
-// botOptions.koreAPIUrl = "http://localhost/api/";
-// botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
-// botOptions.userIdentity = 'uxotest@test.com';// Provide users email id here
-// botOptions.botInfo = { name: "MyTestApp", "_id": "st-956b18bf-a2f0-543c-a4b7-6aece25fa9af" }; // bot name is case sensitive
-// botOptions.clientId = "cs-4c5a1111-75bd-5c55-9a19-1719ce2b425f";
-// botOptions.clientSecret = "stvCQQGI+X6d5g4QSz24qEJaBz0h09AHENW0EjfhxL4=";
+botOptions.koreAPIUrl = "http://localhost/api/";
+botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
+botOptions.userIdentity = 'uxotest@test.com';// Provide users email id here
+botOptions.botInfo = { name: "MyTestApp", "_id": "st-956b18bf-a2f0-543c-a4b7-6aece25fa9af" }; // bot name is case sensitive
+botOptions.clientId = "cs-4c5a1111-75bd-5c55-9a19-1719ce2b425f";
+botOptions.clientSecret = "stvCQQGI+X6d5g4QSz24qEJaBz0h09AHENW0EjfhxL4=";
 
 
 //SIT XO Laxmi
@@ -21,15 +21,6 @@ let botOptions=chatConfig.botOptions;
     // botOptions.botInfo = { name: "Camp testing", "_id": "st-f7438a9b-4eda-5903-be9c-2cc661a0c2ae" }
     // botOptions.clientId = "cs-34b679dc-6d75-5da5-aaac-45b7e9a438eb";
     // botOptions.clientSecret = "zGJ5iFLFQFxzyTBtD6yFukKbfrgAAz4PLRTTUjci8CU=";
-
-    botOptions.koreAPIUrl = "https://smartassist-korevg-np.kore.ai/api/";
-    botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
-    botOptions.userIdentity = 'savgdevtest@mailinator.com';// Provide users email id here
-    botOptions.botInfo = { name: "bot", "_id": "st-1bf741ab-edcc-55dd-b657-0004a8e74b5b" }
-    botOptions.clientId = "cs-9a38a6be-1849-546f-b1b8-b1a720a0b312";
-    botOptions.clientSecret = "T4Osh71TArjnbbBcmEEtF4WtVLEH1mUFQ5rnB+DoMew=";
-
-
 
 /* 
 Important Note: These keys are provided here for quick demos to generate JWT token at client side but not for Production environment.
@@ -70,7 +61,8 @@ https://developer.kore.ai/docs/bots/sdks/user-authorization-and-assertion/
 //   }
   
 //   chatWindowInstance.templateManager.installTemplate(new customTemplateComponent())
-chatWindowInstance.installPlugin(new AgentDesktopPlugin());
-chatWindowInstance.installPlugin(new WebKitSTT({ lang: 'en-US' }));
 
+chatWindowInstance.installPlugin(new WebKitSTT({ lang: 'en-US' }));
+chatWindowInstance.installPlugin(new ProactiveWebCampaignPlugin());
+chatWindowInstance.installPlugin(new UserTypingEventsPlugin());
 chatWindowInstance.show(chatConfig);
