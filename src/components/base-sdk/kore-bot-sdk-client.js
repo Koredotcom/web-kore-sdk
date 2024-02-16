@@ -1428,6 +1428,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     this.CLIENT_EVENTS=CLIENT_EVENTS.RTM;
     this.$=clientOpts.$
     this.debug=debug;
+    this.isSkipOnConnect = clientOpts?.isSkipOnConnect || false;
   }
   
   inherits(KoreRTMClient, BaseAPIClient);
@@ -1499,8 +1500,8 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       if (!__reconnect__ && window.sessionStorage.getItem('isReconnect') == 'true') {
         data.url = data.url + "&isReconnect=true";
       }
-      if (window.sessionStorage.getItem('isSkipOnConnect')) {
-        data.url = data.url + (window.sessionStorage.getItem('isSkipOnConnect') == 'true' ? "&isSkipOnConnect=true" : "&isSkipOnConnect=false");
+      if (this.isSkipOnConnect) {
+        data.url = data.url + "&isSkipOnConnect=true";
       }
       this.authenticated = true;
       //this.activeUserId = data.self.id;
