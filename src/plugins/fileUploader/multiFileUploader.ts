@@ -21,7 +21,7 @@ class KoreMultiFileUploaderPlugin {
   hostInstance: any;
   ele: any;
   innerText: any;
-  config: any;
+  config: any = {};
   options: any;
   $element: any;
   chatInitialize: any;
@@ -30,7 +30,7 @@ class KoreMultiFileUploaderPlugin {
   uploadingInProgress: any = false;
   successEv: Event = new Event('success.ke.multifileuploader');
   errorEv: Event = new Event('failure.ke.multifileuploader');
-  constructor() {
+  constructor(config: any) {
     this.filetypes = {
       audio: ['m4a', 'amr', 'wav', 'aac', 'mp3'],
       video: ['mp4', 'mov', '3gp', 'flv'],
@@ -56,6 +56,9 @@ class KoreMultiFileUploaderPlugin {
       'ppsx', 'ppsm', 'sldx', 'sldm', 'zip', 'rar', 'tar', 'wpd', 'wps', 'rtf', 'msg', 'dat', 'sdf', 'vcf', 'xml', '3ds', '3dm', 'max', 'obj', 'ai', 'eps', 'ps', 'svg', 'indd', 'pct', 'accdb',
       'db', 'dbf', 'mdb', 'pdb', 'sql', 'apk', 'cgi', 'cfm', 'csr', 'css', 'htm', 'html', 'jsp', 'php', 'xhtml', 'rss', 'fnt', 'fon', 'otf', 'ttf', 'cab', 'cur', 'dll', 'dmp', 'drv', '7z', 'cbr',
       'deb', 'gz', 'pkg', 'rpm', 'zipx', 'bak', 'avi', 'm4v', 'mpg', 'rm', 'swf', 'vob', 'wmv', '3gp2', '3g2', 'asf', 'asx', 'srt', 'wma', 'mid', 'aif', 'iff', 'm3u', 'mpa', 'ra', 'aiff', 'tiff'];
+    if (config) {
+      this.config.koreAttachmentAPIUrl = config?.koreAttachmentAPIUrl || 'https://sit-xo.kore.ai/api/'; 
+    }
   }
 
   onInit() {
@@ -266,7 +269,7 @@ class KoreMultiFileUploaderPlugin {
     let me: any = this;
     let $ = me.hostInstance.$;
     let auth = "bearer " + me.hostInstance.config.botOptions.accessToken;
-    let url = me.hostInstance.config.botOptions.koreAPIUrl + '/attachment/file/token';
+    let url = (me.config?.koreAttachmentAPIUrl ? me.config.koreAttachmentAPIUrl : me.hostInstance.config.botOptions.koreAPIUrl) + 'attachment/file/token';
     if (me.hostInstance.config && me.hostInstance.config && me.hostInstance.config.botOptions && me.hostInstance.config.botOptions.webhookConfig && me.hostInstance.config.botOptions.webhookConfig.enable) {
       url = me.hostInstance.config.botOptions.koreAPIUrl + 'attachments/' + me.hostInstance.config.botOptions.webhookConfig.streamId + '/' + me.hostInstance.config.botOptions.webhookConfig.channelType + '/token';
       auth = "bearer " + me.hostInstance.config.botOptions.webhookConfig.token;
@@ -345,9 +348,9 @@ class KoreMultiFileUploaderPlugin {
   getfileuploadConf(_recState: { fileType: any; name: any; }) {
     const me = this;
     me.appConsts.UPLOAD = {
-      FILE_ENDPOINT: me.hostInstance.config.botOptions.koreAPIUrl + '/attachment/file',
-      FILE_TOKEN_ENDPOINT: me.hostInstance.config.botOptions.koreAPIUrl + '/attachment/file/token',
-      FILE_CHUNK_ENDPOINT: me.hostInstance.config.botOptions.koreAPIUrl + '/attachment/file/:fileID/chunk',
+      FILE_ENDPOINT: (me.config?.koreAttachmentAPIUrl ? me.config.koreAttachmentAPIUrl : me.hostInstance.config.botOptions.koreAPIUrl) + 'attachment/file',
+      FILE_TOKEN_ENDPOINT: (me.config?.koreAttachmentAPIUrl ? me.config.koreAttachmentAPIUrl : me.hostInstance.config.botOptions.koreAPIUrl) + 'attachment/file/token',
+      FILE_CHUNK_ENDPOINT: (me.config?.koreAttachmentAPIUrl ? me.config.koreAttachmentAPIUrl : me.hostInstance.config.botOptions.koreAPIUrl) + 'attachment/file/:fileID/chunk',
     };
     let _accessToken = "bearer " + me.hostInstance.config.botOptions.accessToken;
     if (me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) {
@@ -647,7 +650,7 @@ class KoreMultiFileUploaderPlugin {
     let auth = "bearer " + me.hostInstance.config.botOptions.accessToken;
     $.ajax({
       type: 'GET',
-      url: me.hostInstance.config.botOptions.koreAPIUrl + "/attachment/file/" + me.hostInstance.attachmentInfo.fileId + "/url?repeat=true",
+      url: (me.config?.koreAttachmentAPIUrl ? me.config.koreAttachmentAPIUrl : me.hostInstance.config.botOptions.koreAPIUrl) + "attachment/file/" + me.hostInstance.attachmentInfo.fileId + "/url?repeat=true",
       dataType: 'json',
       headers: {
         Authorization: auth,
