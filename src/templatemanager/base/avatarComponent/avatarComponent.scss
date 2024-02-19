@@ -1,13 +1,20 @@
 @import '../variables.scss';
 .avatar-variations-footer {
     position: fixed;
-    bottom: 40px;
-    right: 40px;
+    bottom: 0px;
+    right: 0px;
+    padding: 40px;
     // position: absolute;
     // bottom: 0;
     // right: 0;
     overflow: inherit;
     animation: remove-hidden 0.1s ease forwards;
+    &.box-shadow-light-avatar{
+        background: linear-gradient(314deg, #D0D5DD -2.67%, rgba(217, 217, 217, 0.00) 50.7%);
+    }
+    &.box-shadow-dark-avatar{
+        background: linear-gradient(314deg, #667085 -2.67%, rgba(16, 24, 40, 0.00) 50.7%);
+    }
     @media (max-width: $media-mobile) {
         bottom: 15px;
         right: 10px;
@@ -219,15 +226,17 @@
                         animation-delay: 3s;
                     }
                 }
-                .primary-button{
-                    padding: 0;
-                    width: 0px;
-                    height: 0px;
-                    opacity: 0;
+                .buttons-triger-click-wrapper{
                     &.btn-anim-send{
                         transform-origin: bottom top;   
                         animation: avatarType1Animation2 0.5s ease forwards;
                         animation-delay: 4s;
+                    }
+                    .primary-button{
+                        padding: 0;
+                        width: 0px;
+                        height: 0px;
+                        opacity: 0;
                     }
                 }
             }
@@ -286,11 +295,7 @@
                         animation-delay: 3s;
                     }
                 }
-                .primary-button{
-                    padding: 0;
-                    width: 0px;
-                    height: 0px;
-                    opacity: 0;
+                .buttons-triger-click-wrapper{
                     &.btn-anim-send{
                         -webkit-transform-origin: bottom right;
                         -ms-transform-origin: bottom right;
@@ -301,6 +306,12 @@
                         animation-fill-mode: both;
                         animation: avatarType2Animation2 0.8s ease forwards;
                         animation-delay: 4s;
+                    }
+                    .primary-button{
+                        padding: 0;
+                        width: 0px;
+                        height: 0px;
+                        opacity: 0;
                     }
                 }
             }
@@ -387,22 +398,38 @@
                     }
                 }
             }
-            .primary-button {
-                background: var(--avatar-send-msg-bg);
-                box-shadow: 0px 4px 12px 2px rgba(32, 33, 36, 0.12);
-                border-radius: 4px;
-                height: 40px;
-                padding: 10px 16px;
-                font-weight: 500;
-                font-size: 14px;
-                line-height: 20px;
-                color: var(--global_white);
-                border: 0;
-                white-space: nowrap;
-            }
-            .pwc-buttons {
-                display: flex;
-                padding: 0 2px 0 2px ;
+            .buttons-triger-click-wrapper{
+                display: grid;
+                grid-template-columns: auto auto;
+                grid-gap: 8px;
+                &.buttons-single-row-block{
+                    .primary-button{
+                        &:last-child{
+                            grid-column-start: none !important;
+                        }
+                    }
+                }
+                &.buttons-block-level{
+                    display: inline-flex !important;
+                    flex-direction: column;
+                    align-items: end;
+                }
+                .primary-button {
+                    background: var(--avatar-send-msg-bg);
+                    box-shadow: 0px 4px 12px 2px rgba(32, 33, 36, 0.12);
+                    border-radius: 4px;
+                    height: 40px;
+                    padding: 10px 16px;
+                    font-weight: 500;
+                    font-size: 14px;
+                    line-height: 20px;
+                    color: var(--global_white);
+                    border: 0;
+                    white-space: nowrap;
+                    &:last-child{
+                        grid-column-start: 2;
+                    }
+                }
             }
         }
         .bounce2 {

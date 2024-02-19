@@ -123,9 +123,11 @@ export function AvatarComponent(props: any) {
                                 </svg>
                             </span>}
                         </div>))}
-                    {hostInstance.config.branding.chat_bubble.proactive.buttons.map((btn: any) => (
-                        <button className="primary-button animation-slide-up btn-anim-send" onClick={triggerAvatar}>{btn.title}</button>
-                    ))}
+                        <div className="buttons-triger-click-wrapper animation-slide-up btn-anim-send">
+                        {hostInstance.config.branding.chat_bubble.proactive.buttons.map((btn: any) => (
+                            <button className="primary-button" onClick={triggerAvatar}>{btn.title}</button>                        
+                        ))}
+                    </div>
                 </div>}
 
                 {pwcCampaign.enable && <div className="content-info">
@@ -138,7 +140,7 @@ export function AvatarComponent(props: any) {
                                 </svg>
                             </span>}
                         </div>))}
-                    <div className="pwc-buttons">
+                    <div className="buttons-triger-click-wrapper animation-slide-up btn-anim-send">
                         {pwcCampaign.data?.buttons?.map((ele: any) => (
                             <button style={{ backgroundColor: ele?.backgroundColor, color: ele?.color }} className={`primary-button animation-slide-up ${ele?.actionType == 'accept' ? 'pwc-accept' : ''}`} data-postback={ele?.actionValue} onClick={() => handlePWCButtonEvent(ele)}>{ele?.text}</button>
                         ))}
