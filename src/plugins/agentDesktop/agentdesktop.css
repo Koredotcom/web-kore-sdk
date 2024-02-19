@@ -676,13 +676,14 @@ li.fromCurrentUser .sentIndicator.read{
 }
 .avatar-actions .cobrowser-wrapper-elipse {
     position: absolute;
-    right: -15px;
+    right: -25px;
     display: flex;
     flex-direction: column;
     width: auto;
     height: auto;
     top: auto;
-    bottom: 40px;
+    bottom: 10px;
+    padding-left: 10px;
 }
 .avatar-actions .cobrowser-wrapper-elipse.open-cobrowser .elipse-btn {
     display: block !important;
