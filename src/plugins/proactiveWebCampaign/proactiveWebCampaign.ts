@@ -171,7 +171,7 @@ class ProactiveWebCampaignPlugin {
         templateManager.installTemplate(new PWCPostTemplate());
     }
 
-    eventLoop() {
+    async eventLoop() {
         const me: any = this;
         let currentUrl = window.location.href;
         if (!window.sessionStorage.getItem('kr-pwc')) {
@@ -179,7 +179,7 @@ class ProactiveWebCampaignPlugin {
             window.sessionStorage.setItem('prevUrl', currentUrl);
             window.sessionStorage.setItem('startTime', new Date().getTime() + '');
             me.createTimeSpentObjs();
-            me.getLocationDetails();
+            await me.getLocationDetails();
             me.sendEvent(currentUrl, 'pageChange');
         }
         setInterval(() => {
@@ -317,18 +317,20 @@ class ProactiveWebCampaignPlugin {
                 }
                 let loc: any = window.sessionStorage.getItem('pwcLocationData');
                 loc = JSON.parse(loc);
-                camp.engagementStrategy.rules.forEach((ruleItem: any) => {
-                    switch (ruleItem.rule) {
-                        case 'country':
-                        case 'city':
-                            let ruleCopy = {...ruleItem}
-                            ruleCopy['location'] = loc;
-                            payload.ruleInfo.push(ruleCopy);
-                            break;
-                    }
-                })
-                me.sendApiEvent(payload, '/locationdetails', campInstanceId);
-                me.isCityCountryRule[campInstanceId] = false;
+                if (loc) {
+                    camp.engagementStrategy.rules.forEach((ruleItem: any) => {
+                        switch (ruleItem.rule) {
+                            case 'country':
+                            case 'city':
+                                let ruleCopy = {...ruleItem}
+                                ruleCopy['location'] = loc;
+                                payload.ruleInfo.push(ruleCopy);
+                                break;
+                        }
+                    })
+                    me.sendApiEvent(payload, '/locationdetails', campInstanceId);
+                    me.isCityCountryRule[campInstanceId] = false;
+                }
             }
             let pwe_data: any = window.sessionStorage.getItem('pwe_data');
             pwe_data = JSON.parse(pwe_data);
