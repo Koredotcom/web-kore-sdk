@@ -28,7 +28,7 @@
     background-color: #ebebeb;
 }
 .bank-assist-theme .chat-widget-composebar .compose-bar-wrapper .send-btn {
-    background-color: #3c817c;
+    background-color: #3c817c !important;
 }
 .bank-assist-theme .chat-widget-composebar .compose-bar-wrapper .compose-text-area .typing-text-area {
     background-color: #f7f9fa;

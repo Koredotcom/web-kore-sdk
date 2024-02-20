@@ -54,6 +54,7 @@ class BankAssistTemplatePlugin {
             }
             if (event.messageData?.message?.type === 'agent_disconnected') {
                 me.addBranding();
+                cwInstance.config.branding.header.sub_title.name = '';
                 let chatWidgetBodyWrapper = document.querySelector('.chat-widget-body-wrapper');
                 if (chatWidgetBodyWrapper) {
                     chatWidgetBodyWrapper.classList.remove('dark-background');
@@ -104,6 +105,7 @@ class BankAssistTemplatePlugin {
 
         // Check if the parent div is found
         if (chatWindowMainSection) {
+
             let firstName = localStorage.getItem('firstName') || 'You';
             // Capitalize the first letter of firstName
             const capitalizedFirstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
@@ -153,40 +155,80 @@ class BankAssistTemplatePlugin {
             success: function (data: any) {
                 //assigning the branding values to variables coming from workbench
                 var widgetBranding = data[1].brandingwidgetdesktop;
-                if (botConfigDetails.branding.header.title.name) {
-                    botConfigDetails.branding.general.colors.useColorPaletteOnly = false;
-                    botConfigDetails.branding.header.bg_color = widgetBranding.widgetHeaderColor;
-                    botConfigDetails.branding.header.title.name = widgetBranding.botName;
-                    botConfigDetails.branding.header.title.color = widgetBranding.widgetTextColor;
-                    botConfigDetails.branding.body.background.color = widgetBranding.widgetBodyColor;
-                    botConfigDetails.branding.footer.bg_color = widgetBranding.widgetFooterColor;
-                    botConfigDetails.branding.body.user_message.bg_color = widgetBranding.userchatBgColor;
-                    botConfigDetails.branding.body.user_message.color = widgetBranding.userchatTextColor;
-                    botConfigDetails.branding.body.bot_message.bg_color = widgetBranding.botchatBgColor;
-                    botConfigDetails.branding.body.bot_message.color = widgetBranding.botchatTextColor;
-                    botConfigDetails.branding.body.buttons.bg_color = widgetBranding.buttonActiveBgColor;
-                    botConfigDetails.branding.body.buttons.color = widgetBranding.buttonActiveTextColor;
+                if (botConfigDetails.branding.header.title) {
+                    if (widgetBranding.theme == 'Default light theme' ) {
+                        botConfigDetails.branding.general.colors.useColorPaletteOnly = false;
+                        botConfigDetails.branding.header.bg_color = '#3f517a';
+                        botConfigDetails.branding.header.title.name = "BankAssist";
+                        botConfigDetails.branding.header.sub_title.name = "";
+                        botConfigDetails.branding.header.title.color = "white";
+                        botConfigDetails.branding.body.background.color = "#ebebeb";
+                        botConfigDetails.branding.footer.bg_color = "#ffffff";
+                        botConfigDetails.branding.body.user_message.bg_color = '#546b9d';
+                        botConfigDetails.branding.body.user_message.color = "#ffffff";
+                        botConfigDetails.branding.body.bot_message.bg_color = "#ffffff";
+                        botConfigDetails.branding.body.bot_message.color = '#000000';
+                        botConfigDetails.branding.body.buttons.bg_color = widgetBranding.buttonActiveBgColor;
+                        botConfigDetails.branding.body.buttons.color = widgetBranding.buttonActiveTextColor;
 
-                    botConfigDetails.branding.chat_bubble.icon.type = "custom";
-                    botConfigDetails.branding.chat_bubble.minimise.type = "custom";
-                    botConfigDetails.branding.chat_bubble.icon.icon_url='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFXSURBVHgB5VVRccMwDJWHIAxmCIYQCIUQBhuEDME2BM0QrAyyIWiGIB2ClIEn3T3fqe7VkXftV9/dO1e2ZCl+sktUgRhjw/R0K/Dmb8y5JsYVNgs8PDG9mg4Yp8z9wzk3kDUBNh9h/lAZjyii5yQvZIEcA+iN/nJ0gtbi7OH8rOZOxL1gn8QkPBRyHRG84WFhzqrCPexXMfhojphvahIkBPW7ReU+2WvBlgQD8xscuNoDjyLmL/OdaqHOs6+ISbp11oCRuVgCRJfarktfMUc7FtydM7i16mhdyANzpzrpHiAXSL+ackOZn5k9Krs3iQxxx7xNpZswt1fvzlatB9VJoZQg5MFZkgkdI0mabL3NC7uUJFXo8UWbgm+LTrO/wNh0ARNmnQjJh+weCDqyACJ+QbwuVafW+3QcWN+JP/0XasMWHEVwuhaUgBpbS6wjI+L53+FkeR7+ALqqAJD4w9BaAAAAAElFTkSuQmCC';
-                    botConfigDetails.branding.chat_bubble.minimise.icon='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEzLjA2MDUgMTIuMDAwMUwxOS4yODAzIDUuNzgwMzNDMTkuNTczMiA1LjQ4NzQ0IDE5LjU3MzIgNS4wMTI1NiAxOS4yODAzIDQuNzE5NjdDMTguOTg3NCA0LjQyNjc4IDE4LjUxMjYgNC40MjY3OCAxOC4yMTk3IDQuNzE5NjdMMTEuOTk5OSAxMC45Mzk1TDUuNzgwMzMgNC43MjAyMkM1LjQ4NzQzIDQuNDI3MzMgNS4wMTI1NiA0LjQyNzM0IDQuNzE5NjcgNC43MjAyNEM0LjQyNjc4IDUuMDEzMTQgNC40MjY3OSA1LjQ4ODAyIDQuNzE5NjkgNS43ODA5TDEwLjkzOTIgMTIuMDAwMkw0LjcxOTY3IDE4LjIxOTdDNC40MjY3OCAxOC41MTI2IDQuNDI2NzggMTguOTg3NSA0LjcxOTY3IDE5LjI4MDRDNS4wMTI1NiAxOS41NzMyIDUuNDg3NDQgMTkuNTczMiA1Ljc4MDMzIDE5LjI4MDRMMTEuOTk5OSAxMy4wNjA4TDE4LjIxOTcgMTkuMjgwNEMxOC41MTI2IDE5LjU3MzIgMTguOTg3NSAxOS41NzMyIDE5LjI4MDQgMTkuMjgwM0MxOS41NzMyIDE4Ljk4NzQgMTkuNTczMiAxOC41MTI2IDE5LjI4MDMgMTguMjE5N0wxMy4wNjA1IDEyLjAwMDFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K';
 
-                    //chat bot header 
-                    botConfigDetails.branding.header.buttons.live_agent.show = false;
-                    botConfigDetails.branding.header.buttons.help.show = false;
-                    botConfigDetails.branding.header.icon.type = 'custom'
-                    botConfigDetails.branding.header.icon.icon_url = widgetBranding.bankLogo;
-                    //for changing the logo
-                    if (widgetBranding.bankLogo) {
-                        // Get the reference to the parent div based on its class
-                        var parentDiv = document.querySelector(".bank-assist-theme .info-content-data .img-block figure img");
-                        // Check if the element exists before attempting to access properties
-                        if (parentDiv instanceof HTMLImageElement) {
-                            // replacing the logo
-                            parentDiv.src = widgetBranding.bankLogo;
+                        botConfigDetails.branding.chat_bubble.icon.type = "custom";
+                        botConfigDetails.branding.chat_bubble.minimise.type = "custom";
+                        botConfigDetails.branding.chat_bubble.icon.icon_url='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFXSURBVHgB5VVRccMwDJWHIAxmCIYQCIUQBhuEDME2BM0QrAyyIWiGIB2ClIEn3T3fqe7VkXftV9/dO1e2ZCl+sktUgRhjw/R0K/Dmb8y5JsYVNgs8PDG9mg4Yp8z9wzk3kDUBNh9h/lAZjyii5yQvZIEcA+iN/nJ0gtbi7OH8rOZOxL1gn8QkPBRyHRG84WFhzqrCPexXMfhojphvahIkBPW7ReU+2WvBlgQD8xscuNoDjyLmL/OdaqHOs6+ISbp11oCRuVgCRJfarktfMUc7FtydM7i16mhdyANzpzrpHiAXSL+ackOZn5k9Krs3iQxxx7xNpZswt1fvzlatB9VJoZQg5MFZkgkdI0mabL3NC7uUJFXo8UWbgm+LTrO/wNh0ARNmnQjJh+weCDqyACJ+QbwuVafW+3QcWN+JP/0XasMWHEVwuhaUgBpbS6wjI+L53+FkeR7+ALqqAJD4w9BaAAAAAElFTkSuQmCC';
+                        botConfigDetails.branding.chat_bubble.minimise.icon='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEzLjA2MDUgMTIuMDAwMUwxOS4yODAzIDUuNzgwMzNDMTkuNTczMiA1LjQ4NzQ0IDE5LjU3MzIgNS4wMTI1NiAxOS4yODAzIDQuNzE5NjdDMTguOTg3NCA0LjQyNjc4IDE4LjUxMjYgNC40MjY3OCAxOC4yMTk3IDQuNzE5NjdMMTEuOTk5OSAxMC45Mzk1TDUuNzgwMzMgNC43MjAyMkM1LjQ4NzQzIDQuNDI3MzMgNS4wMTI1NiA0LjQyNzM0IDQuNzE5NjcgNC43MjAyNEM0LjQyNjc4IDUuMDEzMTQgNC40MjY3OSA1LjQ4ODAyIDQuNzE5NjkgNS43ODA5TDEwLjkzOTIgMTIuMDAwMkw0LjcxOTY3IDE4LjIxOTdDNC40MjY3OCAxOC41MTI2IDQuNDI2NzggMTguOTg3NSA0LjcxOTY3IDE5LjI4MDRDNS4wMTI1NiAxOS41NzMyIDUuNDg3NDQgMTkuNTczMiA1Ljc4MDMzIDE5LjI4MDRMMTEuOTk5OSAxMy4wNjA4TDE4LjIxOTcgMTkuMjgwNEMxOC41MTI2IDE5LjU3MzIgMTguOTg3NSAxOS41NzMyIDE5LjI4MDQgMTkuMjgwM0MxOS41NzMyIDE4Ljk4NzQgMTkuNTczMiAxOC41MTI2IDE5LjI4MDMgMTguMjE5N0wxMy4wNjA1IDEyLjAwMDFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K';
+
+                        //chat bot header 
+                        botConfigDetails.branding.header.buttons.live_agent.show = false;
+                        botConfigDetails.branding.header.buttons.help.show = false;
+                        botConfigDetails.branding.header.icon.type = 'custom'
+                        botConfigDetails.branding.header.icon.icon_url = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAKsSURBVHgBzVc9bNNAFP7stlLShVSwIFWQCFGxYapKCAmJZoEBhmRBmQgZEGFqKhYGpKYSKyjd2JoyA+kAC0tAQkIsYMQCA4pBSEwQd0mKoLm+u7OVOD/OuY2bfpJln/383rvv3b17T4MqKoUYWtsp6LgEaAbQitM9Jj8yG9Atupto4Q30yCbSJVtFrTZUopKPg6EAjWXbBpVQpmsV6ccW9uQAnzH+rtCsCtgXWAmIrg5ipL8DfNZAla44RgOLrmQ/NvQe0cotY8TG4eiqOro98DIw+pl3w0IXE20HRMy3P4ZovMOJyDl3TXSEgC+40I1D2miuuAPJgKS+hoNFgodCMsBQREDEp4+ienEZlfO3xXNg8NwCzoCMfV31v9jUNJZOJVE8c83zvvjlBda+VWH/ayhq4tkzmpjAdSNDbqRUfkkdP0szztO9Zzdh8dgcMrML2CIHzK2fCtq0CFr/v04gs0BpFoafKKeYG743d0UwMAj8G3fOODKL93WL2GjC3wfYFII7tPWYrwP1qw99DfcDD8XMy7tDpJg56ZxqvmLLn58SxacRBGphQJwYyDOMEZOqguX5G8ieuCCek28fiXWxPp8V49yHDViNP2JbCtkf7+jdEyW9utwO4wKzdVnJjA2UCRn7hLFBMzU8y9+kQKwPE+XbMDYVFc/u/u4c823npmR3rICck4qbNb96j2dA15gquBObv4aRG5mRCeB5vkSpYGmQWO3yg8AHjtX4jcSr+34iZToNc4fkOOYlEsMaDgrcllOWtSsiLVKErNnChuXYgtcBWaMlEa4TlrDR0SN4y3JBy04a4ThhCd1dvcEhbEw4hCCVzqNYmEIHL8P794iqzWmRJLNQBh1wTNugf0p7b057HBHFa4qcWaSRQd3ySU97zrTv9GDS99dB2vNddTT0D9aC1KgAAAAASUVORK5CYII=';
+                        
+                        //for changing the logo
+                        if (widgetBranding.bankLogo) {
+                            // Get the reference to the parent div based on its class
+                            var parentDiv = document.querySelector(".bank-assist-theme .info-content-data .img-block figure img");
+                            // Check if the element exists before attempting to access properties
+                            if (parentDiv instanceof HTMLImageElement) {
+                                // replacing the logo
+                                parentDiv.src = widgetBranding.bankLogo;
+                            }
+                        }
+                    } else {
+                        botConfigDetails.branding.general.colors.useColorPaletteOnly = false;
+                        botConfigDetails.branding.header.bg_color = widgetBranding.widgetHeaderColor;
+                        botConfigDetails.branding.header.title.name = widgetBranding.botName;
+                        botConfigDetails.branding.header.title.color = widgetBranding.widgetTextColor;
+                        botConfigDetails.branding.body.background.color = widgetBranding.widgetBodyColor;
+                        botConfigDetails.branding.footer.bg_color = widgetBranding.widgetFooterColor;
+                        botConfigDetails.branding.body.user_message.bg_color = widgetBranding.userchatBgColor;
+                        botConfigDetails.branding.body.user_message.color = widgetBranding.userchatTextColor;
+                        botConfigDetails.branding.body.bot_message.bg_color = widgetBranding.botchatBgColor;
+                        botConfigDetails.branding.body.bot_message.color = widgetBranding.botchatTextColor;
+                        botConfigDetails.branding.body.buttons.bg_color = widgetBranding.buttonActiveBgColor;
+                        botConfigDetails.branding.body.buttons.color = widgetBranding.buttonActiveTextColor;
+
+                        botConfigDetails.branding.chat_bubble.icon.type = "custom";
+                        botConfigDetails.branding.chat_bubble.minimise.type = "custom";
+                        botConfigDetails.branding.chat_bubble.icon.icon_url='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFXSURBVHgB5VVRccMwDJWHIAxmCIYQCIUQBhuEDME2BM0QrAyyIWiGIB2ClIEn3T3fqe7VkXftV9/dO1e2ZCl+sktUgRhjw/R0K/Dmb8y5JsYVNgs8PDG9mg4Yp8z9wzk3kDUBNh9h/lAZjyii5yQvZIEcA+iN/nJ0gtbi7OH8rOZOxL1gn8QkPBRyHRG84WFhzqrCPexXMfhojphvahIkBPW7ReU+2WvBlgQD8xscuNoDjyLmL/OdaqHOs6+ISbp11oCRuVgCRJfarktfMUc7FtydM7i16mhdyANzpzrpHiAXSL+ackOZn5k9Krs3iQxxx7xNpZswt1fvzlatB9VJoZQg5MFZkgkdI0mabL3NC7uUJFXo8UWbgm+LTrO/wNh0ARNmnQjJh+weCDqyACJ+QbwuVafW+3QcWN+JP/0XasMWHEVwuhaUgBpbS6wjI+L53+FkeR7+ALqqAJD4w9BaAAAAAElFTkSuQmCC';
+                        botConfigDetails.branding.chat_bubble.minimise.icon='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEzLjA2MDUgMTIuMDAwMUwxOS4yODAzIDUuNzgwMzNDMTkuNTczMiA1LjQ4NzQ0IDE5LjU3MzIgNS4wMTI1NiAxOS4yODAzIDQuNzE5NjdDMTguOTg3NCA0LjQyNjc4IDE4LjUxMjYgNC40MjY3OCAxOC4yMTk3IDQuNzE5NjdMMTEuOTk5OSAxMC45Mzk1TDUuNzgwMzMgNC43MjAyMkM1LjQ4NzQzIDQuNDI3MzMgNS4wMTI1NiA0LjQyNzM0IDQuNzE5NjcgNC43MjAyNEM0LjQyNjc4IDUuMDEzMTQgNC40MjY3OSA1LjQ4ODAyIDQuNzE5NjkgNS43ODA5TDEwLjkzOTIgMTIuMDAwMkw0LjcxOTY3IDE4LjIxOTdDNC40MjY3OCAxOC41MTI2IDQuNDI2NzggMTguOTg3NSA0LjcxOTY3IDE5LjI4MDRDNS4wMTI1NiAxOS41NzMyIDUuNDg3NDQgMTkuNTczMiA1Ljc4MDMzIDE5LjI4MDRMMTEuOTk5OSAxMy4wNjA4TDE4LjIxOTcgMTkuMjgwNEMxOC41MTI2IDE5LjU3MzIgMTguOTg3NSAxOS41NzMyIDE5LjI4MDQgMTkuMjgwM0MxOS41NzMyIDE4Ljk4NzQgMTkuNTczMiAxOC41MTI2IDE5LjI4MDMgMTguMjE5N0wxMy4wNjA1IDEyLjAwMDFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K';
+
+                        //chat bot header 
+                        botConfigDetails.branding.header.buttons.live_agent.show = false;
+                        botConfigDetails.branding.header.buttons.help.show = false;
+                        botConfigDetails.branding.header.icon.type = 'custom'
+                        botConfigDetails.branding.header.icon.icon_url = widgetBranding.bankLogo;
+                        //for changing the logo
+                        if (widgetBranding.bankLogo) {
+                            // Get the reference to the parent div based on its class
+                            var parentDiv = document.querySelector(".bank-assist-theme .info-content-data .img-block figure img");
+                            // Check if the element exists before attempting to access properties
+                            if (parentDiv instanceof HTMLImageElement) {
+                                // replacing the logo
+                                parentDiv.src = widgetBranding.bankLogo;
+                            }
                         }
                     }
+                    
                 }
                 
                 // Get the reference to the parent div based on its class

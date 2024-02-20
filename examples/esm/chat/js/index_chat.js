@@ -3,18 +3,37 @@ import {WebKitSTT} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 
 let chatWindowInstance = new chatWindow();
 
+// Function to generate a random number
+function generateRandomNumber() {
+    var array = new Uint32Array(1);
+    window.crypto.getRandomValues(array);
+    return array[0];
+}
+
+// Function to encrypt a number using XOR encryption
+function encryptNumber(number, key) {
+    return number ^ key; // Simple XOR encryption
+}
+
+// Generate a random number
+var randomNumber = generateRandomNumber();
+// Define a key for encryption
+var encryptionKey = 123456;
+// Encrypt the random number
+var encryptedNumber = encryptNumber(randomNumber, encryptionKey);
+
 //OPTION #1
 let botOptions=chatConfig.botOptions;
 
 botOptions.koreAPIUrl =  "https://demo-bankassist.kore.ai/workbench/api";
 botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
-botOptions.userIdentity = 'demouser@bankassist.com';// Provide users email id here
+botOptions.userIdentity = encryptedNumber;// Provide users email id here
 botOptions.botInfo = { name: "BankAssistSolutionsDemo", "_id": "st-804e5efc-6968-5606-a4fb-d479f7e8c33b" }; // bot name is case sensitive
 botOptions.clientId = "cs-3f08db9c-e06f-55b7-8487-38ee8ca4eae3";
 botOptions.clientSecret = "P8tRvXMrxYtYjul1HdQ+MZ/XrlgBoEPggQlp/qo8YWE=";
 botOptions.accountID = "6544c230c4617f18073de22e";
 botOptions.brandingBotId = "st-65443d22-e08b-5cad-bba0-7f234f960444";
-chatConfig.loadHistory = false
+chatConfig.loadHistory = false;
 /* 
 Important Note: These keys are provided here for quick demos to generate JWT token at client side but not for Production environment.
 Refer below document for JWT token generation at server side. Client Id and Client secret should maintained at server end.

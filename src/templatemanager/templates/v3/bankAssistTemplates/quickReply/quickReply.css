@@ -1,7 +1,7 @@
 .bank-assist-theme .quick-buttons {
     width: 64px;
     min-width: 77px;
-    height: 40px;
+    min-height: 40px;
     padding: 9px 12px;
     gap: 4px;
     text-align: center;

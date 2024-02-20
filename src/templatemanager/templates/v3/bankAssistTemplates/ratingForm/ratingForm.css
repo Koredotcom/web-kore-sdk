@@ -11,6 +11,7 @@
     margin-right: 20px;
     cursor: pointer;
     padding-left: 10px;
+    color:white;
 }
 
 .bank-assist-theme .bankingFeedBackTemplate-content-experience input[type="radio"] {
@@ -29,7 +30,7 @@
 
 .bank-assist-theme .checkbox.checkbox-primary.styledCSS.checkboxesDiv {
     padding: 5px 5px 5px 10px;
-    color:white;
+    color:black;
 }
 
 .bank-assist-theme .list-view-feedback-heading {
