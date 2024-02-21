@@ -20,7 +20,7 @@
         max-width: 100%;
         padding-left: 10%;
         transition: 0.5s all ease;
-        word-break: break-all;
+        word-break: break-word;
         &:hover{
             .bubble-msg-with-img{
                 .bubble-msg{
@@ -279,7 +279,7 @@
         padding-right: 10%;
         padding-left: 32px;
         transition: 0.5s all ease;  
-        word-break: break-all;
+        word-break: break-word;
         &:hover{
             .bubble-msg-with-img{
                 .bubble-msg{
