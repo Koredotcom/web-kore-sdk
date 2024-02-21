@@ -629,8 +629,14 @@ class AgentDesktopPluginScript  {
                 toastContainer.empty();
                 toastContainer.append(incomingCall);
 
+                 // Hide the toastContainer or #toast when isUserCall is true
                 var rejectCall = koreJquery("#rejectcall");
                 var acceptCall = koreJquery("#acceptcall");
+                if(_self.callDetails.isCallFromUser){
+                    document.getElementById('toast').style.visibility = "hidden";
+                    console.log("Toast is hidden");
+                    this.autoAcceptConversation();
+                }
                 rejectCall.off('click').on('click', function (event) {
                     const payload = _self.callDetails;
                     payload['type'] = "call_agent_webrtc_rejected"
@@ -682,6 +688,13 @@ class AgentDesktopPluginScript  {
 
                 });
             }, 100);
+        }
+        this.autoAcceptConversation = function(){
+            setTimeout(()=>{
+                console.log(document.getElementById('acceptcall'));
+                document.getElementById('acceptcall').click();
+                console.log("Clicked successfully");
+            },100);
         }
         this.showCobrowseRequest = function (cobrowseRequest) {
             let me = this;

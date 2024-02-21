@@ -27,7 +27,13 @@ export function WelcomeScreenContainer(props: any) {
         if (e.action.type.toLowerCase() == 'postback' || e.action.type.toLowerCase() == 'text') {
             const timeout = hostInstance.historyLoading ? 3500 : 200
             setTimeout(() => {
-                hostInstance.sendMessage(e.action.value, { renderMsg: e.title });
+                // hostInstance.sendMessage(e.action.value, { renderMsg: e.title });
+                if(e.action?.campaignInfo && e.action?.campaignInfo?.pweInfo){
+                    // To Handle proactive web campaigns
+                    hostInstance.sendMessage(e.action.value, { renderMsg: e.title, campaignInfo: {...e.action.campaignInfo} });
+                } else {
+                    hostInstance.sendMessage(e.action.value, { renderMsg: e.title });
+                }
             }, timeout);
             handleEventsWelcomeScreen();
         } else if (e.action.type == 'url' || e.action.type == 'web_url') {

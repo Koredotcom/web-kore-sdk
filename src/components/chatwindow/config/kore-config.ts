@@ -3,7 +3,7 @@ import BrandingJSON from '../sass/brandingJSON'; // To do
 var chatConfig:any={};
 
 var botOptions:any = {};
-botOptions.openSocket = false;
+botOptions.openSocket = true;
 botOptions.logLevel = 'debug';
 botOptions.koreAPIUrl = "https://sit-xo.kore.ai/api/";
 
@@ -47,7 +47,7 @@ chatConfig = {
         enable:false
     },
     pwcConfig: {
-        enable: false,
+        enable: true,
         container: 'body',
         knownUser: false
     },
@@ -61,7 +61,7 @@ chatConfig = {
     googleMapsAPIKey: "",           
     minimizeMode: true,             // set true, to show chatwindow in minimized mode, If false is set remove #chatContainer style in chatwindow.css  
     multiPageApp: {
-        enable: false,              //set true for non SPA(Single page applications)
+        enable: true,              //set true for non SPA(Single page applications)
         userIdentityStore: 'localStorage',//'localStorage || sessionStorage'
         chatWindowStateStore: 'localStorage'//'localStorage || sessionStorage'
     },

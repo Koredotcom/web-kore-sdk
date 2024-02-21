@@ -168,6 +168,48 @@ const BrandingJSON = {
                             "type": "postback",
                             "value": "https://kore.ai/"
                         }
+                    },
+                    {
+                        "title": "Chat With Us",
+                        "action": {
+                            "type": "postback",
+                            "value": "https://kore.ai/",
+                            "campaignInfo": {
+                                "pweInfo": {
+                                  "isCallFromUser": true,
+                                  "subType": "chat",
+                                  "origin": "pwe"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "title": "Audio Call",
+                        "action": {
+                            "type": "postback",
+                            "value": "https://kore.ai/",
+                            "campaignInfo": {
+                                "pweInfo": {
+                                  "isCallFromUser": true,
+                                  "subType": "audio",
+                                  "origin": "pwe"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "title": "Video Call",
+                        "action": {
+                            "type": "postback",
+                            "value": "https://kore.ai/",
+                            "campaignInfo": {
+                                "pweInfo": {
+                                  "isCallFromUser": true,
+                                  "subType": "video",
+                                  "origin": "pwe"
+                                }
+                            }
+                        }
                     }
                 ],
                 "input": "button",
