@@ -46,6 +46,7 @@ import TemplateClockPicker from './templates/v3/clockPicker/clockPicker';
 import TemplateSystem from './templates/v3/system/system';
 import TemplateAttachmentV3 from './templates/v3/templateAttachment/templateAttachment';
 import TemplateListWidget from './templates/v3/listWidget/listWidget';
+import AdvancedMultiListTemplate from './templates/v3/advancedMulitList/advancedMultiList';
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
 //(function($){
@@ -125,6 +126,7 @@ class TemplateManager {
 		this.installTemplate(new TemplateSystem());
 		this.installTemplate(new TemplateAttachmentV3());
 		this.installTemplate(new TemplateListWidget());
+		this.installTemplate(new AdvancedMultiListTemplate());
 	}
 
 	renderMessage  (msgData: any) {
