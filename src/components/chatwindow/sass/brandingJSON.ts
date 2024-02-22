@@ -66,7 +66,7 @@ const BrandingJSON = {
       "messages": [
         {
           "title": "Welcome to support",
-          "header": "Hello"
+          "header": "Hello {{userName}}"
         },
         {
           "title": "Can I help you any way?",

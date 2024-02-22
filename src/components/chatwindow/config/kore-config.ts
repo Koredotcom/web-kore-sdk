@@ -85,7 +85,8 @@ chatConfig = {
     maxReconnectionAPIAttempts: 5,  // Number of retries on api failure
     UI:{
         version:"v3"
-    }
+    },
+    UIContext: {}  // To add user info
 };
 
 if (!chatConfig.loadHistory) { // pagination scroll will be enabled only when loadHistory flag is true
