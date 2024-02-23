@@ -323,6 +323,11 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 	// }		
 # Release History
 ```
+v10.1.20 [Minor] on 24-Feb-2024: Master branch
+        Bugfixes
+                1.Universal selector issue fix in widget
+                2.Whitelisted b & br tags
+                3.Agent desktop plugin issues fix
 v10.1.17 [Minor] on 06-Jan-2024: Master branch
         Features
                 1.Added config for retries count for api reconnect on failure. Configuration available at chatConfig.maxReconnectionAPIAttempts
