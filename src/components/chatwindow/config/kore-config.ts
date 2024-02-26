@@ -4,7 +4,6 @@ var chatConfig:any={};
 
 var botOptions:any = {};
 botOptions.openSocket = false;
-botOptions.isSkipOnConnect = false;
 botOptions.logLevel = 'debug';
 botOptions.koreAPIUrl = "https://sit-xo.kore.ai/api/";
 
