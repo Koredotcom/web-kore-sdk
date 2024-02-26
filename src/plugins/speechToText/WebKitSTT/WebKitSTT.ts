@@ -123,7 +123,7 @@ class WebKitSTT extends BaseSTT {
                 }, 350);
             };
         } else {
-            alert('This browser does not support STT');
+            alert('Voice recognition is not supported in your browser. Try a different browser or enable voice recognition in your browser settings');
         }
     }
 
