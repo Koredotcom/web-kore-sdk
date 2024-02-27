@@ -75,7 +75,7 @@ class GoogleSTT extends BaseSTT {
 
     uiCallback(r: any) {
         if (r.results && r.results[0]) {
-            $('.chatInputBox').html($('.chatInputBox').html() + ' ' + r.results[0].alternatives[0].transcript);
+            $('.chatInputBox').text($('.chatInputBox').text() + ' ' + r.results[0].alternatives[0].transcript);
             setTimeout(() => {
                 this.setCaretEnd((document as any).getElementsByClassName("chatInputBox"));
                 document.getElementsByClassName('chatInputBox')[0].scrollTop = document.getElementsByClassName('chatInputBox')[0].scrollHeight;
