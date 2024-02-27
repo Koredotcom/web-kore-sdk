@@ -151,7 +151,6 @@ class GoogleSTT extends BaseSTT {
         }).then(data => {
             return data.json();
         }).then(data => {
-            console.log(data);
             callback(data);
         });
 
