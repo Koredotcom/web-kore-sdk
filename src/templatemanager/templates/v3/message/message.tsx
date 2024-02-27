@@ -101,8 +101,8 @@ export function Message(props: any) {
             <Fragment>
                 {
                     msgData.message.map((msgItem: any) => (
-                        <div class="message-bubble">
-                            { msgData.type == 'bot_response' && msgItem.component && msgItem.component.type == 'error' && msgItem.component.payload.text && <div className={`bot-bubble-comp if-animation-bubble i${msgData.messageId || msgItem.clientMessageId}`} id={msgData.messageId || msgItem.clientMessageId}>
+                        <div class={`message-bubble i${msgData.messageId || msgItem.clientMessageId}`} data-time-stamp={msgData.createdOnTimemillis} id={msgData.messageId || msgItem.clientMessageId}>
+                            { msgData.type == 'bot_response' && msgItem.component && msgItem.component.type == 'error' && msgItem.component.payload.text && <div className="bot-bubble-comp if-animation-bubble">
                                     <div className={botStyle}>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
                                             <div className="you-text" title={hostInstance.config.botOptions.botInfo.chatBot}>{hostInstance.config.botOptions.botInfo.chatBot}</div>
@@ -135,7 +135,7 @@ export function Message(props: any) {
                                         </div>}
                                     </div>
                                 </div> }
-                            { msgData.type == 'bot_response' && msgItem.type === 'text' && msgItem.cInfo && msgItem.cInfo.body && <div className={`bot-bubble-comp if-animation-bubble i${msgData.messageId || msgItem.clientMessageId}`} id={msgData.messageId || msgItem.clientMessageId}>
+                            { msgData.type == 'bot_response' && msgItem.type === 'text' && msgItem.cInfo && msgItem.cInfo.body && <div className="bot-bubble-comp if-animation-bubble">
                                     <div className={botStyle}>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
                                             <div className="you-text" title={hostInstance.config.botOptions.botInfo.chatBot}>{hostInstance.config.botOptions.botInfo.chatBot}</div>
@@ -169,7 +169,7 @@ export function Message(props: any) {
                                     </div>
                                 </div> }
 
-                            { msgData.type != 'bot_response' && msgItem.type === 'text' && msgItem.cInfo && msgItem.cInfo.body && <div className={`agent-bubble-comp if-animation-bubble i${msgData.messageId || msgItem.clientMessageId}`} id={msgData.messageId || msgItem.clientMessageId}>
+                            { msgData.type != 'bot_response' && msgItem.type === 'text' && msgItem.cInfo && msgItem.cInfo.body && <div className="agent-bubble-comp if-animation-bubble">
                                     <div className={userStyle}>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
                                             {/* <span className="copied-text">Copied</span> */}

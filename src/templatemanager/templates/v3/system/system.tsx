@@ -29,7 +29,7 @@ export function System(props: any) {
             msgData.message[0].cInfo.body = msgData.message[0].component.payload.text || "";
         }
         return (
-            <div className="agent-joined-banner">
+            <div className={`agent-joined-banner i${msgData.messageId}`} data-time-stamp={msgData.createdOnTimemillis}>
                 <div className={agentBannerClass[brandingInfo.body.agent_message.separator]}>
                     <div className="img-block">
                         <figure>
