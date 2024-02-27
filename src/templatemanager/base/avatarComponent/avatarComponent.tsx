@@ -7,7 +7,7 @@ import { useEffect, useState } from 'preact/hooks';
 export function AvatarComponent(props: any) {
     const hostInstance = props.hostInstance;
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
-    const [pwcCampaign, updatePWCCampaignInfo] = useState({ enable: false, data: { buttons: [], messages: []}});
+    const [pwcCampaign, updatePWCCampaignInfo] = useState({ enable: false, data: { buttons: [], messages: [], appearance: { messageBubbleAlignment : '', buttonAlignment: '', dropShadow: ''}}});
     hostInstance.on('onBrandingUpdate', function (event: any) {
         updateBrandingInfo({...event.brandingData})
     });
@@ -38,7 +38,22 @@ export function AvatarComponent(props: any) {
         "comment": "avatar-actions variation-4"
     }
 
+    let avatarParentStyle = "avatar-variations-footer"; 
     let avatarStyle = aShape[brandingInfo.chat_bubble.style];
+    let buttonStyle = "buttons-triger-click-wrapper animation-slide-up btn-anim-send";
+
+    if (pwcCampaign.enable) {
+        if (pwcCampaign.data.appearance.buttonAlignment == 'singlerow') {
+            buttonStyle = buttonStyle + ' buttons-single-row-block';
+        } else if (pwcCampaign.data.appearance.buttonAlignment == 'stacked') {
+            buttonStyle = buttonStyle + ' buttons-block-level';
+        }
+        if (pwcCampaign.data.appearance.dropShadow == 'lightShadow') {
+            avatarParentStyle = avatarParentStyle + ' box-shadow-light-avatar';
+        } else if (pwcCampaign.data.appearance.dropShadow == 'darkShadow') {
+            avatarParentStyle = avatarParentStyle + ' box-shadow-dark-avatar';
+        }
+    }
 
     if (brandingInfo.chat_bubble.icon.type == 'custom') {
         avatarStyle = 'avatar-actions';
@@ -52,7 +67,7 @@ export function AvatarComponent(props: any) {
         avatarStyle = avatarStyle + ' avatar-bounce-animation';
     }
 
-    if (brandingInfo.chat_bubble.alignment == 'block') {
+    if (brandingInfo.chat_bubble.alignment == 'block' || pwcCampaign.data.appearance.messageBubbleAlignment == 'block') {
         avatarStyle = avatarStyle + ' bubble-align-block';
     }
 
@@ -67,7 +82,7 @@ export function AvatarComponent(props: any) {
 
     const closePWCHelp = (e: any) => {
         hostInstance.chatEle.querySelector('.content-info').remove();
-        updatePWCCampaignInfo({ enable: false, data: { buttons: [], messages: []}});
+        updatePWCCampaignInfo({ enable: false, data: { buttons: [], messages: [], appearance: { messageBubbleAlignment : '', buttonAlignment: '', dropShadow: pwcCampaign.data.appearance.dropShadow}}});
     }
 
     const handlePWCButtonEvent = (e: any) => {
@@ -117,7 +132,7 @@ export function AvatarComponent(props: any) {
     });
 
     return (
-        <div className="avatar-variations-footer" aria-label="avatar footer">
+        <div className={avatarParentStyle} aria-label="avatar footer">
             <div className={avatarStyle} aria-label="avatar actions">
                 {hostInstance.config.branding.chat_bubble.proactive.show && !hostInstance.config.pwcConfig.enable && <div className="content-info">
                     {hostInstance.config.branding.chat_bubble.proactive.messages.map((msg: any, ind: any) => (
@@ -147,7 +162,7 @@ export function AvatarComponent(props: any) {
                                 </svg>
                             </span>}
                         </div>))}
-                    <div className="buttons-triger-click-wrapper animation-slide-up btn-anim-send">
+                    <div className={buttonStyle}>
                         {pwcCampaign.data?.buttons?.map((ele: any) => (
                             <button style={{ backgroundColor: ele?.backgroundColor, color: ele?.color }} className={`primary-button animation-slide-up ${ele?.actionType == 'accept' ? 'pwc-accept' : ''}`} data-postback={ele?.actionValue} onClick={() => handlePWCButtonEvent(ele)}>{ele?.text}</button>
                         ))}
