@@ -33,7 +33,7 @@
     width: 270px;
     margin: 16px auto;
     position: fixed !important;
-    right: 30px !important;
+    /* right: 30px !important; */
     top: 130px !important;
     z-index: 99999;
     margin: 0;
