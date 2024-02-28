@@ -217,6 +217,45 @@
                     line-height: 0;
                 }
             }
+            .speaker-btn {
+                width: 20px;
+                height: 20px;
+                border: 0;
+                padding: 0;
+                background: transparent;
+                align-items: center;
+                justify-content: center;
+                position: absolute;
+                right: 12px;
+                top: 12px;
+            }
+            .speaker-btn-speak {
+                svg {
+                    path {
+                        fill: none;
+                        stroke: var(--chat-widget-compose-bar-other-icons);
+                    }
+                } 
+                &.show {
+                    display: flex;
+                }
+                &.hide {
+                    display: none;
+                }
+            }
+            .speaker-btn-mute {
+                svg {
+                    path {
+                        fill: var(--chat-widget-compose-bar-other-icons);
+                    }
+                } 
+                &.show {
+                    display: flex;
+                }
+                &.hide {
+                    display: none;
+                }
+            }
             .typing-text-area{
                 width: 100%;
                 padding: 12px 35px 12px 12px;

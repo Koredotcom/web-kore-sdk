@@ -31,36 +31,62 @@ class BrowserTTS extends BaseTTS {
         let me: any = this;
         let $ = me.hostInstance.$;
         let cwInstance = me.hostInstance;
-        if(!$('.ttspeakerDiv').hasClass('ttsOff')){
-            var synth = window.speechSynthesis;
-            synth.pause();
-            $('.ttspeakerDiv').addClass('ttsOff');
+        if (me.hostInstance.config.UI.version == 'v2') {
+            if(!$('.ttspeakerDiv').hasClass('ttsOff')){
+                var synth = window.speechSynthesis;
+                synth.pause();
+                $('.ttspeakerDiv').addClass('ttsOff');
+            } else {
+                $('.ttspeakerDiv').removeClass('ttsOff');
+                cwInstance.on("afterRenderMessage", (chatWindowData: { msgData: any; }) => {
+                    var msgData= chatWindowData.msgData;
+                    if (msgData?.type === "bot_response" && !me.hostInstance.minimized && !me.hostInstance.historyLoading) {
+                        if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.type === "template") {
+                            (<any> this)._txtToSpeak = '';
+                        }
+                        else {
+                            try {
+                                (<any> this)._txtToSpeak = msgData.message[0].component.payload.text ? msgData.message[0].component.payload.text.replace(/\r?\n/g, ". .") : "";
+                                (<any> this)._txtToSpeak = me.hostInstance.helpers.checkMarkdowns((<any> this)._txtToSpeak);
+                                // replacing extra new line or line characters
+                                (<any> this)._txtToSpeak = (<any> this)._txtToSpeak.replace('___', '<hr/>');
+                                (<any> this)._txtToSpeak = (<any> this)._txtToSpeak.replace('---', '<hr/>');
+                            } catch (e) {
+                                (<any> this)._txtToSpeak = '';
+                            }
+                        }
+                        if (msgData.message[0].component && msgData.message[0].component.payload.speech_hint) {
+                            (<any> this)._txtToSpeak = msgData.message[0].component.payload.speech_hint;
+                        }
+                        this._ttsConnection = me.speakWithWebAPI((<any> this)._txtToSpeak);
+                    }
+                });
+            }
         } else {
-            $('.ttspeakerDiv').removeClass('ttsOff');
             cwInstance.on("afterRenderMessage", (chatWindowData: { msgData: any; }) => {
-                var msgData= chatWindowData.msgData;
+                var msgData = chatWindowData.msgData;
                 if (msgData?.type === "bot_response" && !me.hostInstance.minimized && !me.hostInstance.historyLoading) {
                     if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.type === "template") {
-                        (<any> this)._txtToSpeak = '';
+                        (<any>this)._txtToSpeak = '';
                     }
                     else {
                         try {
-                            (<any> this)._txtToSpeak = msgData.message[0].component.payload.text ? msgData.message[0].component.payload.text.replace(/\r?\n/g, ". .") : "";
-                            (<any> this)._txtToSpeak = me.hostInstance.helpers.checkMarkdowns((<any> this)._txtToSpeak);
+                            (<any>this)._txtToSpeak = msgData.message[0].component.payload.text ? msgData.message[0].component.payload.text.replace(/\r?\n/g, ". .") : "";
+                            (<any>this)._txtToSpeak = me.hostInstance.helpers.checkMarkdowns((<any>this)._txtToSpeak);
                             // replacing extra new line or line characters
-                            (<any> this)._txtToSpeak = (<any> this)._txtToSpeak.replace('___', '<hr/>');
-                            (<any> this)._txtToSpeak = (<any> this)._txtToSpeak.replace('---', '<hr/>');
+                            (<any>this)._txtToSpeak = (<any>this)._txtToSpeak.replace('___', '<hr/>');
+                            (<any>this)._txtToSpeak = (<any>this)._txtToSpeak.replace('---', '<hr/>');
                         } catch (e) {
-                            (<any> this)._txtToSpeak = '';
+                            (<any>this)._txtToSpeak = '';
                         }
                     }
                     if (msgData.message[0].component && msgData.message[0].component.payload.speech_hint) {
-                        (<any> this)._txtToSpeak = msgData.message[0].component.payload.speech_hint;
+                        (<any>this)._txtToSpeak = msgData.message[0].component.payload.speech_hint;
                     }
-                    this._ttsConnection = me.speakWithWebAPI((<any> this)._txtToSpeak);
+                    this._ttsConnection = me.speakWithWebAPI((<any>this)._txtToSpeak);
                 }
             });
-        }
+    }
         
     }
 

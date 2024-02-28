@@ -1632,10 +1632,11 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   } else {
     _chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
   }
-  let messageHtml=me.generateMessageDOM(msgData);
   if(msgData?.createdOn){
     msgData.createdOnTimemillis = new Date(msgData.createdOn).valueOf();
   }
+
+  let messageHtml=me.generateMessageDOM(msgData);
 
   if (msgData?.type === 'bot_response') {
     this.sendFailedMessage.retryCount=0;
@@ -1734,8 +1735,30 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
     }
   }
   let eleHeight, scrollHeight;
-  if (me.config.UI.version == 'v3' && messageHtml && me.chatEle.querySelectorAll('.chat-widget-body-wrapper > div .i'+ msgData?.messageId).length < 1 || (msgData?.renderType === 'inline')) {
+  if (me.config.UI.version == 'v3' && messageHtml && me.chatEle.querySelectorAll('.chat-widget-body-wrapper .i'+ msgData?.messageId).length < 1 || (msgData?.renderType === 'inline')) {
     if (msgData?.type === 'bot_response' && msgData?.fromHistorySync) {
+      const chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
+      me.msgTimeStamps = [];
+      const msgEles = me.chatEle.querySelectorAll('.message-bubble');
+      if (msgEles.length) {
+        msgEles.forEach((ele: any) => {
+          me.msgTimeStamps.push(ele.getAttribute('data-time-stamp'));
+        });
+        const insertAtIndex = me.findSortedIndex(me.msgTimeStamps, msgData.createdOnTimemillis);
+        if (insertAtIndex >= 0) {
+          const insertAfterEle = msgEles[insertAtIndex];
+          if (insertAfterEle) {
+            var parentElement = insertAfterEle.parentNode;
+            parentElement.insertBefore(messageHtml.cloneNode(true), insertAfterEle);
+          } else {
+            chatContainer.appendChild(messageHtml);
+          }
+        } else {
+          chatContainer.appendChild(messageHtml);
+        }
+      } else {
+        chatContainer.appendChild(messageHtml);
+      }
     } else {
       scrollHeight = me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight;
       if (bot && !bot.previousHistoryLoading) {
@@ -2136,9 +2159,9 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
         setTimeout(() => {
           if (msgData.type === 'outgoing' || msgData.type === 'bot_response') {
             // if ($('.kore-chat-window .chat-container li#' + msgData.messageId).length < 1) {
+              msgData.fromHistorySync = true;
               me.historySyncing(msgData,res,index);
-            msgData.fromHistorySync = true;
-            me.renderMessage(msgData);
+            // me.renderMessage(msgData);
             // }
           }
         }, index * 100);
