@@ -11,26 +11,38 @@ export function Answers(props: any) {
         msgData: msgData,
         hostInstance: hostInstance
     }
-    const [answersObj, setAnswersObj]: any = useState({ arr: [], data: {}, index: 0 });
+    const [answersObj, setAnswersObj]: any = useState({ "generative": { "answerFragments": [], "sources": [] }, "extractive": {} });
     const [modelType, setModelType] = useState('');
+    const [selectedIndex, setSelectedIndex] = useState(0);
 
     useEffect(() => {
         const results = messageObj?.msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.snippet_content;
-        setAnswersObj((prevState: any) => ({ ...prevState, arr: results, data: results[0] }));
-        setModelType(messageObj?.msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0].snippet_type);
+        const templateType = messageObj?.msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0].snippet_type;
+        setModelType(templateType);
+        setAnswersObj((prevState: any) => ({ ...prevState, "extractive": results[0] }));
+        if(templateType==='generative_model') updateGenerativePayload(results);
     }, [msgData])
 
-    // const clickedArrow = (type: string) => {
-    //     let data_index = answersObj.index;
-    //     if ((answersObj.arr.length - 1) >= data_index) {
-    //         if (type === 'left') {
-    //             if (data_index > 0) data_index--;
-    //         } else {
-    //             data_index++;
-    //         }
-    //         setAnswersObj((prevState: any) => ({ ...prevState, data: answersObj.arr[data_index], index: data_index }))
-    //     }
-    // }
+    //generative template payload update
+    const updateGenerativePayload = (data: any) => {
+        let answer_fragment: Array<Object> = [];
+        let sources_data: Array<Object> = [];
+        data?.forEach((item: any) => {
+            const isExist = sources_data.find((source: any) => source.id === item?.sources[0]?.doc_id);
+            if (!isExist) sources_data.push({ "title": item?.sources[0]?.title, "id": item?.sources[0]?.doc_id, "url": item?.sources[0]?.url });
+        });
+        data?.forEach((answer: any) => {
+            const index = sources_data.findIndex((source: any) => source.id === answer?.sources[0]?.doc_id);
+            answer_fragment.push({ "title": answer?.answer_fragment, "id": index });
+        });
+        setAnswersObj((prevState: any) => ({ ...prevState, "generative": { "answerFragment": answer_fragment, "sources": sources_data } }));
+    }
+
+    //redirect to specific url
+    const redirectToURL=(url:string)=>{
+        window.open(url, '_blank'); 
+    }
+
 
     return (
         <div class="sa-answer-block">
@@ -39,44 +51,40 @@ export function Answers(props: any) {
                 modelType === 'generative_model' ? (
                     <Fragment>
                         <div class="sa-answer-result-block">
-                            <div class="sa-answer-result-heading">{answersObj?.data?.answer_fragment}</div>
-                            {
-                                answersObj?.data?.sources?.map((source: any, index: number) => (
-                                    <div class="sa-answer-result-footer">{index + 1}. {source?.title}</div>
-                                ))
-                            }
+                            <div class="sa-answer-result-sub-block">
+                                {
+                                    answersObj.generative?.answerFragment?.map((answer: any) =>
+                                        <span class="sa-answer-result-heading" onMouseOver={()=>setSelectedIndex(answer?.id + 1)} onMouseOut={()=>setSelectedIndex(0)}>{answer?.title} <span><sup>{answer?.id + 1}</sup></span></span>
+                                    )
+                                }                                
+                            </div>
+                            <div className="sa-answer-gen-footer">
+                                    {
+                                        answersObj?.generative?.sources?.map((source: any, index: number) => (
+                                            <div class="sa-answer-result-footer" onClick={()=>redirectToURL(source?.url)}>{index + 1}. <span className={`${(selectedIndex===index+1)&&'selected'}`}>{source?.title}</span></div>
+                                        ))
+                                    }
+                            </div>
+                            <div className="sa-answer-feedback-block">
+                                <div className="sa-answer-left">
+                                    <div className="sa-answer-img">
+                                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                          <path d="M6.99607 1.06205C7.0236 0.841796 6.90264 0.629762 6.69903 0.541377C6.49542 0.452993 6.25792 0.509419 6.11582 0.679936L1.65109 6.03761C1.57393 6.13017 1.49578 6.22391 1.43888 6.30629C1.38507 6.38421 1.28681 6.53739 1.28378 6.73872C1.2803 6.9692 1.38301 7.18849 1.56229 7.33337C1.7189 7.45992 1.89949 7.48251 1.99379 7.49105C2.0935 7.50008 2.21554 7.50005 2.33604 7.50003L5.43354 7.50003L5.00379 10.938C4.97626 11.1583 5.09723 11.3703 5.30083 11.4587C5.50444 11.5471 5.74194 11.4906 5.88404 11.3201L10.3488 5.96245C10.4259 5.86989 10.5041 5.77615 10.561 5.69376C10.6148 5.61585 10.713 5.46266 10.7161 5.26134C10.7196 5.03085 10.6169 4.81157 10.4376 4.66669C10.281 4.54013 10.1004 4.51755 10.0061 4.50901C9.90636 4.49998 9.78431 4.5 9.66381 4.50003L6.56632 4.50003L6.99607 1.06205Z" fill="#6938EF"/>
+                                        </svg>
+                                    </div>
+                                    <div className="sa-answer-text">Answered by AI</div>
+                                </div>
+                            </div>
                         </div>
 
-                        {/* <div class="sa-answer-carousel-block">
-                            <div class="sa-answer-left-arrow" onClick={() => clickedArrow('left')}>
-                                <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M15.8333 8.00008C15.8333 3.94999 12.55 0.666748 8.49996 0.666748C4.44987 0.666748 1.16663 3.94999 1.16663 8.00008C1.16663 12.0502 4.44987 15.3334 8.49996 15.3334C12.55 15.3334 15.8333 12.0502 15.8333 8.00008ZM11.8333 8.00008C11.8333 8.36827 11.5348 8.66675 11.1666 8.66675H7.44277L8.97136 10.1953C9.23171 10.4557 9.23171 10.8778 8.97136 11.1382C8.71101 11.3985 8.2889 11.3985 8.02855 11.1382L5.36189 8.47149C5.10154 8.21114 5.10154 7.78903 5.36189 7.52868L8.02855 4.86201C8.2889 4.60166 8.71101 4.60166 8.97136 4.86201C9.23171 5.12236 9.23171 5.54447 8.97136 5.80482L7.44277 7.33341H11.1666C11.5348 7.33341 11.8333 7.63189 11.8333 8.00008Z" fill="#D0D5DD" />
-                                </svg>
-                            </div>
-                            <div class="sa-answer-dot">
-                                {
-                                    answersObj?.arr?.map((dots: any) => (
-                                        <svg class="m-b-5" width="5" height="4" viewBox="0 0 5 4" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <circle cx="2.5" cy="2" r="2" fill="#D0D5DD" />
-                                        </svg>
-                                    ))
-                                }
-                            </div>
-                            <div class="sa-answer-count">3/{answersObj?.arr?.length}</div>
-                            <div class="sa-answer-right-arrow" onClick={() => clickedArrow('right')}>
-                                <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M1.16671 7.99992C1.16671 12.05 4.44995 15.3333 8.50004 15.3333C12.5501 15.3333 15.8334 12.05 15.8334 7.99992C15.8334 3.94983 12.5501 0.666586 8.50004 0.666585C4.44995 0.666585 1.16671 3.94983 1.16671 7.99992ZM5.16671 7.99992C5.16671 7.63173 5.46518 7.33325 5.83337 7.33325L9.55723 7.33325L8.02864 5.80466C7.76829 5.54431 7.76829 5.1222 8.02864 4.86185C8.28899 4.6015 8.7111 4.6015 8.97145 4.86185L11.6381 7.52851C11.8985 7.78886 11.8985 8.21097 11.6381 8.47132L8.97145 11.138C8.7111 11.3983 8.28899 11.3983 8.02864 11.138C7.76829 10.8776 7.76829 10.4555 8.02864 10.1952L9.55723 8.66659L5.83337 8.66659C5.46518 8.66658 5.16671 8.36811 5.16671 7.99992Z" fill="#D0D5DD" />
-                                </svg>
-                            </div>
-                        </div> */}
                     </Fragment>
                 ) : (
                     <Fragment>
                         <div class="sa-answer-result-block">
-                            <div class="sa-answer-result-heading">{answersObj?.data?.snippet_title}</div>
-                            <div class="sa-answer-result-desc">{answersObj?.data?.snippet_content}</div>
+                            <div class="sa-answer-result-heading">{answersObj?.extractive?.snippet_title}</div>
+                            <div class="sa-answer-result-desc">{answersObj?.extractive?.snippet_content}</div>
 
-                            <div class="sa-answer-result-footer">1. {answersObj?.data?.source}</div>
+                            <div class="sa-answer-result-footer">1. {answersObj?.extractive?.source}</div>
                         </div>
                     </Fragment>
                 )
@@ -94,7 +102,7 @@ export function answerTemplateCheck(props: any) {
         return (
             <Answers {...props} />
         )
-    }
+    }   
 }
 
 class TemplateAnswers extends BaseChatTemplate {
@@ -106,5 +114,4 @@ class TemplateAnswers extends BaseChatTemplate {
 }
 
 export default TemplateAnswers;
-
 
