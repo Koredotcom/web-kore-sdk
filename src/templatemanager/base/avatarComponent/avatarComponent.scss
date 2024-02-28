@@ -376,6 +376,23 @@
                     line-height: 17px;
                     color: var(--avatar-text-colr);
                     white-space: nowrap;
+                    .header-content {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        .header-img {
+                            width: 14px;
+                            flex-shrink: 0;
+                            img{
+                                max-width: 100%;
+                            }
+                        }
+                        h5 {
+                            color: #98A2B3;
+                            font-size: 12px;
+                            font-weight: 500;
+                        }
+                    }
                 }
                 .close-avatar-content {
                     position: absolute;

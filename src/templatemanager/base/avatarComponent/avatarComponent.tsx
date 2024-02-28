@@ -157,8 +157,8 @@ export function AvatarComponent(props: any) {
                         <div className="text-content animation-slide-up" role="contentinfo" aria-labelledby="helojohn">
                             <div className="help-text-content">
                                 {(ind == 0) && pwcCampaign.data.messageHeaderConfig.headerToggle && <div className="header-content">
-                                    {pwcCampaign.data.messageHeaderConfig.headerUpload == 'upload' && <img src={pwcCampaign.data.messageHeaderConfig.headerIcon}></img>}
-                                    {pwcCampaign.data.messageHeaderConfig.headerMessage && <h3>{pwcCampaign.data.messageHeaderConfig.headerMessage}</h3>}
+                                    {pwcCampaign.data.messageHeaderConfig.headerUpload == 'upload' && <div className="header-img"><img src={pwcCampaign.data.messageHeaderConfig.headerIcon}></img></div>}
+                                    {pwcCampaign.data.messageHeaderConfig.headerMessage && <h5>{pwcCampaign.data.messageHeaderConfig.headerMessage}</h5>}
                                 </div>}
                                 <p className="p-text-content" dangerouslySetInnerHTML={{ __html: ele.value }}></p>
                             </div>
