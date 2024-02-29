@@ -10,7 +10,7 @@ export function PieChart(props: any) {
     const msgData = props.msgData;
     return (
         <div className="chart-template-wrapper" id={`pc${msgData.messageId}`}>
-            <div className="d3Pie"></div>
+            <div id="d3Pie"></div>
             <div className="piechartDiv charts-body-info">
                 <h1>{msgData?.message?.[0]?.component?.payload?.text}</h1>
                 <div className="lineChartChildDiv" id={`piechart${msgData.messageId}`}></div>

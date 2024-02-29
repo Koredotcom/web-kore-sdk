@@ -1553,8 +1553,9 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
                   var yPosition = d3.pointer(event)[1]-5;
                   if(d.dispVal) {
                     var ttVal = d.dispVal;
-                  }
-                  else {
+                  } else if (d.currentTarget.__data__.dispVal) {
+                    var ttVal = d.currentTarget.__data__.dispVal;
+                  } else {
                     var ttVal = d.value;
                   }
                   tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
@@ -2277,7 +2278,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
         } else if (chatConfig && chatConfig.graphLib === 'd3') {
             setTimeout(() => {
                 const dimens = {};
-                dimens.outerWidth = 290;
+                dimens.outerWidth = 350;
                 dimens.outerHeight = 350;
                 dimens.innerWidth = 230;
                 dimens.innerHeight = 250;
@@ -2396,7 +2397,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
             }, 150);
         } else if (chatConfig.graphLib === 'd3') {
             var dimens = {};
-            dimens.outerWidth = 280;
+            dimens.outerWidth = 340;
             dimens.outerHeight = 280;
             dimens.innerHeight = 200;
             dimens.legendRectSize = 15;
@@ -2512,7 +2513,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
             if (msgData.message[0].component.payload.pie_type) {
                 // define data
                 var dimens = {};
-                dimens.width = 310;
+                dimens.width = 350;
                 dimens.height = 200;
                 dimens.legendRectSize = 10;
                 dimens.legendSpacing = 2.4;
