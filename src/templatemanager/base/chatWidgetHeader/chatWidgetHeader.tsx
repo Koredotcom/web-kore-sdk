@@ -15,7 +15,6 @@ export function ChatWidgetHeader(props: any) {
         "regular": "chat-widget-header regular",
         "large": "chat-widget-header large "
     }
-
     useEffect(() => {
         hostInstance.eventManager.removeEventListener('.btn-action-close', 'click');
         hostInstance.eventManager.addEventListener('.btn-action-close', 'click', () => {
@@ -37,6 +36,7 @@ export function ChatWidgetHeader(props: any) {
                 hostInstance.removeLocalStoreItem('kr-cw-state');
                 hostInstance.removeLocalStoreItem('kr-cw-uid');
                 hostInstance.config.botOptions.maintainContext = false;
+                localStorage.removeItem("identifierKey");
             }
             hostInstance.config.branding.header.title.name = hostInstance.config.botMessages.reconnecting;
             hostInstance.setBranding(hostInstance.config.branding);

@@ -2,6 +2,15 @@ import SolutionCarouselTemplate from '../templatemanager/templates/v3/solutionTe
 import ItemSelectionList from '../templatemanager/templates/v3/solutionTemplates/itemSelection/itemSelection';
 import KoreHelpers from '../utils/helpers';
 
+
+// const bot = requireKr('/KoreBot.js').instance();
+
+// declare const document:any;
+// const $:any = j$.default ;
+// declare const callListener:any;
+
+
+declare const window: any;
 /**
  * KorePicker plugin classs
  *
@@ -17,18 +26,19 @@ class RetailAssistTemplatePlugin {
   pickerHTML: any;
   hostInstance: any;
   helpers: any;
-  // url: URL | null = null;
-
   constructor(config: any) {
     const me = this;
     this.config = { ...this.config, ...config }
     this.helpers = KoreHelpers.helpers;
-    console.log(me, 'me---')
+
   }
+
   onHostCreate() {
     let me = this;
     let cwInstance = me.hostInstance;
+    const identifier = cwInstance.messageData?.message?.[0]?.component?.payload?.identifier;
 
+    
     // Add event listener for viewInit
     cwInstance.on("viewInit", (chatWindowEle: any) => {
       me.onInit();
@@ -48,37 +58,54 @@ class RetailAssistTemplatePlugin {
         cwInstance.isMaskingEnabled = false;
       }
     });
+
+    let welcomeMessageKey: string | null = null;
     // Add event listener for onWSMessage
     cwInstance.on("onWSMessage", (e: any) => {
       if (e?.messageData?.type === "bot_response" && e?.messageData?.message?.[0]?.component?.payload?.masking) {
         cwInstance.isMaskingEnabled = true;
       }
+      
+      const getIdentifier = e?.messageData?.message?.[0]?.component?.payload?.identifier;
     });
     cwInstance.on("onWSOpen", (e: any) => {
-      // Extracting query parameter from the URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const query = urlParams.get('query');
-        let stringWithoutQuotes = query?.replace(/"/g, '');
-        // Creating message object
-        console.log('Query parameter:', stringWithoutQuotes);
-        let clientMessageId = new Date().getTime();
-        let messageToBot: any = {
-          clientMessageId: clientMessageId,
-          resourceid: '/bot.message',
-        };
-        messageToBot["message"] = {
-          body: stringWithoutQuotes
-        }
-        cwInstance.bot.sendMessage(messageToBot);
+      
+      console.log(e,'e2 messages')
+      const getWelcomeMessageKey = localStorage.getItem('identifierKey');
+      if (getWelcomeMessageKey) {
+        this.searchQreryParams();
+      }
+    });  
+    cwInstance.on("afterRenderMessage", (e: any) => {
+      if (e?.msgData?.type === "bot_response" && e?.msgData?.message?.[0]?.component?.payload?.identifier === "retailWelcomeMessage") {
+        localStorage.setItem("identifierKey", e?.msgData?.message?.[0]?.component?.payload?.identifier);
+        localStorage.setItem("identifierKey", e?.msgData?.message?.[0]?.component?.payload?.identifier);
+          this.searchQreryParams();
+      }
     });
   }
-  onViewInit() {
-    // const url = new URL('https://retail-assist.s3.amazonaws.com/releases/dev/R2.1/bot/index.html?query=%22show%20me%20washers%22');
-    // this.url = url; // Store the URL
-    // this.handleQueryParams(url); // Call handleQueryParams in onViewInit
-    this.handleQueryParams(new URL(window.location.href));
 
-    // Add event listener to handle URL changes
+  searchQreryParams() {
+    let me = this;
+    let cwInstance = me.hostInstance;
+    // Extracting query parameter from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = urlParams.get('query');
+    let stringWithoutQuotes = query?.replace(/"/g, '');
+    // Creating message object
+    let clientMessageId = new Date().getTime();
+    let messageToBot: any = {
+      clientMessageId: clientMessageId,
+      resourceid: '/bot.message',
+    };
+    messageToBot["message"] = {
+      body: stringWithoutQuotes
+    }
+    // cwInstance.bot.sendMessage(messageToBot);
+    cwInstance.sendMessageToBot(stringWithoutQuotes);
+  }
+  onViewInit() {
+    this.handleQueryParams(new URL(window.location.href));
     window.addEventListener('popstate', this.handleURLChange.bind(this));
   }
 
@@ -98,102 +125,6 @@ class RetailAssistTemplatePlugin {
     // Call handleQueryParams with the updated URL
     this.handleQueryParams(new URL(window.location.href));
   }
-
-  // onViewInit() {
-  //   // Function to handle query parameters
-  //   const handleQueryParams = (url: any) => {
-  //     // Get the current URL search params
-  //     // const url = new URL(window.location.href);
-  //     const queryParams = url.searchParams;
-  //     const query = queryParams.get('query');
-
-  //     // Check if query exists
-  //     if (query !== null) {
-  //       // Print the value of the query parameter
-  //       console.log('Query parameter:', query);
-  //     } else {
-  //       console.log('Query parameter is missing');
-  //     }
-  //   };
-  //   const url = new URL('https://retail-assist.s3.amazonaws.com/releases/dev/R2.1/bot/index.html?query=%22show%20me%20washers%22');
-
-  //   // Call the function initially
-  //   handleQueryParams(url);
-
-  // }
-  //   onViewInit() {
-  //     let me = this;
-  //     let cwInstance = me.hostInstance;
-
-  //     // const cwInstance = this.hostInstance;
-  //     // Function to handle query parameters
-  //     const handleQueryParams = () => {
-  //         // Get the current URL search params
-  //         const url = new URL(window.location.href);
-  //         const queryParams = url.searchParams;
-  //         const query = queryParams.get('query');
-
-  //         // Check if query exists
-  //         if (query !== null) {
-  //             // Print the value of the query parameter
-  //             console.log('Query parameter:', query);
-  //             // Trigger the onWSOpen event with the query parameter
-  //             // const event = { query };
-  //             cwInstance.trigger('onWSOpen', event);
-  //         } else {
-  //             console.log('Query parameter is missing');
-  //         }
-  //     };
-
-  //     // Call the function initially
-  //     handleQueryParams();
-
-  //     // Add event listener to handle URL changes
-  //     window.onpopstate = function (event) {
-  //         // Call the function whenever the URL changes
-  //         handleQueryParams();
-  //     };
-  // }
-
-
-
-
-  // onViewInit() {
-  //   // Function to handle query parameters
-  //   const handleQueryParams = () => {
-  //     // Get the current URL search params
-  //     const queryParams = new URLSearchParams("http://myTest.net/oapi/reqAd.jsp?adspace=0&apiver=502&cb=5c1ec2fd99bc41ed8a66729a7e26&client=SDK&criteo_uid=1&dimension=xxlarge&dimensionstrict=true&divid=testdiv&fcid=a9ac1a7d-b157-9529-b54d-cd899d4136f7&format=all&formatstrict=false&pb=0&pub=0&sbiframe=0&session=1e52676b-7208-8c30-2a24-875bf8a88479&response=JSON");
-  // // const queryParams = "http://myTest.net/oapi/reqAd.jsp?adspace=0&apiver=502&cb=5c1ec2fd99bc41ed8a66729a7e26&client=SDK&criteo_uid=1&dimension=xxlarge&dimensionstrict=true&divid=testdiv&fcid=a9ac1a7d-b157-9529-b54d-cd899d4136f7&format=all&formatstrict=false&pb=0&pub=0&sbiframe=0&session=1e52676b-7208-8c30-2a24-875bf8a88479&response=JSON";
-
-  //     const param1 = queryParams.get('param1');
-  //     const param2 = queryParams.get('param2');
-
-  //     // Check if param1 and param2 exist
-  //     if (param1 !== null && param2 !== null) {
-  //       // Construct the string to send to the BOT
-  //       const paramString = `param1=${param1}&param2=${param2}`;
-
-  //       // Send the string to the BOT using cwInstance
-  //       // cwInstance.send(paramString); 
-
-  //       // Perform actions based on the parameters
-  //       console.log('param1:', param1);
-  //       console.log('param2:', param2);
-  //     } else {
-  //       console.log('param1 or param2 is missing');
-  //     }
-  //   };
-
-  //   // Call the function initially
-  //   handleQueryParams();
-
-  //   // Add event listener to handle URL changes
-  //   window.onpopstate = function(event) {
-  //     // Call the function whenever the URL changes
-  //     handleQueryParams();
-  //   };
-  // }
-
 
   onInit() {
     let me = this;
