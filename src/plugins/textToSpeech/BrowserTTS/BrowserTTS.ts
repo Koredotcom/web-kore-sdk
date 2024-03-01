@@ -65,7 +65,7 @@ class BrowserTTS extends BaseTTS {
         } else {
             cwInstance.on("afterRenderMessage", (chatWindowData: { msgData: any; }) => {
                 var msgData = chatWindowData.msgData;
-                if (msgData?.type === "bot_response" && !me.hostInstance.minimized && !me.hostInstance.historyLoading) {
+                if (msgData?.type === "bot_response" && me.isSpeakerOn && !me.hostInstance.historyLoading) {
                     if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.type === "template") {
                         (<any>this)._txtToSpeak = '';
                     }

@@ -1,5 +1,6 @@
 class BaseTTS {
     hostInstance: any;
+    isSpeakerOn: boolean = false;
 
     appendPickerHTMLtoChatWindowFooter(pickerHTML: any) {
         let me: any = this;
@@ -48,6 +49,7 @@ class BaseTTS {
         let me: any = this;
         let chatEle = me.hostInstance.chatEle;
         chatEle.querySelector('.speaker-btn-mute').addEventListener('click', () => {
+            me.isSpeakerOn = true;
             if(me.OnSpeakerButtonClick){
                 me.OnSpeakerButtonClick();
             }
@@ -58,6 +60,7 @@ class BaseTTS {
         });
 
         chatEle.querySelector('.speaker-btn-speak').addEventListener('click', () => {
+            me.isSpeakerOn = false;
             var synth = window.speechSynthesis;
             synth.pause();
             chatEle.querySelector('.speaker-btn-speak').classList.remove('show');
