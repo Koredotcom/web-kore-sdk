@@ -671,6 +671,10 @@ class AgentDesktopPluginScript  {
                     }
                     _self.callAccepted = false;
                     toastContainer.remove();
+                    if (openSound) {
+                        openSound.pause();
+                        openSound.currentTime = 0;
+                    }
                 });
                 acceptCall.off('click').on('click', function (event) {
                     const payload = _self.callDetails;
@@ -690,6 +694,10 @@ class AgentDesktopPluginScript  {
 
                     _self.callAgent();
                     toastContainer.remove();
+                    if (openSound) {
+                        openSound.pause();
+                        openSound.currentTime = 0;
+                    }
                     var timedOut = setTimeout(() => {
                         // even after these many number of seconds call is not established then close the panel
                         if (_self.activeCall === null || !_self.activeCall.isEstablished()) {
