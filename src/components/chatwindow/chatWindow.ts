@@ -1772,12 +1772,12 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
         eleHeight = messageHtml.offsetHeight;
         if (!me.historyLoading && me.config.branding.general.sounds.enable) {
           if (msgData?.type === 'bot_response') {
-            if (me.config.branding.general.sounds.on_open.url != 'None') {
+            if (me.config.branding.general.sounds.on_new_msg.url != 'None') {
               const newMsgSound = new Audio(me.config.branding.general.sounds.on_new_msg.url);
               newMsgSound.play();
             }
           } else {
-            if (me.config.branding.general.sounds.on_open.url != 'None') {
+            if (me.config.branding.general.sounds.on_msg_send.url != 'None') {
               const msgSendSound = new Audio(me.config.branding.general.sounds.on_msg_send.url);
               msgSendSound.play();
             }
