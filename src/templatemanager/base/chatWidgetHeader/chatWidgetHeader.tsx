@@ -68,6 +68,10 @@ export function ChatWidgetHeader(props: any) {
                 hostInstance.chatEle.querySelector('.welcome-chat-section').classList.add(hostInstance.config.branding.chat_bubble.expand_animation);
                 hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize')
             } else {
+                if (hostInstance.config.branding.general.sounds.enable && hostInstance.config.branding.general.sounds.on_close.url != 'None') {
+                    const closeSound = new Audio(hostInstance.config.branding.general.sounds.on_close.url);
+                    closeSound.play();
+                }
                 hostInstance.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
                 hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
             }
