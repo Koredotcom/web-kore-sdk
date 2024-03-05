@@ -111,21 +111,21 @@ export function AvatarComponent(props: any) {
             hostInstance.eventManager.addEventListener('.pwc-accept', 'click', (event: any) => {
                 window.sessionStorage.setItem('isReconnect', 'false');
                 hostInstance.welcomeScreenState = true;
-                hostInstance.chatEle.classList.remove('minimize-chat');
-                hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
-                hostInstance.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
-                hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
-                const ele = hostInstance.chatEle.querySelector('.pwc-accept');
-                const timeout = hostInstance.historyLoading ? 3500 : 200
-                setTimeout(() => {
-                    if (ele.getAttribute('data-postback')) {
-                        hostInstance.sendMessageToBot(ele.getAttribute('data-postback'));
-                    } else {
-                        if (pwcCampaign && pwcCampaign.data && pwcCampaign.data.messages && pwcCampaign.data.messages.length > 0) {
-                            hostInstance.sendMessageToBot(pwcCampaign.data.messages[pwcCampaign.data.messages.length - 1]['value']);
-                        }
-                    }
-                }, timeout);
+                // hostInstance.chatEle.classList.remove('minimize-chat');
+                // hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
+                // hostInstance.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
+                // hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+                // const ele = hostInstance.chatEle.querySelector('.pwc-accept');
+                // const timeout = hostInstance.historyLoading ? 3500 : 200
+                // setTimeout(() => {
+                //     if (ele.getAttribute('data-postback')) {
+                //         hostInstance.sendMessageToBot(ele.getAttribute('data-postback'));
+                //     } else {
+                //         if (pwcCampaign && pwcCampaign.data && pwcCampaign.data.messages && pwcCampaign.data.messages.length > 0) {
+                //             hostInstance.sendMessageToBot(pwcCampaign.data.messages[pwcCampaign.data.messages.length - 1]['value']);
+                //         }
+                //     }
+                // }, timeout);
                 closePWCHelp('');
             });
         }
