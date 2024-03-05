@@ -313,8 +313,6 @@ initShow  (config:any) {
     if (me.config.UI.version == 'v2') {
       chatWindowHtml.addClass('minimize');
       chatWindowHtml.find('.minimized-title').html(`Talk to ${me.config.chatTitle}`);
-    } else {
-      me.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = me.config.botMessages.connecting;
     }
     me.skipedInit = true;
     if (me.config.multiPageApp && me.config.multiPageApp.enable && maintainContext) {
@@ -2591,7 +2589,7 @@ applyVariableValue (key:any,value:any,type:any){
   
 }
 
-  setBranding(brandingData?: any, type?: any, isEditor?: any) {
+  setBranding(brandingData?: any, type?: any, isEditor?: any, headerTitle?: any) {
     const me: any = this;
     me.config.branding = brandingData ? brandingData : me.config.branding;
     me.brandingManager.applyBranding(me.config.branding);
@@ -2608,6 +2606,10 @@ applyVariableValue (key:any,value:any,type:any){
       } else {
         me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(me.config.branding.chat_bubble.expand_animation);
       }
+    }
+
+    if (headerTitle) {
+      me.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = headerTitle;
     }
   }
 
