@@ -70,6 +70,7 @@ chatConfig = {
         interval:30000 //In milli sec, To keep the websocket alive skd send ping message in this interval      
     },
     enableThemes : false, //set true to apply the branding configured    ,
+    delayRender: false,
     branding: BrandingJSON,
     history:{
         paginatedScroll: {

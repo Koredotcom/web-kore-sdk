@@ -116,7 +116,7 @@ export function ChatWidgetHeader(props: any) {
                     </svg>}
                 </figure>}
                 <div className="content-text">
-                    <h1 aria-label="bot name">{brandingInfo.header.title.name}</h1>
+                    <h1 className="chat-header-title" aria-label="bot name">{brandingInfo.header.title.name}</h1>
                     <h2 aria-label="bot desc">{brandingInfo.header.sub_title.name}</h2>
                 </div>
             </div>

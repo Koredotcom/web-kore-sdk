@@ -242,6 +242,9 @@ initShow  (config:any) {
   }
   me.initi18n();
   me.seti18n((me.config && me.config.i18n && me.config.i18n.defaultLanguage) || 'en');
+  if (!me.config?.delayRender) {
+    me.setBranding();
+  }
   if(me.config && me.config.sendFailedMessage && me.config.sendFailedMessage.hasOwnProperty('MAX_RETRIES')){
     this.sendFailedMessage.MAX_RETRIES=me.config.sendFailedMessage.MAX_RETRIES
 }
@@ -257,8 +260,6 @@ initShow  (config:any) {
   me.pwcInfo.dataFalg = false;
   const tempTitle = me._botInfo.name;
   me.config.chatTitle = me.config.botMessages.connecting;
-  me._botInfo.displayName = me.config.branding.header.title.name ? me.config.branding.header.title.name : me._botInfo.name; // To do - need to do same changes in branding api call
-  me.config.branding.header.title.name = me.config.botMessages.connecting;
   if (me.config.multiPageApp && me.config.multiPageApp.enable) {
     var cwState = me.getLocalStoreItem('kr-cw-state');
     var maintainContext:any = !!cwState;
@@ -312,6 +313,8 @@ initShow  (config:any) {
     if (me.config.UI.version == 'v2') {
       chatWindowHtml.addClass('minimize');
       chatWindowHtml.find('.minimized-title').html(`Talk to ${me.config.chatTitle}`);
+    } else {
+      me.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = me.config.botMessages.connecting;
     }
     me.skipedInit = true;
     if (me.config.multiPageApp && me.config.multiPageApp.enable && maintainContext) {
@@ -730,11 +733,9 @@ resetWindow () {
   if (me.config.UI.version == 'v2') {
     me.chatEle.find('.kore-chat-header .header-title').html(me.config.botMessages.reconnecting);
   } else {
-    me._botInfo.displayName = me.config.branding.header.title.name ? me.config.branding.header.title.name : me._botInfo.name; // To do - need to do same changes in branding api call
-    me.config.branding.header.title.name = me.config.botMessages.reconnecting;  
+    me.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = me.config.botMessages.reconnecting;
   }
   // me.chatEle.find('.chat-container').html("");
-  me.setBranding();
   me.bot.close();
   me.config.botOptions.maintainContext = false;
   me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
@@ -1319,8 +1320,7 @@ onBotReady  () {
   _chatContainer.find('.kore-chat-header .header-title').html(me.config.chatTitle).attr('title', me.config.chatTitle);
   _chatContainer.find('.kore-chat-header .disabled').prop('disabled', false).removeClass('disabled');
   } else {
-    me.config.branding.header.title.name = me._botInfo.displayName;
-    me.setBranding();
+    me.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = me.config.branding.header.title.name ? me.config.branding.header.title.name : me._botInfo.name;
     if (me.chatEle.querySelector('.btn-reconnect') && me.chatEle.querySelector('.btn-reconnect').getAttribute('disabled')) {
       me.chatEle.querySelector('.btn-reconnect').removeAttribute('disabled');
     }
@@ -1377,8 +1377,17 @@ render  (chatWindowHtml: any) {
   // let ChatContainerHTML= renderMessage(ChatContainer, {});
 
   // chatWindowHtml.append(ChatContainerHTML);
-  
-  $(me.config.container).append(chatWindowHtml);
+  let isAppendedToContainer = false;
+  if (!me.config?.delayRender) {
+    $(me.config.container).append(chatWindowHtml);
+  } else {
+    me.on(me.EVENTS.JWT_GRANT_SUCCESS, () => {
+      if (!isAppendedToContainer) {
+        $(me.config.container).append(chatWindowHtml);
+        isAppendedToContainer = true;
+      }
+    });
+  }
   me.emit(me.EVENTS.VIEW_INIT,{chatEle:chatWindowHtml,chatWindowEvent:chatWindowEvent});
   if(chatWindowEvent.stopFurtherExecution){
     return false;
@@ -2555,9 +2564,7 @@ getBrandingInformation(options:any){
       if (response && response.activeTheme) {
         if (response && response.v3 && response.v3.header
           && response.v3.header.title && !response.v3.header.title.name) {
-            me._botInfo.displayName = me._botInfo.name;
-        } else {
-          me._botInfo.displayName = response.v3.header.title.name || 'Bot';
+            response.v3.header.title.name = me._botInfo.name;
         }
         me.emit('brandingResponse', response);
         me.setBranding(response?.v3);
