@@ -62,36 +62,36 @@ export function Feedback(props: any) {
         //     val = item.value + ': ' + msgData.message[0].component.payload.messageTodisplay;
         //     renderMsg = item.value + ': ' + msgData.message[0].component.payload.messageTodisplay;
         // }
-        if (item.smileyId > 3) {
+        // if (item.smileyId > 3) {
             hostInstance.sendMessage(val, { renderMsg });
             closeSlider();
-        } else {
-            if (hostInstance.chatEle.querySelectorAll('.chat-actions-bottom-wraper') && hostInstance.chatEle.querySelectorAll('.chat-actions-bottom-wraper').length > 0) {
-                closeSlider();
-            }
-            setTimeout(() => {
-                hostInstance.bottomSliderAction('', getHTML(additionalFeedback, msgData, hostInstance));
-                setTimeout(() => {
-                    hostInstance.chatEle.querySelector('.feedback-text-submit').addEventListener('click', () => {
-                        const selectedOption = hostInstance.chatEle.querySelector('input[name="radio-feedback"]:checked');
-                        const typedtext = hostInstance.chatEle.querySelector('.feedback-typing-text-area');
-                        const csatDiv = hostInstance.chatEle.querySelector('.added-feeback-text');
-                        if (typedtext && typedtext.value) {
-                            val = val + ': ' + typedtext.value;
-                            renderMsg = renderMsg + ': ' + typedtext.value;
-                        }
-                        if (selectedOption) {
-                            csatDiv.classList.remove('hide');
-                            csatDiv.innerText = selectedOption.value;
-                            val = val + ': ' + selectedOption.value;
-                            renderMsg = renderMsg + ': ' + selectedOption.value;
-                        }
-                        hostInstance.sendMessage(val, { renderMsg });
-                        closeSlider();
-                    });
-                });
-            }, 250);
-        }
+        // } else {
+        //     if (hostInstance.chatEle.querySelectorAll('.chat-actions-bottom-wraper') && hostInstance.chatEle.querySelectorAll('.chat-actions-bottom-wraper').length > 0) {
+        //         closeSlider();
+        //     }
+        //     setTimeout(() => {
+        //         hostInstance.bottomSliderAction('', getHTML(additionalFeedback, msgData, hostInstance));
+        //         setTimeout(() => {
+        //             hostInstance.chatEle.querySelector('.feedback-text-submit').addEventListener('click', () => {
+        //                 const selectedOption = hostInstance.chatEle.querySelector('input[name="radio-feedback"]:checked');
+        //                 const typedtext = hostInstance.chatEle.querySelector('.feedback-typing-text-area');
+        //                 const csatDiv = hostInstance.chatEle.querySelector('.added-feeback-text');
+        //                 if (typedtext && typedtext.value) {
+        //                     val = val + ': ' + typedtext.value;
+        //                     renderMsg = renderMsg + ': ' + typedtext.value;
+        //                 }
+        //                 if (selectedOption) {
+        //                     csatDiv.classList.remove('hide');
+        //                     csatDiv.innerText = selectedOption.value;
+        //                     val = val + ': ' + selectedOption.value;
+        //                     renderMsg = renderMsg + ': ' + selectedOption.value;
+        //                 }
+        //                 hostInstance.sendMessage(val, { renderMsg });
+        //                 closeSlider();
+        //             });
+        //         });
+        //     }, 250);
+        // }
     }
 
     const handleNPS = (event: any) => {
