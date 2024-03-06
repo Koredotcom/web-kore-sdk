@@ -11,34 +11,3 @@
         display: none;
     }
 }
-.insure-assist-theme {
-    .chat-widget-body-wrapper {
-        overflow-x: hidden;
-        height: calc(100vh - 380px);
-    }
-    .chat-widget-composebar{
-        .compose-bar-wrapper{
-            .compose-text-area{
-                .typing-text-area:focus{
-                    border: 0.5px solid #0086C9;
-                }
-                .typing-text-area:focus-visible{
-                    outline-color: #0086C9;
-                }
-            }
-            .attachmentUpload{
-                display: none;
-            }
-        }
-    }
-    .chat-widget-header{
-        .actions-info{
-            .btn-action{
-                display: none;
-            }
-            .btn-action.btn-action-close{
-                display: block;
-            }
-        }
-    }
-}

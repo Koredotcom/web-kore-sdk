@@ -1,0 +1,180 @@
+.insure-assist-theme {
+    .chat-widget-body-wrapper {
+        overflow-x: hidden;
+        height: calc(100vh - 380px);
+    }
+
+    .chat-widget-composebar {
+        .compose-bar-wrapper {
+            .send-btn {
+                background: #0086C9;
+            }
+
+            .compose-text-area {
+                .typing-text-area:focus {
+                    border: 0.5px solid #0086C9;
+                }
+
+                .typing-text-area:focus-visible {
+                    outline-color: #0086C9;
+                }
+            }
+
+            .attachmentUpload {
+                display: none;
+            }
+        }
+    }
+
+    .chat-widget-header {
+        .actions-info {
+            .btn-action {
+                display: none;
+            }
+
+            .btn-action.btn-action-close {
+                display: block;
+            }
+        }
+    }
+
+    .chat-actions-bottom-wrapper {
+        height: calc(100vh - 69px);
+        background: #fff;
+
+        .actions-content-data {
+            max-height: 100%;
+        }
+    }
+
+    .avatar-variations-footer.avatar-minimize {
+        display: none;
+    }
+
+    .avatar-variations-footer {
+        display: block;
+
+        .avatar-actions {
+            .avatar-bg {
+                .un-read-msg {
+                    display: none;
+                }
+
+                background: #0086C9;
+            }
+        }
+
+        .avatar-actions {
+            .avatar-bg {
+                .default-avater-icon {
+                    display: block;
+                }
+
+                .close-avater-icon {
+                    display: none;
+                }
+            }
+        }
+
+        .content-info .primary-button {
+            background: #0086C9 !important;
+        }
+    }
+
+    .chat-widgetwrapper-main-container {
+        height: calc(100vh - 70px);
+
+        .agent-bubble-comp {
+            .agent-bubble-content {
+                .bubble-msg {
+                    background: #0086C9;
+                }
+
+                .top-info {
+                    display: none;
+                }
+            }
+
+            .agent-bubble-content:hover {
+                .bubble-msg-with-img {
+                    .bubble-msg {
+                        background: #0086C9;
+                    }
+                }
+            }
+        }
+
+        .bot-img {
+            .bot-chat-icon {
+                display: none;
+            }
+        }
+
+        .bot-bubble-comp {
+            .bot-bubble-content {
+                .bubble-msg-with-img {
+                    .bubble-msg {
+                        border-radius: 12px 12px 12px 4px;
+                    }
+
+                    .bot-img {
+                        position: relative;
+                        left: 0;
+                        top: 2px;
+                    }
+
+                    .bot-img.insureassist-bot-img {
+                        .bot-img {
+                            left: -11px;
+                            top: -12px;
+                        }
+                    }
+                }
+            }
+
+            .bot-bubble-content {
+                padding: 0;
+                padding-right: 7%;
+
+                .top-info {
+                    display: none;
+                }
+            }
+
+            .bot-bubble-content:hover {
+                .bubble-msg-with-img {
+                    .bubble-msg {
+                        background: var(--bot-bubble-msg-bg);
+                    }
+                }
+            }
+        }
+
+        .button-template-container {
+            .button-temp .kr-btn {
+                background: #f0f9ff;
+                color: #0086c9;
+                padding: 10px 16px;
+                border: none;
+            }
+        }
+    }
+
+    .disabled-slider {
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    .quick-buttons {
+        padding: 10px 50px;
+        border-radius: 4px;
+    }
+
+    .typing-indicator-wraper {
+        top: -45px;
+    }
+    .link-btn{
+        color: #0086C9!important;
+    }
+
+}
