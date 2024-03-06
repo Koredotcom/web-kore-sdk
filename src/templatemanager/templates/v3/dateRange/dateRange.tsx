@@ -104,6 +104,7 @@ export function DateRange(props: any) {
     }
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'daterange' && !msgData?.fromHistory) {
+        msgData.message[0].cInfo.body = msgData?.message?.[0]?.component?.payload?.text_message;
         if (msgData?.message?.[0]?.component?.payload?.view_type == 'slider') {
             hostInstance.bottomSliderAction('', getHTML(DateRangeExt, msgData, hostInstance));
             return (
