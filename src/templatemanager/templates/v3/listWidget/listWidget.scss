@@ -224,23 +224,6 @@
                     font-weight: 600;
                     line-height: 20px;
                 }
-                .arrow-icon{
-                    font-size: 10px;
-                    width: 20px;
-                    height: 20px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    border: 0;
-                    background: transparent;
-                    padding: 0;
-                    cursor: pointer;
-                    svg{
-                        path{
-                            fill: var(--gloabl-text-color);
-                        }
-                    }
-                }
                 .tag-status{
                     display: flex;
                     padding: 2px 6px;
@@ -342,7 +325,10 @@
                     button{
                         width: auto;
                     }
-                }     
+                }  
+                &.hide {
+                    display: none;
+                }   
             }
             .table-list-data{
                 display: flex;
@@ -410,6 +396,26 @@
                             letter-spacing: 0.271px;
                         }
                     }
+                }
+            }
+            .arrow-icon{
+                font-size: 10px;
+                width: 20px;
+                height: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 0;
+                background: transparent;
+                padding: 0;
+                cursor: pointer;
+                svg{
+                    path{
+                        fill: var(--gloabl-text-color);
+                    }
+                }
+                &.rotate {
+                    transform: rotate(90deg);
                 }
             }
         }
