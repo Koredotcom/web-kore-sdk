@@ -609,8 +609,9 @@ var KoreGraphAdapter = (function($,d3) {
             else {
                 if(d.data && d.data.dispVal) {
                     tooltip.select('.countDonut').html(d.data.dispVal); // set current count       
-                }
-                else {
+                } else if (d.currentTarget.__data__.value) {
+                    tooltip.select('.countDonut').html(d.currentTarget.__data__.value);
+                } else {
                     tooltip.select('.countDonut').html(d.value); // set current count       
                 }
             }

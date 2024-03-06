@@ -57,6 +57,9 @@ polyline{
                 opacity: 1;
                 display: none;
             }
+            .tooltipDonut {
+                @extend .tooltip
+            }
         }
     }
 }
