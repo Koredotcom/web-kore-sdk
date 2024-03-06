@@ -15,37 +15,44 @@ const BrandingJSON = {
       "on_audio_call": {
         "name": "Sound1",
         "type": "default",
-        "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_audio_call.wav"
+        "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_audio_call.wav",
+        "fileId": ""
       },
       "on_close": {
         "name": "Sound1",
         "type": "default",
-        "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_close.wav"
+        "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_close.wav",
+        "fileId": ""
       },
       "on_msg_send": {
         "name": "Sound1",
         "type": "default",
-        "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_msg_send.wav"
+        "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_msg_send.wav",
+        "fileId": ""
       },
       "on_new_msg": {
         "name": "Sound1",
         "type": "default",
-        "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_new_msg.wav"
+        "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_new_msg.wav",
+        "fileId": ""
       },
       "on_open": {
         "name": "Sound1",
         "type": "default",
-        "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_open.wav"
+        "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_open.wav",
+        "fileId": ""
       },
       "on_proactive_msg": {
         "name": "Sound1",
         "type": "default",
-        "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_proactive_message.wav"
+        "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_proactive_message.wav",
+        "fileId": ""
       },
       "on_video_call": {
         "name": "Sound1",
         "type": "default",
-        "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_video_call.wav"
+        "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_video_call.wav",
+        "fileId": ""
       }
     }
   },
@@ -54,12 +61,14 @@ const BrandingJSON = {
     "icon": {
       "icon_url": "icon-1",
       "size": "small",
-      "type": "default"
+      "type": "default",
+      "fileId": ""
     },
     "minimise": {
       "icon": "icon-m-1",
       "theme": "rounded",
-      "type": "default"
+      "type": "default",
+      "fileId": ""
     },
     "proactive": {
       "show": true,
@@ -93,7 +102,8 @@ const BrandingJSON = {
     "layout": "medium",
     "logo": {
       "logo_url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/kore.png",
-      "name": "kore.ai"
+      "name": "kore.ai",
+      "fileId": ""
     },
     "title": {
       "name": "Hello"
@@ -108,7 +118,8 @@ const BrandingJSON = {
       "type": "color",
       "color": "#175CD3",
       "name": "bg.png",
-      "img": "https://picsum.photos/seed/picsum/200/300"
+      "img": "https://picsum.photos/seed/picsum/200/300",
+      "fileId": ""
     },
     "top_fonts": {
       "color": "#FFFFFF"
@@ -216,7 +227,8 @@ const BrandingJSON = {
             "type": "url",
             "value": "https://kore.ai"
           },
-          "name": "kore.png"
+          "name": "kore.png",
+          "fileId": ""
         }
       ]
     }
@@ -227,7 +239,8 @@ const BrandingJSON = {
     "icon": {
       "show": true,
       "icon_url": "icon-1",
-      "type": "default"
+      "type": "default",
+      "fileId": ""
     },
     "icons_color": "#000000",
     "title": {
@@ -320,7 +333,8 @@ const BrandingJSON = {
       "type": "color",
       "color": "#FFFFFF",
       "img": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/background.png",
-      "name": "bg.png"
+      "name": "bg.png",
+      "fileId": ""
     },
     "font": {
       "family": "Inter",
