@@ -108,6 +108,7 @@ class WebKitSTT extends BaseSTT {
                         $('.sendButton').removeClass('disabled');
                     } else {
                         me.hostInstance.chatEle.querySelector('.voice-speak-msg-info').style.display = 'block';
+                        me.hostInstance.chatEle.querySelector('.voice-compose-btn-recording').focus();
                         me.hostInstance.chatEle.querySelector('.voice-msg-bubble').textContent = this.prevStr + '' + interim_transcript;
                     }
                 }
@@ -121,17 +122,22 @@ class WebKitSTT extends BaseSTT {
                     }
                 }, 350);
             };
+        } else {
+            alert('Voice recognition is not supported in your browser. Try a different browser or enable voice recognition in your browser settings');
         }
     }
 
     startWebKitRecognization() {
-        if (this.recognizing) {
-            this.recognition.stop();
-            return;
+        let me: any = this;
+        if ('webkitSpeechRecognition' in window && me.isChrome()) {
+            if (this.recognizing) {
+                this.recognition.stop();
+                return;
+            }
+            this.final_transcript = '';
+            this.recognition.lang = this.config.lang || 'en-US';
+            this.recognition.start();
         }
-        this.final_transcript = '';
-        this.recognition.lang = this.config.lang || 'en-US';
-        this.recognition.start();
     }
 
     isChrome() {

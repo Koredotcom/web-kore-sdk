@@ -95,10 +95,10 @@ let config= {
       // new HtmlWebpackPlugin() 
     ],
     resolve:{
-        extensions:['.js','.ts','.tsx']
+        extensions:['.js','.ts','.tsx'],
     },
     output: {
-        publicPath:"",
+        publicPath:"/",
         filename: 'kore-web-sdk-[name].umd.js',
         path: path.resolve(__dirname,'dist'),
         clean: false,
@@ -216,6 +216,21 @@ module.exports= function(env,argv){
           FileUploadPluginSDK: {
             import: "./src/index_plugins/fileUpload_umd.ts",
             filename: 'plugins/file-upload.js',
+            chunkLoading: false,
+          },
+          MultiFileUploadPluginSDK: {
+            import: "./src/index_plugins/multiFileUpload.ts",
+            filename: 'plugins/multi-file-upload.js',
+            chunkLoading: false,
+          },
+          AnswersPluginSDK: {
+            import: "./src/index_plugins/answersTemplate.ts",
+            filename: 'plugins/answers-template.js',
+            chunkLoading: false,
+          },
+          ProactiveWebCampaignPluginSDK: {
+            import: "./src/index_plugins/proactiveWebCampaign.ts",
+            filename: 'plugins/proactive-web-campaign.js',
             chunkLoading: false,
           }
         }
@@ -336,8 +351,22 @@ module.exports= function(env,argv){
             import: "./src/index_plugins/fileUpload_umd.ts",
             filename: 'plugins/file-upload-umd.js',
             chunkLoading: false,
+          },
+          MultiFileUploadPluginSDK: {
+            import: "./src/index_plugins/multiFileUpload.ts",
+            filename: 'plugins/multi-file-upload.js',
+            chunkLoading: false,
+          },
+          AnswersPluginSDK: {
+            import: "./src/index_plugins/answersTemplate.ts",
+            filename: 'plugins/answers-template.js',
+            chunkLoading: false,
+          },
+          ProactiveWebCampaignPluginSDK: {
+            import: "./src/index_plugins/proactiveWebCampaign.ts",
+            filename: 'plugins/proactive-web-campaign.js',
+            chunkLoading: false,
           }
-
         }
         config.output.library = {
           name: '[name]',

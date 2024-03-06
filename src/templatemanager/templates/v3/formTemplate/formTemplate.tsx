@@ -11,10 +11,21 @@ export function Form(props: any) {
         msgData: msgData,
         hostInstance: hostInstance
     }
-    const handleEvent = (e: any) => {
-        const input: any = hostInstance.chatEle.querySelector('.form-input-wrapper');
-        const inputEle: any = input.querySelector('input[type=\'password\']');
-        hostInstance.sendMessage(inputEle.value, { renderMsg: inputEle.value, msgData });
+
+    const handleEvent = (ele: any, id: any) => {
+        const inputEle: any = hostInstance.chatEle.querySelector(`#input-${id}`);
+        if (inputEle && inputEle.value) {
+            let botMsg = inputEle.value;
+            let renderMsg = inputEle.value;
+            if (ele.type == 'password') {
+                let render = ' ';
+                for (let i = 0; i < renderMsg.length; i++) {
+                    render = render + '*';
+                }
+                renderMsg = render;
+            }
+            hostInstance.sendMessage(botMsg, { renderMsg }, msgData);
+        }
     }
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'form_template') {
@@ -26,9 +37,9 @@ export function Form(props: any) {
                         <Fragment>
                             <div className="form-input-wrapper">
                                 <label>{ele.label}</label>
-                                <input type={ele.type} placeholder={ele.placeholder}></input>
+                                <input type={ele.type} id={`input-` + msgData.messageId} placeholder={ele.placeholder}></input>
                             </div>
-                            <button className="kr-button-primary lg" onClick={handleEvent}>{ele.fieldButton.title}</button>
+                            <button className="kr-button-primary lg" onClick={() =>handleEvent(ele, msgData.messageId)}>{ele.fieldButton.title}</button>
                         </Fragment>))}
                 </div>
             </div>

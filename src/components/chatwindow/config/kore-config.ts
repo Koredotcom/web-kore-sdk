@@ -3,8 +3,9 @@ import BrandingJSON from '../sass/brandingJSON'; // To do
 var chatConfig:any={};
 
 var botOptions:any = {};
+botOptions.openSocket = false;
 botOptions.logLevel = 'debug';
-botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
+botOptions.koreAPIUrl = "https://sit-xo.kore.ai/api/";
 
 botOptions.API_KEY_CONFIG={
     bootstrapURL:botOptions.koreAPIUrl+'platform/websdk',
@@ -30,6 +31,7 @@ botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 botOptions.webhookConfig={
     enable:false,
     webhookURL:'PLEASE_PROVIDE_WEBHOOK_URL',
+    useSDKChannelResponses: false, //set it to true if you would like to use the responses defined for Web/Mobile SDK Channel
     apiVersion:2
 }
 
@@ -43,6 +45,11 @@ botOptions.webhookConfig={
 chatConfig = {
     mockMode:{
         enable:false
+    },
+    pwcConfig: {
+        enable: false,
+        container: 'body',
+        knownUser: false
     },
     botOptions: botOptions,
     container:'body',
@@ -74,10 +81,11 @@ chatConfig = {
     sendFailedMessage:{ //Number of retries on message send failed
         MAX_RETRIES:3
     },
+    maxReconnectionAPIAttempts: 5,  // Number of retries on api failure
     UI:{
         version:"v3"
     },
-    builderFlag: false
+    UIContext: {}  // To add user info
 };
 
 if (!chatConfig.loadHistory) { // pagination scroll will be enabled only when loadHistory flag is true

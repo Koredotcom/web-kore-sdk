@@ -85,12 +85,12 @@
   }
 
   &.-selected- {
-    color: var(--global-white);
+    color: var(--global_white);
     border: none;
     background: var(--adp-cell-background-color-selected);
 
     &.-current- {
-      color: var(--global-white);
+      color: var(--global_white);
       background: var(--adp-cell-background-color-selected);
     }
 

@@ -8,17 +8,21 @@
     transition: transform 1s;
     transform-origin: 100% 100%;
     display: none;
+    &.testFlow {
+        display: flex;
+        background-color: #FFF;
+    }
     &.minimize{
         animation: bounce-in 0.5s ease forwards;
         display: flex;
       }
     &.minimizeQuick{   
-        transform-origin: top left;            
+        transform-origin: bottom right;            
         animation: quick 0.3s ease forwards;
         display: flex;
     }
     &.minimizeSmooth{   
-        transform-origin: top left;            
+        transform-origin: bottom right;            
         animation: quick 1s ease forwards;
         display: flex;
     }

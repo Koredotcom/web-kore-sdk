@@ -48,5 +48,9 @@
         animation-fill-mode: both;
         background: var(--global-white-bg);
         border-radius: 4px 4px 0px 0px;
+        &.actions-contnet-full-height{
+            max-height: 100%;
+            height: 100%;
+        }
     }
 }

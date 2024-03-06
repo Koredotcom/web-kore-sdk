@@ -24,11 +24,29 @@ export function DatePickerExt(props: any) {
     }
     const [selectedDate, setSelectedDate] = useState(new Date().toDateString());
 
+    const dateFormats: any = {
+        'DD-MM-YYYY': 'dd-MM-yyyy',
+        'MM-DD-YYYY': 'MM-dd-yyyy',
+        'YYYY-MM-DD': 'yyyy-MM-dd',
+        'YYYY-DD-MM': 'yyyy-dd-MM'
+    }
+
+    const getConvertedDate = (date: any, format: any) => {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        const formattedDate = format
+            .replace('DD', day)
+            .replace('MM', month)
+            .replace('YYYY', year);
+        return formattedDate;
+    }
+
     useEffect(() => {
         const dp = new Datepicker(`#cal-${msgData.messageId}`, {
-            dateFormat: msgData?.message?.[0]?.component?.payload?.format,
-            minDate: msgData.message?.[0]?.component?.payload?.startDate ? msgData.message?.[0]?.component?.payload?.startDate : '',
-            maxDate: msgData.message?.[0]?.component?.payload?.endDate ? msgData.message?.[0]?.component?.payload?.endDate : '',
+            dateFormat: dateFormats[msgData?.message?.[0]?.component?.payload?.format],
+            minDate: msgData.message?.[0]?.component?.payload?.startDate ? msgData.message?.[0]?.component?.payload?.startDate : getConvertedDate(new Date(), msgData?.message?.[0]?.component?.payload?.format),
+            maxDate: msgData.message?.[0]?.component?.payload?.endDate ? msgData.message?.[0]?.component?.payload?.endDate : getConvertedDate(new Date(), msgData?.message?.[0]?.component?.payload?.format),        
             disableNavWhenOutOfRange: false,
             onSelect: (d: any) => {
                 setSelectedDate(d.formattedDate);
@@ -65,6 +83,24 @@ export function DatePicker(props: any) {
         hostInstance
     }
 
+    const dateFormats: any = {
+        'DD-MM-YYYY': 'dd-MM-yyyy',
+        'MM-DD-YYYY': 'MM-dd-yyyy',
+        'YYYY-MM-DD': 'yyyy-MM-dd',
+        'YYYY-DD-MM': 'yyyy-dd-MM'
+    }
+
+    const getConvertedDate = (date: any, format: any) => {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        const formattedDate = format
+            .replace('DD', day)
+            .replace('MM', month)
+            .replace('YYYY', year);
+        return formattedDate;
+    }
+
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'dateTemplate' && !msgData?.fromHistory) {
         if (msgData?.message?.[0]?.component?.payload?.view_type == 'slider') {
             hostInstance.bottomSliderAction('', getHTML(DatePickerExt, msgData, hostInstance));
@@ -79,9 +115,9 @@ export function DatePicker(props: any) {
 
             useEffect(() => {
                 const dp = new Datepicker(`#cal-${msgData.messageId}`, {
-                    dateFormat: msgData?.message?.[0]?.component?.payload?.format,
-                    minDate: msgData.message?.[0]?.component?.payload?.startDate ? msgData.message?.[0]?.component?.payload?.startDate : '',
-                    maxDate: msgData.message?.[0]?.component?.payload?.endDate ? msgData.message?.[0]?.component?.payload?.endDate : '',        
+                    dateFormat: dateFormats[msgData?.message?.[0]?.component?.payload?.format],
+                    minDate: msgData.message?.[0]?.component?.payload?.startDate ? msgData.message?.[0]?.component?.payload?.startDate : getConvertedDate(new Date(), msgData?.message?.[0]?.component?.payload?.format),
+                    maxDate: msgData.message?.[0]?.component?.payload?.endDate ? msgData.message?.[0]?.component?.payload?.endDate : getConvertedDate(new Date(), msgData?.message?.[0]?.component?.payload?.format),        
                     disableNavWhenOutOfRange: false,
                     onSelect: (d: any) => {
                         setSelectedDate(d.formattedDate);

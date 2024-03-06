@@ -32,8 +32,13 @@ export function ListViewMore(props: any) {
         }
     }
 
-    const onTabChange = (e: any) => {
-        setSelectedTab(e);
+    const onTabChange = (ele: any, ind: any) => {
+        const tabs = hostInstance.chatEle.querySelectorAll('.tab-name-list');
+        tabs.forEach((button: any) => {
+            button.classList.remove('active-tab');
+        });
+        ele.currentTarget.classList.add('active-tab');
+        setSelectedTab(ind);
     }
 
     return (
@@ -47,8 +52,12 @@ export function ListViewMore(props: any) {
                 </button>
             </div>
             <div className="iner-data-scroll-wraper">
-                <div className="list-view-action-template-wrapper">
-                    {Object.keys(msgData?.message?.[0]?.component?.payload?.moreData).map((e: any) => (<div onClick={() => onTabChange(e)}>{e}</div>))}
+                <div className="list-view-action-template-wrapper">                   
+                    <div className="tabs-sec-data-list-view">
+                        {Object.keys(msgData?.message?.[0]?.component?.payload?.moreData).map((e: any, ind: any) => (
+                            <button className={`tab-name-list ${ind == 0 ? 'active-tab' : ''}`} onClick={(event) => onTabChange(event, e)}>{e}</button>
+                        ))}
+                    </div>
                     <div className="list-content-details">
                         {msgData?.message?.[0]?.component?.payload?.moreData[selectedTab].map((ele: any, ind: any) => (
                             <div className="list-data-temp">

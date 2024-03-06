@@ -510,7 +510,7 @@ class KoreWidgetSDK {
 
 show  (config:any) {
     var _self:any = this;
-    _self.extend(_self.config, config);
+    _self.config = _self.extend(JSON.parse(JSON.stringify(_self.config)), config);
     var initialWidgetData = _self.vars.initialWidgetData;
     //_self.config.container = sel || {}; //#TODO :need to remove below line on prod
   
@@ -2652,7 +2652,7 @@ openPanel  (panelName:any, resPopUp:any, heightToggle:any) {
 
   makeAPICall = true;
 
-  if (localPanelDetail[panelName] !== undefined) {
+  if (localPanelDetail[panelName] !== undefined && (panelName === oldPanelName)) {
     var currTime = new Date().getTime();
     var deffTime = currTime - localPanelDetail[panelName];
     var seconds = Math.floor(deffTime / 1000);

@@ -15,13 +15,13 @@
         display: flex;
     }
     &.minimizeQuick{   
-        transform-origin: top left;            
+        transform-origin: bottom right;            
         animation: quick 0.3s ease forwards;
         display: flex;
     }
     &.minimizeSmooth{   
-        transform-origin: top left;            
-        animation: quick 1s ease forwards;
+        transform-origin: bottom right;            
+        animation: quick 0.8s ease forwards;
         display: flex;
     }
     .welcome-header {
@@ -48,7 +48,7 @@
                 position: absolute;
                 top: 0;
                 left: 0;
-                border: 3px solid var(--global-white);
+                border: 3px solid var(--global_white);
                 box-shadow: none;
                 display: flex;
             }
@@ -94,19 +94,29 @@
             justify-content: center;
             margin: -30px 0 10px 16px;
             display: none;
+            figure{
+                width: 100%;
+                height: 100%;
+                img{
+                    height: 100%;
+                    width: 100%;
+                    border-radius: 100%;
+                }
+            }
         }
     }
     .welcome-interactions {
         flex: 1 1 auto;
         overflow: auto;
+        background: var(--welcome-footer-bg);
     }
     .powerdby-info {
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 6px 16px;
-        background: var(--welcome-footer-bg);
-        height: 28px;
+        background: var(--global-white-bg);
+        height: 18px;
         p {
             font-weight: 500;
             font-size: 10px;
@@ -114,6 +124,9 @@
             color: var(--welecome-footer-text-color);
             margin-right: 5px;
             flex-shrink: 0;
+        }
+        figure {
+            padding: 0 0 3px 0;
         }
     }
 
@@ -141,17 +154,38 @@
                 height: 40px;
                 flex-shrink: 0;
                 margin-right: 8px;
-                background: var(--welcome-start-conv-bot-bg);
+                background: var(--avatar-bg);
                 border-radius: 24px;
                 padding: 10px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 font-size: 16px;
-                svg{
-                    path{
-                        fill: var(--welcome-header-text-color);
+                svg {
+                    path {
+                        fill: var(--avatar-icon-color);
                     }
+                }
+                span {
+                    svg {
+                        path {
+                            fill: none;
+                            stroke: var(--avatar-icon-color);
+                        }
+                    }
+                }
+                img {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+            .bot_icon_image {
+                @extend .bot_icon;
+                background-color: transparent;
+                padding: 0px;
+                img {
+                    width: 100%;
+                    height: 100%;
                 }
             }
             .conv-starter-content-info{
@@ -197,7 +231,7 @@
                 position: relative;                
                 &.hovered-default-bg{
                     background: var(--global-theme-color);
-                    color: var(--global-white);
+                    color: var(--global_white);
                 }
                 &:hover{
                     background: var(--gloabl-secondary-color);
@@ -335,6 +369,7 @@
     .banner-img{
         display: inline-block;
         width: 100%;
+        cursor: pointer;
         img{
             width: 100%;
             height: 100%;
@@ -393,6 +428,7 @@
     border-radius: 4px;
     border: 1px solid var(--gloabl-border-color);
     background: var(--global-white-bg);
+    cursor: pointer;
     .img-block{
         flex-shrink: 0;
         width: 48px;
@@ -483,7 +519,7 @@
     .carousel-left-click {
         position: absolute;
         border-radius: 32px;
-        background: var(--global-white);
+        background: var(--global_white);
         box-shadow: 0px 4px 12px 2px rgba(32, 33, 36, 0.12);
         display: flex;
         width: 32px;

@@ -15,4 +15,7 @@ export {SpeakTextWithAWSPolly} from './plugins/koreawspolly-st-plugin.js';
 export {KoreDesktopNotificationPlugin} from './plugins/kore-desktop-notification.js';
 export {SearchSuggestionsPlugin} from './plugins/search-suggestions.js';
 export {KoreFileUploaderPlugin} from './plugins/file-upload.js';
-export {SolutionsTemplatesPlugin} from './plugins/kore-solutions-plugin.js'
+export {SolutionsTemplatesPlugin} from './plugins/kore-solutions-plugin.js';
+export {KoreMultiFileUploaderPlugin} from './plugins/multi-file-upload.js';
+export {AnswersTemplatesPlugin} from './plugins/answers-template.js';
+export {ProactiveWebCampaignPlugin} from './plugins/proactive-web-campaign.js';

@@ -9,9 +9,9 @@ import { getHTML } from '../../../base/domManager';
 export function BarChart(props: any) {
     const msgData = props.msgData;
     return (
-        <div className="chart-template-wrapper">
+        <div className="chart-template-wrapper" id={`bc${msgData.messageId}`}>
             <div className="barchartDiv charts-body-info">
-                <h1>Travelling expenses</h1>
+                <h1>{msgData?.message?.[0]?.component?.payload?.text}</h1>
                 <div className="barChartChildDiv" id={`barchart${msgData.messageId}`}></div>
             </div>
         </div>
@@ -30,6 +30,20 @@ export function BarChartBase(props: any) {
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'barchart') {
         const pieChartHTML = getHTML(BarChart, msgData, hostInstance);
         KoreGraphAdapter.drawBarChartTemplate(msgData, pieChartHTML, { graphLib: 'd3' });
+
+        setTimeout(() => {
+            hostInstance.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
+                top: hostInstance.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight,
+                behavior: 'smooth'
+            });
+            const ele = hostInstance.chatEle.querySelector(`#bc${msgData.messageId}`);
+            if (ele) {
+                const eleCopy = ele.cloneNode(true); 
+                ele.addEventListener('click', (e: any) => {
+                    hostInstance.modalAction(eleCopy);
+                });
+            }
+        }, 400);
 
         return (
             <BarChart {...messageObj} />

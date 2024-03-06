@@ -60,26 +60,35 @@
     0% {
       opacity: 0;
       transform: scale(0);
+      overflow: hidden;
+    }
+    90%, 50%{
+      overflow: hidden;
     }
     100% { 
         opacity: 1;
         transform: scale(1);
+        overflow: inherit;
     }
 }
 @keyframes bounce-in {
     0% {
       opacity: 0;
-      transform: scale(.3);
+      overflow: hidden;
     }
-    50% {
+    40% {
       opacity: 1;
-      transform: scale(1);
+      overflow: hidden;
     }
-    70% { 
-        transform:translate(-10px)
+    60% { 
+      transform:translate(-10px)
+    }
+    80% { 
+      transform:translate(-15px)
     }
     100% { 
-        transform: scale(1);
+      transform: none;
+      overflow: inherit;
     }
 }
 
@@ -447,49 +456,6 @@
     -webkit-transform: none;
     transform: none;
     opacity: 1;
-  }
-}
-
-// Rotate Out
-
-.rotateOut {
-  -webkit-animation-name: rotateOut;
-  animation-name: rotateOut;
-  -webkit-animation-duration: 0.5s;
-  animation-duration: 0.5s;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-}
-
-@-webkit-keyframes rotateOut {
-  0% {
-    -webkit-transform-origin: center;
-    transform-origin: center;
-    opacity: 1;
-  }
-
-  100% {
-    -webkit-transform-origin: center;
-    transform-origin: center;
-    -webkit-transform: rotate3d(0, 0, 1, 200deg);
-    transform: rotate3d(0, 0, 1, 200deg);
-    opacity: 0;
-  }
-}
-
-@keyframes rotateOut {
-  0% {
-    -webkit-transform-origin: center;
-    transform-origin: center;
-    opacity: 1;
-  }
-
-  100% {
-    -webkit-transform-origin: center;
-    transform-origin: center;
-    -webkit-transform: rotate3d(0, 0, 1, 200deg);
-    transform: rotate3d(0, 0, 1, 200deg);
-    opacity: 0;
   }
 }
 

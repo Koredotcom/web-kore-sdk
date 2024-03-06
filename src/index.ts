@@ -31,6 +31,8 @@ import SpeakTextAWSPollyConfig from './plugins/textToSpeech/KoreAWSPolly/kore-aw
 import SearchSuggestionsPlugin from './plugins/searchSuggestions/searchSuggestions';
 import InsureAssistTemplatePlugin from './plugins/insureAssitTemplatePlugin';
 import UserTypingEventsPlugin from './plugins/userTypingEventsPlugin';
+import ProactiveWebCampaignPlugin from './plugins/proactiveWebCampaign/proactiveWebCampaign';
+import AnswersTemplatesPlugin from './plugins/answers/answersPlugin';
 
 export {
   chatConfig,
@@ -61,6 +63,7 @@ export {
   SpeakTextAWSPollyConfig,
   SearchSuggestionsPlugin,
   KoreMultiFileUploaderPlugin,
-  InsureAssistTemplatePlugin,
-  UserTypingEventsPlugin
+  UserTypingEventsPlugin,
+  AnswersTemplatesPlugin,
+  ProactiveWebCampaignPlugin,
 };

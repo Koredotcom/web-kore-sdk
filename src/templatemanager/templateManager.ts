@@ -44,9 +44,9 @@ import TemplateFeedback from './templates/v3/feedback/feedback';
 import TemplateDateRange from './templates/v3/dateRange/dateRange';
 import TemplateClockPicker from './templates/v3/clockPicker/clockPicker';
 import TemplateSystem from './templates/v3/system/system';
-import DateRangePickerTemplate from './templates/v3/dateRange/dateRange';
-import DatePickerExt from './templates/v3/datePicker/datePicker'
-
+import TemplateAttachmentV3 from './templates/v3/templateAttachment/templateAttachment';
+import TemplateListWidget from './templates/v3/listWidget/listWidget';
+import AdvancedMultiListTemplate from './templates/v3/advancedMulitList/advancedMultiList';
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
 //(function($){
@@ -124,9 +124,9 @@ class TemplateManager {
 		this.installTemplate(new TemplateDateRange());
 		this.installTemplate(new TemplateClockPicker());
 		this.installTemplate(new TemplateSystem());
-		this.installTemplate(new DateRangePickerTemplate());
-		this.installTemplate(new DatePickerExt());
-
+		this.installTemplate(new TemplateAttachmentV3());
+		this.installTemplate(new TemplateListWidget());
+		this.installTemplate(new AdvancedMultiListTemplate());
 	}
 
 	renderMessage  (msgData: any) {
@@ -143,6 +143,7 @@ class TemplateManager {
 				templatesIndex++
 			}
 			if (messageHtml) {
+				console.log('Msg HTML: ', messageHtml);
 				return messageHtml;
 			}
 		}

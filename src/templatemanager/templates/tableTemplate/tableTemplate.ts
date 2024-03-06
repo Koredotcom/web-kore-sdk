@@ -72,14 +72,14 @@ class TableChartTemplate {
                         <table cellspacing="0" cellpadding="0">\
                             <tr class="headerTitle">\
                                 {{each(key, tableHeader) msgData.message[0].component.payload.columns}} \
-                                    <th {{if tableHeader[1]}}style="text-align:${tableHeader[1]};"{{/if}}>${tableHeader[0]}</th>\
+                                    <th {{if tableHeader[1]}}style="text-align:${tableHeader[1]};"{{/if}}>{{html helpers.convertMDtoHTML(tableHeader[0], "bot")}}</th>\
                                 {{/each}} \
                             </tr>\
                             {{each(key, tableRow) msgData.message[0].component.payload.elements}} \
                                 {{if tableRow.Values.length>1}}\
                                     <tr {{if key > 4}}class="hide"{{/if}}>\
                                         {{each(cellkey, cellValue) tableRow.Values}} \
-                                            <td  {{if cellkey === tableRow.Values.length-1}}colspan="2"{{/if}} class=" {{if key == 0}} addTopBorder {{/if}}" {{if msgData.message[0].component.payload.columns[cellkey][1]}}style="text-align:${msgData.message[0].component.payload.columns[cellkey][1]};" {{/if}} title="${cellValue}">${cellValue}</td>\
+                                            <td  {{if cellkey === tableRow.Values.length-1}}colspan="2"{{/if}} class=" {{if key == 0}} addTopBorder {{/if}}" {{if msgData.message[0].component.payload.columns[cellkey][1]}}style="text-align:${msgData.message[0].component.payload.columns[cellkey][1]};" {{/if}} title="{{html helpers.getInnerText(cellValue, "bot")}}">{{html helpers.convertMDtoHTML(cellValue, "bot")}}</td>\
                                         {{/each}} \
                                     </tr>\
                                 {{/if}}\
@@ -95,13 +95,13 @@ class TableChartTemplate {
                                 {{each(cellkey, cellValue) tableRow.Values}} \
                                     {{if cellkey < 2}}\
                                         <div class="accordionCol">\
-                                            <div class="colTitle hideSdkEle">${msgData.message[0].component.payload.columns[cellkey][0]}</div>\
-                                            <div class="colVal">${cellValue}</div>\
+                                            <div class="colTitle hideSdkEle">{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.columns[cellkey][0], "bot")}}</div>\
+                                            <div class="colVal">{{html helpers.convertMDtoHTML(cellValue, "bot")}}</div>\
                                         </div>\
                                     {{else}}\
                                         <div class="accordionCol hideSdkEle">\
-                                            <div class="colTitle">${msgData.message[0].component.payload.columns[cellkey][0]}</div>\
-                                            <div class="colVal">${cellValue}</div>\
+                                            <div class="colTitle">{{html helpers.convertMDtoHTML(msgData.message[0].component.payload.columns[cellkey][0], "bot")}}</div>\
+                                            <div class="colVal">{{html helpers.convertMDtoHTML(cellValue, "bot")}}</div>\
                                         </div>\
                                     {{/if}}\
                                 {{/each}} \
