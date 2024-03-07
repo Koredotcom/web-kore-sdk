@@ -12,7 +12,7 @@ class AgentDesktopPlugin {
     stopTypingInterval: number = 500;
     isTabActive: boolean = true
     isReadRecipetSent: boolean = false;
-
+    isAgentConnected: boolean = false;
     authInfo: any;
     cobrowseSession: any;
 
@@ -108,50 +108,54 @@ class AgentDesktopPlugin {
         this.$ = me.hostInstance.$;
         this.appendVideoAudioElemnts();
         document.addEventListener("visibilitychange", () => {
-            if (document.visibilityState === 'visible') {
-                this.isTabActive = true
-                if (!this.isReadRecipetSent) {
-                    // send read event after user come back to current tab
-                    const messageToBot: any = {};
-                    messageToBot["event"] = "message_read";
-                    messageToBot["message"] = {
-                        "body": "",
-                        "type": ""
+            if (this.isAgentConnected) {
+                if (document.visibilityState === 'visible') {
+                    this.isTabActive = true
+                    if (!this.isReadRecipetSent) {
+                        // send read event after user come back to current tab
+                        const messageToBot: any = {};
+                        messageToBot["event"] = "message_read";
+                        messageToBot["message"] = {
+                            "body": "",
+                            "type": ""
+                        }
+                        messageToBot["resourceid"] = "/bot.message";
+                        me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+                        this.isReadRecipetSent = true;
                     }
-                    messageToBot["resourceid"] = "/bot.message";
-                    me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
-                    this.isReadRecipetSent = true;
+                } else {
+                    this.isTabActive = false
                 }
-            } else {
-                this.isTabActive = false
             }
         });
 
         // send type event from user to agent
         me.hostInstance.on('onKeyDown', ({ event }: any) => {
-            if (event.keyCode !== 13 && (event.which <= 90 && event.which >= 48) || (event.which >= 96 && event.which <= 105) || (event.which >= 186 && event.which <= 222) || (event.keyCode === 32 || event.keyCode === 8) && localStorage.getItem("kr-agent-status") === "connected") {
-                if (!this.isTyping) {
-                    var messageToBot: any = {};
-                    messageToBot["event"] = "typing";
-                    messageToBot["message"] = {
-                        "body": "",
-                        "type": ""
-                    }
-                    messageToBot["resourceid"] = "/bot.message";
-                    me.hostInstance.bot.sendMessage(messageToBot, (err: any) => {
-                        if (err && err.message) {
-                            console.log("Failed to send reciept", err, event.msgData)
+            if (this.isAgentConnected) {
+                if (event.keyCode !== 13 && (event.which <= 90 && event.which >= 48) || (event.which >= 96 && event.which <= 105) || (event.which >= 186 && event.which <= 222) || (event.keyCode === 32 || event.keyCode === 8) && localStorage.getItem("kr-agent-status") === "connected") {
+                    if (!this.isTyping) {
+                        var messageToBot: any = {};
+                        messageToBot["event"] = "typing";
+                        messageToBot["message"] = {
+                            "body": "",
+                            "type": ""
                         }
-                    });
-                    this.isTyping = true;
+                        messageToBot["resourceid"] = "/bot.message";
+                        me.hostInstance.bot.sendMessage(messageToBot, (err: any) => {
+                            if (err && err.message) {
+                                console.log("Failed to send reciept", err, event.msgData)
+                            }
+                        });
+                        this.isTyping = true;
+                    }
+                    clearTimeout(this.typingTimer);
+                    this.typingTimer = setTimeout(() => me.sendStopTypingEvent(), this.stopTypingInterval);
+
+
+                } else if (event.keyCode === 13) {
+                    clearTimeout(this.typingTimer)
+                    me.sendStopTypingEvent()
                 }
-                clearTimeout(this.typingTimer);
-                this.typingTimer = setTimeout(() => me.sendStopTypingEvent(), this.stopTypingInterval);
-
-
-            } else if (event.keyCode === 13) {
-                clearTimeout(this.typingTimer)
-                me.sendStopTypingEvent()
             }
         });
 
@@ -160,6 +164,7 @@ class AgentDesktopPlugin {
 
             // Agent Status 
             if (event.messageData?.message?.type === 'agent_connected') {
+                this.isAgentConnected = true;
                 me.brandingInfo = JSON.parse(JSON.stringify(me.hostInstance.config.branding));
                 if (me.hostInstance.config.branding.body.agent_message.icon.show) {
                     me.hostInstance.config.branding.header.icon.show = true;
@@ -172,6 +177,7 @@ class AgentDesktopPlugin {
                 me.hostInstance.config.branding.header.sub_title.name = me.hostInstance.config.branding.body.agent_message.sub_title.name;
                 me.hostInstance.setBranding(me.hostInstance.config.branding);
             } else if (event.messageData?.message?.type === 'agent_disconnected') {
+                this.isAgentConnected = false;
                 me.hostInstance.config.branding.header.icon = me?.brandingInfo?.header?.icon;
                 me.hostInstance.config.branding.header.title = me?.brandingInfo?.header?.title;
                 me.hostInstance.config.branding.header.sub_title.name = me?.brandingInfo?.header?.sub_title?.name;
@@ -202,84 +208,86 @@ class AgentDesktopPlugin {
 
         // sent event style setting in user chat 
         me.hostInstance.on('afterRenderMessage', (event: any) => {
-            if (!event.messageHtml) return false;
-            if (localStorage.getItem("kr-agent-status") != "connected") return;
+            if (this.isAgentConnected) {
+                if (!event.messageHtml) return false;
+                if (localStorage.getItem("kr-agent-status") != "connected") return;
 
-            if (event.msgData?.type === "currentUser") {
-                me.hostInstance.chatEle.querySelector('.typing-indicator-wraper').style.display = 'none'
+                if (event.msgData?.type === "currentUser") {
+                    me.hostInstance.chatEle.querySelector('.typing-indicator-wraper').style.display = 'none'
 
-                const msg = event.msgData.message;
-                let extraInfoEle = event.messageHtml?.querySelector('.bottom-info');
-                if (!extraInfoEle) {
-                    const ele = document.createElement('div');
-                    ele.classList.add('bottom-info');
-                    event.messageHtml?.querySelector('.agent-bubble-content')?.appendChild(ele);
-                    extraInfoEle = event.messageHtml?.querySelector('.bottom-info');
-                }
-                if (extraInfoEle && !extraInfoEle?.querySelectorAll('.read-text').length) {
-                    const ele1 = document.createElement('div');
-                    ele1.textContent = 'Sent';
-                    ele1.classList.add('read-text');
-                    const ele2 = document.createElement('div');
-                    ele2.classList.add('sent');
-                    extraInfoEle.appendChild(ele1);
-                    extraInfoEle.appendChild(ele2);
+                    const msg = event.msgData.message;
+                    let extraInfoEle = event.messageHtml?.querySelector('.bottom-info');
+                    if (!extraInfoEle) {
+                        const ele = document.createElement('div');
+                        ele.classList.add('bottom-info');
+                        event.messageHtml?.querySelector('.agent-bubble-content')?.appendChild(ele);
+                        extraInfoEle = event.messageHtml?.querySelector('.bottom-info');
+                    }
+                    if (extraInfoEle && !extraInfoEle?.querySelectorAll('.read-text').length) {
+                        const ele1 = document.createElement('div');
+                        ele1.textContent = 'Sent';
+                        ele1.classList.add('read-text');
+                        const ele2 = document.createElement('div');
+                        ele2.classList.add('sent');
+                        extraInfoEle.appendChild(ele1);
+                        extraInfoEle.appendChild(ele2);
 
-                    // changing indicator text for specific message on deliver and read events
-                    me.hostInstance.bot.on('message', (message: any) => {
-                        var tempData = JSON.parse(message.data);
-                        if (!tempData) return;
-                        if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === msg[0].clientMessageId) {
-                            var ele = me.hostInstance.chatEle.querySelector(`.i${tempData.message.clientMessageId} .bottom-info`);
-                            if (tempData.message.type === "message_delivered") {
-                                if (!ele.querySelectorAll('.delivered').length) {
+                        // changing indicator text for specific message on deliver and read events
+                        me.hostInstance.bot.on('message', (message: any) => {
+                            var tempData = JSON.parse(message.data);
+                            if (!tempData) return;
+                            if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === msg[0].clientMessageId) {
+                                var ele = me.hostInstance.chatEle.querySelector(`.i${tempData.message.clientMessageId} .bottom-info`);
+                                if (tempData.message.type === "message_delivered") {
+                                    if (!ele.querySelectorAll('.delivered').length) {
+                                        const childEle1 = ele.querySelector('.read-text');
+                                        childEle1.textContent = 'Delivered';
+                                        const childEle2 = ele.querySelector('.sent');
+                                        if (childEle2) {
+                                            childEle2.classList = [];
+                                            childEle2.classList.add('delivered');
+                                        }
+                                    }
+                                } else if (tempData.message.type === "message_read") {
                                     const childEle1 = ele.querySelector('.read-text');
-                                    childEle1.textContent = 'Delivered';
-                                    const childEle2 = ele.querySelector('.sent');
+                                    childEle1.textContent = 'Read';
+                                    const childEle2 = ele.querySelector('.delivered');
                                     if (childEle2) {
                                         childEle2.classList = [];
-                                        childEle2.classList.add('delivered');
+                                        childEle2.classList.add('read');
                                     }
                                 }
-                            } else if (tempData.message.type === "message_read") {
-                                const childEle1 = ele.querySelector('.read-text');
-                                childEle1.textContent = 'Read';
-                                const childEle2 = ele.querySelector('.delivered');
-                                if (childEle2) {
-                                    childEle2.classList = [];
-                                    childEle2.classList.add('read');
-                                }
+
                             }
-
-                        }
-                        // change the indicator to read when agent switch the slot to other user
-                        // else if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === 'all') {
-                        //     var ele = this.$(" .sentIndicator");
-                        //     if (tempData.message.type === "message_read") {
-                        //         ele.removeClass("delivered").addClass("read");
-                        //     }
-                        // }
-                    });
-                }
-            } else {
-                // send read event from user to agent 
-                if (event.msgData?.message[0]?.component?.payload?.template_type == 'live_agent') {
-                    const messageToBot: any = {};
-                    const msgId = event.msgData.messageId;
-                    messageToBot["event"] = "message_delivered";
-                    messageToBot["message"] = {
-                        "body": "",
-                        "type": ""
+                            // change the indicator to read when agent switch the slot to other user
+                            // else if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === 'all') {
+                            //     var ele = this.$(" .sentIndicator");
+                            //     if (tempData.message.type === "message_read") {
+                            //         ele.removeClass("delivered").addClass("read");
+                            //     }
+                            // }
+                        });
                     }
-                    messageToBot['messageId'] = msgId;
-                    messageToBot["resourceid"] = "/bot.message";
-                    me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
-
-                    // send read event when user being in current tab
-                    if (this.isTabActive) {
-                        messageToBot.event = 'message_read'
+                } else {
+                    // send read event from user to agent 
+                    if (event.msgData?.message[0]?.component?.payload?.template_type == 'live_agent') {
+                        const messageToBot: any = {};
+                        const msgId = event.msgData.messageId;
+                        messageToBot["event"] = "message_delivered";
+                        messageToBot["message"] = {
+                            "body": "",
+                            "type": ""
+                        }
+                        messageToBot['messageId'] = msgId;
+                        messageToBot["resourceid"] = "/bot.message";
                         me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
-                        this.isReadRecipetSent = true;
+
+                        // send read event when user being in current tab
+                        if (this.isTabActive) {
+                            messageToBot.event = 'message_read'
+                            me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+                            this.isReadRecipetSent = true;
+                        }
                     }
                 }
             }

@@ -7,7 +7,7 @@ import { useEffect, useState } from 'preact/hooks';
 export function AvatarComponent(props: any) {
     const hostInstance = props.hostInstance;
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
-    const [pwcCampaign, updatePWCCampaignInfo] = useState({ enable: false, data: { buttons: [], messages: []}});
+    const [pwcCampaign, updatePWCCampaignInfo] = useState({ enable: false, data: { buttons: [], messages: [], appearance: { messageBubbleAlignment : '', buttonAlignment: '', dropShadow: ''}, messageHeaderConfig: { headerToggle: false, headerMessage: '', headerUpload: '', headerIcon: ''}}});
     hostInstance.on('onBrandingUpdate', function (event: any) {
         updateBrandingInfo({...event.brandingData})
     });
@@ -38,7 +38,22 @@ export function AvatarComponent(props: any) {
         "comment": "avatar-actions variation-4"
     }
 
+    let avatarParentStyle = "avatar-variations-footer"; 
     let avatarStyle = aShape[brandingInfo.chat_bubble.style];
+    let buttonStyle = "buttons-triger-click-wrapper animation-slide-up btn-anim-send";
+
+    if (pwcCampaign.enable) {
+        if (pwcCampaign.data.appearance.buttonAlignment == 'singlerow') {
+            buttonStyle = buttonStyle + ' buttons-single-row-block';
+        } else if (pwcCampaign.data.appearance.buttonAlignment == 'stacked') {
+            buttonStyle = buttonStyle + ' buttons-block-level';
+        }
+        if (pwcCampaign.data.appearance.dropShadow == 'lightShadow') {
+            avatarParentStyle = avatarParentStyle + ' box-shadow-light-avatar';
+        } else if (pwcCampaign.data.appearance.dropShadow == 'darkShadow') {
+            avatarParentStyle = avatarParentStyle + ' box-shadow-dark-avatar';
+        }
+    }
 
     if (brandingInfo.chat_bubble.icon.type == 'custom') {
         avatarStyle = 'avatar-actions';
@@ -52,7 +67,7 @@ export function AvatarComponent(props: any) {
         avatarStyle = avatarStyle + ' avatar-bounce-animation';
     }
 
-    if (brandingInfo.chat_bubble.alignment == 'block') {
+    if (brandingInfo.chat_bubble.alignment == 'block' || pwcCampaign.data.appearance.messageBubbleAlignment == 'block') {
         avatarStyle = avatarStyle + ' bubble-align-block';
     }
 
@@ -67,7 +82,7 @@ export function AvatarComponent(props: any) {
 
     const closePWCHelp = (e: any) => {
         hostInstance.chatEle.querySelector('.content-info').remove();
-        updatePWCCampaignInfo({ enable: false, data: { buttons: [], messages: []}});
+        updatePWCCampaignInfo({ enable: false, data: { buttons: [], messages: [], appearance: { messageBubbleAlignment : '', buttonAlignment: '', dropShadow: pwcCampaign.data.appearance.dropShadow}, messageHeaderConfig: { headerToggle: false, headerMessage: '', headerUpload: '', headerIcon: ''}}});
     }
 
     const handlePWCButtonEvent = (e: any) => {
@@ -83,62 +98,77 @@ export function AvatarComponent(props: any) {
         }
     }
 
+    const dynamicContextResolver = (msg: any, data: any) => {
+        return msg.replace(/{{(.*?)}}/g, (match: any, key: any) => {
+            const trimmedKey = key.trim();
+            return data[trimmedKey] || match;
+        });
+    }
+
     useEffect(() => {
         if (hostInstance.config.pwcConfig.enable) {
             hostInstance.eventManager.removeEventListener('.pwc-accept', 'click');
             hostInstance.eventManager.addEventListener('.pwc-accept', 'click', (event: any) => {
                 window.sessionStorage.setItem('isReconnect', 'false');
                 hostInstance.welcomeScreenState = true;
-                hostInstance.chatEle.classList.remove('minimize-chat');
-                hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
-                hostInstance.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
-                hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
-                const ele = hostInstance.chatEle.querySelector('.pwc-accept');
-                const timeout = hostInstance.historyLoading ? 3500 : 200
-                setTimeout(() => {
-                    if (ele.getAttribute('data-postback')) {
-                        hostInstance.sendMessageToBot(ele.getAttribute('data-postback'));
-                    } else {
-                        if (pwcCampaign && pwcCampaign.data && pwcCampaign.data.messages && pwcCampaign.data.messages.length > 0) {
-                            hostInstance.sendMessageToBot(pwcCampaign.data.messages[pwcCampaign.data.messages.length - 1]['value']);
-                        }
-                    }
-                }, timeout);
+                // hostInstance.chatEle.classList.remove('minimize-chat');
+                // hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
+                // hostInstance.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
+                // hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+                // const ele = hostInstance.chatEle.querySelector('.pwc-accept');
+                // const timeout = hostInstance.historyLoading ? 3500 : 200
+                // setTimeout(() => {
+                //     if (ele.getAttribute('data-postback')) {
+                //         hostInstance.sendMessageToBot(ele.getAttribute('data-postback'));
+                //     } else {
+                //         if (pwcCampaign && pwcCampaign.data && pwcCampaign.data.messages && pwcCampaign.data.messages.length > 0) {
+                //             hostInstance.sendMessageToBot(pwcCampaign.data.messages[pwcCampaign.data.messages.length - 1]['value']);
+                //         }
+                //     }
+                // }, timeout);
                 closePWCHelp('');
             });
         }
     });
 
     return (
-        <div className="avatar-variations-footer" aria-label="avatar footer">
+        <div className={avatarParentStyle} aria-label="avatar footer">
             <div className={avatarStyle} aria-label="avatar actions">
                 {hostInstance.config.branding.chat_bubble.proactive.show && !hostInstance.config.pwcConfig.enable && <div className="content-info">
                     {hostInstance.config.branding.chat_bubble.proactive.messages.map((msg: any, ind: any) => (
                         <div className="text-content animation-slide-up text-heading-one" role="contentinfo" aria-labelledby={msg.title}>
-                            {msg.header && <h4 id="helojohn">{msg.header + ' ' + hostInstance.config.botOptions.userIdentity}</h4>}
-                            <p className="help-text-content">{msg.title}</p>
+                            {msg.header && <h4 id="helojohn">{dynamicContextResolver(msg.header, hostInstance.config.UIContext)}</h4>}
+                            <p className="help-text-content">{dynamicContextResolver(msg.title, hostInstance.config.UIContext)}</p>
                             {ind == 0 && <span className="close-avatar-content" role="contentinfo" aria-label="close" onClick={closeHelp}>
                                 <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
                                     <path d="M10.8838 10.0001L16.0669 4.81694C16.311 4.57286 16.311 4.17714 16.0669 3.93306C15.8229 3.68898 15.4271 3.68898 15.1831 3.93306L9.99988 9.11624L4.81694 3.93352C4.57286 3.68944 4.17713 3.68945 3.93306 3.93354C3.68899 4.17762 3.689 4.57335 3.93308 4.81742L9.116 10.0001L3.93306 15.1831C3.68898 15.4272 3.68898 15.8229 3.93306 16.067C4.17714 16.311 4.57286 16.311 4.81694 16.067L9.9999 10.884L15.1831 16.067C15.4272 16.311 15.8229 16.311 16.067 16.0669C16.311 15.8229 16.311 15.4271 16.0669 15.1831L10.8838 10.0001Z" fill="#697586" />
                                 </svg>
                             </span>}
                         </div>))}
-                    {hostInstance.config.branding.chat_bubble.proactive.buttons.map((btn: any) => (
-                        <button className="primary-button animation-slide-up btn-anim-send" onClick={triggerAvatar}>{btn.title}</button>
-                    ))}
+                        <div className="buttons-triger-click-wrapper animation-slide-up btn-anim-send">
+                        {hostInstance.config.branding.chat_bubble.proactive.buttons.map((btn: any) => (
+                            <button className="primary-button" onClick={triggerAvatar}>{btn.title}</button>                        
+                        ))}
+                    </div>
                 </div>}
 
                 {pwcCampaign.enable && <div className="content-info">
                     {pwcCampaign.data?.messages.map((ele: any, ind: any) => (
                         <div className="text-content animation-slide-up" role="contentinfo" aria-labelledby="helojohn">
-                            <p className="help-text-content" dangerouslySetInnerHTML={{ __html: ele.value }}></p>
+                            <div className="help-text-content">
+                                {(ind == 0) && pwcCampaign.data.messageHeaderConfig.headerToggle && <div className="header-content">
+                                    {pwcCampaign.data.messageHeaderConfig.headerUpload == 'upload' && <div className="header-img"><img src={pwcCampaign.data.messageHeaderConfig.headerIcon}></img></div>}
+                                    {pwcCampaign.data.messageHeaderConfig.headerMessage && <h5>{pwcCampaign.data.messageHeaderConfig.headerMessage}</h5>}
+                                </div>}
+                                <p className="p-text-content" dangerouslySetInnerHTML={{ __html: ele.value }}></p>
+                            </div>
                             {(ind == 0) && <span className="close-avatar-content" role="contentinfo" aria-label="close" onClick={closePWCHelp}>
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                     <path d="M10.8838 10.0001L16.0669 4.81694C16.311 4.57286 16.311 4.17714 16.0669 3.93306C15.8229 3.68898 15.4271 3.68898 15.1831 3.93306L9.99988 9.11624L4.81694 3.93352C4.57286 3.68944 4.17713 3.68945 3.93306 3.93354C3.68899 4.17762 3.689 4.57335 3.93308 4.81742L9.116 10.0001L3.93306 15.1831C3.68898 15.4272 3.68898 15.8229 3.93306 16.067C4.17714 16.311 4.57286 16.311 4.81694 16.067L9.9999 10.884L15.1831 16.067C15.4272 16.311 15.8229 16.311 16.067 16.0669C16.311 15.8229 16.311 15.4271 16.0669 15.1831L10.8838 10.0001Z" fill="#697586" />
                                 </svg>
                             </span>}
                         </div>))}
-                    <div className="pwc-buttons">
+                    <div className={buttonStyle}>
                         {pwcCampaign.data?.buttons?.map((ele: any) => (
                             <button style={{ backgroundColor: ele?.backgroundColor, color: ele?.color }} className={`primary-button animation-slide-up ${ele?.actionType == 'accept' ? 'pwc-accept' : ''}`} data-postback={ele?.actionValue} onClick={() => handlePWCButtonEvent(ele)}>{ele?.text}</button>
                         ))}

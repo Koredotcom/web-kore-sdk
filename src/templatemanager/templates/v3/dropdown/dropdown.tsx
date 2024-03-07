@@ -7,11 +7,7 @@ import { Message } from '../message/message';
 export function Dropdown(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
-    const [selectedItem, setSelectedItem] = useState({ title: 'Select', value: 'Select' });
-    const messageobj = {
-        msgData: msgData,
-        hostInstance: hostInstance
-    }
+    const [selectedItem, setSelectedItem] = useState({ title: msgData.message?.[0].component?.payload?.placeholder, value: msgData.message?.[0].component?.payload?.placeholder });
 
     const openDropdown = (e: any) => {
         e.currentTarget.classList.toggle('show-drp');
@@ -40,7 +36,7 @@ export function Dropdown(props: any) {
                         </button> */}
                     </div> }
                     <div className="dropdown-temp">
-                        {/* <div className="label-text">Please select</div> */}
+                        { msgData.message?.[0].component?.payload?.label && <div className="label-text">{msgData.message?.[0].component?.payload.label}</div> }
                         <div className="drp-menu-wrapper" onClick={openDropdown}>
                             <button className="drp-btn">
                                 <span>{selectedItem?.title}</span>

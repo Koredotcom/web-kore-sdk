@@ -101,11 +101,11 @@ export function Message(props: any) {
             <Fragment>
                 {
                     msgData.message.map((msgItem: any) => (
-                        <div class="message-bubble">
-                            { msgData.type == 'bot_response' && msgItem.component && msgItem.component.type == 'error' && msgItem.component.payload.text && <div className={`bot-bubble-comp if-animation-bubble i${msgData.messageId || msgItem.clientMessageId}`} id={msgData.messageId || msgItem.clientMessageId}>
+                        <div class={`message-bubble i${msgData.messageId || msgItem.clientMessageId}`} data-time-stamp={msgData.createdOnTimemillis} id={msgData.messageId || msgItem.clientMessageId}>
+                            { msgData.type == 'bot_response' && msgItem.component && msgItem.component.type == 'error' && msgItem.component.payload.text && <div className="bot-bubble-comp if-animation-bubble">
                                     <div className={botStyle}>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
-                                            <div className="you-text">Kore.ai Bot</div>
+                                            <div className="you-text" title={hostInstance.config.botOptions.botInfo.chatBot}>{hostInstance.config.botOptions.botInfo.chatBot}</div>
                                             <div className="time-tamp">
                                                 <time>{helpers.formatAMPMDay(msgData.createdOn)}</time>
                                             </div>
@@ -120,7 +120,7 @@ export function Message(props: any) {
                                             </div>}
                                             {brandingInfo.body.icon.show && msgData.fromAgent && <div className="bot-img">
                                                 <figure>
-                                                    <img src={msgData.icon} alt='avatr img' />
+                                                    <img src={msgData && msgData.icon ? msgData.icon : 'https://dev-xo.kore.ai/assets/websdkthemes/soundImages/agent.jpg'} alt='avatr img' />
                                                 </figure>
                                             </div>}
                                             <div className="copy-bubble" onClick={() => onCopy(event, msgItem.component.payload.text)}>
@@ -130,15 +130,15 @@ export function Message(props: any) {
                                             </div>
                                         </div>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
-                                            <div className="you-text">Kore.ai Bot</div>
+                                            <div className="you-text" title={hostInstance.config.botOptions.botInfo.chatBot}>{hostInstance.config.botOptions.botInfo.chatBot}</div>
                                             <div className="time-tamp"><time>{helpers.formatAMPMDay(msgData.createdOn)}</time></div>
                                         </div>}
                                     </div>
                                 </div> }
-                            { msgData.type == 'bot_response' && msgItem.type === 'text' && msgItem.cInfo && msgItem.cInfo.body && <div className={`bot-bubble-comp if-animation-bubble i${msgData.messageId || msgItem.clientMessageId}`} id={msgData.messageId || msgItem.clientMessageId}>
+                            { msgData.type == 'bot_response' && msgItem.type === 'text' && msgItem.cInfo && msgItem.cInfo.body && <div className="bot-bubble-comp if-animation-bubble">
                                     <div className={botStyle}>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
-                                            <div className="you-text">Kore.ai Bot</div>
+                                            <div className="you-text" title={hostInstance.config.botOptions.botInfo.chatBot}>{hostInstance.config.botOptions.botInfo.chatBot}</div>
                                             <div className="time-tamp">
                                                 <time>{helpers.formatAMPMDay(msgData.createdOn)}</time>
                                             </div>
@@ -153,7 +153,7 @@ export function Message(props: any) {
                                             </div>}
                                             {brandingInfo.body.icon.show && msgData.fromAgent && <div className="bot-img">
                                                 <figure>
-                                                    <img src={msgData.icon} alt='avatr img' />
+                                                    <img src={msgData && msgData.icon ? msgData.icon : 'https://dev-xo.kore.ai/assets/websdkthemes/soundImages/agent.jpg'} alt='avatr img' />
                                                 </figure>
                                             </div>}
                                             <div className="copy-bubble" onClick={() => onCopy(event, msgItem.cInfo.body)}>
@@ -163,13 +163,13 @@ export function Message(props: any) {
                                             </div>
                                         </div>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
-                                            <div className="you-text">Kore.ai Bot</div>
+                                            <div className="you-text" title={hostInstance.config.botOptions.botInfo.chatBot}>{hostInstance.config.botOptions.botInfo.chatBot}</div>
                                             <div className="time-tamp"><time>{helpers.formatAMPMDay(msgData.createdOn)}</time></div>
                                         </div>}
                                     </div>
                                 </div> }
 
-                            { msgData.type != 'bot_response' && msgItem.type === 'text' && msgItem.cInfo && msgItem.cInfo.body && <div className={`agent-bubble-comp if-animation-bubble i${msgData.messageId || msgItem.clientMessageId}`} id={msgData.messageId || msgItem.clientMessageId}>
+                            { msgData.type != 'bot_response' && msgItem.type === 'text' && msgItem.cInfo && msgItem.cInfo.body && <div className="agent-bubble-comp if-animation-bubble">
                                     <div className={userStyle}>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
                                             {/* <span className="copied-text">Copied</span> */}

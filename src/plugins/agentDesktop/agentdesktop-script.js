@@ -261,7 +261,7 @@ class AgentDesktopPluginScript  {
         }
         this.callTerminated = function () {
             var callContainer = koreJquery("#callcontainer");
-            callContainer.empty();
+            callContainer.remove();
             this.removeAudoVideoContainer();
             this.disableMinimizeButton(false);
         }
@@ -506,6 +506,17 @@ class AgentDesktopPluginScript  {
         }
 
         this.callConnecting = function (videoCall, agentName) {
+            var callcontainer = document.getElementById("callcontainer");
+            if (callcontainer) {
+                callcontainer.remove();
+                callcontainer = null;
+            }
+            if (!callcontainer) {
+                callcontainer = document.createElement("div");
+                callcontainer.id = "callcontainer";
+                var agentcontainer = document.getElementById("agentcontainer");
+                agentcontainer.appendChild(callcontainer);
+            }
             var videoAudoStr = videoCall ? 'Video' : 'Audio';
             var callConnectingHTML =
                 `<div class="video-audio-chat-container">
@@ -543,6 +554,17 @@ class AgentDesktopPluginScript  {
             _self.showFooterButtons(false, _self.callDetails.videoCall);
         }
         this.showScreenShareMessage = function (videoCall, agentName) {
+            var toastcontainer = document.getElementById("toastcontainer");
+            if (toastcontainer) {
+                toastcontainer.remove();
+                toastcontainer = null;
+            }
+            if (!toastcontainer) {
+                toastcontainer = document.createElement("div");
+                toastcontainer.id = "toastcontainer";
+                var agentcontainer = document.getElementById("agentcontainer");
+                agentcontainer.appendChild(toastcontainer);
+            }
             var incomingCall = `
         <div class="initial-video-audio-container">
             <div class="ad-img-block">
@@ -559,7 +581,7 @@ class AgentDesktopPluginScript  {
                 <img id="acceptcall" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAMfSURBVHgBxZg/TBNRHMe/v1cQCTGpCerg4AHGlEXEwZWDiDLS4GBjohJjIokJRF2IA7Az2NGpEmM6GRwN/isxDsACLt6kNyhBoqYJktIW7vl+154tWuiV67Xfpb+7+11/n7zfu997v0eoUKGYrlFTw6Ak6gJIJ2kFlR3kZyRl0hJkKssUljUvafuFEUmYlfw/uXUMPeu/CYEbytRRgSRhmXYQNa69euLGvyxQ6OlFHQ0UU6YGbzJhYaoc2J5AWkwPNjcfmpBSjqGKIqJHqVRmyhxOJEs+L3UzFNc1SY2zJHEO/sgEsr2l5heVggEa38F7ig4EJYovOE01grHDcRZyMfcA4jlTIxhbPCXyMQv3HCP/WcdQF0mVutcJtgojJDCBuoliBQzkR6eGqSohLc+QA1LVdBT1Vm4VgODPnMi3eoOTLSewODSLULC9nKve+bzvlCDZMAifxDAzfdN48/UDjOTn8i+kRVhYAj3wQQ7M0voKxhemXb3DOwgBizRUWQeByUsXAlJDFeUBRi28CApnc7WfjjS24MLxs+XcPMGwpFRAbhw7j562A4Xb+uEXjKPAsaH2MTVWh/dz+rb53V5jxs+PYCPzGys/DV9gVMqSgdYrHXeUXTZti+sfbah7Xbfs6yV1XQzDoLfnH8KL1ObNCLQOdXTDZWFkKA58Pw+1qkbOgbn+9gEyVhZeJEELnDJNoQ24fYnTtbq5Zqcv3H4ZP1K/bJiN7Ca8Skj5WKXszJpiq2jfzFWXoZoCh3D3/WRVYGxRw4i9HwrF+3mXqKOOUvNn+dPVuW7ns59BnaW6myj/FnaM8UtfUOWq7V5kGpG5NraKCqM1jLpJTjnWXyDe06o+PYoaSy0XUSNS6GZ3LR2p9M6kclhGzURmOp2dLL6zC4jbW6JAmB1RAxgVvvfflvq/xdWIvLQd/YTiExGOkYu1WyVXe3bc2sp0+zGneM6kU9mSMKzyxzFxbk9owntJ4BG3hp2GcE8vuBSDqeI1qipqhR2KTKgwM8VfUlWACmADGsntQZXsHsuCJkDq0AD5Iz0kla0mqaVKCK0c5EjvD7WHTOQEQMMGAAAAAElFTkSuQmCC" />
             </div>
         </div>`;
-            var toastContainer = koreJquery("#toast");
+            var toastContainer = koreJquery("#toastcontainer");
             toastContainer.empty();
             toastContainer.append(incomingCall);
 
@@ -573,28 +595,28 @@ class AgentDesktopPluginScript  {
                     }
                     _self.activeCall.stopScreenSharing();
                 }
-                toastContainer.empty();
+                toastContainer.remove();
             });
             acceptCall.off('click').on('click', function (event) {
                 if (_self.activeCall) {
                     _self.screenShare(_self.callDetails);
                 }
-                toastContainer.empty();
+                toastContainer.remove();
             });
         }
         this.showIncomingCallMessage = function (videoCall, agentName) {
 
             var audioVideoStr = videoCall ? 'video' : 'audio';
-            var toastContainer = document.getElementById("toast");
-            if (toastContainer) {
-                toastContainer.remove();
-                toastContainer = null;
+            var toastcontainer = document.getElementById("toastcontainer");
+            if (toastcontainer) {
+                toastcontainer.remove();
+                toastcontainer = null;
             }
-            if (!toastContainer) {
-                toastContainer = document.createElement("div");
-                toastContainer.id = "toast";
-                // koreJquery('.chat-widget-body-wrapper').prepend(toastContainer);
-                document.body.appendChild(toastContainer);
+            if (!toastcontainer) {
+                toastcontainer = document.createElement("div");
+                toastcontainer.id = "toastcontainer";
+                var agentcontainer = document.getElementById("agentcontainer");
+                agentcontainer.appendChild(toastcontainer);
             }
 
             let openSound;
@@ -625,7 +647,7 @@ class AgentDesktopPluginScript  {
             </div>
         </div>`;
             setTimeout(() => {
-                var toastContainer = koreJquery("#toast");
+                var toastContainer = koreJquery("#toastcontainer");
                 toastContainer.empty();
                 toastContainer.append(incomingCall);
 
@@ -648,7 +670,11 @@ class AgentDesktopPluginScript  {
                         _self.activeCall.terminate();
                     }
                     _self.callAccepted = false;
-                    toastContainer.empty();
+                    toastContainer.remove();
+                    if (openSound) {
+                        openSound.pause();
+                        openSound.currentTime = 0;
+                    }
                 });
                 acceptCall.off('click').on('click', function (event) {
                     const payload = _self.callDetails;
@@ -664,11 +690,14 @@ class AgentDesktopPluginScript  {
                         botInstance.sendMessage(messageToBot, (err) => { });
                     }
                     
-                    _self.addAudioVideoContainer();
                     _self.callConnecting(_self.callDetails.videoCall, _self.callDetails.firstName);
 
                     _self.callAgent();
-                    toastContainer.empty();
+                    toastContainer.remove();
+                    if (openSound) {
+                        openSound.pause();
+                        openSound.currentTime = 0;
+                    }
                     var timedOut = setTimeout(() => {
                         // even after these many number of seconds call is not established then close the panel
                         if (_self.activeCall === null || !_self.activeCall.isEstablished()) {
@@ -686,15 +715,16 @@ class AgentDesktopPluginScript  {
         this.showCobrowseRequest = function (cobrowseRequest) {
             let me = this;
             // let cwInstance = me.hostInstance;
-            var toastContainer = document.getElementById("toast");
+            var toastContainer = document.getElementById("toastcontainer");
             if (toastContainer) {
                 toastContainer.remove();
                 toastContainer = null;
             }
             if (!toastContainer) {
                 toastContainer = document.createElement("div");
-                toastContainer.id = "toast";
-                document.body.appendChild(toastContainer);
+                toastContainer.id = "toastcontainer";
+                var agentcontainer = document.getElementById("agentcontainer");
+                agentcontainer.appendChild(toastContainer);
             }
             var cobrowsetoolbar = document.getElementById("cobrowse-toolbar");
             if (cobrowsetoolbar) {
@@ -715,17 +745,19 @@ class AgentDesktopPluginScript  {
                 <img id="acceptcall" src= "${acceptIcon}"/>
             </div>
         </div>`;
-            var toastContainer = koreJquery("#toast");
+            var toastContainer = koreJquery("#toastcontainer");
             toastContainer.empty();
             toastContainer.append(cobrowseRequestHML);
 
             var rejectCall = koreJquery("#rejectcall");
             var acceptCall = koreJquery("#acceptcall");
             rejectCall.off('click').on('click', function (event) {
-                toastContainer.empty();
+                let container = document.getElementById("agentcontainer");
+                container.style.display = 'none';
             });
             acceptCall.off('click').on('click', function (event) {
-                toastContainer.empty();
+                let container = document.getElementById("agentcontainer");
+                container.style.display = 'none';
                 //_self.initializeCoBrowse(cobrowseRequest);
                 cobrowseRequest["userId"] = uuId;
                 me.cobrowseInitialize(cobrowseRequest);
@@ -808,6 +840,7 @@ class AgentDesktopPluginScript  {
                         _self.callAccepted = true;
                         _self.showVideo = true;
                     } else {
+                        this.addAudioVideoContainer();
                         this.showIncomingCallMessage(_self.callDetails.videoCall, _self.callDetails.firstName);
                     }
                 } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'terminate_agent_webrtc') {
@@ -818,8 +851,8 @@ class AgentDesktopPluginScript  {
                         _self.activeCall.terminate();
                         _self.phone.deinit();
                     }
-                    var toastContainer = koreJquery("#toast");
-                    toastContainer.empty();
+                    var toastContainer = koreJquery("#toastcontainer");
+                    toastContainer.remove();
                 }  // webrtc_screenshare will be sent, when in video call
                 else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'webrtc_screenshare') {
                     /*if (_self.activeCall) {
@@ -850,11 +883,11 @@ class AgentDesktopPluginScript  {
                     if (msgJson.message.profileIcon && msgJson.message.profileIcon !== 'undefined') {
                         _self.agentProfileIcon = msgJson.message.profileIcon;
                     }
-
+                    this.addAudioVideoContainer();
                     this.showCobrowseRequest(msgJson.message);
                 } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'close_cobrowse') {
-                    var toastContainer = koreJquery("#toast");
-                    toastContainer.empty();
+                    var toastContainer = koreJquery("#toastcontainer");
+                    toastContainer.remove();
                     this.stopCoBrowse(false);
                 } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'clear_pagevisit_history') {
                     localStorage.removeItem("pagesVisited");
@@ -895,13 +928,13 @@ class AgentDesktopPluginScript  {
             } else {
                 agentcontainer.style.display = 'block'
             }
-            if (!koreJquery("#callcontainer").length) {
-                koreJquery("#agentcontainer").append(`<div id="callcontainer" class="callcontainer"></div>`);
-                /* koreJquery("#callcontainer").css({
-                     "top":  koreJquery(".kore-chat-window").offset().top,
-                     "left" : koreJquery(".kore-chat-window").offset().left - koreJquery(".kore-chat-window").width
-                })*/
-            }
+            // if (!koreJquery("#callcontainer").length) {
+            //     koreJquery("#agentcontainer").append(`<div id="callcontainer" class="callcontainer"></div>`);
+            //     /* koreJquery("#callcontainer").css({
+            //          "top":  koreJquery(".kore-chat-window").offset().top,
+            //          "left" : koreJquery(".kore-chat-window").offset().left - koreJquery(".kore-chat-window").width
+            //     })*/
+            // }
             koreChatBody[0].style.top = "0px";
             koreChatBody[0].style.height = "54%";
             var koreChatWindow = document.getElementsByClassName("chat-widget-body-wrapper");
@@ -1179,8 +1212,8 @@ class AgentDesktopPluginScript  {
             _self.activeCall.muteAudio(!muted);
             _self.updateGui();
         });
-        if (!koreJquery("#toast").length) {
-            koreJquery("#chatContainer").append(`<div id="toast"></div>`);
+        if (!koreJquery("#toastcontainer").length) {
+            koreJquery("#chatContainer").append(`<div id="toastcontainer"></div>`);
         }
 
     }
@@ -2125,11 +2158,12 @@ class AgentDesktopPluginScript  {
                         <img id="acceptcall" src= "${acceptIcon}"/>
                     </div>
                 </div>`;
-                var toastContainer = document.getElementById("toast");
+                var toastContainer = document.getElementById("toastcontainer");
                 if (!toastContainer) {
                     toastContainer = document.createElement("div");
-                    toastContainer.id = "toast";
-                    document.body.appendChild(toastContainer);
+                    toastContainer.id = "toastcontainer";
+                    var agentcontainer = document.getElementById("agentcontainer");
+                agentcontainer.appendChild(toastcontainer);
                 }
                 toastContainer.innerHTML = cobrowseRequestHML;
 

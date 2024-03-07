@@ -103,6 +103,7 @@ export function DatePicker(props: any) {
     }
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'dateTemplate' && !msgData?.fromHistory) {
+        msgData.message[0].cInfo.body = msgData?.message?.[0]?.component?.payload?.text_message;
         if (msgData?.message?.[0]?.component?.payload?.view_type == 'slider') {
             hostInstance.bottomSliderAction('', getHTML(DatePickerExt, msgData, hostInstance));
             return (

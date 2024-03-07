@@ -29,11 +29,11 @@ export function System(props: any) {
             msgData.message[0].cInfo.body = msgData.message[0].component.payload.text || "";
         }
         return (
-            <div className="agent-joined-banner">
+            <div className={`agent-joined-banner i${msgData.messageId}`} data-time-stamp={msgData.createdOnTimemillis}>
                 <div className={agentBannerClass[brandingInfo.body.agent_message.separator]}>
                     <div className="img-block">
                         <figure>
-                            <img src={msgData.icon} alt="agent image" />
+                            <img src={msgData.icon ? msgData.icon : 'https://dev-xo.kore.ai/assets/websdkthemes/soundImages/agent.jpg'} alt="agent image" />
                         </figure>
                     </div>
                     <div className="agent-name">{msgData.message[0].cInfo.body}</div>

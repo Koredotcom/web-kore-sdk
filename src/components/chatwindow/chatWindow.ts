@@ -156,7 +156,15 @@ class chatWindow extends EventEmitter{
      * @property {String} type - type of error - XHRObj/JqueryXHR
      * @property {Object} errObj - error object containing error details
      */
-      API_FAILURE: 'apiFailure'
+      API_FAILURE: 'apiFailure',
+     /**
+     * on historyComplete will be triggered on histroy response render completion.
+     *
+     * @event chatWindow#historyComplete
+     * @type {Object}
+     * @property {Object} chatWindowEvent
+     */
+      HISTORY_COMPLETE: 'historyComplete'
   }
   sendFailedMessage: any;
   
@@ -242,6 +250,9 @@ initShow  (config:any) {
   }
   me.initi18n();
   me.seti18n((me.config && me.config.i18n && me.config.i18n.defaultLanguage) || 'en');
+  if (!me.config?.delayRender) {
+    me.setBranding();
+  }
   if(me.config && me.config.sendFailedMessage && me.config.sendFailedMessage.hasOwnProperty('MAX_RETRIES')){
     this.sendFailedMessage.MAX_RETRIES=me.config.sendFailedMessage.MAX_RETRIES
 }
@@ -257,8 +268,6 @@ initShow  (config:any) {
   me.pwcInfo.dataFalg = false;
   const tempTitle = me._botInfo.name;
   me.config.chatTitle = me.config.botMessages.connecting;
-  me._botInfo.displayName = me.config.branding.header.title.name ? me.config.branding.header.title.name : me._botInfo.name; // To do - need to do same changes in branding api call
-  me.config.branding.header.title.name = me.config.botMessages.connecting;
   if (me.config.multiPageApp && me.config.multiPageApp.enable) {
     var cwState = me.getLocalStoreItem('kr-cw-state');
     var maintainContext:any = !!cwState;
@@ -717,8 +726,10 @@ destroy  () {
       me.skipedInit = true;
     }
   }
-  me.misc.chatOpened = false;
-  me.misc.initial = false;
+  me.misc = {
+    chatOpened: false,
+    initial: false
+  }
   window.removeEventListener('online', me.updateOnlineStatus);
   window.removeEventListener('offline', me.updateOnlineStatus);
 };
@@ -728,11 +739,9 @@ resetWindow () {
   if (me.config.UI.version == 'v2') {
     me.chatEle.find('.kore-chat-header .header-title').html(me.config.botMessages.reconnecting);
   } else {
-    me._botInfo.displayName = me.config.branding.header.title.name ? me.config.branding.header.title.name : me._botInfo.name; // To do - need to do same changes in branding api call
-    me.config.branding.header.title.name = me.config.botMessages.reconnecting;  
+    me.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = me.config.botMessages.reconnecting;
   }
   // me.chatEle.find('.chat-container').html("");
-  me.setBranding();
   me.bot.close();
   me.config.botOptions.maintainContext = false;
   me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
@@ -1317,8 +1326,7 @@ onBotReady  () {
   _chatContainer.find('.kore-chat-header .header-title').html(me.config.chatTitle).attr('title', me.config.chatTitle);
   _chatContainer.find('.kore-chat-header .disabled').prop('disabled', false).removeClass('disabled');
   } else {
-    me.config.branding.header.title.name = me._botInfo.displayName;
-    me.setBranding();
+    me.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = me.config.branding.header.title.name ? me.config.branding.header.title.name : me._botInfo.name;
     if (me.chatEle.querySelector('.btn-reconnect') && me.chatEle.querySelector('.btn-reconnect').getAttribute('disabled')) {
       me.chatEle.querySelector('.btn-reconnect').removeAttribute('disabled');
     }
@@ -1375,8 +1383,17 @@ render  (chatWindowHtml: any) {
   // let ChatContainerHTML= renderMessage(ChatContainer, {});
 
   // chatWindowHtml.append(ChatContainerHTML);
-  
-  $(me.config.container).append(chatWindowHtml);
+  let isAppendedToContainer = false;
+  if (!me.config?.delayRender) {
+    $(me.config.container).append(chatWindowHtml);
+  } else {
+    me.on(me.EVENTS.JWT_GRANT_SUCCESS, () => {
+      if (!isAppendedToContainer) {
+        $(me.config.container).append(chatWindowHtml);
+        isAppendedToContainer = true;
+      }
+    });
+  }
   me.emit(me.EVENTS.VIEW_INIT,{chatEle:chatWindowHtml,chatWindowEvent:chatWindowEvent});
   if(chatWindowEvent.stopFurtherExecution){
     return false;
@@ -1630,10 +1647,11 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   } else {
     _chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
   }
-  let messageHtml=me.generateMessageDOM(msgData);
   if(msgData?.createdOn){
     msgData.createdOnTimemillis = new Date(msgData.createdOn).valueOf();
   }
+
+  let messageHtml=me.generateMessageDOM(msgData);
 
   if (msgData?.type === 'bot_response') {
     this.sendFailedMessage.retryCount=0;
@@ -1732,8 +1750,30 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
     }
   }
   let eleHeight, scrollHeight;
-  if (me.config.UI.version == 'v3' && messageHtml && me.chatEle.querySelectorAll('.chat-widget-body-wrapper > div .i'+ msgData?.messageId).length < 1 || (msgData?.renderType === 'inline')) {
+  if (me.config.UI.version == 'v3' && messageHtml && me.chatEle.querySelectorAll('.chat-widget-body-wrapper .i'+ msgData?.messageId).length < 1 || (msgData?.renderType === 'inline')) {
     if (msgData?.type === 'bot_response' && msgData?.fromHistorySync) {
+      const chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
+      me.msgTimeStamps = [];
+      const msgEles = me.chatEle.querySelectorAll('.message-bubble');
+      if (msgEles.length) {
+        msgEles.forEach((ele: any) => {
+          me.msgTimeStamps.push(ele.getAttribute('data-time-stamp'));
+        });
+        const insertAtIndex = me.findSortedIndex(me.msgTimeStamps, msgData.createdOnTimemillis);
+        if (insertAtIndex >= 0) {
+          const insertAfterEle = msgEles[insertAtIndex];
+          if (insertAfterEle) {
+            var parentElement = insertAfterEle.parentNode;
+            parentElement.insertBefore(messageHtml.cloneNode(true), insertAfterEle);
+          } else {
+            chatContainer.appendChild(messageHtml);
+          }
+        } else {
+          chatContainer.appendChild(messageHtml);
+        }
+      } else {
+        chatContainer.appendChild(messageHtml);
+      }
     } else {
       scrollHeight = me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight;
       if (bot && !bot.previousHistoryLoading) {
@@ -1745,14 +1785,14 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
           chatContainer.appendChild(messageHtml);
         }
         eleHeight = messageHtml.offsetHeight;
-        if (!me.historyLoading && me.config.branding.general.sounds.enable) {
+        if (!me.historyLoading && me.config.branding.general.sounds.enable && !document.querySelector('.chat-window-main-section')?.classList?.contains('minimize-chat')) {
           if (msgData?.type === 'bot_response') {
-            if (me.config.branding.general.sounds.on_open.url != 'None') {
+            if (me.config.branding.general.sounds.on_new_msg.url != 'None') {
               const newMsgSound = new Audio(me.config.branding.general.sounds.on_new_msg.url);
               newMsgSound.play();
             }
           } else {
-            if (me.config.branding.general.sounds.on_open.url != 'None') {
+            if (me.config.branding.general.sounds.on_msg_send.url != 'None') {
               const msgSendSound = new Audio(me.config.branding.general.sounds.on_msg_send.url);
               msgSendSound.play();
             }
@@ -2062,6 +2102,9 @@ historyLoadingComplete () {
       }
     }
     bot.previousHistoryLoading = false;
+    me.emit(me.EVENTS.HISTORY_COMPLETE,{
+      chatWindowEvent:_chatContainer
+    });
     if (me.config.UI.version == 'v2') {
       if (_chatContainer.find('.paginted-history-loader')) {
         _chatContainer.find('.paginted-history-loader').remove();
@@ -2134,9 +2177,9 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
         setTimeout(() => {
           if (msgData.type === 'outgoing' || msgData.type === 'bot_response') {
             // if ($('.kore-chat-window .chat-container li#' + msgData.messageId).length < 1) {
+              msgData.fromHistorySync = true;
               me.historySyncing(msgData,res,index);
-            msgData.fromHistorySync = true;
-            me.renderMessage(msgData);
+            // me.renderMessage(msgData);
             // }
           }
         }, index * 100);
@@ -2530,9 +2573,7 @@ getBrandingInformation(options:any){
       if (response && response.activeTheme) {
         if (response && response.v3 && response.v3.header
           && response.v3.header.title && !response.v3.header.title.name) {
-            me._botInfo.displayName = me._botInfo.name;
-        } else {
-          me._botInfo.displayName = response.v3.header.title.name || 'Bot';
+            response.v3.header.title.name = me._botInfo.name;
         }
         me.emit('brandingResponse', response);
         me.setBranding(response?.v3);
@@ -2559,7 +2600,7 @@ applyVariableValue (key:any,value:any,type:any){
   
 }
 
-  setBranding(brandingData?: any, type?: any, isEditor?: any) {
+  setBranding(brandingData?: any, type?: any, isEditor?: any, headerTitle?: any) {
     const me: any = this;
     me.config.branding = brandingData ? brandingData : me.config.branding;
     me.brandingManager.applyBranding(me.config.branding);
@@ -2576,6 +2617,10 @@ applyVariableValue (key:any,value:any,type:any){
       } else {
         me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(me.config.branding.chat_bubble.expand_animation);
       }
+    }
+
+    if (headerTitle) {
+      me.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = headerTitle;
     }
   }
 

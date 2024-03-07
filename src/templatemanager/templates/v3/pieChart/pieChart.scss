@@ -28,3 +28,38 @@ polyline{
     stroke-width: 1px;
     fill: none;
 }
+
+.piechartDiv {
+    overflow-x: auto;
+}
+
+.lineChartChildDiv {
+    .no-show {
+        display: none;
+    }
+}
+
+.chart-template-wrapper {
+    .piechartDiv {
+        .lineChartChildDiv {
+            .tooltip {
+                background: var(--global-white-bg);
+                box-shadow: 0 0 5px #999999;
+                color: #333;
+                font-size: 12px;
+                left: 130px;
+                padding: 10px;
+                position: absolute;
+                text-align: center;
+                top: 95px;
+                width: 80px;
+                z-index: 10;
+                opacity: 1;
+                display: none;
+            }
+            .tooltipDonut {
+                @extend .tooltip
+            }
+        }
+    }
+}

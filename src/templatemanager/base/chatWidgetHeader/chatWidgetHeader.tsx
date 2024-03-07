@@ -68,6 +68,10 @@ export function ChatWidgetHeader(props: any) {
                 hostInstance.chatEle.querySelector('.welcome-chat-section').classList.add(hostInstance.config.branding.chat_bubble.expand_animation);
                 hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize')
             } else {
+                if (hostInstance.config.branding.general.sounds.enable && hostInstance.config.branding.general.sounds.on_close.url != 'None') {
+                    const closeSound = new Audio(hostInstance.config.branding.general.sounds.on_close.url);
+                    closeSound.play();
+                }
                 hostInstance.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
                 hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
             }
@@ -112,7 +116,7 @@ export function ChatWidgetHeader(props: any) {
                     </svg>}
                 </figure>}
                 <div className="content-text">
-                    <h1 aria-label="bot name">{brandingInfo.header.title.name}</h1>
+                    <h1 className="chat-header-title" aria-label="bot name">{hostInstance.config.botMessages.connecting}</h1>
                     <h2 aria-label="bot desc">{brandingInfo.header.sub_title.name}</h2>
                 </div>
             </div>

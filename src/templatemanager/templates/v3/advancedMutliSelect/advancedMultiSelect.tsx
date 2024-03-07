@@ -14,53 +14,53 @@ export function AdvancedMultiSelect(props: any) {
 
     let selectedData = '';
 
-    const handleViewMore = (event: any) => {
+    const handleViewMore = (event: any, msgId: any) => {
         event.currentTarget.remove();
-        const eles = hostInstance.chatEle.querySelectorAll('.multi-select-list-item.hide');
+        const eles = hostInstance.chatEle.querySelectorAll(`.multi-select-list-${msgId}.hide`);
         eles.forEach((e: any) => {
             e.classList.remove('hide');
         });
     }
 
-    const handleSelectAll = (event: any, index: any) => {
-        if (hostInstance.chatEle.querySelector(`.checkbox-selectall-${index}`).checked) {
-            const eles = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${index}`);
+    const handleSelectAll = (event: any, index: any, msgId: any) => {
+        if (hostInstance.chatEle.querySelector(`.checkbox-selectall-${msgId}-${index}`).checked) {
+            const eles = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${msgId}-${index}`);
             eles.forEach((ele: any) => {
                 ele.checked = true;
                 selectedData = selectedData + ' ' + ele.value;
             });
         } else {
-            const eles = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${index}`);
+            const eles = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${msgId}-${index}`);
             eles.forEach((ele: any) => {
                 ele.checked = false;
             });
             selectedData = '';
         }
 
-        const elesAll = hostInstance.chatEle.querySelectorAll('.checkbox-selectall');
+        const elesAll = hostInstance.chatEle.querySelectorAll(`.checkbox-selectall-${msgId}`);
         elesAll.forEach((ele: any, ind: any) => {
             if (ind !== index) {
                 ele.checked = false;
             }
         });
 
-        const eles = hostInstance.chatEle.querySelectorAll('.checkbox-input');
+        const eles = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${msgId}`);
 
         eles.forEach((ele: any) => {
-            if (!ele.classList.contains(`checkbox-input-${index}`) && !ele.classList.contains(`checkbox-selectall-${index}`)) {
+            if (!ele.classList.contains(`checkbox-input-${msgId}-${index}`) && !ele.classList.contains(`checkbox-selectall-${msgId}-${index}`)) {
                 ele.checked = false;
             }
         });
 
-        if (hostInstance.chatEle.querySelector(`.checkbox-input-${index}`).checked) {
-            hostInstance.chatEle.querySelector('.multi-select-done').classList.add('show');
+        if (hostInstance.chatEle.querySelector(`.checkbox-input-${msgId}-${index}`).checked) {
+            hostInstance.chatEle.querySelector(`.multi-select-done-${msgId}`).classList.add('show');
         } else {
-            hostInstance.chatEle.querySelector('.multi-select-done').classList.remove('show');
+            hostInstance.chatEle.querySelector(`.multi-select-done-${msgId}`).classList.remove('show');
         }
     }
 
-    const handleSelect = (event: any, index: any, ind: any) => {
-        const eles = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${index}`);
+    const handleSelect = (event: any, index: any, ind: any, msgId: any) => {
+        const eles = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${msgId}-${index}`);
         let isSelectAll = true;
         eles.forEach((ele: any) => {
             if (!ele.checked) {
@@ -71,30 +71,37 @@ export function AdvancedMultiSelect(props: any) {
         });
         if (eles.length > 1) {
             if (isSelectAll) {
-                hostInstance.chatEle.querySelector(`.checkbox-selectall-${index}`).checked = true;
+                hostInstance.chatEle.querySelector(`.checkbox-selectall-${msgId}-${index}`).checked = true;
             } else {
-                hostInstance.chatEle.querySelector(`.checkbox-selectall-${index}`).checked = false;
+                hostInstance.chatEle.querySelector(`.checkbox-selectall-${msgId}-${index}`).checked = false;
             }
         }
 
-        const ele = hostInstance.chatEle.querySelectorAll('.checkbox-input');
+        const ele = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${msgId}`);
 
         ele.forEach((ele: any) => {
-            if (!ele.classList.contains(`checkbox-input-${index}`) && !ele.classList.contains(`checkbox-selectall-${index}`)) {
+            if (!ele.classList.contains(`checkbox-input-${msgId}-${index}`) && !ele.classList.contains(`checkbox-selectall-${msgId}-${index}`)) {
                 ele.checked = false;
             }
         });
 
-        if (hostInstance.chatEle.querySelector(`.checkbox-input-${index}-${ind}`).checked) {
-            hostInstance.chatEle.querySelector('.multi-select-done').classList.add('show');
+        const elesAll = hostInstance.chatEle.querySelectorAll(`.checkbox-selectall-${msgId}`);
+        elesAll.forEach((ele: any) => {
+            if (!ele.classList.contains(`.checkbox-selectall-${msgId}`) && !ele.classList.contains(`checkbox-selectall-${msgId}-${index}`)) {
+                ele.checked = false;
+            }
+        });
+
+        if (hostInstance.chatEle.querySelector(`.checkbox-input-${msgId}-${index}-${ind}`).checked) {
+            hostInstance.chatEle.querySelector(`.multi-select-done-${msgId}`).classList.add('show');
         } else {
-            hostInstance.chatEle.querySelector('.multi-select-done').classList.remove('show');
+            hostInstance.chatEle.querySelector(`.multi-select-done-${msgId}`).classList.remove('show');
         }
     }
 
-    const onSubmit = () => {
+    const onSubmit = (msgId: any) => {
         hostInstance.sendMessage('Here are selected items: ' + selectedData, { renderMsg: 'Here are selected items: ' + selectedData});
-        hostInstance.chatEle.querySelector('.multi-select-done').remove();
+        hostInstance.chatEle.querySelector(`.multi-select-done-${msgId}`).remove();
     }
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'advanced_multi_select') {
@@ -103,21 +110,21 @@ export function AdvancedMultiSelect(props: any) {
                 <h1>{msgData?.message[0].component.payload.heading}</h1>
                 <div className="multi-select-list">
                     {msgData.message[0].component.payload.elements.map((ele: any, index: any) => (
-                        <div className={`multi-select-list-item ${index >= msgData.message[0].component.payload.limit ? `hide` : ``}`}>
+                        <div className={`multi-select-list-item multi-select-list-${msgData.messageId} ${index >= msgData.message[0].component.payload.limit ? `hide` : ``}`}>
                             <h1>{ele.collectionTitle}</h1>
-                            {ele.collection.length > 1 && <div className="checkbox-item select-all" onClick={event => handleSelectAll(event, index)}>
-                                <input id={`checkbox-selectall-${index}`} className={`checkbox-input checkbox-selectall checkbox-selectall-${index}`} type="checkbox" value="" />
-                                <label for={`checkbox-selectall-${index}`} className="checkbox-label">
+                            {ele.collection.length > 1 && <div className="checkbox-item select-all" onClick={event => handleSelectAll(event, index, msgData.messageId)}>
+                                <input id={`checkbox-selectall-${msgData.messageId}-${index}`} className={`checkbox-input checkbox-selectall checkbox-selectall-${msgData.messageId} checkbox-selectall-${msgData.messageId}-${index}`} type="checkbox" value="" />
+                                <label for={`checkbox-selectall-${msgData.messageId}-${index}`} className="checkbox-label">
                                     <div className="title">Select All</div>
                                 </label>
                             </div>}
                             <div className="list-content-details if-checkbox-select-all">
                                 {ele.collection.map((e: any, ind: any) => (
                                     <div className="list-data-temp">
-                                        <div className="img-with-content-block" onClick={event => handleSelect(event, index, ind)}>
+                                        <div className="img-with-content-block" onClick={event => handleSelect(event, index, ind, msgData.messageId)}>
                                             <div className="checkbox-item">
-                                                <input id={`checkbox-${index}-${ind}`} className={`checkbox-input checkbox-input-${index} checkbox-input-${index}-${ind}`} type="checkbox" value={e.value} />
-                                                <label for={`checkbox-${index}-${ind}`} className="checkbox-label"></label>
+                                                <input id={`checkbox-${msgData.messageId}-${index}-${ind}`} className={`checkbox-input checkbox-input-${msgData.messageId} checkbox-input-${msgData.messageId}-${index} checkbox-input-${msgData.messageId}-${index}-${ind}`} type="checkbox" value={e.value} />
+                                                <label for={`checkbox-${msgData.messageId}-${index}-${ind}`} className="checkbox-label"></label>
                                             </div>
                                             {e.image_url && <div className="img-block medium-img">
                                                 <figure>
@@ -132,12 +139,12 @@ export function AdvancedMultiSelect(props: any) {
                                     </div>))}
                             </div>
                         </div>))}
-                    <div className="multi-select-list-item" onClick={handleViewMore}>
+                    <div className="multi-select-list-item" onClick={(event) => handleViewMore(event, msgData.messageId)}>
                         <button className="show-more-btn">View More</button>
                     </div>
                 </div>
-                <div className="multi-select-done">
-                    <button className="kr-button-primary lg" onClick={onSubmit}>{msgData.message[0].component.payload.buttons[0].title}</button>
+                <div className={`multi-select-done multi-select-done-${msgData.messageId}`}>
+                    <button className="kr-button-primary lg" onClick={() => onSubmit(msgData.messageId)}>{msgData.message[0].component.payload.buttons[0].title}</button>
                 </div>
             </div>
         );

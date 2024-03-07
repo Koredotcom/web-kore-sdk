@@ -33,7 +33,7 @@
     width: 270px;
     margin: 16px auto;
     position: fixed !important;
-    right: 30px !important;
+    /* right: 30px !important; */
     top: 130px !important;
     z-index: 99999;
     margin: 0;
@@ -676,13 +676,14 @@ li.fromCurrentUser .sentIndicator.read{
 }
 .avatar-actions .cobrowser-wrapper-elipse {
     position: absolute;
-    right: -15px;
+    right: -25px;
     display: flex;
     flex-direction: column;
     width: auto;
     height: auto;
     top: auto;
-    bottom: 40px;
+    bottom: 10px;
+    padding-left: 10px;
 }
 .avatar-actions .cobrowser-wrapper-elipse.open-cobrowser .elipse-btn {
     display: block !important;

@@ -1500,7 +1500,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
         data.url = data.url + "&isReconnect=true";
       }
       if (window.sessionStorage.getItem('isSkipOnConnect')) {
-        data.url = data.url + window.sessionStorage.getItem('isSkipOnConnect') == 'true' ? "&isSkipOnConnect=true" : "&isSkipOnConnect=false";
+        data.url = data.url + (window.sessionStorage.getItem('isSkipOnConnect') == 'true' ? "&isSkipOnConnect=true" : "&isSkipOnConnect=false");
       }
       this.authenticated = true;
       //this.activeUserId = data.self.id;
