@@ -156,7 +156,15 @@ class chatWindow extends EventEmitter{
      * @property {String} type - type of error - XHRObj/JqueryXHR
      * @property {Object} errObj - error object containing error details
      */
-      API_FAILURE: 'apiFailure'
+      API_FAILURE: 'apiFailure',
+     /**
+     * on historyComplete will be triggered on histroy response render completion.
+     *
+     * @event chatWindow#historyComplete
+     * @type {Object}
+     * @property {Object} chatWindowEvent
+     */
+      HISTORY_COMPLETE: 'historyComplete'
   }
   sendFailedMessage: any;
   
@@ -2094,6 +2102,9 @@ historyLoadingComplete () {
       }
     }
     bot.previousHistoryLoading = false;
+    me.emit(me.EVENTS.HISTORY_COMPLETE,{
+      chatWindowEvent:_chatContainer
+    });
     if (me.config.UI.version == 'v2') {
       if (_chatContainer.find('.paginted-history-loader')) {
         _chatContainer.find('.paginted-history-loader').remove();
