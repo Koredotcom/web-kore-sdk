@@ -2359,19 +2359,30 @@ class AgentDesktopPluginScript  {
             }
             function createPeer() {
                 try {
-                    var peerConn = new RTCPeerConnection({
-                        iceServers: [
+                    var ICE_config = {
+                        'iceServers': [
                             {
-                                urls: ['stun:stun.l.google.com:19302',
-                                    'stun:stun1.l.google.com:19302',
-                                    'stun:stun2.l.google.com:19302',
-                                    'stun:stun.l.google.com:19302?transport=udp']
-                            }
+                            'url': 'stun:stun.l.google.com:19302'
+                            },
+                            {
+                            'url': 'stun:stun1.l.google.com:19302'
+                            },
+                            {
+                            'url': 'stun:stun2.l.google.com:19302'
+                            },
+                            {
+                            'url': 'stun:stun3.l.google.com:19302'
+                            },
+                            {
+                            'url': 'stun:stun4.l.google.com:19302'
+                            },
                         ]
-                    });
+                    }
+                    var peerConn = new RTCPeerConnection(ICE_config);
                     return peerConn;
 
                 } catch (err) {
+                    console.log("error while generating RTCPeerConnection", err);
                     var peerConn = new RTCPeerConnection();
                     return peerConn;
 
