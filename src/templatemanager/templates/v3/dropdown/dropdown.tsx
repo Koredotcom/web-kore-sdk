@@ -21,13 +21,6 @@ export function Dropdown(props: any) {
         hostInstance.sendMessage(selectedItem.value, { renderMsg: selectedItem.title });
     }
 
-    const removeDropdown = (msgId: any) => {
-        const ele = hostInstance.chatEle.querySelector(`.dropdown-${msgId}`);
-        if (ele) {
-            ele.remove();
-        }
-    }
-
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'dropdown_template') {
         if (msgData?.fromHistory) {
             const selectedItem = msgData?.message?.[0]?.component?.payload?.elements.filter((e: any) => e.value == msgData?.message?.[0]?.component?.selectedValue);
@@ -38,9 +31,6 @@ export function Dropdown(props: any) {
                 <div className="dropdwon-wrapper-contaner">
                     { msgData.message?.[0].component?.payload.heading && <div className="heading-block">
                         <h1>{msgData.message?.[0].component?.payload.heading}</h1>
-                        <button className="close_dropdown" onClick={() => removeDropdown(msgData.messageId)}>
-                            <svg version="1.1" width="auto" height="auto" viewBox="0 0 1024 1024"><title></title><g id="icomoon-ignore"></g><path fill="#697586" d="M557.251 512.005l265.375-265.378c12.498-12.497 12.498-32.758 0-45.255-12.493-12.497-32.758-12.497-45.251 0l-265.381 265.379-265.367-265.355c-12.497-12.497-32.758-12.496-45.255 0.001s-12.496 32.758 0.001 45.255l265.366 265.353-265.367 265.37c-12.497 12.498-12.497 32.758 0 45.256 12.497 12.493 32.758 12.493 45.255 0l265.368-265.37 265.38 265.37c12.498 12.493 32.758 12.493 45.256-0.005 12.493-12.493 12.493-32.758-0.005-45.251l-265.375-265.37z"></path></svg>
-                        </button>
                     </div> }
                     <div className="dropdown-temp">
                         { msgData.message?.[0].component?.payload?.label && <div className="label-text">{msgData.message?.[0].component?.payload.label}</div> }
