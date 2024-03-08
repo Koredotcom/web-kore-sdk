@@ -123,12 +123,21 @@
                                 display: flex;
                             }
                         }
-                        p{
-                            width: 100%;
-                            color: var(--gloabl-text-color);
-                            font-size: 14px;
-                            font-weight: 500;
-                            line-height: 20px;
+                        .list-section{
+                            p{
+                                width: 100%;
+                                color: var(--gloabl-text-color);
+                                font-size: 14px;
+                                font-weight: 500;
+                                line-height: 20px;
+                            }
+                            .subtext{
+                                color: #697586;
+                                font-size: 12px;
+                                font-weight: 400;
+                                line-height: 18px;
+                                margin-top: 2px;
+                            }
                         }
                         svg{
                             width: 16px;
