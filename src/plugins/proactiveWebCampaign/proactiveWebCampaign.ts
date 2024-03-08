@@ -135,8 +135,9 @@ class ProactiveWebCampaignPlugin {
                                     }
                                     const docSelector: any = document.querySelector(selector);
                                     if (docSelector) {
+                                        let timer: any;
                                         docSelector.addEventListener('mouseenter', () => {
-                                            const timer = setTimeout(() => {
+                                            timer = setTimeout(() => {
                                                 me.sendEvent(pageObj, 'hoverOn');
                                             }, me.elementHoverDuration);
                                         });
@@ -344,7 +345,7 @@ class ProactiveWebCampaignPlugin {
         for (let i=0; i<websiteArray.length; i++) {
             let pageEl = pageVisitArray[i];
             let websiteEl = websiteArray[i];
-            if ((websiteEl.matchingCondition == 'is' && websiteEl.value != pageEl[websiteEl.rule]) || (websiteEl.matchingCondition == 'contains' && !pageEl[websiteEl.rule].includes(websiteEl.value))) {
+            if ((websiteEl.matchingCondition == 'is' && websiteEl.value.trim() != pageEl[websiteEl.rule]) || (websiteEl.matchingCondition == 'contains' && !pageEl[websiteEl.rule].includes(websiteEl.value.trim()))) {
                 journeyMatched = false
             }
         }
@@ -372,7 +373,7 @@ class ProactiveWebCampaignPlugin {
             let websiteOperator = camp.engagementStrategy.website[0].operator;
             if (websiteOperator == 'or' || camp.engagementStrategy.website.length == 1) {
                 camp.engagementStrategy.website.forEach((websiteItem: any) => {
-                    if ((websiteItem.matchingCondition == 'is' && websiteItem.value == pageObject[websiteItem.rule]) || (websiteItem.matchingCondition == 'contains' && pageObject[websiteItem.rule].includes(websiteItem.value))) {
+                    if ((websiteItem.matchingCondition == 'is' && websiteItem.value.trim() == pageObject[websiteItem.rule]) || (websiteItem.matchingCondition == 'contains' && pageObject[websiteItem.rule].includes(websiteItem.value.trim()))) {
                         urlChecked = true;
                     }
                 });
@@ -382,7 +383,7 @@ class ProactiveWebCampaignPlugin {
                 for (let i=0; i<pageVisitHistory.length; i++) {
                     let pageObj = pageVisitHistory[i];
                     let websiteItem = camp.engagementStrategy.website[0];
-                    if ((websiteItem.matchingCondition == 'is' && websiteItem.value == pageObj[websiteItem.rule]) || (websiteItem.matchingCondition == 'contains' && pageObj[websiteItem.rule].includes(websiteItem.value))) {
+                    if ((websiteItem.matchingCondition == 'is' && websiteItem.value.trim() == pageObj[websiteItem.rule]) || (websiteItem.matchingCondition == 'contains' && pageObj[websiteItem.rule].includes(websiteItem.value.trim()))) {
                         let j = camp.engagementStrategy.website.length;
                         if (pageVisitHistory.length - i >= j) {
                             let pageVisitArray = JSON.parse(JSON.stringify(pageVisitHistory));
