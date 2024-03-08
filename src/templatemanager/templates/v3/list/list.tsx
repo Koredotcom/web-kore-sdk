@@ -78,7 +78,7 @@ export function List(props: any) {
         if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
             hostInstance.sendMessage(e.title || e.payload || e.value, { renderMsg: e.title });
         } else if (e.type == 'url' || e.type == 'web_url') {
-            let link = e.fallback_url || e.url;
+            let link = e.url || e.fallback_url;
             if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
                 link = `http:////${link}`;
             }
