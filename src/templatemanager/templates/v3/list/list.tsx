@@ -19,7 +19,7 @@ export function ListMore(props: any) {
 
     const handleClick = (e: any) => {
         if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
-            hostInstance.sendMessage(e.title || e.payload || e.value, { renderMsg: e.title });
+            hostInstance.sendMessage(e.payload || e.title || e.value, { renderMsg: e.title });
             closeMenu();
         } else if (e.type == 'url' || e.type == 'web_url') {
             let link = e.fallback_url || e.url;
