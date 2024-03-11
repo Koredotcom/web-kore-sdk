@@ -266,11 +266,11 @@ export function WelcomeScreenContainer(props: any) {
                 }
                 {brandingInfo.welcome_screen.promotional_content.show && <article className="pramotional-banner-wrapper-container">
                     {brandingInfo.welcome_screen.promotional_content.promotions.map((ele: any) => (
-                        <a className="banner-img" aria-label="pramotional banner" onClick={() => handleStartEvent(ele)}>
+                        (ele && ele.banner && <a className="banner-img" aria-label="pramotional banner" onClick={() => handleStartEvent(ele)}>
                             <figure>
                                 <img src={ele.banner} alt="log-img" />
                             </figure>
-                        </a>))}
+                        </a>)))}
                 </article>}
             </div>        
             <footer>
