@@ -1,3 +1,11 @@
+### 10.1.21
+
+- SDK Release Mar 09, 2024
+* Bug fixes
+  * CRLF security issue fix
+  * Cross-Site Scripting security issue fix
+  * Corrected stun server list format
+
 ### 10.1.20
 
 - SDK Release Feb 24, 2024
