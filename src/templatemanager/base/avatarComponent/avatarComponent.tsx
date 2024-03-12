@@ -8,9 +8,11 @@ export function AvatarComponent(props: any) {
     const hostInstance = props.hostInstance;
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
     const [pwcCampaign, updatePWCCampaignInfo] = useState({ enable: false, data: { buttons: [], messages: [], appearance: { messageBubbleAlignment : '', buttonAlignment: '', dropShadow: ''}, messageHeaderConfig: { headerToggle: false, headerMessage: '', headerUpload: '', headerIcon: ''}}});
+    let [isAcceptTriggered, setAcceptTriggered] = useState(false);
     hostInstance.on('onBrandingUpdate', function (event: any) {
         updateBrandingInfo({...event.brandingData})
     });
+    const actionsList: any = ['chat', 'audio', 'video'];
 
     setInterval(() => {
         if (hostInstance?.pwcInfo?.dataFlag) {
@@ -85,7 +87,47 @@ export function AvatarComponent(props: any) {
         updatePWCCampaignInfo({ enable: false, data: { buttons: [], messages: [], appearance: { messageBubbleAlignment : '', buttonAlignment: '', dropShadow: pwcCampaign.data.appearance.dropShadow}, messageHeaderConfig: { headerToggle: false, headerMessage: '', headerUpload: '', headerIcon: ''}}});
     }
 
-    const handlePWCButtonEvent = (e: any) => {
+    const handleActionEvent = (e: any) => {
+        console.log("action Event got triggered: ", e);
+        hostInstance.welcomeScreenState = true;
+        hostInstance.chatEle.classList.remove('minimize-chat');
+        hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
+        hostInstance.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
+        hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+        hostInstance.bot.KoreRTMClient.prototype.reWriteURL = function connect(socketUrl: any) {
+            if (this.reWriteSocketURL) {
+                var parser = document.createElement('a');
+                parser.href = socketUrl;
+                if (this.reWriteSocketURL.protocol) {
+                    parser.protocol = this.reWriteSocketURL.protocol;
+          
+                }
+                if (this.reWriteSocketURL.hostname) {
+                    parser.hostname = this.reWriteSocketURL.hostname;
+          
+                }
+                if (this.reWriteSocketURL.port) {
+                    parser.port = this.reWriteSocketURL.port;
+          
+                }
+                socketUrl=parser.href;
+            }
+            
+            socketUrl+="&pwc="+e;
+            return socketUrl;
+          };
+        hostInstance.bot.logInComplete();
+        setTimeout(()=>{
+            let msg = "connect "+e;
+            hostInstance.sendMessage(msg);   
+        },2000);
+    }
+
+    /* const handlePWCButtonEvent = (e: any) => {
+        if(e.actionType == 'accept'){
+            setAcceptTriggered(true);
+            console.log("isAcceptTriggered: ", isAcceptTriggered);
+        }
         if (e.actionType == 'url') {
             let link = e.actionValue;
             if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
@@ -96,7 +138,7 @@ export function AvatarComponent(props: any) {
         } else if (e.actionType == 'reject') {
             closePWCHelp(e);
         }
-    }
+    } */
 
     const dynamicContextResolver = (msg: any, data: any) => {
         return msg.replace(/{{(.*?)}}/g, (match: any, key: any) => {
@@ -129,7 +171,7 @@ export function AvatarComponent(props: any) {
                 closePWCHelp('');
             });
         }
-    });
+    },[]);
 
     return (
         <div className={avatarParentStyle} aria-label="avatar footer">
@@ -152,7 +194,7 @@ export function AvatarComponent(props: any) {
                     </div>
                 </div>}
 
-                {pwcCampaign.enable && <div className="content-info">
+                {/* {pwcCampaign.enable && !isAcceptTriggered && <div className="content-info">
                     {pwcCampaign.data?.messages.map((ele: any, ind: any) => (
                         <div className="text-content animation-slide-up" role="contentinfo" aria-labelledby="helojohn">
                             <div className="help-text-content">
@@ -174,6 +216,12 @@ export function AvatarComponent(props: any) {
                         ))}
                     </div>
                 </div>}
+
+                {pwcCampaign.enable && isAcceptTriggered && <div><p>HELLO WORLD!</p>
+                {actionsList?.map((ele: any) => (
+                            <button onClick={() => handleActionEvent(ele)}>{ele}</button>
+                        ))}
+                </div>} */}
 
                 <button className="avatar-bg">
                     {/* <span className="un-read-msg">2</span> */}

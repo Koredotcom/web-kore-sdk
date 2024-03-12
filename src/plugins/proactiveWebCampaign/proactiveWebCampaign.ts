@@ -1,9 +1,11 @@
 /* eslint-disable */
 
 import moment from "moment-timezone";
+import { getHTML } from "../../templatemanager/base/domManager";
 import PWCBannerTemplate from "./templates/pwcBannerTemplate/pwcBannerTemplate";
 import PWCButtonTemplate from "./templates/pwcButtonTemplate/pwcButtonTemplate";
 import PWCPostTemplate from "./templates/pwcPostTemplate/pwcPostTemplate";
+import Chat from "./templates/pwcChatTemplate/pwcChatTemplate";
 class ProactiveWebCampaignPlugin {
     name: string = 'ProactiveWebCampaingPlugin';
     config: any = {};
@@ -20,6 +22,10 @@ class ProactiveWebCampaignPlugin {
     constructor(config: any) {
         config = config || {};
         this.config = { ...this.config, ...config };
+        if(!this.config.dependentPlugins.AgentDesktopPlugin){
+            console.log("PWE is dependent on AgentDesktopPlugin, please add it");
+            return;
+        }
     }
 
     onHostCreate() {
@@ -78,7 +84,7 @@ class ProactiveWebCampaignPlugin {
                     if (data.body.isEnabled) {
                         this.enablePWC = true;
                         this.campInfo = data.body.campInfo || [];
-                        this.campInfo.forEach((campaign: any) => {
+                        this.campInfo?.forEach((campaign: any) => {
                             const pwe_data = {
                                 "isLayoutTriggered": false,
                                 "expected": {
@@ -96,7 +102,7 @@ class ProactiveWebCampaignPlugin {
                             }
                             const campInstanceId = campaign.campInstanceId
                             this.isCityCountryRule[campInstanceId] = false;
-                            campaign.engagementStrategy.rules.forEach((rule: any) => {
+                            (campaign.engagementStrategy.rules || []).forEach((rule: any) => {
                                 const ruleName = rule.rule;
                                 if(ruleName == 'country' || ruleName == 'city') {
                                     this.isCityCountryRule[campInstanceId] = true;
@@ -108,8 +114,8 @@ class ProactiveWebCampaignPlugin {
                                 } else {
                                     pwe_data.expected.rules[ruleName] = [ruleObj]
                                 }
-                            })
-                            campaign.engagementStrategy.rules.forEach((ruleInfo: any) => {
+                            });
+                            (campaign.engagementStrategy.rules || []).forEach((ruleInfo: any) => {
                                 if (ruleInfo.rule === 'hoverOn') {
                                     let selectorType = ruleInfo["matchingCondition"];
                                     let selectorValue = ruleInfo["value"].trim();
@@ -149,14 +155,14 @@ class ProactiveWebCampaignPlugin {
                                 }
                             });
                                                             
-                            campaign.engagementStrategy.goals.forEach((goal: any) => {
+                            (campaign.engagementStrategy.goals || []).forEach((goal: any) => {
                                 const goalObj = {...goal};
                                 delete goalObj.rule;
                                 pwe_data.expected.goals.pageVisited.push(goalObj)
-                            })
-                            campaign.engagementStrategy.website.forEach((website: any) => {
+                            });
+                            (campaign.engagementStrategy.website || []).forEach((website: any) => {
                                 pwe_data.expected.website.push(website);
-                            })
+                            });
                             const data = {
                                 [campInstanceId] : pwe_data
                             }
@@ -169,7 +175,7 @@ class ProactiveWebCampaignPlugin {
                                 window.sessionStorage.setItem('pwe_data', JSON.stringify(data))
                             }
                             this.timeSpent[campInstanceId] = 0;
-                        })
+                        });
                         me.eventLoop();
                     }
                 }
@@ -182,6 +188,15 @@ class ProactiveWebCampaignPlugin {
                     }
                 }
                 if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType == 'chat' && data.body?.layoutDesign && this.enablePWC) {
+                    const layoutData = {
+                        layoutData: data?.body?.layoutDesign
+                    }
+                    const chatContainer = getHTML(Chat, layoutData, this.hostInstance);
+                    let avatarVariations = me.hostInstance.chatEle.querySelector('.avatar-actions');
+                    avatarVariations.prepend(chatContainer);
+                    // avatar-variations-footer
+                    // TODO: append chatContainer to .avatar-actions in avatarVariations
+                    // let targetEle = actionsClass.append(chatContainer);
                     me.hostInstance.pwcInfo.dataFlag = true;
                     me.hostInstance.pwcInfo.chatData = {};
                     me.hostInstance.pwcInfo.chatData.enable = true;
@@ -361,7 +376,7 @@ class ProactiveWebCampaignPlugin {
         messageToBot.resourceid = '/pwe_message';
         messageToBot.iId = me.hostInstance.config.botOptions.botInfo.taskBotId;
         messageToBot.userId = me.hostInstance.config.botOptions.userIdentity;
-        this.campInfo.forEach(async (camp: any) => {
+        this.campInfo?.forEach(async (camp: any) => {
             const campInstanceId = camp.campInstanceId
             let urlChecked = false;
             let goalUrlChecked = false;
@@ -370,9 +385,9 @@ class ProactiveWebCampaignPlugin {
             messageToBot.campInfo = {};
             messageToBot.campInfo.campId = camp.campId;
             messageToBot.campInfo.campInstanceId = camp.campInstanceId;
-            let websiteOperator = camp.engagementStrategy.website[0].operator;
+            let websiteOperator = camp.engagementStrategy?.website[0]?.operator;
             if (websiteOperator == 'or' || camp.engagementStrategy.website.length == 1) {
-                camp.engagementStrategy.website.forEach((websiteItem: any) => {
+                (camp.engagementStrategy.website || []).forEach((websiteItem: any) => {
                     if ((websiteItem.matchingCondition == 'is' && websiteItem.value.trim() == pageObject[websiteItem.rule]) || (websiteItem.matchingCondition == 'contains' && pageObject[websiteItem.rule].includes(websiteItem.value.trim()))) {
                         urlChecked = true;
                     }
@@ -415,7 +430,7 @@ class ProactiveWebCampaignPlugin {
                 let loc: any = window.sessionStorage.getItem('pwcLocationData');
                 loc = JSON.parse(loc);
                 if (loc) {
-                    camp.engagementStrategy.rules.forEach((ruleItem: any) => {
+                    (camp.engagementStrategy.rules || []).forEach((ruleItem: any) => {
                         switch (ruleItem.rule) {
                             case 'country':
                             case 'city':
@@ -434,7 +449,7 @@ class ProactiveWebCampaignPlugin {
             let pwe_data_inst: any = pwe_data[campInstanceId];
             if (urlChecked && this.checkEngagementHours(camp.engagementStrategy.engagementHours) && !pwe_data_inst.isLayoutTriggered) {
                 let condition = camp.engagementStrategy.rules[0].operator;
-                    camp.engagementStrategy.rules.forEach((ruleItem: any) => {
+                    (camp.engagementStrategy.rules || []).forEach((ruleItem: any) => {
                         switch (ruleItem.rule) {
                             case 'user':
                                 const user = me.hostInstance.config.pwcConfig.knownUser ? 'known' : 'anonymous';
@@ -572,14 +587,14 @@ class ProactiveWebCampaignPlugin {
             if (camp.engagementStrategy.goals && camp.engagementStrategy.goals.length) {
                 let condition = camp.engagementStrategy.goals[0].operator;
                 if (condition.toLowerCase() == 'or') {
-                    camp.engagementStrategy.goals.forEach((goalItem: any) => {
+                    (camp.engagementStrategy.goals || []).forEach((goalItem: any) => {
                         if (((goalItem.matchingCondition == 'is' && pageObject.url == goalItem.value) || (goalItem.matchingCondition == 'contains' && pageObject.url?.includes(goalItem.value)))) {
                             goalData.push(goalItem);
                             goalUrlChecked = true;
                         }
                     });
                 } else {
-                    camp.engagementStrategy.goals.forEach((goalItem: any) => {
+                    (camp.engagementStrategy.goals || []).forEach((goalItem: any) => {
                         if (((goalItem.matchingCondition == 'is' && pageObject.url == goalItem.value) || (goalItem.matchingCondition == 'contains' && pageObject.url?.includes(goalItem.value)))) {
                             goalUrlChecked = true;
                         } else {
@@ -633,7 +648,7 @@ class ProactiveWebCampaignPlugin {
 
     createTimeSpentObjs() {
         let goalArr: any = [];
-        this.campInfo.forEach((camp: any) => {
+        this.campInfo?.forEach((camp: any) => {
             const campInstanceId = camp.campInstanceId;
             this.timeSpent[campInstanceId] = 0;
             if (camp.engagementStrategy.goals && camp.engagementStrategy.goals.length) {
@@ -649,8 +664,8 @@ class ProactiveWebCampaignPlugin {
 
     calculateTimeSpent(pageObj: any, type: any) {
         const me: any = this;
-        this.campInfo.forEach((camp: any) => {
-            camp.engagementStrategy.website.forEach((urlItem: any) => {
+        this.campInfo?.forEach((camp: any) => {
+            camp.engagementStrategy?.website?.forEach((urlItem: any) => {
                 if ((urlItem.matchingCondition == 'is' && pageObj[urlItem.rule] == urlItem.value) || (urlItem.matchingCondition == 'contains' && pageObj[urlItem.rule]?.includes(urlItem.value))) {
                     const timeSpentRule = camp.engagementStrategy.rules.find((r: any) => r.rule == 'timeSpent');
                     if (timeSpentRule && timeSpentRule.rule) {
