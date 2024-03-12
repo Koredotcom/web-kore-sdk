@@ -322,6 +322,9 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 	// }		
 # Release History
 ```
+v10.1.21 [Minor] on 09-Mar-2024: Master branch
+        Bugfixes
+                1.cobrowse stun server urls format change
 v10.1.20 [Minor] on 24-Feb-2024: Master branch
         Bugfixes
                 1.Universal selector issue fix in widget
