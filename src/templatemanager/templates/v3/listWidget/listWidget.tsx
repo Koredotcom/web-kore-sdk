@@ -148,7 +148,7 @@ export function ListWidget(props: any) {
                                         </Fragment>
                                 </div>
                             </div>
-                            <div className="adv-list-temp-accordion">
+                            <div className={`adv-list-temp-accordion ${item?.buttonsLayout && item.buttons?.length > item.buttonsLayout?.displayLimit?.count ? `button-z-index-3` : ``}`}>
                                 {item.details && item.details.length > 0 && <div className="list-of-rows">
                                     {item.details.map((textEle: any, inde: any) => (
                                         <div className="row-list-info" onClick={() => handleItem(textEle)}>
