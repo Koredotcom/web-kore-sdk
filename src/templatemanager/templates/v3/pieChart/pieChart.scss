@@ -43,9 +43,8 @@ polyline{
     .piechartDiv {
         .lineChartChildDiv {
             .tooltip {
-                background: var(--global-white-bg);
-                box-shadow: 0 0 5px #999999;
-                color: #333;
+                background: var(--gloabl-text-color);
+                color: var(--global-white-bg);
                 font-size: 12px;
                 left: 130px;
                 padding: 10px;
