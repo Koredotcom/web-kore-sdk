@@ -111,6 +111,17 @@
             }
         }
     }
+    &.if-dark-theme-checkbox{
+        .checkbox-input{
+            &:checked{
+                + .checkbox-label{
+                    &::before{
+                        background-color: var(--global-white-bg);
+                    }
+                }
+            }
+        }
+    }
 }
 
 .checkbox-wrapper{
