@@ -53,11 +53,17 @@ export function Feedback(props: any) {
         }
     }
 
-    const handleEmoji = (event: any, item: any) => {
+    const handleEmoji = (event: any, item: any, msgId?: any, ind?: any) => {
         const currentTarget = event.currentTarget;
         let val = item.value;
         let renderMsg = item.reviewText;
-        currentTarget.parentNode.classList.add('selected-cst-feeback');
+        if (msgId) {
+            const ele = hostInstance.chatEle.querySelector(`.rating-${msgId}-${ind}`);
+            if (ele) {
+                ele.checked = true;
+            }
+        }
+        currentTarget.parentNode.parentNode.classList.add('selected-cst-feeback');
         // if (item.smileyId == '5') {
         //     val = item.value + ': ' + msgData.message[0].component.payload.messageTodisplay;
         //     renderMsg = item.value + ': ' + msgData.message[0].component.payload.messageTodisplay;
@@ -161,9 +167,9 @@ export function Feedback(props: any) {
                     <h6>{msgData?.message?.[0]?.component?.payload?.text}</h6>
                     {(msgData.message[0].component.payload.view == 'emojis' || msgData.message[0].component.payload.view == 'CSAT') && <div className="csat-feedback">
                         <div className="emoji_container">
-                            {msgData.message[0].component.payload.smileyArrays.map((emojiItem: any) => (<div className="emoji-feedback" onClick={event => handleEmoji(event, emojiItem)}>
-                                <input type="radio" id={`rating-${emojiItem.smileyId}`} name="csat_feedback" />
-                                <div className="emoji-details-label" for={`rating-${emojiItem.smileyId}`}>
+                            {msgData.message[0].component.payload.smileyArrays.map((emojiItem: any, ind: any) => (<div className="emoji-feedback">
+                                <input type="radio" id={`rating-${emojiItem.smileyId}`} className={`rating-${msgData.messageId}-${ind}`} name={`csat_feedback-${msgData.messageId}`} onClick={event => handleEmoji(event, emojiItem)} />
+                                <div className="emoji-details-label" for={`rating-${emojiItem.smileyId}`} onClick={event => handleEmoji(event, emojiItem, msgData.messageId, ind)}>
                                     <p>{emojiItem.reviewText}</p>
                                 </div>
                             </div>))}

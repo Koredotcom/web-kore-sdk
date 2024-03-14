@@ -68,15 +68,13 @@
             40%{
                 height: auto;
                 width: auto;
-                padding: 11px;
+                opacity: 0.5;
             }
             100% { 
                 opacity: 1;
                 height: auto;
                 width: auto;
                 transform: scale(1);
-                margin-top: 8px;
-                padding: 10px 16px;
             }
         }
         @keyframes avatarType1IconAnim {
@@ -171,8 +169,8 @@
             0%,
             20%,
             53%,
-            80%,
-            100% {
+            80%
+            {
                 -webkit-transition-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
                 transition-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
                 -webkit-transform: translate3d(0, 0, 0);
@@ -180,8 +178,7 @@
                 opacity: 1;
                 height: auto;
                 width: auto;
-                margin-top: 8px;
-                padding: 10px 16px;
+                opacity: 0;
             }
             
             40%,
@@ -190,6 +187,7 @@
                 transition-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
                 -webkit-transform: translate3d(0, -1px, 0);
                 transform: translate3d(0, -1px, 0);
+                opacity: 1;
             }
             
             70% {
@@ -197,11 +195,16 @@
                 transition-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
                 -webkit-transform: translate3d(0, -0.5px, 0);
                 transform: translate3d(0, -0.5px, 0);
+                opacity: 1;
             }
             
             90% {
                 -webkit-transform: translate3d(0, -0px, 0);
                 transform: translate3d(0, -0px, 0);
+                opacity: 1;
+            }
+            100%{
+                opacity: 1;
             }
         }
 
@@ -228,16 +231,17 @@
                 }
                 .buttons-triger-click-wrapper{
                     &.btn-anim-send{
+                        opacity: 0;
                         transform-origin: bottom top;   
                         animation: avatarType1Animation2 0.5s ease forwards;
-                        animation-delay: 4s;
+                        animation-delay: 2.5s;
                     }
-                    .primary-button{
-                        padding: 0;
-                        width: 0px;
-                        height: 0px;
-                        opacity: 0;
-                    }
+                    // .primary-button{
+                    //     padding: 0;
+                    //     width: 0px;
+                    //     height: 0px;
+                    //     opacity: 0;
+                    // }
                 }
             }
             .avatar-bg{
@@ -304,15 +308,16 @@
                         animation-duration: 1s;
                         -webkit-animation-fill-mode: both;
                         animation-fill-mode: both;
-                        animation: avatarType2Animation2 0.8s ease forwards;
-                        animation-delay: 4s;
-                    }
-                    .primary-button{
-                        padding: 0;
-                        width: 0px;
-                        height: 0px;
                         opacity: 0;
+                        animation: avatarType2Animation2 0.8s ease forwards;
+                        animation-delay: 3s;
                     }
+                    // .primary-button{
+                    //     padding: 0;
+                    //     width: 0px;
+                    //     height: 0px;
+                    //     opacity: 0;
+                    // }
                 }
             }
             .avatar-bg{
@@ -330,6 +335,7 @@
             width: auto;
             flex: auto;
             align-items: flex-end;
+            gap: 8px;
             // position: absolute;
             transition: 0.3s all ease;
             // transform: scale(0) translateX(100%);
@@ -361,7 +367,7 @@
                 display: inline-block;
                 padding: 11px;
                 position: relative;
-                margin-bottom: 8px;                 
+                // margin-bottom: 8px;                 
                 h4 {
                     font-weight: 600;
                     font-size: $font-s-16;

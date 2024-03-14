@@ -30,8 +30,8 @@ export function RadioOptions(props: any) {
                 { msgData?.message?.[0]?.component?.payload.radioOptions.map((ele: any, ind: any) => (
                     <div className="radio-padding">
                         <div className="radio-button-item" onClick={() => selectedItem(ele.postback)}>
-                            <input id={`radio-${ind}`} name="radio" className="radio-input" type="radio" />
-                            <label for={`radio-${ind}`} className="radio-label">
+                            <input id={`radio-${msgData.messageId}-${ind}`} name={`radio-${msgData.messageId}`} className="radio-input" type="radio" />
+                            <label for={`radio-${msgData.messageId}-${ind}`} className="radio-label">
                                 <div className="radio-title">{ele.title}</div>
                                 {/* <div className="radio-desc">Radio button item</div> */}
                             </label>

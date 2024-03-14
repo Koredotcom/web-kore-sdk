@@ -74,6 +74,24 @@ export function Attachment(props: any) {
                 </div>
             </section>
         );
+    } else if (msgData?.message?.[0]?.component?.payload && msgData.message[0].component.type == 'document') {
+        return (
+            <div className="thumbnails-wrapper attachment-document document-template">
+                <div className="thumbnail-data-content document-cotent">
+                    <div className="icon-block">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.75 4.75C4.75 3.7835 5.5335 3 6.5 3H10.5126C10.9767 3 11.4218 3.18437 11.75 3.51256L14.7374 6.5C15.0656 6.82819 15.25 7.27331 15.25 7.73744V15.25C15.25 16.2165 14.4665 17 13.5 17H6.5C5.5335 17 4.75 16.2165 4.75 15.25V4.75ZM6.5 10C6.5 9.51675 6.89175 9.125 7.375 9.125H12.625C13.1082 9.125 13.5 9.51675 13.5 10C13.5 10.4832 13.1082 10.875 12.625 10.875H7.375C6.89175 10.875 6.5 10.4832 6.5 10ZM7.375 12.625C6.89175 12.625 6.5 13.0168 6.5 13.5C6.5 13.9832 6.89175 14.375 7.375 14.375H12.625C13.1082 14.375 13.5 13.9832 13.5 13.5C13.5 13.0168 13.1082 12.625 12.625 12.625H7.375Z" fill="#697586" />
+                        </svg>
+                    </div>
+                    <div className="attchment-details">
+                        <div className="content-info">
+                            {/* <p>120 MB</p> */}
+                        </div>
+                        <button className="kr-button-blue-light" onClick={() => download(msgData?.message?.[0]?.component?.payload.url, extractedFileName || 'file')}>Download</button>
+                    </div>
+                </div>
+            </div>
+        )
     }
 }
 

@@ -60,6 +60,20 @@
             padding: 32px 16px;
             .logo-img {
                 margin-bottom: 18px;
+                width: 56px;
+                height: 56px;
+                // background: var(--global-white-bg);
+                box-shadow: 0px 10px 15px -3px rgba(16, 24, 40, 0.1), 0px 4px 6px -4px rgba(16, 24, 40, 0.1);
+                border-radius: 100%;
+                figure{
+                    width: 100%;
+                    height: 100%;
+                    img{
+                        height: 100%;
+                        width: 100%;
+                        border-radius: 100%;
+                    }
+                }
             }
             h1 {
                 font-weight: 600;
@@ -177,6 +191,7 @@
                 img {
                     width: 100%;
                     height: 100%;
+                    border-radius: 100%;
                 }
             }
             .bot_icon_image {
@@ -186,6 +201,7 @@
                 img {
                     width: 100%;
                     height: 100%;
+                    border-radius: 100%;
                 }
             }
             .conv-starter-content-info{
@@ -544,8 +560,28 @@
         }
     }
     .carousel-right-click {
-        @extend .carousel-left-click;
-        left: auto;
+        position: absolute;
+        border-radius: 32px;
+        background: var(--global_white);
+        box-shadow: 0px 4px 12px 2px rgba(32, 33, 36, 0.12);
+        display: flex;
+        width: 32px;
+        height: 32px;
+        padding: 0px;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        border: 0;
+        left: 15px;
+        top: auto;
+        cursor: pointer;
+        flex-shrink: 0;
+        z-index: 9;
+        svg{
+            path{
+                stroke: var(--gloabl-text-color);
+            }
+        }        left: auto;
         right: 15px;
     }
     .carousel-link-temp-wrapper{

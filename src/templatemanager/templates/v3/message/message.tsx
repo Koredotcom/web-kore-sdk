@@ -49,11 +49,12 @@ export function Message(props: any) {
     const onCopy = (event: any, value: any) => {
         var dummy = document.createElement('textarea');
         document.body.appendChild(dummy);
-        dummy.value = JSON.stringify(value);
+        const copiedValue = JSON.stringify(value);
+        const copiedValueWithoutQuotes = copiedValue.replace(/['"]+/g, '');
+        dummy.value = copiedValueWithoutQuotes;
         dummy.select();
         document.execCommand('copy');
-        document.body.removeChild(dummy);
-        console.log('event: ', event);
+        document.body.removeChild(dummy);        
         event.target.classList.remove('sdkv3-copy');
         event.target.classList.add('sdkv3-check');
         setTimeout(() => {

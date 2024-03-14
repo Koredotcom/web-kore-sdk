@@ -46,7 +46,7 @@ export function CheckBoxes(props: any) {
         return (
             <div className="checkbox-wrapper">
                 {msgData.message[0].component.payload.heading && <h1>{msgData.message[0].component.payload.heading}</h1>}
-                <div className="checkbox-item select-all" onClick={() => onSelectAll()}>
+                <div className={`checkbox-item select-all ${hostInstance.config.branding.general.themeType == 'dark'? `if-dark-theme-checkbox` : ``}`} onClick={() => onSelectAll()}>
                     <input id={`checkbox-selectall-${msgData.messageId}`} className={`checkbox-input checkbox-selectall-${msgData.messageId}`} type="checkbox" value="" />
                     <label for={`checkbox-selectall-${msgData.messageId}`} className="checkbox-label">
                         <div className="title">Select All</div>
@@ -54,7 +54,7 @@ export function CheckBoxes(props: any) {
                 </div>
                 <div className="checkbox-container">
                     { msgData?.message?.[0]?.component?.payload?.elements.map((ele: any, ind: any) => (
-                        <div className="checkbox-item" onClick={() => onItemSelect()}>
+                        <div className={`checkbox-item ${hostInstance.config.branding.general.themeType == 'dark'? `if-dark-theme-checkbox` : ``}`} onClick={() => onItemSelect()}>
                             <input id={`checkbox-${msgData.messageId}-${ind}`} className={`checkbox-input checkbox-input-${msgData.messageId}`} type="checkbox" value={ele.value} />
                             <label for={`checkbox-${msgData.messageId}-${ind}`} className="checkbox-label">
                                 <div className="title">{ele.title}</div>

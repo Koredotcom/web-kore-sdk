@@ -25,20 +25,6 @@
                 font-weight: 700;
                 line-height: normal;
             }
-            .close-dropdown{
-                width: 16px;
-                height: 16px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border: 0;
-                background: transparent;
-                color: var(--gloabl-text-color);
-                font-size: 14px;
-                cursor: pointer;
-                padding: 0;
-                flex-shrink: 0;
-            }
         }
         .dropdown-temp{
             width: 100%;
@@ -55,6 +41,11 @@
                 &.show-drp{
                     .menu-content-list-drp{
                         display: block;
+                    }
+                    .drp-btn{
+                        svg{
+                            transform: rotate(180deg);
+                        }
                     }
                 }
                 .drp-btn{
@@ -75,6 +66,9 @@
                     line-height: 20px;
                     span{
                         width: 100%;
+                        &.default-placeholder{
+                            opacity: 0.5;
+                        }
                     }
                     svg{
                         width: 20px;
@@ -100,6 +94,8 @@
                     background: var(--global-white-bg);
                     z-index: 9;
                     margin-top: 2px;
+                    max-height: 230px;
+                    overflow: auto;
                     li{
                         border-radius: 4px 4px 0px 0px;
                         background: var(--global-white-bg);
@@ -123,12 +119,21 @@
                                 display: flex;
                             }
                         }
-                        p{
+                        .list-section{
                             width: 100%;
-                            color: var(--gloabl-text-color);
-                            font-size: 14px;
-                            font-weight: 500;
-                            line-height: 20px;
+                            p{
+                                width: 100%;
+                                color: var(--gloabl-text-color);
+                                font-size: 14px;
+                                font-weight: 500;
+                                line-height: 20px;
+                            }
+                            .subtext{
+                                color: var(--gloabl-text-color);
+                                font-size: 12px;
+                                font-weight: 400;
+                                line-height: 18px;
+                            }
                         }
                         svg{
                             width: 16px;
@@ -136,6 +141,7 @@
                             align-items: center;
                             justify-content: center;
                             display: none;
+                            flex-shrink: 0;
                             path{
                                 fill: var(--global-theme-color);
                             }

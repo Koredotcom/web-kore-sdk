@@ -285,6 +285,9 @@
             display: none;
             position: relative;
             z-index: 2;
+            &.button-z-index-3{
+                z-index: 3;
+            }
             .list-of-rows{
                 display: flex;
                 flex-direction: column;

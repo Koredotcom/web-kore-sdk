@@ -30,7 +30,7 @@ export function TableExt(props: any) {
                             </thead>
                             <tbody>
                                 {msgData.message[0].component.payload.elements.map((ele: any, ind: any) => (
-                                    (((showMore && ind < 4) || !showMore) && <tr>
+                                    (((showMore && ind < 3) || !showMore) && <tr>
                                         {ele.Values.map((e: any) => (
                                             <td>{e}</td>
                                         ))}
@@ -38,7 +38,7 @@ export function TableExt(props: any) {
                                 ))}
                             </tbody>
                         </table>
-                        {showMore && msgData.message[0].component.payload.elements.length > 4 && <button className={`show-more-btn table-show-more-${msgData.messageId}`}>Show More</button>}
+                        {showMore && msgData.message[0].component.payload.elements.length > 3 && <button className={`show-more-btn table-show-more-${msgData.messageId}`}>Show More</button>}
                     </section>
                 </section>
             </Fragment>
@@ -54,7 +54,7 @@ export function TableExt(props: any) {
                     <div className="table-response-wrapper-container">
                         <div className="table-response-wrapper">
                             {msgData.message[0].component.payload.elements.map((ele: any, ind: any) => (
-                                (((showMore && ind < 4) || !showMore) && <div className="acc-block-content" onClick={selectItem}>
+                                (((showMore && ind < 3) || !showMore) && <div className="acc-block-content" onClick={selectItem}>
                                     {ele.Values.map((e: any, i: any) => (i < 2 && <div className="info-block">
                                         <h1 className="hide">{msgData.message[0].component.payload.columns[i]}</h1>
                                         <p>{e}</p>

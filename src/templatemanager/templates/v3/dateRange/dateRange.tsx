@@ -44,14 +44,22 @@ export function DateRangeExt(props: any) {
     }
 
     useEffect(() => {
+        const currentDatePrev = new Date();
+        const currentDateNext = new Date();
+        currentDatePrev.setFullYear(currentDatePrev.getFullYear() - 7);
+        currentDateNext.setFullYear(currentDateNext.getFullYear() + 7);
+        const minDate = msgData.message?.[0]?.component?.payload?.startDate ? msgData.message?.[0]?.component?.payload?.startDate : getConvertedDate(currentDatePrev, msgData?.message?.[0]?.component?.payload?.format ? msgData?.message?.[0]?.component?.payload?.format : 'DD-MM-YYYY');
         const dp = new Datepicker(`#cal-${msgData.messageId}`, {
-            dateFormat: dateFormats[msgData?.message?.[0]?.component?.payload?.format],
+            dateFormat: msgData?.message?.[0]?.component?.payload?.format ? dateFormats[msgData?.message?.[0]?.component?.payload?.format] : 'dd-MM-yyyy',
             range: true,
-            minDate: msgData.message?.[0]?.component?.payload?.startDate ? msgData.message?.[0]?.component?.payload?.startDate : getConvertedDate(new Date(), msgData?.message?.[0]?.component?.payload?.format),
-            maxDate: msgData.message?.[0]?.component?.payload?.endDate ? msgData.message?.[0]?.component?.payload?.endDate : getConvertedDate(new Date(), msgData?.message?.[0]?.component?.payload?.format),        
+            minDate: minDate,
+            maxDate: msgData.message?.[0]?.component?.payload?.endDate ? msgData.message?.[0]?.component?.payload?.endDate : getConvertedDate(currentDateNext, msgData?.message?.[0]?.component?.payload?.format ? msgData?.message?.[0]?.component?.payload?.format : 'DD-MM-YYYY'),        
             disableNavWhenOutOfRange: false,
             onSelect: (d: any) => {
                 setSelectedDate({ from: d.formattedDate[0], to: d.formattedDate[1]});
+                dp.update({
+                    minDate: d.date[1] ? minDate: d.date[0]
+                });
             }
         });
         dp.show();
@@ -117,14 +125,22 @@ export function DateRange(props: any) {
             const [selectedDate, setSelectedDate] = useState({ from: new Date().toDateString(), to: 'Select' });
 
             useEffect(() => {
+                const currentDatePrev = new Date();
+                const currentDateNext = new Date();
+                currentDatePrev.setFullYear(currentDatePrev.getFullYear() - 7);
+                currentDateNext.setFullYear(currentDateNext.getFullYear() + 7);
+                const minDate = msgData.message?.[0]?.component?.payload?.startDate ? msgData.message?.[0]?.component?.payload?.startDate : getConvertedDate(currentDatePrev, msgData?.message?.[0]?.component?.payload?.format ? msgData?.message?.[0]?.component?.payload?.format : 'DD-MM-YYYY');
                 const dp = new Datepicker(`#cal-${msgData.messageId}`, {
-                    dateFormat: dateFormats[msgData?.message?.[0]?.component?.payload?.format],
+                    dateFormat: msgData?.message?.[0]?.component?.payload?.format ? dateFormats[msgData?.message?.[0]?.component?.payload?.format] : 'dd-MM-yyyy',
                     range: true,
-                    minDate: msgData.message?.[0]?.component?.payload?.startDate ? msgData.message?.[0]?.component?.payload?.startDate : getConvertedDate(new Date(), msgData?.message?.[0]?.component?.payload?.format),
-                    maxDate: msgData.message?.[0]?.component?.payload?.endDate ? msgData.message?.[0]?.component?.payload?.endDate : getConvertedDate(new Date(), msgData?.message?.[0]?.component?.payload?.format),        
+                    minDate: minDate,
+                    maxDate: msgData.message?.[0]?.component?.payload?.endDate ? msgData.message?.[0]?.component?.payload?.endDate : getConvertedDate(currentDateNext, msgData?.message?.[0]?.component?.payload?.format ? msgData?.message?.[0]?.component?.payload?.format : 'DD-MM-YYYY'),        
                     disableNavWhenOutOfRange: false,
                     onSelect: (d: any) => {
                         setSelectedDate({ from: d.formattedDate[0], to: d.formattedDate[1]});
+                        dp.update({
+                            minDate: d.date[1] ? minDate: d.date[0]
+                        });
                     }
                 });
                 dp.show();

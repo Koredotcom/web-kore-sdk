@@ -3,3 +3,13 @@
         justify-content: flex-start;
     }
 }
+
+.thumbnails-wrapper {
+    &.document-template {
+        justify-content: flex-start;
+
+        .document-cotent {
+            width: 50%;
+        }
+    }
+}
