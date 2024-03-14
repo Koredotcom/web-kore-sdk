@@ -20,6 +20,19 @@ export function PieChart(props: any) {
     );
 }
 
+export function PieChartModal(props: any) {
+    const msgData = props.msgData;
+    return (
+        <div className="chart-template-wrapper" id={`pcmodal${msgData.messageId}`}>
+            <div id="d3Pie"></div>
+            <div className="piechartDiv charts-body-info">
+                <h1>{msgData?.message?.[0]?.component?.payload?.text}</h1>
+                <div className="lineChartChildDiv" id={`piechartmodal${msgData.messageId}`}></div>
+            </div>
+        </div>
+    );
+}
+
 export function PieChartBase(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
@@ -39,9 +52,10 @@ export function PieChartBase(props: any) {
             });
             const ele = hostInstance.chatEle.querySelector(`#pc${msgData.messageId}`);
             if (ele) {
-                const eleCopy = ele.cloneNode(true); 
+                const pieChartHTMLModal = getHTML(PieChartModal, msgData, hostInstance);
                 ele.addEventListener('click', (e: any) => {
-                    hostInstance.modalAction(eleCopy);
+                    hostInstance.modalAction(pieChartHTMLModal);
+                    KoreGraphAdapter.openChartModal(msgData, `#piechartmodal${msgData.messageId}`);
                 });
             }
         }, 200);

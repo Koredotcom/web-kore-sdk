@@ -19,6 +19,18 @@ export function LineChart(props: any) {
     );
 }
 
+export function LineChartModal(props: any) {
+    const msgData = props.msgData;
+    return (
+        <div className="chart-template-wrapper" id={`lc${msgData.messageId}`}>
+            <div className="linechartDiv charts-body-info">
+                <h1>{msgData?.message?.[0]?.component?.payload?.text}</h1>
+                <div className="lineChartChildDiv" id={`linechartmodal${msgData.messageId}`}></div>
+            </div>
+        </div>
+    );
+}
+
 export function LineChartBase(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
@@ -38,9 +50,10 @@ export function LineChartBase(props: any) {
             });
             const ele = hostInstance.chatEle.querySelector(`#lc${msgData.messageId}`);
             if (ele) {
-                const eleCopy = ele.cloneNode(true); 
+                const lineChartHTMLModal = getHTML(LineChartModal, msgData, hostInstance);
                 ele.addEventListener('click', (e: any) => {
-                    hostInstance.modalAction(eleCopy);
+                    hostInstance.modalAction(lineChartHTMLModal);
+                    KoreGraphAdapter.openChartModal(msgData, `#linechartmodal${msgData.messageId}`);
                 });
             }
         }, 400);

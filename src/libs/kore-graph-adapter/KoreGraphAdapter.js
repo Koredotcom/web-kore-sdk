@@ -2654,6 +2654,100 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
           }
         });
       }
+      function openChartModal(msgData, containerId) { 
+          if (document.querySelector(containerId)) {
+              document.querySelector(containerId).innerHTML = '';
+          }
+          if (chatConfig && chatConfig.graphLib === 'd3') {
+              if (msgData.message[0].component.payload.pie_type === undefined) {
+                  msgData.message[0].component.payload.pie_type = 'regular';
+              }
+              if (msgData.message[0].component.payload.template_type !== 'linechart' && msgData.message[0].component.payload.template_type !== 'piechart') {
+                  var dimens = {};
+                  dimens.outerWidth = 650;
+                  dimens.outerHeight = 460;
+                  dimens.innerWidth = 450;
+                  dimens.innerHeight = 350;
+                  dimens.legendRectSize = 15;
+                  dimens.legendSpacing = 4;
+                  if (msgData.message[0].component.payload.template_type === 'barchart' && msgData.message[0].component.payload.direction === 'vertical') {
+                      dimens.innerWidth = 500;
+                      this.drawD3barChart(msgData, dimens, containerId, 12);
+                  } else if (msgData.message[0].component.payload.template_type === 'barchart' && msgData.message[0].component.payload.direction === 'horizontal') {
+                      this.drawD3barStackedChart(data.data, dimens, containerId, 12);
+                  } else if (msgData.message[0].component.payload.template_type === 'barchart' && msgData.message[0].component.payload.direction === 'vertical') {
+                      dimens.innerWidth = 550;
+                      this.drawD3barVerticalStackedChart(msgData, dimens, containerId, 12);
+                  } else if (msgData.message[0].component.payload.template_type === 'barchart' && msgData.message[0].component.payload.direction === 'horizontal') {
+                      dimens.outerWidth = 650;
+                      dimens.outerHeight = 350;
+                      dimens.innerWidth = 450;
+                      dimens.innerHeight = 310;
+                      this.drawD3barHorizontalbarChart(msgData, dimens, containerId, 12);
+                  }
+              } else if (msgData.message[0].component.payload.template_type === 'linechart') {
+                  var dimens = {};
+                  dimens.outerWidth = 650;
+                  dimens.outerHeight = 450;
+                  dimens.innerWidth = 480;
+                  dimens.innerHeight = 350;
+                  dimens.legendRectSize = 15;
+                  dimens.legendSpacing = 4;
+                  //  KoreGraphAdapter.drawD3lineChart(data.data, dimens, '.chartContainerDiv', 12);
+                  this.drawD3lineChartV2(msgData, dimens, containerId, 12);
+              } else if (msgData.message[0].component.payload.pie_type) {
+                  var dimens = {};
+                  dimens.width = 600;
+                  dimens.height = 400;
+                  dimens.legendRectSize = 15;
+                  dimens.legendSpacing = 4;
+                  if (msgData.message[0].component.payload.pie_type === 'regular') {
+                      this.drawD3Pie(msgData, dimens, containerId, 16);
+                  } else if (msgData.message[0].component.payload.pie_type === 'donut') {
+                      this.drawD3PieDonut(msgData, dimens, containerId, 16, 'donut');
+                  } else if (msgData.message[0].component.payload.pie_type === 'donut_legend') {
+                      this.drawD3PieDonut(msgData, dimens, containerId, 16, 'donut_legend');
+                  }
+              }
+          } else if (chatConfig && chatConfig.graphLib === 'google') {
+              if (data.type === 'piechart') {
+                  google.charts.load('current', { packages: ['corechart'] });
+                  google.charts.setOnLoadCallback(drawChart);
+                  function drawChart() {
+                      container = document.getElementsByClassName('chartContainerDiv');
+                      chart = new google.visualization.PieChart(container[0]);
+                  }
+              } else if (data.type === 'linechart') {
+                  google.charts.load('current', { packages: ['corechart', 'line'] });
+                  google.charts.setOnLoadCallback(drawChart);
+                  function drawChart() {
+                      container = document.getElementsByClassName('chartContainerDiv');
+                      chart = new google.visualization.LineChart(container[0]);
+                  }
+              } else if (data.type === 'barchart') {
+                  google.charts.load('current', { packages: ['corechart', 'bar'] });
+                  google.charts.setOnLoadCallback(drawChart);
+                  function drawChart() {
+                      container = document.getElementsByClassName('chartContainerDiv');
+                      if (data.direction === 'vertical') {
+                          chart = new google.visualization.ColumnChart(container[0]);
+                      } else {
+                          chart = new google.visualization.BarChart(container[0]);
+                      }
+                  }
+              }
+              setTimeout(() => {
+                  const chartAreaObj = { height: '85%', width: '85%' };
+                  data.options.chartArea = chartAreaObj;
+                  google.visualization.events.addListener(chart, 'ready', () => {
+                      setTimeout(() => {
+                          $('.largePreviewContent .chartContainerDiv').css('height', '91%');
+                      });
+                  });
+                  chart.draw(data.data, data.options);
+              }, 200);
+          }
+      }
       function zoomChart() {
         const modal = document.getElementById('myPreviewModal');
         $('.largePreviewContent').empty();
@@ -2681,6 +2775,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
         drawBarChartTemplate:drawBarChartTemplate,
         drawPieChartTemplate:drawPieChartTemplate,
         handleChartOnClick:handleChartOnClick,
+        openChartModal: openChartModal,
         zoomChart:zoomChart
     }
 })(korejquery,d3);
