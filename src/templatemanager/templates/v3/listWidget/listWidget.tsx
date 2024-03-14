@@ -36,9 +36,9 @@ export function ListWidget(props: any) {
         }
     }
 
-    const handleButtonSection = (event: any, index: any) => {
+    const handleButtonSection = (event: any, index: any, msgId: any) => {
         event.currentTarget.classList.toggle('rotate');
-        hostInstance.chatEle.querySelector(`.lw-buttons-wrapper-sec-${index}`).classList.toggle('hide');
+        hostInstance.chatEle.querySelector(`.lw-buttons-wrapper-sec-${msgId}-${index}`).classList.toggle('hide');
     }
 
     // const handleViewMore = (type: any) => {
@@ -156,14 +156,14 @@ export function ListWidget(props: any) {
                                                 <img src={textEle.image.image_src} />
                                             </figure>}
                                             {textEle.description && <p>{textEle.description}</p>}
-                                            {((item.details.length < 3 && inde == item.details.length - 1) && (item.buttons && item.buttons.length > 0)) && <button className="arrow-icon" onClick={(event) => handleButtonSection(event, index)}>
+                                            {((item.details.length < 3 && inde == item.details.length - 1) && (item.buttons && item.buttons.length > 0)) && <button className="arrow-icon" onClick={(event) => handleButtonSection(event, index, msgData.messageId)}>
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M11.222 8.55518C11.4187 8.35845 11.4303 8.04668 11.2567 7.83641L11.222 7.79823L6.53504 3.11125C6.32601 2.90222 5.98711 2.90222 5.77809 3.11125C5.58136 3.30798 5.56978 3.61975 5.74337 3.83002L5.77809 3.8682L10.0865 8.1767L5.77809 12.4852C5.58136 12.6819 5.56978 12.9937 5.74337 13.204L5.77809 13.2422C5.97482 13.4389 6.28659 13.4505 6.49685 13.2769L6.53504 13.2422L11.222 8.55518Z" fill="#202124" />
                                                 </svg>
                                             </button>}
                                         </div>))}
                                 </div>}
-                                {item.buttons?.length > 0 && <div className={`buttons-wrapper-sec lw-buttons-wrapper-sec-${index} ${item.buttonsLayout?.style === 'fitToWidth' ? `if-full-width-buttons` : `auto-adjust`} ${item.details && item.details.length > 0 ? `hide` : ``}`}>
+                                {item.buttons?.length > 0 && <div className={`buttons-wrapper-sec lw-buttons-wrapper-sec-${msgData.messageId}-${index} ${item.buttonsLayout?.style === 'fitToWidth' ? `if-full-width-buttons` : `auto-adjust`} ${item.details && item.details.length > 0 ? `hide` : ``}`}>
                                     {item.buttons.map((buttonEle: any, ind: any) => (
                                         (((item.buttonsLayout && ind < item.buttonsLayout?.displayLimit?.count) || !item.buttonsLayout && ind < 2) && <button className="kr-button-blue-light" onClick={() => handleItem(buttonEle)}>
                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
