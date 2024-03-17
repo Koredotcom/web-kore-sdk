@@ -89,9 +89,15 @@
                 padding: 12px;
                 width: 100%;
                 &:first-child{
-                    width: 35px;
+                    min-width: 35px;
                     flex-shrink: 0;
                     text-align: left;
+                    max-width: 80px;
+                    p{
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                    }
                 }
                 h1{
                     color: var(--gray-modern-500, var(--table-desc-text-color));
