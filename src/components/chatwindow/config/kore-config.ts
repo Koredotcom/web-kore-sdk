@@ -33,6 +33,13 @@ botOptions.webhookConfig={
     apiVersion:2
 }
 
+// To add query parameters for the websocket url, add the query parameters in queryParams object
+// botOptions.webSocketConfig = {
+//     socketUrl: {
+//         queryParams: {}
+//     }
+// }
+
 // To modify the web socket url use the following option
 // botOptions.reWriteSocketURL = {
 //     protocol: 'PROTOCOL_TO_BE_REWRITTEN',

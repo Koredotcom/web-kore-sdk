@@ -1417,6 +1417,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     this.CLIENT_EVENTS=CLIENT_EVENTS.RTM;
     this.$=clientOpts.$
     this.debug=debug;
+    this.socketConfig = clientOpts?.webSocketConfig || {};
   }
   
   inherits(KoreRTMClient, BaseAPIClient);
@@ -1484,6 +1485,14 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     } else {
       if(__reconnect__){
         data.url = data.url + "&isReconnect=true";
+      }
+      if (this.socketConfig && this.socketConfig?.socketUrl &&
+        this.socketConfig?.socketUrl?.queryParams && Object.keys(this.socketConfig.socketUrl.queryParams).length > 0) {
+        Object.keys(this.socketConfig.socketUrl.queryParams).forEach((qp) => {
+          if (qp && this.socketConfig.socketUrl.queryParams[qp]) {
+            data.url = data.url + '&' + qp + '=' + this.socketConfig.socketUrl.queryParams[qp];
+          }
+        })
       }
       this.authenticated = true;
       //this.activeUserId = data.self.id;
