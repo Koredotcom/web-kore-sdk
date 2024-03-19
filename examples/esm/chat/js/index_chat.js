@@ -13,10 +13,10 @@ botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
 botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET"; */
 botOptions.koreAPIUrl = "https://sit-xo.kore.ai/api/";
 botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
-botOptions.userIdentity = 'sridharsitkore@mailinator.com';// Provide users email id here
-botOptions.botInfo = { name: "SriSitXo", "_id": "st-5207571c-4081-5ee3-8e97-3f445d7c58f0" }
-botOptions.clientId = "cs-c393e8e7-30ac-5d55-a8a4-1347bc8cd79c";
-botOptions.clientSecret = "DPKPJxLosQcfl0UNtAVenMTeVkreTsY+p+qmlDFh+7U=";
+botOptions.userIdentity = 'test' + (Math.random() + 1).toString(36).substring(7) +'@gamil.com';// Provide users email id here
+botOptions.botInfo = { name: "AI Agent 1", "_id": "st-bb1e9f91-576a-598c-b99c-48f8eee548a6" }
+botOptions.clientId = "cs-854ba06e-ba75-5217-9a40-26682fd9f34e";
+botOptions.clientSecret = "bV5gaHj/Fis5XDRnPRkFt9DsDYX/DCmzdm+GZ6/hwms=";
 
 
 /* 

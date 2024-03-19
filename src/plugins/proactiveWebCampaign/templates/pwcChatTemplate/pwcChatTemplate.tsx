@@ -12,7 +12,17 @@ export function Chat(props: any) {
     console.log(hostInstance);
     console.log("HELLO from PWC CHAT");
     let [isAcceptTriggered, setAcceptTriggered] = useState(false);
-    const actionsList: any = ['chat', 'audio', 'video'];
+    /* const actionsList: any = ['chat', 'audio', 'video'];
+    const actionDescriptions = {
+        'chat': 'Engage with a chat agent',
+        'audio': 'Engage over web based audio call',
+        'video': 'Engage over web based video call'
+    }; */
+    const actionsList: any = [
+        {name: "Chat", value: "chat", description: 'Engage with a chat agent'},
+        {name: "Audio", value: "audio", description: 'Engage over web based audio call'},
+        {name: "Video", value: "video", description: 'Engage over web based video call'}
+    ];
 
     let buttonStyle = "buttons-triger-click-wrapper animation-slide-up btn-anim-send";
 
@@ -75,18 +85,23 @@ export function Chat(props: any) {
                 socketUrl=parser.href;
             }
             
-            socketUrl+="&pwe="+e;
+            let url = socketUrl.replace('&isReconnect=true', '');
+            socketUrl= url +"&pwe="+e;
             return socketUrl;
           };
         hostInstance.bot.logInComplete();
         setTimeout(()=>{
-            let msg = "connect "+e;
+            let msg = "connecting "+e;
             hostInstance.sendMessage(msg);   
         },2000);
         // closing the actions layout .actions-content
-        hostInstance.chatEle.querySelector('.actions-content').remove();
+        // hostInstance.chatEle.querySelector('.actions-content').remove();
+        hostInstance.chatEle.querySelector('.welcome-chat-section-campaign').remove();
+        // .welcome-chat-section-campaign
         // setConversationInprogress in agentdesktop-script.js
-        hostInstance.plugins.AgentDesktopPlugin.agentDesktopInfo.setConversationInProgress(e);
+        if(e === 'audio' || e === 'video'){
+            hostInstance.plugins.AgentDesktopPlugin.agentDesktopInfo.setConversationInProgress(e, hostInstance);
+        }
     }
 
     return(
@@ -147,41 +162,31 @@ export function Chat(props: any) {
                             </div>
                         </div>
                         <div className="campaign-click-to-actions-wrapper">
-                            <button className="campaign-click-to-action-chat-voice-btn">
-                                <div className="icon_block">
-                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                        <path d="M5.07994 9.35766C5.02814 9.02385 5.00127 8.68187 5.00127 8.33366C5.00127 4.65176 8.00568 1.66699 11.7118 1.66699C15.4179 1.66699 18.4223 4.65176 18.4223 8.33366C18.4223 9.16539 18.269 9.96154 17.9889 10.6957C17.9308 10.8482 17.9017 10.9245 17.8885 10.984C17.8754 11.043 17.8703 11.0845 17.8689 11.1449C17.8675 11.2058 17.8757 11.273 17.8923 11.4073L18.2278 14.1324C18.2641 14.4274 18.2822 14.5749 18.2332 14.6822C18.1902 14.7761 18.1138 14.8508 18.0189 14.8916C17.9105 14.9382 17.7635 14.9166 17.4694 14.8735L14.815 14.4844C14.6764 14.4641 14.6071 14.4539 14.544 14.4543C14.4816 14.4547 14.4384 14.4593 14.3773 14.4721C14.3155 14.4851 14.2366 14.5147 14.0788 14.5738C13.3427 14.8495 12.545 15.0003 11.7118 15.0003C11.3633 15.0003 11.021 14.9739 10.6869 14.9231M6.36095 18.3337C8.8317 18.3337 10.8346 16.2816 10.8346 13.7503C10.8346 11.219 8.8317 9.16699 6.36095 9.16699C3.8902 9.16699 1.88727 11.219 1.88727 13.7503C1.88727 14.2592 1.9682 14.7486 2.11759 15.2059C2.18074 15.3992 2.21232 15.4959 2.22268 15.5619C2.2335 15.6309 2.2354 15.6696 2.23137 15.7393C2.22751 15.806 2.21081 15.8814 2.17742 16.0323L1.66797 18.3337L4.16364 17.9928C4.29986 17.9742 4.36797 17.9649 4.42744 17.9653C4.49007 17.9657 4.52331 17.9691 4.58473 17.9814C4.64306 17.993 4.72977 18.0236 4.90319 18.0848C5.36013 18.2461 5.85056 18.3337 6.36095 18.3337Z" stroke="#667085" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </div>
-                                <div className="content-info-sec">
-                                    <h1>Chat</h1>
-                                    <p>Engage with a chat agent</p>
-                                </div>
-                            </button>
-                            <button className="campaign-click-to-action-chat-voice-btn">
-                                <div className="icon_block">
-                                    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
-                                        <path d="M12.8346 8.33366V10.0003C12.8346 13.222 10.223 15.8337 7.0013 15.8337M1.16797 8.33366V10.0003C1.16797 13.222 3.77964 15.8337 7.0013 15.8337M7.0013 15.8337V18.3337M3.66797 18.3337H10.3346M7.0013 12.5003C5.62059 12.5003 4.5013 11.381 4.5013 10.0003V4.16699C4.5013 2.78628 5.62059 1.66699 7.0013 1.66699C8.38201 1.66699 9.5013 2.78628 9.5013 4.16699V10.0003C9.5013 11.381 8.38201 12.5003 7.0013 12.5003Z" stroke="#667085" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </div>
-                                <div className="content-info-sec">
-                                    <h1>Audio</h1>
-                                    <p>Engage over web based audio call</p>
-                                </div>
-                            </button>
-                            <button className="campaign-click-to-action-chat-voice-btn">
-                                <div className="icon_block">
-                                    <svg width="20" height="14" viewBox="0 0 20 14" fill="none">
-                                        <path d="M18.3346 4.44313C18.3346 3.93829 18.3346 3.68586 18.2348 3.56898C18.1482 3.46756 18.0182 3.41373 17.8853 3.4242C17.732 3.43626 17.5535 3.61475 17.1966 3.97173L14.168 7.00033L17.1966 10.0289C17.5535 10.3859 17.732 10.5644 17.8853 10.5765C18.0182 10.5869 18.1482 10.5331 18.2348 10.4317C18.3346 10.3148 18.3346 10.0624 18.3346 9.55752V4.44313Z" stroke="#667085" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M1.66797 5.16699C1.66797 3.76686 1.66797 3.0668 1.94045 2.53202C2.18014 2.06161 2.56259 1.67916 3.03299 1.43948C3.56777 1.16699 4.26784 1.16699 5.66797 1.16699H10.168C11.5681 1.16699 12.2682 1.16699 12.8029 1.43948C13.2734 1.67916 13.6558 2.06161 13.8955 2.53202C14.168 3.0668 14.168 3.76686 14.168 5.16699V8.83366C14.168 10.2338 14.168 10.9339 13.8955 11.4686C13.6558 11.939 13.2734 12.3215 12.8029 12.5612C12.2682 12.8337 11.5681 12.8337 10.168 12.8337H5.66797C4.26784 12.8337 3.56777 12.8337 3.03299 12.5612C2.56259 12.3215 2.18014 11.939 1.94045 11.4686C1.66797 10.9339 1.66797 10.2338 1.66797 8.83366V5.16699Z" stroke="#667085" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </div>
-                                <div className="content-info-sec">
-                                    <h1>Video</h1>
-                                    <p>Engage over web based video call</p>
-                                </div>
-                            </button>
-                            <button className="campaign-click-to-action-chat-voice-btn">
+                            {actionsList?.map((action: any) => (
+                                <button className="campaign-click-to-action-chat-voice-btn" onClick={() => handleConversationAction(action.value)}>
+                                    {action.value === 'chat' && <div className="icon_block">
+                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                            <path d="M5.07994 9.35766C5.02814 9.02385 5.00127 8.68187 5.00127 8.33366C5.00127 4.65176 8.00568 1.66699 11.7118 1.66699C15.4179 1.66699 18.4223 4.65176 18.4223 8.33366C18.4223 9.16539 18.269 9.96154 17.9889 10.6957C17.9308 10.8482 17.9017 10.9245 17.8885 10.984C17.8754 11.043 17.8703 11.0845 17.8689 11.1449C17.8675 11.2058 17.8757 11.273 17.8923 11.4073L18.2278 14.1324C18.2641 14.4274 18.2822 14.5749 18.2332 14.6822C18.1902 14.7761 18.1138 14.8508 18.0189 14.8916C17.9105 14.9382 17.7635 14.9166 17.4694 14.8735L14.815 14.4844C14.6764 14.4641 14.6071 14.4539 14.544 14.4543C14.4816 14.4547 14.4384 14.4593 14.3773 14.4721C14.3155 14.4851 14.2366 14.5147 14.0788 14.5738C13.3427 14.8495 12.545 15.0003 11.7118 15.0003C11.3633 15.0003 11.021 14.9739 10.6869 14.9231M6.36095 18.3337C8.8317 18.3337 10.8346 16.2816 10.8346 13.7503C10.8346 11.219 8.8317 9.16699 6.36095 9.16699C3.8902 9.16699 1.88727 11.219 1.88727 13.7503C1.88727 14.2592 1.9682 14.7486 2.11759 15.2059C2.18074 15.3992 2.21232 15.4959 2.22268 15.5619C2.2335 15.6309 2.2354 15.6696 2.23137 15.7393C2.22751 15.806 2.21081 15.8814 2.17742 16.0323L1.66797 18.3337L4.16364 17.9928C4.29986 17.9742 4.36797 17.9649 4.42744 17.9653C4.49007 17.9657 4.52331 17.9691 4.58473 17.9814C4.64306 17.993 4.72977 18.0236 4.90319 18.0848C5.36013 18.2461 5.85056 18.3337 6.36095 18.3337Z" stroke="#667085" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>}
+                                    {action.value === 'audio' && <div className="icon_block">
+                                        <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+                                            <path d="M12.8346 8.33366V10.0003C12.8346 13.222 10.223 15.8337 7.0013 15.8337M1.16797 8.33366V10.0003C1.16797 13.222 3.77964 15.8337 7.0013 15.8337M7.0013 15.8337V18.3337M3.66797 18.3337H10.3346M7.0013 12.5003C5.62059 12.5003 4.5013 11.381 4.5013 10.0003V4.16699C4.5013 2.78628 5.62059 1.66699 7.0013 1.66699C8.38201 1.66699 9.5013 2.78628 9.5013 4.16699V10.0003C9.5013 11.381 8.38201 12.5003 7.0013 12.5003Z" stroke="#667085" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>}
+                                    {action.value === 'video' && <div className="icon_block">
+                                        <svg width="20" height="14" viewBox="0 0 20 14" fill="none">
+                                            <path d="M18.3346 4.44313C18.3346 3.93829 18.3346 3.68586 18.2348 3.56898C18.1482 3.46756 18.0182 3.41373 17.8853 3.4242C17.732 3.43626 17.5535 3.61475 17.1966 3.97173L14.168 7.00033L17.1966 10.0289C17.5535 10.3859 17.732 10.5644 17.8853 10.5765C18.0182 10.5869 18.1482 10.5331 18.2348 10.4317C18.3346 10.3148 18.3346 10.0624 18.3346 9.55752V4.44313Z" stroke="#667085" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M1.66797 5.16699C1.66797 3.76686 1.66797 3.0668 1.94045 2.53202C2.18014 2.06161 2.56259 1.67916 3.03299 1.43948C3.56777 1.16699 4.26784 1.16699 5.66797 1.16699H10.168C11.5681 1.16699 12.2682 1.16699 12.8029 1.43948C13.2734 1.67916 13.6558 2.06161 13.8955 2.53202C14.168 3.0668 14.168 3.76686 14.168 5.16699V8.83366C14.168 10.2338 14.168 10.9339 13.8955 11.4686C13.6558 11.939 13.2734 12.3215 12.8029 12.5612C12.2682 12.8337 11.5681 12.8337 10.168 12.8337H5.66797C4.26784 12.8337 3.56777 12.8337 3.03299 12.5612C2.56259 12.3215 2.18014 11.939 1.94045 11.4686C1.66797 10.9339 1.66797 10.2338 1.66797 8.83366V5.16699Z" stroke="#667085" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>}
+                                    <div className="content-info-sec">
+                                        <h1>{action.name}</h1>
+                                        <p>{action.description}</p>
+                                    </div>
+                                </button>
+                            ))}
+                            {/* <button className="campaign-click-to-action-chat-voice-btn">
                                 <div className="icon_block">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                         <path d="M2.5 7.50033H13.75C15.8211 7.50033 17.5 9.17926 17.5 11.2503C17.5 13.3214 15.8211 15.0003 13.75 15.0003H10M2.5 7.50033L5.83333 4.16699M2.5 7.50033L5.83333 10.8337" stroke="#667085" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -202,7 +207,7 @@ export function Chat(props: any) {
                                     <h1>Click-to-call</h1>
                                     <p>Connect to the IVR number</p>
                                 </div>
-                            </button>
+                            </button> */}
                         </div>
                     </div>
                 </section>
