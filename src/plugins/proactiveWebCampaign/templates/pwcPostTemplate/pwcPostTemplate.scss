@@ -14,6 +14,9 @@
         .post-banner-data{
             width: 350px;
             max-height: 400px;
+            .banner-img-data{
+                max-height: 358px;
+            }
         }
     }
     .post-banner-data{
@@ -42,7 +45,8 @@
             }
         }
         .banner-img-data{
-
+            max-height: 558px;
+            overflow-y: auto;
         }
     }
 }

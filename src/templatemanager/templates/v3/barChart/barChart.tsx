@@ -19,6 +19,18 @@ export function BarChart(props: any) {
     );
 }
 
+export function BarChartModal(props: any) {
+    const msgData = props.msgData;
+    return (
+        <div className="chart-template-wrapper" id={`bc${msgData.messageId}`}>
+            <div className="barchartDiv charts-body-info">
+                <h1>{msgData?.message?.[0]?.component?.payload?.text}</h1>
+                <div className="barChartChildDiv" id={`barchartmodal${msgData.messageId}`}></div>
+            </div>
+        </div>
+    );
+}
+
 export function BarChartBase(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
@@ -38,9 +50,10 @@ export function BarChartBase(props: any) {
             });
             const ele = hostInstance.chatEle.querySelector(`#bc${msgData.messageId}`);
             if (ele) {
-                const eleCopy = ele.cloneNode(true); 
+                const barChartHTMLModal = getHTML(BarChartModal, msgData, hostInstance);
                 ele.addEventListener('click', (e: any) => {
-                    hostInstance.modalAction(eleCopy);
+                    hostInstance.modalAction(barChartHTMLModal);
+                    KoreGraphAdapter.openChartModal(msgData, `#barchartmodal${msgData.messageId}`);
                 });
             }
         }, 400);

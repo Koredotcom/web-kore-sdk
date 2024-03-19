@@ -305,3 +305,30 @@ $font-s-40:2.5rem;
         background: #EAF1FC;
     }
 }
+
+.chat-window-main-section{
+    .chart-disp-val{
+        fill: var(--gloabl-text-color);
+        font-size: 12px;
+    }
+    .chart-axis-line{
+        stroke: var(--gloabl-text-color);
+    }
+    .legend-title{
+        fill: var(--gloabl-text-color);
+        font-size: 12px;
+    }
+    polyline{
+        stroke: var(--gloabl-text-color);
+    }
+    .mouse-per-line{
+        text{
+            fill: var(--gloabl-text-color);
+            font-size: 12px;
+        }
+    }
+    .legend-value{
+        fill: var(--gloabl-text-color);
+        font-size: 12px;
+    }
+}

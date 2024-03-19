@@ -30,6 +30,12 @@ export function Button(props: any) {
                 hostInstance.openExternalLink(link);
                 removeButton(ind)
             } else {
+                layoutDesign.buttons.forEach((button: any, index: number)=>{
+                    const cbtn: any = document.getElementById(`campaign-button-${index}`);
+                    if(cbtn.classList.contains(`show-campaign-content-data`)){
+                        cbtn.classList.remove(`show-campaign-content-data`);
+                    }
+                });
                 const btn = document.getElementById(`campaign-button-${ind}`);
                 if (btn) {
                     btn.classList.add('show-campaign-content-data');

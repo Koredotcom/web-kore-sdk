@@ -57,6 +57,7 @@ class BaseSTT {
             }
             chatEle.querySelector('.compose-voice-text').style.display = 'none';
             chatEle.querySelector('.compose-voice-text-recording').style.display = 'block';
+            chatEle.querySelector('.voice-compose-btn-recording').style.cursor = 'default';
             if (chatEle.querySelector('.hamberger-menu')) {
                 chatEle.querySelector('.hamberger-menu').style.display = 'none';
             }

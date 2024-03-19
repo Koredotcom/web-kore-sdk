@@ -64,14 +64,14 @@ export function WelcomeScreenContainer(props: any) {
     useEffect(() => {
         hostInstance.eventManager.removeEventListener('.start-conv-button', 'click');
         hostInstance.eventManager.addEventListener('.start-conv-button', 'click', (event: any) => {
-            const ele = hostInstance.chatEle.querySelector('.start-conv-value');
-            if (ele && ele.getAttribute('data-value')) {
-                const timeout = hostInstance.historyLoading ? 3500 : 200
-                setTimeout(() => {
-                    hostInstance.sendMessageToBot(ele.getAttribute('data-value'));
-                    ele.setAttribute('data-value', '');
-                }, timeout);
-            }
+            // const ele = hostInstance.chatEle.querySelector('.start-conv-value');
+            // if (ele && ele.getAttribute('data-value')) {
+            //     const timeout = hostInstance.historyLoading ? 3500 : 200
+            //     setTimeout(() => {
+            //         hostInstance.sendMessageToBot(ele.getAttribute('data-value'));
+            //         ele.setAttribute('data-value', '');
+            //     }, timeout);
+            // }
             handleEventsWelcomeScreen();
         })
 
@@ -113,20 +113,20 @@ export function WelcomeScreenContainer(props: any) {
         <div className="welcome-chat-section" aria-label="welcome message screen">
             <header className={wsLayout[brandingInfo.welcome_screen.layout]} aria-label="welcome header">
                 <div className="welcome-header-bg">
-                    <div className="logo-img">
+                    { brandingInfo.welcome_screen.logo.logo_url && <div className="logo-img">
                         <figure>
                             <img src={brandingInfo.welcome_screen.logo.logo_url} alt="log-img" />
                         </figure>
-                    </div>
+                    </div> }
                     <h1>{brandingInfo.welcome_screen.title.name}</h1>
                     <h2>{brandingInfo.welcome_screen.sub_title.name}</h2>
                     <p>{brandingInfo.welcome_screen.note.name}</p>
                 </div>
-                <div className="bg-logo">
+                { brandingInfo.welcome_screen.logo.logo_url && <div className="bg-logo">
                     <figure>
                         <img src={brandingInfo.welcome_screen.logo.logo_url} alt="log-img" />
                     </figure>
-                </div>
+                </div> }
             </header>
             <div className="welcome-interactions" aria-label="welcome message screen">
                 { brandingInfo.welcome_screen.starter_box.show && <section className="start-conversations-wrapper">

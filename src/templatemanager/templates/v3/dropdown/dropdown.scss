@@ -42,6 +42,11 @@
                     .menu-content-list-drp{
                         display: block;
                     }
+                    .drp-btn{
+                        svg{
+                            transform: rotate(180deg);
+                        }
+                    }
                 }
                 .drp-btn{
                     width: 100%;
@@ -61,6 +66,9 @@
                     line-height: 20px;
                     span{
                         width: 100%;
+                        &.default-placeholder{
+                            opacity: 0.5;
+                        }
                     }
                     svg{
                         width: 20px;
@@ -86,6 +94,8 @@
                     background: var(--global-white-bg);
                     z-index: 9;
                     margin-top: 2px;
+                    max-height: 230px;
+                    overflow: auto;
                     li{
                         border-radius: 4px 4px 0px 0px;
                         background: var(--global-white-bg);
@@ -110,6 +120,7 @@
                             }
                         }
                         .list-section{
+                            width: 100%;
                             p{
                                 width: 100%;
                                 color: var(--gloabl-text-color);
@@ -118,11 +129,10 @@
                                 line-height: 20px;
                             }
                             .subtext{
-                                color: #697586;
+                                color: var(--gloabl-text-color);
                                 font-size: 12px;
                                 font-weight: 400;
                                 line-height: 18px;
-                                margin-top: 2px;
                             }
                         }
                         svg{
@@ -131,6 +141,7 @@
                             align-items: center;
                             justify-content: center;
                             display: none;
+                            flex-shrink: 0;
                             path{
                                 fill: var(--global-theme-color);
                             }
