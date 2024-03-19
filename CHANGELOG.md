@@ -1,3 +1,20 @@
+### 10.1.22[Draft]
+
+- SDK Release 
+* Breaking changes
+  * Chat bot icon template HTML structure changed from
+    <code>
+      < div class="minimized">\
+        < span class="messages"> 
+    </code>
+    to
+    <code>
+     < div class="minimized">
+        < button tabindex ="0" class="messages">
+    </code>
+* Bug fixes
+
+
 ### 10.1.21
 
 - SDK Release Mar 09, 2024
