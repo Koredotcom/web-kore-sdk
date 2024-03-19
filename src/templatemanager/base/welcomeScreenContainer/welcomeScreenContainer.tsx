@@ -64,14 +64,14 @@ export function WelcomeScreenContainer(props: any) {
     useEffect(() => {
         hostInstance.eventManager.removeEventListener('.start-conv-button', 'click');
         hostInstance.eventManager.addEventListener('.start-conv-button', 'click', (event: any) => {
-            const ele = hostInstance.chatEle.querySelector('.start-conv-value');
-            if (ele && ele.getAttribute('data-value')) {
-                const timeout = hostInstance.historyLoading ? 3500 : 200
-                setTimeout(() => {
-                    hostInstance.sendMessageToBot(ele.getAttribute('data-value'));
-                    ele.setAttribute('data-value', '');
-                }, timeout);
-            }
+            // const ele = hostInstance.chatEle.querySelector('.start-conv-value');
+            // if (ele && ele.getAttribute('data-value')) {
+            //     const timeout = hostInstance.historyLoading ? 3500 : 200
+            //     setTimeout(() => {
+            //         hostInstance.sendMessageToBot(ele.getAttribute('data-value'));
+            //         ele.setAttribute('data-value', '');
+            //     }, timeout);
+            // }
             handleEventsWelcomeScreen();
         })
 
