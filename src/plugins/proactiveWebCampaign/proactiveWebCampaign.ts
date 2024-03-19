@@ -84,6 +84,7 @@ class ProactiveWebCampaignPlugin {
                     if (data.body.isEnabled) {
                         this.enablePWC = true;
                         this.campInfo = data.body.campInfo || [];
+                        me.hostInstance.campInfo = data.body.campInfo;
                         this.campInfo?.forEach((campaign: any) => {
                             const pwe_data = {
                                 "isLayoutTriggered": false,
@@ -189,7 +190,8 @@ class ProactiveWebCampaignPlugin {
                 }
                 if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType == 'chat' && data.body?.layoutDesign && this.enablePWC) {
                     const layoutData = {
-                        layoutData: data?.body?.layoutDesign
+                        layoutData: data?.body?.layoutDesign,
+                        campInstId: data.body?.campInfo?.campInstId
                     }
                     const chatContainer = getHTML(Chat, layoutData, this.hostInstance);
                     let avatarVariations = me.hostInstance.chatEle.querySelector('.avatar-actions');

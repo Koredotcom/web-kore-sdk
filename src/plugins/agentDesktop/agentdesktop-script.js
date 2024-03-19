@@ -1299,7 +1299,8 @@ class AgentDesktopPluginScript  {
                     "type": ""
                 }
                 messageToBot["resourceid"] = "/bot.message";
-                hostInstance.sendMessage(messageToBot, (err) => { });
+                hostInstance.koreChatWindow.close();
+                // hostInstance.sendMessage(messageToBot, (err) => { });
             });
         },2000);
     }

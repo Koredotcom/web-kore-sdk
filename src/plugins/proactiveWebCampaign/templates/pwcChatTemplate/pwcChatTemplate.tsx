@@ -3,26 +3,26 @@ import BaseChatTemplate from '../../../../templatemanager/templates/v3/baseChatT
 import { useEffect, useState } from 'preact/hooks';
 import './pwcChatTemplate.scss';
 export function Chat(props: any) {
-    // const layoutData = props.msgData.layoutData;
     const pwcCampaign = {
         data: props.msgData.layoutData
     };
-    const hostInstance = props.hostInstance;
-    // console.log(layoutData);
-    console.log(hostInstance);
-    console.log("HELLO from PWC CHAT");
-    let [isAcceptTriggered, setAcceptTriggered] = useState(false);
-    /* const actionsList: any = ['chat', 'audio', 'video'];
-    const actionDescriptions = {
-        'chat': 'Engage with a chat agent',
-        'audio': 'Engage over web based audio call',
-        'video': 'Engage over web based video call'
-    }; */
-    const actionsList: any = [
+    let actionsList: any;
+    let defaultActionsList: any = [
         {name: "Chat", value: "chat", description: 'Engage with a chat agent'},
         {name: "Audio", value: "audio", description: 'Engage over web based audio call'},
         {name: "Video", value: "video", description: 'Engage over web based video call'}
     ];
+    let currentCampInstId = props.msgData.campInstId;
+    const hostInstance = props.hostInstance;
+    let [isAcceptTriggered, setAcceptTriggered] = useState(false);
+    // get actionsList
+    hostInstance.campInfo.forEach((campaign: any)=> {
+        if(campaign.campInstanceId === currentCampInstId){
+            actionsList = defaultActionsList.filter((action: any) => campaign?.engagementStrategy?.channel.includes(action.value));
+            return;
+        }
+    });
+    
 
     let buttonStyle = "buttons-triger-click-wrapper animation-slide-up btn-anim-send";
 
