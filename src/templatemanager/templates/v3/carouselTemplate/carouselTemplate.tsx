@@ -183,7 +183,7 @@ export function Carousel(props: any) {
                                     </figure>
                                 </div>
                                 { ele && ele.buttons && ele.buttons.length > 0 && ele.buttons.map((button: any) => (
-                                    <button className="kr-button-primary" onClick={() => handleButtonEvent(button)}>{button.title}</button>
+                                    <button className="kr-button-primary" onClick={() => handleButtonEvent(button)} title={button.title}>{button.title}</button>
                                 ))}
                             </div>
                         </div>
