@@ -146,38 +146,24 @@ const BrandingJSON = {
         "style": "slack",
         "buttons": [
           {
-            "title": "Contact Sales",
+            "title": "Hello",
             "action": {
               "type": "postback",
-              "value": "Contact Sales"
+              "value": "Hello"
             }
           },
           {
-            "title": "Free Trial",
+            "title": "What can you do?",
             "action": {
               "type": "postback",
-              "value": "Free Trial"
+              "value": "What can you do?"
             }
           },
           {
-            "title": "Support",
+            "title": "Connect to an Agent",
             "action": {
               "type": "postback",
-              "value": "Support"
-            }
-          },
-          {
-            "title": "What’s the latest?",
-            "action": {
-              "type": "postback",
-              "value": "What’s the latest?"
-            }
-          },
-          {
-            "title": "Know about Kore.ai",
-            "action": {
-              "type": "postback",
-              "value": "https://kore.ai/"
+              "value": "Connect to an Agent"
             }
           }
         ],
