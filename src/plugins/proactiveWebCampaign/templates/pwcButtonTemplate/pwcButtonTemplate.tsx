@@ -30,6 +30,12 @@ export function Button(props: any) {
                 hostInstance.openExternalLink(link);
                 removeButton(ind)
             } else {
+                layoutDesign.buttons.forEach((button: any, index: number)=>{
+                    const cbtn: any = document.getElementById(`campaign-button-${index}`);
+                    if(cbtn.classList.contains(`show-campaign-content-data`)){
+                        cbtn.classList.remove(`show-campaign-content-data`);
+                    }
+                });
                 const btn = document.getElementById(`campaign-button-${ind}`);
                 if (btn) {
                     btn.classList.add('show-campaign-content-data');
@@ -51,7 +57,8 @@ export function Button(props: any) {
                         <button className="button-maintain" onClick={() => handleClick(btn, ind)}>{btn?.text}</button>
                         {btn.actionType != 'url' && <div className="content-campaign-more-info" >
                             <div className="heading-block-info">
-                                <h1>{btn?.text}</h1>
+                                {btn.headerUpload === 'upload' && <img src={btn.headerIcon}></img>}
+                                <h1>{btn?.headerMessage}</h1>
                                 <button onClick={() => removeButton(ind)}>
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                                         <path d="M18 6L6 18M6 6L18 18" stroke="#667085" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
