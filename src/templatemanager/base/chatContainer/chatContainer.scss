@@ -23,8 +23,13 @@
               left: 4px;
               right: -35px;
               transform: rotate(0);
-              bottom: 3px;
+              bottom: 4px;
             }
+          }
+        }
+        &.variation-2 {
+          .avatar-bg{
+            width: 68px;
           }
         }
         .avatar-bg{

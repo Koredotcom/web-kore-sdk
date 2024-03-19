@@ -1105,6 +1105,12 @@ bindEventsV3() {
         behavior: 'smooth'
       });
     } else {
+      if (me.chatEle.querySelector('.chat-actions-bottom-wraper')) {
+        me.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');
+        setTimeout(() => {
+          me.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
+        }, 150);
+      }
       const clArr = ['minimize', 'minimizeQuick', 'minimizeSmooth'];
       if (me.config.multiPageApp && me.config.multiPageApp.enable) {
         me.setLocalStoreItem('kr-cw-state', 'minimized');

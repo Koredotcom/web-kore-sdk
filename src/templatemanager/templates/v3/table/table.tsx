@@ -57,7 +57,7 @@ export function TableExt(props: any) {
                                 (((showMore && ind < 3) || !showMore) && <div className="acc-block-content" onClick={selectItem}>
                                     {ele.Values.map((e: any, i: any) => (i < 2 && <div className="info-block">
                                         <h1 className="hide">{msgData.message[0].component.payload.columns[i]}</h1>
-                                        <p>{e}</p>
+                                        <p title={e}>{e}</p>
                                     </div>
                                     ))}
 
