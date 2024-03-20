@@ -35,11 +35,13 @@ export function CheckBoxes(props: any) {
 
     const onSubmit = () => {
         let selectedValues: any= [];
+        let selectedText: any = '';
         const selectedItems = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${msgData.messageId}:checked`);
         selectedItems.forEach((ele: any) => {
             selectedValues.push(ele.value);
+            selectedText = selectedText + ' ' + ele.getAttribute('data-title');
         });
-        hostInstance.sendMessage(selectedValues.toString(), {renderMsg: ''});
+        hostInstance.sendMessage(selectedValues.toString(), {renderMsg: selectedText});
     }
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'multi_select') {
@@ -55,7 +57,7 @@ export function CheckBoxes(props: any) {
                 <div className="checkbox-container">
                     { msgData?.message?.[0]?.component?.payload?.elements.map((ele: any, ind: any) => (
                         <div className={`checkbox-item ${hostInstance.config.branding.general.themeType == 'dark'? `if-dark-theme-checkbox` : ``}`} onClick={() => onItemSelect()}>
-                            <input id={`checkbox-${msgData.messageId}-${ind}`} className={`checkbox-input checkbox-input-${msgData.messageId}`} type="checkbox" value={ele.value} />
+                            <input id={`checkbox-${msgData.messageId}-${ind}`} className={`checkbox-input checkbox-input-${msgData.messageId}`} type="checkbox" data-title={ele.title} value={ele.value} />
                             <label for={`checkbox-${msgData.messageId}-${ind}`} className="checkbox-label">
                                 <div className="title">{ele.title}</div>
                                 {/* <div className="desc-text-checkbox">Checkbox item</div> */}
