@@ -240,6 +240,10 @@ $font-s-40:2.5rem;
     background: var(--button-temp-bg-variation-2);
     border: 1px solid var(--button-temp-variation-2-border);
     color: var(--button-temp-variation-2-color);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
     &.lg{
         padding: 10px 16px;
         height: 40px;
@@ -263,6 +267,10 @@ $font-s-40:2.5rem;
     cursor: pointer;
     text-align: center;
     transition: 0.2s all ease;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
     &.lg{
         padding: 10px 16px;
         height: 40px;
@@ -291,6 +299,10 @@ $font-s-40:2.5rem;
     align-items: center;
     justify-content: center;
     gap: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
     svg{
         path{
             fill: #2B75E4;

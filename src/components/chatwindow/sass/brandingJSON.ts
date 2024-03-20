@@ -125,7 +125,7 @@ const BrandingJSON = {
       "color": "#FFFFFF"
     },
     "bottom_background": {
-      "color": "#FFFFFF"
+      "color": "#EAECF0"
     },
     "templates": [],
     "starter_box": {
@@ -228,14 +228,14 @@ const BrandingJSON = {
       "type": "default",
       "fileId": ""
     },
-    "icons_color": "#000000",
+    "icons_color": "#101828",
     "title": {
       "name": "",
-      "color": "#000000"
+      "color": "#101828"
     },
     "sub_title": {
       "name": "Your personal assistant",
-      "color": "#000000"
+      "color": "#101828"
     },
     "buttons": {
       "close": {
@@ -277,14 +277,14 @@ const BrandingJSON = {
     "layout": "keypad",
     "compose_bar": {
       "bg_color": "#FFFFFE",
-      "outline-color": "#E5E5E5",
+      "outline-color": "#175CD3",
       "placeholder": "Type a message"
     },
-    "icons_color": "#000000",
+    "icons_color": "#101828",
     "buttons": {
       "menu": {
         "show": true,
-        "icon_color": "#000000",
+        "icon_color": "#101828",
         "actions": [
           {
             "title": "About",
@@ -333,11 +333,11 @@ const BrandingJSON = {
     },
     "bot_message": {
       "bg_color": "#EAECF0",
-      "color": "#000000"
+      "color": "#101828"
     },
     "agent_message": {
       "bg_color": "#EAECF0",
-      "color": "#000000",
+      "color": "#101828",
       "separator": "1",
       "icon": {
         "show": "true|false",

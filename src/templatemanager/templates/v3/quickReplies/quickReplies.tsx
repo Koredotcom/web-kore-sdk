@@ -67,7 +67,7 @@ export function QuickReply(props: any) {
                 </button>
                 <div className="quick-replies-buttons" c-parent-id={msgData.messageId}>
                     {msgData.message[0].component.payload.quick_replies.map((ele: any) => (
-                        <button className="kr-btn" c-items-id={msgData.messageId} onClick={() => handleQuickReply(ele)}>{ele.title}</button>
+                        <button className="kr-btn" c-items-id={msgData.messageId} onClick={() => handleQuickReply(ele)}>{ele.image_url && <img src={ele.image_url} class="quickReplyIcon"/>} {ele.title}</button>
                     ))
                     }
                 </div>
@@ -80,7 +80,7 @@ export function QuickReply(props: any) {
 
             {(msgData?.message?.[0]?.component?.payload?.stackedButtons || msgData?.message?.[0]?.component?.payload?.fullWidth) && <div className={quickReplyStyle} id={msgData.messageId}>
                 {msgData.message[0].component.payload.quick_replies.map((ele: any) => (
-                    <button className="kr-btn" c-items-id={msgData.messageId} onClick={() => handleQuickReply(ele)}>{ele.title}</button>
+                    <button className="kr-btn" c-items-id={msgData.messageId} onClick={() => handleQuickReply(ele)}>{ele.image_url && <img src={ele.ele.image_url} class="quickReplyIcon"/>} {ele.title}</button>
                 ))
                 }
             </div>}

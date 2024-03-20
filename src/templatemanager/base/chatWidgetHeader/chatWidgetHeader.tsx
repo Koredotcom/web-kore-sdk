@@ -25,9 +25,15 @@ export function ChatWidgetHeader(props: any) {
 
     useEffect(() => {
         hostInstance.eventManager.removeEventListener('.btn-reconnect', 'click');
-        hostInstance.eventManager.addEventListener('.btn-reconnect', 'click', (e: any) => {
+        hostInstance.eventManager.addEventListener('.btn-reconnect', 'click', (event: any) => {
             if (!hostInstance.chatEle.querySelector('.btn-reconnect').getAttribute('disabled')) {
                 hostInstance.chatEle.querySelector('.btn-reconnect').setAttribute('disabled', true);
+                const data = event?.detail;
+                if (data && data?.isReconnect) {
+                    hostInstance.config.botOptions.forceReconnecting = true;
+                } else {
+                    hostInstance.config.botOptions.forceReconnecting = false;//make it to true if reconnect button should not trigger on connect message
+                }
                 setTimeout(() => {
                     hostInstance.resetWindow();
                 });
@@ -131,7 +137,7 @@ export function ChatWidgetHeader(props: any) {
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M10.0002 1.11133C5.09102 1.11133 1.11133 5.09102 1.11133 10.0002C1.11133 14.9094 5.09102 18.8891 10.0002 18.8891C14.9094 18.8891 18.8891 14.9094 18.8891 10.0002C18.8891 5.09102 14.9094 1.11133 10.0002 1.11133ZM10.0002 2.4282C14.1821 2.4282 17.5722 5.81831 17.5722 10.0002C17.5722 14.1821 14.1821 17.5722 10.0002 17.5722C5.81831 17.5722 2.4282 14.1821 2.4282 10.0002C2.4282 5.81831 5.81831 2.4282 10.0002 2.4282Z" fill="#697586"/>
                     </svg>
                 </a> }
-                { brandingInfo.header?.buttons?.reconnect?.show && <button title="Reconnect" className="btn-action btn-reconnect" type="button" aria-label="Reconnect Chat">
+                { brandingInfo.header.buttons.reconnect.show && <button title="Reconnect" id="kore-reconnect-btn" className="btn-action btn-reconnect" type="button" aria-label="Reconnect Chat">
                     <svg width="20" height="20" viewBox="0 0 14 14" fill="none">
                         <path d="M12.8333 5.83333C12.8333 5.83333 11.6638 4.23979 10.7136 3.28898C9.76343 2.33816 8.4504 1.75 7 1.75C4.1005 1.75 1.75 4.1005 1.75 7C1.75 9.89949 4.1005 12.25 7 12.25C9.39347 12.25 11.4129 10.6483 12.0448 8.45833M12.8333 5.83333V2.33333M12.8333 5.83333H9.33333" stroke="#697586" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>

@@ -1476,6 +1476,16 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     if(data && data.errors && (data.errors[0].code === 'TOKEN_EXPIRED' || data.errors[0].code === 401 || data.errors[0].msg === 'token expired')){
         var $=this.$;
         $(".reload-btn").trigger('click',{isReconnect:true});
+        const buttonElement = document.querySelector('#kore-reconnect-btn');
+        if (buttonElement) {
+          const eventData = { isReconnect: true };
+          const clickEvent = new CustomEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            detail: eventData
+          });
+          buttonElement.dispatchEvent(clickEvent);
+        }
         data.error='token_expired';
     }
     if (err || !data.url) {

@@ -7026,21 +7026,21 @@
     z-index: 10;
     opacity: 0.9 !important;
 }
-.kore-chat-window .widgetPanel .widgetContParent .webFormWidget .sucessMsg{
+ .widgetPanel .widgetContParent .webFormWidget .sucessMsg{
     text-align: center;
 }
-.kore-chat-window .widgetPanel .widgetContParent .webFormWidget .sucessMsg .sucessTickGreen{
+ .widgetPanel .widgetContParent .webFormWidget .sucessMsg .sucessTickGreen{
     width: 37px;
     height: 37px;
     margin-bottom: 15px;
 }
-.kore-chat-window .widgetPanel .widgetContParent .webFormWidget .sucessMsg .sucessDesc{
+ .widgetPanel .widgetContParent .webFormWidget .sucessMsg .sucessDesc{
     font-size: 16px;
     font-weight: normal;
     margin-bottom: 10px;
     color: var(--sdk-chat-widow-primary-font-color);
 }
-.kore-chat-window .widgetPanel .widgetContParent .webFormWidget .sucessMsg .sucessDoneBtn{
+ .widgetPanel .widgetContParent .webFormWidget .sucessMsg .sucessDoneBtn{
     font-size: 14px;
     color: #fff;
     background: #009dab;
@@ -7052,7 +7052,7 @@
     line-height: 30px;
     position: relative;
 }
-.kore-chat-window .widgetPanel .widgetContParent .webFormWidget .sucessMsg .sucessDoneBtn .sucessProgress{
+ .widgetPanel .widgetContParent .webFormWidget .sucessMsg .sucessDoneBtn .sucessProgress{
     display: none;
     width: 0%;
     position: absolute;
@@ -7066,14 +7066,14 @@
      
 
 }
-.kore-chat-window .widgetPanel .widgetContParent .webFormWidget .sucessMsg .sucessDoneBtn.active .sucessProgress{
+ .widgetPanel .widgetContParent .webFormWidget .sucessMsg .sucessDoneBtn.active .sucessProgress{
     display: block;
     width: 100%;
     position: absolute;
     opacity: 1;
     animation: progress-anim 10s ease 0s;
 }
-.kore-chat-window .widgetPanel .widgetContParent .webFormWidget .sucessMsg .sucessDoneBtn.active  .doneBTNText{
+ .widgetPanel .widgetContParent .webFormWidget .sucessMsg .sucessDoneBtn.active  .doneBTNText{
      position: relative;
      z-index: 1;
 }

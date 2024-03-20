@@ -42,11 +42,13 @@
                 background: transparent;
                 padding: 0;
                 border: 0;
+                margin-left: auto;
             }
         }
         .banner-img-data{
             max-height: 558px;
             overflow-y: auto;
+            padding: 16px 24px;
         }
     }
 }

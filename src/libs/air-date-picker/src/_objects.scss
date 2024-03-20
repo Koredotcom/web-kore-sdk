@@ -26,6 +26,9 @@
     &.-focus- {
       background-color: var(--adp-cell-background-color-in-range);
     }
+    &.-disabled- {
+      background-color: var(--adp-background-color);
+    }
   }
 
 

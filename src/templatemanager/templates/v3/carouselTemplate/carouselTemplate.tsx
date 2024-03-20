@@ -154,18 +154,19 @@ export function Carousel(props: any) {
                 <div className="list-carousel" data-id={msgData.messageId}>
                     {msgData.message[0].component.payload.elements.map((ele: any) => (
                         <div className="list-carousel-item">
-                            <div className="img-block">
+                            {ele.image_url && <div className="img-block">
                                 <figure>
                                     <img src={ele.image_url} />
                                 </figure>
-                            </div>
+                            </div>}
                             <div className="content-block">
-                                <div className="heading-block">
-                                    <h1>{ele.title}</h1>
-                                    {/* <p>$34.88</p> */}
-                                </div>
-                                <p>{ele.subtitle}</p>
-                                <div className="rating-block">
+                                {(ele.title || ele.subtext) && <div className="heading-block">
+                                    {ele.title && <h1>{ele.title}</h1>}
+                                    {ele.subtext && <p>{ele.subtext}</p>}
+                                </div>}
+                                {ele.subtitle && <p>{ele.subtitle}</p>}
+                                {ele.default_action && ele.default_action.type === 'web_url' && <a className="link-exteranl-site" href="#" target="_blank" onClick={() => handleButtonEvent({ type: 'web_url', url: ele.default_action.url })}>{ele.default_action.url}</a>}
+                                {/* <div className="rating-block">
                                     <figure>
                                         <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEuOTU1MzYgNi4wODEyTDUuOTE0NjYgNS42NTA5N0w3LjUzMTc2IDEuODExODlDNy43MDY5MyAxLjM5NjA0IDguMjk2MiAxLjM5NjA0IDguNDcxMzcgMS44MTE4OUwxMC4wODg1IDUuNjUwOTdMMTQuMDQ0NyA2LjA4MTJDMTQuNDc3IDYuMTI4MjEgMTQuNjU1NyA2LjY2MDEzIDE0LjMzOTUgNi45NTg2NkwxMS4zNjI5IDkuNzY5MDRMMTIuMjAxMyAxMy44ODkzQzEyLjI5MDEgMTQuMzI1NCAxMS44MTY2IDE0LjY1NzkgMTEuNDM2NiAxNC40MjYzTDguMDAxNTcgMTIuMzMzOUw0LjU2MzI3IDE0LjQyNjVDNC4xODMwNyAxNC42NTc5IDMuNzA5NyAxNC4zMjUxIDMuNzk4NzcgMTMuODg5TDQuNjQwMjEgOS43NjkwNEwxLjY2MDY2IDYuOTU4ODVDMS4zNDQyIDYuNjYwMzggMS41MjI5MSA2LjEyODE5IDEuOTU1MzYgNi4wODEyWiIgZmlsbD0iI0Y1OUUwQiIvPgo8L3N2Zz4K" />
                                     </figure>
@@ -181,9 +182,9 @@ export function Carousel(props: any) {
                                     <figure>
                                         <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9Ikljb24gLyBTdGFyIC8gRmlsbGVkIj4KPHBhdGggaWQ9IlZlY3RvciIgZD0iTTEuOTU1MzYgNi4wODEyTDUuOTE0NjYgNS42NTA5N0w3LjUzMTc2IDEuODExODlDNy43MDY5MyAxLjM5NjA0IDguMjk2MiAxLjM5NjA0IDguNDcxMzcgMS44MTE4OUwxMC4wODg1IDUuNjUwOTdMMTQuMDQ0NyA2LjA4MTJDMTQuNDc3IDYuMTI4MjEgMTQuNjU1NyA2LjY2MDEzIDE0LjMzOTUgNi45NTg2NkwxMS4zNjI5IDkuNzY5MDRMMTIuMjAxMyAxMy44ODkzQzEyLjI5MDEgMTQuMzI1NCAxMS44MTY2IDE0LjY1NzkgMTEuNDM2NiAxNC40MjYzTDguMDAxNTcgMTIuMzMzOUw0LjU2MzI3IDE0LjQyNjVDNC4xODMwNyAxNC42NTc5IDMuNzA5NyAxNC4zMjUxIDMuNzk4NzcgMTMuODg5TDQuNjQwMjEgOS43NjkwNEwxLjY2MDY2IDYuOTU4ODVDMS4zNDQyIDYuNjYwMzggMS41MjI5MSA2LjEyODE5IDEuOTU1MzYgNi4wODEyWiIgZmlsbD0iI0NERDVERiIvPgo8L2c+Cjwvc3ZnPgo=" />
                                     </figure>
-                                </div>
+                                </div> */}
                                 { ele && ele.buttons && ele.buttons.length > 0 && ele.buttons.map((button: any) => (
-                                    <button className="kr-button-primary" onClick={() => handleButtonEvent(button)}>{button.title}</button>
+                                    <button className="kr-button-primary" onClick={() => handleButtonEvent(button)} title={button.title}>{button.title}</button>
                                 ))}
                             </div>
                         </div>

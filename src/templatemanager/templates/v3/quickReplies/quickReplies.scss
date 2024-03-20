@@ -24,6 +24,12 @@
             display: block;
             width: auto;
             margin-bottom: 8px;
+            .quickReplyIcon{
+                height: 17px;
+                width: 17px;
+                border-radius: 50%;
+                max-width: 34px;
+                }
         }
     }
 
@@ -75,6 +81,17 @@
         display: flex;
         overflow: hidden;
         width: 100%;
+        .kr-btn{
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            .quickReplyIcon{
+            height: 17px;
+            width: 17px;
+            border-radius: 50%;
+            max-width: 34px;
+            }
+        }
     }
 
     .quick-left-click {
