@@ -176,6 +176,15 @@
                     }
                 }
 
+                .link-exteranl-site {
+                    color: var(--global-theme-color);
+                    font-size: 12px;
+                    font-weight: 400;
+                    line-height: normal;
+                    text-decoration: none;
+                    cursor: pointer;
+                }
+
                 p {
                     overflow: hidden;
                     color: var(--gloabl-text-color);
