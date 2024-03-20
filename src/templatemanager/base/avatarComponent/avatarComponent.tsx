@@ -41,6 +41,11 @@ export function AvatarComponent(props: any) {
     let avatarParentStyle = "avatar-variations-footer"; 
     let avatarStyle = aShape[brandingInfo.chat_bubble.style];
     let buttonStyle = "buttons-triger-click-wrapper animation-slide-up btn-anim-send";
+    let avatarBgStyle = "avatar-bg";
+
+    if (brandingInfo.chat_bubble.icon.type == 'custom' || brandingInfo.chat_bubble.minimise.type == 'custom') {
+        avatarBgStyle = avatarBgStyle + ' custom-image-avatar-bg';
+    }
 
     if (pwcCampaign.enable) {
         if (pwcCampaign.data.appearance.buttonAlignment == 'singlerow') {
@@ -175,7 +180,7 @@ export function AvatarComponent(props: any) {
                     </div>
                 </div>}
 
-                <button className="avatar-bg">
+                <button className={avatarBgStyle}>
                     {/* <span className="un-read-msg">2</span> */}
                     {brandingInfo.chat_bubble.icon.type == 'default' && <figure className="default-avater-icon">
                         {/* <img src={brandingInfo.chat_bubble.icon.icon_url} alt="Elephant at sunset" /> */}
