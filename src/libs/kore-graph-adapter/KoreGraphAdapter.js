@@ -2280,7 +2280,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
             setTimeout(() => {
                 const dimens = {};
                 dimens.outerWidth = 350;
-                dimens.outerHeight = 350;
+                dimens.outerHeight = 355;
                 dimens.innerWidth = 230;
                 dimens.innerHeight = 250;
                 dimens.legendRectSize = 15;
@@ -2399,7 +2399,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
         } else if (chatConfig.graphLib === 'd3') {
             var dimens = {};
             dimens.outerWidth = 340;
-            dimens.outerHeight = 280;
+            dimens.outerHeight = 290;
             dimens.innerHeight = 200;
             dimens.legendRectSize = 15;
             dimens.legendSpacing = 4;
@@ -2664,12 +2664,12 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
               }
               if (msgData.message[0].component.payload.template_type !== 'linechart' && msgData.message[0].component.payload.template_type !== 'piechart') {
                   var dimens = {};
-                  dimens.outerWidth = 650;
+                  dimens.outerWidth = 500;
                   dimens.outerHeight = 460;
-                  dimens.innerWidth = 450;
+                  dimens.innerWidth = 380;
                   dimens.innerHeight = 350;
                   dimens.legendRectSize = 15;
-                  dimens.legendSpacing = 4;
+                  dimens.legendSpacing = 3;
                   if (msgData.message[0].component.payload.template_type === 'barchart' && msgData.message[0].component.payload.direction === 'vertical') {
                       dimens.innerWidth = 500;
                       this.drawD3barChart(msgData, dimens, containerId, 12);
@@ -2687,9 +2687,9 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
                   }
               } else if (msgData.message[0].component.payload.template_type === 'linechart') {
                   var dimens = {};
-                  dimens.outerWidth = 650;
+                  dimens.outerWidth = 520;
                   dimens.outerHeight = 450;
-                  dimens.innerWidth = 480;
+                  dimens.innerWidth = 400;
                   dimens.innerHeight = 350;
                   dimens.legendRectSize = 15;
                   dimens.legendSpacing = 4;
@@ -2697,7 +2697,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
                   this.drawD3lineChartV2(msgData, dimens, containerId, 12);
               } else if (msgData.message[0].component.payload.pie_type) {
                   var dimens = {};
-                  dimens.width = 600;
+                  dimens.width = 520;
                   dimens.height = 400;
                   dimens.legendRectSize = 15;
                   dimens.legendSpacing = 4;
