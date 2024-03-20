@@ -1116,7 +1116,11 @@ class AgentDesktopPluginScript  {
                 stream.getTracks().forEach(function (track) {
                     track.stop();
                 });
-                this.activeCall = this.phone.call(this.phone.VIDEO, sipUser);
+                if(this.callDetails.videoCall){
+                    this.activeCall = this.phone.call(this.phone.VIDEO, sipUser);
+                }else{
+                    this.activeCall = this.phone.call(this.phone.AUDIO, sipUser);
+                }
             });
         }
         this.toggleButtons = function () {
