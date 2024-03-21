@@ -103,7 +103,8 @@ const BrandingJSON = {
     "logo": {
       "logo_url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/kore.png",
       "name": "kore.ai",
-      "fileId": ""
+      "fileId": "",
+      "type": "default"
     },
     "title": {
       "name": "Hello"
@@ -119,6 +120,7 @@ const BrandingJSON = {
       "color": "#175CD3",
       "name": "bg.png",
       "img": "https://picsum.photos/seed/picsum/200/300",
+      "imgType": "default",
       "fileId": ""
     },
     "top_fonts": {
@@ -214,7 +216,8 @@ const BrandingJSON = {
             "value": "https://kore.ai"
           },
           "name": "kore.png",
-          "fileId": ""
+          "fileId": "",
+          "type": "default"
         }
       ]
     }
@@ -319,6 +322,7 @@ const BrandingJSON = {
       "type": "color",
       "color": "#FFFFFF",
       "img": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/background.png",
+      "imgType": "default",
       "name": "bg.png",
       "fileId": ""
     },
