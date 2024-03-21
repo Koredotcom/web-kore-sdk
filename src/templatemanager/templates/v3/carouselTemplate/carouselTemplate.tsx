@@ -110,7 +110,7 @@ export function Carousel(props: any) {
                         curWidth = curWidth + ele.offsetWidth + 10;
                         if (curWidth > btnsParentDivWidth) {
                             btnsParentDiv.scrollTo({
-                                left: btnsParentDiv.offsetHeight - ele.offsetHeight - 50,
+                                left: btnsParentDiv.scrollLeft - ele.offsetWidth - 50,
                                 behavior: 'smooth'
                             });
                             rightScrollBtn.classList.remove('hide');;

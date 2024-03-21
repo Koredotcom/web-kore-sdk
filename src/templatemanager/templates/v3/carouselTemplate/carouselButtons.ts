@@ -44,7 +44,7 @@ class CarouselButtons {
                     curWidth = curWidth + ele.offsetWidth + 10;
                     if (curWidth > btnsParentDivWidth) {
                         btnsParentDiv.scrollTo({
-                            left: btnsParentDiv.offsetHeight - ele.offsetHeight - this.leftSlideWidth,
+                            left: btnsParentDiv.scrollLeft - ele.offsetWidth - this.leftSlideWidth,
                             behavior: 'smooth'
                         });
                         rightScrollBtn.classList.remove(this.classToHideDisable);
