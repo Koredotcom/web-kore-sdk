@@ -30,7 +30,7 @@ export function WelcomeScreenContainer(props: any) {
                 hostInstance.sendMessage(e.action.value, { renderMsg: e.title });
             }, timeout);
             handleEventsWelcomeScreen();
-        } else if (e.action.type == 'url' || e.action.type == 'web_url') {
+        } else if ((e.action.type == 'url' || e.action.type == 'web_url') && e.action.value) {
             let link = e.action.value;
             if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
                 link = `http:////${link}`;
