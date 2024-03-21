@@ -97,6 +97,7 @@ export function Table(props: any) {
     if (msgData.message?.[0]?.component?.payload?.template_type == 'table') {
         useEffect(() => {
             setTimeout(() => {
+                msgData.message[0].component.payload.table_design = 'regular';
                 hostInstance.chatEle.querySelector(`.table-show-more-${msgData.messageId}`)?.addEventListener('click', (e: any) => {
                     hostInstance.modalAction(getHTML(TableExt, msgData, hostInstance));
                 });
