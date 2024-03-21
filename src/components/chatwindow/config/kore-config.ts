@@ -3,7 +3,7 @@ import BrandingJSON from '../sass/brandingJSON'; // To do
 var chatConfig:any={};
 
 var botOptions:any = {};
-botOptions.openSocket = false;
+botOptions.openSocket = true;
 botOptions.logLevel = 'debug';
 botOptions.koreAPIUrl = "https://sit-xo.kore.ai/api/";
 
@@ -47,7 +47,7 @@ chatConfig = {
         enable:false
     },
     pwcConfig: {
-        enable: false,
+        enable: true,
         container: 'body',
         knownUser: false
     },

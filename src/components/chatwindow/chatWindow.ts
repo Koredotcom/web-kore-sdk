@@ -1900,7 +1900,7 @@ generateMessageDOM(msgData?:any){
       return "";
     }
     if (!messageHtml && msgData && msgData.message && msgData.message[0]) {
-      messageHtml = getHTML(Message, msgData, me); 
+      messageHtml = getHTML(Message, msgData, me); // use this for component html render
       // messageHtml = me.templateManager.renderMessage(msgData);
     } 
   }
