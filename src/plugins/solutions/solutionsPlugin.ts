@@ -1,6 +1,6 @@
 import QuickRepliesWelcome from './templates/quickRepliesWelcomeTemplate/quick-replies-welcome';
-import searchResultsTemplate from './templates/SearchResultsTemplate/searchResults'
-
+import searchResultsTemplate from './templates/SearchResultsTemplate/searchResults';
+import SolutionListViewTemplate from './templates/solutions-list-view/solutions-list-view';
 /**
  *  Solutions template plugin class
  *
@@ -28,6 +28,8 @@ class SolutionsTemplatesPlugin {
             let messageData=chatWindowEle?.messageData;
             if(messageData && messageData.message && messageData.message[0] && messageData.message[0].component && messageData.message[0].component.payload && messageData.message[0].component.payload.payload && messageData.message[0].component.payload.payload.template_type  === 'button') {
                 messageData.message[0].component.payload.payload.template_type = 'quick_replies_welcome';
+            }else if((messageData?.message?.[0]?.component?.payload?.template_type === "listView") || (messageData?.message?.[0]?.component?.payload?.payload?.template_type === "listView")){
+                messageData.message[0].component.payload.payload.template_type = 'solutionslistView';
             }
             
         });
@@ -51,6 +53,7 @@ class SolutionsTemplatesPlugin {
         let templateManager = me.hostInstance.templateManager;
         templateManager.installTemplate(new QuickRepliesWelcome());
         templateManager.installTemplate(new searchResultsTemplate());
+        templateManager.installTemplate(new SolutionListViewTemplate());
     }
 }
 export default SolutionsTemplatesPlugin;
