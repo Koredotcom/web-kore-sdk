@@ -6,6 +6,9 @@ export function Chat(props: any) {
     const pwcCampaign = {
         data: props.msgData.layoutData
     };
+    pwcCampaign.data.messages.forEach((message: any, index: number)=> {
+        pwcCampaign.data.messages[index].value = atob(message.value);
+    });
     let actionsList: any;
     let defaultActionsList: any = [
         {name: "Chat", value: "chat", description: 'Engage with a chat agent'},

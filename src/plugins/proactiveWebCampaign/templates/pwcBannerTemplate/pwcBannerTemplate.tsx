@@ -18,7 +18,7 @@ export function Banner(props: any) {
         messages.forEach((ele: any) => {
             const obj = {
                 type: ele.type,
-                value: decodeURIComponent(ele.value)
+                value: decodeURIComponent(atob(ele.value))
             }
             msgs.push(obj);
         });
