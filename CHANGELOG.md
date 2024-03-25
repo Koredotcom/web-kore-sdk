@@ -1,6 +1,6 @@
-### 10.1.22[Draft]
+### 10.1.22
 
-- SDK Release 
+- SDK Release Mar 23, 2024
 * Breaking changes
   * Chat bot icon template HTML structure changed from
     <code>
@@ -12,8 +12,19 @@
      < div class="minimized">
         < button tabindex ="0" class="messages">
     </code>
+* Features
+  * Added config for the websocket url to add custom query parameters
+    <code>
+      botOptions.webSocketConfig = {
+      socketUrl: {
+          queryParams: {} // add query params in the object
+        }
+      }
+    </code>
+    Note: isReconnect remains unchanged and will function as intended
 * Bug fixes
-
+  * Audio call voice exchange delay issue fix
+  * Added solutions list view template
 
 ### 10.1.21
 

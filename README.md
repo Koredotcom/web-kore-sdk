@@ -71,7 +71,7 @@ include the following script in your html file and configure bot configurations
 
 ```js
 
-<script  src="https://cdn.jsdelivr.net/npm/kore-web-sdk@10.1.21/dist/umd/kore-web-sdk-umd-chat.min.js"></script>
+<script  src="https://cdn.jsdelivr.net/npm/kore-web-sdk@10.1.22/dist/umd/kore-web-sdk-umd-chat.min.js"></script>
 <script>
         //chat window declaration
         var chatConfig=KoreChatSDK.chatConfig;
