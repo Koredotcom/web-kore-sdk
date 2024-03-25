@@ -344,8 +344,9 @@ const BrandingJSON = {
       "color": "#101828",
       "separator": "1",
       "icon": {
-        "show": "true|false",
-        "icon_url": "icomoon|url"
+        "show": true,
+        "icon_url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/agent.jpg",
+        "type": "default"
       },
       "title": {
         "name": "Kore Agent",
