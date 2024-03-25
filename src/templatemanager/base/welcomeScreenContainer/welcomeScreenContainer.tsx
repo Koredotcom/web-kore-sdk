@@ -206,9 +206,9 @@ export function WelcomeScreenContainer(props: any) {
 
                             {brandingInfo.welcome_screen.static_links.links.map((item: any, index: any) => (
                             <div className="link-list-template-wrapper" onClick={() => handleStartEvent(item)}>
-                                <div className="img-block">
+                                {/* <div className="img-block">
                                     <img src={iconHelper.getIcon('link_logo')} />
-                                </div>
+                                </div> */}
                                 {(item.title || item.description) && <div className="titles-info-block">
                                     <h1>{item.title}</h1>
                                     <p>{item.description}</p>
