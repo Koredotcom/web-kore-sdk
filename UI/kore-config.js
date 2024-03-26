@@ -13,6 +13,12 @@
     botOptions.enableAck={ // set true, to send acknowledgment to server on receiving response from bot 
         delivery:false
     }
+    // To add query parameters for the websocket url, add the query parameters in queryParams object
+    botOptions.webSocketConfig = {
+        socketUrl: {
+            queryParams: {}
+        }
+    }
 
     botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
     botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here

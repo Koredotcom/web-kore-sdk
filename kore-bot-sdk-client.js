@@ -1403,6 +1403,7 @@ function KoreRTMClient(token, opts) {
   this.botInfo = clientOpts.botInfo || {};
   this.CLIENT_EVENTS=CLIENT_EVENTS.RTM;
   this.debug=debug;
+  this.socketConfig = clientOpts?.webSocketConfig || {};
 }
 
 inherits(KoreRTMClient, BaseAPIClient);
@@ -1466,6 +1467,16 @@ KoreRTMClient.prototype._onStart = function _onStart(err, data) {
   } else {
     if(__reconnect__){
       data.url = data.url + "&isReconnect=true";
+      data.url = data.url + "&ConnectionMode=keepAlive"
+    } else {
+      if (this.socketConfig && this.socketConfig?.socketUrl &&
+        this.socketConfig?.socketUrl?.queryParams && Object.keys(this.socketConfig.socketUrl.queryParams).length > 0) {
+        Object.keys(this.socketConfig.socketUrl.queryParams).forEach((qp) => {
+          if (qp && this.socketConfig.socketUrl.queryParams[qp]) {
+            data.url = data.url + '&' + qp + '=' + this.socketConfig.socketUrl.queryParams[qp];
+          }
+        })
+      }
     }
     this.authenticated = true;
     //this.activeUserId = data.self.id;
