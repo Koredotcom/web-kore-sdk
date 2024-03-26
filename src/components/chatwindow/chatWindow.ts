@@ -243,6 +243,7 @@ initShow  (config:any) {
 
   me.reWriteWebHookURL(me.config);
   window._chatHistoryLoaded = false;
+  me.setDefaultIcons();
   if(me.config?.mockMode?.enable){
     me.setBranding()
   }else{
@@ -2699,6 +2700,37 @@ applyVariableValue (key:any,value:any,type:any){
       me.chatEle.querySelector('.welcome-chat-section')?.classList.remove(me.config.branding.chat_bubble.expand_animation);
       me.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
       me.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize');
+    }
+  }
+
+  setDefaultIcons() {
+    const me: any = this;
+    if (!me.config.enableThemes) {
+      let url = me.config.botOptions.koreAPIUrl;
+      if (url.indexOf('api/') >= 0) {
+        url = url.replace(/\/api\//, '/');
+      }
+
+      if (me.config.branding.welcome_screen.logo.type == 'default') {
+        me.config.branding.welcome_screen.logo.logo_url =  url + 'assets/websdkthemes/' + me.config.branding.welcome_screen.logo.logo_url
+      }
+      me.config.branding.welcome_screen.promotional_content.promotions.forEach((banner: any) => {
+        if (banner.type == 'default') {
+          banner.banner = url + 'assets/websdkthemes/' + banner.banner;
+        }
+      });
+      if (me.config.branding.body.background.imgType == 'default') {
+        me.config.branding.body.background.img = url + 'assets/websdkthemes/' + me.config.branding.body.background.img;
+      }
+      if (me.config.branding.body.agent_message.icon.type == 'default') {
+        me.config.branding.body.agent_message.icon.icon_url = url + 'assets/websdkthemes/' + me.config.branding.body.agent_message.icon.icon_url;
+      }
+      const soundTypes = ['on_audio_call', 'on_close', 'on_msg_send', 'on_new_msg', 'on_open', 'on_proactive_msg', 'on_video_call'];
+      soundTypes.forEach((type) => {
+        if (me.config.branding.general.sounds[type]['type'] == 'default') {
+          me.config.branding.general.sounds[type]['url'] = url + 'assets/websdkthemes/' + me.config.branding.general.sounds[type]['url'];
+        }
+      });
     }
   }
 
