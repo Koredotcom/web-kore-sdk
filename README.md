@@ -24,8 +24,7 @@ Kore.ai SDK for web enables you to talk to Kore.ai bots over a web socket. This 
 #Supported Browsers
 1. Google Chrome version 55 & above
 2. Mozilla Firefox version 51 & above
-3. Internet Explorer version 11 & above 
-(Web-sdk may not work properly incase compatability mode is on with IE older versions)
+3. Microsoft Edge version 111 & above
 4. Mac Safari version 9.1 & above
 5. Opera version 48 & above
 
@@ -323,6 +322,14 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 	// }		
 # Release History
 ```
+v10.1.21 [Minor] on 09-Mar-2024: Master branch
+        Bugfixes
+                1.cobrowse stun server urls format change
+v10.1.20 [Minor] on 24-Feb-2024: Master branch
+        Bugfixes
+                1.Universal selector issue fix in widget
+                2.Whitelisted b & br tags
+                3.Agent desktop plugin issues fix
 v10.1.17 [Minor] on 06-Jan-2024: Master branch
         Features
                 1.Added config for retries count for api reconnect on failure. Configuration available at chatConfig.maxReconnectionAPIAttempts
