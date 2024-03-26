@@ -1485,21 +1485,28 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     } else {
       if(__reconnect__){
         data.url = data.url + "&isReconnect=true";
+        data.url = data.url + "&ConnectionMode=keepAlive"
+      } else {
+        if (this.socketConfig && this.socketConfig?.socketUrl &&
+          this.socketConfig?.socketUrl?.queryParams && Object.keys(this.socketConfig.socketUrl.queryParams).length > 0) {
+          Object.keys(this.socketConfig.socketUrl.queryParams).forEach((qp) => {
+            if (qp && this.socketConfig.socketUrl.queryParams[qp]) {
+              data.url = data.url + '&' + qp + '=' + this.socketConfig.socketUrl.queryParams[qp];
+            }
+          })
+        }
       }
-      if (this.socketConfig && this.socketConfig?.socketUrl &&
-        this.socketConfig?.socketUrl?.queryParams && Object.keys(this.socketConfig.socketUrl.queryParams).length > 0) {
-        Object.keys(this.socketConfig.socketUrl.queryParams).forEach((qp) => {
-          if (qp && this.socketConfig.socketUrl.queryParams[qp]) {
-            data.url = data.url + '&' + qp + '=' + this.socketConfig.socketUrl.queryParams[qp];
-          }
-        })
-      }
+
       this.authenticated = true;
       //this.activeUserId = data.self.id;
       this.emit(CLIENT_EVENTS.AUTHENTICATED, data);
       this.connect(data.url);
     }
   };
+
+  KoreRTMClient.prototype.appendCustomQueryParams = function(url) {
+
+  }
   
   //To close the ws on refresh,close, and on logout.
   KoreRTMClient.prototype._close = function _close() {
