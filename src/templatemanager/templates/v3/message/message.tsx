@@ -123,7 +123,7 @@ export function Message(props: any) {
                                             </div>}
                                             {brandingInfo.body.icon.show && msgData.fromAgent && <div className="bot-img">
                                                 <figure>
-                                                    <img src={msgData && msgData.icon ? msgData.icon : 'https://dev-xo.kore.ai/assets/websdkthemes/soundImages/agent.jpg'} alt='avatr img' />
+                                                    <img src={msgData && msgData.icon ? msgData.icon : brandingInfo.body.agent_message.icon.icon_url} alt='avatr img' />
                                                 </figure>
                                             </div>}
                                             <div className="copy-bubble" onClick={() => onCopy(event, msgItem.component.payload.text)}>
@@ -156,7 +156,7 @@ export function Message(props: any) {
                                             </div>}
                                             {brandingInfo.body.icon.show && msgData.fromAgent && <div className="bot-img">
                                                 <figure>
-                                                    <img src={msgData && msgData.icon ? msgData.icon : 'https://dev-xo.kore.ai/assets/websdkthemes/soundImages/agent.jpg'} alt='avatr img' />
+                                                    <img src={msgData && msgData.icon ? msgData.icon : brandingInfo.body.agent_message.icon.icon_url} alt='avatr img' />
                                                 </figure>
                                             </div>}
                                             <div className="copy-bubble" onClick={() => onCopy(event, msgItem.cInfo.body)}>

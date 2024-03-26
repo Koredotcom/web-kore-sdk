@@ -169,7 +169,7 @@ class AgentDesktopPlugin {
                 if (me.hostInstance.config.branding.body.agent_message.icon.show) {
                     me.hostInstance.config.branding.header.icon.show = true;
                     me.hostInstance.config.branding.header.icon.type = 'custom';
-                    me.hostInstance.config.branding.header.icon.icon_url = 'https://dev-xo.kore.ai/assets/websdkthemes/soundImages/agent.jpg';
+                    me.hostInstance.config.branding.header.icon.icon_url = me.hostInstance.config.branding.body.agent_message.icon.icon_url;
                 } else {
                     me.hostInstance.config.branding.header.icon.show = false;
                 }
