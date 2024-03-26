@@ -4419,3 +4419,233 @@ white-space: nowrap;
 
 
 
+/* worknotes css styling starts here */
+.worknote-template-content {
+    padding-bottom: 3px;
+}
+
+.worknote-template-content .WtemplateHeading {
+    font-size: 11px;
+    line-height: 16px;
+    padding: 8px;
+    display: flex;
+    gap: 4px;
+}
+
+.worknote-template-content .WtemplateHeading #elements-length-icon {
+    border-radius: 16px;
+    background-color: #eff8ff;
+    color: #175CD3;
+    font-size: 12px;
+    width: max-content;
+    padding: 0px 8px;
+    line-height: 18px;
+}
+
+.worknote-template-content .worknote-elements {
+    display: inline-block;
+    width: 100%;
+    background-color: #F2F4F7;
+    margin-left: 1%;
+    border-radius: 10px;
+    width: 98%;
+    padding-bottom: 3px;
+}
+
+.worknote-elements .worknote-element {
+    background: #FFFFFF;
+    margin-top: 5px;
+    width: 98%;
+    margin-left: 1%;
+    border-radius: 4px;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.worknote-elements .worknote-element .worknote-header {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #2B75E4;
+    padding: 8px 8px 8px 12px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    position: relative;
+}
+
+.worknote-elements .worknote-element .worknote-header .header-title {
+    color: white;
+    display: flex;
+    gap: 10px;
+}
+
+.worknote-elements .worknote-element .worknote-header .header-title .subCategory-title {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 14.52px;
+    width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.worknote-elements .worknote-element .worknote-header .header-title .category-title {
+    font-size: 14px;
+    font-weight: 600;
+    width: 60px;
+    line-height: 16.94px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+.worknote-elements .worknote-element .worknote-header .header-icon {
+    background-color: #2B75E4;
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.worknote-elements .worknote-element .worknote-header .header-icon img {
+    display: block;
+    width: 100%;
+}
+
+.worknote-element .worknote-content {
+    display: none;
+}
+
+.worknote-expanded .worknote-content {
+    display: block;
+    border-radius: 4px;
+}
+
+
+.worknote-elements .worknote-element .worknote-header .worknotes-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.worknote-elements .worknote-element .worknote-descripton {
+    padding: 0px 8px 0px 12px;
+    height: 200px;
+    overflow-y: auto;
+}
+
+.worknote-elements .worknote-element .worknote-title {
+    padding: 0px 8px;
+}
+
+.worknote-elements .worknote-element .worknote-title p {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    margin: 5px
+}
+
+.worknote-elements .worknote-element .worknote-descripton p {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #344054;
+    margin: 0px;
+}
+
+.worknote-elements .worknote-element .worknote-feedback {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    display: flex;
+    margin: 0px 12px;
+    justify-content: flex-start;
+    align-items: center;
+    border-top: 1px solid #ddd;
+    padding: 10px 0px;
+}
+
+.worknote-elements .worknote-element .worknote-feedback .feedback-btns {
+    display: flex;
+    margin-left: 10px;
+}
+
+.worknote-elements .worknote-element .worknote-feedback .feedback-btns .feedbackbtn img {
+    width: 16px;
+    height: 16px;
+}
+
+.worknote-elements .worknote-element .worknote-feedback .feedback-btns .feedbackbtn {
+    margin-right: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border: 1px solid #E3E8EF;
+}
+
+.feedback-btns .likefeedback {
+    background-color: #E6F8EF;
+    border-color: #32D583 !important;
+}
+
+.feedback-btns .dislikefeedback {
+    background-color: #FBECEF;
+    border-color: #F97066 !important;
+}
+
+.worknote-elements .worknote-element .worknote-feedback .feedback-message {
+    line-height: 14.52px;
+    color: #667085;
+    flex: 0 0 auto
+}
+
+.worknote-expanded .header-icon img {
+    transform: rotate(180deg);
+}
+
+.worknote-element .worknote-header .header-title .category-title:hover::after,
+.worknote-element .worknote-header .header-title .subCategory-title:hover::after {
+    content: attr(data-title);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    background: rgba(255, 255, 255);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid #E5E5E5;
+    color: #000;
+    padding: 5px;
+    font-size: 12px;
+    line-height: 20px;
+    font-family: 'inter ', sans-serif;
+    border-radius: 4px;
+    z-index: 10;
+    animation: fadeIn 0.3s ease-out forwards;
+    top: 100%;
+    left: 0;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    gap: 2px;
+    padding: 8px 12px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.worknote-element .worknote-header .header-title .category-title:hover::after {
+    max-width: 180px;
+}
+
+.worknote-element .worknote-header .header-title .subCategory-title:hover::after {
+    max-width: 150px;
+    left: 50%;
+}
