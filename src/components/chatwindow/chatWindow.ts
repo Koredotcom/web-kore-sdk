@@ -1581,7 +1581,7 @@ getChatTemplate (tempType: string) {
                  <button class="reload-btn" title="${botMessages.reconnectText}"></button> \
                  <button class="minimize-btn" title="${botMessages.minimizeText}"></button> \
                  <button class="expand-btn" title="${botMessages.expandText}"></button>\
-                 <button class="close-btn" title="${botMessages.expandText}"></button> \
+                 <button class="close-btn" title="${botMessages.closeText}"></button> \
              </div> \
          </div> \
          <div class="kore-chat-header historyLoadingDiv"> \
