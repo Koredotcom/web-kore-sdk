@@ -167,6 +167,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     }
     client.makeAPICall(this.options.webhookConfig.webhookURL, messagePayload, function(error,resBody){
     if(error){
+      me.emit(WEB_EVENTS.API_FAILURE,{"type":"XHRObj","responseError" : resBody.errors[0]});
       failureCb(resBody);
     }else{
         if(resBody.pollId){
@@ -298,6 +299,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   
     client.makeAPICall(apiUrl, payload, function(error,resBody){
       if(error){
+        me.emit(WEB_EVENTS.API_FAILURE,{"type":"XHRObj","responseError" : resBody.errors[0]});
         //failureCb(resBody);
       }else{
           if(resBody.pollId){
