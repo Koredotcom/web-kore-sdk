@@ -560,7 +560,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       });
       this.emit("rtm_client_initialized");
       this.emit(WEB_EVENTS.JWT_GRANT_SUCCESS,{jwtgrantsuccess : data});
-      if (this.options.openSocket) {
+      if (this.options.openSocket || this.options.botInfo.uiVersion == 'v2') {
         this.logInComplete();
         this.options.openSocket = false;
       }

@@ -263,7 +263,7 @@ initShow  (config:any) {
   me.config.botOptions.botInfo.name = KoreHelpers.prototypes.escapeHTML(me.config.botOptions.botInfo.name);
   me._botInfo = me.config.botOptions.botInfo;
   me.config.botOptions.botInfo = {
-    chatBot: me._botInfo.name, taskBotId: me._botInfo._id, customData: me._botInfo.customData, metaTags: me._botInfo.metaTags, tenanturl: me._botInfo.tenanturl,
+    chatBot: me._botInfo.name, taskBotId: me._botInfo._id, customData: me._botInfo.customData, metaTags: me._botInfo.metaTags, tenanturl: me._botInfo.tenanturl, uiVersion: me.config.UI.version
   };
   me.pwcInfo = {};
   me.pwcInfo.dataFalg = false;
@@ -292,7 +292,7 @@ initShow  (config:any) {
   me.config.botOptions.chatHistory = me.config.chatHistory;
   me.config.botOptions.handleError = me.config.handleError;
   me.config.botOptions.googleMapsAPIKey = me.config.googleMapsAPIKey;
-  if(!me.config?.mockMode?.enable){
+  if(!me.config?.mockMode?.enable && me.config.UI.version == 'v3'){
   me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
   }  
   let chatWindowHtml:any;
@@ -948,11 +948,9 @@ bindEvents  () {
       if (me.config.multiPageApp && me.config.multiPageApp.enable) {
         me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
       }
-      if (!me.misc.chatOpened) {
-        me.bot.logInComplete(); // Start api call & ws
-        me.misc.chatOpened = true;
+      if (!me.config.isConversationTesting) {
+        me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
       }
-      // me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
       me.skipedInit = false;
     }
     const evt = document.createEvent('HTMLEvents');
