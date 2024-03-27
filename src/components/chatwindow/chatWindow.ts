@@ -2711,6 +2711,10 @@ applyVariableValue (key:any,value:any,type:any){
         url = url.replace(/\/api\//, '/');
       }
 
+      if (url.indexOf('1.1') >= 0) {
+        url = url.replace(/\/1\.1\/$/, '/');
+      }
+
       if (me.config.branding.welcome_screen.logo.type == 'default') {
         me.config.branding.welcome_screen.logo.logo_url =  url + 'assets/websdkthemes/' + me.config.branding.welcome_screen.logo.logo_url
       }
