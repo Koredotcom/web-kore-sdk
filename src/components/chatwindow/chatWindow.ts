@@ -2718,7 +2718,7 @@ applyVariableValue (key:any,value:any,type:any){
       }
 
       if (url.indexOf('1.1') >= 0) {
-        url = url.replace(/\/1\.1\/$/, '/');
+        url = url.replace(/\/1\.1/, '/');
       }
 
       if (me.config.branding.welcome_screen.logo.type == 'default') {
