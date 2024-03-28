@@ -3,7 +3,8 @@
 ###### Preview
 
 
-![quickRepliesTemplate](https://user-images.githubusercontent.com/58174664/148944636-4f97913e-7c7c-4ea3-9acd-b241ac466405.PNG)
+<img width="227" alt="quick replies" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/f0db1cd9-e544-472a-8a8a-f78ece006a22">
+
 
 
 ###### Message Payload
