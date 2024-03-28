@@ -2,7 +2,7 @@
 
 ###### Preview
 
-![lineChartTemplate](https://user-images.githubusercontent.com/58174664/148943313-80595e92-af73-43bf-92a0-feb9d5e1a9b4.PNG)
+<img width="237" alt="line chart" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/6b09056c-67fd-4dfd-a84a-b6a2a05769fe">
 
 
 

@@ -2,7 +2,7 @@
 
 ###### Preview
 
-![inlineFormTemplate](https://user-images.githubusercontent.com/58174664/148943000-cbccf32c-1395-4232-aac5-f9d915337eb8.PNG)
+<img width="238" alt="inline form" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/88455d63-1200-4a28-a860-1ad5c22a2e90">
 
 ###### Message Payload
 
