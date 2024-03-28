@@ -2057,8 +2057,8 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
                 })
                 .on('mouseover', function() { // on mouse in show line, circles and text
 
-                    if ($('#myPreviewModal').css('display') === 'block') {
-                        $('.lineChartChildDiv .mouse-per-line').hide();
+                    if ($('.modal_body_actions').css('display') === 'block') {
+                        $('.line-chart-inline .lineChartChildDiv .mouse-per-line').hide();
                     } else {
                         $('.lineChartChildDiv .mouse-per-line').show();
                     }
@@ -2664,8 +2664,8 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
               }
               if (msgData.message[0].component.payload.template_type !== 'linechart' && msgData.message[0].component.payload.template_type !== 'piechart') {
                   var dimens = {};
-                  dimens.outerWidth = 500;
-                  dimens.outerHeight = 350;
+                  dimens.outerWidth = 600;
+                  dimens.outerHeight = 340;
                   dimens.innerWidth = 380;
                   dimens.innerHeight = 250;
                   dimens.legendRectSize = 15;
