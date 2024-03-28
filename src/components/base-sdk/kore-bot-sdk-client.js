@@ -1487,7 +1487,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     } else {
       if(__reconnect__){
         data.url = data.url + "&isReconnect=true";
-        data.url = data.url + "&ConnectionMode=keepAlive"
+        data.url = data.url + "&ConnectionMode=keep_Alive"
       } else {
         if (this.socketConfig && this.socketConfig?.socketUrl &&
           this.socketConfig?.socketUrl?.queryParams && Object.keys(this.socketConfig.socketUrl.queryParams).length > 0) {
