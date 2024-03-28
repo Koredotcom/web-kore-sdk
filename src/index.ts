@@ -32,6 +32,7 @@ import SearchSuggestionsPlugin from './plugins/searchSuggestions/searchSuggestio
 import UserTypingEventsPlugin from './plugins/userTypingEventsPlugin';
 import ProactiveWebCampaignPlugin from './plugins/proactiveWebCampaign/proactiveWebCampaign';
 import AnswersTemplatesPlugin from './plugins/answers/answersPlugin';
+import V2Plugin from './plugins/v2Plugin/v2Plugin';
 
 export {
   chatConfig,
@@ -65,4 +66,5 @@ export {
   UserTypingEventsPlugin,
   AnswersTemplatesPlugin,
   ProactiveWebCampaignPlugin,
+  V2Plugin
 };

@@ -228,6 +228,11 @@ module.exports= function(env,argv){
             filename: 'plugins/answers-template.js',
             chunkLoading: false,
           },
+          v2PluginSDK: {
+            import: "./src/index_plugins/v2Plugin.ts",
+            filename: 'plugins/v2-plugin.js',
+            chunkLoading: false,
+          },
           ProactiveWebCampaignPluginSDK: {
             import: "./src/index_plugins/proactiveWebCampaign.ts",
             filename: 'plugins/proactive-web-campaign.js',
@@ -360,6 +365,11 @@ module.exports= function(env,argv){
           AnswersPluginSDK: {
             import: "./src/index_plugins/answersTemplate.ts",
             filename: 'plugins/answers-template.js',
+            chunkLoading: false,
+          },
+          v2PluginSDK: {
+            import: "./src/index_plugins/v2Plugin.ts",
+            filename: 'plugins/v2-plugin.js',
             chunkLoading: false,
           },
           ProactiveWebCampaignPluginSDK: {

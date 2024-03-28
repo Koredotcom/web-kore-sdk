@@ -1,4 +1,4 @@
-import {chatConfig,chatWindow,AgentDesktopPlugin} from '../../../../../dist/kore-web-sdk.esm.browser.js';
+import {chatConfig,chatWindow,AgentDesktopPlugin,BrowserTTS} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {WebKitSTT} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 
 let chatWindowInstance = new chatWindow();
@@ -52,6 +52,7 @@ https://developer.kore.ai/docs/bots/sdks/user-authorization-and-assertion/
 //   }
   
 //   chatWindowInstance.templateManager.installTemplate(new customTemplateComponent())
+chatWindowInstance.installPlugin(new BrowserTTS());
 chatWindowInstance.installPlugin(new AgentDesktopPlugin());
 chatWindowInstance.installPlugin(new WebKitSTT({ lang: 'en-US' }));
 

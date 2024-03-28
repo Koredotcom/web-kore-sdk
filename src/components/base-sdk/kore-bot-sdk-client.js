@@ -560,7 +560,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       });
       this.emit("rtm_client_initialized");
       this.emit(WEB_EVENTS.JWT_GRANT_SUCCESS,{jwtgrantsuccess : data});
-      if (this.options.openSocket) {
+      if (this.options.openSocket || this.options.botInfo.uiVersion == 'v2') {
         this.logInComplete();
         this.options.openSocket = false;
       }
@@ -571,18 +571,20 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   start conversation after getting jwtgrant and theme
   */
   KoreBot.prototype.logInComplete = function() {
-    this.RtmClient.start({
-      "botInfo": this.options.botInfo
-    });
-    this.RtmClient.on(RTM_EVENTS.MESSAGE, bind(this.onMessage, this));
-    this.RtmClient.on(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, bind(this.onOpenWSConnection, this));
-    //Propagating the events triggered on this.RtmClient to KoreBot instance with ":rtm" prefix
-    var _me=this;
-    Object.keys(RTM_CLIENT_EVENTS).forEach(function(rtmClientEvent){
-      _me.RtmClient.on(RTM_CLIENT_EVENTS[rtmClientEvent],function(eventData){
-        _me.emit("rtm:"+RTM_CLIENT_EVENTS[rtmClientEvent],eventData);
+    if (this.RtmClient) {
+      this.RtmClient.start({
+        "botInfo": this.options.botInfo
       });
-    });
+      this.RtmClient.on(RTM_EVENTS.MESSAGE, bind(this.onMessage, this));
+      this.RtmClient.on(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, bind(this.onOpenWSConnection, this));
+      //Propagating the events triggered on this.RtmClient to KoreBot instance with ":rtm" prefix
+      var _me=this;
+      Object.keys(RTM_CLIENT_EVENTS).forEach(function(rtmClientEvent){
+        _me.RtmClient.on(RTM_CLIENT_EVENTS[rtmClientEvent],function(eventData){
+          _me.emit("rtm:"+RTM_CLIENT_EVENTS[rtmClientEvent],eventData);
+        });
+      });
+    }
   }
   
   /*
@@ -1476,6 +1478,16 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     if(data && data.errors && (data.errors[0].code === 'TOKEN_EXPIRED' || data.errors[0].code === 401 || data.errors[0].msg === 'token expired')){
         var $=this.$;
         $(".reload-btn").trigger('click',{isReconnect:true});
+        const buttonElement = document.querySelector('#kore-reconnect-btn');
+        if (buttonElement) {
+          const eventData = { isReconnect: true };
+          const clickEvent = new CustomEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            detail: eventData
+          });
+          buttonElement.dispatchEvent(clickEvent);
+        }
         data.error='token_expired';
     }
     if (err || !data.url) {

@@ -27,18 +27,26 @@ class KoreHelpers{
             return strTime;
         },
         'formatAMPMDay': function (date) {
+            var month = ["Jan","Feb","Mar","Apr","May","June","July","Aug","Sept","Oct","Nov","Dec"];
             date = new Date(date);
             var hours = date.getHours();
             var minutes = date.getMinutes();
             // var seconds = date.getSeconds();
-            var date = date.getDate();
-            var day = new Date().getDate() == date ? 'Today' : new Date().getDate() - 1 == date ? 'Yesterday' : date ;
+            var dateCheck = date.getDate();
+            var day = new Date().getDate() == dateCheck ? 'Today' : new Date().getDate() - 1 == dateCheck ? 'Yesterday' : dateCheck ;
             var ampm = hours >= 12 ? 'pm' : 'am';
             hours = hours % 12;
             hours = hours ? hours : 12; // the hour '0' should be '12'
             minutes = minutes < 10 ? '0' + minutes : minutes;
             // seconds = seconds < 10 ? '0' + seconds : seconds;
-            var strTime = hours + ':' + minutes + ' ' + ampm + ', ' + day;
+            var mon = month[date.getMonth()];
+            var year = date.getFullYear();
+            var strTime;
+            if (day == 'Today' || day == 'Yesterday') {
+              strTime = hours + ':' + minutes + ' ' + ampm + ', ' + day;
+            } else {
+              strTime = hours + ':' + minutes + ' ' + ampm + ', ' + day + ' ' + mon + ', ' + year;
+            }
             return strTime;
         },
         'formatDate': function (date) {

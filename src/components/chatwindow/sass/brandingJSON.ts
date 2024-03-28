@@ -15,43 +15,43 @@ const BrandingJSON = {
       "on_audio_call": {
         "name": "Sound1",
         "type": "default",
-        "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_audio_call.wav",
+        "url": "on_audio_call.wav",
         "fileId": ""
       },
       "on_close": {
         "name": "Sound1",
         "type": "default",
-        "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_close.wav",
+        "url": "on_close.wav",
         "fileId": ""
       },
       "on_msg_send": {
         "name": "Sound1",
         "type": "default",
-        "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_msg_send.wav",
+        "url": "on_msg_send.wav",
         "fileId": ""
       },
       "on_new_msg": {
         "name": "Sound1",
         "type": "default",
-        "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_new_msg.wav",
+        "url": "on_new_msg.wav",
         "fileId": ""
       },
       "on_open": {
         "name": "Sound1",
         "type": "default",
-        "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_open.wav",
+        "url": "on_open.wav",
         "fileId": ""
       },
       "on_proactive_msg": {
         "name": "Sound1",
         "type": "default",
-        "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_proactive_message.wav",
+        "url": "on_proactive_message.wav",
         "fileId": ""
       },
       "on_video_call": {
         "name": "Sound1",
         "type": "default",
-        "url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/on_video_call.wav",
+        "url": "on_video_call.wav",
         "fileId": ""
       }
     }
@@ -75,7 +75,7 @@ const BrandingJSON = {
       "messages": [
         {
           "title": "Welcome to support",
-          "header": "Hello {{userName}}"
+          "header": "Hello"
         },
         {
           "title": "Can I help you any way?",
@@ -101,9 +101,10 @@ const BrandingJSON = {
     "show": true,
     "layout": "medium",
     "logo": {
-      "logo_url": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/kore.png",
+      "logo_url": "kore.png",
       "name": "kore.ai",
-      "fileId": ""
+      "fileId": "",
+      "type": "default"
     },
     "title": {
       "name": "Hello"
@@ -119,6 +120,7 @@ const BrandingJSON = {
       "color": "#175CD3",
       "name": "bg.png",
       "img": "https://picsum.photos/seed/picsum/200/300",
+      "imgType": "default",
       "fileId": ""
     },
     "top_fonts": {
@@ -208,13 +210,14 @@ const BrandingJSON = {
       "show": true,
       "promotions": [
         {
-          "banner": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/kore_banner.png",
+          "banner": "kore_banner.png",
           "action": {
             "type": "url",
             "value": "https://kore.ai"
           },
           "name": "kore.png",
-          "fileId": ""
+          "fileId": "",
+          "type": "default"
         }
       ]
     }
@@ -318,7 +321,8 @@ const BrandingJSON = {
     "background": {
       "type": "color",
       "color": "#FFFFFF",
-      "img": "https://dev-xo.kore.ai/assets/websdkthemes/soundImages/background.png",
+      "img": "background.png",
+      "imgType": "default",
       "name": "bg.png",
       "fileId": ""
     },
@@ -340,8 +344,9 @@ const BrandingJSON = {
       "color": "#101828",
       "separator": "1",
       "icon": {
-        "show": "true|false",
-        "icon_url": "icomoon|url"
+        "show": true,
+        "icon_url": "agent.jpg",
+        "type": "default"
       },
       "title": {
         "name": "Kore Agent",

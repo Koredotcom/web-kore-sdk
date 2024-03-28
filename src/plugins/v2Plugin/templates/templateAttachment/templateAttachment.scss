@@ -1,0 +1,27 @@
+.kore-chat-window .botResponseAttachments {
+    color: var(--sdk-chat-window-bot-bubble-font-clr);
+    padding: 2px 5px;
+    width: 100%;
+    margin: 2px 0;
+}
+
+.kore-chat-window .botResponseAttachments .uploadedFileIcon {
+    float: left;
+    width: 100%;
+    margin-top: 3px;
+    border-bottom: 2px solid #F1F0F0;
+}
+
+.kore-chat-window .botuploadedFileName {
+    float: left;
+    width: 100%;
+    text-align: center;
+    min-width: 80px;
+    font-size: 14px;
+    padding: 3px 0px 3px 0px;
+}
+
+.kore-chat-window .uploadedFileName {
+    border-top: 1px solid var(--sdk-chat-widow-primary-border-color);
+    color: var(--sdk-chat-window-bot-bubble-font-clr);
+}

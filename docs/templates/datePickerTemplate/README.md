@@ -2,7 +2,7 @@
 
 ###### Preview
 
-![datePicker](https://user-images.githubusercontent.com/58174664/148941995-4932fd5a-9993-45a7-a017-45556296cd64.PNG)
+<img width="237" alt="date" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/e00d37d1-8e94-46c5-a0c5-562582818972">
 
 
 

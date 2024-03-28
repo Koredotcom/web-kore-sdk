@@ -41,6 +41,14 @@ export function AvatarComponent(props: any) {
     let avatarParentStyle = "avatar-variations-footer"; 
     let avatarStyle = aShape[brandingInfo.chat_bubble.style];
     let buttonStyle = "buttons-triger-click-wrapper animation-slide-up btn-anim-send";
+    let avatarBgStyle = "avatar-bg";
+
+    if (brandingInfo.chat_bubble.icon.type == 'custom') {
+        avatarBgStyle = avatarBgStyle + ' custom-image-avatar-bg';
+    }
+    if (brandingInfo.chat_bubble.minimise.type == 'custom') {
+        avatarBgStyle = avatarBgStyle + ' custom-image-minimize-avatar-bg';
+    }
 
     if (pwcCampaign.enable) {
         if (pwcCampaign.data.appearance.buttonAlignment == 'singlerow') {
@@ -175,7 +183,7 @@ export function AvatarComponent(props: any) {
                     </div>
                 </div>}
 
-                <button className="avatar-bg">
+                <button className={avatarBgStyle}>
                     {/* <span className="un-read-msg">2</span> */}
                     {brandingInfo.chat_bubble.icon.type == 'default' && <figure className="default-avater-icon">
                         {/* <img src={brandingInfo.chat_bubble.icon.icon_url} alt="Elephant at sunset" /> */}
@@ -209,11 +217,11 @@ export function AvatarComponent(props: any) {
                             <path d="M17.0492 13L12.2492 18M12.2492 18L7.44922 13M12.2492 18L12.2492 6" stroke="white" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" />
                         </svg></span>}
                     </figure>}
-                    {brandingInfo.chat_bubble.icon.type == 'custom' && <figure>
-                        <img className="custom-img-uploaded" src={brandingInfo.chat_bubble.icon.icon_url} />
+                    {brandingInfo.chat_bubble.icon.type == 'custom' && <figure className="custom-img-uploaded">
+                        <img src={brandingInfo.chat_bubble.icon.icon_url} />
                     </figure>}
-                    {brandingInfo.chat_bubble.minimise.type == 'custom' && <figure>
-                        <img className="custom-img-uploaded-minimize" src={brandingInfo.chat_bubble.minimise.icon} />
+                    {brandingInfo.chat_bubble.minimise.type == 'custom' && <figure className="custom-img-uploaded-minimize" >
+                        <img src={brandingInfo.chat_bubble.minimise.icon} />
                     </figure>}
                 </button>
             </div>

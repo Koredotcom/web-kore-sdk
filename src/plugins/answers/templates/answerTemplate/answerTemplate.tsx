@@ -1,4 +1,4 @@
-import BaseChatTemplate from '../../../../templatemanager/templates/v3/baseChatTemplate';
+import BaseChatTemplate from '../../../../templatemanager/templates/baseChatTemplate';
 import './answerTemplate.scss';
 import { h, Fragment } from 'preact';
 import { useEffect, useState } from 'preact/hooks';

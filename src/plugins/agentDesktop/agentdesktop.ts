@@ -169,19 +169,24 @@ class AgentDesktopPlugin {
                 if (me.hostInstance.config.branding.body.agent_message.icon.show) {
                     me.hostInstance.config.branding.header.icon.show = true;
                     me.hostInstance.config.branding.header.icon.type = 'custom';
-                    me.hostInstance.config.branding.header.icon.icon_url = 'https://dev-xo.kore.ai/assets/websdkthemes/soundImages/agent.jpg';
+                    me.hostInstance.config.branding.header.icon.icon_url = me.hostInstance.config.branding.body.agent_message.icon.icon_url;
                 } else {
                     me.hostInstance.config.branding.header.icon.show = false;
                 }
-                me.hostInstance.config.branding.header.title = me.hostInstance.config.branding.body.agent_message.title;
+                me.hostInstance.config.branding.header.title.name = me.hostInstance.config.branding.body.agent_message.title.name;
                 me.hostInstance.config.branding.header.sub_title.name = me.hostInstance.config.branding.body.agent_message.sub_title.name;
                 me.hostInstance.setBranding(me.hostInstance.config.branding);
+                me.hostInstance.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = me.hostInstance.config.branding.header.title.name;
+
             } else if (event.messageData?.message?.type === 'agent_disconnected') {
-                this.isAgentConnected = false;
-                me.hostInstance.config.branding.header.icon = me?.brandingInfo?.header?.icon;
-                me.hostInstance.config.branding.header.title = me?.brandingInfo?.header?.title;
-                me.hostInstance.config.branding.header.sub_title.name = me?.brandingInfo?.header?.sub_title?.name;
-                me.hostInstance.setBranding(me.hostInstance.config.branding);
+                if (this.isAgentConnected) {
+                    this.isAgentConnected = false;
+                    me.hostInstance.config.branding.header.icon = me?.brandingInfo?.header?.icon;
+                    me.hostInstance.config.branding.header.title.name = me?.brandingInfo?.header?.title?.name;
+                    me.hostInstance.config.branding.header.sub_title.name = me?.brandingInfo?.header?.sub_title?.name;
+                    me.hostInstance.setBranding(me.hostInstance.config.branding);
+                    me.hostInstance.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = me.hostInstance.config.branding.header.title.name;
+                }
             }
             if (event.messageData?.message?.type === 'agent_connected') {
                 localStorage.setItem("kr-agent-status", "connected")

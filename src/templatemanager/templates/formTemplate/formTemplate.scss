@@ -1,79 +1,53 @@
-.kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent .submitClass{
-    cursor:pointer;
-    width:30px;
-    height:20px;
-    border:1px solid var(--sdk-chat-widow-primary-blue-color);
-}
-.kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent{
-    position: relative;
-}
-.kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent .input_group{
-    padding: 0;
-    position: relative;
-    border-radius: 10px;
-}
-.kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent .input_group .input-btn-submit{
-    position: relative;
-    top: 0;
-}
-.kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent .input_group input:focus{
-    outline: 1px solid var(--sdk-chat-window-input-focus-outline)!important;
-}
-.kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent .input_group input{
-    width: 100%;
-    height: 34px;
-    padding: 0px 12px 6px 45px;
-    font-size: 14px;
-    line-height: 1.42857143;
-    background-color: var(--sdk-chat-window-bg-color);
-    background-image: none;
-    border: 1px solid var(--sdk-chat-window-input-border);
-    border-radius: 4px;
-    z-index:1;
-}
-.kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent .ok_btn{
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    height: 26px;
-    bottom: 0;
-    background: var(--sdk-chat-widow-secondary-font-color);
-    padding: 4px 8px;
-    border-radius: 4px;
-    color: var(--sdk-chat-window-bg-color);
-    float: right;
-    cursor: pointer;
-    z-index:2;
-}
-.kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent .inputMainComponent{
-    position: relative;
-}
-.kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent form .hide{
-    display:none;
-}
 
-.kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent .btn-group {
-    margin: 15px 0 0 0;
-    text-align: center;
-}
-.kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent .btn-group .btn-info {
-    min-width: 80px;
-    height: 30px;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
-    margin-right: 10px;
-    background-color: #0d6efd;
-    border: solid 1px transparent;
-    color: #fff;
-}
-.kore-chat-window .kore-chat-body .buttonTmplContent .formMainComponent .btn-group .btn-url-postback {
-    min-width: 80px;
-    height: 30px;
-    border-radius: 4px;
-    font-size: 14px;
-    border: solid 1px transparent;
-    cursor: pointer;
-    margin-right: 10px;
-    color: #0d6efd;
+.form-template-wrapper-container{
+    padding: 0px 16px 5px 16px;
+    display: inline-block;
+    width: 100%;
+    .form-temp-content{
+        border-radius: 4px 0px 0px 0px;
+        background: var(--form-temp-bg);
+        display: flex;
+        width: 100%;
+        padding: 16px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        h1{
+            color: var(--form-temp--text-color);
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal;
+        }
+        .form-input-wrapper{
+            width: 100%;
+            label{
+                color: var(--form-temp--text-color);
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 20px;
+                width: 100%;
+                display: block;
+                margin-bottom: 4px;
+            }
+            input{
+                width: 100%;
+                display: flex;
+                height: 40px;
+                padding: 8px 12px;
+                border-radius: 6px;
+                border: 1px solid var(--gloabl-border-color);
+                background: var(--form-temp-input-bg);
+                box-shadow: var(--form-temp-input-box-shadow);
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 20px;
+                color: var(--form-temp--text-color);
+                &::placeholder{
+                    color: var(--form-temp-input-placeholder);
+                    opacity: 0.5;
+                }
+            }
+        }
+    }
 }
