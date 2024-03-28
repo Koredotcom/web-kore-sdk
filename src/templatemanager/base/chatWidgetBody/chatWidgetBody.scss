@@ -5,6 +5,7 @@
     background-size: cover;
     overflow: auto;
     height: calc(100vh - 330px); // Need to remove
+    padding-bottom: 5px;
     .prev-message-list {
         display: none;
     }
