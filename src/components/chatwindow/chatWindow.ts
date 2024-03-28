@@ -2391,10 +2391,18 @@ showError (response:any) {
     if (response.errors && response.errors[0]) {
       $('.errorMsgBlock').text(response.errors[0].msg);
       $('.errorMsgBlock').addClass('showError');
+      if (document.querySelector('.kore-sdk-error-section')) {
+        document.querySelector('.kore-sdk-error-section').textContent = response.errors[0].msg;
+        document.querySelector('.kore-sdk-error-section').classList.remove('hide');
+      }
     }
   } catch (e) {
     $('.errorMsgBlock').text(response);
     $('.errorMsgBlock').addClass('showError');
+    if (document.querySelector('.kore-sdk-error-section')) {
+      document.querySelector('.kore-sdk-error-section').textContent = response;
+      document.querySelector('.kore-sdk-error-section').classList.remove('hide');
+    }
   }
 };
 
