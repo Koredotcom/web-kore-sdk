@@ -4,7 +4,7 @@ import './welcomeScreenContainer.scss';
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import IconsManager from '../iconsManager';
-import CarouselButtons from '../../templates/v3/carouselTemplate/carouselButtons';
+import CarouselButtons from '../../templates/carouselTemplate/carouselButtons';
 
 export function WelcomeScreenContainer(props: any) {
     const hostInstance = props.hostInstance;

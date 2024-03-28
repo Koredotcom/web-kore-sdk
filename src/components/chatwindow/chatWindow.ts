@@ -3,7 +3,7 @@ import requireKr from '../base-sdk/kore-bot-sdk-client';
 import TemplateManager from '../../templatemanager/templateManager';
 import KoreHelpers from '../../utils/helpers';
 import EventEmitter from '../../utils/EventEmiter'
-import MessageTemplate from '../../templatemanager/templates/messageTemplate/messageTemplate';
+import MessageTemplate from '../../plugins/v2Plugin/templates/messageTemplate/messageTemplate';
 import KRPerfectScrollbar from '../../libs/perfectscroll/perfect-scrollbar';
 import './../../libs/perfectscroll/css/perfect-scrollbar.min.css';
 import './sass/chatWindow.scss';
@@ -14,12 +14,12 @@ import chatConfig from './config/kore-config';
 // import welcomeScreeContainer from '../../preact/templates/base/welcomeScreeContainer/welcomeScreeContainer';
 
 import { getHTML } from '../../templatemanager/base/domManager';
-import { Message } from '../../templatemanager/templates/v3/message/message';
+import { Message } from '../../templatemanager/templates/message/message';
 import { DateSeparator } from '../../templatemanager/base/misc/dateSeparator/dateSeparator';
 import { HistoryLoader } from '../../templatemanager/base/misc/historyLoaderMsg/historyLoaderMsg';
 import { ChatContainer } from '../../templatemanager/base/chatContainer/chatContainer';
 import EventManager from '../../templatemanager/base/eventManager';
-import BrandingManager from '../../templatemanager/templates/v3/brandingManager';
+import BrandingManager from '../../templatemanager/templates/brandingManager';
 import { ActionsBottomSlider } from '../../templatemanager/base/actionsButtonSlider/actionsBottomSlider';
 import { ActionsModal } from '../../templatemanager/base/actionsModal/actionsModal';
 const bot = requireKr('/KoreBot.js').instance();
@@ -2468,7 +2468,9 @@ installPlugin  (plugin:any) {
 scrollTop  () {
   const me:any = this;
   const _chatContainer = me.chatEle;
-  _chatContainer.scrollTop($('.chat-container').prop('scrollHeight'));
+  if (me.config.UI.version == 'v2') {
+    _chatContainer.scrollTop($('.chat-container').prop('scrollHeight'));
+  }
 };
 focusInputTextbox () {
   const me:any = this;

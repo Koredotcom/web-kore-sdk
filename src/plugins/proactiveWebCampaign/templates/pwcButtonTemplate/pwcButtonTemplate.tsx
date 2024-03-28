@@ -1,5 +1,5 @@
 import { h, Fragment } from 'preact';
-import BaseChatTemplate from '../../../../templatemanager/templates/v3/baseChatTemplate';
+import BaseChatTemplate from '../../../../templatemanager/templates/baseChatTemplate';
 import './pwcButtonTemplate.scss';
 export function Button(props: any) {
     const msgData = props.msgData;
