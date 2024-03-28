@@ -62,6 +62,7 @@ class ProactiveWebCampaignPlugin {
                 'iId': me.hostInstance.config.botOptions.botInfo.taskBotId,
                 'user': me.hostInstance.config.botOptions.userIdentity,
                 'client': 'sdk',
+                'userId': this.authInfo.userInfo.userId,
                 'type': 'pwe_message',
                 'from': 'bot',
                 'botInfo': {
@@ -284,6 +285,7 @@ class ProactiveWebCampaignPlugin {
             'resourceid': '/pwe_message',
             'user': me.hostInstance.config.botOptions.userIdentity,
             'type': 'pwe_message',
+            'userId': this.authInfo.userInfo.userId,
             'botInfo': {
                 'chatBot': me.hostInstance._botInfo.name,
                 'taskBotId': me.hostInstance._botInfo._id
@@ -402,6 +404,7 @@ class ProactiveWebCampaignPlugin {
                     'resourceid': '/pwe_message',
                     'user': me.hostInstance.config.botOptions.userIdentity,
                     'type': 'pwe_message',
+                    'userId': this.authInfo.userInfo.userId,
                     'botInfo': {
                         'chatBot': me.hostInstance._botInfo.name,
                         'taskBotId': me.hostInstance._botInfo._id
@@ -600,6 +603,7 @@ class ProactiveWebCampaignPlugin {
                     'resourceid': '/pwe_message',
                     'user': me.hostInstance.config.botOptions.userIdentity,
                     'type': 'pwe_message',
+                    'userId': this.authInfo.userInfo.userId,
                     'botInfo': {
                         'chatBot': me.hostInstance._botInfo.name,
                         'taskBotId': me.hostInstance._botInfo._id
