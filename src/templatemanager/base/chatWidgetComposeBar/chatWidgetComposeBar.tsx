@@ -39,6 +39,12 @@ export function ChatWidgetComposeBar(props: any) {
         hostInstance.bottomSliderAction('', getHTML(Menu, '', hostInstance)) 
     }
 
+    const checkForFileUploadPlugin = () => {
+        if (hostInstance.plugins && !hostInstance.plugins['KoreMultiFileUploaderPlugin']) {
+            alert('Please install File Uploader Plugin...');
+        }
+    }
+
     useEffect(() => {
         hostInstance.eventManager.removeEventListener('.send-btn', 'click');
         hostInstance.eventManager.addEventListener('.send-btn', 'click', (event: any) => {
@@ -135,7 +141,7 @@ export function ChatWidgetComposeBar(props: any) {
                         <path d="M2.5 3.125C2.15482 3.125 1.875 3.40482 1.875 3.75C1.875 4.09518 2.15482 4.375 2.5 4.375H17.5C17.8452 4.375 18.125 4.09518 18.125 3.75C18.125 3.40482 17.8452 3.125 17.5 3.125H2.5ZM2.5 9.375C2.15482 9.375 1.875 9.65482 1.875 10C1.875 10.3452 2.15482 10.625 2.5 10.625H17.5C17.8452 10.625 18.125 10.3452 18.125 10C18.125 9.65482 17.8452 9.375 17.5 9.375H2.5ZM2.5 15.625C2.15482 15.625 1.875 15.9048 1.875 16.25C1.875 16.5952 2.15482 16.875 2.5 16.875H17.5C17.8452 16.875 18.125 16.5952 18.125 16.25C18.125 15.9048 17.8452 15.625 17.5 15.625H2.5Z" fill="#697586"/>
                     </svg>
                 </button> }
-                { brandingInfo.footer.buttons.attachment.show && <button className="action-btn attachmentUpload" type="button" aria-label="Attachments">
+                { brandingInfo.footer.buttons.attachment.show && <button className="action-btn attachmentUpload" type="button" aria-label="Attachments" onClick={() => checkForFileUploadPlugin()}>
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                         <path d="M10 2.5C12.7733 2.5 15 4.79988 15 7.61355V13.341C15 13.7049 14.6924 13.9999 14.313 13.9999C13.9547 13.9999 13.6605 13.7368 13.6289 13.401L13.6261 13.341V7.61355C13.6261 5.5067 11.9908 3.81769 10 3.81769C8.00922 3.81769 6.37393 5.5067 6.37393 7.61355V13.9774C6.37393 15.1951 7.40322 16.1823 8.67291 16.1823C9.94261 16.1823 10.9719 15.1951 10.9719 13.9774V7.61355C10.9719 7.09876 10.5368 6.68143 10 6.68143C9.4856 6.68143 9.06454 7.0647 9.03035 7.54973L9.0281 7.61355V13.341C9.0281 13.7049 8.72054 13.9999 8.34114 13.9999C7.98282 13.9999 7.68857 13.7368 7.65698 13.401L7.65418 13.341V7.61355C7.65418 6.37101 8.70444 5.36374 10 5.36374C11.2956 5.36374 12.3458 6.37101 12.3458 7.61355L12.3458 13.9774C12.3453 15.9224 10.7011 17.5 8.67291 17.5C6.64442 17.5 5 15.9229 5 13.9774V7.61355C5 4.79988 7.22674 2.5 10 2.5Z" fill="#697586"/>
                     </svg>
