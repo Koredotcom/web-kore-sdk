@@ -2,7 +2,7 @@
 
 ###### Preview
 
-![dateRange](https://user-images.githubusercontent.com/58174664/148942165-48d1ced1-5ad4-474b-92ae-a29f456b8fe6.PNG)
+<img width="240" alt="date range" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/65ae8ba3-7269-4968-8537-3abf4f2241e5">
 
 
 ###### Message Payload

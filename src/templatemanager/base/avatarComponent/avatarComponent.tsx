@@ -45,8 +45,11 @@ export function AvatarComponent(props: any) {
     let buttonStyle = "buttons-triger-click-wrapper animation-slide-up btn-anim-send";
     let avatarBgStyle = "avatar-bg";
 
-    if (brandingInfo.chat_bubble.icon.type == 'custom' || brandingInfo.chat_bubble.minimise.type == 'custom') {
+    if (brandingInfo.chat_bubble.icon.type == 'custom') {
         avatarBgStyle = avatarBgStyle + ' custom-image-avatar-bg';
+    }
+    if (brandingInfo.chat_bubble.minimise.type == 'custom') {
+        avatarBgStyle = avatarBgStyle + ' custom-image-minimize-avatar-bg';
     }
 
     if (pwcCampaign.enable) {

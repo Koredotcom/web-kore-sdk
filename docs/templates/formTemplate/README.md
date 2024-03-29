@@ -2,8 +2,8 @@
 
 ###### Preview
 
+<img width="236" alt="form" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/0412b6a8-6236-4084-8957-34eb2479d0d2">
 
-![formTemplate](https://user-images.githubusercontent.com/58174664/148942805-bde4a670-f5d7-488a-907f-39fda63110f8.PNG)
 
 
 

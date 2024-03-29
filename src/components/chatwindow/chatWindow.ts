@@ -3,7 +3,7 @@ import requireKr from '../base-sdk/kore-bot-sdk-client';
 import TemplateManager from '../../templatemanager/templateManager';
 import KoreHelpers from '../../utils/helpers';
 import EventEmitter from '../../utils/EventEmiter'
-import MessageTemplate from '../../templatemanager/templates/messageTemplate/messageTemplate';
+import MessageTemplate from '../../plugins/v2Plugin/templates/messageTemplate/messageTemplate';
 import KRPerfectScrollbar from '../../libs/perfectscroll/perfect-scrollbar';
 import './../../libs/perfectscroll/css/perfect-scrollbar.min.css';
 import './sass/chatWindow.scss';
@@ -14,12 +14,12 @@ import chatConfig from './config/kore-config';
 // import welcomeScreeContainer from '../../preact/templates/base/welcomeScreeContainer/welcomeScreeContainer';
 
 import { getHTML } from '../../templatemanager/base/domManager';
-import { Message } from '../../templatemanager/templates/v3/message/message';
+import { Message } from '../../templatemanager/templates/message/message';
 import { DateSeparator } from '../../templatemanager/base/misc/dateSeparator/dateSeparator';
 import { HistoryLoader } from '../../templatemanager/base/misc/historyLoaderMsg/historyLoaderMsg';
 import { ChatContainer } from '../../templatemanager/base/chatContainer/chatContainer';
 import EventManager from '../../templatemanager/base/eventManager';
-import BrandingManager from '../../templatemanager/templates/v3/brandingManager';
+import BrandingManager from '../../templatemanager/templates/brandingManager';
 import { ActionsBottomSlider } from '../../templatemanager/base/actionsButtonSlider/actionsBottomSlider';
 import { ActionsModal } from '../../templatemanager/base/actionsModal/actionsModal';
 const bot = requireKr('/KoreBot.js').instance();
@@ -243,6 +243,7 @@ initShow  (config:any) {
 
   me.reWriteWebHookURL(me.config);
   window._chatHistoryLoaded = false;
+  me.setDefaultIcons();
   if(me.config?.mockMode?.enable){
     me.setBranding()
   }else{
@@ -262,7 +263,7 @@ initShow  (config:any) {
   me.config.botOptions.botInfo.name = KoreHelpers.prototypes.escapeHTML(me.config.botOptions.botInfo.name);
   me._botInfo = me.config.botOptions.botInfo;
   me.config.botOptions.botInfo = {
-    chatBot: me._botInfo.name, taskBotId: me._botInfo._id, customData: me._botInfo.customData, metaTags: me._botInfo.metaTags, tenanturl: me._botInfo.tenanturl,
+    chatBot: me._botInfo.name, taskBotId: me._botInfo._id, customData: me._botInfo.customData, metaTags: me._botInfo.metaTags, tenanturl: me._botInfo.tenanturl, uiVersion: me.config.UI.version
   };
   me.pwcInfo = {};
   me.pwcInfo.dataFalg = false;
@@ -291,7 +292,7 @@ initShow  (config:any) {
   me.config.botOptions.chatHistory = me.config.chatHistory;
   me.config.botOptions.handleError = me.config.handleError;
   me.config.botOptions.googleMapsAPIKey = me.config.googleMapsAPIKey;
-  if(!me.config?.mockMode?.enable){
+  if(!me.config?.mockMode?.enable && me.config.UI.version == 'v3'){
   me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
   }  
   let chatWindowHtml:any;
@@ -947,11 +948,9 @@ bindEvents  () {
       if (me.config.multiPageApp && me.config.multiPageApp.enable) {
         me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
       }
-      if (!me.misc.chatOpened) {
-        me.bot.logInComplete(); // Start api call & ws
-        me.misc.chatOpened = true;
+      if (!me.config.isConversationTesting) {
+        me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
       }
-      // me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
       me.skipedInit = false;
     }
     const evt = document.createEvent('HTMLEvents');
@@ -1791,7 +1790,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
           chatContainer.appendChild(messageHtml);
         }
         eleHeight = messageHtml.offsetHeight;
-        if (!me.historyLoading && me.config.branding.general.sounds.enable && !document.querySelector('.chat-window-main-section')?.classList?.contains('minimize-chat')) {
+        if (!me.historyLoading && me.config.branding.general.sounds.enable && !document.querySelector('.kore-chat-window-main-section')?.classList?.contains('minimize-chat')) {
           if (msgData?.type === 'bot_response') {
             if (me.config.branding.general.sounds.on_new_msg.url != 'None') {
               const newMsgSound = new Audio(me.config.branding.general.sounds.on_new_msg.url);
@@ -2392,10 +2391,18 @@ showError (response:any) {
     if (response.errors && response.errors[0]) {
       $('.errorMsgBlock').text(response.errors[0].msg);
       $('.errorMsgBlock').addClass('showError');
+      if (document.querySelector('.kore-sdk-error-section')) {
+        document.querySelector('.kore-sdk-error-section').textContent = response.errors[0].msg;
+        document.querySelector('.kore-sdk-error-section').classList.remove('hide');
+      }
     }
   } catch (e) {
     $('.errorMsgBlock').text(response);
     $('.errorMsgBlock').addClass('showError');
+    if (document.querySelector('.kore-sdk-error-section')) {
+      document.querySelector('.kore-sdk-error-section').textContent = response;
+      document.querySelector('.kore-sdk-error-section').classList.remove('hide');
+    }
   }
 };
 
@@ -2461,7 +2468,9 @@ installPlugin  (plugin:any) {
 scrollTop  () {
   const me:any = this;
   const _chatContainer = me.chatEle;
-  _chatContainer.scrollTop($('.chat-container').prop('scrollHeight'));
+  if (me.config.UI.version == 'v2') {
+    _chatContainer.scrollTop($('.chat-container').prop('scrollHeight'));
+  }
 };
 focusInputTextbox () {
   const me:any = this;
@@ -2699,6 +2708,41 @@ applyVariableValue (key:any,value:any,type:any){
       me.chatEle.querySelector('.welcome-chat-section')?.classList.remove(me.config.branding.chat_bubble.expand_animation);
       me.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
       me.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize');
+    }
+  }
+
+  setDefaultIcons() {
+    const me: any = this;
+    if (!me.config.enableThemes) {
+      let url = me.config.botOptions.koreAPIUrl;
+      if (url.indexOf('api/') >= 0) {
+        url = url.replace(/\/api\//, '/');
+      }
+
+      if (url.indexOf('1.1') >= 0) {
+        url = url.replace(/\/1\.1/, '/');
+      }
+
+      if (me.config.branding.welcome_screen.logo.type == 'default') {
+        me.config.branding.welcome_screen.logo.logo_url =  url + 'assets/websdkthemes/' + me.config.branding.welcome_screen.logo.logo_url
+      }
+      me.config.branding.welcome_screen.promotional_content.promotions.forEach((banner: any) => {
+        if (banner.type == 'default') {
+          banner.banner = url + 'assets/websdkthemes/' + banner.banner;
+        }
+      });
+      if (me.config.branding.body.background.imgType == 'default') {
+        me.config.branding.body.background.img = url + 'assets/websdkthemes/' + me.config.branding.body.background.img;
+      }
+      if (me.config.branding.body.agent_message.icon.type == 'default') {
+        me.config.branding.body.agent_message.icon.icon_url = url + 'assets/websdkthemes/' + me.config.branding.body.agent_message.icon.icon_url;
+      }
+      const soundTypes = ['on_audio_call', 'on_close', 'on_msg_send', 'on_new_msg', 'on_open', 'on_proactive_msg', 'on_video_call'];
+      soundTypes.forEach((type) => {
+        if (me.config.branding.general.sounds[type]['type'] == 'default') {
+          me.config.branding.general.sounds[type]['url'] = url + 'assets/websdkthemes/' + me.config.branding.general.sounds[type]['url'];
+        }
+      });
     }
   }
 

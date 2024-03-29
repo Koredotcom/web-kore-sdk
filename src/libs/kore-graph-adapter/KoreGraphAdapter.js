@@ -2057,8 +2057,8 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
                 })
                 .on('mouseover', function() { // on mouse in show line, circles and text
 
-                    if ($('#myPreviewModal').css('display') === 'block') {
-                        $('.lineChartChildDiv .mouse-per-line').hide();
+                    if ($('.modal_body_actions').css('display') === 'block') {
+                        $('.line-chart-inline .lineChartChildDiv .mouse-per-line').hide();
                     } else {
                         $('.lineChartChildDiv .mouse-per-line').show();
                     }
@@ -2664,10 +2664,10 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
               }
               if (msgData.message[0].component.payload.template_type !== 'linechart' && msgData.message[0].component.payload.template_type !== 'piechart') {
                   var dimens = {};
-                  dimens.outerWidth = 500;
-                  dimens.outerHeight = 460;
+                  dimens.outerWidth = 600;
+                  dimens.outerHeight = 340;
                   dimens.innerWidth = 380;
-                  dimens.innerHeight = 350;
+                  dimens.innerHeight = 250;
                   dimens.legendRectSize = 15;
                   dimens.legendSpacing = 3;
                   if (msgData.message[0].component.payload.template_type === 'barchart' && msgData.message[0].component.payload.direction === 'vertical') {
@@ -2688,9 +2688,9 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
               } else if (msgData.message[0].component.payload.template_type === 'linechart') {
                   var dimens = {};
                   dimens.outerWidth = 520;
-                  dimens.outerHeight = 450;
+                  dimens.outerHeight = 350;
                   dimens.innerWidth = 400;
-                  dimens.innerHeight = 350;
+                  dimens.innerHeight = 240;
                   dimens.legendRectSize = 15;
                   dimens.legendSpacing = 4;
                   //  KoreGraphAdapter.drawD3lineChart(data.data, dimens, '.chartContainerDiv', 12);
@@ -2698,7 +2698,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
               } else if (msgData.message[0].component.payload.pie_type) {
                   var dimens = {};
                   dimens.width = 520;
-                  dimens.height = 400;
+                  dimens.height = 350;
                   dimens.legendRectSize = 15;
                   dimens.legendSpacing = 4;
                   if (msgData.message[0].component.payload.pie_type === 'regular') {
