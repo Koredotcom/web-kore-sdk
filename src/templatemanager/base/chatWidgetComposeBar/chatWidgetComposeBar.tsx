@@ -45,6 +45,12 @@ export function ChatWidgetComposeBar(props: any) {
         }
     }
 
+    const checkForSTTPlugin = () => {
+        if (hostInstance.plugins && !hostInstance.plugins['WebKitSTT']) {
+            alert('Please install Speech To Text Plugin...');
+        }
+    }
+
     useEffect(() => {
         hostInstance.eventManager.removeEventListener('.send-btn', 'click');
         hostInstance.eventManager.addEventListener('.send-btn', 'click', (event: any) => {
@@ -168,7 +174,7 @@ export function ChatWidgetComposeBar(props: any) {
                     <textarea className="typing-text-area disableComposeBar" id="typing-text-area" placeholder={brandingInfo.footer.compose_bar.placeholder}></textarea>
                 </div>
                 <div className="compose-voice-text">
-                    <button className="voice-compose-btn" type="button" aria-label="Voice Compose Button">
+                    <button className="voice-compose-btn" type="button" aria-label="Voice Compose Button" onClick={() => checkForSTTPlugin()}>
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                         <path d="M10 1.875C8.28613 1.875 6.875 3.28613 6.875 5V10C6.875 11.7139 8.28613 13.125 10 13.125C11.7139 13.125 13.125 11.7139 13.125 10V5C13.125 3.28613 11.7139 1.875 10 1.875ZM10 3.125C11.0352 3.125 11.875 3.96484 11.875 5V10C11.875 11.0352 11.0352 11.875 10 11.875C8.96484 11.875 8.125 11.0352 8.125 10V5C8.125 3.96484 8.96484 3.125 10 3.125ZM5 9.375C4.65482 9.375 4.375 9.65482 4.375 10C4.375 12.876 6.57715 15.2441 9.375 15.5615V16.875H7.5C7.15482 16.875 6.875 17.1548 6.875 17.5C6.875 17.8452 7.15482 18.125 7.5 18.125H12.5C12.8452 18.125 13.125 17.8452 13.125 17.5C13.125 17.1548 12.8452 16.875 12.5 16.875H10.625V15.5615C13.4229 15.2441 15.625 12.876 15.625 10C15.625 9.65482 15.3452 9.375 15 9.375C14.6548 9.375 14.375 9.65482 14.375 10C14.375 12.4072 12.4072 14.375 10 14.375C7.59277 14.375 5.625 12.4072 5.625 10C5.625 9.65482 5.34518 9.375 5 9.375Z" fill="white"/>
                     </svg>
