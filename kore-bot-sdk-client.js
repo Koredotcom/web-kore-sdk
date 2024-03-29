@@ -1467,7 +1467,7 @@ KoreRTMClient.prototype._onStart = function _onStart(err, data) {
   } else {
     if(__reconnect__){
       data.url = data.url + "&isReconnect=true";
-      data.url = data.url + "&ConnectionMode=keepAlive"
+      data.url = data.url + "&ConnectionMode=Reconnect"
     } else {
       if (this.socketConfig && this.socketConfig?.socketUrl &&
         this.socketConfig?.socketUrl?.queryParams && Object.keys(this.socketConfig.socketUrl.queryParams).length > 0) {
