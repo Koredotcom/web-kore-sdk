@@ -1790,7 +1790,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
           chatContainer.appendChild(messageHtml);
         }
         eleHeight = messageHtml.offsetHeight;
-        if (!me.historyLoading && me.config.branding.general.sounds.enable && !document.querySelector('.chat-window-main-section')?.classList?.contains('minimize-chat')) {
+        if (!me.historyLoading && me.config.branding.general.sounds.enable && !document.querySelector('.kore-chat-window-main-section')?.classList?.contains('minimize-chat')) {
           if (msgData?.type === 'bot_response') {
             if (me.config.branding.general.sounds.on_new_msg.url != 'None') {
               const newMsgSound = new Audio(me.config.branding.general.sounds.on_new_msg.url);

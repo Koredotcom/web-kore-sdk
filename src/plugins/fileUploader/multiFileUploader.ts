@@ -823,7 +823,7 @@ class KoreMultiFileUploaderPlugin {
     }  
     element.find('.img-block').html(icon);
 
-    $('.chat-window-main-section').find('.uploaded-attachment-data').append(element);
+    $('.kore-chat-window-main-section').find('.uploaded-attachment-data').append(element);
 
     element.find('.delete-upload').on('click', (e) => {
       if (!me.uploadingInProgress) {
