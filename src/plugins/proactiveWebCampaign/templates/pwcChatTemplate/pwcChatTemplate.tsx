@@ -7,7 +7,11 @@ export function Chat(props: any) {
         data: props.msgData.layoutData
     };
     pwcCampaign.data.messages.forEach((message: any, index: number)=> {
-        pwcCampaign.data.messages[index].value = atob(message.value);
+        try {
+            pwcCampaign.data.messages[index].value = decodeURIComponent(atob(message.value));
+        } catch(err){
+            // Do nothing
+        }
     });
     let actionsList: any;
     let defaultActionsList: any = [
