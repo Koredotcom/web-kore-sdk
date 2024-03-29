@@ -1,4 +1,4 @@
-import {chatConfig,chatWindow,AgentDesktopPlugin,BrowserTTS} from '../../../../../dist/kore-web-sdk.esm.browser.js';
+import {chatConfig,chatWindow,AgentDesktopPlugin,ProactiveWebCampaignPlugin, BrowserTTS} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 import {WebKitSTT} from '../../../../../dist/kore-web-sdk.esm.browser.js';
 
 let chatWindowInstance = new chatWindow();
