@@ -1,3 +1,10 @@
+### 10.1.23
+
+- SDK Release Mar 30, 2024
+* Bug fixes
+  * apiFailure event added for webhook failure calls
+  * close button tooltip fix
+
 ### 10.1.22
 
 - SDK Release Mar 23, 2024
