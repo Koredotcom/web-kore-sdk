@@ -34,10 +34,10 @@ export function Message(props: any) {
         userStyle = userStyle + ' time-stamp-show-hover';
     }
 
-    if (brandingInfo.general.font.size == 'small') {
+    if (brandingInfo.body.font.size == 'small') {
         botStyle = botStyle + ' small_text';
         userStyle = userStyle + ' small_text';
-    } else if (brandingInfo.general.font.size == 'large') {
+    } else if (brandingInfo.body.font.size == 'large') {
         botStyle = botStyle + ' large_text';
         userStyle = userStyle + ' large_text';  
     }

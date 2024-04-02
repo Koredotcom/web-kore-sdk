@@ -11,11 +11,6 @@ const BrandingJSON = {
       "secondary_text": "#FFFFFF",
       "useColorPaletteOnly": true
     },
-    "font": {
-      "family": "Inter",
-      "size": "medium",
-      "style": ""
-    },
     "sounds": {
       "enable": false,
       "on_audio_call": {
@@ -337,6 +332,11 @@ const BrandingJSON = {
       "imgType": "default",
       "name": "bg.png",
       "fileId": ""
+    },
+    "font": {
+      "family": "Inter",
+      "size": "medium",
+      "style": ""
     },
     "user_message": {
       "bg_color": "#175CD3",
