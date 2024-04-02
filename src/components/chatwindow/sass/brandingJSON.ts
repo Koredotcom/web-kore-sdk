@@ -76,10 +76,10 @@ const BrandingJSON = {
       "header": "Hello",
       "messages": [
         {
-          "title": "Welcome to support",
+          "title": "Welcome to support"
         },
         {
-          "title": "Can I help you any way?",
+          "title": "Can I help you any way?"
         }
       ],
       "buttons": [
