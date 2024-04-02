@@ -145,7 +145,7 @@ export function AvatarComponent(props: any) {
                 {hostInstance.config.branding.chat_bubble.proactive.show && !hostInstance.config.pwcConfig.enable && <div className="content-info">
                     {hostInstance.config.branding.chat_bubble.proactive.messages.map((msg: any, ind: any) => (
                         <div className="text-content animation-slide-up text-heading-one" role="contentinfo" aria-labelledby={msg.title}>
-                            {msg.header && <h4 id="helojohn">{dynamicContextResolver(msg.header, hostInstance.config.UIContext)}</h4>}
+                            {ind == 0 && hostInstance.config.branding.chat_bubble.proactive.header && <h4 id="helojohn">{dynamicContextResolver(hostInstance.config.branding.chat_bubble.proactive.header, hostInstance.config.UIContext)}</h4>}
                             <p className="help-text-content">{dynamicContextResolver(msg.title, hostInstance.config.UIContext)}</p>
                             {ind == 0 && <span className="close-avatar-content" role="contentinfo" aria-label="close" onClick={closeHelp}>
                                 <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
