@@ -4,7 +4,7 @@ class BrandingManager {
     this.applyVariableValue('color', data.general.colors.secondary, 'global', 'secondary');
     this.applyVariableValue('text', data.general.colors.primary_text, 'global', 'primary');
     this.applyVariableValue('text', data.general.colors.secondary_text, 'global', 'secondary');
-    this.applyVariableValue('family', data.body.font.family, 'global', 'font');
+    this.applyVariableValue('family', data.general.font.family, 'global', 'font');
     if (data.general.colors.useColorPaletteOnly) {
       const colorArr = [
         { key: '--chat-sdk-branding--chat_bubble-bg-primary_color', type: 'primary' },
@@ -136,7 +136,7 @@ class BrandingManager {
         }
       }
     }
-    this.applyFonts(data.body.font.family);
+    this.applyFonts(data.general.font.family);
   }
 
   applyVariableValue(property: any, value: any, key: any, subKey: any) {
