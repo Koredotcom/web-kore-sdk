@@ -2713,7 +2713,7 @@ applyVariableValue (key:any,value:any,type:any){
 
   setDefaultIcons() {
     const me: any = this;
-    if (!me.config.enableThemes) {
+    if (!me.config.enableThemes && !me.config.isPlatform) {
       let url = me.config.botOptions.koreAPIUrl;
       if (url.indexOf('api/') >= 0) {
         url = url.replace(/\/api\//, '/');

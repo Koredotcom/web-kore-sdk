@@ -1,8 +1,9 @@
 const BrandingJSON = {
   "general": {
-    "bot_icon": "url",
-    "size": "small",
+    "version": 1,
+    "bot_icon": "",
     "themeType": "light",
+    "widgetPanel": false,
     "colors": {
       "primary": "#175CD3",
       "secondary": "#EAECF0",
@@ -72,14 +73,13 @@ const BrandingJSON = {
     },
     "proactive": {
       "show": true,
+      "header": "Hello",
       "messages": [
         {
-          "title": "Welcome to support",
-          "header": "Hello"
+          "title": "Welcome to support"
         },
         {
-          "title": "Can I help you any way?",
-          "header": ""
+          "title": "Can I help you any way?"
         }
       ],
       "buttons": [
@@ -129,7 +129,10 @@ const BrandingJSON = {
     "bottom_background": {
       "color": "#EAECF0"
     },
-    "templates": [],
+    "widgets": {
+      "show": false,
+      "widgetItems": []
+    },
     "starter_box": {
       "show": true,
       "icon": {
@@ -243,26 +246,26 @@ const BrandingJSON = {
     "buttons": {
       "close": {
         "show": true,
-        "icon": "/images/close-large.svg"
+        "icon": ""
       },
       "minimise": {
         "show": false,
-        "icon": "url|icomoon"
+        "icon": ""
       },
       "expand": {
         "show": false,
-        "icon": "url|icomoon"
+        "icon": ""
       },
       "reconnect": {
         "show": false,
-        "icon": "url|icomoon"
+        "icon": ""
       },
       "help": {
         "show": true,
         "action": {
           "type": "postback|url",
           "value": "https://kore.ai/",
-          "icon": "url|icomoon"
+          "icon": ""
         }
       },
       "live_agent": {
@@ -270,7 +273,7 @@ const BrandingJSON = {
         "action": {
           "type": "postback|url",
           "value": "connect to agent",
-          "icon": "url|icomoon"
+          "icon": ""
         }
       }
     }
@@ -293,27 +296,31 @@ const BrandingJSON = {
             "title": "About",
             "type": "postback",
             "value": "About",
-            "icon": "url|icomoon"
+            "icon": ""
           },
           {
             "title": "Kore.ai",
             "type": "url",
             "value": "https://kore.ai/",
-            "icon": "url|icomoon"
+            "icon": ""
           }
         ]
       },
       "emoji": {
         "show": false,
-        "icon": "url|icomoon"
+        "icon": ""
       },
       "microphone": {
         "show": true,
-        "icon": "url|icomoon"
+        "icon": ""
       },
       "attachment": {
         "show": true,
-        "icon": "url|icomoon"
+        "icon": ""
+      },
+      "speaker": {
+        "show": false,
+        "icon": ""
       }
     }
   },
@@ -329,7 +336,7 @@ const BrandingJSON = {
     "font": {
       "family": "Inter",
       "size": "medium",
-      "style": "1|2|3"
+      "style": ""
     },
     "user_message": {
       "bg_color": "#175CD3",
@@ -350,11 +357,13 @@ const BrandingJSON = {
       },
       "title": {
         "name": "Kore Agent",
-        "color": "#101828"
+        "color": "#101828",
+        "type": "default"
       },
       "sub_title": {
         "name": "Agent servcie",
-        "color": "#101828"
+        "color": "#101828",
+        "type": "default"
       }
     },
     "time_stamp": {
@@ -362,7 +371,9 @@ const BrandingJSON = {
       "show_type": "always",
       "position": "top",
       "separator": "line",
-      "color": "#101828"
+      "color": "#101828",
+      "time_format": "12",
+      "date_format": "dd/mm/yyyy"
     },
     "typing_indicator": {
       "icon": "",
@@ -378,12 +389,7 @@ const BrandingJSON = {
       "bg_color": "red",
       "color": "white"
     },
-    "bubble_style": "balloon",
-    "primaryColor": "#3F42D4",
-    "primaryHoverColor": "#DE4BBC",
-    "secondaryColor": "#3639E6",
-    "secondaryHoverColor": "#B1B2F9",
-    "img": "6495705b0d5bbd027d2e39ad"
+    "bubble_style": "balloon"
   }
 }
 export default BrandingJSON
