@@ -32,8 +32,18 @@ export function DigitalFormExtension(props: any) {
 export function DigitalForm(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
-    const handleForm = () => {
-        hostInstance.bottomSliderAction('', getHTML(DigitalFormExtension, msgData, hostInstance), true)
+    const handleForm = (data: any, msgId: any) => {
+        if (data.renderType == 'inline') {
+            hostInstance.chatEle.querySelector(`.inline-iframe-${msgId}`).style.display = 'block';
+            setTimeout(() => {
+                hostInstance.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
+                    top: hostInstance.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight,
+                    behavior: 'smooth'
+                });
+            }, 100);
+        } else {
+            hostInstance.bottomSliderAction('', getHTML(DigitalFormExtension, msgData, hostInstance), true)
+        }
     }
     if (msgData?.message?.[0]?.component?.payload?.template_type === 'button' && msgData?.message?.[0]?.component?.formData) {
         return (
@@ -49,11 +59,14 @@ export function DigitalForm(props: any) {
                         <p>{msgData?.message?.[0]?.component?.payload?.text}</p>
                         {
                             msgData.message[0].component.payload.buttons.map((ele: any) => (
-                                <button className="link-btn" onClick={handleForm}>{ele.title}</button>
+                                <button className="link-btn" onClick={() => handleForm(msgData?.message?.[0]?.component?.formData, msgData.messageId)}>{ele.title}</button>
                             ))
                         }
                     </div>
                 </div>
+                {msgData?.message?.[0]?.component?.formData && msgData?.message?.[0]?.component?.formData.renderType == 'inline' && <div className={`inline-iframe-container inline-iframe-${msgData.messageId}`} style={{ display: 'none' }}>
+                    <iframe className="iframe-section" src={props.msgData.message[0].component.formData.formLink}></iframe>
+                </div>}
             </div>
         );
     }

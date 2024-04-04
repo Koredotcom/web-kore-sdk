@@ -470,10 +470,12 @@ openModal(template:any, showClose:any) {
   }
 }  else {
   if (!template) {
-    me.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');
-    setTimeout(() => {
-        me.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
-    }, 150);
+    if (me.chatEle.querySelector('.chat-actions-bottom-wraper')) {
+      me.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');
+      setTimeout(() => {
+          me.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
+      }, 150);  
+    }
   }
 }
 }
@@ -501,6 +503,9 @@ formAction(event:any) {
 } else {
   if (event && event.action === 'formSubmit') {
     me.openModal();
+    if (me.chatEle.querySelector('.inline-iframe-container')) {
+      me.chatEle.querySelector('.inline-iframe-container').remove();
+    }
   }
 }
 }
