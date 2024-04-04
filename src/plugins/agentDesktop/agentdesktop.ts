@@ -34,6 +34,9 @@ class AgentDesktopPlugin {
                 //me.AgentDesktop(response.userInfo.userId, response);
                 /** @ignore */
                 this.agentDesktopInfo = new AgentDesktopPluginScript(this.config);
+                // Connecting cobrowse session with the user data
+                this.authInfo = response;
+                this.cobrowseSession = new AgentDesktopPluginScript({...response, excludeRTM: true, isCobrowseSession: true});
             }
         });
         me.hostInstance.on('beforeViewInit', (chatEle: any) => {
@@ -95,11 +98,11 @@ class AgentDesktopPlugin {
             })
         });
 
-        me.hostInstance.on('jwtSuccess', (data: any) => {
+        /* me.hostInstance.on('jwtSuccess', (data: any) => {
             if (!this.authInfo) {
                 this.getAuthInfo(data);
             }
-        });
+        }); */
 
         me.removeEmptyBubblesInTemplate();
     }
@@ -367,6 +370,7 @@ class AgentDesktopPlugin {
     }
 
     getAuthInfo(data: any) {
+        // We are not using this method, leaving it for future purpose
         let me: any = this;
         let cwInstance = me.hostInstance;
 

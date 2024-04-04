@@ -35,12 +35,10 @@ class ProactiveWebCampaignPlugin {
                 me.onInit();
             }
         });
-        me.hostInstance.on('jwtSuccess', (data: any) => {
+        me.hostInstance.on("jwtGrantSuccess", (response: any) => {
             if (me.hostInstance.config.pwcConfig.enable) {
-            if (!this.authInfo) {
-                this.getAuthInfo(data);
+                this.authInfo = response;
             }
-        }
         });
     }
 
@@ -708,40 +706,6 @@ class ProactiveWebCampaignPlugin {
             window.sessionStorage.setItem('pwcLocationData', JSON.stringify(coordinates));
         }
         navigator.geolocation.getCurrentPosition(successCb);
-    }
-
-    getAuthInfo(data: any) {
-        let me: any = this;
-        let cwInstance = me.hostInstance;
-
-        const _payload: any = {
-            assertion: data.jwt,
-            botInfo: {
-                chatBot: cwInstance._botInfo.name,
-                taskBotId: cwInstance._botInfo._id
-            },
-            token: {}
-        }
-
-        const url = new URL(cwInstance.config.botOptions.koreAPIUrl);
-        fetch(url.protocol + '//' + url.host + '/api/oAuth/token/jwtgrant', {
-            "headers": {
-                "content-type": "application/json",
-            },
-            "body": JSON.stringify(_payload),
-            "method": "POST",
-        })
-            .then(res => {
-                if (res.ok) {
-                    return res.json();
-                }
-                throw new Error('Something went wrong');
-            })
-            .then((res: any) => {
-                this.authInfo = res;
-            }).catch(err => {
-                console.error(err)
-            })
     }
 
     async sendApiEvent(payload: string, route: string, campInstanceId?: string) {

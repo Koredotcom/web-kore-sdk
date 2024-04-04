@@ -1,5 +1,4 @@
 import { h, Fragment } from 'preact';
-import BaseChatTemplate from '../../../../templatemanager/templates/v3/baseChatTemplate';
 import { useEffect, useState } from 'preact/hooks';
 import './pwcChatTemplate.scss';
 export function Chat(props: any) {
