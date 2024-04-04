@@ -21,34 +21,23 @@ export function Chat(props: any) {
     let currentCampInstId = props.msgData.campInstId;
     const hostInstance = props.hostInstance;
     let [isAcceptTriggered, setAcceptTriggered] = useState(false);
-    // get actionsList
+    // get actionsList for a campaign
     hostInstance.campInfo.forEach((campaign: any)=> {
         if(campaign.campInstanceId === currentCampInstId){
             actionsList = defaultActionsList.filter((action: any) => campaign?.engagementStrategy?.channel.includes(action.value));
             return;
         }
     });
-    
-
     let buttonStyle = "buttons-triger-click-wrapper animation-slide-up btn-anim-send";
-
     if (pwcCampaign.data.appearance.buttonAlignment == 'singlerow') {
         buttonStyle = buttonStyle + ' buttons-single-row-block';
     } else if (pwcCampaign.data.appearance.buttonAlignment == 'stacked') {
         buttonStyle = buttonStyle + ' buttons-block-level';
     }
-    /* if (pwcCampaign.enable) {
-        if (pwcCampaign.data.appearance.dropShadow == 'lightShadow') {
-            avatarParentStyle = avatarParentStyle + ' box-shadow-light-avatar';
-        } else if (pwcCampaign.data.appearance.dropShadow == 'darkShadow') {
-            avatarParentStyle = avatarParentStyle + ' box-shadow-dark-avatar';
-        }
-    } */
     
     const handlePWCButtonEvent = (e: any) => {
         if(e.actionType == 'accept'){
             setAcceptTriggered(true);
-            console.log("isAcceptTriggered: ", isAcceptTriggered);
         }
         if (e.actionType == 'url') {
             let link = e.actionValue;
@@ -64,11 +53,9 @@ export function Chat(props: any) {
 
     const closePWCHelp = (e: any) => {
         hostInstance.chatEle.querySelector('.content-info').remove();
-        // updatePWCCampaignInfo({ enable: false, data: { buttons: [], messages: [], appearance: { messageBubbleAlignment : '', buttonAlignment: '', dropShadow: pwcCampaign.data.appearance.dropShadow}, messageHeaderConfig: { headerToggle: false, headerMessage: '', headerUpload: '', headerIcon: ''}}});
     }
 
-    const handleConversationAction = (e: any) => {
-        console.log("action Event got triggered: ", e);
+    const handleConversationAction = (action: any) => {
         hostInstance.welcomeScreenState = true;
         hostInstance.chatEle.classList.remove('minimize-chat');
         hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
@@ -92,21 +79,18 @@ export function Chat(props: any) {
             }
             
             let url = socketUrl.replace('&isReconnect=true', '');
-            socketUrl= url +"&pwe="+e;
+            socketUrl= url +"&pwe="+action;
             return socketUrl;
           };
         hostInstance.bot.logInComplete();
         setTimeout(()=>{
-            let msg = "connecting "+e;
+            let msg = "connecting "+action;
             hostInstance.sendMessage(msg);   
         },2000);
-        // closing the actions layout .actions-content
-        // hostInstance.chatEle.querySelector('.actions-content').remove();
         hostInstance.chatEle.querySelector('.welcome-chat-section-campaign').remove();
-        // .welcome-chat-section-campaign
         // setConversationInprogress in agentdesktop-script.js
-        if(e === 'audio' || e === 'video'){
-            hostInstance.plugins.AgentDesktopPlugin.agentDesktopInfo.setConversationInProgress(e, hostInstance);
+        if(action === 'audio' || action === 'video'){
+            hostInstance.plugins.AgentDesktopPlugin.agentDesktopInfo.setConversationInProgress(action, hostInstance);
         }
     }
 
@@ -232,13 +216,3 @@ export function Chat(props: any) {
     
 }
 export default Chat;
-/* class PWCChatTemplate extends BaseChatTemplate {
-    hostInstance: any = this;
-
-    renderMessage(msgData: any) {
-        return this.getHTMLFromPreact(Chat, msgData, this.hostInstance);
-    }
-
-}
-
-export default PWCChatTemplate; */

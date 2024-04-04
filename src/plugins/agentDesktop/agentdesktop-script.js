@@ -1288,7 +1288,6 @@ class AgentDesktopPluginScript  {
     vonbtnimg;
     drawEnabled = false;
     setConversationInProgress(conversationType, hostInstance){
-        // data can be sent through parameter and binded
         var campaignCallingTemplate = `
         <div class="campaign-calling-audio-static-wrapper">
                 <div class="icon_block">
@@ -1315,7 +1314,6 @@ class AgentDesktopPluginScript  {
             // Trigger event when cancel is clicked
             var cancelWebConv = koreJquery("#cancel-web-conversation");
             cancelWebConv.off('click').on('click', function (event) {
-                console.log("Cancel is clicked: ", event);
                 const messageToBot = {};
                 messageToBot["clientMessageId"] = new Date().getTime();
                 messageToBot["event"] = "close_agent_chat";
@@ -1325,7 +1323,6 @@ class AgentDesktopPluginScript  {
                 }
                 messageToBot["resourceid"] = "/bot.message";
                 hostInstance.koreChatWindow.close();
-                // hostInstance.sendMessage(messageToBot, (err) => { });
             });
         },2000);
     }

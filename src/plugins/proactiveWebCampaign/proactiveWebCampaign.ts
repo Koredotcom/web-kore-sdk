@@ -195,9 +195,6 @@ class ProactiveWebCampaignPlugin {
                     const chatContainer = getHTML(Chat, layoutData, this.hostInstance);
                     let avatarVariations = me.hostInstance.chatEle.querySelector('.avatar-actions');
                     avatarVariations.prepend(chatContainer);
-                    // avatar-variations-footer
-                    // TODO: append chatContainer to .avatar-actions in avatarVariations
-                    // let targetEle = actionsClass.append(chatContainer);
                     me.hostInstance.pwcInfo.dataFlag = true;
                     me.hostInstance.pwcInfo.chatData = {};
                     me.hostInstance.pwcInfo.chatData.enable = true;
