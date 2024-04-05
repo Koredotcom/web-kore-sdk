@@ -8,25 +8,13 @@ export function AvatarComponent(props: any) {
     const hostInstance = props.hostInstance;
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
     const [pwcCampaign, updatePWCCampaignInfo] = useState({ enable: false, data: { buttons: [], messages: [], appearance: { messageBubbleAlignment : '', buttonAlignment: '', dropShadow: ''}, messageHeaderConfig: { headerToggle: false, headerMessage: '', headerUpload: '', headerIcon: ''}}});
-    let [isAcceptTriggered, setAcceptTriggered] = useState(false);
     hostInstance.on('onBrandingUpdate', function (event: any) {
         updateBrandingInfo({...event.brandingData})
     });
-    const actionsList: any = ['chat', 'audio', 'video'];
 
     setInterval(() => {
         if (hostInstance?.pwcInfo?.dataFlag) {
             let pwcData = hostInstance.pwcInfo.chatData;
-            let messages = pwcData.data.messages;
-            let msgs: any = [];
-            messages.forEach((ele: any) => {
-                const obj = {
-                    type: ele.type,
-                    value: decodeURIComponent(ele.value)
-                }
-                msgs.push(obj);
-            });
-            pwcData.data.messages = msgs;
             updatePWCCampaignInfo({...pwcData});
             hostInstance.pwcInfo.dataFlag = false;
         }
@@ -53,11 +41,6 @@ export function AvatarComponent(props: any) {
     }
 
     if (pwcCampaign.enable) {
-        if (pwcCampaign.data.appearance.buttonAlignment == 'singlerow') {
-            buttonStyle = buttonStyle + ' buttons-single-row-block';
-        } else if (pwcCampaign.data.appearance.buttonAlignment == 'stacked') {
-            buttonStyle = buttonStyle + ' buttons-block-level';
-        }
         if (pwcCampaign.data.appearance.dropShadow == 'lightShadow') {
             avatarParentStyle = avatarParentStyle + ' box-shadow-light-avatar';
         } else if (pwcCampaign.data.appearance.dropShadow == 'darkShadow') {
@@ -90,43 +73,12 @@ export function AvatarComponent(props: any) {
         hostInstance.chatEle.querySelector('.avatar-bg').click();   
     }
 
-    const closePWCHelp = (e: any) => {
-        hostInstance.chatEle.querySelector('.content-info').remove();
-        updatePWCCampaignInfo({ enable: false, data: { buttons: [], messages: [], appearance: { messageBubbleAlignment : '', buttonAlignment: '', dropShadow: pwcCampaign.data.appearance.dropShadow}, messageHeaderConfig: { headerToggle: false, headerMessage: '', headerUpload: '', headerIcon: ''}}});
-    }
-
     const dynamicContextResolver = (msg: any, data: any) => {
         return msg.replace(/{{(.*?)}}/g, (match: any, key: any) => {
             const trimmedKey = key.trim();
             return data[trimmedKey] || match;
         });
     }
-
-    useEffect(() => {
-        if (hostInstance.config.pwcConfig.enable) {
-            hostInstance.eventManager.removeEventListener('.pwc-accept', 'click');
-            hostInstance.eventManager.addEventListener('.pwc-accept', 'click', (event: any) => {
-                window.sessionStorage.setItem('isReconnect', 'false');
-                hostInstance.welcomeScreenState = true;
-                // hostInstance.chatEle.classList.remove('minimize-chat');
-                // hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
-                // hostInstance.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
-                // hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
-                // const ele = hostInstance.chatEle.querySelector('.pwc-accept');
-                // const timeout = hostInstance.historyLoading ? 3500 : 200
-                // setTimeout(() => {
-                //     if (ele.getAttribute('data-postback')) {
-                //         hostInstance.sendMessageToBot(ele.getAttribute('data-postback'));
-                //     } else {
-                //         if (pwcCampaign && pwcCampaign.data && pwcCampaign.data.messages && pwcCampaign.data.messages.length > 0) {
-                //             hostInstance.sendMessageToBot(pwcCampaign.data.messages[pwcCampaign.data.messages.length - 1]['value']);
-                //         }
-                //     }
-                // }, timeout);
-                closePWCHelp('');
-            });
-        }
-    },[]);
 
     return (
         <div className={avatarParentStyle} aria-label="avatar footer">
