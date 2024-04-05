@@ -1314,15 +1314,8 @@ class AgentDesktopPluginScript  {
             // Trigger event when cancel is clicked
             var cancelWebConv = koreJquery("#cancel-web-conversation");
             cancelWebConv.off('click').on('click', function (event) {
-                const messageToBot = {};
-                messageToBot["clientMessageId"] = new Date().getTime();
-                messageToBot["event"] = "close_agent_chat";
-                messageToBot["message"] = {
-                    "body": "",
-                    "type": ""
-                }
-                messageToBot["resourceid"] = "/bot.message";
-                hostInstance.koreChatWindow.close();
+                hostInstance.chatEle.querySelector('.btn-action-close').click();
+                hostInstance.bot?.close();
             });
         },2000);
     }
