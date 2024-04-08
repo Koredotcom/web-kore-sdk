@@ -651,9 +651,13 @@ class AgentDesktopPluginScript  {
                 var toastContainer = koreJquery("#toastcontainer");
                 toastContainer.empty();
                 toastContainer.append(incomingCall);
-
                 var rejectCall = koreJquery("#rejectcall");
                 var acceptCall = koreJquery("#acceptcall");
+                // Hide the toastContainer or #toast when isUserCall is true
+                if(_self.callDetails.isCallFromUser){
+                    document.getElementById('toastcontainer').style.visibility = "hidden";
+                    this.autoAcceptConversation();
+                }
                 rejectCall.off('click').on('click', function (event) {
                     const payload = _self.callDetails;
                     payload['type'] = "call_agent_webrtc_rejected"
@@ -712,6 +716,13 @@ class AgentDesktopPluginScript  {
 
                 });
             }, 100);
+        }
+        this.autoAcceptConversation = function(){
+            setTimeout(()=>{
+                // Removing call in progress container
+                document.querySelector(".campaign-calling-audio-static-wrapper")?.remove();
+                document.getElementById('acceptcall')?.click();
+            },1000);
         }
         this.showCobrowseRequest = function (cobrowseRequest) {
             let me = this;
@@ -1276,6 +1287,38 @@ class AgentDesktopPluginScript  {
     vonbtn;
     vonbtnimg;
     drawEnabled = false;
+    setConversationInProgress(conversationType, hostInstance){
+        var campaignCallingTemplate = `
+        <div class="campaign-calling-audio-static-wrapper">
+                <div class="icon_block">
+                    <svg width="29" height="29" viewBox="0 0 29 29" fill="none">
+                    <path d="M13.735 2.03125C4.82438 2.03125 4.3693 7.89581 4.33994 12.5566C3.25364 12.9823 2.46094 14.0246 2.46094 15.1843C2.46094 16.6816 3.58394 18.9423 5.27945 18.9423C5.42624 18.9423 5.58038 18.9276 5.73452 18.913C7.11442 23.1921 10.5201 26.4583 13.735 26.4583C15.269 26.4583 16.8471 25.695 18.2343 24.4325C17.6691 24.5206 17.1113 24.5793 16.5535 24.5793H13.735C11.5257 24.5793 8.44293 21.8416 7.36397 17.7679L7.0557 16.6963L6.17491 16.9165C5.63176 17.056 5.35285 17.0633 5.27945 17.0633C4.97851 17.0266 4.33994 15.955 4.33994 15.1843C4.33994 14.7292 4.81704 14.2742 5.33817 14.2448L6.21895 14.1861V13.3053C6.21895 7.46275 6.7254 3.91026 13.735 3.91026C13.9552 3.91026 16.5902 3.9176 18.3297 3.92494L17.6912 5.22409C17.5957 5.45163 17.2508 6.21498 16.0544 7.19852C14.6745 8.34354 12.2817 9.54728 8.09796 9.54728V11.4263C12.6487 11.4263 15.5332 10.0684 17.2581 8.65181C18.1756 7.88847 18.7334 7.1398 19.0857 6.55995C21.0161 7.54349 21.251 9.4959 21.251 13.3053V17.9367C21.0381 20.3002 17.7939 20.8213 16.5535 20.8213H15.614C15.614 19.7864 14.7699 18.9423 13.735 18.9423C12.7001 18.9423 11.856 19.7864 11.856 20.8213C11.856 21.8562 12.7001 22.7003 13.735 22.7003H16.5535C19.1445 22.7003 21.9997 21.5993 22.8731 19.1772H24.0695C25.6182 19.1772 26.888 17.9074 26.888 16.3587V14.2448C26.888 12.6961 25.6182 11.4263 24.0695 11.4263H23.0933C22.9979 8.73255 22.5355 6.2003 19.9592 4.87912L21.3538 2.06061L19.8417 2.05327C19.8417 2.05327 14.0653 2.03125 13.735 2.03125ZM10.9165 13.3053C10.3953 13.3053 9.97696 13.7237 9.97696 14.2448C9.97696 14.7659 10.3953 15.1843 10.9165 15.1843C11.4376 15.1843 11.856 14.7659 11.856 14.2448C11.856 13.7237 11.4376 13.3053 10.9165 13.3053ZM16.5535 13.3053C16.0324 13.3053 15.614 13.7237 15.614 14.2448C15.614 14.7659 16.0324 15.1843 16.5535 15.1843C17.0746 15.1843 17.493 14.7659 17.493 14.2448C17.493 13.7237 17.0746 13.3053 16.5535 13.3053ZM23.13 13.3053H24.0695C24.598 13.3053 25.009 13.7163 25.009 14.2448V16.3587C25.009 16.8871 24.598 17.2982 24.0695 17.2982H23.13V13.3053Z" fill="#155EEF"/>
+                    </svg>
+                </div>
+                <h1>Connecting to an Agent</h1>
+                <p>
+                    <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
+                    <path d="M7.5013 4.66699C7.5013 3.28628 8.62059 2.16699 10.0013 2.16699C11.382 2.16699 12.5013 3.28628 12.5013 4.66699V10.5003C12.5013 11.881 11.382 13.0003 10.0013 13.0003C8.62059 13.0003 7.5013 11.881 7.5013 10.5003V4.66699Z" fill="#9AA4B2"/>
+                    <path d="M15.8346 8.83366V10.5003C15.8346 13.722 13.223 16.3337 10.0013 16.3337M4.16797 8.83366V10.5003C4.16797 13.722 6.77964 16.3337 10.0013 16.3337M10.0013 16.3337V18.8337M6.66797 18.8337H13.3346M10.0013 13.0003C8.62059 13.0003 7.5013 11.881 7.5013 10.5003V4.66699C7.5013 3.28628 8.62059 2.16699 10.0013 2.16699C11.382 2.16699 12.5013 3.28628 12.5013 4.66699V10.5003C12.5013 11.881 11.382 13.0003 10.0013 13.0003Z" stroke="#98A2B3" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Kindly wait while we connect you..</span>
+                </p>
+                <div class="button-cancel-div">
+                    <button class="btn-cancel-btn" id="cancel-web-conversation">Cancel</button>
+                </div>
+            </div>`;
+        setTimeout(()=>{
+            var widgetHeader = koreJquery(".chat-widget-header");
+            widgetHeader.after(campaignCallingTemplate);
+
+            // Trigger event when cancel is clicked
+            var cancelWebConv = koreJquery("#cancel-web-conversation");
+            cancelWebConv.off('click').on('click', function (event) {
+                hostInstance.chatEle.querySelector('.btn-action-close').click();
+                hostInstance.bot?.close();
+            });
+        },2000);
+    }
     stopCoBrowse = (sendMessageFlag = true, removeFromStorage = true) => {
         console.log("cobrowse >>> stopping cobrowse");
         this.agentDrawPaths = [];

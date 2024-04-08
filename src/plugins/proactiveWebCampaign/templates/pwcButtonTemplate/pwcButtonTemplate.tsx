@@ -16,7 +16,7 @@ export function Button(props: any) {
         let btns: any = [];
         buttons.forEach((ele: any) => {
             let obj = ele;
-            obj.message = decodeURIComponent(obj?.message);
+            obj.message = decodeURIComponent(atob(obj?.message));
             btns.push(obj);
         });
         layoutDesign.buttons = btns;
