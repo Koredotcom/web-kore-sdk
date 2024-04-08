@@ -19,8 +19,8 @@
     &.select-all{
         border:0px !important;
         .checkbox-input{
-            left: 1px;
-            top: 1px;
+            left: 0.5px;
+            top: 0.5px;
             + .checkbox-label{
                 padding: 0 0 0 26px;
                 &::before{
@@ -34,10 +34,10 @@
         position: absolute;
         cursor: pointer;
         margin: 0;
-        width: 16px;
-        height: 16px;
-        top: 11px;
-        left: 11px;
+        width: 14.5px;
+        height: 15.1px;
+        top: 10.5px;
+        left: 10.5px;
         border: 0;
         + .checkbox-label{
             width: 100%;
@@ -72,6 +72,7 @@
                 border-radius: 4px;
                 border: 1px solid var(--gloabl-border-color);
                 background: var(--global-white-bg);
+                box-sizing: border-box;
             }
         }
         &:checked{
