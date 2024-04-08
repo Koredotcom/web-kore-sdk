@@ -108,7 +108,7 @@ export function Message(props: any) {
                             { msgData.type == 'bot_response' && msgItem.component && msgItem.component.type == 'error' && msgItem.component.payload.text && <div className="bot-bubble-comp if-animation-bubble">
                                     <div className={botStyle}>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
-                                            <div className="you-text" title={msgData.fromAgent ? msgData.author.name : msgData.fromAgent ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}>{msgData.fromAgent ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}</div>
+                                            <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}>{msgData.fromAgent && msgData.author?.name ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}</div>
                                             <div className="time-tamp">
                                                 <time>{helpers.formatAMPMDay(msgData.createdOn)}</time>
                                             </div>
@@ -133,7 +133,7 @@ export function Message(props: any) {
                                             </div>
                                         </div>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
-                                            <div className="you-text" title={msgData.fromAgent ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}>{msgData.fromAgent ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}</div>
+                                            <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}>{msgData.fromAgent && msgData.author?.name ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}</div>
                                             <div className="time-tamp"><time>{helpers.formatAMPMDay(msgData.createdOn)}</time></div>
                                         </div>}
                                     </div>
@@ -141,7 +141,7 @@ export function Message(props: any) {
                             { msgData.type == 'bot_response' && msgItem.type === 'text' && msgItem.cInfo && msgItem.cInfo.body && <div className="bot-bubble-comp if-animation-bubble">
                                     <div className={botStyle}>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
-                                            <div className="you-text" title={msgData.fromAgent ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}>{msgData.fromAgent ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}</div>
+                                            <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}>{msgData.fromAgent && msgData.author?.name ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}</div>
                                             <div className="time-tamp">
                                                 <time>{helpers.formatAMPMDay(msgData.createdOn)}</time>
                                             </div>
@@ -166,7 +166,7 @@ export function Message(props: any) {
                                             </div>
                                         </div>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
-                                            <div className="you-text" title={msgData.fromAgent ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}>{msgData.fromAgent ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}</div>
+                                            <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}>{msgData.fromAgent ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}</div>
                                             <div className="time-tamp"><time>{helpers.formatAMPMDay(msgData.createdOn)}</time></div>
                                         </div>}
                                     </div>
