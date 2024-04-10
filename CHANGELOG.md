@@ -1,3 +1,10 @@
+### 11.0.4
+
+* Release April 10, 2024
+* Features
+  * added answers plugin as default plugin
+* Bug fixes
+
 ### 11.0.1
 
 * Release April 03, 2024
