@@ -13,8 +13,6 @@ export function ChatContainer(props: any) {
     const hostInstance = props.hostInstance;
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
     hostInstance.on('onBrandingUpdate', function (event: any) {
-        console.count('Branding Call');
-        console.log('Branding Data: ', event.brandingData);
         updateBrandingInfo({...event.brandingData})
     });
 

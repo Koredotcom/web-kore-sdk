@@ -194,7 +194,9 @@ init  (config:any) {
 
 installDefaultPlugins(){
   const me:any = this;
-  me.installPlugin(new AnswersTemplatesPlugin({}));
+  if (me.config.UI.version == 'v3') {
+    me.installPlugin(new AnswersTemplatesPlugin({}));
+  }
 }
 
 installCallbackForPlugins (){
