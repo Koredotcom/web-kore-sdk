@@ -22,6 +22,7 @@ import EventManager from '../../templatemanager/base/eventManager';
 import BrandingManager from '../../templatemanager/templates/brandingManager';
 import { ActionsBottomSlider } from '../../templatemanager/base/actionsButtonSlider/actionsBottomSlider';
 import { ActionsModal } from '../../templatemanager/base/actionsModal/actionsModal';
+import AnswersTemplatesPlugin from '../../plugins/answers/answersPlugin';
 const bot = requireKr('/KoreBot.js').instance();
 
 declare const document:any;
@@ -193,7 +194,7 @@ init  (config:any) {
 
 installDefaultPlugins(){
   const me:any = this;
-  //me.installPlugin(new GreeetingsPlugin());
+  me.installPlugin(new AnswersTemplatesPlugin({}));
 }
 
 installCallbackForPlugins (){
