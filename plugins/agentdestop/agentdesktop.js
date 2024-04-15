@@ -132,6 +132,7 @@ function AgentDesktop(uuId, aResponse) {
         closecallbutton.off('click').on('click', function (event) {
             if (callConnected) {
                 _self.activeCall.terminate();
+                sendCallTerminateEvent();
             }
         });
         var sendSelfVideo = true;
@@ -532,6 +533,19 @@ function AgentDesktop(uuId, aResponse) {
         //fall back to clients jquery version
         koreJquery = window.jQuery;
     }
+
+    function sendCallTerminateEvent() {
+        var payload = _self.callDetails;
+        payload['type'] = "call_agent_webrtc_rejected";
+        var messageToBot = {};
+        messageToBot["event"] = "event";
+        messageToBot["message"] = {
+            "body": _self.callDetails,
+            "type": ""
+        };
+        events.sendMessage(messageToBot, function (err) { });
+    }
+
     function overrideCloseButton() {
         if (overrideFlag) {
             return;
@@ -540,6 +554,10 @@ function AgentDesktop(uuId, aResponse) {
         if (closeBtns && closeBtns.length > 0) {
             koreJquery(".close-btn").off('click').on('click', function (event) {
                 koreJquery("#smartassist-menu").show();
+                if(_self.activeCall && _self.activeCall.isEstablished()){
+                    _self.activeCall.terminate();
+                    sendCallTerminateEvent();
+                }
             })
             overrideFlag = true;
         } else {
@@ -884,7 +902,11 @@ function AgentDesktop(uuId, aResponse) {
             stream.getTracks().forEach(function(track) {
                 track.stop();
             });
-            self.activeCall = self.phone.call(self.phone.VIDEO, sipUser);
+            if(self.callDetails.videoCall){
+                self.activeCall = self.phone.call(self.phone.VIDEO, sipUser);
+            }else{
+                self.activeCall = self.phone.call(self.phone.AUDIO, sipUser);
+            }
         });
     }
     this.toggleButtons = function () {
