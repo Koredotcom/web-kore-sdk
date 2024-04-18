@@ -269,29 +269,47 @@ class AgentDesktopPluginScript  {
             var footerButtonsHTML = null;
             if (callConnected) {
                 footerButtonsHTML = `<div class="footer-btn-a-v-attch">
-                <div id="closecall" class="btn_actions enable-audio">
-                    <div class="title-with-acton-btn">
-                        <img title="End Call" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iOSIgdmlld0JveD0iMCAwIDIwIDkiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGlkPSImIzIyNjsmIzE1NjsmIzE0MzsmIzIzOTsmIzE4NDsmIzE0MzsgS2V5IiBkPSJNMTAuMDE1MyAwLjkwOTM5NUM2LjQ5MzkgMC45MDkzOTUgMi45OTY4MyAxLjY4OTIzIDEuMjQ4MjkgMy40Mzc3N0MwLjQ2MjM2NCA0LjIyMzcgMC4wNDgwNzU5IDUuMTg2MzEgMC4xMDI5MDggNi4zNDk5N0MwLjEzOTQ2MyA3LjAzMjMyIDAuMzU4NzkzIDcuNjUzNzUgMC43NzMwOCA4LjA2ODA0QzEuMDc3NyA4LjM3MjY3IDEuNDg1OSA4LjU0OTM1IDEuOTc5MzkgOC40NzAxNEw1LjE3NzkzIDcuOTI3OTJDNS42NTkyNCA3LjgzNjUzIDUuOTk0MzIgNy42OTY0IDYuMjEzNjUgNy40NzcwN0M2LjQ4NzgxIDcuMjAyOTEgNi41NzkyIDYuNzk0NzIgNi41ODUyOSA2LjI0MDNMNi41OTEzOCA1LjM4MTI2QzYuNTkxMzggNS4yNDcyMyA2LjY0NjIyIDUuMTMxNDcgNi43MjU0MiA1LjA1MjI3QzYuODE2ODEgNC45NjA4OCA2Ljk0NDc1IDQuOTA2MDUgNy4wMzYxMyA0Ljg3NTU5QzcuNjE0OTIgNC42OTg5MSA4LjgxNTEzIDQuNjA3NTIgMTAuMDE1MyA0LjYwMTQzQzExLjIwOTUgNC42MDE0MyAxMi40MDk3IDQuNjkyODIgMTIuOTgyNCA0Ljg3NTU5QzEzLjA3OTkgNC45MTIxNSAxMy4yMDE3IDQuOTYwODggMTMuMjkzMSA1LjA1MjI3QzEzLjM3MjMgNS4xMzE0NyAxMy40MjcxIDUuMjM1MDUgMTMuNDI3MSA1LjM2OTA4TDEzLjQzOTMgNi4yNDYzOUMxMy40NTE1IDYuNzk0NzIgMTMuNTMwNyA3LjIwMjkxIDEzLjgxMSA3LjQ4MzE3QzE0LjAzMDMgNy43MDI0OSAxNC4zNzE1IDcuODM2NTMgMTQuODU4OSA3LjkyMTgyTDE4LjAxNDggOC40NTc5NkMxOC41MjA0IDguNTM3MTYgMTguOTQ2OSA4LjM2NjU3IDE5LjI3NTkgOC4wMzc1OEMxOS42NzggNy42MzU0OCAxOS45MDk1IDcuMDM4NDIgMTkuOTIxNyA2LjMzMTY5QzE5Ljk0NjEgNS4xNzQxMiAxOS41MDc0IDQuMjExNTEgMTguNzMzNyAzLjQzNzc3QzE2Ljk4NTEgMS42ODkyMyAxMy41MzA3IDAuOTAzMzAzIDEwLjAxNTMgMC45MDkzOTVaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K" />						
-                    </div>
+                <div id="muteaudio" class="btn_actions">
+                    <button class="mute-audio">
+                        <span class="mute-img">
+                            <svg width="17" height="16" viewBox="0 0 17 16" fill="none">
+                                <path d="M8.5 1.5C7.12891 1.5 6 2.62891 6 4V8C6 9.37109 7.12891 10.5 8.5 10.5C9.87109 10.5 11 9.37109 11 8V4C11 2.62891 9.87109 1.5 8.5 1.5ZM8.5 2.5C9.32812 2.5 10 3.17188 10 4V8C10 8.82812 9.32812 9.5 8.5 9.5C7.67188 9.5 7 8.82812 7 8V4C7 3.17188 7.67188 2.5 8.5 2.5ZM4.5 7.5C4.22386 7.5 4 7.72386 4 8C4 10.3008 5.76172 12.1953 8 12.4492V13.5H6.5C6.22386 13.5 6 13.7239 6 14C6 14.2761 6.22386 14.5 6.5 14.5H10.5C10.7761 14.5 11 14.2761 11 14C11 13.7239 10.7761 13.5 10.5 13.5H9V12.4492C11.2383 12.1953 13 10.3008 13 8C13 7.72386 12.7761 7.5 12.5 7.5C12.2239 7.5 12 7.72386 12 8C12 9.92578 10.4258 11.5 8.5 11.5C6.57422 11.5 5 9.92578 5 8C5 7.72386 4.77614 7.5 4.5 7.5Z" fill="#525252"/>
+                            </svg>
+                        </span>
+                        <span class="un-mute">
+                            <svg width="17" height="16" viewBox="0 0 17 16" fill="none">
+                                <path d="M8.50125 1C6.89069 1 5.57886 2.25629 5.57886 3.79867V8.46312C5.57886 8.52843 5.58195 8.59346 5.5852 8.65565L6.55299 7.72944V3.79867C6.55299 3.73434 6.55648 3.67063 6.56314 3.60796C6.66303 2.66796 7.49363 1.93289 8.50125 1.93289C9.57604 1.93289 10.4495 2.76938 10.4495 3.79867V3.99788L11.3425 3.14273C11.034 1.91443 9.87477 1 8.50125 1ZM14.4989 1.61768C14.3724 1.62121 14.2523 1.67174 14.164 1.75858L5.16156 10.3799C4.96956 10.0738 4.82246 9.73962 4.7284 9.38387C4.70586 9.30123 4.68642 9.21766 4.67005 9.13303C4.65545 9.0556 4.64282 8.97765 4.63327 8.89859C4.62907 8.8645 4.62506 8.83033 4.62185 8.79595C4.61177 8.6862 4.60473 8.57549 4.60473 8.46312V7.37475C4.60566 7.31232 4.5935 7.25034 4.56897 7.1925C4.54443 7.13465 4.50802 7.08211 4.46189 7.03799C4.41576 6.99387 4.36085 6.95906 4.30041 6.93564C4.23997 6.91222 4.17524 6.90065 4.11005 6.90163C3.98099 6.90356 3.858 6.95447 3.7681 7.04318C3.6782 7.13189 3.62875 7.25115 3.6306 7.37475V8.46312C3.6306 8.61466 3.63853 8.76424 3.65343 8.91196C3.69833 9.36162 3.80951 9.79272 3.97814 10.1953L3.98195 10.1916C4.1103 10.4952 4.27364 10.781 4.4633 11.0486L2.14975 13.2642C2.103 13.3072 2.06568 13.3587 2.03997 13.4157C2.01427 13.4726 2.00068 13.5339 2.00003 13.596C1.99937 13.658 2.01164 13.7196 2.03614 13.7771C2.06063 13.8345 2.09685 13.8867 2.14267 13.9306C2.18849 13.9745 2.243 14.0092 2.30299 14.0326C2.36299 14.0561 2.42727 14.0678 2.49207 14.0672C2.55686 14.0666 2.62088 14.0536 2.68036 14.0289C2.73985 14.0043 2.79361 13.9686 2.83849 13.9238L5.08101 11.7762C5.85187 12.5078 6.87628 12.9918 8.01418 13.1009V14.5269C8.01327 14.5887 8.02519 14.6501 8.04926 14.7074C8.07333 14.7648 8.10906 14.817 8.15438 14.861C8.1997 14.905 8.2537 14.94 8.31325 14.9639C8.37279 14.9877 8.4367 15 8.50125 15C8.56579 15 8.6297 14.9877 8.68925 14.9639C8.74879 14.94 8.8028 14.905 8.84811 14.861C8.89343 14.817 8.92916 14.7648 8.95323 14.7074C8.9773 14.6501 8.98922 14.5887 8.98831 14.5269V13.1039C11.4458 12.869 13.3719 10.8773 13.3719 8.46312V7.37475C13.3719 7.11665 13.1543 6.90831 12.8848 6.90831C12.6153 6.90831 12.3978 7.11665 12.3978 7.37475V8.46312C12.3978 10.5027 10.6824 12.1617 8.56023 12.1923C8.55179 12.1912 8.54334 12.1904 8.53486 12.1898C8.53401 12.1896 8.53317 12.1894 8.53232 12.1892C8.52936 12.1892 8.5264 12.1892 8.52344 12.1892C8.51352 12.1885 8.50358 12.1881 8.49364 12.188C8.49025 12.1882 8.48687 12.1884 8.48349 12.1886C8.4801 12.1888 8.47672 12.189 8.47334 12.1892C8.09171 12.1865 7.72451 12.1297 7.37681 12.0301C7.34896 12.022 7.32069 12.015 7.2931 12.0064C7.2032 11.9785 7.11551 11.9461 7.02864 11.9123C6.98473 11.895 6.94108 11.8775 6.89799 11.8588C6.82715 11.8283 6.7572 11.796 6.68871 11.7616C6.6269 11.7304 6.56647 11.697 6.50669 11.6626C6.45575 11.6336 6.40451 11.6051 6.35512 11.574C6.26058 11.5139 6.16898 11.4502 6.08051 11.3827C6.06748 11.3728 6.05344 11.3641 6.04056 11.3541C5.94572 11.2798 5.85614 11.1997 5.76912 11.1172L6.45976 10.4558C6.98737 10.9517 7.70564 11.2618 8.50125 11.2618C10.1118 11.2618 11.4236 10.0055 11.4236 8.46312V5.70211L14.8527 2.41816C14.923 2.35263 14.971 2.2683 14.9904 2.17622C15.0098 2.08414 14.9997 1.9886 14.9615 1.9021C14.9232 1.8156 14.8586 1.74217 14.7761 1.69142C14.6935 1.64068 14.5969 1.61497 14.4989 1.61768ZM10.4495 6.635V8.46312C10.4495 9.49241 9.57604 10.3289 8.50125 10.3289C7.97295 10.3289 7.49441 10.1279 7.14406 9.80051L10.4495 6.635Z" fill="white"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <p class="mute-text">Mute</p>
+                    <p class="un-mute-text">Unmute</p>
+                </div>
+                <div id="closecall" class="btn_actions">
+                    <button class="enable-audio">
+                        <svg width="21" height="9" viewBox="0 0 21 9" fill="none">
+                            <path d="M10.5153 0.910372C6.9939 0.910372 3.49683 1.69021 1.74829 3.43874C0.962364 4.22467 0.548076 5.18728 0.602908 6.35094C0.639463 7.0333 0.858793 7.65473 1.27308 8.06902C1.5777 8.37364 1.9859 8.55032 2.47939 8.47112L5.67793 7.92889C6.15924 7.8375 6.49432 7.69738 6.71365 7.47805C6.98781 7.20389 7.0792 6.79569 7.08529 6.24128L7.09138 5.38224C7.09138 5.24821 7.14622 5.13245 7.22542 5.05325C7.31681 4.96186 7.44475 4.90703 7.53613 4.87657C8.11492 4.69988 9.31513 4.6085 10.5153 4.60241C11.7095 4.60241 12.9097 4.69379 13.4824 4.87657C13.5799 4.91312 13.7017 4.96186 13.7931 5.05325C13.8723 5.13245 13.9271 5.23602 13.9271 5.37006L13.9393 6.24737C13.9515 6.79569 14.0307 7.20389 14.311 7.48414C14.5303 7.70347 14.8715 7.83751 15.3589 7.9228L18.5148 8.45894C19.0204 8.53814 19.4469 8.36755 19.7759 8.03856C20.178 7.63645 20.4095 7.03939 20.4217 6.33267C20.4461 5.1751 20.0074 4.21249 19.2337 3.43875C17.4851 1.69021 14.0307 0.904279 10.5153 0.910372Z" fill="white"/>
+                        </svg>
+                    </button>	
                     <p>End</p>
-                </div>		
-                <div id="muteaudio" class="btn_actions mute-audio">
-                    <div class="title-with-acton-btn">
-                        <img title="Mute Audio" class="mute-img" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9Ikljb24gLyBNaWNyb3Bob25lIj4KPHBhdGggaWQ9IlZlY3RvciIgZD0iTTggMS41QzYuNjI4OTEgMS41IDUuNSAyLjYyODkxIDUuNSA0VjhDNS41IDkuMzcxMDkgNi42Mjg5MSAxMC41IDggMTAuNUM5LjM3MTA5IDEwLjUgMTAuNSA5LjM3MTA5IDEwLjUgOFY0QzEwLjUgMi42Mjg5MSA5LjM3MTA5IDEuNSA4IDEuNVpNOCAyLjVDOC44MjgxMiAyLjUgOS41IDMuMTcxODggOS41IDRWOEM5LjUgOC44MjgxMiA4LjgyODEyIDkuNSA4IDkuNUM3LjE3MTg4IDkuNSA2LjUgOC44MjgxMiA2LjUgOFY0QzYuNSAzLjE3MTg4IDcuMTcxODggMi41IDggMi41Wk00IDcuNUMzLjcyMzg2IDcuNSAzLjUgNy43MjM4NiAzLjUgOEMzLjUgMTAuMzAwOCA1LjI2MTcyIDEyLjE5NTMgNy41IDEyLjQ0OTJWMTMuNUg2QzUuNzIzODYgMTMuNSA1LjUgMTMuNzIzOSA1LjUgMTRDNS41IDE0LjI3NjEgNS43MjM4NiAxNC41IDYgMTQuNUgxMEMxMC4yNzYxIDE0LjUgMTAuNSAxNC4yNzYxIDEwLjUgMTRDMTAuNSAxMy43MjM5IDEwLjI3NjEgMTMuNSAxMCAxMy41SDguNVYxMi40NDkyQzEwLjczODMgMTIuMTk1MyAxMi41IDEwLjMwMDggMTIuNSA4QzEyLjUgNy43MjM4NiAxMi4yNzYxIDcuNSAxMiA3LjVDMTEuNzIzOSA3LjUgMTEuNSA3LjcyMzg2IDExLjUgOEMxMS41IDkuOTI1NzggOS45MjU3OCAxMS41IDggMTEuNUM2LjA3NDIyIDExLjUgNC41IDkuOTI1NzggNC41IDhDNC41IDcuNzIzODYgNC4yNzYxNCA3LjUgNCA3LjVaIiBmaWxsPSJ3aGl0ZSIvPgo8L2c+Cjwvc3ZnPgo=" />
-                        <img title="Unmute Audio" class="un-mute" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9Imljb25zOC1tdXRlLXVubXV0ZSAxIj4KPHBhdGggaWQ9IlZlY3RvciIgZD0iTTguMDAxMjUgMUM2LjM5MDY5IDEgNS4wNzg4NiAyLjI1NjI5IDUuMDc4ODYgMy43OTg2N1Y4LjQ2MzEyQzUuMDc4ODYgOC41Mjg0MyA1LjA4MTk1IDguNTkzNDYgNS4wODUyIDguNjU1NjVMNi4wNTI5OSA3LjcyOTQ0VjMuNzk4NjdDNi4wNTI5OSAzLjczNDM0IDYuMDU2NDggMy42NzA2MyA2LjA2MzE0IDMuNjA3OTZDNi4xNjMwMyAyLjY2Nzk2IDYuOTkzNjMgMS45MzI4OSA4LjAwMTI1IDEuOTMyODlDOS4wNzYwNCAxLjkzMjg5IDkuOTQ5NSAyLjc2OTM4IDkuOTQ5NSAzLjc5ODY3VjMuOTk3ODhMMTAuODQyNSAzLjE0MjczQzEwLjUzNCAxLjkxNDQzIDkuMzc0NzcgMSA4LjAwMTI1IDFaTTEzLjk5ODkgMS42MTc2OEMxMy44NzI0IDEuNjIxMjEgMTMuNzUyMyAxLjY3MTc0IDEzLjY2NCAxLjc1ODU4TDQuNjYxNTYgMTAuMzc5OUM0LjQ2OTU2IDEwLjA3MzggNC4zMjI0NiA5LjczOTYyIDQuMjI4NCA5LjM4Mzg3QzQuMjA1ODYgOS4zMDEyMyA0LjE4NjQyIDkuMjE3NjYgNC4xNzAwNSA5LjEzMzAzQzQuMTU1NDUgOS4wNTU2IDQuMTQyODIgOC45Nzc2NSA0LjEzMzI3IDguODk4NTlDNC4xMjkwNyA4Ljg2NDUgNC4xMjUwNiA4LjgzMDMzIDQuMTIxODUgOC43OTU5NUM0LjExMTc3IDguNjg2MiA0LjEwNDczIDguNTc1NDkgNC4xMDQ3MyA4LjQ2MzEyVjcuMzc0NzVDNC4xMDU2NiA3LjMxMjMyIDQuMDkzNSA3LjI1MDM0IDQuMDY4OTcgNy4xOTI1QzQuMDQ0NDMgNy4xMzQ2NSA0LjAwODAyIDcuMDgyMTEgMy45NjE4OSA3LjAzNzk5QzMuOTE1NzYgNi45OTM4NyAzLjg2MDg1IDYuOTU5MDYgMy44MDA0MSA2LjkzNTY0QzMuNzM5OTcgNi45MTIyMiAzLjY3NTI0IDYuOTAwNjUgMy42MTAwNSA2LjkwMTYzQzMuNDgwOTkgNi45MDM1NiAzLjM1OCA2Ljk1NDQ3IDMuMjY4MSA3LjA0MzE4QzMuMTc4MiA3LjEzMTg5IDMuMTI4NzUgNy4yNTExNSAzLjEzMDYgNy4zNzQ3NVY4LjQ2MzEyQzMuMTMwNiA4LjYxNDY2IDMuMTM4NTMgOC43NjQyNCAzLjE1MzQzIDguOTExOTZDMy4xOTgzMyA5LjM2MTYyIDMuMzA5NTEgOS43OTI3MiAzLjQ3ODE0IDEwLjE5NTNMMy40ODE5NSAxMC4xOTE2QzMuNjEwMyAxMC40OTUyIDMuNzczNjQgMTAuNzgxIDMuOTYzMyAxMS4wNDg2TDEuNjQ5NzUgMTMuMjY0MkMxLjYwMyAxMy4zMDcyIDEuNTY1NjggMTMuMzU4NyAxLjUzOTk3IDEzLjQxNTdDMS41MTQyNyAxMy40NzI2IDEuNTAwNjggMTMuNTMzOSAxLjUwMDAzIDEzLjU5NkMxLjQ5OTM3IDEzLjY1OCAxLjUxMTY0IDEzLjcxOTYgMS41MzYxNCAxMy43NzcxQzEuNTYwNjMgMTMuODM0NSAxLjU5Njg1IDEzLjg4NjcgMS42NDI2NyAxMy45MzA2QzEuNjg4NDkgMTMuOTc0NSAxLjc0MyAxNC4wMDkyIDEuODAyOTkgMTQuMDMyNkMxLjg2Mjk5IDE0LjA1NjEgMS45MjcyNyAxNC4wNjc4IDEuOTkyMDcgMTQuMDY3MkMyLjA1Njg2IDE0LjA2NjYgMi4xMjA4OCAxNC4wNTM2IDIuMTgwMzYgMTQuMDI4OUMyLjIzOTg1IDE0LjAwNDMgMi4yOTM2MSAxMy45Njg2IDIuMzM4NDkgMTMuOTIzOEw0LjU4MTAxIDExLjc3NjJDNS4zNTE4NyAxMi41MDc4IDYuMzc2MjggMTIuOTkxOCA3LjUxNDE4IDEzLjEwMDlWMTQuNTI2OUM3LjUxMzI3IDE0LjU4ODcgNy41MjUxOSAxNC42NTAxIDcuNTQ5MjYgMTQuNzA3NEM3LjU3MzMzIDE0Ljc2NDggNy42MDkwNiAxNC44MTcgNy42NTQzOCAxNC44NjFDNy42OTk3IDE0LjkwNSA3Ljc1MzcgMTQuOTQgNy44MTMyNSAxNC45NjM5QzcuODcyNzkgMTQuOTg3NyA3LjkzNjcgMTUgOC4wMDEyNSAxNUM4LjA2NTc5IDE1IDguMTI5NyAxNC45ODc3IDguMTg5MjUgMTQuOTYzOUM4LjI0ODc5IDE0Ljk0IDguMzAyOCAxNC45MDUgOC4zNDgxMSAxNC44NjFDOC4zOTM0MyAxNC44MTcgOC40MjkxNiAxNC43NjQ4IDguNDUzMjMgMTQuNzA3NEM4LjQ3NzMgMTQuNjUwMSA4LjQ4OTIyIDE0LjU4ODcgOC40ODgzMSAxNC41MjY5VjEzLjEwMzlDMTAuOTQ1OCAxMi44NjkgMTIuODcxOSAxMC44NzczIDEyLjg3MTkgOC40NjMxMlY3LjM3NDc1QzEyLjg3MTkgNy4xMTY2NSAxMi42NTQzIDYuOTA4MzEgMTIuMzg0OCA2LjkwODMxQzEyLjExNTMgNi45MDgzMSAxMS44OTc4IDcuMTE2NjUgMTEuODk3OCA3LjM3NDc1VjguNDYzMTJDMTEuODk3OCAxMC41MDI3IDEwLjE4MjQgMTIuMTYxNyA4LjA2MDIzIDEyLjE5MjNDOC4wNTE3OSAxMi4xOTEyIDguMDQzMzQgMTIuMTkwNCA4LjAzNDg2IDEyLjE4OThDOC4wMzQwMSAxMi4xODk2IDguMDMzMTcgMTIuMTg5NCA4LjAzMjMyIDEyLjE4OTJDOC4wMjkzNiAxMi4xODkyIDguMDI2NCAxMi4xODkyIDguMDIzNDQgMTIuMTg5MkM4LjAxMzUyIDEyLjE4ODUgOC4wMDM1OCAxMi4xODgxIDcuOTkzNjQgMTIuMTg4QzcuOTkwMjUgMTIuMTg4MiA3Ljk4Njg3IDEyLjE4ODQgNy45ODM0OSAxMi4xODg2QzcuOTgwMSAxMi4xODg4IDcuOTc2NzIgMTIuMTg5IDcuOTczMzQgMTIuMTg5MkM3LjU5MTcxIDEyLjE4NjUgNy4yMjQ1MSAxMi4xMjk3IDYuODc2ODEgMTIuMDMwMUM2Ljg0ODk2IDEyLjAyMiA2LjgyMDY5IDEyLjAxNSA2Ljc5MzEgMTIuMDA2NEM2LjcwMzIgMTEuOTc4NSA2LjYxNTUxIDExLjk0NjEgNi41Mjg2NCAxMS45MTIzQzYuNDg0NzMgMTEuODk1IDYuNDQxMDggMTEuODc3NSA2LjM5Nzk5IDExLjg1ODhDNi4zMjcxNSAxMS44MjgzIDYuMjU3MiAxMS43OTYgNi4xODg3MSAxMS43NjE2QzYuMTI2OSAxMS43MzA0IDYuMDY2NDcgMTEuNjk3IDYuMDA2NjkgMTEuNjYyNkM1Ljk1NTc1IDExLjYzMzYgNS45MDQ1MSAxMS42MDUxIDUuODU1MTIgMTEuNTc0QzUuNzYwNTggMTEuNTEzOSA1LjY2ODk4IDExLjQ1MDIgNS41ODA1MSAxMS4zODI3QzUuNTY3NDggMTEuMzcyOCA1LjU1MzQ0IDExLjM2NDEgNS41NDA1NiAxMS4zNTQxQzUuNDQ1NzIgMTEuMjc5OCA1LjM1NjE0IDExLjE5OTcgNS4yNjkxMiAxMS4xMTcyTDUuOTU5NzYgMTAuNDU1OEM2LjQ4NzM3IDEwLjk1MTcgNy4yMDU2NCAxMS4yNjE4IDguMDAxMjUgMTEuMjYxOEM5LjYxMTgxIDExLjI2MTggMTAuOTIzNiAxMC4wMDU1IDEwLjkyMzYgOC40NjMxMlY1LjcwMjExTDE0LjM1MjcgMi40MTgxNkMxNC40MjMgMi4zNTI2MyAxNC40NzEgMi4yNjgzIDE0LjQ5MDQgMi4xNzYyMkMxNC41MDk4IDIuMDg0MTQgMTQuNDk5NyAxLjk4ODYgMTQuNDYxNSAxLjkwMjFDMTQuNDIzMiAxLjgxNTYgMTQuMzU4NiAxLjc0MjE3IDE0LjI3NjEgMS42OTE0MkMxNC4xOTM1IDEuNjQwNjggMTQuMDk2OSAxLjYxNDk3IDEzLjk5ODkgMS42MTc2OFpNOS45NDk1IDYuNjM1VjguNDYzMTJDOS45NDk1IDkuNDkyNDEgOS4wNzYwNCAxMC4zMjg5IDguMDAxMjUgMTAuMzI4OUM3LjQ3Mjk1IDEwLjMyODkgNi45OTQ0MSAxMC4xMjc5IDYuNjQ0MDYgOS44MDA1MUw5Ljk0OTUgNi42MzVaIiBmaWxsPSJ3aGl0ZSIvPgo8L2c+Cjwvc3ZnPgo=" />
-                    </div>
-                    <p>Mute</p>
-                    <span>Unmute</span>
                 </div>`;
                 if (videoCall) {
                     footerButtonsHTML += `
-                <div id="videobuttons" class="btn_actions enable-video active-">
-                    <div class="title-with-acton-btn">
-                        <img class="video-unmute" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTciIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxNyAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggaWQ9Ikljb24iIGQ9Ik0xMC44MzMzIDQuNDQ0MTJMMTQuMzc0NCAyLjY3MzU5QzE0Ljg5MTUgMi40MTUwMiAxNS41IDIuNzkxMDcgMTUuNSAzLjM2OTI2VjguNjMwMDlDMTUuNSA5LjIwODI4IDE0Ljg5MTUgOS41ODQzMyAxNC4zNzQ0IDkuMzI1NzZMMTAuODMzMyA3LjU1NTIzTTMuMDU1NTYgMTAuNjY2M0g5LjI3Nzc4QzEwLjEzNjkgMTAuNjY2MyAxMC44MzMzIDkuOTY5OSAxMC44MzMzIDkuMTEwNzlWMi44ODg1NkMxMC44MzMzIDIuMDI5NDUgMTAuMTM2OSAxLjMzMzAxIDkuMjc3NzggMS4zMzMwMUgzLjA1NTU2QzIuMTk2NDUgMS4zMzMwMSAxLjUgMi4wMjk0NSAxLjUgMi44ODg1NlY5LjExMDc5QzEuNSA5Ljk2OTkgMi4xOTY0NSAxMC42NjYzIDMuMDU1NTYgMTAuNjY2M1oiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMS4wMTYzOSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=" />						
-                        <img class="video-mute" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTciIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNyAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9Ikljb24gLyBObyBWaWRlbyI+CjxwYXRoIGlkPSJWZWN0b3IiIGQ9Ik00LjE5MzY1IDIuMzc1MTNDNC4wMjM1OCAyLjE4MDkgMy43NDc5NSAyLjE4MDk1IDMuNTc3OTQgMi4zNzUyNUMzLjQwODA3IDIuNTY5MzkgMy40MDc4NiAyLjg4NDA3IDMuNTc3NDcgMy4wNzg1TDQuMzgxMzUgNC4wMDAwNEgyLjgxMjVDMi4wOTEzMSA0LjAwMDA0IDEuNSA0LjY3NTgyIDEuNSA1LjUwMDA0VjEwLjVDMS41IDExLjMyNDMgMi4wOTEzMSAxMiAyLjgxMjUgMTJIMTAuNjg3NUMxMC44ODkyIDEyIDExLjA4MDYgMTEuOTQ1NCAxMS4yNTE1IDExLjg1MTZMMTIuOCAxMy42MjQ2QzEyLjk3MTYgMTMuODIxMSAxMy4yNTAyIDEzLjgyMTMgMTMuNDIyIDEzLjYyNDlDMTMuNTkzNyAxMy40Mjg3IDEzLjU5MzYgMTMuMTEwNSAxMy40MjE5IDEyLjkxNDNMNC4xOTM2NSAyLjM3NTEzWk0xNS41IDQuNzQ5MjNDMTUuNSA0LjM2NiAxNS4xMzgzIDQuMTI1MjQgMTQuODQ2NiA0LjMxNDM2TDEyIDYuMTYwMlY1LjUwMDA0QzEyIDQuNjcxOTIgMTEuNDEyMSA0LjAwMDA0IDEwLjY4NzUgNC4wMDAwNEg2LjgyMTc4TDcuNjk2NzggNS4wMDAwNEgxMC42ODc1QzEwLjkzMDIgNS4wMDAwNCAxMS4xMjUgNS4yMjI3IDExLjEyNSA1LjUwMDA0VjguODc1MDRMMTIgOS44NzUwNEwxNC44NDkxIDExLjY5MzlDMTUuMTQwOCAxMS44ODAxIDE1LjUgMTEuNjM5MiAxNS41IDExLjI1NzRWNC43NDkyM1pNMi44MTI1IDUuMDAwMDRINS4yNTYzNUwxMC41MDYzIDExSDIuODEyNUMyLjU2NjQxIDExIDIuMzc1IDEwLjc4MTMgMi4zNzUgMTAuNVY1LjUwMDA0QzIuMzc1IDUuMjE4NzkgMi41NjY0MSA1LjAwMDA0IDIuODEyNSA1LjAwMDA0Wk0xNC42MjUgNS42MDk0MlYxMC4zOTA3TDEyIDguNzE4NzlWNy4zMDg2NEwxNC42MjUgNS42MDk0MloiIGZpbGw9IndoaXRlIi8+CjwvZz4KPC9zdmc+Cg==" />
-                    </div>
-                    <p>Video On</p>
-                    <span>Video Off</span>
+                    <div id="videobuttons" class="btn_actions video-btns-wrapper active-">
+                    <button class="enable-video">
+                        <span class="video-unmute">
+                            <svg width="17" height="16" viewBox="0 0 17 16" fill="none">
+                                <path d="M4.19365 2.37415C4.02358 2.17992 3.74795 2.17998 3.57794 2.37427C3.40807 2.56841 3.40786 2.88309 3.57747 3.07752L4.38135 3.99907H2.8125C2.09131 3.99907 1.5 4.67485 1.5 5.49907V10.4991C1.5 11.3233 2.09131 11.9991 2.8125 11.9991H10.6875C10.8892 11.9991 11.0806 11.9444 11.2515 11.8506L12.8 13.6236C12.9716 13.8201 13.2502 13.8203 13.422 13.624C13.5937 13.4277 13.5936 13.1095 13.4219 12.9134L4.19365 2.37415ZM15.5 4.74826C15.5 4.36502 15.1383 4.12426 14.8466 4.31338L12 6.15922V5.49907C12 4.67094 11.4121 3.99907 10.6875 3.99907H6.82178L7.69678 4.99907H10.6875C10.9302 4.99907 11.125 5.22172 11.125 5.49907V8.87407L12 9.87407L14.8491 11.6929C15.1408 11.8791 15.5 11.6382 15.5 11.2564V4.74826ZM2.8125 4.99907H5.25635L10.5063 10.9991H2.8125C2.56641 10.9991 2.375 10.7803 2.375 10.4991V5.49907C2.375 5.21782 2.56641 4.99907 2.8125 4.99907ZM14.625 5.60844V10.3897L12 8.71782V7.30766L14.625 5.60844Z" fill="white"/>
+                            </svg>
+                        </span>
+                        <span class="video-mute">
+                            <svg width="15" height="12" viewBox="0 0 15 12" fill="none">
+                                <path d="M9.83333 4.4451L13.3744 2.67457C13.8915 2.41599 14.5 2.79205 14.5 3.37023V8.63107C14.5 9.20926 13.8915 9.58531 13.3744 9.32674L9.83333 7.55621M2.05556 10.6673H8.27778C9.13689 10.6673 9.83333 9.97087 9.83333 9.11176V2.88954C9.83333 2.03043 9.13689 1.33398 8.27778 1.33398H2.05556C1.19645 1.33398 0.5 2.03043 0.5 2.88954V9.11176C0.5 9.97087 1.19645 10.6673 2.05556 10.6673Z" stroke="#000" stroke-width="1.01639" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>                                
+                        </span>                            
+                    </button>
+                    <p class="video-off">Video On</p>
+                    <p class="video-on">Video Off</p>
                 </div>`;
                 }
                 footerButtonsHTML += `</div>`;
@@ -349,49 +367,67 @@ class AgentDesktopPluginScript  {
         }
         this.fullScreen = false;
         this.callConnected = function (videoCall, agentName) {
+            var videoAudoStr = videoCall ? 'video' : 'audio';
             var callConnectedHTML =
-                `<div do-not-mutate="true" class="video-audio-chat-container">
+                `<div do-not-mutate="true" class="video-audio-chat-container ${videoAudoStr}">
             <div class="video-chat-">
-                <div class="video-name-title">${agentName}</div>
                 <div id ='audiovideocallcontainer'></div>
             </div>
             <div id="callbuttons"></div>
         </div>`;
             var videoContainerHTML =
-                `<div id="video_view" class="video-view-">
-            <video id="kore_remote_video_tmp" autoplay="autoplay" playsinline style="display: block;"></video>
-            <div class="action-minimize-audio-control">
-                <div id="maximizevideo" class="maximize-video">
-                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTcuNSAxLjEyNUM3LjI5Mjg5IDEuMTI1IDcuMTI1IDEuMjkyODkgNy4xMjUgMS41QzcuMTI1IDEuNzA3MTEgNy4yOTI4OSAxLjg3NSA3LjUgMS44NzVIOS41OTQ3M0wxLjg3NSA5LjU5NDczVjcuNUMxLjg3NSA3LjI5Mjg5IDEuNzA3MTEgNy4xMjUgMS41IDcuMTI1QzEuMjkyODkgNy4xMjUgMS4xMjUgNy4yOTI4OSAxLjEyNSA3LjVWMTAuNTM0MUMxLjEyNSAxMC43MjI0IDEuMjc3NjMgMTAuODc1IDEuNDY1OTEgMTAuODc1SDQuNUM0LjcwNzExIDEwLjg3NSA0Ljg3NSAxMC43MDcxIDQuODc1IDEwLjVDNC44NzUgMTAuMjkyOSA0LjcwNzExIDEwLjEyNSA0LjUgMTAuMTI1SDIuNDA1MjdMMTAuMTI1IDIuNDA1MjdWNC41QzEwLjEyNSA0LjcwNzExIDEwLjI5MjkgNC44NzUgMTAuNSA0Ljg3NUMxMC43MDcxIDQuODc1IDEwLjg3NSA0LjcwNzExIDEwLjg3NSA0LjVWMS40NjU5MUMxMC44NzUgMS4yNzc2MyAxMC43MjI0IDEuMTI1IDEwLjUzNDEgMS4xMjVINy41WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==" />
+            `<div id="video_view" class="video-view-">
+                <video id="kore_remote_video_tmp" autoplay="autoplay" playsinline style="display: block;"></video>
+                <div class="action-minimize-audio-control">
+                    <div id="maximizevideo" class="maximize-video">
+                        <span class="maximize-icon">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                <path d="M7.5 1.125C7.29289 1.125 7.125 1.29289 7.125 1.5C7.125 1.70711 7.29289 1.875 7.5 1.875H9.59473L1.875 9.59473V7.5C1.875 7.29289 1.70711 7.125 1.5 7.125C1.29289 7.125 1.125 7.29289 1.125 7.5V10.5341C1.125 10.7224 1.27763 10.875 1.46591 10.875H4.5C4.70711 10.875 4.875 10.7071 4.875 10.5C4.875 10.2929 4.70711 10.125 4.5 10.125H2.40527L10.125 2.40527V4.5C10.125 4.70711 10.2929 4.875 10.5 4.875C10.7071 4.875 10.875 4.70711 10.875 4.5V1.46591C10.875 1.27763 10.7224 1.125 10.5341 1.125H7.5Z" fill="white"/>
+                            </svg>
+                        </span>
+                        <span class="minimize-icon">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                <g clip-path="url(#clip0_1305_135743)">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.1402 0.859835C11.2866 1.00628 11.2866 1.24372 11.1402 1.39017L7.28033 5.25H9.75C9.95711 5.25 10.125 5.41789 10.125 5.625C10.125 5.83211 9.95711 6 9.75 6H6.375C6.16789 6 6 5.83211 6 5.625V2.25C6 2.04289 6.16789 1.875 6.375 1.875C6.58211 1.875 6.75 2.04289 6.75 2.25V4.71967L10.6098 0.859835C10.7563 0.713388 10.9937 0.713388 11.1402 0.859835ZM1.875 6.375C1.875 6.16789 2.04289 6 2.25 6H5.625C5.83211 6 6 6.16789 6 6.375V9.75C6 9.95711 5.83211 10.125 5.625 10.125C5.41789 10.125 5.25 9.95711 5.25 9.75V7.28033L1.39017 11.1402C1.24372 11.2866 1.00628 11.2866 0.859835 11.1402C0.713388 10.9937 0.713388 10.7563 0.859835 10.6098L4.71967 6.75H2.25C2.04289 6.75 1.875 6.58211 1.875 6.375Z" fill="white"/>
+                                </g>
+                            <defs>
+                                <clipPath id="clip0_1305_135743">
+                                    <rect width="12" height="12" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                        </span>
+                    </div>
+                </div>
+                <div id="showselfvideocontainer" class="show-self-video-container">
+                    <div class="show-self-video">
+                        <img alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwIDAuMzk4NDM4QzYuNTcxODggMC4zOTg0MzggMy42OTY4OCAyLjgxMDk0IDIuOTc1IDYuMDIzNDRDMy4wNDg0NCA2LjAxNTYyIDMuMTI1IDUuOTk4NDQgMy4yIDUuOTk4NDRDMy40MDQ2OSA1Ljk5ODQ0IDMuNjAxNTYgNi4wNDA2MyAzLjc4NzUgNi4wOTg0NEM0LjQ2NTYzIDMuMjkzNzUgNi45ODkwNiAxLjE5ODQ0IDEwIDEuMTk4NDRDMTMuMDA5NCAxLjE5ODQ0IDE1LjUzNDQgMy4yOTM3NSAxNi4yMTI1IDYuMDk4NDRDMTYuMzk4NCA2LjA0MDYzIDE2LjU5MzggNS45OTg0NCAxNi44IDUuOTk4NDRDMTYuODc1IDUuOTk4NDQgMTYuOTUxNiA2LjAxNTYyIDE3LjAyNSA2LjAyMzQ0QzE2LjMwMzEgMi44MTA5NCAxMy40MjY2IDAuMzk4NDM4IDEwIDAuMzk4NDM4Wk0zLjIgNi43OTg0NEMyLjUzOTA2IDYuNzk4NDQgMiA3LjMzNzUgMiA3Ljk5ODQ0VjEzLjk5ODRDMiAxNC42NTk0IDIuNTM5MDYgMTUuMTk4NCAzLjIgMTUuMTk4NEMzLjg2MDk0IDE1LjE5ODQgNC40IDE0LjY1OTQgNC40IDEzLjk5ODRWNy45OTg0NEM0LjQgNy4zMzc1IDMuODYwOTQgNi43OTg0NCAzLjIgNi43OTg0NFpNMTYuOCA2Ljc5ODQ0QzE2LjEzOTEgNi43OTg0NCAxNS42IDcuMzM3NSAxNS42IDcuOTk4NDRWMTMuOTk4NEMxNS42IDE0LjY1OTQgMTYuMTM5MSAxNS4xOTg0IDE2LjggMTUuMTk4NEMxNy40NjA5IDE1LjE5ODQgMTggMTQuNjU5NCAxOCAxMy45OTg0VjcuOTk4NDRDMTggNy4zMzc1IDE3LjQ2MDkgNi43OTg0NCAxNi44IDYuNzk4NDRaTTEuMiA4LjA0ODQ0QzAuNDc4MTI1IDguNjI4MTMgMCA5LjcxNTYyIDAgMTAuOTk4NEMwIDEyLjI4MTIgMC40NzgxMjUgMTMuMzY4OCAxLjIgMTMuOTQ4NFY4LjA0ODQ0Wk0xOC44IDguMDQ4NDRWMTMuOTQ4NEMxOS41MjE5IDEzLjM2ODggMjAgMTIuMjgxMiAyMCAxMC45OTg0QzIwIDkuNzE1NjIgMTkuNTIxOSA4LjYyODEzIDE4LjggOC4wNDg0NFpNMTYuMjM3NSAxNS45MTA5QzE1Ljg4NDQgMTYuOTk2OSAxNC45NjcyIDE3LjU5ODQgMTMuNiAxNy41OTg0SDEzLjE2MjVDMTMuMTg5MSAxNy43MjgxIDEzLjIgMTcuODYwOSAxMy4yIDE3Ljk5ODRDMTMuMiAxOC4xMzU5IDEzLjE4OTEgMTguMjY4NyAxMy4xNjI1IDE4LjM5ODRIMTMuNkMxNS4zOTY5IDE4LjM5ODQgMTYuNjQwNiAxNy40OTUzIDE3LjA1IDE1Ljk3MzRDMTYuOTY1NiAxNS45ODQ0IDE2Ljg4NTkgMTUuOTk4NCAxNi44IDE1Ljk5ODRDMTYuNjAzMSAxNS45OTg0IDE2LjQxNzIgMTUuOTY0MSAxNi4yMzc1IDE1LjkxMDlaTTkuMiAxNi43OTg0QzguNTM5MDYgMTYuNzk4NCA4IDE3LjMzNzUgOCAxNy45OTg0QzggMTguNjU5NCA4LjUzOTA2IDE5LjE5ODQgOS4yIDE5LjE5ODRIMTEuMkMxMS44NjA5IDE5LjE5ODQgMTIuNCAxOC42NTk0IDEyLjQgMTcuOTk4NEMxMi40IDE3LjMzNzUgMTEuODYwOSAxNi43OTg0IDExLjIgMTYuNzk4NEg5LjJaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K" />
+                    </div>
+                </div>
+                <div id="selfvideocontainer" class="self-video-container">
+                    <div class="self-video">
+                        <div id="agentyou" class="video-user-alphabet">YOU</div>
+                        <video id="kore_local_video_tmp" autoplay="autoplay" playsinline style="display: block;"></video>
+                    </div>
+                    <div id="closeselfvideo" class="close-video">
+                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+                            <path d="M10.8838 10.0001L16.0669 4.81694C16.311 4.57286 16.311 4.17714 16.0669 3.93306C15.8229 3.68898 15.4271 3.68898 15.1831 3.93306L9.99988 9.11624L4.81694 3.93352C4.57286 3.68944 4.17713 3.68945 3.93306 3.93354C3.68899 4.17762 3.689 4.57335 3.93308 4.81742L9.116 10.0001L3.93306 15.1831C3.68898 15.4272 3.68898 15.8229 3.93306 16.067C4.17714 16.311 4.57286 16.311 4.81694 16.067L9.9999 10.884L15.1831 16.067C15.4272 16.311 15.8229 16.311 16.067 16.0669C16.311 15.8229 16.311 15.4271 16.0669 15.1831L10.8838 10.0001Z" fill="#697586"/>
+                        </svg>
+                    </div>
                 </div>
             </div>
-            <div id="showselfvideocontainer" class="show-self-video-container">
-                <div class="show-self-video">
-                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgb3BhY2l0eT0iMC40Ij4KPHBhdGggZD0iTTMuNjkzNjUgMi4zNzUxM0MzLjUyMzU4IDIuMTgwOSAzLjI0Nzk1IDIuMTgwOTUgMy4wNzc5NCAyLjM3NTI1QzIuOTA4MDcgMi41NjkzOSAyLjkwNzg2IDIuODg0MDcgMy4wNzc0NyAzLjA3ODVMMy44ODEzNSA0LjAwMDA0SDIuMzEyNUMxLjU5MTMxIDQuMDAwMDQgMSA0LjY3NTgyIDEgNS41MDAwNFYxMC41QzEgMTEuMzI0MyAxLjU5MTMxIDEyIDIuMzEyNSAxMkgxMC4xODc1QzEwLjM4OTIgMTIgMTAuNTgwNiAxMS45NDU0IDEwLjc1MTUgMTEuODUxNkwxMi4zIDEzLjYyNDZDMTIuNDcxNiAxMy44MjExIDEyLjc1MDIgMTMuODIxMyAxMi45MjIgMTMuNjI0OUMxMy4wOTM3IDEzLjQyODcgMTMuMDkzNiAxMy4xMTA1IDEyLjkyMTkgMTIuOTE0M0wzLjY5MzY1IDIuMzc1MTNaTTE1IDQuNzQ5MjNDMTUgNC4zNjYgMTQuNjM4MyA0LjEyNTI0IDE0LjM0NjYgNC4zMTQzNkwxMS41IDYuMTYwMlY1LjUwMDA0QzExLjUgNC42NzE5MiAxMC45MTIxIDQuMDAwMDQgMTAuMTg3NSA0LjAwMDA0SDYuMzIxNzhMNy4xOTY3OCA1LjAwMDA0SDEwLjE4NzVDMTAuNDMwMiA1LjAwMDA0IDEwLjYyNSA1LjIyMjcgMTAuNjI1IDUuNTAwMDRWOC44NzUwNEwxMS41IDkuODc1MDRMMTQuMzQ5MSAxMS42OTM5QzE0LjY0MDggMTEuODgwMSAxNSAxMS42MzkyIDE1IDExLjI1NzRWNC43NDkyM1pNMi4zMTI1IDUuMDAwMDRINC43NTYzNUwxMC4wMDYzIDExSDIuMzEyNUMyLjA2NjQxIDExIDEuODc1IDEwLjc4MTMgMS44NzUgMTAuNVY1LjUwMDA0QzEuODc1IDUuMjE4NzkgMi4wNjY0MSA1LjAwMDA0IDIuMzEyNSA1LjAwMDA0Wk0xNC4xMjUgNS42MDk0MlYxMC4zOTA3TDExLjUgOC43MTg3OVY3LjMwODY0TDE0LjEyNSA1LjYwOTQyWiIgZmlsbD0iI0NERDVERiIvPgo8L2c+Cjwvc3ZnPgo=" />
-                </div>
-            </div>
-            <div id="selfvideocontainer" class="self-video-container">
-            <div class="self-video">
-                <div id="agentyou" class="video-user-alphabet">YOU</div>
-                <video id="kore_local_video_tmp" autoplay="autoplay" playsinline style="display: block;"></video>
-            </div>
-            <div id="closeselfvideo" class="close-video">
-                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTcuODgzNzggNy4wMDAxTDEzLjA2NjkgMS44MTY5M0MxMy4zMTEgMS41NzI4NSAxMy4zMTEgMS4xNzcxMiAxMy4wNjY5IDAuOTMzMDQ3QzEyLjgyMjkgMC42ODg5NjkgMTIuNDI3MSAwLjY4ODk2OSAxMi4xODMxIDAuOTMzMDQ3TDYuOTk5ODcgNi4xMTYyM0wxLjgxNjk0IDAuOTMzNTA2QzEuNTcyODUgMC42ODk0MzMgMS4xNzcxMiAwLjY4OTQ0MSAwLjkzMzA1MiAwLjkzMzUyNEMwLjY4ODk3OSAxLjE3NzYxIDAuNjg4OTg3IDEuNTczMzMgMC45MzMwNyAxLjgxNzQxTDYuMTE1OTkgNy4wMDAxMkwwLjkzMzA1MSAxMi4xODMxQzAuNjg4OTczIDEyLjQyNzEgMC42ODg5NzMgMTIuODIyOSAwLjkzMzA1MSAxMy4wNjdDMS4xNzcxMyAxMy4zMTEgMS41NzI4NiAxMy4zMTEgMS44MTY5MyAxMy4wNjdMNi45OTk4OSA3Ljg4Mzk4TDEyLjE4MzEgMTMuMDY2OUMxMi40MjcyIDEzLjMxMSAxMi44MjI5IDEzLjMxMSAxMy4wNjcgMTMuMDY2OUMxMy4zMTEgMTIuODIyOCAxMy4zMTEgMTIuNDI3MSAxMy4wNjY5IDEyLjE4M0w3Ljg4Mzc4IDcuMDAwMVoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=" />
-            </div>
-            </div>
-        </div>
        `;
 
             var videoAudoStr = videoCall ? 'video' : 'audio';
             var audioContainerHTML =
                 `<div id="video_view" class="video-view- audio-view-">
-            <div class="agent-profile-img">
-                <img style='height: 30px; width:30px; top:0px;left:0px;position: absolute; border-radius: 50%;'
-                    src="${_self.agentProfileIcon}" alt='Agent' onerror="this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDMiIHZpZXdCb3g9IjAgMCA0OCA0MyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIxNF8xMTA3NDgpIj4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0iI0VBRjFGQyIvPgo8cGF0aCBkPSJNMjIgMjIuMjVDMjUuNTg5OSAyMi4yNSAyOC41IDE5LjMzOTkgMjguNSAxNS43NUMyOC41IDEyLjE2MDEgMjUuNTg5OSA5LjI1IDIyIDkuMjVDMTguNDEwMiA5LjI1IDE1LjUgMTIuMTYwMSAxNS41IDE1Ljc1QzE1LjUgMTkuMzM5OSAxOC40MTAyIDIyLjI1IDIyIDIyLjI1WiIgZmlsbD0iIzJCNzVFNCIvPgo8cGF0aCBkPSJNNi44MzMzNyA0MS43NUM2LjgzMzM3IDMzLjM3MzcgMTMuNjIzNyAyNi41ODMzIDIyIDI2LjU4MzNDMzAuMzc2NCAyNi41ODMzIDM3LjE2NjcgMzMuMzczNyAzNy4xNjY3IDQxLjc1SDYuODMzMzdaIiBmaWxsPSIjMkI3NUU0Ii8+CjwvZz4KPHJlY3QgeD0iMS4yNSIgeT0iMC43NSIgd2lkdGg9IjQxLjUiIGhlaWdodD0iNDEuNSIgcng9IjIwLjc1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8yMTRfMTEwNzQ4Ij4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K'"> 
-            </div>
-            <div class="title">Connected ${videoAudoStr} Call...</div>
-            <div class="audio-info">Disconnecting ${videoAudoStr} call doesn't end conversation</div>
-        </div>`;
+                    <div class="agent-profile-img">
+                        <img src="${_self.agentProfileIcon}" alt='Agent' onerror="this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDMiIHZpZXdCb3g9IjAgMCA0OCA0MyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIxNF8xMTA3NDgpIj4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0iI0VBRjFGQyIvPgo8cGF0aCBkPSJNMjIgMjIuMjVDMjUuNTg5OSAyMi4yNSAyOC41IDE5LjMzOTkgMjguNSAxNS43NUMyOC41IDEyLjE2MDEgMjUuNTg5OSA5LjI1IDIyIDkuMjVDMTguNDEwMiA5LjI1IDE1LjUgMTIuMTYwMSAxNS41IDE1Ljc1QzE1LjUgMTkuMzM5OSAxOC40MTAyIDIyLjI1IDIyIDIyLjI1WiIgZmlsbD0iIzJCNzVFNCIvPgo8cGF0aCBkPSJNNi44MzMzNyA0MS43NUM2LjgzMzM3IDMzLjM3MzcgMTMuNjIzNyAyNi41ODMzIDIyIDI2LjU4MzNDMzAuMzc2NCAyNi41ODMzIDM3LjE2NjcgMzMuMzczNyAzNy4xNjY3IDQxLjc1SDYuODMzMzdaIiBmaWxsPSIjMkI3NUU0Ii8+CjwvZz4KPHJlY3QgeD0iMS4yNSIgeT0iMC43NSIgd2lkdGg9IjQxLjUiIGhlaWdodD0iNDEuNSIgcng9IjIwLjc1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8yMTRfMTEwNzQ4Ij4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K'"> 
+                    </div>
+                    <div class="video-name-title">${agentName}</div>
+                    <div class="title">Connected ${videoAudoStr} Call...</div>
+                    <div class="audio-info">Disconnecting ${videoAudoStr} call doesn't end conversation</div>
+                </div>`;
             var callcontainer = document.getElementById("callcontainer");
             if (callcontainer) {
                 callcontainer.remove();
@@ -445,7 +481,7 @@ class AgentDesktopPluginScript  {
                         "right": "15px",
                         "left": "",
                     });
-                    audiovideocallcontainer.css({ "position": "absolute", "width": "90%", "height": "74%", "top": "24%", "background-color": "black" });
+                    audiovideocallcontainer.css({});
                     var showselfvideocontainer = koreJquery("#showselfvideocontainer").hide();
 
                     var closeselfvideo = koreJquery("#closeselfvideo");
@@ -466,7 +502,7 @@ class AgentDesktopPluginScript  {
                                 "right": "15px",
                                 "left": "",
                             });
-                            koreJquery('#agentcontainer').toggleClass('if-full-screen')
+                            koreJquery('#agentcontainer').toggleClass('full-screen-video')
                             // koreJquery("#selfvideocontainer").draggable({
                             //     containment: "document"
                             // });
@@ -518,22 +554,21 @@ class AgentDesktopPluginScript  {
                 var agentcontainer = document.getElementById("agentcontainer");
                 agentcontainer.appendChild(callcontainer);
             }
-            var videoAudoStr = videoCall ? 'Video' : 'Audio';
+            var videoAudoStr = videoCall ? 'video' : 'audio';
             var callConnectingHTML =
-                `<div class="video-audio-chat-container">
-            <div class="video-chat-">
-                <div class="video-name-title">${agentName}</div>
-                <div id="video_view" class="video-view- audio-view-">
-                    <div class="agent-profile-img">
-                        <img style='height: 30px; width:30px; top:0px;left:0px;position: absolute; border-radius: 50%;'
-                            src="${_self.agentProfileIcon}" alt='Agent' onerror="this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDMiIHZpZXdCb3g9IjAgMCA0OCA0MyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIxNF8xMTA3NDgpIj4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0iI0VBRjFGQyIvPgo8cGF0aCBkPSJNMjIgMjIuMjVDMjUuNTg5OSAyMi4yNSAyOC41IDE5LjMzOTkgMjguNSAxNS43NUMyOC41IDEyLjE2MDEgMjUuNTg5OSA5LjI1IDIyIDkuMjVDMTguNDEwMiA5LjI1IDE1LjUgMTIuMTYwMSAxNS41IDE1Ljc1QzE1LjUgMTkuMzM5OSAxOC40MTAyIDIyLjI1IDIyIDIyLjI1WiIgZmlsbD0iIzJCNzVFNCIvPgo8cGF0aCBkPSJNNi44MzMzNyA0MS43NUM2LjgzMzM3IDMzLjM3MzcgMTMuNjIzNyAyNi41ODMzIDIyIDI2LjU4MzNDMzAuMzc2NCAyNi41ODMzIDM3LjE2NjcgMzMuMzczNyAzNy4xNjY3IDQxLjc1SDYuODMzMzdaIiBmaWxsPSIjMkI3NUU0Ii8+CjwvZz4KPHJlY3QgeD0iMS4yNSIgeT0iMC43NSIgd2lkdGg9IjQxLjUiIGhlaWdodD0iNDEuNSIgcng9IjIwLjc1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8yMTRfMTEwNzQ4Ij4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K'"> 
+                `<div class="video-audio-chat-container ${videoAudoStr}">
+                    <div class="video-chat-">
+                        <div id="video_view" class="video-view- audio-view-">
+                            <div class="agent-profile-img">
+                                <img src="${_self.agentProfileIcon}" alt='Agent' onerror="this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDMiIHZpZXdCb3g9IjAgMCA0OCA0MyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIxNF8xMTA3NDgpIj4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0iI0VBRjFGQyIvPgo8cGF0aCBkPSJNMjIgMjIuMjVDMjUuNTg5OSAyMi4yNSAyOC41IDE5LjMzOTkgMjguNSAxNS43NUMyOC41IDEyLjE2MDEgMjUuNTg5OSA5LjI1IDIyIDkuMjVDMTguNDEwMiA5LjI1IDE1LjUgMTIuMTYwMSAxNS41IDE1Ljc1QzE1LjUgMTkuMzM5OSAxOC40MTAyIDIyLjI1IDIyIDIyLjI1WiIgZmlsbD0iIzJCNzVFNCIvPgo8cGF0aCBkPSJNNi44MzMzNyA0MS43NUM2LjgzMzM3IDMzLjM3MzcgMTMuNjIzNyAyNi41ODMzIDIyIDI2LjU4MzNDMzAuMzc2NCAyNi41ODMzIDM3LjE2NjcgMzMuMzczNyAzNy4xNjY3IDQxLjc1SDYuODMzMzdaIiBmaWxsPSIjMkI3NUU0Ii8+CjwvZz4KPHJlY3QgeD0iMS4yNSIgeT0iMC43NSIgd2lkdGg9IjQxLjUiIGhlaWdodD0iNDEuNSIgcng9IjIwLjc1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8yMTRfMTEwNzQ4Ij4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K'"> 
+                            </div>
+                            <div class="video-name-title">${agentName}</div>
+                            <div class="title">Connecting ${videoAudoStr} Call...</div>
+                            <div class="audio-info">Disconnecting ${videoAudoStr} call doesn't end conversation</div>
+                        </div>										
                     </div>
-                    <div class="title">Connecting ${videoAudoStr} Call...</div>
-                    <div class="audio-info">Disconnecting ${videoAudoStr} call doesn't end conversation</div>
-                </div>										
-            </div>
-            <div id="callbuttons"></div>
-        </div>`;
+                    <div id="callbuttons"></div>
+                </div>`;
             var callContainer = koreJquery("#callcontainer");
             callContainer.empty();
             callContainer.append(callConnectingHTML);
@@ -576,10 +611,8 @@ class AgentDesktopPluginScript  {
                 <div class="type-text">is requesting for a screenshare</div>
             </div>
             <div class="controls-v-a">
-                <button id="rejectcall" class="decline">Decline</button>
-                <button id="acceptcall" class="accept">Accept</button>
-                <img id="rejectcall" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAMCSURBVHgBxZjPaxNBFMffzG43oFCSo1gwMW3BUxPwR/HSBKwUT/XeYIX2asV/IO1/YC+CtFBLejdHaYXGW7ViVy8e2pL14k0SCoLdpDu+t/lhkmbNTDY/vpDsJHmb/fDezLz3hoGi8tOJsFPW50FjUyBYAgQEgeGLJKCIYwtHFjjOB7tczt4yc5bK/zNZw5M7s4sc4IlgCKEmUwixPn6490bGuCPQ8e0HCc75Fg7D4E8Wgq11AvMEOoolgsERI+0weA69lGAvz0rna3EzVwRZoO+xRNgwjLc4jEF/ZNm2nWw3v5gHzD74D1FXUE1AFKZRwzgaAExN5hlCNYaPN/5Kc2aAMKTY6Egg3fhF3UO0rBljWzAEOY6TnPj8PkfjuocQJg1DUnVbqYzpjbwDgw1Vq8JVhgoQemdF9k5jMiprqmRLWcC90jIHyf0mMHkTxjKvILSc6mgbWl5wbWWhKCX9vP/ohvZibHwRXTQnc9PFr0L1YSlyK/z58s0TJrSUgsLGDvzey4GsbCF+6KDxGczS0ips7vyDos8bGU+YwmYGVIRhm9IRJgyK8oLyA+NKiEQFSLoI8YaiYsgXTEVBvV5cdaHLnvIF4wJx8CvmMe5SerXs7MpLjXPGDZnHRFdQkUJGmVYZyGsC+4ISYGnPrkfjTLEQ84Kp7Uud9ilPHgYftZVrkbDsxvg/mF5A4W79mnNdz8reQKlDZmnT6qOQhZYWlPKZzljWXRcn92b3mZBrbwITUTg/PpUxVbLF+WNGD3fjlWXvwDZISvoBirYCxDpd6zvH6d2HeRheTWRFP+1GaFDfGLGMfApDEjWQtXEdiGpaanlhwGpts5tSh1YqrWIMTRicLO1qabXxiyagCPZHjPPHZAgDgMHiPhnJNbfUl5Jr5OCda9hnKNOFwWe1/tA227tQth3vx5yi/+RX7LYwpI4FQ7WB7EVHa9FKrjWEXlI6sKq2S0qJGD2Sw8t2zw6sWpWfnsMjvfI8tpszQF6rlMCNR3r4QogL8ZXr5WzkQO1I7y91mFsdhEgKrAAAAABJRU5ErkJggg=="  />
-                <img id="acceptcall" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAMfSURBVHgBxZg/TBNRHMe/v1cQCTGpCerg4AHGlEXEwZWDiDLS4GBjohJjIokJRF2IA7Az2NGpEmM6GRwN/isxDsACLt6kNyhBoqYJktIW7vl+154tWuiV67Xfpb+7+11/n7zfu997v0eoUKGYrlFTw6Ak6gJIJ2kFlR3kZyRl0hJkKssUljUvafuFEUmYlfw/uXUMPeu/CYEbytRRgSRhmXYQNa69euLGvyxQ6OlFHQ0UU6YGbzJhYaoc2J5AWkwPNjcfmpBSjqGKIqJHqVRmyhxOJEs+L3UzFNc1SY2zJHEO/sgEsr2l5heVggEa38F7ig4EJYovOE01grHDcRZyMfcA4jlTIxhbPCXyMQv3HCP/WcdQF0mVutcJtgojJDCBuoliBQzkR6eGqSohLc+QA1LVdBT1Vm4VgODPnMi3eoOTLSewODSLULC9nKve+bzvlCDZMAifxDAzfdN48/UDjOTn8i+kRVhYAj3wQQ7M0voKxhemXb3DOwgBizRUWQeByUsXAlJDFeUBRi28CApnc7WfjjS24MLxs+XcPMGwpFRAbhw7j562A4Xb+uEXjKPAsaH2MTVWh/dz+rb53V5jxs+PYCPzGys/DV9gVMqSgdYrHXeUXTZti+sfbah7Xbfs6yV1XQzDoLfnH8KL1ObNCLQOdXTDZWFkKA58Pw+1qkbOgbn+9gEyVhZeJEELnDJNoQ24fYnTtbq5Zqcv3H4ZP1K/bJiN7Ca8Skj5WKXszJpiq2jfzFWXoZoCh3D3/WRVYGxRw4i9HwrF+3mXqKOOUvNn+dPVuW7ns59BnaW6myj/FnaM8UtfUOWq7V5kGpG5NraKCqM1jLpJTjnWXyDe06o+PYoaSy0XUSNS6GZ3LR2p9M6kclhGzURmOp2dLL6zC4jbW6JAmB1RAxgVvvfflvq/xdWIvLQd/YTiExGOkYu1WyVXe3bc2sp0+zGneM6kU9mSMKzyxzFxbk9owntJ4BG3hp2GcE8vuBSDqeI1qipqhR2KTKgwM8VfUlWACmADGsntQZXsHsuCJkDq0AD5Iz0kla0mqaVKCK0c5EjvD7WHTOQEQMMGAAAAAElFTkSuQmCC" />
+                <button id="rejectcall" class="decline-btn">Decline</button>
+                <button id="acceptcall" class="accept-btn">Accept</button>               
             </div>
         </div>`;
             var toastContainer = koreJquery("#toastcontainer");
@@ -641,10 +674,8 @@ class AgentDesktopPluginScript  {
                 <div class="type-text">is trying to ${audioVideoStr} call you</div>
             </div>
             <div class="controls-v-a">
-                <button id="rejectcall" class="decline">Decline</button>
-                <button id="acceptcall" class="accept">Accept</button>
-                <img id="rejectcall" src="${rejectIcon}"/>
-                <img id="acceptcall" src= "${acceptIcon}"/>
+                <button id="rejectcall" class="decline-btn">Decline</button>
+                <button id="acceptcall" class="accept-btn">Accept</button>
             </div>
         </div>`;
             setTimeout(() => {
@@ -753,8 +784,8 @@ class AgentDesktopPluginScript  {
                 <div class="type-text">is requesting a CoBrowse session with you</div>
             </div>
             <div class="controls-v-a">
-                <img id="rejectcall" src="${rejectIcon}"/>
-                <img id="acceptcall" src= "${acceptIcon}"/>
+                <button id="rejectcall" class="decline-btn">Decline</button>
+                <button id="acceptcall" class="accept-btn">Accept</button>
             </div>
         </div>`;
             var toastContainer = koreJquery("#toastcontainer");
