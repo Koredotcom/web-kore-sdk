@@ -307,7 +307,7 @@ const BrandingJSON = {
         ]
       },
       "emoji": {
-        "show": true,
+        "show": false,
         "icon": ""
       },
       "microphone": {
