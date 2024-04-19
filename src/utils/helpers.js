@@ -26,10 +26,11 @@ class KoreHelpers{
             var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
             return strTime;
         },
-        'formatAMPMDay': function (date) {
-            var month = ["Jan","Feb","Mar","Apr","May","June","July","Aug","Sept","Oct","Nov","Dec"];
+        'formatAMPMDay': function (date, df, tf) {
+            var month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
             date = new Date(date);
             var hours = date.getHours();
+            var hours24 = hours;
             var minutes = date.getMinutes();
             // var seconds = date.getSeconds();
             var dateCheck = date.getDate();
@@ -37,15 +38,29 @@ class KoreHelpers{
             var ampm = hours >= 12 ? 'pm' : 'am';
             hours = hours % 12;
             hours = hours ? hours : 12; // the hour '0' should be '12'
+            hours = hours < 10 ? '0' + hours : hours;
+            hours24 = hours24 < 10 ? '0' + hours24 : hours24;
             minutes = minutes < 10 ? '0' + minutes : minutes;
             // seconds = seconds < 10 ? '0' + seconds : seconds;
             var mon = month[date.getMonth()];
-            var year = date.getFullYear();
+            var year = date.getFullYear().toString();
+            var mon_digit = (date.getMonth()) + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
             var strTime;
+            var modified_date;
             if (day == 'Today' || day == 'Yesterday') {
-              strTime = hours + ':' + minutes + ' ' + ampm + ', ' + day;
+                if (tf == '12') {
+                    strTime = hours + ':' + minutes + ' ' + ampm + ', ' + day;
+                } else {
+                    strTime = hours24 + ':' + minutes + ', ' + day;
+                }
             } else {
-              strTime = hours + ':' + minutes + ' ' + ampm + ', ' + day + ' ' + mon + ', ' + year;
+                day = day < 10 ? '0' + day : day;
+                modified_date = df == 'dd/mm/yyyy' ? day + '/' + mon_digit + '/' + year.substring(2,4) : df == 'mm/dd/yyyy' ? mon_digit + '/' + day + '/' + year.substring(2, 4) : mon + '/' + day + '/' + year;
+                if (tf == '12') {
+                    strTime = hours + ':' + minutes + ' ' + ampm + ', ' + modified_date;
+                } else {
+                    strTime = hours24 + ':' + minutes + ', ' + modified_date;
+                }
             }
             return strTime;
         },

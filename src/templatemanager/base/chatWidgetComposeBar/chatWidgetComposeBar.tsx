@@ -6,6 +6,7 @@ import './chatWidgetComposeBar.scss';
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { Menu } from '../../base/menu/menu';
+import { EmojiPicker } from '../emojiPicker/emojiPicker';
 
 export function ChatWidgetComposeBar(props: any) {
     const hostInstance = props.hostInstance;
@@ -51,6 +52,14 @@ export function ChatWidgetComposeBar(props: any) {
         }
     }
 
+    const showEmojiPicker = () => {
+        if (hostInstance.chatEle.querySelector('.emoji-picker-section').style.display != 'none') {
+            hostInstance.chatEle.querySelector('.emoji-picker-section').style.display = 'none';
+        } else {
+            hostInstance.chatEle.querySelector('.emoji-picker-section').style.display = 'block';
+        }
+    }
+
     useEffect(() => {
         hostInstance.eventManager.removeEventListener('.send-btn', 'click');
         hostInstance.eventManager.addEventListener('.send-btn', 'click', (event: any) => {
@@ -78,6 +87,7 @@ export function ChatWidgetComposeBar(props: any) {
                 </button>
                 <div className="voice-msg-bubble" aria-label="entered msg"></div>
             </div>
+            <div className="emoji-picker-section" style="display: none"><EmojiPicker {...{hostInstance: hostInstance}}/></div>
             <div className="attachment-wrapper-data hide-attachment">
                 <div className="select-file-block">
                     <button className="inputfile-btn inputfile-btn-media" type="button" aria-label="Media">
@@ -163,7 +173,7 @@ export function ChatWidgetComposeBar(props: any) {
                             <path d="M15.4564 2.28917C16.6375 3.93104 17.3332 5.94554 17.3332 8.12251C17.3332 10.2995 16.6375 12.314 15.4564 13.9558M12.1209 4.78917C12.78 5.73404 13.1665 6.88313 13.1665 8.12251C13.1665 9.36188 12.78 10.511 12.1209 11.4558M7.02843 1.76058L4.39036 4.39865C4.24624 4.54278 4.17417 4.61484 4.09007 4.66637C4.01551 4.71207 3.93423 4.74574 3.8492 4.76615C3.75329 4.78917 3.65138 4.78917 3.44755 4.78917H1.99984C1.53313 4.78917 1.29977 4.78917 1.12151 4.88C0.96471 4.9599 0.837226 5.08738 0.757332 5.24418C0.666504 5.42244 0.666504 5.6558 0.666504 6.12251V10.1225C0.666504 10.5892 0.666504 10.8226 0.757332 11.0008C0.837226 11.1576 0.96471 11.2851 1.12151 11.365C1.29977 11.4558 1.53313 11.4558 1.99984 11.4558H3.44755C3.65138 11.4558 3.75329 11.4558 3.8492 11.4789C3.93423 11.4993 4.01551 11.533 4.09007 11.5786C4.17417 11.6302 4.24624 11.7022 4.39036 11.8464L7.02843 14.4844C7.38541 14.8414 7.5639 15.0199 7.71715 15.032C7.85011 15.0424 7.98005 14.9886 8.06667 14.8872C8.1665 14.7703 8.1665 14.5179 8.1665 14.013V2.23198C8.1665 1.72714 8.1665 1.47471 8.06667 1.35783C7.98005 1.25641 7.85011 1.20258 7.71715 1.21305C7.5639 1.22511 7.38541 1.4036 7.02843 1.76058Z" stroke="#101828" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </button>}
-                    { brandingInfo.footer.buttons.emoji.show &&  <button className="emoji-btn" type="button" aria-label="Emojis">
+                    { brandingInfo.footer.buttons.emoji.show &&  <button className="emoji-btn" type="button" aria-label="Emojis" onClick={showEmojiPicker}>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                             <path d="M5.96154 8.29627C5.96154 7.65625 6.47987 7.14243 7.11538 7.14243C7.7509 7.14243 8.26923 7.65625 8.26923 8.29627C8.26923 8.93179 7.7509 9.45012 7.11538 9.45012C6.47987 9.45012 5.96154 8.93179 5.96154 8.29627Z" fill="#697586"/>
                             <path d="M11.7308 8.29627C11.7308 7.65625 12.2491 7.14243 12.8846 7.14243C13.5201 7.14243 14.0385 7.65625 14.0385 8.29627C14.0385 8.93179 13.5201 9.45012 12.8846 9.45012C12.2491 9.45012 11.7308 8.93179 11.7308 8.29627Z" fill="#697586"/>
