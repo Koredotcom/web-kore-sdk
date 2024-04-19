@@ -69,8 +69,30 @@ export function AvatarComponent(props: any) {
         hostInstance.chatEle.querySelector('.content-info').remove();
     }
 
-    const triggerAvatar = () => {
-        hostInstance.chatEle.querySelector('.avatar-bg').click();   
+    const buttonAction = (btn: any) => {
+        const value = btn.value;
+        hostInstance.welcomeScreenState = true;
+        hostInstance.chatEle.classList.remove('minimize-chat');
+        hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
+        hostInstance.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
+        hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+        if (!hostInstance.config.openSocket && !hostInstance.misc.chatOpened) {
+            hostInstance.bot.logInComplete();
+            hostInstance.misc.chatOpened = true;
+        }
+        if (value) {
+            if (hostInstance.config.loadHistory) {
+                hostInstance.on('historyComplete', (event: any) => {
+                    setTimeout(() => {
+                        hostInstance.sendMessage(value);
+                    }, 500);
+                });    
+            } else {
+                setTimeout(() => {
+                    hostInstance.sendMessage(value);
+                }, 500);
+            }
+        }
     }
 
     const dynamicContextResolver = (msg: any, data: any) => {
@@ -103,7 +125,7 @@ export function AvatarComponent(props: any) {
                         </div>)))}
                     <div className="buttons-triger-click-wrapper animation-slide-up btn-anim-send">
                         {hostInstance.config.branding.chat_bubble.proactive.buttons.map((btn: any) => (
-                            <button className="primary-button" onClick={triggerAvatar}>{btn.title}</button>
+                            <button className="primary-button" onClick={() => buttonAction(btn)}>{btn.title}</button>
                         ))}
                     </div>
                 </div>}
