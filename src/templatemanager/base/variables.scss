@@ -136,6 +136,11 @@ $media-mobile: 600px;
         --date-seperator-color:var(--gloabl-text-color);
     // End
 
+    // Buttons
+        --button-bg-color: var(--chat-sdk-branding--body-buttons-bg_color);
+        --button-text-color: var(--chat-sdk-branding--body-buttons-color);
+    // End
+
     // Template Styles
 
         // Button Template
@@ -145,12 +150,12 @@ $media-mobile: 600px;
         --button-temp-bg-hover:var(--gloabl-bg-secondary);
         --button-temp-bg-variation-1:var(--gloabl-bg-secondary);
         --button-temp-variation-1-border:transparent;
-        --button-temp-variation-1-color:var(--global-theme-color);
+        --button-temp-variation-1-color:var(--button-bg-color);   // --global-theme-color
         --button-temp-bg-variation-1-hover:linear-gradient(0deg, rgba(75, 78, 222, 0.07) 0%, rgba(75, 78, 222, 0.07) 100%), var(--gloabl-bg-secondary);
-        --button-temp-bg-variation-2:var(--global-theme-color);
-        --button-temp-variation-2-border:var(--global-theme-color);
-        --button-temp-variation-2-color:var(--global_white);
-        --button-temp-bg-variation-2-hover:linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), var(--global-theme-color);
+        --button-temp-bg-variation-2:var(--button-bg-color);   // --global-theme-color
+        --button-temp-variation-2-border:var(--button-bg-color);  // --global-theme-color
+        --button-temp-variation-2-color:var(--button-text-color);  // --global_white
+        --button-temp-bg-variation-2-hover:linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), var(--button-bg-color);  // --global-theme-color
         // End
 
         // Card Template
@@ -291,7 +296,7 @@ $font-s-40:2.5rem;
     font-size: 12px;
     line-height: 18px;
     height: 30px;
-    color: #2B75E4;
+    color: var(--button-bg-color);   // #2B75E4
     cursor: pointer;
     text-align: center;
     transition: 0.2s all ease;
@@ -305,7 +310,7 @@ $font-s-40:2.5rem;
     max-width: 100%;
     svg{
         path{
-            fill: #2B75E4;
+            fill: var(--button-bg-color);  // #2B75E4
         }
     }
     &.lg{
