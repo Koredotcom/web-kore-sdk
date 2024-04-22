@@ -11,6 +11,6 @@
 5.Create release in github<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;5.1.Select tag v3-X.X.X(previously created) and branch v3/X.X.X<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;5.2.Update the release notes<br/>
-6.Run npm run-script npm-publish-prod -- --version=X.X.X
+6.Run npm run-script npm-publish-prod -- --version=X.X.X 
          
 
