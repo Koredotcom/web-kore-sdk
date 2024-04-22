@@ -1230,7 +1230,7 @@
     font-weight: 400;
     font-size: 14px;
     line-height: 20px;
-    color: #202124;
+    color: var(--sdk-chat-widow-primary-font-color);
 }
 .kore-chat-window .rating-main-component .numbersComponent .rating-numbers-data {
     display: flex;
