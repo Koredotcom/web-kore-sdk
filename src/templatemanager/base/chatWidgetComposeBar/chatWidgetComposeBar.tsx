@@ -67,6 +67,14 @@ export function ChatWidgetComposeBar(props: any) {
             if (inputEle.value.trim() === '') {
                 return;
             }
+            let chatWindowEvent = {stopFurtherExecution: false};
+            hostInstance.emit('onSubmit', {
+                event: event,
+                chatWindowEvent: chatWindowEvent
+            });
+            if (chatWindowEvent.stopFurtherExecution) {
+                return false;
+            }
             event.preventDefault();
             hostInstance.sendMessageToBot(inputEle.value);
             inputEle.value = '';

@@ -417,6 +417,8 @@
     padding: 8px 16px;
     display: inline-block;
     width: 100%;
+    overflow-y: auto;
+    max-height: 250px;
     .uploaded-item{
         display: flex;
         align-items: center;
