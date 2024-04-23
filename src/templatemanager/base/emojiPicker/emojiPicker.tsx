@@ -17,7 +17,7 @@ export function EmojiPicker(props: any) {
             // emojiPickerElement.skinToneEmoji = '👍';
         }
 
-        hostInstance.chatEle.querySelector('emoji-picker').setAttribute('style', 'height:200px;width:100%');
+        // hostInstance.chatEle.querySelector('emoji-picker').setAttribute('style', 'height:200px;width:100%');
 
         return () => {
             // if (emojiPickerElement !== null) {
