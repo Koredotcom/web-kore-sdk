@@ -20,6 +20,9 @@ export function DateRangeExt(props: any) {
     }
 
     const handleSubmit = () => {
+        if (!selectedDate.from ||  !selectedDate.to) {
+            return
+        }
         hostInstance.sendMessage(selectedDate.from + ' to ' + selectedDate.to, { renderMsg: selectedDate.from + ' to ' + selectedDate.to });
         closeMenu();
     }
@@ -120,6 +123,9 @@ export function DateRange(props: any) {
             )
         } else {
             const handleSubmit = () => {
+                if (!selectedDate.from ||  !selectedDate.to) {
+                    return
+                }
                 hostInstance.sendMessage(selectedDate.from + ' to ' + selectedDate.to, { renderMsg: selectedDate.from + ' to ' + selectedDate.to });
             }
             const [selectedDate, setSelectedDate] = useState({ from: new Date().toDateString(), to: 'Select' });
