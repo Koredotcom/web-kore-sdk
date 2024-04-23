@@ -34,7 +34,7 @@ class KoreHelpers{
             var minutes = date.getMinutes();
             // var seconds = date.getSeconds();
             var dateCheck = date.getDate();
-            var day = new Date().getDate() == dateCheck ? 'Today' : new Date().getDate() - 1 == dateCheck ? 'Yesterday' : dateCheck ;
+            var day = (new Date().getDate() == dateCheck && date.getMonth() == new Date().getMonth()) ? 'Today' : (new Date().getDate() - 1 == dateCheck && date.getMonth() == new Date().getMonth()) ? 'Yesterday' : dateCheck ;
             var ampm = hours >= 12 ? 'pm' : 'am';
             hours = hours % 12;
             hours = hours ? hours : 12; // the hour '0' should be '12'
