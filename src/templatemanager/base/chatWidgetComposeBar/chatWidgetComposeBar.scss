@@ -195,6 +195,11 @@
                     padding-right: 62px;
                 }
             }
+            &.only-emoji-btn {
+                .emoji-btn {
+                    right: 12px;
+                }
+            }
             .emoji-btn{
                 width: 20px;
                 height: 20px;
@@ -376,6 +381,9 @@
             transform: rotate(45deg);
             background: var(--global-white-bg);
             filter: drop-shadow(0px 24px 48px rgba(16, 24, 40, 0.18));
+        }
+        &.emoji-only::before {
+            right: 38px;
         }
         emoji-picker{
             height: 100%;

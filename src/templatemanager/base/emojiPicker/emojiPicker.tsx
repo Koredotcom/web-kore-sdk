@@ -12,6 +12,7 @@ export function EmojiPicker(props: any) {
         if (emojiPickerElement !== null) {
             emojiPickerElement.addEventListener('emoji-click', (event: any) => {
                 hostInstance.chatEle.querySelector('.typing-text-area').value =  hostInstance.chatEle.querySelector('.typing-text-area').value + event.detail.unicode;
+                hostInstance.chatEle.querySelector('.emoji-picker-section').style.display = 'none';
                 hostInstance.chatEle.querySelector('.typing-text-area').focus();
             });
             // emojiPickerElement.skinToneEmoji = '👍';
