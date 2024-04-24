@@ -638,6 +638,19 @@ class KoreHelpers{
           return `${''+txtStr}`.replace(htmlTags, (match) => escapeTokens[match]);
         },
 
+        "decodePattern": function (txtStr, version) {
+            if (version == 'v2') {
+                const htmlTags = /[<>"']/g;
+                return `${'' + txtStr}`.replace(htmlTags, (match) => escapeTokens[match]);
+            } else {
+                try {
+                    return txtStr.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+                } catch (e) {
+                    return txtStr;
+                }
+            }
+        },
+
         "koreReplaceAll" :function (str,search, replacement) {
           const target = str;
           return target.replace(new RegExp(search, "g"), replacement);
