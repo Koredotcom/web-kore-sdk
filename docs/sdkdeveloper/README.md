@@ -139,3 +139,4 @@ npm run-script npm-publish-prod -- --version=10.0.0
 
 ```
 this will publish as kore-web-sdk with version 10.0.0
+
