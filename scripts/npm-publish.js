@@ -82,7 +82,7 @@ function publish(packageJSON){
     } 
 }
 function runPublish(){
-    execSync('cd '+TEMP_DIR+' && npm publish --access public');
+    execSync('cd '+TEMP_DIR+' && npm publish --tag latest(v3) --access public');
 }
 function takeConfirmation(successCB, failureCB) {
     const rl = readline.createInterface({
