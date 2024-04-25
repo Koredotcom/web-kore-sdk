@@ -12,12 +12,13 @@ export function EmojiPicker(props: any) {
         if (emojiPickerElement !== null) {
             emojiPickerElement.addEventListener('emoji-click', (event: any) => {
                 hostInstance.chatEle.querySelector('.typing-text-area').value =  hostInstance.chatEle.querySelector('.typing-text-area').value + event.detail.unicode;
+                hostInstance.chatEle.querySelector('.emoji-picker-section').style.display = 'none';
                 hostInstance.chatEle.querySelector('.typing-text-area').focus();
             });
             // emojiPickerElement.skinToneEmoji = '👍';
         }
 
-        hostInstance.chatEle.querySelector('emoji-picker').setAttribute('style', 'height:200px;width:100%');
+        // hostInstance.chatEle.querySelector('emoji-picker').setAttribute('style', 'height:200px;width:100%');
 
         return () => {
             // if (emojiPickerElement !== null) {

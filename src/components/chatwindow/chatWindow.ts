@@ -263,7 +263,7 @@ initShow  (config:any) {
   if (me.config && me.config.maxReconnectionAPIAttempts) {
     me.config.botOptions.maxReconnectionAPIAttempts = me.config.maxReconnectionAPIAttempts;
   }
-  me.config.botOptions.botInfo.name = KoreHelpers.prototypes.escapeHTML(me.config.botOptions.botInfo.name);
+  me.config.botOptions.botInfo.name = KoreHelpers.prototypes.decodePattern(me.config.botOptions.botInfo.name, me.config.UI.version);
   me._botInfo = me.config.botOptions.botInfo;
   me.config.botOptions.botInfo = {
     chatBot: me._botInfo.name, taskBotId: me._botInfo._id, customData: me._botInfo.customData, metaTags: me._botInfo.metaTags, tenanturl: me._botInfo.tenanturl, uiVersion: me.config.UI.version

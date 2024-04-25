@@ -34,7 +34,7 @@ class KoreHelpers{
             var minutes = date.getMinutes();
             // var seconds = date.getSeconds();
             var dateCheck = date.getDate();
-            var day = new Date().getDate() == dateCheck ? 'Today' : new Date().getDate() - 1 == dateCheck ? 'Yesterday' : dateCheck ;
+            var day = (new Date().getDate() == dateCheck && date.getMonth() == new Date().getMonth()) ? 'Today' : (new Date().getDate() - 1 == dateCheck && date.getMonth() == new Date().getMonth()) ? 'Yesterday' : dateCheck ;
             var ampm = hours >= 12 ? 'pm' : 'am';
             hours = hours % 12;
             hours = hours ? hours : 12; // the hour '0' should be '12'
@@ -636,6 +636,19 @@ class KoreHelpers{
           };
           const htmlTags = /[<>"']/g;
           return `${''+txtStr}`.replace(htmlTags, (match) => escapeTokens[match]);
+        },
+
+        "decodePattern": function (txtStr, version) {
+            if (version == 'v2') {
+                const htmlTags = /[<>"']/g;
+                return `${'' + txtStr}`.replace(htmlTags, (match) => escapeTokens[match]);
+            } else {
+                try {
+                    return txtStr.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+                } catch (e) {
+                    return txtStr;
+                }
+            }
         },
 
         "koreReplaceAll" :function (str,search, replacement) {
