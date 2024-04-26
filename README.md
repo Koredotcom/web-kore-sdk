@@ -23,7 +23,7 @@ With just few lines of code, you can embed our Kore.ai chat widget into your app
 First, install kore web SDK via the [npm](https://www.npmjs.com/get-npm) package manager:
 
 ```bash
-npm install --save kore-web-sdk
+npm install --save kore-web-sdk@legacy-v2
 ```
 
 Get chatWindow and chatConfig
