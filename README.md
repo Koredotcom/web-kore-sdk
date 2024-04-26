@@ -322,14 +322,30 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 	// }		
 # Release History
 ```
+v10.2.0 [Minor] on 27-Apr-2024: Master branch
+        Features
+                1.Added config for the websocket url to add custom query parameters 
+                    botOptions.webSocketConfig = {
+                        socketUrl: {
+                            queryParams: {} // add query params in the object
+                        }
+                    }
+                  Note: isReconnect remains unchanged and will function as intended
+
+        Bugfixes
+                1.CSAT rating template text color issue fix
+                2.Agent desktop plugin issues fix
+
 v10.1.21 [Minor] on 09-Mar-2024: Master branch
         Bugfixes
                 1.cobrowse stun server urls format change
+
 v10.1.20 [Minor] on 24-Feb-2024: Master branch
         Bugfixes
                 1.Universal selector issue fix in widget
                 2.Whitelisted b & br tags
                 3.Agent desktop plugin issues fix
+
 v10.1.17 [Minor] on 06-Jan-2024: Master branch
         Features
                 1.Added config for retries count for api reconnect on failure. Configuration available at chatConfig.maxReconnectionAPIAttempts
