@@ -23,7 +23,7 @@
                 singleDate: true,
                 showShortcuts: false,
                 showTopbar: false,
-                format: 'MM-DD-YYYY',
+                format: 'DD-MM-YYYY',
                 startDate: '',
                 endDate: '',
                 inline: true,
@@ -436,8 +436,8 @@ KorePickers.prototype.addDateRangeListener = function (mainConfig) {
             _korePickers.find(".kore-action-sheet .dateRangePickerContainer .showEnddate .showEndMonth").html("Select");
         }
         else if ((showEndDateValue !== null)) {
-            var startViewDate = moment(startdateValue).format('MM-DD-YYYY') || moment();
-            var endViewDate = moment(enddateValue).format('MM-DD-YYYY') || moment();
+            var startViewDate = moment(startdateValue).format(mainConfig[1].dateRangeConfig.format || 'DD-MM-YYYY') || moment();
+            var endViewDate = moment(enddateValue).format(mainConfig[1].dateRangeConfig.format || 'DD-MM-YYYY') || moment();
             var _innerText = startViewDate + ' to ' + endViewDate;
             _korePickers.find('.footerContainer.pos-relative .chatInputBox').text(_innerText);
             var e = $.Event("keydown");
@@ -548,8 +548,8 @@ KorePickers.prototype.showDatePicker = function (mainConfig) {
         showShortcuts: false,
         singleDate: true,
         showTopbar: false,
-        format: mainConfig[1].dateRangeConfig.format,
-        startDate: mainConfig[1].dateRangeConfig.startDate,
+        format: mainConfig[1].dateConfig.format,
+        startDate: mainConfig[1].dateConfig.startDate,
         endDate: mainConfig[1].dateRangeConfig.endDate,
         inline: true,
         container:  _korePickers.find('.kore-action-sheet .datePickerContainer'),
@@ -581,7 +581,7 @@ KorePickers.prototype.addDateListener = function (mainConfig) {
         showStartDateValue = _korePickers.find(".kore-action-sheet .datePickerContainer .showStartdate .showStartMonth").html(startDate);
     })
     _korePickers.find(".kore-action-sheet .datePickerContainer .confirmBTN").click(function () {
-        var startViewDate = moment(startdateValue).format('MM-DD-YYYY') || moment();
+        var startViewDate = moment(startdateValue).format(mainConfig[1].dateConfig.format || 'DD-MM-YYYY') || moment();
         var _innerText = startViewDate;
         _korePickers.find(".footerContainer.pos-relative .chatInputBox").text(_innerText);
         var e = $.Event("keydown");
