@@ -233,6 +233,11 @@ module.exports= function(env,argv){
             filename: 'plugins/v2-plugin.js',
             chunkLoading: false,
           },
+          v2KoreWidgetsSDK:{
+            import: "./src/index_plugins/v2WidgetsPlugin.ts",
+            filename: 'plugins/v2-kore-web-sdk-widgets.js',
+            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
+          },
           ProactiveWebCampaignPluginSDK: {
             import: "./src/index_plugins/proactiveWebCampaign.ts",
             filename: 'plugins/proactive-web-campaign.js',
@@ -371,6 +376,11 @@ module.exports= function(env,argv){
             import: "./src/index_plugins/v2Plugin.ts",
             filename: 'plugins/v2-plugin.js',
             chunkLoading: false,
+          },
+          v2KoreWidgetsSDK:{
+            import: "./src/index_plugins/v2WidgetsPlugin.ts",
+            filename: 'plugins/v2-kore-web-sdk-widgets.js',
+            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
           ProactiveWebCampaignPluginSDK: {
             import: "./src/index_plugins/proactiveWebCampaign.ts",
