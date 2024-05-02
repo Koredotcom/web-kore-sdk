@@ -2167,6 +2167,9 @@ historySyncing(msgData:any,res:any,index:any){
     if (msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)) {
       msgData.message[0].cInfo.body = '';
     }
+    if (msgData.message[0].component.payload.template_type == "daterange" || msgData.message[0].component.payload.template_type == "dateTemplate" || msgData.message[0].component.payload.template_type == "clockTemplate") {
+      msgData.message[0].cInfo.body = msgData.message[0].component.payload.text_message || msgData.message[0].component.payload.text;
+    }
     me.renderMessage(msgData);
   } catch (e) {
     me.renderMessage(msgData);
