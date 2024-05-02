@@ -21,6 +21,17 @@ let config= {
                 use: 'ts-loader',
                 include:[path.resolve(__dirname,'src'),path.resolve(__dirname,'UI')]
             },
+            {
+              test: /\.(woff|woff2|eot|ttf|otf)$/,
+              use: {
+                loader: 'file-loader',
+                options: {
+                  name: 'fonts/[name].[ext]',
+                  outputPath: 'fonts/',
+                  publicPath: '../fonts',
+                },
+              },
+            },
             // {
             //   test: /\.js$/,
             //   exclude: /(node_modules|bower_componentss)/,
