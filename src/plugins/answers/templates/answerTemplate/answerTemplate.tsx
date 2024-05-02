@@ -116,7 +116,7 @@ export function Answers(props: any) {
                                           "image_url": "",
                                           "source_id": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source_id||'',
                                           "source_type": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source_name||'',
-                                          "title": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.chunk_title||'',
+                                          "title": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source_name||'',
                                           "url":msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source_url||''
                                       }
                                   ]

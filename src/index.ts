@@ -33,6 +33,8 @@ import UserTypingEventsPlugin from './plugins/userTypingEventsPlugin';
 import ProactiveWebCampaignPlugin from './plugins/proactiveWebCampaign/proactiveWebCampaign';
 import AnswersTemplatesPlugin from './plugins/answers/answersPlugin';
 import V2Plugin from './plugins/v2Plugin/v2Plugin';
+import V2WidgetsConfig from './plugins/v2WidgetsPlugin/config/v2-kore-widgets-config';
+import V2KoreWidgetSDK from './plugins/v2WidgetsPlugin/v2-kore-widgets';
 
 export {
   chatConfig,
@@ -66,5 +68,7 @@ export {
   UserTypingEventsPlugin,
   AnswersTemplatesPlugin,
   ProactiveWebCampaignPlugin,
-  V2Plugin
+  V2Plugin,
+  V2WidgetsConfig,
+  V2KoreWidgetSDK
 };
