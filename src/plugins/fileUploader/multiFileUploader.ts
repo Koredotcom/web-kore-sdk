@@ -92,6 +92,10 @@ class KoreMultiFileUploaderPlugin {
 
     me.hostInstance.eventManager.addEventListener('.attachmentUpload', 'click', () => {
       me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.toggle('hide-attachment');
+      if (me.hostInstance.chatEle.querySelector('.uploaded-attachment-data')) {
+        me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
+        document.getElementById("captureMediaAttachment").value = '';
+      }
     });
     me.hostInstance.eventManager.addEventListener('#captureMediaAttachment', 'change', (event: any) => {
       const file = me.hostInstance.chatEle.querySelector('#captureMediaAttachment').files[0];
@@ -102,6 +106,7 @@ class KoreMultiFileUploaderPlugin {
         }
       }
       me.convertFiles(file);
+      document.getElementById("captureMediaAttachment").value = '';
     })
     me.hostInstance.eventManager.addEventListener('#captureFileAttachment', 'change', (event: any) => {
       const file = me.hostInstance.chatEle.querySelector('#captureFileAttachment').files[0];
@@ -112,6 +117,7 @@ class KoreMultiFileUploaderPlugin {
         }
       }
       me.convertFiles(file);
+      document.getElementById("captureMediaAttachment").value = '';
     })
     me.hostInstance.attachmentData = [];
   }
@@ -149,7 +155,7 @@ class KoreMultiFileUploaderPlugin {
               clientMessageObject.message[0].cInfo = serverMessageObject.message;
               me.hostInstance.sendMessage('', attData, serverMessageObject, clientMessageObject);
               me.hostInstance.attachmentInfo = {};
-              me.hostInstance.on("afterRenderMessage", (chatWindowData: any) => {
+              setTimeout(() => {
                 me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.add('hide-attachment');
                 me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
                 document.getElementById("captureMediaAttachment").value = "";
@@ -171,6 +177,37 @@ class KoreMultiFileUploaderPlugin {
             }, 100);
           }
         }
+      } else {
+        alert('Upload in progress');
+      }
+    });
+
+    cwInstance.on("onSubmit", (data: any) => {
+      if (!me.uploadingInProgress) {
+        data.event.preventDefault();
+        if (me.hostInstance.attachmentData && me.hostInstance.attachmentData.length > 0) {
+          me.hostInstance.attachmentData.forEach((attData: any) => {
+            var serverMessageObject: any = {};
+            serverMessageObject.message = {};
+            serverMessageObject.message.attachments = [];
+            data.chatWindowEvent.stopFurtherExecution = true;
+            serverMessageObject.message.attachments[0] = attData;
+            var clientMessageObject: any = {};
+            clientMessageObject.message = [];
+            clientMessageObject.message[0] = {};
+            clientMessageObject.message[0].cInfo = {};
+            clientMessageObject.message[0].cInfo = serverMessageObject.message;
+            me.hostInstance.sendMessage('', attData, serverMessageObject, clientMessageObject);
+            me.hostInstance.attachmentInfo = {};
+            setTimeout(() => {
+              me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.add('hide-attachment');
+              me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
+              document.getElementById("captureMediaAttachment").value = "";
+            });
+          });
+          me.hostInstance.attachmentData = [];
+        }
+        return;
       } else {
         alert('Upload in progress');
       }

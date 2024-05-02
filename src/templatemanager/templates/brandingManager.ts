@@ -27,7 +27,9 @@ class BrandingManager {
         { key: '--chat-sdk-branding--body-bot_message-bg_color', type: 'secondary' },
         { key: '--chat-sdk-branding--body-bot_message-color', type: 'primaryText' },
         { key: '--chat-sdk-branding--body-agent_message-title_color', type: 'primaryText' },
-        { key: '--chat-sdk-branding--body-time_stamp-color', type: 'primaryText' }];
+        { key: '--chat-sdk-branding--body-time_stamp-color', type: 'primaryText' },
+        { key: '--chat-sdk-branding--body-buttons-color', type: 'secondaryText' },
+        { key: '--chat-sdk-branding--body-buttons-bg_color', type: 'primary' }]
 
       colorArr.forEach((ele: any) => {
         if (ele.type == 'primary') {
@@ -95,7 +97,7 @@ class BrandingManager {
               }
               break;
             case 'body':
-              if (key == 'body' && (subKey == 'user_message' || subKey == 'bot_message') && typeof data[key][subKey] === 'object') {
+              if (key == 'body' && (subKey == 'user_message' || subKey == 'bot_message' || subKey == 'buttons') && typeof data[key][subKey] === 'object') {
                 for (var property in data[key][subKey]) {
                   this.applyVariableValue(property, data[key][subKey][property], key, subKey);
                 }

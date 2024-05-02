@@ -42,8 +42,8 @@ class DateRangePickerTemplate {
             if ((showStartDateValue !== null) && (showEndDateValue == null)) {
                 $(me.messageHtml).find(".showEnddate .showEndMonth").html("Select");
             } else if (showEndDateValue !== null) {
-                var startViewDate = moment(startdateValue).format('MM-DD-YYYY') || moment();
-                var endViewDate = moment(enddateValue).format('MM-DD-YYYY') || moment();
+                var startViewDate = moment(startdateValue).format(me.defaultDateRangePickerConfig.format || 'DD-MM-YYYY') || moment();
+                var endViewDate = moment(enddateValue).format(me.defaultDateRangePickerConfig.format || 'DD-MM-YYYY') || moment();
                 var _innerText = startViewDate + ' to ' + endViewDate;
                 //chatWindowInstance.assignValueToInput(_innerText);
                 chatWindowInstance.sendMessage(_innerText);

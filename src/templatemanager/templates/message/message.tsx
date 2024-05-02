@@ -110,7 +110,7 @@ export function Message(props: any) {
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
                                             <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}>{msgData.fromAgent && msgData.author?.name ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}</div>
                                             <div className="time-tamp">
-                                                <time>{helpers.formatAMPMDay(msgData.createdOn)}</time>
+                                                <time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format)}</time>
                                             </div>
                                             {/* <span className="copied-text">Copied</span>                                            */}
                                         </div>}
@@ -134,7 +134,7 @@ export function Message(props: any) {
                                         </div>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
                                             <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}>{msgData.fromAgent && msgData.author?.name ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}</div>
-                                            <div className="time-tamp"><time>{helpers.formatAMPMDay(msgData.createdOn)}</time></div>
+                                            <div className="time-tamp"><time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format)}</time></div>
                                         </div>}
                                     </div>
                                 </div> }
@@ -143,7 +143,7 @@ export function Message(props: any) {
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
                                             <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}>{msgData.fromAgent && msgData.author?.name ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}</div>
                                             <div className="time-tamp">
-                                                <time>{helpers.formatAMPMDay(msgData.createdOn)}</time>
+                                                <time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format)}</time>
                                             </div>
                                             {/* <span className="copied-text">Copied</span>                                            */}
                                         </div>}
@@ -167,7 +167,7 @@ export function Message(props: any) {
                                         </div>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
                                             <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}>{msgData.fromAgent ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}</div>
-                                            <div className="time-tamp"><time>{helpers.formatAMPMDay(msgData.createdOn)}</time></div>
+                                            <div className="time-tamp"><time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format)}</time></div>
                                         </div>}
                                     </div>
                                 </div> }
@@ -177,7 +177,7 @@ export function Message(props: any) {
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
                                             {/* <span className="copied-text">Copied</span> */}
                                             <div className="time-tamp">
-                                                <time>{helpers.formatAMPMDay(msgData.createdOn)}</time>
+                                                <time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format)}</time>
                                             </div>
                                             <div className="you-text">You</div>
                                         </div>}
@@ -199,7 +199,7 @@ export function Message(props: any) {
                                             </div>
                                         </div>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
-                                            <div className="time-tamp"><time>{helpers.formatAMPMDay(msgData.createdOn)}</time></div>
+                                            <div className="time-tamp"><time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format)}</time></div>
                                             <div className="you-text">You</div>
                                         </div>}
                                     </div>

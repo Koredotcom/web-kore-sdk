@@ -63,8 +63,8 @@ export function ChatWidgetHeader(props: any) {
                     hostInstance.removeLocalStoreItem('kr-cw-uid');
                     hostInstance.config.botOptions.maintainContext = false;
                 }
-                hostInstance.config.branding.header.title.name = hostInstance.config.botMessages.reconnecting;
-                hostInstance.setBranding(hostInstance.config.branding);
+                // hostInstance.config.branding.header.title.name = hostInstance.config.botMessages.reconnecting;
+                // hostInstance.setBranding(hostInstance.config.branding);
             }
         })
 
