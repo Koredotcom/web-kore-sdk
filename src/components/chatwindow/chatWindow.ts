@@ -2170,6 +2170,26 @@ historySyncing(msgData:any,res:any,index:any){
     if (msgData.message[0].component.payload.template_type == "daterange" || msgData.message[0].component.payload.template_type == "dateTemplate" || msgData.message[0].component.payload.template_type == "clockTemplate") {
       msgData.message[0].cInfo.body = msgData.message[0].component.payload.text_message || msgData.message[0].component.payload.text;
     }
+
+    // History behaviour new feature
+    // if (msgData.message[0].component && msgData.message[0].component.type == 'template') {
+    //   if (msgData.message[0].component.payload?.history_behaviour?.show || !msgData.message[0].component.payload.history_behaviour) {
+    //     if (msgData.message[0].component.payload.history_behaviour && msgData.message[0].component.payload.history_behaviour?.custom_message) {
+    //       msgData.message[0].cInfo.body = msgData.message[0].component.payload.history_behaviour.custom_message;
+    //     } else {
+    //       msgData.message[0].cInfo.body = msgData.message[0].component.payload.text || msgData.message[0].component.payload.text_message;
+    //     }
+    //     me.renderMessage(msgData);
+    //   }
+    // } else {
+    //   me.renderMessage(msgData);
+    // }
+    // JSON to include in template payload
+    //   "history_behaviour": {
+    //     "show": false,
+    //     "custom_message": "Custom date picker msg"
+    //   }
+
     me.renderMessage(msgData);
   } catch (e) {
     me.renderMessage(msgData);
