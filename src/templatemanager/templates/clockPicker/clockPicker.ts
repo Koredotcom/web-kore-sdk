@@ -12,7 +12,7 @@ class ClockPickerTemplate {
     renderMessage(msgData: any) {
         let me: any = this;
         let $ = me.hostInstance.$;
-        if (msgData?.message?.[0]?.component?.payload?.template_type === "clockTemplate") {
+        if (msgData?.message?.[0]?.component?.payload?.template_type === "clockTemplate" && !msgData.fromHistory) {
             me.messageHtml = $(me.getTemplateString());
             me.initiateClockPicker();
             me.bindDataToTemplate(msgData)
