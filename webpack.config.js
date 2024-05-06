@@ -27,8 +27,7 @@ let config= {
                 loader: 'file-loader',
                 options: {
                   name: '[name].[ext]',
-                  outputPath: 'fonts',
-                  publicPath: './fonts',
+                  outputPath: 'fonts/',
                 },
               },
             },
