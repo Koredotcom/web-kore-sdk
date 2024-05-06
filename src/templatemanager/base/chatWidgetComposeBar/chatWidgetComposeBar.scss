@@ -416,7 +416,7 @@
             width: 100%;
             position: relative;
             background: var(--global-white-bg);
-            border: 1px solid var(--global-white-bg);
+            border: 1px solid var(--gloabl-border-color);
             border-radius: 4px;
             padding: 12px 20px;
             text-align: center;
@@ -425,9 +425,15 @@
             line-height: 24px;
             color: var(--global-theme-color);
             height: 48px;
+            gap: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
+            svg{
+                path{
+                    fill: var(--global-theme-color);
+                }
+            }
             input{
                 position: absolute;
                 opacity: 0;
@@ -449,11 +455,13 @@
 .uploaded-attachment-data{
     background: var(--global-white-bg);
     border-radius: 4px;
-    padding: 8px 16px;
     display: inline-block;
     width: 100%;
     overflow-y: auto;
     max-height: 250px;
+    &:not(:empty){
+        padding: 8px 16px;
+    }
     .uploaded-item{
         display: flex;
         align-items: center;

@@ -99,10 +99,16 @@ export function ChatWidgetComposeBar(props: any) {
             <div className="attachment-wrapper-data hide-attachment">
                 <div className="select-file-block">
                     <button className="inputfile-btn inputfile-btn-media" type="button" aria-label="Media">
+                        <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M3.625 2.5C2.59473 2.5 1.75 3.34473 1.75 4.375V15.625C1.75 16.6553 2.59473 17.5 3.625 17.5H17.375C18.4053 17.5 19.25 16.6553 19.25 15.625V4.375C19.25 3.34473 18.4053 2.5 17.375 2.5H3.625ZM3.625 3.75H17.375C17.7266 3.75 18 4.02344 18 4.375V13.457L13.995 9.22878C13.7934 9.01595 13.4528 9.02141 13.2581 9.2406L11.1787 11.582L7.78897 8.00763C7.58732 7.795 7.24688 7.80057 7.0523 8.01969L3 12.583V4.375C3 4.02344 3.27344 3.75 3.625 3.75ZM14.25 5C13.5615 5 13 5.56152 13 6.25C13 6.93848 13.5615 7.5 14.25 7.5C14.9385 7.5 15.5 6.93848 15.5 6.25C15.5 5.56152 14.9385 5 14.25 5ZM7.44336 9.45801L13.8838 16.25H3.625C3.27344 16.25 3 15.9766 3 15.625V14.4678L7.44336 9.45801ZM13.6445 10.6836L18 15.2734V15.625C18 15.9766 17.7266 16.25 17.375 16.25H15.6025L12.043 12.4902L13.6445 10.6836Z" fill="#4B4EDE"/>
+                        </svg>
                         <span>Media</span>
                         <input type="file" id="captureMediaAttachment" accept="audio/*,video/*,image/*" />
                     </button>
                     <button className="inputfile-btn inputfile-btn-file" type="button" aria-label="File">
+                        <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
+                            <path d="M6.125 2.5C5.09473 2.5 4.25 3.34473 4.25 4.375V15.625C4.25 16.6553 5.09473 17.5 6.125 17.5H14.875C15.9053 17.5 16.75 16.6553 16.75 15.625V6.87509C16.75 6.70933 16.6842 6.55036 16.5669 6.43315L12.8168 2.68306C12.6996 2.56585 12.5407 2.5 12.3749 2.5H6.125ZM6.125 3.75H11.75V6.25C11.75 6.94036 12.3096 7.5 13 7.5H15.5V15.625C15.5 15.9766 15.2266 16.25 14.875 16.25H6.125C5.77344 16.25 5.5 15.9766 5.5 15.625V4.375C5.5 4.02344 5.77344 3.75 6.125 3.75ZM13 4.63379L14.6162 6.25H13V4.63379ZM8.625 10C8.27982 10 8 10.2798 8 10.625C8 10.9702 8.27982 11.25 8.625 11.25H12.375C12.7202 11.25 13 10.9702 13 10.625C13 10.2798 12.7202 10 12.375 10H8.625ZM8.625 12.5C8.27982 12.5 8 12.7798 8 13.125C8 13.4702 8.27982 13.75 8.625 13.75H11.125C11.4702 13.75 11.75 13.4702 11.75 13.125C11.75 12.7798 11.4702 12.5 11.125 12.5H8.625Z" fill="#4B4EDE"/>
+                        </svg>
                         <span>File</span>
                         <input type="file" id="captureFileAttachment" accept=".bmp, .csv, .txt, .json, .pdf, .doc, .dot, .docx, .docm,
                         .dotx, .dotm, .xls, .xlt, .xlm, .xlsx, .xlsm, .xltx, .xltm, .xlsb, .xla, .xlam, .xll, .xlw, .ppt, .pot, .pps, .pptx, .pptm, .potx, .potm, .ppam,
