@@ -138,7 +138,7 @@ class BrandingManager {
         }
       }
     }
-    this.applyFonts(data.body.font.family);
+    // this.applyFonts(data.body.font.family);
   }
 
   applyVariableValue(property: any, value: any, key: any, subKey: any) {
