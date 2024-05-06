@@ -22,14 +22,8 @@ let config= {
                 include:[path.resolve(__dirname,'src'),path.resolve(__dirname,'UI')]
             },
             {
-              test: /\.(woff|woff2|eot|ttf|otf)$/,
-              use: {
-                loader: 'file-loader',
-                options: {
-                  name: '[name].[ext]',
-                  outputPath: 'fonts/',
-                },
-              },
+              test: /\.(woff|woff2|eot|ttf|otf)$/i,
+              type: 'asset/resource',
             },
             // {
             //   test: /\.js$/,
@@ -88,11 +82,6 @@ let config= {
         patterns: [
           { from: path.resolve(__dirname, "src", "esm", "exports.js"), to: path.resolve(__dirname, "dist", "esm") },
           { from: path.resolve(__dirname, "src", "esm", "exports.d.ts"), to: path.resolve(__dirname, "dist", "esm") }
-        ]
-      }),
-      new CopyPlugin({
-        patterns: [
-          { from: path.resolve(__dirname, "fonts"), to: path.resolve(__dirname, "dist", "fonts") },
         ]
       }),
       new webpack.ProvidePlugin({
