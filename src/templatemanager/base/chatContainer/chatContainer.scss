@@ -12,6 +12,17 @@
   max-width: calc(100% - 80px);
   transition: 0.4s all ease;
   font-family: var(--global-font-family);
+  &.is-wigets-enabled{
+    box-shadow: 0px 4px 12px 2px rgba(32, 33, 36, 0.12);
+    width: 444px;
+    .chat-widgetwrapper-main-container{
+      border-radius: 0px 4px 4px 0px;
+      box-shadow: none !important;
+      .chat-widget-header{
+        border-radius: 0px 4px 0px 0px;
+      }
+    }
+  }
   &.avatar-medium-size{
     height: calc(100% - 148px);
     bottom: 108px;
@@ -88,10 +99,7 @@
 
   .kr-wiz-menu-chat {
     display: none;
-		position: absolute;
-		margin-left: -70px;
 		float: left;
-		border: 0;
 		transition: ease-in .33s;
     &.show {
       display: block;

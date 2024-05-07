@@ -16,7 +16,7 @@ export function ChatContainer(props: any) {
         updateBrandingInfo({...event.brandingData})
     });
 
-    let chatContainerClass = 'kore-chat-window-main-section minimize-chat';
+    let chatContainerClass = 'kore-chat-window-main-section is-wigets-enabled minimize-chat';
     if (brandingInfo.chat_bubble.icon.size == 'medium') {
         chatContainerClass = chatContainerClass + ' avatar-medium-size';
     } else if (brandingInfo.chat_bubble.icon.size == 'large') {

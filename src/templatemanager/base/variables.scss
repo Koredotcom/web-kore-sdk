@@ -14,6 +14,24 @@ $media-mobile: 600px;
     --global-secondary-text:var(--chat-sdk-branding--global-secondary-text);      // #FFFFFF;
     // End
 
+    // Main 4 colors for Panle and Widgets
+        --theme-panel-wigdet-primary-bg-color:#175cd3;
+        --theme-panel-wigdet-secondary-bg-color:#EAECF0;
+        --theme-panel-wigdet-primary-text-color:#101828;
+        --theme-panel-wigdet-secondary-text-color:#667085;
+    
+        // Extra colors
+        --panel-wigdet-primary-bg-color:var(--theme-panel-wigdet-primary-bg-color);
+        --panel-wigdet-secondary-bg-color:var(--theme-panel-wigdet-secondary-bg-color);
+        --panel-wigdet-primary-text-color:var(--theme-panel-wigdet-primary-text-color);
+        --panel-wigdet-secondary-text-color:var(--theme-panel-wigdet-secondary-text-color);
+        
+        --panel-wigdet-border-color:var(--panel-wigdet-secondary-bg-color);
+        --panel-wigdet-white-bg-color:#fff;
+        --panel-wigdet-white-text-color:#fff;
+    // End
+
+
     // Font Family
         --global-font-family: var(--chat-sdk-branding--global-font-family);   // "Inter";
     // End
