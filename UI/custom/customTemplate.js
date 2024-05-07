@@ -2715,7 +2715,7 @@ var message = {
                 "button": {
                   "title": "Show Article",
                   "type": "url",
-                  "url": "https://itassist-qa.kore.ai/demoitsm/api/v1/kb_article/KB0000002?key=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHBJZCI6ImNzLTE1NTRjYzA2LWIwNzAtNWUxMC05OTY4LTk0ZGQ3ZTQ5YTgzMSIsImlhdCI6MTY2MzA1NTA5OX0.gim4Dp7Knxw0aCImZSDLUfxWD-zdBTZAC3vlDTGLX-k&host=https%3A%2F%2Fstaging-bots.korebots.com%2Fapi%2F1.1%2Fpublic%2Ftables%2F&env=dev&lang=en"
+                  "url": ""
                 }
               },
               {
@@ -2727,7 +2727,7 @@ var message = {
                 "button": {
                   "title": "Show Article",
                   "type": "url",
-                  "url": "https://itassist-qa.kore.ai/demoitsm/api/v1/kb_article/KB0000003?key=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHBJZCI6ImNzLTE1NTRjYzA2LWIwNzAtNWUxMC05OTY4LTk0ZGQ3ZTQ5YTgzMSIsImlhdCI6MTY2MzA1NTA5OX0.gim4Dp7Knxw0aCImZSDLUfxWD-zdBTZAC3vlDTGLX-k&host=https%3A%2F%2Fstaging-bots.korebots.com%2Fapi%2F1.1%2Fpublic%2Ftables%2F&env=dev&lang=en"
+                  "url": ""
                 }
               },
               {
@@ -2739,7 +2739,7 @@ var message = {
                 "button": {
                   "title": "Show Article",
                   "type": "url",
-                  "url": "https://itassist-qa.kore.ai/demoitsm/api/v1/kb_article/KB0000002?key=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHBJZCI6ImNzLTE1NTRjYzA2LWIwNzAtNWUxMC05OTY4LTk0ZGQ3ZTQ5YTgzMSIsImlhdCI6MTY2MzA1NTA5OX0.gim4Dp7Knxw0aCImZSDLUfxWD-zdBTZAC3vlDTGLX-k&host=https%3A%2F%2Fstaging-bots.korebots.com%2Fapi%2F1.1%2Fpublic%2Ftables%2F&env=dev&lang=en"
+                  "url": ""
                 }
               },
               {
@@ -2751,7 +2751,7 @@ var message = {
                 "button": {
                   "title": "Show Article",
                   "type": "url",
-                  "url": "https://itassist-qa.kore.ai/demoitsm/api/v1/kb_article/KB0000002?key=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHBJZCI6ImNzLTE1NTRjYzA2LWIwNzAtNWUxMC05OTY4LTk0ZGQ3ZTQ5YTgzMSIsImlhdCI6MTY2MzA1NTA5OX0.gim4Dp7Knxw0aCImZSDLUfxWD-zdBTZAC3vlDTGLX-k&host=https%3A%2F%2Fstaging-bots.korebots.com%2Fapi%2F1.1%2Fpublic%2Ftables%2F&env=dev&lang=en"
+                  "url": ""
                 }
               },
             ],
