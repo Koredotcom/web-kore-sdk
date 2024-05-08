@@ -365,7 +365,7 @@ function c2c_call() {
             return c2c_phone.checkAvailableDevices();
         })
         .then(() => {
-            c2c_initSIP({ user: c2c_config.caller, displayName: c2c_config.callerDN, password: '' });
+            c2c_initSIP({ user: c2c_config.caller, displayName: c2c_config.callerDN });
         })
         .catch((e) => {
             c2c_ac_log('Check available devices error:', e);
