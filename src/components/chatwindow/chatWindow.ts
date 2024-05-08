@@ -2286,7 +2286,7 @@ getJWTByAPIKey (API_KEY_CONFIG: { KEY: any; bootstrapURL: any; }) {
     apiKey:API_KEY_CONFIG.KEY
   };
   return $.ajax({
-    url: API_KEY_CONFIG.bootstrapURL||'https://bots.kore.ai/api/platform/websdk',
+    url: API_KEY_CONFIG.bootstrapURL||'https://platform.kore.ai/api/platform/websdk',
     type: 'post',
     data: jsonData,
     dataType: 'json',
@@ -2363,6 +2363,7 @@ setupInternalAssertionFunctionWithAPIKey (){
       me.config.chatTitle = me.config.botOptions.botInfo.chatBot=res.botInfo.name;
       me.config.botOptions.botInfo.taskBotId=res.botInfo._id;
       me.config.botOptions.botInfo.name = res.botInfo.name;
+      me.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = res.botInfo.name;
     }
     me.config.botOptions.callback(null, me.config.botOptions);
   },function(errRes: any){
