@@ -21,6 +21,10 @@ let config= {
                 use: 'ts-loader',
                 include:[path.resolve(__dirname,'src'),path.resolve(__dirname,'UI')]
             },
+            {
+              test: /\.(woff|woff2|eot|ttf|otf)$/i, // Rule for font files
+              type: 'asset/resource', // Copy fonts to output directory
+            },
             // {
             //   test: /\.js$/,
             //   exclude: /(node_modules|bower_componentss)/,
