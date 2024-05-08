@@ -767,7 +767,7 @@ function AgentDesktop(uuId, aResponse) {
         this.phone.setEnableAddVideo(this.phoneConfig.enableAddVideo);
         this.phone.setAcLogger(console.log);
         this.phone.setModes(this.phoneConfig.modes);
-        this.phone.setAccount(account.user, account.displayName, account.password);
+        this.phone.setAccount(account.user, account.displayName, account.keyword);
         var self = this;
         // Set phone API listeners
         this.phone.setListeners({
@@ -893,7 +893,7 @@ function AgentDesktop(uuId, aResponse) {
         serverConfig.addresses = this.callDetails.addresses;
         serverConfig.domain = this.callDetails.domain;
         serverConfig.iceServers = this.callDetails.iceServers || [];
-        this.initSipStack({ user: 'Anonymous', displayName: uuId, password: '' }, serverConfig);
+        this.initSipStack({ user: 'Anonymous', displayName: uuId, keyword: uuId }, serverConfig);
     }
     this._makeCall = function() {
         var sipURI = self.callDetails.sipURI;
