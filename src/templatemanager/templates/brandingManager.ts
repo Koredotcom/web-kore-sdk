@@ -138,7 +138,6 @@ class BrandingManager {
         }
       }
     }
-    this.applyFonts();
   }
 
   applyVariableValue(property: any, value: any, key: any, subKey: any) {
@@ -153,19 +152,6 @@ class BrandingManager {
       console.log(e);
     }
 
-  }
-
-  applyFonts() {
-    let link1 = document.createElement('link');
-    let link2 = document.createElement('link');
-    link1.rel = 'stylesheet';
-    link2.rel = 'stylesheet';
-    link1.type = 'text/css';
-    link2.type = 'text/css';
-    link1.href = '../../../fonts/inter/inter.css';
-    link2.href = '../../../fonts/lato/lato-font.css';
-    document.head.appendChild(link1);
-    document.head.appendChild(link2);
   }
 }
 

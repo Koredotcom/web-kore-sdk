@@ -24,6 +24,9 @@ let config= {
             {
               test: /\.(woff|woff2|eot|ttf|otf)$/i, // Rule for font files
               type: 'asset/resource', // Copy fonts to output directory
+              generator: {
+                filename: "fonts/[name].[ext]",
+              },
             },
             // {
             //   test: /\.js$/,
@@ -135,7 +138,6 @@ module.exports= function(env,argv){
           KoreChatSDK: {
             import: "./src/index_chat.ts",
             filename: 'kore-web-sdk-chat.min.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
           KoreWidgetsSDK:{
             import: "./src/index_widgets.ts",
@@ -268,7 +270,6 @@ module.exports= function(env,argv){
           KoreChatSDK: {
             import: "./src/index_chat.ts",
             filename: 'kore-web-sdk-umd-chat.min.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
           KoreWidgetsSDK:{
             import: "./src/index_widgets.ts",
