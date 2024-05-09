@@ -27,6 +27,16 @@ let config= {
               generator: {
                 filename: "fonts/[name][ext]",
               },
+              use: [
+                {
+                  loader: 'file-loader',
+                  options: {
+                    name: '[name].[ext]', // Optional: Output font file names within the fonts directory
+                    emitFile: true, // Ensures font files are emitted
+                    baseURI: path.resolve(__dirname, 'fonts'), // Set base URI to fonts directory
+                  },
+                },
+              ],
             },
             // {
             //   test: /\.js$/,
