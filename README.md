@@ -322,6 +322,12 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 	// }		
 # Release History
 ```
+v10.2.1 [Minor] on 11-May-2024: Master branch
+        Bugfixes
+                1.Date formatting issue fix in date & date range templates
+                2.Agent desktop plugin issues fix
+                3.Removed hard coded urls in article template
+
 v10.2.0 [Minor] on 27-Apr-2024: Master branch
         Features
                 1.Added config for the websocket url to add custom query parameters 
