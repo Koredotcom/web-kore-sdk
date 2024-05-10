@@ -24,15 +24,9 @@ let config= {
             {
               test: /\.(woff|woff2|eot|ttf|otf)$/i, // Rule for font files
               type: 'asset/resource', // Copy fonts to output directory  
-              use: [
-                {
-                  loader: 'file-loader', // Or 'url-loader'
-                  options: {
-                    name: '[name].[ext]', // Optional: Output font file names
-                    emitFile: true, // Ensures font files are emitted
-                  },
-                },
-              ],            
+              generator: {
+                filename: "fonts/[name][ext]",
+              },            
             },
             // {
             //   test: /\.js$/,
@@ -90,7 +84,11 @@ let config= {
       new CopyPlugin({
         patterns: [
           { from: path.resolve(__dirname, "src", "esm", "exports.js"), to: path.resolve(__dirname, "dist", "esm") },
-          { from: path.resolve(__dirname, "src", "esm", "exports.d.ts"), to: path.resolve(__dirname, "dist", "esm") }
+          { from: path.resolve(__dirname, "src", "esm", "exports.d.ts"), to: path.resolve(__dirname, "dist", "esm") },
+          { from: path.resolve(__dirname, "fonts", "inter"), to: path.resolve(__dirname, "dist", "esm", "fonts") },
+          { from: path.resolve(__dirname, "fonts", "lato"), to: path.resolve(__dirname, "dist", "esm", "fonts") }
+          { from: path.resolve(__dirname, "fonts", "inter"), to: path.resolve(__dirname, "dist", "umd", "fonts") }
+          { from: path.resolve(__dirname, "fonts", "lato"), to: path.resolve(__dirname, "dist", "umd", "fonts") }
         ]
       }),
       new webpack.ProvidePlugin({

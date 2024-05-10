@@ -43,13 +43,11 @@
     "src/exports/exports.js"
   ],
   "dependencies": {
-    "@koredev/kore-fonts": "^10.0.0",
     "aws-sdk": "^2.1102.0",
     "d3": "^7.1.1",
     "emoji-picker-element": "1.21.3",
     "express": "~4.18.2",
     "file-loader": "^6.2.0",
-    "font-awesome": "^4.7.0",
     "jquery": "^3.6.0",
     "jquery-ui": "^1.12.1",
     "jquery.tmpl": "0.0.2",
