@@ -23,7 +23,16 @@ let config= {
             },
             {
               test: /\.(woff|woff2|eot|ttf|otf)$/i, // Rule for font files
-              type: 'asset/resource', // Copy fonts to output directory              
+              type: 'asset/resource', // Copy fonts to output directory  
+              use: [
+                {
+                  loader: 'file-loader', // Or 'url-loader'
+                  options: {
+                    name: '[name].[ext]', // Optional: Output font file names
+                    emitFile: true, // Ensures font files are emitted
+                  },
+                },
+              ],            
             },
             // {
             //   test: /\.js$/,
