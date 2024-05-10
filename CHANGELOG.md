@@ -1,3 +1,10 @@
+### 11.1.1
+* Release May 11, 2024
+* Bug fixes
+  * bot name issue fix when using API_KEY config
+  * date formatting issue fix in date & date range templates
+  * date templates history JSON print issue fix
+
 ### 11.1.0
 * Release April 27, 2024
 * Features
