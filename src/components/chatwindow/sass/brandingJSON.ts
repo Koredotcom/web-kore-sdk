@@ -334,7 +334,7 @@ const BrandingJSON = {
       "fileId": ""
     },
     "font": {
-      "family": "FontAwesome",
+      "family": "Inter",
       "size": "medium",
       "style": ""
     },
