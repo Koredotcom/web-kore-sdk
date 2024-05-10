@@ -86,8 +86,8 @@ let config= {
           { from: path.resolve(__dirname, "src", "esm", "exports.js"), to: path.resolve(__dirname, "dist", "esm") },
           { from: path.resolve(__dirname, "src", "esm", "exports.d.ts"), to: path.resolve(__dirname, "dist", "esm") },
           { from: path.resolve(__dirname, "fonts", "inter"), to: path.resolve(__dirname, "dist", "esm", "fonts") },
-          { from: path.resolve(__dirname, "fonts", "lato"), to: path.resolve(__dirname, "dist", "esm", "fonts") }
-          { from: path.resolve(__dirname, "fonts", "inter"), to: path.resolve(__dirname, "dist", "umd", "fonts") }
+          { from: path.resolve(__dirname, "fonts", "lato"), to: path.resolve(__dirname, "dist", "esm", "fonts") },
+          { from: path.resolve(__dirname, "fonts", "inter"), to: path.resolve(__dirname, "dist", "umd", "fonts") },
           { from: path.resolve(__dirname, "fonts", "lato"), to: path.resolve(__dirname, "dist", "umd", "fonts") }
         ]
       }),
