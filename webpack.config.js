@@ -22,6 +22,10 @@ let config= {
                 include:[path.resolve(__dirname,'src'),path.resolve(__dirname,'UI')]
             },
             {
+              test: /\.(png|svg|jpg|jpeg|gif)$/i,
+              type: 'asset/resource',
+            },
+            {
               test: /\.(woff|woff2|eot|ttf|otf)$/i, // Rule for font files
               type: 'asset/resource', // Copy fonts to output directory  
               generator: {
