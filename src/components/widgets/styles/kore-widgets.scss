@@ -1476,36 +1476,37 @@
             border-radius: var(--sm, 4px);
             min-height: 57px;
             cursor: pointer;
+            background: var(--panel-wigdet-left-menu-bg);
             svg{
                 path{
-                    stroke: var(--sdk-secondary-font-color);
+                    stroke: var(--panel-wigdet-left-menu-font-clr);
                 }
             }
             &:hover{
-                background: var(--sdk-primary-bg-color);
+                background: var(--panel-wigdet-left-menu-selected-bg);
                 svg{
                     path{
-                        stroke: var(--sdk-primary-font-color);
+                        stroke: var(--panel-wigdet-left-menu-selected-font-clr);
                     }
                 }
                 .botName{
-                    color: var(--sdk-primary-font-color);
+                    color: var(--panel-wigdet-left-menu-selected-font-clr);
                 }
             } 
             &.selected{
-                background: var(--sdk-primary-bg-color);
+                background: var(--panel-wigdet-left-menu-selected-bg);
                 svg{
                     path{
-                        stroke: var(--sdk-primary-font-color);
+                        stroke: var(--panel-wigdet-left-menu-selected-font-clr);
                     }
                 }
                 .botName{
-                    color: var(--sdk-primary-font-color);
+                    color: var(--panel-wigdet-left-menu-selected-font-clr);
                 }
             }
             .botName {
                 position: relative;
-                color: var(--sdk-secondary-font-color);
+                color: var(--panel-wigdet-left-menu-font-clr);
                 text-align: center;
                 font-size: 10px;
                 font-weight: 500;
@@ -1519,7 +1520,7 @@
         }
         .divider-line{
             border-radius: 2px;
-            background: var(--sdk-primary-bg-color);
+            background: var(--panel-wigdet-left-menu-selected-bg);
             width: 10px;
             height: 2px;
             margin: 12px auto;
@@ -1556,6 +1557,7 @@
             align-items: center;
             gap: 12px;
             width: 100%;
+            background: var(--panel-wigdet-left-menu-bg);
             .menuItemContainer{
                 width: 48px;
                 height: auto;
@@ -1569,34 +1571,34 @@
                 cursor: pointer;
                 svg{
                     path{
-                        stroke: var(--sdk-secondary-font-color);
+                        stroke: var(--panel-wigdet-left-menu-font-clr);
                     }
                 }
                 &:hover{
-                    background: var(--sdk-primary-bg-color);
+                    background: var(--panel-wigdet-left-menu-selected-font-clr);
                     .panelNameTooltip{
-                        color: var(--sdk-primary-font-color);
+                        color: var(--panel-wigdet-left-menu-selected-font-clr);
                     }
                     svg{
                         path{
-                            stroke: var(--sdk-primary-font-color);
+                            stroke: var(--panel-wigdet-left-menu-selected-font-clr);
                         }
                     }
                 }
                 &.selected{
-                    background: var(--sdk-primary-bg-color);
+                    background: var(--panel-wigdet-left-menu-selected-font-clr);
                     .panelNameTooltip{
-                        color: var(--sdk-primary-font-color);
+                        color: var(--panel-wigdet-left-menu-selected-font-clr);
                     }
                     svg{
                         path{
-                            stroke: var(--sdk-primary-font-color);
+                            stroke: var(--panel-wigdet-left-menu-selected-font-clr);
                         }
                     }
                 }
                 .panelNameTooltip{
                     position: relative;
-                    color: var(--sdk-secondary-font-color);
+                    color: var(--panel-wigdet-left-menu-font-clr);
                     text-align: center;
                     font-size: 10px;
                     font-weight: 500;

@@ -29,7 +29,11 @@ class BrandingManager {
         { key: '--chat-sdk-branding--body-agent_message-title_color', type: 'primaryText' },
         { key: '--chat-sdk-branding--body-time_stamp-color', type: 'primaryText' },
         { key: '--chat-sdk-branding--body-buttons-color', type: 'secondaryText' },
-        { key: '--chat-sdk-branding--body-buttons-bg_color', type: 'primary' }]
+        { key: '--chat-sdk-branding--body-buttons-bg_color', type: 'primary' },
+        { key: '--chat-sdk-branding--widget_panel-colors-color', type: 'secondaryText' },
+        { key: '--chat-sdk-branding--widget_panel-colors-sel_color', type: 'primary' },
+        { key: '--chat-sdk-branding--widget_panel-colors-sel_text_color', type: 'secondaryText' },
+      ]
 
       colorArr.forEach((ele: any) => {
         if (ele.type == 'primary') {
@@ -51,6 +55,7 @@ class BrandingManager {
       document.documentElement.style.setProperty('--chat-sdk-branding--footer-compose_bar-bg_color', data.body.background.color);
       document.documentElement.style.setProperty('--chat-sdk-branding--body-background-bg', data.body.background.color);
       document.documentElement.style.setProperty('--chat-sdk-branding--body-white-background', data.body.background.color);
+      document.documentElement.style.setProperty('--chat-sdk-branding--widget_panel-colors-bg_color', data.body.background.color);
 
       if (data.body.background.type == 'image') {
         const imgData = 'url(\'' + (data.body.background.img) + '\')';
@@ -132,6 +137,16 @@ class BrandingManager {
                 this.applyVariableValue('color', data[key]['icons_color'], key, 'icons');
                 this.applyVariableValue('color', data[key]['buttons']['menu']['icon_color'], key, 'menu_icon');
               }
+              break;
+            case 'widget_panel':
+              if (key == 'widget_panel' && typeof data[key][subKey] === 'object') {
+                for (var property in data[key][subKey]) {
+                  if (property.includes('color')) {
+                    this.applyVariableValue(property, data[key][subKey][property], key, subKey);
+                  }
+                }
+              }
+              break;
             default:
               break;
           }
