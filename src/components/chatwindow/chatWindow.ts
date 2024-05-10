@@ -9,6 +9,7 @@ import './../../libs/perfectscroll/css/perfect-scrollbar.min.css';
 import './sass/chatWindow.scss';
 // import './sass/fonts.scss';
 import '@koredev/kore-fonts/src/fonts.css';
+import 'font-awesome/css/font-awesome.css';
 //import './../../libs/emojione.sprites.css';
 import chatConfig from './config/kore-config';
 //import GreeetingsPlugin from '../../plugins/greetings/greetings-plugin'
