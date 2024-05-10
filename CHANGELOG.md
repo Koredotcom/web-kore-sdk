@@ -1,3 +1,9 @@
+### 10.2.1
+- SDK Release May 11, 2024
+* Bug fixes
+  * date formatting issue fix in date & date range templates
+  * date templates history JSON print issue fix
+
 ### 10.2.0
 - SDK Release Apr 27, 2024
 
