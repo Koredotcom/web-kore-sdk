@@ -2361,6 +2361,8 @@ setupInternalAssertionFunctionWithAPIKey (){
     if(res.botInfo){
       me.config.chatTitle = me.config.botOptions.botInfo.chatBot=res.botInfo.name;
       me.config.botOptions.botInfo.taskBotId=res.botInfo._id;
+      me.config.botOptions.botInfo.name = res.botInfo.name;
+      me._botInfo.name = res.botInfo.name;
     }
     me.config.botOptions.callback(null, me.config.botOptions);
   },function(errRes: any){
