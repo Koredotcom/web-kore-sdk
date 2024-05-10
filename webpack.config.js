@@ -146,6 +146,7 @@ module.exports= function(env,argv){
           KoreChatSDK: {
             import: "./src/index_chat.ts",
             filename: 'kore-web-sdk-chat.min.js',
+            publicPath:"/",
           },
           KoreWidgetsSDK:{
             import: "./src/index_widgets.ts",
@@ -278,6 +279,7 @@ module.exports= function(env,argv){
           KoreChatSDK: {
             import: "./src/index_chat.ts",
             filename: 'kore-web-sdk-umd-chat.min.js',
+            publicPath:"/",
           },
           KoreWidgetsSDK:{
             import: "./src/index_widgets.ts",
