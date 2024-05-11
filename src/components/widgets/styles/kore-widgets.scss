@@ -467,58 +467,58 @@
                                 width: 26px;
                                 background: var(--sdk-primary-bg-color);
                             }
-                        }
-                        .wid-temp-contentDiv {
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                            white-space: nowrap;
-                            line-height: 22px;
-                            .wid-temp-discImage {
-                                padding-right: 15px;
-                                display: inline-block;
-                                width: 17px;
-                                height: 17px;
-                                margin-right: 10px;
-                                padding: 0;
-                                position: relative;
-                                top: -3px;
-                                img{
-                                    width: 100%;
-                                    display: inline-block;
-                                }
-                            }
-                            .wid-temp-discription{
-                                font-size: 12px;
-                                font-weight: 500;
-                                color: var(--sdk-primary-font-color);
-                                display: inline-block;
-                                max-width: 80%;
-                                overflow: hidden;
-                                text-overflow: ellipsis;
-                                white-space: nowrap;
-                            }
-                            .wid-temp-showActions {
-                                float: right;
-                                .accordionIcon-darkMode {
-                                    width: 20px;
-                                    height: 20px;
-                                    cursor: pointer;
-                                    display: none;
-                                }
-                                .accordionIcon {
-                                    width: 20px;
-                                    height: 20px;
-                                    cursor: pointer;
-                                    display: block;
-                                }
-                            }
-                        }
+                        }                       
                     }
                 }
                 .moreItemsScroll {
                     max-height: 200px;
                     overflow-y: auto;
                     padding: 0px 20px 20px 20px;
+                }
+            }
+            .wid-temp-contentDiv {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                line-height: 22px;
+                .wid-temp-discImage {
+                    padding-right: 15px;
+                    display: inline-block;
+                    width: 17px;
+                    height: 17px;
+                    margin-right: 10px;
+                    padding: 0;
+                    position: relative;
+                    top: -3px;
+                    img{
+                        width: 100%;
+                        display: inline-block;
+                    }
+                }
+                .wid-temp-discription{
+                    font-size: 12px;
+                    font-weight: 500;
+                    color: var(--sdk-primary-font-color);
+                    display: inline-block;
+                    max-width: 80%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+                .wid-temp-showActions {
+                    float: right;
+                    .accordionIcon-darkMode {
+                        width: 20px;
+                        height: 20px;
+                        cursor: pointer;
+                        display: none;
+                    }
+                    .accordionIcon {
+                        width: 20px;
+                        height: 20px;
+                        cursor: pointer;
+                        display: block;
+                    }
                 }
             }
         }
@@ -1575,7 +1575,7 @@
                     }
                 }
                 &:hover{
-                    background: var(--panel-wigdet-left-menu-selected-font-clr);
+                    background: var( --panel-wigdet-left-menu-selected-bg);
                     .panelNameTooltip{
                         color: var(--panel-wigdet-left-menu-selected-font-clr);
                     }
@@ -1586,7 +1586,7 @@
                     }
                 }
                 &.selected{
-                    background: var(--panel-wigdet-left-menu-selected-font-clr);
+                    background: var( --panel-wigdet-left-menu-selected-bg);
                     .panelNameTooltip{
                         color: var(--panel-wigdet-left-menu-selected-font-clr);
                     }

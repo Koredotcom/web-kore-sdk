@@ -414,7 +414,7 @@
 
 /* WIDGET CHANGES FOR CHARTS END*/
 
-* {
+.kore-chat-window * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -471,7 +471,7 @@
 .kr-v2-wiz-menu-css .menuItemCntr .menuIconMobile{
     display: none;
 }
-.kr-wiz-content-chat .mainTemplateCntr .widgetTitle .menuIconMobile{
+.kr-v2-wiz-content-chat .mainTemplateCntr .widgetTitle .menuIconMobile{
     width: 15px;
     height: 30px;
     opacity: .8;
@@ -2044,7 +2044,7 @@
 
 /*for kore chat window embed*/
 
-.kr-wiz-menu-chat {     /*Left panel styles*/
+.kr-v2-wiz-menu-chat {     /*Left panel styles*/
     margin-left: -68px;
     height: 100%;
     width: 68px;
@@ -2056,7 +2056,7 @@
     display: none;
 }
 
-.kr-wiz-content-chat {
+.kr-v2-wiz-content-chat {
     position: absolute !important;
     background: var(--bg-color-drpdown);
     height: 100%;
@@ -6750,7 +6750,7 @@
         margin-left: 0;
         float: left;
     }
-    .kr-wiz-menu-chat{
+    .kr-v2-wiz-menu-chat{
         position: absolute;
         margin-left: 0;
         float: left;
@@ -6760,7 +6760,7 @@
         border: 0;
         transition: ease-in .33s;
     }
-    .selectedHeight .kr-wiz-menu-chat{
+    .selectedHeight .kr-v2-wiz-menu-chat{
         box-shadow: 0px 0px 14px 0px rgba(138, 149, 159, 0.25);
         height: 100%;
         width: 250px;
@@ -6776,7 +6776,7 @@
     .selectedHeight .kr-v2-wiz-menu-css .menuItemCntr .sdkThemeContainer{
         display: block;
     }
-    .selectedHeight .kr-wiz-content-chat{
+    .selectedHeight .kr-v2-wiz-content-chat{
         z-index: 99;
     }
     .kr-v2-wiz-menu-css .menuItemCntr .menuIconMobile{
@@ -6791,7 +6791,7 @@
         height: 30px;
         opacity: .8;
     }
-    .kr-wiz-content-chat .mainTemplateCntr .widgetTitle .menuIconMobile{
+    .kr-v2-wiz-content-chat .mainTemplateCntr .widgetTitle .menuIconMobile{
         display: inline-block;
         width: 15px;
         height: 30px;

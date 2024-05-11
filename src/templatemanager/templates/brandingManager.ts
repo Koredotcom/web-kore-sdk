@@ -30,9 +30,9 @@ class BrandingManager {
         { key: '--chat-sdk-branding--body-time_stamp-color', type: 'primaryText' },
         { key: '--chat-sdk-branding--body-buttons-color', type: 'secondaryText' },
         { key: '--chat-sdk-branding--body-buttons-bg_color', type: 'primary' },
-        { key: '--chat-sdk-branding--widget_panel-colors-color', type: 'secondaryText' },
-        { key: '--chat-sdk-branding--widget_panel-colors-sel_color', type: 'primary' },
-        { key: '--chat-sdk-branding--widget_panel-colors-sel_text_color', type: 'secondaryText' },
+        { key: '--chat-sdk-branding--widget_panel-colors-color', type: 'primaryText' },
+        { key: '--chat-sdk-branding--widget_panel-colors-sel_color', type: 'secondary' },
+        { key: '--chat-sdk-branding--widget_panel-colors-sel_text_color', type: 'primaryText' },
       ]
 
       colorArr.forEach((ele: any) => {

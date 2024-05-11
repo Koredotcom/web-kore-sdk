@@ -27,7 +27,7 @@ $media-mobile: 600px;
         --panel-wigdet-secondary-text-color:var(--theme-panel-wigdet-secondary-text-color);
         
         --panel-wigdet-border-color:var(--panel-wigdet-secondary-bg-color);
-        --panel-wigdet-white-bg-color:#fff;
+        --panel-wigdet-white-bg-color:var(--chat-sdk-branding--widget_panel-colors-bg_color);           //   #fff;
         --panel-wigdet-white-text-color:#fff;
         --panel-wigdet-left-menu-bg:var(--chat-sdk-branding--widget_panel-colors-bg_color);
         --panel-wigdet-left-menu-selected-bg:var(--chat-sdk-branding--widget_panel-colors-sel_color);
