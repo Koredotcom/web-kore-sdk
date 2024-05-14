@@ -1422,11 +1422,7 @@ render  (chatWindowHtml: any) {
     if (me.config.UI.version == 'v2') {
       me.chatEle.find('.kr-wiz-menu-chat').show();
     } else {
-      if (me.config.branding.general.widgetPanel) {
-        me.chatEle.querySelector('.kr-wiz-menu-chat').classList.add('show');
-      } else {
-        me.chatEle.querySelector('.kr-wiz-menu-chat').classList.remove('show');
-      }
+      // me.chatEle.querySelector('.kr-wiz-menu-chat').classList.add('show'); // based on config need to show widgets
     }
   }
   if (me.config.UI.version == 'v2') {
