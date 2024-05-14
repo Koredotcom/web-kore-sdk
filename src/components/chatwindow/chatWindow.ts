@@ -720,6 +720,9 @@ updatei18nDirection () {
 destroy  () {
   const me:any = this;
   $('.kore-chat-overlay').hide();
+  if (me.config.widgetSDKInstace) {
+    delete me.config.widgetSDKInstace;
+  }
   me.bot.close();
   if (!me.config.minimizeMode) {
     me.bot.destroy();
