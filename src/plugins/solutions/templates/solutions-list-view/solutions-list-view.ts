@@ -29,10 +29,10 @@ class SolutionListViewTemplate {
         $(messageHtml).off('click', '.solution-list-view .seeMoreList').on('click', '.solution-list-view .seeMoreList', function () {
             if ($(".list-template-sheet").length !== 0) {
                 $(".list-template-sheet").remove();
-                me.listViewTabs();
+                me.listViewTabs(messageHtml);
             }
             else if ($(".list-template-sheet").length === 0) {
-                me.listViewTabs();
+                me.listViewTabs(messageHtml);
             }
         });
         $(messageHtml).find(".listViewLeftContent").on('click', function (e: any) {
@@ -54,12 +54,12 @@ class SolutionListViewTemplate {
 
 
     }
-    listViewTabs() {
+    listViewTabs(messageHtml:any) {
         let me: any = this;
         let chatWindowInstance = me.hostInstance;
         let $ = me.hostInstance.$;
         let helpersObj = helpers;
-        var msgData = $("li.fromOtherUsers.with-icon.listView").data();
+        var msgData = $(messageHtml).data();
         if (msgData.message[0].component.payload.seeMore) {
             msgData.message[0].component.payload.seeMore = false;
         }
