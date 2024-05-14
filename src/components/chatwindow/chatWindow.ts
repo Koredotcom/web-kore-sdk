@@ -2737,6 +2737,15 @@ applyVariableValue (key:any,value:any,type:any){
       });
       me.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
       me.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
+      if (me.config.widgetSDKInstace) {
+        if (me.chatEle?.querySelector('.kr-wiz-menu-chat')) {
+          if (me.config.branding.general.widgetPanel) {
+            me.chatEle.querySelector('.kr-wiz-menu-chat').classList.add('show');
+          } else {
+            me.chatEle.querySelector('.kr-wiz-menu-chat').classList.remove('show');
+          }
+        }
+      }
     } else {
       me.chatEle.classList.remove('minimize-chat');
       if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
