@@ -7,7 +7,7 @@ import MessageTemplate from '../../plugins/v2Plugin/templates/messageTemplate/me
 import KRPerfectScrollbar from '../../libs/perfectscroll/perfect-scrollbar';
 import './../../libs/perfectscroll/css/perfect-scrollbar.min.css';
 import './sass/chatWindow.scss';
-import './sass/fonts.scss';
+// import './sass/fonts.scss';
 //import './../../libs/emojione.sprites.css';
 import chatConfig from './config/kore-config';
 //import GreeetingsPlugin from '../../plugins/greetings/greetings-plugin'
