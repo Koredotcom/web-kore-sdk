@@ -395,7 +395,7 @@ const BrandingJSON = {
     "colors": {
       "bg_color": "#FFFFFF",
       "color": "#101828",
-      "sel_bg_color": "#7A271A",
+      "sel_bg_color": "#EAECF0",
       "sel_color": "#101828"
     }
   }
