@@ -2772,7 +2772,6 @@ applyVariableValue (key:any,value:any,type:any){
         }
         me.chatEle.querySelector('.kore-chat-window-main-section').classList.remove('is-wigets-enabled');
       }
-      }
       me.chatEle.classList.remove('minimize-chat');
       if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
         me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
