@@ -2735,7 +2735,7 @@ applyVariableValue (key:any,value:any,type:any){
           } else {
             me.chatEle.querySelector('.kr-wiz-menu-chat').classList.remove('show');
           }
-          me.chatEle.querySelector('.kore-chat-window-main-section').classList.add('is-wigets-enabled');
+          me.chatEle.querySelector('.kore-chat-window-main-section')?.classList?.add('is-wigets-enabled');
         }
       }
     } else if (type == 'chat') {
@@ -2756,7 +2756,7 @@ applyVariableValue (key:any,value:any,type:any){
           } else {
             me.chatEle.querySelector('.kr-wiz-menu-chat').classList.remove('show');
           }
-          me.chatEle.querySelector('.kore-chat-window-main-section').classList.add('is-wigets-enabled');
+          me.chatEle.querySelector('.kore-chat-window-main-section')?.classList?.add('is-wigets-enabled');
         }
       }
     } else {

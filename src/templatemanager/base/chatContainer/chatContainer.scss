@@ -94,6 +94,9 @@
     }
     .kr-wiz-menu-chat {
       display: none !important;
+      &.show {
+        display: none !important;
+      }
     }
   }
 
