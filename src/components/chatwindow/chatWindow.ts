@@ -2718,10 +2718,12 @@ applyVariableValue (key:any,value:any,type:any){
           clList2.classList.remove(ele);
         }
       });
-      if (me.chatEle?.querySelector('.kr-wiz-menu-chat') && me.config.branding.general.widgetPanel) {
-        me.chatEle.querySelector('.kr-wiz-menu-chat').classList.remove('show');
+      if (me.config.widgetSDKInstace) {
+        if (me.chatEle?.querySelector('.kr-wiz-menu-chat')) {
+          me.chatEle.querySelector('.kr-wiz-menu-chat').classList.remove('show');
+        }
+        me.chatEle.querySelector('.kore-chat-window-main-section').classList.remove('is-wigets-enabled');
       }
-      me.chatEle.querySelector('.kore-chat-window-main-section').classList.remove('is-wigets-enabled');
     }
     else if (type == 'welcome') {
       me.chatEle.classList.remove('minimize-chat');
@@ -2760,9 +2762,17 @@ applyVariableValue (key:any,value:any,type:any){
           } else {
             me.chatEle.querySelector('.kr-wiz-menu-chat').classList.remove('show');
           }
+          me.chatEle.querySelector('.kore-chat-window-main-section').classList.add('is-wigets-enabled');
         }
       }
     } else {
+      if (me.config.widgetSDKInstace) {
+        if (me.chatEle?.querySelector('.kr-wiz-menu-chat')) {
+          me.chatEle.querySelector('.kr-wiz-menu-chat').classList.remove('show');
+        }
+        me.chatEle.querySelector('.kore-chat-window-main-section').classList.remove('is-wigets-enabled');
+      }
+      }
       me.chatEle.classList.remove('minimize-chat');
       if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
         me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
