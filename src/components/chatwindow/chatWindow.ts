@@ -2667,18 +2667,6 @@ applyVariableValue (key:any,value:any,type:any){
       }
     }
 
-    me.on(me.EVENTS.BEFORE_VIEW_INIT, (event: any) => {
-      if (me.config.widgetSDKInstace) {
-        if (me.chatEle?.querySelector('.kr-wiz-menu-chat')) {
-          if (me.config.branding.general.widgetPanel) {
-            me.chatEle.querySelector('.kr-wiz-menu-chat').classList.add('show');
-          } else {
-            me.chatEle.querySelector('.kr-wiz-menu-chat').classList.remove('show');
-          }
-        }
-      }
-    });
-
     if (type == 'welcome' && isEditor) {
       if (me.config.branding.welcome_screen.show) {
         me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove(me.config.branding.chat_bubble.expand_animation);
@@ -2718,12 +2706,8 @@ applyVariableValue (key:any,value:any,type:any){
           clList2.classList.remove(ele);
         }
       });
-      if (me.config.widgetSDKInstace) {
-        if (me.chatEle?.querySelector('.kr-wiz-menu-chat')) {
-          me.chatEle.querySelector('.kr-wiz-menu-chat').classList.remove('show');
-        }
-        me.chatEle.querySelector('.kore-chat-window-main-section').classList.remove('is-wigets-enabled');
-      }
+      me.chatEle.querySelector('.kr-wiz-menu-chat')?.classList?.remove('show');
+      me.chatEle.querySelector('.kore-chat-window-main-section')?.classList?.remove('is-wigets-enabled');
     }
     else if (type == 'welcome') {
       me.chatEle.classList.remove('minimize-chat');
@@ -2766,13 +2750,7 @@ applyVariableValue (key:any,value:any,type:any){
         }
       }
     } else {
-      if (me.config.widgetSDKInstace) {
-        if (me.chatEle?.querySelector('.kr-wiz-menu-chat')) {
-          me.chatEle.querySelector('.kr-wiz-menu-chat').classList.remove('show');
-        }
-        me.chatEle.querySelector('.kore-chat-window-main-section').classList.remove('is-wigets-enabled');
-      }
-      me.chatEle.classList.remove('minimize-chat');
+      me.chatEle.classList.add('minimize-chat');
       if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
         me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
       } else {
@@ -2786,6 +2764,8 @@ applyVariableValue (key:any,value:any,type:any){
       me.chatEle.querySelector('.welcome-chat-section')?.classList.remove(me.config.branding.chat_bubble.expand_animation);
       me.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
       me.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize');
+      me.chatEle.querySelector('.kr-wiz-menu-chat')?.classList?.remove('show');
+      me.chatEle.querySelector('.kore-chat-window-main-section')?.classList?.remove('is-wigets-enabled');
     }
   }
 
