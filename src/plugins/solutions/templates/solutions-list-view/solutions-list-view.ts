@@ -144,7 +144,7 @@ class SolutionListViewTemplate {
                                                 <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
                                             </div> \
                                         {{/if}} \
-                                        <div class="listViewLeftContent" data-url="${msgItem.default_action.url}" data-title="${msgItem.default_action.title}" data-value="${msgItem.default_action.title}"> \
+                                        <div class="listViewLeftContent" {{if msgItem.default_action && msgItem.default_action.url}}data-url="${msgItem.default_action.url}"{{/if}} data-title="{{if msgItem.default_action && msgItem.default_action.title }}${msgItem.default_action.title} {{else}}  ${msgItem.title} {{/if}}" data-value="{{if msgItem.default_action && msgItem.default_action.title }}${msgItem.default_action.title} {{else}}${msgItem.title}{{/if}}"> \
                                             <span class="titleDesc">\
                                             <div class="listViewItemTitle" title="${msgItem.title}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.title, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.title, "user")}} {{/if}}</div> \
                                             {{if msgItem.subtitle}}<div class="listViewItemSubtitle" title="${msgItem.subtitle}">{{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgItem.subtitle, "user")}} {{/if}}</div>{{/if}} \
