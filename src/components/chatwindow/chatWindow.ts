@@ -2706,6 +2706,10 @@ applyVariableValue (key:any,value:any,type:any){
           clList2.classList.remove(ele);
         }
       });
+      if (me.chatEle?.querySelector('.kr-wiz-menu-chat') && me.config.branding.general.widgetPanel) {
+        me.chatEle.querySelector('.kr-wiz-menu-chat').classList.remove('show');
+      }
+      me.chatEle.querySelector('.kore-chat-window-main-section').classList.remove('is-wigets-enabled');
     }
     else if (type == 'welcome') {
       me.chatEle.classList.remove('minimize-chat');
