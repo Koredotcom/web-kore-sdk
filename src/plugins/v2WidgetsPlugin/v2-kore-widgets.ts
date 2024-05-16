@@ -561,8 +561,8 @@ show  (config:any) {
         $(_self.config.container.menu).find('.menuItemCntr').remove();
       }
   
-      $(_self.config.container.menu).addClass('kr-wiz-menu-css');
-      $(_self.config.container.menu).addClass('defaultTheme-kore');
+      $(_self.config.container.menu).addClass('kr-v2-wiz-menu-css');
+      $(_self.config.container.menu).addClass('defaultTheme-v2-kore');
       $(_self.config.container.menu).append(dataHTML);
   
   
@@ -696,10 +696,10 @@ getTemplate  (type:any) {
           <i role="region" aria-label="Select a theme for widgets"  tabindex="0" class="icon-More dropbtnWidgt sdkThemeIcon"  onclick="showDropdown(this)"></i>\
           <ul class="dropdown-contentWidgt  rmpmW themeContent" aria-live="polite" role="list" style="list-style:none;">\
                   <li role="heading" class="themeTitle">Theme</li>\
-                  <li role="listitem" class="dropdown-item action themeName" id="defaultTheme-kore">Theme One<span></span></li>\
-                  <li role="listitem" class="dropdown-item action themeName" id="darkTheme-kore">Theme Two<span></span></li>\
-                  <li role="listitem" class="dropdown-item action themeName" id="defaultTheme-kora">Theme Three<span></span></li>\
-                  <li role="listitem" class="dropdown-item action themeName" id="darkTheme-kora">Theme Four<span></span></li>\
+                  <li role="listitem" class="dropdown-item action themeName" id="defaultTheme-v2-kore">Theme One<span></span></li>\
+                  <li role="listitem" class="dropdown-item action themeName" id="darkTheme-v2-kore">Theme Two<span></span></li>\
+                  <li role="listitem" class="dropdown-item action themeName" id="defaultTheme-v2-kora">Theme Three<span></span></li>\
+                  <li role="listitem" class="dropdown-item action themeName" id="darkTheme-v2-kora">Theme Four<span></span></li>\
           </ul>\
           </div>\
         </div>\
@@ -2802,27 +2802,27 @@ prepareRenderData  (panelName:any) {
           _self.bindTemplateEvents(dataHTML, 'mainTemplate');
         }
 
-        $(_self.config.container.content).addClass('kr-wiz-content-css');
-        if ($(_self.config.container.menu).hasClass('darkTheme-kore')) {
-          $(_self.config.container.content).addClass('darkTheme-kore');
-          $(_self.config.container.content).removeClass('defaultTheme-kore');
-          $(_self.config.container.content).removeClass('defaultTheme-kora');
-          $(_self.config.container.content).removeClass('darkTheme-kora');
-        } else if ($(_self.config.container.menu).hasClass('defaultTheme-kore')) {
-          $(_self.config.container.content).addClass('defaultTheme-kore');
-          $(_self.config.container.content).removeClass('darkTheme-kore');
-          $(_self.config.container.content).removeClass('darkTheme-kora');
-          $(_self.config.container.content).removeClass('defaultTheme-kora');
-        } else if ($(_self.config.container.menu).hasClass('darkTheme-kora')) {
-          $(_self.config.container.content).addClass('darkTheme-kora');
-          $(_self.config.container.content).removeClass('darkTheme-kore');
-          $(_self.config.container.content).removeClass('defaultTheme-kore');
-          $(_self.config.container.content).removeClass('defaultTheme-kora');
-        } else if ($(_self.config.container.menu).hasClass('defaultTheme-kora')) {
-          $(_self.config.container.content).addClass('defaultTheme-kora');
-          $(_self.config.container.content).removeClass('darkTheme-kora');
-          $(_self.config.container.content).removeClass('defaultTheme-kore');
-          $(_self.config.container.content).removeClass('darkTheme-kore');
+        $(_self.config.container.content).addClass('kr-v2-wiz-content-css');
+        if ($(_self.config.container.menu).hasClass('darkTheme-v2-kore')) {
+          $(_self.config.container.content).addClass('darkTheme-v2-kore');
+          $(_self.config.container.content).removeClass('defaultTheme-v2-kore');
+          $(_self.config.container.content).removeClass('defaultTheme-v2-kora');
+          $(_self.config.container.content).removeClass('darkTheme-v2-kora');
+        } else if ($(_self.config.container.menu).hasClass('defaultTheme-v2-kore')) {
+          $(_self.config.container.content).addClass('defaultTheme-v2-kore');
+          $(_self.config.container.content).removeClass('darkTheme-v2-kore');
+          $(_self.config.container.content).removeClass('darkTheme-v2-kora');
+          $(_self.config.container.content).removeClass('defaultTheme-v2-kora');
+        } else if ($(_self.config.container.menu).hasClass('darkTheme-v2-kora')) {
+          $(_self.config.container.content).addClass('darkTheme-v2-kora');
+          $(_self.config.container.content).removeClass('darkTheme-v2-kore');
+          $(_self.config.container.content).removeClass('defaultTheme-v2-kore');
+          $(_self.config.container.content).removeClass('defaultTheme-v2-kora');
+        } else if ($(_self.config.container.menu).hasClass('defaultTheme-v2-kora')) {
+          $(_self.config.container.content).addClass('defaultTheme-v2-kora');
+          $(_self.config.container.content).removeClass('darkTheme-v2-kora');
+          $(_self.config.container.content).removeClass('defaultTheme-v2-kore');
+          $(_self.config.container.content).removeClass('darkTheme-v2-kore');
         }
         $(_self.config.container.content).html(dataHTML);
       }
@@ -3816,7 +3816,7 @@ bindTemplateEvents  (ele:any, templateType:any, bindingData:any) {
       e.stopPropagation();
       e.stopImmediatePropagation();
     })
-    $ele.find('#defaultTheme-kore span').addClass('checkMarkIcon');
+    $ele.find('#defaultTheme-v2-kore span').addClass('checkMarkIcon');
     $ele.find('.sdkBotIcon').addClass('selected');
     $ele.off('click', '.action').on('click', '.action', function (e) {
       if (e && e.currentTarget && $(e.currentTarget)[0]) {
@@ -3825,28 +3825,28 @@ bindTemplateEvents  (ele:any, templateType:any, bindingData:any) {
         if ($('#' + addtheme) && $('#' + addtheme).find('span')) {
           $($('#' + addtheme).find('span')).addClass('checkMarkIcon');
         }
-        if (addtheme !== 'darkTheme-kore') {
-          $(_self.config.container.menu).removeClass('darkTheme-kore');
+        if (addtheme !== 'darkTheme-v2-kore') {
+          $(_self.config.container.menu).removeClass('darkTheme-v2-kore');
           if ($(_self.config.container.content)) {
-            $(_self.config.container.content).removeClass('darkTheme-kore');
+            $(_self.config.container.content).removeClass('darkTheme-v2-kore');
           }
         }
-        if (addtheme !== 'defaultTheme-kore') {
-          $(_self.config.container.menu).removeClass('defaultTheme-kore');
+        if (addtheme !== 'defaultTheme-v2-kore') {
+          $(_self.config.container.menu).removeClass('defaultTheme-v2-kore');
           if ($(_self.config.container.content)) {
-            $(_self.config.container.content).removeClass('defaultTheme-kore');
+            $(_self.config.container.content).removeClass('defaultTheme-v2-kore');
           }
         }
-        if (addtheme !== 'defaultTheme-kora') {
-          $(_self.config.container.menu).removeClass('defaultTheme-kora');
+        if (addtheme !== 'defaultTheme-v2-kora') {
+          $(_self.config.container.menu).removeClass('defaultTheme-v2-kora');
           if ($(_self.config.container.content)) {
-            $(_self.config.container.content).removeClass('defaultTheme-kora');
+            $(_self.config.container.content).removeClass('defaultTheme-v2-kora');
           }
         }
-        if (addtheme !== 'darkTheme-kora') {
-          $(_self.config.container.menu).removeClass('darkTheme-kora');
+        if (addtheme !== 'darkTheme-v2-kora') {
+          $(_self.config.container.menu).removeClass('darkTheme-v2-kora');
           if ($(_self.config.container.content)) {
-            $(_self.config.container.content).removeClass('darkTheme-kora');
+            $(_self.config.container.content).removeClass('darkTheme-v2-kora');
           }
         }
         $(_self.config.container.menu).addClass(addtheme);

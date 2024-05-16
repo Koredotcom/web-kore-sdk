@@ -7,6 +7,7 @@ import MessageTemplate from '../../plugins/v2Plugin/templates/messageTemplate/me
 import KRPerfectScrollbar from '../../libs/perfectscroll/perfect-scrollbar';
 import './../../libs/perfectscroll/css/perfect-scrollbar.min.css';
 import './sass/chatWindow.scss';
+// import './sass/fonts.scss';
 //import './../../libs/emojione.sprites.css';
 import chatConfig from './config/kore-config';
 //import GreeetingsPlugin from '../../plugins/greetings/greetings-plugin'
@@ -1421,7 +1422,7 @@ render  (chatWindowHtml: any) {
     if (me.config.UI.version == 'v2') {
       me.chatEle.find('.kr-wiz-menu-chat').show();
     } else {
-      me.chatEle.querySelector('.kr-wiz-menu-chat').classList.add('show');
+      // me.chatEle.querySelector('.kr-wiz-menu-chat').classList.add('show'); // based on config need to show widgets
     }
   }
   if (me.config.UI.version == 'v2') {
@@ -2285,7 +2286,7 @@ getJWTByAPIKey (API_KEY_CONFIG: { KEY: any; bootstrapURL: any; }) {
     apiKey:API_KEY_CONFIG.KEY
   };
   return $.ajax({
-    url: API_KEY_CONFIG.bootstrapURL||'https://bots.kore.ai/api/platform/websdk',
+    url: API_KEY_CONFIG.bootstrapURL||'https://platform.kore.ai/api/platform/websdk',
     type: 'post',
     data: jsonData,
     dataType: 'json',
@@ -2656,6 +2657,16 @@ applyVariableValue (key:any,value:any,type:any){
       brandingData: brandingData ? brandingData : me.config.branding
     });
 
+    if (me.config.widgetSDKInstace) {
+      if (me.chatEle?.querySelector('.kr-wiz-menu-chat')) {
+        if (me.config.branding.general.widgetPanel) {
+          me.chatEle.querySelector('.kr-wiz-menu-chat').classList.add('show');
+        } else {
+          me.chatEle.querySelector('.kr-wiz-menu-chat').classList.remove('show');
+        }
+      }
+    }
+
     if (type == 'welcome' && isEditor) {
       if (me.config.branding.welcome_screen.show) {
         me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove(me.config.branding.chat_bubble.expand_animation);
@@ -2695,6 +2706,8 @@ applyVariableValue (key:any,value:any,type:any){
           clList2.classList.remove(ele);
         }
       });
+      me.chatEle.querySelector('.kr-wiz-menu-chat')?.classList?.remove('show');
+      me.chatEle.querySelector('.kore-chat-window-main-section')?.classList?.remove('is-wigets-enabled');
     }
     else if (type == 'welcome') {
       me.chatEle.classList.remove('minimize-chat');
@@ -2715,6 +2728,16 @@ applyVariableValue (key:any,value:any,type:any){
       }
       me.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
       me.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
+      if (me.config.widgetSDKInstace) {
+        if (me.chatEle?.querySelector('.kr-wiz-menu-chat')) {
+          if (me.config.branding.general.widgetPanel) {
+            me.chatEle.querySelector('.kr-wiz-menu-chat').classList.add('show');
+          } else {
+            me.chatEle.querySelector('.kr-wiz-menu-chat').classList.remove('show');
+          }
+          me.chatEle.querySelector('.kore-chat-window-main-section')?.classList?.add('is-wigets-enabled');
+        }
+      }
     } else if (type == 'chat') {
       me.chatEle.classList.remove('minimize-chat');
       me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(me.config.branding.chat_bubble.expand_animation);
@@ -2726,8 +2749,18 @@ applyVariableValue (key:any,value:any,type:any){
       });
       me.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
       me.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
+      if (me.config.widgetSDKInstace) {
+        if (me.chatEle?.querySelector('.kr-wiz-menu-chat')) {
+          if (me.config.branding.general.widgetPanel) {
+            me.chatEle.querySelector('.kr-wiz-menu-chat').classList.add('show');
+          } else {
+            me.chatEle.querySelector('.kr-wiz-menu-chat').classList.remove('show');
+          }
+          me.chatEle.querySelector('.kore-chat-window-main-section')?.classList?.add('is-wigets-enabled');
+        }
+      }
     } else {
-      me.chatEle.classList.remove('minimize-chat');
+      me.chatEle.classList.add('minimize-chat');
       if (me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
         me.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
       } else {
@@ -2741,6 +2774,8 @@ applyVariableValue (key:any,value:any,type:any){
       me.chatEle.querySelector('.welcome-chat-section')?.classList.remove(me.config.branding.chat_bubble.expand_animation);
       me.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
       me.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize');
+      me.chatEle.querySelector('.kr-wiz-menu-chat')?.classList?.remove('show');
+      me.chatEle.querySelector('.kore-chat-window-main-section')?.classList?.remove('is-wigets-enabled');
     }
   }
 

@@ -14,6 +14,29 @@ $media-mobile: 600px;
     --global-secondary-text:var(--chat-sdk-branding--global-secondary-text);      // #FFFFFF;
     // End
 
+    // Main 4 colors for Panle and Widgets
+        --theme-panel-wigdet-primary-bg-color:var(--gloabl-primary-color);  // #175cd3;
+        --theme-panel-wigdet-secondary-bg-color:var(--gloabl-secondary-color);   // #EAECF0;
+        --theme-panel-wigdet-primary-text-color:var(--global-primary-text);  // #101828;
+        --theme-panel-wigdet-secondary-text-color:var(--global-secondary-text) ;   // #667085;
+    
+        // Extra colors
+        --panel-wigdet-primary-bg-color:var(--theme-panel-wigdet-primary-bg-color);
+        --panel-wigdet-secondary-bg-color:var(--theme-panel-wigdet-secondary-bg-color);
+        --panel-wigdet-primary-text-color:var(--theme-panel-wigdet-primary-text-color);
+        --panel-wigdet-secondary-text-color:var(--theme-panel-wigdet-secondary-text-color);
+        
+        --panel-wigdet-border-color:var(--panel-wigdet-secondary-bg-color);
+        --panel-wigdet-white-bg-color:var(--chat-sdk-branding--widget_panel-colors-bg_color);           //   #fff;
+        --panel-wigdet-white-text-color:#fff;
+        --panel-wigdet-left-menu-bg:var(--chat-sdk-branding--widget_panel-colors-bg_color);
+        --panel-wigdet-left-menu-selected-bg:var(--chat-sdk-branding--widget_panel-colors-sel_bg_color);
+        --panel-wigdet-left-menu-font-clr:var(--chat-sdk-branding--widget_panel-colors-color);
+        --panel-wigdet-left-menu-selected-font-clr:var(--chat-sdk-branding--widget_panel-colors-sel_color);
+
+    // End
+
+
     // Font Family
         --global-font-family: var(--chat-sdk-branding--global-font-family);   // "Inter";
     // End

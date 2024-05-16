@@ -21,6 +21,13 @@ let config= {
                 use: 'ts-loader',
                 include:[path.resolve(__dirname,'src'),path.resolve(__dirname,'UI')]
             },
+            {
+              test: /\.(woff|woff2|eot|ttf|otf)$/i, // Rule for font files
+              type: 'asset/resource', // Copy fonts to output directory  
+              generator: {
+                filename: "fonts/[name][ext]",
+              },            
+            },
             // {
             //   test: /\.js$/,
             //   exclude: /(node_modules|bower_componentss)/,
@@ -77,7 +84,11 @@ let config= {
       new CopyPlugin({
         patterns: [
           { from: path.resolve(__dirname, "src", "esm", "exports.js"), to: path.resolve(__dirname, "dist", "esm") },
-          { from: path.resolve(__dirname, "src", "esm", "exports.d.ts"), to: path.resolve(__dirname, "dist", "esm") }
+          { from: path.resolve(__dirname, "src", "esm", "exports.d.ts"), to: path.resolve(__dirname, "dist", "esm") },
+          { from: path.resolve(__dirname, "fonts", "inter"), to: path.resolve(__dirname, "dist", "esm", "fonts") },
+          { from: path.resolve(__dirname, "fonts", "lato"), to: path.resolve(__dirname, "dist", "esm", "fonts") },
+          { from: path.resolve(__dirname, "fonts", "inter"), to: path.resolve(__dirname, "dist", "umd", "fonts") },
+          { from: path.resolve(__dirname, "fonts", "lato"), to: path.resolve(__dirname, "dist", "umd", "fonts") }
         ]
       }),
       new webpack.ProvidePlugin({
@@ -131,7 +142,6 @@ module.exports= function(env,argv){
           KoreChatSDK: {
             import: "./src/index_chat.ts",
             filename: 'kore-web-sdk-chat.min.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
           KoreWidgetsSDK:{
             import: "./src/index_widgets.ts",
@@ -264,7 +274,6 @@ module.exports= function(env,argv){
           KoreChatSDK: {
             import: "./src/index_chat.ts",
             filename: 'kore-web-sdk-umd-chat.min.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
           KoreWidgetsSDK:{
             import: "./src/index_widgets.ts",

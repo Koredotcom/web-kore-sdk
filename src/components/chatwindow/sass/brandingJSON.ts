@@ -390,6 +390,14 @@ const BrandingJSON = {
       "color": "white"
     },
     "bubble_style": "balloon"
+  },
+  "widget_panel": {
+    "colors": {
+      "bg_color": "#FFFFFF",
+      "color": "#101828",
+      "sel_bg_color": "#EAECF0",
+      "sel_color": "#101828"
+    }
   }
 }
 export default BrandingJSON
