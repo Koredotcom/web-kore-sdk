@@ -2,7 +2,7 @@
 
 import './chatContainer.scss';
 import { h } from 'preact';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { ChatWidget } from '../chatWidget/chatWidget';
 import { AvatarComponent } from '../avatarComponent/avatarComponent';
 import { WelcomeScreenContainer } from '../../base/welcomeScreenContainer/welcomeScreenContainer';
@@ -26,6 +26,10 @@ export function ChatContainer(props: any) {
     if (brandingInfo.general.widgetPanel) {
         chatContainerClass = chatContainerClass + ' is-wigets-enabled';
     }
+
+    useEffect(() => {
+        hostInstance.emit('renderComplete', { chatEle: hostInstance.chatEle });
+    });
 
     return (
         <div className={chatContainerClass} aria-label='chat-window-section'>
