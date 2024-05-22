@@ -286,6 +286,8 @@ class KoreHelpers{
                             $(_newLA).find('a').attr('target', 'underscoreblank');
                             str = str.replace(linkArray[x], _newLA.innerHTML);
                         }
+                    } else {
+                        str = wrapper1.innerHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(_regExForLink, linkreplacer);
                     }
                 } else {
                     str = wrapper1.innerHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(_regExForLink, linkreplacer);
