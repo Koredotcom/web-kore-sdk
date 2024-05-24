@@ -167,7 +167,6 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     }
     client.makeAPICall(this.options.webhookConfig.webhookURL, messagePayload, function(error,resBody){
     if(error){
-      me.emit(WEB_EVENTS.API_FAILURE,{"type":"XHRObj","responseError" : resBody.errors[0]});
       failureCb(resBody);
     }else{
         if(resBody.pollId){
@@ -299,7 +298,6 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   
     client.makeAPICall(apiUrl, payload, function(error,resBody){
       if(error){
-        me.emit(WEB_EVENTS.API_FAILURE,{"type":"XHRObj","responseError" : resBody.errors[0]});
         //failureCb(resBody);
       }else{
           if(resBody.pollId){
@@ -426,12 +424,12 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     debug("on backword history");
     
     var clientresp = {};
-    clientresp.moreAvailable = data.moreAvailable;
-    this.paginatedScrollDataAvailable = data.moreAvailable;
+    clientresp.moreAvailable = data?.moreAvailable;
+    this.paginatedScrollDataAvailable = data?.moreAvailable;
     clientresp.messages = [];
     clientresp.backward = true;
     clientresp.beforeMessageId = this.oldestId;
-    if (data.messages && data.messages.length > 0) {
+    if (data?.messages && data?.messages?.length > 0) {
       var i;
       for (i = 0; i < data.messages.length; i++) {
         var _msg = {};
@@ -545,9 +543,6 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
           this.cbErrorToClient(err.message);
         }
       }
-      if (data && data.errors && data.errors[0]) {
-        this.emit(WEB_EVENTS.API_FAILURE,{"type":"XHRObj","responseError" : data.errors[0]});
-      }
       console.error(err && err.stack);
     } else {
       this.accessToken = data.authorization.accessToken;
@@ -556,7 +551,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this.userInfo = data;
       this.cbBotDetails(data,this.options.botInfo);
       this.RtmClient = new clients.KoreRtmClient({}, this.options);
-      this.RtmClient.on('api_failure_client', errObj => {
+      this.RtmClient.on('api_failure', errObj => {
         this.emit(WEB_EVENTS.API_FAILURE, errObj);
       });
       this.emit("rtm_client_initialized");
@@ -592,6 +587,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this.cbErrorToClient = data.handleError || noop;
       this.cbBotDetails = data.botDetails || noop;
       this.cbBotChatHistory = data.chatHistory || noop;
+      this.WebClient.on('api_error', errObj => {
+        this.emit(WEB_EVENTS.API_FAILURE, errObj);
+      });
       if(this.options.webhookConfig && this.options.webhookConfig.enable){
         this.options.webhookConfig.token=this.options.assertion;
         this.emit(WEB_EVENTS.WEB_HOOK_READY);
@@ -1120,6 +1118,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
         if (!retryOp.retry(err)) {
           cb(retryOp.mainError(), null);
         } else {
+          if (args && args.url && args.url.indexOf('start') > -1) {
+            _this.emit('api_failure', {"type":"XHRObj", "responseError": { "msg": "An unknown error occurred", "code": 0 }, "request": args});
+          }
           return;
         }
       }
@@ -1137,7 +1138,15 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   
           _this.emit(WEB_CLIENT_EVENTS.RATE_LIMITED, headerSecs);
         } else {
-  
+          if (err) {
+            _this.emit('api_error', {"type":"XHRObj", "responseError": { "msg": "An unknown error occurred", "code": 0 }, "request": args});
+          } else {
+            if (args && args.url && args.url.indexOf('start') > -1) {
+              _this.emit('api_failure', {"type":"XHRObj", "responseError": body['errors'][0], "request": args});
+            } else {
+              _this.emit('api_error', {"type":"XHRObj", "responseError": body['errors'][0], "request": args});
+            }
+          }
           httpErr = new Error('Unable to process request, received bad ' + statusCode + ' error');
           //   if (!retryOp.retry(httpErr)) {
           //     cb(httpErr, body);
@@ -1462,9 +1471,6 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     catch(e){
       console.log(e && e.stack);
     }
-    if (data && data.errors && data.errors[0]) {
-      this.emit('api_failure_client',{"type":"XHRObj","responseError" : data.errors[0]});
-    }
     if(data && data.errors && (data.errors[0].code === 'TOKEN_EXPIRED' || data.errors[0].code === 401 || data.errors[0].msg === 'token expired')){
         var $=this.$;
         $(".reload-btn").trigger('click',{isReconnect:true});
@@ -1643,6 +1649,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   
   KoreRTMClient.prototype.handleWsError = function handleWsError(err) {
     debug("web socket error::%s",err);
+    this.emit('api_failure', { type: 'socketError', responseError: err, request: '' });
     this.emit(CLIENT_EVENTS.WS_ERROR, err);
   };
   
@@ -1950,7 +1957,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     var args = {
       opts: opts
     };
-  
+    args.opts.authorization = 'v';
     return this.client.makeAPICall('/rtm/start', args, optCb);
   };
   
@@ -3532,7 +3539,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   
       // Detect failed CORS requests.
       if(is_cors && xhr.statusCode == 0) {
-        var cors_err = new Error('CORS request rejected: ' + options.uri)
+        var cors_err = new Error('An unknown error occurred.')
         cors_err.cors = 'rejected'
   
         // Do not process this request further.

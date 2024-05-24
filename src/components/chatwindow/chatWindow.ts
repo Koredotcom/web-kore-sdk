@@ -994,8 +994,8 @@ bindSDKEvents  () {
     me.emit(me.EVENTS.JWT_GRANT_SUCCESS, response.jwtgrantsuccess);
   });
 
-  me.bot.on('api_failure', (response: {responseError: any; type: any;}) => {
-    me.emit(me.EVENTS.API_FAILURE, { "type": response.type, "errObj": response.responseError });
+  me.bot.on('api_failure', (response: {responseError: any; type: any; request: any}) => {
+    me.emit(me.EVENTS.API_FAILURE, { "type": response.type, "errObj": response.responseError, "request": response.request });
   });
 };
 parseSocketMessage(msgString:string){
@@ -1807,7 +1807,7 @@ getJWTByAPIKey (API_KEY_CONFIG: { KEY: any; bootstrapURL: any; }) {
     success(data: any) {
     },
     error(err: any) {
-      me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err });
+      me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err, request: { url: API_KEY_CONFIG.bootstrapURL || 'https://bots.kore.ai/api/platform/websdk', data: jsonData }});
       // chatWindowInstance.showError(err.responseText);
     },
   });
@@ -1831,7 +1831,7 @@ getJWT (options: { clientId: any; clientSecret: any; userIdentity: any; JWTUrl: 
 
     },
     error(err: any) {
-      me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err });
+      me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err, request: { url: options.JWTUrl, data: jsonData }});
       // chatWindowInstance.showError(err.responseText);
     },
   });
@@ -1999,18 +1999,19 @@ getBrandingInformation(options:any){
           me.config.botOptions.brandingAPIUrl = me.config.botOptions.koreAPIUrl +'websdkthemes/'+  me.config.botOptions.botInfo.taskBotId+'/activetheme';
       }
       var brandingAPIUrl = (me.config.botOptions.brandingAPIUrl || '').replace(':appId', me.config.botOptions.botInfo.taskBotId);
+      var headers = {
+        'Authorization': "bearer " + options.authorization.accessToken,
+      };
       $.ajax({
           url: brandingAPIUrl,
           type: 'get',
-          headers: {
-            'Authorization': "bearer " + options.authorization.accessToken,
-          },
+          headers: headers,
           dataType: 'json',
           success: function (data: any) {  
                   me.applySDKBranding(data);
           },
           error: function (err: any) {
-              me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err });
+              me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err, request: { url: brandingAPIUrl, headers: headers }});
           }
       });
   }
