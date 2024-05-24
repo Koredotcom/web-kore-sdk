@@ -1957,7 +1957,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     var args = {
       opts: opts
     };
-    args.opts.authorization = 'v';
+
     return this.client.makeAPICall('/rtm/start', args, optCb);
   };
   
