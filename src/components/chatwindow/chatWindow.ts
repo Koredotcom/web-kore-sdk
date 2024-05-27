@@ -144,6 +144,7 @@ class chatWindow extends EventEmitter{
      * @type {Object}
      * @property {String} type - type of error - XHRObj/JqueryXHR
      * @property {Object} errObj - error object containing error details
+     * @property {Object} request - request details
      */
       API_FAILURE: 'apiFailure'
   }
