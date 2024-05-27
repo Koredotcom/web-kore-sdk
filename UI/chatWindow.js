@@ -4773,8 +4773,6 @@
                         //rec.destroy();
                         isRecordingStarted = false;
                     }, 'audio/x-raw');
-                } else {
-                    console.error('Recorder undefined');
                 }
                 if (recognizing) {
                     recognition.stop();
