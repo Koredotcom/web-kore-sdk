@@ -1,3 +1,10 @@
+### 10.3.0
+- SDK Release June 01, 2024
+* Bug fixes
+  * apiFailure event issues fix
+  * link recognization issue fix
+  * solutions listview template issues fix
+
 ### 10.2.1
 - SDK Release May 11, 2024
 * Bug fixes
