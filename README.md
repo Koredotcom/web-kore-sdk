@@ -322,6 +322,10 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 	// }		
 # Release History
 ```
+v10.3.0 [Minor] on 01-June-2024: Master branch
+        Bugfixes
+                1.Removed console log in STT
+
 v10.2.1 [Minor] on 11-May-2024: Master branch
         Bugfixes
                 1.Date formatting issue fix in date & date range templates
