@@ -1,3 +1,8 @@
+### 11.2.0
+* Release June 01, 2024
+* Features
+  * widgets ui enhanced
+
 ### 11.1.1
 * Release May 11, 2024
 * Bug fixes
