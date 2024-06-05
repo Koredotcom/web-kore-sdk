@@ -255,7 +255,7 @@ initShow  (config:any) {
   }
   me.initi18n();
   me.seti18n((me.config && me.config.i18n && me.config.i18n.defaultLanguage) || 'en');
-  if (!me.config?.delayRender) {
+  if (!me.config?.delayRender && me.config.UI.version == 'v3') {
     me.setBranding();
   }
   if(me.config && me.config.sendFailedMessage && me.config.sendFailedMessage.hasOwnProperty('MAX_RETRIES')){
@@ -1266,7 +1266,9 @@ bindSDKEvents  () {
     if (me.config.enableThemes) {
       me.getBrandingInformation(response.jwtgrantsuccess);
     } else {
-      me.setBranding();
+      if (me.config.UI.version == 'v3') {
+        me.setBranding();
+      }
     }
     me.emit(me.EVENTS.JWT_GRANT_SUCCESS, response.jwtgrantsuccess);
   });

@@ -32,16 +32,19 @@
 
 
 // New SCSS
-.kr-wiz-menu-chat {     /*Left panel styles*/
-    position: relative;
-    z-index: 9991;
-    box-shadow: none;
-    border-radius: 4px 0px 0px 4px;
-    border: 1px solid var(--sdk-primary-border-color);
-    background: var(--sdk-default-white);
-    padding: 11px 0;
-    height: 100%;
-    width: 72px;
+.kore-chat-window-main-section {
+    .kr-wiz-menu-chat {
+        /*Left panel styles*/
+        position: relative;
+        z-index: 9991;
+        box-shadow: none;
+        border-radius: 4px 0px 0px 4px;
+        border: 1px solid var(--sdk-primary-border-color);
+        background: var(--sdk-default-white);
+        padding: 11px 0;
+        height: 100%;
+        width: 72px;
+    }
 }
 
 .kr-wiz-content-css {
@@ -519,6 +522,12 @@
                         cursor: pointer;
                         display: block;
                     }
+                    // background-image: var(--sdk-accordion-icon);
+                    // width: 20px;
+                    // height: 20px;
+                    // cursor: pointer;
+                    // position: relative;
+                    // top: 4px;
                 }
             }
         }
