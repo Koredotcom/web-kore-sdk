@@ -1422,7 +1422,7 @@ render  (chatWindowHtml: any) {
   }
   if (me.config.widgetSDKInstace) {
     if (me.config.UI.version == 'v2') {
-      me.chatEle.find('.kr-wiz-menu-chat').show();
+      me.chatEle.find('.kr-v2-wiz-menu-chat').show();
     } else {
       // me.chatEle.querySelector('.kr-wiz-menu-chat').classList.add('show'); // based on config need to show widgets
     }
@@ -1991,7 +1991,7 @@ getChatTemplate (tempType: string) {
 
  var chatWindowTemplate = '<script id="chat_window_tmpl" type="text/x-jqury-tmpl"> \
      <div class="kore-chat-window droppable liteTheme-one"> \
-     <div class="kr-wiz-menu-chat defaultTheme-kore">\
+     <div class="kr-v2-wiz-menu-chat defaultTheme-kore">\
      </div>	\
          <div class="minimized-title"></div> \
          <div class="minimized"><span class="messages"></span></div> \
@@ -2044,7 +2044,7 @@ getChatTemplate (tempType: string) {
                <span class="closeElePreview">&times;</span>\
                <div class="largePreviewContent"></div>\
          </div>\
-         <div class="kr-wiz-content-chat defaultTheme-kore">\
+         <div class="kr-v2-wiz-content-chat defaultTheme-kore">\
          </div>\
      </div> \
  </script>';
@@ -2609,8 +2609,8 @@ getBrandingInformation(options:any){
                 }
                 if (digitalViewsThemeMapping[response[key].panelTheme]) {
                   defaultTheme = digitalViewsThemeMapping[response[key].panelTheme];
-                  $('.kr-wiz-menu-chat').addClass(defaultTheme);
-                  $('.kr-wiz-menu-chat').removeClass('defaultTheme-kore');
+                  $('.kr-v2-wiz-menu-chat').addClass(defaultTheme);
+                  $('.kr-v2-wiz-menu-chat').removeClass('defaultTheme-kore');
 
                 }
               }
