@@ -8,12 +8,32 @@ declare  const window:any;
  */
 class BrowserTTS extends BaseTTS {
     name = 'BrowserTTS';
-    _ttsConnection:any;
+    speechSyn: any;
+    audioMsgs: any[] = [];
+    audioPlaying: boolean = false;
     onHostCreate() {
         let me: any = this;
         let cwInstance = me.hostInstance;
         cwInstance.on("viewInit", (chatWindowEle: any) => {
             me.onInit();
+        });
+
+        cwInstance.on('onKeyDown', (el: any) => {
+            if (el && el.event.keyCode == 13) {
+                me.stop();
+            }
+        });
+
+        cwInstance.on('beforeViewInit', (el: any) => {
+            el.chatEle.find('.close-btn')?.on('click', () => {
+                me.stop();
+            });
+            el.chatEle.find('.reload-btn')?.on('click', () => {
+                me.stop();
+            });
+            el.chatEle.find('.minimize-btn')?.on('click', () => {
+                me.stop();
+            });
         });
     }
     onInit() {
@@ -21,9 +41,7 @@ class BrowserTTS extends BaseTTS {
         me.installTextToSpeechTemplate();
         //  To stop speaking long messages on refresh/reload
         window.addEventListener("beforeunload", (event: any) => {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-            }
+            me.stop();
         });
     }
 
@@ -57,26 +75,53 @@ class BrowserTTS extends BaseTTS {
                     if (msgData.message[0].component && msgData.message[0].component.payload.speech_hint) {
                         (<any> this)._txtToSpeak = msgData.message[0].component.payload.speech_hint;
                     }
-                    this._ttsConnection = me.speakWithWebAPI((<any> this)._txtToSpeak);
+                    this.speakWithWebAPI((<any> this)._txtToSpeak);
                 }
             });
         }
         
     }
 
-    speakWithWebAPI= function(_txtToSpeak: string | undefined) {
+    speakWithWebAPI(_txtToSpeak: string | undefined) {
         if(!_txtToSpeak){
             return false;
         }
         if('speechSynthesis' in window){
-            window.speechSynthesis.cancel();
+            // window.speechSynthesis.cancel();
             // Create a new instance of SpeechSynthesisUtterance.
-            var msg = new SpeechSynthesisUtterance();
-            msg.text =_txtToSpeak;
-            window.speechSynthesis.speak(msg);
+            // var msg = new SpeechSynthesisUtterance();
+            // msg.text =_txtToSpeak;
+            // window.speechSynthesis.speak(msg);
+            this.audioMsgs.push(_txtToSpeak);
+            this.playMessageSequence();
        }else{
            console.warn("KORE:Your browser doesn't support TTS(Speech Synthesiser)")
        }
+    }
+
+    playMessageSequence() {
+        let me: any = this;
+        if (!this.speechSyn) {
+            this.speechSyn = new SpeechSynthesisUtterance();
+        }
+
+        if (this.audioMsgs.length > 0 && !this.audioPlaying) {
+            this.audioPlaying = true;
+            this.speechSyn.text = this.audioMsgs.shift();
+            window.speechSynthesis.speak(this.speechSyn);
+            this.speechSyn.onend = function () {
+                me.audioPlaying = false;
+                me.playMessageSequence();
+            }    
+        }
+    }
+
+    stop() {
+        if ('speechSynthesis' in window) {
+            this.audioMsgs = [];
+            this.audioPlaying = false
+            window.speechSynthesis.cancel();
+        }
     }
 }
 export default BrowserTTS;
