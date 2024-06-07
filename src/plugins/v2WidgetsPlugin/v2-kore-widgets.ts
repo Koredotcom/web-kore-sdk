@@ -602,12 +602,12 @@ show  (config:any) {
           'panelDetail': panelData
         });
         me.bindTemplateEvents(dataHTML, 'webForm');
-        widgetElement.find('.widgetContentPanel ').html(dataHTML);
+        widgetElement?.find('.widgetContentPanel ').html(dataHTML);
       }
     }
-    widgetElement.find('button').addClass('active')
+    widgetElement?.find('button')?.addClass('active')
     setTimeout(function () {
-      if (widgetElement.find('button').length) {
+      if (widgetElement?.find('button').length) {
         me.refreshElement(paneldataString);
       }
     }, 5000)

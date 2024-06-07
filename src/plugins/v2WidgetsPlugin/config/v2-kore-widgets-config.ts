@@ -11,8 +11,8 @@ botOptionsWiz.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 var V2WidgetsConfig = {
     botOptions: botOptionsWiz,
     container :{
-        menu: ".kr-wiz-menu-chat",
-        content: ".kr-wiz-content-chat"
+        menu: ".kr-v2-wiz-menu-chat",
+        content: ".kr-v2-wiz-content-chat"
     }
 };
 
