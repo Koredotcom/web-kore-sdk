@@ -381,8 +381,8 @@ openModal(template:any, showClose:any) {
     };
     const iframe = chatBodyModal.find('iframe');
     me.postMessageToChildIframes(iframe, postPayload);
-    chatBodyModal.hide();
-    $('.kore-chat-window').removeClass('modelOpen');
+    // chatBodyModal.hide();
+    // $('.kore-chat-window').removeClass('modelOpen');
   };
   if (template) {
     chatBodyModal.find('.closeChatBodyModal').css('display', 'none');
