@@ -22,8 +22,8 @@ class BrowserTTS extends BaseTTS {
             me.stop();
         });
 
-        if (cwInstance.config.UI.version == 'v2') {
-            cwInstance.on('beforeViewInit', (el: any) => {
+        cwInstance.on('beforeViewInit', (el: any) => {
+            if (cwInstance.config.UI.version == 'v2') {
                 el.chatEle.find('.close-btn')?.on('click', () => {
                     me.stop();
                 });
@@ -33,17 +33,15 @@ class BrowserTTS extends BaseTTS {
                 el.chatEle.find('.minimize-btn')?.on('click', () => {
                     me.stop();
                 });
-            });
-        } else {
-            cwInstance.on('beforeViewInit', (el: any) => {
+            } else {
                 el.chatEle?.querySelector('.btn-action-close')?.addEventListener('click', () => {
                     me.stop();
                 });
                 el.chatEle?.querySelector('.btn-reconnect')?.addEventListener('click', () => {
                     me.stop();
                 });
-            });
-        }
+            }
+        });
     }
     onInit() {
         let me = this;
