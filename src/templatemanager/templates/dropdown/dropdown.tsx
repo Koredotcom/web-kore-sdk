@@ -46,7 +46,7 @@ export function Dropdown(props: any) {
                                     <li className={selectedItem?.title == ele?.title ? 'active-list-option' :''} onClick={event => selectItem(event, ele) }>
                                         <div className="list-section">
                                             <p>{ele.title}</p>
-                                            <div className="subtext">{ele.value}</div>
+                                            {ele && ele.description && <div className="subtext">{ele.description}</div>}
                                         </div>
                                         {/* { selectedItem.title == ele.title && <i className="sdkv3-check"></i> } */}
                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
