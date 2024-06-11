@@ -446,8 +446,8 @@ openModal(template:any, showClose:any) {
     };
     const iframe = chatBodyModal.find('iframe');
     me.postMessageToChildIframes(iframe, postPayload);
-    chatBodyModal.hide();
-    $('.kore-chat-window').removeClass('modelOpen');
+    // chatBodyModal.hide();
+    // $('.kore-chat-window').removeClass('modelOpen');
   };
   if (template) {
     chatBodyModal.find('.closeChatBodyModal').css('display', 'none');
@@ -510,6 +510,14 @@ formAction(event:any) {
     if (me.chatEle.querySelector('.inline-iframe-container')) {
       me.chatEle.querySelector('.inline-iframe-container').remove();
     }
+  } else if (event.action === 'formClose') {
+    if (me.chatEle.querySelector('.inline-iframe-container')) {
+      me.chatEle.querySelector('.inline-iframe-container').remove();
+    }
+    me.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');
+    setTimeout(() => {
+      me.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
+    }, 150);
   }
 }
 }
