@@ -281,7 +281,7 @@
                         font-style: normal;
                         line-height: 1.5;
                         letter-spacing: 0.27px;
-                        color: var(--sdk-secondary-font-color);
+                        color: var(--sdk-primary-font-color);
                     }
                     .listViewItemValue {
                         display: inline-block;
@@ -510,6 +510,27 @@
                 }
                 .wid-temp-showActions {
                     float: right;
+                    width: 20px;
+                    height: 20px;
+                    cursor: pointer;
+                    position: relative;
+                    top: 4px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 100%;
+                    background: var(--sdk-btn-light-color) !important;
+                    color: var(--sdk-primary-blue-color);
+                    font-size: 10px;
+                    svg{
+                        path{
+                            fill: var(--sdk-primary-blue-color);
+                        }
+                    }
+                    &.active {
+                        transform: rotate(180deg);
+                    }
                     .accordionIcon-darkMode {
                         width: 20px;
                         height: 20px;
@@ -523,6 +544,40 @@
                         display: block;
                     }
                 }
+            }
+        }
+        .titleActions{
+            display: table-cell;
+            vertical-align: middle;
+            text-align: right;
+            width: 25%;
+            &.imageValue{
+                .wid-temp-btnImage{
+                    width: 16px;
+                    height: 16px;
+                    display: inline-block;
+                    cursor: pointer;
+                    img{
+                        max-width: 100%;
+                    }
+                }
+            }
+            &.top{
+                vertical-align: top;
+            }
+            &.center{
+                vertical-align: middle;
+            }
+            &.bottom{
+                vertical-align: bottom;
+            }
+            .actionLink{
+                cursor: pointer;
+                line-height: 14px;
+                font-size: 14px;
+                color: var(--sdk-primary-blue-color);
+                display: inline-block;
+                border-bottom: 1px solid var(--sdk-primary-blue-color-opacity);
             }
         }
     }
@@ -1100,7 +1155,7 @@
           display: block;
           border-radius: 4px;
           text-align: center;
-          padding-top: 10px;
+          padding-top: 0px;
           cursor: pointer;
           position: relative !important;
           top: auto;
@@ -1108,14 +1163,26 @@
           left: auto;
           bottom: 0;
           margin: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          svg{
+            path{
+                stroke: var(--sdk-primary-blue-color);
+            }
+          }
           &:hover {
             background: var(--sdk-btn-light-color);
+            svg{
+                path{
+                    stroke: var(--sdk-primary-blue-color);
+                }
+            }
           }
           &:after {
             content: '';
             width: 3px;
             height: 12px;
-            background-image: var(--sdk-vertical-ellipsis);
             background-repeat: no-repeat;
             display: inline-block;
           }
@@ -1150,6 +1217,7 @@
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
+          text-align: left;
           &.themeTitle {
             color: var(--sdk-primary-font-color);
             background: var(--sdk-default-white);

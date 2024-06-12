@@ -6,10 +6,19 @@ import { getHTML } from '../../base/domManager';
 export function DigitalFormExtension(props: any) {
     const hostInstance = props.hostInstance;
     const closeMenu = () => {
-        hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');
-        setTimeout(() => {
-            hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
-        }, 150);
+        const iframeParent = hostInstance.chatEle.querySelector('.actions-contnet-data .iner-data-scroll-wraper');
+        const postPayload = {
+            payload: {},
+            event: 'formEvent',
+            action: 'formCancel',
+            metaData: {}
+        };
+        const iframe = iframeParent.querySelectorAll('iframe');
+        hostInstance.postMessageToChildIframes(iframe, postPayload);
+        // hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');
+        // setTimeout(() => {
+        //     hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
+        // }, 150);
     }
     return (
         <div className="menu-wrapper-data-actions" style={{height: '100%'}}>

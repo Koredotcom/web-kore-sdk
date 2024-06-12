@@ -749,7 +749,13 @@ getTemplate  (type:any) {
                 {{/if}}\
                 {{if tempData && tempData.headerOptions && tempData.headerOptions.type==="menu" && tempData.headerOptions.menu && tempData.headerOptions.menu.length}}\
                 <div class="headerTitleMenu">\
-                <i class="icon-More dropbtnWidgt moreValue"  onclick="showDropdown(this)"></i>\
+                <i class="icon-More dropbtnWidgt moreValue"  onclick="showDropdown(this)">\
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">\
+                  <path d="M7.99992 8.66669C8.36811 8.66669 8.66659 8.36821 8.66659 8.00002C8.66659 7.63183 8.36811 7.33335 7.99992 7.33335C7.63173 7.33335 7.33325 7.63183 7.33325 8.00002C7.33325 8.36821 7.63173 8.66669 7.99992 8.66669Z" stroke="#667085" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>\
+                  <path d="M7.99992 4.00002C8.36811 4.00002 8.66659 3.70154 8.66659 3.33335C8.66659 2.96516 8.36811 2.66669 7.99992 2.66669C7.63173 2.66669 7.33325 2.96516 7.33325 3.33335C7.33325 3.70154 7.63173 4.00002 7.99992 4.00002Z" stroke="#667085" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>\
+                  <path d="M7.99992 13.3334C8.36811 13.3334 8.66659 13.0349 8.66659 12.6667C8.66659 12.2985 8.36811 12 7.99992 12C7.63173 12 7.33325 12.2985 7.33325 12.6667C7.33325 13.0349 7.63173 13.3334 7.99992 13.3334Z" stroke="#667085" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>\
+                </svg>\
+                </i>\
                 <ul  class="dropdown-contentWidgt  rmpmW moreValueContent" style="list-style:none;">\
                 {{each(key1, menuBtn) tempData.headerOptions.menu}} \
                         <li class="dropdown-item action" actionObj="${JSON.stringify(menuBtn)}" action-type="default">${menuBtn.title}</li>\
@@ -1769,6 +1775,9 @@ getTemplate  (type:any) {
                                    {{/if}} \
                                    {{if ((key===2) || ((msgItem.details.length < 3) && (key===msgItem.details.length-1))) && (msgItem.buttons && msgItem.buttons.length)}} \
                                    <span class="wid-temp-showActions" aria-live="polite" role="button" tabindex="1" aria-label="Show buttons icon">\
+                                      <svg width="11" height="8" viewBox="0 0 11 8" fill="none">\
+                                        <path d="M10.9615 6.36398C10.9695 5.97582 10.7986 5.67266 10.7001 5.51298C10.5989 5.34876 10.4588 5.16209 10.3227 4.98073L7.38484 1.06354C7.29149 0.938993 7.18594 0.798167 7.08438 0.685249C6.97238 0.560728 6.78622 0.377328 6.50548 0.268145C6.15577 0.132135 5.76778 0.132135 5.41807 0.268145C5.13734 0.377328 4.95118 0.560728 4.83918 0.685249C4.73762 0.798154 4.6321 0.938945 4.53876 1.06348L1.60084 4.98072C1.46475 5.16209 1.32469 5.34876 1.22343 5.51298C1.12497 5.67266 0.954034 5.97582 0.962104 6.36398C0.971464 6.81413 1.18253 7.23626 1.53703 7.51384C1.84272 7.75319 2.18781 7.79834 2.37463 7.81538C2.56675 7.8329 2.80011 7.83286 3.02685 7.83281H8.89668C9.12342 7.83286 9.35681 7.8329 9.54893 7.81538C9.73575 7.79834 10.0808 7.75319 10.3865 7.51384C10.741 7.23626 10.9521 6.81413 10.9615 6.36398Z" fill="#101828"/>\
+                                      </svg>\
                                     </span>\
                                    {{/if}} \
                                  </div>\
