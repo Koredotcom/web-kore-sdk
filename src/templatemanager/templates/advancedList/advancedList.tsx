@@ -1,15 +1,13 @@
 import BaseChatTemplate from '../baseChatTemplate';
 import './advancedList.scss';
 import { h, Fragment } from 'preact';
-import { useState } from 'preact/hooks';
-import { Message } from '../message/message';
 import { getHTML } from '../../base/domManager';
-import IconsManager from '../../base/iconsManager';
+import KoreHelpers from '../../../utils/helpers';
 
 export function AdvancedListExtension(props: any) {
-    const iconHelper = new IconsManager();
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
+    const helpers = KoreHelpers.helpers;
 
     const closeMenu = () => {
         hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');
@@ -31,7 +29,7 @@ export function AdvancedListExtension(props: any) {
         }
     }
     const handleAccordian = (index: any) => {
-        hostInstance.chatEle.querySelector(`[data-kr-alt-acc='${msgData.messageId}_${index}']`).classList.toggle('open-acc-adv-temp');
+        hostInstance.chatEle.querySelector(`[data-kr-alt-acc-ext='${msgData.messageId}_${index}']`).classList.toggle('open-acc-adv-temp');
     }
 
     const handleButtonsMore = (event: any, index: any) => {
@@ -89,6 +87,7 @@ export function AdvancedListExtension(props: any) {
     return (
         <div className="menu-wrapper-data-actions">
             <div className="actions-slider-header-menu">
+                <h1></h1>
                 <button className="menu-close" role="contentinfo" aria-label="close" onClick={closeMenu}>
                     <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
                         <path d="M10.8838 10.0001L16.0669 4.81694C16.311 4.57286 16.311 4.17714 16.0669 3.93306C15.8229 3.68898 15.4271 3.68898 15.1831 3.93306L9.99988 9.11624L4.81694 3.93352C4.57286 3.68944 4.17713 3.68945 3.93306 3.93354C3.68899 4.17762 3.689 4.57335 3.93308 4.81742L9.116 10.0001L3.93306 15.1831C3.68898 15.4272 3.68898 15.8229 3.93306 16.067C4.17714 16.311 4.57286 16.311 4.81694 16.067L9.9999 10.884L15.1831 16.067C15.4272 16.311 15.8229 16.311 16.067 16.0669C16.311 15.8229 16.311 15.4271 16.0669 15.1831L10.8838 10.0001Z" fill="#697586"/>
@@ -99,7 +98,7 @@ export function AdvancedListExtension(props: any) {
                 <div className="padding-wrapper-content">
                     <div className="adv-parent-temp-wrapper">
                         <div className="main-heading-wrapper">
-                            {msgData.message[0].component.payload.title && <h1>{msgData.message[0].component.payload.title}</h1>}
+                            {msgData.message[0].component.payload.title && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData.message[0].component.payload.title, "bot") }}></h1>}
                             {(msgData.message[0].component.payload.isSortEnabled || msgData.message[0].component.payload.isSearchEnabled) && <div className="header-actions">
                                 {msgData.message[0].component.payload.isSortEnabled && <button className="btn-action-filter">
                                     <svg width="16" height="17" viewBox="0 0 16 17" fill="none">
@@ -131,7 +130,7 @@ export function AdvancedListExtension(props: any) {
                         </div>
 
                         {msgData.message[0].component.payload.listItems.map((item: any, index: any) => (
-                            <div className={`adv-parent-acc-list ${(!item.isAccordian || !item.isCollapsed) ? `open-acc-adv-temp` : ``}`} data-kr-alt-acc={`${msgData.messageId}_${index}`} style={item?.elementStyles}>
+                            <div className={`adv-parent-acc-list ${(!item.isAccordian || !item.isCollapsed) ? `open-acc-adv-temp` : ``}`} data-kr-alt-acc-ext={`${msgData.messageId}_${index}`} style={item?.elementStyles}>
                                 <div className="advanced-list-template-wrapper" onClick={() => handleItem(item)}>
                                     {item.icon && <div className="img-block">
                                         <figure>
@@ -139,14 +138,14 @@ export function AdvancedListExtension(props: any) {
                                         </figure>
                                     </div>}
                                     {(item.title || item.description) && <div className="titles-info-block">
-                                        <h1 style={item?.titleStyles}>{item.title}</h1>
+                                        <h1 style={item?.titleStyles} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.title, "bot") }}></h1>
                                         <p>{item.description}</p>
                                     </div>}
                                     <div className="right-actions-content">
                                         {item.headerOptions?.length > 0 && item.headerOptions.map((headerEle: any) => (
                                             <Fragment>
-                                                {headerEle.contenttype === 'button' && <button style={headerEle?.buttonStyles} className="kr-button-blue-light" onClick={() => handleItem(headerEle)}>{headerEle.title}</button>}
-                                                {headerEle.type === 'text' && <h1 style={headerEle?.styles}>{headerEle.value}</h1>}
+                                                {headerEle.contenttype === 'button' && <button style={headerEle?.buttonStyles} className="kr-button-blue-light" onClick={() => handleItem(headerEle)} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(headerEle.title, "bot") }}></button>}
+                                                {headerEle.type === 'text' && <h1 style={headerEle?.styles} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(headerEle.value, "bot") }}>{headerEle.value}</h1>}
                                                 {<p style={{ display: 'none' }} className="tag-status">Shortlisted</p>}
                                                 {item.isAccordian && headerEle.type === 'icon' && <button className="arrow-icon" onClick={() => handleAccordian(index)}>
                                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -169,7 +168,7 @@ export function AdvancedListExtension(props: any) {
                                                         </button>
                                                         {headerEle.dropdownOptions.map((dropdownEle: any) => (
                                                             <li>
-                                                                <button className="kr-button-blue-light" onClick={() => handleItem(dropdownEle)}>{dropdownEle.title}</button>
+                                                                <button className="kr-button-blue-light" onClick={() => handleItem(dropdownEle)} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(dropdownEle.title, "bot") }}></button>
                                                             </li>))}
                                                     </ul>
                                                 </div>}
@@ -183,7 +182,7 @@ export function AdvancedListExtension(props: any) {
                                                 {textEle.icon && <figure>
                                                     <img src={textEle.icon} />
                                                 </figure>}
-                                                <p>{textEle.title}</p>
+                                                <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(textEle.title, "bot") }}></p>
                                             </div>))}
                                     </div>}
                                     {item.view === 'options' && item.optionsData && <Fragment>
@@ -191,7 +190,7 @@ export function AdvancedListExtension(props: any) {
                                             <div className="checkbox-item item-checked">
                                                 <input id={`check-box-${msgData.messageId}-${index}-${ind}`} className='checkbox-input' type="checkbox" value={checkboxEle.value} label={checkboxEle.label} data-kr-alt-che={`${msgData.messageId}_${index}`} />
                                                 <label for={`check-box-${msgData.messageId}-${index}-${ind}`} className="checkbox-label">
-                                                    <div className="title">{checkboxEle.label}</div>
+                                                    <div className="title" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(checkboxEle.label, "bot") }}></div>
                                                     {/* <div className="desc-text-checkbox">Checkbox item</div> */}
                                                 </label>
                                             </div>))}
@@ -199,7 +198,7 @@ export function AdvancedListExtension(props: any) {
                                             <div className="radio-button-item">
                                                 <input id={`radio-button-${msgData.messageId}-${index}-${ind}`} name="radio" className="radio-input" type="radio" value={radioEle.value} label={radioEle.label} data-kr-alt-rad={`${msgData.messageId}_${index}`} />
                                                 <label for={`radio-button-${msgData.messageId}-${index}-${ind}`} className="radio-label">
-                                                    <div className="radio-title">{radioEle.label}</div>
+                                                    <div className="radio-title" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(radioEle.label, "bot") }}></div>
                                                     {/* <div className="radio-desc">Radio button item</div> */}
                                                 </label>
                                             </div>))}
@@ -210,7 +209,7 @@ export function AdvancedListExtension(props: any) {
                                                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
                                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M13.7804 3.31768C13.967 3.11682 14.2795 3.1067 14.4784 3.29508C14.6656 3.47238 14.6855 3.76232 14.5317 3.96328L14.5008 3.99987L6.13818 12.509C5.95951 12.7013 5.66615 12.7183 5.46746 12.5556L5.43136 12.523L1.44799 8.55964C1.25373 8.36636 1.25144 8.05066 1.44287 7.85451C1.62304 7.66991 1.9106 7.65699 2.10576 7.81726L2.14122 7.84934L5.76405 11.454L13.7804 3.31768Z" fill="#202124"/>
                                                 </svg>
-                                                <span>{buttonEle.title}</span>
+                                                <span dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(buttonEle.title, "bot") }}></span>
                                             </button>)))}
                                         {((item.buttonsLayout && item.buttons?.length > item.buttonsLayout?.displayLimit?.count) || !item.buttonsLayout) &&
                                             <Fragment>
@@ -230,7 +229,7 @@ export function AdvancedListExtension(props: any) {
                                                     </button>
                                                     {item.buttons.map((buttonEle: any, ind: any) => (
                                                         <li>
-                                                            <button className="kr-button-blue-light" onClick={() => handleItem(buttonEle)}>{buttonEle.title}</button>
+                                                            <button className="kr-button-blue-light" onClick={() => handleItem(buttonEle)} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(buttonEle.title, "bot") }}></button>
                                                         </li>))}
                                                 </ul>
                                             </Fragment>}
@@ -243,8 +242,8 @@ export function AdvancedListExtension(props: any) {
                                                     <img src={tableEle.icon} />
                                                 </div>}
                                                 <div className="titles_info_block">
-                                                    <p>{tableEle.title}</p>
-                                                    <h1>{tableEle.description}</h1>
+                                                    <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(tableEle.title, "bot") }}></p>
+                                                    <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(tableEle.description, "bot") }}></h1>
                                                 </div>
                                             </div>))}
                                     </div>}
@@ -260,6 +259,7 @@ export function AdvancedListExtension(props: any) {
 export function AdvancedList(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
+    const helpers = KoreHelpers.helpers;
 
     const handleItem = (item: any) => {
         if (item.type == 'postback' || item.type == 'text') {
@@ -339,7 +339,7 @@ export function AdvancedList(props: any) {
             <div className="padding-wrapper-content">
                 <div className="adv-parent-temp-wrapper">
                     <div className="main-heading-wrapper">
-                        {msgData.message[0].component.payload.title && <h1>{msgData.message[0].component.payload.title}</h1>}
+                        {msgData.message[0].component.payload.title && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData.message[0].component.payload.title, "bot") }}></h1>}
                         {(msgData.message[0].component.payload.isSortEnabled || msgData.message[0].component.payload.isSearchEnabled) && <div className="header-actions">
                             {msgData.message[0].component.payload.isSortEnabled && <button className="btn-action-filter">
                                 <svg width="16" height="17" viewBox="0 0 16 17" fill="none">
@@ -378,14 +378,14 @@ export function AdvancedList(props: any) {
                                         <img src={item.icon} />
                                     </div>}
                                     {(item.title || item.description) && <div className="titles-info-block">
-                                        <h1 style={item?.titleStyles}>{item.title}</h1>
-                                        <p>{item.description}</p>
+                                        <h1 style={item?.titleStyles} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.title, "bot") }}></h1>
+                                        <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.description, "bot") }}></p>
                                     </div>}
                                     <div className="right-actions-content">
                                         {item.headerOptions?.length > 0 && item.headerOptions.map((headerEle: any) => (
                                             <Fragment>
-                                                {headerEle.contenttype === 'button' && <button style={headerEle?.buttonStyles} className="kr-button-blue-light" onClick={() => handleItem(headerEle)}>{headerEle.title}</button>}
-                                                {headerEle.type === 'text' && <h1 style={headerEle?.styles}>{headerEle.value}</h1>}
+                                                {headerEle.contenttype === 'button' && <button style={headerEle?.buttonStyles} className="kr-button-blue-light" onClick={() => handleItem(headerEle)} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(headerEle.title, "bot") }}></button>}
+                                                {headerEle.type === 'text' && <h1 style={headerEle?.styles} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(headerEle.value, "bot") }}></h1>}
                                                 {<p style={{ display: 'none' }} className="tag-status">Shortlisted</p>}
                                                 {item.isAccordian && headerEle.type === 'icon' && <button className="arrow-icon" onClick={() => handleAccordian(index)}>
                                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -408,7 +408,7 @@ export function AdvancedList(props: any) {
                                                         </button>
                                                         {headerEle.dropdownOptions.map((dropdownEle: any) => (
                                                             <li>
-                                                                <button className="kr-button-blue-light" onClick={() => handleItem(dropdownEle)}>{dropdownEle.title}</button>
+                                                                <button className="kr-button-blue-light" onClick={() => handleItem(dropdownEle)} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(dropdownEle.title, "bot") }}></button>
                                                             </li>))}
                                                     </ul>
                                                 </div>}
@@ -422,7 +422,7 @@ export function AdvancedList(props: any) {
                                                 {textEle.icon && <figure>
                                                     <img src={textEle.icon} />
                                                 </figure>}
-                                                <p>{textEle.title}</p>
+                                                <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(textEle.title, "bot") }}></p>
                                             </div>))}
                                     </div>}
                                     {item.view === 'options' && item.optionsData && <Fragment>
@@ -431,7 +431,7 @@ export function AdvancedList(props: any) {
                                                 <div className="checkbox-item item-checked">
                                                     <input id={`check-box-${msgData.messageId}-${index}-${ind}`} className='checkbox-input' type="checkbox" value={checkboxEle.value} label={checkboxEle.label} data-kr-alt-che={`${msgData.messageId}_${index}`} />
                                                     <label for={`check-box-${msgData.messageId}-${index}-${ind}`} className="checkbox-label">
-                                                        <div className="title">{checkboxEle.label}</div>
+                                                        <div className="title" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(checkboxEle.label, "bot") }}></div>
                                                         {/* <div className="desc-text-checkbox">Checkbox item</div> */}
                                                     </label>
                                                 </div>))}
@@ -439,14 +439,14 @@ export function AdvancedList(props: any) {
                                                 <div className="radio-button-item">
                                                     <input id={`radio-button-${msgData.messageId}-${index}-${ind}`} name="radio" className="radio-input" type="radio" value={radioEle.value} label={radioEle.label} data-kr-alt-rad={`${msgData.messageId}_${index}`} />
                                                     <label for={`radio-button-${msgData.messageId}-${index}-${ind}`} className="radio-label">
-                                                        <div className="radio-title">{radioEle.label}</div>
+                                                        <div className="radio-title" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(radioEle.label, "bot") }}></div>
                                                         {/* <div className="radio-desc">Radio button item</div> */}
                                                     </label>
                                                 </div>))}
                                         </div>
                                         <div className="buttons-wrapper-sec">
-                                            <button className="kr-button-primary" onClick={() => onSubmit(item, index)}>{item.buttons[0].title}</button>
-                                            <button className="kr-button-secondary" onClick={() => onCancel(item, index)}>{item.buttons[1].title}</button>
+                                            <button className="kr-button-primary" onClick={() => onSubmit(item, index)} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.buttons[0].title, "bot") }}></button>
+                                            <button className="kr-button-secondary" onClick={() => onCancel(item, index)} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.buttons[1].title, "bot") }}></button>
                                         </div>
                                     </Fragment>}
                                     {item.buttons?.length > 0 && item.view !== 'options' && <div className={`buttons-wrapper-sec ${item.buttonsLayout?.buttonAligment === 'fullwidth' ? `if-full-width-buttons` : ``}`}>
@@ -475,7 +475,7 @@ export function AdvancedList(props: any) {
                                                     </button>
                                                     {item.buttons.map((buttonEle: any, ind: any) => (
                                                         <li>
-                                                            <button className="kr-button-blue-light" onClick={() => handleItem(buttonEle)}>{buttonEle.title}</button>
+                                                            <button className="kr-button-blue-light" onClick={() => handleItem(buttonEle)} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(buttonEle.title, "bot") }}></button>
                                                         </li>))}
                                                 </ul>
                                             </Fragment>}
@@ -488,8 +488,8 @@ export function AdvancedList(props: any) {
                                                     <img src={tableEle.icon} />
                                                 </div>}
                                                 <div className="titles_info_block">
-                                                    <p>{tableEle.title}</p>
-                                                    <h1>{tableEle.description}</h1>
+                                                    <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(tableEle.title, "bot") }}></p>
+                                                    <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(tableEle.description, "bot") }}></h1>
                                                 </div>
                                             </div>))}
                                     </div>}
