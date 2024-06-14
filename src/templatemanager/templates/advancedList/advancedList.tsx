@@ -206,10 +206,9 @@ export function AdvancedListExtension(props: any) {
                                     {item.buttons?.length > 0 && item.view !== 'options' && <div className={`buttons-wrapper-sec ${item.buttonsLayout?.buttonAligment === 'fullwidth' ? `if-full-width-buttons` : ``}`}>
                                         {item.buttons.map((buttonEle: any, ind: any) => (
                                             (((item.buttonsLayout && ind < item.buttonsLayout?.displayLimit?.count) || !item.buttonsLayout && ind < 2) && <button className="kr-button-blue-light" onClick={() => handleItem(buttonEle)}>
-                                                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M13.7804 3.31768C13.967 3.11682 14.2795 3.1067 14.4784 3.29508C14.6656 3.47238 14.6855 3.76232 14.5317 3.96328L14.5008 3.99987L6.13818 12.509C5.95951 12.7013 5.66615 12.7183 5.46746 12.5556L5.43136 12.523L1.44799 8.55964C1.25373 8.36636 1.25144 8.05066 1.44287 7.85451C1.62304 7.66991 1.9106 7.65699 2.10576 7.81726L2.14122 7.84934L5.76405 11.454L13.7804 3.31768Z" fill="#202124"/>
-                                                </svg>
-                                                <span dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(buttonEle.title, "bot") }}></span>
+                                                {buttonEle.icon && <figure>
+                                                    <img src={buttonEle.icon} />
+                                                </figure>}                                                <span dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(buttonEle.title, "bot") }}></span>
                                             </button>)))}
                                         {((item.buttonsLayout && item.buttons?.length > item.buttonsLayout?.displayLimit?.count) || !item.buttonsLayout) &&
                                             <Fragment>
@@ -452,9 +451,9 @@ export function AdvancedList(props: any) {
                                     {item.buttons?.length > 0 && item.view !== 'options' && <div className={`buttons-wrapper-sec ${item.buttonsLayout?.buttonAligment === 'fullwidth' ? `if-full-width-buttons` : ``}`}>
                                         {item.buttons.map((buttonEle: any, ind: any) => (
                                             (((item.buttonsLayout && ind < item.buttonsLayout?.displayLimit?.count) || !item.buttonsLayout && ind < 2) && <button className="kr-button-blue-light" onClick={() => handleItem(buttonEle)}>
-                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M13.7804 3.31768C13.967 3.11682 14.2795 3.1067 14.4784 3.29508C14.6656 3.47238 14.6855 3.76232 14.5317 3.96328L14.5008 3.99987L6.13818 12.509C5.95951 12.7013 5.66615 12.7183 5.46746 12.5556L5.43136 12.523L1.44799 8.55964C1.25373 8.36636 1.25144 8.05066 1.44287 7.85451C1.62304 7.66991 1.9106 7.65699 2.10576 7.81726L2.14122 7.84934L5.76405 11.454L13.7804 3.31768Z" fill="#202124"/>
-                                                </svg>
+                                                {buttonEle.icon && <figure>
+                                                    <img src={buttonEle.icon} />
+                                                </figure>} 
                                                 <span>{buttonEle.title}</span>
                                             </button>)))}
                                         {((item.buttonsLayout && item.buttons?.length > item.buttonsLayout?.displayLimit?.count) || !item.buttonsLayout) &&

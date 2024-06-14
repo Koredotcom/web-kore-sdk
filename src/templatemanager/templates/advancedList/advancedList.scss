@@ -378,7 +378,16 @@
                 position: relative; 
                 &.if-full-width-buttons{
                     flex-wrap: wrap;
-                }       
+                }    
+                figure {
+                    width: 20px;
+                    height: 20px;
+                    flex-shrink: 0;
+                    img {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
             }
             .table-list-data{
                 display: flex;
