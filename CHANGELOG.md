@@ -1,3 +1,10 @@
+### 10.3.1
+- SDK Release June 15, 2024
+* Bug fixes
+  * TTS message reading sequence added
+  * carousel template sliding issue fix for mobile devices
+  * digital form cancel popup opening issue fix
+
 ### 10.3.0
 - SDK Release June 01, 2024
 * Bug fixes
