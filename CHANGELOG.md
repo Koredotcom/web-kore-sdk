@@ -1,7 +1,7 @@
 ### 11.2.1
 * Release June 15, 2024
 * Features
-  * added description key for elements in the dropdown template. (Click here)[https://github.com/Koredotcom/web-kore-sdk/tree/v3/dev/docs/templates/dropdownTemplate] for more details.
+  * added description key for elements in the dropdown template. [Click here](https://github.com/Koredotcom/web-kore-sdk/tree/v3/dev/docs/templates/dropdownTemplate) for more details.
 * Bug fixes
   * digital form close popup opening issue fix
   * widgets color mapping issue fix for buttons
