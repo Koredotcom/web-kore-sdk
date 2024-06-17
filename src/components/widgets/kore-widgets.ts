@@ -3584,7 +3584,6 @@ bindTemplateEvents  (ele:any, templateType:any, bindingData:any) {
         }
       }
     }
-    console.log(bindingData);
     $ele.off('click', '.listViewLeftContent').on('click', '.listViewLeftContent', function (e) {
       e.stopPropagation();
       var actionObjString = $(e.currentTarget).attr('actionObj');
