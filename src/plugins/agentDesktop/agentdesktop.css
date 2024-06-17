@@ -977,3 +977,7 @@ div .agent-bubble-comp .agent-bubble-content .bottom-info .read{
     cursor: pointer;
     padding: 0;
 }
+
+html.rrweb-paused * {
+    animation-play-state: running !important
+}
