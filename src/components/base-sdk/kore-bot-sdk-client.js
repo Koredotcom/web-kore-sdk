@@ -400,6 +400,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
             if (_comp.type === 'text') {
               _comp.cInfo = {};
               _comp.cInfo.body = data.messages[i].components[j].data && data.messages[i].components[j].data.text;
+              if (data.messages[i].tags && data.messages[i].tags.altText && data.messages[i].tags.altText.length > 0) {
+                _comp.cInfo.body = data.messages[i].tags.altText[0]?.value || _comp.cInfo.body;
+              }
             }
   
             _msg.message[j] = _comp;
@@ -454,6 +457,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
             if (_comp.type === 'text') {
               _comp.cInfo = {};
               _comp.cInfo.body = data.messages[i].components[j].data && data.messages[i].components[j].data.text;
+              if (data.messages[i].tags && data.messages[i].tags.altText && data.messages[i].tags.altText.length > 0) {
+                _comp.cInfo.body = data.messages[i].tags.altText[0]?.value || _comp.cInfo.body;
+              }
             }
   
             _msg.message[j] = _comp;
