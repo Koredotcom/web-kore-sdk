@@ -322,6 +322,11 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 	// }		
 # Release History
 ```
+v10.3.1 [Minor] on 15-June-2024: Master branch
+        Bugfixes
+                1.TTS message reading sequence added
+                2.Carousel template sliding issue fix for mobile devices
+
 v10.3.0 [Minor] on 01-June-2024: Master branch
         Bugfixes
                 1.Removed console log in STT
