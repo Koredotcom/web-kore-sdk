@@ -399,6 +399,9 @@ KoreBot.prototype.onForwardHistory = function(err, data) {
 					if (_comp.type === 'text') {
 						_comp.cInfo = {};
 						_comp.cInfo.body = data.messages[i].components[j].data && data.messages[i].components[j].data.text;
+            if (data.messages[i].tags && data.messages[i].tags.altText && data.messages[i].tags.altText.length > 0) {
+              _comp.cInfo.body = data.messages[i].tags.altText[0]?.value || _comp.cInfo.body;
+            }
 					}
 
 					_msg.message[j] = _comp;
@@ -452,6 +455,9 @@ KoreBot.prototype.onBackWardHistory = function(err, data) {
 					if (_comp.type === 'text') {
 						_comp.cInfo = {};
 						_comp.cInfo.body = data.messages[i].components[j].data && data.messages[i].components[j].data.text;
+            if (data.messages[i].tags && data.messages[i].tags.altText && data.messages[i].tags.altText.length > 0) {
+              _comp.cInfo.body = data.messages[i].tags.altText[0]?.value || _comp.cInfo.body;
+            }
 					}
 
 					_msg.message[j] = _comp;
