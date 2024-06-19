@@ -2801,23 +2801,23 @@ applyVariableValue (key:any,value:any,type:any){
         url = url.replace(/\/1\.1/, '/');
       }
 
-      if (me.config.branding.welcome_screen.logo.type == 'default') {
-        me.config.branding.welcome_screen.logo.logo_url =  url + 'assets/websdkthemes/' + me.config.branding.welcome_screen.logo.logo_url
+      if (me.config.branding.welcome_screen.logo.type == 'default' && me.config.branding.welcome_screen.logo.logo_url.indexOf('assets/websdkthemes/') == -1) {
+        me.config.branding.welcome_screen.logo.logo_url =  url + 'assets/websdkthemes/' + me.config.branding.welcome_screen.logo.logo_url;
       }
       me.config.branding.welcome_screen.promotional_content.promotions.forEach((banner: any) => {
-        if (banner.type == 'default') {
+        if (banner.type == 'default' && banner.banner.indexOf('assets/websdkthemes/') == -1) {
           banner.banner = url + 'assets/websdkthemes/' + banner.banner;
         }
       });
-      if (me.config.branding.body.background.imgType == 'default') {
+      if (me.config.branding.body.background.imgType == 'default' && me.config.branding.body.background.img.indexOf('assets/websdkthemes/') == -1) {
         me.config.branding.body.background.img = url + 'assets/websdkthemes/' + me.config.branding.body.background.img;
       }
-      if (me.config.branding.body.agent_message.icon.type == 'default') {
+      if (me.config.branding.body.agent_message.icon.type == 'default' && me.config.branding.body.agent_message.icon.icon_url.indexOf('assets/websdkthemes/') == -1) {
         me.config.branding.body.agent_message.icon.icon_url = url + 'assets/websdkthemes/' + me.config.branding.body.agent_message.icon.icon_url;
       }
       const soundTypes = ['on_audio_call', 'on_close', 'on_msg_send', 'on_new_msg', 'on_open', 'on_proactive_msg', 'on_video_call'];
       soundTypes.forEach((type) => {
-        if (me.config.branding.general.sounds[type]['type'] == 'default') {
+        if (me.config.branding.general.sounds[type]['type'] == 'default' && me.config.branding.general.sounds[type]['url'].indexOf('assets/websdkthemes/') == -1) {
           me.config.branding.general.sounds[type]['url'] = url + 'assets/websdkthemes/' + me.config.branding.general.sounds[type]['url'];
         }
       });
