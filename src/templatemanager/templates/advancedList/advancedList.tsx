@@ -139,7 +139,7 @@ export function AdvancedListExtension(props: any) {
                                     </div>}
                                     {(item.title || item.description) && <div className="titles-info-block">
                                         <h1 style={item?.titleStyles} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.title, "bot") }}></h1>
-                                        <p>{item.description}</p>
+                                        <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.description, "bot") }}></p>
                                     </div>}
                                     <div className="right-actions-content">
                                         {item.headerOptions?.length > 0 && item.headerOptions.map((headerEle: any) => (
