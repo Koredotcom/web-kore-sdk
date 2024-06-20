@@ -95,6 +95,7 @@ class KoreMultiFileUploaderPlugin {
       if (me.hostInstance.chatEle.querySelector('.uploaded-attachment-data')) {
         me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
         document.getElementById("captureMediaAttachment").value = '';
+        document.getElementById("captureFileAttachment").value = '';
       }
     });
     me.hostInstance.eventManager.addEventListener('#captureMediaAttachment', 'change', (event: any) => {
@@ -117,7 +118,7 @@ class KoreMultiFileUploaderPlugin {
         }
       }
       me.convertFiles(file);
-      document.getElementById("captureMediaAttachment").value = '';
+      document.getElementById("captureFileAttachment").value = '';
     })
     me.hostInstance.attachmentData = [];
   }
@@ -159,6 +160,7 @@ class KoreMultiFileUploaderPlugin {
                 me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.add('hide-attachment');
                 me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
                 document.getElementById("captureMediaAttachment").value = "";
+                document.getElementById("captureFileAttachment").value = "";
               });
             });
             me.hostInstance.attachmentData = [];
@@ -203,6 +205,7 @@ class KoreMultiFileUploaderPlugin {
               me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.add('hide-attachment');
               me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
               document.getElementById("captureMediaAttachment").value = "";
+              document.getElementById("captureFileAttachment").value = "";
             });
           });
           me.hostInstance.attachmentData = [];
