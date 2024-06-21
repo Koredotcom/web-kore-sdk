@@ -3869,9 +3869,9 @@
                                 setTimeout(function () {
                                     if (msgData.type === "outgoing" || msgData.type === "bot_response") {
                                         //if ($('.kore-chat-window .chat-container li#' + msgData.messageId).length < 1) {
+                                            msgData.fromHistorySync = true;
                                             me.historySyncing(msgData,res,index);
-                                            msgData.fromHistorySync=true;
-                                            me.renderMessage(msgData);
+                                            // me.renderMessage(msgData);
                                         //}
                                     }
                                 }, index * 100);
