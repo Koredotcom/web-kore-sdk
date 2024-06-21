@@ -1739,9 +1739,9 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
         setTimeout(() => {
           if (msgData.type === 'outgoing' || msgData.type === 'bot_response') {
             // if ($('.kore-chat-window .chat-container li#' + msgData.messageId).length < 1) {
-              me.historySyncing(msgData,res,index);
             msgData.fromHistorySync = true;
-            me.renderMessage(msgData);
+            me.historySyncing(msgData,res,index);
+            // me.renderMessage(msgData);
             // }
           }
         }, index * 100);
