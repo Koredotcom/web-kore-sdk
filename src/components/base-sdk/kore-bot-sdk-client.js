@@ -488,8 +488,12 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     var __opts__ = {};
     __opts__.forward = opts.forward;
     __opts__.limit = opts.limit || 10; // 10 is the max size.
-    __opts__.offset = this.historyOffset;
-    this.historyOffset = this.historyOffset +( opts.limit?  opts.limit : 10);
+    if (opts.forHistorySync) {
+      __opts__.offset = 0;
+    } else {
+      __opts__.offset = this.historyOffset;
+      this.historyOffset = this.historyOffset + (opts.limit ? opts.limit : 10);
+    }
       
     if (__opts__.forward) {
       if (this.latestId)
@@ -563,6 +567,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this.RtmClient = new clients.KoreRtmClient({}, this.options);
       this.RtmClient.on('api_failure_client', errObj => {
         this.emit(WEB_EVENTS.API_FAILURE, errObj);
+      });
+      this.RtmClient.on('reconnect_event', event => {
+        this.emit('reconnected', event);
       });
       this.emit("rtm_client_initialized");
       this.emit(WEB_EVENTS.JWT_GRANT_SUCCESS,{jwtgrantsuccess : data});
@@ -1524,6 +1531,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       //this.activeUserId = data.self.id;
       this.emit(CLIENT_EVENTS.AUTHENTICATED, data);
       this.connect(data.url);
+      this.emit('reconnect_event', { reconnected: __reconnect__ });
     }
   };
   

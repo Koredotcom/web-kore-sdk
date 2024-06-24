@@ -1164,10 +1164,13 @@ bindEventsV3() {
 
     chatContainer.addEventListener('scroll', (event: any) => {
       var div = event.currentTarget;
+      if (bot.previousHistoryLoading) {
+        return false;
+      }
       if (div.scrollHeight - div.scrollTop === div.clientHeight) {
         bot.previousHistoryLoading = false;
       } else if (div.scrollTop === 0) {
-        if (bot.paginatedScrollDataAvailable) {
+        if (bot.paginatedScrollDataAvailable && !bot.previousHistoryLoading) {
           me.chatEle.querySelector('.typing-text-area').blur();
           me.chatEle.querySelector('.typing-text-area').classList.add('disableComposeBar');
           bot.previousHistoryLoading = true;
@@ -1283,6 +1286,12 @@ bindSDKEvents  () {
 
   me.bot.on('api_failure', (response: {responseError: any; type: any;}) => {
     me.emit(me.EVENTS.API_FAILURE, { "type": response.type, "errObj": response.responseError });
+  });
+
+  me.bot.on('reconnected', (response: any) => {
+    if (me.config?.reconnectHistorySync && response?.reconnected) {
+      me.bot.getHistory({ forHistorySync: true, limit: 10 });
+    }
   });
 };
 parseSocketMessage(msgString:string){
@@ -1798,6 +1807,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
       } else {
         chatContainer.appendChild(messageHtml);
       }
+      scrollHeight = me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight;
     } else {
       scrollHeight = me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight;
       if (bot && !bot.previousHistoryLoading) {
@@ -2119,11 +2129,6 @@ historyLoadingComplete () {
 
       let prevMessageListContainer = me.chatEle.querySelectorAll('.prev-message-list')[0];
       prevMessageListContainer.innerHTML = '';
-
-      let historyLoader = me.chatEle.querySelector('.history-loading-wrapper');
-      if (historyLoader) {
-        historyLoader.remove();
-      }
     }
     bot.previousHistoryLoading = false;
     me.emit(me.EVENTS.HISTORY_COMPLETE,{
@@ -2136,6 +2141,10 @@ historyLoadingComplete () {
       me.historyRenderComplete();
       $('.disableFooter').removeClass('disableFooter');
     } else {
+      let historyLoader = me.chatEle.querySelector('.history-loading-wrapper');
+      if (historyLoader) {
+        historyLoader.remove();
+      }
       me.chatEle.querySelector('.typing-text-area').classList.remove('disableComposeBar');
       me.chatEle.querySelector('.typing-text-area').focus();
     }
