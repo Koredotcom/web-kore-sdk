@@ -487,8 +487,12 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     var __opts__ = {};
     __opts__.forward = opts.forward;
     __opts__.limit = opts.limit || 10; // 10 is the max size.
-    __opts__.offset = this.historyOffset;
-    this.historyOffset = this.historyOffset +( opts.limit?  opts.limit : 10);
+    if (opts.forHistorySync) {
+      __opts__.offset = 0;
+    } else {
+      __opts__.offset = this.historyOffset;
+      this.historyOffset = this.historyOffset +( opts.limit?  opts.limit : 10);
+    }
       
     if (__opts__.forward) {
       if (this.latestId)
