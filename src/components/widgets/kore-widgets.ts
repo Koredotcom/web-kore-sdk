@@ -736,13 +736,13 @@ getTemplate  (type:any) {
                   <div class="headerTitleFilters action" action-type="filter" filterObj= "${JSON.stringify(tempData)}"></div>\
                 {{/if}}\
                 {{if tempData && tempData.headerOptions && tempData.headerOptions.type==="button" && tempData.headerOptions.button && tempData.headerOptions.button.title}}\
-                  <div class="headerTitleBTN action" action-type="default" actionObj="${JSON.stringify(tempData.headerOptions.button)}">${tempData.headerOptions.button.title}</div>\
+                  <div class="headerTitleBTN action" action-type="default" title="${tempData.headerOptions.button.title}" actionObj="${JSON.stringify(tempData.headerOptions.button)}">${tempData.headerOptions.button.title}</div>\
                 {{/if}}\
                 {{if tempData && tempData.headerOptions && tempData.headerOptions.type==="text" && tempData.headerOptions.text}}\
-                  <div class="headerTitleTEXT" action-type="default">${tempData.headerOptions.text}</div>\
+                  <div class="headerTitleTEXT" title="${tempData.headerOptions.text}" action-type="default">${tempData.headerOptions.text}</div>\
                 {{/if}}\
                 {{if tempData && tempData.headerOptions && tempData.headerOptions.type==="url" && tempData.headerOptions.url && tempData.headerOptions.url.title}}\
-                  <div class="headerTitleURL action" action-type="url" actionObj="${JSON.stringify(tempData.headerOptions.url)}">${tempData.headerOptions.url.title}</div>\
+                  <div class="headerTitleURL action" action-type="url" title="${tempData.headerOptions.url.title}" actionObj="${JSON.stringify(tempData.headerOptions.url)}">${tempData.headerOptions.url.title}</div>\
                 {{/if}}\
                 {{if tempData && tempData.headerOptions && tempData.headerOptions.type==="image" && tempData.headerOptions.image && tempData.headerOptions.image.image_src}}\
                 <div class="headerTitleIMG action" action-type="default" actionObj="${JSON.stringify(tempData.headerOptions.image)}"><img src="${tempData.headerOptions.image.image_src}" class="headerIcon"></div>\
