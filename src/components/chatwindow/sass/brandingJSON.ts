@@ -257,7 +257,7 @@ const BrandingJSON = {
         "icon": ""
       },
       "reconnect": {
-        "show": false,
+        "show": true,
         "icon": ""
       },
       "help": {
