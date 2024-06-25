@@ -5,13 +5,16 @@
     border-radius: 12px;
     padding: 0;
     font-size: 14px;
-    -webkit-animation: message-left ease-in-out 2s forwards;
-    -moz-animation: message-left ease-in-out 2s forwards;
-    animation: message-left ease-in-out 2s forwards;
     margin: 0;
     border: 1px solid var(--sdk-chat-widow-primary-bg-color);
     max-width: 95%;
     line-height: 1.5;
+}
+
+.kore-chat-window .listTmplContent .listTmplContentBox .messageLeftAnimation {
+    -webkit-animation: message-left ease-in-out 2s forwards;
+    -moz-animation: message-left ease-in-out 2s forwards;
+    animation: message-left ease-in-out 2s forwards;
 }
 
 .kore-chat-window .listTmplContent .listLeftContent {

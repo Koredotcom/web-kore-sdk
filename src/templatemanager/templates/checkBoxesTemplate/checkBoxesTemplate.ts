@@ -83,7 +83,7 @@ class CheckBoxesTemplate {
                 <div class = "checkboxes-template"> \
                     {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                     {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-                    <ul class="{{if msgData.message[0].component.payload.fromHistory}} dummy checkBoxestmplContentBox  {{else}} checkBoxestmplContentBox{{/if}} "> \
+                    <ul class="{{if msgData.message[0].component.payload.fromHistory}} dummy checkBoxestmplContentBox  {{else}} checkBoxestmplContentBox{{/if}} messageLeftAnimation"> \
                         {{if msgData.message[0].component.payload.title || msgData.message[0].component.payload.heading}} \
                             <li class="listTmplContentHeading"> \
                                 {{if msgData.type === "bot_response" && msgData.message[0].component.payload.heading}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.heading, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \

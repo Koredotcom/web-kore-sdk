@@ -115,7 +115,7 @@ class ButtonTemplate {
                     <div class="buttonTmplContent"> \
                         {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                         {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-                        <div class="buttonTmplContentBox">\
+                        <div class="buttonTmplContentBox messageLeftAnimation">\
                             <div class="buttonTmplContentHeading btn-li"> \
                                 {{if msgData.type === "bot_response"}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
                                 {{if msgData.message[0].cInfo && msgData.message[0].cInfo.emoji}} \

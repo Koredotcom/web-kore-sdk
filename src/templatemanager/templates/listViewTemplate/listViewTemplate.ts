@@ -145,7 +145,7 @@ class ListViewTemplate {
                 <div class="listViewTmplContent {{if msgData.message[0].component.payload.boxShadow}}noShadow{{/if}}"> \
                     {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                     {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
-                    <ul class="listViewTmplContentBox"> \
+                    <ul class="listViewTmplContentBox messageLeftAnimation"> \
                         {{if msgData.message[0].component.payload.text || msgData.message[0].component.payload.heading}} \
                             <li class="listViewTmplContentHeading"> \
                                 {{if msgData.type === "bot_response" && msgData.message[0].component.payload.heading}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "bot")}} {{else}} {{html helpers.convertMDtoHTML(msgData.message[0].component.payload.text, "user")}} {{/if}} \
