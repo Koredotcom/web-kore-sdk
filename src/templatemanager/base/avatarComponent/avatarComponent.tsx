@@ -102,10 +102,21 @@ export function AvatarComponent(props: any) {
         });
     }
 
+    useEffect(() => {
+        if (hostInstance.config.branding.chat_bubble.proactive.show && (hostInstance.config.branding.chat_bubble.proactive.header || hostInstance.config.branding.chat_bubble.proactive.messages.length > 0) && !hostInstance.config.pwcConfig.enable) {
+            if (hostInstance.config.branding.general.sounds.enable && hostInstance.config.branding.general.sounds.on_proactive_msg.url != 'None') {
+                const playSound = new Audio(hostInstance.config.branding.general.sounds.on_proactive_msg.url);
+                playSound?.play().catch(error => {
+                    console.log('Error: ', error);
+                });
+            }
+        }
+    }, []);
+
     return (
         <div className={avatarParentStyle} aria-label="avatar footer">
             <div className={avatarStyle} aria-label="avatar actions">
-                {(hostInstance.config.branding.chat_bubble.proactive.show || hostInstance.config.branding.chat_bubble.proactive.header || hostInstance.config.branding.chat_bubble.proactive.messages.length > 0 || hostInstance.config.branding.chat_bubble.proactive.buttons.length > 0) && !hostInstance.config.pwcConfig.enable && <div className="content-info">
+                {hostInstance.config.branding.chat_bubble.proactive.show && (hostInstance.config.branding.chat_bubble.proactive.header || hostInstance.config.branding.chat_bubble.proactive.messages.length > 0 || hostInstance.config.branding.chat_bubble.proactive.buttons.length > 0) && !hostInstance.config.pwcConfig.enable && <div className="content-info">
                     {hostInstance.config.branding.chat_bubble.proactive.header && <div className="text-content animation-slide-up text-heading-one" role="contentinfo" aria-labelledby={dynamicContextResolver(hostInstance.config.branding.chat_bubble.proactive.header, hostInstance.config.UIContext)}>
                         <h4 id="hellokore">{dynamicContextResolver(hostInstance.config.branding.chat_bubble.proactive.header, hostInstance.config.UIContext)}</h4>
                         <span className="close-avatar-content" role="contentinfo" aria-label="close" onClick={closeHelp}>

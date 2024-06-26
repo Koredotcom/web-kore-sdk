@@ -195,6 +195,12 @@ class ProactiveWebCampaignPlugin {
                     const chatContainer = getHTML(Chat, layoutData, this.hostInstance);
                     let avatarVariations = me.hostInstance.chatEle.querySelector('.avatar-actions');
                     avatarVariations.prepend(chatContainer);
+                    if (me.hostInstance.config.branding.general.sounds.enable && me.hostInstance.config.branding.general.sounds.on_proactive_msg.url != 'None') {
+                        const playSound = new Audio(me.hostInstance.config.branding.general.sounds.on_proactive_msg.url);
+                        playSound.play().catch(error => {
+                            console.log('Error: ', error);
+                        });
+                    }                
                     me.hostInstance.pwcInfo.dataFlag = true;
                     me.hostInstance.pwcInfo.chatData = {};
                     me.hostInstance.pwcInfo.chatData.enable = true;
