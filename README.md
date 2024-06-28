@@ -322,6 +322,11 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 	// }		
 # Release History
 ```
+v10.4.0 [Minor] on 29-June-2024: Master branch
+        Bugfixes
+                1.History sync issue fix on network connect/disconnect
+                2.Button template user message text issue fix
+
 v10.3.1 [Minor] on 15-June-2024: Master branch
         Bugfixes
                 1.TTS message reading sequence added
