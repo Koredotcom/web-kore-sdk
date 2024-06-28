@@ -1,3 +1,12 @@
+### 11.3.0
+* Release June 29, 2024
+* Features
+  * messages can be synced now on Reconnect. Added config to enable disable syncing in kore config. 
+* Bug fixes
+  * button template user message text issue fix
+  * file attachment cancel and upload issue fix
+  * other minor bug fixes
+
 ### 11.2.1
 * Release June 15, 2024
 * Features
