@@ -1,3 +1,11 @@
+### 10.4.0
+- SDK Release June 29, 2024
+* Bug fixes
+  * duplicate/jumping message templates issue fix in history
+  * history sync issue fix on network connect/disconnect
+  * button template user message text issue fix
+  * removed console.log in kore widgets
+
 ### 10.3.1
 - SDK Release June 15, 2024
 * Bug fixes
