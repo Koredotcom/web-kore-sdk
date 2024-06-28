@@ -86,7 +86,13 @@ chatConfig = {
     UI:{
         version:"v3"
     },
-    UIContext: {}  // To add user info
+    UIContext: {},  // To add user info
+    syncMessages: {
+        onReconnect: {
+            enable: false,  // Set true to sync messages on Reconnect
+            batchSize: 10   // To configure the number of messages to fetch
+        }
+    }
 };
 
 if (!chatConfig.loadHistory) { // pagination scroll will be enabled only when loadHistory flag is true
