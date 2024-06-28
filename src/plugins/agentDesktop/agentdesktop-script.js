@@ -712,6 +712,18 @@ class AgentDesktopPluginScript  {
             var rejectCall = koreJquery("#rejectcall");
             var acceptCall = koreJquery("#acceptcall");
             rejectCall.off('click').on('click', function (event) {
+                const payload = {"cobrowse_rejected": true};
+                payload['type'] = "cobrowse_rejected";
+                const messageToBot = {};
+                messageToBot["event"] = "event";
+                messageToBot["message"] = {
+                    "body": payload,
+                    "type": ""
+                }
+
+                if (botInstance) {
+                    botInstance.sendMessage(messageToBot, (err) => { });
+                }
                 toastContainer.empty();
             });
             acceptCall.off('click').on('click', function (event) {
