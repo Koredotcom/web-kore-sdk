@@ -511,6 +511,15 @@ function AgentDesktop(uuId, aResponse) {
         var rejectCall = koreJquery("#rejectcall");
         var acceptCall = koreJquery("#acceptcall");
         rejectCall.off('click').on('click', function (event) {
+            var payload = {"cobrowse_rejected": true};
+            payload['type'] = "cobrowse_rejected";
+            var messageToBot = {};
+            messageToBot["event"] = "event";
+            messageToBot["message"] = {
+            "body": payload,
+            "type": ""
+            };
+            events.sendMessage(messageToBot, function (err) {});
             toastContainer.empty();
         });
         acceptCall.off('click').on('click', function (event) {
