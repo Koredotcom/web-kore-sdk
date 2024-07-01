@@ -797,6 +797,19 @@ class AgentDesktopPluginScript  {
             rejectCall.off('click').on('click', function (event) {
                 let container = document.getElementById("agentcontainer");
                 container.style.display = 'none';
+                
+                const payload = {"cobrowse_rejected": true};
+                payload['type'] = "cobrowse_rejected";
+                const messageToBot = {};
+                messageToBot["event"] = "event";
+                messageToBot["message"] = {
+                    "body": payload,
+                    "type": ""
+                }
+
+                if (botInstance) {
+                    botInstance.sendMessage(messageToBot, (err) => { });
+                }
             });
             acceptCall.off('click').on('click', function (event) {
                 let container = document.getElementById("agentcontainer");
