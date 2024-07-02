@@ -265,17 +265,17 @@
 			this.bankingFeedbackTemplateEvents(messageHtml);
 			$(messageHtml).data(msgData);
 		}
-		else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type === "SYSTEM") {
-			if (msgData.message[0].component && msgData.message[0].component.payload) {
-				msgData.message[0].cInfo.body = msgData.message[0].component.payload.text || "";
-			}
-			messageHtml = $(this.getChatTemplate("systemTemplate")).tmpl({
-				'msgData': msgData,
-				'helpers': this.helpers,
-				'extension': this.extension
-			});
-			$(messageHtml).data(msgData);
-		}
+		// else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type === "SYSTEM") {
+		// 	if (msgData.message[0].component && msgData.message[0].component.payload) {
+		// 		msgData.message[0].cInfo.body = msgData.message[0].component.payload.text || "";
+		// 	}
+		// 	messageHtml = $(this.getChatTemplate("systemTemplate")).tmpl({
+		// 		'msgData': msgData,
+		// 		'helpers': this.helpers,
+		// 		'extension': this.extension
+		// 	});
+		// 	$(messageHtml).data(msgData);
+		// }
 	   return messageHtml;
 	
 		return "";
