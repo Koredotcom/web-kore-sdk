@@ -58,7 +58,7 @@ class TemplateManager {
 	this.installTemplate(new CarouselTemplate());
 	this.installTemplate(new MiniTableChartTemplate());
 	this.installTemplate(new ListViewTemplate());
-	this.installTemplate(new SystemTemplate());
+	// this.installTemplate(new SystemTemplate());
 	this.installTemplate(new AdvancedListTemplate());
 	this.installTemplate(new CardTemplate());
 

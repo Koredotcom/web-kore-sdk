@@ -1722,6 +1722,9 @@ historySyncing(msgData:any,res:any,index:any){
     if (msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)) {
       msgData.message[0].cInfo.body = '';
     }
+    if (msgData.message[0].component.payload.template_type == 'SYSTEM') {
+      msgData.message[0].cInfo.body = msgData.message[0].component.payload.text || '';
+    }
     me.renderMessage(msgData);
   } catch (e) {
     me.renderMessage(msgData);
