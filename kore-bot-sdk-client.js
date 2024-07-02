@@ -555,6 +555,9 @@ KoreBot.prototype.onLogIn = function(err, data) {
     }
 		this.cbBotDetails(data,this.options.botInfo);
 		this.RtmClient = new clients.KoreRtmClient({}, this.options);
+    this.RtmClient.on('reconnect_event', event => {
+      this.emit('reconnected', event);
+    });
 		this.emit("rtm_client_initialized");
 		this.RtmClient.start({
 			"botInfo": this.options.botInfo
@@ -1488,6 +1491,7 @@ KoreRTMClient.prototype._onStart = function _onStart(err, data) {
     //this.activeUserId = data.self.id;
     this.emit(CLIENT_EVENTS.AUTHENTICATED, data);
     this.connect(data.url);
+    this.emit('reconnect_event', { reconnected: __reconnect__ });
   }
 };
 

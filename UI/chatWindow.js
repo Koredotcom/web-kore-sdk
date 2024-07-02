@@ -2054,6 +2054,12 @@
                 me.bot.on("webhook_reconnected", function (response) {
                     me.onBotReady();
                 });
+
+                me.bot.on('reconnected', (response) => {
+                    if (me.config?.syncMessages?.onReconnect?.enable && response?.reconnected) {
+                        me.bot.getHistory({ forHistorySync: true, limit: me.config?.syncMessages?.onReconnect?.batchSize });
+                    }
+                });
             };
             chatWindow.prototype.bindCustomEvents = function (){
                 //hook to add custom events

@@ -94,7 +94,13 @@
         sendFailedMessage:{
             MAX_RETRIES:3
         },
-        maxReconnectionAPIAttempts: 5  // Number of retries on api failure
+        maxReconnectionAPIAttempts: 5,  // Number of retries on api failure,
+        syncMessages: {
+            onReconnect: {
+                enable: false,  // Set true to sync messages on Reconnect
+                batchSize: 10   // To configure the number of messages to fetch
+            }
+        }
     };
      /* 
         allowGoogleSpeech will use Google cloud service api.
