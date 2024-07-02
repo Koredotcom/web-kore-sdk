@@ -998,6 +998,12 @@ bindSDKEvents  () {
   me.bot.on('api_failure', (response: {responseError: any; type: any; request: any}) => {
     me.emit(me.EVENTS.API_FAILURE, { "type": response.type, "errObj": response.responseError, "request": response.request });
   });
+
+  me.bot.on('reconnected', (response: any) => {
+    if (me.config?.syncMessages?.onReconnect?.enable && response?.reconnected) {
+      me.bot.getHistory({ forHistorySync: true, limit: me.config?.syncMessages?.onReconnect?.batchSize });
+    }
+  });
 };
 parseSocketMessage(msgString:string){
   let me:any=this;

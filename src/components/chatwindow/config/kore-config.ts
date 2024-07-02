@@ -77,7 +77,13 @@ chatConfig = {
     sendFailedMessage:{ //Number of retries on message send failed
         MAX_RETRIES:3
     },
-    maxReconnectionAPIAttempts: 5  // Number of retries on api failure
+    maxReconnectionAPIAttempts: 5, // Number of retries on api failure
+    syncMessages: {
+        onReconnect: {
+            enable: false,  // Set true to sync messages on Reconnect
+            batchSize: 10   // To configure the number of messages to fetch
+        }
+    }
 };
 
 if (!chatConfig.loadHistory) { // pagination scroll will be enabled only when loadHistory flag is true

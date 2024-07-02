@@ -564,6 +564,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this.RtmClient.on('api_failure', errObj => {
         this.emit(WEB_EVENTS.API_FAILURE, errObj);
       });
+      this.RtmClient.on('reconnect_event', event => {
+        this.emit('reconnected', event);
+      });
       this.emit("rtm_client_initialized");
       this.emit(WEB_EVENTS.JWT_GRANT_SUCCESS,{jwtgrantsuccess : data});
       this.RtmClient.start({
@@ -1519,6 +1522,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       //this.activeUserId = data.self.id;
       this.emit(CLIENT_EVENTS.AUTHENTICATED, data);
       this.connect(data.url);
+      this.emit('reconnect_event', { reconnected: __reconnect__ });
     }
   };
 
