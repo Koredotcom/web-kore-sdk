@@ -84,65 +84,47 @@ export function Carousel(props: any) {
             const btnsParentDiv: any = hostInstance.chatEle.querySelector(`[data-id='${msgData.messageId}']`);
             const leftScrollBtn = hostInstance.chatEle.querySelector(`[data-button-left='${msgData.messageId}']`);
             const rightScrollBtn = hostInstance.chatEle.querySelector(`[data-button-right='${msgData.messageId}']`);
-            if (btnsParentDiv && btnsParentDiv.hasChildNodes()) {
-                if (leftScrollBtn) {
-                    if (btnsParentDiv.scrollLeft > 0) {
-                        leftScrollBtn.classList.remove('hide');
-                    } else {
-                        leftScrollBtn.classList.add('hide');
-                    }
+            function updateButtonsView() {
+                if (btnsParentDiv.scrollLeft > 0) {
+                    leftScrollBtn.classList.remove('hide');
+                } else {
+                    leftScrollBtn.classList.add('hide');
                 }
-                if (rightScrollBtn) {
-                    if (btnsParentDiv.offsetWidth < btnsParentDiv.scrollWidth) {
-                        rightScrollBtn.classList.remove('hide');
-                    } else {
-                        rightScrollBtn.classList.add('hide');
-                    }
+                if (btnsParentDiv.scrollLeft + btnsParentDiv.clientWidth < btnsParentDiv.scrollWidth) {
+                    rightScrollBtn.classList.remove('hide');
+                } else {
+                    rightScrollBtn.classList.add('hide');
                 }
+            }
+    
+            function scrollToElement(element: any, direction: any) {
+                const offset = direction === 'left' ? -element.offsetWidth - 9 : element.offsetWidth + 10;
+                btnsParentDiv.scrollBy({ left: offset, behavior: 'smooth' });
+                setTimeout(updateButtonsView, 500);
             }
 
             leftScrollBtn.addEventListener('click', () => {
-                const btnsParentDivWidth = btnsParentDiv.scrollLeft;
-                const qButtons = btnsParentDiv.querySelectorAll('.list-carousel-item');
-                let curWidth = 0;
-                if (qButtons.length > 0) {
-                    qButtons.forEach((ele: any) => {
-                        curWidth = curWidth + ele.offsetWidth + 10;
-                        if (curWidth > btnsParentDivWidth) {
-                            btnsParentDiv.scrollTo({
-                                left: btnsParentDiv.scrollLeft - ele.offsetWidth - 50,
-                                behavior: 'smooth'
-                            });
-                            rightScrollBtn.classList.remove('hide');;
-                            if (btnsParentDiv.scrollLeft <= 0) {
-                                leftScrollBtn.classList.add('hide');;
-                            }
-                        }
-
-                    })
+                const qButtons = [...btnsParentDiv.querySelectorAll('.list-carousel-item')];
+                for (let i = qButtons.length - 1; i >= 0; i--) {
+                    const ele = qButtons[i];
+                    if (btnsParentDiv.scrollLeft > ele.offsetLeft) {
+                        scrollToElement(ele, 'left');
+                        break;
+                    }
                 }
-            })
+            });
+    
             rightScrollBtn.addEventListener('click', () => {
-                const btnsParentDivWidth = btnsParentDiv.offsetWidth;
-                const qButtons = btnsParentDiv.querySelectorAll('.list-carousel-item');
-                let curWidth = 0;
-                if (qButtons.length > 0) {
-                    qButtons.forEach((ele: any) => {
-                        curWidth = curWidth + ele.offsetWidth + 10;
-                        if (curWidth > btnsParentDivWidth) {
-                            btnsParentDiv.scrollTo({
-                                left: btnsParentDiv.scrollLeft + ele.offsetWidth + 20,
-                                behavior: 'smooth'
-                            });
-                            leftScrollBtn.classList.remove('hide');;
-                            if (btnsParentDiv.scrollLeft + btnsParentDivWidth + 10 >= btnsParentDiv.scrollWidth) {
-                                rightScrollBtn.classList.add('hide');
-                            }
-                        }
-
-                    })
+                const qButtons = [...btnsParentDiv.querySelectorAll('.list-carousel-item')];
+                for (let ele of qButtons) {
+                    if (btnsParentDiv.scrollLeft + btnsParentDiv.clientWidth < ele.offsetLeft + ele.offsetWidth) {
+                        scrollToElement(ele, 'right');
+                        break;
+                    }
                 }
-            })
+            });
+    
+            updateButtonsView();
         }, 50);
         return (
             <div className="list-template-carousel-wrapper" id={msgData.messageId}>
