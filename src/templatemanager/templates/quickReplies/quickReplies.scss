@@ -118,6 +118,9 @@
             pointer-events: none !important;
             opacity: 0.4;
         }
+        &.remove {
+            display: none;
+        }
     }
 
     .quick-right-click {

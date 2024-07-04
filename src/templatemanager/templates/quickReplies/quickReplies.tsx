@@ -28,7 +28,8 @@ export function QuickReply(props: any) {
                 id: msgData.messageId,
                 class: 'hide',
                 lsWidth: 50,
-                rsWidth: 20
+                rsWidth: 20,
+                classToRemove: 'remove'
             });
             carouselButtons.init();
         }, 50);
