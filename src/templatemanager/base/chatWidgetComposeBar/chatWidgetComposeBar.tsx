@@ -64,7 +64,7 @@ export function ChatWidgetComposeBar(props: any) {
         hostInstance.eventManager.removeEventListener('.send-btn', 'click');
         hostInstance.eventManager.addEventListener('.send-btn', 'click', (event: any) => {
             const inputEle = hostInstance.chatEle.querySelector('.typing-text-area');
-            if (inputEle.value.trim() === '') {
+            if (inputEle.value.trim() === '' && !hostInstance?.attachmentData?.length) {
                 return;
             }
             let chatWindowEvent = {stopFurtherExecution: false};

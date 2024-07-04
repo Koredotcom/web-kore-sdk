@@ -96,6 +96,7 @@ class KoreMultiFileUploaderPlugin {
         me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
         document.getElementById("captureMediaAttachment").value = '';
         document.getElementById("captureFileAttachment").value = '';
+        me.hostInstance.chatEle.querySelector('.send-btn').classList.remove('show');
       }
     });
     me.hostInstance.eventManager.addEventListener('#captureMediaAttachment', 'change', (event: any) => {
@@ -157,6 +158,7 @@ class KoreMultiFileUploaderPlugin {
               me.hostInstance.sendMessage('', attData, serverMessageObject, clientMessageObject);
               me.hostInstance.attachmentInfo = {};
               setTimeout(() => {
+                me.hostInstance.chatEle.querySelector('.send-btn').classList.remove('show');
                 me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.add('hide-attachment');
                 me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
                 document.getElementById("captureMediaAttachment").value = "";
@@ -202,6 +204,7 @@ class KoreMultiFileUploaderPlugin {
             me.hostInstance.sendMessage('', attData, serverMessageObject, clientMessageObject);
             me.hostInstance.attachmentInfo = {};
             setTimeout(() => {
+              me.hostInstance.chatEle.querySelector('.send-btn').classList.remove('show');
               me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.add('hide-attachment');
               me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
               document.getElementById("captureMediaAttachment").value = "";
@@ -488,8 +491,8 @@ class KoreMultiFileUploaderPlugin {
     if ($(evt.currentTarget).closest('.attachment-wrapper-data').find('.proceed-upload').hasClass('hide')) {
       $(evt.currentTarget).closest('.attachment-wrapper-data').find('.proceed-upload').removeClass('hide')
     }
+    me.hostInstance.chatEle.querySelector('.send-btn').classList.add('show');
     me.hostInstance.chatEle.querySelector('.typing-text-area').focus();
-
   }
 
   onUploadError(_this: any, evt: any, _recState: any) {
@@ -872,6 +875,9 @@ class KoreMultiFileUploaderPlugin {
         uid = uid?.substring(3);
         me.hostInstance.attachmentData = me.hostInstance.attachmentData.filter((ele: any) => ele.uniqueId != uid);
         par?.remove();
+        if (me.hostInstance.attachmentData.length == 0) {
+          me.hostInstance.chatEle.querySelector('.send-btn').classList.remove('show');
+        }
       } else {
         alert('Upload in progress');
       }
