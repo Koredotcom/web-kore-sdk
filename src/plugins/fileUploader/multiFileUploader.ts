@@ -96,7 +96,16 @@ class KoreMultiFileUploaderPlugin {
         me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
         document.getElementById("captureMediaAttachment").value = '';
         document.getElementById("captureFileAttachment").value = '';
-        me.hostInstance.chatEle.querySelector('.send-btn').classList.remove('show');
+        if (me.hostInstance.chatEle.querySelector('.typing-text-area').value == '') {
+          me.hostInstance.chatEle.querySelector('.send-btn')?.classList.remove('show');
+        }
+      }
+      if (!me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.contains('hide-attachment')) {
+        me.hostInstance.chatEle.querySelector('.send-btn')?.classList.add('show');
+      } else {
+        if (me.hostInstance.chatEle.querySelector('.typing-text-area').value == '') {
+          me.hostInstance.chatEle.querySelector('.send-btn')?.classList.remove('show');
+        }
       }
     });
     me.hostInstance.eventManager.addEventListener('#captureMediaAttachment', 'change', (event: any) => {
@@ -109,6 +118,7 @@ class KoreMultiFileUploaderPlugin {
       }
       me.convertFiles(file);
       document.getElementById("captureMediaAttachment").value = '';
+      me.hostInstance.chatEle.querySelector('.send-btn')?.classList.add('disabled');
     })
     me.hostInstance.eventManager.addEventListener('#captureFileAttachment', 'change', (event: any) => {
       const file = me.hostInstance.chatEle.querySelector('#captureFileAttachment').files[0];
@@ -120,6 +130,7 @@ class KoreMultiFileUploaderPlugin {
       }
       me.convertFiles(file);
       document.getElementById("captureFileAttachment").value = '';
+      me.hostInstance.chatEle.querySelector('.send-btn')?.classList.add('disabled');
     })
     me.hostInstance.attachmentData = [];
   }
@@ -158,7 +169,7 @@ class KoreMultiFileUploaderPlugin {
               me.hostInstance.sendMessage('', attData, serverMessageObject, clientMessageObject);
               me.hostInstance.attachmentInfo = {};
               setTimeout(() => {
-                me.hostInstance.chatEle.querySelector('.send-btn').classList.remove('show');
+                me.hostInstance.chatEle.querySelector('.send-btn')?.classList.remove('show');
                 me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.add('hide-attachment');
                 me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
                 document.getElementById("captureMediaAttachment").value = "";
@@ -182,6 +193,7 @@ class KoreMultiFileUploaderPlugin {
           }
         }
       } else {
+        me.hostInstance.chatEle.querySelector('.typing-text-area').value = ''; 
         alert('Upload in progress');
       }
     });
@@ -204,7 +216,7 @@ class KoreMultiFileUploaderPlugin {
             me.hostInstance.sendMessage('', attData, serverMessageObject, clientMessageObject);
             me.hostInstance.attachmentInfo = {};
             setTimeout(() => {
-              me.hostInstance.chatEle.querySelector('.send-btn').classList.remove('show');
+              me.hostInstance.chatEle.querySelector('.send-btn')?.classList.remove('show');
               me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.add('hide-attachment');
               me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
               document.getElementById("captureMediaAttachment").value = "";
@@ -491,7 +503,7 @@ class KoreMultiFileUploaderPlugin {
     if ($(evt.currentTarget).closest('.attachment-wrapper-data').find('.proceed-upload').hasClass('hide')) {
       $(evt.currentTarget).closest('.attachment-wrapper-data').find('.proceed-upload').removeClass('hide')
     }
-    me.hostInstance.chatEle.querySelector('.send-btn').classList.add('show');
+    me.hostInstance.chatEle.querySelector('.send-btn')?.classList.remove('disabled');
     me.hostInstance.chatEle.querySelector('.typing-text-area').focus();
   }
 
@@ -875,9 +887,6 @@ class KoreMultiFileUploaderPlugin {
         uid = uid?.substring(3);
         me.hostInstance.attachmentData = me.hostInstance.attachmentData.filter((ele: any) => ele.uniqueId != uid);
         par?.remove();
-        if (me.hostInstance.attachmentData.length == 0) {
-          me.hostInstance.chatEle.querySelector('.send-btn').classList.remove('show');
-        }
       } else {
         alert('Upload in progress');
       }

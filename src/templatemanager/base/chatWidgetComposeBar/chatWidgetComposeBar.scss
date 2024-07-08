@@ -355,6 +355,11 @@
             &.show{
                 display: flex;
             }
+            &.disabled {
+                background-color: #CDD5DF;
+                cursor: none;
+                pointer-events: none;
+            }
         }
     }
     .emoji-picker-section{
