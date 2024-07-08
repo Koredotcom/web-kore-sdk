@@ -248,7 +248,6 @@ class KoreMultiFileUploaderPlugin {
       const _fileName = customFileName || selectedFile.name;
       const fileType = _fileName.split('.').pop().toLowerCase();
       recState.name = _fileName;
-      recState.mediaName = me.getUID();
       recState.uniqueId = me.getUID();
       recState.sizeInMb = me.bytesToMB(selectedFile.size);
       recState.fileType = _fileName.split('.').pop().toLowerCase();
@@ -481,9 +480,10 @@ class KoreMultiFileUploaderPlugin {
     clearTimeout(me.multipartTimeIntervalCount);
     me.multipartTimeIntervalCount = null;
     me.hostInstance.attachmentInfo.fileName = _recState.name;
-    me.hostInstance.attachmentInfo.fileType = _recState.fileType;
-    me.hostInstance.attachmentInfo.type = _recState.type;
-    me.hostInstance.attachmentInfo.fileUrl = '';
+    me.hostInstance.attachmentInfo.fileType = _recState.type;
+    // me.hostInstance.attachmentInfo.fileType = _recState.fileType;
+    // me.hostInstance.attachmentInfo.type = _recState.type;
+    // me.hostInstance.attachmentInfo.fileUrl = '';
     me.hostInstance.attachmentInfo.size = _recState.sizeInMb;
     me.hostInstance.attachmentInfo.uniqueId = _recState.uniqueId;
     if ($(evt.currentTarget).find('.percentage')) {
@@ -702,25 +702,26 @@ class KoreMultiFileUploaderPlugin {
     let me = this;
     me.hostInstance.attachmentInfo = {};
     me.hostInstance.attachmentInfo.fileId = JSON.parse(evt.target.response).fileId;
-    let auth = "bearer " + me.hostInstance.config.botOptions.accessToken;
-    $.ajax({
-      type: 'GET',
-      url: (me.config?.koreAttachmentAPIUrl ? me.config.koreAttachmentAPIUrl : me.hostInstance.config.botOptions.koreAPIUrl) + "attachment/file/" + me.hostInstance.attachmentInfo.fileId + "/url?repeat=true",
-      dataType: 'json',
-      headers: {
-        Authorization: auth,
-      },
-      success(response: any) {
-        me.hostInstance.attachmentInfo.fileUrl = response.fileUrl;
-        me.hostInstance.attachmentData.push(me.hostInstance.attachmentInfo);
-        me.hostInstance.attachmentInfo = {};
-      },
-      error(msg: any) {
-        if (msg.responseJSON && msg.responseJSON.errors && msg.responseJSON.errors.length && msg.responseJSON.errors[0].httpStatus === '401') {
-          alert(msg.responseJSON.errors[0]);
-        }
-      },
-    });
+    // let auth = "bearer " + me.hostInstance.config.botOptions.accessToken;
+    // $.ajax({
+    //   type: 'GET',
+    //   url: (me.config?.koreAttachmentAPIUrl ? me.config.koreAttachmentAPIUrl : me.hostInstance.config.botOptions.koreAPIUrl) + "attachment/file/" + me.hostInstance.attachmentInfo.fileId + "/url?repeat=true",
+    //   dataType: 'json',
+    //   headers: {
+    //     Authorization: auth,
+    //   },
+    //   success(response: any) {
+    //     me.hostInstance.attachmentInfo.fileUrl = response.fileUrl;
+    //     me.hostInstance.attachmentData.push(me.hostInstance.attachmentInfo);
+    //     me.hostInstance.attachmentInfo = {};
+    //   },
+    //   error(msg: any) {
+    //     if (msg.responseJSON && msg.responseJSON.errors && msg.responseJSON.errors.length && msg.responseJSON.errors[0].httpStatus === '401') {
+    //       alert(msg.responseJSON.errors[0]);
+    //     }
+    //   },
+    // });
+    me.hostInstance.attachmentData.push(me.hostInstance.attachmentInfo);
     this.$element.dispatchEvent(me.successEv);
   }
 
