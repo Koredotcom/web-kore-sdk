@@ -10,7 +10,7 @@ export function Button(props: any) {
     const msgData = props.msgData;
     const handleButtonEvent = (e: any) => {
         if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
-            hostInstance.sendMessage(e.payload || e.value, { renderMsg: e.title });
+            hostInstance.sendMessage(e.payload?.toString() || e.value?.toString(), { renderMsg: e.title });
         } else if (e.type == 'url' || e.type == 'web_url') {
             let link = e.url;
             if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
