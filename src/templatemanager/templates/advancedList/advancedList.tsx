@@ -68,6 +68,7 @@ export function AdvancedListExtension(props: any) {
             const innerText = ele ? item.buttons[0].title + ': ' + selectedValue : item.buttons[0].title;
             hostInstance.sendMessage(innerText, { renderMsg: innerText });
         }
+        closeMenu();
     }
 
     const onCancel = (item: any, index: any) => {
@@ -186,22 +187,28 @@ export function AdvancedListExtension(props: any) {
                                             </div>))}
                                     </div>}
                                     {item.view === 'options' && item.optionsData && <Fragment>
-                                        {item.optionsData[0].type === 'checkbox' && item.optionsData.map((checkboxEle: any, ind: any) => (
-                                            <div className="checkbox-item item-checked">
-                                                <input id={`check-box-${msgData.messageId}-${index}-${ind}`} className='checkbox-input' type="checkbox" value={checkboxEle.value} label={checkboxEle.label} data-kr-alt-che={`${msgData.messageId}_${index}`} />
-                                                <label for={`check-box-${msgData.messageId}-${index}-${ind}`} className="checkbox-label">
-                                                    <div className="title" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(checkboxEle.label, "bot") }}></div>
-                                                    {/* <div className="desc-text-checkbox">Checkbox item</div> */}
-                                                </label>
-                                            </div>))}
-                                        {item.optionsData[0].type === 'radio' && item.optionsData.map((radioEle: any, ind: any) => (
-                                            <div className="radio-button-item">
-                                                <input id={`radio-button-${msgData.messageId}-${index}-${ind}`} name="radio" className="radio-input" type="radio" value={radioEle.value} label={radioEle.label} data-kr-alt-rad={`${msgData.messageId}_${index}`} />
-                                                <label for={`radio-button-${msgData.messageId}-${index}-${ind}`} className="radio-label">
-                                                    <div className="radio-title" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(radioEle.label, "bot") }}></div>
-                                                    {/* <div className="radio-desc">Radio button item</div> */}
-                                                </label>
-                                            </div>))}
+                                        <div className="checkbox-list-data-tems">
+                                            {item.optionsData[0].type === 'checkbox' && item.optionsData.map((checkboxEle: any, ind: any) => (
+                                                <div className="checkbox-item item-checked">
+                                                    <input id={`check-box-${msgData.messageId}-${index}-${ind}`} className='checkbox-input' type="checkbox" value={checkboxEle.value} label={checkboxEle.label} data-kr-alt-che={`${msgData.messageId}_${index}`} />
+                                                    <label for={`check-box-${msgData.messageId}-${index}-${ind}`} className="checkbox-label">
+                                                        <div className="title" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(checkboxEle.label, "bot") }}></div>
+                                                        {/* <div className="desc-text-checkbox">Checkbox item</div> */}
+                                                    </label>
+                                                </div>))}
+                                            {item.optionsData[0].type === 'radio' && item.optionsData.map((radioEle: any, ind: any) => (
+                                                <div className="radio-button-item">
+                                                    <input id={`radio-button-${msgData.messageId}-${index}-${ind}`} name="radio" className="radio-input" type="radio" value={radioEle.value} label={radioEle.label} data-kr-alt-rad={`${msgData.messageId}_${index}`} />
+                                                    <label for={`radio-button-${msgData.messageId}-${index}-${ind}`} className="radio-label">
+                                                        <div className="radio-title" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(radioEle.label, "bot") }}></div>
+                                                        {/* <div className="radio-desc">Radio button item</div> */}
+                                                    </label>
+                                                </div>))}
+                                        </div>
+                                        <div className="buttons-wrapper-sec">
+                                            <button className="kr-button-primary" onClick={() => onSubmit(item, index)} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.buttons[0].title, "bot") }}></button>
+                                            <button className="kr-button-secondary" onClick={() => onCancel(item, index)} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.buttons[1].title, "bot") }}></button>
+                                        </div>
                                     </Fragment>}
                                     {item.buttons?.length > 0 && item.view !== 'options' && <div className={`buttons-wrapper-sec ${item.buttonsLayout?.buttonAligment === 'fullwidth' ? `if-full-width-buttons` : ``}`}>
                                         {item.buttons.map((buttonEle: any, ind: any) => (
