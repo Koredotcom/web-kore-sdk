@@ -1,3 +1,10 @@
+### 11.3.1
+* Release July 13, 2024
+* Bug fixes
+  * carousel template sliding issue fix
+  * enabled send button on file upload
+  * other bug fixes
+
 ### 11.3.0
 * Release June 29, 2024
 * Features
