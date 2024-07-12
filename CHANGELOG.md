@@ -1,3 +1,12 @@
+### 10.4.1
+- SDK Release July 13, 2024
+* Features
+  * messages can be synced now on Reconnect. Added config to enable disable syncing in kore config.
+* Breaking changes
+  * agent joining message ui changed from system template to standard message
+* Bug fixes
+  * agent desktop plugin cobrowse issue fix
+
 ### 10.4.0
 - SDK Release June 29, 2024
 * Bug fixes
