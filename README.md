@@ -322,6 +322,23 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 	// }		
 # Release History
 ```
+v10.4.1 [Minor] on 13-July-2024: Master branch
+        Features
+                1.Messages can be synced now on Reconnect. Added config to enable disable syncing in kore config
+                   syncMessages: {
+                       onReconnect: {
+                           enable: false,  // Set true to sync messages on Reconnect
+                           batchSize: 10   // To configure the number of messages to fetch
+                       }
+                   }
+
+        Breaking changes
+                1.Agent joining message ui changed from system template to standard message
+
+        Bugfixes
+                1.Agent transfer issue fix on speaker enable
+                2.Agent desktop cobrowse issue fix
+
 v10.4.0 [Minor] on 29-June-2024: Master branch
         Bugfixes
                 1.History sync issue fix on network connect/disconnect
