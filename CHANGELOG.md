@@ -2,8 +2,21 @@
 - SDK Release July 13, 2024
 * Features
   * messages can be synced now on Reconnect. Added config to enable disable syncing in kore config.
+      ```
+      syncMessages: {
+            onReconnect: {
+                enable: false,  // Set true to sync messages on Reconnect
+                batchSize: 10   // To configure the number of messages to fetch
+            }
+      }
+     ```
+     
 * Breaking changes
-  * agent joining message ui changed from system template to standard message
+  * agent joining message ui changed from system template to standard message<br>
+    <br>before(system template):<br>![image](https://github.com/user-attachments/assets/926eb50e-5c65-4645-85a5-4132fcbf3fa4)
+    <br>
+    <br>after(standard message):<br>![image](https://github.com/user-attachments/assets/46774c27-a71e-49f2-a21c-2099a5b58f68)
+
 * Bug fixes
   * agent desktop plugin cobrowse issue fix
 
