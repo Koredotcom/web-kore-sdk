@@ -23,7 +23,13 @@ export function DateRangeExt(props: any) {
         if (!selectedDate.from ||  !selectedDate.to) {
             return
         }
-        hostInstance.sendMessage(selectedDate.from + ' to ' + selectedDate.to, { renderMsg: selectedDate.from + ' to ' + selectedDate.to });
+        let selected;
+        if (msgData?.message[0]?.component?.payload?.delimiter) {
+            selected = selectedDate.from + ' ' + msgData?.message[0]?.component?.payload?.delimiter + ' ' + selectedDate.to;
+        } else {
+            selected = selectedDate.from + ' to ' + selectedDate.to;
+        }
+        hostInstance.sendMessage(selected, { renderMsg: selected });
         closeMenu();
     }
     const [selectedDate, setSelectedDate] = useState({ from: new Date().toDateString(), to: 'Select' });
