@@ -380,14 +380,18 @@ findSortedIndex  (array:any, value:any) {
 extend(target:any, source:any) {
   let me:any=this;
   for (var prop in source) {
-      if (source.hasOwnProperty(prop)) {
-          if (target[prop] && typeof source[prop] === 'object') {
-              me.extend(target[prop], source[prop]);
-          }
-          else {
-              target[prop] = source[prop];
-          }
+    if (source.hasOwnProperty(prop)) {
+      if (Array.isArray(source[prop])) {
+        target[prop] = source[prop].slice();
+      } else if (source[prop] && typeof source[prop] === 'object') {
+        if (!target[prop] || typeof target[prop] !== 'object') {
+          target[prop] = {};
+        }
+        me.extend(target[prop], source[prop]);
+      } else {
+        target[prop] = source[prop];
       }
+    }
   }
   return target;
 }
