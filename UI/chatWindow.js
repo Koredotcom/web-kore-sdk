@@ -2954,6 +2954,9 @@
                                 if (msgData.message[0].component.payload.title) {
                                     pickerConfig[1].daterangepicker.title = msgData.message[0].component.payload.title;
                                 }
+                                if (msgData.message[0].component.payload.delimiter) {
+                                    pickerConfig[1].dateRangeConfig.delimiter = msgData.message[0].component.payload.delimiter;
+                                }
                                 // $('.typingIndicatorContent').css('display', 'block');
                                 if(!msgData.fromHistory){
                                     KorePickers.prototype.showDateRangePicker(pickerConfig);

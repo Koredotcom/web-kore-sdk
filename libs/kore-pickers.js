@@ -11,6 +11,7 @@
                 startDate: '',
                 endDate: '',
                 inline: true,
+                delimiter: 'to'
                 // container : $('.dateRangePickerContainer'),
     
             },
@@ -392,6 +393,7 @@ KorePickers.prototype.showDateRangePicker = function (mainConfig) {
         format: mainConfig[1].dateRangeConfig.format,
         startDate: mainConfig[1].dateRangeConfig.startDate,
         endDate: mainConfig[1].dateRangeConfig.endDate,
+        delimiter: mainConfig[1].dateRangeConfig.delimiter,
         inline: true,
         container:  _korePickers.find('.kore-action-sheet .dateRangePickerContainer'),
     };
@@ -438,7 +440,12 @@ KorePickers.prototype.addDateRangeListener = function (mainConfig) {
         else if ((showEndDateValue !== null)) {
             var startViewDate = moment(startdateValue).format(mainConfig[1].dateRangeConfig.format || 'DD-MM-YYYY') || moment();
             var endViewDate = moment(enddateValue).format(mainConfig[1].dateRangeConfig.format || 'DD-MM-YYYY') || moment();
-            var _innerText = startViewDate + ' to ' + endViewDate;
+            var _innerText;
+            if (mainConfig[1].dateRangeConfig.delimiter) {
+                _innerText = startViewDate + ' ' + mainConfig[1].dateRangeConfig.delimiter + ' ' + endViewDate;
+            } else {
+                _innerText = startViewDate + ' to ' + endViewDate;
+            }
             _korePickers.find('.footerContainer.pos-relative .chatInputBox').text(_innerText);
             var e = $.Event("keydown");
             e.keyCode = 13;
