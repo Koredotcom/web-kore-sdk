@@ -14,7 +14,8 @@ class DateRangePickerTemplate {
         endDate: (moment(new Date()).add(3, 'M')).format("DD-MM-YYYY"),
         inline: true,
         container: '',
-        appendTo: 'slider' // slider|| messageBubble
+        appendTo: 'slider', // slider|| messageBubble
+        delimiter: 'to'
     };
     daterangeInput: any;
     renderMessage(msgData: any) {
@@ -44,8 +45,12 @@ class DateRangePickerTemplate {
             } else if (showEndDateValue !== null) {
                 var startViewDate = moment(startdateValue).format(me.defaultDateRangePickerConfig.format || 'DD-MM-YYYY') || moment();
                 var endViewDate = moment(enddateValue).format(me.defaultDateRangePickerConfig.format || 'DD-MM-YYYY') || moment();
-                var _innerText = startViewDate + ' to ' + endViewDate;
-                //chatWindowInstance.assignValueToInput(_innerText);
+                var _innerText;
+                if (me.defaultDateRangePickerConfig.delimiter) {
+                    _innerText = startViewDate + ' ' + me.defaultDateRangePickerConfig.delimiter + ' ' + endViewDate;
+                } else {
+                    _innerText = startViewDate + ' to ' + endViewDate;
+                }                //chatWindowInstance.assignValueToInput(_innerText);
                 chatWindowInstance.sendMessage(_innerText);
                 chatWindowInstance.bottomSliderAction('hide');
                 me.daterangeInput.data('dateRangePicker').clear();
@@ -119,6 +124,9 @@ class DateRangePickerTemplate {
             if(!msgData.message[0].component.payload.endDate){
                 datePickerConfig.endDate=(moment(new Date()).add(3, 'M')).format(givenFormat);
             }
+        }
+        if (msgData?.message[0]?.component?.payload?.delimiter) {
+            datePickerConfig.delimiter = msgData.message[0].component.payload.delimiter;
         }
         $.extend(this.defaultDateRangePickerConfig, datePickerConfig)
         me.daterangeInput = $(me.messageHtml).find('#rangeCalenderBtn').dateRangePicker(this.defaultDateRangePickerConfig);
