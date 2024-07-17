@@ -70,6 +70,25 @@
 
         .sa-answer-gen-footer {
             margin-top: 10px;
+            .sa-answer-file-url-block{
+                position: relative;
+                .sa-answer-file-url-icon {
+                    border: 1.3px solid #98A2B3;
+                    border-radius: 2px;
+                    font-size: 8px;
+                    padding: 6px 5px;
+                    position: absolute;
+                    top: -3px;
+                    left: 6px;
+                    line-height: 1px;
+                    font-weight: 600;
+                    &:hover{
+                        background-color: #528BFF;
+                        color: #FFF;
+                        border: 1.3px solid #528BFF;
+                    }
+                }
+            }
         }
 
         .sa-answer-feedback-block {
@@ -127,4 +146,26 @@
             line-height: 18px;
         }
     }
+    .sa-file-popup-img-container{
+        position: relative;
+        .sa-file-popup-img{
+            width: 100%;
+            height: 133px;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 1px solid #98A2B3;
+            position: absolute;
+            top: -133px;
+            left: 0px;
+            padding-bottom: 0px !important;
+            overflow-x: hidden;
+            &.d-none{
+                display: none !important;
+            }
+            img{
+                width: 100%;
+            }
+        }
+    }
+    
 }

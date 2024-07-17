@@ -1,7 +1,7 @@
 import BaseChatTemplate from '../../../../templatemanager/templates/baseChatTemplate';
 import './answerTemplate.scss';
 import { h, Fragment } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useState, useRef } from 'preact/hooks';
 
 
 export function Answers(props: any) {
@@ -14,6 +14,8 @@ export function Answers(props: any) {
     const [answersObj, setAnswersObj]: any = useState({ "generative": { "answerFragments": [], "sources": [] }});
     const [modelType, setModelType] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(0);
+    const [imageObj, setImageObj] = useState({url:'',isShow:false});
+    const imgSrcRef = useRef('');
 
     useEffect(() => {
         const results = messageObj?.msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.snippet_content;
@@ -29,7 +31,7 @@ export function Answers(props: any) {
         let sources_data: Array<Object> = [];
         data?.forEach((item: any) => {
             const isExist = sources_data.find((source: any) => source.id === item?.sources[0]?.doc_id);
-            if (!isExist) sources_data.push({ "title": item?.sources[0]?.title, "id": item?.sources[0]?.doc_id, "url": item?.sources[0]?.url });
+            if (!isExist) sources_data.push({ "title": item?.sources[0]?.title, "id": item?.sources[0]?.doc_id, "url": item?.sources[0]?.url, "file_url": item?.sources[0]?.file_url });
         });
         data?.forEach((answer: any) => {
             const index = sources_data.findIndex((source: any) => source.id === answer?.sources[0]?.doc_id);
@@ -43,10 +45,16 @@ export function Answers(props: any) {
         window.open(url, '_blank'); 
     }
 
+    const showFileUrl = (event:any ,url:string, show:boolean) => {
+        setImageObj({"url": url, isShow:false});
+        setTimeout(()=>{
+           if(show) setImageObj(preState=>({...preState,isShow:show}));
+        },200)
+    }
+
 
     return (
         <div class="sa-answer-block">
-
             {
                 (modelType === 'generative_model'  || modelType === 'extractive_model') ? (
                     <Fragment>
@@ -58,10 +66,22 @@ export function Answers(props: any) {
                                     )
                                 }                                
                             </div>
+                            <div className="sa-file-popup-img-container">
+                            {<div className={`sa-file-popup-img ${!imageObj?.isShow&&'d-none'} `}>
+                                <img id="sa-file-img" src={imageObj.url}/>
+                                </div>}
+                            </div>
                             <div className="sa-answer-gen-footer">
                                     {
                                         answersObj?.generative?.sources?.map((source: any, index: number) => (
-                                            <div class="sa-answer-result-footer" onClick={()=>redirectToURL(source?.url)}>{index + 1}. <span className={`${(selectedIndex===index+1)&&'selected'}`}>{source?.title || source?.url}</span></div>
+                                            <div class="sa-answer-result-footer" ><span onClick={()=>redirectToURL(source?.url)}>{index + 1}. <span className={`${(selectedIndex===index+1)&&'selected'}`}>{source?.title || source?.url}</span></span>
+                                             {source?.file_url&&
+                                            <Fragment>
+                                                <span className="sa-answer-file-url-block" ><span className="sa-answer-file-url-icon" onMouseOver={($event)=>showFileUrl($event,source?.file_url,true)} onMouseOut={($event)=>showFileUrl($event,source?.file_url,false)}>i</span>
+                                                </span>
+                                            </Fragment>
+                                             }
+                                            </div>
                                         ))
                                     }
                             </div>
@@ -117,7 +137,8 @@ export function Answers(props: any) {
                                           "source_id": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source_id||'',
                                           "source_type": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source_name||'',
                                           "title": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source_name||'',
-                                          "url":msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source_url||''
+                                          "url":msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source_url||'',
+                                          "file_url":msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.file_url||''
                                       }
                                   ]
                               }
@@ -137,7 +158,7 @@ export function Answers(props: any) {
 export function answerTemplateCheck(props: any) {
    
     const hostInstance = props.hostInstance;
-    const msgData = props.msgData;
+    const msgData = props.msgData; 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'answerTemplate') {
             props.msgData = updateMsgData(props.msgData)
         return (
