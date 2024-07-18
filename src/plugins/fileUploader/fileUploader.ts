@@ -495,7 +495,7 @@ class KoreFileUploaderPlugin {
         _cmpt.append(`<div class="uploadedFileName">${data.values.componentData.filename}</div>`);
       }
     }
-    _cmpt.append('<div class="removeAttachment"><span>&times;</span></div>');
+    _cmpt.append('<button class="removeAttachment" aria-label="Remove attachment" title="Remove attachment">X</button>');
     $('.footerContainer').find('.attachment').html(_cmpt);
     $('.chatInputBox').focus();
     me.hostInstance.attachmentInfo = {};
