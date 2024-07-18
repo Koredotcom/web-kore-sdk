@@ -1021,6 +1021,7 @@ class AgentDesktopPluginScript  {
         this.removeAudoVideoContainer = function () {
             var koreChatBody = document.getElementsByClassName("chat-widget-body-wrapper");
             var agentcontainer = document.getElementById("agentcontainer");
+            document.querySelector(".campaign-calling-audio-static-wrapper")?.remove(); //removing the campaign container when 'terminate_agent_webrtc' event is triggered
             if (agentcontainer) {
                 agentcontainer.style.display = 'none';
                 koreChatBody[0].style.height = '78%';
