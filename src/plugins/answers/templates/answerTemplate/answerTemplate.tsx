@@ -31,7 +31,7 @@ export function Answers(props: any) {
         let sources_data: Array<Object> = [];
         data?.forEach((item: any) => {
             const isExist = sources_data.find((source: any) => source.id === item?.sources[0]?.doc_id);
-            if (!isExist) sources_data.push({ "title": item?.sources[0]?.title, "id": item?.sources[0]?.doc_id, "url": item?.sources[0]?.url, "file_url": item?.sources[0]?.file_url });
+            if (!isExist) sources_data.push({ "title": item?.sources[0]?.title, "id": item?.sources[0]?.doc_id, "url": item?.sources[0]?.url, "image_url": item?.sources[0]?.image_url });
         });
         data?.forEach((answer: any) => {
             const index = sources_data.findIndex((source: any) => source.id === answer?.sources[0]?.doc_id);
@@ -75,9 +75,9 @@ export function Answers(props: any) {
                                     {
                                         answersObj?.generative?.sources?.map((source: any, index: number) => (
                                             <div class="sa-answer-result-footer" ><span onClick={()=>redirectToURL(source?.url)}>{index + 1}. <span className={`${(selectedIndex===index+1)&&'selected'}`}>{source?.title || source?.url}</span></span>
-                                             {source?.file_url&&
+                                             {source?.image_url&&
                                             <Fragment>
-                                                <span className="sa-answer-file-url-block" ><span className="sa-answer-file-url-icon" onMouseOver={($event)=>showFileUrl($event,source?.file_url,true)} onMouseOut={($event)=>showFileUrl($event,source?.file_url,false)}>i</span>
+                                                <span className="sa-answer-file-url-block" ><span className="sa-answer-file-url-icon" onMouseOver={($event)=>showFileUrl($event,source?.image_url,true)} onMouseOut={($event)=>showFileUrl($event,source?.image_url,false)}>i</span>
                                                 </span>
                                             </Fragment>
                                              }
@@ -133,12 +133,11 @@ export function Answers(props: any) {
                                       {
                                           "chunk_id": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.chunk_id,
                                           "doc_id": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.doc_id||'',
-                                          "image_url": "",
+                                          "image_url": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.image_url||'',
                                           "source_id": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source_id||'',
                                           "source_type": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source_name||'',
                                           "title": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source_name||'',
-                                          "url":msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source_url||'',
-                                          "file_url":msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.file_url||''
+                                          "url":msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source_url||''
                                       }
                                   ]
                               }
