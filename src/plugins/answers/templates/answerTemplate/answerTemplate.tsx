@@ -77,7 +77,7 @@ export function Answers(props: any) {
                                             <div class="sa-answer-result-footer" ><span onClick={()=>redirectToURL(source?.url)}>{index + 1}. <span className={`${(selectedIndex===index+1)&&'selected'}`}>{source?.title || source?.url}</span></span>
                                              {source?.image_url&&
                                             <Fragment>
-                                                <span className="sa-answer-file-url-block" ><span className="sa-answer-file-url-icon" onMouseOver={($event)=>showFileUrl($event,source?.image_url,true)} onMouseOut={($event)=>showFileUrl($event,source?.image_url,false)}>i</span>
+                                                <span className="sa-answer-file-url-block" ><span className="sa-answer-file-url-icon" onMouseOver={($event)=>showFileUrl($event,source?.image_url,true)} onMouseOut={($event)=>showFileUrl($event,'',false)}>i</span>
                                                 </span>
                                             </Fragment>
                                              }
