@@ -5,6 +5,7 @@ import { useState } from 'preact/hooks';
 import { Message } from '../message/message';
 import IconsManager from '../../base/iconsManager';
 import { getHTML } from '../../base/domManager';
+import KoreHelpers from '../../../utils/helpers';
 
 export function ListMore(props: any) {
     const iconHelper = new IconsManager();
@@ -57,7 +58,7 @@ export function ListMore(props: any) {
                                     </div>
                                 </div>
                                 {ele.buttons && ele.buttons[0] && <button className="kr-button-blue-light" onClick={() => handleClick(ele.buttons[0])}>{ele.buttons[0].title}</button>}
-                                {!ele.buttons && <a className="link-exteranl-list" href="#" target="_blank" onClick={() => handleClick(ele.default_action)}>{ele.default_action.url}</a>}
+                                {!ele.buttons && <a className="link-exteranl-list" href="#" target="_blank" onClick={() => handleClick(ele.default_action)}>{ele.default_action?.url}</a>}
                             </div>))}
                     </div>
                 </div> 
@@ -73,6 +74,7 @@ export function List(props: any) {
         msgData: msgData,
         hostInstance: hostInstance
     }
+    const helpers = KoreHelpers.helpers;
 
     const handleClick = (e: any) => {
         if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
@@ -96,7 +98,7 @@ export function List(props: any) {
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'list') {
         return (
-            <div className="list-action-template-wrapper">
+            <div className={`list-action-template-wrapper i${msgData.messageId}`}>
                 {/* <h1>Best Collections</h1> */}
                 <div className="list-content-details">
                     {msgData.message[0].component.payload.elements.map((ele: any, ind: any) => (
@@ -109,12 +111,12 @@ export function List(props: any) {
                                     </figure>
                                 </div>
                                 <div className="content-details">
-                                    <h1>{ele.title}</h1>
-                                    <p>{ele.subtitle}</p>
+                                    <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.title, "bot") }}></h1>
+                                    <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.subtitle, "bot") }}></p>
                                 </div>
                             </div>
                             {ele.buttons && ele.buttons[0] && <button className="kr-button-blue-light" onClick={() => handleClick(ele.buttons[0])}>{ele.buttons[0].title}</button>}
-                            {!ele.buttons && <a className="link-exteranl-list" href="#" target="_blank" onClick={() => handleClick(ele.default_action)}>{ele.default_action.url}</a>}
+                            {!ele.buttons && <a className="link-exteranl-list" href="#" target="_blank" onClick={() => handleClick(ele.default_action)}>{ele.default_action?.url}</a>}
                         </div>)))}
                 </div>
                 { msgData.message[0].component.payload.elements.length > 3 && <button className="show-more-btn" onClick={() =>openSeeMoreTab(msgData.message[0].component.payload.buttons[0])}>{msgData.message[0].component.payload.buttons[0].title}</button>}
