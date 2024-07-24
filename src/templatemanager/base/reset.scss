@@ -48,7 +48,7 @@ time, mark, audio, video {
 	vertical-align: baseline;
 }
 h1, h2, h3, h4, h5, h6{
-  text-align: left;
+  text-align: start;
 }
 /* HTML5 display-role reset for older browsers */
 // article, aside, details, figcaption, figure, 
@@ -125,4 +125,8 @@ body::-webkit-scrollbar {
 	-moz-appearance: textfield;
   }
   /********* Scroll bar global css end *********************/
+}
+
+.display-hide{
+  display: none !important;
 }
