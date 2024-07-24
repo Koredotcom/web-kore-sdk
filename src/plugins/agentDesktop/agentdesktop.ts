@@ -182,6 +182,7 @@ class AgentDesktopPlugin {
                 me.hostInstance.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = me.hostInstance.config.branding.header.title.name;
 
             } else if (event.messageData?.message?.type === 'agent_disconnected') {
+                document.querySelector(".campaign-calling-audio-static-wrapper")?.remove(); //removing the campaign container
                 if (this.isAgentConnected) {
                     this.isAgentConnected = false;
                     me.hostInstance.config.branding.header.icon = me?.brandingInfo?.header?.icon;

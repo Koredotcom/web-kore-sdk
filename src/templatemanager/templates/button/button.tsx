@@ -47,7 +47,7 @@ export function Button(props: any) {
         return (
             <Fragment>
                 <div>
-                    <Message {...messageObj} />
+                    {msgData.message[0].component.payload.text && <Message {...messageObj} />}
                     <div className="button-template-container">
                         <div className={buttonStyle}>
                             {
