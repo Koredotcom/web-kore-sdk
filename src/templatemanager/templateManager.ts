@@ -30,6 +30,7 @@ import AdvancedMultiListTemplate from './templates/advancedMulitList/advancedMul
 import InlineFormTemplate from './templates/inlineForm/inlineForm';
 import ArticleTemplate from './templates/articleTemplate/article';
 import OTPTemplate from './templates/otp/otp';
+import ResetPinTemplate from './templates/resetPin/resetPin';
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
 //(function($){
@@ -87,6 +88,7 @@ class TemplateManager {
 		this.installTemplate(new InlineFormTemplate());
 		this.installTemplate(new ArticleTemplate());
 		this.installTemplate(new OTPTemplate());
+		this.installTemplate(new ResetPinTemplate());
 	}
 
 	renderMessage  (msgData: any) {
