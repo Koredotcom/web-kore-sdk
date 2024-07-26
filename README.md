@@ -322,6 +322,10 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 	// }		
 # Release History
 ```
+v10.5.0 [Minor] on 27-July-2024: Master branch
+        Bugfixes
+                1. WCAG issues fix for attachment cancel button and header controls
+ 
 v10.4.1 [Minor] on 13-July-2024: Master branch
         Features
                 1.Messages can be synced now on Reconnect. Added config to enable disable syncing in kore config
