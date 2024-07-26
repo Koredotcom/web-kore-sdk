@@ -1,3 +1,8 @@
+### 10.5.0
+- SDK Release July 27, 2024
+* Bug fixes
+  * WCAG issues fix for attachment cancel button and header controls
+
 ### 10.4.1
 - SDK Release July 13, 2024
 * Features
