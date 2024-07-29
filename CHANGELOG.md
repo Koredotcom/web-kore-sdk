@@ -1,3 +1,13 @@
+### 11.4.0
+* Release July 27, 2024
+* Bug fixes
+  * advanced list template issues fix
+  * button template issues fix
+  * digital form duplicate issue fix in history when agent disconnected
+  * campaigns issues fix
+  * answers template issues fix
+  * other minor bug fixes
+
 ### 11.3.1
 * Release July 13, 2024
 * Bug fixes

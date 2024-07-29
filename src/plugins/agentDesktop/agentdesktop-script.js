@@ -2493,16 +2493,10 @@ class AgentDesktopPluginScript  {
             }
             function createPeer() {
                 try {
-                    var peerConn = new RTCPeerConnection({
-                        iceServers: [
-                            {
-                                urls: ['stun:stun.l.google.com:19302',
-                                    'stun:stun1.l.google.com:19302',
-                                    'stun:stun2.l.google.com:19302',
-                                    'stun:stun.l.google.com:19302?transport=udp']
-                            }
-                        ]
-                    });
+                    var ICE_config = {
+                        'iceServers': cobrowseRequest.iceServers
+                    }
+                    var peerConn = new RTCPeerConnection(ICE_config);
                     return peerConn;
 
                 } catch (err) {
