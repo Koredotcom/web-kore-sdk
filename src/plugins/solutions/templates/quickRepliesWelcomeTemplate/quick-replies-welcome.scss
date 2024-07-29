@@ -1,7 +1,7 @@
 .quickReplies{
     .quick_replies_welcome{
         .quickRepliesHeading{
-            text-align: left;
+            text-align: start;
             background-color: var(--sdk-chat-window-bot-bubble-bg);
             color: var(--sdk-chat-window-bot-bubble-font-clr);
             margin: 0!important;
@@ -48,7 +48,7 @@
                     border-radius: 20px;
                     display: table;
                     /* white-space: nowrap; */
-                    text-align: left;
+                    text-align: start;
                     color: var(--sdk-chat-window-btn-font-clr);
                     background: var(--sdk-chat-window-btn-hover-bg);
                     transition: background-color 200ms linear;

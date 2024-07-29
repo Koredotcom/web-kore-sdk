@@ -1061,7 +1061,7 @@
             font-weight: bold;
             color: var(--sdk-primary-font-color);
             margin-bottom: 40px;
-            text-align: left;
+            text-align: start;
         }
         .oopsErrorTitle{
             font-size: 18px;
@@ -1217,7 +1217,7 @@
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
-          text-align: left;
+          text-align: start;
           &.themeTitle {
             color: var(--sdk-primary-font-color);
             background: var(--sdk-default-white);

@@ -611,3 +611,14 @@
         }
     }
 }
+
+
+[dir="rtl"]{
+    .bot-bubble-comp{
+        justify-content: flex-end;
+        .bot-bubble-content{
+            padding-left: 10%;
+            padding-right: 32px;
+        }
+    }
+}
