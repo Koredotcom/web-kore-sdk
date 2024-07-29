@@ -2093,7 +2093,7 @@ function dragElement(elmnt) {
                 
             }
             function processEvent(evt) {
-                var limit = 100;
+                var limit = 16 * 1024;
                 const START_MESSAGE = {"type" : "start_event_msg"};
                 const STOP_MESSAGE = {"type" : "stop_event_msg"};
                 //dataChannel.send(JSON.stringify(START_MESSAGE));
@@ -2123,23 +2123,7 @@ function dragElement(elmnt) {
             function createPeer() {
                 try {
                     var ICE_config = {
-                        'iceServers': [
-                            {
-                                'url': 'stun:stun.l.google.com:19302'
-                            },
-                            {
-                                'url': 'stun:stun1.l.google.com:19302'
-                            },
-                            {
-                                'url': 'stun:stun2.l.google.com:19302'
-                            },
-                            {
-                                'url': 'stun:stun3.l.google.com:19302'
-                            },
-                            {
-                                'url': 'stun:stun4.l.google.com:19302'
-                            },
-                        ]
+                        'iceServers': cobrowseRequest.iceServers
                     }
                     var peerConn = new RTCPeerConnection(ICE_config);
                     return peerConn;
