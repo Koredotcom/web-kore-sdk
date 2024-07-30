@@ -28,6 +28,7 @@ import TemplateAttachmentV3 from './templates/templateAttachment/templateAttachm
 import TemplateListWidget from './templates/listWidget/listWidget';
 import AdvancedMultiListTemplate from './templates/advancedMulitList/advancedMultiList';
 import InlineFormTemplate from './templates/inlineForm/inlineForm';
+import CheckListTemplate from './templates/checkList/checkList';
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
 //(function($){
@@ -83,6 +84,7 @@ class TemplateManager {
 		this.installTemplate(new TemplateListWidget());
 		this.installTemplate(new AdvancedMultiListTemplate());
 		this.installTemplate(new InlineFormTemplate());
+		this.installTemplate(new CheckListTemplate());
 	}
 
 	renderMessage  (msgData: any) {
