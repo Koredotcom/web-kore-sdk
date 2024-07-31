@@ -1,0 +1,240 @@
+.kore-chat-window .checklist-progress {
+	--percentage: calc(0 * 1%);
+	background-image: conic-gradient(#009696 100%, #009696 100%, #009696 100%);
+	border-radius: 50%;
+	height: 54px;
+	position: relative;
+	width: 54px;
+	flex-shrink: 0;
+}
+
+.kore-chat-window .checklist-progress:before {
+	background-image: conic-gradient(transparent var(--percentage), #BFE5E5 var(--percentage));
+	border-radius: 50%;
+	content: "";
+	height: 54px;
+	left: 0;
+	position: absolute;
+	width: 54px;
+}
+
+.kore-chat-window .checklist-percentage {
+	--inner-size: calc(54px - 3 * 5px);
+	margin: 0;
+	padding: 0;
+	place-items: center;
+	text-align: center;
+	border-radius: 50%;
+	font-size: calc(var(--inner-size) / 3);
+	height: var(--inner-size);
+	left: 50%;
+	position: absolute;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: var(--inner-size);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 900;
+	font-size: 12px;
+	line-height: 19px;
+	background: #fff;
+}
+
+.kore-chat-window .checklist-percentage:after {
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	background-image: linear-gradient(to right, var(--text-colors));
+	background-position: var(--percentage);
+	background-size: 100000%;
+	/* content: counter(value) '%'; */
+	counter-reset: value calc(0);
+}
+
+.kore-chat-window .check-list-elements {
+	display: inline-block;
+	width: 100%;
+}
+
+.kore-chat-window .check-list-elements .checklist-element {
+	background: #FFFFFF;
+	border: 1px solid #009696;
+	box-shadow: -5px 0px 0px #009696;
+	border-radius: 10px;
+	margin-bottom: 15px;
+}
+
+.kore-chat-window .check-list-elements .checklist-element.clickable {
+	cursor: pointer;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-heading {
+	padding: 14px 20px;
+	position: relative;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-heading .headig-with-progress {
+	display: flex;
+	align-items: center;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-heading .headig-with-progress .title-progress {
+	width: 52px;
+	height: 52px;
+	border-radius: 100%;
+	right: 12px;
+	top: 11px;
+	border: 6px solid #BFE5E5;
+	font-size: 8px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-left: 10px;
+	flex-shrink: 0;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-heading .headig-with-progress .element-title-block {
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 19px;
+	color: #000000;
+	/* margin-bottom: 12px; */
+	/* overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis; */
+	width: 100%;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-heading .checklist-options-wrapper {
+	display: flex;
+	align-items: center;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-heading .checklist-options-wrapper .checklist-options {
+	display: flex;
+	margin-top: 12px;
+	width: 100%;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-heading .checklist-options-wrapper .checklist-options .option-info {
+	flex: 1;
+	border-right: 1px solid #BDC1C6;
+	padding-left: 10px;	
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-heading .checklist-options-wrapper .checklist-options .option-info:first-child {
+	padding-left: 0;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-heading .checklist-options-wrapper .checklist-options .option-info:last-child {
+	border: 0;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-heading .checklist-options-wrapper .checklist-options .option-info .option-title {
+	font-weight: 400;
+	font-size: 13px;
+	line-height: 16px;
+	color: #5F6368;
+	margin-bottom: 4px;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-heading .checklist-options-wrapper .checklist-options .option-info .option-value {
+	font-weight: 400;
+	font-size: 13px;
+	line-height: 16px;
+	color: #202124;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-heading .checklist-options-wrapper .chevron-subelement {
+	flex-shrink: 0;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-heading .checklist-options-wrapper .chevron-subelement:before {
+	content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAICAYAAADJEc7MAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAABjSURBVHgBhZExDoAwCEU/nsDRsaPX4ORew82Ojh5B2tKlBUpCIHwe+Qm0H+eDFvy9d0YQspukXKXfdFYHKqyg1EGWzBE8QGWXyRO6bU+j6KpK5kFaWIIFTaABw4JMcIAB500/yeAzuHRHeEoAAAAASUVORK5CYII=');
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-heading .checklist-options-wrapper .chevron-subelement.open:before {}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-subElements {
+	padding: 0 12px;
+	display: none;
+	width: 100%;
+	margin-top: 14px;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-subElements.show {
+	display: inline-block;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-subElements .subelement-info {
+	background: #F7F9FA;
+	border-radius: 4px;
+	padding: 12px;
+	margin-bottom: 12px;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-subElements .subelement-info .subelement-header {
+	display: flex;
+	align-items: center;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-subElements .subelement-info .subelement-header .subelemt-title-text {
+	font-weight: 700;
+	font-size: 18px;
+	line-height: 22px;
+	color: #000000;
+	width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	margin-bottom: 8px;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-subElements .subelement-info .subelement-header .icon-block {
+	background: #F3F8FF;
+	border: 1px solid #009696;
+	width: 32px;
+	height: 32px;
+	border-radius: 4px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	margin-left: 10px;
+	cursor: pointer;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-subElements .subelement-info .subelemnt-values {
+	display: inline-block;
+	width: 100%;
+}
+
+.kore-chat-window.check-list-elements .checklist-element .checklist-subElements .subelement-info .subelemnt-values .subelement-value {
+	margin-bottom: 10px;
+	display: flex;
+	align-items: center;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 19px;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-subElements .subelement-info .subelemnt-values .subelement-value:last-child {
+	margin: 0;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-subElements .subelement-info .subelemnt-values .subelement-value .val-title {
+	font-weight: 600;
+	margin-right: 4px;
+	flex-shrink: 0;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-subElements .subelement-info .subelemnt-values .subelement-value .val-icon {
+	margin-right: 4px;
+}
+
+.kore-chat-window .check-list-elements .checklist-element .checklist-subElements .subelement-info .subelemnt-values .subelement-value .val-value {
+	width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
