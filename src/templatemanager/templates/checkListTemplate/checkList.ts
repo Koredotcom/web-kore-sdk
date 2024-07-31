@@ -122,30 +122,37 @@ class CheckListTemplate {
                                        {{each(key,element) msgData.message[0].component.payload.elements}}\
                                       <div class="checklist-element {{if element.default_action}}clickable{{/if}}" {{if element.elementStyles}}style="{{each(styleKey,style) element.elementStyles}}${styleKey}:${style};{{/each}}"{{/if}} id="${element.id}" {{if element.default_action}}actionObj="${JSON.stringify(element.default_action)}"{{/if}}>\
                                         <div class="checklist-heading">\
-                                            <div class="headig-with-progress">\
-                                                <div class="element-title-block">${element.title}\</div>\
+                                            <div class="left-info-sec-data">\
+                                                <div class="headig-with-progress">\
+                                                    <div class="element-title-block">${element.title}\</div>\
+                                                </div>\
+                                                <div class="checklist-options-wrapper"> \
+                                                    {{if element.subInformation}}\
+                                                        <div class="checklist-options">\
+                                                            {{each(optionkey,option) element.subInformation}}\
+                                                                <div class="option-info">\
+                                                                    <div class="option-title">${option.title}</div>\
+                                                                    <div class="option-value">${option.value}</div>\
+                                                                </div>\
+                                                            {{/each}}\
+                                                        </div>\
+                                                    {{/if}}\
+                                                </div> \
+                                            </div>\
+                                            <div class="progress-data-block">\
                                                 {{if element.taskProgress}}\
                                                     <div class="checklist-progress" id="progress${element.id}">\
                                                         <div class="checklist-percentage">\
-                                                           ${element.taskProgress}\
+                                                        ${element.taskProgress}\
                                                         </div>\
                                                     </div>\
                                                 {{/if}}\
+                                                <div class="chevron-subelement" subElementIndex="${key}" msgId="${msgData.messageId}">\
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">\
+                                                        <path d="M6 9L12 15L18 9" stroke="#101828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>\
+                                                    </svg>\
+                                                </div> \
                                             </div>\
-                                            <div class="checklist-options-wrapper"> \
-									{{if element.subInformation}}\
-									  <div class="checklist-options">\
-										{{each(optionkey,option) element.subInformation}}\
-										   <div class="option-info">\
-											 <div class="option-title">${option.title}</div>\
-											 <div class="option-value">${option.value}</div>\
-										   </div>\
-										{{/each}}\
-									  </div>\
-									{{/if}}\
-									<div class="chevron-subelement" subElementIndex="${key}" msgId="${msgData.messageId}"> \
-									</div> \
-									</div> \
                                         </div>\
                                         {{if element.subElements &&  element.subElements.length}}\
                                           <div class="checklist-subElements" subElementItem="${msgData.messageId}-${key}">\

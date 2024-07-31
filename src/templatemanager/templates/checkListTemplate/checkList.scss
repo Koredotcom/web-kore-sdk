@@ -52,8 +52,10 @@
 }
 
 .kore-chat-window .check-list-elements {
-	display: inline-block;
-	width: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
 .kore-chat-window .check-list-elements .checklist-element {
@@ -61,7 +63,9 @@
 	border: 1px solid #009696;
 	box-shadow: -5px 0px 0px #009696;
 	border-radius: 10px;
-	margin-bottom: 15px;
+	display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
 .kore-chat-window .check-list-elements .checklist-element.clickable {
@@ -69,8 +73,21 @@
 }
 
 .kore-chat-window .check-list-elements .checklist-element .checklist-heading {
-	padding: 14px 20px;
-	position: relative;
+	padding: 12px 20px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.kore-chat-window .check-list-elements .checklist-element .checklist-heading .left-info-sec-data{
+	width: 100%;
+}
+.kore-chat-window .check-list-elements .checklist-element .checklist-heading .progress-data-block{
+	flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
 }
 
 .kore-chat-window .check-list-elements .checklist-element .checklist-heading .headig-with-progress {
@@ -145,37 +162,40 @@
 	color: #202124;
 }
 
-.kore-chat-window .check-list-elements .checklist-element .checklist-heading .checklist-options-wrapper .chevron-subelement {
-	flex-shrink: 0;
+.kore-chat-window .check-list-elements .checklist-element .checklist-heading .chevron-subelement {
+	line-height: 0;
 }
-
-.kore-chat-window .check-list-elements .checklist-element .checklist-heading .checklist-options-wrapper .chevron-subelement:before {
-	content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAICAYAAADJEc7MAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAABjSURBVHgBhZExDoAwCEU/nsDRsaPX4ORew82Ojh5B2tKlBUpCIHwe+Qm0H+eDFvy9d0YQspukXKXfdFYHKqyg1EGWzBE8QGWXyRO6bU+j6KpK5kFaWIIFTaABw4JMcIAB500/yeAzuHRHeEoAAAAASUVORK5CYII=');
+.kore-chat-window .check-list-elements .checklist-element .checklist-heading .chevron-subelement.open {
+    transform: rotate(180deg);
 }
-
-.kore-chat-window .check-list-elements .checklist-element .checklist-heading .checklist-options-wrapper .chevron-subelement.open:before {}
 
 .kore-chat-window .check-list-elements .checklist-element .checklist-subElements {
 	padding: 0 12px;
 	display: none;
 	width: 100%;
-	margin-top: 14px;
+	margin-bottom: 16px;
 }
 
 .kore-chat-window .check-list-elements .checklist-element .checklist-subElements.show {
-	display: inline-block;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	width: 100%;
 }
 
 .kore-chat-window .check-list-elements .checklist-element .checklist-subElements .subelement-info {
 	background: #F7F9FA;
-	border-radius: 4px;
-	padding: 12px;
-	margin-bottom: 12px;
+    border-radius: 4px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .kore-chat-window .check-list-elements .checklist-element .checklist-subElements .subelement-info .subelement-header {
 	display: flex;
-	align-items: center;
+    align-items: center;
+    gap: 10px;
 }
 
 .kore-chat-window .check-list-elements .checklist-element .checklist-subElements .subelement-info .subelement-header .subelemt-title-text {
@@ -187,7 +207,6 @@
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-	margin-bottom: 8px;
 }
 
 .kore-chat-window .check-list-elements .checklist-element .checklist-subElements .subelement-info .subelement-header .icon-block {
@@ -200,19 +219,20 @@
 	align-items: center;
 	justify-content: center;
 	flex-shrink: 0;
-	margin-left: 10px;
 	cursor: pointer;
 }
 
 .kore-chat-window .check-list-elements .checklist-element .checklist-subElements .subelement-info .subelemnt-values {
-	display: inline-block;
 	width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
-.kore-chat-window.check-list-elements .checklist-element .checklist-subElements .subelement-info .subelemnt-values .subelement-value {
-	margin-bottom: 10px;
+.kore-chat-window .check-list-elements .checklist-element .checklist-subElements .subelement-info .subelemnt-values .subelement-value {
 	display: flex;
-	align-items: center;
+    align-items: center;
+    gap: 2px;
 	font-weight: 400;
 	font-size: 16px;
 	line-height: 19px;
