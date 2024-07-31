@@ -18,6 +18,7 @@ import IframeTemplate from './templates/iframeTemplate/iframeTemplate';
 import SystemTemplate from './templates/systemTemplate/systemTemplate';
 import AdvancedListTemplate from './templates/advancedListTemplate/advancedListTemplate';
 import CardTemplate from './templates/cardTemplate/cardTemplate';
+import CheckListTemplate from './templates/checkListTemplate/checkList';
 
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
@@ -64,6 +65,7 @@ class TemplateManager {
 
 
 	this.installTemplate(new IframeTemplate());
+	this.installTemplate(new CheckListTemplate());
 
 	}
 
