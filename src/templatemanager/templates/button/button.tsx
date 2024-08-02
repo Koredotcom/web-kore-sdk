@@ -49,7 +49,8 @@ export function Button(props: any) {
                 <div>
                     {msgData.message[0].component.payload.text && <Message {...messageObj} />}
                     <div className="button-template-container">
-                        <div className={buttonStyle}>
+                        {/* <div className={buttonStyle}> */}
+                        <div className="button-temp button-variation-2">
                             {
                                 msgData.message[0].component.payload.buttons.map((ele: any) => (
                                     <button className="kr-btn" onClick={() => handleButtonEvent(ele)}>{ele.title}

@@ -236,7 +236,7 @@ const BrandingJSON = {
     },
     "icons_color": "#101828",
     "title": {
-      "name": "",
+      "name": "RetailAssist123",
       "color": "#101828"
     },
     "sub_title": {

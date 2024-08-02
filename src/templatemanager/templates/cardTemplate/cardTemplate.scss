@@ -1,5 +1,6 @@
 .card-template-wrapper {
     padding: 6px 12px 6px 45px;
+    // padding: 6px 12px;
     display: inline-block;
     width: 100%;
     animation-name: left-to-right-slide-anim;
@@ -156,6 +157,7 @@
 
 .card-template-wrapper-view-more-details {
     padding: 6px 12px 6px 45px;
+    // padding: 6px 12px;
     display: inline-block;
     width: 100%;
     -webkit-animation-name: fadeIn;
@@ -570,6 +572,7 @@
             padding: 13px;
             text-align: center;
             color: var(--global_white);
+            // color: var(--global-white);
             font-size: 14px;
             font-style: normal;
             font-weight: 500;

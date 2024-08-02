@@ -19,7 +19,7 @@ export function System(props: any) {
     let agentBannerClass: any = {
         '1': 'agent-joined-wrapper',
         '2': 'agent-joined-wrapper agent-joined-variation-1',
-        '3': 'agent-joined-wrapper agent-joined-variation-2' 
+        '3': 'agent-joined-wrapper agent-joined-variation-2'
     };
 
     useEffect(() => {
@@ -37,12 +37,15 @@ export function System(props: any) {
                 <div className={agentBannerClass[brandingInfo.body.agent_message.separator]}>
                     <div className="img-block">
                         <figure>
-                            <img src={msgData.icon ? msgData.icon : brandingInfo.body.agent_message.icon.icon_url} alt="agent image" />
+                            <img src={msgData.icon ? msgData.icon : brandingInfo.body.agent_message.icon.icon_url} alt="agent image" onError={({ currentTarget }) => {
+                                currentTarget.onerror = null; // prevents looping
+                                currentTarget.src = brandingInfo.body.agent_message.icon.icon_url;
+                            }} />
                         </figure>
                     </div>
                     <div className="agent-name">{msgData.message[0].cInfo.body}</div>
                     <div className="time-stamp">
-                        <time>{helpers.formatAMPMDay(msgData.createdOn)}</time>
+                        <time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format)}</time>
                     </div>
                 </div>
             </div>

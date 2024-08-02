@@ -3,6 +3,7 @@
 
   &:hover {
     // color: var(--adp-cell-background-color-in-range);
+    // color: var(--adp-color-other-month-hover);
   }
 
   &.-disabled- {
@@ -21,6 +22,7 @@
 
   &.-in-range- {
     background-color: var(--adp-cell-background-color-in-range);
+    // background-color: var(--adp-background-color-in-range);
     color: var(--adp-color);
 
     &.-focus- {
@@ -28,6 +30,7 @@
     }
     &.-disabled- {
       background-color: var(--adp-background-color);
+      // background-color: var(--adp-background-color-in-range-focused);
     }
   }
 

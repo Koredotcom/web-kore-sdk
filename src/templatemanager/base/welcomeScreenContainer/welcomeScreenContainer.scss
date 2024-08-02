@@ -131,6 +131,7 @@
         justify-content: center;
         padding: 6px 16px;
         background: var(--global-white-bg);
+        // background: var(--welcome-footer-bg);
         height: 18px;
         p {
             font-weight: 500;
@@ -249,6 +250,7 @@
                 &.hovered-default-bg{
                     background: var(--global-theme-color);
                     color: var(--global_white);
+                    // color: var(--global-white);
                 }
                 &:hover{
                     background: var(--gloabl-secondary-color);
@@ -536,7 +538,8 @@
     .carousel-left-click {
         position: absolute;
         border-radius: 32px;
-        background: var(--global_white);
+        // background: var(--global_white);
+        background: var(--global-white);
         box-shadow: 0px 4px 12px 2px rgba(32, 33, 36, 0.12);
         display: flex;
         width: 32px;
@@ -582,7 +585,8 @@
             path{
                 stroke: var(--gloabl-text-color);
             }
-        }        left: auto;
+        }        
+        left: auto;
         right: 15px;
     }
     .carousel-link-temp-wrapper{

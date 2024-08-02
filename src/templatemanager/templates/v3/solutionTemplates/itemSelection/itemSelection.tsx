@@ -1,4 +1,4 @@
-import BaseChatTemplate from '../../baseChatTemplate'; // Importing necessary modules and styles
+import BaseChatTemplate from '../../../baseChatTemplate'; // Importing necessary modules and styles
 import './itemSelection.scss';
 import { h } from 'preact'; // Using h from preact for JSX
 import { useState } from 'preact/hooks';

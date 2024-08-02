@@ -400,12 +400,16 @@
 
 .card-template-wrapper.address-template-style {
     cursor: pointer;
+    padding: 0;
+    margin-top: 21px;
+    padding-bottom: 10px;
 
     .left-section {
         float: left;
         width: 10%;
         position: relative;
         top: 5px;
+        left: 8px;
 
         img {
             width: 20px;
@@ -417,8 +421,8 @@
         float: right;
         width: 80%;
         position: relative;
-        top: -4px;
-        right: 28px;
+        top: 0px;
+        right: 16px;
     }
 
     .f-left-section {
@@ -426,6 +430,37 @@
             font-size: 12px;
             margin-top: 8px;
         }
+    }
+    .section-item {
+        border-bottom: 1px solid #E4E5E7;
+        overflow: auto;
+        padding: 14px 0;
+    
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+    .address-button {
+        background: #fff;
+        border: 1px solid #D0D5DD;
+        border-radius: 4px;
+        padding: 7px 10px;
+        margin-top: 8px;
+        border-radius: 4px; 
+    }
+    .delete-button {
+        position: absolute;
+        right: -23px;
+        top: 12px;
+        padding: 2px 3px;
+        background: #F0F1F2;
+        border: 1px #D0D5DD;
+        border-radius: 4px; 
+    }
+    .subtitle-text {
+        font-size: 12px;
+        font-weight: 400;
+        margin-top: 10px;
     }
 }
 

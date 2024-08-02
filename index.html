@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kore Store</title>
+</head>
+
+<body>
+    <script src="./dist/umd/plugins/kore-retail-assist-plugin.js"></script>
+    <script src="./dist/umd/plugins/webapi-stt-plugin-umd.js"></script>
+    <script src="./dist/umd/kore-web-sdk-umd-chat.min.js"></script>
+    <script src="./dist/umd/plugins/agent-desktop-umd.js"></script>
+    <script src="./dist/umd/plugins/browser-tts-umd-plugin-umd.js"></script>
+    <!-- <link rel="stylesheet" href="./fonts/inter/inter.css"> -->
+    <script>
+        let config = {
+            "supportType": "Support",
+            "devConfig": {
+                "stage": "retail-assist.s3.amazonaws.com/releases/dev",
+                "botInfo": {
+                    "envUrl": "https://bots.kore.ai/api/",
+                    "botName": "CX_R2.4_Dev",
+                    "botId": "st-7217de04-eeca-52fa-8a7a-52125e6beabd",
+                    "clientId": "cs-eb5ab908-70f3-51c5-bb62-fd642bb559cc",
+                    "clientSecret": "rldllUQhqn0sxjHTws00wniU2smcABBiY8fySiKIdMI=",
+                    "automationName": "CX_R2.4_Dev"
+                }
+            },
+            "qaConfig": {
+                "stage": "retail-assist.s3.amazonaws.com/releases/qa",
+                "botInfo": {
+                    "envUrl": "https://bots.kore.ai/api/",
+                    "botName": "CX_R2.3_QA",
+                    "botId": "st-7217de04-eeca-52fa-8a7a-52125e6beabd",
+                    "clientId": "cs-eb5ab908-70f3-51c5-bb62-fd642bb559cc",
+                    "clientSecret": "rldllUQhqn0sxjHTws00wniU2smcABBiY8fySiKIdMI=",
+                    "automationName": "CX_R2.3_QA"
+                }
+            },
+            "prodConfig": {
+                "stage": "retail-assist.s3.amazonaws.com/releases/prod",
+                "botInfo": {
+                    "envUrl": "https://bots.kore.ai/api/",
+                    "botName": "CX_R2.3_Prod",
+                    "botId": "st-7217de04-eeca-52fa-8a7a-52125e6beabd",
+                    "clientId": "cs-eb5ab908-70f3-51c5-bb62-fd642bb559cc",
+                    "clientSecret": "rldllUQhqn0sxjHTws00wniU2smcABBiY8fySiKIdMI=",
+                    "automationName": "CX_R2.3_Prod"
+                }
+            },
+            "demoConfig": {
+                "stage": "demobots.kore.ai/retailAssist",
+                "botInfo": {
+                    "envUrl": "https://demo-bots.kore.ai/api/",
+                    "botName": "CX_R2.3",
+                    "botId": "st-d0bbfd90-c00f-59d6-b6f5-6f9b8b7cd8ec",
+                    "clientId": "cs-9abb99a3-2dac-5354-b298-3953bef666eb",
+                    "clientSecret": "GzrXm3haWsrcvXUDoqrfWeAKNR/uJQgAtc6Ha4zOo4A=",
+                    "automationName": "CX_R2.3"
+                }
+            },
+            "localConfig": {
+                "stage": "127.0.0.1",
+                "botInfo": {
+                    "envUrl": "https://bots.kore.ai/api/",
+                    "botName": "CX_R2.4_Dev",
+                    "botId": "st-7217de04-eeca-52fa-8a7a-52125e6beabd",
+                    "clientId": "cs-eb5ab908-70f3-51c5-bb62-fd642bb559cc",
+                    "clientSecret": "rldllUQhqn0sxjHTws00wniU2smcABBiY8fySiKIdMI=",
+                    "automationName": "CX_R2.4_Dev"
+                }
+            },
+            "shopifyAppConfig": {
+                "stage": "retail-assist.s3.amazonaws.com/releases/shopifyApp",
+                "botInfo": {
+                    "envUrl": "https://bots.kore.ai/api/",
+                    "botName": "CX_R2.3_Prod",
+                    "botId": "st-7217de04-eeca-52fa-8a7a-52125e6beabd",
+                    "clientId": "cs-eb5ab908-70f3-51c5-bb62-fd642bb559cc",
+                    "clientSecret": "rldllUQhqn0sxjHTws00wniU2smcABBiY8fySiKIdMI=",
+                    "automationName": "CX_R2.3_Prod"
+                }
+            }
+        }
+        function koreGenerateUUID() {
+            console.info("generating UUID");
+            var d = new Date().getTime();
+            if (window.performance && typeof window.performance.now === "function") {
+                d += performance.now(); //use high-precision timer if available
+            }
+            var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = (d + Math.random() * 16) % 16 | 0;
+                d = Math.floor(d / 16);
+                return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            });
+            return uuid;
+        }
+        var korecookie = localStorage.getItem("korecom");
+        var uuid = (korecookie) || koreGenerateUUID();
+        localStorage.setItem("korecom", uuid);
+        const JWT_URL = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
+        var chatConfig = KoreChatSDK.chatConfig;
+        var chatWindow = KoreChatSDK.chatWindow;
+        var RetailAssistTemplatePlugin = KoreRetailAssistSDK.RetailAssistTemplatePlugin
+        var WebKitSTT = WebKitSTTPluginSDK.WebKitSTT;
+        var AgentDesktopPlugin = AgentDeskTopPluginSDK.AgentDesktopPlugin;
+        var chatWindowInstance = new chatWindow();
+        const botOptions = chatConfig.botOptions;
+        // const queryString = window.location.search;
+        // const urlParams = new URLSearchParams(queryString);
+        // const requestId = urlParams.get('requestId')
+        // const localRequestId = localStorage.getItem("requestId")
+        // if (requestId && (!localRequestId || (localRequestId != requestId)) ) {
+        //     localStorage.setItem("requestId" , requestId)
+        //         let keysToRemove = ["kr-cw-uid", "korecom","identifierKey"];
+        //     for (key of keysToRemove) {
+        //         localStorage.removeItem(key);
+        //     }
+        //     localStorage.setItem('identifierKey', 'retailWelcomeMessage');
+        // }
+        var email = "";
+        var cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i].trim();
+            if (cookie.startsWith('email=')) {
+                email = cookie.substring(6);
+            }
+        }
+        async function getBotCredentials(location) {
+            let identifier = `${location.origin}${location.pathname}`;
+            console.log("identifier", identifier);
+            for (let key in config) {
+                let configData = config[key];
+                if (identifier.includes(configData.stage)) {
+                    return JSON.stringify(configData.botInfo);
+                }
+            }
+            const myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+            const raw = JSON.stringify({
+                "query": {
+                    "expressions": [
+                        {
+                            "field": "storeDomainName",
+                            "operand": "=",
+                            "value": location.hostname
+                        }
+                    ],
+                    "operator": "or"
+                }
+            });
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: raw,
+                redirect: "follow"
+            };
+
+            try {
+                const response = await fetch("https://retailassist-poc.kore.ai/datatables/shopifyApp/getData/query", requestOptions);
+                const result = await response.json();
+                const botCredentials = result[0].botInfo;
+                return botCredentials;
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+        }
+
+        // Function to set a cookie.
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+
+            //Set the expiry date (add specified number of days).
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+
+            var expires = "expires=" + d.toUTCString();
+
+            //Save the cookie on the user's device.
+            document.cookie = cname + "=" + JSON.stringify(cvalue) + ";" + expires + ";path=/";
+        }
+
+        //Function to get a cookie
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    let botInfo = c.substring(name.length, c.length);
+                    let parsedInfo = JSON.parse(botInfo);
+                    if (parsedInfo?.automationName?.includes(config.supportType)) {
+                        return "";
+                    }
+                    return botInfo;
+                }
+            }
+            return "";
+        }
+
+        async function initiateBot(location) {
+            try {
+                let hostname = location.hostname + location.pathname;
+                const botCredentials = getCookie(hostname) || await getBotCredentials(location)
+                const parsedCredentials = JSON.parse(botCredentials)
+                const botName = parsedCredentials?.botName || "";
+                const automationName = parsedCredentials?.automationName || botName || "NA";
+                const botId = parsedCredentials?.botId || "";
+                botOptions.koreAPIUrl = parsedCredentials?.envUrl || "";
+                botOptions.JWTUrl = parsedCredentials?.JWTUrl || JWT_URL;
+                botOptions.botInfo = {
+                    name: botName,
+                    _id: botId,
+                    customData: {
+                        automationName: automationName,
+                    },
+                }
+                botOptions.userIdentity =
+                    uuid + '-' + botOptions.botInfo.customData.automationName
+                botOptions.clientId = parsedCredentials?.clientId || "";
+                botOptions.clientSecret = parsedCredentials?.clientSecret || "";
+                botOptions.botInfo.customData["userEmail"] = email || botOptions.botInfo.customData["userEmail"];
+                setCookie(hostname, parsedCredentials, 7)
+                // chatWindowInstance.installPlugin(new BrowserTTS());
+                chatWindowInstance.installPlugin(new AgentDesktopPlugin());
+                chatWindowInstance.installPlugin(new WebKitSTT({ lang: 'en-US' }));
+                chatWindowInstance.installPlugin(new RetailAssistTemplatePlugin());
+                chatWindowInstance.show(chatConfig);
+            }
+            catch (error) {
+                console.error(`An error occurred while initiating the bot: ${error.message}`);
+            }
+        }
+        try {
+            if (typeof window !== 'undefined' && window.location) {
+                initiateBot(window.location);
+            } else {
+                throw new Error("window or location is not defined.");
+            }
+        } catch (error) {
+            console.error(`An error occurred while starting the bot: ${error.message}`);
+        }
+    </script>
+</body>
+</body>
+
+</html>

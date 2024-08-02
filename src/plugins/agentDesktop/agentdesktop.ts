@@ -56,23 +56,23 @@ class AgentDesktopPlugin {
         })
 
         me.hostInstance.on('viewInit', (chatEle: any) => {
-            me.hostInstance.$('.avatar-actions').append(`
-            <div class="cobrowser-wrapper-elipse">
-                <div class="elipse-btn" id='krcobrowseMenu'>
-                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwIDE2LjEyNUwxMCAxNi4xMTYyTTEwIDEwTDEwIDkuOTkxMjVNMTAgMy44NzVMMTAgMy44NjYyNU0xMCAxNS4yNUMxMC40ODMyIDE1LjI1IDEwLjg3NSAxNS42NDE4IDEwLjg3NSAxNi4xMjVDMTAuODc1IDE2LjYwODIgMTAuNDgzMiAxNyAxMCAxN0M5LjUxNjc1IDE3IDkuMTI1IDE2LjYwODIgOS4xMjUgMTYuMTI1QzkuMTI1IDE1LjY0MTggOS41MTY3NSAxNS4yNSAxMCAxNS4yNVpNMTAgOS4xMjVDMTAuNDgzMiA5LjEyNSAxMC44NzUgOS41MTY3NSAxMC44NzUgMTBDMTAuODc1IDEwLjQ4MzIgMTAuNDgzMiAxMC44NzUgMTAgMTAuODc1QzkuNTE2NzUgMTAuODc1IDkuMTI1IDEwLjQ4MzIgOS4xMjUgMTBDOS4xMjUgOS41MTY3NSA5LjUxNjc1IDkuMTI1IDEwIDkuMTI1Wk0xMCAzQzEwLjQ4MzIgMyAxMC44NzUgMy4zOTE3NSAxMC44NzUgMy44NzVDMTAuODc1IDQuMzU4MjUgMTAuNDgzMiA0Ljc1IDEwIDQuNzVDOS41MTY3NSA0Ljc1IDkuMTI1IDQuMzU4MjUgOS4xMjUgMy44NzVDOS4xMjUgMy4zOTE3NSA5LjUxNjc1IDMgMTAgM1oiIHN0cm9rZT0iIzczNzM3MyIgc3Ryb2tlLXdpZHRoPSIxLjY3IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==" />
-                </div>
-                <div class="co-bowser-options">
-                <button class="btn-co-browser" id='krCobrowseBtn' title="Co-browse Session">
-                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE0LjY2NzMgNkgxLjMzMzk4TTEuMzMzOTggNS4yTDEuMzMzOTggMTAuOEMxLjMzMzk4IDExLjkyMDEgMS4zMzM5OCAxMi40ODAyIDEuNTUxOTcgMTIuOTA4QzEuNzQzNzIgMTMuMjg0MyAyLjA0OTY4IDEzLjU5MDMgMi40MjYgMTMuNzgyQzIuODUzODMgMTQgMy40MTM4OCAxNCA0LjUzMzk4IDE0SDExLjQ2NzNDMTIuNTg3NCAxNCAxMy4xNDc1IDE0IDEzLjU3NTMgMTMuNzgyQzEzLjk1MTYgMTMuNTkwMyAxNC4yNTc2IDEzLjI4NDMgMTQuNDQ5MyAxMi45MDhDMTQuNjY3MyAxMi40ODAyIDE0LjY2NzMgMTEuOTIwMSAxNC42NjczIDEwLjhWNS4yQzE0LjY2NzMgNC4wNzk5IDE0LjY2NzMgMy41MTk4NCAxNC40NDkzIDMuMDkyMDJDMTQuMjU3NiAyLjcxNTcgMTMuOTUxNiAyLjQwOTczIDEzLjU3NTMgMi4yMTc5OUMxMy4xNDc1IDIgMTIuNTg3NCAyIDExLjQ2NzMgMkw0LjUzMzk5IDJDMy40MTM4OCAyIDIuODUzODMgMiAyLjQyNiAyLjIxNzk5QzIuMDQ5NjggMi40MDk3MyAxLjc0MzcyIDIuNzE1NjkgMS41NTE5NyAzLjA5MjAyQzEuMzMzOTggMy41MTk4NCAxLjMzMzk4IDQuMDc5OSAxLjMzMzk4IDUuMloiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==" />
-                </button>
-                <div class="input-box-co-browser">
-                <div class="label-text">Co-Browser Security Code</div>
-                <input type="text" placeholder="Enter code" id='cobrowseInput'>
-                <div class="error-msg" id='krOTPErrorMsg'>Please enter a valid security code</div>
-                </div>
-                </div>
-            </div>
-            `);
+            // me.hostInstance.$('.avatar-actions').append(`
+            // <div class="cobrowser-wrapper-elipse">
+            //     <div class="elipse-btn" id='krcobrowseMenu'>
+            //     <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwIDE2LjEyNUwxMCAxNi4xMTYyTTEwIDEwTDEwIDkuOTkxMjVNMTAgMy44NzVMMTAgMy44NjYyNU0xMCAxNS4yNUMxMC40ODMyIDE1LjI1IDEwLjg3NSAxNS42NDE4IDEwLjg3NSAxNi4xMjVDMTAuODc1IDE2LjYwODIgMTAuNDgzMiAxNyAxMCAxN0M5LjUxNjc1IDE3IDkuMTI1IDE2LjYwODIgOS4xMjUgMTYuMTI1QzkuMTI1IDE1LjY0MTggOS41MTY3NSAxNS4yNSAxMCAxNS4yNVpNMTAgOS4xMjVDMTAuNDgzMiA5LjEyNSAxMC44NzUgOS41MTY3NSAxMC44NzUgMTBDMTAuODc1IDEwLjQ4MzIgMTAuNDgzMiAxMC44NzUgMTAgMTAuODc1QzkuNTE2NzUgMTAuODc1IDkuMTI1IDEwLjQ4MzIgOS4xMjUgMTBDOS4xMjUgOS41MTY3NSA5LjUxNjc1IDkuMTI1IDEwIDkuMTI1Wk0xMCAzQzEwLjQ4MzIgMyAxMC44NzUgMy4zOTE3NSAxMC44NzUgMy44NzVDMTAuODc1IDQuMzU4MjUgMTAuNDgzMiA0Ljc1IDEwIDQuNzVDOS41MTY3NSA0Ljc1IDkuMTI1IDQuMzU4MjUgOS4xMjUgMy44NzVDOS4xMjUgMy4zOTE3NSA5LjUxNjc1IDMgMTAgM1oiIHN0cm9rZT0iIzczNzM3MyIgc3Ryb2tlLXdpZHRoPSIxLjY3IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==" />
+            //     </div>
+            //     <div class="co-bowser-options">
+            //     <button class="btn-co-browser" id='krCobrowseBtn' title="Co-browse Session">
+            //     <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE0LjY2NzMgNkgxLjMzMzk4TTEuMzMzOTggNS4yTDEuMzMzOTggMTAuOEMxLjMzMzk4IDExLjkyMDEgMS4zMzM5OCAxMi40ODAyIDEuNTUxOTcgMTIuOTA4QzEuNzQzNzIgMTMuMjg0MyAyLjA0OTY4IDEzLjU5MDMgMi40MjYgMTMuNzgyQzIuODUzODMgMTQgMy40MTM4OCAxNCA0LjUzMzk4IDE0SDExLjQ2NzNDMTIuNTg3NCAxNCAxMy4xNDc1IDE0IDEzLjU3NTMgMTMuNzgyQzEzLjk1MTYgMTMuNTkwMyAxNC4yNTc2IDEzLjI4NDMgMTQuNDQ5MyAxMi45MDhDMTQuNjY3MyAxMi40ODAyIDE0LjY2NzMgMTEuOTIwMSAxNC42NjczIDEwLjhWNS4yQzE0LjY2NzMgNC4wNzk5IDE0LjY2NzMgMy41MTk4NCAxNC40NDkzIDMuMDkyMDJDMTQuMjU3NiAyLjcxNTcgMTMuOTUxNiAyLjQwOTczIDEzLjU3NTMgMi4yMTc5OUMxMy4xNDc1IDIgMTIuNTg3NCAyIDExLjQ2NzMgMkw0LjUzMzk5IDJDMy40MTM4OCAyIDIuODUzODMgMiAyLjQyNiAyLjIxNzk5QzIuMDQ5NjggMi40MDk3MyAxLjc0MzcyIDIuNzE1NjkgMS41NTE5NyAzLjA5MjAyQzEuMzMzOTggMy41MTk4NCAxLjMzMzk4IDQuMDc5OSAxLjMzMzk4IDUuMloiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==" />
+            //     </button>
+            //     <div class="input-box-co-browser">
+            //     <div class="label-text">Co-Browser Security Code</div>
+            //     <input type="text" placeholder="Enter code" id='cobrowseInput'>
+            //     <div class="error-msg" id='krOTPErrorMsg'>Please enter a valid security code</div>
+            //     </div>
+            //     </div>
+            // </div>
+            // `);
 
             me.hostInstance.$('#krOTPErrorMsg').hide();
             
@@ -164,7 +164,6 @@ class AgentDesktopPlugin {
 
         // agent connected and disconnected events
         me.hostInstance.on('onWSMessage', (event: any) => {
-
             // Agent Status 
             if (event.messageData?.message?.type === 'agent_connected') {
                 this.isAgentConnected = true;
