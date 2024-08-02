@@ -3,7 +3,8 @@
 ###### Preview
 
 
-![advance-multi-select](https://user-images.githubusercontent.com/58174664/148904346-b262cc94-8cba-4371-bee0-d58c0fb4c51c.PNG)
+<img width="248" alt="adv multi select" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/af43e8c6-10fe-4540-93a9-44fa0e94a223">
+
 
 
 ###### Message Payload

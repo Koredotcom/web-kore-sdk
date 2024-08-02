@@ -3,7 +3,7 @@
 ###### Preview
 
 
-![tableListTemplate](https://user-images.githubusercontent.com/58174664/148945268-7ba94674-73dd-43f6-8a55-ca06231196bd.PNG)
+<img width="205" alt="table list" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/d5b1b4ba-20c7-4418-b13f-1fb9d8fee615">
 
 
 

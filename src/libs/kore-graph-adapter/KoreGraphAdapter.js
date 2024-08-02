@@ -609,8 +609,9 @@ var KoreGraphAdapter = (function($,d3) {
             else {
                 if(d.data && d.data.dispVal) {
                     tooltip.select('.countDonut').html(d.data.dispVal); // set current count       
-                }
-                else {
+                } else if (d.currentTarget.__data__.value) {
+                    tooltip.select('.countDonut').html(d.currentTarget.__data__.data.dispVal);
+                } else {
                     tooltip.select('.countDonut').html(d.value); // set current count       
                 }
             }
@@ -1553,8 +1554,9 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
                   var yPosition = d3.pointer(event)[1]-5;
                   if(d.dispVal) {
                     var ttVal = d.dispVal;
-                  }
-                  else {
+                  } else if (d.currentTarget.__data__.dispVal) {
+                    var ttVal = d.currentTarget.__data__.dispVal;
+                  } else {
                     var ttVal = d.value;
                   }
                   tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
@@ -2055,8 +2057,8 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
                 })
                 .on('mouseover', function() { // on mouse in show line, circles and text
 
-                    if ($('#myPreviewModal').css('display') === 'block') {
-                        $('.lineChartChildDiv .mouse-per-line').hide();
+                    if ($('.modal_body_actions').css('display') === 'block') {
+                        $('.line-chart-inline .lineChartChildDiv .mouse-per-line').hide();
                     } else {
                         $('.lineChartChildDiv .mouse-per-line').show();
                     }
@@ -2277,8 +2279,8 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
         } else if (chatConfig && chatConfig.graphLib === 'd3') {
             setTimeout(() => {
                 const dimens = {};
-                dimens.outerWidth = 380;
-                dimens.outerHeight = 350;
+                dimens.outerWidth = 350;
+                dimens.outerHeight = 355;
                 dimens.innerWidth = 230;
                 dimens.innerHeight = 250;
                 dimens.legendRectSize = 15;
@@ -2396,8 +2398,8 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
             }, 150);
         } else if (chatConfig.graphLib === 'd3') {
             var dimens = {};
-            dimens.outerWidth = 350;
-            dimens.outerHeight = 300;
+            dimens.outerWidth = 340;
+            dimens.outerHeight = 290;
             dimens.innerHeight = 200;
             dimens.legendRectSize = 15;
             dimens.legendSpacing = 4;
@@ -2512,7 +2514,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
             if (msgData.message[0].component.payload.pie_type) {
                 // define data
                 var dimens = {};
-                dimens.width = 300;
+                dimens.width = 350;
                 dimens.height = 200;
                 dimens.legendRectSize = 10;
                 dimens.legendSpacing = 2.4;
@@ -2652,6 +2654,100 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
           }
         });
       }
+      function openChartModal(msgData, containerId) { 
+          if (document.querySelector(containerId)) {
+              document.querySelector(containerId).innerHTML = '';
+          }
+          if (chatConfig && chatConfig.graphLib === 'd3') {
+              if (msgData.message[0].component.payload.pie_type === undefined) {
+                  msgData.message[0].component.payload.pie_type = 'regular';
+              }
+              if (msgData.message[0].component.payload.template_type !== 'linechart' && msgData.message[0].component.payload.template_type !== 'piechart') {
+                  var dimens = {};
+                  dimens.outerWidth = 600;
+                  dimens.outerHeight = 340;
+                  dimens.innerWidth = 380;
+                  dimens.innerHeight = 250;
+                  dimens.legendRectSize = 15;
+                  dimens.legendSpacing = 3;
+                  if (msgData.message[0].component.payload.template_type === 'barchart' && msgData.message[0].component.payload.direction === 'vertical') {
+                      dimens.innerWidth = 500;
+                      this.drawD3barChart(msgData, dimens, containerId, 12);
+                  } else if (msgData.message[0].component.payload.template_type === 'barchart' && msgData.message[0].component.payload.direction === 'horizontal') {
+                      this.drawD3barStackedChart(data.data, dimens, containerId, 12);
+                  } else if (msgData.message[0].component.payload.template_type === 'barchart' && msgData.message[0].component.payload.direction === 'vertical') {
+                      dimens.innerWidth = 550;
+                      this.drawD3barVerticalStackedChart(msgData, dimens, containerId, 12);
+                  } else if (msgData.message[0].component.payload.template_type === 'barchart' && msgData.message[0].component.payload.direction === 'horizontal') {
+                      dimens.outerWidth = 650;
+                      dimens.outerHeight = 350;
+                      dimens.innerWidth = 450;
+                      dimens.innerHeight = 310;
+                      this.drawD3barHorizontalbarChart(msgData, dimens, containerId, 12);
+                  }
+              } else if (msgData.message[0].component.payload.template_type === 'linechart') {
+                  var dimens = {};
+                  dimens.outerWidth = 520;
+                  dimens.outerHeight = 350;
+                  dimens.innerWidth = 400;
+                  dimens.innerHeight = 240;
+                  dimens.legendRectSize = 15;
+                  dimens.legendSpacing = 4;
+                  //  KoreGraphAdapter.drawD3lineChart(data.data, dimens, '.chartContainerDiv', 12);
+                  this.drawD3lineChartV2(msgData, dimens, containerId, 12);
+              } else if (msgData.message[0].component.payload.pie_type) {
+                  var dimens = {};
+                  dimens.width = 520;
+                  dimens.height = 350;
+                  dimens.legendRectSize = 15;
+                  dimens.legendSpacing = 4;
+                  if (msgData.message[0].component.payload.pie_type === 'regular') {
+                      this.drawD3Pie(msgData, dimens, containerId, 16);
+                  } else if (msgData.message[0].component.payload.pie_type === 'donut') {
+                      this.drawD3PieDonut(msgData, dimens, containerId, 16, 'donut');
+                  } else if (msgData.message[0].component.payload.pie_type === 'donut_legend') {
+                      this.drawD3PieDonut(msgData, dimens, containerId, 16, 'donut_legend');
+                  }
+              }
+          } else if (chatConfig && chatConfig.graphLib === 'google') {
+              if (data.type === 'piechart') {
+                  google.charts.load('current', { packages: ['corechart'] });
+                  google.charts.setOnLoadCallback(drawChart);
+                  function drawChart() {
+                      container = document.getElementsByClassName('chartContainerDiv');
+                      chart = new google.visualization.PieChart(container[0]);
+                  }
+              } else if (data.type === 'linechart') {
+                  google.charts.load('current', { packages: ['corechart', 'line'] });
+                  google.charts.setOnLoadCallback(drawChart);
+                  function drawChart() {
+                      container = document.getElementsByClassName('chartContainerDiv');
+                      chart = new google.visualization.LineChart(container[0]);
+                  }
+              } else if (data.type === 'barchart') {
+                  google.charts.load('current', { packages: ['corechart', 'bar'] });
+                  google.charts.setOnLoadCallback(drawChart);
+                  function drawChart() {
+                      container = document.getElementsByClassName('chartContainerDiv');
+                      if (data.direction === 'vertical') {
+                          chart = new google.visualization.ColumnChart(container[0]);
+                      } else {
+                          chart = new google.visualization.BarChart(container[0]);
+                      }
+                  }
+              }
+              setTimeout(() => {
+                  const chartAreaObj = { height: '85%', width: '85%' };
+                  data.options.chartArea = chartAreaObj;
+                  google.visualization.events.addListener(chart, 'ready', () => {
+                      setTimeout(() => {
+                          $('.largePreviewContent .chartContainerDiv').css('height', '91%');
+                      });
+                  });
+                  chart.draw(data.data, data.options);
+              }, 200);
+          }
+      }
       function zoomChart() {
         const modal = document.getElementById('myPreviewModal');
         $('.largePreviewContent').empty();
@@ -2679,6 +2775,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
         drawBarChartTemplate:drawBarChartTemplate,
         drawPieChartTemplate:drawPieChartTemplate,
         handleChartOnClick:handleChartOnClick,
+        openChartModal: openChartModal,
         zoomChart:zoomChart
     }
 })(korejquery,d3);

@@ -9,7 +9,7 @@ Refer browser compatability [here](https://developer.mozilla.org/en-US/docs/Web/
 import { BrowserTTS } from 'kore-web-sdk';
 
 
-chatWindowInstance.installPlugin(new BrowserTTSPlugin());
+chatWindowInstance.installPlugin(new BrowserTTS());
 ```
 
 ## For UMD Installations
@@ -18,10 +18,10 @@ chatWindowInstance.installPlugin(new BrowserTTSPlugin());
  <summary>Click here</summary>
 	<br>
   
-  1. Include BrowserTTS_umd.ts in index.html
+  1. Include browser-tts-umd-plugin-umd.js in index.html
 
 ```js
-<script  src="PATH_TO_FILE/BrowserTTS_umd.ts"></script>
+<script src="PATH_TO_FILE/browser-tts-umd-plugin-umd.js"></script>
 
 ```
 2. Get plugin reference

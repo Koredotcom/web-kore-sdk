@@ -3,9 +3,9 @@ import BrandingJSON from '../sass/brandingJSON'; // To do
 var chatConfig:any={};
 
 var botOptions:any = {};
-botOptions.initialChat = false;
+botOptions.openSocket = false;
 botOptions.logLevel = 'debug';
-botOptions.koreAPIUrl = "https://bots.kore.ai/api/";
+botOptions.koreAPIUrl = "https://platform.kore.ai/api/";
 
 botOptions.API_KEY_CONFIG={
     bootstrapURL:botOptions.koreAPIUrl+'platform/websdk',
@@ -31,6 +31,7 @@ botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 botOptions.webhookConfig={
     enable:false,
     webhookURL:'PLEASE_PROVIDE_WEBHOOK_URL',
+    useSDKChannelResponses: false, //set it to true if you would like to use the responses defined for Web/Mobile SDK Channel
     apiVersion:2
 }
 
@@ -44,6 +45,11 @@ botOptions.webhookConfig={
 chatConfig = {
     mockMode:{
         enable:false
+    },
+    pwcConfig: {
+        enable: false,
+        container: 'body',
+        knownUser: false
     },
     botOptions: botOptions,
     container:'body',
@@ -64,6 +70,7 @@ chatConfig = {
         interval:30000 //In milli sec, To keep the websocket alive skd send ping message in this interval      
     },
     enableThemes : false, //set true to apply the branding configured    ,
+    delayRender: false,
     branding: BrandingJSON,
     history:{
         paginatedScroll: {
@@ -75,10 +82,17 @@ chatConfig = {
     sendFailedMessage:{ //Number of retries on message send failed
         MAX_RETRIES:3
     },
+    maxReconnectionAPIAttempts: 5,  // Number of retries on api failure
     UI:{
         version:"v3"
     },
-    builderFlag: false
+    UIContext: {},  // To add user info
+    syncMessages: {
+        onReconnect: {
+            enable: false,  // Set true to sync messages on Reconnect
+            batchSize: 10   // To configure the number of messages to fetch
+        }
+    }
 };
 
 if (!chatConfig.loadHistory) { // pagination scroll will be enabled only when loadHistory flag is true

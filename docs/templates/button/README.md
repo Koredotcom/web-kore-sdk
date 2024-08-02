@@ -2,7 +2,8 @@
 
 ###### Preview
 
-![buttonTemplate](https://user-images.githubusercontent.com/58174664/148940966-5d7990ea-9e94-4eeb-a277-e97b4906b879.PNG)
+<img width="238" alt="button" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/c19e4a2e-3e3b-4a90-be57-d69ce5bd31c2">
+
 
 
 ###### Message Payload
@@ -15,7 +16,10 @@ var message = {
         "template_type": "button",
         "text": "Button Template Label",
         "subText": "Button Template Description",
-        "buttons": []
+        "buttons": [],
+        "variation": "plain",  // plain, textInverted, backgroundInverted 
+        "fullWidth": false, // for full width
+        "stackedButtons": false // for stacked buttons
     }
 };
 for (i = 0; i < info.length; i++) {

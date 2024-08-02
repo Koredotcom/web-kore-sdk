@@ -3,7 +3,8 @@
 ###### Text template
 
 ###### Preview
-![textTemplate](https://user-images.githubusercontent.com/58174664/148945903-22484a15-1af1-4351-bd12-ab64ea5bd7f7.PNG)
+<img width="226" alt="text" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/4d173526-a03a-4aff-ab11-b37dc587aa0e">
+
 ###### Message Payload
 ```js
 var message = {
@@ -15,7 +16,8 @@ print(JSON.stringify(message));
 ###### Preview
 
 
-![textTemplate-with-videoAttachment](https://user-images.githubusercontent.com/58174664/148946072-16a20a42-24b4-4f9d-986d-e279ea8c773d.PNG)
+<img width="224" alt="video" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/65f8d1cb-e28d-4630-96e3-150bdf397743">
+
 
 
 ###### Message Payload

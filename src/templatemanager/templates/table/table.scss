@@ -1,0 +1,154 @@
+
+.table-wrapper-section{
+    padding: 0px 5px 12px 16px;
+    overflow: scroll;
+    display: inline-block;
+    width: 100%;
+}
+.table-regular-view{
+    border-radius: 4px;
+    border: 1px solid var(--gloabl-border-color);
+    width: 100%;
+    thead{
+        th{
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--table-border);
+            color: var(--table-header-text-color);
+            font-size: 11px;
+            font-weight: 600;
+            line-height: normal;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            text-align: left;
+        }
+    }
+    tbody{
+        tr{
+            &:nth-child(odd){
+                td{
+                    background: var(--table-body-tr-bg);
+                }
+            }
+            &:last-child{
+                td{
+                    border: 0;
+                }
+            }
+        }
+        td{
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--table-border);
+            color: var(--table-header-text-color);
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 18px;
+        }
+    }
+}
+
+.table-response-wrapper-container{
+    padding: 12px 10px 12px 16px;
+    .table-response-wrapper{
+        border-radius: 4px;
+        border: 1px solid var(--gloabl-border-color);
+        .acc-block-content{
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--table-border);
+            &:last-child{
+                border: 0;
+            }
+            &:nth-child(odd){
+                background: var(--table-body-tr-bg);
+            }
+            &.acc-open{
+                position: relative;
+                padding-right: 71px;
+                flex-wrap: wrap;
+                .info-block{
+                    flex: 1 1 50% !important;
+                    h1{
+                        display: block;
+                    }                    
+                }
+                .icon-block{
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                    z-index: 2;
+                    svg{
+                        transform: rotate(90deg);
+                    }
+                }
+                .hide {
+                    display: block;
+                }
+            }
+            .info-block{                
+                padding: 12px;
+                width: 100%;
+                &:first-child{
+                    min-width: 35px;
+                    flex-shrink: 0;
+                    text-align: left;
+                    max-width: 80px;
+                    p{
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                    }
+                }
+                h1{
+                    color: var(--gray-modern-500, var(--table-desc-text-color));
+                    font-size: 11px;
+                    font-weight: 500;
+                    line-height: 16px;
+                    margin-bottom: 3px;
+                }
+                p{
+                    color: var(--table-header-text-color);
+                    font-size: 12px;
+                    font-weight: 400;
+                    line-height: 18px;
+                }
+            }
+            .icon-block{
+                display: flex;
+                width: 71px;
+                height: 42px;
+                padding: 12px;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+                flex-shrink: 0;
+                cursor: pointer;
+                svg{
+                    width: 16px;
+                    height: 16px;
+                    text-align: center;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    path{
+                        stroke: var(--gloabl-text-color);
+                    }
+                }
+            }
+            .hide{
+                display: none;
+            }
+        }
+    }
+}
+.show-more-btn{
+    padding: 8px;
+    color: var(--global-theme-color);
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}

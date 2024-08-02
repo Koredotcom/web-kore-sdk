@@ -1,53 +1,80 @@
-### 10.1.9
-
-- SDK Release Aug 19, 2023
+### 11.4.0
+* Release July 27, 2024
 * Bug fixes
-  * carousel template bugfixes with multiple 
-  * quick reply template bugfixes
-  * Bugfix for back to back form trigger within 1 sec with continuous loading
-  * Added a config to send acknowledgement on bot response.Configuration available at chatConfig.botOptions.enableAck
-### 10.1.1
+  * advanced list template issues fix
+  * button template issues fix
+  * digital form duplicate issue fix in history when agent disconnected
+  * campaigns issues fix
+  * answers template issues fix
+  * other minor bug fixes
 
-- SDK Release July 4, 2023
+### 11.3.1
+* Release July 13, 2024
 * Bug fixes
-  * Reconnect on token expiry 
-  * ADA mac safari voiceover bug fixes
-  * Support for .gif fileType
-  * Multiple carouselTemplate fix
-  * Solutions templates plugin added
-### 10.1.0
+  * carousel template sliding issue fix
+  * enabled send button on file upload
+  * other bug fixes
 
-- Release Apr 16, 2023
-* Bug fixes
-  * Tree shaking for esm modules
-  * Retry logic on failed message
-  * CSS namespacing for jquery libs
-  * Agent Desktop plugin bug fixes
-
-### 10.0.0
-
-- Release Jan 21, 2023
+### 11.3.0
+* Release June 29, 2024
 * Features
-  * Feedback templates added
+  * messages can be synced now on Reconnect. Added config to enable disable syncing in kore config. 
 * Bug fixes
-  * Fixed Quick replies template null handling issue.
-  * Quick reply template issue with URL 
-  * AdvancedList template close not working for show more slider
-  * Table template double rendering on show more click
+  * button template user message text issue fix
+  * file attachment cancel and upload issue fix
+  * other minor bug fixes
 
-### 9.3.11 
-
-- Release Dec 26, 2022
+### 11.2.1
+* Release June 15, 2024
 * Features
-  * STT plugin for Google Cloud & Azure framework
-  * AgentDesktop plugIn added
+  * added description key for elements in the dropdown template. [Click here](https://github.com/Koredotcom/web-kore-sdk/tree/v3/dev/docs/templates/dropdownTemplate) for more details.
 * Bug fixes
-  * Paginated scroll change when no data is available
-  * Pre-compiled template support added
-  * Security Fix: XSS in the user message
-  * Advanced list and list view template render issue
+  * digital form close popup opening issue fix
+  * widgets color mapping issue fix for buttons
+  * other minor bug fixes
 
-### 9.3.0 
+### 11.2.0
+* Release June 01, 2024
+* Features
+  * widgets ui enhanced
 
-- Release July 22, 2022
-- v2 base version
+### 11.1.1
+* Release May 11, 2024
+* Bug fixes
+  * bot name issue fix when using API_KEY config
+  * date formatting issue fix in date & date range templates
+  * date templates history JSON print issue fix
+
+### 11.1.0
+* Release April 27, 2024
+* Features
+  * added proactive messages and buttons configuration for avatar
+  * added emoji picker support in compose bar
+  * added date and time formats for messages timestamp
+  * customization of colors for buttons added
+* Bug fixes
+  * answers template bug fixes
+  * timestamp issues fix
+  * File uploader plugin issues fix
+  * Date range template end date selection issue fix
+  * docs updated
+  * audio, video calls css issues fix
+  * other minor issues fix
+
+### 11.0.4
+
+* Release April 10, 2024
+* Features
+  * added answers plugin as default plugin
+* Bug fixes
+
+### 11.0.1
+
+* Release April 03, 2024
+* Changes
+  * version number added in branding JSON
+
+### 11.0.0
+
+* Release Mar 30, 2024
+* v3 base version

@@ -2,7 +2,7 @@
 
 ###### Preview
 
-![dropdowntemplate](https://user-images.githubusercontent.com/58174664/148942680-abf05fc5-4b96-42d9-a948-73fbc73fe7ba.PNG)
+<img width="234" alt="dropdown" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/7e08f887-c8c7-4629-8709-d8255df7d49c">
 
 
 ###### Message Payload
@@ -16,26 +16,32 @@ var message =  {
 		"elements": [
 			{
 				"title": "United Arab Emirates Dirham",
+				"description": "Dirham",
 				"value":"AED"
 			},
 			{
 				"title": "Australian Dollar",
+				"description": "Dollar",
 				"value":"AUD"
 			},
 			{
 				"title": "Canadian Dollar",
+				"description": "Dollar",
 				"value":"CAD"
 			},
 			{
 				"title": "Swiss Franc",
+				"description": "Franc",
 				"value":"CHF"
 			},
 			{
 				"title": "Chinese Yuanr",
+				"description": "Yuanr",
 				"value":"CNY"
 			},
 			{
 				"title": "Czech Koruna",
+				"description": "Koruna",
 				"value":"CZK"
 			}
 

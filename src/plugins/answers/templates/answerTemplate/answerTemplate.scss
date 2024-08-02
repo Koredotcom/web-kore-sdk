@@ -1,0 +1,171 @@
+.sa-answer-block {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 12px;
+
+    .sa-answer-result-block {
+        gap: 8px;
+        padding: 8px 16px 16px 16px;
+        border-radius: 8px;
+        border-top: 4px solid var(--Gray-100, #F2F4F7);
+        background: var(--Base-White, #FFF);
+        box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.10);
+
+        .sa-answer-result-sub-block {
+            &:hover {
+                .sa-answer-result-heading {
+                    color: var(--Gray-300, #D0D5DD);
+                    font-weight: 400;
+                }                
+            }
+        }        
+
+        .sa-answer-result-heading {
+            color: var(--Gray-700, #344054);
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 18px;
+            cursor: pointer;
+
+             &:hover {
+                color: var(--Gray-700, #344054) !important;
+                font-weight: 600 !important;
+            }            
+
+            span {
+                position: relative;
+                padding: 0px 7px 0 1px;
+
+                sup {
+                    position: absolute;
+                    left: -2px;
+                    color: var(--Gray-400, #98A2B3);
+                    font-family: Inter;
+                    font-size: 9px;
+                    font-weight: 700;
+                    line-height: 18px;
+                }
+            }
+        }
+
+        .sa-answer-result-desc {
+            color: var(--Gray-700, #344054);
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 18px;
+        }
+
+        .sa-answer-result-footer {
+            color: var(--Gray-400, #98A2B3);
+            font-size: 10px;
+            font-weight: 500;
+            line-height: 18px;
+            cursor: pointer;
+
+            .selected {
+                text-decoration: underline;
+            }
+        }
+
+        .sa-answer-gen-footer {
+            margin-top: 10px;
+            .sa-answer-file-url-block{
+                position: relative;
+                .sa-answer-file-url-icon {
+                    border: 1.3px solid #98A2B3;
+                    border-radius: 2px;
+                    font-size: 8px;
+                    padding: 6px 5px;
+                    position: absolute;
+                    top: -3px;
+                    left: 6px;
+                    line-height: 1px;
+                    font-weight: 600;
+                    &:hover{
+                        background-color: #528BFF;
+                        color: #FFF;
+                        border: 1.3px solid #528BFF;
+                    }
+                }
+            }
+        }
+
+        .sa-answer-feedback-block {
+            margin-top: 8px;
+
+            .sa-answer-left {
+                display: flex;
+                gap: 7px;
+
+                .sa-answer-img {
+                    border-radius: 20px;
+                    background: var(--Purple-50, #F4F3FF);
+                    padding: 2px;
+                    display: flex;
+                    padding: 4px;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 4px;
+                }
+                .sa-answer-text {
+                    color: var(--Purple-700, #5925DC);
+                    font-size: 8px;
+                    font-weight: 500;
+                    line-height: 18px;
+                }
+            }
+        }
+
+    }
+
+    .sa-answer-carousel-block {
+        display: flex;
+        justify-content: center;
+        padding-top: 12px;
+        gap: 10px;
+
+        .sa-answer-dot {
+            .m-b-5 {
+                margin-bottom: 5px;
+            }
+        }
+
+        .sa-answer-count {
+            display: flex;
+            height: 16px;
+            padding: 0px 6px;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            border-radius: 12px;
+            border: 1px solid var(--Gray-200, #EAECF0);
+            color: var(--Gray-400, #98A2B3);
+            font-size: 10px;
+            font-weight: 500;
+            line-height: 18px;
+        }
+    }
+    .sa-file-popup-img-container{
+        position: relative;
+        .sa-file-popup-img{
+            width: 100%;
+            height: 133px;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 1px solid #98A2B3;
+            position: absolute;
+            top: -133px;
+            left: 0px;
+            padding-bottom: 0px !important;
+            overflow-x: hidden;
+            &.d-none{
+                display: none !important;
+            }
+            img{
+                width: 100%;
+            }
+        }
+    }
+    
+}

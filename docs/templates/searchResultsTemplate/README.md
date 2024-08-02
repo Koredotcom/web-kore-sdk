@@ -1,8 +1,5 @@
 ## Search Results template
 
-###### Preview
-
-<img width="493" alt="Screenshot 2023-07-04 at 6 03 18 PM" src="https://github.com/Koredotcom/web-kore-sdk/assets/29255055/7080ca3a-2915-4c05-97a6-cc28dc134910">
 
 
 ###### Message Payload

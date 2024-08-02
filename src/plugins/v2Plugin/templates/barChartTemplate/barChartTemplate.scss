@@ -1,0 +1,52 @@
+.kore-chat-window .barchart .barchartDiv {
+    display: block;
+    /*border: 13px solid #F1F0F0;*/
+    border-radius: 4px;
+    clear: both;
+    margin-left: -45px;
+    width: 353px;
+    box-shadow: 0 1px 5px 0 rgba(179, 186, 200, 0.58);
+    cursor: pointer;
+    background-color: #ffffff;
+}
+
+.kore-chat-window .barchart .messageBubble.barchart {
+    margin-bottom: 10px;
+}
+
+.kore-chat-window .barchart .profile-photo {
+    top: 28px;
+}
+.kore-chat-window .barchartDiv .bar-chart-tooltip {
+    position: absolute;
+    max-width: 170px;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: #eed;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+  }
+  .kore-chat-window  .largePreviewContent .bar-chart-tooltip {
+      position: absolute;
+      padding: 2px;
+      font: 12px sans-serif;
+      background: #eed;
+      border: 0px;
+      border-radius: 8px;
+      pointer-events: none;
+      max-width: 200px;
+  }
+  .kore-chat-window .barChartChildDiv {
+    margin-left: 13px;
+    width: 340px;
+}
+  [dir="rtl"].kore-chat-window .piechart .piechartDiv{
+    direction: ltr;
+    margin-right: -45px;
+}
+
+[dir="rtl"].kore-chat-window .barchart .barchartDiv{
+    margin-right: -45px;
+    direction: ltr; 
+}

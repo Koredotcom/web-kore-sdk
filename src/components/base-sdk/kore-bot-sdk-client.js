@@ -74,12 +74,6 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       _chatHistoryLoaded = true;
       this.cbBotChatHistory(arguments);
     }
-    else if(_chatHistoryLoaded && arguments && arguments[0] === 'history') {
-      setTimeout(function(){
-              $('.chatInputBox').focus();
-              $('.disableFooter').removeClass('disableFooter');
-          });
-    }
     this.EventEmitter.prototype.emit.apply(this, arguments);
   };
   
@@ -224,6 +218,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
         console.log("it is array")
         textData.forEach(function(entry,index) {
             var clientMessageId = new Date().getTime()+index;
+            var textORJSON = isJson(entry.val || entry);
             msgData = {
                 'type': "bot_response",
                 'messageId':entry.messageId || clientMessageId,
@@ -235,11 +230,31 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
                         'body': entry.val || entry,//for v2 and v1 respectively 
                         'attachments': ""
                     },
-                    "component": isJson(entry.val || entry),//for v2 and v1 respectively 
+                    "component": {}
                     //'clientMessageId': clientMessageId
                 }],
   
             };
+            if (textORJSON.payload) {
+              msgData.message[0].component.payload = textORJSON.payload;
+              msgData.message[0].component.type = textORJSON.type;
+            } else if (textORJSON.text) {
+              msgData.message[0].component.payload = {
+                text: textORJSON.text
+              }
+              msgData.message[0].component.type = 'template'
+            } else {
+              msgData.message[0].component.payload = {
+                text: textORJSON
+              }
+              msgData.message[0].component.type = 'text'
+            }
+            if (msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.text) {
+              msgData.message[0].cInfo.body = msgData.message[0].component.payload.text;
+            }
+            if (msgData.message[0].component && msgData.message[0].component.payload && (msgData.message[0].component.payload.videoUrl || msgData.message[0].component.payload.audioUrl)) {
+              msgData.message[0].cInfo.body = msgData.message[0].component.payload.text || "";
+            }
             msgsData.push(msgData);
         });
     } else {
@@ -385,6 +400,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
             if (_comp.type === 'text') {
               _comp.cInfo = {};
               _comp.cInfo.body = data.messages[i].components[j].data && data.messages[i].components[j].data.text;
+              if (data.messages[i].tags && data.messages[i].tags.altText && data.messages[i].tags.altText.length > 0) {
+                _comp.cInfo.body = data.messages[i].tags.altText[0]?.value || _comp.cInfo.body;
+              }
             }
   
             _msg.message[j] = _comp;
@@ -439,6 +457,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
             if (_comp.type === 'text') {
               _comp.cInfo = {};
               _comp.cInfo.body = data.messages[i].components[j].data && data.messages[i].components[j].data.text;
+              if (data.messages[i].tags && data.messages[i].tags.altText && data.messages[i].tags.altText.length > 0) {
+                _comp.cInfo.body = data.messages[i].tags.altText[0]?.value || _comp.cInfo.body;
+              }
             }
   
             _msg.message[j] = _comp;
@@ -467,8 +488,12 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     var __opts__ = {};
     __opts__.forward = opts.forward;
     __opts__.limit = opts.limit || 10; // 10 is the max size.
-    __opts__.offset = this.historyOffset;
-    this.historyOffset = this.historyOffset +( opts.limit?  opts.limit : 10);
+    if (opts.forHistorySync) {
+      __opts__.offset = 0;
+    } else {
+      __opts__.offset = this.historyOffset;
+      this.historyOffset = this.historyOffset + (opts.limit ? opts.limit : 10);
+    }
       
     if (__opts__.forward) {
       if (this.latestId)
@@ -529,6 +554,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
           this.cbErrorToClient(err.message);
         }
       }
+      if (data && data.errors && data.errors[0]) {
+        this.emit(WEB_EVENTS.API_FAILURE,{"type":"XHRObj","responseError" : data.errors[0]});
+      }
       console.error(err && err.stack);
     } else {
       this.accessToken = data.authorization.accessToken;
@@ -537,11 +565,17 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this.userInfo = data;
       this.cbBotDetails(data,this.options.botInfo);
       this.RtmClient = new clients.KoreRtmClient({}, this.options);
+      this.RtmClient.on('api_failure_client', errObj => {
+        this.emit(WEB_EVENTS.API_FAILURE, errObj);
+      });
+      this.RtmClient.on('reconnect_event', event => {
+        this.emit('reconnected', event);
+      });
       this.emit("rtm_client_initialized");
       this.emit(WEB_EVENTS.JWT_GRANT_SUCCESS,{jwtgrantsuccess : data});
-      if (this.options.initialChat) {
+      if (this.options.openSocket || this.options.botInfo.uiVersion == 'v2') {
         this.logInComplete();
-        this.options.initialChat = false;
+        this.options.openSocket = false;
       }
     }
   };
@@ -550,18 +584,20 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   start conversation after getting jwtgrant and theme
   */
   KoreBot.prototype.logInComplete = function() {
-    this.RtmClient.start({
-      "botInfo": this.options.botInfo
-    });
-    this.RtmClient.on(RTM_EVENTS.MESSAGE, bind(this.onMessage, this));
-    this.RtmClient.on(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, bind(this.onOpenWSConnection, this));
-    //Propagating the events triggered on this.RtmClient to KoreBot instance with ":rtm" prefix
-    var _me=this;
-    Object.keys(RTM_CLIENT_EVENTS).forEach(function(rtmClientEvent){
-      _me.RtmClient.on(RTM_CLIENT_EVENTS[rtmClientEvent],function(eventData){
-        _me.emit("rtm:"+RTM_CLIENT_EVENTS[rtmClientEvent],eventData);
+    if (this.RtmClient) {
+      this.RtmClient.start({
+        "botInfo": this.options.botInfo
       });
-    });
+      this.RtmClient.on(RTM_EVENTS.MESSAGE, bind(this.onMessage, this));
+      this.RtmClient.on(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, bind(this.onOpenWSConnection, this));
+      //Propagating the events triggered on this.RtmClient to KoreBot instance with ":rtm" prefix
+      var _me=this;
+      Object.keys(RTM_CLIENT_EVENTS).forEach(function(rtmClientEvent){
+        _me.RtmClient.on(RTM_CLIENT_EVENTS[rtmClientEvent],function(eventData){
+          _me.emit("rtm:"+RTM_CLIENT_EVENTS[rtmClientEvent],eventData);
+        });
+      });
+    }
   }
   
   /*
@@ -1182,7 +1218,8 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     RATE_LIMITED: 'rate_limited',
     WEB_HOOK_READY:'webhook_ready',
     WEB_HOOK_RECONNECTED:'webhook_reconnected',
-    JWT_GRANT_SUCCESS : 'jwtgrantsuccess'
+    JWT_GRANT_SUCCESS : 'jwtgrantsuccess',
+    API_FAILURE: 'api_failure'
   };
   
   module.exports.RTM = {
@@ -1448,9 +1485,22 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     catch(e){
       console.log(e && e.stack);
     }
+    if (data && data.errors && data.errors[0]) {
+      this.emit('api_failure_client',{"type":"XHRObj","responseError" : data.errors[0]});
+    }
     if(data && data.errors && (data.errors[0].code === 'TOKEN_EXPIRED' || data.errors[0].code === 401 || data.errors[0].msg === 'token expired')){
         var $=this.$;
         $(".reload-btn").trigger('click',{isReconnect:true});
+        const buttonElement = document.querySelector('#kore-reconnect-btn');
+        if (buttonElement) {
+          const eventData = { isReconnect: true };
+          const clickEvent = new CustomEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            detail: eventData
+          });
+          buttonElement.dispatchEvent(clickEvent);
+        }
         data.error='token_expired';
     }
     if (err || !data.url) {
@@ -1471,10 +1521,20 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       if(__reconnect__){
         data.url = data.url + "&isReconnect=true";
       }
+      if (!__reconnect__ && window.sessionStorage.getItem('isReconnect') == 'true') {
+        data.url = data.url + "&isReconnect=true";
+      }
+      if (window.sessionStorage.getItem('debugLogEnabled') == 'true') {
+        data.url = data.url + "&isDebugging=true";
+      }
+      if (window.sessionStorage.getItem('isSkipOnConnect')) {
+        data.url = data.url + (window.sessionStorage.getItem('isSkipOnConnect') == 'true' ? "&isSkipOnConnect=true" : "&isSkipOnConnect=false");
+      }
       this.authenticated = true;
       //this.activeUserId = data.self.id;
       this.emit(CLIENT_EVENTS.AUTHENTICATED, data);
       this.connect(data.url);
+      this.emit('reconnect_event', { reconnected: __reconnect__ });
     }
   };
   
@@ -1915,6 +1975,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   inherits(RtmApi, BaseApi);
   
   RtmApi.prototype.start = function start(opts, optCb) {
+    opts.language = localStorage.currentBotLanguage || "en";
     var args = {
       opts: opts
     };
@@ -1945,7 +2006,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     BaseAPIClient.call(this, token, clientOpts);
     this.claims = opts.claims;
     this.retryConfig = clientOpts.retryConfig || {
-      retries: 5,
+      retries: clientOpts.maxReconnectionAPIAttempts || 5,
       factor: 3.9
     };
     this.user = {};

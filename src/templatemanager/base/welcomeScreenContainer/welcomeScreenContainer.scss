@@ -48,7 +48,7 @@
                 position: absolute;
                 top: 0;
                 left: 0;
-                border: 3px solid var(--global-white);
+                border: 3px solid var(--global_white);
                 box-shadow: none;
                 display: flex;
             }
@@ -60,6 +60,20 @@
             padding: 32px 16px;
             .logo-img {
                 margin-bottom: 18px;
+                width: 56px;
+                height: 56px;
+                // background: var(--global-white-bg);
+                box-shadow: 0px 10px 15px -3px rgba(16, 24, 40, 0.1), 0px 4px 6px -4px rgba(16, 24, 40, 0.1);
+                border-radius: 100%;
+                figure{
+                    width: 100%;
+                    height: 100%;
+                    img{
+                        height: 100%;
+                        width: 100%;
+                        border-radius: 100%;
+                    }
+                }
             }
             h1 {
                 font-weight: 600;
@@ -109,14 +123,15 @@
         background: linear-gradient(45deg, #F5ED47 14.64%, #80F5E8 85.36%);
         flex: 1 1 auto;
         overflow: auto;
+        background: var(--welcome-footer-bg);
     }
     .powerdby-info {
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 6px 16px;
-        background: var(--welcome-footer-bg);
-        height: 28px;
+        background: var(--global-white-bg);
+        height: 18px;
         p {
             font-weight: 500;
             font-size: 10px;
@@ -124,6 +139,9 @@
             color: var(--welecome-footer-text-color);
             margin-right: 5px;
             flex-shrink: 0;
+        }
+        figure {
+            padding: 0 0 3px 0;
         }
     }
 
@@ -174,6 +192,7 @@
                 img {
                     width: 100%;
                     height: 100%;
+                    border-radius: 100%;
                 }
             }
             .bot_icon_image {
@@ -183,6 +202,7 @@
                 img {
                     width: 100%;
                     height: 100%;
+                    border-radius: 100%;
                 }
             }
             .conv-starter-content-info{
@@ -228,7 +248,7 @@
                 position: relative;                
                 &.hovered-default-bg{
                     background: var(--global-theme-color);
-                    color: var(--global-white);
+                    color: var(--global_white);
                 }
                 &:hover{
                     background: var(--gloabl-secondary-color);
@@ -366,6 +386,7 @@
     .banner-img{
         display: inline-block;
         width: 100%;
+        cursor: pointer;
         img{
             width: 100%;
             height: 100%;
@@ -424,6 +445,7 @@
     border-radius: 4px;
     border: 1px solid var(--gloabl-border-color);
     background: var(--global-white-bg);
+    cursor: pointer;
     .img-block{
         flex-shrink: 0;
         width: 48px;
@@ -514,7 +536,7 @@
     .carousel-left-click {
         position: absolute;
         border-radius: 32px;
-        background: var(--global-white);
+        background: var(--global_white);
         box-shadow: 0px 4px 12px 2px rgba(32, 33, 36, 0.12);
         display: flex;
         width: 32px;
@@ -539,8 +561,28 @@
         }
     }
     .carousel-right-click {
-        @extend .carousel-left-click;
-        left: auto;
+        position: absolute;
+        border-radius: 32px;
+        background: var(--global_white);
+        box-shadow: 0px 4px 12px 2px rgba(32, 33, 36, 0.12);
+        display: flex;
+        width: 32px;
+        height: 32px;
+        padding: 0px;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        border: 0;
+        left: 15px;
+        top: auto;
+        cursor: pointer;
+        flex-shrink: 0;
+        z-index: 9;
+        svg{
+            path{
+                stroke: var(--gloabl-text-color);
+            }
+        }        left: auto;
         right: 15px;
     }
     .carousel-link-temp-wrapper{

@@ -31,6 +31,11 @@ import SpeakTextAWSPollyConfig from './plugins/textToSpeech/KoreAWSPolly/kore-aw
 import SearchSuggestionsPlugin from './plugins/searchSuggestions/searchSuggestions';
 import UserTypingEventsPlugin from './plugins/userTypingEventsPlugin';
 import RetailAssistTemplatePlugin from './plugins/retailAssistPlugin';
+import ProactiveWebCampaignPlugin from './plugins/proactiveWebCampaign/proactiveWebCampaign';
+import AnswersTemplatesPlugin from './plugins/answers/answersPlugin';
+import V2Plugin from './plugins/v2Plugin/v2Plugin';
+import V2WidgetsConfig from './plugins/v2WidgetsPlugin/config/v2-kore-widgets-config';
+import V2KoreWidgetSDK from './plugins/v2WidgetsPlugin/v2-kore-widgets';
 
 export {
   chatConfig,
@@ -62,5 +67,10 @@ export {
   SearchSuggestionsPlugin,
   KoreMultiFileUploaderPlugin,
   UserTypingEventsPlugin,
-  RetailAssistTemplatePlugin
+  RetailAssistTemplatePlugin,
+  AnswersTemplatesPlugin,
+  ProactiveWebCampaignPlugin,
+  V2Plugin,
+  V2WidgetsConfig,
+  V2KoreWidgetSDK
 };
