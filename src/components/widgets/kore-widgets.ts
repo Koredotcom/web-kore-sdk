@@ -605,9 +605,9 @@ show  (config:any) {
         widgetElement.find('.widgetContentPanel ').html(dataHTML);
       }
     }
-    widgetElement.find('button').addClass('active')
+    widgetElement?.find('button')?.addClass('active')
     setTimeout(function () {
-      if (widgetElement.find('button').length) {
+      if (widgetElement?.find('button')?.length) {
         me.refreshElement(paneldataString);
       }
     }, 5000)

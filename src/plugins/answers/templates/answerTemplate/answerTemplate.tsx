@@ -128,7 +128,7 @@ export function Answers(props: any) {
                           "score": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.score||'',
                           "snippet_content": [
                               {
-                                  "answer_fragment": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.chunk_text,
+                                  "answer_fragment": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.snippet_content,
                                   "sources": [
                                       {
                                           "chunk_id": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.chunk_id,
@@ -136,8 +136,8 @@ export function Answers(props: any) {
                                           "image_url": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.image_url||'',
                                           "source_id": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source_id||'',
                                           "source_type": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source_name||'',
-                                          "title": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source_name||'',
-                                          "url":msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source_url||''
+                                          "title": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source||'',
+                                          "url":msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.url||''
                                       }
                                   ]
                               }
