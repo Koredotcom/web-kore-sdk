@@ -58,7 +58,7 @@ By developing the [client web part](https://learn.microsoft.com/en-us/sharepoint
 
 
    
-6. #### Add the Web Part whick contains Kore Web SDK to Your Site:
+6. #### Add the Web Part which contains Kore Web SDK to Your Site:
    Navigate to Your SharePoint Site.
 
    Go to the page where you want to add the Kore Web SDK.
