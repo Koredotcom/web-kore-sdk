@@ -1,29 +1,29 @@
-# Kore Web SDK integration in Sharepoint:
+# Kore Web SDK integration in Sharepoint
 To integrate Kore Web SDK in SharePoint sites we need to use [SharePoint Framework(SPFx)](https://learn.microsoft.com/en-us/sharepoint/dev/spfx/sharepoint-framework-overview).
 
 By developing the [client web part](https://learn.microsoft.com/en-us/sharepoint/dev/spfx/web-parts/overview-client-side-web-parts) using Single Page Application we will integrate Kore Web SDK.
 
 
 ## Below are the steps to integrate using Sharepoint framework(SPFx):
->[!NOTE]
->It is framework-agnostic, it can be used with any JavaScript framework – React, Angular, Knockout and more. Here we are using React for creating web part. You can use any framework or library according to your convenience.
+> [!NOTE]
+> It is framework-agnostic, it can be used with any JavaScript framework – React, Angular, Knockout and more. Here we are using React for creating web part. You can use any framework or library according to your convenience.
 
-1. Create a web part using Sharepoint Framework using React by follwoing the instructions given [here](https://learn.microsoft.com/en-us/sharepoint/dev/spfx/web-parts/get-started/build-a-hello-world-web-part)
+1. Create a web part using Sharepoint Framework using React by follwoing the instructions given [here](https://learn.microsoft.com/en-us/sharepoint/dev/spfx/web-parts/get-started/build-a-hello-world-web-part).
 
 
    <img width="920" alt="react code screenshot" src="https://github.com/user-attachments/assets/b33658eb-e7b6-4ced-8207-a9c5d8cead74">
 
 
-2. Now open the main component .tsx file
+2. Now open the main component .tsx file.
 
    <img width="928" alt="main component screenshot" src="https://github.com/user-attachments/assets/c1e786de-dfe2-4d53-8ac0-bc735e280be8">
 
 
-3. install the Kore Web SDK by following the [instructions](v2/dev?tab=readme-ov-file#-getting-started) in `componentDidMount()` method
-
-
+3. Install the Kore Web SDK by following the [instructions](https://github.com/Koredotcom/web-kore-sdk/tree/v2/dev?tab=readme-ov-file#-getting-started) in `componentDidMount()` method.
+   
    <img width="914" alt="sdk snippet" src="https://github.com/user-attachments/assets/d2345b4f-bb27-4fbd-8a3b-d5b3458ee292">
 
+   Note: You need to install Kore Web SDK in the relevant main file in the framework/library used. 
 
 
 4. Generate the .sppkg file for the web part by following the [instructions](https://learn.microsoft.com/en-us/sharepoint/dev/spfx/web-parts/get-started/hosting-webpart-from-office-365-cdn#review-solution-settings).
@@ -58,10 +58,10 @@ By developing the [client web part](https://learn.microsoft.com/en-us/sharepoint
 
 
    
-7. #### Add the Web Part whick contains Kore Web SDK to Your Site:
-   Navigate to Your SharePoint Site
+6. #### Add the Web Part whick contains Kore Web SDK to Your Site:
+   Navigate to Your SharePoint Site.
 
-   Go to the page where you want to add the Kore Web SDK
+   Go to the page where you want to add the Kore Web SDK.
 
    Click on the + icon to add a new web part.
    Search for the SDK web part in the list.
@@ -74,7 +74,7 @@ By developing the [client web part](https://learn.microsoft.com/en-us/sharepoint
    <img width="1917" alt="web part screenshot" src="https://github.com/user-attachments/assets/8435a116-cc14-4fda-b229-2f0fa3dc6e9b">
 
 
-9. Kore Web SDK added to the SharePoint site.
+7. Kore Web SDK added to the SharePoint site.
     
     <img width="1919" alt="final screenshot" src="https://github.com/user-attachments/assets/427372e0-deeb-496e-92d8-cb9779f72296">
 
