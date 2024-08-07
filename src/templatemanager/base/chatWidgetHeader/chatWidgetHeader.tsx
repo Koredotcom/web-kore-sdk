@@ -8,14 +8,37 @@ import IconsManager from '../iconsManager';
 export function ChatWidgetHeader(props: any) {
     const hostInstance = props.hostInstance;
     const iconHelper = new IconsManager();
-    const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.brandingCopy);
+    const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
+    hostInstance.on('onBrandingUpdate', function (event: any) {
+        updateBrandingInfo({...event.brandingData})
+    });
 
     const hSizeObj: any = {
         "compact": "chat-widget-header",
         "regular": "chat-widget-header regular",
         "large": "chat-widget-header large "
     }
+
+    const handleHeaderIcon = (data: any) => {
+        hostInstance.sendMessage(data);
+    }
+
     useEffect(() => {
+        hostInstance.eventManager.removeEventListener('.btn-reconnect', 'click');
+        hostInstance.eventManager.addEventListener('.btn-reconnect', 'click', (event: any) => {
+            if (!hostInstance.chatEle.querySelector('.btn-reconnect').getAttribute('disabled')) {
+                hostInstance.chatEle.querySelector('.btn-reconnect').setAttribute('disabled', true);
+                const data = event?.detail;
+                if (data && data?.isReconnect) {
+                    hostInstance.config.botOptions.forceReconnecting = true;
+                } else {
+                    hostInstance.config.botOptions.forceReconnecting = false;//make it to true if reconnect button should not trigger on connect message
+                }
+                setTimeout(() => {
+                    hostInstance.resetWindow();
+                });
+            }
+          });
         hostInstance.eventManager.removeEventListener('.btn-action-close', 'click');
         hostInstance.eventManager.addEventListener('.btn-action-close', 'click', () => {
             hostInstance.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
@@ -29,17 +52,20 @@ export function ChatWidgetHeader(props: any) {
             // if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
             //     hostInstance.setLocalStoreItem('kr-cw-state', 'minimized');
             //   }
-            hostInstance.destroy();
-            hostInstance.bot.historyOffset = 0;
-            hostInstance.bot.previousHistoryLoading = false;
-            if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
-                hostInstance.removeLocalStoreItem('kr-cw-state');
-                hostInstance.removeLocalStoreItem('kr-cw-uid');
-                hostInstance.config.botOptions.maintainContext = false;
-                localStorage.removeItem("identifierKey");
+            if (!hostInstance.config.pwcConfig.enable) {
+                hostInstance.destroy();
+                hostInstance.misc.initial = true;
+                hostInstance.misc.chatOpened = false;
+                hostInstance.bot.historyOffset = 0;
+                hostInstance.bot.previousHistoryLoading = false;
+                if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
+                    hostInstance.removeLocalStoreItem('kr-cw-state');
+                    hostInstance.removeLocalStoreItem('kr-cw-uid');
+                    hostInstance.config.botOptions.maintainContext = false;
+                }
+                // hostInstance.config.branding.header.title.name = hostInstance.config.botMessages.reconnecting;
+                // hostInstance.setBranding(hostInstance.config.branding);
             }
-            hostInstance.config.branding.header.title.name = hostInstance.config.botMessages.reconnecting;
-            hostInstance.setBranding(hostInstance.config.branding);
         })
 
         hostInstance.eventManager.removeEventListener('.back-to-chat', 'click');
@@ -48,6 +74,10 @@ export function ChatWidgetHeader(props: any) {
                 hostInstance.chatEle.querySelector('.welcome-chat-section').classList.add(hostInstance.config.branding.chat_bubble.expand_animation);
                 hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize')
             } else {
+                if (hostInstance.config.branding.general.sounds.enable && hostInstance.config.branding.general.sounds.on_close.url != 'None') {
+                    const closeSound = new Audio(hostInstance.config.branding.general.sounds.on_close.url);
+                    closeSound.play();
+                }
                 hostInstance.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
                 hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
             }
@@ -57,10 +87,7 @@ export function ChatWidgetHeader(props: any) {
                 hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove(hostInstance.config.branding.chat_bubble.expand_animation);
             }
         })
-        hostInstance.on('onBrandingUpdate', function (event: any) {
-            updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
-        });
-    }, [brandingInfo])
+    })
 
     return (
         <div className={hSizeObj[brandingInfo.header.size]} aria-label="chat widget header">
@@ -93,15 +120,15 @@ export function ChatWidgetHeader(props: any) {
                     {brandingInfo.header.icon.icon_url && brandingInfo.header.icon.icon_url == 'icon-4' && <svg width="21" height="21" viewBox="0 0 22 22" fill="none">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M11.25 0.5C5.45101 0.5 0.75 5.20101 0.75 11C0.75 16.799 5.45101 21.5 11.25 21.5C17.049 21.5 21.75 16.799 21.75 11C21.75 5.20101 17.049 0.5 11.25 0.5ZM11.2501 2.05566C16.19 2.05566 20.1946 6.06023 20.1946 11.0001C20.1946 15.94 16.19 19.9446 11.2501 19.9446C6.31023 19.9446 2.30566 15.94 2.30566 11.0001C2.30566 6.06023 6.31023 2.05566 11.2501 2.05566ZM11.2822 6.40039C11.7047 6.40039 12.0516 6.711 12.0889 7.10737L12.0922 7.17817V7.25C12.0922 7.67955 11.7295 8.02778 11.2822 8.02778C10.8597 8.02778 10.5127 7.71717 10.4755 7.32079L10.4722 7.25V7.17817C10.4722 6.74861 10.8348 6.40039 11.2822 6.40039ZM11.2499 9.5C11.6556 9.5 11.9888 9.81061 12.0245 10.207L12.0277 10.2778V16.0742C12.0277 16.5037 11.6795 16.852 11.2499 16.852C10.8443 16.852 10.5111 16.5414 10.4753 16.145L10.4722 16.0742V10.2778C10.4722 9.84822 10.8204 9.5 11.2499 9.5Z" fill="white" />
                     </svg>} */}
-                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iMTYiIGZpbGw9IiM0Q0EzMEQiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik05LjMzMzY2IDEwLjAwMDFIMTAuMDQwN0wxMC42MzggMTkuNTU2M0MxMC42NDI2IDE5LjYzMSAxMC42NDgyIDE5LjcyMTIgMTAuNjU5NSAxOS44MDA3QzEwLjY3MjggMTkuODkzNCAxMC43IDIwLjAyNCAxMC43NzY1IDIwLjE1OTJDMTAuODc2MyAyMC4zMzU2IDExLjAyNzMgMjAuNDc3NSAxMS4yMDk2IDIwLjU2NjFDMTEuMzQ5MyAyMC42MzQxIDExLjQ4MTQgMjAuNjUzIDExLjU3NDggMjAuNjYwNUMxMS42NTQ3IDIwLjY2NjggMTEuNzQ1MSAyMC42NjY4IDExLjgyIDIwLjY2NjhMMjAuNjY3IDIwLjY2NjhDMjEuMDM1MiAyMC42NjY4IDIxLjMzMzcgMjAuMzY4MyAyMS4zMzM3IDIwLjAwMDFDMjEuMzMzNyAxOS42MzE5IDIxLjAzNTIgMTkuMzMzNCAyMC42NjcgMTkuMzMzNEgxMS45NkwxMS44NzY2IDE4LjAwMDFIMjAuMTE0OUMyMC40MzIgMTguMDAwMSAyMC43MDczIDE4LjAwMDEgMjAuOTM1OCAxNy45ODIzQzIxLjE3ODIgMTcuOTYzNSAyMS40MTkgMTcuOTIxOSAyMS42NTUzIDE3LjgxMTNDMjIuMDEwNCAxNy42NDQ5IDIyLjMwODggMTcuMzc3OCAyMi41MTMzIDE3LjA0MzJDMjIuNjQ5NCAxNi44MjA2IDIyLjcxNzMgMTYuNTg2IDIyLjc2MjggMTYuMzQ3MUMyMi44MDU3IDE2LjEyMiAyMi44MzYxIDE1Ljg0ODQgMjIuODcxMSAxNS41MzMzTDIzLjI2NTYgMTEuOTgyN0MyMy4yNzU0IDExLjg5NTIgMjMuMjg2OCAxMS43OTI2IDIzLjI4OTEgMTEuNzAyM0MyMy4yOTE4IDExLjU5OTMgMjMuMjg2IDExLjQ0NjcgMjMuMjE4IDExLjI4MzFDMjMuMTMxMiAxMS4wNzQxIDIyLjk3NiAxMC45MDA3IDIyLjc3NzkgMTAuNzkxM0MyMi42MjI4IDEwLjcwNTcgMjIuNDcxOCAxMC42ODMxIDIyLjM2OTEgMTAuNjc0M0MyMi4yNzkgMTAuNjY2NyAyMi4xNzU5IDEwLjY2NjcgMjIuMDg3OCAxMC42NjY4TDExLjQxODMgMTAuNjY2OEwxMS4zNjI3IDkuNzc3MjNDMTEuMzU4MSA5LjcwMjQ3IDExLjM1MjUgOS42MTIyNyAxMS4zNDExIDkuNTMyODVDMTEuMzI3OSA5LjQ0MDEyIDExLjMwMDcgOS4zMDk1MyAxMS4yMjQyIDkuMTc0MjhDMTEuMTI0NCA4Ljk5NzkgMTAuOTczMyA4Ljg1NjAxIDEwLjc5MTEgOC43Njc0QzEwLjY1MTMgOC42OTk0NiAxMC41MTkzIDguNjgwNDcgMTAuNDI1OSA4LjY3MzA1QzEwLjM0NTkgOC42NjY2OSAxMC4yNTU2IDguNjY2NzIgMTAuMTgwNyA4LjY2Njc1TDkuMzMzNjYgOC42NjY3NkM4Ljk2NTQ3IDguNjY2NzYgOC42NjY5OSA4Ljk2NTIzIDguNjY2OTkgOS4zMzM0MkM4LjY2Njk5IDkuNzAxNjEgOC45NjU0NyAxMC4wMDAxIDkuMzMzNjYgMTAuMDAwMVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xMy4wMDAzIDIxLjMzMzRDMTIuNDQ4IDIxLjMzMzQgMTIuMDAwMyAyMS43ODExIDEyLjAwMDMgMjIuMzMzNEMxMi4wMDAzIDIyLjg4NTcgMTIuNDQ4IDIzLjMzMzQgMTMuMDAwMyAyMy4zMzM0QzEzLjU1MjYgMjMuMzMzNCAxNC4wMDAzIDIyLjg4NTcgMTQuMDAwMyAyMi4zMzM0QzE0LjAwMDMgMjEuNzgxMSAxMy41NTI2IDIxLjMzMzQgMTMuMDAwMyAyMS4zMzM0WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTE5LjAwMDMgMjEuMzMzNEMxOC40NDggMjEuMzMzNCAxOC4wMDAzIDIxLjc4MTEgMTguMDAwMyAyMi4zMzM0QzE4LjAwMDMgMjIuODg1NyAxOC40NDggMjMuMzMzNCAxOS4wMDAzIDIzLjMzMzRDMTkuNTUyNiAyMy4zMzM0IDIwLjAwMDMgMjIuODg1NyAyMC4wMDAzIDIyLjMzMzRDMjAuMDAwMyAyMS43ODExIDE5LjU1MjYgMjEuMzMzNCAxOS4wMDAzIDIxLjMzMzRaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K"/>
+                     <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iMTYiIGZpbGw9IiM0Q0EzMEQiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik05LjMzMzY2IDEwLjAwMDFIMTAuMDQwN0wxMC42MzggMTkuNTU2M0MxMC42NDI2IDE5LjYzMSAxMC42NDgyIDE5LjcyMTIgMTAuNjU5NSAxOS44MDA3QzEwLjY3MjggMTkuODkzNCAxMC43IDIwLjAyNCAxMC43NzY1IDIwLjE1OTJDMTAuODc2MyAyMC4zMzU2IDExLjAyNzMgMjAuNDc3NSAxMS4yMDk2IDIwLjU2NjFDMTEuMzQ5MyAyMC42MzQxIDExLjQ4MTQgMjAuNjUzIDExLjU3NDggMjAuNjYwNUMxMS42NTQ3IDIwLjY2NjggMTEuNzQ1MSAyMC42NjY4IDExLjgyIDIwLjY2NjhMMjAuNjY3IDIwLjY2NjhDMjEuMDM1MiAyMC42NjY4IDIxLjMzMzcgMjAuMzY4MyAyMS4zMzM3IDIwLjAwMDFDMjEuMzMzNyAxOS42MzE5IDIxLjAzNTIgMTkuMzMzNCAyMC42NjcgMTkuMzMzNEgxMS45NkwxMS44NzY2IDE4LjAwMDFIMjAuMTE0OUMyMC40MzIgMTguMDAwMSAyMC43MDczIDE4LjAwMDEgMjAuOTM1OCAxNy45ODIzQzIxLjE3ODIgMTcuOTYzNSAyMS40MTkgMTcuOTIxOSAyMS42NTUzIDE3LjgxMTNDMjIuMDEwNCAxNy42NDQ5IDIyLjMwODggMTcuMzc3OCAyMi41MTMzIDE3LjA0MzJDMjIuNjQ5NCAxNi44MjA2IDIyLjcxNzMgMTYuNTg2IDIyLjc2MjggMTYuMzQ3MUMyMi44MDU3IDE2LjEyMiAyMi44MzYxIDE1Ljg0ODQgMjIuODcxMSAxNS41MzMzTDIzLjI2NTYgMTEuOTgyN0MyMy4yNzU0IDExLjg5NTIgMjMuMjg2OCAxMS43OTI2IDIzLjI4OTEgMTEuNzAyM0MyMy4yOTE4IDExLjU5OTMgMjMuMjg2IDExLjQ0NjcgMjMuMjE4IDExLjI4MzFDMjMuMTMxMiAxMS4wNzQxIDIyLjk3NiAxMC45MDA3IDIyLjc3NzkgMTAuNzkxM0MyMi42MjI4IDEwLjcwNTcgMjIuNDcxOCAxMC42ODMxIDIyLjM2OTEgMTAuNjc0M0MyMi4yNzkgMTAuNjY2NyAyMi4xNzU5IDEwLjY2NjcgMjIuMDg3OCAxMC42NjY4TDExLjQxODMgMTAuNjY2OEwxMS4zNjI3IDkuNzc3MjNDMTEuMzU4MSA5LjcwMjQ3IDExLjM1MjUgOS42MTIyNyAxMS4zNDExIDkuNTMyODVDMTEuMzI3OSA5LjQ0MDEyIDExLjMwMDcgOS4zMDk1MyAxMS4yMjQyIDkuMTc0MjhDMTEuMTI0NCA4Ljk5NzkgMTAuOTczMyA4Ljg1NjAxIDEwLjc5MTEgOC43Njc0QzEwLjY1MTMgOC42OTk0NiAxMC41MTkzIDguNjgwNDcgMTAuNDI1OSA4LjY3MzA1QzEwLjM0NTkgOC42NjY2OSAxMC4yNTU2IDguNjY2NzIgMTAuMTgwNyA4LjY2Njc1TDkuMzMzNjYgOC42NjY3NkM4Ljk2NTQ3IDguNjY2NzYgOC42NjY5OSA4Ljk2NTIzIDguNjY2OTkgOS4zMzM0MkM4LjY2Njk5IDkuNzAxNjEgOC45NjU0NyAxMC4wMDAxIDkuMzMzNjYgMTAuMDAwMVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xMy4wMDAzIDIxLjMzMzRDMTIuNDQ4IDIxLjMzMzQgMTIuMDAwMyAyMS43ODExIDEyLjAwMDMgMjIuMzMzNEMxMi4wMDAzIDIyLjg4NTcgMTIuNDQ4IDIzLjMzMzQgMTMuMDAwMyAyMy4zMzM0QzEzLjU1MjYgMjMuMzMzNCAxNC4wMDAzIDIyLjg4NTcgMTQuMDAwMyAyMi4zMzM0QzE0LjAwMDMgMjEuNzgxMSAxMy41NTI2IDIxLjMzMzQgMTMuMDAwMyAyMS4zMzM0WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTE5LjAwMDMgMjEuMzMzNEMxOC40NDggMjEuMzMzNCAxOC4wMDAzIDIxLjc4MTEgMTguMDAwMyAyMi4zMzM0QzE4LjAwMDMgMjIuODg1NyAxOC40NDggMjMuMzMzNCAxOS4wMDAzIDIzLjMzMzRDMTkuNTUyNiAyMy4zMzM0IDIwLjAwMDMgMjIuODg1NyAyMC4wMDAzIDIyLjMzMzRDMjAuMDAwMyAyMS43ODExIDE5LjU1MjYgMjEuMzMzNCAxOS4wMDAzIDIxLjMzMzRaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K"/>
                 </figure>}
                 <div className="content-text">
-                    <h1 aria-label="bot name">{brandingInfo.header.title.name}</h1>
+                    <h1 className="chat-header-title" aria-label="bot name">{hostInstance.config.botMessages.connecting}</h1>
                     <h2 aria-label="bot desc">{brandingInfo.header.sub_title.name}</h2>
                 </div>
             </div>
             <div className="actions-info">
-               { brandingInfo.header.buttons.help.show && <a title="Help" href="#" target="_blank" className="btn-action" aria-label="Help link kore ai products">
+               { brandingInfo.header.buttons.help.show && <a title="Help" href={brandingInfo.header.buttons.help.action.value} target="_blank" className="btn-action" aria-label="Help link kore ai products">
                     {/* <figure>
                         <img src={iconHelper.getIcon('help')} alt="back button" />
                     </figure> */}
@@ -111,12 +138,12 @@ export function ChatWidgetHeader(props: any) {
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M10.0002 1.11133C5.09102 1.11133 1.11133 5.09102 1.11133 10.0002C1.11133 14.9094 5.09102 18.8891 10.0002 18.8891C14.9094 18.8891 18.8891 14.9094 18.8891 10.0002C18.8891 5.09102 14.9094 1.11133 10.0002 1.11133ZM10.0002 2.4282C14.1821 2.4282 17.5722 5.81831 17.5722 10.0002C17.5722 14.1821 14.1821 17.5722 10.0002 17.5722C5.81831 17.5722 2.4282 14.1821 2.4282 10.0002C2.4282 5.81831 5.81831 2.4282 10.0002 2.4282Z" fill="#697586"/>
                     </svg>
                 </a> }
-                { brandingInfo.header.buttons.reconnect.show && <button title="Reconnect" className="btn-action btn-reconnect" type="button" aria-label="Reconnect Chat">
+                { brandingInfo.header.buttons.reconnect.show && <button title="Reconnect" id="kore-reconnect-btn" className="btn-action btn-reconnect" type="button" aria-label="Reconnect Chat">
                     <svg width="20" height="20" viewBox="0 0 14 14" fill="none">
                         <path d="M12.8333 5.83333C12.8333 5.83333 11.6638 4.23979 10.7136 3.28898C9.76343 2.33816 8.4504 1.75 7 1.75C4.1005 1.75 1.75 4.1005 1.75 7C1.75 9.89949 4.1005 12.25 7 12.25C9.39347 12.25 11.4129 10.6483 12.0448 8.45833M12.8333 5.83333V2.33333M12.8333 5.83333H9.33333" stroke="#697586" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button> }
-                { brandingInfo.header.buttons.live_agent.show && <button title="Agent Chat" className="btn-action" type="button" aria-label="Agent Chat">
+                { brandingInfo.header.buttons.live_agent.show && <button title="Agent Chat" className="btn-action" type="button" aria-label="Agent Chat" onClick={(event) =>handleHeaderIcon(brandingInfo.header.buttons.live_agent.action.value)}>
                     {/* <figure>
                             <img src={iconHelper.getIcon('support')} alt="back button" />
                         </figure> */}

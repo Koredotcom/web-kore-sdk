@@ -3,7 +3,7 @@
 ###### Preview
 
 
-![ratingTemplate](https://user-images.githubusercontent.com/58174664/148945067-332cdf1b-fd76-41e3-b2da-bb58b0bb0e5b.PNG)
+<img width="227" alt="stars" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/d8257f6f-c524-46a7-8251-edcfe38c1e88">
 
 
 ###### Message Payload
@@ -35,7 +35,8 @@ if (message.payload.view === "star") {
 print(JSON.stringify(message));
 ```
 
-<img width="302" alt="image" src="https://user-images.githubusercontent.com/53572776/195780280-7d35a0c9-d60e-4990-8001-1a85780fb457.png">
+<img width="229" alt="csat" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/ca65856d-dd38-4c99-b763-f39f4675d9b6">
+
 
 ###### Message Payload
 
@@ -64,7 +65,8 @@ for(var i=1;i<=5;i++){
 print(JSON.stringify(message));
 ```
 
-<img width="304" alt="image" src="https://user-images.githubusercontent.com/53572776/195780545-4fb8e286-c73b-4cfc-b200-b2481721fabe.png">
+<img width="225" alt="nps" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/9820b0d3-f6eb-4417-ae5e-de3348c3a6f5">
+
 
 ###### Message Payload
 
@@ -93,7 +95,7 @@ for(var i=0;i<=10;i++){
 }
 print(JSON.stringify(message)); 
 ```
-<img width="301" alt="image" src="https://user-images.githubusercontent.com/53572776/195780717-6181d60f-6258-4874-bf1b-d6b3558fea68.png">
+<img width="226" alt="like dislike" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/83828784-7641-4aae-8e18-cb74501930dd">
 
 ###### Message Payload
 

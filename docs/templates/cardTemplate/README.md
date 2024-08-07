@@ -2,7 +2,7 @@
 
 ###### Preview
 
-![cardTemplate](https://user-images.githubusercontent.com/53572776/180215673-4070a404-72c1-4de0-907e-df342633dad1.png)
+<img width="207" alt="card" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/7b060bf7-8c87-4788-bd33-c6b50ab03007">
 
 
 ###### Message Payload

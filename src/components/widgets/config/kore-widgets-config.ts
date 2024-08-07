@@ -1,5 +1,6 @@
 var botOptionsWiz:any = {};
 botOptionsWiz.logLevel = 'debug';
+// botOptionsWiz.koreAPIUrl = "https://platform.kore.ai";
 botOptionsWiz.koreAPIUrl = "https://bots.kore.ai";
 
 botOptionsWiz.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";

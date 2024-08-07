@@ -91,12 +91,12 @@ class GoogleSTT extends BaseSTT {
             }, 350)
         }
         }
-        else if (r.code === 403) {
+        else if (r?.code === 403 || r?.error?.code === 400) {
             this.gapiLoaded = false;
             if ($('.recordingMicrophone').is(':visible')) {
                 $('.recordingMicrophone').trigger('click');
             }
-            alert(r.message || 'Please provide valid Google speech API key');
+            alert(r.message || r.error.message || 'Please provide valid Google speech API key');
         }
     }
     stop() {

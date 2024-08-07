@@ -1,8 +1,5 @@
 ##  Quick Replies Welcome template
 
-###### Preview
-
-<img width="487" alt="Screenshot 2023-07-04 at 6 04 01 PM" src="https://github.com/Koredotcom/web-kore-sdk/assets/29255055/cb049c4f-9b42-4f32-98c8-9fb2222f2c12">
 
 
 ###### Message Payload

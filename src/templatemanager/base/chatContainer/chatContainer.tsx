@@ -13,25 +13,23 @@ export function ChatContainer(props: any) {
     const hostInstance = props.hostInstance;
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
     hostInstance.on('onBrandingUpdate', function (event: any) {
-        console.count('Branding Call');
-        console.log('Branding Data: ', event.brandingData);
         updateBrandingInfo({...event.brandingData})
     });
 
-    let chatContainerClass = 'chat-window-main-section minimize-chat';
+    let chatContainerClass = 'kore-chat-window-main-section minimize-chat';
     if (brandingInfo.chat_bubble.icon.size == 'medium') {
         chatContainerClass = chatContainerClass + ' avatar-medium-size';
     } else if (brandingInfo.chat_bubble.icon.size == 'large') {
         chatContainerClass = chatContainerClass + ' avatar-large-size';
     }
 
+    if (brandingInfo.general.widgetPanel) {
+        chatContainerClass = chatContainerClass + ' is-wigets-enabled';
+    }
+
     useEffect(() => {
-        hostInstance.on('onBrandingUpdate', function (event: any) {
-            console.count('Branding Call');
-            console.log('Branding Data: ', event.brandingData);
-            updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
-        });
-    }, [brandingInfo])
+        hostInstance.emit('renderComplete', { chatEle: hostInstance.chatEle });
+    });
 
     return (
         <div className={chatContainerClass} aria-label='chat-window-section'>

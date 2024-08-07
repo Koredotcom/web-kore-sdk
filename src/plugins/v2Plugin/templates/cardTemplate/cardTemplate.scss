@@ -1,0 +1,406 @@
+/* card template info start */
+
+.kore-chat-window .card-template .card-body .card-data {
+	/* border: 1px solid #85B7FE; */
+	border-radius: 0 0 8px 8px;
+}
+
+.kore-chat-window .card-template .card-body .card-title {
+	/* background: #E7F1FF; */
+	color: #07377F;
+	border-radius: 8px 8px 0px 0px;
+	/* border: 1px solid #85B7FE; */
+	border-bottom: 0;
+}
+
+
+/* card template info end */
+
+
+/* card template success start */
+
+.kore-chat-window .card-template.card-success .card-body .card-data {
+	border: 1px solid #93D3A2;
+}
+
+.kore-chat-window .card-template.card-success .card-body .card-title {
+	background: #EAF6EC;
+	color: #135423;
+	border-radius: 8px 8px 0px 0px;
+	border: 1px solid #93D3A2;
+	border-bottom: 0;
+}
+
+
+/* card template success end */
+
+
+/* card template card solid info start */
+
+
+/* .kore-chat-window .card-template .card-body .card-data{
+    border: 1px solid #0D6EFD;
+} */
+
+.kore-chat-window .card-template .card-body .card-title {
+	/* background: #0D6EFD; */
+	color: #FFFFFF;
+	border-radius: 8px 8px 0px 0px;
+	/* border: 1px solid #0D6EFD; */
+	border-bottom: 0;
+}
+
+
+/* card template card solid info end */
+
+
+/* card template card solid full info start */
+
+.kore-chat-window .card-template .card-body .card-title {
+	font-weight: 600;
+	font-size: 16px;
+	line-height: 20px;
+	color: #202124;
+	padding: 14px 14px 8px 14px;
+}
+
+.kore-chat-window .card-template .card-body {
+	background: #FFFFFF;
+	color: #202124;
+	border-radius: 10px;
+	/* box-shadow: 4px 4px 0px rgba(19, 84, 35, 0.5); */
+	border-bottom: 0;
+}
+
+
+/* card template card solid full info end */
+
+
+/* card template card img info start */
+
+.kore-chat-window .card-template.card-img-info .card-body {
+	border: 1px solid #E4E5E7;
+	box-shadow: 0px 1px 2px #bdc1c6;
+	border-radius: 8px;
+}
+
+.kore-chat-window .card-template.card-img-info .card-body .card-title-block {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	padding: 10px 10px 0 10px;
+}
+
+
+/* card template card img info end */
+
+
+/* card template card img overflowmenu info start */
+
+.kore-chat-window .card-template .card-body {
+	border: 1px solid #E4E5E7;
+	box-shadow: 0px 1px 2px #bdc1c6;
+	border-radius: 8px;
+	cursor: pointer;
+}
+
+.kore-chat-window .card-template .card-body .card-title-block {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	padding: 10px 10px 0 10px;
+	position: relative;
+}
+
+.kore-chat-window .card-template .card-body .card-title-block.left-border {
+	padding: 10px 10px !important;
+}
+
+.kore-chat-window .card-template .card-body .card-title-block.left-border .card-block {
+	border-radius: 4px !important;
+}
+
+.kore-chat-window .card-template .card-body .card-title-block .card-text-action {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+}
+
+.kore-chat-window .card-template .card-body .card-title-block .more-button-info {
+	list-style: none;
+	display: none;
+	position: absolute;
+	padding: 10px;
+	right: 10px;
+	min-width: 200px;
+	max-height: 200px;
+	box-shadow: 0px 4px 12px 2px rgba(32, 33, 36, 0.12);
+	border-radius: 5px;
+	background: #fff;
+	height: auto;
+	min-height: auto;
+	z-index: 99;
+}
+
+.kore-chat-window .card-template .card-body .card-title-block .more-button-info li {
+	margin: 0;
+}
+
+.kore-chat-window .card-template .card-body .card-title-block .more-button-info li .button_ {
+	margin: 5px 0;
+	float: right;
+	border: 0;
+	padding: 7px 20px;
+	background: #e7f1ff;
+	border-radius: 4px;
+	color: #020203;
+	font-weight: normal;
+	font-size: 14px;
+	line-height: 20px;
+	cursor: pointer;
+	width: 100%;
+}
+
+.kore-chat-window .card-template .card-body .card-title-block .more-button-info .close_btn {
+	cursor: pointer;
+	border: none;
+	outline: none;
+	position: static !important;
+	/* top: 5px; */
+	right: 22px;
+	background: #fff;
+	border-radius: 100%;
+	padding: 0;
+	width: 25px;
+	height: 25px;
+	text-align: center;
+	z-index: 2;
+	transition: 0.3s all ease;
+	float: right;
+}
+
+.kore-chat-window .card-template .card-body .card-title-block .more-button-info .close_btn:hover {
+	background: #DFE7F5;
+}
+
+
+/* .kore-chat-window .card-template .card-body .card-data{
+    padding: 20px 10px;
+} */
+
+.kore-chat-window .card-template .card-body .card-data-list {
+	/* display: flex; */
+	align-items: center;
+	justify-content: flex-start;
+}
+
+.kore-chat-window .card-template .card-body .card-data-list .card-block-text {
+	padding: 0 20px 0 0;
+	flex: 1;
+}
+
+.kore-chat-window .card-template .card-body .card-data-list .card-block-text .title-text {
+	font-weight: 600;
+	font-size: 16px;
+	line-height: 20px;
+	color: #202124;
+}
+
+.kore-chat-window .card-template .card-body .card-data-list .card-block-text .title-desc {
+	font-weight: normal;
+	font-size: 13px;
+	line-height: 20px;
+	color: #9AA0A6;
+}
+
+.kore-chat-window .card-template .card-body .card-data-btn.btn-info .card-btn {
+	background: #0D6EFD;
+	border: 1px solid #0D6EFD;
+	color: #fff;
+}
+
+.kore-chat-window .card-template .card-body-info {
+	width: 5px;
+	height: 100%;
+	background: #0D6EFD;
+	position: absolute;
+	border-radius: 10px;
+}
+
+.kore-chat-window .card-template .card-body .card-title-block .card-text-action .card-action-data {
+	color: #BDC1C6;
+	font-weight: normal;
+	font-size: 12px;
+	line-height: 20px;
+}
+
+.kore-chat-window .card-template .card-body .card-title-block .card-text-action .icon {
+	cursor: pointer;
+	margin-left: 5px;
+}
+
+
+/* card template card img overflowmenu info end */
+
+
+/* card template card simple data info start */
+
+.kore-chat-window .card-template.card-simple-data-info .card-body {
+	border: 1px solid #E4E5E7;
+	box-shadow: 0px 1px 2px #bdc1c6;
+	border-radius: 8px;
+}
+
+.kore-chat-window .card-template.card-simple-data-info .card-body .card-title-block {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	padding: 10px 10px;
+	position: relative;
+}
+
+.kore-chat-window .card-template.card-simple-data-info .card-body .card-title-block .card-block {
+	border-left: 5px solid #0d6efd;
+	border-radius: 4px;
+}
+
+
+/* card template card simple data info end */
+
+.kore-chat-window .card-template .card-body .card-data-btn .card-btn {
+	border-radius: 0px 0px 10px 10px;
+	width: 100%;
+	padding: 14px 0;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 17px;
+	cursor: pointer;
+}
+
+.kore-chat-window .card-template .card-body .card-title-block .card-block {
+	padding-left: 15px;
+	width: calc(100% - 29px);
+}
+
+.kore-chat-window .card-template .card-body .card-title-block .card-block .title-text {
+	font-weight: 600;
+	font-size: 16px;
+	line-height: 20px;
+	color: #202124;
+}
+
+.kore-chat-window .card-template .card-body .card-title-block .card-block .title-text.card-text-overflow {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	/* width: 176px; */
+	/* width: calc(100% - 190px); */
+	white-space: nowrap;
+	/* padding-right: 10px; */
+	padding-right: 110px;
+}
+
+.kore-chat-window .card-template .card-body .card-title-block .card-block .title-desc {
+	font-weight: normal;
+	font-size: 13px;
+	line-height: 20px;
+	color: #9AA0A6;
+}
+
+.kore-chat-window .card-template .card-body .card-title-block .card-block-img {
+	width: 40px;
+	height: 40px;
+	flex-shrink: 0;
+}
+
+.kore-chat-window .card-template .card-body .card-title-block .card-block-img .icon-text {
+	width: 40px;
+	height: 40px;
+	vertical-align: middle;
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: normal;
+	font-size: 12px;
+	background: #0D6EFD;
+	color: #FFFF;
+}
+
+.kore-chat-window .card-template .card-body .card-title-block .card-block-img.small {
+	width: 16px;
+	height: 16px;
+}
+
+.kore-chat-window .card-template .card-body .card-title-block .card-block-img.small img {
+	width: 16px;
+	height: 16px;
+}
+
+.kore-chat-window .card-template .card-body .card-title-block .card-block-img img {
+	vertical-align: middle;
+}
+
+.kore-chat-window .card-template .card-body .card-title-block .card-block-img.circle-img img {
+	border-radius: 100%;
+}
+
+.kore-chat-window .card-template .card-body .card-title {
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 20px;
+	padding: 14px 14px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.kore-chat-window .card-template  .card-data {
+	padding: 10px 15px;
+}
+
+.kore-chat-window .card-template .card-data .card-data-list .card-text {
+	color: #3C4043;
+	font-weight: 500;
+	font-size: 12px;
+	line-height: 19px;
+	display: flex;
+	align-items: flex-start;
+	position: relative;
+	margin: 5px 0;
+}
+
+.kore-chat-window .card-template .card-data .card-data-list .card-text.icon {
+	top: -16px;
+}
+
+.kore-chat-window .card-template .card-data .card-data-list .card-text .card-text-icon.if-icon-right .icon-img {
+	width: auto;
+	position: absolute;
+	right: 4px;
+}
+
+.kore-chat-window .card-template .card-data .card-data-list .card-text .card-text-icon {
+	width: 25px;
+	padding: 5px 10px 0 0;
+}
+
+.kore-chat-window .card-template .card-data .card-data-list .card-text .card-text-icon img {
+	vertical-align: middle;
+}
+
+.kore-chat-window .card-template .card-data .card-data-list .card-text .card-text-action {
+	position: absolute;
+	right: 0;
+	transform: rotate(180deg);
+}
+
+.kore-chat-window .card-template .card-data .card-data-list.card-display-flex {
+	display: flex;
+}
+
+.kore-chat-window .koreLargePreviewContent.card-template-modal {
+	width: 350px !important;
+}
+
+
+/* card template css ends here */

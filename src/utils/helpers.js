@@ -26,19 +26,42 @@ class KoreHelpers{
             var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
             return strTime;
         },
-        'formatAMPMDay': function (date) {
+        'formatAMPMDay': function (date, df, tf) {
+            var month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
             date = new Date(date);
             var hours = date.getHours();
+            var hours24 = hours;
             var minutes = date.getMinutes();
             // var seconds = date.getSeconds();
-            var date = date.getDate();
-            var day = new Date().getDate() == date ? 'Today' : new Date().getDate() - 1 == date ? 'Yesterday' : date ;
+            var dateCheck = date.getDate();
+            var day = (new Date().getDate() == dateCheck && date.getMonth() == new Date().getMonth()) ? 'Today' : (new Date().getDate() - 1 == dateCheck && date.getMonth() == new Date().getMonth()) ? 'Yesterday' : dateCheck ;
             var ampm = hours >= 12 ? 'pm' : 'am';
             hours = hours % 12;
             hours = hours ? hours : 12; // the hour '0' should be '12'
+            hours = hours < 10 ? '0' + hours : hours;
+            hours24 = hours24 < 10 ? '0' + hours24 : hours24;
             minutes = minutes < 10 ? '0' + minutes : minutes;
             // seconds = seconds < 10 ? '0' + seconds : seconds;
-            var strTime = hours + ':' + minutes + ' ' + ampm + ', ' + day;
+            var mon = month[date.getMonth()];
+            var year = date.getFullYear().toString();
+            var mon_digit = (date.getMonth()) + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+            var strTime;
+            var modified_date;
+            if (day == 'Today' || day == 'Yesterday') {
+                if (tf == '12') {
+                    strTime = hours + ':' + minutes + ' ' + ampm + ', ' + day;
+                } else {
+                    strTime = hours24 + ':' + minutes + ', ' + day;
+                }
+            } else {
+                day = day < 10 ? '0' + day : day;
+                modified_date = df == 'dd/mm/yyyy' ? day + '/' + mon_digit + '/' + year.substring(2,4) : df == 'mm/dd/yyyy' ? mon_digit + '/' + day + '/' + year.substring(2, 4) : mon + '/' + day + '/' + year;
+                if (tf == '12') {
+                    strTime = hours + ':' + minutes + ' ' + ampm + ', ' + modified_date;
+                } else {
+                    strTime = hours24 + ':' + minutes + ', ' + modified_date;
+                }
+            }
             return strTime;
         },
         'formatDate': function (date) {
@@ -537,6 +560,13 @@ class KoreHelpers{
             }
             val = txtArr.join('');
             return val;
+        },
+        'getInnerText': function(val){
+            if(val === ''){
+                return val;
+            }
+            var tempEle = $('<div>'+this.convertMDtoHTML(val,'bot')+'</div>')
+            return tempEle.text();
         }
     };
     static prototypes ={
@@ -606,6 +636,19 @@ class KoreHelpers{
           };
           const htmlTags = /[<>"']/g;
           return `${''+txtStr}`.replace(htmlTags, (match) => escapeTokens[match]);
+        },
+
+        "decodePattern": function (txtStr, version) {
+            if (version == 'v2') {
+                const htmlTags = /[<>"']/g;
+                return `${'' + txtStr}`.replace(htmlTags, (match) => escapeTokens[match]);
+            } else {
+                try {
+                    return txtStr.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+                } catch (e) {
+                    return txtStr;
+                }
+            }
         },
 
         "koreReplaceAll" :function (str,search, replacement) {

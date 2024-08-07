@@ -14,7 +14,8 @@
         border-radius: 4px!important;
         border: none!important;
         background: var(--global-white-bg)!important;
-        width: 82%!important;
+        // width: 82%!important;
+        width: 87%!important;
         flex-shrink: 0!important;
         max-height: 520px;
 
@@ -359,12 +360,13 @@
     .carousel-left-click {
         position: absolute;
         border-radius: 32px;
-        background: var(--global-white);
+        background: var(--global_white);
+        // background: var(--global-white);
         box-shadow: 0px 4px 12px 2px rgba(32, 33, 36, 0.12);
         display: flex;
         width: 32px;
         height: 32px;
-        padding: 8px;
+        padding: 10px;
         justify-content: center;
         align-items: center;
         gap: 10px;
@@ -373,7 +375,7 @@
         top: 53%;
         cursor: pointer;
         flex-shrink: 0;
-        z-index: 9;
+        z-index: 99999;
 
         svg {
             path {
@@ -395,7 +397,7 @@
     .list-carousel {
         display: flex;
         overflow: hidden;
-        gap: 10px;
+        gap: 20px;
 
         .list-carousel-item {
             display: flex;

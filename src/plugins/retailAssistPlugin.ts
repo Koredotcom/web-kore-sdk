@@ -152,7 +152,7 @@ class RetailAssistTemplatePlugin {
     let $ = me.hostInstance.$;
     $(me.hostInstance.chatEle).find('.avatar-variations-footer #helojohn').empty('');
     $(me.hostInstance.chatEle).find('.avatar-variations-footer #helojohn').html('Hello 😊')
-    $(me.hostInstance.chatEle).find('.avatar-variations-footer .help-text-content').html(this.helpers.convertMDtoHTML('I am your Virtual Shopping Assistant.\n How can I help you?', "bot"));
+    $(me.hostInstance.chatEle).find('.avatar-variations-footer .help-text-content').html(this.helpers.convertMDtoHTML('Hello 😊\n I am your Virtual Shopping Assistant.\n How can I help you?', "bot"));
   }
 
   appendCustomThings() {
@@ -169,7 +169,7 @@ class RetailAssistTemplatePlugin {
     // $(hostInstance.chatEle).insertBefore(button,'btn-action-close');
     $(button).insertBefore(hostInstance.chatEle.querySelector('.actions-info .btn-action-close'));
     $(hostInstance.chatEle.querySelector('.actions-info .retail-minimize-button')).off('click').on('click', (e: any) => {
-      hostInstance.chatEle.querySelector('.avatar-variations-footer').click();
+      hostInstance.chatEle.querySelector('.avatar-bg').click();
     })
 
   }

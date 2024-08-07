@@ -2,8 +2,8 @@
 
 ###### Preview
 
+<img width="228" alt="radio options" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/02b76d7e-c0a4-4510-af34-7683f29ec36a">
 
-![radioOptionPickerTemplate](https://user-images.githubusercontent.com/58174664/148944880-96791636-d8f5-480e-b9b4-1b496f0b237b.PNG)
 
 
 ###### Message Payload

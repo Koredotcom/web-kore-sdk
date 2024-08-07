@@ -54,6 +54,7 @@
 
     &.-in-range- {
       color: var(--adp-color-disabled-in-range);
+      background-color: var(--adp-background-color);
     }
 
     &.-current- {
@@ -85,12 +86,14 @@
   }
 
   &.-selected- {
-    color: var(--global-white);
+    color: var(--global_white);
+    // color: var(--global-white);
     border: none;
     background: var(--adp-cell-background-color-selected);
 
     &.-current- {
-      color: var(--global-white);
+      color: var(--global_white);
+      // color: var(--global-white);
       background: var(--adp-cell-background-color-selected);
     }
 

@@ -15,16 +15,24 @@ export function Menu(props: any) {
     }
 
     const handleButtonEvent = (e: any) => {
-        if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
-            hostInstance.sendMessage(e.value, { renderMsg: e.title });
-            closeMenu();
-        } else if (e.type == 'url' || e.type == 'web_url') {
-            let link = e.value;
-            if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
-                link = `http:////${link}`;
+        // if (!e.type) {
+            let text = e.value;
+            if (text.indexOf('http') >= 0 || text.indexOf('www') >= 0 || text.indexOf('https') >= 0) {
+                hostInstance.openExternalLink(text);
+            } else {
+                hostInstance.sendMessage(text, { renderMsg: e.title });
+                closeMenu(); 
             }
-            hostInstance.openExternalLink(link);
-        }
+        // } else if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
+        //     hostInstance.sendMessage(e.value, { renderMsg: e.title });
+        //     closeMenu();
+        // } else if (e.type == 'url' || e.type == 'web_url') {
+        //     let link = e.value;
+        //     if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
+        //         link = `http:////${link}`;
+        //     }
+        //     hostInstance.openExternalLink(link);
+        // }
     }
 
     useEffect(() => {

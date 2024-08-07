@@ -3,6 +3,7 @@
 @import './footer.scss';
 @import './variables.scss';
 @import './base64-images.scss';
+
 .kore-chat-window {
 	.pos-absolute {
 		position: absolute;
@@ -41,6 +42,22 @@
 	-moz-border-radius: 4px;
 	border-radius: 4px;
 	z-index: 1030;
+
+	&.chatwindow-cobrowse-open {
+		right: 28px !important;
+
+		&.minimize {
+			padding-right: 30px;
+
+			.minimized {
+				right: 30px;
+			}
+
+			.minimized-title {
+				margin-right: 50px;
+			}
+		}
+	}
 	.errorMsg {
 		position: absolute;
 		width: 300px;
@@ -117,6 +134,11 @@
 		background-repeat: no-repeat;
 		background-size: 100% 100%;
 		ul.chat-container {
+			&.scrolling{
+				.ps__rail-y{
+					display: none !important;
+				}
+			}
 			position: absolute;
 			bottom: 0;
 			right: 0;
@@ -147,7 +169,7 @@
 		text-decoration: none;
 	}
 	ul.chat-container {
-		li {
+		li:not(.ps__rail-y,.ps__rail-x) {
 			// &:first-child {
 			// 	margin-top: 10px;
 			// }
@@ -925,7 +947,7 @@
         .kore-chat-header {
             display: none;
         }
-        .kr-wiz-menu-chat {
+        .kr-v2-wiz-menu-chat {
             display: none !important;
         }
         .minimized-title {

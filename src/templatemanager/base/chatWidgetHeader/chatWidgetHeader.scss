@@ -24,6 +24,14 @@
                 justify-content: center;
                 margin: 0 0 12px 0;                
             }
+            .content-text{
+                h1{
+                    text-align: center;
+                }
+                h2{
+                    text-align: center;
+                }
+            }
         }
         &.transparent-style{
             background: rgba(255, 255, 255, 0.7);
@@ -81,6 +89,9 @@
                         fill: none;
                         stroke: var(--chat-widget-header-bg-large-actions-color);
                     }
+                }
+                &.btn-reconnect[disabled]{
+                    opacity: 0.5;
                 }
             }
         }
@@ -213,6 +224,9 @@
                     fill: none;
                     stroke: var(--chat-widget-header-actions-color);
                 }
+            }
+            &.btn-reconnect[disabled]{
+                opacity: 0.5;
             }
         }
     }

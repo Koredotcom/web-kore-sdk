@@ -120,7 +120,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     H = a(/\${[\w\W]*}/gm),
     z = a(/^data-[\-\w.\u00B7-\uFFFF]/),
     B = a(/^aria-[\-\w]+$/),
-    W = a(/^(?:(?:(?:f|ht)tps?|mailto|tel|callto|sms|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i),
+    W = a(/^(?:(?:(?:f|ht)tps?|mailto|tel|callto|sms|cid|xmpp|Notes|notes):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i),
     G = a(/^(?:\w+script|data):/i),
     j = a(/[\u0000-\u0020\u00A0\u1680\u180E\u2000-\u2029\u205F\u3000]/g),
     q = a(/^html$/i);

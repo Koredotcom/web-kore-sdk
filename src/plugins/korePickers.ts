@@ -1,8 +1,8 @@
-import DatePickerTemplate from '../templatemanager/templates/datePicker/datePicker';
-import DateRangePickerTemplate from '../templatemanager/templates/dateRangePicker/dateRangePicker';
-import ClockPickerTemplate from '../templatemanager/templates/clockPicker/clockPicker';
-import RadioOptionPickerTemplate from '../templatemanager/templates/radioOptionPicker/radioOptionPicker';
-import TaskPickerTemplate from '../templatemanager/templates/taskPickerTemplate/taskPickerTemplate';
+import DatePickerTemplate from './v2Plugin/templates/datePicker/datePicker';
+import DateRangePickerTemplate from './v2Plugin/templates/dateRangePicker/dateRangePicker';
+import ClockPickerTemplate from './v2Plugin/templates/clockPicker/clockPicker';
+import RadioOptionPickerTemplate from './v2Plugin/templates/radioOptionPicker/radioOptionPicker';
+import TaskPickerTemplate from './v2Plugin/templates/taskPickerTemplate/taskPickerTemplate';
 /**
  * KorePicker plugin classs
  *

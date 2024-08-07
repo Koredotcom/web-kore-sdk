@@ -2,7 +2,8 @@
 
 ###### Preview
 
-![bar-chart](https://user-images.githubusercontent.com/58174664/148940646-06716a68-ac79-47d1-b3b9-8bd2084c8e0e.PNG)
+<img width="242" alt="bar chart" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/4fa4b889-29d7-4632-8e96-7cde4b733a9d">
+
 
 
 ###### Message Payload

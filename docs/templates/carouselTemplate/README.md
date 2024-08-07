@@ -2,7 +2,7 @@
 
 ###### Preview
 
-![carouselTemplate](https://user-images.githubusercontent.com/58174664/148941175-97f9203e-dcb8-456b-bd6d-0ce181fc933e.PNG)
+<img width="240" alt="carousel" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/a357bdba-3043-4073-97d8-8d6de032cb4e">
 
 
 ###### Message Payload

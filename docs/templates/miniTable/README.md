@@ -3,7 +3,7 @@
 ###### Preview
 
 
-![miniTableTemplate](https://user-images.githubusercontent.com/58174664/148944198-5dc8ccd0-9985-4a60-a86d-fc2078ca3970.PNG)
+<img width="224" alt="mini table" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/74ca8a45-e3e7-4f29-8288-171ae6dce29b">
 
 
 
