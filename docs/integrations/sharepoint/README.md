@@ -8,7 +8,7 @@ By developing the [client web part](https://learn.microsoft.com/en-us/sharepoint
 > [!NOTE]
 > It is framework-agnostic, it can be used with any JavaScript framework – React, Angular, Knockout and more. Here we are using React for creating web part. You can use any framework or library according to your convenience.
 
-1. Create a web part using Sharepoint Framework using React by follwoing the instructions given [here](https://learn.microsoft.com/en-us/sharepoint/dev/spfx/web-parts/get-started/build-a-hello-world-web-part).
+1. Create a web part using Sharepoint Framework using React by follwoing the instructions given [here](https://learn.microsoft.com/en-us/sharepoint/dev/spfx/set-up-your-development-environment).
 
 
    <img width="920" alt="react code screenshot" src="https://github.com/user-attachments/assets/b33658eb-e7b6-4ced-8207-a9c5d8cead74">
