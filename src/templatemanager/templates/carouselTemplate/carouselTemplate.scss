@@ -123,7 +123,7 @@
 
 .kore-chat-window .purejscarousel-btn.purejscarousel-btn-prev.hideNow,
 .kore-chat-window .purejscarousel-btn.purejscarousel-btn-next.hideNow {
-    display: none;
+    display: none !important;
 }
 
 .kore-chat-window .purejscarousel-btn.purejscarousel-btn-next {
