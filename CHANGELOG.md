@@ -1,3 +1,14 @@
+### 10.5.1
+- SDK Release Aug 10, 2024
+* Features
+  * added new checklist template. Please find the relevant JSON and screenshot [here](https://github.com/Koredotcom/web-kore-sdk/tree/v2/dev/docs/templates/checkListTemplate)
+  * added documentation for [SharePoint integration](https://github.com/Koredotcom/web-kore-sdk/tree/v2/dev/docs/integrations/sharepoint)
+
+* Bug fixes
+  * carousel template buttons hide on start and end slides
+  * agent desktop cobrowse iceServers changed
+  * solutions listview template issue fix
+
 ### 10.5.0
 - SDK Release July 27, 2024
 * Bug fixes
