@@ -322,9 +322,15 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-starte
 	// }		
 # Release History
 ```
+v10.5.1 [Minor] on 10-Aug-2024: Master branch
+        Features
+                1.Added new checklist template. Please find the relevant JSON and screenshot in the link -> https://github.com/Koredotcom/web-kore-sdk/tree/v2/dev/docs/templates/checkListTemplate
+        Bugfixes
+                1.Agent desktop cobrowse iceServers changed & incresed packet limit
+
 v10.5.0 [Minor] on 27-July-2024: Master branch
         Bugfixes
-                1. WCAG issues fix for attachment cancel button and header controls
+                1.WCAG issues fix for attachment cancel button and header controls
  
 v10.4.1 [Minor] on 13-July-2024: Master branch
         Features
