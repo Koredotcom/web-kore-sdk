@@ -3065,7 +3065,7 @@
                 _chatContainer.animate({
                     scrollTop: _chatContainer.prop("scrollHeight")
                 }, 100);
-                if (msgData.type === "bot_response" && me.isTTSOn && me.config.isTTSEnabled && !me.minimized && !me.historyLoading) {
+                if (msgData.type === "bot_response" && me.isTTSOn && me.config.isTTSEnabled && !me.minimized && !me.historyLoading && !msgData.fromHistorySync) {
                     if(msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type === "live_agent" && msgData.message[0].component.payload.text){
 						_txtToSpeak = msgData.message[0].component.payload.text;
 					} else if (msgData.message[0] && msgData.message[0].component && typeof msgData.message[0].component != 'object') { // agent transfer waiting message speaking
