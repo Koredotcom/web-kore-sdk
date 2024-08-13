@@ -104,7 +104,7 @@
             flex-shrink: 0;
             width: 64px;
             height: 64px;
-            border: 2px solid var(--gloabl-border-color);
+            // border: 2px solid var(--gloabl-border-color);
             border-radius: 100%;
 
             .checklist-progress {
@@ -115,6 +115,16 @@
                 position: relative;
                 width: 64px;
                 flex-shrink: 0;
+                &::before {
+                    background-image: conic-gradient(transparent var(--percentage), var(--gloabl-bg-secondary) var(--percentage));
+                    border-radius: 50%;
+                    content: "";
+                    height: 64px;
+                    left: 0;
+                    position: absolute;
+                    width: 64px;
+                    filter: brightness(120%);
+                }  
                 .checklist-percentage {
                     --inner-size: calc(64px - 3 * 5px);
                     margin: 0;
@@ -135,30 +145,18 @@
                     font-weight: 900;
                     font-size: 12px;
                     line-height: 19px;
-                    background: #fff;
+                    background: var(--global-white-bg);
+                    &::after{
+                        -webkit-text-fill-color: transparent;
+                        background-clip: text;
+                        background-image: linear-gradient(to right, var(--text-colors));
+                        background-position: var(--percentage);
+                        background-size: 100000%;
+                        /* content: counter(value) '%'; */
+                        counter-reset: value calc(0);
+                   }
                 }
-                
-                .checklist-percentage:after {
-                    -webkit-text-fill-color: transparent;
-                    background-clip: text;
-                    background-image: linear-gradient(to right, var(--text-colors));
-                    background-position: var(--percentage);
-                    background-size: 100000%;
-                    /* content: counter(value) '%'; */
-                    counter-reset: value calc(0);
-                }    
-            }
-            
-            .checklist-progress:before {
-                background-image: conic-gradient(transparent var(--percentage), var(--global-theme-color) var(--percentage));
-                border-radius: 50%;
-                content: "";
-                height: 64px;
-                left: 0;
-                position: absolute;
-                width: 64px;
-                filter: brightness(120%);
-            }            
+            }        
         }
     }
     .more-details-status-type{
@@ -174,50 +172,53 @@
             gap: 4px;
             align-self: stretch;
             border-bottom: 1px solid var(--gloabl-border-color);
-            &:last-child{
-                border: 0;
+            h2{
+                color: var(--gloabl-text-color);
+                font-size: 14px;
+                font-weight: 600;
+                line-height: normal;
+                width: 100%;
             }
             .status-heading{
                 display: flex;
                 align-items: center;
                 width: 100%;
-                h2{
+                gap: 8px;
+                h3{
                     color: var(--gloabl-text-color);
-                    font-size: 14px;
-                    font-weight: 600;
-                    line-height: normal;
-                    width: 100%;
+                    font-size: 12px;
+                    font-weight: 500;
+                    line-height: 18px;
+                    min-width: 75px;
                 }
                 .status-info{
-                    flex-shrink: 0;
                     display: flex;
                     align-items: center;
-                    padding: 2px 10px;
-                    gap: 6px;
-                    border-radius: 24px;
-                    background: var(--Success-50, #F0FDF4);
+                    gap: 4px;
                     color: var(--gloabl-text-color);
                     text-align: center;
                     font-size: 12px;
                     font-weight: 500;
                     line-height: 18px;
-                    &.pending{
-                        background: var(--Warning-50, #FFFAEB);
+                    figure{
+                        line-height: 0;
                     }
-                    svg{
-                        path{
-                        //    fill: #22C55E;
-                        }
+                    span{
+                        color: var(--gloabl-text-color);
+                        font-size: 12px;
+                        font-weight: 400;
+                        line-height: normal;
                     }
                 }
-            }
-            p{
-                color: var(--gloabl-text-color);
-                font-size: 12px;
-                font-weight: 400;
-                line-height: normal;
-                margin: 0;
-                width: 100%;
+                p{
+                    color: var(--gloabl-text-color);
+                    opacity: 0.6;
+                    font-size: 12px;
+                    font-weight: 400;
+                    line-height: normal;
+                    margin: 0;
+                    width: 100%;
+                }
             }
         }
     }

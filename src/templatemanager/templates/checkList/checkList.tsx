@@ -118,40 +118,52 @@ export function CheckList(props: any) {
                     </div>
                     <div className="more-details-status-type">
                         <div className="details-card-status">
+                            <h2>Books</h2>
                             <div className="status-heading">
-                                <h2>Books</h2>
+                                <h3>Status:</h3>
                                 <div className="status-info">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8.00039 13.6004C11.0932 13.6004 13.6004 11.0932 13.6004 8.00039C13.6004 4.9076 11.0932 2.40039 8.00039 2.40039C4.9076 2.40039 2.40039 4.9076 2.40039 8.00039C2.40039 11.0932 4.9076 13.6004 8.00039 13.6004ZM10.5954 7.09537C10.8687 6.822 10.8687 6.37878 10.5954 6.10542C10.322 5.83205 9.87878 5.83205 9.60542 6.10542L7.30039 8.41044L6.39537 7.50542C6.122 7.23205 5.67878 7.23205 5.40542 7.50542C5.13205 7.77878 5.13205 8.222 5.40542 8.49537L6.80542 9.89537C7.07878 10.1687 7.522 10.1687 7.79537 9.89537L10.5954 7.09537Z" fill="#22C55E"/>
-                                    </svg>
+                                    <figure>
+                                        <img alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9ImNoZWNrLWNpcmNsZSIgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzE1MjQxXzM4NzI2KSI+CjxwYXRoIGlkPSJJY29uIiBkPSJNNS4wMDA2NSA3Ljk5OTY3TDcuMDAwNjUgOS45OTk2N0wxMS4wMDA3IDUuOTk5NjdNMTQuNjY3MyA3Ljk5OTY3QzE0LjY2NzMgMTEuNjgxNiAxMS42ODI2IDE0LjY2NjMgOC4wMDA2NSAxNC42NjYzQzQuMzE4NzUgMTQuNjY2MyAxLjMzMzk4IDExLjY4MTYgMS4zMzM5OCA3Ljk5OTY3QzEuMzMzOTggNC4zMTc3OCA0LjMxODc1IDEuMzMzMDEgOC4wMDA2NSAxLjMzMzAxQzExLjY4MjYgMS4zMzMwMSAxNC42NjczIDQuMzE3NzggMTQuNjY3MyA3Ljk5OTY3WiIgc3Ryb2tlPSIjNjY3MDg1IiBzdHJva2Utd2lkdGg9IjEuMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfMTUyNDFfMzg3MjYiPgo8cmVjdCB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIGZpbGw9IndoaXRlIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==" />
+                                    </figure>
                                     <span>Completed</span>
                                 </div>
                             </div>
-                            <p>Completed On: 30/08/2024</p>
+                            <div className="status-heading">
+                                <h3>Updated:</h3>
+                                <p className="status-info-desc">July 30, 2024</p>
+                            </div>
                         </div>
                         <div className="details-card-status">
+                            <h2>Books</h2>
                             <div className="status-heading">
-                                <h2>Mentor</h2>
+                                <h3>Status:</h3>
                                 <div className="status-info">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8.00039 13.6004C11.0932 13.6004 13.6004 11.0932 13.6004 8.00039C13.6004 4.9076 11.0932 2.40039 8.00039 2.40039C4.9076 2.40039 2.40039 4.9076 2.40039 8.00039C2.40039 11.0932 4.9076 13.6004 8.00039 13.6004ZM10.5954 7.09537C10.8687 6.822 10.8687 6.37878 10.5954 6.10542C10.322 5.83205 9.87878 5.83205 9.60542 6.10542L7.30039 8.41044L6.39537 7.50542C6.122 7.23205 5.67878 7.23205 5.40542 7.50542C5.13205 7.77878 5.13205 8.222 5.40542 8.49537L6.80542 9.89537C7.07878 10.1687 7.522 10.1687 7.79537 9.89537L10.5954 7.09537Z" fill="#22C55E"/>
-                                    </svg>
-                                    <span>Completed</span>
+                                    <figure>
+                                        <img alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9ImNoZWNrLWNpcmNsZSIgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzE1MjQxXzM4NzI2KSI+CjxwYXRoIGlkPSJJY29uIiBkPSJNNS4wMDA2NSA3Ljk5OTY3TDcuMDAwNjUgOS45OTk2N0wxMS4wMDA3IDUuOTk5NjdNMTQuNjY3MyA3Ljk5OTY3QzE0LjY2NzMgMTEuNjgxNiAxMS42ODI2IDE0LjY2NjMgOC4wMDA2NSAxNC42NjYzQzQuMzE4NzUgMTQuNjY2MyAxLjMzMzk4IDExLjY4MTYgMS4zMzM5OCA3Ljk5OTY3QzEuMzMzOTggNC4zMTc3OCA0LjMxODc1IDEuMzMzMDEgOC4wMDA2NSAxLjMzMzAxQzExLjY4MjYgMS4zMzMwMSAxNC42NjczIDQuMzE3NzggMTQuNjY3MyA3Ljk5OTY3WiIgc3Ryb2tlPSIjNjY3MDg1IiBzdHJva2Utd2lkdGg9IjEuMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfMTUyNDFfMzg3MjYiPgo8cmVjdCB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIGZpbGw9IndoaXRlIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==" />
+                                    </figure>
+                                    <span>Stopped</span>
                                 </div>
                             </div>
-                            <p>Completed On: 30/08/2024</p>
+                            <div className="status-heading">
+                                <h3>Updated:</h3>
+                                <p className="status-info-desc">July 30, 2024</p>
+                            </div>
                         </div>
                         <div className="details-card-status">
+                            <h2>Books</h2>
                             <div className="status-heading">
-                                <h2>Article</h2>
-                                <div className="status-info pending">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                        <path d="M8.00039 5.5115V8.00039L9.86706 9.86706M13.6004 8.00039C13.6004 11.0932 11.0932 13.6004 8.00039 13.6004C4.9076 13.6004 2.40039 11.0932 2.40039 8.00039C2.40039 4.9076 4.9076 2.40039 8.00039 2.40039C11.0932 2.40039 13.6004 4.9076 13.6004 8.00039Z" stroke="#F79009" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                    <span>Pending...</span>
+                                <h3>Status:</h3>
+                                <div className="status-info">
+                                    <figure>
+                                        <img alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9ImNoZWNrLWNpcmNsZSIgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzE1MjQxXzM4NzI2KSI+CjxwYXRoIGlkPSJJY29uIiBkPSJNNS4wMDA2NSA3Ljk5OTY3TDcuMDAwNjUgOS45OTk2N0wxMS4wMDA3IDUuOTk5NjdNMTQuNjY3MyA3Ljk5OTY3QzE0LjY2NzMgMTEuNjgxNiAxMS42ODI2IDE0LjY2NjMgOC4wMDA2NSAxNC42NjYzQzQuMzE4NzUgMTQuNjY2MyAxLjMzMzk4IDExLjY4MTYgMS4zMzM5OCA3Ljk5OTY3QzEuMzMzOTggNC4zMTc3OCA0LjMxODc1IDEuMzMzMDEgOC4wMDA2NSAxLjMzMzAxQzExLjY4MjYgMS4zMzMwMSAxNC42NjczIDQuMzE3NzggMTQuNjY3MyA3Ljk5OTY3WiIgc3Ryb2tlPSIjNjY3MDg1IiBzdHJva2Utd2lkdGg9IjEuMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfMTUyNDFfMzg3MjYiPgo8cmVjdCB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIGZpbGw9IndoaXRlIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==" />
+                                    </figure>
+                                    <span>Inprogress</span>
                                 </div>
                             </div>
-                            <p>Updated On: 30/08/2024</p>
+                            <div className="status-heading">
+                                <h3>Updated:</h3>
+                                <p className="status-info-desc">July 30, 2024</p>
+                            </div>
                         </div>
                     </div>
                     <button className="show-more-btn hide-show-details">Details</button>
