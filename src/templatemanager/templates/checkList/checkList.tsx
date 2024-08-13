@@ -1,7 +1,7 @@
 import BaseChatTemplate from '../baseChatTemplate';
 import './checkList.scss';
 import { h, Fragment } from 'preact';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { Message } from '../message/message';
 
 export function CheckList(props: any) {
@@ -45,9 +45,51 @@ export function CheckList(props: any) {
     }
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'checkListTemplate') {
+        useEffect(() => {
+            const ele = hostInstance.chatEle.querySelector(`#msg${msgData.messageId}`)
+            function bindPercentages(ele: any, msgData: any) {
+                if (msgData && msgData.message[0].component.payload.elements.length) {
+                    for (var i = 0; i < msgData.message[0].component.payload.elements.length; i++) {
+                        var element = msgData.message[0].component.payload.elements[i];
+                        var id = i;
+                        var HTMLElement = ele.querySelector('#c' + id);
+                        var progressStyles = element.progressStyles;
+                        var percentage = parseInt(element.taskProgress);
+                        if (HTMLElement && progressStyles) {
+                            for (var key in progressStyles) {
+                                if (progressStyles.hasOwnProperty(key)) {
+                                    if (key === 'background') {
+                                        var style = document.createElement('style');
+                                        style.textContent = `
+                                            #progress${id}:before {
+                                                background-image: conic-gradient(transparent ${percentage}%, ${progressStyles[key]} ${percentage}%);
+                                            }
+                                        `;
+                                        HTMLElement.querySelector('.checklist-progress#progress' + id).appendChild(style);
+                                    } else if (key === 'fillColor') {
+                                        HTMLElement.querySelector('.checklist-progress').style.setProperty('--percentage', (percentage * 1) + '%');
+                                        var image = `conic-gradient(${progressStyles[key]} 100%, ${progressStyles[key]} 100%, ${progressStyles[key]} 100%)`;
+                                        HTMLElement.querySelector('.checklist-progress').style.backgroundImage = image;
+                                    } else if (key === 'textcolor') {
+                                        HTMLElement.querySelector('.checklist-percentage').style.color = progressStyles[key];
+                                    }
+                                }
+                            }
+                        } else {
+                            if (HTMLElement) {
+                                HTMLElement.querySelector('.checklist-progress').style.setProperty('--percentage', (percentage * 1) + '%');
+                            }
+                        }
+                    }
+                }
+            }
+            
+            bindPercentages(ele, msgData);
+        }, []);
+
         return (
-            <div className="checklist-temp-wrapper">
-                <button className="checklist-card">
+            <div className="checklist-temp-wrapper" id={`msg${msgData.messageId}`}>
+                <button className="checklist-card" id="c1">
                     <div className="manage-card-block">
                         <div className="left-block-details">
                             <h1>Manager Onboarding Tasks</h1>
@@ -66,7 +108,13 @@ export function CheckList(props: any) {
                                 </div>
                             </div>
                         </div>
-                        <div className="progress-circle-block"></div>
+                        <div className="progress-circle-block">
+                            <div class="checklist-progress" id="progress1">
+                                <div class="checklist-percentage">
+                                    89 %
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div className="more-details-status-type">
                         <div className="details-card-status">

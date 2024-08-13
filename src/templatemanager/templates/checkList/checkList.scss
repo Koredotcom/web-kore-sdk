@@ -106,6 +106,58 @@
             height: 64px;
             border: 2px solid var(--gloabl-border-color);
             border-radius: 100%;
+
+            .checklist-progress {
+                --percentage: calc(0 * 1%);
+                background-image: conic-gradient(#009696 100%, #009696 100%, #009696 100%);
+                border-radius: 50%;
+                height: 64px;
+                position: relative;
+                width: 64px;
+                flex-shrink: 0;
+                .checklist-percentage {
+                    --inner-size: calc(64px - 3 * 5px);
+                    margin: 0;
+                    padding: 0;
+                    place-items: center;
+                    text-align: center;
+                    border-radius: 50%;
+                    font-size: calc(var(--inner-size) / 3);
+                    height: var(--inner-size);
+                    left: 50%;
+                    position: absolute;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                    width: var(--inner-size);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 900;
+                    font-size: 12px;
+                    line-height: 19px;
+                    background: #fff;
+                }
+                
+                .checklist-percentage:after {
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                    background-image: linear-gradient(to right, var(--text-colors));
+                    background-position: var(--percentage);
+                    background-size: 100000%;
+                    /* content: counter(value) '%'; */
+                    counter-reset: value calc(0);
+                }    
+            }
+            
+            .checklist-progress:before {
+                background-image: conic-gradient(transparent var(--percentage), #BFE5E5 var(--percentage));
+                border-radius: 50%;
+                content: "";
+                height: 64px;
+                left: 0;
+                position: absolute;
+                width: 64px;
+            }            
         }
     }
     .more-details-status-type{
