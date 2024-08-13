@@ -1,65 +1,101 @@
 import BaseChatTemplate from '../baseChatTemplate';
 import './checkList.scss';
 import { h, Fragment } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
-import { Message } from '../message/message';
+import { useEffect } from 'preact/hooks';
+import { getHTML } from '../../base/domManager';
+
+export function CheckListViewMore(props: any) {
+    const msgData = props.msgData;
+    const hostInstance = props.hostInstance;
+    const msgObj = {
+        msgData,
+        hostInstance,
+        viewMore: true
+    }
+
+    const closeMenu = () => {
+        hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');
+        setTimeout(() => {
+            hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
+        }, 150);
+    }
+
+
+    return (
+        <div className="menu-wrapper-data-actions">
+            <div className="actions-slider-header-menu">
+                <h1>{msgData.message[0].component.payload.heading}</h1>
+                <button className="menu-close" role="contentinfo" aria-label="close" onClick={closeMenu}>
+                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                        <path d="M10.8838 10.0001L16.0669 4.81694C16.311 4.57286 16.311 4.17714 16.0669 3.93306C15.8229 3.68898 15.4271 3.68898 15.1831 3.93306L9.99988 9.11624L4.81694 3.93352C4.57286 3.68944 4.17713 3.68945 3.93306 3.93354C3.68899 4.17762 3.689 4.57335 3.93308 4.81742L9.116 10.0001L3.93306 15.1831C3.68898 15.4272 3.68898 15.8229 3.93306 16.067C4.17714 16.311 4.57286 16.311 4.81694 16.067L9.9999 10.884L15.1831 16.067C15.4272 16.311 15.8229 16.311 16.067 16.0669C16.311 15.8229 16.311 15.4271 16.0669 15.1831L10.8838 10.0001Z" fill="#697586" />
+                    </svg>
+                </button>
+            </div>
+            <div className="iner-data-scroll-wraper">
+                <CheckList {...msgObj} />
+            </div>
+        </div>
+    )
+}
 
 export function CheckList(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
+    const viewMore = props?.viewMore || false;
 
-    const onSelectAll = () => {
-        const selectedAll = hostInstance.chatEle.querySelector(`.checkbox-selectall-${msgData.messageId}`);
-        const eles = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${msgData.messageId}`);
-        if (selectedAll && selectedAll.checked) {
-            eles.forEach((ele: any) => {
-                ele.checked = true;
-            });
-        } else {
-            eles.forEach((ele: any) => {
-                ele.checked = false;
-            });
+    const handleEvent = ($event: any, e: any) => {
+        $event?.stopPropagation();
+        if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
+            hostInstance.sendMessage(e.payload?.toString(), { renderMsg: e.title });
+        } else if (e.type == 'url' || e.type == 'web_url') {
+            let link = e.url;
+            if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
+                link = `http:////${link}`;
+            }
+            hostInstance.openExternalLink(link);
+        }
+        if (viewMore) {
+            closeMenu();
         }
     }
 
-    const onItemSelect = () => {
-        const selectedAll = hostInstance.chatEle.querySelector(`.checkbox-selectall-${msgData.messageId}`);
-        const eles = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${msgData.messageId}`);
-        let allChecked = true;
-        eles.forEach((ele: any) => {
-            if (!ele.checked) allChecked = false;
-        });
-        if (allChecked) selectedAll.checked = true
-        else selectedAll.checked = false
+    const toggleItem = (event: any, msgId: any, i: any, viewMore: any) => {
+        if (event.currentTarget.textContent == 'Details') {
+            event.currentTarget.textContent = 'Hide Details';
+        } else {
+            event.currentTarget.textContent = 'Details';
+        }
+        const ele = hostInstance.chatEle.querySelector(`#item-${msgId}-${i}-${viewMore}`);
+        ele.classList.toggle('hide');
     }
 
-    const onSubmit = () => {
-        let selectedValues: any= [];
-        let selectedText: any = '';
-        const selectedItems = hostInstance.chatEle.querySelectorAll(`.checkbox-input-${msgData.messageId}:checked`);
-        selectedItems.forEach((ele: any) => {
-            selectedValues.push(ele.value);
-            selectedText = selectedText + ' ' + ele.getAttribute('data-title');
-        });
-        hostInstance.sendMessage(selectedValues.toString(), {renderMsg: selectedText});
+    const handleViewMore = () => {
+        hostInstance.bottomSliderAction('', getHTML(CheckListViewMore, msgData, hostInstance));
+    }
+
+    const closeMenu = () => {
+        hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');
+        setTimeout(() => {
+            hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').remove('.chat-actions-bottom-wraper');
+        }, 150);
     }
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'checkListTemplate') {
         useEffect(() => {
-            const ele = hostInstance.chatEle.querySelector(`#msg${msgData.messageId}`)
+            const ele = hostInstance.chatEle.querySelector(`.checklist-${msgData.messageId}-${viewMore}`)
             function bindPercentages(ele: any, msgData: any) {
                 if (msgData && msgData.message[0].component.payload.elements.length) {
-                    for (var i = 0; i < msgData.message[0].component.payload.elements.length; i++) {
-                        var element = msgData.message[0].component.payload.elements[i];
-                        var id = i;
-                        var HTMLElement = ele.querySelector('#c' + id);
-                        var progressStyles = element.progressStyles;
-                        var percentage = parseInt(element.taskProgress);
+                    for (let i = 0; i < msgData.message[0].component.payload.elements.length; i++) {
+                        let element = msgData.message[0].component.payload.elements[i];
+                        let id = i;
+                        let HTMLElement = ele.querySelector(`#ci-${msgData.messageId}-${id}-${viewMore}`);
+                        let progressStyles = element.progressStyles;
+                        let percentage = parseInt(element.taskProgress);
                         if (HTMLElement && progressStyles) {
-                            for (var key in progressStyles) {
+                            for (let key in progressStyles) {
                                 if (progressStyles.hasOwnProperty(key)) {
                                     if (key === 'background') {
-                                        var style = document.createElement('style');
+                                        let style = document.createElement('style');
                                         style.textContent = `
                                             #progress${id}:before {
                                                 background-image: conic-gradient(transparent ${percentage}%, ${progressStyles[key]} ${percentage}%);
@@ -68,7 +104,7 @@ export function CheckList(props: any) {
                                         HTMLElement.querySelector('.checklist-progress#progress' + id).appendChild(style);
                                     } else if (key === 'fillColor') {
                                         HTMLElement.querySelector('.checklist-progress').style.setProperty('--percentage', (percentage * 1) + '%');
-                                        var image = `conic-gradient(${progressStyles[key]} 100%, ${progressStyles[key]} 100%, ${progressStyles[key]} 100%)`;
+                                        let image = `conic-gradient(${progressStyles[key]} 100%, ${progressStyles[key]} 100%, ${progressStyles[key]} 100%)`;
                                         HTMLElement.querySelector('.checklist-progress').style.backgroundImage = image;
                                     } else if (key === 'textcolor') {
                                         HTMLElement.querySelector('.checklist-percentage').style.color = progressStyles[key];
@@ -83,145 +119,64 @@ export function CheckList(props: any) {
                     }
                 }
             }
-            
+
             bindPercentages(ele, msgData);
         }, []);
 
         return (
-            <div className="checklist-temp-wrapper" id={`msg${msgData.messageId}`}>
-                <button className="checklist-card" id="c1">
-                    <div className="manage-card-block">
-                        <div className="left-block-details">
-                            <h1>Manager Onboarding Tasks</h1>
-                            <div className="status-data-block">
-                                <div className="status-data">
-                                    <h2>Total Tasks</h2>
-                                    <p>100</p>
+            <div className={`checklist-temp-wrapper i${msgData.messageId} checklist-${msgData.messageId}-${viewMore}`}>
+                {msgData.message[0].component.payload.elements.map((ele: any, ind: any) => (
+                    ((!viewMore && ((msgData.message[0].component.payload.showMore && (ind < msgData.message[0].component.payload.displayLimit)) || !msgData.message[0].component.payload.showMore) || viewMore) &&
+                        <button className="checklist-card" id={`ci-${msgData.messageId}-${ind}-${viewMore}`}>
+                            <div className="manage-card-block" onClick={(event) => handleEvent(event, ele.default_action)}>
+                                <div className="left-block-details">
+                                    {ele.title && <h1>{ele.title}</h1>}
+                                    {ele.subInformation && ele.subInformation.length > 0 && <div className="status-data-block">
+                                        {ele.subInformation.map((item: any) => (
+                                            <div className="status-data">
+                                                {item.title && <h2>{item.title}</h2>}
+                                                {item.value && <p>{item.value}</p>}
+                                            </div>))}
+                                    </div>}
                                 </div>
-                                <div className="status-data">
-                                    <h2>Completed</h2>
-                                    <p>40</p>
-                                </div>
-                                <div className="status-data">
-                                    <h2>Pending</h2>
-                                    <p>60</p>
-                                </div>
+                                {ele.taskProgress && <div className="progress-circle-block">
+                                    <div class="checklist-progress" id={`progress${ind}`}>
+                                        <div class="checklist-percentage">
+                                            {ele.taskProgress}
+                                        </div>
+                                    </div>
+                                </div>}
                             </div>
-                        </div>
-                        <div className="progress-circle-block">
-                            <div class="checklist-progress" id="progress1">
-                                <div class="checklist-percentage">
-                                    89 %
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="more-details-status-type">
-                        <div className="details-card-status">
-                            <h2>Books</h2>
-                            <div className="status-heading">
-                                <h3>Status:</h3>
-                                <div className="status-info">
-                                    <figure>
-                                        <img alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9ImNoZWNrLWNpcmNsZSIgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzE1MjQxXzM4NzI2KSI+CjxwYXRoIGlkPSJJY29uIiBkPSJNNS4wMDA2NSA3Ljk5OTY3TDcuMDAwNjUgOS45OTk2N0wxMS4wMDA3IDUuOTk5NjdNMTQuNjY3MyA3Ljk5OTY3QzE0LjY2NzMgMTEuNjgxNiAxMS42ODI2IDE0LjY2NjMgOC4wMDA2NSAxNC42NjYzQzQuMzE4NzUgMTQuNjY2MyAxLjMzMzk4IDExLjY4MTYgMS4zMzM5OCA3Ljk5OTY3QzEuMzMzOTggNC4zMTc3OCA0LjMxODc1IDEuMzMzMDEgOC4wMDA2NSAxLjMzMzAxQzExLjY4MjYgMS4zMzMwMSAxNC42NjczIDQuMzE3NzggMTQuNjY3MyA3Ljk5OTY3WiIgc3Ryb2tlPSIjNjY3MDg1IiBzdHJva2Utd2lkdGg9IjEuMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfMTUyNDFfMzg3MjYiPgo8cmVjdCB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIGZpbGw9IndoaXRlIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==" />
-                                    </figure>
-                                    <span>Completed</span>
-                                </div>
-                            </div>
-                            <div className="status-heading">
-                                <h3>Updated:</h3>
-                                <p className="status-info-desc">July 30, 2024</p>
-                            </div>
-                        </div>
-                        <div className="details-card-status">
-                            <h2>Books</h2>
-                            <div className="status-heading">
-                                <h3>Status:</h3>
-                                <div className="status-info">
-                                    <figure>
-                                        <img alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9ImNoZWNrLWNpcmNsZSIgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzE1MjQxXzM4NzI2KSI+CjxwYXRoIGlkPSJJY29uIiBkPSJNNS4wMDA2NSA3Ljk5OTY3TDcuMDAwNjUgOS45OTk2N0wxMS4wMDA3IDUuOTk5NjdNMTQuNjY3MyA3Ljk5OTY3QzE0LjY2NzMgMTEuNjgxNiAxMS42ODI2IDE0LjY2NjMgOC4wMDA2NSAxNC42NjYzQzQuMzE4NzUgMTQuNjY2MyAxLjMzMzk4IDExLjY4MTYgMS4zMzM5OCA3Ljk5OTY3QzEuMzMzOTggNC4zMTc3OCA0LjMxODc1IDEuMzMzMDEgOC4wMDA2NSAxLjMzMzAxQzExLjY4MjYgMS4zMzMwMSAxNC42NjczIDQuMzE3NzggMTQuNjY3MyA3Ljk5OTY3WiIgc3Ryb2tlPSIjNjY3MDg1IiBzdHJva2Utd2lkdGg9IjEuMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfMTUyNDFfMzg3MjYiPgo8cmVjdCB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIGZpbGw9IndoaXRlIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==" />
-                                    </figure>
-                                    <span>Stopped</span>
-                                </div>
-                            </div>
-                            <div className="status-heading">
-                                <h3>Updated:</h3>
-                                <p className="status-info-desc">July 30, 2024</p>
-                            </div>
-                        </div>
-                        <div className="details-card-status">
-                            <h2>Books</h2>
-                            <div className="status-heading">
-                                <h3>Status:</h3>
-                                <div className="status-info">
-                                    <figure>
-                                        <img alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9ImNoZWNrLWNpcmNsZSIgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzE1MjQxXzM4NzI2KSI+CjxwYXRoIGlkPSJJY29uIiBkPSJNNS4wMDA2NSA3Ljk5OTY3TDcuMDAwNjUgOS45OTk2N0wxMS4wMDA3IDUuOTk5NjdNMTQuNjY3MyA3Ljk5OTY3QzE0LjY2NzMgMTEuNjgxNiAxMS42ODI2IDE0LjY2NjMgOC4wMDA2NSAxNC42NjYzQzQuMzE4NzUgMTQuNjY2MyAxLjMzMzk4IDExLjY4MTYgMS4zMzM5OCA3Ljk5OTY3QzEuMzMzOTggNC4zMTc3OCA0LjMxODc1IDEuMzMzMDEgOC4wMDA2NSAxLjMzMzAxQzExLjY4MjYgMS4zMzMwMSAxNC42NjczIDQuMzE3NzggMTQuNjY3MyA3Ljk5OTY3WiIgc3Ryb2tlPSIjNjY3MDg1IiBzdHJva2Utd2lkdGg9IjEuMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfMTUyNDFfMzg3MjYiPgo8cmVjdCB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIGZpbGw9IndoaXRlIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==" />
-                                    </figure>
-                                    <span>Inprogress</span>
-                                </div>
-                            </div>
-                            <div className="status-heading">
-                                <h3>Updated:</h3>
-                                <p className="status-info-desc">July 30, 2024</p>
-                            </div>
-                        </div>
-                    </div>
-                    <button className="show-more-btn hide-show-details">Details</button>
-                </button>
-                <button className="checklist-card" id="c2">
-                    <div className="manage-card-block">
-                        <div className="left-block-details">
-                            <h1>Manager Onboarding Tasks</h1>
-                            <div className="status-data-block">
-                                <div className="status-data">
-                                    <h2>Total Tasks</h2>
-                                    <p>100</p>
-                                </div>
-                                <div className="status-data">
-                                    <h2>Completed</h2>
-                                    <p>40</p>
-                                </div>
-                                <div className="status-data">
-                                    <h2>Pending</h2>
-                                    <p>60</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="progress-circle-block">
-                            <div class="checklist-progress" id="progress2">
-                                <div class="checklist-percentage">
-                                    50 %
-                                </div>
-                            </div>
-                        </div>                    </div>
-                    <button className="show-more-btn hide-show-details">Details</button>
-                </button>
-                <button className="checklist-card">
-                    <div className="manage-card-block">
-                        <div className="left-block-details">
-                            <h1>Manager Onboarding Tasks</h1>
-                            <div className="status-data-block">
-                                <div className="status-data">
-                                    <h2>Total Tasks</h2>
-                                    <p>100</p>
-                                </div>
-                                <div className="status-data">
-                                    <h2>Completed</h2>
-                                    <p>40</p>
-                                </div>
-                                <div className="status-data">
-                                    <h2>Pending</h2>
-                                    <p>60</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="progress-circle-block"></div>
-                    </div>
-                    <button className="show-more-btn hide-show-details">Details</button>
-                </button>
-                <button className="show-more-btn">View More</button>
+                            {ele.subElements && ele.subElements.length && <div className="more-details-status-type hide" id={`item-${msgData.messageId}-${ind}-${viewMore}`}>
+                                {ele.subElements.map((se: any) => (
+                                    <div className="details-card-status" onClick={(event) => handleEvent(event, se.default_action)}>
+                                        <div className="details-card-status-header">
+                                            {se.title && <h2>{se.title}</h2>}
+                                            {se.rightContent && se.rightContent.icon &&
+                                                <figure onClick={(event) => handleEvent(event, se.default_action)}>
+                                                    <img src={se.rightContent.icon} />
+                                                </figure>}
+
+                                        </div>
+                                        {se.values && se.values.length && se.values.map((v: any) => (<div className="status-heading">
+                                            <h3>{v.title}</h3>
+                                            <div className="status-info">
+                                                {v.icon && <figure>
+                                                    <img alt="" src={v.icon} />
+                                                </figure>}
+                                                <span>{v.value}</span>
+                                            </div>
+                                        </div>))}
+                                    </div>))}
+                            </div>}
+                            <button className="show-more-btn hide-show-details" onClick={(event) => toggleItem(event, msgData.messageId, ind, viewMore)}>Details</button>
+                        </button>
+                    )))}
+                {msgData.message[0].component.payload.showMore && !viewMore && <button className="show-more-btn" onClick={() => handleViewMore()}>View More</button>}
             </div>
         );
+    } else {
+        return null;
     }
 }
 

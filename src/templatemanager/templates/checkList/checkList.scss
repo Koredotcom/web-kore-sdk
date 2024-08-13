@@ -1,10 +1,11 @@
-.checklist-temp-wrapper{
+.checklist-temp-wrapper {
     padding: 0 16px 0px 16px;
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    .show-more-btn{
+
+    .show-more-btn {
         padding: 0;
         color: var(--global-theme-color);
         text-align: start;
@@ -15,14 +16,15 @@
         background: transparent;
         cursor: pointer;
         display: inline-flex;
-        &.hide-show-details{
+
+        &.hide-show-details {
             width: 100%;
             font-weight: 400;
         }
     }
 }
 
-.checklist-card{
+.checklist-card {
     flex-direction: column;
     width: 100%;
     border-radius: 4px;
@@ -35,22 +37,40 @@
     text-align: start;
     min-height: 98px;
     transition: 0.2s all ease;
-    &:hover{
+
+    &:hover {
         border: 1px solid var(--gloabl-border-color);
         background: var(--gloabl-bg-secondary);
+
+        .manage-card-block {
+            .progress-circle-block {
+                .checklist-progress {
+                    &::before {
+                        background-image: conic-gradient(transparent var(--percentage), var(--global-white-bg) var(--percentage));
+                    }
+
+                    .checklist-percentage {
+                        background: var(--gloabl-bg-secondary);
+                    }
+                }
+            }
+        }
     }
-    .manage-card-block{
+
+    .manage-card-block {
         width: 100%;
         display: flex;
         align-items: center;
         gap: 8px;
-        .left-block-details{
+
+        .left-block-details {
             width: 100%;
             display: flex;
             flex-direction: column;
             gap: 16px;
             overflow: hidden;
-            h1{
+
+            h1 {
                 color: var(--gloabl-text-color);
                 font-size: 14px;
                 font-weight: 600;
@@ -60,22 +80,26 @@
                 text-overflow: ellipsis;
                 width: 100%;
             }
-            .status-data-block{
+
+            .status-data-block {
                 display: flex;
                 align-items: center;
                 gap: 8px;
                 width: 100%;
-                .status-data{
+
+                .status-data {
                     padding-right: 10px;
                     border-right: 1px solid var(--gloabl-border-color);
                     max-width: 100%;
                     overflow: hidden;
                     min-width: 70px;
-                    &:last-child{
+
+                    &:last-child {
                         border: 0;
                         padding: 0;
                     }
-                    h2{
+
+                    h2 {
                         overflow: hidden;
                         color: var(--gloabl-text-color);
                         font-size: 12px;
@@ -86,7 +110,8 @@
                         white-space: nowrap;
                         text-overflow: ellipsis;
                     }
-                    p{
+
+                    p {
                         overflow: hidden;
                         color: var(--gloabl-text-color);
                         font-size: 12px;
@@ -100,7 +125,8 @@
                 }
             }
         }
-        .progress-circle-block{
+
+        .progress-circle-block {
             flex-shrink: 0;
             width: 64px;
             height: 64px;
@@ -109,12 +135,13 @@
 
             .checklist-progress {
                 --percentage: calc(0 * 1%);
-                background-image: conic-gradient( var(--global-theme-color) 100%, var(--global-theme-color) 100%, var(--global-theme-color) 100%);
+                background-image: conic-gradient(var(--global-theme-color) 100%, var(--global-theme-color) 100%, var(--global-theme-color) 100%);
                 border-radius: 50%;
                 height: 64px;
                 position: relative;
                 width: 64px;
                 flex-shrink: 0;
+
                 &::before {
                     background-image: conic-gradient(transparent var(--percentage), var(--gloabl-bg-secondary) var(--percentage));
                     border-radius: 50%;
@@ -123,8 +150,8 @@
                     left: 0;
                     position: absolute;
                     width: 64px;
-                    filter: brightness(120%);
-                }  
+                }
+
                 .checklist-percentage {
                     --inner-size: calc(64px - 3 * 5px);
                     margin: 0;
@@ -146,24 +173,26 @@
                     font-size: 12px;
                     line-height: 19px;
                     background: var(--global-white-bg);
-                    &::after{
+
+                    &::after {
                         -webkit-text-fill-color: transparent;
                         background-clip: text;
                         background-image: linear-gradient(to right, var(--text-colors));
                         background-position: var(--percentage);
                         background-size: 100000%;
-                        /* content: counter(value) '%'; */
                         counter-reset: value calc(0);
-                   }
+                    }
                 }
-            }        
+            }
         }
     }
-    .more-details-status-type{
+
+    .more-details-status-type {
         width: 100%;
         display: flex;
         flex-direction: column;
-        .details-card-status{
+
+        .details-card-status {
             display: flex;
             padding: 8px 0px 7px 0px;
             flex-direction: column;
@@ -172,26 +201,41 @@
             gap: 4px;
             align-self: stretch;
             border-bottom: 1px solid var(--gloabl-border-color);
-            h2{
-                color: var(--gloabl-text-color);
-                font-size: 14px;
-                font-weight: 600;
-                line-height: normal;
+
+            .details-card-status-header {
+                display: flex;
+                align-items: center;
+                gap: 5px;
                 width: 100%;
+
+                figure {
+                    flex-shrink: 0;
+                }
+
+                h2 {
+                    color: var(--gloabl-text-color);
+                    font-size: 14px;
+                    font-weight: 600;
+                    line-height: normal;
+                    width: 100%;
+                }
             }
-            .status-heading{
+
+            .status-heading {
                 display: flex;
                 align-items: center;
                 width: 100%;
                 gap: 8px;
-                h3{
+
+                h3 {
                     color: var(--gloabl-text-color);
                     font-size: 12px;
                     font-weight: 500;
                     line-height: 18px;
                     min-width: 75px;
                 }
-                .status-info{
+
+                .status-info {
                     display: flex;
                     align-items: center;
                     gap: 4px;
@@ -200,17 +244,20 @@
                     font-size: 12px;
                     font-weight: 500;
                     line-height: 18px;
-                    figure{
+
+                    figure {
                         line-height: 0;
                     }
-                    span{
+
+                    span {
                         color: var(--gloabl-text-color);
                         font-size: 12px;
                         font-weight: 400;
                         line-height: normal;
                     }
                 }
-                p{
+
+                p {
                     color: var(--gloabl-text-color);
                     opacity: 0.6;
                     font-size: 12px;
@@ -221,6 +268,9 @@
                 }
             }
         }
+
+        &.hide {
+            display: none;
+        }
     }
 }
-
