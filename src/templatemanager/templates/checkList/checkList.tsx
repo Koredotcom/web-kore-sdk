@@ -156,7 +156,7 @@ export function CheckList(props: any) {
                     </div>
                     <button className="show-more-btn hide-show-details">Details</button>
                 </button>
-                <button className="checklist-card">
+                <button className="checklist-card" id="c2">
                     <div className="manage-card-block">
                         <div className="left-block-details">
                             <h1>Manager Onboarding Tasks</h1>
@@ -175,8 +175,13 @@ export function CheckList(props: any) {
                                 </div>
                             </div>
                         </div>
-                        <div className="progress-circle-block"></div>
-                    </div>
+                        <div className="progress-circle-block">
+                            <div class="checklist-progress" id="progress2">
+                                <div class="checklist-percentage">
+                                    50 %
+                                </div>
+                            </div>
+                        </div>                    </div>
                     <button className="show-more-btn hide-show-details">Details</button>
                 </button>
                 <button className="checklist-card">

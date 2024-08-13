@@ -109,7 +109,7 @@
 
             .checklist-progress {
                 --percentage: calc(0 * 1%);
-                background-image: conic-gradient(#009696 100%, #009696 100%, #009696 100%);
+                background-image: conic-gradient( var(--global-theme-color) 100%, var(--global-theme-color) 100%, var(--global-theme-color) 100%);
                 border-radius: 50%;
                 height: 64px;
                 position: relative;
@@ -150,13 +150,14 @@
             }
             
             .checklist-progress:before {
-                background-image: conic-gradient(transparent var(--percentage), #BFE5E5 var(--percentage));
+                background-image: conic-gradient(transparent var(--percentage), var(--global-theme-color) var(--percentage));
                 border-radius: 50%;
                 content: "";
                 height: 64px;
                 left: 0;
                 position: absolute;
                 width: 64px;
+                filter: brightness(120%);
             }            
         }
     }
