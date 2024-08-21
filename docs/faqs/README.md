@@ -86,3 +86,32 @@ To remove previously added customData to futher messages
 ```js
  delete botOptions.botInfo.metaTags;
 ```
+
+### How to open Digital Form by default
+
+By default for Digital Form button will be displayed. After clicking the button Digital Form will be opened. But this behaviour can be changed to automatically open the Digital Form by using following code.
+
+###### Custom template sample code for opening Digital Form by default
+Write the custom template
+```js
+class TemplateForm {
+    renderMessage(msgData) {
+        if (msgData?.message?.[0]?.component?.payload?.template_type === 'button' && msgData?.message?.[0]?.component?.formData) {
+            if (msgData.message[0].component.formData) {
+                msgData.message[0].component.payload.formData = msgData.message[0].component.formData;
+            }
+
+            msgData.message[0].component.payload.template_type = 'iframe';
+            msgData.message[0].component.payload.formData.renderType = 'inline';
+            msgData.renderType = msgData.message[0].component.payload.formData.renderType;
+        }
+    }
+}
+
+export default TemplateForm; // Needed only if you write your custom template in different file. You need to export and import
+```
+Install the custom template
+```js
+chatWindowInstance.templateManager.installTemplate(new TemplateForm());
+chatWindowInstance.show(chatConfig);
+```
