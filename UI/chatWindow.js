@@ -2202,42 +2202,44 @@
                 if(msgObject && (msgObject.nlmeta || msgObject.nlMeta)){
                     messageToBot["message"].nlMeta= msgObject.nlmeta || msgObject.nlMeta;
                 }
-                if(me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable){
-                    me.sendMessageViaWebHook(
-                        chatInput.text(),
-                        function (msgsData) {
-                            me.handleWebHookResponse(msgsData);
-                        }, function (err) {
-                            setTimeout(function () {
-                                var failedMsgEle=$('.kore-chat-window [id="' + clientMessageId + '"]');
-                                failedMsgEle.find('.messageBubble').append('<div class="errorMsg hide"><span class="failed-text">Send Failed </span><div class="retry"><span class="retry-icon"></span><span class="retry-text">Retry</span></div></div>');
-                                if(sendFailedMessage.retryCount<sendFailedMessage.MAX_RETRIES){
-                                    failedMsgEle.find('.retry').trigger('click');
-                                    sendFailedMessage.retryCount++;
-                                }else{
-                                    failedMsgEle.find('.errorMsg').removeClass('hide');
-                                    $('.typingIndicatorContent').css('display', 'none');
-                                }
-                            }, 350);
-                        },
-                        me.attachmentInfo?{attachments:[me.attachmentInfo]}:null
+                if ($('.kore-chat-window .chat-container li#' + msgData.message[0].clientMessageId).length < 1) {
+                    if (me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) {
+                        me.sendMessageViaWebHook(
+                            chatInput.text(),
+                            function (msgsData) {
+                                me.handleWebHookResponse(msgsData);
+                            }, function (err) {
+                                setTimeout(function () {
+                                    var failedMsgEle = $('.kore-chat-window [id="' + clientMessageId + '"]');
+                                    failedMsgEle.find('.messageBubble').append('<div class="errorMsg hide"><span class="failed-text">Send Failed </span><div class="retry"><span class="retry-icon"></span><span class="retry-text">Retry</span></div></div>');
+                                    if (sendFailedMessage.retryCount < sendFailedMessage.MAX_RETRIES) {
+                                        failedMsgEle.find('.retry').trigger('click');
+                                        sendFailedMessage.retryCount++;
+                                    } else {
+                                        failedMsgEle.find('.errorMsg').removeClass('hide');
+                                        $('.typingIndicatorContent').css('display', 'none');
+                                    }
+                                }, 350);
+                            },
+                            me.attachmentInfo ? { attachments: [me.attachmentInfo] } : null
                         );
-                }else{
-                    me.bot.sendMessage(messageToBot, function messageSent(err) {
-                        if (err && err.message) {
-                            setTimeout(function () {
-                                var failedMsgEle=$('.kore-chat-window [id="' + clientMessageId + '"]');
-                                failedMsgEle.find('.messageBubble').append('<div class="errorMsg hide"><span class="failed-text">Send Failed </span><div class="retry"><span class="retry-icon"></span><span class="retry-text">Retry</span></div></div>');
-                                if(sendFailedMessage.retryCount<sendFailedMessage.MAX_RETRIES){
-                                    failedMsgEle.find('.retry').trigger('click');
-                                    sendFailedMessage.retryCount++;
-                                }else{
-                                    failedMsgEle.find('.errorMsg').removeClass('hide');
-                                    $('.typingIndicatorContent').css('display', 'none');
-                                }
-                            }, 350);
-                        }
-                    });    
+                    } else {
+                        me.bot.sendMessage(messageToBot, function messageSent(err) {
+                            if (err && err.message) {
+                                setTimeout(function () {
+                                    var failedMsgEle = $('.kore-chat-window [id="' + clientMessageId + '"]');
+                                    failedMsgEle.find('.messageBubble').append('<div class="errorMsg hide"><span class="failed-text">Send Failed </span><div class="retry"><span class="retry-icon"></span><span class="retry-text">Retry</span></div></div>');
+                                    if (sendFailedMessage.retryCount < sendFailedMessage.MAX_RETRIES) {
+                                        failedMsgEle.find('.retry').trigger('click');
+                                        sendFailedMessage.retryCount++;
+                                    } else {
+                                        failedMsgEle.find('.errorMsg').removeClass('hide');
+                                        $('.typingIndicatorContent').css('display', 'none');
+                                    }
+                                }, 350);
+                            }
+                        });
+                    }
                 }
                 me.attachmentInfo = {};
                 chatInput.html("");
@@ -3028,7 +3030,7 @@
                     bottomSliderAction('show',messageHtml);
                 }else{
                     //ignore message(msgId) if it is already in viewport                     
-                    if ($('.kore-chat-window .chat-container li#' + msgData.messageId).length < 1 || (msgData.renderType==='inline')) {
+                    if ($('.kore-chat-window .chat-container li#' + (msgData.messageId || msgData.message[0].clientMessageId)).length < 1 || (msgData.renderType==='inline')) {
                         if (msgData.type === "bot_response" && msgData.fromHistorySync) {
                             var msgTimeStamps = [];
                             var msgEles = $('.kore-chat-window .chat-container>li');
