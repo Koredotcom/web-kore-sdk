@@ -46,7 +46,7 @@
                             koreBot.applySDKBranding(data);
                         }
                         if (koreBot && koreBot.initToken) {
-                            koreBot.initToken(options);
+                            koreBot.initToken(options.authorization);
                         }
                     },
                     error: function (err) {
