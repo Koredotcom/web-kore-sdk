@@ -1,3 +1,8 @@
+### 11.4.1
+* Release Aug 10, 2024
+* Bug fixes
+  * agent desktop ice servers config changed
+
 ### 11.4.0
 * Release July 27, 2024
 * Bug fixes
