@@ -13,7 +13,7 @@
     <script src="./dist/umd/plugins/webapi-stt-plugin-umd.js"></script>
     <script src="./dist/umd/kore-web-sdk-umd-chat.min.js"></script>
     <script src="./dist/umd/plugins/agent-desktop-umd.js"></script>
-    <script src="./dist/umd/plugins/browser-tts-umd-plugin-umd.js"></script>
+    <!-- <script src="./dist/umd/plugins/browser-tts-umd-plugin-umd.js"></script> -->
     <!-- <link rel="stylesheet" href="./fonts/inter/inter.css"> -->
     <script>
         let config = {
@@ -22,22 +22,22 @@
                 "stage": "retail-assist.s3.amazonaws.com/releases/dev", 
                 "botInfo": {
                     "envUrl": "https://bots.kore.ai/api/",
-                    "botName": "CX_R2.4_Dev",
+                    "botName": "CX_R2.5_Dev",
                     "botId": "st-7217de04-eeca-52fa-8a7a-52125e6beabd",
                     "clientId": "cs-eb5ab908-70f3-51c5-bb62-fd642bb559cc",
                     "clientSecret": "rldllUQhqn0sxjHTws00wniU2smcABBiY8fySiKIdMI=",
-                    "automationName": "CX_R2.4_Dev"
+                    "automationName": "CX_R2.5_Dev"
                 }
             },
             "qaConfig": {
                 "stage": "retail-assist.s3.amazonaws.com/releases/qa",
                 "botInfo": {
                     "envUrl": "https://bots.kore.ai/api/",
-                    "botName": "CX_R2.3_QA",
+                    "botName": "CX_R2.5_QA",
                     "botId": "st-7217de04-eeca-52fa-8a7a-52125e6beabd",
                     "clientId": "cs-eb5ab908-70f3-51c5-bb62-fd642bb559cc",
                     "clientSecret": "rldllUQhqn0sxjHTws00wniU2smcABBiY8fySiKIdMI=",
-                    "automationName": "CX_R2.3_QA"
+                    "automationName": "CX_R2.5_QA"
                 }
             },
             "prodConfig": {
@@ -66,11 +66,11 @@
                 "stage": "127.0.0.1",
                 "botInfo": {
                     "envUrl": "https://bots.kore.ai/api/",
-                    "botName": "CX_R2.4_Dev",
+                    "botName": "CX_R2.5_Dev",
                     "botId": "st-7217de04-eeca-52fa-8a7a-52125e6beabd",
                     "clientId": "cs-eb5ab908-70f3-51c5-bb62-fd642bb559cc",
                     "clientSecret": "rldllUQhqn0sxjHTws00wniU2smcABBiY8fySiKIdMI=",
-                    "automationName": "CX_R2.4_Dev"
+                    "automationName": "CX_R2.5_Dev"
                 }
             },
             "shopifyAppConfig": {
@@ -84,6 +84,13 @@
                     "automationName": "CX_R2.3_Prod"
                 }
             }
+        }
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const queryRequest = urlParams.get('query');
+        const requestId = urlParams.get('requestId')
+        if (queryRequest || requestId) {
+            localStorage.clear();
         }
         function koreGenerateUUID() {
             console.info("generating UUID");
@@ -109,18 +116,11 @@
         var AgentDesktopPlugin = AgentDeskTopPluginSDK.AgentDesktopPlugin;
         var chatWindowInstance = new chatWindow();
         const botOptions = chatConfig.botOptions;
-        // const queryString = window.location.search;
-        // const urlParams = new URLSearchParams(queryString);
-        // const requestId = urlParams.get('requestId')
-        // const localRequestId = localStorage.getItem("requestId")
-        // if (requestId && (!localRequestId || (localRequestId != requestId)) ) {
-        //     localStorage.setItem("requestId" , requestId)
-        //         let keysToRemove = ["kr-cw-uid", "korecom","identifierKey"];
-        //     for (key of keysToRemove) {
-        //         localStorage.removeItem(key);
-        //     }
-        //     localStorage.setItem('identifierKey', 'retailWelcomeMessage');
-        // }
+        if (queryRequest || requestId) {
+            localStorage.setItem('kr-cw-state', 'open');
+            localStorage.setItem('kr-cw-welcome-chat', true);
+            localStorage.setItem('identifierKey', 'retailWelcomeMessage');
+        }
         var email = "";
         var cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
@@ -228,6 +228,7 @@
                 botOptions.clientId = parsedCredentials?.clientId || "";
                 botOptions.clientSecret = parsedCredentials?.clientSecret || "";
                 botOptions.botInfo.customData["userEmail"] = email || botOptions.botInfo.customData["userEmail"];
+                botOptions.botInfo.customData["RequestId"] = requestId || botOptions.botInfo.customData["requestId"];
                 setCookie(hostname, parsedCredentials, 7)
                 // chatWindowInstance.installPlugin(new BrowserTTS());
                 chatWindowInstance.installPlugin(new AgentDesktopPlugin());

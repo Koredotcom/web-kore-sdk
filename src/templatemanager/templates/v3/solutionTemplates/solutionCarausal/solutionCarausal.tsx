@@ -5,6 +5,7 @@ import stackedCards from './solutionCarousal'
 import { useState, useEffect } from 'preact/hooks';
 import { getHTML } from '../../../../base/domManager';
 import IconsManager from '../../../../base/iconsManager';
+import KoreHelpers from '../../../../../utils/helpers';
 
 export function Carousel(props: any) {
     const hostInstance = props.hostInstance;
@@ -322,6 +323,13 @@ export function Carousel(props: any) {
                                                     )}
                                                 </div>
                                             )}
+                                             {ele?.description && <div className='summary-description'>
+                                                {ele?.description?.split('\n')?.length && ele?.description?.split('\n')?.map((obj: any) => (
+                                                    <p className='desc' dangerouslySetInnerHTML={{__html: KoreHelpers?.helpers?.convertMDtoHTML(obj)}}></p>
+                                                ))
+                                                }
+                                            </div>
+                                            }
                                             {ele?.itemID && <p className="summary-text-style" >{ele?.itemID}</p>}
                                         </div>
                                     ))

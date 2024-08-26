@@ -662,6 +662,9 @@
 
     .desc-details-title {
         padding-bottom: 10px;
+        h2{
+            font-size: 12px;
+        }
 
     }
 
@@ -704,12 +707,18 @@
         .left-description {
             float: left;
             width: 50%;
+            h2{
+                font-size: 12px;
+            }
         }
 
         .right-description {
             // width: 50%;
             float: right;
             // margin-right: 80px;
+            h2{
+                font-size: 12px;
+            }
         }
     }
  

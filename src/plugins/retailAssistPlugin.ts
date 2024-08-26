@@ -73,7 +73,7 @@ class RetailAssistTemplatePlugin {
       console.log(e,'e2 messages')
       const getWelcomeMessageKey = localStorage.getItem('identifierKey');
       if (getWelcomeMessageKey) {
-        this.searchQreryParams();
+        this.searchQreryParams('');
       }
     });  
     cwInstance.on("afterRenderMessage", (e: any) => {
@@ -85,13 +85,13 @@ class RetailAssistTemplatePlugin {
     });
   }
 
-  searchQreryParams() {
+  searchQreryParams(text?:any) {
     let me = this;
     let cwInstance = me.hostInstance;
     // Extracting query parameter from the URL
     const urlParams = new URLSearchParams(window.location.search);
     const query = urlParams.get('query');
-    let stringWithoutQuotes = query?.replace(/"/g, '');
+    let stringWithoutQuotes = text === '' ? text : query?.replace(/"/g, '');
     // Creating message object
     let clientMessageId = new Date().getTime();
     let messageToBot: any = {
