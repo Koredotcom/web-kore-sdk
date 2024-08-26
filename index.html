@@ -116,11 +116,13 @@
         var AgentDesktopPlugin = AgentDeskTopPluginSDK.AgentDesktopPlugin;
         var chatWindowInstance = new chatWindow();
         const botOptions = chatConfig.botOptions;
+
         if (queryRequest || requestId) {
             localStorage.setItem('kr-cw-state', 'open');
             localStorage.setItem('kr-cw-welcome-chat', true);
             localStorage.setItem('identifierKey', 'retailWelcomeMessage');
         }
+        
         var email = "";
         var cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
