@@ -1,7 +1,11 @@
-import BaseChatTemplate from '../../baseChatTemplate';
+import BaseChatTemplate from '../../../baseChatTemplate';
 import './solutionCarausal.scss';
-import { h } from 'preact';
+import { h, Fragment } from 'preact';
+import stackedCards from './solutionCarousal'
 import { useState, useEffect } from 'preact/hooks';
+import { getHTML } from '../../../../base/domManager';
+import IconsManager from '../../../../base/iconsManager';
+import KoreHelpers from '../../../../../utils/helpers';
 
 export function Carousel(props: any) {
     const hostInstance = props.hostInstance;
@@ -20,9 +24,11 @@ export function Carousel(props: any) {
     const [updatedQty, setUpdatedQty] = useState(null);
     const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
     const [currentQty, setCurrentQty] = useState(null);
+    const [upatedQtyElements , upatedQtyElement] = useState<any[]>()
     const [tooltipStatesSubTitle, setTooltipStatesSubTitle] = useState([] as boolean[]);
     const [tooltipStatesSummaryText, setTooltipStatesSummaryText] = useState([] as boolean[]);
-
+     // For disabled the slider
+    const [isSliderEnabled, setSliderEnabled] = useState(true);
 
 
     const handleMouseEnterSubTitle = (index: number) => {
@@ -60,6 +66,7 @@ export function Carousel(props: any) {
         setElements((prevElements: any) => {
             const updatedElements = [...prevElements];
             updatedElements[index].qty = Math.max(1, updatedElements[index].qty - 1);
+            upatedQtyElement(updatedElements)
             return updatedElements;
         });
     };
@@ -69,6 +76,7 @@ export function Carousel(props: any) {
             const updatedElements = [...prevElements];
             updatedElements[index].qty = parseInt(updatedElements[index].qty, 10) + 1;
             const newQty = updatedElements[index].qty;
+            upatedQtyElement(updatedElements)
             setUpdatedQty(newQty);
             return updatedElements;
         });
@@ -76,9 +84,18 @@ export function Carousel(props: any) {
 
 
     const handleButtonEvent = (e: any) => {
+        let qty:any
         if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
-            let payload = e.payload + `#${updatedQty || currentQty}` || currentQty;
+            upatedQtyElements?.forEach(ele=>{
+                ele.buttons.forEach((Buttonpayload: { payload: any; }) =>{
+                     if(Buttonpayload.payload == e.payload){
+                        qty =  ele.qty
+                     }
+                })
+            })
+            let payload = e.payload + `#${qty || updatedQty || currentQty}` || currentQty;
             hostInstance.sendMessage(payload, { renderMsg: e.value });
+            setSliderEnabled(false);
         } else if (e.type == 'url' || e.type == 'web_url') {
             let link = e.url;
             if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
@@ -100,105 +117,127 @@ export function Carousel(props: any) {
             return newIndex;
         });
     };
-    const debounce = <T extends (...args: any[]) => void>(func: T, delay: number) => {
-        let timeoutId: ReturnType<typeof setTimeout>;
-      
-        return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
-          clearTimeout(timeoutId);
-          timeoutId = setTimeout(() => {
-            func.apply(this, args);
-          }, delay);
-        };
-      };
-
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'retailAssistcarousel') {
         setTimeout(() => {
             const btnsParentDiv: any = hostInstance.chatEle.querySelector(`[data-id='${msgData.messageId}']`);
             const leftScrollBtn = hostInstance.chatEle.querySelector(`[data-button-left='${msgData.messageId}']`);
             const rightScrollBtn = hostInstance.chatEle.querySelector(`[data-button-right='${msgData.messageId}']`);
-            
-            if (btnsParentDiv && btnsParentDiv.hasChildNodes()) {
-                if (leftScrollBtn) {
-                    if (btnsParentDiv.scrollLeft > 0) {
-                        leftScrollBtn.classList.remove('hide');
-                    } else {
-                        leftScrollBtn.classList.add('hide');
-                    }
+            function updateButtonsView() {
+                if (btnsParentDiv.scrollLeft > 0) {
+                    leftScrollBtn.classList.remove('hide');
+                } else {
+                    leftScrollBtn.classList.add('hide');
                 }
-                if (rightScrollBtn) {
-                    if (btnsParentDiv.offsetWidth < btnsParentDiv.scrollWidth) {
-                        rightScrollBtn.classList.remove('hide');
-                    } else {
-                        rightScrollBtn.classList.add('hide');
-                    }
+                if (btnsParentDiv.scrollLeft + btnsParentDiv.clientWidth < btnsParentDiv.scrollWidth) {
+                    rightScrollBtn.classList.remove('hide');
+                } else {
+                    rightScrollBtn.classList.add('hide');
                 }
+            }
+    
+            function scrollToElement(element: any, direction: any) {
+                const offset = direction === 'left' ? -element.offsetWidth - 9 : element.offsetWidth + 10;
+                btnsParentDiv.scrollBy({ left: offset, behavior: 'smooth' });
+                setTimeout(updateButtonsView, 500);
             }
 
             leftScrollBtn.addEventListener('click', () => {
-                const btnsParentDivWidth = btnsParentDiv.scrollLeft;
-                const qButtons = btnsParentDiv.querySelectorAll('.list-carousel-item');
-                let curWidth = 0;
-                if (qButtons.length > 0) {
-                    qButtons.forEach((ele: any) => {
-                        curWidth = curWidth + ele.offsetWidth + 10;
-                        if (curWidth > btnsParentDivWidth) {
-                            btnsParentDiv.scrollTo({
-                                left: btnsParentDiv.offsetHeight - ele.offsetHeight - 50,
-                                behavior: 'smooth'
-                            });
-                            rightScrollBtn.classList.remove('hide');;
-                            if (btnsParentDiv.scrollLeft <= 0) {
-                                leftScrollBtn.classList.add('hide');;
-                            }
-                        }
-
-                    })
+                const qButtons = [...btnsParentDiv.querySelectorAll('.list-carousel-item')];
+                for (let i = qButtons.length - 1; i >= 0; i--) {
+                    const ele = qButtons[i];
+                    if (btnsParentDiv.scrollLeft > ele.offsetLeft) {
+                        scrollToElement(ele, 'left');
+                        break;
+                    }
                 }
-            })
-            const handleRightScroll = debounce(() => {
-                const btnsParentDivWidth = btnsParentDiv.offsetWidth;
-                const qButtons = btnsParentDiv.querySelectorAll('.list-carousel-item');
-                let curWidth = 0;
-            
-                if (qButtons.length > 0) {
-                    qButtons.forEach((ele: any, index: number) => {
-                        curWidth = curWidth + ele.offsetWidth + 10;
-            
-                        if (curWidth > btnsParentDivWidth) {
-                            btnsParentDiv.scrollTo({
-                                left: btnsParentDiv.scrollLeft + ele.offsetWidth + 20,
-                                behavior: 'smooth'
-                            });
-            
-                            leftScrollBtn.classList.remove('hide');
-            
-                            // Check if the second-to-last item is fully visible
-                            const secondToLastItemVisible =
-                                btnsParentDiv.scrollLeft + btnsParentDivWidth + 10 >= btnsParentDiv.scrollWidth - ele.offsetWidth - 10;
-            
-                            if (secondToLastItemVisible) {
-                                rightScrollBtn.classList.add('hide');
-                            } else {
-                                rightScrollBtn.classList.remove('hide'); // Show the button if there's more content to scroll
-                            }
-                        }
-                    });
+            });
+    
+            rightScrollBtn.addEventListener('click', () => {
+                const qButtons = [...btnsParentDiv.querySelectorAll('.list-carousel-item')];
+                for (let ele of qButtons) {
+                    if (btnsParentDiv.scrollLeft + btnsParentDiv.clientWidth < ele.offsetLeft + ele.offsetWidth) {
+                        scrollToElement(ele, 'right');
+                        break;
+                    }
                 }
-            }, 200);
-             // Adjust the debounce delay as needed
-            rightScrollBtn.addEventListener('click', handleRightScroll);
+            });
+    
+            updateButtonsView();
         }, 50);
+        // setTimeout(() => {
+        //     const btnsParentDiv: any = hostInstance.chatEle.querySelector(`[data-id='${msgData.messageId}']`);
+        //     const leftScrollBtn = hostInstance.chatEle.querySelector(`[data-button-left='${msgData.messageId}']`);
+        //     const rightScrollBtn = hostInstance.chatEle.querySelector(`[data-button-right='${msgData.messageId}']`);
+        //     if (btnsParentDiv && btnsParentDiv.hasChildNodes()) {
+        //         if (leftScrollBtn) {
+        //             if (btnsParentDiv.scrollLeft > 0) {
+        //                 leftScrollBtn.classList.remove('hide');
+        //             } else {
+        //                 leftScrollBtn.classList.add('hide');
+        //             }
+        //         }
+        //         if (rightScrollBtn) {
+        //             if (btnsParentDiv.offsetWidth < btnsParentDiv.scrollWidth) {
+        //                 rightScrollBtn.classList.remove('hide');
+        //             } else {
+        //                 rightScrollBtn.classList.add('hide');
+        //             }
+        //         }
+        //     }
+
+        //     leftScrollBtn.addEventListener('click', () => {
+        //         const btnsParentDivWidth = btnsParentDiv.scrollLeft;
+        //         const qButtons = btnsParentDiv.querySelectorAll('.list-carousel-item');
+        //         let curWidth = 0;
+        //         if (qButtons.length > 0) {
+        //             qButtons.forEach((ele: any) => {
+        //                 curWidth = curWidth + ele.offsetWidth + 10;
+        //                 if (curWidth > btnsParentDivWidth) {
+        //                     btnsParentDiv.scrollTo({
+        //                         left: btnsParentDiv.offsetHeight - ele.offsetHeight - 50,
+        //                         behavior: 'smooth'
+        //                     });
+        //                     rightScrollBtn.classList.remove('hide');;
+        //                     if (btnsParentDiv.scrollLeft <= 0) {
+        //                         leftScrollBtn.classList.add('hide');;
+        //                     }
+        //                 }
+
+        //             })
+        //         }
+        //     })
+        //     rightScrollBtn.addEventListener('click', () => {
+        //         const btnsParentDivWidth = btnsParentDiv.offsetWidth;
+        //         const qButtons = btnsParentDiv.querySelectorAll('.list-carousel-item');
+        //         let curWidth = 0;
+        //         if (qButtons.length > 0) {
+        //             qButtons.forEach((ele: any) => {
+        //                 curWidth = curWidth + ele.offsetWidth + 10;
+        //                 if (curWidth > btnsParentDivWidth) {
+        //                     btnsParentDiv.scrollTo({
+        //                         left: btnsParentDiv.scrollLeft + ele.offsetWidth + 20,
+        //                         behavior: 'smooth'
+        //                     });
+        //                     leftScrollBtn.classList.remove('hide');;
+        //                     if (btnsParentDiv.scrollLeft + btnsParentDivWidth + 10 >= btnsParentDiv.scrollWidth) {
+        //                         rightScrollBtn.classList.add('hide');
+        //                     }
+        //                 }
+
+        //             })
+        //         }
+        //     })
+        // }, 50);
         return (
             <div key={rerenderKey} className="list-template-carousel-wrapper" id={msgData.messageId}>
-                <button className="carousel-left-click" data-button-left={msgData.messageId} onClick={handleLeftClick}>
+                <button className="carousel-left-click" data-button-left={msgData.messageId} onClick={handleLeftClick} disabled={!isSliderEnabled}>
                     <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
                         <path d="M12 15.5L7 10.5L12 5.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </button>
-                <div className="list-carousel" data-id={msgData.messageId}>
+                <div className={`list-carousel slider ${isSliderEnabled ? '' : 'disabled-slider'}`} data-id={msgData.messageId}>
                     {msgData.message[0].component.payload.elements.map((item: any, index: number) => (
-
                         <div className="list-carousel-item">
                             <button className="card-content-sec">
                                 <div className="top-sec-card">
@@ -284,6 +323,13 @@ export function Carousel(props: any) {
                                                     )}
                                                 </div>
                                             )}
+                                             {ele?.description && <div className='summary-description'>
+                                                {ele?.description?.split('\n')?.length && ele?.description?.split('\n')?.map((obj: any) => (
+                                                    <p className='desc' dangerouslySetInnerHTML={{__html: KoreHelpers?.helpers?.convertMDtoHTML(obj)}}></p>
+                                                ))
+                                                }
+                                            </div>
+                                            }
                                             {ele?.itemID && <p className="summary-text-style" >{ele?.itemID}</p>}
                                         </div>
                                     ))
@@ -303,7 +349,7 @@ export function Carousel(props: any) {
                             </button>
                         </div>))}
                 </div>
-                <button className="carousel-right-click" data-button-right={msgData.messageId} onClick={handleRightClick}>
+                <button className="carousel-right-click" data-button-right={msgData.messageId} onClick={handleRightClick} disabled={!isSliderEnabled}>
                     <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
                         <path d="M7 5.5L12 10.5L7 15.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
@@ -442,4 +488,3 @@ class SolutionCarouselTemplate extends BaseChatTemplate {
 }
 
 export default SolutionCarouselTemplate;
-

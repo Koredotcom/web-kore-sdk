@@ -1,6 +1,6 @@
-import LineChartTemplate from '../templatemanager/templates/lineChartTemplate/lineChartTemplate';
-import BarChartTemplate from '../templatemanager/templates/barChartTemplate/barChartTemplate';
-import PieChartTemplate from '../templatemanager/templates/pieChartTemplate/pieChartTemplate';
+import LineChartTemplate from './v2Plugin/templates/lineChartTemplate/lineChartTemplate';
+import BarChartTemplate from './v2Plugin/templates/barChartTemplate/barChartTemplate';
+import PieChartTemplate from './v2Plugin/templates/pieChartTemplate/pieChartTemplate';
 
 /**
  *  Graph template plugin class

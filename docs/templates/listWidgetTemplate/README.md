@@ -3,7 +3,7 @@
 ###### Preview
 
 
-![listWidgetTemplate](https://user-images.githubusercontent.com/58174664/148943999-d3019dc5-90f0-41a8-9383-8a727c77e4f4.PNG)
+<img width="201" alt="list widget" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/4a2f691c-67ac-4cb8-a2ee-ea402871133c">
 
 
 

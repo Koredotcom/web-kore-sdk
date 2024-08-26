@@ -3,7 +3,7 @@
 ###### Preview
 
 
-![pieChartTemplate](https://user-images.githubusercontent.com/58174664/148944411-f54f8d16-e03e-4c02-8568-0bc803c17aa6.PNG)
+<img width="229" alt="pie chart" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/6c35599f-7fda-43b7-888f-39b2322cd25d">
 
 
 

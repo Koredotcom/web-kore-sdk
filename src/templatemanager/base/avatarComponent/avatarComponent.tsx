@@ -3,12 +3,22 @@
 import './avatarComponent.scss';
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import IconsManager from '../iconsManager';
 
 export function AvatarComponent(props: any) {
     const hostInstance = props.hostInstance;
-    const iconHelper = new IconsManager();
-    const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.brandingCopy);
+    const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
+    const [pwcCampaign, updatePWCCampaignInfo] = useState({ enable: false, data: { buttons: [], messages: [], appearance: { messageBubbleAlignment : '', buttonAlignment: '', dropShadow: ''}, messageHeaderConfig: { headerToggle: false, headerMessage: '', headerUpload: '', headerIcon: ''}}});
+    hostInstance.on('onBrandingUpdate', function (event: any) {
+        updateBrandingInfo({...event.brandingData})
+    });
+
+    setInterval(() => {
+        if (hostInstance?.pwcInfo?.dataFlag) {
+            let pwcData = hostInstance.pwcInfo.chatData;
+            updatePWCCampaignInfo({...pwcData});
+            hostInstance.pwcInfo.dataFlag = false;
+        }
+    }, 500)
 
     const aShape: any = {
         "rounded": "avatar-actions",
@@ -17,9 +27,39 @@ export function AvatarComponent(props: any) {
         "square": "avatar-actions variation-3"
     }
 
+    let avatarParentStyle = "avatar-variations-footer"; 
     let avatarStyle = aShape[brandingInfo.chat_bubble.style];
+    let buttonStyle = "buttons-triger-click-wrapper animation-slide-up btn-anim-send";
+    let avatarBgStyle = "avatar-bg";
 
-    if (brandingInfo.chat_bubble.alignment == 'block') {
+    if (brandingInfo.chat_bubble.icon.type == 'custom') {
+        avatarBgStyle = avatarBgStyle + ' custom-image-avatar-bg';
+    }
+    if (brandingInfo.chat_bubble.minimise.type == 'custom') {
+        avatarBgStyle = avatarBgStyle + ' custom-image-minimize-avatar-bg';
+    }
+
+    if (pwcCampaign.enable) {
+        if (pwcCampaign.data.appearance.dropShadow == 'lightShadow') {
+            avatarParentStyle = avatarParentStyle + ' box-shadow-light-avatar';
+        } else if (pwcCampaign.data.appearance.dropShadow == 'darkShadow') {
+            avatarParentStyle = avatarParentStyle + ' box-shadow-dark-avatar';
+        }
+    }
+
+    if (brandingInfo.chat_bubble.icon.type == 'custom') {
+        avatarStyle = 'avatar-actions';
+    }
+
+    if (brandingInfo.chat_bubble.animation == 'quick') {
+        avatarStyle = avatarStyle + ' avatar-gentle-animation';
+    } else if (brandingInfo.chat_bubble.animation == 'slide') {
+        avatarStyle = avatarStyle + ' avatar-instant-animation';
+    } else if (brandingInfo.chat_bubble.animation == 'crossFade') {
+        avatarStyle = avatarStyle + ' avatar-bounce-animation';
+    }
+
+    if (brandingInfo.chat_bubble.alignment == 'block' || pwcCampaign.data.appearance.messageBubbleAlignment == 'block') {
         avatarStyle = avatarStyle + ' bubble-align-block';
     }
 
@@ -28,36 +68,80 @@ export function AvatarComponent(props: any) {
         hostInstance.chatEle.querySelector('.content-info').remove();
     }
 
-    useEffect(() => {
-        hostInstance.on('onBrandingUpdate', function (event: any) {
-            console.log('BCopy: ', JSON.parse(JSON.stringify(hostInstance.config.brandingCopy)));
-            updateBrandingInfo(JSON.parse(JSON.stringify(event.brandingData)))
-            console.log('EData: ', event.brandingData);
-            console.log('AB: ', JSON.parse(JSON.stringify(hostInstance.config.branding)));
-            console.log('ABH: ', JSON.parse(JSON.stringify(brandingInfo)));
+    const buttonAction = (btn: any) => {
+        const value = btn.value;
+        hostInstance.welcomeScreenState = true;
+        hostInstance.chatEle.classList.remove('minimize-chat');
+        hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
+        hostInstance.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
+        hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+        if (!hostInstance.config.openSocket && !hostInstance.misc.chatOpened) {
+            hostInstance.bot.logInComplete();
+            hostInstance.misc.chatOpened = true;
+        }
+        if (value) {
+            if (hostInstance.config.loadHistory) {
+                hostInstance.on('historyComplete', (event: any) => {
+                    setTimeout(() => {
+                        hostInstance.sendMessage(value);
+                    }, 500);
+                });    
+            } else {
+                setTimeout(() => {
+                    hostInstance.sendMessage(value);
+                }, 500);
+            }
+        }
+    }
+
+    const dynamicContextResolver = (msg: any, data: any) => {
+        return msg.replace(/{{(.*?)}}/g, (match: any, key: any) => {
+            const trimmedKey = key.trim();
+            return data[trimmedKey] || match;
         });
-    }, [brandingInfo])
+    }
+
+    useEffect(() => {
+        if (hostInstance?.config?.branding?.chat_bubble.proactive?.show && (hostInstance.config.branding.chat_bubble.proactive.header || hostInstance.config.branding.chat_bubble.proactive.messages.length > 0) && !hostInstance.config.pwcConfig.enable) {
+            if (hostInstance.config.branding.general.sounds.enable && hostInstance.config.branding.general.sounds.on_proactive_msg.url != 'None') {
+                const playSound = new Audio(hostInstance.config.branding.general.sounds.on_proactive_msg.url);
+                playSound?.play().catch(error => {
+                    console.log('Error: ', error);
+                });
+            }
+        }
+    }, []);
 
     return (
-        <div className="avatar-variations-footer" aria-label="avatar footer">
+        <div className={avatarParentStyle} aria-label="avatar footer">
             <div className={avatarStyle} aria-label="avatar actions">
-                <div className="content-info">
-                    <div className="text-content animation-slide-up text-heading-one" role="contentinfo" aria-labelledby="helojohn">
-                        <h4 id="helojohn"></h4>
-                        <p className="help-text-content"></p>
+                {hostInstance?.config?.branding?.chat_bubble?.proactive?.show && (hostInstance.config.branding.chat_bubble.proactive.header || hostInstance.config.branding.chat_bubble.proactive.messages.length > 0 || hostInstance.config.branding.chat_bubble.proactive.buttons.length > 0) && !hostInstance.config.pwcConfig.enable && <div className="content-info">
+                    {hostInstance.config.branding.chat_bubble.proactive.header && <div className="text-content animation-slide-up text-heading-one" role="contentinfo" aria-labelledby={dynamicContextResolver(hostInstance.config.branding.chat_bubble.proactive.header, hostInstance.config.UIContext)}>
+                        <h4 id="hellokore">{dynamicContextResolver(hostInstance.config.branding.chat_bubble.proactive.header, hostInstance.config.UIContext)}</h4>
                         <span className="close-avatar-content" role="contentinfo" aria-label="close" onClick={closeHelp}>
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
                                 <path d="M10.8838 10.0001L16.0669 4.81694C16.311 4.57286 16.311 4.17714 16.0669 3.93306C15.8229 3.68898 15.4271 3.68898 15.1831 3.93306L9.99988 9.11624L4.81694 3.93352C4.57286 3.68944 4.17713 3.68945 3.93306 3.93354C3.68899 4.17762 3.689 4.57335 3.93308 4.81742L9.116 10.0001L3.93306 15.1831C3.68898 15.4272 3.68898 15.8229 3.93306 16.067C4.17714 16.311 4.57286 16.311 4.81694 16.067L9.9999 10.884L15.1831 16.067C15.4272 16.311 15.8229 16.311 16.067 16.0669C16.311 15.8229 16.311 15.4271 16.0669 15.1831L10.8838 10.0001Z" fill="#697586" />
                             </svg>
                         </span>
+                    </div>}
+                    {hostInstance?.config?.branding?.chat_bubble?.proactive?.messages?.map((msg: any, ind: any) => (
+                        (msg.title && <div className="text-content animation-slide-up text-heading-one" role="contentinfo" aria-labelledby={msg.title}>
+                            <p className="help-text-content">{dynamicContextResolver(msg.title, hostInstance.config.UIContext)}</p>
+                            {ind == 0 && !hostInstance.config.branding.chat_bubble.proactive.header && <span className="close-avatar-content" role="contentinfo" aria-label="close" onClick={closeHelp}>
+                                <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+                                    <path d="M10.8838 10.0001L16.0669 4.81694C16.311 4.57286 16.311 4.17714 16.0669 3.93306C15.8229 3.68898 15.4271 3.68898 15.1831 3.93306L9.99988 9.11624L4.81694 3.93352C4.57286 3.68944 4.17713 3.68945 3.93306 3.93354C3.68899 4.17762 3.689 4.57335 3.93308 4.81742L9.116 10.0001L3.93306 15.1831C3.68898 15.4272 3.68898 15.8229 3.93306 16.067C4.17714 16.311 4.57286 16.311 4.81694 16.067L9.9999 10.884L15.1831 16.067C15.4272 16.311 15.8229 16.311 16.067 16.0669C16.311 15.8229 16.311 15.4271 16.0669 15.1831L10.8838 10.0001Z" fill="#697586" />
+                                </svg>
+                            </span>}
+                        </div>)))}
+                    <div className="buttons-triger-click-wrapper animation-slide-up btn-anim-send">
+                        {hostInstance?.config?.branding?.chat_bubble?.proactive?.buttons?.map((btn: any) => (
+                            <button className="primary-button" onClick={() => buttonAction(btn)}>{btn.title}</button>
+                        ))}
                     </div>
-                    <div className="text-content animation-slide-up" role="contentinfo" aria-label="paragraph text">
-                        <p className="help-text-content">Can I help you any way?</p>
-                    </div>
-                    <button className="primary-button animation-slide-up">Send message</button>
-                </div>
-                <button className="avatar-bg">
-                    <span className="un-read-msg">2</span>
+                </div>}
+
+                <button className={avatarBgStyle}>
+                    {/* <span className="un-read-msg">2</span> */}
                     {brandingInfo.chat_bubble.icon.type == 'default' && <figure className="default-avater-icon">
                         {/* <img src={brandingInfo.chat_bubble.icon.icon_url} alt="Elephant at sunset" /> */}
                         {brandingInfo.chat_bubble.icon.icon_url && brandingInfo.chat_bubble.icon.icon_url == 'icon-1' && <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -92,11 +176,11 @@ export function AvatarComponent(props: any) {
                             <path d="M17.0492 13L12.2492 18M12.2492 18L7.44922 13M12.2492 18L12.2492 6" stroke="white" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" />
                         </svg></span>}
                     </figure>}
-                    {brandingInfo.chat_bubble.icon.type == 'custom' && <figure>
-                        <img className="custom-img-uploaded" src={brandingInfo.chat_bubble.icon.icon_url} />
+                    {brandingInfo.chat_bubble.icon.type == 'custom' && <figure className="custom-img-uploaded">
+                        <img src={brandingInfo.chat_bubble.icon.icon_url} />
                     </figure>}
-                    {brandingInfo.chat_bubble.minimise.type == 'custom' && <figure>
-                        <img className="custom-img-uploaded-minimize" src={brandingInfo.chat_bubble.minimise.icon} />
+                    {brandingInfo.chat_bubble.minimise.type == 'custom' && <figure className="custom-img-uploaded-minimize" >
+                        <img src={brandingInfo.chat_bubble.minimise.icon} />
                     </figure>}
                 </button>
             </div>

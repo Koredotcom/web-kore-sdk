@@ -61,6 +61,22 @@ const RetailBrandingJSON = {
             "theme": "rounded",
             "type": "default"
         },
+        "proactive": {
+            "show": true,
+            // "header": "Hello 😊",
+            "messages": [
+                {
+                    "title": "Hello 😊. ABC \n  I am your Virtual Shopping Assistant.\n How can I help you!"
+                }
+            ],
+            // "buttons": [
+            //     {
+            //         "title": "Send Message",
+            //         "type": "postback",
+            //         "value": ""
+            //     }
+            // ]
+        },
         "sound": "themeOne",
         "alignment": "inline",
         "animation": "slide",
@@ -76,10 +92,11 @@ const RetailBrandingJSON = {
             "name": "kore.ai"
         },
         "title": {
-            "name": "Hello"
+            "name": "Hello ",
+            'emoji': '😊'
         },
         "sub_title": {
-            "name": "I'm KORE's new AI, ready to assist you with all your shopping needs."
+            "name": "Hey there! I'm your shopping sidekick here at the Kore Store."
         },
         "note": {
             "name": ""
@@ -103,7 +120,7 @@ const RetailBrandingJSON = {
                 "show": true
             },
             "title": "Start Conversation",
-            "sub_text": "I can help you shop for products & answer questions.",
+            "sub_text": "Shop easy: buy, return, cancel, track orders - I've got you!",
             "start_conv_button": {
                 "color": "#4B4EDE"
             },
@@ -128,10 +145,10 @@ const RetailBrandingJSON = {
                     }
                 },
                 {
-                    "title": "Cancel my oder",
+                    "title": "Cancel my order",
                     "action": {
                         "type": "postback",
-                        "value": "Cancel my oder"
+                        "value": "Cancel my order"
                     }
                 }
                 ],
@@ -247,7 +264,7 @@ const RetailBrandingJSON = {
         "buttons": {
             "menu": {
                 "show": false,
-                "icon_color": "#000000" ,
+                "icon_color": "#000000",
                 "actions": [{
                     "title": "Get Balance",
                     "type": "postback",
@@ -303,20 +320,26 @@ const RetailBrandingJSON = {
             "color": "#000000"
         },
         "agent_message": {
-            "bg_color": "#FA8437",
-            "color": "#FFFFFF",
+            // "bg_color": "#FA8437",
+            // "color": "#FFFFFF",
+            "bg_color": "#eaecf0",
+            "color": "#000000",
             "separator": "3",
-            "icon": {
-                "show": "true|false",
-                "icon_url": "icomoon|url"
+           "icon": {
+              "show": true,
+              "icon_url": "https://retail-assist.s3.amazonaws.com/images/agent.jpg",
+            //   "icon_url": "/images/agent.jpg",
+            //   "icon_url": "https://platform.kore.ai/assets/websdkthemes/agent.jpg",
+              "type": "" // default
             },
             "title": {
-                "name": "I am your Virtual Shopping Assistant. How can I help you?",
+                "name": "Welcome to RetailAssist",
                 "color": "#0D6EFD"
             },
             "sub_title": {
-                "name": "Live Agent",
-                "color": "#0D6EFD"
+              "name": "Agent servcie",
+              "color": "#101828",
+              "type": "default"
             }
         },
         "time_stamp": {
@@ -324,7 +347,9 @@ const RetailBrandingJSON = {
             "show_type": "always",
             "position": "top",
             "separator": "line",
-            "color": "#0000FF"
+            "color": "#0000FF",
+            "time_format": "12",
+            "date_format": "dd/mm/yyyy"
         },
         "icon": {
             "show": true,
@@ -333,7 +358,7 @@ const RetailBrandingJSON = {
             "agent_icon": true
         },
         "buttons": {
-            "bg_color": "red",
+            "bg_color": "#444ce7",
             "color": "white"
         },
         "typing_indicator": {

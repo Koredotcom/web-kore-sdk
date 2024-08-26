@@ -2,7 +2,8 @@
   color: var(--adp-color-other-month);
 
   &:hover {
-    color: var(--adp-color-other-month-hover);
+    // color: var(--adp-cell-background-color-in-range);
+    // color: var(--adp-color-other-month-hover);
   }
 
   &.-disabled- {
@@ -20,11 +21,16 @@
   }
 
   &.-in-range- {
-    background-color: var(--adp-background-color-in-range);
+    background-color: var(--adp-cell-background-color-in-range);
+    // background-color: var(--adp-background-color-in-range);
     color: var(--adp-color);
 
     &.-focus- {
-      background-color: var(--adp-background-color-in-range-focused);
+      background-color: var(--adp-cell-background-color-in-range);
+    }
+    &.-disabled- {
+      background-color: var(--adp-background-color);
+      // background-color: var(--adp-background-color-in-range-focused);
     }
   }
 

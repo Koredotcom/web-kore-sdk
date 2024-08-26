@@ -36,3 +36,11 @@ export{SearchSuggestionsPlugin}from"./plugins/search-suggestions.js";
 export {KoreFileUploaderPlugin} from './plugins/file-upload.js';
 // @ts-ignore
 export {KoreMultiFileUploaderPlugin} from './plugins/multi-file-upload.js';
+// @ts-ignore
+export {AnswersTemplatesPlugin} from './plugins/answers-template.js';
+// @ts-ignore
+export {ProactiveWebCampaignPlugin} from './plugins/proactive-web-campaign.js';
+// @ts-ignore
+export {V2Plugin} from './plugins/v2-plugin.js';
+// @ts-ignore
+export {V2KoreWidgetSDK, V2WidgetsConfig} from './plugins/v2-kore-web-sdk-widgets.js';

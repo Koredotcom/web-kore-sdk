@@ -154,6 +154,8 @@ class AgentDesktopPluginScript  {
     koreCoBrowse;
     rrweb;
     authResponse;
+    agentDefaultProfileIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDMiIHZpZXdCb3g9IjAgMCA0OCA0MyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIxNF8xMTA3NDgpIj4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0iI0VBRjFGQyIvPgo8cGF0aCBkPSJNMjIgMjIuMjVDMjUuNTg5OSAyMi4yNSAyOC41IDE5LjMzOTkgMjguNSAxNS43NUMyOC41IDEyLjE2MDEgMjUuNTg5OSA5LjI1IDIyIDkuMjVDMTguNDEwMiA5LjI1IDE1LjUgMTIuMTYwMSAxNS41IDE1Ljc1QzE1LjUgMTkuMzM5OSAxOC40MTAyIDIyLjI1IDIyIDIyLjI1WiIgZmlsbD0iIzJCNzVFNCIvPgo8cGF0aCBkPSJNNi44MzMzNyA0MS43NUM2LjgzMzM3IDMzLjM3MzcgMTMuNjIzNyAyNi41ODMzIDIyIDI2LjU4MzNDMzAuMzc2NCAyNi41ODMzIDM3LjE2NjcgMzMuMzczNyAzNy4xNjY3IDQxLjc1SDYuODMzMzdaIiBmaWxsPSIjMkI3NUU0Ii8+CjwvZz4KPHJlY3QgeD0iMS4yNSIgeT0iMC43NSIgd2lkdGg9IjQxLjUiIGhlaWdodD0iNDEuNSIgcng9IjIwLjc1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8yMTRfMTEwNzQ4Ij4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K';
+
     constructor(config,response) {
         this.config = {
             ...this.config,
@@ -194,7 +196,7 @@ class AgentDesktopPluginScript  {
         let me = this;
         this.authResponse = null;
         let cwInstance = this.config.hostInstance;
-        let botInstance = cwInstance.bot;
+        let botInstance = cwInstance?.bot;
         console.log("agentdesktop uuId", uuId);
         /*if (uuId && uuId.length > 0) {
             localStorage.setItem("kr-cw-uid", uuId)
@@ -207,7 +209,9 @@ class AgentDesktopPluginScript  {
             me.autoStartCobrowse();
         }
         var _self = this;
-        this.phone = new AudioCodesUA();
+        if (!this.config.isCobrowseSession) { // DONOT initiate a audiocodes for cobrowse session.
+            this.phone = new AudioCodesUA();
+        }
         this.activeCall = null;
         this.callDetails = null;
         this.callAccepted = false;
@@ -257,7 +261,7 @@ class AgentDesktopPluginScript  {
         }
         this.callTerminated = function () {
             var callContainer = koreJquery("#callcontainer");
-            callContainer.empty();
+            callContainer.remove();
             this.removeAudoVideoContainer();
             this.disableMinimizeButton(false);
         }
@@ -292,21 +296,21 @@ class AgentDesktopPluginScript  {
                 if (videoCall) {
                     footerButtonsHTML += `
                     <div id="videobuttons" class="btn_actions video-btns-wrapper active-">
-                        <button class="enable-video">
-                            <span class="video-unmute">
-                                <svg width="17" height="16" viewBox="0 0 17 16" fill="none">
-                                    <path d="M4.19365 2.37415C4.02358 2.17992 3.74795 2.17998 3.57794 2.37427C3.40807 2.56841 3.40786 2.88309 3.57747 3.07752L4.38135 3.99907H2.8125C2.09131 3.99907 1.5 4.67485 1.5 5.49907V10.4991C1.5 11.3233 2.09131 11.9991 2.8125 11.9991H10.6875C10.8892 11.9991 11.0806 11.9444 11.2515 11.8506L12.8 13.6236C12.9716 13.8201 13.2502 13.8203 13.422 13.624C13.5937 13.4277 13.5936 13.1095 13.4219 12.9134L4.19365 2.37415ZM15.5 4.74826C15.5 4.36502 15.1383 4.12426 14.8466 4.31338L12 6.15922V5.49907C12 4.67094 11.4121 3.99907 10.6875 3.99907H6.82178L7.69678 4.99907H10.6875C10.9302 4.99907 11.125 5.22172 11.125 5.49907V8.87407L12 9.87407L14.8491 11.6929C15.1408 11.8791 15.5 11.6382 15.5 11.2564V4.74826ZM2.8125 4.99907H5.25635L10.5063 10.9991H2.8125C2.56641 10.9991 2.375 10.7803 2.375 10.4991V5.49907C2.375 5.21782 2.56641 4.99907 2.8125 4.99907ZM14.625 5.60844V10.3897L12 8.71782V7.30766L14.625 5.60844Z" fill="white"/>
-                                </svg>
-                            </span>
-                            <span class="video-mute">
-                                <svg width="15" height="12" viewBox="0 0 15 12" fill="none">
-                                    <path d="M9.83333 4.4451L13.3744 2.67457C13.8915 2.41599 14.5 2.79205 14.5 3.37023V8.63107C14.5 9.20926 13.8915 9.58531 13.3744 9.32674L9.83333 7.55621M2.05556 10.6673H8.27778C9.13689 10.6673 9.83333 9.97087 9.83333 9.11176V2.88954C9.83333 2.03043 9.13689 1.33398 8.27778 1.33398H2.05556C1.19645 1.33398 0.5 2.03043 0.5 2.88954V9.11176C0.5 9.97087 1.19645 10.6673 2.05556 10.6673Z" stroke="#000" stroke-width="1.01639" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>                                
-                            </span>                            
-                        </button>
-                        <p class="video-off">Video On</p>
-                        <p class="video-on">Video Off</p>
-                    </div>`;
+                    <button class="enable-video">
+                        <span class="video-unmute">
+                            <svg width="17" height="16" viewBox="0 0 17 16" fill="none">
+                                <path d="M4.19365 2.37415C4.02358 2.17992 3.74795 2.17998 3.57794 2.37427C3.40807 2.56841 3.40786 2.88309 3.57747 3.07752L4.38135 3.99907H2.8125C2.09131 3.99907 1.5 4.67485 1.5 5.49907V10.4991C1.5 11.3233 2.09131 11.9991 2.8125 11.9991H10.6875C10.8892 11.9991 11.0806 11.9444 11.2515 11.8506L12.8 13.6236C12.9716 13.8201 13.2502 13.8203 13.422 13.624C13.5937 13.4277 13.5936 13.1095 13.4219 12.9134L4.19365 2.37415ZM15.5 4.74826C15.5 4.36502 15.1383 4.12426 14.8466 4.31338L12 6.15922V5.49907C12 4.67094 11.4121 3.99907 10.6875 3.99907H6.82178L7.69678 4.99907H10.6875C10.9302 4.99907 11.125 5.22172 11.125 5.49907V8.87407L12 9.87407L14.8491 11.6929C15.1408 11.8791 15.5 11.6382 15.5 11.2564V4.74826ZM2.8125 4.99907H5.25635L10.5063 10.9991H2.8125C2.56641 10.9991 2.375 10.7803 2.375 10.4991V5.49907C2.375 5.21782 2.56641 4.99907 2.8125 4.99907ZM14.625 5.60844V10.3897L12 8.71782V7.30766L14.625 5.60844Z" fill="white"/>
+                            </svg>
+                        </span>
+                        <span class="video-mute">
+                            <svg width="15" height="12" viewBox="0 0 15 12" fill="none">
+                                <path d="M9.83333 4.4451L13.3744 2.67457C13.8915 2.41599 14.5 2.79205 14.5 3.37023V8.63107C14.5 9.20926 13.8915 9.58531 13.3744 9.32674L9.83333 7.55621M2.05556 10.6673H8.27778C9.13689 10.6673 9.83333 9.97087 9.83333 9.11176V2.88954C9.83333 2.03043 9.13689 1.33398 8.27778 1.33398H2.05556C1.19645 1.33398 0.5 2.03043 0.5 2.88954V9.11176C0.5 9.97087 1.19645 10.6673 2.05556 10.6673Z" stroke="#000" stroke-width="1.01639" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>                                
+                        </span>                            
+                    </button>
+                    <p class="video-off">Video On</p>
+                    <p class="video-on">Video Off</p>
+                </div>`;
                 }
                 footerButtonsHTML += `</div>`;
             }
@@ -330,6 +334,7 @@ class AgentDesktopPluginScript  {
             closecallbutton.off('click').on('click', function (event) {
                 if (callConnected) {
                     _self.activeCall.terminate();
+                    sendCallTerminateEvent();
                 }
             });
             var sendSelfVideo = true;
@@ -363,7 +368,6 @@ class AgentDesktopPluginScript  {
         this.fullScreen = false;
         this.callConnected = function (videoCall, agentName) {
             var videoAudoStr = videoCall ? 'video' : 'audio';
-
             var callConnectedHTML =
                 `<div do-not-mutate="true" class="video-audio-chat-container ${videoAudoStr}">
             <div class="video-chat-">
@@ -372,47 +376,53 @@ class AgentDesktopPluginScript  {
             <div id="callbuttons"></div>
         </div>`;
             var videoContainerHTML =
-                `<div id="video_view" class="video-view-">
-            <video id="kore_remote_video_tmp" autoplay="autoplay" playsinline style="display: block;"></video>
-            <div class="action-minimize-audio-control">
-                <div id="maximizevideo" class="maximize-video">
-                    <span class="maximize-icon">
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                            <path d="M7.5 1.125C7.29289 1.125 7.125 1.29289 7.125 1.5C7.125 1.70711 7.29289 1.875 7.5 1.875H9.59473L1.875 9.59473V7.5C1.875 7.29289 1.70711 7.125 1.5 7.125C1.29289 7.125 1.125 7.29289 1.125 7.5V10.5341C1.125 10.7224 1.27763 10.875 1.46591 10.875H4.5C4.70711 10.875 4.875 10.7071 4.875 10.5C4.875 10.2929 4.70711 10.125 4.5 10.125H2.40527L10.125 2.40527V4.5C10.125 4.70711 10.2929 4.875 10.5 4.875C10.7071 4.875 10.875 4.70711 10.875 4.5V1.46591C10.875 1.27763 10.7224 1.125 10.5341 1.125H7.5Z" fill="white"/>
+            `<div id="video_view" class="video-view-">
+                <video id="kore_remote_video_tmp" autoplay="autoplay" playsinline style="display: block;"></video>
+                <div class="action-minimize-audio-control">
+                    <div id="maximizevideo" class="maximize-video">
+                        <span class="maximize-icon">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                <path d="M7.5 1.125C7.29289 1.125 7.125 1.29289 7.125 1.5C7.125 1.70711 7.29289 1.875 7.5 1.875H9.59473L1.875 9.59473V7.5C1.875 7.29289 1.70711 7.125 1.5 7.125C1.29289 7.125 1.125 7.29289 1.125 7.5V10.5341C1.125 10.7224 1.27763 10.875 1.46591 10.875H4.5C4.70711 10.875 4.875 10.7071 4.875 10.5C4.875 10.2929 4.70711 10.125 4.5 10.125H2.40527L10.125 2.40527V4.5C10.125 4.70711 10.2929 4.875 10.5 4.875C10.7071 4.875 10.875 4.70711 10.875 4.5V1.46591C10.875 1.27763 10.7224 1.125 10.5341 1.125H7.5Z" fill="white"/>
+                            </svg>
+                        </span>
+                        <span class="minimize-icon">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                <g clip-path="url(#clip0_1305_135743)">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.1402 0.859835C11.2866 1.00628 11.2866 1.24372 11.1402 1.39017L7.28033 5.25H9.75C9.95711 5.25 10.125 5.41789 10.125 5.625C10.125 5.83211 9.95711 6 9.75 6H6.375C6.16789 6 6 5.83211 6 5.625V2.25C6 2.04289 6.16789 1.875 6.375 1.875C6.58211 1.875 6.75 2.04289 6.75 2.25V4.71967L10.6098 0.859835C10.7563 0.713388 10.9937 0.713388 11.1402 0.859835ZM1.875 6.375C1.875 6.16789 2.04289 6 2.25 6H5.625C5.83211 6 6 6.16789 6 6.375V9.75C6 9.95711 5.83211 10.125 5.625 10.125C5.41789 10.125 5.25 9.95711 5.25 9.75V7.28033L1.39017 11.1402C1.24372 11.2866 1.00628 11.2866 0.859835 11.1402C0.713388 10.9937 0.713388 10.7563 0.859835 10.6098L4.71967 6.75H2.25C2.04289 6.75 1.875 6.58211 1.875 6.375Z" fill="white"/>
+                                </g>
+                            <defs>
+                                <clipPath id="clip0_1305_135743">
+                                    <rect width="12" height="12" fill="white"/>
+                                </clipPath>
+                            </defs>
                         </svg>
-                    </span>
-                    <span class="minimize-icon">
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                            <g clip-path="url(#clip0_1305_135743)">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M11.1402 0.859835C11.2866 1.00628 11.2866 1.24372 11.1402 1.39017L7.28033 5.25H9.75C9.95711 5.25 10.125 5.41789 10.125 5.625C10.125 5.83211 9.95711 6 9.75 6H6.375C6.16789 6 6 5.83211 6 5.625V2.25C6 2.04289 6.16789 1.875 6.375 1.875C6.58211 1.875 6.75 2.04289 6.75 2.25V4.71967L10.6098 0.859835C10.7563 0.713388 10.9937 0.713388 11.1402 0.859835ZM1.875 6.375C1.875 6.16789 2.04289 6 2.25 6H5.625C5.83211 6 6 6.16789 6 6.375V9.75C6 9.95711 5.83211 10.125 5.625 10.125C5.41789 10.125 5.25 9.95711 5.25 9.75V7.28033L1.39017 11.1402C1.24372 11.2866 1.00628 11.2866 0.859835 11.1402C0.713388 10.9937 0.713388 10.7563 0.859835 10.6098L4.71967 6.75H2.25C2.04289 6.75 1.875 6.58211 1.875 6.375Z" fill="white"/>
-                            </g>
-                        <defs>
-                            <clipPath id="clip0_1305_135743">
-                                <rect width="12" height="12" fill="white"/>
-                            </clipPath>
-                        </defs>
-                    </svg>
-                    </span>
+                        </span>
+                    </div>
+                </div>
+                <div id="showselfvideocontainer" class="show-self-video-container">
+                    <div class="show-self-video">
+                        <img alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwIDAuMzk4NDM4QzYuNTcxODggMC4zOTg0MzggMy42OTY4OCAyLjgxMDk0IDIuOTc1IDYuMDIzNDRDMy4wNDg0NCA2LjAxNTYyIDMuMTI1IDUuOTk4NDQgMy4yIDUuOTk4NDRDMy40MDQ2OSA1Ljk5ODQ0IDMuNjAxNTYgNi4wNDA2MyAzLjc4NzUgNi4wOTg0NEM0LjQ2NTYzIDMuMjkzNzUgNi45ODkwNiAxLjE5ODQ0IDEwIDEuMTk4NDRDMTMuMDA5NCAxLjE5ODQ0IDE1LjUzNDQgMy4yOTM3NSAxNi4yMTI1IDYuMDk4NDRDMTYuMzk4NCA2LjA0MDYzIDE2LjU5MzggNS45OTg0NCAxNi44IDUuOTk4NDRDMTYuODc1IDUuOTk4NDQgMTYuOTUxNiA2LjAxNTYyIDE3LjAyNSA2LjAyMzQ0QzE2LjMwMzEgMi44MTA5NCAxMy40MjY2IDAuMzk4NDM4IDEwIDAuMzk4NDM4Wk0zLjIgNi43OTg0NEMyLjUzOTA2IDYuNzk4NDQgMiA3LjMzNzUgMiA3Ljk5ODQ0VjEzLjk5ODRDMiAxNC42NTk0IDIuNTM5MDYgMTUuMTk4NCAzLjIgMTUuMTk4NEMzLjg2MDk0IDE1LjE5ODQgNC40IDE0LjY1OTQgNC40IDEzLjk5ODRWNy45OTg0NEM0LjQgNy4zMzc1IDMuODYwOTQgNi43OTg0NCAzLjIgNi43OTg0NFpNMTYuOCA2Ljc5ODQ0QzE2LjEzOTEgNi43OTg0NCAxNS42IDcuMzM3NSAxNS42IDcuOTk4NDRWMTMuOTk4NEMxNS42IDE0LjY1OTQgMTYuMTM5MSAxNS4xOTg0IDE2LjggMTUuMTk4NEMxNy40NjA5IDE1LjE5ODQgMTggMTQuNjU5NCAxOCAxMy45OTg0VjcuOTk4NDRDMTggNy4zMzc1IDE3LjQ2MDkgNi43OTg0NCAxNi44IDYuNzk4NDRaTTEuMiA4LjA0ODQ0QzAuNDc4MTI1IDguNjI4MTMgMCA5LjcxNTYyIDAgMTAuOTk4NEMwIDEyLjI4MTIgMC40NzgxMjUgMTMuMzY4OCAxLjIgMTMuOTQ4NFY4LjA0ODQ0Wk0xOC44IDguMDQ4NDRWMTMuOTQ4NEMxOS41MjE5IDEzLjM2ODggMjAgMTIuMjgxMiAyMCAxMC45OTg0QzIwIDkuNzE1NjIgMTkuNTIxOSA4LjYyODEzIDE4LjggOC4wNDg0NFpNMTYuMjM3NSAxNS45MTA5QzE1Ljg4NDQgMTYuOTk2OSAxNC45NjcyIDE3LjU5ODQgMTMuNiAxNy41OTg0SDEzLjE2MjVDMTMuMTg5MSAxNy43MjgxIDEzLjIgMTcuODYwOSAxMy4yIDE3Ljk5ODRDMTMuMiAxOC4xMzU5IDEzLjE4OTEgMTguMjY4NyAxMy4xNjI1IDE4LjM5ODRIMTMuNkMxNS4zOTY5IDE4LjM5ODQgMTYuNjQwNiAxNy40OTUzIDE3LjA1IDE1Ljk3MzRDMTYuOTY1NiAxNS45ODQ0IDE2Ljg4NTkgMTUuOTk4NCAxNi44IDE1Ljk5ODRDMTYuNjAzMSAxNS45OTg0IDE2LjQxNzIgMTUuOTY0MSAxNi4yMzc1IDE1LjkxMDlaTTkuMiAxNi43OTg0QzguNTM5MDYgMTYuNzk4NCA4IDE3LjMzNzUgOCAxNy45OTg0QzggMTguNjU5NCA4LjUzOTA2IDE5LjE5ODQgOS4yIDE5LjE5ODRIMTEuMkMxMS44NjA5IDE5LjE5ODQgMTIuNCAxOC42NTk0IDEyLjQgMTcuOTk4NEMxMi40IDE3LjMzNzUgMTEuODYwOSAxNi43OTg0IDExLjIgMTYuNzk4NEg5LjJaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K" />
+                    </div>
+                </div>
+                <div id="selfvideocontainer" class="self-video-container">
+                    <div class="self-video">
+                        <div id="agentyou" class="video-user-alphabet">YOU</div>
+                        <video id="kore_local_video_tmp" autoplay="autoplay" playsinline style="display: block;"></video>
+                    </div>
+                    <div id="closeselfvideo" class="close-video">
+                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+                            <path d="M10.8838 10.0001L16.0669 4.81694C16.311 4.57286 16.311 4.17714 16.0669 3.93306C15.8229 3.68898 15.4271 3.68898 15.1831 3.93306L9.99988 9.11624L4.81694 3.93352C4.57286 3.68944 4.17713 3.68945 3.93306 3.93354C3.68899 4.17762 3.689 4.57335 3.93308 4.81742L9.116 10.0001L3.93306 15.1831C3.68898 15.4272 3.68898 15.8229 3.93306 16.067C4.17714 16.311 4.57286 16.311 4.81694 16.067L9.9999 10.884L15.1831 16.067C15.4272 16.311 15.8229 16.311 16.067 16.0669C16.311 15.8229 16.311 15.4271 16.0669 15.1831L10.8838 10.0001Z" fill="#697586"/>
+                        </svg>
+                    </div>
                 </div>
             </div>
-            <div id="showselfvideocontainer" class="show-self-video-container">
-                <div class="show-self-video">
-                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwIDAuMzk4NDM4QzYuNTcxODggMC4zOTg0MzggMy42OTY4OCAyLjgxMDk0IDIuOTc1IDYuMDIzNDRDMy4wNDg0NCA2LjAxNTYyIDMuMTI1IDUuOTk4NDQgMy4yIDUuOTk4NDRDMy40MDQ2OSA1Ljk5ODQ0IDMuNjAxNTYgNi4wNDA2MyAzLjc4NzUgNi4wOTg0NEM0LjQ2NTYzIDMuMjkzNzUgNi45ODkwNiAxLjE5ODQ0IDEwIDEuMTk4NDRDMTMuMDA5NCAxLjE5ODQ0IDE1LjUzNDQgMy4yOTM3NSAxNi4yMTI1IDYuMDk4NDRDMTYuMzk4NCA2LjA0MDYzIDE2LjU5MzggNS45OTg0NCAxNi44IDUuOTk4NDRDMTYuODc1IDUuOTk4NDQgMTYuOTUxNiA2LjAxNTYyIDE3LjAyNSA2LjAyMzQ0QzE2LjMwMzEgMi44MTA5NCAxMy40MjY2IDAuMzk4NDM4IDEwIDAuMzk4NDM4Wk0zLjIgNi43OTg0NEMyLjUzOTA2IDYuNzk4NDQgMiA3LjMzNzUgMiA3Ljk5ODQ0VjEzLjk5ODRDMiAxNC42NTk0IDIuNTM5MDYgMTUuMTk4NCAzLjIgMTUuMTk4NEMzLjg2MDk0IDE1LjE5ODQgNC40IDE0LjY1OTQgNC40IDEzLjk5ODRWNy45OTg0NEM0LjQgNy4zMzc1IDMuODYwOTQgNi43OTg0NCAzLjIgNi43OTg0NFpNMTYuOCA2Ljc5ODQ0QzE2LjEzOTEgNi43OTg0NCAxNS42IDcuMzM3NSAxNS42IDcuOTk4NDRWMTMuOTk4NEMxNS42IDE0LjY1OTQgMTYuMTM5MSAxNS4xOTg0IDE2LjggMTUuMTk4NEMxNy40NjA5IDE1LjE5ODQgMTggMTQuNjU5NCAxOCAxMy45OTg0VjcuOTk4NDRDMTggNy4zMzc1IDE3LjQ2MDkgNi43OTg0NCAxNi44IDYuNzk4NDRaTTEuMiA4LjA0ODQ0QzAuNDc4MTI1IDguNjI4MTMgMCA5LjcxNTYyIDAgMTAuOTk4NEMwIDEyLjI4MTIgMC40NzgxMjUgMTMuMzY4OCAxLjIgMTMuOTQ4NFY4LjA0ODQ0Wk0xOC44IDguMDQ4NDRWMTMuOTQ4NEMxOS41MjE5IDEzLjM2ODggMjAgMTIuMjgxMiAyMCAxMC45OTg0QzIwIDkuNzE1NjIgMTkuNTIxOSA4LjYyODEzIDE4LjggOC4wNDg0NFpNMTYuMjM3NSAxNS45MTA5QzE1Ljg4NDQgMTYuOTk2OSAxNC45NjcyIDE3LjU5ODQgMTMuNiAxNy41OTg0SDEzLjE2MjVDMTMuMTg5MSAxNy43MjgxIDEzLjIgMTcuODYwOSAxMy4yIDE3Ljk5ODRDMTMuMiAxOC4xMzU5IDEzLjE4OTEgMTguMjY4NyAxMy4xNjI1IDE4LjM5ODRIMTMuNkMxNS4zOTY5IDE4LjM5ODQgMTYuNjQwNiAxNy40OTUzIDE3LjA1IDE1Ljk3MzRDMTYuOTY1NiAxNS45ODQ0IDE2Ljg4NTkgMTUuOTk4NCAxNi44IDE1Ljk5ODRDMTYuNjAzMSAxNS45OTg0IDE2LjQxNzIgMTUuOTY0MSAxNi4yMzc1IDE1LjkxMDlaTTkuMiAxNi43OTg0QzguNTM5MDYgMTYuNzk4NCA4IDE3LjMzNzUgOCAxNy45OTg0QzggMTguNjU5NCA4LjUzOTA2IDE5LjE5ODQgOS4yIDE5LjE5ODRIMTEuMkMxMS44NjA5IDE5LjE5ODQgMTIuNCAxOC42NTk0IDEyLjQgMTcuOTk4NEMxMi40IDE3LjMzNzUgMTEuODYwOSAxNi43OTg0IDExLjIgMTYuNzk4NEg5LjJaIiBmaWxsPSIjMjAyMTI0Ii8+Cjwvc3ZnPgo=" />
-                </div>
-            </div>
-            <div id="selfvideocontainer" class="self-video-container">
-            <div class="self-video">
-                <div id="agentyou" class="video-user-alphabet">YOU</div>
-                <video id="kore_local_video_tmp" autoplay="autoplay" playsinline style="display: block;"></video>
-            </div>
-            </div>
-        </div>
        `;
 
+            var videoAudoStr = videoCall ? 'video' : 'audio';
             var audioContainerHTML =
                 `<div id="video_view" class="video-view- audio-view-">
                     <div class="agent-profile-img">
-                        <img src="${_self.agentProfileIcon}"> 
+                        <img src="${_self.agentProfileIcon}" alt='Agent' onerror="this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDMiIHZpZXdCb3g9IjAgMCA0OCA0MyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIxNF8xMTA3NDgpIj4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0iI0VBRjFGQyIvPgo8cGF0aCBkPSJNMjIgMjIuMjVDMjUuNTg5OSAyMi4yNSAyOC41IDE5LjMzOTkgMjguNSAxNS43NUMyOC41IDEyLjE2MDEgMjUuNTg5OSA5LjI1IDIyIDkuMjVDMTguNDEwMiA5LjI1IDE1LjUgMTIuMTYwMSAxNS41IDE1Ljc1QzE1LjUgMTkuMzM5OSAxOC40MTAyIDIyLjI1IDIyIDIyLjI1WiIgZmlsbD0iIzJCNzVFNCIvPgo8cGF0aCBkPSJNNi44MzMzNyA0MS43NUM2LjgzMzM3IDMzLjM3MzcgMTMuNjIzNyAyNi41ODMzIDIyIDI2LjU4MzNDMzAuMzc2NCAyNi41ODMzIDM3LjE2NjcgMzMuMzczNyAzNy4xNjY3IDQxLjc1SDYuODMzMzdaIiBmaWxsPSIjMkI3NUU0Ii8+CjwvZz4KPHJlY3QgeD0iMS4yNSIgeT0iMC43NSIgd2lkdGg9IjQxLjUiIGhlaWdodD0iNDEuNSIgcng9IjIwLjc1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8yMTRfMTEwNzQ4Ij4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K'"> 
                     </div>
                     <div class="video-name-title">${agentName}</div>
                     <div class="title">Connected ${videoAudoStr} Call...</div>
@@ -471,30 +481,32 @@ class AgentDesktopPluginScript  {
                         "right": "15px",
                         "left": "",
                     });
-                    audiovideocallcontainer.css({ });
+                    audiovideocallcontainer.css({});
                     var showselfvideocontainer = koreJquery("#showselfvideocontainer").hide();
 
-                    // var closeselfvideo = koreJquery("#closeselfvideo");
-                    // closeselfvideo.off('click').on('click', function (event) {
-                    //     koreJquery("#selfvideocontainer").hide();
-                    //     showselfvideocontainer.show();
-                    // });
+                    var closeselfvideo = koreJquery("#closeselfvideo");
+                    closeselfvideo.off('click').on('click', function (event) {
+                        koreJquery("#selfvideocontainer").hide();
+                        showselfvideocontainer.show();
+                    });
                     showselfvideocontainer.off('click').on('click', function (event) {
                         koreJquery("#selfvideocontainer").show();
                         showselfvideocontainer.hide();
                     });
                     var maximizevideo = koreJquery("#maximizevideo");
                     maximizevideo.off('click').on('click', function (event) {
-                        var elem = document.getElementById("agentcontainer");
+                        var elem = document.getElementById("audiovideocallcontainer");
                         if (!_self.fullScreen) {
-                            // koreJquery("#selfvideocontainer").css({
-                                
-                            // });
+                            koreJquery("#selfvideocontainer").css({
+                                "top": "174px",
+                                "right": "15px",
+                                "left": "",
+                            });
+                            koreJquery('#agentcontainer').toggleClass('full-screen-video')
                             // koreJquery("#selfvideocontainer").draggable({
                             //     containment: "document"
                             // });
                             _self.fullScreen = true;
-                            elem.classList.add('full-screen-video');
                             // if (elem.requestFullscreen) {
                             //     elem.requestFullscreen();
                             // } else if (elem.webkitRequestFullscreen) { /* Safari */
@@ -504,13 +516,15 @@ class AgentDesktopPluginScript  {
                             // }
                         } else {
                             _self.fullScreen = false;
-                            elem.classList.remove('full-screen-video');
-                            // document.exitFullscreen();
+                            document.exitFullscreen();
                             // koreJquery("#selfvideocontainer").draggable({
                             //     containment: ".video-audio-chat-container"
                             // });
-                            // koreJquery("#selfvideocontainer").css({
-                            // });
+                            koreJquery("#selfvideocontainer").css({
+                                "top": "65px",
+                                "right": "15px",
+                                "left": "",
+                            });
 
                         }
                     });
@@ -529,15 +543,26 @@ class AgentDesktopPluginScript  {
         }
 
         this.callConnecting = function (videoCall, agentName) {
-            var videoAudoStr = videoCall ? 'Video' : 'Audio';
+            var callcontainer = document.getElementById("callcontainer");
+            if (callcontainer) {
+                callcontainer.remove();
+                callcontainer = null;
+            }
+            if (!callcontainer) {
+                callcontainer = document.createElement("div");
+                callcontainer.id = "callcontainer";
+                var agentcontainer = document.getElementById("agentcontainer");
+                agentcontainer.appendChild(callcontainer);
+            }
+            var videoAudoStr = videoCall ? 'video' : 'audio';
             var callConnectingHTML =
                 `<div class="video-audio-chat-container ${videoAudoStr}">
                     <div class="video-chat-">
                         <div id="video_view" class="video-view- audio-view-">
                             <div class="agent-profile-img">
-                                <img src="${_self.agentProfileIcon}"> 
+                                <img src="${_self.agentProfileIcon}" alt='Agent' onerror="this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDMiIHZpZXdCb3g9IjAgMCA0OCA0MyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIxNF8xMTA3NDgpIj4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0iI0VBRjFGQyIvPgo8cGF0aCBkPSJNMjIgMjIuMjVDMjUuNTg5OSAyMi4yNSAyOC41IDE5LjMzOTkgMjguNSAxNS43NUMyOC41IDEyLjE2MDEgMjUuNTg5OSA5LjI1IDIyIDkuMjVDMTguNDEwMiA5LjI1IDE1LjUgMTIuMTYwMSAxNS41IDE1Ljc1QzE1LjUgMTkuMzM5OSAxOC40MTAyIDIyLjI1IDIyIDIyLjI1WiIgZmlsbD0iIzJCNzVFNCIvPgo8cGF0aCBkPSJNNi44MzMzNyA0MS43NUM2LjgzMzM3IDMzLjM3MzcgMTMuNjIzNyAyNi41ODMzIDIyIDI2LjU4MzNDMzAuMzc2NCAyNi41ODMzIDM3LjE2NjcgMzMuMzczNyAzNy4xNjY3IDQxLjc1SDYuODMzMzdaIiBmaWxsPSIjMkI3NUU0Ii8+CjwvZz4KPHJlY3QgeD0iMS4yNSIgeT0iMC43NSIgd2lkdGg9IjQxLjUiIGhlaWdodD0iNDEuNSIgcng9IjIwLjc1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8yMTRfMTEwNzQ4Ij4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K'"> 
                             </div>
-                            <div class="video-name-title">${agentName} <span></span>1m 0s</div>
+                            <div class="video-name-title">${agentName}</div>
                             <div class="title">Connecting ${videoAudoStr} Call...</div>
                             <div class="audio-info">Disconnecting ${videoAudoStr} call doesn't end conversation</div>
                         </div>										
@@ -565,10 +590,21 @@ class AgentDesktopPluginScript  {
             _self.showFooterButtons(false, _self.callDetails.videoCall);
         }
         this.showScreenShareMessage = function (videoCall, agentName) {
+            var toastcontainer = document.getElementById("toastcontainer");
+            if (toastcontainer) {
+                toastcontainer.remove();
+                toastcontainer = null;
+            }
+            if (!toastcontainer) {
+                toastcontainer = document.createElement("div");
+                toastcontainer.id = "toastcontainer";
+                var agentcontainer = document.getElementById("agentcontainer");
+                agentcontainer.appendChild(toastcontainer);
+            }
             var incomingCall = `
         <div class="initial-video-audio-container">
             <div class="ad-img-block">
-                <img src="${_self.agentProfileIcon}" />
+                <img src="${_self.agentProfileIcon}" alt='Agent' onerror="this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDMiIHZpZXdCb3g9IjAgMCA0OCA0MyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIxNF8xMTA3NDgpIj4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0iI0VBRjFGQyIvPgo8cGF0aCBkPSJNMjIgMjIuMjVDMjUuNTg5OSAyMi4yNSAyOC41IDE5LjMzOTkgMjguNSAxNS43NUMyOC41IDEyLjE2MDEgMjUuNTg5OSA5LjI1IDIyIDkuMjVDMTguNDEwMiA5LjI1IDE1LjUgMTIuMTYwMSAxNS41IDE1Ljc1QzE1LjUgMTkuMzM5OSAxOC40MTAyIDIyLjI1IDIyIDIyLjI1WiIgZmlsbD0iIzJCNzVFNCIvPgo8cGF0aCBkPSJNNi44MzMzNyA0MS43NUM2LjgzMzM3IDMzLjM3MzcgMTMuNjIzNyAyNi41ODMzIDIyIDI2LjU4MzNDMzAuMzc2NCAyNi41ODMzIDM3LjE2NjcgMzMuMzczNyAzNy4xNjY3IDQxLjc1SDYuODMzMzdaIiBmaWxsPSIjMkI3NUU0Ii8+CjwvZz4KPHJlY3QgeD0iMS4yNSIgeT0iMC43NSIgd2lkdGg9IjQxLjUiIGhlaWdodD0iNDEuNSIgcng9IjIwLjc1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8yMTRfMTEwNzQ4Ij4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K'"/>
             </div>
             <div class="content-desc">
                 <div class="name">${agentName}</div>
@@ -576,10 +612,10 @@ class AgentDesktopPluginScript  {
             </div>
             <div class="controls-v-a">
                 <button id="rejectcall" class="decline-btn">Decline</button>
-                <button id="acceptcall" class="accept-btn">Accept</button>                
+                <button id="acceptcall" class="accept-btn">Accept</button>               
             </div>
         </div>`;
-            var toastContainer = koreJquery("#toast");
+            var toastContainer = koreJquery("#toastcontainer");
             toastContainer.empty();
             toastContainer.append(incomingCall);
 
@@ -593,28 +629,30 @@ class AgentDesktopPluginScript  {
                     }
                     _self.activeCall.stopScreenSharing();
                 }
-                toastContainer.empty();
+                toastContainer.remove();
             });
             acceptCall.off('click').on('click', function (event) {
                 if (_self.activeCall) {
                     _self.screenShare(_self.callDetails);
                 }
-                toastContainer.empty();
+                toastContainer.remove();
             });
         }
         this.showIncomingCallMessage = function (videoCall, agentName) {
 
             var audioVideoStr = videoCall ? 'video' : 'audio';
-            var toastContainer = document.getElementById("toast");
-            if (toastContainer) {
-                toastContainer.remove();
-                toastContainer = null;
+            var toastcontainer = document.getElementById("toastcontainer");
+            if (toastcontainer) {
+                toastcontainer.remove();
+                toastcontainer = null;
             }
-            if (!toastContainer) {
-                toastContainer = document.createElement("div");
-                toastContainer.id = "toast";
-                document.body.appendChild(toastContainer);
+            if (!toastcontainer) {
+                toastcontainer = document.createElement("div");
+                toastcontainer.id = "toastcontainer";
+                var agentcontainer = document.getElementById("agentcontainer");
+                agentcontainer.appendChild(toastcontainer);
             }
+
             let openSound;
             if (cwInstance.config.branding.general.sounds.enable && cwInstance.config.branding.general.sounds.on_audio_call.url != 'None' && audioVideoStr == 'audio') {
                 openSound = new Audio(cwInstance.config.branding.general.sounds.on_audio_call.url);
@@ -624,40 +662,34 @@ class AgentDesktopPluginScript  {
                 openSound = new Audio(cwInstance.config.branding.general.sounds.on_video_call.url);
                 openSound.loop = true;
                 openSound.play();
-            } 
+            }
 
             var incomingCall = `
-                <div class="initial-video-audio-container">
-                    <div class="ad-img-block">
-                        <img src="${_self.agentProfileIcon}"/>
-                    </div>
-                    <div class="content-desc">
-                        <div class="name">${agentName}</div>
-                        <div class="type-text">
-                            <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
-                                <path d="M3.5 6.5C3.5 5.5335 4.2835 4.75 5.25 4.75H10.5C11.4665 4.75 12.25 5.5335 12.25 6.5V13.5C12.25 14.4665 11.4665 15.25 10.5 15.25H5.25C4.2835 15.25 3.5 14.4665 3.5 13.5V6.5Z" fill="#9AA4B2"/>
-                                <path d="M14.4837 7.46738C14.1873 7.6156 14 7.91858 14 8.25V11.75C14 12.0814 14.1873 12.3844 14.4837 12.5326L16.2337 13.4076C16.5049 13.5432 16.8271 13.5288 17.085 13.3693C17.343 13.2099 17.5 12.9283 17.5 12.625V7.375C17.5 7.07175 17.343 6.79011 17.085 6.63068C16.8271 6.47125 16.5049 6.45676 16.2337 6.59238L14.4837 7.46738Z" fill="#9AA4B2"/>
-                            </svg> is trying to ${audioVideoStr} call you
-                        </div>
-                    </div>
-                    <div class="controls-v-a">
-                        <button id="rejectcall" class="decline-btn">Decline</button>
-                        <button id="acceptcall" class="accept-btn">Accept</button>
-                    </div>
-                </div>`;   
+        <div class="initial-video-audio-container">
+            <div class="ad-img-block">
+                <img src="${_self.agentProfileIcon}" alt='Agent' onerror="this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDMiIHZpZXdCb3g9IjAgMCA0OCA0MyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIxNF8xMTA3NDgpIj4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0iI0VBRjFGQyIvPgo8cGF0aCBkPSJNMjIgMjIuMjVDMjUuNTg5OSAyMi4yNSAyOC41IDE5LjMzOTkgMjguNSAxNS43NUMyOC41IDEyLjE2MDEgMjUuNTg5OSA5LjI1IDIyIDkuMjVDMTguNDEwMiA5LjI1IDE1LjUgMTIuMTYwMSAxNS41IDE1Ljc1QzE1LjUgMTkuMzM5OSAxOC40MTAyIDIyLjI1IDIyIDIyLjI1WiIgZmlsbD0iIzJCNzVFNCIvPgo8cGF0aCBkPSJNNi44MzMzNyA0MS43NUM2LjgzMzM3IDMzLjM3MzcgMTMuNjIzNyAyNi41ODMzIDIyIDI2LjU4MzNDMzAuMzc2NCAyNi41ODMzIDM3LjE2NjcgMzMuMzczNyAzNy4xNjY3IDQxLjc1SDYuODMzMzdaIiBmaWxsPSIjMkI3NUU0Ii8+CjwvZz4KPHJlY3QgeD0iMS4yNSIgeT0iMC43NSIgd2lkdGg9IjQxLjUiIGhlaWdodD0iNDEuNSIgcng9IjIwLjc1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8yMTRfMTEwNzQ4Ij4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K'"/>
+            </div>
+            <div class="content-desc">
+                <div class="name">${agentName}</div>
+                <div class="type-text">is trying to ${audioVideoStr} call you</div>
+            </div>
+            <div class="controls-v-a">
+                <button id="rejectcall" class="decline-btn">Decline</button>
+                <button id="acceptcall" class="accept-btn">Accept</button>
+            </div>
+        </div>`;
             setTimeout(() => {
-                var toastContainer = koreJquery("#toast");
+                var toastContainer = koreJquery("#toastcontainer");
                 toastContainer.empty();
                 toastContainer.append(incomingCall);
-
                 var rejectCall = koreJquery("#rejectcall");
                 var acceptCall = koreJquery("#acceptcall");
+                // Hide the toastContainer or #toast when isUserCall is true
+                if(_self.callDetails.isCallFromUser){
+                    document.getElementById('toastcontainer').style.visibility = "hidden";
+                    this.autoAcceptConversation();
+                }
                 rejectCall.off('click').on('click', function (event) {
-                    if (openSound) {
-                        openSound.pause();
-                        openSound.currentTime = 0;
-                        openSound.remove();
-                    }
                     const payload = _self.callDetails;
                     payload['type'] = "call_agent_webrtc_rejected"
                     const messageToBot = {};
@@ -666,19 +698,21 @@ class AgentDesktopPluginScript  {
                         "body": _self.callDetails,
                         "type": ""
                     }
-                    botInstance.sendMessage(messageToBot, (err) => { });
+
+                    if (botInstance) {
+                        botInstance.sendMessage(messageToBot, (err) => { });
+                    }
                     if (_self.activeCall) {
                         _self.activeCall.terminate();
                     }
                     _self.callAccepted = false;
-                    toastContainer.empty();
-                });
-                acceptCall.off('click').on('click', function (event) {
+                    toastContainer.remove();
                     if (openSound) {
                         openSound.pause();
                         openSound.currentTime = 0;
-                        openSound.remove();
                     }
+                });
+                acceptCall.off('click').on('click', function (event) {
                     const payload = _self.callDetails;
                     payload['type'] = "call_agent_webrtc_accepted"
                     const messageToBot = {};
@@ -687,13 +721,19 @@ class AgentDesktopPluginScript  {
                         "body": _self.callDetails,
                         "type": ""
                     }
-                    botInstance.sendMessage(messageToBot, (err) => { });
+
+                    if (botInstance) {
+                        botInstance.sendMessage(messageToBot, (err) => { });
+                    }
                     
-                    _self.addAudioVideoContainer();
                     _self.callConnecting(_self.callDetails.videoCall, _self.callDetails.firstName);
 
                     _self.callAgent();
-                    toastContainer.empty();
+                    toastContainer.remove();
+                    if (openSound) {
+                        openSound.pause();
+                        openSound.currentTime = 0;
+                    }
                     var timedOut = setTimeout(() => {
                         // even after these many number of seconds call is not established then close the panel
                         if (_self.activeCall === null || !_self.activeCall.isEstablished()) {
@@ -708,18 +748,26 @@ class AgentDesktopPluginScript  {
                 });
             }, 100);
         }
+        this.autoAcceptConversation = function(){
+            setTimeout(()=>{
+                // Removing call in progress container
+                document.querySelector(".campaign-calling-audio-static-wrapper")?.remove();
+                document.getElementById('acceptcall')?.click();
+            },1000);
+        }
         this.showCobrowseRequest = function (cobrowseRequest) {
             let me = this;
             // let cwInstance = me.hostInstance;
-            var toastContainer = document.getElementById("toast");
+            var toastContainer = document.getElementById("toastcontainer");
             if (toastContainer) {
                 toastContainer.remove();
                 toastContainer = null;
             }
             if (!toastContainer) {
                 toastContainer = document.createElement("div");
-                toastContainer.id = "toast";
-                document.body.appendChild(toastContainer);
+                toastContainer.id = "toastcontainer";
+                var agentcontainer = document.getElementById("agentcontainer");
+                agentcontainer.appendChild(toastContainer);
             }
             var cobrowsetoolbar = document.getElementById("cobrowse-toolbar");
             if (cobrowsetoolbar) {
@@ -727,9 +775,9 @@ class AgentDesktopPluginScript  {
             }
             var agentName = cobrowseRequest?.firstName;
             var cobrowseRequestHML = `
-        <div class="initial-video-audio-container">
+        <div class="initial-video-audio-container cobrowser-intial-width">
             <div class="ad-img-block">
-                <img src="${_self.agentProfileIcon}" />
+                <img src="${_self.agentProfileIcon}" alt='Agent' onerror="this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDMiIHZpZXdCb3g9IjAgMCA0OCA0MyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIxNF8xMTA3NDgpIj4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0iI0VBRjFGQyIvPgo8cGF0aCBkPSJNMjIgMjIuMjVDMjUuNTg5OSAyMi4yNSAyOC41IDE5LjMzOTkgMjguNSAxNS43NUMyOC41IDEyLjE2MDEgMjUuNTg5OSA5LjI1IDIyIDkuMjVDMTguNDEwMiA5LjI1IDE1LjUgMTIuMTYwMSAxNS41IDE1Ljc1QzE1LjUgMTkuMzM5OSAxOC40MTAyIDIyLjI1IDIyIDIyLjI1WiIgZmlsbD0iIzJCNzVFNCIvPgo8cGF0aCBkPSJNNi44MzMzNyA0MS43NUM2LjgzMzM3IDMzLjM3MzcgMTMuNjIzNyAyNi41ODMzIDIyIDI2LjU4MzNDMzAuMzc2NCAyNi41ODMzIDM3LjE2NjcgMzMuMzczNyAzNy4xNjY3IDQxLjc1SDYuODMzMzdaIiBmaWxsPSIjMkI3NUU0Ii8+CjwvZz4KPHJlY3QgeD0iMS4yNSIgeT0iMC43NSIgd2lkdGg9IjQxLjUiIGhlaWdodD0iNDEuNSIgcng9IjIwLjc1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8yMTRfMTEwNzQ4Ij4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K'"/>
             </div>
             <div class="content-desc">
                 <div class="name">${agentName}</div>
@@ -740,17 +788,32 @@ class AgentDesktopPluginScript  {
                 <button id="acceptcall" class="accept-btn">Accept</button>
             </div>
         </div>`;
-            var toastContainer = koreJquery("#toast");
+            var toastContainer = koreJquery("#toastcontainer");
             toastContainer.empty();
             toastContainer.append(cobrowseRequestHML);
 
             var rejectCall = koreJquery("#rejectcall");
             var acceptCall = koreJquery("#acceptcall");
             rejectCall.off('click').on('click', function (event) {
-                toastContainer.empty();
+                let container = document.getElementById("agentcontainer");
+                container.style.display = 'none';
+                
+                const payload = {"cobrowse_rejected": true};
+                payload['type'] = "cobrowse_rejected";
+                const messageToBot = {};
+                messageToBot["event"] = "event";
+                messageToBot["message"] = {
+                    "body": payload,
+                    "type": ""
+                }
+
+                if (botInstance) {
+                    botInstance.sendMessage(messageToBot, (err) => { });
+                }
             });
             acceptCall.off('click').on('click', function (event) {
-                toastContainer.empty();
+                let container = document.getElementById("agentcontainer");
+                container.style.display = 'none';
                 //_self.initializeCoBrowse(cobrowseRequest);
                 cobrowseRequest["userId"] = uuId;
                 me.cobrowseInitialize(cobrowseRequest);
@@ -769,6 +832,22 @@ class AgentDesktopPluginScript  {
             //fall back to clients jquery version
             koreJquery = window.jQuery;
         }
+
+        function sendCallTerminateEvent(){
+            const payload = _self.callDetails;
+            payload['type'] = "call_agent_webrtc_terminated"
+            const messageToBot = {};
+            messageToBot["event"] = "event";
+            messageToBot["message"] = {
+                "body": _self.callDetails,
+                "type": ""
+            }
+
+            if (botInstance) {
+                botInstance.sendMessage(messageToBot, (err) => { });
+            }
+        }
+
         function overrideCloseButton() {
             if (overrideFlag) {
                 return;
@@ -777,6 +856,10 @@ class AgentDesktopPluginScript  {
             if (closeBtns && closeBtns.length > 0) {
                 koreJquery(".close-btn").off('click').on('click', function (event) {
                     koreJquery("#smartassist-menu").show();
+                    if(_self.activeCall && _self.activeCall.isEstablished()){
+                        _self.activeCall.terminate();
+                        sendCallTerminateEvent();
+                    }
                 })
                 overrideFlag = true;
             } else {
@@ -788,108 +871,112 @@ class AgentDesktopPluginScript  {
         console.log("window.KoreSDK", window.KoreSDK, uuId)
         var events = requireKr('/KoreBot.js').instance();
         var originalSendMessageFunction = events.sendMessage;
-        botInstance.sendMessage = function sendMessage(message, optCb) {
-            var pagesVisited = localStorage.getItem("pagesVisited");
-            var pagesVisitedArray = [];
-            if (pagesVisited && pagesVisited != '[]') {
-                pagesVisitedArray = JSON.parse(pagesVisited);
-                // calculate time spent on last item
-                var obj = pagesVisitedArray[0];
-                var start = moment(obj.timestamp);
-                var end = moment();
-                var duration = moment.duration(end.diff(start));
-                var milliseconds = duration.asMilliseconds();
-                obj['timespent'] = milliseconds;
-                obj['domain'] =  window.location.hostname; 
+        var overrideFlag = false;
+        if (botInstance) {
+            botInstance.sendMessage = function sendMessage(message, optCb) {
+                var pagesVisited = localStorage.getItem("pagesVisited");
+                var pagesVisitedArray = [];
+                if (pagesVisited && pagesVisited != '[]') {
+                    pagesVisitedArray = JSON.parse(pagesVisited);
+                    // calculate time spent on last item
+                    var obj = pagesVisitedArray[0];
+                    var start = moment(obj.timestamp);
+                    var end = moment();
+                    var duration = moment.duration(end.diff(start));
+                    var milliseconds = duration.asMilliseconds();
+                    obj['timespent'] = milliseconds;
+                    obj['domain'] =  window.location.hostname;
+                }
+
+                localStorage.setItem("pagesVisited", JSON.stringify(pagesVisitedArray));
+
+                message["agentDesktopMeta"] = { "pagesVisited": pagesVisitedArray };
+                originalSendMessageFunction.call(this, message, optCb);
             }
 
-            localStorage.setItem("pagesVisited", JSON.stringify(pagesVisitedArray));
+            botInstance.on('message', (message) => {
+                overrideCloseButton();
+                var msgJson = JSON.parse(message.data);
+                if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'call_agent_webrtc') {
+                    //koreJquery("#rejectPhone").show();
+                    _self.callDetails = msgJson.message;
+                    _self.agentProfileIcon = _self.userIcon;
+                    if (_self.callDetails.profileIcon && _self.callDetails.profileIcon !== 'undefined') {
+                        _self.agentProfileIcon = _self.callDetails.profileIcon;
+                    }
+                    console.log('payload=', msgJson.message);
+                    _self.callAccepted = false;
+                    _self.showPhonePanel = true;
 
-            message["agentDesktopMeta"] = { "pagesVisited": pagesVisitedArray };
-            originalSendMessageFunction.call(this, message, optCb);
-        }
-        var overrideFlag = false;
-        botInstance.on('message', (message) => {
-            overrideCloseButton();
-            var msgJson = JSON.parse(message.data);
-            if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'call_agent_webrtc') {
-                //koreJquery("#rejectPhone").show();
-                _self.callDetails = msgJson.message;
-                _self.agentProfileIcon = _self.userIcon;
-                if (_self.callDetails.profileIcon && _self.callDetails.profileIcon !== 'undefined') {
-                    _self.agentProfileIcon = _self.callDetails.profileIcon;
-                }
-                console.log('payload=', msgJson.message);
-                _self.callAccepted = false;
-                _self.showPhonePanel = true;
-
-                if (_self.callDetails.restoreCall) {
+                    if (_self.callDetails.restoreCall) {
+                        if (_self.activeCall) {
+                            _self.activeCall.terminate();
+                        }
+                        _self.callAgent();
+                        _self.callAccepted = true;
+                        _self.showVideo = true;
+                    } else {
+                        this.addAudioVideoContainer();
+                        this.showIncomingCallMessage(_self.callDetails.videoCall, _self.callDetails.firstName);
+                    }
+                } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'terminate_agent_webrtc') {
+                    _self.removeAudoVideoContainer()
+                    _self.showPhonePanel = false;
+                    _self.showVideo = false;
                     if (_self.activeCall) {
                         _self.activeCall.terminate();
+                        _self.phone.deinit();
                     }
-                    _self.callAgent();
-                    _self.callAccepted = true;
-                    _self.showVideo = true;
-                } else {
-                    this.showIncomingCallMessage(_self.callDetails.videoCall, _self.callDetails.firstName);
-                }
-            } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'terminate_agent_webrtc') {
-                _self.removeAudoVideoContainer()
-                _self.showPhonePanel = false;
-                _self.showVideo = false;
-                if (_self.activeCall) {
-                    _self.activeCall.terminate();
-                    _self.phone.deinit();
-                }
-                var toastContainer = koreJquery("#toast");
-                toastContainer.empty();
-            }  // webrtc_screenshare will be sent, when in video call
-            else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'webrtc_screenshare') {
-                /*if (_self.activeCall) {
-                    _self.screenShare(msgJson.message);
-                }*/
-                this.showScreenShareMessage(_self.callDetails.videoCall, _self.callDetails.firstName);
-            } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'webrtc_screenshare_cancel') {
-                if (!_self.callDetails.videoCall) {
-                    //_self.activeCall.stopSendingVideo();
-                    _self.sendVideo(false);
-                }
-                if (_self.screenSharingStream) {
-                    _self.phone.closeScreenSharing();
-                }
+                    var toastContainer = koreJquery("#toastcontainer");
+                    toastContainer.remove();
+                }  // webrtc_screenshare will be sent, when in video call
+                else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'webrtc_screenshare') {
+                    /*if (_self.activeCall) {
+                        _self.screenShare(msgJson.message);
+                    }*/
+                    this.showScreenShareMessage(_self.callDetails.videoCall, _self.callDetails.firstName);
+                } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'webrtc_screenshare_cancel') {
+                    if (!_self.callDetails.videoCall) {
+                        //_self.activeCall.stopSendingVideo();
+                        _self.sendVideo(false);
+                    }
+                    if (_self.screenSharingStream) {
+                        _self.phone.closeScreenSharing();
+                    }
 
-                if (_self.activeCall && _self.activeCall.isScreenSharing()) {
-                    _self.activeCall.stopScreenSharing();
+                    if (_self.activeCall && _self.activeCall.isScreenSharing()) {
+                        _self.activeCall.stopScreenSharing();
+                    }
+                } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'cobrowse') {
+                    console.log("cobrowse request ", msgJson.message);
+                    _self.maskClassList = msgJson.message.blockClasses;
+                    _self.maskPatternList = msgJson.message.patternList;
+                        if (_self.maskPatternList) {
+                    _self.scanElement(document.body, _self.maskPatternList);
+                    }
+                    _self.cobrowseMaskFields(msgJson.message);
+                    _self.agentProfileIcon = _self.userIcon;
+                    if (msgJson.message.profileIcon && msgJson.message.profileIcon !== 'undefined') {
+                        _self.agentProfileIcon = msgJson.message.profileIcon;
+                    }
+                    this.addAudioVideoContainer();
+                    this.showCobrowseRequest(msgJson.message);
+                } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'close_cobrowse') {
+                    var toastContainer = koreJquery("#toastcontainer");
+                    toastContainer.remove();
+                    this.stopCoBrowse(false);
+                } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'clear_pagevisit_history') {
+                    localStorage.removeItem("pagesVisited");
+                    var pagesVisitedArray = [];
+                    var pageTitle = this.getPageTitle();
+                    pagesVisitedArray.push({
+                        page: pageTitle,
+                        timestamp: new moment()
+                    });
+                    localStorage.setItem("pagesVisited", JSON.stringify(pagesVisitedArray))
                 }
-            } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'cobrowse') {
-                console.log("cobrowse request ", msgJson.message);
-                _self.maskClassList = msgJson.message.blockClasses;
-                _self.maskPatternList = msgJson.message.patternList;
-                if(_self.maskPatternList){
-                _self.scanElement(document.body, _self.maskPatternList);
-                }
-                _self.cobrowseMaskFields(msgJson.message);
-                _self.agentProfileIcon = _self.userIcon;
-                if (msgJson.message.profileIcon && msgJson.message.profileIcon !== 'undefined') {
-                    _self.agentProfileIcon = msgJson.message.profileIcon;
-                }
-
-                this.showCobrowseRequest(msgJson.message);
-            } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'close_cobrowse') {
-                var toastContainer = koreJquery("#toast");
-                toastContainer.empty();
-                this.stopCoBrowse(false);
-            } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'clear_pagevisit_history') {
-                localStorage.removeItem("pagesVisited");
-                var pagesVisitedArray = [];
-                var pageTitle = this.getPageTitle();
-                pagesVisitedArray.push({
-                    page: pageTitle,
-                    timestamp: new moment()
-                });
-                localStorage.setItem("pagesVisited", JSON.stringify(pagesVisitedArray))
-            }
-        });
+            });
+        }
         this.getPageTitle = function () {
             var title = document.title;
             var metaTags = document.getElementsByTagName("meta");
@@ -917,23 +1004,24 @@ class AgentDesktopPluginScript  {
             } else {
                 agentcontainer.style.display = 'block'
             }
-            if (!koreJquery("#callcontainer").length) {
-                koreJquery("#agentcontainer").append(`<div id="callcontainer" class="callcontainer"></div>`);
-                /* koreJquery("#callcontainer").css({
-                     "top":  koreJquery(".kore-chat-window").offset().top,
-                     "left" : koreJquery(".kore-chat-window").offset().left - koreJquery(".kore-chat-window").width
-                })*/
-            }
+            // if (!koreJquery("#callcontainer").length) {
+            //     koreJquery("#agentcontainer").append(`<div id="callcontainer" class="callcontainer"></div>`);
+            //     /* koreJquery("#callcontainer").css({
+            //          "top":  koreJquery(".kore-chat-window").offset().top,
+            //          "left" : koreJquery(".kore-chat-window").offset().left - koreJquery(".kore-chat-window").width
+            //     })*/
+            // }
             koreChatBody[0].style.top = "0px";
             koreChatBody[0].style.height = "54%";
-            // var koreChatWindow = document.getElementsByClassName("kore-chat-window");
-            // koreChatWindow[0].style.top = "0px";
-            // koreChatWindow[0].style.maxHeight = '99%';
-            // koreChatWindow[0].style.height = '97%';
+            var koreChatWindow = document.getElementsByClassName("chat-widget-body-wrapper");
+            koreChatWindow[0].style.top = "0px";
+            koreChatWindow[0].style.maxHeight = '99%';
+            koreChatWindow[0].style.height = '97%';
         }
         this.removeAudoVideoContainer = function () {
             var koreChatBody = document.getElementsByClassName("chat-widget-body-wrapper");
             var agentcontainer = document.getElementById("agentcontainer");
+            document.querySelector(".campaign-calling-audio-static-wrapper")?.remove(); //removing the campaign container when 'terminate_agent_webrtc' event is triggered
             if (agentcontainer) {
                 agentcontainer.style.display = 'none';
                 koreChatBody[0].style.height = '78%';
@@ -1125,7 +1213,11 @@ class AgentDesktopPluginScript  {
                 stream.getTracks().forEach(function (track) {
                     track.stop();
                 });
-                this.activeCall = this.phone.call(this.phone.VIDEO, sipUser);
+                if(this.callDetails.videoCall){
+                    this.activeCall = this.phone.call(this.phone.VIDEO, sipUser);
+                }else{
+                    this.activeCall = this.phone.call(this.phone.AUDIO, sipUser);
+                }
             });
         }
         this.toggleButtons = function () {
@@ -1201,21 +1293,21 @@ class AgentDesktopPluginScript  {
             _self.activeCall.muteAudio(!muted);
             _self.updateGui();
         });
-        if (!koreJquery("#toast").length) {
-            koreJquery("#chatContainer").append(`<div id="toast"></div>`);
+        if (!koreJquery("#toastcontainer").length) {
+            koreJquery("#chatContainer").append(`<div id="toastcontainer"></div>`);
         }
 
     }
 
     /////////////////////////// cobrowse functionality begins //////////////////////////////////////
-    noControlImage = "data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjMDAwMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciICB2aWV3Qm94PSIwIDAgNTAgNTAiIHdpZHRoPSI1MHB4IiBoZWlnaHQ9IjUwcHgiPjxwYXRoIGQ9Ik0gOSAzIEMgNi4yNTM5MDYgMyA0IDUuMjUzOTA2IDQgOCBMIDQgMzQgQyA0IDM2Ljc0NjA5NCA2LjI1MzkwNiAzOSA5IDM5IEwgMTIuOTE3OTY5IDM5IEMgMTIuODk4NDM4IDQwLjEyMTA5NCAxMi45MDYyNSA0MS4yNjE3MTkgMTIuNjU2MjUgNDIuMTkxNDA2IEMgMTIuMzMyMDMxIDQzLjQxNDA2MyAxMS43NjE3MTkgNDQuMzc4OTA2IDEwLjQ4NDM3NSA0NS4xNDA2MjUgQyAxMC4xMDE1NjMgNDUuMzc1IDkuOTE3OTY5IDQ1LjgzMjAzMSAxMC4wMzkwNjMgNDYuMjY1NjI1IEMgMTAuMTU2MjUgNDYuNjk5MjE5IDEwLjU1MDc4MSA0NyAxMSA0NyBDIDE1LjIzODI4MSA0NyAxOS40MTQwNjMgNDQuNzIyNjU2IDIxLjYxMzI4MSAzOSBMIDQxIDM5IEMgNDMuNzQ2MDk0IDM5IDQ2IDM2Ljc0NjA5NCA0NiAzNCBMIDQ2IDggQyA0NiA1LjI1MzkwNiA0My43NDYwOTQgMyA0MSAzIFogTSA5IDUgTCA0MSA1IEMgNDIuNjU2MjUgNSA0NCA2LjM0Mzc1IDQ0IDggTCA0NCAzNCBDIDQ0IDM1LjY1NjI1IDQyLjY1NjI1IDM3IDQxIDM3IEwgMjEgMzcgQyAyMC41NzAzMTMgMzcgMjAuMTg3NSAzNy4yNzM0MzggMjAuMDUwNzgxIDM3LjY4MzU5NCBDIDE4LjYxNzE4OCA0MS45ODA0NjkgMTYuMzQzNzUgNDMuOTUzMTI1IDEzLjY4NzUgNDQuNjY0MDYzIEMgMTQuMDgyMDMxIDQ0LjAzOTA2MyAxNC40MTAxNTYgNDMuMzg2NzE5IDE0LjU5Mzc1IDQyLjcwNzAzMSBDIDE1LjAxNTYyNSA0MS4xMjg5MDYgMTUgMzkuNSAxNSAzOCBDIDE1IDM3LjQ0OTIxOSAxNC41NTA3ODEgMzcgMTQgMzcgTCA5IDM3IEMgNy4zNDM3NSAzNyA2IDM1LjY1NjI1IDYgMzQgTCA2IDggQyA2IDYuMzQzNzUgNy4zNDM3NSA1IDkgNSBaIE0gMTQuNDI5Njg4IDkgTCAxMyAxMC40Mjk2ODggTCAxNS4xNDA2MjUgMTQgTCAxNi41ODU5MzggMTQgTCAyMS4xMDkzNzUgMTguNTI3MzQ0IEwgMjIuNTI3MzQ0IDE3LjEwOTM3NSBMIDE4IDEyLjU4NTkzOCBMIDE4IDExLjE0MDYyNSBaIE0gMzEgOSBDIDI3LjY4NzUgOSAyNSAxMS42ODc1IDI1IDE1IEMgMjUgMTUuNzM0Mzc1IDI1LjE0MDYyNSAxNi40Mzc1IDI1LjM3ODkwNiAxNy4wODU5MzggTCAxMy43MzQzNzUgMjguNzM0Mzc1IEMgMTMuNjE3MTg4IDI4Ljg0NzY1NiAxMy41MTE3MTkgMjguOTc2NTYzIDEzLjQyMTg3NSAyOS4xMTMyODEgQyAxMy4zODI4MTMgMjkuMTc1NzgxIDEzLjM1MTU2MyAyOS4yNDIxODggMTMuMzE2NDA2IDI5LjMwODU5NCBDIDEzLjI3MzQzOCAyOS4zODI4MTMgMTMuMjI2NTYzIDI5LjQ2MDkzOCAxMy4xOTE0MDYgMjkuNTQyOTY5IEMgMTMuMTU2MjUgMjkuNjI1IDEzLjEzNjcxOSAyOS43MTA5MzggMTMuMTA5Mzc1IDI5Ljc5Njg3NSBDIDEzLjA4OTg0NCAyOS44NjcxODggMTMuMDYyNSAyOS45Mzc1IDEzLjA0Njg3NSAzMC4wMTE3MTkgQyAxMi45ODQzNzUgMzAuMzMyMDMxIDEyLjk4NDM3NSAzMC42NjQwNjMgMTMuMDQ2ODc1IDMwLjk4ODI4MSBDIDEzLjA2MjUgMzEuMDYyNSAxMy4wODk4NDQgMzEuMTI4OTA2IDEzLjEwOTM3NSAzMS4yMDMxMjUgQyAxMy4xMzY3MTkgMzEuMjg1MTU2IDEzLjE1NjI1IDMxLjM3NSAxMy4xOTE0MDYgMzEuNDUzMTI1IEMgMTMuMjI2NTYzIDMxLjUzOTA2MyAxMy4yNjk1MzEgMzEuNjEzMjgxIDEzLjMxMjUgMzEuNjg3NSBDIDEzLjM0NzY1NiAzMS43NTM5MDYgMTMuMzc4OTA2IDMxLjgyMDMxMyAxMy40MjE4NzUgMzEuODg2NzE5IEMgMTMuNjA1NDY5IDMyLjE2MDE1NiAxMy44Mzk4NDQgMzIuMzk0NTMxIDE0LjExMzI4MSAzMi41NzgxMjUgQyAxNC4xNzU3ODEgMzIuNjE3MTg4IDE0LjI0MjE4OCAzMi42NDg0MzggMTQuMzA4NTk0IDMyLjY4MzU5NCBDIDE0LjM4NjcxOSAzMi43MjY1NjMgMTQuNDYwOTM4IDMyLjc3MzQzOCAxNC41NDY4NzUgMzIuODA4NTk0IEMgMTQuNjI4OTA2IDMyLjg0Mzc1IDE0LjcxNDg0NCAzMi44NjMyODEgMTQuNzk2ODc1IDMyLjg4NjcxOSBDIDE0Ljg3MTA5NCAzMi45MDYyNSAxNC45Mzc1IDMyLjkzMzU5NCAxNS4wMTE3MTkgMzIuOTQ5MjE5IEMgMTUuMzM1OTM4IDMzLjAxMTcxOSAxNS42Njc5NjkgMzMuMDExNzE5IDE1Ljk4ODI4MSAzMi45NDkyMTkgQyAxNi4wNjI1IDMyLjkzMzU5NCAxNi4xMzI4MTMgMzIuOTA2MjUgMTYuMjAzMTI1IDMyLjg4NjcxOSBDIDE2LjI4OTA2MyAzMi44NjMyODEgMTYuMzc1IDMyLjg0Mzc1IDE2LjQ1NzAzMSAzMi44MDg1OTQgQyAxNi41MzkwNjMgMzIuNzczNDM4IDE2LjYxNzE4OCAzMi43MjY1NjMgMTYuNjkxNDA2IDMyLjY4MzU5NCBDIDE2Ljc1NzgxMyAzMi42NDg0MzggMTYuODI0MjE5IDMyLjYxNzE4OCAxNi44ODY3MTkgMzIuNTc4MTI1IEMgMTcuMDIzNDM4IDMyLjQ4NDM3NSAxNy4xNTIzNDQgMzIuMzgyODEzIDE3LjI2NTYyNSAzMi4yNjU2MjUgTCAyOC45MTQwNjMgMjAuNjIxMDk0IEMgMjkuNTYyNSAyMC44NTkzNzUgMzAuMjY1NjI1IDIxIDMxIDIxIEMgMzQuMzEyNSAyMSAzNyAxOC4zMTI1IDM3IDE1IEMgMzcgMTQuMDc0MjE5IDM2Ljc4NTE1NiAxMy4xOTkyMTkgMzYuNDEwMTU2IDEyLjQxNzk2OSBMIDMxLjkxNDA2MyAxNi45MTQwNjMgTCAyOS4wODU5MzggMTQuMDg1OTM4IEwgMzMuNTgyMDMxIDkuNTg5ODQ0IEMgMzIuODAwNzgxIDkuMjE0ODQ0IDMxLjkyNTc4MSA5IDMxIDkgWiBNIDI5Ljk0OTIxOSAyMi40MTQwNjMgTCAyNi40MTQwNjMgMjUuOTUzMTI1IEwgMzIuNzM0Mzc1IDMyLjI2OTUzMSBDIDMyLjg0NzY1NiAzMi4zODY3MTkgMzIuOTc2NTYzIDMyLjQ4ODI4MSAzMy4xMTMyODEgMzIuNTc4MTI1IEMgMzMuMTc1NzgxIDMyLjYyMTA5NCAzMy4yNDIxODggMzIuNjUyMzQ0IDMzLjMwODU5NCAzMi42ODc1IEMgMzMuMzgyODEzIDMyLjczMDQ2OSAzMy40NjA5MzggMzIuNzc3MzQ0IDMzLjU0Mjk2OSAzMi44MTI1IEMgMzMuNjI1IDMyLjg0Mzc1IDMzLjcxMDkzOCAzMi44NjMyODEgMzMuNzk2ODc1IDMyLjg5MDYyNSBDIDMzLjg2NzE4OCAzMi45MTAxNTYgMzMuOTM3NSAzMi45Mzc1IDM0LjAxMTcxOSAzMi45NTMxMjUgQyAzNC4zMzIwMzEgMzMuMDE1NjI1IDM0LjY2NDA2MyAzMy4wMTU2MjUgMzQuOTg4MjgxIDMyLjk1MzEyNSBDIDM1LjA2MjUgMzIuOTM3NSAzNS4xMjg5MDYgMzIuOTEwMTU2IDM1LjIwMzEyNSAzMi44OTA2MjUgQyAzNS4yODUxNTYgMzIuODYzMjgxIDM1LjM3MTA5NCAzMi44NDM3NSAzNS40NTMxMjUgMzIuODEyNSBDIDM1LjUzOTA2MyAzMi43NzczNDQgMzUuNjEzMjgxIDMyLjczMDQ2OSAzNS42OTE0MDYgMzIuNjg3NSBDIDM1Ljc1NzgxMyAzMi42NTIzNDQgMzUuODI0MjE5IDMyLjYyMTA5NCAzNS44ODY3MTkgMzIuNTc4MTI1IEMgMzYuMTYwMTU2IDMyLjM5ODQzOCAzNi4zOTQ1MzEgMzIuMTYwMTU2IDM2LjU3ODEyNSAzMS44ODY3MTkgQyAzNi42MjEwOTQgMzEuODI0MjE5IDM2LjY0ODQzOCAzMS43NTc4MTMgMzYuNjg3NSAzMS42OTE0MDYgQyAzNi43MjY1NjMgMzEuNjEzMjgxIDM2Ljc3MzQzOCAzMS41MzkwNjMgMzYuODA4NTk0IDMxLjQ1MzEyNSBDIDM2Ljg0Mzc1IDMxLjM3MTA5NCAzNi44NjMyODEgMzEuMjg1MTU2IDM2Ljg5MDYyNSAzMS4yMDMxMjUgQyAzNi45MTAxNTYgMzEuMTI4OTA2IDM2LjkzNzUgMzEuMDYyNSAzNi45NTMxMjUgMzAuOTg4MjgxIEMgMzcuMDE1NjI1IDMwLjY2Nzk2OSAzNy4wMTU2MjUgMzAuMzM1OTM4IDM2Ljk1MzEyNSAzMC4wMTE3MTkgQyAzNi45Mzc1IDI5LjkzNzUgMzYuOTEwMTU2IDI5Ljg3MTA5NCAzNi44OTA2MjUgMjkuNzk2ODc1IEMgMzYuODYzMjgxIDI5LjcxNDg0NCAzNi44NDM3NSAyOS42Mjg5MDYgMzYuODA4NTk0IDI5LjU0Njg3NSBDIDM2Ljc3MzQzOCAyOS40NjA5MzggMzYuNzI2NTYzIDI5LjM4NjcxOSAzNi42ODM1OTQgMjkuMzA4NTk0IEMgMzYuNjQ4NDM4IDI5LjI0MjE4OCAzNi42MTcxODggMjkuMTc1NzgxIDM2LjU3ODEyNSAyOS4xMTMyODEgQyAzNi40ODQzNzUgMjguOTc2NTYzIDM2LjM4MjgxMyAyOC44NDc2NTYgMzYuMjY1NjI1IDI4LjczNDM3NSBaIi8+PC9zdmc+";
-    releaseControlImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTkgM0M2LjI1MzkxIDMgNCA1LjI1MzkxIDQgOFYzNEM0IDM2Ljc0NjEgNi4yNTM5MSAzOSA5IDM5SDEyLjkxOEMxMi44OTg0IDQwLjEyMTEgMTIuOTA2MiA0MS4yNjE3IDEyLjY1NjIgNDIuMTkxNEMxMi4zMzIgNDMuNDE0MSAxMS43NjE3IDQ0LjM3ODkgMTAuNDg0NCA0NS4xNDA2QzEwLjEwMTYgNDUuMzc1IDkuOTE3OTcgNDUuODMyIDEwLjAzOTEgNDYuMjY1NkMxMC4xNTYzIDQ2LjY5OTIgMTAuNTUwOCA0NyAxMSA0N0MxNS4yMzgzIDQ3IDE5LjQxNDEgNDQuNzIyNyAyMS42MTMzIDM5SDQxQzQzLjc0NjEgMzkgNDYgMzYuNzQ2MSA0NiAzNFY4QzQ2IDUuMjUzOTEgNDMuNzQ2MSAzIDQxIDNIOVpNOSA1SDQxQzQyLjY1NjIgNSA0NCA2LjM0Mzc1IDQ0IDhWMzRDNDQgMzUuNjU2MiA0Mi42NTYyIDM3IDQxIDM3SDIxQzIwLjU3MDMgMzcgMjAuMTg3NSAzNy4yNzM0IDIwLjA1MDggMzcuNjgzNkMxOC42MTcyIDQxLjk4MDUgMTYuMzQzOCA0My45NTMxIDEzLjY4NzUgNDQuNjY0MUMxNC4wODIgNDQuMDM5MSAxNC40MTAyIDQzLjM4NjcgMTQuNTkzOCA0Mi43MDdDMTUuMDE1NiA0MS4xMjg5IDE1IDM5LjUgMTUgMzhDMTUgMzcuNDQ5MiAxNC41NTA4IDM3IDE0IDM3SDlDNy4zNDM3NSAzNyA2IDM1LjY1NjIgNiAzNFY4QzYgNi4zNDM3NSA3LjM0Mzc1IDUgOSA1Wk0xNC40Mjk3IDlMMTMgMTAuNDI5N0wxNS4xNDA2IDE0SDE2LjU4NTlMMjEuMTA5NCAxOC41MjczTDIyLjUyNzMgMTcuMTA5NEwxOCAxMi41ODU5VjExLjE0MDZMMTQuNDI5NyA5Wk0zMSA5QzI3LjY4NzUgOSAyNSAxMS42ODc1IDI1IDE1QzI1IDE1LjczNDQgMjUuMTQwNiAxNi40Mzc1IDI1LjM3ODkgMTcuMDg1OUwxMy43MzQ0IDI4LjczNDRDMTMuNjE3MiAyOC44NDc3IDEzLjUxMTcgMjguOTc2NiAxMy40MjE5IDI5LjExMzNDMTMuMzgyOCAyOS4xNzU4IDEzLjM1MTYgMjkuMjQyMiAxMy4zMTY0IDI5LjMwODZDMTMuMjczNCAyOS4zODI4IDEzLjIyNjYgMjkuNDYwOSAxMy4xOTE0IDI5LjU0M0MxMy4xNTYzIDI5LjYyNSAxMy4xMzY3IDI5LjcxMDkgMTMuMTA5NCAyOS43OTY5QzEzLjA4OTggMjkuODY3MiAxMy4wNjI1IDI5LjkzNzUgMTMuMDQ2OSAzMC4wMTE3QzEyLjk4NDQgMzAuMzMyIDEyLjk4NDQgMzAuNjY0MSAxMy4wNDY5IDMwLjk4ODNDMTMuMDYyNSAzMS4wNjI1IDEzLjA4OTggMzEuMTI4OSAxMy4xMDk0IDMxLjIwMzFDMTMuMTM2NyAzMS4yODUyIDEzLjE1NjMgMzEuMzc1IDEzLjE5MTQgMzEuNDUzMUMxMy4yMjY2IDMxLjUzOTEgMTMuMjY5NSAzMS42MTMzIDEzLjMxMjUgMzEuNjg3NUMxMy4zNDc3IDMxLjc1MzkgMTMuMzc4OSAzMS44MjAzIDEzLjQyMTkgMzEuODg2N0MxMy42MDU1IDMyLjE2MDIgMTMuODM5OCAzMi4zOTQ1IDE0LjExMzMgMzIuNTc4MUMxNC4xNzU4IDMyLjYxNzIgMTQuMjQyMiAzMi42NDg0IDE0LjMwODYgMzIuNjgzNkMxNC4zODY3IDMyLjcyNjYgMTQuNDYwOSAzMi43NzM0IDE0LjU0NjkgMzIuODA4NkMxNC42Mjg5IDMyLjg0MzcgMTQuNzE0OCAzMi44NjMzIDE0Ljc5NjkgMzIuODg2N0MxNC44NzExIDMyLjkwNjIgMTQuOTM3NSAzMi45MzM2IDE1LjAxMTcgMzIuOTQ5MkMxNS4zMzU5IDMzLjAxMTcgMTUuNjY4IDMzLjAxMTcgMTUuOTg4MyAzMi45NDkyQzE2LjA2MjUgMzIuOTMzNiAxNi4xMzI4IDMyLjkwNjIgMTYuMjAzMSAzMi44ODY3QzE2LjI4OTEgMzIuODYzMyAxNi4zNzUgMzIuODQzNyAxNi40NTcgMzIuODA4NkMxNi41MzkxIDMyLjc3MzQgMTYuNjE3MiAzMi43MjY2IDE2LjY5MTQgMzIuNjgzNkMxNi43NTc4IDMyLjY0ODQgMTYuODI0MiAzMi42MTcyIDE2Ljg4NjcgMzIuNTc4MUMxNy4wMjM0IDMyLjQ4NDQgMTcuMTUyMyAzMi4zODI4IDE3LjI2NTYgMzIuMjY1NkwyOC45MTQxIDIwLjYyMTFDMjkuNTYyNSAyMC44NTk0IDMwLjI2NTYgMjEgMzEgMjFDMzQuMzEyNSAyMSAzNyAxOC4zMTI1IDM3IDE1QzM3IDE0LjA3NDIgMzYuNzg1MiAxMy4xOTkyIDM2LjQxMDIgMTIuNDE4TDMxLjkxNDEgMTYuOTE0MUwyOS4wODU5IDE0LjA4NTlMMzMuNTgyIDkuNTg5ODRDMzIuODAwOCA5LjIxNDg0IDMxLjkyNTggOSAzMSA5Wk0yOS45NDkyIDIyLjQxNDFMMjYuNDE0MSAyNS45NTMxTDMyLjczNDQgMzIuMjY5NUMzMi44NDc3IDMyLjM4NjcgMzIuOTc2NiAzMi40ODgzIDMzLjExMzMgMzIuNTc4MUMzMy4xNzU4IDMyLjYyMTEgMzMuMjQyMiAzMi42NTIzIDMzLjMwODYgMzIuNjg3NUMzMy4zODI4IDMyLjczMDUgMzMuNDYwOSAzMi43NzczIDMzLjU0MyAzMi44MTI1QzMzLjYyNSAzMi44NDM4IDMzLjcxMDkgMzIuODYzMyAzMy43OTY5IDMyLjg5MDZDMzMuODY3MiAzMi45MTAyIDMzLjkzNzUgMzIuOTM3NSAzNC4wMTE3IDMyLjk1MzFDMzQuMzMyIDMzLjAxNTYgMzQuNjY0MSAzMy4wMTU2IDM0Ljk4ODMgMzIuOTUzMUMzNS4wNjI1IDMyLjkzNzUgMzUuMTI4OSAzMi45MTAyIDM1LjIwMzEgMzIuODkwNkMzNS4yODUyIDMyLjg2MzMgMzUuMzcxMSAzMi44NDM4IDM1LjQ1MzEgMzIuODEyNUMzNS41MzkxIDMyLjc3NzMgMzUuNjEzMyAzMi43MzA1IDM1LjY5MTQgMzIuNjg3NUMzNS43NTc4IDMyLjY1MjMgMzUuODI0MiAzMi42MjExIDM1Ljg4NjcgMzIuNTc4MUMzNi4xNjAyIDMyLjM5ODQgMzYuMzk0NSAzMi4xNjAyIDM2LjU3ODEgMzEuODg2N0MzNi42MjExIDMxLjgyNDIgMzYuNjQ4NCAzMS43NTc4IDM2LjY4NzUgMzEuNjkxNEMzNi43MjY2IDMxLjYxMzMgMzYuNzczNCAzMS41MzkxIDM2LjgwODYgMzEuNDUzMUMzNi44NDM3IDMxLjM3MTEgMzYuODYzMyAzMS4yODUyIDM2Ljg5MDYgMzEuMjAzMUMzNi45MTAyIDMxLjEyODkgMzYuOTM3NSAzMS4wNjI1IDM2Ljk1MzEgMzAuOTg4M0MzNy4wMTU2IDMwLjY2OCAzNy4wMTU2IDMwLjMzNTkgMzYuOTUzMSAzMC4wMTE3QzM2LjkzNzUgMjkuOTM3NSAzNi45MTAyIDI5Ljg3MTEgMzYuODkwNiAyOS43OTY5QzM2Ljg2MzMgMjkuNzE0OCAzNi44NDM3IDI5LjYyODkgMzYuODA4NiAyOS41NDY5QzM2Ljc3MzQgMjkuNDYwOSAzNi43MjY2IDI5LjM4NjcgMzYuNjgzNiAyOS4zMDg2QzM2LjY0ODQgMjkuMjQyMiAzNi42MTcyIDI5LjE3NTggMzYuNTc4MSAyOS4xMTMzQzM2LjQ4NDQgMjguOTc2NiAzNi4zODI4IDI4Ljg0NzcgMzYuMjY1NiAyOC43MzQ0TDI5Ljk0OTIgMjIuNDE0MVoiIGZpbGw9IiMwMDlEQUIiLz4KPC9zdmc+Cg==";
+    noControlImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTQuMDAwNjUgNC4wMDAwNEw3LjAwMDY1IDcuMDAwMDRNNC4wMDA2NSA0LjAwMDA0SDIuMDAwNjVMMS4zMzM5OCAyLjAwMDA0TDIuMDAwNjUgMS4zMzMzN0w0LjAwMDY1IDIuMDAwMDRWNC4wMDAwNFpNMTIuODQgMS44MjczOEwxMS4wODgyIDMuNTc5MTNDMTAuODI0MiAzLjg0MzE0IDEwLjY5MjIgMy45NzUxNCAxMC42NDI4IDQuMTI3MzZDMTAuNTk5MyA0LjI2MTI2IDEwLjU5OTMgNC40MDU0OSAxMC42NDI4IDQuNTM5MzlDMTAuNjkyMiA0LjY5MTYgMTAuODI0MiA0LjgyMzYxIDExLjA4ODIgNS4wODc2MkwxMS4yNDY0IDUuMjQ1NzlDMTEuNTEwNCA1LjUwOTggMTEuNjQyNCA1LjY0MTgxIDExLjc5NDYgNS42OTEyN0MxMS45Mjg1IDUuNzM0NzcgMTIuMDcyOCA1LjczNDc3IDEyLjIwNjcgNS42OTEyN0MxMi4zNTg5IDUuNjQxODEgMTIuNDkwOSA1LjUwOTggMTIuNzU0OSA1LjI0NTc5TDE0LjM5MzUgMy42MDcxOUMxNC41NyA0LjAzNjYzIDE0LjY2NzMgNC41MDY5NyAxNC42NjczIDUuMDAwMDRDMTQuNjY3MyA3LjAyNTA4IDEzLjAyNTcgOC42NjY3MSAxMS4wMDA3IDguNjY2NzFDMTAuNzU2NSA4LjY2NjcxIDEwLjUxNzkgOC42NDI4NSAxMC4yODcyIDguNTk3MzNDOS45NjMwNiA4LjUzMzQxIDkuODAxMDEgOC41MDE0NSA5LjcwMjc4IDguNTExMjRDOS41OTgzNCA4LjUyMTY1IDkuNTQ2ODYgOC41MzczMSA5LjQ1NDMyIDguNTg2ODNDOS4zNjcyOCA4LjYzMzQxIDkuMjc5OTcgOC43MjA3MyA5LjEwNTM0IDguODk1MzVMNC4zMzM5OCAxMy42NjY3QzMuNzgxNyAxNC4yMTkgMi44ODYyNyAxNC4yMTkgMi4zMzM5OSAxMy42NjY3QzEuNzgxNyAxMy4xMTQ0IDEuNzgxNyAxMi4yMTkgMi4zMzM5OSAxMS42NjY3TDcuMTA1MzQgNi44OTUzNUM3LjI3OTk3IDYuNzIwNzIgNy4zNjcyOCA2LjYzMzQxIDcuNDEzODYgNi41NDYzN0M3LjQ2MzM4IDYuNDUzODMgNy40NzkwNCA2LjQwMjM1IDcuNDg5NDUgNi4yOTc5MUM3LjQ5OTI0IDYuMTk5NjggNy40NjcyOCA2LjAzNzYzIDcuNDAzMzYgNS43MTM1M0M3LjM1Nzg0IDUuNDgyNzUgNy4zMzM5OCA1LjI0NDE4IDcuMzMzOTggNS4wMDAwNEM3LjMzMzk4IDIuOTc1IDguOTc1NjEgMS4zMzMzNyAxMS4wMDA3IDEuMzMzMzdDMTEuNjcxIDEuMzMzMzcgMTIuMjk5MyAxLjUxMzI2IDEyLjg0IDEuODI3MzhaTTguMDAwNjkgMTBMMTEuNjY3MyAxMy42NjY2QzEyLjIxOTYgMTQuMjE4OSAxMy4xMTUgMTQuMjE4OSAxMy42NjczIDEzLjY2NjZDMTQuMjE5NiAxMy4xMTQzIDE0LjIxOTYgMTIuMjE4OSAxMy42NjczIDExLjY2NjZMMTAuNjUwOSA4LjY1MDI0QzEwLjQzNzMgOC42MzAwMyAxMC4yMjkxIDguNTkxNTEgMTAuMDI3OCA4LjUzNjI2QzkuNzY4NDcgOC40NjUwNyA5LjQ4Mzk1IDguNTE2NzQgOS4yOTM3NiA4LjcwNjkzTDguMDAwNjkgMTBaIiBzdHJva2U9IiMyNjI2MjYiIHN0cm9rZS13aWR0aD0iMS4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==";
+    releaseControlImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTUiIHZpZXdCb3g9IjAgMCAxNiAxNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTQgNEw3IDdNNCA0SDJMMS4zMzMzNCAyTDIgMS4zMzMzM0w0IDJWNFpNMTIuODM5MyAxLjgyNzM0TDExLjA4NzYgMy41NzkwOUMxMC44MjM2IDMuODQzMSAxMC42OTE2IDMuOTc1MSAxMC42NDIxIDQuMTI3MzJDMTAuNTk4NiA0LjI2MTIyIDEwLjU5ODYgNC40MDU0NSAxMC42NDIxIDQuNTM5MzVDMTAuNjkxNiA0LjY5MTU2IDEwLjgyMzYgNC44MjM1NyAxMS4wODc2IDUuMDg3NThMMTEuMjQ1OCA1LjI0NTc1QzExLjUwOTggNS41MDk3NiAxMS42NDE4IDUuNjQxNzcgMTEuNzk0IDUuNjkxMjNDMTEuOTI3OSA1LjczNDczIDEyLjA3MjEgNS43MzQ3MyAxMi4yMDYgNS42OTEyM0MxMi4zNTgyIDUuNjQxNzcgMTIuNDkwMiA1LjUwOTc2IDEyLjc1NDIgNS4yNDU3NUwxNC4zOTI5IDMuNjA3MTVDMTQuNTY5MyA0LjAzNjU5IDE0LjY2NjcgNC41MDY5MyAxNC42NjY3IDVDMTQuNjY2NyA3LjAyNTA0IDEzLjAyNSA4LjY2NjY3IDExIDguNjY2NjdDMTAuNzU1OSA4LjY2NjY3IDEwLjUxNzMgOC42NDI4MSAxMC4yODY1IDguNTk3MjlDOS45NjI0MSA4LjUzMzM3IDkuODAwMzYgOC41MDE0MSA5LjcwMjEzIDguNTExMkM5LjU5NzY5IDguNTIxNjEgOS41NDYyMiA4LjUzNzI3IDkuNDUzNjggOC41ODY3OUM5LjM2NjYzIDguNjMzMzcgOS4yNzkzMiA4LjcyMDY5IDkuMTA0NjkgOC44OTUzMUw0LjMzMzM0IDEzLjY2NjdDMy43ODEwNSAxNC4yMTg5IDIuODg1NjIgMTQuMjE4OSAyLjMzMzM0IDEzLjY2NjdDMS43ODEwNSAxMy4xMTQ0IDEuNzgxMDUgMTIuMjE4OSAyLjMzMzM0IDExLjY2NjdMNy4xMDQ2OSA2Ljg5NTMxQzcuMjc5MzIgNi43MjA2OCA3LjM2NjYzIDYuNjMzMzcgNy40MTMyMSA2LjU0NjMzQzcuNDYyNzQgNi40NTM3OSA3LjQ3ODM5IDYuNDAyMzEgNy40ODg4IDYuMjk3ODdDNy40OTg1OSA2LjE5OTY0IDcuNDY2NjMgNi4wMzc1OSA3LjQwMjcxIDUuNzEzNDlDNy4zNTcyIDUuNDgyNzEgNy4zMzMzNCA1LjI0NDE0IDcuMzMzMzQgNUM3LjMzMzM0IDIuOTc0OTYgOC45NzQ5NiAxLjMzMzMzIDExIDEuMzMzMzNDMTEuNjcwMyAxLjMzMzMzIDEyLjI5ODcgMS41MTMyMiAxMi44MzkzIDEuODI3MzRaTTguMDAwMDQgOS45OTk5NkwxMS42NjY3IDEzLjY2NjZDMTIuMjE5IDE0LjIxODkgMTMuMTE0NCAxNC4yMTg5IDEzLjY2NjcgMTMuNjY2NkMxNC4yMTg5IDEzLjExNDMgMTQuMjE4OSAxMi4yMTg5IDEzLjY2NjcgMTEuNjY2NkwxMC42NTAyIDguNjUwMkMxMC40MzY3IDguNjI5OTkgMTAuMjI4NSA4LjU5MTQ3IDEwLjAyNzIgOC41MzYyMkM5Ljc2NzgyIDguNDY1MDMgOS40ODMzIDguNTE2NyA5LjI5MzExIDguNzA2ODlMOC4wMDAwNCA5Ljk5OTk2WiIgc3Ryb2tlPSIjMjk3MEZGIiBzdHJva2Utd2lkdGg9IjEuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=";
     pickColorImage = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciICB2aWV3Qm94PSIwIDAgNDggNDgiIHdpZHRoPSI0OHB4IiBoZWlnaHQ9IjQ4cHgiPjxwYXRoIGZpbGw9IiNlOTFlNjMiIGQ9Ik0yNCw0djIwTDE0LDYuNjgxTDI0LDR6Ii8+PHBhdGggZmlsbD0iI2ZmNTcyMiIgZD0iTTM0LDYuNjgxTDQxLjMxOSwxNEwyNCwyNEwzNCw2LjY4MXoiLz48cGF0aCBmaWxsPSIjZjQ0MzM2IiBkPSJNMjQsNGwxMCwyLjY4MUwyNCwyNFY0eiIvPjxwYXRoIGZpbGw9IiM4YmMzNGEiIGQ9Ik0yNCw0NFYyNGwxMCwxNy4zMTlMMjQsNDR6Ii8+PHBhdGggZmlsbD0iIzAzYTlmNCIgZD0iTTE0LDQxLjMxOUw2LjY4MSwzNEwyNCwyNEwxNCw0MS4zMTl6Ii8+PHBhdGggZmlsbD0iIzRjYWY1MCIgZD0iTTI0LDQ0bC0xMC0yLjY4MUwyNCwyNFY0NHoiLz48cGF0aCBmaWxsPSIjZmY5ODAwIiBkPSJNNDQsMjRIMjRsMTcuMzE5LTEwTDQ0LDI0eiIvPjxwYXRoIGZpbGw9IiNmZmViM2IiIGQ9Ik00MS4zMTksMzRMMzQsNDEuMzE5TDI0LDI0TDQxLjMxOSwzNHoiLz48cGF0aCBmaWxsPSIjZmZjMTA3IiBkPSJNNDQsMjRsLTIuNjgxLDEwTDI0LDI0SDQ0eiIvPjxwYXRoIGZpbGw9IiMzZjUxYjUiIGQ9Ik00LDI0aDIwTDYuNjgxLDM0TDQsMjR6Ii8+PHBhdGggZmlsbD0iIzljMjdiMCIgZD0iTTYuNjgxLDE0TDE0LDYuNjgxTDI0LDI0TDYuNjgxLDE0eiIvPjxwYXRoIGZpbGw9IiM2NzNhYjciIGQ9Ik00LDI0bDIuNjgxLTEwTDI0LDI0SDR6Ii8+PC9zdmc+";
-    drawEnabledImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzUiIHZpZXdCb3g9IjAgMCAzMiAzNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgZmlsdGVyPSJ1cmwoI2ZpbHRlcjBfZCkiPgo8cGF0aCBkPSJNMjMuODI4MSAzQzIzLjMxNjQgMyAyMi44MDQ2IDMuMTk1NDQgMjIuNDE0MSAzLjU4NTk0TDIxIDVMMjYgMTBMMjcuNDE0MSA4LjU4NTk0QzI4LjE5NTEgNy44MDQ5NCAyOC4xOTUxIDYuNTM4ODEgMjcuNDE0MSA1Ljc1NzgxTDI1LjI0MjIgMy41ODU5NEMyNC44NTE3IDMuMTk1NDQgMjQuMzM5OSAzIDIzLjgyODEgM1pNMTkgN0w3LjAwMDAxIDE5TDguNTAwMDEgMTkuNUw5LjAwMDAxIDIyTDExLjUgMjIuNUwxMiAyNEwyNCAxMkwxOSA3Wk01LjE1MjM1IDIzLjE1MjNMNC4wMzcxMSAyNi4zMDg2QzQuMDEyMyAyNi4zNjkzIDMuOTk5NyAyNi40MzQ0IDQuMDAwMDEgMjYuNUM0LjAwMDAxIDI2LjYzMjYgNC4wNTI2OCAyNi43NTk4IDQuMTQ2NDUgMjYuODUzNkM0LjI0MDIyIDI2Ljk0NzMgNC4zNjc0IDI3IDQuNTAwMDEgMjdDNC41NjIwOSAyNy4wMDAzIDQuNjIzNjkgMjYuOTg5IDQuNjgxNjUgMjYuOTY2OEw3Ljg0NzY2IDI1Ljg0NzdMNS4xNTIzNSAyMy4xNTIzWiIgZmlsbD0iIzAwOURBQiIvPgo8L2c+CjxkZWZzPgo8ZmlsdGVyIGlkPSJmaWx0ZXIwX2QiIHg9Ii0zIiB5PSIwIiB3aWR0aD0iMzgiIGhlaWdodD0iMzgiIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlRmxvb2QgZmxvb2Qtb3BhY2l0eT0iMCIgcmVzdWx0PSJCYWNrZ3JvdW5kSW1hZ2VGaXgiLz4KPGZlQ29sb3JNYXRyaXggaW49IlNvdXJjZUFscGhhIiB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMTI3IDAiIHJlc3VsdD0iaGFyZEFscGhhIi8+CjxmZU9mZnNldCBkeT0iNCIvPgo8ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSIyIi8+CjxmZUNvbXBvc2l0ZSBpbjI9ImhhcmRBbHBoYSIgb3BlcmF0b3I9Im91dCIvPgo8ZmVDb2xvck1hdHJpeCB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMC4yNSAwIi8+CjxmZUJsZW5kIG1vZGU9Im5vcm1hbCIgaW4yPSJCYWNrZ3JvdW5kSW1hZ2VGaXgiIHJlc3VsdD0iZWZmZWN0MV9kcm9wU2hhZG93Ii8+CjxmZUJsZW5kIG1vZGU9Im5vcm1hbCIgaW49IlNvdXJjZUdyYXBoaWMiIGluMj0iZWZmZWN0MV9kcm9wU2hhZG93IiByZXN1bHQ9InNoYXBlIi8+CjwvZmlsdGVyPgo8L2RlZnM+Cjwvc3ZnPgo=";
-    drawDisabledImage = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+PHN2ZyBmaWxsPSIjMDAwMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciICB2aWV3Qm94PSIwIDAgMzAgMzAiIHdpZHRoPSIzMHB4IiBoZWlnaHQ9IjMwcHgiPiAgICA8cGF0aCBkPSJNIDIyLjgyODEyNSAzIEMgMjIuMzE2Mzc1IDMgMjEuODA0NTYyIDMuMTk1NDM3NSAyMS40MTQwNjIgMy41ODU5Mzc1IEwgMjAgNSBMIDI1IDEwIEwgMjYuNDE0MDYyIDguNTg1OTM3NSBDIDI3LjE5NTA2MiA3LjgwNDkzNzUgMjcuMTk1MDYyIDYuNTM4ODEyNSAyNi40MTQwNjIgNS43NTc4MTI1IEwgMjQuMjQyMTg4IDMuNTg1OTM3NSBDIDIzLjg1MTY4OCAzLjE5NTQzNzUgMjMuMzM5ODc1IDMgMjIuODI4MTI1IDMgeiBNIDE4IDcgTCA2IDE5IEwgNy41IDE5LjUgTCA4IDIyIEwgMTAuNSAyMi41IEwgMTEgMjQgTCAyMyAxMiBMIDE4IDcgeiBNIDQuMTUyMzQzOCAyMy4xNTIzNDQgTCAzLjAzNzEwOTQgMjYuMzA4NTk0IEEgMC41IDAuNSAwIDAgMCAzIDI2LjUgQSAwLjUgMC41IDAgMCAwIDMuNSAyNyBBIDAuNSAwLjUgMCAwIDAgMy42ODE2NDA2IDI2Ljk2Njc5NyBMIDYuODQ3NjU2MiAyNS44NDc2NTYgTCA0LjE1MjM0MzggMjMuMTUyMzQ0IHoiLz48L3N2Zz4=";
-    eraserImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTciIGhlaWdodD0iMTciIHZpZXdCb3g9IjAgMCAxNyAxNyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTExLjY2NjkgMC4zNDM3NUMxMS4wNzg2IDAuMzQzNzUgMTAuNDkwOSAwLjU2NjY3OSAxMC4wNDU4IDEuMDExNzJMMS4wMTMyNiAxMC4wNDU2QzAuMTIzMTgzIDEwLjkzNTcgMC4xMjMxODMgMTIuMzk5IDEuMDEzMjYgMTMuMjg5MUw0LjA0NTgxIDE2LjMyMTZDNC40MzkyNyAxNi43MTUxIDQuOTQ1NDcgMTYuOTI0NSA1LjQ2Mzc4IDE2Ljk3MDFDNS41Mjk1NCAxNi45OTA1IDUuNTk4MDYgMTcuMDAwNiA1LjY2NjkxIDE3SDExLjAwMDJDMTEuMDg4NiAxNy4wMDEyIDExLjE3NjMgMTYuOTg0OSAxMS4yNTgzIDE2Ljk1MkMxMS4zNDAyIDE2LjkxOSAxMS40MTQ5IDE2Ljg3MDEgMTEuNDc3OCAxNi44MDgxQzExLjU0MDcgMTYuNzQ2MSAxMS41OTA2IDE2LjY3MjIgMTEuNjI0NyAxNi41OTA3QzExLjY1ODggMTYuNTA5MiAxMS42NzY0IDE2LjQyMTcgMTEuNjc2NCAxNi4zMzMzQzExLjY3NjQgMTYuMjQ1IDExLjY1ODggMTYuMTU3NSAxMS42MjQ3IDE2LjA3NkMxMS41OTA2IDE1Ljk5NDUgMTEuNTQwNyAxNS45MjA2IDExLjQ3NzggMTUuODU4NkMxMS40MTQ5IDE1Ljc5NjUgMTEuMzQwMiAxNS43NDc2IDExLjI1ODMgMTUuNzE0N0MxMS4xNzYzIDE1LjY4MTcgMTEuMDg4NiAxNS42NjU0IDExLjAwMDIgMTUuNjY2N0g3Ljk0Mjk1TDE2LjMyMTkgNy4yODc3NkMxNy4yMTE5IDYuMzk3NjggMTcuMjExOSA0LjkzNDM1IDE2LjMyMTkgNC4wNDQyN0wxMy4yODkzIDEuMDExNzJDMTIuODQ0MyAwLjU2NjY3OSAxMi4yNTUzIDAuMzQzNzUgMTEuNjY2OSAwLjM0Mzc1Wk02LjEzODI2IDYuODA0NjlMMTAuNTI4OSAxMS4xOTUzTDYuMzQ1MjkgMTUuMzc4OUM1Ljk2NDU0IDE1Ljc1OTcgNS4zNjkyOCAxNS43NTk3IDQuOTg4NTIgMTUuMzc4OUwxLjk1NTk3IDEyLjM0NjRDMS41NzUzOCAxMS45NjU4IDEuNTc1MzggMTEuMzY4OSAxLjk1NTk3IDEwLjk4ODNMNi4xMzgyNiA2LjgwNDY5Wk0xMy42NjY5IDE1LjY2NjdDMTMuNDkwMSAxNS42NjY3IDEzLjMyMDUgMTUuNzM2OSAxMy4xOTU1IDE1Ljg2MTlDMTMuMDcwNSAxNS45ODcgMTMuMDAwMiAxNi4xNTY1IDEzLjAwMDIgMTYuMzMzM0MxMy4wMDAyIDE2LjUxMDEgMTMuMDcwNSAxNi42Nzk3IDEzLjE5NTUgMTYuODA0N0MxMy4zMjA1IDE2LjkyOTggMTMuNDkwMSAxNyAxMy42NjY5IDE3QzEzLjg0MzcgMTcgMTQuMDEzMyAxNi45Mjk4IDE0LjEzODMgMTYuODA0N0MxNC4yNjMzIDE2LjY3OTcgMTQuMzMzNiAxNi41MTAxIDE0LjMzMzYgMTYuMzMzM0MxNC4zMzM2IDE2LjE1NjUgMTQuMjYzMyAxNS45ODcgMTQuMTM4MyAxNS44NjE5QzE0LjAxMzMgMTUuNzM2OSAxMy44NDM3IDE1LjY2NjcgMTMuNjY2OSAxNS42NjY3Wk0xNi4zMzM2IDE1LjY2NjdDMTYuMTU2OCAxNS42NjY3IDE1Ljk4NzIgMTUuNzM2OSAxNS44NjIyIDE1Ljg2MTlDMTUuNzM3MSAxNS45ODcgMTUuNjY2OSAxNi4xNTY1IDE1LjY2NjkgMTYuMzMzM0MxNS42NjY5IDE2LjUxMDEgMTUuNzM3MSAxNi42Nzk3IDE1Ljg2MjIgMTYuODA0N0MxNS45ODcyIDE2LjkyOTggMTYuMTU2OCAxNyAxNi4zMzM2IDE3QzE2LjUxMDQgMTcgMTYuNjggMTYuOTI5OCAxNi44MDUgMTYuODA0N0MxNi45MyAxNi42Nzk3IDE3LjAwMDIgMTYuNTEwMSAxNy4wMDAyIDE2LjMzMzNDMTcuMDAwMiAxNi4xNTY1IDE2LjkzIDE1Ljk4NyAxNi44MDUgMTUuODYxOUMxNi42OCAxNS43MzY5IDE2LjUxMDQgMTUuNjY2NyAxNi4zMzM2IDE1LjY2NjdaIiBmaWxsPSJibGFjayIvPgo8L3N2Zz4K";
-    closeImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEuNzU1NTMgMC41NzgxMjVMMC41NzcxNDggMS43NTY1MUw1LjgyMTI5IDcuMDAwNjVMMC41NzcxNDggMTIuMjQ0OEwxLjc1NTUzIDEzLjQyMzJMNi45OTk2NyA4LjE3OTAzTDEyLjI0MzggMTMuNDIzMkwxMy40MjIyIDEyLjI0NDhMOC4xNzgwNiA3LjAwMDY1TDEzLjQyMjIgMS43NTY1MUwxMi4yNDM4IDAuNTc4MTI1TDYuOTk5NjcgNS44MjIyN0wxLjc1NTUzIDAuNTc4MTI1WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==";
-    reconnectImage = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTNweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTMgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5yZWxvYWQ8L3RpdGxlPgogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0iQXJ0Ym9hcmQiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0zNTcuMDAwMDAwLCAtMjQxLjAwMDAwMCkiIGZpbGw9IiM4QTk1OUYiIHN0cm9rZT0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJyZWxvYWQiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDM1OC4wMDAwMDAsIDI0Mi4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik0xMC44LDUuMjczNTc2NTggQzEwLjgsMi4zNjU3MTQyIDguMzc3NTg1NzEsMCA1LjQwMDAyMzg3LDAgQzIuNDIyNDYyMDMsMCAwLDIuMzY1NzE0MiAwLDUuMjczNTc2NTggQzAsNS40NDYzMTE0MiAwLjE0MzQwNjM1Myw1LjU4NjM1OTc2IDAuMzIwMjgyOTQyLDUuNTg2MzU5NzYgQzAuNDk3MTU5NTMsNS41ODYzNTk3NiAwLjY0MDU2NTg4Myw1LjQ0NjI4ODEgMC42NDA1NjU4ODMsNS4yNzM1NzY1OCBDMC42NDA1NjU4ODMsMi43MTA2NDc2NSAyLjc3NTY0MjI2LDAuNjI1NTg5NjY4IDUuNCwwLjYyNTU4OTY2OCBDOC4wMjQzNTc3NCwwLjYyNTU4OTY2OCAxMC4xNTk0MzQxLDIuNzEwNjcwOTYgMTAuMTU5NDM0MSw1LjI3MzU3NjU4IEMxMC4xNTk0MzQxLDcuODM2NDU4ODkgOC4wMjQzNTc3NCw5LjkyMTU0MDE4IDUuNCw5LjkyMTU0MDE4IEw0Ljg0NDMyNzI0LDkuOTIxNTQwMTggTDUuNjM4ODc1MzEsOS4wNTI5NzAwMyBDNS43NTY3MzczMyw4LjkyNDE1OTEyIDUuNzQ1MzAyMDYsOC43MjY0MDgxNiA1LjYxMzQwMjYsOC42MTEzMDYgQzUuNDgxNTAzMTMsOC40OTYyMDM4NSA1LjI3ODk4NjcyLDguNTA3Mzk0NjYgNS4xNjExNDg1Nyw4LjYzNjIwNTU2IEw0LjAyNTM1Njg4LDkuODc3ODAyNzYgQzMuODM5NDMyMzUsMTAuMDgxMDU1OSAzLjgzOTQzMjM1LDEwLjM4NzU5MDggNC4wMjUzNTY4OCwxMC41OTA4NDQgTDUuMTYxMTQ4NTcsMTEuODMyNDQxMiBDNS4yMjQ0MzY0NCwxMS45MDE2Mzc3IDUuMzEyMDc0OTgsMTEuOTM2ODQyMSA1LjQwMDExOTM3LDExLjkzNjg0MjEgQzUuNDc2MDYwMDQsMTEuOTM2ODQyMSA1LjU1MjMxMTA2LDExLjkxMDU5MDMgNS42MTM0MDI2LDExLjg1NzM0MDcgQzUuNzQ1MzI1OTQsMTEuNzQyMjM4NiA1Ljc1NjczNzMzLDExLjU0NDQ4NzYgNS42Mzg4NzUzMSwxMS40MTU2NzY3IEw0Ljg0NDMyNzI0LDEwLjU0NzEwNjUgTDUuNCwxMC41NDcxMDY1IEM4LjM3NzU4NTcxLDEwLjU0NzEwNjUgMTAuOCw4LjE4MTM5MjM0IDEwLjgsNS4yNzM1NzY1OCBaIiBpZD0iUGF0aCI+PC9wYXRoPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=";
+    drawEnabledImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUiIGhlaWdodD0iMTUiIHZpZXdCb3g9IjAgMCAxNSAxNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEzIDE0SDcuNjY2NjdNMC42NjY2NDkgMTQuMzMzM0w0LjM2NjE2IDEyLjkxMDRDNC42MDI3OSAxMi44MTk0IDQuNzIxMSAxMi43NzM5IDQuODMxNzkgMTIuNzE0NUM0LjkzMDEyIDEyLjY2MTcgNS4wMjM4NSAxMi42MDA4IDUuMTEyMDEgMTIuNTMyNEM1LjIxMTI2IDEyLjQ1NTQgNS4zMDA5IDEyLjM2NTggNS40ODAxNyAxMi4xODY1TDEzIDQuNjY2NjdDMTMuNzM2NCAzLjkzMDI5IDEzLjczNjQgMi43MzYzOCAxMyAyQzEyLjI2MzYgMS4yNjM2MiAxMS4wNjk3IDEuMjYzNjIgMTAuMzMzMyAyTDIuODEzNSA5LjUxOTgxQzIuNjM0MjMgOS42OTkwOCAyLjU0NDYgOS43ODg3MiAyLjQ2NzU4IDkuODg3OTdDMi4zOTkxNiA5Ljk3NjEzIDIuMzM4MjUgMTAuMDY5OSAyLjI4NTQ3IDEwLjE2ODJDMi4yMjYwNSAxMC4yNzg5IDIuMTgwNTUgMTAuMzk3MiAyLjA4OTU0IDEwLjYzMzhMMC42NjY2NDkgMTQuMzMzM1pNMC42NjY2NDkgMTQuMzMzM0wyLjAzODczIDEwLjc2NkMyLjEzNjkxIDEwLjUxMDcgMi4xODYwMSAxMC4zODMxIDIuMjcwMjEgMTAuMzI0NkMyLjM0MzggMTAuMjczNSAyLjQzNDg1IDEwLjI1NDIgMi41MjI4NSAxMC4yNzFDMi42MjM1NCAxMC4yOTAyIDIuNzIwMjQgMTAuMzg2OSAyLjkxMzY0IDEwLjU4MDNMNC40MTk3IDEyLjA4NjRDNC42MTMxIDEyLjI3OTggNC43MDk4IDEyLjM3NjUgNC43MjkwMyAxMi40NzcyQzQuNzQ1ODMgMTIuNTY1MiA0LjcyNjUxIDEyLjY1NjIgNC42NzU0MSAxMi43Mjk4QzQuNjE2OTUgMTIuODE0IDQuNDg5MzEgMTIuODYzMSA0LjIzNDAzIDEyLjk2MTNMMC42NjY2NDkgMTQuMzMzM1oiIHN0cm9rZT0iIzI5NzBGRiIgc3Ryb2tlLXdpZHRoPSIxLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K";
+    drawDisabledImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggb3BhY2l0eT0iMC4xMiIgZD0iTTMuMDM4MDggMTAuNzY2MUMzLjEzNjI2IDEwLjUxMDggMy4xODUzNSAxMC4zODMxIDMuMjY5NTYgMTAuMzI0N0MzLjM0MzE0IDEwLjI3MzYgMy40MzQyIDEwLjI1NDMgMy41MjIxOSAxMC4yNzExQzMuNjIyODkgMTAuMjkwMyAzLjcxOTU5IDEwLjM4NyAzLjkxMjk5IDEwLjU4MDRMNS40MTkwNSAxMi4wODY0QzUuNjEyNDUgMTIuMjc5OCA1LjcwOTE1IDEyLjM3NjUgNS43MjgzNyAxMi40NzcyQzUuNzQ1MTggMTIuNTY1MiA1LjcyNTg1IDEyLjY1NjMgNS42NzQ3NiAxMi43Mjk5QzUuNjE2MyAxMi44MTQxIDUuNDg4NjYgMTIuODYzMiA1LjIzMzM4IDEyLjk2MTRMMS42NjYwMiAxNC4zMzM0TDMuMDM4MDggMTAuNzY2MVoiIGZpbGw9IiMyNjI2MjYiLz4KPHBhdGggZD0iTTEzLjk5OTQgMTRIOC42NjYwM00xLjY2NjAyIDE0LjMzMzRMNS4zNjU1MyAxMi45MTA1QzUuNjAyMTYgMTIuODE5NSA1LjcyMDQ3IDEyLjc3NCA1LjgzMTE2IDEyLjcxNDZDNS45Mjk0OCAxMi42NjE4IDYuMDIzMjIgMTIuNjAwOSA2LjExMTM4IDEyLjUzMjRDNi4yMTA2MyAxMi40NTU0IDYuMzAwMjcgMTIuMzY1OCA2LjQ3OTU0IDEyLjE4NjVMMTMuOTk5NCA0LjY2NjcxQzE0LjczNTcgMy45MzAzMyAxNC43MzU3IDIuNzM2NDIgMTMuOTk5NCAyLjAwMDA0QzEzLjI2MyAxLjI2MzY2IDEyLjA2OTEgMS4yNjM2NiAxMS4zMzI3IDIuMDAwMDRMMy44MTI4NyA5LjUxOTg1QzMuNjMzNiA5LjY5OTEyIDMuNTQzOTYgOS43ODg3NiAzLjQ2Njk0IDkuODg4MDFDMy4zOTg1MyA5Ljk3NjE3IDMuMzM3NjIgMTAuMDY5OSAzLjI4NDg0IDEwLjE2ODJDMy4yMjU0MiAxMC4yNzg5IDMuMTc5OTEgMTAuMzk3MiAzLjA4ODkgMTAuNjMzOUwxLjY2NjAyIDE0LjMzMzRaTTEuNjY2MDIgMTQuMzMzNEwzLjAzODEgMTAuNzY2QzMuMTM2MjggMTAuNTEwNyAzLjE4NTM3IDEwLjM4MzEgMy4yNjk1OCAxMC4zMjQ2QzMuMzQzMTYgMTAuMjczNSAzLjQzNDIyIDEwLjI1NDIgMy41MjIyMSAxMC4yNzFDMy42MjI5IDEwLjI5MDIgMy43MTk2IDEwLjM4NjkgMy45MTMgMTAuNTgwM0w1LjQxOTA2IDEyLjA4NjRDNS42MTI0NiAxMi4yNzk4IDUuNzA5MTYgMTIuMzc2NSA1LjcyODM5IDEyLjQ3NzJDNS43NDUyIDEyLjU2NTIgNS43MjU4NyAxMi42NTYyIDUuNjc0NzggMTIuNzI5OEM1LjYxNjMxIDEyLjgxNCA1LjQ4ODY3IDEyLjg2MzEgNS4yMzM0IDEyLjk2MTNMMS42NjYwMiAxNC4zMzM0WiIgc3Ryb2tlPSIjMjYyNjI2IiBzdHJva2Utd2lkdGg9IjEuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=";
+    eraserImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9ImVyYXNlciI+CjxwYXRoIGlkPSJJY29uIiBkPSJNMTEuOTk5IDguNjY2NjlMNy4zMzIzOCA0LjAwMDAyTTEzLjk5OSAxNEg1LjMzMjM4TTcuMjkwNTUgMTMuMzc1MkwxMy4wNjk2IDcuNTk2MUMxMy44NjE3IDYuODA0MDYgMTQuMjU3NyA2LjQwODA1IDE0LjQwNjEgNS45NTEzOUMxNC41MzY2IDUuNTQ5NyAxNC41MzY2IDUuMTE3MDEgMTQuNDA2MSA0LjcxNTMyQzE0LjI1NzcgNC4yNTg2NyAxMy44NjE3IDMuODYyNjUgMTMuMDY5NiAzLjA3MDYyTDEyLjkyODUgMi45Mjk0M0MxMi4xMzY0IDIuMTM3NCAxMS43NDA0IDEuNzQxMzggMTEuMjgzNyAxLjU5M0MxMC44ODIxIDEuNDYyNDkgMTAuNDQ5NCAxLjQ2MjQ5IDEwLjA0NzcgMS41OTNDOS41OTEwMiAxLjc0MTM4IDkuMTk1IDIuMTM3NCA4LjQwMjk3IDIuOTI5NDNMMi45Mjg0NiA4LjQwMzk1QzIuMTM2NDIgOS4xOTU5OCAxLjc0MDQgOS41OTIgMS41OTIwMyAxMC4wNDg3QzEuNDYxNTEgMTAuNDUwMyAxLjQ2MTUxIDEwLjg4MyAxLjU5MjAzIDExLjI4NDdDMS43NDA0IDExLjc0MTQgMi4xMzY0MiAxMi4xMzc0IDIuOTI4NDUgMTIuOTI5NEwzLjM3NDIxIDEzLjM3NTJDMy42MDQ4MSAxMy42MDU4IDMuNzIwMTEgMTMuNzIxMSAzLjg1NDY3IDEzLjgwMzVDMy45NzM5NiAxMy44NzY2IDQuMTA0MDIgMTMuOTMwNSA0LjI0MDA3IDEzLjk2MzJDNC4zOTM1MiAxNCA0LjU1NjU4IDE0IDQuODgyNyAxNEg1Ljc4MjA2QzYuMTA4MTggMTQgNi4yNzEyNCAxNCA2LjQyNDY5IDEzLjk2MzJDNi41NjA3NCAxMy45MzA1IDYuNjkwOCAxMy44NzY2IDYuODEwMDkgMTMuODAzNUM2Ljk0NDY1IDEzLjcyMTEgNy4wNTk5NSAxMy42MDU4IDcuMjkwNTUgMTMuMzc1MloiIHN0cm9rZT0iIzI2MjYyNiIgc3Ryb2tlLXdpZHRoPSIxLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L2c+Cjwvc3ZnPgo=";
+    closeImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTQgMTJMMTIgNE00IDRMMTIgMTIiIHN0cm9rZT0iIzI2MjYyNiIgc3Ryb2tlLXdpZHRoPSIxLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K";
+    reconnectImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9InJlZnJlc2gtY3ctMDEiPgo8cGF0aCBpZD0iSWNvbiIgZD0iTTE0LjY2NjcgNi42NjY2N0MxNC42NjY3IDYuNjY2NjcgMTMuMzMgNC44NDU0OCAxMi4yNDQxIDMuNzU4ODNDMTEuMTU4MiAyLjY3MjE4IDkuNjU3NiAyIDggMkM0LjY4NjI5IDIgMiA0LjY4NjI5IDIgOEMyIDExLjMxMzcgNC42ODYyOSAxNCA4IDE0QzEwLjczNTQgMTQgMTMuMDQzMyAxMi4xNjk1IDEzLjc2NTUgOS42NjY2N00xNC42NjY3IDYuNjY2NjdWMi42NjY2N00xNC42NjY3IDYuNjY2NjdIMTAuNjY2NyIgc3Ryb2tlPSIjMjYyNjI2IiBzdHJva2Utd2lkdGg9IjEuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjwvZz4KPC9zdmc+Cg==";
     visibilityOffImage = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjRweCIgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMjRweCIgZmlsbD0iIzAwMDAwMCI+PHBhdGggZD0iTTAgMGgyNHYyNEgwVjB6bTAgMGgyNHYyNEgwVjB6bTAgMGgyNHYyNEgwVjB6bTAgMGgyNHYyNEgwVjB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTEyIDZjMy43OSAwIDcuMTcgMi4xMyA4LjgyIDUuNS0uNTkgMS4yMi0xLjQyIDIuMjctMi40MSAzLjEybDEuNDEgMS40MWMxLjM5LTEuMjMgMi40OS0yLjc3IDMuMTgtNC41M0MyMS4yNyA3LjExIDE3IDQgMTIgNGMtMS4yNyAwLTIuNDkuMi0zLjY0LjU3bDEuNjUgMS42NUMxMC42NiA2LjA5IDExLjMyIDYgMTIgNnptLTEuMDcgMS4xNEwxMyA5LjIxYy41Ny4yNSAxLjAzLjcxIDEuMjggMS4yOGwyLjA3IDIuMDdjLjA4LS4zNC4xNC0uNy4xNC0xLjA3QzE2LjUgOS4wMSAxNC40OCA3IDEyIDdjLS4zNyAwLS43Mi4wNS0xLjA3LjE0ek0yLjAxIDMuODdsMi42OCAyLjY4QzMuMDYgNy44MyAxLjc3IDkuNTMgMSAxMS41IDIuNzMgMTUuODkgNyAxOSAxMiAxOWMxLjUyIDAgMi45OC0uMjkgNC4zMi0uODJsMy40MiAzLjQyIDEuNDEtMS40MUwzLjQyIDIuNDUgMi4wMSAzLjg3em03LjUgNy41bDIuNjEgMi42MWMtLjA0LjAxLS4wOC4wMi0uMTIuMDItMS4zOCAwLTIuNS0xLjEyLTIuNS0yLjUgMC0uMDUuMDEtLjA4LjAxLS4xM3ptLTMuNC0zLjRsMS43NSAxLjc1Yy0uMjMuNTUtLjM2IDEuMTUtLjM2IDEuNzggMCAyLjQ4IDIuMDIgNC41IDQuNSA0LjUuNjMgMCAxLjIzLS4xMyAxLjc3LS4zNmwuOTguOThjLS44OC4yNC0xLjguMzgtMi43NS4zOC0zLjc5IDAtNy4xNy0yLjEzLTguODItNS41LjctMS40MyAxLjcyLTIuNjEgMi45My0zLjUzeiIvPjwvc3ZnPg==";
     visibilityOnImage = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjRweCIgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMjRweCIgZmlsbD0iIzAwMDAwMCI+PHBhdGggZD0iTTAgMGgyNHYyNEgwVjB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTEyIDZjMy43OSAwIDcuMTcgMi4xMyA4LjgyIDUuNUMxOS4xNyAxNC44NyAxNS43OSAxNyAxMiAxN3MtNy4xNy0yLjEzLTguODItNS41QzQuODMgOC4xMyA4LjIxIDYgMTIgNm0wLTJDNyA0IDIuNzMgNy4xMSAxIDExLjUgMi43MyAxNS44OSA3IDE5IDEyIDE5czkuMjctMy4xMSAxMS03LjVDMjEuMjcgNy4xMSAxNyA0IDEyIDR6bTAgNWMxLjM4IDAgMi41IDEuMTIgMi41IDIuNVMxMy4zOCAxNCAxMiAxNHMtMi41LTEuMTItMi41LTIuNVMxMC42MiA5IDEyIDltMC0yYy0yLjQ4IDAtNC41IDIuMDItNC41IDQuNVM5LjUyIDE2IDEyIDE2czQuNS0yLjAyIDQuNS00LjVTMTQuNDggNyAxMiA3eiIvPjwvc3ZnPg==";
     socket = null;
@@ -1240,6 +1332,38 @@ class AgentDesktopPluginScript  {
     vonbtn;
     vonbtnimg;
     drawEnabled = false;
+    setConversationInProgress(conversationType, hostInstance){
+        var campaignCallingTemplate = `
+        <div class="campaign-calling-audio-static-wrapper">
+                <div class="icon_block">
+                    <svg width="29" height="29" viewBox="0 0 29 29" fill="none">
+                    <path d="M13.735 2.03125C4.82438 2.03125 4.3693 7.89581 4.33994 12.5566C3.25364 12.9823 2.46094 14.0246 2.46094 15.1843C2.46094 16.6816 3.58394 18.9423 5.27945 18.9423C5.42624 18.9423 5.58038 18.9276 5.73452 18.913C7.11442 23.1921 10.5201 26.4583 13.735 26.4583C15.269 26.4583 16.8471 25.695 18.2343 24.4325C17.6691 24.5206 17.1113 24.5793 16.5535 24.5793H13.735C11.5257 24.5793 8.44293 21.8416 7.36397 17.7679L7.0557 16.6963L6.17491 16.9165C5.63176 17.056 5.35285 17.0633 5.27945 17.0633C4.97851 17.0266 4.33994 15.955 4.33994 15.1843C4.33994 14.7292 4.81704 14.2742 5.33817 14.2448L6.21895 14.1861V13.3053C6.21895 7.46275 6.7254 3.91026 13.735 3.91026C13.9552 3.91026 16.5902 3.9176 18.3297 3.92494L17.6912 5.22409C17.5957 5.45163 17.2508 6.21498 16.0544 7.19852C14.6745 8.34354 12.2817 9.54728 8.09796 9.54728V11.4263C12.6487 11.4263 15.5332 10.0684 17.2581 8.65181C18.1756 7.88847 18.7334 7.1398 19.0857 6.55995C21.0161 7.54349 21.251 9.4959 21.251 13.3053V17.9367C21.0381 20.3002 17.7939 20.8213 16.5535 20.8213H15.614C15.614 19.7864 14.7699 18.9423 13.735 18.9423C12.7001 18.9423 11.856 19.7864 11.856 20.8213C11.856 21.8562 12.7001 22.7003 13.735 22.7003H16.5535C19.1445 22.7003 21.9997 21.5993 22.8731 19.1772H24.0695C25.6182 19.1772 26.888 17.9074 26.888 16.3587V14.2448C26.888 12.6961 25.6182 11.4263 24.0695 11.4263H23.0933C22.9979 8.73255 22.5355 6.2003 19.9592 4.87912L21.3538 2.06061L19.8417 2.05327C19.8417 2.05327 14.0653 2.03125 13.735 2.03125ZM10.9165 13.3053C10.3953 13.3053 9.97696 13.7237 9.97696 14.2448C9.97696 14.7659 10.3953 15.1843 10.9165 15.1843C11.4376 15.1843 11.856 14.7659 11.856 14.2448C11.856 13.7237 11.4376 13.3053 10.9165 13.3053ZM16.5535 13.3053C16.0324 13.3053 15.614 13.7237 15.614 14.2448C15.614 14.7659 16.0324 15.1843 16.5535 15.1843C17.0746 15.1843 17.493 14.7659 17.493 14.2448C17.493 13.7237 17.0746 13.3053 16.5535 13.3053ZM23.13 13.3053H24.0695C24.598 13.3053 25.009 13.7163 25.009 14.2448V16.3587C25.009 16.8871 24.598 17.2982 24.0695 17.2982H23.13V13.3053Z" fill="#155EEF"/>
+                    </svg>
+                </div>
+                <h1>Connecting to an Agent</h1>
+                <p>
+                    <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
+                    <path d="M7.5013 4.66699C7.5013 3.28628 8.62059 2.16699 10.0013 2.16699C11.382 2.16699 12.5013 3.28628 12.5013 4.66699V10.5003C12.5013 11.881 11.382 13.0003 10.0013 13.0003C8.62059 13.0003 7.5013 11.881 7.5013 10.5003V4.66699Z" fill="#9AA4B2"/>
+                    <path d="M15.8346 8.83366V10.5003C15.8346 13.722 13.223 16.3337 10.0013 16.3337M4.16797 8.83366V10.5003C4.16797 13.722 6.77964 16.3337 10.0013 16.3337M10.0013 16.3337V18.8337M6.66797 18.8337H13.3346M10.0013 13.0003C8.62059 13.0003 7.5013 11.881 7.5013 10.5003V4.66699C7.5013 3.28628 8.62059 2.16699 10.0013 2.16699C11.382 2.16699 12.5013 3.28628 12.5013 4.66699V10.5003C12.5013 11.881 11.382 13.0003 10.0013 13.0003Z" stroke="#98A2B3" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Kindly wait while we connect you..</span>
+                </p>
+                <div class="button-cancel-div">
+                    <button class="btn-cancel-btn" id="cancel-web-conversation">Cancel</button>
+                </div>
+            </div>`;
+        setTimeout(()=>{
+            var widgetHeader = koreJquery(".chat-widget-header");
+            widgetHeader.after(campaignCallingTemplate);
+
+            // Trigger event when cancel is clicked
+            var cancelWebConv = koreJquery("#cancel-web-conversation");
+            cancelWebConv.off('click').on('click', function (event) {
+                hostInstance.chatEle.querySelector('.btn-action-close').click();
+                hostInstance.bot?.close();
+            });
+        },2000);
+    }
     stopCoBrowse = (sendMessageFlag = true, removeFromStorage = true) => {
         console.log("cobrowse >>> stopping cobrowse");
         this.agentDrawPaths = [];
@@ -1593,6 +1717,27 @@ class AgentDesktopPluginScript  {
         cobrowsetoolbar.classList.add("rr-block");
         cobrowsetoolbar.style.border = 'none';
         cobrowsetoolbar.setAttribute("do-not-mutate", "true");
+
+        var livecobrowseTextNode = document.createElement('span')
+        livecobrowseTextNode.innerHTML = 'Co-browse inprogress';
+        livecobrowseTextNode.style.position = 'relative';
+        livecobrowseTextNode.style.top = '10px';
+        livecobrowseTextNode.style.color = '#737373';
+        livecobrowseTextNode.style.fontWeight = '600';
+        livecobrowseTextNode.style.writingMode = 'tb-rl';
+        livecobrowseTextNode.style.transform = 'rotate(-180deg)';
+        cobrowsetoolbar.appendChild(livecobrowseTextNode);
+
+        var cobrowseIconNode = document.createElement('img');
+        cobrowseIconNode.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMjYiIHZpZXdCb3g9IjAgMCAxNiAyNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik03LjMzMzM0IDEzLjAwMDJDNy4zMzMzNCAxMi42MzIgNy42MzE4MSAxMi4zMzM1IDggMTIuMzMzNUg4LjAwNjY3QzguMzc0ODYgMTIuMzMzNSA4LjY3MzM0IDEyLjYzMiA4LjY3MzM0IDEzLjAwMDJDOC42NzMzNCAxMy4zNjg0IDguMzc0ODYgMTMuNjY2OCA4LjAwNjY3IDEzLjY2NjhIOEM3LjYzMTgxIDEzLjY2NjggNy4zMzMzNCAxMy4zNjg0IDcuMzMzMzQgMTMuMDAwMloiIGZpbGw9IiM3MzczNzMiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik03Ljk5OTkzIDMuNjY2ODNDNS4zOTU5NiAzLjY2NjgzIDMuMDI1NzggNC42NjEyMyAxLjI0NTk4IDYuMjkyMThDMC45NzQ1MjUgNi41NDA5MyAwLjU1MjgxNyA2LjUyMjUzIDAuMzA0MDY3IDYuMjUxMDdDMC4wNTUzMTY0IDUuOTc5NjIgMC4wNzM3MjExIDUuNTU3OTEgMC4zNDUxNzUgNS4zMDkxNkMyLjM2MTIgMy40NjE3NSA1LjA0OTU3IDIuMzMzNSA3Ljk5OTkzIDIuMzMzNUMxMC45NTAzIDIuMzMzNSAxMy42Mzg3IDMuNDYxNzUgMTUuNjU0NyA1LjMwOTE2QzE1LjkyNjEgNS41NTc5MSAxNS45NDQ1IDUuOTc5NjIgMTUuNjk1OCA2LjI1MTA3QzE1LjQ0NyA2LjUyMjUzIDE1LjAyNTMgNi41NDA5MyAxNC43NTM5IDYuMjkyMThDMTIuOTc0MSA0LjY2MTIzIDEwLjYwMzkgMy42NjY4MyA3Ljk5OTkzIDMuNjY2ODNaIiBmaWxsPSIjNzM3MzczIi8+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNNy45OTk5OSA3LjAwMDE2QzYuMzExMSA3LjAwMDE2IDQuNzcwMzIgNy42MjczMSAzLjU5NTMgOC42NjIzOUMzLjMxOTAyIDguOTA1NzcgMi44OTc3NSA4Ljg3OTEgMi42NTQzOCA4LjYwMjgyQzIuNDExIDguMzI2NTQgMi40Mzc2NyA3LjkwNTI3IDIuNzEzOTUgNy42NjE4OUM0LjEyMzEgNi40MjA1NiA1Ljk3NDM0IDUuNjY2ODMgNy45OTk5OSA1LjY2NjgzQzEwLjAyNTYgNS42NjY4MyAxMS44NzY5IDYuNDIwNTYgMTMuMjg2IDcuNjYxODlDMTMuNTYyMyA3LjkwNTI3IDEzLjU4OSA4LjMyNjU0IDEzLjM0NTYgOC42MDI4MkMxMy4xMDIyIDguODc5MSAxMi42ODEgOC45MDU3NyAxMi40MDQ3IDguNjYyMzlDMTEuMjI5NyA3LjYyNzMxIDkuNjg4ODggNy4wMDAxNiA3Ljk5OTk5IDcuMDAwMTZaIiBmaWxsPSIjNzM3MzczIi8+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNNy45OTk5MyAxMC4zMzM1QzcuMjEyMzkgMTAuMzMzNSA2LjQ5MDI3IDEwLjYwNTggNS45MTk5NiAxMS4wNjE5QzUuNjMyNDEgMTEuMjkxOCA1LjIxMjg5IDExLjI0NTEgNC45ODI5MyAxMC45NTc2QzQuNzUyOTggMTAuNjcgNC43OTk2NiAxMC4yNTA1IDUuMDg3MjEgMTAuMDIwNkM1Ljg4NTM3IDkuMzgyMjcgNi44OTg5NCA5LjAwMDE2IDcuOTk5OTMgOS4wMDAxNkM5LjA4NDQ2IDkuMDAwMTYgMTAuMDg0MyA5LjM3MDk0IDEwLjg3NjggOS45OTIyMUMxMS4xNjY2IDEwLjIxOTQgMTEuMjE3NCAxMC42Mzg0IDEwLjk5MDIgMTAuOTI4MkMxMC43NjMxIDExLjIxOCAxMC4zNDQxIDExLjI2ODcgMTAuMDU0MyAxMS4wNDE2QzkuNDg4MDUgMTAuNTk3NyA4Ljc3NTc4IDEwLjMzMzUgNy45OTk5MyAxMC4zMzM1WiIgZmlsbD0iIzczNzM3MyIvPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTguNjY2NjYgMTIuOTk5OEM4LjY2NjY2IDEzLjM2OCA4LjM2ODE5IDEzLjY2NjUgOCAxMy42NjY1SDcuOTkzMzNDNy42MjUxNCAxMy42NjY1IDcuMzI2NjYgMTMuMzY4IDcuMzI2NjYgMTIuOTk5OEM3LjMyNjY2IDEyLjYzMTYgNy42MjUxNCAxMi4zMzMyIDcuOTkzMzMgMTIuMzMzMkg4QzguMzY4MTkgMTIuMzMzMiA4LjY2NjY2IDEyLjYzMTYgOC42NjY2NiAxMi45OTk4WiIgZmlsbD0iIzczNzM3MyIvPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTguMDAwMDcgMjIuMzMzMkMxMC42MDQgMjIuMzMzMiAxMi45NzQyIDIxLjMzODggMTQuNzU0IDE5LjcwNzhDMTUuMDI1NSAxOS40NTkxIDE1LjQ0NzIgMTkuNDc3NSAxNS42OTU5IDE5Ljc0ODlDMTUuOTQ0NyAyMC4wMjA0IDE1LjkyNjMgMjAuNDQyMSAxNS42NTQ4IDIwLjY5MDhDMTMuNjM4OCAyMi41MzgzIDEwLjk1MDQgMjMuNjY2NSA4LjAwMDA3IDIzLjY2NjVDNS4wNDk3MSAyMy42NjY1IDIuMzYxMzUgMjIuNTM4MyAwLjM0NTMyIDIwLjY5MDhDMC4wNzM4NjY4IDIwLjQ0MjEgMC4wNTU0NjA5IDIwLjAyMDQgMC4zMDQyMTMgMTkuNzQ4OUMwLjU1Mjk2MiAxOS40Nzc1IDAuOTc0NjcxIDE5LjQ1OTEgMS4yNDYxMyAxOS43MDc4QzMuMDI1OTMgMjEuMzM4OCA1LjM5NjExIDIyLjMzMzIgOC4wMDAwNyAyMi4zMzMyWiIgZmlsbD0iIzczNzM3MyIvPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTguMDAwMDEgMTguOTk5OEM5LjY4ODkgMTguOTk5OCAxMS4yMjk3IDE4LjM3MjcgMTIuNDA0NyAxNy4zMzc2QzEyLjY4MSAxNy4wOTQyIDEzLjEwMjIgMTcuMTIwOSAxMy4zNDU2IDE3LjM5NzJDMTMuNTg5IDE3LjY3MzUgMTMuNTYyMyAxOC4wOTQ3IDEzLjI4NiAxOC4zMzgxQzExLjg3NjkgMTkuNTc5NCAxMC4wMjU3IDIwLjMzMzIgOC4wMDAwMSAyMC4zMzMyQzUuOTc0MzYgMjAuMzMzMiA0LjEyMzEyIDE5LjU3OTQgMi43MTM5NyAxOC4zMzgxQzIuNDM3NjkgMTguMDk0NyAyLjQxMTAyIDE3LjY3MzUgMi42NTQ0IDE3LjM5NzJDMi44OTc3OCAxNy4xMjA5IDMuMzE5MDQgMTcuMDk0MiAzLjU5NTMyIDE3LjMzNzZDNC43NzAzNCAxOC4zNzI3IDYuMzExMTIgMTguOTk5OCA4LjAwMDAxIDE4Ljk5OThaIiBmaWxsPSIjNzM3MzczIi8+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNOC4wMDAwNyAxNS42NjY1QzguNzg3NjEgMTUuNjY2NSA5LjUwOTczIDE1LjM5NDIgMTAuMDggMTQuOTM4MUMxMC4zNjc2IDE0LjcwODIgMTAuNzg3MSAxNC43NTQ5IDExLjAxNzEgMTUuMDQyNEMxMS4yNDcgMTUuMzMgMTEuMjAwMyAxNS43NDk1IDEwLjkxMjggMTUuOTc5NEMxMC4xMTQ2IDE2LjYxNzcgOS4xMDEwNiAxNi45OTk4IDguMDAwMDcgMTYuOTk5OEM2LjkxNTU0IDE2Ljk5OTggNS45MTU3NSAxNi42MjkxIDUuMTIzMTcgMTYuMDA3OEM0LjgzMzM5IDE1Ljc4MDYgNC43ODI2MiAxNS4zNjE2IDUuMDA5NzYgMTUuMDcxOEM1LjIzNjkgMTQuNzgyIDUuNjU1OTUgMTQuNzMxMyA1Ljk0NTcyIDE0Ljk1ODRDNi41MTE5NSAxNS40MDIzIDcuMjI0MjIgMTUuNjY2NSA4LjAwMDA3IDE1LjY2NjVaIiBmaWxsPSIjNzM3MzczIi8+Cjwvc3ZnPgo=';
+        cobrowseIconNode.style.position = 'relative';
+        cobrowseIconNode.style.left = '3px';
+        cobrowsetoolbar.appendChild(cobrowseIconNode);
+
+        var cobrowseDividerNode = document.createElement('hr');
+        cobrowseDividerNode.style.width = '100%';
+        cobrowsetoolbar.appendChild(cobrowseDividerNode);
+
         var btnDivStyle = {
             cursor: 'pointer',
             width: '30px',
@@ -2054,7 +2199,7 @@ class AgentDesktopPluginScript  {
                     }
                 } else if (obj.type === 'fullsnapshot') {
                     console.log("taking fullsnapshot");
-                    me.ACKrrweb.record.takeFullSnapshot(true);
+                    me.rrweb.record.takeFullSnapshot(true);
                 } else if (obj.type === 'set_request_control') {
                     me.requestAccepted = obj.data;
                     if (me.releasebtnimg) {
@@ -2113,24 +2258,25 @@ class AgentDesktopPluginScript  {
                 var acceptIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAMfSURBVHgBxZg/TBNRHMe/v1cQCTGpCerg4AHGlEXEwZWDiDLS4GBjohJjIokJRF2IA7Az2NGpEmM6GRwN/isxDsACLt6kNyhBoqYJktIW7vl+154tWuiV67Xfpb+7+11/n7zfu997v0eoUKGYrlFTw6Ak6gJIJ2kFlR3kZyRl0hJkKssUljUvafuFEUmYlfw/uXUMPeu/CYEbytRRgSRhmXYQNa69euLGvyxQ6OlFHQ0UU6YGbzJhYaoc2J5AWkwPNjcfmpBSjqGKIqJHqVRmyhxOJEs+L3UzFNc1SY2zJHEO/sgEsr2l5heVggEa38F7ig4EJYovOE01grHDcRZyMfcA4jlTIxhbPCXyMQv3HCP/WcdQF0mVutcJtgojJDCBuoliBQzkR6eGqSohLc+QA1LVdBT1Vm4VgODPnMi3eoOTLSewODSLULC9nKve+bzvlCDZMAifxDAzfdN48/UDjOTn8i+kRVhYAj3wQQ7M0voKxhemXb3DOwgBizRUWQeByUsXAlJDFeUBRi28CApnc7WfjjS24MLxs+XcPMGwpFRAbhw7j562A4Xb+uEXjKPAsaH2MTVWh/dz+rb53V5jxs+PYCPzGys/DV9gVMqSgdYrHXeUXTZti+sfbah7Xbfs6yV1XQzDoLfnH8KL1ObNCLQOdXTDZWFkKA58Pw+1qkbOgbn+9gEyVhZeJEELnDJNoQ24fYnTtbq5Zqcv3H4ZP1K/bJiN7Ca8Skj5WKXszJpiq2jfzFWXoZoCh3D3/WRVYGxRw4i9HwrF+3mXqKOOUvNn+dPVuW7ns59BnaW6myj/FnaM8UtfUOWq7V5kGpG5NraKCqM1jLpJTjnWXyDe06o+PYoaSy0XUSNS6GZ3LR2p9M6kclhGzURmOp2dLL6zC4jbW6JAmB1RAxgVvvfflvq/xdWIvLQd/YTiExGOkYu1WyVXe3bc2sp0+zGneM6kU9mSMKzyxzFxbk9owntJ4BG3hp2GcE8vuBSDqeI1qipqhR2KTKgwM8VfUlWACmADGsntQZXsHsuCJkDq0AD5Iz0kla0mqaVKCK0c5EjvD7WHTOQEQMMGAAAAAElFTkSuQmCC";
                 var agentName = data?.firstName;
                 var cobrowseRequestHML = `
-                <div class="initial-video-audio-container" do-not-mutate="true">
+                <div class="initial-video-audio-container cobrowser-intial-width" do-not-mutate="true">
                     <div class="ad-img-block">
-                        <img src="${_self.agentProfileIcon}" />
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDMiIHZpZXdCb3g9IjAgMCA0OCA0MyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIxNF8xMTA3NDgpIj4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0iI0VBRjFGQyIvPgo8cGF0aCBkPSJNMjIgMjIuMjVDMjUuNTg5OSAyMi4yNSAyOC41IDE5LjMzOTkgMjguNSAxNS43NUMyOC41IDEyLjE2MDEgMjUuNTg5OSA5LjI1IDIyIDkuMjVDMTguNDEwMiA5LjI1IDE1LjUgMTIuMTYwMSAxNS41IDE1Ljc1QzE1LjUgMTkuMzM5OSAxOC40MTAyIDIyLjI1IDIyIDIyLjI1WiIgZmlsbD0iIzJCNzVFNCIvPgo8cGF0aCBkPSJNNi44MzMzNyA0MS43NUM2LjgzMzM3IDMzLjM3MzcgMTMuNjIzNyAyNi41ODMzIDIyIDI2LjU4MzNDMzAuMzc2NCAyNi41ODMzIDM3LjE2NjcgMzMuMzczNyAzNy4xNjY3IDQxLjc1SDYuODMzMzdaIiBmaWxsPSIjMkI3NUU0Ii8+CjwvZz4KPHJlY3QgeD0iMS4yNSIgeT0iMC43NSIgd2lkdGg9IjQxLjUiIGhlaWdodD0iNDEuNSIgcng9IjIwLjc1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8yMTRfMTEwNzQ4Ij4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K" alt='Agent'/>
                     </div>
                     <div class="content-desc">
                         <div class="name">${agentName}</div>
                         <div class="type-text">${data.confirmMessage}</div>
                     </div>
                     <div class="controls-v-a">
-                        <button id="rejectcall" class="decline-btn">Decline</button>
-                        <button id="acceptcall" class="accept-btn">Accept</button>
+                        <img id="rejectcall" src="${rejectIcon}"/>
+                        <img id="acceptcall" src= "${acceptIcon}"/>
                     </div>
                 </div>`;
-                var toastContainer = document.getElementById("toast");
+                var toastContainer = document.getElementById("toastcontainer");
                 if (!toastContainer) {
                     toastContainer = document.createElement("div");
-                    toastContainer.id = "toast";
-                    document.body.appendChild(toastContainer);
+                    toastContainer.id = "toastcontainer";
+                    var agentcontainer = document.getElementById("agentcontainer");
+                agentcontainer.appendChild(toastcontainer);
                 }
                 toastContainer.innerHTML = cobrowseRequestHML;
 
@@ -2292,7 +2438,7 @@ class AgentDesktopPluginScript  {
                                 });
                                 elements[0].dispatchEvent(e);
                                 const ENTER_KEY_MSG = { "type": "enterkey_dispatched" };
-                                this.sendDCMessage(JSON.stringify(ENTER_KEY_MSG));
+                                me.sendDCMessage(JSON.stringify(ENTER_KEY_MSG));
                             }, 100);
                         }
                     }
@@ -5027,7 +5173,7 @@ class AgentDesktopPluginScript  {
                     }
                 };
                 this.genAdds = function (n, target) {
-                    for(var i =0;i< me.maskClassList.length > 0; i++) {
+                    for(var i =0;i< me.maskClassList?.length > 0; i++) {
                       if(me.maskClassList[i] !== ''){
                         if (n && n.classList && n.classList.contains(me.maskClassList[i])) {
                             n.classList.add('rr-block');
