@@ -1,9 +1,9 @@
 ##  CheckList Template
 
 ###### Preview
-![image](https://github.com/user-attachments/assets/1467ffcc-f03e-4e52-8f8c-e40ad0a986c7)
+![image](https://github.com/user-attachments/assets/824e8f80-c48a-42be-b6f7-27ea2b970c18)
 
-![image](https://github.com/user-attachments/assets/aae3458b-0163-40c8-a3fa-e0a6b28644a9)
+![image](https://github.com/user-attachments/assets/275397b8-b4b6-458f-84b1-5677def68823)
 
 
 ###### Message Payload
@@ -14,7 +14,7 @@ var message = {
   "payload": {
     "template_type": "checkListTemplate",
     "title": "Here are checklist templates",
-    "displayLimit": 1, // optional
+    "displayLimit": 3, // optional
     "showMore": true, // optional
     "elements": [
       {
