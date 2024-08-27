@@ -174,7 +174,7 @@ export function CheckList(props: any) {
                             <button className="show-more-btn hide-show-details" onClick={(event) => toggleItem(event, msgData.messageId, ind, viewMore)}>Details</button>
                         </button>
                     )))}
-                {msgData.message[0].component.payload.showMore && !viewMore && <button className="show-more-btn" onClick={() => handleViewMore()}>View More</button>}
+                {msgData.message[0].component.payload.showMore && (msgData.message[0].component.payload.elements.length > msgData.message[0].component.payload.displayLimit) && !viewMore && <button className="show-more-btn" onClick={() => handleViewMore()}>View More</button>}
             </div>
         );
     } else {
