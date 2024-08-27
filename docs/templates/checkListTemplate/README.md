@@ -1,9 +1,9 @@
 ##  CheckList Template
 
 ###### Preview
+![image](https://github.com/user-attachments/assets/1467ffcc-f03e-4e52-8f8c-e40ad0a986c7)
 
-
-
+![image](https://github.com/user-attachments/assets/aae3458b-0163-40c8-a3fa-e0a6b28644a9)
 
 
 ###### Message Payload
@@ -13,9 +13,9 @@ var message = {
   "type": "template",
   "payload": {
     "template_type": "checkListTemplate",
-    "title": "Here are checklist templates", // optional
-    "displayLimit": 1,
-    "showMore": true,
+    "title": "Here are checklist templates",
+    "displayLimit": 1, // optional
+    "showMore": true, // optional
     "elements": [
       {
         title: 'Manager Onboarding Tasks',
