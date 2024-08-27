@@ -66,6 +66,8 @@ export function CheckList(props: any) {
             event.currentTarget.textContent = 'Details';
         }
         const ele = hostInstance.chatEle.querySelector(`#item-${msgId}-${i}-${viewMore}`);
+        const eleParent = hostInstance.chatEle.querySelector(`#ci-${msgData.messageId}-${i}-${viewMore}`);
+        eleParent.classList.toggle('no-bg-hover-card');
         ele.classList.toggle('hide');
     }
 
