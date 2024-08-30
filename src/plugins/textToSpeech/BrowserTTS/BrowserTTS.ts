@@ -57,8 +57,12 @@ class BrowserTTS extends BaseTTS {
             $('.ttspeakerDiv').removeClass('ttsOff');
             cwInstance.on("afterRenderMessage", (chatWindowData: { msgData: any; }) => {
                 var msgData= chatWindowData.msgData;
-                if (msgData?.type === "bot_response" && !me.hostInstance.minimized && !me.hostInstance.historyLoading) {
-                    if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.type === "template") {
+                if (msgData?.type === "bot_response" && !me.hostInstance.minimized && !me.hostInstance.historyLoading && !msgData.fromHistorySync) {
+                    if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.template_type === "live_agent" && msgData.message[0].component.payload.text) {
+                        (<any>this)._txtToSpeak = msgData.message[0].component.payload.text;
+                    } else if (msgData.message[0] && msgData.message[0].component && typeof msgData.message[0].component != 'object') { // agent transfer waiting message speaking
+                        (<any>this)._txtToSpeak = msgData.message[0].component;
+                    } else if (msgData.message[0] && msgData.message[0].component && msgData.message[0].component.type === "template") {
                         (<any> this)._txtToSpeak = '';
                     }
                     else {
