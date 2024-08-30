@@ -324,6 +324,14 @@ Note: When integrated into an iFrame, the SDK's functionality will be confined t
 	// }		
 # Release History
 ```
+v10.6.0 [Minor] on 31-Aug-2024: Master branch
+        Features
+                1.Added optional delimiter key as connecting word/character between the start date and end date for date range template. Please find the json here -> https://github.com/Koredotcom/web-kore-sdk/tree/v2/dev/docs/templates/dateRangePickerTemplate#message-payload
+        Bugfixes
+                1.Duplicate user messages issue fix
+                2.Intermittent attachment upload token issue fix
+                3.Agent responses repeatedly reading issue fix for sync messages
+
 v10.5.1 [Minor] on 10-Aug-2024: Master branch
         Features
                 1.Added new checklist template. Please find the relevant JSON and screenshot in the link -> https://github.com/Koredotcom/web-kore-sdk/tree/v2/dev/docs/templates/checkListTemplate
