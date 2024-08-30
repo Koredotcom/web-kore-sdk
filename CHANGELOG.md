@@ -1,3 +1,13 @@
+### 11.5.0
+* Release Aug 31, 2024
+* Features
+  * added new checklist template. Please find the relevant JSON and screenshot [here](https://github.com/Koredotcom/web-kore-sdk/tree/v3/dev/docs/templates/checkListTemplate)
+  * added optional delimiter key as the connecting word/character between the start date and end date for date range template. Please find the JSON [here](https://github.com/Koredotcom/web-kore-sdk/tree/v3/dev/docs/templates/dateRangePickerTemplate#message-payload)
+* Bug fixes
+  * intermittent duplicate user messages issue fix
+  * attachments bug fixes
+  * fixed reading issue for messages when agent is connected
+
 ### 11.4.1
 * Release Aug 10, 2024
 * Bug fixes
