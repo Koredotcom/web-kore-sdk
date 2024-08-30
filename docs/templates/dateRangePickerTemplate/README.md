@@ -18,6 +18,7 @@ var message = {
         "startDate":"09-09-2021",
         "endDate":"05-02-2020",
         "format": "MM-DD-YYYY",
+        "delimiter": "-" // optional. connecting word/character between start date and end date. default is to.
     }
 };
 print(JSON.stringify(message));
