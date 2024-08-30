@@ -1,3 +1,12 @@
+### 10.6.0
+- SDK Release Aug 31, 2024
+* Features
+  * added optional delimiter key as the connecting word/character between the start date and end date for date range template. Please find the JSON [here](https://github.com/Koredotcom/web-kore-sdk/tree/v2/dev/docs/templates/dateRangePickerTemplate#message-payload)
+
+* Bug fixes
+  * intermittent duplicate user messages issue fix
+  * fixed reading issue for messages when agent is connected
+
 ### 10.5.1
 - SDK Release Aug 10, 2024
 * Features
