@@ -8,6 +8,9 @@ Features supported:
  3. Co-browse
  4. Screensharing
 
+Note:
+When integrated into an iFrame, the SDK's functionality will be confined to that specific frame
+
 ## Installation Sample for Agent Desktop
 
 
