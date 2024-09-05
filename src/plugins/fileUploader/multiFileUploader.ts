@@ -156,18 +156,19 @@ class KoreMultiFileUploaderPlugin {
           data.event.preventDefault();
           if (me.hostInstance.attachmentData && me.hostInstance.attachmentData.length > 0) {
             me.hostInstance.attachmentData.forEach((attData: any) => {
-              var serverMessageObject: any = {};
+              let serverMessageObject: any = {};
               serverMessageObject.message = {};
               serverMessageObject.message.attachments = [];
               data.chatWindowEvent.stopFurtherExecution = true;
               serverMessageObject.message.attachments[0] = attData;
-              var clientMessageObject: any = {};
+              let clientMessageObject: any = {};
               clientMessageObject.message = [];
               clientMessageObject.message[0] = {};
+              clientMessageObject.message[0].clientMessageId = new Date().getTime();
               clientMessageObject.message[0].cInfo = {};
               clientMessageObject.message[0].cInfo = serverMessageObject.message;
               me.hostInstance.sendMessage('', attData, serverMessageObject, clientMessageObject);
-              me.hostInstance.attachmentInfo = {};
+
               setTimeout(() => {
                 me.hostInstance.chatEle.querySelector('.send-btn')?.classList.remove('show');
                 me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.add('hide-attachment');
@@ -203,18 +204,19 @@ class KoreMultiFileUploaderPlugin {
         data.event.preventDefault();
         if (me.hostInstance.attachmentData && me.hostInstance.attachmentData.length > 0) {
           me.hostInstance.attachmentData.forEach((attData: any) => {
-            var serverMessageObject: any = {};
+            let serverMessageObject: any = {};
             serverMessageObject.message = {};
             serverMessageObject.message.attachments = [];
             data.chatWindowEvent.stopFurtherExecution = true;
             serverMessageObject.message.attachments[0] = attData;
-            var clientMessageObject: any = {};
+            let clientMessageObject: any = {};
             clientMessageObject.message = [];
             clientMessageObject.message[0] = {};
+            clientMessageObject.message[0].clientMessageId = new Date().getTime();
             clientMessageObject.message[0].cInfo = {};
             clientMessageObject.message[0].cInfo = serverMessageObject.message;
             me.hostInstance.sendMessage('', attData, serverMessageObject, clientMessageObject);
-            me.hostInstance.attachmentInfo = {};
+
             setTimeout(() => {
               me.hostInstance.chatEle.querySelector('.send-btn')?.classList.remove('show');
               me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.add('hide-attachment');
@@ -712,7 +714,8 @@ class KoreMultiFileUploaderPlugin {
       },
       success(response: any) {
         me.hostInstance.attachmentInfo.fileUrl = response.fileUrl;
-        me.hostInstance.attachmentData.push(me.hostInstance.attachmentInfo);
+        me.hostInstance.attachmentData.push({ ...me.hostInstance.attachmentInfo });
+        me.hostInstance.attachmentInfo = {};
       },
       error(msg: any) {
         if (msg.responseJSON && msg.responseJSON.errors && msg.responseJSON.errors.length && msg.responseJSON.errors[0].httpStatus === '401') {
