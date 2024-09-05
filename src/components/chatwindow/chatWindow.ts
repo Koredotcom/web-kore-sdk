@@ -1331,11 +1331,12 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
 
   let me:any = this;
   let _chatContainer = $(me.chatEle).find('.chat-container');
-  let messageHtml=me.generateMessageDOM(msgData);
   if(msgData?.createdOn){
     msgData.createdOnTimemillis = new Date(msgData.createdOn).valueOf();
   }
 
+  let messageHtml=me.generateMessageDOM(msgData);
+  
   if (msgData?.type === 'bot_response') {
     this.sendFailedMessage.retryCount=0;
     me.waiting_for_message = false;
