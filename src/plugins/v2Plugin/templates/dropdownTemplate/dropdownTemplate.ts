@@ -23,9 +23,9 @@ class DropdownTemplate {
         $(messageHtml).find('.selectTemplateDropdowm').on('change', function (e: any) {
             e.preventDefault();
             e.stopPropagation();
-            let selectedTarget = e.currentTarget;
+            let selectedTarget = $(e.currentTarget).find('option:selected');
             //chatWindowInstance.assignValueToInput(selectedTarget.value);
-            chatWindowInstance.sendMessage(selectedTarget.value,{renderMsg:selectedTarget.selectedValue});
+            chatWindowInstance.sendMessage(selectedTarget.val(), { renderMsg: selectedTarget.attr('name') });
             // var k = $.Event('keydown', { which: 13 });
             // k.keyCode = 13
             // $('.chatInputBox').trigger(k);
@@ -45,7 +45,7 @@ class DropdownTemplate {
                         <select class="selectTemplateDropdowm">\
                         <option>select</option> \
                             {{each(key, msgItem) msgData.message[0].component.payload.elements}} \
-                            <option xyz = "${msgData.message[0].component.selectedValue} {{if msgData.message[0].component.selectedValue === msgItem.value}}selected{{/if}}" class = "dropdownTemplatesValues" title = "${msgItem.title}" type = "postback" value="${msgItem.value}"> \
+                            <option xyz = "${msgData.message[0].component.selectedValue} {{if msgData.message[0].component.selectedValue === msgItem.value}}selected{{/if}}" class = "dropdownTemplatesValues" title = "${msgItem.title}" type = "postback" value="${msgItem.value}" name="${msgItem.title}"> \
                                 {{if msgItem.title.length > 32}}${msgItem.title.substr(0,32)}...{{else}}${msgItem.title}{{/if}}\
                                 </option> \
                             {{/each}} \
