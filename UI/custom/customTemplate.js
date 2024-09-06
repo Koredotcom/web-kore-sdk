@@ -348,7 +348,7 @@
 							<select class="selectTemplateDropdowm">\
 							<option>select</option> \
 								{{each(key, msgItem) msgData.message[0].component.payload.elements}} \
-								    <option xyz = "${msgData.message[0].component.selectedValue} {{if msgData.message[0].component.selectedValue === msgItem.value}}selected{{/if}}" class = "dropdownTemplatesValues" title = "${msgItem.title}" type = "postback" value="${msgItem.value}"> \
+								    <option xyz = "${msgData.message[0].component.selectedValue} {{if msgData.message[0].component.selectedValue === msgItem.value}}selected{{/if}}" class = "dropdownTemplatesValues" title = "${msgItem.title}" type = "postback" value="${msgItem.value}" name="${msgItem.title}"> \
 								      {{if msgItem.title.length > 32}}${msgItem.title.substr(0,32)}...{{else}}${msgItem.title}{{/if}}\
 							        </option> \
 								{{/each}} \
@@ -3527,11 +3527,12 @@ var checkListTemplate = '<script id="chat_checklist_tmpl" type="text/x-jqury-tmp
 		$(messageHtml).find('.selectTemplateDropdowm').on('change', function (e) {
 			e.preventDefault();
 			e.stopPropagation();
-			$(".chatInputBox").text(this.value)
-			var k = $.Event('keydown', { which: 13 });
-			k.keyCode = 13
-			$('.chatInputBox').trigger(k);
-	
+			// $(".chatInputBox").text(this.value)
+			// var k = $.Event('keydown', { which: 13 });
+			// k.keyCode = 13
+			// $('.chatInputBox').trigger(k);
+			var selectedOption = $(this).find('option:selected');
+			chatInitialize.sendMessage($(".chatInputBox").text(this.value), selectedOption.attr('name'));	
 		});
 		/* Inline form submit click function starts here*/
 		$(messageHtml).find(".formMainComponent").on('keydown',function(e){
