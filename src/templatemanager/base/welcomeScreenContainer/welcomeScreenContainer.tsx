@@ -25,10 +25,14 @@ export function WelcomeScreenContainer(props: any) {
 
     const handleStartEvent = (e: any) => {
         if (e.action.type.toLowerCase() == 'postback' || e.action.type.toLowerCase() == 'text') {
-            const timeout = hostInstance.historyLoading ? 3500 : 200
-            setTimeout(() => {
+            if (hostInstance.isWelcomeScreenOpened) {
                 hostInstance.sendMessage(e.action.value, { renderMsg: e.title });
-            }, timeout);
+            } else {
+                let event = hostInstance.config.loadHistory ? 'historyComplete' : 'onWSOpen';
+                hostInstance.on(event, (ev: any) => {
+                    hostInstance.sendMessage(e.action.value, { renderMsg: e.title });
+                }, true);
+            }
             handleEventsWelcomeScreen();
         } else if ((e.action.type == 'url' || e.action.type == 'web_url') && e.action.value) {
             let link = e.action.value;
@@ -40,12 +44,17 @@ export function WelcomeScreenContainer(props: any) {
     }
 
     const handleEventsWelcomeScreen = () => {
-        hostInstance.welcomeScreenState = true;
+        hostInstance.isWelcomeScreenOpened = true;
         if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
             hostInstance.setLocalStoreItem('kr-cw-welcome-chat', true);
         }
         hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container')?.classList.add('fadeIn');
         hostInstance.chatEle.querySelector('.welcome-chat-section')?.classList.remove(hostInstance.config.branding.chat_bubble.expand_animation);
+        if (!hostInstance.config.botOptions.openSocket && !hostInstance.isSocketOpened) {
+            setTimeout(() => {
+                hostInstance.bot.logInComplete();
+            }, 2000);
+        }
     }
 
     if (brandingInfo.welcome_screen.static_links.show && brandingInfo.welcome_screen.static_links.layout == 'carousel') {

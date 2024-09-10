@@ -71,7 +71,7 @@ export function AvatarComponent(props: any) {
 
     const buttonAction = (btn: any) => {
         const value = btn.value;
-        hostInstance.welcomeScreenState = true;
+        hostInstance.isWelcomeScreenOpened = true;
         hostInstance.chatEle.classList.remove('minimize-chat');
         hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
         hostInstance.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');

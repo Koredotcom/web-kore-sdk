@@ -28,6 +28,7 @@ export function ChatWidgetHeader(props: any) {
         hostInstance.eventManager.addEventListener('.btn-reconnect', 'click', (event: any) => {
             if (!hostInstance.chatEle.querySelector('.btn-reconnect').getAttribute('disabled')) {
                 hostInstance.chatEle.querySelector('.btn-reconnect').setAttribute('disabled', true);
+                hostInstance.isReconnected = true;
                 const data = event?.detail;
                 if (data && data?.isReconnect) {
                     hostInstance.config.botOptions.forceReconnecting = true;
@@ -49,13 +50,9 @@ export function ChatWidgetHeader(props: any) {
                 hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove(hostInstance.config.branding.chat_bubble.expand_animation);
             }
             hostInstance.chatEle.classList.add('minimize-chat');
-            // if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
-            //     hostInstance.setLocalStoreItem('kr-cw-state', 'minimized');
-            //   }
             if (!hostInstance.config.pwcConfig.enable) {
                 hostInstance.destroy();
-                hostInstance.misc.initial = true;
-                hostInstance.misc.chatOpened = false;
+                hostInstance.isSocketOpened = false;
                 hostInstance.bot.historyOffset = 0;
                 hostInstance.bot.previousHistoryLoading = false;
                 if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
@@ -63,8 +60,6 @@ export function ChatWidgetHeader(props: any) {
                     hostInstance.removeLocalStoreItem('kr-cw-uid');
                     hostInstance.config.botOptions.maintainContext = false;
                 }
-                // hostInstance.config.branding.header.title.name = hostInstance.config.botMessages.reconnecting;
-                // hostInstance.setBranding(hostInstance.config.branding);
             }
         })
 
