@@ -2848,10 +2848,16 @@ applyVariableValue (key:any,value:any,type:any){
 
   setConfig() {
     const me: any = this;
-    me.config.loadHistory = me.config.history.enable; // Need to remove loadHistory from kore config
-    me.config.messageHistoryLimit = me.config.history.recent.batchSize; // Need to remove messageHistoryLimit from kore config
-    me.config.allowLocation = me.config.location.enable; // Need to remove allowLocation from kore config
-    me.config.googleMapsAPIKey = me.config.location.googleMapsAPIKey; // Need to remove googleMapsAPIKey from kore config
+    if (me.config.history.hasOwnProperty('enable')) {
+      me.config.loadHistory = me.config.history.enable; // Need to remove loadHistory from kore config
+    }
+    if (me.config.hasOwnProperty('location')) {
+      me.config.allowLocation = me.config.location.enable; // Need to remove allowLocation from kore config
+      me.config.googleMapsAPIKey = me.config.location.googleMapsAPIKey; // Need to remove googleMapsAPIKey from kore config  
+    }
+    if (me.config.history.hasOwnProperty('recent')) {
+      me.config.messageHistoryLimit = me.config.history.recent.batchSize; // Need to remove messageHistoryLimit from kore config
+    }
     me.loadHistory = me.config.loadHistory || false;
     me.historyLoading = !!me.loadHistory;
     me.config.botOptions.loadHistory = me.config.loadHistory;

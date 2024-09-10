@@ -55,10 +55,10 @@ chatConfig = {
     container:'body',
     allowIframe: false, 			// set true, opens authentication links in popup window, default value is "false"
     isSendButton: false, 			// set true, to show send button below the compose bar
-    // allowLocation: true,			// set false, to deny sending location to server
-    // loadHistory: true,				// set true to load recent chat history
-    // messageHistoryLimit: 10,		// set limit to load recent chat history
-    // googleMapsAPIKey: "",           
+    allowLocation: true,			//deprecated - set false, to deny sending location to server
+    loadHistory: true,				//deprecated - set true to load recent chat history
+    messageHistoryLimit: 10,		//deprecated - set limit to load recent chat history
+    googleMapsAPIKey: "",           //deprecated
     minimizeMode: true,             // set true, to show chatwindow in minimized mode, If false is set remove #chatContainer style in chatwindow.css  
     multiPageApp: {
         enable: false,              //set true for non SPA(Single page applications)
