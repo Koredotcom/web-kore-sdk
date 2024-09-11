@@ -283,7 +283,7 @@ initShow  (config:any) {
   }  
   me.bot.on('jwtgrantsuccess', (response: { jwtgrantsuccess: any; }) => {
     me.config.jwtGrantSuccessInformation = response.jwtgrantsuccess;
-    if (!me.isReconnected && !me?.platform) {
+    if (!me.isReconnected && !me.config?.autoConnect) {
       if (me.config.enableThemes) {
         me.getBrandingInformation(response.jwtgrantsuccess);
       } else {
@@ -300,7 +300,7 @@ initShow  (config:any) {
     me.initUI();
   }
 
-  if ((me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) || me?.platform) {
+  if ((me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) || me.config?.autoConnect) {
     me.setBranding();
     me.initUI();
   }
