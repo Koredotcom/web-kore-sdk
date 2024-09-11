@@ -76,17 +76,15 @@ export function AvatarComponent(props: any) {
         hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
         hostInstance.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
         hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
-        if (!hostInstance.config.openSocket && !hostInstance.misc.chatOpened) {
+        if (!hostInstance.isSocketOpened) {
             hostInstance.bot.logInComplete();
-            hostInstance.misc.chatOpened = true;
         }
         if (value) {
             if (hostInstance.config.loadHistory) {
-                hostInstance.on('historyComplete', (event: any) => {
-                    setTimeout(() => {
-                        hostInstance.sendMessage(value);
-                    }, 500);
-                });    
+                let event = hostInstance.config.loadHistory ? 'historyComplete' : 'onWSOpen';
+                hostInstance.on(event, (ev: any) => {
+                    hostInstance.sendMessage(value);
+                }, true);
             } else {
                 setTimeout(() => {
                     hostInstance.sendMessage(value);
