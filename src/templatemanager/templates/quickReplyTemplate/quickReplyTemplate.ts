@@ -183,7 +183,7 @@ class QuickReplyTemplate {
     getTemplateString() {
         var quickReplyTemplate = '<script id="chat_quick_reply_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
-            <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+            <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}"\
                 class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon quickReplies"> \
                 <div class="quickReplyTemplate"> \
                     {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \

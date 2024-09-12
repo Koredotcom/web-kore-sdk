@@ -41,7 +41,7 @@ class PieChartTemplate {
     getTemplateString() {
         var pieChartTemplate = '<script id="chat_pie_chart_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
-            <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
+            <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}"\
                 class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon piechart"> \
                 {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                 {{if msgData.icon}}<div class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
