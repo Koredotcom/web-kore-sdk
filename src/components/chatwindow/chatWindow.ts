@@ -1404,9 +1404,10 @@ render  (chatWindowHtml: any) {
   if (me.config.UI.version == 'v2') {
     me.bindEvents();
   }
-
-  if ((document.querySelectorAll('.kore-chat-window-main-section')?.length < 1 && me.config.UI.version == 'v3') || ($('body').find('.kore-chat-window').length < 1 && me.config.UI.version == 'v2')) {
+  let isAppendedToContainer = false;
+  if (!isAppendedToContainer && (document.querySelectorAll('.kore-chat-window-main-section')?.length < 1 && me.config.UI.version == 'v3') || ($('body').find('.kore-chat-window').length < 1 && me.config.UI.version == 'v2')) {
     $(me.config.container).append(chatWindowHtml);
+    isAppendedToContainer = true;
   }
 
   me.emit(me.EVENTS.VIEW_INIT,{chatEle:chatWindowHtml,chatWindowEvent:chatWindowEvent});

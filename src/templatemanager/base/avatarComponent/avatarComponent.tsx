@@ -80,7 +80,7 @@ export function AvatarComponent(props: any) {
             hostInstance.bot.logInComplete();
         }
         if (value) {
-            if (hostInstance.config.loadHistory) {
+            if (!hostInstance.isSocketOpened) {
                 let event = hostInstance.config.loadHistory ? 'historyComplete' : 'onWSOpen';
                 hostInstance.on(event, (ev: any) => {
                     hostInstance.sendMessage(value);
