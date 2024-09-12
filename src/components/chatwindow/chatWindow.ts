@@ -759,16 +759,14 @@ destroy  () {
   if (me.config && me.chatEle) {
     if (!me.config.minimizeMode) {
       me.chatEle.remove();
+      me.config = null;
     } else {
       if (me.config.UI.version == 'v2') {
         me.chatEle.find('.kore-chat-header .header-title').html(me.config.botMessages.reconnecting);
         me.chatEle.addClass('minimize');
-      } else {
-        me.chatEle.remove();
       }
       me.skipedInit = true;
     }
-    me.config = null;
   }
 
   window.removeEventListener('online', me.updateOnlineStatus);
