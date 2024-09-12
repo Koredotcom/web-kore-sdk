@@ -300,7 +300,7 @@ initShow  (config:any) {
     me.initUI();
   }
 
-  if ((me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) || me.config?.autoConnect) {
+  if ((me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) || (!me.config?.mockMode?.enable && me.config?.autoConnect)) {
     me.setBranding();
     me.initUI();
   }
@@ -1404,10 +1404,9 @@ render  (chatWindowHtml: any) {
   if (me.config.UI.version == 'v2') {
     me.bindEvents();
   }
-  let isAppendedToContainer = false;
-  if (!isAppendedToContainer && (document.querySelectorAll('.kore-chat-window-main-section')?.length < 1 && me.config.UI.version == 'v3') || ($('body').find('.kore-chat-window').length < 1 && me.config.UI.version == 'v2')) {
+
+  if ((document.querySelectorAll('.kore-chat-window-main-section')?.length < 1 && me.config.UI.version == 'v3') || ($('body').find('.kore-chat-window').length < 1 && me.config.UI.version == 'v2')) {
     $(me.config.container).append(chatWindowHtml);
-    isAppendedToContainer = true;
   }
 
   me.emit(me.EVENTS.VIEW_INIT,{chatEle:chatWindowHtml,chatWindowEvent:chatWindowEvent});
