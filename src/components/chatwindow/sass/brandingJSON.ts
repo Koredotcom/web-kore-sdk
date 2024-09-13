@@ -398,7 +398,7 @@ const BrandingJSON = {
       "show": true,
       "name": "",
       "show_type": "always",
-      "position": "top",
+      "position": "top"
     }
   },
   "widget_panel": {
@@ -420,7 +420,7 @@ const BrandingJSON = {
     "history": {
       "enable": true,
       "recent": {
-        "batch_size": 10,
+        "batch_size": 10
       },
       "paginated_scroll": {
         "enable": true,
@@ -430,9 +430,9 @@ const BrandingJSON = {
     },
     "multi_page_app": {
       "enable": false,
-      "user_identity_store": 'localStorage',
-      "chat_window_state_store": 'localStorage'
-    },
+      "user_identity_store": "localStorage",
+      "chat_window_state_store": "localStorage"
+    }
   }
 }
 export default BrandingJSON
