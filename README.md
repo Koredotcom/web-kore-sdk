@@ -324,6 +324,11 @@ Note: When integrated into an iFrame, the SDK's functionality will be confined t
 	// }		
 # Release History
 ```
+v10.6.1 [Minor] on 14-Sept-2024: Master branch
+        Bugfixes
+                1.Dropdown template selected option name display issue fix
+                2.Added date-time attribute for templates to avoid duplicate render on history api call
+
 v10.6.0 [Minor] on 31-Aug-2024: Master branch
         Features
                 1.Added optional delimiter key as connecting word/character between the start date and end date for date range template. Please find the json here -> https://github.com/Koredotcom/web-kore-sdk/tree/v2/dev/docs/templates/dateRangePickerTemplate#message-payload
