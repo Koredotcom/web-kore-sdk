@@ -1,3 +1,9 @@
+### 10.6.1
+- SDK Release Sept 14, 2024
+* Bug fixes
+  * dropdown template selected option name display issue fix
+  * added date-time attribute for templates to avoid duplicate render on history api call
+
 ### 10.6.0
 - SDK Release Aug 31, 2024
 * Features
