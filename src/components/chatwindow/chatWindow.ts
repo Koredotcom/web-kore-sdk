@@ -2624,6 +2624,7 @@ getBrandingInformation(options:any){
     } else {
       if (response && response.activeTheme) {
         me.emit('brandingResponse', response);
+        me.setBrandingMissingInfo(response);
         me.overrideKoreConfig(response?.v3);
         me.setBranding(response?.v3);
         me.initUI();
@@ -2865,6 +2866,80 @@ applyVariableValue (key:any,value:any,type:any){
     me.config.botOptions.chatHistory = me.config.chatHistory;
     me.config.botOptions.handleError = me.config.handleError;
     me.config.botOptions.googleMapsAPIKey = me.config.googleMapsAPIKey;
+  }
+
+  setBrandingMissingInfo(theme: any) {
+    if (theme.v3) {
+      // check for new keys and add if not exist
+      if (!(theme.v3.hasOwnProperty('widget_panel'))) {
+        if (theme.v3.general.themeType == 'dark') {
+          theme.v3['widget_panel'] = {
+            "colors": {
+              "bg_color": "#1D2939",
+              "color": "#FFFFFF",
+              "sel_bg_color": "#F8F9FC",
+              "sel_color": "#1D2939"
+            }
+          }
+        } else {
+          theme.v3['widget_panel'] = {
+            "colors": {
+              "bg_color": "#FFFFFF",
+              "color": "#101828",
+              "sel_bg_color": "EAECF0",
+              "sel_color": "101828"
+            }
+          }
+        }
+      }
+      if (!(theme.v3.hasOwnProperty('override_kore_config'))) {
+        theme.v3['override_kore_config'] = {
+          "enable": false,
+          "emoji_short_cut": true,
+          "typing_indicator_timeout": 10000,
+          "location": {
+            "enable": true,
+            "google_maps_API_key": ""
+          },
+          "history": {
+            "enable": true,
+            "recent": {
+              "batch_size": 10
+            },
+            "paginated_scroll": {
+              "enable": true,
+              "batch_size": 10,
+              "loading_label": "Loading old messages"
+            }
+          },
+          "multi_page_app": {
+            "enable": false,
+            "user_identity_store": "localStorage",
+            "chat_window_state_store": "localStorage"
+          }
+        }
+      }
+      if (!(theme.v3?.footer?.buttons?.hasOwnProperty('speaker'))) {
+        theme.v3.footer.buttons['speaker'] = {
+          "show": false,
+          "icon": ""
+        }
+      }
+      if (!(theme.v3?.footer?.buttons?.hasOwnProperty('send_button'))) {
+        theme.v3.footer.buttons['send_button'] = {
+          "show": true,
+          "icon": ""
+        }
+      }
+      if (!(theme.v3?.body.hasOwnProperty('bot_name'))) {
+        theme.v3.body['bot_name'] = {
+          "show": true,
+          "name": "",
+          "show_type": "always",
+          "position": "top"
+        }
+      }
+    }
   }
 
 /**
