@@ -1165,7 +1165,7 @@ bindEventsV3() {
     }
   })
 
-  if (me?.config.history.paginatedScroll.enable && !me.config?.mockMode?.enable) {
+  if (me.config.history?.enable && me?.config.history.paginatedScroll.enable && !me.config?.mockMode?.enable) {
     var chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
 
     chatContainer.addEventListener('scroll', (event: any) => {

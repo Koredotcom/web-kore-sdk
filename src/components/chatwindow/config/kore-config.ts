@@ -103,7 +103,7 @@ chatConfig = {
     enableEmojiShortcut: true
 };
 
-if (!chatConfig.loadHistory) { // pagination scroll will be enabled only when loadHistory flag is true
+if (!chatConfig.history.enable) { // pagination scroll will be enabled only when loadHistory flag is true
     chatConfig.history.paginatedScroll.enable = false;
 }
 export default chatConfig;
