@@ -246,6 +246,14 @@ initShow  (config:any) {
   me.reWriteWebHookURL(me.config);
   window._chatHistoryLoaded = false;
   me.setDefaultIcons();
+  if (me.config.multiPageApp && me.config.multiPageApp.enable) {
+    let cwState = me.getLocalStoreItem('kr-cw-state');
+    let maintainContext:any = !!cwState;
+    if (maintainContext && me.getLocalStoreItem('kr-cw-uid')) {
+      me.config.botOptions.userIdentity = me.getLocalStoreItem('kr-cw-uid');
+    }
+    me.config.botOptions.maintainContext = maintainContext;
+  }
   if(me.config?.mockMode?.enable){
     me.setBranding();
   }else{
@@ -309,15 +317,8 @@ initShow  (config:any) {
 initUI() {
   let me: any = this;
   const tempTitle = me._botInfo.name;
-  if (me.config.multiPageApp && me.config.multiPageApp.enable) {
-    var cwState = me.getLocalStoreItem('kr-cw-state');
-    var maintainContext:any = !!cwState;
-    if (maintainContext && me.getLocalStoreItem('kr-cw-uid')) {
-      me.config.botOptions.userIdentity = me.getLocalStoreItem('kr-cw-uid');
-    }
-    me.config.botOptions.maintainContext = maintainContext;
-  }
-
+  let cwState = me.getLocalStoreItem('kr-cw-state');
+  let maintainContext:any = !!cwState;
   let chatWindowHtml:any;
   if (me.config.UI.version == 'v2') {
     chatWindowHtml = (<any> $(me.getChatTemplate())).tmpl(me.config)
