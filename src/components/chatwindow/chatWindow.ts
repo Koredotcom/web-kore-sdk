@@ -272,8 +272,8 @@ initShow  (config:any) {
     window.sessionStorage.setItem('isReconnect', 'true');
   }
   me.config.userAgentIE = navigator.userAgent.indexOf('Trident/') !== -1;
-  const mobileBrowserOpened = me.isMobile();
-  if (mobileBrowserOpened) {
+  me.mobileBrowserOpened = me.isMobile();
+  if (me.mobileBrowserOpened) {
     me.config.isSendButton = true;
   }
   me.config.ttsInterface = me.config.ttsInterface || 'webapi';
