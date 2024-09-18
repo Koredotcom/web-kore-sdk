@@ -2841,9 +2841,6 @@ applyVariableValue (key:any,value:any,type:any){
       me.config.history.paginatedScroll.enable = data.override_kore_config.history.paginated_scroll.enable;
       me.config.history.paginatedScroll.batchSize = data.override_kore_config.history.paginated_scroll.batch_size;
       me.config.history.paginatedScroll.loadingLabel = data.override_kore_config.history.paginated_scroll.loading_label;
-      me.config.multiPageApp.enable = data.override_kore_config.multi_page_app.enable;
-      me.config.multiPageApp.userIdentityStore = data.override_kore_config.multi_page_app.user_identity_store;
-      me.config.multiPageApp.chatWindowStateStore = data.override_kore_config.multi_page_app.chat_window_state_store;
       me.setConfig();
     }
   }
