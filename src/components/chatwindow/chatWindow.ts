@@ -459,12 +459,12 @@ addBottomSlider  () {
   $('.kore-chat-window').append(actionSheetTemplate);
 };
 updateOnlineStatus () {
-
+  const me: any = this;
   if (typeof (navigator.onLine) === 'boolean') {
     if (navigator.onLine) {
       this.hideError();
-      if (bot && bot.RtmClient) {
-        bot.getHistory({ forHistorySync: true, limit: 30 });
+      if (bot && bot.RtmClient && me.config?.syncMessages?.onNetworkResume?.enable) {
+        bot.getHistory({ forHistorySync: true, limit: me.config?.syncMessages?.onNetworkResume?.batchSize });
       }
     } else {
       this.showError('You are currently offline');
