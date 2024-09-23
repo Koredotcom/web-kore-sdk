@@ -274,7 +274,10 @@ Install node js if not installed  https://nodejs.org
 # How to handle custom templates
   -  Custom templates logic has been separated out from chatWindow.js
   -  Refer custom folder under UI folder
-  -  Refer https://github.com/Koredotcom/web-kore-sdk/blob/master/UI/custom/customTemplate.js and https://github.com/Koredotcom/web-kore-sdk/blob/master/UI/custom/customTemplate.css files for sample code snippet. 
+  -  Refer https://github.com/Koredotcom/web-kore-sdk/blob/master/UI/custom/customTemplate.js and https://github.com/Koredotcom/web-kore-sdk/blob/master/UI/custom/customTemplate.css files for sample code snippet.
+  > [!NOTE]
+  > - Please add the following two attributes for parent div in the custom template html
+  > - `data-kr-msg-id` with value `msgData.messageId` and `data-time` with value `msgData.createdOnTimemillis`
   
 ## How to integrate Amazon Polly TTS
 1. Uncomment amazon polly files 'plugins/aws-sdk-2.668.0.min.js' and 'plugins/kore-aws-polly.js' in index.html
