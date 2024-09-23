@@ -99,6 +99,10 @@
             onReconnect: {
                 enable: false,  // Set true to sync messages on Reconnect
                 batchSize: 10   // To configure the number of messages to fetch
+            },
+            onNetworkResume: {
+                enable: true,  // Set true to sync messages on network back
+                batchSize: 10   // To configure the number of messages to fetch
             }
         }
     };

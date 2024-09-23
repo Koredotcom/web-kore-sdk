@@ -943,10 +943,9 @@
             if ("boolean" === typeof(navigator["onLine"])) {
                 if (navigator.onLine) {
                     this.hideError();
-                    if(bot && bot.RtmClient){
-                            bot.getHistory({forHistorySync:true,limit:30});                           
+                    if (bot && bot.RtmClient && window.KoreSDK?.chatConfig?.syncMessages?.onNetworkResume?.enable) {
+                        bot.getHistory({ forHistorySync: true, limit: window.KoreSDK?.chatConfig?.syncMessages?.onNetworkResume?.batchSize });
                     }
-
                 } else {
                     this.showError("You are currently offline")
                 }
