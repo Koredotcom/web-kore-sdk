@@ -1173,7 +1173,7 @@ if(messageText && messageText.trim() && messageText.trim().length){
   // if (msgObject && (msgObject.nlmeta || msgObject.nlMeta)) {
   //   messageToBot.message.nlMeta = msgObject.nlmeta || msgObject.nlMeta;
   // }
-  if ($(`.kore-chat-window .chat-container li#${msgData?.message?.[0]?.clientMessageId}`).length < 1) {
+  if ($(`.kore-chat-window .chat-container [data-kr-msg-id="${msgData?.message?.[0]?.clientMessageId}"]`).length < 1) {
     if (me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) {
       me.sendMessageViaWebHook(
         messageText,
@@ -1182,7 +1182,7 @@ if(messageText && messageText.trim() && messageText.trim().length){
         },
         (err: any) => {
           setTimeout(() => {
-            var failedMsgEle = $('.kore-chat-window [id="' + clientMessageId + '"]');
+            var failedMsgEle = $('.kore-chat-window [data-kr-msg-id="' + clientMessageId + '"]');
             failedMsgEle.find('.messageBubble').append('<div class="errorMsg hide"><span class="failed-text">Send Failed </span><div class="retry"><span class="retry-icon"></span><span class="retry-text">Retry</span></div></div>');
             if (this.sendFailedMessage.retryCount < this.sendFailedMessage.MAX_RETRIES) {
               failedMsgEle.find('.retry').trigger('click');
@@ -1207,7 +1207,7 @@ if(messageText && messageText.trim() && messageText.trim().length){
       me.bot.sendMessage(messageToBot, (err: { message: any; }) => {
         if (err && err.message) {
           setTimeout(() => {
-            var failedMsgEle = $('.kore-chat-window [id="' + clientMessageId + '"]');
+            var failedMsgEle = $('.kore-chat-window [data-kr-msg-id="' + clientMessageId + '"]');
             failedMsgEle.find('.messageBubble').append('<div class="errorMsg hide"><span class="failed-text">Send Failed </span><div class="retry"><span class="retry-icon"></span><span class="retry-text">Retry</span></div></div>');
             if (this.sendFailedMessage.retryCount < this.sendFailedMessage.MAX_RETRIES) {
               failedMsgEle.find('.retry').trigger('click');
@@ -1396,10 +1396,10 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   //   me.bottomSliderAction('show', messageHtml);
   // } else {
     // ignore message(msgId) if it is already in viewport
-  if ($(`.kore-chat-window .chat-container li#${msgData?.messageId || msgData?.message?.[0]?.clientMessageId}`).length < 1 || (msgData?.renderType === 'inline')) {
+  if ($(`.kore-chat-window .chat-container [data-kr-msg-id="${msgData?.messageId || msgData?.message?.[0]?.clientMessageId}"]`).length < 1 || (msgData?.renderType === 'inline')) {
     if (msgData?.type === 'bot_response' && msgData?.fromHistorySync) {
       const msgTimeStamps: number[] = [];
-      const msgEles = $('.kore-chat-window .chat-container>li');
+      const msgEles = $('.kore-chat-window .chat-container > [data-kr-msg-id]');
       if (msgEles.length) {
         msgEles.each((i: any, ele: any) => {
           msgTimeStamps.push(parseInt($(ele).attr('data-time')));

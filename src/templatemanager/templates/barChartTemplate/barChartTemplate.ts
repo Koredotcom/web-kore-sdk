@@ -43,7 +43,7 @@ constructor(config?:any) {
   getTemplateString() {
     const barchartTemplate = '<script id="chat_bar_chart_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
-            <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}"\
+            <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" data-kr-msg-id="${msgData.messageId}"\
                 class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon barchart"> \
                 {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                 {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \

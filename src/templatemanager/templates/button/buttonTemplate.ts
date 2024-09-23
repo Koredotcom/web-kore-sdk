@@ -110,7 +110,7 @@ class ButtonTemplate {
     getTemplateString() {
         var buttonTemplate = '<script id="chat_button_tmpl" type="text/x-jqury-tmpl"> \
             {{if msgData.message}} \
-                <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}"\
+                <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" data-kr-msg-id="${msgData.messageId}"\
                     class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
                     <div class="buttonTmplContent"> \
                         {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \

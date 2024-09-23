@@ -110,7 +110,7 @@ class CheckListTemplate {
     getTemplateString() {
         var checkListTemplate = '<script id="chat_checklist_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
-            <li class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon" id="${msgData.messageId}" data-time="${msgData.createdOnTimemillis}"> \
+            <li class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon" id="${msgData.messageId}" data-time="${msgData.createdOnTimemillis}" data-kr-msg-id="${msgData.messageId}"> \
                <div class="check-list-template">\
                        {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                     {{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \

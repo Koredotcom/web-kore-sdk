@@ -181,7 +181,7 @@ class CardTemplate {
     getTemplateString() {
 	var cardTemplate = '<script id="chat_card_tmpl" type="text/x-jqury-tmpl"> \
 	{{if msgData.message}} \
-	<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+	<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon" data-kr-msg-id="${msgData.messageId}"> \
 		{{if msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.cards && msgData.message[0].component.payload.cards.length}}\
 		{{each(key,card) msgData.message[0].component.payload.cards}}\
 		<div class="card-template">\

@@ -41,7 +41,7 @@ class LineChartTemplate {
     getTemplateString() {
         var linechartTemplate = '<script id="chat_line_chart_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
-            <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}"\
+            <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" data-kr-msg-id="${msgData.messageId}"\
                 class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon linechart"> \
                 {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                 {{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \

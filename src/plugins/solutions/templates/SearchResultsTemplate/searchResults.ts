@@ -50,7 +50,7 @@ export class searchResultsTemplate {
     getTemplateString() {
         let searchTemplate = '<script id="search_message_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData && msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload}} \
-            <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+            <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon" data-kr-msg-id="${msgData.messageId}"> \
                 <div class="messageBubble"> \
                     <div class="search-temp-one"> \
                         {{each(key, msgItem) msgData.message[0].component.payload.graph_answer.payload.center_panel.data}} \
