@@ -339,7 +339,7 @@
 		*/
 		var dropdownTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			{{if msgData.message}} \
-				<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+				<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon" data-kr-msg-id="${msgData.messageId}"> \
 					<div class="buttonTmplContent"> \
 						{{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
 						{{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
@@ -390,7 +390,7 @@
 		*/
 		var checkBoxesTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			{{if msgData.message}} \
-			<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+			<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon" data-kr-msg-id="${msgData.messageId}"> \
 					<div class = "listTmplContent"> \
 						{{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
 						{{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
@@ -437,7 +437,7 @@
 		*/
 		var likeDislikeTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 			{{if msgData.message}} \
-				<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon quickReplies"> \
+				<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon quickReplies" data-kr-msg-id="${msgData.messageId}"> \
 					<div class="buttonTmplContent"> \
 						{{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
 						{{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
@@ -480,7 +480,7 @@
 		
 var formTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 {{if msgData.message}} \
-<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon" data-kr-msg-id="${msgData.messageId}"> \
 	<div class="buttonTmplContent"> \
 	{{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
 		{{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
@@ -615,7 +615,7 @@ print(JSON.stringify(message)); */
 
 	var advancedMultiSelect = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 	{{if msgData.message}} \
-	<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
+	<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}" data-kr-msg-id="${msgData.messageId}"> \
 			<div class = "listTmplContent advancedMultiSelect"> \
 				{{if msgData.createdOn && !msgData.message[0].component.payload.sliderView}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
 				{{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
@@ -825,7 +825,7 @@ print(JSON.stringify(message)); */
 
 	var listViewTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 	{{if msgData.message}} \
-		<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon listView"> \
+		<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon listView" data-kr-msg-id="${msgData.messageId}"> \
 			<div class="listViewTmplContent {{if msgData.message[0].component.payload.boxShadow}}noShadow{{/if}}"> \
 				{{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
 				{{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
@@ -1066,7 +1066,7 @@ print(JSON.stringify(message));
 
  var tableListTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
  {{if msgData.message}} \
-	 <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+	 <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon" data-kr-msg-id="${msgData.messageId}"> \
 		 <div class="listTmplContent"> \
 			 {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
 			 {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
@@ -1210,7 +1210,7 @@ print(JSON.stringify(message)); */
 
 var ratingTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 {{if msgData.message}} \
-<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
+<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}" data-kr-msg-id="${msgData.messageId}"> \
 	<div class="buttonTmplContent"> \
 			{{if msgData.createdOn && !msgData.message[0].component.payload.sliderView}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
 			{{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
@@ -1556,7 +1556,7 @@ print(JSON.stringify(message)); */
 	
 	var listWidget = '<script id="chat-window-listTemplate" type="text/x-jqury-tmpl">\
 	{{if msgData.message}} \
-	<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+	<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon" data-kr-msg-id="${msgData.messageId}"> \
 		<div class="listTmplContent"> \
 			{{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
 			{{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
@@ -1844,7 +1844,7 @@ print(JSON.stringify(message)); */
 		*/
 	var customTableTemplate='<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 {{if msgData.message}} \
-	<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}"\
+	<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" data-kr-msg-id="${msgData.messageId}"\
 		class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon tablechart"> \
 		{{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
 		{{if msgData.icon}}<div aria-live="off" class="profile-photo extraBottom"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
@@ -1900,7 +1900,7 @@ print(JSON.stringify(message)); */
 </scipt>';
 var advancedListTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 	{{if msgData.message}} \
-	<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+	<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon" data-kr-msg-id="${msgData.messageId}"> \
 	<div class="advanced-list-wrapper {{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.listViewType !="button"}}img-with-title with-accordion if-multiple-accordions-list{{/if}}{{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.listViewType ==="button"}}if-multiple-tags{{/if}} {{if msgData.message[0].component.payload.fromHistory}}fromHistory{{/if}}">\
 	{{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.sliderView}}<button class="close-btn" title="Close"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button> {{/if}}\
 	{{if msgData && msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
@@ -2191,7 +2191,7 @@ var advancedListTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tm
 
 	var cardTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 	{{if msgData.message}} \
-	<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+	<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon" data-kr-msg-id="${msgData.messageId}"> \
 		{{if msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.cards && msgData.message[0].component.payload.cards.length}}\
 		{{each(key,card) msgData.message[0].component.payload.cards}}\
 		<div class="card-template">\
@@ -2279,7 +2279,7 @@ var advancedListTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tm
 	</script>';
 	var proposeTimesTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl">\
 	{{if msgData.message}}\
-		<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+		<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon" data-kr-msg-id="${msgData.messageId}"> \
 		   <div class="propose-template">\
 		   {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
 		   {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
@@ -2355,7 +2355,7 @@ var advancedListTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tm
 
 	var default_card_template = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl">\
 	{{if msgData.message}}\
-		<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+		<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon" data-kr-msg-id="${msgData.messageId}"> \
 		   <div class="default-card-template">\
 		   {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
 		   {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
@@ -2487,7 +2487,7 @@ var advancedListTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tm
 
 	var advancedMultiListTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 	{{if msgData.message}} \
-		<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+		<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon" data-kr-msg-id="${msgData.messageId}"> \
 		<div class="advanced-multi-list-wrapper {{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.listViewType !="button"}}img-with-title with-accordion if-multiple-accordions-list{{/if}}{{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.listViewType ==="button"}}if-multiple-tags{{/if}} {{if msgData.message[0].component.payload.fromHistory}}fromHistory{{/if}}">\
 		{{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.sliderView}}<button class="close-btn" title="Close"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+"></button> {{/if}}\
 		{{if msgData && msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
@@ -2776,7 +2776,7 @@ print(JSON.stringify(message)); */
 
 	var articleTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
 	{{if msgData.message}} \
-		<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+		<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon" data-kr-msg-id="${msgData.messageId}"> \
 		   <div class="article-template">\
 				{{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
 				{{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
@@ -2840,7 +2840,7 @@ print(JSON.stringify(message)); */
 
 	var resetPinTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
     {{if msgData && msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload}} \
-        <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}mashreq-otp-validation"> \
+        <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}mashreq-otp-validation" data-kr-msg-id="${msgData.messageId}"> \
             <div class="reset-pin-template">\
                 <div class="hading-text">${msgData.message[0].component.payload.title}\
                 {{if msgData && msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.sliderView && !msgData.fromHistory}}\
@@ -2951,7 +2951,7 @@ print(JSON.stringify(message)); */
 
 	var quick_replies_welcome = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
             {{if msgData.message}} \
-                <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon quickReplies"> \
+                <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon quickReplies" data-kr-msg-id="${msgData.messageId}"> \
                     <div class="buttonTmplContent "> \
                         {{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                         {{if msgData.icon}}<div aria-live="off" class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
@@ -3005,7 +3005,7 @@ print(JSON.stringify(message)); */
 
 	var otpValidationTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
     {{if msgData && msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload}} \
-        <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}mashreq-otp-validation"> \
+        <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}mashreq-otp-validation" data-kr-msg-id="${msgData.messageId}"> \
             <div class="otp-validations">\
                 <div class="hading-text">${msgData.message[0].component.payload.title}\
                 {{if msgData && msgData.message && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.sliderView && !msgData.fromHistory}}\
@@ -3138,7 +3138,7 @@ var message= {
 
 	var bankingFeedbackTemplate = '<script id="chat-window-listTemplate" type="text/x-jqury-tmpl">\
 	{{if msgData.message && msgData.message[0].component.payload}} \
-	<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
+	<li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId}" class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon" data-kr-msg-id="${msgData.messageId}"> \
 	{{if msgData.createdOn}}<div aria-live="off" class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>\
 				{{/if}} \
 				{{if msgData.icon}}\
@@ -3212,7 +3212,7 @@ var message= {
 
 var checkListTemplate = '<script id="chat_checklist_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
-            <li class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon" id="${msgData.messageId}" data-time="${msgData.createdOnTimemillis}"> \
+            <li class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon" id="${msgData.messageId}" data-time="${msgData.createdOnTimemillis}" data-kr-msg-id="${msgData.messageId}"> \
                <div class="check-list-template">\
                        {{if msgData.createdOn}}<div class="extra-info">${helpers.formatDate(msgData.createdOn)}</div>{{/if}} \
                     {{if msgData.icon}}<div class="profile-photo"> <div class="user-account avtar" style="background-image:url(${msgData.icon})"></div> </div> {{/if}} \
