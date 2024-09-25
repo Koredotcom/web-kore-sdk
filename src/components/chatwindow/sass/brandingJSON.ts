@@ -321,6 +321,10 @@ const BrandingJSON = {
       "speaker": {
         "show": false,
         "icon": ""
+      },
+      "send_button": {
+        "show": true,
+        "icon": ""
       }
     }
   },
@@ -389,7 +393,13 @@ const BrandingJSON = {
       "bg_color": "red",
       "color": "white"
     },
-    "bubble_style": "balloon"
+    "bubble_style": "balloon",
+    "bot_name": {
+      "show": true,
+      "name": "",
+      "show_type": "always",
+      "position": "top"
+    }
   },
   "widget_panel": {
     "colors": {
@@ -397,6 +407,26 @@ const BrandingJSON = {
       "color": "#101828",
       "sel_bg_color": "#EAECF0",
       "sel_color": "#101828"
+    }
+  },
+  "override_kore_config": {
+    "enable": false,
+    "emoji_short_cut": true,
+    "typing_indicator_timeout": 10000,
+    "location": {
+      "enable": true,
+      "google_maps_API_key": ""
+    },
+    "history": {
+      "enable": true,
+      "recent": {
+        "batch_size": 10
+      },
+      "paginated_scroll": {
+        "enable": true,
+        "batch_size": 10,
+        "loading_label": "Loading old messages"
+      }
     }
   }
 }

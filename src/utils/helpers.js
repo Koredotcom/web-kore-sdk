@@ -668,5 +668,15 @@ class KoreHelpers{
           }
         // }
     }
+
+    static allowEmojiShortcuts(config) {
+        this.helpers.nl2br = function (str, runEmojiCheck) {
+            if (config.enableEmojiShortcut) {
+                str = emojione.shortnameToImage(str);
+            }
+            str = str.replace(/(?:\r\n|\r|\n)/g, '<br />');
+            return str;
+        }
+    }
 } 
 export default KoreHelpers

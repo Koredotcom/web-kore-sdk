@@ -536,7 +536,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     debug("opened WS Connection");
     this.initialized = true;
     if(this.options.loadHistory && !_chatHistoryLoaded){
-      this.getHistory({});
+      this.getHistory({ limit : this.options.messageHistoryLimit });
     }
     this.emit(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, {});
   };
@@ -573,9 +573,8 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       });
       this.emit("rtm_client_initialized");
       this.emit(WEB_EVENTS.JWT_GRANT_SUCCESS,{jwtgrantsuccess : data});
-      if (this.options.openSocket || this.options.botInfo.uiVersion == 'v2') {
+      if (this.options.openSocket || this.options.autoConnect || this.options.botInfo.uiVersion == 'v2') {
         this.logInComplete();
-        this.options.openSocket = false;
       }
     }
   };
@@ -620,7 +619,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
         this.options.webhookConfig.token=this.options.assertion;
         this.emit(WEB_EVENTS.WEB_HOOK_READY);
         if(this.options.loadHistory && !_chatHistoryLoaded){
-          this.getHistory({},data);
+          this.getHistory({ limit : this.options.messageHistoryLimit },data);
         }else{
           this.emit(WEB_EVENTS.WEB_HOOK_RECONNECTED);
         }

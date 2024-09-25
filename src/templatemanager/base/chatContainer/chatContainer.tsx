@@ -27,10 +27,6 @@ export function ChatContainer(props: any) {
         chatContainerClass = chatContainerClass + ' is-wigets-enabled';
     }
 
-    useEffect(() => {
-        hostInstance.emit('renderComplete', { chatEle: hostInstance.chatEle });
-    });
-
     return (
         <div className={chatContainerClass} aria-label='chat-window-section'>
             <div className="kr-wiz-menu-chat defaultTheme-kore"></div>
