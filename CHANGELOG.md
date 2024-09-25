@@ -1,3 +1,9 @@
+### 11.5.1
+* Release Sept 14, 2024
+* Bug fixes
+  * chat window position issue fix
+  * dropdown template selected option name display issue fix(v2)
+
 ### 11.5.0
 * Release Aug 31, 2024
 * Features
