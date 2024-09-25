@@ -2909,11 +2909,6 @@ applyVariableValue (key:any,value:any,type:any){
               "batch_size": 10,
               "loading_label": "Loading old messages"
             }
-          },
-          "multi_page_app": {
-            "enable": false,
-            "user_identity_store": "localStorage",
-            "chat_window_state_store": "localStorage"
           }
         }
       }
