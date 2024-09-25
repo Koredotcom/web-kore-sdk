@@ -55,10 +55,10 @@ chatConfig = {
     container:'body',
     allowIframe: false, 			// set true, opens authentication links in popup window, default value is "false"
     isSendButton: false, 			// set true, to show send button below the compose bar
-    allowLocation: true,			//deprecated - set false, to deny sending location to server
-    loadHistory: true,				//deprecated - set true to load recent chat history
-    messageHistoryLimit: 10,		//deprecated - set limit to load recent chat history
-    googleMapsAPIKey: "",           //deprecated
+    allowLocation: true,			// deprecated - please use location.enable
+    loadHistory: true,				// deprecated - please use history.enable
+    messageHistoryLimit: 10,		// deprecated - please use history.recent.batchSize
+    googleMapsAPIKey: "",           // deprecated - please use location.googleMapsAPIKey
     minimizeMode: true,             // set true, to show chatwindow in minimized mode, If false is set remove #chatContainer style in chatwindow.css  
     multiPageApp: {
         enable: false,              //set true for non SPA(Single page applications)
@@ -76,7 +76,7 @@ chatConfig = {
         googleMapsAPIKey: '' // provide Google maps API key to get location details
     },
     history:{
-        enable: true,
+        enable: true, // set true to load recent chat history
         recent: {
             batchSize: 10, // set limit to load the number of messages in recent chat history
         },
@@ -103,7 +103,4 @@ chatConfig = {
     enableEmojiShortcut: true
 };
 
-if (!chatConfig.history.enable) { // pagination scroll will be enabled only when loadHistory flag is true
-    chatConfig.history.paginatedScroll.enable = false;
-}
 export default chatConfig;
