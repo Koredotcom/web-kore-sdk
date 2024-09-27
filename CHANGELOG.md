@@ -1,3 +1,18 @@
+### 10.7.0
+- SDK Release Sept 28, 2024
+* Features
+  * history syncing can now be disabled during network resume by using the kore config. Added following config in the kore config
+      ```
+      syncMessages: {
+          ...
+          onNetworkResume: {
+              enable: true,  // Set true to sync messages on network back
+              batchSize: 10   // To configure the number of messages to fetch
+          }
+      }
+      ```
+  * two mandatory attributes have been introduced for custom templates to prevent duplicate template issues. Please refer [here](https://github.com/Koredotcom/web-kore-sdk/tree/v2/dev?tab=readme-ov-file#-custom-templates) for more details
+
 ### 10.6.1
 - SDK Release Sept 14, 2024
 * Bug fixes
