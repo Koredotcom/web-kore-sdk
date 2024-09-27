@@ -1,3 +1,18 @@
+### 11.6.0
+* Release Sept 28, 2024
+* Breaking changes
+  * For the implementations with method override initShow need to be revisted with the newer implementation. chatWindowHtml generation got moved to new method initUI. This method will create the chatwindow ui
+  * `loadHistory` key deprecated in kore config. Please use `history.enable` in kore config for enabling disabling chat history
+  * `messageHistoryLimit` key deprecated in kore config. Please use `history.recent.batchSize` in kore config for setting number of messages to fetch in recent chat history
+  * `allowLocation` key deprecated in kore config. Please use `location.enable` in kore config for enabling disbaling location
+  * `googleMapsAPIKey` key deprecated in kore config. Please use `location.googleMapsAPIKey` in kore config for providing Google Maps API Key
+  * `enableThemes` now enabled by default in kore config
+* Features
+  * added new key `enableEmojiShortcut` in kore config. If enabled then emoji shortcut text will be converted to emoji in user input.
+  * some keys in the kore config can be overridden using the theme editor in the builder. Please refer [here](https://docs.kore.ai/xo/channels/add-web-mobile-client/#virtual-assistant-theme-design) for more details
+* Bug fixes
+  * minor bug fixes
+
 ### 11.5.1
 * Release Sept 14, 2024
 * Bug fixes
