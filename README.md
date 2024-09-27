@@ -327,6 +327,18 @@ Note: When integrated into an iFrame, the SDK's functionality will be confined t
 	// }		
 # Release History
 ```
+v10.7.0 [Minor] on 28-Sept-2024: Master branch
+        Features
+                1.History syncing can now be disabled during network resume by using the kore config. Added following config in the kore config
+                    syncMessages: {
+                        ...
+                        onNetworkResume: {
+                            enable: true,  // Set true to sync messages on network back
+                            batchSize: 10   // To configure the number of messages to fetch
+                        }
+                    }
+                2.Two mandatory attributes have been introduced for custom templates to prevent duplicate template issues. Please refer to the link for more details -> https://github.com/Koredotcom/web-kore-sdk?tab=readme-ov-file#how-to-handle-custom-templates 
+
 v10.6.1 [Minor] on 14-Sept-2024: Master branch
         Bugfixes
                 1.Dropdown template selected option name display issue fix
