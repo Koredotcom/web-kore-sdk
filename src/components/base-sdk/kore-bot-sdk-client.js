@@ -1526,9 +1526,6 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       if (window.sessionStorage.getItem('debugLogEnabled') == 'true') {
         data.url = data.url + "&isDebugging=true";
       }
-      if (window.sessionStorage.getItem('isSkipOnConnect')) {
-        data.url = data.url + (window.sessionStorage.getItem('isSkipOnConnect') == 'true' ? "&isSkipOnConnect=true" : "&isSkipOnConnect=false");
-      }
       this.authenticated = true;
       //this.activeUserId = data.self.id;
       this.emit(CLIENT_EVENTS.AUTHENTICATED, data);

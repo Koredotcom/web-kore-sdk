@@ -986,9 +986,7 @@ bindEvents  () {
       if (me.config.multiPageApp && me.config.multiPageApp.enable) {
         me.setLocalStoreItem('kr-cw-uid', me.config.botOptions.userIdentity);
       }
-      if (!me.config.isConversationTesting) {
-        me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
-      }
+      me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
       me.skipedInit = false;
     }
     const evt = document.createEvent('HTMLEvents');
