@@ -2,7 +2,7 @@ import BaseChatTemplate from '../../../../templatemanager/templates/baseChatTemp
 import './answerTemplate.scss';
 import { h, Fragment, render  } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import {CarouselImagePopupTemplate} from './carouselImagePopupTemplate';
+import {CarouselImagePopupTemplate} from '../carouselImagePopupTemplate/carouselImagePopupTemplate';
 export function Answers(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
