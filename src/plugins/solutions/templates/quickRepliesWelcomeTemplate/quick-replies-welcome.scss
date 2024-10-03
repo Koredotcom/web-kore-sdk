@@ -43,14 +43,14 @@
                     }
                 }
                 .buttonQuickReply {
-                    border: 1px solid var(--sdk-chat-window-btn-hover-border-clr);
+                    border: 1px solid var(--sdk-chat-window-btn-border-clr);
                     padding: 4px 13px;
                     border-radius: 20px;
                     display: table;
                     /* white-space: nowrap; */
                     text-align: left;
                     color: var(--sdk-chat-window-btn-font-clr);
-                    background: var(--sdk-chat-window-btn-hover-bg);
+                    background: var(--sdk-chat-window-btn-default-bg);
                     transition: background-color 200ms linear;
                     -webkit-transition: background-color 200ms linear;
                     -moz-transition: background-color 200ms linear;
@@ -66,6 +66,11 @@
                         border-radius: 50%;
                         max-width: 34px;
                         margin: 0px 7px 2px -8px;
+                    }
+                    &:hover{
+                        color: var(--sdk-chat-window-btn-hover-font-clr);
+                        border-color: var(--sdk-chat-window-btn-hover-border-clr);
+                        background-color: var(--sdk-chat-window-btn-hover-bg);
                     }
                 }
                 .quickreplyText{
