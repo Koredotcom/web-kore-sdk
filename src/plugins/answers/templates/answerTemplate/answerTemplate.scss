@@ -12,10 +12,25 @@
         box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.10);
 
         .sa-answer-result-sub-block {
+            overflow: scroll;
+            table{
+                border: 1.4px solid gray;
+                padding: 2px;
+                border-collapse: collapse;
+                border-radius: 4px;
+                    tr{
+                        td,th{
+                            border: 1px solid #dddddd;
+                            text-align: left;
+                            padding: 8px;
+                        }
+                    }
+
+            }
             &:hover {
                 .sa-answer-result-heading {
                     color: var(--Gray-300, #D0D5DD);
-                    font-weight: 400;
+                    font-weight: 600;
                 }                
             }
         }        
@@ -72,21 +87,40 @@
             margin-top: 10px;
             .sa-answer-file-url-block{
                 position: relative;
+                .sa-url-icon-preview{
+                    position: absolute;
+                    top: -3px;
+                    left: 6px;
+                    display: flex;
+                    gap: 6px;
+                    align-items: center;
+                    justify-content: center;
+                    .sa-preview-text{
+                        display: none;
+                    }
+                    &:hover{
+                        .sa-answer-file-url-icon{
+                            background-color: #528BFF;
+                            color: #FFF;
+                            border: 1.3px solid #528BFF;
+                        }
+                        .sa-preview-text{
+                            display: flex;
+                            font-size: 10px;
+                            font-weight: 500;
+                            line-height: 18px;
+                            color: #155EEF;
+                        }
+                     
+                    }
+                }
                 .sa-answer-file-url-icon {
                     border: 1.3px solid #98A2B3;
                     border-radius: 2px;
                     font-size: 8px;
                     padding: 6px 5px;
-                    position: absolute;
-                    top: -3px;
-                    left: 6px;
                     line-height: 1px;
                     font-weight: 600;
-                    &:hover{
-                        background-color: #528BFF;
-                        color: #FFF;
-                        border: 1.3px solid #528BFF;
-                    }
                 }
             }
         }
@@ -169,3 +203,4 @@
     }
     
 }
+
