@@ -11,7 +11,7 @@
         .checkbox-input{
             &:checked{
                 + .checkbox-label{
-                    background: var(--gloabl-bg-secondary);
+                    background: var(--sdk-gloabl-bg-secondary);
                 }
             }
         }
@@ -47,13 +47,13 @@
             padding-left: 36px;
             border-radius: 2px;
             .title{
-                color: var(--gloabl-text-color);
+                color: var(--sdk-gloabl-text-color);
                 font-size: 14px;
                 font-weight: 400;
                 line-height: normal;
             }
             .desc-text-checkbox{
-                color: var(--gloabl-text-color);
+                color: var(--sdk-gloabl-text-color);
                 font-size: 14px;
                 font-weight: 400;
                 line-height: 20px;
@@ -70,8 +70,8 @@
                 top: 10px;
                 margin: 0;
                 border-radius: 4px;
-                border: 1px solid var(--gloabl-border-color);
-                background: var(--global-white-bg);
+                border: 1px solid var(--sdk-gloabl-border-color);
+                background: var(--sdk-global-white-bg);
                 box-sizing: border-box;
             }
         }
@@ -79,8 +79,8 @@
             + .checkbox-label{
                 &::before{
                     content: "";
-                    border: 1px solid var(--global-theme-color);
-                    background:var(--global-theme-color);
+                    border: 1px solid var(--sdk-global-theme-color);
+                    background:var(--sdk-global-theme-color);
                     background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTMiIHZpZXdCb3g9IjAgMCAxOCAxMyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xNi4yMjQ1IDEuMTQ3MUMxNi40NTc3IDAuODk2MDIyIDE2Ljg0ODQgMC44ODMzNzUgMTcuMDk3IDEuMTE4ODVDMTcuMzMxMSAxLjM0MDQ4IDE3LjM1NTkgMS43MDI5IDE3LjE2MzYgMS45NTQxTDE3LjEyNSAxLjk5OTgzTDYuNjcxNzUgMTIuNjM2MkM2LjQ0ODQxIDEyLjg3NjcgNi4wODE3MSAxMi44OTc4IDUuODMzMzUgMTIuNjk0NUw1Ljc4ODIzIDEyLjY1MzhMMC44MDkwMTQgNy42OTk1NUMwLjU2NjE4NyA3LjQ1Nzk0IDAuNTYzMzE4IDcuMDYzMzIgMC44MDI2MDcgNi44MTgxNEMxLjAyNzgyIDYuNTg3MzggMS4zODcyNyA2LjU3MTI0IDEuNjMxMjMgNi43NzE1N0wxLjY3NTU1IDYuODExNjdMNi4yMDQwOSAxMS4zMTc0TDE2LjIyNDUgMS4xNDcxWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==");
                     display: flex;
                     justify-content: center;
@@ -92,7 +92,7 @@
             }
             &:focus{
                 + .checkbox-label{
-                    color: var(--gloabl-text-color);
+                    color: var(--sdk-gloabl-text-color);
                 }
             }
             &:disabled{
@@ -117,7 +117,7 @@
             &:checked{
                 + .checkbox-label{
                     &::before{
-                        background-color: var(--global-white-bg);
+                        background-color: var(--sdk-global-white-bg);
                     }
                 }
             }
@@ -131,7 +131,7 @@
     flex-direction: column;
     gap: 16px;
     h1{
-        color: var(--gloabl-text-color);
+        color: var(--sdk-gloabl-text-color);
         font-size: 14px;
         font-weight: 700;
         line-height: normal;
@@ -142,8 +142,8 @@
         gap: 8px;
         .checkbox-item{
             border-radius: 4px;
-            border: 1px solid var(--gloabl-border-color);
-            background: var(--global-white-bg);
+            border: 1px solid var(--sdk-gloabl-border-color);
+            background: var(--sdk-global-white-bg);
             width: 100%;
             .checkbox-input {
                 + .checkbox-label {

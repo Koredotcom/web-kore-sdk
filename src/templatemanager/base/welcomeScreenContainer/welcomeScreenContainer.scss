@@ -48,7 +48,7 @@
                 position: absolute;
                 top: 0;
                 left: 0;
-                border: 3px solid var(--global_white);
+                border: 3px solid var(--sdk-global-white);
                 box-shadow: none;
                 display: flex;
             }
@@ -62,7 +62,7 @@
                 margin-bottom: 18px;
                 width: 56px;
                 height: 56px;
-                // background: var(--global-white-bg);
+                // background: var(--sdk-global-white-bg);
                 box-shadow: 0px 10px 15px -3px rgba(16, 24, 40, 0.1), 0px 4px 6px -4px rgba(16, 24, 40, 0.1);
                 border-radius: 100%;
                 figure{
@@ -100,7 +100,7 @@
         .bg-logo {
             width: 56px;
             height: 56px;
-            background: var(--global-white-bg);
+            background: var(--sdk-global-white-bg);
             box-shadow: 0px 10px 15px -3px rgba(16, 24, 40, 0.1), 0px 4px 6px -4px rgba(16, 24, 40, 0.1);
             border-radius: 100%;
             display: none;
@@ -129,7 +129,7 @@
         align-items: center;
         justify-content: center;
         padding: 6px 16px;
-        background: var(--global-white-bg);
+        background: var(--sdk-global-white-bg);
         height: 18px;
         p {
             font-weight: 500;
@@ -246,11 +246,11 @@
                 cursor: pointer;
                 position: relative;                
                 &.hovered-default-bg{
-                    background: var(--global-theme-color);
-                    color: var(--global_white);
+                    background: var(--sdk-global-theme-color);
+                    color: var(--sdk-global-white);
                 }
                 &:hover{
-                    background: var(--gloabl-secondary-color);
+                    background: var(--sdk-gloabl-secondary-color);
                 }
                 .new-item{
                     position: absolute;
@@ -292,7 +292,7 @@
             svg{
                 flex-shrink: 0;
                 path{
-                    stroke: var(--global-white-bg);
+                    stroke: var(--sdk-global-white-bg);
                 }
             }
         }
@@ -312,13 +312,13 @@
                     font-size: 16px;
                     svg{
                         path{
-                            fill: var(--gloabl-text-color);
+                            fill: var(--sdk-gloabl-text-color);
                         }
                     }
                 }
                 input{
                     background: var(--welcome-start-conv-search-bg);
-                    border: 1px solid var(--gloabl-border-color);
+                    border: 1px solid var(--sdk-gloabl-border-color);
                     border-radius: 4px;
                     width: 100%;
                     height: 34px;
@@ -326,19 +326,19 @@
                     font-weight: 400;
                     font-size: 14px;
                     line-height: 20px;
-                    color: var(--gloabl-text-color);
+                    color: var(--sdk-gloabl-text-color);
                     &::placeholder{
-                        color: var(--gloabl-text-color);
+                        color: var(--sdk-gloabl-text-color);
                         font-weight: 400;
                         font-size: 14px;
                         line-height: 20px;
                         opacity: 0.5;
                     }
                     &:focus{
-                        border: solid 1px var(--global-theme-color)
+                        border: solid 1px var(--sdk-global-theme-color)
                     }
                     &:active{
-                        border: solid 1px var(--global-theme-color);
+                        border: solid 1px var(--sdk-global-theme-color);
                     }
                     &:disabled{
                         opacity: 0.4;
@@ -366,7 +366,7 @@
                 flex-shrink: 0;
                 svg{
                     path{
-                        fill: var(--global-white-bg);
+                        fill: var(--sdk-global-white-bg);
                     }
                 }
             }
@@ -403,7 +403,7 @@
     .main-heading-wrapper{
         width: 100%;
         h1{
-            color: var(--gloabl-text-color);
+            color: var(--sdk-gloabl-text-color);
             font-size: 18px;
             font-weight: 600;
             line-height: 20px;
@@ -417,8 +417,8 @@
         width: 100%;
         box-shadow: 0px 1px 2px -1px rgba(16, 24, 40, 0.10), 0px 1px 3px 0px rgba(16, 24, 40, 0.10);
         border-radius: 4px;
-        border: 1px solid var(--gloabl-border-color);
-        background: var(--global-white-bg);
+        border: 1px solid var(--sdk-gloabl-border-color);
+        background: var(--sdk-global-white-bg);
         display: flex;
         padding: 16px;
         flex-direction: column;
@@ -442,8 +442,8 @@
     padding: 16px;
     gap: 8px;
     border-radius: 4px;
-    border: 1px solid var(--gloabl-border-color);
-    background: var(--global-white-bg);
+    border: 1px solid var(--sdk-gloabl-border-color);
+    background: var(--sdk-global-white-bg);
     cursor: pointer;
     .img-block{
         flex-shrink: 0;
@@ -479,7 +479,7 @@
         // white-space: nowrap;
         // text-overflow: ellipsis;
         h1{
-            color: var(--gloabl-text-color);
+            color: var(--sdk-gloabl-text-color);
             font-size: 14px;
             font-weight: 600;
             line-height: normal;
@@ -489,7 +489,7 @@
             // width: 100%;
         }
         p{
-            color: var(--gloabl-text-color);
+            color: var(--sdk-gloabl-text-color);
             font-size: 12px;
             font-weight: 400;
             line-height: normal;
@@ -519,7 +519,7 @@
             cursor: pointer;
             svg{
                 path{
-                    stroke: var(--gloabl-text-color);
+                    stroke: var(--sdk-gloabl-text-color);
                 }
             }
         }
@@ -535,7 +535,7 @@
     .carousel-left-click {
         position: absolute;
         border-radius: 32px;
-        background: var(--global_white);
+        background: var(--sdk-global-white);
         box-shadow: 0px 4px 12px 2px rgba(32, 33, 36, 0.12);
         display: flex;
         width: 32px;
@@ -552,7 +552,7 @@
         z-index: 9;
         svg{
             path{
-                stroke: var(--gloabl-text-color);
+                stroke: var(--sdk-gloabl-text-color);
             }
         }
         &.hide {
@@ -562,7 +562,7 @@
     .carousel-right-click {
         position: absolute;
         border-radius: 32px;
-        background: var(--global_white);
+        background: var(--sdk-global-white);
         box-shadow: 0px 4px 12px 2px rgba(32, 33, 36, 0.12);
         display: flex;
         width: 32px;
@@ -579,7 +579,7 @@
         z-index: 9;
         svg{
             path{
-                stroke: var(--gloabl-text-color);
+                stroke: var(--sdk-gloabl-text-color);
             }
         }        left: auto;
         right: 15px;

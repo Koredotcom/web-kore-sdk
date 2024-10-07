@@ -32,7 +32,7 @@
                 position: absolute;
                 top: 0;
                 left: 0;
-                border: 3px solid var(--global_white);
+                border: 3px solid var(--sdk-global-white);
                 box-shadow: none;
                 display: flex;
             }
@@ -46,7 +46,7 @@
                 margin-bottom: 18px;
                 width: 56px;
                 height: 56px;
-                // background: var(--global-white-bg);
+                // background: var(--sdk-global-white-bg);
                 box-shadow: 0px 10px 15px -3px rgba(16, 24, 40, 0.1), 0px 4px 6px -4px rgba(16, 24, 40, 0.1);
                 border-radius: 100%;
                 figure{
@@ -84,7 +84,7 @@
         .bg-logo {
             width: 56px;
             height: 56px;
-            background: var(--global-white-bg);
+            background: var(--sdk-global-white-bg);
             box-shadow: 0px 10px 15px -3px rgba(16, 24, 40, 0.1), 0px 4px 6px -4px rgba(16, 24, 40, 0.1);
             border-radius: 100%;
             display: none;

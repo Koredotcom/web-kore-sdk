@@ -8,16 +8,16 @@
         display: flex;
         align-items: center;
         border-radius: 4px;
-        border: 1px solid var(--gloabl-border-color);
-        background: var(--gloabl-bg-secondary);
+        border: 1px solid var(--sdk-gloabl-border-color);
+        background: var(--sdk-gloabl-bg-secondary);
         padding: 10px 15px;
         gap: 10px;
         min-height: 40px;
         justify-content: center;
         .loader-history{
-            border: 2px solid var(--global-white-bg);
+            border: 2px solid var(--sdk-global-white-bg);
             border-radius: 50%;
-            border-top: 2px solid var(--global-theme-color);
+            border-top: 2px solid var(--sdk-global-theme-color);
             width: 16px;
             height: 16px;
             -webkit-animation: spinLoader 2s linear infinite;
@@ -25,7 +25,7 @@
             flex-shrink: 0;
         }
         .title-loading{
-            color: var(--gloabl-text-color);
+            color: var(--sdk-gloabl-text-color);
             font-size: 14px;
             font-weight: 500;
         }

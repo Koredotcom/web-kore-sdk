@@ -12,7 +12,7 @@
     height: 100%;
     border-radius: 4px;
     box-shadow: 0px 1px 2px -1px rgba(16, 24, 40, 0.10), 0px 1px 3px 0px rgba(16, 24, 40, 0.10);
-    background: var(--global-white-bg);
+    background: var(--sdk-global-white-bg);
 
     &.list-with-border-multi-items {
         .adv-parent-acc-list {
@@ -27,7 +27,7 @@
                 position: absolute;
                 width: calc(100% - 20px);
                 height: 1px;
-                background: var(--gloabl-border-color);
+                background: var(--sdk-gloabl-border-color);
                 bottom: 0;
                 left: 10px;
             }
@@ -43,23 +43,23 @@
 
         .tab-name {
             border: 0;
-            color: var(--gloabl-text-color);
+            color: var(--sdk-gloabl-text-color);
             font-size: 14px;
             font-weight: 400;
             line-height: 20px;
             padding: 10px 12px;
             min-width: 44px;
             min-height: 44px;
-            border-bottom: 2px solid var(--global-white-bg);
-            background: var(--global-white-bg);
+            border-bottom: 2px solid var(--sdk-global-white-bg);
+            background: var(--sdk-global-white-bg);
             transition: 0.3s all ease;
 
             &:hover {
-                border-bottom: 2px solid var(--global-theme-color);
+                border-bottom: 2px solid var(--sdk-global-theme-color);
             }
 
             &.active-tab {
-                border-bottom: 2px solid var(--global-theme-color);
+                border-bottom: 2px solid var(--sdk-global-theme-color);
             }
         }
     }
@@ -70,9 +70,9 @@
         left: auto;
         right: 0;
         z-index: 9;
-        border: 1px solid var(--gloabl-border-color);
+        border: 1px solid var(--sdk-gloabl-border-color);
         box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.10), 0px 4px 6px -1px rgba(16, 24, 40, 0.10);
-        background: var(--global-white-bg);
+        background: var(--sdk-global-white-bg);
         margin-top: 2px;
         top: 34px;
         border-radius: 4px;
@@ -94,14 +94,14 @@
 
             svg {
                 path {
-                    fill: var(--gloabl-text-color);
+                    fill: var(--sdk-gloabl-text-color);
                 }
             }
         }
 
         li {
             border-radius: 4px 4px 0px 0px;
-            background: var(--global-white-bg);
+            background: var(--sdk-global-white-bg);
             display: flex;
             padding: 5px 16px;
             width: 100%;
@@ -121,7 +121,7 @@
         gap: 10px;
 
         h1 {
-            color: var(--gloabl-text-color);
+            color: var(--sdk-gloabl-text-color);
             font-size: 18px;
             font-weight: 600;
             line-height: 20px;
@@ -152,7 +152,7 @@
 
                 svg {
                     path {
-                        fill: var(--gloabl-text-color);
+                        fill: var(--sdk-gloabl-text-color);
                     }
                 }
             }
@@ -168,15 +168,15 @@
                 font-weight: 400;
                 line-height: 20px;
                 border-radius: 8px;
-                border: 1px solid var(--gloabl-border-color);
-                background: var(--global-white-bg);
+                border: 1px solid var(--sdk-gloabl-border-color);
+                background: var(--sdk-global-white-bg);
                 box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-                color: var(--gloabl-text-color);
+                color: var(--sdk-gloabl-text-color);
                 outline: 0;
                 z-index: 1;
 
                 &::placeholder {
-                    color: var(--gloabl-text-color);
+                    color: var(--sdk-gloabl-text-color);
                     font-size: 14px;
                     font-weight: 400;
                     line-height: 20px;
@@ -184,13 +184,13 @@
                 }
 
                 &:focus {
-                    border: 1px solid var(--global-theme-color);
-                    box-shadow: 0px 0px 0px 4px var(--global-theme-color), 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+                    border: 1px solid var(--sdk-global-theme-color);
+                    box-shadow: 0px 0px 0px 4px var(--sdk-global-theme-color), 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
                 }
 
                 &:active {
-                    border: 1px solid var(--global-theme-color);
-                    box-shadow: 0px 0px 0px 4px var(--global-theme-color), 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+                    border: 1px solid var(--sdk-global-theme-color);
+                    box-shadow: 0px 0px 0px 4px var(--sdk-global-theme-color), 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
                 }
             }
         }
@@ -270,7 +270,7 @@
                 // white-space: nowrap;
                 // text-overflow: ellipsis;
                 h1 {
-                    color: var(--gloabl-text-color);
+                    color: var(--sdk-gloabl-text-color);
                     font-size: 16px;
                     font-weight: 600;
                     line-height: normal;
@@ -281,7 +281,7 @@
                 }
 
                 p {
-                    color: var(--gloabl-text-color);
+                    color: var(--sdk-gloabl-text-color);
                     font-size: 14px;
                     font-weight: 400;
                     line-height: normal;
@@ -301,7 +301,7 @@
                 justify-content: flex-end;
 
                 h1 {
-                    color: var(--gloabl-text-color);
+                    color: var(--sdk-gloabl-text-color);
                     font-size: 14px;
                     font-weight: 600;
                     line-height: 20px;
@@ -321,7 +321,7 @@
 
                     svg {
                         path {
-                            fill: var(--gloabl-text-color);
+                            fill: var(--sdk-gloabl-text-color);
                         }
                     }
                 }
@@ -333,7 +333,7 @@
                     align-items: center;
                     gap: 10px;
                     border-radius: 4px;
-                    background: var(--gloabl-bg-secondary);
+                    background: var(--sdk-gloabl-bg-secondary);
                     color: var(--green-2, #27AE60);
                     font-size: 10px;
                     font-weight: 400;
@@ -348,7 +348,7 @@
 
                     &.show-drp {
                         .elipse-dropdown {
-                            background: var(--gloabl-bg-secondary);
+                            background: var(--sdk-gloabl-bg-secondary);
                         }
 
                         .drp-content-menu {
@@ -371,12 +371,12 @@
 
                         svg {
                             path {
-                                fill: var(--gloabl-text-color);
+                                fill: var(--sdk-gloabl-text-color);
                             }
                         }
 
                         &:hover {
-                            background: var(--gloabl-bg-secondary);
+                            background: var(--sdk-gloabl-bg-secondary);
                         }
                     }
                 }
@@ -418,7 +418,7 @@
                     }
 
                     p {
-                        color: var(--gloabl-text-color);
+                        color: var(--sdk-gloabl-text-color);
                         font-size: 12px;
                         font-weight: 500;
                         line-height: 19px;
@@ -502,7 +502,7 @@
                         width: 100%;
 
                         p {
-                            color: var(--gloabl-text-color);
+                            color: var(--sdk-gloabl-text-color);
                             font-size: 14px;
                             font-weight: 400;
                             line-height: normal;
@@ -510,7 +510,7 @@
                         }
 
                         h1 {
-                            color: var(--gloabl-text-color);
+                            color: var(--sdk-gloabl-text-color);
                             font-size: 14px;
                             font-weight: 600;
                             line-height: normal;
@@ -539,7 +539,7 @@
 
                         &:checked {
                             +.radio-label {
-                                background: var(--gloabl-bg-secondary);
+                                background: var(--sdk-gloabl-bg-secondary);
                             }
                         }
 
@@ -570,7 +570,7 @@
             align-items: center;
             gap: 10px;
             border: 0;
-            color: var(--global-theme-color);
+            color: var(--sdk-global-theme-color);
             text-align: center;
             font-size: 14px;
             font-weight: 400;
@@ -580,7 +580,7 @@
 
             svg {
                 path {
-                    fill: var(--gloabl-text-color);
+                    fill: var(--sdk-gloabl-text-color);
                 }
             }
         }

@@ -8,7 +8,7 @@
     .mini-left-click {
         position: absolute;
         border-radius: 32px;
-        background: var(--global_white);
+        background: var(--sdk-global-white);
         box-shadow: 0px 4px 12px 2px rgba(32, 33, 36, 0.12);
         display: flex;
         width: 32px;
@@ -25,7 +25,7 @@
         z-index: 9;
         svg{
             path{
-                stroke: var(--gloabl-text-color);
+                stroke: var(--sdk-gloabl-text-color);
             }
         }
         &.hide {
@@ -46,7 +46,7 @@
         gap: 10px;
         .mini-table-regular-view{
             border-radius: 4px;
-            border: 1px solid var(--gloabl-border-color);
+            border: 1px solid var(--sdk-gloabl-border-color);
             width: 270px;
             flex-shrink: 0;
             thead{
