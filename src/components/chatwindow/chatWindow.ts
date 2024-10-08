@@ -695,6 +695,25 @@ initi18n  () {
         minimizeText: 'Minimize',
         reconnectText: 'Reconnect',
         attachmentText: 'Attachment',
+        help: 'Help',
+        agent: 'Agent Chat',
+        media: 'Media',
+        file: 'File',
+        tapToSpeak: 'Tap microphone to speak',
+        listenToEnd: 'Listening... Tap to end',
+        tapToSend: 'Tap to send',
+        typing: 'Typing',
+        menu: 'Menu',
+        poweredBy: 'Powered by',
+        keyboard: 'Keyboard',
+        microphone: 'Microphone',
+        cancel: 'Cancel',
+        emojis: 'Emojis',
+        speakerOn: 'Speaker on',
+        speakerOff: 'Speaker off',
+        attachments: 'Attachments',
+        close: 'Close Chat',
+        reconnect: 'Reconnect Chat'
       },
     },
   };
@@ -730,6 +749,46 @@ seti18n (lang:any) {
       chatEle.find('.chatInputBox').attr('placeholder', botMessages.message);
       chatEle.find('.sendButton').html(botMessages.sendText);
       chatEle.find('.chatSendMsg').html(botMessages.entertosend);
+    } else {
+      chatEle.querySelector('.actions-info .link-url')?.setAttribute('title', botMessages.help);
+      chatEle.querySelector('.actions-info .btn-reconnect')?.setAttribute('title', botMessages.reconnect);
+      chatEle.querySelector('.actions-info .agent-chat')?.setAttribute('title', botMessages.agent);
+      chatEle.querySelector('.actions-info .btn-action-close')?.setAttribute('title', botMessages.close);
+      chatEle.querySelector('.compose-bar-wrapper .hamberger-menu')?.setAttribute('title', botMessages.menu);
+      chatEle.querySelector('.compose-bar-wrapper .attachmentUpload')?.setAttribute('title', botMessages.attachments);
+      chatEle.querySelector('.compose-bar-wrapper .key-board')?.setAttribute('title', botMessages.attachments);
+      chatEle.querySelector('.compose-bar-wrapper .speaker-btn-mute')?.setAttribute('title', botMessages.speakerOn);
+      chatEle.querySelector('.compose-bar-wrapper .speaker-btn-speak')?.setAttribute('title', botMessages.speakerOff);
+      chatEle.querySelector('.compose-bar-wrapper .emoji-btn')?.setAttribute('title', botMessages.emojis);
+      if (chatEle.querySelector('.compose-bar-wrapper .speak-info.tap-speak')) {
+        chatEle.querySelector('.compose-bar-wrapper .speak-info.tap-speak').textContent = botMessages.tapToSpeak;
+      }
+      if (chatEle.querySelector('.compose-bar-wrapper .speak-info.listen-end')) {
+        chatEle.querySelector('.compose-bar-wrapper .speak-info.listen-end').textContent = botMessages.listenToEnd;
+      }
+      if (chatEle.querySelector('.compose-bar-wrapper .speak-info.tap-send')) {
+        chatEle.querySelector('.compose-bar-wrapper .speak-info.tap-send').textContent = botMessages.tapToSend;
+      }
+      chatEle.querySelector('.compose-bar-wrapper .voice-btn')?.setAttribute('title', botMessages.microphone);
+      chatEle.querySelector('.compose-bar-wrapper .send-btn')?.setAttribute('title', botMessages.sendText);
+      if (chatEle.querySelector('.compose-bar-wrapper .typing-indicator-wraper p')) {
+        chatEle.querySelector('.compose-bar-wrapper .typing-indicator-wraper p').textContent = botMessages.typing;
+      }
+      if (chatEle.querySelector('.compose-bar-wrapper .powerdby-info p')) {
+        chatEle.querySelector('.compose-bar-wrapper .powerdby-info p').textContent = botMessages.poweredBy;
+      }
+      if (chatEle.querySelector('.select-file-block .inputfile-btn-media span')) {
+        chatEle.querySelector('.select-file-block .inputfile-btn-media span').textContent = botMessages.media;
+      }
+      if (chatEle.querySelector('.select-file-block .inputfile-btn-file span')) {
+        chatEle.querySelector('.select-file-block .inputfile-btn-file span').textContent = botMessages.file;
+      }
+      if (chatEle.querySelector('.select-file-block .inputfile-btn-file span')) {
+        chatEle.querySelector('.select-file-block .inputfile-btn-file span').textContent = botMessages.file;
+      }
+      if (chatEle.querySelector('.end-of-history-separator')) {
+        chatEle.querySelector('.end-of-history-separator .date-text').textContent = botMessages.endofchat;
+      }
     }
   }
 };
@@ -2250,10 +2309,13 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
                   $('.chat-container').animate({
                     scrollTop: $('.chat-container').prop('scrollHeight'),
                   }, 2500);
-                  $('.chat-container').append("<div class='endChatContainer'><span class='endChatContainerText'>End of chat history</span></div>");
+                  $('.chat-container').append("<div class='endChatContainer'><span class='endChatContainerText'>" + me.config.botMessages.endofchat + "</span></div>");
                 } else {
                   const chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
-                  const dateSeparator = getHTML(DateSeparator, 'End of chat history', me);                  
+                  const dateSeparator = getHTML(DateSeparator, {text: me.config.botMessages.endofchat, type: 'end-of-history-separator'}, me); 
+                  if (me.chatEle.querySelector('.end-of-history-separator')?.length < 1)  {
+                    chatContainer.appendChild(dateSeparator);
+                  } 
                   chatContainer.appendChild(dateSeparator);
                   chatContainer.scrollTo({
                     top: chatContainer.scrollHeight,

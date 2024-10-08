@@ -242,6 +242,10 @@ module.exports= function(env,argv){
             import: "./src/index_plugins/proactiveWebCampaign.ts",
             filename: 'plugins/proactive-web-campaign.js',
             chunkLoading: false,
+          },
+          Korei18nPluginSDK: {
+            import: "./src/index_plugins/Korei18n.ts",
+            filename: 'plugins/kore-i18n.js'
           }
         }
         config.output.path= path.resolve(__dirname,'dist/esm');
@@ -386,6 +390,10 @@ module.exports= function(env,argv){
             import: "./src/index_plugins/proactiveWebCampaign.ts",
             filename: 'plugins/proactive-web-campaign.js',
             chunkLoading: false,
+          },
+          Korei18nPluginSDK: {
+            import: "./src/index_plugins/Korei18n.ts",
+            filename: 'plugins/kore-i18n.js'
           }
         }
         config.output.library = {

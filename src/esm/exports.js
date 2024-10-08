@@ -21,3 +21,4 @@ export {AnswersTemplatesPlugin} from './plugins/answers-template.js';
 export {ProactiveWebCampaignPlugin} from './plugins/proactive-web-campaign.js';
 export {V2Plugin} from './plugins/v2-plugin.js'
 export {V2KoreWidgetSDK, V2WidgetsConfig} from './plugins/v2-kore-web-sdk-widgets.js';
+export {Korei18nPlugin} from './plugins/kore-i18n.js';
