@@ -183,14 +183,14 @@ export function WelcomeScreenContainer(props: any) {
                                 ))
                             }
                         </div>}
-                        {brandingInfo.welcome_screen.starter_box.quick_start_buttons.show && brandingInfo.welcome_screen.starter_box.quick_start_buttons.input === 'button' && <button className="start-conv-button">
+                        {brandingInfo.welcome_screen.starter_box.quick_start_buttons.input === 'button' && <button className="start-conv-button">
                             <span class="start-conv-value" data-value={brandingInfo.welcome_screen.starter_box.quick_start_buttons.action.value} >{brandingInfo.welcome_screen.starter_box.quick_start_buttons.action.value}</span>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path d="M7 5L12 10L7 15" stroke="white" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </button>}
 
-                        {brandingInfo.welcome_screen.starter_box.quick_start_buttons.show && brandingInfo.welcome_screen.starter_box.quick_start_buttons.input === 'search' && <div className="start-conv-search-block">
+                        {brandingInfo.welcome_screen.starter_box.quick_start_buttons.input === 'search' && <div className="start-conv-search-block">
                             <div className="start-conv-search">
                                 <div className="search-icon">
                                     <svg width="16" height="17" viewBox="0 0 16 17" fill="none">
