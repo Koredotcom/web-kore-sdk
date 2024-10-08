@@ -2685,9 +2685,13 @@ getBrandingInformation(options:any){
     } else {
       if (response && response.activeTheme) {
         me.emit('brandingResponse', response);
-        me.setBrandingMissingInfo(response);
-        me.overrideKoreConfig(response?.v3);
-        me.setBranding(response?.v3);
+        if (response && response?.v3) {
+          me.setBrandingMissingInfo(response);
+          me.overrideKoreConfig(response?.v3);
+          me.setBranding(response?.v3);  
+        } else {
+          me.setBranding();  
+        }
         me.initUI();
       }
     }
