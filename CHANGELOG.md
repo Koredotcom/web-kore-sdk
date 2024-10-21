@@ -1,3 +1,8 @@
+### 11.6.1
+* Release Oct 21, 2024
+* Bug fixes
+  * support for markdown added in digital form message
+
 ### 11.6.0
 * Release Sept 28, 2024
 * Breaking changes
