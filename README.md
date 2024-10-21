@@ -327,6 +327,9 @@ Note: When integrated into an iFrame, the SDK's functionality will be confined t
 	// }		
 # Release History
 ```
+v10.7.1 [Minor] on 21-Oct-2024: Master branch
+        Stable release
+
 v10.7.0 [Minor] on 28-Sept-2024: Master branch
         Features
                 1.History syncing can now be disabled during network resume by using the kore config. Added following config in the kore config
