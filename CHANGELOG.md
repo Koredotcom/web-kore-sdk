@@ -1,3 +1,8 @@
+### 10.7.1
+- SDK Release Oct 21, 2024
+* Bug fixes
+  * solutions plugin quick replies welcome template css issue fix
+
 ### 10.7.0
 - SDK Release Sept 28, 2024
 * Features
