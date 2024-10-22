@@ -113,10 +113,6 @@ export function QuickReplies(props: any) {
                     const quickReply = getHTML(QuickReply, msgData, hostInstance);
                     const composeBar = hostInstance.chatEle.querySelector('.chat-widget-composebar');
                     composeBar.insertBefore(quickReply, composeBar.firstChild);
-                } else {
-                    const quickReply = getHTML(QuickReply, msgData, hostInstance);
-                    const quickReplyParent = hostInstance.chatEle.querySelector('[data-kr-msg-id="' + msgData.messageId + '"]');
-                    quickReplyParent.appendChild(quickReply);
                 }
             }, 500);
         });
@@ -124,6 +120,7 @@ export function QuickReplies(props: any) {
             <Fragment>
                 <div className='quick-replies-container' data-kr-msg-id={msgData.messageId}>
                     <Message {...messageObj} />
+                    {(msgData.fromHistory || msgData?.message?.[0]?.component?.payload?.inline) && <QuickReply {...messageObj} />}
                 </div>
             </Fragment>
         );
