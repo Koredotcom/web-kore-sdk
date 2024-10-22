@@ -386,8 +386,16 @@ class KoreHelpers{
                     }
                     _lineBreakAdded = true;
                 } else if (txtArr[i].indexOf('---') === 0 || txtArr[i].indexOf('___') === 0) {
-                    txtArr[i] = '<hr/>' + txtArr[i].substring(3);
-                    _lineBreakAdded = true;
+                    let nextChar;
+                    if (txtArr[i].indexOf('---') === 0) {
+                        nextChar = txtArr[i].charAt(4);
+                    } else if (txtArr[i].indexOf('___') === 0) {
+                        nextChar = txtArr[i].charAt(4);
+                    }
+                    if ((nextChar !== '-') && (nextChar !== '_')) {
+                        txtArr[i] = '<hr/>' + txtArr[i].substring(3);
+                        _lineBreakAdded = true;
+                    }
                 }
                 var j;
                 // Matches Image markup ![test](http://google.com/image.png)
