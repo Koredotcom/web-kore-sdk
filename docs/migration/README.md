@@ -1,31 +1,31 @@
 ## Upgrading sdk from v1/v2 to v3
 
 ### Using v1 - XO10
-    #### using default sdk
-        method - 1: NPM package
-            1. install the kore web sdk using the cmd `npm i kore-web-sdk`
-            2. configure the following in kore config.
-                i. change `botOptions.koreAPIUrl` to https://bots.kore.ai
-                ii. set `disableThemes` flag as false.
-        method - 2: 
-            1. copy the latest script from [here]()
-            2. configure the following in kore config.
-                i. change botOptions.koreAPIUrl to https://bots.kore.ai
-                ii. set disableThemes flag as false.
+#### using default sdk
+    method - 1: NPM package
+        1. install the kore web sdk using the cmd `npm i kore-web-sdk`
+        2. configure the following in kore config.
+            i. change `botOptions.koreAPIUrl` to https://bots.kore.ai
+            ii. set `disableThemes` flag as false.
+    method - 2: 
+        1. copy the latest script from [here]()
+        2. configure the following in kore config.
+            i. change botOptions.koreAPIUrl to https://bots.kore.ai
+            ii. set disableThemes flag as false.
 
-    #### using custom sdk
-        method - 1: NPM package
-            1. install the kore web sdk using the cmd `npm i kore-web-sdk`
-            2. configure the following in kore config.
-                i. change `botOptions.koreAPIUrl` to https://bots.kore.ai
-                ii. set `disableThemes` flag as false.
-            3. Use events to customize the customizations    
-        method - 2: 
-            1. copy the latest script from here
-            2. configure the following in kore config.
-                i. change `botOptions.koreAPIUrl` to https://bots.kore.ai
-                ii. set `disableThemes` flag as false.
-            3. Use events to customize the customizations
+#### using custom sdk
+    method - 1: NPM package
+        1. install the kore web sdk using the cmd `npm i kore-web-sdk`
+        2. configure the following in kore config.
+            i. change `botOptions.koreAPIUrl` to https://bots.kore.ai
+            ii. set `disableThemes` flag as false.
+        3. Use events to customize the customizations    
+    method - 2: 
+        1. copy the latest script from here
+        2. configure the following in kore config.
+            i. change `botOptions.koreAPIUrl` to https://bots.kore.ai
+            ii. set `disableThemes` flag as false.
+        3. Use events to customize the customizations
 
 
 
