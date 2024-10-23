@@ -17,6 +17,10 @@ With just few lines of code, you can embed our Kore.ai chat widget into your app
 
 [FAQ's](/docs/faqs) 
 
+[Migration](/docs/migration)
+
+[Configurations](/docs/configuration)
+
 
 ## 💡 Getting Started
 
