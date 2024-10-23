@@ -1,8 +1,7 @@
-# Upgrading SDK from v1/v2 to v3
+## Upgrading SDK from v1/v2 to v3
 
-## Using v1 - XO10
+### Using v1 - XO10
 
-### Using Default SDK
 
 **Method 1: NPM Package**
 
@@ -20,29 +19,7 @@
 2. Configure the following in the Kore config:
     - Change `botOptions.koreAPIUrl` to `https://bots.kore.ai`
     - Set `disableThemes` flag to `false`
-
-### Using Custom SDK
-
-**Method 1: NPM Package**
-
-1. Install the kore web SDK using the command:
-    ```bash
-    npm i kore-web-sdk
-    ```
-2. Configure the following in the Kore config:
-    - Change `botOptions.koreAPIUrl` to `https://bots.kore.ai`
-    - Set `disableThemes` flag to `false`
-3. Use events to customize the customizations
-
-**Method 2: Script**
-
-1. Copy the latest script from [here]()
-2. Configure the following in the Kore config:
-    - Change `botOptions.koreAPIUrl` to `https://bots.kore.ai`
-    - Set `disableThemes` flag to `false`
-3. Use events to customize the customizations
-
-
+For customizations please refer here
 
 ### Using v1 - Upgrade from XO10 to XO11
     using default sdk
