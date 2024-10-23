@@ -108,7 +108,7 @@ export function Message(props: any) {
                             { msgData.type == 'bot_response' && msgItem.component && msgItem.component.type == 'error' && msgItem.component.payload.text && <div className="bot-bubble-comp if-animation-bubble">
                                     <div className={botStyle}>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
-                                            <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}>{msgData.fromAgent && msgData.author?.name ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}</div>
+                                            <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}>{msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}</div>
                                             <div className="time-tamp">
                                                 <time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format)}</time>
                                             </div>
@@ -133,7 +133,7 @@ export function Message(props: any) {
                                             </div>
                                         </div>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
-                                            <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}>{msgData.fromAgent && msgData.author?.name ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}</div>
+                                            <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}>{msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}</div>
                                             <div className="time-tamp"><time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format)}</time></div>
                                         </div>}
                                     </div>
@@ -141,7 +141,7 @@ export function Message(props: any) {
                             { msgData.type == 'bot_response' && msgItem.type === 'text' && msgItem.cInfo && msgItem.cInfo.body && <div className="bot-bubble-comp if-animation-bubble">
                                     <div className={botStyle}>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
-                                            <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}>{msgData.fromAgent && msgData.author?.name ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}</div>
+                                            <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}>{msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}</div>
                                             <div className="time-tamp">
                                                 <time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format)}</time>
                                             </div>
@@ -166,7 +166,7 @@ export function Message(props: any) {
                                             </div>
                                         </div>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
-                                            <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}>{msgData.fromAgent ? msgData.author.name : hostInstance.config.botOptions.botInfo.chatBot}</div>
+                                            <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}>{msgData.fromAgent ? msgData.author.name : brandingInfo.body.bot_name.name}</div>
                                             <div className="time-tamp"><time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format)}</time></div>
                                         </div>}
                                     </div>
@@ -204,7 +204,7 @@ export function Message(props: any) {
                                         </div>}
                                     </div>
                                 </div> }
-                            { msgItem.type === 'text' && msgItem.cInfo && msgItem.cInfo.attachments && msgData.message[0].cInfo.attachments[0].type == 'image' &&
+                            { msgData.type == 'currentUser' && msgItem.cInfo && msgItem.cInfo.attachments && msgData.message[0].cInfo.attachments[0].fileType == 'image' &&
                                 <section className="attachment-sended-temp-wrapper">
                                     <div className="multiple-attchments">
                                         <div className="attchments-wrap">
@@ -224,28 +224,28 @@ export function Message(props: any) {
                                         </div>
                                     </div>
                                 </section> }
-                            { msgItem.type === 'text' && msgItem.cInfo && msgItem.cInfo.attachments && msgData.message[0].cInfo.attachments[0].type != 'image' && 
+                            { msgData.type == 'currentUser' && msgItem.cInfo && msgItem.cInfo.attachments && msgData.message[0].cInfo.attachments[0].fileType != 'image' && 
                                 <div className="thumbnails-wrapper attachment-document">
                                     <div className="thumbnail-data-content">
-                                        { msgData.message[0].cInfo.attachments[0].type == 'attachment' && <div className="icon-block">
+                                        { msgData.message[0].cInfo.attachments[0].fileType == 'attachment' && <div className="icon-block">
                                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M4.75 4.75C4.75 3.7835 5.5335 3 6.5 3H10.5126C10.9767 3 11.4218 3.18437 11.75 3.51256L14.7374 6.5C15.0656 6.82819 15.25 7.27331 15.25 7.73744V15.25C15.25 16.2165 14.4665 17 13.5 17H6.5C5.5335 17 4.75 16.2165 4.75 15.25V4.75ZM6.5 10C6.5 9.51675 6.89175 9.125 7.375 9.125H12.625C13.1082 9.125 13.5 9.51675 13.5 10C13.5 10.4832 13.1082 10.875 12.625 10.875H7.375C6.89175 10.875 6.5 10.4832 6.5 10ZM7.375 12.625C6.89175 12.625 6.5 13.0168 6.5 13.5C6.5 13.9832 6.89175 14.375 7.375 14.375H12.625C13.1082 14.375 13.5 13.9832 13.5 13.5C13.5 13.0168 13.1082 12.625 12.625 12.625H7.375Z" fill="#697586" />
                                             </svg>
                                         </div> }
-                                        { msgData.message[0].cInfo.attachments[0].type == 'audio' && <div className="icon-block">
+                                        { msgData.message[0].cInfo.attachments[0].fileType == 'audio' && <div className="icon-block">
                                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                                 <path d="M17 3.87501C17 3.61286 16.8825 3.36453 16.6797 3.19833C16.477 3.03214 16.2105 2.96559 15.9534 3.017L7.2034 4.767C6.7944 4.8488 6.5 5.20791 6.5 5.62501V13.5996C6.22632 13.5351 5.93181 13.5 5.625 13.5C4.17525 13.5 3 14.2835 3 15.25C3 16.2165 4.17525 17 5.625 17C7.07474 17 8.24999 16.2165 8.25 15.25V8.09233L15.25 6.69233V11.8496C14.9763 11.7851 14.6818 11.75 14.375 11.75C12.9253 11.75 11.75 12.5335 11.75 13.5C11.75 14.4665 12.9253 15.25 14.375 15.25C15.8247 15.25 17 14.4665 17 13.5V3.87501Z" fill="#697586" />
                                             </svg>
                                         </div> }
                                         <div className="attchment-details">
                                             <div className="content-info">
-                                                { msgData.message[0].cInfo.attachments[0].type == 'video'&& 
+                                                { msgData.message[0].cInfo.attachments[0].fileType == 'video' && 
                                                     <video width="240" height="145" controls>
                                                         <source src={msgData.message[0].cInfo.attachments[0].fileUrl}></source>
                                                     </video>
                                                 }
                                                 <h1>{msgData.message[0].cInfo.attachments[0].fileName}</h1>
-                                                { msgData.message[0].cInfo.attachments[0].type == 'audio' &&
+                                                { msgData.message[0].cInfo.attachments[0].fileType == 'audio' &&
                                                     <audio controls>
                                                         <source src={msgData.message[0].cInfo.attachments[0].fileUrl}></source>
                                                     </audio> }
@@ -255,7 +255,7 @@ export function Message(props: any) {
                                         </div>
                                     </div>
                                 </div> }
-                            { msgItem.component && msgItem.component.payload && (msgItem.component.payload.audioUrl || msgItem.component.payload.videoUrl) &&
+                            { msgData.type == 'bot_response' && msgItem.component && msgItem.component.payload && (msgItem.component.payload.audioUrl || msgItem.component.payload.videoUrl) &&
                                 <section className="attachment-sended-temp-wrapper attachment-wrap">
                                 <div className="multiple-attchments">
                                     <div className="attchments-wrap">

@@ -29,7 +29,6 @@ class AgentDesktopPlugin {
 
         cwInstance.on("jwtGrantSuccess", (response: any) => {
             if (!this.agentDesktopInfo) {
-                me.onInit();
                 this.config = me.extend(me, response)
                 //me.AgentDesktop(response.userInfo.userId, response);
                 /** @ignore */
@@ -40,6 +39,7 @@ class AgentDesktopPlugin {
             }
         });
         me.hostInstance.on('beforeViewInit', (chatEle: any) => {
+            me.onInit();
             if (me.hostInstance.chatEle.querySelectorAll('.btn-action-close') && me.hostInstance.chatEle.querySelectorAll('.btn-action-close').length > 0) {
                 me.hostInstance.chatEle.querySelector('.btn-action-close').addEventListener('click', () => {
                     const messageToBot: any = {};

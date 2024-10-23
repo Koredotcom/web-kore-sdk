@@ -20,34 +20,42 @@ class CarouselButtons {
         const btnsParentDiv: any = this.hostInstance.chatEle.querySelector(`[c-parent-id='${this.id}']`);
         const leftScrollBtn = this.hostInstance.chatEle.querySelector(`[c-left-button-id='${this.id}']`);
         const rightScrollBtn = this.hostInstance.chatEle.querySelector(`[c-right-button-id='${this.id}']`);
-
-        if (btnsParentDiv.offsetWidth >= btnsParentDiv.scrollWidth && this.id != 'welcome_screen_carousel') {
-            rightScrollBtn.classList.add(this.classToRemove);
-            leftScrollBtn.classList.add(this.classToRemove);
-        } else if (btnsParentDiv.offsetWidth >= btnsParentDiv.scrollWidth && this.id == 'welcome_screen_carousel') {
-            if (btnsParentDiv.children.length == 1) {
+    
+        const updateButtons = () => {
+            const isVisible = btnsParentDiv.offsetWidth && btnsParentDiv.scrollWidth;
+            if (!isVisible) {
+                return;
+            }
+    
+            if (btnsParentDiv.offsetWidth >= btnsParentDiv.scrollWidth && this.id != 'welcome_screen_carousel') {
                 rightScrollBtn.classList.add(this.classToRemove);
-                leftScrollBtn.classList.add(this.classToRemove);    
-            }
-        }
-
-        if (btnsParentDiv && btnsParentDiv.hasChildNodes()) {
-            if (leftScrollBtn) {
-                if (btnsParentDiv.scrollLeft > 0) {
-                    leftScrollBtn.classList.remove(this.classToHideDisable);
-                } else {
-                    leftScrollBtn.classList.add(this.classToHideDisable);
+                leftScrollBtn.classList.add(this.classToRemove);
+            } else if (btnsParentDiv.offsetWidth >= btnsParentDiv.scrollWidth && this.id == 'welcome_screen_carousel') {
+                if (btnsParentDiv.children.length === 1) {
+                    rightScrollBtn.classList.add(this.classToRemove);
+                    leftScrollBtn.classList.add(this.classToRemove);
                 }
             }
-            if (rightScrollBtn) {
-                if (btnsParentDiv.offsetWidth < btnsParentDiv.scrollWidth) {
-                    rightScrollBtn.classList.remove(this.classToHideDisable);
-                } else {
-                    rightScrollBtn.classList.add(this.classToHideDisable);
+            if (btnsParentDiv && btnsParentDiv.hasChildNodes()) {
+                if (leftScrollBtn) {
+                    if (btnsParentDiv.scrollLeft > 0) {
+                        leftScrollBtn.classList.remove(this.classToHideDisable);
+                    } else {
+                        leftScrollBtn.classList.add(this.classToHideDisable);
+                    }
+                }
+                if (rightScrollBtn) {
+                    if (btnsParentDiv.offsetWidth < btnsParentDiv.scrollWidth) {
+                        rightScrollBtn.classList.remove(this.classToHideDisable);
+                    } else {
+                        rightScrollBtn.classList.add(this.classToHideDisable);
+                    }
                 }
             }
-        }
-
+        };
+    
+        updateButtons();
+    
         leftScrollBtn.addEventListener('click', () => {
             const btnsParentDivWidth = btnsParentDiv.scrollLeft;
             const qButtons = btnsParentDiv.querySelectorAll(`[c-items-id='${this.id}']`);
@@ -86,10 +94,16 @@ class CarouselButtons {
                             rightScrollBtn.classList.add(this.classToHideDisable);
                         }
                     }
-
-                })
+                });
             }
-        })
+        });
+    
+        const checkForButtonsVisibility = setInterval(() => {
+            if (btnsParentDiv.offsetWidth > 0) {
+                updateButtons();
+                clearInterval(checkForButtonsVisibility);
+            }
+        }, 300);
     }
 }
 

@@ -18,22 +18,22 @@
   --adp-transition-ease: ease-out;
   --adp-transition-offset: 8px;
 
-  --adp-background-color: var(--global-white-bg);
-  --adp-background-color-hover: var(--gloabl-bg-secondary);
-  --adp-background-color-active: var(--gloabl-bg-secondary);
-  --adp-background-color-in-range: var(--gloabl-text-color);
-  --adp-background-color-in-range-focused: var(--gloabl-text-color);
-  --adp-background-color-selected-other-month-focused: var(--global-theme-color);
-  --adp-background-color-selected-other-month: var(--global-theme-color);
+  --adp-background-color: var(--sdk-global-white-bg);
+  --adp-background-color-hover: var(--sdk-gloabl-bg-secondary);
+  --adp-background-color-active: var(--sdk-gloabl-bg-secondary);
+  --adp-background-color-in-range: var(--sdk-gloabl-text-color);
+  --adp-background-color-in-range-focused: var(--sdk-gloabl-text-color);
+  --adp-background-color-selected-other-month-focused: var(--sdk-global-theme-color);
+  --adp-background-color-selected-other-month: var(--sdk-global-theme-color);
 
-  --adp-color: var(--gloabl-text-color);
-  --adp-color-secondary: var(--gloabl-text-color);
-  --adp-accent-color: var(--gloabl-text-color);
+  --adp-color: var(--sdk-gloabl-text-color);
+  --adp-color-secondary: var(--sdk-gloabl-text-color);
+  --adp-accent-color: var(--sdk-gloabl-text-color);
   --adp-color-current-date: var(--adp-accent-color);
   --adp-color-other-month: #9AA4B2;
   --adp-color-disabled: #aeaeae;
   --adp-color-disabled-in-range: #939393;
-  --adp-color-other-month-hover: var(--gloabl-text-color);
+  --adp-color-other-month-hover: var(--sdk-gloabl-text-color);
 
   --adp-border-color: #E4E5E7;
   --adp-border-color-inner: #E4E5E7;
@@ -45,8 +45,8 @@
   --adp-nav-action-size: 36px;
   --adp-nav-color-secondary: var(--adp-color-secondary);
 
-  --adp-day-name-color: var(--gloabl-text-color);
-  --adp-day-name-color-hover: var(--global-theme-color);
+  --adp-day-name-color: var(--sdk-gloabl-text-color);
+  --adp-day-name-color-hover: var(--sdk-global-theme-color);
 
   --adp-day-cell-width: 1fr;
   --adp-day-cell-height: 42px;
@@ -59,10 +59,10 @@
 
   --adp-cell-border-radius: 100px;
   --adp-cell-background-color-hover: var(--adp-background-color-hover);
-  --adp-cell-background-color-selected: var(--global-theme-color);
-  --adp-cell-background-color-selected-hover: var(--global-theme-color);
-  --adp-cell-background-color-in-range: var(--gloabl-border-color);
-  --adp-cell-background-color-in-range-hover: var(--gloabl-border-color);
+  --adp-cell-background-color-selected: var(--sdk-global-theme-color);
+  --adp-cell-background-color-selected-hover: var(--sdk-global-theme-color);
+  --adp-cell-background-color-in-range: var(--sdk-gloabl-border-color);
+  --adp-cell-background-color-in-range-hover: var(--sdk-gloabl-border-color);
 
   --adp-btn-height: 32px;
   --adp-btn-color: var(--adp-accent-color);

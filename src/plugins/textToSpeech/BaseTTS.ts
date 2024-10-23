@@ -48,7 +48,7 @@ class BaseTTS {
     bindEventsV3() {
         let me: any = this;
         let chatEle = me.hostInstance.chatEle;
-        chatEle.querySelector('.speaker-btn-mute').addEventListener('click', () => {
+        chatEle.querySelector('.speaker-btn-mute')?.addEventListener('click', () => {
             me.isSpeakerOn = true;
             if(me.OnSpeakerButtonClick){
                 me.OnSpeakerButtonClick();
@@ -59,7 +59,7 @@ class BaseTTS {
             chatEle.querySelector('.speaker-btn-speak').classList.add('show');
         });
 
-        chatEle.querySelector('.speaker-btn-speak').addEventListener('click', () => {
+        chatEle.querySelector('.speaker-btn-speak')?.addEventListener('click', () => {
             me.isSpeakerOn = false;
             var synth = window.speechSynthesis;
             synth.pause();

@@ -420,8 +420,16 @@ class KoreHelpers{
                     }
                     _lineBreakAdded = true;
                 } else if (txtArr[i].indexOf('---') === 0 || txtArr[i].indexOf('___') === 0) {
-                    txtArr[i] = '<hr/>' + txtArr[i].substring(3);
-                    _lineBreakAdded = true;
+                    let nextChar;
+                    if (txtArr[i].indexOf('---') === 0) {
+                        nextChar = txtArr[i].charAt(4);
+                    } else if (txtArr[i].indexOf('___') === 0) {
+                        nextChar = txtArr[i].charAt(4);
+                    }
+                    if ((nextChar !== '-') && (nextChar !== '_')) {
+                        txtArr[i] = '<hr/>' + txtArr[i].substring(3);
+                        _lineBreakAdded = true;
+                    }
                 }
                 var j;
                 // Matches Image markup ![test](http://google.com/image.png)
@@ -667,6 +675,16 @@ class KoreHelpers{
             return str.indexOf(search, start) !== -1;
           }
         // }
+    }
+
+    static allowEmojiShortcuts(config) {
+        this.helpers.nl2br = function (str, runEmojiCheck) {
+            if (config.enableEmojiShortcut) {
+                str = emojione.shortnameToImage(str);
+            }
+            str = str.replace(/(?:\r\n|\r|\n)/g, '<br />');
+            return str;
+        }
     }
 } 
 export default KoreHelpers

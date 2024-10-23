@@ -56,7 +56,7 @@ export function Chat(props: any) {
     }
 
     const handleConversationAction = (action: any) => {
-        hostInstance.welcomeScreenState = true;
+        hostInstance.isWelcomeScreenOpened = true;
         hostInstance.chatEle.classList.remove('minimize-chat');
         hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
         hostInstance.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');

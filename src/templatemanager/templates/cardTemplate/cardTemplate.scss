@@ -9,7 +9,7 @@
 
     .card-warpper-info {
         border-radius: 4px;
-        border: 1px solid var(--gloabl-border-color);
+        border: 1px solid var(--sdk-gloabl-border-color);
         background: var(--card-main-wrapper-bg);
         display: flex;
         padding: 16px;
@@ -55,7 +55,7 @@
         .tag-name {
             flex-shrink: 0;
             border-radius: 24px;
-            background: var(--gloabl-bg-secondary);
+            background: var(--sdk-gloabl-bg-secondary);
             padding: 2px 10px;
             color: var(--kore-green-kore-green-0, #04AF5F);
             text-align: center;
@@ -91,7 +91,7 @@
 
         .clickble-text {
             @extend .amount-text;
-            color: var(--global-theme-color);
+            color: var(--sdk-global-theme-color);
         }
     }
 
@@ -179,7 +179,7 @@
         flex-shrink: 0;
         h1{
             width: 100%;
-            color: var(--gloabl-text-color);
+            color: var(--sdk-gloabl-text-color);
             font-size: 14px;
             font-weight: 700;
             line-height: normal;
@@ -197,7 +197,7 @@
             cursor: pointer;
             svg{
                 path{
-                    fill: var(--gloabl-text-color);
+                    fill: var(--sdk-gloabl-text-color);
                 }
             }
         }
@@ -223,7 +223,7 @@
         margin-bottom: 12px;
 
         h1 {
-            color: var(--gloabl-text-color);
+            color: var(--sdk-gloabl-text-color);
             font-size: 18px;
             font-weight: 700;
             line-height: 14px;
@@ -232,9 +232,9 @@
 
         span {
             border-radius: 4px;
-            background: var(--gloabl-bg-secondary);
+            background: var(--sdk-gloabl-bg-secondary);
             flex-shrink: 0;
-            color: var(--gloabl-text-color);
+            color: var(--sdk-gloabl-text-color);
             text-align: right;
             font-size: 14px;
             font-weight: 700;
@@ -262,7 +262,7 @@
             }
 
             p {
-                color: var(--gloabl-text-color);
+                color: var(--sdk-gloabl-text-color);
                 font-size: 14px;
                 font-weight: 400;
                 line-height: normal;
@@ -277,7 +277,7 @@
             gap: 14px;
 
             p {
-                color: var(--gloabl-text-color);
+                color: var(--sdk-gloabl-text-color);
                 font-size: 14px;
                 font-weight: 600;
                 line-height: 14px;
@@ -318,7 +318,7 @@
             p {
                 font-size: 14px;
                 line-height: 20px;
-                color: var(--gloabl-text-color);
+                color: var(--sdk-gloabl-text-color);
                 font-weight: 500;
             }
         }
@@ -327,7 +327,7 @@
             p {
                 font-size: 20px;
                 font-weight: 700;
-                color: var(--gloabl-text-color);
+                color: var(--sdk-gloabl-text-color);
             }
         }
     }
@@ -343,7 +343,7 @@
         display: inline-block;
         width: 100%;
         border-radius: 6px;
-        border: 1px solid var(--gloabl-border-color);
+        border: 1px solid var(--sdk-gloabl-border-color);
         margin: 2px 0;
         .accordion_heading{
             width: 100%;
@@ -352,7 +352,7 @@
             align-items: center;
             gap: 10px;
             min-height: 50px;
-            background: var(--gloabl-bg-secondary);
+            background: var(--sdk-gloabl-bg-secondary);
             border: 0;
             padding: 10px;
             &[aria-expanded="true"]{
@@ -361,7 +361,7 @@
                 }
             }
             p{
-                color: var(--gloabl-text-color);
+                color: var(--sdk-gloabl-text-color);
                 font-size: 14px;
                 font-weight: 600;
                 line-height: normal;
@@ -376,7 +376,7 @@
                 cursor: pointer;
                 svg{
                     path{
-                        fill: var(--gloabl-text-color);
+                        fill: var(--sdk-gloabl-text-color);
                     }
                 }
             }
@@ -408,7 +408,7 @@
         padding: 10px 10px 10px 0px;
         align-items: flex-start;
         gap: 15px;
-        border-bottom: 1px solid var(--gloabl-border-color);
+        border-bottom: 1px solid var(--sdk-gloabl-border-color);
         &:last-child{
             border: 0;
         }
@@ -416,13 +416,13 @@
         .left-data{
             width: 100%;
             h1{
-                color: var(--gloabl-text-color);
+                color: var(--sdk-gloabl-text-color);
                 font-size: 14px;
                 font-weight: 500;
                 line-height: 20px;
             }
             p{
-                color: var(--gloabl-text-color);
+                color: var(--sdk-gloabl-text-color);
                 font-size: 13px;
                 font-weight: 400;
                 line-height: 20px;
@@ -431,7 +431,7 @@
         .right-data{
             flex-shrink: 0;
             p{
-                color: var(--gloabl-text-color);
+                color: var(--sdk-gloabl-text-color);
                 text-align: right;
                 font-size: 12px;
                 font-weight: 500;
@@ -447,10 +447,10 @@
     width: 100%;
     .rugular-card-temp{
         border-radius: 8px;
-        background: var(--global-white-bg);
+        background: var(--sdk-global-white-bg);
         display: inline-block;
         width: 100%;
-        box-shadow: 0px 1px 2px 0px var(--gloabl-border-color);
+        box-shadow: 0px 1px 2px 0px var(--sdk-gloabl-border-color);
         .card-r-h-1{
             width: 100%;        
             display: flex;
@@ -461,7 +461,7 @@
                 width: 4px;
                 flex-shrink: 0;
                 border-radius: 9px;
-                background: var(--global-theme-color);
+                background: var(--sdk-global-theme-color);
             }
             .img-block{
                 flex-shrink: 0;
@@ -497,7 +497,7 @@
                 // white-space: nowrap;
                 // text-overflow: ellipsis;
                 h1{
-                    color: var(--gloabl-text-color);
+                    color: var(--sdk-gloabl-text-color);
                     font-size: 16px;
                     font-weight: 600;
                     line-height: normal;
@@ -507,7 +507,7 @@
                     // width: 100%;
                 }
                 p{
-                    color: var(--gloabl-text-color);
+                    color: var(--sdk-gloabl-text-color);
                     font-size: 14px;
                     font-weight: 400;
                     line-height: normal;
@@ -521,20 +521,20 @@
         }
         .r-header-card{
             border-radius: 8px 8px 0px 0px;
-            background: var(--gloabl-bg-secondary);
+            background: var(--sdk-gloabl-bg-secondary);
             padding: 14px;
-            color: var(--gloabl-text-color);
+            color: var(--sdk-gloabl-text-color);
             font-size: 14px;
             font-weight: 500;
             line-height: 20px;
-            border: 1px solid var(--gloabl-border-color);
+            border: 1px solid var(--sdk-gloabl-border-color);
             h1{
                 margin: 0;
             }
         }
         .r-body-card{
             padding: 10px 14px;
-            border: 1px solid var(--gloabl-border-color);
+            border: 1px solid var(--sdk-gloabl-border-color);
             border-radius: 0px 0px 8px 8px;
             display: flex;
             flex-direction: column;
@@ -554,7 +554,7 @@
                     }
                 }
                 p{
-                    color: var(--gloabl-text-color);
+                    color: var(--sdk-gloabl-text-color);
                     font-size: 12px;
                     font-weight: 500;
                     line-height: 19px;
@@ -565,11 +565,11 @@
         .btn-action-card{
             width: 100%;
             border-radius: 0px 0px 8px 8px;
-            background: var(--global-theme-color);
-            border: 1px solid var(--global-theme-color);
+            background: var(--sdk-global-theme-color);
+            border: 1px solid var(--sdk-global-theme-color);
             padding: 13px;
             text-align: center;
-            color: var(--global_white);
+            color: var(--sdk-global-white);
             font-size: 14px;
             font-style: normal;
             font-weight: 500;

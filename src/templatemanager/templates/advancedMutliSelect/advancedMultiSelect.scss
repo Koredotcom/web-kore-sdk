@@ -5,7 +5,7 @@
     gap: 16px;
 
     h1 {
-        color: var(--gloabl-text-color);
+        color: var(--sdk-gloabl-text-color);
         font-size: 14px;
         font-weight: 700;
         line-height: normal;
@@ -25,7 +25,7 @@
             }
 
             h1 {
-                color: var(--gloabl-text-color);
+                color: var(--sdk-gloabl-text-color);
                 font-size: 14px;
                 font-weight: 700;
                 line-height: normal;
@@ -56,8 +56,8 @@
 
                 .list-data-temp {
                     border-radius: 4px;
-                    border: 1px solid var(--gloabl-border-color);
-                    background: var(--global-white-bg);
+                    border: 1px solid var(--sdk-gloabl-border-color);
+                    background: var(--sdk-global-white-bg);
                     display: flex;
                     padding: 12px;
                     align-items: flex-start;
@@ -104,14 +104,14 @@
                             width: 100%;
 
                             h1 {
-                                color: var(--gloabl-text-color);
+                                color: var(--sdk-gloabl-text-color);
                                 font-size: 14px;
                                 font-weight: 700;
                                 line-height: normal;
                             }
 
                             p {
-                                color: var(--gloabl-text-color);
+                                color: var(--sdk-gloabl-text-color);
                                 font-size: 12px;
                                 font-weight: 400;
                                 line-height: normal;

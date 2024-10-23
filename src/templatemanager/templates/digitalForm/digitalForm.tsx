@@ -2,6 +2,7 @@ import BaseChatTemplate from '../baseChatTemplate';
 import './digitalForm.scss';
 import { h } from 'preact';
 import { getHTML } from '../../base/domManager';
+import KoreHelpers from '../../../utils/helpers';
 
 export function DigitalFormExtension(props: any) {
     const hostInstance = props.hostInstance;
@@ -41,6 +42,7 @@ export function DigitalFormExtension(props: any) {
 export function DigitalForm(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
+    const helpers = KoreHelpers.helpers
     const handleForm = (data: any, msgId: any) => {
         if (data.renderType == 'inline') {
             hostInstance.chatEle.querySelector(`.inline-iframe-${msgId}`).style.display = 'block';
@@ -65,7 +67,7 @@ export function DigitalForm(props: any) {
                             </svg>
                         </div>
                         <h1></h1>
-                        <p>{msgData?.message?.[0]?.component?.payload?.text}</p>
+                        <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData?.message?.[0]?.component?.payload?.text, "bot") }}></p>
                         {
                             msgData.message[0].component.payload.buttons.map((ele: any) => (
                                 <button className="link-btn" onClick={() => handleForm(msgData?.message?.[0]?.component?.formData, msgData.messageId)}>{ele.title}</button>

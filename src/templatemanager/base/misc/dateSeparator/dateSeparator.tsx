@@ -2,7 +2,8 @@ import './dateSeparator.scss';
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
 export function DateSeparator(props: any) {
-    const text = props.msgData;
+    const text = props.msgData.text;
+    const type = props.msgData.type
     const hostInstance = props.hostInstance;
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
     hostInstance.on('onBrandingUpdate', function (event: any) {
@@ -15,7 +16,7 @@ export function DateSeparator(props: any) {
     }
 
     return (
-        <div className={dsStyle[brandingInfo.body.time_stamp.separator]}>
+        <div className={type + ' ' + dsStyle[brandingInfo.body.time_stamp.separator]}>
             <div className="line-border"></div>
             <div className="date-text">{text}</div>
             <div className="line-border"></div>

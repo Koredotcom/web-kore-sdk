@@ -1,9 +1,8 @@
 import BaseChatTemplate from '../../../../templatemanager/templates/baseChatTemplate';
 import './answerTemplate.scss';
-import { h, Fragment } from 'preact';
-import { useEffect, useState, useRef } from 'preact/hooks';
-
-
+import { h, Fragment, render  } from 'preact';
+import { useEffect, useState } from 'preact/hooks';
+import {CarouselImagePopupTemplate} from '../carouselImagePopupTemplate/carouselImagePopupTemplate';
 export function Answers(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
@@ -14,8 +13,6 @@ export function Answers(props: any) {
     const [answersObj, setAnswersObj]: any = useState({ "generative": { "answerFragments": [], "sources": [] }});
     const [modelType, setModelType] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(0);
-    const [imageObj, setImageObj] = useState({url:'',isShow:false});
-    const imgSrcRef = useRef('');
 
     useEffect(() => {
         const results = messageObj?.msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.snippet_content;
@@ -31,7 +28,7 @@ export function Answers(props: any) {
         let sources_data: Array<Object> = [];
         data?.forEach((item: any) => {
             const isExist = sources_data.find((source: any) => source.id === item?.sources[0]?.doc_id);
-            if (!isExist) sources_data.push({ "title": item?.sources[0]?.title, "id": item?.sources[0]?.doc_id, "url": item?.sources[0]?.url, "image_url": item?.sources[0]?.image_url });
+            if (!isExist) sources_data.push({ "title": item?.sources[0]?.title, "id": item?.sources[0]?.doc_id, "url": item?.sources[0]?.url, "image_url": item?.sources[0]?.image_url||[] });
         });
         data?.forEach((answer: any) => {
             const index = sources_data.findIndex((source: any) => source.id === answer?.sources[0]?.doc_id);
@@ -45,11 +42,14 @@ export function Answers(props: any) {
         window.open(url, '_blank'); 
     }
 
-    const showFileUrl = (event:any ,url:string, show:boolean) => {
-        setImageObj({"url": url, isShow:false});
-        setTimeout(()=>{
-           if(show) setImageObj(preState=>({...preState,isShow:show}));
-        },200)
+    const showFileUrl = (image_urls: any, title:string) => {
+            // Create a div element to hold the dynamic content
+            const tempDiv = document.createElement('div');
+            tempDiv.id = 'sa-img-carousel-popup-container';
+            // Append to the body
+            document.body.appendChild(tempDiv);
+            const sourceData = {"image_urls":image_urls,"title":title}
+            render(<CarouselImagePopupTemplate data={sourceData}/>,tempDiv);
     }
 
 
@@ -62,22 +62,17 @@ export function Answers(props: any) {
                             <div class="sa-answer-result-sub-block">
                                 {
                                     answersObj.generative?.answerFragment?.map((answer: any) =>
-                                        <span class="sa-answer-result-heading" onMouseOver={()=>setSelectedIndex(answer?.id + 1)} onMouseOut={()=>setSelectedIndex(0)}>{answer?.title} <span><sup>{answer?.id + 1}</sup></span></span>
+                                        <span class="sa-answer-result-heading" onMouseOver={()=>setSelectedIndex(answer?.id + 1)} onMouseOut={()=>setSelectedIndex(0)} dangerouslySetInnerHTML={{__html:answer?.title}}> <span><sup>{answer?.id + 1}</sup></span></span>
                                     )
                                 }                                
-                            </div>
-                            <div className="sa-file-popup-img-container">
-                            {<div className={`sa-file-popup-img ${!imageObj?.isShow&&'d-none'} `}>
-                                <img id="sa-file-img" src={imageObj.url}/>
-                                </div>}
                             </div>
                             <div className="sa-answer-gen-footer">
                                     {
                                         answersObj?.generative?.sources?.map((source: any, index: number) => (
                                             <div class="sa-answer-result-footer" ><span onClick={()=>redirectToURL(source?.url)}>{index + 1}. <span className={`${(selectedIndex===index+1)&&'selected'}`}>{source?.title || source?.url}</span></span>
-                                             {source?.image_url&&
+                                             {(source?.image_url?.length > 0)&&
                                             <Fragment>
-                                                <span className="sa-answer-file-url-block" ><span className="sa-answer-file-url-icon" onMouseOver={($event)=>showFileUrl($event,source?.image_url,true)} onMouseOut={($event)=>showFileUrl($event,'',false)}>i</span>
+                                                <span className="sa-answer-file-url-block" ><span className="sa-url-icon-preview" onClick={()=>showFileUrl(source?.image_url,source?.title || source?.url)}><span className="sa-answer-file-url-icon" >i</span> <span className="sa-preview-text">Preview</span></span>
                                                 </span>
                                             </Fragment>
                                              }
@@ -133,7 +128,7 @@ export function Answers(props: any) {
                                       {
                                           "chunk_id": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.chunk_id,
                                           "doc_id": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.doc_id||'',
-                                          "image_url": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.image_url||'',
+                                          "image_url": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.image_url||[],
                                           "source_id": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source_id||'',
                                           "source_type": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source_name||'',
                                           "title": msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.source||'',
@@ -173,6 +168,8 @@ class TemplateAnswers extends BaseChatTemplate {
         return this.getHTMLFromPreact(answerTemplateCheck, msgData, this.hostInstance);
     }
 }
+
+
 
 export default TemplateAnswers;
 

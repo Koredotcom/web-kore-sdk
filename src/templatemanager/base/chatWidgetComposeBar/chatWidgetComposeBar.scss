@@ -19,8 +19,8 @@
             right: 8px;
             width: 16px;
             height: 16px;
-            background: var(--global-white-bg);
-            border: 1px solid var(--gloabl-border-color);
+            background: var(--sdk-global-white-bg);
+            border: 1px solid var(--sdk-gloabl-border-color);
             border-radius: 32px;
             display: flex;
             align-items: center;
@@ -96,10 +96,10 @@
                     cursor: pointer;  
                     svg{
                         path{
-                            fill: var(--global_white);
+                            fill: var(--sdk-global-white);
                         }
                         rect{
-                            fill: var(--global_white);
+                            fill: var(--sdk-global-white);
                         }
                     }             
                 }
@@ -131,7 +131,7 @@
                     background: transparent;
                     border: 0;
                     padding: 2px 8px;
-                    color: var(--global-theme-color);
+                    color: var(--sdk-global-theme-color);
                     text-align: center;
                     font-size: 11px;
                     font-weight: 600;
@@ -217,7 +217,7 @@
                 }
                 svg{
                     path{
-                        fill: var(--gloabl-text-color);
+                        fill: var(--sdk-gloabl-text-color);
                     }
                 }
             }
@@ -277,13 +277,13 @@
                     color: var(--chat-widget-compose-bar-text-area-placeholder-color);
                 }
                 &:focus{
-                    border: 0.5px solid var(--global-theme-color);
+                    border: 0.5px solid var(--sdk-global-theme-color);
                 }
                 &:active{
-                    border: 0.5px solid var(--global-theme-color);
+                    border: 0.5px solid var(--sdk-global-theme-color);
                 }
                 &:focus-visible{
-                    outline-color: var(--global-theme-color);
+                    outline-color: var(--sdk-global-theme-color);
                     outline-offset: 0px;
                     outline-style: solid;
                 }
@@ -337,7 +337,7 @@
         .send-btn{
             width: 41px;
             height: 44px;
-            background: var(--global-theme-color);
+            background: var(--sdk-global-theme-color);
             border-radius: 4px;
             padding: 0;
             border: 0;
@@ -349,7 +349,7 @@
             margin-left: 8px;
             svg{
                 path{
-                    fill: var(--global_white);
+                    fill: var(--sdk-global-white);
                 }
             }
             &.show{
@@ -370,21 +370,21 @@
         width: 360px;
         right: 20px;
         border-radius: 16px;
-        background: var(--global-white-bg);
+        background: var(--sdk-global-white-bg);
         box-shadow: 0px 32px 64px -12px rgba(16, 24, 40, 0.14);
         &::before{
             content: "";
             position: absolute;
             bottom: -8px;
             right: 64px;
-            // border-color: var(--global_white) transparent transparent transparent;
+            // border-color: var(--sdk-global-white) transparent transparent transparent;
             // border-style: solid;
             // border-width: 15px;
             width: 16px;
             height: 16px;
             background: #fff;
             transform: rotate(45deg);
-            background: var(--global-white-bg);
+            background: var(--sdk-global-white-bg);
             filter: drop-shadow(0px 24px 48px rgba(16, 24, 40, 0.18));
         }
         &.emoji-only::before {
@@ -411,7 +411,7 @@
     border-radius: 0px 0px 4px 4px;
     padding: 16px 16px 0px 16px;
     .select-file-block{
-        background: var(--global-white-bg);
+        background: var(--sdk-global-white-bg);
         border-radius: 4px;
         padding: 16px;
         display: flex;
@@ -420,15 +420,15 @@
         .inputfile-btn{
             width: 100%;
             position: relative;
-            background: var(--global-white-bg);
-            border: 1px solid var(--gloabl-border-color);
+            background: var(--sdk-global-white-bg);
+            border: 1px solid var(--sdk-gloabl-border-color);
             border-radius: 4px;
             padding: 12px 20px;
             text-align: center;
             font-weight: 500;
             font-size: 16px;
             line-height: 24px;
-            color: var(--global-theme-color);
+            color: var(--sdk-global-theme-color);
             height: 48px;
             gap: 8px;
             display: flex;
@@ -436,7 +436,7 @@
             justify-content: center;
             svg{
                 path{
-                    fill: var(--global-theme-color);
+                    fill: var(--sdk-global-theme-color);
                 }
             }
             input{
@@ -458,7 +458,7 @@
 
 // Attached Items
 .uploaded-attachment-data{
-    background: var(--global-white-bg);
+    background: var(--sdk-global-white-bg);
     border-radius: 4px;
     display: inline-block;
     width: 100%;
@@ -475,7 +475,7 @@
         .img-block{
             width: 56px;
             height: 56px;
-            background: var(--gloabl-bg-secondary);
+            background: var(--sdk-gloabl-bg-secondary);
             border-radius: 4px;
             flex-shrink: 0;
             margin-right: 8px;
@@ -489,18 +489,18 @@
                 font-weight: 500;
                 font-size: 14px;
                 line-height: 17px;
-                color: var(--gloabl-text-color);
+                color: var(--sdk-gloabl-text-color);
                 margin-bottom: 8px;
             }
             .progress-percentage{
                 height: 5px;
                 width: 100%;
-                background: var(--gloabl-bg-secondary);
+                background: var(--sdk-gloabl-bg-secondary);
                 border-radius: 4px;
                 margin: 8px 0;
                 div{
                     height: 100%;
-                    background: var(--global-theme-color);
+                    background: var(--sdk-global-theme-color);
                     border-radius: 4px;
                     width: 70%;
                 }
@@ -514,7 +514,7 @@
                     font-weight: 400;
                     font-size: 12px;
                     line-height: 18px;
-                    color: var(--gloabl-text-color);
+                    color: var(--sdk-gloabl-text-color);
                 }
             }  
         }
@@ -546,10 +546,10 @@
     align-items: center;
     gap: 20px;
     padding: 4px 0;
-    background: var(--global-white-bg);
+    background: var(--sdk-global-white-bg);
     z-index: 9;
     p{
-        color: var(--gloabl-text-color);
+        color: var(--sdk-gloabl-text-color);
         font-size: 12px;
         font-weight: 400;
         line-height: 20px;
@@ -560,8 +560,8 @@
         width: 8px;
         height: 8px;
         border-radius: 5px;
-        background-color: var(--global-theme-color);
-        color: var(--global-theme-color);
+        background-color: var(--sdk-global-theme-color);
+        color: var(--sdk-global-theme-color);
         animation: dot-flashing 1s infinite linear alternate;
         animation-delay: 0.5s;
         &::before{
@@ -573,8 +573,8 @@
             width: 8px;
             height: 8px;
             border-radius: 5px;
-            background-color: var(--global-theme-color);
-            color: var(--global-theme-color);
+            background-color: var(--sdk-global-theme-color);
+            color: var(--sdk-global-theme-color);
             animation: dot-flashing 1s infinite alternate;
             animation-delay: 0s;
         }
@@ -587,8 +587,8 @@
             width: 8px;
             height: 8px;
             border-radius: 5px;
-            background-color: var(--global-theme-color);
-            color: var(--global-theme-color);
+            background-color: var(--sdk-global-theme-color);
+            color: var(--sdk-global-theme-color);
             animation: dot-flashing 1s infinite alternate;
             animation-delay: 1s;
         }
@@ -601,7 +601,7 @@
     align-items: center;
     justify-content: center;
     padding: 6px 16px;
-    background: var(--global-white-bg);
+    background: var(--sdk-global-white-bg);
     height: 18px;
     p {
         font-weight: 500;

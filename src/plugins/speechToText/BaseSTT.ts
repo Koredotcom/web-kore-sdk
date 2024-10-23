@@ -51,7 +51,7 @@ class BaseSTT {
     bindEventsV3() {
         let me: any = this;
         let chatEle = me.hostInstance.chatEle;
-        chatEle.querySelector('.voice-compose-btn').addEventListener('click', () => {
+        chatEle.querySelector('.voice-compose-btn')?.addEventListener('click', () => {
             if(me.onRecordButtonClick){
                 me.onRecordButtonClick();
             }
@@ -70,7 +70,7 @@ class BaseSTT {
             chatEle.querySelector('.key-board').style.display = 'none';
         });
 
-        chatEle.querySelector('.voice-compose-btn-recording').addEventListener('click', () => {
+        chatEle.querySelector('.voice-compose-btn-recording')?.addEventListener('click', () => {
             if (chatEle.querySelector('.voice-msg-bubble').textContent.trim() !== '') {
                 me.stop();
                 setTimeout(function () {
@@ -83,7 +83,7 @@ class BaseSTT {
             }
         });
 
-        chatEle.querySelector('.voice-compose-btn-end').addEventListener('click', () => {
+        chatEle.querySelector('.voice-compose-btn-end')?.addEventListener('click', () => {
             if (chatEle.querySelector('.voice-msg-bubble').textContent.trim() !== '') {
                 chatEle.querySelector('.voice-msg-bubble').classList.remove('speak-done-bg');
                 me.hostInstance.sendMessageToBot(chatEle.querySelector(".voice-msg-bubble").textContent);
@@ -104,7 +104,7 @@ class BaseSTT {
             }
         });
 
-        chatEle.querySelector('.cancel-sepak').addEventListener('click', () => {
+        chatEle.querySelector('.cancel-sepak')?.addEventListener('click', () => {
             me.stop();
             chatEle.querySelector('.voice-msg-bubble').textContent = '';
             chatEle.querySelector('.voice-speak-msg-info').style.display = 'none';
@@ -122,7 +122,7 @@ class BaseSTT {
             chatEle.querySelector('.key-board').style.display = 'block';
         });
 
-        chatEle.querySelector('.remove-voice-text').addEventListener('click', () => {
+        chatEle.querySelector('.remove-voice-text')?.addEventListener('click', () => {
             chatEle.querySelector('.voice-msg-bubble').textContent = '';
             chatEle.querySelector('.voice-speak-msg-info').style.display = 'none';
             if (me.recognizing) {
@@ -147,14 +147,14 @@ class BaseSTT {
             }
         });
 
-        chatEle.querySelector('.voice-compose-btn-recording').addEventListener('keydown', (event: any) => {
+        chatEle.querySelector('.voice-compose-btn-recording')?.addEventListener('keydown', (event: any) => {
             if (event.key === 'Enter' && chatEle.querySelector('.voice-msg-bubble').textContent.trim() !== '') {
                 chatEle.querySelector('.voice-compose-btn-recording').click();
                 chatEle.querySelector('.voice-compose-btn-end').focus();
             }
         });
 
-        chatEle.querySelector('.voice-compose-btn-end').addEventListener('keydown', (event: any) => {
+        chatEle.querySelector('.voice-compose-btn-end')?.addEventListener('keydown', (event: any) => {
             if (event.key === 'Enter' && chatEle.querySelector('.voice-msg-bubble').textContent.trim() !== '') {
                 chatEle.querySelector('.voice-compose-btn-end').click();
             }

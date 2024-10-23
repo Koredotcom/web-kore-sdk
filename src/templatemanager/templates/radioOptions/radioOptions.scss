@@ -5,7 +5,7 @@
     flex-direction: column;
     gap: 20px;
     h1{
-        color: var(--gloabl-text-color);
+        color: var(--sdk-gloabl-text-color);
         font-size: 14px;
         font-weight: 700;
         line-height: normal;
@@ -31,7 +31,7 @@
             margin: 0;
             padding-left: 36px;
             .radio-title{
-                color: var(--gloabl-text-color);
+                color: var(--sdk-gloabl-text-color);
                 font-size: 14px;
                 font-weight: 500;
                 line-height: normal;
@@ -65,8 +65,8 @@
             + .radio-label{
                 &::before{
                     content: "";
-                    background-color: var(--global-theme-color);
-                    border: 1px solid var(--global-theme-color);
+                    background-color: var(--sdk-global-theme-color);
+                    border: 1px solid var(--sdk-global-theme-color);
                     box-shadow: var(--radio-checked-shadow);
                 }
             }

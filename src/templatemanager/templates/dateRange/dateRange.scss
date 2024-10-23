@@ -12,7 +12,7 @@
         flex-shrink: 0;
         h1{
             width: 100%;
-            color: var(--gloabl-text-color);
+            color: var(--sdk-gloabl-text-color);
             font-size: 14px;
             font-weight: 700;
             line-height: normal;
@@ -30,7 +30,7 @@
             cursor: pointer;
             svg{
                 path{
-                    fill: var(--gloabl-text-color);
+                    fill: var(--sdk-gloabl-text-color);
                 }
             }
         }

@@ -25,10 +25,14 @@ export function WelcomeScreenContainer(props: any) {
 
     const handleStartEvent = (e: any) => {
         if (e.action.type.toLowerCase() == 'postback' || e.action.type.toLowerCase() == 'text') {
-            const timeout = hostInstance.historyLoading ? 3500 : 200
-            setTimeout(() => {
+            if (hostInstance.isWelcomeScreenOpened) {
                 hostInstance.sendMessage(e.action.value, { renderMsg: e.title });
-            }, timeout);
+            } else {
+                let event = hostInstance.config.loadHistory ? 'historyComplete' : 'onWSOpen';
+                hostInstance.on(event, (ev: any) => {
+                    hostInstance.sendMessage(e.action.value, { renderMsg: e.title });
+                }, true);
+            }
             handleEventsWelcomeScreen();
         } else if ((e.action.type == 'url' || e.action.type == 'web_url') && e.action.value) {
             let link = e.action.value;
@@ -40,12 +44,17 @@ export function WelcomeScreenContainer(props: any) {
     }
 
     const handleEventsWelcomeScreen = () => {
-        hostInstance.welcomeScreenState = true;
+        hostInstance.isWelcomeScreenOpened = true;
         if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
             hostInstance.setLocalStoreItem('kr-cw-welcome-chat', true);
         }
         hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container')?.classList.add('fadeIn');
         hostInstance.chatEle.querySelector('.welcome-chat-section')?.classList.remove(hostInstance.config.branding.chat_bubble.expand_animation);
+        if (!hostInstance.config.botOptions.openSocket && !hostInstance.isSocketOpened) {
+            setTimeout(() => {
+                hostInstance.bot.logInComplete();
+            }, 2000);
+        }
     }
 
     if (brandingInfo.welcome_screen.static_links.show && brandingInfo.welcome_screen.static_links.layout == 'carousel') {
@@ -174,14 +183,14 @@ export function WelcomeScreenContainer(props: any) {
                                 ))
                             }
                         </div>}
-                        {brandingInfo.welcome_screen.starter_box.quick_start_buttons.show && brandingInfo.welcome_screen.starter_box.quick_start_buttons.input === 'button' && <button className="start-conv-button">
+                        {brandingInfo.welcome_screen.starter_box.quick_start_buttons.input === 'button' && <button className="start-conv-button">
                             <span class="start-conv-value" data-value={brandingInfo.welcome_screen.starter_box.quick_start_buttons.action.value} >{brandingInfo.welcome_screen.starter_box.quick_start_buttons.action.value}</span>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path d="M7 5L12 10L7 15" stroke="white" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </button>}
 
-                        {brandingInfo.welcome_screen.starter_box.quick_start_buttons.show && brandingInfo.welcome_screen.starter_box.quick_start_buttons.input === 'search' && <div className="start-conv-search-block">
+                        {brandingInfo.welcome_screen.starter_box.quick_start_buttons.input === 'search' && <div className="start-conv-search-block">
                             <div className="start-conv-search">
                                 <div className="search-icon">
                                     <svg width="16" height="17" viewBox="0 0 16 17" fill="none">

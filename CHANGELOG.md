@@ -1,3 +1,39 @@
+### 11.6.0
+* Release Sept 28, 2024
+* Breaking changes
+  * For the implementations with method override initShow need to be revisted with the newer implementation. chatWindowHtml generation got moved to new method initUI. This method will create the chatwindow ui
+  * `loadHistory` key deprecated in kore config. Please use `history.enable` in kore config for enabling disabling chat history
+  * `messageHistoryLimit` key deprecated in kore config. Please use `history.recent.batchSize` in kore config for setting number of messages to fetch in recent chat history
+  * `allowLocation` key deprecated in kore config. Please use `location.enable` in kore config for enabling disbaling location
+  * `googleMapsAPIKey` key deprecated in kore config. Please use `location.googleMapsAPIKey` in kore config for providing Google Maps API Key
+  * `enableThemes` now enabled by default in kore config
+* Features
+  * added new key `enableEmojiShortcut` in kore config. If enabled then emoji shortcut text will be converted to emoji in user input.
+  * some keys in the kore config can be overridden using the theme editor in the builder. Please refer [here](https://docs.kore.ai/xo/channels/add-web-mobile-client/#virtual-assistant-theme-design) for more details
+* Bug fixes
+  * minor bug fixes
+
+### 11.5.1
+* Release Sept 14, 2024
+* Bug fixes
+  * chat window position issue fix
+  * dropdown template selected option name display issue fix(v2)
+
+### 11.5.0
+* Release Aug 31, 2024
+* Features
+  * added new checklist template. Please find the relevant JSON and screenshot [here](https://github.com/Koredotcom/web-kore-sdk/tree/v3/dev/docs/templates/checkListTemplate)
+  * added optional delimiter key as the connecting word/character between the start date and end date for date range template. Please find the JSON [here](https://github.com/Koredotcom/web-kore-sdk/tree/v3/dev/docs/templates/dateRangePickerTemplate#message-payload)
+* Bug fixes
+  * intermittent duplicate user messages issue fix
+  * attachments bug fixes
+  * fixed reading issue for messages when agent is connected
+
+### 11.4.1
+* Release Aug 10, 2024
+* Bug fixes
+  * agent desktop ice servers config changed
+
 ### 11.4.0
 * Release July 27, 2024
 * Bug fixes

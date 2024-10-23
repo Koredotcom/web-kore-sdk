@@ -125,6 +125,13 @@ export function Carousel(props: any) {
             });
     
             updateButtonsView();
+
+            const checkForButtonsVisibility = setInterval(() => {
+                if (btnsParentDiv.offsetWidth > 0) {
+                    updateButtonsView();
+                    clearInterval(checkForButtonsVisibility);
+                }
+            }, 300);
         }, 50);
         return (
             <div className="list-template-carousel-wrapper" id={msgData.messageId}>

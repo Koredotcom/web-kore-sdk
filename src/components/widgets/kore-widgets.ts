@@ -3882,7 +3882,7 @@ bindTemplateEvents  (ele:any, templateType:any, bindingData:any) {
 
 
 
-getHTMLTemplate  (responseData:any, xhrObject:any) {
+getHTMLTemplate  (responseData:any, xhrObject:any, timeout: any = 100) {
   var _self:any = this;
 
   var dataHTML:any;
@@ -3996,7 +3996,7 @@ getHTMLTemplate  (responseData:any, xhrObject:any) {
         } else {
           KoreGraphAdapter.drawD3Pie(responseData, dimens, '.widgetContParent#' + xhrObject.passedkey.subpanel + ' #piechart', 12);
         }
-      }, 100);
+      }, timeout);
     } else if (xhrObject.passedkey.widgetTemplate === 'linechart') {
       var dataHTML = (<any>$(_self.getTemplate("lineChartTemplate"))).tmplProxy({
         'tempdata': responseData,
@@ -4017,7 +4017,7 @@ getHTMLTemplate  (responseData:any, xhrObject:any) {
         _self.bindTemplateEvents(dataHTML, 'lineChartTemplate');
 
         KoreGraphAdapter.drawD3lineChartV2(responseData, dimens, '.widgetContParent#' + xhrObject.passedkey.subpanel + ' #linechart', 12);
-      }, 100);
+      }, timeout);
     } else if (xhrObject.passedkey.widgetTemplate === 'barchart') {
       var dataHTML = (<any>$(_self.getTemplate("barChartTemplate"))).tmplProxy({
         'tempdata': responseData,
@@ -4062,7 +4062,7 @@ getHTMLTemplate  (responseData:any, xhrObject:any) {
         //   KoreGraphAdapter.drawD3Pie(responseData, dimens, '.widgetContParent#' + xhrObject.passedkey.subpanel + ' #piechart', 12);
         // }
 
-      }, 100);
+      }, timeout);
     } else if (xhrObject.passedkey.widgetTemplate === 'ActionItems') {
       dataHTML = (<any>$(_self.getTemplate("ActionItems"))).tmplProxy({
         'tempdata': responseData,

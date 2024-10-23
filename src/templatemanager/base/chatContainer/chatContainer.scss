@@ -2,7 +2,7 @@
 @import '../variables.scss';
 
 .kore-chat-window-main-section {
-  position: absolute;
+  position: fixed;
   height: calc(100% - 136px);
   border-radius: 4px;
   right: 40px;
@@ -82,7 +82,7 @@
     width: calc(100% - 20px);
     height: calc(100% - 115px);
     right: 10px;
-    bottom: 75px;
+    bottom: 40px;
     max-width: 100%;
   }
   &.minimize-chat{

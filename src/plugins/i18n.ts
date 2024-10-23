@@ -1,9 +1,10 @@
 class Korei18nPlugin {
-    static config={
-        rtlLanguages:['ar'],
-        availableLanguages:['en','ar'],//shown as list of available languages in chat window header to select
-        defaultLanguage:"en",//default selection from above list
-        languageStrings:{   //any additional language can be added in this object by adding the key in availableLanguages
+    name = 'Korei18nPlugin';
+    config = {
+        rtlLanguages: ['ar'],
+        availableLanguages: ['en', 'ar', 'ja', 'ko'],//shown as list of available languages in chat window header to select
+        defaultLanguage: "en",//default selection from above list
+        languageStrings: {   //any additional language can be added in this object by adding the key in availableLanguages
             ar: {
                 message: "رسالة...",
                 connecting: "توصيل ...",
@@ -11,17 +12,98 @@ class Korei18nPlugin {
                 entertosend: "اضغط على Enter للإرسال",
                 endofchat: "نهاية سجل الدردشة",
                 loadinghistory: "تحميل محفوظات الدردشة ..",
-                sendText:"إرسال",
-                closeText:"قريب",
-                expandText:"وسعت",
-                minimizeText:"تصغير",
-                reconnectText:"أعد الاتصال",
-                attachmentText:"المرفق"
+                sendText: "إرسال",
+                closeText: "قريب",
+                expandText: "وسعت",
+                minimizeText: "تصغير",
+                reconnectText: "أعد الاتصال",
+                attachmentText: "المرفق",
+                help: "يساعد",
+                agent: "دردشة الوكيل",
+                media: "وسائط",
+                file: "ملف",
+                tapToSpeak: "اضغط على الميكروفون للتحدث",
+                listenToEnd: "جارٍ الاستماع... انقر للإنهاء",
+                tapToSend: "انقر للإرسال",
+                typing: "الكتابة",
+                menu: "قائمة طعام",
+                poweredBy: "مدعوم من",
+                keyboard: "لوحة المفاتيح",
+                microphone: "ميكروفون",
+                cancel: "يلغي",
+                speakerOn: "مكبر الصوت قيد التشغيل",
+                speakerOff: "مكبر الصوت معطل",
+                attachments: "المرفقات",
+                close: "إغلاق الدردشة",
+                reconnect: "إعادة الاتصال بالدردشة"
+            },
+            ja: {
+                message: 'メッセージ...',
+                connecting: '接続中...',
+                reconnecting: '再接続中...',
+                entertosend: 'Enterキーを押して送信',
+                endofchat: 'チャット履歴の終わり',
+                loadinghistory: 'チャット履歴を読み込んでいます...',
+                sendText: '送信',
+                closeText: '閉じる',
+                expandText: '展開',
+                minimizeText: '最小化',
+                reconnectText: '再接続',
+                attachmentText: '添付ファイル',
+                help: 'ヘルプ',
+                agent: 'エージェントチャット',
+                media: 'メディア',
+                file: 'ファイル',
+                tapToSpeak: 'マイクをタップして話す',
+                listenToEnd: '聴いています... 終了するにはタップしてください',
+                tapToSend: 'タップして送信',
+                typing: '入力中',
+                menu: 'メニュー',
+                poweredBy: 'Powered by',
+                keyboard: 'キーボード',
+                microphone: 'マイク',
+                cancel: 'キャンセル',
+                emojis: '絵文字',
+                speakerOn: 'スピーカーオン',
+                speakerOff: 'スピーカーオフ',
+                attachments: '添付ファイル',
+                close: 'チャットを閉じる',
+                reconnect: 'チャットを再接続'
+            },
+            ko: {
+                message: '메시지...',
+                connecting: '연결 중...',
+                reconnecting: '재연결 중...',
+                entertosend: 'Enter 키를 눌러 전송',
+                endofchat: '채팅 기록 끝',
+                loadinghistory: '채팅 기록을 로딩 중입니다...',
+                sendText: '전송',
+                closeText: '닫기',
+                expandText: '확장',
+                minimizeText: '최소화',
+                reconnectText: '재연결',
+                attachmentText: '첨부 파일',
+                help: '도움말',
+                agent: '에이전트 채팅',
+                media: '미디어',
+                file: '파일',
+                tapToSpeak: '마이크를 탭하여 말하기',
+                listenToEnd: '듣고 있습니다... 종료하려면 탭하세요',
+                tapToSend: '탭하여 전송',
+                typing: '입력 중',
+                menu: '메뉴',
+                poweredBy: 'Powered by',
+                keyboard: '키보드',
+                microphone: '마이크',
+                cancel: '취소',
+                emojis: '이모지',
+                speakerOn: '스피커 켜짐',
+                speakerOff: '스피커 꺼짐',
+                attachments: '첨부 파일',
+                close: '채팅 닫기',
+                reconnect: '채팅 재연결'
             }
         }
     }
 }
-export default {
-    name: "Korei18nPlugin",
-    plugin: Korei18nPlugin
-}
+export default Korei18nPlugin;
