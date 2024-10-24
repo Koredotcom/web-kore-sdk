@@ -1,27 +1,34 @@
-# SdkAngular
+# kore web sdk angular sample
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.7.
+## Installation
+1.Install dependencies
 
-## Development server
+```bash
+npm install 
+```
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Code scaffolding
+2.Configure bot configs in src/app/app.component.ts
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```js
 
-## Build
+let botOptions=chatConfig.botOptions;
+	
+ botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
+ botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
+ botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
+ botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
+ botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+ /* 
+ Important Note: These keys are provided here for quick demos to generate JWT token at client side but not for Production environment.
+ Refer below document for JWT token generation at server side. Client Id and Client secret should maintained at server end.
+ https://developer.kore.ai/docs/bots/sdks/user-authorization-and-assertion/
+ **/
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```
 
-## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+3.run angular app which will open at http://localhost:4200
+```js
+npm start
+```
