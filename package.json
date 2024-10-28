@@ -58,6 +58,7 @@
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.45",
     "perfect-scrollbar": "^1.5.2",
+    "postcss-preset-env": "^10.0.8",
     "preact": "10.17.1",
     "preact-render-to-string": "^6.0.3",
     "pubsub-js": "^1.9.4",

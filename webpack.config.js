@@ -32,25 +32,37 @@ let config= {
             //     }
             //   }
             // },
-              {
-                test: /\.css|.scss$/,
-                use: [
-                  "style-loader", //3. Inject styles into DOM
-                  "css-loader", //2. Turns css into commonjs
-                  "postcss-loader",
-                  "sass-loader" //1. Turns sass into css
-                ]
-              },
+            {
+              test: /\.css|.scss$/,
+              use: [
+                  "style-loader",
+                  "css-loader",
+                  {
+                      loader: "postcss-loader",
+                      options: {
+                          postcssOptions: {
+                              plugins: [
+                                  ["postcss-preset-env"],
+                              ],
+                          },
+                      },
+                  },
+                  {
+                      loader: "sass-loader",
+                      options: {
+                          sassOptions: {
+                              includePaths: [path.resolve(__dirname, 'fonts')]
+                          }
+                      }
+                  }
+              ]
+            },
               {
                 test: /\.(woff|woff2)$/,
                 type: 'asset/resource',
                 generator: {
                   filename: 'fonts/[path][name][ext]'
-                },
-                include: [
-                  path.resolve(__dirname, 'fonts'),
-                  path.resolve(__dirname, 'src')
-                ]
+                }
               },
             // {
             //     test: path.resolve('./UI/chatWindow.js'),
@@ -89,7 +101,11 @@ let config= {
         patterns: [
           { from: path.resolve(__dirname, "src", "esm", "exports.js"), to: path.resolve(__dirname, "dist", "esm") },
           { from: path.resolve(__dirname, "src", "esm", "exports.d.ts"), to: path.resolve(__dirname, "dist", "esm") },
-          { from: path.resolve(__dirname, "fonts"), to: path.resolve(__dirname, "dist/fonts") }
+          { 
+            from: 'fonts',
+            to: 'fonts',
+            noErrorOnMissing: true
+         }
         ]
       }),
       new webpack.ProvidePlugin({
@@ -109,9 +125,8 @@ let config= {
     resolve:{
         extensions:['.js','.ts','.tsx'],
         alias: {
-          // Add this alias
           '@fonts': path.resolve(__dirname, 'fonts')
-        },
+      }
     },
     output: {
         publicPath:"/",
