@@ -46,7 +46,11 @@ let config= {
                 type: 'asset/resource',
                 generator: {
                   filename: 'fonts/[path][name][ext]'
-                }
+                },
+                include: [
+                  path.resolve(__dirname, 'fonts'),
+                  path.resolve(__dirname, 'src')
+                ]
               },
             // {
             //     test: path.resolve('./UI/chatWindow.js'),
@@ -104,6 +108,10 @@ let config= {
     ],
     resolve:{
         extensions:['.js','.ts','.tsx'],
+        alias: {
+          // Add this alias
+          '@fonts': path.resolve(__dirname, 'fonts')
+        },
     },
     output: {
         publicPath:"/",
