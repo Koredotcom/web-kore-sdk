@@ -31,6 +31,10 @@
     "type": "git",
     "url": "git@github.com:Koredotcom/web-kore-sdk.git#v3/11.6.1"
   },
+  "files": [
+    "dist",
+    "fonts"
+  ],
   "author": "Rajasekhar Balla",
   "license": "MIT",
   "bugs": {

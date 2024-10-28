@@ -40,7 +40,14 @@ let config= {
                   "postcss-loader",
                   "sass-loader" //1. Turns sass into css
                 ]
-              }
+              },
+              {
+                test: /\.(woff|woff2)$/,
+                type: 'asset/resource',
+                generator: {
+                  filename: 'fonts/[path][name][ext]'
+                }
+              },
             // {
             //     test: path.resolve('./UI/chatWindow.js'),
             //     use: ['imports-loader?this=>window'] 
@@ -78,6 +85,7 @@ let config= {
         patterns: [
           { from: path.resolve(__dirname, "src", "esm", "exports.js"), to: path.resolve(__dirname, "dist", "esm") },
           { from: path.resolve(__dirname, "src", "esm", "exports.d.ts"), to: path.resolve(__dirname, "dist", "esm") },
+          { from: path.resolve(__dirname, "fonts"), to: path.resolve(__dirname, "dist/fonts") }
         ]
       }),
       new webpack.ProvidePlugin({
