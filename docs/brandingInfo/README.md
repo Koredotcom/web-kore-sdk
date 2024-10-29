@@ -527,11 +527,99 @@ The following contains the explanation of the branding JSON object, which define
 
   
 ### Footer Configuration
+```
+"footer": {
+    "bg_color": "#EAECF0",
+    "layout": "keypad",
+    "compose_bar": {
+      "bg_color": "#FFFFFE",
+      "outline-color": "#175CD3",
+      "placeholder": "Type a message"
+    },
+    "icons_color": "#101828",
+    "buttons": {
+      "menu": {
+        "show": true,
+        "icon_color": "#101828",
+        "actions": [
+          {
+            "title": "About",
+            "type": "postback",
+            "value": "About",
+            "icon": ""
+          },
+          {
+            "title": "Kore.ai",
+            "type": "url",
+            "value": "https://kore.ai/",
+            "icon": ""
+          }
+        ]
+      },
+      "emoji": {
+        "show": true,
+        "icon": ""
+      },
+      "microphone": {
+        "show": true,
+        "icon": ""
+      },
+      "attachment": {
+        "show": true,
+        "icon": ""
+      },
+      "speaker": {
+        "show": false,
+        "icon": ""
+      },
+      "send_button": {
+        "show": true,
+        "icon": ""
+      }
+    }
+  }
+```
 - **bg_color**: Background color for the footer (#EAECF0).
 - **layout**: Layout type (set to "keypad").
 - **compose_bar**: Configuration for the message input area.
 - **icons_color**: Color for icons in the footer.
 - **buttons**: Detailed settings for various buttons, including menu, microphone, attachment, and send button.
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| bg_color | string | #EAECF0 | Any color code |
+| layout | string | keypad | keypad, voice |
+| icons_color | string | #101828 | Any color code |
+
+- For compose_bar
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| bg_color | string | #FFFFFF | Any color code |
+| outline-color | string | #175CD3 | Any color code |
+| placeholder | string | kore default | Any valid placeholder text |
+
+- For emoji, microphone, attachment and  send_button in buttons
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| show | boolean | true | true, false |
+
+- For speaker in buttons
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| show | boolean | false | true, false |
+
+- For menu in buttons
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| show | boolean | true | true, false |
+| icon_color | string | #101828 | Any valid color |
+| actions - title | string | kore default | Any valid title |
+| actions - type | string | postbak | postback, url |
+
   
 ### Body Configuration
 - **background**: Defines the main background color and image.
