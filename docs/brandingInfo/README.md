@@ -114,7 +114,7 @@ The following contains the explanation of the branding JSON object, which define
 | -------- | ---- | ------- | ---------------- |
 | name | string | - | - |
 | type | string | default | default, custom |
-| fileId | string | - | any valid URL
+| fileId | string | - | Any valid URL
 
 
 ### Avatar/Chat Icon Settings
@@ -557,7 +557,7 @@ The following contains the explanation of the branding JSON object, which define
 | -------- | ---- | ------- | ---------------- |
 | show | boolean | true | true, false |
 | action - type | string | - | postback, url |
-| action - value | string | - | any valid url for type `url` or valid value for type `postback` |
+| action - value | string | - | Any valid url for type `url` or valid value for type `postback` |
 
   
 ### Footer Configuration
@@ -751,7 +751,7 @@ The following contains the explanation of the branding JSON object, which define
 | -------- | ---- | ------- | ---------------- |
 | type | string | color | color, image |
 | color | string | #FFFFFF | Any valid color code |
-| img | string | kore default | for type `default` background.png. For type `custom` any valid image url |
+| img | string | kore default | For type `default` background.png. For type `custom` any valid image url |
 | imgType | string | default | default, custom |
 | name | string | - | - |
 | fileId | string | - | - |
@@ -790,14 +790,14 @@ The following contains the explanation of the branding JSON object, which define
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | show | boolean | true | true, false |
-| icon_url | string | kore default | for type `default` agent.jpg. For type `custom` any valid icon URL. |
+| icon_url | string | kore default | For type `default` agent.jpg. For type `custom` any valid icon URL. |
 | type | string | default | default, custom |
 
 * For title, sub_title in agent_message
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
-| name | string | kore default | ANy valid name |
+| name | string | kore default | Any valid name |
 | color | string | #101828 | Any valid color code |
 
 * For time_stamp
