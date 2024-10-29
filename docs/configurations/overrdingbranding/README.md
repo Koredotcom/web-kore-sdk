@@ -1,8 +1,8 @@
 # For overriding the branding JSON in kore config
 
-Please refer [here](docs/brandingInfo) for more details regarding branding JSON info
+Please refer [here](../../../docs/brandingInfo) for more details regarding branding JSON info
 
-## General Settings
+### General Settings
 ```
 // Colors
 chatConfig.branding.general.colors.primary = "#175CD3";
@@ -28,7 +28,7 @@ chatConfig.branding.general.sounds.on_close.fileId = "";
 // Like this we can override for other sounds
 ```
 
-## Avatar/Chat Icon Settings
+### Avatar/Chat Icon Settings
 ```
 // Avatar icon
 chatConfig.branding.chat_bubble.style = "rounded";
@@ -59,7 +59,7 @@ chatConfig.branding.chat_bubble.primary_color = "#175CD3";
 chatConfig.branding.chat_bubble.secondary_color = "#FFFFFF";
 ```
 
-## Welcome Screen Settins
+### Welcome Screen Settings
 ```
 // Welcome screen top sections
 chatConfig.branding.welcome_screen.show = true;
@@ -125,7 +125,7 @@ chatConfig.branding.welcome_screen.promotional_content.promotions[0].name = "kor
 chatConfig.branding.welcome_screen.promotional_content.promotions[0].fileId = "";
 ```
 
-## Header configuration
+### Header configuration
 ```
 // Header icon and title related
 chatConfig.branding.header.bg_color = "#6895F0";
@@ -154,7 +154,7 @@ chatConfig.branding.header.buttons.live_agent.action.type = "postback";
 chatConfig.branding.header.buttons.live_agent.action.value = "connect to agent";
 ```
 
-## Footer Configuration
+### Footer Configuration
 ```
 chatConfig.branding.footer.bg_color = "#EAECF0";
 chatConfig.branding.footer.layout = "keypad";
@@ -184,7 +184,7 @@ chatConfig.branding.footer.buttons.speaker.show = false;
 chatConfig.branding.footer.buttons.send_button.show = true;
 ```
 
-## Body Configuration
+### Body Configuration
 ```
 // Chat window body background
 chatConfig.branding.body.background.type = "color";
@@ -237,7 +237,7 @@ chatConfig.branding.body.bot_name.show = true;
 chatConfig.branding.body.bot_name.name = "v3sdk";
 ```
 
-## Widget Panel Configuration
+### Widget Panel Configuration
 You need to have widgets added in platform
 ```
 chatConfig.branding.widget_panel.colors.bg_color = "#FFFFFF";
