@@ -5,41 +5,85 @@ The following contains the explanation of the branding JSON object, which define
 ### General Settings
 ```
 "general": {
-  "version": 1,
-  "bot_icon": "",
-  "themeType": "light",
-  "widgetPanel": false,
-  "colors": {
-    "primary": "#175CD3",
-    "secondary": "#EAECF0",
-    "primary_text": "#101828",
-    "secondary_text": "#FFFFFF",
-    "useColorPaletteOnly": true
-  },
-  "sounds": {
-    "enable": false,
-    "on_audio_call": {
-      "name": "Sound1",
-      "type": "default",
-      "url": "https://platform.kore.ai/assets/websdkthemes/on_audio_call.wav"
+    "version": 1,
+    "bot_icon": "",
+    "themeType": "light",
+    "widgetPanel": false,
+    "colors": {
+      "primary": "#175CD3",
+      "secondary": "#EAECF0",
+      "primary_text": "#101828",
+      "secondary_text": "#FFFFFF",
+      "useColorPaletteOnly": true
     },
-    // Additional sound configurations...
+    "sounds": {
+      "enable": false,
+      "on_audio_call": {
+        "name": "Sound1",
+        "type": "default",
+        "url": "on_audio_call.wav",
+        "fileId": ""
+      },
+      "on_close": {
+        "name": "Sound1",
+        "type": "default",
+        "url": "on_close.wav",
+        "fileId": ""
+      },
+      "on_msg_send": {
+        "name": "Sound1",
+        "type": "default",
+        "url": "on_msg_send.wav",
+        "fileId": ""
+      },
+      "on_new_msg": {
+        "name": "Sound1",
+        "type": "default",
+        "url": "on_new_msg.wav",
+        "fileId": ""
+      },
+      "on_open": {
+        "name": "Sound1",
+        "type": "default",
+        "url": "on_open.wav",
+        "fileId": ""
+      },
+      "on_proactive_msg": {
+        "name": "Sound1",
+        "type": "default",
+        "url": "on_proactive_message.wav",
+        "fileId": ""
+      },
+      "on_video_call": {
+        "name": "Sound1",
+        "type": "default",
+        "url": "on_video_call.wav",
+        "fileId": ""
+      }
+    }
   }
-}
 ```
 - **version**: Branding JSON version number.
-- **bot_icon**: Not using. Reserved for future use.
-- **themeType**: To identity the theme type.
+- **bot_icon**: Not using.
+- **themeType**: To identity the theme type. Colors can be independent of this themeType.
 - **widgetPanel**: To show/hide widget panel.
-- **colors**: Color scheme:
-  - **primary**: Main color of the theme (#175CD3).
-  - **secondary**: Secondary color (#EAECF0).
-  - **primary_text**: Color for primary text (#101828).
-  - **secondary_text**: Color for secondary text (#FFFFFF).
-  - **useColorPaletteOnly**: A boolean to restrict color usage to the defined palette (set to false).
+- **colors**: Color scheme object:
+  - **primary**: Main color of the theme.
+  - **secondary**: Secondary color.
+  - **primary_text**: Color for primary text.
+  - **secondary_text**: Color for secondary text.
+  - **useColorPaletteOnly**: If enabled then it is in easy mode. In easy mode all the elements in the chat interface is mapped by using the above 4 colors. If disbaled then it is in advanced mode. In advanced mode respective elements have their own color configuration will you can see in further sections. Remaining will use above 4 colors.
 - **sounds**: An object containing sound settings for various actions, including:
-  - **enable**: Whether sounds are enabled (set to false).
+  - **enable**: To enable/disbale sounds.
   - Each action (like on audio call, on close, etc.) has a name, type, URL, and fileId.
+  - We have the following actions where a sound can trigger
+    - on_audio_call: This sound will be played for incoming audio call.
+    - on_close: This sound will be played on closing the chat window.
+    - on_msg_send: This sound will be played on sending message to bot.
+    - on_new_msg: This sound will be played on receiving a message from bot.
+    - on_open: This sound will be played on opening the chat window.
+    - on_proactive_msg: This sound will be played on proactive message.
+    - on_video_call: This sound will be played for incoming video call.
     
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
