@@ -1,5 +1,7 @@
 # Configuring kore config
 
+Please refer [here](../../../src/components/chatwindow/config/kore-config.ts) for kore config
+
 ```
 let botOptions = chatConfig.botOptions;
 
