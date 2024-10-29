@@ -622,6 +622,81 @@ The following contains the explanation of the branding JSON object, which define
 
   
 ### Body Configuration
+```
+"body": {
+    "background": {
+      "type": "color",
+      "color": "#FFFFFF",
+      "img": "background.png",
+      "imgType": "default",
+      "name": "bg.png",
+      "fileId": ""
+    },
+    "font": {
+      "family": "Inter",
+      "size": "medium",
+      "style": ""
+    },
+    "user_message": {
+      "bg_color": "#175CD3",
+      "color": "#FFFFFF"
+    },
+    "bot_message": {
+      "bg_color": "#EAECF0",
+      "color": "#101828"
+    },
+    "agent_message": {
+      "bg_color": "#EAECF0",
+      "color": "#101828",
+      "separator": "1",
+      "icon": {
+        "show": true,
+        "icon_url": "agent.jpg",
+        "type": "default"
+      },
+      "title": {
+        "name": "Kore Agent",
+        "color": "#101828",
+        "type": "default"
+      },
+      "sub_title": {
+        "name": "Agent servcie",
+        "color": "#101828",
+        "type": "default"
+      }
+    },
+    "time_stamp": {
+      "show": true,
+      "show_type": "always",
+      "position": "top",
+      "separator": "line",
+      "color": "#101828",
+      "time_format": "12",
+      "date_format": "dd/mm/yyyy"
+    },
+    "typing_indicator": {
+      "icon": "",
+      "show": true
+    },
+    "icon": {
+      "show": true,
+      "user_icon": false,
+      "bot_icon": true,
+      "agent_icon": true
+    },
+    "buttons": {
+      "bg_color": "red",
+      "color": "white"
+    },
+    "bubble_style": "balloon",
+    "bot_name": {
+      "show": true,
+      "name": "",
+      "show_type": "always",
+      "position": "top"
+    }
+  }
+```
 - **background**: Defines the main background color and image.
 - **font**: Font settings including family, size, and style.
 - **user_message**, **bot_message**, and **agent_message**: Customizations for message backgrounds and text colors.
@@ -631,6 +706,104 @@ The following contains the explanation of the branding JSON object, which define
 - **buttons**: Button customization for colors.
 - **bubble_style**: Defines the style of message bubbles (set to "balloon").
 - **bot_name**: Settings for displaying the bot's name.
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| bubble_style | string | balloon | balloon, rounded, rectangle |
+
+- For background
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| type | string | color | color, image |
+| color | string | #FFFFFF | Any color code |
+| img | string | kore default | for type `default` background.png. For type `custom` any valid image url |
+| imgType | string | default | default, custom |
+| name | string | - | - |
+| fileId | string | - | - |
+
+- For font
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| family | string | Inter | Inter, Lato |
+| size | string | medium | small, medium, large |
+
+- For user_message
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| bg_color | string | #175CD3 | Any color code |
+| color | string | #FFFFFF | Any color code |
+
+- For bot_message
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| bg_color | string | #EAECF0 | Any color code |
+| color | string | #101828 | Any color code |
+
+- For agent_message
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| bg_color | string | #EAECF0 | Any color code |
+| color | string | #101828 | Any color code |
+| separator | string | 1 | 1, 2, 3 |
+
+- For icon in agent_message
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| show | boolean | true | true, false |
+| icon_url | string | kore default | for type `default` agent.jpg. For type `custom` any valid icon URL. |
+| type | string | default | default, custom |
+
+- For title, sub_title in agent_message
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| name | string | kore default | ANy valid name |
+| color | string | #101828 | Any color code |
+
+- For time_stamp
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| show | boolean | true | true, false |
+| show_type | string | always | always, hover |
+| position | string | top | top, bottom |
+| color | string | #101828 | Any color code |
+| time_format | string | 12 | 12, 24 |
+| date_format | string | dd/mm/yyyy | dd/mm/yyyy, mm/dd/yyyy, mmm/dd/yyyy
+
+- For typing_indicator
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| show | boolean | true | true, false |
+
+- For icon
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| show | boolean | true | true, false |
+| user_icon | boolean | false | true, false |
+
+- For buttons
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| bg_color | string | red | Any color code |
+| color | string | white | Any color code |
+
+- For bot_name
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| show | boolean | true | true, false |
+| name | string | '' | Any valid name |
+
 
 ### Widget Panel Configuration
 - **colors**: Settings for the colors used in the widget panel, including background and selection colors.
