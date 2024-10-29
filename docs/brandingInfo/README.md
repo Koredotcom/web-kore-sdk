@@ -95,17 +95,18 @@ The following contains the explanation of the branding JSON object, which define
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
-| primary | string | #175CD3 | Any color code |
-| secondary | string | #EAECF0 | Any color code |
-| primary_text | string | #101828 | Any color code |
-| secondary_text | string | #FFFFFF | Any color code |
+| primary | string | #175CD3 | Any valid color code |
+| secondary | string | #EAECF0 | Any valid color code |
+| primary_text | string | #101828 | Any valid color code |
+| secondary_text | string | #FFFFFF | Any valid color code |
 | useColorPaletteOnly | boolean | true | true, false |
 
 - Sounds
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
-| sounds - enable | boolean | false | true, false |
+| enable | boolean | false | true, false |
+| actions | object | - | - | 
 
 - For each action in sounds
 
@@ -121,10 +122,10 @@ The following contains the explanation of the branding JSON object, which define
 "chat_bubble": {
     "style": "rounded",
     "icon": {
-      "icon_url": "https://platform.kore.ai/api/getMediaStream/orgFiles/o-6bc71456-89f0-539b-8574-9f6d298851d4/f-f8d7a6e0-a45f-5025-8a19-50ece224e5ee.png",
+      "icon_url": "icon-1",
       "size": "small",
-      "type": "custom",
-      "fileId": "6720605045abe6b1222964b5"
+      "type": "default",
+      "fileId": ""
     },
     "minimise": {
       "icon": "icon-m-1",
@@ -137,14 +138,14 @@ The following contains the explanation of the branding JSON object, which define
       "header": "Hello",
       "messages": [
         {
-          "title": "Can I help you any way?"
+          "title": "Welcome to support"
         }
       ],
       "buttons": [
         {
           "title": "Send Message",
           "type": "postback",
-          "value": "Hi"
+          "value": ""
         }
       ]
     },
@@ -156,20 +157,20 @@ The following contains the explanation of the branding JSON object, which define
     "secondary_color": "#FFFFFF"
   }
 ```
-- **style**: The visual style of chat bubbles (set to "rounded").
+- **style**: The visual style of chat icon. If custom icon is uploaded then style property will not be applied
 - **icon**: Configuration for the chat icon, including URL, size, and type.
-- **minimise**: Settings for the minimize icon and theme.
+- **minimise**: Settings for the minimize icon. It includes URL, type.
 - **proactive**: Shows a proactive message with options:
-  - **show**: Indicates if proactive messages are displayed (set to true).
+  - **show**: To show/hode proactive messages are displayed.
   - **header**: The header text ("Hello").
   - **messages**: An array of proactive messages.
   - **buttons**: Actionable buttons displayed in the proactive message.
-- **sound**: The sound theme for notifications (set to "themeOne").
-- **alignment**: Positioning of chat bubbles (set to "inline").
+- **sound**: Not using.
+- **alignment**: Positioning of proactive messages.
 - **animation**: Type of animations used for chat bubble interactions.
-- **expand_animation**: .
-- **primary_color**:
-- **secondary_color**:
+- **expand_animation**: Type of animations used when chat window is opened
+- **primary_color**: Chat icon background color. Not applicable for custom icon upload.
+- **secondary_color**: Chat icon color. Not applicable for custom icon upload.
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -190,7 +191,7 @@ The following contains the explanation of the branding JSON object, which define
 | -------- | ---- | ------- | ---------------- |
 | icon_url | string | icon-m-1 | For type `default` - icon-m-1, icon-m-2, icon-m-3, icon-m-4. For type `custom` - any valid url |
 | type | string | default | default, custom |
-| fileId | string | - |
+| fileId | string | - | - |
 
 - For proactive
 
@@ -199,13 +200,13 @@ The following contains the explanation of the branding JSON object, which define
 | show | boolean | true | true, false
 | header | string | Hello | Any valid string |
 
-- For each message
+- For each message in proactive
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | title | string | - | - |
 
-- For each button
+- For each button in proactive
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -219,8 +220,8 @@ The following contains the explanation of the branding JSON object, which define
 | alignment | string | inline | inline, block |
 | animation | string | slide | slide, quick, crossFade |
 | expand_animation | string | minimize | minimize, minimizeQuick, minimizeSmooth |
-| primary_color | string | #175CD3 | Any color code |
-| seconday_color | string | #FFFFFF | Any color code |
+| primary_color | string | #175CD3 | Any valid color code |
+| seconday_color | string | #FFFFFF | Any valid color code |
 
 
 ### Welcome Screen
@@ -229,10 +230,10 @@ The following contains the explanation of the branding JSON object, which define
     "show": true,
     "layout": "medium",
     "logo": {
-      "logo_url": "https://platform.kore.ai/api/getMediaStream/orgFiles/o-6bc71456-89f0-539b-8574-9f6d298851d4/f-e040e018-e900-57f9-bd30-2be2b8eca4e4.png",
-      "type": "custom",
-      "name": "kore.png",
-      "fileId": "6720609445abe6b1222964d3"
+      "logo_url": "kore.png",
+      "name": "kore.ai",
+      "fileId": "",
+      "type": "default"
     },
     "title": {
       "name": "Hello"
@@ -247,7 +248,7 @@ The following contains the explanation of the branding JSON object, which define
       "type": "color",
       "color": "#175CD3",
       "name": "bg.png",
-      "img": "300",
+      "img": "https://picsum.photos/seed/picsum/200/300",
       "imgType": "default",
       "fileId": ""
     },
@@ -269,7 +270,7 @@ The following contains the explanation of the branding JSON object, which define
       "title": "Start New Conversation",
       "sub_text": "I'm your personal assistant I'm here to help",
       "start_conv_button": {
-        "color": "#032C73"
+        "color": "#175CD3"
       },
       "start_conv_text": {
         "color": "#FFFFFF"
@@ -283,13 +284,6 @@ The following contains the explanation of the branding JSON object, which define
             "action": {
               "type": "postback",
               "value": "Hello"
-            }
-          },
-          {
-            "title": "Connect to an Agent",
-            "action": {
-              "type": "postback",
-              "value": "Connect to an Agent"
             }
           }
         ],
@@ -326,28 +320,28 @@ The following contains the explanation of the branding JSON object, which define
       "show": true,
       "promotions": [
         {
-          "banner": "https://sit-xo.kore.ai/assets/websdkthemes/kore_banner.png",
-          "type": "default",
+          "banner": "kore_banner.png",
           "action": {
             "type": "url",
             "value": "https://kore.ai"
           },
           "name": "kore.png",
-          "fileId": ""
+          "fileId": "",
+          "type": "default"
         }
       ]
     }
   }
 ```
-- **show**: Indicates if the welcome screen is visible (set to true).
-- **layout**: Defines the layout style (set to "medium").
-- **logo**: Contains the logo details including URL and file ID.
-- **title**, **sub_title**, and **note**: Text settings for the welcome message.
+- **show**: To show/hide welcome screen.
+- **layout**: Defines the layout style.
+- **logo**: Contains the logo details including URL, type.
+- **title**, **sub_title**, and **note**: Text settings for the welcome screen.
 - **background**: Defines the background color or image for the welcome screen.
-- **top_fonts** and **bottom_background**: Text colors and background settings.
-- **widgets**: Settings for showing additional widgets (currently not shown).
+- **top_fonts** and **bottom_background**: Text colors in upper part and background color in bottom part settings.
+- **widgets**: Not using.
 - **starter_box**: Displays options to start conversations with buttons and text.
-- **static_links**: Carousel layout for displaying links to promotions or updates.
+- **static_links**: Carousel/list layout for displaying links to promotions or updates.
 - **promotional_content**: Section for displaying promotional banners.
 
 | Property | Type | Default Value | Supported Values |
@@ -375,7 +369,7 @@ The following contains the explanation of the branding JSON object, which define
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | type | string | color | color, image |
-| color | string | #175CD3 | Any color code |
+| color | string | #175CD3 | Any valid color code |
 | name | string | - | - |
 | img | string | - | Any valid URL |
 | imgType | string | default | default, custom |
@@ -385,13 +379,7 @@ The following contains the explanation of the branding JSON object, which define
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
-| color | string | #FFFFFF, #EAECF0 | Any color code |
-
-- For widgets
-
-| Property | Type | Default Value | Supported Values |
-| -------- | ---- | ------- | ---------------- |
-| show | boolean | false | true, false |
+| color | string | #FFFFFF, #EAECF0 | Any valid color code |
 
 - For starter_box
 
@@ -406,7 +394,7 @@ The following contains the explanation of the branding JSON object, which define
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
-| color | string | #175CD3, #FFFFFF | Any color code |
+| color | string | #175CD3, #FFFFFF | Any valid color code |
 
 - For quick_start_buttons in starter_box
 
@@ -436,9 +424,10 @@ The following contains the explanation of the branding JSON object, which define
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | show | boolean | true | true, false |
-| layout | string | carousel | carousel, list
+| layout | string | carousel | carousel, list |
+| links | object | - | - |
 
-- For eack item in links
+- For eack link in links
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -452,6 +441,7 @@ The following contains the explanation of the branding JSON object, which define
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | show | boolean | true | true, false |
+| promotions | object | - | - |
 
 - For each item in promotions
 
@@ -521,17 +511,17 @@ The following contains the explanation of the branding JSON object, which define
     }
   }
 ```
-- **bg_color**: Background color of the header (#6895F0).
-- **size**: Size of the header (set to "compact").
-- **icon**: Configuration for the header icon (URL and type).
+- **bg_color**: Background color of the header.
+- **size**: Size of the header.
+- **icon**: Configuration for the header icon including URL and type.
 - **title** and **sub_title**: Text settings for the header.
 - **buttons**: Configuration for buttons in the header, including close, minimize, and help options.
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
-| bg_color | string | #EAECF0 | Any color code |
+| bg_color | string | #EAECF0 | Any valid color code |
 | size | string | compact | compact, regular, large |
-| icons_color | string | #101828 | Any color code |
+| icons_color | string | #101828 | Any valid color code |
 
 - For icon 
 
@@ -547,7 +537,7 @@ The following contains the explanation of the branding JSON object, which define
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | name | string | kore default | Any valid name |
-| color | string | kore degault | Any color code |
+| color | string | kore degault | Any valid color code |
 
 - For close, reconnect in buttons
 
@@ -623,27 +613,27 @@ The following contains the explanation of the branding JSON object, which define
     }
   }
 ```
-- **bg_color**: Background color for the footer (#EAECF0).
-- **layout**: Layout type (set to "keypad").
+- **bg_color**: Background color for the footer.
+- **layout**: Primary input method.
 - **compose_bar**: Configuration for the message input area.
 - **icons_color**: Color for icons in the footer.
 - **buttons**: Detailed settings for various buttons, including menu, microphone, attachment, and send button.
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
-| bg_color | string | #EAECF0 | Any color code |
+| bg_color | string | #EAECF0 | Any valid color code |
 | layout | string | keypad | keypad, voice |
-| icons_color | string | #101828 | Any color code |
+| icons_color | string | #101828 | Any valid color code |
 
 - For compose_bar
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
-| bg_color | string | #FFFFFF | Any color code |
-| outline-color | string | #175CD3 | Any color code |
+| bg_color | string | #FFFFFF | Any valid color code |
+| outline-color | string | #175CD3 | Any valid color code |
 | placeholder | string | kore default | Any valid placeholder text |
 
-- For emoji, microphone, attachment and  send_button in buttons
+- For emoji, microphone, attachment and send_button in buttons
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -741,14 +731,14 @@ The following contains the explanation of the branding JSON object, which define
     }
   }
 ```
-- **background**: Defines the main background color and image.
-- **font**: Font settings including family, size, and style.
+- **background**: Defines the main background color and image for chat window.
+- **font**: Font settings including family for whole chat window and size for user/bot messgaes.
 - **user_message**, **bot_message**, and **agent_message**: Customizations for message backgrounds and text colors.
 - **time_stamp**: Configuration for displaying timestamps.
-- **typing_indicator**: Shows if a typing indicator is displayed.
+- **typing_indicator**: To show/hide a typing indicator.
 - **icon**: Settings for displaying user, bot, and agent icons.
 - **buttons**: Button customization for colors.
-- **bubble_style**: Defines the style of message bubbles (set to "balloon").
+- **bubble_style**: Defines the style of message bubbles.
 - **bot_name**: Settings for displaying the bot's name.
 
 | Property | Type | Default Value | Supported Values |
@@ -760,7 +750,7 @@ The following contains the explanation of the branding JSON object, which define
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | type | string | color | color, image |
-| color | string | #FFFFFF | Any color code |
+| color | string | #FFFFFF | Any valid color code |
 | img | string | kore default | for type `default` background.png. For type `custom` any valid image url |
 | imgType | string | default | default, custom |
 | name | string | - | - |
@@ -777,22 +767,22 @@ The following contains the explanation of the branding JSON object, which define
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
-| bg_color | string | #175CD3 | Any color code |
-| color | string | #FFFFFF | Any color code |
+| bg_color | string | #175CD3 | Any valid color code |
+| color | string | #FFFFFF | Any valid color code |
 
 - For bot_message
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
-| bg_color | string | #EAECF0 | Any color code |
-| color | string | #101828 | Any color code |
+| bg_color | string | #EAECF0 | Any valid color code |
+| color | string | #101828 | Any valid color code |
 
 - For agent_message
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
-| bg_color | string | #EAECF0 | Any color code |
-| color | string | #101828 | Any color code |
+| bg_color | string | #EAECF0 | Any valid color code |
+| color | string | #101828 | Any valid color code |
 | separator | string | 1 | 1, 2, 3 |
 
 - For icon in agent_message
@@ -808,7 +798,7 @@ The following contains the explanation of the branding JSON object, which define
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | name | string | kore default | ANy valid name |
-| color | string | #101828 | Any color code |
+| color | string | #101828 | Any valid color code |
 
 - For time_stamp
 
@@ -817,7 +807,7 @@ The following contains the explanation of the branding JSON object, which define
 | show | boolean | true | true, false |
 | show_type | string | always | always, hover |
 | position | string | top | top, bottom |
-| color | string | #101828 | Any color code |
+| color | string | #101828 | Any valid color code |
 | time_format | string | 12 | 12, 24 |
 | date_format | string | dd/mm/yyyy | dd/mm/yyyy, mm/dd/yyyy, mmm/dd/yyyy
 
@@ -838,8 +828,8 @@ The following contains the explanation of the branding JSON object, which define
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
-| bg_color | string | red | Any color code |
-| color | string | white | Any color code |
+| bg_color | string | red | Any valid color code |
+| color | string | white | Any valid color code |
 
 - For bot_name
 
@@ -864,17 +854,17 @@ The following contains the explanation of the branding JSON object, which define
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
-| bg_color | string | #FFFFFF | Any color code |
-| color | string | #101828 | Any color code |
-| sel_bg_color | string | #EAECF0 | Any color code |
-| sel_color | string | #101828 | Any color code |
+| bg_color | string | #FFFFFF | Any valid color code |
+| color | string | #101828 | Any valid color code |
+| sel_bg_color | string | #EAECF0 | Any valid color code |
+| sel_color | string | #101828 | Any valid color code |
 
 
 ### Override Settings
+> [!NOTE]
+> These settings can be configured in kore config or using theme editor in platform 
 - **enable**: Indicates if configuration overrides are enabled (set to false).
 - **emoji_short_cut**: Enables shortcut for emojis (set to true).
 - **typing_indicator_timeout**: Timeout duration for typing indicators (10 seconds).
 - **location**: Configuration for location sharing.
 - **history**: History settings, including recent message batches and paginated scrolling.
-> [!NOTE]
-> These settings can be configured in kore config or using theme editor in platform 
