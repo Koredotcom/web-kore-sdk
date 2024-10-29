@@ -14,24 +14,24 @@ The following contains the explanation of the branding JSON object, which define
     "secondary": "#EAECF0",
     "primary_text": "#101828",
     "secondary_text": "#FFFFFF",
-    "useColorPaletteOnly": false
+    "useColorPaletteOnly": true
   },
   "sounds": {
     "enable": false,
     "on_audio_call": {
       "name": "Sound1",
       "type": "default",
-      "url": "https://sit-xo.kore.ai/assets/websdkthemes/on_audio_call.wav"
+      "url": "https://platform.kore.ai/assets/websdkthemes/on_audio_call.wav"
     },
     // Additional sound configurations...
   }
 }
 ```
-- **version**: The version number of the branding JSON.
+- **version**: Branding JSON version number.
 - **bot_icon**: Not using. Reserved for future use.
 - **themeType**: To identity the theme type.
-- **widgetPanel**: A boolean indicating whether the widget panel is displayed or not (set to false).
-- **colors**: An object defining the color scheme:
+- **widgetPanel**: To show/hide widget panel.
+- **colors**: Color scheme:
   - **primary**: Main color of the theme (#175CD3).
   - **secondary**: Secondary color (#EAECF0).
   - **primary_text**: Color for primary text (#101828).
@@ -40,8 +40,78 @@ The following contains the explanation of the branding JSON object, which define
 - **sounds**: An object containing sound settings for various actions, including:
   - **enable**: Whether sounds are enabled (set to false).
   - Each action (like on audio call, on close, etc.) has a name, type, URL, and fileId.
+    
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| version  | integer | 1 | - |
+| bot_icon | string | - | - |
+| widgetPanel | boolean | false | true, false |
 
-## Chat Bubble Settings
+- Colors
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| primary | string | #175CD3 | Any color code |
+| secondary | string | #EAECF0 | Any color code |
+| primary_text | string | #101828 | Any color code |
+| secondary_text | string | #FFFFFF | Any color code |
+| useColorPaletteOnly | boolean | true | true, false |
+
+- Sounds
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| sounds - enable | boolean | false | true, false |
+
+- For each action in sounds
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| name | string | - | - |
+| type | string | default | default, custom |
+| fileId | string | - | any valid URL
+
+
+## Avatar/Chat Icon Settings
+```
+"chat_bubble": {
+    "style": "rounded",
+    "icon": {
+      "icon_url": "https://platform.kore.ai/api/getMediaStream/orgFiles/o-6bc71456-89f0-539b-8574-9f6d298851d4/f-f8d7a6e0-a45f-5025-8a19-50ece224e5ee.png",
+      "size": "small",
+      "type": "custom",
+      "fileId": "6720605045abe6b1222964b5"
+    },
+    "minimise": {
+      "icon": "icon-m-1",
+      "theme": "rounded",
+      "type": "default",
+      "fileId": ""
+    },
+    "proactive": {
+      "show": true,
+      "header": "Hello",
+      "messages": [
+        {
+          "title": "Can I help you any way?"
+        }
+      ],
+      "buttons": [
+        {
+          "title": "Send Message",
+          "type": "postback",
+          "value": "Hi"
+        }
+      ]
+    },
+    "sound": "themeOne",
+    "alignment": "inline",
+    "animation": "slide",
+    "expand_animation": "minimize",
+    "primary_color": "#175CD3",
+    "secondary_color": "#FFFFFF"
+  }
+```
 - **style**: The visual style of chat bubbles (set to "rounded").
 - **icon**: Configuration for the chat icon, including URL, size, and type.
 - **minimise**: Settings for the minimize icon and theme.
@@ -53,6 +123,61 @@ The following contains the explanation of the branding JSON object, which define
 - **sound**: The sound theme for notifications (set to "themeOne").
 - **alignment**: Positioning of chat bubbles (set to "inline").
 - **animation**: Type of animations used for chat bubble interactions.
+- **expand_animation**: .
+- **primary_color**:
+- **secondary_color**:
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| style | string | rounded | rounded, balloon, rectangel, square, comment |
+
+- For icon
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| icon | string | icon-1 | For type `default` - icon-1, icon-2, icon-3, icon-4. For type `custom` - any valid url |
+| size | string | small | small, medium, large |
+| type | string | default | default, custom |
+| fileId | string | - |
+
+- For minimse icon
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| icon_url | string | icon-m-1 | For type `default` - icon-m-1, icon-m-2, icon-m-3, icon-m-4. For type `custom` - any valid url |
+| type | string | default | default, custom |
+| fileId | string | - |
+
+- For proactive
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| show | boolean | true | true, false
+| header | string | Hello | Any valid string |
+
+- For each message
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| title | string | - | - |
+
+- For each button
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| title | string | - | Any valid string |
+| type | string | postback | postback |
+| value | sting | - | Any valid string |
+
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| alignment | string | inline | inline, block |
+| animation | string | slide | slide, quick, crossFade |
+| expand_animation | string | minimize | minimize, minimizeQuick, minimizeSmooth |
+| primary_color | string | #175CD3 | Any color code |
+| seconday_color | string | #FFFFFF | Any color code |
+
 
 ### Welcome Screen
 - **show**: Indicates if the welcome screen is visible (set to true).
