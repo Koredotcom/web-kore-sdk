@@ -180,6 +180,121 @@ The following contains the explanation of the branding JSON object, which define
 
 
 ### Welcome Screen
+```
+"welcome_screen": {
+    "show": true,
+    "layout": "medium",
+    "logo": {
+      "logo_url": "https://platform.kore.ai/api/getMediaStream/orgFiles/o-6bc71456-89f0-539b-8574-9f6d298851d4/f-e040e018-e900-57f9-bd30-2be2b8eca4e4.png",
+      "type": "custom",
+      "name": "kore.png",
+      "fileId": "6720609445abe6b1222964d3"
+    },
+    "title": {
+      "name": "Hello"
+    },
+    "sub_title": {
+      "name": "Welcome to Kore.ai"
+    },
+    "note": {
+      "name": "Our Community is ready to help you to join our best platform"
+    },
+    "background": {
+      "type": "color",
+      "color": "#175CD3",
+      "name": "bg.png",
+      "img": "300",
+      "imgType": "default",
+      "fileId": ""
+    },
+    "top_fonts": {
+      "color": "#FFFFFF"
+    },
+    "bottom_background": {
+      "color": "#EAECF0"
+    },
+    "widgets": {
+      "show": false,
+      "widgetItems": []
+    },
+    "starter_box": {
+      "show": true,
+      "icon": {
+        "show": true
+      },
+      "title": "Start New Conversation",
+      "sub_text": "I'm your personal assistant I'm here to help",
+      "start_conv_button": {
+        "color": "#032C73"
+      },
+      "start_conv_text": {
+        "color": "#FFFFFF"
+      },
+      "quick_start_buttons": {
+        "show": true,
+        "style": "slack",
+        "buttons": [
+          {
+            "title": "Hello",
+            "action": {
+              "type": "postback",
+              "value": "Hello"
+            }
+          },
+          {
+            "title": "Connect to an Agent",
+            "action": {
+              "type": "postback",
+              "value": "Connect to an Agent"
+            }
+          }
+        ],
+        "input": "button",
+        "action": {
+          "type": "postback",
+          "value": "Start Conversation"
+        }
+      }
+    },
+    "static_links": {
+      "show": true,
+      "layout": "carousel",
+      "links": [
+        {
+          "title": "New Products",
+          "description": "We have some exciting news and have released a few new products!",
+          "action": {
+            "type": "url",
+            "value": "https://kore.ai/"
+          }
+        },
+        {
+          "title": "Platform Release",
+          "description": "Kore.ai Unveils Generative AI, Large Language Models in XO Platform",
+          "action": {
+            "type": "url",
+            "value": "https://kore.ai/"
+          }
+        }
+      ]
+    },
+    "promotional_content": {
+      "show": true,
+      "promotions": [
+        {
+          "banner": "https://sit-xo.kore.ai/assets/websdkthemes/kore_banner.png",
+          "type": "default",
+          "action": {
+            "type": "url",
+            "value": "https://kore.ai"
+          },
+          "name": "kore.png",
+          "fileId": ""
+        }
+      ]
+    }
+  }
+```
 - **show**: Indicates if the welcome screen is visible (set to true).
 - **layout**: Defines the layout style (set to "medium").
 - **logo**: Contains the logo details including URL and file ID.
@@ -190,6 +305,121 @@ The following contains the explanation of the branding JSON object, which define
 - **starter_box**: Displays options to start conversations with buttons and text.
 - **static_links**: Carousel layout for displaying links to promotions or updates.
 - **promotional_content**: Section for displaying promotional banners.
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| show | string | true | true, false |
+| layout | string | medium | regular, medium, large |
+
+- For logo
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| logo_url | string | kore.png | For type `default` - kore.png. For type `custom` - any valid url |
+| name | string | - | Any valid name |
+| fileId | string | - | - |
+| type | string | default | default, custom |
+
+- For title, subtitle, note
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| name | string | - | Any valid name |
+
+- For background
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| type | string | color | color, image |
+| color | string | #175CD3 | Any color code |
+| name | string | - | - |
+| img | string | - | Any valid URL |
+| imgType | string | default | default, custom |
+| fileId | string | - | - |
+
+- For top_fonts and bottom_background
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| color | string | #FFFFFF, #EAECF0 | Any color code |
+
+- For widgets
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| show | boolean | false | true, false |
+
+- For starter_box
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| show | boolean | true | true, false |
+| icon - show | boolean | true | true, false |
+| title | string | kore defalt | Any valid title |
+| sub_text | string | kore default | Any valid text |
+
+- For start_conv_button and start_conv_text
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| color | string | #175CD3, #FFFFFF | Any color code |
+
+- For quick_start_buttons in starter_box
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| show | boolean | true | true, false |
+| style | string | slack | slack, stack |
+
+- For buttons in quick_start_buttons
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| title | string | kore default | Any valid title |
+| action - type | string | postback | postback, url |
+| action - value | string | kore default | Any valid value |
+
+- For starter_box start conversation button/search
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| input | string | button | button, search |
+| action - type | string | postback | postback, url |
+| action - value | string | kore default | Any valid value | 
+
+- For static_links
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| show | boolean | true | true, false |
+| layout | string | carousel | carousel, list
+
+- For eack item in links
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| title | string | kore default | Any valid title |
+| description | string | kore default | Any valid description |
+| action - type | string | url | url |
+| action - value | string | kore default | Any valid link |
+
+- For promotional_content
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| show | boolean | true | true, false |
+
+- For each item in promotions
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| banner | string | kore default | Any valid image url |
+| type | string | default | default, custom |
+| name | string | - | - |
+| fileId | string | - | - |
+| action - type | string | url | url |
+| action - value | string | kore default | Any valid link |
+
 
 ### Header Configuration
 - **bg_color**: Background color of the header (#6895F0).
