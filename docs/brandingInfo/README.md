@@ -68,7 +68,7 @@ The following contains the explanation of the branding JSON object, which define
 - **themeType**: To identity the theme type. Colors can be independent of this themeType.
 - **widgetPanel**: To show/hide widget panel.
 - **colors**: Color scheme object:
-  - **primary**: Main color of the theme.
+  - **primary**: Main color of the chst interface.
   - **secondary**: Secondary color.
   - **primary_text**: Color for primary text.
   - **secondary_text**: Color for secondary text.
