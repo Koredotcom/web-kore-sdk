@@ -91,7 +91,7 @@ The following contains the explanation of the branding JSON object, which define
 | bot_icon | string | - | - |
 | widgetPanel | boolean | false | true, false |
 
-- Colors
+* For colors
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -101,14 +101,14 @@ The following contains the explanation of the branding JSON object, which define
 | secondary_text | string | #FFFFFF | Any valid color code |
 | useColorPaletteOnly | boolean | true | true, false |
 
-- Sounds
+* For sounds
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | enable | boolean | false | true, false |
 | actions | object | - | - | 
 
-- For each action in sounds
+* For each action in sounds
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -176,7 +176,7 @@ The following contains the explanation of the branding JSON object, which define
 | -------- | ---- | ------- | ---------------- |
 | style | string | rounded | rounded, balloon, rectangel, square, comment |
 
-- For icon
+* For icon
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -185,7 +185,7 @@ The following contains the explanation of the branding JSON object, which define
 | type | string | default | default, custom |
 | fileId | string | - |
 
-- For minimse icon
+* For minimse icon
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -193,20 +193,20 @@ The following contains the explanation of the branding JSON object, which define
 | type | string | default | default, custom |
 | fileId | string | - | - |
 
-- For proactive
+* For proactive
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | show | boolean | true | true, false
 | header | string | Hello | Any valid string |
 
-- For each message in proactive
+* For each message in proactive
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | title | string | - | - |
 
-- For each button in proactive
+* For each button in proactive
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -349,7 +349,7 @@ The following contains the explanation of the branding JSON object, which define
 | show | string | true | true, false |
 | layout | string | medium | regular, medium, large |
 
-- For logo
+* For logo
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -358,13 +358,13 @@ The following contains the explanation of the branding JSON object, which define
 | fileId | string | - | - |
 | type | string | default | default, custom |
 
-- For title, subtitle, note
+* For title, subtitle, note
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | name | string | - | Any valid name |
 
-- For background
+* For background
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -375,13 +375,13 @@ The following contains the explanation of the branding JSON object, which define
 | imgType | string | default | default, custom |
 | fileId | string | - | - |
 
-- For top_fonts and bottom_background
+* For top_fonts and bottom_background
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | color | string | #FFFFFF, #EAECF0 | Any valid color code |
 
-- For starter_box
+* For starter_box
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -390,20 +390,20 @@ The following contains the explanation of the branding JSON object, which define
 | title | string | kore defalt | Any valid title |
 | sub_text | string | kore default | Any valid text |
 
-- For start_conv_button and start_conv_text
+* For start_conv_button and start_conv_text
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | color | string | #175CD3, #FFFFFF | Any valid color code |
 
-- For quick_start_buttons in starter_box
+* For quick_start_buttons in starter_box
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | show | boolean | true | true, false |
 | style | string | slack | slack, stack |
 
-- For buttons in quick_start_buttons
+* For buttons in quick_start_buttons
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -411,7 +411,7 @@ The following contains the explanation of the branding JSON object, which define
 | action - type | string | postback | postback, url |
 | action - value | string | kore default | Any valid value |
 
-- For starter_box start conversation button/search
+* For starter_box start conversation button/search
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -419,7 +419,7 @@ The following contains the explanation of the branding JSON object, which define
 | action - type | string | postback | postback, url |
 | action - value | string | kore default | Any valid value | 
 
-- For static_links
+* For static_links
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -427,7 +427,7 @@ The following contains the explanation of the branding JSON object, which define
 | layout | string | carousel | carousel, list |
 | links | object | - | - |
 
-- For eack link in links
+* For eack link in links
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -436,14 +436,14 @@ The following contains the explanation of the branding JSON object, which define
 | action - type | string | url | url |
 | action - value | string | kore default | Any valid link |
 
-- For promotional_content
+* For promotional_content
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | show | boolean | true | true, false |
 | promotions | object | - | - |
 
-- For each item in promotions
+* For each item in promotions
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -523,7 +523,7 @@ The following contains the explanation of the branding JSON object, which define
 | size | string | compact | compact, regular, large |
 | icons_color | string | #101828 | Any valid color code |
 
-- For icon 
+* For icon 
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -532,26 +532,26 @@ The following contains the explanation of the branding JSON object, which define
 | type | string | default | default, custom |
 | fileId | string | - | - |
 
-- For title, sub_title
+* For title, sub_title
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | name | string | kore default | Any valid name |
 | color | string | kore degault | Any valid color code |
 
-- For close, reconnect in buttons
+* For close, reconnect in buttons
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | show | boolean | true | true, false |
 
-- For minimise, expand in buttons 
+* For minimise, expand in buttons 
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | show | boolean | false | true, false |
 
-- For help, live_agent in buttons
+* For help, live_agent in buttons
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -625,7 +625,7 @@ The following contains the explanation of the branding JSON object, which define
 | layout | string | keypad | keypad, voice |
 | icons_color | string | #101828 | Any valid color code |
 
-- For compose_bar
+* For compose_bar
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -633,19 +633,19 @@ The following contains the explanation of the branding JSON object, which define
 | outline-color | string | #175CD3 | Any valid color code |
 | placeholder | string | kore default | Any valid placeholder text |
 
-- For emoji, microphone, attachment and send_button in buttons
+* For emoji, microphone, attachment and send_button in buttons
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | show | boolean | true | true, false |
 
-- For speaker in buttons
+* For speaker in buttons
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | show | boolean | false | true, false |
 
-- For menu in buttons
+* For menu in buttons
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -745,7 +745,7 @@ The following contains the explanation of the branding JSON object, which define
 | -------- | ---- | ------- | ---------------- |
 | bubble_style | string | balloon | balloon, rounded, rectangle |
 
-- For background
+* For background
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -756,28 +756,28 @@ The following contains the explanation of the branding JSON object, which define
 | name | string | - | - |
 | fileId | string | - | - |
 
-- For font
+* For font
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | family | string | Inter | Inter, Lato |
 | size | string | medium | small, medium, large |
 
-- For user_message
+* For user_message
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | bg_color | string | #175CD3 | Any valid color code |
 | color | string | #FFFFFF | Any valid color code |
 
-- For bot_message
+* For bot_message
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | bg_color | string | #EAECF0 | Any valid color code |
 | color | string | #101828 | Any valid color code |
 
-- For agent_message
+* For agent_message
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -785,7 +785,7 @@ The following contains the explanation of the branding JSON object, which define
 | color | string | #101828 | Any valid color code |
 | separator | string | 1 | 1, 2, 3 |
 
-- For icon in agent_message
+* For icon in agent_message
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -793,14 +793,14 @@ The following contains the explanation of the branding JSON object, which define
 | icon_url | string | kore default | for type `default` agent.jpg. For type `custom` any valid icon URL. |
 | type | string | default | default, custom |
 
-- For title, sub_title in agent_message
+* For title, sub_title in agent_message
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | name | string | kore default | ANy valid name |
 | color | string | #101828 | Any valid color code |
 
-- For time_stamp
+* For time_stamp
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
@@ -811,27 +811,27 @@ The following contains the explanation of the branding JSON object, which define
 | time_format | string | 12 | 12, 24 |
 | date_format | string | dd/mm/yyyy | dd/mm/yyyy, mm/dd/yyyy, mmm/dd/yyyy
 
-- For typing_indicator
+* For typing_indicator
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | show | boolean | true | true, false |
 
-- For icon
+* For icon
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | show | boolean | true | true, false |
 | user_icon | boolean | false | true, false |
 
-- For buttons
+* For buttons
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
 | bg_color | string | red | Any valid color code |
 | color | string | white | Any valid color code |
 
-- For bot_name
+* For bot_name
 
 | Property | Type | Default Value | Supported Values |
 | -------- | ---- | ------- | ---------------- |
