@@ -868,3 +868,9 @@ The following contains the explanation of the branding JSON object, which define
 - **typing_indicator_timeout**: Timeout duration for typing indicators (10 seconds).
 - **location**: Configuration for location sharing.
 - **history**: History settings, including recent message batches and paginated scrolling.
+
+
+
+> [!TIP]
+> Above configurations can be easily configued using theme editor in Platform 11.
+> For configuring without using theme editor click here
