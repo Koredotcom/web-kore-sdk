@@ -19,7 +19,7 @@ chatConfig.branding.general.sounds.enable = true
 chatConfig.branding.general.sounds.on_audio_call.name = "Sound1";
 chatConfig.branding.general.sounds.on_audio_call.type = "custom";
 chatConfig.branding.general.sounds.on_audio_call.url = "https://commondatastorage.googleapis.com/codeskulptor-assets/week7-bounce.m4a";
-chatConfig.branding.general.sounds.on_audio_call.fileId = ""; // optional for custom type
+chatConfig.branding.general.sounds.on_audio_call.fileId = ""; // Optional for custom type
 
 chatConfig.branding.general.sounds.on_close.name = "Sound1";
 chatConfig.branding.general.sounds.on_close.type = "default";
@@ -238,7 +238,7 @@ chatConfig.branding.body.bot_name.name = "v3sdk";
 ```
 
 ### Widget Panel Configuration
-You need to have widgets added in platform
+Widgets must be added in platform before using this configuration
 ```
 chatConfig.branding.widget_panel.colors.bg_color = "#FFFFFF";
 chatConfig.branding.widget_panel.colors.color = "#101828";
