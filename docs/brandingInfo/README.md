@@ -806,7 +806,25 @@ The following contains the explanation of the branding JSON object, which define
 
 
 ### Widget Panel Configuration
+```
+"widget_panel": {
+    "colors": {
+      "bg_color": "#FFFFFF",
+      "color": "#101828",
+      "sel_bg_color": "#EAECF0",
+      "sel_color": "#101828"
+    }
+  }
+```
 - **colors**: Settings for the colors used in the widget panel, including background and selection colors.
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| bg_color | string | #FFFFFF | Any color code |
+| color | string | #101828 | Any color code |
+| sel_bg_color | string | #EAECF0 | Any color code |
+| sel_color | string | #101828 | Any color code |
+
 
 ### Override Settings
 - **enable**: Indicates if configuration overrides are enabled (set to false).
@@ -814,3 +832,5 @@ The following contains the explanation of the branding JSON object, which define
 - **typing_indicator_timeout**: Timeout duration for typing indicators (10 seconds).
 - **location**: Configuration for location sharing.
 - **history**: History settings, including recent message batches and paginated scrolling.
+> [!NOTE]
+> These settings can be configured in kore config or using theme editor in platform 
