@@ -72,7 +72,7 @@ The following contains the explanation of the branding JSON object, which define
 | fileId | string | - | any valid URL
 
 
-## Avatar/Chat Icon Settings
+### Avatar/Chat Icon Settings
 ```
 "chat_bubble": {
     "style": "rounded",
@@ -422,11 +422,109 @@ The following contains the explanation of the branding JSON object, which define
 
 
 ### Header Configuration
+```
+"header": {
+    "bg_color": "#EAECF0",
+    "size": "compact",
+    "icon": {
+      "show": true,
+      "icon_url": "icon-1",
+      "type": "default",
+      "fileId": ""
+    },
+    "icons_color": "#101828",
+    "title": {
+      "name": "",
+      "color": "#101828"
+    },
+    "sub_title": {
+      "name": "Your personal assistant",
+      "color": "#101828"
+    },
+    "buttons": {
+      "close": {
+        "show": true,
+        "icon": ""
+      },
+      "minimise": {
+        "show": false,
+        "icon": ""
+      },
+      "expand": {
+        "show": false,
+        "icon": ""
+      },
+      "reconnect": {
+        "show": true,
+        "icon": ""
+      },
+      "help": {
+        "show": true,
+        "action": {
+          "type": "postback|url",
+          "value": "https://kore.ai/",
+          "icon": ""
+        }
+      },
+      "live_agent": {
+        "show": true,
+        "action": {
+          "type": "postback|url",
+          "value": "connect to agent",
+          "icon": ""
+        }
+      }
+    }
+  }
+```
 - **bg_color**: Background color of the header (#6895F0).
 - **size**: Size of the header (set to "compact").
 - **icon**: Configuration for the header icon (URL and type).
 - **title** and **sub_title**: Text settings for the header.
 - **buttons**: Configuration for buttons in the header, including close, minimize, and help options.
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| bg_color | string | #EAECF0 | Any color code |
+| size | string | compact | compact, regular, large |
+| icons_color | string | #101828 | Any color code |
+
+- For icon 
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| show | boolean | true | true, false |
+| icon_url | string | icon-1 | For type `default` - icon-1, icon-2, icon-3, icon-4. For type `custom` - any valid icon url |
+| type | string | default | default, custom |
+| fileId | string | - | - |
+
+- For title, sub_title
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| name | string | kore default | Any valid name |
+| color | string | kore degault | Any color code |
+
+- For close, reconnect in buttons
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| show | boolean | true | true, false |
+
+- For minimise, expand in buttons 
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| show | boolean | false | true, false |
+
+- For help, live_agent in buttons
+
+| Property | Type | Default Value | Supported Values |
+| -------- | ---- | ------- | ---------------- |
+| show | boolean | true | true, false |
+| action - type | string | - | postback, url |
+| action - value | string | - | any valid url for type `url` or valid value for type `postback` |
+
   
 ### Footer Configuration
 - **bg_color**: Background color for the footer (#EAECF0).
