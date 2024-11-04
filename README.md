@@ -327,6 +327,10 @@ Note: When integrated into an iFrame, the SDK's functionality will be confined t
 	// }		
 # Release History
 ```
+v10.8.0 [Minor] on 3-Nov-2024: Master branch
+        Bugfixes
+               1.Horizontal rule issue fix in kore markdown
+
 v10.7.1 [Minor] on 21-Oct-2024: Master branch
         Stable release
 
