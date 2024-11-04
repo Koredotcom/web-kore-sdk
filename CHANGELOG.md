@@ -1,3 +1,8 @@
+### 10.8.0
+- SDK Release Nov 3, 2024
+* Bug fixes
+  * horizontal rule issue fix in kore markdown
+
 ### 10.7.1
 - SDK Release Oct 21, 2024
 * Bug fixes
