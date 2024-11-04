@@ -1,3 +1,14 @@
+### 11.7.0
+* Release Nov 3, 2024
+* Documentation
+  * added documentation for events, branding json and how to override branding json
+* Bug fixes
+  * quick replies template inline support added
+  * welcome screen starter box changes
+  * i18n issues fixed
+  * carousel image popup template added in answers plugin
+  * other minor bug fixes
+
 ### 11.6.1
 * Release Oct 21, 2024
 * Bug fixes

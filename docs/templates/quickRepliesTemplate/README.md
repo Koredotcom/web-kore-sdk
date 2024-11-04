@@ -16,7 +16,8 @@ var message = {
     "payload": {
         "template_type": "quick_replies",
         "text": "Quick reply label",
-        "quick_replies": []
+        "quick_replies": [],
+        "inline": false
     }
 };
 
