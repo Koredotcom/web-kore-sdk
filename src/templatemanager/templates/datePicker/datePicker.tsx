@@ -33,6 +33,9 @@ export function DatePickerExt(props: any) {
     }
 
     const getConvertedDate = (date: any, format: any) => {
+        if (typeof date == 'string') {
+            date = new Date(date);
+        }
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
@@ -50,8 +53,8 @@ export function DatePickerExt(props: any) {
         currentDateNext.setFullYear(currentDateNext.getFullYear() + 7);
         const dp = new Datepicker(`#cal-${msgData.messageId}`, {
             dateFormat: msgData?.message?.[0]?.component?.payload?.format ? dateFormats[msgData?.message?.[0]?.component?.payload?.format] : 'dd-MM-yyyy',
-            minDate: msgData.message?.[0]?.component?.payload?.startDate ? msgData.message?.[0]?.component?.payload?.startDate : getConvertedDate(currentDatePrev, msgData?.message?.[0]?.component?.payload?.format ? msgData?.message?.[0]?.component?.payload?.format : 'DD-MM-YYYY'),
-            maxDate: msgData.message?.[0]?.component?.payload?.endDate ? msgData.message?.[0]?.component?.payload?.endDate : getConvertedDate(currentDateNext, msgData?.message?.[0]?.component?.payload?.format ? msgData?.message?.[0]?.component?.payload?.format : 'DD-MM-YYYY'),        
+            minDate: msgData.message?.[0]?.component?.payload?.startDate ? getConvertedDate(msgData.message?.[0]?.component?.payload?.startDate, msgData?.message?.[0]?.component?.payload?.format) : getConvertedDate(currentDatePrev, msgData?.message?.[0]?.component?.payload?.format ? msgData?.message?.[0]?.component?.payload?.format : 'DD-MM-YYYY'),
+            maxDate: msgData.message?.[0]?.component?.payload?.endDate ? getConvertedDate(msgData.message?.[0]?.component?.payload?.endDate, msgData?.message?.[0]?.component?.payload?.format) : getConvertedDate(currentDateNext, msgData?.message?.[0]?.component?.payload?.format ? msgData?.message?.[0]?.component?.payload?.format : 'DD-MM-YYYY'),        
             disableNavWhenOutOfRange: false,
             onSelect: (d: any) => {
                 setSelectedDate(d.formattedDate);
@@ -96,6 +99,9 @@ export function DatePicker(props: any) {
     }
 
     const getConvertedDate = (date: any, format: any) => {
+        if (typeof date == 'string') {
+            date = new Date(date);
+        }
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
@@ -126,8 +132,8 @@ export function DatePicker(props: any) {
                 currentDateNext.setFullYear(currentDateNext.getFullYear() + 7);
                 const dp = new Datepicker(`#cal-${msgData.messageId}`, {
                     dateFormat: msgData?.message?.[0]?.component?.payload?.format ? dateFormats[msgData?.message?.[0]?.component?.payload?.format] : 'dd-MM-yyyy',
-                    minDate: msgData.message?.[0]?.component?.payload?.startDate ? msgData.message?.[0]?.component?.payload?.startDate : getConvertedDate(currentDatePrev, msgData?.message?.[0]?.component?.payload?.format ? msgData?.message?.[0]?.component?.payload?.format : 'DD-MM-YYYY'),
-                    maxDate: msgData.message?.[0]?.component?.payload?.endDate ? msgData.message?.[0]?.component?.payload?.endDate : getConvertedDate(currentDateNext, msgData?.message?.[0]?.component?.payload?.format ? msgData?.message?.[0]?.component?.payload?.format : 'DD-MM-YYYY'),        
+                    minDate: msgData.message?.[0]?.component?.payload?.startDate ? getConvertedDate(msgData.message?.[0]?.component?.payload?.startDate, msgData?.message?.[0]?.component?.payload?.format) : getConvertedDate(currentDatePrev, msgData?.message?.[0]?.component?.payload?.format ? msgData?.message?.[0]?.component?.payload?.format : 'DD-MM-YYYY'),
+                    maxDate: msgData.message?.[0]?.component?.payload?.endDate ? getConvertedDate(msgData.message?.[0]?.component?.payload?.endDate, msgData?.message?.[0]?.component?.payload?.format) : getConvertedDate(currentDateNext, msgData?.message?.[0]?.component?.payload?.format ? msgData?.message?.[0]?.component?.payload?.format : 'DD-MM-YYYY'),        
                     disableNavWhenOutOfRange: false,
                     onSelect: (d: any) => {
                         setSelectedDate(d.formattedDate);
