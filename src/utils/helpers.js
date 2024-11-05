@@ -422,9 +422,9 @@ class KoreHelpers{
                 } else if (txtArr[i].indexOf('---') === 0 || txtArr[i].indexOf('___') === 0) {
                     let nextChar;
                     if (txtArr[i].indexOf('---') === 0) {
-                        nextChar = txtArr[i].charAt(4);
+                        nextChar = txtArr[i].charAt(3);
                     } else if (txtArr[i].indexOf('___') === 0) {
-                        nextChar = txtArr[i].charAt(4);
+                        nextChar = txtArr[i].charAt(3);
                     }
                     if ((nextChar !== '-') && (nextChar !== '_')) {
                         txtArr[i] = '<hr/>' + txtArr[i].substring(3);
