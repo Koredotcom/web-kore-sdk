@@ -49,6 +49,8 @@ function AgentDesktop(uuId, aResponse) {
     this.showVideo = false;
     this.screenSharingStream = null;
     this.agentProfileIcon = null;
+    this.maskClassList = null;
+    this.maskPatternList = null;
     this.phoneConfig = {
         reconnectIntervalMin: 2, // Minimum interval between WebSocket reconnection attempts. (seconds)
         reconnectIntervalMax: 30, // Maximum interval between WebSocket reconnection attempts (seconds)
@@ -652,6 +654,12 @@ function AgentDesktop(uuId, aResponse) {
             }
         } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'cobrowse') {
             console.log("cobrowse request ", msgJson.message);
+            _self.maskClassList = msgJson.message.blockClasses;
+            _self.maskPatternList = msgJson.message.patternList;
+            if (_self.maskPatternList) {
+              _self.scanElement(document.body, _self.maskPatternList);
+            }
+            _self.cobrowseMaskFields(msgJson.message);
             _self.agentProfileIcon = _self.userIcon;
             if (msgJson.message.profileIcon && msgJson.message.profileIcon !== 'undefined') {
                 _self.agentProfileIcon = msgJson.message.profileIcon;
@@ -1067,6 +1075,13 @@ function stopCoBrowse(sendMessageFlag = true, removeFromStorage = true) {
     if (cobrowsetoolbar) {
         cobrowsetoolbar.remove();
     }
+
+    this.maskClassList = [];
+    this.maskPatternList = [];
+
+    document.querySelectorAll('.rr-block').forEach(item => {
+        item.classList.remove('rr-block');
+    });
 }
 function closeChannel() {
     if (dataChannel && dataChannel.readyState === 'open') {
@@ -2173,6 +2188,68 @@ function dragElement(elmnt) {
             }
         }
     }
+
+    cobrowseMaskFields = function (e) {
+        console.log("cobrowse >>> koreCoBrowseMakingFields initialize");
+        for(var i =0;i< e.blockClasses.length > 0; i++){
+             if(e.blockClasses[i] === ''){
+                 return false
+             }
+             document.querySelectorAll('.'+e.blockClasses[i]).forEach(item => {
+                 item.classList.add('rr-block');
+             });
+        }
+     }
+
+     scanElement= (element, patternArray) =>{
+        var children = element.childNodes;
+        if (!children || children.length === 0) {
+            return;
+        }
+        for (var i = 0; i < children.length; i++) {
+            var value = "";
+            var childElement = children[i];
+            if (childElement.nodeName === 'TEXTAREA' || childElement.nodeName === 'INPUT') {
+                value = childElement.value;
+            } else if (childElement && childElement.childNodes && childElement.childNodes.length) {
+                value = childElement.childNodes[0].data;
+            } else if (childElement && childElement.childNodes && childElement.childNodes.length === 0) {
+                value = childElement.data;
+            }
+            if (value) {
+                // compare the value with patternArray
+                for (var j = 0; j < patternArray.length; j++) {
+                    var resExp = this.strToRegEx(patternArray[j]);
+                    var matchedStrings = value.match(resExp);
+                    if (matchedStrings && matchedStrings.length > 0) {
+                        // console.log("value===", value, childElement.classList);
+                        if (childElement.nodeName === 'TEXTAREA' || childElement.nodeName === 'INPUT') {
+                            childElement.classList.add("rr-block")
+                        }else if(childElement && childElement.childNodes?.length === 0) {
+                            childElement.parentElement.classList.add("rr-mask")
+                        } else {
+                            childElement.classList.add("rr-mask")
+                        }
+                        
+                    }
+                }
+            }
+            this.scanElement(childElement, patternArray);
+        }
+    }
+
+    strToRegEx = function (str) {
+        let i1 = str.indexOf("/")
+        if (i1 != -1) {
+        str = str.substr(i1+1);
+        }
+        let i2 = str.lastIndexOf("/");
+        if (i2 != -1) {
+            str = str.substr(0, i2)
+        }
+        return new RegExp(str)
+    }
+
     var koreCoBrowse = (function (exports) {
         exports.agentclient = AgentDesktop;
         exports.initialize = cobrowseInitialize;
@@ -4725,6 +4802,23 @@ function dragElement(elmnt) {
                     }
                 };
                 this.genAdds = function (n, target) {
+                    for (var i = 0; i < _this.maskClassList?.length > 0; i++) {
+                        if (_this.maskClassList[i] !== '') {
+                            if (n && n.classList && n.classList.contains(_this.maskClassList[i])) {
+                                n.classList.add('rr-block');
+                                takeFullSnapshot(false);
+                                return;
+                            }
+                            if (target && target.classList && target.classList.contains(_this.maskClassList[i])) {
+                                target.classList.add('rr-block');
+                                takeFullSnapshot(false);
+                                return;
+                            }
+                        }
+                    }
+                    if (_this.maskPatternList) {
+                        _this.scanElement(n, _this.maskPatternList);
+                    }
                     if (n && n.getAttribute && n.getAttribute('do-not-mutate') === 'true') {
                         return;
                     }
