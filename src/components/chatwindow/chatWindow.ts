@@ -2344,11 +2344,14 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
   }
 };
 
-getJWTByAPIKey (API_KEY_CONFIG: { KEY: any; bootstrapURL: any; }) {
+getJWTByAPIKey (API_KEY_CONFIG: { KEY: any; bootstrapURL: any; }, userIdentity: any) {
   const me: any = this;
-  const jsonData = {
+  const jsonData: any = {
     apiKey:API_KEY_CONFIG.KEY
   };
+  if (userIdentity && userIdentity != 'PLEASE_ENTER_USER_EMAIL_ID') {
+    jsonData['ity'] = userIdentity;
+  }
   return $.ajax({
     url: API_KEY_CONFIG.bootstrapURL||'https://platform.kore.ai/api/platform/websdk',
     type: 'post',
@@ -2414,7 +2417,7 @@ setupInternalAssertionFunction (){
 
 setupInternalAssertionFunctionWithAPIKey (){
   const me:any = this;
-  me.getJWTByAPIKey(me.config.botOptions.API_KEY_CONFIG).then(function(res: { botInfo: { name: any; _id: any; }; ity: any; jwt: any; }){
+  me.getJWTByAPIKey(me.config.botOptions.API_KEY_CONFIG, me.config.botOptions.userIdentity).then(function(res: { botInfo: { name: any; _id: any; }; ity: any; jwt: any; }){
     if(me.config.widgetSDKInstace && res.botInfo){
       var widgetsConfig=me.config.widgetSDKInstace.config;
       widgetsConfig.botOptions.botInfo.name=res.botInfo.name;
