@@ -327,6 +327,11 @@ Note: When integrated into an iFrame, the SDK's functionality will be confined t
 	// }		
 # Release History
 ```
+v10.8.1 [Minor] on 16-Nov-2024
+        Bugfixes
+               1.Kore markdown horizontal line issue fixed
+               2.Added masking functionality in Agent desktop
+
 v10.8.0 [Minor] on 3-Nov-2024: Master branch
         Bugfixes
                1.Horizontal rule issue fix in kore markdown
