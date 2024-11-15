@@ -1,3 +1,10 @@
+### 11.7.1
+* Release Nov 16, 2024
+* Bug fixes
+  * file upload button colors mapped to branding button colors
+  * date formatting issue fix in date and date range templates
+  * quick replies postback issue fix for numbers
+
 ### 11.7.0
 * Release Nov 3, 2024
 * Documentation
