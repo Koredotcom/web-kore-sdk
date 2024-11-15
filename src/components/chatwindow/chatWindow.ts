@@ -736,6 +736,7 @@ bindEvents  () {
 
   _chatContainer.on('click', 'li a, .isLink a',  (e: any) => {
     e.preventDefault();
+    e.stopPropagation();
     let targetEle = $(e.currentTarget);
     let a_link = targetEle.attr('href');
     if (a_link.indexOf("http:") < 0 && a_link.indexOf("https:") < 0) {
