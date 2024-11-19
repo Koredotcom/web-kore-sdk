@@ -34,10 +34,7 @@ let config= {
             // },
             {
               test: /\.(woff|woff2|eot|ttf|otf)$/i, // Rule for font files
-              type: 'asset/resource', // Copy fonts to output directory  
-              generator: {
-                filename: "fonts/[name][ext]",
-              },            
+              type: 'asset/resource', // Copy fonts to output directory            
             },
               {
                 test: /\.css|.scss$/,

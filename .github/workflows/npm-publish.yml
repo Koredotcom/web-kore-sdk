@@ -9,7 +9,7 @@ on:
       - v2/dev 
       - v2/dev-rc1
       - v3/dev
-      - v3/fontsIssue
+      - v3/fix
 jobs:
   build:
     runs-on: ubuntu-latest
