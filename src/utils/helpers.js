@@ -516,11 +516,11 @@ class KoreHelpers{
                             var _italicTxt = _matchItalic[j];
                             if ((txtArr[i].indexOf(_italicTxt) === 0) || (txtArr[i][txtArr[i].indexOf(_italicTxt) - 1] === ' ') || txtArr[i].indexOf(_italicTxt) !== -1) {
                             var validItalicMark = true;
-                                if(txtArr[i][txtArr[i].indexOf(_italicTxt) + _italicTxt.length]){
-                                    if(txtArr[i][txtArr[i].indexOf(_italicTxt) + _italicTxt.length] !== ' '){
-                                    validItalicMark = false;
-                                    }
-                                }
+                                // if(txtArr[i][txtArr[i].indexOf(_italicTxt) + _italicTxt.length]){
+                                //     if(txtArr[i][txtArr[i].indexOf(_italicTxt) + _italicTxt.length] !== ' '){
+                                //     validItalicMark = false;
+                                //     }
+                                // }
                                 if(validItalicMark){
                                 _italicTxt = _italicTxt.substring(1, _italicTxt.length - 1) + ' ';
                                 _italicTxt = '<i class="markdownItalic">' + _italicTxt + '</i>';
