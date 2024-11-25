@@ -1578,9 +1578,9 @@ getChatTemplate (tempType: string) {
      <div class="kr-wiz-menu-chat defaultTheme-kore">\
      </div>	\
          <div class="minimized-title"></div> \
-         <div class="minimized"><button tabindex ="0" class="messages"></button></div> \
+         <div class="minimized"><button tabindex ="0" class="messages" aria-label="chat"></button></div> \
          <div class="kore-chat-header"> \
-             <div id="botHeaderTitle" aria-labelledby="botHeaderTitle" class="header-title" title="${chatTitle}">${chatTitle}</div> \
+             <div id="botHeaderTitle" aria-labelledby="botHeaderTitle" class="header-title" title="${chatTitle}" tabindex=0 role="header">${chatTitle}</div> \
              <div class="chat-box-controls"> \
                  {{if botMessages.availableLanguages}}\
                      <select class="lang-selector" >\
