@@ -150,7 +150,14 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       if(userLocation.latitude !== 0 && userLocation.longitude !== 0) { //passing location for each message
         message["meta"].location = userLocation;
       }
-      this.RtmClient.sendMessage(message,optCb);
+      if (this.RtmClient) {
+        this.RtmClient.sendMessage(message,optCb);
+      } else {
+        var errorWSMsg = 'ws not connected or reconnecting, unable to send message';
+        if (optCb) {
+          optCb(new Error(errorWSMsg));
+        }
+      }
     }else{
       if(optCb){
         optCb(new Error("Bot is Initializing...Please try again"));
