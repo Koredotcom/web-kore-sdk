@@ -1,3 +1,26 @@
+### 11.7.1
+* Release Nov 16, 2024
+* Bug fixes
+  * file upload button colors mapped to branding button colors
+  * date formatting issue fix in date and date range templates
+  * quick replies postback issue fix for numbers
+
+### 11.7.0
+* Release Nov 3, 2024
+* Documentation
+  * added documentation for events, branding json and how to override branding json
+* Bug fixes
+  * quick replies template inline support added
+  * welcome screen starter box changes
+  * i18n issues fixed
+  * carousel image popup template added in answers plugin
+  * other minor bug fixes
+
+### 11.6.1
+* Release Oct 21, 2024
+* Bug fixes
+  * support for markdown added in digital form message
+
 ### 11.6.0
 * Release Sept 28, 2024
 * Breaking changes

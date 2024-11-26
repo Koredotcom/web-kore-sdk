@@ -3,6 +3,8 @@ import './answerTemplate.scss';
 import { h, Fragment, render  } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import {CarouselImagePopupTemplate} from '../carouselImagePopupTemplate/carouselImagePopupTemplate';
+import KoreHelpers from '../../../../utils/helpers';
+
 export function Answers(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
@@ -10,6 +12,7 @@ export function Answers(props: any) {
         msgData: msgData,
         hostInstance: hostInstance
     }
+    const helpers = KoreHelpers.helpers;
     const [answersObj, setAnswersObj]: any = useState({ "generative": { "answerFragments": [], "sources": [] }});
     const [modelType, setModelType] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(0);
@@ -62,7 +65,7 @@ export function Answers(props: any) {
                             <div class="sa-answer-result-sub-block">
                                 {
                                     answersObj.generative?.answerFragment?.map((answer: any) =>
-                                        <span class="sa-answer-result-heading" onMouseOver={()=>setSelectedIndex(answer?.id + 1)} onMouseOut={()=>setSelectedIndex(0)} dangerouslySetInnerHTML={{__html:answer?.title}}> <span><sup>{answer?.id + 1}</sup></span></span>
+                                        <span class="sa-answer-result-heading" onMouseOver={()=>setSelectedIndex(answer?.id + 1)} onMouseOut={()=>setSelectedIndex(0)} dangerouslySetInnerHTML={{__html: helpers.convertMDtoHTML(answer?.title, "bot") }}> <span><sup>{answer?.id + 1}</sup></span></span>
                                     )
                                 }                                
                             </div>
