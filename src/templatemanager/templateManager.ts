@@ -28,6 +28,9 @@ import TemplateAttachmentV3 from './templates/templateAttachment/templateAttachm
 import TemplateListWidget from './templates/listWidget/listWidget';
 import AdvancedMultiListTemplate from './templates/advancedMulitList/advancedMultiList';
 import InlineFormTemplate from './templates/inlineForm/inlineForm';
+import ArticleTemplate from './templates/articleTemplate/article';
+import OTPTemplate from './templates/otp/otp';
+import ResetPinTemplate from './templates/resetPin/resetPin';
 import CheckListTemplate from './templates/checkList/checkList';
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
@@ -84,6 +87,9 @@ class TemplateManager {
 		this.installTemplate(new TemplateListWidget());
 		this.installTemplate(new AdvancedMultiListTemplate());
 		this.installTemplate(new InlineFormTemplate());
+		this.installTemplate(new ArticleTemplate());
+		this.installTemplate(new OTPTemplate());
+		this.installTemplate(new ResetPinTemplate());
 		this.installTemplate(new CheckListTemplate());
 	}
 

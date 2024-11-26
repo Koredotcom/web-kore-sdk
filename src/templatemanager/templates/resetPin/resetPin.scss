@@ -1,0 +1,9 @@
+.pin-error {
+    color: #ff0000;
+    margin: 10px 0;
+    text-align: center;
+    
+    &.hidden {
+        display: none;
+    }
+}
