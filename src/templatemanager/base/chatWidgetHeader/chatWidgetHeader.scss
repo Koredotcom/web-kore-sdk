@@ -8,6 +8,7 @@
     width: 100%;
     padding: 16px;
     position: relative;
+    gap: 8px;
     &.transparent-style{
         background: rgba(255, 255, 255, 0.7);
         backdrop-filter: blur(10px);
@@ -111,7 +112,6 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        margin-right: 8px;
         svg{
             path{
                 stroke: var(--chat-widget-header-actions-color);
@@ -125,11 +125,11 @@
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+        gap: 8px;
         .img-block{
             flex-shrink: 0;
             display: flex;
             align-items: center;
-            margin-right: 8px;
             figure{
                 width: 32px;
                 height: 32px;
@@ -149,7 +149,6 @@
             width: 32px;
             height: 32px;
             flex-shrink: 0;
-            margin-right: 8px;
             background: var(--avatar-bg);
             border-radius: 24px;
             padding: 10px;
@@ -201,7 +200,6 @@
         align-items: center;
         flex-shrink: 0;
         gap: 12px;
-        margin-left: 8px;
         .btn-action{
             width: 20px;
             height: 20px;

@@ -280,6 +280,10 @@ $font-s-40:2.5rem;
     &:hover{
         background: var(--button-temp-bg-variation-2-hover);
     }
+    &:disabled{
+        opacity: 0.5;
+        pointer-events: none;
+    }
 }
 .kr-button-secondary{
     width: 100%;

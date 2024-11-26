@@ -59,7 +59,7 @@
                     line-height: normal;
                     letter-spacing: 0.5px;
                     text-transform: uppercase;
-                    text-align: left;
+                    text-align: start;
                 }
             }
             tbody{
@@ -77,7 +77,7 @@
                 }
                 td{
                     padding: 12px;
-                    text-align: left;
+                    text-align: start;
                     border-bottom: 1px solid var(--table-border);
                     color: var(--table-header-text-color);
                     font-size: 12px;
