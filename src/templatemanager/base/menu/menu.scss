@@ -23,7 +23,7 @@
             }
             span{
                 border-radius: 16px;
-                background: var(--gloabl-bg-secondary);
+                background: var(--sdk-gloabl-bg-secondary);
                 display: flex;
                 padding: 2px 8px;
                 justify-content: center;
@@ -38,7 +38,7 @@
         .title-desc-heading{
             width: 100%;
             p{
-                color: var(--gloabl-text-color);
+                color: var(--sdk-gloabl-text-color);
                 font-size: 12px;
                 font-weight: 400;
                 line-height: 18px;

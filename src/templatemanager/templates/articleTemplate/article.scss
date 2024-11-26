@@ -5,7 +5,7 @@
     width: 100%;
     .show-more-btn{
         padding: 8px 0;
-        color: var(--global-theme-color);
+        color: var(--sdk-global-theme-color);
         text-align: center;
         font-size: 12px;
         font-weight: 500;
@@ -23,8 +23,8 @@
     gap: 8px;
     .article-card{
         border-radius: 4px;
-        border: 1px solid var(--gloabl-border-color);
-        background: var(--global-white-bg);
+        border: 1px solid var(--sdk-gloabl-border-color);
+        background: var(--sdk-global-white-bg);
         display: flex;
         padding: 16px;
         flex-direction: column;
@@ -35,7 +35,7 @@
         text-align: start;
         cursor: pointer;
         &:hover{
-            background: var(--gloabl-bg-secondary); 
+            background: var(--sdk-gloabl-bg-secondary); 
         }
         .article-header{
             display: flex;
@@ -45,19 +45,19 @@
             svg{
                 flex-shrink: 0;
                 path{
-                    fill: var(--gloabl-text-color);
+                    fill: var(--sdk-gloabl-text-color);
                 }
             }
             span{
                 width: 100%;
-                color: var(--gloabl-text-color);
+                color: var(--sdk-gloabl-text-color);
                 font-size: 14px;
                 font-weight: 600;
             }
         }
         .article-body-text{
             width: 100%;
-            color: var(--gloabl-text-color);
+            color: var(--sdk-gloabl-text-color);
             font-size: 12px;
             font-weight: 400;
             display: -webkit-box;
@@ -77,7 +77,7 @@
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
-                color: var(--gloabl-text-color);
+                color: var(--sdk-gloabl-text-color);
                 font-size: 12px;
                 font-weight: 400;
                 line-height: normal;
@@ -96,7 +96,7 @@
         flex: 1 1 auto;
         padding: 0 16px 10px 16px;
         p{
-            color: var(--gloabl-text-color);
+            color: var(--sdk-gloabl-text-color);
             margin: 0;
             font-size: 12px;
             font-weight: 400;
@@ -105,7 +105,7 @@
     }
     .article-update-time-block{
         border-radius: 8px;
-        background: var(--gloabl-bg-secondary);
+        background: var(--sdk-gloabl-bg-secondary);
         display: flex;
         padding: 8px 16px;
         align-items: center;
@@ -114,7 +114,7 @@
         margin: 16px 16px 0 16px;
         word-break: break-word;
         .created-updated-text{
-            color: var(--gloabl-text-color);
+            color: var(--sdk-gloabl-text-color);
             font-size: 12px;
             font-weight: 400;
             line-height: normal;
@@ -127,7 +127,7 @@
             border: 0;
             padding: 0;
             background: transparent;
-            color: var(--global-theme-color);
+            color: var(--sdk-global-theme-color);
             font-size: 14px;
             font-weight: 500;
             line-height: 20px;
@@ -136,7 +136,7 @@
             cursor: pointer;
             svg{
                 path{
-                    fill: var(--global-theme-color);
+                    fill: var(--sdk-global-theme-color);
                 }
             }
         }
