@@ -103,19 +103,6 @@ class TaskPickerTemplate {
         }
         return actionsData;
     }
-    getTaskPickerOptions(taskPickerConfig: any) {
-        let me: any = this;
-        let $ = me.hostInstance.$;
-        var $taskContent = $('<div class="taskMenuPicker"></div>');
-        taskPickerConfig.forEach(function (task: any) {
-            var taskHtml = $('<div class="btnTask">\
-                <span class="taskName" data-value="'+ task.postback.value + '" data-title="' + task.postback.title + '" title="' + task.title + '">' + task.title + '</span>\
-                <div class="imageIcon"> <img src="'+ task.icon + '" class="displayIcon"></div>\
-                </div>');
-            $taskContent.append(taskHtml)
-        });
-        return $taskContent;
-    }
 
     getTaskPickerOptionsTemplate(){
         let me: any = this;

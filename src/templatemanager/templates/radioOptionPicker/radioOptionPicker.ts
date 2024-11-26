@@ -1,5 +1,6 @@
 
 import './radioOptionPicker.scss';
+import helpers from '../../../utils/helpers';
 class RadioOptionPickerTemplate {
 
     renderMessage(msgData: any) {
@@ -39,10 +40,13 @@ class RadioOptionPickerTemplate {
         let me: any = this;
         let $ = me.hostInstance.$;
         let chatWindowInstance = me.hostInstance;
-        // let accountData: any = me.getRadioOptions();
+        let helpersObj = helpers;
         let accountData: any = msgData.message[0].component.payload.radioOptions;
         chatWindowInstance.bottomSliderAction('show', me.messageHtml);
-        $(me.messageHtml).append(me.getradioOptionsPickerTemplate(accountData))
+        $(me.messageHtml).append($(me.getradioOptionsPickerTemplate()).tmpl({
+            'radioOptions': accountData,
+            'helpers': helpersObj.helpers
+        }));
         $(me.messageHtml).removeClass("hide");
         if (msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.heading) {
             $(me.messageHtml).find('.radioOptionHeading').text(msgData.message[0].component.payload.heading);
@@ -106,25 +110,34 @@ class RadioOptionPickerTemplate {
         }
         return accountData;
     }
-    getradioOptionsPickerTemplate(radioOptionConfig: any) {
-        let me: any = this;
-        let $ = me.hostInstance.$;
-        var $radioOptionsContent = $('<div class="radioOptionMenuPicker"></div>');
-        radioOptionConfig.forEach(function (radioOption: any) {
-            var radioOptionHtml = $('<label class="radioButton"><div class="btnAccount">\
-                                        <div class="radioValue">\
-                                            <input type="radio" id="selectedValue" name="radio">\
-                                                 <span class="checkmark"></span>\
-                                            </div>\
-                                            <span class="radioOptionDetails">\
-                                                <span class="radioOptionName" title="'+ radioOption.title + '" data-value="' + radioOption.postback.value + '" data-title="' + radioOption.postback.title + '">' + radioOption.title + '</span>\
-                                                <div class="radioOptionValue" title="'+ radioOption.value + '">' + radioOption.value + '</div>\
-                                            </span>\
-                                        </div> \
-                                    </label>');
-            $radioOptionsContent.append(radioOptionHtml)
-        });
-        return $radioOptionsContent;
+    getradioOptionsPickerTemplate() {
+        var radioOptionsTemplate = '<script id="chat_radio_options_tmpl" type="text/x-jqury-tmpl"> \
+            <div class="radioOptionMenuPicker"> \
+                {{if radioOptions && radioOptions.length}} \
+                    {{each(key, radioOption) radioOptions}} \
+                    <label class="radioButton"> \
+                        <div class="btnAccount"> \
+                            <div class="radioValue"> \
+                                <input type="radio" id="selectedValue" name="radio"> \
+                                <span class="checkmark"></span> \
+                            </div> \
+                            <span class="radioOptionDetails"> \
+                                <span class="radioOptionName" \
+                                    title="{{html helpers.convertMDtoHTML(radioOption.title, "bot")}}" \
+                                    data-value="${radioOption.postback.value}" \
+                                    data-title="${radioOption.postback.title}"> \
+                                    {{html helpers.convertMDtoHTML(radioOption.title, "bot")}} \
+                                </span> \
+                                <div class="radioOptionValue" title="${radioOption.value}">${radioOption.value}</div> \
+                            </span> \
+                        </div> \
+                    </label> \
+                    {{/each}} \
+                {{/if}} \
+            </div> \
+        </script>';
+
+        return radioOptionsTemplate;
     }
 }
 

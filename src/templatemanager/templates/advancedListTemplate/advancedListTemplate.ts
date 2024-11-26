@@ -359,15 +359,10 @@ class AdvancedListTemplate {
 				</div>'
 			}
 			function sliderContent(listItem: any) {
-				var $taskContent = $('<div class="inner-btns-acc if-full-width-btn"></div>');
-				if (listItem && listItem.buttons) {
-					var buttonsArray = listItem.buttons;
-					buttonsArray.forEach(function (button: any) {
-						var taskHtml = $('<button class="button_" type="' + button.type + '" title="' + button.title + '" value="'+button.payload+'" ><img src="' + button.icon + '">' + button.title + '</button>');
-						$taskContent.append(taskHtml)
-					});
-				}
-			return $taskContent;
+				return $(me.getTemplateSliderString()).tmpl({
+					buttons: listItem.buttons,
+					helpers: helpersObj.helpers
+				});
 			}
 			function sliderButtonEvents(sliderContent: any){
 				sliderContent.off('click','.inner-btns-acc .button_').on('click','.inner-btns-acc .button_',function(e: any){
@@ -874,6 +869,22 @@ class AdvancedListTemplate {
 		{{/if}}\
 		</script>';
         return advancedListTemplate;
+    }
+
+    getTemplateSliderString() {
+        const sliderTemplate = '<script id="chat_slider_content_tmpl" type="text/x-jqury-tmpl">\
+            <div class="inner-btns-acc if-full-width-btn">\
+                {{if buttons && buttons.length}}\
+                    {{each(i,button) buttons}}\
+                        <button class="button_" type="${button.type}" title="${button.title}" value="${button.payload}">\
+                            <img src="${button.icon}">\
+                            {{html helpers.convertMDtoHTML(button.title, "bot")}}\
+                        </button>\
+                    {{/each}}\
+                {{/if}}\
+            </div>\
+        </script>';
+        return sliderTemplate;
     }
 
 }
