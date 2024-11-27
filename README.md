@@ -283,7 +283,7 @@ Install node js if not installed  https://nodejs.org
 1. Uncomment amazon polly files 'plugins/aws-sdk-2.668.0.min.js' and 'plugins/kore-aws-polly.js' in index.html
 2. Provide AWS "REGION" and "IDENTITY_POOL_ID" in plugins/kore-aws-polly.js which can be generated from AWS web console by following the instructions here
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-started-browser.html#getting-started-browser-iam-role
-3.In kore-config.js set chatConfig.ttsInterface to "awspolly" and chatConfig.isTTSEnabled to "true"
+3. In kore-config.js set chatConfig.ttsInterface to "awspolly" and chatConfig.isTTSEnabled to "true"
 
 ## How to integrate Agent Desktop features 
 1. Goto in index.html and uncomment AgentDesktop files agentdesktop.css,ac_webrtc.min.js,audio_player.js,config.js,libs/c2c.js and agentdesktop.js
@@ -307,18 +307,29 @@ Note: When integrated into an iFrame, the SDK's functionality will be confined t
 
 # How to resolve conflicts with existing libraries like jquery, require, etc..
 	1. Add "libs/kore-no-conflict-start.js" before kore SDK files which will stores your library references.
-	2.Add "libs/kore-no-conflict-end.js" after kore SDK files which will reassign your library references.
-	In our sample UI/index.html it is been included already.	
+	2. Add "libs/kore-no-conflict-end.js" after kore SDK files which will reassign your library references.
+	In our sample UI/index.html it is been included already.
+# How to change the kore SDK language/i18n support in kore SDK
+1. Go to in index.html and uncomment the line <script src="kore-118n-config.js" type="text/javascript"></script>
+2. Now go to `kore-118n-config.js` file.
+3. Add your choice of language in the `availableLanguages`.
+4. Add relevant keys in the `languageStrings` for the newly added language.
+5. Language dropdown will be available now in the kore SDK header.
+ 
+> [!TIP]
+> To set a particular language as default language, go to kore-118n-config.js file and
+> set `defaultLanguage` to the language of your choice 
+
 # How to enable API based (webhook channel) message communication 
 	1. Enable the webhook channel by following the below link
 		https://developer.kore.ai/docs/bots/channel-enablement/adding-webhook-channel/
-	2.Configure the botOptions in kore-config.js with the values you get in above steps
+	2. Configure the botOptions in kore-config.js with the values you get in above steps
 		botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";//URL of the Service to generate JWT (JSON Web Tokens)
 		botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
 		botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
 		botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
 		botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
-	3.Un comment the following lines in UI/kore-config.js and provide the webhookURL which you get in the above steps
+	3. Un comment the following lines in UI/kore-config.js and provide the webhookURL which you get in the above steps
 	// for webhook based communication use following option 
 	// botOptions.webhookConfig={
 	//     enable:true,
