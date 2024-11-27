@@ -422,9 +422,14 @@
                 }
             }
             .buttons-triger-click-wrapper{
-                display: grid;
-                grid-template-columns: auto auto;
+                // display: grid;
+                // grid-template-columns: auto auto;
+                // grid-gap: 8px;
                 grid-gap: 8px;
+                height: 100%;
+                display: flex;
+                justify-content: flex-end;
+                width: 100%;
                 &.buttons-single-row-block{
                     .primary-button{
                         &:last-child{
