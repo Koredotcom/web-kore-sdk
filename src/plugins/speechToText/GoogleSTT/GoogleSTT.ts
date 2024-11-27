@@ -193,8 +193,8 @@ class GoogleSTT extends BaseSTT {
         let context = new Context();
         // }
         let mediaStreamSource = context.createMediaStreamSource(mediaStream);
-        window.userSpeechAnalyser = context.createAnalyser();
-        mediaStreamSource.connect(window.userSpeechAnalyser);
+        let userSpeechAnalyser = context.createAnalyser();
+        mediaStreamSource.connect(userSpeechAnalyser);
         console.log('Mediastream created');
         // if (_connection) {
         //     _connection.close();
