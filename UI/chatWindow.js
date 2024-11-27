@@ -50,7 +50,7 @@
             var _exports = {},
                 _template, _this = {};
             var navigator = window.navigator;
-            var mediaStream, mediaStreamSource, rec, _connection, intervalKey, context;
+            var mediaStream, mediaStreamSource, rec, _connection, intervalKey, context, userSpeechAnalyser;
             var _permission = false;
             var _user_connection = false;
             var CONTENT_TYPE = "content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)16000,+format=(string)S16LE,+channels=(int)1";
@@ -4605,8 +4605,8 @@
                     context = new Context();
                 }
                 mediaStreamSource = context.createMediaStreamSource(mediaStream);
-                window.userSpeechAnalyser = context.createAnalyser();
-                mediaStreamSource.connect(window.userSpeechAnalyser);
+                userSpeechAnalyser = context.createAnalyser();
+                mediaStreamSource.connect(userSpeechAnalyser);
                 console.log('Mediastream created');
                 if (_connection) {
                     _connection.close();
