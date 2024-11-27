@@ -3931,7 +3931,7 @@
                                         }, 2500);
                                         $('.historyLoadingDiv').removeClass('showMsg');
                                         if(!me.config.multiPageApp.enable){
-                                            $('.chat-container').append("<div class='endChatContainer'><span class='endChatContainerText'>End of chat history</span></div>");
+                                            $('.chat-container').append("<div class='endChatContainer'><span class='endChatContainerText'>" + botMessages.endofchat + "</span></div>");
                                         }
                                         if(messagesQueue.length){
                                             messagesQueue.forEach(function(msg, currIndex){
