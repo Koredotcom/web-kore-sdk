@@ -104,7 +104,8 @@
                 enable: true,  // Set true to sync messages on network back
                 batchSize: 10   // To configure the number of messages to fetch
             }
-        }
+        },
+        showAttachment: true  // Set false, to hide attachment icon
     };
      /* 
         allowGoogleSpeech will use Google cloud service api.
