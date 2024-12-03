@@ -17,6 +17,8 @@ With just few lines of code, you can embed our Kore.ai chat widget into your app
 
 [FAQ's](/docs/faqs) 
 
+[Migration from v1/v2](/docs/migration)
+
 
 ## 💡 Getting Started
 
@@ -149,5 +151,3 @@ class KoreCustomPlugin{
 chatWindowInstance.installPlugin(new KoreCustomPlugin());
 ```
 Kore offered plugins are listed [here](./docs/plugins)
-
-
