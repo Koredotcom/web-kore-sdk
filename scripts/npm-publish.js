@@ -28,6 +28,9 @@ function getArgs () {
 function writePackageJSON(packageJSON){
     fs.writeFileSync(TEMP_DIR+'/package.json', JSON.stringify(packageJSON));
 }
+function emptyExistingDistribution(){
+    fse.emptyDirSync(TEMP_DIR+'/dist');
+}
 function copyDistrubution(){
     fse.copySync("./dist", TEMP_DIR+'/dist',{overwrite:true});
 }
@@ -114,6 +117,7 @@ console.log("ARGS"+JSON.stringify(args));
 const TEMP_DIR = "./.temp";
 let packageJSON={};
 
+emptyExistingDistribution();
 copyDistrubution();
 copyReadMeFile();
  packageJSON=readPackageJSON();
