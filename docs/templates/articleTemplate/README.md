@@ -2,7 +2,10 @@
 
 ###### Preview
 
-<img width="241" alt="checkbox" src="https://github.com/Koredotcom/web-kore-sdk/assets/131746603/48993986-bcf1-4263-a277-cb8e170f0227">
+![image](https://github.com/user-attachments/assets/f82cf1cc-6db2-495e-8d09-3996dc6f57aa)
+
+![image](https://github.com/user-attachments/assets/816c1614-bf97-4279-9660-31b8a8ffec28)
+
 
 ###### Message Payload
 
