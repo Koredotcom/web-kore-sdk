@@ -1,3 +1,12 @@
+### 10.9.0
+- SDK Release Dec 09, 2024
+* Bug fixes
+  * ADA issues fix for chat icon and chat header
+  * crash issue fix in iOS on network interruption
+  * XSS issues fix in advanced list, radio options and task picker templates
+  * Google STT resource injection security issue fix
+  * Agent desktop audiocodes upgraded
+
 ### 10.8.1
 - SDK Release Nov 16, 2024
 * Bug fixes
