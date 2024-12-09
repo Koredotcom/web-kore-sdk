@@ -1,3 +1,20 @@
+### 11.8.0
+* Release Dec 09, 2024
+* Features
+  * added new article, otp and reset pin templates.
+    - [article template](https://github.com/Koredotcom/web-kore-sdk/tree/v3/dev/docs/templates/articleTemplate)
+    - [otp template](https://github.com/Koredotcom/web-kore-sdk/tree/v3/dev/docs/templates/otpTemplate)
+    - [reset pin template](https://github.com/Koredotcom/web-kore-sdk/tree/v3/dev/docs/templates/resetPinTemplate)
+* Documentation
+  * updated Agent Desktop
+* Bug fixes
+  * avatar cross fade bubble animation issue fixed
+  * fixed rtl issues
+  * expand animation for chat window issue fix
+  * fixed fonts issue
+  * answers template formatting issue fixed
+  * Google STT resource injection security issue fix
+
 ### 11.7.1
 * Release Nov 16, 2024
 * Bug fixes
