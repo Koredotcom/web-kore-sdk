@@ -100,6 +100,10 @@ export function QuickReplies(props: any) {
         hostInstance: hostInstance
     }
 
+    if (hostInstance.chatEle.querySelectorAll('.chat-widget-composebar .quick-replies') && hostInstance.chatEle.querySelectorAll('.chat-widget-composebar .quick-replies').length > 0) {
+        hostInstance.chatEle.querySelector('.chat-widget-composebar .quick-replies').remove();   // To remove quick replies container if exists
+    }
+
     if (msgData?.message?.[0]?.component?.payload?.template_type === 'quick_replies') {
         if (msgData?.fromHistory) {
             messageObj.msgData.message[0].cInfo.body = messageObj.msgData.message[0].cInfo.body.payload.text;
@@ -107,9 +111,6 @@ export function QuickReplies(props: any) {
         useEffect(() => {
             setTimeout(() => {
                 if (!msgData.fromHistory && !msgData?.message?.[0]?.component?.payload?.inline) {
-                    if (hostInstance.chatEle.querySelectorAll('.chat-widget-composebar .quick-replies') && hostInstance.chatEle.querySelectorAll('.chat-widget-composebar .quick-replies').length > 0) {
-                        hostInstance.chatEle.querySelector('.chat-widget-composebar .quick-replies').remove();   // To remove quick replies container if exists
-                    }
                     const quickReply = getHTML(QuickReply, msgData, hostInstance);
                     const composeBar = hostInstance.chatEle.querySelector('.chat-widget-composebar');
                     composeBar.insertBefore(quickReply, composeBar.firstChild);
