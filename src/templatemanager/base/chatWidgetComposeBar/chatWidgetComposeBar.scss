@@ -597,7 +597,7 @@
 
 // Powered By
 .powerdby-info {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     padding: 6px 16px;
@@ -613,5 +613,8 @@
     }
     figure {
         padding: 0 0 3px 0;
+    }
+    &.show-kore-banner {
+        display: flex;
     }
 }
