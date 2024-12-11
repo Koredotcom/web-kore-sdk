@@ -172,6 +172,7 @@ class KoreFileUploaderPlugin {
         serverMessageObject.message.attachments = [];
         if (this.attachmentFileId) {
           me.hostInstance.attachmentInfo.fileId = this.attachmentFileId;
+          this.attachmentFileId = '';
         }
         if (me.hostInstance.attachmentInfo && Object.keys(me.hostInstance.attachmentInfo) && Object.keys(me.hostInstance.attachmentInfo).length) {
           data.chatWindowEvent.stopFurtherExecution = true;
