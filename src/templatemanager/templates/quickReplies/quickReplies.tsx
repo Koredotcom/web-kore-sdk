@@ -100,7 +100,7 @@ export function QuickReplies(props: any) {
         hostInstance: hostInstance
     }
 
-    if (hostInstance.chatEle.querySelectorAll('.chat-widget-composebar .quick-replies') && hostInstance.chatEle.querySelectorAll('.chat-widget-composebar .quick-replies').length > 0) {
+    if (hostInstance.chatEle && hostInstance.chatEle.querySelectorAll('.chat-widget-composebar .quick-replies') && hostInstance.chatEle.querySelectorAll('.chat-widget-composebar .quick-replies').length > 0) {
         hostInstance.chatEle.querySelector('.chat-widget-composebar .quick-replies').remove();   // To remove quick replies container if exists
     }
 
