@@ -1,3 +1,8 @@
+### 11.8.1
+* Release Dec 19, 2024
+* Bug fixes
+  * quick replies template remove issue fix on bot message
+
 ### 11.8.0
 * Release Dec 09, 2024
 * Features
