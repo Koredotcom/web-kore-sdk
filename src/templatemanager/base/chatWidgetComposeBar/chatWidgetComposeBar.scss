@@ -272,7 +272,7 @@
                 font-size: 14px;
                 line-height: 17px;                
                 color: var(--chat-widget-compose-bar-text-area-color);
-                font-family: 'Inter';
+                // font-family: 'Inter';
                 &::placeholder{
                     color: var(--chat-widget-compose-bar-text-area-placeholder-color);
                 }
