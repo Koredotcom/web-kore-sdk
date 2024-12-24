@@ -65,7 +65,7 @@ export function Answers(props: any) {
                             <div class="sa-answer-result-sub-block">
                                 {
                                     answersObj.generative?.answerFragment?.map((answer: any) =>
-                                        <span class="sa-answer-result-heading" onMouseOver={()=>setSelectedIndex(answer?.id + 1)} onMouseOut={()=>setSelectedIndex(0)}><span dangerouslySetInnerHTML={{__html:answer?.title}}></span><span><sup>{answer?.id + 1}</sup></span></span>
+                                        <span class="sa-answer-result-heading" onMouseOver={()=>setSelectedIndex(answer?.id + 1)} onMouseOut={()=>setSelectedIndex(0)}><span dangerouslySetInnerHTML={{__html:helpers.convertMDtoHTML(answer?.title, "bot") }}></span><span><sup>{answer?.id + 1}</sup></span></span>
                                     )
                                 }                                
                             </div>
