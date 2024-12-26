@@ -65,13 +65,13 @@ export function Answers(props: any) {
                             <div class="sa-answer-result-sub-block">
                                 {
                                     answersObj.generative?.answerFragment?.map((answer: any) =>
-                                        <span class="sa-answer-result-heading" onMouseOver={()=>setSelectedIndex(answer?.id + 1)} onMouseOut={()=>setSelectedIndex(0)} dangerouslySetInnerHTML={{__html: helpers.convertMDtoHTML(answer?.title, "bot") }}> <span><sup>{answer?.id + 1}</sup></span></span>
+                                        <span class="sa-answer-result-heading" onMouseOver={()=>setSelectedIndex(answer?.id + 1)} onMouseOut={()=>setSelectedIndex(0)}><span dangerouslySetInnerHTML={{__html:helpers.convertMDtoHTML(answer?.title, "bot") }}></span><span><sup>{answer?.id + 1}</sup></span></span>
                                     )
                                 }                                
                             </div>
                             <div className="sa-answer-gen-footer">
                                     {
-                                        answersObj?.generative?.sources?.map((source: any, index: number) => (
+                                        answersObj?.generative?.sources?.filter((source: any) => source?.title?.length > 0)?.map((source: any, index: number) => (
                                             <div class="sa-answer-result-footer" ><span onClick={()=>redirectToURL(source?.url)}>{index + 1}. <span className={`${(selectedIndex===index+1)&&'selected'}`}>{source?.title || source?.url}</span></span>
                                              {(source?.image_url?.length > 0)&&
                                             <Fragment>
