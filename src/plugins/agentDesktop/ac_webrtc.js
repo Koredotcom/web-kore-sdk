@@ -15,9 +15,7 @@
 class AudioCodesUA {
      JsSipInit = function() {
         !(function (e) {
-            if ('object' == typeof exports && 'undefined' != typeof module)
-                module.exports = e()
-            else if ('function' == typeof define && define.amd) define([], e)
+            if ('function' == typeof define && define.amd) define([], e)
             else {
                 ;('undefined' != typeof window
                     ? window
