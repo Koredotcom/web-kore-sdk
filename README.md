@@ -338,14 +338,17 @@ Note: When integrated into an iFrame, the SDK's functionality will be confined t
 	// }		
 # Release History
 ```
-v10.9.0 [Minor] on 09-Dec-2024
+v10.9.1 [Minor] on 19-Dec-2024: Master branch
+        Stable release
+
+v10.9.0 [Minor] on 09-Dec-2024: Master branch
         Features
                 1.Added config to hide/show attachment icon
         Bugfixes
                 1.i18n chat history label issue fix
                 2.Google STT resource injection security issue fix
 
-v10.8.1 [Minor] on 16-Nov-2024
+v10.8.1 [Minor] on 16-Nov-2024: Master branch
         Bugfixes
                 1.Kore markdown horizontal line issue fixed
                 2.Added masking functionality in Agent desktop
