@@ -285,7 +285,7 @@ Install node js if not installed  https://nodejs.org
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-started-browser.html#getting-started-browser-iam-role
 3. In kore-config.js set chatConfig.ttsInterface to "awspolly" and chatConfig.isTTSEnabled to "true"
 
-## How to integrate Agent Desktop features 
+## How to integrate Contact Center Agent Desktop features
 1. Goto in index.html and uncomment AgentDesktop files agentdesktop.css,ac_webrtc.min.js,audio_player.js,config.js,libs/c2c.js and agentdesktop.js
 2. Include these files in gruntFile.js if you are using minifed SDK
 
