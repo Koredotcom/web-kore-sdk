@@ -8,7 +8,7 @@ import {
 
 } from '../../../../../dist/kore-web-sdk.esm.browser.js';
 
-
+// OPTION #1 with client id and client secret
 //configure chatConfig
 var botOptions=chatConfig.botOptions;
 botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
@@ -46,11 +46,10 @@ let wSdk = new KoreWidgetSDK(widgetsConfig);
 chatConfig.widgetSDKInstace=wSdk;
 
 
-
-
-//OPTION #1 with own JWT Service
 chatWindowInstance.on("jwtSuccess", (res,event) => {
     wSdk.setJWT(res.jwt);
+});
+chatWindowInstance.on("beforeViewInit", () => {
     wSdk.show(widgetsConfig);
 });
 chatWindowInstance.show(chatConfig);
@@ -58,39 +57,35 @@ chatWindowInstance.show(chatConfig);
 
 
 
-// //OPTION #2 with own JWT Service
-// chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){
-//     chatWindowInstance.setJWT(res.jwt);
-//     chatWindowInstance.show();
-
-//     wSdk.setJWT(res.jwt);
-//     wSdk.show(widgetsConfig);
-
-// },function(errRes){
-
-// });
-
-
-
-// //OPTION #3 with own JWT Service
+// OPTION #2 with own JWT Service
+// var botOptions=chatConfig.botOptions;
+// botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
+// botOptions.botInfo = { 
+//     name: "PLEASE_ENTER_BOT_NAME",
+//     _id: "PLEASE_ENTER_BOT_ID" 
+// };
+// chatConfig.botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
 // chatConfig.JWTAsertion=function(commitJWT){
 //     chatWindowInstance.getJWT(chatConfig.botOptions).then(function(res){
 //         chatWindowInstance.setJWT(res.jwt);
 //         wSdk.setJWT(res.jwt);
-//         wSdk.show(widgetsConfig);
 //         commitJWT();
 //     },function(errRes){
 //         console.log(errRes);
 //     });
 //  };
+// chatWindowInstance.on("beforeViewInit", () => {
+//     wSdk.show(widgetsConfig);
+// });
+// chatWindowInstance.show(chatConfig);
 
 
-
-//todo:underconstuction:identity needs to be passed
-//jwt retry needs discussion
+// OPTION #3 using API key
 // chatConfig.API_KEY_CONFIG.KEY="xyz";
 // chatWindowInstance.on("jwtSuccess", (res,event) => {
 //     wSdk.setJWT(res.jwt);
+// });
+// chatWindowInstance.on("beforeViewInit", () => {
 //     wSdk.show(widgetsConfig);
 // });
 // chatWindowInstance.show(chatConfig);           
