@@ -1481,7 +1481,9 @@ render  (chatWindowHtml: any) {
     if (me.config.UI.version == 'v2') {
       me.chatEle.find('.kr-v2-wiz-menu-chat').show();
     } else {
-      // me.chatEle.querySelector('.kr-wiz-menu-chat').classList.add('show'); // based on config need to show widgets
+      if (me.config.branding.general.widgetPanel) {
+        me.chatEle.querySelector('.kr-wiz-menu-chat').classList.add('show');
+      }
     }
   }
   if (me.config.UI.version == 'v2') {
@@ -2728,7 +2730,7 @@ applyVariableValue (key:any,value:any,type:any){
       brandingData: brandingData ? brandingData : me.config.branding
     });
 
-    if (me.config.widgetSDKInstace) {
+    if (me.config.widgetSDKInstace && isEditor) {
       if (me.chatEle?.querySelector('.kr-wiz-menu-chat')) {
         if (me.config.branding.general.widgetPanel) {
           me.chatEle.querySelector('.kr-wiz-menu-chat').classList.add('show');
