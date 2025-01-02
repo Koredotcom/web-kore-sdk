@@ -2965,7 +2965,7 @@ applyVariableValue (key:any,value:any,type:any){
           "emoji_short_cut": true,
           "typing_indicator_timeout": 10000,
           "location": {
-            "enable": true,
+            "enable": false,
             "google_maps_API_key": ""
           },
           "history": {
