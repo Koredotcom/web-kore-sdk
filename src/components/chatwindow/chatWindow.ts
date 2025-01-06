@@ -2311,14 +2311,17 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
                   $('.chat-container').animate({
                     scrollTop: $('.chat-container').prop('scrollHeight'),
                   }, 2500);
-                  $('.chat-container').append("<div class='endChatContainer'><span class='endChatContainerText'>" + me.config.botMessages.endofchat + "</span></div>");
+                  if (!me.config.multiPageApp.enable) {
+                    $('.chat-container').append("<div class='endChatContainer'><span class='endChatContainerText'>" + me.config.botMessages.endofchat + "</span></div>");
+                  }
                 } else {
                   const chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
-                  const dateSeparator = getHTML(DateSeparator, {text: me.config.botMessages.endofchat, type: 'end-of-history-separator'}, me); 
-                  if (me.chatEle.querySelector('.end-of-history-separator')?.length < 1)  {
-                    chatContainer.appendChild(dateSeparator);
-                  } 
-                  chatContainer.appendChild(dateSeparator);
+                  if (!me.config.multiPageApp.enable) {
+                    const dateSeparator = getHTML(DateSeparator, {text: me.config.botMessages.endofchat, type: 'end-of-history-separator'}, me); 
+                    if (!me.chatEle.querySelector('.end-of-history-separator'))  {
+                      chatContainer.appendChild(dateSeparator);
+                    } 
+                  }
                   chatContainer.scrollTo({
                     top: chatContainer.scrollHeight,
                     behavior: 'smooth'
