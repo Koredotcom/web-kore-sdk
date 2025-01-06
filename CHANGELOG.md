@@ -1,3 +1,11 @@
+### 11.9.0
+* Release Jan 05, 2025
+* Bug fixes
+  * advanced multi select template issues fix
+  * input placeholder font issue fix
+  * answers template empty value issue fix
+  * other minor bug fixes
+
 ### 11.8.1
 * Release Dec 19, 2024
 * Bug fixes
