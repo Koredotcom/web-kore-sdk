@@ -1785,7 +1785,9 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
                   $('.chat-container').animate({
                     scrollTop: $('.chat-container').prop('scrollHeight'),
                   }, 2500);
-                  $('.chat-container').append("<div class='endChatContainer'><span class='endChatContainerText'>End of chat history</span></div>");
+                  if (!me.config.multiPageApp.enable) {
+                    $('.chat-container').append("<div class='endChatContainer'><span class='endChatContainerText'>End of chat history</span></div>");
+                  }
               }
               if (messagesQueue.length) {
                 messagesQueue.forEach((msg: any, currIndex: number) => {
