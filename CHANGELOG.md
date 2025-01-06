@@ -1,3 +1,8 @@
+### 10.10.0
+- SDK Release Jan 05, 2025
+* Documentation
+  * updated Agent Desktop
+
 ### 10.9.1
 - SDK Release Dec 19, 2024
 * Bug fixes
