@@ -359,7 +359,7 @@ class KoreHelpers{
                     txtArr[i] = '\r\n';
                     _lineBreakAdded = true;
                 } else if (txtArr[i].indexOf('*') === 0) {
-                    if (!isEven(txtArr[i].split('*').length - 1)) {
+                    if (!isEven(txtArr[i].split('*').length - 1) && txtArr[i].substring(1)) {
                         txtArr[i] = '\r\n&#9679; ' + txtArr[i].substring(1);
                         _lineBreakAdded = true;
                     }
