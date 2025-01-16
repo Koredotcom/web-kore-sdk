@@ -258,7 +258,7 @@ export function ChatWidgetComposeBar(props: any) {
                 <p>{hostInstance.config.botMessages.typing}</p>
                 <div class="dot-flashing"></div>
             </div>}
-            <div className="powerdby-info">
+            <div className="powerdby-info powerdby-hide">
                 <p>{hostInstance.config.botMessages.poweredBy}</p>
                 <figure>
                     <img src={iconHelper.getIcon('kore_logo')} alt="kore-img" />

@@ -282,14 +282,6 @@ export function WelcomeScreenContainer(props: any) {
                         </a>)))}
                 </article>}
             </div>        
-            <footer>
-                <div className="powerdby-info">
-                    <p>Powered by</p>
-                    <figure>
-                        <img src={iconHelper.getIcon('kore_logo')} alt="kore-img" />
-                    </figure>
-                </div>
-            </footer>
         </div>
     );
 

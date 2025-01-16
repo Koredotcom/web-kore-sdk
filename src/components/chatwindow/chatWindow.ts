@@ -1481,7 +1481,9 @@ render  (chatWindowHtml: any) {
     if (me.config.UI.version == 'v2') {
       me.chatEle.find('.kr-v2-wiz-menu-chat').show();
     } else {
-      // me.chatEle.querySelector('.kr-wiz-menu-chat').classList.add('show'); // based on config need to show widgets
+      if (me.config.branding.general.widgetPanel) {
+        me.chatEle.querySelector('.kr-wiz-menu-chat').classList.add('show');
+      }
     }
   }
   if (me.config.UI.version == 'v2') {
@@ -2309,14 +2311,17 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
                   $('.chat-container').animate({
                     scrollTop: $('.chat-container').prop('scrollHeight'),
                   }, 2500);
-                  $('.chat-container').append("<div class='endChatContainer'><span class='endChatContainerText'>" + me.config.botMessages.endofchat + "</span></div>");
+                  if (!me.config.multiPageApp.enable) {
+                    $('.chat-container').append("<div class='endChatContainer'><span class='endChatContainerText'>" + me.config.botMessages.endofchat + "</span></div>");
+                  }
                 } else {
                   const chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
-                  const dateSeparator = getHTML(DateSeparator, {text: me.config.botMessages.endofchat, type: 'end-of-history-separator'}, me); 
-                  if (me.chatEle.querySelector('.end-of-history-separator')?.length < 1)  {
-                    chatContainer.appendChild(dateSeparator);
-                  } 
-                  chatContainer.appendChild(dateSeparator);
+                  if (!me.config.multiPageApp.enable) {
+                    const dateSeparator = getHTML(DateSeparator, {text: me.config.botMessages.endofchat, type: 'end-of-history-separator'}, me); 
+                    if (!me.chatEle.querySelector('.end-of-history-separator'))  {
+                      chatContainer.appendChild(dateSeparator);
+                    } 
+                  }
                   chatContainer.scrollTo({
                     top: chatContainer.scrollHeight,
                     behavior: 'smooth'
@@ -2728,7 +2733,7 @@ applyVariableValue (key:any,value:any,type:any){
       brandingData: brandingData ? brandingData : me.config.branding
     });
 
-    if (me.config.widgetSDKInstace) {
+    if (me.config.widgetSDKInstace && isEditor) {
       if (me.chatEle?.querySelector('.kr-wiz-menu-chat')) {
         if (me.config.branding.general.widgetPanel) {
           me.chatEle.querySelector('.kr-wiz-menu-chat').classList.add('show');
@@ -2963,7 +2968,7 @@ applyVariableValue (key:any,value:any,type:any){
           "emoji_short_cut": true,
           "typing_indicator_timeout": 10000,
           "location": {
-            "enable": true,
+            "enable": false,
             "google_maps_API_key": ""
           },
           "history": {

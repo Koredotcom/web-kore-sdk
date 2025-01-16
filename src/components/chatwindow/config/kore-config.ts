@@ -55,7 +55,7 @@ chatConfig = {
     container:'body',
     allowIframe: false, 			// set true, opens authentication links in popup window, default value is "false"
     isSendButton: false, 			// set true, to show send button below the compose bar
-    allowLocation: true,			// deprecated - please use location.enable
+    allowLocation: false,			// deprecated - please use location.enable
     loadHistory: true,				// deprecated - please use history.enable
     messageHistoryLimit: 10,		// deprecated - please use history.recent.batchSize
     googleMapsAPIKey: "",           // deprecated - please use location.googleMapsAPIKey
@@ -72,7 +72,7 @@ chatConfig = {
     enableThemes : true, //set true to apply the branding configured    ,
     branding: BrandingJSON,
     location: {
-        enable: true, // set false, to deny sending location to server
+        enable: false, // set false, to deny sending location to server
         googleMapsAPIKey: '' // provide Google maps API key to get location details
     },
     history:{

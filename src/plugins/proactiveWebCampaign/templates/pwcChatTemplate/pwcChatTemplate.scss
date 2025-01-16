@@ -246,23 +246,4 @@
             }
         }
     }
-    .powerdby-info {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0px 16px;
-        background: var(--Gray-Modern-50, #F8FAFC);
-        height: 28px;
-        p {
-            font-weight: 500;
-            font-size: 10px;
-            line-height: 12px;
-            color: var(--Gray-Modern-400, #9AA4B2);
-            margin-right: 5px;
-            flex-shrink: 0;
-        }
-        figure {
-            padding: 0 0 3px 0;
-        }
-    }
 }
