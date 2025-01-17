@@ -330,12 +330,17 @@ Note: When integrated into an iFrame, the SDK's functionality will be confined t
 		botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
 		botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 	3. Un comment the following lines in UI/kore-config.js and provide the webhookURL which you get in the above steps
-	// for webhook based communication use following option 
-	// botOptions.webhookConfig={
+ 	// for webhook based communication use following option 
+	// botOptions.webhookConfig = {
 	//     enable:true,
 	//     webhookURL:'PLEASE_PROVIDE_WEBHOOK_URL',
 	//     apiVersion:2	
-	// }		
+	// }
+ 
+ 	Note: Polling must be enabled for webhook version 2. Please refer https://developer.kore.ai/docs/bots/channel-enablement/adding-webhook-channel/#Step_1_Associate_an_App on how to enable polling.
+
+ 
+	
 # Release History
 ```
 v10.10.0 [Minor] on 05-Jan-2025: Master branch
