@@ -34,6 +34,7 @@ botOptions.webhookConfig={
     useSDKChannelResponses: false, //set it to true if you would like to use the responses defined for Web/Mobile SDK Channel
     apiVersion:2
 }
+// Note: Polling must be enabled for webhook version 2. Please refer https://docs.kore.ai/xo/channels/add-webhook-channel/#step-1-associate-an-app on how to enable polling.
 
 // To modify the web socket url use the following option
 // botOptions.reWriteSocketURL = {
