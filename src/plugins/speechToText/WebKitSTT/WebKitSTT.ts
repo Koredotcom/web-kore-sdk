@@ -47,13 +47,20 @@ class WebKitSTT extends BaseSTT {
     }
 
     initializeWebKitSpeechRecognition() {
-        let me: any = this;
+        let me = this;
         let $ = me.hostInstance.$;
-        if ('webkitSpeechRecognition' in window && me.isChrome()) {
-            this.recognition = new window.webkitSpeechRecognition;
+        
+        // Updated to use standard SpeechRecognition with webkit fallback
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        
+        if (SpeechRecognition) {
+            this.recognition = new SpeechRecognition();
             this.final_transcript = '';
+            
+            // Added standard configuration options
             this.recognition.continuous = true;
             this.recognition.interimResults = true;
+            this.recognition.maxAlternatives = 1;
 
             this.recognition.onstart = function () {
                 this.prevStr = "";
