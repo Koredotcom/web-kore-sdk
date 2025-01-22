@@ -3104,7 +3104,9 @@
                             speakTextWithAWSPolly(_txtToSpeak);
                         }
 
-                    }else if (!_ttsConnection || (_ttsConnection.readyState && _ttsConnection.readyState !== 1)) {
+                    } else if (me.config.ttsInterface === 'azure') {
+                        me.speakWithAzure(_txtToSpeak);
+                    } else if (!_ttsConnection || (_ttsConnection.readyState && _ttsConnection.readyState !== 1)) {
                         try {
                             _ttsConnection = createSocketForTTS();
                         } catch (e) {
@@ -4547,7 +4549,7 @@
                     if (recognizer != null) {
                         RecognizerStop(SDK, recognizer);
                     }
-                    recognizer = RecognizerSetup(SDK, chatInitialize.config.stt.azure.recognitionMode, chatInitialize.config.stt.azure.recognitionLanguage, 0, chatInitialize.stt.azure.subscriptionKey);
+                    recognizer = RecognizerSetup(SDK, chatInitialize.config.stt.azure.recognitionMode, chatInitialize.config.stt.azure.recognitionLanguage, 0, chatInitialize.config.stt.azure.subscriptionKey);
                     RecognizerStart(SDK, recognizer);
                 } else if(chatInitialize.config.stt.vendor === 'google'){
                     // using google cloud speech API
@@ -4835,6 +4837,17 @@
                    console.warn("KORE:Your browser doesn't support TTS(Speech Synthesiser)")
                }
             }
+            chatWindow.prototype.speakWithAzure = function(_txtToSpeak) {
+                if (!_txtToSpeak) {
+                    return false;
+                }
+                
+                if (typeof window.speakTextWithAzure === 'function') {
+                    window.speakTextWithAzure(_txtToSpeak);
+                } else {
+                    console.warn("KORE: Azure TTS is not properly initialized");
+                }
+            };
             chatWindow.prototype.stopSpeaking= function() {
                 var me = this;
                 if (me.config.isTTSEnabled) {
@@ -4843,6 +4856,10 @@
                             audioMsgs = [];
                             audioPlaying = false;
                             window.speechSynthesis.cancel();
+                        }
+                    } else if (me.config.ttsInterface === "azure") {
+                        if (typeof window.stopSpeakingAzure === 'function') {
+                            window.stopSpeakingAzure();
                         }
                     }
                 }
