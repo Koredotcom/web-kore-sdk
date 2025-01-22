@@ -6,31 +6,18 @@ Here are the some of the frequently asked questions
 
 ### How to customize styles (CSS) in chat window ?
 
-Any styling in the chat window can be overridden by targeting the parent class ".kore-chat-window" in your application code.
+Any styling in the chat window can be overridden by targeting the parent class ".kore-chat-window-main-section" in your application code.
 
-###### Example 1: Hide reload button
+###### Example 1: Increase width of chat window
 ```css
-.kore-chat-window .kore-chat-header .reload-btn{
-  display: none !important;
-}
-```
-###### Example 2: Increase width of chat window
-```css
-.kore-chat-window{
+.kore-chat-window-main-section {
   width: 600px !important;
 }
 ```
-###### Example 3: Make chat window to occupy full screen
+###### Example 2: Make chat window to occupy full screen
 ```css
-.kore-chat-window:not(.minimize){
+.kore-chat-window-main-section {
   width: 100% !important;
-  height: 100% !important;
-  top: 0 !important;
-  bottom: 0 !important;
-  max-height: 100% !important;
-  max-width: 100% !important;
-  margin: 0 !important;
-  left: 0 !important;
 }
 ```
 ### How to open chat window by default ?
@@ -39,9 +26,11 @@ By default chat icon will be provided to user to click and open chat window on d
 
 ###### Example: How to open chat window by default
 ```js
-chatWindowInstance.on("viewInit", (event) => {
-    let chatEle=event.chatEle;
-    chatEle.find('.messages').trigger('click');
+let viewInit = chatWindowInstance.EVENTS.VIEW_INIT;
+chatWindowInstance.on(viewInit, (event) => { 
+  setTimeout(() => {
+    chatWindowInstance.chatEle.querySelector('.avatar-bg').click();
+  }, 800);
 });
 chatWindowInstance.show(chatConfig);
 ```
