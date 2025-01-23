@@ -57,19 +57,9 @@ To integrate Kore Web SDK in Service Now portal please follow the below steps.
    > [!TIP]
    > Instead of API Key you can also use your own JWT service and configure
 
-  
 
+#### Service Now frequently update the instructions. It is advised to check the instructions regularly by following the below links:
 
-   
-
-
-
-
-
-
-
-
-
-
-
-
+* [Service Now Developer Portal](https://developer.servicenow.com/dev.do#!/reference)
+* [Service Now Docs](https://www.servicenow.com/docs/)
+* [Creating a Widget](https://www.servicenow.com/docs/bundle/washingtondc-platform-user-interface/page/build/service-portal/task/create-new-widget.html)
