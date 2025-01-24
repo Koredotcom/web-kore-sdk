@@ -343,6 +343,12 @@ Note: When integrated into an iFrame, the SDK's functionality will be confined t
 	
 # Release History
 ```
+v10.10.1 [Minor] on 25-Jan-2025: Master branch
+        Features
+		1.Azure Text to Speech introduced
+        Bugfixes
+                1.Markdown unordered list empty text bullet issue fix
+
 v10.10.0 [Minor] on 05-Jan-2025: Master branch
         Stable release
 
