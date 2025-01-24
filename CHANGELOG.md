@@ -1,3 +1,10 @@
+### 10.10.1
+- SDK Release Jan 25, 2025
+* Bug fixes
+  * end of chat history label removed for multi page app feature
+  * ADA issues fix for chat header
+  * markdown unordered list empty text bullet issue fix
+
 ### 10.10.0
 - SDK Release Jan 05, 2025
 * Documentation
