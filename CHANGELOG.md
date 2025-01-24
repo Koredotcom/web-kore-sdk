@@ -1,3 +1,16 @@
+### 11.9.1
+* Release Jan 25, 2025
+* Documentation
+  * added instructions for Kore Web SDK Service Now integration
+  * updated faqs
+* Bug fixes
+  * end of chat history label removed for multi page app feature
+  * powered by kore branding in footer removed
+  * location access disabled by default
+  * markdown unordered list empty text bullet issue fix
+  * widgets loading issue fix
+  * audiocodes upgraded to v1.19.0 in Agent Desktop plugin
+
 ### 11.9.0
 * Release Jan 05, 2025
 * Bug fixes
