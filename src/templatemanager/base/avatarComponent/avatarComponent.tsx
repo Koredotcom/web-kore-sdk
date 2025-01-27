@@ -76,6 +76,16 @@ export function AvatarComponent(props: any) {
         hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
         hostInstance.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
         hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(hostInstance.config.branding.chat_bubble.expand_animation);
+        if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
+            hostInstance.setLocalStoreItem('kr-cw-welcome-chat', true);
+            hostInstance.setLocalStoreItem('kr-cw-state', 'open');
+        }
+        if (hostInstance.skipedInit) {
+            if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
+                hostInstance.setLocalStoreItem('kr-cw-uid', hostInstance.config.botOptions.userIdentity);
+            }
+            hostInstance.skipedInit = false;
+        }
         if (!hostInstance.isSocketOpened) {
             hostInstance.bot.logInComplete();
         }
