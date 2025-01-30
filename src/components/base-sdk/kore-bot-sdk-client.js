@@ -571,6 +571,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this.RtmClient.on('reconnect_event', event => {
         this.emit('reconnected', event);
       });
+      this.RtmClient.on('before_ws_con', event => {
+        this.emit('before_ws_connection', event);
+      });
       this.emit("rtm_client_initialized");
       this.emit(WEB_EVENTS.JWT_GRANT_SUCCESS,{jwtgrantsuccess : data});
       if (this.options.openSocket || this.options.autoConnect || this.options.botInfo.uiVersion == 'v2') {
@@ -1442,6 +1445,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     this.CLIENT_EVENTS=CLIENT_EVENTS.RTM;
     this.$=clientOpts.$
     this.debug=debug;
+    this.socketConfig = clientOpts?.webSocketConfig || {};
   }
   
   inherits(KoreRTMClient, BaseAPIClient);
@@ -1517,8 +1521,17 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
         }
       }
     } else {
-      if(__reconnect__){
-        data.url = data.url + "&isReconnect=true";
+      if (this.socketConfig && this.socketConfig?.socketUrl &&
+        this.socketConfig?.socketUrl?.queryParams && Object.keys(this.socketConfig.socketUrl.queryParams).length > 0) {
+        Object.keys(this.socketConfig.socketUrl.queryParams).forEach((qp) => {
+          if (qp && this.socketConfig.socketUrl.queryParams[qp]) {
+            data.url = data.url + '&' + qp + '=' + this.socketConfig.socketUrl.queryParams[qp];
+          }
+        });
+      } else {
+        if (__reconnect__) {
+          data.url = data.url + "&isReconnect=true";
+        }
       }
       if (!__reconnect__ && window.sessionStorage.getItem('isReconnect') == 'true') {
         data.url = data.url + "&isReconnect=true";
@@ -1529,8 +1542,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this.authenticated = true;
       //this.activeUserId = data.self.id;
       this.emit(CLIENT_EVENTS.AUTHENTICATED, data);
-      this.connect(data.url);
       this.emit('reconnect_event', { reconnected: __reconnect__ });
+      this.emit('before_ws_con', { data, isImplicitReconnect: __reconnect__ });
+      this.connect(data.url);
     }
   };
   

@@ -36,6 +36,13 @@ botOptions.webhookConfig={
 }
 // Note: Polling must be enabled for webhook version 2. Please refer https://docs.kore.ai/xo/channels/add-webhook-channel/#step-1-associate-an-app on how to enable polling.
 
+// To add query parameters for the websocket url, add the query parameters in queryParams object
+botOptions.webSocketConfig = {
+    socketUrl: {
+        queryParams: {}
+    }
+}
+
 // To modify the web socket url use the following option
 // botOptions.reWriteSocketURL = {
 //     protocol: 'PROTOCOL_TO_BE_REWRITTEN',
