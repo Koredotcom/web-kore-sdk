@@ -87,6 +87,15 @@ class chatWindow extends EventEmitter{
      */
     AFTER_RENDER_MSG:'afterRenderMessage',
     /**
+     * beforeWSConnection will be triggered before web socket connection is established
+     * 
+     * @event chatWindow#beforeWSConnection
+     * @type {object}
+     * @property {Object} data - contains web socket url
+     * @property {Object} isImplicitReconnect - flag whether the connection is implicit reconnection or not
+     */
+    BEFORE_WS_CONNECTION:'beforeWSConnection',
+    /**
      * onWSOpen will be triggered on new websocket connection open
      *
      * @event chatWindow#onWSOpen
@@ -1004,6 +1013,9 @@ bindSDKEvents  () {
     if (me.config?.syncMessages?.onReconnect?.enable && response?.reconnected) {
       me.bot.getHistory({ forHistorySync: true, limit: me.config?.syncMessages?.onReconnect?.batchSize });
     }
+  });
+  me.bot.on('before_ws_connection', (response: any) => {
+    me.emit(me.EVENTS.BEFORE_WS_CONNECTION, response );
   });
 };
 parseSocketMessage(msgString:string){
