@@ -2067,6 +2067,9 @@
                         me.bot.getHistory({ forHistorySync: true, limit: me.config?.syncMessages?.onReconnect?.batchSize });
                     }
                 });
+                me.bot.on('before_ws_connection', (response) => {
+                    // listen to before_ws_connection for any query param changes in the socket url
+                });
             };
             chatWindow.prototype.bindCustomEvents = function (){
                 //hook to add custom events
