@@ -55,6 +55,39 @@ export function Answers(props: any) {
             render(<CarouselImagePopupTemplate data={sourceData}/>,tempDiv);
     }
 
+    const  extractShortDomainOrFile=(link:string) =>{
+        // Remove protocol (http://, https://, etc.) and "www." if present
+        let strippedLink = link.replace(/(^\w+:|^)\/\//, '').replace(/^www\./, '');
+        
+        // Check if the link has a file extension
+        const hasFileExtension = strippedLink.match(/\.[^\/]+$/);
+      
+        if (hasFileExtension) {
+          // Split by '/' to get the last segment, which should be the file
+          const pathSegments = strippedLink.split('/');
+          const fileName = pathSegments[pathSegments.length - 1];
+      
+          // Split filename and extension
+          const [name, extension] = fileName.split('.');
+      
+          // Take the first three characters of the filename and concatenate with the extension
+          const shortenedFile = name.slice(0, 3) + '...' + extension;
+      
+          return shortenedFile;
+        } else {
+          // Extract domain and TLD (stop at first '/')
+          const domainAndTld = strippedLink.split('/')[0]; // Take only the part before the first '/'
+          
+          // Split into domain and TLD
+          const [domain, tld] = domainAndTld.split('.').slice(-2);
+      
+          // Take first three characters of domain and concatenate with TLD
+          const shortenedDomain = domain.slice(0, 3) + '...' + tld;
+      
+          return shortenedDomain;
+        }
+      }
+
 
     return (
         <div class="sa-answer-block">
@@ -65,21 +98,45 @@ export function Answers(props: any) {
                             <div class="sa-answer-result-sub-block">
                                 {
                                     answersObj.generative?.answerFragment?.map((answer: any) =>
-                                        <span class="sa-answer-result-heading" onMouseOver={()=>setSelectedIndex(answer?.id + 1)} onMouseOut={()=>setSelectedIndex(0)}><span dangerouslySetInnerHTML={{__html:helpers.convertMDtoHTML(answer?.title, "bot") }}></span><span><sup>{answer?.id + 1}</sup></span></span>
+
+                                        <span className={`sa-answer-result-heading ${(selectedIndex===answer?.id +1)&&'sa-answer-result-heading-selected'}`} onMouseOver={()=>setSelectedIndex(answer?.id + 1)} onMouseOut={()=>setSelectedIndex(0)}>
+                                            <span dangerouslySetInnerHTML={{__html:helpers.convertMDtoHTML(answer?.title, "bot") }}></span>
+                                            <div className={` tooltip-container ${selectedIndex === answer?.id + 1 && 'position-class'} `}>
+                                                <span
+                                                    className={` sa-answer-list-item ${selectedIndex === answer?.id + 1 && 'sa-answer-list-item-selected'}`}
+                                                >
+                                                    {answer?.id + 1}
+                                                
+                                                </span> 
+                                                {selectedIndex === answer?.id + 1 && (
+                                                    <div class="tooltip">{answersObj?.generative?.sources?.[selectedIndex - 1]?.title || answersObj?.generative?.sources?.[selectedIndex - 1]?.url}</div>
+                                                )}
+                                            </div>
+                                        </span>
                                     )
                                 }                                
                             </div>
                             <div className="sa-answer-gen-footer">
                                     {
                                         answersObj?.generative?.sources?.filter((source: any) => source?.title?.length > 0)?.map((source: any, index: number) => (
-                                            <div class="sa-answer-result-footer" ><span onClick={()=>redirectToURL(source?.url)}>{index + 1}. <span className={`${(selectedIndex===index+1)&&'selected'}`}>{source?.title || source?.url}</span></span>
-                                             {(source?.image_url?.length > 0)&&
-                                            <Fragment>
-                                                <span className="sa-answer-file-url-block" ><span className="sa-url-icon-preview" onClick={()=>showFileUrl(source?.image_url,source?.title || source?.url)}><span className="sa-answer-file-url-icon" >i</span> <span className="sa-preview-text">Preview</span></span>
-                                                </span>
-                                            </Fragment>
-                                             }
-                                            </div>
+                                            <div className='tooltip-container'>
+
+                                            <div className={`sa-answer-result-footer ${source?.title ? 'sa-answer-result-footer-with-title-content' : 'sa-answer-result-footer-with-url-content'} ${(selectedIndex===index+1)&&'selected'}`} 
+                                                    onMouseOver={() => setSelectedIndex(index+1)}
+                                                    onMouseOut={() => setSelectedIndex(0)}>
+                                            <span onClick={()=>redirectToURL(source?.url)}>{index + 1}. <span>{source?.title || extractShortDomainOrFile(source?.url)}</span></span>
+                                                    {(source?.image_url?.length > 0)&&
+                                                    <Fragment>
+                                                        <span className="sa-answer-file-url-block" ><span className="sa-url-icon-preview" onClick={()=>showFileUrl(source?.image_url,source?.title || source?.url)}><span className="sa-answer-file-url-icon" >i</span> <span className="sa-preview-text">Preview</span></span>
+                                                        </span>
+                                                    </Fragment>
+                                                    }
+                                             </div>
+                                             {selectedIndex === index + 1 && (
+                                                <div class="tooltip">{source?.title || source?.url}</div>
+                                             )}
+
+                                        </div>
                                         ))
                                     }
                             </div>
