@@ -101,7 +101,7 @@ export function Answers(props: any) {
 
                                         <span className={`sa-answer-result-heading ${(selectedIndex===answer?.id +1)&&'sa-answer-result-heading-selected'}`} onMouseOver={()=>setSelectedIndex(answer?.id + 1)} onMouseOut={()=>setSelectedIndex(0)}>
                                             <span dangerouslySetInnerHTML={{__html:helpers.convertMDtoHTML(answer?.title, "bot") }}></span>
-                                            <div className={` tooltip-container ${selectedIndex === answer?.id + 1 && 'position-class'} `}>
+                                            <div className={`sa-tooltip-container ${selectedIndex === answer?.id + 1 && 'position-class'} `}>
                                                 <span
                                                     className={` sa-answer-list-item ${selectedIndex === answer?.id + 1 && 'sa-answer-list-item-selected'}`}
                                                 >
@@ -109,7 +109,7 @@ export function Answers(props: any) {
                                                 
                                                 </span> 
                                                 {selectedIndex === answer?.id + 1 && (
-                                                    <div class="tooltip">{answersObj?.generative?.sources?.[selectedIndex - 1]?.title || answersObj?.generative?.sources?.[selectedIndex - 1]?.url}</div>
+                                                    <div class="sa-tooltip">{answersObj?.generative?.sources?.[selectedIndex - 1]?.title || answersObj?.generative?.sources?.[selectedIndex - 1]?.url}</div>
                                                 )}
                                             </div>
                                         </span>
@@ -119,7 +119,7 @@ export function Answers(props: any) {
                             <div className="sa-answer-gen-footer">
                                     {
                                         answersObj?.generative?.sources?.filter((source: any) => source?.title?.length > 0)?.map((source: any, index: number) => (
-                                            <div className='tooltip-container'>
+                                            <div className='sa-tooltip-container'>
 
                                             <div className={`sa-answer-result-footer ${source?.title ? 'sa-answer-result-footer-with-title-content' : 'sa-answer-result-footer-with-url-content'} ${(selectedIndex===index+1)&&'selected'}`} 
                                                     onMouseOver={() => setSelectedIndex(index+1)}
@@ -133,7 +133,7 @@ export function Answers(props: any) {
                                                     }
                                              </div>
                                              {selectedIndex === index + 1 && (
-                                                <div class="tooltip">{source?.title || source?.url}</div>
+                                                <div class="sa-tooltip">{source?.title || source?.url}</div>
                                              )}
 
                                         </div>
