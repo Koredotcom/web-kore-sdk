@@ -34,6 +34,44 @@ chatWindowInstance.on(viewInit, (event) => {
 });
 chatWindowInstance.show(chatConfig);
 ```
+
+### How to increase the text input elements font size in iOS devcies
+To increase the input elements font size to prevent zoom in in iOS devices
+```js
+const viewInit = chatWindowInstance.EVENTS.VIEW_INIT;
+chatWindowInstance.on(viewInit, (ev) => {
+  let chatHTML = ev.chatEle;
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  if (isIOS) {
+    if (chatHTML) {
+      chatHTML.classList.add('ios-device');
+
+      // Create an array of selectors and their corresponding iOS class
+      const elementSelectors = [
+        '[contenteditable="true"]',
+        'input[type="text"]',
+        'input[type="email"]',
+        'input[type="password"]',
+        'input[type="number"]',
+        'input[type="tel"]',
+        'input[type="search"]',
+        'input[type="url"]',
+        'textarea'
+      ];
+
+      // Add iOS classes to all matching elements
+      elementSelectors.forEach((selector) => {
+        const elements = chatHTML.querySelectorAll(selector);
+        elements.forEach((element) => {
+          element.classList.add('ios-device-font');
+            element.style.fontSize = '16px';
+          });
+      });
+    }
+  }
+});
+```
+
 ## Custom Codes
 
 ### How to pass customData to bot from SDK ?
