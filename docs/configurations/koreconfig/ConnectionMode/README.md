@@ -47,6 +47,6 @@ For backward compatibility, the platform continues to support the isReconnect fl
 add the following snippet when configuring kore config
 ```
 chatConfig.botOptions.webSocketConfig.socketUrl.queryParams = {
-ConnectionMode: 'Default'
+  ConnectionMode: 'Default'
 }
 ```
