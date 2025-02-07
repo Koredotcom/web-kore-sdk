@@ -57,7 +57,7 @@ botOptions.webSocketConfig = {
     }
 };
 ```
-Add custom query parameters to WebSocket URL using the `queryParams` object. Please refer for [kore provided query params](../../faqs#connectionmode)
+Add custom query parameters to WebSocket URL using the `queryParams` object. Please refer for [kore provided query params](ConnectionMode/README.md)
 
 ### Webhook Configuration
 ```typescript
