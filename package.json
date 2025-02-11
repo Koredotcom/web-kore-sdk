@@ -50,6 +50,7 @@
     "jquery": "^3.6.0",
     "jquery-ui": "^1.12.1",
     "jquery.tmpl": "0.0.2",
+    "kore-web-sdk": "^11.9.1",
     "microsoft-cognitiveservices-speech-sdk": "^1.24.1",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.45",

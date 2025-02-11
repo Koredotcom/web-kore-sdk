@@ -3,18 +3,24 @@
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0">
-        <title>Kore Web SDK</title>
-        <style>
-            body {
-                overflow: hidden;
-            }
-        </style>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Kore.ai Chatbot</title>
     </head>
-
     <body>
-    
+        <script src="https://cdn.jsdelivr.net/npm/kore-web-sdk@11.8.1/dist/umd/kore-web-sdk-umd-chat.min.js"></script>
+        <script>
+            var chatConfig = KoreChatSDK.chatConfig;
+            var chatWindow = KoreChatSDK.chatWindow;
+            var chatWindowInstance = new chatWindow();
+            
+            var botOptions=chatConfig.botOptions;
+            botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
+            botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';
+            botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
+            botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
+            botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+            
+            chatWindowInstance.show(chatConfig);
+        </script>
     </body>
-    
-    <script type="module" src="js/index_chat.js"></script>
 </html>
