@@ -343,6 +343,9 @@ Note: When integrated into an iFrame, the SDK's functionality will be confined t
 	
 # Release History
 ```
+v10.11.0 [Minor] on 12-Feb-2025: Master branch
+        Stable release
+
 v10.10.1 [Minor] on 25-Jan-2025: Master branch
         Features
 		1.Azure Text to Speech introduced
