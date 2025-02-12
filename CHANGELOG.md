@@ -1,3 +1,8 @@
+### 11.10.0
+* Release Feb 12, 2025
+* Bug fixes
+  * multi page app issue fix for avatar buttons
+
 ### 11.9.1
 * Release Jan 25, 2025
 * Documentation
