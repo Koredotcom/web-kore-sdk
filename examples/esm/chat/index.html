@@ -1,3 +1,24 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0">
+        <title>Kore Web SDK</title>
+        <style>
+            body {
+                overflow: hidden;
+            }
+        </style>
+    </head>
+
+    <body>
+    
+    </body>
+    
+    <script type="module" src="js/index_chat.js"></script>
+</html>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -13,14 +34,50 @@
             var chatWindow = KoreChatSDK.chatWindow;
             var chatWindowInstance = new chatWindow();
             
-            var botOptions=chatConfig.botOptions;
-            botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
-            botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';
-            botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
-            botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
-            botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+            var botOptions = chatConfig.botOptions;
+            botOptions.JWTUrl = "http://localhost:8080/get-token";
+            botOptions.userIdentity = "vishwajith.anugu@kore.com";
+            botOptions.botInfo = { name: "banking bot", "_id": "st-c263faef-41c9-5d7c-887e-02263a9bdcd4" };
+            botOptions.clientId = "cs-020580f4-0f0f-5181-8adf-6cb8d97a30e6";
+            botOptions.clientSecret = "ubFjP10+Gdx84/ayECUGDuCY8Ti9/UboJ1+RZ8JrxOU=";
             
             chatWindowInstance.show(chatConfig);
         </script>
     </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Kore.ai Chatbot</title>
+    </head>
+    <body>
+        <script type="module">
+            // Fetch environment variables from the backend
+            fetch('/config')
+                .then(response => response.json())
+                .then(config => {
+                    const { chatConfig, chatWindow } = window.KoreChatSDK; 
+                    let botOptions = chatConfig.botOptions;
+
+                    botOptions.JWTUrl = config.JWT_URL;
+                    botOptions.userIdentity = config.USER_EMAIL_ID;
+                    botOptions.botInfo = { name: config.BOT_NAME, "_id": config.BOT_ID };
+                    botOptions.clientId = config.CLIENT_ID;
+                    botOptions.clientSecret = config.CLIENT_SECRET;
+
+                    const chatWindowInstance = new chatWindow(chatConfig);
+                    chatWindowInstance.show(chatConfig);
+                })
+                .catch(error => console.error('Error loading config:', error));
+        </script>
+
+        <!-- Include Kore.ai Web SDK -->
+        <script src="https://cdn.jsdelivr.net/npm/kore-web-sdk@11.8.1/dist/umd/kore-web-sdk-umd-chat.min.js"></script>
+    </body>
 </html>
+
+
