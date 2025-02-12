@@ -98,7 +98,7 @@ export function List(props: any) {
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'list') {
         return (
-            <div className={`list-action-template-wrapper i${msgData.messageId}`}>
+            <div className="list-action-template-wrapper" data-cw-msg-id={msgData?.messageId}>
                 {/* <h1>Best Collections</h1> */}
                 <div className="list-content-details">
                     {msgData.message[0].component.payload.elements.map((ele: any, ind: any) => (

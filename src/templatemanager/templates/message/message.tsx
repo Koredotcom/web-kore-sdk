@@ -104,7 +104,7 @@ export function Message(props: any) {
             <Fragment>
                 {
                     msgData.message.map((msgItem: any) => (
-                        <div class={`message-bubble i${msgData.messageId || msgItem.clientMessageId}`} data-time-stamp={msgData.createdOnTimemillis} id={msgData.messageId || msgItem.clientMessageId}>
+                        <div className="message-bubble" data-cw-msg-id={msgData.messageId || msgItem.clientMessageId} data-time-stamp={msgData.createdOnTimemillis} id={msgData.messageId || msgItem.clientMessageId}>
                             { msgData.type == 'bot_response' && msgItem.component && msgItem.component.type == 'error' && msgItem.component.payload.text && <div className="bot-bubble-comp if-animation-bubble">
                                     <div className={botStyle}>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">

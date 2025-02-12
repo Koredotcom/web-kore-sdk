@@ -33,7 +33,7 @@ export function TableList(props: any) {
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'tableList') {
         return (
-            <div>
+            <div data-cw-msg-id={msgData?.messageId}>
                 {msgData.message[0].component.payload.elements.map((ele: any) => (
                     <Fragment>
                         <div className="table-list-wrapper-info">

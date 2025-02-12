@@ -136,7 +136,7 @@ export function card(props: any) {
     if (msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'modern') {
         return (
             <Fragment>
-                <div>
+                <div data-cw-msg-id={msgData?.messageId}>
                     <section className="card-template-wrapper" aria-label="card template sdk">
                         <div className="card-warpper-info">
                             <h1>{msgData.message[0].component.payload.cards.cardHeading.title}</h1>
@@ -167,7 +167,7 @@ export function card(props: any) {
     } else if (msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate' && msgData?.message?.[0]?.component?.payload?.cardViewType === 'details') {
         return (
             <Fragment>
-                <div>
+                <div data-cw-msg-id={msgData?.messageId}>
                     <section className="card-template-wrapper-view-more-details" aria-label="card template sdk">
                         {
                             msgData.message[0].component.payload.cards.cardDescription.map((ele: any) => (
@@ -220,7 +220,7 @@ export function card(props: any) {
         );
     } else if(msgData?.message?.[0]?.component?.payload?.template_type === 'cardTemplate') {
         return (
-            <div className="regular-card-temp-container">
+            <div className="regular-card-temp-container" data-cw-msg-id={msgData?.messageId}>
                 {msgData?.message?.[0]?.component?.payload.cards.map((card: any, index: any) => (
                     <div className="rugular-card-temp" style={!card.cardDescription ? card.cardContentStyles : ''}>
                         {card && card.cardHeading && <div class="card-r-h-1" style={card.cardHeading.headerStyles}>

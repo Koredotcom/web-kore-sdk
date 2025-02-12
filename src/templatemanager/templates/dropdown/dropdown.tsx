@@ -27,7 +27,7 @@ export function Dropdown(props: any) {
             setSelectedItem(selectedItem[0]);
         }
         return (
-            <section className={`dropdwon-wrapper-section dropdown-${msgData.messageId}`}>
+            <section className={`dropdwon-wrapper-section dropdown-${msgData.messageId}`} data-cw-msg-id={msgData?.messageId}>
                 <div className="dropdwon-wrapper-contaner">
                     { msgData.message?.[0].component?.payload.heading && <div className="heading-block">
                         <h1>{msgData.message?.[0].component?.payload.heading}</h1>

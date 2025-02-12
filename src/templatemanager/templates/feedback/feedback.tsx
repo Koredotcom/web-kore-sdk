@@ -161,7 +161,7 @@ export function Feedback(props: any) {
     }
 
     return (
-        <div className="feedback-template-wrapper-container" id={msgData.messageId}>
+        <div className="feedback-template-wrapper-container" id={msgData.messageId} data-cw-msg-id={msgData?.messageId}>
             <div className="feedback-temp-wrapper">
                 <div className="feedback-temp-sec">
                     <h6>{msgData?.message?.[0]?.component?.payload?.text}</h6>
@@ -228,6 +228,11 @@ export function FeedbackTemplate(props: any) {
         hostInstance
     }
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'feedbackTemplate' && (msgData.message[0].component.payload.view === "star" || msgData.message[0].component.payload.view === "emojis" || msgData.message[0].component.payload.view === "CSAT" || msgData.message[0].component.payload.view === "ThumbsUpDown" || msgData.message[0].component.payload.view === "NPS")) {
+        // Check if element already exists
+        const existingElement = hostInstance?.chatEle?.querySelector(`[data-cw-msg-id="${msgData?.messageId}"]`);
+        if (existingElement) {
+            return; // Exit if element already exists
+        }
         if (msgData.message[0].component.payload.sliderView) {
             if (msgData?.fromHistory) {
                 msgObj.msgData.message[0].cInfo.body = msgObj.msgData.message[0].cInfo.body.payload.text;

@@ -1561,7 +1561,7 @@ if(messageText && messageText.trim() && messageText.trim().length){
   // if (msgObject && (msgObject.nlmeta || msgObject.nlMeta)) {
   //   messageToBot.message.nlMeta = msgObject.nlmeta || msgObject.nlMeta;
   // }
-  if ((me.config.UI.version == 'v3' && me.chatEle.querySelectorAll('.chat-widget-body-wrapper .i' + (msgData?.message?.[0]?.clientMessageId)).length < 1) || (me.config.UI.version == 'v2' && $(`.kore-chat-window .chat-container li#${msgData?.messageId || msgData?.message?.[0]?.clientMessageId}`).length < 1)) {
+  if ((me.config.UI.version == 'v3' && me.chatEle.querySelectorAll(`.chat-widget-body-wrapper [data-cw-msg-id="${msgData?.messageId || msgData?.message?.[0]?.clientMessageId}"]`).length < 1) || (me.config.UI.version == 'v2' && $(`.kore-chat-window .chat-container li#${msgData?.messageId || msgData?.message?.[0]?.clientMessageId}`).length < 1)) {
     if (me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) {
       me.sendMessageViaWebHook(
         messageText,
@@ -1838,7 +1838,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
     }
   }
   let eleHeight, scrollHeight;
-  if (me.config.UI.version == 'v3' && messageHtml && me.chatEle.querySelectorAll('.chat-widget-body-wrapper .i'+ (msgData?.messageId || msgData?.message?.[0]?.clientMessageId)).length < 1 || (msgData?.renderType === 'inline')) {
+  if (me.config.UI.version == 'v3' && messageHtml && me.chatEle.querySelectorAll(`.chat-widget-body-wrapper [data-cw-msg-id="${msgData?.messageId || msgData?.message?.[0]?.clientMessageId}"]`).length < 1 || (msgData?.renderType === 'inline')) {
     if (msgData?.type === 'bot_response' && msgData?.fromHistorySync) {
       const chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
       me.msgTimeStamps = [];

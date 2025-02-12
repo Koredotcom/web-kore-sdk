@@ -120,7 +120,7 @@ export function AdvancedMultiSelect(props: any) {
     }
 
         return (
-            <div className="multi-select-action-template-wrapper">
+            <div className="multi-select-action-template-wrapper" data-cw-msg-id={msgData?.messageId}>
                 <h1>{msgData?.message[0].component.payload.heading}</h1>
                 <div className="multi-select-list">
                     {msgData.message[0].component.payload.elements.map((ele: any, index: any) => (
@@ -206,6 +206,11 @@ export function AMSelect(props: any) {
         hostInstance: hostInstance
     }
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'advanced_multi_select') {
+        // Check if element already exists
+        const existingElement = hostInstance?.chatEle?.querySelector(`[data-cw-msg-id="${msgData?.messageId}"]`);
+        if (existingElement) {
+            return; // Exit if element already exists
+        }
         if (msgData?.message?.[0]?.component?.payload?.sliderView && !msgData?.fromHistory) {
             hostInstance.bottomSliderAction('', getHTML(AdvancedMultiSelectSlider, msgData, hostInstance));
             messageObj.msgData.message[0].cInfo.body = messageObj.msgData?.message[0]?.component?.payload?.heading;

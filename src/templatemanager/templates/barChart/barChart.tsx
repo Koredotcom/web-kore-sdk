@@ -9,7 +9,7 @@ import { getHTML } from '../../base/domManager';
 export function BarChart(props: any) {
     const msgData = props.msgData;
     return (
-        <div className="chart-template-wrapper" id={`bc${msgData.messageId}`}>
+        <div className="chart-template-wrapper" id={`bc${msgData.messageId}`} data-cw-msg-id={msgData?.messageId}>
             <div className="barchartDiv charts-body-info">
                 <h1>{msgData?.message?.[0]?.component?.payload?.text}</h1>
                 <div className="barChartChildDiv" id={`barchart${msgData.messageId}`}></div>
@@ -40,6 +40,11 @@ export function BarChartBase(props: any) {
     }
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'barchart') {
+        // Check if element already exists
+        const existingElement = hostInstance?.chatEle?.querySelector(`[data-cw-msg-id="${msgData?.messageId}"]`);
+        if (existingElement) {
+            return; // Exit if element already exists
+        }
         const pieChartHTML = getHTML(BarChart, msgData, hostInstance);
         KoreGraphAdapter.drawBarChartTemplate(msgData, pieChartHTML, { graphLib: 'd3' });
 

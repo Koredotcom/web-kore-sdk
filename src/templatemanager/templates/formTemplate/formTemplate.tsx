@@ -30,7 +30,7 @@ export function Form(props: any) {
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'form_template') {
         return (
-            <div className="form-template-wrapper-container">
+            <div className="form-template-wrapper-container" data-cw-msg-id={msgData?.messageId}>
                 <div className="form-temp-content">
                     <h1>{msgData?.message?.[0]?.component?.payload.heading}</h1>
                     {msgData?.message?.[0]?.component?.payload.formFields.map((ele: any) => (

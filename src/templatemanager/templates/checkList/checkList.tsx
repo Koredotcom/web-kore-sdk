@@ -84,6 +84,11 @@ export function CheckList(props: any) {
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'checkListTemplate') {
         useEffect(() => {
+            // Check if element already exists
+            const existingElement = hostInstance?.chatEle?.querySelector(`[data-cw-msg-id="${msgData?.messageId}"]`);
+            if (existingElement) {
+                return; // Exit if element already exists
+            }
             const ele = hostInstance.chatEle.querySelector(`.checklist-${msgData.messageId}-${viewMore}`)
             function bindPercentages(ele: any, msgData: any) {
                 if (msgData && msgData.message[0].component.payload.elements.length) {
@@ -126,7 +131,7 @@ export function CheckList(props: any) {
         }, []);
 
         return (
-            <div className={`checklist-temp-wrapper i${msgData.messageId} checklist-${msgData.messageId}-${viewMore}`}>
+            <div className={`checklist-temp-wrapper checklist-${msgData.messageId}-${viewMore}`} data-cw-msg-id={msgData?.messageId}>
                 {msgData.message[0].component.payload.elements.map((ele: any, ind: any) => (
                     ((!viewMore && ((msgData.message[0].component.payload.showMore && (ind < msgData.message[0].component.payload.displayLimit)) || !msgData.message[0].component.payload.showMore) || viewMore) &&
                         <button className="checklist-card" id={`ci-${msgData.messageId}-${ind}-${viewMore}`}>

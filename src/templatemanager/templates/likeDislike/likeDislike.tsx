@@ -26,7 +26,7 @@ export function LikeDislike(props: any) {
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'like_dislike') {
         return (
-            <div>Like Dislike Temaplte</div>
+            <div data-cw-msg-id={msgData?.messageId}>Like Dislike Temaplte</div>
         );
     }
 }

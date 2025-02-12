@@ -9,7 +9,7 @@ import { getHTML } from '../../base/domManager';
 export function PieChart(props: any) {
     const msgData = props.msgData;
     return (
-        <div className="chart-template-wrapper" id={`pc${msgData.messageId}`}>
+        <div className="chart-template-wrapper" id={`pc${msgData.messageId}`} data-cw-msg-id={msgData?.messageId}>
             <div id="d3Pie"></div>
             <div className="piechartDiv charts-body-info">
                 <h1>{msgData?.message?.[0]?.component?.payload?.text}</h1>
@@ -42,6 +42,11 @@ export function PieChartBase(props: any) {
     }
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'piechart') {
+        // Check if element already exists
+        const existingElement = hostInstance?.chatEle?.querySelector(`[data-cw-msg-id="${msgData?.messageId}"]`);
+        if (existingElement) {
+            return; // Exit if element already exists
+        }
         const pieChartHTML = getHTML(PieChart, msgData, hostInstance);
         KoreGraphAdapter.drawPieChartTemplate(msgData, pieChartHTML, { graphLib: 'd3' });
 

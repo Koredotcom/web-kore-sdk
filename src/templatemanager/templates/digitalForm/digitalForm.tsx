@@ -58,7 +58,7 @@ export function DigitalForm(props: any) {
     }
     if (msgData?.message?.[0]?.component?.payload?.template_type === 'button' && msgData?.message?.[0]?.component?.formData) {
         return (
-            <div className={`i${msgData.messageId}`}>
+            <div data-cw-msg-id={msgData?.messageId}>
                 <div className="thumbnails-wrapper forms-thumbnails">
                     <div className="thumbnail-data-content">
                         <div className="icon-block">

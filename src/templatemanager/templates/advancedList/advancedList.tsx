@@ -342,7 +342,7 @@ export function AdvancedList(props: any) {
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'advancedListTemplate') {
         return (
-            <div className="padding-wrapper-content">
+            <div className="padding-wrapper-content" data-cw-msg-id={msgData?.messageId}>
                 <div className="adv-parent-temp-wrapper">
                     <div className="main-heading-wrapper">
                         {msgData.message[0].component.payload.title && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData.message[0].component.payload.title, "bot") }}></h1>}

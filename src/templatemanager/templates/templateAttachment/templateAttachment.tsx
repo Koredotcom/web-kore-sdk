@@ -37,7 +37,7 @@ export function Attachment(props: any) {
 
     if (msgData?.message?.[0]?.component?.payload && (msgData.message[0].component.type == 'image' || msgData.message[0].component.type == 'audio' || msgData.message[0].component.type == 'video' || msgData.message[0].component.type == 'link')) {
         return (
-            <section className="attachment-sended-temp-wrapper attachment-wrap">
+            <section className="attachment-sended-temp-wrapper attachment-wrap" data-cw-msg-id={msgData?.messageId}>
                 <div className="multiple-attchments">
                     <div className="attchments-wrap" onClick={() => openLink(msgData?.message?.[0]?.component?.payload.url)}>
                         {msgData.message[0].component.type == 'image' && <div className="img-attch">
@@ -76,7 +76,7 @@ export function Attachment(props: any) {
         );
     } else if (msgData?.message?.[0]?.component?.payload && msgData.message[0].component.type == 'document') {
         return (
-            <div className="thumbnails-wrapper forms-thumbnails document-template">
+            <div className="thumbnails-wrapper forms-thumbnails document-template" data-cw-msg-id={msgData?.messageId}>
                 <div className="thumbnail-data-content document-cotent">
                     <div className="icon-block">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">

@@ -128,6 +128,11 @@ export function DateRange(props: any) {
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'daterange' && !msgData?.fromHistory) {
         msgData.message[0].cInfo.body = msgData?.message?.[0]?.component?.payload?.text_message;
+        // Check if element already exists
+        const existingElement = hostInstance?.chatEle?.querySelector(`[data-cw-msg-id="${msgData?.messageId}"]`);
+        if (existingElement) {
+            return; // Exit if element already exists
+        }
         if (msgData?.message?.[0]?.component?.payload?.view_type == 'slider') {
             hostInstance.bottomSliderAction('', getHTML(DateRangeExt, msgData, hostInstance));
             return (

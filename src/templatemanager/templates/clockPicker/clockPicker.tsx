@@ -20,6 +20,11 @@ export function ClockPicker(props: any) {
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'clockTemplate' && !msgData.formHistory) {
         useEffect(() => {
+            // Check if element already exists
+            const existingElement = hostInstance?.chatEle?.querySelector(`[data-cw-msg-id="${msgData?.messageId}"]`);
+            if (existingElement) {
+                return; // Exit if element already exists
+            }
             const dp = new Datepicker(`#${msgData.messageId}`, {
                 timepicker: true,
                 timeFormat: 'hh:mm AA',
@@ -31,7 +36,7 @@ export function ClockPicker(props: any) {
             dp.show();
         }, []);
         return (
-          <div className="date-picker-wrapper-template">
+          <div className="date-picker-wrapper-template" data-cw-msg-id={msgData?.messageId}>
             <div className="date-picker-calendar" id={msgData.messageId}></div>
             <button className="kr-button-primary lg" onClick={handleSubmit}>Confirm</button>
           </div>

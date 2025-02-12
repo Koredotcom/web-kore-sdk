@@ -84,7 +84,7 @@ export function OTPExt(props: any) {
     };
 
     return (
-        <div className="menu-wrapper-data-actions">
+        <div className="menu-wrapper-data-actions" data-cw-msg-id={msgData?.messageId}>
             <div className="actions-slider-header-menu">
                <div className="title-desc-heading">
                     <h1>{payload.title || 'Enter OTP'}</h1>
@@ -150,6 +150,11 @@ export function OTP(props: any) {
     }
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'otpValidationTemplate') {
+        // Check if element already exists
+        const existingElement = hostInstance?.chatEle?.querySelector(`[data-cw-msg-id="${msgData?.messageId}"]`);
+        if (existingElement) {
+            return; // Exit if element already exists
+        }
         if (msgData.fromHistory || !msgData.message[0].component.payload.sliderView) {
             return (
                 <OTPExt {...msg} />

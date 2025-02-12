@@ -100,7 +100,7 @@ export function TemplateArticle(props: any) {
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'articleTemplate') {
         return (
-            <div className="article-temp-wrapper-data">
+            <div className="article-temp-wrapper-data" data-cw-msg-id={msgData?.messageId}>
                 <div className="articles-block">
                     {msgData?.message?.[0]?.component?.payload?.elements.map((ele: any, ind: any) => (
                         (((msgData?.message?.[0]?.component?.payload.displayLimit > ind) || !msgData?.message?.[0]?.component?.payload.displayLimit) &&

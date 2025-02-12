@@ -110,7 +110,7 @@ export function QuickReplies(props: any) {
         }
         useEffect(() => {
             setTimeout(() => {
-                if (!msgData.fromHistory && !msgData?.message?.[0]?.component?.payload?.inline) {
+                if ((!msgData.fromHistory && !msgData?.fromHistorySync) && !msgData?.message?.[0]?.component?.payload?.inline) {
                     const quickReply = getHTML(QuickReply, msgData, hostInstance);
                     const composeBar = hostInstance.chatEle.querySelector('.chat-widget-composebar');
                     composeBar.insertBefore(quickReply, composeBar.firstChild);
@@ -121,7 +121,7 @@ export function QuickReplies(props: any) {
             <Fragment>
                 <div className='quick-replies-container' data-kr-msg-id={msgData.messageId}>
                     <Message {...messageObj} />
-                    {(msgData.fromHistory || msgData?.message?.[0]?.component?.payload?.inline) && <QuickReply {...messageObj} />}
+                    {(msgData.fromHistory || msgData?.fromHistorySync || msgData?.message?.[0]?.component?.payload?.inline) && <QuickReply {...messageObj} />}
                 </div>
             </Fragment>
         );

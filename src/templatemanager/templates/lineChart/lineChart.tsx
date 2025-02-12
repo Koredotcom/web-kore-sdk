@@ -9,7 +9,7 @@ import { getHTML } from '../../base/domManager';
 export function LineChart(props: any) {
     const msgData = props.msgData;
     return (
-        <div className="chart-template-wrapper line-chart-inline" id={`lc${msgData.messageId}`}>
+        <div className="chart-template-wrapper line-chart-inline" id={`lc${msgData.messageId}`} data-cw-msg-id={msgData?.messageId}>
             <div className="linechartDiv charts-body-info">
                 <h1>{msgData?.message?.[0]?.component?.payload?.text}</h1>
                 <div className="lineChartChildDiv" id={`linechart${msgData.messageId}`}></div>
@@ -40,6 +40,11 @@ export function LineChartBase(props: any) {
     }
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'linechart') {
+        // Check if element already exists
+        const existingElement = hostInstance?.chatEle?.querySelector(`[data-cw-msg-id="${msgData?.messageId}"]`);
+        if (existingElement) {
+            return; // Exit if element already exists
+        }
         const pieChartHTML = getHTML(LineChart, msgData, hostInstance);
         KoreGraphAdapter.drawlineChartTemplate(msgData, pieChartHTML, { graphLib: 'd3' });
 

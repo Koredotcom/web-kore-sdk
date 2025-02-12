@@ -111,7 +111,7 @@ export function Reset(props: any) {
     };
 
     return (
-        <div className="menu-wrapper-data-actions">
+        <div className="menu-wrapper-data-actions" data-cw-msg-id={msgData?.messageId}>
             <div className="actions-slider-header-menu">
                 <h1>{payload.title || 'Reset PIN'}</h1>
                 {!isFromHistory && <button className="menu-close" role="contentinfo" aria-label="close" onClick={closeMenu}>
@@ -178,6 +178,11 @@ export function ResetPin(props: any) {
     }
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'resetPinTemplate') {
+        // Check if element already exists
+        const existingElement = hostInstance?.chatEle?.querySelector(`[data-cw-msg-id="${msgData?.messageId}"]`);
+        if (existingElement) {
+            return; // Exit if element already exists
+        }
         if (msgData.fromHistory) {
             return (
                 <Reset {...msg} />

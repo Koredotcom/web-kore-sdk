@@ -107,7 +107,7 @@ export function ListView(props: any) {
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'listView') {
         return (
-            <div className="list-view-action-template-wrapper">
+            <div className="list-view-action-template-wrapper" data-cw-msg-id={msgData?.messageId}>
                 <h1>{msgData.message[0].component.payload.heading}</h1>
                 <div className="list-content-details">
                     { msgData.message[0].component.payload.elements.map((ele: any, ind: any) => (

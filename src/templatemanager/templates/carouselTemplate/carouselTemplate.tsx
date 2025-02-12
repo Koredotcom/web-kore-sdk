@@ -43,7 +43,7 @@ export function Carousel(props: any) {
         }, 300)
 
         return (
-            <div className={stackClass}>
+            <div className={stackClass} data-cw-msg-id={msgData?.messageId}>
                 <button className={leftCheButton}>
                     <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
                         <path d="M12 15.5L7 10.5L12 5.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
@@ -134,7 +134,7 @@ export function Carousel(props: any) {
             }, 300);
         }, 50);
         return (
-            <div className="list-template-carousel-wrapper" id={msgData.messageId}>
+            <div className="list-template-carousel-wrapper" id={msgData.messageId} data-cw-msg-id={msgData?.messageId}>
                 <button className="carousel-left-click" data-button-left={msgData.messageId}>
                     <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
                         <path d="M12 15.5L7 10.5L12 5.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>

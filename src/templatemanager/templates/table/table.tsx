@@ -17,7 +17,7 @@ export function TableExt(props: any) {
     if (msgData.message?.[0]?.component?.payload?.template_type == 'table' && msgData.message[0].component.payload?.table_design == 'regular') {
         return (
             <Fragment>
-                <section class="table-wrapper-main-container">
+                <section class="table-wrapper-main-container" data-cw-msg-id={msgData?.messageId}>
                     {showMore && <Message {...messageObj} />}
                     <section class="table-wrapper-section">
                         <table className="table-regular-view">
@@ -103,7 +103,7 @@ export function Table(props: any) {
                 });
             }, 500);
         });
-        if (msgData?.fromHistory) {
+        if (msgData?.fromHistory || msgData?.fromHistorySync) {
             msgObj.msgData.message[0].cInfo.body = msgObj.msgData.message[0].cInfo.body.payload.text;
         }
         return (

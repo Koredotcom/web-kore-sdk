@@ -41,12 +41,12 @@ export function Button(props: any) {
             buttonStyle = buttonStyle + ' stack-buttons';
         }
 
-        if (msgData?.fromHistory) {
+        if (msgData?.fromHistory || msgData?.fromHistorySync) {
             messageObj.msgData.message[0].cInfo.body = messageObj.msgData.message[0].cInfo.body.payload.text;
         }
         return (
             <Fragment>
-                <div>
+                <div data-cw-msg-id={msgData?.messageId}>
                     {msgData.message[0].component.payload.text && <Message {...messageObj} />}
                     <div className="button-template-container">
                         <div className={buttonStyle}>

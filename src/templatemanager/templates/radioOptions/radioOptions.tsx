@@ -32,7 +32,7 @@ export function RadioOptionsComp(props: any) {
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'radioOptionTemplate' && !msgData.fromHistory) {
         return (
-            <div className="radio-button-wrapper">
+            <div className="radio-button-wrapper" data-cw-msg-id={msgData?.messageId}>
                 <h1>{msgData?.message?.[0]?.component?.payload.heading}</h1>
                 { msgData?.message?.[0]?.component?.payload.radioOptions.map((ele: any, ind: any) => (
                     <div className="radio-padding">
@@ -95,6 +95,11 @@ export function RadioOptions(props: any) {
     }
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'radioOptionTemplate' && !msgData.fromHistory) {
+        // Check if element already exists
+        const existingElement = hostInstance?.chatEle?.querySelector(`[data-cw-msg-id="${msgData?.messageId}"]`);
+        if (existingElement) {
+            return; // Exit if element already exists
+        }
         if (msgData?.message?.[0]?.component?.payload?.slideView) {
             hostInstance.bottomSliderAction('', getHTML(RadioOptionsSlider, msgData, hostInstance));
             return (
