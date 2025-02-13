@@ -111,6 +111,11 @@ export function QuickReplies(props: any) {
         useEffect(() => {
             setTimeout(() => {
                 if ((!msgData.fromHistory && !msgData?.fromHistorySync) && !msgData?.message?.[0]?.component?.payload?.inline) {
+                    // Check if element already exists
+                    const existingElement = hostInstance.chatEle.querySelector(`[data-quick-replies-cid="${msgData?.messageId}"]`);
+                    if (existingElement) {
+                        return; // Exit if element already exists
+                    }
                     const quickReply = getHTML(QuickReply, msgData, hostInstance);
                     const composeBar = hostInstance.chatEle.querySelector('.chat-widget-composebar');
                     composeBar.insertBefore(quickReply, composeBar.firstChild);
