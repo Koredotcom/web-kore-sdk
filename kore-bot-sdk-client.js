@@ -1479,11 +1479,20 @@ KoreRTMClient.prototype._onStart = function _onStart(err, data) {
   } else {
     if (this.socketConfig && this.socketConfig?.socketUrl &&
       this.socketConfig?.socketUrl?.queryParams && Object.keys(this.socketConfig.socketUrl.queryParams).length > 0) {
-      Object.keys(this.socketConfig.socketUrl.queryParams).forEach((qp) => {
-        if (qp && this.socketConfig.socketUrl.queryParams[qp]) {
-          data.url = data.url + '&' + qp + '=' + this.socketConfig.socketUrl.queryParams[qp];
+        if (__reconnect__) {
+          data.url = data.url + "&ConnectionMode=Reconnect";
+          Object.keys(this.socketConfig.socketUrl.queryParams).forEach((qp) => {
+            if (qp && qp !== 'ConnectionMode' && this.socketConfig.socketUrl.queryParams[qp]) {
+              data.url = data.url + '&' + qp + '=' + this.socketConfig.socketUrl.queryParams[qp];
+            }
+          });
+        } else {
+          Object.keys(this.socketConfig.socketUrl.queryParams).forEach((qp) => {
+            if (qp && this.socketConfig.socketUrl.queryParams[qp]) {
+              data.url = data.url + '&' + qp + '=' + this.socketConfig.socketUrl.queryParams[qp];
+            }
+          });
         }
-      });
     } else {
       if(__reconnect__) {
         data.url = data.url + "&isReconnect=true";
