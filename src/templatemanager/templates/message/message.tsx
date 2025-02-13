@@ -109,7 +109,7 @@ export function Message(props: any) {
                                     <div className={botStyle}>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
                                             <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}>{msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}</div>
-                                            <div className="time-tamp">
+                                            <div className="time-stamp">
                                                 <time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format)}</time>
                                             </div>
                                             {/* <span className="copied-text">Copied</span>                                            */}
@@ -134,7 +134,7 @@ export function Message(props: any) {
                                         </div>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
                                             <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}>{msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}</div>
-                                            <div className="time-tamp"><time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format)}</time></div>
+                                            <div className="time-stamp"><time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format)}</time></div>
                                         </div>}
                                     </div>
                                 </div> }
@@ -142,7 +142,7 @@ export function Message(props: any) {
                                     <div className={botStyle}>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
                                             <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}>{msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}</div>
-                                            <div className="time-tamp">
+                                            <div className="time-stamp">
                                                 <time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format)}</time>
                                             </div>
                                             {/* <span className="copied-text">Copied</span>                                            */}
@@ -167,7 +167,7 @@ export function Message(props: any) {
                                         </div>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
                                             <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}>{msgData.fromAgent ? msgData.author.name : brandingInfo.body.bot_name.name}</div>
-                                            <div className="time-tamp"><time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format)}</time></div>
+                                            <div className="time-stamp"><time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format)}</time></div>
                                         </div>}
                                     </div>
                                 </div> }
@@ -176,7 +176,7 @@ export function Message(props: any) {
                                     <div className={userStyle}>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
                                             {/* <span className="copied-text">Copied</span> */}
-                                            <div className="time-tamp">
+                                            <div className="time-stamp">
                                                 <time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format)}</time>
                                             </div>
                                             <div className="you-text">You</div>
@@ -199,7 +199,7 @@ export function Message(props: any) {
                                             </div>
                                         </div>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
-                                            <div className="time-tamp"><time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format)}</time></div>
+                                            <div className="time-stamp"><time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format)}</time></div>
                                             <div className="you-text">You</div>
                                         </div>}
                                     </div>

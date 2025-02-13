@@ -12,7 +12,7 @@ export function ChatWidgetBody() {
             {/* <div className="agent-bubble-comp">
                 <div className="agent-bubble-content">
                     <div className="top-info">
-                        <div className="time-tamp"><time>2:32pm, Today</time></div>
+                        <div className="time-stamp"><time>2:32pm, Today</time></div>
                         <div className="you-text">You</div>
                     </div>
                     <div className="bubble-msg-with-img">
@@ -27,7 +27,7 @@ export function ChatWidgetBody() {
                         </div>
                     </div>
                     <div className="bottom-info">
-                        <div className="time-tamp"><time>2:32pm, Today</time></div>
+                        <div className="time-stamp"><time>2:32pm, Today</time></div>
                         <div className="read-text">Read <i className="sdkv3-read-status"></i></div>
                     </div>
                 </div>
@@ -36,7 +36,7 @@ export function ChatWidgetBody() {
                 <div className="bot-bubble-content">
                     <div className="top-info">
                         <div className="you-text">You</div>
-                        <div className="time-tamp"><time>2:32pm, Today</time></div>
+                        <div className="time-stamp"><time>2:32pm, Today</time></div>
                     </div>
                     <div className="bubble-msg-with-img">
                         <div className="bubble-msg">Hello there! Thanks for reaching Kore.ai how may I assist you?</div>
@@ -50,7 +50,7 @@ export function ChatWidgetBody() {
                         </div>
                     </div>
                     <div className="bottom-info">
-                        <div className="time-tamp"><time>2:32pm, Today</time></div>
+                        <div className="time-stamp"><time>2:32pm, Today</time></div>
                     </div>
                 </div>
             </div>

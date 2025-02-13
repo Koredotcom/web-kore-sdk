@@ -38,9 +38,12 @@
         }       
         &.small_text{
             .top-info {
-                .time-tamp{
+                .time-stamp{
                     font-size: 10px;
                     line-height: 12px;
+                    time{
+                        font-size: 10px;
+                    }
                 }
                 .you-text{
                     font-size: 10px;
@@ -54,9 +57,12 @@
                 }
             } 
             .bottom-info {
-                .time-tamp{
+                .time-stamp{
                     font-size: 10px;
                     line-height: 12px;
+                    time{
+                        font-size: 10px;
+                    }
                 }
                 .you-text{
                     font-size: 10px;
@@ -70,9 +76,12 @@
         }
         &.large_text{
             .top-info {
-                .time-tamp{
+                .time-stamp{
                     font-size: 14px;
                     line-height: 17px;
+                    time{
+                        font-size: 14px;
+                    }
                 }
                 .you-text{
                     font-size: 14px;
@@ -86,9 +95,12 @@
                 }
             }   
             .bottom-info {
-                .time-tamp{
+                .time-stamp{
                     font-size: 14px;
                     line-height: 17px;
+                    time{
+                        font-size: 14px;
+                    }
                 }
                 .you-text{
                     font-size: 10px;
@@ -125,23 +137,23 @@
         }
         &.time-stamp-show-hover{
             .top-info {
-                .time-tamp{
+                .time-stamp{
                     display: none;
                 }
             }
             .bottom-info{
-                .time-tamp{
+                .time-stamp{
                     display: none;
                 }
             }
             &:hover{
                 .top-info {
-                    .time-tamp{
+                    .time-stamp{
                         display: block;
                     }
                 }
                 .bottom-info {
-                    .time-tamp{
+                    .time-stamp{
                         display: block;
                     }
                 }
@@ -151,11 +163,14 @@
             display: flex;
             align-items: center;
             gap: 4px;
-            .time-tamp{
+            .time-stamp{
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
                 color: var(--time-stamp-color);    // var(--agent-bubble-text-color);
+                time{
+                    font-size: 12px;
+                }
             }
             .you-text{
                 font-weight: 600;
@@ -226,11 +241,14 @@
             display: flex;
             align-items: center;
             gap: 4px;
-            .time-tamp{
+            .time-stamp{
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
                 color: var(--time-stamp-color); // var(--sdk-gloabl-text-color);
+                time{
+                    font-size: 12px;
+                }
             }
             .you-text{
                 font-weight: 600;
@@ -289,9 +307,12 @@
         }
         &.small_text{
             .top-info {
-                .time-tamp{
+                .time-stamp{
                     font-size: 10px;
                     line-height: 12px;
+                    time{
+                        font-size: 10px;
+                    }
                 }
                 .you-text{
                     font-size: 10px;
@@ -305,9 +326,12 @@
                 }
             } 
             .bottom-info {
-                .time-tamp{
+                .time-stamp{
                     font-size: 10px;
                     line-height: 12px;
+                    time{
+                        font-size: 10px;
+                    }
                 }
                 .you-text{
                     font-size: 10px;
@@ -321,9 +345,12 @@
         }
         &.large_text{
             .top-info {
-                .time-tamp{
+                .time-stamp{
                     font-size: 14px;
                     line-height: 17px;
+                    time{
+                        font-size: 14px;
+                    }
                 }
                 .you-text{
                     font-size: 14px;
@@ -337,9 +364,12 @@
                 }
             }   
             .bottom-info {
-                .time-tamp{
+                .time-stamp{
                     font-size: 14px;
                     line-height: 17px;
+                    time{
+                        font-size: 14px;
+                    }
                 }
                 .you-text{
                     font-size: 10px;
@@ -376,23 +406,23 @@
         }
         &.time-stamp-show-hover{
             .top-info {
-                .time-tamp{
+                .time-stamp{
                     display: none;
                 }
             }
             .bottom-info{
-                .time-tamp{
+                .time-stamp{
                     display: none;
                 }
             }
             &:hover{
                 .top-info {
-                    .time-tamp{
+                    .time-stamp{
                         display: block;
                     }
                 }
                 .bottom-info {
-                    .time-tamp{
+                    .time-stamp{
                         display: block;
                     }
                 }
@@ -403,12 +433,15 @@
             align-items: center;
             gap: 4px;
             width: 100%;
-            .time-tamp{
+            .time-stamp{
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
                 color: var(--time-stamp-color); // var(--sdk-gloabl-text-color);
                 flex-shrink: 0;
+                time{
+                    font-size: 12px;
+                }
             }
             .you-text{
                 font-weight: 600;
@@ -493,12 +526,15 @@
             align-items: center;
             gap: 4px;
             width: 100%;
-            .time-tamp{
+            .time-stamp{
                 font-weight: 400;
                 font-size: 12px;
                 line-height: 15px;
                 color:  var(--time-stamp-color); // var(--sdk-gloabl-text-color);
                 flex-shrink: 0;
+                time{
+                    font-size: 12px;
+                }
             }
             .you-text{
                 font-weight: 600;
