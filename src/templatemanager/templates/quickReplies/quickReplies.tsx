@@ -116,7 +116,7 @@ export function QuickReplies(props: any) {
                     composeBar.insertBefore(quickReply, composeBar.firstChild);
                 }
             }, 500);
-        });
+        }, []);
         return (
             <Fragment>
                 <div className='quick-replies-container' data-kr-msg-id={msgData.messageId}>
