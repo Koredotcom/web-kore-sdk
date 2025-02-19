@@ -22,7 +22,7 @@ class CarouselButtons {
         const rightScrollBtn = this.hostInstance.chatEle.querySelector(`[c-right-button-id='${this.id}']`);
     
         const updateButtons = () => {
-            const isVisible = btnsParentDiv.offsetWidth && btnsParentDiv.scrollWidth;
+            const isVisible = btnsParentDiv?.offsetWidth && btnsParentDiv?.scrollWidth;
             if (!isVisible) {
                 return;
             }
@@ -56,7 +56,7 @@ class CarouselButtons {
     
         updateButtons();
     
-        leftScrollBtn.addEventListener('click', () => {
+        leftScrollBtn?.addEventListener('click', () => {
             const btnsParentDivWidth = btnsParentDiv.scrollLeft;
             const qButtons = btnsParentDiv.querySelectorAll(`[c-items-id='${this.id}']`);
             let curWidth = 0;
@@ -77,7 +77,7 @@ class CarouselButtons {
                 })
             }
         })
-        rightScrollBtn.addEventListener('click', () => {
+        rightScrollBtn?.addEventListener('click', () => {
             const btnsParentDivWidth = btnsParentDiv.offsetWidth;
             const qButtons = btnsParentDiv.querySelectorAll(`[c-items-id='${this.id}']`);
             let curWidth = 0;
@@ -99,7 +99,7 @@ class CarouselButtons {
         });
     
         const checkForButtonsVisibility = setInterval(() => {
-            if (btnsParentDiv.offsetWidth > 0) {
+            if (btnsParentDiv && btnsParentDiv.offsetWidth > 0) {
                 updateButtons();
                 clearInterval(checkForButtonsVisibility);
             }
