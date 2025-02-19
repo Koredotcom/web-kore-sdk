@@ -1,3 +1,8 @@
+### 11.10.1
+* Release Feb 19, 2025
+* Bug fixes
+  * 11.10.0 version corrupted issue fix
+
 ### 11.10.0
 * Release Feb 12, 2025
 * Bug fixes
