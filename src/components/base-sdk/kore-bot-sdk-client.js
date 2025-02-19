@@ -590,14 +590,20 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this.RtmClient.start({
         "botInfo": this.options.botInfo
       });
-      this.RtmClient.on(RTM_EVENTS.MESSAGE, bind(this.onMessage, this));
-      this.RtmClient.on(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, bind(this.onOpenWSConnection, this));
+      if (this.RtmClient.listenerCount(RTM_EVENTS.MESSAGE) === 0) {
+        this.RtmClient.on(RTM_EVENTS.MESSAGE, bind(this.onMessage, this));
+      }
+      if (this.RtmClient.listenerCount(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED) === 0) {
+        this.RtmClient.on(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, bind(this.onOpenWSConnection, this));
+      }
       //Propagating the events triggered on this.RtmClient to KoreBot instance with ":rtm" prefix
       var _me=this;
       Object.keys(RTM_CLIENT_EVENTS).forEach(function(rtmClientEvent){
-        _me.RtmClient.on(RTM_CLIENT_EVENTS[rtmClientEvent],function(eventData){
-          _me.emit("rtm:"+RTM_CLIENT_EVENTS[rtmClientEvent],eventData);
-        });
+        if (_me.RtmClient.listenerCount(RTM_CLIENT_EVENTS[rtmClientEvent]) === 0) {
+          _me.RtmClient.on(RTM_CLIENT_EVENTS[rtmClientEvent],function(eventData){
+            _me.emit("rtm:"+RTM_CLIENT_EVENTS[rtmClientEvent],eventData);
+          });
+        }
       });
     }
   }
