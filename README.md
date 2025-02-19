@@ -20,6 +20,9 @@ With just few lines of code, you can embed our Kore.ai chat widget into your app
 
 ## 💡 Getting Started
 
+>[!NOTE]
+>If you are currently using this version(11.10.0) we strongly recommend update it to 11.10.1 or later version. We have size issue in this 11.10.0 version.
+
 First, install kore web SDK via the [npm](https://www.npmjs.com/get-npm) package manager:
 
 ```bash
