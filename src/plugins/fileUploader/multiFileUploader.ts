@@ -91,6 +91,9 @@ class KoreMultiFileUploaderPlugin {
     let me: any = this;
 
     me.hostInstance.eventManager.addEventListener('.attachmentUpload', 'click', () => {
+      if (me.hostInstance.chatEle?.querySelector('.emoji-picker-section') && me.hostInstance.chatEle?.querySelector('.emoji-picker-section')?.style?.display != 'none') {
+        me.hostInstance.chatEle.querySelector('.emoji-picker-section').style.display = 'none';
+      }
       me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.toggle('hide-attachment');
       if (me.hostInstance.chatEle.querySelector('.uploaded-attachment-data')) {
         me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';

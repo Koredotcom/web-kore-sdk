@@ -62,6 +62,9 @@ export function ChatWidgetComposeBar(props: any) {
         if (hostInstance.chatEle.querySelector('.emoji-picker-section').style.display != 'none') {
             hostInstance.chatEle.querySelector('.emoji-picker-section').style.display = 'none';
         } else {
+            if (hostInstance.chatEle?.querySelector('.attachment-wrapper-data') && !hostInstance.chatEle?.querySelector('.attachment-wrapper-data')?.classList.contains('hide-attachment')) {
+                hostInstance.chatEle?.querySelector('.attachment-wrapper-data')?.classList.add('hide-attachment');
+            }
             hostInstance.chatEle.querySelector('.emoji-picker-section').style.display = 'block';
         }
     }
