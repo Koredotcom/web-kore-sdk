@@ -166,7 +166,7 @@ export function Message(props: any) {
                                             </div>
                                         </div>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
-                                            <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}>{msgData.fromAgent ? msgData.author.name : brandingInfo.body.bot_name.name}</div>
+                                            <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}>{msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}</div>
                                             <div className="time-stamp"><time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format)}</time></div>
                                         </div>}
                                     </div>
