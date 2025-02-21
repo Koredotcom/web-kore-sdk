@@ -497,7 +497,7 @@
                     }
                 }
             }
-            &:not(.custom-image-avatar-bg){
+            // &:not(.custom-image-avatar-bg){ commented because when both minimize image and custom image is true then it will not work
                 &.click-to-rotate-icon{
                     &.custom-image-minimize-avatar-bg{
                         box-shadow: none;
@@ -513,7 +513,7 @@
                         }
                     }
                 }
-            }
+            // }
             .default-avater-icon {
                 img {
                     height: 24px;
