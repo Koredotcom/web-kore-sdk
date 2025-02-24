@@ -14,7 +14,7 @@ To integrate Kore Web SDK in Service Now portal please follow the below steps.
 
    ![image](https://github.com/user-attachments/assets/2d863b85-63b2-40c1-9478-42bdd34c3a9d)
 
-4. Copy the below script and paste it in the Client Script editor
+4. Copy the below script and paste it in the Client Script editor or copy the embed script available in the Web/mobile channel and paste it in the HTML Template.
    ```
    (function () {
     var script = document.createElement('script');
