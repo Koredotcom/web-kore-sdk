@@ -246,7 +246,7 @@ class AgentDesktopPlugin {
                             var tempData = JSON.parse(message.data);
                             if (!tempData) return;
                             if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === msg[0].clientMessageId) {
-                                var ele = me.hostInstance.chatEle.querySelector(`.i${tempData.message.clientMessageId} .bottom-info`);
+                                var ele = me.hostInstance.chatEle.querySelector(`[data-cw-msg-id="${tempData.message.clientMessageId}"] .bottom-info`);
                                 if (tempData.message.type === "message_delivered") {
                                     if (!ele.querySelectorAll('.delivered').length) {
                                         const childEle1 = ele.querySelector('.read-text');
