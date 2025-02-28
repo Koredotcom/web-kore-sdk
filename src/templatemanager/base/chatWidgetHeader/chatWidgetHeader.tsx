@@ -36,7 +36,7 @@ export function ChatWidgetHeader(props: any) {
                     hostInstance.config.botOptions.forceReconnecting = false;//make it to true if reconnect button should not trigger on connect message
                 }
                 setTimeout(() => {
-                    hostInstance.resetWindow();
+                    hostInstance.resetWindow(data);
                 });
             }
           });
@@ -59,6 +59,9 @@ export function ChatWidgetHeader(props: any) {
                     hostInstance.removeLocalStoreItem('kr-cw-state');
                     hostInstance.removeLocalStoreItem('kr-cw-uid');
                     hostInstance.config.botOptions.maintainContext = false;
+                }
+                if (hostInstance.config.botOptions.openSocket) {
+                    hostInstance.bot.init(hostInstance.config.botOptions);
                 }
             }
         })
