@@ -1,3 +1,16 @@
+### 10.12.0
+* SDK Release Mar 04, 2025
+* Documentation
+  * added documentation for kore config
+  * added documentation for ConnectionMode
+* Breaking changes
+  * updates to ConnectionMode parameter handling during implicit reconnections:
+    Previously, implicit reconnections would append `&isReconnect=true&ConnectionMode=Reconnect` to the WebSocket URL. Now we will append `&ConnectionMode=Reconnect` only. Behaviour will remain same. Please [refer](docs/configurations/koreconfig/ConnectionMode/README.md) for more details
+> [!NOTE]
+> Above changes will be applicable only when ConnectionMode query parameter is used
+* Features
+  * added new event BEFORE_WS_CONNECTION on chat window instance. It will be triggered before web socket connection is established. Please refer [here](https://github.com/Koredotcom/web-kore-sdk/tree/v3/dev/docs/customizations#example-for-beforewsconnection-event) for sample.
+
 ### 10.11.0
 - SDK Release Feb 12, 2025
 * Stable release
