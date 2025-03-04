@@ -343,6 +343,10 @@ Note: When integrated into an iFrame, the SDK's functionality will be confined t
 	
 # Release History
 ```
+v10.12.0 [Minor] on 04-Mar-2025: Master branch
+        Breaking changes
+                1.When ConnectionMode query parameter is used, for implicit reconnections we will append only &ConnectionMode=Reconnect to the websocket url. Previously, 
+                  implicit reconnections would append &isReconnect=true&ConnectionMode=Reconnect. Behavior will remain same.
 v10.11.0 [Minor] on 12-Feb-2025: Master branch
         Stable release
 
