@@ -1,3 +1,39 @@
+### 11.11.0
+* Release Mar 04, 2025
+* Features
+  * Added config for the websocket url to add custom query parameters
+    <code>
+      botOptions.webSocketConfig = {
+      socketUrl: {
+          queryParams: {} // add query params in the object
+        }
+      }
+    </code>
+    Please refer [here](docs/configurations/koreconfig/ConnectionMode/README.md) for ConnectionMode query paramter details
+  * history syncing can now be disabled during network resume by using the kore config. Added following config in the kore config
+      ```
+      syncMessages: {
+          ...
+          onNetworkResume: {
+              enable: true,  // Set true to sync messages on network back
+              batchSize: 10   // To configure the number of messages to fetch
+          }
+      }
+      ```
+  * added new event BEFORE_WS_CONNECTION on chat window instance. It will be triggered before web socket connection is established. Please refer [here](docs/customizations#example-for-beforewsconnection-event) for sample.
+* Documentation
+  * updated kore config documentation
+  * added ConnectionMode documentation
+  * updated events documentation
+  * updated faqs
+  * added JSON Web Token (JWT) generation and usage
+* Bug fixes
+  * added data-cw-msg-id attribute for messages and templates to prevent duplicate issues
+  * optional chaining added for bottom time stamp in message
+  * answers template issues fix
+  * composebar disable issue fix on reconnection
+  * other minor bug fixes
+
 ### 11.10.1
 * Release Feb 19, 2025
 * Bug fixes
