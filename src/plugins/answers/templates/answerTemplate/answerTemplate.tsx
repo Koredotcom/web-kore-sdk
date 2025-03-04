@@ -82,7 +82,7 @@ export function Answers(props: any) {
           const [domain, tld] = domainAndTld.split('.').slice(-2);
       
           // Take first three characters of domain and concatenate with TLD
-          const shortenedDomain = domain.slice(0, 3) + '...' + tld;
+          const shortenedDomain = tld ? domain.slice(0, 3) + '...' + tld : domain.slice(0, 8) + '...';
       
           return shortenedDomain;
         }
@@ -121,14 +121,16 @@ export function Answers(props: any) {
                                         answersObj?.generative?.sources?.filter((source: any) => source?.title?.length > 0)?.map((source: any, index: number) => (
                                             <div className='sa-tooltip-container'>
 
-                                            <div className={`sa-answer-result-footer ${source?.title ? 'sa-answer-result-footer-with-title-content' : 'sa-answer-result-footer-with-url-content'} ${(selectedIndex===index+1)&&'selected'}`} 
+                                            <div className={`sa-answer-result-footer  ${(selectedIndex===index+1)&&'selected'}`} 
                                                     onMouseOver={() => setSelectedIndex(index+1)}
                                                     onMouseOut={() => setSelectedIndex(0)}>
-                                            <span onClick={()=>redirectToURL(source?.url)}>{index + 1}. <span>{source?.title || extractShortDomainOrFile(source?.url)}</span></span>
+                                            <span onClick={()=>redirectToURL(source?.url)}>{index + 1}. <span>{ extractShortDomainOrFile(source?.title || source?.url)}</span></span>
                                                     {(source?.image_url?.length > 0)&&
                                                     <Fragment>
-                                                        <span className="sa-answer-file-url-block" ><span className="sa-url-icon-preview" onClick={()=>showFileUrl(source?.image_url,source?.title || source?.url)}><span className="sa-answer-file-url-icon" >i</span> <span className="sa-preview-text">Preview</span></span>
-                                                        </span>
+                                                        <div className="sa-answer-file-url-block" onClick={()=>showFileUrl(source?.image_url,source?.title || source?.url)} >
+                                                                <span className="sa-answer-file-url-icon" >i</span> 
+                                                                <span className="sa-preview-text">Preview</span>
+                                                        </div>
                                                     </Fragment>
                                                     }
                                              </div>
