@@ -248,6 +248,7 @@ initShow  (config:any) {
   me.isWelcomeScreenOpened = false;
   me.isReconnected = false;
   me.isSocketOpened = false;
+  me.enableAgentChanges = true;
   me.config.chatTitle = 'Kore.ai Bot Chat';
   me.config.allowIframe = false;
 
