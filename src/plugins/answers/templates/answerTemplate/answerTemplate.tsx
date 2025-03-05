@@ -129,7 +129,6 @@ export function Answers(props: any) {
                                                     <Fragment>
                                                         <div className="sa-answer-file-url-block" onClick={()=>showFileUrl(source?.image_url,source?.title || source?.url)} >
                                                                 <span className="sa-answer-file-url-icon" >i</span> 
-                                                                <span className="sa-preview-text">Preview</span>
                                                         </div>
                                                     </Fragment>
                                                     }
