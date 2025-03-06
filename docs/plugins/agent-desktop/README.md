@@ -60,7 +60,7 @@ chatWindowInstance.installPlugin(new AgentDesktopPlugin());
 1. Include agent-desktop-umd.js in index.html
 
 ```js
-<script  src="PATH_TO_FILE/agent-desktop-umd.js"></script>
+<script  src="PATH_TO_FILE/plugins/agent-desktop-umd.js"></script>
 
 ```
 2. Get plugin reference

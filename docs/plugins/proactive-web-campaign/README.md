@@ -2,6 +2,9 @@
 Proactive web campaigns to engage with website visitors based on different rules.
 
 
+>[!NOTE]
+>Please add [Agent Desktop Plugin](../agent-desktop/README.md) to use this plugin.
+
 ## Configure ChatConfig
 ```js
 let botOptions = chatConfig.botOptions;
@@ -20,7 +23,9 @@ chatConfig.pwcConfig.enable = true;
 
 import { ProactiveWebCampaignPlugin } from 'kore-web-sdk';
 
-chatWindowInstance.installPlugin(new ProactiveWebCampaignPlugin());
+chatWindowInstance.installPlugin(new ProactiveWebCampaignPlugin({ dependentPlugins: {
+    AgentDesktopPlugin: true
+}}));
 
 ```
 
@@ -34,7 +39,7 @@ chatWindowInstance.installPlugin(new ProactiveWebCampaignPlugin());
 1. Include proactive-web-campaign.js in index.html
 
 ```js
-<script  src="PATH_TO_FILE/proactive-web-campaign.js"></script>
+<script  src="PATH_TO_FILE/plugins/proactive-web-campaign.js"></script>
 
 ```
 2. Get plugin reference
@@ -46,7 +51,9 @@ var ProactiveWebCampaignPlugin = ProactiveWebCampaignPluginSDK.ProactiveWebCampa
 
 ```js
 
-chatWindowInstance.installPlugin(new ProactiveWebCampaignPlugin());
+chatWindowInstance.installPlugin(new ProactiveWebCampaignPlugin({ dependentPlugins: {
+    AgentDesktopPlugin: true
+}}));
 ```
 	
 </details>
