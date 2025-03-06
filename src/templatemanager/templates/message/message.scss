@@ -482,6 +482,11 @@
 					padding-left: 10px;
 					margin: 0;
 				}
+                .isLink {
+                    a {
+                        color: var(--sdk-global-theme-color);
+                    }
+                }
             }
             .copy-bubble{
                 position: absolute;

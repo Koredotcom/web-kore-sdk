@@ -283,7 +283,7 @@ class KoreHelpers{
                 // str = sanitizeXSS(str);
                 // str = str.replace(/onerror=/gi, '');
                 // str = str.replace(/onmouseover=/gi, '');
-                str = DOMPurify.sanitize(str,{ ALLOWED_TAGS: ['a'] , ADD_TAGS: ['iframe'], ADD_ATTR: ['target']})
+                str = DOMPurify.sanitize(str,{ ALLOWED_TAGS: ['a','b','br'] , ADD_TAGS: ['iframe'], ADD_ATTR: ['target']})
                 wrapper1 = document.createElement('div');
                 newStr = str.replace(/“/g, '\"').replace(/”/g, '\"');
                 newStr = newStr.replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -297,31 +297,35 @@ class KoreHelpers{
                 // str = sanitizeXSS(str);
                 // str = str.replace(/onerror=/gi, '');
                 // str = str.replace(/onmouseover=/gi, '');
-                str = DOMPurify.sanitize(str,{ ALLOWED_TAGS: ['a'] , ADD_TAGS: ['iframe'], ADD_ATTR: ['target']})
+                str = DOMPurify.sanitize(str,{ ALLOWED_TAGS: ['a','b','br'] , ADD_TAGS: ['iframe'], ADD_ATTR: ['target']})
                 wrapper1 = document.createElement('div');
                 //str = str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
                 wrapper1.innerHTML = xssAttack(str);
-                if ($(wrapper1).find('a').attr('href')) {
+                if ($(wrapper1).find('a').attr('href') || $(wrapper1).find('b') || $(wrapper1).find('br')) {
                     var linkArray = str.match(/<a[^>]*>([^<]+)<\/a>/g);
-                    for (var x = 0; x < linkArray.length; x++) {
-                        var _newLA = document.createElement('div');
-                        var _detectedLink=linkArray[x];
-                        _newLA.innerHTML = linkArray[x];
-                        //for mailto: links, new line character need to be repaced with %0A 
-                        if (_detectedLink.indexOf("href='mailto:") > -1 || _detectedLink.indexOf('href="mailto:') > -1) {
-                            _detectedLink = _detectedLink.split('\n').join("%0A")
-    
+                    if (linkArray) {
+                        for (var x = 0; x < linkArray.length; x++) {
+                            var _newLA = document.createElement('div');
+                            var _detectedLink=linkArray[x];
+                            _newLA.innerHTML = linkArray[x];
+                            //for mailto: links, new line character need to be repaced with %0A 
+                            if (_detectedLink.indexOf("href='mailto:") > -1 || _detectedLink.indexOf('href="mailto:') > -1) {
+                                _detectedLink = _detectedLink.split('\n').join("%0A")
+        
+                            }
+                            var _randomKey = "korerandom://" + Object.keys(hyperLinksMap).length;
+                            _newLA.innerHTML = _detectedLink;
+        
+                            var _aEle = _newLA.getElementsByTagName('a');
+                            if (_aEle && _aEle[0] && _aEle[0].href) {
+                                hyperLinksMap[_randomKey] = _aEle[0].href;
+                                _aEle[0].href = _randomKey;
+                            }
+                            $(_newLA).find('a').attr('target', 'underscoreblank');
+                            str = str.replace(linkArray[x], _newLA.innerHTML);
                         }
-                        var _randomKey = "korerandom://" + Object.keys(hyperLinksMap).length;
-                        _newLA.innerHTML = _detectedLink;
-    
-                        var _aEle = _newLA.getElementsByTagName('a');
-                        if (_aEle && _aEle[0] && _aEle[0].href) {
-                            hyperLinksMap[_randomKey] = _aEle[0].href;
-                            _aEle[0].href = _randomKey;
-                        }
-                        $(_newLA).find('a').attr('target', 'underscoreblank');
-                        str = str.replace(linkArray[x], _newLA.innerHTML);
+                    } else {
+                        str = wrapper1.innerHTML.replace(_regExForLink, linkreplacer);
                     }
                 } else {
                     str = wrapper1.innerHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(_regExForLink, linkreplacer);
