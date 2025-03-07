@@ -115,15 +115,8 @@
             font-weight: 500;
             line-height: 16px;
             cursor: pointer;
-        }
-        .sa-answer-result-footer-with-title-content{
-            width: 89px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .sa-answer-result-footer-with-url-content{
-           width:fit-content;
+            display: flex;
+            gap:6px;
         }
         .selected {
             color: #155EEF;
@@ -136,12 +129,9 @@
             display: flex;
             flex-wrap: wrap;
             .sa-answer-file-url-block{
-                position: relative;
-                .sa-url-icon-preview{
-                    position: absolute;
-                    top: -3px;
-                    left: 6px;
-                    display: flex;
+                    display:flex;
+                    justify-content: start;
+                    align-items: center;
                     gap: 6px;
                     align-items: center;
                     justify-content: center;
@@ -163,7 +153,6 @@
                         }
                      
                     }
-                }
                 .sa-answer-file-url-icon {
                     border: 1.3px solid #98A2B3;
                     border-radius: 2px;
