@@ -722,7 +722,9 @@ initi18n  () {
         speakerOff: 'Speaker off',
         attachments: 'Attachments',
         close: 'Close Chat',
-        reconnect: 'Reconnect Chat'
+        reconnect: 'Reconnect Chat',
+        today: 'Today',
+        yesterday: 'Yesterday'
       },
     },
   };

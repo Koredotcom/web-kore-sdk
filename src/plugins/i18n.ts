@@ -35,7 +35,9 @@ class Korei18nPlugin {
                 speakerOff: "مكبر الصوت معطل",
                 attachments: "المرفقات",
                 close: "إغلاق الدردشة",
-                reconnect: "إعادة الاتصال بالدردشة"
+                reconnect: "إعادة الاتصال بالدردشة",
+                today: "اليوم",
+                yesterday: "أمس"
             },
             ja: {
                 message: 'メッセージ...',
@@ -68,7 +70,9 @@ class Korei18nPlugin {
                 speakerOff: 'スピーカーオフ',
                 attachments: '添付ファイル',
                 close: 'チャットを閉じる',
-                reconnect: 'チャットを再接続'
+                reconnect: 'チャットを再接続',
+                today: '今日',
+                yesterday: '昨日'
             },
             ko: {
                 message: '메시지...',
@@ -101,7 +105,9 @@ class Korei18nPlugin {
                 speakerOff: '스피커 꺼짐',
                 attachments: '첨부 파일',
                 close: '채팅 닫기',
-                reconnect: '채팅 재연결'
+                reconnect: '채팅 재연결',
+                today: '오늘',
+                yesterday: '어제'
             }
         }
     }

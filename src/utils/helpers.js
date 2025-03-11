@@ -26,7 +26,7 @@ class KoreHelpers{
             var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
             return strTime;
         },
-        'formatAMPMDay': function (date, df, tf) {
+        'formatAMPMDay': function (date, df, tf, config) {
             var month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
             date = new Date(date);
             var hours = date.getHours();
@@ -49,8 +49,10 @@ class KoreHelpers{
             var modified_date;
             if (day == 'Today' || day == 'Yesterday') {
                 if (tf == '12') {
+                    day = day == 'Today' ? config?.botMessages?.today || day : config?.botMessages?.yesterday || day;
                     strTime = hours + ':' + minutes + ' ' + ampm + ', ' + day;
                 } else {
+                    day = day == 'Today' ? config?.botMessages?.today || day : config?.botMessages?.yesterday || day;
                     strTime = hours24 + ':' + minutes + ', ' + day;
                 }
             } else {
