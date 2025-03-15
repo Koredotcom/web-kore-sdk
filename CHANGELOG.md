@@ -1,5 +1,9 @@
+### 10.12.1
+- SDK Release Mar 15, 2025
+* Stable release
+
 ### 10.12.0
-* SDK Release Mar 04, 2025
+- SDK Release Mar 04, 2025
 * Documentation
   * added documentation for kore config
   * added documentation for ConnectionMode
