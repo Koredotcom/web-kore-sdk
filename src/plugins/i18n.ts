@@ -2,7 +2,7 @@ class Korei18nPlugin {
     name = 'Korei18nPlugin';
     config = {
         rtlLanguages: ['ar'],
-        availableLanguages: ['en', 'ar', 'ja', 'ko'],//shown as list of available languages in chat window header to select
+        availableLanguages: ['en', 'ar', 'ja', 'ko', 'zh', 'de'],//shown as list of available languages in chat window header to select
         defaultLanguage: "en",//default selection from above list
         languageStrings: {   //any additional language can be added in this object by adding the key in availableLanguages
             ar: {
@@ -108,6 +108,76 @@ class Korei18nPlugin {
                 reconnect: '채팅 재연결',
                 today: '오늘',
                 yesterday: '어제'
+            },
+            zh: {
+                message: "消息...",
+                connecting: "连接中...",
+                reconnecting: "重新连接中...",
+                entertosend: "按回车发送",
+                endofchat: "聊天记录结束",
+                loadinghistory: "加载聊天记录...",
+                sendText: "发送",
+                closeText: "关闭",
+                expandText: "展开",
+                minimizeText: "最小化",
+                reconnectText: "重新连接",
+                attachmentText: "附件",
+                help: "帮助",
+                agent: "代理聊天",
+                media: "媒体",
+                file: "文件",
+                tapToSpeak: "点击麦克风讲话",
+                listenToEnd: "正在监听... 点击结束",
+                tapToSend: "点击发送",
+                typing: "输字中",
+                menu: "菜单",
+                poweredBy: "由...提供支持",
+                keyboard: "键盘",
+                microphone: "麦克风",
+                cancel: "取消",
+                emojis: "表情符号",
+                speakerOn: "扬声器开启",
+                speakerOff: "扬声器关闭",
+                attachments: "附件",
+                close: "关闭聊天",
+                reconnect: "重新连接聊天",
+                today: "今天",
+                yesterday: "昨天"
+            },
+            de: {
+                message: "Nachricht...",
+                connecting: "Verbindung wird hergestellt...",
+                reconnecting: "Wiederverbindung wird hergestellt...",
+                entertosend: "Drücke Enter zum Senden",
+                endofchat: "Ende des Chatverlaufs",
+                loadinghistory: "Lade Chatverlauf...",
+                sendText: "Senden",
+                closeText: "Schließen",
+                expandText: "Erweitern",
+                minimizeText: "Minimieren",
+                reconnectText: "Wiederverbinden",
+                attachmentText: "Anhang",
+                help: "Hilfe",
+                agent: "Agent-Chat",
+                media: "Medien",
+                file: "Datei",
+                tapToSpeak: "Tippe auf Mikrophon zum Sprechen",
+                listenToEnd: "Höre zu... Tippe zum Beenden",
+                tapToSend: "Tippe zum Senden",
+                typing: "Tippen...",
+                menu: "Menü",
+                poweredBy: "Bereitgestellt von",
+                keyboard: "Tastatur",
+                microphone: "Mikrophon",
+                cancel: "Abbrechen",
+                emojis: "Emojis",
+                speakerOn: "Lautsprecher ein",
+                speakerOff: "Lautsprecher aus",
+                attachments: "Anhänge",
+                close: "Chat schließen",
+                reconnect: "Chat wiederherstellen",
+                today: "Heute",
+                yesterday: "Gestern"
             }
         }
     }
