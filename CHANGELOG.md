@@ -1,3 +1,11 @@
+### 11.11.1
+* Release Mar 15, 2025
+* Documentation
+  * updated proactive web campaign plugin instructions
+* Bug fixes
+  * b and br tags whitelisted
+  * updated preview image in answer template
+
 ### 11.11.0
 * Release Mar 04, 2025
 * Features
