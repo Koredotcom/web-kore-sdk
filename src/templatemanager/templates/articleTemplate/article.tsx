@@ -3,9 +3,11 @@ import { getHTML } from '../../base/domManager';
 import BaseChatTemplate from '../baseChatTemplate';
 import './article.scss';
 import { h, Fragment } from 'preact';
+import KoreHelpers from '../../../utils/helpers';
 
 export function Article(props: any) {
     const hostInstance = props.hostInstance;
+    const helpers = KoreHelpers.helpers;
     const [msgData, setMsgData] = useState(props.msgData);
 
     const showArticle = (item: any) => {
@@ -36,7 +38,7 @@ export function Article(props: any) {
         <div className="menu-wrapper-data-actions">
             <div className="actions-slider-header-menu">
                 <div className="article-menuheader">
-                    <h1>{msgData.showArticle ? msgData.title : 'Articles'}</h1>
+                    <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData.showArticle ? msgData.title : 'Articles', "bot") }}></h1>
                     {!msgData.showArticle && <span>{msgData?.message?.[0]?.component?.payload?.elements?.length}</span>}
                 </div>
                 <button className="menu-close" role="contentinfo" aria-label="close" onClick={closeMenu}>
@@ -55,9 +57,9 @@ export function Article(props: any) {
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M3 5.625C3 4.6585 3.7835 3.875 4.75 3.875H11.75C12.7165 3.875 13.5 4.6585 13.5 5.625V14.375C13.5 15.3415 14.2835 16.125 15.25 16.125H4.75C3.7835 16.125 3 15.3415 3 14.375V5.625ZM5.625 6.5H10.875V10H5.625V6.5ZM10.875 11.75H5.625V13.5H10.875V11.75Z" fill="#101828" />
                                         <path d="M14.375 7.375H15.25C16.2165 7.375 17 8.1585 17 9.125V13.9375C17 14.6624 16.4124 15.25 15.6875 15.25C14.9626 15.25 14.375 14.6624 14.375 13.9375V7.375Z" fill="#101828" />
                                     </svg>
-                                    <span>{ele.title}</span>
+                                    <span dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.title, "bot") }}></span>
                                 </div>
-                                <div className="article-body-text">{ele.description}</div>
+                                {ele.description && <div className="article-body-text" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.description, "bot") }}></div>}
                                 <div className="article-footer">
                                     <div>{ele.createdOn}</div>
                                     <div>{ele.updatedOn}</div>
@@ -67,7 +69,7 @@ export function Article(props: any) {
                 </div>}
                 {msgData.showArticle && <div className={`article-full-card-content-details ${!msgData.showArticle ? 'display-hide' : ''}`}>
                     <div className="scroll-inner-data">
-                        <p>{msgData.description}</p>
+                        {msgData.description && <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData.description, "bot") }}></p>}
                     </div>
                     <div className="article-update-time-block">
                         <div className="created-updated-text">{msgData.createdOn}</div>
@@ -89,6 +91,7 @@ export function Article(props: any) {
 export function TemplateArticle(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
+    const helpers = KoreHelpers.helpers;
     const showMore = () => {
         hostInstance.bottomSliderAction('', getHTML(Article, msgData, hostInstance));
     }
@@ -110,9 +113,9 @@ export function TemplateArticle(props: any) {
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M3 5.625C3 4.6585 3.7835 3.875 4.75 3.875H11.75C12.7165 3.875 13.5 4.6585 13.5 5.625V14.375C13.5 15.3415 14.2835 16.125 15.25 16.125H4.75C3.7835 16.125 3 15.3415 3 14.375V5.625ZM5.625 6.5H10.875V10H5.625V6.5ZM10.875 11.75H5.625V13.5H10.875V11.75Z" fill="#101828" />
                                         <path d="M14.375 7.375H15.25C16.2165 7.375 17 8.1585 17 9.125V13.9375C17 14.6624 16.4124 15.25 15.6875 15.25C14.9626 15.25 14.375 14.6624 14.375 13.9375V7.375Z" fill="#101828" />
                                     </svg>
-                                    <span>{ele.title}</span>
+                                    <span dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.title, "bot") }}></span>
                                 </div>
-                                <div className="article-body-text">{ele.description}</div>
+                                {ele.description && <div className="article-body-text" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.description, "bot") }}></div>}
                                 <div className="article-footer">
                                     <div>{ele.createdOn}</div>
                                     <div>{ele.updatedOn}</div>

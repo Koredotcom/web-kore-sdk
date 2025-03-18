@@ -1,16 +1,12 @@
 import BaseChatTemplate from '../baseChatTemplate';
 import './formTemplate.scss';
 import { h, Fragment } from 'preact';
-import { useState } from 'preact/hooks';
-import { Message } from '../message/message';
+import KoreHelpers from '../../../utils/helpers';
 
 export function Form(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
-    const messageobj = {
-        msgData: msgData,
-        hostInstance: hostInstance
-    }
+    const helpers = KoreHelpers.helpers;
 
     const handleEvent = (ele: any, id: any) => {
         const inputEle: any = hostInstance.chatEle.querySelector(`#input-${id}`);
@@ -32,7 +28,7 @@ export function Form(props: any) {
         return (
             <div className="form-template-wrapper-container" data-cw-msg-id={msgData?.messageId}>
                 <div className="form-temp-content">
-                    <h1>{msgData?.message?.[0]?.component?.payload.heading}</h1>
+                    {msgData?.message?.[0]?.component?.payload.heading && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData?.message?.[0]?.component?.payload.heading, "bot") }}></h1>}
                     {msgData?.message?.[0]?.component?.payload.formFields.map((ele: any) => (
                         <Fragment>
                             <div className="form-input-wrapper">

@@ -1,16 +1,12 @@
 import BaseChatTemplate from '../baseChatTemplate';
 import './tableList.scss';
 import { h, Fragment } from 'preact';
-import { useState } from 'preact/hooks';
-import { Message } from '../message/message';
+import KoreHelpers from '../../../utils/helpers';
 
 export function TableList(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
-    const messageobj = {
-        msgData: msgData,
-        hostInstance: hostInstance
-    }
+    const helpers = KoreHelpers.helpers;
 
     const handleEvent = (event: any, action: any) => {
         event?.stopPropagation();
@@ -38,8 +34,8 @@ export function TableList(props: any) {
                     <Fragment>
                         <div className="table-list-wrapper-info">
                             <div className="table-list-info-content">
-                                {ele.sectionHeader && <h1>{ele.sectionHeader}</h1>}
-                                {ele.sectionHeaderDesc && <p>{ele.sectionHeaderDesc}</p>}
+                                {ele.sectionHeader && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.sectionHeader, "bot") }}></h1>}
+                                {ele.sectionHeaderDesc && <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.sectionHeaderDesc, "bot") }}></p>}
 
                                 {ele.rowItems.map((item: any) => (
                                     <div className="table-list-data-card" style={{backgroundColor: item.bgcolor ? item.bgcolor: '', color: item.title.rowColor ? item.title.rowColor: ''}} onClick={(event) => handleEvent(event, item.default_action)}>
@@ -49,15 +45,15 @@ export function TableList(props: any) {
                                             </figure>
                                         </div>}
                                         { item.title.type == 'text' && (item.title.text.title || item.title.text.subtitle) && <div className="content-details">
-                                            <h1>{item.title.text.title}</h1>
-                                            <p>{item.title.text.subtitle}</p>
+                                            <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.title.text.title, "bot") }}></h1>
+                                            <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.title.text.subtitle, "bot") }}></p>
                                         </div>}
                                         { item.title.type == 'url' && (item.title.url.title || item.title.url.subtitle) && <div className="content-details">
-                                            <h1 className="under-line" onClick={(event) => handleEvent(event, item.title.url)}>{item.title.url.title}</h1>
-                                            <p>{item.title.url.subtitle}</p>
+                                            <h1 className="under-line" onClick={(event) => handleEvent(event, item.title.url)} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.title.url.title, "bot") }}></h1>
+                                            <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.title.url.subtitle, "bot") }}></p>
                                         </div>}
-                                        {item.value.type == 'text' && item.value.text && <div className="price-tag">{item.value.text}</div>}
-                                        {item.value.type == 'url' && item.value.url && <div className="price-tag under-line" onClick={(event) => handleEvent(event, item.value.url)}>{item.value.url.title}</div>}
+                                        {item.value.type == 'text' && item.value.text && <div className="price-tag" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.value.text, "bot") }}></div>}
+                                        {item.value.type == 'url' && item.value.url && <div className="price-tag under-line" onClick={(event) => handleEvent(event, item.value.url)} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.value.url.title, "bot") }}></div>}
 
                                         {/* { item && item.title.image && item.title.image.image_type && item.title.image.image_src && <div><img src={item.title.image.image_src} style={{height: '40px', width: '40px'}}></img></div> }
                             <div>

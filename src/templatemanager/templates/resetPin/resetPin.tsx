@@ -3,10 +3,12 @@ import BaseChatTemplate from '../baseChatTemplate';
 import { Message } from '../message/message';
 import './resetPin.scss';
 import { h, Fragment } from 'preact';
+import KoreHelpers from '../../../utils/helpers';
 
 export function Reset(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
+    const helpers = KoreHelpers.helpers;
     const isFromHistory = msgData.fromHistory;
     const messageId = msgData.messageId;
     const payload = msgData?.message?.[0]?.component?.payload || {};
@@ -113,7 +115,7 @@ export function Reset(props: any) {
     return (
         <div className="menu-wrapper-data-actions" data-cw-msg-id={msgData?.messageId}>
             <div className="actions-slider-header-menu">
-                <h1>{payload.title || 'Reset PIN'}</h1>
+                <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(payload.title || 'Reset PIN', "bot") }}></h1>
                 {!isFromHistory && <button className="menu-close" role="contentinfo" aria-label="close" onClick={closeMenu}>
                     <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
                         <path d="M10.8838 10.0001L16.0669 4.81694C16.311 4.57286 16.311 4.17714 16.0669 3.93306C15.8229 3.68898 15.4271 3.68898 15.1831 3.93306L9.99988 9.11624L4.81694 3.93352C4.57286 3.68944 4.17713 3.68945 3.93306 3.93354C3.68899 4.17762 3.689 4.57335 3.93308 4.81742L9.116 10.0001L3.93306 15.1831C3.68898 15.4272 3.68898 15.8229 3.93306 16.067C4.17714 16.311 4.57286 16.311 4.81694 16.067L9.9999 10.884L15.1831 16.067C15.4272 16.311 15.8229 16.311 16.067 16.0669C16.311 15.8229 16.311 15.4271 16.0669 15.1831L10.8838 10.0001Z" fill="#697586" />
@@ -122,7 +124,7 @@ export function Reset(props: any) {
             </div>
             <div className="iner-data-scroll-wraper otp-data-scroll-wrapper">
                 <div className="otp-input-wrapper">
-                    <p>{payload.enterPinTitle || 'Enter your new PIN'}</p>
+                    <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(payload.enterPinTitle || 'Enter your new PIN', "bot") }}></p>
                     <div className="otp-inputs" id={`pin-set-1-${messageId}`}>
                         {Array.from({ length: pinLength }, (_, i) => (
                             <input 
@@ -137,7 +139,7 @@ export function Reset(props: any) {
                     </div>
                 </div>
                 <div className="otp-input-wrapper">
-                    <p>{payload.reEnterPinTitle || 'Re-enter your PIN'}</p>
+                    <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(payload.reEnterPinTitle || 'Re-enter your PIN', "bot") }}></p>
                     <div className="otp-inputs" id={`pin-set-2-${messageId}`}>
                         {Array.from({ length: pinLength }, (_, i) => (
                             <input 

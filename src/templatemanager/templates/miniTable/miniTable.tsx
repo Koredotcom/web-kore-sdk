@@ -1,13 +1,14 @@
 import BaseChatTemplate from '../baseChatTemplate';
 import './miniTable.scss';
 import { h, Fragment } from 'preact';
-import { useState } from 'preact/hooks';
 import { Message } from '../message/message';
 import CarouselButtons from '../carouselTemplate/carouselButtons';
+import KoreHelpers from '../../../utils/helpers';
 
 export function MiniTable(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
+    const helpers = KoreHelpers.helpers;
     const messageobj = {
         msgData: msgData,
         hostInstance: hostInstance
@@ -53,7 +54,7 @@ export function MiniTable(props: any) {
                                 <thead>
                                     <tr>
                                         { ele.primary.map((e: any) => (
-                                        <th>{e[0]}</th>
+                                        <th dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(e[0] || "", "bot") }}></th>
                                         ))}
                                     </tr>
                                 </thead>
@@ -61,7 +62,7 @@ export function MiniTable(props: any) {
                                     {ele.additional.map((el: any) => (
                                         <tr>
                                             { el.map((e: any) => (
-                                                <td>{e}</td>
+                                                <td dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(e || "", "bot") }}></td>
                                             ))}
                                         </tr>
                                     ))}

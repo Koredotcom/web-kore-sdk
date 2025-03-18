@@ -1,11 +1,12 @@
 import BaseChatTemplate from '../baseChatTemplate';
 import './feedback.scss';
 import { h, Fragment } from 'preact';
-import { useState } from 'preact/hooks';
 import { Message } from '../message/message';
 import { getHTML } from '../../base/domManager';
+import KoreHelpers from '../../../utils/helpers';
 
 export function additionalFeedback(props: any) {
+    const helpers = KoreHelpers.helpers;
     const data = {
         header: 'Describe your feedback',
         placeholder: 'Anything else you would like to add (optional)',
@@ -19,7 +20,7 @@ export function additionalFeedback(props: any) {
 
     return(
         <div className="radio-button-wrapper">
-                <h1>{data.header}</h1>
+                {data.header && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(data.header, "bot") }}></h1>}
                 { data.options.map((ele: any, ind: any) => (
                     <div className="radio-padding">
                         <div className="radio-button-item">
@@ -40,6 +41,7 @@ export function additionalFeedback(props: any) {
 export function Feedback(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
+    const helpers = KoreHelpers.helpers;
     
     const handleEvent = (e: any) => {
         if (e.type == 'url' || e.type == 'data-url') {
@@ -164,7 +166,7 @@ export function Feedback(props: any) {
         <div className="feedback-template-wrapper-container" id={msgData.messageId} data-cw-msg-id={msgData?.messageId}>
             <div className="feedback-temp-wrapper">
                 <div className="feedback-temp-sec">
-                    <h6>{msgData?.message?.[0]?.component?.payload?.text}</h6>
+                    {msgData?.message?.[0]?.component?.payload?.text && <h6 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData?.message?.[0]?.component?.payload?.text, "bot") }}></h6>}
                     {(msgData.message[0].component.payload.view == 'emojis' || msgData.message[0].component.payload.view == 'CSAT') && <div className="csat-feedback">
                         <div className="emoji_container">
                             {msgData.message[0].component.payload.smileyArrays.map((emojiItem: any, ind: any) => (<div className="emoji-feedback">

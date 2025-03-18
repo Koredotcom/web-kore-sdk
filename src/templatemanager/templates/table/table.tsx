@@ -4,10 +4,12 @@ import { h, Fragment } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { Message } from '../message/message';
 import { getHTML } from '../../base/domManager';
+import KoreHelpers from '../../../utils/helpers';
 
 export function TableExt(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
+    const helpers = KoreHelpers.helpers;
     const showMore = props?.showMore || false;
     const messageObj = {
         msgData: msgData,
@@ -24,7 +26,7 @@ export function TableExt(props: any) {
                             <thead>
                                 <tr>
                                     {msgData.message[0].component.payload.columns.map((ele: any) => (
-                                        <th>{ele[0]}</th>
+                                        <th dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele[0] || "", "bot") }}></th>
                                     ))}
                                 </tr>
                             </thead>
@@ -32,7 +34,7 @@ export function TableExt(props: any) {
                                 {msgData.message[0].component.payload.elements.map((ele: any, ind: any) => (
                                     (((showMore && ind < 3) || !showMore) && <tr>
                                         {ele.Values.map((e: any) => (
-                                            <td>{e}</td>
+                                            <td dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(e || "", "bot") }}></td>
                                         ))}
                                     </tr>)
                                 ))}
@@ -56,14 +58,14 @@ export function TableExt(props: any) {
                             {msgData.message[0].component.payload.elements.map((ele: any, ind: any) => (
                                 (((showMore && ind < 3) || !showMore) && <div className="acc-block-content" onClick={selectItem}>
                                     {ele.Values.map((e: any, i: any) => (i < 2 && <div className="info-block">
-                                        <h1 className="hide">{msgData.message[0].component.payload.columns[i]}</h1>
-                                        <p title={e}>{e}</p>
+                                        <h1 className="hide" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData.message[0].component.payload.columns[i], "bot") }}></h1>
+                                        <p title={e} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(e, "bot") }}></p>
                                     </div>
                                     ))}
 
                                     {ele.Values.map((e: any, i: any) => (i >= 2 && <div className="info-block hide">
-                                        <h1>{msgData.message[0].component.payload.columns[i]}</h1>
-                                        <p>{e}</p>
+                                        <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData.message[0].component.payload.columns[i], "bot") }}></h1>
+                                        <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(e, "bot") }}></p>
                                     </div>
                                     ))}
 

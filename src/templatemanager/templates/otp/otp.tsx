@@ -3,10 +3,12 @@ import BaseChatTemplate from '../baseChatTemplate';
 import { Message } from '../message/message';
 import './otp.scss';
 import { h, Fragment } from 'preact';
+import KoreHelpers from '../../../utils/helpers';
 
 export function OTPExt(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
+    const helpers = KoreHelpers.helpers;
     const fromHistory = msgData.fromHistory;
     const messageId = msgData.messageId;
     const payload = msgData.message[0].component.payload;
@@ -87,8 +89,8 @@ export function OTPExt(props: any) {
         <div className="menu-wrapper-data-actions" data-cw-msg-id={msgData?.messageId}>
             <div className="actions-slider-header-menu">
                <div className="title-desc-heading">
-                    <h1>{payload.title || 'Enter OTP'}</h1>
-                    <p>{payload.description || 'Please enter your 4 digit one time password'}</p>
+                    <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(payload.title || 'Enter OTP', "bot") }}></h1>
+                    <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(payload.description || 'Please enter your 4 digit one time password', "bot") }}></p>
                </div>
                 {!fromHistory && <button className="menu-close" role="contentinfo" aria-label="close" onClick={closeMenu}>
                     <svg width="16" height="16" viewBox="0 0 20 20" fill="none">

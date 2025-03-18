@@ -2,10 +2,12 @@ import BaseChatTemplate from '../baseChatTemplate';
 import './advancedMultiList.scss';
 import { h, Fragment } from 'preact';
 import { getHTML } from '../../base/domManager';
+import KoreHelpers from '../../../utils/helpers';
 
 export function AdvancedMultiListExtension(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
+    const helpers = KoreHelpers.helpers;
 
     const handleItem = (item: any) => {
         if (item.type == 'postback' || item.type == 'text') {
@@ -46,7 +48,7 @@ export function AdvancedMultiListExtension(props: any) {
                 {msgData.message[0].component.payload.listItems.map((listItem: any, index: any) => (
                     <Fragment>
                         <div className="main-heading-wrapper">
-                            {listItem.title && <h1>{listItem.title}</h1>}
+                            {listItem.title && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(listItem.title, "bot") }}></h1>}
                         </div>
                         {
                             (listItem.subListItems.map((item: any, ind: any) => (
@@ -57,8 +59,8 @@ export function AdvancedMultiListExtension(props: any) {
                                             <img src={item.icon} />
                                         </div>}
                                         {(item.title || item.description) && <div className="titles-info-block">
-                                            <h1 style={item?.titleStyles}>{item.title}</h1>
-                                            <p>{item.description}</p>
+                                            <h1 style={item?.titleStyles} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.title, "bot") }}></h1>
+                                            {item.description && <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.description, "bot") }}></p>}
                                         </div>}
                                         <div className="right-actions-content">
                                             {item.headerOptions?.length > 0 && item.headerOptions.map((headerEle: any) => (
@@ -101,7 +103,7 @@ export function AdvancedMultiListExtension(props: any) {
                                                     {textEle.icon && <figure>
                                                         <img src={textEle.icon} />
                                                     </figure>}
-                                                    <p>{textEle.title}</p>
+                                                    <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(textEle.title, "bot") }}></p>
                                                 </div>))}
                                         </div>}
                                         {/* {item.buttons?.length > 0 && item.view !== 'options' && <div className={`buttons-wrapper-sec ${item.buttonsLayout?.buttonAligment === 'fullwidth' ? `if-full-width-buttons` : ``}`}>
@@ -177,6 +179,7 @@ export function AdvancedMultiListExtensionSlider(props: any) {
 export function AdvancedMultiList(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
+    const helpers = KoreHelpers.helpers;
 
     const handleItem = (item: any) => {
         if (item.type == 'postback' || item.type == 'text') {
@@ -227,7 +230,7 @@ export function AdvancedMultiList(props: any) {
                         ((msgData.message[0].component.payload.seeMore && (index < msgData.message[0].component.payload.listItemDisplayCount) || !msgData.message[0].component.payload.seeMore) &&
                             <Fragment>
                                 <div className="main-heading-wrapper">
-                                    {listItem.title && <h1>{listItem.title}</h1>}
+                                    {listItem.title && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(listItem.title, "bot") }}></h1>}
                                 </div>
                                 {
                                     (listItem.subListItems.map((item: any, ind: any) => (
@@ -238,8 +241,8 @@ export function AdvancedMultiList(props: any) {
                                                     <img src={item.icon} />
                                                 </div>}
                                                 {(item.title || item.description) && <div className="titles-info-block">
-                                                    <h1 style={item?.titleStyles}>{item.title}</h1>
-                                                    <p>{item.description}</p>
+                                                    {item.title && <h1 style={item?.titleStyles} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.title, "bot") }}></h1>}
+                                                    {item.description && <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.description, "bot") }}></p>}
                                                 </div>}
                                                 <div className="right-actions-content">
                                                     {item.headerOptions?.length > 0 && item.headerOptions.map((headerEle: any) => (
@@ -282,7 +285,7 @@ export function AdvancedMultiList(props: any) {
                                                             {textEle.icon && <figure>
                                                                 <img src={textEle.icon} />
                                                             </figure>}
-                                                            <p>{textEle.title}</p>
+                                                            <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(textEle.title, "bot") }}></p>
                                                         </div>))}
                                                 </div>}
                                                 {/* {item.buttons?.length > 0 && item.view !== 'options' && <div className={`buttons-wrapper-sec ${item.buttonsLayout?.buttonAligment === 'fullwidth' ? `if-full-width-buttons` : ``}`}>

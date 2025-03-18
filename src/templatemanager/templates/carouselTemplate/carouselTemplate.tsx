@@ -3,15 +3,13 @@
 import BaseChatTemplate from '../baseChatTemplate';
 import './carouselTemplate.scss';
 import { h, Fragment } from 'preact';
-import stackedCards from './stackedCarousel'
+import stackedCards from './stackedCarousel';
+import KoreHelpers from '../../../utils/helpers';
+
 export function Carousel(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
-
-    const messageobj = {
-        msgData: msgData,
-        hostInstance: hostInstance
-    }
+    const helpers = KoreHelpers.helpers;
 
     const handleButtonEvent = (e: any) => {
         if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
@@ -54,16 +52,16 @@ export function Carousel(props: any) {
                         <li class="item">
                             <button className="card-content-sec">
                                 <div className="top-sec-card">
-                                    <h1>{item.topSection.title}</h1>
+                                    <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.topSection.title, "bot") }}></h1>
                                     {/* <span className="tag-name">Active</span> */}
                                 </div>
                                 <div className="middle-sec-card">
-                                    <p>{item.middleSection.description}</p>
+                                    <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.middleSection.description, "bot") }}></p>
                                 </div>
                                 <div className="bottom-sec-card">
-                                    <h2>{item.bottomSection.title}</h2>
+                                    <h2 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.bottomSection.title, "bot") }}></h2>
                                     <p>
-                                        <time>{item.bottomSection.description}</time>
+                                        <time dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.bottomSection.description, "bot") }}></time>
                                     </p>
                                 </div>
                                 <button className="view-more-btn">{item.buttons[0].title}</button>
@@ -150,10 +148,10 @@ export function Carousel(props: any) {
                             </div>}
                             <div className="content-block">
                                 {(ele.title || ele.subtext) && <div className="heading-block">
-                                    {ele.title && <h1>{ele.title}</h1>}
-                                    {ele.subtext && <p>{ele.subtext}</p>}
+                                    {ele.title && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.title, "bot") }}></h1>}
+                                    {ele.subtext && <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.subtext, "bot") }}></p>}
                                 </div>}
-                                {ele.subtitle && <p>{ele.subtitle}</p>}
+                                {ele.subtitle && <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.subtitle, "bot") }}></p>}
                                 {ele.default_action && ele.default_action.type === 'web_url' && <a className="link-exteranl-site" href="#" target="_blank" onClick={() => handleButtonEvent({ type: 'web_url', url: ele.default_action.url })}>{ele.default_action.url}</a>}
                                 {/* <div className="rating-block">
                                     <figure>

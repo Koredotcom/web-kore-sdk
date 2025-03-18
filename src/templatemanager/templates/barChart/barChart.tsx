@@ -1,17 +1,17 @@
 import BaseChatTemplate from '../baseChatTemplate';
 import './barChart.scss';
 import { h, Fragment } from 'preact';
-import { useState } from 'preact/hooks';
-import { Message } from '../message/message';
 import KoreGraphAdapter from '../../../libs/kore-graph-adapter/KoreGraphAdapter';
 import { getHTML } from '../../base/domManager';
+import KoreHelpers from '../../../utils/helpers';
 
 export function BarChart(props: any) {
     const msgData = props.msgData;
+    const helpers = KoreHelpers.helpers;
     return (
         <div className="chart-template-wrapper" id={`bc${msgData.messageId}`} data-cw-msg-id={msgData?.messageId}>
             <div className="barchartDiv charts-body-info">
-                <h1>{msgData?.message?.[0]?.component?.payload?.text}</h1>
+                <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData?.message?.[0]?.component?.payload?.text, "bot") }}></h1>
                 <div className="barChartChildDiv" id={`barchart${msgData.messageId}`}></div>
             </div>
         </div>
@@ -21,10 +21,11 @@ export function BarChart(props: any) {
 
 export function BarChartModal(props: any) {
     const msgData = props.msgData;
+    const helpers = KoreHelpers.helpers;
     return (
         <div className="chart-template-wrapper" id={`bc${msgData.messageId}`}>
             <div className="barchartDiv charts-body-info">
-                <h1>{msgData?.message?.[0]?.component?.payload?.text}</h1>
+                <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData?.message?.[0]?.component?.payload?.text, "bot") }}></h1>
                 <div className="barChartChildDiv" id={`barchartmodal${msgData.messageId}`}></div>
             </div>
         </div>

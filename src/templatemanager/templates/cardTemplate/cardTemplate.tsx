@@ -1,14 +1,13 @@
 import { getHTML } from '../../base/domManager';
 import BaseChatTemplate from '../baseChatTemplate';
-import IconsManager from '../../base/iconsManager';
 import './cardTemplate.scss';
 import { h, Fragment } from 'preact';
-
+import KoreHelpers from '../../../utils/helpers';
 
 export function cardSliderExtension(props: any) {
     const sliderData = props.msgData;
-    const iconHelper = new IconsManager();
     const hostInstance = props.hostInstance;
+    const helpers = KoreHelpers.helpers;
     const closeMenu = () => {
         hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');
         setTimeout(() => {
@@ -25,7 +24,7 @@ export function cardSliderExtension(props: any) {
     return (
         <div className="menu-wrapper-data-actions">
             <div className="actions-slider-header-menu">
-                <h1>{sliderData.sliderTitle}</h1>
+                {sliderData.sliderTitle && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(sliderData.sliderTitle, "bot") }}></h1>}
                 <button className="menu-close" role="contentinfo" aria-label="close" onClick={closeMenu}>
                     <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
                         <path d="M10.8838 10.0001L16.0669 4.81694C16.311 4.57286 16.311 4.17714 16.0669 3.93306C15.8229 3.68898 15.4271 3.68898 15.1831 3.93306L9.99988 9.11624L4.81694 3.93352C4.57286 3.68944 4.17713 3.68945 3.93306 3.93354C3.68899 4.17762 3.689 4.57335 3.93308 4.81742L9.116 10.0001L3.93306 15.1831C3.68898 15.4272 3.68898 15.8229 3.93306 16.067C4.17714 16.311 4.57286 16.311 4.81694 16.067L9.9999 10.884L15.1831 16.067C15.4272 16.311 15.8229 16.311 16.067 16.0669C16.311 15.8229 16.311 15.4271 16.0669 15.1831L10.8838 10.0001Z" fill="#697586"/>
@@ -38,18 +37,18 @@ export function cardSliderExtension(props: any) {
                         sliderData.sliderInfo.map((ele: any) => (
                             <div>
                                 <div className="top-sec-card">
-                                    <h1>{ele.topSection.title}</h1>
-                                    <span style={ele.topSection.details.styles} className="tag-name">{ele.topSection.details.title}</span>
+                                    <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.topSection.title, "bot") }}></h1>
+                                    <span style={ele.topSection.details.styles} className="tag-name" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.topSection.details.title, "bot") }}></span>
                                 </div>
                                 {
                                     ele.middleSection.items.map((item: any) => (
                                         <div className="middle-sec-card">
                                             <div class="img-with-text">
-                                                <img src={item.icon} />
-                                                <p>{item.title}</p>
+                                                {item.icon && <img src={item.icon} />}
+                                                <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.title, "bot") }}></p>
                                             </div>
                                             <div class="right-title">
-                                                <p>{item.value}</p>
+                                                <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.value, "bot") }}></p>
                                             </div>
                                         </div>
                                     ))
@@ -58,11 +57,11 @@ export function cardSliderExtension(props: any) {
                                     ele.bottomSection.items.map((val: any) => (
                                         <div className="bottom-sec-card small-font-sec">
                                             <div class="img-with-text">
-                                                <p style={val.titleStyles}>{val.title}</p>
+                                                <p style={val.titleStyles} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(val.title, "bot") }}></p>
                                             </div>
                                             <div class="right-title">
                                                 {val.icon && <img src={val.icon} />}
-                                                <p style={val.titleStyles}>{val.value}</p>
+                                                <p style={val.titleStyles} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(val.value, "bot") }}></p>
                                             </div>
                                         </div>
                                     ))
@@ -77,7 +76,7 @@ export function cardSliderExtension(props: any) {
                             ele.moreInfo.map((item: any,i: any) => (
                                 <div className="accordion_item" onClick={() => openAccordionDetails(event,i)}>
                                     <button className="accordion_heading" aria-expanded="true">
-                                        <p>{item.title}</p>
+                                        <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.title, "bot") }}></p>
                                         <div className="arrow-icon">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
                                                 <path d="M6.09961 4L10.0996 8L6.09961 12" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
@@ -91,11 +90,11 @@ export function cardSliderExtension(props: any) {
                                                     item.items.map((val: any) => (
                                                         <div className="card-acc-temp">
                                                             <div className="left-data">
-                                                                <h1 style={val.nameStyles}>{val.name}</h1>
-                                                                { val.description  && <p>{val.description}</p>}
+                                                                <h1 style={val.nameStyles} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(val.name, "bot") }}></h1>
+                                                                { val.description  && <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(val.description, "bot") }}></p>}
                                                             </div>
                                                             <div className="right-data">
-                                                                <p>{val.value}</p>
+                                                                <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(val.value, "bot") }}></p>
                                                             </div>
                                                         </div>
                                                     ))
@@ -116,10 +115,8 @@ export function cardSliderExtension(props: any) {
 export function card(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
-    const messageobj = {
-        msgData: msgData,
-        hostInstance: hostInstance
-    }
+    const helpers = KoreHelpers.helpers;
+
     const handleButtonEvent = (e: any) => {
         if (e.type.toLowerCase() == 'postback' || e.type.toLowerCase() == 'text') {
             hostInstance.sendMessage(e.payload || e.value, { renderMsg: e.title });
@@ -139,21 +136,21 @@ export function card(props: any) {
                 <div data-cw-msg-id={msgData?.messageId}>
                     <section className="card-template-wrapper" aria-label="card template sdk">
                         <div className="card-warpper-info">
-                            <h1>{msgData.message[0].component.payload.cards.cardHeading.title}</h1>
+                            <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData.message[0].component.payload.cards.cardHeading.title, "bot") }}></h1>
                             {
                                 msgData.message[0].component.payload.cards.cardDescription.map((ele: any) => (
                                     <button className="card-content-sec" onClick={() => handleButtonEvent(ele.actions)}>
                                         <div className="top-sec-card">
-                                            <h1>{ele.topSection.title}</h1>
-                                            <span style={ele.topSection.details.styles} className="tag-name">{ele.topSection.details.title}</span>
+                                            <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.topSection.title, "bot") }}></h1>
+                                            <span style={ele.topSection.details.styles} className="tag-name" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.topSection.details.title, "bot") }}></span>
                                         </div>
                                         <div className="middle-sec-card">
-                                            <p>{ele.middleSection.title}</p>
+                                            <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.middleSection.title, "bot") }}></p>
                                         </div>
                                         <div className="bottom-sec-card">
-                                            <h2>{ele.bottomSection.title}</h2>
+                                            <h2 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.bottomSection.title, "bot") }}></h2>
                                             <p>
-                                                <time>{ele.bottomSection.details.title}</time>
+                                                <time dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.bottomSection.details.title, "bot") }}></time>
                                             </p>
                                         </div>
                                     </button>
@@ -173,17 +170,17 @@ export function card(props: any) {
                             msgData.message[0].component.payload.cards.cardDescription.map((ele: any) => (
                                 <div className="card-content-sec">
                                     <div className="top-sec-card">
-                                        <h1>{ele.topSection.title}</h1>
-                                        <span style={ele.topSection.details.styles} className="tag-name">{ele.topSection.details.title}</span>
+                                        <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.topSection.title, "bot") }}></h1>
+                                        <span style={ele.topSection.details.styles} className="tag-name" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.topSection.details.title, "bot") }}></span>
                                     </div>
                                     <div className="middle-sec-card">
-                                        <p>{ele.topSection.subTitle}</p>
+                                        <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.topSection.subTitle, "bot") }}></p>
                                     </div>
                                     {
                                         ele.topSection.items.map((val: any) => (
                                             <div className="bottom-sec-card">
-                                                <h2 style={val.titleStyles}>{val.title}</h2>
-                                                <p style={val.valueStyles}>{val.value}</p>
+                                                <h2 style={val.titleStyles} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(val.title, "bot") }}></h2>
+                                                <p style={val.valueStyles} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(val.value, "bot") }}></p>
                                             </div>
                                         ))
                                     }
@@ -192,7 +189,7 @@ export function card(props: any) {
                                         ele.middleSection.items.map((val: any) => (
                                             <div className="bottom-sec-card">
                                                 <h2 style={val.titleStyles}>{val.title}<span style={val.subTitleStyles}>{val.subTitle}</span></h2>
-                                                <p style={val.valueStyles}>{val.value}</p>
+                                                <p style={val.valueStyles} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(val.value, "bot") }}></p>
                                             </div>
                                         ))
                                     }
@@ -200,8 +197,8 @@ export function card(props: any) {
                                     {
                                         ele.bottomSection.items.map((val: any) => (
                                             <div className="bottom-sec-card">
-                                                <h2 style={val.titleStyles}>{val.title}</h2>
-                                                <p style={val.valueStyles}>{val.value}</p>
+                                                <h2 style={val.titleStyles} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(val.title, "bot") }}></h2>
+                                                <p style={val.valueStyles} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(val.value, "bot") }}></p>
                                             </div>
                                         ))
                                     }
@@ -230,8 +227,8 @@ export function card(props: any) {
                                 </figure>
                             </div>}
                             {card.cardHeading && (card.cardHeading.title || card.cardHeading.description) && <div class="titles-info-block">
-                                {card.cardHeading.title && <h1>{card.cardHeading.title}</h1>}
-                                {card.cardHeading.description && <p>{card.cardHeading.description}</p>}
+                                {card.cardHeading.title && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(card.cardHeading.title, "bot") }}></h1>}
+                                {card.cardHeading.description && <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(card.cardHeading.description, "bot") }}></p>}
                             </div>}
                         </div>}
                         {card && card.cardDescription && <div className="r-body-card" style={card.cardDescription.cardContentStyles}>
@@ -240,7 +237,7 @@ export function card(props: any) {
                                     {desc.icon && <figure>
                                         <img src={desc.icon} />
                                     </figure>}
-                                    {desc.title && <p>{desc.title}</p>}
+                                    {desc.title && <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(desc.title, "bot") }}></p>}
                                 </div>
                             ))}
                         </div>}

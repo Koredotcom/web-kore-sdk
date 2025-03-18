@@ -1,18 +1,18 @@
 import BaseChatTemplate from '../baseChatTemplate';
 import './pieChart.scss';
 import { h, Fragment } from 'preact';
-import { useState } from 'preact/hooks';
-import { Message } from '../message/message';
 import KoreGraphAdapter from '../../../libs/kore-graph-adapter/KoreGraphAdapter';
 import { getHTML } from '../../base/domManager';
+import KoreHelpers from '../../../utils/helpers';
 
 export function PieChart(props: any) {
     const msgData = props.msgData;
+    const helpers = KoreHelpers.helpers;
     return (
         <div className="chart-template-wrapper" id={`pc${msgData.messageId}`} data-cw-msg-id={msgData?.messageId}>
             <div id="d3Pie"></div>
             <div className="piechartDiv charts-body-info">
-                <h1>{msgData?.message?.[0]?.component?.payload?.text}</h1>
+                {msgData?.message?.[0]?.component?.payload?.text && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData?.message?.[0]?.component?.payload?.text, "bot") }}></h1>}
                 <div className="lineChartChildDiv" id={`piechart${msgData.messageId}`}></div>
             </div>
         </div>
@@ -22,11 +22,12 @@ export function PieChart(props: any) {
 
 export function PieChartModal(props: any) {
     const msgData = props.msgData;
+    const helpers = KoreHelpers.helpers;
     return (
         <div className="chart-template-wrapper" id={`pcmodal${msgData.messageId}`}>
             <div id="d3Pie"></div>
             <div className="piechartDiv charts-body-info">
-                <h1>{msgData?.message?.[0]?.component?.payload?.text}</h1>
+                {msgData?.message?.[0]?.component?.payload?.text && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData?.message?.[0]?.component?.payload?.text, "bot") }}></h1>}
                 <div className="lineChartChildDiv" id={`piechartmodal${msgData.messageId}`}></div>
             </div>
         </div>

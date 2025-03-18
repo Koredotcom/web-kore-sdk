@@ -4,10 +4,12 @@ import { h, Fragment } from 'preact';
 import { useState } from 'preact/hooks';
 import { Message } from '../message/message';
 import { getHTML } from '../../base/domManager';
+import KoreHelpers from '../../../utils/helpers';
 
 export function RadioOptionsComp(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
+    const helpers = KoreHelpers.helpers;
     const [selectItem, setSelectedItem] = useState({title: '', value: ''});
 
     const selectedItem  = (e: any) => {
@@ -33,19 +35,19 @@ export function RadioOptionsComp(props: any) {
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'radioOptionTemplate' && !msgData.fromHistory) {
         return (
             <div className="radio-button-wrapper" data-cw-msg-id={msgData?.messageId}>
-                <h1>{msgData?.message?.[0]?.component?.payload.heading}</h1>
+                {msgData?.message?.[0]?.component?.payload.heading && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData?.message?.[0]?.component?.payload.heading, "bot") }}></h1>}
                 { msgData?.message?.[0]?.component?.payload.radioOptions.map((ele: any, ind: any) => (
                     <div className="radio-padding">
                         <div className="radio-button-item" onClick={() => selectedItem(ele.postback)}>
                             <input id={`radio-${msgData.messageId}-${ind}`} name={`radio-${msgData.messageId}`} className="radio-input" type="radio" />
                             <label for={`radio-${msgData.messageId}-${ind}`} className="radio-label">
-                                {ele.title && <div className="radio-title">{ele.title}</div>}
-                                {ele.value && <div className="radio-desc">{ele.value}</div>}
+                                {ele.title && <div className="radio-title" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.title, "bot") }}></div>}
+                                {ele.value && <div className="radio-desc" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.value, "bot") }}></div>}
                             </label>
                         </div>
                     </div>
                 ))}
-                <button className="kr-button-primary lg" onClick={onSubmit}>Confirm</button>
+                <button className="kr-button-primary lg" onClick={onSubmit} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData?.message?.[0]?.component?.payload.submitButtonText || 'Confirm', "bot") }}></button>
             </div>
         );
     } else {

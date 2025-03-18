@@ -1,10 +1,12 @@
 import BaseChatTemplate from '../baseChatTemplate';
 import './listWidget.scss';
 import { h, Fragment } from 'preact';
+import KoreHelpers from '../../../utils/helpers';
 
 export function ListWidget(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
+    const helpers = KoreHelpers.helpers;
 
     const handleItem = (item: any) => {
         if (item.type == 'postback' || item.type == 'text') {
@@ -53,12 +55,12 @@ export function ListWidget(props: any) {
                 <div className="adv-parent-temp-wrapper-list-widget">
                     <div className="main-heading-wrapper">
                         <div>
-                            {msgData.message[0].component.payload.title && <h1>{msgData.message[0].component.payload.title}</h1>}
-                            {msgData.message[0].component.payload.description && <p>{msgData.message[0].component.payload.description}</p>}
+                            {msgData.message[0].component.payload.title && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData.message[0].component.payload.title, "bot") }}></h1>}
+                            {msgData.message[0].component.payload.description && <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData.message[0].component.payload.description, "bot") }}></p>}
                         </div>
                         {msgData && msgData.headerOptions && msgData.headerOptions.type === "text" && msgData.headerOptions.text &&
                             <div className="header-actions">
-                                <p>{msgData.headerOptions.text}</p>
+                                <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData.headerOptions.text, "bot") }}></p>
                             </div>}
                         {msgData && msgData.headerOptions && msgData.headerOptions.type === "button" && msgData.headerOptions.button && msgData.headerOptions.button.title &&
                             <div className="header-actions">
@@ -109,8 +111,8 @@ export function ListWidget(props: any) {
                                     <img src={item.image.image_src} />
                                 </div>}
                                 {(item.title || item.subtitle) && <div className="titles-info-block">
-                                    <h1 style={item?.titleStyles}>{item.title}</h1>
-                                    <p>{item.subtitle}</p>
+                                    <h1 style={item?.titleStyles} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.title, "bot") }}></h1>
+                                    {item.subtitle && <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.subtitle, "bot") }}></p>}
                                 </div>}
                                 <div className="right-actions-content">
                                         <Fragment>
@@ -119,7 +121,7 @@ export function ListWidget(props: any) {
                                                 <button style={item?.buttonStyles} className="kr-button-blue-light">{item.value.button.title}</button>
                                             </div>
                                             }
-                                            {item.value && item.value.type === "text" && item.value.text && <h1>{item.value.text}</h1>}                                        
+                                            {item.value && item.value.type === "text" && item.value.text && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(item.value.text, "bot") }}></h1>}                                        
                                             {item.value && item.value.type === "image" && item.value.image && item.value.image.image_src &&
                                                 <img src={item.value.image.image_src} style={{width: '20px', height: '20px'}}></img>
                                             }
@@ -155,7 +157,7 @@ export function ListWidget(props: any) {
                                             {textEle.image && textEle.image.image_type === "image" && textEle.image.image_src && <figure>
                                                 <img src={textEle.image.image_src} />
                                             </figure>}
-                                            {textEle.description && <p>{textEle.description}</p>}
+                                            {textEle.description && <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(textEle.description, "bot") }}></p>}
                                             {((item.details.length < 3 && inde == item.details.length - 1) && (item.buttons && item.buttons.length > 0)) && <button className="arrow-icon" onClick={(event) => handleButtonSection(event, index, msgData.messageId)}>
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M11.222 8.55518C11.4187 8.35845 11.4303 8.04668 11.2567 7.83641L11.222 7.79823L6.53504 3.11125C6.32601 2.90222 5.98711 2.90222 5.77809 3.11125C5.58136 3.30798 5.56978 3.61975 5.74337 3.83002L5.77809 3.8682L10.0865 8.1767L5.77809 12.4852C5.58136 12.6819 5.56978 12.9937 5.74337 13.204L5.77809 13.2422C5.97482 13.4389 6.28659 13.4505 6.49685 13.2769L6.53504 13.2422L11.222 8.55518Z" fill="#202124" />
