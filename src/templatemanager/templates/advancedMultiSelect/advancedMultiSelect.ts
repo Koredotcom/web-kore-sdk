@@ -199,7 +199,7 @@ class AdvancedMultiSelectTemplate {
                                                             <div class="multiSelectDescContainer">\
                                                                 <p class="multiTitle">{{html helpers.convertMDtoHTML(msgItem.title, "bot")}}</p>\
                                                                 {{if msgItem.description}}\
-                                                                <p class="multiDesc">${msgItem.description}</p>\
+                                                                <p class="multiDesc">{{html helpers.convertMDtoHTML(msgItem.description, "bot")}}</p>\
                                                                 {{/if}}\
                                                             </div>\
                                                         </div>\
