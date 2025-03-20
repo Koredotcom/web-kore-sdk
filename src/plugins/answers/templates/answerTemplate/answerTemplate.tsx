@@ -89,6 +89,28 @@ export function Answers(props: any) {
       }
 
 
+      const renderAnswerResult=(answer:any)=>{
+        const hasSource= answersObj?.generative?.sources?.[answer?.id]?.title || answersObj?.generative?.sources?.[answer?.id]?.url
+
+        return   <span className={`sa-answer-result-heading ${(selectedIndex===answer?.id +1 && hasSource) &&'sa-answer-result-heading-selected'}`} onMouseOver={()=>setSelectedIndex(answer?.id + 1)} onMouseOut={()=>setSelectedIndex(0)}>
+                    <span dangerouslySetInnerHTML={{__html:helpers.convertMDtoHTML(answer?.title, "bot") }}></span>
+                    <div className={`sa-tooltip-container ${selectedIndex === answer?.id + 1 && 'position-class'} `}>
+                           { 
+                            
+                            hasSource ? <Fragment>
+                                            <span className={` sa-answer-list-item ${selectedIndex === answer?.id + 1 && 'sa-answer-list-item-selected'}`} onClick={()=>redirectToURL(answersObj?.generative?.sources?.[answer?.id]?.url)}>
+                                                {answer?.id + 1}
+                                            </span> 
+                                            {selectedIndex === answer?.id + 1 && (
+                                                <div class="sa-tooltip">{answersObj?.generative?.sources?.[selectedIndex - 1]?.title || answersObj?.generative?.sources?.[selectedIndex - 1]?.url}</div>
+                                            )}
+                                         </Fragment> 
+                                    : null
+                            }
+                    </div>
+                </span>
+      }
+
     return (
         <div class="sa-answer-block">
             {
@@ -96,25 +118,7 @@ export function Answers(props: any) {
                     <Fragment>
                         <div class="sa-answer-result-block">
                             <div class="sa-answer-result-sub-block">
-                                {
-                                    answersObj.generative?.answerFragment?.map((answer: any) =>
-
-                                        <span className={`sa-answer-result-heading ${(selectedIndex===answer?.id +1)&&'sa-answer-result-heading-selected'}`} onMouseOver={()=>setSelectedIndex(answer?.id + 1)} onMouseOut={()=>setSelectedIndex(0)}>
-                                            <span dangerouslySetInnerHTML={{__html:helpers.convertMDtoHTML(answer?.title, "bot") }}></span>
-                                            <div className={`sa-tooltip-container ${selectedIndex === answer?.id + 1 && 'position-class'} `}>
-                                                <span
-                                                    className={` sa-answer-list-item ${selectedIndex === answer?.id + 1 && 'sa-answer-list-item-selected'}`}
-                                                >
-                                                    {answer?.id + 1}
-                                                
-                                                </span> 
-                                                {selectedIndex === answer?.id + 1 && (
-                                                    <div class="sa-tooltip">{answersObj?.generative?.sources?.[selectedIndex - 1]?.title || answersObj?.generative?.sources?.[selectedIndex - 1]?.url}</div>
-                                                )}
-                                            </div>
-                                        </span>
-                                    )
-                                }                                
+                                {answersObj.generative?.answerFragment?.map(renderAnswerResult)}                                
                             </div>
                             <div className="sa-answer-gen-footer">
                                     {
