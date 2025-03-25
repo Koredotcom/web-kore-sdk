@@ -1,21 +1,42 @@
 import BaseChatTemplate from '../baseChatTemplate';
 import './dropdown.scss';
 import { h, Fragment } from 'preact';
-import { useState } from 'preact/hooks';
 import KoreHelpers from '../../../utils/helpers';
 
 export function Dropdown(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
     const helpers = KoreHelpers.helpers;
-    const [selectedItem, setSelectedItem] = useState({ title: msgData.message?.[0].component?.payload?.placeholder ? msgData.message?.[0].component?.payload?.placeholder : 'Select', value: msgData.message?.[0].component?.payload?.placeholder ? msgData.message?.[0].component?.payload?.placeholder : 'Select' });
+    
+    let selectedItem = { 
+        title: msgData.message?.[0].component?.payload?.placeholder || 'Select', 
+        value: msgData.message?.[0].component?.payload?.placeholder || 'Select' 
+    };
 
     const openDropdown = (e: any) => {
         e.currentTarget.classList.toggle('show-drp');
     }
 
     const selectItem = (e: any, item: any) => {
-        setSelectedItem(item);
+        selectedItem = item;
+        
+        const dropdownSection = document.querySelector(`.dropdown-${msgData.messageId}`);
+        if (dropdownSection) {
+            const dropdownButton = dropdownSection.querySelector('.drp-btn span');
+            if (dropdownButton) {
+                dropdownButton.textContent = item.title;
+            }
+            
+            const listItems = dropdownSection.querySelectorAll('.menu-content-list-drp li');
+            listItems.forEach((li: any) => {
+                const titleElement = li.querySelector('p');
+                if (titleElement && titleElement.textContent.trim() === item.title) {
+                    li.classList.add('active-list-option');
+                } else {
+                    li.classList.remove('active-list-option');
+                }
+            });
+        }
     }
 
     const onSubmit = () => {
@@ -23,9 +44,11 @@ export function Dropdown(props: any) {
     }
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'dropdown_template') {
-        if (msgData?.fromHistory) {
-            const selectedItem = msgData?.message?.[0]?.component?.payload?.elements.filter((e: any) => e.value == msgData?.message?.[0]?.component?.selectedValue);
-            setSelectedItem(selectedItem[0]);
+        if (msgData?.fromHistory) { 
+            const historyItem = msgData?.message?.[0]?.component?.payload?.elements.filter((e: any) => e.value == msgData?.message?.[0]?.component?.selectedValue);
+            if (historyItem && historyItem.length > 0) {
+                selectedItem = historyItem[0];
+            }
         }
         return (
             <section className={`dropdwon-wrapper-section dropdown-${msgData.messageId}`} data-cw-msg-id={msgData?.messageId}>
