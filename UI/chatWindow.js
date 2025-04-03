@@ -2027,7 +2027,7 @@
                                 'type': "currentUser",
                                 "message": [{
                                     'type': 'text',
-                                    'cInfo': { 'body': tempmsg.body, attachments: tempmsg.attachments },
+                                    'cInfo': { 'body': tempmsg.renderMsg ? tempmsg.renderMsg : tempmsg.body, attachments: tempmsg.attachments },
                                     'clientMessageId': tempData.id
                                 }],
                                 "createdOn": tempData.id
@@ -2037,7 +2037,7 @@
                                 'type': "currentUser",
                                 "message": [{
                                     'type': 'text',
-                                    'cInfo': { 'body': tempmsg.body },
+                                    'cInfo': { 'body': tempmsg.renderMsg ? tempmsg.renderMsg : tempmsg.body },
                                     'clientMessageId': tempData.id
                                 }],
                                 "createdOn": tempData.id
@@ -2049,7 +2049,7 @@
                         setTimeout(function () {
                             $('.trainWarningDiv').addClass('showMsg');
                         }, 2000);
-                    }
+                    } 
                 });
                 
                 me.bot.on("webhook_ready", function (response) {
