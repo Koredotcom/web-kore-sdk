@@ -1418,7 +1418,7 @@ parseSocketMessage(msgString:string){
         type: 'currentUser',
         message: [{
           type: 'text',
-          cInfo: { body: tempmsg.body, attachments: tempmsg.attachments },
+          cInfo: { body: tempmsg?.renderMsg || tempmsg.body, attachments: tempmsg.attachments },
           clientMessageId: tempData.id,
         }],
         createdOn: tempData.id,
@@ -1428,7 +1428,7 @@ parseSocketMessage(msgString:string){
         type: 'currentUser',
         message: [{
           type: 'text',
-          cInfo: { body: tempmsg.body },
+          cInfo: { body: tempmsg?.renderMsg || tempmsg.body },
           clientMessageId: tempData.id,
         }],
         createdOn: tempData.id,
