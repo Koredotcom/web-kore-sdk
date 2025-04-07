@@ -1,3 +1,9 @@
+### 10.13.0
+- SDK Release April 05, 2025
+* Bug fixes
+  * markdown support added for collection description in advanced multi select template
+  * renderMsg issue fix for buttons when Web SDK is opened in multiple tabs
+
 ### 10.12.1
 - SDK Release Mar 15, 2025
 * Stable release
