@@ -343,6 +343,11 @@ Note: When integrated into an iFrame, the SDK's functionality will be confined t
 	
 # Release History
 ```
+v10.13.0 [Minor] on 05-Apr-2025: Master branch
+        Bugfixes
+                1.Markdown support added for collection description in advanced multi select template
+                2.renderMsg issue fix for buttons when Web SDK is opened in multiple tabs
+
 v10.12.1 [Minor] on 15-Mar-2025: Master branch
         Stable release
 
