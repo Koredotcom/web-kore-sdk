@@ -1,0 +1,49 @@
+.sa-feedback-block {
+    .horizontal-line {
+        height: 1px;
+        background: #F2F4F7;
+    }
+
+    .feedback-row {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+
+        .left {
+            font-weight: 400;
+            font-size: 11px;
+            line-height: 14px;
+            color: #98A2B3;
+        }
+        
+
+        .right {
+            display: flex;
+            gap: 4px;
+            cursor: pointer !important;
+        }
+    }
+
+    .comments-block {
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 16px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+
+        .comment {
+            border: 1px solid #F9FAFB;
+            background: #EAECF0;
+            color: #344054;
+            padding: 2px 8px;
+            border-radius: 25px;
+            cursor: pointer;
+
+            &.active {
+                border: 1px solid #B2CCFF;
+                color: #155EEF;
+            }
+        }
+    }
+}

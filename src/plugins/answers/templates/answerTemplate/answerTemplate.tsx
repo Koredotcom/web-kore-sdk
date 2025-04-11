@@ -4,14 +4,18 @@ import { h, Fragment, render  } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import {CarouselImagePopupTemplate} from '../carouselImagePopupTemplate/carouselImagePopupTemplate';
 import KoreHelpers from '../../../../utils/helpers';
+import FeedbackTemplate from '../feedbackTemplate/feedbackTemplate';
+import ImageCarouselSvgIcons from '../carouselImagePopupTemplate/imageCarouselSvgIcons';
 
 export function Answers(props: any) {
     const hostInstance = props.hostInstance;
+    const isPlatform = hostInstance?.config?.isPlatform;
     const msgData = props.msgData;
     const messageObj = {
         msgData: msgData,
         hostInstance: hostInstance
     }
+    const feedbackSettings = hostInstance.config['feedback'];
     const helpers = KoreHelpers.helpers;
     const [answersObj, setAnswersObj]: any = useState({ "generative": { "answerFragments": [], "sources": [] }});
     const [modelType, setModelType] = useState('');
@@ -24,7 +28,7 @@ export function Answers(props: any) {
         setAnswersObj((prevState: any) => ({ ...prevState}));
         updateGenerativePayload(results);
     }, [msgData])
-
+   
     //generative template payload update
     const updateGenerativePayload = (data: any) => {
         let answer_fragment: Array<Object> = [];
@@ -37,7 +41,7 @@ export function Answers(props: any) {
             const index = sources_data.findIndex((source: any) => source.id === answer?.sources[0]?.doc_id);
             answer_fragment.push({ "title": answer?.answer_fragment, "id": index });
         });
-        setAnswersObj((prevState: any) => ({ ...prevState, "generative": { "answerFragment": answer_fragment, "sources": sources_data } }));
+        setAnswersObj((prevState: any) => ({ ...prevState, "generative": { "answerFragment": answer_fragment,  "sources": sources_data} }));
     }
 
     //redirect to specific url
@@ -82,7 +86,7 @@ export function Answers(props: any) {
           const [domain, tld] = domainAndTld.split('.').slice(-2);
       
           // Take first three characters of domain and concatenate with TLD
-          const shortenedDomain = tld ? domain.slice(0, 3) + '...' + tld : domain.slice(0, 8) + '...';
+          const shortenedDomain = domain.slice(0, 3) + '...' + tld;
       
           return shortenedDomain;
         }
@@ -95,6 +99,18 @@ export function Answers(props: any) {
                 (modelType === 'generative_model'  || modelType === 'extractive_model') ? (
                     <Fragment>
                         <div class="sa-answer-result-block">
+
+                            <div className="sa-answer-header-block">
+                                <div className="sa-answer-left">
+                                {modelType === 'generative_model'&& <Fragment>
+                                    <div className="sa-answer-img">
+                                        <ImageCarouselSvgIcons type="answer-icon" />
+                                    </div>
+                                    <div className="sa-answer-text">Answered by AI</div>
+                                    </Fragment>}
+                                </div>
+                            </div>
+
                             <div class="sa-answer-result-sub-block">
                                 {
                                     answersObj.generative?.answerFragment?.map((answer: any) =>
@@ -116,20 +132,20 @@ export function Answers(props: any) {
                                     )
                                 }                                
                             </div>
+
                             <div className="sa-answer-gen-footer">
                                     {
                                         answersObj?.generative?.sources?.filter((source: any) => source?.title?.length > 0)?.map((source: any, index: number) => (
                                             <div className='sa-tooltip-container'>
 
-                                            <div className={`sa-answer-result-footer  ${(selectedIndex===index+1)&&'selected'}`} 
+                                            <div className={`sa-answer-result-footer ${source?.title ? 'sa-answer-result-footer-with-title-content' : 'sa-answer-result-footer-with-url-content'} ${(selectedIndex===index+1)&&'selected'}`} 
                                                     onMouseOver={() => setSelectedIndex(index+1)}
                                                     onMouseOut={() => setSelectedIndex(0)}>
-                                            <span onClick={()=>redirectToURL(source?.url)}>{index + 1}. <span>{ extractShortDomainOrFile(source?.title || source?.url)}</span></span>
+                                            <span onClick={()=>redirectToURL(source?.url)}>{index + 1}. <span>{source?.title || extractShortDomainOrFile(source?.url)}</span></span>
                                                     {(source?.image_url?.length > 0)&&
                                                     <Fragment>
-                                                        <div className="sa-answer-file-url-block" onClick={()=>showFileUrl(source?.image_url,source?.title || source?.url)} >
-                                                                <span className="sa-answer-file-url-icon" >i</span> 
-                                                        </div>
+                                                        <span className="sa-answer-file-url-block" ><span className="sa-url-icon-preview" onClick={()=>showFileUrl(source?.image_url,source?.title || source?.url)}><span className="sa-answer-file-url-icon" >i</span> <span className="sa-preview-text">Preview</span></span>
+                                                        </span>
                                                     </Fragment>
                                                     }
                                              </div>
@@ -140,19 +156,12 @@ export function Answers(props: any) {
                                         </div>
                                         ))
                                     }
-                            </div>
-                            <div className="sa-answer-feedback-block">
-                                <div className="sa-answer-left">
-                                {modelType === 'generative_model'&& <Fragment>
-                                    <div className="sa-answer-img">
-                                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                          <path d="M6.99607 1.06205C7.0236 0.841796 6.90264 0.629762 6.69903 0.541377C6.49542 0.452993 6.25792 0.509419 6.11582 0.679936L1.65109 6.03761C1.57393 6.13017 1.49578 6.22391 1.43888 6.30629C1.38507 6.38421 1.28681 6.53739 1.28378 6.73872C1.2803 6.9692 1.38301 7.18849 1.56229 7.33337C1.7189 7.45992 1.89949 7.48251 1.99379 7.49105C2.0935 7.50008 2.21554 7.50005 2.33604 7.50003L5.43354 7.50003L5.00379 10.938C4.97626 11.1583 5.09723 11.3703 5.30083 11.4587C5.50444 11.5471 5.74194 11.4906 5.88404 11.3201L10.3488 5.96245C10.4259 5.86989 10.5041 5.77615 10.561 5.69376C10.6148 5.61585 10.713 5.46266 10.7161 5.26134C10.7196 5.03085 10.6169 4.81157 10.4376 4.66669C10.281 4.54013 10.1004 4.51755 10.0061 4.50901C9.90636 4.49998 9.78431 4.5 9.66381 4.50003L6.56632 4.50003L6.99607 1.06205Z" fill="#6938EF"/>
-                                        </svg>
-                                    </div>
-                                    <div className="sa-answer-text">Answered by AI</div>
-                                    </Fragment>}
-                                </div>
-                            </div>
+                            </div>                            
+
+                            {
+                                (!isPlatform && feedbackSettings?.enable) && <FeedbackTemplate data={hostInstance} searchRequestId={messageObj?.msgData?.message[0]?.component?.payload?.searchRequestId}/>
+                            }
+                            
                         </div>
 
                     </Fragment>
