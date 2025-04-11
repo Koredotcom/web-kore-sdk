@@ -19,9 +19,13 @@
         }
     }
 
+
     .sa-answer-result-block {
         gap: 8px;
         padding: 8px 16px 16px 16px;
+        border-radius: 8px;
+        border-top: 4px solid var(--Gray-100, #F2F4F7);
+        background: var(--Base-White, #FFF);
         box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.10);
         border-radius: 8px;
         background: linear-gradient(white, white) padding-box, linear-gradient(to right, #AD00FE, #00E0EE) border-box;
@@ -131,15 +135,8 @@
             font-weight: 500;
             line-height: 16px;
             cursor: pointer;
-        }
-        .sa-answer-result-footer-with-title-content{
-            width: 89px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .sa-answer-result-footer-with-url-content{
-           width:fit-content;
+            display: flex;
+            gap:6px;
         }
         .selected {
             color: #155EEF;
@@ -152,12 +149,9 @@
             display: flex;
             flex-wrap: wrap;
             .sa-answer-file-url-block{
-                position: relative;
-                .sa-url-icon-preview{
-                    position: absolute;
-                    top: -3px;
-                    left: 6px;
-                    display: flex;
+                    display:flex;
+                    justify-content: start;
+                    align-items: center;
                     gap: 6px;
                     align-items: center;
                     justify-content: center;
@@ -179,7 +173,6 @@
                         }
                      
                     }
-                }
                 .sa-answer-file-url-icon {
                     border: 1.3px solid #98A2B3;
                     border-radius: 2px;
@@ -189,7 +182,33 @@
                     font-weight: 600;
                 }
             }
-        }       
+        }
+
+        .sa-answer-feedback-block {
+            margin-top: 8px;
+
+            .sa-answer-left {
+                display: flex;
+                gap: 7px;
+
+                .sa-answer-img {
+                    border-radius: 20px;
+                    background: var(--Purple-50, #F4F3FF);
+                    padding: 2px;
+                    display: flex;
+                    padding: 4px;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 4px;
+                }
+                .sa-answer-text {
+                    color: var(--Purple-700, #5925DC);
+                    font-size: 8px;
+                    font-weight: 500;
+                    line-height: 18px;
+                }
+            }
+        }
 
     }
 

@@ -86,7 +86,7 @@ export function Answers(props: any) {
           const [domain, tld] = domainAndTld.split('.').slice(-2);
       
           // Take first three characters of domain and concatenate with TLD
-          const shortenedDomain = domain.slice(0, 3) + '...' + tld;
+          const shortenedDomain = tld ? domain.slice(0, 3) + '...' + tld : domain.slice(0, 8) + '...';
       
           return shortenedDomain;
         }
@@ -132,7 +132,6 @@ export function Answers(props: any) {
                                     )
                                 }                                
                             </div>
-
                             <div className="sa-answer-gen-footer">
                                     {
                                         answersObj?.generative?.sources?.filter((source: any) => source?.title?.length > 0)?.map((source: any, index: number) => (
