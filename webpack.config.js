@@ -217,6 +217,11 @@ module.exports= function(env,argv){
             import: "./src/index_plugins/fileUpload_umd.ts",
             filename: 'plugins/file-upload.js',
             chunkLoading: false,
+          },
+          Korei18nPluginSDK: {
+            import: "./src/index_plugins/korei18n.ts",
+            filename: 'plugins/kore-i18n.js',
+            chunkLoading: false,
           }
         }
         config.output.path= path.resolve(__dirname,'dist/esm');
@@ -336,8 +341,12 @@ module.exports= function(env,argv){
             import: "./src/index_plugins/fileUpload_umd.ts",
             filename: 'plugins/file-upload-umd.js',
             chunkLoading: false,
+          },
+          Korei18nPluginSDK: {
+            import: "./src/index_plugins/korei18n.ts",
+            filename: 'plugins/kore-i18n.js',
+            chunkLoading: false,
           }
-
         }
         config.output.library = {
           name: '[name]',

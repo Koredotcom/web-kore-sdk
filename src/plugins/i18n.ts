@@ -1,5 +1,6 @@
 class Korei18nPlugin {
-    static config={
+    name = "Korei18nPlugin";
+    config={
         rtlLanguages:['ar'],
         availableLanguages:['en','ar'],//shown as list of available languages in chat window header to select
         defaultLanguage:"en",//default selection from above list
@@ -21,7 +22,4 @@ class Korei18nPlugin {
         }
     }
 }
-export default {
-    name: "Korei18nPlugin",
-    plugin: Korei18nPlugin
-}
+export default Korei18nPlugin;
