@@ -4,9 +4,12 @@ import { h, Fragment, render  } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import {CarouselImagePopupTemplate} from '../carouselImagePopupTemplate/carouselImagePopupTemplate';
 import KoreHelpers from '../../../../utils/helpers';
+import FeedbackTemplate from '../feedbackTemplate/feedbackTemplate';
+import ImageCarouselSvgIcons from '../carouselImagePopupTemplate/imageCarouselSvgIcons';
 
 export function Answers(props: any) {
     const hostInstance = props.hostInstance;
+    const isPlatform = hostInstance?.config?.isPlatform;
     const msgData = props.msgData;
     const messageObj = {
         msgData: msgData,
@@ -24,7 +27,7 @@ export function Answers(props: any) {
         setAnswersObj((prevState: any) => ({ ...prevState}));
         updateGenerativePayload(results);
     }, [msgData])
-
+   
     //generative template payload update
     const updateGenerativePayload = (data: any) => {
         let answer_fragment: Array<Object> = [];
@@ -37,7 +40,7 @@ export function Answers(props: any) {
             const index = sources_data.findIndex((source: any) => source.id === answer?.sources[0]?.doc_id);
             answer_fragment.push({ "title": answer?.answer_fragment, "id": index });
         });
-        setAnswersObj((prevState: any) => ({ ...prevState, "generative": { "answerFragment": answer_fragment, "sources": sources_data } }));
+        setAnswersObj((prevState: any) => ({ ...prevState, "generative": { "answerFragment": answer_fragment,  "sources": sources_data} }));
     }
 
     //redirect to specific url
@@ -95,6 +98,18 @@ export function Answers(props: any) {
                 (modelType === 'generative_model'  || modelType === 'extractive_model') ? (
                     <Fragment>
                         <div class="sa-answer-result-block">
+
+                            <div className="sa-answer-header-block">
+                                <div className="sa-answer-left">
+                                {modelType === 'generative_model'&& <Fragment>
+                                    <div className="sa-answer-img">
+                                        <ImageCarouselSvgIcons type="answer-icon" />
+                                    </div>
+                                    <div className="sa-answer-text">Answered by AI</div>
+                                    </Fragment>}
+                                </div>
+                            </div>
+
                             <div class="sa-answer-result-sub-block">
                                 {
                                     answersObj.generative?.answerFragment?.map((answer: any) =>
@@ -153,6 +168,11 @@ export function Answers(props: any) {
                                     </Fragment>}
                                 </div>
                             </div>
+
+                            {
+                                (!isPlatform && hostInstance['saFeedback']?.enable) && <FeedbackTemplate data={hostInstance} searchRequestId={messageObj?.msgData?.message[0]?.component?.payload?.searchRequestId}/>
+                            }
+                            
                         </div>
 
                     </Fragment>

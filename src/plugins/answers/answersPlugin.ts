@@ -22,7 +22,40 @@ class AnswersTemplatesPlugin {
         let cwInstance = me.hostInstance;
         cwInstance.on("viewInit", (chatWindowEle: any) => {
             me.onInit();
+            me.getFeedbackSettings();
         });
+    }
+
+
+    getFeedbackSettings(){
+        let me:any = this;
+        let cwInstance = me.hostInstance;
+        const saFeedback = {
+            enable:false,
+            }
+            me.getFeedbackSettingsAPICall().then(function (res: any) {
+                cwInstance["saFeedback"] = {...saFeedback,...res?.feedback};
+            }, function (errRes: any) {
+            });
+    }
+
+    getFeedbackSettingsAPICall(callback: any): Promise<any> {
+        let me: any = this;
+        let $ = me.hostInstance.$;
+        return $.ajax({
+            url: me.hostInstance.config?.botOptions?.koreAPIUrl + "searchsdk/" + me.hostInstance.config?.botOptions?.botInfo?.taskBotId + "/settings",
+            type: "GET",
+            headers: {
+                "Authorization": "bearer " + me.hostInstance.config?.botOptions?.accessToken
+            },
+            data: {},
+
+            success: function (data: any) {
+                if (callback) callback(null, data);
+            },
+            error: function (err:any) {
+            }
+        }) as any;
     }
 
     onInit() {
