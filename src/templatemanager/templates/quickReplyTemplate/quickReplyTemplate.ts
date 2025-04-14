@@ -127,57 +127,79 @@ class QuickReplyTemplate {
             // }, 600);
         });
         $(messageHtml).off('click', '.quickreplyRightIcon').on('click', '.quickreplyRightIcon', (event: any) => {
-            const _quickReplesDivs = event.currentTarget.parentElement.getElementsByClassName('quickReplyTemplContentChild');
-            if (_quickReplesDivs.length) {
-                const _scrollParentDiv = event.target.parentElement.getElementsByClassName('quick_replies_btn_parent');
-                const _totalWidth = event.target.parentElement.offsetWidth;
-                let _currWidth = 0;
-                // calculation for moving element scroll
-                for (let i = 0; i < _quickReplesDivs.length; i++) {
-                    _currWidth += (_quickReplesDivs[i].offsetWidth + 10);
-                    if (_currWidth > _totalWidth) {
-                        // _scrollParentDiv[0].scrollLeft = _currWidth;
-                        $(_scrollParentDiv).animate({
-                            scrollLeft: (_scrollParentDiv[0].scrollLeft + _quickReplesDivs[i].offsetWidth + 20),
-                        }, 'slow', () => {
-                            // deciding to enable left and right scroll icons
-                            const leftIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyLeftIcon');
-                            leftIcon[0].classList.remove('hide');
-                            if ((_scrollParentDiv[0].scrollLeft + _totalWidth + 10) >= _scrollParentDiv[0].scrollWidth) {
-                                const rightIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyRightIcon');
-                                rightIcon[0].classList.add('hide');
-                            }
-                        });
-                        break;
+            if ($(event.currentTarget).data('scrollTimeout')) {
+                clearTimeout($(event.currentTarget).data('scrollTimeout'));
+            }
+
+            const eventData = {
+                currentTarget: event.currentTarget,
+                target: event.target
+            };
+            
+            $(event.currentTarget).data('scrollTimeout', setTimeout(() => {
+                const _quickReplesDivs = eventData.currentTarget.parentElement.getElementsByClassName('quickReplyTemplContentChild');
+                if (_quickReplesDivs.length) {
+                    const _scrollParentDiv = eventData.target.parentElement.getElementsByClassName('quick_replies_btn_parent');
+                    const _totalWidth = eventData.target.parentElement.offsetWidth;
+                    let _currWidth = 0;
+                    // calculation for moving element scroll
+                    for (let i = 0; i < _quickReplesDivs.length; i++) {
+                        _currWidth += (_quickReplesDivs[i].offsetWidth + 10);
+                        if (_currWidth > _totalWidth) {
+                            // _scrollParentDiv[0].scrollLeft = _currWidth;
+                            $(_scrollParentDiv).animate({
+                                scrollLeft: (_scrollParentDiv[0].scrollLeft + _quickReplesDivs[i].offsetWidth + 20),
+                            }, 'slow', () => {
+                                // deciding to enable left and right scroll icons
+                                const leftIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyLeftIcon');
+                                leftIcon[0].classList.remove('hide');
+                                if ((_scrollParentDiv[0].scrollLeft + _totalWidth + 10) >= _scrollParentDiv[0].scrollWidth) {
+                                    const rightIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyRightIcon');
+                                    rightIcon[0].classList.add('hide');
+                                }
+                            });
+                            break;
+                        }
                     }
                 }
-            }
+            }, 300));
         });
         $(messageHtml).off('click', '.quickreplyLeftIcon').on('click', '.quickreplyLeftIcon', function (event: any) {
-            const _quickReplesDivs = event.currentTarget.parentElement.getElementsByClassName('quickReplyTemplContentChild');
-            if(_quickReplesDivs.length) {
-                const _scrollParentDiv = event.target.parentElement.getElementsByClassName('quick_replies_btn_parent');
-                const _totalWidth = _scrollParentDiv[0].scrollLeft;
-                let _currWidth = 0;
-                for(let i=0;i<_quickReplesDivs.length;i++) {
-                    _currWidth += (_quickReplesDivs[i].offsetWidth+10);
-                    if(_currWidth > _totalWidth) {
-                        //_scrollParentDiv[0].scrollLeft = (_totalWidth - _quickReplesDivs[i].offsetWidth+20);
-                        $(_scrollParentDiv).animate({
-                            scrollLeft: (_totalWidth - _quickReplesDivs[i].offsetWidth-50)
-                        },'slow',function(){
-                            // deciding to enable left and right scroll icons
-                            const rightIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyRightIcon');
-                            rightIcon[0].classList.remove('hide');
-                            if(_scrollParentDiv[0].scrollLeft <= 0) {
-                                const leftIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyLeftIcon');
-                                leftIcon[0].classList.add('hide');
-                            }
-                        });
-                        break;
+            if ($(event.currentTarget).data('scrollTimeout')) {
+                clearTimeout($(event.currentTarget).data('scrollTimeout'));
+            }
+
+            const eventData = {
+                currentTarget: event.currentTarget,
+                target: event.target
+            };
+            
+            $(event.currentTarget).data('scrollTimeout', setTimeout(() => {
+                const _quickReplesDivs = eventData.currentTarget.parentElement.getElementsByClassName('quickReplyTemplContentChild');
+                if(_quickReplesDivs.length) {
+                    const _scrollParentDiv = eventData.target.parentElement.getElementsByClassName('quick_replies_btn_parent');
+                    const _totalWidth = _scrollParentDiv[0].scrollLeft;
+                    let _currWidth = 0;
+                    for(let i=0;i<_quickReplesDivs.length;i++) {
+                        _currWidth += (_quickReplesDivs[i].offsetWidth+10);
+                        if(_currWidth > _totalWidth) {
+                            //_scrollParentDiv[0].scrollLeft = (_totalWidth - _quickReplesDivs[i].offsetWidth+20);
+                            $(_scrollParentDiv).animate({
+                                scrollLeft: (_totalWidth - _quickReplesDivs[i].offsetWidth - 50)
+                            },'slow',function(){
+                                // deciding to enable left and right scroll icons
+                                const rightIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyRightIcon');
+                                rightIcon[0].classList.remove('hide');
+                                if(_scrollParentDiv[0].scrollLeft <= 0) {
+                                    const leftIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyLeftIcon');
+                                    leftIcon[0].classList.add('hide');
+                                }
+                            });
+                            break;
+                        }
                     }
                 }
-            }
+            }, 300));
         });
     }
     getTemplateString() {
