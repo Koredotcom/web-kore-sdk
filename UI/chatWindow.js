@@ -1795,57 +1795,79 @@
                     }
                 });
                 _chatContainer.off('click', '.quickreplyLeftIcon').on('click', '.quickreplyLeftIcon', function (event) {
-                    var _quickReplesDivs = event.currentTarget.parentElement.getElementsByClassName('buttonTmplContentChild');
-                    if (_quickReplesDivs.length) {
-                        var _scrollParentDiv = event.target.parentElement.getElementsByClassName('quick_replies_btn_parent');
-                        var _totalWidth = _scrollParentDiv[0].scrollLeft;
-                        var _currWidth = 0;
-                        for (var i = 0; i < _quickReplesDivs.length; i++) {
-                            _currWidth += (_quickReplesDivs[i].offsetWidth + 10);
-                            if (_currWidth > _totalWidth) {
+                    if ($(this).data('scrollTimeout')) {
+                        clearTimeout($(this).data('scrollTimeout'));
+                    }
+
+                    var eventData = {
+                        currentTarget: event.currentTarget,
+                        target: event.target
+                    };
+                    
+                    $(this).data('scrollTimeout', setTimeout(function() {
+                        var _quickReplesDivs = eventData.currentTarget.parentElement.getElementsByClassName('buttonTmplContentChild');
+                        if (_quickReplesDivs.length) {
+                            var _scrollParentDiv = eventData.target.parentElement.getElementsByClassName('quick_replies_btn_parent');
+                            var _totalWidth = _scrollParentDiv[0].scrollLeft;
+                            var _currWidth = 0;
+                            for (var i = 0; i < _quickReplesDivs.length; i++) {
+                                _currWidth += (_quickReplesDivs[i].offsetWidth + 10);
+                                if (_currWidth > _totalWidth) {
                                 //_scrollParentDiv[0].scrollLeft = (_totalWidth - _quickReplesDivs[i].offsetWidth+20);
-                                $(_scrollParentDiv).animate({
-                                    scrollLeft: (_totalWidth - _quickReplesDivs[i].offsetWidth - 50)
-                                }, 'slow', function () {
-                                    // deciding to enable left and right scroll icons
-                                    var rightIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyRightIcon');
-                                    rightIcon[0].classList.remove('hide');
-                                    if (_scrollParentDiv[0].scrollLeft <= 0) {
-                                        var leftIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyLeftIcon');
-                                        leftIcon[0].classList.add('hide');
-                                    }
-                                });
-                                break;
+                                    $(_scrollParentDiv).animate({
+                                        scrollLeft: (_totalWidth - _quickReplesDivs[i].offsetWidth - 50)
+                                    }, 'slow', function () {
+                                        // deciding to enable left and right scroll icons
+                                        var rightIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyRightIcon');
+                                        rightIcon[0].classList.remove('hide');
+                                        if (_scrollParentDiv[0].scrollLeft <= 0) {
+                                            var leftIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyLeftIcon');
+                                            leftIcon[0].classList.add('hide');
+                                        }
+                                    });
+                                    break;
+                                }
                             }
                         }
-                    }
+                    }, 300));
                 });
                 _chatContainer.off('click', '.quickreplyRightIcon').on('click', '.quickreplyRightIcon', function (event) {
-                    var _quickReplesDivs = event.currentTarget.parentElement.getElementsByClassName('buttonTmplContentChild');
-                    if (_quickReplesDivs.length) {
-                        var _scrollParentDiv = event.target.parentElement.getElementsByClassName('quick_replies_btn_parent');
-                        var _totalWidth = event.target.parentElement.offsetWidth;
-                        var _currWidth = 0;
+                    if ($(this).data('scrollTimeout')) {
+                        clearTimeout($(this).data('scrollTimeout'));
+                    }
+
+                    var eventData = {
+                        currentTarget: event.currentTarget,
+                        target: event.target
+                    };
+                    
+                    $(this).data('scrollTimeout', setTimeout(function() {
+                        var _quickReplesDivs = eventData.currentTarget.parentElement.getElementsByClassName('buttonTmplContentChild');
+                        if (_quickReplesDivs.length) {
+                            var _scrollParentDiv = eventData.target.parentElement.getElementsByClassName('quick_replies_btn_parent');
+                            var _totalWidth = eventData.target.parentElement.offsetWidth;
+                            var _currWidth = 0;
                         // calculation for moving element scroll
-                        for (var i = 0; i < _quickReplesDivs.length; i++) {
-                            _currWidth += (_quickReplesDivs[i].offsetWidth + 10);
-                            if (_currWidth > _totalWidth) {
+                            for (var i = 0; i < _quickReplesDivs.length; i++) {
+                                _currWidth += (_quickReplesDivs[i].offsetWidth + 10);
+                                if (_currWidth > _totalWidth) {
                                 //_scrollParentDiv[0].scrollLeft = _currWidth;
-                                $(_scrollParentDiv).animate({
-                                    scrollLeft: (_scrollParentDiv[0].scrollLeft + _quickReplesDivs[i].offsetWidth + 20)
-                                }, 'slow', function () {
-                                    // deciding to enable left and right scroll icons
-                                    var leftIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyLeftIcon');
-                                    leftIcon[0].classList.remove('hide');
-                                    if ((_scrollParentDiv[0].scrollLeft + _totalWidth + 10) >= _scrollParentDiv[0].scrollWidth) {
-                                        var rightIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyRightIcon');
-                                        rightIcon[0].classList.add('hide');
-                                    }
-                                });
-                                break;
+                                    $(_scrollParentDiv).animate({
+                                        scrollLeft: (_scrollParentDiv[0].scrollLeft + _quickReplesDivs[i].offsetWidth + 20)
+                                    }, 'slow', function () {
+                                        // deciding to enable left and right scroll icons
+                                        var leftIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyLeftIcon');
+                                        leftIcon[0].classList.remove('hide');
+                                        if ((_scrollParentDiv[0].scrollLeft + _totalWidth + 10) >= _scrollParentDiv[0].scrollWidth) {
+                                            var rightIcon = _scrollParentDiv[0].parentElement.querySelectorAll('.quickreplyRightIcon');
+                                            rightIcon[0].classList.add('hide');
+                                        }
+                                    });
+                                    break;
+                                }
                             }
                         }
-                    }
+                    }, 300));
                 });
                 _chatContainer.off('click', '.minimized').on('click', '.minimized,.minimized-title', function (event) {
                     if(me.config.multiPageApp && me.config.multiPageApp.enable){
