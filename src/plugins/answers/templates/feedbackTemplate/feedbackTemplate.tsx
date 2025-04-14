@@ -74,10 +74,10 @@ export function FeedbackTemplate(props: any): any {
 
     //image carousel template html
     return <div className="sa-feedback-block">
-        <div className="horizontal-line"></div>
-        <div className="feedback-row">
-            <div className="left">What do you think of the result?</div>
-            <div className="right">
+        <div className="sa-horizontal-line"></div>
+        <div className="sa-feedback-row">
+            <div className="sa-left">What do you think of the result?</div>
+            <div className="sa-right">
                 <span onClick={() => selectFeedbackType('up')}><ImageCarouselSvgIcons type={feedbackObj.thumsUp?'thums-up-green':'thums-up'} /></span>  
                 <span onClick={() => selectFeedbackType('down')}><ImageCarouselSvgIcons type={feedbackObj.thumsDown?'thums-down-red':'thums-down'} /></span> 
                 
@@ -85,10 +85,10 @@ export function FeedbackTemplate(props: any): any {
         </div>
         {
             isNegative && (
-                <div className="comments-block">
+                <div className="sa-comments-block">
                     {
                         negativeFeedbackArr.map((item, index) => (
-                            <div key={index} className={`comment ${item?.selected && 'active'}`} onClick={() => selectedFeedback(index)}>{item?.name}</div>
+                            <div key={index} className={`sa-comment ${item?.selected && 'sa-active'}`} onClick={() => selectedFeedback(index)}>{item?.name}</div>
                         ))
                     }
                 </div>

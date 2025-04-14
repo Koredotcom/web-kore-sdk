@@ -32,7 +32,6 @@ import ArticleTemplate from './templates/articleTemplate/article';
 import OTPTemplate from './templates/otp/otp';
 import ResetPinTemplate from './templates/resetPin/resetPin';
 import CheckListTemplate from './templates/checkList/checkList';
-import TemplateAnswers from '../plugins/answers/templates/answerTemplate/answerTemplate';
 // import './customTemplate.css';
 // import '../../../libs/purejscarousel.css';
 //(function($){
@@ -92,7 +91,6 @@ class TemplateManager {
 		this.installTemplate(new OTPTemplate());
 		this.installTemplate(new ResetPinTemplate());
 		this.installTemplate(new CheckListTemplate());
-		this.installTemplate(new TemplateAnswers());
 	}
 
 	renderMessage  (msgData: any) {

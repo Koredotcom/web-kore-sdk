@@ -15,7 +15,6 @@ export function Answers(props: any) {
         msgData: msgData,
         hostInstance: hostInstance
     }
-    const feedbackSettings = hostInstance.config['feedback'];
     const helpers = KoreHelpers.helpers;
     const [answersObj, setAnswersObj]: any = useState({ "generative": { "answerFragments": [], "sources": [] }});
     const [modelType, setModelType] = useState('');
@@ -171,7 +170,7 @@ export function Answers(props: any) {
                             </div>
 
                             {
-                                (!isPlatform && feedbackSettings?.enable) && <FeedbackTemplate data={hostInstance} searchRequestId={messageObj?.msgData?.message[0]?.component?.payload?.searchRequestId}/>
+                                (!isPlatform && hostInstance['saFeedback']?.enable) && <FeedbackTemplate data={hostInstance} searchRequestId={messageObj?.msgData?.message[0]?.component?.payload?.searchRequestId}/>
                             }
                             
                         </div>

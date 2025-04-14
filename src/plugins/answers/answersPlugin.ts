@@ -22,24 +22,19 @@ class AnswersTemplatesPlugin {
         let cwInstance = me.hostInstance;
         cwInstance.on("viewInit", (chatWindowEle: any) => {
             me.onInit();
-        });
-        cwInstance.on('jwtGrantSuccess', (e:any) => {
             me.getFeedbackSettings();
-         })
+        });
     }
 
 
     getFeedbackSettings(){
         let me:any = this;
         let cwInstance = me.hostInstance;
-        const feedback = {
+        const saFeedback = {
             enable:false,
             }
             me.getFeedbackSettingsAPICall().then(function (res: any) {
-                cwInstance.config["feedback"] = {...feedback,...res?.feedback};
-                cwInstance.on('beforeWSSendMessage', (msg:any) => {
-                    msg.messageToBot['isFeedbackEnabled'] =  cwInstance.config["feedback"]?.["enable"];
-                })
+                cwInstance["saFeedback"] = {...saFeedback,...res?.feedback};
             }, function (errRes: any) {
             });
     }
@@ -51,7 +46,6 @@ class AnswersTemplatesPlugin {
             url: me.hostInstance.config?.botOptions?.koreAPIUrl + "searchsdk/" + me.hostInstance.config?.botOptions?.botInfo?.taskBotId + "/settings",
             type: "GET",
             headers: {
-                // "auth": me.hostInstance.config?.botOptions?.assertion,
                 "Authorization": "bearer " + me.hostInstance.config?.botOptions?.accessToken
             },
             data: {},
