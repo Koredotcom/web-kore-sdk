@@ -6,11 +6,11 @@ let chatWindowInstance = new chatWindow();
 //OPTION #1
 let botOptions=chatConfig.botOptions;
 
-botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
+botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE"; 
 botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
-botOptions.botInfo = { name: "image answering doing desing time changes", "_id": "st-bfd0024e-bddd-583c-86a1-58112b120cc1" }; // bot name is case sensitive
-botOptions.clientId = "cs-b8230a17-5262-501a-9fbe-5e7350bed141";
-botOptions.clientSecret = "l7TuPkwsEa+Li0Y47eX19tQhxxtcnJhfJCBKT+/6AZs=";
+botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
+botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
+botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 
 
 /* 
