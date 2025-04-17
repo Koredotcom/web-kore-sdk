@@ -1,3 +1,13 @@
+### 11.12.0
+* Release April 05, 2025
+* Features
+  * added i18n support for germany and chinese(zh) in the Korei18nPlugin
+* Bug fixes
+  * image broken issue and header issue fix in list template
+  * added kore markdown support in templates
+  * renderMsg issue fix for buttons when Web SDK is opened in multiple tabs
+  * other minor bug fixes
+
 ### 11.11.1
 * Release Mar 15, 2025
 * Documentation
