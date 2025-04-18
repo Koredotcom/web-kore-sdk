@@ -113,9 +113,9 @@ export function Answers(props: any) {
                     </div>
                 </span>
       }
-
+    
     return (
-        <div class="sa-answer-block">
+        <div class="sa-answer-block"  data-cw-msg-id={messageObj?.msgData?.messageId}>
             {
                 (modelType === 'generative_model'  || modelType === 'extractive_model') ? (
                     <Fragment>
