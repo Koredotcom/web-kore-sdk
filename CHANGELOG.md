@@ -1,3 +1,9 @@
+### 10.13.1
+- SDK Release April 19, 2025
+* Bug fixes
+  * Korei18nPlugin issues fixed
+  * quick replies mulitple clicks scroll issue fix
+
 ### 10.13.0
 - SDK Release April 05, 2025
 * Bug fixes
