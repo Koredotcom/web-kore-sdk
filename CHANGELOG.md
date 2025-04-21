@@ -1,3 +1,10 @@
+### 11.12.1
+* Release April 19, 2025
+* Features
+  * feedback support added in answers template
+* Bug fixes
+  * answers template issues fixed
+
 ### 11.12.0
 * Release April 05, 2025
 * Features
