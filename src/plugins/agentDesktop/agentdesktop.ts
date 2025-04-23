@@ -316,11 +316,14 @@ class AgentDesktopPlugin {
         localVideoElement.id = 'kore_local_video';
         localVideoElement.width = 0;
         localVideoElement.height = 0;
+        localVideoElement['autoplay'] = true;
+        localVideoElement['playsInline'] = true;
         let remoteVideoElement = document.createElement('video');
         remoteVideoElement.id = 'kore_remote_video';
         remoteVideoElement.width = 0;
         remoteVideoElement.height = 0;
-
+        remoteVideoElement['autoplay'] = true;
+        remoteVideoElement['playsInline'] = true;
         chatEleDiv.insertBefore(localVideoElement, chatEleDiv.firstChild);
         chatEleDiv.insertBefore(remoteVideoElement, chatEleDiv.firstChild);
     }
