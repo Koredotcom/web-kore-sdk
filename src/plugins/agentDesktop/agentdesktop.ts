@@ -166,7 +166,7 @@ class AgentDesktopPlugin {
         me.hostInstance.on('onWSMessage', (event: any) => {
 
             // Agent Status 
-            if (event.messageData?.message?.type === 'agent_connected' && me?.hostInstance?.enableAgentChanges) {
+            if ((event.messageData?.message?.type === 'agent_connected' || event.messageData?.message?.type === 'agent_session_active') && me?.hostInstance?.enableAgentChanges) {
                 this.isAgentConnected = true;
                 me.brandingInfo = JSON.parse(JSON.stringify(me.hostInstance.config.branding));
                 if (me.hostInstance.config.branding.body.agent_message.icon.show) {
@@ -181,7 +181,7 @@ class AgentDesktopPlugin {
                 me.hostInstance.setBranding(me.hostInstance.config.branding);
                 me.hostInstance.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = me.hostInstance.config.branding.header.title.name;
 
-            } else if (event.messageData?.message?.type === 'agent_disconnected' && me?.hostInstance?.enableAgentChanges) {
+            } else if ((event.messageData?.message?.type === 'agent_disconnected' || event.messageData?.message?.type === 'agent_session_inactive') && me?.hostInstance?.enableAgentChanges) {
                 document.querySelector(".campaign-calling-audio-static-wrapper")?.remove(); //removing the campaign container
                 if (this.isAgentConnected) {
                     this.isAgentConnected = false;
