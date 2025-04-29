@@ -1128,10 +1128,11 @@ class AgentDesktopPluginScript  {
                 stream.getTracks().forEach(function (track) {
                     track.stop();
                 });
+                let extraHeaders = [`X-conversationId: ${this.callDetails?.conversationId}`];
                 if(this.callDetails.videoCall){
-                    this.activeCall = this.phone.call(this.phone.VIDEO, sipUser);
+                    this.activeCall = this.phone.call(this.phone.VIDEO, sipUser, extraHeaders);
                 }else{
-                    this.activeCall = this.phone.call(this.phone.AUDIO, sipUser);
+                    this.activeCall = this.phone.call(this.phone.AUDIO, sipUser, extraHeaders);
                 }
             });
         }
