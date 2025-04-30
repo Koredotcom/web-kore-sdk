@@ -54,7 +54,7 @@ export function Answers(props: any) {
             tempDiv.id = 'sa-img-carousel-popup-container';
             // Append to the body
             document.body.appendChild(tempDiv);
-            const sourceData = {"image_urls":image_urls,"title":title}
+            const sourceData = {"image_urls":Array.isArray(image_urls) ? image_urls : [image_urls],"title":title}
             render(<CarouselImagePopupTemplate data={sourceData}/>,tempDiv);
     }
 
