@@ -343,6 +343,9 @@ Note: When integrated into an iFrame, the SDK's functionality will be confined t
 	
 # Release History
 ```
+v10.14.0 [Minor] on 03-May-2025: Master branch
+        Stable release
+
 v10.13.1 [Minor] on 19-Apr-2025: Master branch
         Bugfixes
                 1.Quick replies template mulitple clicks scroll issue fix
