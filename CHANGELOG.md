@@ -1,3 +1,9 @@
+### 11.13.0
+* Release May 03, 2025
+* Bug fixes
+  * agent desktop issues fix
+  * answers template issues fix
+
 ### 11.12.1
 * Release April 19, 2025
 * Features
