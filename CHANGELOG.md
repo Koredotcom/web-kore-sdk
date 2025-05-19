@@ -1,3 +1,7 @@
+### 11.13.1
+* Release May 17, 2025
+* Stable release
+
 ### 11.13.0
 * Release May 03, 2025
 * Bug fixes
