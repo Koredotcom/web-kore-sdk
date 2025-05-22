@@ -138,7 +138,7 @@
  */
 
 
-import AudioCodesUA from './ac_webrtc.min.js';
+// import AudioCodesUA from './ac_webrtc.min.js';
 
  //import { io } from "socket.io-client";
 // import * as JsSIP from 'jssip';
@@ -210,7 +210,7 @@ class AgentDesktopPluginScript  {
         }
         var _self = this;
         if (!this.config.isCobrowseSession) { // DONOT initiate a audiocodes for cobrowse session.
-            this.phone = new AudioCodesUA();
+            this.phone = null;
         }
         this.activeCall = null;
         this.callDetails = null;
@@ -900,6 +900,26 @@ class AgentDesktopPluginScript  {
                 if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'call_agent_webrtc') {
                     //koreJquery("#rejectPhone").show();
                     _self.callDetails = msgJson.message;
+                    if(!_self.phone){
+                        const payload = _self.callDetails;
+                        payload['type'] = "call_agent_webrtc_rejected"
+                        const messageToBot = {};
+                        messageToBot["event"] = "event";
+                        messageToBot["message"] = {
+                            "body": _self.callDetails,
+                            "type": ""
+                        }
+    
+                        if (botInstance) {
+                            botInstance.sendMessage(messageToBot, (err) => { });
+                        }
+                        if (_self.activeCall) {
+                            _self.activeCall.terminate();
+                        }
+                        _self.callAccepted = false;
+                        alert("Voice/Video calling is not configured for this session. Please contact support.");
+                        return;
+                    }
                     _self.agentProfileIcon = _self.userIcon;
                     if (_self.callDetails.profileIcon && _self.callDetails.profileIcon !== 'undefined') {
                         _self.agentProfileIcon = _self.callDetails.profileIcon;
@@ -1071,6 +1091,7 @@ class AgentDesktopPluginScript  {
 
         this.initSipStack = function (account, serverConfig) {
             console.log('this.phoneConfig', this.phoneConfig);
+            if(!this.phone) return;
             this.phone.setServerConfig(serverConfig.addresses, serverConfig.domain, serverConfig.iceServers);
             this.phone.setReconnectIntervals(this.phoneConfig.reconnectIntervalMin, this.phoneConfig.reconnectIntervalMax);
             this.phone.setRegisterExpires(this.phoneConfig.registerExpires);
@@ -1195,7 +1216,7 @@ class AgentDesktopPluginScript  {
         }
         this.callAgent = function () {
             console.log('this.callDetails', this.callDetails)
-
+            if(!this.phone) return;
             var sipURI = this.callDetails.sipURI;
             var sipUser = sipURI.substring(sipURI.indexOf(':') + 1, sipURI.indexOf('@'));
 
