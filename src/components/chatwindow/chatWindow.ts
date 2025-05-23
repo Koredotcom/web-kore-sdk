@@ -1164,6 +1164,7 @@ bindEventsV3() {
         if (window.sessionStorage.getItem('isReconnect') == 'true') {
           window.sessionStorage.setItem('isReconnect', 'false');
           setTimeout(() => {
+            me.isReconnected = true;
             me.resetWindow();
           })
         }
