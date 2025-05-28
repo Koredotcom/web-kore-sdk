@@ -16,7 +16,7 @@ export function DateSeparator(props: any) {
     }
 
     return (
-        <div className={type + ' ' + dsStyle[brandingInfo.body.time_stamp.separator]}>
+        <div className={type + ' ' + dsStyle[brandingInfo.body.time_stamp.separator]} aria-hidden="true">
             <div className="line-border"></div>
             <div className="date-text">{text}</div>
             <div className="line-border"></div>
