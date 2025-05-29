@@ -198,7 +198,7 @@ export function AdvancedListExtension(props: any) {
                                                 </div>))}
                                             {item.optionsData[0].type === 'radio' && item.optionsData.map((radioEle: any, ind: any) => (
                                                 <div className="radio-button-item">
-                                                    <input id={`radio-button-${msgData.messageId}-${index}-${ind}`} name="radio" className="radio-input" type="radio" value={radioEle.value} label={radioEle.label} data-kr-alt-rad={`${msgData.messageId}_${index}`} />
+                                                    <input id={`radio-button-${msgData.messageId}-${index}-${ind}`} name="radio" className="radio-input" type="radio" value={radioEle.value} label={radioEle.label} data-kr-alt-rad={`${msgData.messageId}_${index}`} onKeyDown={(e) => { if (e.key === 'Enter') onSubmit(item, index); }} />
                                                     <label for={`radio-button-${msgData.messageId}-${index}-${ind}`} className="radio-label">
                                                         <div className="radio-title" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(radioEle.label, "bot") }}></div>
                                                         {/* <div className="radio-desc">Radio button item</div> */}
@@ -443,7 +443,7 @@ export function AdvancedList(props: any) {
                                                 </div>))}
                                             {item.optionsData[0].type === 'radio' && item.optionsData.map((radioEle: any, ind: any) => (
                                                 <div className="radio-button-item">
-                                                    <input id={`radio-button-${msgData.messageId}-${index}-${ind}`} name="radio" className="radio-input" type="radio" value={radioEle.value} label={radioEle.label} data-kr-alt-rad={`${msgData.messageId}_${index}`} />
+                                                    <input id={`radio-button-${msgData.messageId}-${index}-${ind}`} name="radio" className="radio-input" type="radio" value={radioEle.value} label={radioEle.label} data-kr-alt-rad={`${msgData.messageId}_${index}`} onKeyDown={(e) => { if (e.key === 'Enter') onSubmit(item, index); }} />
                                                     <label for={`radio-button-${msgData.messageId}-${index}-${ind}`} className="radio-label">
                                                         <div className="radio-title" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(radioEle.label, "bot") }}></div>
                                                         {/* <div className="radio-desc">Radio button item</div> */}

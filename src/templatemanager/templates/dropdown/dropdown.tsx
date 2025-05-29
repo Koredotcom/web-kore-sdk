@@ -67,7 +67,7 @@ export function Dropdown(props: any) {
                             </button>
                             <div className="menu-content-list-drp">
                                 { msgData?.message?.[0].component?.payload.elements.map((ele: any) => (
-                                    <li className={selectedItem?.title == ele?.title ? 'active-list-option' :''} onClick={event => selectItem(event, ele) } tabIndex={0}>
+                                    <li className={selectedItem?.title == ele?.title ? 'active-list-option' :''} onClick={event => selectItem(event, ele) } tabIndex={0} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') selectItem(event, ele); }} >
                                         <div className="list-section">
                                             <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.title, "bot") }}></p>
                                             {ele && ele.description && <div className="subtext" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.description, "bot") }}></div>}

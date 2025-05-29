@@ -56,7 +56,7 @@ export function TableExt(props: any) {
                     <div className="table-response-wrapper-container">
                         <div className="table-response-wrapper">
                             {msgData.message[0].component.payload.elements.map((ele: any, ind: any) => (
-                                (((showMore && ind < 3) || !showMore) && <div className="acc-block-content" onClick={selectItem}>
+                                (((showMore && ind < 3) || !showMore) && <div className="acc-block-content" onClick={selectItem} tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') selectItem(e); }} >
                                     {ele.Values.map((e: any, i: any) => (i < 2 && <div className="info-block">
                                         <h1 className="hide" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData.message[0].component.payload.columns[i], "bot") }}></h1>
                                         <p title={e} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(e, "bot") }}></p>
