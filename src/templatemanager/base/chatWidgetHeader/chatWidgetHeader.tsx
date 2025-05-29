@@ -89,7 +89,7 @@ export function ChatWidgetHeader(props: any) {
 
     return (
         <div className={hSizeObj[brandingInfo.header.size]} aria-label="chat widget header">
-            <button className="back-to-chat" type="button" aria-label="back to welcome screen">
+            <button className="back-to-chat" type="button" aria-label={`${hostInstance.config.branding.welcome_screen.show ? 'back to welcome screen' : 'minimize chat'}`}>
                 {/* <figure>
                     <img src={iconHelper.getIcon('arrow_back')} alt="back button" />
                 </figure> */}
