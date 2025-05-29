@@ -184,10 +184,10 @@ export function AvatarComponent(props: any) {
                         </svg></span>}
                     </figure>}
                     {brandingInfo.chat_bubble.icon.type == 'custom' && <figure className="custom-img-uploaded" aria-label="chat icon">
-                        <img src={brandingInfo.chat_bubble.icon.icon_url} />
+                        <img src={brandingInfo.chat_bubble.icon.icon_url} aria-hidden="true"/>
                     </figure>}
                     {brandingInfo.chat_bubble.minimise.type == 'custom' && <figure className="custom-img-uploaded-minimize" aria-label="minimize chat">
-                        <img src={brandingInfo.chat_bubble.minimise.icon} />
+                        <img src={brandingInfo.chat_bubble.minimise.icon} aria-hidden="true"/>
                     </figure>}
                 </button>
             </div>
