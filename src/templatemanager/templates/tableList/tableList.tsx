@@ -38,7 +38,7 @@ export function TableList(props: any) {
                                 {ele.sectionHeaderDesc && <p dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.sectionHeaderDesc, "bot") }}></p>}
 
                                 {ele.rowItems.map((item: any) => (
-                                    <div className="table-list-data-card" style={{backgroundColor: item.bgcolor ? item.bgcolor: '', color: item.title.rowColor ? item.title.rowColor: ''}} onClick={(event) => handleEvent(event, item.default_action)}>
+                                    <div className="table-list-data-card" style={{backgroundColor: item.bgcolor ? item.bgcolor: '', color: item.title.rowColor ? item.title.rowColor: ''}} onClick={(event) => handleEvent(event, item.default_action)} tabIndex={0} >
                                         {item && item.title.image && item.title.image.image_type && item.title.image.image_src && <div className={`img-block ${item.title.image.size == 'medium' ? `medium-img` : `small-img`}`}>
                                             <figure>
                                                 <img src={item.title.image.image_src} />
