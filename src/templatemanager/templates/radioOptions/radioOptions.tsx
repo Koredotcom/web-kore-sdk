@@ -50,7 +50,7 @@ export function RadioOptionsComp(props: any) {
                              onKeyDown={(e) => handleKeyDown(e, ele.postback)}
                              role="radio"
                         >
-                            <input id={`radio-${msgData.messageId}-${ind}`} name={`radio-${msgData.messageId}-${ind}`} className="radio-input" type="radio" checked={selectItem.value === ele.postback.value} />
+                            <input id={`radio-${msgData.messageId}-${ind}`} name={`radio-${msgData.messageId}`} className="radio-input" type="radio" checked={selectItem.value === ele.postback.value} />
                             <label for={`radio-${msgData.messageId}-${ind}`} className="radio-label">
                                 {ele.title && <div className="radio-title" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.title, "bot") }}></div>}
                                 {ele.value && <div className="radio-desc" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.value, "bot") }}></div>}

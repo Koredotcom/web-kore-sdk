@@ -18,6 +18,7 @@ export function Dropdown(props: any) {
     }
 
     const selectItem = (e: any, item: any) => {
+        e.stopPropagation();
         selectedItem = item;
         
         const dropdownSection = document.querySelector(`.dropdown-${msgData.messageId}`);
@@ -36,6 +37,12 @@ export function Dropdown(props: any) {
                     li.classList.remove('active-list-option');
                 }
             });
+
+            // Close the dropdown
+            const menuWrapper = dropdownSection.querySelector('.drp-menu-wrapper');
+            if (menuWrapper) {
+                menuWrapper.classList.remove('show-drp');
+            }
         }
     }
 
