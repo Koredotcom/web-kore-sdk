@@ -347,12 +347,12 @@ export function AdvancedList(props: any) {
                     <div className="main-heading-wrapper">
                         {msgData.message[0].component.payload.title && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData.message[0].component.payload.title, "bot") }}></h1>}
                         {(msgData.message[0].component.payload.isSortEnabled || msgData.message[0].component.payload.isSearchEnabled) && <div className="header-actions">
-                            {msgData.message[0].component.payload.isSortEnabled && <button className="btn-action-filter">
+                            {msgData.message[0].component.payload.isSortEnabled && <button className="btn-action-filter" aria-label="sort">
                                 <svg width="16" height="17" viewBox="0 0 16 17" fill="none">
                                     <path d="M2 4C1.72386 4 1.5 4.22386 1.5 4.5C1.5 4.77614 1.72386 5 2 5H14C14.2761 5 14.5 4.77614 14.5 4.5C14.5 4.22386 14.2761 4 14 4H2ZM4 8C3.72386 8 3.5 8.22386 3.5 8.5C3.5 8.77614 3.72386 9 4 9H12C12.2761 9 12.5 8.77614 12.5 8.5C12.5 8.22386 12.2761 8 12 8H4ZM6 12C5.72386 12 5.5 12.2239 5.5 12.5C5.5 12.7761 5.72386 13 6 13H10C10.2761 13 10.5 12.7761 10.5 12.5C10.5 12.2239 10.2761 12 10 12H6Z" fill="#202124"/>
                                 </svg>
                             </button>}
-                            {msgData.message[0].component.payload.isSearchEnabled && <button className="btn-action-filter">
+                            {msgData.message[0].component.payload.isSearchEnabled && <button className="btn-action-filter" aria-label="search">
                                 <svg width="16" height="17" viewBox="0 0 16 17" fill="none">
                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M7.29765 2.2998C4.26141 2.2998 1.80005 4.76774 1.80005 7.81209C1.80005 10.8564 4.26141 13.3244 7.29765 13.3244C8.62542 13.3244 9.84326 12.8524 10.7934 12.0667L13.3422 14.5909L13.3802 14.6252C13.5895 14.7962 13.898 14.7828 14.0916 14.5863C14.2973 14.3775 14.2952 14.0411 14.087 13.8349L11.5426 11.3151C12.3252 10.3627 12.7952 9.14244 12.7952 7.81209C12.7952 4.76774 10.3339 2.2998 7.29765 2.2998ZM7.29765 3.36241C9.74859 3.36241 11.7355 5.3546 11.7355 7.81209C11.7355 10.2696 9.74859 12.2618 7.29765 12.2618C4.84671 12.2618 2.85983 10.2696 2.85983 7.81209C2.85983 5.3546 4.84671 3.36241 7.29765 3.36241Z" fill="#202124"/>
                                 </svg>
@@ -393,13 +393,13 @@ export function AdvancedList(props: any) {
                                                 {headerEle.contenttype === 'button' && <button style={headerEle?.buttonStyles} className="kr-button-blue-light" onClick={() => handleItem(headerEle)} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(headerEle.title, "bot") }}></button>}
                                                 {headerEle.type === 'text' && <h1 style={headerEle?.styles} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(headerEle.value, "bot") }}></h1>}
                                                 {<p style={{ display: 'none' }} className="tag-status">Shortlisted</p>}
-                                                {item.isAccordian && headerEle.type === 'icon' && <button className="arrow-icon" onClick={() => handleAccordian(index)}>
+                                                {item.isAccordian && headerEle.type === 'icon' && <button className="arrow-icon" onClick={() => handleAccordian(index)} aria-label="accordion">
                                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M11.222 8.55518C11.4187 8.35845 11.4303 8.04668 11.2567 7.83641L11.222 7.79823L6.53504 3.11125C6.32601 2.90222 5.98711 2.90222 5.77809 3.11125C5.58136 3.30798 5.56978 3.61975 5.74337 3.83002L5.77809 3.8682L10.0865 8.1767L5.77809 12.4852C5.58136 12.6819 5.56978 12.9937 5.74337 13.204L5.77809 13.2422C5.97482 13.4389 6.28659 13.4505 6.49685 13.2769L6.53504 13.2422L11.222 8.55518Z" fill="#202124"/>
                                                     </svg>
                                                 </button>}
                                                 {headerEle.type === 'dropdown' && <div className="dropdown-list-wrapper" onClick={event => handleDropdown(event, index)}>
-                                                    <button className="elipse-dropdown" onClick={event => handleDropdown(event, index)}>
+                                                    <button className="elipse-dropdown" onClick={event => handleDropdown(event, index)} aria-label="dropdown">
                                                         <svg width="16" height="17" viewBox="0 0 16 17" fill="none">
                                                             <path d="M7.46661 4.76623C8.1539 4.76623 8.71106 4.20908 8.71106 3.52179C8.71106 2.8345 8.1539 2.27734 7.46661 2.27734C6.77932 2.27734 6.22217 2.8345 6.22217 3.52179C6.22217 4.20908 6.77932 4.76623 7.46661 4.76623Z" fill="#202124"/>
                                                             <path d="M8.71106 8.49957C8.71106 9.18685 8.1539 9.74401 7.46661 9.74401C6.77932 9.74401 6.22217 9.18685 6.22217 8.49957C6.22217 7.81228 6.77932 7.25512 7.46661 7.25512C8.1539 7.25512 8.71106 7.81228 8.71106 8.49957Z" fill="#202124"/>

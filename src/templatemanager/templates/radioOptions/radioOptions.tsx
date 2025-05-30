@@ -16,13 +16,6 @@ export function RadioOptionsComp(props: any) {
         setSelectedItem(e);
     }
 
-    const handleKeyDown = (e: any, postback: any) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            selectedItem(postback);
-        }
-    }
-
     const onSubmit = () => {
         if (msgData?.message?.[0]?.component?.payload?.slideView) {
             closeMenu();
@@ -45,12 +38,8 @@ export function RadioOptionsComp(props: any) {
                 {msgData?.message?.[0]?.component?.payload.heading && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData?.message?.[0]?.component?.payload.heading, "bot") }}></h1>}
                 { msgData?.message?.[0]?.component?.payload.radioOptions.map((ele: any, ind: any) => (
                     <div className="radio-padding">
-                        <div className="radio-button-item"
-                             onClick={() => selectedItem(ele.postback)}
-                             onKeyDown={(e) => handleKeyDown(e, ele.postback)}
-                             role="radio"
-                        >
-                            <input id={`radio-${msgData.messageId}-${ind}`} name={`radio-${msgData.messageId}`} className="radio-input" type="radio" checked={selectItem.value === ele.postback.value} />
+                        <div className="radio-button-item" onClick={() => selectedItem(ele.postback)}>
+                            <input id={`radio-${msgData.messageId}-${ind}`} name={`radio-${msgData.messageId}`} className="radio-input" type="radio" />
                             <label for={`radio-${msgData.messageId}-${ind}`} className="radio-label">
                                 {ele.title && <div className="radio-title" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.title, "bot") }}></div>}
                                 {ele.value && <div className="radio-desc" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(ele.value, "bot") }}></div>}
