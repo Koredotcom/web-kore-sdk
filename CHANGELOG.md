@@ -1,3 +1,9 @@
+### 11.14.0
+* Release May 31, 2025
+* Bug fixes
+  * accessibility improvements and bug fixes
+  * proactive web campaings plugin issues fix
+
 ### 11.13.1
 * Release May 17, 2025
 * Stable release
