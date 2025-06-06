@@ -863,11 +863,12 @@ bindEvents  () {
   });
 
   _chatContainer.on('click', '.reload-btn',  (event: any,data:any) => {
-    if(data && data.isReconnect){
+    console.log('-----reconnect------');
+    // if(data && data.isReconnect){
         me.config.botOptions.forceReconnecting=true;
-    }else{
-        me.config.botOptions.forceReconnecting=false;//make it to true if reconnect button should not trigger on connect message
-    }
+    // }else{
+        // me.config.botOptions.forceReconnecting=false;//make it to true if reconnect button should not trigger on connect message
+    // }
     $(this).addClass('disabled').prop('disabled', true);
     $('.close-btn').addClass('disabled').prop('disabled', true);
     setTimeout(() => {
