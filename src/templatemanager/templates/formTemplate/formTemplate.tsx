@@ -10,7 +10,7 @@ export function Form(props: any) {
 
     const handleEvent = (ele: any, id: any) => {
         if (ele.type && ele.type === 'postback') { 
-            hostInstance.sendMessage(ele?.payload?.toString() || ele?.value?.toString(), { renderMsg: ele?.title }, msgData);
+            hostInstance.sendMessage(ele?.payload?.toString() || ele?.value?.toString(), { renderMsg: ele?.title });
             return;
         }
         else if (ele.type && (ele.type === 'url' || ele.type === 'web_url')) {
@@ -57,7 +57,7 @@ export function Form(props: any) {
                 }
                 botMsg=!isKeysPresent ? botMsg.join(',') : JSON.stringify(botMsg);
                 renderMsg=!isKeysPresent ? renderMsg.join(',') : JSON.stringify(renderMsg);
-                hostInstance.sendMessage(botMsg, { renderMsg }, msgData);
+                hostInstance.sendMessage(botMsg, { renderMsg });
             }
         }
     }
