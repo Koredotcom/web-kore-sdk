@@ -252,6 +252,9 @@ class KoreFileUploaderPlugin {
         recState.componentSize = _file.size;
         recState.uploadFn = 'acceptFile';
       }
+      if (_file.size) {
+        recState.componentSize = _file.size;
+      }
       if (this.allowedFileTypes && this.allowedFileTypes.indexOf(fileType) !== -1) {
         if (recState.type === 'audio' || recState.type === 'video') {
           // read duration;
@@ -502,6 +505,9 @@ class KoreFileUploaderPlugin {
     me.hostInstance.attachmentInfo = {};
     me.hostInstance.attachmentInfo.fileName = data.values.componentData.filename;
     me.hostInstance.attachmentInfo.fileType = data.values.componentType;
+    if (data.values.componentSize) {
+      me.hostInstance.attachmentInfo.fileSize = data.values.componentSize;
+    }
     $('.sendButton').removeClass('disabled');
   }
 
@@ -526,7 +532,7 @@ class KoreFileUploaderPlugin {
     ele.uploader(_uc);
   }
 
-  notifyfileCmpntRdy(_this: any, _recState: { resulttype: any; mediaName: any; type: any; name: any; }, _tofileId: undefined) {
+  notifyfileCmpntRdy(_this: any, _recState: { resulttype: any; mediaName: any; type: any; name: any; componentSize: any; }, _tofileId: undefined) {
     var me = _this;
     const _data:any = {};
     _data.meta = {
@@ -540,6 +546,9 @@ class KoreFileUploaderPlugin {
         filename: _recState.name,
       },
     };
+    if (_recState.componentSize) {
+      _data.values.componentSize = _recState.componentSize;
+    }
     me.onComponentReady(me, _data);
   }
 
