@@ -343,6 +343,10 @@ Note: When integrated into an iFrame, the SDK's functionality will be confined t
 	
 # Release History
 ```
+v10.15.1 [Minor] on 14-June-2025: Master branch
+        Bugfixes
+                1.Added fileSize in user message for file uploads
+
 v10.15.0 [Minor] on 31-May-2025: Master branch
         Stable release
 
