@@ -5088,6 +5088,9 @@
                         recState.componentSize = _file.size;
                         recState.uploadFn = 'acceptFile';
                     }
+                    if (_file.size){
+                        recState.componentSize = _file.size;
+                    }
                     if (allowedFileTypes && allowedFileTypes.indexOf(fileType) !== -1) {
                         if (recState.type === 'audio' || recState.type === 'video') {
                             //read duration;
@@ -5366,6 +5369,9 @@
                 $('.chatInputBox').focus();
                 chatInitialize.attachmentInfo.fileName = data.values.componentData.filename;
                 chatInitialize.attachmentInfo.fileType = data.values.componentType;
+                if (data.values.componentSize) {
+                    chatInitialize.attachmentInfo.fileSize = data.values.componentSize;
+                }
                 $('.sendButton').removeClass('disabled');
             };
             function acceptFileRecording(_this, _recState, ele) {
@@ -5401,6 +5407,9 @@
                         filename: _recState.name
                     }
                 };
+                if (_recState.componentSize) {
+                    _data.values.componentSize = _recState.componentSize;
+                }
                 onComponentReady(_this, _data);
             };
             /***************************************************** ke.uploader file code **********************************************/
