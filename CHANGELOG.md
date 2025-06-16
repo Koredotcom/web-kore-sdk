@@ -1,3 +1,8 @@
+### 10.15.1
+- SDK Release June 14, 2025
+* Bug fixes
+  * added fileSize in user message for file uploads
+
 ### 10.15.0
 - SDK Release May 31, 2025
 * Stable release
