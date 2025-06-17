@@ -38,24 +38,24 @@ The Kore Web SDK is a toolkit for launching chat widgets on websites or within o
 
 The Kore Web SDK v3 is designed to be fully compatible with screen readers.
 
-<!-- Placeholder for a short video demonstrating screen reader functionality -->
-[Video: Screen Reader Demonstration]
+https://github.com/user-attachments/assets/fe484d03-9086-4a3f-8b10-18bd3cfe9013
 
-## Customization and Accessibility
+### Color contrast
 
-The Kore Web SDK offers extensive customization options. While a base level of accessibility is provided, it is crucial to ensure that any customizations made also adhere to WCAG 2.1 Level AA standards. You can customize the SDK to best suit your specific accessibility requirements.
-
-For detailed information on how to customize the SDK, please refer to our [Customization Documentation](../customizations/).
-
-### Theme Creation and Accessibility
-
-The Kore Web SDK provides default light and dark themes that are fully WCAG 2.1 Level AA compliant with color contrast ratios of 4.5:1 or higher. For organizations requiring custom branding or specific accessibility needs, new themes can be created following the [Virtual Assistant Theme & Design guidelines](https://docs.kore.ai/xo/channels/add-web-mobile-client/?h=theme#virtual-assistant-theme-design).
+The Kore Web SDK provides default light and dark themes that are fully WCAG 2.1 Level AA compliant with color contrast ratios of 4.5:1 or higher. For creating custom branding or specific accessibility needs, new themes can be created following the [Virtual Assistant Theme & Design guidelines](https://docs.kore.ai/xo/channels/add-web-mobile-client/?h=theme#virtual-assistant-theme-design).
 
 When creating custom themes, ensure that:
 *   All color combinations maintain the required contrast ratios
 *   Interactive elements remain clearly distinguishable
 *   Focus indicators are visible and meet contrast requirements
 *   Custom themes are tested with assistive technologies before deployment
+
+
+## Customization and Accessibility
+
+The Kore Web SDK offers extensive customization options. While a base level of accessibility is provided, it is crucial to ensure that any customizations made also adhere to WCAG 2.1 Level AA standards. You can customize the SDK to best suit your specific accessibility requirements.
+
+For detailed information on how to customize the SDK, please refer to our [Customization Documentation](../customizations/).
 
 ## Guidelines for Maintaining Compliance
 
@@ -64,18 +64,12 @@ To ensure ongoing WCAG 2.1 Level AA compliance with the SDK, developers should a
 *   **Semantic HTML:** Utilize appropriate HTML5 elements to define the structure and meaning of content within custom templates and components.
 *   **ARIA Attributes:** Implement ARIA (Accessible Rich Internet Applications) attributes where necessary to enhance the accessibility of dynamic content and custom controls. Refer to the [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/) for guidance.
 *   **Keyboard Navigation:** Ensure all interactive elements are focusable and operable via keyboard. Maintain a logical focus order.
-    *   <!-- Placeholder for an image/gif demonstrating keyboard navigation -->
-    [Image: Keyboard Navigation Example]
 *   **Color Contrast:** Verify that text and UI elements meet the minimum color contrast ratios specified by WCAG 2.1 AA (4.5:1 for normal text, 3:1 for large text and graphical objects). All default themes provided by the Kore Web SDK maintain a color contrast ratio of 4.5:1 or higher, ensuring compliance with WCAG 2.1 Level AA standards out of the box.
-    *   <!-- Placeholder for an image showing good color contrast -->
     [Image: Color Contrast Example]
 *   **Text Alternatives:** Provide appropriate alternative text for all non-text content (e.g., icons, images).
 *   **Responsive Design:** Ensure that the chat widget and its contents are responsive and accessible across various screen sizes and orientations.
 *   **Testing:** Regularly test customizations with accessibility evaluation tools and assistive technologies (e.g., screen readers like NVDA, JAWS, or VoiceOver).
 
 Customers can completely customize the SDK to make any necessary changes to meet their accessibility needs. It is the responsibility of the customer to ensure their customizations remain compliant with WCAG 2.1 Level AA standards.
-
-<!-- Placeholder for general accessibility best practices screenshot/diagram -->
-[Image: General Accessibility Best Practices]
 
 This documentation aims to provide a clear understanding of the Kore AI Web SDK's accessibility features and empower developers to build inclusive chat experiences.
