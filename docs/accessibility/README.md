@@ -8,7 +8,7 @@ For more information on WCAG 2.1 Level AA, please visit the official [Web Conten
 
 The Kore Web SDK is a toolkit for launching chat widgets on websites or within other applications. This is an end-user facing application where the users interact with the virtual assistants. The SDK includes a reference implementation of the web chat widget, designed to meet AA standards of ADA compliance.
 
-## Kore Web SDKs Accessibility
+## Kore Web SDK Accessibility
 
 ### WCAG 2.1 Level AA Compliance Status
 
@@ -36,9 +36,11 @@ The Kore Web SDK is a toolkit for launching chat widgets on websites or within o
 
 ### Screen Reader Support
 
-The Kore Web SDK v3 is designed to be fully compatible with screen readers.
+The Kore Web SDK is designed to be fully compatible with screen readers.
 
 https://github.com/user-attachments/assets/fe484d03-9086-4a3f-8b10-18bd3cfe9013
+
+Above video is recorded while using [NVDA reader](https://www.nvaccess.org/download/)
 
 ### Color contrast
 
