@@ -21,18 +21,18 @@ The Kore Web SDK is a toolkit for launching chat widgets on websites or within o
 | Component     | Support |
 |---------------|-------|
 | Chat Icon     | Yes   |
-|               | <!-- Placeholder for Chat Icon image --> [Image: Chat Icon Accessibility] |
+|               | ![image](https://github.com/user-attachments/assets/a515857d-1bc2-44d2-8ecd-11864b33ee01) |
 | Chat Window   | Yes   |
-|               | <!-- Placeholder for Chat Window image --> [Image: Chat Window Accessibility] |
+|               | ![image](https://github.com/user-attachments/assets/3bd84612-abec-4607-8975-188bdfad57da) |
+| Welcome Screen        | Yes   |
+|               | ![image](https://github.com/user-attachments/assets/4ace910f-acc5-4175-bd4a-704c73f98ee5) |
 | Header        | Yes   |
-|               | <!-- Placeholder for Header image --> [Image: Header Accessibility] |
+|               | ![image](https://github.com/user-attachments/assets/2c32b7cf-e5a0-4f10-8329-c4742cb21a96) |
 | Footer        | Yes   |
-|               | <!-- Placeholder for Footer image --> [Image: Footer Accessibility] |
+|               | ![image](https://github.com/user-attachments/assets/ecc79f3f-ecf9-4978-af26-47edda42ce72) |
 | Templates     | Yes   |
-|               | <!-- Placeholder for Templates image --> [Image: Templates Accessibility] |
+|               | ![image](https://github.com/user-attachments/assets/9d69fc02-0f27-4ef4-989f-f7287ce06709) |
 
-<!-- Placeholder for a screenshot illustrating overall component accessibility -->
-[Image: SDK Component Accessibility Overview]
 
 ### Screen Reader Support
 
