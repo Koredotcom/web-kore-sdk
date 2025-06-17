@@ -47,6 +47,16 @@ The Kore Web SDK offers extensive customization options. While a base level of a
 
 For detailed information on how to customize the SDK, please refer to our [Customization Documentation](../customizations/).
 
+### Theme Creation and Accessibility
+
+The Kore Web SDK provides default light and dark themes that are fully WCAG 2.1 Level AA compliant with color contrast ratios of 4.5:1 or higher. For organizations requiring custom branding or specific accessibility needs, new themes can be created following the [Virtual Assistant Theme & Design guidelines](https://docs.kore.ai/xo/channels/add-web-mobile-client/?h=theme#virtual-assistant-theme-design).
+
+When creating custom themes, ensure that:
+*   All color combinations maintain the required contrast ratios
+*   Interactive elements remain clearly distinguishable
+*   Focus indicators are visible and meet contrast requirements
+*   Custom themes are tested with assistive technologies before deployment
+
 ## Guidelines for Maintaining Compliance
 
 To ensure ongoing WCAG 2.1 Level AA compliance with the SDK, developers should adhere to the following best practices when customizing or extending the SDK:
@@ -56,7 +66,7 @@ To ensure ongoing WCAG 2.1 Level AA compliance with the SDK, developers should a
 *   **Keyboard Navigation:** Ensure all interactive elements are focusable and operable via keyboard. Maintain a logical focus order.
     *   <!-- Placeholder for an image/gif demonstrating keyboard navigation -->
     [Image: Keyboard Navigation Example]
-*   **Color Contrast:** Verify that text and UI elements meet the minimum color contrast ratios specified by WCAG 2.1 AA (4.5:1 for normal text, 3:1 for large text and graphical objects).
+*   **Color Contrast:** Verify that text and UI elements meet the minimum color contrast ratios specified by WCAG 2.1 AA (4.5:1 for normal text, 3:1 for large text and graphical objects). All default themes provided by the Kore Web SDK maintain a color contrast ratio of 4.5:1 or higher, ensuring compliance with WCAG 2.1 Level AA standards out of the box.
     *   <!-- Placeholder for an image showing good color contrast -->
     [Image: Color Contrast Example]
 *   **Text Alternatives:** Provide appropriate alternative text for all non-text content (e.g., icons, images).
