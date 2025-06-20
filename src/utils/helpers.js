@@ -401,6 +401,9 @@ class KoreHelpers{
                 } else if (txtArr[i].indexOf('*') === 0) {
                     if (!isEven(txtArr[i].split('*').length - 1) && txtArr[i].substring(1)) {
                         txtArr[i] = '\r\n&#9679; ' + txtArr[i].substring(1);
+                        if (i === 0) {
+                            txtArr[i] = txtArr[i].replace(/^\r\n/, '');
+                        }
                         _lineBreakAdded = true;
                     }
                 }  else if (txtArr[i].indexOf('>>') === 0) {
