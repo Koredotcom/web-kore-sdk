@@ -170,7 +170,24 @@ export function Feedback(props: any) {
                     {(msgData.message[0].component.payload.view == 'emojis' || msgData.message[0].component.payload.view == 'CSAT') && <div className="csat-feedback">
                         <div className="emoji_container">
                             {msgData.message[0].component.payload.smileyArrays.map((emojiItem: any, ind: any) => (<div className="emoji-feedback">
-                                <input type="radio" id={`rating-${emojiItem.smileyId}`} className={`rating-${msgData.messageId}-${ind}`} name={`csat_feedback-${msgData.messageId}`} onClick={event => handleEmoji(event, emojiItem)} />
+                                <input
+                                    type="radio"
+                                    id={`rating-${emojiItem.smileyId}`}
+                                    className={`rating-${msgData.messageId}-${ind}`}
+                                    name={`csat_feedback-${msgData.messageId}`}
+                                    onKeyDown={(e: any) => {
+                                        if (e.key === 'Enter') {
+                                            handleEmoji(e, emojiItem);
+                                            e.preventDefault();
+                                        }
+                                    }}
+                                    onClick={(e: any) => {
+                                        if (e.detail !== 0) {
+                                            handleEmoji(e, emojiItem);
+                                        }
+                                    }}
+                                    aria-label={emojiItem.reviewText}
+                                />
                                 <div className="emoji-details-label" for={`rating-${emojiItem.smileyId}`} onClick={event => handleEmoji(event, emojiItem, msgData.messageId, ind)}>
                                     <p>{emojiItem.reviewText}</p>
                                 </div>
@@ -207,14 +224,36 @@ export function Feedback(props: any) {
                             <span>{msgData.message[0].component.payload.thumpsUpDownArrays[0].reviewText.includes('Extremely Unlikely') ? msgData.message[0].component.payload.thumpsUpDownArrays[0].reviewText : msgData.message[0].component.payload.thumpsUpDownArrays[1].reviewText}</span>
                         </button>
                     </div>}
-                    {msgData.message[0].component.payload.view == 'star' && <div className="rating-feedback-star">{
-                        msgData.message[0].component.payload.starArrays.map((starItem: any) => (
-                            <Fragment>
-                                <input type="radio" name="rating" id={`rating-${msgData.messageId}-${starItem.starId}`} onClick={() => handleStar(starItem)} className={`rating-${msgData.messageId}`} />
-                                <label for={`rating-${msgData.messageId}-${starItem.starId}`}></label>
+                    {msgData.message[0].component.payload.view == 'star' && <div className="rating-feedback-star" >{msgData.message[0].component.payload.starArrays.map((starItem: any, index: number) => (
+                            <Fragment key={starItem.starId}>
+                                <input
+                                    type="radio"
+                                    role="radio"
+                                    aria-checked="false"
+                                    name="rating"
+                                    id={`rating-${msgData.messageId}-${starItem.starId}`}
+                                    onClick={() => handleStar(starItem)}
+                                    className={`rating-${msgData.messageId}`}
+                                />
+                                <button tabIndex={0} htmlFor={`rating-${msgData.messageId}-${starItem.starId}`} onKeyDown={(e) => { 
+                                    if (e.key === 'Enter') {
+                                        handleStar(starItem); 
+                                    } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+                                        e.preventDefault();
+                                        const prevStar = e.currentTarget.previousElementSibling?.previousElementSibling as HTMLButtonElement;
+                                        if (prevStar && prevStar.tagName === 'BUTTON') {
+                                            prevStar.focus();
+                                        }
+                                    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+                                        e.preventDefault();
+                                        const nextStar = e.currentTarget.nextElementSibling?.nextElementSibling as HTMLButtonElement;
+                                        if (nextStar && nextStar.tagName === 'BUTTON') {
+                                            nextStar.focus();
+                                }
+                                    }
+                                }}></button>
                             </Fragment>
-                        ))
-                    }
+                        ))}
                     </div>}
                 </div>
             </div>
