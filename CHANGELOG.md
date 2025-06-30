@@ -1,3 +1,10 @@
+### 11.15.0
+* Release June 28, 2025
+* Bug fixes
+  * otp template slider close issue fix on resend click
+  * digital form styling issue fix when widgets enabled
+  * removed extra line for unordered list in the markdown
+
 ### 11.14.1
 * Release June 14, 2025
 * Bug fixes
