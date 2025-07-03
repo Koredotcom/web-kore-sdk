@@ -46,3 +46,5 @@ export {V2Plugin} from './plugins/v2-plugin.js';
 export {V2KoreWidgetSDK, V2WidgetsConfig} from './plugins/v2-kore-web-sdk-widgets.js';
 // @ts-ignore
 export {Korei18nPlugin} from './plugins/kore-i18n.js';
+// @ts-ignore
+export {AgenticPlugin} from './plugins/agentic.js';

@@ -100,6 +100,12 @@ let config= {
     ],
     resolve:{
         extensions:['.js','.ts','.tsx'],
+        alias: {
+            "react": "preact/compat",
+            "react-dom/test-utils": "preact/test-utils",
+            "react-dom": "preact/compat",     // Must be below test-utils
+            "react/jsx-runtime": "preact/jsx-runtime"
+        },
     },
     output: {
         publicPath:"/",
@@ -250,6 +256,11 @@ module.exports= function(env,argv){
           Korei18nPluginSDK: {
             import: "./src/index_plugins/Korei18n.ts",
             filename: 'plugins/kore-i18n.js'
+          },
+          AgenticPluginSDK: {
+            import: "./src/index_plugins/agentic.ts",
+            filename: 'plugins/agentic.js',
+            chunkLoading: false,
           }
         }
         config.output.path= path.resolve(__dirname,'dist/esm');
@@ -398,6 +409,11 @@ module.exports= function(env,argv){
           Korei18nPluginSDK: {
             import: "./src/index_plugins/Korei18n.ts",
             filename: 'plugins/kore-i18n.js'
+          },
+          AgenticPluginSDK: {
+            import: "./src/index_plugins/agentic.ts",
+            filename: 'plugins/agentic-umd.js',
+            chunkLoading: false,
           }
         }
         config.output.library = {

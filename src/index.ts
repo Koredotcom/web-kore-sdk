@@ -35,6 +35,7 @@ import AnswersTemplatesPlugin from './plugins/answers/answersPlugin';
 import V2Plugin from './plugins/v2Plugin/v2Plugin';
 import V2WidgetsConfig from './plugins/v2WidgetsPlugin/config/v2-kore-widgets-config';
 import V2KoreWidgetSDK from './plugins/v2WidgetsPlugin/v2-kore-widgets';
+import AgenticPlugin from './plugins/agentic/agentic';
 
 export {
   chatConfig,
@@ -70,5 +71,6 @@ export {
   ProactiveWebCampaignPlugin,
   V2Plugin,
   V2WidgetsConfig,
-  V2KoreWidgetSDK
+  V2KoreWidgetSDK,
+  AgenticPlugin
 };
