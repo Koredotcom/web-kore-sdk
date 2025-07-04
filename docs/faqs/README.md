@@ -170,6 +170,13 @@ chatWindowInstance.on(viewInit, (e) => {
 });
 ```
 
+### How to increase the typing indicator time
+
+To increase the typing indicator time please add the following config in the kore config
+```js
+chatConfig.maxTypingIndicatorTime = 20000 // time in milliseconds
+```
+
 ## Custom Codes
 
 ### How to pass customData to bot from SDK ?
