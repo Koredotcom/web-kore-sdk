@@ -174,9 +174,15 @@ class ProactiveWebCampaignPlugin {
                             } else if (!pweSessionData) {
                                 window.sessionStorage.setItem('pwe_data', JSON.stringify(data))
                             }
-                            this.timeSpent[campInstanceId] = 0;
+                            // Only reset timeSpent if it doesn't exist (first time initialization)
+                            if (this.timeSpent[campInstanceId] === undefined) {
+                                this.timeSpent[campInstanceId] = 0;
+                            }
                         });
-                        me.eventLoop();
+                        // Only call eventLoop if it hasn't been initialized before (to avoid multiple setInterval calls)
+                        if (!window.sessionStorage.getItem('kr-pwc')) {
+                            me.eventLoop();
+                        }
                     }
                 }
                 if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType !== 'chat' && this.enablePWC) {
@@ -657,7 +663,10 @@ class ProactiveWebCampaignPlugin {
         let goalArr: any = [];
         this.campInfo?.forEach((camp: any) => {
             const campInstanceId = camp.campInstanceId;
-            this.timeSpent[campInstanceId] = 0;
+            // Only reset timeSpent if it doesn't exist (first time initialization)
+            if (this.timeSpent[campInstanceId] === undefined) {
+                this.timeSpent[campInstanceId] = 0;
+            }
             if (camp.engagementStrategy.goals && camp.engagementStrategy.goals.length) {
                 const obj = {
                     campId: camp.campId,
