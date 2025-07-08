@@ -19,6 +19,12 @@ class ProactiveWebCampaignPlugin {
     isCityCountryRule: any = {};
     cityCountryData: any = {};
     elementHoverDuration: number = 2000;
+    customDataObject: any = {
+        "hello": "first",
+        "world": "second",
+        "hello.world": "third",
+        "hello.world.test": "fourth"
+    };
     constructor(config: any) {
         config = config || {};
         this.config = { ...this.config, ...config };
@@ -213,6 +219,16 @@ class ProactiveWebCampaignPlugin {
                     me.hostInstance.pwcInfo.chatData.data = data.body.layoutDesign;
                 }
             }
+        });
+        me.customDataListener();
+    }
+
+    customDataListener(){
+        const me: any = this;
+        me.hostInstance.on('pwcCustomData', (event: any) =>{
+            // LAST STEP: This data should be utilised to evaluate the "conditionType" of value "custom"
+            console.log(event.data);
+            me.customDataObject = event.data; //Flatten the data to a single object
         });
     }
 
