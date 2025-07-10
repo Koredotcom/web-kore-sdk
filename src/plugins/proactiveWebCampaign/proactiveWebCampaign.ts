@@ -829,6 +829,10 @@ class ProactiveWebCampaignPlugin {
              
         if (condition.toLowerCase() == 'or') {    
             if (pwe_data_inst.isLayoutTriggered) {
+                console.log(`🔄 *** Legacy OR condition triggered for ${campInstanceId} - updating satisfaction flags ***`);
+                // Update satisfaction flags to ensure consistency
+                me.updateSatisfactionFlags(campInstanceId);
+                
                 messageToBot.ruleInfo = ruleData;
                 if (ruleData.length > 0) {
                     me.sendApiEvent(payload, '/pweevents'); 
@@ -862,9 +866,15 @@ class ProactiveWebCampaignPlugin {
                     }
                 }
                 if (allRulesMet) {
+                    console.log(`🔄 *** Legacy AND condition triggered for ${campInstanceId} - updating satisfaction flags ***`);
+                    
                     pwe_data_inst.isLayoutTriggered = true;
                     pwe_data[campInstanceId] = pwe_data_inst
                     window.sessionStorage.setItem('pwe_data', JSON.stringify(pwe_data));
+                    
+                    // Update satisfaction flags to ensure consistency
+                    me.updateSatisfactionFlags(campInstanceId);
+                    
                     messageToBot.ruleInfo = ruleData;
                     me.sendApiEvent(payload, '/pweevents');
                 }
@@ -2343,6 +2353,9 @@ class ProactiveWebCampaignPlugin {
             pweData[campInstanceId] = campaignData;
             window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
             
+            // Ensure satisfaction flags are properly updated when campaign is triggered
+            console.log('🔄 *** New evaluation logic triggered campaign - ensuring satisfaction flags are updated ***');
+            
             // Send API event (using existing logic)
             this.triggerCampaignEvent(campInstanceId, campId);
         } else {
@@ -2356,6 +2369,106 @@ class ProactiveWebCampaignPlugin {
         }
         
         console.log(`🎯 =================== CAMPAIGN TRIGGER DECISION END ===================\n`);
+    }
+
+    /**
+     * Updates isSatisfied flags for rules and exclusions based on current evaluation
+     * This method should be called whenever a campaign is triggered to ensure flags are consistent
+     * @param campInstanceId - Campaign instance ID
+     */
+    updateSatisfactionFlags(campInstanceId: string): void {
+        console.log(`🏁 =================== UPDATING SATISFACTION FLAGS ===================`);
+        console.log(`🏁 Campaign: ${campInstanceId}`);
+        
+        let pweData: any = window.sessionStorage.getItem('pwe_data');
+        pweData = JSON.parse(pweData) || {};
+        
+        if (!pweData[campInstanceId]) {
+            console.log(`⚠️ No campaign data found for ${campInstanceId}`);
+            return;
+        }
+
+        const campaignData = pweData[campInstanceId];
+        
+        // Log current state before update
+        console.log(`🏁 BEFORE UPDATE - Current flags:`, {
+            rules: {
+                isSatisfied: campaignData.expected.rules.isSatisfied,
+                groupCount: campaignData.expected.rules.groups?.length || 0
+            },
+            exclusions: {
+                isSatisfied: campaignData.expected.exclusions.isSatisfied,
+                groupCount: campaignData.expected.exclusions.groups?.length || 0
+            },
+            isLayoutTriggered: campaignData.isLayoutTriggered
+        });
+        
+        // Update rules satisfaction flags
+        if (campaignData.expected.rules.groups) {
+            console.log(`🏁 Updating ${campaignData.expected.rules.groups.length} rule groups`);
+            campaignData.expected.rules.groups.forEach((group: any, index: number) => {
+                if (group.conditions) {
+                    const oldSatisfied = group.conditions.isSatisfied;
+                    group.conditions.isSatisfied = this.evaluateGroupConditions(
+                        group.conditions,
+                        campaignData.actual.rules
+                    );
+                    console.log(`🏁 Group ${index + 1} (${group.id}): ${oldSatisfied} → ${group.conditions.isSatisfied}`);
+                }
+            });
+            
+            // Update overall rules satisfaction
+            const oldRulesSatisfied = campaignData.expected.rules.isSatisfied;
+            campaignData.expected.rules.isSatisfied = this.evaluateGroupsSatisfaction(
+                campaignData.expected.rules.groups,
+                campaignData.expected.rules.groupType
+            );
+            console.log(`🏁 Overall rules satisfaction: ${oldRulesSatisfied} → ${campaignData.expected.rules.isSatisfied}`);
+        }
+        
+        // Update exclusions satisfaction flags
+        if (campaignData.expected.exclusions.groups && campaignData.expected.exclusions.groups.length > 0) {
+            console.log(`🏁 Updating ${campaignData.expected.exclusions.groups.length} exclusion groups`);
+            campaignData.expected.exclusions.groups.forEach((group: any, index: number) => {
+                if (group.conditions) {
+                    const oldSatisfied = group.conditions.isSatisfied;
+                    group.conditions.isSatisfied = this.evaluateGroupConditions(
+                        group.conditions,
+                        campaignData.actual.exclusions
+                    );
+                    console.log(`🏁 Exclusion Group ${index + 1} (${group.id}): ${oldSatisfied} → ${group.conditions.isSatisfied}`);
+                }
+            });
+            
+            // Update overall exclusions satisfaction
+            const oldExclusionsSatisfied = campaignData.expected.exclusions.isSatisfied;
+            campaignData.expected.exclusions.isSatisfied = this.evaluateGroupsSatisfaction(
+                campaignData.expected.exclusions.groups,
+                campaignData.expected.exclusions.groupType
+            );
+            console.log(`🏁 Overall exclusions satisfaction: ${oldExclusionsSatisfied} → ${campaignData.expected.exclusions.isSatisfied}`);
+        } else {
+            console.log(`🏁 No exclusions to update`);
+        }
+        
+        // Save updated data
+        pweData[campInstanceId] = campaignData;
+        window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
+        
+        // Log final state after update
+        console.log(`🏁 AFTER UPDATE - Final flags:`, {
+            rules: {
+                isSatisfied: campaignData.expected.rules.isSatisfied,
+                groupCount: campaignData.expected.rules.groups?.length || 0
+            },
+            exclusions: {
+                isSatisfied: campaignData.expected.exclusions.isSatisfied,
+                groupCount: campaignData.expected.exclusions.groups?.length || 0
+            },
+            isLayoutTriggered: campaignData.isLayoutTriggered
+        });
+        
+        console.log(`🏁 =================== SATISFACTION FLAGS UPDATE COMPLETE ===================\n`);
     }
 
     /**
