@@ -1141,8 +1141,30 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
         if (!retryOp.retry(err)) {
           cb(retryOp.mainError(), null);
         } else {
-          if (args && args.url && args.url.indexOf('start') > -1) {
-            _this.emit('api_failure', {"type":"XHRObj", "responseError": { "msg": "An unknown error occurred", "code": 0 }, "request": args});
+          if (args && args.url) {
+            if (_this._events['api_failure']) {
+              let errorData = {
+                "type":"XHRObj", 
+                "responseError": { "msg": "An unknown error occurred", "code": 0 }, 
+                "request": args, 
+                "meta": { isRetry: retryOp._attempts - 1 > 0 ? true : false, isLastAttempt: retryOp._errors.length == (_this.retryConfig.retries + 1)}
+              };
+              if (_this.clientType == 'rtmClient' && _this.autoReconnect) {
+                errorData.meta = '';
+              }
+              _this.emit('api_failure', errorData);
+            } else if (_this._events['api_error']) {
+              let errorData = {
+                "type":"XHRObj", 
+                "responseError": { "msg": "An unknown error occurred", "code": 0 },
+                "request": args,
+                "meta": { isRetry: retryOp._attempts - 1 > 0 ? true : false, isLastAttempt: retryOp._errors.length == (_this.retryConfig.retries + 1)}
+              };
+              if (_this.clientType == 'rtmClient' && _this.autoReconnect) {
+                errorData.meta = '';
+              }
+              _this.emit('api_error', errorData);
+            }
           }
           return;
         }
@@ -1162,12 +1184,54 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
           _this.emit(WEB_CLIENT_EVENTS.RATE_LIMITED, headerSecs);
         } else {
           if (err) {
-            _this.emit('api_error', {"type":"XHRObj", "responseError": { "msg": "An unknown error occurred", "code": 0 }, "request": args});
+            if (_this._events['api_error']) {
+              let errorData = {
+                "type":"XHRObj", 
+                "responseError": { "msg": "An unknown error occurred", "code": 0 }, 
+                "request": args, 
+                "meta": { isRetry: retryOp._attempts - 1 > 0 ? true : false, isLastAttempt: retryOp._errors.length == (_this.retryConfig.retries + 1)}
+              };
+              if (_this.clientType == 'rtmClient' && _this.autoReconnect) {
+                errorData.meta = '';
+              }
+              _this.emit('api_error', errorData);
+            } else if (_this._events['api_failure']) {
+              let errorData = {
+                "type":"XHRObj", 
+                "responseError": { "msg": "An unknown error occurred", "code": 0 }, 
+                "request": args, 
+                "meta": { isRetry: retryOp._attempts - 1 > 0 ? true : false, isLastAttempt: retryOp._errors.length == (_this.retryConfig.retries + 1)}
+              };
+              if (_this.clientType == 'rtmClient' && _this.autoReconnect) {
+                errorData.meta = '';
+              }
+              _this.emit('api_failure', errorData);
+            }
           } else {
-            if (args && args.url && args.url.indexOf('start') > -1) {
-              _this.emit('api_failure', {"type":"XHRObj", "responseError": body['errors'][0], "request": args});
-            } else {
-              _this.emit('api_error', {"type":"XHRObj", "responseError": body['errors'][0], "request": args});
+            if (args && args.url) {
+              if (_this._events['api_failure']) {
+                let errorData = {
+                  "type":"XHRObj", 
+                  "responseError": body['errors'][0], 
+                  "request": args, 
+                  meta: { isRetry: retryOp._attempts - 1 > 0 ? true : false, isLastAttempt: retryOp._errors.length == (_this.retryConfig.retries + 1)}
+                };
+                if (_this.clientType == 'rtmClient' && _this.autoReconnect) {
+                  errorData.meta = '';
+                }
+                _this.emit('api_failure', errorData);
+              } else if (_this._events['api_error']) {
+                let errorData = {
+                  "type":"XHRObj", 
+                  "responseError": body['errors'][0], 
+                  "request": args, 
+                  meta: { isRetry: retryOp._attempts - 1 > 0 ? true : false, isLastAttempt: retryOp._errors.length == (_this.retryConfig.retries + 1)}
+                };
+                if (_this.clientType == 'rtmClient' && _this.autoReconnect) {
+                  errorData.meta = '';
+                }
+                _this.emit('api_error', errorData);
+              }
             }
           }
           httpErr = new Error('Unable to process request, received bad ' + statusCode + ' error');
@@ -1452,6 +1516,11 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     this.$=clientOpts.$
     this.debug=debug;
     this.socketConfig = clientOpts?.webSocketConfig || {};
+    this.retryConfig = clientOpts?.retryConfig || {
+      retries: clientOpts.maxReconnectionAPIAttempts || 5,
+      factor: 3.9
+    };
+    this.clientType = 'rtmClient';
   }
   
   inherits(KoreRTMClient, BaseAPIClient);
@@ -1618,7 +1687,8 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this._safeDisconnect();
       this._connAttempts++;
       if (this._connAttempts > this.MAX_RECONNECTION_ATTEMPTS) {
-        throw new Error('unable to connect to kore.ai RTM API, failed after max reconnection attempts');
+        // throw new Error('unable to connect to kore.ai RTM API, failed after max reconnection attempts');
+        return;
       }
       setTimeout(bind(this.start, this), this._connAttempts * this.RECONNECTION_BACKOFF);
     }
@@ -1682,7 +1752,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   
   KoreRTMClient.prototype.handleWsError = function handleWsError(err) {
     debug("web socket error::%s",err);
-    this.emit('api_failure', { type: 'socketError', responseError: err, request: '' });
+    this.emit('api_failure', { type: 'socketError', responseError: err, request: '', meta: '' });
     this.emit(CLIENT_EVENTS.WS_ERROR, err);
   };
   
@@ -2021,6 +2091,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       factor: 3.9
     };
     this.user = {};
+    this.clientType = 'webClient';
   }
   
   inherits(WebAPIClient, BaseAPIClient);

@@ -1005,8 +1005,8 @@ bindSDKEvents  () {
     me.emit(me.EVENTS.JWT_GRANT_SUCCESS, response.jwtgrantsuccess);
   });
 
-  me.bot.on('api_failure', (response: {responseError: any; type: any; request: any}) => {
-    me.emit(me.EVENTS.API_FAILURE, { "type": response.type, "errObj": response.responseError, "request": response.request });
+  me.bot.on('api_failure', (response: {responseError: any; type: any; request: any; meta: any}) => {
+    me.emit(me.EVENTS.API_FAILURE, { "type": response.type, "errObj": response.responseError, "request": response.request, "meta": response.meta });
   });
 
   me.bot.on('reconnected', (response: any) => {
