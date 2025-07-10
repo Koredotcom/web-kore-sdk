@@ -2376,9 +2376,10 @@ class ProactiveWebCampaignPlugin {
                 'chatBot': this.hostInstance._botInfo.name,
                 'taskBotId': this.hostInstance._botInfo._id
             },
-            'ruleInfo': [], // TODO: Populate with actual rule data
+            'ruleInfo': {isAllRulesSatisfied: true}, // TODO: Populate with actual rule data
             'campInfo': {
-                'campId': campId
+                'campId': campId,
+                'campInstanceId': campInstanceId
             }
         };
         
