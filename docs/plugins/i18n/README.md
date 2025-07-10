@@ -21,7 +21,7 @@ chatWindowInstance.installPlugin(new Korei18nPlugin());
   1. Include kore-i18n.js in index.html
 
 ```js
-<script  src="PATH_TO_FILE/kore-i18n.js"></script>
+<script  src="PATH_TO_FILE/plugins/kore-i18n.js"></script>
 
 ```
 2. Get plugin reference
@@ -43,8 +43,8 @@ chatWindowInstance.installPlugin(new Korei18nPlugin());
 
 Update the config as shown below to use any one of the supported Language
 
-```javascript
- chatWindowInstance.plugins.Korei18nPlugin.config.defaultLanguage = 'ar'; // ja', 'ko', 'zh', 'de'
+```js
+chatWindowInstance.plugins.Korei18nPlugin.config.defaultLanguage = 'ar'; //ja', 'ko', 'zh', 'de'
 ```
 
 ## Adding new language support
@@ -53,11 +53,11 @@ We can add new langauage support in the Kore Web SDK by following below steps
 1. install the Kore i18n plugin by following the above instructions
 2. add the langauge to the `availableLanguages`
 ```js
- chatWindowInstance.plugins.Korei18nPlugin.config.availableLanguages.push('ab');
+chatWindowInstance.plugins.Korei18nPlugin.config.availableLanguages.push('ab');
 ```
 3. set the `languageStrings` for the following keys to the above added language 
 ```js
- chatWindowInstance.plugins.Korei18nPlugin.config.languageStrings['ab'] = {
+chatWindowInstance.plugins.Korei18nPlugin.config.languageStrings['ab'] = {
     message: "",
     connecting: "",
     reconnecting: "",
@@ -90,9 +90,12 @@ We can add new langauage support in the Kore Web SDK by following below steps
     reconnect: "",
     today: "",
     yesterday: ""
- },
+ }
 ```
 4. Set the newly added langauge as default language
 ```js
 chatWindowInstance.plugins.Korei18nPlugin.config.defaultLanguage = 'ab';
 ```
+
+> [!NOTE]
+> For main fields please refer [branding info](../../../docs/brandingInfo)
