@@ -270,6 +270,7 @@ class ProactiveWebCampaignPlugin {
     3. Smart Triggering: Only process relevant campaigns when conditions are met
     4. Resource Cleanup: Proper timer management and cleanup
     5. PAGE-AWARE TIMERS: Only start timers for campaigns matching current page
+    6. CONDITION-SPECIFIC UPDATES: Only update actual values for configured condition types
     
     📊 PERFORMANCE IMPROVEMENTS:
     - 🔥 CPU Usage: Reduced from continuous polling to event-based triggers
@@ -277,11 +278,24 @@ class ProactiveWebCampaignPlugin {
     - 🎯 Precision: Exact timing for timeSpent conditions (no 1-second intervals)
     - 🚀 Scalability: Performance doesn't degrade with more campaigns
     - 🌐 Page Accuracy: Timers only run for campaigns relevant to current page
+    - 🎪 Data Accuracy: Actual values only collected for configured conditions
     
-    🔧 FIX APPLIED: timeSpent Timer Issue
+    🔧 FIXES APPLIED:
+    
+    1. timeSpent Timer Issue:
     - ISSUE: Timers were being set for ALL campaigns regardless of URL matching
     - SOLUTION: Only set timers for campaigns that match current page URL/title
     - RESULT: timeSpent values only update when user is on matching pages
+    
+    2. Unnecessary Data Collection Issue:
+    - ISSUE: All campaigns collecting pageVisitCount, user, country, city regardless of configuration
+    - SOLUTION: Added campaignHasConditionType() helper to check condition configuration
+    - RESULT: Only collects actual data for condition types that are configured
+    
+    3. Website Configuration Check Issue:
+    - ISSUE: Multiple campaigns with different URL configs getting updated simultaneously
+    - SOLUTION: Enhanced filtering and validation at multiple levels
+    - RESULT: Each campaign only processes when its specific website config matches
     ==================================================================================
     */
 
@@ -324,13 +338,26 @@ class ProactiveWebCampaignPlugin {
                     if (group.conditions) {
                         group.conditions.forEach((condition: any) => {
                             if (condition.column === 'timeSpent') {
-                                console.log(`⏱️ Creating timer for campaign ${campInstanceId}, timeSpent: ${condition.value}s`);
-                                this.createTimeSpentTimer(
-                                    campInstanceId,
-                                    group.id,
-                                    condition.id,
-                                    condition.value * 1000 // Convert to milliseconds
-                                );
+                                console.log(`⏱️ Processing timeSpent condition for campaign ${campInstanceId}:`, {
+                                    value: condition.value,
+                                    isNot: condition.isNot,
+                                    operator: condition.operator
+                                });
+                                
+                                if (condition.isNot === true) {
+                                    // For isNot: true, we need immediate evaluation
+                                    console.log(`🔄 *** isNot=true timeSpent condition detected - handling immediately ***`);
+                                    this.handleIsNotTimeSpentCondition(campInstanceId, group.id, condition.id, condition.value);
+                                } else {
+                                    // Regular timer behavior for non-negated conditions
+                                    console.log(`⏱️ Creating timer for campaign ${campInstanceId}, timeSpent: ${condition.value}s`);
+                                    this.createTimeSpentTimer(
+                                        campInstanceId,
+                                        group.id,
+                                        condition.id,
+                                        condition.value * 1000 // Convert to milliseconds
+                                    );
+                                }
                             }
                         });
                     }
@@ -342,7 +369,45 @@ class ProactiveWebCampaignPlugin {
     }
 
     /**
+     * Handles isNot: true timeSpent conditions by immediately updating actual value and evaluating
+     * @param campInstanceId - Campaign instance ID
+     * @param groupId - Group ID containing the condition
+     * @param conditionId - Condition ID
+     * @param thresholdSeconds - Threshold value in seconds
+     */
+    handleIsNotTimeSpentCondition(campInstanceId: string, groupId: string, conditionId: string, thresholdSeconds: number): void {
+        console.log(`🔄 *** Handling isNot=true timeSpent condition for campaign ${campInstanceId} ***`);
+        console.log(`🔄 Group: ${groupId}, Condition: ${conditionId}, Threshold: ${thresholdSeconds}s`);
+        
+        // Get current time spent (initially 0)
+        const currentTimeSpent = this.timeSpent[campInstanceId] || 0;
+        
+        console.log(`🔄 Current time spent: ${currentTimeSpent}s`);
+        console.log(`🔄 Since isNot=true, condition is satisfied when timeSpent < ${thresholdSeconds}s`);
+        console.log(`🔄 Currently: ${currentTimeSpent} < ${thresholdSeconds} = ${currentTimeSpent < thresholdSeconds}`);
+        
+        // Immediately update actual value
+        this.updateTimeSpentActualValue(campInstanceId, currentTimeSpent);
+        
+        // Immediately evaluate the campaign
+        console.log(`🔄 *** Immediately evaluating campaign ${campInstanceId} for isNot timeSpent condition ***`);
+        this.evaluateSpecificCampaign(campInstanceId, 'timeSpent-isNot');
+        
+        // Still set up a timer for when the condition would become false
+        // This is important because if the user stays long enough, the isNot condition will no longer be satisfied
+        console.log(`🔄 Setting up timer for when isNot condition becomes false (at ${thresholdSeconds}s)`);
+        this.createTimeSpentTimer(
+            campInstanceId,
+            groupId,
+            conditionId,
+            thresholdSeconds * 1000 // Convert to milliseconds
+        );
+    }
+
+    /**
      * Creates an individual timer for a specific timeSpent condition
+     * For regular conditions: timer fires when condition becomes satisfied
+     * For isNot conditions: timer fires when condition becomes NOT satisfied
      * @param campInstanceId - Campaign instance ID
      * @param groupId - Group ID containing the condition
      * @param conditionId - Condition ID
@@ -390,19 +455,44 @@ class ProactiveWebCampaignPlugin {
     }
 
     /**
-     * Handles when a timeSpent condition is met
+     * Handles when a timeSpent condition timer fires
+     * For regular conditions: condition becomes satisfied (timeSpent >= threshold)
+     * For isNot conditions: condition becomes NOT satisfied (timeSpent >= threshold, so isNot becomes false)
      * @param campInstanceId - Campaign instance ID
      * @param groupId - Group ID
      * @param conditionId - Condition ID
      * @param timeSpentSeconds - Time spent in seconds
      */
     handleTimeSpentConditionMet(campInstanceId: string, groupId: string, conditionId: string, timeSpentSeconds: number): void {
-        console.log(`🎯 TimeSpent condition met for campaign ${campInstanceId}: ${timeSpentSeconds}s`);
+        console.log(`🎯 TimeSpent timer fired for campaign ${campInstanceId}: ${timeSpentSeconds}s`);
         console.log(`⏱️ Timer details - Group: ${groupId}, Condition: ${conditionId}`);
         
         const currentUrl = window.location.href;
         const currentPageTitle = document.title.trim();
         console.log(`🌐 Current page when timer fired:`, { currentUrl, currentPageTitle });
+        
+        // Find the specific condition to check if it's an isNot condition
+        const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
+        let isNotCondition = false;
+        
+        if (campaign?.engagementStrategy?.rules?.groups) {
+            campaign.engagementStrategy.rules.groups.forEach((group: any) => {
+                if (group.id === groupId && group.conditions) {
+                    group.conditions.forEach((condition: any) => {
+                        if (condition.id === conditionId && condition.column === 'timeSpent') {
+                            isNotCondition = condition.isNot === true;
+                        }
+                    });
+                }
+            });
+        }
+        
+        if (isNotCondition) {
+            console.log(`🔄 *** This is an isNot condition - timer firing means condition is now NOT satisfied ***`);
+            console.log(`🔄 User has spent ${timeSpentSeconds}s, so isNot condition is now false`);
+        } else {
+            console.log(`✅ This is a regular condition - timer firing means condition is now satisfied`);
+        }
         
         // Update actual values
         this.updateTimeSpentActualValue(campInstanceId, timeSpentSeconds);
@@ -534,6 +624,9 @@ class ProactiveWebCampaignPlugin {
         pageVisitArray.push(pageObj);
         window.sessionStorage.setItem('pageVisitHistory', JSON.stringify(pageVisitArray));
         
+        // Clear timeSpent for campaigns that no longer match current page
+        this.clearTimeSpentForInactiveCampaigns(currentUrl, currentPageTitle);
+        
         // Update page visit counts for relevant campaigns
         this.updatePageVisitCounts();
         
@@ -549,7 +642,59 @@ class ProactiveWebCampaignPlugin {
     }
 
     /**
-     * Updates page visit counts for all relevant campaigns
+     * Clears timeSpent actual values for campaigns that no longer match current page
+     * @param currentUrl - Current page URL
+     * @param currentPageTitle - Current page title
+     */
+    clearTimeSpentForInactiveCampaigns(currentUrl: string, currentPageTitle: string): void {
+        console.log('🧹 Clearing timeSpent for inactive campaigns');
+        
+        if (!this.campInfo || this.campInfo.length === 0) {
+            console.log('⚠️ No campaigns to check for timeSpent clearing');
+            return;
+        }
+
+        // Get currently active campaigns
+        const activeCampaigns = this.getActiveCampaigns(currentUrl, currentPageTitle);
+        const activeCampaignIds = activeCampaigns.map(camp => camp.campInstanceId);
+        
+        console.log(`🔍 Active campaigns for current page: [${activeCampaignIds.join(', ')}]`);
+        
+        // Check all campaigns and clear timeSpent for inactive ones
+        this.campInfo.forEach((campaign: any) => {
+            const campInstanceId = campaign.campInstanceId;
+            const isActive = activeCampaignIds.includes(campInstanceId);
+            
+            if (!isActive && this.campaignHasConditionType(campaign, 'timeSpent')) {
+                console.log(`🧹 Campaign ${campInstanceId} no longer active - clearing timeSpent`);
+                
+                // Clear instance variable
+                this.timeSpent[campInstanceId] = 0;
+                
+                // Clear actual value in sessionStorage
+                let pweData: any = window.sessionStorage.getItem('pwe_data');
+                pweData = JSON.parse(pweData) || {};
+                
+                if (pweData[campInstanceId] && pweData[campInstanceId].actual.rules.timeSpent !== undefined) {
+                    const previousValue = pweData[campInstanceId].actual.rules.timeSpent;
+                    console.log(`🧹 Clearing timeSpent actual value for ${campInstanceId}: ${previousValue} → 0`);
+                    pweData[campInstanceId].actual.rules.timeSpent = 0;
+                    window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
+                    
+                    // Note: This clearing applies to both regular and isNot conditions
+                    // For isNot conditions, clearing to 0 means the condition would be satisfied again if the campaign becomes active
+                    console.log(`🧹 This clearing works for both regular and isNot timeSpent conditions`);
+                }
+            } else if (isActive && this.campaignHasConditionType(campaign, 'timeSpent')) {
+                console.log(`✅ Campaign ${campInstanceId} still active - keeping timeSpent value`);
+            }
+        });
+        
+        console.log('✅ TimeSpent clearing complete');
+    }
+
+    /**
+     * Updates page visit counts for campaigns that have pageVisitCount conditions
      * NOTE: This method only updates the counts, evaluation happens in sendEventNew()
      */
     updatePageVisitCounts(): void {
@@ -561,7 +706,19 @@ class ProactiveWebCampaignPlugin {
         // Get campaigns that match current page
         const activeCampaigns = this.getActiveCampaigns(currentUrl, currentPageTitle);
         
-        activeCampaigns.forEach(campaign => {
+        // Filter campaigns that actually have pageVisitCount conditions
+        const campaignsWithPageVisitCount = activeCampaigns.filter(campaign => 
+            this.campaignHasConditionType(campaign, 'pageVisitCount')
+        );
+        
+        if (campaignsWithPageVisitCount.length === 0) {
+            console.log('⚠️ No active campaigns have pageVisitCount conditions - skipping count updates');
+            return;
+        }
+        
+        console.log(`📊 Found ${campaignsWithPageVisitCount.length} campaigns with pageVisitCount conditions`);
+        
+        campaignsWithPageVisitCount.forEach(campaign => {
             const campInstanceId = campaign.campInstanceId;
             
             let pweData: any = window.sessionStorage.getItem('pwe_data');
@@ -1263,16 +1420,175 @@ class ProactiveWebCampaignPlugin {
     groupConditionsByColumn(conditions: any[]): any {
         const grouped: any = {};
         
-        conditions.forEach((condition: any) => {
+        console.log('📊 Input conditions to groupConditionsByColumn:', conditions);
+        
+        conditions.forEach((condition: any, index: number) => {
             const column = condition.column;
+            
+            // Enhanced debugging for isNot flag
+            console.log(`📊 Processing condition ${index + 1}:`, {
+                column,
+                operator: condition.operator,
+                value: condition.value,
+                isNot: condition.isNot,
+                fullCondition: condition
+            });
+            
             if (!grouped[column]) {
                 grouped[column] = [];
             }
-            grouped[column].push(condition);
+            
+            // Ensure isNot flag is preserved
+            grouped[column].push({
+                ...condition,
+                isNot: condition.isNot // Explicitly preserve isNot flag
+            });
+            
+            // Log isNot flag preservation
+            if (condition.isNot !== undefined) {
+                console.log(`📊 *** isNot flag preserved for ${column} condition: ${condition.isNot} ***`);
+            }
         });
 
-        console.log('📊 Conditions grouped by column:', grouped);
+        console.log('📊 Final grouped conditions:', grouped);
+        
+        // Additional debugging: Check if isNot flags are preserved
+        Object.keys(grouped).forEach(column => {
+            grouped[column].forEach((condition: any, index: number) => {
+                if (condition.isNot !== undefined) {
+                    console.log(`📊 *** Final verification - ${column} condition ${index + 1} isNot: ${condition.isNot} ***`);
+                }
+            });
+        });
+        
         return grouped;
+    }
+
+    /**
+     * Checks if a campaign has a specific condition type configured
+     * @param campaign - Campaign object
+     * @param conditionType - Type of condition to check for (e.g., 'pageVisitCount', 'timeSpent', 'user', etc.)
+     * @returns Boolean indicating if campaign has the condition type
+     */
+    campaignHasConditionType(campaign: any, conditionType: string): boolean {
+        if (!campaign.engagementStrategy?.rules?.groups) {
+            return false;
+        }
+
+        for (const group of campaign.engagementStrategy.rules.groups) {
+            if (group.conditions) {
+                for (const condition of group.conditions) {
+                    if (condition.column === conditionType) {
+                        console.log(`✅ Campaign ${campaign.campInstanceId} has ${conditionType} condition`);
+                        return true;
+                    }
+                }
+            }
+        }
+
+        console.log(`❌ Campaign ${campaign.campInstanceId} does NOT have ${conditionType} condition`);
+        return false;
+    }
+
+    /**
+     * Gets all condition types configured for a campaign (for debugging)
+     * @param campaign - Campaign object
+     * @returns Array of condition types
+     */
+    getCampaignConditionTypes(campaign: any): string[] {
+        const conditionTypes: string[] = [];
+        
+        if (!campaign.engagementStrategy?.rules?.groups) {
+            return conditionTypes;
+        }
+
+        for (const group of campaign.engagementStrategy.rules.groups) {
+            if (group.conditions) {
+                for (const condition of group.conditions) {
+                    if (!conditionTypes.includes(condition.column)) {
+                        conditionTypes.push(condition.column);
+                    }
+                }
+            }
+        }
+
+        console.log(`📋 Campaign ${campaign.campInstanceId} condition types:`, conditionTypes);
+        return conditionTypes;
+    }
+
+    /**
+     * Analyzes campaign configuration for potential issues (for debugging)
+     * @param campInstanceId - Campaign instance ID
+     */
+    analyzeCampaignConfiguration(campInstanceId: string): void {
+        console.log(`\n🔍 =================== CAMPAIGN CONFIGURATION ANALYSIS ===================`);
+        console.log(`🔍 Campaign ID: ${campInstanceId}`);
+        
+        const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
+        if (!campaign) {
+            console.log('⚠️ Campaign not found');
+            return;
+        }
+
+        let pweData: any = window.sessionStorage.getItem('pwe_data');
+        pweData = JSON.parse(pweData) || {};
+        const campaignData = pweData[campInstanceId];
+        
+        if (!campaignData) {
+            console.log('⚠️ Campaign data not found in session storage');
+            return;
+        }
+
+        console.log('🔍 Campaign rules structure:');
+        console.log(`   - Group type: ${campaignData.expected.rules.groupType}`);
+        console.log(`   - Number of groups: ${campaignData.expected.rules.groups?.length || 0}`);
+        
+        const issues: string[] = [];
+        
+        if (campaignData.expected.rules.groups) {
+            campaignData.expected.rules.groups.forEach((group: any, groupIndex: number) => {
+                console.log(`\n🔍 Group ${groupIndex + 1} (${group.id}):`);
+                console.log(`   - Type: ${group.conditions.type}`);
+                
+                // Analyze conditions in this group
+                Object.keys(group.conditions).forEach(column => {
+                    if (column === 'type' || column === 'isSatisfied') return;
+                    
+                    const conditions = group.conditions[column];
+                    if (Array.isArray(conditions)) {
+                        conditions.forEach((condition: any, condIndex: number) => {
+                            console.log(`   - Condition ${condIndex + 1} (${column}):`);
+                            console.log(`     * Operator: ${condition.operator}`);
+                            console.log(`     * Expected value: ${condition.value} (${typeof condition.value})`);
+                            console.log(`     * isNot: ${condition.isNot}`);
+                            
+                            const actualValue = campaignData.actual.rules[column];
+                            console.log(`     * Actual value: ${actualValue} (${typeof actualValue})`);
+                            
+                            // Check for potential issues
+                            if (condition.isNot) {
+                                issues.push(`${column} condition has isNot=true - ensure this is intentional`);
+                            }
+                            
+                            if (typeof condition.value !== typeof actualValue && actualValue !== undefined) {
+                                issues.push(`${column} type mismatch: expected ${typeof condition.value}, actual ${typeof actualValue}`);
+                            }
+                        });
+                    }
+                });
+            });
+        }
+        
+        if (issues.length > 0) {
+            console.log('\n⚠️ Potential configuration issues found:');
+            issues.forEach((issue, index) => {
+                console.log(`   ${index + 1}. ${issue}`);
+            });
+        } else {
+            console.log('\n✅ No obvious configuration issues found');
+        }
+        
+        console.log(`🔍 =================== CAMPAIGN CONFIGURATION ANALYSIS END ===================\n`);
     }
 
     /**
@@ -1382,10 +1698,16 @@ class ProactiveWebCampaignPlugin {
      */
     evaluateActiveCampaigns(activeCampaigns: any[], currentUrl: string, currentPageTitle: string, eventType: string): void {
         console.log('🔄 Evaluating active campaigns:', activeCampaigns.length);
+        console.log('🌐 Current page:', { currentUrl, currentPageTitle });
+        console.log('🎯 Event type:', eventType);
         
         activeCampaigns.forEach(campaign => {
             const campInstanceId = campaign.campInstanceId;
-            console.log(`📊 Evaluating campaign: ${campInstanceId}`);
+            console.log(`\n📊 === Evaluating Campaign: ${campInstanceId} ===`);
+            
+            // Show campaign's condition types for debugging
+            const conditionTypes = this.getCampaignConditionTypes(campaign);
+            console.log(`🎯 Campaign website config:`, campaign.engagementStrategy?.website);
             
             // Update actual values based on current state
             this.updateActualValues(campInstanceId, currentUrl, currentPageTitle, eventType);
@@ -1398,11 +1720,14 @@ class ProactiveWebCampaignPlugin {
             
             // Check if campaign should be triggered
             this.checkCampaignTrigger(campInstanceId, campaign.campId);
+            
+            console.log(`📊 === End Campaign ${campInstanceId} Evaluation ===\n`);
         });
     }
 
     /**
      * Updates actual values in pwe_data based on current user behavior
+     * ONLY updates values for condition types that are configured in the campaign
      * @param campInstanceId - Campaign instance ID
      * @param currentUrl - Current page URL
      * @param currentPageTitle - Current page title
@@ -1421,19 +1746,40 @@ class ProactiveWebCampaignPlugin {
 
         const campaignData = pweData[campInstanceId];
         
-        // Update based on event type
+        // Find the campaign to check its conditions
+        const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
+        if (!campaign) {
+            console.log(`⚠️ Campaign not found for actual values update: ${campInstanceId}`);
+            return;
+        }
+        
+        // Update based on event type and campaign configuration
         switch (eventType) {
             case 'pageChange':
                 // pageVisitCount is already updated by updatePageVisitCounts() in handlePageChange()
-                // So we only need to update general rules (user, country, city)
+                // So we only need to update general rules (user, country, city) if configured
                 console.log(`🔄 PageChange event: updating general rules only (pageVisitCount already updated)`);
                 this.updateGeneralRules(campaignData, campInstanceId);
                 break;
             case 'timeSpent':
-                this.updateTimeSpent(campaignData, campInstanceId);
+                // timeSpent is already updated by timer callback, just call updateTimeSpent for consistency
+                if (this.campaignHasConditionType(campaign, 'timeSpent')) {
+                    this.updateTimeSpent(campaignData, campInstanceId);
+                } else {
+                    console.log(`⚠️ Campaign ${campInstanceId} doesn't have timeSpent condition - skipping update`);
+                }
                 break;
             case 'hoverOn':
-                this.updateHoverEvent(campaignData);
+                if (this.campaignHasConditionType(campaign, 'hoverOn')) {
+                    this.updateHoverEvent(campaignData);
+                } else {
+                    console.log(`⚠️ Campaign ${campInstanceId} doesn't have hoverOn condition - skipping update`);
+                }
+                break;
+            case 'titleChange':
+                // For title changes, only update general rules if needed
+                console.log(`🔄 TitleChange event: checking if general rules need updates`);
+                this.updateGeneralRules(campaignData, campInstanceId);
                 break;
             default:
                 console.log(`🔄 Processing general event: ${eventType}`);
@@ -1445,7 +1791,7 @@ class ProactiveWebCampaignPlugin {
         pweData[campInstanceId] = campaignData;
         window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
         
-        console.log(`✅ Updated actual values for ${campInstanceId}`);
+        console.log(`✅ Updated actual values for ${campInstanceId} based on configured conditions`);
     }
 
     /**
@@ -1484,22 +1830,39 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Updates general rules like user type, country, city
+     * ONLY updates values for condition types that are configured in the campaign
      * @param campaignData - Campaign data object
      * @param campInstanceId - Campaign instance ID
      */
     updateGeneralRules(campaignData: any, campInstanceId: string): void {
-        // Update user type
-        if (!campaignData.actual.rules.user) {
-            campaignData.actual.rules.user = this.hostInstance.config.pwcConfig.knownUser ? 'known' : 'anonymous';
-            console.log(`👤 User type updated: ${campaignData.actual.rules.user}`);
+        // Find the campaign to check its conditions
+        const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
+        if (!campaign) {
+            console.log(`⚠️ Campaign not found for general rules update: ${campInstanceId}`);
+            return;
         }
 
-        // Update country/city if available
-        if (this.cityCountryData[campInstanceId]) {
-            campaignData.actual.rules.country = this.cityCountryData[campInstanceId].countryMatched;
-            campaignData.actual.rules.city = this.cityCountryData[campInstanceId].cityMatched;
-            console.log(`🌍 Location updated - Country: ${campaignData.actual.rules.country}, City: ${campaignData.actual.rules.city}`);
+        console.log(`🔍 Checking which general rules to update for campaign: ${campInstanceId}`);
+
+        // Update user type ONLY if campaign has user condition
+        if (this.campaignHasConditionType(campaign, 'user') && !campaignData.actual.rules.user) {
+            campaignData.actual.rules.user = this.hostInstance.config.pwcConfig.knownUser ? 'known' : 'anonymous';
+            console.log(`👤 User type updated for campaign with user condition: ${campaignData.actual.rules.user}`);
         }
+
+        // Update country ONLY if campaign has country condition
+        if (this.campaignHasConditionType(campaign, 'country') && this.cityCountryData[campInstanceId]) {
+            campaignData.actual.rules.country = this.cityCountryData[campInstanceId].countryMatched;
+            console.log(`🌍 Country updated for campaign with country condition: ${campaignData.actual.rules.country}`);
+        }
+
+        // Update city ONLY if campaign has city condition
+        if (this.campaignHasConditionType(campaign, 'city') && this.cityCountryData[campInstanceId]) {
+            campaignData.actual.rules.city = this.cityCountryData[campInstanceId].cityMatched;
+            console.log(`🏙️ City updated for campaign with city condition: ${campaignData.actual.rules.city}`);
+        }
+
+        console.log(`✅ General rules update complete for ${campInstanceId}`);
     }
 
     /**
@@ -1521,6 +1884,9 @@ class ProactiveWebCampaignPlugin {
             console.log('⚠️ No rules to evaluate');
             return;
         }
+
+        // Analyze campaign configuration first
+        this.analyzeCampaignConfiguration(campInstanceId);
 
         // Evaluate each group
         rules.groups.forEach((group: any) => {
@@ -1594,13 +1960,17 @@ class ProactiveWebCampaignPlugin {
      * @returns Boolean indicating if group conditions are satisfied
      */
     evaluateGroupConditions(groupConditions: any, actualValues: any): boolean {
-        console.log('🔍 Evaluating group conditions:', groupConditions);
+        console.log('\n🔍 =================== GROUP EVALUATION START ===================');
+        console.log('🔍 Group conditions structure:', JSON.stringify(groupConditions, null, 2));
         console.log('🔍 Actual values available:', actualValues);
         
         const conditionResults: boolean[] = [];
         const groupType = groupConditions.type || 'AND';
         let totalExpectedConditions = 0;
         let evaluatedConditions = 0;
+        const conditionDetails: any[] = [];
+        
+        console.log(`🎯 Group type: ${groupType}`);
         
         // Check each condition type
         Object.keys(groupConditions).forEach(column => {
@@ -1609,47 +1979,73 @@ class ProactiveWebCampaignPlugin {
             const conditions = groupConditions[column];
             if (!Array.isArray(conditions)) return;
             
+            console.log(`\n📋 Processing ${conditions.length} condition(s) for column: ${column}`);
+            
             totalExpectedConditions += conditions.length;
             
-            conditions.forEach((condition: any) => {
+            conditions.forEach((condition: any, index: number) => {
                 const actualValue = actualValues[column];
-                console.log(`🔍 Evaluating condition ${condition.id} (${column}):`, {
-                    expectedValue: condition.value,
-                    actualValue: actualValue,
+                console.log(`\n🔍 --- Condition ${index + 1}/${conditions.length} for ${column} ---`);
+                console.log(`🔍 Condition details:`, {
+                    id: condition.id,
                     operator: condition.operator,
+                    expectedValue: condition.value,
+                    expectedType: typeof condition.value,
                     isNot: condition.isNot,
+                    actualValue: actualValue,
+                    actualType: typeof actualValue,
                     hasActualValue: actualValue !== undefined && actualValue !== null
                 });
                 
                 // Check if we have an actual value to compare against
                 if (actualValue === undefined || actualValue === null) {
-                    console.log(`⚠️ Missing actual value for condition ${condition.id} (${column})`);
+                    console.log(`⚠️ Missing actual value for condition ${condition.id || index} (${column})`);
                     
                     // For AND logic, missing values mean condition is not satisfied
-                    // For OR logic, we continue to check other conditions
                     if (groupType === 'AND') {
                         conditionResults.push(false);
-                        console.log(`❌ Condition ${condition.id} (${column}): false (missing actual value)`);
+                        evaluatedConditions++; // Count missing as evaluated for AND
+                        conditionDetails.push({
+                            column,
+                            condition: condition.id || index,
+                            result: false,
+                            reason: 'missing actual value'
+                        });
+                        console.log(`❌ Condition ${condition.id || index} (${column}): false (missing actual value in AND group)`);
                     } else {
-                        // For OR logic, don't count missing conditions as false yet
-                        console.log(`⏸️ Condition ${condition.id} (${column}): skipped (missing actual value in OR group)`);
+                        // For OR logic, missing values are skipped
+                        conditionDetails.push({
+                            column,
+                            condition: condition.id || index,
+                            result: 'skipped',
+                            reason: 'missing actual value in OR group'
+                        });
+                        console.log(`⏸️ Condition ${condition.id || index} (${column}): skipped (missing actual value in OR group)`);
                     }
                 } else {
                     const result = this.evaluateCondition(condition, actualValue);
                     conditionResults.push(result);
                     evaluatedConditions++;
-                    console.log(`📊 Condition ${condition.id} (${column}): ${result}`);
+                    conditionDetails.push({
+                        column,
+                        condition: condition.id || index,
+                        result,
+                        actualValue,
+                        expectedValue: condition.value,
+                        operator: condition.operator,
+                        isNot: condition.isNot
+                    });
+                    console.log(`📊 Condition ${condition.id || index} (${column}): ${result ? '✅ SATISFIED' : '❌ NOT SATISFIED'}`);
                 }
             });
         });
 
-        console.log(`📊 Evaluation summary:`, {
-            groupType,
-            totalExpectedConditions,
-            evaluatedConditions,
-            conditionResults,
-            hasAllRequiredValues: evaluatedConditions === totalExpectedConditions
-        });
+        console.log(`\n📊 =================== EVALUATION SUMMARY ===================`);
+        console.log(`📊 Group type: ${groupType}`);
+        console.log(`📊 Total expected conditions: ${totalExpectedConditions}`);
+        console.log(`📊 Evaluated conditions: ${evaluatedConditions}`);
+        console.log(`📊 Condition results: [${conditionResults.join(', ')}]`);
+        console.log(`📊 Condition details:`, conditionDetails);
 
         // Apply group type logic (AND/OR)
         let satisfied = false;
@@ -1659,16 +2055,24 @@ class ProactiveWebCampaignPlugin {
             satisfied = false;
             console.log('⚠️ No conditions found to evaluate');
         } else if (groupType === 'AND') {
-            // For AND: ALL conditions must be satisfied AND we must have all required values
-            satisfied = conditionResults.every(result => result) && (evaluatedConditions === totalExpectedConditions);
-            console.log(`📏 AND Group evaluation: ${satisfied} (all conditions satisfied: ${conditionResults.every(result => result)}, all values present: ${evaluatedConditions === totalExpectedConditions})`);
+            // For AND: ALL conditions must be satisfied
+            const allConditionsSatisfied = conditionResults.every(result => result);
+            const allValuesPresent = evaluatedConditions === totalExpectedConditions;
+            satisfied = allConditionsSatisfied && allValuesPresent;
+            
+            console.log(`📏 AND Group detailed evaluation:`);
+            console.log(`   - All conditions satisfied: ${allConditionsSatisfied} (${conditionResults.filter(r => r).length}/${conditionResults.length} passed)`);
+            console.log(`   - All values present: ${allValuesPresent} (${evaluatedConditions}/${totalExpectedConditions} evaluated)`);
+            console.log(`   - Final result: ${satisfied ? '✅ SATISFIED' : '❌ NOT SATISFIED'}`);
         } else {
             // For OR: At least ONE condition must be satisfied
             satisfied = conditionResults.some(result => result);
-            console.log(`📏 OR Group evaluation: ${satisfied} (at least one condition satisfied)`);
+            console.log(`📏 OR Group detailed evaluation:`);
+            console.log(`   - At least one satisfied: ${satisfied} (${conditionResults.filter(r => r).length}/${conditionResults.length} passed)`);
+            console.log(`   - Final result: ${satisfied ? '✅ SATISFIED' : '❌ NOT SATISFIED'}`);
         }
             
-        console.log(`📏 Final group evaluation (${groupType}): ${satisfied}`);
+        console.log(`🔍 =================== GROUP EVALUATION END: ${satisfied ? '✅ SATISFIED' : '❌ NOT SATISFIED'} ===================\n`);
         return satisfied;
     }
 
@@ -1760,39 +2164,80 @@ class ProactiveWebCampaignPlugin {
         const { operator, value, isNot } = condition;
         let result = false;
         
-        console.log(`🔍 DETAILED CONDITION EVALUATION:`, {
-            condition,
-            actualValue,
-            operator,
-            expectedValue: value,
-            isNot
-        });
+        console.log(`\n🔍 =============== CONDITION EVALUATION START ===============`);
+        console.log(`🔍 Condition ID: ${condition.id || 'unknown'}`);
+        console.log(`🔍 Full condition object:`, condition);
+        console.log(`🔍 Operator: ${operator}`);
+        console.log(`🔍 Expected value: ${value} (type: ${typeof value})`);
+        console.log(`🔍 Actual value: ${actualValue} (type: ${typeof actualValue})`);
+        console.log(`🔍 isNot flag: ${isNot} (type: ${typeof isNot})`);
+        
+        // Enhanced isNot debugging
+        if (isNot !== undefined) {
+            console.log(`🔍 isNot flag is present: ${isNot}`);
+            if (isNot === true) {
+                console.log(`🔍 *** IMPORTANT: This condition has isNot=true - result will be inverted! ***`);
+            } else if (isNot === false) {
+                console.log(`🔍 isNot=false - result will NOT be inverted`);
+            } else {
+                console.log(`⚠️ isNot has unexpected value: ${isNot} (${typeof isNot})`);
+            }
+        } else {
+            console.log(`🔍 isNot flag is undefined/missing - treating as false`);
+        }
+        
+        // Type coercion warning
+        if (typeof actualValue !== typeof value) {
+            console.log(`⚠️ TYPE MISMATCH: actual (${typeof actualValue}) vs expected (${typeof value})`);
+            console.log(`⚠️ This may cause evaluation issues. Consider using consistent types.`);
+        }
         
         switch (operator) {
             case 'equals':
-                result = actualValue == value;
-                console.log(`📊 Equals evaluation: ${actualValue} == ${value} = ${result}`);
+                result = actualValue == value; // Loose comparison for type coercion
+                console.log(`📊 Equals evaluation (loose): ${actualValue} == ${value} = ${result}`);
+                if (typeof actualValue !== typeof value) {
+                    const strictResult = actualValue === value;
+                    console.log(`📊 Strict comparison would be: ${actualValue} === ${value} = ${strictResult}`);
+                }
                 break;
             case 'is':
-                result = actualValue === value;
-                console.log(`📊 Is evaluation: ${actualValue} === ${value} = ${result}`);
+                result = actualValue === value; // Strict comparison
+                console.log(`📊 Is evaluation (strict): ${actualValue} === ${value} = ${result}`);
+                if (typeof actualValue !== typeof value) {
+                    const looseResult = actualValue == value;
+                    console.log(`📊 Loose comparison would be: ${actualValue} == ${value} = ${looseResult}`);
+                }
                 break;
             case 'not':
-                result = actualValue !== value;
-                console.log(`📊 Not evaluation: ${actualValue} !== ${value} = ${result}`);
+                result = actualValue !== value; // Strict not equal
+                console.log(`📊 Not evaluation (strict): ${actualValue} !== ${value} = ${result}`);
                 break;
             default:
                 console.log(`⚠️ Unknown operator: ${operator}`);
+                console.log(`🔍 =============== CONDITION EVALUATION END: ERROR ===============\n`);
                 return false;
         }
         
-        // Apply isNot logic
-        if (isNot) {
+        // Store pre-isNot result for debugging
+        const preIsNotResult = result;
+        
+        // Apply isNot logic with enhanced debugging
+        if (isNot === true) {
             result = !result;
-            console.log(`🔄 Applied isNot logic: ${!result} → ${result}`);
+            console.log(`🔄 *** APPLIED isNot LOGIC ***`);
+            console.log(`🔄 Original evaluation result: ${preIsNotResult}`);
+            console.log(`🔄 After isNot inversion: ${result}`);
+            console.log(`🔄 Interpretation: Condition is satisfied when "${actualValue} ${operator} ${value}" is ${preIsNotResult ? 'FALSE' : 'TRUE'}`);
+            console.log(`🔄 Since isNot=true, the condition is ${result ? 'SATISFIED' : 'NOT SATISFIED'}`);
+        } else if (isNot === false) {
+            console.log(`🔄 isNot=false - no inversion applied`);
+        } else if (isNot !== undefined) {
+            console.log(`⚠️ Unexpected isNot value: ${isNot} - treating as false`);
         }
         
-        console.log(`🔍 Final condition result: ${actualValue} ${operator} ${value} (isNot: ${isNot}) = ${result}`);
+        console.log(`🔍 Final condition result: ${result ? '✅ SATISFIED' : '❌ NOT SATISFIED'}`);
+        console.log(`🔍 =============== CONDITION EVALUATION END ===============\n`);
         return result;
     }
 
@@ -1803,15 +2248,36 @@ class ProactiveWebCampaignPlugin {
      * @returns Boolean indicating if groups are satisfied
      */
     evaluateGroupsSatisfaction(groups: any[], groupType: string): boolean {
-        if (!groups || groups.length === 0) return false;
+        console.log(`\n📊 =================== GROUPS SATISFACTION EVALUATION ===================`);
+        console.log(`📊 Group type: ${groupType}`);
+        console.log(`📊 Number of groups: ${groups.length}`);
         
-        const groupResults = groups.map(group => group.conditions.isSatisfied);
+        if (!groups || groups.length === 0) {
+            console.log('⚠️ No groups to evaluate');
+            console.log(`📊 =================== GROUPS SATISFACTION RESULT: FALSE ===================\n`);
+            return false;
+        }
+        
+        const groupResults = groups.map((group, index) => {
+            const result = group.conditions.isSatisfied;
+            console.log(`📊 Group ${index + 1} (${group.id}): ${result ? '✅ SATISFIED' : '❌ NOT SATISFIED'}`);
+            return result;
+        });
+        
+        console.log(`📊 Group results: [${groupResults.join(', ')}]`);
         
         const satisfied = groupType === 'AND'
             ? groupResults.every(result => result)
             : groupResults.some(result => result);
             
-        console.log(`📊 Groups satisfaction (${groupType}): ${satisfied}`);
+        console.log(`📊 ${groupType} Logic evaluation:`);
+        if (groupType === 'AND') {
+            console.log(`   - All groups must be satisfied: ${satisfied} (${groupResults.filter(r => r).length}/${groupResults.length} satisfied)`);
+        } else {
+            console.log(`   - At least one group must be satisfied: ${satisfied} (${groupResults.filter(r => r).length}/${groupResults.length} satisfied)`);
+        }
+        
+        console.log(`📊 =================== GROUPS SATISFACTION RESULT: ${satisfied ? '✅ SATISFIED' : '❌ NOT SATISFIED'} ===================\n`);
         return satisfied;
     }
 
@@ -1842,19 +2308,35 @@ class ProactiveWebCampaignPlugin {
         // Check exclusions (if exclusions are satisfied, campaign should NOT trigger)
         const exclusionsSatisfied = campaignData.expected.exclusions.isSatisfied;
         
-        console.log(`📊 Rules satisfied: ${rulesSatisfied}, Exclusions satisfied: ${exclusionsSatisfied}`);
+        console.log(`\n🎯 =================== CAMPAIGN TRIGGER DECISION ===================`);
+        console.log(`🎯 Campaign ID: ${campInstanceId}`);
+        console.log(`🎯 Rules satisfied: ${rulesSatisfied ? '✅ YES' : '❌ NO'}`);
+        console.log(`🎯 Exclusions satisfied: ${exclusionsSatisfied ? '⚠️ YES (blocks campaign)' : '✅ NO (allows campaign)'}`);
         
         // DEBUG: Log detailed campaign data to understand why it's triggering
-        console.log('🔍 DEBUG - Campaign data:', {
+        console.log('🔍 DEBUG - Campaign data summary:', {
             campInstanceId,
             actual: campaignData.actual.rules,
-            expected: campaignData.expected.rules,
-            rulesSatisfied,
-            exclusionsSatisfied
+            expected: {
+                rules: {
+                    isSatisfied: campaignData.expected.rules.isSatisfied,
+                    groupType: campaignData.expected.rules.groupType,
+                    groupCount: campaignData.expected.rules.groups?.length || 0
+                },
+                exclusions: {
+                    isSatisfied: campaignData.expected.exclusions.isSatisfied,
+                    groupType: campaignData.expected.exclusions.groupType,
+                    groupCount: campaignData.expected.exclusions.groups?.length || 0
+                }
+            }
         });
         
-        if (rulesSatisfied && !exclusionsSatisfied) {
-            console.log('🎉 Campaign should be triggered!');
+        const shouldTrigger = rulesSatisfied && !exclusionsSatisfied;
+        console.log(`🎯 Final decision: ${shouldTrigger ? '🎉 TRIGGER CAMPAIGN' : '❌ DO NOT TRIGGER'}`);
+        
+        if (shouldTrigger) {
+            console.log('🎉 Campaign trigger conditions met!');
+            console.log('🎉 Marking campaign as triggered and sending API event...');
             
             // Mark as triggered
             campaignData.isLayoutTriggered = true;
@@ -1866,12 +2348,14 @@ class ProactiveWebCampaignPlugin {
         } else {
             console.log('❌ Campaign trigger conditions not met');
             if (!rulesSatisfied) {
-                console.log('❌ Rules not satisfied - campaign will not trigger');
+                console.log('❌ Reason: Rules not satisfied - campaign will not trigger');
             }
             if (exclusionsSatisfied) {
-                console.log('❌ Exclusions satisfied - campaign blocked');
+                console.log('❌ Reason: Exclusions satisfied - campaign blocked');
             }
         }
+        
+        console.log(`🎯 =================== CAMPAIGN TRIGGER DECISION END ===================\n`);
     }
 
     /**
