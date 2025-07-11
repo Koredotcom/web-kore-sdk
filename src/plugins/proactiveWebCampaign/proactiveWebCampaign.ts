@@ -1465,6 +1465,7 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Constructs rules/exclusions structure with proper grouping and condition tracking
+     * CORRECTED: Reads 'globalType' from socket message but stores as 'groupType' internally
      * @param rulesConfig - Rules or exclusions configuration
      * @returns Structured rules object
      */
@@ -1479,10 +1480,15 @@ class ProactiveWebCampaignPlugin {
         }
 
         console.log('🔧 Constructing rules structure from config:', rulesConfig);
+        console.log('🔧 Socket message globalType:', rulesConfig.globalType);
+        
+        // CORRECTED: Read 'globalType' from socket message, store as 'groupType' internally
+        const groupType = rulesConfig.globalType || rulesConfig.groupType || 'OR';
+        console.log(`🔧 *** Mapping globalType to groupType: "${rulesConfig.globalType}" → "${groupType}" ***`);
         
         const structure = {
             isSatisfied: false,
-            groupType: rulesConfig.groupType || 'OR',
+            groupType: groupType, // Use corrected value from globalType
             groups: rulesConfig.groups.map((group: any) => {
                 console.log(`📋 Processing group ${group.id}:`, group);
                 const groupConditions = this.groupConditionsByColumn(group.conditions || []);
@@ -1498,7 +1504,8 @@ class ProactiveWebCampaignPlugin {
             })
         };
 
-        console.log('✅ Final rules structure constructed:', JSON.stringify(structure, null, 2));
+        console.log('✅ Final rules structure constructed with corrected groupType:', JSON.stringify(structure, null, 2));
+        console.log(`✅ *** Verified groupType in structure: "${structure.groupType}" ***`);
         return structure;
     }
 
