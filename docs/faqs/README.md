@@ -177,6 +177,13 @@ To increase the typing indicator time please add the following config in the kor
 chatConfig.maxTypingIndicatorTime = 20000 // time in milliseconds
 ```
 
+### How to explicitly close the conversation session
+
+To close the chat conversation session explicitly please use the following
+```js
+chatWindowInstance.closeConversationSession();
+```
+
 ## Custom Codes
 
 ### How to pass customData to bot from SDK ?
