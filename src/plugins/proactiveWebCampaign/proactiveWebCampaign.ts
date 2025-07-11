@@ -2173,6 +2173,9 @@ class ProactiveWebCampaignPlugin {
             // Run detailed analysis for debugging
             this.analyzeConditionEvaluation(group.conditions, campaignData.actual.rules);
             
+            // ENHANCED: Update individual condition satisfaction states (RULES - selective persistence)
+            this.updateIndividualConditionStates(group.conditions, campaignData.actual.rules, false);
+            
             // Evaluate group satisfaction
             group.conditions.isSatisfied = this.evaluateGroupConditions(
                 group.conditions,
@@ -2224,6 +2227,9 @@ class ProactiveWebCampaignPlugin {
         exclusions.groups.forEach((group: any, index: number) => {
             const previousGroupSatisfied = group.conditions.isSatisfied;
             
+            // ENHANCED: Update individual condition satisfaction states (EXCLUSIONS - always dynamic)
+            this.updateIndividualConditionStates(group.conditions, campaignData.actual.exclusions, true);
+            
             group.conditions.isSatisfied = this.evaluateGroupConditions(
                 group.conditions,
                 campaignData.actual.exclusions
@@ -2260,6 +2266,7 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Evaluates conditions within a group
+     * ENHANCED: Implements persistence for pageVisitCount conditions (once satisfied, stays satisfied)
      * @param groupConditions - Group conditions object
      * @param actualValues - Actual values to compare against
      * @returns Boolean indicating if group conditions are satisfied
@@ -2299,7 +2306,8 @@ class ProactiveWebCampaignPlugin {
                     isNot: condition.isNot,
                     actualValue: actualValue,
                     actualType: typeof actualValue,
-                    hasActualValue: actualValue !== undefined && actualValue !== null
+                    hasActualValue: actualValue !== undefined && actualValue !== null,
+                    previouslySatisfied: condition.isSatisfied // Track previous satisfaction state
                 });
                 
                 // Check if we have an actual value to compare against
@@ -2328,7 +2336,10 @@ class ProactiveWebCampaignPlugin {
                         console.log(`⏸️ Condition ${condition.id || index} (${column}): skipped (missing actual value in OR group)`);
                     }
                 } else {
-                    const result = this.evaluateCondition(condition, actualValue);
+                    // Use the satisfaction state that was set by updateIndividualConditionStates
+                    // This ensures proper persistence logic for rules vs exclusions
+                    const result = condition.isSatisfied || false;
+                    
                     conditionResults.push(result);
                     evaluatedConditions++;
                     conditionDetails.push({
@@ -2340,6 +2351,7 @@ class ProactiveWebCampaignPlugin {
                         operator: condition.operator,
                         isNot: condition.isNot
                     });
+                    
                     console.log(`📊 Condition ${condition.id || index} (${column}): ${result ? '✅ SATISFIED' : '❌ NOT SATISFIED'}`);
                 }
             });
@@ -2379,6 +2391,85 @@ class ProactiveWebCampaignPlugin {
             
         console.log(`🔍 =================== GROUP EVALUATION END: ${satisfied ? '✅ SATISFIED' : '❌ NOT SATISFIED'} ===================\n`);
         return satisfied;
+    }
+
+    /**
+     * Updates individual condition satisfaction states with different persistence logic for rules vs exclusions
+     * RULES: Selective persistence (pageVisitCount, country, city persist; user, timeSpent, hoverOn dynamic)
+     * EXCLUSIONS: Always dynamic re-evaluation (no persistence for any condition type)
+     * @param groupConditions - Group conditions object  
+     * @param actualValues - Actual values to compare against
+     * @param isExclusions - Whether these are exclusion conditions (determines persistence behavior)
+     */
+    updateIndividualConditionStates(groupConditions: any, actualValues: any, isExclusions: boolean = false): void {
+        console.log(`🔄 Updating individual condition satisfaction states (${isExclusions ? 'EXCLUSIONS - dynamic' : 'RULES - selective persistence'})`);
+        
+        // Check each condition type
+        Object.keys(groupConditions).forEach(column => {
+            if (column === 'type' || column === 'isSatisfied') return;
+            
+            const conditions = groupConditions[column];
+            if (!Array.isArray(conditions)) return;
+            
+            conditions.forEach((condition: any, index: number) => {
+                const actualValue = actualValues[column];
+                
+                if (actualValue !== undefined && actualValue !== null) {
+                    const currentResult = this.evaluateCondition(condition, actualValue);
+                    const previousSatisfied = condition.isSatisfied;
+                    
+                    if (isExclusions) {
+                        // EXCLUSIONS: ALWAYS DYNAMIC RE-EVALUATION (no persistence for any condition type)
+                        condition.isSatisfied = currentResult;
+                        console.log(`🔄 *** EXCLUSION ${column} condition ${condition.id || index}: ${currentResult} (dynamic) ***`);
+                        console.log(`🔄 Actual: ${actualValue}, Expected: ${condition.value}, Result: ${currentResult} (always fresh)`);
+                    } else {
+                        // RULES: SELECTIVE PERSISTENCE LOGIC
+                        if (column === 'pageVisitCount') {
+                            // pageVisitCount: PERSIST once satisfied
+                            if (previousSatisfied === true) {
+                                condition.isSatisfied = true;
+                                console.log(`🔄 *** RULES pageVisitCount condition ${condition.id || index} PERSISTED as satisfied ***`);
+                                console.log(`🔄 Actual: ${actualValue}, Expected: ${condition.value}, Previous: true, Current: true (persisted)`);
+                            } else if (currentResult === true) {
+                                condition.isSatisfied = true;
+                                console.log(`🔄 *** RULES pageVisitCount condition ${condition.id || index} newly SATISFIED ***`);
+                                console.log(`🔄 Actual: ${actualValue}, Expected: ${condition.value}, Previous: false, Current: true (new)`);
+                            } else {
+                                condition.isSatisfied = false;
+                                console.log(`🔄 RULES pageVisitCount condition ${condition.id || index} not satisfied`);
+                                console.log(`🔄 Actual: ${actualValue}, Expected: ${condition.value}, Result: false`);
+                            }
+                        } else if (column === 'country' || column === 'city') {
+                            // country, city: PERSIST once satisfied (browser session doesn't change location)
+                            if (previousSatisfied === true) {
+                                condition.isSatisfied = true;
+                                console.log(`🔄 *** RULES ${column} condition ${condition.id || index} PERSISTED as satisfied (location doesn't change) ***`);
+                                console.log(`🔄 Previous: true, Current: true (persisted)`);
+                            } else {
+                                condition.isSatisfied = currentResult;
+                                console.log(`🔄 RULES ${column} condition ${condition.id || index}: ${currentResult} ${currentResult ? '(newly satisfied, will persist)' : '(not satisfied)'}`);
+                            }
+                        } else if (column === 'user') {
+                            // user: DYNAMIC (can change from anonymous → known during session)
+                            condition.isSatisfied = currentResult;
+                            console.log(`🔄 *** RULES user condition ${condition.id || index}: ${currentResult} (dynamic - can change anonymous→known) ***`);
+                            console.log(`🔄 Actual: ${actualValue}, Expected: ${condition.value}, Result: ${currentResult} (fresh evaluation)`);
+                        } else {
+                            // timeSpent, hoverOn, etc.: NORMAL EVALUATION (no persistence)
+                            condition.isSatisfied = currentResult;
+                            console.log(`🔄 RULES ${column} condition ${condition.id || index}: ${currentResult} (normal evaluation)`);
+                        }
+                    }
+                } else {
+                    // Missing actual value
+                    condition.isSatisfied = false;
+                    console.log(`🔄 Condition ${condition.id || index} (${column}): false (missing actual value)`);
+                }
+            });
+        });
+        
+        console.log('✅ Individual condition states updated');
     }
 
     /**
