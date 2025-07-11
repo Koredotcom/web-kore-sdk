@@ -510,6 +510,8 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Updates timeSpent actual value for a campaign
+     * CORRECTED: Only populates actual.rules OR actual.exclusions based on where condition is configured
+     * CRITICAL: Triggers re-evaluation since exclusions can flip based on timeSpent changes
      * @param campInstanceId - Campaign instance ID
      * @param timeSpentSeconds - Time spent in seconds
      */
@@ -524,8 +526,26 @@ class ProactiveWebCampaignPlugin {
             return;
         }
 
-        // Update actual timeSpent value
-        pweData[campInstanceId].actual.rules.timeSpent = timeSpentSeconds;
+        // Find the campaign to check its conditions
+        const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
+        if (!campaign) {
+            console.log(`⚠️ Campaign not found for timeSpent actual value update: ${campInstanceId}`);
+            return;
+        }
+
+        const hasInRules = this.campaignHasConditionType(campaign, 'timeSpent');
+        const hasInExclusions = this.campaignHasExclusionConditionType(campaign, 'timeSpent');
+
+        // CORRECTED: Only update where condition is actually configured
+        if (hasInRules) {
+            pweData[campInstanceId].actual.rules.timeSpent = timeSpentSeconds;
+            console.log(`⏱️ TimeSpent updated in RULES: ${campInstanceId} = ${timeSpentSeconds}s`);
+        }
+        
+        if (hasInExclusions) {
+            pweData[campInstanceId].actual.exclusions.timeSpent = timeSpentSeconds;
+            console.log(`⏱️ TimeSpent updated in EXCLUSIONS: ${campInstanceId} = ${timeSpentSeconds}s`);
+        }
         
         // Also update the instance variable
         this.timeSpent[campInstanceId] = timeSpentSeconds;
@@ -533,7 +553,47 @@ class ProactiveWebCampaignPlugin {
         // Save to sessionStorage
         window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
         
-        console.log(`✅ TimeSpent updated: ${campInstanceId} = ${timeSpentSeconds}s`);
+        // CRITICAL: Re-evaluate based on what was updated
+        if (hasInExclusions) {
+            console.log(`🔄 *** Triggering exclusion re-evaluation due to timeSpent change ***`);
+            this.reevaluateExclusionsForTimeSpentChange(campInstanceId);
+        } else if (hasInRules) {
+            console.log(`🔄 *** Triggering rules re-evaluation due to timeSpent change ***`);
+            this.evaluateSpecificCampaign(campInstanceId, 'timeSpent');
+        }
+    }
+
+    /**
+     * Re-evaluates exclusions when timeSpent changes (dynamic exclusion behavior)
+     * This allows exclusions to flip from satisfied ↔ not satisfied as time progresses
+     * @param campInstanceId - Campaign instance ID
+     */
+    reevaluateExclusionsForTimeSpentChange(campInstanceId: string): void {
+        console.log(`🔄 Re-evaluating exclusions for timeSpent change: ${campInstanceId}`);
+        
+        // Re-evaluate exclusions with new timeSpent data
+        this.evaluateExclusionsForCampaign(campInstanceId);
+        
+        // Get updated exclusions status
+        let pweData: any = window.sessionStorage.getItem('pwe_data');
+        pweData = JSON.parse(pweData) || {};
+        const exclusionsSatisfied = pweData[campInstanceId]?.expected?.exclusions?.isSatisfied || false;
+        
+        if (exclusionsSatisfied) {
+            console.log(`🚫 *** TimeSpent change caused exclusions to BLOCK campaign ${campInstanceId} ***`);
+        } else {
+            console.log(`✅ *** TimeSpent change allows campaign ${campInstanceId} to proceed ***`);
+            
+            // Only evaluate rules if exclusions don't block
+            console.log(`📏 Re-evaluating rules since exclusions allow campaign`);
+            this.evaluateRulesForCampaign(campInstanceId);
+            
+            // Check trigger decision
+            const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
+            if (campaign) {
+                this.checkCampaignTrigger(campInstanceId, campaign.campId);
+            }
+        }
     }
 
     /**
@@ -695,6 +755,7 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Updates page visit counts for campaigns that have pageVisitCount conditions
+     * CORRECTED: Only populates actual.rules OR actual.exclusions based on where condition is configured
      * NOTE: This method only updates the counts, evaluation happens in sendEventNew()
      */
     updatePageVisitCounts(): void {
@@ -706,9 +767,10 @@ class ProactiveWebCampaignPlugin {
         // Get campaigns that match current page
         const activeCampaigns = this.getActiveCampaigns(currentUrl, currentPageTitle);
         
-        // Filter campaigns that actually have pageVisitCount conditions
+        // Filter campaigns that actually have pageVisitCount conditions in rules OR exclusions
         const campaignsWithPageVisitCount = activeCampaigns.filter(campaign => 
-            this.campaignHasConditionType(campaign, 'pageVisitCount')
+            this.campaignHasConditionType(campaign, 'pageVisitCount') || 
+            this.campaignHasExclusionConditionType(campaign, 'pageVisitCount')
         );
         
         if (campaignsWithPageVisitCount.length === 0) {
@@ -725,14 +787,32 @@ class ProactiveWebCampaignPlugin {
             pweData = JSON.parse(pweData) || {};
             
             if (pweData[campInstanceId]) {
-                // Update page visit count
-                if (!pweData[campInstanceId].actual.rules.pageVisitCount) {
-                    pweData[campInstanceId].actual.rules.pageVisitCount = 1;
-                } else {
-                    pweData[campInstanceId].actual.rules.pageVisitCount++;
+                const hasInRules = this.campaignHasConditionType(campaign, 'pageVisitCount');
+                const hasInExclusions = this.campaignHasExclusionConditionType(campaign, 'pageVisitCount');
+                
+                let currentCount = 0;
+                
+                // Determine current count from existing data
+                if (hasInRules && pweData[campInstanceId].actual.rules.pageVisitCount) {
+                    currentCount = pweData[campInstanceId].actual.rules.pageVisitCount;
+                } else if (hasInExclusions && pweData[campInstanceId].actual.exclusions.pageVisitCount) {
+                    currentCount = pweData[campInstanceId].actual.exclusions.pageVisitCount;
                 }
                 
-                console.log(`📊 Page visit count updated for ${campInstanceId}: ${pweData[campInstanceId].actual.rules.pageVisitCount}`);
+                // Increment count
+                currentCount = currentCount || 0;
+                currentCount++;
+                
+                // CORRECTED: Only populate where condition is actually configured
+                if (hasInRules) {
+                    pweData[campInstanceId].actual.rules.pageVisitCount = currentCount;
+                    console.log(`📊 Page visit count updated in RULES for ${campInstanceId}: ${currentCount}`);
+                }
+                
+                if (hasInExclusions) {
+                    pweData[campInstanceId].actual.exclusions.pageVisitCount = currentCount;
+                    console.log(`📊 Page visit count updated in EXCLUSIONS for ${campInstanceId}: ${currentCount}`);
+                }
                 
                 // Save updated data
                 window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
@@ -1475,10 +1555,10 @@ class ProactiveWebCampaignPlugin {
     }
 
     /**
-     * Checks if a campaign has a specific condition type configured
+     * Checks if a campaign has a specific condition type configured in RULES
      * @param campaign - Campaign object
      * @param conditionType - Type of condition to check for (e.g., 'pageVisitCount', 'timeSpent', 'user', etc.)
-     * @returns Boolean indicating if campaign has the condition type
+     * @returns Boolean indicating if campaign has the condition type in rules
      */
     campaignHasConditionType(campaign: any, conditionType: string): boolean {
         if (!campaign.engagementStrategy?.rules?.groups) {
@@ -1489,14 +1569,40 @@ class ProactiveWebCampaignPlugin {
             if (group.conditions) {
                 for (const condition of group.conditions) {
                     if (condition.column === conditionType) {
-                        console.log(`✅ Campaign ${campaign.campInstanceId} has ${conditionType} condition`);
+                        console.log(`✅ Campaign ${campaign.campInstanceId} has ${conditionType} condition in RULES`);
                         return true;
                     }
                 }
             }
         }
 
-        console.log(`❌ Campaign ${campaign.campInstanceId} does NOT have ${conditionType} condition`);
+        console.log(`❌ Campaign ${campaign.campInstanceId} does NOT have ${conditionType} condition in RULES`);
+        return false;
+    }
+
+    /**
+     * Checks if a campaign has a specific condition type configured in EXCLUSIONS
+     * @param campaign - Campaign object
+     * @param conditionType - Type of condition to check for (e.g., 'pageVisitCount', 'timeSpent', 'user', etc.)
+     * @returns Boolean indicating if campaign has the condition type in exclusions
+     */
+    campaignHasExclusionConditionType(campaign: any, conditionType: string): boolean {
+        if (!campaign.engagementStrategy?.exclusions?.groups) {
+            return false;
+        }
+
+        for (const group of campaign.engagementStrategy.exclusions.groups) {
+            if (group.conditions) {
+                for (const condition of group.conditions) {
+                    if (condition.column === conditionType) {
+                        console.log(`✅ Campaign ${campaign.campInstanceId} has ${conditionType} condition in EXCLUSIONS`);
+                        return true;
+                    }
+                }
+            }
+        }
+
+        console.log(`❌ Campaign ${campaign.campInstanceId} does NOT have ${conditionType} condition in EXCLUSIONS`);
         return false;
     }
 
@@ -1700,36 +1806,55 @@ class ProactiveWebCampaignPlugin {
     }
 
     /**
-     * Evaluates rules for active campaigns and updates actual values
+     * Evaluates active campaigns with OPTIMIZED FLOW: Exclusions First, Then Rules
+     * CRITICAL CHANGE: Check exclusions as blockers first, only evaluate rules if not blocked
      * @param activeCampaigns - Array of active campaigns
      * @param currentUrl - Current page URL
      * @param currentPageTitle - Current page title
      * @param eventType - Type of event triggering evaluation
      */
     evaluateActiveCampaigns(activeCampaigns: any[], currentUrl: string, currentPageTitle: string, eventType: string): void {
-        console.log('🔄 Evaluating active campaigns:', activeCampaigns.length);
+        console.log('🔄 Evaluating active campaigns with OPTIMIZED FLOW:', activeCampaigns.length);
         console.log('🌐 Current page:', { currentUrl, currentPageTitle });
         console.log('🎯 Event type:', eventType);
         
         activeCampaigns.forEach(campaign => {
             const campInstanceId = campaign.campInstanceId;
-            console.log(`\n📊 === Evaluating Campaign: ${campInstanceId} ===`);
+            console.log(`\n📊 === Evaluating Campaign: ${campInstanceId} (EXCLUSIONS → RULES) ===`);
             
             // Show campaign's condition types for debugging
             const conditionTypes = this.getCampaignConditionTypes(campaign);
             console.log(`🎯 Campaign website config:`, campaign.engagementStrategy?.website);
             
-            // Update actual values based on current state
+            // STEP 1: Update actual values based on current state (for both rules and exclusions)
             this.updateActualValues(campInstanceId, currentUrl, currentPageTitle, eventType);
             
-            // Evaluate rules
-            this.evaluateRulesForCampaign(campInstanceId);
-            
-            // Evaluate exclusions
+            // STEP 2: EXCLUSIONS FIRST - Check blockers before expensive rules evaluation
+            console.log(`🚫 === STEP 2: Evaluating EXCLUSIONS first (blockers) ===`);
             this.evaluateExclusionsForCampaign(campInstanceId);
             
-            // Check if campaign should be triggered
-            this.checkCampaignTrigger(campInstanceId, campaign.campId);
+            // Get current exclusions status
+            let pweData: any = window.sessionStorage.getItem('pwe_data');
+            pweData = JSON.parse(pweData) || {};
+            const exclusionsSatisfied = pweData[campInstanceId]?.expected?.exclusions?.isSatisfied || false;
+            
+            if (exclusionsSatisfied) {
+                // EXCLUSIONS BLOCK THE CAMPAIGN - Skip rules evaluation for performance
+                console.log(`🚫 *** CAMPAIGN BLOCKED BY EXCLUSIONS - Skipping rules evaluation ***`);
+                console.log(`🚫 Campaign ${campInstanceId} will NOT trigger due to exclusions`);
+                console.log(`⚡ Performance gain: Skipped expensive rules evaluation`);
+            } else {
+                // EXCLUSIONS ALLOW THE CAMPAIGN - Proceed with rules evaluation
+                console.log(`✅ *** EXCLUSIONS ALLOW CAMPAIGN - Proceeding with rules evaluation ***`);
+                
+                // STEP 3: RULES EVALUATION (only if not blocked by exclusions)
+                console.log(`📏 === STEP 3: Evaluating RULES (campaign not blocked) ===`);
+                this.evaluateRulesForCampaign(campInstanceId);
+                
+                // STEP 4: FINAL TRIGGER DECISION
+                console.log(`🎯 === STEP 4: Final trigger decision ===`);
+                this.checkCampaignTrigger(campInstanceId, campaign.campId);
+            }
             
             console.log(`📊 === End Campaign ${campInstanceId} Evaluation ===\n`);
         });
@@ -1737,6 +1862,7 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Updates actual values in pwe_data based on current user behavior
+     * CRITICAL: Updates BOTH rules AND exclusions with the same behavioral data
      * ONLY updates values for condition types that are configured in the campaign
      * @param campInstanceId - Campaign instance ID
      * @param currentUrl - Current page URL
@@ -1769,19 +1895,19 @@ class ProactiveWebCampaignPlugin {
                 // pageVisitCount is already updated by updatePageVisitCounts() in handlePageChange()
                 // So we only need to update general rules (user, country, city) if configured
                 console.log(`🔄 PageChange event: updating general rules only (pageVisitCount already updated)`);
-                this.updateGeneralRules(campaignData, campInstanceId);
+                this.updateGeneralData(campaignData, campInstanceId);
                 break;
             case 'timeSpent':
                 // timeSpent is already updated by timer callback, just call updateTimeSpent for consistency
                 if (this.campaignHasConditionType(campaign, 'timeSpent')) {
-                    this.updateTimeSpent(campaignData, campInstanceId);
+                    this.updateTimeSpentData(campaignData, campInstanceId);
                 } else {
                     console.log(`⚠️ Campaign ${campInstanceId} doesn't have timeSpent condition - skipping update`);
                 }
                 break;
             case 'hoverOn':
-                if (this.campaignHasConditionType(campaign, 'hoverOn')) {
-                    this.updateHoverEvent(campaignData);
+                if (this.campaignHasConditionType(campaign, 'hoverOn') || this.campaignHasExclusionConditionType(campaign, 'hoverOn')) {
+                    this.updateHoverData(campaignData, campInstanceId);
                 } else {
                     console.log(`⚠️ Campaign ${campInstanceId} doesn't have hoverOn condition - skipping update`);
                 }
@@ -1789,11 +1915,11 @@ class ProactiveWebCampaignPlugin {
             case 'titleChange':
                 // For title changes, only update general rules if needed
                 console.log(`🔄 TitleChange event: checking if general rules need updates`);
-                this.updateGeneralRules(campaignData, campInstanceId);
+                this.updateGeneralData(campaignData, campInstanceId);
                 break;
             default:
                 console.log(`🔄 Processing general event: ${eventType}`);
-                this.updateGeneralRules(campaignData, campInstanceId);
+                this.updateGeneralData(campaignData, campInstanceId);
                 break;
         }
 
@@ -1805,74 +1931,209 @@ class ProactiveWebCampaignPlugin {
     }
 
     /**
-     * Updates page visit count in actual data
+     * Updates page visit count data
+     * CORRECTED: Only populates actual.rules OR actual.exclusions based on where condition is configured
      * @param campaignData - Campaign data object
+     * @param campInstanceId - Campaign instance ID (optional for backward compatibility)
      */
-    updatePageVisitCount(campaignData: any): void {
-        if (!campaignData.actual.rules.pageVisitCount) {
-            campaignData.actual.rules.pageVisitCount = 1;
+    updatePageVisitCount(campaignData: any, campInstanceId?: string): void {
+        if (campInstanceId) {
+            const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
+            if (!campaign) {
+                console.log(`⚠️ Campaign not found for page visit count update: ${campInstanceId}`);
+                return;
+            }
+
+            const hasInRules = this.campaignHasConditionType(campaign, 'pageVisitCount');
+            const hasInExclusions = this.campaignHasExclusionConditionType(campaign, 'pageVisitCount');
+            
+            let currentCount = 0;
+            
+            // Get current count
+            if (hasInRules && campaignData.actual.rules.pageVisitCount) {
+                currentCount = campaignData.actual.rules.pageVisitCount;
+            } else if (hasInExclusions && campaignData.actual.exclusions.pageVisitCount) {
+                currentCount = campaignData.actual.exclusions.pageVisitCount;
+            }
+            
+            currentCount = currentCount || 0;
+            currentCount++;
+            
+            if (hasInRules) {
+                campaignData.actual.rules.pageVisitCount = currentCount;
+                console.log(`📊 Page visit count updated in RULES: ${currentCount}`);
+            }
+            
+            if (hasInExclusions) {
+                campaignData.actual.exclusions.pageVisitCount = currentCount;
+                console.log(`📊 Page visit count updated in EXCLUSIONS: ${currentCount}`);
+            }
         } else {
-            campaignData.actual.rules.pageVisitCount++;
+            // Legacy mode for backward compatibility
+            if (!campaignData.actual.rules.pageVisitCount) {
+                campaignData.actual.rules.pageVisitCount = 1;
+            } else {
+                campaignData.actual.rules.pageVisitCount++;
+            }
+            
+            campaignData.actual.exclusions.pageVisitCount = campaignData.actual.rules.pageVisitCount;
+            console.log(`📊 Page visit count updated (legacy mode - both rules & exclusions): ${campaignData.actual.rules.pageVisitCount}`);
         }
-        console.log(`📊 Page visit count updated: ${campaignData.actual.rules.pageVisitCount}`);
     }
 
     /**
-     * Updates time spent in actual data
+     * Updates time spent data
+     * CORRECTED: Only populates actual.rules OR actual.exclusions based on where condition is configured
+     * @param campaignData - Campaign data object
+     * @param campInstanceId - Campaign instance ID
+     */
+    updateTimeSpentData(campaignData: any, campInstanceId: string): void {
+        if (this.timeSpent[campInstanceId]) {
+            const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
+            if (!campaign) {
+                console.log(`⚠️ Campaign not found for timeSpent data update: ${campInstanceId}`);
+                return;
+            }
+
+            const hasInRules = this.campaignHasConditionType(campaign, 'timeSpent');
+            const hasInExclusions = this.campaignHasExclusionConditionType(campaign, 'timeSpent');
+            
+            if (hasInRules) {
+                campaignData.actual.rules.timeSpent = this.timeSpent[campInstanceId];
+                console.log(`⏱️ Time spent updated in RULES: ${this.timeSpent[campInstanceId]} seconds`);
+            }
+            
+            if (hasInExclusions) {
+                campaignData.actual.exclusions.timeSpent = this.timeSpent[campInstanceId];
+                console.log(`⏱️ Time spent updated in EXCLUSIONS: ${this.timeSpent[campInstanceId]} seconds`);
+            }
+        }
+    }
+
+    /**
+     * Updates hover event data
+     * CORRECTED: Only populates actual.rules OR actual.exclusions based on where condition is configured
+     * @param campaignData - Campaign data object
+     */
+    updateHoverData(campaignData: any, campInstanceId?: string): void {
+        if (campInstanceId) {
+            const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
+            if (!campaign) {
+                console.log(`⚠️ Campaign not found for hover data update: ${campInstanceId}`);
+                return;
+            }
+
+            const hasInRules = this.campaignHasConditionType(campaign, 'hoverOn');
+            const hasInExclusions = this.campaignHasExclusionConditionType(campaign, 'hoverOn');
+            
+            if (hasInRules) {
+                campaignData.actual.rules.hoverOn = true;
+                console.log('🖱️ Hover event recorded in RULES');
+            }
+            
+            if (hasInExclusions) {
+                campaignData.actual.exclusions.hoverOn = true;
+                console.log('🖱️ Hover event recorded in EXCLUSIONS');
+            }
+        } else {
+            // Fallback for backward compatibility - update both if campInstanceId not provided
+            campaignData.actual.rules.hoverOn = true;
+            campaignData.actual.exclusions.hoverOn = true;
+            console.log('🖱️ Hover event recorded (both rules & exclusions - legacy mode)');
+        }
+    }
+
+    /**
+     * Updates general data like user type, country, city
+     * CORRECTED: Only populates actual.rules OR actual.exclusions based on where condition is configured
+     * @param campaignData - Campaign data object
+     * @param campInstanceId - Campaign instance ID
+     */
+    updateGeneralData(campaignData: any, campInstanceId: string): void {
+        // Find the campaign to check its conditions
+        const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
+        if (!campaign) {
+            console.log(`⚠️ Campaign not found for general data update: ${campInstanceId}`);
+            return;
+        }
+
+        console.log(`🔍 Checking which general data to update for campaign: ${campInstanceId}`);
+
+        // Update user type - check rules and exclusions separately
+        const hasUserInRules = this.campaignHasConditionType(campaign, 'user');
+        const hasUserInExclusions = this.campaignHasExclusionConditionType(campaign, 'user');
+        
+        if ((hasUserInRules || hasUserInExclusions) && !campaignData.actual.rules.user && !campaignData.actual.exclusions.user) {
+            const userType = this.hostInstance.config.pwcConfig.knownUser ? 'known' : 'anonymous';
+            
+            if (hasUserInRules) {
+                campaignData.actual.rules.user = userType;
+                console.log(`👤 User type updated in RULES: ${userType}`);
+            }
+            
+            if (hasUserInExclusions) {
+                campaignData.actual.exclusions.user = userType;
+                console.log(`👤 User type updated in EXCLUSIONS: ${userType}`);
+            }
+        }
+
+        // Update country - check rules and exclusions separately
+        const hasCountryInRules = this.campaignHasConditionType(campaign, 'country');
+        const hasCountryInExclusions = this.campaignHasExclusionConditionType(campaign, 'country');
+        
+        if ((hasCountryInRules || hasCountryInExclusions) && this.cityCountryData[campInstanceId]) {
+            const countryData = this.cityCountryData[campInstanceId].countryMatched;
+            
+            if (hasCountryInRules) {
+                campaignData.actual.rules.country = countryData;
+                console.log(`🌍 Country updated in RULES: ${countryData}`);
+            }
+            
+            if (hasCountryInExclusions) {
+                campaignData.actual.exclusions.country = countryData;
+                console.log(`🌍 Country updated in EXCLUSIONS: ${countryData}`);
+            }
+        }
+
+        // Update city - check rules and exclusions separately
+        const hasCityInRules = this.campaignHasConditionType(campaign, 'city');
+        const hasCityInExclusions = this.campaignHasExclusionConditionType(campaign, 'city');
+        
+        if ((hasCityInRules || hasCityInExclusions) && this.cityCountryData[campInstanceId]) {
+            const cityData = this.cityCountryData[campInstanceId].cityMatched;
+            
+            if (hasCityInRules) {
+                campaignData.actual.rules.city = cityData;
+                console.log(`🏙️ City updated in RULES: ${cityData}`);
+            }
+            
+            if (hasCityInExclusions) {
+                campaignData.actual.exclusions.city = cityData;
+                console.log(`🏙️ City updated in EXCLUSIONS: ${cityData}`);
+            }
+        }
+
+        console.log(`✅ General data update complete for ${campInstanceId}`);
+    }
+
+    /**
+     * LEGACY METHOD: Updates time spent in actual data (kept for backward compatibility)
      * @param campaignData - Campaign data object
      * @param campInstanceId - Campaign instance ID
      */
     updateTimeSpent(campaignData: any, campInstanceId: string): void {
-        if (this.timeSpent[campInstanceId]) {
-            campaignData.actual.rules.timeSpent = this.timeSpent[campInstanceId];
-            console.log(`⏱️ Time spent updated: ${this.timeSpent[campInstanceId]} seconds`);
-        }
+        // Delegate to new method that handles both rules and exclusions
+        this.updateTimeSpentData(campaignData, campInstanceId);
     }
 
     /**
-     * Updates hover event in actual data
-     * @param campaignData - Campaign data object
-     */
-    updateHoverEvent(campaignData: any): void {
-        campaignData.actual.rules.hoverOn = true;
-        console.log('🖱️ Hover event recorded');
-    }
-
-    /**
-     * Updates general rules like user type, country, city
-     * ONLY updates values for condition types that are configured in the campaign
+     * LEGACY METHOD: Updates general rules (kept for backward compatibility)
      * @param campaignData - Campaign data object
      * @param campInstanceId - Campaign instance ID
      */
     updateGeneralRules(campaignData: any, campInstanceId: string): void {
-        // Find the campaign to check its conditions
-        const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
-        if (!campaign) {
-            console.log(`⚠️ Campaign not found for general rules update: ${campInstanceId}`);
-            return;
-        }
-
-        console.log(`🔍 Checking which general rules to update for campaign: ${campInstanceId}`);
-
-        // Update user type ONLY if campaign has user condition
-        if (this.campaignHasConditionType(campaign, 'user') && !campaignData.actual.rules.user) {
-            campaignData.actual.rules.user = this.hostInstance.config.pwcConfig.knownUser ? 'known' : 'anonymous';
-            console.log(`👤 User type updated for campaign with user condition: ${campaignData.actual.rules.user}`);
-        }
-
-        // Update country ONLY if campaign has country condition
-        if (this.campaignHasConditionType(campaign, 'country') && this.cityCountryData[campInstanceId]) {
-            campaignData.actual.rules.country = this.cityCountryData[campInstanceId].countryMatched;
-            console.log(`🌍 Country updated for campaign with country condition: ${campaignData.actual.rules.country}`);
-        }
-
-        // Update city ONLY if campaign has city condition
-        if (this.campaignHasConditionType(campaign, 'city') && this.cityCountryData[campInstanceId]) {
-            campaignData.actual.rules.city = this.cityCountryData[campInstanceId].cityMatched;
-            console.log(`🏙️ City updated for campaign with city condition: ${campaignData.actual.rules.city}`);
-        }
-
-        console.log(`✅ General rules update complete for ${campInstanceId}`);
+        // Delegate to new method that handles both rules and exclusions
+        this.updateGeneralData(campaignData, campInstanceId);
     }
 
     /**
@@ -1926,6 +2187,7 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Evaluates exclusions for a campaign and updates satisfaction status
+     * CRITICAL: Supports dynamic exclusion evaluation (can flip satisfied ↔ not satisfied)
      * @param campInstanceId - Campaign instance ID
      */
     evaluateExclusionsForCampaign(campInstanceId: string): void {
@@ -1940,27 +2202,53 @@ class ProactiveWebCampaignPlugin {
         const exclusions = campaignData.expected.exclusions;
         
         if (!exclusions || !exclusions.groups) {
-            console.log('⚠️ No exclusions to evaluate');
+            console.log('⚠️ No exclusions to evaluate - campaign allowed to proceed');
             return;
         }
 
+        // Store previous satisfaction status for dynamic behavior logging
+        const previousSatisfied = exclusions.isSatisfied;
+
+        console.log(`🚫 === EXCLUSIONS EVALUATION START ===`);
+        console.log(`🚫 Previous exclusions status: ${previousSatisfied ? 'SATISFIED (blocking)' : 'NOT SATISFIED (allowing)'}`);
+        console.log(`🚫 Available exclusions data:`, campaignData.actual.exclusions);
+
         // Evaluate each group
-        exclusions.groups.forEach((group: any) => {
+        exclusions.groups.forEach((group: any, index: number) => {
+            const previousGroupSatisfied = group.conditions.isSatisfied;
+            
             group.conditions.isSatisfied = this.evaluateGroupConditions(
                 group.conditions,
                 campaignData.actual.exclusions
             );
-            console.log(`🚫 Exclusion group ${group.id} satisfied: ${group.conditions.isSatisfied}`);
+            
+            // Log dynamic behavior for exclusions
+            if (previousGroupSatisfied !== group.conditions.isSatisfied) {
+                console.log(`🔄 *** DYNAMIC EXCLUSION CHANGE *** Group ${group.id}: ${previousGroupSatisfied} → ${group.conditions.isSatisfied}`);
+            }
+            
+            console.log(`🚫 Exclusion group ${index + 1} (${group.id}) satisfied: ${group.conditions.isSatisfied ? '✅ YES (blocks)' : '❌ NO (allows)'}`);
         });
 
         // Evaluate overall exclusions satisfaction
         exclusions.isSatisfied = this.evaluateGroupsSatisfaction(exclusions.groups, exclusions.groupType);
         
+        // Log dynamic exclusion behavior
+        if (previousSatisfied !== exclusions.isSatisfied) {
+            console.log(`🔄 *** DYNAMIC EXCLUSIONS FLIP *** Campaign ${campInstanceId}: ${previousSatisfied} → ${exclusions.isSatisfied}`);
+            if (exclusions.isSatisfied) {
+                console.log(`🚫 *** Campaign is now BLOCKED by exclusions ***`);
+            } else {
+                console.log(`✅ *** Campaign is now ALLOWED (exclusions no longer block) ***`);
+            }
+        }
+        
         // Save updated data
         pweData[campInstanceId] = campaignData;
         window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
         
-        console.log(`✅ Exclusions evaluation complete for ${campInstanceId}: ${exclusions.isSatisfied}`);
+        console.log(`🚫 === EXCLUSIONS EVALUATION COMPLETE ===`);
+        console.log(`🚫 Final exclusions status: ${exclusions.isSatisfied ? '🚫 SATISFIED (BLOCKS campaign)' : '✅ NOT SATISFIED (ALLOWS campaign)'}`);
     }
 
     /**
