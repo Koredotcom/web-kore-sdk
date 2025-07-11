@@ -1,3 +1,10 @@
+### 11.15.1
+* Release July 12, 2025
+* Documentation
+  * added i18n instructions
+  * updated faqs
+* Stable release
+
 ### 11.15.0
 * Release June 28, 2025
 * Bug fixes
