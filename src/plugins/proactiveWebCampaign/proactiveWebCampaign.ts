@@ -28,6 +28,25 @@ class ProactiveWebCampaignPlugin {
         "hello.world": "third",
         "hello.world.test": "fourth"
     };
+    
+    // =====================================================================================
+    //                          🚀 CUSTOM CONDITIONTYPE SUPPORT PROPERTIES
+    // =====================================================================================
+    flattenedCustomData: any = {};           // Current flattened custom data
+    previousFlattenedCustomData: any = {};   // Previous state for change detection
+    customColumnConfig: Set<string> = new Set(); // Configured custom columns whitelist
+    customDataDebounceTimer: any = null;     // Debounce timer for pwcCustomData events
+    customDataChangeMap: any = {};           // Track which custom keys have changed
+    
+    // Supported custom operators
+    static readonly CUSTOM_OPERATORS = [
+        'equals', 'in', 'gt', 'ge', 'lt', 'le', 'between', 
+        'begins_with', 'ends_with', 'contains'
+    ];
+    
+    // Maximum flattening depth for performance safety
+    static readonly MAX_FLATTEN_DEPTH = 10;
+    
     constructor(config: any) {
         config = config || {};
         this.config = { ...this.config, ...config };
@@ -219,13 +238,534 @@ class ProactiveWebCampaignPlugin {
       
       
       
+    /**
+     * =====================================================================================
+     *                      🎯 ENHANCED CUSTOM DATA LISTENER WITH PERFORMANCE OPTIMIZATIONS
+     * =====================================================================================
+     * 
+     * Features:
+     * - 1-second debouncing for performance
+     * - Recursive JSON flattening (max depth 10)
+     * - Efficient change detection
+     * - Targeted campaign updates
+     * - Memory management with configured column cleanup
+     */
     customDataListener(){
         const me: any = this;
         me.hostInstance.on('pwcCustomData', (event: any) =>{
-            // LAST STEP: This data should be utilised to evaluate the "conditionType" of value "custom"
-            console.log(event.data);
-            me.customDataObject = event.data; //Flatten the data to a single object
+            console.log("🔄 PWC Custom Data Received:", event.data);
+            
+            // Store raw data for backward compatibility
+            me.customDataObject = event.data;
+            
+            // Clear existing debounce timer
+            if (me.customDataDebounceTimer) {
+                clearTimeout(me.customDataDebounceTimer);
+            }
+            
+            // Debounce rapid successive updates (1 second)
+            me.customDataDebounceTimer = setTimeout(() => {
+                console.log("⏱️ Processing debounced custom data update");
+                me.processCustomDataUpdate(event.data);
+                me.customDataDebounceTimer = null;
+            }, 1000);
         });
+    }
+
+    /**
+     * Processes custom data update with flattening and change detection
+     * @param rawData - Raw nested JSON data from pwcCustomData event
+     */
+    processCustomDataUpdate(rawData: any): void {
+        console.log("🔄 =================== CUSTOM DATA PROCESSING START ===================");
+        console.log("🔄 Raw data received:", rawData);
+        
+        try {
+            // Step 1: Flatten the received data
+            const newFlattenedData = this.flattenObject(rawData);
+            console.log("🗂️ Flattened custom data:", newFlattenedData);
+            console.log(`🗂️ Flattened ${Object.keys(newFlattenedData).length} keys`);
+            
+            // Step 2: Clean up data based on configured custom columns
+            const cleanedFlattenedData = this.cleanupFlattenedData(newFlattenedData);
+            console.log("🧹 Cleaned flattened data:", cleanedFlattenedData);
+            console.log(`🧹 Retained ${Object.keys(cleanedFlattenedData).length} configured keys`);
+            
+            // Step 3: Detect changes between old and new data
+            const changes = this.detectCustomDataChanges(cleanedFlattenedData);
+            console.log("📊 Custom data changes detected:", changes);
+            console.log(`📊 Found ${Object.keys(changes).length} changes`);
+            
+            // Step 4: Update state
+            this.previousFlattenedCustomData = { ...this.flattenedCustomData };
+            this.flattenedCustomData = cleanedFlattenedData;
+            this.customDataChangeMap = changes;
+            
+            // Step 5: Only trigger evaluation if there are actual changes
+            if (Object.keys(changes).length > 0) {
+                console.log("🎯 Changes detected, triggering custom data evaluation");
+                this.handleCustomDataChanges(changes);
+            } else {
+                console.log("⚠️ No changes detected, skipping evaluation");
+            }
+            
+            console.log("🔄 =================== CUSTOM DATA PROCESSING COMPLETE ===================");
+        } catch (error) {
+            console.error("❌ Error processing custom data:", error);
+            console.log("🔄 =================== CUSTOM DATA PROCESSING FAILED ===================");
+        }
+    }
+
+    /**
+     * Recursively flattens nested JSON object into dot-notation keys with array support
+     * @param obj - Object to flatten
+     * @param prefix - Current prefix for nested keys
+     * @param maxDepth - Maximum nesting depth (default 10)
+     * @param currentDepth - Current recursion depth
+     * @returns Flattened object with dot-notation keys
+     * 
+     * Examples:
+     * {user: {profile: {age: 25}}} → {"user.profile.age": 25}
+     * {skills: ["sit", "stand"]} → {"skills[0]": "sit", "skills[1]": "stand"}
+     * {users: [{name: "John", tags: ["admin"]}]} → {"users[0].name": "John", "users[0].tags[0]": "admin"}
+     */
+    flattenObject(obj: any, prefix: string = '', maxDepth: number = ProactiveWebCampaignPlugin.MAX_FLATTEN_DEPTH, currentDepth: number = 0): any {
+        const flattened: any = {};
+        
+        // Safety checks
+        if (obj === null || obj === undefined) {
+            console.log(`🗂️ Skipping null/undefined object at prefix: ${prefix}`);
+            return flattened;
+        }
+        
+        // Depth limit check
+        if (currentDepth >= maxDepth) {
+            console.log(`⚠️ Maximum flattening depth (${maxDepth}) reached at prefix: ${prefix}`);
+            // Store the object as-is when depth limit reached
+            if (prefix) {
+                flattened[prefix] = obj;
+            }
+            return flattened;
+        }
+        
+        // Handle arrays
+        if (Array.isArray(obj)) {
+            console.log(`🗂️ Flattening array at prefix: ${prefix}, length: ${obj.length}`);
+            obj.forEach((item, index) => {
+                const arrayKey = prefix ? `${prefix}[${index}]` : `[${index}]`;
+                
+                if (item !== null && typeof item === 'object') {
+                    // Recursively flatten array objects
+                    Object.assign(flattened, this.flattenObject(item, arrayKey, maxDepth, currentDepth + 1));
+                } else {
+                    // Store primitive array values
+                    flattened[arrayKey] = item;
+                }
+            });
+            return flattened;
+        }
+        
+        // Handle objects
+        if (typeof obj === 'object') {
+            console.log(`🗂️ Flattening object at prefix: ${prefix}, keys: ${Object.keys(obj).length}`);
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    const newKey = prefix ? `${prefix}.${key}` : key;
+                    const value = obj[key];
+                    
+                    if (value !== null && (typeof value === 'object')) {
+                        // Recursively flatten nested objects and arrays
+                        Object.assign(flattened, this.flattenObject(value, newKey, maxDepth, currentDepth + 1));
+                    } else {
+                        // Store primitive values
+                        flattened[newKey] = value;
+                    }
+                }
+            }
+            return flattened;
+        }
+        
+        // Handle primitive values at root level
+        if (prefix) {
+            flattened[prefix] = obj;
+        }
+        
+        console.log(`🗂️ Flattened object completed. Generated ${Object.keys(flattened).length} keys`);
+        return flattened;
+    }
+
+    /**
+     * Cleans up flattened data to only keep keys that are configured in campaigns
+     * This prevents memory bloat from unused custom data keys
+     * @param flattenedData - Flattened custom data
+     * @returns Cleaned flattened data with only configured keys
+     */
+    cleanupFlattenedData(flattenedData: any): any {
+        if (this.customColumnConfig.size === 0) {
+            console.log("🧹 No custom column configuration found, keeping all flattened data");
+            return flattenedData;
+        }
+        
+        const cleaned: any = {};
+        let retainedCount = 0;
+        let removedCount = 0;
+        
+        for (const key in flattenedData) {
+            if (this.customColumnConfig.has(key)) {
+                cleaned[key] = flattenedData[key];
+                retainedCount++;
+            } else {
+                removedCount++;
+                console.log(`🧹 Removing unconfigured key: ${key}`);
+            }
+        }
+        
+        console.log(`🧹 Cleanup complete: retained ${retainedCount} keys, removed ${removedCount} keys`);
+        return cleaned;
+    }
+
+    /**
+     * Detects changes between old and new flattened custom data
+     * Returns only the changed keys for performance optimization
+     * @param newFlattenedData - New flattened data
+     * @returns Object containing only changed keys with change metadata
+     */
+    detectCustomDataChanges(newFlattenedData: any): any {
+        const changes: any = {};
+        
+        // Check for new or modified keys
+        for (const key in newFlattenedData) {
+            const newValue = newFlattenedData[key];
+            const oldValue = this.previousFlattenedCustomData[key];
+            
+            if (newValue !== oldValue) {
+                changes[key] = {
+                    oldValue: oldValue,
+                    newValue: newValue,
+                    type: this.previousFlattenedCustomData.hasOwnProperty(key) ? 'modified' : 'added'
+                };
+                console.log(`📊 ${changes[key].type.toUpperCase()}: ${key} = ${oldValue} → ${newValue}`);
+            }
+        }
+        
+        // Check for removed keys
+        for (const key in this.previousFlattenedCustomData) {
+            if (!newFlattenedData.hasOwnProperty(key)) {
+                changes[key] = {
+                    oldValue: this.previousFlattenedCustomData[key],
+                    newValue: null,
+                    type: 'removed'
+                };
+                console.log(`📊 REMOVED: ${key} = ${changes[key].oldValue} → null`);
+            }
+        }
+        
+        console.log(`📊 Change detection complete: found ${Object.keys(changes).length} changes`);
+        return changes;
+    }
+
+    /**
+     * Handles custom data changes by updating relevant campaigns
+     * Only processes campaigns that have custom conditions matching the changed keys
+     * @param changes - Object containing changed keys with metadata
+     */
+    handleCustomDataChanges(changes: any): void {
+        console.log("🎯 =================== HANDLING CUSTOM DATA CHANGES ===================");
+        console.log("🎯 Changes to process:", changes);
+        
+        if (!this.campInfo || this.campInfo.length === 0) {
+            console.log("⚠️ No campaigns available for custom data evaluation");
+            return;
+        }
+        
+        const currentUrl = window.location.href;
+        const currentPageTitle = document.title.trim();
+        
+        // Get active campaigns that might be affected by custom data changes
+        const activeCampaigns = this.getActiveCampaigns(currentUrl, currentPageTitle);
+        console.log(`🎯 Found ${activeCampaigns.length} active campaigns for current page`);
+        
+        if (activeCampaigns.length === 0) {
+            console.log("⚠️ No active campaigns for custom data evaluation");
+            return;
+        }
+        
+        // Filter campaigns that have custom conditions matching the changed keys
+        const affectedCampaigns = activeCampaigns.filter(campaign => {
+            return this.campaignHasCustomConditionsForKeys(campaign, Object.keys(changes));
+        });
+        
+        console.log(`🎯 Found ${affectedCampaigns.length} campaigns affected by custom data changes`);
+        
+        if (affectedCampaigns.length > 0) {
+            // Update actual values for affected campaigns
+            affectedCampaigns.forEach(campaign => {
+                const campInstanceId = campaign.campInstanceId;
+                console.log(`🔄 Updating custom data for campaign: ${campInstanceId}`);
+                this.updateCustomActualValues(campInstanceId, changes);
+            });
+            
+            // Trigger evaluation for affected campaigns
+            console.log("🔄 Triggering evaluation for affected campaigns");
+            this.evaluateActiveCampaigns(affectedCampaigns, currentUrl, currentPageTitle, 'customData');
+        } else {
+            console.log("⚠️ No campaigns affected by these custom data changes");
+        }
+        
+        console.log("🎯 =================== CUSTOM DATA CHANGES HANDLED ===================");
+    }
+
+    /**
+     * =====================================================================================
+     *                         🎯 CUSTOM CONDITION CAMPAIGN FILTERING & UPDATES
+     * =====================================================================================
+     */
+
+    /**
+     * Checks if a campaign has custom conditions that match the changed keys
+     * @param campaign - Campaign object
+     * @param changedKeys - Array of changed custom data keys
+     * @returns Boolean indicating if campaign is affected by the changes
+     */
+    campaignHasCustomConditionsForKeys(campaign: any, changedKeys: string[]): boolean {
+        const hasInRules = this.checkCustomConditionsInSection(
+            campaign.engagementStrategy?.rules?.groups || [],
+            changedKeys
+        );
+        
+        const hasInExclusions = this.checkCustomConditionsInSection(
+            campaign.engagementStrategy?.exclusions?.groups || [],
+            changedKeys
+        );
+        
+        const isAffected = hasInRules || hasInExclusions;
+        
+        if (isAffected) {
+            console.log(`✅ Campaign ${campaign.campInstanceId} is affected by custom data changes`);
+            console.log(`   - Rules affected: ${hasInRules}`);
+            console.log(`   - Exclusions affected: ${hasInExclusions}`);
+            console.log(`   - Matching keys: ${changedKeys.filter(key => 
+                this.campaignHasCustomConditionForKey(campaign, key)
+            ).join(', ')}`);
+        }
+        
+        return isAffected;
+    }
+
+    /**
+     * Checks if a rules/exclusions section has custom conditions matching changed keys
+     * @param groups - Array of groups to check
+     * @param changedKeys - Array of changed custom data keys
+     * @returns Boolean indicating if section is affected
+     */
+    checkCustomConditionsInSection(groups: any[], changedKeys: string[]): boolean {
+        for (const group of groups) {
+            if (group.conditions) {
+                for (const condition of group.conditions) {
+                    if (condition.conditionType === 'custom' && condition.column) {
+                        // Check if this custom condition's column matches any changed key
+                        if (changedKeys.includes(condition.column)) {
+                            console.log(`🎯 Found matching custom condition: ${condition.column} in group ${group.id}`);
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks if a campaign has a custom condition for a specific key
+     * @param campaign - Campaign object
+     * @param key - Custom data key to check
+     * @returns Boolean indicating if campaign has condition for this key
+     */
+    campaignHasCustomConditionForKey(campaign: any, key: string): boolean {
+        // Check in rules
+        if (campaign.engagementStrategy?.rules?.groups) {
+            for (const group of campaign.engagementStrategy.rules.groups) {
+                if (group.conditions) {
+                    for (const condition of group.conditions) {
+                        if (condition.conditionType === 'custom' && condition.column === key) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Check in exclusions
+        if (campaign.engagementStrategy?.exclusions?.groups) {
+            for (const group of campaign.engagementStrategy.exclusions.groups) {
+                if (group.conditions) {
+                    for (const condition of group.conditions) {
+                        if (condition.conditionType === 'custom' && condition.column === key) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return false;
+    }
+
+    /**
+     * Updates actual values for custom conditions in a campaign
+     * CORRECTED: Only populates actual.rules OR actual.exclusions based on where condition is configured
+     * @param campInstanceId - Campaign instance ID
+     * @param changes - Object containing changed custom data
+     */
+    updateCustomActualValues(campInstanceId: string, changes: any): void {
+        console.log(`📝 =================== UPDATING CUSTOM ACTUAL VALUES ===================`);
+        console.log(`📝 Campaign: ${campInstanceId}`);
+        console.log(`📝 Changes to process:`, changes);
+        
+        let pweData: any = window.sessionStorage.getItem('pwe_data');
+        pweData = JSON.parse(pweData) || {};
+        
+        if (!pweData[campInstanceId]) {
+            console.log(`⚠️ No pwe_data found for ${campInstanceId}`);
+            return;
+        }
+
+        const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
+        if (!campaign) {
+            console.log(`⚠️ Campaign not found for custom data update: ${campInstanceId}`);
+            return;
+        }
+
+        let updatedRules = false;
+        let updatedExclusions = false;
+
+        // Update rules custom conditions
+        if (campaign.engagementStrategy?.rules?.groups) {
+            campaign.engagementStrategy.rules.groups.forEach((group: any) => {
+                if (group.conditions) {
+                    group.conditions.forEach((condition: any) => {
+                        if (condition.conditionType === 'custom' && condition.column) {
+                            const customKey = condition.column;
+                            
+                            // Check if this key has changed or if we need to set initial value
+                            if (changes.hasOwnProperty(customKey)) {
+                                const newValue = changes[customKey].newValue;
+                                pweData[campInstanceId].actual.rules[customKey] = newValue;
+                                updatedRules = true;
+                                console.log(`📝 Updated RULES custom value: ${customKey} = ${newValue}`);
+                            } else if (this.flattenedCustomData.hasOwnProperty(customKey) && 
+                                      !pweData[campInstanceId].actual.rules.hasOwnProperty(customKey)) {
+                                // Set initial value if not already set
+                                const currentValue = this.flattenedCustomData[customKey];
+                                pweData[campInstanceId].actual.rules[customKey] = currentValue;
+                                updatedRules = true;
+                                console.log(`📝 Set initial RULES custom value: ${customKey} = ${currentValue}`);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        // Update exclusions custom conditions
+        if (campaign.engagementStrategy?.exclusions?.groups) {
+            campaign.engagementStrategy.exclusions.groups.forEach((group: any) => {
+                if (group.conditions) {
+                    group.conditions.forEach((condition: any) => {
+                        if (condition.conditionType === 'custom' && condition.column) {
+                            const customKey = condition.column;
+                            
+                            // Check if this key has changed or if we need to set initial value
+                            if (changes.hasOwnProperty(customKey)) {
+                                const newValue = changes[customKey].newValue;
+                                pweData[campInstanceId].actual.exclusions[customKey] = newValue;
+                                updatedExclusions = true;
+                                console.log(`📝 Updated EXCLUSIONS custom value: ${customKey} = ${newValue}`);
+                            } else if (this.flattenedCustomData.hasOwnProperty(customKey) && 
+                                      !pweData[campInstanceId].actual.exclusions.hasOwnProperty(customKey)) {
+                                // Set initial value if not already set
+                                const currentValue = this.flattenedCustomData[customKey];
+                                pweData[campInstanceId].actual.exclusions[customKey] = currentValue;
+                                updatedExclusions = true;
+                                console.log(`📝 Set initial EXCLUSIONS custom value: ${customKey} = ${currentValue}`);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        // Save updated data
+        if (updatedRules || updatedExclusions) {
+            window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
+            console.log(`✅ Custom actual values updated for ${campInstanceId}`);
+            console.log(`   - Rules updated: ${updatedRules}`);
+            console.log(`   - Exclusions updated: ${updatedExclusions}`);
+        } else {
+            console.log(`⚠️ No custom conditions found for changed keys in ${campInstanceId}`);
+        }
+        
+        console.log(`📝 =================== CUSTOM ACTUAL VALUES UPDATE COMPLETE ===================`);
+    }
+
+    /**
+     * Extracts custom column configurations from campaigns during pwe_verify
+     * Creates a whitelist of custom data keys that campaigns actually use
+     * @param campaigns - Array of campaign data
+     */
+    extractCustomColumns(campaigns: any[]): void {
+        console.log("📋 =================== EXTRACTING CUSTOM COLUMN CONFIGURATIONS ===================");
+        console.log(`📋 Processing ${campaigns.length} campaigns for custom columns`);
+        
+        this.customColumnConfig.clear();
+        let totalCustomConditions = 0;
+        
+        campaigns.forEach((campaign, index) => {
+            const campaignCustomColumns = new Set<string>();
+            
+            // Extract from rules
+            if (campaign.engagementStrategy?.rules?.groups) {
+                campaign.engagementStrategy.rules.groups.forEach((group: any) => {
+                    if (group.conditions) {
+                        group.conditions.forEach((condition: any) => {
+                            if (condition.conditionType === 'custom' && condition.column) {
+                                campaignCustomColumns.add(condition.column);
+                                this.customColumnConfig.add(condition.column);
+                                totalCustomConditions++;
+                                console.log(`📋 Found custom condition in RULES: ${condition.column} (campaign: ${campaign.campInstanceId})`);
+                            }
+                        });
+                    }
+                });
+            }
+            
+            // Extract from exclusions
+            if (campaign.engagementStrategy?.exclusions?.groups) {
+                campaign.engagementStrategy.exclusions.groups.forEach((group: any) => {
+                    if (group.conditions) {
+                        group.conditions.forEach((condition: any) => {
+                            if (condition.conditionType === 'custom' && condition.column) {
+                                campaignCustomColumns.add(condition.column);
+                                this.customColumnConfig.add(condition.column);
+                                totalCustomConditions++;
+                                console.log(`📋 Found custom condition in EXCLUSIONS: ${condition.column} (campaign: ${campaign.campInstanceId})`);
+                            }
+                        });
+                    }
+                });
+            }
+            
+            if (campaignCustomColumns.size > 0) {
+                console.log(`📋 Campaign ${index + 1} (${campaign.campInstanceId}) uses ${campaignCustomColumns.size} custom columns: [${Array.from(campaignCustomColumns).join(', ')}]`);
+            }
+        });
+        
+        console.log(`📋 Custom column extraction complete:`);
+        console.log(`   - Total campaigns processed: ${campaigns.length}`);
+        console.log(`   - Total custom conditions found: ${totalCustomConditions}`);
+        console.log(`   - Unique custom columns: ${this.customColumnConfig.size}`);
+        console.log(`   - Custom columns configured: [${Array.from(this.customColumnConfig).join(', ')}]`);
+        console.log("📋 =================== CUSTOM COLUMN EXTRACTION COMPLETE ===================");
     }
 
     sendPWCStartEvent() {
@@ -1327,11 +1867,18 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Constructs the pwe_data object based on the new campaign structure
+     * ENHANCED: Now extracts custom column configurations and initializes custom data
      * @param campaignData - Campaign data received from socket
      * @returns Constructed pwe_data object
      */
     constructPweData(campaignData: any): any {
         console.log('🏗️ Constructing pwe_data for campaigns:', campaignData.length);
+        
+        // STEP 1: Extract custom column configurations for efficient data management
+        this.extractCustomColumns(campaignData);
+        
+        // STEP 2: Initialize custom data from existing flattened data (if available)
+        this.initializeCustomDataForCampaigns(campaignData);
         
         const pweData: any = {};
         
@@ -1358,10 +1905,97 @@ class ProactiveWebCampaignPlugin {
                 }
             };
             
+            // STEP 3: Initialize custom data actual values for this campaign
+            this.initializeCustomActualValuesForCampaign(campInstanceId, campaign, pweData[campInstanceId]);
+            
             console.log(`✅ Constructed pwe_data for ${campInstanceId}:`, pweData[campInstanceId]);
         });
         
         return pweData;
+    }
+
+    /**
+     * Initializes custom data for all campaigns based on current flattened custom data
+     * This ensures campaigns have initial custom data values if pwcCustomData was received earlier
+     */
+    initializeCustomDataForCampaigns(campaigns: any[]): void {
+        console.log("🔄 =================== INITIALIZING CUSTOM DATA FOR CAMPAIGNS ===================");
+        
+        if (Object.keys(this.flattenedCustomData).length === 0) {
+            console.log("⚠️ No flattened custom data available for initialization");
+            return;
+        }
+        
+        console.log(`📋 Initializing custom data for ${campaigns.length} campaigns`);
+        console.log(`📋 Available flattened data keys: [${Object.keys(this.flattenedCustomData).join(', ')}]`);
+        
+        // This method prepares for the actual value initialization that happens in initializeCustomActualValuesForCampaign
+        console.log("🔄 =================== CUSTOM DATA INITIALIZATION PREPARED ===================");
+    }
+
+    /**
+     * Initializes custom actual values for a specific campaign
+     * @param campInstanceId - Campaign instance ID
+     * @param campaign - Campaign configuration
+     * @param campaignData - Campaign data structure to populate
+     */
+    initializeCustomActualValuesForCampaign(campInstanceId: string, campaign: any, campaignData: any): void {
+        console.log(`🔄 Initializing custom actual values for campaign: ${campInstanceId}`);
+        
+        let initializedRules = 0;
+        let initializedExclusions = 0;
+        
+        // Initialize custom conditions in rules
+        if (campaign.engagementStrategy?.rules?.groups) {
+            campaign.engagementStrategy.rules.groups.forEach((group: any) => {
+                if (group.conditions) {
+                    group.conditions.forEach((condition: any) => {
+                        if (condition.conditionType === 'custom' && condition.column) {
+                            const customKey = condition.column;
+                            
+                            if (this.flattenedCustomData.hasOwnProperty(customKey)) {
+                                campaignData.actual.rules[customKey] = this.flattenedCustomData[customKey];
+                                initializedRules++;
+                                console.log(`🔄 Initialized RULES custom value: ${customKey} = ${this.flattenedCustomData[customKey]}`);
+                            } else {
+                                // Set to null if data not available yet
+                                campaignData.actual.rules[customKey] = null;
+                                console.log(`🔄 Initialized RULES custom value to null: ${customKey} (data not available)`);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        
+        // Initialize custom conditions in exclusions
+        if (campaign.engagementStrategy?.exclusions?.groups) {
+            campaign.engagementStrategy.exclusions.groups.forEach((group: any) => {
+                if (group.conditions) {
+                    group.conditions.forEach((condition: any) => {
+                        if (condition.conditionType === 'custom' && condition.column) {
+                            const customKey = condition.column;
+                            
+                            if (this.flattenedCustomData.hasOwnProperty(customKey)) {
+                                campaignData.actual.exclusions[customKey] = this.flattenedCustomData[customKey];
+                                initializedExclusions++;
+                                console.log(`🔄 Initialized EXCLUSIONS custom value: ${customKey} = ${this.flattenedCustomData[customKey]}`);
+                            } else {
+                                // Set to null if data not available yet
+                                campaignData.actual.exclusions[customKey] = null;
+                                console.log(`🔄 Initialized EXCLUSIONS custom value to null: ${customKey} (data not available)`);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        
+        if (initializedRules > 0 || initializedExclusions > 0) {
+            console.log(`✅ Custom actual values initialized for ${campInstanceId}: ${initializedRules} rules, ${initializedExclusions} exclusions`);
+        } else {
+            console.log(`⚠️ No custom conditions found for campaign: ${campInstanceId}`);
+        }
     }
 
     /**
@@ -1869,6 +2503,7 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Updates actual values in pwe_data based on current user behavior
+     * ENHANCED: Now handles custom conditionType with customData event type
      * CRITICAL: Updates BOTH rules AND exclusions with the same behavioral data
      * ONLY updates values for condition types that are configured in the campaign
      * @param campInstanceId - Campaign instance ID
@@ -1919,6 +2554,11 @@ class ProactiveWebCampaignPlugin {
                     console.log(`⚠️ Campaign ${campInstanceId} doesn't have hoverOn condition - skipping update`);
                 }
                 break;
+            case 'customData':
+                // Custom data is already updated by updateCustomActualValues() in handleCustomDataChanges()
+                console.log(`🔄 CustomData event: custom values already updated by handleCustomDataChanges()`);
+                // No additional processing needed - values were updated based on specific changes
+                break;
             case 'titleChange':
                 // For title changes, only update general rules if needed
                 console.log(`🔄 TitleChange event: checking if general rules need updates`);
@@ -1930,11 +2570,112 @@ class ProactiveWebCampaignPlugin {
                 break;
         }
 
+        // Always ensure custom data is up-to-date if campaign has custom conditions
+        // This handles cases where custom data was received before campaign configuration
+        if (this.campaignHasCustomConditions(campaign)) {
+            console.log(`🔄 Campaign has custom conditions, ensuring custom data is up-to-date`);
+            this.ensureCustomDataUpToDate(campInstanceId, campaign, campaignData);
+        }
+
         // Save updated data
         pweData[campInstanceId] = campaignData;
         window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
         
         console.log(`✅ Updated actual values for ${campInstanceId} based on configured conditions`);
+    }
+
+    /**
+     * Checks if a campaign has any custom conditions in rules or exclusions
+     * @param campaign - Campaign object
+     * @returns Boolean indicating if campaign has custom conditions
+     */
+    campaignHasCustomConditions(campaign: any): boolean {
+        // Check in rules
+        if (campaign.engagementStrategy?.rules?.groups) {
+            for (const group of campaign.engagementStrategy.rules.groups) {
+                if (group.conditions) {
+                    for (const condition of group.conditions) {
+                        if (condition.conditionType === 'custom') {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Check in exclusions
+        if (campaign.engagementStrategy?.exclusions?.groups) {
+            for (const group of campaign.engagementStrategy.exclusions.groups) {
+                if (group.conditions) {
+                    for (const condition of group.conditions) {
+                        if (condition.conditionType === 'custom') {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return false;
+    }
+
+    /**
+     * Ensures custom data is up-to-date for a campaign based on current flattened custom data
+     * @param campInstanceId - Campaign instance ID
+     * @param campaign - Campaign configuration
+     * @param campaignData - Campaign data structure to update
+     */
+    ensureCustomDataUpToDate(campInstanceId: string, campaign: any, campaignData: any): void {
+        console.log(`🔄 Ensuring custom data is up-to-date for campaign: ${campInstanceId}`);
+        
+        let updatedRules = false;
+        let updatedExclusions = false;
+        
+        // Update custom conditions in rules
+        if (campaign.engagementStrategy?.rules?.groups) {
+            campaign.engagementStrategy.rules.groups.forEach((group: any) => {
+                if (group.conditions) {
+                    group.conditions.forEach((condition: any) => {
+                        if (condition.conditionType === 'custom' && condition.column) {
+                            const customKey = condition.column;
+                            const currentValue = this.flattenedCustomData[customKey];
+                            
+                            // Update if value is different or not set
+                            if (campaignData.actual.rules[customKey] !== currentValue) {
+                                campaignData.actual.rules[customKey] = currentValue !== undefined ? currentValue : null;
+                                updatedRules = true;
+                                console.log(`🔄 Updated RULES custom value: ${customKey} = ${currentValue}`);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        
+        // Update custom conditions in exclusions
+        if (campaign.engagementStrategy?.exclusions?.groups) {
+            campaign.engagementStrategy.exclusions.groups.forEach((group: any) => {
+                if (group.conditions) {
+                    group.conditions.forEach((condition: any) => {
+                        if (condition.conditionType === 'custom' && condition.column) {
+                            const customKey = condition.column;
+                            const currentValue = this.flattenedCustomData[customKey];
+                            
+                            // Update if value is different or not set
+                            if (campaignData.actual.exclusions[customKey] !== currentValue) {
+                                campaignData.actual.exclusions[customKey] = currentValue !== undefined ? currentValue : null;
+                                updatedExclusions = true;
+                                console.log(`🔄 Updated EXCLUSIONS custom value: ${customKey} = ${currentValue}`);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        
+        if (updatedRules || updatedExclusions) {
+            console.log(`✅ Custom data ensured up-to-date for ${campInstanceId}: ${updatedRules ? 'rules' : ''} ${updatedExclusions ? 'exclusions' : ''}`);
+        }
     }
 
     /**
@@ -2551,24 +3292,27 @@ class ProactiveWebCampaignPlugin {
     }
 
     /**
-     * Evaluates a single condition
+     * Evaluates a single condition with support for custom conditionType operators
+     * ENHANCED: Now supports 10 custom operators for custom conditionType
      * @param condition - Condition object
      * @param actualValue - Actual value to compare
      * @returns Boolean indicating if condition is satisfied
      */
     evaluateCondition(condition: any, actualValue: any): boolean {
-        const { operator, value, isNot } = condition;
+        const { operator, value, isNot, conditionType } = condition;
         let result = false;
         
         console.log(`\n🔍 =============== CONDITION EVALUATION START ===============`);
         console.log(`🔍 Condition ID: ${condition.id || 'unknown'}`);
+        console.log(`🔍 Condition Type: ${conditionType || 'default'}`);
+        console.log(`🔍 Column: ${condition.column || 'unknown'}`);
         console.log(`🔍 Full condition object:`, condition);
         console.log(`🔍 Operator: ${operator}`);
         console.log(`🔍 Expected value: ${value} (type: ${typeof value})`);
         console.log(`🔍 Actual value: ${actualValue} (type: ${typeof actualValue})`);
         console.log(`🔍 isNot flag: ${isNot} (type: ${typeof isNot})`);
         
-        // Enhanced isNot debugging
+        // Enhanced debugging for isNot flag
         if (isNot !== undefined) {
             console.log(`🔍 isNot flag is present: ${isNot}`);
             if (isNot === true) {
@@ -2582,37 +3326,46 @@ class ProactiveWebCampaignPlugin {
             console.log(`🔍 isNot flag is undefined/missing - treating as false`);
         }
         
-        // Type coercion warning
-        if (typeof actualValue !== typeof value) {
-            console.log(`⚠️ TYPE MISMATCH: actual (${typeof actualValue}) vs expected (${typeof value})`);
-            console.log(`⚠️ This may cause evaluation issues. Consider using consistent types.`);
-        }
-        
-        switch (operator) {
-            case 'equals':
-                result = actualValue == value; // Loose comparison for type coercion
-                console.log(`📊 Equals evaluation (loose): ${actualValue} == ${value} = ${result}`);
-                if (typeof actualValue !== typeof value) {
-                    const strictResult = actualValue === value;
-                    console.log(`📊 Strict comparison would be: ${actualValue} === ${value} = ${strictResult}`);
-                }
-                break;
-            case 'is':
-                result = actualValue === value; // Strict comparison
-                console.log(`📊 Is evaluation (strict): ${actualValue} === ${value} = ${result}`);
-                if (typeof actualValue !== typeof value) {
-                    const looseResult = actualValue == value;
-                    console.log(`📊 Loose comparison would be: ${actualValue} == ${value} = ${looseResult}`);
-                }
-                break;
-            case 'not':
-                result = actualValue !== value; // Strict not equal
-                console.log(`📊 Not evaluation (strict): ${actualValue} !== ${value} = ${result}`);
-                break;
-            default:
-                console.log(`⚠️ Unknown operator: ${operator}`);
-                console.log(`🔍 =============== CONDITION EVALUATION END: ERROR ===============\n`);
-                return false;
+        // Handle custom conditionType with special operators
+        if (conditionType === 'custom') {
+            console.log(`🔍 *** CUSTOM CONDITION EVALUATION ***`);
+            result = this.evaluateCustomCondition(condition, actualValue, value);
+        } else {
+            // Handle default condition types
+            console.log(`🔍 *** DEFAULT CONDITION EVALUATION ***`);
+            
+            // Type coercion warning for default conditions
+            if (typeof actualValue !== typeof value) {
+                console.log(`⚠️ TYPE MISMATCH: actual (${typeof actualValue}) vs expected (${typeof value})`);
+                console.log(`⚠️ This may cause evaluation issues. Consider using consistent types.`);
+            }
+            
+            switch (operator) {
+                case 'equals':
+                    result = actualValue == value; // Loose comparison for type coercion
+                    console.log(`📊 Equals evaluation (loose): ${actualValue} == ${value} = ${result}`);
+                    if (typeof actualValue !== typeof value) {
+                        const strictResult = actualValue === value;
+                        console.log(`📊 Strict comparison would be: ${actualValue} === ${value} = ${strictResult}`);
+                    }
+                    break;
+                case 'is':
+                    result = actualValue === value; // Strict comparison
+                    console.log(`📊 Is evaluation (strict): ${actualValue} === ${value} = ${result}`);
+                    if (typeof actualValue !== typeof value) {
+                        const looseResult = actualValue == value;
+                        console.log(`📊 Loose comparison would be: ${actualValue} == ${value} = ${looseResult}`);
+                    }
+                    break;
+                case 'not':
+                    result = actualValue !== value; // Strict not equal
+                    console.log(`📊 Not evaluation (strict): ${actualValue} !== ${value} = ${result}`);
+                    break;
+                default:
+                    console.log(`⚠️ Unknown operator for default condition: ${operator}`);
+                    console.log(`🔍 =============== CONDITION EVALUATION END: ERROR ===============\n`);
+                    return false;
+            }
         }
         
         // Store pre-isNot result for debugging
@@ -2635,6 +3388,281 @@ class ProactiveWebCampaignPlugin {
         console.log(`🔍 Final condition result: ${result ? '✅ SATISFIED' : '❌ NOT SATISFIED'}`);
         console.log(`🔍 =============== CONDITION EVALUATION END ===============\n`);
         return result;
+    }
+
+    /**
+     * =====================================================================================
+     *                        🎯 CUSTOM CONDITION EVALUATION ENGINE
+     * =====================================================================================
+     * 
+     * Evaluates custom conditions with all 10 supported operators:
+     * - equals: Case-sensitive exact match
+     * - in: Array membership check  
+     * - gt, ge, lt, le: Numeric comparisons (greater/less than/equal)
+     * - between: Inclusive range check {start, end}
+     * - begins_with, ends_with, contains: String operations
+     */
+    evaluateCustomCondition(condition: any, actualValue: any, expectedValue: any): boolean {
+        const { operator, column } = condition;
+        
+        console.log(`🎯 Evaluating custom condition:`);
+        console.log(`   - Column: ${column}`);
+        console.log(`   - Operator: ${operator}`);
+        console.log(`   - Expected: ${expectedValue} (${typeof expectedValue})`);
+        console.log(`   - Actual: ${actualValue} (${typeof actualValue})`);
+        
+        // Handle null actual values
+        if (actualValue === null || actualValue === undefined) {
+            console.log(`⚠️ Custom condition has null/undefined actual value`);
+            console.log(`📊 Null value result: false (condition cannot be satisfied)`);
+            return false;
+        }
+        
+        try {
+            switch (operator) {
+                case 'equals':
+                    return this.evaluateEquals(actualValue, expectedValue);
+                    
+                case 'in':
+                    return this.evaluateIn(actualValue, expectedValue);
+                    
+                case 'gt':
+                    return this.evaluateGreaterThan(actualValue, expectedValue);
+                    
+                case 'ge':
+                    return this.evaluateGreaterEqual(actualValue, expectedValue);
+                    
+                case 'lt':
+                    return this.evaluateLessThan(actualValue, expectedValue);
+                    
+                case 'le':
+                    return this.evaluateLessEqual(actualValue, expectedValue);
+                    
+                case 'between':
+                    return this.evaluateBetween(actualValue, expectedValue);
+                    
+                case 'begins_with':
+                    return this.evaluateBeginsWith(actualValue, expectedValue);
+                    
+                case 'ends_with':
+                    return this.evaluateEndsWith(actualValue, expectedValue);
+                    
+                case 'contains':
+                    return this.evaluateContains(actualValue, expectedValue);
+                    
+                default:
+                    console.log(`⚠️ Unsupported custom operator: ${operator}`);
+                    return false;
+            }
+        } catch (error) {
+            console.error(`❌ Error evaluating custom condition: ${error}`);
+            return false;
+        }
+    }
+
+    // =====================================================================================
+    //                         🔧 CUSTOM OPERATOR IMPLEMENTATIONS
+    // =====================================================================================
+
+    /**
+     * Evaluates equals operator (case-sensitive)
+     */
+    evaluateEquals(actualValue: any, expectedValue: any): boolean {
+        // Convert both to same type for comparison
+        let actual = actualValue;
+        let expected = expectedValue;
+        
+        // If both look like numbers, compare as numbers
+        if (!isNaN(actual) && !isNaN(expected)) {
+            actual = Number(actual);
+            expected = Number(expected);
+        }
+        
+        const result = actual === expected;
+        console.log(`📊 Equals: ${actualValue} === ${expectedValue} → ${result}`);
+        return result;
+    }
+
+    /**
+     * Evaluates in operator (array membership)
+     */
+    evaluateIn(actualValue: any, expectedValue: any): boolean {
+        if (!Array.isArray(expectedValue)) {
+            console.log(`⚠️ 'in' operator expects array, got: ${typeof expectedValue}`);
+            return false;
+        }
+        
+        // Convert for comparison if needed
+        let actual = actualValue;
+        const expected = expectedValue;
+        
+        // Check if any array item matches (with type conversion)
+        const result = expected.some(item => {
+            // Try exact match first
+            if (actual === item) return true;
+            
+            // Try numeric conversion if both can be numbers
+            if (!isNaN(actual) && !isNaN(item)) {
+                return Number(actual) === Number(item);
+            }
+            
+            return false;
+        });
+        
+        console.log(`📊 In: ${actualValue} in [${expectedValue.join(', ')}] → ${result}`);
+        return result;
+    }
+
+    /**
+     * Evaluates greater than operator
+     */
+    evaluateGreaterThan(actualValue: any, expectedValue: any): boolean {
+        const actual = this.convertToNumber(actualValue);
+        const expected = this.convertToNumber(expectedValue);
+        
+        if (actual === null || expected === null) {
+            console.log(`⚠️ 'gt' operator requires numeric values`);
+            return false;
+        }
+        
+        const result = actual > expected;
+        console.log(`📊 Greater than: ${actual} > ${expected} → ${result}`);
+        return result;
+    }
+
+    /**
+     * Evaluates greater than or equal operator
+     */
+    evaluateGreaterEqual(actualValue: any, expectedValue: any): boolean {
+        const actual = this.convertToNumber(actualValue);
+        const expected = this.convertToNumber(expectedValue);
+        
+        if (actual === null || expected === null) {
+            console.log(`⚠️ 'ge' operator requires numeric values`);
+            return false;
+        }
+        
+        const result = actual >= expected;
+        console.log(`📊 Greater equal: ${actual} >= ${expected} → ${result}`);
+        return result;
+    }
+
+    /**
+     * Evaluates less than operator
+     */
+    evaluateLessThan(actualValue: any, expectedValue: any): boolean {
+        const actual = this.convertToNumber(actualValue);
+        const expected = this.convertToNumber(expectedValue);
+        
+        if (actual === null || expected === null) {
+            console.log(`⚠️ 'lt' operator requires numeric values`);
+            return false;
+        }
+        
+        const result = actual < expected;
+        console.log(`📊 Less than: ${actual} < ${expected} → ${result}`);
+        return result;
+    }
+
+    /**
+     * Evaluates less than or equal operator
+     */
+    evaluateLessEqual(actualValue: any, expectedValue: any): boolean {
+        const actual = this.convertToNumber(actualValue);
+        const expected = this.convertToNumber(expectedValue);
+        
+        if (actual === null || expected === null) {
+            console.log(`⚠️ 'le' operator requires numeric values`);
+            return false;
+        }
+        
+        const result = actual <= expected;
+        console.log(`📊 Less equal: ${actual} <= ${expected} → ${result}`);
+        return result;
+    }
+
+    /**
+     * Evaluates between operator (inclusive range)
+     */
+    evaluateBetween(actualValue: any, expectedValue: any): boolean {
+        const actual = this.convertToNumber(actualValue);
+        
+        if (actual === null) {
+            console.log(`⚠️ 'between' operator requires numeric actual value`);
+            return false;
+        }
+        
+        if (!expectedValue || typeof expectedValue !== 'object' || !expectedValue.hasOwnProperty('start') || !expectedValue.hasOwnProperty('end')) {
+            console.log(`⚠️ 'between' operator expects {start, end} object, got:`, expectedValue);
+            return false;
+        }
+        
+        const start = this.convertToNumber(expectedValue.start);
+        const end = this.convertToNumber(expectedValue.end);
+        
+        if (start === null || end === null) {
+            console.log(`⚠️ 'between' operator requires numeric start and end values`);
+            return false;
+        }
+        
+        const result = actual >= start && actual <= end;
+        console.log(`📊 Between: ${start} <= ${actual} <= ${end} → ${result}`);
+        return result;
+    }
+
+    /**
+     * Evaluates begins_with operator (string prefix)
+     */
+    evaluateBeginsWith(actualValue: any, expectedValue: any): boolean {
+        const actual = String(actualValue);
+        const expected = String(expectedValue);
+        
+        const result = actual.startsWith(expected);
+        console.log(`📊 Begins with: "${actual}".startsWith("${expected}") → ${result}`);
+        return result;
+    }
+
+    /**
+     * Evaluates ends_with operator (string suffix)
+     */
+    evaluateEndsWith(actualValue: any, expectedValue: any): boolean {
+        const actual = String(actualValue);
+        const expected = String(expectedValue);
+        
+        const result = actual.endsWith(expected);
+        console.log(`📊 Ends with: "${actual}".endsWith("${expected}") → ${result}`);
+        return result;
+    }
+
+    /**
+     * Evaluates contains operator (string substring)
+     */
+    evaluateContains(actualValue: any, expectedValue: any): boolean {
+        const actual = String(actualValue);
+        const expected = String(expectedValue);
+        
+        const result = actual.includes(expected);
+        console.log(`📊 Contains: "${actual}".includes("${expected}") → ${result}`);
+        return result;
+    }
+
+    /**
+     * Converts value to number, returns null if conversion fails
+     * @param value - Value to convert
+     * @returns Number or null if conversion fails
+     */
+    convertToNumber(value: any): number | null {
+        if (typeof value === 'number') {
+            return isNaN(value) ? null : value;
+        }
+        
+        const converted = Number(value);
+        if (isNaN(converted)) {
+            console.log(`⚠️ Cannot convert "${value}" to number`);
+            return null;
+        }
+        
+        return converted;
     }
 
     /**
