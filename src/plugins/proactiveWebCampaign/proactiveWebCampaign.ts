@@ -117,31 +117,48 @@ class ProactiveWebCampaignPlugin {
                         this.campInfo = data.body.campInfo || [];
                         me.hostInstance.campInfo = data.body.campInfo;
                         
-                        // Use new campaign data structure
-                        const pweData = this.constructPweData(this.campInfo);
-                        
-                        // Store in session storage
+                        // PERFORMANCE OPTIMIZATION: Get existing data first
                         let existingPweData: any = window.sessionStorage.getItem('pwe_data');
                         existingPweData = JSON.parse(existingPweData) || {};
                         
-                        // Merge with existing data
-                        Object.keys(pweData).forEach(campInstanceId => {
-                            existingPweData[campInstanceId] = pweData[campInstanceId];
+                        // Filter to only NEW campaigns (not already in pwe_data)
+                        const newCampaigns = this.campInfo.filter((campaign: any) => 
+                            !existingPweData[campaign.campInstanceId]
+                        );
+                        
+                        console.log(`📊 Campaign analysis: ${this.campInfo.length} total, ${newCampaigns.length} new, ${this.campInfo.length - newCampaigns.length} existing`);
+                        
+                        // Only proceed if there are new campaigns OR first time initialization
+                        if (newCampaigns.length > 0 || Object.keys(existingPweData).length === 0) {
+                            console.log('✅ Processing new campaigns and setting up services');
                             
-                            // Initialize timeSpent if not exists
-                            if (this.timeSpent[campInstanceId] === undefined) {
-                                this.timeSpent[campInstanceId] = 0;
-                            }
-                        });
-                        
-                        window.sessionStorage.setItem('pwe_data', JSON.stringify(existingPweData));
-                        console.log('💾 PWE data saved to session storage');
-                        
-                        // Setup hover event listeners for campaigns with hoverOn rules
-                        this.setupHoverListeners();
-                        
-                        // Initialize efficient PWC tracking system
-                        me.initializePWCTracking();
+                            // Use new campaign data structure - only process NEW campaigns
+                            const pweData = this.constructPweData(newCampaigns);
+                            
+                            // Merge with existing data - only add new campaigns
+                            Object.keys(pweData).forEach(campInstanceId => {
+                                if (!existingPweData[campInstanceId]) {  // Double-check for safety
+                                    existingPweData[campInstanceId] = pweData[campInstanceId];
+                                    
+                                    // Initialize timeSpent if not exists
+                                    if (this.timeSpent[campInstanceId] === undefined) {
+                                        this.timeSpent[campInstanceId] = 0;
+                                    }
+                                }
+                            });
+                            
+                            window.sessionStorage.setItem('pwe_data', JSON.stringify(existingPweData));
+                            console.log('💾 PWE data saved to session storage');
+                            
+                            // Setup hover event listeners for campaigns with hoverOn rules
+                            this.setupHoverListeners();
+                            
+                            // Initialize efficient PWC tracking system
+                            me.initializePWCTracking();
+                        } else {
+                            console.log('⚠️ No new campaigns detected, skipping redundant setup for performance');
+                            console.log('⚡ Performance optimization: Existing campaigns preserved, no processing needed');
+                        }
                     } else {
                         console.log('❌ PWE is disabled, removing pwe_data from session storage');
                         window.sessionStorage.removeItem('pwe_data');
