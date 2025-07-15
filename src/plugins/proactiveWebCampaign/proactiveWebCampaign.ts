@@ -16,18 +16,11 @@ class ProactiveWebCampaignPlugin {
     visible: boolean = true;
     authInfo: any;
     timeSpent: any = {};
-    isCityCountryRule: any = {};
-    cityCountryData: any = {};
     elementHoverDuration: number = 2000;
     timeSpentTimers: any = {}; // New: Individual timers for timeSpent conditions
     activeTimerIds: any = {}; // New: Track active timer IDs for cleanup
     pageChangeDebounceTimer: any = null; // New: Debounce timer for page changes
-    customDataObject: any = {
-        "hello": "first",
-        "world": "second",
-        "hello.world": "third",
-        "hello.world.test": "fourth"
-    };
+    customDataObject: any = {};
     
     // =====================================================================================
     //                          🚀 CUSTOM CONDITIONTYPE SUPPORT PROPERTIES
@@ -1576,40 +1569,7 @@ class ProactiveWebCampaignPlugin {
                 }
             }
             
-            if (me.isCityCountryRule[campInstanceId]) {
-                const payload: any = {
-                    'event_name': 'pwe_event',
-                    'resourceid': '/pwe_message',
-                    'user': me.hostInstance.config.botOptions.userIdentity,
-                    'type': 'pwe_message',
-                    'userId': this.authInfo.userInfo.userId,
-                    'botInfo': {
-                        'chatBot': me.hostInstance._botInfo.name,
-                        'taskBotId': me.hostInstance._botInfo._id
-                    },
-                    'ruleInfo': [],
-                    'campInfo': {
-                        'campId' : camp.campId,
-                        
-                    }
-                }
-                let loc: any = window.sessionStorage.getItem('pwcLocationData');
-                loc = JSON.parse(loc);
-                if (loc) {
-                    (camp.engagementStrategy.rules || []).forEach((ruleItem: any) => {
-                        switch (ruleItem.rule) {
-                            case 'country':
-                            case 'city':
-                                let ruleCopy = {...ruleItem}
-                                ruleCopy['location'] = loc;
-                                payload.ruleInfo.push(ruleCopy);
-                                break;
-                        }
-                    })
-                    me.sendApiEvent(payload, '/locationdetails', campInstanceId);
-                    me.isCityCountryRule[campInstanceId] = false;
-                }
-            }
+
             let pwe_data: any = window.sessionStorage.getItem('pwe_data');
             pwe_data = JSON.parse(pwe_data);
             let pwe_data_inst: any = pwe_data[campInstanceId];
@@ -1683,42 +1643,7 @@ class ProactiveWebCampaignPlugin {
                                     window.sessionStorage.setItem('pwe_data', JSON.stringify(pwe_data));
                                 }
                                 break;
-                            case 'country':
-                                pwe_data = window.sessionStorage.getItem('pwe_data');
-                                pwe_data = JSON.parse(pwe_data);
-                                pwe_data_inst = pwe_data[campInstanceId];
-                                if(pwe_data_inst && !("country" in pwe_data_inst.actual.rules && me.cityCountryData[campInstanceId])) {
-                                    let loc: any = window.sessionStorage.getItem('pwcLocationData');
-                                    loc = JSON.parse(loc);
-                                    pwe_data_inst.actual.rules["country"] = me.cityCountryData[campInstanceId]?.countryMatched
-                                    const ruleCopy = {...ruleItem}
-                                    ruleCopy.value = loc;
-                                    ruleData.push(ruleCopy);
-                                    if (me.cityCountryData[campInstanceId]?.countryMatched && condition.toLowerCase() == 'or') {
-                                        pwe_data_inst.isLayoutTriggered = true;
-                                    }
-                                    pwe_data[campInstanceId] = pwe_data_inst
-                                    window.sessionStorage.setItem('pwe_data', JSON.stringify(pwe_data));
-                                }
-                                break;
-                            case 'city':
-                                pwe_data = window.sessionStorage.getItem('pwe_data');
-                                pwe_data = JSON.parse(pwe_data);
-                                pwe_data_inst = pwe_data[campInstanceId];
-                                if(pwe_data_inst && !("city" in pwe_data_inst.actual.rules && me.cityCountryData[campInstanceId]?.cityMatched)) {
-                                    let loct: any = window.sessionStorage.getItem('pwcLocationData');
-                                    loct = JSON.parse(loct);
-                                    pwe_data_inst.actual.rules["city"] = me.cityCountryData[campInstanceId]?.cityMatched
-                                    const ruleCopy = {...ruleItem}
-                                    ruleCopy.value = loct;
-                                    ruleData.push(ruleCopy);
-                                    if (me.cityCountryData[campInstanceId]?.cityMatched && condition.toLowerCase() == 'or') {
-                                        pwe_data_inst.isLayoutTriggered = true;
-                                    }
-                                    pwe_data[campInstanceId] = pwe_data_inst
-                                    window.sessionStorage.setItem('pwe_data', JSON.stringify(pwe_data));
-                                }
-                                break;
+
                             case 'hoverOn':
                                 if (type == 'hoverOn') {
                                     pwe_data = window.sessionStorage.getItem('pwe_data');
@@ -1843,16 +1768,160 @@ class ProactiveWebCampaignPlugin {
     }
 
     getLocationDetails() {
+        const me = this;
         const successCb = function(position: any) {
             let coordinates: any = {
-                latitude: '',
-                longitude: ''
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
             }
-            coordinates.latitude = position.coords.latitude;
-            coordinates.longitude =  position.coords.longitude;
-            window.sessionStorage.setItem('pwcLocationData', JSON.stringify(coordinates));
+            
+            console.log('🌍 Coordinates obtained:', coordinates);
+            
+            // Check if location data already exists in sessionStorage
+            const existingLocationData = window.sessionStorage.getItem('pwcLocationData');
+            if (!existingLocationData) {
+                console.log('📍 No existing location data found, calling location API');
+                me.callLocationAPI(coordinates);
+            } else {
+                console.log('📍 Location data already exists in sessionStorage');
+            }
         }
-        navigator.geolocation.getCurrentPosition(successCb);
+        
+        const errorCb = function(error: any) {
+            console.error('❌ Error getting coordinates:', error);
+        }
+        
+        navigator.geolocation.getCurrentPosition(successCb, errorCb);
+    }
+
+    /**
+     * =====================================================================================
+     *                           🌍 LOCATION API INTEGRATION WITH RETRY LOGIC
+     * =====================================================================================
+     */
+    
+    /**
+     * Calls the location API with coordinates and handles retry logic
+     * @param coordinates - Object containing latitude and longitude
+     */
+    async callLocationAPI(coordinates: any): Promise<void> {
+        console.log('🔄 Calling location API with coordinates:', coordinates);
+        
+        try {
+            const payload = {
+                latitude: coordinates.latitude.toString(),
+                longitude: coordinates.longitude.toString()
+            };
+            
+            const response = await this.sendLocationAPIRequest(payload);
+            
+            if (response && Array.isArray(response)) {
+                console.log('✅ Location API response received:', response);
+                this.parseAndSaveLocationData(response, coordinates);
+            } else {
+                console.error('❌ Invalid API response format:', response);
+                this.scheduleLocationAPIRetry(coordinates);
+            }
+        } catch (error) {
+            console.error('❌ Location API call failed:', error);
+            this.scheduleLocationAPIRetry(coordinates);
+        }
+    }
+
+    /**
+     * Sends the actual API request to the location endpoint
+     * @param payload - Request payload with latitude and longitude
+     * @returns Promise with API response
+     */
+    async sendLocationAPIRequest(payload: any): Promise<any> {
+        const me = this;
+        const url = new URL(me.hostInstance.config.botOptions.koreAPIUrl);
+        const endpoint = `${url.protocol}//${url.host}/customerengagement/api/pwe/bots/${me.hostInstance._botInfo._id}/locationDetails/geoLocation`;
+        
+        console.log('🌐 Sending request to:', endpoint);
+        console.log('📤 Request payload:', payload);
+        
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${this.authInfo.authorization.accessToken}`
+            },
+            body: JSON.stringify(payload)
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        return await response.json();
+    }
+
+    /**
+     * Schedules a retry of the location API call after 1 minute
+     * @param coordinates - Original coordinates for retry
+     */
+    scheduleLocationAPIRetry(coordinates: any): void {
+        console.log('⏰ Scheduling location API retry in 1 minute');
+        setTimeout(() => {
+            console.log('🔄 Retrying location API call');
+            this.callLocationAPI(coordinates);
+        }, 60000); // 1 minute
+    }
+
+    /**
+     * Parses API response and saves location data to sessionStorage
+     * @param apiResponse - Array response from location API
+     * @param coordinates - Original coordinates
+     */
+    parseAndSaveLocationData(apiResponse: any[], coordinates: any): void {
+        console.log('🔍 Parsing location API response');
+        
+        try {
+            const locationData = {
+                latitude: coordinates.latitude,
+                longitude: coordinates.longitude,
+                country: this.findLocationByType(apiResponse, 'country'),
+                city: this.findLocationByType(apiResponse, 'locality'),
+                state: this.findLocationByType(apiResponse, 'administrative_area_level_1')
+            };
+            
+            console.log('📍 Parsed location data:', locationData);
+            
+            // Save to sessionStorage
+            window.sessionStorage.setItem('pwcLocationData', JSON.stringify(locationData));
+            console.log('💾 Location data saved to sessionStorage');
+            
+            // Log parsed values for debugging
+            console.log(`🌍 Country: ${locationData.country || 'Not found'}`);
+            console.log(`🏙️ City: ${locationData.city || 'Not found'}`);
+            console.log(`🏛️ State: ${locationData.state || 'Not found'}`);
+            
+        } catch (error) {
+            console.error('❌ Error parsing location data:', error);
+            this.scheduleLocationAPIRetry(coordinates);
+        }
+    }
+
+    /**
+     * Finds location data by type from API response
+     * @param response - API response array
+     * @param targetType - Type to search for (country, locality, administrative_area_level_1)
+     * @returns Location name or null if not found
+     */
+    findLocationByType(response: any[], targetType: string): string | null {
+        try {
+            const item = response.find(item => 
+                item.types && Array.isArray(item.types) && item.types.includes(targetType)
+            );
+            
+            const result = item ? item.long_name : null;
+            console.log(`🔍 Found ${targetType}: ${result || 'Not found'}`);
+            return result;
+        } catch (error) {
+            console.error(`❌ Error finding ${targetType}:`, error);
+            return null;
+        }
     }
 
     async sendApiEvent(payload: string, route: string, campInstanceId?: string) {
@@ -1874,9 +1943,8 @@ class ProactiveWebCampaignPlugin {
                 throw new Error('Something went wrong');
             })
             .then((res: any) => {
-                if (campInstanceId) {
-                    me.cityCountryData[campInstanceId] = res;
-                }
+                // Response handling - cityCountryData assignment removed due to new location API system
+                console.log('✅ API response received:', res);
             }).catch(err => {
                 console.log(err);
             })
@@ -2842,39 +2910,56 @@ class ProactiveWebCampaignPlugin {
             }
         }
 
-        // Update country - check rules and exclusions separately
-        const hasCountryInRules = this.campaignHasConditionType(campaign, 'country');
-        const hasCountryInExclusions = this.campaignHasExclusionConditionType(campaign, 'country');
+        // Update location data (country, city, state) from sessionStorage
+        const locationData = JSON.parse(window.sessionStorage.getItem('pwcLocationData') || '{}');
         
-        if ((hasCountryInRules || hasCountryInExclusions) && this.cityCountryData[campInstanceId]) {
-            const countryData = this.cityCountryData[campInstanceId].countryMatched;
+        if (locationData && (locationData.country || locationData.city || locationData.state)) {
+            // Update country - check rules and exclusions separately
+            const hasCountryInRules = this.campaignHasConditionType(campaign, 'country');
+            const hasCountryInExclusions = this.campaignHasExclusionConditionType(campaign, 'country');
             
-            if (hasCountryInRules) {
-                campaignData.actual.rules.country = countryData;
-                console.log(`🌍 Country updated in RULES: ${countryData}`);
+            if ((hasCountryInRules || hasCountryInExclusions) && locationData.country) {
+                if (hasCountryInRules) {
+                    campaignData.actual.rules.country = locationData.country;
+                    console.log(`🌍 Country updated in RULES: ${locationData.country}`);
+                }
+                
+                if (hasCountryInExclusions) {
+                    campaignData.actual.exclusions.country = locationData.country;
+                    console.log(`🌍 Country updated in EXCLUSIONS: ${locationData.country}`);
+                }
             }
-            
-            if (hasCountryInExclusions) {
-                campaignData.actual.exclusions.country = countryData;
-                console.log(`🌍 Country updated in EXCLUSIONS: ${countryData}`);
-            }
-        }
 
-        // Update city - check rules and exclusions separately
-        const hasCityInRules = this.campaignHasConditionType(campaign, 'city');
-        const hasCityInExclusions = this.campaignHasExclusionConditionType(campaign, 'city');
-        
-        if ((hasCityInRules || hasCityInExclusions) && this.cityCountryData[campInstanceId]) {
-            const cityData = this.cityCountryData[campInstanceId].cityMatched;
+            // Update city - check rules and exclusions separately
+            const hasCityInRules = this.campaignHasConditionType(campaign, 'city');
+            const hasCityInExclusions = this.campaignHasExclusionConditionType(campaign, 'city');
             
-            if (hasCityInRules) {
-                campaignData.actual.rules.city = cityData;
-                console.log(`🏙️ City updated in RULES: ${cityData}`);
+            if ((hasCityInRules || hasCityInExclusions) && locationData.city) {
+                if (hasCityInRules) {
+                    campaignData.actual.rules.city = locationData.city;
+                    console.log(`🏙️ City updated in RULES: ${locationData.city}`);
+                }
+                
+                if (hasCityInExclusions) {
+                    campaignData.actual.exclusions.city = locationData.city;
+                    console.log(`🏙️ City updated in EXCLUSIONS: ${locationData.city}`);
+                }
             }
+
+            // Update state - check rules and exclusions separately (NEW)
+            const hasStateInRules = this.campaignHasConditionType(campaign, 'state');
+            const hasStateInExclusions = this.campaignHasExclusionConditionType(campaign, 'state');
             
-            if (hasCityInExclusions) {
-                campaignData.actual.exclusions.city = cityData;
-                console.log(`🏙️ City updated in EXCLUSIONS: ${cityData}`);
+            if ((hasStateInRules || hasStateInExclusions) && locationData.state) {
+                if (hasStateInRules) {
+                    campaignData.actual.rules.state = locationData.state;
+                    console.log(`🏛️ State updated in RULES: ${locationData.state}`);
+                }
+                
+                if (hasStateInExclusions) {
+                    campaignData.actual.exclusions.state = locationData.state;
+                    console.log(`🏛️ State updated in EXCLUSIONS: ${locationData.state}`);
+                }
             }
         }
 
