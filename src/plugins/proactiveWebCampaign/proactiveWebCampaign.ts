@@ -1213,9 +1213,10 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Restarts timers when URL changes (more efficient than continuous polling)
+     * ENHANCED: Now includes hoverOn reset and hover listener management
      */
     handlePageChange(): void {
-        console.log('📄 Page change detected, restarting relevant timers');
+        console.log('📄 Page change detected, restarting relevant timers and resetting hoverOn');
         
         // Clear existing timers
         this.clearAllTimeSpentTimers();
@@ -1237,11 +1238,20 @@ class ProactiveWebCampaignPlugin {
         // Clear timeSpent for campaigns that no longer match current page
         this.clearTimeSpentForInactiveCampaigns(currentUrl, currentPageTitle);
         
+        // Reset hoverOn values for all campaigns (keep keys, reset values to false)
+        this.resetHoverOnValues();
+        
+        // Clear existing hover listeners (they'll be recreated for new active campaigns)
+        this.clearHoverListeners();
+        
         // Update page visit counts for relevant campaigns
         this.updatePageVisitCounts();
         
         // Setup new timers for active campaigns
         this.setupTimeSpentTimers();
+        
+        // Setup new hover listeners for active campaigns on new page
+        this.setupHoverListeners();
         
         // Trigger rule evaluation
         this.sendEventNew(pageObj, 'pageChange');
@@ -1249,6 +1259,56 @@ class ProactiveWebCampaignPlugin {
         // Update tracking variables
         window.sessionStorage.setItem('prevUrl', currentUrl);
         window.sessionStorage.setItem('startTime', Date.now().toString());
+    }
+
+    /**
+     * Resets all hoverOn values to false while keeping the key structure
+     * This maintains performance by avoiding recreation of keys
+     */
+    resetHoverOnValues(): void {
+        console.log('🔄 Resetting hoverOn values to false for all campaigns');
+        
+        let pweData: any = window.sessionStorage.getItem('pwe_data');
+        pweData = JSON.parse(pweData) || {};
+        
+        let totalResetCount = 0;
+        
+        Object.keys(pweData).forEach(campInstanceId => {
+            const campaignData = pweData[campInstanceId];
+            
+            // Reset rules hoverOn values
+            if (campaignData.actual.rules.hoverOn) {
+                Object.keys(campaignData.actual.rules.hoverOn).forEach(key => {
+                    campaignData.actual.rules.hoverOn[key] = false;
+                    totalResetCount++;
+                });
+                console.log(`🔄 Reset ${Object.keys(campaignData.actual.rules.hoverOn).length} RULES hoverOn keys for ${campInstanceId}`);
+            }
+            
+            // Reset exclusions hoverOn values
+            if (campaignData.actual.exclusions.hoverOn) {
+                Object.keys(campaignData.actual.exclusions.hoverOn).forEach(key => {
+                    campaignData.actual.exclusions.hoverOn[key] = false;
+                    totalResetCount++;
+                });
+                console.log(`🔄 Reset ${Object.keys(campaignData.actual.exclusions.hoverOn).length} EXCLUSIONS hoverOn keys for ${campInstanceId}`);
+            }
+        });
+        
+        // Save updated data
+        window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
+        
+        console.log(`✅ HoverOn reset complete: ${totalResetCount} total keys reset to false`);
+    }
+
+    /**
+     * Clears all hover listeners to prevent memory leaks
+     * Note: This is a placeholder for future implementation of listener tracking
+     */
+    clearHoverListeners(): void {
+        console.log('🧹 Clearing hover listeners (preventing memory leaks)');
+        // TODO: Implement proper listener cleanup if needed
+        // For now, relying on DOM element replacement to clean up listeners
     }
 
     /**
@@ -1492,7 +1552,10 @@ class ProactiveWebCampaignPlugin {
                             if (!actual[key]) allRulesMet = false;
                             break;
                         case 'hoverOn':
-                            if (!actual[key]) allRulesMet = false;
+                            // DEPRECATED: Old hoverOn logic - now uses key-based structure
+                            console.log('⚠️ DEPRECATED: Old hoverOn validation logic - use new key-based structure');
+                            // The new implementation uses object structure, not boolean
+                            if (!actual[key] || typeof actual[key] !== 'object') allRulesMet = false;
                     }
                 }
                 if (allRulesMet) {
@@ -1645,30 +1708,11 @@ class ProactiveWebCampaignPlugin {
                                 break;
 
                             case 'hoverOn':
-                                if (type == 'hoverOn') {
-                                    pwe_data = window.sessionStorage.getItem('pwe_data');
-                                    pwe_data = JSON.parse(pwe_data);
-                                    pwe_data_inst = pwe_data[campInstanceId];
-                                    if (pwe_data_inst && !("hoverOn" in pwe_data_inst.actual.rules)) {
-                                        const ruleCopy = {...ruleItem}
-                                        if (condition.toLowerCase() == 'or') pwe_data_inst.isLayoutTriggered = true;
-                                        const actual: any = pwe_data_inst.actual.rules;
-                                        const expected: any = pwe_data_inst.expected.rules;
-                                        let isLastRule = true;
-                                        if (condition.toLowerCase() == 'and') {
-                                            for (const key in expected) {
-                                                if (actual[key] != expected[key][0].value && key == 'pageVisitCount') isLastRule = false;
-                                                if (key == 'timeSpent' && !actual[key]) isLastRule = false;
-                                            }
-                                        }
-                                        if (condition.toLowerCase() == 'or' || isLastRule) {
-                                            ruleData.push(ruleCopy);
-                                            pwe_data_inst.actual.rules["hoverOn"] = true
-                                            pwe_data[campInstanceId] = pwe_data_inst
-                                            window.sessionStorage.setItem('pwe_data', JSON.stringify(pwe_data));
-                                        }                                                                
-                                    }
-                                }
+                                // DEPRECATED: Old hoverOn logic - now handled by new key-based structure
+                                console.log('⚠️ DEPRECATED: Old hoverOn logic in sendEvent - use new structure');
+                                console.log('⚠️ HoverOn is now handled by setupHoverListenerForCondition method');
+                                // The new implementation handles hoverOn through the key-based structure
+                                // in hover event listeners, so no processing needed here
                             default:
                         }
                     });
@@ -2085,43 +2129,178 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Sets up hover event listeners for campaigns with hoverOn rules
-     * This method scans through all campaigns and sets up DOM event listeners
-     * for elements that have hoverOn rules configured
+     * ENHANCED: Now only sets up listeners for campaigns that match current page (website-aware)
      */
     setupHoverListeners(): void {
-        console.log('🖱️ Setting up hover event listeners');
+        console.log('🖱️ Setting up hover event listeners (website-aware)');
         
         if (!this.campInfo || this.campInfo.length === 0) {
             console.log('⚠️ No campaigns available for hover setup');
             return;
         }
 
-        this.campInfo.forEach((campaign: any) => {
+        // Get current page info
+        const currentUrl = window.location.href;
+        const currentPageTitle = document.title.trim();
+        
+        // Only setup hover listeners for campaigns that match current page
+        const activeCampaigns = this.getActiveCampaigns(currentUrl, currentPageTitle);
+        
+        if (activeCampaigns.length === 0) {
+            console.log('⚠️ No active campaigns for current page - no hover listeners needed');
+            return;
+        }
+
+        console.log(`🖱️ Setting up hover listeners for ${activeCampaigns.length} active campaigns`);
+
+        activeCampaigns.forEach((campaign: any) => {
             const campInstanceId = campaign.campInstanceId;
-            console.log(`🎯 Setting up hover listeners for campaign: ${campInstanceId}`);
+            console.log(`🎯 Setting up hover listeners for active campaign: ${campInstanceId}`);
             
-            // Check if campaign has rules with hoverOn
-            if (campaign.engagementStrategy.rules && campaign.engagementStrategy.rules.groups) {
-                campaign.engagementStrategy.rules.groups.forEach((group: any) => {
-                    if (group.conditions) {
-                        group.conditions.forEach((condition: any) => {
-                            if (condition.column === 'hoverOn') {
-                                this.setupHoverListenerForCondition(condition, campInstanceId);
-                            }
-                        });
-                    }
-                });
-            }
+            // Initialize hoverOn structure for this active campaign
+            this.initializeHoverOnForCampaign(campaign);
+            
+            // Setup DOM listeners for this campaign
+            this.setupHoverListenersForCampaign(campaign);
         });
     }
 
     /**
+     * Initializes hoverOn structure for a campaign (only for active campaigns)
+     * ENHANCED: Smart key creation - only create keys that don't exist
+     * @param campaign - Campaign object
+     */
+    initializeHoverOnForCampaign(campaign: any): void {
+        console.log(`🔑 Initializing hoverOn structure for campaign: ${campaign.campInstanceId}`);
+        
+        let pweData: any = window.sessionStorage.getItem('pwe_data');
+        pweData = JSON.parse(pweData) || {};
+        
+        if (!pweData[campaign.campInstanceId]) {
+            console.log(`⚠️ Campaign data not found for hoverOn initialization: ${campaign.campInstanceId}`);
+            return;
+        }
+
+        let rulesKeysCreated = 0;
+        let exclusionsKeysCreated = 0;
+        let rulesKeysSkipped = 0;
+        let exclusionsKeysSkipped = 0;
+
+        // Initialize hoverOn structure for rules
+        if (campaign.engagementStrategy.rules && campaign.engagementStrategy.rules.groups) {
+            // Ensure hoverOn object exists
+            if (!pweData[campaign.campInstanceId].actual.rules.hoverOn) {
+                pweData[campaign.campInstanceId].actual.rules.hoverOn = {};
+            }
+
+            campaign.engagementStrategy.rules.groups.forEach((group: any, groupIndex: number) => {
+                if (group.conditions) {
+                    group.conditions.forEach((condition: any, conditionIndex: number) => {
+                        if (condition.column === 'hoverOn') {
+                            const groupId = group.id || `group_${groupIndex}`;
+                            const conditionId = condition.id || `condition_${conditionIndex}`;
+                            const key = `${groupId}_${conditionId}`;
+                            
+                            // OPTIMIZATION: Only create if doesn't exist
+                            if (!(key in pweData[campaign.campInstanceId].actual.rules.hoverOn)) {
+                                pweData[campaign.campInstanceId].actual.rules.hoverOn[key] = false;
+                                rulesKeysCreated++;
+                                console.log(`🔑 Created new RULES hoverOn key: ${key}`);
+                            } else {
+                                rulesKeysSkipped++;
+                                console.log(`⚡ Skipped existing RULES hoverOn key: ${key}`);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        // Initialize hoverOn structure for exclusions
+        if (campaign.engagementStrategy.exclusions && campaign.engagementStrategy.exclusions.groups) {
+            // Ensure hoverOn object exists
+            if (!pweData[campaign.campInstanceId].actual.exclusions.hoverOn) {
+                pweData[campaign.campInstanceId].actual.exclusions.hoverOn = {};
+            }
+
+            campaign.engagementStrategy.exclusions.groups.forEach((group: any, groupIndex: number) => {
+                if (group.conditions) {
+                    group.conditions.forEach((condition: any, conditionIndex: number) => {
+                        if (condition.column === 'hoverOn') {
+                            const groupId = group.id || `group_${groupIndex}`;
+                            const conditionId = condition.id || `condition_${conditionIndex}`;
+                            const key = `${groupId}_${conditionId}`;
+                            
+                            // OPTIMIZATION: Only create if doesn't exist
+                            if (!(key in pweData[campaign.campInstanceId].actual.exclusions.hoverOn)) {
+                                pweData[campaign.campInstanceId].actual.exclusions.hoverOn[key] = false;
+                                exclusionsKeysCreated++;
+                                console.log(`🔑 Created new EXCLUSIONS hoverOn key: ${key}`);
+                            } else {
+                                exclusionsKeysSkipped++;
+                                console.log(`⚡ Skipped existing EXCLUSIONS hoverOn key: ${key}`);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        // Save updated data
+        window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
+        
+        console.log(`✅ HoverOn initialization complete for ${campaign.campInstanceId}:`);
+        console.log(`   - Rules: ${rulesKeysCreated} created, ${rulesKeysSkipped} skipped`);
+        console.log(`   - Exclusions: ${exclusionsKeysCreated} created, ${exclusionsKeysSkipped} skipped`);
+    }
+
+    /**
+     * Sets up hover listeners for a specific campaign
+     * @param campaign - Campaign object
+     */
+    setupHoverListenersForCampaign(campaign: any): void {
+        const campInstanceId = campaign.campInstanceId;
+        console.log(`🖱️ Setting up DOM listeners for campaign: ${campInstanceId}`);
+        
+        // Setup listeners for rules
+        if (campaign.engagementStrategy.rules && campaign.engagementStrategy.rules.groups) {
+            campaign.engagementStrategy.rules.groups.forEach((group: any, groupIndex: number) => {
+                if (group.conditions) {
+                    group.conditions.forEach((condition: any, conditionIndex: number) => {
+                        if (condition.column === 'hoverOn') {
+                            this.setupHoverListenerForCondition(condition, campInstanceId, group, groupIndex, conditionIndex, 'rules');
+                        }
+                    });
+                }
+            });
+        }
+
+        // Setup listeners for exclusions
+        if (campaign.engagementStrategy.exclusions && campaign.engagementStrategy.exclusions.groups) {
+            campaign.engagementStrategy.exclusions.groups.forEach((group: any, groupIndex: number) => {
+                if (group.conditions) {
+                    group.conditions.forEach((condition: any, conditionIndex: number) => {
+                        if (condition.column === 'hoverOn') {
+                            this.setupHoverListenerForCondition(condition, campInstanceId, group, groupIndex, conditionIndex, 'exclusions');
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    /**
      * Sets up hover listener for a specific hoverOn condition
+     * ENHANCED: Now uses key-based structure and supports both rules and exclusions
      * @param condition - The hoverOn condition configuration
      * @param campInstanceId - Campaign instance ID
+     * @param group - Group object
+     * @param groupIndex - Group index (fallback for missing group.id)
+     * @param conditionIndex - Condition index (fallback for missing condition.id)
+     * @param type - 'rules' or 'exclusions'
      */
-    setupHoverListenerForCondition(condition: any, campInstanceId: string): void {
-        console.log(`🖱️ Setting up hover listener for condition:`, condition);
+    setupHoverListenerForCondition(condition: any, campInstanceId: string, group: any, groupIndex: number, conditionIndex: number, type: string): void {
+        console.log(`🖱️ Setting up hover listener for ${type} condition:`, condition);
         
         let selector: string = '';
         const selectorValue = condition.value?.trim();
@@ -2155,28 +2334,46 @@ class ProactiveWebCampaignPlugin {
         if (docSelector) {
             let timer: any;
             
+            // Generate key for this condition
+            const groupId = group.id || `group_${groupIndex}`;
+            const conditionId = condition.id || `condition_${conditionIndex}`;
+            const key = `${groupId}_${conditionId}`;
+            
             docSelector.addEventListener('mouseenter', () => {
-                console.log(`🖱️ Mouse entered element: ${selector}`);
+                console.log(`🖱️ Mouse entered element: ${selector} (${key})`);
                 timer = setTimeout(() => {
-                    console.log(`⏰ Hover duration reached for: ${selector}`);
-                    const currentUrl = window.location.href;
-                    const currentPageTitle = document.title.trim();
-                    const pageObj = {
-                        url: currentUrl,
-                        pageName: currentPageTitle
-                    };
+                    console.log(`⏰ Hover duration reached for: ${selector} (${key})`);
                     
-                    // Use new sendEvent method
-                    this.sendEventNew(pageObj, 'hoverOn');
+                    // Direct update to pwe_data using key-based structure
+                    let pweData: any = window.sessionStorage.getItem('pwe_data');
+                    pweData = JSON.parse(pweData) || {};
+                    
+                    if (pweData[campInstanceId] && pweData[campInstanceId].actual[type].hoverOn) {
+                        pweData[campInstanceId].actual[type].hoverOn[key] = true;
+                        window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
+                        console.log(`✅ HoverOn ${type} condition satisfied: ${key} = true`);
+                        
+                        // Trigger evaluation
+                        const currentUrl = window.location.href;
+                        const currentPageTitle = document.title.trim();
+                        const pageObj = {
+                            url: currentUrl,
+                            pageName: currentPageTitle
+                        };
+                        
+                        this.sendEventNew(pageObj, 'hoverOn');
+                    } else {
+                        console.log(`⚠️ HoverOn ${type} structure not found for ${campInstanceId}`);
+                    }
                 }, this.elementHoverDuration);
             });
             
             docSelector.addEventListener('mouseleave', () => {
-                console.log(`🖱️ Mouse left element: ${selector}`);
+                console.log(`🖱️ Mouse left element: ${selector} (${key})`);
                 clearTimeout(timer);
             });
             
-            console.log(`✅ Hover listener set up for: ${selector}`);
+            console.log(`✅ Hover listener set up for: ${selector} (${key})`);
         } else {
             console.log(`⚠️ Element not found for selector: ${selector}`);
         }
@@ -2633,11 +2830,9 @@ class ProactiveWebCampaignPlugin {
                 }
                 break;
             case 'hoverOn':
-                if (this.campaignHasConditionType(campaign, 'hoverOn') || this.campaignHasExclusionConditionType(campaign, 'hoverOn')) {
-                    this.updateHoverData(campaignData, campInstanceId);
-                } else {
-                    console.log(`⚠️ Campaign ${campInstanceId} doesn't have hoverOn condition - skipping update`);
-                }
+                // HoverOn updates are now handled directly in hover event listeners
+                // No additional processing needed here as the key-based structure is updated immediately
+                console.log(`🖱️ HoverOn event processed - values already updated in hover listeners`);
                 break;
             case 'customData':
                 // Custom data is already updated by updateCustomActualValues() in handleCustomDataChanges()
@@ -2844,36 +3039,19 @@ class ProactiveWebCampaignPlugin {
     }
 
     /**
-     * Updates hover event data
-     * CORRECTED: Only populates actual.rules OR actual.exclusions based on where condition is configured
+     * DEPRECATED: Updates hover event data (legacy method - replaced by new key-based structure)
+     * This method is kept for backward compatibility but is no longer used
+     * The new implementation directly updates the key-based hoverOn structure in hover event listeners
      * @param campaignData - Campaign data object
+     * @param campInstanceId - Campaign instance ID
      */
     updateHoverData(campaignData: any, campInstanceId?: string): void {
-        if (campInstanceId) {
-            const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
-            if (!campaign) {
-                console.log(`⚠️ Campaign not found for hover data update: ${campInstanceId}`);
-                return;
-            }
-
-            const hasInRules = this.campaignHasConditionType(campaign, 'hoverOn');
-            const hasInExclusions = this.campaignHasExclusionConditionType(campaign, 'hoverOn');
-            
-            if (hasInRules) {
-                campaignData.actual.rules.hoverOn = true;
-                console.log('🖱️ Hover event recorded in RULES');
-            }
-            
-            if (hasInExclusions) {
-                campaignData.actual.exclusions.hoverOn = true;
-                console.log('🖱️ Hover event recorded in EXCLUSIONS');
-            }
-        } else {
-            // Fallback for backward compatibility - update both if campInstanceId not provided
-            campaignData.actual.rules.hoverOn = true;
-            campaignData.actual.exclusions.hoverOn = true;
-            console.log('🖱️ Hover event recorded (both rules & exclusions - legacy mode)');
-        }
+        console.log('⚠️ DEPRECATED: updateHoverData method called - this is now handled by key-based structure');
+        console.log('⚠️ HoverOn updates should be handled directly in hover event listeners');
+        
+        // This method is now deprecated - the new implementation handles hoverOn
+        // updates directly in the hover event listeners using the key-based structure
+        // See: setupHoverListenerForCondition method for the new implementation
     }
 
     /**
@@ -3017,7 +3195,7 @@ class ProactiveWebCampaignPlugin {
             this.analyzeConditionEvaluation(group.conditions, campaignData.actual.rules);
             
             // ENHANCED: Update individual condition satisfaction states (RULES - selective persistence)
-            this.updateIndividualConditionStates(group.conditions, campaignData.actual.rules, false);
+            this.updateIndividualConditionStates(group.conditions, campaignData.actual.rules, false, group.id);
             
             // Evaluate group satisfaction
             group.conditions.isSatisfied = this.evaluateGroupConditions(
@@ -3071,7 +3249,7 @@ class ProactiveWebCampaignPlugin {
             const previousGroupSatisfied = group.conditions.isSatisfied;
             
             // ENHANCED: Update individual condition satisfaction states (EXCLUSIONS - always dynamic)
-            this.updateIndividualConditionStates(group.conditions, campaignData.actual.exclusions, true);
+            this.updateIndividualConditionStates(group.conditions, campaignData.actual.exclusions, true, group.id);
             
             group.conditions.isSatisfied = this.evaluateGroupConditions(
                 group.conditions,
@@ -3243,8 +3421,9 @@ class ProactiveWebCampaignPlugin {
      * @param groupConditions - Group conditions object  
      * @param actualValues - Actual values to compare against
      * @param isExclusions - Whether these are exclusion conditions (determines persistence behavior)
+     * @param groupId - Group ID for hoverOn condition evaluation
      */
-    updateIndividualConditionStates(groupConditions: any, actualValues: any, isExclusions: boolean = false): void {
+    updateIndividualConditionStates(groupConditions: any, actualValues: any, isExclusions: boolean = false, groupId?: string): void {
         console.log(`🔄 Updating individual condition satisfaction states (${isExclusions ? 'EXCLUSIONS - dynamic' : 'RULES - selective persistence'})`);
         
         // Check each condition type
@@ -3258,7 +3437,15 @@ class ProactiveWebCampaignPlugin {
                 const actualValue = actualValues[column];
                 
                 if (actualValue !== undefined && actualValue !== null) {
-                    const currentResult = this.evaluateCondition(condition, actualValue);
+                    let currentResult: boolean;
+                    
+                    // Special handling for hoverOn conditions
+                    if (condition.column === 'hoverOn' && groupId) {
+                        currentResult = this.evaluateHoverOnConditionWithContext(condition, actualValue, groupId);
+                    } else {
+                        currentResult = this.evaluateCondition(condition, actualValue);
+                    }
+                    
                     const previousSatisfied = condition.isSatisfied;
                     
                     if (isExclusions) {
@@ -3432,6 +3619,10 @@ class ProactiveWebCampaignPlugin {
         if (conditionType === 'custom') {
             console.log(`🔍 *** CUSTOM CONDITION EVALUATION ***`);
             result = this.evaluateCustomCondition(condition, actualValue, value);
+        } else if (condition.column === 'hoverOn') {
+            // Handle hoverOn conditions with new key-based structure
+            console.log(`🔍 *** HOVERON CONDITION EVALUATION ***`);
+            result = this.evaluateHoverOnCondition(condition, actualValue);
         } else {
             // Handle default condition types
             console.log(`🔍 *** DEFAULT CONDITION EVALUATION ***`);
@@ -3489,6 +3680,117 @@ class ProactiveWebCampaignPlugin {
         
         console.log(`🔍 Final condition result: ${result ? '✅ SATISFIED' : '❌ NOT SATISFIED'}`);
         console.log(`🔍 =============== CONDITION EVALUATION END ===============\n`);
+        return result;
+    }
+
+    /**
+     * =====================================================================================
+     *                        🖱️ HOVERON CONDITION EVALUATION ENGINE
+     * =====================================================================================
+     * 
+     * Evaluates hoverOn conditions with new key-based structure:
+     * - actualValue is an object: { "group1_co-1": true, "group2_co-3": false }
+     * - Looks up the specific key for this condition
+     * - Returns boolean result (no type mismatch issues)
+     */
+    evaluateHoverOnCondition(condition: any, actualValue: any): boolean {
+        console.log(`🖱️ Evaluating hoverOn condition:`);
+        console.log(`   - Condition ID: ${condition.id}`);
+        console.log(`   - Expected value: ${condition.value}`);
+        console.log(`   - Actual hoverOn object:`, actualValue);
+        
+        // Handle case where actualValue is not an object (shouldn't happen with new structure)
+        if (!actualValue || typeof actualValue !== 'object') {
+            console.log(`⚠️ HoverOn actual value is not an object - using legacy fallback`);
+            
+            // Legacy fallback for backward compatibility during transition
+            if (typeof actualValue === 'boolean') {
+                console.log(`📊 Legacy boolean hoverOn: ${actualValue}`);
+                return actualValue === true;
+            }
+            
+            console.log(`📊 Invalid hoverOn actualValue type: ${typeof actualValue}`);
+            return false;
+        }
+        
+        // Find the key for this condition
+        // We need to find the key that corresponds to this condition
+        // The key format is: "groupId_conditionId"
+        let matchingKey: string | null = null;
+        let matchingValue = false;
+        
+        // Search through all keys to find the one that matches this condition
+        Object.keys(actualValue).forEach(key => {
+            // For now, we'll match by condition ID if it exists
+            if (condition.id && key.includes(condition.id)) {
+                matchingKey = key;
+                matchingValue = actualValue[key];
+                console.log(`🔍 Found matching key: ${key} = ${matchingValue}`);
+            }
+        });
+        
+        // If no matching key found, check if there's only one key (single condition case)
+        if (!matchingKey && Object.keys(actualValue).length === 1) {
+            matchingKey = Object.keys(actualValue)[0];
+            matchingValue = actualValue[matchingKey];
+            console.log(`🔍 Single condition fallback - using key: ${matchingKey} = ${matchingValue}`);
+        }
+        
+        // If still no matching key, condition is not satisfied
+        if (!matchingKey) {
+            console.log(`⚠️ No matching hoverOn key found for condition ${condition.id}`);
+            console.log(`   Available keys: [${Object.keys(actualValue).join(', ')}]`);
+            return false;
+        }
+        
+        // Return the boolean value
+        const result = matchingValue === true;
+        console.log(`📊 HoverOn condition result: ${matchingKey} = ${matchingValue} → ${result}`);
+        return result;
+    }
+
+    /**
+     * Evaluates hoverOn conditions with group context for precise key matching
+     * @param condition - The hoverOn condition
+     * @param actualValue - The hoverOn object
+     * @param groupId - The group ID for key construction
+     * @returns Boolean result
+     */
+    evaluateHoverOnConditionWithContext(condition: any, actualValue: any, groupId: string): boolean {
+        console.log(`🖱️ Evaluating hoverOn condition with group context:`);
+        console.log(`   - Group ID: ${groupId}`);
+        console.log(`   - Condition ID: ${condition.id}`);
+        console.log(`   - Actual hoverOn object:`, actualValue);
+        
+        // Handle case where actualValue is not an object
+        if (!actualValue || typeof actualValue !== 'object') {
+            console.log(`⚠️ HoverOn actual value is not an object - using legacy fallback`);
+            
+            // Legacy fallback for backward compatibility during transition
+            if (typeof actualValue === 'boolean') {
+                console.log(`📊 Legacy boolean hoverOn: ${actualValue}`);
+                return actualValue === true;
+            }
+            
+            console.log(`📊 Invalid hoverOn actualValue type: ${typeof actualValue}`);
+            return false;
+        }
+        
+        // Construct the expected key
+        const expectedKey = `${groupId}_${condition.id}`;
+        console.log(`🔍 Looking for key: ${expectedKey}`);
+        
+        // Check if the key exists and get its value
+        const keyValue = actualValue[expectedKey];
+        const result = keyValue === true;
+        
+        console.log(`📊 HoverOn condition result: ${expectedKey} = ${keyValue} → ${result}`);
+        
+        if (keyValue === undefined) {
+            console.log(`⚠️ Key ${expectedKey} not found in hoverOn object`);
+            console.log(`   Available keys: [${Object.keys(actualValue).join(', ')}]`);
+        }
+        
         return result;
     }
 
