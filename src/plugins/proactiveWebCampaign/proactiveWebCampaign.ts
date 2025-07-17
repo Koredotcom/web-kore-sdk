@@ -2314,7 +2314,7 @@ class ProactiveWebCampaignPlugin {
         
         // Build selector based on operator type
         switch (condition.operator) {
-            case 'querySelector':
+            case 'query_selector':
                 selector = decodedValue;
                 break;
             case 'id':
