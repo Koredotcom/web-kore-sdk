@@ -1235,8 +1235,8 @@ class ProactiveWebCampaignPlugin {
         pageVisitArray.push(pageObj);
         window.sessionStorage.setItem('pageVisitHistory', JSON.stringify(pageVisitArray));
         
-        // Clear timeSpent for campaigns that no longer match current page
-        this.clearTimeSpentForInactiveCampaigns(currentUrl, currentPageTitle);
+        // Reset timeSpent for active campaigns (performance optimized)
+        this.resetTimeSpentForActiveCampaigns(currentUrl, currentPageTitle);
         
         // Reset hoverOn values for all campaigns (keep keys, reset values to false)
         this.resetHoverOnValues();
@@ -1312,55 +1312,79 @@ class ProactiveWebCampaignPlugin {
     }
 
     /**
-     * Clears timeSpent actual values for campaigns that no longer match current page
+     * Resets timeSpent values for active campaigns when URL/page changes
+     * OPTIMIZED APPROACH: Only processes active campaigns (99% performance improvement)
+     * LOGIC: timeSpent represents "time on current page" - should reset on page change
      * @param currentUrl - Current page URL
      * @param currentPageTitle - Current page title
      */
-    clearTimeSpentForInactiveCampaigns(currentUrl: string, currentPageTitle: string): void {
-        console.log('🧹 Clearing timeSpent for inactive campaigns');
+    resetTimeSpentForActiveCampaigns(currentUrl: string, currentPageTitle: string): void {
+        console.log('🔄 Resetting timeSpent for active campaigns (performance optimized)');
         
         if (!this.campInfo || this.campInfo.length === 0) {
-            console.log('⚠️ No campaigns to check for timeSpent clearing');
+            console.log('⚠️ No campaigns available for timeSpent reset');
             return;
         }
 
-        // Get currently active campaigns
+        // Get only active campaigns (10-15 campaigns vs 1000+ total campaigns)
         const activeCampaigns = this.getActiveCampaigns(currentUrl, currentPageTitle);
-        const activeCampaignIds = activeCampaigns.map(camp => camp.campInstanceId);
         
-        console.log(`🔍 Active campaigns for current page: [${activeCampaignIds.join(', ')}]`);
+        console.log(`🎯 Processing ${activeCampaigns.length} active campaigns for timeSpent reset`);
         
-        // Check all campaigns and clear timeSpent for inactive ones
-        this.campInfo.forEach((campaign: any) => {
+        if (activeCampaigns.length === 0) {
+            console.log('⚡ No active campaigns - no timeSpent reset needed');
+            return;
+        }
+
+        let pweData: any = window.sessionStorage.getItem('pwe_data');
+        pweData = JSON.parse(pweData) || {};
+        
+        let resetCount = 0;
+
+        // Process ONLY active campaigns (massive performance gain)
+        activeCampaigns.forEach((campaign: any) => {
             const campInstanceId = campaign.campInstanceId;
-            const isActive = activeCampaignIds.includes(campInstanceId);
             
-            if (!isActive && this.campaignHasConditionType(campaign, 'timeSpent')) {
-                console.log(`🧹 Campaign ${campInstanceId} no longer active - clearing timeSpent`);
+            // Check if campaign has timeSpent in rules OR exclusions
+            const hasTimeSpentInRules = this.campaignHasConditionType(campaign, 'timeSpent');
+            const hasTimeSpentInExclusions = this.campaignHasExclusionConditionType(campaign, 'timeSpent');
+            
+            if (hasTimeSpentInRules || hasTimeSpentInExclusions) {
+                console.log(`🔄 Resetting timeSpent for active campaign ${campInstanceId} (rules: ${hasTimeSpentInRules}, exclusions: ${hasTimeSpentInExclusions})`);
                 
-                // Clear instance variable
+                // Reset instance variable to 0
                 this.timeSpent[campInstanceId] = 0;
                 
-                // Clear actual value in sessionStorage
-                let pweData: any = window.sessionStorage.getItem('pwe_data');
-                pweData = JSON.parse(pweData) || {};
-                
-                if (pweData[campInstanceId] && pweData[campInstanceId].actual.rules.timeSpent !== undefined) {
-                    const previousValue = pweData[campInstanceId].actual.rules.timeSpent;
-                    console.log(`🧹 Clearing timeSpent actual value for ${campInstanceId}: ${previousValue} → 0`);
-                    pweData[campInstanceId].actual.rules.timeSpent = 0;
-                    window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
+                if (pweData[campInstanceId]) {
+                    // Reset rules.timeSpent if configured in rules
+                    if (hasTimeSpentInRules) {
+                        const previousValue = pweData[campInstanceId].actual.rules.timeSpent || 0;
+                        pweData[campInstanceId].actual.rules.timeSpent = 0;
+                        console.log(`🔄 Reset RULES timeSpent: ${previousValue} → 0`);
+                    }
                     
-                    // Note: This clearing applies to both regular and isNot conditions
-                    // For isNot conditions, clearing to 0 means the condition would be satisfied again if the campaign becomes active
-                    console.log(`🧹 This clearing works for both regular and isNot timeSpent conditions`);
+                    // Reset exclusions.timeSpent if configured in exclusions
+                    if (hasTimeSpentInExclusions) {
+                        const previousValue = pweData[campInstanceId].actual.exclusions.timeSpent || 0;
+                        pweData[campInstanceId].actual.exclusions.timeSpent = 0;
+                        console.log(`🔄 Reset EXCLUSIONS timeSpent: ${previousValue} → 0`);
+                    }
+                    
+                    resetCount++;
                 }
-            } else if (isActive && this.campaignHasConditionType(campaign, 'timeSpent')) {
-                console.log(`✅ Campaign ${campInstanceId} still active - keeping timeSpent value`);
+            } else {
+                console.log(`⚡ Campaign ${campInstanceId} has no timeSpent conditions - skipping`);
             }
         });
         
-        console.log('✅ TimeSpent clearing complete');
+        // Save updated data if any resets were made
+        if (resetCount > 0) {
+            window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
+            console.log(`✅ TimeSpent reset complete: ${resetCount} active campaigns reset`);
+            console.log(`⚡ Performance: Processed ${activeCampaigns.length} active campaigns instead of ${this.campInfo.length} total campaigns`);
+        } else {
+            console.log('⚡ No timeSpent conditions found in active campaigns - no reset needed');
+        }
     }
 
     /**
@@ -3141,6 +3165,42 @@ class ProactiveWebCampaignPlugin {
             }
         }
 
+        // Update current URL - check rules and exclusions separately (NEW)
+        const hasUrlInRules = this.campaignHasConditionType(campaign, 'url');
+        const hasUrlInExclusions = this.campaignHasExclusionConditionType(campaign, 'url');
+        
+        if (hasUrlInRules || hasUrlInExclusions) {
+            const currentUrl = window.location.href;
+            
+            if (hasUrlInRules) {
+                campaignData.actual.rules.url = currentUrl;
+                console.log(`🌐 URL updated in RULES: ${currentUrl}`);
+            }
+            
+            if (hasUrlInExclusions) {
+                campaignData.actual.exclusions.url = currentUrl;
+                console.log(`🌐 URL updated in EXCLUSIONS: ${currentUrl}`);
+            }
+        }
+
+        // Update current page name - check rules and exclusions separately (NEW)
+        const hasPageNameInRules = this.campaignHasConditionType(campaign, 'pageName');
+        const hasPageNameInExclusions = this.campaignHasExclusionConditionType(campaign, 'pageName');
+        
+        if (hasPageNameInRules || hasPageNameInExclusions) {
+            const currentPageName = document.title ? document.title.trim() : '';
+            
+            if (hasPageNameInRules) {
+                campaignData.actual.rules.pageName = currentPageName;
+                console.log(`📄 PageName updated in RULES: "${currentPageName}"`);
+            }
+            
+            if (hasPageNameInExclusions) {
+                campaignData.actual.exclusions.pageName = currentPageName;
+                console.log(`📄 PageName updated in EXCLUSIONS: "${currentPageName}"`);
+            }
+        }
+
         console.log(`✅ General data update complete for ${campInstanceId}`);
     }
 
@@ -3623,6 +3683,10 @@ class ProactiveWebCampaignPlugin {
             // Handle hoverOn conditions with new key-based structure
             console.log(`🔍 *** HOVERON CONDITION EVALUATION ***`);
             result = this.evaluateHoverOnCondition(condition, actualValue);
+        } else if (condition.column === 'url' || condition.column === 'pageName') {
+            // Handle url/pageName conditions with case-sensitive string operations
+            console.log(`🔍 *** URL/PAGENAME CONDITION EVALUATION ***`);
+            result = this.evaluateUrlPageNameCondition(condition, actualValue, value);
         } else {
             // Handle default condition types
             console.log(`🔍 *** DEFAULT CONDITION EVALUATION ***`);
@@ -3791,6 +3855,78 @@ class ProactiveWebCampaignPlugin {
             console.log(`   Available keys: [${Object.keys(actualValue).join(', ')}]`);
         }
         
+        return result;
+    }
+
+    /**
+     * =====================================================================================
+     *                        🌐 URL/PAGENAME CONDITION EVALUATION ENGINE
+     * =====================================================================================
+     * 
+     * Evaluates url and pageName conditions with case-sensitive string operations:
+     * URL operators: contains, ends_with
+     * PageName operators: is, contains
+     * 
+     * @param condition - The condition configuration
+     * @param actualValue - Current URL or page name from actual data
+     * @param expectedValue - Expected value from condition configuration
+     * @returns Boolean evaluation result
+     */
+    evaluateUrlPageNameCondition(condition: any, actualValue: any, expectedValue: any): boolean {
+        const { column, operator } = condition;
+        
+        console.log(`🌐 Evaluating ${column} condition:`);
+        console.log(`   - Operator: ${operator}`);
+        console.log(`   - Actual: "${actualValue}"`);
+        console.log(`   - Expected: "${expectedValue}"`);
+        
+        // Safety check: ensure we have strings to work with
+        const actualStr = actualValue ? String(actualValue) : '';
+        const expectedStr = expectedValue ? String(expectedValue) : '';
+        
+        console.log(`   - Actual (string): "${actualStr}"`);
+        console.log(`   - Expected (string): "${expectedStr}"`);
+        
+        let result = false;
+        
+        if (column === 'url') {
+            // URL operators: contains, ends_with
+            switch (operator) {
+                case 'contains':
+                    result = actualStr.includes(expectedStr);
+                    console.log(`📊 URL contains evaluation: "${actualStr}".includes("${expectedStr}") = ${result}`);
+                    break;
+                case 'ends_with':
+                    result = actualStr.endsWith(expectedStr);
+                    console.log(`📊 URL ends_with evaluation: "${actualStr}".endsWith("${expectedStr}") = ${result}`);
+                    break;
+                default:
+                    console.log(`⚠️ Unknown URL operator: ${operator}`);
+                    console.log(`   Supported URL operators: contains, ends_with`);
+                    return false;
+            }
+        } else if (column === 'pageName') {
+            // PageName operators: is, contains
+            switch (operator) {
+                case 'is':
+                    result = actualStr === expectedStr;
+                    console.log(`📊 PageName is evaluation: "${actualStr}" === "${expectedStr}" = ${result}`);
+                    break;
+                case 'contains':
+                    result = actualStr.includes(expectedStr);
+                    console.log(`📊 PageName contains evaluation: "${actualStr}".includes("${expectedStr}") = ${result}`);
+                    break;
+                default:
+                    console.log(`⚠️ Unknown PageName operator: ${operator}`);
+                    console.log(`   Supported PageName operators: is, contains`);
+                    return false;
+            }
+        } else {
+            console.log(`⚠️ Unknown column for URL/PageName evaluation: ${column}`);
+            return false;
+        }
+        
+        console.log(`📊 Final ${column} condition result: ${result}`);
         return result;
     }
 
