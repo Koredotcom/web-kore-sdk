@@ -95,6 +95,13 @@ export function Message(props: any) {
         }
     }
 
+    if (msgData?.enableLiveChatMetaData && !msgData?.fromHistory) {
+        msgData.fromAgent = true;
+        if (msgData.author) {
+            msgData.author['name'] = msgData?.author?.firstName + ' ' + msgData?.author?.lastName;
+        }
+    }
+
     if (msgData.message) {
         if (msgData.type == 'bot_response' && msgData.message[0].component && msgData.message[0].component.type == 'error'
         && msgData.message[0].component.payload.text) {

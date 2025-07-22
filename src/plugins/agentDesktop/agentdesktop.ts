@@ -13,6 +13,8 @@ class AgentDesktopPlugin {
     isTabActive: boolean = true
     isReadRecipetSent: boolean = false;
     isAgentConnected: boolean = false;
+    isTPAgentConnected: boolean = false;
+    TMsgData: any;
     authInfo: any;
     cobrowseSession: any;
 
@@ -111,7 +113,7 @@ class AgentDesktopPlugin {
         this.$ = me.hostInstance.$;
         this.appendVideoAudioElemnts();
         document.addEventListener("visibilitychange", () => {
-            if (this.isAgentConnected) {
+            if (this.isAgentConnected || this.isTPAgentConnected) {
                 if (document.visibilityState === 'visible') {
                     this.isTabActive = true
                     if (!this.isReadRecipetSent) {
@@ -123,6 +125,11 @@ class AgentDesktopPlugin {
                             "type": ""
                         }
                         messageToBot["resourceid"] = "/bot.message";
+                        if (this.TMsgData) {
+                            messageToBot['messageId'] = this.TMsgData?.messageId;
+                            messageToBot['agent_MessageId'] = this.TMsgData?.agent_MessageId;
+                            this.TMsgData = null;
+                        }
                         me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
                         this.isReadRecipetSent = true;
                     }
@@ -166,30 +173,15 @@ class AgentDesktopPlugin {
         me.hostInstance.on('onWSMessage', (event: any) => {
 
             // Agent Status 
-            if ((event.messageData?.message?.type === 'agent_connected' || event.messageData?.message?.type === 'agent_session_active') && me?.hostInstance?.enableAgentChanges) {
-                this.isAgentConnected = true;
-                me.brandingInfo = JSON.parse(JSON.stringify(me.hostInstance.config.branding));
-                if (me.hostInstance.config.branding.body.agent_message.icon.show) {
-                    me.hostInstance.config.branding.header.icon.show = true;
-                    me.hostInstance.config.branding.header.icon.type = 'custom';
-                    me.hostInstance.config.branding.header.icon.icon_url = me.hostInstance.config.branding.body.agent_message.icon.icon_url;
-                } else {
-                    me.hostInstance.config.branding.header.icon.show = false;
-                }
-                me.hostInstance.config.branding.header.title.name = me.hostInstance.config.branding.body.agent_message.title.name;
-                me.hostInstance.config.branding.header.sub_title.name = me.hostInstance.config.branding.body.agent_message.sub_title.name;
-                me.hostInstance.setBranding(me.hostInstance.config.branding);
-                me.hostInstance.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = me.hostInstance.config.branding.header.title.name;
+            if (event.messageData?.message?.type === 'agent_connected' && me?.hostInstance?.enableAgentChanges) {
+                me.isAgentConnected = true;
+                me.manageAgentBranding('set');
 
-            } else if ((event.messageData?.message?.type === 'agent_disconnected' || event.messageData?.message?.type === 'agent_session_inactive') && me?.hostInstance?.enableAgentChanges) {
+            } else if (event.messageData?.message?.type === 'agent_disconnected' && me?.hostInstance?.enableAgentChanges) {
                 document.querySelector(".campaign-calling-audio-static-wrapper")?.remove(); //removing the campaign container
-                if (this.isAgentConnected) {
-                    this.isAgentConnected = false;
-                    me.hostInstance.config.branding.header.icon = me?.brandingInfo?.header?.icon;
-                    me.hostInstance.config.branding.header.title.name = me?.brandingInfo?.header?.title?.name;
-                    me.hostInstance.config.branding.header.sub_title.name = me?.brandingInfo?.header?.sub_title?.name;
-                    me.hostInstance.setBranding(me.hostInstance.config.branding);
-                    me.hostInstance.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = me.hostInstance.config.branding.header.title.name;
+                if (me.isAgentConnected) {
+                    me.isAgentConnected = false;
+                    me.manageAgentBranding('reset');
                 }
             }
             if (event.messageData?.message?.type === 'agent_connected') {
@@ -198,8 +190,18 @@ class AgentDesktopPlugin {
                 localStorage.setItem("kr-agent-status", "disconneted")
             }
 
+            if (event.messageData?.message?.type === 'agent_session_active' && me?.hostInstance?.enableAgentChanges) {
+                me.isTPAgentConnected = true;
+                me.manageAgentBranding('set');
+            } else if (event.messageData?.message?.type === 'agent_session_inactive' && me?.hostInstance?.enableAgentChanges) {
+                if (me.isTPAgentConnected) {
+                    me.isTPAgentConnected = false;
+                    me.manageAgentBranding('reset');
+                }
+            }
+
             // when agent send the message, hide the type indicator
-            if (event.messageData.message) {
+            if (event.messageData?.message) {
                 if (event?.messageData?.message[0]?.type === 'text' && event?.messageData?.author?.type === 'AGENT') {
                     me.hostInstance.chatEle.querySelector('.typing-indicator-wraper').style.display = 'none'
                     this.isReadRecipetSent = false;
@@ -217,9 +219,9 @@ class AgentDesktopPlugin {
 
         // sent event style setting in user chat 
         me.hostInstance.on('afterRenderMessage', (event: any) => {
-            if (this.isAgentConnected) {
+            if (this.isAgentConnected || this.isTPAgentConnected) {
                 if (!event.messageHtml) return false;
-                if (localStorage.getItem("kr-agent-status") != "connected") return;
+                if (localStorage.getItem("kr-agent-status") != "connected" && !this.isTPAgentConnected) return;
 
                 if (event.msgData?.type === "currentUser") {
                     me.hostInstance.chatEle.querySelector('.typing-indicator-wraper').style.display = 'none'
@@ -279,7 +281,7 @@ class AgentDesktopPlugin {
                     }
                 } else {
                     // send read event from user to agent 
-                    if (event.msgData?.message[0]?.component?.payload?.template_type == 'live_agent') {
+                    if (event.msgData?.message[0]?.component?.payload?.template_type == 'live_agent' || event.msgData?.enableLiveChatMetaData) {
                         const messageToBot: any = {};
                         const msgId = event.msgData.messageId;
                         messageToBot["event"] = "message_delivered";
@@ -289,6 +291,10 @@ class AgentDesktopPlugin {
                         }
                         messageToBot['messageId'] = msgId;
                         messageToBot["resourceid"] = "/bot.message";
+                        if (event.msgData?.agent_MessageId) {
+                            messageToBot['agent_MessageId'] = event.msgData?.agent_MessageId;
+                            this.TMsgData = event.msgData;
+                        }
                         me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
 
                         // send read event when user being in current tab
@@ -444,6 +450,30 @@ class AgentDesktopPlugin {
                 me.hostInstance.$('#cobrowseInput').addClass('error');
                 
             })
+    }
+
+    manageAgentBranding(type: string) {
+        let me: any = this;
+        if (type == 'set') {
+            me.brandingInfo = JSON.parse(JSON.stringify(me.hostInstance.config.branding));
+            if (me.hostInstance.config.branding.body.agent_message.icon.show) {
+                me.hostInstance.config.branding.header.icon.show = true;
+                me.hostInstance.config.branding.header.icon.type = 'custom';
+                me.hostInstance.config.branding.header.icon.icon_url = me.hostInstance.config.branding.body.agent_message.icon.icon_url;
+            } else {
+                me.hostInstance.config.branding.header.icon.show = false;
+            }
+            me.hostInstance.config.branding.header.title.name = me.hostInstance.config.branding.body.agent_message.title.name;
+            me.hostInstance.config.branding.header.sub_title.name = me.hostInstance.config.branding.body.agent_message.sub_title.name;
+            me.hostInstance.setBranding(me.hostInstance.config.branding);
+            me.hostInstance.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = me.hostInstance.config.branding.header.title.name;
+        } else {
+            me.hostInstance.config.branding.header.icon = me?.brandingInfo?.header?.icon;
+            me.hostInstance.config.branding.header.title.name = me?.brandingInfo?.header?.title?.name;
+            me.hostInstance.config.branding.header.sub_title.name = me?.brandingInfo?.header?.sub_title?.name;
+            me.hostInstance.setBranding(me.hostInstance.config.branding);
+            me.hostInstance.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = me.hostInstance.config.branding.header.title.name;
+        }
     }
 }
 export default AgentDesktopPlugin;
