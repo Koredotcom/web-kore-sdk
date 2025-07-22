@@ -391,7 +391,7 @@
         &.chat-bubble-style-2{
             .bubble-msg-with-img{
                 .bubble-msg{
-                    border-radius: 8px 2px 8px 8px;
+                    border-radius: 2px 8px 8px 8px;
                 }
             }
         }
@@ -466,7 +466,7 @@
             flex-wrap: wrap;
             .bubble-msg{
                 background: var(--bot-bubble-msg-bg);
-                border-radius: 8px 8px 2px 8px;
+                border-radius: 8px 8px 8px 2px;
                 font-weight: 400;
                 font-size: 14px;
                 line-height: 17px;
