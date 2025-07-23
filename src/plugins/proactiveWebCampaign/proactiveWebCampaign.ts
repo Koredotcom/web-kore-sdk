@@ -296,6 +296,7 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Processes custom data update with flattening and change detection
+     * ENHANCED: Now persists flattened data to sessionStorage with merge strategy
      * @param rawData - Raw nested JSON data from pwcCustomData event
      */
     processCustomDataUpdate(rawData: any): void {
@@ -308,22 +309,32 @@ class ProactiveWebCampaignPlugin {
             console.log("🗂️ Flattened custom data:", newFlattenedData);
             console.log(`🗂️ Flattened ${Object.keys(newFlattenedData).length} keys`);
             
-            // Step 2: Clean up data based on configured custom columns
-            const cleanedFlattenedData = this.cleanupFlattenedData(newFlattenedData);
-            console.log("🧹 Cleaned flattened data:", cleanedFlattenedData);
-            console.log(`🧹 Retained ${Object.keys(cleanedFlattenedData).length} configured keys`);
+            // Step 2: Get existing data from sessionStorage and merge with new data
+            const existingData = this.getPersistedCustomData();
+            const mergedData = this.mergeCustomData(existingData, newFlattenedData);
+            console.log("🔄 Merged with existing sessionStorage data:", mergedData);
+            console.log(`🔄 Final merged data has ${Object.keys(mergedData).length} keys`);
             
-            // Step 3: Detect changes between old and new data
+            // Step 3: Persist merged data to sessionStorage
+            this.persistCustomDataToSession(mergedData);
+            
+            // Step 4: Clean up data based on configured custom columns (REMOVED: cleanupFlattenedData causes data loss)
+            // Using merged data directly to prevent data loss across navigation
+            const cleanedFlattenedData = mergedData;
+            console.log("✅ Using full merged data (no cleanup to prevent data loss):", cleanedFlattenedData);
+            console.log(`✅ Preserved ${Object.keys(cleanedFlattenedData).length} keys for processing`);
+            
+            // Step 5: Detect changes between old and new data
             const changes = this.detectCustomDataChanges(cleanedFlattenedData);
             console.log("📊 Custom data changes detected:", changes);
             console.log(`📊 Found ${Object.keys(changes).length} changes`);
             
-            // Step 4: Update state
+            // Step 6: Update state
             this.previousFlattenedCustomData = { ...this.flattenedCustomData };
             this.flattenedCustomData = cleanedFlattenedData;
             this.customDataChangeMap = changes;
             
-            // Step 5: Only trigger evaluation if there are actual changes
+            // Step 7: Only trigger evaluation if there are actual changes
             if (Object.keys(changes).length > 0) {
                 console.log("🎯 Changes detected, triggering custom data evaluation");
                 this.handleCustomDataChanges(changes);
@@ -535,6 +546,70 @@ class ProactiveWebCampaignPlugin {
         }
         
         console.log("🎯 =================== CUSTOM DATA CHANGES HANDLED ===================");
+    }
+
+    /**
+     * Retrieves persisted custom data from sessionStorage
+     * @returns Object containing flattened custom data or empty object if none exists
+     */
+    getPersistedCustomData(): any {
+        try {
+            const storedData = sessionStorage.getItem('pwcCustomData');
+            if (storedData) {
+                const parsedData = JSON.parse(storedData);
+                console.log("📖 Retrieved existing custom data from sessionStorage:", parsedData);
+                return parsedData;
+            } else {
+                console.log("📖 No existing custom data found in sessionStorage");
+                return {};
+            }
+        } catch (error) {
+            console.error("❌ Error retrieving custom data from sessionStorage:", error);
+            return {};
+        }
+    }
+
+    /**
+     * Merges existing custom data with new custom data
+     * New data takes precedence over existing data for same keys
+     * @param existingData - Existing flattened custom data
+     * @param newData - New flattened custom data
+     * @returns Merged custom data object
+     */
+    mergeCustomData(existingData: any, newData: any): any {
+        const merged = { ...existingData, ...newData };
+        console.log("🔄 Merging custom data:");
+        console.log(`   - Existing keys: ${Object.keys(existingData).length}`);
+        console.log(`   - New keys: ${Object.keys(newData).length}`);
+        console.log(`   - Merged keys: ${Object.keys(merged).length}`);
+        
+        // Log any overwritten keys
+        Object.keys(newData).forEach(key => {
+            if (existingData.hasOwnProperty(key) && existingData[key] !== newData[key]) {
+                console.log(`🔄 Key updated: ${key} = ${existingData[key]} → ${newData[key]}`);
+            }
+        });
+        
+        return merged;
+    }
+
+    /**
+     * Persists custom data to sessionStorage with error handling
+     * @param customData - Flattened custom data to persist
+     */
+    persistCustomDataToSession(customData: any): void {
+        try {
+            const dataToStore = JSON.stringify(customData);
+            sessionStorage.setItem('pwcCustomData', dataToStore);
+            console.log("💾 Custom data persisted to sessionStorage successfully");
+            console.log(`💾 Stored ${Object.keys(customData).length} keys`);
+        } catch (error) {
+            console.error("❌ Error persisting custom data to sessionStorage:", error);
+            if (error instanceof Error && error.name === 'QuotaExceededError') {
+                console.warn("⚠️ sessionStorage quota exceeded, using memory-only storage");
+                // Continue with memory-only approach as fallback
+            }
+        }
     }
 
     /**
@@ -1226,9 +1301,21 @@ class ProactiveWebCampaignPlugin {
     /**
      * Restarts timers when URL changes (more efficient than continuous polling)
      * ENHANCED: Now includes hoverOn reset and hover listener management
+     * ENHANCED: Now retrieves custom data from sessionStorage to handle navigation
      */
     handlePageChange(): void {
         console.log('📄 Page change detected, restarting relevant timers and resetting hoverOn');
+        
+        // STEP 1: Retrieve custom data from sessionStorage to handle navigation
+        const persistedCustomData = this.getPersistedCustomData();
+        if (Object.keys(persistedCustomData).length > 0) {
+            // Update in-memory custom data with persisted data
+            this.flattenedCustomData = { ...this.flattenedCustomData, ...persistedCustomData };
+            console.log('📄 ✅ Custom data retrieved from sessionStorage and merged into memory');
+            console.log(`📄 Total custom data keys available: ${Object.keys(this.flattenedCustomData).length}`);
+        } else {
+            console.log('📄 ⚡ No custom data found in sessionStorage - using memory only');
+        }
         
         // Clear existing timers
         this.clearAllTimeSpentTimers();
@@ -2187,12 +2274,21 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Initializes custom actual values for a specific campaign
+     * ENHANCED: Now retrieves custom data from sessionStorage for initialization
      * @param campInstanceId - Campaign instance ID
      * @param campaign - Campaign configuration
      * @param campaignData - Campaign data structure to populate
      */
     initializeCustomActualValuesForCampaign(campInstanceId: string, campaign: any, campaignData: any): void {
         console.log(`🔄 Initializing custom actual values for campaign: ${campInstanceId}`);
+        
+        // Get custom data from sessionStorage (survives navigation)
+        const persistedCustomData = this.getPersistedCustomData();
+        console.log(`🔄 Using persisted custom data for initialization:`, persistedCustomData);
+        
+        // Combine with in-memory data as fallback
+        const combinedCustomData = { ...persistedCustomData, ...this.flattenedCustomData };
+        console.log(`🔄 Combined data for initialization:`, combinedCustomData);
         
         let initializedRules = 0;
         let initializedExclusions = 0;
@@ -2205,10 +2301,10 @@ class ProactiveWebCampaignPlugin {
                         if (condition.conditionType === 'custom' && condition.column) {
                             const customKey = condition.column;
                             
-                            if (this.flattenedCustomData.hasOwnProperty(customKey)) {
-                                campaignData.actual.rules[customKey] = this.flattenedCustomData[customKey];
+                            if (combinedCustomData.hasOwnProperty(customKey)) {
+                                campaignData.actual.rules[customKey] = combinedCustomData[customKey];
                                 initializedRules++;
-                                console.log(`🔄 Initialized RULES custom value: ${customKey} = ${this.flattenedCustomData[customKey]}`);
+                                console.log(`🔄 Initialized RULES custom value: ${customKey} = ${combinedCustomData[customKey]}`);
                             } else {
                                 // Set to null if data not available yet
                                 campaignData.actual.rules[customKey] = null;
@@ -2228,10 +2324,10 @@ class ProactiveWebCampaignPlugin {
                         if (condition.conditionType === 'custom' && condition.column) {
                             const customKey = condition.column;
                             
-                            if (this.flattenedCustomData.hasOwnProperty(customKey)) {
-                                campaignData.actual.exclusions[customKey] = this.flattenedCustomData[customKey];
+                            if (combinedCustomData.hasOwnProperty(customKey)) {
+                                campaignData.actual.exclusions[customKey] = combinedCustomData[customKey];
                                 initializedExclusions++;
-                                console.log(`🔄 Initialized EXCLUSIONS custom value: ${customKey} = ${this.flattenedCustomData[customKey]}`);
+                                console.log(`🔄 Initialized EXCLUSIONS custom value: ${customKey} = ${combinedCustomData[customKey]}`);
                             } else {
                                 // Set to null if data not available yet
                                 campaignData.actual.exclusions[customKey] = null;
@@ -2975,6 +3071,7 @@ class ProactiveWebCampaignPlugin {
 
         // Always ensure custom data is up-to-date if campaign has custom conditions
         // This handles cases where custom data was received before campaign configuration
+        // ENHANCED: Now pulls from sessionStorage to handle navigation scenarios
         if (this.campaignHasCustomConditions(campaign)) {
             console.log(`🔄 Campaign has custom conditions, ensuring custom data is up-to-date`);
             this.ensureCustomDataUpToDate(campInstanceId, campaign, campaignData);
@@ -3024,12 +3121,21 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Ensures custom data is up-to-date for a campaign based on current flattened custom data
+     * ENHANCED: Now retrieves custom data from sessionStorage to handle navigation
      * @param campInstanceId - Campaign instance ID
      * @param campaign - Campaign configuration
      * @param campaignData - Campaign data structure to update
      */
     ensureCustomDataUpToDate(campInstanceId: string, campaign: any, campaignData: any): void {
         console.log(`🔄 Ensuring custom data is up-to-date for campaign: ${campInstanceId}`);
+        
+        // Get custom data from sessionStorage (survives navigation)
+        const persistedCustomData = this.getPersistedCustomData();
+        console.log(`🔄 Retrieved persisted custom data:`, persistedCustomData);
+        
+        // Also use in-memory data as fallback
+        const combinedCustomData = { ...persistedCustomData, ...this.flattenedCustomData };
+        console.log(`🔄 Combined custom data (sessionStorage + memory):`, combinedCustomData);
         
         let updatedRules = false;
         let updatedExclusions = false;
@@ -3041,7 +3147,7 @@ class ProactiveWebCampaignPlugin {
                     group.conditions.forEach((condition: any) => {
                         if (condition.conditionType === 'custom' && condition.column) {
                             const customKey = condition.column;
-                            const currentValue = this.flattenedCustomData[customKey];
+                            const currentValue = combinedCustomData[customKey];
                             
                             // Update if value is different or not set
                             if (campaignData.actual.rules[customKey] !== currentValue) {
@@ -3062,7 +3168,7 @@ class ProactiveWebCampaignPlugin {
                     group.conditions.forEach((condition: any) => {
                         if (condition.conditionType === 'custom' && condition.column) {
                             const customKey = condition.column;
-                            const currentValue = this.flattenedCustomData[customKey];
+                            const currentValue = combinedCustomData[customKey];
                             
                             // Update if value is different or not set
                             if (campaignData.actual.exclusions[customKey] !== currentValue) {
