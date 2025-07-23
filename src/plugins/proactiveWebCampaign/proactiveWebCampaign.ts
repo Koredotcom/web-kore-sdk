@@ -1697,202 +1697,51 @@ class ProactiveWebCampaignPlugin {
         
     }
 
-    isJourneyValid(pageVisitArray: any, websiteArray: any) {
-        let journeyMatched = true;
-        for (let i=0; i<websiteArray.length; i++) {
-            let pageEl = pageVisitArray[i];
-            let websiteEl = websiteArray[i];
-            if ((websiteEl.matchingCondition == 'is' && websiteEl.value.trim() != pageEl[websiteEl.rule]) || (websiteEl.matchingCondition == 'contains' && !pageEl[websiteEl.rule].includes(websiteEl.value.trim()))) {
-                journeyMatched = false
-            }
+    /**
+     * Checks if the journey is valid based on the page visit array and website array
+     * ENHANCED: Now implements reverse-order matching (checks last N entries only)
+     * @param pageVisitArray - The page visit array (pageVisitHistory) from sessionStorage
+     * @param websiteArray - The website array configured in the campaign
+     * @returns true if the recent journey matches the required sequence, false otherwise
+     */
+    isJourneyValid(pageVisitArray: any, websiteArray: any): boolean {
+        // STEP 1: Validation - Check if we have enough data
+        if (!pageVisitArray || !websiteArray || pageVisitArray.length < websiteArray.length) {
+            return false;
         }
-        return journeyMatched;
-    }
-
-    sendEvent(pageObject: any, type: any) {
-        const me: any = this;
-        const clientMessageId = new Date().getTime();
-        const messageToBot: any = {};
-        messageToBot.clientMessageId = clientMessageId;
-        messageToBot.event_name = 'pwe_event';
-        messageToBot.resourceid = '/pwe_message';
-        messageToBot.iId = me.hostInstance.config.botOptions.botInfo.taskBotId;
-        messageToBot.userId = me.hostInstance.config.botOptions.userIdentity;
-        this.campInfo?.forEach(async (camp: any) => {
-            const campInstanceId = camp.campInstanceId
-            let urlChecked = false;
-            let goalUrlChecked = false;
-            let ruleData: any = [];
-            let goalData: any = [];
-            messageToBot.campInfo = {};
-            messageToBot.campInfo.campId = camp.campId;
-            messageToBot.campInfo.campInstanceId = camp.campInstanceId;
-            let websiteOperator = camp.engagementStrategy?.website[0]?.operator;
-            if (websiteOperator == 'or' || camp.engagementStrategy.website.length == 1) {
-                (camp.engagementStrategy.website || []).forEach((websiteItem: any) => {
-                    if ((websiteItem.matchingCondition == 'is' && websiteItem.value.trim() == pageObject[websiteItem.rule]) || (websiteItem.matchingCondition == 'contains' && pageObject[websiteItem.rule].includes(websiteItem.value.trim()))) {
-                        urlChecked = true;
-                    }
-                });
+        
+        // STEP 2: Extract the last N entries from pageVisitArray (reverse order logic)
+        const requiredSteps = websiteArray.length;
+        const startIndex = pageVisitArray.length - requiredSteps;
+        const recentVisits = pageVisitArray.slice(startIndex);
+        
+        // STEP 3: Compare each step in exact sequential order (must match exactly)
+        for (let i = 0; i < websiteArray.length; i++) {
+            const pageVisit = recentVisits[i];
+            const expectedStep = websiteArray[i];
+            
+            // Get the actual value based on the rule (url or pageName)
+            const actualValue = pageVisit[expectedStep.rule];
+            const expectedValue = expectedStep.value.trim();
+            
+            // STEP 4: Apply matching condition for this step
+            let stepMatches = false;
+            if (expectedStep.matchingCondition === 'is') {
+                stepMatches = actualValue === expectedValue;
+            } else if (expectedStep.matchingCondition === 'contains') {
+                stepMatches = actualValue && actualValue.includes(expectedValue);
             } else {
-                let pageVisitHistory: any = window.sessionStorage.getItem('pageVisitHistory');
-                pageVisitHistory = JSON.parse(pageVisitHistory)
-                for (let i=0; i<pageVisitHistory.length; i++) {
-                    let pageObj = pageVisitHistory[i];
-                    let websiteItem = camp.engagementStrategy.website[0];
-                    if ((websiteItem.matchingCondition == 'is' && websiteItem.value.trim() == pageObj[websiteItem.rule]) || (websiteItem.matchingCondition == 'contains' && pageObj[websiteItem.rule].includes(websiteItem.value.trim()))) {
-                        let j = camp.engagementStrategy.website.length;
-                        if (pageVisitHistory.length - i >= j) {
-                            let pageVisitArray = JSON.parse(JSON.stringify(pageVisitHistory));
-                            pageVisitArray = pageVisitArray.splice(i,j);
-                            if (!urlChecked) {
-                                urlChecked = this.isJourneyValid(pageVisitArray, camp.engagementStrategy.website);
-                            }
-                        }
-                    }
-                }
+                stepMatches = false;
             }
             
-
-            let pwe_data: any = window.sessionStorage.getItem('pwe_data');
-            pwe_data = JSON.parse(pwe_data);
-            let pwe_data_inst: any = pwe_data[campInstanceId];
-            if (urlChecked && this.checkEngagementHours(camp.engagementStrategy.engagementHours) && !pwe_data_inst.isLayoutTriggered) {
-                let condition = camp.engagementStrategy.rules[0].operator;
-                    (camp.engagementStrategy.rules || []).forEach((ruleItem: any) => {
-                        switch (ruleItem.rule) {
-                            case 'user':
-                                const user = me.hostInstance.config.pwcConfig.knownUser ? 'known' : 'anonymous';
-                                pwe_data = window.sessionStorage.getItem('pwe_data');
-                                pwe_data = JSON.parse(pwe_data);
-                                pwe_data_inst = pwe_data[campInstanceId];
-                                if(pwe_data_inst && !("user" in pwe_data_inst.actual.rules)) {
-                                    if (user == ruleItem.value && condition.toLowerCase() == 'or') {
-                                        pwe_data_inst.isLayoutTriggered = true;
-                                    }
-                                    const ruleCopy = {...ruleItem} 
-                                    ruleCopy.value = user;
-                                    ruleData.push(ruleCopy);
-                                    pwe_data_inst.actual.rules["user"] = user;
-                                    pwe_data[campInstanceId] = pwe_data_inst
-                                    window.sessionStorage.setItem('pwe_data', JSON.stringify(pwe_data));
-                                }
-                                break;
-                            case 'timeSpent':
-                                pwe_data = window.sessionStorage.getItem('pwe_data');
-                                pwe_data = JSON.parse(pwe_data);
-                                pwe_data_inst = pwe_data[campInstanceId];
-                                if(pwe_data_inst && !("timeSpent" in pwe_data_inst.actual.rules) && (me.timeSpent[campInstanceId] >= ruleItem.value)) {
-                                    const ruleCopy = {...ruleItem}
-                                    ruleCopy.value = me.timeSpent[campInstanceId];
-                                    ruleData.push(ruleCopy);
-                                    me.timeSpent[campInstanceId] = 0;
-                                    if (condition.toLowerCase() == 'or') pwe_data_inst.isLayoutTriggered = true;
-                                    const actual: any = pwe_data_inst.actual.rules;
-                                    const expected: any = pwe_data_inst.expected.rules;
-                                    let isLastRule = true;
-                                    if (condition.toLowerCase() == 'and') {
-                                        for (const key in expected) {
-                                            if (actual[key] != expected[key][0].value && key == 'pageVisitCount') isLastRule = false;
-                                        }
-                                    }
-                                    if (condition.toLowerCase() == 'or' || isLastRule) {
-                                        pwe_data_inst.actual.rules["timeSpent"] = ruleItem.value
-                                        pwe_data[campInstanceId] = pwe_data_inst
-                                        window.sessionStorage.setItem('pwe_data', JSON.stringify(pwe_data));
-                                    }
-                                }
-                                break;
-                            case 'pageVisitCount':
-                                if (type == 'pageChange') {
-                                    pwe_data = window.sessionStorage.getItem('pwe_data');
-                                    pwe_data = JSON.parse(pwe_data);
-                                    pwe_data_inst = pwe_data[campInstanceId];
-                                    let count;
-                                    if(pwe_data_inst && !("pageVisitCount" in pwe_data_inst.actual.rules)) {
-                                        pwe_data_inst.actual.rules["pageVisitCount"] = 1;
-                                        count = 1;
-                                    } else {
-                                        count = pwe_data_inst.actual.rules.pageVisitCount;
-                                        count++;
-                                        pwe_data_inst.actual.rules.pageVisitCount = count;
-                                    }
-                                    if (pwe_data_inst.actual.rules.pageVisitCount == ruleItem.value && condition.toLowerCase() == 'or') {
-                                        pwe_data_inst.isLayoutTriggered = true;
-                                    }
-                                    const ruleCopy = {...ruleItem}
-                                    ruleCopy.value = count;
-                                    ruleData.push(ruleCopy);
-                                    pwe_data[campInstanceId] = pwe_data_inst
-                                    window.sessionStorage.setItem('pwe_data', JSON.stringify(pwe_data));
-                                }
-                                break;
-
-                            case 'hoverOn':
-                                // DEPRECATED: Old hoverOn logic - now handled by new key-based structure
-                                console.log('⚠️ DEPRECATED: Old hoverOn logic in sendEvent - use new structure');
-                                console.log('⚠️ HoverOn is now handled by setupHoverListenerForCondition method');
-                                // The new implementation handles hoverOn through the key-based structure
-                                // in hover event listeners, so no processing needed here
-                            default:
-                        }
-                    });
-                    this.validateAction(messageToBot, ruleData, campInstanceId, condition, camp.campId);
+            // STEP 5: If any step fails, entire journey is invalid
+            if (!stepMatches) {
+                return false;
             }
-
-            if (camp.engagementStrategy.goals && camp.engagementStrategy.goals.length) {
-                let condition = camp.engagementStrategy.goals[0].operator;
-                if (condition.toLowerCase() == 'or') {
-                    (camp.engagementStrategy.goals || []).forEach((goalItem: any) => {
-                        if (((goalItem.matchingCondition == 'is' && pageObject.url == goalItem.value) || (goalItem.matchingCondition == 'contains' && pageObject.url?.includes(goalItem.value)))) {
-                            goalData.push(goalItem);
-                            goalUrlChecked = true;
-                        }
-                    });
-                } else {
-                    (camp.engagementStrategy.goals || []).forEach((goalItem: any) => {
-                        if (((goalItem.matchingCondition == 'is' && pageObject.url == goalItem.value) || (goalItem.matchingCondition == 'contains' && pageObject.url?.includes(goalItem.value)))) {
-                            goalUrlChecked = true;
-                        } else {
-                            goalUrlChecked = false;
-                            return
-                        }
-                    });
-                    if (goalUrlChecked) {
-                        goalData = camp.engagementStrategy.goals;
-                    }
-                }
-                let goalArr: any = window.sessionStorage.getItem('goalArr');
-                goalArr = JSON.parse(goalArr);
-                const goalInd = goalArr.findIndex((r: any) => r.campId == camp.campId);
-                let goalEle = goalArr[goalInd];
-                const payload: any = {
-                    'event_name': 'pwe_event',
-                    'resourceid': '/pwe_message',
-                    'user': me.hostInstance.config.botOptions.userIdentity,
-                    'type': 'pwe_message',
-                    'userId': this.authInfo.userInfo.userId,
-                    'botInfo': {
-                        'chatBot': me.hostInstance._botInfo.name,
-                        'taskBotId': me.hostInstance._botInfo._id
-                    },
-                    'goalInfo': goalData,
-                    'campInfo': {
-                        'campId' : camp.campId 
-                    }
-                }                
-                if (goalEle && !goalEle.eventFired && goalData && goalData.length > 0) {
-                    let messageToBotGoal: any = {}
-                    messageToBotGoal = JSON.parse(JSON.stringify(messageToBot));
-                    messageToBotGoal.ruleInfo = [];
-                    messageToBotGoal.goalInfo = goalData;
-                    me.sendApiEvent(payload, '/pweevents');
-                    goalEle.eventFired = true;
-                    goalArr[goalInd] = goalEle;
-                    window.sessionStorage.setItem('goalArr', JSON.stringify(goalArr));
-                }
-            }
-        });
+        }
+        
+        // STEP 6: All steps matched - journey is valid
+        return true;
     }
 
     checkEngagementHours(engHours: any) {
