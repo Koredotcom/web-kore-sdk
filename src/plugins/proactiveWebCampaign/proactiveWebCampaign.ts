@@ -21,6 +21,7 @@ class ProactiveWebCampaignPlugin {
     activeTimerIds: any = {}; // New: Track active timer IDs for cleanup
     pageChangeDebounceTimer: any = null; // New: Debounce timer for page changes
     customDataObject: any = {};
+    isInitialPageLoaded: boolean = false; // NEW: Flag to track initial page processing
     
     // =====================================================================================
     //                          🚀 CUSTOM CONDITIONTYPE SUPPORT PROPERTIES
@@ -151,6 +152,17 @@ class ProactiveWebCampaignPlugin {
                         } else {
                             console.log('⚠️ No new campaigns detected, skipping redundant setup for performance');
                             console.log('⚡ Performance optimization: Existing campaigns preserved, no processing needed');
+                        }
+                        
+                        // NEW: Handle initial page processing (fixes landing page campaigns)
+                        // MOVED OUTSIDE: Execute regardless of campaign novelty (critical for multi-page apps)
+                        if (!this.isInitialPageLoaded) {
+                            console.log('🚀 Processing initial page load (enables landing page campaigns)');
+                            this.handlePageChange();
+                            this.isInitialPageLoaded = true;
+                            console.log('✅ Initial page processing complete');
+                        } else {
+                            console.log('⚡ Initial page already processed, skipping for performance');
                         }
                     } else {
                         console.log('❌ PWE is disabled, removing pwe_data from session storage');
@@ -1480,26 +1492,23 @@ class ProactiveWebCampaignPlugin {
             window.sessionStorage.setItem('prevUrl', currentUrl);
             window.sessionStorage.setItem('startTime', Date.now().toString());
 
-            // Initialize page visit history
-            let pageVisitArray: any = window.sessionStorage.getItem('pageVisitHistory');
-            if (!pageVisitArray) {
-                pageVisitArray = [];
-            } else {
-                pageVisitArray = JSON.parse(pageVisitArray);
-            }
-            pageVisitArray.push(pageObj);
-            window.sessionStorage.setItem('pageVisitHistory', JSON.stringify(pageVisitArray));
+            // NOTE: Page Visit history is already tracked in handlePageChange(), hence commenting here
+            // let pageVisitArray: any = window.sessionStorage.getItem('pageVisitHistory');
+            // if (!pageVisitArray) {
+            //     pageVisitArray = [];
+            // } else {
+            //     pageVisitArray = JSON.parse(pageVisitArray);
+            // }
+            // pageVisitArray.push(pageObj);
+            // window.sessionStorage.setItem('pageVisitHistory', JSON.stringify(pageVisitArray));
 
             // Set up initial data
             me.createTimeSpentObjs();
             await me.getLocationDetails();
             me.getDeviceDetails();
 
-            // Set up efficient timers for timeSpent conditions
-            me.setupTimeSpentTimers();
-
-            // Initial rule evaluation
-            me.sendEventNew(pageObj, 'pageChange');
+            // NOTE: Timer setup moved to handlePageChange() to avoid duplication
+            // Initial page processing will be handled by flag-based approach in pwe_verify
             
             console.log('✅ PWC tracking initialized');
         } else {
@@ -2051,6 +2060,9 @@ class ProactiveWebCampaignPlugin {
             console.log(`🌍 Country: ${locationData.country || 'Not found'}`);
             console.log(`🏙️ City: ${locationData.city || 'Not found'}`);
             console.log(`🏛️ State: ${locationData.state || 'Not found'}`);
+            
+            // NEW: Trigger re-evaluation for location-based campaigns
+            this.reevaluateLocationBasedCampaigns();
             
         } catch (error) {
             console.error('❌ Error parsing location data:', error);
@@ -3200,6 +3212,7 @@ class ProactiveWebCampaignPlugin {
         }
 
         // Update location data (country, city, state) from sessionStorage
+        // ASYNC-SAFE: Handle missing location data gracefully (location API may still be running)
         const locationData = JSON.parse(window.sessionStorage.getItem('pwcLocationData') || '{}');
         
         if (locationData && (locationData.country || locationData.city || locationData.state)) {
@@ -3250,6 +3263,9 @@ class ProactiveWebCampaignPlugin {
                     console.log(`🏛️ State updated in EXCLUSIONS: ${locationData.state}`);
                 }
             }
+        } else {
+            // Location data not yet available (geolocation API still running)
+            console.log('📍 Location data not yet available - will re-evaluate when location API completes');
         }
 
         // Update current URL - check rules and exclusions separately (NEW)
@@ -3309,6 +3325,70 @@ class ProactiveWebCampaignPlugin {
         }
 
         console.log(`✅ General data update complete for ${campInstanceId}`);
+    }
+
+    /**
+     * Re-evaluates campaigns that have location-based conditions when location data becomes available
+     * ASYNC-SAFE: Called when geolocation API completes to handle location-based campaigns
+     */
+    reevaluateLocationBasedCampaigns(): void {
+        console.log('📍 Location data ready - re-evaluating location-based campaigns');
+        
+        if (!this.campInfo || this.campInfo.length === 0) {
+            console.log('⚠️ No campaigns available for location re-evaluation');
+            return;
+        }
+        
+        const currentUrl = window.location.href;
+        const currentPageTitle = document.title.trim();
+        const activeCampaigns = this.getActiveCampaigns(currentUrl, currentPageTitle);
+        
+        console.log(`🎯 Checking ${activeCampaigns.length} active campaigns for location conditions`);
+        
+        let locationCampaignsCount = 0;
+        let pweData: any = window.sessionStorage.getItem('pwe_data');
+        pweData = JSON.parse(pweData) || {};
+        
+        activeCampaigns.forEach(campaign => {
+            const campInstanceId = campaign.campInstanceId;
+            
+            // Check if campaign has location conditions in rules OR exclusions
+            const hasLocationInRules = 
+                this.campaignHasConditionType(campaign, 'country') ||
+                this.campaignHasConditionType(campaign, 'city') ||
+                this.campaignHasConditionType(campaign, 'state');
+                
+            const hasLocationInExclusions = 
+                this.campaignHasExclusionConditionType(campaign, 'country') ||
+                this.campaignHasExclusionConditionType(campaign, 'city') ||
+                this.campaignHasExclusionConditionType(campaign, 'state');
+            
+            if (hasLocationInRules || hasLocationInExclusions) {
+                console.log(`📍 Campaign ${campInstanceId} has location conditions - updating data`);
+                locationCampaignsCount++;
+                
+                // Update location data for this campaign
+                if (pweData[campInstanceId]) {
+                    this.updateGeneralData(pweData[campInstanceId], campInstanceId);
+                }
+            }
+        });
+        
+        if (locationCampaignsCount > 0) {
+            // Save updated data
+            window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
+            
+            // Trigger evaluation for location-based campaigns
+            const pageObj = {
+                url: currentUrl,
+                pageName: currentPageTitle
+            };
+            
+            this.sendEventNew(pageObj, 'locationReady');
+            console.log(`✅ Location re-evaluation complete: ${locationCampaignsCount} campaigns updated`);
+        } else {
+            console.log('⚡ No location-based campaigns found - no re-evaluation needed');
+        }
     }
 
     /**
