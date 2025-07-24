@@ -3152,7 +3152,7 @@ class ProactiveWebCampaignPlugin {
         const hasUserInRules = this.campaignHasConditionType(campaign, 'user');
         const hasUserInExclusions = this.campaignHasExclusionConditionType(campaign, 'user');
         
-        if ((hasUserInRules || hasUserInExclusions) && !campaignData.actual.rules.user && !campaignData.actual.exclusions.user) {
+        if ((hasUserInRules || hasUserInExclusions)) {
             const userType = this.hostInstance.config.pwcConfig.knownUser ? 'known' : 'anonymous';
             
             if (hasUserInRules) {
