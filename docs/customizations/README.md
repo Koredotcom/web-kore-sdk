@@ -38,6 +38,41 @@ chatWindowInstance.on(beforeWSConnection, (ev) => {
 });
 ```
 
+#### Example for onWSMessage event
+onWSMessage will be triggered each time when a message is arrived in the socket from the server
+
+For example I want to check for some regex and then add a flag for all the bot responses
+```js
+const onSocketMessage = chatWindowInstance.EVENTS.ON_WS_MESSAGE;
+chatWindowInstance.on(onSocketMessage, (message) => {
+  if (message?.messageData?.type === 'bot_response' && message.messageData?.message?.length > 0) {
+    const messageItem = message.messageData.message[0];
+    if (messageItem?.component?.payload?.text) {
+      const payload = messageItem.component.payload;
+      const text = payload.text;
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (emailRegex.test(text)) {
+        payload.isEmailAvailable = true;
+      }
+    }
+  }
+});
+```
+
+#### Example for beforeWSSendMessage event
+beforeWSSendMessage will be triggered before sending user message to the server in the socket
+
+For example I want to modify the message typed by the user
+```js
+const beforeSendMessage = chatWindowInstance.EVENTS.BEFORE_WS_SEND_MESSAGE;
+chatWindowInstance.on(beforeSendMessage, (event) => {
+  const msgData = event.messageToBot;
+  if (msgData) {
+    msgData.message.body = 'Hello';
+  }
+});
+```
+
 #### Example for beforeRenderMessage event
 beforeRenderMessage will be triggered before the message is rendered in the chat window. It will trigger for each and every message.
 
@@ -48,7 +83,9 @@ chatWindowInstance.on(beforeRenderMessage, (event) => {
     const msgHtml = event.messageHtml;
     const msgData = event.msgData;
     if (msgData && msgData.type === 'bot_response') {
+      if (msgHtml.querySelector('.bubble-msg')) {
         msgHtml.querySelector('.bubble-msg').style['background-color'] = 'red';
+      }
     }
 });
 ```
