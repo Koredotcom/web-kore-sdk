@@ -67,7 +67,7 @@ For example I want to modify the message typed by the user
 const beforeSendMessage = chatWindowInstance.EVENTS.BEFORE_WS_SEND_MESSAGE;
 chatWindowInstance.on(beforeSendMessage, (event) => {
   const msgData = event.messageToBot;
-  if (msgData) {
+  if (msgData) { // add additional conditions according to the requirement
     msgData.message.body = 'Hello';
   }
 });
@@ -87,5 +87,20 @@ chatWindowInstance.on(beforeRenderMessage, (event) => {
         msgHtml.querySelector('.bubble-msg').style['background-color'] = 'red';
       }
     }
+});
+```
+
+#### Example for onChatHistoryResponse event
+onChatHistoryResponse will be triggered when the chat history api call successfully fetched the chat history messages
+
+```js
+const onChatHistoryResponse = chatWindowInstance.EVENTS.ON_CHAT_HISTORY_RESPONSE;
+chatWindowInstance.on(onChatHistoryResponse, (res) => {
+  let response = res.historyResponse;
+  if (response && response[1] && response[1].messages.length > 0) {
+      response[1].messages.forEach((msgData) => {
+          // each message will be available here
+      });
+  }
 });
 ```
