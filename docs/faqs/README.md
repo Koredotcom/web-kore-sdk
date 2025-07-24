@@ -184,9 +184,9 @@ To close the chat conversation session explicitly please use the following
 chatWindowInstance.closeConversationSession();
 ```
 
-### How to add minimize button next to the close
+### How to add minimize button next to the close button
 
-To add minimize button use the following
+To add minimize button in the chat header use the following
 ```js
 let beforeViewInit = chatWindowInstance.EVENTS.BEFORE_VIEW_INIT;
 chatWindowInstance.on(beforeViewInit, (e) => {
@@ -401,6 +401,83 @@ chatWindowInstance.on(beforeViewInit, (e) => {
     font-size: 14px;
     font-weight: bold;
 }
+```
+
+### How to remove time stamps for consecutive messages
+
+To remove time stamps for consecutive messages or message grouping or timestamp grouping or condensed timestamps please use the following
+```js
+let beforeRenderMessage = chatWindowInstance.EVENTS.BEFORE_RENDER_MSG;
+let msgCount = 0;
+let timeStamp;
+chatWindowInstance.on(beforeRenderMessage, (e) => {
+    let msgHtml = e.messageHtml;
+    let msgData = e.msgData;
+    if (msgData.type === 'bot_response' && msgData.createdOn) {
+        const currentMinute = Math.floor(Date.parse(msgData.createdOn) / 60000);
+        if (msgCount === 0) {
+            msgCount++;
+            timeStamp = currentMinute;
+        } else if (timeStamp === currentMinute) {
+            msgCount++;
+        } else {
+            msgCount = 0;
+            timeStamp = null;
+        }
+        if (msgCount >= 2) {
+            msgHtml.querySelector('.bot-bubble-comp .top-info')?.remove(); // class - top-info or bottom-info
+            // msgHtml.querySelector('.bot-bubble-comp .bot-img')?.remove(); // to remove icon uncomment this line
+        }
+    } else {
+        msgCount = 0;
+        timeStamp = null;
+    }
+});
+
+chatWindowInstance.on(chatWindowInstance.EVENTS.ON_KEY_DOWN, (e) => {
+    if (e.event.keyCode === 13) {
+        msgCount = 0;
+        timeStamp = null;
+    }
+});
+
+chatWindowInstance.on('onSubmit', (e) => {
+    msgCount = 0;
+    timeStamp = null;
+});
+```
+
+### How to change the time stamps for messages other than the Kore provided standard ones
+
+By default Kore provides messages time stamp configuration using [Theme Editor](https://docs.kore.ai/xo/channels/add-web-mobile-client/?h=theme#virtual-assistant-theme-design). If other format is required then please use the following
+```js
+ let beforeRenderMessage = chatWindowInstance.EVENTS.BEFORE_RENDER_MSG;
+   chatWindowInstance.on(beforeRenderMessage, (e) => {
+    let msgHtml = e.messageHtml;
+    let msgData = e.msgData;
+    if (msgData.type === 'bot_response' && msgData.createdOn) { 
+      let convertedTime = new Date(msgData.createdOn).toLocaleString();
+      if (msgHtml.querySelector('.bot-bubble-comp .top-info .time-stamp time')) { // class - top-info or bottom-info
+        msgHtml.querySelector('.bot-bubble-comp .top-info .time-stamp time').textContent = convertedTime;
+      }
+    }
+  
+
+    // uncomment the following if format need to be changed  
+    // if (msgData.type === 'bot_response' && msgData.createdOn) { 
+    //   let locale = navigator.language;
+    //   let convertedTime = new Date(msgData.createdOn).toLocaleString(locale, {
+    //     year: 'numeric',
+    //     month: 'numeric',   // e.g., "Jul"
+    //     day: '2-digit',
+    //     hour: '2-digit',
+    //     minute: '2-digit'
+    //   });
+    //   if (msgHtml.querySelector('.bot-bubble-comp .top-info .time-stamp time')) {   // class - top-info or bottom-info
+    //     msgHtml.querySelector('.bot-bubble-comp .top-info .time-stamp time').textContent = convertedTime;
+    //   }
+    // }
+   });
 ```
 
 ## Custom Codes
