@@ -184,6 +184,302 @@ To close the chat conversation session explicitly please use the following
 chatWindowInstance.closeConversationSession();
 ```
 
+### How to add minimize button next to the close button
+
+To add minimize button in the chat header use the following
+```js
+let beforeViewInit = chatWindowInstance.EVENTS.BEFORE_VIEW_INIT;
+chatWindowInstance.on(beforeViewInit, (e) => {
+  let html = e.chatEle;
+  const actionsInfo = html.querySelector('.actions-info');
+  if (actionsInfo && actionsInfo.querySelector('.btn-action-close')) {
+      const closeButton = actionsInfo.querySelector('.btn-action-close');
+      if (!actionsInfo.querySelector('.btn-action-minimize')) {
+          const minimizeButton = document.createElement('button');
+          minimizeButton.className = 'btn-action btn-action-minimize';
+          minimizeButton.title = 'Minimize Chat';
+          minimizeButton.type = 'button';
+          minimizeButton.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M4 10H16" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          `;
+          
+          // event listener
+          minimizeButton.addEventListener('click', () => {
+              const avatarBg = html.querySelector('.avatar-bg');
+              if(avatarBg){
+                avatarBg.click();
+              }
+          });
+          
+          // style setting 
+          const style = document.createElement('style');
+          style.textContent = `
+              .btn-action-minimize {
+                  border: none;
+                  background: transparent;
+                  cursor: pointer;
+                  padding: 0px 5px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+              }
+              .btn-action-minimize:hover {
+                  opacity: 0.8;
+              }
+          `;
+          html.appendChild(style);
+          closeButton.parentNode.insertBefore(minimizeButton, closeButton);
+      }
+  }
+});
+```
+
+### How to add popup for user warning when clicking on close button
+
+To add popup when user clicks on close button please add the following javascript and css snippets.
+```js
+let beforeViewInit = chatWindowInstance.EVENTS.BEFORE_VIEW_INIT;
+chatWindowInstance.on(beforeViewInit, (e) => {
+  let html = e.chatEle;
+  const closeButton = html.querySelector('.btn-action-close');
+  if (closeButton) {
+      let isShowingConfirmation = false;
+
+      // Add our confirmation popup handler
+      const originalCloseButtonClick = function (e) {
+          // Only show confirmation if not already showing and not triggered by our confirmation
+          if (!isShowingConfirmation) {
+              e.preventDefault();
+              e.stopPropagation();
+
+              isShowingConfirmation = true;
+
+              // Create confirmation popup
+              const overlay = document.createElement('div');
+              overlay.className = 'close-confirmation-overlay';
+
+              const popup = document.createElement('div');
+              popup.className = 'close-confirmation-popup';
+
+              // Close icon at top right
+              const closeIcon = document.createElement('div');
+              closeIcon.className = 'close-icon';
+              closeIcon.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <path d="M18 6L6 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                      <path d="M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                  </svg>`;
+
+              closeIcon.addEventListener('click', function () {
+                  overlay.style.display = 'none';
+                  isShowingConfirmation = false;
+              });
+
+              // Icon container with exit icon
+              const iconContainer = document.createElement('div');
+              iconContainer.className = 'icon-container';
+              iconContainer.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <path d="M14 8V6C14 5.46957 13.7893 4.96086 13.4142 4.58579C13.0391 4.21071 12.5304 4 12 4H5C4.46957 4 3.96086 4.21071 3.58579 4.58579C3.21071 4.96086 3 5.46957 3 6V18C3 18.5304 3.21071 19.0391 3.58579 19.4142C3.96086 19.7893 4.46957 20 5 20H12C12.5304 20 13.0391 19.7893 13.4142 19.4142C13.7893 19.0391 14 18.5304 14 18V16" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                      <path d="M7 12H21M21 12L18 9M21 12L18 15" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                  </svg>`;
+
+              // Message
+              const message = document.createElement('p');
+              message.className = 'confirmation-message';
+              message.textContent = 'Do you really want to close the chat?';
+
+              // Close button
+              const closeConfirmButton = document.createElement('button');
+              closeConfirmButton.className = 'close-confirm-button';
+              closeConfirmButton.textContent = 'Close the chat';
+
+              closeConfirmButton.addEventListener('click', function () {
+                  // Hide the overlay
+                  overlay.style.display = 'none';
+
+                  // Set flag to false to allow the event to proceed
+                  isShowingConfirmation = false;
+
+                  // To show welcome screen again
+                  chatWindowInstance.removeLocalStoreItem('kr-cw-welcome-chat');
+                  // use it when mulitPageApp is used
+
+                  // Temporarily remove our event listener
+                  closeButton.removeEventListener('click', originalCloseButtonClick, true);
+
+                  // Trigger the original close button click
+                  closeButton.click();
+
+                  // Re-add our event listener after a short delay
+                  setTimeout(function () {
+                      closeButton.addEventListener('click', originalCloseButtonClick, true);
+                  }, 100);
+              });
+
+              // Assemble the popup
+              popup.appendChild(closeIcon);
+              popup.appendChild(iconContainer);
+              popup.appendChild(message);
+              popup.appendChild(closeConfirmButton);
+              overlay.appendChild(popup);
+
+              // Add to the chat window
+              html.appendChild(overlay);
+          }
+      };
+
+      // Add the event listener with a named function so we can remove it later
+      closeButton.addEventListener('click', originalCloseButtonClick, true);
+  }
+});
+```
+
+```css
+/* Close confirmation overlay */
+.close-confirmation-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Close confirmation popup */
+.close-confirmation-popup {
+    background-color: white;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 300px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    padding: 20px;
+    position: relative;
+}
+
+/* Close icon */
+.close-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+/* Icon container */
+.icon-container {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 20px auto;
+}
+
+/* Confirmation message */
+.confirmation-message {
+    margin: 0 0 20px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Close confirm button */
+.close-confirm-button {
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #e53935;
+    color: white !important;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+```
+
+### How to remove time stamps for consecutive messages
+
+To remove time stamps for consecutive messages or message grouping or timestamp grouping or condensed timestamps please use the following
+```js
+let beforeRenderMessage = chatWindowInstance.EVENTS.BEFORE_RENDER_MSG;
+let msgCount = 0;
+let timeStamp;
+chatWindowInstance.on(beforeRenderMessage, (e) => {
+    let msgHtml = e.messageHtml;
+    let msgData = e.msgData;
+    if (msgData.type === 'bot_response' && msgData.createdOn) {
+        const currentMinute = Math.floor(Date.parse(msgData.createdOn) / 60000);
+        if (msgCount === 0) {
+            msgCount++;
+            timeStamp = currentMinute;
+        } else if (timeStamp === currentMinute) {
+            msgCount++;
+        } else {
+            msgCount = 0;
+            timeStamp = null;
+        }
+        if (msgCount >= 2) {
+            msgHtml.querySelector('.bot-bubble-comp .top-info')?.remove(); // class - top-info or bottom-info
+            // msgHtml.querySelector('.bot-bubble-comp .bot-img')?.remove(); // to remove icon uncomment this line
+        }
+    } else {
+        msgCount = 0;
+        timeStamp = null;
+    }
+});
+
+chatWindowInstance.on(chatWindowInstance.EVENTS.ON_KEY_DOWN, (e) => {
+    if (e.event.keyCode === 13) {
+        msgCount = 0;
+        timeStamp = null;
+    }
+});
+
+chatWindowInstance.on('onSubmit', (e) => {
+    msgCount = 0;
+    timeStamp = null;
+});
+```
+
+### How to change the time stamps for messages other than the Kore provided standard ones
+
+By default Kore provides messages time stamp configuration using [Theme Editor](https://docs.kore.ai/xo/channels/add-web-mobile-client/?h=theme#virtual-assistant-theme-design). If other format is required then please use the following
+```js
+ let beforeRenderMessage = chatWindowInstance.EVENTS.BEFORE_RENDER_MSG;
+   chatWindowInstance.on(beforeRenderMessage, (e) => {
+    let msgHtml = e.messageHtml;
+    let msgData = e.msgData;
+    if (msgData.type === 'bot_response' && msgData.createdOn) { 
+      let convertedTime = new Date(msgData.createdOn).toLocaleString();
+      if (msgHtml.querySelector('.bot-bubble-comp .top-info .time-stamp time')) { // class - top-info or bottom-info
+        msgHtml.querySelector('.bot-bubble-comp .top-info .time-stamp time').textContent = convertedTime;
+      }
+    }
+  
+
+    // uncomment the following if format need to be changed  
+    // if (msgData.type === 'bot_response' && msgData.createdOn) { 
+    //   let locale = navigator.language;
+    //   let convertedTime = new Date(msgData.createdOn).toLocaleString(locale, {
+    //     year: 'numeric',
+    //     month: 'numeric',   // e.g., "Jul"
+    //     day: '2-digit',
+    //     hour: '2-digit',
+    //     minute: '2-digit'
+    //   });
+    //   if (msgHtml.querySelector('.bot-bubble-comp .top-info .time-stamp time')) {   // class - top-info or bottom-info
+    //     msgHtml.querySelector('.bot-bubble-comp .top-info .time-stamp time').textContent = convertedTime;
+    //   }
+    // }
+   });
+```
+
 ## Custom Codes
 
 ### How to pass customData to bot from SDK ?
