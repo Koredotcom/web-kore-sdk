@@ -1,6 +1,6 @@
-## For customization in the SDK
+# For customization in the SDK
 
-### Events
+## Events
 We can customize the SDK using the events.
 We have the list of events available [here](https://koredotcom.github.io/web-kore-sdk/chatwindow/api/chatWindow.html)
 
@@ -103,4 +103,34 @@ chatWindowInstance.on(onChatHistoryResponse, (res) => {
       });
   }
 });
+```
+
+## Functionality
+
+### How to send message to the bot outside Web SDK
+
+#### Send message to the bot
+
+To send message to the bot from outside the Web SDK add the following code snippet
+
+```js
+chatWindowInstance.sendMessage('Hello', {renderMsg: 'Hello'});  // renderMsg will be rendered in the chat window
+```
+
+#### Send message to the bot without showing in the chat window
+
+To send message to the bot without showing in the chat window
+
+```js
+const clientMessageId = new Date().getTime();
+let msgData = {
+  message: {
+    body: 'Hello'
+  },
+  clientMessageId: clientMessageId,
+  resourceid :'/bot.message',
+  id: clientMessageId
+};
+
+chatWindowInstance.bot.sendMessage(msgData);
 ```
