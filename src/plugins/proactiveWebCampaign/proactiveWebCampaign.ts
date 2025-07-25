@@ -295,7 +295,7 @@ class ProactiveWebCampaignPlugin {
                 this.handleCustomDataChanges(changes);
             }
         } catch (error) {
-            console.error("❌ Error processing custom data:", error);
+            console.error("Error processing custom data:", error);
         }
     }
 
@@ -485,7 +485,7 @@ class ProactiveWebCampaignPlugin {
             sessionStorage.setItem('pwcCustomData', dataToStore);
         } catch (error) {
             if (error instanceof Error && error.name === 'QuotaExceededError') {
-                console.warn("⚠️ sessionStorage quota exceeded, using memory-only storage");
+                console.warn("sessionStorage quota exceeded, using memory-only storage");
                 // Continue with memory-only approach as fallback
             }
         }
@@ -1354,7 +1354,7 @@ class ProactiveWebCampaignPlugin {
         }
         
         const errorCb = function(error: any) {
-            console.error('❌ Error getting coordinates:', error);
+            console.error('Error getting coordinates:', error);
         }
         
         navigator.geolocation.getCurrentPosition(successCb, errorCb);
@@ -1446,7 +1446,7 @@ class ProactiveWebCampaignPlugin {
                 this.scheduleLocationAPIRetry(coordinates);
             }
         } catch (error) {
-            console.error('❌ Location API call failed:', error);
+            console.error('Location API call failed:', error);
             this.scheduleLocationAPIRetry(coordinates);
         }
     }
@@ -1506,7 +1506,7 @@ class ProactiveWebCampaignPlugin {
             this.reevaluateLocationBasedCampaigns();
             
         } catch (error) {
-            console.error('❌ Error parsing location data:', error);
+            console.error('Error parsing location data:', error);
             this.scheduleLocationAPIRetry(coordinates);
         }
     }
@@ -1526,7 +1526,7 @@ class ProactiveWebCampaignPlugin {
             const result = item ? item.long_name : null;
             return result;
         } catch (error) {
-            console.error(`❌ Error finding ${targetType}:`, error);
+            console.error(`Error finding ${targetType}:`, error);
             return null;
         }
     }
@@ -2288,22 +2288,6 @@ class ProactiveWebCampaignPlugin {
     }
 
     /**
-     * DEPRECATED: Updates hover event data (legacy method - replaced by new key-based structure)
-     * This method is kept for backward compatibility but is no longer used
-     * The new implementation directly updates the key-based hoverOn structure in hover event listeners
-     * @param campaignData - Campaign data object
-     * @param campInstanceId - Campaign instance ID
-     */
-    /* updateHoverData(campaignData: any, campInstanceId?: string): void {
-        console.log('⚠️ DEPRECATED: updateHoverData method called - this is now handled by key-based structure');
-        console.log('⚠️ HoverOn updates should be handled directly in hover event listeners');
-        
-        // This method is now deprecated - the new implementation handles hoverOn
-        // updates directly in the hover event listeners using the key-based structure
-        // See: setupHoverListenerForCondition method for the new implementation
-    } */
-
-    /**
      * Updates general data like user type, country, city
      * Only populates actual.rules OR actual.exclusions based on where condition is configured
      * @param campaignData - Campaign data object
@@ -2989,11 +2973,11 @@ class ProactiveWebCampaignPlugin {
                     return this.evaluateContains(actualValue, expectedValue);
                     
                 default:
-                    console.log(`⚠️ Unsupported custom operator: ${operator}`);
+                    console.log(`Unsupported custom operator: ${operator}`);
                     return false;
             }
         } catch (error) {
-            console.error(`❌ Error evaluating custom condition: ${error}`);
+            console.error(`Error evaluating custom condition: ${error}`);
             return false;
         }
     }
