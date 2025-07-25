@@ -102,11 +102,7 @@ class ProactiveWebCampaignPlugin {
             if (event && event.data) {
                 const data = JSON.parse(event.data);
                 if (data.type == 'pwe_message' && data.event_name == 'pwe_verify') {
-                    console.log('🔔 PWE Verify message received:', data);
-                    
                     if (data.body.isEnabled) {
-                        console.log('✅ PWE is enabled, processing campaigns');
-                        
                         this.enablePWC = true;
                         this.campInfo = data.body.campInfo || [];
                         me.hostInstance.campInfo = data.body.campInfo;
@@ -119,13 +115,8 @@ class ProactiveWebCampaignPlugin {
                         const newCampaigns = this.campInfo.filter((campaign: any) => 
                             !existingPweData[campaign.campInstanceId]
                         );
-                        
-                        console.log(`📊 Campaign analysis: ${this.campInfo.length} total, ${newCampaigns.length} new, ${this.campInfo.length - newCampaigns.length} existing`);
-                        
                         // Only proceed if there are new campaigns OR first time initialization
                         if (newCampaigns.length > 0 || Object.keys(existingPweData).length === 0) {
-                            console.log('✅ Processing new campaigns and setting up services');
-                            
                             // Use new campaign data structure - only process NEW campaigns
                             const pweData = this.constructPweData(newCampaigns);
                             
@@ -140,32 +131,23 @@ class ProactiveWebCampaignPlugin {
                                     }
                                 }
                             });
-                            
+                            //PWE data saved to session storage
                             window.sessionStorage.setItem('pwe_data', JSON.stringify(existingPweData));
-                            console.log('💾 PWE data saved to session storage');
                             
                             // Setup hover event listeners for campaigns with hoverOn rules
                             this.setupHoverListeners();
                             
                             // Initialize efficient PWC tracking system
                             me.initializePWCTracking();
-                        } else {
-                            console.log('⚠️ No new campaigns detected, skipping redundant setup for performance');
-                            console.log('⚡ Performance optimization: Existing campaigns preserved, no processing needed');
                         }
                         
-                        // NEW: Handle initial page processing (fixes landing page campaigns)
-                        // MOVED OUTSIDE: Execute regardless of campaign novelty (critical for multi-page apps)
+                        // Handle initial page processing (fixes landing page campaigns)
+                        // Execute regardless of campaign novelty (critical for multi-page apps)
                         if (!this.isInitialPageLoaded) {
-                            console.log('🚀 Processing initial page load (enables landing page campaigns)');
                             this.handlePageChange();
                             this.isInitialPageLoaded = true;
-                            console.log('✅ Initial page processing complete');
-                        } else {
-                            console.log('⚡ Initial page already processed, skipping for performance');
                         }
                     } else {
-                        console.log('❌ PWE is disabled, removing pwe_data from session storage');
                         window.sessionStorage.removeItem('pwe_data');
                         this.enablePWC = false;
                         this.campInfo = [];
@@ -202,10 +184,8 @@ class ProactiveWebCampaignPlugin {
         });
         me.customDataListener();
 
-        // Track URL and title changes with efficient event handling
+        // Track URL changes with efficient event handling
         this.onUrlChange(() => {
-            console.log('URL changed to:', window.location.href);
-            
             // Clear any existing debounce timer
             if (this.pageChangeDebounceTimer) {
                 clearTimeout(this.pageChangeDebounceTimer);
@@ -213,20 +193,18 @@ class ProactiveWebCampaignPlugin {
             
             // Add debounced delay to ensure page state is stable and prevent rapid multiple evaluations
             this.pageChangeDebounceTimer = setTimeout(() => {
-                console.log('🔄 Processing debounced page change');
                 this.handlePageChange();
                 this.pageChangeDebounceTimer = null;
             }, 150);
         });
-
+        // Track title changes with efficient event handling
         this.onTitleChange((newTitle) => {
-            console.log('Title changed to:', newTitle);
             const pageObj = {
                 url: window.location.href,
                 pageName: newTitle
             };
             // Title changes don't require timer restart, just rule evaluation
-            this.sendEventNew(pageObj, 'titleChange');
+            this.sendEvent(pageObj, 'titleChange');
         });
     }
 
@@ -261,22 +239,12 @@ class ProactiveWebCampaignPlugin {
       
       
     /**
-     * =====================================================================================
-     *                      🎯 ENHANCED CUSTOM DATA LISTENER WITH PERFORMANCE OPTIMIZATIONS
-     * =====================================================================================
-     * 
-     * Features:
+     * - Custom Data Listener, listens to pwcCustomData event and processes the data
      * - 1-second debouncing for performance
-     * - Recursive JSON flattening (max depth 10)
-     * - Efficient change detection
-     * - Targeted campaign updates
-     * - Memory management with configured column cleanup
      */
     customDataListener(){
         const me: any = this;
         me.hostInstance.on('pwcCustomData', (event: any) =>{
-            console.log("🔄 PWC Custom Data Received:", event.data);
-            
             // Store raw data for backward compatibility
             me.customDataObject = event.data;
             
@@ -287,7 +255,6 @@ class ProactiveWebCampaignPlugin {
             
             // Debounce rapid successive updates (1 second)
             me.customDataDebounceTimer = setTimeout(() => {
-                console.log("⏱️ Processing debounced custom data update");
                 me.processCustomDataUpdate(event.data);
                 me.customDataDebounceTimer = null;
             }, 1000);
@@ -296,38 +263,27 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Processes custom data update with flattening and change detection
-     * ENHANCED: Now persists flattened data to sessionStorage with merge strategy
+     * persists flattened data to sessionStorage with merge strategy
      * @param rawData - Raw nested JSON data from pwcCustomData event
      */
     processCustomDataUpdate(rawData: any): void {
-        console.log("🔄 =================== CUSTOM DATA PROCESSING START ===================");
-        console.log("🔄 Raw data received:", rawData);
-        
         try {
             // Step 1: Flatten the received data
             const newFlattenedData = this.flattenObject(rawData);
-            console.log("🗂️ Flattened custom data:", newFlattenedData);
-            console.log(`🗂️ Flattened ${Object.keys(newFlattenedData).length} keys`);
             
             // Step 2: Get existing data from sessionStorage and merge with new data
             const existingData = this.getPersistedCustomData();
             const mergedData = this.mergeCustomData(existingData, newFlattenedData);
-            console.log("🔄 Merged with existing sessionStorage data:", mergedData);
-            console.log(`🔄 Final merged data has ${Object.keys(mergedData).length} keys`);
             
             // Step 3: Persist merged data to sessionStorage
             this.persistCustomDataToSession(mergedData);
             
-            // Step 4: Clean up data based on configured custom columns (REMOVED: cleanupFlattenedData causes data loss)
+            // Step 4: mergedData prepared from the Configured Custom Columns
             // Using merged data directly to prevent data loss across navigation
             const cleanedFlattenedData = mergedData;
-            console.log("✅ Using full merged data (no cleanup to prevent data loss):", cleanedFlattenedData);
-            console.log(`✅ Preserved ${Object.keys(cleanedFlattenedData).length} keys for processing`);
             
             // Step 5: Detect changes between old and new data
             const changes = this.detectCustomDataChanges(cleanedFlattenedData);
-            console.log("📊 Custom data changes detected:", changes);
-            console.log(`📊 Found ${Object.keys(changes).length} changes`);
             
             // Step 6: Update state
             this.previousFlattenedCustomData = { ...this.flattenedCustomData };
@@ -336,16 +292,10 @@ class ProactiveWebCampaignPlugin {
             
             // Step 7: Only trigger evaluation if there are actual changes
             if (Object.keys(changes).length > 0) {
-                console.log("🎯 Changes detected, triggering custom data evaluation");
                 this.handleCustomDataChanges(changes);
-            } else {
-                console.log("⚠️ No changes detected, skipping evaluation");
             }
-            
-            console.log("🔄 =================== CUSTOM DATA PROCESSING COMPLETE ===================");
         } catch (error) {
             console.error("❌ Error processing custom data:", error);
-            console.log("🔄 =================== CUSTOM DATA PROCESSING FAILED ===================");
         }
     }
 
@@ -367,13 +317,11 @@ class ProactiveWebCampaignPlugin {
         
         // Safety checks
         if (obj === null || obj === undefined) {
-            console.log(`🗂️ Skipping null/undefined object at prefix: ${prefix}`);
             return flattened;
         }
         
         // Depth limit check
         if (currentDepth >= maxDepth) {
-            console.log(`⚠️ Maximum flattening depth (${maxDepth}) reached at prefix: ${prefix}`);
             // Store the object as-is when depth limit reached
             if (prefix) {
                 flattened[prefix] = obj;
@@ -383,7 +331,6 @@ class ProactiveWebCampaignPlugin {
         
         // Handle arrays
         if (Array.isArray(obj)) {
-            console.log(`🗂️ Flattening array at prefix: ${prefix}, length: ${obj.length}`);
             obj.forEach((item, index) => {
                 const arrayKey = prefix ? `${prefix}[${index}]` : `[${index}]`;
                 
@@ -400,7 +347,6 @@ class ProactiveWebCampaignPlugin {
         
         // Handle objects
         if (typeof obj === 'object') {
-            console.log(`🗂️ Flattening object at prefix: ${prefix}, keys: ${Object.keys(obj).length}`);
             for (const key in obj) {
                 if (obj.hasOwnProperty(key)) {
                     const newKey = prefix ? `${prefix}.${key}` : key;
@@ -422,39 +368,7 @@ class ProactiveWebCampaignPlugin {
         if (prefix) {
             flattened[prefix] = obj;
         }
-        
-        console.log(`🗂️ Flattened object completed. Generated ${Object.keys(flattened).length} keys`);
         return flattened;
-    }
-
-    /**
-     * Cleans up flattened data to only keep keys that are configured in campaigns
-     * This prevents memory bloat from unused custom data keys
-     * @param flattenedData - Flattened custom data
-     * @returns Cleaned flattened data with only configured keys
-     */
-    cleanupFlattenedData(flattenedData: any): any {
-        if (this.customColumnConfig.size === 0) {
-            console.log("🧹 No custom column configuration found, keeping all flattened data");
-            return flattenedData;
-        }
-        
-        const cleaned: any = {};
-        let retainedCount = 0;
-        let removedCount = 0;
-        
-        for (const key in flattenedData) {
-            if (this.customColumnConfig.has(key)) {
-                cleaned[key] = flattenedData[key];
-                retainedCount++;
-            } else {
-                removedCount++;
-                console.log(`🧹 Removing unconfigured key: ${key}`);
-            }
-        }
-        
-        console.log(`🧹 Cleanup complete: retained ${retainedCount} keys, removed ${removedCount} keys`);
-        return cleaned;
     }
 
     /**
@@ -477,7 +391,6 @@ class ProactiveWebCampaignPlugin {
                     newValue: newValue,
                     type: this.previousFlattenedCustomData.hasOwnProperty(key) ? 'modified' : 'added'
                 };
-                console.log(`📊 ${changes[key].type.toUpperCase()}: ${key} = ${oldValue} → ${newValue}`);
             }
         }
         
@@ -489,11 +402,9 @@ class ProactiveWebCampaignPlugin {
                     newValue: null,
                     type: 'removed'
                 };
-                console.log(`📊 REMOVED: ${key} = ${changes[key].oldValue} → null`);
             }
         }
         
-        console.log(`📊 Change detection complete: found ${Object.keys(changes).length} changes`);
         return changes;
     }
 
@@ -503,11 +414,7 @@ class ProactiveWebCampaignPlugin {
      * @param changes - Object containing changed keys with metadata
      */
     handleCustomDataChanges(changes: any): void {
-        console.log("🎯 =================== HANDLING CUSTOM DATA CHANGES ===================");
-        console.log("🎯 Changes to process:", changes);
-        
         if (!this.campInfo || this.campInfo.length === 0) {
-            console.log("⚠️ No campaigns available for custom data evaluation");
             return;
         }
         
@@ -516,10 +423,8 @@ class ProactiveWebCampaignPlugin {
         
         // Get active campaigns that might be affected by custom data changes
         const activeCampaigns = this.getActiveCampaigns(currentUrl, currentPageTitle);
-        console.log(`🎯 Found ${activeCampaigns.length} active campaigns for current page`);
         
         if (activeCampaigns.length === 0) {
-            console.log("⚠️ No active campaigns for custom data evaluation");
             return;
         }
         
@@ -528,24 +433,16 @@ class ProactiveWebCampaignPlugin {
             return this.campaignHasCustomConditionsForKeys(campaign, Object.keys(changes));
         });
         
-        console.log(`🎯 Found ${affectedCampaigns.length} campaigns affected by custom data changes`);
-        
         if (affectedCampaigns.length > 0) {
             // Update actual values for affected campaigns
             affectedCampaigns.forEach(campaign => {
                 const campInstanceId = campaign.campInstanceId;
-                console.log(`🔄 Updating custom data for campaign: ${campInstanceId}`);
                 this.updateCustomActualValues(campInstanceId, changes);
             });
             
             // Trigger evaluation for affected campaigns
-            console.log("🔄 Triggering evaluation for affected campaigns");
             this.evaluateActiveCampaigns(affectedCampaigns, currentUrl, currentPageTitle, 'customData');
-        } else {
-            console.log("⚠️ No campaigns affected by these custom data changes");
         }
-        
-        console.log("🎯 =================== CUSTOM DATA CHANGES HANDLED ===================");
     }
 
     /**
@@ -557,14 +454,11 @@ class ProactiveWebCampaignPlugin {
             const storedData = sessionStorage.getItem('pwcCustomData');
             if (storedData) {
                 const parsedData = JSON.parse(storedData);
-                console.log("📖 Retrieved existing custom data from sessionStorage:", parsedData);
                 return parsedData;
             } else {
-                console.log("📖 No existing custom data found in sessionStorage");
                 return {};
             }
         } catch (error) {
-            console.error("❌ Error retrieving custom data from sessionStorage:", error);
             return {};
         }
     }
@@ -577,19 +471,7 @@ class ProactiveWebCampaignPlugin {
      * @returns Merged custom data object
      */
     mergeCustomData(existingData: any, newData: any): any {
-        const merged = { ...existingData, ...newData };
-        console.log("🔄 Merging custom data:");
-        console.log(`   - Existing keys: ${Object.keys(existingData).length}`);
-        console.log(`   - New keys: ${Object.keys(newData).length}`);
-        console.log(`   - Merged keys: ${Object.keys(merged).length}`);
-        
-        // Log any overwritten keys
-        Object.keys(newData).forEach(key => {
-            if (existingData.hasOwnProperty(key) && existingData[key] !== newData[key]) {
-                console.log(`🔄 Key updated: ${key} = ${existingData[key]} → ${newData[key]}`);
-            }
-        });
-        
+        const merged = { ...existingData, ...newData };        
         return merged;
     }
 
@@ -601,22 +483,13 @@ class ProactiveWebCampaignPlugin {
         try {
             const dataToStore = JSON.stringify(customData);
             sessionStorage.setItem('pwcCustomData', dataToStore);
-            console.log("💾 Custom data persisted to sessionStorage successfully");
-            console.log(`💾 Stored ${Object.keys(customData).length} keys`);
         } catch (error) {
-            console.error("❌ Error persisting custom data to sessionStorage:", error);
             if (error instanceof Error && error.name === 'QuotaExceededError') {
                 console.warn("⚠️ sessionStorage quota exceeded, using memory-only storage");
                 // Continue with memory-only approach as fallback
             }
         }
     }
-
-    /**
-     * =====================================================================================
-     *                         🎯 CUSTOM CONDITION CAMPAIGN FILTERING & UPDATES
-     * =====================================================================================
-     */
 
     /**
      * Checks if a campaign has custom conditions that match the changed keys
@@ -637,15 +510,6 @@ class ProactiveWebCampaignPlugin {
         
         const isAffected = hasInRules || hasInExclusions;
         
-        if (isAffected) {
-            console.log(`✅ Campaign ${campaign.campInstanceId} is affected by custom data changes`);
-            console.log(`   - Rules affected: ${hasInRules}`);
-            console.log(`   - Exclusions affected: ${hasInExclusions}`);
-            console.log(`   - Matching keys: ${changedKeys.filter(key => 
-                this.campaignHasCustomConditionForKey(campaign, key)
-            ).join(', ')}`);
-        }
-        
         return isAffected;
     }
 
@@ -662,7 +526,6 @@ class ProactiveWebCampaignPlugin {
                     if (condition.conditionType === 'custom' && condition.column) {
                         // Check if this custom condition's column matches any changed key
                         if (changedKeys.includes(condition.column)) {
-                            console.log(`🎯 Found matching custom condition: ${condition.column} in group ${group.id}`);
                             return true;
                         }
                     }
@@ -678,7 +541,7 @@ class ProactiveWebCampaignPlugin {
      * @param key - Custom data key to check
      * @returns Boolean indicating if campaign has condition for this key
      */
-    campaignHasCustomConditionForKey(campaign: any, key: string): boolean {
+    /* campaignHasCustomConditionForKey(campaign: any, key: string): boolean {
         // Check in rules
         if (campaign.engagementStrategy?.rules?.groups) {
             for (const group of campaign.engagementStrategy.rules.groups) {
@@ -706,30 +569,23 @@ class ProactiveWebCampaignPlugin {
         }
         
         return false;
-    }
+    } */
 
     /**
-     * Updates actual values for custom conditions in a campaign
-     * CORRECTED: Only populates actual.rules OR actual.exclusions based on where condition is configured
+     * Updates or populates actual.rules OR actual.exclusions with custom actual values based on where condition is configured
      * @param campInstanceId - Campaign instance ID
      * @param changes - Object containing changed custom data
      */
     updateCustomActualValues(campInstanceId: string, changes: any): void {
-        console.log(`📝 =================== UPDATING CUSTOM ACTUAL VALUES ===================`);
-        console.log(`📝 Campaign: ${campInstanceId}`);
-        console.log(`📝 Changes to process:`, changes);
-        
         let pweData: any = window.sessionStorage.getItem('pwe_data');
         pweData = JSON.parse(pweData) || {};
         
         if (!pweData[campInstanceId]) {
-            console.log(`⚠️ No pwe_data found for ${campInstanceId}`);
             return;
         }
 
         const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
         if (!campaign) {
-            console.log(`⚠️ Campaign not found for custom data update: ${campInstanceId}`);
             return;
         }
 
@@ -749,14 +605,12 @@ class ProactiveWebCampaignPlugin {
                                 const newValue = changes[customKey].newValue;
                                 pweData[campInstanceId].actual.rules[customKey] = newValue;
                                 updatedRules = true;
-                                console.log(`📝 Updated RULES custom value: ${customKey} = ${newValue}`);
                             } else if (this.flattenedCustomData.hasOwnProperty(customKey) && 
                                       !pweData[campInstanceId].actual.rules.hasOwnProperty(customKey)) {
                                 // Set initial value if not already set
                                 const currentValue = this.flattenedCustomData[customKey];
                                 pweData[campInstanceId].actual.rules[customKey] = currentValue;
                                 updatedRules = true;
-                                console.log(`📝 Set initial RULES custom value: ${customKey} = ${currentValue}`);
                             }
                         }
                     });
@@ -777,14 +631,12 @@ class ProactiveWebCampaignPlugin {
                                 const newValue = changes[customKey].newValue;
                                 pweData[campInstanceId].actual.exclusions[customKey] = newValue;
                                 updatedExclusions = true;
-                                console.log(`📝 Updated EXCLUSIONS custom value: ${customKey} = ${newValue}`);
                             } else if (this.flattenedCustomData.hasOwnProperty(customKey) && 
                                       !pweData[campInstanceId].actual.exclusions.hasOwnProperty(customKey)) {
                                 // Set initial value if not already set
                                 const currentValue = this.flattenedCustomData[customKey];
                                 pweData[campInstanceId].actual.exclusions[customKey] = currentValue;
                                 updatedExclusions = true;
-                                console.log(`📝 Set initial EXCLUSIONS custom value: ${customKey} = ${currentValue}`);
                             }
                         }
                     });
@@ -795,14 +647,7 @@ class ProactiveWebCampaignPlugin {
         // Save updated data
         if (updatedRules || updatedExclusions) {
             window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
-            console.log(`✅ Custom actual values updated for ${campInstanceId}`);
-            console.log(`   - Rules updated: ${updatedRules}`);
-            console.log(`   - Exclusions updated: ${updatedExclusions}`);
-        } else {
-            console.log(`⚠️ No custom conditions found for changed keys in ${campInstanceId}`);
         }
-        
-        console.log(`📝 =================== CUSTOM ACTUAL VALUES UPDATE COMPLETE ===================`);
     }
 
     /**
@@ -811,9 +656,6 @@ class ProactiveWebCampaignPlugin {
      * @param campaigns - Array of campaign data
      */
     extractCustomColumns(campaigns: any[]): void {
-        console.log("📋 =================== EXTRACTING CUSTOM COLUMN CONFIGURATIONS ===================");
-        console.log(`📋 Processing ${campaigns.length} campaigns for custom columns`);
-        
         this.customColumnConfig.clear();
         let totalCustomConditions = 0;
         
@@ -829,7 +671,6 @@ class ProactiveWebCampaignPlugin {
                                 campaignCustomColumns.add(condition.column);
                                 this.customColumnConfig.add(condition.column);
                                 totalCustomConditions++;
-                                console.log(`📋 Found custom condition in RULES: ${condition.column} (campaign: ${campaign.campInstanceId})`);
                             }
                         });
                     }
@@ -845,24 +686,12 @@ class ProactiveWebCampaignPlugin {
                                 campaignCustomColumns.add(condition.column);
                                 this.customColumnConfig.add(condition.column);
                                 totalCustomConditions++;
-                                console.log(`📋 Found custom condition in EXCLUSIONS: ${condition.column} (campaign: ${campaign.campInstanceId})`);
                             }
                         });
                     }
                 });
             }
-            
-            if (campaignCustomColumns.size > 0) {
-                console.log(`📋 Campaign ${index + 1} (${campaign.campInstanceId}) uses ${campaignCustomColumns.size} custom columns: [${Array.from(campaignCustomColumns).join(', ')}]`);
-            }
         });
-        
-        console.log(`📋 Custom column extraction complete:`);
-        console.log(`   - Total campaigns processed: ${campaigns.length}`);
-        console.log(`   - Total custom conditions found: ${totalCustomConditions}`);
-        console.log(`   - Unique custom columns: ${this.customColumnConfig.size}`);
-        console.log(`   - Custom columns configured: [${Array.from(this.customColumnConfig).join(', ')}]`);
-        console.log("📋 =================== CUSTOM COLUMN EXTRACTION COMPLETE ===================");
     }
 
     sendPWCStartEvent() {
@@ -889,63 +718,12 @@ class ProactiveWebCampaignPlugin {
         templateManager.installTemplate(new PWCPostTemplate());
     }
 
-    /*
-    ==================================================================================
-                              🚀 PERFORMANCE-OPTIMIZED TIMER SYSTEM
-    ==================================================================================
-    
-    🎯 PROBLEM SOLVED:
-    The previous eventLoop was running every 1000ms (1 second) and:
-    ❌ Evaluating ALL campaigns every second
-    ❌ Recalculating time spent for ALL campaigns every second  
-    ❌ Triggering full rule evaluation every second
-    ❌ Causing significant performance overhead
-    
-    ✅ NEW EFFICIENT APPROACH:
-    1. Event-Driven Evaluation: Only evaluate rules when something actually changes
-    2. Targeted Timers: Individual timers for each timeSpent condition
-    3. Smart Triggering: Only process relevant campaigns when conditions are met
-    4. Resource Cleanup: Proper timer management and cleanup
-    5. PAGE-AWARE TIMERS: Only start timers for campaigns matching current page
-    6. CONDITION-SPECIFIC UPDATES: Only update actual values for configured condition types
-    
-    📊 PERFORMANCE IMPROVEMENTS:
-    - 🔥 CPU Usage: Reduced from continuous polling to event-based triggers
-    - ⚡ Memory: Efficient timer management with cleanup
-    - 🎯 Precision: Exact timing for timeSpent conditions (no 1-second intervals)
-    - 🚀 Scalability: Performance doesn't degrade with more campaigns
-    - 🌐 Page Accuracy: Timers only run for campaigns relevant to current page
-    - 🎪 Data Accuracy: Actual values only collected for configured conditions
-    
-    🔧 FIXES APPLIED:
-    
-    1. timeSpent Timer Issue:
-    - ISSUE: Timers were being set for ALL campaigns regardless of URL matching
-    - SOLUTION: Only set timers for campaigns that match current page URL/title
-    - RESULT: timeSpent values only update when user is on matching pages
-    
-    2. Unnecessary Data Collection Issue:
-    - ISSUE: All campaigns collecting pageVisitCount, user, country, city regardless of configuration
-    - SOLUTION: Added campaignHasConditionType() helper to check condition configuration
-    - RESULT: Only collects actual data for condition types that are configured
-    
-    3. Website Configuration Check Issue:
-    - ISSUE: Multiple campaigns with different URL configs getting updated simultaneously
-    - SOLUTION: Enhanced filtering and validation at multiple levels
-    - RESULT: Each campaign only processes when its specific website config matches
-    ==================================================================================
-    */
-
     /**
      * Creates targeted timers for timeSpent conditions instead of polling every second
-     * This is much more efficient than the previous eventLoop approach
      * IMPORTANT: Only sets up timers for campaigns that match the current page
      */
     setupTimeSpentTimers(): void {
-        console.log('⏱️ Setting up targeted timeSpent timers');
-        
         if (!this.campInfo || this.campInfo.length === 0) {
-            console.log('⚠️ No campaigns available for timer setup');
             return;
         }
 
@@ -953,41 +731,26 @@ class ProactiveWebCampaignPlugin {
         const currentUrl = window.location.href;
         const currentPageTitle = document.title.trim();
         
-        console.log('🌐 Current page for timer setup:', { currentUrl, currentPageTitle });
-        
         // Only get campaigns that match the current page
         const activeCampaigns = this.getActiveCampaigns(currentUrl, currentPageTitle);
         
         if (activeCampaigns.length === 0) {
-            console.log('⚠️ No active campaigns for current page - no timers needed');
             return;
         }
-        
-        console.log(`✅ Setting up timers for ${activeCampaigns.length} active campaign(s)`);
 
         activeCampaigns.forEach((campaign: any) => {
             const campInstanceId = campaign.campInstanceId;
-            console.log(`⏱️ Setting up timeSpent timers for active campaign: ${campInstanceId}`);
-            
             // Check for timeSpent conditions in the new structure
             if (campaign.engagementStrategy?.rules?.groups) {
                 campaign.engagementStrategy.rules.groups.forEach((group: any) => {
                     if (group.conditions) {
                         group.conditions.forEach((condition: any) => {
                             if (condition.column === 'timeSpent') {
-                                console.log(`⏱️ Processing timeSpent condition for campaign ${campInstanceId}:`, {
-                                    value: condition.value,
-                                    isNot: condition.isNot,
-                                    operator: condition.operator
-                                });
-                                
                                 if (condition.isNot === true) {
                                     // For isNot: true, we need immediate evaluation
-                                    console.log(`🔄 *** isNot=true timeSpent condition detected - handling immediately ***`);
                                     this.handleIsNotTimeSpentCondition(campInstanceId, group.id, condition.id, condition.value);
                                 } else {
                                     // Regular timer behavior for non-negated conditions
-                                    console.log(`⏱️ Creating timer for campaign ${campInstanceId}, timeSpent: ${condition.value}s`);
                                     this.createTimeSpentTimer(
                                         campInstanceId,
                                         group.id,
@@ -1001,8 +764,6 @@ class ProactiveWebCampaignPlugin {
                 });
             }
         });
-        
-        console.log('✅ TimeSpent timers setup complete for active campaigns only');
     }
 
     /**
@@ -1013,26 +774,16 @@ class ProactiveWebCampaignPlugin {
      * @param thresholdSeconds - Threshold value in seconds
      */
     handleIsNotTimeSpentCondition(campInstanceId: string, groupId: string, conditionId: string, thresholdSeconds: number): void {
-        console.log(`🔄 *** Handling isNot=true timeSpent condition for campaign ${campInstanceId} ***`);
-        console.log(`🔄 Group: ${groupId}, Condition: ${conditionId}, Threshold: ${thresholdSeconds}s`);
-        
         // Get current time spent (initially 0)
         const currentTimeSpent = this.timeSpent[campInstanceId] || 0;
-        
-        console.log(`🔄 Current time spent: ${currentTimeSpent}s`);
-        console.log(`🔄 Since isNot=true, condition is satisfied when timeSpent < ${thresholdSeconds}s`);
-        console.log(`🔄 Currently: ${currentTimeSpent} < ${thresholdSeconds} = ${currentTimeSpent < thresholdSeconds}`);
-        
         // Immediately update actual value
         this.updateTimeSpentActualValue(campInstanceId, currentTimeSpent);
         
         // Immediately evaluate the campaign
-        console.log(`🔄 *** Immediately evaluating campaign ${campInstanceId} for isNot timeSpent condition ***`);
         this.evaluateSpecificCampaign(campInstanceId, 'timeSpent-isNot');
         
         // Still set up a timer for when the condition would become false
         // This is important because if the user stays long enough, the isNot condition will no longer be satisfied
-        console.log(`🔄 Setting up timer for when isNot condition becomes false (at ${thresholdSeconds}s)`);
         this.createTimeSpentTimer(
             campInstanceId,
             groupId,
@@ -1051,8 +802,6 @@ class ProactiveWebCampaignPlugin {
      * @param timeoutMs - Timeout in milliseconds
      */
     createTimeSpentTimer(campInstanceId: string, groupId: string, conditionId: string, timeoutMs: number): void {
-        console.log(`⏱️ Creating timer for campaign ${campInstanceId}, group ${groupId}, condition ${conditionId}: ${timeoutMs}ms`);
-        
         // Additional safety check: verify campaign is still active for current page
         const currentUrl = window.location.href;
         const currentPageTitle = document.title.trim();
@@ -1060,7 +809,7 @@ class ProactiveWebCampaignPlugin {
         const isActive = activeCampaigns.some(camp => camp.campInstanceId === campInstanceId);
         
         if (!isActive) {
-            console.log(`⚠️ Safety check failed: Campaign ${campInstanceId} not active for current page - skipping timer creation`);
+            // Safety check failed: Campaign ${campInstanceId} not active for current page - skipping timer creation
             return;
         }
         
@@ -1071,7 +820,6 @@ class ProactiveWebCampaignPlugin {
         
         // Create new timer
         const timerId = setTimeout(() => {
-            console.log(`⏰ Timer fired for ${timerKey}`);
             this.handleTimeSpentConditionMet(campInstanceId, groupId, conditionId, timeoutMs / 1000);
         }, timeoutMs);
         
@@ -1087,8 +835,6 @@ class ProactiveWebCampaignPlugin {
         };
         
         this.activeTimerIds[timerKey] = timerId;
-        
-        console.log(`✅ Timer created for active campaign: ${timerKey}`);
     }
 
     /**
@@ -1101,12 +847,8 @@ class ProactiveWebCampaignPlugin {
      * @param timeSpentSeconds - Time spent in seconds
      */
     handleTimeSpentConditionMet(campInstanceId: string, groupId: string, conditionId: string, timeSpentSeconds: number): void {
-        console.log(`🎯 TimeSpent timer fired for campaign ${campInstanceId}: ${timeSpentSeconds}s`);
-        console.log(`⏱️ Timer details - Group: ${groupId}, Condition: ${conditionId}`);
-        
         const currentUrl = window.location.href;
         const currentPageTitle = document.title.trim();
-        console.log(`🌐 Current page when timer fired:`, { currentUrl, currentPageTitle });
         
         // Find the specific condition to check if it's an isNot condition
         const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
@@ -1124,13 +866,6 @@ class ProactiveWebCampaignPlugin {
             });
         }
         
-        if (isNotCondition) {
-            console.log(`🔄 *** This is an isNot condition - timer firing means condition is now NOT satisfied ***`);
-            console.log(`🔄 User has spent ${timeSpentSeconds}s, so isNot condition is now false`);
-        } else {
-            console.log(`✅ This is a regular condition - timer firing means condition is now satisfied`);
-        }
-        
         // Update actual values
         this.updateTimeSpentActualValue(campInstanceId, timeSpentSeconds);
         
@@ -1141,8 +876,6 @@ class ProactiveWebCampaignPlugin {
         // Clean up timer
         const timerKey = `${campInstanceId}-${groupId}-${conditionId}`;
         this.clearTimeSpentTimer(timerKey);
-        
-        console.log(`✅ TimeSpent timer processing complete for ${campInstanceId}`);
     }
 
     /**
@@ -1153,35 +886,29 @@ class ProactiveWebCampaignPlugin {
      * @param timeSpentSeconds - Time spent in seconds
      */
     updateTimeSpentActualValue(campInstanceId: string, timeSpentSeconds: number): void {
-        console.log(`📝 Updating timeSpent actual value for ${campInstanceId}: ${timeSpentSeconds}s`);
-        
         let pweData: any = window.sessionStorage.getItem('pwe_data');
         pweData = JSON.parse(pweData) || {};
         
         if (!pweData[campInstanceId]) {
-            console.log(`⚠️ No pwe_data found for ${campInstanceId}`);
             return;
         }
 
         // Find the campaign to check its conditions
         const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
         if (!campaign) {
-            console.log(`⚠️ Campaign not found for timeSpent actual value update: ${campInstanceId}`);
             return;
         }
 
         const hasInRules = this.campaignHasConditionType(campaign, 'timeSpent');
         const hasInExclusions = this.campaignHasExclusionConditionType(campaign, 'timeSpent');
 
-        // CORRECTED: Only update where condition is actually configured
+        // Only update where condition is actually configured
         if (hasInRules) {
             pweData[campInstanceId].actual.rules.timeSpent = timeSpentSeconds;
-            console.log(`⏱️ TimeSpent updated in RULES: ${campInstanceId} = ${timeSpentSeconds}s`);
         }
         
         if (hasInExclusions) {
             pweData[campInstanceId].actual.exclusions.timeSpent = timeSpentSeconds;
-            console.log(`⏱️ TimeSpent updated in EXCLUSIONS: ${campInstanceId} = ${timeSpentSeconds}s`);
         }
         
         // Also update the instance variable
@@ -1190,12 +917,10 @@ class ProactiveWebCampaignPlugin {
         // Save to sessionStorage
         window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
         
-        // CRITICAL: Re-evaluate based on what was updated
+        // Re-evaluate based on what was updated
         if (hasInExclusions) {
-            console.log(`🔄 *** Triggering exclusion re-evaluation due to timeSpent change ***`);
             this.reevaluateExclusionsForTimeSpentChange(campInstanceId);
         } else if (hasInRules) {
-            console.log(`🔄 *** Triggering rules re-evaluation due to timeSpent change ***`);
             this.evaluateSpecificCampaign(campInstanceId, 'timeSpent');
         }
     }
@@ -1206,8 +931,6 @@ class ProactiveWebCampaignPlugin {
      * @param campInstanceId - Campaign instance ID
      */
     reevaluateExclusionsForTimeSpentChange(campInstanceId: string): void {
-        console.log(`🔄 Re-evaluating exclusions for timeSpent change: ${campInstanceId}`);
-        
         // Re-evaluate exclusions with new timeSpent data
         this.evaluateExclusionsForCampaign(campInstanceId);
         
@@ -1217,12 +940,9 @@ class ProactiveWebCampaignPlugin {
         const exclusionsSatisfied = pweData[campInstanceId]?.expected?.exclusions?.isSatisfied || false;
         
         if (exclusionsSatisfied) {
-            console.log(`🚫 *** TimeSpent change caused exclusions to BLOCK campaign ${campInstanceId} ***`);
+            // TimeSpent change caused exclusions to BLOCK campaign
         } else {
-            console.log(`✅ *** TimeSpent change allows campaign ${campInstanceId} to proceed ***`);
-            
             // Only evaluate rules if exclusions don't block
-            console.log(`📏 Re-evaluating rules since exclusions allow campaign`);
             this.evaluateRulesForCampaign(campInstanceId);
             
             // Check trigger decision
@@ -1239,12 +959,9 @@ class ProactiveWebCampaignPlugin {
      * @param triggerType - What triggered this evaluation
      */
     evaluateSpecificCampaign(campInstanceId: string, triggerType: string): void {
-        console.log(`🔄 Evaluating specific campaign: ${campInstanceId} (trigger: ${triggerType})`);
-        
         // Find the campaign
         const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
         if (!campaign) {
-            console.log(`⚠️ Campaign not found: ${campInstanceId}`);
             return;
         }
 
@@ -1252,20 +969,15 @@ class ProactiveWebCampaignPlugin {
         const currentUrl = window.location.href;
         const currentPageTitle = document.title.trim();
         
-        console.log(`🌐 Current page during evaluation:`, { currentUrl, currentPageTitle });
-        console.log(`🎯 Campaign ${campInstanceId} website config:`, campaign.engagementStrategy?.website);
-        
         // Check if campaign is still active for current page
         const activeCampaigns = this.getActiveCampaigns(currentUrl, currentPageTitle);
         const isStillActive = activeCampaigns.some(camp => camp.campInstanceId === campInstanceId);
         
         if (!isStillActive) {
-            console.log(`⚠️ Campaign ${campInstanceId} no longer active for current page - skipping evaluation`);
-            console.log(`ℹ️ This is expected if user navigated away from matching page after timer was set`);
+            // Campaign no longer active for current page - skipping evaluation
+            // This is expected if user navigated away from matching page after timer was set
             return;
         }
-
-        console.log(`✅ Campaign ${campInstanceId} is still active for current page - proceeding with evaluation`);
         
         // Evaluate this specific campaign
         this.evaluateActiveCampaigns([campaign], currentUrl, currentPageTitle, triggerType);
@@ -1280,7 +992,6 @@ class ProactiveWebCampaignPlugin {
             clearTimeout(this.activeTimerIds[timerKey]);
             delete this.activeTimerIds[timerKey];
             delete this.timeSpentTimers[timerKey];
-            console.log(`🗑️ Timer cleared: ${timerKey}`);
         }
     }
 
@@ -1288,8 +999,6 @@ class ProactiveWebCampaignPlugin {
      * Clears all timeSpent timers (useful for cleanup)
      */
     clearAllTimeSpentTimers(): void {
-        console.log('🗑️ Clearing all timeSpent timers');
-        
         Object.keys(this.activeTimerIds).forEach(timerKey => {
             this.clearTimeSpentTimer(timerKey);
         });
@@ -1300,21 +1009,15 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Restarts timers when URL changes (more efficient than continuous polling)
-     * ENHANCED: Now includes hoverOn reset and hover listener management
-     * ENHANCED: Now retrieves custom data from sessionStorage to handle navigation
+     * Now includes hoverOn reset and hover listener management
+     * Now retrieves custom data from sessionStorage to handle navigation
      */
     handlePageChange(): void {
-        console.log('📄 Page change detected, restarting relevant timers and resetting hoverOn');
-        
         // STEP 1: Retrieve custom data from sessionStorage to handle navigation
         const persistedCustomData = this.getPersistedCustomData();
         if (Object.keys(persistedCustomData).length > 0) {
             // Update in-memory custom data with persisted data
             this.flattenedCustomData = { ...this.flattenedCustomData, ...persistedCustomData };
-            console.log('📄 ✅ Custom data retrieved from sessionStorage and merged into memory');
-            console.log(`📄 Total custom data keys available: ${Object.keys(this.flattenedCustomData).length}`);
-        } else {
-            console.log('📄 ⚡ No custom data found in sessionStorage - using memory only');
         }
         
         // Clear existing timers
@@ -1341,7 +1044,7 @@ class ProactiveWebCampaignPlugin {
         this.resetHoverOnValues();
         
         // Clear existing hover listeners (they'll be recreated for new active campaigns)
-        this.clearHoverListeners();
+        // this.clearHoverListeners();
         
         // Update page visit counts for relevant campaigns
         this.updatePageVisitCounts();
@@ -1353,7 +1056,7 @@ class ProactiveWebCampaignPlugin {
         this.setupHoverListeners();
         
         // Trigger rule evaluation
-        this.sendEventNew(pageObj, 'pageChange');
+        this.sendEvent(pageObj, 'pageChange');
         
         // Update tracking variables
         window.sessionStorage.setItem('prevUrl', currentUrl);
@@ -1365,8 +1068,6 @@ class ProactiveWebCampaignPlugin {
      * This maintains performance by avoiding recreation of keys
      */
     resetHoverOnValues(): void {
-        console.log('🔄 Resetting hoverOn values to false for all campaigns');
-        
         let pweData: any = window.sessionStorage.getItem('pwe_data');
         pweData = JSON.parse(pweData) || {};
         
@@ -1381,7 +1082,6 @@ class ProactiveWebCampaignPlugin {
                     campaignData.actual.rules.hoverOn[key] = false;
                     totalResetCount++;
                 });
-                console.log(`🔄 Reset ${Object.keys(campaignData.actual.rules.hoverOn).length} RULES hoverOn keys for ${campInstanceId}`);
             }
             
             // Reset exclusions hoverOn values
@@ -1390,14 +1090,11 @@ class ProactiveWebCampaignPlugin {
                     campaignData.actual.exclusions.hoverOn[key] = false;
                     totalResetCount++;
                 });
-                console.log(`🔄 Reset ${Object.keys(campaignData.actual.exclusions.hoverOn).length} EXCLUSIONS hoverOn keys for ${campInstanceId}`);
             }
         });
         
-        // Save updated data
+        // Save updated data - HoverOn reset complete
         window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
-        
-        console.log(`✅ HoverOn reset complete: ${totalResetCount} total keys reset to false`);
     }
 
     /**
@@ -1405,33 +1102,23 @@ class ProactiveWebCampaignPlugin {
      * Note: This is a placeholder for future implementation of listener tracking
      */
     clearHoverListeners(): void {
-        console.log('🧹 Clearing hover listeners (preventing memory leaks)');
         // TODO: Implement proper listener cleanup if needed
         // For now, relying on DOM element replacement to clean up listeners
     }
 
     /**
      * Resets timeSpent values for active campaigns when URL/page changes
-     * OPTIMIZED APPROACH: Only processes active campaigns (99% performance improvement)
-     * LOGIC: timeSpent represents "time on current page" - should reset on page change
      * @param currentUrl - Current page URL
      * @param currentPageTitle - Current page title
      */
     resetTimeSpentForActiveCampaigns(currentUrl: string, currentPageTitle: string): void {
-        console.log('🔄 Resetting timeSpent for active campaigns (performance optimized)');
-        
         if (!this.campInfo || this.campInfo.length === 0) {
-            console.log('⚠️ No campaigns available for timeSpent reset');
             return;
         }
 
-        // Get only active campaigns (10-15 campaigns vs 1000+ total campaigns)
+        // Get only active campaigns
         const activeCampaigns = this.getActiveCampaigns(currentUrl, currentPageTitle);
-        
-        console.log(`🎯 Processing ${activeCampaigns.length} active campaigns for timeSpent reset`);
-        
         if (activeCampaigns.length === 0) {
-            console.log('⚡ No active campaigns - no timeSpent reset needed');
             return;
         }
 
@@ -1449,8 +1136,6 @@ class ProactiveWebCampaignPlugin {
             const hasTimeSpentInExclusions = this.campaignHasExclusionConditionType(campaign, 'timeSpent');
             
             if (hasTimeSpentInRules || hasTimeSpentInExclusions) {
-                console.log(`🔄 Resetting timeSpent for active campaign ${campInstanceId} (rules: ${hasTimeSpentInRules}, exclusions: ${hasTimeSpentInExclusions})`);
-                
                 // Reset instance variable to 0
                 this.timeSpent[campInstanceId] = 0;
                 
@@ -1459,41 +1144,31 @@ class ProactiveWebCampaignPlugin {
                     if (hasTimeSpentInRules) {
                         const previousValue = pweData[campInstanceId].actual.rules.timeSpent || 0;
                         pweData[campInstanceId].actual.rules.timeSpent = 0;
-                        console.log(`🔄 Reset RULES timeSpent: ${previousValue} → 0`);
                     }
                     
                     // Reset exclusions.timeSpent if configured in exclusions
                     if (hasTimeSpentInExclusions) {
                         const previousValue = pweData[campInstanceId].actual.exclusions.timeSpent || 0;
                         pweData[campInstanceId].actual.exclusions.timeSpent = 0;
-                        console.log(`🔄 Reset EXCLUSIONS timeSpent: ${previousValue} → 0`);
                     }
                     
                     resetCount++;
                 }
-            } else {
-                console.log(`⚡ Campaign ${campInstanceId} has no timeSpent conditions - skipping`);
             }
         });
         
-        // Save updated data if any resets were made
+        // Save updated data in sessionStorage if any resets were made
         if (resetCount > 0) {
             window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
-            console.log(`✅ TimeSpent reset complete: ${resetCount} active campaigns reset`);
-            console.log(`⚡ Performance: Processed ${activeCampaigns.length} active campaigns instead of ${this.campInfo.length} total campaigns`);
-        } else {
-            console.log('⚡ No timeSpent conditions found in active campaigns - no reset needed');
         }
     }
 
     /**
      * Updates page visit counts for campaigns that have pageVisitCount conditions
-     * CORRECTED: Only populates actual.rules OR actual.exclusions based on where condition is configured
-     * NOTE: This method only updates the counts, evaluation happens in sendEventNew()
+     * Only populates actual.rules OR actual.exclusions based on where condition is configured
+     * NOTE: This method only updates the counts, evaluation happens in sendEvent()
      */
     updatePageVisitCounts(): void {
-        console.log('📊 Updating page visit counts');
-        
         const currentUrl = window.location.href;
         const currentPageTitle = document.title.trim();
         
@@ -1505,14 +1180,12 @@ class ProactiveWebCampaignPlugin {
             this.campaignHasConditionType(campaign, 'pageVisitCount') || 
             this.campaignHasExclusionConditionType(campaign, 'pageVisitCount')
         );
-        
+        // No active campaigns have pageVisitCount conditions - skipping count updates
         if (campaignsWithPageVisitCount.length === 0) {
-            console.log('⚠️ No active campaigns have pageVisitCount conditions - skipping count updates');
             return;
         }
         
-        console.log(`📊 Found ${campaignsWithPageVisitCount.length} campaigns with pageVisitCount conditions`);
-        
+        // campaigns with pageVisitCount conditions found
         campaignsWithPageVisitCount.forEach(campaign => {
             const campInstanceId = campaign.campInstanceId;
             
@@ -1536,37 +1209,30 @@ class ProactiveWebCampaignPlugin {
                 currentCount = currentCount || 0;
                 currentCount++;
                 
-                // CORRECTED: Only populate where condition is actually configured
+                // Only populate where condition is actually configured in RULES
                 if (hasInRules) {
                     pweData[campInstanceId].actual.rules.pageVisitCount = currentCount;
-                    console.log(`📊 Page visit count updated in RULES for ${campInstanceId}: ${currentCount}`);
                 }
-                
+                // Only populate where condition is actually configured in EXCLUSIONS
                 if (hasInExclusions) {
                     pweData[campInstanceId].actual.exclusions.pageVisitCount = currentCount;
-                    console.log(`📊 Page visit count updated in EXCLUSIONS for ${campInstanceId}: ${currentCount}`);
                 }
                 
                 // Save updated data
                 window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
-                
-                // NOTE: Removed evaluateSpecificCampaign() to prevent double evaluation
-                // Evaluation will happen in sendEventNew() after all counts are updated
             }
         });
     }
 
     /**
      * Lightweight initialization - replaces the heavy eventLoop
-     * Only sets up initial tracking and timers, no continuous polling
+     * Only sets up initial tracking and timers
      */
     async initializePWCTracking() {
         const me: any = this;
-        console.log('🚀 Initializing efficient PWC tracking system');
         
+        // kr-pwc First time initialization
         if (!window.sessionStorage.getItem('kr-pwc')) {
-            console.log('📊 First time initialization');
-            
             const currentUrl = window.location.href;
             const currentPageTitle = document.title.trim();
             const pageObj = {
@@ -1579,127 +1245,28 @@ class ProactiveWebCampaignPlugin {
             window.sessionStorage.setItem('prevUrl', currentUrl);
             window.sessionStorage.setItem('startTime', Date.now().toString());
 
-            // NOTE: Page Visit history is already tracked in handlePageChange(), hence commenting here
-            // let pageVisitArray: any = window.sessionStorage.getItem('pageVisitHistory');
-            // if (!pageVisitArray) {
-            //     pageVisitArray = [];
-            // } else {
-            //     pageVisitArray = JSON.parse(pageVisitArray);
-            // }
-            // pageVisitArray.push(pageObj);
-            // window.sessionStorage.setItem('pageVisitHistory', JSON.stringify(pageVisitArray));
-
             // Set up initial data
             me.createTimeSpentObjs();
             await me.getLocationDetails();
             me.getDeviceDetails();
-
-            // NOTE: Timer setup moved to handlePageChange() to avoid duplication
-            // Initial page processing will be handled by flag-based approach in pwe_verify
-            
-            console.log('✅ PWC tracking initialized');
         } else {
-            console.log('♻️ PWC already initialized, setting up timers');
             // Just set up timers for current page
             me.setupTimeSpentTimers();
         }
 
-        // Set up cleanup on page unload
+        // Set up cleanup on page unload - cleaning up PWC resources
         window.addEventListener('beforeunload', (e: any) => {
-            console.log('🗑️ Page unloading, cleaning up PWC resources');
             me.clearAllTimeSpentTimers();
             window.sessionStorage.removeItem('kr-pwc');
             window.sessionStorage.removeItem('timeSpentArr');
             window.sessionStorage.removeItem('startTime');
             window.sessionStorage.removeItem('prevUrl');
         });
-        
-        console.log('🎯 Efficient PWC tracking system ready');
-    }
-
-    validateAction(messageToBot: any, ruleData: any, campInstanceId: any, condition: any, campId: any) {
-        const me: any = this;
-        let pwe_data: any = window.sessionStorage.getItem('pwe_data');
-        pwe_data = JSON.parse(pwe_data);
-        const pwe_data_inst: any = pwe_data[campInstanceId];
-        const payload: any = {
-            'event_name': 'pwe_event',
-            'resourceid': '/pwe_message',
-            'user': me.hostInstance.config.botOptions.userIdentity,
-            'type': 'pwe_message',
-            'userId': this.authInfo.userInfo.userId,
-            'botInfo': {
-                'chatBot': me.hostInstance._botInfo.name,
-                'taskBotId': me.hostInstance._botInfo._id
-            },
-            'ruleInfo': ruleData,
-            'campInfo': {
-                'campId' : campId
-            }
-        }
-             
-        if (condition.toLowerCase() == 'or') {    
-            if (pwe_data_inst.isLayoutTriggered) {
-                console.log(`🔄 *** Legacy OR condition triggered for ${campInstanceId} - updating satisfaction flags ***`);
-                // Update satisfaction flags to ensure consistency
-                me.updateSatisfactionFlags(campInstanceId);
-                
-                messageToBot.ruleInfo = ruleData;
-                if (ruleData.length > 0) {
-                    me.sendApiEvent(payload, '/pweevents'); 
-                }       
-            }
-        } else if (condition.toLowerCase() == 'and') {
-            const actual: any = pwe_data_inst.actual.rules;
-            const expected: any = pwe_data_inst.expected.rules;
-            const allRulesTriggered = Object.keys(expected).every(key => Object.keys(actual).includes(key));
-            if(allRulesTriggered) {
-                let allRulesMet = true;
-                for (const key in expected) {
-                    switch (key) {
-                        case 'user':
-                            if (actual[key] != expected[key][0].value) allRulesMet = false;
-                            break;
-                        case 'timeSpent':
-                            if (actual[key] < expected[key][0].value) allRulesMet = false;
-                            break;
-                        case 'pageVisitCount':
-                            if (actual[key] != expected[key][0].value) allRulesMet = false;
-                            break;
-                        case 'country':
-                            if (!actual[key]) allRulesMet = false;
-                            break;
-                        case 'city':
-                            if (!actual[key]) allRulesMet = false;
-                            break;
-                        case 'hoverOn':
-                            // DEPRECATED: Old hoverOn logic - now uses key-based structure
-                            console.log('⚠️ DEPRECATED: Old hoverOn validation logic - use new key-based structure');
-                            // The new implementation uses object structure, not boolean
-                            if (!actual[key] || typeof actual[key] !== 'object') allRulesMet = false;
-                    }
-                }
-                if (allRulesMet) {
-                    console.log(`🔄 *** Legacy AND condition triggered for ${campInstanceId} - updating satisfaction flags ***`);
-                    
-                    pwe_data_inst.isLayoutTriggered = true;
-                    pwe_data[campInstanceId] = pwe_data_inst
-                    window.sessionStorage.setItem('pwe_data', JSON.stringify(pwe_data));
-                    
-                    // Update satisfaction flags to ensure consistency
-                    me.updateSatisfactionFlags(campInstanceId);
-                    
-                    messageToBot.ruleInfo = ruleData;
-                    me.sendApiEvent(payload, '/pweevents');
-                }
-            }
-        }
-        
     }
 
     /**
      * Checks if the journey is valid based on the page visit array and website array
-     * ENHANCED: Now implements reverse-order matching (checks last N entries only)
+     * implements reverse-order matching (checks last N entries only)
      * @param pageVisitArray - The page visit array (pageVisitHistory) from sessionStorage
      * @param websiteArray - The website array configured in the campaign
      * @returns true if the recent journey matches the required sequence, false otherwise
@@ -1771,16 +1338,6 @@ class ProactiveWebCampaignPlugin {
         window.sessionStorage.setItem('goalArr', JSON.stringify(goalArr));
     }
 
-    /**
-     * Legacy method - now replaced by efficient timer system
-     * Kept for backward compatibility if needed, but not used in new implementation
-     */
-    calculateTimeSpent(pageObj: any, type: any) {
-        console.log('⚠️ calculateTimeSpent called - this method is now replaced by efficient timers');
-        console.log('💡 Use setupTimeSpentTimers() for better performance');
-        // Method kept for backward compatibility but functionality moved to timer system
-    }
-
     getLocationDetails() {
         const me = this;
         const successCb = function(position: any) {
@@ -1788,16 +1345,11 @@ class ProactiveWebCampaignPlugin {
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude
             }
-            
-            console.log('🌍 Coordinates obtained:', coordinates);
-            
             // Check if location data already exists in sessionStorage
             const existingLocationData = window.sessionStorage.getItem('pwcLocationData');
             if (!existingLocationData) {
-                console.log('📍 No existing location data found, calling location API');
+                // No existing location data found, calling location API
                 me.callLocationAPI(coordinates);
-            } else {
-                console.log('📍 Location data already exists in sessionStorage');
             }
         }
         
@@ -1814,12 +1366,9 @@ class ProactiveWebCampaignPlugin {
      * CACHED: Detects once per session for optimal performance
      */
     getDeviceDetails() {
-        console.log('📱 Detecting device type...');
-        
         // Check if device data already exists in sessionStorage
         const existingDeviceData = window.sessionStorage.getItem('pwcDeviceData');
         if (existingDeviceData) {
-            console.log('📱 Device data already exists in sessionStorage:', existingDeviceData);
             return;
         }
 
@@ -1829,8 +1378,6 @@ class ProactiveWebCampaignPlugin {
         // Store device data in sessionStorage
         const deviceData = { device: deviceType };
         window.sessionStorage.setItem('pwcDeviceData', JSON.stringify(deviceData));
-        
-        console.log('✅ Device detection complete:', deviceData);
     }
 
     /**
@@ -1839,74 +1386,52 @@ class ProactiveWebCampaignPlugin {
      * @returns Device type: 'mobile', 'tablet', or 'laptop'
      */
     detectDeviceType(): string {
-        console.log('🔍 Running hybrid device detection...');
-        
         // Gather detection signals
         const ua = navigator.userAgent.toLowerCase();
         const hasTouch = 'ontouchstart' in window || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0);
         const screenWidth = Math.min(screen.width, window.innerWidth); // Use smaller value for accuracy
         const screenHeight = Math.min(screen.height, window.innerHeight);
-        
-        console.log('📊 Detection signals:');
-        console.log(`   - Screen: ${screenWidth}x${screenHeight}`);
-        console.log(`   - Touch: ${hasTouch}`);
-        console.log(`   - User Agent: ${ua}`);
-
         // Mobile Detection (Priority 1)
         // Small screen OR explicit mobile indicators
         const isMobileUA = /android.*mobile|iphone|ipod|blackberry|iemobile|opera mini|mobile/i.test(ua);
         if (screenWidth < 768 || isMobileUA) {
-            console.log('📱 Detected: Mobile (small screen or mobile UA)');
             return 'mobile';
         }
 
         // iPad Detection (Priority 2) - Modern iPads report as desktop
         const isIPad = /macintosh/i.test(ua) && hasTouch && screenWidth >= 768 && screenWidth <= 1366;
         if (isIPad) {
-            console.log('📱 Detected: Tablet (iPad with touch)');
             return 'tablet';
         }
 
         // Android Tablet Detection (Priority 3)
         const isAndroidTablet = /android/i.test(ua) && !/mobile/i.test(ua) && hasTouch;
         if (isAndroidTablet && screenWidth >= 768) {
-            console.log('📱 Detected: Tablet (Android tablet)');
             return 'tablet';
         }
 
         // General Tablet Detection (Priority 4)
         // Medium screen with touch capabilities
         if (screenWidth >= 768 && screenWidth <= 1024 && hasTouch) {
-            console.log('📱 Detected: Tablet (medium screen with touch)');
             return 'tablet';
         }
 
         // Explicit tablet user agents (Priority 5)
         const isTabletUA = /tablet|ipad|kindle|silk/i.test(ua);
         if (isTabletUA) {
-            console.log('📱 Detected: Tablet (tablet user agent)');
             return 'tablet';
         }
 
         // Default: Laptop/Desktop (Priority 6)
         // Large screens, Chromebooks, Smart TVs, desktop browsers, etc.
-        console.log('📱 Detected: Laptop (default - large screen or desktop-class device)');
         return 'laptop';
     }
-
-    /**
-     * =====================================================================================
-     *                           🌍 LOCATION API INTEGRATION WITH RETRY LOGIC
-     * =====================================================================================
-     */
     
     /**
      * Calls the location API with coordinates and handles retry logic
      * @param coordinates - Object containing latitude and longitude
      */
     async callLocationAPI(coordinates: any): Promise<void> {
-        console.log('🔄 Calling location API with coordinates:', coordinates);
-        
         try {
             const payload = {
                 latitude: coordinates.latitude.toString(),
@@ -1916,10 +1441,8 @@ class ProactiveWebCampaignPlugin {
             const response = await this.sendLocationAPIRequest(payload);
             
             if (response && Array.isArray(response)) {
-                console.log('✅ Location API response received:', response);
                 this.parseAndSaveLocationData(response, coordinates);
             } else {
-                console.error('❌ Invalid API response format:', response);
                 this.scheduleLocationAPIRetry(coordinates);
             }
         } catch (error) {
@@ -1937,10 +1460,6 @@ class ProactiveWebCampaignPlugin {
         const me = this;
         const url = new URL(me.hostInstance.config.botOptions.koreAPIUrl);
         const endpoint = `${url.protocol}//${url.host}/customerengagement/api/pwe/bots/${me.hostInstance._botInfo._id}/locationDetails/geoLocation`;
-        
-        console.log('🌐 Sending request to:', endpoint);
-        console.log('📤 Request payload:', payload);
-        
         const response = await fetch(endpoint, {
             method: 'POST',
             headers: {
@@ -1962,9 +1481,7 @@ class ProactiveWebCampaignPlugin {
      * @param coordinates - Original coordinates for retry
      */
     scheduleLocationAPIRetry(coordinates: any): void {
-        console.log('⏰ Scheduling location API retry in 1 minute');
         setTimeout(() => {
-            console.log('🔄 Retrying location API call');
             this.callLocationAPI(coordinates);
         }, 60000); // 1 minute
     }
@@ -1975,8 +1492,6 @@ class ProactiveWebCampaignPlugin {
      * @param coordinates - Original coordinates
      */
     parseAndSaveLocationData(apiResponse: any[], coordinates: any): void {
-        console.log('🔍 Parsing location API response');
-        
         try {
             const locationData = {
                 latitude: coordinates.latitude,
@@ -1985,19 +1500,9 @@ class ProactiveWebCampaignPlugin {
                 city: this.findLocationByType(apiResponse, 'locality'),
                 state: this.findLocationByType(apiResponse, 'administrative_area_level_1')
             };
-            
-            console.log('📍 Parsed location data:', locationData);
-            
             // Save to sessionStorage
             window.sessionStorage.setItem('pwcLocationData', JSON.stringify(locationData));
-            console.log('💾 Location data saved to sessionStorage');
-            
-            // Log parsed values for debugging
-            console.log(`🌍 Country: ${locationData.country || 'Not found'}`);
-            console.log(`🏙️ City: ${locationData.city || 'Not found'}`);
-            console.log(`🏛️ State: ${locationData.state || 'Not found'}`);
-            
-            // NEW: Trigger re-evaluation for location-based campaigns
+            // Trigger re-evaluation for location-based campaigns
             this.reevaluateLocationBasedCampaigns();
             
         } catch (error) {
@@ -2019,7 +1524,6 @@ class ProactiveWebCampaignPlugin {
             );
             
             const result = item ? item.long_name : null;
-            console.log(`🔍 Found ${targetType}: ${result || 'Not found'}`);
             return result;
         } catch (error) {
             console.error(`❌ Error finding ${targetType}:`, error);
@@ -2046,8 +1550,7 @@ class ProactiveWebCampaignPlugin {
                 throw new Error('Something went wrong');
             })
             .then((res: any) => {
-                // Response handling - cityCountryData assignment removed due to new location API system
-                console.log('✅ API response received:', res);
+                // Response handling - API response received
             }).catch(err => {
                 console.log(err);
             })
@@ -2055,24 +1558,18 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Constructs the pwe_data object based on the new campaign structure
-     * ENHANCED: Now extracts custom column configurations and initializes custom data
+     * Extracts custom column configurations and initializes custom data
      * @param campaignData - Campaign data received from socket
      * @returns Constructed pwe_data object
      */
     constructPweData(campaignData: any): any {
-        console.log('🏗️ Constructing pwe_data for campaigns:', campaignData.length);
-        
         // STEP 1: Extract custom column configurations for efficient data management
         this.extractCustomColumns(campaignData);
-        
-        // STEP 2: Initialize custom data from existing flattened data (if available)
-        this.initializeCustomDataForCampaigns(campaignData);
         
         const pweData: any = {};
         
         campaignData.forEach((campaign: any) => {
             const campInstanceId = campaign.campInstanceId;
-            console.log(`📋 Processing campaign: ${campInstanceId}`);
             
             // Initialize campaign data structure
             pweData[campInstanceId] = {
@@ -2095,8 +1592,6 @@ class ProactiveWebCampaignPlugin {
             
             // STEP 3: Initialize custom data actual values for this campaign
             this.initializeCustomActualValuesForCampaign(campInstanceId, campaign, pweData[campInstanceId]);
-            
-            console.log(`✅ Constructed pwe_data for ${campInstanceId}:`, pweData[campInstanceId]);
         });
         
         return pweData;
@@ -2107,37 +1602,24 @@ class ProactiveWebCampaignPlugin {
      * This ensures campaigns have initial custom data values if pwcCustomData was received earlier
      */
     initializeCustomDataForCampaigns(campaigns: any[]): void {
-        console.log("🔄 =================== INITIALIZING CUSTOM DATA FOR CAMPAIGNS ===================");
-        
         if (Object.keys(this.flattenedCustomData).length === 0) {
-            console.log("⚠️ No flattened custom data available for initialization");
             return;
         }
-        
-        console.log(`📋 Initializing custom data for ${campaigns.length} campaigns`);
-        console.log(`📋 Available flattened data keys: [${Object.keys(this.flattenedCustomData).join(', ')}]`);
-        
-        // This method prepares for the actual value initialization that happens in initializeCustomActualValuesForCampaign
-        console.log("🔄 =================== CUSTOM DATA INITIALIZATION PREPARED ===================");
     }
 
     /**
      * Initializes custom actual values for a specific campaign
-     * ENHANCED: Now retrieves custom data from sessionStorage for initialization
+     * Retrieves custom data from sessionStorage for initialization
      * @param campInstanceId - Campaign instance ID
      * @param campaign - Campaign configuration
      * @param campaignData - Campaign data structure to populate
      */
     initializeCustomActualValuesForCampaign(campInstanceId: string, campaign: any, campaignData: any): void {
-        console.log(`🔄 Initializing custom actual values for campaign: ${campInstanceId}`);
-        
         // Get custom data from sessionStorage (survives navigation)
         const persistedCustomData = this.getPersistedCustomData();
-        console.log(`🔄 Using persisted custom data for initialization:`, persistedCustomData);
         
         // Combine with in-memory data as fallback
         const combinedCustomData = { ...persistedCustomData, ...this.flattenedCustomData };
-        console.log(`🔄 Combined data for initialization:`, combinedCustomData);
         
         let initializedRules = 0;
         let initializedExclusions = 0;
@@ -2151,13 +1633,12 @@ class ProactiveWebCampaignPlugin {
                             const customKey = condition.column;
                             
                             if (combinedCustomData.hasOwnProperty(customKey)) {
+                                // Initialized RULES custom value
                                 campaignData.actual.rules[customKey] = combinedCustomData[customKey];
                                 initializedRules++;
-                                console.log(`🔄 Initialized RULES custom value: ${customKey} = ${combinedCustomData[customKey]}`);
                             } else {
                                 // Set to null if data not available yet
                                 campaignData.actual.rules[customKey] = null;
-                                console.log(`🔄 Initialized RULES custom value to null: ${customKey} (data not available)`);
                             }
                         }
                     });
@@ -2174,36 +1655,26 @@ class ProactiveWebCampaignPlugin {
                             const customKey = condition.column;
                             
                             if (combinedCustomData.hasOwnProperty(customKey)) {
+                                // Initialized EXCLUSIONS custom value
                                 campaignData.actual.exclusions[customKey] = combinedCustomData[customKey];
                                 initializedExclusions++;
-                                console.log(`🔄 Initialized EXCLUSIONS custom value: ${customKey} = ${combinedCustomData[customKey]}`);
                             } else {
                                 // Set to null if data not available yet
                                 campaignData.actual.exclusions[customKey] = null;
-                                console.log(`🔄 Initialized EXCLUSIONS custom value to null: ${customKey} (data not available)`);
                             }
                         }
                     });
                 }
             });
         }
-        
-        if (initializedRules > 0 || initializedExclusions > 0) {
-            console.log(`✅ Custom actual values initialized for ${campInstanceId}: ${initializedRules} rules, ${initializedExclusions} exclusions`);
-        } else {
-            console.log(`⚠️ No custom conditions found for campaign: ${campInstanceId}`);
-        }
     }
 
     /**
      * Sets up hover event listeners for campaigns with hoverOn rules
-     * ENHANCED: Now only sets up listeners for campaigns that match current page (website-aware)
+     * Only sets up listeners for campaigns that match current page (website-aware)
      */
     setupHoverListeners(): void {
-        console.log('🖱️ Setting up hover event listeners (website-aware)');
-        
         if (!this.campInfo || this.campInfo.length === 0) {
-            console.log('⚠️ No campaigns available for hover setup');
             return;
         }
 
@@ -2215,15 +1686,12 @@ class ProactiveWebCampaignPlugin {
         const activeCampaigns = this.getActiveCampaigns(currentUrl, currentPageTitle);
         
         if (activeCampaigns.length === 0) {
-            console.log('⚠️ No active campaigns for current page - no hover listeners needed');
             return;
         }
 
-        console.log(`🖱️ Setting up hover listeners for ${activeCampaigns.length} active campaigns`);
-
+        // Setting up hover listeners for active campaigns
         activeCampaigns.forEach((campaign: any) => {
             const campInstanceId = campaign.campInstanceId;
-            console.log(`🎯 Setting up hover listeners for active campaign: ${campInstanceId}`);
             
             // Initialize hoverOn structure for this active campaign
             this.initializeHoverOnForCampaign(campaign);
@@ -2235,24 +1703,16 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Initializes hoverOn structure for a campaign (only for active campaigns)
-     * ENHANCED: Smart key creation - only create keys that don't exist
+     * Smart key creation - only create keys that don't exist
      * @param campaign - Campaign object
      */
     initializeHoverOnForCampaign(campaign: any): void {
-        console.log(`🔑 Initializing hoverOn structure for campaign: ${campaign.campInstanceId}`);
-        
         let pweData: any = window.sessionStorage.getItem('pwe_data');
         pweData = JSON.parse(pweData) || {};
         
         if (!pweData[campaign.campInstanceId]) {
-            console.log(`⚠️ Campaign data not found for hoverOn initialization: ${campaign.campInstanceId}`);
             return;
         }
-
-        let rulesKeysCreated = 0;
-        let exclusionsKeysCreated = 0;
-        let rulesKeysSkipped = 0;
-        let exclusionsKeysSkipped = 0;
 
         // Initialize hoverOn structure for rules
         if (campaign.engagementStrategy.rules && campaign.engagementStrategy.rules.groups) {
@@ -2272,11 +1732,6 @@ class ProactiveWebCampaignPlugin {
                             // OPTIMIZATION: Only create if doesn't exist
                             if (!(key in pweData[campaign.campInstanceId].actual.rules.hoverOn)) {
                                 pweData[campaign.campInstanceId].actual.rules.hoverOn[key] = false;
-                                rulesKeysCreated++;
-                                console.log(`🔑 Created new RULES hoverOn key: ${key}`);
-                            } else {
-                                rulesKeysSkipped++;
-                                console.log(`⚡ Skipped existing RULES hoverOn key: ${key}`);
                             }
                         }
                     });
@@ -2302,11 +1757,6 @@ class ProactiveWebCampaignPlugin {
                             // OPTIMIZATION: Only create if doesn't exist
                             if (!(key in pweData[campaign.campInstanceId].actual.exclusions.hoverOn)) {
                                 pweData[campaign.campInstanceId].actual.exclusions.hoverOn[key] = false;
-                                exclusionsKeysCreated++;
-                                console.log(`🔑 Created new EXCLUSIONS hoverOn key: ${key}`);
-                            } else {
-                                exclusionsKeysSkipped++;
-                                console.log(`⚡ Skipped existing EXCLUSIONS hoverOn key: ${key}`);
                             }
                         }
                     });
@@ -2316,10 +1766,6 @@ class ProactiveWebCampaignPlugin {
 
         // Save updated data
         window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
-        
-        console.log(`✅ HoverOn initialization complete for ${campaign.campInstanceId}:`);
-        console.log(`   - Rules: ${rulesKeysCreated} created, ${rulesKeysSkipped} skipped`);
-        console.log(`   - Exclusions: ${exclusionsKeysCreated} created, ${exclusionsKeysSkipped} skipped`);
     }
 
     /**
@@ -2328,7 +1774,6 @@ class ProactiveWebCampaignPlugin {
      */
     setupHoverListenersForCampaign(campaign: any): void {
         const campInstanceId = campaign.campInstanceId;
-        console.log(`🖱️ Setting up DOM listeners for campaign: ${campInstanceId}`);
         
         // Setup listeners for rules
         if (campaign.engagementStrategy.rules && campaign.engagementStrategy.rules.groups) {
@@ -2368,13 +1813,10 @@ class ProactiveWebCampaignPlugin {
      * @param type - 'rules' or 'exclusions'
      */
     setupHoverListenerForCondition(condition: any, campInstanceId: string, group: any, groupIndex: number, conditionIndex: number, type: string): void {
-        console.log(`🖱️ Setting up hover listener for ${type} condition:`, condition);
-        
         let selector: string = '';
         const selectorValue = condition.value?.trim();
         
         if (!selectorValue) {
-            console.log('⚠️ No selector value provided for hoverOn condition');
             return;
         }
         
@@ -2392,11 +1834,8 @@ class ProactiveWebCampaignPlugin {
                 selector = '.' + decodedValue;
                 break;
             default:
-                console.log(`⚠️ Unknown hover selector type: ${condition.operator}`);
                 return;
         }
-        
-        console.log(`🎯 Setting up hover listener for selector: ${selector}`);
         
         const docSelector: any = document.querySelector(selector);
         if (docSelector) {
@@ -2408,10 +1847,7 @@ class ProactiveWebCampaignPlugin {
             const key = `${groupId}_${conditionId}`;
             
             docSelector.addEventListener('mouseenter', () => {
-                console.log(`🖱️ Mouse entered element: ${selector} (${key})`);
                 timer = setTimeout(() => {
-                    console.log(`⏰ Hover duration reached for: ${selector} (${key})`);
-                    
                     // Direct update to pwe_data using key-based structure
                     let pweData: any = window.sessionStorage.getItem('pwe_data');
                     pweData = JSON.parse(pweData) || {};
@@ -2419,7 +1855,6 @@ class ProactiveWebCampaignPlugin {
                     if (pweData[campInstanceId] && pweData[campInstanceId].actual[type].hoverOn) {
                         pweData[campInstanceId].actual[type].hoverOn[key] = true;
                         window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
-                        console.log(`✅ HoverOn ${type} condition satisfied: ${key} = true`);
                         
                         // Trigger evaluation
                         const currentUrl = window.location.href;
@@ -2429,33 +1864,25 @@ class ProactiveWebCampaignPlugin {
                             pageName: currentPageTitle
                         };
                         
-                        this.sendEventNew(pageObj, 'hoverOn');
-                    } else {
-                        console.log(`⚠️ HoverOn ${type} structure not found for ${campInstanceId}`);
+                        this.sendEvent(pageObj, 'hoverOn');
                     }
                 }, this.elementHoverDuration);
             });
             
             docSelector.addEventListener('mouseleave', () => {
-                console.log(`🖱️ Mouse left element: ${selector} (${key})`);
                 clearTimeout(timer);
             });
-            
-            console.log(`✅ Hover listener set up for: ${selector} (${key})`);
-        } else {
-            console.log(`⚠️ Element not found for selector: ${selector}`);
         }
     }
 
     /**
      * Constructs rules/exclusions structure with proper grouping and condition tracking
-     * CORRECTED: Reads 'globalType' from socket message but stores as 'groupType' internally
+     * Reads 'globalType' from socket message but stores as 'groupType' internally
      * @param rulesConfig - Rules or exclusions configuration
      * @returns Structured rules object
      */
     constructRulesStructure(rulesConfig: any): any {
         if (!rulesConfig || !rulesConfig.groups) {
-            console.log('⚠️ No rules configuration provided, returning empty structure');
             return {
                 isSatisfied: false,
                 groupType: 'OR',
@@ -2463,20 +1890,14 @@ class ProactiveWebCampaignPlugin {
             };
         }
 
-        console.log('🔧 Constructing rules structure from config:', rulesConfig);
-        console.log('🔧 Socket message globalType:', rulesConfig.globalType);
-        
-        // CORRECTED: Read 'globalType' from socket message, store as 'groupType' internally
+        // Read 'globalType' from socket message, store as 'groupType' internally
         const groupType = rulesConfig.globalType || rulesConfig.groupType || 'OR';
-        console.log(`🔧 *** Mapping globalType to groupType: "${rulesConfig.globalType}" → "${groupType}" ***`);
         
         const structure = {
             isSatisfied: false,
             groupType: groupType, // Use corrected value from globalType
             groups: rulesConfig.groups.map((group: any) => {
-                console.log(`📋 Processing group ${group.id}:`, group);
                 const groupConditions = this.groupConditionsByColumn(group.conditions || []);
-                console.log(`📊 Grouped conditions for group ${group.id}:`, groupConditions);
                 return {
                     id: group.id,
                     conditions: {
@@ -2488,8 +1909,6 @@ class ProactiveWebCampaignPlugin {
             })
         };
 
-        console.log('✅ Final rules structure constructed with corrected groupType:', JSON.stringify(structure, null, 2));
-        console.log(`✅ *** Verified groupType in structure: "${structure.groupType}" ***`);
         return structure;
     }
 
@@ -2500,20 +1919,8 @@ class ProactiveWebCampaignPlugin {
      */
     groupConditionsByColumn(conditions: any[]): any {
         const grouped: any = {};
-        
-        console.log('📊 Input conditions to groupConditionsByColumn:', conditions);
-        
         conditions.forEach((condition: any, index: number) => {
             const column = condition.column;
-            
-            // Enhanced debugging for isNot flag
-            console.log(`📊 Processing condition ${index + 1}:`, {
-                column,
-                operator: condition.operator,
-                value: condition.value,
-                isNot: condition.isNot,
-                fullCondition: condition
-            });
             
             if (!grouped[column]) {
                 grouped[column] = [];
@@ -2523,22 +1930,6 @@ class ProactiveWebCampaignPlugin {
             grouped[column].push({
                 ...condition,
                 isNot: condition.isNot // Explicitly preserve isNot flag
-            });
-            
-            // Log isNot flag preservation
-            if (condition.isNot !== undefined) {
-                console.log(`📊 *** isNot flag preserved for ${column} condition: ${condition.isNot} ***`);
-            }
-        });
-
-        console.log('📊 Final grouped conditions:', grouped);
-        
-        // Additional debugging: Check if isNot flags are preserved
-        Object.keys(grouped).forEach(column => {
-            grouped[column].forEach((condition: any, index: number) => {
-                if (condition.isNot !== undefined) {
-                    console.log(`📊 *** Final verification - ${column} condition ${index + 1} isNot: ${condition.isNot} ***`);
-                }
             });
         });
         
@@ -2560,14 +1951,11 @@ class ProactiveWebCampaignPlugin {
             if (group.conditions) {
                 for (const condition of group.conditions) {
                     if (condition.column === conditionType) {
-                        console.log(`✅ Campaign ${campaign.campInstanceId} has ${conditionType} condition in RULES`);
                         return true;
                     }
                 }
             }
         }
-
-        console.log(`❌ Campaign ${campaign.campInstanceId} does NOT have ${conditionType} condition in RULES`);
         return false;
     }
 
@@ -2586,116 +1974,12 @@ class ProactiveWebCampaignPlugin {
             if (group.conditions) {
                 for (const condition of group.conditions) {
                     if (condition.column === conditionType) {
-                        console.log(`✅ Campaign ${campaign.campInstanceId} has ${conditionType} condition in EXCLUSIONS`);
                         return true;
                     }
                 }
             }
         }
-
-        console.log(`❌ Campaign ${campaign.campInstanceId} does NOT have ${conditionType} condition in EXCLUSIONS`);
         return false;
-    }
-
-    /**
-     * Gets all condition types configured for a campaign (for debugging)
-     * @param campaign - Campaign object
-     * @returns Array of condition types
-     */
-    getCampaignConditionTypes(campaign: any): string[] {
-        const conditionTypes: string[] = [];
-        
-        if (!campaign.engagementStrategy?.rules?.groups) {
-            return conditionTypes;
-        }
-
-        for (const group of campaign.engagementStrategy.rules.groups) {
-            if (group.conditions) {
-                for (const condition of group.conditions) {
-                    if (!conditionTypes.includes(condition.column)) {
-                        conditionTypes.push(condition.column);
-                    }
-                }
-            }
-        }
-
-        console.log(`📋 Campaign ${campaign.campInstanceId} condition types:`, conditionTypes);
-        return conditionTypes;
-    }
-
-    /**
-     * Analyzes campaign configuration for potential issues (for debugging)
-     * @param campInstanceId - Campaign instance ID
-     */
-    analyzeCampaignConfiguration(campInstanceId: string): void {
-        console.log(`\n🔍 =================== CAMPAIGN CONFIGURATION ANALYSIS ===================`);
-        console.log(`🔍 Campaign ID: ${campInstanceId}`);
-        
-        const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
-        if (!campaign) {
-            console.log('⚠️ Campaign not found');
-            return;
-        }
-
-        let pweData: any = window.sessionStorage.getItem('pwe_data');
-        pweData = JSON.parse(pweData) || {};
-        const campaignData = pweData[campInstanceId];
-        
-        if (!campaignData) {
-            console.log('⚠️ Campaign data not found in session storage');
-            return;
-        }
-
-        console.log('🔍 Campaign rules structure:');
-        console.log(`   - Group type: ${campaignData.expected.rules.groupType}`);
-        console.log(`   - Number of groups: ${campaignData.expected.rules.groups?.length || 0}`);
-        
-        const issues: string[] = [];
-        
-        if (campaignData.expected.rules.groups) {
-            campaignData.expected.rules.groups.forEach((group: any, groupIndex: number) => {
-                console.log(`\n🔍 Group ${groupIndex + 1} (${group.id}):`);
-                console.log(`   - Type: ${group.conditions.type}`);
-                
-                // Analyze conditions in this group
-                Object.keys(group.conditions).forEach(column => {
-                    if (column === 'type' || column === 'isSatisfied') return;
-                    
-                    const conditions = group.conditions[column];
-                    if (Array.isArray(conditions)) {
-                        conditions.forEach((condition: any, condIndex: number) => {
-                            console.log(`   - Condition ${condIndex + 1} (${column}):`);
-                            console.log(`     * Operator: ${condition.operator}`);
-                            console.log(`     * Expected value: ${condition.value} (${typeof condition.value})`);
-                            console.log(`     * isNot: ${condition.isNot}`);
-                            
-                            const actualValue = campaignData.actual.rules[column];
-                            console.log(`     * Actual value: ${actualValue} (${typeof actualValue})`);
-                            
-                            // Check for potential issues
-                            if (condition.isNot) {
-                                issues.push(`${column} condition has isNot=true - ensure this is intentional`);
-                            }
-                            
-                            if (typeof condition.value !== typeof actualValue && actualValue !== undefined) {
-                                issues.push(`${column} type mismatch: expected ${typeof condition.value}, actual ${typeof actualValue}`);
-                            }
-                        });
-                    }
-                });
-            });
-        }
-        
-        if (issues.length > 0) {
-            console.log('\n⚠️ Potential configuration issues found:');
-            issues.forEach((issue, index) => {
-                console.log(`   ${index + 1}. ${issue}`);
-            });
-        } else {
-            console.log('\n✅ No obvious configuration issues found');
-        }
-        
-        console.log(`🔍 =================== CAMPAIGN CONFIGURATION ANALYSIS END ===================\n`);
     }
 
     /**
@@ -2706,16 +1990,13 @@ class ProactiveWebCampaignPlugin {
      */
     getActiveCampaigns(currentUrl: string, currentPageTitle: string): any[] {
         if (!this.campInfo) {
-            console.log('⚠️ No campaigns available');
             return [];
         }
 
-        console.log('🔍 Getting active campaigns for:', { currentUrl, currentPageTitle });
-        
         const activeCampaigns = this.campInfo.filter((campaign: any) => {
             // Check engagement hours
             if (!this.checkEngagementHours(campaign.engagementStrategy.engagementHours)) {
-                console.log(`⏰ Campaign ${campaign.campInstanceId} outside engagement hours`);
+                // returns false, if outside engagement hours`);
                 return false;
             }
 
@@ -2727,15 +2008,13 @@ class ProactiveWebCampaignPlugin {
             );
 
             if (websiteMatches) {
-                console.log(`✅ Campaign ${campaign.campInstanceId} matches current page`);
                 return true;
             }
 
-            console.log(`❌ Campaign ${campaign.campInstanceId} does not match current page`);
             return false;
         });
 
-        console.log('🎯 Active campaigns:', activeCampaigns.length);
+        // returns array of active campaigns that match the current page or url
         return activeCampaigns;
     }
 
@@ -2750,8 +2029,6 @@ class ProactiveWebCampaignPlugin {
         if (!websiteConfig || websiteConfig.length === 0) {
             return true; // No restrictions
         }
-
-        console.log('🌐 Checking website matching:', websiteConfig);
         
         const pageObject = {
             url: currentUrl,
@@ -2787,8 +2064,6 @@ class ProactiveWebCampaignPlugin {
      * @returns Boolean indicating if journey matches
      */
     checkJourneyMatching(websiteConfig: any[]): boolean {
-        console.log('🚶 Checking journey matching');
-        
         let pageVisitHistory: any = window.sessionStorage.getItem('pageVisitHistory');
         pageVisitHistory = JSON.parse(pageVisitHistory) || [];
         
@@ -2797,31 +2072,22 @@ class ProactiveWebCampaignPlugin {
     }
 
     /**
-     * Evaluates active campaigns with OPTIMIZED FLOW: Exclusions First, Then Rules
-     * CRITICAL CHANGE: Check exclusions as blockers first, only evaluate rules if not blocked
+     * Evaluates active campaigns with OPTIMIZED FLOW: check Exclusions as blockers First, Only evaluate Rules if not blocked
      * @param activeCampaigns - Array of active campaigns
      * @param currentUrl - Current page URL
      * @param currentPageTitle - Current page title
      * @param eventType - Type of event triggering evaluation
      */
     evaluateActiveCampaigns(activeCampaigns: any[], currentUrl: string, currentPageTitle: string, eventType: string): void {
-        console.log('🔄 Evaluating active campaigns with OPTIMIZED FLOW:', activeCampaigns.length);
-        console.log('🌐 Current page:', { currentUrl, currentPageTitle });
-        console.log('🎯 Event type:', eventType);
-        
         activeCampaigns.forEach(campaign => {
             const campInstanceId = campaign.campInstanceId;
-            console.log(`\n📊 === Evaluating Campaign: ${campInstanceId} (EXCLUSIONS → RULES) ===`);
-            
             // Show campaign's condition types for debugging
-            const conditionTypes = this.getCampaignConditionTypes(campaign);
-            console.log(`🎯 Campaign website config:`, campaign.engagementStrategy?.website);
+            // const conditionTypes = this.getCampaignConditionTypes(campaign);
             
             // STEP 1: Update actual values based on current state (for both rules and exclusions)
             this.updateActualValues(campInstanceId, currentUrl, currentPageTitle, eventType);
             
             // STEP 2: EXCLUSIONS FIRST - Check blockers before expensive rules evaluation
-            console.log(`🚫 === STEP 2: Evaluating EXCLUSIONS first (blockers) ===`);
             this.evaluateExclusionsForCampaign(campInstanceId);
             
             // Get current exclusions status
@@ -2829,25 +2095,14 @@ class ProactiveWebCampaignPlugin {
             pweData = JSON.parse(pweData) || {};
             const exclusionsSatisfied = pweData[campInstanceId]?.expected?.exclusions?.isSatisfied || false;
             
-            if (exclusionsSatisfied) {
-                // EXCLUSIONS BLOCK THE CAMPAIGN - Skip rules evaluation for performance
-                console.log(`🚫 *** CAMPAIGN BLOCKED BY EXCLUSIONS - Skipping rules evaluation ***`);
-                console.log(`🚫 Campaign ${campInstanceId} will NOT trigger due to exclusions`);
-                console.log(`⚡ Performance gain: Skipped expensive rules evaluation`);
-            } else {
-                // EXCLUSIONS ALLOW THE CAMPAIGN - Proceed with rules evaluation
-                console.log(`✅ *** EXCLUSIONS ALLOW CAMPAIGN - Proceeding with rules evaluation ***`);
-                
+            // Proceed with rules evaluation if exclusions are not satisfied
+            if (!exclusionsSatisfied) {
                 // STEP 3: RULES EVALUATION (only if not blocked by exclusions)
-                console.log(`📏 === STEP 3: Evaluating RULES (campaign not blocked) ===`);
                 this.evaluateRulesForCampaign(campInstanceId);
                 
                 // STEP 4: FINAL TRIGGER DECISION
-                console.log(`🎯 === STEP 4: Final trigger decision ===`);
                 this.checkCampaignTrigger(campInstanceId, campaign.campId);
             }
-            
-            console.log(`📊 === End Campaign ${campInstanceId} Evaluation ===\n`);
         });
     }
 
@@ -2862,13 +2117,10 @@ class ProactiveWebCampaignPlugin {
      * @param eventType - Type of event triggering update
      */
     updateActualValues(campInstanceId: string, currentUrl: string, currentPageTitle: string, eventType: string): void {
-        console.log(`📝 Updating actual values for ${campInstanceId}, event: ${eventType}`);
-        
         let pweData: any = window.sessionStorage.getItem('pwe_data');
         pweData = JSON.parse(pweData) || {};
         
         if (!pweData[campInstanceId]) {
-            console.log(`⚠️ No pwe_data found for ${campInstanceId}`);
             return;
         }
 
@@ -2877,7 +2129,6 @@ class ProactiveWebCampaignPlugin {
         // Find the campaign to check its conditions
         const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
         if (!campaign) {
-            console.log(`⚠️ Campaign not found for actual values update: ${campInstanceId}`);
             return;
         }
         
@@ -2886,51 +2137,40 @@ class ProactiveWebCampaignPlugin {
             case 'pageChange':
                 // pageVisitCount is already updated by updatePageVisitCounts() in handlePageChange()
                 // So we only need to update general rules (user, country, city) if configured
-                console.log(`🔄 PageChange event: updating general rules only (pageVisitCount already updated)`);
                 this.updateGeneralData(campaignData, campInstanceId);
                 break;
             case 'timeSpent':
                 // timeSpent is already updated by timer callback, just call updateTimeSpent for consistency
                 if (this.campaignHasConditionType(campaign, 'timeSpent')) {
                     this.updateTimeSpentData(campaignData, campInstanceId);
-                } else {
-                    console.log(`⚠️ Campaign ${campInstanceId} doesn't have timeSpent condition - skipping update`);
                 }
                 break;
             case 'hoverOn':
                 // HoverOn updates are now handled directly in hover event listeners
                 // No additional processing needed here as the key-based structure is updated immediately
-                console.log(`🖱️ HoverOn event processed - values already updated in hover listeners`);
                 break;
             case 'customData':
                 // Custom data is already updated by updateCustomActualValues() in handleCustomDataChanges()
-                console.log(`🔄 CustomData event: custom values already updated by handleCustomDataChanges()`);
-                // No additional processing needed - values were updated based on specific changes
                 break;
             case 'titleChange':
                 // For title changes, only update general rules if needed
-                console.log(`🔄 TitleChange event: checking if general rules need updates`);
                 this.updateGeneralData(campaignData, campInstanceId);
                 break;
             default:
-                console.log(`🔄 Processing general event: ${eventType}`);
                 this.updateGeneralData(campaignData, campInstanceId);
                 break;
         }
 
         // Always ensure custom data is up-to-date if campaign has custom conditions
         // This handles cases where custom data was received before campaign configuration
-        // ENHANCED: Now pulls from sessionStorage to handle navigation scenarios
+        // Now pulls from sessionStorage to handle navigation scenarios
         if (this.campaignHasCustomConditions(campaign)) {
-            console.log(`🔄 Campaign has custom conditions, ensuring custom data is up-to-date`);
             this.ensureCustomDataUpToDate(campInstanceId, campaign, campaignData);
         }
 
         // Save updated data
         pweData[campInstanceId] = campaignData;
         window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
-        
-        console.log(`✅ Updated actual values for ${campInstanceId} based on configured conditions`);
     }
 
     /**
@@ -2970,24 +2210,17 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Ensures custom data is up-to-date for a campaign based on current flattened custom data
-     * ENHANCED: Now retrieves custom data from sessionStorage to handle navigation
+     * Now retrieves custom data from sessionStorage to handle navigation
      * @param campInstanceId - Campaign instance ID
      * @param campaign - Campaign configuration
      * @param campaignData - Campaign data structure to update
      */
     ensureCustomDataUpToDate(campInstanceId: string, campaign: any, campaignData: any): void {
-        console.log(`🔄 Ensuring custom data is up-to-date for campaign: ${campInstanceId}`);
-        
         // Get custom data from sessionStorage (survives navigation)
         const persistedCustomData = this.getPersistedCustomData();
-        console.log(`🔄 Retrieved persisted custom data:`, persistedCustomData);
         
         // Also use in-memory data as fallback
         const combinedCustomData = { ...persistedCustomData, ...this.flattenedCustomData };
-        console.log(`🔄 Combined custom data (sessionStorage + memory):`, combinedCustomData);
-        
-        let updatedRules = false;
-        let updatedExclusions = false;
         
         // Update custom conditions in rules
         if (campaign.engagementStrategy?.rules?.groups) {
@@ -3001,8 +2234,6 @@ class ProactiveWebCampaignPlugin {
                             // Update if value is different or not set
                             if (campaignData.actual.rules[customKey] !== currentValue) {
                                 campaignData.actual.rules[customKey] = currentValue !== undefined ? currentValue : null;
-                                updatedRules = true;
-                                console.log(`🔄 Updated RULES custom value: ${customKey} = ${currentValue}`);
                             }
                         }
                     });
@@ -3022,74 +2253,17 @@ class ProactiveWebCampaignPlugin {
                             // Update if value is different or not set
                             if (campaignData.actual.exclusions[customKey] !== currentValue) {
                                 campaignData.actual.exclusions[customKey] = currentValue !== undefined ? currentValue : null;
-                                updatedExclusions = true;
-                                console.log(`🔄 Updated EXCLUSIONS custom value: ${customKey} = ${currentValue}`);
                             }
                         }
                     });
                 }
             });
         }
-        
-        if (updatedRules || updatedExclusions) {
-            console.log(`✅ Custom data ensured up-to-date for ${campInstanceId}: ${updatedRules ? 'rules' : ''} ${updatedExclusions ? 'exclusions' : ''}`);
-        }
-    }
-
-    /**
-     * Updates page visit count data
-     * CORRECTED: Only populates actual.rules OR actual.exclusions based on where condition is configured
-     * @param campaignData - Campaign data object
-     * @param campInstanceId - Campaign instance ID (optional for backward compatibility)
-     */
-    updatePageVisitCount(campaignData: any, campInstanceId?: string): void {
-        if (campInstanceId) {
-            const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
-            if (!campaign) {
-                console.log(`⚠️ Campaign not found for page visit count update: ${campInstanceId}`);
-                return;
-            }
-
-            const hasInRules = this.campaignHasConditionType(campaign, 'pageVisitCount');
-            const hasInExclusions = this.campaignHasExclusionConditionType(campaign, 'pageVisitCount');
-            
-            let currentCount = 0;
-            
-            // Get current count
-            if (hasInRules && campaignData.actual.rules.pageVisitCount) {
-                currentCount = campaignData.actual.rules.pageVisitCount;
-            } else if (hasInExclusions && campaignData.actual.exclusions.pageVisitCount) {
-                currentCount = campaignData.actual.exclusions.pageVisitCount;
-            }
-            
-            currentCount = currentCount || 0;
-            currentCount++;
-            
-            if (hasInRules) {
-                campaignData.actual.rules.pageVisitCount = currentCount;
-                console.log(`📊 Page visit count updated in RULES: ${currentCount}`);
-            }
-            
-            if (hasInExclusions) {
-                campaignData.actual.exclusions.pageVisitCount = currentCount;
-                console.log(`📊 Page visit count updated in EXCLUSIONS: ${currentCount}`);
-            }
-        } else {
-            // Legacy mode for backward compatibility
-            if (!campaignData.actual.rules.pageVisitCount) {
-                campaignData.actual.rules.pageVisitCount = 1;
-            } else {
-                campaignData.actual.rules.pageVisitCount++;
-            }
-            
-            campaignData.actual.exclusions.pageVisitCount = campaignData.actual.rules.pageVisitCount;
-            console.log(`📊 Page visit count updated (legacy mode - both rules & exclusions): ${campaignData.actual.rules.pageVisitCount}`);
-        }
     }
 
     /**
      * Updates time spent data
-     * CORRECTED: Only populates actual.rules OR actual.exclusions based on where condition is configured
+     * Only populates actual.rules OR actual.exclusions based on where condition is configured
      * @param campaignData - Campaign data object
      * @param campInstanceId - Campaign instance ID
      */
@@ -3097,7 +2271,6 @@ class ProactiveWebCampaignPlugin {
         if (this.timeSpent[campInstanceId]) {
             const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
             if (!campaign) {
-                console.log(`⚠️ Campaign not found for timeSpent data update: ${campInstanceId}`);
                 return;
             }
 
@@ -3106,12 +2279,10 @@ class ProactiveWebCampaignPlugin {
             
             if (hasInRules) {
                 campaignData.actual.rules.timeSpent = this.timeSpent[campInstanceId];
-                console.log(`⏱️ Time spent updated in RULES: ${this.timeSpent[campInstanceId]} seconds`);
             }
             
             if (hasInExclusions) {
                 campaignData.actual.exclusions.timeSpent = this.timeSpent[campInstanceId];
-                console.log(`⏱️ Time spent updated in EXCLUSIONS: ${this.timeSpent[campInstanceId]} seconds`);
             }
         }
     }
@@ -3123,18 +2294,18 @@ class ProactiveWebCampaignPlugin {
      * @param campaignData - Campaign data object
      * @param campInstanceId - Campaign instance ID
      */
-    updateHoverData(campaignData: any, campInstanceId?: string): void {
+    /* updateHoverData(campaignData: any, campInstanceId?: string): void {
         console.log('⚠️ DEPRECATED: updateHoverData method called - this is now handled by key-based structure');
         console.log('⚠️ HoverOn updates should be handled directly in hover event listeners');
         
         // This method is now deprecated - the new implementation handles hoverOn
         // updates directly in the hover event listeners using the key-based structure
         // See: setupHoverListenerForCondition method for the new implementation
-    }
+    } */
 
     /**
      * Updates general data like user type, country, city
-     * CORRECTED: Only populates actual.rules OR actual.exclusions based on where condition is configured
+     * Only populates actual.rules OR actual.exclusions based on where condition is configured
      * @param campaignData - Campaign data object
      * @param campInstanceId - Campaign instance ID
      */
@@ -3142,11 +2313,8 @@ class ProactiveWebCampaignPlugin {
         // Find the campaign to check its conditions
         const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
         if (!campaign) {
-            console.log(`⚠️ Campaign not found for general data update: ${campInstanceId}`);
             return;
         }
-
-        console.log(`🔍 Checking which general data to update for campaign: ${campInstanceId}`);
 
         // Update user type - check rules and exclusions separately
         const hasUserInRules = this.campaignHasConditionType(campaign, 'user');
@@ -3157,19 +2325,18 @@ class ProactiveWebCampaignPlugin {
             
             if (hasUserInRules) {
                 campaignData.actual.rules.user = userType;
-                console.log(`👤 User type updated in RULES: ${userType}`);
             }
             
             if (hasUserInExclusions) {
                 campaignData.actual.exclusions.user = userType;
-                console.log(`👤 User type updated in EXCLUSIONS: ${userType}`);
             }
         }
 
         // Update location data (country, city, state) from sessionStorage
-        // ASYNC-SAFE: Handle missing location data gracefully (location API may still be running)
+        // Handle missing location data gracefully (location API may still be running)
         const locationData = JSON.parse(window.sessionStorage.getItem('pwcLocationData') || '{}');
-        
+        // If location data is available, update the campaign data
+        // Location data not yet available - will re-evaluate when location API completes
         if (locationData && (locationData.country || locationData.city || locationData.state)) {
             // Update country - check rules and exclusions separately
             const hasCountryInRules = this.campaignHasConditionType(campaign, 'country');
@@ -3178,12 +2345,10 @@ class ProactiveWebCampaignPlugin {
             if ((hasCountryInRules || hasCountryInExclusions) && locationData.country) {
                 if (hasCountryInRules) {
                     campaignData.actual.rules.country = locationData.country;
-                    console.log(`🌍 Country updated in RULES: ${locationData.country}`);
                 }
                 
                 if (hasCountryInExclusions) {
                     campaignData.actual.exclusions.country = locationData.country;
-                    console.log(`🌍 Country updated in EXCLUSIONS: ${locationData.country}`);
                 }
             }
 
@@ -3194,12 +2359,10 @@ class ProactiveWebCampaignPlugin {
             if ((hasCityInRules || hasCityInExclusions) && locationData.city) {
                 if (hasCityInRules) {
                     campaignData.actual.rules.city = locationData.city;
-                    console.log(`🏙️ City updated in RULES: ${locationData.city}`);
                 }
                 
                 if (hasCityInExclusions) {
                     campaignData.actual.exclusions.city = locationData.city;
-                    console.log(`🏙️ City updated in EXCLUSIONS: ${locationData.city}`);
                 }
             }
 
@@ -3210,17 +2373,12 @@ class ProactiveWebCampaignPlugin {
             if ((hasStateInRules || hasStateInExclusions) && locationData.state) {
                 if (hasStateInRules) {
                     campaignData.actual.rules.state = locationData.state;
-                    console.log(`🏛️ State updated in RULES: ${locationData.state}`);
                 }
                 
                 if (hasStateInExclusions) {
                     campaignData.actual.exclusions.state = locationData.state;
-                    console.log(`🏛️ State updated in EXCLUSIONS: ${locationData.state}`);
                 }
             }
-        } else {
-            // Location data not yet available (geolocation API still running)
-            console.log('📍 Location data not yet available - will re-evaluate when location API completes');
         }
 
         // Update current URL - check rules and exclusions separately (NEW)
@@ -3232,12 +2390,10 @@ class ProactiveWebCampaignPlugin {
             
             if (hasUrlInRules) {
                 campaignData.actual.rules.url = currentUrl;
-                console.log(`🌐 URL updated in RULES: ${currentUrl}`);
             }
             
             if (hasUrlInExclusions) {
                 campaignData.actual.exclusions.url = currentUrl;
-                console.log(`🌐 URL updated in EXCLUSIONS: ${currentUrl}`);
             }
         }
 
@@ -3250,12 +2406,10 @@ class ProactiveWebCampaignPlugin {
             
             if (hasPageNameInRules) {
                 campaignData.actual.rules.pageName = currentPageName;
-                console.log(`📄 PageName updated in RULES: "${currentPageName}"`);
             }
             
             if (hasPageNameInExclusions) {
                 campaignData.actual.exclusions.pageName = currentPageName;
-                console.log(`📄 PageName updated in EXCLUSIONS: "${currentPageName}"`);
             }
         }
 
@@ -3270,36 +2424,27 @@ class ProactiveWebCampaignPlugin {
             
             if (hasDeviceInRules) {
                 campaignData.actual.rules.device = currentDevice;
-                console.log(`📱 Device updated in RULES: "${currentDevice}"`);
             }
             
             if (hasDeviceInExclusions) {
                 campaignData.actual.exclusions.device = currentDevice;
-                console.log(`📱 Device updated in EXCLUSIONS: "${currentDevice}"`);
             }
         }
-
-        console.log(`✅ General data update complete for ${campInstanceId}`);
     }
 
     /**
      * Re-evaluates campaigns that have location-based conditions when location data becomes available
-     * ASYNC-SAFE: Called when geolocation API completes to handle location-based campaigns
+     * Called when geolocation API completes to handle location-based campaigns
      */
     reevaluateLocationBasedCampaigns(): void {
-        console.log('📍 Location data ready - re-evaluating location-based campaigns');
-        
         if (!this.campInfo || this.campInfo.length === 0) {
-            console.log('⚠️ No campaigns available for location re-evaluation');
             return;
         }
         
         const currentUrl = window.location.href;
         const currentPageTitle = document.title.trim();
         const activeCampaigns = this.getActiveCampaigns(currentUrl, currentPageTitle);
-        
-        console.log(`🎯 Checking ${activeCampaigns.length} active campaigns for location conditions`);
-        
+
         let locationCampaignsCount = 0;
         let pweData: any = window.sessionStorage.getItem('pwe_data');
         pweData = JSON.parse(pweData) || {};
@@ -3319,7 +2464,6 @@ class ProactiveWebCampaignPlugin {
                 this.campaignHasExclusionConditionType(campaign, 'state');
             
             if (hasLocationInRules || hasLocationInExclusions) {
-                console.log(`📍 Campaign ${campInstanceId} has location conditions - updating data`);
                 locationCampaignsCount++;
                 
                 // Update location data for this campaign
@@ -3339,31 +2483,8 @@ class ProactiveWebCampaignPlugin {
                 pageName: currentPageTitle
             };
             
-            this.sendEventNew(pageObj, 'locationReady');
-            console.log(`✅ Location re-evaluation complete: ${locationCampaignsCount} campaigns updated`);
-        } else {
-            console.log('⚡ No location-based campaigns found - no re-evaluation needed');
+            this.sendEvent(pageObj, 'locationReady');
         }
-    }
-
-    /**
-     * LEGACY METHOD: Updates time spent in actual data (kept for backward compatibility)
-     * @param campaignData - Campaign data object
-     * @param campInstanceId - Campaign instance ID
-     */
-    updateTimeSpent(campaignData: any, campInstanceId: string): void {
-        // Delegate to new method that handles both rules and exclusions
-        this.updateTimeSpentData(campaignData, campInstanceId);
-    }
-
-    /**
-     * LEGACY METHOD: Updates general rules (kept for backward compatibility)
-     * @param campaignData - Campaign data object
-     * @param campInstanceId - Campaign instance ID
-     */
-    updateGeneralRules(campaignData: any, campInstanceId: string): void {
-        // Delegate to new method that handles both rules and exclusions
-        this.updateGeneralData(campaignData, campInstanceId);
     }
 
     /**
@@ -3371,8 +2492,6 @@ class ProactiveWebCampaignPlugin {
      * @param campInstanceId - Campaign instance ID
      */
     evaluateRulesForCampaign(campInstanceId: string): void {
-        console.log(`📏 Evaluating rules for ${campInstanceId}`);
-        
         let pweData: any = window.sessionStorage.getItem('pwe_data');
         pweData = JSON.parse(pweData) || {};
         
@@ -3382,19 +2501,16 @@ class ProactiveWebCampaignPlugin {
         const rules = campaignData.expected.rules;
         
         if (!rules || !rules.groups) {
-            console.log('⚠️ No rules to evaluate');
             return;
         }
 
         // Analyze campaign configuration first
-        this.analyzeCampaignConfiguration(campInstanceId);
+        // this.analyzeCampaignConfiguration(campInstanceId);
 
         // Evaluate each group
         rules.groups.forEach((group: any) => {
-            console.log(`\n🔍 === Evaluating Group ${group.id} ===`);
-            
             // Run detailed analysis for debugging
-            this.analyzeConditionEvaluation(group.conditions, campaignData.actual.rules);
+            // this.analyzeConditionEvaluation(group.conditions, campaignData.actual.rules);
             
             // ENHANCED: Update individual condition satisfaction states (RULES - selective persistence)
             this.updateIndividualConditionStates(group.conditions, campaignData.actual.rules, false, group.id);
@@ -3404,8 +2520,6 @@ class ProactiveWebCampaignPlugin {
                 group.conditions,
                 campaignData.actual.rules
             );
-            console.log(`📊 Group ${group.id} satisfied: ${group.conditions.isSatisfied}`);
-            console.log(`🔍 === End Group ${group.id} Evaluation ===\n`);
         });
 
         // Evaluate overall rules satisfaction
@@ -3414,18 +2528,14 @@ class ProactiveWebCampaignPlugin {
         // Save updated data
         pweData[campInstanceId] = campaignData;
         window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
-        
-        console.log(`✅ Rules evaluation complete for ${campInstanceId}: ${rules.isSatisfied}`);
     }
 
     /**
      * Evaluates exclusions for a campaign and updates satisfaction status
-     * CRITICAL: Supports dynamic exclusion evaluation (can flip satisfied ↔ not satisfied)
+     * Supports dynamic exclusion evaluation (can flip satisfied ↔ not satisfied)
      * @param campInstanceId - Campaign instance ID
      */
     evaluateExclusionsForCampaign(campInstanceId: string): void {
-        console.log(`🚫 Evaluating exclusions for ${campInstanceId}`);
-        
         let pweData: any = window.sessionStorage.getItem('pwe_data');
         pweData = JSON.parse(pweData) || {};
         
@@ -3435,16 +2545,11 @@ class ProactiveWebCampaignPlugin {
         const exclusions = campaignData.expected.exclusions;
         
         if (!exclusions || !exclusions.groups) {
-            console.log('⚠️ No exclusions to evaluate - campaign allowed to proceed');
             return;
         }
 
         // Store previous satisfaction status for dynamic behavior logging
         const previousSatisfied = exclusions.isSatisfied;
-
-        console.log(`🚫 === EXCLUSIONS EVALUATION START ===`);
-        console.log(`🚫 Previous exclusions status: ${previousSatisfied ? 'SATISFIED (blocking)' : 'NOT SATISFIED (allowing)'}`);
-        console.log(`🚫 Available exclusions data:`, campaignData.actual.exclusions);
 
         // Evaluate each group
         exclusions.groups.forEach((group: any, index: number) => {
@@ -3457,55 +2562,29 @@ class ProactiveWebCampaignPlugin {
                 group.conditions,
                 campaignData.actual.exclusions
             );
-            
-            // Log dynamic behavior for exclusions
-            if (previousGroupSatisfied !== group.conditions.isSatisfied) {
-                console.log(`🔄 *** DYNAMIC EXCLUSION CHANGE *** Group ${group.id}: ${previousGroupSatisfied} → ${group.conditions.isSatisfied}`);
-            }
-            
-            console.log(`🚫 Exclusion group ${index + 1} (${group.id}) satisfied: ${group.conditions.isSatisfied ? '✅ YES (blocks)' : '❌ NO (allows)'}`);
         });
 
         // Evaluate overall exclusions satisfaction
         exclusions.isSatisfied = this.evaluateGroupsSatisfaction(exclusions.groups, exclusions.groupType);
         
-        // Log dynamic exclusion behavior
-        if (previousSatisfied !== exclusions.isSatisfied) {
-            console.log(`🔄 *** DYNAMIC EXCLUSIONS FLIP *** Campaign ${campInstanceId}: ${previousSatisfied} → ${exclusions.isSatisfied}`);
-            if (exclusions.isSatisfied) {
-                console.log(`🚫 *** Campaign is now BLOCKED by exclusions ***`);
-            } else {
-                console.log(`✅ *** Campaign is now ALLOWED (exclusions no longer block) ***`);
-            }
-        }
-        
         // Save updated data
         pweData[campInstanceId] = campaignData;
         window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
-        
-        console.log(`🚫 === EXCLUSIONS EVALUATION COMPLETE ===`);
-        console.log(`🚫 Final exclusions status: ${exclusions.isSatisfied ? '🚫 SATISFIED (BLOCKS campaign)' : '✅ NOT SATISFIED (ALLOWS campaign)'}`);
     }
 
     /**
      * Evaluates conditions within a group
-     * ENHANCED: Implements persistence for pageVisitCount conditions (once satisfied, stays satisfied)
+     * Implements persistence for pageVisitCount conditions (once satisfied, stays satisfied)
      * @param groupConditions - Group conditions object
      * @param actualValues - Actual values to compare against
      * @returns Boolean indicating if group conditions are satisfied
      */
     evaluateGroupConditions(groupConditions: any, actualValues: any): boolean {
-        console.log('\n🔍 =================== GROUP EVALUATION START ===================');
-        console.log('🔍 Group conditions structure:', JSON.stringify(groupConditions, null, 2));
-        console.log('🔍 Actual values available:', actualValues);
-        
         const conditionResults: boolean[] = [];
         const groupType = groupConditions.type || 'AND';
         let totalExpectedConditions = 0;
         let evaluatedConditions = 0;
         const conditionDetails: any[] = [];
-        
-        console.log(`🎯 Group type: ${groupType}`);
         
         // Check each condition type
         Object.keys(groupConditions).forEach(column => {
@@ -3514,28 +2593,13 @@ class ProactiveWebCampaignPlugin {
             const conditions = groupConditions[column];
             if (!Array.isArray(conditions)) return;
             
-            console.log(`\n📋 Processing ${conditions.length} condition(s) for column: ${column}`);
-            
             totalExpectedConditions += conditions.length;
             
             conditions.forEach((condition: any, index: number) => {
                 const actualValue = actualValues[column];
-                console.log(`\n🔍 --- Condition ${index + 1}/${conditions.length} for ${column} ---`);
-                console.log(`🔍 Condition details:`, {
-                    id: condition.id,
-                    operator: condition.operator,
-                    expectedValue: condition.value,
-                    expectedType: typeof condition.value,
-                    isNot: condition.isNot,
-                    actualValue: actualValue,
-                    actualType: typeof actualValue,
-                    hasActualValue: actualValue !== undefined && actualValue !== null,
-                    previouslySatisfied: condition.isSatisfied // Track previous satisfaction state
-                });
                 
                 // Check if we have an actual value to compare against
                 if (actualValue === undefined || actualValue === null) {
-                    console.log(`⚠️ Missing actual value for condition ${condition.id || index} (${column})`);
                     
                     // For AND logic, missing values mean condition is not satisfied
                     if (groupType === 'AND') {
@@ -3547,7 +2611,6 @@ class ProactiveWebCampaignPlugin {
                             result: false,
                             reason: 'missing actual value'
                         });
-                        console.log(`❌ Condition ${condition.id || index} (${column}): false (missing actual value in AND group)`);
                     } else {
                         // For OR logic, missing values are skipped
                         conditionDetails.push({
@@ -3556,7 +2619,6 @@ class ProactiveWebCampaignPlugin {
                             result: 'skipped',
                             reason: 'missing actual value in OR group'
                         });
-                        console.log(`⏸️ Condition ${condition.id || index} (${column}): skipped (missing actual value in OR group)`);
                     }
                 } else {
                     // Use the satisfaction state that was set by updateIndividualConditionStates
@@ -3574,18 +2636,9 @@ class ProactiveWebCampaignPlugin {
                         operator: condition.operator,
                         isNot: condition.isNot
                     });
-                    
-                    console.log(`📊 Condition ${condition.id || index} (${column}): ${result ? '✅ SATISFIED' : '❌ NOT SATISFIED'}`);
                 }
             });
         });
-
-        console.log(`\n📊 =================== EVALUATION SUMMARY ===================`);
-        console.log(`📊 Group type: ${groupType}`);
-        console.log(`📊 Total expected conditions: ${totalExpectedConditions}`);
-        console.log(`📊 Evaluated conditions: ${evaluatedConditions}`);
-        console.log(`📊 Condition results: [${conditionResults.join(', ')}]`);
-        console.log(`📊 Condition details:`, conditionDetails);
 
         // Apply group type logic (AND/OR)
         let satisfied = false;
@@ -3593,26 +2646,15 @@ class ProactiveWebCampaignPlugin {
         if (conditionResults.length === 0) {
             // No conditions to evaluate
             satisfied = false;
-            console.log('⚠️ No conditions found to evaluate');
         } else if (groupType === 'AND') {
             // For AND: ALL conditions must be satisfied
             const allConditionsSatisfied = conditionResults.every(result => result);
             const allValuesPresent = evaluatedConditions === totalExpectedConditions;
             satisfied = allConditionsSatisfied && allValuesPresent;
-            
-            console.log(`📏 AND Group detailed evaluation:`);
-            console.log(`   - All conditions satisfied: ${allConditionsSatisfied} (${conditionResults.filter(r => r).length}/${conditionResults.length} passed)`);
-            console.log(`   - All values present: ${allValuesPresent} (${evaluatedConditions}/${totalExpectedConditions} evaluated)`);
-            console.log(`   - Final result: ${satisfied ? '✅ SATISFIED' : '❌ NOT SATISFIED'}`);
         } else {
             // For OR: At least ONE condition must be satisfied
             satisfied = conditionResults.some(result => result);
-            console.log(`📏 OR Group detailed evaluation:`);
-            console.log(`   - At least one satisfied: ${satisfied} (${conditionResults.filter(r => r).length}/${conditionResults.length} passed)`);
-            console.log(`   - Final result: ${satisfied ? '✅ SATISFIED' : '❌ NOT SATISFIED'}`);
         }
-            
-        console.log(`🔍 =================== GROUP EVALUATION END: ${satisfied ? '✅ SATISFIED' : '❌ NOT SATISFIED'} ===================\n`);
         return satisfied;
     }
 
@@ -3626,8 +2668,6 @@ class ProactiveWebCampaignPlugin {
      * @param groupId - Group ID for hoverOn condition evaluation
      */
     updateIndividualConditionStates(groupConditions: any, actualValues: any, isExclusions: boolean = false, groupId?: string): void {
-        console.log(`🔄 Updating individual condition satisfaction states (${isExclusions ? 'EXCLUSIONS - dynamic' : 'RULES - selective persistence'})`);
-        
         // Check each condition type
         Object.keys(groupConditions).forEach(column => {
             if (column === 'type' || column === 'isSatisfied') return;
@@ -3653,133 +2693,38 @@ class ProactiveWebCampaignPlugin {
                     if (isExclusions) {
                         // EXCLUSIONS: ALWAYS DYNAMIC RE-EVALUATION (no persistence for any condition type)
                         condition.isSatisfied = currentResult;
-                        console.log(`🔄 *** EXCLUSION ${column} condition ${condition.id || index}: ${currentResult} (dynamic) ***`);
-                        console.log(`🔄 Actual: ${actualValue}, Expected: ${condition.value}, Result: ${currentResult} (always fresh)`);
                     } else {
                         // RULES: SELECTIVE PERSISTENCE LOGIC
                         if (column === 'pageVisitCount') {
                             // pageVisitCount: PERSIST once satisfied
                             if (previousSatisfied === true) {
                                 condition.isSatisfied = true;
-                                console.log(`🔄 *** RULES pageVisitCount condition ${condition.id || index} PERSISTED as satisfied ***`);
-                                console.log(`🔄 Actual: ${actualValue}, Expected: ${condition.value}, Previous: true, Current: true (persisted)`);
                             } else if (currentResult === true) {
                                 condition.isSatisfied = true;
-                                console.log(`🔄 *** RULES pageVisitCount condition ${condition.id || index} newly SATISFIED ***`);
-                                console.log(`🔄 Actual: ${actualValue}, Expected: ${condition.value}, Previous: false, Current: true (new)`);
                             } else {
                                 condition.isSatisfied = false;
-                                console.log(`🔄 RULES pageVisitCount condition ${condition.id || index} not satisfied`);
-                                console.log(`🔄 Actual: ${actualValue}, Expected: ${condition.value}, Result: false`);
                             }
                         } else if (column === 'country' || column === 'city') {
                             // country, city: PERSIST once satisfied (browser session doesn't change location)
                             if (previousSatisfied === true) {
                                 condition.isSatisfied = true;
-                                console.log(`🔄 *** RULES ${column} condition ${condition.id || index} PERSISTED as satisfied (location doesn't change) ***`);
-                                console.log(`🔄 Previous: true, Current: true (persisted)`);
                             } else {
                                 condition.isSatisfied = currentResult;
-                                console.log(`🔄 RULES ${column} condition ${condition.id || index}: ${currentResult} ${currentResult ? '(newly satisfied, will persist)' : '(not satisfied)'}`);
                             }
                         } else if (column === 'user') {
                             // user: DYNAMIC (can change from anonymous → known during session)
                             condition.isSatisfied = currentResult;
-                            console.log(`🔄 *** RULES user condition ${condition.id || index}: ${currentResult} (dynamic - can change anonymous→known) ***`);
-                            console.log(`🔄 Actual: ${actualValue}, Expected: ${condition.value}, Result: ${currentResult} (fresh evaluation)`);
                         } else {
                             // timeSpent, hoverOn, etc.: NORMAL EVALUATION (no persistence)
                             condition.isSatisfied = currentResult;
-                            console.log(`🔄 RULES ${column} condition ${condition.id || index}: ${currentResult} (normal evaluation)`);
                         }
                     }
                 } else {
                     // Missing actual value
                     condition.isSatisfied = false;
-                    console.log(`🔄 Condition ${condition.id || index} (${column}): false (missing actual value)`);
                 }
             });
         });
-        
-        console.log('✅ Individual condition states updated');
-    }
-
-    /**
-     * Provides detailed analysis of condition evaluation for debugging
-     * @param groupConditions - Group conditions object
-     * @param actualValues - Actual values to compare against
-     * @returns Detailed analysis object
-     */
-    analyzeConditionEvaluation(groupConditions: any, actualValues: any): any {
-        const analysis = {
-            groupType: groupConditions.type || 'AND',
-            expectedConditions: {} as any,
-            actualValues: actualValues,
-            missingValues: [] as string[],
-            satisfiedConditions: [] as any[],
-            unsatisfiedConditions: [] as any[],
-            summary: ''
-        };
-
-        // Analyze each condition type
-        Object.keys(groupConditions).forEach(column => {
-            if (column === 'type' || column === 'isSatisfied') return;
-            
-            const conditions = groupConditions[column];
-            if (!Array.isArray(conditions)) return;
-            
-            analysis.expectedConditions[column] = conditions;
-            
-            conditions.forEach((condition: any) => {
-                const actualValue = actualValues[column];
-                
-                if (actualValue === undefined || actualValue === null) {
-                    analysis.missingValues.push(column);
-                } else {
-                    const result = this.evaluateCondition(condition, actualValue);
-                    if (result) {
-                        analysis.satisfiedConditions.push({
-                            column,
-                            condition,
-                            actualValue,
-                            result
-                        });
-                    } else {
-                        analysis.unsatisfiedConditions.push({
-                            column,
-                            condition,
-                            actualValue,
-                            result
-                        });
-                    }
-                }
-            });
-        });
-
-        // Generate summary
-        const totalConditions = analysis.satisfiedConditions.length + analysis.unsatisfiedConditions.length;
-        const missingCount = analysis.missingValues.length;
-        
-        if (analysis.groupType === 'AND') {
-            if (missingCount > 0) {
-                analysis.summary = `❌ AND group not satisfied: ${missingCount} missing values (${analysis.missingValues.join(', ')})`;
-            } else if (analysis.unsatisfiedConditions.length > 0) {
-                analysis.summary = `❌ AND group not satisfied: ${analysis.unsatisfiedConditions.length}/${totalConditions} conditions failed`;
-            } else {
-                analysis.summary = `✅ AND group satisfied: all ${totalConditions} conditions met`;
-            }
-        } else {
-            if (analysis.satisfiedConditions.length > 0) {
-                analysis.summary = `✅ OR group satisfied: ${analysis.satisfiedConditions.length}/${totalConditions} conditions met`;
-            } else if (missingCount === Object.keys(analysis.expectedConditions).length) {
-                analysis.summary = `❌ OR group not satisfied: all values missing`;
-            } else {
-                analysis.summary = `❌ OR group not satisfied: no conditions met`;
-            }
-        }
-
-        console.log('📋 Condition Analysis:', analysis);
-        return analysis;
     }
 
     /**
@@ -3793,80 +2738,37 @@ class ProactiveWebCampaignPlugin {
         const { operator, value, isNot, conditionType } = condition;
         let result = false;
         
-        console.log(`\n🔍 =============== CONDITION EVALUATION START ===============`);
-        console.log(`🔍 Condition ID: ${condition.id || 'unknown'}`);
-        console.log(`🔍 Condition Type: ${conditionType || 'default'}`);
-        console.log(`🔍 Column: ${condition.column || 'unknown'}`);
-        console.log(`🔍 Full condition object:`, condition);
-        console.log(`🔍 Operator: ${operator}`);
-        console.log(`🔍 Expected value: ${value} (type: ${typeof value})`);
-        console.log(`🔍 Actual value: ${actualValue} (type: ${typeof actualValue})`);
-        console.log(`🔍 isNot flag: ${isNot} (type: ${typeof isNot})`);
-        
-        // Enhanced debugging for isNot flag
-        if (isNot !== undefined) {
-            console.log(`🔍 isNot flag is present: ${isNot}`);
-            if (isNot === true) {
-                console.log(`🔍 *** IMPORTANT: This condition has isNot=true - result will be inverted! ***`);
-            } else if (isNot === false) {
-                console.log(`🔍 isNot=false - result will NOT be inverted`);
-            } else {
-                console.log(`⚠️ isNot has unexpected value: ${isNot} (${typeof isNot})`);
-            }
-        } else {
-            console.log(`🔍 isNot flag is undefined/missing - treating as false`);
-        }
-        
         // Handle custom conditionType with special operators
         if (conditionType === 'custom') {
-            console.log(`🔍 *** CUSTOM CONDITION EVALUATION ***`);
             result = this.evaluateCustomCondition(condition, actualValue, value);
         } else if (condition.column === 'hoverOn') {
             // Handle hoverOn conditions with new key-based structure
-            console.log(`🔍 *** HOVERON CONDITION EVALUATION ***`);
             result = this.evaluateHoverOnCondition(condition, actualValue);
         } else if (condition.column === 'url' || condition.column === 'pageName') {
             // Handle url/pageName conditions with case-sensitive string operations
-            console.log(`🔍 *** URL/PAGENAME CONDITION EVALUATION ***`);
             result = this.evaluateUrlPageNameCondition(condition, actualValue, value);
         } else if (condition.column === 'device') {
             // Handle device conditions with simple string comparison
-            console.log(`🔍 *** DEVICE CONDITION EVALUATION ***`);
             result = this.evaluateDeviceCondition(condition, actualValue, value);
         } else {
             // Handle default condition types
-            console.log(`🔍 *** DEFAULT CONDITION EVALUATION ***`);
-            
-            // Type coercion warning for default conditions
-            if (typeof actualValue !== typeof value) {
-                console.log(`⚠️ TYPE MISMATCH: actual (${typeof actualValue}) vs expected (${typeof value})`);
-                console.log(`⚠️ This may cause evaluation issues. Consider using consistent types.`);
-            }
-            
             switch (operator) {
                 case 'equals':
                     result = actualValue == value; // Loose comparison for type coercion
-                    console.log(`📊 Equals evaluation (loose): ${actualValue} == ${value} = ${result}`);
                     if (typeof actualValue !== typeof value) {
                         const strictResult = actualValue === value;
-                        console.log(`📊 Strict comparison would be: ${actualValue} === ${value} = ${strictResult}`);
                     }
                     break;
                 case 'is':
                     result = actualValue === value; // Strict comparison
-                    console.log(`📊 Is evaluation (strict): ${actualValue} === ${value} = ${result}`);
                     if (typeof actualValue !== typeof value) {
                         const looseResult = actualValue == value;
-                        console.log(`📊 Loose comparison would be: ${actualValue} == ${value} = ${looseResult}`);
                     }
                     break;
                 case 'not':
                     result = actualValue !== value; // Strict not equal
-                    console.log(`📊 Not evaluation (strict): ${actualValue} !== ${value} = ${result}`);
                     break;
                 default:
-                    console.log(`⚠️ Unknown operator for default condition: ${operator}`);
-                    console.log(`🔍 =============== CONDITION EVALUATION END: ERROR ===============\n`);
                     return false;
             }
         }
@@ -3877,49 +2779,24 @@ class ProactiveWebCampaignPlugin {
         // Apply isNot logic with enhanced debugging
         if (isNot === true) {
             result = !result;
-            console.log(`🔄 *** APPLIED isNot LOGIC ***`);
-            console.log(`🔄 Original evaluation result: ${preIsNotResult}`);
-            console.log(`🔄 After isNot inversion: ${result}`);
-            console.log(`🔄 Interpretation: Condition is satisfied when "${actualValue} ${operator} ${value}" is ${preIsNotResult ? 'FALSE' : 'TRUE'}`);
-            console.log(`🔄 Since isNot=true, the condition is ${result ? 'SATISFIED' : 'NOT SATISFIED'}`);
-        } else if (isNot === false) {
-            console.log(`🔄 isNot=false - no inversion applied`);
-        } else if (isNot !== undefined) {
-            console.log(`⚠️ Unexpected isNot value: ${isNot} - treating as false`);
         }
         
-        console.log(`🔍 Final condition result: ${result ? '✅ SATISFIED' : '❌ NOT SATISFIED'}`);
-        console.log(`🔍 =============== CONDITION EVALUATION END ===============\n`);
         return result;
     }
 
     /**
-     * =====================================================================================
-     *                        🖱️ HOVERON CONDITION EVALUATION ENGINE
-     * =====================================================================================
-     * 
      * Evaluates hoverOn conditions with new key-based structure:
      * - actualValue is an object: { "group1_co-1": true, "group2_co-3": false }
      * - Looks up the specific key for this condition
      * - Returns boolean result (no type mismatch issues)
      */
     evaluateHoverOnCondition(condition: any, actualValue: any): boolean {
-        console.log(`🖱️ Evaluating hoverOn condition:`);
-        console.log(`   - Condition ID: ${condition.id}`);
-        console.log(`   - Expected value: ${condition.value}`);
-        console.log(`   - Actual hoverOn object:`, actualValue);
-        
         // Handle case where actualValue is not an object (shouldn't happen with new structure)
         if (!actualValue || typeof actualValue !== 'object') {
-            console.log(`⚠️ HoverOn actual value is not an object - using legacy fallback`);
-            
             // Legacy fallback for backward compatibility during transition
             if (typeof actualValue === 'boolean') {
-                console.log(`📊 Legacy boolean hoverOn: ${actualValue}`);
                 return actualValue === true;
             }
-            
-            console.log(`📊 Invalid hoverOn actualValue type: ${typeof actualValue}`);
             return false;
         }
         
@@ -3935,7 +2812,6 @@ class ProactiveWebCampaignPlugin {
             if (condition.id && key.includes(condition.id)) {
                 matchingKey = key;
                 matchingValue = actualValue[key];
-                console.log(`🔍 Found matching key: ${key} = ${matchingValue}`);
             }
         });
         
@@ -3943,19 +2819,15 @@ class ProactiveWebCampaignPlugin {
         if (!matchingKey && Object.keys(actualValue).length === 1) {
             matchingKey = Object.keys(actualValue)[0];
             matchingValue = actualValue[matchingKey];
-            console.log(`🔍 Single condition fallback - using key: ${matchingKey} = ${matchingValue}`);
         }
         
         // If still no matching key, condition is not satisfied
         if (!matchingKey) {
-            console.log(`⚠️ No matching hoverOn key found for condition ${condition.id}`);
-            console.log(`   Available keys: [${Object.keys(actualValue).join(', ')}]`);
             return false;
         }
         
         // Return the boolean value
         const result = matchingValue === true;
-        console.log(`📊 HoverOn condition result: ${matchingKey} = ${matchingValue} → ${result}`);
         return result;
     }
 
@@ -3967,48 +2839,26 @@ class ProactiveWebCampaignPlugin {
      * @returns Boolean result
      */
     evaluateHoverOnConditionWithContext(condition: any, actualValue: any, groupId: string): boolean {
-        console.log(`🖱️ Evaluating hoverOn condition with group context:`);
-        console.log(`   - Group ID: ${groupId}`);
-        console.log(`   - Condition ID: ${condition.id}`);
-        console.log(`   - Actual hoverOn object:`, actualValue);
-        
         // Handle case where actualValue is not an object
         if (!actualValue || typeof actualValue !== 'object') {
-            console.log(`⚠️ HoverOn actual value is not an object - using legacy fallback`);
-            
             // Legacy fallback for backward compatibility during transition
             if (typeof actualValue === 'boolean') {
-                console.log(`📊 Legacy boolean hoverOn: ${actualValue}`);
                 return actualValue === true;
             }
-            
-            console.log(`📊 Invalid hoverOn actualValue type: ${typeof actualValue}`);
             return false;
         }
         
         // Construct the expected key
         const expectedKey = `${groupId}_${condition.id}`;
-        console.log(`🔍 Looking for key: ${expectedKey}`);
         
         // Check if the key exists and get its value
         const keyValue = actualValue[expectedKey];
         const result = keyValue === true;
         
-        console.log(`📊 HoverOn condition result: ${expectedKey} = ${keyValue} → ${result}`);
-        
-        if (keyValue === undefined) {
-            console.log(`⚠️ Key ${expectedKey} not found in hoverOn object`);
-            console.log(`   Available keys: [${Object.keys(actualValue).join(', ')}]`);
-        }
-        
         return result;
     }
 
     /**
-     * =====================================================================================
-     *                        🌐 URL/PAGENAME CONDITION EVALUATION ENGINE
-     * =====================================================================================
-     * 
      * Evaluates url and pageName conditions with case-sensitive string operations:
      * URL operators: contains, ends_with
      * PageName operators: is, contains
@@ -4021,17 +2871,9 @@ class ProactiveWebCampaignPlugin {
     evaluateUrlPageNameCondition(condition: any, actualValue: any, expectedValue: any): boolean {
         const { column, operator } = condition;
         
-        console.log(`🌐 Evaluating ${column} condition:`);
-        console.log(`   - Operator: ${operator}`);
-        console.log(`   - Actual: "${actualValue}"`);
-        console.log(`   - Expected: "${expectedValue}"`);
-        
         // Safety check: ensure we have strings to work with
         const actualStr = actualValue ? String(actualValue) : '';
         const expectedStr = expectedValue ? String(expectedValue) : '';
-        
-        console.log(`   - Actual (string): "${actualStr}"`);
-        console.log(`   - Expected (string): "${expectedStr}"`);
         
         let result = false;
         
@@ -4040,15 +2882,11 @@ class ProactiveWebCampaignPlugin {
             switch (operator) {
                 case 'contains':
                     result = actualStr.includes(expectedStr);
-                    console.log(`📊 URL contains evaluation: "${actualStr}".includes("${expectedStr}") = ${result}`);
                     break;
                 case 'ends_with':
                     result = actualStr.endsWith(expectedStr);
-                    console.log(`📊 URL ends_with evaluation: "${actualStr}".endsWith("${expectedStr}") = ${result}`);
                     break;
                 default:
-                    console.log(`⚠️ Unknown URL operator: ${operator}`);
-                    console.log(`   Supported URL operators: contains, ends_with`);
                     return false;
             }
         } else if (column === 'pageName') {
@@ -4056,31 +2894,21 @@ class ProactiveWebCampaignPlugin {
             switch (operator) {
                 case 'is':
                     result = actualStr === expectedStr;
-                    console.log(`📊 PageName is evaluation: "${actualStr}" === "${expectedStr}" = ${result}`);
                     break;
                 case 'contains':
                     result = actualStr.includes(expectedStr);
-                    console.log(`📊 PageName contains evaluation: "${actualStr}".includes("${expectedStr}") = ${result}`);
                     break;
                 default:
-                    console.log(`⚠️ Unknown PageName operator: ${operator}`);
-                    console.log(`   Supported PageName operators: is, contains`);
                     return false;
             }
         } else {
-            console.log(`⚠️ Unknown column for URL/PageName evaluation: ${column}`);
             return false;
         }
         
-        console.log(`📊 Final ${column} condition result: ${result}`);
         return result;
     }
 
     /**
-     * =====================================================================================
-     *                        📱 DEVICE CONDITION EVALUATION ENGINE
-     * =====================================================================================
-     * 
      * Evaluates device conditions with simple "is" operator comparison:
      * - Supports: Mobile, Tablet, Laptop
      * - Case-sensitive string matching
@@ -4094,48 +2922,25 @@ class ProactiveWebCampaignPlugin {
     evaluateDeviceCondition(condition: any, actualValue: any, expectedValue: any): boolean {
         const { operator } = condition;
         
-        console.log(`📱 Evaluating device condition:`);
-        console.log(`   - Operator: ${operator}`);
-        console.log(`   - Actual: "${actualValue}"`);
-        console.log(`   - Expected: "${expectedValue}"`);
-        
         // Safety check: ensure we have strings to work with
         const actualDevice = actualValue ? String(actualValue) : '';
         const expectedDevice = expectedValue ? String(expectedValue) : '';
-        
-        console.log(`   - Actual (string): "${actualDevice}"`);
-        console.log(`   - Expected (string): "${expectedDevice}"`);
-        
+
         let result = false;
         
         // Device only supports "is" operator
         switch (operator) {
             case 'is':
                 result = actualDevice === expectedDevice;
-                console.log(`📊 Device is evaluation: "${actualDevice}" === "${expectedDevice}" = ${result}`);
                 break;
             default:
-                console.log(`⚠️ Unknown device operator: ${operator}`);
-                console.log(`   Supported device operators: is`);
                 return false;
         }
         
-        // Validate device type
-        const validDevices = ['mobile', 'tablet', 'laptop'];
-        if (expectedDevice && !validDevices.includes(expectedDevice)) {
-            console.log(`⚠️ Invalid device type: ${expectedDevice}`);
-            console.log(`   Valid device types: ${validDevices.join(', ')}`);
-        }
-        
-        console.log(`📊 Final device condition result: ${result}`);
         return result;
     }
 
     /**
-     * =====================================================================================
-     *                        🎯 CUSTOM CONDITION EVALUATION ENGINE
-     * =====================================================================================
-     * 
      * Evaluates custom conditions with all 10 supported operators:
      * - equals: Case-sensitive exact match
      * - in: Array membership check  
@@ -4146,16 +2951,8 @@ class ProactiveWebCampaignPlugin {
     evaluateCustomCondition(condition: any, actualValue: any, expectedValue: any): boolean {
         const { operator, column } = condition;
         
-        console.log(`🎯 Evaluating custom condition:`);
-        console.log(`   - Column: ${column}`);
-        console.log(`   - Operator: ${operator}`);
-        console.log(`   - Expected: ${expectedValue} (${typeof expectedValue})`);
-        console.log(`   - Actual: ${actualValue} (${typeof actualValue})`);
-        
         // Handle null actual values
         if (actualValue === null || actualValue === undefined) {
-            console.log(`⚠️ Custom condition has null/undefined actual value`);
-            console.log(`📊 Null value result: false (condition cannot be satisfied)`);
             return false;
         }
         
@@ -4201,10 +2998,6 @@ class ProactiveWebCampaignPlugin {
         }
     }
 
-    // =====================================================================================
-    //                         🔧 CUSTOM OPERATOR IMPLEMENTATIONS
-    // =====================================================================================
-
     /**
      * Evaluates equals operator (case-sensitive)
      */
@@ -4220,7 +3013,6 @@ class ProactiveWebCampaignPlugin {
         }
         
         const result = actual === expected;
-        console.log(`📊 Equals: ${actualValue} === ${expectedValue} → ${result}`);
         return result;
     }
 
@@ -4229,7 +3021,6 @@ class ProactiveWebCampaignPlugin {
      */
     evaluateIn(actualValue: any, expectedValue: any): boolean {
         if (!Array.isArray(expectedValue)) {
-            console.log(`⚠️ 'in' operator expects array, got: ${typeof expectedValue}`);
             return false;
         }
         
@@ -4250,7 +3041,6 @@ class ProactiveWebCampaignPlugin {
             return false;
         });
         
-        console.log(`📊 In: ${actualValue} in [${expectedValue.join(', ')}] → ${result}`);
         return result;
     }
 
@@ -4262,12 +3052,10 @@ class ProactiveWebCampaignPlugin {
         const expected = this.convertToNumber(expectedValue);
         
         if (actual === null || expected === null) {
-            console.log(`⚠️ 'gt' operator requires numeric values`);
             return false;
         }
         
         const result = actual > expected;
-        console.log(`📊 Greater than: ${actual} > ${expected} → ${result}`);
         return result;
     }
 
@@ -4279,12 +3067,10 @@ class ProactiveWebCampaignPlugin {
         const expected = this.convertToNumber(expectedValue);
         
         if (actual === null || expected === null) {
-            console.log(`⚠️ 'ge' operator requires numeric values`);
             return false;
         }
         
         const result = actual >= expected;
-        console.log(`📊 Greater equal: ${actual} >= ${expected} → ${result}`);
         return result;
     }
 
@@ -4296,12 +3082,10 @@ class ProactiveWebCampaignPlugin {
         const expected = this.convertToNumber(expectedValue);
         
         if (actual === null || expected === null) {
-            console.log(`⚠️ 'lt' operator requires numeric values`);
             return false;
         }
         
         const result = actual < expected;
-        console.log(`📊 Less than: ${actual} < ${expected} → ${result}`);
         return result;
     }
 
@@ -4313,28 +3097,25 @@ class ProactiveWebCampaignPlugin {
         const expected = this.convertToNumber(expectedValue);
         
         if (actual === null || expected === null) {
-            console.log(`⚠️ 'le' operator requires numeric values`);
             return false;
         }
         
         const result = actual <= expected;
-        console.log(`📊 Less equal: ${actual} <= ${expected} → ${result}`);
         return result;
     }
 
     /**
      * Evaluates between operator (inclusive range)
+     * 'between' operator requires numeric start and end values
      */
     evaluateBetween(actualValue: any, expectedValue: any): boolean {
         const actual = this.convertToNumber(actualValue);
         
         if (actual === null) {
-            console.log(`⚠️ 'between' operator requires numeric actual value`);
             return false;
         }
         
         if (!expectedValue || typeof expectedValue !== 'object' || !expectedValue.hasOwnProperty('start') || !expectedValue.hasOwnProperty('end')) {
-            console.log(`⚠️ 'between' operator expects {start, end} object, got:`, expectedValue);
             return false;
         }
         
@@ -4342,12 +3123,10 @@ class ProactiveWebCampaignPlugin {
         const end = this.convertToNumber(expectedValue.end);
         
         if (start === null || end === null) {
-            console.log(`⚠️ 'between' operator requires numeric start and end values`);
             return false;
         }
         
         const result = actual >= start && actual <= end;
-        console.log(`📊 Between: ${start} <= ${actual} <= ${end} → ${result}`);
         return result;
     }
 
@@ -4359,7 +3138,6 @@ class ProactiveWebCampaignPlugin {
         const expected = String(expectedValue);
         
         const result = actual.startsWith(expected);
-        console.log(`📊 Begins with: "${actual}".startsWith("${expected}") → ${result}`);
         return result;
     }
 
@@ -4371,7 +3149,6 @@ class ProactiveWebCampaignPlugin {
         const expected = String(expectedValue);
         
         const result = actual.endsWith(expected);
-        console.log(`📊 Ends with: "${actual}".endsWith("${expected}") → ${result}`);
         return result;
     }
 
@@ -4383,7 +3160,6 @@ class ProactiveWebCampaignPlugin {
         const expected = String(expectedValue);
         
         const result = actual.includes(expected);
-        console.log(`📊 Contains: "${actual}".includes("${expected}") → ${result}`);
         return result;
     }
 
@@ -4399,7 +3175,6 @@ class ProactiveWebCampaignPlugin {
         
         const converted = Number(value);
         if (isNaN(converted)) {
-            console.log(`⚠️ Cannot convert "${value}" to number`);
             return null;
         }
         
@@ -4413,36 +3188,18 @@ class ProactiveWebCampaignPlugin {
      * @returns Boolean indicating if groups are satisfied
      */
     evaluateGroupsSatisfaction(groups: any[], groupType: string): boolean {
-        console.log(`\n📊 =================== GROUPS SATISFACTION EVALUATION ===================`);
-        console.log(`📊 Group type: ${groupType}`);
-        console.log(`📊 Number of groups: ${groups.length}`);
-        
         if (!groups || groups.length === 0) {
-            console.log('⚠️ No groups to evaluate');
-            console.log(`📊 =================== GROUPS SATISFACTION RESULT: FALSE ===================\n`);
             return false;
         }
         
         const groupResults = groups.map((group, index) => {
             const result = group.conditions.isSatisfied;
-            console.log(`📊 Group ${index + 1} (${group.id}): ${result ? '✅ SATISFIED' : '❌ NOT SATISFIED'}`);
             return result;
         });
-        
-        console.log(`📊 Group results: [${groupResults.join(', ')}]`);
-        
         const satisfied = groupType === 'AND'
             ? groupResults.every(result => result)
             : groupResults.some(result => result);
-            
-        console.log(`📊 ${groupType} Logic evaluation:`);
-        if (groupType === 'AND') {
-            console.log(`   - All groups must be satisfied: ${satisfied} (${groupResults.filter(r => r).length}/${groupResults.length} satisfied)`);
-        } else {
-            console.log(`   - At least one group must be satisfied: ${satisfied} (${groupResults.filter(r => r).length}/${groupResults.length} satisfied)`);
-        }
-        
-        console.log(`📊 =================== GROUPS SATISFACTION RESULT: ${satisfied ? '✅ SATISFIED' : '❌ NOT SATISFIED'} ===================\n`);
+
         return satisfied;
     }
 
@@ -4452,8 +3209,6 @@ class ProactiveWebCampaignPlugin {
      * @param campId - Campaign ID
      */
     checkCampaignTrigger(campInstanceId: string, campId: string): void {
-        console.log(`🎯 Checking campaign trigger for ${campInstanceId}`);
-        
         let pweData: any = window.sessionStorage.getItem('pwe_data');
         pweData = JSON.parse(pweData) || {};
         
@@ -4463,7 +3218,6 @@ class ProactiveWebCampaignPlugin {
         
         // Check if already triggered
         if (campaignData.isLayoutTriggered) {
-            console.log('⚠️ Campaign already triggered');
             return;
         }
 
@@ -4473,57 +3227,17 @@ class ProactiveWebCampaignPlugin {
         // Check exclusions (if exclusions are satisfied, campaign should NOT trigger)
         const exclusionsSatisfied = campaignData.expected.exclusions.isSatisfied;
         
-        console.log(`\n🎯 =================== CAMPAIGN TRIGGER DECISION ===================`);
-        console.log(`🎯 Campaign ID: ${campInstanceId}`);
-        console.log(`🎯 Rules satisfied: ${rulesSatisfied ? '✅ YES' : '❌ NO'}`);
-        console.log(`🎯 Exclusions satisfied: ${exclusionsSatisfied ? '⚠️ YES (blocks campaign)' : '✅ NO (allows campaign)'}`);
-        
-        // DEBUG: Log detailed campaign data to understand why it's triggering
-        console.log('🔍 DEBUG - Campaign data summary:', {
-            campInstanceId,
-            actual: campaignData.actual.rules,
-            expected: {
-                rules: {
-                    isSatisfied: campaignData.expected.rules.isSatisfied,
-                    groupType: campaignData.expected.rules.groupType,
-                    groupCount: campaignData.expected.rules.groups?.length || 0
-                },
-                exclusions: {
-                    isSatisfied: campaignData.expected.exclusions.isSatisfied,
-                    groupType: campaignData.expected.exclusions.groupType,
-                    groupCount: campaignData.expected.exclusions.groups?.length || 0
-                }
-            }
-        });
-        
         const shouldTrigger = rulesSatisfied && !exclusionsSatisfied;
-        console.log(`🎯 Final decision: ${shouldTrigger ? '🎉 TRIGGER CAMPAIGN' : '❌ DO NOT TRIGGER'}`);
         
         if (shouldTrigger) {
-            console.log('🎉 Campaign trigger conditions met!');
-            console.log('🎉 Marking campaign as triggered and sending API event...');
-            
             // Mark as triggered
             campaignData.isLayoutTriggered = true;
             pweData[campInstanceId] = campaignData;
             window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
             
-            // Ensure satisfaction flags are properly updated when campaign is triggered
-            console.log('🔄 *** New evaluation logic triggered campaign - ensuring satisfaction flags are updated ***');
-            
             // Send API event (using existing logic)
             this.triggerCampaignEvent(campInstanceId, campId);
-        } else {
-            console.log('❌ Campaign trigger conditions not met');
-            if (!rulesSatisfied) {
-                console.log('❌ Reason: Rules not satisfied - campaign will not trigger');
-            }
-            if (exclusionsSatisfied) {
-                console.log('❌ Reason: Exclusions satisfied - campaign blocked');
-            }
         }
-        
-        console.log(`🎯 =================== CAMPAIGN TRIGGER DECISION END ===================\n`);
     }
 
     /**
@@ -4532,35 +3246,17 @@ class ProactiveWebCampaignPlugin {
      * @param campInstanceId - Campaign instance ID
      */
     updateSatisfactionFlags(campInstanceId: string): void {
-        console.log(`🏁 =================== UPDATING SATISFACTION FLAGS ===================`);
-        console.log(`🏁 Campaign: ${campInstanceId}`);
-        
         let pweData: any = window.sessionStorage.getItem('pwe_data');
         pweData = JSON.parse(pweData) || {};
         
         if (!pweData[campInstanceId]) {
-            console.log(`⚠️ No campaign data found for ${campInstanceId}`);
             return;
         }
 
         const campaignData = pweData[campInstanceId];
         
-        // Log current state before update
-        console.log(`🏁 BEFORE UPDATE - Current flags:`, {
-            rules: {
-                isSatisfied: campaignData.expected.rules.isSatisfied,
-                groupCount: campaignData.expected.rules.groups?.length || 0
-            },
-            exclusions: {
-                isSatisfied: campaignData.expected.exclusions.isSatisfied,
-                groupCount: campaignData.expected.exclusions.groups?.length || 0
-            },
-            isLayoutTriggered: campaignData.isLayoutTriggered
-        });
-        
         // Update rules satisfaction flags
         if (campaignData.expected.rules.groups) {
-            console.log(`🏁 Updating ${campaignData.expected.rules.groups.length} rule groups`);
             campaignData.expected.rules.groups.forEach((group: any, index: number) => {
                 if (group.conditions) {
                     const oldSatisfied = group.conditions.isSatisfied;
@@ -4568,7 +3264,6 @@ class ProactiveWebCampaignPlugin {
                         group.conditions,
                         campaignData.actual.rules
                     );
-                    console.log(`🏁 Group ${index + 1} (${group.id}): ${oldSatisfied} → ${group.conditions.isSatisfied}`);
                 }
             });
             
@@ -4578,12 +3273,10 @@ class ProactiveWebCampaignPlugin {
                 campaignData.expected.rules.groups,
                 campaignData.expected.rules.groupType
             );
-            console.log(`🏁 Overall rules satisfaction: ${oldRulesSatisfied} → ${campaignData.expected.rules.isSatisfied}`);
         }
         
         // Update exclusions satisfaction flags
         if (campaignData.expected.exclusions.groups && campaignData.expected.exclusions.groups.length > 0) {
-            console.log(`🏁 Updating ${campaignData.expected.exclusions.groups.length} exclusion groups`);
             campaignData.expected.exclusions.groups.forEach((group: any, index: number) => {
                 if (group.conditions) {
                     const oldSatisfied = group.conditions.isSatisfied;
@@ -4591,7 +3284,6 @@ class ProactiveWebCampaignPlugin {
                         group.conditions,
                         campaignData.actual.exclusions
                     );
-                    console.log(`🏁 Exclusion Group ${index + 1} (${group.id}): ${oldSatisfied} → ${group.conditions.isSatisfied}`);
                 }
             });
             
@@ -4601,29 +3293,11 @@ class ProactiveWebCampaignPlugin {
                 campaignData.expected.exclusions.groups,
                 campaignData.expected.exclusions.groupType
             );
-            console.log(`🏁 Overall exclusions satisfaction: ${oldExclusionsSatisfied} → ${campaignData.expected.exclusions.isSatisfied}`);
-        } else {
-            console.log(`🏁 No exclusions to update`);
         }
         
         // Save updated data
         pweData[campInstanceId] = campaignData;
         window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
-        
-        // Log final state after update
-        console.log(`🏁 AFTER UPDATE - Final flags:`, {
-            rules: {
-                isSatisfied: campaignData.expected.rules.isSatisfied,
-                groupCount: campaignData.expected.rules.groups?.length || 0
-            },
-            exclusions: {
-                isSatisfied: campaignData.expected.exclusions.isSatisfied,
-                groupCount: campaignData.expected.exclusions.groups?.length || 0
-            },
-            isLayoutTriggered: campaignData.isLayoutTriggered
-        });
-        
-        console.log(`🏁 =================== SATISFACTION FLAGS UPDATE COMPLETE ===================\n`);
     }
 
     /**
@@ -4632,8 +3306,6 @@ class ProactiveWebCampaignPlugin {
      * @param campId - Campaign ID
      */
     triggerCampaignEvent(campInstanceId: string, campId: string): void {
-        console.log(`🚀 Triggering campaign event for ${campInstanceId}`);
-        
         const payload: any = {
             'event_name': 'pwe_event',
             'resourceid': '/pwe_message',
@@ -4644,7 +3316,7 @@ class ProactiveWebCampaignPlugin {
                 'chatBot': this.hostInstance._botInfo.name,
                 'taskBotId': this.hostInstance._botInfo._id
             },
-            'ruleInfo': {isAllRulesSatisfied: true}, // TODO: Populate with actual rule data
+            'ruleInfo': {isAllRulesSatisfied: true},
             'campInfo': {
                 'campId': campId,
                 'campInstanceId': campInstanceId
@@ -4659,14 +3331,11 @@ class ProactiveWebCampaignPlugin {
      * @param pageObject - Page object with url and pageName
      * @param type - Event type
      */
-    sendEventNew(pageObject: any, type: any): void {
-        console.log('🌟 New sendEvent triggered:', { pageObject, type });
-        
+    sendEvent(pageObject: any, type: any): void {
         // Get active campaigns for current page
         const activeCampaigns = this.getActiveCampaigns(pageObject.url, pageObject.pageName);
         
         if (activeCampaigns.length === 0) {
-            console.log('⚠️ No active campaigns for current page');
             return;
         }
         
@@ -4675,165 +3344,5 @@ class ProactiveWebCampaignPlugin {
     }
 
 }
-
-/* 
-==================================================================================
-                            📋 TEST SCENARIOS & USE CASES
-==================================================================================
-
-🎯 TESTING OVERVIEW:
-This refactored ProactiveWebCampaignPlugin supports complex rule evaluation with:
-- Groups and conditions (AND/OR logic)
-- Exclusions to prevent campaign triggering
-- Multiple rule types: timeSpent, pageVisitCount, user, country, city, hoverOn
-- Website targeting with URL/page title matching
-- Goal tracking and achievement
-
-==================================================================================
-                                🧪 TEST SCENARIOS
-==================================================================================
-
-1️⃣ BASIC CAMPAIGN ACTIVATION:
-   📝 Test: Single rule campaign with OR logic
-   📋 Setup: Campaign with timeSpent >= 30 seconds
-   🎯 Expected: Campaign triggers after 30 seconds on matching page
-   🔍 Validate: Check console logs for rule evaluation and campaign trigger
-
-2️⃣ COMPLEX RULE EVALUATION:
-   📝 Test: Multiple rules with AND logic
-   📋 Setup: Campaign with timeSpent >= 30 AND pageVisitCount >= 3
-   🎯 Expected: Campaign triggers only when both conditions are met
-   🔍 Validate: Monitor actual values in sessionStorage
-
-3️⃣ EXCLUSION RULES:
-   📝 Test: Campaign with exclusion conditions
-   📋 Setup: Campaign with rule (user = 'known') but exclusion (country = 'US')
-   🎯 Expected: Campaign should NOT trigger for known US users
-   🔍 Validate: Check exclusion evaluation in console
-
-4️⃣ WEBSITE TARGETING:
-   📝 Test: URL and page title matching
-   📋 Setup: Campaign targeting pages with URL containing 'test'
-   🎯 Expected: Campaign only evaluates on pages with 'test' in URL
-   🔍 Validate: Check website matching logs
-
-5️⃣ HOVER INTERACTIONS:
-   📝 Test: HoverOn rule with element selector
-   📋 Setup: Campaign with hoverOn rule for button with ID 'titleBtn1'
-   🎯 Expected: Campaign triggers after hovering on button for 2 seconds
-   🔍 Validate: Check hover event listeners and timing
-
-6️⃣ ENGAGEMENT HOURS:
-   📝 Test: Time-based campaign activation
-   📋 Setup: Campaign with custom engagement hours (9 AM - 5 PM)
-   🎯 Expected: Campaign only active during specified hours
-   🔍 Validate: Check engagement hour validation
-
-7️⃣ JOURNEY TRACKING:
-   📝 Test: Sequential page visit requirements
-   📋 Setup: Campaign with 'then' operator for page journey
-   🎯 Expected: Campaign triggers only after visiting pages in sequence
-   🔍 Validate: Monitor page visit history and journey validation
-
-8️⃣ GOAL ACHIEVEMENT:
-   📝 Test: Goal tracking and completion
-   📋 Setup: Campaign with goal for reaching specific page
-   🎯 Expected: Goal marked as achieved when target page is visited
-   🔍 Validate: Check goal evaluation and API calls
-
-9️⃣ MULTIPLE CAMPAIGNS:
-   📝 Test: Multiple campaigns with different rules
-   📋 Setup: 3 campaigns with different targeting and rules
-   🎯 Expected: Each campaign evaluated independently
-   🔍 Validate: Check campaign isolation and proper evaluation
-
-🔟 ERROR HANDLING:
-   📝 Test: Invalid data and edge cases
-   📋 Setup: Malformed campaign data, missing selectors
-   🎯 Expected: Graceful degradation with error logging
-   🔍 Validate: Check error handling and fallback behavior
-
-==================================================================================
-                                📊 USE CASES
-==================================================================================
-
-🏪 E-COMMERCE SCENARIOS:
-   • Cart abandonment: Trigger after 30s on cart page with items
-   • Product interest: Trigger after hovering on product for 3s
-   • Checkout assistance: Trigger for new users on checkout page
-   • Seasonal promotions: Time-based campaigns for holidays
-
-🏢 SaaS APPLICATION:
-   • Feature onboarding: Trigger after 5 page visits for new users
-   • Upgrade prompts: Trigger for free users after 10 feature uses
-   • Help assistance: Trigger when user hovers on help icons
-   • Regional offers: Country-based campaign targeting
-
-📰 CONTENT WEBSITES:
-   • Newsletter signup: Trigger after reading 3 articles
-   • Premium content: Trigger for anonymous users on premium pages
-   • Reading engagement: Trigger after 2 minutes on article pages
-   • Regional news: City-based content recommendations
-
-🎓 EDUCATIONAL PLATFORMS:
-   • Course recommendations: Trigger after viewing 5 course pages
-   • Study reminders: Time-based triggers for enrolled students
-   • Help assistance: Trigger when struggling with assignments
-   • Progress celebration: Trigger after completing milestones
-
-==================================================================================
-                                🔧 DEBUGGING GUIDE
-==================================================================================
-
-📊 CONSOLE MONITORING:
-   • Look for emoji-prefixed logs (🏗️, 📋, ✅, ⚠️, 🎯)
-   • Monitor sessionStorage 'pwe_data' for campaign states
-   • Check rule evaluation results and satisfaction status
-   • Validate API calls and payload data
-
-🔍 COMMON ISSUES:
-   • Campaign not triggering: Check website matching and engagement hours
-   • Rules not evaluating: Verify rule structure and condition types
-   • Hover not working: Check element selectors and DOM availability
-   • Performance issues: Monitor loop iterations and memory usage
-
-📝 DEVELOPMENT TIPS:
-   • Use browser dev tools to inspect sessionStorage
-   • Set breakpoints in key methods for detailed debugging
-   • Test with different user scenarios and page combinations
-   • Validate campaign data structure before implementation
-
-==================================================================================
-                                🚀 DEPLOYMENT CHECKLIST
-==================================================================================
-
-✅ TESTING CHECKLIST:
-   □ All console logs working correctly
-   □ SessionStorage data structure valid
-   □ Website matching working for all scenarios
-   □ Rule evaluation logic correct for AND/OR
-   □ Exclusion rules preventing campaigns correctly
-   □ Hover listeners attached to correct elements
-   □ API calls triggered with correct payloads
-   □ Goal tracking working properly
-   □ Multiple campaigns isolated correctly
-   □ Error handling graceful for edge cases
-
-✅ PERFORMANCE CHECKLIST:
-   □ No memory leaks in event listeners
-   □ Efficient DOM queries and caching
-   □ Minimal sessionStorage operations
-   □ Optimized loop iterations
-   □ Proper cleanup on page unload
-
-✅ COMPATIBILITY CHECKLIST:
-   □ Works with existing PWC infrastructure
-   □ Backward compatible with current campaigns
-   □ No conflicts with other plugins
-   □ Proper TypeScript typing
-   □ Cross-browser compatibility
-
-==================================================================================
-*/
 
 export default ProactiveWebCampaignPlugin
