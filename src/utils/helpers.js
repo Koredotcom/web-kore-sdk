@@ -426,7 +426,7 @@ class KoreHelpers{
                 }
                 // Matches link markup [test](http://google.com/)
                 //var _matchLink = txtArr[i].match(/\[([^\]]+)\](|\s)+\(([^\)])+\)/g);
-                var _matchLink = txtArr[i].match(/\[([^\]]+)\](|\s)\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\)/g);
+                var _matchLink = txtArr[i].match(/\[([^\]]+)\](|\s)\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\)?/g);
                 if (_matchLink && _matchLink.length > 0) {
                     for (j = 0; j < _matchLink.length; j++) {
                         var _linkTxt = _matchLink[j].substring(1, _matchLink[j].indexOf(']'));
