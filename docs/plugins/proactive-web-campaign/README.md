@@ -29,6 +29,27 @@ chatWindowInstance.installPlugin(new ProactiveWebCampaignPlugin({ dependentPlugi
 
 ```
 
+## Example to Emit Custom JSON Data for Proactive Web Campaign Plugin. Event Name: "pwcCustomData"
+
+```js
+
+// Any Valid JSON
+let custom_data = {
+  "userId": "abc123",
+  "userAttributes": {
+    "age": 29,
+    "location": "New York"
+  }
+  "details": {
+    "campaignName": "Summer Sale 2025",
+    "discountOffered": 15
+  }
+}
+
+chatWindowInstance.emit('pwcCustomData', {data: {...custom_data}});
+
+```
+
 
 ## For UMD Installations
 <details>
