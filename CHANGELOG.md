@@ -1,3 +1,16 @@
+### 11.16.0
+* Release July 26, 2025
+* Features
+  * added support for read receipts and agent name for third party live chat(Salesforce). Please refer [Platfrom Salesforce Agent integration docs](https://docs.kore.ai/xo/app-settings/integrations/agents/configuring-the-salesforce-agent/#configure-messaging-for-in-app-and-web-miaw) for more details
+  * enhanced the Proactive Web Campaign Plugin. The plugin has been updated to support exclusion rules in addition to the existing rules and evaluating custom data. Please refer [here](docs/plugins/proactive-web-campaign/README.md#sending-custom-data-to-the-proactive-web-campaign-plugin) for more details about passing custom data.
+* Documentation
+  * updated events with example code snippets
+  * updated faqs
+  * updated proactive web campaing plugin instructions
+* Bug fixes
+  * kore markdown link issue fix
+  * message bubble corners issue fix
+
 ### 11.15.1
 * Release July 12, 2025
 * Documentation
