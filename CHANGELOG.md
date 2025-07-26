@@ -1,3 +1,8 @@
+### 10.17.0
+- SDK Release July 26, 2025
+* Bug fixes
+  * kore markdown link issue fix
+
 ### 10.16.1
 - SDK Release July 12, 2025
 * Stable release
