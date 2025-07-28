@@ -112,7 +112,11 @@ chatConfig = {
             batchSize: 10  // To configure the number of messages to fetch
         }
     },
-    enableEmojiShortcut: true
+    enableEmojiShortcut: true,
+    clickToAgent: {   // set url and flow id
+        url: '',
+        flowId: ''
+    }
 };
 
 export default chatConfig;

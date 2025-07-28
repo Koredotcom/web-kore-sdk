@@ -9,6 +9,8 @@ export function ChatWidgetHeader(props: any) {
     const hostInstance = props.hostInstance;
     const iconHelper = new IconsManager();
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
+    const [showAgentDropdown, setShowAgentDropdown] = useState(false);
+    
     hostInstance.on('onBrandingUpdate', function (event: any) {
         updateBrandingInfo({...event.brandingData})
     });
@@ -22,6 +24,30 @@ export function ChatWidgetHeader(props: any) {
     const handleHeaderIcon = (data: any) => {
         hostInstance.sendMessage(data);
     }
+
+    const toggleAgentDropdown = (event: any) => {
+        event.stopPropagation();
+        setShowAgentDropdown(!showAgentDropdown);
+    }
+
+    const handleAgentOption = (action: string) => {
+        setShowAgentDropdown(false);
+        handleHeaderIcon('Chat With Agent');
+    }
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: any) => {
+            if (showAgentDropdown && !event.target.closest('.agent-dropdown-wrapper')) {
+                setShowAgentDropdown(false);
+            }
+        };
+
+        document.addEventListener('click', handleClickOutside);
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [showAgentDropdown]);
 
     useEffect(() => {
         hostInstance.eventManager.removeEventListener('.btn-reconnect', 'click');
@@ -140,14 +166,37 @@ export function ChatWidgetHeader(props: any) {
                         <path d="M12.8333 5.83333C12.8333 5.83333 11.6638 4.23979 10.7136 3.28898C9.76343 2.33816 8.4504 1.75 7 1.75C4.1005 1.75 1.75 4.1005 1.75 7C1.75 9.89949 4.1005 12.25 7 12.25C9.39347 12.25 11.4129 10.6483 12.0448 8.45833M12.8333 5.83333V2.33333M12.8333 5.83333H9.33333" stroke="#697586" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button> }
-                { brandingInfo.header.buttons.live_agent.show && <button title={hostInstance.config.botMessages.agent} className="btn-action agent-chat" type="button" onClick={(event) =>handleHeaderIcon(brandingInfo.header.buttons.live_agent.action.value)}>
-                    {/* <figure>
-                            <img src={iconHelper.getIcon('support')} alt="back button" />
-                        </figure> */}
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M9.32692 1.25C2.94321 1.25 2.61719 5.45147 2.59615 8.79057C1.81791 9.09555 1.25 9.84225 1.25 10.6731C1.25 11.7458 2.05454 13.3654 3.26923 13.3654C3.3744 13.3654 3.48483 13.3549 3.59525 13.3444C4.58383 16.41 7.02374 18.75 9.32692 18.75C10.4259 18.75 11.5565 18.2031 12.5503 17.2987C12.1454 17.3618 11.7458 17.4038 11.3462 17.4038H9.32692C7.74414 17.4038 5.53561 15.4425 4.76262 12.524L4.54177 11.7563L3.91076 11.9141C3.52163 12.014 3.32182 12.0192 3.26923 12.0192C3.05364 11.9929 2.59615 11.2252 2.59615 10.6731C2.59615 10.3471 2.93795 10.021 3.3113 10L3.94231 9.95793V9.32692C3.94231 5.14123 4.30514 2.59615 9.32692 2.59615C9.48468 2.59615 11.3724 2.60141 12.6187 2.60667L12.1612 3.53741C12.0928 3.70042 11.8457 4.2473 10.9886 4.95192C10 5.77224 8.28576 6.63462 5.28846 6.63462V7.98077C8.54868 7.98077 10.6152 7.00796 11.851 5.99309C12.5083 5.44621 12.9079 4.90986 13.1603 4.49444C14.5433 5.19907 14.7115 6.59781 14.7115 9.32692V12.645C14.559 14.3382 12.2348 14.7115 11.3462 14.7115H10.6731C10.6731 13.9701 10.0684 13.3654 9.32692 13.3654C8.58549 13.3654 7.98077 13.9701 7.98077 14.7115C7.98077 15.453 8.58549 16.0577 9.32692 16.0577H11.3462C13.2024 16.0577 15.2479 15.2689 15.8736 13.5337H16.7308C17.8403 13.5337 18.75 12.6239 18.75 11.5144V10C18.75 8.89047 17.8403 7.98077 16.7308 7.98077H16.0314C15.963 6.05093 15.6318 4.23678 13.7861 3.29026L14.7852 1.27103L13.7019 1.26578C13.7019 1.26578 9.56355 1.25 9.32692 1.25ZM7.30769 9.32692C6.93434 9.32692 6.63462 9.62665 6.63462 10C6.63462 10.3733 6.93434 10.6731 7.30769 10.6731C7.68104 10.6731 7.98077 10.3733 7.98077 10C7.98077 9.62665 7.68104 9.32692 7.30769 9.32692ZM11.3462 9.32692C10.9728 9.32692 10.6731 9.62665 10.6731 10C10.6731 10.3733 10.9728 10.6731 11.3462 10.6731C11.7195 10.6731 12.0192 10.3733 12.0192 10C12.0192 9.62665 11.7195 9.32692 11.3462 9.32692ZM16.0577 9.32692H16.7308C17.1094 9.32692 17.4038 9.62139 17.4038 10V11.5144C17.4038 11.893 17.1094 12.1875 16.7308 12.1875H16.0577V9.32692Z" fill="#697586"/>
-                        </svg>
-                </button> }
+                { brandingInfo.header.buttons.live_agent.show && 
+                    <div className="agent-dropdown-wrapper">
+                        <button title={hostInstance.config.botMessages.agent} className="btn-action agent-chat" type="button" onClick={toggleAgentDropdown}>
+                            {/* <figure>
+                                    <img src={iconHelper.getIcon('support')} alt="back button" />
+                                </figure> */}
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path d="M9.32692 1.25C2.94321 1.25 2.61719 5.45147 2.59615 8.79057C1.81791 9.09555 1.25 9.84225 1.25 10.6731C1.25 11.7458 2.05454 13.3654 3.26923 13.3654C3.3744 13.3654 3.48483 13.3549 3.59525 13.3444C4.58383 16.41 7.02374 18.75 9.32692 18.75C10.4259 18.75 11.5565 18.2031 12.5503 17.2987C12.1454 17.3618 11.7458 17.4038 11.3462 17.4038H9.32692C7.74414 17.4038 5.53561 15.4425 4.76262 12.524L4.54177 11.7563L3.91076 11.9141C3.52163 12.014 3.32182 12.0192 3.26923 12.0192C3.05364 11.9929 2.59615 11.2252 2.59615 10.6731C2.59615 10.3471 2.93795 10.021 3.3113 10L3.94231 9.95793V9.32692C3.94231 5.14123 4.30514 2.59615 9.32692 2.59615C9.48468 2.59615 11.3724 2.60141 12.6187 2.60667L12.1612 3.53741C12.0928 3.70042 11.8457 4.2473 10.9886 4.95192C10 5.77224 8.28576 6.63462 5.28846 6.63462V7.98077C8.54868 7.98077 10.6152 7.00796 11.851 5.99309C12.5083 5.44621 12.9079 4.90986 13.1603 4.49444C14.5433 5.19907 14.7115 6.59781 14.7115 9.32692V12.645C14.559 14.3382 12.2348 14.7115 11.3462 14.7115H10.6731C10.6731 13.9701 10.0684 13.3654 9.32692 13.3654C8.58549 13.3654 7.98077 13.9701 7.98077 14.7115C7.98077 15.453 8.58549 16.0577 9.32692 16.0577H11.3462C13.2024 16.0577 15.2479 15.2689 15.8736 13.5337H16.7308C17.8403 13.5337 18.75 12.6239 18.75 11.5144V10C18.75 8.89047 17.8403 7.98077 16.7308 7.98077H16.0314C15.963 6.05093 15.6318 4.23678 13.7861 3.29026L14.7852 1.27103L13.7019 1.26578C13.7019 1.26578 9.56355 1.25 9.32692 1.25ZM7.30769 9.32692C6.93434 9.32692 6.63462 9.62665 6.63462 10C6.63462 10.3733 6.93434 10.6731 7.30769 10.6731C7.68104 10.6731 7.98077 10.3733 7.98077 10C7.98077 9.62665 7.68104 9.32692 7.30769 9.32692ZM11.3462 9.32692C10.9728 9.32692 10.6731 9.62665 10.6731 10C10.6731 10.3733 10.9728 10.6731 11.3462 10.6731C11.7195 10.6731 12.0192 10.3733 12.0192 10C12.0192 9.62665 11.7195 9.32692 11.3462 9.32692ZM16.0577 9.32692H16.7308C17.1094 9.32692 17.4038 9.62139 17.4038 10V11.5144C17.4038 11.893 17.1094 12.1875 16.7308 12.1875H16.0577V9.32692Z" fill="#697586"/>
+                                </svg>
+                        </button>
+                        {showAgentDropdown && (
+                            <div className="agent-dropdown-menu">
+                                <ul>
+                                    <li id="call-to-agent">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                            <path d="M15.2 11.4C15.2 11.6122 15.1157 11.8157 14.9657 11.9657C14.8157 12.1157 14.6122 12.2 14.4 12.2H1.6C1.38783 12.2 1.18434 12.1157 1.03431 11.9657C0.884285 11.8157 0.8 11.6122 0.8 11.4V4.6C0.8 4.38783 0.884285 4.18434 1.03431 4.03431C1.18434 3.88429 1.38783 3.8 1.6 3.8H14.4C14.6122 3.8 14.8157 3.88429 14.9657 4.03431C15.1157 4.18434 15.2 4.38783 15.2 4.6V11.4Z" stroke="#697586" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M0.8 5.6L8 10L15.2 5.6" stroke="#697586" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        Call to Agent
+                                    </li>
+                                    <li onClick={() => handleAgentOption('chat')}>
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                            <path d="M14.5 8.5C14.5 9.56087 14.0786 10.5783 13.3284 11.3284C12.5783 12.0786 11.5609 12.5 10.5 12.5H3.5L1 15V3.5C1 2.43913 1.42143 1.42172 2.17157 0.671573C2.92172 -0.0785766 3.93913 -0.5 5 -0.5H10.5C11.5609 -0.5 12.5783 -0.0785766 13.3284 0.671573C14.0786 1.42172 14.5 2.43913 14.5 3.5V8.5Z" stroke="#697586" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        Chat With Agent
+                                    </li>
+                                </ul>
+                            </div>
+                        )}
+                    </div>
+                }
                 { brandingInfo.header.buttons.close.show && <button title={hostInstance.config.botMessages.close} className="btn-action btn-action-close" type="button">
                     {/* <figure>
                         <img src={iconHelper.getIcon('close_large')} alt="back button" />
