@@ -271,7 +271,7 @@ const BrandingJSON = {
       "live_agent": {
         "show": true,
         "action": {
-          "type": "postback|url",
+          "type": "chat",
           "value": "connect to agent",
           "icon": ""
         }
