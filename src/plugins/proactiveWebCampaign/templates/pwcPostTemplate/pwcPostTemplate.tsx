@@ -6,7 +6,7 @@ export function Post(props: any) {
     
     if (msgData.type == 'pwe_message' && msgData.body.campInfo?.webCampaignType && msgData.body.campInfo?.webCampaignType == 'post' && msgData?.body?.layoutDesign) {
         const layoutDesign = msgData.body?.layoutDesign;
-        let postClass = 'campaign-post-banner-data-sec';
+        let postClass = 'pwc-active-campaign-template campaign-post-banner-data-sec';
         if (layoutDesign?.size == 'small') {
             postClass = postClass + ' small-post-banner';
         }

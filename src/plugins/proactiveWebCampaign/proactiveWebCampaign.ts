@@ -3323,6 +3323,12 @@ class ProactiveWebCampaignPlugin {
      * @param campId - Campaign ID
      */
     triggerCampaignEvent(campInstanceId: string, campId: string): void {
+        console.log('triggerCampaignEvent: ', campInstanceId);
+        // If any campaign template is active, do not trigger campaign event
+        if(this.isActiveCampaignTemplate()){
+            console.log('campaign template is active, do not trigger campaign event, campInstanceId:', campInstanceId);
+            return;
+        }
         // Generate unique browser session ID for this campaign trigger session
         this.browserSessionId = this.generateBrowserSessionId();
         const payload: any = {
@@ -3346,6 +3352,16 @@ class ProactiveWebCampaignPlugin {
         };
         
         this.sendApiEvent(payload, '/pweevents');
+    }
+
+    /**
+     * Checks if any campaign template is active
+     * @returns Boolean indicating if any campaign template is active
+     */
+    isActiveCampaignTemplate(): boolean{
+        let selector = '.pwc-active-campaign-template'; // class available on DOM after campaign template is rendered
+        let activeCampaignTemplate = document.querySelector(selector);
+        return activeCampaignTemplate ? true : false;
     }
 
     /**

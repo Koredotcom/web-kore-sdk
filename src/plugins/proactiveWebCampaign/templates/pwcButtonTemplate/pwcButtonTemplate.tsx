@@ -7,7 +7,7 @@ export function Button(props: any) {
 
     if (msgData.type == 'pwe_message' && msgData.body.campInfo?.webCampaignType && msgData.body.campInfo?.webCampaignType == 'button' && msgData?.body?.layoutDesign) {
         const layoutDesign = msgData.body?.layoutDesign;
-        let buttonClass = 'campaign-post-button-wrapper';
+        let buttonClass = 'pwc-active-campaign-template campaign-post-button-wrapper';
         if (layoutDesign?.placement == 'right') {
             buttonClass = buttonClass + ' campaign-post-button-wrapper-right-position';
         }

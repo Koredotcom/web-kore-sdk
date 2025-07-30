@@ -95,7 +95,7 @@ export function Chat(props: any) {
     }
 
     return(
-        <div>{!isAcceptTriggered && <div className="content-info">
+        <div>{!isAcceptTriggered && <div className="pwc-active-campaign-template content-info">
             {pwcCampaign.data?.messages.map((ele: any, ind: any) => (
                 <div className="text-content animation-slide-up" role="contentinfo" aria-labelledby="helojohn">
                     <div className="help-text-content">

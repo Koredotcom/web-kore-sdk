@@ -6,7 +6,7 @@ export function Banner(props: any) {
 
     if (msgData.type == 'pwe_message' && msgData.body.campInfo?.webCampaignType && msgData.body.campInfo?.webCampaignType == 'banner' && msgData?.body?.layoutDesign) {
         const layoutDesign = msgData.body?.layoutDesign;
-        let bannerClass = 'campaign-banner-sec';
+        let bannerClass = 'pwc-active-campaign-template campaign-banner-sec';
         if (layoutDesign.pattern == 'floating') {
             bannerClass = bannerClass + ' floating-banner';
         }
