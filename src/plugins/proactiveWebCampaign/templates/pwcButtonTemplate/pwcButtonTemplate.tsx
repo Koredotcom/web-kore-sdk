@@ -7,6 +7,9 @@ export function Button(props: any) {
 
     if (msgData.type == 'pwe_message' && msgData.body.campInfo?.webCampaignType && msgData.body.campInfo?.webCampaignType == 'button' && msgData?.body?.layoutDesign) {
         const layoutDesign = msgData.body?.layoutDesign;
+        // "pwc-active-campaign-template" class is added to the DOM after the campaign template is rendered
+        // This class is used to identify the campaign template and prevent the sendApiEvent from getting triggered multiple times
+        // DONOT REMOVE THIS CLASS
         let buttonClass = 'pwc-active-campaign-template campaign-post-button-wrapper';
         if (layoutDesign?.placement == 'right') {
             buttonClass = buttonClass + ' campaign-post-button-wrapper-right-position';
