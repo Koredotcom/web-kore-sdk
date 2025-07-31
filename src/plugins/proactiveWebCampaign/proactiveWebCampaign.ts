@@ -2685,7 +2685,7 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Updates individual condition satisfaction states with different persistence logic for rules vs exclusions
-     * RULES: Selective persistence (pageVisitCount, country, city persist; user, timeSpent, hoverOn dynamic)
+     * RULES: Selective persistence (country, city persist; pageVisitCount, user, timeSpent, hoverOn dynamic)
      * EXCLUSIONS: Always dynamic re-evaluation (no persistence for any condition type)
      * @param groupConditions - Group conditions object  
      * @param actualValues - Actual values to compare against
@@ -2721,14 +2721,8 @@ class ProactiveWebCampaignPlugin {
                     } else {
                         // RULES: SELECTIVE PERSISTENCE LOGIC
                         if (column === 'pageVisitCount') {
-                            // pageVisitCount: PERSIST once satisfied
-                            if (previousSatisfied === true) {
-                                condition.isSatisfied = true;
-                            } else if (currentResult === true) {
-                                condition.isSatisfied = true;
-                            } else {
-                                condition.isSatisfied = false;
-                            }
+                            // pageVisitCount: ALWAYS DYNAMIC (evaluate against live data for operators 'equals' and 'ge')
+                            condition.isSatisfied = currentResult;
                         } else if (column === 'country' || column === 'city') {
                             // country, city: PERSIST once satisfied (browser session doesn't change location)
                             if (previousSatisfied === true) {
@@ -2792,6 +2786,10 @@ class ProactiveWebCampaignPlugin {
                     break;
                 case 'not':
                     result = actualValue !== value; // Strict not equal
+                    break;
+                case 'ge':
+                    // Greater than or equal operator (primarily for pageVisitCount)
+                    result = this.evaluateGreaterEqual(actualValue, value);
                     break;
                 default:
                     return false;
