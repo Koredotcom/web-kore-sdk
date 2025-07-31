@@ -41,6 +41,10 @@ class ProactiveWebCampaignPlugin {
     
     // Maximum flattening depth for performance safety
     static readonly MAX_FLATTEN_DEPTH = 10;
+
+    // This flag is used to prevent the sendApiEvent from getting triggered multiple times
+    // As multiple campaign templates cannot be rendered at the same time
+    isPendingSendAPIEvent: boolean = false;
     
     constructor(config: any) {
         config = config || {};
@@ -187,6 +191,8 @@ class ProactiveWebCampaignPlugin {
                         } else {
                             document.querySelector(me.hostInstance.config.pwcConfig.container).appendChild(htmlEle);
                         }
+                        // Reset the flag to allow the next campaign template to be rendered
+                        this.isPendingSendAPIEvent = false;
                     }
                 }
                 if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType == 'chat' && data.body?.layoutDesign && this.browserSessionId && this.enablePWC) {
@@ -210,6 +216,8 @@ class ProactiveWebCampaignPlugin {
                         me.hostInstance.pwcInfo.chatData = {};
                         me.hostInstance.pwcInfo.chatData.enable = true;
                         me.hostInstance.pwcInfo.chatData.data = data.body.layoutDesign;
+                        // Reset the flag to allow the next campaign template to be rendered
+                        this.isPendingSendAPIEvent = false;
                     }
                 }
             }
@@ -3323,12 +3331,11 @@ class ProactiveWebCampaignPlugin {
      * @param campId - Campaign ID
      */
     triggerCampaignEvent(campInstanceId: string, campId: string): void {
-        console.log('triggerCampaignEvent: ', campInstanceId);
         // If any campaign template is active, do not trigger campaign event
-        if(this.isActiveCampaignTemplate()){
-            console.log('campaign template is active, do not trigger campaign event, campInstanceId:', campInstanceId);
+        if(this.isActiveCampaignTemplate() || this.isPendingSendAPIEvent){
             return;
         }
+        this.isPendingSendAPIEvent = true;
         // Generate unique browser session ID for this campaign trigger session
         this.browserSessionId = this.generateBrowserSessionId();
         const payload: any = {
