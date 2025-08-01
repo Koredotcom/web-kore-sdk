@@ -52,6 +52,10 @@ class ProactiveWebCampaignPlugin {
         startTime: number;
         expiryTime: number;
     } = { isActive: false, startTime: 0, expiryTime: 0 };
+
+    // This flag is used to prevent the same visitor from chatting with the bot multiple times
+    // This flag is used to block the templates from rendering if the visitor is already chatting with the bot
+    isVisitorAlreadyChatting: boolean = false;
     
     constructor(config: any) {
         config = config || {};
@@ -142,6 +146,7 @@ class ProactiveWebCampaignPlugin {
                 if (data.type == 'pwe_message' && data.event_name == 'pwe_verify') {
                     if (data.body.isEnabled) {
                         this.enablePWC = true;
+                        this.isVisitorAlreadyChatting = data?.isVisitorAlreadyChatting || false;
                         this.campInfo = data.body.campInfo || [];
                         me.hostInstance.campInfo = data.body.campInfo;
                         
@@ -194,6 +199,7 @@ class ProactiveWebCampaignPlugin {
                         this.campInfo = [];
                     }
                 }
+                // Banner, Post, Button Templates
                 if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType !== 'chat' && this.browserSessionId && this.enablePWC) {
                     // Check browser_session_id to ensure template is shown only in the triggering browser tab
                     const receivedBrowserSessionId = data?.ruleInfo?.browser_session_id;
@@ -210,6 +216,7 @@ class ProactiveWebCampaignPlugin {
                         this.isPendingSendAPIEvent = false;
                     }
                 }
+                // Chat Template
                 if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType == 'chat' && data.body?.layoutDesign && this.browserSessionId && this.enablePWC) {
                     // Check browser_session_id to ensure template is shown only in the triggering browser tab
                     const receivedBrowserSessionId = data?.ruleInfo?.browser_session_id;
@@ -236,6 +243,10 @@ class ProactiveWebCampaignPlugin {
                         // Reset the flag to allow the next campaign template to be rendered
                         this.isPendingSendAPIEvent = false;
                     }
+                }
+                if (data.type == 'pwe_message'){
+                    // Update the flag details received from the pwe_message
+                    this.isVisitorAlreadyChatting = data?.isVisitorAlreadyChatting || this.isVisitorAlreadyChatting;
                 }
             }
         });
@@ -3346,6 +3357,10 @@ class ProactiveWebCampaignPlugin {
      * @param campId - Campaign ID
      */
     triggerCampaignEvent(campInstanceId: string, campId: string): void {
+        // If visitor is already chatting, do not trigger campaign event
+        if(this.isVisitorAlreadyChatting){
+            return;
+        }
         // If any campaign template is active, do not trigger campaign event
         if(this.isActiveCampaignTemplate() || this.isPendingSendAPIEvent){
             return;
@@ -3407,7 +3422,7 @@ class ProactiveWebCampaignPlugin {
         // Evaluate active campaigns
         this.evaluateActiveCampaigns(activeCampaigns, pageObject.url, pageObject.pageName, type);
     }
-    
+
     /**
      * Checks if cooldown is currently active
      * Optimized: Check in-memory state first, then handle expiry
