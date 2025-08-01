@@ -25,7 +25,7 @@ class ProactiveWebCampaignPlugin {
     browserSessionId: string = ''; // Unique identifier for the campaign trigger session
     
     // =====================================================================================
-    //                          🚀 CUSTOM CONDITIONTYPE SUPPORT PROPERTIES
+    //                          CUSTOM CONDITIONTYPE SUPPORT PROPERTIES
     // =====================================================================================
     flattenedCustomData: any = {};           // Current flattened custom data
     previousFlattenedCustomData: any = {};   // Previous state for change detection
@@ -46,11 +46,21 @@ class ProactiveWebCampaignPlugin {
     // As multiple campaign templates cannot be rendered at the same time
     isPendingSendAPIEvent: boolean = false;
     
+    coolDownTime: number = 0; // Duration in minutes (converted to ms for calculations)
+    cooldownState: {
+        isActive: boolean;
+        startTime: number;
+        expiryTime: number;
+    } = { isActive: false, startTime: 0, expiryTime: 0 };
+    
     constructor(config: any) {
         config = config || {};
         this.config = { ...this.config, ...config };
         // Fetch the uniqueId from sessionStorage, helpful in the case of multi page application
         this.browserSessionId = window.sessionStorage.getItem('pwc_browser_session_id') || '';
+        
+        // Restore cooldown state from sessionStorage (for page reloads/navigation)
+        this.restoreCooldownState();
         
         if(!this.config.dependentPlugins.AgentDesktopPlugin){
             console.log("PWE is dependent on AgentDesktopPlugin, please add it");
@@ -135,6 +145,9 @@ class ProactiveWebCampaignPlugin {
                         this.campInfo = data.body.campInfo || [];
                         me.hostInstance.campInfo = data.body.campInfo;
                         
+                        // Set cooldown time from configuration (in minutes)
+                        this.coolDownTime = data.body?.coolDownTime || 0;
+                        
                         // PERFORMANCE OPTIMIZATION: Get existing data first
                         let existingPweData: any = window.sessionStorage.getItem('pwe_data');
                         existingPweData = JSON.parse(existingPweData) || {};
@@ -191,6 +204,8 @@ class ProactiveWebCampaignPlugin {
                         } else {
                             document.querySelector(me.hostInstance.config.pwcConfig.container).appendChild(htmlEle);
                         }
+                        // Start cooldown timer for this campaign trigger
+                        this.startCooldown();
                         // Reset the flag to allow the next campaign template to be rendered
                         this.isPendingSendAPIEvent = false;
                     }
@@ -216,6 +231,8 @@ class ProactiveWebCampaignPlugin {
                         me.hostInstance.pwcInfo.chatData = {};
                         me.hostInstance.pwcInfo.chatData.enable = true;
                         me.hostInstance.pwcInfo.chatData.data = data.body.layoutDesign;
+                        // Start cooldown timer for this campaign trigger
+                        this.startCooldown();
                         // Reset the flag to allow the next campaign template to be rendered
                         this.isPendingSendAPIEvent = false;
                     }
@@ -3333,6 +3350,11 @@ class ProactiveWebCampaignPlugin {
         if(this.isActiveCampaignTemplate() || this.isPendingSendAPIEvent){
             return;
         }
+        
+        // Check if cooldown is active, abandon campaign if so
+        if(this.isCooldownActive()){
+            return;
+        }
         this.isPendingSendAPIEvent = true;
         // Generate unique browser session ID for this campaign trigger session
         this.browserSessionId = this.generateBrowserSessionId();
@@ -3384,6 +3406,94 @@ class ProactiveWebCampaignPlugin {
         
         // Evaluate active campaigns
         this.evaluateActiveCampaigns(activeCampaigns, pageObject.url, pageObject.pageName, type);
+    }
+    
+    /**
+     * Checks if cooldown is currently active
+     * Optimized: Check in-memory state first, then handle expiry
+     * @returns Boolean indicating if cooldown is active
+     */
+    isCooldownActive(): boolean {
+        // Check in-memory state first (most common case)
+        if (!this.cooldownState.isActive) return false;
+        
+        const currentTime = Date.now();
+        if (currentTime >= this.cooldownState.expiryTime) {
+            this.clearCooldown(); // Auto-cleanup expired cooldown
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Starts cooldown timer after a campaign is triggered
+     * Converts minutes to milliseconds for calculations
+     */
+    startCooldown(): void {
+        if (this.coolDownTime <= 0) return;
+        
+        const currentTime = Date.now();
+        const cooldownMs = this.coolDownTime * 60 * 1000; // Convert minutes to milliseconds
+        
+        this.cooldownState = {
+            isActive: true,
+            startTime: currentTime,
+            expiryTime: currentTime + cooldownMs
+        };
+        
+        this.persistCooldownState();
+    }
+
+    /**
+     * Clears cooldown state from memory and sessionStorage
+     */
+    clearCooldown(): void {
+        this.cooldownState = { isActive: false, startTime: 0, expiryTime: 0 };
+        sessionStorage.removeItem('pwc_cooldown_state');
+    }
+
+    /**
+     * Persists cooldown state to sessionStorage for multi-page apps
+     * No error handling needed - in-memory state continues to work in SPAs
+     */
+    persistCooldownState(): void {
+        if (this.cooldownState.isActive) {
+            sessionStorage.setItem('pwc_cooldown_state', JSON.stringify({
+                ...this.cooldownState,
+                coolDownTime: this.coolDownTime
+            }));
+        }
+    }
+
+    /**
+     * Restores cooldown state from sessionStorage on initialization
+     * Only called during page load/refresh - has error handling fallback
+     */
+    restoreCooldownState(): void {
+        try {
+            const stored = sessionStorage.getItem('pwc_cooldown_state');
+            if (stored) {
+                const state = JSON.parse(stored);
+                // Validate state structure
+                if (state && typeof state.isActive === 'boolean' && typeof state.startTime === 'number') {
+                    this.cooldownState = {
+                        isActive: state.isActive,
+                        startTime: state.startTime,
+                        expiryTime: state.expiryTime
+                    };
+                    this.coolDownTime = state.coolDownTime || 0;
+                    
+                    // Check if restored cooldown has expired
+                    if (!this.isCooldownActive()) {
+                        this.clearCooldown();
+                    }
+                }
+            }
+        } catch (error) {
+            console.warn('Failed to restore cooldown state, disabling cooldown for session:', error);
+            this.coolDownTime = 0; // Disable cooldown for this session
+            this.clearCooldown();
+        }
     }
 
 }
