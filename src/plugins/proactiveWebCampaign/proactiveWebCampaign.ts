@@ -22,6 +22,7 @@ class ProactiveWebCampaignPlugin {
     pageChangeDebounceTimer: any = null; // New: Debounce timer for page changes
     customDataObject: any = {};
     isInitialPageLoaded: boolean = false; // NEW: Flag to track initial page processing
+    browserSessionId: string = ''; // Unique identifier for the campaign trigger session
     
     // =====================================================================================
     //                          🚀 CUSTOM CONDITIONTYPE SUPPORT PROPERTIES
@@ -44,10 +45,33 @@ class ProactiveWebCampaignPlugin {
     constructor(config: any) {
         config = config || {};
         this.config = { ...this.config, ...config };
+        // Fetch the uniqueId from sessionStorage, helpful in the case of multi page application
+        this.browserSessionId = window.sessionStorage.getItem('pwc_browser_session_id') || '';
+        
         if(!this.config.dependentPlugins.AgentDesktopPlugin){
             console.log("PWE is dependent on AgentDesktopPlugin, please add it");
             return;
         }
+    }
+
+    /**
+     * Generates a unique browser session ID for the campaign trigger session
+     * @returns Unique browser session ID
+     */
+    generateBrowserSessionId(): string {
+        const timestamp = Date.now();
+        const randomUUID = 'xxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = Math.random() * 16 | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+        
+        const browserId = `bsi_${timestamp}_${randomUUID}`;
+        
+        // Store in sessionStorage for persistence across page navigations
+        window.sessionStorage.setItem('pwc_browser_session_id', browserId);
+        
+        return browserId;
     }
 
     onHostCreate() {
@@ -153,32 +177,40 @@ class ProactiveWebCampaignPlugin {
                         this.campInfo = [];
                     }
                 }
-                if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType !== 'chat' && this.enablePWC) {
-                    const htmlEle = me.hostInstance.generateMessageDOM(data);
-                    if (me.hostInstance.config.pwcConfig.container instanceof HTMLElement) {
-                        me.hostInstanceconfig.pwcConfig.container.appendChild(htmlEle);
-                    } else {
-                        document.querySelector(me.hostInstance.config.pwcConfig.container).appendChild(htmlEle);
+                if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType !== 'chat' && this.browserSessionId && this.enablePWC) {
+                    // Check browser_session_id to ensure template is shown only in the triggering browser tab
+                    const receivedBrowserSessionId = data?.ruleInfo?.browser_session_id;
+                    if (receivedBrowserSessionId && receivedBrowserSessionId === this.browserSessionId) {
+                        const htmlEle = me.hostInstance.generateMessageDOM(data);
+                        if (me.hostInstance.config.pwcConfig.container instanceof HTMLElement) {
+                            me.hostInstance.config.pwcConfig.container.appendChild(htmlEle);
+                        } else {
+                            document.querySelector(me.hostInstance.config.pwcConfig.container).appendChild(htmlEle);
+                        }
                     }
                 }
-                if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType == 'chat' && data.body?.layoutDesign && this.enablePWC) {
-                    const layoutData = {
-                        layoutData: data?.body?.layoutDesign,
-                        campInstId: data.body?.campInfo?.campInstId
+                if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType == 'chat' && data.body?.layoutDesign && this.browserSessionId && this.enablePWC) {
+                    // Check browser_session_id to ensure template is shown only in the triggering browser tab
+                    const receivedBrowserSessionId = data?.ruleInfo?.browser_session_id;
+                    if (receivedBrowserSessionId && receivedBrowserSessionId === this.browserSessionId) {
+                        const layoutData = {
+                            layoutData: data?.body?.layoutDesign,
+                            campInstId: data.body?.campInfo?.campInstId
+                        }
+                        const chatContainer = getHTML(Chat, layoutData, this.hostInstance);
+                        let avatarVariations = me.hostInstance.chatEle.querySelector('.avatar-actions');
+                        avatarVariations.prepend(chatContainer);
+                        if (me.hostInstance.config.branding.general.sounds.enable && me.hostInstance.config.branding.general.sounds.on_proactive_msg.url != 'None') {
+                            const playSound = new Audio(me.hostInstance.config.branding.general.sounds.on_proactive_msg.url);
+                            playSound.play().catch(error => {
+                                console.log('Error: ', error);
+                            });
+                        }                
+                        me.hostInstance.pwcInfo.dataFlag = true;
+                        me.hostInstance.pwcInfo.chatData = {};
+                        me.hostInstance.pwcInfo.chatData.enable = true;
+                        me.hostInstance.pwcInfo.chatData.data = data.body.layoutDesign;
                     }
-                    const chatContainer = getHTML(Chat, layoutData, this.hostInstance);
-                    let avatarVariations = me.hostInstance.chatEle.querySelector('.avatar-actions');
-                    avatarVariations.prepend(chatContainer);
-                    if (me.hostInstance.config.branding.general.sounds.enable && me.hostInstance.config.branding.general.sounds.on_proactive_msg.url != 'None') {
-                        const playSound = new Audio(me.hostInstance.config.branding.general.sounds.on_proactive_msg.url);
-                        playSound.play().catch(error => {
-                            console.log('Error: ', error);
-                        });
-                    }                
-                    me.hostInstance.pwcInfo.dataFlag = true;
-                    me.hostInstance.pwcInfo.chatData = {};
-                    me.hostInstance.pwcInfo.chatData.enable = true;
-                    me.hostInstance.pwcInfo.chatData.data = data.body.layoutDesign;
                 }
             }
         });
@@ -1261,6 +1293,7 @@ class ProactiveWebCampaignPlugin {
             window.sessionStorage.removeItem('timeSpentArr');
             window.sessionStorage.removeItem('startTime');
             window.sessionStorage.removeItem('prevUrl');
+            window.sessionStorage.removeItem('pwc_browser_session_id');
         });
     }
 
@@ -3290,6 +3323,8 @@ class ProactiveWebCampaignPlugin {
      * @param campId - Campaign ID
      */
     triggerCampaignEvent(campInstanceId: string, campId: string): void {
+        // Generate unique browser session ID for this campaign trigger session
+        this.browserSessionId = this.generateBrowserSessionId();
         const payload: any = {
             'event_name': 'pwe_event',
             'resourceid': '/pwe_message',
@@ -3300,7 +3335,10 @@ class ProactiveWebCampaignPlugin {
                 'chatBot': this.hostInstance._botInfo.name,
                 'taskBotId': this.hostInstance._botInfo._id
             },
-            'ruleInfo': {isAllRulesSatisfied: true},
+            'ruleInfo': {
+                isAllRulesSatisfied: true,
+                browser_session_id: this.browserSessionId
+            },
             'campInfo': {
                 'campId': campId,
                 'campInstanceId': campInstanceId
