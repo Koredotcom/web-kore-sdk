@@ -95,11 +95,9 @@ export function Message(props: any) {
         }
     }
 
-    if (msgData?.enableLiveChatMetaData && !msgData?.fromHistory) {
+    if (msgData?.author) {
         msgData.fromAgent = true;
-        if (msgData.author) {
-            msgData.author['name'] = msgData?.author?.firstName + ' ' + msgData?.author?.lastName;
-        }
+        msgData.author['name'] = msgData?.author?.firstName + ' ' + msgData?.author?.lastName;
     }
 
     if (msgData.message) {
