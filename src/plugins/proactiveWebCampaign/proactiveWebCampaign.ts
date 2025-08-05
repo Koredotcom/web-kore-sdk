@@ -3381,25 +3381,22 @@ class ProactiveWebCampaignPlugin {
      * @param campId - Campaign ID
      */
     triggerCampaignEvent(campInstanceId: string, campId: string): void {
-        // Performance-optimized check order: DOM queries first, then session/time calculations
-        
-        // 1. Fast DOM check - active campaign templates
         // If any campaign template is active, do not trigger campaign event
         if(this.isActiveCampaignTemplate() || this.isPendingSendAPIEvent){
             return;
         }
         
-        // 2. Fast DOM check - chat window open state
+        // Check if chat window is open, do not trigger campaign event
         if(this.isChatWindowOpen()){
             return;
         }
         
-        // 3. Session-based chat detection (with in-memory fallback)
+        // If visitor is already chatting, do not trigger campaign event
         if(this.isVisitorAlreadyChatting){
             return;
         }
         
-        // 4. Time-based cooldown check
+        // Check if cooldown is active, do not trigger campaign event
         if(this.isCooldownActive()){
             return;
         }
