@@ -31,7 +31,6 @@ class ProactiveWebCampaignPlugin {
     customDataObject: any = {};
     isInitialPageLoaded: boolean = false; // NEW: Flag to track initial page processing
     browserSessionId: string = ''; // Unique identifier for the campaign trigger session
-    browserSessionId: string = ''; // Unique identifier for the campaign trigger session
     
     // =====================================================================================
     //                          CUSTOM CONDITIONTYPE SUPPORT PROPERTIES
