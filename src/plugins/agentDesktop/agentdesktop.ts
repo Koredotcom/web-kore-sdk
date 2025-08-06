@@ -266,6 +266,12 @@ class AgentDesktopPlugin {
                                     if (childEle2) {
                                         childEle2.classList = [];
                                         childEle2.classList.add('read');
+                                    } else {
+                                        const childEle3 = ele.querySelector('.sent');
+                                        if (childEle3) {
+                                            childEle3.classList = [];
+                                            childEle3.classList.add('read');
+                                        }
                                     }
                                 }
 
