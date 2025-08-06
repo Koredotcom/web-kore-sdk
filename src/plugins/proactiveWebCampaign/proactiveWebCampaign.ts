@@ -6,6 +6,14 @@ import PWCBannerTemplate from "./templates/pwcBannerTemplate/pwcBannerTemplate";
 import PWCButtonTemplate from "./templates/pwcButtonTemplate/pwcButtonTemplate";
 import PWCPostTemplate from "./templates/pwcPostTemplate/pwcPostTemplate";
 import Chat from "./templates/pwcChatTemplate/pwcChatTemplate";
+
+// Interface for chat session information
+interface ChatSessionInfo {
+    sessionId: string;
+    isActive: boolean;
+    source: 'Session_Start' | 'Session_End' | 'Bot_Active';
+}
+
 class ProactiveWebCampaignPlugin {
     name: string = 'ProactiveWebCampaingPlugin';
     config: any = {};
@@ -23,9 +31,10 @@ class ProactiveWebCampaignPlugin {
     customDataObject: any = {};
     isInitialPageLoaded: boolean = false; // NEW: Flag to track initial page processing
     browserSessionId: string = ''; // Unique identifier for the campaign trigger session
+    browserSessionId: string = ''; // Unique identifier for the campaign trigger session
     
     // =====================================================================================
-    //                          🚀 CUSTOM CONDITIONTYPE SUPPORT PROPERTIES
+    //                          CUSTOM CONDITIONTYPE SUPPORT PROPERTIES
     // =====================================================================================
     flattenedCustomData: any = {};           // Current flattened custom data
     previousFlattenedCustomData: any = {};   // Previous state for change detection
@@ -41,12 +50,42 @@ class ProactiveWebCampaignPlugin {
     
     // Maximum flattening depth for performance safety
     static readonly MAX_FLATTEN_DEPTH = 10;
+
+    // DOM selector constants
+    private static readonly ACTIVE_CAMPAIGN_SELECTOR = '.pwc-active-campaign-template';
+    private static readonly CHAT_CONTAINER_SELECTOR = '.chat-widgetwrapper-main-container.minimize';
+
+    // This flag is used to prevent the sendApiEvent from getting triggered multiple times
+    // As multiple campaign templates cannot be rendered at the same time
+    isPendingSendAPIEvent: boolean = false;
+    
+    coolDownTime: number = 0; // Duration in minutes (converted to ms for calculations)
+    cooldownState: {
+        isActive: boolean;
+        startTime: number;
+        expiryTime: number;
+    } = { isActive: false, startTime: 0, expiryTime: 0 };
+
+    // This flag is used to prevent the same visitor from chatting with the bot multiple times
+    // This flag is used to block the templates from rendering if the visitor is already chatting with the bot
+    isVisitorAlreadyChatting: boolean = false;
+
+    // In-memory session info (fallback for sessionStorage)
+    private chatSessionInfo: ChatSessionInfo | null = null;
+    // SessionStorage key for chat session data
+    private static readonly CHAT_SESSION_STORAGE_KEY = 'pwc_chat_session_info';
     
     constructor(config: any) {
         config = config || {};
         this.config = { ...this.config, ...config };
         // Fetch the uniqueId from sessionStorage, helpful in the case of multi page application
         this.browserSessionId = window.sessionStorage.getItem('pwc_browser_session_id') || '';
+        
+        // Restore cooldown state from sessionStorage (for page reloads/navigation)
+        this.restoreCooldownState();
+        
+        // Initialize chat session state from sessionStorage
+        this.initializeChatSessionState();
         
         if(!this.config.dependentPlugins.AgentDesktopPlugin){
             console.log("PWE is dependent on AgentDesktopPlugin, please add it");
@@ -131,6 +170,9 @@ class ProactiveWebCampaignPlugin {
                         this.campInfo = data.body.campInfo || [];
                         me.hostInstance.campInfo = data.body.campInfo;
                         
+                        // Set cooldown time from configuration (in minutes)
+                        this.coolDownTime = data.body?.coolDownTime || 0;
+                        
                         // PERFORMANCE OPTIMIZATION: Get existing data first
                         let existingPweData: any = window.sessionStorage.getItem('pwe_data');
                         existingPweData = JSON.parse(existingPweData) || {};
@@ -177,6 +219,7 @@ class ProactiveWebCampaignPlugin {
                         this.campInfo = [];
                     }
                 }
+                // Banner, Post, Button Templates
                 if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType !== 'chat' && this.browserSessionId && this.enablePWC) {
                     // Check browser_session_id to ensure template is shown only in the triggering browser tab
                     const receivedBrowserSessionId = data?.ruleInfo?.browser_session_id;
@@ -187,8 +230,13 @@ class ProactiveWebCampaignPlugin {
                         } else {
                             document.querySelector(me.hostInstance.config.pwcConfig.container).appendChild(htmlEle);
                         }
+                        // Start cooldown timer for this campaign trigger
+                        this.startCooldown();
+                        // Reset the flag to allow the next campaign template to be rendered
+                        this.isPendingSendAPIEvent = false;
                     }
                 }
+                // Chat Template
                 if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType == 'chat' && data.body?.layoutDesign && this.browserSessionId && this.enablePWC) {
                     // Check browser_session_id to ensure template is shown only in the triggering browser tab
                     const receivedBrowserSessionId = data?.ruleInfo?.browser_session_id;
@@ -210,7 +258,20 @@ class ProactiveWebCampaignPlugin {
                         me.hostInstance.pwcInfo.chatData = {};
                         me.hostInstance.pwcInfo.chatData.enable = true;
                         me.hostInstance.pwcInfo.chatData.data = data.body.layoutDesign;
+                        // Start cooldown timer for this campaign trigger
+                        this.startCooldown();
+                        // Reset the flag to allow the next campaign template to be rendered
+                        this.isPendingSendAPIEvent = false;
                     }
+                }
+                
+                // Handle chat session events for active chat detection
+                if (data.type === 'Session_Start') {
+                    this.updateChatSessionState('Session_Start', data);
+                } else if (data.type === 'Session_End') {
+                    this.updateChatSessionState('Session_End', data);
+                } else if (data.type === 'Bot_Active') {
+                    this.updateChatSessionState('Bot_Active', data);
                 }
             }
         });
@@ -2677,7 +2738,7 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Updates individual condition satisfaction states with different persistence logic for rules vs exclusions
-     * RULES: Selective persistence (pageVisitCount, country, city persist; user, timeSpent, hoverOn dynamic)
+     * RULES: Selective persistence (country, city persist; pageVisitCount, user, timeSpent, hoverOn dynamic)
      * EXCLUSIONS: Always dynamic re-evaluation (no persistence for any condition type)
      * @param groupConditions - Group conditions object  
      * @param actualValues - Actual values to compare against
@@ -2713,14 +2774,8 @@ class ProactiveWebCampaignPlugin {
                     } else {
                         // RULES: SELECTIVE PERSISTENCE LOGIC
                         if (column === 'pageVisitCount') {
-                            // pageVisitCount: PERSIST once satisfied
-                            if (previousSatisfied === true) {
-                                condition.isSatisfied = true;
-                            } else if (currentResult === true) {
-                                condition.isSatisfied = true;
-                            } else {
-                                condition.isSatisfied = false;
-                            }
+                            // pageVisitCount: ALWAYS DYNAMIC (evaluate against live data for operators 'equals' and 'ge')
+                            condition.isSatisfied = currentResult;
                         } else if (column === 'country' || column === 'city') {
                             // country, city: PERSIST once satisfied (browser session doesn't change location)
                             if (previousSatisfied === true) {
@@ -2784,6 +2839,10 @@ class ProactiveWebCampaignPlugin {
                     break;
                 case 'not':
                     result = actualValue !== value; // Strict not equal
+                    break;
+                case 'ge':
+                    // Greater than or equal operator (primarily for pageVisitCount)
+                    result = this.evaluateGreaterEqual(actualValue, value);
                     break;
                 default:
                     return false;
@@ -3323,6 +3382,26 @@ class ProactiveWebCampaignPlugin {
      * @param campId - Campaign ID
      */
     triggerCampaignEvent(campInstanceId: string, campId: string): void {
+        // If any campaign template is active, do not trigger campaign event
+        if(this.isActiveCampaignTemplate() || this.isPendingSendAPIEvent){
+            return;
+        }
+        
+        // Check if chat window is open, do not trigger campaign event
+        if(this.isChatWindowOpen()){
+            return;
+        }
+        
+        // If visitor is already chatting, do not trigger campaign event
+        if(this.isVisitorAlreadyChatting){
+            return;
+        }
+        
+        // Check if cooldown is active, do not trigger campaign event
+        if(this.isCooldownActive()){
+            return;
+        }
+        this.isPendingSendAPIEvent = true;
         // Generate unique browser session ID for this campaign trigger session
         this.browserSessionId = this.generateBrowserSessionId();
         const payload: any = {
@@ -3349,6 +3428,15 @@ class ProactiveWebCampaignPlugin {
     }
 
     /**
+     * Checks if any campaign template is active
+     * @returns Boolean indicating if any campaign template is active
+     */
+    isActiveCampaignTemplate(): boolean{
+        const activeCampaignTemplate = document.querySelector(ProactiveWebCampaignPlugin.ACTIVE_CAMPAIGN_SELECTOR);
+        return activeCampaignTemplate !== null;
+    }
+
+    /**
      * Enhanced sendEvent method to work with new campaign structure
      * @param pageObject - Page object with url and pageName
      * @param type - Event type
@@ -3363,6 +3451,191 @@ class ProactiveWebCampaignPlugin {
         
         // Evaluate active campaigns
         this.evaluateActiveCampaigns(activeCampaigns, pageObject.url, pageObject.pageName, type);
+    }
+
+    /**
+     * Checks if cooldown is currently active
+     * Optimized: Check in-memory state first, then handle expiry
+     * @returns Boolean indicating if cooldown is active
+     */
+    isCooldownActive(): boolean {
+        // Check in-memory state first (most common case)
+        if (!this.cooldownState.isActive) return false;
+        
+        const currentTime = Date.now();
+        if (currentTime >= this.cooldownState.expiryTime) {
+            this.clearCooldown(); // Auto-cleanup expired cooldown
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Starts cooldown timer after a campaign is triggered
+     * Converts minutes to milliseconds for calculations
+     */
+    startCooldown(): void {
+        if (this.coolDownTime <= 0) return;
+        
+        const currentTime = Date.now();
+        const cooldownMs = this.coolDownTime * 60 * 1000; // Convert minutes to milliseconds
+        
+        this.cooldownState = {
+            isActive: true,
+            startTime: currentTime,
+            expiryTime: currentTime + cooldownMs
+        };
+        
+        this.persistCooldownState();
+    }
+
+    /**
+     * Clears cooldown state from memory and sessionStorage
+     */
+    clearCooldown(): void {
+        this.cooldownState = { isActive: false, startTime: 0, expiryTime: 0 };
+        sessionStorage.removeItem('pwc_cooldown_state');
+    }
+
+    /**
+     * Persists cooldown state to sessionStorage for multi-page apps
+     * No error handling needed - in-memory state continues to work in SPAs
+     */
+    persistCooldownState(): void {
+        if (this.cooldownState.isActive) {
+            sessionStorage.setItem('pwc_cooldown_state', JSON.stringify({
+                ...this.cooldownState,
+                coolDownTime: this.coolDownTime
+            }));
+        }
+    }
+
+    /**
+     * Restores cooldown state from sessionStorage on initialization
+     * Only called during page load/refresh - has error handling fallback
+     */
+    restoreCooldownState(): void {
+        try {
+            const stored = sessionStorage.getItem('pwc_cooldown_state');
+            if (stored) {
+                const state = JSON.parse(stored);
+                // Validate state structure
+                if (state && typeof state.isActive === 'boolean' && typeof state.startTime === 'number') {
+                    this.cooldownState = {
+                        isActive: state.isActive,
+                        startTime: state.startTime,
+                        expiryTime: state.expiryTime
+                    };
+                    this.coolDownTime = state.coolDownTime || 0;
+                    
+                    // Check if restored cooldown has expired
+                    if (!this.isCooldownActive()) {
+                        this.clearCooldown();
+                    }
+                }
+            }
+        } catch (error) {
+            console.warn('Failed to restore cooldown state, disabling cooldown for session:', error);
+            this.coolDownTime = 0; // Disable cooldown for this session
+            this.clearCooldown();
+        }
+    }
+
+    /**
+     * Initialize chat session state from sessionStorage
+     */
+    initializeChatSessionState(): void {
+        try {
+            const storedSessionInfo = window.sessionStorage.getItem(ProactiveWebCampaignPlugin.CHAT_SESSION_STORAGE_KEY);
+            if (storedSessionInfo) {
+                this.chatSessionInfo = JSON.parse(storedSessionInfo);
+                // Sync the isVisitorAlreadyChatting flag with session state
+                this.isVisitorAlreadyChatting = this.chatSessionInfo?.isActive || false;
+            } else {
+                this.chatSessionInfo = { sessionId: '', isActive: false, source: 'Session_Start' };
+                this.isVisitorAlreadyChatting = false;
+            }
+        } catch (error) {
+            console.warn('PWC: Failed to restore chat session state from sessionStorage:', error);
+            this.chatSessionInfo = { sessionId: '', isActive: false, source: 'Session_Start' };
+            this.isVisitorAlreadyChatting = false;
+        }
+    }
+
+    /**
+     * Check if chat window is currently open
+     * Note: When minimize class is present, chat window is actually OPEN
+     * @returns true if chat window is open, false if closed/minimized
+     */
+    isChatWindowOpen(): boolean {
+        const chatContainer = document.querySelector(ProactiveWebCampaignPlugin.CHAT_CONTAINER_SELECTOR);
+        return chatContainer !== null;
+    }
+
+    /**
+     * Update chat session state based on received events
+     * Handles Session_Start, Session_End, and Bot_Active events
+     * @param eventType - Type of event received
+     * @param data - Event data
+     */
+    updateChatSessionState(eventType: 'Session_Start' | 'Session_End' | 'Bot_Active', data: any): void {
+        try {
+            let sessionInfo: ChatSessionInfo | null = null;
+            
+            switch (eventType) {
+                case 'Session_Start':
+                    if (data.sessionId) {
+                        sessionInfo = {
+                            sessionId: data.sessionId,
+                            isActive: true,
+                            source: 'Session_Start'
+                        };
+                    }
+                    break;
+                    
+                case 'Session_End':
+                    // Only process if sessionId matches the stored one
+                    if (data.sessionId && this.chatSessionInfo && data.sessionId === this.chatSessionInfo.sessionId) {
+                        sessionInfo = {
+                            sessionId: data.sessionId,
+                            isActive: false,
+                            source: 'Session_End'
+                        };
+                    }
+                    break;
+                    
+                case 'Bot_Active':
+                    // Safe check for recentSessionInfo with fallback to false
+                    const isActive = data.recentSessionInfo?.isActive || false;
+                    const sessionId = data.recentSessionInfo?.sessionId || '';
+                    
+                    if (sessionId) {
+                        sessionInfo = {
+                            sessionId: sessionId,
+                            isActive: isActive,
+                            source: 'Bot_Active'
+                        };
+                    }
+                    break;
+            }
+            
+            if (sessionInfo) {
+                // Update in-memory state
+                this.chatSessionInfo = sessionInfo;
+                this.isVisitorAlreadyChatting = sessionInfo.isActive;
+                
+                // Save to sessionStorage
+                window.sessionStorage.setItem(
+                    ProactiveWebCampaignPlugin.CHAT_SESSION_STORAGE_KEY, 
+                    JSON.stringify(sessionInfo)
+                );
+            }
+            
+        } catch (error) {
+            console.warn('PWC: Failed to update chat session state:', error);
+            // Fallback to safe defaults
+            this.isVisitorAlreadyChatting = false;
+        }
     }
 
 }

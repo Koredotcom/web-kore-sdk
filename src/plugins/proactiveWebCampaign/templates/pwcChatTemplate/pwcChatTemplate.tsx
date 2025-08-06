@@ -95,7 +95,10 @@ export function Chat(props: any) {
     }
 
     return(
-        <div>{!isAcceptTriggered && <div className="content-info">
+        // "pwc-active-campaign-template" class is added to the DOM after the campaign template is rendered
+        // This class is used to identify the campaign template and prevent the sendApiEvent from getting triggered multiple times
+        // DONOT REMOVE THIS CLASS
+        <div>{!isAcceptTriggered && <div className="pwc-active-campaign-template content-info">
             {pwcCampaign.data?.messages.map((ele: any, ind: any) => (
                 <div className="text-content animation-slide-up" role="contentinfo" aria-labelledby="helojohn">
                     <div className="help-text-content">
