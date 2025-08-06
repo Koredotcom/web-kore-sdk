@@ -29,6 +29,9 @@ class MessageTemplate {
                 'extension':extension
             });
         } else {
+            if (msgData?.enableLiveChatMetaData) {
+                msgData.fromAgent = true;
+            }
             me.messageHtml = $(me.getTemplateString('message')).tmpl({
                 'msgData': msgData,
                 'helpers': helpersObj.helpers,

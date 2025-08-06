@@ -12,6 +12,8 @@ class AgentDesktopPlugin {
     stopTypingInterval: number = 500;
     isTabActive: boolean = true
     isReadRecipetSent: boolean = false;
+    TMsgData: any;
+    isTPAgentConnected: boolean = false;
 
     authInfo: any;
     cobrowseSession: any;
@@ -119,6 +121,11 @@ class AgentDesktopPlugin {
                         "type": ""
                     }
                     messageToBot["resourceid"] = "/bot.message";
+                    if (this.TMsgData) {
+                        messageToBot['messageId'] = this.TMsgData?.messageId;
+                        messageToBot['agent_MessageId'] = this.TMsgData?.agent_MessageId;
+                        this.TMsgData = null;
+                    }
                     me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
                     this.isReadRecipetSent = true;
                 }
@@ -165,6 +172,13 @@ class AgentDesktopPlugin {
                 localStorage.setItem("kr-agent-status", "disconneted")
             }
 
+            // Third part agent status
+            if (event.messageData?.message?.type === 'agent_session_active') {
+                me.isTPAgentConnected = true;
+            } else if (event.messageData?.message?.type === 'agent_session_inactive') {
+                me.isTPAgentConnected = false;
+            }
+
             // when agent send the message, hide the type indicator
             if (event.messageData.message) {
                 if (event?.messageData?.message[0]?.type === 'text' && event?.messageData?.author?.type === 'AGENT') {
@@ -187,7 +201,7 @@ class AgentDesktopPlugin {
         // sent event style setting in user chat 
         me.hostInstance.on('afterRenderMessage', (event: any) => {
             if (!event.messageHtml) return false;
-            if (localStorage.getItem("kr-agent-status") != "connected") return;
+            if (localStorage.getItem("kr-agent-status") != "connected" && !this.isTPAgentConnected) return;
 
             if (event.msgData?.type === "currentUser") {
                 // remove bot typing while agent being connected
@@ -209,7 +223,11 @@ class AgentDesktopPlugin {
                                     ele.addClass("delivered");
                                 }
                             } else if (tempData.message.type === "message_read") {
-                                ele.removeClass("delivered").addClass("read");
+                                if (ele.hasClass('delivered')) {
+                                    ele.removeClass("delivered").addClass("read");
+                                } else {
+                                    ele.addClass("read");
+                                }
                             }
 
                         }
@@ -224,7 +242,7 @@ class AgentDesktopPlugin {
                 }
             } else {
                 // send read event from user to agent 
-                if (event.msgData?.message[0]?.component?.payload?.template_type == 'live_agent') {
+                if (event.msgData?.message[0]?.component?.payload?.template_type == 'live_agent' || event.msgData?.enableLiveChatMetaData) {
                     const messageToBot: any = {};
                     const msgId = event.msgData.messageId;
                     messageToBot["event"] = "message_delivered";
@@ -234,6 +252,10 @@ class AgentDesktopPlugin {
                     }
                     messageToBot['messageId'] = msgId;
                     messageToBot["resourceid"] = "/bot.message";
+                    if (event.msgData?.agent_MessageId) {
+                        messageToBot['agent_MessageId'] = event.msgData?.agent_MessageId;
+                        this.TMsgData = event.msgData;
+                    }
                     me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
 
                     // send read event when user being in current tab
