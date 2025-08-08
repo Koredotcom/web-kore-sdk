@@ -235,7 +235,7 @@ export function Feedback(props: any) {
                                     onClick={() => handleStar(starItem)}
                                     className={`rating-${msgData.messageId}`}
                                 />
-                                <button tabIndex={0} htmlFor={`rating-${msgData.messageId}-${starItem.starId}`} onKeyDown={(e) => { 
+                                <button tabIndex={0} htmlFor={`rating-${msgData.messageId}-${starItem.starId}`} onClick={() => handleStar(starItem)} onKeyDown={(e) => { 
                                     if (e.key === 'Enter') {
                                         handleStar(starItem); 
                                     } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
