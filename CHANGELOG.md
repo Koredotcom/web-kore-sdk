@@ -1,3 +1,8 @@
+### 10.17.1
+- SDK Release August 11, 2025
+* Bug fixes
+  * read receipts added for live chat for supported integrations
+
 ### 10.17.0
 - SDK Release July 26, 2025
 * Bug fixes
