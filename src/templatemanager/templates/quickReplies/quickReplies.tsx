@@ -63,7 +63,7 @@ export function QuickReply(props: any) {
     return (
         <Fragment>
             {(!msgData?.message?.[0]?.component?.payload?.stackedButtons && !msgData?.message?.[0]?.component?.payload?.fullWidth) && <div className={quickReplyStyle} data-quick-replies-cid={msgData.messageId}>
-                <button className="quick-left-click" c-left-button-id={msgData.messageId}>
+                <button className="quick-left-click" c-left-button-id={msgData.messageId} aria-label="scroll left">
                     <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
                         <path d="M12 15.5L7 10.5L12 5.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
@@ -74,7 +74,7 @@ export function QuickReply(props: any) {
                     ))
                     }
                 </div>
-                <button className="quick-right-click" c-right-button-id={msgData.messageId}>
+                <button className="quick-right-click" c-right-button-id={msgData.messageId} aria-label="scroll right">
                     <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
                         <path d="M7 5.5L12 10.5L7 15.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
@@ -100,7 +100,7 @@ export function QuickReplies(props: any) {
         hostInstance: hostInstance
     }
 
-    if (hostInstance.chatEle && hostInstance.chatEle.querySelectorAll('.chat-widget-composebar .quick-replies') && hostInstance.chatEle.querySelectorAll('.chat-widget-composebar .quick-replies').length > 0) {
+    if (!msgData?.fromHistory && !msgData?.fromHistorySync && hostInstance.chatEle && hostInstance.chatEle.querySelectorAll('.chat-widget-composebar .quick-replies') && hostInstance.chatEle.querySelectorAll('.chat-widget-composebar .quick-replies').length > 0) {
         hostInstance.chatEle.querySelector('.chat-widget-composebar .quick-replies').remove();   // To remove quick replies container if exists
     }
 

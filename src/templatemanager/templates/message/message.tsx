@@ -95,6 +95,11 @@ export function Message(props: any) {
         }
     }
 
+    if (msgData?.author) {
+        msgData.fromAgent = true;
+        msgData.author['name'] = msgData?.author?.firstName + ' ' + msgData?.author?.lastName;
+    }
+
     if (msgData.message) {
         if (msgData.type == 'bot_response' && msgData.message[0].component && msgData.message[0].component.type == 'error'
         && msgData.message[0].component.payload.text) {
@@ -107,7 +112,7 @@ export function Message(props: any) {
                         <div className="message-bubble" data-cw-msg-id={msgData.messageId || msgItem.clientMessageId} data-time-stamp={msgData.createdOnTimemillis} id={msgData.messageId || msgItem.clientMessageId}>
                             { msgData.type == 'bot_response' && msgItem.component && msgItem.component.type == 'error' && msgItem.component.payload.text && <div className="bot-bubble-comp if-animation-bubble">
                                     <div className={botStyle}>
-                                        {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
+                                        {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info" aria-hidden="true">
                                             <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}>{msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}</div>
                                             <div className="time-stamp">
                                                 <time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format, hostInstance.config)}</time>
@@ -118,12 +123,12 @@ export function Message(props: any) {
                                             <div className="bubble-msg" style={{color: msgItem.component.payload.color}} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgItem.component.payload.text, "bot", msgItem) }}></div>
                                             {brandingInfo.body.icon.show && !msgData.fromAgent && <div className="bot-img">
                                                 <figure>
-                                                    <img src={msgData && msgData.icon ? msgData.icon : iconHelper.getIcon('kore')} alt='avatr img' />
+                                                    <img src={msgData && msgData.icon ? msgData.icon : iconHelper.getIcon('kore')} alt='avatr img' aria-hidden="true"/>
                                                 </figure>
                                             </div>}
                                             {brandingInfo.body.icon.show && msgData.fromAgent && <div className="bot-img">
                                                 <figure>
-                                                    <img src={msgData && msgData.icon ? msgData.icon : brandingInfo.body.agent_message.icon.icon_url} alt='avatr img' />
+                                                    <img src={msgData && msgData.icon ? msgData.icon : brandingInfo.body.agent_message.icon.icon_url} alt='avatr img' aria-hidden="true"/>
                                                 </figure>
                                             </div>}
                                             <div className="copy-bubble" onClick={() => onCopy(event, helpers.getInnerText(msgItem.component.payload.text))}>
@@ -132,7 +137,7 @@ export function Message(props: any) {
                                                 </svg>
                                             </div>
                                         </div>
-                                        {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
+                                        {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info" aria-hidden="true">
                                             <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}>{msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}</div>
                                             <div className="time-stamp"><time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format, hostInstance.config)}</time></div>
                                         </div>}
@@ -140,7 +145,7 @@ export function Message(props: any) {
                                 </div> }
                             { msgData.type == 'bot_response' && msgItem.type === 'text' && msgItem.cInfo && msgItem.cInfo.body && <div className="bot-bubble-comp if-animation-bubble">
                                     <div className={botStyle}>
-                                        {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
+                                        {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info" aria-hidden="true">
                                             <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}>{msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}</div>
                                             <div className="time-stamp">
                                                 <time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format, hostInstance.config)}</time>
@@ -151,12 +156,12 @@ export function Message(props: any) {
                                             <div className="bubble-msg" style={botStyles} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgItem.cInfo.body, "bot", msgItem) }}></div>
                                             {brandingInfo.body.icon.show && !msgData.fromAgent && <div className="bot-img">
                                                 <figure>
-                                                    <img src={msgData && msgData.icon ? msgData.icon : iconHelper.getIcon('kore')} alt='avatr img' />
+                                                    <img src={msgData && msgData.icon ? msgData.icon : iconHelper.getIcon('kore')} alt='avatr img' aria-hidden="true"/>
                                                 </figure>
                                             </div>}
                                             {brandingInfo.body.icon.show && msgData.fromAgent && <div className="bot-img">
                                                 <figure>
-                                                    <img src={msgData && msgData.icon ? msgData.icon : brandingInfo.body.agent_message.icon.icon_url} alt='avatr img' />
+                                                    <img src={msgData && msgData.icon ? msgData.icon : brandingInfo.body.agent_message.icon.icon_url} alt='avatr img' aria-hidden="true"/>
                                                 </figure>
                                             </div>}
                                             <div className="copy-bubble" onClick={() => onCopy(event, helpers.getInnerText(msgItem.cInfo.body))}>
@@ -165,7 +170,7 @@ export function Message(props: any) {
                                                 </svg>
                                             </div>
                                         </div>
-                                        {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
+                                        {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info" aria-hidden="true">
                                             <div className="you-text" title={msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}>{msgData.fromAgent && msgData.author?.name ? msgData.author.name : brandingInfo.body.bot_name.name}</div>
                                             <div className="time-stamp"><time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format, hostInstance.config)}</time></div>
                                         </div>}
@@ -174,7 +179,7 @@ export function Message(props: any) {
 
                             { msgData.type != 'bot_response' && msgItem.type === 'text' && msgItem.cInfo && msgItem.cInfo.body && <div className="agent-bubble-comp if-animation-bubble">
                                     <div className={userStyle}>
-                                        {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info">
+                                        {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info" aria-hidden="true">
                                             {/* <span className="copied-text">Copied</span> */}
                                             <div className="time-stamp">
                                                 <time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format, hostInstance.config)}</time>
@@ -186,7 +191,7 @@ export function Message(props: any) {
                                             </div>
                                             <div className="agent-img">
                                                 <figure>
-                                                    <img src={iconHelper.getIcon('user')} alt='user img' />
+                                                    <img src={iconHelper.getIcon('user')} alt='user img' aria-hidden="true"/>
                                                 </figure>
                                             </div>
                                             <div className="copy-bubble" onClick={() => onCopy(event, helpers.getInnerText(msgItem.cInfo.renderMsg && msgItem.cInfo.renderMsg !== '' ? msgItem.cInfo.renderMsg : msgItem.cInfo.body))}>
@@ -198,7 +203,7 @@ export function Message(props: any) {
                                         </svg> */}
                                             </div>
                                         </div>
-                                        {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info">
+                                        {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info" aria-hidden="true">
                                             <div className="time-stamp"><time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format, hostInstance.config)}</time></div>
                                             <div className="you-text">You</div>
                                         </div>}
@@ -210,7 +215,7 @@ export function Message(props: any) {
                                         <div className="attchments-wrap">
                                             <div className="img-attch">
                                                 <figure>
-                                                    <img src={msgData.message[0].cInfo.attachments[0].fileUrl} />
+                                                    <img src={msgData.message[0].cInfo.attachments[0].fileUrl} aria-hidden="true"/>
                                                 </figure>
                                             </div>
                                             {/* <button className="layer-multiple">+1</button> */}

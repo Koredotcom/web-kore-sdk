@@ -1,3 +1,58 @@
+### 11.16.1
+* Release August 11, 2025
+* Bug fixes
+  * added display of agent name for messages in chat history for supported integrations
+  * quick replies issue fix on history scroll
+  * proactive web campaign issues fix
+
+### 11.16.0
+* Release July 26, 2025
+* Features
+  * added support for read receipts and agent name for third party live chat(Salesforce). Please refer [Platfrom Salesforce Agent integration docs](https://docs.kore.ai/xo/app-settings/integrations/agents/configuring-the-salesforce-agent/#configure-messaging-for-in-app-and-web-miaw) for more details
+  * enhanced the Proactive Web Campaign Plugin. The plugin has been updated to support exclusion rules in addition to the existing rules and evaluating custom data. Please refer [here](docs/plugins/proactive-web-campaign/README.md#sending-custom-data-to-the-proactive-web-campaign-plugin) for more details about passing custom data.
+* Documentation
+  * updated events with example code snippets
+  * updated faqs
+  * updated proactive web campaing plugin instructions
+* Bug fixes
+  * kore markdown link issue fix
+  * message bubble corners issue fix
+
+### 11.15.1
+* Release July 12, 2025
+* Documentation
+  * added i18n instructions
+  * updated faqs
+* Stable release
+
+### 11.15.0
+* Release June 28, 2025
+* Bug fixes
+  * otp template slider close issue fix on resend click
+  * digital form styling issue fix when widgets enabled
+  * removed extra line for unordered list in the markdown
+
+### 11.14.1
+* Release June 14, 2025
+* Bug fixes
+  * form template issues fix
+
+### 11.14.0
+* Release May 31, 2025
+* Bug fixes
+  * accessibility improvements and bug fixes
+  * proactive web campaings plugin issues fix
+
+### 11.13.1
+* Release May 17, 2025
+* Stable release
+
+### 11.13.0
+* Release May 03, 2025
+* Bug fixes
+  * agent desktop issues fix
+  * answers template issues fix
+
 ### 11.12.1
 * Release April 19, 2025
 * Features

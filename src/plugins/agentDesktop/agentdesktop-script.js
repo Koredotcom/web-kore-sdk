@@ -1359,6 +1359,8 @@ class AgentDesktopPluginScript  {
             // Trigger event when cancel is clicked
             var cancelWebConv = koreJquery("#cancel-web-conversation");
             cancelWebConv.off('click').on('click', function (event) {
+                // Removing call in progress container
+                document.querySelector(".campaign-calling-audio-static-wrapper")?.remove();
                 hostInstance.chatEle.querySelector('.btn-action-close').click();
                 hostInstance.bot?.close();
             });

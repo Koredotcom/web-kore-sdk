@@ -60,7 +60,7 @@ export function Chat(props: any) {
         hostInstance.chatEle.classList.remove('minimize-chat');
         hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
         hostInstance.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
-        hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add('minimize');
+        hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(hostInstance.config.branding.chat_bubble.expand_animation);
         hostInstance.bot.close();
         hostInstance.bot.KoreRTMClient.prototype.reWriteURL = function connect(socketUrl: any) {
             if (this.reWriteSocketURL) {
@@ -95,7 +95,10 @@ export function Chat(props: any) {
     }
 
     return(
-        <div>{!isAcceptTriggered && <div className="content-info">
+        // "pwc-active-campaign-template" class is added to the DOM after the campaign template is rendered
+        // This class is used to identify the campaign template and prevent the sendApiEvent from getting triggered multiple times
+        // DONOT REMOVE THIS CLASS
+        <div>{!isAcceptTriggered && <div className="pwc-active-campaign-template content-info">
             {pwcCampaign.data?.messages.map((ele: any, ind: any) => (
                 <div className="text-content animation-slide-up" role="contentinfo" aria-labelledby="helojohn">
                     <div className="help-text-content">
@@ -121,17 +124,17 @@ export function Chat(props: any) {
         {isAcceptTriggered && <div className="welcome-chat-section-campaign" aria-label="">
             <header className="welcome-header-campaign variation-2" aria-label="welcome header">
                 <div className="welcome-header-bg">
-                    <div className="logo-img">
+                    {hostInstance.config.branding.welcome_screen.logo.logo_url && <div className="logo-img">
                         <figure>
-                        <img src="https://dev-xo.kore.ai/assets/websdkthemes/soundImages/kore.png" alt="log-img" />
+                        <img src={hostInstance.config.branding.welcome_screen.logo.logo_url} alt="log-img" />
                         </figure>
-                    </div>
-                    <h1>Hello</h1>
-                    <h2>Welcome to Kore.ai</h2>
+                    </div>}
+                    <h1>{hostInstance.config.branding.welcome_screen.title.name}</h1>
+                    <h2>{hostInstance.config.branding.welcome_screen.sub_title.name}</h2>
                 </div>
                 <div className="bg-logo">
                     <figure>
-                        <img src="https://dev-xo.kore.ai/assets/websdkthemes/soundImages/kore.png" alt="log-img" />
+                        <img src={hostInstance.config.branding.welcome_screen.logo.logo_url} alt="log-img" />
                     </figure>
                 </div>
             </header>

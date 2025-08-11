@@ -65,8 +65,8 @@ export function OTPExt(props: any) {
             if (payload.piiReductionChar) {
                 otp = payload.piiReductionChar + otp + payload.piiReductionChar;
             }
-            hostInstance.sendMessage(otp, { renderMsg: '*'.repeat(otp.length) });
-            if (!fromHistory) {
+            hostInstance.sendMessage(otp, { renderMsg: '*'.repeat(payload.pinLength) });
+            if (msgData.message[0].component?.payload?.sliderView && !fromHistory) {
                 closeMenu();
             }
         }
@@ -75,6 +75,9 @@ export function OTPExt(props: any) {
     const handleResend = () => {
         const resendPayload = payload.otpButtons[1].payload;
         hostInstance.sendMessage(resendPayload);
+        if (msgData.message[0].component?.payload?.sliderView && !fromHistory) {
+            closeMenu();
+        }
     };
 
     const closeMenu = () => {

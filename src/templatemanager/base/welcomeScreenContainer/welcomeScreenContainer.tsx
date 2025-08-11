@@ -240,7 +240,7 @@ export function WelcomeScreenContainer(props: any) {
                         </div>
 
                         <div className="carousel-temp-links">
-                            <button className="carousel-left-click" c-left-button-id="welcome_screen_carousel">
+                            <button className="carousel-left-click" c-left-button-id="welcome_screen_carousel" aria-label="scroll left">
                                 <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
                                     <path d="M12 15.5L7 10.5L12 5.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
@@ -256,7 +256,7 @@ export function WelcomeScreenContainer(props: any) {
                                                 <p>{item.description}</p>
                                             </div>}
                                             <div className="right-actions-content">
-                                                <button className="arrow-icon">
+                                                <button className="arrow-icon" aria-label={item.title}>
                                                     <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
                                                         <path d="M7 5.38232L12 10.3823L7 15.3823" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
                                                     </svg>
@@ -264,7 +264,7 @@ export function WelcomeScreenContainer(props: any) {
                                             </div>
                                     </div>))}
                             </div>
-                            <button className="carousel-right-click" c-right-button-id="welcome_screen_carousel">
+                            <button className="carousel-right-click" c-right-button-id="welcome_screen_carousel" aria-label="scroll right">
                                 <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
                                     <path d="M7 5.5L12 10.5L7 15.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>

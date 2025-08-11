@@ -127,7 +127,7 @@ export function AvatarComponent(props: any) {
                 {hostInstance.config.branding.chat_bubble.proactive.show && (hostInstance.config.branding.chat_bubble.proactive.header || hostInstance.config.branding.chat_bubble.proactive.messages.length > 0 || hostInstance.config.branding.chat_bubble.proactive.buttons.length > 0) && !hostInstance.config.pwcConfig.enable && <div className="content-info">
                     {hostInstance.config.branding.chat_bubble.proactive.header && <div className="text-content animation-slide-up text-heading-one" role="contentinfo" aria-labelledby={dynamicContextResolver(hostInstance.config.branding.chat_bubble.proactive.header, hostInstance.config.UIContext)}>
                         <h4 id="hellokore">{dynamicContextResolver(hostInstance.config.branding.chat_bubble.proactive.header, hostInstance.config.UIContext)}</h4>
-                        <span className="close-avatar-content" role="contentinfo" aria-label="close" onClick={closeHelp}>
+                        <span className="close-avatar-content" role="contentinfo" aria-label="close proactive message" onClick={closeHelp} tabIndex={0}>
                             <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
                                 <path d="M10.8838 10.0001L16.0669 4.81694C16.311 4.57286 16.311 4.17714 16.0669 3.93306C15.8229 3.68898 15.4271 3.68898 15.1831 3.93306L9.99988 9.11624L4.81694 3.93352C4.57286 3.68944 4.17713 3.68945 3.93306 3.93354C3.68899 4.17762 3.689 4.57335 3.93308 4.81742L9.116 10.0001L3.93306 15.1831C3.68898 15.4272 3.68898 15.8229 3.93306 16.067C4.17714 16.311 4.57286 16.311 4.81694 16.067L9.9999 10.884L15.1831 16.067C15.4272 16.311 15.8229 16.311 16.067 16.0669C16.311 15.8229 16.311 15.4271 16.0669 15.1831L10.8838 10.0001Z" fill="#697586" />
                             </svg>
@@ -151,7 +151,7 @@ export function AvatarComponent(props: any) {
 
                 <button className={avatarBgStyle}>
                     {/* <span className="un-read-msg">2</span> */}
-                    {brandingInfo.chat_bubble.icon.type == 'default' && <figure className="default-avater-icon">
+                    {brandingInfo.chat_bubble.icon.type == 'default' && <figure className="default-avater-icon" aria-label="chat icon">
                         {/* <img src={brandingInfo.chat_bubble.icon.icon_url} alt="Elephant at sunset" /> */}
                         {brandingInfo.chat_bubble.icon.icon_url && brandingInfo.chat_bubble.icon.icon_url == 'icon-1' && <svg width="24" height="18" viewBox="0 0 24 18" fill="none">
                             <path d="M12.6667 7.4618V10.0965C12.0584 10.8017 11.2505 11.0427 10.4419 11.0427C9.00304 11.0427 8 9.99141 8 8.78878C8 7.56693 9.00304 6.49573 10.4419 6.49573C11.2505 6.49573 12.0584 6.74061 12.6667 7.4618Z" fill="white" />
@@ -168,7 +168,7 @@ export function AvatarComponent(props: any) {
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M11.25 0.5C5.45101 0.5 0.75 5.20101 0.75 11C0.75 16.799 5.45101 21.5 11.25 21.5C17.049 21.5 21.75 16.799 21.75 11C21.75 5.20101 17.049 0.5 11.25 0.5ZM11.2501 2.05566C16.19 2.05566 20.1946 6.06023 20.1946 11.0001C20.1946 15.94 16.19 19.9446 11.2501 19.9446C6.31023 19.9446 2.30566 15.94 2.30566 11.0001C2.30566 6.06023 6.31023 2.05566 11.2501 2.05566ZM11.2822 6.40039C11.7047 6.40039 12.0516 6.711 12.0889 7.10737L12.0922 7.17817V7.25C12.0922 7.67955 11.7295 8.02778 11.2822 8.02778C10.8597 8.02778 10.5127 7.71717 10.4755 7.32079L10.4722 7.25V7.17817C10.4722 6.74861 10.8348 6.40039 11.2822 6.40039ZM11.2499 9.5C11.6556 9.5 11.9888 9.81061 12.0245 10.207L12.0277 10.2778V16.0742C12.0277 16.5037 11.6795 16.852 11.2499 16.852C10.8443 16.852 10.5111 16.5414 10.4753 16.145L10.4722 16.0742V10.2778C10.4722 9.84822 10.8204 9.5 11.2499 9.5Z" fill="white" />
                         </svg>}
                     </figure>}
-                    {brandingInfo.chat_bubble.minimise.type == 'default' && <figure className="close-avater-icon rotateIn">
+                    {brandingInfo.chat_bubble.minimise.type == 'default' && <figure className="close-avater-icon rotateIn" aria-label="minimize chat">
                         {/* <img src={brandingInfo.chat_bubble.minimise.icon} alt="Elephant at sunset" /> */}
                         {brandingInfo.chat_bubble.minimise.icon && brandingInfo.chat_bubble.minimise.icon == 'icon-m-1' && <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M12.5466 15.2242C12.2625 15.5076 11.8122 15.5242 11.5086 15.2742L11.4534 15.2242L4.72639 8.8159C4.42454 8.51487 4.42454 8.0268 4.72639 7.72577C5.01049 7.44245 5.46072 7.42578 5.76436 7.67577L5.8195 7.72577L12 13.5889L18.1805 7.72577C18.4646 7.44245 18.9148 7.42578 19.2185 7.67577L19.2736 7.72577C19.5577 8.00909 19.5744 8.4581 19.3237 8.76091L19.2736 8.8159L12.5466 15.2242Z" fill="white" />
@@ -183,11 +183,11 @@ export function AvatarComponent(props: any) {
                             <path d="M17.0492 13L12.2492 18M12.2492 18L7.44922 13M12.2492 18L12.2492 6" stroke="white" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" />
                         </svg></span>}
                     </figure>}
-                    {brandingInfo.chat_bubble.icon.type == 'custom' && <figure className="custom-img-uploaded">
-                        <img src={brandingInfo.chat_bubble.icon.icon_url} />
+                    {brandingInfo.chat_bubble.icon.type == 'custom' && <figure className="custom-img-uploaded" aria-label="chat icon">
+                        <img src={brandingInfo.chat_bubble.icon.icon_url} aria-hidden="true"/>
                     </figure>}
-                    {brandingInfo.chat_bubble.minimise.type == 'custom' && <figure className="custom-img-uploaded-minimize" >
-                        <img src={brandingInfo.chat_bubble.minimise.icon} />
+                    {brandingInfo.chat_bubble.minimise.type == 'custom' && <figure className="custom-img-uploaded-minimize" aria-label="minimize chat">
+                        <img src={brandingInfo.chat_bubble.minimise.icon} aria-hidden="true"/>
                     </figure>}
                 </button>
             </div>

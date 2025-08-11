@@ -57,7 +57,7 @@ class KoreMultiFileUploaderPlugin {
       'db', 'dbf', 'mdb', 'pdb', 'sql', 'apk', 'cgi', 'cfm', 'csr', 'css', 'htm', 'html', 'jsp', 'php', 'xhtml', 'rss', 'fnt', 'fon', 'otf', 'ttf', 'cab', 'cur', 'dll', 'dmp', 'drv', '7z', 'cbr',
       'deb', 'gz', 'pkg', 'rpm', 'zipx', 'bak', 'avi', 'm4v', 'mpg', 'rm', 'swf', 'vob', 'wmv', '3gp2', '3g2', 'asf', 'asx', 'srt', 'wma', 'mid', 'aif', 'iff', 'm3u', 'mpa', 'ra', 'aiff', 'tiff'];
     if (config) {
-      this.config.koreAttachmentAPIUrl = config?.koreAttachmentAPIUrl || 'https://sit-xo.kore.ai/api/'; 
+      this.config.koreAttachmentAPIUrl = config?.koreAttachmentAPIUrl || 'https://platform.kore.ai/api/'; 
     }
   }
 
@@ -95,6 +95,9 @@ class KoreMultiFileUploaderPlugin {
         me.hostInstance.chatEle.querySelector('.emoji-picker-section').style.display = 'none';
       }
       me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.toggle('hide-attachment');
+      if (!me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.contains('hide-attachment')) {
+        me.hostInstance.chatEle.querySelector('.inputfile-btn-media')?.focus();
+      }
       if (me.hostInstance.chatEle.querySelector('.uploaded-attachment-data')) {
         me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
         document.getElementById("captureMediaAttachment").value = '';
@@ -110,6 +113,12 @@ class KoreMultiFileUploaderPlugin {
       //     me.hostInstance.chatEle.querySelector('.send-btn')?.classList.remove('show');
       //   }
       // }
+    });
+    me.hostInstance.eventManager.addEventListener('.inputfile-btn-media', 'click', () => {
+      me.hostInstance.chatEle.querySelector('#captureMediaAttachment')?.click();
+    });
+    me.hostInstance.eventManager.addEventListener('.inputfile-btn-file', 'click', () => {
+      me.hostInstance.chatEle.querySelector('#captureFileAttachment')?.click();
     });
     me.hostInstance.eventManager.addEventListener('#captureMediaAttachment', 'change', (event: any) => {
       const file = me.hostInstance.chatEle.querySelector('#captureMediaAttachment').files[0];

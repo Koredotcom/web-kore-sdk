@@ -1164,6 +1164,7 @@ bindEventsV3() {
         if (window.sessionStorage.getItem('isReconnect') == 'true') {
           window.sessionStorage.setItem('isReconnect', 'false');
           setTimeout(() => {
+            me.isReconnected = true;
             me.resetWindow();
           })
         }
@@ -1872,6 +1873,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   let eleHeight, scrollHeight;
   if (me.config.UI.version == 'v3' && messageHtml && me.chatEle.querySelectorAll(`.chat-widget-body-wrapper [data-cw-msg-id="${msgData?.messageId || msgData?.message?.[0]?.clientMessageId}"]`).length < 1 || (msgData?.renderType === 'inline')) {
     if (msgData?.type === 'bot_response' && msgData?.fromHistorySync) {
+      messageHtml.setAttribute('aria-hidden', 'true');
       const chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
       me.msgTimeStamps = [];
       const msgEles = me.chatEle.querySelectorAll('.message-bubble');
@@ -1901,6 +1903,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
         const chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
         if (me.historyLoading) {
           messageHtml?.classList?.remove('if-animation-bubble');
+          messageHtml.setAttribute('aria-hidden', 'true');
         }
         if (messageHtml) {
           chatContainer.appendChild(messageHtml);

@@ -82,6 +82,8 @@ export function Carousel(props: any) {
             const btnsParentDiv: any = hostInstance.chatEle.querySelector(`[data-id='${msgData.messageId}']`);
             const leftScrollBtn = hostInstance.chatEle.querySelector(`[data-button-left='${msgData.messageId}']`);
             const rightScrollBtn = hostInstance.chatEle.querySelector(`[data-button-right='${msgData.messageId}']`);
+            const carouselItems = btnsParentDiv.querySelectorAll('.list-carousel-item');
+            
             function updateButtonsView() {
                 if (btnsParentDiv.scrollLeft > 0) {
                     leftScrollBtn.classList.remove('hide');
@@ -100,6 +102,42 @@ export function Carousel(props: any) {
                 btnsParentDiv.scrollBy({ left: offset, behavior: 'smooth' });
                 setTimeout(updateButtonsView, 500);
             }
+
+            function scrollItemIntoView(item: any) {
+                const itemLeft = item.offsetLeft;
+                const itemRight = itemLeft + item.offsetWidth;
+                const containerLeft = btnsParentDiv.scrollLeft;
+                const containerRight = containerLeft + btnsParentDiv.clientWidth;
+
+                if (itemLeft < containerLeft) {
+                    // Item is to the left of visible area - use left navigation logic
+                    const offset = -item.offsetWidth - 9;
+                    btnsParentDiv.scrollBy({ left: offset, behavior: 'smooth' });
+                } else if (itemRight > containerRight) {
+                    // Item is to the right of visible area - use right navigation logic  
+                    const offset = item.offsetWidth + 10;
+                    btnsParentDiv.scrollBy({ left: offset, behavior: 'smooth' });
+                }
+                setTimeout(updateButtonsView, 500);
+            }
+
+            // Add focus event listeners to carousel items for tab navigation
+            carouselItems.forEach((item: any) => {
+                // Make carousel items focusable
+                item.setAttribute('tabindex', '0');
+                
+                item.addEventListener('focus', () => {
+                    scrollItemIntoView(item);
+                });
+
+                // Handle keyboard navigation within items
+                item.addEventListener('keydown', (e: any) => {
+                    if (e.key === 'Tab') {
+                        // Let default tab behavior handle focus within the item
+                        return;
+                    }
+                });
+            });
 
             leftScrollBtn.addEventListener('click', () => {
                 const qButtons = [...btnsParentDiv.querySelectorAll('.list-carousel-item')];

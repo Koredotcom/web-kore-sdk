@@ -6,7 +6,10 @@ export function Post(props: any) {
     
     if (msgData.type == 'pwe_message' && msgData.body.campInfo?.webCampaignType && msgData.body.campInfo?.webCampaignType == 'post' && msgData?.body?.layoutDesign) {
         const layoutDesign = msgData.body?.layoutDesign;
-        let postClass = 'campaign-post-banner-data-sec';
+        // "pwc-active-campaign-template" class is added to the DOM after the campaign template is rendered
+        // This class is used to identify the campaign template and prevent the sendApiEvent from getting triggered multiple times
+        // DONOT REMOVE THIS CLASS
+        let postClass = 'pwc-active-campaign-template campaign-post-banner-data-sec';
         if (layoutDesign?.size == 'small') {
             postClass = postClass + ' small-post-banner';
         }
