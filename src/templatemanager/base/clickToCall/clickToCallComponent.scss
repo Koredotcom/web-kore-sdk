@@ -1,0 +1,154 @@
+.click-to-call-component {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    
+    .call-flow-number- {
+        padding: 20px;
+        border-bottom: 1px solid #e0e0e0;
+        
+        .phone-number-sec {
+            text-align: center;
+            
+            .number-p {
+                font-size: 14px;
+                color: #666;
+                margin-bottom: 5px;
+            }
+            
+            .dialing-title {
+                font-size: 16px;
+                font-weight: 500;
+                color: #333;
+            }
+        }
+    }
+    
+    .scroll-kepad-data-call {
+        padding: 20px;
+        overflow-y: auto;
+        max-height: calc(100% - 100px);
+        
+        .keypad-numbers-data {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            
+            .numbers {
+                width: 100%;
+                max-width: 300px;
+                padding: 15px;
+                font-size: 18px;
+                border: 2px solid #ddd;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                text-align: center;
+                outline: none;
+                
+                &:focus {
+                    border-color: #007bff;
+                }
+            }
+            
+            .keypad-num {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+                margin-bottom: 30px;
+                max-width: 250px;
+                
+                .num {
+                    width: 60px;
+                    height: 60px;
+                    border: 2px solid #ddd;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 20px;
+                    font-weight: 500;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    background: #fff;
+                    
+                    &:hover {
+                        background: #f0f0f0;
+                        border-color: #007bff;
+                    }
+                    
+                    &:active {
+                        transform: scale(0.95);
+                        background: #e0e0e0;
+                    }
+                    
+                    &.pt-2 {
+                        padding-top: 2px;
+                    }
+                }
+            }
+            
+            .bottom-actions {
+                display: flex;
+                gap: 30px;
+                align-items: center;
+                
+                .speaker-icon, .end-call-icon {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    background: #28a745;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    
+                    &:hover {
+                        background: #218838;
+                        transform: scale(1.05);
+                    }
+                    
+                    &.disabled {
+                        background: #ccc;
+                        cursor: not-allowed;
+                        
+                        &:hover {
+                            background: #ccc;
+                            transform: none;
+                        }
+                    }
+                    
+                    img {
+                        width: 24px;
+                        height: 24px;
+                    }
+                }
+                
+                div:last-child {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    background: #dc3545;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    
+                    &:hover {
+                        background: #c82333;
+                        transform: scale(1.05);
+                    }
+                    
+                    img {
+                        width: 24px;
+                        height: 24px;
+                    }
+                }
+            }
+        }
+    }
+}

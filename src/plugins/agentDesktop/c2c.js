@@ -13,10 +13,14 @@
               Replace default SBC server address (from config.js) to the parameter value.
  */
 
+import AudioCodesUA from './ac_webrtc.js';
+import './jssip.js'; // Import JsSIP to make it available globally
+
 let phone = new AudioCodesUA(); // phone API
 var activeCall = null; // not null, if exists active call
 let callTo; // call to user
 let transferCall = null;
+let extraHeaders = [];
 
 // Run when document is ready
 function c2c_call(config) {
@@ -38,6 +42,8 @@ function c2c_call(config) {
 
     // Get call parameters from URL
     callTo = config.botName || 'Kore_WebRTC';
+    console.log('config in c2c', config);
+    
     if (callTo === null) {
         let missedCallParameter = 'Missed "call" parameter in URL';
         guiError(missedCallParameter);
@@ -57,9 +63,9 @@ function c2c_call(config) {
     // Note: the method implementation moved to phone API.
     phone.checkAvailableDevices()
         .then(() => {
-            let caller = getParameter('caller', 'Anonymous');
-            let callerDN = getParameter('callerDN', 'Anonymous');
-            initSipStack_c2c({ user: caller, displayName: callerDN, password: '' }, config);
+            let caller = getParameter('caller', config?.userIdentity);
+            let callerDN = getParameter('callerDN', config?.userIdentity);
+            initSipStack_c2c({ user: caller, displayName: callerDN, password: caller }, config);
         })
         .catch((e) => {
             ac_log('error', e);
@@ -90,10 +96,12 @@ function guiSendDTMF(key) {
 }
 
 function initSipStack_c2c(account, config) {
-    phone.setOAuthToken(config.accessToken);
+    console.log('account in initSipStack_c2c', account, config);
+    // phone.setOAuthToken(config.accessToken);
     phone.setServerConfig(config.serverConfig.addresses, config.serverConfig.domain, config.serverConfig.iceServers);
-    phone.setAccount(account.user, account.displayName, account.user, account.user);
+    phone.setAccount(account.user, account.displayName, account.password, account.user);
     phone.setDtmfOptions(true, null, null);
+    extraHeaders = config.extraHeaders
 
     // Set phone API listeners
     phone.setListeners({
@@ -144,7 +152,7 @@ function initSipStack_c2c(account, config) {
             ac_log('phone>>> callConfirmed');
             guiInfo('');
             if (call.hasReceiveVideo()){ // Show when receiving video
-                let remoteVideo = document.getElementById('remote_video');
+                let remoteVideo = document.getElementById('kore_remote_video');
                 remoteVideo.style.display = 'block';
             }
             //guiShowPanel('call_established_panel');
@@ -153,7 +161,7 @@ function initSipStack_c2c(account, config) {
 
         callShowStreams: function(call, localStream, remoteStream) {
             ac_log('phone>>> callShowStreams');
-            let remoteVideo = document.getElementById('remote_video');
+            let remoteVideo = document.getElementById('kore_remote_video');  
             remoteVideo.srcObject = remoteStream; // to play audio and optional video
             config.callShowStreams(call, localStream, remoteStream);
         },
@@ -197,7 +205,7 @@ function initSipStack_c2c(account, config) {
     });
 
     guiInfo('Connecting...');
-    phone.init(false);
+    phone.init(true);
 }
 
 function onBeforeUnload() {
@@ -219,7 +227,7 @@ function guiMakeCall(callTo) {
     // document.getElementById('call_established_user').innerText = callTo;
     guiInfo('');
     //guiShowPanel('outgoing_call_panel');
-    activeCall = phone.call(phone.AUDIO, callTo); // Note: Can be used audio or video call.
+    activeCall = phone.call(phone.AUDIO, callTo, extraHeaders); // Note: Can be used audio or video call.
 }
 
 function c2c_hangup() {
@@ -244,9 +252,9 @@ function guiWarning(text) { guiStatus(text, 'Gold'); }
 function guiInfo(text) { guiStatus(text, 'Aquamarine'); }
 
 function guiStatus(text, color) {
-    let line = document.getElementById('status_line');
-    line.setAttribute('style', `background-color: ${color}`);
-    line.innerHTML = text;
+    // let line = document.getElementById('status_line');
+    // line.setAttribute('style', `background-color: ${color}`);
+    // line.innerHTML = text;
 }
 //--------------- Show or hide element -------
 function guiShow(id) {
@@ -273,3 +281,5 @@ function guiShowPanel(activePanel) {
         }
     }
 }
+
+export { c2c_call };

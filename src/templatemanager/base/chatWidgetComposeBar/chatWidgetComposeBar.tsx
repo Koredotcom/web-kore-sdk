@@ -15,6 +15,7 @@ export function ChatWidgetComposeBar(props: any) {
     hostInstance.on('onBrandingUpdate', function (event: any) {
         updateBrandingInfo({...event.brandingData})
     });
+    const setShowClickToCallWidget = props.setShowClickToCallWidget;
 
     const inputTypeObj: any = {
         keypad: 'compose-bar-wrapper',
@@ -38,6 +39,12 @@ export function ChatWidgetComposeBar(props: any) {
 
     const handleHamberger = () => {
         hostInstance.bottomSliderAction('', getHTML(Menu, '', hostInstance)) 
+    }
+
+    const handleClickToCall = () => {
+        console.log('config', hostInstance.config);
+        
+        setShowClickToCallWidget(true);        
     }
 
     const checkForFileUploadPlugin = () => {
@@ -184,6 +191,11 @@ export function ChatWidgetComposeBar(props: any) {
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                         <path d="M10 2.5C12.7733 2.5 15 4.79988 15 7.61355V13.341C15 13.7049 14.6924 13.9999 14.313 13.9999C13.9547 13.9999 13.6605 13.7368 13.6289 13.401L13.6261 13.341V7.61355C13.6261 5.5067 11.9908 3.81769 10 3.81769C8.00922 3.81769 6.37393 5.5067 6.37393 7.61355V13.9774C6.37393 15.1951 7.40322 16.1823 8.67291 16.1823C9.94261 16.1823 10.9719 15.1951 10.9719 13.9774V7.61355C10.9719 7.09876 10.5368 6.68143 10 6.68143C9.4856 6.68143 9.06454 7.0647 9.03035 7.54973L9.0281 7.61355V13.341C9.0281 13.7049 8.72054 13.9999 8.34114 13.9999C7.98282 13.9999 7.68857 13.7368 7.65698 13.401L7.65418 13.341V7.61355C7.65418 6.37101 8.70444 5.36374 10 5.36374C11.2956 5.36374 12.3458 6.37101 12.3458 7.61355L12.3458 13.9774C12.3453 15.9224 10.7011 17.5 8.67291 17.5C6.64442 17.5 5 15.9229 5 13.9774V7.61355C5 4.79988 7.22674 2.5 10 2.5Z" fill="#697586"/>
                     </svg>
+                </button> }
+                { brandingInfo.footer.buttons.menu.show && <button className="action-btn hamberger-menu" type="button" title={hostInstance.config.botMessages.menu} onClick={handleClickToCall}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.05-.24 11.72 11.72 0 003.68.59 1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 5a1 1 0 011-1h3.5a1 1 0 011 1c0 1.27.21 2.5.59 3.68a1 1 0 01-.24 1.05l-2.23 2.06z"/>
+                </svg>
                 </button> }
                 <div className={`compose-text-area ${brandingInfo.footer.buttons.speaker.show && brandingInfo.footer.buttons.emoji.show ? 'emoji-btn-true' : 'only-emoji-btn'}`}>
                     {brandingInfo.footer.buttons.speaker.show && <button className="speaker-btn speaker-btn-mute show" type="button" title={hostInstance.config.botMessages.speakerOn} onClick={() => checkForTTSPlugin()}>
