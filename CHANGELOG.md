@@ -1,3 +1,10 @@
+### 11.16.1
+* Release August 11, 2025
+* Bug fixes
+  * added display of agent name for messages in chat history for supported integrations
+  * quick replies issue fix on history scroll
+  * proactive web campaign issues fix
+
 ### 11.16.0
 * Release July 26, 2025
 * Features
