@@ -187,6 +187,7 @@ export function ClickToCallComponent(props: any) {
             "body": "",
             "type": "click_to_all"
         }
+        messageToBot["isClickToCallEnabled"] = true,
         messageToBot["resourceid"] = "/bot.message";
         hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
 
