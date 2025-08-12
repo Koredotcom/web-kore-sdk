@@ -192,16 +192,14 @@ export function ClickToCallComponent(props: any) {
         hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
 
 
-        // 
         console.log('handleClickToCall', hostInstance);
         const { clickToCallFlowId, accessToken, botInfo:{taskBotId}} = hostInstance.config?.botOptions;
         const  {userInfo}  = hostInstance.bot.userInfo; // userid is here
-        console.log('wsUrl', hostInstance.bot?.RtmClient?.ws?.url, userInfo); // sid here
-        const sid = hostInstance.bot?.RtmClient?.ws?.url.split('sid=')[1].split('&')[0];
+        const sid = hostInstance.sessionId;
 
         localStorage.setItem("X-botName", "kore.com");
         localStorage.setItem("X-CALLFLOW-ID", clickToCallFlowId);
-        localStorage.setItem("X-CALLFLOW-STATE", "configured");
+        localStorage.setItem("X-CALLFLOW-STATE", "published");
         localStorage.setItem("X-RTM-SESSION-ID", sid);
         localStorage.setItem("X-RTM-USER-ID", userInfo.userId);
         localStorage.setItem("taskBotId", taskBotId);

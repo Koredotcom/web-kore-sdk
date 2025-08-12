@@ -249,8 +249,15 @@ class AgentDesktopPlugin {
         me.hostInstance.on('onWSMessage', (event: any) => {
 
             if(event.messageData?.type === 'Session_Start') {
-                console.log('Session_Start: 2', event.messageData?.sessionId);
+                console.log('Session_Start: Session_Start', event.messageData?.sessionId);
                 me.hostInstance.sessionId = event.messageData?.sessionId;
+            }
+
+            if(event.messageData?.type === 'Bot_Active') {
+                console.log('Session_Start: Bot_Active', event.messageData?.recentSessionInfo?.sessionId);
+                if(event.messageData?.recentSessionInfo?.isActive && event.messageData?.recentSessionInfo?.sessionId) {
+                    me.hostInstance.sessionId = event.messageData?.recentSessionInfo?.sessionId;
+                }
             }
 
             // Handle SBC details response
