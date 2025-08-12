@@ -15,7 +15,7 @@ export function ChatWidgetComposeBar(props: any) {
     hostInstance.on('onBrandingUpdate', function (event: any) {
         updateBrandingInfo({...event.brandingData})
     });
-    const setShowClickToCallWidget = props.setShowClickToCallWidget;
+
 
     const inputTypeObj: any = {
         keypad: 'compose-bar-wrapper',
@@ -39,14 +39,6 @@ export function ChatWidgetComposeBar(props: any) {
 
     const handleHamberger = () => {
         hostInstance.bottomSliderAction('', getHTML(Menu, '', hostInstance)) 
-    }
-
-    const handleClickToCall = () => {
-        console.log('config', hostInstance.config);
-        
-        // Trigger the click-to-call event - now handled by agentDesktop plugin
-        hostInstance.emit('onClickToCall', {});
-        // setShowClickToCallWidget(true); // No longer needed - handled by plugin
     }
 
     const checkForFileUploadPlugin = () => {
