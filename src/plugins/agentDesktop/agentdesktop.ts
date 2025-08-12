@@ -263,48 +263,26 @@ class AgentDesktopPlugin {
             }
 
             // Handle SBC details response
-            if (event.messageData?.type === 'events' && event.messageData?.message?.type === 'sbc_details_response') {
-                console.log('Received SBC details:', event.messageData.message);
-                const mockCallDetails = {
-                    "addresses": [
-                        "wss://sbc1-korevg-np.kore.ai:8443"
-                    ],
-                    "domain": "uat-uxo-korebots-korevg-np.kore.ai",
-                    "iceServers": [
-                        {
-                            "url": "stun:global.stun.twilio.com:3478",
-                            "urls": "stun:global.stun.twilio.com:3478"
-                        },
-                        {
-                            "credential": "m03s0GzsVES7JRwl8zsoJcMQ6l2t/+7GGjHr0VOuAKE=",
-                            "url": "turn:global.turn.twilio.com:3478?transport=udp",
-                            "urls": "turn:global.turn.twilio.com:3478?transport=udp",
-                            "username": "e0a101cf8bc2c85264c378045e3f39dbb87c7623fc669185d6b19b309753a089"
-                        },
-                        {
-                            "credential": "m03s0GzsVES7JRwl8zsoJcMQ6l2t/+7GGjHr0VOuAKE=",
-                            "url": "turn:global.turn.twilio.com:3478?transport=tcp",
-                            "urls": "turn:global.turn.twilio.com:3478?transport=tcp",
-                            "username": "e0a101cf8bc2c85264c378045e3f39dbb87c7623fc669185d6b19b309753a089"
-                        },
-                        {
-                            "credential": "m03s0GzsVES7JRwl8zsoJcMQ6l2t/+7GGjHr0VOuAKE=",
-                            "url": "turn:global.turn.twilio.com:443?transport=tcp",
-                            "urls": "turn:global.turn.twilio.com:443?transport=tcp",
-                            "username": "e0a101cf8bc2c85264c378045e3f39dbb87c7623fc669185d6b19b309753a089"
-                        }
-                    ],
-                }
+            if (event.messageData?.type === 'sbc_details_response') {
+                console.log('Received SBC details:', event.messageData?.responseData);
+
 
                 // const sipURI = mockCallDetails.sipURI;
                 // const sipUser = sipURI.substring(sipURI.indexOf(':') + 1, sipURI.indexOf('@'));
     
                 // console.log('sipURI', sipURI, 'sipUser', sipUser, mockCallDetails.videoCall);
                 var uuId = this.config.userInfo.userId;
-                var serverConfig: any = {};
-                serverConfig.addresses = mockCallDetails.addresses;
-                serverConfig.domain = mockCallDetails.domain;
-                serverConfig.iceServers = mockCallDetails.iceServers || [];
+                const serverConfig: {
+                    addresses: string[];
+                    domain: string;
+                    iceServers: any[];
+                } = event.messageData?.responseData;
+                serverConfig.addresses = serverConfig.addresses;
+                serverConfig.domain = serverConfig.domain;
+                serverConfig.iceServers = serverConfig.iceServers || [];
+                console.log('serverConfig', serverConfig);
+                this.agentDesktopInfo.initSipStack({ user: uuId, displayName: uuId, password: '' }, serverConfig, false);
+                me.hostInstance.serverConfig = serverConfig;
                 // me.initSipStack({ user: uuId, displayName: uuId, password: '' }, serverConfig);
                 // if (this.agentDesktopInfo && event.messageData.message.sbcConfiguration) {
                 //     // Store SBC details for future use

@@ -260,37 +260,8 @@ export function ClickToCallComponent(props: ClickToCallProps) {
             
             accessToken: localStorage.getItem("accessToken") || "",
             botName: localStorage.getItem("taskBotId") || "",
-            
-            serverConfig: {
-                "domain": "korevg-staging.kore.ai",
-                "addresses": [
-                    "wss://sbc1-korevg-np.kore.ai:8443"
-                ],
-                "iceServers": [
-                    {
-                        "url": "stun:global.stun.twilio.com:3478",
-                        "urls": "stun:global.stun.twilio.com:3478"
-                    },
-                    {
-                        "credential": "qWe9jOx8YKGZLa4QWjy0/EnVTUs7ziOVjfWnwytPisY=",
-                        "url": "turn:global.turn.twilio.com:3478?transport=udp",
-                        "urls": "turn:global.turn.twilio.com:3478?transport=udp",
-                        "username": "e92827d0bc455a0895b7fe16299c6c36c021f33d8b8173184511f97eff63cf2a"
-                    },
-                    {
-                        "credential": "qWe9jOx8YKGZLa4QWjy0/EnVTUs7ziOVjfWnwytPisY=",
-                        "url": "turn:global.turn.twilio.com:3478?transport=tcp",
-                        "urls": "turn:global.turn.twilio.com:3478?transport=tcp",
-                        "username": "e92827d0bc455a0895b7fe16299c6c36c021f33d8b8173184511f97eff63cf2a"
-                    },
-                    {
-                        "credential": "qWe9jOx8YKGZLa4QWjy0/EnVTUs7ziOVjfWnwytPisY=",
-                        "url": "turn:global.turn.twilio.com:443?transport=tcp",
-                        "urls": "turn:global.turn.twilio.com:443?transport=tcp",
-                        "username": "e92827d0bc455a0895b7fe16299c6c36c021f33d8b8173184511f97eff63cf2a"
-                    }
-                ]
-            },
+
+            serverConfig: hostInstance.serverConfig || {},
             
             extraHeaders: [
                 `X-CALLFLOW-ID: ${localStorage.getItem("X-CALLFLOW-ID")}`,
