@@ -177,6 +177,14 @@
                     }
                 }
             }
+            &.connect-to-agent{
+                svg{
+                    path{
+                        stroke: var(--chat-widget-compose-bar-other-icons);
+                        fill: none;
+                    }
+                }
+            }
             svg{
                 path{
                     fill: var(--chat-widget-compose-bar-other-icons);
