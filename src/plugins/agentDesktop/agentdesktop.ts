@@ -248,6 +248,11 @@ class AgentDesktopPlugin {
         // agent connected and disconnected events
         me.hostInstance.on('onWSMessage', (event: any) => {
 
+            if(event.messageData?.type === 'Session_Start') {
+                console.log('Session_Start: 2', event.messageData?.sessionId);
+                me.hostInstance.sessionId = event.messageData?.sessionId;
+            }
+
             // Handle SBC details response
             if (event.messageData?.type === 'events' && event.messageData?.message?.type === 'sbc_details_response') {
                 console.log('Received SBC details:', event.messageData.message);
