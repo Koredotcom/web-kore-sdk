@@ -37,7 +37,8 @@ class Korei18nPlugin {
                 close: "إغلاق الدردشة",
                 reconnect: "إعادة الاتصال بالدردشة",
                 today: "اليوم",
-                yesterday: "أمس"
+                yesterday: "أمس",
+                clickToCall: "الاتصال بوكيل الصوت"
             },
             ja: {
                 message: 'メッセージ...',
@@ -72,7 +73,8 @@ class Korei18nPlugin {
                 close: 'チャットを閉じる',
                 reconnect: 'チャットを再接続',
                 today: '今日',
-                yesterday: '昨日'
+                yesterday: '昨日',
+                clickToCall: "音声エージェントに接続"
             },
             ko: {
                 message: '메시지...',
@@ -107,7 +109,8 @@ class Korei18nPlugin {
                 close: '채팅 닫기',
                 reconnect: '채팅 재연결',
                 today: '오늘',
-                yesterday: '어제'
+                yesterday: '어제',
+                clickToCall: "음성 에이전트에 연결"
             },
             zh: {
                 message: "消息...",
@@ -142,7 +145,8 @@ class Korei18nPlugin {
                 close: "关闭聊天",
                 reconnect: "重新连接聊天",
                 today: "今天",
-                yesterday: "昨天"
+                yesterday: "昨天",
+                clickToCall: "连接到语音代理"
             },
             de: {
                 message: "Nachricht...",
@@ -177,7 +181,8 @@ class Korei18nPlugin {
                 close: "Chat schließen",
                 reconnect: "Chat wiederherstellen",
                 today: "Heute",
-                yesterday: "Gestern"
+                yesterday: "Gestern",
+                clickToCall: " Mit Sprachagent verbinden"
             }
         }
     }

@@ -325,6 +325,10 @@ const BrandingJSON = {
       "send_button": {
         "show": true,
         "icon": ""
+      },
+      "click_to_call": {
+        "show": false,
+        "icon": ""
       }
     }
   },

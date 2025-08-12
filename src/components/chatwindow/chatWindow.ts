@@ -724,7 +724,8 @@ initi18n  () {
         close: 'Close Chat',
         reconnect: 'Reconnect Chat',
         today: 'Today',
-        yesterday: 'Yesterday'
+        yesterday: 'Yesterday',
+        clickToCall: 'Connect to Voice Agent'
       },
     },
   };
@@ -3058,6 +3059,12 @@ applyVariableValue (key:any,value:any,type:any){
           "name": "",
           "show_type": "always",
           "position": "top"
+        }
+      }
+      if (!(theme.v3?.footer?.buttons?.hasOwnProperty('click_to_call'))) {
+        theme.v3.footer.buttons['click_to_call'] = {
+          "show": false,
+          "icon": ""
         }
       }
     }
