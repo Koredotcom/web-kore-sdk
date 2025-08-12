@@ -8,11 +8,10 @@ import { getHTML } from '../../templatemanager/base/domManager';
 
 interface ClickToCallSliderProps {
     hostInstance: any;
-    dtmfInput?: string;
 }
 
 export function ClickToCallSlider(props: ClickToCallSliderProps) {
-    const { hostInstance, dtmfInput } = props;
+    const { hostInstance } = props;
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
 
     hostInstance.on('onBrandingUpdate', function (event: any) {

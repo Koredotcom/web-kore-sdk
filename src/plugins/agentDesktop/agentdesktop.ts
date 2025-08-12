@@ -151,7 +151,6 @@ class AgentDesktopPlugin {
         let me: any = this;
         this.$ = me.hostInstance.$;
         this.appendVideoAudioElemnts();
-     
         document.addEventListener("visibilitychange", () => {
             if (this.isAgentConnected || this.isTPAgentConnected) {
                 if (document.visibilityState === 'visible') {
