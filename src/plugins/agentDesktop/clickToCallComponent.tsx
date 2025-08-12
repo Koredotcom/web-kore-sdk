@@ -142,6 +142,12 @@ export function ClickToCallComponent(props: ClickToCallProps) {
 
     // Handler functions for keypad functionality
     const onClickDigit = (digit: string | number) => {
+        console.log('onClickDigit', currentActiveCall, currentActiveCall?.wasAccepted?.());
+        // Only allow DTMF input if call is connected
+        if (!currentActiveCall || !currentActiveCall.wasAccepted?.()) {
+            return;
+        }
+        
         const newNumber = dtmfInputValue + digit.toString();
         setDtmfInputValue(newNumber);
         
@@ -154,7 +160,7 @@ export function ClickToCallComponent(props: ClickToCallProps) {
 
 
     const toggleMute = () => {
-        if (currentActiveCall && currentActiveCall.wasAccepted && currentActiveCall.wasAccepted()) {
+        if (currentActiveCall && currentActiveCall.wasAccepted?.()) {
             const isMuted = currentActiveCall.isAudioMuted?.() || false;
             currentActiveCall.muteAudio?.(!isMuted);
             setIsMuted(!isMuted);
@@ -303,18 +309,18 @@ export function ClickToCallComponent(props: ClickToCallProps) {
                 <div className="keypad-numbers-data-sec">
                     <div className="keypad-numbers-data">                
                         <div className="keypad-nums-list">
-                            <button className="keypad-num" onClick={() => onClickDigit(1)}>1</button>
-                            <button className="keypad-num" onClick={() => onClickDigit(2)}>2</button>
-                            <button className="keypad-num" onClick={() => onClickDigit(3)}>3</button>
-                            <button className="keypad-num" onClick={() => onClickDigit(4)}>4</button>
-                            <button className="keypad-num" onClick={() => onClickDigit(5)}>5</button>
-                            <button className="keypad-num" onClick={() => onClickDigit(6)}>6</button>
-                            <button className="keypad-num" onClick={() => onClickDigit(7)}>7</button>
-                            <button className="keypad-num" onClick={() => onClickDigit(8)}>8</button>
-                            <button className="keypad-num" onClick={() => onClickDigit(9)}>9</button>
-                            <button className="keypad-num" onClick={() => onClickDigit('*')}>*</button>
-                            <button className="keypad-num" onClick={() => onClickDigit('0')}>0</button>
-                            <button className="keypad-num" onClick={() => onClickDigit('#')}>#</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit(1)}>1</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit(2)}>2</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit(3)}>3</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit(4)}>4</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit(5)}>5</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit(6)}>6</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit(7)}>7</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit(8)}>8</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit(9)}>9</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit('*')}>*</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit('0')}>0</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit('#')}>#</button>
                         </div>
                         <div className="action-buttons-mute-end-call">
                             <button 
