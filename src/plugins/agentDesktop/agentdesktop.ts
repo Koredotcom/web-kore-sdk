@@ -681,7 +681,7 @@ class AgentDesktopPlugin {
             h(ClickToCallComponent, {
                 hostInstance: me.hostInstance,
                 setShowClickToCallWidget,
-                phoneNumber
+                dtmfInput: phoneNumber
             }),
             c2cContainer
         );

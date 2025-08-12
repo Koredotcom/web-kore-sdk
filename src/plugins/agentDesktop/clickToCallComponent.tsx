@@ -43,16 +43,17 @@ interface C2CConfig {
 interface ClickToCallProps {
     hostInstance: any;
     setShowClickToCallWidget: (show: boolean) => void;
-    phoneNumber?: string;
+    dtmfInput?: string;
+    autoInit?: boolean;
 }
 
 export function ClickToCallComponent(props: ClickToCallProps) {
-    const { hostInstance, setShowClickToCallWidget } = props;
-    const [showWarningPopup, setShowWarningPopup] = useState(true);
+    const { hostInstance, setShowClickToCallWidget, autoInit } = props;
+
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
     
     // Component state for call functionality
-    const [phoneNumber, setPhoneNumber] = useState(props.phoneNumber || '');
+    const [dtmfInputValue, setDtmfInputValue] = useState(props.dtmfInput || '');
     const [callStatus, setCallStatus] = useState('Connecting...');
     const [currentActiveCall, setCurrentActiveCall] = useState<CallObject | null>(null);
     const [isMuted, setIsMuted] = useState(false);
@@ -101,6 +102,13 @@ export function ClickToCallComponent(props: ClickToCallProps) {
         };
     }, []);
 
+    // Auto-initialize call if autoInit is true
+    useEffect(() => {
+        if (autoInit) {
+            initCall();
+        }
+    }, [autoInit]);
+
     // Add beforeunload event listener to handle page reload/refresh
     useEffect(() => {
         const handleBeforeUnload = (event: any) => {
@@ -131,8 +139,8 @@ export function ClickToCallComponent(props: ClickToCallProps) {
 
     // Handler functions for keypad functionality
     const onClickDigit = (digit: string | number) => {
-        const newNumber = phoneNumber + digit.toString();
-        setPhoneNumber(newNumber);
+        const newNumber = dtmfInputValue + digit.toString();
+        setDtmfInputValue(newNumber);
         
         // Send DTMF if call is active
         if (currentActiveCall && typeof currentActiveCall.sendDTMF === 'function') {
@@ -144,7 +152,7 @@ export function ClickToCallComponent(props: ClickToCallProps) {
         const value = event.target.value;
         // Allow only numbers, *, and #
         const filteredValue = value.replace(/[^0-9*#]/g, '');
-        setPhoneNumber(filteredValue);
+        setDtmfInputValue(filteredValue);
     };
 
     const toggleMute = () => {
@@ -170,7 +178,7 @@ export function ClickToCallComponent(props: ClickToCallProps) {
         setCallStatus('Call ended');
         setCallStartTime(null);
         setCallDuration('00:00');
-        setPhoneNumber('');
+        setDtmfInputValue('');
         setShowClickToCallWidget(false);
     };
 
@@ -278,86 +286,59 @@ export function ClickToCallComponent(props: ClickToCallProps) {
 
     return (
         <div className="click-to-call-component" aria-label="click to call component">
-            {showWarningPopup && (
-                <div className="warning-popup-overlay">
-                    <div className="warning-popup">
-                        <div className="warning-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
+            <div className="call-status-header">
+                <div className="call-info-section">
+                    <div className="dialing-title">{callStatus}</div>
+                    {callStartTime && <div className="call-time">{callDuration}</div>}
+                </div>
+            </div>
+            <div className="keypad-container">
+                <div className="keypad-content">
+                                        <input 
+                        className="dtmf-input" 
+                        id="dtmfInput" 
+                        ref={dtmfInputRef}
+                        value={dtmfInputValue}
+                        onInput={onInput}
+                        onKeyPress={(e) => {
+                            const charCode = e.which || e.keyCode;
+                            if (!((charCode >= 48 && charCode <= 57) || charCode === 35 || charCode === 42)) {
+                                e.preventDefault();
+                            }
+                        }}
+                        placeholder="Enter DTMF digits"
+                    />
+                    <div className="dtmf-keypad">
+                        <div className="dtmf-key" onClick={() => onClickDigit(1)}>1</div>
+                        <div className="dtmf-key" onClick={() => onClickDigit(2)}>2</div>
+                        <div className="dtmf-key" onClick={() => onClickDigit(3)}>3</div>
+                        <div className="dtmf-key" onClick={() => onClickDigit(4)}>4</div>
+                        <div className="dtmf-key" onClick={() => onClickDigit(5)}>5</div>
+                        <div className="dtmf-key" onClick={() => onClickDigit(6)}>6</div>
+                        <div className="dtmf-key" onClick={() => onClickDigit(7)}>7</div>
+                        <div className="dtmf-key" onClick={() => onClickDigit(8)}>8</div>
+                        <div className="dtmf-key" onClick={() => onClickDigit(9)}>9</div>
+                        <div className="dtmf-key pt-2" onClick={() => onClickDigit('*')}>*</div>
+                        <div className="dtmf-key" onClick={() => onClickDigit('0')}>0</div>
+                        <div className="dtmf-key" onClick={() => onClickDigit('#')}>#</div>
+                    </div>
+                    <div className="call-actions">
+                        <div 
+                            className={`mute-button ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} 
+                            onClick={toggleMute}
+                        >
+                            {!isMuted ? (
+                                <img src="assets/icons/testing/mute.svg" alt="Muted" />
+                            ) : (
+                                <img src="assets/icons/testing/unmute.svg" alt="Unmuted" />
+                            )}
                         </div>
-                        <div className="warning-content">
-                            <h3>Connect to Voice Agent?</h3>
-                            <p>You will be connected to a live voice agent{phoneNumber && ` at ${phoneNumber}`}. Your current conversation will end before connecting. Do you want to continue?</p>
-                        </div>  
-                        <div className="warning-actions">
-                            <button className="btn-cancel" onClick={() => {
-                                setShowWarningPopup(false)
-                                setShowClickToCallWidget(false);
-                            }}>Cancel</button>
-                            <button className="btn-continue" onClick={() => {setShowWarningPopup(false); initCall()}}>Continue</button>
+                        <div className={`end-call-button ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => currentActiveCall?.wasAccepted?.() && onClickHome(true)}>
+                            <img src="assets/icons/testing/endcall.svg" alt="End Call" />
                         </div>
                     </div>
                 </div>
-            )}
-            
-            {!showWarningPopup && (
-                <React.Fragment>
-                    <div className="call-flow-number-">
-                        <div className="phone-number-sec">
-                            <div className="dialing-title">{callStatus}</div>
-                            {callStartTime && <div className="call-time">{callDuration}</div>}
-                        </div>
-                    </div>
-                    <div className="scroll-kepad-data-call">
-                        <div className="keypad-numbers-data">
-                            <input 
-                                className="numbers" 
-                                id="dtmfInput" 
-                                ref={dtmfInputRef}
-                                value={phoneNumber}
-                                onInput={onInput}
-                                onKeyPress={(e) => {
-                                    const charCode = e.which || e.keyCode;
-                                    if (!((charCode >= 48 && charCode <= 57) || charCode === 35 || charCode === 42)) {
-                                        e.preventDefault();
-                                    }
-                                }}
-                                placeholder="Enter phone number"
-                            />
-                            <div className="keypad-num">
-                                <div className="num" onClick={() => onClickDigit(1)}>1</div>
-                                <div className="num" onClick={() => onClickDigit(2)}>2</div>
-                                <div className="num" onClick={() => onClickDigit(3)}>3</div>
-                                <div className="num" onClick={() => onClickDigit(4)}>4</div>
-                                <div className="num" onClick={() => onClickDigit(5)}>5</div>
-                                <div className="num" onClick={() => onClickDigit(6)}>6</div>
-                                <div className="num" onClick={() => onClickDigit(7)}>7</div>
-                                <div className="num" onClick={() => onClickDigit(8)}>8</div>
-                                <div className="num" onClick={() => onClickDigit(9)}>9</div>
-                                <div className="num pt-2" onClick={() => onClickDigit('*')}>*</div>
-                                <div className="num" onClick={() => onClickDigit('0')}>0</div>
-                                <div className="num" onClick={() => onClickDigit('#')}>#</div>
-                            </div>
-                            <div className="bottom-actions">
-                                <div 
-                                    className={`speaker-icon ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} 
-                                    onClick={toggleMute}
-                                >
-                                    {!isMuted ? (
-                                        <img src="assets/icons/testing/mute.svg" alt="Muted" />
-                                    ) : (
-                                        <img src="assets/icons/testing/unmute.svg" alt="Unmuted" />
-                                    )}
-                                </div>
-                                <div className={`end-call-icon ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => currentActiveCall?.wasAccepted?.() && onClickHome(true)}>
-                                    <img src="assets/icons/testing/endcall.svg" alt="End Call" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </React.Fragment>
-            )}
+            </div>
         </div>
     );
 }
