@@ -1,4 +1,6 @@
 import AgentDesktopPluginScript from './agentdesktop-script';
+import { ClickToCallComponent } from './clickToCallComponent';
+import { h, render } from 'preact';
 
 
 /** @ignore */
@@ -17,6 +19,8 @@ class AgentDesktopPlugin {
     TMsgData: any;
     authInfo: any;
     cobrowseSession: any;
+    clickToCallComponent: any = null;
+    showClickToCallWidget: boolean = false;
 
     constructor(config?: any) {
         this.config = {
@@ -32,12 +36,82 @@ class AgentDesktopPlugin {
         cwInstance.on("jwtGrantSuccess", (response: any) => {
             if (!this.agentDesktopInfo) {
                 this.config = me.extend(me, response)
+                console.log("this.config", this.config);
                 //me.AgentDesktop(response.userInfo.userId, response);
                 /** @ignore */
                 this.agentDesktopInfo = new AgentDesktopPluginScript(this.config);
+                console.log("this.agentDesktopInfo", this.agentDesktopInfo);
                 // Connecting cobrowse session with the user data
                 this.authInfo = response;
                 this.cobrowseSession = new AgentDesktopPluginScript({...response, excludeRTM: true, isCobrowseSession: true});
+            }
+        });
+
+        // this.emit(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, {}) 
+        // above line in kore-rtm-client.js will be emitted after the rtm connection is successfully established
+        // Here we are listening to the open event and sending the get_sbc_details event when the rtm connection is established
+        me.hostInstance.bot.on('open', (response: any) => {
+            console.log('WebSocket connection opened:', response);
+            
+            // Send get_sbc_details event when websocket connection is established
+            if (this.authInfo) {
+                const sbcRequestMessage: any = {};
+                sbcRequestMessage["clientMessageId"] = new Date().getTime();
+                sbcRequestMessage["event"] = "sbc_details_request";
+                sbcRequestMessage["message"] = {
+                    "body":"",
+                    "type": ""
+                };
+                sbcRequestMessage["resourceid"] = "/bot.message";
+                
+                me.hostInstance.bot.sendMessage(sbcRequestMessage, (err: any) => {
+                    if (err) {
+                        console.error("Failed to request SBC details:", err);
+                    } else {
+                        console.log("SBC details request sent successfully via open event");
+                    }
+                });
+                // ======================================================================================================
+                const callDetails = 
+                    {
+                        "domain": "korevg-staging.kore.ai",
+                        "addresses": [
+                            "wss://sbc1-korevg-np.kore.ai:8443"
+                        ],
+                        "iceServers": [
+                            {
+                                "url": "stun:global.stun.twilio.com:3478",
+                                "urls": "stun:global.stun.twilio.com:3478"
+                            },  
+                            {
+                                "credential": "qWe9jOx8YKGZLa4QWjy0/EnVTUs7ziOVjfWnwytPisY=",
+                                "url": "turn:global.turn.twilio.com:3478?transport=udp",
+                                "urls": "turn:global.turn.twilio.com:3478?transport=udp",
+                                "username": "e92827d0bc455a0895b7fe16299c6c36c021f33d8b8173184511f97eff63cf2a"
+                            },
+                            {
+                                "credential": "qWe9jOx8YKGZLa4QWjy0/EnVTUs7ziOVjfWnwytPisY=",
+                                "url": "turn:global.turn.twilio.com:3478?transport=tcp",
+                                "urls": "turn:global.turn.twilio.com:3478?transport=tcp",
+                                "username": "e92827d0bc455a0895b7fe16299c6c36c021f33d8b8173184511f97eff63cf2a"
+                            },
+                            {
+                                "credential": "qWe9jOx8YKGZLa4QWjy0/EnVTUs7ziOVjfWnwytPisY=",
+                                "url": "turn:global.turn.twilio.com:443?transport=tcp",
+                                "urls": "turn:global.turn.twilio.com:443?transport=tcp",
+                                "username": "e92827d0bc455a0895b7fe16299c6c36c021f33d8b8173184511f97eff63cf2a"
+                            }
+                        ]
+                    
+                }
+
+                const uuId = this.config.userInfo.userId;
+                const serverConfig: any = {};
+                serverConfig.addresses = callDetails.addresses;
+                serverConfig.domain = callDetails.domain;
+                serverConfig.iceServers = callDetails.iceServers || [];
+                this.agentDesktopInfo.initSipStack({ user: uuId, displayName: uuId, password: '' }, serverConfig, false);
+                // ======================================================================================================
             }
         });
         me.hostInstance.on('beforeViewInit', (chatEle: any) => {
@@ -112,6 +186,10 @@ class AgentDesktopPlugin {
         let me: any = this;
         this.$ = me.hostInstance.$;
         this.appendVideoAudioElemnts();
+        me.hostInstance.on('onClickToCall', (event: any) => {
+            console.log("onClickToCall", event);
+            this.handleClickToCall(event);
+        });        
         document.addEventListener("visibilitychange", () => {
             if (this.isAgentConnected || this.isTPAgentConnected) {
                 if (document.visibilityState === 'visible') {
@@ -171,6 +249,50 @@ class AgentDesktopPlugin {
 
         // agent connected and disconnected events
         me.hostInstance.on('onWSMessage', (event: any) => {
+
+            if(event.messageData?.type === 'Session_Start') {
+                console.log('Session_Start: Session_Start', event.messageData?.sessionId);
+                me.hostInstance.sessionId = event.messageData?.sessionId;
+            }
+
+            if(event.messageData?.type === 'Bot_Active') {
+                console.log('Session_Start: Bot_Active', event.messageData?.recentSessionInfo?.sessionId);
+                if(event.messageData?.recentSessionInfo?.isActive && event.messageData?.recentSessionInfo?.sessionId) {
+                    me.hostInstance.sessionId = event.messageData?.recentSessionInfo?.sessionId;
+                }
+            }
+
+            // Handle SBC details response
+            if (event.messageData?.type === 'sbc_details_response') {
+                console.log('Received SBC details:', event.messageData?.responseData);
+
+
+                // const sipURI = mockCallDetails.sipURI;
+                // const sipUser = sipURI.substring(sipURI.indexOf(':') + 1, sipURI.indexOf('@'));
+    
+                // console.log('sipURI', sipURI, 'sipUser', sipUser, mockCallDetails.videoCall);
+                var uuId = this.config.userInfo.userId;
+                const serverConfig: {
+                    addresses: string[];
+                    domain: string;
+                    iceServers: any[];
+                } = event.messageData?.responseData;
+                serverConfig.addresses = serverConfig.addresses;
+                serverConfig.domain = serverConfig.domain;
+                serverConfig.iceServers = serverConfig.iceServers || [];
+                console.log('serverConfig', serverConfig);
+                this.agentDesktopInfo.initSipStack({ user: uuId, displayName: uuId, password: '' }, serverConfig, false);
+                me.hostInstance.serverConfig = serverConfig;
+                // me.initSipStack({ user: uuId, displayName: uuId, password: '' }, serverConfig);
+                // if (this.agentDesktopInfo && event.messageData.message.sbcConfiguration) {
+                //     // Store SBC details for future use
+                //     this.agentDesktopInfo.sbcDetails = event.messageData.message.sbcConfiguration;
+                    
+                //     // Establish SBC socket connection
+                //     // this.establishSBCConnection(event.messageData.message.sbcConfiguration);
+                //     // this.establishSBCConnection(event.messageData.message.sbcConfiguration);
+                // }
+            }
 
             // Agent Status 
             if (event.messageData?.message?.type === 'agent_connected' && me?.hostInstance?.enableAgentChanges) {
@@ -456,6 +578,113 @@ class AgentDesktopPlugin {
                 me.hostInstance.$('#cobrowseInput').addClass('error');
                 
             })
+    }
+
+    establishSBCConnection(sbcConfiguration: any) {
+        console.log('Establishing SBC connection with configuration:', sbcConfiguration);
+        
+        if (!this.agentDesktopInfo || !sbcConfiguration) {
+            console.error('Cannot establish SBC connection: Missing agentDesktopInfo or SBC configuration');
+            return;
+        }
+
+        try {
+            // Create a mock callDetails object similar to how it's done in call_agent_webrtc_accepted
+            const mockCallDetails = {
+                addresses: sbcConfiguration.addresses || [],
+                domain: sbcConfiguration.domain || '',
+                iceServers: sbcConfiguration.iceServers || [],
+                sipURI: sbcConfiguration.sipURI || 'sip:user@domain.com',
+                videoCall: false, // Default to audio call for SBC connection
+                firstName: 'SBC Connection',
+                restoreCall: false
+            };
+
+            // Set the call details in agentDesktopInfo
+            this.agentDesktopInfo.callDetails = mockCallDetails;
+            
+            // Initialize SIP stack with SBC configuration
+            const userIdentifier = this.authInfo?.userInfo?.userId || 'user_' + new Date().getTime();
+            const account = {
+                user: userIdentifier,
+                displayName: userIdentifier,
+                password: ''
+            };
+
+            const serverConfig = {
+                addresses: sbcConfiguration.addresses,
+                domain: sbcConfiguration.domain,
+                iceServers: sbcConfiguration.iceServers || []
+            };
+
+            // Initialize the SIP stack for SBC connection
+            if (this.agentDesktopInfo.initSipStack && typeof this.agentDesktopInfo.initSipStack === 'function') {
+                this.agentDesktopInfo.initSipStack(account, serverConfig);
+                console.log('SBC socket connection initiated successfully');
+            } else {
+                console.error('initSipStack method not available on agentDesktopInfo');
+            }
+
+        } catch (error) {
+            console.error('Error establishing SBC connection:', error);
+        }
+    }
+
+    handleClickToCall(event: any) {
+        console.log('handleClickToCall called with event:', event);
+        
+        // Extract phone number from event if available
+        const phoneNumber = event?.phoneNumber || event?.data?.phoneNumber || '';
+        
+        // Show the click-to-call widget
+        this.showClickToCallWidget = true;
+        
+        // Create and render the click-to-call component
+        this.renderClickToCallComponent(phoneNumber);
+    }
+
+    renderClickToCallComponent(phoneNumber?: string) {
+        const me: any = this;
+        const chatContainer = me.hostInstance.chatEle;
+        
+        if (!chatContainer) {
+            console.error('Chat container not found');
+            return;
+        }
+
+        // Create container for the click-to-call component
+        let c2cContainer = chatContainer.querySelector('.click-to-call-container');
+        if (!c2cContainer) {
+            c2cContainer = document.createElement('div');
+            c2cContainer.className = 'click-to-call-container';
+            c2cContainer.style.cssText = `
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 1000;
+                background: white;
+            `;
+            chatContainer.appendChild(c2cContainer);
+        }
+
+        // Render the component directly
+        const setShowClickToCallWidget = (show: boolean) => {
+            me.showClickToCallWidget = show;
+            if (!show && c2cContainer) {
+                c2cContainer.remove();
+            }
+        };
+
+        render(
+            h(ClickToCallComponent, {
+                hostInstance: me.hostInstance,
+                setShowClickToCallWidget,
+                phoneNumber
+            }),
+            c2cContainer
+        );
     }
 
     manageAgentBranding(type: string) {
