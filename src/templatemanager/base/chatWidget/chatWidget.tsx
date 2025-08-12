@@ -5,7 +5,8 @@ import { h } from 'preact';
 import { ChatWidgetHeader } from '../chatWidgetHeader/chatWidgetHeader';
 import { ChatWidgetBody } from '../chatWidgetBody/chatWidgetBody';
 import { ChatWidgetComposeBar } from '../chatWidgetComposeBar/chatWidgetComposeBar';
-import { ClickToCallComponent } from '../clickToCall/clickToCallComponent';
+// Click-to-call functionality has been moved to agentDesktop plugin
+// import { ClickToCallComponent } from '../clickToCall/clickToCallComponent';
 import { useState } from 'preact/hooks';
 export function ChatWidget(props: any) {
 
@@ -16,7 +17,8 @@ export function ChatWidget(props: any) {
             <ChatWidgetHeader {...props}/>
             <ChatWidgetBody />
             <ChatWidgetComposeBar {...props} setShowClickToCallWidget={setShowClickToCallWidget} />
-            {showClickToCallWidget && <ClickToCallComponent {...props} setShowClickToCallWidget={setShowClickToCallWidget} />}
+        {/* Click-to-call widget now handled by agentDesktop plugin */}
+        {/* {showClickToCallWidget && <ClickToCallComponent {...props} setShowClickToCallWidget={setShowClickToCallWidget} />} */}
         </div>
     );
 }

@@ -44,7 +44,9 @@ export function ChatWidgetComposeBar(props: any) {
     const handleClickToCall = () => {
         console.log('config', hostInstance.config);
         
-        setShowClickToCallWidget(true);        
+        // Trigger the click-to-call event - now handled by agentDesktop plugin
+        hostInstance.emit('onClickToCall', {});
+        // setShowClickToCallWidget(true); // No longer needed - handled by plugin
     }
 
     const checkForFileUploadPlugin = () => {

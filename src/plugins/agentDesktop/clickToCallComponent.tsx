@@ -1,17 +1,19 @@
-
-
 /** @jsx h */
 import './clickToCallComponent.scss';
 import { h } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
-import IconsManager from '../iconsManager';
-import { c2c_call } from '../../../plugins/agentDesktop/c2c';
+import { c2c_call } from './c2c';
 import React from 'preact/compat';
 
 // Type definitions for C2C callback functions
 interface CallObject {
     hasReceiveVideo?: () => boolean;
     reject?: () => void;
+    sendDTMF?: (digit: string) => void;
+    terminate?: () => void;
+    wasAccepted?: () => boolean;
+    isAudioMuted?: () => boolean;
+    muteAudio?: (mute: boolean) => void;
     [key: string]: any;
 }
 
@@ -38,15 +40,19 @@ interface C2CConfig {
     };
 }
 
-export function ClickToCallComponent(props: any) {
-    const hostInstance = props.hostInstance;
-    const setShowClickToCallWidget = props.setShowClickToCallWidget;
+interface ClickToCallProps {
+    hostInstance: any;
+    setShowClickToCallWidget: (show: boolean) => void;
+    phoneNumber?: string;
+}
+
+export function ClickToCallComponent(props: ClickToCallProps) {
+    const { hostInstance, setShowClickToCallWidget } = props;
     const [showWarningPopup, setShowWarningPopup] = useState(true);
-    const iconHelper = new IconsManager();
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
     
     // Component state for call functionality
-    const [phoneNumber, setPhoneNumber] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState(props.phoneNumber || '');
     const [callStatus, setCallStatus] = useState('Connecting...');
     const [currentActiveCall, setCurrentActiveCall] = useState<CallObject | null>(null);
     const [isMuted, setIsMuted] = useState(false);
@@ -54,6 +60,7 @@ export function ClickToCallComponent(props: any) {
     const [callStartTime, setCallStartTime] = useState<number | null>(null);
     const [callDuration, setCallDuration] = useState('00:00');
     const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
     hostInstance.on('onBrandingUpdate', function (event: any) {
         updateBrandingInfo({...event.brandingData})
     });
@@ -111,16 +118,6 @@ export function ClickToCallComponent(props: any) {
         };
     }, [currentActiveCall]);
 
-    const hSizeObj: any = {
-        "compact": "chat-widget-header",
-        "regular": "chat-widget-header regular",
-        "large": "chat-widget-header large "
-    }
-
-    const handleHeaderIcon = (data: any) => {
-        hostInstance.sendMessage(data);
-    }
-
     // Helper function to format elapsed time in MM:SS format
     const formatCallDuration = (startTime: number | null): string => {
         if (!startTime) return '00:00';
@@ -152,16 +149,15 @@ export function ClickToCallComponent(props: any) {
 
     const toggleMute = () => {
         if (currentActiveCall && currentActiveCall.wasAccepted && currentActiveCall.wasAccepted()) {
-
-            const isMuted = currentActiveCall.isAudioMuted();
-            currentActiveCall.muteAudio(!isMuted);
-            setIsMuted(isMuted);
+            const isMuted = currentActiveCall.isAudioMuted?.() || false;
+            currentActiveCall.muteAudio?.(!isMuted);
+            setIsMuted(!isMuted);
         }
     };
 
     const onClickHome = (endCall: boolean = false) => {
         if (endCall && currentActiveCall) {
-            currentActiveCall.terminate();
+            currentActiveCall.terminate?.();
         }
         
         // Clear timer and reset timer state
@@ -172,12 +168,11 @@ export function ClickToCallComponent(props: any) {
         
         setCurrentActiveCall(null);
         setCallStatus('Call ended');
-        setCallStartTime(0);
+        setCallStartTime(null);
         setCallDuration('00:00');
         setPhoneNumber('');
         setShowClickToCallWidget(false);
     };
-
 
     const initCall = () => {
         const messageToBot: any = {};
@@ -185,16 +180,15 @@ export function ClickToCallComponent(props: any) {
         messageToBot["event"] = "close_agent_chat";
         messageToBot["message"] = {
             "body": "",
-            "type": "click_to_all"
+            "type": "click_to_call"
         }
         messageToBot["isClickToCallEnabled"] = true,
         messageToBot["resourceid"] = "/bot.message";
         hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
 
-
         console.log('handleClickToCall', hostInstance);
-        const { clickToCallFlowId, accessToken, botInfo:{taskBotId}} = hostInstance.config?.botOptions;
-        const  {userInfo}  = hostInstance.bot.userInfo; // userid is here
+        const { clickToCallFlowId, accessToken, botInfo: { taskBotId } } = hostInstance.config?.botOptions;
+        const { userInfo } = hostInstance.bot.userInfo; // userid is here
         const sid = hostInstance.sessionId;
 
         localStorage.setItem("X-botName", "kore.com");
@@ -206,33 +200,33 @@ export function ClickToCallComponent(props: any) {
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("userIdentity", userInfo.userId);
 
-
-        
-        // Validate required dependencies before initiating call
-
+        // Configure c2c callbacks
         const c2cConfig: C2CConfig = {
             loginStateChanged: (isLogin: boolean, cause: string) => {
                 switch (cause) {
-                case "connected":
-                    break;
-                case "disconnected":
-    
-                    break;
-                case "login failed":
-    
-                    break;
-                case "login":
-    
-                    break;
-                case "logout":
-    
-                    break;
+                    case "connected":
+                        setCallStatus('Connected');
+                        break;
+                    case "disconnected":
+                        setCallStatus('Disconnected');
+                        break;
+                    case "login failed":
+                        setCallStatus('Login failed');
+                        break;
+                    case "login":
+                        setCallStatus('Logging in...');
+                        break;
+                    case "logout":
+                        setCallStatus('Logged out');
+                        break;
                 }
-                console.log("Testing Component :: ", isLogin, cause);
+                console.log("ClickToCall Component :: ", isLogin, cause);
             },
-    
-            outgoingCallProgress: (call: CallObject, response: any) => {},
-    
+
+            outgoingCallProgress: (call: CallObject, response: any) => {
+                setCallStatus('Calling...');
+            },
+
             callTerminated: (call: CallObject, message: string, cause: string, redirectTo?: string) => {
                 // Clear timer and reset timer state
                 if (timerIntervalRef.current) {
@@ -243,30 +237,30 @@ export function ClickToCallComponent(props: any) {
                 setIsMuted(false);
                 setCurrentActiveCall(null);
                 setCallStatus('Call ended');
-                setCallStartTime(0);
+                setCallStartTime(null);
                 setCallDuration('00:00');
                 onClickHome();
             },
-    
+
             callConfirmed: (call: CallObject, message: string, cause: string) => {
                 setCurrentActiveCall(call);
                 setCallStatus('Call connected');
-                // start timer to check if call is connected
-                // want to show time 
             },
-    
+
             callShowStreams: (call: CallObject, localStream: MediaStream, remoteStream: MediaStream) => {
-                setCallStartTime(new Date().getTime());
+                setCallStartTime(Date.now());
                 console.log('callShowStreams', call, localStream, remoteStream);
             },
-    
+
             incomingCall: (call: CallObject, invite: InviteObject) => { 
                 console.log('incomingCall', call, invite);
-                },
-    
+            },
+
             callHoldStateChanged: (call: CallObject, isHold: boolean, isRemote: boolean) => { },
+            
             accessToken: localStorage.getItem("accessToken") || "",
-            botName: localStorage.getItem("taskBotId") || "" ,  // st-****
+            botName: localStorage.getItem("taskBotId") || "",
+            
             serverConfig: {
                 "domain": "korevg-staging.kore.ai",
                 "addresses": [
@@ -297,87 +291,19 @@ export function ClickToCallComponent(props: any) {
                     }
                 ]
             },
+            
             extraHeaders: [
-                            // `X-PHONE-NUMBER:""`,
-                            // `X-botName: null`,
-                            // `X-Call-ID: null`,
-
-                            `X-CALLFLOW-ID: ${localStorage.getItem("X-CALLFLOW-ID")}`,
-                            `X-CALLFLOW-STATE: ${localStorage.getItem("X-CALLFLOW-STATE")}`,
-                            ` X-RTM-SESSION-ID: ${localStorage.getItem("X-RTM-SESSION-ID")}`,
-                            ` X-RTM-USER-ID: ${localStorage.getItem("X-RTM-USER-ID")}`,
-                            ],
+                `X-CALLFLOW-ID: ${localStorage.getItem("X-CALLFLOW-ID")}`,
+                `X-CALLFLOW-STATE: ${localStorage.getItem("X-CALLFLOW-STATE")}`,
+                `X-RTM-SESSION-ID: ${localStorage.getItem("X-RTM-SESSION-ID")}`,
+                `X-RTM-USER-ID: ${localStorage.getItem("X-RTM-USER-ID")}`,
+            ],
+            
             userIdentity: localStorage.getItem("userIdentity") || ""
-            };
+        };
             
         c2c_call(c2cConfig);
     }
-
-
-
-    // useEffect(() => {
-    //     hostInstance.eventManager.removeEventListener('.btn-reconnect', 'click');
-    //     hostInstance.eventManager.addEventListener('.btn-reconnect', 'click', (event: any) => {
-    //         if (!hostInstance.chatEle.querySelector('.btn-reconnect').getAttribute('disabled')) {
-    //             hostInstance.chatEle.querySelector('.btn-reconnect').setAttribute('disabled', true);
-    //             hostInstance.isReconnected = true;
-    //             const data = event?.detail;
-    //             if (data && data?.isReconnect) {
-    //                 hostInstance.config.botOptions.forceReconnecting = true;
-    //             } else {
-    //                 hostInstance.config.botOptions.forceReconnecting = false;//make it to true if reconnect button should not trigger on connect message
-    //             }
-    //             setTimeout(() => {
-    //                 hostInstance.resetWindow(data);
-    //             });
-    //         }
-    //       });
-    //     hostInstance.eventManager.removeEventListener('.btn-action-close', 'click');
-    //     hostInstance.eventManager.addEventListener('.btn-action-close', 'click', () => {
-    //         hostInstance.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
-    //         hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize');
-    //         if (hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
-    //           hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
-    //         } else {
-    //             hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove(hostInstance.config.branding.chat_bubble.expand_animation);
-    //         }
-    //         hostInstance.chatEle.classList.add('minimize-chat');
-    //         if (!hostInstance.config.pwcConfig.enable) {
-    //             hostInstance.destroy();
-    //             hostInstance.isSocketOpened = false;
-    //             hostInstance.bot.historyOffset = 0;
-    //             hostInstance.bot.previousHistoryLoading = false;
-    //             if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
-    //                 hostInstance.removeLocalStoreItem('kr-cw-state');
-    //                 hostInstance.removeLocalStoreItem('kr-cw-uid');
-    //                 hostInstance.config.botOptions.maintainContext = false;
-    //             }
-    //             if (hostInstance.config.botOptions.openSocket) {
-    //                 hostInstance.bot.init(hostInstance.config.botOptions);
-    //             }
-    //         }
-    //     })
-
-    //     hostInstance.eventManager.removeEventListener('.back-to-chat', 'click');
-    //     hostInstance.eventManager.addEventListener('.back-to-chat', 'click', () => {
-    //         if (hostInstance.config.branding.welcome_screen.show) {
-    //             hostInstance.chatEle.querySelector('.welcome-chat-section').classList.add(hostInstance.config.branding.chat_bubble.expand_animation);
-    //             hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize')
-    //         } else {
-    //             if (hostInstance.config.branding.general.sounds.enable && hostInstance.config.branding.general.sounds.on_close.url != 'None') {
-    //                 const closeSound = new Audio(hostInstance.config.branding.general.sounds.on_close.url);
-    //                 closeSound.play();
-    //             }
-    //             hostInstance.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
-    //             hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
-    //         }
-    //         if (hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
-    //             hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
-    //         } else {
-    //             hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove(hostInstance.config.branding.chat_bubble.expand_animation);
-    //         }
-    //     })
-    // })
 
     return (
         <div className="click-to-call-component" aria-label="click to call component">
@@ -391,7 +317,7 @@ export function ClickToCallComponent(props: any) {
                         </div>
                         <div className="warning-content">
                             <h3>Connect to Voice Agent?</h3>
-                            <p>You will be connected to a live voice agent at <strong>{phoneNumber}</strong>. Your current conversation will end before connecting. Do you want to continue?</p>
+                            <p>You will be connected to a live voice agent{phoneNumber && ` at ${phoneNumber}`}. Your current conversation will end before connecting. Do you want to continue?</p>
                         </div>  
                         <div className="warning-actions">
                             <button className="btn-cancel" onClick={() => {
@@ -402,64 +328,65 @@ export function ClickToCallComponent(props: any) {
                         </div>
                     </div>
                 </div>
-            )}{
-                !showWarningPopup && <React.Fragment>
-                <div className="call-flow-number-">
-                    <div className="phone-number-sec">
-                        <div className="dialing-title">{callStatus}</div>
-                        {callStartTime && <div className="call-time">{callDuration}</div>}
-                    </div>
-                </div>
-                <div className="scroll-kepad-data-call">
-                    <div className="keypad-numbers-data">
-                        <input 
-                            className="numbers" 
-                            id="dtmfInput" 
-                            ref={dtmfInputRef}
-                            value={phoneNumber}
-                            onInput={onInput}
-                            onKeyPress={(e) => {
-                                const charCode = e.which || e.keyCode;
-                                if (!((charCode >= 48 && charCode <= 57) || charCode === 35 || charCode === 42)) {
-                                    e.preventDefault();
-                                }
-                            }}
-                            placeholder="Enter phone number"
-                        />
-                        <div className="keypad-num">
-                            <div className="num" onClick={() => onClickDigit(1)}>1</div>
-                            <div className="num" onClick={() => onClickDigit(2)}>2</div>
-                            <div className="num" onClick={() => onClickDigit(3)}>3</div>
-                            <div className="num" onClick={() => onClickDigit(4)}>4</div>
-                            <div className="num" onClick={() => onClickDigit(5)}>5</div>
-                            <div className="num" onClick={() => onClickDigit(6)}>6</div>
-                            <div className="num" onClick={() => onClickDigit(7)}>7</div>
-                            <div className="num" onClick={() => onClickDigit(8)}>8</div>
-                            <div className="num" onClick={() => onClickDigit(9)}>9</div>
-                            <div className="num pt-2" onClick={() => onClickDigit('*')}>*</div>
-                            <div className="num" onClick={() => onClickDigit('0')}>0</div>
-                            <div className="num" onClick={() => onClickDigit('#')}>#</div>
-                        </div>
-                        <div className="bottom-actions">
-                            <div 
-                                className={`speaker-icon ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} 
-                                onClick={toggleMute}
-                            >
-                                {!isMuted ? (
-                                    <img src="assets/icons/testing/mute.svg" alt="Muted" />
-                                ) : (
-                                    <img src="assets/icons/testing/unmute.svg" alt="Unmuted" />
-                                )}
-                            </div>
-                            <div className={`end-call-icon ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => currentActiveCall?.wasAccepted?.() && onClickHome(true)}>
-                                <img src="assets/icons/testing/endcall.svg" alt="End Call" />
-                            </div>
+            )}
+            
+            {!showWarningPopup && (
+                <React.Fragment>
+                    <div className="call-flow-number-">
+                        <div className="phone-number-sec">
+                            <div className="dialing-title">{callStatus}</div>
+                            {callStartTime && <div className="call-time">{callDuration}</div>}
                         </div>
                     </div>
-                </div>
-            </React.Fragment>
-            }
-
+                    <div className="scroll-kepad-data-call">
+                        <div className="keypad-numbers-data">
+                            <input 
+                                className="numbers" 
+                                id="dtmfInput" 
+                                ref={dtmfInputRef}
+                                value={phoneNumber}
+                                onInput={onInput}
+                                onKeyPress={(e) => {
+                                    const charCode = e.which || e.keyCode;
+                                    if (!((charCode >= 48 && charCode <= 57) || charCode === 35 || charCode === 42)) {
+                                        e.preventDefault();
+                                    }
+                                }}
+                                placeholder="Enter phone number"
+                            />
+                            <div className="keypad-num">
+                                <div className="num" onClick={() => onClickDigit(1)}>1</div>
+                                <div className="num" onClick={() => onClickDigit(2)}>2</div>
+                                <div className="num" onClick={() => onClickDigit(3)}>3</div>
+                                <div className="num" onClick={() => onClickDigit(4)}>4</div>
+                                <div className="num" onClick={() => onClickDigit(5)}>5</div>
+                                <div className="num" onClick={() => onClickDigit(6)}>6</div>
+                                <div className="num" onClick={() => onClickDigit(7)}>7</div>
+                                <div className="num" onClick={() => onClickDigit(8)}>8</div>
+                                <div className="num" onClick={() => onClickDigit(9)}>9</div>
+                                <div className="num pt-2" onClick={() => onClickDigit('*')}>*</div>
+                                <div className="num" onClick={() => onClickDigit('0')}>0</div>
+                                <div className="num" onClick={() => onClickDigit('#')}>#</div>
+                            </div>
+                            <div className="bottom-actions">
+                                <div 
+                                    className={`speaker-icon ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} 
+                                    onClick={toggleMute}
+                                >
+                                    {!isMuted ? (
+                                        <img src="assets/icons/testing/mute.svg" alt="Muted" />
+                                    ) : (
+                                        <img src="assets/icons/testing/unmute.svg" alt="Unmuted" />
+                                    )}
+                                </div>
+                                <div className={`end-call-icon ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => currentActiveCall?.wasAccepted?.() && onClickHome(true)}>
+                                    <img src="assets/icons/testing/endcall.svg" alt="End Call" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </React.Fragment>
+            )}
         </div>
     );
 }

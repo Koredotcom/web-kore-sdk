@@ -1,4 +1,6 @@
 import AgentDesktopPluginScript from './agentdesktop-script';
+import { ClickToCallComponent } from './clickToCallComponent';
+import { h, render } from 'preact';
 
 
 /** @ignore */
@@ -17,6 +19,8 @@ class AgentDesktopPlugin {
     TMsgData: any;
     authInfo: any;
     cobrowseSession: any;
+    clickToCallComponent: any = null;
+    showClickToCallWidget: boolean = false;
 
     constructor(config?: any) {
         this.config = {
@@ -55,11 +59,8 @@ class AgentDesktopPlugin {
                 sbcRequestMessage["clientMessageId"] = new Date().getTime();
                 sbcRequestMessage["event"] = "sbc_details_request";
                 sbcRequestMessage["message"] = {
-                    "body": {
-                        "requestType": "sbc_configuration",
-                        "userInfo": this.authInfo.userInfo
-                    },
-                    "type": "sbc_request"
+                    "body":"",
+                    "type": ""
                 };
                 sbcRequestMessage["resourceid"] = "/bot.message";
                 
@@ -187,6 +188,7 @@ class AgentDesktopPlugin {
         this.appendVideoAudioElemnts();
         me.hostInstance.on('onClickToCall', (event: any) => {
             console.log("onClickToCall", event);
+            this.handleClickToCall(event);
         });        
         document.addEventListener("visibilitychange", () => {
             if (this.isAgentConnected || this.isTPAgentConnected) {
@@ -648,6 +650,63 @@ class AgentDesktopPlugin {
         } catch (error) {
             console.error('Error establishing SBC connection:', error);
         }
+    }
+
+    handleClickToCall(event: any) {
+        console.log('handleClickToCall called with event:', event);
+        
+        // Extract phone number from event if available
+        const phoneNumber = event?.phoneNumber || event?.data?.phoneNumber || '';
+        
+        // Show the click-to-call widget
+        this.showClickToCallWidget = true;
+        
+        // Create and render the click-to-call component
+        this.renderClickToCallComponent(phoneNumber);
+    }
+
+    renderClickToCallComponent(phoneNumber?: string) {
+        const me: any = this;
+        const chatContainer = me.hostInstance.chatEle;
+        
+        if (!chatContainer) {
+            console.error('Chat container not found');
+            return;
+        }
+
+        // Create container for the click-to-call component
+        let c2cContainer = chatContainer.querySelector('.click-to-call-container');
+        if (!c2cContainer) {
+            c2cContainer = document.createElement('div');
+            c2cContainer.className = 'click-to-call-container';
+            c2cContainer.style.cssText = `
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 1000;
+                background: white;
+            `;
+            chatContainer.appendChild(c2cContainer);
+        }
+
+        // Render the component directly
+        const setShowClickToCallWidget = (show: boolean) => {
+            me.showClickToCallWidget = show;
+            if (!show && c2cContainer) {
+                c2cContainer.remove();
+            }
+        };
+
+        render(
+            h(ClickToCallComponent, {
+                hostInstance: me.hostInstance,
+                setShowClickToCallWidget,
+                phoneNumber
+            }),
+            c2cContainer
+        );
     }
 
     manageAgentBranding(type: string) {
