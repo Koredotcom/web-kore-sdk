@@ -42,17 +42,16 @@ interface C2CConfig {
 
 interface ClickToCallProps {
     hostInstance: any;
-    setShowClickToCallWidget: (show: boolean) => void;
-    phoneNumber?: string;
+    dtmfInput?: string;
 }
 
 export function ClickToCallComponent(props: ClickToCallProps) {
-    const { hostInstance, setShowClickToCallWidget } = props;
-    const [showWarningPopup, setShowWarningPopup] = useState(true);
+    const { hostInstance } = props;
+
     const [brandingInfo, updateBrandingInfo] = useState(hostInstance.config.branding);
     
     // Component state for call functionality
-    const [phoneNumber, setPhoneNumber] = useState(props.phoneNumber || '');
+    const [dtmfInputValue, setDtmfInputValue] = useState(props.dtmfInput || '');
     const [callStatus, setCallStatus] = useState('Connecting...');
     const [currentActiveCall, setCurrentActiveCall] = useState<CallObject | null>(null);
     const [isMuted, setIsMuted] = useState(false);
@@ -64,6 +63,13 @@ export function ClickToCallComponent(props: ClickToCallProps) {
     hostInstance.on('onBrandingUpdate', function (event: any) {
         updateBrandingInfo({...event.brandingData})
     });
+
+    const closeClickToCallComponent = () => {
+        hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('close-bottom-slide');
+        setTimeout(() => {
+            hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper')?.remove();
+        }, 150);
+    }
 
     // Timer effect to update call duration every second when call is active
     useEffect(() => {
@@ -101,6 +107,11 @@ export function ClickToCallComponent(props: ClickToCallProps) {
         };
     }, []);
 
+    // Auto-initialize call if autoInit is true
+    useEffect(() => {
+        initCall();
+    }, []);
+
     // Add beforeunload event listener to handle page reload/refresh
     useEffect(() => {
         const handleBeforeUnload = (event: any) => {
@@ -131,8 +142,13 @@ export function ClickToCallComponent(props: ClickToCallProps) {
 
     // Handler functions for keypad functionality
     const onClickDigit = (digit: string | number) => {
-        const newNumber = phoneNumber + digit.toString();
-        setPhoneNumber(newNumber);
+        // Only allow DTMF input if call is connected
+        if (!currentActiveCall || !currentActiveCall.wasAccepted?.()) {
+            return;
+        }
+        
+        const newNumber = dtmfInputValue + digit.toString();
+        setDtmfInputValue(newNumber);
         
         // Send DTMF if call is active
         if (currentActiveCall && typeof currentActiveCall.sendDTMF === 'function') {
@@ -140,15 +156,10 @@ export function ClickToCallComponent(props: ClickToCallProps) {
         }
     };
 
-    const onInput = (event: any) => {
-        const value = event.target.value;
-        // Allow only numbers, *, and #
-        const filteredValue = value.replace(/[^0-9*#]/g, '');
-        setPhoneNumber(filteredValue);
-    };
+
 
     const toggleMute = () => {
-        if (currentActiveCall && currentActiveCall.wasAccepted && currentActiveCall.wasAccepted()) {
+        if (currentActiveCall && currentActiveCall.wasAccepted?.()) {
             const isMuted = currentActiveCall.isAudioMuted?.() || false;
             currentActiveCall.muteAudio?.(!isMuted);
             setIsMuted(!isMuted);
@@ -170,8 +181,8 @@ export function ClickToCallComponent(props: ClickToCallProps) {
         setCallStatus('Call ended');
         setCallStartTime(null);
         setCallDuration('00:00');
-        setPhoneNumber('');
-        setShowClickToCallWidget(false);
+        setDtmfInputValue('');
+        closeClickToCallComponent();
     };
 
     const initCall = () => {
@@ -186,7 +197,6 @@ export function ClickToCallComponent(props: ClickToCallProps) {
         messageToBot["resourceid"] = "/bot.message";
         hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
 
-        console.log('handleClickToCall', hostInstance);
         const { clickToCallFlowId, accessToken, botInfo: { taskBotId } } = hostInstance.config?.botOptions;
         const { userInfo } = hostInstance.bot.userInfo; // userid is here
         const sid = hostInstance.sessionId;
@@ -205,26 +215,26 @@ export function ClickToCallComponent(props: ClickToCallProps) {
             loginStateChanged: (isLogin: boolean, cause: string) => {
                 switch (cause) {
                     case "connected":
-                        setCallStatus('Connected');
+                        // setCallStatus('Connected');
                         break;
                     case "disconnected":
-                        setCallStatus('Disconnected');
+                        // setCallStatus('Disconnected');
                         break;
                     case "login failed":
-                        setCallStatus('Login failed');
+                        // setCallStatus('Login failed');
                         break;
                     case "login":
-                        setCallStatus('Logging in...');
+                        // setCallStatus('Logging in...');
                         break;
                     case "logout":
-                        setCallStatus('Logged out');
+                        // setCallStatus('Logged out');
                         break;
                 }
                 console.log("ClickToCall Component :: ", isLogin, cause);
             },
 
             outgoingCallProgress: (call: CallObject, response: any) => {
-                setCallStatus('Calling...');
+                // setCallStatus('Calling...');
             },
 
             callTerminated: (call: CallObject, message: string, cause: string, redirectTo?: string) => {
@@ -277,87 +287,63 @@ export function ClickToCallComponent(props: ClickToCallProps) {
     }
 
     return (
-        <div className="click-to-call-component" aria-label="click to call component">
-            {showWarningPopup && (
-                <div className="warning-popup-overlay">
-                    <div className="warning-popup">
-                        <div className="warning-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
+        <div className="click-to-call-container">
+            <div className="click-to-call-wrapper-container" aria-label="click to call component">
+                <div className="call-status-sec">
+                    <div className="dialing-title">{callStatus}</div>
+                    {callStartTime && <div className="call-time">{callDuration}</div>}
+                </div>
+                <div className="call-number-input-sec">
+                    <input 
+                        className="dtmf-input" 
+                        id="dtmfInput" 
+                        ref={dtmfInputRef}
+                        value={dtmfInputValue}
+                        readOnly
+                        tabIndex={-1}
+                        placeholder="Enter Number"
+                    />
+                </div>
+                <div className="keypad-numbers-data-sec">
+                    <div className="keypad-numbers-data">                
+                        <div className="keypad-nums-list">
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit(1)}>1</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit(2)}>2</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit(3)}>3</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit(4)}>4</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit(5)}>5</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit(6)}>6</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit(7)}>7</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit(8)}>8</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit(9)}>9</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit('*')}>*</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit('0')}>0</button>
+                            <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit('#')}>#</button>
                         </div>
-                        <div className="warning-content">
-                            <h3>Connect to Voice Agent?</h3>
-                            <p>You will be connected to a live voice agent{phoneNumber && ` at ${phoneNumber}`}. Your current conversation will end before connecting. Do you want to continue?</p>
-                        </div>  
-                        <div className="warning-actions">
-                            <button className="btn-cancel" onClick={() => {
-                                setShowWarningPopup(false)
-                                setShowClickToCallWidget(false);
-                            }}>Cancel</button>
-                            <button className="btn-continue" onClick={() => {setShowWarningPopup(false); initCall()}}>Continue</button>
+                        <div className="action-buttons-mute-end-call">
+                            <button 
+                                className={`mute-button ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} 
+                                onClick={toggleMute}
+                            >
+                                {!isMuted ? (
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <path d="M19.7479 4.99999C21.1652 6.97023 22 9.38762 22 12C22 14.6124 21.1652 17.0298 19.7479 19M15.7453 7.99999C16.5362 9.13382 17 10.5127 17 12C17 13.4872 16.5362 14.8662 15.7453 16M9.63432 4.36567L6.46863 7.53136C6.29568 7.70431 6.2092 7.79079 6.10828 7.85263C6.01881 7.90746 5.92127 7.94786 5.81923 7.97236C5.70414 7.99999 5.58185 7.99999 5.33726 7.99999H3.6C3.03995 7.99999 2.75992 7.99999 2.54601 8.10898C2.35785 8.20485 2.20487 8.35784 2.10899 8.546C2 8.75991 2 9.03994 2 9.59999V14.4C2 14.96 2 15.2401 2.10899 15.454C2.20487 15.6421 2.35785 15.7951 2.54601 15.891C2.75992 16 3.03995 16 3.6 16H5.33726C5.58185 16 5.70414 16 5.81923 16.0276C5.92127 16.0521 6.01881 16.0925 6.10828 16.1473C6.2092 16.2092 6.29568 16.2957 6.46863 16.4686L9.63431 19.6343C10.0627 20.0627 10.2769 20.2769 10.4608 20.2913C10.6203 20.3039 10.7763 20.2393 10.8802 20.1176C11 19.9773 11 19.6744 11 19.0686V4.93136C11 4.32554 11 4.02264 10.8802 3.88237C10.7763 3.76067 10.6203 3.69608 10.4608 3.70864C10.2769 3.72311 10.0627 3.9373 9.63432 4.36567Z" stroke="#101828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                ) : (
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <path d="M22 8.99993L16 14.9999M16 8.99993L22 14.9999M9.63432 4.36561L6.46863 7.5313C6.29568 7.70425 6.2092 7.79073 6.10828 7.85257C6.01881 7.9074 5.92127 7.9478 5.81923 7.9723C5.70414 7.99993 5.58185 7.99993 5.33726 7.99993H3.6C3.03995 7.99993 2.75992 7.99993 2.54601 8.10892C2.35785 8.20479 2.20487 8.35777 2.10899 8.54594C2 8.75985 2 9.03987 2 9.59993V14.3999C2 14.96 2 15.24 2.10899 15.4539C2.20487 15.6421 2.35785 15.7951 2.54601 15.8909C2.75992 15.9999 3.03995 15.9999 3.6 15.9999H5.33726C5.58185 15.9999 5.70414 15.9999 5.81923 16.0276C5.92127 16.0521 6.01881 16.0925 6.10828 16.1473C6.2092 16.2091 6.29568 16.2956 6.46863 16.4686L9.63431 19.6342C10.0627 20.0626 10.2769 20.2768 10.4608 20.2913C10.6203 20.3038 10.7763 20.2392 10.8802 20.1175C11 19.9773 11 19.6744 11 19.0686V4.9313C11 4.32548 11 4.02257 10.8802 3.88231C10.7763 3.76061 10.6203 3.69602 10.4608 3.70858C10.2769 3.72305 10.0627 3.93724 9.63432 4.36561Z" stroke="#101828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                )}
+                            </button>
+                            <button className={`end-call-button ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => currentActiveCall?.wasAccepted?.() && onClickHome(true)}>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M8.38028 8.85335C9.07627 10.303 10.0251 11.6616 11.2266 12.8632C12.4282 14.0648 13.7869 15.0136 15.2365 15.7096C15.3612 15.7694 15.4235 15.7994 15.5024 15.8224C15.7828 15.9041 16.127 15.8454 16.3644 15.6754C16.4313 15.6275 16.4884 15.5704 16.6027 15.4561C16.9523 15.1064 17.1271 14.9316 17.3029 14.8174C17.9658 14.3864 18.8204 14.3864 19.4833 14.8174C19.6591 14.9316 19.8339 15.1064 20.1835 15.4561L20.3783 15.6509C20.9098 16.1824 21.1755 16.4481 21.3198 16.7335C21.6069 17.301 21.6069 17.9713 21.3198 18.5389C21.1755 18.8242 20.9098 19.09 20.3783 19.6214L20.2207 19.779C19.6911 20.3087 19.4263 20.5735 19.0662 20.7757C18.6667 21.0001 18.0462 21.1615 17.588 21.1601C17.1751 21.1589 16.8928 21.0788 16.3284 20.9186C13.295 20.0576 10.4326 18.4332 8.04466 16.0452C5.65668 13.6572 4.03221 10.7948 3.17124 7.76144C3.01103 7.19699 2.93092 6.91477 2.9297 6.50182C2.92833 6.0436 3.08969 5.42311 3.31411 5.0236C3.51636 4.66357 3.78117 4.39876 4.3108 3.86913L4.46843 3.7115C4.99987 3.18006 5.2656 2.91433 5.55098 2.76999C6.11854 2.48292 6.7888 2.48292 7.35636 2.76999C7.64174 2.91433 7.90747 3.18006 8.43891 3.7115L8.63378 3.90637C8.98338 4.25597 9.15819 4.43078 9.27247 4.60655C9.70347 5.26945 9.70347 6.12403 9.27247 6.78692C9.15819 6.96269 8.98338 7.1375 8.63378 7.4871C8.51947 7.60142 8.46231 7.65857 8.41447 7.72538C8.24446 7.96281 8.18576 8.30707 8.26748 8.58743C8.29048 8.66632 8.32041 8.72866 8.38028 8.85335Z" stroke="#F2F4F7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
                         </div>
                     </div>
                 </div>
-            )}
-            
-            {!showWarningPopup && (
-                <React.Fragment>
-                    <div className="call-flow-number-">
-                        <div className="phone-number-sec">
-                            <div className="dialing-title">{callStatus}</div>
-                            {callStartTime && <div className="call-time">{callDuration}</div>}
-                        </div>
-                    </div>
-                    <div className="scroll-kepad-data-call">
-                        <div className="keypad-numbers-data">
-                            <input 
-                                className="numbers" 
-                                id="dtmfInput" 
-                                ref={dtmfInputRef}
-                                value={phoneNumber}
-                                onInput={onInput}
-                                onKeyPress={(e) => {
-                                    const charCode = e.which || e.keyCode;
-                                    if (!((charCode >= 48 && charCode <= 57) || charCode === 35 || charCode === 42)) {
-                                        e.preventDefault();
-                                    }
-                                }}
-                                placeholder="Enter phone number"
-                            />
-                            <div className="keypad-num">
-                                <div className="num" onClick={() => onClickDigit(1)}>1</div>
-                                <div className="num" onClick={() => onClickDigit(2)}>2</div>
-                                <div className="num" onClick={() => onClickDigit(3)}>3</div>
-                                <div className="num" onClick={() => onClickDigit(4)}>4</div>
-                                <div className="num" onClick={() => onClickDigit(5)}>5</div>
-                                <div className="num" onClick={() => onClickDigit(6)}>6</div>
-                                <div className="num" onClick={() => onClickDigit(7)}>7</div>
-                                <div className="num" onClick={() => onClickDigit(8)}>8</div>
-                                <div className="num" onClick={() => onClickDigit(9)}>9</div>
-                                <div className="num pt-2" onClick={() => onClickDigit('*')}>*</div>
-                                <div className="num" onClick={() => onClickDigit('0')}>0</div>
-                                <div className="num" onClick={() => onClickDigit('#')}>#</div>
-                            </div>
-                            <div className="bottom-actions">
-                                <div 
-                                    className={`speaker-icon ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} 
-                                    onClick={toggleMute}
-                                >
-                                    {!isMuted ? (
-                                        <img src="assets/icons/testing/mute.svg" alt="Muted" />
-                                    ) : (
-                                        <img src="assets/icons/testing/unmute.svg" alt="Unmuted" />
-                                    )}
-                                </div>
-                                <div className={`end-call-icon ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => currentActiveCall?.wasAccepted?.() && onClickHome(true)}>
-                                    <img src="assets/icons/testing/endcall.svg" alt="End Call" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </React.Fragment>
-            )}
+            </div>
         </div>
     );
 }

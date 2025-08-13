@@ -1,6 +1,6 @@
 import AgentDesktopPluginScript from './agentdesktop-script';
-import { ClickToCallComponent } from './clickToCallComponent';
-import { h, render } from 'preact';
+import { ClickToCallSlider } from './clickToCallSlider';
+import { getHTML } from '../../templatemanager/base/domManager';
 
 
 /** @ignore */
@@ -19,8 +19,7 @@ class AgentDesktopPlugin {
     TMsgData: any;
     authInfo: any;
     cobrowseSession: any;
-    clickToCallComponent: any = null;
-    showClickToCallWidget: boolean = false;
+    clickToCallEnabled: boolean = false;
 
     constructor(config?: any) {
         this.config = {
@@ -47,14 +46,15 @@ class AgentDesktopPlugin {
             }
         });
 
+        me.hostInstance.on('onBrandingUpdate', (event: any) => {
+            this.clickToCallEnabled = event?.brandingData?.footer?.buttons?.click_to_call?.show;
+        });
+
         // this.emit(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, {}) 
         // above line in kore-rtm-client.js will be emitted after the rtm connection is successfully established
         // Here we are listening to the open event and sending the get_sbc_details event when the rtm connection is established
         me.hostInstance.bot.on('open', (response: any) => {
-            console.log('WebSocket connection opened:', response);
-            
-            // Send get_sbc_details event when websocket connection is established
-            if (this.authInfo) {
+            if (this.authInfo && this.clickToCallEnabled) {
                 const sbcRequestMessage: any = {};
                 sbcRequestMessage["clientMessageId"] = new Date().getTime();
                 sbcRequestMessage["event"] = "sbc_details_request";
@@ -71,47 +71,6 @@ class AgentDesktopPlugin {
                         console.log("SBC details request sent successfully via open event");
                     }
                 });
-                // ======================================================================================================
-                const callDetails = 
-                    {
-                        "domain": "korevg-staging.kore.ai",
-                        "addresses": [
-                            "wss://sbc1-korevg-np.kore.ai:8443"
-                        ],
-                        "iceServers": [
-                            {
-                                "url": "stun:global.stun.twilio.com:3478",
-                                "urls": "stun:global.stun.twilio.com:3478"
-                            },  
-                            {
-                                "credential": "qWe9jOx8YKGZLa4QWjy0/EnVTUs7ziOVjfWnwytPisY=",
-                                "url": "turn:global.turn.twilio.com:3478?transport=udp",
-                                "urls": "turn:global.turn.twilio.com:3478?transport=udp",
-                                "username": "e92827d0bc455a0895b7fe16299c6c36c021f33d8b8173184511f97eff63cf2a"
-                            },
-                            {
-                                "credential": "qWe9jOx8YKGZLa4QWjy0/EnVTUs7ziOVjfWnwytPisY=",
-                                "url": "turn:global.turn.twilio.com:3478?transport=tcp",
-                                "urls": "turn:global.turn.twilio.com:3478?transport=tcp",
-                                "username": "e92827d0bc455a0895b7fe16299c6c36c021f33d8b8173184511f97eff63cf2a"
-                            },
-                            {
-                                "credential": "qWe9jOx8YKGZLa4QWjy0/EnVTUs7ziOVjfWnwytPisY=",
-                                "url": "turn:global.turn.twilio.com:443?transport=tcp",
-                                "urls": "turn:global.turn.twilio.com:443?transport=tcp",
-                                "username": "e92827d0bc455a0895b7fe16299c6c36c021f33d8b8173184511f97eff63cf2a"
-                            }
-                        ]
-                    
-                }
-
-                const uuId = this.config.userInfo.userId;
-                const serverConfig: any = {};
-                serverConfig.addresses = callDetails.addresses;
-                serverConfig.domain = callDetails.domain;
-                serverConfig.iceServers = callDetails.iceServers || [];
-                this.agentDesktopInfo.initSipStack({ user: uuId, displayName: uuId, password: '' }, serverConfig, false);
-                // ======================================================================================================
             }
         });
         me.hostInstance.on('beforeViewInit', (chatEle: any) => {
@@ -127,6 +86,12 @@ class AgentDesktopPlugin {
                     }
                     messageToBot["resourceid"] = "/bot.message";
                     me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+                });
+            }
+            if(me.hostInstance.chatEle.querySelector('#kore-click-to-call')){
+                // click listener for kore-click-to-call
+                me.hostInstance.chatEle.querySelector('#kore-click-to-call').addEventListener('click', () => {
+                    me.hostInstance.bottomSliderAction('', getHTML(ClickToCallSlider, { hostInstance: me.hostInstance }, me.hostInstance));
                 });
             }
         })
@@ -186,10 +151,6 @@ class AgentDesktopPlugin {
         let me: any = this;
         this.$ = me.hostInstance.$;
         this.appendVideoAudioElemnts();
-        me.hostInstance.on('onClickToCall', (event: any) => {
-            console.log("onClickToCall", event);
-            this.handleClickToCall(event);
-        });        
         document.addEventListener("visibilitychange", () => {
             if (this.isAgentConnected || this.isTPAgentConnected) {
                 if (document.visibilityState === 'visible') {
@@ -264,13 +225,7 @@ class AgentDesktopPlugin {
 
             // Handle SBC details response
             if (event.messageData?.type === 'sbc_details_response') {
-                console.log('Received SBC details:', event.messageData?.responseData);
 
-
-                // const sipURI = mockCallDetails.sipURI;
-                // const sipUser = sipURI.substring(sipURI.indexOf(':') + 1, sipURI.indexOf('@'));
-    
-                // console.log('sipURI', sipURI, 'sipUser', sipUser, mockCallDetails.videoCall);
                 var uuId = this.config.userInfo.userId;
                 const serverConfig: {
                     addresses: string[];
@@ -280,18 +235,7 @@ class AgentDesktopPlugin {
                 serverConfig.addresses = serverConfig.addresses;
                 serverConfig.domain = serverConfig.domain;
                 serverConfig.iceServers = serverConfig.iceServers || [];
-                console.log('serverConfig', serverConfig);
-                this.agentDesktopInfo.initSipStack({ user: uuId, displayName: uuId, password: '' }, serverConfig, false);
                 me.hostInstance.serverConfig = serverConfig;
-                // me.initSipStack({ user: uuId, displayName: uuId, password: '' }, serverConfig);
-                // if (this.agentDesktopInfo && event.messageData.message.sbcConfiguration) {
-                //     // Store SBC details for future use
-                //     this.agentDesktopInfo.sbcDetails = event.messageData.message.sbcConfiguration;
-                    
-                //     // Establish SBC socket connection
-                //     // this.establishSBCConnection(event.messageData.message.sbcConfiguration);
-                //     // this.establishSBCConnection(event.messageData.message.sbcConfiguration);
-                // }
             }
 
             // Agent Status 
@@ -628,63 +572,6 @@ class AgentDesktopPlugin {
         } catch (error) {
             console.error('Error establishing SBC connection:', error);
         }
-    }
-
-    handleClickToCall(event: any) {
-        console.log('handleClickToCall called with event:', event);
-        
-        // Extract phone number from event if available
-        const phoneNumber = event?.phoneNumber || event?.data?.phoneNumber || '';
-        
-        // Show the click-to-call widget
-        this.showClickToCallWidget = true;
-        
-        // Create and render the click-to-call component
-        this.renderClickToCallComponent(phoneNumber);
-    }
-
-    renderClickToCallComponent(phoneNumber?: string) {
-        const me: any = this;
-        const chatContainer = me.hostInstance.chatEle;
-        
-        if (!chatContainer) {
-            console.error('Chat container not found');
-            return;
-        }
-
-        // Create container for the click-to-call component
-        let c2cContainer = chatContainer.querySelector('.click-to-call-container');
-        if (!c2cContainer) {
-            c2cContainer = document.createElement('div');
-            c2cContainer.className = 'click-to-call-container';
-            c2cContainer.style.cssText = `
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                z-index: 1000;
-                background: white;
-            `;
-            chatContainer.appendChild(c2cContainer);
-        }
-
-        // Render the component directly
-        const setShowClickToCallWidget = (show: boolean) => {
-            me.showClickToCallWidget = show;
-            if (!show && c2cContainer) {
-                c2cContainer.remove();
-            }
-        };
-
-        render(
-            h(ClickToCallComponent, {
-                hostInstance: me.hostInstance,
-                setShowClickToCallWidget,
-                phoneNumber
-            }),
-            c2cContainer
-        );
     }
 
     manageAgentBranding(type: string) {
