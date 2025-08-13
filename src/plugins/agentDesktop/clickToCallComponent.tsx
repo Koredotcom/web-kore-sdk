@@ -142,7 +142,6 @@ export function ClickToCallComponent(props: ClickToCallProps) {
 
     // Handler functions for keypad functionality
     const onClickDigit = (digit: string | number) => {
-        console.log('onClickDigit', currentActiveCall, currentActiveCall?.wasAccepted?.());
         // Only allow DTMF input if call is connected
         if (!currentActiveCall || !currentActiveCall.wasAccepted?.()) {
             return;
@@ -198,7 +197,6 @@ export function ClickToCallComponent(props: ClickToCallProps) {
         messageToBot["resourceid"] = "/bot.message";
         hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
 
-        console.log('handleClickToCall', hostInstance);
         const { clickToCallFlowId, accessToken, botInfo: { taskBotId } } = hostInstance.config?.botOptions;
         const { userInfo } = hostInstance.bot.userInfo; // userid is here
         const sid = hostInstance.sessionId;
