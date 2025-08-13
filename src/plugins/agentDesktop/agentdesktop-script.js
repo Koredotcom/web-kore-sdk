@@ -1069,7 +1069,7 @@ class AgentDesktopPluginScript  {
 
         }
 
-        this.initSipStack = function (account, serverConfig) {
+        this.initSipStack = function (account, serverConfig, autoCall = true) {
             console.log('this.phoneConfig', this.phoneConfig);
             this.phone.setServerConfig(serverConfig.addresses, serverConfig.domain, serverConfig.iceServers);
             this.phone.setReconnectIntervals(this.phoneConfig.reconnectIntervalMin, this.phoneConfig.reconnectIntervalMax);
@@ -1088,7 +1088,9 @@ class AgentDesktopPluginScript  {
                     switch (cause) {
                         case "connected":
                             console.log('phone>>> loginStateChanged: connected');
-                            self._makeCall();
+                            if (autoCall) {
+                                self._makeCall();
+                            }
                             //guiMakeCall(callTo);
                             break;
                         case "disconnected":

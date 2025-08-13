@@ -1,4 +1,6 @@
 import AgentDesktopPluginScript from './agentdesktop-script';
+import { ClickToCallSlider } from './clickToCallSlider';
+import { getHTML } from '../../templatemanager/base/domManager';
 
 
 /** @ignore */
@@ -17,6 +19,7 @@ class AgentDesktopPlugin {
     TMsgData: any;
     authInfo: any;
     cobrowseSession: any;
+    clickToCallEnabled: boolean = false;
 
     constructor(config?: any) {
         this.config = {
@@ -40,6 +43,32 @@ class AgentDesktopPlugin {
                 this.cobrowseSession = new AgentDesktopPluginScript({...response, excludeRTM: true, isCobrowseSession: true});
             }
         });
+
+        me.hostInstance.on('onBrandingUpdate', (event: any) => {
+            this.clickToCallEnabled = event?.brandingData?.footer?.buttons?.click_to_call?.show;
+        });
+
+        // this.emit(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, {}) 
+        // above line in kore-rtm-client.js will be emitted after the rtm connection is successfully established
+        // Here we are listening to the open event and sending the get_sbc_details event when the rtm connection is established
+        me.hostInstance.bot.on('open', (response: any) => {
+            if (this.authInfo && this.clickToCallEnabled) {
+                const sbcRequestMessage: any = {};
+                sbcRequestMessage["clientMessageId"] = new Date().getTime();
+                sbcRequestMessage["event"] = "sbc_details_request";
+                sbcRequestMessage["message"] = {
+                    "body":"",
+                    "type": ""
+                };
+                sbcRequestMessage["resourceid"] = "/bot.message";
+                
+                me.hostInstance.bot.sendMessage(sbcRequestMessage, (err: any) => {
+                    if (err) {
+                        console.error("Failed to request SBC details:", err);
+                    }
+                });
+            }
+        });
         me.hostInstance.on('beforeViewInit', (chatEle: any) => {
             me.onInit();
             if (me.hostInstance.chatEle.querySelectorAll('.btn-action-close') && me.hostInstance.chatEle.querySelectorAll('.btn-action-close').length > 0) {
@@ -53,6 +82,12 @@ class AgentDesktopPlugin {
                     }
                     messageToBot["resourceid"] = "/bot.message";
                     me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+                });
+            }
+            if(me.hostInstance.chatEle.querySelector('#kore-click-to-call')){
+                // click listener for kore-click-to-call
+                me.hostInstance.chatEle.querySelector('#kore-click-to-call').addEventListener('click', () => {
+                    me.hostInstance.bottomSliderAction('', getHTML(ClickToCallSlider, { hostInstance: me.hostInstance }, me.hostInstance));
                 });
             }
         })
@@ -171,6 +206,31 @@ class AgentDesktopPlugin {
 
         // agent connected and disconnected events
         me.hostInstance.on('onWSMessage', (event: any) => {
+
+            if(event.messageData?.type === 'Session_Start') {
+                me.hostInstance.sessionId = event.messageData?.sessionId;
+            }
+
+            if(event.messageData?.type === 'Bot_Active') {
+                if(event.messageData?.recentSessionInfo?.isActive && event.messageData?.recentSessionInfo?.sessionId) {
+                    me.hostInstance.sessionId = event.messageData?.recentSessionInfo?.sessionId;
+                }
+            }
+
+            // Handle SBC details response
+            if (event.messageData?.type === 'sbc_details_response') {
+
+                var uuId = this.config.userInfo.userId;
+                const serverConfig: {
+                    addresses: string[];
+                    domain: string;
+                    iceServers: any[];
+                } = event.messageData?.responseData;
+                serverConfig.addresses = serverConfig.addresses;
+                serverConfig.domain = serverConfig.domain;
+                serverConfig.iceServers = serverConfig.iceServers || [];
+                me.hostInstance.serverConfig = serverConfig;
+            }
 
             // Agent Status 
             if (event.messageData?.message?.type === 'agent_connected' && me?.hostInstance?.enableAgentChanges) {
@@ -456,6 +516,53 @@ class AgentDesktopPlugin {
                 me.hostInstance.$('#cobrowseInput').addClass('error');
                 
             })
+    }
+
+    establishSBCConnection(sbcConfiguration: any) {      
+        if (!this.agentDesktopInfo || !sbcConfiguration) {
+            console.error('Cannot establish SBC connection: Missing agentDesktopInfo or SBC configuration');
+            return;
+        }
+
+        try {
+            // Create a mock callDetails object similar to how it's done in call_agent_webrtc_accepted
+            const mockCallDetails = {
+                addresses: sbcConfiguration.addresses || [],
+                domain: sbcConfiguration.domain || '',
+                iceServers: sbcConfiguration.iceServers || [],
+                sipURI: sbcConfiguration.sipURI || 'sip:user@domain.com',
+                videoCall: false, // Default to audio call for SBC connection
+                firstName: 'SBC Connection',
+                restoreCall: false
+            };
+
+            // Set the call details in agentDesktopInfo
+            this.agentDesktopInfo.callDetails = mockCallDetails;
+            
+            // Initialize SIP stack with SBC configuration
+            const userIdentifier = this.authInfo?.userInfo?.userId || 'user_' + new Date().getTime();
+            const account = {
+                user: userIdentifier,
+                displayName: userIdentifier,
+                password: ''
+            };
+
+            const serverConfig = {
+                addresses: sbcConfiguration.addresses,
+                domain: sbcConfiguration.domain,
+                iceServers: sbcConfiguration.iceServers || []
+            };
+
+            // Initialize the SIP stack for SBC connection
+            if (this.agentDesktopInfo.initSipStack && typeof this.agentDesktopInfo.initSipStack === 'function') {
+                this.agentDesktopInfo.initSipStack(account, serverConfig);
+            } else {
+                console.error('initSipStack method not available on agentDesktopInfo');
+            }
+
+        } catch (error) {
+            console.error('Error establishing SBC connection:', error);
+        }
     }
 
     manageAgentBranding(type: string) {
