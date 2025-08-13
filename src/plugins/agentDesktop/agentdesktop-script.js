@@ -2276,6 +2276,7 @@ class AgentDesktopPluginScript  {
                     </div>
                 </div>`;
                 var toastContainer = document.getElementById("toastcontainer");
+                me?.addAudioVideoContainer();
                 if (!toastContainer) {
                     toastContainer = document.createElement("div");
                     toastContainer.id = "toastcontainer";
