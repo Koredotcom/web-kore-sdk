@@ -276,6 +276,7 @@ AgentDesktop = function (uuId, aResponse) {
         callContainer.remove();
         this.removeAudoVideoContainer();
         this.disableMinimizeButton(false);
+        _self.enableClickToCallButton();
     }
     this.showFooterButtons = function (callConnected, videoCall) {
         var footerButtonsHTML = null;
@@ -1149,7 +1150,6 @@ AgentDesktop = function (uuId, aResponse) {
                 self.showVideo = false;
                 self.screenSharingStream = null;
                 _self.callTerminated();
-                _self.enableClickToCallButton();
             },
 
             callConfirmed: function (call, message, cause) {
