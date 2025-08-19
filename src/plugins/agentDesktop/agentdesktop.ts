@@ -35,11 +35,9 @@ class AgentDesktopPlugin {
         cwInstance.on("jwtGrantSuccess", (response: any) => {
             if (!this.agentDesktopInfo) {
                 this.config = me.extend(me, response)
-                console.log("this.config", this.config);
                 //me.AgentDesktop(response.userInfo.userId, response);
                 /** @ignore */
                 this.agentDesktopInfo = new AgentDesktopPluginScript(this.config);
-                console.log("this.agentDesktopInfo", this.agentDesktopInfo);
                 // Connecting cobrowse session with the user data
                 this.authInfo = response;
                 this.cobrowseSession = new AgentDesktopPluginScript({...response, excludeRTM: true, isCobrowseSession: true});

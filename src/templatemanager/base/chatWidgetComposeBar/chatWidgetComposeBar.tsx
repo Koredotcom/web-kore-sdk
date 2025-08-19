@@ -16,7 +16,6 @@ export function ChatWidgetComposeBar(props: any) {
         updateBrandingInfo({...event.brandingData})
     });
 
-
     const inputTypeObj: any = {
         keypad: 'compose-bar-wrapper',
         voice: 'compose-bar-wrapper if-voice-compose'
