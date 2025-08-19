@@ -13,7 +13,7 @@
               Replace default SBC server address (from config.js) to the parameter value.
  */
 
-import AudioCodesUA from './ac_webrtc.js';
+import AudioCodesUA from './ac_webrtc.js?c2c';
 import './jssip.js'; // Import JsSIP to make it available globally
 
 let phone = new AudioCodesUA(); // phone API

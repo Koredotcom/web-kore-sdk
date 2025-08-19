@@ -184,6 +184,11 @@
                         fill: none;
                     }
                 }
+                &.disabled{
+                    opacity: 0.4;
+                    cursor: none;
+                    pointer-events: none;
+                }
             }
             svg{
                 path{

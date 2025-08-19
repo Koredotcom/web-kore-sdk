@@ -259,6 +259,18 @@ class AgentDesktopPluginScript  {
             },
             version: '18-Nov-2020'
         }
+        this.disableClickToCallButton = function () {
+            var clickToCallButton = cwInstance.chatEle.querySelector("#kore-click-to-call");
+            if(clickToCallButton) {
+                clickToCallButton.classList.add('disabled');
+            }
+        }
+        this.enableClickToCallButton = function () {
+            var clickToCallButton = cwInstance.chatEle.querySelector("#kore-click-to-call");
+            if(clickToCallButton) {
+                clickToCallButton.classList.remove('disabled');
+            }
+        }
         this.callTerminated = function () {
             var callContainer = koreJquery("#callcontainer");
             callContainer.remove();
@@ -690,6 +702,7 @@ class AgentDesktopPluginScript  {
                     this.autoAcceptConversation();
                 }
                 rejectCall.off('click').on('click', function (event) {
+                    _self.enableClickToCallButton();
                     const payload = _self.callDetails;
                     payload['type'] = "call_agent_webrtc_rejected"
                     const messageToBot = {};
@@ -899,6 +912,7 @@ class AgentDesktopPluginScript  {
                 var msgJson = JSON.parse(message.data);
                 if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'call_agent_webrtc') {
                     //koreJquery("#rejectPhone").show();
+                    _self.disableClickToCallButton();
                     _self.callDetails = msgJson.message;
                     _self.agentProfileIcon = _self.userIcon;
                     if (_self.callDetails.profileIcon && _self.callDetails.profileIcon !== 'undefined') {
@@ -1135,6 +1149,7 @@ class AgentDesktopPluginScript  {
                     self.showVideo = false;
                     self.screenSharingStream = null;
                     _self.callTerminated();
+                    _self.enableClickToCallButton();
                 },
 
                 callConfirmed: function (call, message, cause) {
