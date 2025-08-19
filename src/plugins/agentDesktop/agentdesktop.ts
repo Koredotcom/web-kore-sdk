@@ -67,8 +67,6 @@ class AgentDesktopPlugin {
                 me.hostInstance.bot.sendMessage(sbcRequestMessage, (err: any) => {
                     if (err) {
                         console.error("Failed to request SBC details:", err);
-                    } else {
-                        console.log("SBC details request sent successfully via open event");
                     }
                 });
             }
@@ -212,12 +210,10 @@ class AgentDesktopPlugin {
         me.hostInstance.on('onWSMessage', (event: any) => {
 
             if(event.messageData?.type === 'Session_Start') {
-                console.log('Session_Start: Session_Start', event.messageData?.sessionId);
                 me.hostInstance.sessionId = event.messageData?.sessionId;
             }
 
             if(event.messageData?.type === 'Bot_Active') {
-                console.log('Session_Start: Bot_Active', event.messageData?.recentSessionInfo?.sessionId);
                 if(event.messageData?.recentSessionInfo?.isActive && event.messageData?.recentSessionInfo?.sessionId) {
                     me.hostInstance.sessionId = event.messageData?.recentSessionInfo?.sessionId;
                 }
@@ -524,9 +520,7 @@ class AgentDesktopPlugin {
             })
     }
 
-    establishSBCConnection(sbcConfiguration: any) {
-        console.log('Establishing SBC connection with configuration:', sbcConfiguration);
-        
+    establishSBCConnection(sbcConfiguration: any) {      
         if (!this.agentDesktopInfo || !sbcConfiguration) {
             console.error('Cannot establish SBC connection: Missing agentDesktopInfo or SBC configuration');
             return;
@@ -564,7 +558,6 @@ class AgentDesktopPlugin {
             // Initialize the SIP stack for SBC connection
             if (this.agentDesktopInfo.initSipStack && typeof this.agentDesktopInfo.initSipStack === 'function') {
                 this.agentDesktopInfo.initSipStack(account, serverConfig);
-                console.log('SBC socket connection initiated successfully');
             } else {
                 console.error('initSipStack method not available on agentDesktopInfo');
             }
