@@ -232,10 +232,10 @@ export function Feedback(props: any) {
                                     aria-checked="false"
                                     name="rating"
                                     id={`rating-${msgData.messageId}-${starItem.starId}`}
-                                    onClick={() => handleStar(starItem)}
+                                    // onClick={() => handleStar(starItem)}
                                     className={`rating-${msgData.messageId}`}
                                 />
-                                <button tabIndex={0} htmlFor={`rating-${msgData.messageId}-${starItem.starId}`} onClick={() => handleStar(starItem)} onKeyDown={(e) => { 
+                                <label role="button" tabIndex={0} htmlFor={`rating-${msgData.messageId}-${starItem.starId}`} onClick={(e) => {if(e.detail !== 0) handleStar(starItem)}} onKeyDown={(e) => { 
                                     if (e.key === 'Enter') {
                                         handleStar(starItem); 
                                     } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
@@ -251,7 +251,7 @@ export function Feedback(props: any) {
                                             nextStar.focus();
                                 }
                                     }
-                                }}></button>
+                                }}></label>
                             </Fragment>
                         ))}
                     </div>}
