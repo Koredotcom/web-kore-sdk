@@ -87,7 +87,9 @@ class AgentDesktopPlugin {
             if(me.hostInstance.chatEle.querySelector('#kore-click-to-call')){
                 // click listener for kore-click-to-call
                 me.hostInstance.chatEle.querySelector('#kore-click-to-call').addEventListener('click', () => {
-                    me.hostInstance.bottomSliderAction('', getHTML(ClickToCallSlider, { hostInstance: me.hostInstance }, me.hostInstance));
+                    if(!this.agentDesktopInfo.activeCall){
+                        me.hostInstance.bottomSliderAction('', getHTML(ClickToCallSlider, { hostInstance: me.hostInstance }, me.hostInstance));
+                    }
                 });
             }
         })
@@ -516,53 +518,6 @@ class AgentDesktopPlugin {
                 me.hostInstance.$('#cobrowseInput').addClass('error');
                 
             })
-    }
-
-    establishSBCConnection(sbcConfiguration: any) {      
-        if (!this.agentDesktopInfo || !sbcConfiguration) {
-            console.error('Cannot establish SBC connection: Missing agentDesktopInfo or SBC configuration');
-            return;
-        }
-
-        try {
-            // Create a mock callDetails object similar to how it's done in call_agent_webrtc_accepted
-            const mockCallDetails = {
-                addresses: sbcConfiguration.addresses || [],
-                domain: sbcConfiguration.domain || '',
-                iceServers: sbcConfiguration.iceServers || [],
-                sipURI: sbcConfiguration.sipURI || 'sip:user@domain.com',
-                videoCall: false, // Default to audio call for SBC connection
-                firstName: 'SBC Connection',
-                restoreCall: false
-            };
-
-            // Set the call details in agentDesktopInfo
-            this.agentDesktopInfo.callDetails = mockCallDetails;
-            
-            // Initialize SIP stack with SBC configuration
-            const userIdentifier = this.authInfo?.userInfo?.userId || 'user_' + new Date().getTime();
-            const account = {
-                user: userIdentifier,
-                displayName: userIdentifier,
-                password: ''
-            };
-
-            const serverConfig = {
-                addresses: sbcConfiguration.addresses,
-                domain: sbcConfiguration.domain,
-                iceServers: sbcConfiguration.iceServers || []
-            };
-
-            // Initialize the SIP stack for SBC connection
-            if (this.agentDesktopInfo.initSipStack && typeof this.agentDesktopInfo.initSipStack === 'function') {
-                this.agentDesktopInfo.initSipStack(account, serverConfig);
-            } else {
-                console.error('initSipStack method not available on agentDesktopInfo');
-            }
-
-        } catch (error) {
-            console.error('Error establishing SBC connection:', error);
-        }
     }
 
     manageAgentBranding(type: string) {

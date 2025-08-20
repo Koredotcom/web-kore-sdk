@@ -293,7 +293,7 @@ export function ClickToCallComponent(props: ClickToCallProps) {
                     <div className="dialing-title">{callStatus}</div>
                     {callStartTime && <div className="call-time">{callDuration}</div>}
                 </div>
-                <div className="call-number-input-sec">
+                {/* <div className="call-number-input-sec">
                     <input 
                         className="dtmf-input" 
                         id="dtmfInput" 
@@ -303,10 +303,10 @@ export function ClickToCallComponent(props: ClickToCallProps) {
                         tabIndex={-1}
                         placeholder="Enter Number"
                     />
-                </div>
+                </div> */}
                 <div className="keypad-numbers-data-sec">
                     <div className="keypad-numbers-data">                
-                        <div className="keypad-nums-list">
+                        {/* <div className="keypad-nums-list">
                             <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit(1)}>1</button>
                             <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit(2)}>2</button>
                             <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit(3)}>3</button>
@@ -319,7 +319,7 @@ export function ClickToCallComponent(props: ClickToCallProps) {
                             <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit('*')}>*</button>
                             <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit('0')}>0</button>
                             <button className={`keypad-num ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} onClick={() => onClickDigit('#')}>#</button>
-                        </div>
+                        </div> */}
                         <div className="action-buttons-mute-end-call">
                             <button 
                                 className={`mute-button ${!currentActiveCall?.wasAccepted?.() ? 'disabled' : ''}`} 
