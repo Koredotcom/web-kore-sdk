@@ -18,7 +18,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: 24px;
+        gap: 8px;
         text-align: center;
         .call-status-sec{
             display: flex;
@@ -97,7 +97,7 @@
                 }
                 .action-buttons-mute-end-call{
                     display: flex;
-                    gap: 8px;
+                    gap: 18px;
                     justify-content: center;
                     align-items: center;
                     button{
