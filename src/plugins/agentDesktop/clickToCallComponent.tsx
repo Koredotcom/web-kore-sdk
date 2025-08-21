@@ -278,6 +278,7 @@ export function ClickToCallComponent(props: ClickToCallProps) {
                 `X-CALLFLOW-STATE: ${localStorage.getItem("X-CALLFLOW-STATE")}`,
                 `X-RTM-SESSION-ID: ${localStorage.getItem("X-RTM-SESSION-ID")}`,
                 `X-RTM-USER-ID: ${localStorage.getItem("X-RTM-USER-ID")}`,
+                `X-RTM-URL: ${window?.location?.href}`
             ],
             
             userIdentity: localStorage.getItem("userIdentity") || ""
