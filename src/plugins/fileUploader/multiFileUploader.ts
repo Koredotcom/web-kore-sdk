@@ -392,7 +392,7 @@ class KoreMultiFileUploaderPlugin {
     let ele: any;
     var uploadConfig = me.getfileuploadConf(selectedFile);
     uploadConfig.chunkSize = me.appConsts.CHUNK_SIZE;
-    uploadConfig.chunkUpload = selectedFile.size > me.appConsts.CHUNK_SIZE;
+    uploadConfig.chunkUpload = selectedFile.componentSize > me.appConsts.CHUNK_SIZE;
     uploadConfig.file = selectedFile;
     if (uploadConfig.chunkUpload) {
       me.createElement(selectedFile);
