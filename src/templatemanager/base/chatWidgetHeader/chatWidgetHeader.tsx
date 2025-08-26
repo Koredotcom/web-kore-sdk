@@ -78,6 +78,7 @@ export function ChatWidgetHeader(props: any) {
                 }
                 hostInstance.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
                 hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
+                hostInstance.chatEle.classList.add('minimize-chat');
             }
             if (hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
                 hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');
