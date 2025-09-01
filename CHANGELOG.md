@@ -1,3 +1,12 @@
+### 11.17.0
+* Release August 30, 2025
+* Features
+  * added click to call feature. Users can make voice calls from the Web SDK. To enable the feature please use theme editor in the builder
+* Bug fixes
+  * accessibility issues fix for feedback template
+  * co browse issue fix in agent desktop plugin
+  * other minor bug fixes
+
 ### 11.16.1
 * Release August 11, 2025
 * Bug fixes
