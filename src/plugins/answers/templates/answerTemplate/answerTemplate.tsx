@@ -45,7 +45,9 @@ export function Answers(props: any) {
 
     //redirect to specific url
     const redirectToURL=(url:string)=>{
-        window.open(url, '_blank'); 
+        if (typeof url === 'string' && url.trim() !== '' && url !== undefined) {
+            window.open(url, '_blank');
+        }
     }
 
     const showFileUrl = (image_urls: any, title:string) => {
@@ -101,7 +103,7 @@ export function Answers(props: any) {
                            { 
                             
                             hasSource ? <Fragment>
-                                            <span className={` sa-answer-list-item ${selectedIndex === answer?.id + 1 && 'sa-answer-list-item-selected'}`} onClick={()=>redirectToURL(answersObj?.generative?.sources?.[answer?.id]?.url)}>
+                                            <span className={` sa-answer-list-item ${selectedIndex === answer?.id + 1 && 'sa-answer-list-item-selected'} ${!answersObj?.generative?.sources?.[answer?.id]?.url && 'pointer-events-none'}`} onClick={()=>redirectToURL(answersObj?.generative?.sources?.[answer?.id]?.url)}>
                                                 {answer?.id + 1}
                                             </span> 
                                             {selectedIndex === answer?.id + 1 && (
@@ -140,7 +142,7 @@ export function Answers(props: any) {
                                         answersObj?.generative?.sources?.filter((source: any) => source?.title?.length > 0)?.map((source: any, index: number) => (
                                             <div className='sa-tooltip-container'>
 
-                                            <div className={`sa-answer-result-footer  ${(selectedIndex===index+1)&&'selected'}`} 
+                                            <div className={`sa-answer-result-footer  ${(selectedIndex===index+1)&&'selected'} ${!source?.url && 'pointer-events-none'}`} 
                                                     onMouseOver={() => setSelectedIndex(index+1)}
                                                     onMouseOut={() => setSelectedIndex(0)}>
                                             <span onClick={()=>redirectToURL(source?.url)}>{index + 1}. <span>{ extractShortDomainOrFile(source?.title || source?.url)}</span></span>
