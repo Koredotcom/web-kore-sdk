@@ -98,7 +98,11 @@ export function Answers(props: any) {
         const hasSource= answersObj?.generative?.sources?.[answer?.id]?.title || answersObj?.generative?.sources?.[answer?.id]?.url
 
         return   <span className={`sa-answer-result-heading ${(selectedIndex===answer?.id +1 && hasSource) &&'sa-answer-result-heading-selected'}`} onMouseOver={()=>setSelectedIndex(answer?.id + 1)} onMouseOut={()=>setSelectedIndex(0)}>
-                    <span dangerouslySetInnerHTML={{__html:helpers.convertMDtoHTML(answer?.title, "bot") }}></span>
+                    {
+                        /<[^>]+>/.test(answer?.title)
+                        ? <span dangerouslySetInnerHTML={{__html: answer?.title}}></span>
+                        : <span dangerouslySetInnerHTML={{__html: helpers.convertMDtoHTML(answer?.title, "bot")}}></span>
+                    }
                     <div className={`sa-tooltip-container ${selectedIndex === answer?.id + 1 && 'position-class'} `}>
                            { 
                             
