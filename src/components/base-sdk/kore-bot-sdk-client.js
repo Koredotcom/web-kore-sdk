@@ -3298,9 +3298,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       }
       // AMD / RequireJS
       else if (typeof define === 'function' && define.amd) {
-          define([], function () {
-              return async;
-          });
+          // define([], function () {
+          //     return async;
+          // });
       }
       // included directly via <script> tag
       else {

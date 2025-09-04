@@ -5,9 +5,7 @@
  * Released under the MIT License.
  */
 
-!function (t, e) { 
-        "function" == typeof define && define.amd ? 
-            define([], e) : 
+!function (t, e) {  
             "object" == typeof exports ? 
                 exports.io = e() : t.io = e() }
                 (self, (
