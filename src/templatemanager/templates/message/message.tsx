@@ -95,9 +95,15 @@ export function Message(props: any) {
         }
     }
 
-    if (msgData?.author) {
+    if (msgData?.author && (msgData?.author?.firstName || msgData?.author?.lastName)) {
         msgData.fromAgent = true;
-        msgData.author['name'] = msgData?.author?.firstName + ' ' + msgData?.author?.lastName;
+        if (msgData?.author?.firstName && msgData?.author?.lastName) {
+            msgData.author['name'] = msgData?.author?.firstName + ' ' + msgData?.author?.lastName;
+        } else if (msgData?.author?.firstName) {
+            msgData.author['name'] = msgData?.author?.firstName;
+        } else if (msgData?.author?.lastName) {
+            msgData.author['name'] = msgData?.author?.lastName;
+        }
     }
 
     if (msgData.message) {

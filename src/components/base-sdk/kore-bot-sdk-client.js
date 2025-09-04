@@ -411,8 +411,12 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
         _msg.createdOn = data.messages[i].createdOn;
         if (data.messages[i]?.author) {
           _msg.author = {};
-          _msg.author.firstName = data.messages[i]?.author?.firstName;
-          _msg.author.lastName = data.messages[i]?.author?.lastName;
+          if (data.messages[i]?.author?.firstName) {
+            _msg.author.firstName = data.messages[i]?.author?.firstName;
+          }
+          if (data.messages[i]?.author?.lastName) {
+            _msg.author.lastName = data.messages[i]?.author?.lastName;
+          }
         }
         clientresp.messages[i] = _msg;
   
