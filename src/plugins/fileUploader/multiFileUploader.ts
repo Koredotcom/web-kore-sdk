@@ -584,14 +584,9 @@ class KoreMultiFileUploaderPlugin {
     me.uploadingInProgress = true;
     if (element) {
       const progressbar = element.querySelector('.percentage');
-      me.multipartTimeInterval = setInterval(function () {
-        progressbar.style.width = 10 * 2 + '%';
-      });
-
       const progressCount = element.querySelector('.percentage-complete');
-      me.multipartTimeIntervalCount = setInterval(function () {
-        progressCount.textContent = 10 * 2 + '% uploaded';
-      });
+      if (progressbar) progressbar.style.width = '0%';
+      if (progressCount) progressCount.textContent = '0% uploaded';
     }
 
     if (!this.options.chunkUpload) {
@@ -646,7 +641,7 @@ class KoreMultiFileUploaderPlugin {
     _conc.addEventListener('load', (evt: { target: { status: number; response: string; }; }) => {
       if (evt.target.status === 200) {
         _scope.messageToken = JSON.parse(evt.target.response).fileToken;
-        _scope.totalChunks = Math.floor(_scope.options.file.size / _scope.options.chunkSize) + 1;
+        _scope.totalChunks = Math.ceil(_scope.options.file.size / _scope.options.chunkSize);
         _scope.currChunk = 0;
         _scope.options.chunkUrl = _scope.options.chunkUrl.replace(':token', _scope.messageToken);
         if (me.isElementInDOM(_scope.$element)) {
@@ -706,15 +701,14 @@ class KoreMultiFileUploaderPlugin {
 
   // kfrm.net.HttpRequest = me.HttpRequest;
   progressListener(_this: any, evt: any, ele: any) {
-    // if (ele) {
-    //   let width = (evt.loaded / evt.total) * 100;
-    //   const progressbar = ele.querySelector('.percentage');
-    //   const percentageCompletion = ele.querySelector('.percentage-complete');
-    //   progressbar.style.width = width + '%';
-    //   let perComp = Math.floor(width) + '% uploaded';
-    //   percentageCompletion.textContent = perComp;
-    // }
-    console.log('File upload progress: ', evt);
+    if (!ele || !evt || !evt.lengthComputable) {
+      return;
+    }
+    let width = (evt.loaded / evt.total) * 100;
+    const progressbar = ele.querySelector('.percentage');
+    const percentageCompletion = ele.querySelector('.percentage-complete');
+    if (progressbar) progressbar.style.width = Math.floor(width) + '%';
+    if (percentageCompletion) percentageCompletion.textContent = Math.floor(width) + '% uploaded';
   }
 
   loadListener(_this: any, evt: { target: { response: string; }; }) {
@@ -743,9 +737,11 @@ class KoreMultiFileUploaderPlugin {
     this.$element.dispatchEvent(me.successEv);
   }
 
-  errorListener(_this: { events: { error: { params: any; }; }; $element: { trigger: (arg0: any) => void; }; }, evt: any) {
-    _this.events.error.params = evt;
-    _this.$element.trigger(_this.events.error);
+  errorListener(_this: any, evt: any) {
+    let me: any = this;
+    if (_this && _this.$element && _this.$element.dispatchEvent) {
+      _this.$element.dispatchEvent(me.errorEv);
+    }
   }
 
   initUploadChunk(_this: any) {
@@ -777,9 +773,29 @@ class KoreMultiFileUploaderPlugin {
     const _scope: any = _this;
     const _conc = me.getConnection(_this);
     this._mdat = new me.MultipartData();
+    if (_conc.upload && _conc.upload.addEventListener && _scope.$element) {
+      _conc.upload.addEventListener('progress', (evt: any) => {
+        if (evt && evt.lengthComputable) {
+          const basePercent = (_scope.currChunk / _scope.totalChunks) * 100;
+          const chunkContribution = (evt.loaded / evt.total) * (100 / _scope.totalChunks);
+          const percent = Math.min(99, Math.floor(basePercent + chunkContribution));
+          const progressbar = _scope.$element.querySelector('.percentage');
+          const percentageCompletion = _scope.$element.querySelector('.percentage-complete');
+          if (progressbar) progressbar.style.width = percent + '%';
+          if (percentageCompletion) percentageCompletion.textContent = percent + '% uploaded';
+        }
+      }, false);
+    }
     _conc.addEventListener('load', (evt: { target: { status: number; }; }) => {
       if (evt.target.status === 200) {
         _scope.currChunk++;
+        if (me.isElementInDOM(_scope.$element)) {
+          const percent = Math.min(99, Math.floor((_scope.currChunk / _scope.totalChunks) * 100));
+          const progressbar = _scope.$element.querySelector('.percentage');
+          const percentageCompletion = _scope.$element.querySelector('.percentage-complete');
+          if (progressbar) progressbar.style.width = percent + '%';
+          if (percentageCompletion) percentageCompletion.textContent = percent + '% uploaded';
+        }
         if (!me.isElementInDOM(_scope.$element)) {
 
         } else if (_scope.currChunk === _scope.totalChunks) {
