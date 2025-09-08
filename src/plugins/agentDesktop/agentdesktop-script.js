@@ -209,7 +209,7 @@ AgentDesktop = function (uuId, aResponse) {
         me.autoStartCobrowse();
     }
     var _self = this;
-    if (!this.config.isVoiceCobrowseSession) { // DONOT initiate a audiocodes for cobrowse session.
+    if (!this.config.isVoiceCobrowseSession) { // DONOT initiate a audiocodes for voice-cobrowse session.
         this.phone = new AudioCodesUA();
     }
     this.activeCall = null;
@@ -2315,8 +2315,8 @@ cobrowseInitialize = (cobrowseRequest) => {
                     <img id="acceptcall" src= "${acceptIcon}"/>
                 </div>
             </div>`;
-            var toastContainer = document.getElementById("toastcontainer");
-            var toastContainerVoiceCobrowse = document.getElementById("toastcontainer-voicecobrowse");
+            let toastContainer = document.getElementById("toastcontainer");
+            let toastContainerVoiceCobrowse = document.getElementById("toastcontainer-voicecobrowse");
 
             if (me?.config?.isVoiceCobrowseSession) {
                 /*
@@ -2335,7 +2335,7 @@ cobrowseInitialize = (cobrowseRequest) => {
                 if (!toastContainer) {
                     toastContainer = document.createElement("div");
                     toastContainer.id = "toastcontainer";
-                    var agentcontainer = document.getElementById("agentcontainer");
+                    let agentcontainer = document.getElementById("agentcontainer");
                     agentcontainer.appendChild(toastContainer);
                 }
                 toastContainer.innerHTML = cobrowseRequestHML;

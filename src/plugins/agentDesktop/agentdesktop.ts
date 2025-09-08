@@ -514,8 +514,8 @@ class AgentDesktopPlugin {
             .then((res: any) => {
                 me.hostInstance.$('.cobrowser-wrapper-elipse').toggleClass('open-cobrowser open-input-browse');
                 me.hostInstance.$('#cobrowseInput').val('').removeClass('error');
-                this.cobrowseSession.koreCoBrowse.initialize(res);
                 localStorage.setItem("voiceCobrowseRequest", JSON.stringify(res));
+                this.cobrowseSession.koreCoBrowse.initialize(res);
             }).catch(err => {
                 me.hostInstance.$('#krOTPErrorMsg').show();
                 me.hostInstance.$('#cobrowseInput').addClass('error');
