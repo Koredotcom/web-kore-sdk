@@ -2600,26 +2600,6 @@ autoStartCobrowse = function () {
         document.body.onfocusin = me.focusHandler; //IE
     }
 }
-
-autoStartVoiceCobrowse = function () {
-    let me = this;
-    if (this.authResponse && this.authResponse.userInfo) {
-        console.log("cobrowse >>> starting cobrowse")
-        let cobrowseRequest = localStorage.getItem("voiceCobrowseRequest");
-        console.log(cobrowseRequest);
-        if (this.socket && this.socket.connected) {
-            this.socket.disconnect();
-            this.socket = null;
-        }
-        if (cobrowseRequest) {
-            setTimeout(() => {
-                me.cobrowseInitialize(JSON.parse(cobrowseRequest));
-            }, 500);
-        }
-        document.body.addEventListener('focus', me.focusHandler, true); //Non-IE   
-        document.body.onfocusin = me.focusHandler; //IE
-    }
-}
 terminateCobrowse = function () {
     this.stopCoBrowse();
 }
