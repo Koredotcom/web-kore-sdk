@@ -516,7 +516,6 @@ class AgentDesktopPlugin {
                 me.hostInstance.$('#cobrowseInput').val('').removeClass('error');
                 this.cobrowseSession.koreCoBrowse.initialize(res);
                 localStorage.setItem("voiceCobrowseRequest", JSON.stringify(res));
-                console.log('this.cobrowseSession >>>>>>>>>>>>>>> voice cobrowse instance', res)
             }).catch(err => {
                 me.hostInstance.$('#krOTPErrorMsg').show();
                 me.hostInstance.$('#cobrowseInput').addClass('error');
