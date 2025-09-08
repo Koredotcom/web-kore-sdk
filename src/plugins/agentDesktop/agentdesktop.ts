@@ -37,10 +37,12 @@ class AgentDesktopPlugin {
                 this.config = me.extend(me, response)
                 //me.AgentDesktop(response.userInfo.userId, response);
                 /** @ignore */
+                /* There are two instances of AgentDesktopPluginScript below. In agentdesktop-script, the chat-co-browse re-initialization logic runs for both instances, which creates two socket connections.
+                * We use the isVoiceCobrowseSession flag to prevent co-browse re-initialization for the voice-cobrowse/standalone otp cobrowse instance below if it is not required. */
                 this.agentDesktopInfo = new AgentDesktopPluginScript(this.config);
                 // Connecting cobrowse session with the user data
                 this.authInfo = response;
-                this.cobrowseSession = new AgentDesktopPluginScript({...response, excludeRTM: true, isCobrowseSession: true});
+                this.cobrowseSession = new AgentDesktopPluginScript({ ...response, excludeRTM: true, isVoiceCobrowseSession: true });
             }
         });
 
@@ -477,7 +479,7 @@ class AgentDesktopPlugin {
             })
             .then((res: any) => {
                 this.authInfo = res;
-                this.cobrowseSession = new AgentDesktopPluginScript({...res, excludeRTM: true, isCobrowseSession: true});
+                this.cobrowseSession = new AgentDesktopPluginScript({...res, excludeRTM: true, isVoiceCobrowseSession: true});
             }).catch(err => {
                 console.error(err)
                 // this.authInfo = null;
@@ -513,6 +515,8 @@ class AgentDesktopPlugin {
                 me.hostInstance.$('.cobrowser-wrapper-elipse').toggleClass('open-cobrowser open-input-browse');
                 me.hostInstance.$('#cobrowseInput').val('').removeClass('error');
                 this.cobrowseSession.koreCoBrowse.initialize(res);
+                localStorage.setItem("voiceCobrowseRequest", JSON.stringify(res));
+                console.log('this.cobrowseSession >>>>>>>>>>>>>>> voice cobrowse instance', res)
             }).catch(err => {
                 me.hostInstance.$('#krOTPErrorMsg').show();
                 me.hostInstance.$('#cobrowseInput').addClass('error');
