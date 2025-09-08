@@ -2133,21 +2133,25 @@ cobrowseInitialize = (cobrowseRequest) => {
     function initialize(me) {
         console.log("cobrowse >>> joining room ", cobrowseRequest.conversationId);
         addCobrowseAttribute(me);
-        function reapplyMaskingFromLocalStorage(storageKey) {
+        function reapplyMasking(storageKey) {
             if (localStorage.getItem(storageKey)) {
-                let request = JSON.parse(localStorage.getItem(storageKey));
-                me.maskClassList = request.blockClasses;
-                me.maskPatternList = request.patternList;
-                if (me.maskPatternList) {
-                    me.scanElement(document.body, me.maskPatternList);
+                let cobrowseRequestFromLocal = JSON.parse(localStorage.getItem(storageKey));
+                if (cobrowseRequestFromLocal) {
+                    me.maskClassList = cobrowseRequestFromLocal?.blockClasses;
+                    me.maskPatternList = cobrowseRequestFromLocal?.patternList;
+                    if (me.maskPatternList) {
+                        me.scanElement(document.body, me.maskPatternList);
+                    }
+                    if (me.maskClassList) {
+                        me.cobrowseMaskFields(cobrowseRequestFromLocal);
+                    }
                 }
-                me.cobrowseMaskFields(request);
             }
         }
         if (me.config.isVoiceCobrowseSession) {
-            reapplyMaskingFromLocalStorage('voiceCobrowseRequest');
+            reapplyMasking('voiceCobrowseRequest');
         } else {
-            reapplyMaskingFromLocalStorage('cobrowseRequest');
+            reapplyMasking('cobrowseRequest');
         }
         me.socket.emit("start_cobrowse", { "conversationId": cobrowseRequest.conversationId });
         me.socket.on("ice-candidate", handleNewICECandidateMsg);
@@ -2315,7 +2319,10 @@ cobrowseInitialize = (cobrowseRequest) => {
             var toastContainerVoiceCobrowse = document.getElementById("toastcontainer-voicecobrowse");
 
             if (me?.config?.isVoiceCobrowseSession) {
-                /* For voice co-browse requests, the controls are not visible because they were added to the agent container. In the voice co-browse case, we do not expect the chat window to be open at all times to display these controls. */
+                /*
+                * For voice co-browse requests, the controls are not visible because they are added to the agent container.
+                * In the voice co-browse scenario, we do not expect the chat window to be open at all times to display these controls.
+                */
                 if (!toastContainerVoiceCobrowse) {
                     toastContainerVoiceCobrowse = document.createElement("div");
                     toastContainerVoiceCobrowse.id = "toastcontainer-voicecobrowse";
@@ -2323,7 +2330,7 @@ cobrowseInitialize = (cobrowseRequest) => {
                 }
                 toastContainerVoiceCobrowse.innerHTML = cobrowseRequestHML;
             } else {
-                //if not voicecobrowse instance of agentdesktop-plugin attach the controls to agentcontainer
+                /* If this is not a voice co-browse instance of the AgentDesktop plugin, attach the controls to the agent container.*/
                 me?.addAudioVideoContainer();
                 if (!toastContainer) {
                     toastContainer = document.createElement("div");
