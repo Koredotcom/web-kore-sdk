@@ -209,7 +209,7 @@ AgentDesktop = function (uuId, aResponse) {
         me.autoStartCobrowse();
     }
     var _self = this;
-    if (!this.config.isCobrowseSession) { // DONOT initiate a audiocodes for cobrowse session.
+    if (!this.config.isVoiceCobrowseSession) { // DONOT initiate a audiocodes for voice-cobrowse session.
         this.phone = new AudioCodesUA();
     }
     this.activeCall = null;
@@ -1391,7 +1391,11 @@ stopCoBrowse = (sendMessageFlag = true, removeFromStorage = true) => {
     this.drawEnabled = false;
     this.requestAccepted = false;
     if (removeFromStorage) {
-        localStorage.removeItem("cobrowseRequest");
+        if (this.config.isVoiceCobrowseSession) {
+            localStorage.removeItem("voiceCobrowseRequest");
+        } else {
+            localStorage.removeItem("cobrowseRequest");
+        }
     }
 
     var kaMousePointer = document.getElementById("kamousepointer");
@@ -1422,7 +1426,7 @@ stopCoBrowse = (sendMessageFlag = true, removeFromStorage = true) => {
     console.log("cobrowse >>> koreCoBrowseUnMakingFields");
     if(this.maskClassList){
         for(var i =0;i< this.maskClassList.length > 0; i++){
-            if(this.this.maskClassList[i] !== ''){
+            if(this.maskClassList[i] !== ''){
                 document.querySelectorAll('.'+this.maskClassList[i]).forEach(item => {
                     item.classList.remove('rr-block');
                 });
@@ -2129,6 +2133,26 @@ cobrowseInitialize = (cobrowseRequest) => {
     function initialize(me) {
         console.log("cobrowse >>> joining room ", cobrowseRequest.conversationId);
         addCobrowseAttribute(me);
+        function reapplyMasking(storageKey) {
+            if (localStorage.getItem(storageKey)) {
+                let cobrowseRequestFromLocal = JSON.parse(localStorage.getItem(storageKey));
+                if (cobrowseRequestFromLocal) {
+                    me.maskClassList = cobrowseRequestFromLocal?.blockClasses;
+                    me.maskPatternList = cobrowseRequestFromLocal?.patternList;
+                    if (me.maskPatternList) {
+                        me.scanElement(document.body, me.maskPatternList);
+                    }
+                    if (me.maskClassList) {
+                        me.cobrowseMaskFields(cobrowseRequestFromLocal);
+                    }
+                }
+            }
+        }
+        if (me.config.isVoiceCobrowseSession) {
+            reapplyMasking('voiceCobrowseRequest');
+        } else {
+            reapplyMasking('cobrowseRequest');
+        }
         me.socket.emit("start_cobrowse", { "conversationId": cobrowseRequest.conversationId });
         me.socket.on("ice-candidate", handleNewICECandidateMsg);
         me.socket.on("offer", handleOffer);
@@ -2237,7 +2261,7 @@ cobrowseInitialize = (cobrowseRequest) => {
         function handleMessageInternal(obj) {
             if (obj.type === 'target_mouse_move') {
                 positionMousePointer(obj);
-            } else if (obj.type === 'target_key_up' && obj.tagName === 'INPUT' && (obj.targetType === 'text' || obj.targetType === 'email')) {
+            } else if (obj.type === 'target_key_up' && obj.tagName === 'INPUT' && ((obj.targetType === 'text' || obj.targetType === 'email' || obj.targetType === 'number' || obj.targetType === 'password' || obj.targetType === 'search' || obj.targetType === 'tel' || obj.targetType === 'url' || obj.targetType === 'date' || obj.targetType === 'datetime-local' || obj.targetType === 'month' || obj.targetType === 'time' || obj.targetType === 'week'))) {
                 processKeyUpText(obj);
             } else if ((obj.type === 'target_key_down' || obj.type === 'target_key_up') && obj.tagName === 'DIV') {
                 processKeyDownDiv(obj);
@@ -2291,20 +2315,40 @@ cobrowseInitialize = (cobrowseRequest) => {
                     <img id="acceptcall" src= "${acceptIcon}"/>
                 </div>
             </div>`;
-            var toastContainer = document.getElementById("toastcontainer");
-            me?.addAudioVideoContainer();
-            if (!toastContainer) {
-                toastContainer = document.createElement("div");
-                toastContainer.id = "toastcontainer";
-                var agentcontainer = document.getElementById("agentcontainer");
-            agentcontainer.appendChild(toastcontainer);
+            let toastContainer = document.getElementById("toastcontainer");
+            let toastContainerVoiceCobrowse = document.getElementById("toastcontainer-voicecobrowse");
+
+            if (me?.config?.isVoiceCobrowseSession) {
+                /*
+                * For voice co-browse requests, the controls are not visible because they are added to the agent container.
+                * In the voice co-browse scenario, we do not expect the chat window to be open at all times to display these controls.
+                */
+                if (!toastContainerVoiceCobrowse) {
+                    toastContainerVoiceCobrowse = document.createElement("div");
+                    toastContainerVoiceCobrowse.id = "toastcontainer-voicecobrowse";
+                    document.body.appendChild(toastContainerVoiceCobrowse);
+                }
+                toastContainerVoiceCobrowse.innerHTML = cobrowseRequestHML;
+            } else {
+                /* If this is not a voice co-browse instance of the AgentDesktop plugin, attach the controls to the agent container.*/
+                me?.addAudioVideoContainer();
+                if (!toastContainer) {
+                    toastContainer = document.createElement("div");
+                    toastContainer.id = "toastcontainer";
+                    let agentcontainer = document.getElementById("agentcontainer");
+                    agentcontainer.appendChild(toastContainer);
+                }
+                toastContainer.innerHTML = cobrowseRequestHML;
             }
-            toastContainer.innerHTML = cobrowseRequestHML;
 
             var rejectCall = document.getElementById("rejectcall");
             var acceptCall = document.getElementById("acceptcall");
             rejectCall.onclick = (e) => {
-                toastContainer.innerHTML = '';
+                if(me.config.isVoiceCobrowseSession){
+                    toastContainerVoiceCobrowse.innerHTML = '';
+                }else{
+                    toastContainer.innerHTML = '';
+                }
                 me.requestAccepted = false;
                 if (me.releasebtnimg)
                     me.releasebtnimg.src = me.noControlImage;
@@ -2318,7 +2362,11 @@ cobrowseInitialize = (cobrowseRequest) => {
                 me.requestAccepted = true;
                 if (me.releasebtnimg)
                     me.releasebtnimg.src = me.releaseControlImage;
-                toastContainer.innerHTML = '';
+                if (me.config.isVoiceCobrowseSession) {
+                    toastContainerVoiceCobrowse.innerHTML = '';
+                } else {
+                    toastContainer.innerHTML = '';
+                }
                 const RESPONSE_MESSAGE = {
                     "type": "request_control",
                     "response": "accepted"
@@ -2539,7 +2587,12 @@ autoStartCobrowse = function () {
     let me = this;
     if (this.authResponse && this.authResponse.userInfo) {
         console.log("cobrowse >>> starting cobrowse")
-        let cobrowseRequest = localStorage.getItem("cobrowseRequest");
+        let cobrowseRequest;
+        if(this.config.isVoiceCobrowseSession){
+            cobrowseRequest = localStorage.getItem("voiceCobrowseRequest");
+        }else{
+            cobrowseRequest = localStorage.getItem("cobrowseRequest");
+        }
         console.log(cobrowseRequest);
         if (this.socket && this.socket.connected) {
             this.socket.disconnect();
