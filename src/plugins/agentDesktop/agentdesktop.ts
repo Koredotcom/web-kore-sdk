@@ -180,8 +180,8 @@ class AgentDesktopPlugin {
 
         // send type event from user to agent
         me.hostInstance.on('onKeyDown', ({ event }: any) => {
-            if (this.isAgentConnected) {
-                if (event.keyCode !== 13 && (event.which <= 90 && event.which >= 48) || (event.which >= 96 && event.which <= 105) || (event.which >= 186 && event.which <= 222) || (event.keyCode === 32 || event.keyCode === 8) && localStorage.getItem("kr-agent-status") === "connected") {
+            if (this.isAgentConnected || this.isTPAgentConnected) {
+                if (event.keyCode !== 13 && (event.which <= 90 && event.which >= 48) || (event.which >= 96 && event.which <= 105) || (event.which >= 186 && event.which <= 222) || (event.keyCode === 32 || event.keyCode === 8) && (localStorage.getItem("kr-agent-status") === "connected" || localStorage.getItem("kr-tp-agent-status") === "connected")) {
                     if (!this.isTyping) {
                         var messageToBot: any = {};
                         messageToBot["event"] = "typing";
@@ -263,6 +263,11 @@ class AgentDesktopPlugin {
                     me.manageAgentBranding('reset');
                 }
             }
+            if (event.messageData?.message?.type === 'agent_session_active') {
+                localStorage.setItem("kr-tp-agent-status", "connected")
+            } else if (event.messageData?.message?.type === 'agent_session_inactive') {
+                localStorage.setItem("kr-tp-agent-status", "disconneted")
+            }
 
             // when agent send the message, hide the type indicator
             if (event.messageData?.message) {
@@ -273,9 +278,9 @@ class AgentDesktopPlugin {
             }
 
             // type indicator style changes when agent is being connected
-            if (event.messageData?.message?.author?.type === 'AGENT' && event.messageData.message.type === 'typing' && localStorage.getItem("kr-agent-status") === "connected") {
+            if (event.messageData?.message?.author?.type === 'AGENT' && event.messageData.message.type === 'typing' && (localStorage.getItem("kr-agent-status") === "connected" || localStorage.getItem("kr-tp-agent-status") === "connected")) {
                 me.hostInstance.chatEle.querySelector('.typing-indicator-wraper').style.display = 'flex'
-            } else if (event.messageData?.message?.author?.type === 'AGENT' && event.messageData.message.type === 'stoptyping' && localStorage.getItem("kr-agent-status") === "connected") {
+            } else if (event.messageData?.message?.author?.type === 'AGENT' && event.messageData.message.type === 'stoptyping' && (localStorage.getItem("kr-agent-status") === "connected" || localStorage.getItem("kr-tp-agent-status") === "connected")) {
                 me.hostInstance.chatEle.querySelector('.typing-indicator-wraper').style.display = 'none'
             } else if (localStorage.getItem("kr-agent-status") !== "conneted") {
             }
