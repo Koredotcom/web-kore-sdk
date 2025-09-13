@@ -1,3 +1,14 @@
+### 11.17.1
+* Release Sept 13, 2025
+* Features
+  * added support for typing indicator in third party live agent chat(Salesforce)
+* Bug fixes
+  * agent name issue fix for messages in the chat history
+  * file chunk upload issue fix
+  * cobrowse issue fix for multi page app feature
+  * answers template minor bug fixes
+  * other minor bug fixes
+
 ### 11.17.0
 * Release August 30, 2025
 * Features

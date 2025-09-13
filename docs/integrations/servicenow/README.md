@@ -18,7 +18,7 @@ To integrate Kore Web SDK in Service Now portal please follow the below steps.
    ```
    (function () {
     var script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/kore-web-sdk@11.17.0/dist/umd/kore-web-sdk-umd-chat.min.js';
+    script.src = 'https://cdn.jsdelivr.net/npm/kore-web-sdk@11.17.1/dist/umd/kore-web-sdk-umd-chat.min.js';
     script.onload = function () {
       KoreChatSDK.chatConfig.botOptions.API_KEY_CONFIG.KEY = '';
       var chatWindow = new KoreChatSDK.chatWindow();
