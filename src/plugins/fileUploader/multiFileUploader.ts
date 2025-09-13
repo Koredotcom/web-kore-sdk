@@ -510,6 +510,7 @@ class KoreMultiFileUploaderPlugin {
 
     // Push attachment info using per-upload scope
     const att = {
+      fileId: scope.fileId || _recState.fileId,
       fileName: _recState.name,
       fileType: _recState.type,
       fileUrl: scope.fileUrl || '',
@@ -751,6 +752,7 @@ class KoreMultiFileUploaderPlugin {
       },
       success(response: any) {
         _this.fileUrl = response.fileUrl;
+        _this.fileId = fileId;
         if (_this && _this.$element && _this.$element.dispatchEvent) {
           _this.$element.dispatchEvent(me.successEv);
         }
