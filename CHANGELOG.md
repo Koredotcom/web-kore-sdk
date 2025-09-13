@@ -1,3 +1,8 @@
+### 11.17.10
+* Release Sept 13, 2025
+* Bug fixes
+  * file download issue fix in the CCAI Agent Console sent by the User from the Web SDK ([#248](https://github.com/Koredotcom/web-kore-sdk/issues/248))
+
 ### 11.17.1
 * Release Sept 13, 2025
 * Features
