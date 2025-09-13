@@ -20,6 +20,9 @@ With just few lines of code, you can embed our Kore.ai chat widget into your app
 
 ## 💡 Getting Started
 
+>[!NOTE]
+>If you are currently using this version(11.17.1) or planning to upgrage the Web SDK to this version we strongly recommend update it to [11.17.10](https://github.com/Koredotcom/web-kore-sdk/tree/v3/11.17.10) or later version. We have file download issue in the CCAI Agent Console using the current version. Please refer ([#248](https://github.com/Koredotcom/web-kore-sdk/issues/248)) for more details.
+
 First, install kore web SDK via the [npm](https://www.npmjs.com/get-npm) package manager:
 
 ```bash
