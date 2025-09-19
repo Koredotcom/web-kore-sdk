@@ -167,7 +167,7 @@ export function Answers(props: any) {
                                     }
                             </div>
                             {
-                                (!isPlatform && hostInstance['saFeedback']?.enable && !messageObj?.msgData?.fromHistory) && <FeedbackTemplate data={hostInstance} searchRequestId={messageObj?.msgData?.message[0]?.component?.payload?.searchRequestId}/>
+                                (!isPlatform && hostInstance['saFeedback']?.enable && !messageObj?.msgData?.fromHistory && !messageObj?.msgData?.fromHistorySync) && <FeedbackTemplate data={hostInstance} searchRequestId={messageObj?.msgData?.message[0]?.component?.payload?.searchRequestId}/>
                             }
                             
                         </div>
