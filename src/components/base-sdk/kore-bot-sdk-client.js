@@ -692,7 +692,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   }
   
   module.exports.instance = function(){
-      var _instance=new KoreBot();
+    console.log('-------Kore Web SDK Instance------Creation');
+      let _instance=new KoreBot();
+      console.log('-------Kore Web SDK Instance------Created: ', _instance);
       /*
         Adding KoreBot,KoreRTMClient function to instance 
         so developers can override the prototype methods of KoreBot from out of this file 
