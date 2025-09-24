@@ -62,7 +62,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       "longitude": 0,
       "street": ""
   };
-  var _chatHistoryLoaded = false;
+  let _chatHistoryLoaded = false;
   inherits(KoreBot, EventEmitter);
   
   KoreBot.prototype.emit = function emit() {
