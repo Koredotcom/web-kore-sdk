@@ -1,3 +1,9 @@
+### 10.18.1
+- SDK Release Sept 13, 2025
+* Bug fixes
+  * removed define support to resolve RequireJS conflicts and improve SharePoint compatibility.
+  * added support for typing indicator in third party live agent chats
+
 ### 10.18.0
 - SDK Release August 30, 2025
 * Stable release
