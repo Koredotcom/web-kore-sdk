@@ -70,7 +70,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this.historySyncInProgress = false;		
       arguments[2]="historysync";
       this.cbBotChatHistory(arguments);
-    }else if(!window._chatHistoryLoaded && arguments && arguments[0] === 'history') {
+    }else if(!_chatHistoryLoaded && arguments && arguments[0] === 'history') {
       _chatHistoryLoaded = true;
       this.cbBotChatHistory(arguments);
     }
@@ -544,6 +544,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     console.log('----------Kore Web SDK----------Socket Opened');
     this.initialized = true;
     console.log('----------Kore Web SDK----------On WS Open-----Options: ', this);
+    console.log('----------Kore Web SDK----------_chatHistoryLoaded: ', _chatHistoryLoaded)
     if(this.options.loadHistory && !_chatHistoryLoaded){
       console.log('----------Kore Web SDK----------On WS Open-----Calling history');
       this.getHistory({});
