@@ -54,6 +54,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     this.historyOffset = 0;
     this.previousHistoryLoading = false;
     this.paginatedScrollDataAvailable = true;
+    this._chatHistoryLoaded = false;
   }
   var userLocation = {
       "city": "",
@@ -62,7 +63,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       "longitude": 0,
       "street": ""
   };
-  let _chatHistoryLoaded = false;
+  
   inherits(KoreBot, EventEmitter);
   
   KoreBot.prototype.emit = function emit() {
@@ -70,8 +71,8 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this.historySyncInProgress = false;		
       arguments[2]="historysync";
       this.cbBotChatHistory(arguments);
-    }else if(!_chatHistoryLoaded && arguments && arguments[0] === 'history') {
-      _chatHistoryLoaded = true;
+    }else if(!this._chatHistoryLoaded && arguments && arguments[0] === 'history') {
+      this._chatHistoryLoaded = true;
       this.cbBotChatHistory(arguments);
     }
     this.EventEmitter.prototype.emit.apply(this, arguments);
@@ -368,7 +369,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     if (this.RtmClient) {
       this.RtmClient._close();
     }
-    _chatHistoryLoaded = false;
+    this._chatHistoryLoaded = false;
     this.removeAllListeners();
   };
   /*
@@ -544,8 +545,8 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     console.log('----------Kore Web SDK----------Socket Opened');
     this.initialized = true;
     console.log('----------Kore Web SDK----------On WS Open-----Options: ', this);
-    console.log('----------Kore Web SDK----------_chatHistoryLoaded: ', _chatHistoryLoaded)
-    if(this.options.loadHistory && !_chatHistoryLoaded){
+    console.log('----------Kore Web SDK----------this._chatHistoryLoaded: ', this._chatHistoryLoaded)
+    if(this.options.loadHistory && !this._chatHistoryLoaded){
       console.log('----------Kore Web SDK----------On WS Open-----Calling history');
       this.getHistory({});
     }
@@ -621,7 +622,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       if(this.options.webhookConfig && this.options.webhookConfig.enable){
         this.options.webhookConfig.token=this.options.assertion;
         this.emit(WEB_EVENTS.WEB_HOOK_READY);
-        if(this.options.loadHistory && !_chatHistoryLoaded){
+        if(this.options.loadHistory && !this._chatHistoryLoaded){
           this.getHistory({},data);
         }else{
           this.emit(WEB_EVENTS.WEB_HOOK_RECONNECTED);
@@ -691,7 +692,6 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   }
   
   module.exports.instance = function(){
-    _chatHistoryLoaded = false;
       var _instance=new KoreBot();
       /*
         Adding KoreBot,KoreRTMClient function to instance 
