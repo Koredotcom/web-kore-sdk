@@ -486,6 +486,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   */
   KoreBot.prototype.getHistory = function(opts,config) {
     debug("get history");
+    console.log('---------Kore Web SDK--------Get History');
     opts = opts || {};
     //opts.limit = 10;
       if(typeof window !== "undefined"){
@@ -540,8 +541,11 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   */
   KoreBot.prototype.onOpenWSConnection = function(msg) {
     debug("opened WS Connection");
+    console.log('----------Kore Web SDK----------Socket Opened');
     this.initialized = true;
+    console.log('----------Kore Web SDK----------On WS Open-----Options: ', this);
     if(this.options.loadHistory && !_chatHistoryLoaded){
+      console.log('----------Kore Web SDK----------On WS Open-----Calling history');
       this.getHistory({});
     }
     this.emit(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, {});
