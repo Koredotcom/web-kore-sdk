@@ -43,8 +43,7 @@ class AgentDesktopPlugin {
                 this.agentDesktopInfo = new AgentDesktopPluginScript(this.config);
                 // Connecting cobrowse session with the user data
                 this.authInfo = response;
-                this.cobrowseSession = new AgentDesktopPluginScript({...response, excludeRTM: true, isCobrowseSession: true});
-                this.isSafari = this.agentDesktopInfo.phone.browser === 'safari';
+                this.cobrowseSession = new AgentDesktopPluginScript({ ...response, excludeRTM: true, isVoiceCobrowseSession: true });                
                 // disable click to call button until sbc details are received
                 this.agentDesktopInfo.disableClickToCallButton();
             }
@@ -399,25 +398,27 @@ class AgentDesktopPlugin {
         // let remoteVideoElement = '<video id="kore_remote_video" autoplay="autoplay" playsinline style="width:0px;height:0px"></video>';
         // chatEle.append(localVideoElement);
         // chatEle.append(remoteVideoElement);
+        // extract isSafari for userAgent string navigator.userAgent
+        const ua = navigator?.userAgent;  
+        // Example: "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3 Safari/605.1.15"
+        const isSafari = ua?.match(/Version\/([\d.]+).*Safari/);
         let localVideoElement = document.createElement('video');
         localVideoElement.id = 'kore_local_video';
-        localVideoElement.width = this.isSafari ? 1 : 0;
-        localVideoElement.height = this.isSafari ? 1 : 0;
+        localVideoElement.width = isSafari ? 1 : 0;
+        localVideoElement.height = isSafari ? 1 : 0;
         localVideoElement['autoplay'] = true;
         localVideoElement['playsInline'] = true;
         let remoteVideoElement = document.createElement('video');
         remoteVideoElement.id = 'kore_remote_video';
-        remoteVideoElement.width = this.isSafari ? 1 : 0;
-        remoteVideoElement.height = this.isSafari ? 1 : 0;
+        remoteVideoElement.width = isSafari ? 1 : 0;
+        remoteVideoElement.height = isSafari ? 1 : 0;
         remoteVideoElement['autoplay'] = true;
         remoteVideoElement['playsInline'] = true;
-        // set display to hidden for safari browser
-        if (this.isSafari) {
-            localVideoElement.style.display = 'hidden';
-            remoteVideoElement.style.display = 'hidden';
-        }
         chatEleDiv.insertBefore(localVideoElement, chatEleDiv.firstChild);
         chatEleDiv.insertBefore(remoteVideoElement, chatEleDiv.firstChild);
+        // set display to hidden
+        localVideoElement.style.display = 'hidden';
+        remoteVideoElement.style.display = 'hidden';
     }
 
     extend(target: any, source: any) {
