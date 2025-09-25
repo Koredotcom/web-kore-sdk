@@ -20,7 +20,6 @@ class AgentDesktopPlugin {
     authInfo: any;
     cobrowseSession: any;
     clickToCallEnabled: boolean = false;
-    isSafari: boolean = false;
 
     constructor(config?: any) {
         this.config = {
