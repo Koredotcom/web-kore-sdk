@@ -407,8 +407,8 @@ class AgentDesktopPlugin {
         localVideoElement['playsInline'] = true;
         let remoteVideoElement = document.createElement('video');
         remoteVideoElement.id = 'kore_remote_video';
-        remoteVideoElement.width = this.isSafari ? 0 : 1;
-        remoteVideoElement.height = this.isSafari ? 0 : 1;
+        remoteVideoElement.width = this.isSafari ? 1 : 0;
+        remoteVideoElement.height = this.isSafari ? 1 : 0;
         remoteVideoElement['autoplay'] = true;
         remoteVideoElement['playsInline'] = true;
         // set display to hidden for safari browser
