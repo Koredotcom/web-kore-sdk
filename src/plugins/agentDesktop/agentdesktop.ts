@@ -401,7 +401,7 @@ class AgentDesktopPlugin {
         // extract isSafari for userAgent string navigator.userAgent
         const ua = navigator?.userAgent;  
         // Example: "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3 Safari/605.1.15"
-        const isSafari = ua?.match(/Version\/([\d.]+).*Safari/);
+        const isSafari = ua?.includes("Safari");
         let localVideoElement = document.createElement('video');
         localVideoElement.id = 'kore_local_video';
         localVideoElement.width = isSafari ? 1 : 0;
