@@ -260,13 +260,13 @@ AgentDesktop = function (uuId, aResponse) {
         version: '18-Nov-2020'
     }
     this.disableClickToCallButton = function () {
-        var clickToCallButton = cwInstance.chatEle.querySelector("#kore-click-to-call");
+        var clickToCallButton = me.config.hostInstance?.chatEle?.querySelector("#kore-click-to-call");
         if(clickToCallButton) {
             clickToCallButton.classList.add('disabled');
         }
     }
     this.enableClickToCallButton = function () {
-        var clickToCallButton = cwInstance.chatEle.querySelector("#kore-click-to-call");
+        var clickToCallButton = me.config.hostInstance?.chatEle?.querySelector("#kore-click-to-call");
         if(clickToCallButton) {
             clickToCallButton.classList.remove('disabled');
         }
