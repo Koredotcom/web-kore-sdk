@@ -55,6 +55,8 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     this.previousHistoryLoading = false;
     this.paginatedScrollDataAvailable = true;
     this._chatHistoryLoaded = false;
+    this.instanceCreationTime = new Date().getTime();
+    console.log('---------Kore Web SDK Bot Instance Creation Time: ', this.instanceCreationTime);
   }
   var userLocation = {
       "city": "",

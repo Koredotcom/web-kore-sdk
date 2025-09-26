@@ -200,6 +200,7 @@ show  (config:any) {
   if (config.widgetSDKInstace) {
     this.addWidgetEvents(config);
   }
+  console.log('----------Kore Web SDK Instance ID: ', bot.instanceCreationTime);
   me.initShow(config);
   if ($('body').find('.kore-chat-window').length > 0) {
       return false;
