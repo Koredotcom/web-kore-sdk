@@ -9,6 +9,7 @@ on:
       - v2/dev 
       - v2/dev-rc1
       - v2/en
+      - v2/enb
       
 jobs:
   build:
