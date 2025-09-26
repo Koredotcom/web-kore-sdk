@@ -2638,7 +2638,6 @@ cobrowseMaskFields = function (e) {
     if (!children || children.length === 0) {
         return;
     }
-    console.log("children===", children);
     for (var i = 0; i < children.length; i++) {
         var value = "";
         var childElement = children[i];
@@ -2650,14 +2649,10 @@ cobrowseMaskFields = function (e) {
             value = childElement.data;
         }
         if (value) {
-            // compare the value with patternArray
-            console.log('value>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', value)
             for (var j = 0; j < patternArray.length; j++) {
                 var resExp = this.strToRegEx(patternArray[j]);
                 var matchedStrings = value.match(resExp);
-                console.log(matchedStrings )
                 if (matchedStrings && matchedStrings.length > 0) {
-                    // console.log("value===", value, childElement.classList);
                     if (childElement.nodeName === 'TEXTAREA' || childElement.nodeName === 'INPUT') {
                         childElement.classList.add("rr-block")
                     }else if(childElement && childElement.childNodes?.length === 0) {
