@@ -73,7 +73,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this.historySyncInProgress = false;		
       arguments[2]="historysync";
       this.cbBotChatHistory(arguments);
-    }else if(!this._chatHistoryLoaded && arguments && arguments[0] === 'history') {
+    }else if(!window._chatHistoryLoaded && arguments && arguments[0] === 'history') {
       this._chatHistoryLoaded = true;
       this.cbBotChatHistory(arguments);
     }
