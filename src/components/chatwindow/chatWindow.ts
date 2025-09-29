@@ -11,7 +11,7 @@ import './sass/chatWindow.scss';
 import chatConfig from './config/kore-config'
 //import GreeetingsPlugin from '../../plugins/greetings/greetings-plugin'
 
-const bot = requireKr('/KoreBot.js').instance();
+// const bot = requireKr('/KoreBot.js').instance();
 
 declare const document:any;
 const $:any = j$.default ;
@@ -29,6 +29,7 @@ declare const window:any;
 class chatWindow extends EventEmitter{
  chatEle: any;
   config: {};
+  bot: any;
 
 
    /**
@@ -163,6 +164,7 @@ class chatWindow extends EventEmitter{
   super(null);
   this.chatEle;
   this.config={};
+  this.bot = requireKr('/KoreBot.js').instance();
   this.init(this.config);
 }
 paginatedScrollMsgDiv: any = $('<div class="temp-message-div"><ul class="prev-message-list"></ul></div>');
@@ -170,7 +172,6 @@ init  (config:any) {
   const me:any = this;
   me.config=me.extend(me.config,chatConfig);
   me.plugins = {};
-  me.bot=bot;
   me.vars={};
   me.helpers=KoreHelpers.helpers;
   me.templateManager = new TemplateManager(me);
@@ -472,8 +473,8 @@ updateOnlineStatus () {
   if (typeof (navigator.onLine) === 'boolean') {
     if (navigator.onLine) {
       this.hideError();
-      if (bot && bot.RtmClient && me.config?.syncMessages?.onNetworkResume?.enable) {
-        bot.getHistory({ forHistorySync: true, limit: me.config?.syncMessages?.onNetworkResume?.batchSize });
+      if (me.bot && me.bot.RtmClient && me.config?.syncMessages?.onNetworkResume?.enable) {
+        me.bot.getHistory({ forHistorySync: true, limit: me.config?.syncMessages?.onNetworkResume?.batchSize });
       }
     } else {
       this.showError('You are currently offline');
@@ -784,8 +785,8 @@ bindEvents  () {
   
   _chatContainer.on('click', '.close-btn', (event: any) => {
     me.destroy();
-    bot.historyOffset = 0;
-    bot.previousHistoryLoading = false;
+    me.bot.historyOffset = 0;
+    me.bot.previousHistoryLoading = false;
     if (me.config.multiPageApp && me.config.multiPageApp.enable) {
       me.removeLocalStoreItem('kr-cw-state');
       me.removeLocalStoreItem('kr-cw-uid');
@@ -887,15 +888,15 @@ bindEvents  () {
   if (me?.config?.history?.paginatedScroll?.enable) {
     _chatContainer.find('.kore-chat-body .chat-container').on('scroll', (event: any) => {
       var div = $(event.currentTarget);
-      if(bot.previousHistoryLoading){
+      if(me.bot.previousHistoryLoading){
         return false;
       }
       if (div[0].scrollHeight - div.scrollTop() == div.height()) {
-        bot.previousHistoryLoading = false;
+        me.bot.previousHistoryLoading = false;
       }
       else if (div.scrollTop() == 0) {
-        if (bot.paginatedScrollDataAvailable && !bot.previousHistoryLoading) {
-          bot.previousHistoryLoading = true;
+        if (me.bot.paginatedScrollDataAvailable && !me.bot.previousHistoryLoading) {
+          me.bot.previousHistoryLoading = true;
           let message = me?.config?.history?.paginatedScroll?.loadingLabel || 'Loading chat history..';
           let paginatedHistoryLoader = $('<div class="paginted-history-loader">\
                                               <div class="historyWarningTextDiv displayTable">  \
@@ -908,7 +909,7 @@ bindEvents  () {
           }
           _chatContainer.find('.kore-chat-footer').addClass('disableFooter');
           _chatContainer.find('.kore-chat-footer .chatInputBox').blur();
-          bot.getHistory({ limit: (me?.config?.history?.paginatedScroll?.batchSize) }, me?.config?.botOptions);
+          me.bot.getHistory({ limit: (me?.config?.history?.paginatedScroll?.batchSize) }, me?.config?.botOptions);
         }
       }
     });
@@ -1328,7 +1329,7 @@ closeConversationSession  () {
   const messageToBot:any = {};
   messageToBot.clientMessageId = clientMessageId;
   messageToBot.resourceid = '/bot.closeConversationSession';
-  bot.sendMessage(messageToBot, (err: any) => {
+  me.bot.sendMessage(messageToBot, (err: any) => {
     console.error('bot.closeConversationSession send failed sending');
   });
 };
@@ -1433,7 +1434,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
         _chatContainer.append(messageHtml);
       }
     } else {
-      if(bot && !bot.previousHistoryLoading){
+      if(me.bot && !me.bot.previousHistoryLoading){
         _chatContainer.append(messageHtml);
       }else{
         $(this.paginatedScrollMsgDiv).find('.prev-message-list').append($(messageHtml).addClass('previousMessage'));
@@ -1477,7 +1478,7 @@ updateScrollOnMessageRender(msgData: any){
   const me: any = this; 
   let _chatContainer = $(me.chatEle).find('.chat-container');
   const debounceScrollingCall: any = me.debounceScrollingHide(me.removeScrollingHide, 500);
-  if(bot && !bot.previousHistoryLoading){
+  if(me.bot && !me.bot.previousHistoryLoading){
     _chatContainer.addClass('scrolling'); // start hiding scroll on message arrival
     _chatContainer.animate({
       scrollTop: _chatContainer.prop('scrollHeight'),
@@ -1668,7 +1669,7 @@ historyLoadingComplete () {
     if (me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) {
       me.getBotMetaData();
     }
-    if ($(this.paginatedScrollMsgDiv).find('.prev-message-list li.previousMessage').length > 0 && bot.previousHistoryLoading) {
+    if ($(this.paginatedScrollMsgDiv).find('.prev-message-list li.previousMessage').length > 0 && me.bot.previousHistoryLoading) {
       let paginatedLi = $(this.paginatedScrollMsgDiv).find('.prev-message-list li.previousMessage');
       if (paginatedLi && paginatedLi.length) {
         for (var i = 0; i < paginatedLi.length; i++) {
@@ -1693,7 +1694,7 @@ historyLoadingComplete () {
     if(_chatContainer.find('.paginted-history-loader')){
       _chatContainer.find('.paginted-history-loader').remove();
     }
-    bot.previousHistoryLoading = false;
+    me.bot.previousHistoryLoading = false;
     me.historyRenderComplete();
     $('.disableFooter').removeClass('disableFooter');
   }, 0, me);
@@ -1776,7 +1777,7 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
   } else if (me.loadHistory) {
     me.historyLoading = true;
     if (res && res[1] && res[1].messages.length > 0) {
-      if(!bot.previousHistoryLoading){
+      if(!me.bot.previousHistoryLoading){
         $('.chat-container').hide();
         $('.historyLoadingDiv').addClass('showMsg');
       }
@@ -1793,7 +1794,7 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
             setTimeout((messagesQueue) => {
               $('.chat-container').show();
               $('.historyLoadingDiv').removeClass('showMsg');
-              if(!bot.previousHistoryLoading){
+              if(!me.bot.previousHistoryLoading){
                   $('.chat-container').animate({
                     scrollTop: $('.chat-container').prop('scrollHeight'),
                   }, 2500);
