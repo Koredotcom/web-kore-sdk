@@ -1,3 +1,9 @@
+### 10.19.0
+- SDK Release Sept 29, 2025
+* Bug fixes
+  * dropped global bot singleton and scoped instance to constructor
+  * added unique attribute for rating template
+
 ### 10.18.1
 - SDK Release Sept 13, 2025
 * Bug fixes
