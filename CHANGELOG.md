@@ -1,3 +1,10 @@
+### 11.18.0
+* Release Sept 29, 2025
+* Bug fixes
+  * feedback visibility change for history in the answers template
+  * click to call issues fix
+  * removed console logs for co browse in agent desktop plugin
+
 ### 11.17.10
 * Release Sept 13, 2025
 * Bug fixes
