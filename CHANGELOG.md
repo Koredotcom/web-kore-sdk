@@ -1,3 +1,8 @@
+### 10.19.1
+- SDK Release Sept 30, 2025
+* Bug fixes
+  * moved _chatHistoryLoaded to inside kore bot
+
 ### 10.19.0
 - SDK Release Sept 29, 2025
 * Bug fixes
