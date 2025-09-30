@@ -1648,6 +1648,10 @@ if(messageText && messageText.trim() && messageText.trim().length){
   me.postSendMessageToBot();
   if(clientMessageObject){
     me.extend(msgData,clientMessageObject);
+    // add attachments from clientMessageObject for rendering purpose. For images, audio, video it contains base64 data.
+    if (clientMessageObject.message && clientMessageObject.message.length > 0 && clientMessageObject.message[0].cInfo && clientMessageObject.message[0].cInfo.attachments) {
+      msgData.message[0].cInfo.attachments = clientMessageObject.message[0].cInfo.attachments;
+    }
   }
   me.renderMessage(msgData);
 };

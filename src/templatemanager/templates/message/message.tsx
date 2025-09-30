@@ -221,7 +221,7 @@ export function Message(props: any) {
                                         <div className="attchments-wrap">
                                             <div className="img-attch">
                                                 <figure>
-                                                    <img src={msgData.message[0].cInfo.attachments[0].fileUrl} aria-hidden="true"/>
+                                                    <img src={msgData.message[0].cInfo.attachments[0].fileContentBase64 || msgData.message[0].cInfo.attachments[0].fileUrl} aria-hidden="true"/>
                                                 </figure>
                                             </div>
                                             {/* <button className="layer-multiple">+1</button> */}
@@ -252,13 +252,13 @@ export function Message(props: any) {
                                             <div className="content-info">
                                                 { msgData.message[0].cInfo.attachments[0].fileType == 'video' && 
                                                     <video width="240" height="145" controls>
-                                                        <source src={msgData.message[0].cInfo.attachments[0].fileUrl}></source>
+                                                        <source src={msgData.message[0].cInfo.attachments[0].fileContentBase64 || msgData.message[0].cInfo.attachments[0].fileUrl}></source>
                                                     </video>
                                                 }
                                                 <h1>{msgData.message[0].cInfo.attachments[0].fileName}</h1>
                                                 { msgData.message[0].cInfo.attachments[0].fileType == 'audio' &&
                                                     <audio controls>
-                                                        <source src={msgData.message[0].cInfo.attachments[0].fileUrl}></source>
+                                                        <source src={msgData.message[0].cInfo.attachments[0].fileContentBase64 || msgData.message[0].cInfo.attachments[0].fileUrl}></source>
                                                     </audio> }
                                                 <p>{`${msgData.message[0].cInfo.attachments[0].size} MB`}</p>
                                             </div>

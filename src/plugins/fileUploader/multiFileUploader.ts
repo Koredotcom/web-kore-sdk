@@ -172,13 +172,27 @@ class KoreMultiFileUploaderPlugin {
             serverMessageObject.message = {};
             serverMessageObject.message.attachments = [];
             data.chatWindowEvent.stopFurtherExecution = true;
-            serverMessageObject.message.attachments[0] = attData;
+            serverMessageObject.message.attachments[0] = {
+              fileId: attData.fileId,
+              fileName: attData.fileName,
+              fileType: attData.fileType,
+              fileUrl: attData.fileUrl,
+              size: attData.size,
+              uniqueId: attData.uniqueId // Add uniqueId for server here
+            };
             let clientMessageObject: any = {};
             clientMessageObject.message = [];
             clientMessageObject.message[0] = {};
             clientMessageObject.message[0].clientMessageId = new Date().getTime();
             clientMessageObject.message[0].cInfo = {};
-            clientMessageObject.message[0].cInfo = serverMessageObject.message;
+            clientMessageObject.message[0].cInfo.attachments = [{
+              fileId: attData.fileId,
+              fileName: attData.fileName,
+              fileType: attData.fileType,
+              fileUrl: attData.fileUrl,
+              size: attData.size,
+              fileContentBase64: attData?.fileContentBase64 // Include Base64 for local rendering
+            }];
             me.hostInstance.sendMessage('', attData, serverMessageObject, clientMessageObject);
 
             setTimeout(() => {
@@ -214,13 +228,27 @@ class KoreMultiFileUploaderPlugin {
           serverMessageObject.message = {};
           serverMessageObject.message.attachments = [];
           data.chatWindowEvent.stopFurtherExecution = true;
-          serverMessageObject.message.attachments[0] = attData;
+          serverMessageObject.message.attachments[0] = {
+            fileId: attData.fileId,
+            fileName: attData.fileName,
+            fileType: attData.fileType,
+            fileUrl: attData.fileUrl,
+            size: attData.size,
+            uniqueId: attData.uniqueId // Add uniqueId for server here
+          };
           let clientMessageObject: any = {};
           clientMessageObject.message = [];
           clientMessageObject.message[0] = {};
           clientMessageObject.message[0].clientMessageId = new Date().getTime();
           clientMessageObject.message[0].cInfo = {};
-          clientMessageObject.message[0].cInfo = serverMessageObject.message;
+          clientMessageObject.message[0].cInfo.attachments = [{
+            fileId: attData.fileId,
+            fileName: attData.fileName,
+            fileType: attData.fileType,
+            fileUrl: attData.fileUrl,
+            size: attData.size,
+            fileContentBase64: attData?.fileContentBase64 // Include Base64 for local rendering
+          }];
           me.hostInstance.sendMessage('', attData, serverMessageObject, clientMessageObject);
 
           setTimeout(() => {
@@ -515,7 +543,8 @@ class KoreMultiFileUploaderPlugin {
       fileType: _recState.type,
       fileUrl: scope.fileUrl || '',
       size: _recState.sizeInMb,
-      uniqueId: _recState.uniqueId
+      uniqueId: _recState.uniqueId,
+      ...((_recState.type === 'image' || _recState.type === 'audio' || _recState.type === 'video') && {fileContentBase64: "data:" + _recState.type + "/" + _recState.fileType + ";base64," + _recState.resulttype}) // Add Base64 content for rendering purpose with prefix for image, audio, and video
     };
     if (att.fileUrl) {
       me.hostInstance.attachmentData.push(att);
@@ -745,7 +774,7 @@ class KoreMultiFileUploaderPlugin {
     let auth = "bearer " + me.hostInstance.config.botOptions.accessToken;
     $.ajax({
       type: 'GET',
-      url: (me.config?.koreAttachmentAPIUrl ? me.config.koreAttachmentAPIUrl : me.hostInstance.config.botOptions.koreAPIUrl) + "attachment/file/" + fileId + "/url?repeat=true",
+      url: (me.config?.koreAttachmentAPIUrl ? me.config.koreAttachmentAPIUrl : me.hostInstance.config.botOptions.koreAPIUrl) + "attachment/file/" + fileId + "/url",
       dataType: 'json',
       headers: {
         Authorization: auth,
