@@ -54,6 +54,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     this.historyOffset = 0;
     this.previousHistoryLoading = false;
     this.paginatedScrollDataAvailable = true;
+    this._chatHistoryLoaded = false;
   }
   var userLocation = {
       "city": "",
@@ -62,7 +63,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       "longitude": 0,
       "street": ""
   };
-  var _chatHistoryLoaded = false;
+
   inherits(KoreBot, EventEmitter);
   
   KoreBot.prototype.emit = function emit() {
@@ -71,7 +72,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       arguments[2]="historysync";
       this.cbBotChatHistory(arguments);
     }else if(!window._chatHistoryLoaded && arguments && arguments[0] === 'history') {
-      _chatHistoryLoaded = true;
+      this._chatHistoryLoaded = true;
       this.cbBotChatHistory(arguments);
     }
     this.EventEmitter.prototype.emit.apply(this, arguments);
@@ -368,7 +369,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     if (this.RtmClient) {
       this.RtmClient._close();
     }
-    _chatHistoryLoaded = false;
+    this._chatHistoryLoaded = false;
     this.removeAllListeners();
   };
   /*
@@ -541,7 +542,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   KoreBot.prototype.onOpenWSConnection = function(msg) {
     debug("opened WS Connection");
     this.initialized = true;
-    if(this.options.loadHistory && !_chatHistoryLoaded){
+    if(this.options.loadHistory && !this._chatHistoryLoaded){
       this.getHistory({});
     }
     this.emit(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, {});
@@ -616,7 +617,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       if(this.options.webhookConfig && this.options.webhookConfig.enable){
         this.options.webhookConfig.token=this.options.assertion;
         this.emit(WEB_EVENTS.WEB_HOOK_READY);
-        if(this.options.loadHistory && !_chatHistoryLoaded){
+        if(this.options.loadHistory && !this._chatHistoryLoaded){
           this.getHistory({},data);
         }else{
           this.emit(WEB_EVENTS.WEB_HOOK_RECONNECTED);
@@ -686,7 +687,6 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   }
   
   module.exports.instance = function(){
-    _chatHistoryLoaded = false;
       var _instance=new KoreBot();
       /*
         Adding KoreBot,KoreRTMClient function to instance 
