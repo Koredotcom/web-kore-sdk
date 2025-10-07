@@ -42,6 +42,7 @@ declare const window:any;
 class chatWindow extends EventEmitter{
  chatEle: any;
   config: {};
+  streamingMessages: Map<string, { text: string; msgData: any }> = new Map();
 
 
    /**
@@ -167,6 +168,35 @@ class chatWindow extends EventEmitter{
      * @property {Object} errObj - error object containing error details
      */
       API_FAILURE: 'apiFailure',
+     /**
+     * onStreamingStart will be triggered when streaming message starts
+     *
+     * @event chatWindow#onStreamingStart
+     * @type {Object}
+     * @property {String} messageId - message identifier
+     * @property {Object} msgData - message data
+     */
+      STREAMING_START: 'onStreamingStart',
+     /**
+     * onStreamingChunk will be triggered on each streaming chunk
+     *
+     * @event chatWindow#onStreamingChunk
+     * @type {Object}
+     * @property {String} messageId - message identifier
+     * @property {Object} msgData - message data
+     * @property {String} accumulatedText - accumulated text so far
+     */
+      STREAMING_CHUNK: 'onStreamingChunk',
+     /**
+     * onStreamingComplete will be triggered when streaming completes
+     *
+     * @event chatWindow#onStreamingComplete
+     * @type {Object}
+     * @property {String} messageId - message identifier
+     * @property {String} finalText - final accumulated text
+     * @property {Object} msgData - message data
+     */
+      STREAMING_COMPLETE: 'onStreamingComplete',
      /**
      * on historyComplete will be triggered on histroy response render completion.
      *
@@ -1346,6 +1376,13 @@ bindSDKEvents  () {
     }
 
     let msgData=me.parseSocketMessage(JSON.stringify(tempData));
+    
+    // Handle streaming messages (V3 only)
+    if (msgData && msgData.isStreaming && me.config.UI.version == 'v3') {
+      me.handleStreamingMessage(msgData);
+      return;
+    }
+    
     if (msgData) {
       if (me.loadHistory && me.historyLoading) {
         me.messagesQueue.push(msgData)
@@ -1439,6 +1476,138 @@ parseSocketMessage(msgString:string){
     //me.renderMessage(msgData);
   }
   return msgData;
+}
+
+handleStreamingMessage(msgData: any) {
+    const me: any = this;
+    const messageId = msgData.messageId;
+    const newChunkText = msgData.message?.[0]?.cInfo?.body || '';
+    
+    let streamState = me.streamingMessages.get(messageId);
+    
+    if (!streamState) {
+        // ===== FIRST CHUNK =====
+        
+        // Hide typing indicator
+        me.hideTypingIndicator();
+        
+        // Create buffer
+        me.streamingMessages.set(messageId, {
+            text: newChunkText,
+            msgData: msgData
+        });
+        
+        // Generate and render DOM
+        const messageHtml = me.generateMessageDOM(msgData);
+        if (!messageHtml) return;
+        
+        // Fire BEFORE_RENDER_MSG event
+        let chatWindowEvent = { stopFurtherExecution: false };
+        me.emit(me.EVENTS.BEFORE_RENDER_MSG, {
+            messageHtml: messageHtml,
+            msgData: msgData,
+            chatWindowEvent: chatWindowEvent
+        });
+        
+        if (chatWindowEvent.stopFurtherExecution) {
+            me.streamingMessages.delete(messageId);
+            return;
+        }
+        
+        // Append to DOM
+        const chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
+        if (chatContainer && messageHtml) {
+            chatContainer.appendChild(messageHtml);
+        }
+        
+        // Emit streaming start event
+        me.emit(me.EVENTS.STREAMING_START, { messageId, msgData });
+        
+        // Auto-scroll to show first chunk
+        me.scrollToBottom();
+        
+    } else {
+        // ===== SUBSEQUENT CHUNKS =====
+        
+        // Append text
+        streamState.text += newChunkText;
+        streamState.msgData.message[0].cInfo.body = streamState.text;
+        
+        // Update DOM
+        me.updateStreamingDOM(messageId, streamState.text);
+        
+        // Emit chunk event
+        me.emit(me.EVENTS.STREAMING_CHUNK, {
+            messageId,
+            msgData,
+            accumulatedText: streamState.text
+        });
+    }
+    
+    // Check completion
+    if (msgData.isComplete) {
+        me.finalizeStreamingMessage(messageId);
+    }
+}
+
+updateStreamingDOM(messageId: string, fullText: string) {
+    const me: any = this;
+    const helpers = KoreHelpers.helpers;
+    
+    // Find the text content element in DOM (V3 only)
+    const textElement = me.chatEle.querySelector(
+        `[data-cw-msg-id="${messageId}"] .bubble-msg`
+    );
+    
+    if (textElement) {
+        // Convert markdown and update innerHTML
+        const htmlContent = helpers.convertMDtoHTML(fullText, "bot", {});
+        textElement.innerHTML = htmlContent;
+        
+        // Auto-scroll if user is near bottom
+        me.scrollToBottom();
+    }
+}
+
+scrollToBottom() {
+    const me: any = this;
+    
+    const container = me.chatEle.querySelector('.chat-widget-body-wrapper');
+    if (!container) return;
+    
+    // Always scroll to bottom during streaming
+    container.scrollTo({
+        top: container.scrollHeight,
+        behavior: 'smooth'
+    });
+}
+
+finalizeStreamingMessage(messageId: string) {
+    const me: any = this;
+    const streamState = me.streamingMessages.get(messageId);
+    
+    if (!streamState) return;
+    
+    // Update final message data
+    streamState.msgData.message[0].cInfo.body = streamState.text;
+    
+    // Emit streaming complete event
+    me.emit(me.EVENTS.STREAMING_COMPLETE, {
+        messageId: messageId,
+        finalText: streamState.text,
+        msgData: streamState.msgData
+    });
+    
+    // Find DOM element for AFTER_RENDER_MSG event
+    const domElement = me.chatEle.querySelector(`[data-cw-msg-id="${messageId}"]`);
+    
+    me.emit(me.EVENTS.AFTER_RENDER_MSG, {
+        messageHtml: domElement,
+        msgData: streamState.msgData
+    });
+    
+    // Clean up buffer
+    me.streamingMessages.delete(messageId);
 }
 
 onBotReady  () {
