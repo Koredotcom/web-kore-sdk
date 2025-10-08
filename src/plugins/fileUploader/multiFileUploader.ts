@@ -122,26 +122,36 @@ class KoreMultiFileUploaderPlugin {
       me.hostInstance.chatEle.querySelector('#captureFileAttachment')?.click();
     });
     me.hostInstance.eventManager.addEventListener('#captureMediaAttachment', 'change', (event: any) => {
-      const file = me.hostInstance.chatEle.querySelector('#captureMediaAttachment').files[0];
-      if (file && file.size) {
-        if (file.size > me.filetypes.file.limit.size) {
-          alert(me.filetypes.file.limit.msg);
-          return;
+      const files = me.hostInstance.chatEle.querySelector('#captureMediaAttachment').files;
+      if (files && files.length > 0) {
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          if (file && file.size) {
+            if (file.size > me.filetypes.file.limit.size) {
+              alert(me.filetypes.file.limit.msg);
+              continue;
+            }
+          }
+          me.convertFiles(file);
         }
       }
-      me.convertFiles(file);
       document.getElementById("captureMediaAttachment").value = '';
       // me.hostInstance.chatEle.querySelector('.send-btn')?.classList.add('disabled');
     })
     me.hostInstance.eventManager.addEventListener('#captureFileAttachment', 'change', (event: any) => {
-      const file = me.hostInstance.chatEle.querySelector('#captureFileAttachment').files[0];
-      if (file && file.size) {
-        if (file.size > me.filetypes.file.limit.size) {
-          alert(me.filetypes.file.limit.msg);
-          return;
+      const files = me.hostInstance.chatEle.querySelector('#captureFileAttachment').files;
+      if (files && files.length > 0) {
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          if (file && file.size) {
+            if (file.size > me.filetypes.file.limit.size) {
+              alert(me.filetypes.file.limit.msg);
+              continue;
+            }
+          }
+          me.convertFiles(file);
         }
       }
-      me.convertFiles(file);
       document.getElementById("captureFileAttachment").value = '';
       // me.hostInstance.chatEle.querySelector('.send-btn')?.classList.add('disabled');
     })
@@ -167,12 +177,18 @@ class KoreMultiFileUploaderPlugin {
         }
         data.event.preventDefault();
         if (me.hostInstance.attachmentData && me.hostInstance.attachmentData.length > 0) {
+          let serverMessageObject: any = {};
+          serverMessageObject.message = {};
+          serverMessageObject.message.attachments = [];
+          let clientMessageObject: any = {};
+          clientMessageObject.message = [];
+          clientMessageObject.message[0] = {};
+          clientMessageObject.message[0].clientMessageId = new Date().getTime();
+          clientMessageObject.message[0].cInfo = {};
+          clientMessageObject.message[0].cInfo.attachments = [];
+          data.chatWindowEvent.stopFurtherExecution = true;
           me.hostInstance.attachmentData.forEach((attData: any) => {
-            let serverMessageObject: any = {};
-            serverMessageObject.message = {};
-            serverMessageObject.message.attachments = [];
-            data.chatWindowEvent.stopFurtherExecution = true;
-            serverMessageObject.message.attachments[0] = {
+            let attachment = {
               fileId: attData.fileId,
               fileName: attData.fileName,
               fileType: attData.fileType,
@@ -180,28 +196,28 @@ class KoreMultiFileUploaderPlugin {
               size: attData.size,
               uniqueId: attData.uniqueId // Add uniqueId for server here
             };
-            let clientMessageObject: any = {};
-            clientMessageObject.message = [];
-            clientMessageObject.message[0] = {};
-            clientMessageObject.message[0].clientMessageId = new Date().getTime();
-            clientMessageObject.message[0].cInfo = {};
-            clientMessageObject.message[0].cInfo.attachments = [{
+            serverMessageObject.message.attachments.push(attachment);
+            
+            let clientAttachment = {
               fileId: attData.fileId,
               fileName: attData.fileName,
               fileType: attData.fileType,
               fileUrl: attData.fileUrl,
               size: attData.size,
               fileContentBase64: attData?.fileContentBase64 // Include Base64 for local rendering
-            }];
-            me.hostInstance.sendMessage('', attData, serverMessageObject, clientMessageObject);
+            };
+            clientMessageObject.message[0].cInfo.attachments.push(clientAttachment);
+          });
+          
+          // Send message once with all attachments
+          me.hostInstance.sendMessage('', me.hostInstance.attachmentData, serverMessageObject, clientMessageObject);
 
-            setTimeout(() => {
-              // me.hostInstance.chatEle.querySelector('.send-btn')?.classList.remove('show');
-              me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.add('hide-attachment');
-              me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
-              document.getElementById("captureMediaAttachment").value = "";
-              document.getElementById("captureFileAttachment").value = "";
-            });
+          setTimeout(() => {
+            // me.hostInstance.chatEle.querySelector('.send-btn')?.classList.remove('show');
+            me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.add('hide-attachment');
+            me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
+            document.getElementById("captureMediaAttachment").value = "";
+            document.getElementById("captureFileAttachment").value = "";
           });
           me.hostInstance.attachmentData = [];
         }
@@ -223,12 +239,18 @@ class KoreMultiFileUploaderPlugin {
     cwInstance.on("onSubmit", (data: any) => {
       data.event.preventDefault();
       if (me.hostInstance.attachmentData && me.hostInstance.attachmentData.length > 0) {
+        let serverMessageObject: any = {};
+        serverMessageObject.message = {};
+        serverMessageObject.message.attachments = [];
+        let clientMessageObject: any = {};
+        clientMessageObject.message = [];
+        clientMessageObject.message[0] = {};
+        clientMessageObject.message[0].clientMessageId = new Date().getTime();
+        clientMessageObject.message[0].cInfo = {};
+        clientMessageObject.message[0].cInfo.attachments = [];
+        data.chatWindowEvent.stopFurtherExecution = true;
         me.hostInstance.attachmentData.forEach((attData: any) => {
-          let serverMessageObject: any = {};
-          serverMessageObject.message = {};
-          serverMessageObject.message.attachments = [];
-          data.chatWindowEvent.stopFurtherExecution = true;
-          serverMessageObject.message.attachments[0] = {
+          let attachment = {
             fileId: attData.fileId,
             fileName: attData.fileName,
             fileType: attData.fileType,
@@ -236,28 +258,27 @@ class KoreMultiFileUploaderPlugin {
             size: attData.size,
             uniqueId: attData.uniqueId // Add uniqueId for server here
           };
-          let clientMessageObject: any = {};
-          clientMessageObject.message = [];
-          clientMessageObject.message[0] = {};
-          clientMessageObject.message[0].clientMessageId = new Date().getTime();
-          clientMessageObject.message[0].cInfo = {};
-          clientMessageObject.message[0].cInfo.attachments = [{
+          serverMessageObject.message.attachments.push(attachment);
+          let clientAttachment = {
             fileId: attData.fileId,
             fileName: attData.fileName,
             fileType: attData.fileType,
             fileUrl: attData.fileUrl,
             size: attData.size,
             fileContentBase64: attData?.fileContentBase64 // Include Base64 for local rendering
-          }];
-          me.hostInstance.sendMessage('', attData, serverMessageObject, clientMessageObject);
+          };
+          clientMessageObject.message[0].cInfo.attachments.push(clientAttachment);
+        });
+        
+        // Send message once with all attachments
+        me.hostInstance.sendMessage('', me.hostInstance.attachmentData, serverMessageObject, clientMessageObject);
 
-          setTimeout(() => {
-            // me.hostInstance.chatEle.querySelector('.send-btn')?.classList.remove('show');
-            me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.add('hide-attachment');
-            me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
-            document.getElementById("captureMediaAttachment").value = "";
-            document.getElementById("captureFileAttachment").value = "";
-          });
+        setTimeout(() => {
+          // me.hostInstance.chatEle.querySelector('.send-btn')?.classList.remove('show');
+          me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.add('hide-attachment');
+          me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
+          document.getElementById("captureMediaAttachment").value = "";
+          document.getElementById("captureFileAttachment").value = "";
         });
         me.hostInstance.attachmentData = [];
       }
@@ -433,7 +454,7 @@ class KoreMultiFileUploaderPlugin {
     }
   }
 
-  getfileuploadConf(_recState: { fileType: any; name: any; }) {
+  getfileuploadConf(_recState: { fileType: any; name: any; fileToken?: any; }) {
     const me = this;
     me.appConsts.UPLOAD = {
       FILE_ENDPOINT: (me.config?.koreAttachmentAPIUrl ? me.config.koreAttachmentAPIUrl : me.hostInstance.config.botOptions.koreAPIUrl) + 'attachment/file',
@@ -451,9 +472,9 @@ class KoreMultiFileUploaderPlugin {
       };
     }
     let _uploadConfg: any = {};
-    _uploadConfg.url = me.appConsts.UPLOAD.FILE_ENDPOINT.replace(':fileID', me.fileToken);
+    _uploadConfg.url = me.appConsts.UPLOAD.FILE_ENDPOINT.replace(':fileID', _recState.fileToken);
     _uploadConfg.tokenUrl = me.appConsts.UPLOAD.FILE_TOKEN_ENDPOINT;
-    _uploadConfg.chunkUrl = me.appConsts.UPLOAD.FILE_CHUNK_ENDPOINT.replace(':fileID', me.fileToken);
+    _uploadConfg.chunkUrl = me.appConsts.UPLOAD.FILE_CHUNK_ENDPOINT.replace(':fileID', _recState.fileToken);
     _uploadConfg.fieldName = 'file';
     _uploadConfg.data = {
       fileExtension: _recState.fileType,
