@@ -266,13 +266,10 @@ class ProactiveWebCampaignPlugin {
                 
                 // Handle chat session events for active chat detection
                 if (data.type === 'Session_Start') {
-                    console.log("🚀 ~ ProactiveWebCampaignPlugin ~ onInit ~ Session_Start:");
                     this.updateChatSessionState('Session_Start', data);
                 } else if (data.type === 'Session_End') {
-                    console.log("🚀 ~ ProactiveWebCampaignPlugin ~ onInit ~ Session_End:");
                     this.updateChatSessionState('Session_End', data);
                 } else if (data.type === 'Bot_Active') {
-                    console.log("🚀 ~ ProactiveWebCampaignPlugin ~ onInit ~ Bot_Active:");
                     this.updateChatSessionState('Bot_Active', data);
                 }
             }
@@ -3412,25 +3409,21 @@ class ProactiveWebCampaignPlugin {
     triggerCampaignEvent(campInstanceId: string, campId: string): void {
         // If any campaign template is active, do not trigger campaign event
         if(this.isActiveCampaignTemplate() || this.isPendingSendAPIEvent){
-            console.log("🚀 ~ ProactiveWebCampaignPlugin ~ triggerCampaignEvent ~ isActiveCampaignTemplate:");
             return;
         }
         
         // Check if chat window is open, do not trigger campaign event
         if(this.isChatWindowOpen()){
-            console.log("🚀 ~ ProactiveWebCampaignPlugin ~ triggerCampaignEvent ~ isChatWindowOpen:");
             return;
         }
         
         // If visitor is already chatting, do not trigger campaign event
         if(this.isVisitorAlreadyChatting){
-            console.log("🚀 ~ ProactiveWebCampaignPlugin ~ triggerCampaignEvent ~ isVisitorAlreadyChatting:", this.isVisitorAlreadyChatting);
             return;
         }
         
         // Check if cooldown is active, do not trigger campaign event
         if(this.isCooldownActive()){
-            console.log("🚀 ~ ProactiveWebCampaignPlugin ~ triggerCampaignEvent ~ isCooldownActive:");
             return;
         }
         this.isPendingSendAPIEvent = true;
@@ -3581,7 +3574,6 @@ class ProactiveWebCampaignPlugin {
             const storedSessionInfo = window.sessionStorage.getItem(ProactiveWebCampaignPlugin.CHAT_SESSION_STORAGE_KEY);
             if (storedSessionInfo) {
                 this.chatSessionInfo = JSON.parse(storedSessionInfo);
-                console.log("🚀 ~ ProactiveWebCampaignPlugin ~ initializeChatSessionState ~ this.chatSessionInfo:", this.chatSessionInfo)
                 // Sync the isVisitorAlreadyChatting flag with session state
                 this.isVisitorAlreadyChatting = this.chatSessionInfo?.isActive || false;
             } else {
@@ -3655,7 +3647,6 @@ class ProactiveWebCampaignPlugin {
             if (sessionInfo) {
                 // Update in-memory state
                 this.chatSessionInfo = sessionInfo;
-                console.log("🚀 ~ ProactiveWebCampaignPlugin ~ updateChatSessionState ~ this.chatSessionInfo:", this.chatSessionInfo)
                 this.isVisitorAlreadyChatting = sessionInfo.isActive;
                 
                 // Save to sessionStorage
