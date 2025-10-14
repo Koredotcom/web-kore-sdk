@@ -9,6 +9,7 @@ on:
       - v2/dev 
       - v2/dev-rc1
       - v3/dev
+      - v3/client_file
 jobs:
   build:
     runs-on: ubuntu-latest
