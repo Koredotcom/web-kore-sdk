@@ -234,7 +234,7 @@ init  (config:any) {
 installDefaultPlugins(){
   const me:any = this;
   if (me.config.UI.version == 'v3') {
-    me.installPlugin(new AnswersTemplatesPlugin({}));
+     me.installPlugin(new AnswersTemplatesPlugin({}));
   }
 }
 
@@ -1378,7 +1378,7 @@ bindSDKEvents  () {
     let msgData=me.parseSocketMessage(JSON.stringify(tempData));
     
     // Handle streaming messages (V3 only)
-    if (msgData && msgData.isStreaming && me.config.UI.version == 'v3') {
+    if (msgData && msgData.sM && me.config.UI.version == 'v3') {
       me.handleStreamingMessage(msgData);
       return;
     }
@@ -1521,7 +1521,7 @@ handleStreamingMessage(msgData: any) {
         }
         
         // Emit streaming start event
-        me.emit(me.EVENTS.STREAMING_START, { messageId, msgData });
+        // me.emit(me.EVENTS.STREAMING_START, { messageId, msgData });
         
         // Auto-scroll to show first chunk
         me.scrollToBottom();
@@ -1537,15 +1537,15 @@ handleStreamingMessage(msgData: any) {
         me.updateStreamingDOM(messageId, streamState.text);
         
         // Emit chunk event
-        me.emit(me.EVENTS.STREAMING_CHUNK, {
-            messageId,
-            msgData,
-            accumulatedText: streamState.text
-        });
+        // me.emit(me.EVENTS.STREAMING_CHUNK, {
+        //     messageId,
+        //     msgData,
+        //     accumulatedText: streamState.text
+        // });
     }
     
     // Check completion
-    if (msgData.isComplete) {
+    if (msgData.endChunk) {
         me.finalizeStreamingMessage(messageId);
     }
 }
@@ -1590,13 +1590,14 @@ finalizeStreamingMessage(messageId: string) {
     
     // Update final message data
     streamState.msgData.message[0].cInfo.body = streamState.text;
+    streamState.msgData.message[0].component.payload.text = streamState.text;
     
     // Emit streaming complete event
-    me.emit(me.EVENTS.STREAMING_COMPLETE, {
-        messageId: messageId,
-        finalText: streamState.text,
-        msgData: streamState.msgData
-    });
+    // me.emit(me.EVENTS.STREAMING_COMPLETE, {
+    //     messageId: messageId,
+    //     finalText: streamState.text,
+    //     msgData: streamState.msgData
+    // });
     
     // Find DOM element for AFTER_RENDER_MSG event
     const domElement = me.chatEle.querySelector(`[data-cw-msg-id="${messageId}"]`);
