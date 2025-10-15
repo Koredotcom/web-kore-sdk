@@ -169,35 +169,6 @@ class chatWindow extends EventEmitter{
      */
       API_FAILURE: 'apiFailure',
      /**
-     * onStreamingStart will be triggered when streaming message starts
-     *
-     * @event chatWindow#onStreamingStart
-     * @type {Object}
-     * @property {String} messageId - message identifier
-     * @property {Object} msgData - message data
-     */
-      STREAMING_START: 'onStreamingStart',
-     /**
-     * onStreamingChunk will be triggered on each streaming chunk
-     *
-     * @event chatWindow#onStreamingChunk
-     * @type {Object}
-     * @property {String} messageId - message identifier
-     * @property {Object} msgData - message data
-     * @property {String} accumulatedText - accumulated text so far
-     */
-      STREAMING_CHUNK: 'onStreamingChunk',
-     /**
-     * onStreamingComplete will be triggered when streaming completes
-     *
-     * @event chatWindow#onStreamingComplete
-     * @type {Object}
-     * @property {String} messageId - message identifier
-     * @property {String} finalText - final accumulated text
-     * @property {Object} msgData - message data
-     */
-      STREAMING_COMPLETE: 'onStreamingComplete',
-     /**
      * on historyComplete will be triggered on histroy response render completion.
      *
      * @event chatWindow#historyComplete
@@ -234,7 +205,7 @@ init  (config:any) {
 installDefaultPlugins(){
   const me:any = this;
   if (me.config.UI.version == 'v3') {
-     me.installPlugin(new AnswersTemplatesPlugin({}));
+    me.installPlugin(new AnswersTemplatesPlugin({}));
   }
 }
 
