@@ -1377,8 +1377,7 @@ bindSDKEvents  () {
 
     let msgData=me.parseSocketMessage(JSON.stringify(tempData));
     
-    // Handle streaming messages (V3 only)
-    if (msgData && msgData.sM && me.config.UI.version == 'v3') {
+    if (msgData && msgData?.sM && me.config.UI.version == 'v3') {
       me.handleStreamingMessage(msgData);
       return;
     }
@@ -1479,136 +1478,97 @@ parseSocketMessage(msgString:string){
 }
 
 handleStreamingMessage(msgData: any) {
-    const me: any = this;
-    const messageId = msgData.messageId;
-    const newChunkText = msgData.message?.[0]?.cInfo?.body || '';
-    
-    let streamState = me.streamingMessages.get(messageId);
-    
-    if (!streamState) {
-        // ===== FIRST CHUNK =====
-        
-        // Hide typing indicator
-        me.hideTypingIndicator();
-        
-        // Create buffer
-        me.streamingMessages.set(messageId, {
-            text: newChunkText,
-            msgData: msgData
-        });
-        
-        // Generate and render DOM
-        const messageHtml = me.generateMessageDOM(msgData);
-        if (!messageHtml) return;
-        
-        // Fire BEFORE_RENDER_MSG event
-        let chatWindowEvent = { stopFurtherExecution: false };
-        me.emit(me.EVENTS.BEFORE_RENDER_MSG, {
-            messageHtml: messageHtml,
-            msgData: msgData,
-            chatWindowEvent: chatWindowEvent
-        });
-        
-        if (chatWindowEvent.stopFurtherExecution) {
-            me.streamingMessages.delete(messageId);
-            return;
-        }
-        
-        // Append to DOM
-        const chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
-        if (chatContainer && messageHtml) {
-            chatContainer.appendChild(messageHtml);
-        }
-        
-        // Emit streaming start event
-        // me.emit(me.EVENTS.STREAMING_START, { messageId, msgData });
-        
-        // Auto-scroll to show first chunk
-        me.scrollToBottom();
-        
-    } else {
-        // ===== SUBSEQUENT CHUNKS =====
-        
-        // Append text
-        streamState.text += newChunkText;
-        streamState.msgData.message[0].cInfo.body = streamState.text;
-        
-        // Update DOM
-        me.updateStreamingDOM(messageId, streamState.text);
-        
-        // Emit chunk event
-        // me.emit(me.EVENTS.STREAMING_CHUNK, {
-        //     messageId,
-        //     msgData,
-        //     accumulatedText: streamState.text
-        // });
+  const me: any = this;
+  const messageId = msgData.messageId;
+  const newChunkText = msgData.message?.[0]?.cInfo?.body || msgData.message?.[0]?.component?.payload?.text || msgData.message?.[0]?.component?.payload || '';
+
+  let streamState = me.streamingMessages.get(messageId);
+
+  if (!streamState) {
+    me.hideTypingIndicator();
+    me.streamingMessages.set(messageId, {
+      text: newChunkText,
+      msgData: msgData
+    });
+
+    const messageHtml = me.generateMessageDOM(msgData);
+    if (!messageHtml) return;
+
+    let chatWindowEvent = { stopFurtherExecution: false };
+    me.emit(me.EVENTS.BEFORE_RENDER_MSG, {
+      messageHtml: messageHtml,
+      msgData: msgData,
+      chatWindowEvent: chatWindowEvent
+    });
+
+    if (chatWindowEvent.stopFurtherExecution) {
+      me.streamingMessages.delete(messageId);
+      return;
     }
-    
-    // Check completion
-    if (msgData.endChunk) {
-        me.finalizeStreamingMessage(messageId);
+
+    const chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
+    if (chatContainer && messageHtml) {
+      chatContainer.appendChild(messageHtml);
     }
+    me.scrollToBottom();
+  } else {
+    if (newChunkText) {
+      streamState.text += newChunkText;
+      streamState.msgData.message[0].cInfo.body = streamState.text;
+      streamState.msgData.message[0].component.payload.text = streamState.text;
+      me.updateStreamingMessage(messageId, streamState.text);
+    }
+  }
+
+  if (msgData.endChunk) {
+    me.stopStreamingMessage(messageId);
+  }
 }
 
-updateStreamingDOM(messageId: string, fullText: string) {
-    const me: any = this;
-    const helpers = KoreHelpers.helpers;
-    
-    // Find the text content element in DOM (V3 only)
-    const textElement = me.chatEle.querySelector(
-        `[data-cw-msg-id="${messageId}"] .bubble-msg`
-    );
-    
-    if (textElement) {
-        // Convert markdown and update innerHTML
-        const htmlContent = helpers.convertMDtoHTML(fullText, "bot", {});
-        textElement.innerHTML = htmlContent;
-        
-        // Auto-scroll if user is near bottom
-        me.scrollToBottom();
-    }
+updateStreamingMessage(messageId: string, fullText: string) {
+  const me: any = this;
+  const helpers = KoreHelpers.helpers;
+
+  const textElement = me.chatEle.querySelector(
+    `[data-cw-msg-id="${messageId}"] .bubble-msg`
+  );
+
+  if (textElement) {
+    const htmlContent = helpers.convertMDtoHTML(fullText, "bot", {});
+    textElement.innerHTML = htmlContent;
+    me.scrollToBottom();
+  }
 }
 
 scrollToBottom() {
-    const me: any = this;
-    
-    const container = me.chatEle.querySelector('.chat-widget-body-wrapper');
-    if (!container) return;
-    
-    // Always scroll to bottom during streaming
-    container.scrollTo({
-        top: container.scrollHeight,
-        behavior: 'smooth'
-    });
+  const me: any = this;
+
+  const container = me.chatEle.querySelector('.chat-widget-body-wrapper');
+  if (!container) return;
+
+  container.scrollTo({
+    top: container.scrollHeight,
+    behavior: 'smooth'
+  });
 }
 
-finalizeStreamingMessage(messageId: string) {
-    const me: any = this;
-    const streamState = me.streamingMessages.get(messageId);
-    
-    if (!streamState) return;
-    
-    // Update final message data
-    streamState.msgData.message[0].cInfo.body = streamState.text;
-    streamState.msgData.message[0].component.payload.text = streamState.text;
-    
-    // Emit streaming complete event
-    // me.emit(me.EVENTS.STREAMING_COMPLETE, {
-    //     messageId: messageId,
-    //     finalText: streamState.text,
-    //     msgData: streamState.msgData
-    // });
-    
-    // Find DOM element for AFTER_RENDER_MSG event
-    const domElement = me.chatEle.querySelector(`[data-cw-msg-id="${messageId}"]`);
-    
-    me.emit(me.EVENTS.AFTER_RENDER_MSG, {
-        messageHtml: domElement,
-        msgData: streamState.msgData
-    });
-    
-    // Clean up buffer
-    me.streamingMessages.delete(messageId);
+stopStreamingMessage(messageId: string) {
+  const me: any = this;
+  const streamState = me.streamingMessages.get(messageId);
+
+  if (!streamState) return;
+
+  streamState.msgData.message[0].cInfo.body = streamState.text;
+  streamState.msgData.message[0].component.payload.text = streamState.text;
+
+  const domElement = me.chatEle.querySelector(`[data-cw-msg-id="${messageId}"]`);
+
+  me.emit(me.EVENTS.AFTER_RENDER_MSG, {
+    messageHtml: domElement,
+    msgData: streamState.msgData
+  });
+
+  me.streamingMessages.delete(messageId);
 }
 
 onBotReady  () {
