@@ -1486,7 +1486,9 @@ handleStreamingMessage(msgData: any) {
     if (newChunkText) {
       streamState.text += newChunkText;
       streamState.msgData.message[0].cInfo.body = streamState.text;
-      streamState.msgData.message[0].component.payload.text = streamState.text;
+      if (streamState.msgData.message[0].component?.payload?.text) {
+        streamState.msgData.message[0].component.payload.text = streamState.text;
+      }
       me.updateStreamingMessage(messageId, streamState.text);
     }
   }
@@ -1530,7 +1532,9 @@ stopStreamingMessage(messageId: string) {
   if (!streamState) return;
 
   streamState.msgData.message[0].cInfo.body = streamState.text;
-  streamState.msgData.message[0].component.payload.text = streamState.text;
+  if (streamState.msgData.message[0].component?.payload?.text) {
+    streamState.msgData.message[0].component.payload.text = streamState.text;
+  }
 
   const domElement = me.chatEle.querySelector(`[data-cw-msg-id="${messageId}"]`);
 
