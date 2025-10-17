@@ -59,6 +59,9 @@ class KoreMultiFileUploaderPlugin {
       'deb', 'gz', 'pkg', 'rpm', 'zipx', 'bak', 'avi', 'm4v', 'mpg', 'rm', 'swf', 'vob', 'wmv', '3gp2', '3g2', 'asf', 'asx', 'srt', 'wma', 'mid', 'aif', 'iff', 'm3u', 'mpa', 'ra', 'aiff', 'tiff'];
     if (config) {
       this.config.koreAttachmentAPIUrl = config?.koreAttachmentAPIUrl || 'https://platform.kore.ai/api/'; 
+      this.config.maxFiles = config?.maxFiles || 10; // Maximum files allowed to upload at once
+    } else {
+      this.config.maxFiles = 10; // Default maximum files limit
     }
   }
 
@@ -124,6 +127,14 @@ class KoreMultiFileUploaderPlugin {
     me.hostInstance.eventManager.addEventListener('#captureMediaAttachment', 'change', (event: any) => {
       const files = me.hostInstance.chatEle.querySelector('#captureMediaAttachment').files;
       if (files && files.length > 0) {
+        const currentAttachmentsCount = me.hostInstance.attachmentData ? me.hostInstance.attachmentData.length : 0;
+        const maxFilesAllowed = me.config.maxFiles || 10;
+        
+        if (currentAttachmentsCount + files.length > maxFilesAllowed) {
+          alert(`Maximum ${maxFilesAllowed} files can be uploaded at once.`);
+          document.getElementById("captureMediaAttachment").value = '';
+          return;
+        }
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           if (file && file.size) {
@@ -141,6 +152,14 @@ class KoreMultiFileUploaderPlugin {
     me.hostInstance.eventManager.addEventListener('#captureFileAttachment', 'change', (event: any) => {
       const files = me.hostInstance.chatEle.querySelector('#captureFileAttachment').files;
       if (files && files.length > 0) {
+        const currentAttachmentsCount = me.hostInstance.attachmentData ? me.hostInstance.attachmentData.length : 0;
+        const maxFilesAllowed = me.config.maxFiles || 10;
+        
+        if (currentAttachmentsCount + files.length > maxFilesAllowed) {
+          alert(`Maximum ${maxFilesAllowed} files can be uploaded at once. `);
+          document.getElementById("captureFileAttachment").value = '';
+          return;
+        }
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           if (file && file.size) {
