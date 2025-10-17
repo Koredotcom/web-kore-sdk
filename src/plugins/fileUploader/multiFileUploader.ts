@@ -130,8 +130,14 @@ class KoreMultiFileUploaderPlugin {
         const currentAttachmentsCount = me.hostInstance.attachmentData ? me.hostInstance.attachmentData.length : 0;
         const maxFilesAllowed = me.config.maxFiles || 10;
         
+        if (files.length > maxFilesAllowed) {
+          alert(`You can select maximum ${maxFilesAllowed} files at once.`);
+          document.getElementById("captureMediaAttachment").value = '';
+          return;
+        }
+        
         if (currentAttachmentsCount + files.length > maxFilesAllowed) {
-          alert(`Maximum ${maxFilesAllowed} files can be uploaded at once.`);
+          alert(`Maximum ${maxFilesAllowed} files can be uploaded at once. You have ${currentAttachmentsCount} file(s) already selected.`);
           document.getElementById("captureMediaAttachment").value = '';
           return;
         }
@@ -155,8 +161,14 @@ class KoreMultiFileUploaderPlugin {
         const currentAttachmentsCount = me.hostInstance.attachmentData ? me.hostInstance.attachmentData.length : 0;
         const maxFilesAllowed = me.config.maxFiles || 10;
         
+        if (files.length > maxFilesAllowed) {
+          alert(`You can select maximum ${maxFilesAllowed} files at once.`);
+          document.getElementById("captureFileAttachment").value = '';
+          return;
+        }
+        
         if (currentAttachmentsCount + files.length > maxFilesAllowed) {
-          alert(`Maximum ${maxFilesAllowed} files can be uploaded at once. `);
+          alert(`Maximum ${maxFilesAllowed} files can be uploaded at once. You have ${currentAttachmentsCount} file(s) already selected.`);
           document.getElementById("captureFileAttachment").value = '';
           return;
         }

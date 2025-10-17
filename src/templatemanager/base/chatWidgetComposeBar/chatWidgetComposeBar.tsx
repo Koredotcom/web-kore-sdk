@@ -44,6 +44,9 @@ export function ChatWidgetComposeBar(props: any) {
         if (hostInstance.plugins && !hostInstance.plugins['KoreMultiFileUploaderPlugin']) {
             alert('Please install File Uploader Plugin...');
         }
+        if (hostInstance.attachmentData && hostInstance.attachmentData.length > 0) {
+            hostInstance.attachmentData = [];
+        }
     }
 
     const checkForSTTPlugin = () => {
