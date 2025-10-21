@@ -1404,12 +1404,38 @@ class ProactiveWebCampaignPlugin {
         return true;
     }
 
-    checkEngagementHours(engHours: any) {
+    /**
+     * Checks if the current time is within the engagement hours specified in engStrategy
+     * @param engStrategy - Engagement strategy object with engagement hours settings
+     * @returns {boolean} - Returns true if current time is within engagement hours, false otherwise
+     */
+    checkEngagementHours(engStrategy: any) {
+        // If campaign is set for 'anytime', allow engagement regardless of time
+        if (engStrategy?.engagementHoursCategory === 'anytime') {
+            return true;
+        }
+        const engHours = engStrategy?.engagementHours;
+        if (!engHours || !engHours.start || !engHours.end) {
+            return false;
+        }
         const tz = engHours?.timezone || 'Asia/Kolkata';
+        // Get the current time in the specified timezone
         const currTime = moment().tz(tz);
-        const startTime = moment.tz(engHours.start, 'hh:mm A', tz);     
-        const endTime = moment.tz(engHours.end, 'hh:mm A', tz);       
-        return currTime.isBetween(startTime, endTime)
+
+        // Format and parse the start and end times using engagement hours and current day
+        const startTime = moment.tz(
+            currTime.format('YYYY-MM-DD') + ' ' + engHours.start,
+            'YYYY-MM-DD hh:mm A',
+            tz
+        );
+        const endTime = moment.tz(
+            currTime.format('YYYY-MM-DD') + ' ' + engHours.end,
+            'YYYY-MM-DD hh:mm A',
+            tz
+        );
+
+        // Return true if current time is between startTime and endTime (inclusive)
+        return currTime.isBetween(startTime, endTime, null, '[]');
     }
 
     createTimeSpentObjs() {
@@ -2088,7 +2114,7 @@ class ProactiveWebCampaignPlugin {
 
         const activeCampaigns = this.campInfo.filter((campaign: any) => {
             // Check engagement hours
-            if (!this.checkEngagementHours(campaign.engagementStrategy.engagementHours)) {
+            if (!this.checkEngagementHours(campaign.engagementStrategy)) {
                 // returns false, if outside engagement hours`);
                 return false;
             }
