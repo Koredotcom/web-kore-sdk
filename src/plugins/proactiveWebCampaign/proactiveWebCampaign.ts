@@ -7,13 +7,6 @@ import PWCButtonTemplate from "./templates/pwcButtonTemplate/pwcButtonTemplate";
 import PWCPostTemplate from "./templates/pwcPostTemplate/pwcPostTemplate";
 import Chat from "./templates/pwcChatTemplate/pwcChatTemplate";
 
-// Interface for chat session information
-interface ChatSessionInfo {
-    sessionId: string;
-    isActive: boolean;
-    source: 'Session_Start' | 'Session_End' | 'Bot_Active';
-}
-
 class ProactiveWebCampaignPlugin {
     name: string = 'ProactiveWebCampaingPlugin';
     config: any = {};
@@ -54,6 +47,10 @@ class ProactiveWebCampaignPlugin {
     private static readonly ACTIVE_CAMPAIGN_SELECTOR = '.pwc-active-campaign-template';
     private static readonly CHAT_CONTAINER_SELECTOR = '.chat-widgetwrapper-main-container.minimize';
 
+    // API retry configuration constants
+    private static readonly MAX_API_RETRIES = 5;
+    private static readonly RETRY_DELAY_MS = 30000; // 30 seconds
+
     // This flag is used to prevent the sendApiEvent from getting triggered multiple times
     // As multiple campaign templates cannot be rendered at the same time
     isPendingSendAPIEvent: boolean = false;
@@ -68,11 +65,6 @@ class ProactiveWebCampaignPlugin {
     // This flag is used to prevent the same visitor from chatting with the bot multiple times
     // This flag is used to block the templates from rendering if the visitor is already chatting with the bot
     isVisitorAlreadyChatting: boolean = false;
-
-    // In-memory session info (fallback for sessionStorage)
-    private chatSessionInfo: ChatSessionInfo | null = null;
-    // SessionStorage key for chat session data
-    private static readonly CHAT_SESSION_STORAGE_KEY = 'pwc_chat_session_info';
     
     constructor(config: any) {
         config = config || {};
@@ -82,9 +74,6 @@ class ProactiveWebCampaignPlugin {
         
         // Restore cooldown state from sessionStorage (for page reloads/navigation)
         this.restoreCooldownState();
-        
-        // Initialize chat session state from sessionStorage
-        this.initializeChatSessionState();
         
         if(!this.config.dependentPlugins.AgentDesktopPlugin){
             console.log("PWE is dependent on AgentDesktopPlugin, please add it");
@@ -132,146 +121,20 @@ class ProactiveWebCampaignPlugin {
         pageVisitArray = JSON.parse(pageVisitArray);
         if (!pageVisitArray) window.sessionStorage.setItem('pageVisitHistory', JSON.stringify([]));
         me.installPWCTemplates();
+        
+        // Check if pwe_data already exists in sessionStorage
+        const existingPweData = window.sessionStorage.getItem('pwe_data');
+        if (!existingPweData) {
+            // Initialize PWC campaigns via API
+            me.initializePWCCampaigns();
+        }
+        
         document.addEventListener("visibilitychange", () => {
             if (document.visibilityState === "visible") {
                 me.visible = true;
                 window.sessionStorage.setItem('startTime', new Date().getTime() + '');
             } else {
                 me.visible = false;
-            }
-        });
-        me.hostInstance.on('onWSOpen', (event: any) => {
-            me.sendPWCStartEvent();
-            const clientMessageId = new Date().getTime();
-            const payload: any = {
-                'clientMessageId': clientMessageId,
-                'event_name': 'pwe_verify',
-                'resourceid': '/pwe_message',
-                'iId': me.hostInstance.config.botOptions.botInfo.taskBotId,
-                'user': me.hostInstance.config.botOptions.userIdentity,
-                'client': 'sdk',
-                'userId': this.authInfo.userInfo.userId,
-                'type': 'pwe_message',
-                'from': 'bot',
-                'botInfo': {
-                    'chatBot': me.hostInstance._botInfo.name,
-                    'taskBotId': me.hostInstance._botInfo._id
-                }
-            }
-            me.sendApiEvent(payload, '/pweevents');
-        });
-        me.hostInstance.bot.on('message', (event: any) => {
-            if (event && event.data) {
-                const data = JSON.parse(event.data);
-                if (data.type == 'pwe_message' && data.event_name == 'pwe_verify') {
-                    if (data.body.isEnabled) {
-                        this.enablePWC = true;
-                        this.campInfo = data.body.campInfo || [];
-                        me.hostInstance.campInfo = data.body.campInfo;
-                        
-                        // Set cooldown time from configuration (in minutes)
-                        this.coolDownTime = data.body?.coolDownTime || 0;
-                        
-                        // PERFORMANCE OPTIMIZATION: Get existing data first
-                        let existingPweData: any = window.sessionStorage.getItem('pwe_data');
-                        existingPweData = JSON.parse(existingPweData) || {};
-                        
-                        // Filter to only NEW campaigns (not already in pwe_data)
-                        const newCampaigns = this.campInfo.filter((campaign: any) => 
-                            !existingPweData[campaign.campInstanceId]
-                        );
-                        // Only proceed if there are new campaigns OR first time initialization
-                        if (newCampaigns.length > 0 || Object.keys(existingPweData).length === 0) {
-                            // Use new campaign data structure - only process NEW campaigns
-                            const pweData = this.constructPweData(newCampaigns);
-                            
-                            // Merge with existing data - only add new campaigns
-                            Object.keys(pweData).forEach(campInstanceId => {
-                                if (!existingPweData[campInstanceId]) {  // Double-check for safety
-                                    existingPweData[campInstanceId] = pweData[campInstanceId];
-                                    
-                                    // Initialize timeSpent if not exists
-                                    if (this.timeSpent[campInstanceId] === undefined) {
-                                        this.timeSpent[campInstanceId] = 0;
-                                    }
-                                }
-                            });
-                            //PWE data saved to session storage
-                            window.sessionStorage.setItem('pwe_data', JSON.stringify(existingPweData));
-                            
-                            // Setup hover event listeners for campaigns with hoverOn rules
-                            this.setupHoverListeners();
-                            
-                            // Initialize efficient PWC tracking system
-                            me.initializePWCTracking();
-                        }
-                        
-                        // Handle initial page processing (fixes landing page campaigns)
-                        // Execute regardless of campaign novelty (critical for multi-page apps)
-                        if (!this.isInitialPageLoaded) {
-                            this.handlePageChange();
-                            this.isInitialPageLoaded = true;
-                        }
-                    } else {
-                        window.sessionStorage.removeItem('pwe_data');
-                        this.enablePWC = false;
-                        this.campInfo = [];
-                    }
-                }
-                // Banner, Post, Button Templates
-                if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType !== 'chat' && this.browserSessionId && this.enablePWC) {
-                    // Check browser_session_id to ensure template is shown only in the triggering browser tab
-                    const receivedBrowserSessionId = data?.ruleInfo?.browser_session_id;
-                    if (receivedBrowserSessionId && receivedBrowserSessionId === this.browserSessionId) {
-                        const htmlEle = me.hostInstance.generateMessageDOM(data);
-                        if (me.hostInstance.config.pwcConfig.container instanceof HTMLElement) {
-                            me.hostInstance.config.pwcConfig.container.appendChild(htmlEle);
-                        } else {
-                            document.querySelector(me.hostInstance.config.pwcConfig.container).appendChild(htmlEle);
-                        }
-                        // Start cooldown timer for this campaign trigger
-                        this.startCooldown();
-                        // Reset the flag to allow the next campaign template to be rendered
-                        this.isPendingSendAPIEvent = false;
-                    }
-                }
-                // Chat Template
-                if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType == 'chat' && data.body?.layoutDesign && this.browserSessionId && this.enablePWC) {
-                    // Check browser_session_id to ensure template is shown only in the triggering browser tab
-                    const receivedBrowserSessionId = data?.ruleInfo?.browser_session_id;
-                    if (receivedBrowserSessionId && receivedBrowserSessionId === this.browserSessionId) {
-                        const layoutData = {
-                            layoutData: data?.body?.layoutDesign,
-                            campInstId: data.body?.campInfo?.campInstId
-                        }
-                        const chatContainer = getHTML(Chat, layoutData, this.hostInstance);
-                        let avatarVariations = me.hostInstance.chatEle.querySelector('.avatar-actions');
-                        avatarVariations.prepend(chatContainer);
-                        if (me.hostInstance.config.branding.general.sounds.enable && me.hostInstance.config.branding.general.sounds.on_proactive_msg.url != 'None') {
-                            const playSound = new Audio(me.hostInstance.config.branding.general.sounds.on_proactive_msg.url);
-                            playSound.play().catch(error => {
-                                console.log('Error: ', error);
-                            });
-                        }                
-                        me.hostInstance.pwcInfo.dataFlag = true;
-                        me.hostInstance.pwcInfo.chatData = {};
-                        me.hostInstance.pwcInfo.chatData.enable = true;
-                        me.hostInstance.pwcInfo.chatData.data = data.body.layoutDesign;
-                        // Start cooldown timer for this campaign trigger
-                        this.startCooldown();
-                        // Reset the flag to allow the next campaign template to be rendered
-                        this.isPendingSendAPIEvent = false;
-                    }
-                }
-                
-                // Handle chat session events for active chat detection
-                if (data.type === 'Session_Start') {
-                    this.updateChatSessionState('Session_Start', data);
-                } else if (data.type === 'Session_End') {
-                    this.updateChatSessionState('Session_End', data);
-                } else if (data.type === 'Bot_Active') {
-                    this.updateChatSessionState('Bot_Active', data);
-                }
             }
         });
         me.customDataListener();
@@ -785,22 +648,6 @@ class ProactiveWebCampaignPlugin {
             }
         });
     }
-
-    sendPWCStartEvent() {
-        const me: any = this;
-        const clientMessageId = new Date().getTime();
-        const messageToBot: any = {};
-        messageToBot.clientMessageId = clientMessageId;
-        messageToBot.event_name = 'pwe_verify';
-        messageToBot.resourceid = '/pwe_message';
-        messageToBot.iId = me.hostInstance.config.botOptions.botInfo.taskBotId;
-        messageToBot.userId = me.hostInstance.config.botOptions.userIdentity;
-        setTimeout(() => {
-            me.hostInstance.bot.sendMessage(messageToBot, (err: any) => {
-                console.error('pwe_startEvent send failed sending');
-            });
-        }, 200);
-    };
 
     installPWCTemplates() {
         let me = this;
@@ -1650,35 +1497,203 @@ class ProactiveWebCampaignPlugin {
         }
     }
 
-    async sendApiEvent(payload: string, route: string, campInstanceId?: string) {
+    /**
+     * Sends API event with retry logic
+     * @param payload - Event payload
+     * @param route - API route
+     * @param retryCount - Number of retries remaining (default: MAX_API_RETRIES)
+     * @returns Promise with API response
+     */
+    async sendApiEvent(payload: any, route: string, retryCount: number = ProactiveWebCampaignPlugin.MAX_API_RETRIES): Promise<any> {
         let me: any = this;
         let cwInstance = me.hostInstance;
         const url = new URL(cwInstance.config.botOptions.koreAPIUrl);
-        fetch(url.protocol + '//' + url.host + '/customerengagement/api/pwe/bots/' + cwInstance._botInfo._id + route, {
-            "headers": {
-                "content-type": "application/json",
-                "Authorization": "bearer " + this.authInfo.authorization.accessToken,
-            },
-            "body": JSON.stringify(payload),
-            "method": "POST",
-        })
-            .then(res => {
-                if (res.ok) {
-                    return res.json();
+        
+        try {
+            const response = await fetch(url.protocol + '//' + url.host + '/customerengagement/api/pwe/bots/' + cwInstance._botInfo._id + route, {
+                "headers": {
+                    "content-type": "application/json",
+                    "Authorization": "bearer " + this.authInfo.authorization.accessToken,
+                },
+                "body": JSON.stringify(payload),
+                "method": "POST",
+            });
+            
+            if (response.ok) {
+                return await response.json();
+            }
+            
+            throw new Error(`API request failed with status: ${response.status}`);
+        } catch (err) {
+            console.error(`PWC API Error (${ProactiveWebCampaignPlugin.MAX_API_RETRIES - retryCount + 1}/${ProactiveWebCampaignPlugin.MAX_API_RETRIES}):`, err);
+            
+            // Retry logic
+            if (retryCount > 0) {
+                console.log(`Retrying in ${ProactiveWebCampaignPlugin.RETRY_DELAY_MS / 1000} seconds... (${retryCount} attempts remaining)`);
+                await new Promise(resolve => setTimeout(resolve, ProactiveWebCampaignPlugin.RETRY_DELAY_MS));
+                return this.sendApiEvent(payload, route, retryCount - 1);
+            }
+            
+            // All retries exhausted
+            throw new Error(`PWC API request failed after ${ProactiveWebCampaignPlugin.MAX_API_RETRIES} attempts: ${err}`);
+        }
+    }
+
+    /**
+     * Initializes PWC campaigns by calling the pwe_verify API
+     * Replaces the onWSOpen event handler logic
+     */
+    async initializePWCCampaigns(): Promise<void> {
+        const me: any = this;
+        
+        try {
+            const clientMessageId = new Date().getTime();
+            const payload: any = {
+                'clientMessageId': clientMessageId,
+                'event_name': 'pwe_verify',
+                'resourceid': '/pwe_message',
+                'iId': me.hostInstance.config.botOptions.botInfo.taskBotId,
+                'user': me.hostInstance.config.botOptions.userIdentity,
+                'client': 'sdk',
+                'userId': this.authInfo.userInfo.userId,
+                'type': 'pwe_message',
+                'from': 'bot',
+                'botInfo': {
+                    'chatBot': me.hostInstance._botInfo.name,
+                    'taskBotId': me.hostInstance._botInfo._id
                 }
-                throw new Error('Something went wrong');
-            })
-            .then((res: any) => {
-                // Response handling - API response received
-            }).catch(err => {
-                console.log(err);
-            })
+            };
+            
+            const response = await me.sendApiEvent(payload, '/pweevents');
+            await me.handlePweVerifyResponse(response);
+        } catch (error) {
+            console.error('PWC: Failed to initialize campaigns:', error);
+        }
+    }
+
+    /**
+     * Handles the pwe_verify API response
+     * Processes campaign configuration and initializes PWC system
+     * @param responseData - API response data
+     */
+    async handlePweVerifyResponse(responseData: any): Promise<void> {
+        const me: any = this;
+        const data = responseData.response;
+        
+        if (data.body.isEnabled) {
+            this.enablePWC = true;
+            this.campInfo = data.body.campInfo || [];
+            me.hostInstance.campInfo = data.body.campInfo;
+            
+            // Set cooldown time from configuration (in minutes)
+            this.coolDownTime = data.body?.coolDownTime || 0;
+            
+            // PERFORMANCE OPTIMIZATION: Get existing data first
+            let existingPweData: any = window.sessionStorage.getItem('pwe_data');
+            existingPweData = JSON.parse(existingPweData) || {};
+            
+            // Filter to only NEW campaigns (not already in pwe_data)
+            const newCampaigns = this.campInfo.filter((campaign: any) => 
+                !existingPweData[campaign.campInstanceId]
+            );
+            // Only proceed if there are new campaigns OR first time initialization
+            if (newCampaigns.length > 0 || Object.keys(existingPweData).length === 0) {
+                // Use new campaign data structure - only process NEW campaigns
+                const pweData = this.constructPweData(newCampaigns);
+                
+                // Merge with existing data - only add new campaigns
+                Object.keys(pweData).forEach(campInstanceId => {
+                    if (!existingPweData[campInstanceId]) {  // Double-check for safety
+                        existingPweData[campInstanceId] = pweData[campInstanceId];
+                        
+                        // Initialize timeSpent if not exists
+                        if (this.timeSpent[campInstanceId] === undefined) {
+                            this.timeSpent[campInstanceId] = 0;
+                        }
+                    }
+                });
+                //PWE data saved to session storage
+                window.sessionStorage.setItem('pwe_data', JSON.stringify(existingPweData));
+                
+                // Setup hover event listeners for campaigns with hoverOn rules
+                this.setupHoverListeners();
+                
+                // Initialize efficient PWC tracking system
+                me.initializePWCTracking();
+            }
+            
+            // Handle initial page processing (fixes landing page campaigns)
+            // Execute regardless of campaign novelty (critical for multi-page apps)
+            if (!this.isInitialPageLoaded) {
+                this.handlePageChange();
+                this.isInitialPageLoaded = true;
+            }
+        } else {
+            window.sessionStorage.removeItem('pwe_data');
+            this.enablePWC = false;
+            this.campInfo = [];
+        }
+    }
+
+    /**
+     * Handles the pwe_event API response and renders campaign templates
+     * @param responseData - API response data
+     */
+    handlePweEventResponse(responseData: any): void {
+        const me: any = this;
+        const data = responseData.response;
+        
+        // Banner, Post, Button Templates
+        if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType !== 'chat' && this.browserSessionId && this.enablePWC) {
+            // Check browser_session_id to ensure template is shown only in the triggering browser tab
+            const receivedBrowserSessionId = data?.ruleInfo?.browser_session_id;
+            if (receivedBrowserSessionId && receivedBrowserSessionId === this.browserSessionId) {
+                const htmlEle = me.hostInstance.generateMessageDOM(data);
+                if (me.hostInstance.config.pwcConfig.container instanceof HTMLElement) {
+                    me.hostInstance.config.pwcConfig.container.appendChild(htmlEle);
+                } else {
+                    document.querySelector(me.hostInstance.config.pwcConfig.container).appendChild(htmlEle);
+                }
+                // Start cooldown timer for this campaign trigger
+                this.startCooldown();
+                // Reset the flag to allow the next campaign template to be rendered
+                this.isPendingSendAPIEvent = false;
+            }
+        }
+        // Chat Template
+        if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType == 'chat' && data.body?.layoutDesign && this.browserSessionId && this.enablePWC) {
+            // Check browser_session_id to ensure template is shown only in the triggering browser tab
+            const receivedBrowserSessionId = data?.ruleInfo?.browser_session_id;
+            if (receivedBrowserSessionId && receivedBrowserSessionId === this.browserSessionId) {
+                const layoutData = {
+                    layoutData: data?.body?.layoutDesign,
+                    campInstId: data.body?.campInfo?.campInstId
+                }
+                const chatContainer = getHTML(Chat, layoutData, this.hostInstance);
+                let avatarVariations = me.hostInstance.chatEle.querySelector('.avatar-actions');
+                avatarVariations.prepend(chatContainer);
+                if (me.hostInstance.config.branding.general.sounds.enable && me.hostInstance.config.branding.general.sounds.on_proactive_msg.url != 'None') {
+                    const playSound = new Audio(me.hostInstance.config.branding.general.sounds.on_proactive_msg.url);
+                    playSound.play().catch(error => {
+                        console.log('Error: ', error);
+                    });
+                }                
+                me.hostInstance.pwcInfo.dataFlag = true;
+                me.hostInstance.pwcInfo.chatData = {};
+                me.hostInstance.pwcInfo.chatData.enable = true;
+                me.hostInstance.pwcInfo.chatData.data = data.body.layoutDesign;
+                // Start cooldown timer for this campaign trigger
+                this.startCooldown();
+                // Reset the flag to allow the next campaign template to be rendered
+                this.isPendingSendAPIEvent = false;
+            }
+        }
     }
 
     /**
      * Constructs the pwe_data object based on the new campaign structure
      * Extracts custom column configurations and initializes custom data
-     * @param campaignData - Campaign data received from socket
+     * @param campaignData - Campaign data received from API
      * @returns Constructed pwe_data object
      */
     constructPweData(campaignData: any): any {
@@ -1996,7 +2011,7 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Constructs rules/exclusions structure with proper grouping and condition tracking
-     * Reads 'globalType' from socket message but stores as 'groupType' internally
+     * Reads 'globalType' from API response but stores as 'groupType' internally
      * @param rulesConfig - Rules or exclusions configuration
      * @returns Structured rules object
      */
@@ -2009,7 +2024,7 @@ class ProactiveWebCampaignPlugin {
             };
         }
 
-        // Read 'globalType' from socket message, store as 'groupType' internally
+        // Read 'globalType' from API response, store as 'groupType' internally
         const groupType = rulesConfig.globalType || rulesConfig.groupType || 'OR';
         
         const structure = {
@@ -3402,11 +3417,11 @@ class ProactiveWebCampaignPlugin {
     }
 
     /**
-     * Triggers campaign event using existing API logic
+     * Triggers campaign event using API and handles response
      * @param campInstanceId - Campaign instance ID
      * @param campId - Campaign ID
      */
-    triggerCampaignEvent(campInstanceId: string, campId: string): void {
+    async triggerCampaignEvent(campInstanceId: string, campId: string): Promise<void> {
         // If any campaign template is active, do not trigger campaign event
         if(this.isActiveCampaignTemplate() || this.isPendingSendAPIEvent){
             return;
@@ -3426,6 +3441,7 @@ class ProactiveWebCampaignPlugin {
         if(this.isCooldownActive()){
             return;
         }
+        
         this.isPendingSendAPIEvent = true;
         // Generate unique browser session ID for this campaign trigger session
         this.browserSessionId = this.generateBrowserSessionId();
@@ -3449,7 +3465,14 @@ class ProactiveWebCampaignPlugin {
             }
         };
         
-        this.sendApiEvent(payload, '/pweevents');
+        try {
+            const response = await this.sendApiEvent(payload, '/pweevents');
+            this.handlePweEventResponse(response);
+        } catch (error) {
+            console.error('PWC: Failed to trigger campaign event:', error);
+            // Reset the flag on failure
+            this.isPendingSendAPIEvent = false;
+        }
     }
 
     /**
@@ -3567,27 +3590,6 @@ class ProactiveWebCampaignPlugin {
     }
 
     /**
-     * Initialize chat session state from sessionStorage
-     */
-    initializeChatSessionState(): void {
-        try {
-            const storedSessionInfo = window.sessionStorage.getItem(ProactiveWebCampaignPlugin.CHAT_SESSION_STORAGE_KEY);
-            if (storedSessionInfo) {
-                this.chatSessionInfo = JSON.parse(storedSessionInfo);
-                // Sync the isVisitorAlreadyChatting flag with session state
-                this.isVisitorAlreadyChatting = this.chatSessionInfo?.isActive || false;
-            } else {
-                this.chatSessionInfo = { sessionId: '', isActive: false, source: 'Session_Start' };
-                this.isVisitorAlreadyChatting = false;
-            }
-        } catch (error) {
-            console.warn('PWC: Failed to restore chat session state from sessionStorage:', error);
-            this.chatSessionInfo = { sessionId: '', isActive: false, source: 'Session_Start' };
-            this.isVisitorAlreadyChatting = false;
-        }
-    }
-
-    /**
      * Check if chat window is currently open
      * Note: When minimize class is present, chat window is actually OPEN
      * @returns true if chat window is open, false if closed/minimized
@@ -3595,72 +3597,6 @@ class ProactiveWebCampaignPlugin {
     isChatWindowOpen(): boolean {
         const chatContainer = document.querySelector(ProactiveWebCampaignPlugin.CHAT_CONTAINER_SELECTOR);
         return chatContainer !== null;
-    }
-
-    /**
-     * Update chat session state based on received events
-     * Handles Session_Start, Session_End, and Bot_Active events
-     * @param eventType - Type of event received
-     * @param data - Event data
-     */
-    updateChatSessionState(eventType: 'Session_Start' | 'Session_End' | 'Bot_Active', data: any): void {
-        try {
-            let sessionInfo: ChatSessionInfo | null = null;
-            
-            switch (eventType) {
-                case 'Session_Start':
-                    if (data.sessionId) {
-                        sessionInfo = {
-                            sessionId: data.sessionId,
-                            isActive: true,
-                            source: 'Session_Start'
-                        };
-                    }
-                    break;
-                    
-                case 'Session_End':
-                    // Only process if sessionId matches the stored one
-                    if (data.sessionId && this.chatSessionInfo && data.sessionId === this.chatSessionInfo.sessionId) {
-                        sessionInfo = {
-                            sessionId: data.sessionId,
-                            isActive: false,
-                            source: 'Session_End'
-                        };
-                    }
-                    break;
-                    
-                case 'Bot_Active':
-                    // Safe check for recentSessionInfo with fallback to false
-                    const isActive = data.recentSessionInfo?.isActive || false;
-                    const sessionId = data.recentSessionInfo?.sessionId || '';
-                    
-                    if (sessionId) {
-                        sessionInfo = {
-                            sessionId: sessionId,
-                            isActive: isActive,
-                            source: 'Bot_Active'
-                        };
-                    }
-                    break;
-            }
-            
-            if (sessionInfo) {
-                // Update in-memory state
-                this.chatSessionInfo = sessionInfo;
-                this.isVisitorAlreadyChatting = sessionInfo.isActive;
-                
-                // Save to sessionStorage
-                window.sessionStorage.setItem(
-                    ProactiveWebCampaignPlugin.CHAT_SESSION_STORAGE_KEY, 
-                    JSON.stringify(sessionInfo)
-                );
-            }
-            
-        } catch (error) {
-            console.warn('PWC: Failed to update chat session state:', error);
-            // Fallback to safe defaults
-            this.isVisitorAlreadyChatting = false;
-        }
     }
 
 }
