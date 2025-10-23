@@ -125,8 +125,16 @@ class ProactiveWebCampaignPlugin {
         // Check if pwe_data already exists in sessionStorage
         const existingPweData = window.sessionStorage.getItem('pwe_data');
         if (!existingPweData) {
-            // Initialize PWC campaigns via API
+            // First time - Initialize PWC campaigns via API
             me.initializePWCCampaigns();
+        } else {
+            // Page navigation - Restore from sessionStorage
+            const restored = me.restorePWCStateFromStorage();
+            if (!restored) {
+                // Restoration failed - fallback to API call
+                console.warn('PWC: Restoration failed, fetching fresh data from API');
+                me.initializePWCCampaigns();
+            }
         }
         
         document.addEventListener("visibilitychange", () => {
@@ -1572,6 +1580,63 @@ class ProactiveWebCampaignPlugin {
     }
 
     /**
+     * Restores PWC state from sessionStorage for multi-page apps
+     * Called when pwe_data exists but in-memory state is lost (page navigation)
+     * Reconstructs campInfo from stored data to avoid redundant API calls
+     * @returns Boolean indicating if restoration was successful
+     */
+    restorePWCStateFromStorage(): boolean {
+        const me: any = this;
+        
+        try {
+            // Read sessionStorage ONCE for each key (performance optimization)
+            const pweDataStr = window.sessionStorage.getItem('pwe_data');
+            const enabledStr = window.sessionStorage.getItem('pwc_enabled');
+            const cooldownStr = window.sessionStorage.getItem('pwc_cooldown_time');
+            
+            if (!pweDataStr) {
+                return false;
+            }
+            
+            // Parse pwe_data once
+            const pweData = JSON.parse(pweDataStr);
+            
+            // Restore global flags
+            this.enablePWC = enabledStr === 'true';
+            this.coolDownTime = cooldownStr ? parseInt(cooldownStr) : 0;
+            
+            // Reconstruct campInfo array from pwe_data (RAW format for compatibility)
+            this.campInfo = Object.keys(pweData).map(campInstanceId => ({
+                campInstanceId: pweData[campInstanceId].campInstanceId || campInstanceId,
+                campId: pweData[campInstanceId].campId,
+                engagementStrategy: {
+                    engagementHours: pweData[campInstanceId].engagementHours,
+                    engagementHoursCategory: pweData[campInstanceId].engagementHoursCategory,
+                    channel: pweData[campInstanceId].channel,
+                    website: pweData[campInstanceId].website,
+                    // Reconstruct RAW format from PROCESSED format
+                    rules: this.reconstructRawRulesFromProcessed(pweData[campInstanceId].expected?.rules),
+                    exclusions: this.reconstructRawRulesFromProcessed(pweData[campInstanceId].expected?.exclusions),
+                    goals: pweData[campInstanceId].expected?.goals?.pageVisited || []
+                }
+            }));
+            
+            // Store in hostInstance for template access
+            me.hostInstance.campInfo = this.campInfo;
+            
+            // Re-setup necessary listeners and tracking
+            this.setupHoverListeners();
+            this.initializePWCTracking();
+            this.handlePageChange();
+            
+            return true;
+        } catch (error) {
+            console.error('PWC: Failed to restore state from sessionStorage:', error);
+            return false;
+        }
+    }
+
+    /**
      * Handles the pwe_verify API response
      * Processes campaign configuration and initializes PWC system
      * @param responseData - API response data
@@ -1612,8 +1677,17 @@ class ProactiveWebCampaignPlugin {
                         }
                     }
                 });
-                //PWE data saved to session storage
-                window.sessionStorage.setItem('pwe_data', JSON.stringify(existingPweData));
+                
+                // Save to session storage with error handling
+                try {
+                    window.sessionStorage.setItem('pwe_data', JSON.stringify(existingPweData));
+                    // Save global config for multi-page restoration
+                    window.sessionStorage.setItem('pwc_enabled', 'true');
+                    window.sessionStorage.setItem('pwc_cooldown_time', this.coolDownTime.toString());
+                } catch (e) {
+                    console.error('PWC: Failed to save to sessionStorage (quota exceeded?):', e);
+                    // Continue execution - worst case: API called on next page
+                }
                 
                 // Setup hover event listeners for campaigns with hoverOn rules
                 this.setupHoverListeners();
@@ -1629,7 +1703,10 @@ class ProactiveWebCampaignPlugin {
                 this.isInitialPageLoaded = true;
             }
         } else {
+            // Cleanup all PWC data when disabled
             window.sessionStorage.removeItem('pwe_data');
+            window.sessionStorage.removeItem('pwc_enabled');
+            window.sessionStorage.removeItem('pwc_cooldown_time');
             this.enablePWC = false;
             this.campInfo = [];
         }
@@ -1705,8 +1782,17 @@ class ProactiveWebCampaignPlugin {
         campaignData.forEach((campaign: any) => {
             const campInstanceId = campaign.campInstanceId;
             
-            // Initialize campaign data structure
+            // Initialize campaign data structure with flattened fields for multi-page support
             pweData[campInstanceId] = {
+                // Flattened campaign identifiers and config (for reconstruction)
+                campId: campaign.campId,
+                campInstanceId: campInstanceId,
+                engagementHours: campaign.engagementStrategy.engagementHours,
+                engagementHoursCategory: campaign.engagementStrategy.engagementHoursCategory,
+                channel: campaign.engagementStrategy.channel,
+                website: campaign.engagementStrategy.website || [],
+                
+                // Existing structure
                 isLayoutTriggered: false,
                 expected: {
                     goals: {
@@ -2068,6 +2154,62 @@ class ProactiveWebCampaignPlugin {
         });
         
         return grouped;
+    }
+
+    /**
+     * Reconstructs RAW rules format from PROCESSED format stored in pwe_data
+     * Converts: grouped-by-column structure → array of conditions
+     * Removes: runtime state (isSatisfied, actualValue)
+     * Used during page navigation to restore campInfo from sessionStorage
+     * @param processedRules - Processed rules structure from pwe_data.expected
+     * @returns RAW rules structure matching original API format
+     */
+    reconstructRawRulesFromProcessed(processedRules: any): any {
+        if (!processedRules || !processedRules.groups) {
+            return { globalType: 'OR', groups: [] };
+        }
+        
+        return {
+            globalType: processedRules.groupType,  // Rename field back to original
+            groups: processedRules.groups.map((group: any) => {
+                const conditions: any[] = [];
+                const groupConditions = group.conditions;
+                
+                // Extract system fields
+                const groupType = groupConditions?.type || 'AND';
+                
+                // Iterate through all condition groups
+                Object.keys(groupConditions || {}).forEach((key) => {
+                    // Skip system fields
+                    if (key === 'type' || key === 'isSatisfied') return;
+                    
+                    // Key is the column name (e.g., 'pageVisitCount')
+                    const columnConditions = groupConditions[key];
+                    
+                    // Handle array of conditions for this column
+                    if (Array.isArray(columnConditions)) {
+                        columnConditions.forEach((condition: any) => {
+                            // Reconstruct RAW condition (remove runtime state)
+                            conditions.push({
+                                id: condition.id,
+                                column: key,  // Re-add column field from key
+                                operator: condition.operator,
+                                value: condition.value,
+                                conditionType: condition.conditionType,
+                                isNot: condition.isNot
+                                // Exclude: isSatisfied, actualValue (runtime data)
+                            });
+                        });
+                    }
+                });
+                
+                return {
+                    id: group.id,
+                    type: groupType,
+                    conditions: conditions  // Array format (original structure)
+                };
+            })
+        };
     }
 
     /**
