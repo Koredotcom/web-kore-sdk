@@ -2521,6 +2521,14 @@ cobrowseInitialize = (cobrowseRequest) => {
             var elements = document.querySelectorAll(`[cb-id="${cbId}"]`);
             if (elements && elements.length > 0) {
                 elements[0].value = value;
+                /* Dispatch input event - THIS IS THE KEY EVENT ALL FRAMEWORKS LISTEN TO */
+                try {
+                    var inputEvent = new Event('input', { bubbles: true, cancelable: true });
+                    elements[0].dispatchEvent(inputEvent);
+                }
+                catch (e) {
+                    console.error("Error dispatching input event", e);
+                }
             }
         }
         function positionMousePointer(payload) {
@@ -5205,19 +5213,6 @@ rrwebInit = function (exports) {
                     }
                     case 'childList': {
                         m.addedNodes.forEach(function (n) { return _this.genAdds(n, m.target); });
-                        // for each newly added node, assign cb-id
-                        m.addedNodes.forEach(function (n) { 
-                            if (n && n.nodeType === 1) {
-                                createCbId(n);
-                                // Also ensure all descendant elements get cb-id
-                                if (n.querySelectorAll) {
-                                    var descendants = n.querySelectorAll('*');
-                                    for (var j = 0; j < descendants.length; j++) {
-                                        createCbId(descendants[j]);
-                                    }
-                                }
-                            }
-                        });
                         m.removedNodes.forEach(function (n) {
                             var nodeId = _this.mirror.getId(n);
                             var parentId = isShadowRoot(m.target)
@@ -5252,23 +5247,17 @@ rrwebInit = function (exports) {
                 }
             };
             this.genAdds = function (n, target) {
-                for(var i =0;i< me.maskClassList?.length > 0; i++) {
-                  if(me.maskClassList[i] !== ''){
-                    if (n && n.classList && n.classList.contains(me.maskClassList[i])) {
-                        n.classList.add('rr-block');
-                        takeFullSnapshot(false);
-                        return;
+                /* Create cb-id for newly added elements and all their descendants so interactions work */
+                if (n && n.nodeType === 1) {
+                    createCbId(n);
+                    /* Also ensure all descendant elements get cb-id */
+                    if (n.querySelectorAll) {
+                        var descendants = n.querySelectorAll('*');
+                        for (var j = 0; j < descendants.length; j++) {
+                            createCbId(descendants[j]);
+                        }
                     }
-                    if (target && target.classList && target.classList.contains(me.maskClassList[i])) {
-                        target.classList.add('rr-block');
-                        takeFullSnapshot(false);
-                        return;
-                    }
-                  } 
-               }
-               if(me.maskPatternList){
-                    me.scanElement(n, me.maskPatternList);
-               }
+                }
                 if (n && n.getAttribute && n.getAttribute('do-not-mutate') === 'true') {
                     return;
                 }
@@ -5280,6 +5269,19 @@ rrwebInit = function (exports) {
                 }
                 if (target && isBlocked(target, _this.blockClass)) {
                     return;
+                }
+                for (var i = 0; i < me.maskClassList?.length > 0; i++) {
+                    if (me.maskClassList[i] !== '') {
+                        if (n && n.classList && n.classList.contains(me.maskClassList[i])) {
+                            n.classList.add('rr-block');
+                        }
+                        if (target && target.classList && target.classList.contains(me.maskClassList[i])) {
+                            target.classList.add('rr-block');
+                        }
+                    }
+                }
+                if (me.maskPatternList) {
+                    me.scanElement(n, me.maskPatternList);
                 }
                 if (isINode(n)) {
                     if (isIgnored(n)) {
@@ -5298,7 +5300,10 @@ rrwebInit = function (exports) {
                     _this.addedSet.add(n);
                     _this.droppedSet.delete(n);
                 }
-                n.childNodes.forEach(function (childN) { return _this.genAdds(childN); });
+                /* Don't recursively process children of blocked elements as this will cause the inner blocked elements to be displayed in agent side */
+                if (!n.classList || !n.classList.contains('rr-block')) {
+                    n.childNodes.forEach(function (childN) { return _this.genAdds(childN); });
+                }
             };
         }
         MutationBuffer.prototype.init = function (cb, blockClass, blockSelector, maskTextClass, maskTextSelector, inlineStylesheet, maskInputOptions, maskTextFn, maskInputFn, recordCanvas, slimDOMOptions, doc, mirror, iframeManager, shadowDomManager) {
