@@ -71,7 +71,7 @@ include the following script in your html file and configure bot configurations
 
 ```js
 
-<script  src="https://cdn.jsdelivr.net/npm/kore-web-sdk@11.17.10/dist/umd/kore-web-sdk-umd-chat.min.js"></script>
+<script  src="https://cdn.jsdelivr.net/npm/kore-web-sdk@11.18.0/dist/umd/kore-web-sdk-umd-chat.min.js"></script>
 <script>
         //chat window declaration
         var chatConfig=KoreChatSDK.chatConfig;
@@ -125,9 +125,9 @@ In addition to the kore message templates, new custom templates can be intstalle
 ```bash
 class customTemplateComponent{
   renderMessage(msgData){
-      if(msgData?.message[0]?.component?.payload?.template_type==='custom_stock_template'){
-          return '<h2>My Template HTML</h2>';      
-      }else{
+      if (msgData?.message[0]?.component?.payload?.template_type === 'custom_stock_template') {
+          return '<h2 data-kr-msg-id=' + msgData.messageId + ' data-time=' + msgData.createdOnTimemillis + '>My Template HTML</h2>';      
+      } else {
           return false;
       }
   } 
@@ -136,6 +136,10 @@ class customTemplateComponent{
 chatWindowInstance.templateManager.installTemplate(new customTemplateComponent());
 ```
 Other framework UI components like angular and react can also be injected with this
+
+> [!NOTE]
+> - Please add the following two attributes for parent div in the custom template html
+> - `data-kr-msg-id` with value `msgData.messageId` and `data-time` with value `msgData.createdOnTimemillis`
 
 ## 💡 Plugins
 

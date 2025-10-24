@@ -42,6 +42,7 @@ declare const window:any;
 class chatWindow extends EventEmitter{
  chatEle: any;
   config: {};
+  streamingMessages: Map<string, { text: string; msgData: any }> = new Map();
 
 
    /**
@@ -1346,6 +1347,12 @@ bindSDKEvents  () {
     }
 
     let msgData=me.parseSocketMessage(JSON.stringify(tempData));
+    
+    if (msgData && msgData?.sM && me.config.UI.version == 'v3') {
+      me.handleStreamingMessage(msgData);
+      return;
+    }
+    
     if (msgData) {
       if (me.loadHistory && me.historyLoading) {
         me.messagesQueue.push(msgData)
@@ -1439,6 +1446,104 @@ parseSocketMessage(msgString:string){
     //me.renderMessage(msgData);
   }
   return msgData;
+}
+
+handleStreamingMessage(msgData: any) {
+  const me: any = this;
+  const messageId = msgData.messageId;
+  const newChunkText = msgData.message?.[0]?.cInfo?.body || msgData.message?.[0]?.component?.payload?.text || msgData.message?.[0]?.component?.payload || '';
+
+  let streamState = me.streamingMessages.get(messageId);
+
+  if (!streamState) {
+    me.hideTypingIndicator();
+    me.streamingMessages.set(messageId, {
+      text: newChunkText,
+      msgData: msgData
+    });
+
+    const messageHtml = me.generateMessageDOM(msgData);
+    if (!messageHtml) return;
+
+    let chatWindowEvent = { stopFurtherExecution: false };
+    me.emit(me.EVENTS.BEFORE_RENDER_MSG, {
+      messageHtml: messageHtml,
+      msgData: msgData,
+      chatWindowEvent: chatWindowEvent
+    });
+
+    if (chatWindowEvent.stopFurtherExecution) {
+      me.streamingMessages.delete(messageId);
+      return;
+    }
+
+    const chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
+    if (chatContainer && messageHtml) {
+      chatContainer.appendChild(messageHtml);
+    }
+    me.scrollToBottom();
+  } else {
+    if (newChunkText) {
+      streamState.text += newChunkText;
+      streamState.msgData.message[0].cInfo.body = streamState.text;
+      if (streamState.msgData.message[0].component?.payload?.text) {
+        streamState.msgData.message[0].component.payload.text = streamState.text;
+      }
+      me.updateStreamingMessage(messageId, streamState.text);
+    }
+  }
+
+  if (msgData.endChunk) {
+    me.stopStreamingMessage(messageId);
+  }
+}
+
+updateStreamingMessage(messageId: string, fullText: string) {
+  const me: any = this;
+  const helpers = KoreHelpers.helpers;
+
+  const textElement = me.chatEle.querySelector(
+    `[data-cw-msg-id="${messageId}"] .bubble-msg`
+  );
+
+  if (textElement) {
+    const htmlContent = helpers.convertMDtoHTML(fullText, "bot", {});
+    textElement.innerHTML = htmlContent;
+    me.scrollToBottom();
+  }
+}
+
+scrollToBottom() {
+  const me: any = this;
+
+  const container = me.chatEle.querySelector('.chat-widget-body-wrapper');
+  if (!container) return;
+
+  container.scrollTo({
+    top: container.scrollHeight,
+    behavior: 'smooth'
+  });
+}
+
+stopStreamingMessage(messageId: string) {
+  const me: any = this;
+  const streamState = me.streamingMessages.get(messageId);
+
+  if (!streamState) return;
+
+  streamState.msgData.message[0].cInfo.body = streamState.text;
+  if (streamState.msgData.message[0].component?.payload?.text) {
+    streamState.msgData.message[0].component.payload.text = streamState.text;
+  }
+
+  const domElement = me.chatEle.querySelector(`[data-cw-msg-id="${messageId}"]`);
+
+  me.emit(me.EVENTS.AFTER_RENDER_MSG, {
+    messageHtml: domElement,
+    msgData: streamState.msgData
+  });
+
+  me.streamingMessages.delete(messageId);
 }
 
 onBotReady  () {
@@ -1648,6 +1753,10 @@ if(messageText && messageText.trim() && messageText.trim().length){
   me.postSendMessageToBot();
   if(clientMessageObject){
     me.extend(msgData,clientMessageObject);
+    // add attachments from clientMessageObject for rendering purpose. For images, audio, video it contains base64 data.
+    if (clientMessageObject.message && clientMessageObject.message.length > 0 && clientMessageObject.message[0].cInfo && clientMessageObject.message[0].cInfo.attachments) {
+      msgData.message[0].cInfo.attachments = clientMessageObject.message[0].cInfo.attachments;
+    }
   }
   me.renderMessage(msgData);
 };

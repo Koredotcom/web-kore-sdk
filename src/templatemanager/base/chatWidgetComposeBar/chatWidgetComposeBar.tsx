@@ -44,6 +44,9 @@ export function ChatWidgetComposeBar(props: any) {
         if (hostInstance.plugins && !hostInstance.plugins['KoreMultiFileUploaderPlugin']) {
             alert('Please install File Uploader Plugin...');
         }
+        if (hostInstance.attachmentData && hostInstance.attachmentData.length > 0) {
+            hostInstance.attachmentData = [];
+        }
     }
 
     const checkForSTTPlugin = () => {
@@ -113,7 +116,7 @@ export function ChatWidgetComposeBar(props: any) {
                         </svg>
                         <span>{hostInstance.config.botMessages.media}</span>
                     </button>
-                    <input type="file" id="captureMediaAttachment" accept="audio/*,video/*,image/*" style={{display: 'none'}} />
+                    <input type="file" id="captureMediaAttachment" accept="audio/*,video/*,image/*" multiple style={{display: 'none'}} />
                     <button className="inputfile-btn inputfile-btn-file" type="button" aria-label="File">
                         <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
                             <path d="M6.125 2.5C5.09473 2.5 4.25 3.34473 4.25 4.375V15.625C4.25 16.6553 5.09473 17.5 6.125 17.5H14.875C15.9053 17.5 16.75 16.6553 16.75 15.625V6.87509C16.75 6.70933 16.6842 6.55036 16.5669 6.43315L12.8168 2.68306C12.6996 2.56585 12.5407 2.5 12.3749 2.5H6.125ZM6.125 3.75H11.75V6.25C11.75 6.94036 12.3096 7.5 13 7.5H15.5V15.625C15.5 15.9766 15.2266 16.25 14.875 16.25H6.125C5.77344 16.25 5.5 15.9766 5.5 15.625V4.375C5.5 4.02344 5.77344 3.75 6.125 3.75ZM13 4.63379L14.6162 6.25H13V4.63379ZM8.625 10C8.27982 10 8 10.2798 8 10.625C8 10.9702 8.27982 11.25 8.625 11.25H12.375C12.7202 11.25 13 10.9702 13 10.625C13 10.2798 12.7202 10 12.375 10H8.625ZM8.625 12.5C8.27982 12.5 8 12.7798 8 13.125C8 13.4702 8.27982 13.75 8.625 13.75H11.125C11.4702 13.75 11.75 13.4702 11.75 13.125C11.75 12.7798 11.4702 12.5 11.125 12.5H8.625Z" fill="#4B4EDE"/>
@@ -124,7 +127,7 @@ export function ChatWidgetComposeBar(props: any) {
                         .dotx, .dotm, .xls, .xlt, .xlm, .xlsx, .xlsm, .xltx, .xltm, .xlsb, .xla, .xlam, .xll, .xlw, .ppt, .pot, .pps, .pptx, .pptm, .potx, .potm, .ppam,
                         .ppsx, .ppsm, .sldx, .sldm, .zip, .rar., .tar, .wpd, .wps, .rtf, .msg, .dat, .sdf, .vcf, .xml, .3ds, .3dm, .max, .obj, .ai, .eps, .ps, .svg, .indd, .pct, .accdb,
                         .db, .dbf, .mdb, .pdb, .sql, .apk, .cgi, .cfm, .csr, .css, .htm, .html, .jsp, .php, .xhtml, .rss, .fnt, .fon, .otf, .ttf, .cab, .cur, .dll, .dmp, .drv, .7z, .cbr,
-                        .deb, .gz, .pkg, .rpm, .zipx, .bak, .avi, .m4v, .mpg, .rm, .swf, .vob, .wmv, .3gp2, .3g2, .asf, .asx, .srt, .wma, .mid, .aif, .iff, .m3u, .mpa, .ra, .aiff, .tiff" style={{display: 'none'}}/>
+                        .deb, .gz, .pkg, .rpm, .zipx, .bak, .avi, .m4v, .mpg, .rm, .swf, .vob, .wmv, .3gp2, .3g2, .asf, .asx, .srt, .wma, .mid, .aif, .iff, .m3u, .mpa, .ra, .aiff, .tiff" multiple style={{display: 'none'}}/>
                 </div>
                 <div className="uploaded-attachment-data">
                     {/* <div className="uploaded-item">
