@@ -1551,11 +1551,7 @@ class ProactiveWebCampaignPlugin {
                 return this.sendApiEvent(payload, route, retryCount - 1);
             }
             
-            // All retries exhausted or non-retryable error
-            const errorMessage = retryCount === 0 
-                ? `PWC API request failed after ${ProactiveWebCampaignPlugin.MAX_API_RETRIES} retry attempts: ${err.message || err}`
-                : err.message || err;
-            throw new Error(errorMessage);
+            throw new Error(err.message || err);
         }
     }
 
