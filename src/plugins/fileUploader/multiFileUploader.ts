@@ -339,12 +339,15 @@ class KoreMultiFileUploaderPlugin {
       let uploadFn;
       if ((me.filetypes.image.indexOf(recState.fileType) > -1)) {
         recState.type = 'image';
+        recState.componentSize = selectedFile.size;
         recState.uploadFn = 'acceptFileRecording';
       } else if ((me.filetypes.video.indexOf(recState.fileType) > -1)) {
         recState.type = 'video';
+        recState.componentSize = selectedFile.size;
         recState.uploadFn = 'acceptVideoRecording';
       } else if ((me.filetypes.audio.indexOf(recState.fileType) > -1)) {
         recState.type = 'audio';
+        recState.componentSize = selectedFile.size;
         recState.uploadFn = 'acceptFile';
       } else {
         recState.type = 'attachment';
@@ -466,23 +469,24 @@ class KoreMultiFileUploaderPlugin {
     uploadConfig.chunkSize = me.appConsts.CHUNK_SIZE;
     uploadConfig.chunkUpload = selectedFile.componentSize > me.appConsts.CHUNK_SIZE;
     uploadConfig.file = _file;
-    if (uploadConfig.chunkUpload) {
-      me.createElement(selectedFile);
-      ele = me.hostInstance.chatEle.querySelector('#uid' + selectedFile.uniqueId);
-      me.initiateRcorder(selectedFile, ele);
-      me.multifileuploader(uploadConfig, ele);
-    } else {
-      var reader: any = new FileReader();
-      reader.onloadend = function (evt: any) {
-        if (evt.target.readyState === FileReader.DONE) { // DONE == 2
-          var converted = reader.result.replace(/^.*;base64,/, '');
-          var resultGet = converted;
-          selectedFile.resulttype = resultGet;
+    
+    // Always read base64 for media files
+    var reader: any = new FileReader();
+    reader.onloadend = function (evt: any) {
+      if (evt.target.readyState === FileReader.DONE) {
+        var converted = reader.result.replace(/^.*;base64,/, '');
+        selectedFile.resulttype = converted;
+        if (uploadConfig.chunkUpload) {
+          me.createElement(selectedFile);
+          ele = me.hostInstance.chatEle.querySelector('#uid' + selectedFile.uniqueId);
+          me.initiateRcorder(selectedFile, ele);
+          me.multifileuploader(uploadConfig, ele);
+        } else {
           me.acceptFileRecording(selectedFile);
         }
-      };
-      reader.readAsDataURL(_file);
-    }
+      }
+    };
+    reader.readAsDataURL(_file);
   }
 
   getfileuploadConf(_recState: { fileType: any; name: any; fileToken?: any; }) {
