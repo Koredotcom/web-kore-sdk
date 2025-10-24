@@ -410,8 +410,6 @@ class AgentDesktopPlugin {
         remoteVideoElement.height = 1;
         remoteVideoElement['autoplay'] = true;
         remoteVideoElement['playsInline'] = true;
-        chatEleDiv.insertBefore(localVideoElement, chatEleDiv.firstChild);
-        chatEleDiv.insertBefore(remoteVideoElement, chatEleDiv.firstChild);
         // keep elements out of layout and interaction without affecting existing layout
         localVideoElement.style.position = 'absolute';
         localVideoElement.style.zIndex = '-999';
@@ -426,6 +424,8 @@ class AgentDesktopPlugin {
         remoteVideoElement.style.top = '0';
         remoteVideoElement.style.pointerEvents = 'none';
         remoteVideoElement.style.opacity = '0.0001';
+        chatEleDiv.insertBefore(localVideoElement, chatEleDiv.firstChild);
+        chatEleDiv.insertBefore(remoteVideoElement, chatEleDiv.firstChild);
     }
 
     extend(target: any, source: any) {
