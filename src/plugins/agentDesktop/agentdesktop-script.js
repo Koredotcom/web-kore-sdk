@@ -146,6 +146,7 @@ import * as koreJquery from '../../libs/korejquery';
 import requireKr from '../../components/base-sdk/kore-bot-sdk-client';
 import './agentdesktop.css';
 import moment from 'moment';
+import { pack } from '@amplitude/rrweb-packer';
 
 /** @ignore */
 class AgentDesktopPluginScript  {
@@ -2217,7 +2218,8 @@ cobrowseInitialize = (cobrowseRequest) => {
                             collectFonts: true,
                             userTriggeredOnInput: true,
                             maskTextClass: 'rr-mask',
-                            collectFonts: true
+                            collectFonts: true,
+                            packFn: pack // This is used to pack/compress the events to reduce the size of the data sent.
                         });
                     }
                 }
@@ -2538,7 +2540,8 @@ cobrowseInitialize = (cobrowseRequest) => {
             const STOP_MESSAGE = { "type": "stop_event_msg" };
             //dataChannel.send(JSON.stringify(START_MESSAGE));
             me.sendDCMessage(JSON.stringify(START_MESSAGE));
-            let str = JSON.stringify(evt);
+            // let str = JSON.stringify(evt);
+            let str = evt; // Instead of JSON.stringify(evt), we are sending the compressedevent as it is to reduce the size of the data sent.
             if (str.length > limit) {
                 let noOfChunks = Math.floor(str.length / limit);
                 let remainingChunks = str.length % limit
@@ -5202,6 +5205,19 @@ rrwebInit = function (exports) {
                     }
                     case 'childList': {
                         m.addedNodes.forEach(function (n) { return _this.genAdds(n, m.target); });
+                        // for each newly added node, assign cb-id
+                        m.addedNodes.forEach(function (n) { 
+                            if (n && n.nodeType === 1) {
+                                createCbId(n);
+                                // Also ensure all descendant elements get cb-id
+                                if (n.querySelectorAll) {
+                                    var descendants = n.querySelectorAll('*');
+                                    for (var j = 0; j < descendants.length; j++) {
+                                        createCbId(descendants[j]);
+                                    }
+                                }
+                            }
+                        });
                         m.removedNodes.forEach(function (n) {
                             var nodeId = _this.mirror.getId(n);
                             var parentId = isShadowRoot(m.target)
