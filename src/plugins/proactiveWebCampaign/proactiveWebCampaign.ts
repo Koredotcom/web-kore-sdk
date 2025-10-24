@@ -1533,11 +1533,8 @@ class ProactiveWebCampaignPlugin {
             
             throw new Error(`API request failed with status: ${response.status}`);
         } catch (err) {
-            console.error(`PWC API Error (${ProactiveWebCampaignPlugin.MAX_API_RETRIES - retryCount + 1}/${ProactiveWebCampaignPlugin.MAX_API_RETRIES}):`, err);
-            
             // Retry logic
             if (retryCount > 0) {
-                console.log(`Retrying in ${ProactiveWebCampaignPlugin.RETRY_DELAY_MS / 1000} seconds... (${retryCount} attempts remaining)`);
                 await new Promise(resolve => setTimeout(resolve, ProactiveWebCampaignPlugin.RETRY_DELAY_MS));
                 return this.sendApiEvent(payload, route, retryCount - 1);
             }
