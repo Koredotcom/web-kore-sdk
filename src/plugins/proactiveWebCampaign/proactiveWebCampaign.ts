@@ -61,10 +61,6 @@ class ProactiveWebCampaignPlugin {
         startTime: number;
         expiryTime: number;
     } = { isActive: false, startTime: 0, expiryTime: 0 };
-
-    // This flag is used to prevent the same visitor from chatting with the bot multiple times
-    // This flag is used to block the templates from rendering if the visitor is already chatting with the bot
-    isVisitorAlreadyChatting: boolean = false;
     
     constructor(config: any) {
         config = config || {};
@@ -1546,7 +1542,6 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Initializes PWC campaigns by calling the pwe_verify API
-     * Replaces the onWSOpen event handler logic
      */
     async initializePWCCampaigns(): Promise<void> {
         const me: any = this;
@@ -2155,9 +2150,6 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Reconstructs RAW rules format from PROCESSED format stored in pwe_data
-     * Converts: grouped-by-column structure → array of conditions
-     * Removes: runtime state (isSatisfied, actualValue)
-     * Used during page navigation to restore campInfo from sessionStorage
      * @param processedRules - Processed rules structure from pwe_data.expected
      * @returns RAW rules structure matching original API format
      */
