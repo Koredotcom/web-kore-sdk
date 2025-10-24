@@ -3494,7 +3494,7 @@ class ProactiveWebCampaignPlugin {
             window.sessionStorage.setItem('pwe_data', JSON.stringify(pweData));
             
             // Send API event (using existing logic)
-            this.triggerCampaignEvent(campInstanceId, campId);
+            this.triggerCampaignEvent(campInstanceId, campId, campaignData);
         }
     }
 
@@ -3563,25 +3563,11 @@ class ProactiveWebCampaignPlugin {
      * @param campInstanceId - Campaign instance ID
      * @param campId - Campaign ID
      */
-    async triggerCampaignEvent(campInstanceId: string, campId: string): Promise<void> {
-        // If any campaign template is active, do not trigger campaign event
-        if(this.isActiveCampaignTemplate() || this.isPendingSendAPIEvent){
-            return;
-        }
-        
-        // Check if chat window is open, do not trigger campaign event
-        if(this.isChatWindowOpen()){
-            return;
-        }
-        
-        // If visitor is already chatting, do not trigger campaign event
-        if(this.isVisitorAlreadyChatting){
-            return;
-        }
-        
-        // Check if cooldown is active, do not trigger campaign event
-        if(this.isCooldownActive()){
-            return;
+    async triggerCampaignEvent(campInstanceId: string, campId: string, campaignData: any): Promise<void> {
+        let suppressed = {
+            isActiveCampaignTemplate: this.isActiveCampaignTemplate() || this.isPendingSendAPIEvent,
+            isChatWindowOpen: this.isChatWindowOpen(),
+            isCooldownActive: this.isCooldownActive()
         }
         
         this.isPendingSendAPIEvent = true;
@@ -3599,7 +3585,11 @@ class ProactiveWebCampaignPlugin {
             },
             'ruleInfo': {
                 isAllRulesSatisfied: true,
-                browser_session_id: this.browserSessionId
+                browser_session_id: this.browserSessionId,
+                rules: campaignData.actual.rules,
+                exclusions: campaignData.actual.exclusions,
+                goals: campaignData.actual.goals,
+                ...suppressed
             },
             'campInfo': {
                 'campId': campId,
