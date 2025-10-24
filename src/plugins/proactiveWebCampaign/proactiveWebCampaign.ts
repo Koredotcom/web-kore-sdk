@@ -112,59 +112,63 @@ class ProactiveWebCampaignPlugin {
     }
 
     onInit() {
-        const me: any = this;
-        let pageVisitArray: any = window.sessionStorage.getItem('pageVisitHistory');
-        pageVisitArray = JSON.parse(pageVisitArray);
-        if (!pageVisitArray) window.sessionStorage.setItem('pageVisitHistory', JSON.stringify([]));
-        me.installPWCTemplates();
-        
-        // Check if pwe_data already exists in sessionStorage
-        const existingPweData = window.sessionStorage.getItem('pwe_data');
-        if (!existingPweData) {
-            // First time - Initialize PWC campaigns via API
-            me.initializePWCCampaigns();
-        } else {
-            // Page navigation - Restore from sessionStorage
-            const restored = me.restorePWCStateFromStorage();
-            if (!restored) {
-                // Restoration failed - fallback to API call
-                console.warn('PWC: Restoration failed, fetching fresh data from API');
+        try {
+            const me: any = this;
+            let pageVisitArray: any = window.sessionStorage.getItem('pageVisitHistory');
+            pageVisitArray = JSON.parse(pageVisitArray);
+            if (!pageVisitArray) window.sessionStorage.setItem('pageVisitHistory', JSON.stringify([]));
+            me.installPWCTemplates();
+            
+            // Check if pwe_data already exists in sessionStorage
+            const existingPweData = window.sessionStorage.getItem('pwe_data');
+            if (!existingPweData) {
+                // First time - Initialize PWC campaigns via API
                 me.initializePWCCampaigns();
-            }
-        }
-        
-        document.addEventListener("visibilitychange", () => {
-            if (document.visibilityState === "visible") {
-                me.visible = true;
-                window.sessionStorage.setItem('startTime', new Date().getTime() + '');
             } else {
-                me.visible = false;
-            }
-        });
-        me.customDataListener();
-
-        // Track URL changes with efficient event handling
-        this.onUrlChange(() => {
-            // Clear any existing debounce timer
-            if (this.pageChangeDebounceTimer) {
-                clearTimeout(this.pageChangeDebounceTimer);
+                // Page navigation - Restore from sessionStorage
+                const restored = me.restorePWCStateFromStorage();
+                if (!restored) {
+                    // Restoration failed - fallback to API call
+                    console.warn('PWC: Restoration failed, fetching fresh data from API');
+                    me.initializePWCCampaigns();
+                }
             }
             
-            // Add debounced delay to ensure page state is stable and prevent rapid multiple evaluations
-            this.pageChangeDebounceTimer = setTimeout(() => {
-                this.handlePageChange();
-                this.pageChangeDebounceTimer = null;
-            }, 150);
-        });
-        // Track title changes with efficient event handling
-        this.onTitleChange((newTitle) => {
-            const pageObj = {
-                url: window.location.href,
-                pageName: newTitle
-            };
-            // Title changes don't require timer restart, just rule evaluation
-            this.sendEvent(pageObj, 'titleChange');
-        });
+            document.addEventListener("visibilitychange", () => {
+                if (document.visibilityState === "visible") {
+                    me.visible = true;
+                    window.sessionStorage.setItem('startTime', new Date().getTime() + '');
+                } else {
+                    me.visible = false;
+                }
+            });
+            me.customDataListener();
+    
+            // Track URL changes with efficient event handling
+            this.onUrlChange(() => {
+                // Clear any existing debounce timer
+                if (this.pageChangeDebounceTimer) {
+                    clearTimeout(this.pageChangeDebounceTimer);
+                }
+                
+                // Add debounced delay to ensure page state is stable and prevent rapid multiple evaluations
+                this.pageChangeDebounceTimer = setTimeout(() => {
+                    this.handlePageChange();
+                    this.pageChangeDebounceTimer = null;
+                }, 150);
+            });
+            // Track title changes with efficient event handling
+            this.onTitleChange((newTitle) => {
+                const pageObj = {
+                    url: window.location.href,
+                    pageName: newTitle
+                };
+                // Title changes don't require timer restart, just rule evaluation
+                this.sendEvent(pageObj, 'titleChange');
+            });
+        } catch (error) {
+            console.error('PWC: initialization error', error);
+        }
     }
 
     onUrlChange(callback: () => void) {
@@ -1527,17 +1531,54 @@ class ProactiveWebCampaignPlugin {
                 return await response.json();
             }
             
-            throw new Error(`API request failed with status: ${response.status}`);
-        } catch (err) {
-            // Retry logic
-            if (retryCount > 0) {
+            // Check if this is a retryable error
+            const shouldRetry = this.shouldRetryStatusCode(response.status);
+            
+            if (shouldRetry && retryCount > 0) {
                 await new Promise(resolve => setTimeout(resolve, ProactiveWebCampaignPlugin.RETRY_DELAY_MS));
                 return this.sendApiEvent(payload, route, retryCount - 1);
             }
             
-            // All retries exhausted
-            throw new Error(`PWC API request failed after ${ProactiveWebCampaignPlugin.MAX_API_RETRIES} attempts: ${err}`);
+            // Non-retryable error or retries exhausted
+            throw new Error(`API request failed with status: ${response.status}`);
+            
+        } catch (err: any) {
+            // Check if this is a network error (TypeError from fetch)
+            const isNetworkError = err instanceof TypeError || err.message?.includes('fetch') || err.message?.includes('network');
+            
+            if (isNetworkError && retryCount > 0) {
+                await new Promise(resolve => setTimeout(resolve, ProactiveWebCampaignPlugin.RETRY_DELAY_MS));
+                return this.sendApiEvent(payload, route, retryCount - 1);
+            }
+            
+            // All retries exhausted or non-retryable error
+            const errorMessage = retryCount === 0 
+                ? `PWC API request failed after ${ProactiveWebCampaignPlugin.MAX_API_RETRIES} retry attempts: ${err.message || err}`
+                : err.message || err;
+            throw new Error(errorMessage);
         }
+    }
+
+    /**
+     * Determines if an HTTP status code should trigger a retry
+     * Retries: 429 (Rate Limit), 5xx (Server Errors)
+     * Does NOT retry: 4xx (Client Errors, except 429)
+     * @param statusCode - HTTP status code
+     * @returns Boolean indicating if retry should happen
+     */
+    private shouldRetryStatusCode(statusCode: number): boolean {
+        // Retry rate limiting (429)
+        if (statusCode === 429) {
+            return true;
+        }
+        
+        // Retry server errors (5xx)
+        if (statusCode >= 500 && statusCode < 600) {
+            return true;
+        }
+        
+        // Do NOT retry client errors (4xx except 429)
+        return false;
     }
 
     /**
