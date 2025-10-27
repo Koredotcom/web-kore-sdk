@@ -1,3 +1,15 @@
+### 11.19.0
+* Release Oct 25, 2025
+* Breaking Changes
+  * Proactive Web Campaign plugin: Replaced socket implementation with API based for reducing the server load
+* Features
+  * added streaming support for messages in Web SDK using Agent Node and Prompt Node in Platform
+  * users can now select and upload multiple files at a time
+* Bug fixes
+  * removed repeat parameter for uploaded file urls
+  * proactive web campaign time zone handling issue fix
+  * css issue fix for video elements in agent desktop plugin
+
 ### 11.18.0
 * Release Sept 29, 2025
 * Bug fixes
