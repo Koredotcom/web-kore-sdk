@@ -2261,9 +2261,12 @@ cobrowseInitialize = (cobrowseRequest) => {
             }
         }
         function handleMessageInternal(obj) {
+            const TEXT_INPUT_TYPES = ['text', 'email', 'number', 'password', 'search', 'tel', 'url', 'date', 'datetime-local', 'month', 'time', 'week'];
+            const isTextInput = obj.tagName === 'INPUT' && TEXT_INPUT_TYPES.includes(obj.targetType);
+            const isTextarea = obj.tagName === 'TEXTAREA';
             if (obj.type === 'target_mouse_move') {
                 positionMousePointer(obj);
-            } else if (obj.type === 'target_key_up' && obj.tagName === 'INPUT' && ((obj.targetType === 'text' || obj.targetType === 'email' || obj.targetType === 'number' || obj.targetType === 'password' || obj.targetType === 'search' || obj.targetType === 'tel' || obj.targetType === 'url' || obj.targetType === 'date' || obj.targetType === 'datetime-local' || obj.targetType === 'month' || obj.targetType === 'time' || obj.targetType === 'week'))) {
+            } else if (obj.type === 'target_key_up' && (isTextInput || isTextarea)) {
                 processKeyUpText(obj);
             } else if ((obj.type === 'target_key_down' || obj.type === 'target_key_up') && obj.tagName === 'DIV') {
                 processKeyDownDiv(obj);
@@ -2409,6 +2412,7 @@ cobrowseInitialize = (cobrowseRequest) => {
                 simulate(elements[0], "click", obj);
             }
         }
+        let lastFocusedFormElement = null;
         function simulate(element, eventName) {
             var options = extend(defaultOptions, arguments[2] || {});
             var oEvent, eventType = null;
@@ -2438,6 +2442,40 @@ cobrowseInitialize = (cobrowseRequest) => {
                 var evt = document.createEventObject();
                 oEvent = extend(evt, options);
                 element.fireEvent('on' + eventName, oEvent);
+            }
+            if (eventName === 'click') {
+                /**
+                 * Manage focus/blur events for form validation in single page applications (Angular/React/Vue)
+                 * When agent clicks form elements, dispatch blur on previous element (marks as "touched")
+                 * and focus on clicked element (makes it active) to properly trigger validation display
+                 */ 
+                const isFormElement = ['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName);
+                const isContentEditable = element.isContentEditable;
+
+                /* Dispatch blur event on previously focused element to mark it as "touched" */
+                if (lastFocusedFormElement && lastFocusedFormElement !== element) {
+                    try {
+                        const blurEvent = new Event('blur');
+                        lastFocusedFormElement.dispatchEvent(blurEvent);
+                    } catch (e) {
+                        console.error("Error blurring previous element", e);
+                    }
+                }
+
+                /* Dispatch focus event on clicked element and track it for next interaction */
+                if (isFormElement || isContentEditable) {
+                    try {
+                        const focusEvent = new FocusEvent('focus');
+                        element.dispatchEvent(focusEvent);
+                        lastFocusedFormElement = element;
+                    }
+                    catch (e) {
+                        lastFocusedFormElement = element;
+                        console.error("Error focusing element", e);
+                    }
+                }else{
+                    lastFocusedFormElement = null;
+                }
             }
             return element;
         }
@@ -2523,7 +2561,7 @@ cobrowseInitialize = (cobrowseRequest) => {
                 elements[0].value = value;
                 /* Dispatch input event - THIS IS THE KEY EVENT ALL FRAMEWORKS LISTEN TO */
                 try {
-                    var inputEvent = new Event('input', { bubbles: true, cancelable: true });
+                    const inputEvent = new Event('input', { bubbles: true });
                     elements[0].dispatchEvent(inputEvent);
                 }
                 catch (e) {
