@@ -398,27 +398,34 @@ class AgentDesktopPlugin {
         // let remoteVideoElement = '<video id="kore_remote_video" autoplay="autoplay" playsinline style="width:0px;height:0px"></video>';
         // chatEle.append(localVideoElement);
         // chatEle.append(remoteVideoElement);
-        // extract isSafari for userAgent string navigator.userAgent
-        const ua = navigator?.userAgent;  
-        // Example: "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3 Safari/605.1.15"
-        const isSafari = ua?.includes("Safari");
         let localVideoElement = document.createElement('video');
         localVideoElement.id = 'kore_local_video';
-        localVideoElement.width = isSafari ? 1 : 0;
-        localVideoElement.height = isSafari ? 1 : 0;
+        localVideoElement.width = 1;
+        localVideoElement.height = 1;
         localVideoElement['autoplay'] = true;
         localVideoElement['playsInline'] = true;
         let remoteVideoElement = document.createElement('video');
         remoteVideoElement.id = 'kore_remote_video';
-        remoteVideoElement.width = isSafari ? 1 : 0;
-        remoteVideoElement.height = isSafari ? 1 : 0;
+        remoteVideoElement.width = 1;
+        remoteVideoElement.height = 1;
         remoteVideoElement['autoplay'] = true;
         remoteVideoElement['playsInline'] = true;
+        // keep elements out of layout and interaction without affecting existing layout
+        localVideoElement.style.position = 'absolute';
+        localVideoElement.style.zIndex = '-999';
+        localVideoElement.style.left = '0';
+        localVideoElement.style.top = '0';
+        localVideoElement.style.pointerEvents = 'none';
+        localVideoElement.style.opacity = '0.0001';
+
+        remoteVideoElement.style.position = 'absolute';
+        remoteVideoElement.style.zIndex = '-999';
+        remoteVideoElement.style.left = '0';
+        remoteVideoElement.style.top = '0';
+        remoteVideoElement.style.pointerEvents = 'none';
+        remoteVideoElement.style.opacity = '0.0001';
         chatEleDiv.insertBefore(localVideoElement, chatEleDiv.firstChild);
         chatEleDiv.insertBefore(remoteVideoElement, chatEleDiv.firstChild);
-        // set display to hidden
-        localVideoElement.style.display = 'hidden';
-        remoteVideoElement.style.display = 'hidden';
     }
 
     extend(target: any, source: any) {
