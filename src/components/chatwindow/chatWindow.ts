@@ -1677,7 +1677,7 @@ sendMessageToBot  (messageText:any, options: { renderMsg: any; }, serverMessageO
   };
 if(messageText && messageText.trim() && messageText.trim().length){
   messageToBot["message"] = { 
-    body: messageText.trim().replace(/\s/g, ' ')
+    body: messageText.trim().replace(/[ \t]+/g, ' ')
   }
 }
   
