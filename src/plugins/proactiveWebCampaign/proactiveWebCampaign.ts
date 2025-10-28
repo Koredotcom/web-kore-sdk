@@ -1751,9 +1751,10 @@ class ProactiveWebCampaignPlugin {
         
         // Banner, Post, Button Templates
         if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType !== 'chat' && this.browserSessionId && this.enablePWC) {
+            // browserSessionId check is skipped for now as we are using API based approach, and this is not required for API based approach
             // Check browser_session_id to ensure template is shown only in the triggering browser tab
-            const receivedBrowserSessionId = data?.ruleInfo?.browser_session_id;
-            if (receivedBrowserSessionId && receivedBrowserSessionId === this.browserSessionId) {
+            // const receivedBrowserSessionId = data?.ruleInfo?.browser_session_id;
+            // if (receivedBrowserSessionId && receivedBrowserSessionId === this.browserSessionId) {
                 const htmlEle = me.hostInstance.generateMessageDOM(data);
                 if (me.hostInstance.config.pwcConfig.container instanceof HTMLElement) {
                     me.hostInstance.config.pwcConfig.container.appendChild(htmlEle);
@@ -1764,13 +1765,14 @@ class ProactiveWebCampaignPlugin {
                 this.startCooldown();
                 // Reset the flag to allow the next campaign template to be rendered
                 this.isPendingSendAPIEvent = false;
-            }
+            // }
         }
         // Chat Template
         if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType == 'chat' && data.body?.layoutDesign && this.browserSessionId && this.enablePWC) {
+            // browserSessionId check is skipped for now as we are using API based approach, and this is not required for API based approach
             // Check browser_session_id to ensure template is shown only in the triggering browser tab
-            const receivedBrowserSessionId = data?.ruleInfo?.browser_session_id;
-            if (receivedBrowserSessionId && receivedBrowserSessionId === this.browserSessionId) {
+            // const receivedBrowserSessionId = data?.ruleInfo?.browser_session_id;
+            // if (receivedBrowserSessionId && receivedBrowserSessionId === this.browserSessionId) {
                 const layoutData = {
                     layoutData: data?.body?.layoutDesign,
                     campInstId: data.body?.campInfo?.campInstId
@@ -1792,7 +1794,7 @@ class ProactiveWebCampaignPlugin {
                 this.startCooldown();
                 // Reset the flag to allow the next campaign template to be rendered
                 this.isPendingSendAPIEvent = false;
-            }
+            // }
         }
     }
 
@@ -3625,7 +3627,9 @@ class ProactiveWebCampaignPlugin {
         
         try {
             const response = await this.sendApiEvent(payload, '/pweevents');
-            this.handlePweEventResponse(response);
+            if(response.response.body.layoutDesign){
+                this.handlePweEventResponse(response);
+            }
         } catch (error) {
             console.error('PWC: Failed to trigger campaign event:', error);
             // Reset the flag on failure
