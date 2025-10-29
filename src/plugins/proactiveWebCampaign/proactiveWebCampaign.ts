@@ -23,7 +23,7 @@ interface PersistedTemplate {
 }
 
 class ProactiveWebCampaignPlugin {
-    name: string = 'ProactiveWebCampaingPlugin';
+    name: string = 'ProactiveWebCampaignPlugin';
     config: any = {};
     hostInstance: any;
     enablePWC: boolean = false;
