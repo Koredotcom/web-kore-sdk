@@ -2134,17 +2134,18 @@ cobrowseInitialize = (cobrowseRequest) => {
     function initialize(me) {
         console.log("cobrowse >>> joining room ", cobrowseRequest.conversationId);
         addCobrowseAttribute(me);
+        /* here reapplyMasking method is intended to apply masking during page navigation in middle of cobrowse(regardless of voice/standalone-cobrowse or chat-cobrowse) session for multiple page app or intial masking applied for voice/standalone cobrowse session */
         function reapplyMasking(storageKey) {
             if (localStorage.getItem(storageKey)) {
                 let cobrowseRequestFromLocal = JSON.parse(localStorage.getItem(storageKey));
                 if (cobrowseRequestFromLocal) {
-                    me.maskClassList = cobrowseRequestFromLocal?.blockClasses;
-                    me.maskPatternList = cobrowseRequestFromLocal?.patternList;
-                    if (me.maskPatternList) {
-                        me.scanElement(document.body, me.maskPatternList);
-                    }
-                    if (me.maskClassList) {
+                    if ((!me.maskClassList || me.maskClassList.length === 0) && cobrowseRequestFromLocal?.blockClasses?.length > 0) {
+                        me.maskClassList = cobrowseRequestFromLocal.blockClasses;
                         me.cobrowseMaskFields(cobrowseRequestFromLocal);
+                    }
+                    if ((!me.maskPatternList || me.maskPatternList.length === 0) && cobrowseRequestFromLocal?.patternList?.length > 0) {
+                        me.maskPatternList = cobrowseRequestFromLocal.patternList;
+                        me.scanElement(document.body, me.maskPatternList);
                     }
                 }
             }
