@@ -11,13 +11,8 @@ import Chat from "./templates/pwcChatTemplate/pwcChatTemplate";
  * Interface for persisted template data stored in sessionStorage
  */
 interface PersistedTemplate {
-    templateType: 'banner' | 'post' | 'button' | 'chat';
-    layoutDesign: any;
-    campInfo: {
-        campId: string;
-        campInstId: string;
-        webCampaignType: string;
-    };
+    templateType: string;
+    body: any;
     shownAt: number;          // Timestamp when template was first shown
     persistDuration: number;  // Duration in milliseconds
 }
@@ -1818,15 +1813,6 @@ class ProactiveWebCampaignPlugin {
                 this.startCooldown();
                 // Reset the flag to allow the next campaign template to be rendered
                 this.isPendingSendAPIEvent = false;
-                
-                // Persist template to sessionStorage for multi-page persistence
-                this.persistTemplate({
-                    templateType: data.body.campInfo.webCampaignType,
-                    layoutDesign: data.body.layoutDesign,
-                    campInfo: data.body.campInfo,
-                    shownAt: Date.now(),
-                    persistDuration: ProactiveWebCampaignPlugin.TEMPLATE_PERSIST_DURATION
-                });
             // }
         }
         // Chat Template
@@ -1856,15 +1842,6 @@ class ProactiveWebCampaignPlugin {
                 this.startCooldown();
                 // Reset the flag to allow the next campaign template to be rendered
                 this.isPendingSendAPIEvent = false;
-                
-                // Persist template to sessionStorage for multi-page persistence
-                this.persistTemplate({
-                    templateType: data.body.campInfo.webCampaignType,
-                    layoutDesign: data.body.layoutDesign,
-                    campInfo: data.body.campInfo,
-                    shownAt: Date.now(),
-                    persistDuration: ProactiveWebCampaignPlugin.TEMPLATE_PERSIST_DURATION
-                });
             // }
         }
     }
@@ -1958,8 +1935,8 @@ class ProactiveWebCampaignPlugin {
         const reconstructedData = {
             type: 'pwe_message',
             body: {
-                campInfo: template.campInfo,
-                layoutDesign: template.layoutDesign
+                campInfo: template.body.campInfo,
+                layoutDesign: template.body.layoutDesign
             }
         };
         
@@ -3797,6 +3774,13 @@ class ProactiveWebCampaignPlugin {
         try {
             const response = await this.sendApiEvent(payload, '/pweevents');
             if(response.response.body.layoutDesign){
+                // Persist template to sessionStorage for multi-page persistence
+                this.persistTemplate({
+                    templateType: response.response.body.campInfo.webCampaignType,
+                    body: response.response.body,
+                    shownAt: Date.now(),
+                    persistDuration: ProactiveWebCampaignPlugin.TEMPLATE_PERSIST_DURATION
+                });
                 this.handlePweEventResponse(response);
             }
         } catch (error) {
