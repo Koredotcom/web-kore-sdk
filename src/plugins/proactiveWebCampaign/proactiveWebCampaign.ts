@@ -7,6 +7,21 @@ import PWCButtonTemplate from "./templates/pwcButtonTemplate/pwcButtonTemplate";
 import PWCPostTemplate from "./templates/pwcPostTemplate/pwcPostTemplate";
 import Chat from "./templates/pwcChatTemplate/pwcChatTemplate";
 
+/**
+ * Interface for persisted template data stored in sessionStorage
+ */
+interface PersistedTemplate {
+    templateType: 'banner' | 'post' | 'button' | 'chat';
+    layoutDesign: any;
+    campInfo: {
+        campId: string;
+        campInstId: string;
+        webCampaignType: string;
+    };
+    shownAt: number;          // Timestamp when template was first shown
+    persistDuration: number;  // Duration in milliseconds
+}
+
 class ProactiveWebCampaignPlugin {
     name: string = 'ProactiveWebCampaingPlugin';
     config: any = {};
@@ -51,9 +66,15 @@ class ProactiveWebCampaignPlugin {
     private static readonly MAX_API_RETRIES = 5;
     private static readonly RETRY_DELAY_MS = 30000; // 30 seconds
 
+    // Template persistence configuration
+    private static readonly TEMPLATE_PERSIST_DURATION = 5 * 60 * 1000; // 5 minutes
+
     // This flag is used to prevent the sendApiEvent from getting triggered multiple times
     // As multiple campaign templates cannot be rendered at the same time
     isPendingSendAPIEvent: boolean = false;
+    
+    // Persisted template data (loaded once in onInit, synchronized with sessionStorage)
+    private currentPersistedTemplate: PersistedTemplate | null = null;
     
     coolDownTime: number = 0; // Duration in minutes (converted to ms for calculations)
     cooldownState: {
@@ -99,14 +120,10 @@ class ProactiveWebCampaignPlugin {
 
     onHostCreate() {
         let me: any = this;
-        me.hostInstance.on("viewInit", (chatWindowEle: any) => {
-            if (me.hostInstance.config.pwcConfig.enable) {
-                me.onInit();
-            }
-        });
         me.hostInstance.on("jwtGrantSuccess", (response: any) => {
             if (me.hostInstance.config.pwcConfig.enable) {
                 this.authInfo = response;
+                me.onInit();
             }
         });
     }
@@ -118,6 +135,17 @@ class ProactiveWebCampaignPlugin {
             pageVisitArray = JSON.parse(pageVisitArray);
             if (!pageVisitArray) window.sessionStorage.setItem('pageVisitHistory', JSON.stringify([]));
             me.installPWCTemplates();
+            
+            // ONE-TIME READ: Load persisted template from sessionStorage
+            const persistedTemplateStr = window.sessionStorage.getItem('pwc_persisted_template');
+            if (persistedTemplateStr) {
+                try {
+                    this.currentPersistedTemplate = JSON.parse(persistedTemplateStr);
+                } catch (e) {
+                    console.error('PWC: Failed to parse persisted template', e);
+                    window.sessionStorage.removeItem('pwc_persisted_template');
+                }
+            }
             
             // Check if pwe_data already exists in sessionStorage
             const existingPweData = window.sessionStorage.getItem('pwe_data');
@@ -133,6 +161,9 @@ class ProactiveWebCampaignPlugin {
                     me.initializePWCCampaigns();
                 }
             }
+            
+            // Restore persisted template if valid
+            this.restorePersistedTemplate();
             
             document.addEventListener("visibilitychange", () => {
                 if (document.visibilityState === "visible") {
@@ -1750,7 +1781,7 @@ class ProactiveWebCampaignPlugin {
         const data = responseData.response;
         
         // Banner, Post, Button Templates
-        if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType !== 'chat' && this.browserSessionId && this.enablePWC) {
+        if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType !== 'chat' && this.enablePWC) {
             // browserSessionId check is skipped for now as we are using API based approach, and this is not required for API based approach
             // Check browser_session_id to ensure template is shown only in the triggering browser tab
             // const receivedBrowserSessionId = data?.ruleInfo?.browser_session_id;
@@ -1765,10 +1796,19 @@ class ProactiveWebCampaignPlugin {
                 this.startCooldown();
                 // Reset the flag to allow the next campaign template to be rendered
                 this.isPendingSendAPIEvent = false;
+                
+                // Persist template to sessionStorage for multi-page persistence
+                this.persistTemplate({
+                    templateType: data.body.campInfo.webCampaignType,
+                    layoutDesign: data.body.layoutDesign,
+                    campInfo: data.body.campInfo,
+                    shownAt: Date.now(),
+                    persistDuration: ProactiveWebCampaignPlugin.TEMPLATE_PERSIST_DURATION
+                });
             // }
         }
         // Chat Template
-        if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType == 'chat' && data.body?.layoutDesign && this.browserSessionId && this.enablePWC) {
+        if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType == 'chat' && data.body?.layoutDesign && this.enablePWC) {
             // browserSessionId check is skipped for now as we are using API based approach, and this is not required for API based approach
             // Check browser_session_id to ensure template is shown only in the triggering browser tab
             // const receivedBrowserSessionId = data?.ruleInfo?.browser_session_id;
@@ -1794,8 +1834,96 @@ class ProactiveWebCampaignPlugin {
                 this.startCooldown();
                 // Reset the flag to allow the next campaign template to be rendered
                 this.isPendingSendAPIEvent = false;
+                
+                // Persist template to sessionStorage for multi-page persistence
+                this.persistTemplate({
+                    templateType: data.body.campInfo.webCampaignType,
+                    layoutDesign: data.body.layoutDesign,
+                    campInfo: data.body.campInfo,
+                    shownAt: Date.now(),
+                    persistDuration: ProactiveWebCampaignPlugin.TEMPLATE_PERSIST_DURATION
+                });
             // }
         }
+    }
+
+    /**
+     * Persists template data to sessionStorage for multi-page persistence
+     * @param templateData - Template data to persist
+     */
+    private persistTemplate(templateData: PersistedTemplate): void {
+        try {
+            // Update in-memory variable
+            this.currentPersistedTemplate = templateData;
+            // Update sessionStorage
+            window.sessionStorage.setItem('pwc_persisted_template', JSON.stringify(templateData));
+        } catch (e) {
+            console.error('PWC: Failed to persist template', e);
+        }
+    }
+
+    /**
+     * Public method for templates to call when closing
+     * Clears persisted template from both memory and sessionStorage
+     */
+    clearPersistedTemplateFromStorage(): void {
+        // Clear in-memory variable
+        this.currentPersistedTemplate = null;
+        // Clear from sessionStorage
+        try {
+            window.sessionStorage.removeItem('pwc_persisted_template');
+        } catch (e) {
+            console.error('PWC: Failed to clear persisted template', e);
+        }
+    }
+
+    /**
+     * Checks if a persisted template has expired
+     * @param template - Persisted template to check
+     * @returns Boolean indicating if template has expired
+     */
+    private isTemplateExpired(template: PersistedTemplate): boolean {
+        const now = Date.now();
+        const elapsed = now - template.shownAt;
+        return elapsed > template.persistDuration;
+    }
+
+    /**
+     * Restores persisted template from sessionStorage if valid
+     * Called during onInit after PWC state restoration
+     */
+    private restorePersistedTemplate(): void {
+        console.log('restorePersistedTemplate', this.currentPersistedTemplate);
+        // Use in-memory variable (already loaded in onInit)
+        if (!this.currentPersistedTemplate) return;
+        
+        // Check expiry
+        if (this.isTemplateExpired(this.currentPersistedTemplate)) {
+            this.clearPersistedTemplateFromStorage();
+            return;
+        }
+        
+        // Re-render template
+        this.renderPersistedTemplate(this.currentPersistedTemplate);
+    }
+
+    /**
+     * Re-renders a persisted template in the DOM
+     * @param template - Persisted template to render
+     */
+    private renderPersistedTemplate(template: PersistedTemplate): void {
+        // Construct data structure matching API response format
+        const reconstructedData = {
+            type: 'pwe_message',
+            body: {
+                campInfo: template.campInfo,
+                layoutDesign: template.layoutDesign
+            }
+        };
+        setTimeout(() => {
+            // Reuse existing rendering logic
+            this.handlePweEventResponse({ response: reconstructedData });
+        }, 1000);
     }
 
     /**
@@ -3642,8 +3770,16 @@ class ProactiveWebCampaignPlugin {
      * @returns Boolean indicating if any campaign template is active
      */
     isActiveCampaignTemplate(): boolean{
+        // Check 1: DOM (template currently rendered)
         const activeCampaignTemplate = document.querySelector(ProactiveWebCampaignPlugin.ACTIVE_CAMPAIGN_SELECTOR);
-        return activeCampaignTemplate !== null;
+        if (activeCampaignTemplate !== null) return true;
+        
+        // Check 2: In-memory persisted template (loaded from sessionStorage in onInit)
+        if (this.currentPersistedTemplate && !this.isTemplateExpired(this.currentPersistedTemplate)) {
+            return true;
+        }
+        
+        return false;
     }
 
     /**
