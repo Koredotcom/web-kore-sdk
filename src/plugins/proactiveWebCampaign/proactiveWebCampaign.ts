@@ -76,6 +76,9 @@ class ProactiveWebCampaignPlugin {
     // Persisted template data (loaded once in onInit, synchronized with sessionStorage)
     private currentPersistedTemplate: PersistedTemplate | null = null;
     
+    // Flag to prevent duplicate template restoration
+    private isTemplateRestored: boolean = false;
+    
     coolDownTime: number = 0; // Duration in minutes (converted to ms for calculations)
     cooldownState: {
         isActive: boolean;
@@ -120,6 +123,14 @@ class ProactiveWebCampaignPlugin {
 
     onHostCreate() {
         let me: any = this;
+        
+        // Register viewInit handler for template restoration
+        me.hostInstance.on("viewInit", (chatWindowEle: any) => {
+            if (me.hostInstance.config.pwcConfig.enable) {
+                me.onViewInit();
+            }
+        });
+        
         me.hostInstance.on("jwtGrantSuccess", (response: any) => {
             if (me.hostInstance.config.pwcConfig.enable) {
                 this.authInfo = response;
@@ -135,6 +146,9 @@ class ProactiveWebCampaignPlugin {
             pageVisitArray = JSON.parse(pageVisitArray);
             if (!pageVisitArray) window.sessionStorage.setItem('pageVisitHistory', JSON.stringify([]));
             me.installPWCTemplates();
+            
+            // Reset template restoration flag for new page load
+            this.isTemplateRestored = false;
             
             // ONE-TIME READ: Load persisted template from sessionStorage
             const persistedTemplateStr = window.sessionStorage.getItem('pwc_persisted_template');
@@ -200,6 +214,14 @@ class ProactiveWebCampaignPlugin {
         } catch (error) {
             console.error('PWC: initialization error', error);
         }
+    }
+
+    /**
+     * Called when view is initialized (DOM ready)
+     * Attempts template restoration for chat templates that need DOM access
+     */
+    onViewInit(): void {
+        this.restorePersistedTemplate();
     }
 
     onUrlChange(callback: () => void) {
@@ -1893,18 +1915,38 @@ class ProactiveWebCampaignPlugin {
      * Called during onInit after PWC state restoration
      */
     private restorePersistedTemplate(): void {
-        console.log('restorePersistedTemplate', this.currentPersistedTemplate);
-        // Use in-memory variable (already loaded in onInit)
-        if (!this.currentPersistedTemplate) return;
+        // Guard 1: Already restored? Skip to prevent duplicate rendering
+        if (this.isTemplateRestored) {
+            return;
+        }
         
-        // Check expiry
+        // Guard 2: No data loaded yet? Skip (will be called again from other event)
+        if (!this.currentPersistedTemplate) {
+            return;
+        }
+        
+        // Guard 3: Template expired? Clean up and skip
         if (this.isTemplateExpired(this.currentPersistedTemplate)) {
             this.clearPersistedTemplateFromStorage();
             return;
         }
         
-        // Re-render template
+        // Guard 4: Chat template but DOM not ready yet? Skip (will be called again from viewInit)
+        if (this.currentPersistedTemplate.templateType === 'chat') {
+            const chatEle = this.hostInstance.chatEle;
+            const avatarActions = chatEle?.querySelector('.avatar-actions');
+            
+            if (!avatarActions) {
+                // DOM not ready, will try again when onViewInit calls this method
+                return;
+            }
+        }
+        
+        // All conditions met - render template
         this.renderPersistedTemplate(this.currentPersistedTemplate);
+        
+        // Mark as restored to prevent duplicate rendering
+        this.isTemplateRestored = true;
     }
 
     /**
@@ -1920,10 +1962,9 @@ class ProactiveWebCampaignPlugin {
                 layoutDesign: template.layoutDesign
             }
         };
-        setTimeout(() => {
-            // Reuse existing rendering logic
-            this.handlePweEventResponse({ response: reconstructedData });
-        }, 1000);
+        
+        // Render immediately (DOM readiness already verified in guards)
+        this.handlePweEventResponse({ response: reconstructedData });
     }
 
     /**
