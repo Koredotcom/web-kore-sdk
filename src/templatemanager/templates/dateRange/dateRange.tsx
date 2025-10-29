@@ -70,7 +70,7 @@ export function DateRangeExt(props: any) {
             onSelect: (d: any) => {
                 setSelectedDate({ from: d.formattedDate[0], to: d.formattedDate[1]});
                 dp.update({
-                    minDate: d.date[1] ? minDate: d.date[0]
+                    minDate: d.date[1] ? minDate : d.date[0]
                 });
             }
         });
@@ -97,13 +97,15 @@ export function DateRangeExt(props: any) {
     );
 }
 
-export function DateRange(props: any) {
+export function DateRangeInline(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
     const msgObj = {
         msgData,
         hostInstance
     }
+
+    const [selectedDate, setSelectedDate] = useState({ from: new Date().toDateString(), to: 'Select' });
 
     const dateFormats: any = {
         'DD-MM-YYYY': 'dd-MM-yyyy',
@@ -126,6 +128,59 @@ export function DateRange(props: any) {
         return formattedDate;
     }
 
+    const handleSubmit = () => {
+        if (!selectedDate.from ||  !selectedDate.to) {
+            return
+        }
+        let selected;
+        if (msgData?.message[0]?.component?.payload?.delimiter) {
+            selected = selectedDate.from + ' ' + msgData?.message[0]?.component?.payload?.delimiter + ' ' + selectedDate.to;
+        } else {
+            selected = selectedDate.from + ' to ' + selectedDate.to;
+        }
+        hostInstance.sendMessage(selected, { renderMsg: selected });
+    }
+
+    useEffect(() => {
+        const currentDatePrev = new Date();
+        const currentDateNext = new Date();
+        currentDatePrev.setFullYear(currentDatePrev.getFullYear() - 7);
+        currentDateNext.setFullYear(currentDateNext.getFullYear() + 7);
+        const minDate = msgData.message?.[0]?.component?.payload?.startDate ? getConvertedDate(msgData.message?.[0]?.component?.payload?.startDate, msgData?.message?.[0]?.component?.payload?.format) : getConvertedDate(currentDatePrev, msgData?.message?.[0]?.component?.payload?.format ? msgData?.message?.[0]?.component?.payload?.format : 'DD-MM-YYYY');
+        const dp = new Datepicker(`#cal-${msgData.messageId}`, {
+            dateFormat: msgData?.message?.[0]?.component?.payload?.format ? dateFormats[msgData?.message?.[0]?.component?.payload?.format] : 'dd-MM-yyyy',
+            range: true,
+            minDate: minDate,
+            maxDate: msgData.message?.[0]?.component?.payload?.endDate ? getConvertedDate(msgData.message?.[0]?.component?.payload?.endDate, msgData?.message?.[0]?.component?.payload?.format) : getConvertedDate(currentDateNext, msgData?.message?.[0]?.component?.payload?.format ? msgData?.message?.[0]?.component?.payload?.format : 'DD-MM-YYYY'),        
+            disableNavWhenOutOfRange: false,
+            onSelect: (d: any) => {
+                setSelectedDate({ from: d.formattedDate[0], to: d.formattedDate[1]});
+                dp.update({
+                    minDate: d.date[1] ? minDate : d.date[0]
+                });
+            }
+        });
+        dp.show();
+    }, []);
+
+    return (
+        <div className="date-picker-wrapper-template">
+            <Message {...msgObj} />
+            <h1>{selectedDate.from} - {selectedDate.to}</h1>
+            <div className="date-picker-calendar" id={'cal-' + msgData.messageId}></div>
+            <button className="kr-button-primary lg" onClick={handleSubmit}>Confirm</button>
+        </div>
+    )
+}
+
+export function DateRange(props: any) {
+    const hostInstance = props.hostInstance;
+    const msgData = props.msgData;
+    const msgObj = {
+        msgData,
+        hostInstance
+    }
+
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'daterange' && !msgData?.fromHistory) {
         msgData.message[0].cInfo.body = msgData?.message?.[0]?.component?.payload?.text_message;
         // Check if element already exists
@@ -139,43 +194,7 @@ export function DateRange(props: any) {
                 <Message {...msgObj} />
             )
         } else {
-            const handleSubmit = () => {
-                if (!selectedDate.from ||  !selectedDate.to) {
-                    return
-                }
-                hostInstance.sendMessage(selectedDate.from + ' to ' + selectedDate.to, { renderMsg: selectedDate.from + ' to ' + selectedDate.to });
-            }
-            const [selectedDate, setSelectedDate] = useState({ from: new Date().toDateString(), to: 'Select' });
-
-            useEffect(() => {
-                const currentDatePrev = new Date();
-                const currentDateNext = new Date();
-                currentDatePrev.setFullYear(currentDatePrev.getFullYear() - 7);
-                currentDateNext.setFullYear(currentDateNext.getFullYear() + 7);
-                const minDate = msgData.message?.[0]?.component?.payload?.startDate ? getConvertedDate(msgData.message?.[0]?.component?.payload?.startDate, msgData?.message?.[0]?.component?.payload?.format) : getConvertedDate(currentDatePrev, msgData?.message?.[0]?.component?.payload?.format ? msgData?.message?.[0]?.component?.payload?.format : 'DD-MM-YYYY');
-                const dp = new Datepicker(`#cal-${msgData.messageId}`, {
-                    dateFormat: msgData?.message?.[0]?.component?.payload?.format ? dateFormats[msgData?.message?.[0]?.component?.payload?.format] : 'dd-MM-yyyy',
-                    range: true,
-                    minDate: minDate,
-                    maxDate: msgData.message?.[0]?.component?.payload?.endDate ? getConvertedDate(msgData.message?.[0]?.component?.payload?.endDate, msgData?.message?.[0]?.component?.payload?.format) : getConvertedDate(currentDateNext, msgData?.message?.[0]?.component?.payload?.format ? msgData?.message?.[0]?.component?.payload?.format : 'DD-MM-YYYY'),        
-                    disableNavWhenOutOfRange: false,
-                    onSelect: (d: any) => {
-                        setSelectedDate({ from: d.formattedDate[0], to: d.formattedDate[1]});
-                        dp.update({
-                            minDate: d.date[1] ? minDate: d.date[0]
-                        });
-                    }
-                });
-                dp.show();
-            }, []);
-            return (
-                <div className="date-picker-wrapper-template">
-                    <Message {...msgObj} />
-                    <h1>{selectedDate.from} - {selectedDate.to}</h1>
-                    <div  className="date-picker-calendar"id={'cal-' + msgData.messageId}></div>
-                    <button className="kr-button-primary lg" onClick={handleSubmit}>Confirm</button>
-                </div>
-            )
+            return <DateRangeInline hostInstance={hostInstance} msgData={msgData} />
         }
     }
 }
