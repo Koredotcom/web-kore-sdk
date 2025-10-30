@@ -2245,7 +2245,6 @@ cobrowseInitialize = (cobrowseRequest) => {
                     console.log('error msg', err, cobrowseEventMsg)
                 }
             } else if (obj.type === 'fullsnapshot') {
-                console.log("taking fullsnapshot");
                 me.rrweb.record.takeFullSnapshot(true);
             } else if (obj.type === 'set_request_control') {
                 me.requestAccepted = obj.data;
@@ -2390,7 +2389,6 @@ cobrowseInitialize = (cobrowseRequest) => {
             } else {
                 var elements = document.querySelectorAll(`[cb-id="${cbId}"]`);
                 if (elements && elements.length > 0) {
-                    console.log("scrolling", obj.scrollLeft, obj.scrollTop);
                     elements[0].scrollTo(obj.scrollLeft, obj.scrollTop);
                 }
             }
@@ -3131,7 +3129,6 @@ rrwebInit = function (exports) {
                 };
             case n.ELEMENT_NODE:
                 if (n.getAttribute && n.getAttribute("do-not-mutate") === 'true') {
-                    console.log("got do-not-mutate", n)
                     return false;
                 }
                 var needBlock = _isBlockedElement(n, blockClass, blockSelector);
@@ -3167,7 +3164,7 @@ rrwebInit = function (exports) {
                     tagName === 'select') {
                     var value = n.value;
                     if (attributes_1.type === 'text') {
-                        console.log("text");
+                        // console.log("text");
                     }
                     if (attributes_1.type !== 'radio' &&
                         attributes_1.type !== 'checkbox' &&
