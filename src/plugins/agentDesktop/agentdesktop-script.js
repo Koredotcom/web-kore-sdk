@@ -146,6 +146,7 @@ import * as koreJquery from '../../libs/korejquery';
 import requireKr from '../../components/base-sdk/kore-bot-sdk-client';
 import './agentdesktop.css';
 import moment from 'moment';
+import { pack } from '@amplitude/rrweb-packer';
 
 /** @ignore */
 class AgentDesktopPluginScript  {
@@ -2133,17 +2134,18 @@ cobrowseInitialize = (cobrowseRequest) => {
     function initialize(me) {
         console.log("cobrowse >>> joining room ", cobrowseRequest.conversationId);
         addCobrowseAttribute(me);
+        /* here reapplyMasking method is intended to apply masking during page navigation in middle of cobrowse(regardless of voice/standalone-cobrowse or chat-cobrowse) session for multiple page app or intial masking applied for voice/standalone cobrowse session */
         function reapplyMasking(storageKey) {
             if (localStorage.getItem(storageKey)) {
                 let cobrowseRequestFromLocal = JSON.parse(localStorage.getItem(storageKey));
                 if (cobrowseRequestFromLocal) {
-                    me.maskClassList = cobrowseRequestFromLocal?.blockClasses;
-                    me.maskPatternList = cobrowseRequestFromLocal?.patternList;
-                    if (me.maskPatternList) {
-                        me.scanElement(document.body, me.maskPatternList);
-                    }
-                    if (me.maskClassList) {
+                    if ((!me.maskClassList || me.maskClassList.length === 0) && cobrowseRequestFromLocal?.blockClasses?.length > 0) {
+                        me.maskClassList = cobrowseRequestFromLocal.blockClasses;
                         me.cobrowseMaskFields(cobrowseRequestFromLocal);
+                    }
+                    if ((!me.maskPatternList || me.maskPatternList.length === 0) && cobrowseRequestFromLocal?.patternList?.length > 0) {
+                        me.maskPatternList = cobrowseRequestFromLocal.patternList;
+                        me.scanElement(document.body, me.maskPatternList);
                     }
                 }
             }
@@ -2217,7 +2219,8 @@ cobrowseInitialize = (cobrowseRequest) => {
                             collectFonts: true,
                             userTriggeredOnInput: true,
                             maskTextClass: 'rr-mask',
-                            collectFonts: true
+                            collectFonts: true,
+                            packFn: pack // This is used to pack/compress the events to reduce the size of the data sent.
                         });
                     }
                 }
@@ -2242,7 +2245,6 @@ cobrowseInitialize = (cobrowseRequest) => {
                     console.log('error msg', err, cobrowseEventMsg)
                 }
             } else if (obj.type === 'fullsnapshot') {
-                console.log("taking fullsnapshot");
                 me.rrweb.record.takeFullSnapshot(true);
             } else if (obj.type === 'set_request_control') {
                 me.requestAccepted = obj.data;
@@ -2259,9 +2261,12 @@ cobrowseInitialize = (cobrowseRequest) => {
             }
         }
         function handleMessageInternal(obj) {
+            const TEXT_INPUT_TYPES = ['text', 'email', 'number', 'password', 'search', 'tel', 'url', 'date', 'datetime-local', 'month', 'time', 'week'];
+            const isTextInput = obj.tagName === 'INPUT' && TEXT_INPUT_TYPES.includes(obj.targetType);
+            const isTextarea = obj.tagName === 'TEXTAREA';
             if (obj.type === 'target_mouse_move') {
                 positionMousePointer(obj);
-            } else if (obj.type === 'target_key_up' && obj.tagName === 'INPUT' && ((obj.targetType === 'text' || obj.targetType === 'email' || obj.targetType === 'number' || obj.targetType === 'password' || obj.targetType === 'search' || obj.targetType === 'tel' || obj.targetType === 'url' || obj.targetType === 'date' || obj.targetType === 'datetime-local' || obj.targetType === 'month' || obj.targetType === 'time' || obj.targetType === 'week'))) {
+            } else if (obj.type === 'target_key_up' && (isTextInput || isTextarea)) {
                 processKeyUpText(obj);
             } else if ((obj.type === 'target_key_down' || obj.type === 'target_key_up') && obj.tagName === 'DIV') {
                 processKeyDownDiv(obj);
@@ -2384,7 +2389,6 @@ cobrowseInitialize = (cobrowseRequest) => {
             } else {
                 var elements = document.querySelectorAll(`[cb-id="${cbId}"]`);
                 if (elements && elements.length > 0) {
-                    console.log("scrolling", obj.scrollLeft, obj.scrollTop);
                     elements[0].scrollTo(obj.scrollLeft, obj.scrollTop);
                 }
             }
@@ -2407,6 +2411,7 @@ cobrowseInitialize = (cobrowseRequest) => {
                 simulate(elements[0], "click", obj);
             }
         }
+        let lastFocusedFormElement = null;
         function simulate(element, eventName) {
             var options = extend(defaultOptions, arguments[2] || {});
             var oEvent, eventType = null;
@@ -2436,6 +2441,37 @@ cobrowseInitialize = (cobrowseRequest) => {
                 var evt = document.createEventObject();
                 oEvent = extend(evt, options);
                 element.fireEvent('on' + eventName, oEvent);
+            }
+            if (eventName === 'click') {
+                /**
+                 * Manage focus/blur events for form validation in single page applications (Angular/React/Vue)
+                 * When agent clicks form elements, dispatch blur on previous element (marks as "touched")
+                 * and focus on clicked element (makes it active) to properly trigger validation display
+                 */ 
+                const isFormElement = ['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName);
+                const isContentEditable = element.isContentEditable;
+
+                /* Dispatch blur event on previously focused element to mark it as "touched" */
+                if (lastFocusedFormElement && lastFocusedFormElement !== element) {
+                    try {
+                        const blurEvent = new Event('blur');
+                        lastFocusedFormElement.dispatchEvent(blurEvent);
+                    } catch (e) {}
+                }
+
+                /* Dispatch focus event on clicked element and track it for next interaction */
+                if (isFormElement || isContentEditable) {
+                    try {
+                        const focusEvent = new FocusEvent('focus');
+                        element.dispatchEvent(focusEvent);
+                        lastFocusedFormElement = element;
+                    }
+                    catch (e) {
+                        lastFocusedFormElement = element;
+                    }
+                }else{
+                    lastFocusedFormElement = null;
+                }
             }
             return element;
         }
@@ -2519,6 +2555,12 @@ cobrowseInitialize = (cobrowseRequest) => {
             var elements = document.querySelectorAll(`[cb-id="${cbId}"]`);
             if (elements && elements.length > 0) {
                 elements[0].value = value;
+                /* Dispatch input event - THIS IS THE KEY EVENT ALL FRAMEWORKS LISTEN TO */
+                try {
+                    const inputEvent = new Event('input', { bubbles: true });
+                    elements[0].dispatchEvent(inputEvent);
+                }
+                catch (e) {}
             }
         }
         function positionMousePointer(payload) {
@@ -2538,7 +2580,8 @@ cobrowseInitialize = (cobrowseRequest) => {
             const STOP_MESSAGE = { "type": "stop_event_msg" };
             //dataChannel.send(JSON.stringify(START_MESSAGE));
             me.sendDCMessage(JSON.stringify(START_MESSAGE));
-            let str = JSON.stringify(evt);
+            // let str = JSON.stringify(evt);
+            let str = evt; // Instead of JSON.stringify(evt), we are sending the compressedevent as it is to reduce the size of the data sent.
             if (str.length > limit) {
                 let noOfChunks = Math.floor(str.length / limit);
                 let remainingChunks = str.length % limit
@@ -3081,7 +3124,6 @@ rrwebInit = function (exports) {
                 };
             case n.ELEMENT_NODE:
                 if (n.getAttribute && n.getAttribute("do-not-mutate") === 'true') {
-                    console.log("got do-not-mutate", n)
                     return false;
                 }
                 var needBlock = _isBlockedElement(n, blockClass, blockSelector);
@@ -3117,7 +3159,7 @@ rrwebInit = function (exports) {
                     tagName === 'select') {
                     var value = n.value;
                     if (attributes_1.type === 'text') {
-                        console.log("text");
+                        // console.log("text");
                     }
                     if (attributes_1.type !== 'radio' &&
                         attributes_1.type !== 'checkbox' &&
@@ -5236,23 +5278,17 @@ rrwebInit = function (exports) {
                 }
             };
             this.genAdds = function (n, target) {
-                for(var i =0;i< me.maskClassList?.length > 0; i++) {
-                  if(me.maskClassList[i] !== ''){
-                    if (n && n.classList && n.classList.contains(me.maskClassList[i])) {
-                        n.classList.add('rr-block');
-                        takeFullSnapshot(false);
-                        return;
+                /* Create cb-id for newly added elements and all their descendants so interactions work */
+                if (n && n.nodeType === 1) {
+                    createCbId(n);
+                    /* Also ensure all descendant elements get cb-id */
+                    if (n.querySelectorAll) {
+                        var descendants = n.querySelectorAll('*');
+                        for (var j = 0; j < descendants.length; j++) {
+                            createCbId(descendants[j]);
+                        }
                     }
-                    if (target && target.classList && target.classList.contains(me.maskClassList[i])) {
-                        target.classList.add('rr-block');
-                        takeFullSnapshot(false);
-                        return;
-                    }
-                  } 
-               }
-               if(me.maskPatternList){
-                    me.scanElement(n, me.maskPatternList);
-               }
+                }
                 if (n && n.getAttribute && n.getAttribute('do-not-mutate') === 'true') {
                     return;
                 }
@@ -5264,6 +5300,19 @@ rrwebInit = function (exports) {
                 }
                 if (target && isBlocked(target, _this.blockClass)) {
                     return;
+                }
+                for (var i = 0; i < me.maskClassList?.length > 0; i++) {
+                    if (me.maskClassList[i] !== '') {
+                        if (n && n.classList && n.classList.contains(me.maskClassList[i])) {
+                            n.classList.add('rr-block');
+                        }
+                        if (target && target.classList && target.classList.contains(me.maskClassList[i])) {
+                            target.classList.add('rr-block');
+                        }
+                    }
+                }
+                if (me.maskPatternList) {
+                    me.scanElement(n, me.maskPatternList);
                 }
                 if (isINode(n)) {
                     if (isIgnored(n)) {
@@ -5282,7 +5331,10 @@ rrwebInit = function (exports) {
                     _this.addedSet.add(n);
                     _this.droppedSet.delete(n);
                 }
-                n.childNodes.forEach(function (childN) { return _this.genAdds(childN); });
+                /* Don't recursively process children of blocked elements as this will cause the inner blocked elements to be displayed in agent side */
+                if (!n.classList || !n.classList.contains('rr-block')) {
+                    n.childNodes.forEach(function (childN) { return _this.genAdds(childN); });
+                }
             };
         }
         MutationBuffer.prototype.init = function (cb, blockClass, blockSelector, maskTextClass, maskTextSelector, inlineStylesheet, maskInputOptions, maskTextFn, maskInputFn, recordCanvas, slimDOMOptions, doc, mirror, iframeManager, shadowDomManager) {
