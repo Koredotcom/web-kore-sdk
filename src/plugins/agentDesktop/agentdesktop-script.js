@@ -2456,9 +2456,7 @@ cobrowseInitialize = (cobrowseRequest) => {
                     try {
                         const blurEvent = new Event('blur');
                         lastFocusedFormElement.dispatchEvent(blurEvent);
-                    } catch (e) {
-                        console.error("Error blurring previous element", e);
-                    }
+                    } catch (e) {}
                 }
 
                 /* Dispatch focus event on clicked element and track it for next interaction */
@@ -2470,7 +2468,6 @@ cobrowseInitialize = (cobrowseRequest) => {
                     }
                     catch (e) {
                         lastFocusedFormElement = element;
-                        console.error("Error focusing element", e);
                     }
                 }else{
                     lastFocusedFormElement = null;
@@ -2563,9 +2560,7 @@ cobrowseInitialize = (cobrowseRequest) => {
                     const inputEvent = new Event('input', { bubbles: true });
                     elements[0].dispatchEvent(inputEvent);
                 }
-                catch (e) {
-                    console.error("Error dispatching input event", e);
-                }
+                catch (e) {}
             }
         }
         function positionMousePointer(payload) {
