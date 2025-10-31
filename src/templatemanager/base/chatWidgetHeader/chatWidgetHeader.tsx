@@ -50,19 +50,17 @@ export function ChatWidgetHeader(props: any) {
                 hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove(hostInstance.config.branding.chat_bubble.expand_animation);
             }
             hostInstance.chatEle.classList.add('minimize-chat');
-            if (!hostInstance.config.pwcConfig.enable) {
-                hostInstance.destroy();
-                hostInstance.isSocketOpened = false;
-                hostInstance.bot.historyOffset = 0;
-                hostInstance.bot.previousHistoryLoading = false;
-                if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
-                    hostInstance.removeLocalStoreItem('kr-cw-state');
-                    hostInstance.removeLocalStoreItem('kr-cw-uid');
-                    hostInstance.config.botOptions.maintainContext = false;
-                }
-                if (hostInstance.config.botOptions.openSocket) {
-                    hostInstance.bot.init(hostInstance.config.botOptions);
-                }
+            hostInstance.destroy();
+            hostInstance.isSocketOpened = false;
+            hostInstance.bot.historyOffset = 0;
+            hostInstance.bot.previousHistoryLoading = false;
+            if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
+                hostInstance.removeLocalStoreItem('kr-cw-state');
+                hostInstance.removeLocalStoreItem('kr-cw-uid');
+                hostInstance.config.botOptions.maintainContext = false;
+            }
+            if (hostInstance.config.botOptions.openSocket) {
+                hostInstance.bot.init(hostInstance.config.botOptions);
             }
         })
 

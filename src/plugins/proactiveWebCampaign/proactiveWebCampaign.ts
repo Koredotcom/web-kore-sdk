@@ -34,6 +34,7 @@ class ProactiveWebCampaignPlugin {
     customDataObject: any = {};
     isInitialPageLoaded: boolean = false; // NEW: Flag to track initial page processing
     browserSessionId: string = ''; // Unique identifier for the campaign trigger session
+    isPWEChatTriggered: string = '';
     
     // =====================================================================================
     //                          CUSTOM CONDITIONTYPE SUPPORT PROPERTIES
@@ -130,6 +131,14 @@ class ProactiveWebCampaignPlugin {
             if (me.hostInstance.config.pwcConfig.enable) {
                 this.authInfo = response;
                 me.onInit();
+            }
+        });
+        me.hostInstance.on(me.hostInstance.EVENTS.BEFORE_WS_CONNECTION, (event: any) => {
+            if (me.isPWEChatTriggered) {
+                let url = event.data.url;
+                url = url + "&pwe=" + me.isPWEChatTriggered;
+                event.data.url = url;
+                me.isPWEChatTriggered = '';
             }
         });
     }
