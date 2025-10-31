@@ -52,10 +52,17 @@ export function Chat(props: any) {
     }
 
     const closePWCHelp = (e: any) => {
+         // Clear from sessionStorage when chat opens
+         hostInstance.plugins.ProactiveWebCampaignPlugin.clearPersistedTemplateFromStorage();
+        
+        // Remove from DOM
         hostInstance.chatEle.querySelector('.content-info').remove();
     }
 
     const handleConversationAction = (action: any) => {
+        // Clear from sessionStorage when chat opens
+        hostInstance.plugins.ProactiveWebCampaignPlugin.clearPersistedTemplateFromStorage();
+        
         hostInstance.isWelcomeScreenOpened = true;
         hostInstance.chatEle.classList.remove('minimize-chat');
         hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');

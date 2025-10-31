@@ -47,6 +47,10 @@ export function Button(props: any) {
         }
 
         const removeButton = (ind: any) => {
+            // Clear from sessionStorage
+            hostInstance.plugins.ProactiveWebCampaignPlugin.clearPersistedTemplateFromStorage();
+            
+            // Remove from DOM
             const btn = document.getElementById(`campaign-button-${ind}`);
             if (btn) {
                 btn.remove();

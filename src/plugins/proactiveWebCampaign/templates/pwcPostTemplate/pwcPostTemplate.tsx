@@ -3,6 +3,7 @@ import BaseChatTemplate from '../../../../templatemanager/templates/baseChatTemp
 import './pwcPostTemplate.scss';
 export function Post(props: any) {
     const msgData = props.msgData;
+    const hostInstance = props.hostInstance;
     
     if (msgData.type == 'pwe_message' && msgData.body.campInfo?.webCampaignType && msgData.body.campInfo?.webCampaignType == 'post' && msgData?.body?.layoutDesign) {
         const layoutDesign = msgData.body?.layoutDesign;
@@ -24,6 +25,10 @@ export function Post(props: any) {
         });
         layoutDesign.messages = msgs;
         const closePost = () => {
+            // Clear from sessionStorage
+            hostInstance.plugins.ProactiveWebCampaignPlugin.clearPersistedTemplateFromStorage();
+            
+            // Remove from DOM
             const bannerEle: any = document.querySelector('.campaign-post-banner-data-sec');
             bannerEle.remove();
         }
