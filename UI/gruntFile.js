@@ -164,7 +164,6 @@ module.exports = function (grunt) {
     // Load the plugin that provides the "uglify" task.
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.loadNpmTasks('grunt-contrib-copy');
 
     // the default task can be run just by typing "grunt" on the command line
     grunt.registerTask('default', ['clean', 'uglify','cssmin']);
