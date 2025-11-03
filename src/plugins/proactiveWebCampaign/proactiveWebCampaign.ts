@@ -136,8 +136,9 @@ class ProactiveWebCampaignPlugin {
         me.hostInstance.on(me.hostInstance.EVENTS.BEFORE_WS_CONNECTION, (event: any) => {
             if (me.isPWEChatTriggered) {
                 let url = event.data.url;
-                url = url + "&pwe=" + me.isPWEChatTriggered;
-                event.data.url = url;
+                let socketUrl = url.replace('&isReconnect=true', '');
+                socketUrl = socketUrl + "&pwe=" + me.isPWEChatTriggered;
+                event.data.url = socketUrl;
                 me.isPWEChatTriggered = '';
             }
         });
