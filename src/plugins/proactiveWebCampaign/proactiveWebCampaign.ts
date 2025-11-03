@@ -216,9 +216,28 @@ class ProactiveWebCampaignPlugin {
                 // Title changes don't require timer restart, just rule evaluation
                 this.sendEvent(pageObj, 'titleChange');
             });
+        setTimeout(() => {
+            this.handleAvatarClick();
+        }, 1000);
         } catch (error) {
             console.error('PWC: initialization error', error);
         }
+    }
+
+    handleAvatarClick() {
+        // Handle avatar click
+        document.querySelector(".avatar-bg")?.addEventListener("click", () => {
+            const isProactivePersistentTemplate = sessionStorage.getItem('pwc_persisted_template');
+            const activeCampaignTemplate = document.querySelector(ProactiveWebCampaignPlugin.ACTIVE_CAMPAIGN_SELECTOR);
+
+            if(isProactivePersistentTemplate && activeCampaignTemplate) {
+                // Clear from sessionStorage when chat opens
+                this.clearPersistedTemplateFromStorage();
+                
+                // Remove from DOM
+                activeCampaignTemplate?.remove();
+            }
+        });
     }
 
     /**
