@@ -48,7 +48,6 @@ chatWindowInstance.installPlugin(new ProactiveWebCampaignPlugin({ dependentPlugi
 ## Configure ChatConfig
 ```js
 let botOptions = chatConfig.botOptions;
-botOptions.openSocket = true;
 
 chatConfig.pwcConfig.enable = true;
 chatConfig.pwcConfig.container = '' // pass dom element to render post, banner and button pwc templates. default is body
