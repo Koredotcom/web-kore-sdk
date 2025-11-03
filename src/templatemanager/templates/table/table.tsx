@@ -20,7 +20,7 @@ export function TableExt(props: any) {
         return (
             <Fragment>
                 <section class="table-wrapper-main-container" data-cw-msg-id={msgData?.messageId}>
-                    {showMore && <Message {...messageObj} />}
+                    {showMore && msgData?.message?.[0]?.cInfo?.body &&<Message {...messageObj} />}
                     <section class="table-wrapper-section">
                         <table className="table-regular-view">
                             <thead>
@@ -52,7 +52,7 @@ export function TableExt(props: any) {
         return (
             <Fragment>
                 <div className='table-container'>
-                    {showMore && <Message {...messageObj} />}
+                    {showMore && msgData?.message?.[0]?.cInfo?.body && <Message {...messageObj} />}
                     <div className="table-response-wrapper-container">
                         <div className="table-response-wrapper">
                             {msgData.message[0].component.payload.elements.map((ele: any, ind: any) => (
@@ -105,9 +105,7 @@ export function Table(props: any) {
                 });
             }, 500);
         });
-        if (msgData?.fromHistory || msgData?.fromHistorySync) {
-            msgObj.msgData.message[0].cInfo.body = msgObj.msgData.message[0].cInfo.body.payload.text;
-        }
+        msgObj.msgData.message[0].cInfo.body = msgObj.msgData.message[0].component?.payload?.text || '';
         return (
             <Fragment>
                 <TableExt {...msgObj} />
