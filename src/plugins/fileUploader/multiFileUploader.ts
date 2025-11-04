@@ -485,7 +485,20 @@ class KoreMultiFileUploaderPlugin {
     uploadConfig.chunkUpload = selectedFile.componentSize > me.appConsts.CHUNK_SIZE;
     uploadConfig.file = _file;
     
-    // Always read base64 for media files
+    // If resulttype is already set (e.g., for Safari iOS videos), use it directly
+    if (selectedFile.resulttype) {
+      if (uploadConfig.chunkUpload) {
+        me.createElement(selectedFile);
+        ele = me.hostInstance.chatEle.querySelector('#uid' + selectedFile.uniqueId);
+        me.initiateRcorder(selectedFile, ele);
+        me.multifileuploader(uploadConfig, ele);
+      } else {
+        me.acceptFileRecording(selectedFile);
+      }
+      return;
+    }
+    
+    // Read base64 for media files if not already set
     var reader: any = new FileReader();
     reader.onloadend = function (evt: any) {
       if (evt.target.readyState === FileReader.DONE) {
