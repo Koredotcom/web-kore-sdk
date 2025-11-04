@@ -317,6 +317,12 @@ class KoreMultiFileUploaderPlugin {
     });
   }
 
+  // Detect Safari iOS
+  isSafariIOS(): boolean {
+    const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+    return /iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream && /Safari/.test(userAgent);
+  }
+
   convertFiles(selectedFile: any, customFileName: undefined) {
     let me: any = this;
     const recState: any = {};
@@ -355,7 +361,16 @@ class KoreMultiFileUploaderPlugin {
         recState.uploadFn = 'acceptFile';
       }
       if (this.allowedFileTypes && this.allowedFileTypes.indexOf(fileType) !== -1) {
-        if (recState.type === 'audio' || recState.type === 'video') {
+        // For Safari iOS videos, use direct DataURL approach to avoid canvas issues
+        if (recState.type === 'video' && me.isSafariIOS()) {
+          const videoReader = new FileReader();
+          videoReader.onload = function (e: any) {
+            const base64Data = e.target.result.replace(/^.*;base64,/, '');
+            recState.resulttype = base64Data;
+            me.getFileToken(recState, selectedFile);
+          };
+          videoReader.readAsDataURL(selectedFile);
+        } else if (recState.type === 'audio' || recState.type === 'video') {
           // read duration;
           const rd = new FileReader();
           rd.onload = function (e: any) {
