@@ -877,8 +877,6 @@ AgentDesktop = function (uuId, aResponse) {
                 }
             })
             overrideFlag = true;
-        } else {
-            console.log("close button not found")
         }
 
     }
@@ -2262,7 +2260,9 @@ cobrowseInitialize = (cobrowseRequest) => {
         }
         function handleMessageInternal(obj) {
             const TEXT_INPUT_TYPES = ['text', 'email', 'number', 'password', 'search', 'tel', 'url', 'date', 'datetime-local', 'month', 'time', 'week'];
-            const isTextInput = obj.tagName === 'INPUT' && TEXT_INPUT_TYPES.includes(obj.targetType);
+            // Handle input without explicit type (defaults to text) or with valid text-like types
+            const inputType = obj.targetType || 'text';
+            const isTextInput = obj.tagName === 'INPUT' && TEXT_INPUT_TYPES.includes(inputType);
             const isTextarea = obj.tagName === 'TEXTAREA';
             if (obj.type === 'target_mouse_move') {
                 positionMousePointer(obj);
@@ -2408,9 +2408,59 @@ cobrowseInitialize = (cobrowseRequest) => {
             var cbId = obj.cbId;
             var elements = document.querySelectorAll(`[cb-id="${cbId}"]`);
             if (elements && elements.length > 0) {
+                if (obj?.selectDropdownChange) {
+                    processSelectDropdownChange(obj);
+                    return;
+                }
                 simulate(elements[0], "click", obj);
             }
         }
+        function processSelectDropdownChange(evt) {
+            var cbId = evt.cbId;
+            var elements = document.querySelectorAll(`[cb-id="${cbId}"]`);
+            if (elements && elements.length > 0) {
+                try {
+                    if (!elements[0]) return;
+                    const el = elements[0];
+                    // Mark element to prevent rrweb from recording this change immediately to prevent flickering
+                    el.setAttribute("do-not-mutate", "true");
+                    if (evt.multiple) {
+                        // Multi-select: Handle array of selections
+                        const wanted = Array.isArray(evt.selected) ? evt.selected : [];
+                        Array.from(el.options).forEach((opt, idx) => {
+                            opt.selected = wanted.some(s =>
+                                s.value === opt.value || s.index === idx
+                            );
+                        });
+                    } else {
+                        // Single-select: Simpler with just value match
+                        if (typeof evt.value === 'string') {
+                            const targetOption = Array.from(el.options)
+                                .find(opt => opt.value === evt.value || opt.text === evt.value);
+                            if (targetOption) {
+                                el.value = evt.value;
+                            }
+                        } else if (typeof evt.selectedIndex === 'number') {
+                            el.selectedIndex = evt.selectedIndex;
+                        }
+                    }
+                    // Dispatch events so frameworks/listeners react
+                    try {
+                        const inputEvent = new Event('input', { bubbles: true });
+                        el.dispatchEvent(inputEvent);
+                        const changeEvent = new Event('change', { bubbles: true });
+                        el.dispatchEvent(changeEvent);
+                    }
+                    catch (e) { }
+                    // Remove the marker after a short delay
+                    setTimeout(() => {
+                        el.removeAttribute("do-not-mutate");
+                    }, 200);
+
+                } catch (err) { }
+            }
+        }
+        
         let lastFocusedFormElement = null;
         function simulate(element, eventName) {
             var options = extend(defaultOptions, arguments[2] || {});
@@ -2554,6 +2604,7 @@ cobrowseInitialize = (cobrowseRequest) => {
             var value = obj.value;
             var elements = document.querySelectorAll(`[cb-id="${cbId}"]`);
             if (elements && elements.length > 0) {
+                elements[0].setAttribute("do-not-mutate", "true");
                 elements[0].value = value;
                 /* Dispatch input event - THIS IS THE KEY EVENT ALL FRAMEWORKS LISTEN TO */
                 try {
@@ -2561,6 +2612,9 @@ cobrowseInitialize = (cobrowseRequest) => {
                     elements[0].dispatchEvent(inputEvent);
                 }
                 catch (e) {}
+                setTimeout(() => {
+                    elements[0].removeAttribute("do-not-mutate");
+                }, 200);
             }
         }
         function positionMousePointer(payload) {
