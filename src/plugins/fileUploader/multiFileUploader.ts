@@ -485,8 +485,11 @@ class KoreMultiFileUploaderPlugin {
     uploadConfig.chunkUpload = selectedFile.componentSize > me.appConsts.CHUNK_SIZE;
     uploadConfig.file = _file;
     
-    // If resulttype is already set (e.g., for Safari iOS videos), use it directly
-    if (selectedFile.resulttype) {
+    // For Safari iOS videos, resulttype already contains full video base64, so use it directly
+    const isSafariIOSVideo = selectedFile.type === 'video' && me.isSafariIOS() && selectedFile.resulttype;
+    
+    if (isSafariIOSVideo) {
+      // Safari iOS video: resulttype already has full video base64
       if (uploadConfig.chunkUpload) {
         me.createElement(selectedFile);
         ele = me.hostInstance.chatEle.querySelector('#uid' + selectedFile.uniqueId);
@@ -498,11 +501,26 @@ class KoreMultiFileUploaderPlugin {
       return;
     }
     
-    // Read base64 for media files if not already set
+    // For non-Safari videos, resulttype is just a canvas thumbnail, so we need to read full video
+    // For other media types, if resulttype exists, use it
+    if (selectedFile.resulttype && selectedFile.type !== 'video') {
+      if (uploadConfig.chunkUpload) {
+        me.createElement(selectedFile);
+        ele = me.hostInstance.chatEle.querySelector('#uid' + selectedFile.uniqueId);
+        me.initiateRcorder(selectedFile, ele);
+        me.multifileuploader(uploadConfig, ele);
+      } else {
+        me.acceptFileRecording(selectedFile);
+      }
+      return;
+    }
+    
+    // Read base64 for media files (always read full file for non-Safari videos)
     var reader: any = new FileReader();
     reader.onloadend = function (evt: any) {
       if (evt.target.readyState === FileReader.DONE) {
         var converted = reader.result.replace(/^.*;base64,/, '');
+        // For videos, replace thumbnail with full video base64
         selectedFile.resulttype = converted;
         if (uploadConfig.chunkUpload) {
           me.createElement(selectedFile);
@@ -628,7 +646,7 @@ class KoreMultiFileUploaderPlugin {
       fileUrl: scope.fileUrl || '',
       size: _recState.sizeInMb,
       uniqueId: _recState.uniqueId,
-      ...((_recState.type === 'image' || _recState.type === 'audio' || _recState.type === 'video') && {fileContentBase64: "data:" + _recState.type + "/" + _recState.fileType + ";base64," + _recState.resulttype}) // Add Base64 content for rendering purpose with prefix for image, audio, and video
+      ...((_recState.type === 'image' || _recState.type === 'audio' || _recState.type === 'video') && _recState.resulttype && {fileContentBase64: "data:" + _recState.type + "/" + _recState.fileType + ";base64," + _recState.resulttype}) // Add Base64 content for rendering purpose with prefix for image, audio, and video
     };
     if (att.fileUrl) {
       me.hostInstance.attachmentData.push(att);
