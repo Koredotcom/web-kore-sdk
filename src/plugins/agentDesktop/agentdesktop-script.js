@@ -2434,14 +2434,13 @@ cobrowseInitialize = (cobrowseRequest) => {
                         });
                     } else {
                         // Single-select: Simpler with just value match
-                        if (typeof evt.value === 'string') {
+                        // Check for null/undefined explicitly to allow 0, "", false as valid values
+                        if (evt.value !== null && evt.value !== undefined) {
                             const targetOption = Array.from(el.options)
                                 .find(opt => opt.value === evt.value || opt.text === evt.value);
                             if (targetOption) {
                                 el.value = evt.value;
                             }
-                        } else if (typeof evt.selectedIndex === 'number') {
-                            el.selectedIndex = evt.selectedIndex;
                         }
                     }
                     // Dispatch events so frameworks/listeners react
