@@ -9,6 +9,7 @@ on:
       - v2/dev 
       - v2/dev-rc1
       - v3/dev
+      - v3/iosvid
 jobs:
   build:
     runs-on: ubuntu-latest
