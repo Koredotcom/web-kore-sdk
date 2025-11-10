@@ -365,8 +365,13 @@ class KoreMultiFileUploaderPlugin {
         if (recState.type === 'video' && me.isSafariIOS()) {
           const videoReader = new FileReader();
           videoReader.onload = function (e: any) {
-            const base64Data = e.target.result.replace(/^.*;base64,/, '');
+            const dataUrl = e.target.result;
+            // Extract MIME type from data URL (e.g., "data:video/quicktime;base64,...")
+            const mimeMatch = dataUrl.match(/^data:([^;]+);base64,/);
+            const mimeType = mimeMatch ? mimeMatch[1] : `video/${recState.fileType}`;
+            const base64Data = dataUrl.replace(/^.*;base64,/, '');
             recState.resulttype = base64Data;
+            recState.mimeType = mimeType; // Store actual MIME type for Safari iOS
             me.getFileToken(recState, selectedFile);
           };
           videoReader.readAsDataURL(selectedFile);
@@ -519,7 +524,13 @@ class KoreMultiFileUploaderPlugin {
     var reader: any = new FileReader();
     reader.onloadend = function (evt: any) {
       if (evt.target.readyState === FileReader.DONE) {
-        var converted = reader.result.replace(/^.*;base64,/, '');
+        const dataUrl = evt.target.result;
+        // Extract MIME type from data URL for accurate type detection
+        const mimeMatch = dataUrl.match(/^data:([^;]+);base64,/);
+        if (mimeMatch) {
+          selectedFile.mimeType = mimeMatch[1];
+        }
+        var converted = dataUrl.replace(/^.*;base64,/, '');
         // For videos, replace thumbnail with full video base64
         selectedFile.resulttype = converted;
         if (uploadConfig.chunkUpload) {
@@ -639,15 +650,28 @@ class KoreMultiFileUploaderPlugin {
     me.hostInstance.chatEle.querySelector('.typing-text-area').focus();
 
     // Push attachment info using per-upload scope
-    const att = {
+    // For Safari iOS videos, use the stored MIME type; otherwise construct from type and fileType
+    let fileContentBase64: string | undefined = undefined;
+    if ((_recState.type === 'image' || _recState.type === 'audio' || _recState.type === 'video') && _recState.resulttype) {
+      if (_recState.mimeType) {
+        // Use stored MIME type (for Safari iOS videos)
+        fileContentBase64 = "data:" + _recState.mimeType + ";base64," + _recState.resulttype;
+      } else {
+        // Construct MIME type from type and fileType
+        fileContentBase64 = "data:" + _recState.type + "/" + _recState.fileType + ";base64," + _recState.resulttype;
+      }
+    }
+    const att: any = {
       fileId: scope.fileId || _recState.fileId,
       fileName: _recState.name,
       fileType: _recState.type,
       fileUrl: scope.fileUrl || '',
       size: _recState.sizeInMb,
       uniqueId: _recState.uniqueId,
-      ...((_recState.type === 'image' || _recState.type === 'audio' || _recState.type === 'video') && _recState.resulttype && {fileContentBase64: "data:" + _recState.type + "/" + _recState.fileType + ";base64," + _recState.resulttype}) // Add Base64 content for rendering purpose with prefix for image, audio, and video
     };
+    if (fileContentBase64) {
+      att.fileContentBase64 = fileContentBase64; // Add Base64 content for rendering purpose with correct MIME type
+    }
     if (att.fileUrl) {
       me.hostInstance.attachmentData.push(att);
     }

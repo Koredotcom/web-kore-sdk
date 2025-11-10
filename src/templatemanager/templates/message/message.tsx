@@ -278,8 +278,8 @@ export function Message(props: any) {
                                             <div className="attchment-details">
                                                 <div className="content-info">
                                                     { attachment.fileType == 'video' && 
-                                                        <video width="240" height="145" controls>
-                                                            <source src={attachment.fileContentBase64 || attachment.fileUrl}></source>
+                                                        <video width="240" height="145" controls playsInline>
+                                                            <source src={attachment.fileContentBase64 || attachment.fileUrl} type={attachment.fileContentBase64 ? attachment.fileContentBase64.split(';')[0].split(':')[1] : 'video/mp4'}></source>
                                                         </video>
                                                     }
                                                     <h1>{attachment.fileName}</h1>
