@@ -2259,7 +2259,7 @@ cobrowseInitialize = (cobrowseRequest) => {
             }
         }
         function handleMessageInternal(obj) {
-            const TEXT_INPUT_TYPES = ['text', 'email', 'number', 'password', 'search', 'tel', 'url', 'date', 'datetime-local', 'month', 'time', 'week'];
+            const TEXT_INPUT_TYPES = ['text', 'email', 'number', 'password', 'search', 'tel', 'url', 'date', 'datetime-local', 'month', 'time', 'week', 'color', 'range'];
             // Handle input without explicit type (defaults to text) or with valid text-like types
             const inputType = obj.targetType || 'text';
             const isTextInput = obj.tagName === 'INPUT' && TEXT_INPUT_TYPES.includes(inputType);
@@ -2462,7 +2462,7 @@ cobrowseInitialize = (cobrowseRequest) => {
         }
         
         let lastFocusedFormElement = null;
-        function simulate(element, eventName) {
+        function simulate(element, eventName, eventData) {
             var options = extend(defaultOptions, arguments[2] || {});
             var oEvent, eventType = null;
 
@@ -2493,6 +2493,18 @@ cobrowseInitialize = (cobrowseRequest) => {
                 element.fireEvent('on' + eventName, oEvent);
             }
             if (eventName === 'click') {
+                if (element.tagName === 'INPUT') {
+                    if(element.type === 'range' || element.type === 'number'){
+                        element.value = eventData.value;
+                    }
+                    try {
+                        const inputEvent = new Event('input', { bubbles: true });
+                        element.dispatchEvent(inputEvent);
+                        const changeEvent = new Event('change', { bubbles: true });
+                        element.dispatchEvent(changeEvent);
+                    }
+                    catch (e) { }
+                }
                 /**
                  * Manage focus/blur events for form validation in single page applications (Angular/React/Vue)
                  * When agent clicks form elements, dispatch blur on previous element (marks as "touched")
