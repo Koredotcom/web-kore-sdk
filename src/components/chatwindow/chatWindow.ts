@@ -1390,7 +1390,7 @@ bindSDKEvents  () {
   });
 
   me.bot.on('reconnected', (response: any) => {
-    if (me.config?.syncMessages?.onReconnect?.enable && response?.reconnected) {
+    if (me.config?.syncMessages?.onReconnect?.enable && response?.reconnected && !me.historyLoading) {
       me.bot.getHistory({ forHistorySync: true, limit: me.config?.syncMessages?.onReconnect?.batchSize });
     }
   });
