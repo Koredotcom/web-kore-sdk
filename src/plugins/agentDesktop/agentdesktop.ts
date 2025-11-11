@@ -310,7 +310,7 @@ class AgentDesktopPlugin {
                     }
                     if (extraInfoEle && !extraInfoEle?.querySelectorAll('.read-text').length) {
                         const ele1 = document.createElement('div');
-                        ele1.textContent = 'Sent';
+                        ele1.textContent =  me.hostInstance.config.botMessages.sent || 'Sent';
                         ele1.classList.add('read-text');
                         const ele2 = document.createElement('div');
                         ele2.classList.add('sent');
@@ -326,7 +326,7 @@ class AgentDesktopPlugin {
                                 if (tempData.message.type === "message_delivered") {
                                     if (!ele.querySelectorAll('.delivered').length) {
                                         const childEle1 = ele.querySelector('.read-text');
-                                        childEle1.textContent = 'Delivered';
+                                        childEle1.textContent = me.hostInstance.config.botMessages.delivered || 'Delivered';
                                         const childEle2 = ele.querySelector('.sent');
                                         if (childEle2) {
                                             childEle2.classList = [];
@@ -335,7 +335,7 @@ class AgentDesktopPlugin {
                                     }
                                 } else if (tempData.message.type === "message_read") {
                                     const childEle1 = ele.querySelector('.read-text');
-                                    childEle1.textContent = 'Read';
+                                    childEle1.textContent = me.hostInstance.config.botMessages.read || 'Read';
                                     const childEle2 = ele.querySelector('.delivered');
                                     if (childEle2) {
                                         childEle2.classList = [];

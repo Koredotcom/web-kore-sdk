@@ -726,7 +726,11 @@ initi18n  () {
         reconnect: 'Reconnect Chat',
         today: 'Today',
         yesterday: 'Yesterday',
-        clickToCall: 'Connect to Voice Agent'
+        clickToCall: 'Connect to Voice Agent',
+        read: 'Read',
+        delivered: 'Delivered',
+        sent: 'Sent',
+        you: 'You'
       },
     },
   };

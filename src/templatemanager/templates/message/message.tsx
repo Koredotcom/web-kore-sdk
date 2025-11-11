@@ -190,7 +190,7 @@ export function Message(props: any) {
                                             <div className="time-stamp">
                                                 <time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format, hostInstance.config)}</time>
                                             </div>
-                                            <div className="you-text">You</div>
+                                            <div className="you-text">{hostInstance.config.botMessages.you || 'You'}</div>
                                         </div>}
                                         <div className="bubble-msg-with-img">
                                             <div className="bubble-msg" dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgItem.cInfo.renderMsg && msgItem.cInfo.renderMsg !== '' ? msgItem.cInfo.renderMsg : msgItem.cInfo.body, "user", msgItem) }}>
@@ -211,7 +211,7 @@ export function Message(props: any) {
                                         </div>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'bottom' && <div className="bottom-info" aria-hidden="true">
                                             <div className="time-stamp"><time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format, hostInstance.config)}</time></div>
-                                            <div className="you-text">You</div>
+                                            <div className="you-text">{hostInstance.config.botMessages.you || 'You'}</div>
                                         </div>}
                                     </div>
                                 </div> }

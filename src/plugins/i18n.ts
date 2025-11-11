@@ -38,7 +38,11 @@ class Korei18nPlugin {
                 reconnect: "إعادة الاتصال بالدردشة",
                 today: "اليوم",
                 yesterday: "أمس",
-                clickToCall: "الاتصال بوكيل الصوت"
+                clickToCall: "الاتصال بوكيل الصوت",
+                read: "مقروءة",
+                delivered: "مسلّمة",
+                sent: "مرسلة",
+                you: "أنت"
             },
             ja: {
                 message: 'メッセージ...',
@@ -74,7 +78,11 @@ class Korei18nPlugin {
                 reconnect: 'チャットを再接続',
                 today: '今日',
                 yesterday: '昨日',
-                clickToCall: "音声エージェントに接続"
+                clickToCall: "音声エージェントに接続",
+                read: "読み込み",
+                delivered: "配信",
+                sent: "送信",
+                you: "あなた"
             },
             ko: {
                 message: '메시지...',
@@ -110,7 +118,11 @@ class Korei18nPlugin {
                 reconnect: '채팅 재연결',
                 today: '오늘',
                 yesterday: '어제',
-                clickToCall: "음성 에이전트에 연결"
+                clickToCall: "음성 에이전트에 연결",
+                read: "읽음",
+                delivered: "배달",
+                sent: "전송",
+                you: "당신"
             },
             zh: {
                 message: "消息...",
@@ -146,7 +158,11 @@ class Korei18nPlugin {
                 reconnect: "重新连接聊天",
                 today: "今天",
                 yesterday: "昨天",
-                clickToCall: "连接到语音代理"
+                clickToCall: "连接到语音代理",
+                read: "已读",
+                delivered: "已送达",
+                sent: "已发送",
+                you: "你"
             },
             de: {
                 message: "Nachricht...",
@@ -182,7 +198,11 @@ class Korei18nPlugin {
                 reconnect: "Chat wiederherstellen",
                 today: "Heute",
                 yesterday: "Gestern",
-                clickToCall: " Mit Sprachagent verbinden"
+                clickToCall: " Mit Sprachagent verbinden",
+                read: "Gelesen",
+                delivered: "Geliefert",
+                sent: "Gesendet",
+                you: "Sie"
             }
         }
     }
