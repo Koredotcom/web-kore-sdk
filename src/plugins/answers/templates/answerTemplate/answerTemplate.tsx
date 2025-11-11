@@ -18,7 +18,8 @@ export function Answers(props: any) {
     const helpers = KoreHelpers.helpers;
     const [answersObj, setAnswersObj]: any = useState({ "generative": { "answerFragments": [], "sources": [] }});
     const [modelType, setModelType] = useState('');
-    const [selectedIndex, setSelectedIndex] = useState(0);
+    const [selectedIndex, setSelectedIndex] = useState<any>([]);
+    const [exactMatch, setExactMatch] = useState<boolean>(false);
 
     useEffect(() => {
         const results = messageObj?.msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.snippet_content;
@@ -32,13 +33,32 @@ export function Answers(props: any) {
     const updateGenerativePayload = (data: any) => {
         let answer_fragment: Array<Object> = [];
         let sources_data: Array<Object> = [];
+        // Process all sources from all items
         data?.forEach((item: any) => {
-            const isExist = sources_data.find((source: any) => source.id === item?.sources[0]?.doc_id);
-            if (!isExist) sources_data.push({ "title": item?.sources[0]?.title, "id": item?.sources[0]?.doc_id, "url": item?.sources[0]?.url, "image_url": item?.sources[0]?.image_url||[] });
+            item?.sources?.forEach((source: any) => {
+                const isExist = sources_data.find((existingSource: any) => existingSource.url === source?.url);
+                if (!isExist) {
+                    sources_data.push({ 
+                        "title": source?.title, 
+                        "id": source?.doc_id, 
+                        "url": source?.url, 
+                        "image_url": source?.image_url || [] 
+                    });
+                }
+            });
         });
+        
+        // Process answer fragments and map them to all relevant sources
         data?.forEach((answer: any) => {
-            const index = sources_data.findIndex((source: any) => source.id === answer?.sources[0]?.doc_id);
-            answer_fragment.push({ "title": answer?.answer_fragment, "id": index });
+            let indexes:any = [];
+            answer?.sources?.forEach((source: any) => {
+                const index = sources_data.findIndex((existingSource: any) => existingSource.url === source?.url);
+                if (index !== -1) {
+                    indexes.push(index);
+                }
+            });
+
+            answer_fragment.push({ "title": answer?.answer_fragment, "indexes": indexes });
         });
         setAnswersObj((prevState: any) => ({ ...prevState, "generative": { "answerFragment": answer_fragment,  "sources": sources_data} }));
     }
@@ -93,30 +113,42 @@ export function Answers(props: any) {
         }
       }
 
+        const renderCitationList=(sourceIndex:any,hasSource:any,isSelected:any)=>
+            {
 
+            
+            
+            return <div className={`sa-tooltip-container ${isSelected && 'position-class'} `}>
+                { 
+                
+                hasSource ? <Fragment>
+                                <span className={` sa-answer-list-item ${isSelected && 'sa-answer-list-item-selected'} ${!answersObj?.generative?.sources?.[sourceIndex]?.url && 'pointer-events-none'}`} onClick={()=>redirectToURL(answersObj?.generative?.sources?.[sourceIndex]?.url)}>
+                                    {sourceIndex + 1}
+                                </span> 
+                                {selectedIndex.includes(sourceIndex) && (
+                                    <div class="sa-tooltip">{answersObj?.generative?.sources?.[sourceIndex]?.title || answersObj?.generative?.sources?.[sourceIndex]?.url}</div>
+                                )}
+                            </Fragment> 
+                        : null
+                }
+            </div>
+}
       const renderAnswerResult=(answer:any)=>{
-        const hasSource= answersObj?.generative?.sources?.[answer?.id]?.title || answersObj?.generative?.sources?.[answer?.id]?.url
-
-        return   <span className={`sa-answer-result-heading ${(selectedIndex===answer?.id +1 && hasSource) &&'sa-answer-result-heading-selected'}`} onMouseOver={()=>setSelectedIndex(answer?.id + 1)} onMouseOut={()=>setSelectedIndex(0)}>
+        let hasSource:any = answer?.indexes?.some((index:any)=>answersObj?.generative?.sources?.[index]?.title || answersObj?.generative?.sources?.[index]?.url)
+        let isEqual:any = false;
+        if(exactMatch){
+            isEqual = selectedIndex?.length === answer?.indexes?.length && answer?.indexes.every((val:any, i:any) =>  selectedIndex?.includes(val));         
+        }else{
+            isEqual = answer?.indexes.some((val:any, i:any) =>  selectedIndex?.includes(val));         
+        }
+        const isSelected= hasSource && isEqual;
+        return   <span className={`sa-answer-result-heading ${(isSelected) &&'sa-answer-result-heading-selected'}`} onMouseOver={()=>{setSelectedIndex(answer?.indexes);setExactMatch(true)}} onMouseOut={()=>{setSelectedIndex([]);setExactMatch(false)}}>
                     {
                         /<[^>]+>/.test(answer?.title)
                         ? <span dangerouslySetInnerHTML={{__html: answer?.title}}></span>
                         : <span dangerouslySetInnerHTML={{__html: helpers.convertMDtoHTML(answer?.title, "bot")}}></span>
                     }
-                    <div className={`sa-tooltip-container ${selectedIndex === answer?.id + 1 && 'position-class'} `}>
-                           { 
-                            
-                            hasSource ? <Fragment>
-                                            <span className={` sa-answer-list-item ${selectedIndex === answer?.id + 1 && 'sa-answer-list-item-selected'} ${!answersObj?.generative?.sources?.[answer?.id]?.url && 'pointer-events-none'}`} onClick={()=>redirectToURL(answersObj?.generative?.sources?.[answer?.id]?.url)}>
-                                                {answer?.id + 1}
-                                            </span> 
-                                            {selectedIndex === answer?.id + 1 && (
-                                                <div class="sa-tooltip">{answersObj?.generative?.sources?.[selectedIndex - 1]?.title || answersObj?.generative?.sources?.[selectedIndex - 1]?.url}</div>
-                                            )}
-                                         </Fragment> 
-                                    : null
-                            }
-                    </div>
+                   {answer?.indexes?.map((index:any)=>renderCitationList(index,hasSource,exactMatch ? isSelected : selectedIndex.includes(index)))}
                 </span>
       }
     
@@ -146,9 +178,9 @@ export function Answers(props: any) {
                                         answersObj?.generative?.sources?.filter((source: any) => source?.title?.length > 0)?.map((source: any, index: number) => (
                                             <div className='sa-tooltip-container'>
 
-                                            <div className={`sa-answer-result-footer  ${(selectedIndex===index+1)&&'selected'} ${!source?.url && 'pointer-events-none'}`} 
-                                                    onMouseOver={() => setSelectedIndex(index+1)}
-                                                    onMouseOut={() => setSelectedIndex(0)}>
+                                            <div className={`sa-answer-result-footer  ${(selectedIndex.includes(index))&&'selected'} ${!source?.url && 'pointer-events-none'}`} 
+                                                    onMouseOver={() => setSelectedIndex([index])}
+                                                    onMouseOut={() => setSelectedIndex([])}>
                                             <span onClick={()=>redirectToURL(source?.url)}>{index + 1}. <span>{ extractShortDomainOrFile(source?.title || source?.url)}</span></span>
                                                     {(source?.image_url?.length > 0)&&
                                                     <Fragment>
@@ -158,7 +190,7 @@ export function Answers(props: any) {
                                                     </Fragment>
                                                     }
                                              </div>
-                                             {selectedIndex === index + 1 && (
+                                             {selectedIndex.includes(index) && (
                                                 <div class="sa-tooltip">{source?.title || source?.url}</div>
                                              )}
 
@@ -228,7 +260,6 @@ export function Answers(props: any) {
     }
 
 export function answerTemplateCheck(props: any) {
-   
     const hostInstance = props.hostInstance;
     const msgData = props.msgData; 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'answerTemplate') {
