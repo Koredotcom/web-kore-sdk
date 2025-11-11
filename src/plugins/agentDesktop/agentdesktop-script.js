@@ -2494,7 +2494,10 @@ cobrowseInitialize = (cobrowseRequest) => {
             if (eventName === 'click') {
                 if (element.tagName === 'INPUT') {
                     if(element.type === 'range' || element.type === 'number'){
-                        element.value = eventData.value;
+                        /* Only set value if it's defined and not null*/
+                        if(eventData?.value !== null && eventData?.value !== undefined){
+                            element.value = eventData.value;
+                        }
                     }
                     try {
                         const inputEvent = new Event('input', { bubbles: true });
@@ -2569,6 +2572,11 @@ cobrowseInitialize = (cobrowseRequest) => {
             var cbId = obj.cbId;
             var elements = document.querySelectorAll(`[cb-id="${cbId}"]`);
             if (elements && elements.length > 0) {
+                /* Only process contentEditable divs, not regular div*/
+                if (!elements[0].isContentEditable) {
+                    /* Skip processing for non-editable divs*/
+                    return; 
+                } 
                 if (!(obj.which >= 0 && obj.which <= 46)) {
                     elements[0].setAttribute("do-not-mutate", "true");
                     elements[0].textContent = obj.textContent;
