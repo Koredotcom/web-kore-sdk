@@ -413,7 +413,9 @@ class KoreMultiFileUploaderPlugin {
             const img = new Image();
             img.src = url;
             img.onload = function () {
-              recState.resulttype = me.getDataURL(img);
+              const dataUrl = me.getDataURL(img);
+              // Extract base64 part from data URL (getDataURL returns "data:image/png;base64,...")
+              recState.resulttype = dataUrl.replace(/^.*;base64,/, '');
               me.getFileToken(recState, selectedFile);
             };
           };
