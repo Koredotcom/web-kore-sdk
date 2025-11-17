@@ -1,3 +1,16 @@
+### 11.19.1
+* Release Nov 17, 2025
+* Bug fixes
+  * date, date range and clock templates selection issue fix
+  * preserved \n in the user message when sending to bot/agent
+  * fixed json printing issue for table template
+  * co browse issues fix in agent desktop plugin
+  * proactive web campaign plugin issues fix
+  * fixed citation issue in answers template
+  * i18n changes for read receipts
+  * double history api call issue fix when onReconnect feature is used
+  * other minor bug fixes
+
 ### 11.19.0
 * Release Oct 25, 2025
 * Breaking Changes
