@@ -34,6 +34,7 @@ class ProactiveWebCampaignPlugin {
     customDataObject: any = {};
     isInitialPageLoaded: boolean = false; // NEW: Flag to track initial page processing
     browserSessionId: string = ''; // Unique identifier for the campaign trigger session
+    isPWEChatTriggered: string = '';
     
     // =====================================================================================
     //                          CUSTOM CONDITIONTYPE SUPPORT PROPERTIES
@@ -132,6 +133,15 @@ class ProactiveWebCampaignPlugin {
                 me.onInit();
             }
         });
+        me.hostInstance.on(me.hostInstance.EVENTS.BEFORE_WS_CONNECTION, (event: any) => {
+            if (me.isPWEChatTriggered) {
+                let url = event.data.url;
+                let socketUrl = url.replace('&isReconnect=true', '');
+                socketUrl = socketUrl + "&pwe=" + me.isPWEChatTriggered;
+                event.data.url = socketUrl;
+                me.isPWEChatTriggered = '';
+            }
+        });
     }
 
     onInit() {
@@ -206,9 +216,28 @@ class ProactiveWebCampaignPlugin {
                 // Title changes don't require timer restart, just rule evaluation
                 this.sendEvent(pageObj, 'titleChange');
             });
+        setTimeout(() => {
+            this.handleAvatarClick();
+        }, 1000);
         } catch (error) {
             console.error('PWC: initialization error', error);
         }
+    }
+
+    handleAvatarClick() {
+        // Handle avatar click
+        document.querySelector(".avatar-bg")?.addEventListener("click", () => {
+            const isProactivePersistentTemplate = sessionStorage.getItem('pwc_persisted_template');
+            const activeCampaignTemplate = document.querySelector(ProactiveWebCampaignPlugin.ACTIVE_CAMPAIGN_SELECTOR);
+
+            if(isProactivePersistentTemplate && activeCampaignTemplate) {
+                // Clear from sessionStorage when chat opens
+                this.clearPersistedTemplateFromStorage();
+                
+                // Remove from DOM
+                activeCampaignTemplate?.remove();
+            }
+        });
     }
 
     /**

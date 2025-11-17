@@ -64,35 +64,16 @@ export function Chat(props: any) {
         hostInstance.plugins.ProactiveWebCampaignPlugin.clearPersistedTemplateFromStorage();
         
         hostInstance.isWelcomeScreenOpened = true;
+        hostInstance.plugins.ProactiveWebCampaignPlugin.isPWEChatTriggered = action;
         hostInstance.chatEle.classList.remove('minimize-chat');
         hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
         hostInstance.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
         hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(hostInstance.config.branding.chat_bubble.expand_animation);
-        hostInstance.bot.close();
-        hostInstance.bot.KoreRTMClient.prototype.reWriteURL = function connect(socketUrl: any) {
-            if (this.reWriteSocketURL) {
-                var parser = document.createElement('a');
-                parser.href = socketUrl;
-                if (this.reWriteSocketURL.protocol) {
-                    parser.protocol = this.reWriteSocketURL.protocol;
-                }
-                if (this.reWriteSocketURL.hostname) {
-                    parser.hostname = this.reWriteSocketURL.hostname;
-                }
-                if (this.reWriteSocketURL.port) {
-                    parser.port = this.reWriteSocketURL.port;
-                }
-                socketUrl=parser.href;
-            }
-            
-            let url = socketUrl.replace('&isReconnect=true', '');
-            socketUrl= url +"&pwe="+action;
-            return socketUrl;
-          };
+        hostInstance.bot.RtmClient._safeDisconnect();
         hostInstance.bot.logInComplete();
         setTimeout(()=>{
             let msg = "connecting "+action;
-            hostInstance.sendMessage(msg);   
+            hostInstance.sendMessage(msg); 
         },2000);
         hostInstance.chatEle.querySelector('.welcome-chat-section-campaign').remove();
         // setConversationInprogress in agentdesktop-script.js
