@@ -3533,6 +3533,9 @@ var checkListTemplate = '<script id="chat_checklist_tmpl" type="text/x-jqury-tmp
 			// $('.chatInputBox').trigger(k);
 			var selectedOption = $(this).find('option:selected');
 			chatInitialize.sendMessage($(".chatInputBox").text(this.value), selectedOption.attr('name'));	
+			setTimeout(() => {
+				$('.kore-chat-footer .chatInputBox').focus();
+			}, 600);
 		});
 		/* Inline form submit click function starts here*/
 		$(messageHtml).find(".formMainComponent").on('keydown',function(e){
