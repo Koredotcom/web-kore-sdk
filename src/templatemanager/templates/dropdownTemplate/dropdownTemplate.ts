@@ -30,7 +30,7 @@ class DropdownTemplate {
             // var k = $.Event('keydown', { which: 13 });
             // k.keyCode = 13
             // $('.chatInputBox').trigger(k);
-
+            chatWindowInstance.focusInputTextbox();
         });
 
     }
