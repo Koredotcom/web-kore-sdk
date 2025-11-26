@@ -3802,7 +3802,18 @@ class ProactiveWebCampaignPlugin {
         
         try {
             const response = await this.sendApiEvent(payload, '/pweevents');
-            if(response.response.body.layoutDesign){
+            let suppressionResponse = response.response.ruleInfo;
+            if(suppressionResponse.isActiveCampaignTemplate 
+                || suppressionResponse.isChatWindowOpen 
+                || suppressionResponse.isCooldownActive 
+                || suppressionResponse.isVisitorAlreadyChatting
+            ){
+                const existingPweData = JSON.parse(window.sessionStorage.getItem('pwe_data') || '{}');
+                let campInstanceId = response.response.body.campInfo.campInstId;
+                existingPweData[campInstanceId].isLayoutTriggered = false;
+                window.sessionStorage.setItem('pwe_data', JSON.stringify(existingPweData));
+                this.isPendingSendAPIEvent = false;
+            } else if(response.response.body.layoutDesign){
                 // Persist template to sessionStorage for multi-page persistence
                 this.persistTemplate({
                     templateType: response.response.body.campInfo.webCampaignType,

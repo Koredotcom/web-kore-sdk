@@ -71,10 +71,6 @@ export function Chat(props: any) {
         hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(hostInstance.config.branding.chat_bubble.expand_animation);
         hostInstance.bot.RtmClient._safeDisconnect();
         hostInstance.bot.logInComplete();
-        setTimeout(()=>{
-            let msg = "connecting "+action;
-            hostInstance.sendMessage(msg); 
-        },2000);
         hostInstance.chatEle.querySelector('.welcome-chat-section-campaign').remove();
         // setConversationInprogress in agentdesktop-script.js
         if(action === 'audio' || action === 'video'){
