@@ -728,7 +728,9 @@ initi18n  () {
         read: 'Read',
         delivered: 'Delivered',
         sent: 'Sent',
-        you: 'You'
+        you: 'You',
+        uploaded: 'uploaded',
+        download: 'Download'
       },
     },
   };

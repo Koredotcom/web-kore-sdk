@@ -232,7 +232,7 @@ export function Message(props: any) {
                                                     <h2>{attachment.fileName}</h2>
                                                     <p>{`${attachment.size} MB`}</p>
                                                 </div>
-                                                <button className="kr-button-blue-light" onClick={() => download(attachment.fileUrl, attachment.fileName?.split('.')?.[0] || 'file')}>Download</button>
+                                                <button className="kr-button-blue-light" onClick={() => download(attachment.fileUrl, attachment.fileName?.split('.')?.[0] || 'file')}>{hostInstance.config.botMessages.download}</button>
                                             </div>
                                         </div>
                                     </section>
@@ -265,7 +265,7 @@ export function Message(props: any) {
                                                         </audio> }
                                                     <p>{`${attachment.size} MB`}</p>
                                                 </div>
-                                                <button className="kr-button-blue-light" onClick={() => download(attachment.fileUrl, attachment.fileName?.split('.')?.[0] || 'file')}>Download</button>
+                                                <button className="kr-button-blue-light" onClick={() => download(attachment.fileUrl, attachment.fileName?.split('.')?.[0] || 'file')}>{hostInstance.config.botMessages.download}</button>
                                             </div>
                                         </div>
                                     </div>
