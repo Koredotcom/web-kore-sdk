@@ -70,7 +70,7 @@ export function Message(props: any) {
             
             // Prepare the URL with isSdk parameter (for GET request)
             const urlWithParams = new URL(url);
-            urlWithParams.searchParams.append('isSdk', 'true');
+            urlWithParams.searchParams.append('isSDK', 'true');
             
             // Fetch the file with authorization header
             const response = await fetch(urlWithParams.toString(), {
