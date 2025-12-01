@@ -63,14 +63,63 @@ export function Message(props: any) {
         }, 800);
     }
 
-    const download = (url: any, filename: any) => {
-        let link = document.createElement("a");
-        link.download = filename;
-        link.target = "_blank";
-        link.href = url;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    const download = async (url: any, filename: any) => {
+        try {
+            // Get access token from hostInstance config
+            const accessToken = hostInstance.config.botOptions.accessToken;
+            
+            // Prepare the URL with isSdk parameter (for GET request)
+            const urlWithParams = new URL(url);
+            urlWithParams.searchParams.append('isSdk', 'true');
+            
+            // Fetch the file with authorization header
+            const response = await fetch(urlWithParams.toString(), {
+                method: 'GET', // or 'POST' if your API requires it
+                headers: {
+                    'Authorization': `bearer ${accessToken}`,
+                    // Add other headers if needed
+                },
+                // If you need to send isSdk in body (for POST request), uncomment below:
+                // body: JSON.stringify({ isSdk: true }),
+                // headers: {
+                //     'Authorization': `bearer ${accessToken}`,
+                //     'Content-Type': 'application/json',
+                // }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Download failed: ${response.statusText}`);
+            }
+            
+            // Convert response to blob
+            const blob = await response.blob();
+            
+            // Create object URL from blob
+            const blobUrl = window.URL.createObjectURL(blob);
+            
+            // Create and trigger download link
+            let link = document.createElement("a");
+            link.download = filename;
+            link.href = blobUrl;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Clean up the object URL after a short delay
+            setTimeout(() => {
+                window.URL.revokeObjectURL(blobUrl);
+            }, 100);
+        } catch (error) {
+            console.error('Download error:', error);
+            // Fallback to original method if fetch fails
+            let link = document.createElement("a");
+            link.download = filename;
+            link.target = "_blank";
+            link.href = url;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
     }
 
     let botStyles = {
