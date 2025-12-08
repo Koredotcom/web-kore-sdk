@@ -1,3 +1,11 @@
+### 11.20.0
+* Release Dec 06, 2025
+* Bug fixes
+  * dropped global bot singleton and scoped instance to constructor and moved _chatHistoryLoaded to inside kore bot
+  * proactive web campaigns issues fix
+  * accessibility doc 1.4.10 criterion issue fix
+  * added i18n strings in file upload and download option
+
 ### 11.19.1
 * Release Nov 17, 2025
 * Bug fixes
