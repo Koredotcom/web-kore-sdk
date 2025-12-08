@@ -1,3 +1,8 @@
+### 10.21.0
+- SDK Release Dec 06, 2025
+* Bug fixes
+  * dropdown template input focus after selection issue fix
+
 ### 10.20.1
 - SDK Release Nov 17, 2025
 * Stable release
