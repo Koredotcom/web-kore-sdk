@@ -40,7 +40,7 @@ export function FeedbackTemplate(props: any): any {
     //API call to update feedback
     const updateFeedback = (type:string,selectedFeedbackArray?:any[]) => {
         const streamId=hostInstanceData?.config?.botOptions?.botInfo?.taskBotId;
-        const url = hostInstanceData?.config?.botOptions?.koreAPIUrl + 'searchsdk/' + streamId + '/feedback';
+        const url = hostInstanceData?.config?.botOptions?.koreAPIUrl?.replace(/\/?$/, "/") + 'searchsdk/' + streamId + '/feedback';
         const updatedFeedbackArray= selectedFeedbackArray ??  feedbackArr;
         const selectedTags = updatedFeedbackArray?.filter(item => item.selected)
         .map(item => item.name);

@@ -22,6 +22,8 @@ class AnswersTemplatesPlugin {
         let cwInstance = me.hostInstance;
         cwInstance.on("viewInit", (chatWindowEle: any) => {
             me.onInit();
+        });
+        cwInstance.on("jwtGrantSuccess", (response: any) => {
             me.getFeedbackSettings();
         });
     }
