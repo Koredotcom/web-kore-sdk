@@ -45,7 +45,7 @@ class AnswersTemplatesPlugin {
         let me: any = this;
         let $ = me.hostInstance.$;
         return $.ajax({
-            url: me.hostInstance.config?.botOptions?.koreAPIUrl + "searchsdk/" + me.hostInstance.config?.botOptions?.botInfo?.taskBotId + "/settings",
+            url: me.hostInstance.config?.botOptions?.koreAPIUrl?.replace(/\/?$/, "/") + "searchsdk/" + me.hostInstance.config?.botOptions?.botInfo?.taskBotId + "/settings",
             type: "GET",
             headers: {
                 "Authorization": "bearer " + me.hostInstance.config?.botOptions?.accessToken
