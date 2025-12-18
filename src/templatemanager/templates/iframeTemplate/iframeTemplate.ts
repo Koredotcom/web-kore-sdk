@@ -28,13 +28,13 @@ class IframeTemplate {
                 <li class="inlineIframeContainer"> \
                     <div class="iframeBubble"> \
                             <div class="uiformComponent">\
-                            <div id="closeInlineModel" role="region" aria-live="polite" aria-atomic="true" aira-label="close Form" class="loading_form iframeLoader"></div>\
+                            <div id="closeInlineModel" role="region" aria-live="polite" aria-atomic="true" aria-label="close Form" class="loading_form iframeLoader"></div>\
                             <iframe id="inlineIframeModal" src="${link_url}"></iframe> \
                             </div>\
                     </div>\
                 </li> \
             {{else}}\
-                <iframe role="region" aria-live="polite" aria-atomic="true" aira-label="Loadig Form" id="iframeModal" src="${link_url}"></iframe> \
+                <iframe role="region" aria-live="polite" aria-atomic="true" aria-label="Loadig Form" id="iframeModal" src="${link_url}"></iframe> \
             {{/if}}\
         {{else}}\
             <div role="region" aria-live="polite" aria-atomic="true" class="failedIframe">Failed to load iFrame</div>\
