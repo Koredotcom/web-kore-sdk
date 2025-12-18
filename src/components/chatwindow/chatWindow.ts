@@ -2249,7 +2249,7 @@ getChatTemplate (tempType: string) {
                <div id="caption"></div>\
          </div>\
          <div id="chatBodyModal" class="chatBodyModal animate-bottom">\
-         <span class="closeChatBodyModal" aira-label="Close Form" role="button" tabindex="0" aria-atomic="true"></span>\
+         <span class="closeChatBodyModal" aria-label="Close Form" role="button" tabindex="0" aria-atomic="true"></span>\
          <div id="closeInlineModel" class="loading_form iframeLoader"></div>\
          <div id="chatBodyModalContent"></div>\
          </div>\
