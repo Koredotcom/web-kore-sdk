@@ -1443,7 +1443,7 @@ parseSocketMessage(msgString:string){
 handleStreamingMessage(msgData: any) {
   const me: any = this;
   const messageId = msgData.messageId;
-  const newChunkText = msgData.message?.[0]?.cInfo?.body || msgData.message?.[0]?.component?.payload?.text || msgData.message?.[0]?.component?.payload || '';
+  const newChunkText = msgData.message?.[0]?.component?.payload?.payload?.answer || msgData.message?.[0]?.cInfo?.body || msgData.message?.[0]?.component?.payload?.text || msgData.message?.[0]?.component?.payload || '';
 
   let streamState = me.streamingMessages.get(messageId);
 
@@ -1475,11 +1475,24 @@ handleStreamingMessage(msgData: any) {
     }
     me.scrollToBottom();
   } else {
-    if (newChunkText) {
+    // If this is the final chunk with complete answer_payload, replace entire msgData
+    if (msgData.endChunk && msgData.message?.[0]?.component?.payload?.answer_payload) {
+      // Final chunk has complete payload structure - use it
+      streamState.text += newChunkText;
+      streamState.msgData = msgData;
+      streamState.msgData.message[0].cInfo.body = streamState.text;
+      if (streamState.msgData.message[0].component?.payload?.payload?.answer !== undefined) {
+        streamState.msgData.message[0].component.payload.payload.answer = streamState.text;
+      }
+    } else if (newChunkText) {
+      // Regular chunk - just accumulate text
       streamState.text += newChunkText;
       streamState.msgData.message[0].cInfo.body = streamState.text;
       if (streamState.msgData.message[0].component?.payload?.text) {
         streamState.msgData.message[0].component.payload.text = streamState.text;
+      }
+      if (streamState.msgData.message[0].component?.payload?.payload?.answer !== undefined) {
+        streamState.msgData.message[0].component.payload.payload.answer = streamState.text;
       }
       me.updateStreamingMessage(messageId, streamState.text);
     }
@@ -1493,6 +1506,19 @@ handleStreamingMessage(msgData: any) {
 updateStreamingMessage(messageId: string, fullText: string) {
   const me: any = this;
   const helpers = KoreHelpers.helpers;
+
+  // Check for answerTemplate streaming element
+  const answerElement = me.chatEle.querySelector(
+    `[data-cw-msg-id="${messageId}"] .sa-answer-result-heading`
+  );
+
+  if (answerElement) {
+    // For answerTemplate, use CMHelpers (which is called in the template)
+    const htmlContent = helpers.convertMDtoHTML(fullText, "bot", {});
+    answerElement.innerHTML = htmlContent;
+    me.scrollToBottom();
+    return;
+  }
 
   const textElement = me.chatEle.querySelector(
     `[data-cw-msg-id="${messageId}"] .bubble-msg`
@@ -1527,8 +1553,45 @@ stopStreamingMessage(messageId: string) {
   if (streamState.msgData.message[0].component?.payload?.text) {
     streamState.msgData.message[0].component.payload.text = streamState.text;
   }
+  if (streamState.msgData.message[0].component?.payload?.payload?.answer !== undefined) {
+    streamState.msgData.message[0].component.payload.payload.answer = streamState.text;
+  }
 
-  const domElement = me.chatEle.querySelector(`[data-cw-msg-id="${messageId}"]`);
+  // Mark streaming as complete to trigger full template render
+  streamState.msgData.endChunk = true;
+
+  // Check if this is an answerTemplate - if so, render full template alongside streaming template
+  const isAnswerTemplate = streamState.msgData.message?.[0]?.component?.payload?.template_type === 'answerTemplate';
+  
+  let domElement;
+  
+  if (isAnswerTemplate) {
+    const streamingDomElement = me.chatEle.querySelector(`[data-cw-msg-id="${messageId}"]`);
+    
+    if (streamingDomElement) {
+      // Generate full Answers template with endChunk=true (already set above)
+      const newMessageHtml = me.generateMessageDOM(streamState.msgData);
+      
+      if (newMessageHtml) {
+        const parentContainer = streamingDomElement.parentNode;
+        
+        // Insert the full template right after the streaming template
+        if (parentContainer) {
+          const nextSibling = streamingDomElement.nextSibling;
+          if (nextSibling) {
+            parentContainer.insertBefore(newMessageHtml, nextSibling);
+          } else {
+            parentContainer.appendChild(newMessageHtml);
+          }
+        }
+        
+        domElement = newMessageHtml;
+        me.scrollToBottom();
+      }
+    }
+  } else {
+    domElement = me.chatEle.querySelector(`[data-cw-msg-id="${messageId}"]`);
+  }
 
   me.emit(me.EVENTS.AFTER_RENDER_MSG, {
     messageHtml: domElement,
