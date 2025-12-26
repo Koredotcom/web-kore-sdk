@@ -1560,7 +1560,7 @@ stopStreamingMessage(messageId: string) {
   // Mark streaming as complete to trigger full template render
   streamState.msgData.endChunk = true;
 
-  // Check if this is an answerTemplate - if so, render full template alongside streaming template
+  // Check if this is an answerTemplate - if so, replace streaming template with full template
   const isAnswerTemplate = streamState.msgData.message?.[0]?.component?.payload?.template_type === 'answerTemplate';
   
   let domElement;
@@ -1575,14 +1575,9 @@ stopStreamingMessage(messageId: string) {
       if (newMessageHtml) {
         const parentContainer = streamingDomElement.parentNode;
         
-        // Insert the full template right after the streaming template
+        // Replace the streaming template with the full template
         if (parentContainer) {
-          const nextSibling = streamingDomElement.nextSibling;
-          if (nextSibling) {
-            parentContainer.insertBefore(newMessageHtml, nextSibling);
-          } else {
-            parentContainer.appendChild(newMessageHtml);
-          }
+          parentContainer.replaceChild(newMessageHtml, streamingDomElement);
         }
         
         domElement = newMessageHtml;
