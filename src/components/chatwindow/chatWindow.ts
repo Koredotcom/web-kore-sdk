@@ -1443,13 +1443,12 @@ parseSocketMessage(msgString:string){
 handleStreamingMessage(msgData: any) {
   const me: any = this;
   const messageId = msgData.messageId;
-  const newChunkText = msgData.message?.[0]?.component?.payload?.payload?.answer || msgData.message?.[0]?.cInfo?.body || msgData.message?.[0]?.component?.payload?.text || msgData.message?.[0]?.component?.payload || '';
+  const newChunkText = msgData.message?.[0]?.cInfo?.body || msgData.message?.[0]?.component?.payload?.text || msgData.message?.[0]?.component?.payload || '';
+
   // answerTemplate handles streaming internally, no need for generic streaming logic
   if (msgData.message?.[0]?.component?.payload?.template_type == 'answerTemplate') {
-    if (me.plugins && me.plugins.AnswersTemplatesPlugin) {
       me.plugins.AnswersTemplatesPlugin.handleStreamingMessage(msgData);
       return;
-    }
   }
   let streamState = me.streamingMessages.get(messageId);
 
@@ -1535,7 +1534,6 @@ stopStreamingMessage(messageId: string) {
   }
 
   const domElement = me.chatEle.querySelector(`[data-cw-msg-id="${messageId}"]`);
-  me.scrollToBottom();
 
   me.emit(me.EVENTS.AFTER_RENDER_MSG, {
     messageHtml: domElement,

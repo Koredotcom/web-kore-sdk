@@ -281,7 +281,7 @@ export function answerTemplateCheck(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData; 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'answerTemplate') {
-        props.msgData = updateMsgData(props.msgData);
+            props.msgData = updateMsgData(props.msgData);
         
         // Check if streaming mode is active (sM: true at root level)
         const isStreaming = msgData?.sM === true;
