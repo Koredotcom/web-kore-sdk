@@ -1477,7 +1477,6 @@ handleStreamingMessage(msgData: any) {
   } else {
     // If this is the final chunk with complete answer_payload, replace entire msgData
     if (msgData.endChunk && msgData.message?.[0]?.component?.payload?.answer_payload) {
-      // Final chunk has complete payload structure - use it
       streamState.text += newChunkText;
       streamState.msgData = msgData;
       streamState.msgData.message[0].cInfo.body = streamState.text;
