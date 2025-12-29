@@ -1444,7 +1444,13 @@ handleStreamingMessage(msgData: any) {
   const me: any = this;
   const messageId = msgData.messageId;
   const newChunkText = msgData.message?.[0]?.component?.payload?.payload?.answer || msgData.message?.[0]?.cInfo?.body || msgData.message?.[0]?.component?.payload?.text || msgData.message?.[0]?.component?.payload || '';
-
+  // answerTemplate handles streaming internally, no need for generic streaming logic
+  if (msgData.message?.[0]?.component?.payload?.template_type == 'answerTemplate') {
+    if (me.plugins && me.plugins.AnswersTemplatesPlugin) {
+      me.plugins.AnswersTemplatesPlugin.handleStreamingMessage(msgData);
+      return;
+    }
+  }
   let streamState = me.streamingMessages.get(messageId);
 
   if (!streamState) {
@@ -1475,23 +1481,11 @@ handleStreamingMessage(msgData: any) {
     }
     me.scrollToBottom();
   } else {
-    // If this is the final chunk with complete answer_payload, replace entire msgData
-    if (msgData.endChunk && msgData.message?.[0]?.component?.payload?.answer_payload) {
-      streamState.text += newChunkText;
-      streamState.msgData = msgData;
-      streamState.msgData.message[0].cInfo.body = streamState.text;
-      if (streamState.msgData.message[0].component?.payload?.payload?.answer !== undefined) {
-        streamState.msgData.message[0].component.payload.payload.answer = streamState.text;
-      }
-    } else if (newChunkText) {
-      // Regular chunk - just accumulate text
+    if (newChunkText) {
       streamState.text += newChunkText;
       streamState.msgData.message[0].cInfo.body = streamState.text;
       if (streamState.msgData.message[0].component?.payload?.text) {
         streamState.msgData.message[0].component.payload.text = streamState.text;
-      }
-      if (streamState.msgData.message[0].component?.payload?.payload?.answer !== undefined) {
-        streamState.msgData.message[0].component.payload.payload.answer = streamState.text;
       }
       me.updateStreamingMessage(messageId, streamState.text);
     }
@@ -1505,18 +1499,6 @@ handleStreamingMessage(msgData: any) {
 updateStreamingMessage(messageId: string, fullText: string) {
   const me: any = this;
   const helpers = KoreHelpers.helpers;
-
-  // Check for answerTemplate streaming element
-  const answerElement = me.chatEle.querySelector(
-    `[data-cw-msg-id="${messageId}"] .sa-answer-result-heading`
-  );
-
-  if (answerElement) {
-    const htmlContent = helpers.convertMDtoHTML(fullText, "bot", {});
-    answerElement.innerHTML = htmlContent;
-    me.scrollToBottom();
-    return;
-  }
 
   const textElement = me.chatEle.querySelector(
     `[data-cw-msg-id="${messageId}"] .bubble-msg`
@@ -1551,25 +1533,8 @@ stopStreamingMessage(messageId: string) {
   if (streamState.msgData.message[0].component?.payload?.text) {
     streamState.msgData.message[0].component.payload.text = streamState.text;
   }
-  if (streamState.msgData.message[0].component?.payload?.payload?.answer !== undefined) {
-    streamState.msgData.message[0].component.payload.payload.answer = streamState.text;
-  }
 
-  // Mark streaming as complete to trigger full template render
-  streamState.msgData.endChunk = true;
-
-  // Check if this is an answerTemplate - if so, replace streaming template with full template
-  const isAnswerTemplate = streamState.msgData.message?.[0]?.component?.payload?.template_type === 'answerTemplate';
-  let domElement = me.chatEle.querySelector(`[data-cw-msg-id="${messageId}"]`);
-
-  if (isAnswerTemplate && domElement) {
-    const newMessageHtml = me.generateMessageDOM(streamState.msgData);
-    if (newMessageHtml && domElement.parentNode) {
-      domElement.parentNode.replaceChild(newMessageHtml, domElement);
-      domElement = newMessageHtml;
-      me.scrollToBottom();
-    }
-  }
+  const domElement = me.chatEle.querySelector(`[data-cw-msg-id="${messageId}"]`);
   me.scrollToBottom();
 
   me.emit(me.EVENTS.AFTER_RENDER_MSG, {
