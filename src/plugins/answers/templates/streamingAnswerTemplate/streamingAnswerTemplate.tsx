@@ -6,8 +6,6 @@ import { CMHelpers } from '../../../../utils/cm-helpers';
 
 export function StreamingAnswersTemplate(props: any) {
     const msgData = props.msgData;
-    const hostInstance = props.hostInstance;
-    const helpers = KoreHelpers.helpers;
     
     const accumulatedText = msgData?.message?.[0]?.component?.payload?.payload?.answer || msgData?.message?.[0]?.component?.payload?.answer || msgData?.message?.[0]?.cInfo?.body || '';
 
