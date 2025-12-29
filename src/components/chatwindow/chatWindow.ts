@@ -1513,7 +1513,6 @@ updateStreamingMessage(messageId: string, fullText: string) {
   );
 
   if (answerElement) {
-    // For answerTemplate, use CMHelpers (which is called in the template)
     const htmlContent = helpers.convertMDtoHTML(fullText, "bot", {});
     answerElement.innerHTML = htmlContent;
     me.scrollToBottom();
@@ -1562,31 +1561,17 @@ stopStreamingMessage(messageId: string) {
 
   // Check if this is an answerTemplate - if so, replace streaming template with full template
   const isAnswerTemplate = streamState.msgData.message?.[0]?.component?.payload?.template_type === 'answerTemplate';
-  
-  let domElement;
-  
-  if (isAnswerTemplate) {
-    const streamingDomElement = me.chatEle.querySelector(`[data-cw-msg-id="${messageId}"]`);
-    
-    if (streamingDomElement) {
-      // Generate full Answers template with endChunk=true (already set above)
-      const newMessageHtml = me.generateMessageDOM(streamState.msgData);
-      
-      if (newMessageHtml) {
-        const parentContainer = streamingDomElement.parentNode;
-        
-        // Replace the streaming template with the full template
-        if (parentContainer) {
-          parentContainer.replaceChild(newMessageHtml, streamingDomElement);
-        }
-        
-        domElement = newMessageHtml;
-        me.scrollToBottom();
-      }
+  let domElement = me.chatEle.querySelector(`[data-cw-msg-id="${messageId}"]`);
+
+  if (isAnswerTemplate && domElement) {
+    const newMessageHtml = me.generateMessageDOM(streamState.msgData);
+    if (newMessageHtml && domElement.parentNode) {
+      domElement.parentNode.replaceChild(newMessageHtml, domElement);
+      domElement = newMessageHtml;
+      me.scrollToBottom();
     }
-  } else {
-    domElement = me.chatEle.querySelector(`[data-cw-msg-id="${messageId}"]`);
   }
+  me.scrollToBottom();
 
   me.emit(me.EVENTS.AFTER_RENDER_MSG, {
     messageHtml: domElement,
