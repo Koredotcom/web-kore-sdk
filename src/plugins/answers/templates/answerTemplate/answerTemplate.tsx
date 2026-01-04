@@ -6,6 +6,24 @@ import {CarouselImagePopupTemplate} from '../carouselImagePopupTemplate/carousel
 import KoreHelpers from '../../../../utils/helpers';
 import FeedbackTemplate from '../feedbackTemplate/feedbackTemplate';
 import ImageCarouselSvgIcons from '../carouselImagePopupTemplate/imageCarouselSvgIcons';
+import { StreamingAnswersTemplate } from '../streamingAnswerTemplate/streamingAnswerTemplate';
+
+// Streaming wrapper that handles routing between streaming and final template
+export function StreamingAnswers(props: any) {
+    const msgData = props.msgData;
+
+    // Check if streaming mode is active and if streaming is complete
+    const isStreaming = msgData?.sM === true;
+    const isStreamingComplete = msgData?.endChunk === true;
+    
+    // If streaming is complete, render the final Answers component
+    if (!isStreaming || isStreamingComplete) {
+        return <Answers {...props} />;
+    }
+
+    // Otherwise, render the simplified streaming template
+    return <StreamingAnswersTemplate {...props} />;
+}
 
 export function Answers(props: any) {
     const hostInstance = props.hostInstance;
@@ -263,9 +281,14 @@ export function answerTemplateCheck(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData; 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'answerTemplate') {
-            props.msgData = updateMsgData(props.msgData)
+            props.msgData = updateMsgData(props.msgData);
+        
+        // Check if streaming mode is active (sM: true at root level)
+        const isStreaming = msgData?.sM === true;
+        const isStreamingComplete = msgData?.endChunk === true;
+        
         return (
-            <Answers {...props} />
+            (isStreaming && !isStreamingComplete) ? <StreamingAnswers {...props} /> : <Answers {...props} />
         )
     }   
 }

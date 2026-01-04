@@ -1448,6 +1448,10 @@ handleStreamingMessage(msgData: any) {
   const messageId = msgData.messageId;
   const newChunkText = msgData.message?.[0]?.cInfo?.body || msgData.message?.[0]?.component?.payload?.text || msgData.message?.[0]?.component?.payload || '';
 
+  if (msgData.message?.[0]?.component?.payload?.template_type == 'answerTemplate') {
+      me.plugins.AnswersTemplatesPlugin.handleStreamingMessage(msgData);
+      return;
+  }
   let streamState = me.streamingMessages.get(messageId);
 
   if (!streamState) {
