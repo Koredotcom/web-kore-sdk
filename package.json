@@ -53,8 +53,6 @@
     "moment-timezone": "^0.5.45",
     "perfect-scrollbar": "^1.5.2",
     "preact": "10.17.1",
-    "react-markdown": "^10.1.0",
-    "remark-gfm": "^4.0.1",
     "util": "^0.12.4"
   },
   "devDependencies": {
