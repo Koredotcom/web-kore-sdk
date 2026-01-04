@@ -1445,7 +1445,6 @@ handleStreamingMessage(msgData: any) {
   const messageId = msgData.messageId;
   const newChunkText = msgData.message?.[0]?.cInfo?.body || msgData.message?.[0]?.component?.payload?.text || msgData.message?.[0]?.component?.payload || '';
 
-  // answerTemplate handles streaming internally, no need for generic streaming logic
   if (msgData.message?.[0]?.component?.payload?.template_type == 'answerTemplate') {
       me.plugins.AnswersTemplatesPlugin.handleStreamingMessage(msgData);
       return;
