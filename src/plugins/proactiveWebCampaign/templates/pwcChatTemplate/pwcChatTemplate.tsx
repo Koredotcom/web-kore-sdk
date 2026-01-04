@@ -69,12 +69,11 @@ export function Chat(props: any) {
         hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
         hostInstance.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
         hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(hostInstance.config.branding.chat_bubble.expand_animation);
+        if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
+            hostInstance.setLocalStoreItem('kr-cw-state', 'open');
+        }
         hostInstance.bot.RtmClient._safeDisconnect();
         hostInstance.bot.logInComplete();
-        setTimeout(()=>{
-            let msg = "connecting "+action;
-            hostInstance.sendMessage(msg); 
-        },2000);
         hostInstance.chatEle.querySelector('.welcome-chat-section-campaign').remove();
         // setConversationInprogress in agentdesktop-script.js
         if(action === 'audio' || action === 'video'){

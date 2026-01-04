@@ -42,7 +42,9 @@ class Korei18nPlugin {
                 read: "مقروءة",
                 delivered: "مسلّمة",
                 sent: "مرسلة",
-                you: "أنت"
+                you: "أنت",
+                uploaded: "تم الرفع",
+                download: "تحميل"
             },
             ja: {
                 message: 'メッセージ...',
@@ -82,7 +84,9 @@ class Korei18nPlugin {
                 read: "読み込み",
                 delivered: "配信",
                 sent: "送信",
-                you: "あなた"
+                you: "あなた",
+                uploaded: "アップロード",
+                download: "ダウンロード"
             },
             ko: {
                 message: '메시지...',
@@ -122,7 +126,9 @@ class Korei18nPlugin {
                 read: "읽음",
                 delivered: "배달",
                 sent: "전송",
-                you: "당신"
+                you: "당신",
+                uploaded: "업로드",
+                download: "다운로드"
             },
             zh: {
                 message: "消息...",
@@ -162,7 +168,9 @@ class Korei18nPlugin {
                 read: "已读",
                 delivered: "已送达",
                 sent: "已发送",
-                you: "你"
+                you: "你",
+                uploaded: "已上传",
+                download: "下载"
             },
             de: {
                 message: "Nachricht...",
@@ -202,7 +210,9 @@ class Korei18nPlugin {
                 read: "Gelesen",
                 delivered: "Geliefert",
                 sent: "Gesendet",
-                you: "Sie"
+                you: "Sie",
+                uploaded: "Hochgeladen",
+                download: "Herunterladen"
             }
         }
     }

@@ -24,7 +24,7 @@ import BrandingManager from '../../templatemanager/templates/brandingManager';
 import { ActionsBottomSlider } from '../../templatemanager/base/actionsButtonSlider/actionsBottomSlider';
 import { ActionsModal } from '../../templatemanager/base/actionsModal/actionsModal';
 import AnswersTemplatesPlugin from '../../plugins/answers/answersPlugin';
-const bot = requireKr('/KoreBot.js').instance();
+// const bot = requireKr('/KoreBot.js').instance();
 
 declare const document:any;
 const $:any = j$.default ;
@@ -42,6 +42,7 @@ declare const window:any;
 class chatWindow extends EventEmitter{
  chatEle: any;
   config: {};
+  bot: any;
   streamingMessages: Map<string, { text: string; msgData: any }> = new Map();
 
 
@@ -183,6 +184,7 @@ class chatWindow extends EventEmitter{
   super(null);
   this.chatEle;
   this.config={};
+  this.bot = requireKr('/KoreBot.js').instance();
   this.init(this.config);
 }
 paginatedScrollMsgDiv: any = $('<div class="temp-message-div"><ul class="prev-message-list"></ul></div>');
@@ -190,7 +192,6 @@ init  (config:any) {
   const me:any = this;
   me.config=me.extend(me.config,chatConfig);
   me.plugins = {};
-  me.bot=bot;
   me.vars={};
   me.helpers=KoreHelpers.helpers;
   me.eventManager = new EventManager(me);
@@ -586,8 +587,8 @@ updateOnlineStatus () {
   if (typeof (navigator.onLine) === 'boolean') {
     if (navigator.onLine) {
       this.hideError();
-      if (bot && bot.RtmClient && me.config?.syncMessages?.onNetworkResume?.enable) {
-        bot.getHistory({ forHistorySync: true, limit: me.config?.syncMessages?.onNetworkResume?.batchSize });
+      if (me.bot && me.bot.RtmClient && me.config?.syncMessages?.onNetworkResume?.enable) {
+        me.bot.getHistory({ forHistorySync: true, limit: me.config?.syncMessages?.onNetworkResume?.batchSize });
       }
     } else {
       this.showError('You are currently offline');
@@ -727,7 +728,9 @@ initi18n  () {
         read: 'Read',
         delivered: 'Delivered',
         sent: 'Sent',
-        you: 'You'
+        you: 'You',
+        uploaded: 'uploaded',
+        download: 'Download'
       },
     },
   };
@@ -999,8 +1002,8 @@ bindEvents  () {
   
   _chatContainer.on('click', '.close-btn', (event: any) => {
     me.destroy();
-    bot.historyOffset = 0;
-    bot.previousHistoryLoading = false;
+    me.bot.historyOffset = 0;
+    me.bot.previousHistoryLoading = false;
     if (me.config.multiPageApp && me.config.multiPageApp.enable) {
       me.removeLocalStoreItem('kr-cw-state');
       me.removeLocalStoreItem('kr-cw-uid');
@@ -1102,15 +1105,15 @@ bindEvents  () {
   if (me?.config?.history?.paginatedScroll?.enable) {
     _chatContainer.find('.kore-chat-body .chat-container').on('scroll', (event: any) => {
       var div = $(event.currentTarget);
-      if(bot.previousHistoryLoading){
+      if(me.bot.previousHistoryLoading){
         return false;
       }
       if (div[0].scrollHeight - div.scrollTop() == div.height()) {
-        bot.previousHistoryLoading = false;
+        me.bot.previousHistoryLoading = false;
       }
       else if (div.scrollTop() == 0) {
-        if (bot.paginatedScrollDataAvailable && !bot.previousHistoryLoading) {
-          bot.previousHistoryLoading = true;
+        if (me.bot.paginatedScrollDataAvailable && !me.bot.previousHistoryLoading) {
+          me.bot.previousHistoryLoading = true;
           let message = me?.config?.history?.paginatedScroll?.loadingLabel || 'Loading chat history..';
           let paginatedHistoryLoader = $('<div class="paginted-history-loader">\
                                               <div class="historyWarningTextDiv displayTable">  \
@@ -1123,7 +1126,7 @@ bindEvents  () {
           }
           _chatContainer.find('.kore-chat-footer').addClass('disableFooter');
           _chatContainer.find('.kore-chat-footer .chatInputBox').blur();
-          bot.getHistory({ limit: (me?.config?.history?.paginatedScroll?.batchSize) }, me?.config?.botOptions);
+          me.bot.getHistory({ limit: (me?.config?.history?.paginatedScroll?.batchSize) }, me?.config?.botOptions);
         }
       }
     });
@@ -1258,23 +1261,23 @@ bindEventsV3() {
 
     chatContainer.addEventListener('scroll', (event: any) => {
       var div = event.currentTarget;
-      if (bot.previousHistoryLoading) {
+      if (me.bot.previousHistoryLoading) {
         return false;
       }
       if (div.scrollHeight - div.scrollTop === div.clientHeight) {
-        bot.previousHistoryLoading = false;
+        me.bot.previousHistoryLoading = false;
       } else if (div.scrollTop === 0) {
-        if (bot.paginatedScrollDataAvailable && !bot.previousHistoryLoading) {
+        if (me.bot.paginatedScrollDataAvailable && !me.bot.previousHistoryLoading) {
           me.chatEle.querySelector('.typing-text-area').blur();
           me.chatEle.querySelector('.typing-text-area').classList.add('disableComposeBar');
-          bot.previousHistoryLoading = true;
+          me.bot.previousHistoryLoading = true;
           var message = me?.config?.history?.paginatedScroll?.loadingLabel || 'Loading chat history..';
           const historyLoader = getHTML(HistoryLoader, message, me);
           var firstLi = me.chatEle.querySelectorAll('.chat-widget-body-wrapper > div')[0];
           if (!(me.chatEle.querySelectorAll('.history-loading-wrapper').length)) {
             me.chatEle.querySelector('.chat-widget-body-wrapper').insertBefore(historyLoader, firstLi);
           }
-          bot.getHistory({ limit: (me?.config?.history?.paginatedScroll?.batchSize) });
+          me.bot.getHistory({ limit: (me?.config?.history?.paginatedScroll?.batchSize) });
         }
       }
     });
@@ -1844,7 +1847,7 @@ closeConversationSession  () {
   const messageToBot:any = {};
   messageToBot.clientMessageId = clientMessageId;
   messageToBot.resourceid = '/bot.closeConversationSession';
-  bot.sendMessage(messageToBot, (err: any) => {
+  me.bot.sendMessage(messageToBot, (err: any) => {
     console.error('bot.closeConversationSession send failed sending');
   });
 };
@@ -1968,7 +1971,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
         _chatContainer.append(messageHtml);
       }
     } else {
-      if(bot && !bot.previousHistoryLoading){
+      if(me.bot && !me.bot.previousHistoryLoading){
         _chatContainer.append(messageHtml);
       }else{
         $(this.paginatedScrollMsgDiv).find('.prev-message-list').append($(messageHtml).addClass('previousMessage'));
@@ -2005,7 +2008,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
       scrollHeight = me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight;
     } else {
       scrollHeight = me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight;
-      if (bot && !bot.previousHistoryLoading) {
+      if (me.bot && !me.bot.previousHistoryLoading) {
         const chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
         if (me.historyLoading) {
           messageHtml?.classList?.remove('if-animation-bubble');
@@ -2034,7 +2037,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
       }
     }
 
-    if (bot && !bot.previousHistoryLoading) {
+    if (me.bot && !me.bot.previousHistoryLoading) {
       scrollHeight = (me.historyLoading || eleHeight < 300) ? me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight : scrollHeight - me.chatEle.querySelector('.chat-widget-body-wrapper').clientHeight / 2;
       me.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
         top: scrollHeight,
@@ -2083,7 +2086,7 @@ updateScrollOnMessageRender(msgData: any){
   const me: any = this; 
   let _chatContainer = $(me.chatEle).find('.chat-container');
   const debounceScrollingCall: any = me.debounceScrollingHide(me.removeScrollingHide, 500);
-  if(bot && !bot.previousHistoryLoading){
+  if(me.bot && !me.bot.previousHistoryLoading){
     _chatContainer.addClass('scrolling'); // start hiding scroll on message arrival
     _chatContainer.animate({
       scrollTop: _chatContainer.prop('scrollHeight'),
@@ -2250,7 +2253,7 @@ getChatTemplate (tempType: string) {
                <div id="caption"></div>\
          </div>\
          <div id="chatBodyModal" class="chatBodyModal animate-bottom">\
-         <span class="closeChatBodyModal" aira-label="Close Form" role="button" tabindex="0" aria-atomic="true"></span>\
+         <span class="closeChatBodyModal" aria-label="Close Form" role="button" tabindex="0" aria-atomic="true"></span>\
          <div id="closeInlineModel" class="loading_form iframeLoader"></div>\
          <div id="chatBodyModalContent"></div>\
          </div>\
@@ -2286,7 +2289,7 @@ historyLoadingComplete () {
     if (me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) {
       me.getBotMetaData();
     }
-    if (me.config.UI.version == 'v2' && $(this.paginatedScrollMsgDiv).find('.prev-message-list li.previousMessage').length > 0 && bot.previousHistoryLoading) {
+    if (me.config.UI.version == 'v2' && $(this.paginatedScrollMsgDiv).find('.prev-message-list li.previousMessage').length > 0 && me.bot.previousHistoryLoading) {
       let paginatedLi = $(this.paginatedScrollMsgDiv).find('.prev-message-list li.previousMessage');
       if (paginatedLi && paginatedLi.length) {
         for (var i = 0; i < paginatedLi.length; i++) {
@@ -2309,7 +2312,7 @@ historyLoadingComplete () {
         $(this.paginatedScrollMsgDiv).find('.prev-message-list').empty();
       }
     } 
-    if (me.config.UI.version == 'v3' && me.chatEle.querySelectorAll('.prev-message-list > div').length > 0 && bot.previousHistoryLoading){
+    if (me.config.UI.version == 'v3' && me.chatEle.querySelectorAll('.prev-message-list > div').length > 0 && me.bot.previousHistoryLoading){
       let prevMessageList = me.chatEle.querySelectorAll('.prev-message-list > div');
       let chatContainerList = me.chatEle.querySelectorAll('.chat-widget-body-wrapper > div');
 
@@ -2326,7 +2329,7 @@ historyLoadingComplete () {
       let prevMessageListContainer = me.chatEle.querySelectorAll('.prev-message-list')[0];
       prevMessageListContainer.innerHTML = '';
     }
-    bot.previousHistoryLoading = false;
+    me.bot.previousHistoryLoading = false;
     me.emit(me.EVENTS.HISTORY_COMPLETE,{
       chatWindowEvent:_chatContainer
     });
@@ -2446,7 +2449,7 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
   } else if (me.loadHistory) {
     me.historyLoading = true;
     if (res && res[1] && res[1].messages.length > 0) {
-      if(!bot.previousHistoryLoading){
+      if(!me.bot.previousHistoryLoading){
         $('.chat-container').hide();
         $('.historyLoadingDiv').addClass('showMsg');
       }
@@ -2463,7 +2466,7 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
             setTimeout((messagesQueue) => {
               $('.chat-container').show();
               $('.historyLoadingDiv').removeClass('showMsg');
-              if(!bot.previousHistoryLoading){
+              if(!me.bot.previousHistoryLoading){
                 if (me.config.UI.version == 'v2') {
                   $('.chat-container').animate({
                     scrollTop: $('.chat-container').prop('scrollHeight'),

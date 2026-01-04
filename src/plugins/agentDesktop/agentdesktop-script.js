@@ -1095,6 +1095,21 @@ AgentDesktop = function (uuId, aResponse) {
         this.phone.setAcLogger(console.log);
         this.phone.setModes(this.phoneConfig.modes);
         this.phone.setAccount(account.user, account.displayName, account.user, account.user);
+
+        const serverAddress = serverConfig.addresses[0];
+        const audiocodesDomains = [
+            'audiocodes-webrtc-prod.kore.ai',
+            'audiocodes-jp-webrtc-prod.kore.ai',
+            'audiocodes-de-webrtc-prod.kore.ai',
+            'smartassist-agent-np.kore.ai'
+        ];
+        const url = new URL(serverAddress);
+        const domain = url.hostname;
+        if(!audiocodesDomains.includes(domain)){
+            this.phone.setCodecFilter({
+                audio: { priority: ['opus'], remove: ['pcmu', 'pcma', 'g722'] }
+            });
+        }
         var self = this;
         // Set phone API listeners
         this.phone.setListeners({

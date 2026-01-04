@@ -572,7 +572,7 @@ class KoreMultiFileUploaderPlugin {
       var progressbar = $(evt.currentTarget).find('.percentage');
       $(progressbar).css({ 'width': 100 + '%' });
       var progressCount = $(evt.currentTarget).find('.percentage-complete');
-      $(progressCount).text('100% uploaded');
+      $(progressCount).text('100% ' + me.hostInstance.config.botMessages.uploaded);
       $(evt.currentTarget).attr('data-value', _recState.fileToken);
       $(evt.currentTarget).attr('data-name', _recState.name);
       $(evt.currentTarget).attr('file-size', _recState.sizeInMb);
@@ -668,7 +668,7 @@ class KoreMultiFileUploaderPlugin {
       const progressbar = element.querySelector('.percentage');
       const progressCount = element.querySelector('.percentage-complete');
       if (progressbar) progressbar.style.width = '0%';
-      if (progressCount) progressCount.textContent = '0% uploaded';
+      if (progressCount) progressCount.textContent = '0% ' + me.hostInstance.config.botMessages.uploaded;
     }
 
     if (!options.chunkUpload) {
@@ -712,7 +712,7 @@ class KoreMultiFileUploaderPlugin {
     };
     if (_conc.upload && _conc.upload.addEventListener) {
       _conc.upload.addEventListener('progress', (evt: any) => {
-        me.progressListener(_scope, evt, ele);
+        me.progressListener(_scope, evt, ele, me);
       }, false);
     }
     _conc.addEventListener('load', (evt: any) => {
@@ -809,7 +809,7 @@ class KoreMultiFileUploaderPlugin {
   }
 
   // kfrm.net.HttpRequest = me.HttpRequest;
-  progressListener(_this: any, evt: any, ele: any) {
+  progressListener(_this: any, evt: any, ele: any, me: any) {
     if (!ele || !evt || !evt.lengthComputable) {
       return;
     }
@@ -817,7 +817,7 @@ class KoreMultiFileUploaderPlugin {
     const progressbar = ele.querySelector('.percentage');
     const percentageCompletion = ele.querySelector('.percentage-complete');
     if (progressbar) progressbar.style.width = Math.floor(width) + '%';
-    if (percentageCompletion) percentageCompletion.textContent = Math.floor(width) + '% uploaded';
+    if (percentageCompletion) percentageCompletion.textContent = Math.floor(width) + '% ' + me.hostInstance.config.botMessages.uploaded;
   }
 
   loadListener(_this: any, evt: { target: { response: string; }; }) {
@@ -918,7 +918,7 @@ class KoreMultiFileUploaderPlugin {
           const progressbar = _scope.$element.querySelector('.percentage');
           const percentageCompletion = _scope.$element.querySelector('.percentage-complete');
           if (progressbar) progressbar.style.width = percent + '%';
-          if (percentageCompletion) percentageCompletion.textContent = percent + '% uploaded';
+          if (percentageCompletion) percentageCompletion.textContent = percent + '% ' + me.hostInstance.config.botMessages.uploaded;
         }
       }, false);
     }
@@ -930,7 +930,7 @@ class KoreMultiFileUploaderPlugin {
           const progressbar = _scope.$element.querySelector('.percentage');
           const percentageCompletion = _scope.$element.querySelector('.percentage-complete');
           if (progressbar) progressbar.style.width = percent + '%';
-          if (percentageCompletion) percentageCompletion.textContent = percent + '% uploaded';
+          if (percentageCompletion) percentageCompletion.textContent = percent + '% ' + me.hostInstance.config.botMessages.uploaded;
         }
         if (!me.isElementInDOM(_scope.$element)) {
 
@@ -1043,7 +1043,7 @@ class KoreMultiFileUploaderPlugin {
             </div>\
             <div class="size-completion">\
               <p class="file-size">'+ selectedFile.sizeInMb + 'MB -</p>\
-              <p class="percentage-complete"> 0% uploaded</p>\
+              <p class="percentage-complete"> 0% ' + me.hostInstance.config.botMessages.uploaded + '</p>\
             </div>\
         </div>\
         <button class="delete-upload" title='+ me.hostInstance.config.botMessages.cancel + '>\
