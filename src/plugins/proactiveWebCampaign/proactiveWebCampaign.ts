@@ -2473,11 +2473,11 @@ class ProactiveWebCampaignPlugin {
         }
 
         const activeCampaigns = this.campInfo.filter((campaign: any) => {
-            // Check engagement hours
-            if (!this.checkEngagementHours(campaign.engagementStrategy)) {
+            // Enagement Hours are validated at services after the rules are met
+            /* if (!this.checkEngagementHours(campaign.engagementStrategy)) {
                 // returns false, if outside engagement hours`);
                 return false;
-            }
+            } */
 
             // Check website matching
             const websiteMatches = this.checkWebsiteMatching(
@@ -3776,17 +3776,8 @@ class ProactiveWebCampaignPlugin {
         this.isPendingSendAPIEvent = true;
         // Generate unique browser session ID for this campaign trigger session
         this.browserSessionId = this.generateBrowserSessionId();
-        const payload: any = {
-            'event_name': 'pwe_event',
-            'resourceid': '/pwe_message',
-            'user': this.hostInstance.config.botOptions.userIdentity,
-            'type': 'pwe_message',
-            'userId': this.authInfo.userInfo.userId,
-            'botInfo': {
-                'chatBot': this.hostInstance._botInfo.name,
-                'taskBotId': this.hostInstance._botInfo._id
-            },
-            'ruleInfo': {
+        const data = {
+            ruleInfo: {
                 isAllRulesSatisfied: true,
                 browser_session_id: this.browserSessionId,
                 rules: campaignData.actual.rules,
@@ -3794,12 +3785,12 @@ class ProactiveWebCampaignPlugin {
                 goals: campaignData.actual.goals,
                 ...suppressed
             },
-            'campInfo': {
-                'campId': campId,
-                'campInstanceId': campInstanceId
+            eventInfo: {
+                action: 'impression',
+                data: {}
             }
-        };
-        
+        }
+        const payload = this.preparePwePayload(campInstanceId, campId, data);
         try {
             const response = await this.sendApiEvent(payload, '/pweevents');
             let suppressionResponse = response.response.ruleInfo;
@@ -3807,6 +3798,7 @@ class ProactiveWebCampaignPlugin {
                 || suppressionResponse.isChatWindowOpen 
                 || suppressionResponse.isCooldownActive 
                 || suppressionResponse.isVisitorAlreadyChatting
+                || suppressionResponse.isCampaignInOperationalHours
             ){
                 const existingPweData = JSON.parse(window.sessionStorage.getItem('pwe_data') || '{}');
                 let campInstanceId = response.response.body.campInfo.campInstId;
@@ -3828,6 +3820,56 @@ class ProactiveWebCampaignPlugin {
             // Reset the flag on failure
             this.isPendingSendAPIEvent = false;
         }
+    }
+
+    /**
+     * Generic function to send campaign event with eventInfo
+     * PUBLIC METHOD - Can be called from templates and internal code
+     * @param campInstanceId - Campaign instance ID
+     * @param campId - Campaign ID
+     * @param metricData - Metric data {action: 'impression'|'click'|'close', data: {}}
+     * @returns Promise<void>
+     */
+    async recordCampaignMetric(campInstanceId: string, campId: string, metricData: any): Promise<void> {
+        // Build base payload
+        const payload = this.preparePwePayload(campInstanceId, campId, metricData);
+        try {
+            const response = await this.sendApiEvent(payload, '/pweevents');
+        } catch (error) {
+            console.error('PWC: Failed to record campaign metric:', error);
+        }
+    }
+
+    /**
+     * Prepares eventInfo object for campaign events
+     * @param campInstanceId - Campaign instance ID
+     * @param campId - Campaign ID
+     * @param data - Data object {ruleInfo: {isAllRulesSatisfied: true, browser_session_id: this.browserSessionId, rules: campaignData.actual.rules, exclusions: campaignData.actual.exclusions, goals: campaignData.actual.goals, ...suppressed}, eventInfo: {action: 'impression'|'click'|'close', data: {}}}
+     * @returns payload object
+     */
+    preparePwePayload(campInstanceId: string, campId: string, data: any): any {
+        if(!campId){
+            const campaign = this.campInfo?.find((camp: any) => camp.campInstanceId === campInstanceId);
+            campId = campaign?.campId;
+        }
+        const payload: any = {
+            'event_name': 'pwe_event',
+            'resourceid': '/pwe_message',
+            'user': this.hostInstance?.config?.botOptions?.userIdentity,
+            'type': 'pwe_message',
+            'userId': this.authInfo?.userInfo?.userId,
+            'isLoggedInUser': this.hostInstance?.config?.pwcConfig?.knownUser || false,
+            'botInfo': {
+                'chatBot': this.hostInstance?._botInfo?.name,
+                'taskBotId': this.hostInstance?._botInfo?._id
+            },
+            'campInfo': {
+                'campId': campId,
+                'campInstanceId': campInstanceId
+            },
+            ...data
+        };
+        return payload;
     }
 
     /**

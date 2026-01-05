@@ -31,12 +31,18 @@ export function Post(props: any) {
             // Remove from DOM
             const bannerEle: any = document.querySelector('.campaign-post-banner-data-sec');
             bannerEle.remove();
+
+            hostInstance.plugins.ProactiveWebCampaignPlugin.recordCampaignMetric(
+                msgData.body.campInfo.campInstId,
+                msgData.body.campInfo.campId,
+                { eventInfo: { action: 'close', data: {} } }
+            );
         }
         return (
             <div className={postClass}>
                 <div className="post-banner-data">
                     <div className="header-block-info">
-                        <button className="close-post-banner" onClick={closePost}>
+                        <button className="close-post-banner" onClick={() => closePost()}>
                             <svg width="19" height="19" viewBox="0 0 19 19" fill="none">
                                 <path d="M13.2985 5.70215L5.74023 13.2604M5.74023 5.70215L13.2985 13.2604" stroke="#101828" stroke-width="1.51166" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
