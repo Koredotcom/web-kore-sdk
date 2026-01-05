@@ -3798,7 +3798,7 @@ class ProactiveWebCampaignPlugin {
                 || suppressionResponse.isChatWindowOpen 
                 || suppressionResponse.isCooldownActive 
                 || suppressionResponse.isVisitorAlreadyChatting
-                || suppressionResponse.isCampaignInOperationalHours
+                || !suppressionResponse.isCampaignInOperationalHours
             ){
                 const existingPweData = JSON.parse(window.sessionStorage.getItem('pwe_data') || '{}');
                 let campInstanceId = response.response.body.campInfo.campInstId;
