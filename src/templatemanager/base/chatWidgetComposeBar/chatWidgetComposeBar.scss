@@ -529,7 +529,74 @@
                     line-height: 18px;
                     color: var(--sdk-gloabl-text-color);
                 }
-            }  
+            }
+            .upload-error-status {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                margin-top: 4px;
+                
+                .upload-failed-text {
+                    font-size: 12px;
+                    line-height: 18px;
+                    color: #D92D20;
+                    font-weight: 500;
+                }
+                .info-icon {
+                    display: flex;
+                    align-items: center;
+                    cursor: help;
+                    position: relative;
+                    
+                    svg {
+                        width: 14px;
+                        height: 14px;
+                    }
+
+                    .error-tooltip {
+                        visibility: hidden;
+                        width: max-content;
+                        max-width: 250px;
+                        background-color: #fff;
+                        color: #344054;
+                        text-align: left;
+                        border-radius: 8px;
+                        padding: 8px 12px;
+                        position: absolute;
+                        z-index: 1000;
+                        bottom: 150%;
+                        left: -8px;
+                        
+                        box-shadow: 0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08);
+                        border: 1px solid #F2F4F7;
+                        
+                        font-size: 12px;
+                        line-height: 18px;
+                        font-weight: 400;
+                        white-space: normal;
+                        word-wrap: break-word;
+
+                        opacity: 0;
+                        transition: opacity 0.2s;
+                        
+                        &::after {
+                            content: "";
+                            position: absolute;
+                            top: 100%;
+                            left: 14px;
+                            margin-left: -5px;
+                            border-width: 5px;
+                            border-style: solid;
+                            border-color: #fff transparent transparent transparent;
+                        }
+                    }
+
+                    &:hover .error-tooltip {
+                        visibility: visible;
+                        opacity: 1;
+                    }
+                }
+            }
         }
         .delete-upload{
             cursor: pointer;
