@@ -1,3 +1,8 @@
+### 10.22.0
+- SDK Release Jan 17, 2026
+* Bug fixes
+  * aria label name issue fix
+
 ### 10.21.0
 - SDK Release Dec 06, 2025
 * Bug fixes
