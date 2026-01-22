@@ -388,6 +388,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
         if (data.messages[i].type === 'incoming') {
           _msg.from = "self";
           _msg.type = "user_message";
+          _msg.messageId = data.messages[i]?.userMsgId || _msg.messageId;
         } else {
           _msg.from = "bot";
           _msg.type = "bot_response";
@@ -452,6 +453,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
         if (data.messages[i].type === 'incoming') {
           _msg.from = "self";
           _msg.type = "user_message";
+          _msg.messageId = data.messages[i]?.userMsgId || _msg.messageId;
         } else {
           _msg.from = "bot";
           _msg.type = "bot_response";
