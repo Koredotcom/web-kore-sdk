@@ -975,6 +975,11 @@ AgentDesktop = function (uuId, aResponse) {
                 }
                 this.addAudioVideoContainer();
                 this.showCobrowseRequest(msgJson.message);
+            } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'agent_cobrowse_reconnect_request') {
+                _self.closeChannel();
+                setTimeout(() => {
+                    _self.autoStartCobrowse();
+                }, 1000);
             } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'close_cobrowse') {
                 var toastContainer = koreJquery("#toastcontainer");
                 toastContainer.remove();
@@ -2196,7 +2201,8 @@ cobrowseInitialize = (cobrowseRequest) => {
             }).then(() => {
                 const payload = {
                     conversationId: incoming.caller,
-                    sdp: me.peer.localDescription
+                    sdp: me.peer.localDescription,
+                    capabilities: ["agent_reconnect"]
                 }
                 me.socket.emit("answer", payload);
             }).catch(err => {

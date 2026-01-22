@@ -13,11 +13,12 @@ var message = {
     "payload": {
         "text": "display",
         "template_type": "daterange",
+        "view_type": "inline", // inline, slider
         "title": "Text to display on header",
         "text_message": "text to display in message node",
-        "startDate":"09-09-2021",
-        "endDate":"05-02-2020",
-        "format": "MM-DD-YYYY",
+        "startDate":"01-20-2026",
+        "endDate":"01-26-2026",
+        "format": "MM-DD-YYYY", // supported formats - DD-MM-YYYY, MM-DD-YYYY, YYYY-MM-DD
         "delimiter": "-" // optional. connecting word/character between start date and end date. default is to.
     }
 };

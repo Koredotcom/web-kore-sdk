@@ -351,12 +351,28 @@ class AgentDesktopPlugin {
 
                             }
                             // change the indicator to read when agent switch the slot to other user
-                            // else if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === 'all') {
-                            //     var ele = this.$(" .sentIndicator");
-                            //     if (tempData.message.type === "message_read") {
-                            //         ele.removeClass("delivered").addClass("read");
-                            //     }
-                            // }
+                            else if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === 'all') {
+                                if (tempData.message.type === "message_read") {
+                                    const elements = me.hostInstance.chatEle.querySelectorAll('.bottom-info') || [];
+                                    elements.forEach((ele: any) => {
+                                        const childEle1 = ele.querySelector('.read-text');
+                                        if (childEle1) {
+                                            childEle1.textContent = me.hostInstance.config.botMessages.read || 'Read';
+                                        }
+                                        const childEle2 = ele.querySelector('.delivered');
+                                        if (childEle2) {
+                                            childEle2.classList = [];
+                                            childEle2.classList.add('read');
+                                        } else {
+                                            const childEle3 = ele.querySelector('.sent');
+                                            if (childEle3) {
+                                                childEle3.classList = [];
+                                                childEle3.classList.add('read');
+                                            }
+                                        }
+                                    });
+                                }
+                            }
                         });
                     }
                 } else {
