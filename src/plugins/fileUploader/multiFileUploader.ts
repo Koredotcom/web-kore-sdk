@@ -317,6 +317,12 @@ class KoreMultiFileUploaderPlugin {
     });
   }
 
+  // Detect Safari iOS
+  isSafariIOS(): boolean {
+    const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+    return /iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream && /Safari/.test(userAgent);
+  }
+
   convertFiles(selectedFile: any, customFileName: undefined) {
     let me: any = this;
     const recState: any = {};
@@ -339,12 +345,15 @@ class KoreMultiFileUploaderPlugin {
       let uploadFn;
       if ((me.filetypes.image.indexOf(recState.fileType) > -1)) {
         recState.type = 'image';
+        recState.componentSize = selectedFile.size;
         recState.uploadFn = 'acceptFileRecording';
       } else if ((me.filetypes.video.indexOf(recState.fileType) > -1)) {
         recState.type = 'video';
+        recState.componentSize = selectedFile.size;
         recState.uploadFn = 'acceptVideoRecording';
       } else if ((me.filetypes.audio.indexOf(recState.fileType) > -1)) {
         recState.type = 'audio';
+        recState.componentSize = selectedFile.size;
         recState.uploadFn = 'acceptFile';
       } else {
         recState.type = 'attachment';
@@ -352,7 +361,21 @@ class KoreMultiFileUploaderPlugin {
         recState.uploadFn = 'acceptFile';
       }
       if (this.allowedFileTypes && this.allowedFileTypes.indexOf(fileType) !== -1) {
-        if (recState.type === 'audio' || recState.type === 'video') {
+        // For Safari iOS videos, use direct DataURL approach to avoid canvas issues
+        if (recState.type === 'video' && me.isSafariIOS()) {
+          const videoReader = new FileReader();
+          videoReader.onload = function (e: any) {
+            const dataUrl = e.target.result;
+            // Extract MIME type from data URL (e.g., "data:video/quicktime;base64,...")
+            const mimeMatch = dataUrl.match(/^data:([^;]+);base64,/);
+            const mimeType = mimeMatch ? mimeMatch[1] : `video/${recState.fileType}`;
+            const base64Data = dataUrl.replace(/^.*;base64,/, '');
+            recState.resulttype = base64Data;
+            recState.mimeType = mimeType; // Store actual MIME type for Safari iOS
+            me.getFileToken(recState, selectedFile);
+          };
+          videoReader.readAsDataURL(selectedFile);
+        } else if (recState.type === 'audio' || recState.type === 'video') {
           // read duration;
           const rd = new FileReader();
           rd.onload = function (e: any) {
@@ -390,7 +413,9 @@ class KoreMultiFileUploaderPlugin {
             const img = new Image();
             img.src = url;
             img.onload = function () {
-              recState.resulttype = me.getDataURL(img);
+              const dataUrl = me.getDataURL(img);
+              // Extract base64 part from data URL (getDataURL returns "data:image/png;base64,...")
+              recState.resulttype = dataUrl.replace(/^.*;base64,/, '');
               me.getFileToken(recState, selectedFile);
             };
           };
@@ -466,23 +491,61 @@ class KoreMultiFileUploaderPlugin {
     uploadConfig.chunkSize = me.appConsts.CHUNK_SIZE;
     uploadConfig.chunkUpload = selectedFile.componentSize > me.appConsts.CHUNK_SIZE;
     uploadConfig.file = _file;
-    if (uploadConfig.chunkUpload) {
-      me.createElement(selectedFile);
-      ele = me.hostInstance.chatEle.querySelector('#uid' + selectedFile.uniqueId);
-      me.initiateRcorder(selectedFile, ele);
-      me.multifileuploader(uploadConfig, ele);
-    } else {
-      var reader: any = new FileReader();
-      reader.onloadend = function (evt: any) {
-        if (evt.target.readyState === FileReader.DONE) { // DONE == 2
-          var converted = reader.result.replace(/^.*;base64,/, '');
-          var resultGet = converted;
-          selectedFile.resulttype = resultGet;
+    
+    // For Safari iOS videos, resulttype already contains full video base64, so use it directly
+    const isSafariIOSVideo = selectedFile.type === 'video' && me.isSafariIOS() && selectedFile.resulttype;
+    
+    if (isSafariIOSVideo) {
+      // Safari iOS video: resulttype already has full video base64
+      if (uploadConfig.chunkUpload) {
+        me.createElement(selectedFile);
+        ele = me.hostInstance.chatEle.querySelector('#uid' + selectedFile.uniqueId);
+        me.initiateRcorder(selectedFile, ele);
+        me.multifileuploader(uploadConfig, ele);
+      } else {
+        me.acceptFileRecording(selectedFile);
+      }
+      return;
+    }
+    
+    // For non-Safari videos, resulttype is just a canvas thumbnail, so we need to read full video
+    // For other media types, if resulttype exists, use it
+    if (selectedFile.resulttype && selectedFile.type !== 'video') {
+      if (uploadConfig.chunkUpload) {
+        me.createElement(selectedFile);
+        ele = me.hostInstance.chatEle.querySelector('#uid' + selectedFile.uniqueId);
+        me.initiateRcorder(selectedFile, ele);
+        me.multifileuploader(uploadConfig, ele);
+      } else {
+        me.acceptFileRecording(selectedFile);
+      }
+      return;
+    }
+    
+    // Read base64 for media files (always read full file for non-Safari videos)
+    var reader: any = new FileReader();
+    reader.onloadend = function (evt: any) {
+      if (evt.target.readyState === FileReader.DONE) {
+        const dataUrl = evt.target.result;
+        // Extract MIME type from data URL for accurate type detection
+        const mimeMatch = dataUrl.match(/^data:([^;]+);base64,/);
+        if (mimeMatch) {
+          selectedFile.mimeType = mimeMatch[1];
+        }
+        var converted = dataUrl.replace(/^.*;base64,/, '');
+        // For videos, replace thumbnail with full video base64
+        selectedFile.resulttype = converted;
+        if (uploadConfig.chunkUpload) {
+          me.createElement(selectedFile);
+          ele = me.hostInstance.chatEle.querySelector('#uid' + selectedFile.uniqueId);
+          me.initiateRcorder(selectedFile, ele);
+          me.multifileuploader(uploadConfig, ele);
+        } else {
           me.acceptFileRecording(selectedFile);
         }
-      };
-      reader.readAsDataURL(_file);
-    }
+      }
+    };
+    reader.readAsDataURL(_file);
   }
 
   getfileuploadConf(_recState: { fileType: any; name: any; fileToken?: any; }) {
@@ -589,15 +652,28 @@ class KoreMultiFileUploaderPlugin {
     me.hostInstance.chatEle.querySelector('.typing-text-area').focus();
 
     // Push attachment info using per-upload scope
-    const att = {
+    // For Safari iOS videos, use the stored MIME type; otherwise construct from type and fileType
+    let fileContentBase64: string | undefined = undefined;
+    if ((_recState.type === 'image' || _recState.type === 'audio' || _recState.type === 'video') && _recState.resulttype) {
+      if (_recState.mimeType) {
+        // Use stored MIME type (for Safari iOS videos)
+        fileContentBase64 = "data:" + _recState.mimeType + ";base64," + _recState.resulttype;
+      } else {
+        // Construct MIME type from type and fileType
+        fileContentBase64 = "data:" + _recState.type + "/" + _recState.fileType + ";base64," + _recState.resulttype;
+      }
+    }
+    const att: any = {
       fileId: scope.fileId || _recState.fileId,
       fileName: _recState.name,
       fileType: _recState.type,
       fileUrl: scope.fileUrl || '',
       size: _recState.sizeInMb,
       uniqueId: _recState.uniqueId,
-      ...((_recState.type === 'image' || _recState.type === 'audio' || _recState.type === 'video') && {fileContentBase64: "data:" + _recState.type + "/" + _recState.fileType + ";base64," + _recState.resulttype}) // Add Base64 content for rendering purpose with prefix for image, audio, and video
     };
+    if (fileContentBase64) {
+      att.fileContentBase64 = fileContentBase64; // Add Base64 content for rendering purpose with correct MIME type
+    }
     if (att.fileUrl) {
       me.hostInstance.attachmentData.push(att);
     }
