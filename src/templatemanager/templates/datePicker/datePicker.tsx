@@ -28,8 +28,7 @@ export function DatePickerExt(props: any) {
     const dateFormats: any = {
         'DD-MM-YYYY': 'dd-MM-yyyy',
         'MM-DD-YYYY': 'MM-dd-yyyy',
-        'YYYY-MM-DD': 'yyyy-MM-dd',
-        'YYYY-DD-MM': 'yyyy-dd-MM'
+        'YYYY-MM-DD': 'yyyy-MM-dd'
     }
 
     const getConvertedDate = (date: any, format: any) => {
@@ -39,8 +38,7 @@ export function DatePickerExt(props: any) {
         const map: any = {
             'DD-MM-YYYY': [0, 1, 2],
             'MM-DD-YYYY': [1, 0, 2],
-            'YYYY-MM-DD': [2, 1, 0],
-            'YYYY-DD-MM': [2, 0, 1]
+            'YYYY-MM-DD': [2, 1, 0]
         };
     
         const idx = map[format];
@@ -99,8 +97,7 @@ export function DatePickerInline(props: any) {
     const dateFormats: any = {
         'DD-MM-YYYY': 'dd-MM-yyyy',
         'MM-DD-YYYY': 'MM-dd-yyyy',
-        'YYYY-MM-DD': 'yyyy-MM-dd',
-        'YYYY-DD-MM': 'yyyy-dd-MM'
+        'YYYY-MM-DD': 'yyyy-MM-dd'
     }
 
     const getConvertedDate = (date: any, format: any) => {
@@ -110,8 +107,7 @@ export function DatePickerInline(props: any) {
         const map: any = {
             'DD-MM-YYYY': [0, 1, 2],
             'MM-DD-YYYY': [1, 0, 2],
-            'YYYY-MM-DD': [2, 1, 0],
-            'YYYY-DD-MM': [2, 0, 1]
+            'YYYY-MM-DD': [2, 1, 0]
         };
     
         const idx = map[format];

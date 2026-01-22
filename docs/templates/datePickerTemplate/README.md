@@ -14,10 +14,12 @@ var message = {
     "payload": {
         "text": "display",
         "template_type": "dateTemplate",
+        "view_type": "inline", // inline, slider
         "title": "Text to display on header",
         "text_message": "text to display in message node",
-        "format": "MM-DD-YYYY",
-
+        "format": "MM-DD-YYYY" // supported formats - DD-MM-YYYY, MM-DD-YYYY, YYYY-MM-DD
+        // "startDate": "01-20-2026",
+        // "endDate": "01-26-2026"
     }
 };
 print(JSON.stringify(message));
