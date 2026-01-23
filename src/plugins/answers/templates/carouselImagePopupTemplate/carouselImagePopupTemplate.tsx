@@ -11,6 +11,7 @@ export function CarouselImagePopupTemplate(props: any): any {
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [isDragging, setIsDragging] = useState(false);
     const [startPos, setStartPos] = useState({ x: 0, y: 0 });
+    const [isHovered, setIsHovered] = useState(false);
     const imageRef = useRef(null);
       // Convert scale to percentage for display
   const zoomPercentage = Math.round(imageObj?.scale * 100); 
@@ -66,28 +67,33 @@ export function CarouselImagePopupTemplate(props: any): any {
        }else if(type === 'up') setIsDragging(false);
     };
 
+    //render fit screen and zoom controls
+    const renderFitScreenAndZoomControls = () => {
+        return (
+            <div className={`sa-header-rightblock ${!isHovered ? 'sa-hide-controls' : ''}`}>
+                <div className="sa-zoom-in-out-block">
+                    <div className="sa-display sa-cursor-pointer sa-b-r"><span onClick={()=>setZoomInOut(true)}><ImageCarouselSvgIcons type={'zoom-in'} /> </span></div>
+                    <div className="sa-display sa-b-r">{zoomPercentage}%</div>
+                    <div className="sa-display sa-cursor-pointer"><span onClick={()=>setZoomInOut(false)}><ImageCarouselSvgIcons type={'zoom-out'} /> </span></div>
+                </div>
+            </div>
+        );
+    };
+
     //image carousel template html
     const imgCarouselTemp = <div className={`sa-carousel-img-popup ${propsData.image_urls?.length===1 && 'sa-remove-carousel'}`}>
                         <div className="sa-img-popup-header-block">
                             <div className="sa-header-leftblock">
-                                <div className='sa-back-btn' onClick={closePopup}> <span><ImageCarouselSvgIcons type={'left-arrow'} /> </span></div>
+                                <div className='sa-back-btn' onClick={closePopup}> <span><ImageCarouselSvgIcons type={'back-arrow'} /> </span></div>
                                 <div className="sa-filename">{propsData?.title}</div>
                             </div>
-                            <div className="sa-header-rightblock">
-                                <div className="sa-display-flex sa-cursor-pointer sa-filename" onClick={()=>setFullScreen()}> <span><ImageCarouselSvgIcons type={'expand'} /> </span> Fit Screen</div>
-                                <div className="sa-zoom-in-out-block">
-                                    <div className="sa-display-flex sa-cursor-pointer sa-b-r"><span onClick={()=>setZoomInOut(true)}><ImageCarouselSvgIcons type={'zoom-in'} /> </span></div>
-                                    <div className="sa-display-flex sa-b-r">{zoomPercentage}%</div>
-                                    <div className="sa-display-flex sa-cursor-pointer"><span onClick={()=>setZoomInOut(false)}><ImageCarouselSvgIcons type={'zoom-out'} /> </span></div>
-                                </div>
-                            </div>
+                            
                         </div>
                         {
                         <Fragment>
                             <div className={`sa-carousel-body-container ${imageObj?.isExpand && 'expand-img'}`}>
                                 <div className="sa-carousel-btn" onClick={() => movePreNext('previous')}> <span><ImageCarouselSvgIcons type={'left-btn-arrow'} /></span> </div>
-                                <div className="sa-file-popup-img-container">
-
+                                <div className="sa-file-popup-img-container" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
                                     <div className="sa-file-popup-img">
                                         <div className="image-container" style={{ cursor: isDragging ? 'grabbing' : imageObj?.scale > 1 ? 'grab' : 'default' }}>
                                             <div className="sa-img-child" style={{ transform: `scale(${imageObj.scale}) translate(${position.x}px, ${position.y}px)`, transition: isDragging ? 'none' : 'transform 0.3s ease' }}
@@ -100,6 +106,7 @@ export function CarouselImagePopupTemplate(props: any): any {
                                             </div>
                                         </div>
                                     </div>
+                                    {renderFitScreenAndZoomControls()}
                                 </div>
                                 <div className="sa-carousel-btn" onClick={() => movePreNext('next')}> <span><ImageCarouselSvgIcons type={'right-btn-arrow'} /></span> </div>
                             </div>
@@ -107,7 +114,7 @@ export function CarouselImagePopupTemplate(props: any): any {
                                 <div className="sa-carousel-footer-block">
                                     {
                                         propsData?.image_urls?.map((imgUrl: any, index: number) => (
-                                            <div className="sa-display-flex sa-carousel-img-btn-block">
+                                            <div className="sa-display sa-carousel-img-btn-block">
                                                 <img className={`sa-carousel-img-btn ${index === imageObj?.index && 'selected-img'}`} src={imgUrl} onClick={() => movePreNext('selectIndex',index)}/>
                                             </div>
                                         ))
