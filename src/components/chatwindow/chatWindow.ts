@@ -1364,6 +1364,14 @@ bindSDKEvents  () {
     //     $('.trainWarningDiv').addClass('showMsg');
     //   }, 2000);
     // }
+
+    if ((tempData?.type === 'initial_language' || tempData?.type === 'language_switched') && me?.config?.enableRTLTextDirection && me.config.UI.version == 'v3')  {
+      if (tempData?.langDetails?.language == 'ar' || tempData?.langDetails?.newLanguage == 'ar') {
+        me.chatEle.setAttribute('dir', 'rtl');
+      } else {
+        me.chatEle.setAttribute('dir', 'ltr');
+      }
+    }
   });
 
   me.bot.on('webhook_ready', (response: any) => {
