@@ -2,7 +2,7 @@ import BaseChatTemplate from '../../../../templatemanager/templates/baseChatTemp
 import './answerTemplate.scss';
 import { h, Fragment, render  } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import {CarouselImagePopupTemplate} from '../carouselImagePopupTemplate/carouselImagePopupTemplate';
+import {GoogleDrivePreviewTemplate} from '../googleDrivePreviewTemplate/googleDrivePreviewTemplate';
 import KoreHelpers from '../../../../utils/helpers';
 import FeedbackTemplate from '../feedbackTemplate/feedbackTemplate';
 import ImageCarouselSvgIcons from '../carouselImagePopupTemplate/imageCarouselSvgIcons';
@@ -77,7 +77,7 @@ export function Answers(props: any) {
             // Append to the body
             document.body.appendChild(tempDiv);
             const sourceData = {"image_urls":Array.isArray(image_urls) ? image_urls : [image_urls],"title":title}
-            render(<CarouselImagePopupTemplate data={sourceData}/>,tempDiv);
+            render(<GoogleDrivePreviewTemplate data={sourceData}/>,tempDiv);
     }
 
     const  extractShortDomainOrFile=(link:string) =>{

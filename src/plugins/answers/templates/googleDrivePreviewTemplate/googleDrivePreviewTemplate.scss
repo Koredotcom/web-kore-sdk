@@ -1,0 +1,406 @@
+#sa-img-carousel-popup-container {
+    background: rgba(32, 33, 36, 0.4);
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    margin-left: -8px;
+    font-family: inter;
+    z-index: 999999;
+    top: 0;
+    overflow-x: hidden;
+    overflow-y: hidden;
+
+    // Google Drive style scrollbar - thinner and more subtle
+    &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(128, 134, 139, 0.2);
+        border-radius: 4px;
+        border: 1px solid transparent;
+        background-clip: padding-box;
+        transition: background-color 0.15s ease;
+
+        &:hover {
+            background-color: rgba(128, 134, 139, 0.4);
+        }
+
+        &:active {
+            background-color: rgba(128, 134, 139, 0.5);
+        }
+    }
+
+    &::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+
+    // Firefox scrollbar
+    scrollbar-width: thin;
+    scrollbar-color: rgba(128, 134, 139, 0.2) transparent;
+
+    .sa-google-drive-preview {
+        width: 100%;
+        height: 100vh;
+        max-width: 100%;
+        background-color: rgba(15, 23, 42, 0.55);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+
+        // Carousel buttons - fixed position, always visible
+        .sa-carousel-btn {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 15;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 37px;
+            height: 37px;
+            border-radius: 50%;
+            background-color: rgba(60, 64, 67, 0.9);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+
+            &:hover {
+                background-color: rgba(95, 99, 104, 0.9);
+                transform: translateY(-50%) scale(1.05);
+            }
+
+            &.sa-carousel-btn-left {
+                left: 12px;
+            }
+
+            &.sa-carousel-btn-right {
+                right: 12px;
+            }
+
+            svg {
+                width: 8px;
+                height: 13px;
+                path {
+                    stroke: #FFFFFF;
+                }
+            }
+        }
+
+        // Header - transparent initially, becomes black on scroll
+        .sa-preview-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background-color: transparent;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            padding: 8px 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+
+            &.sa-header-scrolled {
+                background-color: #0C111D !important;
+            }
+
+            .sa-header-content {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                .sa-header-left {
+                    display: flex;
+                    align-items: center;
+                    flex: 1;
+                    min-width: 0;
+
+                    .sa-back-btn {
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        transition: background-color 0.2s ease;
+
+                        &:hover {
+                            background-color: rgba(255, 255, 255, 0.1);
+                        }
+
+                        svg {
+                            width: 24px;
+                            height: 24px;
+                        }
+                    }
+
+                    .sa-file-icon {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 40px;
+                        height: 40px;
+                        flex-shrink: 0;
+
+                        svg {
+                            width: 22px;
+                            height: 22px;
+                            display: block;
+                        }
+                    }
+
+                    .sa-filename {
+                        color: #FFFFFF;
+                        font-size: 18px;
+                        font-weight: 500;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        text-transform: capitalize;
+                        flex: 1;
+                        min-width: 0;
+                    }
+                }
+
+                .sa-header-right {
+                    display: flex;
+                    align-items: center;
+                    gap: 16px;
+                }
+            }
+        }
+
+        // Preview body - scrollable content area
+        .sa-preview-body {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            padding: 20px 24px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            margin-top: 64px;
+            margin-bottom: 80px;
+
+            // Single image (no carousel) - different margin
+            &.sa-single-image {
+                margin-top: 100px;
+
+                .sa-preview-img {
+                    margin-top: 50%;
+                }
+            }
+
+            // Google Drive style scrollbar for preview body
+            &::-webkit-scrollbar {
+                width: 8px;
+                height: 8px;
+            }
+
+            &::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background-color: rgba(128, 134, 139, 0.2);
+                border-radius: 4px;
+                border: 1px solid transparent;
+                background-clip: padding-box;
+                transition: background-color 0.15s ease;
+
+                &:hover {
+                    background-color: rgba(128, 134, 139, 0.4);
+                }
+
+                &:active {
+                    background-color: rgba(128, 134, 139, 0.5);
+                }
+            }
+
+            &::-webkit-scrollbar-corner {
+                background: transparent;
+            }
+
+            // Firefox scrollbar
+            scrollbar-width: thin;
+            scrollbar-color: rgba(128, 134, 139, 0.2) transparent;
+
+
+            .sa-preview-image-container {
+                max-width: 75%;
+                width: auto;
+                max-height: none;
+                overflow: visible;
+                position: relative;
+                transition: transform 0.3s ease;
+                transform-origin: top center;
+                margin: 20px auto;
+
+                .sa-image-wrapper {
+                    width: 100%;
+                    max-width: 100%;
+                    height: auto;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: #FFFFFF;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+                    overflow-x: hidden;
+                    overflow-y: visible;
+                    box-sizing: border-box;
+                    pointer-events: auto;
+
+                    .sa-image-content {
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        .sa-preview-img {
+                            max-width: 100%;
+                            width: auto;
+                            height: auto;
+                            object-fit: contain;
+                            display: block;
+                            user-select: none;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Bottom controls - fixed at bottom
+        .sa-preview-bottom-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px 24px 20px;
+            background: linear-gradient(to top, rgba(32, 33, 36, 0.95) 0%, rgba(32, 33, 36, 0.85) 60%, rgba(32, 33, 36, 0.7) 80%, transparent 100%);
+            pointer-events: none;
+
+            .sa-zoom-controls {
+                display: flex;
+                align-items: center;
+                background-color: rgba(60, 64, 67, 0.9);
+                border-radius: 24px;
+                padding: 6px 12px;
+                gap: 8px;
+                opacity: 1;
+                visibility: visible;
+                pointer-events: auto;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+                .sa-zoom-controls-inner {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+
+                    .sa-zoom-btn {
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 36px;
+                        height: 36px;
+                        border-radius: 50%;
+                        transition: background-color 0.2s ease;
+                        pointer-events: auto;
+
+                        &:hover {
+                            background-color: rgba(95, 99, 104, 0.9);
+                        }
+
+                        svg {
+                            width: 20px;
+                            height: 20px;
+                            path {
+                                stroke: #FFFFFF;
+                            }
+                        }
+                    }
+
+                    .sa-zoom-percentage {
+                        color: #FFFFFF;
+                        font-size: 14px;
+                        font-weight: 500;
+                        min-width: 50px;
+                        text-align: center;
+                        user-select: none;
+                        cursor: pointer;
+                        padding: 4px 8px;
+                        border-radius: 4px;
+                        transition: background-color 0.2s ease;
+
+                        &:hover {
+                            background-color: rgba(95, 99, 104, 0.5);
+                        }
+                    }
+                }
+            }
+
+            .sa-preview-footer {
+                display: flex;
+                gap: 12px;
+                padding: 12px;
+                background-color: rgba(60, 64, 67, 0.9);
+                border-radius: 24px;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+                pointer-events: auto;
+
+                .sa-preview-thumbnail {
+                    width: 60px;
+                    height: 60px;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    cursor: pointer;
+                    border: 2px solid transparent;
+                    transition: border-color 0.2s ease, transform 0.2s ease;
+                    flex-shrink: 0;
+
+                    &:hover {
+                        transform: scale(1.1);
+                        border-color: rgba(255, 255, 255, 0.5);
+                    }
+
+                    &.sa-thumbnail-active {
+                        border-color: #4285F4;
+                        box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.3);
+                    }
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+                }
+            }
+        }
+    }
+}
+
