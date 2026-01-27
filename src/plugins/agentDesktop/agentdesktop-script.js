@@ -1237,7 +1237,7 @@ AgentDesktop = function (uuId, aResponse) {
                         remoteVideoTmp["volume"] = 0.5;
                         clearInterval(checkExist);
                     }
-                }, 100); // check every 100ms// check every 100ms
+                }, 100); // check every 100ms
 
 
             },
