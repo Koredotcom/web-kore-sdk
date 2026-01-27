@@ -644,6 +644,17 @@ AgentDesktop = function (uuId, aResponse) {
                 _self.activeCall.stopScreenSharing();
             }
             toastContainer.remove();
+            const payload = _self.callDetails;
+            payload['type'] = "webrtc_screenshare_reject"
+            const messageToBot = {};
+            messageToBot["event"] = "event";
+            messageToBot["message"] = {
+                "body": _self.callDetails,
+                "type": ""
+            }
+            if (botInstance) {
+                botInstance.sendMessage(messageToBot, (err) => { });
+            }
         });
         acceptCall.off('click').on('click', function (event) {
             if (_self.activeCall) {
@@ -955,11 +966,21 @@ AgentDesktop = function (uuId, aResponse) {
                     _self.sendVideo(false);
                 }
                 if (_self.screenSharingStream) {
+                    _self.screenSharingStream.getTracks().forEach(function (track) {
+                        if (track && track.readyState === 'live') {
+                            track.stop();
+                        }
+                    });
                     _self.phone.closeScreenSharing();
+                    _self.screenSharingStream = null;
                 }
 
                 if (_self.activeCall && _self.activeCall.isScreenSharing()) {
                     _self.activeCall.stopScreenSharing();
+                }
+                var toastcontainer = document.getElementById("toastcontainer");
+                if (toastcontainer) {
+                    toastcontainer.remove();
                 }
             } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'cobrowse') {
                 console.log("cobrowse request ", msgJson.message);
@@ -1071,6 +1092,18 @@ AgentDesktop = function (uuId, aResponse) {
                         this.screenSharingStream.getVideoTracks()[0].onended = function () {
                             me.sendVideo(me.callDetails.videoCall);
                             me.sendControlMessage('screenshare_end');
+                            me.screenSharingStream = null;
+                            const payload = me.callDetails;
+                            payload['type'] = "webrtc_screenshare_end"
+                            const messageToBot = {};
+                            messageToBot["event"] = "event";
+                            messageToBot["message"] = {
+                                "body": me.callDetails,
+                                "type": ""
+                            }
+                            if (botInstance) {
+                                botInstance.sendMessage(messageToBot, (err) => { });
+                            }
                         };
                     });
             }
@@ -1187,21 +1220,36 @@ AgentDesktop = function (uuId, aResponse) {
                 console.log('phone>>> callShowStreams');
                 var remoteVideo = document.getElementById('kore_remote_video');
                 console.log('remoteVideo', remoteVideo)
-                remoteVideo.srcObject = remoteStream; // to play audio and optional video
-                remoteVideo["volume"] = 0.5;
+                if (remoteVideo) {
+                    remoteVideo.srcObject = remoteStream; // to play audio and optional video
+                    remoteVideo["volume"] = 0.5;
+                }
                 console.log('remoteStream', remoteStream)
 
+                self.localCameraStream = localStream;
                 var localVideo = document.getElementById('kore_local_video');
-                localVideo.srcObject = localStream; // to play audio and optional video
-                localVideo.volume = 0.0;
-                localVideo.mute = false;
+                if (localVideo) {
+                    localVideo.srcObject = localStream; // to play audio and optional video
+                    localVideo.volume = 0.0;
+                    localVideo.mute = false;
+                }
+                var tempLocalVideo = document.getElementById('kore_local_video_tmp');
+                if (tempLocalVideo) {
+                    tempLocalVideo.srcObject = localStream;
+                    tempLocalVideo.volume = 0.0;
+                    tempLocalVideo.mute = false;
+                }
                 var checkExist = setInterval(function () {
                     if (document.getElementById("kore_remote_video_tmp")) {
                         let remoteVideo = document.getElementById('kore_remote_video');
-                        remoteVideo.srcObject = remoteStream;
+                        if (remoteVideo) {
+                            remoteVideo.srcObject = remoteStream;
+                        }
                         let remoteVideoTmp = document.getElementById('kore_remote_video_tmp');
-                        remoteVideoTmp.srcObject = remoteVideo.srcObject;
-                        remoteVideoTmp["volume"] = 0.5;
+                        if (remoteVideoTmp) {
+                            remoteVideoTmp.srcObject = remoteStream;
+                            remoteVideoTmp["volume"] = 0.5;
+                        }
                         clearInterval(checkExist);
                     }
                 }, 100); // check every 100ms
