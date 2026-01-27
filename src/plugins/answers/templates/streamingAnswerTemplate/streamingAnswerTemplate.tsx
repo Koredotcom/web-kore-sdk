@@ -1,7 +1,7 @@
 import '../answerTemplate/answerTemplate.scss';
 import { h, Fragment } from 'preact';
 import KoreHelpers from '../../../../utils/helpers';
-import ImageCarouselSvgIcons from '../carouselImagePopupTemplate/imageCarouselSvgIcons';
+import ImageCarouselSvgIcons from '../imagePreviewTemplate/imageCarouselSvgIcons';
 import { CMHelpers } from '../../../../utils/cm-helpers';
 
 export function StreamingAnswersTemplate(props: any) {

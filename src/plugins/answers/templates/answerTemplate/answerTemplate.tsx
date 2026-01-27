@@ -2,10 +2,10 @@ import BaseChatTemplate from '../../../../templatemanager/templates/baseChatTemp
 import './answerTemplate.scss';
 import { h, Fragment, render  } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import {CarouselImagePopupTemplate} from '../carouselImagePopupTemplate/carouselImagePopupTemplate';
+import {ImagePreviewTemplate} from '../imagePreviewTemplate/imagePreviewTemplate';
 import KoreHelpers from '../../../../utils/helpers';
 import FeedbackTemplate from '../feedbackTemplate/feedbackTemplate';
-import ImageCarouselSvgIcons from '../carouselImagePopupTemplate/imageCarouselSvgIcons';
+import ImageCarouselSvgIcons from '../imagePreviewTemplate/imageCarouselSvgIcons';
 import { StreamingAnswersTemplate } from '../streamingAnswerTemplate/streamingAnswerTemplate';
 
 // Streaming wrapper that handles routing between streaming and final template
@@ -95,7 +95,7 @@ export function Answers(props: any) {
             // Append to the body
             document.body.appendChild(tempDiv);
             const sourceData = {"image_urls":Array.isArray(image_urls) ? image_urls : [image_urls],"title":title}
-            render(<CarouselImagePopupTemplate data={sourceData}/>,tempDiv);
+            render(<ImagePreviewTemplate data={sourceData}/>,tempDiv);
     }
 
     const  extractShortDomainOrFile=(link:string) =>{

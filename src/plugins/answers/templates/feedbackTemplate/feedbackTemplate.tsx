@@ -1,7 +1,7 @@
 
 import { h, Fragment } from 'preact';
 import { useState, useRef } from 'preact/hooks';
-import ImageCarouselSvgIcons from '../carouselImagePopupTemplate/imageCarouselSvgIcons';
+import ImageCarouselSvgIcons from '../imagePreviewTemplate/imageCarouselSvgIcons';
 import './feedbackTemplate.scss';
 
 //carousel image popup template
