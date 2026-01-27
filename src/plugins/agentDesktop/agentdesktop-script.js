@@ -2767,7 +2767,7 @@ focusHandler = function (e) {
 cobrowseMaskFields = function (e) {
    console.log("cobrowse >>> koreCoBrowseMakingFields initialize");
    if (!e || !e.blockClasses) return;
-   for(var i = 0; i < e.blockClasses.length; i++){
+   for(var i = 0; i < e.blockClasses?.length; i++){
         if(e.blockClasses[i] === ''){
             return false
         }
@@ -5402,7 +5402,7 @@ rrwebInit = function (exports) {
                 if (target && isBlocked(target, _this.blockClass)) {
                     return;
                 }
-                if (me.maskClassList && me.maskClassList.length > 0) {
+                if (me.maskClassList && me.maskClassList?.length > 0) {
                     for (var i = 0; i < me.maskClassList?.length; i++) {
                         if (me.maskClassList[i] !== '') {
                             if (n && n.classList && n.classList.contains(me.maskClassList[i])) {
