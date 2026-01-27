@@ -1447,7 +1447,7 @@ stopCoBrowse = (sendMessageFlag = true, removeFromStorage = true, removeMasking 
         }
         console.log("cobrowse >>> koreCoBrowseUnMakingFields");
 
-        if (this.maskClassList && this.maskClassList.length > 0) {
+        if (this.maskClassList && this.maskClassList?.length > 0) {
             for (var i = 0; i < this.maskClassList.length; i++) {
                 if (this.maskClassList[i] !== '') {
                     document.querySelectorAll('.' + this.maskClassList[i]).forEach(item => {
