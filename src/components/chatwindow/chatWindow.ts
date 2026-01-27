@@ -23,7 +23,7 @@ import EventManager from '../../templatemanager/base/eventManager';
 import BrandingManager from '../../templatemanager/templates/brandingManager';
 import { ActionsBottomSlider } from '../../templatemanager/base/actionsButtonSlider/actionsBottomSlider';
 import { ActionsModal } from '../../templatemanager/base/actionsModal/actionsModal';
-import AnswersTemplatesPlugin from '../../plugins/answers/answersPlugin';
+// import AnswersTemplatesPlugin from '../../plugins/answers/answersPlugin';
 // const bot = requireKr('/KoreBot.js').instance();
 
 declare const document:any;
@@ -200,15 +200,15 @@ init  (config:any) {
   me.messageTemplate=new MessageTemplate();
   me.messageTemplate.hostInstance=me;
   me.installCallbackForPlugins();
-  me.installDefaultPlugins();
+  // me.installDefaultPlugins();
 }
 
-installDefaultPlugins(){
-  const me:any = this;
-  if (me.config.UI.version == 'v3') {
-    me.installPlugin(new AnswersTemplatesPlugin({}));
-  }
-}
+// installDefaultPlugins(){
+//   const me:any = this;
+//   if (me.config.UI.version == 'v3') {
+//     me.installPlugin(new AnswersTemplatesPlugin({}));
+//   }
+// }
 
 installCallbackForPlugins (){
   const me:any = this;
@@ -1456,7 +1456,7 @@ handleStreamingMessage(msgData: any) {
   const messageId = msgData.messageId;
   const newChunkText = msgData.message?.[0]?.cInfo?.body || msgData.message?.[0]?.component?.payload?.text || msgData.message?.[0]?.component?.payload || '';
 
-  if (msgData.message?.[0]?.component?.payload?.template_type == 'answerTemplate') {
+  if (msgData.message?.[0]?.component?.payload?.template_type == 'answerTemplate' && me.plugins.AnswersTemplatesPlugin) {
       me.plugins.AnswersTemplatesPlugin.handleStreamingMessage(msgData);
       return;
   }
