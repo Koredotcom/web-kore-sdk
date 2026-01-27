@@ -1,10 +1,10 @@
 import { h, Fragment } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
-import './googleDrivePreviewTemplate.scss';
-import ImageCarouselSvgIcons from '../carouselImagePopupTemplate/imageCarouselSvgIcons';
+import './imagePreviewTemplate.scss';
+import ImageCarouselSvgIcons from './imageCarouselSvgIcons';
 
 // Google Drive style preview template
-export function GoogleDrivePreviewTemplate(props: any): any {
+export function ImagePreviewTemplate(props: any): any {
     const propsData = props.data;
     const containerRef = useRef<HTMLDivElement>(null);
     const imageRef = useRef<HTMLDivElement>(null);
@@ -246,7 +246,7 @@ export function GoogleDrivePreviewTemplate(props: any): any {
 
     // Main template
     const previewTemplate = (
-        <div className="sa-google-drive-preview" ref={containerRef}>
+        <div className="sa-image-preview" ref={containerRef}>
             {renderHeader()}
             {propsData?.image_urls?.length > 1 && (
                 <div className="sa-carousel-btn sa-carousel-btn-left" onClick={() => movePreNext('previous')}>
@@ -316,5 +316,5 @@ export function GoogleDrivePreviewTemplate(props: any): any {
     return previewTemplate;
 }
 
-export default GoogleDrivePreviewTemplate;
+export default ImagePreviewTemplate;
 
