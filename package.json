@@ -1,6 +1,6 @@
 {
   "name": "kore-web-sdk",
-  "version": "11.20.0",
+  "version": "11.21.0",
   "description": "Kore.ai offers Bots SDKs as a set of platform-specific client libraries that provide a quick and convenient way to integrate Kore.ai Bots chat capability into custom applications",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -29,7 +29,7 @@
   "module": "dist/esm/exports.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:Koredotcom/web-kore-sdk.git#v3/11.20.0"
+    "url": "git@github.com:Koredotcom/web-kore-sdk.git#v3/11.21.0"
   },
   "author": "Rajasekhar Balla",
   "license": "MIT",
@@ -47,17 +47,14 @@
     "aws-sdk": "^2.1102.0",
     "d3": "^7.1.1",
     "emoji-picker-element": "1.21.3",
-    "express": "~4.18.2",
     "jquery": "^3.6.0",
-    "jquery-ui": "^1.12.1",
-    "jquery.tmpl": "0.0.2",
     "microsoft-cognitiveservices-speech-sdk": "^1.24.1",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.45",
     "perfect-scrollbar": "^1.5.2",
     "preact": "10.17.1",
-    "preact-render-to-string": "^6.0.3",
-    "pubsub-js": "^1.9.4",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
     "util": "^0.12.4"
   },
   "devDependencies": {

@@ -826,7 +826,7 @@ class KoreMultiFileUploaderPlugin {
     let auth = "bearer " + me.hostInstance.config.botOptions.accessToken;
     $.ajax({
       type: 'GET',
-      url: (me.config?.koreAttachmentAPIUrl ? me.config.koreAttachmentAPIUrl : me.hostInstance.config.botOptions.koreAPIUrl) + "attachment/file/" + fileId + "/url",
+      url: (me.config?.koreAttachmentAPIUrl ? me.config.koreAttachmentAPIUrl : me.hostInstance.config.botOptions.koreAPIUrl) + "attachment/v2/stream/" + me.hostInstance.config.botOptions.botInfo.taskBotId + "/file/" + fileId + "/url",
       dataType: 'json',
       headers: {
         Authorization: auth,

@@ -975,6 +975,11 @@ AgentDesktop = function (uuId, aResponse) {
                 }
                 this.addAudioVideoContainer();
                 this.showCobrowseRequest(msgJson.message);
+            } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'agent_cobrowse_reconnect_request') {
+                _self.closeChannel();
+                setTimeout(() => {
+                    _self.autoStartCobrowse();
+                }, 1000);
             } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'close_cobrowse') {
                 var toastContainer = koreJquery("#toastcontainer");
                 toastContainer.remove();
@@ -1095,6 +1100,21 @@ AgentDesktop = function (uuId, aResponse) {
         this.phone.setAcLogger(console.log);
         this.phone.setModes(this.phoneConfig.modes);
         this.phone.setAccount(account.user, account.displayName, account.user, account.user);
+
+        const serverAddress = serverConfig.addresses[0];
+        const audiocodesDomains = [
+            'audiocodes-webrtc-prod.kore.ai',
+            'audiocodes-jp-webrtc-prod.kore.ai',
+            'audiocodes-de-webrtc-prod.kore.ai',
+            'smartassist-agent-np.kore.ai'
+        ];
+        const url = new URL(serverAddress);
+        const domain = url.hostname;
+        if(!audiocodesDomains.includes(domain)){
+            this.phone.setCodecFilter({
+                audio: { priority: ['opus'], remove: ['pcmu', 'pcma', 'g722'] }
+            });
+        }
         var self = this;
         // Set phone API listeners
         this.phone.setListeners({
@@ -1382,7 +1402,7 @@ setConversationInProgress(conversationType, hostInstance){
         });
     },2000);
 }
-stopCoBrowse = (sendMessageFlag = true, removeFromStorage = true) => {
+stopCoBrowse = (sendMessageFlag = true, removeFromStorage = true, removeMasking = true) => {
     console.log("cobrowse >>> stopping cobrowse");
     this.agentDrawPaths = [];
     this.userDrawPaths = [];
@@ -1418,22 +1438,27 @@ stopCoBrowse = (sendMessageFlag = true, removeFromStorage = true) => {
     this.removeCanvas();
     this.removeMousePointer();
     this.removeTooltip();
-    var cobrowsetoolbar = document.getElementById("cobrowse-toolbar");
-    if (cobrowsetoolbar) {
-        cobrowsetoolbar.remove();
+    
+    // Only remove toolbar & masking from DOM if this is a full stop (not a reconnection)
+    if (removeMasking) {
+        var cobrowsetoolbar = document.getElementById("cobrowse-toolbar");
+        if (cobrowsetoolbar) {
+            cobrowsetoolbar.remove();
+        }
+        console.log("cobrowse >>> koreCoBrowseUnMakingFields");
+
+        if (this.maskClassList && this.maskClassList?.length > 0) {
+            for (var i = 0; i < this.maskClassList.length; i++) {
+                if (this.maskClassList[i] !== '') {
+                    document.querySelectorAll('.' + this.maskClassList[i]).forEach(item => {
+                        item.classList.remove('rr-block');
+                    });
+                }
+            }
+        }
+        this.maskClassList = [];
+        this.maskPatternList = [];
     }
-    console.log("cobrowse >>> koreCoBrowseUnMakingFields");
-    if(this.maskClassList){
-        for(var i =0;i< this.maskClassList.length > 0; i++){
-            if(this.maskClassList[i] !== ''){
-                document.querySelectorAll('.'+this.maskClassList[i]).forEach(item => {
-                    item.classList.remove('rr-block');
-                });
-           }
-       }
-    }
-    this.maskClassList = [];
-    this.maskPatternList = [];
 }
 closeChannel = function () {
     if (this.dataChannel && this.dataChannel.readyState === 'open') {
@@ -2137,11 +2162,12 @@ cobrowseInitialize = (cobrowseRequest) => {
             if (localStorage.getItem(storageKey)) {
                 let cobrowseRequestFromLocal = JSON.parse(localStorage.getItem(storageKey));
                 if (cobrowseRequestFromLocal) {
-                    if ((!me.maskClassList || me.maskClassList.length === 0) && cobrowseRequestFromLocal?.blockClasses?.length > 0) {
+                    // ALWAYS reapply masking on reconnection
+                    if (cobrowseRequestFromLocal?.blockClasses?.length > 0) {
                         me.maskClassList = cobrowseRequestFromLocal.blockClasses;
                         me.cobrowseMaskFields(cobrowseRequestFromLocal);
                     }
-                    if ((!me.maskPatternList || me.maskPatternList.length === 0) && cobrowseRequestFromLocal?.patternList?.length > 0) {
+                    if (cobrowseRequestFromLocal?.patternList?.length > 0) {
                         me.maskPatternList = cobrowseRequestFromLocal.patternList;
                         me.scanElement(document.body, me.maskPatternList);
                     }
@@ -2181,7 +2207,8 @@ cobrowseInitialize = (cobrowseRequest) => {
             }).then(() => {
                 const payload = {
                     conversationId: incoming.caller,
-                    sdp: me.peer.localDescription
+                    sdp: me.peer.localDescription,
+                    capabilities: ["agent_reconnect"]
                 }
                 me.socket.emit("answer", payload);
             }).catch(err => {
@@ -2205,7 +2232,7 @@ cobrowseInitialize = (cobrowseRequest) => {
                             me.peer.close();
                             me.peer = null;
                         }
-                        me.stopCoBrowse(false, false);
+                        me.stopCoBrowse(false, false, false);
                     }
                     me.dataChannel.onopen = () => {
                         console.log("cobrowse >>> start recording");
@@ -2739,7 +2766,8 @@ focusHandler = function (e) {
 
 cobrowseMaskFields = function (e) {
    console.log("cobrowse >>> koreCoBrowseMakingFields initialize");
-   for(var i =0;i< e.blockClasses.length > 0; i++){
+   if (!e || !e.blockClasses) return;
+   for(var i = 0; i < e.blockClasses?.length; i++){
         if(e.blockClasses[i] === ''){
             return false
         }
@@ -5374,17 +5402,19 @@ rrwebInit = function (exports) {
                 if (target && isBlocked(target, _this.blockClass)) {
                     return;
                 }
-                for (var i = 0; i < me.maskClassList?.length > 0; i++) {
-                    if (me.maskClassList[i] !== '') {
-                        if (n && n.classList && n.classList.contains(me.maskClassList[i])) {
-                            n.classList.add('rr-block');
-                        }
-                        if (target && target.classList && target.classList.contains(me.maskClassList[i])) {
-                            target.classList.add('rr-block');
+                if (me.maskClassList && me.maskClassList?.length > 0) {
+                    for (var i = 0; i < me.maskClassList?.length; i++) {
+                        if (me.maskClassList[i] !== '') {
+                            if (n && n.classList && n.classList.contains(me.maskClassList[i])) {
+                                n.classList.add('rr-block');
+                            }
+                            if (target && target.classList && target.classList.contains(me.maskClassList[i])) {
+                                target.classList.add('rr-block');
+                            }
                         }
                     }
                 }
-                if (me.maskPatternList) {
+                if (me.maskPatternList && me.maskPatternList?.length > 0) {
                     me.scanElement(n, me.maskPatternList);
                 }
                 if (isINode(n)) {

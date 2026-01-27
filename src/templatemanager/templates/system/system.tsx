@@ -13,10 +13,6 @@ export function System(props: any) {
     hostInstance.on('onBrandingUpdate', function (event: any) {
         updateBrandingInfo({...event.brandingData})
     });
-    const messageobj = {
-        msgData: msgData,
-        hostInstance: hostInstance
-    }
 
     let agentBannerClass: any = {
         '1': 'agent-joined-wrapper',
@@ -38,7 +34,7 @@ export function System(props: any) {
                     </div>
                     <div className="agent-name">{msgData.message[0].cInfo.body}</div>
                     <div className="time-stamp">
-                        <time>{helpers.formatAMPMDay(msgData.createdOn)}</time>
+                        <time>{helpers.formatAMPMDay(msgData.createdOn, brandingInfo.body.time_stamp.date_format, brandingInfo.body.time_stamp.time_format, hostInstance.config)}</time>
                     </div>
                 </div>
             </div>

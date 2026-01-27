@@ -1364,6 +1364,14 @@ bindSDKEvents  () {
     //     $('.trainWarningDiv').addClass('showMsg');
     //   }, 2000);
     // }
+
+    if ((tempData?.type === 'initial_language' || tempData?.type === 'language_switched') && me?.config?.enableRTLTextDirection && me.config.UI.version == 'v3')  {
+      if (tempData?.langDetails?.language == 'ar' || tempData?.langDetails?.newLanguage == 'ar') {
+        me.chatEle.setAttribute('dir', 'rtl');
+      } else {
+        me.chatEle.setAttribute('dir', 'ltr');
+      }
+    }
   });
 
   me.bot.on('webhook_ready', (response: any) => {
@@ -1448,6 +1456,10 @@ handleStreamingMessage(msgData: any) {
   const messageId = msgData.messageId;
   const newChunkText = msgData.message?.[0]?.cInfo?.body || msgData.message?.[0]?.component?.payload?.text || msgData.message?.[0]?.component?.payload || '';
 
+  if (msgData.message?.[0]?.component?.payload?.template_type == 'answerTemplate') {
+      me.plugins.AnswersTemplatesPlugin.handleStreamingMessage(msgData);
+      return;
+  }
   let streamState = me.streamingMessages.get(messageId);
 
   if (!streamState) {
@@ -2249,7 +2261,7 @@ getChatTemplate (tempType: string) {
                <div id="caption"></div>\
          </div>\
          <div id="chatBodyModal" class="chatBodyModal animate-bottom">\
-         <span class="closeChatBodyModal" aira-label="Close Form" role="button" tabindex="0" aria-atomic="true"></span>\
+         <span class="closeChatBodyModal" aria-label="Close Form" role="button" tabindex="0" aria-atomic="true"></span>\
          <div id="closeInlineModel" class="loading_form iframeLoader"></div>\
          <div id="chatBodyModalContent"></div>\
          </div>\

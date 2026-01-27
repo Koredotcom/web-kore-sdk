@@ -1,3 +1,16 @@
+### 11.21.0
+* Release Jan 17, 2026
+* Features
+  * updated fileUrl api to v2 version. You can now set controls for fileUrls in the [Platform](https://platform.kore.ai/)
+  * streaming support added for answers template
+* Bug fixes
+  * read issue fix for bulk agent messages from CCAI Console
+  * timestamp issue fix in system template
+  * aria label name issue fix
+  * fixed settings api failing and access token problem in answers template
+  * set OPUS codec as priority and removed PCMU, PCMA & G722 codec from the phone configuration in Agent Desktop plugin
+  * other minor bug fixes
+
 ### 11.20.0
 * Release Dec 06, 2025
 * Bug fixes

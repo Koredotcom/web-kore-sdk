@@ -113,7 +113,8 @@ chatConfig = {
             batchSize: 10  // To configure the number of messages to fetch
         }
     },
-    enableEmojiShortcut: true
+    enableEmojiShortcut: true,   // Set false to disable emoji shortcut support. Enabled by default
+    enableRTLTextDirection: true   // Set false to disable RTL support. Enabled by default for Arabic bot responses
 };
 
 export default chatConfig;
