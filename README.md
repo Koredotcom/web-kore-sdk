@@ -143,15 +143,25 @@ Other framework UI components like angular and react can also be injected with t
 
 ## 💡 Plugins
 
-Kore's chatwindow functionlity can be extended with the help of plugins.Newly created plugins can be installed with *installPlugin* method
+Kore's chatwindow functionlity can be extended with the help of plugins. Newly created plugins can be installed with *installPlugin* method
 
 ```bash
-class KoreCustomPlugin{
+class KoreCustomPlugin {
   
 }
 
 chatWindowInstance.installPlugin(new KoreCustomPlugin());
 ```
+
+Kore plugins can be installed as shown below.
+
+```bash
+
+import { AnswersTemplatesPlugin } from 'kore-web-sdk';
+
+chatWindowInstance.installPlugin(new AnswersTemplatesPlugin());
+```
+
 Kore offered plugins are listed [here](./docs/plugins)
 
 
