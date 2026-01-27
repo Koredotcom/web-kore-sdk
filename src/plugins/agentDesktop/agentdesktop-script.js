@@ -1220,39 +1220,24 @@ AgentDesktop = function (uuId, aResponse) {
                 console.log('phone>>> callShowStreams');
                 var remoteVideo = document.getElementById('kore_remote_video');
                 console.log('remoteVideo', remoteVideo)
-                if (remoteVideo) {
-                    remoteVideo.srcObject = remoteStream; // to play audio and optional video
-                    remoteVideo["volume"] = 0.5;
-                }
+                remoteVideo.srcObject = remoteStream; // to play audio and optional video
+                remoteVideo["volume"] = 0.5;
                 console.log('remoteStream', remoteStream)
 
-                self.localCameraStream = localStream;
                 var localVideo = document.getElementById('kore_local_video');
-                if (localVideo) {
-                    localVideo.srcObject = localStream; // to play audio and optional video
-                    localVideo.volume = 0.0;
-                    localVideo.mute = false;
-                }
-                var tempLocalVideo = document.getElementById('kore_local_video_tmp');
-                if (tempLocalVideo) {
-                    tempLocalVideo.srcObject = localStream;
-                    tempLocalVideo.volume = 0.0;
-                    tempLocalVideo.mute = false;
-                }
+                localVideo.srcObject = localStream; // to play audio and optional video
+                localVideo.volume = 0.0;
+                localVideo.mute = false;
                 var checkExist = setInterval(function () {
                     if (document.getElementById("kore_remote_video_tmp")) {
                         let remoteVideo = document.getElementById('kore_remote_video');
-                        if (remoteVideo) {
-                            remoteVideo.srcObject = remoteStream;
-                        }
+                        remoteVideo.srcObject = remoteStream;
                         let remoteVideoTmp = document.getElementById('kore_remote_video_tmp');
-                        if (remoteVideoTmp) {
-                            remoteVideoTmp.srcObject = remoteStream;
-                            remoteVideoTmp["volume"] = 0.5;
-                        }
+                        remoteVideoTmp.srcObject = remoteVideo.srcObject;
+                        remoteVideoTmp["volume"] = 0.5;
                         clearInterval(checkExist);
                     }
-                }, 100); // check every 100ms
+                }, 100); // check every 100ms// check every 100ms
 
 
             },
