@@ -1489,6 +1489,10 @@ stopCoBrowse = (sendMessageFlag = true, removeFromStorage = true, removeMasking 
                 }
             }
         }
+        // Remove rr-block from all elements (including those added via pattern matching)
+        document.querySelectorAll('.rr-block').forEach(item => {
+            item.classList.remove('rr-block');
+        });
         this.maskClassList = [];
         this.maskPatternList = [];
     }
