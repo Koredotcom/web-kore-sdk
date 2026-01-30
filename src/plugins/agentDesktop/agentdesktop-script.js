@@ -1943,6 +1943,8 @@ createCobrowseToolBar = function () {
     this.colorbtn.setAttribute("do-not-mutate", "true");
     this.colorbtnimg = document.createElement("img");
     Object.assign(this.colorbtnimg.style, btnImgStyle);
+    this.colorbtnimg.style.setProperty('width', '16px', 'important');
+    this.colorbtnimg.style.setProperty('height', '16px', 'important');
     this.colorbtnimg.src = this.pickColorImage;
     this.colorbtn.append(this.colorbtnimg);
     var colorInput = document.createElement("INPUT");
