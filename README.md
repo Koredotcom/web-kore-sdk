@@ -343,6 +343,9 @@ Note: When integrated into an iFrame, the SDK's functionality will be confined t
 	
 # Release History
 ```
+v10.22.1 [Minor] on 31-Jan-2026: Master branch
+        Stable release
+
 v10.22.0 [Minor] on 17-Jan-2026: Master branch
         Stable release
 
@@ -724,6 +727,7 @@ V6.0.0 [Major] on 04-NOV-2017: web-sdk-6.0.0 branch
 
 # License
 _Copyright © Kore.ai, Inc. MIT License; see LICENSE for further details._
+
 
 
 
