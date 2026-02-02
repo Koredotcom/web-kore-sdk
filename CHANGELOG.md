@@ -1,3 +1,17 @@
+### 11.21.1
+* Release Jan 31, 2026
+* Breaking Changes
+  * removed Answers Plugin by default. Need to install it manually for Search AI. Please refer [here](./docs/plugins/answers/) for installation instructions
+* Features
+  * added automatic RTL support for Arabic language in the Web SDK. RTL support can be disbaled by using the flag in the kore config. Please refer [kore config docs](./docs/configurations/koreconfig/README.md#rtl-support-for-arabic-language) for the configuration
+* Bug fixes
+  * dates disable issue fix in date and date range templates
+  * user message duplicate issue fix on network reconnections
+  * added preview template new design in answers template
+  * screen share issue fix on the video call in agent desktop plugin
+  * co browse issues fix
+  * other minor bug fixes
+
 ### 11.21.0
 * Release Jan 17, 2026
 * Features
