@@ -10,6 +10,7 @@ export function ChatWidget(props: any) {
     return (
         <div className='chat-widgetwrapper-main-container'>
             <ChatWidgetHeader {...props}/>
+            <div className="kore-sdk-error-section hide"></div>
             <ChatWidgetBody />
             <ChatWidgetComposeBar {...props} />
         </div>

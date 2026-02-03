@@ -1801,7 +1801,7 @@ if(messageText && messageText.trim() && messageText.trim().length){
         if (!errorMsg) {
           errorMsg = document.createElement('div');
           errorMsg.className = 'errorMsg';
-          errorMsg.innerHTML = '<div class="failed-text">Sending failed </div><div class="retry-text">Resend</div><div class="delete-text">Delete</div>';
+          errorMsg.innerHTML = '<div class="failed-text">Sending failed</div><button type="button" class="retry-text">Resend</button><span class="or-text">or</span><button type="button" class="delete-text">Delete</button>';
           if (firstChild) {
             failedMsgEle.querySelector('.bottom-info').insertBefore(errorMsg, firstChild);
           } else {
