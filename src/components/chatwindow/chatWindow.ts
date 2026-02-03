@@ -165,8 +165,9 @@ class chatWindow extends EventEmitter{
      *
      * @event chatWindow#apiFailure
      * @type {Object}
-     * @property {String} type - type of error - XHRObj/JqueryXHR
+     * @property {String} type - type of error - XHRObj/JqueryXHR/socketError
      * @property {Object} errObj - error object containing error details
+     * @property {Object} request - request details
      */
       API_FAILURE: 'apiFailure',
      /**
@@ -253,6 +254,7 @@ initShow  (config:any) {
   me.enableAgentChanges = true;
   me.config.chatTitle = 'Kore.ai Bot Chat';
   me.config.allowIframe = false;
+  me.isUIInitialized = false;
 
   me.reWriteWebHookURL(me.config);
   window._chatHistoryLoaded = false;
@@ -299,7 +301,7 @@ initShow  (config:any) {
   }  
   me.bot.on('jwtgrantsuccess', (response: { jwtgrantsuccess: any; }) => {
     me.config.jwtGrantSuccessInformation = response.jwtgrantsuccess;
-    if (!me.isReconnected && !me.config?.autoConnect) {
+    if (!me.isReconnected && !me.config?.autoConnect && !me.isUIInitialized) {
       if (me.config.enableThemes) {
         me.getBrandingInformation(response.jwtgrantsuccess);
       } else {
@@ -310,6 +312,10 @@ initShow  (config:any) {
       }
     }
     me.emit(me.EVENTS.JWT_GRANT_SUCCESS, response.jwtgrantsuccess);
+  });
+
+  me.bot.on('api_failure', (response: {responseError: any; type: any; request: any;}) => {
+    me.emit(me.EVENTS.API_FAILURE, { "type": response.type, "errObj": response.responseError, "request": response.request });
   });
 
   if(me.config?.mockMode?.enable || me.config.UI.version == 'v2'){ 
@@ -324,6 +330,7 @@ initShow  (config:any) {
 
 initUI() {
   let me: any = this;
+  me.isUIInitialized = true;
   const tempTitle = me._botInfo.name;
   let cwState = me.getLocalStoreItem('kr-cw-state');
   let maintainContext:any = !!cwState;
@@ -587,6 +594,11 @@ updateOnlineStatus () {
   if (typeof (navigator.onLine) === 'boolean') {
     if (navigator.onLine) {
       this.hideError();
+      const data = {
+        fromClient: true,
+        isReconnect: true
+      }
+      me.resetWindow(data);
       if (me.bot && me.bot.RtmClient && me.config?.syncMessages?.onNetworkResume?.enable) {
         me.bot.getHistory({ forHistorySync: true, limit: me.config?.syncMessages?.onNetworkResume?.batchSize });
       }
@@ -874,6 +886,21 @@ resetWindow (data:any = {}) {
       }
     }
   }
+
+  if (me.bot && me.bot.RtmClient) {
+    if (typeof me.bot.RtmClient.cleanup === 'function') {
+        me.bot.RtmClient.cleanup();
+    }
+  }  
+
+  if (data && data.fromClient) {
+    if (data.isReconnect) {
+      me.config.botOptions.forceReconnecting = true;
+    } else {
+      me.config.botOptions.forceReconnecting = false;
+    }
+  }
+
   // me.chatEle.find('.chat-container').html("");
   me.bot.close();
   me.config.botOptions.maintainContext = false;
@@ -1354,8 +1381,10 @@ bindSDKEvents  () {
       } else {
         if (me.config.supportDelayedMessages) {
           me.pushTorenderMessagesQueue(msgData)
+          console.log('msgData', msgData);
         } else {
           me.renderMessage(msgData)
+          console.log('msgData', msgData);
         }
       }
     }
@@ -1382,10 +1411,6 @@ bindSDKEvents  () {
 
   me.bot.on('webhook_reconnected', (response: any) => {
     me.onBotReady();
-  });
-
-  me.bot.on('api_failure', (response: {responseError: any; type: any;}) => {
-    me.emit(me.EVENTS.API_FAILURE, { "type": response.type, "errObj": response.responseError });
   });
 
   me.bot.on('reconnected', (response: any) => {
@@ -1740,17 +1765,7 @@ if(messageText && messageText.trim() && messageText.trim().length){
       }
       me.bot.sendMessage(messageToBot, (err: { message: any; }) => {
         if (err && err.message) {
-          setTimeout(() => {
-            var failedMsgEle = $('.kore-chat-window [id="' + clientMessageId + '"]');
-            failedMsgEle.find('.messageBubble').append('<div class="errorMsg hide"><span class="failed-text">Send Failed </span><div class="retry"><span class="retry-icon"></span><span class="retry-text">Retry</span></div></div>');
-            if (this.sendFailedMessage.retryCount < this.sendFailedMessage.MAX_RETRIES) {
-              failedMsgEle.find('.retry').trigger('click');
-              this.sendFailedMessage.retryCount++;
-            } else {
-              failedMsgEle.find('.errorMsg').removeClass('hide');
-              me.hideTypingIndicator();
-            }
-          }, 350);
+          me.handleMessageFailure(messageToBot, clientMessageId);
         }
       });
     }
@@ -1768,7 +1783,71 @@ if(messageText && messageText.trim() && messageText.trim().length){
   me.renderMessage(msgData);
 };
 
-postSendMessageToBot () {
+  handleMessageFailure(messageToBot: any, clientMessageId: string) {
+    const me: any = this;
+    setTimeout(() => {
+      let failedMsgEle = me.chatEle.querySelector(`[data-cw-msg-id="${clientMessageId}"]`);
+      if (failedMsgEle) {
+        let firstChild;
+        if (!failedMsgEle.querySelector('.bottom-info')) {
+          const bottomInfo = document.createElement('div');
+          bottomInfo.className = 'bottom-info';
+          failedMsgEle.querySelector('.agent-bubble-content').appendChild(bottomInfo);
+        } else {
+          firstChild = failedMsgEle.querySelector('.bottom-info').firstChild;
+        }
+
+        let errorMsg = failedMsgEle.querySelector('.errorMsg');
+        if (!errorMsg) {
+          errorMsg = document.createElement('div');
+          errorMsg.className = 'errorMsg';
+          errorMsg.innerHTML = '<div class="failed-text">Sending failed </div><div class="retry-text">Resend</div><div class="delete-text">Delete</div>';
+          if (firstChild) {
+            failedMsgEle.querySelector('.bottom-info').insertBefore(errorMsg, firstChild);
+          } else {
+            failedMsgEle.querySelector('.bottom-info').appendChild(errorMsg);
+          }
+
+          const retryBtn = errorMsg.querySelector('.retry-text');
+          const deleteBtn = errorMsg.querySelector('.delete-text');
+
+          if (retryBtn) {
+            retryBtn.addEventListener('click', (e: any) => {
+              e.stopPropagation();
+              me.resendMessage(messageToBot, clientMessageId, failedMsgEle);
+            });
+          }
+          if (deleteBtn) {
+            deleteBtn.addEventListener('click', (e: any) => {
+              e.stopPropagation();
+              failedMsgEle.remove();
+            });
+          }
+        }
+        errorMsg.classList.remove('hide');
+      }
+    }, 350);
+  }
+
+  resendMessage(messageToBot: any, clientMessageId: string, failedMsgEle: any) {
+    const me: any = this;
+    const errorMsg = failedMsgEle.querySelector('.errorMsg');
+    if (errorMsg) {
+      errorMsg.remove();
+    }
+    const bottomInfo = failedMsgEle.querySelector('.bottom-info');
+    if (bottomInfo && bottomInfo.children.length === 0) {
+      bottomInfo.remove();
+    }
+
+    me.bot.sendMessage(messageToBot, (err: any) => {
+      if (err && err.message) {
+        me.handleMessageFailure(messageToBot, clientMessageId);
+      }
+    });
+  }
+
+  postSendMessageToBot () {
   let me:any=this;
   if (me.config.UI.version == 'v2') {
     const _bodyContainer = $(me.chatEle).find('.kore-chat-body');
@@ -2533,7 +2612,7 @@ getJWTByAPIKey (API_KEY_CONFIG: { KEY: any; bootstrapURL: any; }, userIdentity: 
     success(data: any) {
     },
     error(err: any) {
-      me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err });
+      me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err, request: { url: API_KEY_CONFIG.bootstrapURL || 'https://platform.kore.ai/api/platform/websdk', data: jsonData }});
       // chatWindowInstance.showError(err.responseText);
     },
   });
@@ -2557,7 +2636,7 @@ getJWT (options: { clientId: any; clientSecret: any; userIdentity: any; JWTUrl: 
 
     },
     error(err: any) {
-      me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err });
+      me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err, request: { url: options.JWTUrl, data: jsonData }});
       // chatWindowInstance.showError(err.responseText);
     },
   });
@@ -2622,6 +2701,7 @@ assertionFn (options:any, callback:any) {
   options.handleError = me.showError;
   options.chatHistory = me.chatHistory.bind(me);
   options.botDetails = me.botDetails;
+  options.resetWindow = me.resetWindow.bind(me);
   if(me.config && me.config.JWTAsertion){
     me.config.JWTAsertion(me.SDKcallbackWraper.bind(me));
   }else if(options.assertion){//check for reconnect case
@@ -2766,18 +2846,19 @@ getBrandingInformation(options:any){
           me.config.botOptions.brandingAPIUrl = me.config.botOptions.koreAPIUrl +'websdkthemes/'+  me.config.botOptions.botInfo.taskBotId+'/activetheme';
       }
       var brandingAPIUrl = (me.config.botOptions.brandingAPIUrl || '').replace(':appId', me.config.botOptions.botInfo.taskBotId);
+      var headers = {
+        'Authorization': "bearer " + options.authorization.accessToken,
+      };
       $.ajax({
           url: brandingAPIUrl,
           type: 'get',
-          headers: {
-            'Authorization': "bearer " + options.authorization.accessToken,
-          },
+          headers: headers,
           dataType: 'json',
           success: function (data: any) {  
                   me.applySDKBranding(data);
           },
           error: function (err: any) {
-              me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err });
+              me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err, request: { url: brandingAPIUrl, headers: headers }});
           }
       });
   }

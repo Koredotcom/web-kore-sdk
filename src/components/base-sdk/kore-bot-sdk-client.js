@@ -152,7 +152,14 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
         message["meta"].location = userLocation;
       }
       this.emit('beforeWSSendMessage', message);
-      this.RtmClient.sendMessage(message,optCb);
+      if (this.RtmClient) {
+        this.RtmClient.sendMessage(message,optCb);
+      } else {
+        var errorWSMsg = 'ws not connected or reconnecting, unable to send message';
+        if (optCb) {
+          optCb(new Error(errorWSMsg));
+        }
+      }
     }else{
       if(optCb){
         optCb(new Error("Bot is Initializing...Please try again"));
@@ -438,12 +445,12 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     debug("on backword history");
     
     var clientresp = {};
-    clientresp.moreAvailable = data.moreAvailable;
-    this.paginatedScrollDataAvailable = data.moreAvailable;
+    clientresp.moreAvailable = data?.moreAvailable;
+    this.paginatedScrollDataAvailable = data?.moreAvailable;
     clientresp.messages = [];
     clientresp.backward = true;
     clientresp.beforeMessageId = this.oldestId;
-    if (data.messages && data.messages.length > 0) {
+    if (data?.messages && data.messages.length > 0) {
       var i;
       for (i = 0; i < data.messages.length; i++) {
         var _msg = {};
@@ -569,10 +576,6 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
           this.cbErrorToClient(err.message);
         }
       }
-      if (data && data.errors && data.errors[0]) {
-        this.emit(WEB_EVENTS.API_FAILURE,{"type":"XHRObj","responseError" : data.errors[0]});
-      }
-      console.error(err && err.stack);
     } else {
       this.accessToken = data.authorization.accessToken;
       this.options.accessToken = this.accessToken;
@@ -580,7 +583,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this.userInfo = data;
       this.cbBotDetails(data,this.options.botInfo);
       this.RtmClient = new clients.KoreRtmClient({}, this.options);
-      this.RtmClient.on('api_failure_client', errObj => {
+      this.RtmClient.on(WEB_EVENTS.API_FAILURE, errObj => {
         this.emit(WEB_EVENTS.API_FAILURE, errObj);
       });
       this.RtmClient.on('reconnect_event', event => {
@@ -639,6 +642,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this.cbErrorToClient = data.handleError || noop;
       this.cbBotDetails = data.botDetails || noop;
       this.cbBotChatHistory = data.chatHistory || noop;
+      this.WebClient.on(WEB_EVENTS.API_FAILURE, errObj => {
+        this.emit(WEB_EVENTS.API_FAILURE, errObj);
+      });
       if(this.options.webhookConfig && this.options.webhookConfig.enable){
         this.options.webhookConfig.token=this.options.assertion;
         this.emit(WEB_EVENTS.WEB_HOOK_READY);
@@ -1152,10 +1158,16 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     var args = task.args;
     var cb = task.cb;
     var _this = this;
-  
+    console.log('retry config', this.retryConfig);
     var retryOp = retry.operation(this.retryConfig);
-  
+    _this._activeRetryOp = retryOp;
+
     var handleTransportResponse = function handleTransportResponse(err, headers, statusCode, body) {
+      _this._currentRequest = null;
+      // If we've been cleaned up/cancelled, stop processing
+      if (_this._activeRetryOp !== retryOp) {
+        return;
+      }
       var headerSecs;
       var headerMs;
       var httpErr;
@@ -1164,8 +1176,19 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   
       if (err) {
         if (!retryOp.retry(err)) {
+          _this._activeRetryOp = null;
           cb(retryOp.mainError(), null);
         } else {
+          let responseErr;
+          if (err) {
+            responseErr = {
+              "msg": err.message || 'An unkown error occurred',
+              "code": 0
+            }
+          } else {
+            responseErr = body['errors'][0] || body['errors'];
+          }
+          _this.emit('api_failure', {"type":"XHRObj", "responseError": responseErr, "request": args});
           return;
         }
       }
@@ -1183,17 +1206,31 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   
           _this.emit(WEB_CLIENT_EVENTS.RATE_LIMITED, headerSecs);
         } else {
-  
+          let responseErr;
+          if (err) {
+            responseErr = {
+              "msg": err.message || 'An unknown error occurred',
+              "code": 0
+            }
+          } else {
+            responseErr = body['errors'][0] || body['errors'];
+          }
+          _this.emit('api_failure', {"type":"XHRObj", "responseError": responseErr, "request": args});
           httpErr = new Error('Unable to process request, received bad ' + statusCode + ' error');
-          //   if (!retryOp.retry(httpErr)) {
-          //     cb(httpErr, body);
-          //   } else {
-          // cb(httpErr, body);
-          //     return;
-          //   }
-          cb(httpErr, body);
+           
+          if (statusCode !== 401) {
+            if (!retryOp.retry(httpErr)) {
+              cb(httpErr, body);
+            } else {
+              cb(httpErr, body);
+              return;
+            }
+          } else {
+            cb(httpErr, body);
+          }
         }
-      } else {        
+      } else {       
+          _this._activeRetryOp = null;
           cb(null, body);
       }
   
@@ -1201,7 +1238,11 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     };
   
     retryOp.attempt(function attemptTransportCall() {
-      _this.transport(args, handleTransportResponse);
+      // If we've been cleaned up/cancelled, don't start the request
+      if (_this._activeRetryOp !== retryOp) {
+        return;
+      }
+      _this._currentRequest = _this.transport(args, handleTransportResponse);
     });
   };
   
@@ -1438,10 +1479,12 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     this._socketFn = clientOpts.socketFn || wsSocketFn;
     this.ws = undefined;
   
-    this.MAX_RECONNECTION_ATTEMPTS = clientOpts.maxReconnectionAttempts || 10;
+    // this.MAX_RECONNECTION_ATTEMPTS = clientOpts.maxReconnectionAttempts || 10;
     this.RECONNECTION_BACKOFF = clientOpts.reconnectionBackoff || 3000;
     this.MAX_PONG_INTERVAL = clientOpts.maxPongInterval || 10000;
     this.WS_PING_INTERVAL = clientOpts.wsPingInterval || 5000;
+
+    this.cbResetWindow = clientOpts.resetWindow || noop;
   
     this.autoReconnect = clientOpts.autoReconnect !== false;
     this.connected = false;
@@ -1466,6 +1509,10 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     this.$=clientOpts.$
     this.debug=debug;
     this.socketConfig = clientOpts?.webSocketConfig || {};
+    this.retryConfig = clientOpts.retryConfig || {
+      retries: clientOpts.maxReconnectionAPIAttempts || 5,
+      factor: 2
+    };
   }
   
   inherits(KoreRTMClient, BaseAPIClient);
@@ -1508,22 +1555,25 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     catch(e){
       console.log(e && e.stack);
     }
-    if (data && data.errors && data.errors[0]) {
-      this.emit('api_failure_client',{"type":"XHRObj","responseError" : data.errors[0]});
-    }
     if(data && data.errors && (data.errors[0].code === 'TOKEN_EXPIRED' || data.errors[0].code === 401 || data.errors[0].msg === 'token expired')){
-        var $=this.$;
-        $(".reload-btn").trigger('click',{isReconnect:true});
-        const buttonElement = document.querySelector('#kore-reconnect-btn');
-        if (buttonElement) {
-          const eventData = { isReconnect: true };
-          const clickEvent = new CustomEvent('click', {
-            bubbles: true,
-            cancelable: true,
-            detail: eventData
-          });
-          buttonElement.dispatchEvent(clickEvent);
+        // var $=this.$;
+        // $(".reload-btn").trigger('click',{isReconnect:true});
+        // const buttonElement = document.querySelector('#kore-reconnect-btn');
+        // buttonElement.setAttribute('disabled', false);
+        // if (buttonElement) {
+        //   const eventData = { isReconnect: true };
+        //   const clickEvent = new CustomEvent('click', {
+        //     bubbles: true,
+        //     cancelable: true,
+        //     detail: eventData
+        //   });
+        //   buttonElement.dispatchEvent(clickEvent);
+        // }
+        const data = {
+          fromClient: true,
+          isReconnect: true
         }
+         this.cbResetWindow(data);
         data.error='token_expired';
     }
     if (err || !data.url) {
@@ -1535,10 +1585,10 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
         errMsg = 'unrecoverable failure connecting to the RTM API';
         this.disconnect(errMsg, data.error);
       } else {
-        this.authenticated = false;
-        if (this.autoReconnect) {
-          this.reconnect();
-        }
+        // this.authenticated = false;
+        // if (this.autoReconnect) {
+        //   this.reconnect();
+        // }
       }
     } else {
       if (this.socketConfig && this.socketConfig?.socketUrl &&
@@ -1577,6 +1627,21 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     }
   };
   
+  KoreRTMClient.prototype.cleanup = function cleanup() {
+    this._activeRetryOp = null;
+    if (this._currentRequest) {
+      try {
+        this._currentRequest.abort();
+      } catch (e) {
+        console.log("Error aborting request", e);
+      }
+      this._currentRequest = null;
+    }
+    if (this._requestQueue) {
+      this._requestQueue.kill(); 
+    }
+  };
+
   //To close the ws on refresh,close, and on logout.
   KoreRTMClient.prototype._close = function _close() {
     this.autoReconnect = false;
@@ -1645,9 +1710,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this.emit(CLIENT_EVENTS.ATTEMPTING_RECONNECT);
       this._safeDisconnect();
       this._connAttempts++;
-      if (this._connAttempts > this.MAX_RECONNECTION_ATTEMPTS) {
-        throw new Error('unable to connect to kore.ai RTM API, failed after max reconnection attempts');
-      }
+      // if (this._connAttempts > this.MAX_RECONNECTION_ATTEMPTS) {
+      //   throw new Error('unable to connect to kore.ai RTM API, failed after max reconnection attempts');
+      // }
       setTimeout(bind(this.start, this), this._connAttempts * this.RECONNECTION_BACKOFF);
     }
   };
@@ -1710,6 +1775,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   
   KoreRTMClient.prototype.handleWsError = function handleWsError(err) {
     debug("web socket error::%s",err);
+    this.emit('api_failure', { type: 'socketError', responseError: err, request: '' });
     this.emit(CLIENT_EVENTS.WS_ERROR, err);
   };
   
@@ -1891,6 +1957,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       opts: opts,
       type: "GET"
     };
+    // args.opts.authorization = 'vvr';
     var _api = '/botmessages/rtm';
   
     if(config && config.webhookConfig && config.webhookConfig.enable){
@@ -1996,6 +2063,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     var args = {
       opts: opts
     };
+    // args.opts.assertion =  "";
     return this.client.makeAPICall('/oAuth/token/jwtgrant', args, optCb);
   };
   
@@ -2018,6 +2086,10 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     var args = {
       opts: opts
     };
+
+  
+    // args.opts.authorization =  "";
+
   
     return this.client.makeAPICall('/rtm/start', args, optCb);
   };
@@ -3600,7 +3672,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   
       // Detect failed CORS requests.
       if(is_cors && xhr.statusCode == 0) {
-        var cors_err = new Error('CORS request rejected: ' + options.uri)
+        var cors_err = new Error('An unknown error occurred.')
         cors_err.cors = 'rejected'
   
         // Do not process this request further.
@@ -16733,7 +16805,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     var opts = {
       retries: 10,
       factor: 2,
-      minTimeout: 1 * 1000,
+      minTimeout: 1 * 10000,
       maxTimeout: Infinity,
       randomize: false
     };
