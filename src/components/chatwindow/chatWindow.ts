@@ -1714,7 +1714,7 @@ if(messageText && messageText.trim() && messageText.trim().length){
         },
         (err: any) => {
          if (me.config.UI.version == 'v3') {
-          me.handleMessageFailure(messageToBot, clientMessageId);
+          me.handleMessageFailure(messageText, clientMessageId);
          }
         },
         me.attachmentInfo ? { attachments: [me.attachmentInfo] } : null,
@@ -1806,11 +1806,25 @@ if(messageText && messageText.trim() && messageText.trim().length){
       bottomInfo.remove();
     }
 
-    me.bot.sendMessage(messageToBot, (err: any) => {
-      if (err && err.message) {
-        me.handleMessageFailure(messageToBot, clientMessageId);
-      }
-    });
+    if (me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) {
+      me.sendMessageViaWebHook(
+        messageToBot,
+        (msgsData: any) => {
+          me.handleWebHookResponse(msgsData);
+        },
+        (err: any) => {
+          me.handleMessageFailure(messageToBot, clientMessageId);
+        },
+        null,
+      );
+    } else {
+      me.bot.sendMessage(messageToBot, (err: any) => {
+        if (err && err.message) {
+          me.handleMessageFailure(messageToBot, clientMessageId);
+        }
+      });
+    }
+    me.postSendMessageToBot();
   }
 
   postSendMessageToBot () {
