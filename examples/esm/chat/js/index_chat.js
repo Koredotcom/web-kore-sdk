@@ -6,13 +6,11 @@ let chatWindowInstance = new chatWindow();
 //OPTION #1
 let botOptions=chatConfig.botOptions;
 
-botOptions.koreAPIUrl = "https://platform.kore.ai/api/";
-botOptions.JWTUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
-botOptions.userIdentity = 'bharat.tadimalla@kore.com';// Provide users email id here
-botOptions.botInfo = { name: "Templates SDK", "_id": "st-0c0406e6-1156-5044-8168-e235d4505a7d" }; // bot name is case sensitive
-botOptions.clientId = "cs-f2356555-81af-5c36-a2c3-13dddac83d49";
-botOptions.clientSecret = "bK/HizcV0r2aWrCWltElwJp7YFlBrhHdFI4fkMDPLB8=";
-
+botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE"; 
+botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
+botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
+botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
+botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 
 /* 
 Important Note: These keys are provided here for quick demos to generate JWT token at client side but not for Production environment.
