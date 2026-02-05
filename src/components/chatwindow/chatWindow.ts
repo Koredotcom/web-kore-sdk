@@ -179,7 +179,6 @@ class chatWindow extends EventEmitter{
      */
       HISTORY_COMPLETE: 'historyComplete'
   }
-  sendFailedMessage: any;
   
  constructor() {
   super(null);
@@ -234,11 +233,6 @@ show  (config:any) {
 };
 initShow  (config:any) {
   const me:any = this;
-  this.sendFailedMessage={
-    messageId:null,
-    MAX_RETRIES:3,
-    retryCount:0
-};
   me.config=me.extend(JSON.parse(JSON.stringify(chatConfig)),config);
   this.config = me.extend(me.config,{
     chatTitle: 'Kore.ai Bot Chat',
@@ -275,9 +269,6 @@ initShow  (config:any) {
   me.initi18n();
   me.seti18n((me.config && me.config.i18n && me.config.i18n.defaultLanguage) || 'en');
   KoreHelpers.allowEmojiShortcuts(me.config);
-  if(me.config && me.config.sendFailedMessage && me.config.sendFailedMessage.hasOwnProperty('MAX_RETRIES')){
-    this.sendFailedMessage.MAX_RETRIES=me.config.sendFailedMessage.MAX_RETRIES
-}
   if (me.config && me.config.maxReconnectionAPIAttempts) {
     me.config.botOptions.maxReconnectionAPIAttempts = me.config.maxReconnectionAPIAttempts;
   }
@@ -595,7 +586,7 @@ updateOnlineStatus () {
     if (navigator.onLine) {
       this.hideError();
       const data = {
-        fromClient: true,
+        forceReconnect: true,
         isReconnect: true
       }
       me.resetWindow(data);
@@ -893,7 +884,7 @@ resetWindow (data:any = {}) {
     }
   }  
 
-  if (data && data.fromClient) {
+  if (data && data.forceReconnect) {
     if (data.isReconnect) {
       me.config.botOptions.forceReconnecting = true;
     } else {
@@ -1086,7 +1077,6 @@ bindEvents  () {
     _chatContainer.find(".failed-text").remove();  
     _chatContainer.find(".retry-icon").remove();
     _chatContainer.find(".retry-text").text('Retrying...');
-    this.sendFailedMessage.messageId=target.closest('.fromCurrentUser').attr('id');
     _chatContainer.find(".reload-btn").trigger('click',{isReconnect:true});
 });
 
@@ -1381,10 +1371,8 @@ bindSDKEvents  () {
       } else {
         if (me.config.supportDelayedMessages) {
           me.pushTorenderMessagesQueue(msgData)
-          console.log('msgData', msgData);
         } else {
           me.renderMessage(msgData)
-          console.log('msgData', msgData);
         }
       }
     }
@@ -1610,16 +1598,6 @@ onBotReady  () {
       }
     });
   }
-  if(this.sendFailedMessage.messageId){
-    var msgEle=_chatContainer.find('#'+this.sendFailedMessage.messageId);
-    msgEle.find('.errorMsg').remove();
-    var msgTxt=msgEle.find('.messageBubble').text().trim();
-    _chatContainer.find('.chatInputBox').text(msgTxt);
-    msgEle.remove();
-    me.sendMessageWithWithChatInput($('.chatInputBox'));
-    // me.sendMessage($('.chatInputBox').text());
-
-}
 };
 bindIframeEvents  (authPopup: { on: (arg0: string, arg1: string, arg2: () => void) => void; find: (arg0: string) => any[]; }) {
   const me:any = this;
@@ -1687,10 +1665,6 @@ render  (chatWindowHtml: any) {
 sendMessageToBot  (messageText:any, options: { renderMsg: any; }, serverMessageObject: any,clientMessageObject: any) {
   const me:any = this;
   let clientMessageId = new Date().getTime();
-  if(this.sendFailedMessage.messageId){
-    clientMessageId=this.sendFailedMessage.messageId;
-    this.sendFailedMessage.messageId=null;
-}
   let msgData:any = {
     type: 'currentUser',
     message: [{
@@ -1740,17 +1714,9 @@ if(messageText && messageText.trim() && messageText.trim().length){
           me.handleWebHookResponse(msgsData);
         },
         (err: any) => {
-          setTimeout(() => {
-            var failedMsgEle = $('.kore-chat-window [id="' + clientMessageId + '"]');
-            failedMsgEle.find('.messageBubble').append('<div class="errorMsg hide"><span class="failed-text">Send Failed </span><div class="retry"><span class="retry-icon"></span><span class="retry-text">Retry</span></div></div>');
-            if (this.sendFailedMessage.retryCount < this.sendFailedMessage.MAX_RETRIES) {
-              failedMsgEle.find('.retry').trigger('click');
-              this.sendFailedMessage.retryCount++;
-            } else {
-              failedMsgEle.find('.errorMsg').removeClass('hide');
-              me.hideTypingIndicator();
-            }
-          }, 350);
+         if (me.config.UI.version == 'v3') {
+          me.handleMessageFailure(messageToBot, clientMessageId);
+         }
         },
         me.attachmentInfo ? { attachments: [me.attachmentInfo] } : null,
       );
@@ -1764,7 +1730,7 @@ if(messageText && messageText.trim() && messageText.trim().length){
         return false;
       }
       me.bot.sendMessage(messageToBot, (err: { message: any; }) => {
-        if (err && err.message) {
+        if (err && err.message && me.config.UI.version == 'v3') {
           me.handleMessageFailure(messageToBot, clientMessageId);
         }
       });
@@ -1801,7 +1767,7 @@ if(messageText && messageText.trim() && messageText.trim().length){
         if (!errorMsg) {
           errorMsg = document.createElement('div');
           errorMsg.className = 'errorMsg';
-          errorMsg.innerHTML = '<div class="failed-text">Sending failed</div><button type="button" class="retry-text">Resend</button><span class="or-text">or</span><button type="button" class="delete-text">Delete</button>';
+          errorMsg.innerHTML = '<div class="failed-text">Sending failed.</div><button type="button" class="retry-text">Resend</button><span class="or-text">or</span><button type="button" class="delete-text">Delete</button>';
           if (firstChild) {
             failedMsgEle.querySelector('.bottom-info').insertBefore(errorMsg, firstChild);
           } else {
@@ -1826,6 +1792,7 @@ if(messageText && messageText.trim() && messageText.trim().length){
         }
         errorMsg.classList.remove('hide');
       }
+      me.hideTypingIndicator();
     }, 350);
   }
 
@@ -1971,7 +1938,6 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   let messageHtml=me.generateMessageDOM(msgData);
 
   if (msgData?.type === 'bot_response') {
-    this.sendFailedMessage.retryCount=0;
     me.waiting_for_message = false;
     setTimeout(() => {
       if (me.config.UI.version == 'v2') {
@@ -2737,24 +2703,31 @@ setWidgetInstance  (widgetSDKInstace:any) {
 
 
 hideError  () {
+  const me: any = this;
+  if (me.config.UI.version == 'v2') {
   $('.errorMsgBlock').removeClass('showError');
+  } else {
+    if (document.querySelector('.kore-sdk-error-section')) {
+      document.querySelector('.kore-sdk-error-section')?.classList.add('hide');
+    }
+  }
 };
+
 showError (response:any) {
   try {
     response = JSON.parse(response);
-    if (response.errors && response.errors[0]) {
-      $('.errorMsgBlock').text(response.errors[0].msg);
+    let errorMessage = response?.errors?.[0]?.msg || response?.errors?.message || response?.message || 'Unknown error occurred.';
+      $('.errorMsgBlock').text(errorMessage);
       $('.errorMsgBlock').addClass('showError');
       if (document.querySelector('.kore-sdk-error-section')) {
-        document.querySelector('.kore-sdk-error-section').textContent = response.errors[0].msg;
+        document.querySelector('.kore-sdk-error-section').textContent = errorMessage;
         document.querySelector('.kore-sdk-error-section').classList.remove('hide');
       }
-    }
   } catch (e) {
-    $('.errorMsgBlock').text(response);
+    $('.errorMsgBlock').text(response?.message || response || 'Unknown error occurred.');
     $('.errorMsgBlock').addClass('showError');
     if (document.querySelector('.kore-sdk-error-section')) {
-      document.querySelector('.kore-sdk-error-section').textContent = response;
+      document.querySelector('.kore-sdk-error-section').textContent = response?.message || response || 'Unknown error occurred.';
       document.querySelector('.kore-sdk-error-section').classList.remove('hide');
     }
   }

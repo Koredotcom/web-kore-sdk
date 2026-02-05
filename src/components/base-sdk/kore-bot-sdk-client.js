@@ -1158,13 +1158,11 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     var args = task.args;
     var cb = task.cb;
     var _this = this;
-    console.log('retry config', this.retryConfig);
     var retryOp = retry.operation(this.retryConfig);
     _this._activeRetryOp = retryOp;
 
     var handleTransportResponse = function handleTransportResponse(err, headers, statusCode, body) {
       _this._currentRequest = null;
-      // If we've been cleaned up/cancelled, stop processing
       if (_this._activeRetryOp !== retryOp) {
         return;
       }
@@ -1186,7 +1184,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
               "code": 0
             }
           } else {
-            responseErr = body['errors'][0] || body['errors'];
+            responseErr = body?.errors?.[0] || body?.errors || body;
           }
           _this.emit('api_failure', {"type":"XHRObj", "responseError": responseErr, "request": args});
           return;
@@ -1213,7 +1211,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
               "code": 0
             }
           } else {
-            responseErr = body['errors'][0] || body['errors'];
+            responseErr = body?.errors?.[0] || body?.errors || body;
           }
           _this.emit('api_failure', {"type":"XHRObj", "responseError": responseErr, "request": args});
           httpErr = new Error('Unable to process request, received bad ' + statusCode + ' error');
@@ -1238,7 +1236,6 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     };
   
     retryOp.attempt(function attemptTransportCall() {
-      // If we've been cleaned up/cancelled, don't start the request
       if (_this._activeRetryOp !== retryOp) {
         return;
       }
@@ -1570,7 +1567,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
         //   buttonElement.dispatchEvent(clickEvent);
         // }
         const data = {
-          fromClient: true,
+          forceReconnect: true,
           isReconnect: true
         }
          this.cbResetWindow(data);
@@ -1957,7 +1954,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       opts: opts,
       type: "GET"
     };
-    // args.opts.authorization = 'vvr';
+
     var _api = '/botmessages/rtm';
   
     if(config && config.webhookConfig && config.webhookConfig.enable){
@@ -2063,7 +2060,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     var args = {
       opts: opts
     };
-    // args.opts.assertion =  "";
+
     return this.client.makeAPICall('/oAuth/token/jwtgrant', args, optCb);
   };
   
@@ -2087,10 +2084,6 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       opts: opts
     };
 
-  
-    // args.opts.authorization =  "";
-
-  
     return this.client.makeAPICall('/rtm/start', args, optCb);
   };
   
@@ -3672,7 +3665,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   
       // Detect failed CORS requests.
       if(is_cors && xhr.statusCode == 0) {
-        var cors_err = new Error('An unknown error occurred.')
+        var cors_err = new Error('Request rejected: ' + options.uri)
         cors_err.cors = 'rejected'
   
         // Do not process this request further.
