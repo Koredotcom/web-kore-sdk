@@ -243,7 +243,6 @@ initShow  (config:any) {
   me.messagesQueue=[];
 
   me.isWelcomeScreenOpened = false;
-  me.isReconnected = false;
   me.isSocketOpened = false;
   me.enableAgentChanges = true;
   me.config.chatTitle = 'Kore.ai Bot Chat';
@@ -292,7 +291,7 @@ initShow  (config:any) {
   }  
   me.bot.on('jwtgrantsuccess', (response: { jwtgrantsuccess: any; }) => {
     me.config.jwtGrantSuccessInformation = response.jwtgrantsuccess;
-    if (!me.isReconnected && !me.config?.autoConnect && !me.isUIInitialized) {
+    if (!me.config?.autoConnect && !me.isUIInitialized) {
       if (me.config.enableThemes) {
         me.getBrandingInformation(response.jwtgrantsuccess);
       } else {
