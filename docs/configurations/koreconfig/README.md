@@ -154,13 +154,9 @@ chatConfig.location = {
 
 ### Retry Configuration
 ```typescript
-chatConfig.sendFailedMessage = {
-    MAX_RETRIES: 3
-};
 chatConfig.maxReconnectionAPIAttempts = 5;
 ```
-- `MAX_RETRIES`: Maximum attempts for failed message delivery
-- `maxReconnectionAPIAttempts`: Maximum API reconnection attempts
+- `maxReconnectionAPIAttempts`: Maximum API reconnection attempts. Applicable for jwtGrant, start and history APIs only
 
 ### WebSocket Keep-Alive
 ```typescript
