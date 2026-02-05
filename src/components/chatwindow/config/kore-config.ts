@@ -98,7 +98,7 @@ chatConfig = {
     sendFailedMessage:{ //Number of retries on message send failed
         MAX_RETRIES:3
     },
-    maxReconnectionAPIAttempts: 2,  // Number of retries on api failure
+    maxReconnectionAPIAttempts: 5,  // Number of retries on api failure
     UI:{
         version:"v3"
     },

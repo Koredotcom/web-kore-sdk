@@ -16798,7 +16798,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     var opts = {
       retries: 10,
       factor: 2,
-      minTimeout: 1 * 10000,
+      minTimeout: 1 * 1000,
       maxTimeout: Infinity,
       randomize: false
     };
