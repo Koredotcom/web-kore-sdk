@@ -110,4 +110,18 @@
       display: block;
     }
 	}
+
+  .kore-sdk-error-section {
+    display: block;
+    text-align: center;
+    background: #FEF3F2;
+    color: #B42318;
+    font-size: var(--font-size-text-xs, 12px);
+    font-weight: var(--font-weight-normal-Medium, 500);
+    line-height: var(--font-line-height-text-xs, 16px);
+    padding: 8px;
+    &.hide {
+      display: none;
+    }
+  }
 }

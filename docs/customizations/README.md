@@ -105,6 +105,24 @@ chatWindowInstance.on(onChatHistoryResponse, (res) => {
 });
 ```
 
+#### apiFailure event for API failures
+apiFailure will be triggered when an API is failed because of network issues or blocks or standard 4xx/5xx errors
+
+```js
+let apiFailureEvent = chatWindowInstance.EVENTS.API_FAILURE;
+chatWindowInstance.on(apiFailureEvent, (e) => {
+  if (e.type === 'XHRObj') {
+    // show pop up
+  }
+});
+```
+
+When an event is triggered it contains the following the details
+
+- `type`: It contains the type of error. We have three types of errors - **XHRObj** (jwtGrant, start, history, web hooks apis), **socketError** (Web socket), **JqueryXHR** (activeTheme, apiKey) 
+- `errObj`: It contains the error message and status code
+- `request`: It contains the request details
+
 ## Functionality
 
 ### How to send message to the bot outside Web SDK

@@ -7,7 +7,6 @@ export function ChatWidgetBody() {
 
     return (
         <div className="chat-widget-body-wrapper" aria-live="polite" aria-relevant="additions" tabIndex={-1}>
-            <div className="kore-sdk-error-section hide"></div>
             <div className="prev-message-list" aria-hidden="true"></div>
             {/* <div className="agent-bubble-comp">
                 <div className="agent-bubble-content">

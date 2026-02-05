@@ -28,7 +28,6 @@ export function ChatWidgetHeader(props: any) {
         hostInstance.eventManager.addEventListener('.btn-reconnect', 'click', (event: any) => {
             if (!hostInstance.chatEle.querySelector('.btn-reconnect').getAttribute('disabled')) {
                 hostInstance.chatEle.querySelector('.btn-reconnect').setAttribute('disabled', true);
-                hostInstance.isReconnected = true;
                 const data = event?.detail;
                 if (data && data?.isReconnect) {
                     hostInstance.config.botOptions.forceReconnecting = true;
