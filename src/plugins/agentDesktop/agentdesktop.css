@@ -898,6 +898,10 @@ div .agent-bubble-comp .agent-bubble-content .bottom-info .sent{
     background-position: center
 }
 
+div .agent-bubble-comp .agent-bubble-content .bottom-info .sent.hide{
+    display: none;
+}
+
 div .agent-bubble-comp .agent-bubble-content .bottom-info .delivered{
     background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOCIgaGVpZ2h0PSI4IiB2aWV3Qm94PSIwIDAgOCA4IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTQgOEM2LjIwOTE0IDggOCA2LjIwOTE0IDggNEM4IDEuNzkwODYgNi4yMDkxNCAwIDQgMEMxLjc5MDg2IDAgMCAxLjc5MDg2IDAgNEMwIDYuMjA5MTQgMS43OTA4NiA4IDQgOFpNNS44NTM1NSAzLjM1MzU1QzYuMDQ4ODIgMy4xNTgyOSA2LjA0ODgyIDIuODQxNzEgNS44NTM1NSAyLjY0NjQ1QzUuNjU4MjkgMi40NTExOCA1LjM0MTcxIDIuNDUxMTggNS4xNDY0NSAyLjY0NjQ1TDMuNSA0LjI5Mjg5TDIuODUzNTUgMy42NDY0NUMyLjY1ODI5IDMuNDUxMTggMi4zNDE3MSAzLjQ1MTE4IDIuMTQ2NDUgMy42NDY0NUMxLjk1MTE4IDMuODQxNzEgMS45NTExOCA0LjE1ODI5IDIuMTQ2NDUgNC4zNTM1NUwzLjE0NjQ1IDUuMzUzNTVDMy4zNDE3MSA1LjU0ODgyIDMuNjU4MjkgNS41NDg4MiAzLjg1MzU1IDUuMzUzNTVMNS44NTM1NSAzLjM1MzU1WiIgZmlsbD0iIzlBQTRCMiIvPgo8L3N2Zz4K");
     width: 8px;

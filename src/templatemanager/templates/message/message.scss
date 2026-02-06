@@ -268,6 +268,9 @@
                     font-size: 10px;
                     margin-left: 5px;
                 }
+                &.hide{
+                    display: none;
+                }
             }
             .errorMsg{
                 display: flex;

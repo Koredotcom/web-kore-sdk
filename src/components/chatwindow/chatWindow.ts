@@ -1760,6 +1760,14 @@ if(messageText && messageText.trim() && messageText.trim().length){
           failedMsgEle.querySelector('.agent-bubble-content').appendChild(bottomInfo);
         } else {
           firstChild = failedMsgEle.querySelector('.bottom-info').firstChild;
+          const readText = failedMsgEle.querySelector('.read-text');
+          if (readText) {
+            readText.classList.add('hide');
+          }
+          const sentText = failedMsgEle.querySelector('.sent');
+          if (sentText) {
+            sentText.classList.add('hide');
+          }
         }
 
         let errorMsg = failedMsgEle.querySelector('.errorMsg');
@@ -1800,6 +1808,14 @@ if(messageText && messageText.trim() && messageText.trim().length){
     const errorMsg = failedMsgEle.querySelector('.errorMsg');
     if (errorMsg) {
       errorMsg.remove();
+    }
+    const readText = failedMsgEle.querySelector('.read-text');
+    if (readText) {
+      readText.classList.remove('hide');
+    }
+    const sentText = failedMsgEle.querySelector('.sent');
+    if (sentText) {
+      sentText.classList.remove('hide');
     }
     const bottomInfo = failedMsgEle.querySelector('.bottom-info');
     if (bottomInfo && bottomInfo.children.length === 0) {
