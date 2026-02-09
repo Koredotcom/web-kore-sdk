@@ -158,6 +158,7 @@ authResponse;
 agentDefaultProfileIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDMiIHZpZXdCb3g9IjAgMCA0OCA0MyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIxNF8xMTA3NDgpIj4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0iI0VBRjFGQyIvPgo8cGF0aCBkPSJNMjIgMjIuMjVDMjUuNTg5OSAyMi4yNSAyOC41IDE5LjMzOTkgMjguNSAxNS43NUMyOC41IDEyLjE2MDEgMjUuNTg5OSA5LjI1IDIyIDkuMjVDMTguNDEwMiA5LjI1IDE1LjUgMTIuMTYwMSAxNS41IDE1Ljc1QzE1LjUgMTkuMzM5OSAxOC40MTAyIDIyLjI1IDIyIDIyLjI1WiIgZmlsbD0iIzJCNzVFNCIvPgo8cGF0aCBkPSJNNi44MzMzNyA0MS43NUM2LjgzMzM3IDMzLjM3MzcgMTMuNjIzNyAyNi41ODMzIDIyIDI2LjU4MzNDMzAuMzc2NCAyNi41ODMzIDM3LjE2NjcgMzMuMzczNyAzNy4xNjY3IDQxLjc1SDYuODMzMzdaIiBmaWxsPSIjMkI3NUU0Ii8+CjwvZz4KPHJlY3QgeD0iMS4yNSIgeT0iMC43NSIgd2lkdGg9IjQxLjUiIGhlaWdodD0iNDEuNSIgcng9IjIwLjc1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8yMTRfMTEwNzQ4Ij4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K';
 
 constructor(config,response) {
+    this.arrangeBrowserMediaTracks(); //
     this.config = {
         ...this.config,
         ...config
@@ -1205,6 +1206,29 @@ AgentDesktop = function (uuId, aResponse) {
             },
 
             callConfirmed: function (call, message, cause) {
+                // FIX: Safari sometimes doesn't start sending video until the track is "touched"
+                // Workaround: Replace video track with itself to force Safari to activate it
+                if (call.hasSendVideo()) {
+                    setTimeout(() => {
+                        try {
+                            const pc = call.getRTCPeerConnection();
+                            if (pc) {
+                                const videoSender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
+                                if (videoSender && videoSender.track) {
+                                    // FIX: Safari video workaround - touching video track to activate sending
+                                    videoSender.replaceTrack(videoSender.track).then(() => {
+                                        // FIX: Safari video track touched successfully
+                                    }).catch(e => {
+                                        // FIX: Safari video track touch failed
+                                    });
+                                }
+                            }
+                        } catch (e) {
+                            // FIX: Safari video workaround error
+                        }
+                    }, 500); // Small delay to ensure everything is set up
+                }
+
                 _self.callConnected(_self.callDetails.videoCall, _self.callDetails.firstName);
                 console.log('phone>>> callConfirmed ', new Date(), call.hasReceiveVideo());
                 let remoteVideoStream = call.getRTCRemoteStream();
@@ -2881,6 +2905,23 @@ koreCoBrowseInit = function (exports) {
     }
     return exports;
 };
+
+// This is a workaround to fix the issue where the video track is returned first instead of audio track in the MediaStream.getTracks() method in Safari.
+arrangeBrowserMediaTracks = function (){
+    const originalGetTracks = MediaStream.prototype.getTracks;
+    MediaStream.prototype.getTracks = function() {
+        const tracks = originalGetTracks.call(this);
+        
+        // Sort: audio tracks first, then video tracks
+        const sortedTracks = tracks.sort((a, b) => {
+            if (a.kind === 'audio' && b.kind === 'video') return -1;
+            if (a.kind === 'video' && b.kind === 'audio') return 1;
+            return 0;
+        });
+        return sortedTracks;
+    };
+}
+
 ///////////////////////////////////// rrweb //////////////////////////////////////////////////////////////
 rrwebInit = function (exports) {
     'use strict';
