@@ -59,7 +59,7 @@ When creating custom themes, ensure that:
 
 ## Customization and Accessibility
 
-The Kore Web SDK offers extensive customization options. While a base level of accessibility is provided, it is crucial to ensure that any customizations made also adhere to WCAG 2.1 Level AA standards. You can customize the SDK to best suit your specific accessibility requirements.
+The Kore Web SDK offers extensive customization options. While a base level of accessibility is provided, it is crucial to ensure that any customizations made also adhere to WCAG 2.2 Level AA standards. You can customize the SDK to best suit your specific accessibility requirements.
 
 For detailed information on how to customize the SDK, please refer to our [Customization Documentation](../customizations/).
 
