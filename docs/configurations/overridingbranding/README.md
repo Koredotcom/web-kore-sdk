@@ -246,3 +246,20 @@ chatConfig.branding.widget_panel.colors.sel_bg_color = "#EAECF0";
 chatConfig.branding.widget_panel.colors.sel_color = "#101828";
 
 ```
+
+> [!NOTE]
+> Above overriding will work when [enableThemes](../koreconfig/README.md#chat-window-configuration) flag is disabled
+
+
+# Overriding the branding configured in the Theme Editor
+
+To override the branding info configured in the Theme Editor please use the below code snippet with above mentioned keys (replace chatConfig.branding with e.v3)
+
+```js
+chatWindowInstance.on('brandingResponse', (e) => {
+  if (e.v3) {
+    e.v3.footer.compose_bar.placeholder = 'Type a message.......';
+  }
+});
+
+```
