@@ -70,11 +70,7 @@ To ensure ongoing WCAG 2.2 Level AA compliance with the SDK, developers should a
 *   **Semantic HTML:** Utilize appropriate HTML5 elements to define the structure and meaning of content within custom templates and components.
 *   **ARIA Attributes:** Implement ARIA (Accessible Rich Internet Applications) attributes where necessary to enhance the accessibility of dynamic content and custom controls. Refer to the [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/) for guidance.
 *   **Keyboard Navigation:** Ensure all interactive elements are focusable and operable via keyboard. Maintain a logical focus order.
-    *   <!-- Placeholder for an image/gif demonstrating keyboard navigation -->
-    [Image: Keyboard Navigation Example]
 *   **Color Contrast:** Verify that text and UI elements meet the minimum color contrast ratios specified by WCAG 2.2 AA (4.5:1 for normal text, 3:1 for large text and graphical objects). All default themes provided by the Kore Web SDK maintain a color contrast ratio of 4.5:1 or higher, ensuring compliance with WCAG 2.2 Level AA standards out of the box.
-    *   <!-- Placeholder for an image showing good color contrast -->
-    [Image: Color Contrast Example]
 *   **Text Alternatives:** Provide appropriate alternative text for all non-text content (e.g., icons, images).
 *   **Responsive Design:** Ensure that the chat widget and its contents are responsive and accessible across various screen sizes and orientations.
 *   **Testing:** Regularly test customizations with accessibility evaluation tools and assistive technologies (e.g., screen readers like NVDA, JAWS, or VoiceOver).
