@@ -5,7 +5,7 @@ import { useEffect, useState } from 'preact/hooks';
 import Datepicker from '../../../libs/air-date-picker/src/datepicker';
 import KoreHelpers from '../../../utils/helpers';
 
-export function ClockPicker(props: any) {
+export function ClockPickerInline(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
     const helpers = KoreHelpers.helpers;
@@ -30,35 +30,43 @@ export function ClockPicker(props: any) {
         }
     }
 
+    useEffect(() => {
+        const dp = new Datepicker(`#clock${msgData.messageId}`, {
+            timepicker: true,
+            timeFormat: 'hh:mm AA',
+            onlyTimepicker: true,
+            onSelect: (d: any) => {
+                setSelectedDate(d.formattedDate);
+            }
+        });
+        dp.show();
+        setTimeout(() => {
+            hostInstance.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
+                top: hostInstance.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight,
+                behavior: 'smooth'
+            });
+        }, 100);
+    }, []);
+
+    return (
+        <div className="date-picker-wrapper-template" data-cw-msg-id={msgData?.messageId}>
+            <div className="date-picker-calendar" id={`clock${msgData.messageId}`}></div>
+            <button className="kr-button-primary lg" onClick={handleSubmit} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData?.message[0]?.component?.payload?.confirmButtonText || "Confirm", "bot") }}></button>
+        </div>
+    );
+}
+
+export function ClockPicker(props: any) {
+    const hostInstance = props.hostInstance;
+    const msgData = props.msgData;
+
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'clockTemplate' && !msgData.formHistory) {
         // Check if element already exists
         const existingElement = hostInstance?.chatEle?.querySelector(`[data-cw-msg-id="${msgData?.messageId}"]`);
         if (existingElement) {
             return; // Exit if element already exists
         }
-        useEffect(() => {
-            const dp = new Datepicker(`#clock${msgData.messageId}`, {
-                timepicker: true,
-                timeFormat: 'hh:mm AA',
-                onlyTimepicker: true,
-                onSelect: (d: any) => {
-                    setSelectedDate(d.formattedDate);
-                }
-            });
-            dp.show();
-            setTimeout(() => {
-                hostInstance.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
-                    top: hostInstance.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight,
-                    behavior: 'smooth'
-                });
-            }, 100);
-        }, []);
-        return (
-          <div className="date-picker-wrapper-template" data-cw-msg-id={msgData?.messageId}>
-            <div className="date-picker-calendar" id={`clock${msgData.messageId}`}></div>
-            <button className="kr-button-primary lg" onClick={handleSubmit} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData?.message[0]?.component?.payload?.confirmButtonText || "Confirm", "bot") }}></button>
-          </div>
-        );
+        return <ClockPickerInline hostInstance={hostInstance} msgData={msgData} />
     }
 }
 

@@ -49,7 +49,7 @@ export function LineChartBase(props: any) {
         KoreGraphAdapter.drawlineChartTemplate(msgData, pieChartHTML, { graphLib: 'd3' });
 
         setTimeout(() => {
-            hostInstance.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
+            hostInstance.chatEle.querySelector('.chat-widget-body-wrapper')?.scrollTo({
                 top: hostInstance.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight,
                 behavior: 'smooth'
             });

@@ -1,4 +1,6 @@
 import AgentDesktopPluginScript from './agentdesktop-script';
+import { ClickToCallSlider } from './clickToCallSlider';
+import { getHTML } from '../../templatemanager/base/domManager';
 
 
 /** @ignore */
@@ -13,8 +15,11 @@ class AgentDesktopPlugin {
     isTabActive: boolean = true
     isReadRecipetSent: boolean = false;
     isAgentConnected: boolean = false;
+    isTPAgentConnected: boolean = false;
+    TMsgData: any;
     authInfo: any;
     cobrowseSession: any;
+    clickToCallEnabled: boolean = false;
 
     constructor(config?: any) {
         this.config = {
@@ -32,10 +37,41 @@ class AgentDesktopPlugin {
                 this.config = me.extend(me, response)
                 //me.AgentDesktop(response.userInfo.userId, response);
                 /** @ignore */
+                /* There are two instances of AgentDesktopPluginScript below. In agentdesktop-script, the chat-co-browse re-initialization logic runs for both instances, which creates two socket connections.
+                * We use the isVoiceCobrowseSession flag to prevent co-browse re-initialization for the voice-cobrowse/standalone otp cobrowse instance below if it is not required. */
                 this.agentDesktopInfo = new AgentDesktopPluginScript(this.config);
                 // Connecting cobrowse session with the user data
                 this.authInfo = response;
-                this.cobrowseSession = new AgentDesktopPluginScript({...response, excludeRTM: true, isCobrowseSession: true});
+                this.cobrowseSession = new AgentDesktopPluginScript({ ...response, excludeRTM: true, isVoiceCobrowseSession: true });                
+                
+                // disable click to call button until sbc details are received
+                this.agentDesktopInfo.disableClickToCallButton();
+            }
+        });
+
+        me.hostInstance.on('onBrandingUpdate', (event: any) => {
+            this.clickToCallEnabled = event?.brandingData?.footer?.buttons?.click_to_call?.show;
+        });
+
+        // this.emit(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, {}) 
+        // above line in kore-rtm-client.js will be emitted after the rtm connection is successfully established
+        // Here we are listening to the open event and sending the get_sbc_details event when the rtm connection is established
+        me.hostInstance.bot.on('open', (response: any) => {
+            if (this.authInfo && this.clickToCallEnabled) {
+                const sbcRequestMessage: any = {};
+                sbcRequestMessage["clientMessageId"] = new Date().getTime();
+                sbcRequestMessage["event"] = "sbc_details_request";
+                sbcRequestMessage["message"] = {
+                    "body":"",
+                    "type": ""
+                };
+                sbcRequestMessage["resourceid"] = "/bot.message";
+                
+                me.hostInstance.bot.sendMessage(sbcRequestMessage, (err: any) => {
+                    if (err) {
+                        console.error("Failed to request SBC details:", err);
+                    }
+                });
             }
         });
         me.hostInstance.on('beforeViewInit', (chatEle: any) => {
@@ -51,6 +87,14 @@ class AgentDesktopPlugin {
                     }
                     messageToBot["resourceid"] = "/bot.message";
                     me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
+                });
+            }
+            if(me.hostInstance.chatEle.querySelector('#kore-click-to-call')){
+                // click listener for kore-click-to-call
+                me.hostInstance.chatEle.querySelector('#kore-click-to-call').addEventListener('click', () => {
+                    if(!this.agentDesktopInfo.activeCall){
+                        me.hostInstance.bottomSliderAction('', getHTML(ClickToCallSlider, { hostInstance: me.hostInstance }, me.hostInstance));
+                    }
                 });
             }
         })
@@ -111,7 +155,7 @@ class AgentDesktopPlugin {
         this.$ = me.hostInstance.$;
         this.appendVideoAudioElemnts();
         document.addEventListener("visibilitychange", () => {
-            if (this.isAgentConnected) {
+            if (this.isAgentConnected || this.isTPAgentConnected) {
                 if (document.visibilityState === 'visible') {
                     this.isTabActive = true
                     if (!this.isReadRecipetSent) {
@@ -123,6 +167,11 @@ class AgentDesktopPlugin {
                             "type": ""
                         }
                         messageToBot["resourceid"] = "/bot.message";
+                        if (this.TMsgData) {
+                            messageToBot['messageId'] = this.TMsgData?.messageId;
+                            messageToBot['agent_MessageId'] = this.TMsgData?.agent_MessageId;
+                            this.TMsgData = null;
+                        }
                         me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
                         this.isReadRecipetSent = true;
                     }
@@ -134,8 +183,8 @@ class AgentDesktopPlugin {
 
         // send type event from user to agent
         me.hostInstance.on('onKeyDown', ({ event }: any) => {
-            if (this.isAgentConnected) {
-                if (event.keyCode !== 13 && (event.which <= 90 && event.which >= 48) || (event.which >= 96 && event.which <= 105) || (event.which >= 186 && event.which <= 222) || (event.keyCode === 32 || event.keyCode === 8) && localStorage.getItem("kr-agent-status") === "connected") {
+            if (this.isAgentConnected || this.isTPAgentConnected) {
+                if (event.keyCode !== 13 && (event.which <= 90 && event.which >= 48) || (event.which >= 96 && event.which <= 105) || (event.which >= 186 && event.which <= 222) || (event.keyCode === 32 || event.keyCode === 8) && (localStorage.getItem("kr-agent-status") === "connected" || localStorage.getItem("kr-tp-agent-status") === "connected")) {
                     if (!this.isTyping) {
                         var messageToBot: any = {};
                         messageToBot["event"] = "typing";
@@ -165,31 +214,43 @@ class AgentDesktopPlugin {
         // agent connected and disconnected events
         me.hostInstance.on('onWSMessage', (event: any) => {
 
-            // Agent Status 
-            if ((event.messageData?.message?.type === 'agent_connected' || event.messageData?.message?.type === 'agent_session_active') && me?.hostInstance?.enableAgentChanges) {
-                this.isAgentConnected = true;
-                me.brandingInfo = JSON.parse(JSON.stringify(me.hostInstance.config.branding));
-                if (me.hostInstance.config.branding.body.agent_message.icon.show) {
-                    me.hostInstance.config.branding.header.icon.show = true;
-                    me.hostInstance.config.branding.header.icon.type = 'custom';
-                    me.hostInstance.config.branding.header.icon.icon_url = me.hostInstance.config.branding.body.agent_message.icon.icon_url;
-                } else {
-                    me.hostInstance.config.branding.header.icon.show = false;
-                }
-                me.hostInstance.config.branding.header.title.name = me.hostInstance.config.branding.body.agent_message.title.name;
-                me.hostInstance.config.branding.header.sub_title.name = me.hostInstance.config.branding.body.agent_message.sub_title.name;
-                me.hostInstance.setBranding(me.hostInstance.config.branding);
-                me.hostInstance.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = me.hostInstance.config.branding.header.title.name;
+            if(event.messageData?.type === 'Session_Start') {
+                me.hostInstance.sessionId = event.messageData?.sessionId;
+            }
 
-            } else if ((event.messageData?.message?.type === 'agent_disconnected' || event.messageData?.message?.type === 'agent_session_inactive') && me?.hostInstance?.enableAgentChanges) {
+            if(event.messageData?.type === 'Bot_Active') {
+                if(event.messageData?.recentSessionInfo?.isActive && event.messageData?.recentSessionInfo?.sessionId) {
+                    me.hostInstance.sessionId = event.messageData?.recentSessionInfo?.sessionId;
+                }
+            }
+
+            // Handle SBC details response
+            if (event.messageData?.type === 'sbc_details_response') {
+
+                var uuId = this.config.userInfo.userId;
+                const serverConfig: {
+                    addresses: string[];
+                    domain: string;
+                    iceServers: any[];
+                } = event.messageData?.responseData;
+                serverConfig.addresses = serverConfig.addresses;
+                serverConfig.domain = serverConfig.domain;
+                serverConfig.iceServers = serverConfig.iceServers || [];
+                me.hostInstance.serverConfig = serverConfig;
+                // enable click to call button when sbc details are received
+                this.agentDesktopInfo.enableClickToCallButton();
+            }
+
+            // Agent Status 
+            if (event.messageData?.message?.type === 'agent_connected' && me?.hostInstance?.enableAgentChanges) {
+                me.isAgentConnected = true;
+                me.manageAgentBranding('set');
+
+            } else if (event.messageData?.message?.type === 'agent_disconnected' && me?.hostInstance?.enableAgentChanges) {
                 document.querySelector(".campaign-calling-audio-static-wrapper")?.remove(); //removing the campaign container
-                if (this.isAgentConnected) {
-                    this.isAgentConnected = false;
-                    me.hostInstance.config.branding.header.icon = me?.brandingInfo?.header?.icon;
-                    me.hostInstance.config.branding.header.title.name = me?.brandingInfo?.header?.title?.name;
-                    me.hostInstance.config.branding.header.sub_title.name = me?.brandingInfo?.header?.sub_title?.name;
-                    me.hostInstance.setBranding(me.hostInstance.config.branding);
-                    me.hostInstance.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = me.hostInstance.config.branding.header.title.name;
+                if (me.isAgentConnected) {
+                    me.isAgentConnected = false;
+                    me.manageAgentBranding('reset');
                 }
             }
             if (event.messageData?.message?.type === 'agent_connected') {
@@ -198,8 +259,23 @@ class AgentDesktopPlugin {
                 localStorage.setItem("kr-agent-status", "disconneted")
             }
 
+            if (event.messageData?.message?.type === 'agent_session_active' && me?.hostInstance?.enableAgentChanges) {
+                me.isTPAgentConnected = true;
+                me.manageAgentBranding('set');
+            } else if (event.messageData?.message?.type === 'agent_session_inactive' && me?.hostInstance?.enableAgentChanges) {
+                if (me.isTPAgentConnected) {
+                    me.isTPAgentConnected = false;
+                    me.manageAgentBranding('reset');
+                }
+            }
+            if (event.messageData?.message?.type === 'agent_session_active') {
+                localStorage.setItem("kr-tp-agent-status", "connected")
+            } else if (event.messageData?.message?.type === 'agent_session_inactive') {
+                localStorage.setItem("kr-tp-agent-status", "disconneted")
+            }
+
             // when agent send the message, hide the type indicator
-            if (event.messageData.message) {
+            if (event.messageData?.message) {
                 if (event?.messageData?.message[0]?.type === 'text' && event?.messageData?.author?.type === 'AGENT') {
                     me.hostInstance.chatEle.querySelector('.typing-indicator-wraper').style.display = 'none'
                     this.isReadRecipetSent = false;
@@ -207,9 +283,9 @@ class AgentDesktopPlugin {
             }
 
             // type indicator style changes when agent is being connected
-            if (event.messageData?.message?.author?.type === 'AGENT' && event.messageData.message.type === 'typing' && localStorage.getItem("kr-agent-status") === "connected") {
+            if (event.messageData?.message?.author?.type === 'AGENT' && event.messageData.message.type === 'typing' && (localStorage.getItem("kr-agent-status") === "connected" || localStorage.getItem("kr-tp-agent-status") === "connected")) {
                 me.hostInstance.chatEle.querySelector('.typing-indicator-wraper').style.display = 'flex'
-            } else if (event.messageData?.message?.author?.type === 'AGENT' && event.messageData.message.type === 'stoptyping' && localStorage.getItem("kr-agent-status") === "connected") {
+            } else if (event.messageData?.message?.author?.type === 'AGENT' && event.messageData.message.type === 'stoptyping' && (localStorage.getItem("kr-agent-status") === "connected" || localStorage.getItem("kr-tp-agent-status") === "connected")) {
                 me.hostInstance.chatEle.querySelector('.typing-indicator-wraper').style.display = 'none'
             } else if (localStorage.getItem("kr-agent-status") !== "conneted") {
             }
@@ -217,9 +293,9 @@ class AgentDesktopPlugin {
 
         // sent event style setting in user chat 
         me.hostInstance.on('afterRenderMessage', (event: any) => {
-            if (this.isAgentConnected) {
+            if (this.isAgentConnected || this.isTPAgentConnected) {
                 if (!event.messageHtml) return false;
-                if (localStorage.getItem("kr-agent-status") != "connected") return;
+                if (localStorage.getItem("kr-agent-status") != "connected" && !this.isTPAgentConnected) return;
 
                 if (event.msgData?.type === "currentUser") {
                     me.hostInstance.chatEle.querySelector('.typing-indicator-wraper').style.display = 'none'
@@ -234,7 +310,7 @@ class AgentDesktopPlugin {
                     }
                     if (extraInfoEle && !extraInfoEle?.querySelectorAll('.read-text').length) {
                         const ele1 = document.createElement('div');
-                        ele1.textContent = 'Sent';
+                        ele1.textContent =  me.hostInstance.config.botMessages.sent || 'Sent';
                         ele1.classList.add('read-text');
                         const ele2 = document.createElement('div');
                         ele2.classList.add('sent');
@@ -250,7 +326,7 @@ class AgentDesktopPlugin {
                                 if (tempData.message.type === "message_delivered") {
                                     if (!ele.querySelectorAll('.delivered').length) {
                                         const childEle1 = ele.querySelector('.read-text');
-                                        childEle1.textContent = 'Delivered';
+                                        childEle1.textContent = me.hostInstance.config.botMessages.delivered || 'Delivered';
                                         const childEle2 = ele.querySelector('.sent');
                                         if (childEle2) {
                                             childEle2.classList = [];
@@ -259,27 +335,49 @@ class AgentDesktopPlugin {
                                     }
                                 } else if (tempData.message.type === "message_read") {
                                     const childEle1 = ele.querySelector('.read-text');
-                                    childEle1.textContent = 'Read';
+                                    childEle1.textContent = me.hostInstance.config.botMessages.read || 'Read';
                                     const childEle2 = ele.querySelector('.delivered');
                                     if (childEle2) {
                                         childEle2.classList = [];
                                         childEle2.classList.add('read');
+                                    } else {
+                                        const childEle3 = ele.querySelector('.sent');
+                                        if (childEle3) {
+                                            childEle3.classList = [];
+                                            childEle3.classList.add('read');
+                                        }
                                     }
                                 }
 
                             }
                             // change the indicator to read when agent switch the slot to other user
-                            // else if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === 'all') {
-                            //     var ele = this.$(" .sentIndicator");
-                            //     if (tempData.message.type === "message_read") {
-                            //         ele.removeClass("delivered").addClass("read");
-                            //     }
-                            // }
+                            else if (tempData.from === "bot" && tempData.type === "events" && tempData.message.clientMessageId === 'all') {
+                                if (tempData.message.type === "message_read") {
+                                    const elements = me.hostInstance.chatEle.querySelectorAll('.bottom-info') || [];
+                                    elements.forEach((ele: any) => {
+                                        const childEle1 = ele.querySelector('.read-text');
+                                        if (childEle1) {
+                                            childEle1.textContent = me.hostInstance.config.botMessages.read || 'Read';
+                                        }
+                                        const childEle2 = ele.querySelector('.delivered');
+                                        if (childEle2) {
+                                            childEle2.classList = [];
+                                            childEle2.classList.add('read');
+                                        } else {
+                                            const childEle3 = ele.querySelector('.sent');
+                                            if (childEle3) {
+                                                childEle3.classList = [];
+                                                childEle3.classList.add('read');
+                                            }
+                                        }
+                                    });
+                                }
+                            }
                         });
                     }
                 } else {
                     // send read event from user to agent 
-                    if (event.msgData?.message[0]?.component?.payload?.template_type == 'live_agent') {
+                    if (event.msgData?.message[0]?.component?.payload?.template_type == 'live_agent' || event.msgData?.enableLiveChatMetaData) {
                         const messageToBot: any = {};
                         const msgId = event.msgData.messageId;
                         messageToBot["event"] = "message_delivered";
@@ -289,6 +387,10 @@ class AgentDesktopPlugin {
                         }
                         messageToBot['messageId'] = msgId;
                         messageToBot["resourceid"] = "/bot.message";
+                        if (event.msgData?.agent_MessageId) {
+                            messageToBot['agent_MessageId'] = event.msgData?.agent_MessageId;
+                            this.TMsgData = event.msgData;
+                        }
                         me.hostInstance.bot.sendMessage(messageToBot, (err: any) => { });
 
                         // send read event when user being in current tab
@@ -314,16 +416,30 @@ class AgentDesktopPlugin {
         // chatEle.append(remoteVideoElement);
         let localVideoElement = document.createElement('video');
         localVideoElement.id = 'kore_local_video';
-        localVideoElement.width = 0;
-        localVideoElement.height = 0;
+        localVideoElement.width = 1;
+        localVideoElement.height = 1;
         localVideoElement['autoplay'] = true;
         localVideoElement['playsInline'] = true;
         let remoteVideoElement = document.createElement('video');
         remoteVideoElement.id = 'kore_remote_video';
-        remoteVideoElement.width = 0;
-        remoteVideoElement.height = 0;
+        remoteVideoElement.width = 1;
+        remoteVideoElement.height = 1;
         remoteVideoElement['autoplay'] = true;
         remoteVideoElement['playsInline'] = true;
+        // keep elements out of layout and interaction without affecting existing layout
+        localVideoElement.style.position = 'absolute';
+        localVideoElement.style.zIndex = '-999';
+        localVideoElement.style.left = '0';
+        localVideoElement.style.top = '0';
+        localVideoElement.style.pointerEvents = 'none';
+        localVideoElement.style.opacity = '0.0001';
+
+        remoteVideoElement.style.position = 'absolute';
+        remoteVideoElement.style.zIndex = '-999';
+        remoteVideoElement.style.left = '0';
+        remoteVideoElement.style.top = '0';
+        remoteVideoElement.style.pointerEvents = 'none';
+        remoteVideoElement.style.opacity = '0.0001';
         chatEleDiv.insertBefore(localVideoElement, chatEleDiv.firstChild);
         chatEleDiv.insertBefore(remoteVideoElement, chatEleDiv.firstChild);
     }
@@ -403,7 +519,7 @@ class AgentDesktopPlugin {
             })
             .then((res: any) => {
                 this.authInfo = res;
-                this.cobrowseSession = new AgentDesktopPluginScript({...res, excludeRTM: true, isCobrowseSession: true});
+                this.cobrowseSession = new AgentDesktopPluginScript({...res, excludeRTM: true, isVoiceCobrowseSession: true});
             }).catch(err => {
                 console.error(err)
                 // this.authInfo = null;
@@ -438,12 +554,37 @@ class AgentDesktopPlugin {
             .then((res: any) => {
                 me.hostInstance.$('.cobrowser-wrapper-elipse').toggleClass('open-cobrowser open-input-browse');
                 me.hostInstance.$('#cobrowseInput').val('').removeClass('error');
+                localStorage.setItem("voiceCobrowseRequest", JSON.stringify(res));
                 this.cobrowseSession.koreCoBrowse.initialize(res);
             }).catch(err => {
                 me.hostInstance.$('#krOTPErrorMsg').show();
                 me.hostInstance.$('#cobrowseInput').addClass('error');
                 
             })
+    }
+
+    manageAgentBranding(type: string) {
+        let me: any = this;
+        if (type == 'set') {
+            me.brandingInfo = JSON.parse(JSON.stringify(me.hostInstance.config.branding));
+            if (me.hostInstance.config.branding.body.agent_message.icon.show) {
+                me.hostInstance.config.branding.header.icon.show = true;
+                me.hostInstance.config.branding.header.icon.type = 'custom';
+                me.hostInstance.config.branding.header.icon.icon_url = me.hostInstance.config.branding.body.agent_message.icon.icon_url;
+            } else {
+                me.hostInstance.config.branding.header.icon.show = false;
+            }
+            me.hostInstance.config.branding.header.title.name = me.hostInstance.config.branding.body.agent_message.title.name;
+            me.hostInstance.config.branding.header.sub_title.name = me.hostInstance.config.branding.body.agent_message.sub_title.name;
+            me.hostInstance.setBranding(me.hostInstance.config.branding);
+            me.hostInstance.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = me.hostInstance.config.branding.header.title.name;
+        } else {
+            me.hostInstance.config.branding.header.icon = me?.brandingInfo?.header?.icon;
+            me.hostInstance.config.branding.header.title.name = me?.brandingInfo?.header?.title?.name;
+            me.hostInstance.config.branding.header.sub_title.name = me?.brandingInfo?.header?.sub_title?.name;
+            me.hostInstance.setBranding(me.hostInstance.config.branding);
+            me.hostInstance.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = me.hostInstance.config.branding.header.title.name;
+        }
     }
 }
 export default AgentDesktopPlugin;

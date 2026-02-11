@@ -28,22 +28,23 @@ export function DatePickerExt(props: any) {
     const dateFormats: any = {
         'DD-MM-YYYY': 'dd-MM-yyyy',
         'MM-DD-YYYY': 'MM-dd-yyyy',
-        'YYYY-MM-DD': 'yyyy-MM-dd',
-        'YYYY-DD-MM': 'yyyy-dd-MM'
+        'YYYY-MM-DD': 'yyyy-MM-dd'
     }
 
     const getConvertedDate = (date: any, format: any) => {
-        if (typeof date == 'string') {
-            date = new Date(date);
+        if (date instanceof Date && !isNaN(date.getTime())) {
+            return date;
         }
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        const formattedDate = format
-            .replace('DD', day)
-            .replace('MM', month)
-            .replace('YYYY', year);
-        return formattedDate;
+        const map: any = {
+            'DD-MM-YYYY': [0, 1, 2],
+            'MM-DD-YYYY': [1, 0, 2],
+            'YYYY-MM-DD': [2, 1, 0]
+        };
+    
+        const idx = map[format];
+        const parts = date.split('-');
+        const [d, m, y] = idx.map((i: number) => Number(parts[i]));
+        return new Date(y, m - 1, d);
     }
 
     useEffect(() => {
@@ -83,7 +84,7 @@ export function DatePickerExt(props: any) {
     );
 }
 
-export function DatePicker(props: any) {
+export function DatePickerInline(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
     const msgObj = {
@@ -91,25 +92,67 @@ export function DatePicker(props: any) {
         hostInstance
     }
 
+    const [selectedDate, setSelectedDate] = useState(new Date().toDateString());
+
     const dateFormats: any = {
         'DD-MM-YYYY': 'dd-MM-yyyy',
         'MM-DD-YYYY': 'MM-dd-yyyy',
-        'YYYY-MM-DD': 'yyyy-MM-dd',
-        'YYYY-DD-MM': 'yyyy-dd-MM'
+        'YYYY-MM-DD': 'yyyy-MM-dd'
     }
 
     const getConvertedDate = (date: any, format: any) => {
-        if (typeof date == 'string') {
-            date = new Date(date);
+        if (date instanceof Date && !isNaN(date.getTime())) {
+            return date;
         }
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        const formattedDate = format
-            .replace('DD', day)
-            .replace('MM', month)
-            .replace('YYYY', year);
-        return formattedDate;
+        const map: any = {
+            'DD-MM-YYYY': [0, 1, 2],
+            'MM-DD-YYYY': [1, 0, 2],
+            'YYYY-MM-DD': [2, 1, 0]
+        };
+    
+        const idx = map[format];
+        const parts = date.split('-');
+        const [d, m, y] = idx.map((i: number) => Number(parts[i]));
+        return new Date(y, m - 1, d);
+    }
+
+    const handleSubmit = () => {
+        hostInstance.sendMessage(selectedDate, { renderMsg: selectedDate });
+    }
+
+    useEffect(() => {
+        const currentDatePrev = new Date();
+        const currentDateNext = new Date();
+        currentDatePrev.setFullYear(currentDatePrev.getFullYear() - 7);
+        currentDateNext.setFullYear(currentDateNext.getFullYear() + 7);
+        const dp = new Datepicker(`#cal-${msgData.messageId}`, {
+            dateFormat: msgData?.message?.[0]?.component?.payload?.format ? dateFormats[msgData?.message?.[0]?.component?.payload?.format] : 'dd-MM-yyyy',
+            minDate: msgData.message?.[0]?.component?.payload?.startDate ? getConvertedDate(msgData.message?.[0]?.component?.payload?.startDate, msgData?.message?.[0]?.component?.payload?.format) : getConvertedDate(currentDatePrev, msgData?.message?.[0]?.component?.payload?.format ? msgData?.message?.[0]?.component?.payload?.format : 'DD-MM-YYYY'),
+            maxDate: msgData.message?.[0]?.component?.payload?.endDate ? getConvertedDate(msgData.message?.[0]?.component?.payload?.endDate, msgData?.message?.[0]?.component?.payload?.format) : getConvertedDate(currentDateNext, msgData?.message?.[0]?.component?.payload?.format ? msgData?.message?.[0]?.component?.payload?.format : 'DD-MM-YYYY'),        
+            disableNavWhenOutOfRange: false,
+            onSelect: (d: any) => {
+                setSelectedDate(d.formattedDate);
+            }
+        });
+        dp.show();
+    }, []);
+
+    return (
+        <div className="date-picker-wrapper-template">
+            <Message {...msgObj} />
+            <h1>{selectedDate}</h1>
+            <div className="date-picker-calendar" id={'cal-' + msgData.messageId}></div>
+            <button className="kr-button-primary" onClick={handleSubmit}>Confirm</button>
+        </div>
+    )
+}
+
+export function DatePicker(props: any) {
+    const hostInstance = props.hostInstance;
+    const msgData = props.msgData;
+    const msgObj = {
+        msgData,
+        hostInstance
     }
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'dateTemplate' && !msgData?.fromHistory) {
@@ -125,35 +168,7 @@ export function DatePicker(props: any) {
                 <Message {...msgObj} />
             )
         } else {
-            const handleSubmit = () => {
-                hostInstance.sendMessage(selectedDate, { renderMsg: selectedDate });
-            }
-            const [selectedDate, setSelectedDate] = useState(new Date().toDateString());
-
-            useEffect(() => {
-                const currentDatePrev = new Date();
-                const currentDateNext = new Date();
-                currentDatePrev.setFullYear(currentDatePrev.getFullYear() - 7);
-                currentDateNext.setFullYear(currentDateNext.getFullYear() + 7);
-                const dp = new Datepicker(`#cal-${msgData.messageId}`, {
-                    dateFormat: msgData?.message?.[0]?.component?.payload?.format ? dateFormats[msgData?.message?.[0]?.component?.payload?.format] : 'dd-MM-yyyy',
-                    minDate: msgData.message?.[0]?.component?.payload?.startDate ? getConvertedDate(msgData.message?.[0]?.component?.payload?.startDate, msgData?.message?.[0]?.component?.payload?.format) : getConvertedDate(currentDatePrev, msgData?.message?.[0]?.component?.payload?.format ? msgData?.message?.[0]?.component?.payload?.format : 'DD-MM-YYYY'),
-                    maxDate: msgData.message?.[0]?.component?.payload?.endDate ? getConvertedDate(msgData.message?.[0]?.component?.payload?.endDate, msgData?.message?.[0]?.component?.payload?.format) : getConvertedDate(currentDateNext, msgData?.message?.[0]?.component?.payload?.format ? msgData?.message?.[0]?.component?.payload?.format : 'DD-MM-YYYY'),        
-                    disableNavWhenOutOfRange: false,
-                    onSelect: (d: any) => {
-                        setSelectedDate(d.formattedDate);
-                    }
-                });
-                dp.show();
-            }, []);
-            return (
-                <div className="date-picker-wrapper-template">
-                    <Message {...msgObj} />
-                    <h1>{selectedDate}</h1>
-                    <div className="date-picker-calendar" id={'cal-' + msgData.messageId}></div>
-                    <button className="kr-button-primary" onClick={handleSubmit}>Confirm</button>
-                </div>
-            )
+            return <DatePickerInline hostInstance={hostInstance} msgData={msgData} />
         }
     }
 }

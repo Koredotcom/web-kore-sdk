@@ -154,13 +154,9 @@ chatConfig.location = {
 
 ### Retry Configuration
 ```typescript
-chatConfig.sendFailedMessage = {
-    MAX_RETRIES: 3
-};
 chatConfig.maxReconnectionAPIAttempts = 5;
 ```
-- `MAX_RETRIES`: Maximum attempts for failed message delivery
-- `maxReconnectionAPIAttempts`: Maximum API reconnection attempts
+- `maxReconnectionAPIAttempts`: Maximum API reconnection attempts. Applicable for jwtGrant, start and history APIs only
 
 ### WebSocket Keep-Alive
 ```typescript
@@ -196,3 +192,6 @@ Configure Proactive Web Campaign settings:
 - `knownUser`: Indicates if the user is known/unknown
 
 **Important:** When implementing Proactive Web Campaign Plugin functionality, the `pwcConfig.enable` must be set to true.
+
+### RTL support for Arabic Language
+- `enableRTLTextDirection`: automatic RTL support for Arabic language. It is enabled by defualt. Set it to false to disable it  

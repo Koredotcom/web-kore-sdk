@@ -28,7 +28,6 @@ export function ChatWidgetHeader(props: any) {
         hostInstance.eventManager.addEventListener('.btn-reconnect', 'click', (event: any) => {
             if (!hostInstance.chatEle.querySelector('.btn-reconnect').getAttribute('disabled')) {
                 hostInstance.chatEle.querySelector('.btn-reconnect').setAttribute('disabled', true);
-                hostInstance.isReconnected = true;
                 const data = event?.detail;
                 if (data && data?.isReconnect) {
                     hostInstance.config.botOptions.forceReconnecting = true;
@@ -50,19 +49,17 @@ export function ChatWidgetHeader(props: any) {
                 hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove(hostInstance.config.branding.chat_bubble.expand_animation);
             }
             hostInstance.chatEle.classList.add('minimize-chat');
-            if (!hostInstance.config.pwcConfig.enable) {
-                hostInstance.destroy();
-                hostInstance.isSocketOpened = false;
-                hostInstance.bot.historyOffset = 0;
-                hostInstance.bot.previousHistoryLoading = false;
-                if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
-                    hostInstance.removeLocalStoreItem('kr-cw-state');
-                    hostInstance.removeLocalStoreItem('kr-cw-uid');
-                    hostInstance.config.botOptions.maintainContext = false;
-                }
-                if (hostInstance.config.botOptions.openSocket) {
-                    hostInstance.bot.init(hostInstance.config.botOptions);
-                }
+            hostInstance.destroy();
+            hostInstance.isSocketOpened = false;
+            hostInstance.bot.historyOffset = 0;
+            hostInstance.bot.previousHistoryLoading = false;
+            if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
+                hostInstance.removeLocalStoreItem('kr-cw-state');
+                hostInstance.removeLocalStoreItem('kr-cw-uid');
+                hostInstance.config.botOptions.maintainContext = false;
+            }
+            if (hostInstance.config.botOptions.openSocket) {
+                hostInstance.bot.init(hostInstance.config.botOptions);
             }
         })
 
@@ -78,6 +75,7 @@ export function ChatWidgetHeader(props: any) {
                 }
                 hostInstance.chatEle.querySelector('.avatar-bg').classList.remove('click-to-rotate-icon');
                 hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.remove('avatar-minimize')
+                hostInstance.chatEle.classList.add('minimize-chat');
             }
             if (hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.contains('fadeIn')) {
                 hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.remove('fadeIn');

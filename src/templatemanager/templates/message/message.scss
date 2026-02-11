@@ -268,6 +268,30 @@
                     font-size: 10px;
                     margin-left: 5px;
                 }
+                &.hide{
+                    display: none;
+                }
+            }
+            .errorMsg{
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                font-size: 11px;
+                font-weight: 500;
+                .failed-text{
+                    color: var(--destructive-500-main, #EF4444);
+                }
+                .retry-text, .delete-text{
+                   background: transparent;
+                   border: 0;
+                   cursor: pointer;
+                   padding: 0;
+                   color: var(--sdk-global-theme-color);
+                }
+                .or-text{
+                    opacity: 0.5;
+                    color: var(--sdk-gloabl-text-color);
+                }
             }
         }
     }
@@ -391,7 +415,7 @@
         &.chat-bubble-style-2{
             .bubble-msg-with-img{
                 .bubble-msg{
-                    border-radius: 8px 2px 8px 8px;
+                    border-radius: 2px 8px 8px 8px;
                 }
             }
         }
@@ -466,7 +490,7 @@
             flex-wrap: wrap;
             .bubble-msg{
                 background: var(--bot-bubble-msg-bg);
-                border-radius: 8px 8px 2px 8px;
+                border-radius: 8px 8px 8px 2px;
                 font-weight: 400;
                 font-size: 14px;
                 line-height: 17px;

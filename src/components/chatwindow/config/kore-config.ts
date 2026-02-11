@@ -24,6 +24,7 @@ botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id
 botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
 botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
 botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+botOptions.clickToCallFlowId = "PLEASE_ENTER_CLICK_TO_CALL_FLOW_ID"; // Optional. Provide flow id if you want to use click to call feature
 
 
 
@@ -94,9 +95,6 @@ chatConfig = {
             loadingLabel:'Loading old messages' // Loading label will be displayed when the user uses paginated scroll
         } 
     },
-    sendFailedMessage:{ //Number of retries on message send failed
-        MAX_RETRIES:3
-    },
     maxReconnectionAPIAttempts: 5,  // Number of retries on api failure
     UI:{
         version:"v3"
@@ -112,7 +110,8 @@ chatConfig = {
             batchSize: 10  // To configure the number of messages to fetch
         }
     },
-    enableEmojiShortcut: true
+    enableEmojiShortcut: true,   // Set false to disable emoji shortcut support. Enabled by default
+    enableRTLTextDirection: true   // Set false to disable RTL support. Enabled by default for Arabic bot responses
 };
 
 export default chatConfig;

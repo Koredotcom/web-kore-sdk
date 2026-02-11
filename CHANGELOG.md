@@ -1,3 +1,129 @@
+### 11.21.1
+* Release Jan 31, 2026
+* Breaking Changes
+  * removed Answers Plugin by default. Need to install it manually for Search AI. Please refer [here](./docs/plugins/answers/) for installation instructions
+* Features
+  * added automatic RTL support for Arabic language in the Web SDK. RTL support can be disbaled by using the flag in the kore config. Please refer [kore config docs](./docs/configurations/koreconfig/README.md#rtl-support-for-arabic-language) for the configuration
+* Bug fixes
+  * dates disable issue fix in date and date range templates
+  * user message duplicate issue fix on network reconnections
+  * added preview template new design in answers template
+  * screen share issue fix on the video call in agent desktop plugin
+  * co browse issues fix
+  * other minor bug fixes
+
+### 11.21.0
+* Release Jan 17, 2026
+* Features
+  * updated fileUrl api to v2 version. You can now set controls for fileUrls in the [Platform](https://platform.kore.ai/)
+  * streaming support added for answers template
+* Bug fixes
+  * read issue fix for bulk agent messages from CCAI Console
+  * timestamp issue fix in system template
+  * aria label name issue fix
+  * fixed settings api failing and access token problem in answers template
+  * set OPUS codec as priority and removed PCMU, PCMA & G722 codec from the phone configuration in Agent Desktop plugin
+  * other minor bug fixes
+
+### 11.20.0
+* Release Dec 06, 2025
+* Bug fixes
+  * dropped global bot singleton and scoped instance to constructor and moved _chatHistoryLoaded to inside kore bot
+  * proactive web campaigns issues fix
+  * accessibility doc 1.4.10 criterion issue fix
+  * added i18n strings in file upload and download option
+
+### 11.19.1
+* Release Nov 17, 2025
+* Bug fixes
+  * date, date range and clock templates selection issue fix
+  * preserved \n in the user message when sending to bot/agent
+  * fixed json printing issue for table template
+  * co browse issues fix in agent desktop plugin
+  * proactive web campaign plugin issues fix
+  * fixed citation issue in answers template
+  * i18n changes for read receipts
+  * double history api call issue fix when onReconnect feature is used
+  * other minor bug fixes
+
+### 11.19.0
+* Release Oct 25, 2025
+* Breaking Changes
+  * Proactive Web Campaign plugin: Replaced socket implementation with API based for reducing the server load
+* Features
+  * added streaming support for messages in Web SDK using Agent Node and Prompt Node in Platform
+  * users can now select and upload multiple files at a time
+* Bug fixes
+  * removed repeat parameter for uploaded file urls
+  * proactive web campaign time zone handling issue fix
+  * css issue fix for video elements in agent desktop plugin
+
+### 11.18.0
+* Release Sept 29, 2025
+* Bug fixes
+  * feedback visibility change for history in the answers template
+  * click to call issues fix
+  * removed console logs for co browse in agent desktop plugin
+
+### 11.17.10
+* Release Sept 13, 2025
+* Bug fixes
+  * file download issue fix in the CCAI Agent Console sent by the User from the Web SDK ([#248](https://github.com/Koredotcom/web-kore-sdk/issues/248))
+
+### 11.17.1
+* Release Sept 13, 2025
+* Features
+  * added support for typing indicator in third party live agent chat(Salesforce)
+* Bug fixes
+  * agent name issue fix for messages in the chat history
+  * file chunk upload issue fix
+  * cobrowse issue fix for multi page app feature
+  * answers template minor bug fixes
+  * other minor bug fixes
+
+### 11.17.0
+* Release August 30, 2025
+* Features
+  * added click to call feature. Users can make voice calls from the Web SDK. To enable the feature please use theme editor in the builder
+* Bug fixes
+  * accessibility issues fix for feedback template
+  * co browse issue fix in agent desktop plugin
+  * other minor bug fixes
+
+### 11.16.1
+* Release August 11, 2025
+* Bug fixes
+  * added display of agent name for messages in chat history for supported integrations
+  * quick replies issue fix on history scroll
+  * proactive web campaign issues fix
+
+### 11.16.0
+* Release July 26, 2025
+* Features
+  * added support for read receipts and agent name for third party live chat(Salesforce). Please refer [Platfrom Salesforce Agent integration docs](https://docs.kore.ai/xo/app-settings/integrations/agents/configuring-the-salesforce-agent/#configure-messaging-for-in-app-and-web-miaw) for more details
+  * enhanced the Proactive Web Campaign Plugin. The plugin has been updated to support exclusion rules in addition to the existing rules and evaluating custom data. Please refer [here](docs/plugins/proactive-web-campaign/README.md#sending-custom-data-to-the-proactive-web-campaign-plugin) for more details about passing custom data.
+* Documentation
+  * updated events with example code snippets
+  * updated faqs
+  * updated proactive web campaing plugin instructions
+* Bug fixes
+  * kore markdown link issue fix
+  * message bubble corners issue fix
+
+### 11.15.1
+* Release July 12, 2025
+* Documentation
+  * added i18n instructions
+  * updated faqs
+* Stable release
+
+### 11.15.0
+* Release June 28, 2025
+* Bug fixes
+  * otp template slider close issue fix on resend click
+  * digital form styling issue fix when widgets enabled
+  * removed extra line for unordered list in the markdown
+
 ### 11.14.1
 * Release June 14, 2025
 * Bug fixes

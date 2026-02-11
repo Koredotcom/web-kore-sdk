@@ -52,41 +52,28 @@ export function Chat(props: any) {
     }
 
     const closePWCHelp = (e: any) => {
+         // Clear from sessionStorage when chat opens
+         hostInstance.plugins.ProactiveWebCampaignPlugin.clearPersistedTemplateFromStorage();
+        
+        // Remove from DOM
         hostInstance.chatEle.querySelector('.content-info').remove();
     }
 
     const handleConversationAction = (action: any) => {
+        // Clear from sessionStorage when chat opens
+        hostInstance.plugins.ProactiveWebCampaignPlugin.clearPersistedTemplateFromStorage();
+        
         hostInstance.isWelcomeScreenOpened = true;
+        hostInstance.plugins.ProactiveWebCampaignPlugin.isPWEChatTriggered = action;
         hostInstance.chatEle.classList.remove('minimize-chat');
         hostInstance.chatEle.querySelector('.avatar-variations-footer').classList.add('avatar-minimize');
         hostInstance.chatEle.querySelector('.avatar-bg').classList.add('click-to-rotate-icon');
         hostInstance.chatEle.querySelector('.chat-widgetwrapper-main-container').classList.add(hostInstance.config.branding.chat_bubble.expand_animation);
-        hostInstance.bot.close();
-        hostInstance.bot.KoreRTMClient.prototype.reWriteURL = function connect(socketUrl: any) {
-            if (this.reWriteSocketURL) {
-                var parser = document.createElement('a');
-                parser.href = socketUrl;
-                if (this.reWriteSocketURL.protocol) {
-                    parser.protocol = this.reWriteSocketURL.protocol;
-                }
-                if (this.reWriteSocketURL.hostname) {
-                    parser.hostname = this.reWriteSocketURL.hostname;
-                }
-                if (this.reWriteSocketURL.port) {
-                    parser.port = this.reWriteSocketURL.port;
-                }
-                socketUrl=parser.href;
-            }
-            
-            let url = socketUrl.replace('&isReconnect=true', '');
-            socketUrl= url +"&pwe="+action;
-            return socketUrl;
-          };
+        if (hostInstance.config.multiPageApp && hostInstance.config.multiPageApp.enable) {
+            hostInstance.setLocalStoreItem('kr-cw-state', 'open');
+        }
+        hostInstance.bot.RtmClient._safeDisconnect();
         hostInstance.bot.logInComplete();
-        setTimeout(()=>{
-            let msg = "connecting "+action;
-            hostInstance.sendMessage(msg);   
-        },2000);
         hostInstance.chatEle.querySelector('.welcome-chat-section-campaign').remove();
         // setConversationInprogress in agentdesktop-script.js
         if(action === 'audio' || action === 'video'){
@@ -95,7 +82,10 @@ export function Chat(props: any) {
     }
 
     return(
-        <div>{!isAcceptTriggered && <div className="content-info">
+        // "pwc-active-campaign-template" class is added to the DOM after the campaign template is rendered
+        // This class is used to identify the campaign template and prevent the sendApiEvent from getting triggered multiple times
+        // DONOT REMOVE THIS CLASS
+        <div>{!isAcceptTriggered && <div className="pwc-active-campaign-template content-info">
             {pwcCampaign.data?.messages.map((ele: any, ind: any) => (
                 <div className="text-content animation-slide-up" role="contentinfo" aria-labelledby="helojohn">
                     <div className="help-text-content">

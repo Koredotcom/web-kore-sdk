@@ -100,6 +100,11 @@ let config= {
     ],
     resolve:{
         extensions:['.js','.ts','.tsx'],
+        alias: {
+          "react": "preact/compat",
+          "react-dom": "preact/compat",
+          "react/jsx-runtime": "preact/jsx-runtime"
+        },
     },
     output: {
         publicPath:"/",

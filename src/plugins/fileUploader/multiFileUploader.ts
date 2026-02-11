@@ -15,6 +15,7 @@ class KoreMultiFileUploaderPlugin {
   fileUploaderCounter: any;
   xhrValue: any;
   xhr: any;
+  activeUploads: any = 0;
   private _conc: any;
   private _mdat: any;
   _fields: any[];
@@ -58,6 +59,9 @@ class KoreMultiFileUploaderPlugin {
       'deb', 'gz', 'pkg', 'rpm', 'zipx', 'bak', 'avi', 'm4v', 'mpg', 'rm', 'swf', 'vob', 'wmv', '3gp2', '3g2', 'asf', 'asx', 'srt', 'wma', 'mid', 'aif', 'iff', 'm3u', 'mpa', 'ra', 'aiff', 'tiff'];
     if (config) {
       this.config.koreAttachmentAPIUrl = config?.koreAttachmentAPIUrl || 'https://platform.kore.ai/api/'; 
+      this.config.maxFiles = config?.maxFiles || 10; // Maximum files allowed to upload at once
+    } else {
+      this.config.maxFiles = 10; // Default maximum files limit
     }
   }
 
@@ -121,26 +125,64 @@ class KoreMultiFileUploaderPlugin {
       me.hostInstance.chatEle.querySelector('#captureFileAttachment')?.click();
     });
     me.hostInstance.eventManager.addEventListener('#captureMediaAttachment', 'change', (event: any) => {
-      const file = me.hostInstance.chatEle.querySelector('#captureMediaAttachment').files[0];
-      if (file && file.size) {
-        if (file.size > me.filetypes.file.limit.size) {
-          alert(me.filetypes.file.limit.msg);
+      const files = me.hostInstance.chatEle.querySelector('#captureMediaAttachment').files;
+      if (files && files.length > 0) {
+        const currentAttachmentsCount = me.hostInstance.attachmentData ? me.hostInstance.attachmentData.length : 0;
+        const maxFilesAllowed = me.config.maxFiles || 10;
+        
+        if (files.length > maxFilesAllowed) {
+          alert(`You can select maximum ${maxFilesAllowed} files at once.`);
+          document.getElementById("captureMediaAttachment").value = '';
           return;
         }
+        
+        if (currentAttachmentsCount + files.length > maxFilesAllowed) {
+          alert(`Maximum ${maxFilesAllowed} files can be uploaded at once. You have ${currentAttachmentsCount} file(s) already selected.`);
+          document.getElementById("captureMediaAttachment").value = '';
+          return;
+        }
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          if (file && file.size) {
+            if (file.size > me.filetypes.file.limit.size) {
+              alert(me.filetypes.file.limit.msg);
+              continue;
+            }
+          }
+          me.convertFiles(file);
+        }
       }
-      me.convertFiles(file);
       document.getElementById("captureMediaAttachment").value = '';
       // me.hostInstance.chatEle.querySelector('.send-btn')?.classList.add('disabled');
     })
     me.hostInstance.eventManager.addEventListener('#captureFileAttachment', 'change', (event: any) => {
-      const file = me.hostInstance.chatEle.querySelector('#captureFileAttachment').files[0];
-      if (file && file.size) {
-        if (file.size > me.filetypes.file.limit.size) {
-          alert(me.filetypes.file.limit.msg);
+      const files = me.hostInstance.chatEle.querySelector('#captureFileAttachment').files;
+      if (files && files.length > 0) {
+        const currentAttachmentsCount = me.hostInstance.attachmentData ? me.hostInstance.attachmentData.length : 0;
+        const maxFilesAllowed = me.config.maxFiles || 10;
+        
+        if (files.length > maxFilesAllowed) {
+          alert(`You can select maximum ${maxFilesAllowed} files at once.`);
+          document.getElementById("captureFileAttachment").value = '';
           return;
         }
+        
+        if (currentAttachmentsCount + files.length > maxFilesAllowed) {
+          alert(`Maximum ${maxFilesAllowed} files can be uploaded at once. You have ${currentAttachmentsCount} file(s) already selected.`);
+          document.getElementById("captureFileAttachment").value = '';
+          return;
+        }
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          if (file && file.size) {
+            if (file.size > me.filetypes.file.limit.size) {
+              alert(me.filetypes.file.limit.msg);
+              continue;
+            }
+          }
+          me.convertFiles(file);
+        }
       }
-      me.convertFiles(file);
       document.getElementById("captureFileAttachment").value = '';
       // me.hostInstance.chatEle.querySelector('.send-btn')?.classList.add('disabled');
     })
@@ -159,90 +201,119 @@ class KoreMultiFileUploaderPlugin {
       me.onInit();
     });
     cwInstance.on("onKeyDown", (data: any) => {
-      if (!me.uploadingInProgress) {
-        let _escPressed = 0;
-        if (data.event.keyCode === 13) {
-          if (data.event.shiftKey) {
-            return;
-          }
-          data.event.preventDefault();
-          if (me.hostInstance.attachmentData && me.hostInstance.attachmentData.length > 0) {
-            me.hostInstance.attachmentData.forEach((attData: any) => {
-              let serverMessageObject: any = {};
-              serverMessageObject.message = {};
-              serverMessageObject.message.attachments = [];
-              data.chatWindowEvent.stopFurtherExecution = true;
-              serverMessageObject.message.attachments[0] = attData;
-              let clientMessageObject: any = {};
-              clientMessageObject.message = [];
-              clientMessageObject.message[0] = {};
-              clientMessageObject.message[0].clientMessageId = new Date().getTime();
-              clientMessageObject.message[0].cInfo = {};
-              clientMessageObject.message[0].cInfo = serverMessageObject.message;
-              me.hostInstance.sendMessage('', attData, serverMessageObject, clientMessageObject);
-
-              setTimeout(() => {
-                // me.hostInstance.chatEle.querySelector('.send-btn')?.classList.remove('show');
-                me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.add('hide-attachment');
-                me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
-                document.getElementById("captureMediaAttachment").value = "";
-                document.getElementById("captureFileAttachment").value = "";
-              });
-            });
-            me.hostInstance.attachmentData = [];
-          }
+      let _escPressed = 0;
+      if (data.event.keyCode === 13) {
+        if (data.event.shiftKey) {
           return;
         }
-        else if (data.event.keyCode === 27) {
-          _escPressed++;
-          if (_escPressed > 1) {
-            _escPressed = 0;
-            stop();
-            this.innerText = "";
-            $('.attachment').empty();
-            this.fileUploaderCounter = 0;
-            setTimeout(function () {
-            }, 100);
-          }
-        }
-      } else {
-        me.hostInstance.chatEle.querySelector('.typing-text-area').value = ''; 
-        alert('Upload in progress');
-      }
-    });
-
-    cwInstance.on("onSubmit", (data: any) => {
-      if (!me.uploadingInProgress) {
         data.event.preventDefault();
         if (me.hostInstance.attachmentData && me.hostInstance.attachmentData.length > 0) {
+          let serverMessageObject: any = {};
+          serverMessageObject.message = {};
+          serverMessageObject.message.attachments = [];
+          let clientMessageObject: any = {};
+          clientMessageObject.message = [];
+          clientMessageObject.message[0] = {};
+          clientMessageObject.message[0].clientMessageId = new Date().getTime();
+          clientMessageObject.message[0].cInfo = {};
+          clientMessageObject.message[0].cInfo.attachments = [];
+          data.chatWindowEvent.stopFurtherExecution = true;
           me.hostInstance.attachmentData.forEach((attData: any) => {
-            let serverMessageObject: any = {};
-            serverMessageObject.message = {};
-            serverMessageObject.message.attachments = [];
-            data.chatWindowEvent.stopFurtherExecution = true;
-            serverMessageObject.message.attachments[0] = attData;
-            let clientMessageObject: any = {};
-            clientMessageObject.message = [];
-            clientMessageObject.message[0] = {};
-            clientMessageObject.message[0].clientMessageId = new Date().getTime();
-            clientMessageObject.message[0].cInfo = {};
-            clientMessageObject.message[0].cInfo = serverMessageObject.message;
-            me.hostInstance.sendMessage('', attData, serverMessageObject, clientMessageObject);
+            let attachment = {
+              fileId: attData.fileId,
+              fileName: attData.fileName,
+              fileType: attData.fileType,
+              fileUrl: attData.fileUrl,
+              size: attData.size,
+              uniqueId: attData.uniqueId // Add uniqueId for server here
+            };
+            serverMessageObject.message.attachments.push(attachment);
+            
+            let clientAttachment = {
+              fileId: attData.fileId,
+              fileName: attData.fileName,
+              fileType: attData.fileType,
+              fileUrl: attData.fileUrl,
+              size: attData.size,
+              fileContentBase64: attData?.fileContentBase64 // Include Base64 for local rendering
+            };
+            clientMessageObject.message[0].cInfo.attachments.push(clientAttachment);
+          });
+          
+          // Send message once with all attachments
+          me.hostInstance.sendMessage('', me.hostInstance.attachmentData, serverMessageObject, clientMessageObject);
 
-            setTimeout(() => {
-              // me.hostInstance.chatEle.querySelector('.send-btn')?.classList.remove('show');
-              me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.add('hide-attachment');
-              me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
-              document.getElementById("captureMediaAttachment").value = "";
-              document.getElementById("captureFileAttachment").value = "";
-            });
+          setTimeout(() => {
+            // me.hostInstance.chatEle.querySelector('.send-btn')?.classList.remove('show');
+            me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.add('hide-attachment');
+            me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
+            document.getElementById("captureMediaAttachment").value = "";
+            document.getElementById("captureFileAttachment").value = "";
           });
           me.hostInstance.attachmentData = [];
         }
         return;
-      } else {
-        alert('Upload in progress');
+      } else if (data.event.keyCode === 27) {
+        _escPressed++;
+        if (_escPressed > 1) {
+          _escPressed = 0;
+          stop();
+          this.innerText = "";
+          $('.attachment').empty();
+          this.fileUploaderCounter = 0;
+          setTimeout(function () {
+          }, 100);
+        }
       }
+    });
+
+    cwInstance.on("onSubmit", (data: any) => {
+      data.event.preventDefault();
+      if (me.hostInstance.attachmentData && me.hostInstance.attachmentData.length > 0) {
+        let serverMessageObject: any = {};
+        serverMessageObject.message = {};
+        serverMessageObject.message.attachments = [];
+        let clientMessageObject: any = {};
+        clientMessageObject.message = [];
+        clientMessageObject.message[0] = {};
+        clientMessageObject.message[0].clientMessageId = new Date().getTime();
+        clientMessageObject.message[0].cInfo = {};
+        clientMessageObject.message[0].cInfo.attachments = [];
+        data.chatWindowEvent.stopFurtherExecution = true;
+        me.hostInstance.attachmentData.forEach((attData: any) => {
+          let attachment = {
+            fileId: attData.fileId,
+            fileName: attData.fileName,
+            fileType: attData.fileType,
+            fileUrl: attData.fileUrl,
+            size: attData.size,
+            uniqueId: attData.uniqueId // Add uniqueId for server here
+          };
+          serverMessageObject.message.attachments.push(attachment);
+          let clientAttachment = {
+            fileId: attData.fileId,
+            fileName: attData.fileName,
+            fileType: attData.fileType,
+            fileUrl: attData.fileUrl,
+            size: attData.size,
+            fileContentBase64: attData?.fileContentBase64 // Include Base64 for local rendering
+          };
+          clientMessageObject.message[0].cInfo.attachments.push(clientAttachment);
+        });
+        
+        // Send message once with all attachments
+        me.hostInstance.sendMessage('', me.hostInstance.attachmentData, serverMessageObject, clientMessageObject);
+
+        setTimeout(() => {
+          // me.hostInstance.chatEle.querySelector('.send-btn')?.classList.remove('show');
+          me.hostInstance.chatEle.querySelector('.attachment-wrapper-data').classList.add('hide-attachment');
+          me.hostInstance.chatEle.querySelector('.uploaded-attachment-data').innerText = '';
+          document.getElementById("captureMediaAttachment").value = "";
+          document.getElementById("captureFileAttachment").value = "";
+        });
+        me.hostInstance.attachmentData = [];
+      }
+      return;
     });
   }
 
@@ -351,6 +422,7 @@ class KoreMultiFileUploaderPlugin {
       },
       success(response: { fileToken: any; }) {
         _recState.fileToken = response.fileToken;
+        me.fileToken = response.fileToken;
         me.prepareUploadConfig(_recState, _file);
       },
       error(msg: { responseJSON: { errors: string | any[]; }; }) {
@@ -392,8 +464,8 @@ class KoreMultiFileUploaderPlugin {
     let ele: any;
     var uploadConfig = me.getfileuploadConf(selectedFile);
     uploadConfig.chunkSize = me.appConsts.CHUNK_SIZE;
-    uploadConfig.chunkUpload = selectedFile.size > me.appConsts.CHUNK_SIZE;
-    uploadConfig.file = selectedFile;
+    uploadConfig.chunkUpload = selectedFile.componentSize > me.appConsts.CHUNK_SIZE;
+    uploadConfig.file = _file;
     if (uploadConfig.chunkUpload) {
       me.createElement(selectedFile);
       ele = me.hostInstance.chatEle.querySelector('#uid' + selectedFile.uniqueId);
@@ -413,7 +485,7 @@ class KoreMultiFileUploaderPlugin {
     }
   }
 
-  getfileuploadConf(_recState: { fileType: any; name: any; }) {
+  getfileuploadConf(_recState: { fileType: any; name: any; fileToken?: any; }) {
     const me = this;
     me.appConsts.UPLOAD = {
       FILE_ENDPOINT: (me.config?.koreAttachmentAPIUrl ? me.config.koreAttachmentAPIUrl : me.hostInstance.config.botOptions.koreAPIUrl) + 'attachment/file',
@@ -431,9 +503,9 @@ class KoreMultiFileUploaderPlugin {
       };
     }
     let _uploadConfg: any = {};
-    _uploadConfg.url = me.appConsts.UPLOAD.FILE_ENDPOINT.replace(':fileID', me.fileToken);
+    _uploadConfg.url = me.appConsts.UPLOAD.FILE_ENDPOINT.replace(':fileID', _recState.fileToken);
     _uploadConfg.tokenUrl = me.appConsts.UPLOAD.FILE_TOKEN_ENDPOINT;
-    _uploadConfg.chunkUrl = me.appConsts.UPLOAD.FILE_CHUNK_ENDPOINT.replace(':fileID', me.fileToken);
+    _uploadConfg.chunkUrl = me.appConsts.UPLOAD.FILE_CHUNK_ENDPOINT.replace(':fileID', _recState.fileToken);
     _uploadConfg.fieldName = 'file';
     _uploadConfg.data = {
       fileExtension: _recState.fileType,
@@ -477,14 +549,16 @@ class KoreMultiFileUploaderPlugin {
     const me: any = this;
     // Handle success event here
     me.onFileToUploaded(me, e, _recState);
-    me.uploadingInProgress = false;
+    me.activeUploads = Math.max(0, (me.activeUploads || 0) - 1);
+    me.uploadingInProgress = me.activeUploads > 0;
   }
 
   errorHandler(e: any, _recState: any) {
     const me: any = this;
     // Handle error event here
     me.onUploadError(me, e, _recState);
-    me.uploadingInProgress = false;
+    me.activeUploads = Math.max(0, (me.activeUploads || 0) - 1);
+    me.uploadingInProgress = me.activeUploads > 0;
   }
 
   onFileToUploaded(_this: this, evt: any, _recState: any) {
@@ -493,18 +567,12 @@ class KoreMultiFileUploaderPlugin {
     me.multipartTimeInterval = null;
     clearTimeout(me.multipartTimeIntervalCount);
     me.multipartTimeIntervalCount = null;
-    me.hostInstance.attachmentInfo.fileName = _recState.name;
-    me.hostInstance.attachmentInfo.fileType = _recState.type;
-    // me.hostInstance.attachmentInfo.fileType = _recState.fileType;
-    // me.hostInstance.attachmentInfo.type = _recState.type;
-    me.hostInstance.attachmentInfo.fileUrl = '';
-    me.hostInstance.attachmentInfo.size = _recState.sizeInMb;
-    me.hostInstance.attachmentInfo.uniqueId = _recState.uniqueId;
+    const scope = (evt && evt.currentTarget && (evt.currentTarget as any).__kmfu) || {};
     if ($(evt.currentTarget).find('.percentage')) {
       var progressbar = $(evt.currentTarget).find('.percentage');
       $(progressbar).css({ 'width': 100 + '%' });
       var progressCount = $(evt.currentTarget).find('.percentage-complete');
-      $(progressCount).text('100% uploaded');
+      $(progressCount).text('100% ' + me.hostInstance.config.botMessages.uploaded);
       $(evt.currentTarget).attr('data-value', _recState.fileToken);
       $(evt.currentTarget).attr('data-name', _recState.name);
       $(evt.currentTarget).attr('file-size', _recState.sizeInMb);
@@ -519,6 +587,20 @@ class KoreMultiFileUploaderPlugin {
     }
     // me.hostInstance.chatEle.querySelector('.send-btn')?.classList.remove('disabled');
     me.hostInstance.chatEle.querySelector('.typing-text-area').focus();
+
+    // Push attachment info using per-upload scope
+    const att = {
+      fileId: scope.fileId || _recState.fileId,
+      fileName: _recState.name,
+      fileType: _recState.type,
+      fileUrl: scope.fileUrl || '',
+      size: _recState.sizeInMb,
+      uniqueId: _recState.uniqueId,
+      ...((_recState.type === 'image' || _recState.type === 'audio' || _recState.type === 'video') && {fileContentBase64: "data:" + _recState.type + "/" + _recState.fileType + ";base64," + _recState.resulttype}) // Add Base64 content for rendering purpose with prefix for image, audio, and video
+    };
+    if (att.fileUrl) {
+      me.hostInstance.attachmentData.push(att);
+    }
   }
 
   onUploadError(_this: any, evt: any, _recState: any) {
@@ -578,64 +660,87 @@ class KoreMultiFileUploaderPlugin {
 
   multiFileUploader(options: any, element: any) {
     let me: any = this;
-    this.options = { options };
-    this.$element = element;
-    me.uploadingInProgress = true;
+    const scope: any = { options, $element: element };
+    (element as any).__kmfu = scope;
+    me.activeUploads = (me.activeUploads || 0) + 1;
+    me.uploadingInProgress = me.activeUploads > 0;
     if (element) {
       const progressbar = element.querySelector('.percentage');
-      me.multipartTimeInterval = setInterval(function () {
-        progressbar.style.width = 10 * 2 + '%';
-      });
-
       const progressCount = element.querySelector('.percentage-complete');
-      me.multipartTimeIntervalCount = setInterval(function () {
-        progressCount.textContent = 10 * 2 + '% uploaded';
-      });
+      if (progressbar) progressbar.style.width = '0%';
+      if (progressCount) progressCount.textContent = '0% ' + me.hostInstance.config.botMessages.uploaded;
     }
 
-    if (!this.options.chunkUpload) {
-      me.startUpload(this.options, element);
+    if (!options.chunkUpload) {
+      me.startUpload(scope, element);
     } else {
-      me.startChunksUpload(this);
+      me.startChunksUpload(scope, element);
     }
   }
 
-  startUpload(_this: { options: { url: any; headers: { [x: string]: any; }; data: { [x: string]: any; }; }; }, ele?: any) {
+  startUpload(_this: { options: { url: any; headers: { [x: string]: any; }; data: { [x: string]: any; }; }; $element?: any }, ele?: any) {
     let me: any = this;
     const _scope: any = _this;
-    this._conc = me.getConnection(_this),
-      this._mdat = new me.MultipartData();
-    if (this._conc.upload && this._conc.upload.addEventListener) {
-      this._conc.upload.addEventListener('progress', (evt: any) => {
-        me.progressListener(_scope, evt, ele);
+    const _conc = me.getConnection(_this);
+    const boundary = "--------MultipartData" + Math.random();
+    const fields: any[] = [];
+    const appendField = (key: string, value: any) => { fields.push([key, value]); };
+    const bodyString = () => {
+      let body = "";
+      fields.forEach(function (field) {
+        body += "--" + boundary + "\r\n";
+        if (field[1].data) {
+          var file = field[1];
+          if (file.fileName) {
+            body += "Content-Disposition: form-data; name=\"" + field[0] + "\"; filename=\"" + file.fileName + "\"";
+          } else {
+            body += "Content-Disposition: form-data; name=\"" + field[0] + "\"";
+          }
+          body += "\r\n";
+          if (file.type) {
+            body += "Content-Type: UTF-8; charset=ISO-8859-1\r\n";
+          }
+          body += "Content-Transfer-Encoding: base64\r\n";
+          body += "\r\n" + file.data + "\r\n";
+        } else {
+          body += "Content-Disposition: form-data; name=\"" + field[0] + "\";\r\n\r\n";
+          body += field[1] + "\r\n";
+        }
+      });
+      body += "--" + boundary + "--";
+      return body;
+    };
+    if (_conc.upload && _conc.upload.addEventListener) {
+      _conc.upload.addEventListener('progress', (evt: any) => {
+        me.progressListener(_scope, evt, ele, me);
       }, false);
     }
-    this._conc.addEventListener('load', (evt: any) => {
+    _conc.addEventListener('load', (evt: any) => {
       // if (_scope.$element.parent().length) {
       me.loadListener(_scope, evt);
       // }
     }, false);
-    this._conc.addEventListener('error', (evt: any) => {
+    _conc.addEventListener('error', (evt: any) => {
       me.errorListener(_scope, evt);
     }, false);
-    this._conc.withCredentials = false;
-    this._conc.open('POST', _this.options.url);
+    _conc.withCredentials = false;
+    _conc.open('POST', _this.options.url);
 
     if (_this.options.headers) {
       for (const header in _this.options.headers) {
-        this._conc.setRequestHeader(header, _this.options.headers[header]);
+        _conc.setRequestHeader(header, _this.options.headers[header]);
       }
     }
     if (_this.options.data) {
       for (const key in _this.options.data) {
-        me.MultipartDataAppend(key, _this.options.data[key]);
+        appendField(key, _this.options.data[key]);
       }
     }
-    this._conc.setRequestHeader('Content-Type', `multipart/form-data; boundary=${this._mdat.boundary}`);
-    this._conc.send(me.MultipartDatatoString());
+    _conc.setRequestHeader('Content-Type', `multipart/form-data; boundary=${boundary}`);
+    _conc.send(bodyString());
   }
 
-  startChunksUpload(_this: { options: { tokenUrl: any; headers: { [x: string]: any; }; }; }) {
+  startChunksUpload(_this: { options: { tokenUrl: any; headers: { [x: string]: any; }; }; }, element: any) {
     let me = this;
     const _scope: any = _this;
     const _conc = me.getConnection(_this);
@@ -645,10 +750,10 @@ class KoreMultiFileUploaderPlugin {
     _conc.addEventListener('load', (evt: { target: { status: number; response: string; }; }) => {
       if (evt.target.status === 200) {
         _scope.messageToken = JSON.parse(evt.target.response).fileToken;
-        _scope.totalChunks = Math.floor(_scope.options.file.size / _scope.options.chunkSize) + 1;
+        _scope.totalChunks = Math.ceil(_scope.options.file.size / _scope.options.chunkSize);
         _scope.currChunk = 0;
         _scope.options.chunkUrl = _scope.options.chunkUrl.replace(':token', _scope.messageToken);
-        if (_scope.$element.parent().length) {
+        if (me.isElementInDOM(_scope.$element)) {
           me.initUploadChunk(_scope);
         }
       } else {
@@ -699,35 +804,39 @@ class KoreMultiFileUploaderPlugin {
     return this.xhr;
   }
 
+  isElementInDOM(el: any) {
+    return !!(el && (el.isConnected || (typeof document !== 'undefined' && document.body && document.body.contains(el))));
+  }
+
   // kfrm.net.HttpRequest = me.HttpRequest;
-  progressListener(_this: any, evt: any, ele: any) {
-    // if (ele) {
-    //   let width = (evt.loaded / evt.total) * 100;
-    //   const progressbar = ele.querySelector('.percentage');
-    //   const percentageCompletion = ele.querySelector('.percentage-complete');
-    //   progressbar.style.width = width + '%';
-    //   let perComp = Math.floor(width) + '% uploaded';
-    //   percentageCompletion.textContent = perComp;
-    // }
-    console.log('File upload progress: ', evt);
+  progressListener(_this: any, evt: any, ele: any, me: any) {
+    if (!ele || !evt || !evt.lengthComputable) {
+      return;
+    }
+    let width = (evt.loaded / evt.total) * 100;
+    const progressbar = ele.querySelector('.percentage');
+    const percentageCompletion = ele.querySelector('.percentage-complete');
+    if (progressbar) progressbar.style.width = Math.floor(width) + '%';
+    if (percentageCompletion) percentageCompletion.textContent = Math.floor(width) + '% ' + me.hostInstance.config.botMessages.uploaded;
   }
 
   loadListener(_this: any, evt: { target: { response: string; }; }) {
     let me = this;
-    me.hostInstance.attachmentInfo = {};
-    me.hostInstance.attachmentInfo.fileId = JSON.parse(evt.target.response).fileId;
+    const fileId = JSON.parse(evt.target.response).fileId;
     let auth = "bearer " + me.hostInstance.config.botOptions.accessToken;
     $.ajax({
       type: 'GET',
-      url: (me.config?.koreAttachmentAPIUrl ? me.config.koreAttachmentAPIUrl : me.hostInstance.config.botOptions.koreAPIUrl) + "attachment/file/" + me.hostInstance.attachmentInfo.fileId + "/url?repeat=true",
+      url: (me.config?.koreAttachmentAPIUrl ? me.config.koreAttachmentAPIUrl : me.hostInstance.config.botOptions.koreAPIUrl) + "attachment/v2/stream/" + me.hostInstance.config.botOptions.botInfo.taskBotId + "/file/" + fileId + "/url",
       dataType: 'json',
       headers: {
         Authorization: auth,
       },
       success(response: any) {
-        me.hostInstance.attachmentInfo.fileUrl = response.fileUrl;
-        me.hostInstance.attachmentData.push({ ...me.hostInstance.attachmentInfo });
-        me.hostInstance.attachmentInfo = {};
+        _this.fileUrl = response.fileUrl;
+        _this.fileId = fileId;
+        if (_this && _this.$element && _this.$element.dispatchEvent) {
+          _this.$element.dispatchEvent(me.successEv);
+        }
       },
       error(msg: any) {
         if (msg.responseJSON && msg.responseJSON.errors && msg.responseJSON.errors.length && msg.responseJSON.errors[0].httpStatus === '401') {
@@ -735,12 +844,13 @@ class KoreMultiFileUploaderPlugin {
         }
       },
     });
-    this.$element.dispatchEvent(me.successEv);
   }
 
-  errorListener(_this: { events: { error: { params: any; }; }; $element: { trigger: (arg0: any) => void; }; }, evt: any) {
-    _this.events.error.params = evt;
-    _this.$element.trigger(_this.events.error);
+  errorListener(_this: any, evt: any) {
+    let me: any = this;
+    if (_this && _this.$element && _this.$element.dispatchEvent) {
+      _this.$element.dispatchEvent(me.errorEv);
+    }
   }
 
   initUploadChunk(_this: any) {
@@ -752,12 +862,12 @@ class KoreMultiFileUploaderPlugin {
     const reader = new FileReader();
     const blob = file.slice(start, stop);
     reader.onloadend = function (evt: any) {
-      if (evt.target.readyState === FileReader.DONE && _scope.$element.parent().length) { // DONE == 2
+      if (evt.target.readyState === FileReader.DONE && me.isElementInDOM(_scope.$element)) { // DONE == 2
         let dataObj = evt.target.result;
         dataObj = dataObj.replace(/^.*;base64,/, '');
         dataObj = dataObj.replace('data:application/octet-stream;base64,', '');
         _scope.chunk = dataObj;
-        if (_scope.currChunk < _scope.totalChunks && _scope.$element.parent().length) {
+        if (_scope.currChunk < _scope.totalChunks && me.isElementInDOM(_scope.$element)) {
           me.uploadChunk(_scope);
         }
       } else {
@@ -771,11 +881,58 @@ class KoreMultiFileUploaderPlugin {
     let me: any = this;
     const _scope: any = _this;
     const _conc = me.getConnection(_this);
-    this._mdat = new me.MultipartData();
+    const boundary = "--------MultipartData" + Math.random();
+    const fields: any[] = [];
+    const appendField = (key: string, value: any) => { fields.push([key, value]); };
+    const bodyString = () => {
+      var body = "";
+      fields.forEach(function (field) {
+        body += "--" + boundary + "\r\n";
+        if (field[1].data) {
+          var file = field[1];
+          if (file.fileName) {
+            body += "Content-Disposition: form-data; name=\"" + field[0] + "\"; filename=\"" + file.fileName + "\"";
+          } else {
+            body += "Content-Disposition: form-data; name=\"" + field[0] + "\"";
+          }
+          body += "\r\n";
+          if (file.type) {
+            body += "Content-Type: UTF-8; charset=ISO-8859-1\r\n";
+          }
+          body += "Content-Transfer-Encoding: base64\r\n";
+          body += "\r\n" + file.data + "\r\n";
+        } else {
+          body += "Content-Disposition: form-data; name=\"" + field[0] + "\";\r\n\r\n";
+          body += field[1] + "\r\n";
+        }
+      });
+      body += "--" + boundary + "--";
+      return body;
+    };
+    if (_conc.upload && _conc.upload.addEventListener && _scope.$element) {
+      _conc.upload.addEventListener('progress', (evt: any) => {
+        if (evt && evt.lengthComputable) {
+          const basePercent = (_scope.currChunk / _scope.totalChunks) * 100;
+          const chunkContribution = (evt.loaded / evt.total) * (100 / _scope.totalChunks);
+          const percent = Math.min(99, Math.floor(basePercent + chunkContribution));
+          const progressbar = _scope.$element.querySelector('.percentage');
+          const percentageCompletion = _scope.$element.querySelector('.percentage-complete');
+          if (progressbar) progressbar.style.width = percent + '%';
+          if (percentageCompletion) percentageCompletion.textContent = percent + '% ' + me.hostInstance.config.botMessages.uploaded;
+        }
+      }, false);
+    }
     _conc.addEventListener('load', (evt: { target: { status: number; }; }) => {
       if (evt.target.status === 200) {
         _scope.currChunk++;
-        if (!_scope.$element.parent().length) {
+        if (me.isElementInDOM(_scope.$element)) {
+          const percent = Math.min(99, Math.floor((_scope.currChunk / _scope.totalChunks) * 100));
+          const progressbar = _scope.$element.querySelector('.percentage');
+          const percentageCompletion = _scope.$element.querySelector('.percentage-complete');
+          if (progressbar) progressbar.style.width = percent + '%';
+          if (percentageCompletion) percentageCompletion.textContent = percent + '% ' + me.hostInstance.config.botMessages.uploaded;
+        }
+        if (!me.isElementInDOM(_scope.$element)) {
 
         } else if (_scope.currChunk === _scope.totalChunks) {
           me.commitFile(_scope);
@@ -797,21 +954,48 @@ class KoreMultiFileUploaderPlugin {
         _conc.setRequestHeader(header, _this.options.headers[header]);
       }
     }
-    me.MultipartDataAppend('chunkNo', _scope.currChunk);
-    me.MultipartDataAppend('messageToken', _scope.messageToken);
-    me.MultipartDataAppend('chunk', {
+    appendField('chunkNo', _scope.currChunk);
+    appendField('messageToken', _scope.messageToken);
+    appendField('chunk', {
       data: _scope.chunk,
       fileName: _scope.options.file.name,
     });
-    _conc.setRequestHeader('Content-Type', `multipart/form-data; boundary=${this._mdat.boundary}`);
-    _conc.send(me.MultipartDatatoString());
+    _conc.setRequestHeader('Content-Type', `multipart/form-data; boundary=${boundary}`);
+    _conc.send(bodyString());
   }
 
   commitFile(_this: { options: { chunkUrl: string; headers: { [x: string]: any; }; data: { [x: string]: any; }; }; }) {
     let me: any = this;
     const _scope: any = _this;
     const _conc = me.getConnection(_this);
-    this._mdat = new me.MultipartData();
+    const boundary = "--------MultipartData" + Math.random();
+    const fields: any[] = [];
+    const appendField = (key: string, value: any) => { fields.push([key, value]); };
+    const bodyString = () => {
+      var body = "";
+      fields.forEach(function (field) {
+        body += "--" + boundary + "\r\n";
+        if (field[1].data) {
+          var file = field[1];
+          if (file.fileName) {
+            body += "Content-Disposition: form-data; name=\"" + field[0] + "\"; filename=\"" + file.fileName + "\"";
+          } else {
+            body += "Content-Disposition: form-data; name=\"" + field[0] + "\"";
+          }
+          body += "\r\n";
+          if (file.type) {
+            body += "Content-Type: UTF-8; charset=ISO-8859-1\r\n";
+          }
+          body += "Content-Transfer-Encoding: base64\r\n";
+          body += "\r\n" + file.data + "\r\n";
+        } else {
+          body += "Content-Disposition: form-data; name=\"" + field[0] + "\";\r\n\r\n";
+          body += field[1] + "\r\n";
+        }
+      });
+      body += "--" + boundary + "--";
+      return body;
+    };
     _conc.addEventListener('load', (evt: { target: { status: number; }; }) => {
       if (evt.target.status === 200) {
         // if (_scope.$element.parent().length) {
@@ -832,15 +1016,15 @@ class KoreMultiFileUploaderPlugin {
         _conc.setRequestHeader(header, _this.options.headers[header]);
       }
     }
-    me.MultipartDataAppend('totalChunks', _scope.totalChunks);
-    me.MultipartDataAppend('messageToken', _scope.messageToken);
+    appendField('totalChunks', _scope.totalChunks);
+    appendField('messageToken', _scope.messageToken);
     if (_this.options.data) {
       for (const key in _this.options.data) {
-        me.MultipartDataAppend(key, _this.options.data[key]);
+        appendField(key, _this.options.data[key]);
       }
     }
-    _conc.setRequestHeader('Content-Type', `multipart/form-data; boundary=${this._mdat.boundary}`);
-    _conc.send(me.MultipartDatatoString());
+    _conc.setRequestHeader('Content-Type', `multipart/form-data; boundary=${boundary}`);
+    _conc.send(bodyString());
   }
 
   setOptions(_this: { options: any; }, opts: any) {
@@ -859,7 +1043,7 @@ class KoreMultiFileUploaderPlugin {
             </div>\
             <div class="size-completion">\
               <p class="file-size">'+ selectedFile.sizeInMb + 'MB -</p>\
-              <p class="percentage-complete"> 0% uploaded</p>\
+              <p class="percentage-complete"> 0% ' + me.hostInstance.config.botMessages.uploaded + '</p>\
             </div>\
         </div>\
         <button class="delete-upload" title='+ me.hostInstance.config.botMessages.cancel + '>\

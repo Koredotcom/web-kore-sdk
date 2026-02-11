@@ -44,6 +44,9 @@ export function ChatWidgetComposeBar(props: any) {
         if (hostInstance.plugins && !hostInstance.plugins['KoreMultiFileUploaderPlugin']) {
             alert('Please install File Uploader Plugin...');
         }
+        if (hostInstance.attachmentData && hostInstance.attachmentData.length > 0) {
+            hostInstance.attachmentData = [];
+        }
     }
 
     const checkForSTTPlugin = () => {
@@ -113,7 +116,7 @@ export function ChatWidgetComposeBar(props: any) {
                         </svg>
                         <span>{hostInstance.config.botMessages.media}</span>
                     </button>
-                    <input type="file" id="captureMediaAttachment" accept="audio/*,video/*,image/*" style={{display: 'none'}} />
+                    <input type="file" id="captureMediaAttachment" accept="audio/*,video/*,image/*" multiple style={{display: 'none'}} />
                     <button className="inputfile-btn inputfile-btn-file" type="button" aria-label="File">
                         <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
                             <path d="M6.125 2.5C5.09473 2.5 4.25 3.34473 4.25 4.375V15.625C4.25 16.6553 5.09473 17.5 6.125 17.5H14.875C15.9053 17.5 16.75 16.6553 16.75 15.625V6.87509C16.75 6.70933 16.6842 6.55036 16.5669 6.43315L12.8168 2.68306C12.6996 2.56585 12.5407 2.5 12.3749 2.5H6.125ZM6.125 3.75H11.75V6.25C11.75 6.94036 12.3096 7.5 13 7.5H15.5V15.625C15.5 15.9766 15.2266 16.25 14.875 16.25H6.125C5.77344 16.25 5.5 15.9766 5.5 15.625V4.375C5.5 4.02344 5.77344 3.75 6.125 3.75ZM13 4.63379L14.6162 6.25H13V4.63379ZM8.625 10C8.27982 10 8 10.2798 8 10.625C8 10.9702 8.27982 11.25 8.625 11.25H12.375C12.7202 11.25 13 10.9702 13 10.625C13 10.2798 12.7202 10 12.375 10H8.625ZM8.625 12.5C8.27982 12.5 8 12.7798 8 13.125C8 13.4702 8.27982 13.75 8.625 13.75H11.125C11.4702 13.75 11.75 13.4702 11.75 13.125C11.75 12.7798 11.4702 12.5 11.125 12.5H8.625Z" fill="#4B4EDE"/>
@@ -124,7 +127,7 @@ export function ChatWidgetComposeBar(props: any) {
                         .dotx, .dotm, .xls, .xlt, .xlm, .xlsx, .xlsm, .xltx, .xltm, .xlsb, .xla, .xlam, .xll, .xlw, .ppt, .pot, .pps, .pptx, .pptm, .potx, .potm, .ppam,
                         .ppsx, .ppsm, .sldx, .sldm, .zip, .rar., .tar, .wpd, .wps, .rtf, .msg, .dat, .sdf, .vcf, .xml, .3ds, .3dm, .max, .obj, .ai, .eps, .ps, .svg, .indd, .pct, .accdb,
                         .db, .dbf, .mdb, .pdb, .sql, .apk, .cgi, .cfm, .csr, .css, .htm, .html, .jsp, .php, .xhtml, .rss, .fnt, .fon, .otf, .ttf, .cab, .cur, .dll, .dmp, .drv, .7z, .cbr,
-                        .deb, .gz, .pkg, .rpm, .zipx, .bak, .avi, .m4v, .mpg, .rm, .swf, .vob, .wmv, .3gp2, .3g2, .asf, .asx, .srt, .wma, .mid, .aif, .iff, .m3u, .mpa, .ra, .aiff, .tiff" style={{display: 'none'}}/>
+                        .deb, .gz, .pkg, .rpm, .zipx, .bak, .avi, .m4v, .mpg, .rm, .swf, .vob, .wmv, .3gp2, .3g2, .asf, .asx, .srt, .wma, .mid, .aif, .iff, .m3u, .mpa, .ra, .aiff, .tiff" multiple style={{display: 'none'}}/>
                 </div>
                 <div className="uploaded-attachment-data">
                     {/* <div className="uploaded-item">
@@ -183,6 +186,18 @@ export function ChatWidgetComposeBar(props: any) {
                 { brandingInfo.footer.buttons.attachment.show && <button className="action-btn attachmentUpload" type="button" title={hostInstance.config.botMessages.attachments} onClick={() => checkForFileUploadPlugin()}>
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                         <path d="M10 2.5C12.7733 2.5 15 4.79988 15 7.61355V13.341C15 13.7049 14.6924 13.9999 14.313 13.9999C13.9547 13.9999 13.6605 13.7368 13.6289 13.401L13.6261 13.341V7.61355C13.6261 5.5067 11.9908 3.81769 10 3.81769C8.00922 3.81769 6.37393 5.5067 6.37393 7.61355V13.9774C6.37393 15.1951 7.40322 16.1823 8.67291 16.1823C9.94261 16.1823 10.9719 15.1951 10.9719 13.9774V7.61355C10.9719 7.09876 10.5368 6.68143 10 6.68143C9.4856 6.68143 9.06454 7.0647 9.03035 7.54973L9.0281 7.61355V13.341C9.0281 13.7049 8.72054 13.9999 8.34114 13.9999C7.98282 13.9999 7.68857 13.7368 7.65698 13.401L7.65418 13.341V7.61355C7.65418 6.37101 8.70444 5.36374 10 5.36374C11.2956 5.36374 12.3458 6.37101 12.3458 7.61355L12.3458 13.9774C12.3453 15.9224 10.7011 17.5 8.67291 17.5C6.64442 17.5 5 15.9229 5 13.9774V7.61355C5 4.79988 7.22674 2.5 10 2.5Z" fill="#697586"/>
+                    </svg>
+                </button> }
+                { brandingInfo.footer.buttons.click_to_call.show && <button className="action-btn connect-to-agent" id="kore-click-to-call" type="button" title={hostInstance.config.botMessages.clickToCall}>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <g clip-path="url(#clip0_20289_60803)">
+                            <path d="M9.36648 3.99998C10.0176 4.12702 10.6161 4.44548 11.0852 4.9146C11.5543 5.38372 11.8728 5.98216 11.9998 6.63331M9.36648 1.33331C10.7193 1.4836 11.9809 2.08943 12.944 3.05132C13.9071 4.01321 14.5145 5.27399 14.6665 6.62665M6.8178 9.24203C6.01675 8.44097 5.38422 7.53521 4.92022 6.5688C4.88031 6.48567 4.86036 6.44411 4.84503 6.39152C4.79054 6.20461 4.82968 5.97511 4.94302 5.81682C4.97491 5.77228 5.01302 5.73417 5.08923 5.65797C5.3223 5.4249 5.43883 5.30836 5.51502 5.19118C5.80235 4.74925 5.80235 4.17953 5.51502 3.7376C5.43883 3.62042 5.3223 3.50388 5.08923 3.27081L4.95931 3.1409C4.60502 2.7866 4.42787 2.60945 4.23762 2.51322C3.85924 2.32184 3.4124 2.32184 3.03402 2.51322C2.84377 2.60945 2.66662 2.7866 2.31233 3.1409L2.20724 3.24599C1.85416 3.59907 1.67762 3.77561 1.54278 4.01563C1.39317 4.28197 1.2856 4.69563 1.2865 5.00111C1.28732 5.27641 1.34073 5.46456 1.44753 5.84085C2.02151 7.86312 3.10449 9.77136 4.69648 11.3633C6.28847 12.9553 8.19671 14.0383 10.219 14.6123C10.5953 14.7191 10.7834 14.7725 11.0587 14.7733C11.3642 14.7742 11.7779 14.6667 12.0442 14.517C12.2842 14.3822 12.4608 14.2057 12.8138 13.8526L12.9189 13.7475C13.2732 13.3932 13.4504 13.2161 13.5466 13.0258C13.738 12.6474 13.738 12.2006 13.5466 11.8222C13.4504 11.632 13.2732 11.4548 12.9189 11.1005L12.789 10.9706C12.5559 10.7375 12.4394 10.621 12.3222 10.5448C11.8803 10.2575 11.3106 10.2575 10.8687 10.5448C10.7515 10.621 10.6349 10.7375 10.4019 10.9706C10.3257 11.0468 10.2875 11.0849 10.243 11.1168C10.0847 11.2301 9.85521 11.2693 9.66831 11.2148C9.61572 11.1995 9.57415 11.1795 9.49103 11.1396C8.52461 10.6756 7.61885 10.0431 6.8178 9.24203Z" stroke="#101828" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                        </g>
+                        <defs>
+                            <clipPath id="clip0_20289_60803">
+                                <rect width="16" height="16" fill="white"/>
+                            </clipPath>
+                        </defs>
                     </svg>
                 </button> }
                 <div className={`compose-text-area ${brandingInfo.footer.buttons.speaker.show && brandingInfo.footer.buttons.emoji.show ? 'emoji-btn-true' : 'only-emoji-btn'}`}>

@@ -401,6 +401,9 @@ class KoreHelpers{
                 } else if (txtArr[i].indexOf('*') === 0) {
                     if (!isEven(txtArr[i].split('*').length - 1) && txtArr[i].substring(1)) {
                         txtArr[i] = '\r\n&#9679; ' + txtArr[i].substring(1);
+                        if (i === 0) {
+                            txtArr[i] = txtArr[i].replace(/^\r\n/, '');
+                        }
                         _lineBreakAdded = true;
                     }
                 }  else if (txtArr[i].indexOf('>>') === 0) {
@@ -466,7 +469,7 @@ class KoreHelpers{
                 }
                 // Matches link markup [test](http://google.com/)
                 //var _matchLink = txtArr[i].match(/\[([^\]]+)\](|\s)+\(([^\)])+\)/g);
-                var _matchLink = txtArr[i].match(/\[([^\]]+)\](|\s)\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\)/g);
+                var _matchLink = txtArr[i].match(/\[([^\]]+)\](|\s)\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\)?/g);
                 if (_matchLink && _matchLink.length > 0) {
                     for (j = 0; j < _matchLink.length; j++) {
                         var _linkTxt = _matchLink[j].substring(1, _matchLink[j].indexOf(']'));

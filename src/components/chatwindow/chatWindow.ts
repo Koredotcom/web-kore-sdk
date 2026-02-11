@@ -23,8 +23,8 @@ import EventManager from '../../templatemanager/base/eventManager';
 import BrandingManager from '../../templatemanager/templates/brandingManager';
 import { ActionsBottomSlider } from '../../templatemanager/base/actionsButtonSlider/actionsBottomSlider';
 import { ActionsModal } from '../../templatemanager/base/actionsModal/actionsModal';
-import AnswersTemplatesPlugin from '../../plugins/answers/answersPlugin';
-const bot = requireKr('/KoreBot.js').instance();
+// import AnswersTemplatesPlugin from '../../plugins/answers/answersPlugin';
+// const bot = requireKr('/KoreBot.js').instance();
 
 declare const document:any;
 const $:any = j$.default ;
@@ -42,6 +42,8 @@ declare const window:any;
 class chatWindow extends EventEmitter{
  chatEle: any;
   config: {};
+  bot: any;
+  streamingMessages: Map<string, { text: string; msgData: any }> = new Map();
 
 
    /**
@@ -163,8 +165,9 @@ class chatWindow extends EventEmitter{
      *
      * @event chatWindow#apiFailure
      * @type {Object}
-     * @property {String} type - type of error - XHRObj/JqueryXHR
+     * @property {String} type - type of error - XHRObj/JqueryXHR/socketError
      * @property {Object} errObj - error object containing error details
+     * @property {Object} request - request details
      */
       API_FAILURE: 'apiFailure',
      /**
@@ -176,12 +179,12 @@ class chatWindow extends EventEmitter{
      */
       HISTORY_COMPLETE: 'historyComplete'
   }
-  sendFailedMessage: any;
   
  constructor() {
   super(null);
   this.chatEle;
   this.config={};
+  this.bot = requireKr('/KoreBot.js').instance();
   this.init(this.config);
 }
 paginatedScrollMsgDiv: any = $('<div class="temp-message-div"><ul class="prev-message-list"></ul></div>');
@@ -189,7 +192,6 @@ init  (config:any) {
   const me:any = this;
   me.config=me.extend(me.config,chatConfig);
   me.plugins = {};
-  me.bot=bot;
   me.vars={};
   me.helpers=KoreHelpers.helpers;
   me.eventManager = new EventManager(me);
@@ -198,15 +200,15 @@ init  (config:any) {
   me.messageTemplate=new MessageTemplate();
   me.messageTemplate.hostInstance=me;
   me.installCallbackForPlugins();
-  me.installDefaultPlugins();
+  // me.installDefaultPlugins();
 }
 
-installDefaultPlugins(){
-  const me:any = this;
-  if (me.config.UI.version == 'v3') {
-    me.installPlugin(new AnswersTemplatesPlugin({}));
-  }
-}
+// installDefaultPlugins(){
+//   const me:any = this;
+//   if (me.config.UI.version == 'v3') {
+//     me.installPlugin(new AnswersTemplatesPlugin({}));
+//   }
+// }
 
 installCallbackForPlugins (){
   const me:any = this;
@@ -231,11 +233,6 @@ show  (config:any) {
 };
 initShow  (config:any) {
   const me:any = this;
-  this.sendFailedMessage={
-    messageId:null,
-    MAX_RETRIES:3,
-    retryCount:0
-};
   me.config=me.extend(JSON.parse(JSON.stringify(chatConfig)),config);
   this.config = me.extend(me.config,{
     chatTitle: 'Kore.ai Bot Chat',
@@ -246,11 +243,11 @@ initShow  (config:any) {
   me.messagesQueue=[];
 
   me.isWelcomeScreenOpened = false;
-  me.isReconnected = false;
   me.isSocketOpened = false;
   me.enableAgentChanges = true;
   me.config.chatTitle = 'Kore.ai Bot Chat';
   me.config.allowIframe = false;
+  me.isUIInitialized = false;
 
   me.reWriteWebHookURL(me.config);
   window._chatHistoryLoaded = false;
@@ -271,9 +268,6 @@ initShow  (config:any) {
   me.initi18n();
   me.seti18n((me.config && me.config.i18n && me.config.i18n.defaultLanguage) || 'en');
   KoreHelpers.allowEmojiShortcuts(me.config);
-  if(me.config && me.config.sendFailedMessage && me.config.sendFailedMessage.hasOwnProperty('MAX_RETRIES')){
-    this.sendFailedMessage.MAX_RETRIES=me.config.sendFailedMessage.MAX_RETRIES
-}
   if (me.config && me.config.maxReconnectionAPIAttempts) {
     me.config.botOptions.maxReconnectionAPIAttempts = me.config.maxReconnectionAPIAttempts;
   }
@@ -285,9 +279,6 @@ initShow  (config:any) {
   me.pwcInfo = {};
   me.pwcInfo.dataFalg = false;
   me.config.chatTitle = me.config.botMessages.connecting;
-  if (me.config.pwcConfig.enable) {
-    window.sessionStorage.setItem('isReconnect', 'true');
-  }
   me.config.userAgentIE = navigator.userAgent.indexOf('Trident/') !== -1;
   me.mobileBrowserOpened = me.isMobile();
   if (me.mobileBrowserOpened) {
@@ -300,7 +291,7 @@ initShow  (config:any) {
   }  
   me.bot.on('jwtgrantsuccess', (response: { jwtgrantsuccess: any; }) => {
     me.config.jwtGrantSuccessInformation = response.jwtgrantsuccess;
-    if (!me.isReconnected && !me.config?.autoConnect) {
+    if (!me.config?.autoConnect && !me.isUIInitialized) {
       if (me.config.enableThemes) {
         me.getBrandingInformation(response.jwtgrantsuccess);
       } else {
@@ -311,6 +302,10 @@ initShow  (config:any) {
       }
     }
     me.emit(me.EVENTS.JWT_GRANT_SUCCESS, response.jwtgrantsuccess);
+  });
+
+  me.bot.on('api_failure', (response: {responseError: any; type: any; request: any;}) => {
+    me.emit(me.EVENTS.API_FAILURE, { "type": response.type, "errObj": response.responseError, "request": response.request });
   });
 
   if(me.config?.mockMode?.enable || me.config.UI.version == 'v2'){ 
@@ -325,6 +320,7 @@ initShow  (config:any) {
 
 initUI() {
   let me: any = this;
+  me.isUIInitialized = true;
   const tempTitle = me._botInfo.name;
   let cwState = me.getLocalStoreItem('kr-cw-state');
   let maintainContext:any = !!cwState;
@@ -588,8 +584,13 @@ updateOnlineStatus () {
   if (typeof (navigator.onLine) === 'boolean') {
     if (navigator.onLine) {
       this.hideError();
-      if (bot && bot.RtmClient && me.config?.syncMessages?.onNetworkResume?.enable) {
-        bot.getHistory({ forHistorySync: true, limit: me.config?.syncMessages?.onNetworkResume?.batchSize });
+      const data = {
+        forceReconnect: true,
+        isReconnect: true
+      }
+      me.resetWindow(data);
+      if (me.bot && me.bot.RtmClient && me.config?.syncMessages?.onNetworkResume?.enable) {
+        me.bot.getHistory({ forHistorySync: true, limit: me.config?.syncMessages?.onNetworkResume?.batchSize });
       }
     } else {
       this.showError('You are currently offline');
@@ -724,7 +725,14 @@ initi18n  () {
         close: 'Close Chat',
         reconnect: 'Reconnect Chat',
         today: 'Today',
-        yesterday: 'Yesterday'
+        yesterday: 'Yesterday',
+        clickToCall: 'Connect to Voice Agent',
+        read: 'Read',
+        delivered: 'Delivered',
+        sent: 'Sent',
+        you: 'You',
+        uploaded: 'uploaded',
+        download: 'Download'
       },
     },
   };
@@ -868,6 +876,21 @@ resetWindow (data:any = {}) {
       }
     }
   }
+
+  if (me.bot && me.bot.RtmClient) {
+    if (typeof me.bot.RtmClient.cleanup === 'function') {
+        me.bot.RtmClient.cleanup();
+    }
+  }  
+
+  if (data && data.forceReconnect) {
+    if (data.isReconnect) {
+      me.config.botOptions.forceReconnecting = true;
+    } else {
+      me.config.botOptions.forceReconnecting = false;
+    }
+  }
+
   // me.chatEle.find('.chat-container').html("");
   me.bot.close();
   me.config.botOptions.maintainContext = false;
@@ -996,8 +1019,8 @@ bindEvents  () {
   
   _chatContainer.on('click', '.close-btn', (event: any) => {
     me.destroy();
-    bot.historyOffset = 0;
-    bot.previousHistoryLoading = false;
+    me.bot.historyOffset = 0;
+    me.bot.previousHistoryLoading = false;
     if (me.config.multiPageApp && me.config.multiPageApp.enable) {
       me.removeLocalStoreItem('kr-cw-state');
       me.removeLocalStoreItem('kr-cw-uid');
@@ -1053,7 +1076,6 @@ bindEvents  () {
     _chatContainer.find(".failed-text").remove();  
     _chatContainer.find(".retry-icon").remove();
     _chatContainer.find(".retry-text").text('Retrying...');
-    this.sendFailedMessage.messageId=target.closest('.fromCurrentUser').attr('id');
     _chatContainer.find(".reload-btn").trigger('click',{isReconnect:true});
 });
 
@@ -1099,15 +1121,15 @@ bindEvents  () {
   if (me?.config?.history?.paginatedScroll?.enable) {
     _chatContainer.find('.kore-chat-body .chat-container').on('scroll', (event: any) => {
       var div = $(event.currentTarget);
-      if(bot.previousHistoryLoading){
+      if(me.bot.previousHistoryLoading){
         return false;
       }
       if (div[0].scrollHeight - div.scrollTop() == div.height()) {
-        bot.previousHistoryLoading = false;
+        me.bot.previousHistoryLoading = false;
       }
       else if (div.scrollTop() == 0) {
-        if (bot.paginatedScrollDataAvailable && !bot.previousHistoryLoading) {
-          bot.previousHistoryLoading = true;
+        if (me.bot.paginatedScrollDataAvailable && !me.bot.previousHistoryLoading) {
+          me.bot.previousHistoryLoading = true;
           let message = me?.config?.history?.paginatedScroll?.loadingLabel || 'Loading chat history..';
           let paginatedHistoryLoader = $('<div class="paginted-history-loader">\
                                               <div class="historyWarningTextDiv displayTable">  \
@@ -1120,7 +1142,7 @@ bindEvents  () {
           }
           _chatContainer.find('.kore-chat-footer').addClass('disableFooter');
           _chatContainer.find('.kore-chat-footer .chatInputBox').blur();
-          bot.getHistory({ limit: (me?.config?.history?.paginatedScroll?.batchSize) }, me?.config?.botOptions);
+          me.bot.getHistory({ limit: (me?.config?.history?.paginatedScroll?.batchSize) }, me?.config?.botOptions);
         }
       }
     });
@@ -1160,15 +1182,6 @@ bindEventsV3() {
 
   me.eventManager.addEventListener('.avatar-bg', 'click', () => {
     if (!me.chatEle.querySelector('.avatar-bg').classList.contains('click-to-rotate-icon')) {
-      if(me.config.pwcConfig.enable) {
-        if (window.sessionStorage.getItem('isReconnect') == 'true') {
-          window.sessionStorage.setItem('isReconnect', 'false');
-          setTimeout(() => {
-            me.isReconnected = true;
-            me.resetWindow();
-          })
-        }
-      }
       if (me.config.multiPageApp && me.config.multiPageApp.enable) {
         me.setLocalStoreItem('kr-cw-state', 'open');
       }
@@ -1264,23 +1277,23 @@ bindEventsV3() {
 
     chatContainer.addEventListener('scroll', (event: any) => {
       var div = event.currentTarget;
-      if (bot.previousHistoryLoading) {
+      if (me.bot.previousHistoryLoading) {
         return false;
       }
       if (div.scrollHeight - div.scrollTop === div.clientHeight) {
-        bot.previousHistoryLoading = false;
+        me.bot.previousHistoryLoading = false;
       } else if (div.scrollTop === 0) {
-        if (bot.paginatedScrollDataAvailable && !bot.previousHistoryLoading) {
+        if (me.bot.paginatedScrollDataAvailable && !me.bot.previousHistoryLoading) {
           me.chatEle.querySelector('.typing-text-area').blur();
           me.chatEle.querySelector('.typing-text-area').classList.add('disableComposeBar');
-          bot.previousHistoryLoading = true;
+          me.bot.previousHistoryLoading = true;
           var message = me?.config?.history?.paginatedScroll?.loadingLabel || 'Loading chat history..';
           const historyLoader = getHTML(HistoryLoader, message, me);
           var firstLi = me.chatEle.querySelectorAll('.chat-widget-body-wrapper > div')[0];
           if (!(me.chatEle.querySelectorAll('.history-loading-wrapper').length)) {
             me.chatEle.querySelector('.chat-widget-body-wrapper').insertBefore(historyLoader, firstLi);
           }
-          bot.getHistory({ limit: (me?.config?.history?.paginatedScroll?.batchSize) });
+          me.bot.getHistory({ limit: (me?.config?.history?.paginatedScroll?.batchSize) });
         }
       }
     });
@@ -1345,6 +1358,12 @@ bindSDKEvents  () {
     }
 
     let msgData=me.parseSocketMessage(JSON.stringify(tempData));
+    
+    if (msgData && msgData?.sM && me.config.UI.version == 'v3') {
+      me.handleStreamingMessage(msgData);
+      return;
+    }
+    
     if (msgData) {
       if (me.loadHistory && me.historyLoading) {
         me.messagesQueue.push(msgData)
@@ -1361,6 +1380,14 @@ bindSDKEvents  () {
     //     $('.trainWarningDiv').addClass('showMsg');
     //   }, 2000);
     // }
+
+    if ((tempData?.type === 'initial_language' || tempData?.type === 'language_switched') && me?.config?.enableRTLTextDirection && me.config.UI.version == 'v3')  {
+      if (tempData?.langDetails?.language == 'ar' || tempData?.langDetails?.newLanguage == 'ar') {
+        me.chatEle.setAttribute('dir', 'rtl');
+      } else {
+        me.chatEle.setAttribute('dir', 'ltr');
+      }
+    }
   });
 
   me.bot.on('webhook_ready', (response: any) => {
@@ -1373,12 +1400,8 @@ bindSDKEvents  () {
     me.onBotReady();
   });
 
-  me.bot.on('api_failure', (response: {responseError: any; type: any;}) => {
-    me.emit(me.EVENTS.API_FAILURE, { "type": response.type, "errObj": response.responseError });
-  });
-
   me.bot.on('reconnected', (response: any) => {
-    if (me.config?.syncMessages?.onReconnect?.enable && response?.reconnected) {
+    if (me.config?.syncMessages?.onReconnect?.enable && response?.reconnected && !me.historyLoading) {
       me.bot.getHistory({ forHistorySync: true, limit: me.config?.syncMessages?.onReconnect?.batchSize });
     }
   });
@@ -1440,6 +1463,108 @@ parseSocketMessage(msgString:string){
   return msgData;
 }
 
+handleStreamingMessage(msgData: any) {
+  const me: any = this;
+  const messageId = msgData.messageId;
+  const newChunkText = msgData.message?.[0]?.cInfo?.body || msgData.message?.[0]?.component?.payload?.text || msgData.message?.[0]?.component?.payload || '';
+
+  if (msgData.message?.[0]?.component?.payload?.template_type == 'answerTemplate' && me.plugins.AnswersTemplatesPlugin) {
+      me.plugins.AnswersTemplatesPlugin.handleStreamingMessage(msgData);
+      return;
+  }
+  let streamState = me.streamingMessages.get(messageId);
+
+  if (!streamState) {
+    me.hideTypingIndicator();
+    me.streamingMessages.set(messageId, {
+      text: newChunkText,
+      msgData: msgData
+    });
+
+    const messageHtml = me.generateMessageDOM(msgData);
+    if (!messageHtml) return;
+
+    let chatWindowEvent = { stopFurtherExecution: false };
+    me.emit(me.EVENTS.BEFORE_RENDER_MSG, {
+      messageHtml: messageHtml,
+      msgData: msgData,
+      chatWindowEvent: chatWindowEvent
+    });
+
+    if (chatWindowEvent.stopFurtherExecution) {
+      me.streamingMessages.delete(messageId);
+      return;
+    }
+
+    const chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
+    if (chatContainer && messageHtml) {
+      chatContainer.appendChild(messageHtml);
+    }
+    me.scrollToBottom();
+  } else {
+    if (newChunkText) {
+      streamState.text += newChunkText;
+      streamState.msgData.message[0].cInfo.body = streamState.text;
+      if (streamState.msgData.message[0].component?.payload?.text) {
+        streamState.msgData.message[0].component.payload.text = streamState.text;
+      }
+      me.updateStreamingMessage(messageId, streamState.text);
+    }
+  }
+
+  if (msgData.endChunk) {
+    me.stopStreamingMessage(messageId);
+  }
+}
+
+updateStreamingMessage(messageId: string, fullText: string) {
+  const me: any = this;
+  const helpers = KoreHelpers.helpers;
+
+  const textElement = me.chatEle.querySelector(
+    `[data-cw-msg-id="${messageId}"] .bubble-msg`
+  );
+
+  if (textElement) {
+    const htmlContent = helpers.convertMDtoHTML(fullText, "bot", {});
+    textElement.innerHTML = htmlContent;
+    me.scrollToBottom();
+  }
+}
+
+scrollToBottom() {
+  const me: any = this;
+
+  const container = me.chatEle.querySelector('.chat-widget-body-wrapper');
+  if (!container) return;
+
+  container.scrollTo({
+    top: container.scrollHeight,
+    behavior: 'smooth'
+  });
+}
+
+stopStreamingMessage(messageId: string) {
+  const me: any = this;
+  const streamState = me.streamingMessages.get(messageId);
+
+  if (!streamState) return;
+
+  streamState.msgData.message[0].cInfo.body = streamState.text;
+  if (streamState.msgData.message[0].component?.payload?.text) {
+    streamState.msgData.message[0].component.payload.text = streamState.text;
+  }
+
+  const domElement = me.chatEle.querySelector(`[data-cw-msg-id="${messageId}"]`);
+
+  me.emit(me.EVENTS.AFTER_RENDER_MSG, {
+    messageHtml: domElement,
+    msgData: streamState.msgData
+  });
+
+  me.streamingMessages.delete(messageId);
+}
+
 onBotReady  () {
   // hook to add custom events
   const me:any = this;
@@ -1472,16 +1597,6 @@ onBotReady  () {
       }
     });
   }
-  if(this.sendFailedMessage.messageId){
-    var msgEle=_chatContainer.find('#'+this.sendFailedMessage.messageId);
-    msgEle.find('.errorMsg').remove();
-    var msgTxt=msgEle.find('.messageBubble').text().trim();
-    _chatContainer.find('.chatInputBox').text(msgTxt);
-    msgEle.remove();
-    me.sendMessageWithWithChatInput($('.chatInputBox'));
-    // me.sendMessage($('.chatInputBox').text());
-
-}
 };
 bindIframeEvents  (authPopup: { on: (arg0: string, arg1: string, arg2: () => void) => void; find: (arg0: string) => any[]; }) {
   const me:any = this;
@@ -1549,10 +1664,6 @@ render  (chatWindowHtml: any) {
 sendMessageToBot  (messageText:any, options: { renderMsg: any; }, serverMessageObject: any,clientMessageObject: any) {
   const me:any = this;
   let clientMessageId = new Date().getTime();
-  if(this.sendFailedMessage.messageId){
-    clientMessageId=this.sendFailedMessage.messageId;
-    this.sendFailedMessage.messageId=null;
-}
   let msgData:any = {
     type: 'currentUser',
     message: [{
@@ -1571,7 +1682,7 @@ sendMessageToBot  (messageText:any, options: { renderMsg: any; }, serverMessageO
   };
 if(messageText && messageText.trim() && messageText.trim().length){
   messageToBot["message"] = { 
-    body: messageText.trim().replace(/\s/g, ' ')
+    body: messageText.trim().replace(/[ \t]+/g, ' ')
   }
 }
   
@@ -1602,17 +1713,9 @@ if(messageText && messageText.trim() && messageText.trim().length){
           me.handleWebHookResponse(msgsData);
         },
         (err: any) => {
-          setTimeout(() => {
-            var failedMsgEle = $('.kore-chat-window [id="' + clientMessageId + '"]');
-            failedMsgEle.find('.messageBubble').append('<div class="errorMsg hide"><span class="failed-text">Send Failed </span><div class="retry"><span class="retry-icon"></span><span class="retry-text">Retry</span></div></div>');
-            if (this.sendFailedMessage.retryCount < this.sendFailedMessage.MAX_RETRIES) {
-              failedMsgEle.find('.retry').trigger('click');
-              this.sendFailedMessage.retryCount++;
-            } else {
-              failedMsgEle.find('.errorMsg').removeClass('hide');
-              me.hideTypingIndicator();
-            }
-          }, 350);
+         if (me.config.UI.version == 'v3') {
+          me.handleMessageFailure(messageText, clientMessageId);
+         }
         },
         me.attachmentInfo ? { attachments: [me.attachmentInfo] } : null,
       );
@@ -1626,18 +1729,8 @@ if(messageText && messageText.trim() && messageText.trim().length){
         return false;
       }
       me.bot.sendMessage(messageToBot, (err: { message: any; }) => {
-        if (err && err.message) {
-          setTimeout(() => {
-            var failedMsgEle = $('.kore-chat-window [id="' + clientMessageId + '"]');
-            failedMsgEle.find('.messageBubble').append('<div class="errorMsg hide"><span class="failed-text">Send Failed </span><div class="retry"><span class="retry-icon"></span><span class="retry-text">Retry</span></div></div>');
-            if (this.sendFailedMessage.retryCount < this.sendFailedMessage.MAX_RETRIES) {
-              failedMsgEle.find('.retry').trigger('click');
-              this.sendFailedMessage.retryCount++;
-            } else {
-              failedMsgEle.find('.errorMsg').removeClass('hide');
-              me.hideTypingIndicator();
-            }
-          }, 350);
+        if (err && err.message && me.config.UI.version == 'v3') {
+          me.handleMessageFailure(messageToBot, clientMessageId);
         }
       });
     }
@@ -1647,11 +1740,110 @@ if(messageText && messageText.trim() && messageText.trim().length){
   me.postSendMessageToBot();
   if(clientMessageObject){
     me.extend(msgData,clientMessageObject);
+    // add attachments from clientMessageObject for rendering purpose. For images, audio, video it contains base64 data.
+    if (clientMessageObject.message && clientMessageObject.message.length > 0 && clientMessageObject.message[0].cInfo && clientMessageObject.message[0].cInfo.attachments) {
+      msgData.message[0].cInfo.attachments = clientMessageObject.message[0].cInfo.attachments;
+    }
   }
   me.renderMessage(msgData);
 };
 
-postSendMessageToBot () {
+  handleMessageFailure(messageToBot: any, clientMessageId: string) {
+    const me: any = this;
+    setTimeout(() => {
+      let failedMsgEle = me.chatEle.querySelector(`[data-cw-msg-id="${clientMessageId}"]`);
+      if (failedMsgEle) {
+        let firstChild;
+        if (!failedMsgEle.querySelector('.bottom-info')) {
+          const bottomInfo = document.createElement('div');
+          bottomInfo.className = 'bottom-info';
+          failedMsgEle.querySelector('.agent-bubble-content').appendChild(bottomInfo);
+        } else {
+          firstChild = failedMsgEle.querySelector('.bottom-info').firstChild;
+          const readText = failedMsgEle.querySelector('.read-text');
+          if (readText) {
+            readText.classList.add('hide');
+          }
+          const sentText = failedMsgEle.querySelector('.sent');
+          if (sentText) {
+            sentText.classList.add('hide');
+          }
+        }
+
+        let errorMsg = failedMsgEle.querySelector('.errorMsg');
+        if (!errorMsg) {
+          errorMsg = document.createElement('div');
+          errorMsg.className = 'errorMsg';
+          errorMsg.innerHTML = '<div class="failed-text">Sending failed.</div><button type="button" class="retry-text">Resend</button><span class="or-text">or</span><button type="button" class="delete-text">Delete</button>';
+          if (firstChild) {
+            failedMsgEle.querySelector('.bottom-info').insertBefore(errorMsg, firstChild);
+          } else {
+            failedMsgEle.querySelector('.bottom-info').appendChild(errorMsg);
+          }
+
+          const retryBtn = errorMsg.querySelector('.retry-text');
+          const deleteBtn = errorMsg.querySelector('.delete-text');
+
+          if (retryBtn) {
+            retryBtn.addEventListener('click', (e: any) => {
+              e.stopPropagation();
+              me.resendMessage(messageToBot, clientMessageId, failedMsgEle);
+            });
+          }
+          if (deleteBtn) {
+            deleteBtn.addEventListener('click', (e: any) => {
+              e.stopPropagation();
+              failedMsgEle.remove();
+            });
+          }
+        }
+        errorMsg.classList.remove('hide');
+      }
+      me.hideTypingIndicator();
+    }, 350);
+  }
+
+  resendMessage(messageToBot: any, clientMessageId: string, failedMsgEle: any) {
+    const me: any = this;
+    const errorMsg = failedMsgEle.querySelector('.errorMsg');
+    if (errorMsg) {
+      errorMsg.remove();
+    }
+    const readText = failedMsgEle.querySelector('.read-text');
+    if (readText) {
+      readText.classList.remove('hide');
+    }
+    const sentText = failedMsgEle.querySelector('.sent');
+    if (sentText) {
+      sentText.classList.remove('hide');
+    }
+    const bottomInfo = failedMsgEle.querySelector('.bottom-info');
+    if (bottomInfo && bottomInfo.children.length === 0) {
+      bottomInfo.remove();
+    }
+
+    if (me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) {
+      me.sendMessageViaWebHook(
+        messageToBot,
+        (msgsData: any) => {
+          me.handleWebHookResponse(msgsData);
+        },
+        (err: any) => {
+          me.handleMessageFailure(messageToBot, clientMessageId);
+        },
+        null,
+      );
+    } else {
+      me.bot.sendMessage(messageToBot, (err: any) => {
+        if (err && err.message) {
+          me.handleMessageFailure(messageToBot, clientMessageId);
+        }
+      });
+    }
+    me.postSendMessageToBot();
+  }
+
+  postSendMessageToBot () {
   let me:any=this;
   if (me.config.UI.version == 'v2') {
     const _bodyContainer = $(me.chatEle).find('.kore-chat-body');
@@ -1738,7 +1930,7 @@ closeConversationSession  () {
   const messageToBot:any = {};
   messageToBot.clientMessageId = clientMessageId;
   messageToBot.resourceid = '/bot.closeConversationSession';
-  bot.sendMessage(messageToBot, (err: any) => {
+  me.bot.sendMessage(messageToBot, (err: any) => {
     console.error('bot.closeConversationSession send failed sending');
   });
 };
@@ -1775,7 +1967,6 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
   let messageHtml=me.generateMessageDOM(msgData);
 
   if (msgData?.type === 'bot_response') {
-    this.sendFailedMessage.retryCount=0;
     me.waiting_for_message = false;
     setTimeout(() => {
       if (me.config.UI.version == 'v2') {
@@ -1862,7 +2053,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
         _chatContainer.append(messageHtml);
       }
     } else {
-      if(bot && !bot.previousHistoryLoading){
+      if(me.bot && !me.bot.previousHistoryLoading){
         _chatContainer.append(messageHtml);
       }else{
         $(this.paginatedScrollMsgDiv).find('.prev-message-list').append($(messageHtml).addClass('previousMessage'));
@@ -1899,7 +2090,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
       scrollHeight = me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight;
     } else {
       scrollHeight = me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight;
-      if (bot && !bot.previousHistoryLoading) {
+      if (me.bot && !me.bot.previousHistoryLoading) {
         const chatContainer = me.chatEle.querySelector('.chat-widget-body-wrapper');
         if (me.historyLoading) {
           messageHtml?.classList?.remove('if-animation-bubble');
@@ -1928,7 +2119,7 @@ renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | numb
       }
     }
 
-    if (bot && !bot.previousHistoryLoading) {
+    if (me.bot && !me.bot.previousHistoryLoading) {
       scrollHeight = (me.historyLoading || eleHeight < 300) ? me.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight : scrollHeight - me.chatEle.querySelector('.chat-widget-body-wrapper').clientHeight / 2;
       me.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
         top: scrollHeight,
@@ -1977,7 +2168,7 @@ updateScrollOnMessageRender(msgData: any){
   const me: any = this; 
   let _chatContainer = $(me.chatEle).find('.chat-container');
   const debounceScrollingCall: any = me.debounceScrollingHide(me.removeScrollingHide, 500);
-  if(bot && !bot.previousHistoryLoading){
+  if(me.bot && !me.bot.previousHistoryLoading){
     _chatContainer.addClass('scrolling'); // start hiding scroll on message arrival
     _chatContainer.animate({
       scrollTop: _chatContainer.prop('scrollHeight'),
@@ -2144,7 +2335,7 @@ getChatTemplate (tempType: string) {
                <div id="caption"></div>\
          </div>\
          <div id="chatBodyModal" class="chatBodyModal animate-bottom">\
-         <span class="closeChatBodyModal" aira-label="Close Form" role="button" tabindex="0" aria-atomic="true"></span>\
+         <span class="closeChatBodyModal" aria-label="Close Form" role="button" tabindex="0" aria-atomic="true"></span>\
          <div id="closeInlineModel" class="loading_form iframeLoader"></div>\
          <div id="chatBodyModalContent"></div>\
          </div>\
@@ -2180,7 +2371,7 @@ historyLoadingComplete () {
     if (me.config && me.config && me.config.botOptions && me.config.botOptions.webhookConfig && me.config.botOptions.webhookConfig.enable) {
       me.getBotMetaData();
     }
-    if (me.config.UI.version == 'v2' && $(this.paginatedScrollMsgDiv).find('.prev-message-list li.previousMessage').length > 0 && bot.previousHistoryLoading) {
+    if (me.config.UI.version == 'v2' && $(this.paginatedScrollMsgDiv).find('.prev-message-list li.previousMessage').length > 0 && me.bot.previousHistoryLoading) {
       let paginatedLi = $(this.paginatedScrollMsgDiv).find('.prev-message-list li.previousMessage');
       if (paginatedLi && paginatedLi.length) {
         for (var i = 0; i < paginatedLi.length; i++) {
@@ -2203,7 +2394,7 @@ historyLoadingComplete () {
         $(this.paginatedScrollMsgDiv).find('.prev-message-list').empty();
       }
     } 
-    if (me.config.UI.version == 'v3' && me.chatEle.querySelectorAll('.prev-message-list > div').length > 0 && bot.previousHistoryLoading){
+    if (me.config.UI.version == 'v3' && me.chatEle.querySelectorAll('.prev-message-list > div').length > 0 && me.bot.previousHistoryLoading){
       let prevMessageList = me.chatEle.querySelectorAll('.prev-message-list > div');
       let chatContainerList = me.chatEle.querySelectorAll('.chat-widget-body-wrapper > div');
 
@@ -2220,7 +2411,7 @@ historyLoadingComplete () {
       let prevMessageListContainer = me.chatEle.querySelectorAll('.prev-message-list')[0];
       prevMessageListContainer.innerHTML = '';
     }
-    bot.previousHistoryLoading = false;
+    me.bot.previousHistoryLoading = false;
     me.emit(me.EVENTS.HISTORY_COMPLETE,{
       chatWindowEvent:_chatContainer
     });
@@ -2340,7 +2531,7 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
   } else if (me.loadHistory) {
     me.historyLoading = true;
     if (res && res[1] && res[1].messages.length > 0) {
-      if(!bot.previousHistoryLoading){
+      if(!me.bot.previousHistoryLoading){
         $('.chat-container').hide();
         $('.historyLoadingDiv').addClass('showMsg');
       }
@@ -2357,7 +2548,7 @@ chatHistory  (res: { messages: string | any[]; }[] | any) {
             setTimeout((messagesQueue) => {
               $('.chat-container').show();
               $('.historyLoadingDiv').removeClass('showMsg');
-              if(!bot.previousHistoryLoading){
+              if(!me.bot.previousHistoryLoading){
                 if (me.config.UI.version == 'v2') {
                   $('.chat-container').animate({
                     scrollTop: $('.chat-container').prop('scrollHeight'),
@@ -2416,7 +2607,7 @@ getJWTByAPIKey (API_KEY_CONFIG: { KEY: any; bootstrapURL: any; }, userIdentity: 
     success(data: any) {
     },
     error(err: any) {
-      me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err });
+      me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err, request: { url: API_KEY_CONFIG.bootstrapURL || 'https://platform.kore.ai/api/platform/websdk', data: jsonData }});
       // chatWindowInstance.showError(err.responseText);
     },
   });
@@ -2440,7 +2631,7 @@ getJWT (options: { clientId: any; clientSecret: any; userIdentity: any; JWTUrl: 
 
     },
     error(err: any) {
-      me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err });
+      me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err, request: { url: options.JWTUrl, data: jsonData }});
       // chatWindowInstance.showError(err.responseText);
     },
   });
@@ -2505,6 +2696,7 @@ assertionFn (options:any, callback:any) {
   options.handleError = me.showError;
   options.chatHistory = me.chatHistory.bind(me);
   options.botDetails = me.botDetails;
+  options.resetWindow = me.resetWindow.bind(me);
   if(me.config && me.config.JWTAsertion){
     me.config.JWTAsertion(me.SDKcallbackWraper.bind(me));
   }else if(options.assertion){//check for reconnect case
@@ -2540,24 +2732,31 @@ setWidgetInstance  (widgetSDKInstace:any) {
 
 
 hideError  () {
+  const me: any = this;
+  if (me.config.UI.version == 'v2') {
   $('.errorMsgBlock').removeClass('showError');
+  } else {
+    if (document.querySelector('.kore-sdk-error-section')) {
+      document.querySelector('.kore-sdk-error-section')?.classList.add('hide');
+    }
+  }
 };
+
 showError (response:any) {
   try {
     response = JSON.parse(response);
-    if (response.errors && response.errors[0]) {
-      $('.errorMsgBlock').text(response.errors[0].msg);
+    let errorMessage = response?.errors?.[0]?.msg || response?.errors?.message || response?.message || 'Unknown error occurred.';
+      $('.errorMsgBlock').text(errorMessage);
       $('.errorMsgBlock').addClass('showError');
       if (document.querySelector('.kore-sdk-error-section')) {
-        document.querySelector('.kore-sdk-error-section').textContent = response.errors[0].msg;
+        document.querySelector('.kore-sdk-error-section').textContent = errorMessage;
         document.querySelector('.kore-sdk-error-section').classList.remove('hide');
       }
-    }
   } catch (e) {
-    $('.errorMsgBlock').text(response);
+    $('.errorMsgBlock').text(response?.message || response || 'Unknown error occurred.');
     $('.errorMsgBlock').addClass('showError');
     if (document.querySelector('.kore-sdk-error-section')) {
-      document.querySelector('.kore-sdk-error-section').textContent = response;
+      document.querySelector('.kore-sdk-error-section').textContent = response?.message || response || 'Unknown error occurred.';
       document.querySelector('.kore-sdk-error-section').classList.remove('hide');
     }
   }
@@ -2649,18 +2848,19 @@ getBrandingInformation(options:any){
           me.config.botOptions.brandingAPIUrl = me.config.botOptions.koreAPIUrl +'websdkthemes/'+  me.config.botOptions.botInfo.taskBotId+'/activetheme';
       }
       var brandingAPIUrl = (me.config.botOptions.brandingAPIUrl || '').replace(':appId', me.config.botOptions.botInfo.taskBotId);
+      var headers = {
+        'Authorization': "bearer " + options.authorization.accessToken,
+      };
       $.ajax({
           url: brandingAPIUrl,
           type: 'get',
-          headers: {
-            'Authorization': "bearer " + options.authorization.accessToken,
-          },
+          headers: headers,
           dataType: 'json',
           success: function (data: any) {  
                   me.applySDKBranding(data);
           },
           error: function (err: any) {
-              me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err });
+              me.emit(me.EVENTS.API_FAILURE, { type: "JqueryXHR", errObj: err, request: { url: brandingAPIUrl, headers: headers }});
           }
       });
   }
@@ -3058,6 +3258,12 @@ applyVariableValue (key:any,value:any,type:any){
           "name": "",
           "show_type": "always",
           "position": "top"
+        }
+      }
+      if (!(theme.v3?.footer?.buttons?.hasOwnProperty('click_to_call'))) {
+        theme.v3.footer.buttons['click_to_call'] = {
+          "show": false,
+          "icon": ""
         }
       }
     }

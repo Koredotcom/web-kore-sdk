@@ -3,10 +3,14 @@ import BaseChatTemplate from '../../../../templatemanager/templates/baseChatTemp
 import './pwcBannerTemplate.scss';
 export function Banner(props: any) {
     const msgData = props.msgData;
+    const hostInstance = props.hostInstance;
 
     if (msgData.type == 'pwe_message' && msgData.body.campInfo?.webCampaignType && msgData.body.campInfo?.webCampaignType == 'banner' && msgData?.body?.layoutDesign) {
         const layoutDesign = msgData.body?.layoutDesign;
-        let bannerClass = 'campaign-banner-sec';
+        // "pwc-active-campaign-template" class is added to the DOM after the campaign template is rendered
+        // This class is used to identify the campaign template and prevent the sendApiEvent from getting triggered multiple times
+        // DONOT REMOVE THIS CLASS
+        let bannerClass = 'pwc-active-campaign-template campaign-banner-sec';
         if (layoutDesign.pattern == 'floating') {
             bannerClass = bannerClass + ' floating-banner';
         }
@@ -24,6 +28,10 @@ export function Banner(props: any) {
         });
         layoutDesign.messages = msgs;
         const closeBanner = () => {
+            // Clear from sessionStorage
+            hostInstance.plugins.ProactiveWebCampaignPlugin.clearPersistedTemplateFromStorage();
+            
+            // Remove from DOM
             const bannerEle: any = document.querySelector('.campaign-banner-sec');
             bannerEle.remove();
         }

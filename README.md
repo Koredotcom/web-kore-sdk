@@ -71,7 +71,7 @@ include the following script in your html file and configure bot configurations
 
 ```js
 
-<script  src="https://cdn.jsdelivr.net/npm/kore-web-sdk@11.14.1/dist/umd/kore-web-sdk-umd-chat.min.js"></script>
+<script  src="https://cdn.jsdelivr.net/npm/kore-web-sdk@11.21.1/dist/umd/kore-web-sdk-umd-chat.min.js"></script>
 <script>
         //chat window declaration
         var chatConfig=KoreChatSDK.chatConfig;
@@ -125,9 +125,9 @@ In addition to the kore message templates, new custom templates can be intstalle
 ```bash
 class customTemplateComponent{
   renderMessage(msgData){
-      if(msgData?.message[0]?.component?.payload?.template_type==='custom_stock_template'){
-          return '<h2>My Template HTML</h2>';      
-      }else{
+      if (msgData?.message[0]?.component?.payload?.template_type === 'custom_stock_template') {
+          return '<h2 data-kr-msg-id=' + msgData.messageId + ' data-time=' + msgData.createdOnTimemillis + '>My Template HTML</h2>';      
+      } else {
           return false;
       }
   } 
@@ -137,17 +137,31 @@ chatWindowInstance.templateManager.installTemplate(new customTemplateComponent()
 ```
 Other framework UI components like angular and react can also be injected with this
 
+> [!NOTE]
+> - Please add the following two attributes for parent div in the custom template html
+> - `data-kr-msg-id` with value `msgData.messageId` and `data-time` with value `msgData.createdOnTimemillis`
+
 ## 💡 Plugins
 
-Kore's chatwindow functionlity can be extended with the help of plugins.Newly created plugins can be installed with *installPlugin* method
+Kore's chatwindow functionlity can be extended with the help of plugins. Newly created plugins can be installed with *installPlugin* method
 
 ```bash
-class KoreCustomPlugin{
+class KoreCustomPlugin {
   
 }
 
 chatWindowInstance.installPlugin(new KoreCustomPlugin());
 ```
+
+Kore plugins can be installed as shown below.
+
+```bash
+
+import { AnswersTemplatesPlugin } from 'kore-web-sdk';
+
+chatWindowInstance.installPlugin(new AnswersTemplatesPlugin());
+```
+
 Kore offered plugins are listed [here](./docs/plugins)
 
 

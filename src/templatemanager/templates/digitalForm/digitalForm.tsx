@@ -55,6 +55,9 @@ export function DigitalForm(props: any) {
         } else {
             hostInstance.bottomSliderAction('', getHTML(DigitalFormExtension, msgData, hostInstance), true)
         }
+        if (hostInstance.chatEle.querySelector('.kr-wiz-menu-chat')?.classList?.contains('show')) {
+            hostInstance.chatEle.querySelector('.chat-actions-bottom-wraper').classList.add('chat-widget-overflow-wrapper');
+        }
     }
     if (msgData?.message?.[0]?.component?.payload?.template_type === 'button' && msgData?.message?.[0]?.component?.formData) {
         return (

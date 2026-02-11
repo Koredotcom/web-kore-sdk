@@ -2,10 +2,28 @@ import BaseChatTemplate from '../../../../templatemanager/templates/baseChatTemp
 import './answerTemplate.scss';
 import { h, Fragment, render  } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import {CarouselImagePopupTemplate} from '../carouselImagePopupTemplate/carouselImagePopupTemplate';
+import {ImagePreviewTemplate} from '../imagePreviewTemplate/imagePreviewTemplate';
 import KoreHelpers from '../../../../utils/helpers';
 import FeedbackTemplate from '../feedbackTemplate/feedbackTemplate';
-import ImageCarouselSvgIcons from '../carouselImagePopupTemplate/imageCarouselSvgIcons';
+import ImageCarouselSvgIcons from '../imagePreviewTemplate/imageCarouselSvgIcons';
+import { StreamingAnswersTemplate } from '../streamingAnswerTemplate/streamingAnswerTemplate';
+
+// Streaming wrapper that handles routing between streaming and final template
+export function StreamingAnswers(props: any) {
+    const msgData = props.msgData;
+
+    // Check if streaming mode is active and if streaming is complete
+    const isStreaming = msgData?.sM === true;
+    const isStreamingComplete = msgData?.endChunk === true;
+    
+    // If streaming is complete, render the final Answers component
+    if (!isStreaming || isStreamingComplete) {
+        return <Answers {...props} />;
+    }
+
+    // Otherwise, render the simplified streaming template
+    return <StreamingAnswersTemplate {...props} />;
+}
 
 export function Answers(props: any) {
     const hostInstance = props.hostInstance;
@@ -18,7 +36,8 @@ export function Answers(props: any) {
     const helpers = KoreHelpers.helpers;
     const [answersObj, setAnswersObj]: any = useState({ "generative": { "answerFragments": [], "sources": [] }});
     const [modelType, setModelType] = useState('');
-    const [selectedIndex, setSelectedIndex] = useState(0);
+    const [selectedIndex, setSelectedIndex] = useState<any>([]);
+    const [exactMatch, setExactMatch] = useState<boolean>(false);
 
     useEffect(() => {
         const results = messageObj?.msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.snippet_content;
@@ -32,20 +51,41 @@ export function Answers(props: any) {
     const updateGenerativePayload = (data: any) => {
         let answer_fragment: Array<Object> = [];
         let sources_data: Array<Object> = [];
+        // Process all sources from all items
         data?.forEach((item: any) => {
-            const isExist = sources_data.find((source: any) => source.id === item?.sources[0]?.doc_id);
-            if (!isExist) sources_data.push({ "title": item?.sources[0]?.title, "id": item?.sources[0]?.doc_id, "url": item?.sources[0]?.url, "image_url": item?.sources[0]?.image_url||[] });
+            item?.sources?.forEach((source: any) => {
+                const isExist = sources_data.find((existingSource: any) => existingSource.url === source?.url);
+                if (!isExist) {
+                    sources_data.push({ 
+                        "title": source?.title, 
+                        "id": source?.doc_id, 
+                        "url": source?.url, 
+                        "image_url": source?.image_url || [] 
+                    });
+                }
+            });
         });
+        
+        // Process answer fragments and map them to all relevant sources
         data?.forEach((answer: any) => {
-            const index = sources_data.findIndex((source: any) => source.id === answer?.sources[0]?.doc_id);
-            answer_fragment.push({ "title": answer?.answer_fragment, "id": index });
+            let indexes:any = [];
+            answer?.sources?.forEach((source: any) => {
+                const index = sources_data.findIndex((existingSource: any) => existingSource.url === source?.url);
+                if (index !== -1) {
+                    indexes.push(index);
+                }
+            });
+
+            answer_fragment.push({ "title": answer?.answer_fragment, "indexes": indexes });
         });
         setAnswersObj((prevState: any) => ({ ...prevState, "generative": { "answerFragment": answer_fragment,  "sources": sources_data} }));
     }
 
     //redirect to specific url
     const redirectToURL=(url:string)=>{
-        window.open(url, '_blank'); 
+        if (typeof url === 'string' && url.trim() !== '' && url !== undefined) {
+            window.open(url, '_blank');
+        }
     }
 
     const showFileUrl = (image_urls: any, title:string) => {
@@ -55,7 +95,7 @@ export function Answers(props: any) {
             // Append to the body
             document.body.appendChild(tempDiv);
             const sourceData = {"image_urls":Array.isArray(image_urls) ? image_urls : [image_urls],"title":title}
-            render(<CarouselImagePopupTemplate data={sourceData}/>,tempDiv);
+            render(<ImagePreviewTemplate data={sourceData}/>,tempDiv);
     }
 
     const  extractShortDomainOrFile=(link:string) =>{
@@ -91,26 +131,42 @@ export function Answers(props: any) {
         }
       }
 
+        const renderCitationList=(sourceIndex:any,hasSource:any,isSelected:any)=>
+            {
 
+            
+            
+            return <div className={`sa-tooltip-container ${isSelected && 'position-class'} `}>
+                { 
+                
+                hasSource ? <Fragment>
+                                <span className={` sa-answer-list-item ${isSelected && 'sa-answer-list-item-selected'} ${!answersObj?.generative?.sources?.[sourceIndex]?.url && 'pointer-events-none'}`} onClick={()=>redirectToURL(answersObj?.generative?.sources?.[sourceIndex]?.url)}>
+                                    {sourceIndex + 1}
+                                </span> 
+                                {selectedIndex.includes(sourceIndex) && (
+                                    <div class="sa-tooltip">{answersObj?.generative?.sources?.[sourceIndex]?.title || answersObj?.generative?.sources?.[sourceIndex]?.url}</div>
+                                )}
+                            </Fragment> 
+                        : null
+                }
+            </div>
+}
       const renderAnswerResult=(answer:any)=>{
-        const hasSource= answersObj?.generative?.sources?.[answer?.id]?.title || answersObj?.generative?.sources?.[answer?.id]?.url
-
-        return   <span className={`sa-answer-result-heading ${(selectedIndex===answer?.id +1 && hasSource) &&'sa-answer-result-heading-selected'}`} onMouseOver={()=>setSelectedIndex(answer?.id + 1)} onMouseOut={()=>setSelectedIndex(0)}>
-                    <span dangerouslySetInnerHTML={{__html:helpers.convertMDtoHTML(answer?.title, "bot") }}></span>
-                    <div className={`sa-tooltip-container ${selectedIndex === answer?.id + 1 && 'position-class'} `}>
-                           { 
-                            
-                            hasSource ? <Fragment>
-                                            <span className={` sa-answer-list-item ${selectedIndex === answer?.id + 1 && 'sa-answer-list-item-selected'}`} onClick={()=>redirectToURL(answersObj?.generative?.sources?.[answer?.id]?.url)}>
-                                                {answer?.id + 1}
-                                            </span> 
-                                            {selectedIndex === answer?.id + 1 && (
-                                                <div class="sa-tooltip">{answersObj?.generative?.sources?.[selectedIndex - 1]?.title || answersObj?.generative?.sources?.[selectedIndex - 1]?.url}</div>
-                                            )}
-                                         </Fragment> 
-                                    : null
-                            }
-                    </div>
+        let hasSource:any = answer?.indexes?.some((index:any)=>answersObj?.generative?.sources?.[index]?.title || answersObj?.generative?.sources?.[index]?.url)
+        let isEqual:any = false;
+        if(exactMatch){
+            isEqual = selectedIndex?.length === answer?.indexes?.length && answer?.indexes.every((val:any, i:any) =>  selectedIndex?.includes(val));         
+        }else{
+            isEqual = answer?.indexes.some((val:any, i:any) =>  selectedIndex?.includes(val));         
+        }
+        const isSelected= hasSource && isEqual;
+        return   <span className={`sa-answer-result-heading ${(isSelected) &&'sa-answer-result-heading-selected'}`} onMouseOver={()=>{setSelectedIndex(answer?.indexes);setExactMatch(true)}} onMouseOut={()=>{setSelectedIndex([]);setExactMatch(false)}}>
+                    {
+                        /<[^>]+>/.test(answer?.title)
+                        ? <span dangerouslySetInnerHTML={{__html: answer?.title}}></span>
+                        : <span dangerouslySetInnerHTML={{__html: helpers.convertMDtoHTML(answer?.title, "bot")}}></span>
+                    }
+                   {answer?.indexes?.map((index:any)=>renderCitationList(index,hasSource,exactMatch ? isSelected : selectedIndex.includes(index)))}
                 </span>
       }
     
@@ -140,9 +196,9 @@ export function Answers(props: any) {
                                         answersObj?.generative?.sources?.filter((source: any) => source?.title?.length > 0)?.map((source: any, index: number) => (
                                             <div className='sa-tooltip-container'>
 
-                                            <div className={`sa-answer-result-footer  ${(selectedIndex===index+1)&&'selected'}`} 
-                                                    onMouseOver={() => setSelectedIndex(index+1)}
-                                                    onMouseOut={() => setSelectedIndex(0)}>
+                                            <div className={`sa-answer-result-footer  ${(selectedIndex.includes(index))&&'selected'} ${!source?.url && 'pointer-events-none'}`} 
+                                                    onMouseOver={() => setSelectedIndex([index])}
+                                                    onMouseOut={() => setSelectedIndex([])}>
                                             <span onClick={()=>redirectToURL(source?.url)}>{index + 1}. <span>{ extractShortDomainOrFile(source?.title || source?.url)}</span></span>
                                                     {(source?.image_url?.length > 0)&&
                                                     <Fragment>
@@ -152,7 +208,7 @@ export function Answers(props: any) {
                                                     </Fragment>
                                                     }
                                              </div>
-                                             {selectedIndex === index + 1 && (
+                                             {selectedIndex.includes(index) && (
                                                 <div class="sa-tooltip">{source?.title || source?.url}</div>
                                              )}
 
@@ -161,7 +217,7 @@ export function Answers(props: any) {
                                     }
                             </div>
                             {
-                                (!isPlatform && hostInstance['saFeedback']?.enable) && <FeedbackTemplate data={hostInstance} searchRequestId={messageObj?.msgData?.message[0]?.component?.payload?.searchRequestId}/>
+                                (!isPlatform && hostInstance['saFeedback']?.enable && !messageObj?.msgData?.fromHistory && !messageObj?.msgData?.fromHistorySync) && <FeedbackTemplate data={hostInstance} searchRequestId={messageObj?.msgData?.message[0]?.component?.payload?.searchRequestId}/>
                             }
                             
                         </div>
@@ -222,13 +278,17 @@ export function Answers(props: any) {
     }
 
 export function answerTemplateCheck(props: any) {
-   
     const hostInstance = props.hostInstance;
     const msgData = props.msgData; 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'answerTemplate') {
-            props.msgData = updateMsgData(props.msgData)
+            props.msgData = updateMsgData(props.msgData);
+        
+        // Check if streaming mode is active (sM: true at root level)
+        const isStreaming = msgData?.sM === true;
+        const isStreamingComplete = msgData?.endChunk === true;
+        
         return (
-            <Answers {...props} />
+            (isStreaming && !isStreamingComplete) ? <StreamingAnswers {...props} /> : <Answers {...props} />
         )
     }   
 }
