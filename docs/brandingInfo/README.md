@@ -862,7 +862,7 @@ The following contains the explanation of the branding JSON object, which define
 
 ### Override Settings
 > [!NOTE]
-> These settings can be configured in kore config or using theme editor in platform 
+> These settings can be configured using Theme Editor in the Platform without need of configuring them in the code
 - **enable**: Indicates if configuration overrides are enabled (set to false).
 - **emoji_short_cut**: Enables shortcut for emojis (set to true).
 - **typing_indicator_timeout**: Timeout duration for typing indicators (10 seconds).
@@ -871,5 +871,5 @@ The following contains the explanation of the branding JSON object, which define
 
 
 > [!TIP]
-> Above configurations can be easily configued using theme editor in Platform 11.
-> For configuring without using theme editor click here
+> Above configurations can be easily configued using Theme Editor in Platform 11.
+> For configuring without using Theme Editor [refer here](../configurations/overridingbranding/)

@@ -89,9 +89,9 @@ chatConfig = {
 ```
 - `container`: DOM element to render the chat window
 - `allowIframe`: Opens authentication links in popup when true
-- `isSendButton`: Shows send button below compose bar when true
+- `isSendButton`: Shows send button in the compose bar when true
 - `minimizeMode`: Shows chat window in minimized mode when true - not using
-- `enableThemes`: Enables custom branding when true
+- `enableThemes`: Applies theme configured in the Platform when true
 
 ### History and Message Settings
 ```typescript
