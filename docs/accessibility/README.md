@@ -8,7 +8,7 @@ For more information on WCAG 2.2 Level AA, please visit the official [Web Conten
 
 The Kore Web SDK is a toolkit for launching chat widgets on websites or within other applications. This is an end-user facing application where the users interact with the virtual assistants. The SDK includes a reference implementation of the web chat widget, designed to meet AA standards of ADA compliance.
 
-## Kore Web SDKs Accessibility
+## Kore Web SDK Accessibility
 
 ### WCAG 2.2 Level AA Compliance Status
 
@@ -36,12 +36,11 @@ The Kore Web SDK is a toolkit for launching chat widgets on websites or within o
 
 ### Screen Reader Support
 
-The Kore Web SDK v3 is designed to be fully compatible with screen readers.
+The Kore Web SDK is designed to be fully compatible with screen readers.
 
-<!-- Placeholder for a short video demonstrating screen reader functionality -->
-[Video: Screen Reader Demonstration]
+https://github.com/user-attachments/assets/fe484d03-9086-4a3f-8b10-18bd3cfe9013
 
-## Customization and Accessibility
+Above video is recorded while using [NVDA reader](https://www.nvaccess.org/download/)
 
 The Kore Web SDK offers extensive customization options. While a base level of accessibility is provided, it is crucial to ensure that any customizations made also adhere to WCAG 2.2 Level AA standards. You can customize the SDK to best suit your specific accessibility requirements.
 
@@ -56,6 +55,13 @@ When creating custom themes, ensure that:
 *   Interactive elements remain clearly distinguishable
 *   Focus indicators are visible and meet contrast requirements
 *   Custom themes are tested with assistive technologies before deployment
+
+
+## Customization and Accessibility
+
+The Kore Web SDK offers extensive customization options. While a base level of accessibility is provided, it is crucial to ensure that any customizations made also adhere to WCAG 2.1 Level AA standards. You can customize the SDK to best suit your specific accessibility requirements.
+
+For detailed information on how to customize the SDK, please refer to our [Customization Documentation](../customizations/).
 
 ## Guidelines for Maintaining Compliance
 
@@ -74,8 +80,5 @@ To ensure ongoing WCAG 2.2 Level AA compliance with the SDK, developers should a
 *   **Testing:** Regularly test customizations with accessibility evaluation tools and assistive technologies (e.g., screen readers like NVDA, JAWS, or VoiceOver).
 
 Customers can completely customize the SDK to make any necessary changes to meet their accessibility needs. It is the responsibility of the customer to ensure their customizations remain compliant with WCAG 2.2 Level AA standards.
-
-<!-- Placeholder for general accessibility best practices screenshot/diagram -->
-[Image: General Accessibility Best Practices]
 
 This documentation aims to provide a clear understanding of the Kore AI Web SDK's accessibility features and empower developers to build inclusive chat experiences.
