@@ -128,6 +128,17 @@ let config= {
           writeToDisk: true,
         },
         open: ['/examples/esm/chat'],
+        // /ws proxy disabled by default to avoid [HPM] WebSocket "write after end" errors on close.
+        // Set PROXY_WS=1 when running dev server to enable: PROXY_WS=1 npm run serve
+        proxy: process.env.PROXY_WS === '1' ? [
+          {
+            context: ['/ws'],
+            target: 'https://uae-platform.kore.ai',
+            secure: true,
+            ws: true,
+            changeOrigin: true,
+          },
+        ] : [],
       },
 }
 
@@ -142,120 +153,6 @@ module.exports= function(env,argv){
             filename: 'kore-web-sdk-chat.min.js',
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
-          KoreWidgetsSDK:{
-            import: "./src/index_widgets.ts",
-            filename: 'kore-web-sdk-widgets.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          },
-          // KoreSearchSDK:{
-          //   import: "./src/index_umd_search.ts",
-          //   filename: 'kore-web-sdk-umd-search.js',
-          //   chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          // },
-          KorePickersPluginSDK: {
-            import: "./src/index_plugins/korepicker.ts",
-            filename: 'plugins/kore-picker-plugin.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          },
-          KoreGraphTemplatesPluginSDK: {
-            import: "./src/index_plugins/graphTemplates.ts",
-            filename: 'plugins/kore-graph-templates-plugin.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          },
-          KoreSolutionsTemplatesPlugin: {
-            import: "./src/index_plugins/solutionsTemplates.ts",
-            filename: 'plugins/kore-solutions-plugin.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          },
-          WebKitSTTPluginSDK: {
-            import: "./src/index_plugins/WebKitSTT.ts",
-            filename: 'plugins/webapi-stt-plugin.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          },
-          BrowserTTSPluginSDK: {
-            import: "./src/index_plugins/BrowserTTS.ts",
-            filename: 'plugins/browser-tts-plugin.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          },
-          AgentDeskTopPluginSDK: {
-            import: "./src/index_plugins/agentDesktop.ts",
-            filename: 'plugins/agent-desktop.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          },
-          GoogleSTTPluginSDK:{
-            import: "./src/index_plugins/googleSTT.ts",
-            filename: 'plugins/google-stt-plugin.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-    
-          },
-          GoogleTTSPluginSDK:{
-            import: "./src/index_plugins/googleTTS.ts",
-            filename: 'plugins/google-tts-plugin.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-    
-          },
-          AzureSTTPluginSDK:{
-            import: "./src/index_plugins/AzureSTT.ts",
-            filename: 'plugins/azure-stt-plugin.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-    
-          },
-          AzureTTSPluginSDK:{
-            import: "./src/index_plugins/AzureTTS.ts",
-            filename: 'plugins/azure-tts-plugin.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-    
-          },
-          KoreAWSPollySTSDK:{
-            import: "./src/index_plugins/KoreAWSST.ts",
-            filename: 'plugins/koreawspolly-st-plugin.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-    
-          },
-          KoreDesktopNotificationPluginSDK: {
-            import: "./src/index_plugins/KoreDesktopNotification.ts",
-            filename: 'plugins/kore-desktop-notification.js',
-            chunkLoading: false,
-          },
-          SearchSuggestionsPluginSDK: {
-            import: "./src/index_plugins/SearchSuggestions.ts",
-            filename: 'plugins/search-suggestions.js',
-            chunkLoading: false,
-          },
-          FileUploadPluginSDK: {
-            import: "./src/index_plugins/fileUpload_umd.ts",
-            filename: 'plugins/file-upload.js',
-            chunkLoading: false,
-          },
-          MultiFileUploadPluginSDK: {
-            import: "./src/index_plugins/multiFileUpload.ts",
-            filename: 'plugins/multi-file-upload.js',
-            chunkLoading: false,
-          },
-          AnswersPluginSDK: {
-            import: "./src/index_plugins/answersTemplate.ts",
-            filename: 'plugins/answers-template.js',
-            chunkLoading: false,
-          },
-          v2PluginSDK: {
-            import: "./src/index_plugins/v2Plugin.ts",
-            filename: 'plugins/v2-plugin.js',
-            chunkLoading: false,
-          },
-          v2KoreWidgetsSDK:{
-            import: "./src/index_plugins/v2WidgetsPlugin.ts",
-            filename: 'plugins/v2-kore-web-sdk-widgets.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          },
-          ProactiveWebCampaignPluginSDK: {
-            import: "./src/index_plugins/proactiveWebCampaign.ts",
-            filename: 'plugins/proactive-web-campaign.js',
-            chunkLoading: false,
-          },
-          Korei18nPluginSDK: {
-            import: "./src/index_plugins/Korei18n.ts",
-            filename: 'plugins/kore-i18n.js'
-          }
         }
         config.output.path= path.resolve(__dirname,'dist/esm');
         config.output.libraryTarget = "module";
@@ -279,131 +176,6 @@ module.exports= function(env,argv){
             filename: 'kore-web-sdk-umd-chat.min.js',
             chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
           },
-          KoreWidgetsSDK:{
-            import: "./src/index_widgets.ts",
-            filename: 'kore-web-sdk-umd-widgets.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          },
-          // KoreSearchSDK:{
-          //   import: "./src/index_umd_search.ts",
-          //   filename: 'kore-web-sdk-umd-search.js',
-          //   chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          // },
-          KorePickersPluginSDK: {
-            import: "./src/index_plugins/korepicker.ts",
-            filename: 'plugins/kore-picker-plugin-umd.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          },
-          KoreGraphTemplatesPluginSDK: {
-            import: "./src/index_plugins/graphTemplates.ts",
-            filename: 'plugins/kore-graph-templates-plugin-umd.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          },
-          KoreSolutionsTemplatesPluginSDK: {
-            import: "./src/index_plugins/solutionsTemplates.ts",
-            filename: 'plugins/kore-solutions-plugin-umd.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          },
-          WebKitSTTPluginSDK: {
-            import: "./src/index_plugins/WebKitSTT.ts",
-            filename: 'plugins/webapi-stt-plugin-umd.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          },
-          BrowserTTSPluginSDK: {
-            import: "./src/index_plugins/BrowserTTS.ts",
-            filename: 'plugins/browser-tts-umd-plugin-umd.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          },
-          AgentDeskTopPluginSDK: {
-            import: "./src/index_plugins/agentDesktop.ts",
-            filename: 'plugins/agent-desktop-umd.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          },
-          // BrowserTTSPluginSDK: {
-          //   import: "./src/index_plugins/BrowserTTS_umd.ts",
-          //   filename: 'plugins/browser-tts-umd-plugin-umd.js',
-          //   chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          // },
-          GoogleSTTPluginSDK:{
-            import: "./src/index_plugins/googleSTT.ts",
-            filename: 'plugins/google-stt-umd-plugin-umd.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-    
-          },
-          GoogleTTSPluginSDK:{
-            import: "./src/index_plugins/googleTTS.ts",
-            filename: 'plugins/google-tts-umd-plugin-umd.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-    
-          },
-    
-          AzureSTTPluginSDK:{
-            import: "./src/index_plugins/AzureSTT.ts",
-            filename: 'plugins/azure-stt-umd-plugin-umd.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-    
-          },
-          AzureTTSPluginSDK:{
-            import: "./src/index_plugins/AzureTTS.ts",
-            filename: 'plugins/azure-tts-umd-plugin-umd.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-    
-          },
-          KoreAWSPollySTSDK:{
-            import: "./src/index_plugins/KoreAWSST.ts",
-            filename: 'plugins/koreawspolly-st-umd-plugin-umd.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-    
-          },
-          // AgentDeskTopPluginSDK: {
-          //   import: "./src/index_plugins/agentDesktop_umd.ts",
-          //   filename: 'plugins/agent-desktop-umd.js',
-          //   chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          // },
-          KoreDesktopNotificationPluginSDK: {
-            import: "./src/index_plugins/KoreDesktopNotification.ts",
-            filename: 'plugins/kore-desktop-notification-umd.js',
-            chunkLoading: false,
-          },
-          SearchSuggestionsPluginSDK: {
-            import: "./src/index_plugins/SearchSuggestions.ts",
-            filename: 'plugins/search-suggestions-umd.js',
-            chunkLoading: false,
-          },
-          FileUploadPluginSDK: {
-            import: "./src/index_plugins/fileUpload_umd.ts",
-            filename: 'plugins/file-upload-umd.js',
-            chunkLoading: false,
-          },
-          MultiFileUploadPluginSDK: {
-            import: "./src/index_plugins/multiFileUpload.ts",
-            filename: 'plugins/multi-file-upload.js',
-            chunkLoading: false,
-          },
-          AnswersPluginSDK: {
-            import: "./src/index_plugins/answersTemplate.ts",
-            filename: 'plugins/answers-template.js',
-            chunkLoading: false,
-          },
-          v2PluginSDK: {
-            import: "./src/index_plugins/v2Plugin.ts",
-            filename: 'plugins/v2-plugin.js',
-            chunkLoading: false,
-          },
-          v2KoreWidgetsSDK:{
-            import: "./src/index_plugins/v2WidgetsPlugin.ts",
-            filename: 'plugins/v2-kore-web-sdk-widgets.js',
-            chunkLoading: false, // Disable chunks that are loaded on demand and put everything in the main chunk.
-          },
-          ProactiveWebCampaignPluginSDK: {
-            import: "./src/index_plugins/proactiveWebCampaign.ts",
-            filename: 'plugins/proactive-web-campaign.js',
-            chunkLoading: false,
-          },
-          Korei18nPluginSDK: {
-            import: "./src/index_plugins/Korei18n.ts",
-            filename: 'plugins/kore-i18n.js'
-          }
         }
         config.output.library = {
           name: '[name]',

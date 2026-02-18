@@ -4,7 +4,6 @@ import { h, Fragment } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { Message } from '../message/message';
 import { getHTML } from '../../base/domManager';
-import CarouselButtons from '../carouselTemplate/carouselButtons';
 
 export function QuickReply(props: any) {
     const msgData = props.msgData;
@@ -23,19 +22,7 @@ export function QuickReply(props: any) {
             hostInstance.chatEle.querySelector('[data-quick-replies-cid="' + msg.messageId + '"]')?.remove();
         }
     }
-    if (!msgData?.message?.[0]?.component?.payload?.stackedButtons && !msgData?.message?.[0]?.component?.payload?.fullWidth) {
-        setTimeout(() => {
-            const carouselButtons = new CarouselButtons({
-                hostInstance,
-                id: msgData.messageId,
-                class: 'hide',
-                lsWidth: 50,
-                rsWidth: 20,
-                classToRemove: 'remove'
-            });
-            carouselButtons.init();
-        }, 50);
-    }
+
 
     setTimeout(() => {
         hostInstance.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({

@@ -2,11 +2,8 @@
 
 import './chatContainer.scss';
 import { h } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import { ChatWidget } from '../chatWidget/chatWidget';
-import { AvatarComponent } from '../avatarComponent/avatarComponent';
-import { WelcomeScreenContainer } from '../../base/welcomeScreenContainer/welcomeScreenContainer';
-
 
 export function ChatContainer(props: any) {
 
@@ -16,7 +13,8 @@ export function ChatContainer(props: any) {
         updateBrandingInfo({...event.brandingData})
     });
 
-    let chatContainerClass = 'kore-chat-window-main-section minimize-chat';
+    let chatContainerClass = 'kore-chat-window-main-section';
+        chatContainerClass = chatContainerClass + ' custom-template-open';
     if (brandingInfo.chat_bubble.icon.size == 'medium') {
         chatContainerClass = chatContainerClass + ' avatar-medium-size';
     } else if (brandingInfo.chat_bubble.icon.size == 'large') {
@@ -30,11 +28,7 @@ export function ChatContainer(props: any) {
     return (
         <div className={chatContainerClass} aria-label='chat-window-section'>
             <div className="kr-wiz-menu-chat defaultTheme-kore"></div>
-            <AvatarComponent {...props} />
             <ChatWidget {...props} />
-            { brandingInfo.welcome_screen.show &&
-                <WelcomeScreenContainer {...props} />
-            }
             <div className="kr-wiz-content-chat"></div>
         </div>
 

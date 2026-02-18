@@ -3,7 +3,6 @@ import requireKr from '../base-sdk/kore-bot-sdk-client';
 import TemplateManager from '../../templatemanager/templateManager';
 import KoreHelpers from '../../utils/helpers';
 import EventEmitter from '../../utils/EventEmiter'
-import MessageTemplate from '../../plugins/v2Plugin/templates/messageTemplate/messageTemplate';
 import KRPerfectScrollbar from '../../libs/perfectscroll/perfect-scrollbar';
 import './../../libs/perfectscroll/css/perfect-scrollbar.min.css';
 import './sass/chatWindow.scss';
@@ -197,8 +196,6 @@ init  (config:any) {
   me.eventManager = new EventManager(me);
   me.brandingManager = new BrandingManager();
   me.templateManager = new TemplateManager(me);
-  me.messageTemplate=new MessageTemplate();
-  me.messageTemplate.hostInstance=me;
   me.installCallbackForPlugins();
   // me.installDefaultPlugins();
 }
@@ -844,7 +841,8 @@ destroy  () {
         me.chatEle.addClass('minimize');
       } else {
         if (!me.config.botOptions.openSocket) {
-          me.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = me.config.botMessages.reconnecting;
+          const headerTitleEl = me.chatEle.querySelector('.chat-widget-header .chat-header-title');
+          if (headerTitleEl) headerTitleEl.textContent = me.config.botMessages.reconnecting;
           me.chatEle.querySelector('.typing-text-area')?.classList?.add('disableComposeBar');
           if (me.chatEle.querySelectorAll('.chat-widget-composebar .quick-replies .kr-btn')) {
             me.chatEle.querySelectorAll('.chat-widget-composebar .quick-replies .kr-btn').forEach((button: any) => {
@@ -866,7 +864,8 @@ resetWindow (data:any = {}) {
   if (me.config.UI.version == 'v2') {
     me.chatEle.find('.kore-chat-header .header-title').html(me.config.botMessages.reconnecting);
   } else {
-    me.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = me.config.botMessages.reconnecting;
+    const headerTitleEl = me.chatEle.querySelector('.chat-widget-header .chat-header-title');
+    if (headerTitleEl) headerTitleEl.textContent = me.config.botMessages.reconnecting;
     if (data && !data.isReconnect) {
       me.chatEle.querySelector('.typing-text-area')?.classList?.add('disableComposeBar');
         if (me.chatEle.querySelectorAll('.chat-widget-composebar .quick-replies .kr-btn')) {
@@ -1284,8 +1283,11 @@ bindEventsV3() {
         me.bot.previousHistoryLoading = false;
       } else if (div.scrollTop === 0) {
         if (me.bot.paginatedScrollDataAvailable && !me.bot.previousHistoryLoading) {
-          me.chatEle.querySelector('.typing-text-area').blur();
-          me.chatEle.querySelector('.typing-text-area').classList.add('disableComposeBar');
+          const typingArea = me.chatEle.querySelector('.typing-text-area');
+          if (typingArea) {
+            typingArea.blur();
+            typingArea.classList.add('disableComposeBar');
+          }
           me.bot.previousHistoryLoading = true;
           var message = me?.config?.history?.paginatedScroll?.loadingLabel || 'Loading chat history..';
           const historyLoader = getHTML(HistoryLoader, message, me);
@@ -1576,7 +1578,8 @@ onBotReady  () {
   _chatContainer.find('.kore-chat-header .header-title').html(me.config.chatTitle).attr('title', me.config.chatTitle);
   _chatContainer.find('.kore-chat-header .disabled').prop('disabled', false).removeClass('disabled');
   } else {
-    me.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = me.config.branding.header.title.name ? me.config.branding.header.title.name : me._botInfo.name;
+    const headerTitleEl = me.chatEle.querySelector('.chat-widget-header .chat-header-title');
+    if (headerTitleEl) headerTitleEl.textContent = me.config.branding.header.title.name ? me.config.branding.header.title.name : me._botInfo.name;
     if (me.chatEle.querySelector('.btn-reconnect') && me.chatEle.querySelector('.btn-reconnect').getAttribute('disabled')) {
       me.chatEle.querySelector('.btn-reconnect').removeAttribute('disabled');
     }
@@ -1940,7 +1943,8 @@ showTypingIndicator  () {
   if (me.config.UI.version == 'v2') {
     $('.typingIndicatorContent').css('display', 'block');
   } else {
-    me.chatEle.querySelector('.typing-indicator-wraper').style.display = 'flex';
+    const el = me.chatEle.querySelector('.typing-indicator-wraper');
+    if (el) el.style.display = 'flex';
   }
 };
 hideTypingIndicator  () {
@@ -1948,7 +1952,8 @@ hideTypingIndicator  () {
   if (me.config.UI.version == 'v2') {
     $('.typingIndicatorContent').css('display', 'none');
   } else {
-    me.chatEle.querySelector('.typing-indicator-wraper').style.display = 'none';
+    const el = me.chatEle.querySelector('.typing-indicator-wraper');
+    if (el) el.style.display = 'none';
   }
 };
 renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | number | Date; type: string; icon: any; message: { component: { payload: { fromHistory: any; }; }; }[]; messageId: any; renderType: string; fromHistorySync: any; } | any) {
@@ -2201,8 +2206,8 @@ generateMessageDOM(msgData?:any){
       return "";
     }
     if (!messageHtml && msgData && msgData.message && msgData.message[0]) {
-      messageHtml=me.messageTemplate.renderMessage(msgData);
-    }    
+      messageHtml = getHTML(Message, msgData, me);
+    }
   } else {
     messageHtml = me.templateManager.renderMessage(msgData);
     if(messageHtml==='_ignore_message_render_'){
@@ -3011,7 +3016,8 @@ applyVariableValue (key:any,value:any,type:any){
     }
 
     if (headerTitle) {
-      me.chatEle.querySelector('.chat-widget-header .chat-header-title').textContent = headerTitle;
+      const headerTitleEl = me.chatEle.querySelector('.chat-widget-header .chat-header-title');
+      if (headerTitleEl) headerTitleEl.textContent = headerTitle;
     }
   }
 

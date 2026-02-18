@@ -37,7 +37,7 @@ small, strike, strong, sub, sup, tt, var,
 b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend, caption, tbody, tfoot, thead,
-aside, canvas, details, embed, 
+, canvas, details, embed, 
 figure, figcaption, footer, header, hgroup, 
 menu, nav, output, ruby, summary,
 time, mark, audio, video {
@@ -56,6 +56,7 @@ h1, h2, h3, h4, h5, h6{
 // }
 body {
 	line-height: normal;
+	margin: 0;
 }
 ol, ul {
 	list-style: none;
@@ -128,4 +129,7 @@ body::-webkit-scrollbar {
 
 .display-hide{
   display: none !important;
+}
+body{
+  margin: 0;
 }

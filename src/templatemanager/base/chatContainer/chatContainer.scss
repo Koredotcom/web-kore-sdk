@@ -2,14 +2,10 @@
 @import '../variables.scss';
 
 .kore-chat-window-main-section {
-  position: fixed;
   height: calc(100% - 136px);
   border-radius: 4px;
-  right: 40px;
-  bottom: 96px;
-  top: auto;
-  width: 400px;
-  max-width: calc(100% - 80px);
+  width: 100%;
+  max-width: 100%;
   transition: 0.4s all ease;
   font-family: var(--global-font-family);
   &.is-wigets-enabled{
@@ -74,6 +70,11 @@
   }
   &.no-avatar-bg-icon{
     height: calc(100% - 80px);
+  }
+  &.custom-template-open {
+    .chat-widgetwrapper-main-container {
+      display: flex;
+    }
   }
   @media (max-width: $media-mobile) {
     width: calc(100% - 20px);

@@ -3,9 +3,11 @@ import BrandingJSON from '../sass/brandingJSON'; // To do
 var chatConfig:any={};
 
 var botOptions:any = {};
-botOptions.openSocket = false;
+// Set true to use WebSocket for real-time messages. The WebSocket URL is provided by the Kore API (login/rtm response).
+// If you see ws://localhost:9000/ws in the browser, the API may be returning a same-origin URL—use reWriteSocketURL below to point to the Kore host, or fix your backend to return the actual wss:// URL.
+botOptions.openSocket = true;
 botOptions.logLevel = 'debug';
-botOptions.koreAPIUrl = "https://platform.kore.ai/api/";
+botOptions.koreAPIUrl = "https://uae-platform.kore.ai/api/";
 
 botOptions.API_KEY_CONFIG={
     bootstrapURL:botOptions.koreAPIUrl+'platform/websdk',
@@ -44,11 +46,11 @@ botOptions.webSocketConfig = {
     }
 }
 
-// To modify the web socket url use the following option
+// When the API returns a WebSocket URL with wrong host (e.g. ws://localhost:9000/ws in dev), rewrite it to the Kore host so the connection succeeds:
 // botOptions.reWriteSocketURL = {
-//     protocol: 'PROTOCOL_TO_BE_REWRITTEN',
-//     hostname: 'HOSTNAME_TO_BE_REWRITTEN',
-//     port: 'PORT_TO_BE_REWRITTEN'
+//     protocol: 'wss:',
+//     hostname: 'uae-platform.kore.ai',
+//     port: ''
 // };
 
 chatConfig = {
@@ -97,7 +99,9 @@ chatConfig = {
     },
     maxReconnectionAPIAttempts: 5,  // Number of retries on api failure
     UI:{
-        version:"v3"
+        version:"v3",
+        // Set template to 'custom' to use the custom search/knowledge-base style UI (Arctera-style)
+        template: 'default' // 'default' | 'custom'
     },
     UIContext: {},  // To add user info
     syncMessages: {
