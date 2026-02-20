@@ -480,6 +480,74 @@ By default Kore provides messages time stamp configuration using [Theme Editor](
    });
 ```
 
+### How to render dummy text as bot response in chat window
+
+To render a dummy text as bot response in the chat window please use the below code snippet
+
+```js
+const msgText = 'Dummy text';
+const msg = {
+    "type": "bot_response",
+    "from": "bot",
+    "message": [
+        {
+            "type": "text",
+            "component": {
+                "type": "text",
+                "payload": {
+                   "text": msgText
+                }
+            },
+            "cInfo": {
+               "body": msgText
+            }
+        }
+    ],
+    "messageId": "ms-" + new Date().valueOf(),
+    "botInfo": {},
+    "createdOn": new Date().toISOString(),
+    "icon": "", // add the icon url here copied from other messages
+    "createdOnTimemillis": new Date().valueOf()
+}
+
+chatWindowInstance.renderMessage(msg);
+```
+
+### How to render a dummy custom template as bot response in chat window
+
+To render a dummy custom template as bot response in the chat window please use the following code snippet. You should have relevant custom template code to render in the UI. Please refer [here](../../README.md#-custom-templates) for more details about custom template
+
+```js
+const msgData = {
+    "type": "bot_response",
+    "from": "bot",
+    "message": [
+        {
+            "type": "text",
+            "component": {
+                "type": "template",
+                "payload": {
+                    "template_type": "custom_weather_template", // template_type is mandatory
+                    "temparature": "36 C" // you can any properties here
+                }
+            },
+            "cInfo": {
+                "body": ""
+            }
+        }
+    ],
+    "messageId": "ms-"+new Date().getTime(),
+    "sessionId": "",
+    "botInfo": {},
+    "createdOn": new Date().toISOString(),
+    "icon": "", // add icon url here copied from other messages
+    "timestamp": new Date().getTime(),
+    "createdOnTimemillis": new Date().valueOf()
+    };
+    
+    chatWindowInstance.renderMessage(msgData);
+```
+
 ## Custom Codes
 
 ### How to pass customData to bot from SDK ?
