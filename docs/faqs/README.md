@@ -20,6 +20,7 @@ Any styling in the chat window can be overridden by targeting the parent class "
   width: 100% !important;
 }
 ```
+
 ### How to open chat window by default ?
 
 By default chat icon will be provided to user to click and open chat window on demand.But this behaviour can be changed to automatically open chatwindow using following code 
@@ -451,8 +452,8 @@ chatWindowInstance.on('onSubmit', (e) => {
 
 By default Kore provides messages time stamp configuration using [Theme Editor](https://docs.kore.ai/xo/channels/add-web-mobile-client/?h=theme#virtual-assistant-theme-design). If other format is required then please use the following
 ```js
- let beforeRenderMessage = chatWindowInstance.EVENTS.BEFORE_RENDER_MSG;
-   chatWindowInstance.on(beforeRenderMessage, (e) => {
+let beforeRenderMessage = chatWindowInstance.EVENTS.BEFORE_RENDER_MSG;
+chatWindowInstance.on(beforeRenderMessage, (e) => {
     let msgHtml = e.messageHtml;
     let msgData = e.msgData;
     if (msgData.type === 'bot_response' && msgData.createdOn) { 
@@ -477,7 +478,7 @@ By default Kore provides messages time stamp configuration using [Theme Editor](
     //     msgHtml.querySelector('.bot-bubble-comp .top-info .time-stamp time').textContent = convertedTime;
     //   }
     // }
-   });
+});
 ```
 
 ### How to render dummy text as bot response in chat window
@@ -543,51 +544,51 @@ const msgData = {
     "icon": "", // add icon url here copied from other messages
     "timestamp": new Date().getTime(),
     "createdOnTimemillis": new Date().valueOf()
-    };
+};
     
-    chatWindowInstance.renderMessage(msgData);
+chatWindowInstance.renderMessage(msgData);
 ```
 
 ## Custom Codes
 
 ### How to pass customData to bot from SDK ?
 
-To send some additional information along with user message, custom data will be useful.This can be done by setting the customData object on botOptions.botInfo.
+To send some additional information along with user message, custom data will be useful. This can be done by setting the customData object on botOptions.botInfo
 
 ###### Code Sample for sending customData
 Setting custom data which will be added to all the further messages sent
 ```js
- botOptions.botInfo.customData={
-        someinfo:"tobot"
- }
+botOptions.botInfo.customData = {
+    someinfo: "tobot"
+}
 ```
 To update previously added customData, simply update customData key with new object to futher messages
 ```js
- botOptions.botInfo.customData={
-        newInfo:"tobot2"
- }
+botOptions.botInfo.customData = {
+    newInfo: "tobot2"
+}
 ```
 To remove previously added customData to futher messages
 ```js
- delete botOptions.botInfo.customData;
+delete botOptions.botInfo.customData;
 ```
 
-### How to pass meta tags to bot from SDK ?
+### How to pass meta tags to bot from Web SDK ?
 
-To send meta tags information along with user message by setting the metaTags object on botOptions.botInfo.
+To send meta tags information along with user message by setting the metaTags object on botOptions.botInfo
 
 ###### Code Sample for sending meta tags
 Setting meta tags which will be added to all the further messages sent
 ```js
- botOptions.botInfo.metaTags=["premium_user"];
+botOptions.botInfo.metaTags = ["premium_user"];
 ```
 To update previously added metat tags, simply update metaTags key with new array to futher messages
 ```js
- botOptions.botInfo.metaTags=["regular_user"];
+botOptions.botInfo.metaTags = ["regular_user"];
 ```
 To remove previously added customData to futher messages
 ```js
- delete botOptions.botInfo.metaTags;
+delete botOptions.botInfo.metaTags;
 ```
 
 ## ConnectionMode usage
