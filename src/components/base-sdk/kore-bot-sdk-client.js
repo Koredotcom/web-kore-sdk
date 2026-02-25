@@ -1259,6 +1259,11 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       args.headers.Authorization = optData.opts.authorization;
       delete args.data.authorization;
     }
+
+    if (optData && optData.opts && optData.opts['x-rtm-secure']) {
+      args.headers['x-rtm-secure'] = optData.opts['x-rtm-secure'];
+      delete args.data['x-rtm-secure'];
+    }
   
     this._requestQueue.push({
       args: args,
@@ -1501,6 +1506,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     }
     this.user = {};
     this.user.accessToken = clientOpts.accessToken;
+    this.assertion = clientOpts?.assertion;
     this.botInfo = clientOpts.botInfo || {};
     this.CLIENT_EVENTS=CLIENT_EVENTS.RTM;
     this.$=clientOpts.$
@@ -1530,6 +1536,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this._connecting = true;
       opts = opts || {"botInfo":this.botInfo};
       opts.authorization = "bearer "+ this.user.accessToken;
+      opts['x-rtm-secure'] = 1;
       this._rtm.start(opts, bind(this._onStart, this));
     }
   };
@@ -1620,7 +1627,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this.emit(CLIENT_EVENTS.AUTHENTICATED, data);
       this.emit('reconnect_event', { reconnected: __reconnect__ });
       this.emit('before_ws_con', { data, isImplicitReconnect: __reconnect__ });
-      this.connect(data.url);
+      this.connect(data.url, data?.nonce || '');
     }
   };
   
@@ -1678,11 +1685,17 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   };
   
   
-  KoreRTMClient.prototype.connect = function connect(socketUrl) {
+  KoreRTMClient.prototype.connect = function connect(socketUrl, nonce) {
     debug("connecting");
     this.emit(CLIENT_EVENTS.WS_OPENING,{});
     socketUrl=this.reWriteURL(socketUrl);
-    this.ws = this._socketFn(socketUrl);
+    let protocols = [];
+    if (this.assertion && nonce) { 
+      protocols.push('x-rtm-secure|1');
+      protocols.push('jwt|' + this.assertion);
+      protocols.push('nonce|' + nonce);
+    }
+    this.ws = this._socketFn(socketUrl, protocols);
     this.ws.onopen = bind(this.handleWsOpen, this);
     this.ws.onmessage = bind(this.handleWsMessage, this);
     this.ws.onerror = bind(this.handleWsError, this);
@@ -1898,9 +1911,10 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   
   },{"browser-request":20,"lodash":24}],11:[function(require,module,exports){
   
-  var wsTransport = function wsTransport(socketUrl, opts) {
-    var wsTransportOpts = opts || {};
-    var wsOpts = {};
+  var wsTransport = function wsTransport(socketUrl, protocols) {
+    if (protocols && protocols.length > 0) {
+      return new WebSocket(socketUrl, protocols);
+    }
     return new WebSocket(socketUrl);
   };
   
@@ -2083,6 +2097,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     var args = {
       opts: opts
     };
+
 
     return this.client.makeAPICall('/rtm/start', args, optCb);
   };
