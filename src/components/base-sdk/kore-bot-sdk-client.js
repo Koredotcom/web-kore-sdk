@@ -1516,6 +1516,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       retries: clientOpts.maxReconnectionAPIAttempts || 5,
       factor: 2
     };
+    this.enableSecureRTM = clientOpts.enableSecureRTM !== false
   }
   
   inherits(KoreRTMClient, BaseAPIClient);
@@ -1536,7 +1537,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       this._connecting = true;
       opts = opts || {"botInfo":this.botInfo};
       opts.authorization = "bearer "+ this.user.accessToken;
-      opts['x-rtm-secure'] = 1;
+      if (this.enableSecureRTM) {
+        opts['x-rtm-secure'] = 1;
+      }
       this._rtm.start(opts, bind(this._onStart, this));
     }
   };
@@ -1690,7 +1693,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     this.emit(CLIENT_EVENTS.WS_OPENING,{});
     socketUrl=this.reWriteURL(socketUrl);
     let protocols = [];
-    if (this.assertion && nonce) { 
+    if (this.enableSecureRTM && this.assertion && nonce) { 
       protocols.push('x-rtm-secure|1');
       protocols.push('jwt|' + this.assertion);
       protocols.push('nonce|' + nonce);
@@ -2097,7 +2100,6 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     var args = {
       opts: opts
     };
-
 
     return this.client.makeAPICall('/rtm/start', args, optCb);
   };
