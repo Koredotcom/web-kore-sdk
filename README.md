@@ -32,33 +32,58 @@ Get chatWindow and chatConfig
 import { chatConfig, chatWindow } from 'kore-web-sdk';
 
 ```
+
+Create chat window instance
+
+```js
+let chatWindowInstance = new chatWindow(chatConfig);
+```
+
 Configure ChatConfig
-
-
 
 ```js
 
 let botOptions=chatConfig.botOptions;
-	
- botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
- botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
- botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
- botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
- botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
- /* 
- Important Note: These keys are provided here for quick demos to generate JWT token at client side but not for Production environment.
- Refer below document for JWT token generation at server side. Client Id and Client secret should maintained at server end.
- https://developer.kore.ai/docs/bots/sdks/user-authorization-and-assertion/
- **/
-
+botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
+botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
+ 
 ```
 
+Configure JWTAsertion function
 
-Create chat window instance and trigger show method
 ```js
-var chatWindowInstance = new chatWindow(chatConfig);
-chatWindowInstance.show(chatConfig);
+ chatConfig.JWTAsertion = function (commitJWT: any) {
+      let payload = {
+        "identity": "user@example.com"
+      }
+      fetch('http://localhost:7000/api/users/sts/', {
+        "headers": {
+          "content-type": "application/json",
+        },
+        "body": JSON.stringify(payload),
+        "method": "POST",
+      })
+        .then(res => {
+          if (res.ok) {
+            return res.json();
+          }
+          throw new Error('Something went wrong');
+        })
+        .then((res) => {
+          chatWindowInstance.setJWT(res.jwt); // jwt returned by API service
+          commitJWT(); // Callback function
+        }).catch(err => {
+          console.log(err);
+        });
+    };
+```
+>[!NOTE]
+>We need to setup a sample JWT web service to generate a JWT by configure the Client Id and Client Secret. Please follow the [instructions](./docs/configurations/jwtgenerationandusage/) to setup a server and generate a JWT
 
+
+Trigger show method
+```js
+chatWindowInstance.show(chatConfig);
 ```
 ### Examples
 Click [here](/docs/sdkdeveloper) to explore different variations how SDK can be consumed 
@@ -67,7 +92,7 @@ Click [here](/docs/sdkdeveloper) to explore different variations how SDK can be 
 <details>
  <summary>Legacy</summary>
 
-include the following script in your html file and configure bot configurations 
+include the following script in your html file and configure the configurations 
 
 ```js
 
@@ -82,15 +107,36 @@ include the following script in your html file and configure bot configurations
 
         //configure bot configurations
         var botOptions=chatConfig.botOptions;
-        botOptions.JWTUrl = "PLEASE_ENTER_JWTURL_HERE";
         botOptions.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';
         botOptions.botInfo = { name: "PLEASE_ENTER_BOT_NAME", "_id": "PLEASE_ENTER_BOT_ID" }; // bot name is case sensitive
-        botOptions.clientId = "PLEASE_ENTER_CLIENT_ID";
-        botOptions.clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+
+        chatConfig.JWTAsertion = function (commitJWT: any) {
+            let payload = {
+                "identity": "user@example.com"
+            }
+            fetch('http://localhost:7000/api/users/sts/', {
+                "headers": {
+                    "content-type": "application/json",
+                },
+                "body": JSON.stringify(payload),
+                "method": "POST",
+            })
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+                throw new Error('Something went wrong');
+            })
+            .then((res) => {
+                chatWindowInstance.setJWT(res.jwt); // jwt returned by API service
+                commitJWT(); // Callback function
+            }).catch(err => {
+                console.log(err);
+            });
+        };
+        
 	/* 
-	Important Note: These keys are provided here for quick demos to generate JWT token at client side but not for Production environment.
-	Refer below document for JWT token generation at server side. Client Id and Client secret should maintained at server end.
-	https://developer.kore.ai/docs/bots/sdks/user-authorization-and-assertion/
+	Important Note: We need to setup a sample JWT web service to generate a JWT by configure the Client Id and Client Secret. Please follow the [instructions](./docs/configurations/jwtgenerationandusage/) to setup a server and generate a JWT
 	**/
 
         //show chatwindow

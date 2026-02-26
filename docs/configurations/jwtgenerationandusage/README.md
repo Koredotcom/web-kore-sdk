@@ -16,12 +16,12 @@ Generate and sign the JWT using the client credentials and return it to the Web 
 2. Go to the users.js file
    
    ![image](https://github.com/user-attachments/assets/9347aaa0-247e-471e-abfb-63e535e22c2a)
-3. Configure the Client ID and Client Secret. You can hard code or fetch the details from database. Client ID and Client Secret can be copied from the Web/mobile channel available in the Platform.
+3. Configure the Client ID and Client Secret __users.js__ under __routes__ folder. You can use env variables or hard code or fetch the details from database. Client Id and Client Secret can be copied from the **Web/Mobile Client** page on the **Flows & Channels** -> **Digital** available in the Platform.
    
    ![image](https://github.com/user-attachments/assets/54853771-fb45-4aa5-a645-d71d6ef9e436)
    
    ![image](https://github.com/user-attachments/assets/09f0e33f-07fd-4b1c-99ba-ac18e07b7a32)
-4. Start the server.
+4. Start the server using using the cmd node startServer
 
 ## Usage in the Kore Web SDK
 We need to configure the chatConfig to pass jwt returned by the above API servcie
