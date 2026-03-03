@@ -160,3 +160,7 @@
     background: transparent;
     cursor: pointer;
 }
+
+.kore-chat-window-main-section .show-more-btn{
+    @extend .show-more-btn;
+}

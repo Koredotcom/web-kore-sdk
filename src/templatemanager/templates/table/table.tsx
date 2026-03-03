@@ -102,7 +102,6 @@ export function TableExt(props: any) {
                 <section class="table-wrapper-main-container" data-cw-msg-id={msgData?.messageId}>
                     {showMore && msgData?.message?.[0]?.cInfo?.body && <Message {...messageObj} />}
                     <section class="table-wrapper-section">
-                        <div style="overflow-x:auto; padding: 0 8px;">
                             <table className="table-regular-view" cellSpacing={0} cellPadding={0}>
                                 <thead>
                                     <tr>
@@ -129,7 +128,6 @@ export function TableExt(props: any) {
                                     ))}
                                 </tbody>
                             </table>
-                        </div>
                         {showMore && payload.elements.length > 3 && <button className={`show-more-btn table-show-more-${msgData.messageId}`}>Show More</button>}
                     </section>
                 </section>
