@@ -1364,7 +1364,8 @@ class AgentDesktopPluginScript  {
             display: 'inline-block',
             fontStyle: 'normal',
             fontWeight: 600,
-            fontSize: '10px'
+            fontSize: '10px',
+            lineHeight: 'normal'
         }
         var tooltiptext = document.createElement("div");
         tooltiptext.id = "cobrowse-tooltip-text";
@@ -1587,8 +1588,8 @@ class AgentDesktopPluginScript  {
         cobrowsetoolbar.style.background = '#FFFFFF';
         cobrowsetoolbar.style.boxShadow = '0px 2px 5px rgba(0, 0, 0, 0.25)';
         cobrowsetoolbar.style.borderRadius = '2px';
-        cobrowsetoolbar.style.left = 'calc(100% - 50px)';
-        cobrowsetoolbar.style.top = '40%';
+        cobrowsetoolbar.style.left = 'calc(100% - 58px)';
+        cobrowsetoolbar.style.top = '21%';
         cobrowsetoolbar.style.fontWeight = 'normal';
         cobrowsetoolbar.style.fontSize = '14px';
         cobrowsetoolbar.style.lineHeight = '20px';
