@@ -1260,9 +1260,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       delete args.data.authorization;
     }
 
-    if (optData && optData.opts && optData.opts['x-rtm-secure']) {
-      args.headers['x-rtm-secure'] = optData.opts['x-rtm-secure'];
-      delete args.data['x-rtm-secure'];
+    if (optData && optData.opts && optData.opts['x-rtm-v']) {
+      args.headers['x-rtm-v'] = optData.opts['x-rtm-v'];
+      delete args.data['x-rtm-v'];
     }
   
     this._requestQueue.push({
@@ -1538,7 +1538,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       opts = opts || {"botInfo":this.botInfo};
       opts.authorization = "bearer "+ this.user.accessToken;
       if (this.enableSecureRTM) {
-        opts['x-rtm-secure'] = 1;
+        opts['x-rtm-v'] = 1;
       }
       this._rtm.start(opts, bind(this._onStart, this));
     }
@@ -1694,7 +1694,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     socketUrl=this.reWriteURL(socketUrl);
     let protocols = [];
     if (this.enableSecureRTM && this.assertion && nonce) { 
-      protocols.push('x-rtm-secure|1');
+      protocols.push('x-rtm-v|1');
       protocols.push('jwt|' + this.assertion);
       protocols.push('nonce|' + nonce);
     }
