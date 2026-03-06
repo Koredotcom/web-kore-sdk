@@ -152,7 +152,6 @@ class AgentDesktopPluginScript  {
     koreCoBrowse;
     rrweb;
     authResponse;
-    cwInstance = null;
     agentDefaultProfileIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDMiIHZpZXdCb3g9IjAgMCA0OCA0MyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIxNF8xMTA3NDgpIj4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0iI0VBRjFGQyIvPgo8cGF0aCBkPSJNMjIgMjIuMjVDMjUuNTg5OSAyMi4yNSAyOC41IDE5LjMzOTkgMjguNSAxNS43NUMyOC41IDEyLjE2MDEgMjUuNTg5OSA5LjI1IDIyIDkuMjVDMTguNDEwMiA5LjI1IDE1LjUgMTIuMTYwMSAxNS41IDE1Ljc1QzE1LjUgMTkuMzM5OSAxOC40MTAyIDIyLjI1IDIyIDIyLjI1WiIgZmlsbD0iIzJCNzVFNCIvPgo8cGF0aCBkPSJNNi44MzMzNyA0MS43NUM2LjgzMzM3IDMzLjM3MzcgMTMuNjIzNyAyNi41ODMzIDIyIDI2LjU4MzNDMzAuMzc2NCAyNi41ODMzIDM3LjE2NjcgMzMuMzczNyAzNy4xNjY3IDQxLjc1SDYuODMzMzdaIiBmaWxsPSIjMkI3NUU0Ii8+CjwvZz4KPHJlY3QgeD0iMS4yNSIgeT0iMC43NSIgd2lkdGg9IjQxLjUiIGhlaWdodD0iNDEuNSIgcng9IjIwLjc1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8yMTRfMTEwNzQ4Ij4KPHJlY3QgeD0iMiIgeT0iMS41IiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K';
 
     constructor(config,response) {
@@ -194,8 +193,7 @@ class AgentDesktopPluginScript  {
     AgentDesktop = function (uuId, aResponse) {
         let me = this;
         this.authResponse = null;
-        this.cwInstance = this.config.hostInstance;
-        let cwInstance = this.cwInstance;
+        let cwInstance = this.config.hostInstance;
         let botInstance = cwInstance?.bot;
         console.log("agentdesktop uuId", uuId);
         /*if (uuId && uuId.length > 0) {
@@ -1965,7 +1963,7 @@ class AgentDesktopPluginScript  {
         if (!cobrowseRequest.userId) {
             cobrowseRequest.userId = me.koreGenerateUUID();
         }
-        const hostBotOptions = this.cwInstance && this.cwInstance.config && this.cwInstance.config.botOptions || {};
+        const hostBotOptions = this.config && this.config.hostInstance && this.config.hostInstance.config && this.config.hostInstance.config.botOptions || {};
         const isSecureCobrowseEnabled = hostBotOptions && hostBotOptions.enableSecureCobrowse === true;
         if (this.socket === null) {
             const socketOpts = {
