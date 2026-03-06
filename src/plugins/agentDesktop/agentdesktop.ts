@@ -42,7 +42,7 @@ class AgentDesktopPlugin {
                 this.agentDesktopInfo = new AgentDesktopPluginScript(this.config);
                 // Connecting cobrowse session with the user data
                 this.authInfo = response;
-                this.cobrowseSession = new AgentDesktopPluginScript({ ...response, excludeRTM: true, isVoiceCobrowseSession: true });                
+                this.cobrowseSession = new AgentDesktopPluginScript({ ...this.config, ...response, excludeRTM: true, isVoiceCobrowseSession: true });               
                 
                 // disable click to call button until sbc details are received
                 this.agentDesktopInfo.disableClickToCallButton();
@@ -519,7 +519,7 @@ class AgentDesktopPlugin {
             })
             .then((res: any) => {
                 this.authInfo = res;
-                this.cobrowseSession = new AgentDesktopPluginScript({...res, excludeRTM: true, isVoiceCobrowseSession: true});
+                this.cobrowseSession = new AgentDesktopPluginScript({...this.config, ...res, excludeRTM: true, isVoiceCobrowseSession: true});
             }).catch(err => {
                 console.error(err)
                 // this.authInfo = null;
