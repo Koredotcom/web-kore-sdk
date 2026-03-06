@@ -1730,14 +1730,28 @@ function dragElement(elmnt) {
         if (!cobrowseRequest.userId) {
             cobrowseRequest.userId = koreGenerateUUID();
         }
+        const isSecureCobrowseEnabled = window.chatConfig && window.chatConfig.botOptions && window.chatConfig.botOptions.enableSecureCobrowse === true;
         if (socket === null) {
-            socket = io(cobrowseRequest.cobrowseUrl + "/cobrowse",  {
-                "query" : {
-                    "userId" : this.authResponse.userInfo.userId,
-                    "authToken" : this.authResponse.authorization.accessToken,
-                    "accountId" : this.authResponse.userInfo.accountId
-                }, 
-            "path" : "/agentassist/api/v1/chat", transports : ['websocket', 'polling', 'flashsocket'] });
+            const socketOpts = {
+                path: "/agentassist/api/v1/chat",
+                transports: ["websocket", "polling", "flashsocket"]
+            };
+            if (isSecureCobrowseEnabled) {
+                socketOpts.auth = {
+                    authToken: this.authResponse.authorization.accessToken
+                };
+                socketOpts.query = {
+                    userId: this.authResponse.userInfo.userId,
+                    accountId: this.authResponse.userInfo.accountId
+                };
+            } else {
+                socketOpts.query = {
+                    userId: this.authResponse.userInfo.userId,
+                    authToken: this.authResponse.authorization.accessToken,
+                    accountId: this.authResponse.userInfo.accountId
+                };
+            }
+            socket = io(cobrowseRequest.cobrowseUrl + "/cobrowse", socketOpts);
         } else {
             initialize();
         }
