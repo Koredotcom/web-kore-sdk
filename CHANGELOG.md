@@ -1,3 +1,21 @@
+### 11.22.0
+* Release Mar 06, 2026
+* Breaking Changes
+  * removed dependency on reconnect button for token expiry auto reconnections internally
+* Features
+  * added additional handshake validation for enhanced security before establishing WebSocket connection. For on-prem please upgrade the Platform or disable it using `botOptions.enableSecureRTM = false;` 
+  * enhanced apiFailure event. For more details please refer [here](./docs/customizations/README.md#apifailure-event-for-api-failures)
+  * enhanced offline messages handling for WebSocket and webhook communication
+* Documentation
+  * added accessibility doc. Please refer [Kore docs](https://docs.kore.ai/xo/sdk/web-sdk-accessibility/) for VPAT
+  * updated FAQs
+  * minor doc enhancements  
+* Bug fixes
+  * markdown issue fix for image links having _ in alt text
+  * co-browse color picker icon issue in Firefox and removed blocked user input masking on co-browse session end
+  * support video calls for cross browsers
+  * other minor bug fixes
+
 ### 11.21.1
 * Release Jan 31, 2026
 * Breaking Changes
