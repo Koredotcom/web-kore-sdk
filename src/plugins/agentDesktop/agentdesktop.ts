@@ -360,7 +360,7 @@ class AgentDesktopPlugin {
             })
             .then((res: any) => {
                 this.authInfo = res;
-                this.cobrowseSession = new AgentDesktopPluginScript({...res, excludeRTM: true, isCobrowseSession: true});
+                this.cobrowseSession = new AgentDesktopPluginScript({...res, excludeRTM: true, isCobrowseSession: true, hostInstance: me.hostInstance});
             }).catch(err => {
                 console.error(err)
                 // this.authInfo = null;

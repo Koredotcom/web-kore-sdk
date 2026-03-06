@@ -1964,15 +1964,29 @@ class AgentDesktopPluginScript  {
         if (!cobrowseRequest.userId) {
             cobrowseRequest.userId = me.koreGenerateUUID();
         }
+        const hostBotOptions = this.config && this.config.hostInstance && this.config.hostInstance.config && this.config.hostInstance.config.botOptions || {};
+        const isSecureCobrowseEnabled = hostBotOptions && hostBotOptions.enableSecureCobrowse === true;
         if (this.socket === null) {
-            this.socket = io(cobrowseRequest.cobrowseUrl + "/cobrowse", {
-                "query": {
-                    "userId": this.authResponse.userInfo.userId,
-                    "authToken": this.authResponse.authorization.accessToken,
-                    "accountId": this.authResponse.userInfo.accountId
-                },
-                "path": "/agentassist/api/v1/chat", transports: ['websocket', 'polling', 'flashsocket']
-            });
+            const socketOpts = {
+                path: "/agentassist/api/v1/chat",
+                transports: ["websocket", "polling", "flashsocket"]
+            };
+            if (isSecureCobrowseEnabled) {
+                socketOpts.auth = {
+                    authToken: this.authResponse.authorization.accessToken
+                };
+                socketOpts.query = {
+                    userId: this.authResponse.userInfo.userId,
+                    accountId: this.authResponse.userInfo.accountId
+                };
+            } else {
+                socketOpts.query = {
+                    userId: this.authResponse.userInfo.userId,
+                    authToken: this.authResponse.authorization.accessToken,
+                    accountId: this.authResponse.userInfo.accountId
+                };
+            }
+            this.socket = io(cobrowseRequest.cobrowseUrl + "/cobrowse", socketOpts);
         } else {
             initialize(me);
         }
