@@ -82,6 +82,57 @@ export function TableExt(props: any) {
                 </div>
             </Fragment>
         );
+    } else if (msgData.message?.[0]?.component?.payload?.template_type == 'custom_table' && msgData.message[0].component.payload?.table_design == 'regular') {
+        const payload = msgData.message[0].component.payload;
+        const handleCellClick = (cellValue: any) => {
+            if (cellValue[1] === 'button' && cellValue[2]) {
+                if (cellValue[2].type === 'web_url' && cellValue[2].url) {
+                    let link = cellValue[2].url;
+                    if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
+                        link = `https://${link}`;
+                    }
+                    hostInstance.openExternalLink(link);
+                } else if (cellValue[2].type === 'postback') {
+                    hostInstance.sendMessage(cellValue[2].payload, { renderMsg: cellValue[2].title });
+                }
+            }
+        }
+        return (
+            <Fragment>
+                <section class="table-wrapper-main-container" data-cw-msg-id={msgData?.messageId}>
+                    {showMore && msgData?.message?.[0]?.cInfo?.body && <Message {...messageObj} />}
+                    <section class="table-wrapper-section">
+                            <table className="table-regular-view" cellSpacing={0} cellPadding={0}>
+                                <thead>
+                                    <tr>
+                                        {payload.columns.map((col: any) => (
+                                            <th style={col[1] ? { textAlign: col[1] } : {}}
+                                                dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(col[0] || "", "bot") }}></th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {payload.elements.map((row: any, rowIdx: any) => (
+                                        row.Values?.length > 1 && ((showMore && rowIdx < 3) || !showMore) &&
+                                        <tr>
+                                            {row.Values.map((cell: any, cellIdx: any) => (
+                                                <td
+                                                    className={cell[1] === 'button' ? `clickable-btn${cell[2]?.type === 'web_url' ? ' clickable-link' : ''}` : ''}
+                                                    style={payload.columns[cellIdx]?.[1] ? { textAlign: payload.columns[cellIdx][1] } : {}}
+                                                    title={cell[0]}
+                                                    onClick={() => cell[1] === 'button' && handleCellClick(cell)}
+                                                    dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(String(cell[0] ?? ""), "bot") }}>
+                                                </td>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        {showMore && payload.elements.length > 3 && <button className={`show-more-btn table-show-more-${msgData.messageId}`}>Show More</button>}
+                    </section>
+                </section>
+            </Fragment>
+        );
     } else {
         return null;
     }
@@ -97,6 +148,21 @@ export function Table(props: any) {
     }
 
     if (msgData.message?.[0]?.component?.payload?.template_type == 'table') {
+        useEffect(() => {
+            setTimeout(() => {
+                msgData.message[0].component.payload.table_design = 'regular';
+                hostInstance.chatEle.querySelector(`.table-show-more-${msgData.messageId}`)?.addEventListener('click', (e: any) => {
+                    hostInstance.modalAction(getHTML(TableExt, msgData, hostInstance));
+                });
+            }, 500);
+        });
+        msgObj.msgData.message[0].cInfo.body = msgObj.msgData.message[0].component?.payload?.text || '';
+        return (
+            <Fragment>
+                <TableExt {...msgObj} />
+            </Fragment>
+        )
+    } else if (msgData.message?.[0]?.component?.payload?.template_type == 'custom_table') {
         useEffect(() => {
             setTimeout(() => {
                 msgData.message[0].component.payload.table_design = 'regular';

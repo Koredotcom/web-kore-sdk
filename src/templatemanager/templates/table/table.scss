@@ -43,6 +43,14 @@
             font-size: 12px;
             font-weight: 400;
             line-height: 18px;
+            &.clickable-btn{
+                cursor: pointer;
+                color: var(--sdk-global-theme-color);
+                font-weight: 500;
+            }
+            &.clickable-link{
+                text-decoration: underline;
+            }
         }
     }
 }
@@ -151,4 +159,8 @@
     border: 0;
     background: transparent;
     cursor: pointer;
+}
+
+.kore-chat-window-main-section .show-more-btn{
+    @extend .show-more-btn;
 }
