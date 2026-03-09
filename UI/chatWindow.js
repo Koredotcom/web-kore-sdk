@@ -4284,7 +4284,7 @@
             this.botDetails = function (response, botInfo) {
                 if(window.KoreAgentDesktop){
                     if (response && response.userInfo) {
-                        KoreAgentDesktop(response.userInfo.userId, response);
+                        KoreAgentDesktop(response.userInfo.userId, response, chatInitialize.config.botOptions);
                     } else {
                         console.log("AgentDesktop initialization - did not receive authResponse")
                     }    

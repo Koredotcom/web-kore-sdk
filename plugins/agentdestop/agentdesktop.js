@@ -26,8 +26,9 @@ $(document).ready(function () {
 });
 
 
-function AgentDesktop(uuId, aResponse) {
+function AgentDesktop(uuId, aResponse, botOptions) {
     this.authResponse = null;
+    this.botOptions = botOptions || null;
     console.log("agentdesktop uuId", uuId);
     /*if (uuId && uuId.length > 0) {
         localStorage.setItem("kr-cw-uid", uuId)
@@ -1730,7 +1731,7 @@ function dragElement(elmnt) {
         if (!cobrowseRequest.userId) {
             cobrowseRequest.userId = koreGenerateUUID();
         }
-        const isSecureCobrowseEnabled = window.chatConfig && window.chatConfig.botOptions && window.chatConfig.botOptions.enableSecureCobrowse === true;
+        const isSecureCobrowseEnabled = this.botOptions && this.botOptions.enableSecureCobrowse === true;
         if (socket === null) {
             const socketOpts = {
                 path: "/agentassist/api/v1/chat",
