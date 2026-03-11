@@ -29,7 +29,7 @@ export function TableList(props: any) {
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'tableList') {
         return (
-            <div data-cw-msg-id={msgData?.messageId}>
+            <div data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
                 {msgData.message[0].component.payload.elements.map((ele: any) => (
                     <Fragment>
                         <div className="table-list-wrapper-info">

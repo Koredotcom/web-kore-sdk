@@ -6,10 +6,11 @@ import { getHTML } from '../../base/domManager';
 import KoreHelpers from '../../../utils/helpers';
 
 export function LineChart(props: any) {
+    const hostInstance = props.hostInstance;
     const helpers = KoreHelpers.helpers;
     const msgData = props.msgData;
     return (
-        <div className="chart-template-wrapper line-chart-inline" id={`lc${msgData.messageId}`} data-cw-msg-id={msgData?.messageId}>
+        <div className="chart-template-wrapper line-chart-inline" id={`lc${msgData.messageId}`} data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
             <div className="linechartDiv charts-body-info">
                 {msgData?.message?.[0]?.component?.payload?.text && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData?.message?.[0]?.component?.payload?.text, "bot") }}></h1>}
                 <div className="lineChartChildDiv" id={`linechart${msgData.messageId}`}></div>

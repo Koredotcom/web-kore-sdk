@@ -134,7 +134,7 @@ export function CheckList(props: any) {
         }, []);
 
         return (
-            <div className={`checklist-temp-wrapper checklist-${msgData.messageId}-${viewMore}`} data-cw-msg-id={msgData?.messageId}>
+            <div className={`checklist-temp-wrapper checklist-${msgData.messageId}-${viewMore}`} data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
                 {msgData.message[0].component.payload.elements.map((ele: any, ind: any) => (
                     ((!viewMore && ((msgData.message[0].component.payload.showMore && (ind < msgData.message[0].component.payload.displayLimit)) || !msgData.message[0].component.payload.showMore) || viewMore) &&
                         <button className="checklist-card" id={`ci-${msgData.messageId}-${ind}-${viewMore}`}>

@@ -95,7 +95,7 @@ export function List(props: any) {
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'list') {
         return (
-            <div className="list-action-template-wrapper" data-cw-msg-id={msgData?.messageId}>
+            <div className="list-action-template-wrapper" data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
                 {(msgData.message[0].component.payload.text || msgData.message[0].component.payload.heading) && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML((msgData.message[0].component.payload.text || msgData.message[0].component.payload.heading), "bot") }}></h1>}
                 <div className="list-content-details">
                     {msgData.message[0].component.payload.elements.map((ele: any, ind: any) => (

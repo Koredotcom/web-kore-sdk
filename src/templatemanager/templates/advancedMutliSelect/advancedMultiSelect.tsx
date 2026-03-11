@@ -120,7 +120,7 @@ export function AdvancedMultiSelect(props: any) {
     }
 
         return (
-            <div className="multi-select-action-template-wrapper" data-cw-msg-id={msgData?.messageId}>
+            <div className="multi-select-action-template-wrapper" data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
                 <h1>{msgData?.message[0].component.payload.heading}</h1>
                 <div className="multi-select-list">
                     {msgData.message[0].component.payload.elements.map((ele: any, index: any) => (

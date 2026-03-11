@@ -51,7 +51,7 @@ export function ListWidget(props: any) {
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'listWidget') {
         return (
-            <div className="padding-wrapper-content-list-widget" data-cw-msg-id={msgData?.messageId}>
+            <div className="padding-wrapper-content-list-widget" data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
                 <div className="adv-parent-temp-wrapper-list-widget">
                     <div className="main-heading-wrapper">
                         <div>

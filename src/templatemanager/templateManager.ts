@@ -107,7 +107,6 @@ class TemplateManager {
 				templatesIndex++
 			}
 			if (messageHtml) {
-				console.log('Msg HTML: ', messageHtml);
 				return messageHtml;
 			}
 		}

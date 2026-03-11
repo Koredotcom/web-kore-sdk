@@ -26,7 +26,7 @@ export function MiniTable(props: any) {
             carouselButtons.init();
         }, 50);
         return (
-            <div className="mini-table-template-wrapper"  id={msgData.messageId}>
+            <div className="mini-table-template-wrapper" id={msgData.messageId} data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
                 <Message {...messageobj}/>
                 <div className="mini-table-template">
                     <button className="mini-left-click" c-left-button-id={msgData.messageId}>

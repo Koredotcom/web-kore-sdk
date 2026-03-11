@@ -5,6 +5,7 @@ import './button.scss';
 import { h, Fragment } from 'preact';
 import { useState } from 'preact/hooks';
 import { Message } from '../message/message';
+import KoreHelpers from '../../../utils/helpers';
 export function Button(props: any) {
     const hostInstance = props.hostInstance;
     const msgData = props.msgData;
@@ -46,7 +47,7 @@ export function Button(props: any) {
         }
         return (
             <Fragment>
-                <div data-cw-msg-id={msgData?.messageId}>
+                <div data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
                     {msgData.message[0].component.payload.text && <Message {...messageObj} />}
                     <div className="button-template-container">
                         <div className={buttonStyle}>

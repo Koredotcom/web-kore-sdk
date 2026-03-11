@@ -64,7 +64,7 @@ export function DatePickerExt(props: any) {
         dp.show();
     }, []);
     return (
-        <div className="menu-wrapper-data-actions">
+        <div className="menu-wrapper-data-actions" dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
             <div className="actions-slider-header-menu">
                 {msgData?.message?.[0]?.component?.payload?.title && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData?.message?.[0]?.component?.payload?.title, "bot") }}></h1>}
                 <button className="menu-close" role="contentinfo" aria-label="close" onClick={closeMenu}>
@@ -138,7 +138,7 @@ export function DatePickerInline(props: any) {
     }, []);
 
     return (
-        <div className="date-picker-wrapper-template">
+        <div className="date-picker-wrapper-template" dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
             <Message {...msgObj} />
             <h1>{selectedDate}</h1>
             <div className="date-picker-calendar" id={'cal-' + msgData.messageId}></div>

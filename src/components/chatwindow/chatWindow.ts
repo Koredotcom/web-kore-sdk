@@ -1381,12 +1381,12 @@ bindSDKEvents  () {
     //   }, 2000);
     // }
 
-    if ((tempData?.type === 'initial_language' || tempData?.type === 'language_switched') && me?.config?.enableRTLTextDirection && me.config.UI.version == 'v3')  {
-      if (tempData?.langDetails?.language == 'ar' || tempData?.langDetails?.newLanguage == 'ar') {
-        me.chatEle.setAttribute('dir', 'rtl');
-      } else {
-        me.chatEle.setAttribute('dir', 'ltr');
+    if ((tempData?.type === 'initial_language' || tempData?.type === 'language_switched') && me?.config?.rtl?.enable && me?.config?.rtl?.applyToChatWindow && me.config.UI.version == 'v3')  {
+      const langDetails = tempData?.langDetails;
+      if (me.config?.rtl?.enableTranslations) {
+        me.seti18n(langDetails?.language || langDetails?.newLanguage);
       }
+      me.chatEle.setAttribute('dir', langDetails?.language == 'ar' || langDetails?.newLanguage == 'ar' ? 'rtl' : 'ltr');
     }
   });
 

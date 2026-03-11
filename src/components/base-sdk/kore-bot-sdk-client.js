@@ -427,6 +427,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
             _msg.author.lastName = data.messages[i]?.author?.lastName;
           }
         }
+        if (data.messages[i]?.lang) {
+          _msg.botLanguage = data.messages[i]?.lang;
+        }
         clientresp.messages[i] = _msg;
   
       }
@@ -488,6 +491,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
           _msg.author = {};
           _msg.author.firstName = data.messages[i]?.author?.firstName;
           _msg.author.lastName = data.messages[i]?.author?.lastName;
+        }
+        if (data.messages[i]?.lang) {
+          _msg.botLanguage = data.messages[i]?.lang;
         }
         clientresp.messages[i] = _msg;
   

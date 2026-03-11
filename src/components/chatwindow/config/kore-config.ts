@@ -111,7 +111,12 @@ chatConfig = {
         }
     },
     enableEmojiShortcut: true,   // Set false to disable emoji shortcut support. Enabled by default
-    enableRTLTextDirection: true   // Set false to disable RTL support. Enabled by default for Arabic bot responses
+    rtl: {
+        enable: true,  // Set false to disable entire RTL support
+        applyToMessages: true, // Set false to disable RTL support for messages
+        applyToChatWindow: true, // Set false to disable RTL support to entire chat window
+        enableTranslations: false // Set true to enable translations support
+    }
 };
 
 export default chatConfig;

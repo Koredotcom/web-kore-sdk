@@ -58,7 +58,7 @@ export function Dropdown(props: any) {
             }
         }
         return (
-            <section className={`dropdwon-wrapper-section dropdown-${msgData.messageId}`} data-cw-msg-id={msgData?.messageId}>
+            <section className={`dropdwon-wrapper-section dropdown-${msgData.messageId}`} data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
                 <div className="dropdwon-wrapper-contaner">
                     { msgData.message?.[0].component?.payload.heading && <div className="heading-block">
                         <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData.message?.[0].component?.payload.heading, "bot") }}></h1>

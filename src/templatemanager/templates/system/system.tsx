@@ -25,7 +25,7 @@ export function System(props: any) {
             msgData.message[0].cInfo.body = msgData.message[0].component.payload.text || "";
         }
         return (
-            <div className="agent-joined-banner" data-time-stamp={msgData.createdOnTimemillis} data-cw-msg-id={msgData?.messageId}>
+            <div className="agent-joined-banner" data-time-stamp={msgData.createdOnTimemillis} data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
                 <div className={agentBannerClass[brandingInfo.body.agent_message.separator]}>
                     <div className="img-block">
                         <figure>

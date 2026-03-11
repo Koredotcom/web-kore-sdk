@@ -5,6 +5,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { Message } from '../message/message';
 import { getHTML } from '../../base/domManager';
 import CarouselButtons from '../carouselTemplate/carouselButtons';
+import KoreHelpers from '../../../utils/helpers';
 
 export function QuickReply(props: any) {
     const msgData = props.msgData;
@@ -62,7 +63,7 @@ export function QuickReply(props: any) {
 
     return (
         <Fragment>
-            {(!msgData?.message?.[0]?.component?.payload?.stackedButtons && !msgData?.message?.[0]?.component?.payload?.fullWidth) && <div className={quickReplyStyle} data-quick-replies-cid={msgData.messageId}>
+            {(!msgData?.message?.[0]?.component?.payload?.stackedButtons && !msgData?.message?.[0]?.component?.payload?.fullWidth) && <div className={quickReplyStyle} data-quick-replies-cid={msgData.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
                 <button className="quick-left-click" c-left-button-id={msgData.messageId} aria-label="scroll left">
                     <svg width="20" height="21" viewBox="0 0 20 21" fill="none">
                         <path d="M12 15.5L7 10.5L12 5.5" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" />
@@ -81,7 +82,7 @@ export function QuickReply(props: any) {
                 </button>
             </div>}
 
-            {(msgData?.message?.[0]?.component?.payload?.stackedButtons || msgData?.message?.[0]?.component?.payload?.fullWidth) && <div className={quickReplyStyle} data-quick-replies-cid={msgData.messageId}>
+            {(msgData?.message?.[0]?.component?.payload?.stackedButtons || msgData?.message?.[0]?.component?.payload?.fullWidth) && <div className={quickReplyStyle} data-quick-replies-cid={msgData.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
                 {msgData.message[0].component.payload.quick_replies.map((ele: any) => (
                     <button className="kr-btn" c-items-id={msgData.messageId} onClick={() => handleQuickReply(ele, msgData)} disabled={msgData.fromHistory}>{ele.image_url && <img src={ele.ele.image_url} class="quickReplyIcon"/>} {ele.title}</button>
                 ))
@@ -119,7 +120,7 @@ export function QuickReplies(props: any) {
         }, []);
         return (
             <Fragment>
-                <div className='quick-replies-container' data-kr-msg-id={msgData.messageId}>
+                <div className='quick-replies-container' data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
                     <Message {...messageObj} />
                     {(msgData.fromHistory || msgData?.fromHistorySync || msgData?.message?.[0]?.component?.payload?.inline) && <QuickReply {...messageObj} />}
                 </div>

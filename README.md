@@ -126,7 +126,7 @@ In addition to the kore message templates, new custom templates can be intstalle
 class customTemplateComponent{
   renderMessage(msgData){
       if (msgData?.message[0]?.component?.payload?.template_type === 'custom_stock_template') {
-          return '<h2 data-kr-msg-id=' + msgData.messageId + ' data-time=' + msgData.createdOnTimemillis + '>My Template HTML</h2>';      
+          return '<h2 data-cw-msg-id=' + msgData.messageId + ' data-time=' + msgData.createdOnTimemillis + '>My Template HTML</h2>';      
       } else {
           return false;
       }
@@ -139,7 +139,7 @@ Other framework UI components like angular and react can also be injected with t
 
 > [!NOTE]
 > - Please add the following two attributes for parent div in the custom template html
-> - `data-kr-msg-id` with value `msgData.messageId` and `data-time` with value `msgData.createdOnTimemillis`
+> - `data-cw-msg-id` with value `msgData.messageId` and `data-time` with value `msgData.createdOnTimemillis`
 
 ## 💡 Plugins
 
