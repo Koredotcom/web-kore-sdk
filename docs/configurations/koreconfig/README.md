@@ -197,7 +197,7 @@ Configure Proactive Web Campaign settings:
 Automatic RTL support for Arabic language. It is enabled by defualt.
 
 ```typescript
-rtl: {
+chatConfig.rtl = {
         enable: true,
         applyToMessages: true,
         applyToChatWindow: true,
