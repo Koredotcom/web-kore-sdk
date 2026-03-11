@@ -696,5 +696,29 @@ class KoreHelpers{
             return str;
         }
     }
+
+    // regex to check if the content is RTL
+    static RTL_REGEX = /[\u0591-\u07FF\u200F\u202B\u202E\uFB1D-\uFDFD\uFE70-\uFEFC]/;
+    static isRTLContent = function (config, msgData, content) {
+        if (!config.rtl.enable || !config.rtl.applyToMessages) {
+            return false;
+        }
+        if (content) {
+            let text;
+            if (typeof content === 'string') {
+                text = content.replace(/<[^>]*>/g, '');
+            } else if (content instanceof HTMLElement) {
+                text = content.textContent || content.innerText || '';
+            } else {
+                text = String(content).replace(/<[^>]*>/g, '');
+            }
+            return KoreHelpers.RTL_REGEX.test(text);
+        }
+        if (msgData?.botLanguage) {
+            return msgData.botLanguage == 'ar' ? true : false;
+        }
+
+        return false;
+    }
 } 
 export default KoreHelpers

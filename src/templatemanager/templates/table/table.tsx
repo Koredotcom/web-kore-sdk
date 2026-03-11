@@ -19,7 +19,7 @@ export function TableExt(props: any) {
     if (msgData.message?.[0]?.component?.payload?.template_type == 'table' && msgData.message[0].component.payload?.table_design == 'regular') {
         return (
             <Fragment>
-                <section class="table-wrapper-main-container" data-cw-msg-id={msgData?.messageId}>
+                <section class="table-wrapper-main-container" data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
                     {showMore && msgData?.message?.[0]?.cInfo?.body &&<Message {...messageObj} />}
                     <section class="table-wrapper-section">
                         <table className="table-regular-view">
@@ -51,7 +51,7 @@ export function TableExt(props: any) {
         }
         return (
             <Fragment>
-                <div className='table-container'>
+                <div className='table-container' data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
                     {showMore && msgData?.message?.[0]?.cInfo?.body && <Message {...messageObj} />}
                     <div className="table-response-wrapper-container">
                         <div className="table-response-wrapper">
@@ -99,7 +99,7 @@ export function TableExt(props: any) {
         }
         return (
             <Fragment>
-                <section class="table-wrapper-main-container" data-cw-msg-id={msgData?.messageId}>
+                <section class="table-wrapper-main-container" data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
                     {showMore && msgData?.message?.[0]?.cInfo?.body && <Message {...messageObj} />}
                     <section class="table-wrapper-section">
                             <table className="table-regular-view" cellSpacing={0} cellPadding={0}>

@@ -49,7 +49,7 @@ export function ClockPickerInline(props: any) {
     }, []);
 
     return (
-        <div className="date-picker-wrapper-template" data-cw-msg-id={msgData?.messageId}>
+        <div className="date-picker-wrapper-template" data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
             <div className="date-picker-calendar" id={`clock${msgData.messageId}`}></div>
             <button className="kr-button-primary lg" onClick={handleSubmit} dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData?.message[0]?.component?.payload?.confirmButtonText || "Confirm", "bot") }}></button>
         </div>

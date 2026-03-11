@@ -6,10 +6,11 @@ import { getHTML } from '../../base/domManager';
 import KoreHelpers from '../../../utils/helpers';
 
 export function PieChart(props: any) {
+    const hostInstance = props.hostInstance;
     const msgData = props.msgData;
     const helpers = KoreHelpers.helpers;
     return (
-        <div className="chart-template-wrapper" id={`pc${msgData.messageId}`} data-cw-msg-id={msgData?.messageId}>
+        <div className="chart-template-wrapper" id={`pc${msgData.messageId}`} data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
             <div id="d3Pie"></div>
             <div className="piechartDiv charts-body-info">
                 {msgData?.message?.[0]?.component?.payload?.text && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData?.message?.[0]?.component?.payload?.text, "bot") }}></h1>}

@@ -3,6 +3,7 @@ import './likeDislike.scss';
 import { h, Fragment } from 'preact';
 import { useState } from 'preact/hooks';
 import { Message } from '../message/message';
+import KoreHelpers from '../../../utils/helpers';
 
 export function LikeDislike(props: any) {
     const hostInstance = props.hostInstance;
@@ -26,7 +27,7 @@ export function LikeDislike(props: any) {
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'like_dislike') {
         return (
-            <div data-cw-msg-id={msgData?.messageId}>Like Dislike Temaplte</div>
+            <div data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>Like Dislike Temaplte</div>
         );
     }
 }

@@ -194,4 +194,18 @@ Configure Proactive Web Campaign settings:
 **Important:** When implementing Proactive Web Campaign Plugin functionality, the `pwcConfig.enable` must be set to true.
 
 ### RTL support for Arabic Language
-- `enableRTLTextDirection`: automatic RTL support for Arabic language. It is enabled by defualt. Set it to false to disable it  
+RTL support for Arabic language. It is enabled by defualt.
+
+```typescript
+chatConfig.rtl = {
+        enable: true,
+        applyToMessages: true,
+        applyToChatWindow: true,
+        enableTranslations: false
+    }
+```
+Configure rtl settings:
+- `enable`: Set false to disable entire RTL support
+- `applyToMessages`: Set false to disable RTL support for messages
+- `applyToChatWindow`: Set false to disable RTL support to entire chat window
+- `enableTranslations`: Set true to enable translations support. Please install [Kore i18n plugin](../../plugins/i18n/) when enabled

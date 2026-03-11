@@ -163,7 +163,7 @@ export function Feedback(props: any) {
     }
 
     return (
-        <div className="feedback-template-wrapper-container" id={msgData.messageId} data-cw-msg-id={msgData?.messageId}>
+        <div className="feedback-template-wrapper-container" id={msgData.messageId} data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
             <div className="feedback-temp-wrapper">
                 <div className="feedback-temp-sec">
                     {msgData?.message?.[0]?.component?.payload?.text && <h6 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData?.message?.[0]?.component?.payload?.text, "bot") }}></h6>}

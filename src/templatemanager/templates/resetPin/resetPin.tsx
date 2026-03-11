@@ -113,7 +113,7 @@ export function Reset(props: any) {
     };
 
     return (
-        <div className="menu-wrapper-data-actions" data-cw-msg-id={msgData?.messageId}>
+        <div className="menu-wrapper-data-actions" data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
             <div className="actions-slider-header-menu">
                 <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(payload.title || 'Reset PIN', "bot") }}></h1>
                 {!isFromHistory && <button className="menu-close" role="contentinfo" aria-label="close" onClick={closeMenu}>

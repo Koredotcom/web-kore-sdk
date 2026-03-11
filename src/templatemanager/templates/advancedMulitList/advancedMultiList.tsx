@@ -224,7 +224,7 @@ export function AdvancedMultiList(props: any) {
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'advancedMultiListTemplate') {
         return (
-            <div className="padding-wrapper-content" data-cw-msg-id={msgData?.messageId}>
+            <div className="padding-wrapper-content" data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
                 <div className="adv-parent-temp-wrapper">
                     {msgData.message[0].component.payload.listItems.map((listItem: any, index: any) => (
                         ((msgData.message[0].component.payload.seeMore && (index < msgData.message[0].component.payload.listItemDisplayCount) || !msgData.message[0].component.payload.seeMore) &&

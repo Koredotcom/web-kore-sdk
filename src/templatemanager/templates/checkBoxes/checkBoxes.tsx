@@ -46,7 +46,7 @@ export function CheckBoxes(props: any) {
 
     if (msgData?.message?.[0]?.component?.payload?.template_type == 'multi_select') {
         return (
-            <div className="checkbox-wrapper" data-cw-msg-id={msgData?.messageId}>
+            <div className="checkbox-wrapper" data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
                 {msgData.message[0].component.payload.heading && <h1 dangerouslySetInnerHTML={{ __html: helpers.convertMDtoHTML(msgData.message[0].component.payload.heading, "bot") }}></h1>}
                 <div className={`checkbox-item select-all ${hostInstance.config.branding.general.themeType == 'dark'? `if-dark-theme-checkbox` : ``}`} onClick={() => onSelectAll()}>
                     <input id={`checkbox-selectall-${msgData.messageId}`} className={`checkbox-input checkbox-selectall-${msgData.messageId}`} type="checkbox" value="" />
