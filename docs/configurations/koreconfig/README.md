@@ -194,7 +194,7 @@ Configure Proactive Web Campaign settings:
 **Important:** When implementing Proactive Web Campaign Plugin functionality, the `pwcConfig.enable` must be set to true.
 
 ### RTL support for Arabic Language
-Automatic RTL support for Arabic language. It is enabled by defualt.
+RTL support for Arabic language. It is enabled by defualt.
 
 ```typescript
 chatConfig.rtl = {
