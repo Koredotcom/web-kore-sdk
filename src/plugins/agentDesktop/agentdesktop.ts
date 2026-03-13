@@ -39,10 +39,11 @@ class AgentDesktopPlugin {
                 /** @ignore */
                 /* There are two instances of AgentDesktopPluginScript below. In agentdesktop-script, the chat-co-browse re-initialization logic runs for both instances, which creates two socket connections.
                 * We use the isVoiceCobrowseSession flag to prevent co-browse re-initialization for the voice-cobrowse/standalone otp cobrowse instance below if it is not required. */
+                this.config['hostBotOptions'] = this.config?.hostInstance?.config?.botOptions || {};
                 this.agentDesktopInfo = new AgentDesktopPluginScript(this.config);
                 // Connecting cobrowse session with the user data
                 this.authInfo = response;
-                this.cobrowseSession = new AgentDesktopPluginScript({ ...this.config, ...response, excludeRTM: true, isVoiceCobrowseSession: true });               
+                this.cobrowseSession = new AgentDesktopPluginScript({ ...response, excludeRTM: true, isVoiceCobrowseSession: true, hostBotOptions: this.config?.hostInstance?.config?.botOptions || {} });               
                 
                 // disable click to call button until sbc details are received
                 this.agentDesktopInfo.disableClickToCallButton();
@@ -519,7 +520,7 @@ class AgentDesktopPlugin {
             })
             .then((res: any) => {
                 this.authInfo = res;
-                this.cobrowseSession = new AgentDesktopPluginScript({...this.config, ...res, excludeRTM: true, isVoiceCobrowseSession: true});
+                this.cobrowseSession = new AgentDesktopPluginScript({...res, excludeRTM: true, isVoiceCobrowseSession: true, hostBotOptions: this.config?.hostInstance?.config?.botOptions});
             }).catch(err => {
                 console.error(err)
                 // this.authInfo = null;
