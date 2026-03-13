@@ -35,6 +35,7 @@ class AgentDesktopPlugin {
                 this.config = me.extend(me, response)
                 //me.AgentDesktop(response.userInfo.userId, response);
                 /** @ignore */
+                this.config['hostBotOptions'] = me?.hostInstance?.config?.botOptions || {};
                 this.agentDesktopInfo = new AgentDesktopPluginScript(this.config);
             }
         });
@@ -360,7 +361,7 @@ class AgentDesktopPlugin {
             })
             .then((res: any) => {
                 this.authInfo = res;
-                this.cobrowseSession = new AgentDesktopPluginScript({...res, excludeRTM: true, isCobrowseSession: true, hostInstance: me.hostInstance});
+                this.cobrowseSession = new AgentDesktopPluginScript({...res, excludeRTM: true, isCobrowseSession: true, hostBotOptions: me?.hostInstance?.config?.botOptions || {}});
             }).catch(err => {
                 console.error(err)
                 // this.authInfo = null;

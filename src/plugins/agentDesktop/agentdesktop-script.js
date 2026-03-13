@@ -1964,7 +1964,7 @@ class AgentDesktopPluginScript  {
         if (!cobrowseRequest.userId) {
             cobrowseRequest.userId = me.koreGenerateUUID();
         }
-        const hostBotOptions = this.config && this.config.hostInstance && this.config.hostInstance.config && this.config.hostInstance.config.botOptions || {};
+        const hostBotOptions = this.config && this.config.hostBotOptions || {};
         const isSecureCobrowseEnabled = hostBotOptions && hostBotOptions.enableSecureCobrowse === true;
         if (this.socket === null) {
             const socketOpts = {
