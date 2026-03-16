@@ -1,3 +1,10 @@
+### 11.22.1
+* Release Mar 14, 2026
+* Features
+  * enhanced RTL support for Arabic language. Introduced additional configuration for better handling. Please refer [kore config docs](./docs/configurations/koreconfig/README.md#rtl-support-for-arabic-language) for the configuration
+  * moved auth token to socket auth options for cobrowse session for enhanced security. Please enable it using `botOptions.enableSecureCobrowse = true`. For on-prem please upgrade the Platform before enabling it
+  * added kore custom table template. Please refer [here](./docs/templates/tableTemplate/README.md#kore-custom-table-template) for the template payload
+
 ### 11.22.0
 * Release Mar 06, 2026
 * Breaking Changes
@@ -21,7 +28,7 @@
 * Breaking Changes
   * removed Answers Plugin by default. Need to install it manually for Search AI. Please refer [here](./docs/plugins/answers/) for installation instructions
 * Features
-  * added automatic RTL support for Arabic language in the Web SDK. RTL support can be disbaled by using the flag in the kore config. Please refer [kore config docs](./docs/configurations/koreconfig/README.md#rtl-support-for-arabic-language) for the configuration
+  * added RTL support for Arabic language in the Web SDK. RTL support can be disbaled by using the flag in the kore config. Please refer [kore config docs](./docs/configurations/koreconfig/README.md#rtl-support-for-arabic-language) for the configuration
 * Bug fixes
   * dates disable issue fix in date and date range templates
   * user message duplicate issue fix on network reconnections
