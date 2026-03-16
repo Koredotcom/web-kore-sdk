@@ -343,6 +343,11 @@ Note: When integrated into an iFrame, the SDK's functionality will be confined t
 	
 # Release History
 ```
+v10.23.1 [Minor] on 14-Mar-2025: Master branch
+        Features
+               1.Moved auth token to socket auth options for cobrowse session for enhanced security.
+                  Please enable it using botOptions.enableSecureCobrowse = true. For on-prem please upgrade the Platform and then enable it
+
 v10.23.0 [Minor] on 06-Mar-2026: Master branch
         Stable release
 
