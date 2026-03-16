@@ -1,3 +1,10 @@
+### 10.23.1
+- SDK Release Mar 14, 2026
+* Features
+  * moved auth token to socket auth options for cobrowse session for enhanced security. Please enable it using `botOptions.enableSecureCobrowse = true`. For on-prem please upgrade the Platform before enabling it
+* Bug fixes
+  * cobrowse masking issue fix
+
 ### 10.23.0
 - SDK Release Mar 06, 2026
 * Stable release
