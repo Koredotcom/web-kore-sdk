@@ -32,8 +32,7 @@ By developing the [client web part](https://learn.microsoft.com/en-us/sharepoint
 
 
 5. #### Upload the .sppkg file(web part) to the SharePoint Apps:
-> [!NOTE]
-> This step requires SharePoint Admin access
+   This step requires SharePoint Admin access.
 
    Go to your [SharePoint Admin Center](https://go.microsoft.com/fwlink/?linkid=2185219).
    Click on More features in the left-hand menu.
@@ -59,7 +58,7 @@ By developing the [client web part](https://learn.microsoft.com/en-us/sharepoint
    <img width="1920" alt="app list screenshot" src="https://github.com/user-attachments/assets/453a874c-4302-43b5-aad3-6edee9dac139">
 
    
-6. #### Add the Web Part which contains Kore Web SDK to Your Site:
+7. #### Add the Web Part which contains Kore Web SDK to Your Site:
    Navigate to Your SharePoint Site.
 
    Go to the page where you want to add the Kore Web SDK.
@@ -75,11 +74,11 @@ By developing the [client web part](https://learn.microsoft.com/en-us/sharepoint
     <img width="1853" alt="integration screenshot" src="https://github.com/user-attachments/assets/e3ea8124-bb1f-4478-8590-26645657e759" />
 
 
-7. Kore Web SDK added to the SharePoint site.
+8. Kore Web SDK added to the SharePoint site.
     
     <img width="1853" alt="final screesnhot" src="https://github.com/user-attachments/assets/83dd06ba-4135-4966-b115-d00d0336c5b8" />
 
-8. Passing logged-in SharePoint user's email Id and other data to Kore Platform as shown below
+9. Passing logged-in SharePoint user's email Id and other data to Kore Platform as shown below
    
    a. Configure the web part properties to pass as props. Please refer for [web part properties](https://learn.microsoft.com/en-us/sharepoint/dev/spfx/web-parts/guidance/integrate-web-part-properties-with-sharepoint)
    
