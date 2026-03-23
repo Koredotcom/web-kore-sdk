@@ -65,7 +65,7 @@ botOptions.botInfo = {
 The SDK requires a signed JWT token for authentication. You must provide a `JWTAsertion` callback that fetches the token from **your server**. Your server is responsible for signing the JWT using the Client ID and Client Secret obtained from the [Kore.ai platform](https://docs.kore.ai/xo/channels/add-web-mobile-client/#add-webmobile-client-channel).
 
 > [!NOTE]
-> **Do not expose your Client ID or Client Secret on the client side.** These credentials must remain on your server. See the [JWT generation guide](./docs/configurations/jwtgenerationandusage/) for server-side implementation details.
+> **Do not expose your Client ID or Client Secret on the client side.** These credentials must remain on your server. See the [JWT generation guide](./docs/configurations/jwtgenerationandusage/) for sample server-side implementation details.
 
 ```js
 chatConfig.JWTAsertion = function (commitJWT) {
