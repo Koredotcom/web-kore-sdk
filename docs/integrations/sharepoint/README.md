@@ -71,12 +71,12 @@ By developing the [client web part](https://learn.microsoft.com/en-us/sharepoint
    
    Add it to the page.
    
-   <img width="1917" alt="web part screenshot" src="https://github.com/user-attachments/assets/8435a116-cc14-4fda-b229-2f0fa3dc6e9b">
+    <img width="1853" alt="integration screenshot" src="https://github.com/user-attachments/assets/e3ea8124-bb1f-4478-8590-26645657e759" />
 
 
 7. Kore Web SDK added to the SharePoint site.
     
-    <img width="1919" alt="final screenshot" src="https://github.com/user-attachments/assets/427372e0-deeb-496e-92d8-cb9779f72296">
+    <img width="1853" alt="final screesnhot" src="https://github.com/user-attachments/assets/83dd06ba-4135-4966-b115-d00d0336c5b8" />
 
 
 
