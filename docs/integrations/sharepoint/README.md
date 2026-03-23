@@ -78,6 +78,16 @@ By developing the [client web part](https://learn.microsoft.com/en-us/sharepoint
     
     <img width="1853" alt="final screesnhot" src="https://github.com/user-attachments/assets/83dd06ba-4135-4966-b115-d00d0336c5b8" />
 
+8. Passing logged-in SharePoint user's email Id and other data to Kore Platform as shown below
+   a. Configure the web part properties to pass as props
+   image.png
+
+   b. Passing the SharePoint logged-in user's email Id as User Identity
+   image.png
+
+   c. Passing custom data to Kore Platform
+   image.png
+
 
 
 
