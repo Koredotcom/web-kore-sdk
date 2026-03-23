@@ -19,7 +19,7 @@ By developing the [client web part](https://learn.microsoft.com/en-us/sharepoint
    <img width="928" alt="main component screenshot" src="https://github.com/user-attachments/assets/c1e786de-dfe2-4d53-8ac0-bc735e280be8">
 
 
-3. Install the Kore Web SDK by following the [instructions](https://github.com/Koredotcom/web-kore-sdk/tree/v2/dev?tab=readme-ov-file#-getting-started) in `componentDidMount()` method.
+3. Install the Kore Web SDK by following the [instructions](https://github.com/Koredotcom/web-kore-sdk/tree/v3/dev?tab=readme-ov-file#-getting-started) in `componentDidMount()` method.
    
    <img width="914" alt="sdk snippet" src="https://github.com/user-attachments/assets/d2345b4f-bb27-4fbd-8a3b-d5b3458ee292">
 
@@ -32,6 +32,8 @@ By developing the [client web part](https://learn.microsoft.com/en-us/sharepoint
 
 
 5. #### Upload the .sppkg file(web part) to the SharePoint Apps:
+> [!NOTE]
+> This step requires SharePoint Admin access
 
    Go to your [SharePoint Admin Center](https://go.microsoft.com/fwlink/?linkid=2185219).
    Click on More features in the left-hand menu.
@@ -55,7 +57,6 @@ By developing the [client web part](https://learn.microsoft.com/en-us/sharepoint
    App successfully uploaded and enabled.
    
    <img width="1920" alt="app list screenshot" src="https://github.com/user-attachments/assets/453a874c-4302-43b5-aad3-6edee9dac139">
-
 
    
 6. #### Add the Web Part which contains Kore Web SDK to Your Site:
