@@ -25,13 +25,15 @@ export function Button(props: any) {
         layoutDesign.buttons = btns;
 
         const handleClick = (btn: any, ind: any) => {
+            let buttonActionType = '';
             if (btn.actionType == 'url') {
                 let link = btn.actionValue;
                 if (link.indexOf('http:') < 0 && link.indexOf('https:') < 0) {
                     link = `http:////${link}`;
                 }
                 hostInstance.openExternalLink(link);
-                removeButton(ind)
+                buttonActionType = 'sendToUrl';
+                removeButton(ind, false);
             } else {
                 layoutDesign.buttons.forEach((button: any, index: number)=>{
                     const cbtn: any = document.getElementById(`campaign-button-${index}`);
@@ -43,10 +45,20 @@ export function Button(props: any) {
                 if (btn) {
                     btn.classList.add('show-campaign-content-data');
                 }
+                buttonActionType = 'slideOutMessage';
             }
+            recordCampaignMetric(msgData?.body?.campInfo?.campInstId, msgData?.body?.campInfo?.campId, { action: 'click', data: { buttonActionType } });
         }
 
-        const removeButton = (ind: any) => {
+        const recordCampaignMetric = (campInstId: string, campId: string, eventInfo: any) => {
+            hostInstance.plugins.ProactiveWebCampaignPlugin.recordCampaignMetric(
+                campInstId,
+                campId,
+                { eventInfo: eventInfo }
+            );
+        }
+
+        const removeButton = (ind: any, sendEvent = false) => {
             // Clear from sessionStorage
             hostInstance.plugins.ProactiveWebCampaignPlugin.clearPersistedTemplateFromStorage();
             
@@ -54,6 +66,10 @@ export function Button(props: any) {
             const btn = document.getElementById(`campaign-button-${ind}`);
             if (btn) {
                 btn.remove();
+            }
+
+            if (sendEvent) {
+                recordCampaignMetric(msgData?.body?.campInfo?.campInstId, msgData?.body?.campInfo?.campId, { action: 'close', data: {} });
             }
         }
 
@@ -66,7 +82,7 @@ export function Button(props: any) {
                             <div className="heading-block-info">
                                 {btn.headerUpload === 'upload' && <img src={btn.headerIcon}></img>}
                                 <h1>{btn?.headerMessage}</h1>
-                                <button onClick={() => removeButton(ind)}>
+                                <button onClick={() => removeButton(ind, true)}>
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                                         <path d="M18 6L6 18M6 6L18 18" stroke="#667085" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
