@@ -6,6 +6,7 @@ import PWCBannerTemplate from "./templates/pwcBannerTemplate/pwcBannerTemplate";
 import PWCButtonTemplate from "./templates/pwcButtonTemplate/pwcButtonTemplate";
 import PWCPostTemplate from "./templates/pwcPostTemplate/pwcPostTemplate";
 import Chat from "./templates/pwcChatTemplate/pwcChatTemplate";
+import PWCQuickChatTemplate from "./templates/pwcQuickChatTemplate/pwcQuickChatTemplate";
 
 /**
  * Interface for persisted template data stored in sessionStorage
@@ -35,6 +36,7 @@ class ProactiveWebCampaignPlugin {
     isInitialPageLoaded: boolean = false; // NEW: Flag to track initial page processing
     browserSessionId: string = ''; // Unique identifier for the campaign trigger session
     isPWEChatTriggered: string = '';
+    pwcFlowId: string = '';
     
     // =====================================================================================
     //                          CUSTOM CONDITIONTYPE SUPPORT PROPERTIES
@@ -138,8 +140,12 @@ class ProactiveWebCampaignPlugin {
                 let url = event.data.url;
                 let socketUrl = url.replace('&isReconnect=true', '');
                 socketUrl = socketUrl + "&pwe=" + me.isPWEChatTriggered;
+                if (me.isPWEChatTriggered === 'quickchat' && me.pwcFlowId) {
+                    socketUrl = socketUrl + "&pwcflowId=" + encodeURIComponent(me.pwcFlowId);
+                }
                 event.data.url = socketUrl;
                 me.isPWEChatTriggered = '';
+                me.pwcFlowId = '';
             }
         });
     }
@@ -740,6 +746,7 @@ class ProactiveWebCampaignPlugin {
         templateManager.installTemplate(new PWCButtonTemplate());
         templateManager.installTemplate(new PWCBannerTemplate());
         templateManager.installTemplate(new PWCPostTemplate());
+        templateManager.installTemplate(new PWCQuickChatTemplate());
     }
 
     /**
@@ -1826,8 +1833,29 @@ class ProactiveWebCampaignPlugin {
         const me: any = this;
         const data = responseData.response;
         
+        // QuickChat Template - Handle first (special case that auto-opens chat)
+        // Note: Backend sends "quickchat" (lowercase)
+        if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && 
+            data.body.campInfo?.webCampaignType == 'quickchat' && 
+            this.enablePWC) {
+            // QuickChat directly opens the chat window and triggers experience flow
+            const htmlEle = me.hostInstance.generateMessageDOM(data);
+            // We don't append to DOM as quickChat directly opens chat window
+            // The template component handles everything internally
+            
+            // Note: We don't persist quickChat templates as they immediately open the chat
+            // and there's no intermediate UI to restore
+            
+            // Start cooldown timer for this campaign trigger
+            this.startCooldown();
+            // Reset the flag to allow the next campaign template to be rendered
+            this.isPendingSendAPIEvent = false;
+        }
         // Banner, Post, Button Templates
-        if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType !== 'chat' && this.enablePWC) {
+        else if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && 
+                 data.body.campInfo?.webCampaignType !== 'chat' && 
+                 data.body.campInfo?.webCampaignType !== 'quickchat' && 
+                 this.enablePWC) {
             // browserSessionId check is skipped for now as we are using API based approach, and this is not required for API based approach
             // Check browser_session_id to ensure template is shown only in the triggering browser tab
             // const receivedBrowserSessionId = data?.ruleInfo?.browser_session_id;
@@ -1845,7 +1873,7 @@ class ProactiveWebCampaignPlugin {
             // }
         }
         // Chat Template
-        if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType == 'chat' && data.body?.layoutDesign && this.enablePWC) {
+        else if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && data.body.campInfo?.webCampaignType == 'chat' && data.body?.layoutDesign && this.enablePWC) {
             // browserSessionId check is skipped for now as we are using API based approach, and this is not required for API based approach
             // Check browser_session_id to ensure template is shown only in the triggering browser tab
             // const receivedBrowserSessionId = data?.ruleInfo?.browser_session_id;
@@ -3805,7 +3833,7 @@ class ProactiveWebCampaignPlugin {
                 existingPweData[campInstanceId].isLayoutTriggered = false;
                 window.sessionStorage.setItem('pwe_data', JSON.stringify(existingPweData));
                 this.isPendingSendAPIEvent = false;
-            } else if(response.response.body.layoutDesign){
+            } else if(response.response.body.layoutDesign || response.response.body.campInfo.webCampaignType == 'quickchat'){
                 // Persist template to sessionStorage for multi-page persistence
                 this.persistTemplate({
                     templateType: response.response.body.campInfo.webCampaignType,
@@ -3874,6 +3902,7 @@ class ProactiveWebCampaignPlugin {
 
     /**
      * Checks if any campaign template is active
+     * NOTE: quickChat doesn't render visible templates - it directly opens chat
      * @returns Boolean indicating if any campaign template is active
      */
     isActiveCampaignTemplate(): boolean{
