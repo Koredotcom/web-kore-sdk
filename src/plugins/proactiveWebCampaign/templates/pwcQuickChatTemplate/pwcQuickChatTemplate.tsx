@@ -15,9 +15,6 @@ export function QuickChat(props: any) {
 
     const openChatWithFlowId = () => {
         try {
-            // Clear from sessionStorage when chat opens
-            hostInstance.plugins.ProactiveWebCampaignPlugin.clearPersistedTemplateFromStorage();
-            
             // Set flag to indicate PWE chat is triggered
             hostInstance.isWelcomeScreenOpened = true;
             hostInstance.plugins.ProactiveWebCampaignPlugin.isPWEChatTriggered = 'quickchat';
@@ -96,4 +93,3 @@ class PWCQuickChatTemplate extends BaseChatTemplate {
 }
 
 export default PWCQuickChatTemplate;
-

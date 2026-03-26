@@ -1839,7 +1839,7 @@ class ProactiveWebCampaignPlugin {
             data.body.campInfo?.webCampaignType == 'quickchat' && 
             this.enablePWC) {
             // QuickChat directly opens the chat window and triggers experience flow
-            const htmlEle = me.hostInstance.generateMessageDOM(data);
+            me.hostInstance.generateMessageDOM(data);
             // We don't append to DOM as quickChat directly opens chat window
             // The template component handles everything internally
             
@@ -2501,11 +2501,11 @@ class ProactiveWebCampaignPlugin {
         }
 
         const activeCampaigns = this.campInfo.filter((campaign: any) => {
-            // Enagement Hours are validated at services after the rules are met
-            /* if (!this.checkEngagementHours(campaign.engagementStrategy)) {
-                // returns false, if outside engagement hours`);
-                return false;
-            } */
+            // Check engagement hours
+            // if (!this.checkEngagementHours(campaign.engagementStrategy)) {
+            //     // returns false, if outside engagement hours`);
+            //     return false;
+            // }
 
             // Check website matching
             const websiteMatches = this.checkWebsiteMatching(
@@ -3833,14 +3833,16 @@ class ProactiveWebCampaignPlugin {
                 existingPweData[campInstanceId].isLayoutTriggered = false;
                 window.sessionStorage.setItem('pwe_data', JSON.stringify(existingPweData));
                 this.isPendingSendAPIEvent = false;
-            } else if(response.response.body.layoutDesign || response.response.body.campInfo.webCampaignType == 'quickchat'){
+            } else if(response.response.body.layoutDesign || response.response.body.campInfo.webCampaignType === 'quickchat'){
                 // Persist template to sessionStorage for multi-page persistence
-                this.persistTemplate({
-                    templateType: response.response.body.campInfo.webCampaignType,
-                    body: response.response.body,
-                    shownAt: Date.now(),
-                    persistDuration: ProactiveWebCampaignPlugin.TEMPLATE_PERSIST_DURATION
-                });
+                if(response.response.body.campInfo.webCampaignType !== 'quickchat'){
+                    this.persistTemplate({
+                        templateType: response.response.body.campInfo.webCampaignType,
+                        body: response.response.body,
+                        shownAt: Date.now(),
+                        persistDuration: ProactiveWebCampaignPlugin.TEMPLATE_PERSIST_DURATION
+                    });
+                }
                 this.handlePweEventResponse(response);
             }
         } catch (error) {
@@ -3883,13 +3885,13 @@ class ProactiveWebCampaignPlugin {
         const payload: any = {
             'event_name': 'pwe_event',
             'resourceid': '/pwe_message',
-            'user': this.hostInstance?.config?.botOptions?.userIdentity,
+            'user': this.hostInstance.config.botOptions.userIdentity,
             'type': 'pwe_message',
-            'userId': this.authInfo?.userInfo?.userId,
-            'isLoggedInUser': this.hostInstance?.config?.pwcConfig?.knownUser || false,
+            'userId': this.authInfo.userInfo.userId,
+            'isLoggedInUser': this.hostInstance.config.pwcConfig.knownUser || false,
             'botInfo': {
-                'chatBot': this.hostInstance?._botInfo?.name,
-                'taskBotId': this.hostInstance?._botInfo?._id
+                'chatBot': this.hostInstance._botInfo.name,
+                'taskBotId': this.hostInstance._botInfo._id
             },
             'campInfo': {
                 'campId': campId,
