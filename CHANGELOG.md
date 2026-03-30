@@ -1,3 +1,10 @@
+### 11.23.0
+* Release Mar 28, 2026
+* Features
+  * analytics dashboard support added for proactive web campaigns plugin
+* Documentation
+  * added SharePoint integration instructions
+  
 ### 11.22.1
 * Release Mar 14, 2026
 * Features
