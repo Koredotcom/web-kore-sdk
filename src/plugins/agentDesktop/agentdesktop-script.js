@@ -394,6 +394,13 @@ AgentDesktop = function (uuId, aResponse) {
         `<div id="video_view" class="video-view-">
             <video id="kore_remote_video_tmp" autoplay="autoplay" playsinline style="display: block;"></video>
             <div class="action-minimize-audio-control">
+                <div class="recording-video-info">
+                    <div class="recording-tooltip">This call is being recorded.</div>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M6 0.5C2.96243 0.5 0.5 2.96243 0.5 6C0.5 9.03757 2.96243 11.5 6 11.5C9.03757 11.5 11.5 9.03757 11.5 6C11.5 2.96243 9.03757 0.5 6 0.5Z" fill="#D92D20"/>
+                    </svg>
+                    <p>Rec</p>
+                </div>
                 <div id="maximizevideo" class="maximize-video">
                     <span class="maximize-icon">
                         <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
