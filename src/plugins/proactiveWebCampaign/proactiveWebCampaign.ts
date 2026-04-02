@@ -2502,10 +2502,10 @@ class ProactiveWebCampaignPlugin {
 
         const activeCampaigns = this.campInfo.filter((campaign: any) => {
             // Check engagement hours
-            // if (!this.checkEngagementHours(campaign.engagementStrategy)) {
-            //     // returns false, if outside engagement hours`);
-            //     return false;
-            // }
+            /* if (!this.checkEngagementHours(campaign.engagementStrategy)) {
+                // returns false, if outside engagement hours`);
+                return false;
+            } */
 
             // Check website matching
             const websiteMatches = this.checkWebsiteMatching(
