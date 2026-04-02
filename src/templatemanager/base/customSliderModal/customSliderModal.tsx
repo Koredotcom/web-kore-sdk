@@ -1,3 +1,4 @@
+/** @jsx h */
 import '../menu/menu.scss';
 import './customSliderModal.scss';
 import { h } from 'preact';
@@ -129,6 +130,26 @@ export function CustomSliderModal(props: any) {
 
     const close = () => closeBottomSlider(hostInstance);
 
+    const proccedAction = () => {
+        const isRecordingConsentModal =
+            variant === 'warning' &&
+            title === defaultCopy.warning.title &&
+            primaryLabel === defaultCopy.warning.primaryLabel &&
+            secondaryLabel === defaultCopy.warning.secondaryLabel;
+
+        if (isRecordingConsentModal && typeof hostInstance?.emit === 'function') {
+            hostInstance.emit('video_call_recording_proceed');
+        }
+        close();
+    };
+
+    const declineAction = () => {
+        if (typeof hostInstance?.emit === 'function') {
+            hostInstance.emit('video_call_recording_decline');
+        }
+        close();
+    };
+
     return (
         <div
             className={`menu-wrapper-data-actions custom-slider-modal custom-slider-modal--${variant}`}
@@ -144,11 +165,11 @@ export function CustomSliderModal(props: any) {
                 <p>{body}</p>
                 <div className="custom-slider-modal__actions">
                     {showSecondary && (
-                        <button className="kr-button-secondary lg" type="button" onClick={close}>
+                        <button className="kr-button-secondary lg" type="button" onClick={declineAction}>
                             {secondaryLabel}
                         </button>
                     )}
-                    <button className="kr-button-primary lg" type="button" onClick={close}>
+                    <button className="kr-button-primary lg" type="button" onClick={proccedAction}>
                         {primaryLabel}
                     </button>
                 </div>
