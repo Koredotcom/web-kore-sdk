@@ -142,7 +142,14 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     debug("sending message to bot");
     if(this.initialized){
       message["resourceid"] = message.resourceid || '/bot.message';
-      message["botInfo"] = this.options.botInfo || {};
+      console.log(message["botInfo"]);
+      var _msgCustomData = message["botInfo"] && message["botInfo"].customData;
+      if (_msgCustomData) {
+        message["botInfo"] = Object.assign({}, this.options.botInfo || {}, { customData: _msgCustomData });
+      } else {
+        message["botInfo"] = this.options.botInfo || {};
+      }
+      // message["botInfo"] = this.options.botInfo || {};
       message["client"] = this.options.client || "sdk";
       message["meta"] = {
         "timezone":jstz.jstz.determine().name(),

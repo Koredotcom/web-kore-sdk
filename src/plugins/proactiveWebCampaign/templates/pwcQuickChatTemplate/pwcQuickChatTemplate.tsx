@@ -44,13 +44,29 @@ export function QuickChat(props: any) {
             
             // Reconnect bot
             hostInstance.bot.RtmClient._safeDisconnect();
+            
+            // Add isSkipOnConnect to socket URL query params
+            if (!hostInstance.bot.RtmClient.socketConfig) {
+                hostInstance.bot.RtmClient.socketConfig = {};
+            }
+            if (!hostInstance.bot.RtmClient.socketConfig.socketUrl) {
+                hostInstance.bot.RtmClient.socketConfig.socketUrl = {};
+            }
+            if (!hostInstance.bot.RtmClient.socketConfig.socketUrl.queryParams) {
+                hostInstance.bot.RtmClient.socketConfig.socketUrl.queryParams = {};
+            }
+            hostInstance.bot.RtmClient.socketConfig.socketUrl.queryParams.isSkipOnConnect = 'true';
+            
             hostInstance.bot.logInComplete();
             // Trigger experience flow if available
             if (experienceFlowId) {
-                // Send the flow trigger to backend after bot is ready
-                setTimeout(() => {
+                let messageSent = false;
+                
+                const sendQuickChatMessage = () => {
+                    if (messageSent) return;
+                    messageSent = true;
+                    
                     try {
-                        // Trigger experience flow and pass callFlowId in botInfo.customData
                         hostInstance.bot.sendMessage({
                             type: 'event',
                             eventType: 'quickChatTrigger',
@@ -59,7 +75,8 @@ export function QuickChat(props: any) {
                             botInfo: {
                                 customData: [
                                     {
-                                        callFlowId: experienceFlowId
+                                        callFlowId: experienceFlowId,
+                                        state: "published"
                                     }
                                 ]
                             }
@@ -67,7 +84,22 @@ export function QuickChat(props: any) {
                     } catch (error) {
                         console.error('PWC QuickChat: Error triggering experience flow', error);
                     }
-                }, 800);
+                };
+
+                // Check if bot is already connected and initialized
+                if (hostInstance.bot?.initialized && hostInstance.bot?.RtmClient?.connected) {
+                    sendQuickChatMessage();
+                } else {
+                    // Wait for RTM_CONNECTION_OPENED event (fires after hello message, when initialized=true)
+                    hostInstance.bot.once('open', sendQuickChatMessage);
+                    
+                    // Fallback timeout in case event is missed
+                    setTimeout(() => {
+                        if (!messageSent && hostInstance.bot?.initialized && hostInstance.bot?.RtmClient?.connected) {
+                            sendQuickChatMessage();
+                        }
+                    }, 5000);
+                }
             }
         } catch (error) {
             console.error('PWC QuickChat: Error opening chat', error);
