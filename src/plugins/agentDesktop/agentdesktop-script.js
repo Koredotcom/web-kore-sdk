@@ -200,6 +200,36 @@ AgentDesktop = function (uuId, aResponse) {
     this.authResponse = null;
     let cwInstance = this.config.hostInstance;
     let botInstance = cwInstance?.bot;
+
+    const closeRecordingConsentSlider = () => {
+        try {
+            if (!cwInstance?.chatEle) {
+                return;
+            }
+            // Only close when the recording consent modal is actually open.
+            if (!cwInstance.chatEle.querySelector('.custom-slider-modal')) {
+                return;
+            }
+
+            if (cwInstance?.config?.UI?.version == 'v2') {
+                if (typeof cwInstance.bottomSliderAction === 'function') {
+                    cwInstance.bottomSliderAction('hide');
+                }
+                return;
+            }
+
+            const wrap = cwInstance.chatEle.querySelector('.chat-actions-bottom-wraper');
+            if (!wrap) {
+                return;
+            }
+            wrap.classList.add('close-bottom-slide');
+            setTimeout(() => {
+                wrap.remove();
+            }, 150);
+        } catch (e) {
+            console.log('Failed to close recording consent slider', e);
+        }
+    };
     if (!this.config.isVoiceCobrowseSession && cwInstance && typeof cwInstance.on === 'function') {
         cwInstance.on('video_call_recording_proceed', () => {
             try {
@@ -1124,6 +1154,8 @@ AgentDesktop = function (uuId, aResponse) {
                 if (!cwInstance?.chatEle?.querySelector('.custom-slider-modal')) {
                     openCustomSliderModal(cwInstance, { variant: 'warning' });
                 }
+            } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'video_call_recording_request_timeout') {
+                closeRecordingConsentSlider();
             } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'video_call_recording_resume') {
                 _self.isVideoCallRecordingPaused = false;
                 if (typeof _self.updateVideoCallRecordingUI === 'function') {
@@ -1427,7 +1459,7 @@ AgentDesktop = function (uuId, aResponse) {
                 track.stop();
             });
             if(this.callDetails.videoCall){
-                this.activeCall = this.phone.call(this.phone.VIDEO, sipUser, [`X-botName:${this.callDetails?.botId || ''}`, `X-cId:${this.callDetails?.conversationId || ''}`, "X-VideoCall:true"]);
+                this.activeCall = this.phone.call(this.phone.VIDEO, sipUser, [`X-botName:${this.callDetails?.botId || ''}`, `X-cId:${this.callDetails?.conversationId || ''}`, `X-isVideoCall:true`]);
             }else{
                 this.activeCall = this.phone.call(this.phone.AUDIO, sipUser);
             }
