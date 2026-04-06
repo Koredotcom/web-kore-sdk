@@ -1149,10 +1149,9 @@ AgentDesktop = function (uuId, aResponse) {
                 });
                 localStorage.setItem("pagesVisited", JSON.stringify(pagesVisitedArray))
             } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'video_call_recording_request') {
-                console.log("video_call_recording_request", msgJson.message);
                 const cwInstance = this.config.hostInstance;
                 if (!cwInstance?.chatEle?.querySelector('.custom-slider-modal')) {
-                    openCustomSliderModal(cwInstance, { variant: 'warning' });
+                    openCustomSliderModal(cwInstance, { variant: 'warning', emitOnPrimary: 'video_call_recording_proceed', emitOnSecondary: 'video_call_recording_decline' });
                 }
             } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'video_call_recording_request_timeout') {
                 closeRecordingConsentSlider();
@@ -1458,9 +1457,9 @@ AgentDesktop = function (uuId, aResponse) {
             stream.getTracks().forEach(function (track) {
                 track.stop();
             });
-            if(this.callDetails.videoCall){
+            if (this.callDetails.videoCall) {
                 this.activeCall = this.phone.call(this.phone.VIDEO, sipUser, [`X-botName:${this.callDetails?.botId || ''}`, `X-cId:${this.callDetails?.conversationId || ''}`, `X-isVideoCall:true`]);
-            }else{
+            } else {
                 this.activeCall = this.phone.call(this.phone.AUDIO, sipUser);
             }
         });

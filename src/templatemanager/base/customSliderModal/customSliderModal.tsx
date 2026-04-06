@@ -15,6 +15,8 @@ export interface CustomSliderModalOptions {
     secondaryLabel?: string;
     /** Default true. Set false for a single primary action. */
     showSecondaryButton?: boolean;
+    emitOnPrimary?: string;
+    emitOnSecondary?: string;
 }
 
 const defaultCopy: Record<
@@ -131,21 +133,15 @@ export function CustomSliderModal(props: any) {
     const close = () => closeBottomSlider(hostInstance);
 
     const proccedAction = () => {
-        const isRecordingConsentModal =
-            variant === 'warning' &&
-            title === defaultCopy.warning.title &&
-            primaryLabel === defaultCopy.warning.primaryLabel &&
-            secondaryLabel === defaultCopy.warning.secondaryLabel;
-
-        if (isRecordingConsentModal && typeof hostInstance?.emit === 'function') {
-            hostInstance.emit('video_call_recording_proceed');
+        if (opts.emitOnPrimary && typeof hostInstance?.emit === 'function') {
+            hostInstance.emit(opts.emitOnPrimary);
         }
         close();
     };
 
     const declineAction = () => {
-        if (typeof hostInstance?.emit === 'function') {
-            hostInstance.emit('video_call_recording_decline');
+        if (opts.emitOnSecondary && typeof hostInstance?.emit === 'function') {
+            hostInstance.emit(opts.emitOnSecondary);
         }
         close();
     };

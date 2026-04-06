@@ -4,7 +4,6 @@ import './chatWidgetHeader.scss';
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import IconsManager from '../iconsManager';
-import { openCustomSliderModal } from '../customSliderModal/customSliderModal';
 
 export function ChatWidgetHeader(props: any) {
     const hostInstance = props.hostInstance;
@@ -23,10 +22,6 @@ export function ChatWidgetHeader(props: any) {
     const handleHeaderIcon = (data: any) => {
         hostInstance.sendMessage(data);
     }
-
-    const openBottomSheetDemo = () => {
-        openCustomSliderModal(hostInstance, { variant: 'warning' });
-    };
 
     useEffect(() => {
         hostInstance.eventManager.removeEventListener('.btn-reconnect', 'click');
@@ -128,14 +123,6 @@ export function ChatWidgetHeader(props: any) {
                 </div>
             </div>
             <div className="actions-info">
-                <button title="Open bottom sheet (demo)" className="btn-action btn-open-bottom-sheet-demo" type="button" aria-label="Open bottom sheet demo" onClick={openBottomSheetDemo}>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <path d="M3.75 5.625C3.75 4.93464 4.30964 4.375 5 4.375H7.5C8.19036 4.375 8.75 4.93464 8.75 5.625V8.125C8.75 8.81536 8.19036 9.375 7.5 9.375H5C4.30964 9.375 3.75 8.81536 3.75 8.125V5.625Z" stroke="#697586" strokeWidth="1.25" />
-                        <path d="M11.25 5.625C11.25 4.93464 11.8096 4.375 12.5 4.375H15C15.6904 4.375 16.25 4.93464 16.25 5.625V8.125C16.25 8.81536 15.6904 9.375 15 9.375H12.5C11.8096 9.375 11.25 8.81536 11.25 8.125V5.625Z" stroke="#697586" strokeWidth="1.25" />
-                        <path d="M3.75 13.125C3.75 12.4346 4.30964 11.875 5 11.875H7.5C8.19036 11.875 8.75 12.4346 8.75 13.125V15.625C8.75 16.3154 8.19036 16.875 7.5 16.875H5C4.30964 16.875 3.75 16.3154 3.75 15.625V13.125Z" stroke="#697586" strokeWidth="1.25" />
-                        <path d="M11.25 13.125C11.25 12.4346 11.8096 11.875 12.5 11.875H15C15.6904 11.875 16.25 12.4346 16.25 13.125V15.625C16.25 16.3154 15.6904 16.875 15 16.875H12.5C11.8096 16.875 11.25 16.3154 11.25 15.625V13.125Z" stroke="#697586" strokeWidth="1.25" />
-                    </svg>
-                </button>
                { brandingInfo.header.buttons.help.show && <a title={hostInstance.config.botMessages.help} href={brandingInfo.header.buttons.help.action.value} target="_blank" className="btn-action link-url">
                     {/* <figure>
                         <img src={iconHelper.getIcon('help')} alt="back button" />
