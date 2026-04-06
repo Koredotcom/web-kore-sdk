@@ -98,7 +98,7 @@ class ListTemplate {
         });
     }
     getTemplateString() {
-        var listTemplate = '<script id="chat_list_tmpl" type="text/x-jqury-tmpl"> \
+        var listTemplate = '<script id="v2_chat_list_tmpl" type="text/x-jqury-tmpl"> \
      {{if msgData.message}} \
          <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
              class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \

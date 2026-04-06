@@ -138,7 +138,7 @@ class ListViewTemplate {
 
     }
     getTemplateString(type: any) {
-        var listViewTemplate = '<script id="chat_list_view_tmpl" type="text/x-jqury-tmpl"> \
+        var listViewTemplate = '<script id="v2_chat_list_view_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
             <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon listView"> \
                 <div class="listViewTmplContent {{if msgData.message[0].component.payload.boxShadow}}noShadow{{/if}}"> \
@@ -184,7 +184,7 @@ class ListViewTemplate {
             </li> \
         {{/if}} \
      </script>';
-        var listActionSheetTemplate = '<script id="chat_listview_actionsheet" type="text/x-jqury-tmpl">\
+        var listActionSheetTemplate = '<script id="v2_chat_listview_actionsheet" type="text/x-jqury-tmpl">\
      <div class="list-template-sheet hide">\
       {{if msgData.message}} \
         <div class="sheetHeader">\

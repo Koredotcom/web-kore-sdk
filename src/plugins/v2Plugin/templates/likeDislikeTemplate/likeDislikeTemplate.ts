@@ -73,7 +73,7 @@ class LikeDislikeTemplate {
         });
     }
     getTemplateString() {
-        var likeDislikeTemplate = '<script id="chat_like_dislike_tmpl" type="text/x-jqury-tmpl"> \
+        var likeDislikeTemplate = '<script id="v2_chat_like_dislike_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
             <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon quickReplies"> \
                 <div class="buttonTmplContent"> \

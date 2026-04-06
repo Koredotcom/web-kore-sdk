@@ -180,7 +180,7 @@ class QuickReplyTemplate {
         });
     }
     getTemplateString() {
-        var quickReplyTemplate = '<script id="chat_quick_reply_tmpl" type="text/x-jqury-tmpl"> \
+        var quickReplyTemplate = '<script id="v2_chat_quick_reply_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
             <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
                 class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon quickReplies"> \

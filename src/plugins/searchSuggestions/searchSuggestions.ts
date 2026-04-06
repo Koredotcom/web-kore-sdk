@@ -166,7 +166,7 @@ class SearchSuggestionsPlugin {
     //suggestion template
     getAutoSuggestionTemplate = function () {
         var autoSuggestion =
-            '<script type="text/x-jqury-tmpl">\
+            '<script id="chat_autoSuggestion_tmpl" type="text/x-jqury-tmpl">\
               {{if suggestions && suggestions.length > 0}}\
                 <div class="suggestion-search-data-parent">\
                 <div class="title-suggestion">Suggestions</div>\

@@ -2517,7 +2517,7 @@ getTemplate  (type:any) {
                         </div>\
                     </div>\
           </sript>';
-  var webForm = '<script  type="text/x-jquery-tmpl"> \
+  var webForm = '<script id="chat_webForm_tmpl" type="text/x-jquery-tmpl"> \
           <div class="webFormWidget" {{if panelDetail}}panelDetail="${JSON.stringify(panelDetail)}"{{/if}}>\
               {{if tempdata && tempdata.formLink}}\
                       <iframe id="${panelDetail.subpanel}" class="iframeModal" src="${tempdata.formLink}"></iframe> \
