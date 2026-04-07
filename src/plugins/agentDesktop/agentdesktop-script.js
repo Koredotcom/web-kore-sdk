@@ -147,7 +147,7 @@ import requireKr from '../../components/base-sdk/kore-bot-sdk-client';
 import './agentdesktop.css';
 import moment from 'moment';
 import { pack } from '@amplitude/rrweb-packer';
-import { openCustomSliderModal } from '../../templatemanager/base/customSliderModal/customSliderModal.tsx';
+import { openRecordingConsentSlider } from './recordingConsentSlider.tsx';
 
 /** @ignore */
 class AgentDesktopPluginScript  {
@@ -206,8 +206,8 @@ AgentDesktop = function (uuId, aResponse) {
             if (!cwInstance?.chatEle) {
                 return;
             }
-            // Only close when the recording consent modal is actually open.
-            if (!cwInstance.chatEle.querySelector('.custom-slider-modal')) {
+            // Only close when the recording consent slider is actually open.
+            if (!cwInstance.chatEle.querySelector('.recording-consent-slider')) {
                 return;
             }
 
@@ -1150,8 +1150,8 @@ AgentDesktop = function (uuId, aResponse) {
                 localStorage.setItem("pagesVisited", JSON.stringify(pagesVisitedArray))
             } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'video_call_recording_request') {
                 const cwInstance = this.config.hostInstance;
-                if (!cwInstance?.chatEle?.querySelector('.custom-slider-modal')) {
-                    openCustomSliderModal(cwInstance, { variant: 'warning', emitOnPrimary: 'video_call_recording_proceed', emitOnSecondary: 'video_call_recording_decline' });
+                if (!cwInstance?.chatEle?.querySelector('.recording-consent-slider')) {
+                    openRecordingConsentSlider(cwInstance);
                 }
             } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'video_call_recording_request_timeout') {
                 closeRecordingConsentSlider();
