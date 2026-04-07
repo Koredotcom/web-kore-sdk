@@ -1,4 +1,5 @@
 import $ from '../../libs/korejquery';
+import widgetTemplates from '../../libs/precompiled-templates-widgets';
 import PerfectScrollbar from 'perfect-scrollbar';
 import requireKr from '../base-sdk/kore-bot-sdk-client'
 import './styles/kore-widgets.scss'
@@ -451,6 +452,8 @@ class KoreWidgetSDK {
   // this.bot = requireKr('/KoreBot.js').instance();
   // //this.config.botOptions.
   constructor(config: any){
+    // Load precompiled widget templates into cache
+    ($ as any).installPreCompiledTemplates(widgetTemplates);
     this.init(config);
   this.initVariables();
   this.jqueryManupulations(); //this.on=$(this).on;

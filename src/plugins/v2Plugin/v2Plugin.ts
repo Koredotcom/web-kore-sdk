@@ -18,6 +18,7 @@ import IframeTemplate from './templates/iframeTemplate/iframeTemplate';
 import SystemTemplate from './templates/systemTemplate/systemTemplate';
 import AdvancedListTemplate from './templates/advancedListTemplate/advancedListTemplate';
 import CardTemplate from './templates/cardTemplate/cardTemplate';
+import v2PluginTemplates from './precompiled-templates-v2plugin';
 
 class V2Plugin {
     name = 'V2Plugin';
@@ -41,6 +42,7 @@ class V2Plugin {
     onInit() {
         let me = this;
         let $ = me.hostInstance.$;
+        $.installPreCompiledTemplates(v2PluginTemplates);
         if (me.hostInstance.config.UI.version == 'v2') {
             me.installPickerTemplates();
         }

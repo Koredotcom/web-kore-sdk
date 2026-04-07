@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import searchTemplates from './precompiled-templates-search';
 import KRPerfectScrollbar from 'perfect-scrollbar';
 import './searchSuggestions.scss';
 /**
@@ -52,6 +53,7 @@ class SearchSuggestionsPlugin {
     }
     onInit() {
         let me:any = this;
+        ($ as any).installPreCompiledTemplates(searchTemplates);
         me.containers["_chatWindowContainer"] = $(me.config?.containerClasses?.chatWindowClass);
         me.containers["_chatBodyContainer"] = $(me.config?.containerClasses?.chatWindowClass).find(me.config?.containerClasses?.chatBodyClass);
         me.containers["_chatInput"] = $(me.config?.containerClasses?.chatWindowClass).find(me.config?.containerClasses?.chatInputClass);

@@ -1,4 +1,5 @@
 import $ from '../../libs/korejquery';
+import v2WidgetTemplates from './precompiled-templates-v2widgets';
 import PerfectScrollbar from 'perfect-scrollbar';
 import requireKr from '../../components/base-sdk/kore-bot-sdk-client';
 import './styles/v2-kore-widgets.css';
@@ -451,6 +452,7 @@ class V2KoreWidgetSDK {
   // this.bot = requireKr('/KoreBot.js').instance();
   // //this.config.botOptions.
   constructor(config: any){
+    ($ as any).installPreCompiledTemplates(v2WidgetTemplates);
     this.init(config);
   this.initVariables();
   this.jqueryManupulations(); //this.on=$(this).on;

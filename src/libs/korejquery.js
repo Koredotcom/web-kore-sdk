@@ -1,6 +1,6 @@
 import korejquery from 'jquery'
 //import './jquery.tmpl.min'
-import precompiledTemplates from './precompiled-templates'
+import precompiledTemplates from './precompiled-templates-v2chatwindow'
 /*!
  * jQuery Templates Plugin 1.0.0pre
  * http://github.com/jquery/jquery-tmpl
