@@ -38,7 +38,7 @@
                                     n.o = function (t, e) { 
                                         return Object.prototype.hasOwnProperty.call(t, e) }, 
                                         n.p = "", n(n.s = 18) }([function (t, e) { 
-                                            t.exports = "undefined" != typeof self ? self : "undefined" != typeof window ? window : Function("return this")() }, 
+                                            t.exports = "undefined" != typeof self ? self : "undefined" != typeof window ? window : globalThis }, 
                                             function (t, e, n) { 
                                                 var r = n(24), o = n(25), i = String.fromCharCode(30); 
                                                 t.exports = { protocol: 4, encodePacket: r, encodePayload: function (t, e) { 
