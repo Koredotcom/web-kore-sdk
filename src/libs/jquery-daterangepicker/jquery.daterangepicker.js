@@ -1169,7 +1169,8 @@ function installDateRangeFunctions($, moment) {
                 });
             });
 
-            box.find('[custom]').click(function() {
+            box.find('[custom]').click(function(e) {
+                e.preventDefault();
                 var valueName = $(this).attr('custom');
                 opt.start = false;
                 opt.end = false;
@@ -1181,7 +1182,8 @@ function installDateRangeFunctions($, moment) {
                 if (opt.autoClose) closeDatePicker();
             });
 
-            box.find('[shortcut]').click(function() {
+            box.find('[shortcut]').click(function(e) {
+                e.preventDefault();
                 var shortcut = $(this).attr('shortcut');
                 var end = new Date(),
                     start = false;
@@ -2281,7 +2283,7 @@ function installDateRangeFunctions($, moment) {
                         for (var i = 0; i < data['prev-days'].length; i++) {
                             name = data['prev-days'][i];
                             name += (data['prev-days'][i] > 1) ? translate('days') : translate('day');
-                            html += ' <a href="javascript:;" shortcut="day,-' + data['prev-days'][i] + '">' + name + '</a>';
+                            html += ' <a href="#" shortcut="day,-' + data['prev-days'][i] + '">' + name + '</a>';
                         }
                         html += '</span>';
                     }
@@ -2291,7 +2293,7 @@ function installDateRangeFunctions($, moment) {
                         for (var i = 0; i < data['next-days'].length; i++) {
                             name = data['next-days'][i];
                             name += (data['next-days'][i] > 1) ? translate('days') : translate('day');
-                            html += ' <a href="javascript:;" shortcut="day,' + data['next-days'][i] + '">' + name + '</a>';
+                            html += ' <a href="#" shortcut="day,' + data['next-days'][i] + '">' + name + '</a>';
                         }
                         html += '</span>';
                     }
@@ -2300,7 +2302,7 @@ function installDateRangeFunctions($, moment) {
                         html += '&nbsp;<span class="prev-buttons">' + translate('previous');
                         for (var i = 0; i < data.prev.length; i++) {
                             name = translate('prev-' + data.prev[i]);
-                            html += ' <a href="javascript:;" shortcut="prev,' + data.prev[i] + '">' + name + '</a>';
+                            html += ' <a href="#" shortcut="prev,' + data.prev[i] + '">' + name + '</a>';
                         }
                         html += '</span>';
                     }
@@ -2309,7 +2311,7 @@ function installDateRangeFunctions($, moment) {
                         html += '&nbsp;<span class="next-buttons">' + translate('next');
                         for (var i = 0; i < data.next.length; i++) {
                             name = translate('next-' + data.next[i]);
-                            html += ' <a href="javascript:;" shortcut="next,' + data.next[i] + '">' + name + '</a>';
+                            html += ' <a href="#" shortcut="next,' + data.next[i] + '">' + name + '</a>';
                         }
                         html += '</span>';
                     }
@@ -2318,7 +2320,7 @@ function installDateRangeFunctions($, moment) {
                 if (opt.customShortcuts) {
                     for (var i = 0; i < opt.customShortcuts.length; i++) {
                         var sh = opt.customShortcuts[i];
-                        html += '&nbsp;<span class="custom-shortcut"><a href="javascript:;" shortcut="custom">' + sh.name + '</a></span>';
+                        html += '&nbsp;<span class="custom-shortcut"><a href="#" shortcut="custom">' + sh.name + '</a></span>';
                     }
                 }
                 html += '</div>';
@@ -2331,7 +2333,7 @@ function installDateRangeFunctions($, moment) {
                 if (opt.customValues) {
                     for (var i = 0; i < opt.customValues.length; i++) {
                         var val = opt.customValues[i];
-                        html += '&nbsp;<span class="custom-value"><a href="javascript:;" custom="' + val.value + '">' + val.name + '</a></span>';
+                        html += '&nbsp;<span class="custom-value"><a href="#" custom="' + val.value + '">' + val.name + '</a></span>';
                     }
                 }
             }
