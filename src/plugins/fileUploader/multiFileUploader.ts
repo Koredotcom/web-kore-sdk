@@ -605,11 +605,22 @@ class KoreMultiFileUploaderPlugin {
 
   onUploadError(_this: any, evt: any, _recState: any) {
     const me = _this;
-    if ($(evt.currentTarget).find('.percentage')) {
-      var progressbar = $(evt.currentTarget).find('.percentage');
-      $(progressbar).css({ 'background': '#FF0000' });
-      $(evt.currentTarget).find('.info-error-msg').css({ 'display': 'block' });
-      $(evt.currentTarget).find('.file-size').css({ 'display': 'none' });
+    const currentTarget = $(evt.currentTarget);
+    currentTarget.addClass('upload-failed');
+    if (currentTarget.find('.percentage')) {
+      currentTarget.find('.progress-percentage').hide();
+      currentTarget.find('.size-completion').hide();
+      const errorContainer = currentTarget.find('.upload-error-status');
+      errorContainer.removeClass('hide-error-status');
+      let errorMsg = me.hostInstance.config.botMessages.uploadFailed;
+      if (evt.detail && evt.detail.error && evt.detail.error.errors && evt.detail.error.errors.length > 0) {
+        errorMsg = evt.detail.error.errors[0].msg;
+      } else if (evt.detail && evt.detail.error && evt.detail.error.msg) {
+         errorMsg = evt.detail.error.msg;
+      }
+      
+      currentTarget.find('.error-tooltip').text(errorMsg);
+      currentTarget.find('.info-icon').removeAttr('title');
     }
   }
 
@@ -717,7 +728,15 @@ class KoreMultiFileUploaderPlugin {
     }
     _conc.addEventListener('load', (evt: any) => {
       // if (_scope.$element.parent().length) {
-      me.loadListener(_scope, evt);
+      if (evt.target.status >= 200 && evt.target.status < 300) {
+        me.loadListener(_scope, evt);
+      } else {
+        let errorResp = null;
+        try {
+          errorResp = JSON.parse(evt.target.response);
+        } catch (e) { }
+        me.errorListener(_scope, evt, errorResp);
+      }
       // }
     }, false);
     _conc.addEventListener('error', (evt: any) => {
@@ -757,7 +776,11 @@ class KoreMultiFileUploaderPlugin {
           me.initUploadChunk(_scope);
         }
       } else {
-        me.errorListener(_scope, evt);
+        let errorResp = null;
+        try {
+          errorResp = JSON.parse(evt.target.response);
+        } catch (e) { }
+        me.errorListener(_scope, evt, errorResp);
       }
     }, false);
     _conc.withCredentials = false;
@@ -846,10 +869,16 @@ class KoreMultiFileUploaderPlugin {
     });
   }
 
-  errorListener(_this: any, evt: any) {
+  errorListener(_this: any, evt: any, errorData?: any) {
     let me: any = this;
     if (_this && _this.$element && _this.$element.dispatchEvent) {
-      _this.$element.dispatchEvent(me.errorEv);
+      const event = new CustomEvent('error.ke.multifileuploader', {
+        detail: {
+          error: errorData,
+          originalEvent: evt
+        }
+      });
+      _this.$element.dispatchEvent(event);
     }
   }
 
@@ -1002,7 +1031,12 @@ class KoreMultiFileUploaderPlugin {
           me.loadListener(_scope, evt);
         // }
       } else {
-        me.errorListener(_scope, evt);
+        let errorResp = null;
+        try {
+          const response = (evt.target as any).response; 
+          if(response) errorResp = JSON.parse(response);
+        } catch (e) { }
+        me.errorListener(_scope, evt, errorResp);
       }
     }, false);
     _conc.addEventListener('error', (evt: any) => {
@@ -1045,6 +1079,13 @@ class KoreMultiFileUploaderPlugin {
               <p class="file-size">'+ selectedFile.sizeInMb + 'MB -</p>\
               <p class="percentage-complete"> 0% ' + me.hostInstance.config.botMessages.uploaded + '</p>\
             </div>\
+            <div class="upload-error-status hide-error-status">\
+                <span class="info-icon">\
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><g clip-path="url(#clip0_443_4661)"><path d="M8.00016 10.6654V7.9987M8.00016 5.33203H8.00683M14.6668 7.9987C14.6668 11.6806 11.6821 14.6654 8.00016 14.6654C4.31826 14.6654 1.3335 11.6806 1.3335 7.9987C1.3335 4.3168 4.31826 1.33203 8.00016 1.33203C11.6821 1.33203 14.6668 4.3168 14.6668 7.9987Z" stroke="#D92D20" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/></g><defs><clipPath id="clip0_443_4661"><rect width="16" height="16" fill="white"/></clipPath></defs></svg>\
+                    <div class="error-tooltip"></div>\
+                </span>\
+                <span class="upload-failed-text">' + me.hostInstance.config.botMessages.uploadFailed + '</span>\
+            </div>\
         </div>\
         <button class="delete-upload" title='+ me.hostInstance.config.botMessages.cancel + '>\
                 <img src="data:image/svg+xml;base64, PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTRweCIgaGVpZ2h0PSIxNHB4IiB2aWV3Qm94PSIwIDAgMTQgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjMgKDY3Mjk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5jbG9zZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM0NC4wMDAwMDAsIC0yMjkuMDAwMDAwKSIgZmlsbD0iIzhBOTU5RiI+CiAgICAgICAgICAgIDxnIGlkPSJjbG9zZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQ0LjAwMDAwMCwgMjI5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjE0IDEuNCAxMi42IDAgNyA1LjYgMS40IDAgMCAxLjQgNS42IDcgMCAxMi42IDEuNCAxNCA3IDguNCAxMi42IDE0IDE0IDEyLjYgOC40IDciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+" alt="remove" />\
@@ -1079,8 +1120,10 @@ class KoreMultiFileUploaderPlugin {
     $('.kore-chat-window-main-section').find('.uploaded-attachment-data').append(element);
 
     element.find('.delete-upload').on('click', (e) => {
-      if (!me.uploadingInProgress) {
-        const par = e.currentTarget.parentElement;
+      const par = e.currentTarget.parentElement;
+      const isFailed = par && (par.classList.contains('upload-failed') || !$(par).find('.upload-error-status').hasClass('hide-error-status'));
+      
+      if (!me.uploadingInProgress || isFailed) {
         let uid = par?.id;
         uid = uid?.substring(3);
         me.hostInstance.attachmentData = me.hostInstance.attachmentData.filter((ele: any) => ele.uniqueId != uid);
