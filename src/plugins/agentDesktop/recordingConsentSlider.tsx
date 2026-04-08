@@ -68,9 +68,9 @@ export function RecordingConsentSlider(props: RecordingConsentSliderProps) {
                 <div className="recording-consent-slider__icon" aria-hidden="true">
                     <WarningIcon />
                 </div>
-                <h1 id="recording-consent-slider-title">Recording started</h1>
+                <h1 id="recording-consent-slider-title">This Call Will Be Recorded</h1>
                 <p>
-                    This video call will now be recorded to help improve our services. Please do not share sensitive information like passwords or OTPs. If you are not comfortable with recording, let the agent know or you may end the call.
+                    This video call may be recorded to help improve our services. Please avoid sharing sensitive information such as passwords or OTPs. If you are not comfortable with recording, you may decline or end the call.
                 </p>
                 <div className="recording-consent-slider__actions">
                     <button className="kr-button-secondary lg" type="button" onClick={declineAction}>
