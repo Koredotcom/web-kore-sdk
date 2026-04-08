@@ -529,7 +529,68 @@
                     line-height: 18px;
                     color: var(--sdk-gloabl-text-color);
                 }
-            }  
+            }
+            .upload-error-status {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                margin-top: 4px;
+                &.hide-error-status {
+                    display: none;
+                }
+
+                .upload-failed-text {
+                    font-size: 12px;
+                    line-height: 18px;
+                    color: #D92D20;
+                    font-weight: 500;
+                }
+                .info-icon {
+                    display: flex;
+                    align-items: center;
+                    cursor: help;
+                    position: relative;
+                    .error-tooltip {
+                        visibility: hidden;
+                        width: max-content;
+                        max-width: 250px;
+                        background-color: var(--sdk-global-white-bg);
+                        color: var(--sdk-gloabl-text-color);
+                        border-radius: 6px;
+                        padding: 8px 12px;
+                        position: absolute;
+                        z-index: 9;
+                        bottom: 150%;
+                        left: -8px;
+                        box-shadow: var(--form-temp-input-box-shadow);
+                        border: 1px solid var(--sdk-gloabl-border-color);
+                    
+                        font-size: 12px;
+                        line-height: 18px;
+                        font-weight: 400;
+                        white-space: normal;
+                        word-wrap: break-word;
+                        opacity: 0;
+                        transition: opacity 0.2s;
+                        
+                        &::after {
+                            content: "";
+                            position: absolute;
+                            top: 100%;
+                            left: 14px;
+                            margin-left: -5px;
+                            border-width: 5px;
+                            border-style: solid;
+                            border-color: var(--sdk-global-white-bg) transparent transparent transparent;
+                        }
+                    }
+
+                    &:hover .error-tooltip {
+                        visibility: visible;
+                        opacity: 1;
+                    }
+                }
+            }
         }
         .delete-upload{
             cursor: pointer;
