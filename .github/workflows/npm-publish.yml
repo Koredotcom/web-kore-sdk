@@ -9,6 +9,7 @@ on:
       - v2/dev 
       - v2/dev-rc1
       - v3/dev
+      - v3/11.21.0_platform_OP
 jobs:
   build:
     runs-on: ubuntu-latest
