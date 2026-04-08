@@ -535,7 +535,11 @@
                 align-items: center;
                 gap: 4px;
                 margin-top: 4px;
-                
+
+                &.hide {
+                    display: none;
+                }
+
                 .upload-failed-text {
                     font-size: 12px;
                     line-height: 18px;
