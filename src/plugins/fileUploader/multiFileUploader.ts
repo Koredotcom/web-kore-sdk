@@ -611,7 +611,7 @@ class KoreMultiFileUploaderPlugin {
       currentTarget.find('.progress-percentage').hide();
       currentTarget.find('.size-completion').hide();
       const errorContainer = currentTarget.find('.upload-error-status');
-      errorContainer.removeClass('hide');
+      errorContainer.removeClass('hide-error-status');
       let errorMsg = me.hostInstance.config.botMessages.uploadFailed;
       if (evt.detail && evt.detail.error && evt.detail.error.errors && evt.detail.error.errors.length > 0) {
         errorMsg = evt.detail.error.errors[0].msg;
@@ -1121,7 +1121,7 @@ class KoreMultiFileUploaderPlugin {
 
     element.find('.delete-upload').on('click', (e) => {
       const par = e.currentTarget.parentElement;
-      const isFailed = par && (par.classList.contains('upload-failed') || !$(par).find('.upload-error-status').hasClass('hide'));
+      const isFailed = par && (par.classList.contains('upload-failed') || !$(par).find('.upload-error-status').hasClass('hide-error-status'));
       
       if (!me.uploadingInProgress || isFailed) {
         let uid = par?.id;
