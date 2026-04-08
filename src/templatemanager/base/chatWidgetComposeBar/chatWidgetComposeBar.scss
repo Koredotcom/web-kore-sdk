@@ -535,8 +535,7 @@
                 align-items: center;
                 gap: 4px;
                 margin-top: 4px;
-
-                &.hide {
+                &.hide-error-status {
                     display: none;
                 }
 
@@ -551,35 +550,26 @@
                     align-items: center;
                     cursor: help;
                     position: relative;
-                    
-                    svg {
-                        width: 14px;
-                        height: 14px;
-                    }
-
                     .error-tooltip {
                         visibility: hidden;
                         width: max-content;
                         max-width: 250px;
-                        background-color: #fff;
-                        color: #344054;
-                        text-align: left;
-                        border-radius: 8px;
+                        background-color: var(--sdk-global-white-bg);
+                        color: var(--sdk-gloabl-text-color);
+                        border-radius: 6px;
                         padding: 8px 12px;
                         position: absolute;
-                        z-index: 1000;
+                        z-index: 9;
                         bottom: 150%;
                         left: -8px;
-                        
-                        box-shadow: 0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08);
-                        border: 1px solid #F2F4F7;
-                        
+                        box-shadow: var(--form-temp-input-box-shadow);
+                        border: 1px solid var(--sdk-gloabl-border-color);
+                    
                         font-size: 12px;
                         line-height: 18px;
                         font-weight: 400;
                         white-space: normal;
                         word-wrap: break-word;
-
                         opacity: 0;
                         transition: opacity 0.2s;
                         
@@ -591,7 +581,7 @@
                             margin-left: -5px;
                             border-width: 5px;
                             border-style: solid;
-                            border-color: #fff transparent transparent transparent;
+                            border-color: var(--sdk-global-white-bg) transparent transparent transparent;
                         }
                     }
 

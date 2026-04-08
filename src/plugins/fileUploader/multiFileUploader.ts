@@ -1079,7 +1079,7 @@ class KoreMultiFileUploaderPlugin {
               <p class="file-size">'+ selectedFile.sizeInMb + 'MB -</p>\
               <p class="percentage-complete"> 0% ' + me.hostInstance.config.botMessages.uploaded + '</p>\
             </div>\
-            <div class="upload-error-status hide">\
+            <div class="upload-error-status hide-error-status">\
                 <span class="info-icon">\
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><g clip-path="url(#clip0_443_4661)"><path d="M8.00016 10.6654V7.9987M8.00016 5.33203H8.00683M14.6668 7.9987C14.6668 11.6806 11.6821 14.6654 8.00016 14.6654C4.31826 14.6654 1.3335 11.6806 1.3335 7.9987C1.3335 4.3168 4.31826 1.33203 8.00016 1.33203C11.6821 1.33203 14.6668 4.3168 14.6668 7.9987Z" stroke="#D92D20" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/></g><defs><clipPath id="clip0_443_4661"><rect width="16" height="16" fill="white"/></clipPath></defs></svg>\
                     <div class="error-tooltip"></div>\
