@@ -1,3 +1,9 @@
+### 11.23.1
+* Release Apr 11, 2026
+* Features
+  * added error message info support for file uploads
+  * added video call recording support in agent desktop plugin
+
 ### 11.23.0
 * Release Mar 28, 2026
 * Features
