@@ -1,3 +1,7 @@
+### 10.24.1
+- SDK Release Apr 11, 2026
+* Stable release
+
 ### 10.24.0
 - SDK Release Mar 28, 2026
 * Stable release
