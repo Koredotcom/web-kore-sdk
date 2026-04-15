@@ -5,6 +5,8 @@ import { useEffect, useState } from 'preact/hooks';
 import {ImagePreviewTemplate} from '../imagePreviewTemplate/imagePreviewTemplate';
 import KoreHelpers from '../../../../utils/helpers';
 import FeedbackTemplate from '../feedbackTemplate/feedbackTemplate';
+import SearchResultsTemplate from '../SearchResultsTemplate/searchResultsTemplate';
+import { getSearchResults, getTotalResultsCount, getResultsWebsocket } from '../relevantResultsTemplate/searchResultsData';
 import ImageCarouselSvgIcons from '../imagePreviewTemplate/imageCarouselSvgIcons';
 import { StreamingAnswersTemplate } from '../streamingAnswerTemplate/streamingAnswerTemplate';
 
@@ -40,6 +42,9 @@ export function Answers(props: any) {
     const [exactMatch, setExactMatch] = useState<boolean>(false);
 
     useEffect(() => {
+        if(messageObj?.msgData?.message[0]?.component?.payload?.answer_payload) {
+            messageObj.msgData.message[0].component.payload =  {...messageObj?.msgData?.message[0]?.component?.payload , ...getResultsWebsocket}
+        }
         const results = messageObj?.msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.snippet_content;
         const templateType = messageObj?.msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0].snippet_type;
         setModelType(templateType);
@@ -133,9 +138,6 @@ export function Answers(props: any) {
 
         const renderCitationList=(sourceIndex:any,hasSource:any,isSelected:any)=>
             {
-
-            
-            
             return <div className={`sa-tooltip-container ${isSelected && 'position-class'} `}>
                 { 
                 
@@ -175,8 +177,8 @@ export function Answers(props: any) {
             {
                 (modelType === 'generative_model'  || modelType === 'extractive_model') ? (
                     <Fragment>
-                        <div class="sa-answer-result-block">
-
+                        <div class="sa-answer-generative-stack">
+                            <div class="sa-answer-result-block sa-answer-ai-card">
                             <div className="sa-answer-header-block">
                                 <div className="sa-answer-left">
                                 {modelType === 'generative_model'&& <Fragment>
@@ -219,7 +221,29 @@ export function Answers(props: any) {
                             {
                                 (!isPlatform && hostInstance['saFeedback']?.enable && !messageObj?.msgData?.fromHistory && !messageObj?.msgData?.fromHistorySync) && <FeedbackTemplate data={hostInstance} searchRequestId={messageObj?.msgData?.message[0]?.component?.payload?.searchRequestId}/>
                             }
-                            
+                            </div>
+
+                            <div class="sa-answer-relevant-results-wrap">
+                                {(() => {
+                                    const payload = messageObj?.msgData?.message[0]?.component?.payload;
+                                    const searchResults = getSearchResults(payload);
+                                    const totalResults = getTotalResultsCount;
+                                    if (!searchResults?.length) return null;
+                                    return (
+                                        <SearchResultsTemplate
+                                            results={searchResults}
+                                            totalResults={totalResults}
+                                            hostInstance={hostInstance}
+                                            msgData={{ template: payload, searchIndexId: payload?.searchIndexId }}
+                                            onResultClick={(result: any) => {
+                                                if (result.source.url) {
+                                                    window.open(result.source.url, '_blank');
+                                                }
+                                            }}
+                                        />
+                                    );
+                                })()}
+                            </div>
                         </div>
 
                     </Fragment>

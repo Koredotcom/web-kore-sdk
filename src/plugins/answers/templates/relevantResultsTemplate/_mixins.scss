@@ -1,0 +1,93 @@
+// ─── Shared SCSS Mixins ────────────────────────────────────────────────────────
+// Shared across all relevantResultsTemplate components.
+
+// ─── Typography ───────────────────────────────────────────────────────────────
+
+// Text properties with !important overrides (for template theming).
+@mixin dynamicText($weight, $size, $height, $color) {
+    color: $color !important;
+    font-weight: $weight !important;
+    font-size: $size !important;
+    line-height: $height !important;
+}
+
+// Inter font stack with standard (non-override) text properties.
+@mixin interText($weight, $size, $height, $color) {
+    font-family: Inter, sans-serif;
+    font-weight: $weight;
+    font-size: $size;
+    line-height: $height;
+    color: $color;
+}
+
+// Single-line overflow truncation.
+@mixin textEllipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+// Multi-line webkit clamp truncation.
+@mixin lineClamp($lines: 3) {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: $lines;
+    overflow: hidden;
+}
+
+// ─── Layout ───────────────────────────────────────────────────────────────────
+
+// Horizontal flex row. justify-content and align-items are opt-in.
+@mixin flexRow($gap: 0, $justify: null, $alignItems: center) {
+    display: flex;
+    align-items: $alignItems;
+    @if $gap != 0      { gap: $gap; }
+    @if $justify != null { justify-content: $justify; }
+}
+
+// Vertical flex column. align-items is opt-in.
+@mixin flexColumn($gap: 0, $alignItems: null) {
+    display: flex;
+    flex-direction: column;
+    @if $gap != 0          { gap: $gap; }
+    @if $alignItems != null { align-items: $alignItems; }
+}
+
+// Centered flex container (both axes).
+@mixin flexCenter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+// Fixed-size icon container: centered, shrink-proof.
+@mixin iconBox($size) {
+    @include flexCenter;
+    flex-shrink: 0;
+    width: $size;
+    height: $size;
+}
+
+// ─── Utilities ────────────────────────────────────────────────────────────────
+
+// Strip native button chrome.
+@mixin btnReset {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+// Shorthand ease transition.
+@mixin easeTransition($prop: all, $dur: 0.2s) {
+    transition: $prop $dur ease;
+}
+
+// Shared layout base for cancel / apply button pairs.
+// Font and color are set per-button via interText or individual properties.
+@mixin actionBtnBase {
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid;
+    @include easeTransition;
+}

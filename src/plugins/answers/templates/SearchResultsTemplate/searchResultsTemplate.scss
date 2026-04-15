@@ -1,0 +1,265 @@
+// ─── Mixins ───────────────────────────────────────────────────────────────────
+
+@mixin dynamicText($weight, $size, $height, $color) {
+    color: $color !important;
+    font-weight: $weight !important;
+    font-size: $size !important;
+    line-height: $height !important;
+}
+
+@mixin flexColumn($gap: 0, $alignSelf: stretch, $width: 100%) {
+    display: flex;
+    flex-direction: column;
+    align-self: $alignSelf;
+    width: $width;
+    gap: $gap;
+}
+
+@mixin flexRow($gap: 0, $justify: null, $alignItems: null, $alignSelf: null, $width: null) {
+    display: flex;
+    flex-direction: row;
+    gap: $gap;
+    @if $justify    != null { justify-content: $justify; }
+    @if $alignItems != null { align-items:      $alignItems; }
+    @if $alignSelf  != null { align-self:       $alignSelf; }
+    @if $width      != null { width:            $width; }
+}
+
+@mixin interFont($weight, $size, $height, $color, $letterSpacing: null) {
+    font-family: Inter, sans-serif;
+    @include dynamicText($weight, $size, $height, $color);
+    @if $letterSpacing != null { letter-spacing: $letterSpacing; }
+}
+
+@mixin textEllipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@mixin lineClamp($lines: 3) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+}
+
+// ─── Layout ───────────────────────────────────────────────────────────────────
+
+.search-results-container {
+    @include flexColumn($gap: 4px);
+    align-items: stretch;
+    box-sizing: border-box;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.search-results-header {
+    @include flexRow(
+        $gap: 12px,
+        $justify: space-between,
+        $alignItems: center,
+        $alignSelf: stretch,
+        $width: 100%
+    );
+    min-height: 32px;
+}
+
+.search-results-title {
+    @include interFont(600, 12px, 16px, #344054, -0.01em);
+    text-align: left;
+    flex: 1;
+    margin: 0;
+}
+
+.search-results-view-all {
+    @include flexRow($gap: 4px, $alignItems: center);
+    cursor: pointer;
+    padding: 4px 8px;
+    background: transparent;
+    border: none;
+    outline: none;
+
+    .search-all-results-text {
+        @include interFont(500, 12px, 16px, #155EEF);
+    }
+
+    svg {
+        width: 12px;
+        height: 12px;
+        flex-shrink: 0;
+        @include dynamicText(500, 12px, 16px, #667085);
+    }
+}
+
+.search-results-list {
+    @include flexColumn();
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.search-result-item {
+    @include flexColumn($gap: 4px);
+    padding: 8px 0px !important;
+    cursor: pointer;
+    border-top: 1px solid #EAECF0 !important;
+    transition: all 0.2s ease;
+    position: relative;
+    min-height: 68px;
+
+    &:hover {
+        background-color: rgba(102, 112, 133, 0.05);
+        border-bottom-color: #D0D5DD;
+
+        .result-title-link {
+            @include dynamicText(500, 12px, 16px, #155EEF);
+        }
+
+        .result-snippet {
+            @include dynamicText(400, 12px, 16px, #475467);
+        }
+    }
+
+    &:focus-within {
+        outline: 2px solid #155EEF;
+        outline-offset: 2px;
+        border-radius: 4px;
+    }
+
+    &.first-item {
+        border-top: 1px solid #EAECF0;
+    }
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &:active {
+        background-color: rgba(102, 112, 133, 0.08);
+    }
+}
+
+.result-content {
+    @include flexColumn($gap: 6px);
+    padding: 0 4px;
+}
+
+.result-title-row {
+    @include flexRow($gap: 8px, $alignItems: center, $width: 100%);
+    min-height: 20px;
+}
+
+.result-type-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.result-title-link {
+    @include interFont(500, 12px, 16px, #475467, -0.01em);
+    @include textEllipsis;
+    text-decoration: none;
+    flex: 1;
+    min-width: 0;
+
+    &:hover {
+        color: #155EEF;
+    }
+}
+
+.result-snippet {
+    @include flexRow(
+        $gap: 8px,
+        $justify: stretch,
+        $alignItems: stretch,
+        $alignSelf: stretch,
+        $width: 100%
+    );
+    @include interFont(400, 12px, 16px, #667085, -0.01em);
+    @include lineClamp(3);
+    text-align: left;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    margin: 0;
+    max-width: 100%;
+}
+
+.result-text-image {
+    @include flexRow(
+        $gap: 8px,
+        $justify: stretch,
+        $alignItems: stretch,
+        $alignSelf: stretch,
+        $width: 100%
+    );
+}
+
+.result-text-image-img {
+    width: 64px;
+    height: 48px;
+    border-radius: 4px;
+}
+
+// ─── States ───────────────────────────────────────────────────────────────────
+
+// Loading state
+.search-results-container.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+// Empty state
+.search-results-list:empty::after {
+    content: 'No search results found';
+    display: block;
+    text-align: center;
+    padding: 20px;
+    color: #667085;
+    font-size: 14px;
+    font-style: italic;
+}
+
+// ─── Responsive ───────────────────────────────────────────────────────────────
+
+@media (max-width: 480px) {
+    .search-results-container {
+        padding: 6px 8px 0px;
+    }
+
+    .search-result-item {
+        padding: 6px 0px;
+        min-height: 60px;
+    }
+
+    .result-content {
+        gap: 8px;
+    }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+    .search-results-view-all,
+    .search-result-item,
+    .result-title-link,
+    .search-results-view-all svg,
+    .result-type-icon img {
+        transition: none;
+    }
+}
+
+// ─── Custom slider ────────────────────────────────────────────────────────────
+
+.chat-actions-bottom-wraper.search-all-results-slider {
+    top: 68px;
+    height: 88%;
+
+    .popup-window-block {
+        max-height: 98% !important;
+        height: 98% !important;
+    }
+}
+
+// ─── Table styles are in tablePreviewTemplate/tablePreviewUtils.scss ──────────
+// (imported automatically via tablePreviewUtils.tsx)

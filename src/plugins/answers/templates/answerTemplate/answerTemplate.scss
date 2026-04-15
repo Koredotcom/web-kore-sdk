@@ -3,6 +3,32 @@
     flex-direction: column;
     padding: 8px 12px;
 
+    .sa-answer-generative-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        align-items: stretch;
+    }
+
+    .sa-answer-ai-card.sa-answer-result-block {
+        padding-bottom: 12px;
+    }
+
+    .sa-answer-card-feedback {
+        margin-top: 4px;
+
+        .sa-feedback-block {
+            margin-top: 0;
+        }
+    }
+
+    .sa-answer-relevant-results-wrap {
+        width: 100%;
+        padding: 0 4px 4px;
+        box-sizing: border-box;
+    }
+
     .sa-answer-header-block {
         margin-top: 8px;
 
